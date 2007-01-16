@@ -1,5 +1,35 @@
 2007-01-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* scripts/convert-flac2mp3.sh
+	  scripts/convert-ogg2mp3.sh
+	  src/file_convert.[ch]
+	  src/flacfile.[ch]
+	  src/oggfile.[ch]: new files for patch mentioned below
+
+	  configure.in
+	  gtkpod.glade
+	  scripts/Makefile.am
+	  src/Makefile.am
+	  src/display_itdb.h
+	  src/display_tracks.c
+	  src/file.c
+	  src/file.h
+	  src/file_itunesdb.c
+	  src/misc.c
+	  src/misc.h
+	  src/misc_conversion.c
+	  src/misc_track.c
+	  src/prefs.c
+	  src/prefs_window.c
+	  src/repository.c
+	  src/syncdir.c
+	  src/tools.c: combined patch by Marc d[r]eadlock and Simon
+	  Naunton for on-the fly conversion of FLAC and OGG files
+	  during export to the iPod, plus some patches thrown in by
+	  myself. Thanks for the contribution!
+
+2007-01-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* po/ja.po: updated Japanese catalog -- thanks to Kentaro Fukuchi
 
 2007-01-14 Jorg Schuler <jcsjcs at users.sourceforge.net>

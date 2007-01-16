@@ -358,6 +358,8 @@ static void add_files (gpointer key, gpointer value, gpointer user_data)
 		case FILE_TYPE_MP4:
 		case FILE_TYPE_MOV:
 		case FILE_TYPE_MPG:
+                case FILE_TYPE_OGG:
+                case FILE_TYPE_FLAC:
 		    tr = gp_track_by_filename (pl->itdb, filename);
 		    if (tr)
 		    {   /* track is known -> add to playlist if not

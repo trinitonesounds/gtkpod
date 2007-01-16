@@ -1,4 +1,6 @@
-, TODO:
+BUGS, TODO:
+
+- fileselection_select_script(): display @additional_text.
 
 - modify "warning" when matching checksums: Send a patch that changes
   the behavior from printing into the info window to opening a dialog

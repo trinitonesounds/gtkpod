@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-21 23:16:41 jcs>
+/* Time-stamp: <2007-01-16 14:08:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -196,6 +196,53 @@ T_item TM_to_T (TM_item tm)
     return -1;
 }
 
+
+/* See track_get_item() / track_get_item_pointer()  */
+gchar *get_allowed_percent_char(void )
+{
+    return g_strdup("latgcoysSny");
+}
+/* translates a char into a T_... (defined in display.h) */
+T_item char_to_T(gchar c){
+    switch (c) {
+        case 'l': return T_ALBUM;
+        case 'a': return T_ARTIST;
+        case 't': return T_TITLE;
+        case 'g': return T_GENRE;
+        case 'c': return T_COMMENT;
+        case 'o': return T_COMPOSER;
+        case 'f': return T_FILETYPE;
+        case 's': return T_PC_PATH;
+        case 'S': return T_IPOD_PATH;
+	    /* case 'i': return T_IPOD_ID; */
+        case 'n': return T_TRACK_NR;
+	    /* case 'f': return T_TRANSFERRED; */
+	    /* case 'z': return T_SIZE; */
+	    /* case 'L': return T_TRACKLEN; */
+	    /* case 'b': return T_BITRATE; */
+	    /* case 'r': return T_SAMPLERATE; */
+	    /* case 'b': return T_BPM; */
+	    /* case 'C': return T_PLAYCOUNT; */
+	    /* case 'i': return T_RATING; */
+	    /* case '': return T_TIME_ADDED; */
+	    /* case '': return T_TIME_PLAYED; */
+	    /* case '': return T_TIME_MODIFIED; */
+	    /* case '': return T_VOLUME; */
+	    /* case '': return T_SOUNDCHECK; */
+        case 'y': return T_YEAR;
+	    /* case 'd': return T_CD_NR; */
+	    /* case '': return T_GROUPING; */
+	    /* case '': return T_COMPILATION; */
+	    /* case '': return T_CATEGORY; */
+	    /* case '': return T_DESCRIPTION; */
+	    /* case '': return T_PODCASTURL; */
+	    /* case '': return T_PODCASTRSS; */
+	    /* case '': return T_SUBTITLE; */
+	    /* case '': return T_TIME_RELEASED; */
+	    /* case '': return T_CHECKED; */
+    }
+    return -1;
+}
 
 /* translates a ST_CAT_... (defined in display.h) into a
  * T_... (defined in display.h). Returns -1 in case a translation is not

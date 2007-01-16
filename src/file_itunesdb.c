@@ -46,6 +46,12 @@
 #include "tools.h"
 #include "ipod_init.h"
 #include "lastfm.h"
+#include "file_convert.h"
+
+#define _TO_STR(x) #x
+#define TO_STR(x) _TO_STR(x)
+#define debug(s) printf(__FILE__":" TO_STR(__LINE__) ":" s)
+#define debugx(s,...) printf(__FILE__":" TO_STR(__LINE__) ":" s,__VA_ARGS__)
 
 /*------------------------------------------------------------------*\
  *                                                                  *
@@ -415,6 +421,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     else
 	offline = FALSE;
 
+
     block_widgets ();
     if (offline || (type & GP_ITDB_TYPE_LOCAL))
     { /* offline or local database - requires extended info */
@@ -775,7 +782,6 @@ iTunesDB *gp_merge_itdb (iTunesDB *old_itdb)
     if (new_itdb)
     {
 	gp_replace_itdb (old_itdb, new_itdb);
-
 	/* take care of autosync... */
 	sync_all_playlists (new_itdb);
 
@@ -1177,8 +1183,27 @@ static gpointer th_copy (gpointer data)
     g_return_val_if_fail (track, NULL);
     etr = track->userdata;
     g_return_val_if_fail (etr, NULL);
+    gchar *file_to_transfer=etr->pc_path_locale;
 
-    itdb_cp_track_to_ipod (track, etr->pc_path_locale, &error);
+
+    if (etr->conv!=NULL)
+    {
+        error = file_convert_pre_copy(track);
+        if (!error) 
+        {
+            error= file_convert_wait_for_conversion(track);
+            if (!error)
+                file_to_transfer=etr->conv->converted_file;
+        }
+    }
+
+    if (error == NULL)
+    {
+        fprintf(stderr,"Trying to copy: %s\n",file_to_transfer);
+        itdb_cp_track_to_ipod (track, file_to_transfer, &error);
+        if (etr->conv != NULL)
+            file_convert_post_copy(track);
+    }
 
     /* delete old size */
     if (track->transferred) etr->oldsize = 0;

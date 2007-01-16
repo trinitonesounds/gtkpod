@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-10-14 19:04:40 jcs>
+/* Time-stamp: <2007-01-16 18:34:24 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Copyright (C) 2006 James Liggett <jrliggett at cox.net>
@@ -136,7 +136,7 @@ enum {
 static void set_default_preferences()
 {
     int i;
-    gchar *dir; /* Last directory browsed to */
+    gchar *str;
 
     prefs_set_int("update_existing", FALSE);
     prefs_set_int("id3_write", FALSE);
@@ -156,7 +156,16 @@ static void set_default_preferences()
     prefs_set_string ("path_play_now", "xmms %s");
     prefs_set_string ("path_play_enqueue", "xmms -e %s");
     prefs_set_string ("path_mserv_trackinfo_root", "/var/lib/mserv/trackinfo/");
-  
+
+    str = g_build_filename (SCRIPTDIR, "convert-ogg2mp3.sh", NULL);
+    prefs_set_string ("path_conv_ogg", str);
+    g_free (str);
+
+    str = g_build_filename (SCRIPTDIR, "convert-flac2mp3.sh", NULL);
+    prefs_set_string ("path_conv_flac", str);
+    g_free (str);
+
+
     /* Set sorting tab defaults */
     for (i = 0; i < SORT_TAB_MAX; i++)
     {
@@ -251,12 +260,12 @@ static void set_default_preferences()
     prefs_set_string("export_template", "%o;%a - %t.mp3;%t.wav");
 
     /* Set last browsed directory */
-    dir = g_get_current_dir();
+    str = g_get_current_dir();
 
-    if (dir)
+    if (str)
     {
-	prefs_set_string("last_dir_browsed", dir);
-	g_free(dir);
+	prefs_set_string("last_dir_browsed", str);
+	g_free(str);
     }
     else
 	prefs_set_string("last_dir_browsed", g_get_home_dir());
@@ -267,7 +276,7 @@ static void set_default_preferences()
     prefs_set_int("st_sort", SORT_NONE);
     prefs_set_int("pm_sort", SORT_NONE);
     prefs_set_int("tm_sortcol", TM_COLUMN_TITLE);
-    prefs_set_int("tm_sort_", SORT_NONE);
+    prefs_set_int("tm_sort", SORT_NONE);
 }
 
 /* Initialize default variable-length list entries */
@@ -708,6 +717,15 @@ static void cleanup_keys()
 	prefs_set_string("coverart", NULL);
     }
   
+    /* rename tm_sort_ to tm_sort */
+    if (prefs_get_string_value("tm_sort_", &buf))
+    {
+	prefs_set_string("tm_sort", buf);
+	g_free(buf);
+	prefs_set_string("tm_sort_", NULL);
+    }
+
+
     /* Convert old path numbered keys to named ones */
   
   
@@ -971,7 +989,7 @@ static void cleanup_keys()
     /* sm_sort_ renamed to tm_sort */
     if (prefs_get_int_value("sm_sort_", &int_buf))
     {
-	prefs_set_int("tm_sort_", int_buf);
+	prefs_set_int("tm_sort", int_buf);
 	prefs_set_string("sm_sort_", NULL);
     }
 

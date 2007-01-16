@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-23 00:50:17 jcs>
+/* Time-stamp: <2007-01-16 18:29:48 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -70,8 +70,6 @@ static void standard_toggle_toggled (GtkToggleButton *togglebutton,
 
 
 /* Definition of path button names.
-   E.g. path_button_names[PATH_PLAY_ENQUEUE] is
-   "play_enqueue_path_button".
    path_fileselector_titles[] specifies the title for the file
    chooser. path_type[] specifies whether to browse for dirs or for
    files.
@@ -81,12 +79,11 @@ static const gchar *path_button_names[] =
     "play_now_path_button",
     "play_enqueue_path_button",
     "mp3gain_path_button",
-    "",
-    "",
+    "aacgain_path_button",
     "mserv_music_root_button",
     "mserv_trackinfo_root_button",
-    "",
-    "aacgain_path_button",
+    "path_conv_ogg_button",
+    "path_conv_flac_button",
     NULL
 };
 static const gchar *path_key_names[] =
@@ -94,12 +91,11 @@ static const gchar *path_key_names[] =
     "path_play_now",
     "path_play_enqueue",
     "path_mp3gain",
-    "",
-    "",
+    "aacgain_path",
     "path_mserv_music_root",
     "path_mserv_trackinfo_root",
-    "",
-    "aacgain_path",
+    "path_conv_ogg",
+    "path_conv_flac",
     NULL
 };
 const gchar *path_entry_names[] =
@@ -107,12 +103,11 @@ const gchar *path_entry_names[] =
     "play_now_path_entry",
     "play_enqueue_path_entry",
     "mp3gain_path_entry",
-    "",
-    "",
+    "aacgain_path_entry",
     "mserv_music_root_entry",
     "mserv_trackinfo_root_entry",
-    "",
-    "aacgain_path_entry",
+    "path_conv_ogg_entry",
+    "path_conv_flac_entry",
     NULL
 };
 static const gchar *path_fileselector_titles[] =
@@ -120,18 +115,16 @@ static const gchar *path_fileselector_titles[] =
     N_("Please select command for 'Play Now'"),
     N_("Please select command for 'Enqueue'"),
     N_("Please select the mp3gain executable"),
-    "",
-    "",
+    N_("Please select the aacgain executable"),
     N_("Select the mserv music root directory"),
     N_("Select the mserv trackinfo root directory"),
-    "",
-    N_("Please select the aacgain executable"),
+    N_("Select the ogg/vorbis converter command"),
+    N_("Select the flac converter command"),
     NULL
 };
 static const GtkFileChooserAction path_type[] =
 {
     GTK_FILE_CHOOSER_ACTION_OPEN,  /* select file */
-    GTK_FILE_CHOOSER_ACTION_OPEN,
     GTK_FILE_CHOOSER_ACTION_OPEN,
     GTK_FILE_CHOOSER_ACTION_OPEN,
     GTK_FILE_CHOOSER_ACTION_OPEN,
@@ -141,7 +134,6 @@ static const GtkFileChooserAction path_type[] =
     GTK_FILE_CHOOSER_ACTION_OPEN,
     -1
 };
-
 
 static void on_cfg_st_autoselect_toggled (GtkToggleButton *togglebutton,
 					  gpointer         user_data)
@@ -175,6 +167,8 @@ static void on_path_button_pressed (GtkButton *button, gpointer user_data)
 {
     gint i = GPOINTER_TO_INT (user_data);
     gchar *oldpath, *newpath;
+    gchar *fallback = NULL;
+    gchar *text = NULL;
 
     g_return_if_fail (temp_prefs);
 
@@ -184,15 +178,23 @@ static void on_path_button_pressed (GtkButton *button, gpointer user_data)
 	oldpath = prefs_get_string (path_key_names[i]);
     }
 
+    /* initialize fallback path with something reasonable */
+    if ((strcmp (path_key_names[i], "path_conv_ogg") == 0) ||
+	(strcmp (path_key_names[i], "path_conv_flac") == 0))
+    {
+	fallback = g_strdup (SCRIPTDIR);
+	text = g_markup_printf_escaped (_("<i>Have a look at the scripts provided in '%s'. If you write a new script or improve an existing one, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release.</i>"), SCRIPTDIR);
+    }
+
     switch (path_type[i])
     {
     case GTK_FILE_CHOOSER_ACTION_OPEN:
 	/* script */
 	newpath = fileselection_select_script (
 	    oldpath,
-	    NULL,
+	    fallback,
 	    _(path_fileselector_titles[i]),
-	    NULL);
+	    text);
 	break;
     case GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER:
 	/* directory */
@@ -205,6 +207,8 @@ static void on_path_button_pressed (GtkButton *button, gpointer user_data)
 	g_return_if_reached ();
     }
     g_free (oldpath);
+    g_free (fallback);
+    g_free (text);
 
     if (newpath)
     {
@@ -1723,7 +1727,7 @@ void sort_window_update (void)
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
-	switch (prefs_get_int("tm_sort_"))
+	switch (prefs_get_int("tm_sort"))
 	{
 	case SORT_ASCENDING:
 	    w = gtkpod_xml_get_widget (sort_window_xml, "tm_ascend");
@@ -1840,11 +1844,11 @@ static void sort_window_set ()
 	pm_sort (val);
     if (temp_prefs_get_int_value(sort_temp_prefs, "st_sort", &val))
 	st_sort (val);
-    if (temp_prefs_get_int_value(sort_temp_prefs, "tm_sort_", NULL) ||
+    if (temp_prefs_get_int_value(sort_temp_prefs, "tm_sort", NULL) ||
 	(sortcol_old != sortcol_new))
     {
 	tm_sort_counter (-1);
-	tm_sort (prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort_"));
+	tm_sort (prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
     }
     /* if auto sort was changed to TRUE, store order */
     if (!temp_prefs_get_int(sort_temp_prefs, "tm_autostore"))
@@ -2067,7 +2071,7 @@ void sort_window_set_st_sort (gint val)
 
 void sort_window_set_tm_sort (gint val)
 {
-    temp_prefs_set_int(sort_temp_prefs, "tm_sort_", val);
+    temp_prefs_set_int(sort_temp_prefs, "tm_sort", val);
 }
 
 void sort_window_set_case_sensitive (gboolean val)

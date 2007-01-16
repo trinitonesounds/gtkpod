@@ -260,6 +260,8 @@ static gboolean nm_get_soundcheck (Track *track)
 	    }
 	    break;
 	case FILE_TYPE_WAV: /* FIXME */
+	case FILE_TYPE_OGG: /* FIXME */
+	case FILE_TYPE_FLAC: /* FIXME */
 	case FILE_TYPE_M4V:
 	case FILE_TYPE_MP4:
 	case FILE_TYPE_MOV:

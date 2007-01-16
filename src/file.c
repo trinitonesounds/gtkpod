@@ -53,7 +53,8 @@
 #include "mp4file.h"
 #include "prefs.h"
 #include "wavfile.h"
-
+#include "oggfile.h"
+#include "flacfile.h"
 
 static const gchar *imageext[] =
 {".jpg", ".jpeg", ".png", ".pbm", ".pgm", ".ppm", ".tif", ".tiff",
@@ -95,6 +96,8 @@ Track *video_get_file_info (gchar *filename)
     case FILE_TYPE_PLS:
     case FILE_TYPE_IMAGE:
     case FILE_TYPE_DIRECTORY:
+    case FILE_TYPE_OGG:
+    case FILE_TYPE_FLAC:
 	g_free (track);
 	g_return_val_if_reached (NULL);
     }
@@ -138,6 +141,8 @@ FileType determine_file_type (gchar *path)
 
 	else if (g_strcasecmp (suf, ".m3u") == 0) type = FILE_TYPE_M3U;
 	else if (g_strcasecmp (suf, ".pls") == 0) type = FILE_TYPE_PLS;
+        else if (g_strcasecmp (suf, ".ogg") == 0) type = FILE_TYPE_OGG;
+        else if (g_strcasecmp (suf, ".flac") == 0) type = FILE_TYPE_FLAC;
 
 	else
 	{
@@ -253,6 +258,8 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
 	case FILE_TYPE_MP4:
 	case FILE_TYPE_MOV:
 	case FILE_TYPE_MPG:
+        case FILE_TYPE_OGG:
+        case FILE_TYPE_FLAC:
 	case FILE_TYPE_IMAGE:
 	case FILE_TYPE_DIRECTORY:
 	    gtkpod_warning (_("'%s' is a not a known playlist file.\n\n"),
@@ -348,6 +355,8 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
 	case FILE_TYPE_MP4:
 	case FILE_TYPE_MOV:
 	case FILE_TYPE_MPG:
+	case FILE_TYPE_OGG:
+        case FILE_TYPE_FLAC:
 	case FILE_TYPE_IMAGE:
 	    break;
 	}
@@ -1090,6 +1099,22 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	    nti->mediatype = 0x00000001;
 	}
 	break;
+    case FILE_TYPE_OGG:
+        nti = ogg_get_file_info (name);
+        /* Set unk208 to audio */
+        if (nti)
+        {
+            nti->mediatype = 0x00000001;
+        }
+        break;
+    case FILE_TYPE_FLAC:
+        nti = flac_get_file_info (name);
+        /* Set unk208 to audio */
+        if (nti)
+        {
+            nti->mediatype = 0x00000001;
+        }
+        break;
     case FILE_TYPE_M4V:
     case FILE_TYPE_MP4:
 	/* I don't know if .m4v and .mp4 can simply be handled like
@@ -1720,6 +1745,8 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
   case FILE_TYPE_MP4:
   case FILE_TYPE_MOV:
   case FILE_TYPE_MPG:
+  case FILE_TYPE_OGG:
+  case FILE_TYPE_FLAC:
   case FILE_TYPE_IMAGE:
   case FILE_TYPE_UNKNOWN:
   case FILE_TYPE_DIRECTORY:
@@ -1905,6 +1932,10 @@ static gboolean file_write_info (gchar *name, Track *track)
 	return mp4_write_file_info (name, track);
     case FILE_TYPE_WAV:
 	return wav_write_file_info (name, track);
+    case FILE_TYPE_OGG:
+        return ogg_write_file_info (name, track);
+    case FILE_TYPE_FLAC:
+        return flac_write_file_info (name, track);
     case FILE_TYPE_M4V:
     case FILE_TYPE_MP4:
     case FILE_TYPE_MOV:
@@ -2221,6 +2252,8 @@ gboolean read_soundcheck (Track *track)
 	case FILE_TYPE_M4B:
 	    result = mp4_read_soundcheck (path, track);
 	    break;
+        case FILE_TYPE_OGG: /* FIXME */
+        case FILE_TYPE_FLAC: /* FIXME */
 	case FILE_TYPE_WAV: /* FIXME */
 	case FILE_TYPE_M4V:
 	case FILE_TYPE_MP4:

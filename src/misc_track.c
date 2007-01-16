@@ -342,6 +342,7 @@ void gp_itdb_hash (iTunesDB *itdb)
 
    g_return_if_fail (itdb);
 
+
    if (!prefs_get_int("md5")) return;
 
    ns = itdb_tracks_number (itdb);
@@ -1495,6 +1496,8 @@ Playlist *add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
 		    case FILE_TYPE_MP4:
 		    case FILE_TYPE_MOV:
 		    case FILE_TYPE_MPG:
+                    case FILE_TYPE_OGG:
+                    case FILE_TYPE_FLAC:
 			if (!pl)
 			{  /* no playlist yet -- create new one */
 			    pl = add_new_pl_user_name (itdb, NULL,

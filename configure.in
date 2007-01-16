@@ -104,6 +104,26 @@ if test "y$have_mp4v2" = "y"; then
 	have_mp4v2="*** no -- will build without aac support"
 fi
 
+dnl Check for libvorbisfile 
+AC_SEARCH_LIBS(ov_open,
+        ["vorbisfile"],
+        [AC_CHECK_HEADER(vorbis/vorbisfile.h,
+          [have_vorbisfile="yes -- will build with ogg support" AC_DEFINE_UNQUOTED(HAVE_LIBVORBISFILE, 1, ["Define to 1 if you have the ogg library"])],
+          [echo "*** vorbisfile.h cannot be found. Check your ogg/vorbis installation."])])
+if test "y$have_vorbisfile" = "y"; then
+        have_vorbisfile="*** no -- will build without ogg support"
+fi
+
+dnl Check for FLAC
+AC_SEARCH_LIBS(FLAC__metadata_get_streaminfo,
+	["FLAC"],
+	[AC_CHECK_HEADER(FLAC/metadata.h,
+          [have_flac="yes -- will build with FLAC support" AC_DEFINE_UNQUOTED(HAVE_FLAC, 1, ["Define to 1 if you have the flac library"])],
+          [echo "*** FLAC/metadata.h cannot be found. Check your FLAC installation."])])
+if test "y$have_flac" = "y"; then
+        have_flac="*** no -- will build without FLAC support"
+fi
+
 dnl Additional libs maybe needed when compiling under solaris
 AC_SEARCH_LIBS(bind,
 	      ["socket" "nsl" "socket -lnsl"])
@@ -133,7 +153,8 @@ Configuration for $PACKAGE $VERSION :
  id3tag lib ...........: yes
  libcurl ..............: $have_curl
  mp4v2 ................: $have_mp4v2
- NLS/gettext ..........: $USE_NLS
+ vorbisfile ...........: $have_vorbisfile
+ FLAC .................: $have_flac
 
  Now type 'make' to build $PACKAGE $VERSION,
  and then 'make install' for installation.

@@ -19,7 +19,9 @@ script_SCRIPTS = \
 	sync-tomboy.sh \
 	sync-webcalendar.sh \
 	ldif2vcf.sh \
-	mab2vcard
+	mab2vcard \
+	convert-ogg2mp3.sh \
+	convert-flac2mp3.sh
 
 # these scripts will go in the distribution. Actually, if they are to
 # be installed, they should go into the .tar.gz-file automatically...

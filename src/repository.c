@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-25 21:40:01 jcs>
+/* Time-stamp: <2007-01-16 17:55:41 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -62,9 +62,6 @@ struct _RepWin
 };
 
 typedef struct _RepWin RepWin;
-
-/* where to find the scripts */
-static const gchar *scriptdir = PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S;
 
 typedef enum
 {
@@ -662,10 +659,10 @@ static void ipod_sync_button_clicked (RepWin *repwin, iPodSyncType type)
     oldpath = prefs_get_string (key);
     g_free (key);
 
-    text = g_markup_printf_escaped (_("<i>Have a look at the scripts provided in '%s'. If you write a new script, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release.</i>"), scriptdir);
+    text = g_markup_printf_escaped (_("<i>Have a look at the scripts provided in '%s'. If you write a new script or improve an existing one, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release.</i>"), SCRIPTDIR);
 
     newpath = fileselection_select_script (oldpath,
-					   scriptdir,
+					   SCRIPTDIR,
 					   title,
 					   text);
     g_free (oldpath);

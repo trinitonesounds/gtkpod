@@ -59,7 +59,10 @@ gtkpod_SOURCES = \
     sha1.c sha1.h \
     syncdir.c syncdir.h \
     tools.c tools.h \
-    wavfile.c wavfile.h
+    wavfile.c wavfile.h \
+    oggfile.c oggfile.h \
+    flacfile.c flacfile.h \
+    file_convert.c file_convert.h
 
 gtkpod_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@
 

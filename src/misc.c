@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2006-06-28 01:21:08 jcs>
+|  Time-stamp: <2007-01-16 17:50:45 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -46,6 +46,11 @@
 
 
 #define DEBUG_MISC 0
+
+
+/* where to find the scripts */
+const gchar *SCRIPTDIR = PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S;
+
 
 /*------------------------------------------------------------------*\
  *                                                                  *

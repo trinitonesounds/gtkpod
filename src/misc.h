@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-25 00:25:35 jcs>
+/* Time-stamp: <2007-01-16 17:50:43 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -45,6 +45,9 @@
 #include "time.h"
 
 #define C_FREE(a) {g_free(a); a=NULL;}
+
+/* where to find the scripts */
+extern const gchar *SCRIPTDIR;
 
 /* version of GTK_CHECK_VERSION that uses the runtime variables
    gtk_*_version... instead of the compile-time constants
@@ -105,7 +108,9 @@ void close_about_window (void);
 gboolean parse_tracks_from_string(gchar **s, Track **track);
 gboolean gtkpod_main_quit(void);
 
+gchar *get_allowed_percent_char(void);
 T_item TM_to_T (TM_item sm);
+T_item char_to_T (char c);
 T_item ST_to_T (ST_CAT_item st);
 const gchar *get_tm_string (TM_item tm);
 const gchar *get_tm_tooltip (TM_item tm);

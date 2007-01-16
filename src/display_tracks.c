@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-26 14:48:28 jcs>
+/* Time-stamp: <2007-01-16 18:29:49 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1643,7 +1643,7 @@ gint tm_sort_counter (gint inc)
 
 void tm_adopt_order_in_sorttab (void)
 {
-    if (prefs_get_int("tm_sort_") == SORT_NONE)
+    if (prefs_get_int("tm_sort") == SORT_NONE)
     {
 	GList *gl, *tracks = NULL;
 
@@ -1665,7 +1665,7 @@ static void tm_unsort (void)
     {
 	GtkTreeModel *model= gtk_tree_view_get_model (track_treeview);
 
-	prefs_set_int("tm_sort_", SORT_NONE);
+	prefs_set_int("tm_sort", SORT_NONE);
 	if (!BROKEN_GTK_TREE_SORT)
 	{
 /* no need to comment this out -- searching still works, but for lack
@@ -1784,7 +1784,7 @@ static void tm_sort_column_changed (GtkTreeSortable *ts,
     }
     else
     {
-	prefs_set_int("tm_sort_", order);
+	prefs_set_int("tm_sort", order);
     }
     prefs_set_int("tm_sortcol", newcol);
 
@@ -2184,7 +2184,7 @@ void tm_create_treeview (void)
 		    (gpointer)0);
 
   /* initialize sorting */
-  tm_sort (prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort_"));
+  tm_sort (prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
   /* set correct column for typeahead */
   if (prefs_get_int_value (TM_PREFS_SEARCH_COLUMN, &col))
   {
@@ -2281,7 +2281,7 @@ void tm_enable_disable_view_sort (gboolean enable)
 	    fprintf (stderr, "Programming error: disable_count < 0\n");
 	if (disable_count == 0 && track_treeview)
 	{
-	    if ((prefs_get_int("tm_sort_") != SORT_NONE) &&
+	    if ((prefs_get_int("tm_sort") != SORT_NONE) &&
 		sorting_disabled())
 	    {
 		/* Re-enable sorting */
@@ -2298,7 +2298,7 @@ void tm_enable_disable_view_sort (gboolean enable)
 		    gtk_tree_sortable_set_sort_column_id (
 			GTK_TREE_SORTABLE (model),
 			prefs_get_int("tm_sortcol"),
-			prefs_get_int("tm_sort_"));
+			prefs_get_int("tm_sort"));
 		}
 	    }
 	}
@@ -2307,7 +2307,7 @@ void tm_enable_disable_view_sort (gboolean enable)
     {
 	if (disable_count == 0 && track_treeview)
 	{
-	    if ((prefs_get_int("tm_sort_") != SORT_NONE) &&
+	    if ((prefs_get_int("tm_sort") != SORT_NONE) &&
 		sorting_disabled ())
 	    {
 		/* Disable sorting */
@@ -2324,7 +2324,7 @@ void tm_enable_disable_view_sort (gboolean enable)
 		    gtk_tree_sortable_set_sort_column_id (
 			GTK_TREE_SORTABLE (model),
 			GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
-			prefs_get_int("tm_sort_"));
+			prefs_get_int("tm_sort"));
 		}
 	    }
 	}

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-17 16:33:11 jcs>
+/* Time-stamp: <2007-01-16 14:08:07 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -36,6 +36,7 @@
 
 #include <gtk/gtk.h>
 #include "itdb.h"
+#include "file.h"
 
 struct itdbs_head
 {
@@ -63,6 +64,17 @@ typedef struct
 
 typedef struct
 {
+    gchar   *converted_file;        /* PC filename of the "mp3" file 
+                                       != NULL if the file exists   */
+    gint32   old_size;              /* size of the original file    */
+    FileType type;                  /* type of the original file    */
+    GPid     child_pid;             /* PID of conversion process    */
+    gint     child_stdout;          /* STDOUT of conversion process */
+    gchar   *command_line;          /* used for conversion */
+} TrackConv;
+
+typedef struct
+{
   gint32  oldsize;        /* used when updating tracks: size on iPod */
   gchar   *year_str;      /* year as string -- always identical to year */
   gchar   *pc_path_locale;/* path on PC (local encoding)             */
@@ -75,6 +87,7 @@ typedef struct
   gchar   *charset;       /* charset used for ID3 tags               */
   gint32  sortindex;      /* used for stable sorting (current order) */
   gboolean tchanged;      /* temporary use, e.g. in detail.c         */
+  TrackConv *conv;        /* to convert file */
 } ExtraTrackData;
 
 /* types for iTunesDB */
