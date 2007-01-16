@@ -28,6 +28,9 @@
 	  during export to the iPod, plus some patches thrown in by
 	  myself. Thanks for the contribution!
 
+	* src/charset.c: Default Japanese auto-conversion to UTF8
+          instead of EUC-JP. Thanks to Jun Kobayashi
+
 2007-01-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* po/ja.po: updated Japanese catalog -- thanks to Kentaro Fukuchi

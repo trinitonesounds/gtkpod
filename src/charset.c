@@ -267,37 +267,45 @@ gchar *charset_to_description (gchar *charset)
    Hiroshi Kawashima */
 static const gchar *charset_check_k_code (const gchar *p2)
 {
-    guchar *p = (guchar *)p2;
+    static const char* charsets[] = {
+	    "UTF-8",
+	    "EUC-JP",
+	    "CP932",
+	    "ISO-2022-JP",
+	    NULL
+    };
+    int i;
+    gchar *ret;
+    gssize len;
 
-    while (p && *p && (*p != '\n'))
-    {
-	if ((p[0] == 0x1b) &&
-	    p[1] && (p[1] == 0x24) &&
-	    p[2] && (p[2] == 0x42))	    return ("ISO-2022-JP");
-	if ((p[0] == 0x1b) &&
-	    p[1] && (p[1] == 0x24) &&
-	    p[2] && (p[2] == 0x40))	    return ("ISO-2022-JP");
-	if (((p[0] >= 0x81) && (p[0] <= 0x9f)) ||
-	    (p[0] >= 0xe0)) 	            return ("Shift_JIS");
-	if ((p[0] >= 0xa1) && (p[0] <= 0xfe) && p[1] &&
-	    (((p[1] >= 0x21) && (p[1] <= 0x7e)) ||
-	     ((p[1] >= 0xa1) && (p[1] <= 0xfe))))
-	                                    return ("EUC-JP");
-	++p;
+    if (p2 == NULL) return NULL;
+ 
+    len = strlen ((gchar*)p2);
+    for (i=0; charsets[i]; i++) {
+      ret = g_convert ((gchar*)p2,            /* string to convert */
+		       len,                  /* length of string  */
+		       "UTF-8",              /* to_codeset        */
+		       charsets[i],          /* from_codeset      */
+		       NULL,                 /* *bytes_read       */
+		       NULL,                 /* *bytes_written    */
+		       NULL);                /* GError **error    */
+      if (ret != NULL) {
+        g_free(ret);
+        return charsets[i];
+      }
     }
     return (NULL);
 }
 
-/* same as check_k_code, but defaults to "EUC-JP" if no match is found */
-static const gchar *charset_check_k_code_with_default (const gchar *p)
+/* same as check_k_code, but defaults to "UTF-8" if no match is found */
+static const gchar *charset_check_k_code_with_default (const guchar *p)
 {
     const gchar *result=NULL;
 
     if (p)       result = charset_check_k_code (p);
-    if (!result) result = "EUC-JP";
+    if (!result) result = "UTF-8";
     return result;
 }
-
 
 /* return the charset actually used for the "auto detection"
  * feature. So far only Japanese Auto Detecion is implemented */
