@@ -242,6 +242,12 @@ typedef enum {
     T_REMEMBER_PLAYBACK_POSITION,
     T_SKIP_WHEN_SHUFFLING,
     T_THUMB_PATH,   /* 40 */
+    T_MEDIA_TYPE,
+    T_TV_SHOW,
+    T_TV_EPISODE,
+    T_TV_NETWORK,
+    T_SEASON_NR,    /* 45 */
+    T_EPISODE_NR,
     T_ITEM_NUM,
 } T_item;
 

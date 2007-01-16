@@ -172,6 +172,22 @@ static void details_checkbutton_toggled (GtkCheckButton *button,
 }
 
 
+static void details_combobox_changed (GtkComboBox *combobox,
+					 Detail *detail)
+{
+    T_item item;
+
+    g_return_if_fail (combobox);
+
+    item = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (combobox),
+					       "details_item"));
+    
+    g_return_if_fail ((item > 0) && (item < T_ITEM_NUM));
+
+    details_get_item (detail, item, FALSE);
+}
+
+
 static void details_writethrough_toggled (GtkCheckButton *button,
 					  Detail *detail)
 {
@@ -617,6 +633,11 @@ static void details_setup_widget (Detail *detail, T_item item)
     case T_TIME_PLAYED:
     case T_TIME_MODIFIED:
     case T_TIME_RELEASED:
+    case T_TV_SHOW:
+    case T_TV_EPISODE:
+    case T_TV_NETWORK:
+    case T_SEASON_NR:
+    case T_EPISODE_NR:
 	buf = g_strdup_printf ("details_entry_%d", item);
 	w = gtkpod_xml_get_widget (detail->xml, buf);
 	g_signal_connect (w, "activate",
@@ -647,6 +668,13 @@ static void details_setup_widget (Detail *detail, T_item item)
 			  G_CALLBACK (details_text_changed),
 			  detail);
 	break;
+    case T_MEDIA_TYPE:
+	buf = g_strdup_printf ("details_combobox_%d", item);
+	w = gtkpod_xml_get_widget (detail->xml, buf);
+	g_signal_connect (w, "changed",
+			  G_CALLBACK (details_combobox_changed),
+			  detail);
+	break;
     case T_ALL:
     case T_ITEM_NUM:
 	/* cannot happen because of assertion above */
@@ -668,7 +696,7 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
     GtkTextBuffer *tb;
     GtkWidget *w = NULL;
     gchar *text;
-    gchar *entry, *checkbutton, *textview;
+    gchar *entry, *checkbutton, *textview, *combobox;
 
     g_return_if_fail (detail);
     g_return_if_fail ((item > 0) && (item < T_ITEM_NUM));
@@ -676,6 +704,7 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
     entry = g_strdup_printf ("details_entry_%d", item);
     checkbutton = g_strdup_printf ("details_checkbutton_%d", item);
     textview = g_strdup_printf ("details_textview_%d", item);
+    combobox = g_strdup_printf ("details_combobox_%d", item);
 
     if (track != NULL)
     {
@@ -728,6 +757,11 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
     case T_TIME_PLAYED:
     case T_TIME_MODIFIED:
     case T_TIME_RELEASED:
+    case T_TV_SHOW:
+    case T_TV_EPISODE:
+    case T_TV_NETWORK:
+    case T_SEASON_NR:
+    case T_EPISODE_NR:
 	w = gtkpod_xml_get_widget (detail->xml, entry);
 	g_signal_handlers_block_by_func (w, details_text_changed, detail);
 	gtk_entry_set_text (GTK_ENTRY (w), text);
@@ -799,6 +833,18 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
 					      FALSE);
 	}
 	break;
+    case T_MEDIA_TYPE:
+	if ((w = gtkpod_xml_get_widget (detail->xml, combobox)))
+	{
+	  if (track)
+	    {
+	      gint gui = dbToGUI(track->mediatype);
+	      gtk_combo_box_set_active (GTK_COMBO_BOX (w), gui);
+	    }
+	    else
+	      gtk_combo_box_set_active (GTK_COMBO_BOX (w), 0);
+	}
+	break;
     case T_ALL:
     case T_ITEM_NUM:
 	/* cannot happen because of assertion above */
@@ -821,7 +867,7 @@ static void details_get_item (Detail *detail, T_item item,
 			      gboolean assumechanged)
 {
     GtkWidget *w = NULL;
-    gchar *entry, *checkbutton, *textview;
+    gchar *entry, *checkbutton, *textview, *combobox;
     gboolean changed = FALSE;
     ExtraTrackData *etr;
     Track *track;
@@ -837,6 +883,7 @@ static void details_get_item (Detail *detail, T_item item,
     entry = g_strdup_printf ("details_entry_%d", item);
     checkbutton = g_strdup_printf ("details_checkbutton_%d", item);
     textview = g_strdup_printf ("details_textview_%d", item);
+    combobox = g_strdup_printf ("details_combobox_%d", item);
 
     switch (item)
     {
@@ -868,6 +915,11 @@ static void details_get_item (Detail *detail, T_item item,
     case T_STARTTIME:
     case T_STOPTIME:
     case T_SOUNDCHECK:
+    case T_TV_SHOW:
+    case T_TV_EPISODE:
+    case T_TV_NETWORK:
+    case T_SEASON_NR:
+    case T_EPISODE_NR:
 	if ((w = gtkpod_xml_get_widget (detail->xml, entry)))
 	{
 	    const gchar *text;
@@ -980,6 +1032,20 @@ static void details_get_item (Detail *detail, T_item item,
 		changed = TRUE;
 		if (state)  track->checked = 0;
 		else        track->checked = 1;
+	    }
+	}
+	break;
+    case T_MEDIA_TYPE:
+	if ((w = gtkpod_xml_get_widget (detail->xml, combobox)))
+	{
+	    gint active;
+	    active = gtk_combo_box_get_active (GTK_COMBO_BOX (w));
+	    guint32 mediatype_db = guiToDB(active);
+
+	    if (track->mediatype != mediatype_db)
+	    {
+		track->mediatype = mediatype_db;
+		changed = TRUE;
 	    }
 	}
 	break;

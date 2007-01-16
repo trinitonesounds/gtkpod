@@ -789,6 +789,9 @@ void gp_track_validate_entries (Track *track)
     if (!track->podcastrss)      track->podcastrss = g_strdup ("");
     if (!track->subtitle)        track->subtitle = g_strdup ("");
     if (!track->ipod_path)       track->ipod_path = g_strdup ("");
+    if (!track->tvshow)          track->tvshow = g_strdup("");
+    if (!track->tvepisode)       track->tvepisode = g_strdup("");
+    if (!track->tvnetwork)       track->tvnetwork = g_strdup("");
     if (!etr->pc_path_utf8)      etr->pc_path_utf8 = g_strdup ("");
     if (!etr->pc_path_locale)    etr->pc_path_locale = g_strdup ("");
     if (!etr->thumb_path_utf8)   etr->thumb_path_utf8 = g_strdup ("");

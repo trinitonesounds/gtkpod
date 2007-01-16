@@ -527,6 +527,15 @@ gchar **track_get_item_pointer (Track *track, T_item t_item)
     case T_THUMB_PATH:
 	result = &etr->thumb_path_utf8;
 	break;
+    case T_TV_SHOW:
+        result = &track->tvshow;
+        break;
+    case T_TV_EPISODE:
+        result = &track->tvepisode;
+        break;
+    case T_TV_NETWORK:
+        result = &track->tvnetwork;
+        break;
     case T_ALL:
     case T_IPOD_ID:
     case T_TRACK_NR:
@@ -551,6 +560,9 @@ gchar **track_get_item_pointer (Track *track, T_item t_item)
     case T_REMEMBER_PLAYBACK_POSITION:
     case T_SKIP_WHEN_SHUFFLING:
     case T_CHECKED:
+    case T_MEDIA_TYPE:
+    case T_SEASON_NR:
+    case T_EPISODE_NR:
     case T_ITEM_NUM:
 	g_return_val_if_reached (NULL);
     }
@@ -614,6 +626,9 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
     case T_PODCASTRSS:
     case T_SUBTITLE:
     case T_THUMB_PATH:
+    case T_TV_SHOW:
+    case T_TV_EPISODE:
+    case T_TV_NETWORK:
 	fritem = track_get_item (frtrack, item);
 	toitem_ptr = track_get_item_pointer (totrack, item);
 	g_return_val_if_fail (fritem, FALSE);
@@ -787,6 +802,27 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
 	    changed = TRUE;
 	}
 	break;
+    case T_MEDIA_TYPE:
+	if (frtrack->mediatype != totrack->mediatype)
+	{
+	    totrack->mediatype = frtrack->mediatype;
+	    changed = TRUE;
+	}
+	break;
+    case T_SEASON_NR:
+	if (frtrack->season_nr != totrack->season_nr)
+	{
+	    totrack->season_nr = frtrack->season_nr;
+	    changed = TRUE;
+	}
+	break;
+    case T_EPISODE_NR:
+	if (frtrack->episode_nr != totrack->episode_nr)
+	{
+	    totrack->episode_nr = frtrack->episode_nr;
+	    changed = TRUE;
+	}
+	break;
     case T_ITEM_NUM:
     case T_ALL:
 	g_return_val_if_reached (FALSE);
@@ -871,6 +907,9 @@ gchar *track_get_text (Track *track, T_item item)
     case T_PODCASTURL:
     case T_PODCASTRSS:
     case T_SUBTITLE:
+    case T_TV_SHOW:
+    case T_TV_EPISODE:
+    case T_TV_NETWORK:
 	text = g_strdup (track_get_item (track, item));
 	break;
     case T_TRACK_NR:
@@ -966,6 +1005,15 @@ gchar *track_get_text (Track *track, T_item item)
     case T_SOUNDCHECK:
 	text = g_strdup_printf ("%0.2f", soundcheck_to_replaygain (track->soundcheck));
 	break;
+    case T_SEASON_NR:
+        text = g_strdup_printf ("%d", track->season_nr);
+	break;
+    case T_EPISODE_NR:
+        text = g_strdup_printf ("%d", track->episode_nr);
+	break;
+    case T_MEDIA_TYPE:
+        text = g_strdup_printf ("%#.8x", track->mediatype);
+	break;
     case T_TRANSFERRED:
     case T_COMPILATION:
     case T_REMEMBER_PLAYBACK_POSITION:
@@ -1039,6 +1087,9 @@ gboolean track_set_text (Track *track, const gchar *new_text, T_item item)
     case T_PODCASTURL:
     case T_PODCASTRSS:
     case T_SUBTITLE:
+    case T_TV_SHOW:
+    case T_TV_EPISODE:
+    case T_TV_NETWORK:
         itemp_utf8 = track_get_item_pointer (track, item);
         if (g_utf8_collate (*itemp_utf8, new_text) != 0)
         {
@@ -1203,6 +1254,30 @@ gboolean track_set_text (Track *track, const gchar *new_text, T_item item)
 	    changed = TRUE;
 	}
 	break;
+    case T_SEASON_NR:
+        nr = atoi (new_text);
+        if ((nr >= 0) && (nr != track->season_nr))
+        {
+	    track->season_nr = nr;
+	    changed = TRUE;
+        }
+        break;
+    case T_EPISODE_NR:
+        nr = atoi (new_text);
+        if ((nr >= 0) && (nr != track->episode_nr))
+        {
+	    track->episode_nr = nr;
+	    changed = TRUE;
+        }
+        break;
+    case T_MEDIA_TYPE:
+        nr = atoi (new_text);
+        if ((nr >= 0) && (nr != track->mediatype))
+        {
+	    track->mediatype = nr;
+	    changed = TRUE;
+        }
+        break;
     case T_PC_PATH:
     case T_IPOD_PATH:
     case T_IPOD_ID:

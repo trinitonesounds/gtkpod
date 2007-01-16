@@ -254,4 +254,8 @@ void set_itdb_index_prefs_int (gint index,
 			       const gchar *subkey, gint value);
 gboolean get_offline (iTunesDB *itdb);
 gboolean sorting_disabled();
+
+guint32 guiToDB(gint gui);
+gint dbToGUI(guint32 db);
+
 #endif

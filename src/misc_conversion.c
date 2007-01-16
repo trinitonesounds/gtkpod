@@ -98,6 +98,12 @@ static const gchar *t_strings[] = {
     N_("Remember Playback Position"),
     N_("Skip when Shuffling"),
     N_("Artwork Path"),      /* 40 */
+    N_("Media Type"),
+    N_("TV Show"),
+    N_("TV Episode"),
+    N_("TV Network"),
+    N_("Season Nr"),         /* 45 */
+    N_("Episode Nr"),
     NULL };
 
 /* Tooltips for prefs window */
@@ -145,6 +151,12 @@ static const gchar *t_tooltips[] = {
     NULL,
     NULL,
     NULL,
+    NULL,   /* 40 */
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,   /* 45 */
     NULL
  };
 

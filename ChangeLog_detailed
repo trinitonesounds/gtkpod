@@ -36,7 +36,19 @@
           to Audrius Meskauskas for pointing this out.
 
 	* src/file.c: when looking for thumbnail files, also look for
-          uppercase filename extensions, like .JPG -- not only for .jpg.
+          uppercase filename extensions, like .JPG -- not only for
+          .jpg.
+
+	* gtkpod.glade
+	  src/details.c
+	  src/display.h
+	  src/display_itdb.c
+	  src/file.c
+	  src/misc.c
+	  src/misc.h
+	  src/misc_conversion.c
+	  src/misc_track.c: Mario Rossi's patch to display and select
+	  TV-related data fields and the media type of a given track.
 
 2007-01-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
 

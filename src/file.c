@@ -823,6 +823,15 @@ static void copy_new_info (Track *from, Track *to)
     g_free (to->subtitle);
     to->subtitle = g_strdup (from->subtitle);
 
+    g_free (to->tvshow);
+    to->tvshow = g_strdup (from->tvshow);
+
+    g_free (to->tvepisode);
+    to->tvepisode = g_strdup (from->tvepisode);
+
+    g_free (to->tvnetwork);
+    to->tvnetwork = g_strdup (from->tvnetwork);
+
     g_free (eto->thumb_path_utf8);
     eto->thumb_path_utf8 = g_strdup (efrom->thumb_path_utf8);
 
