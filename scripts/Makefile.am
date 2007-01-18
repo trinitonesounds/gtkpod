@@ -21,8 +21,8 @@ script_SCRIPTS = \
 	ldif2vcf.sh \
 	mab2vcard \
 	convert-ogg2mp3.sh \
-	convert-flac2mp3.sh
+	convert-flac2mp3.sh \
+	convert-flac2m4a.sh
 
-# these scripts will go in the distribution. Actually, if they are to
-# be installed, they should go into the .tar.gz-file automatically...
+# these scripts will of course also go in the distribution tarball.
 EXTRA_DIST=$(script_SCRIPTS)

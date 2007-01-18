@@ -4,6 +4,8 @@
 	  scripts/convert-ogg2mp3.sh: some minor fixes pointed out by
 	  Peter Edwards. Thanks!
 
+	* scripts/convert-flac2m4a.sh: thanks to Peter Edwards.
+
 2007-01-16 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* scripts/convert-flac2mp3.sh
