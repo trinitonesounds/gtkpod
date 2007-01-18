@@ -22,14 +22,14 @@ comment="Encoded for gtkpod with lame"
 #echo "Converting \"$oggfile\" into \"$mp3file\""
 
 # Checking input file
-if [ "$oggfile" == "" ]; then 
+if [ "$oggfile" = "" ]; then 
     exit 1
 fi
 if [ ! -f $oggfile ]; then
     exit 1
 fi
 # Checking output file
-touch $mp3file
+touch "$mp3file"
 if [ "x$?" != "x0" ]; then
     exit 2
 fi
@@ -55,7 +55,7 @@ if [ "$genre" != "" ]; then
 fi
 
 # Launch command
-exec oggdec "$oggfile" --output - | lame -h --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$tracknum" --tg "$genre" - "$mp3file"
+exec oggdec --output - -- "$oggfile" | lame -h --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$tracknum" --tg "$genre" - "$mp3file"
 # Check result
 if [ "x$?" != "x0" ]; then
     exit 6

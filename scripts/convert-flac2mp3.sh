@@ -24,7 +24,7 @@ comment="Encoded for gtkpod with lame"
 #echo "Converting \"$flacfile\" into \"$mp3file\""
 
 # Checking input file
-if [ "$flacfile" == "" ]; then 
+if [ "$flacfile" = "" ]; then 
     exit 1
 fi
 if [ ! -f "$flacfile" ]; then
@@ -32,7 +32,7 @@ if [ ! -f "$flacfile" ]; then
 fi
 
 # Checking output file
-touch $mp3file
+touch "$mp3file"
 if [ "x$?" != "x0" ]; then
     exit 2
 fi
@@ -59,7 +59,7 @@ if [ "$genre" != "" ]; then
 fi
 
 # Launch command
-exec flac -d -c "$flacfile" | lame -h --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$tracknum" --tg "$genre" - "$mp3file"
+exec flac -d -c -- "$flacfile" | lame -h --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$tracknum" --tg "$genre" - "$mp3file"
 # Check result
 if [ "x$?" != "x0" ]; then
     exit 6
