@@ -53,9 +53,9 @@
 
 
 /* Internal functions */
-static GError *execute_conv(gchar **argv,Track *track);
+static GError *execute_conv (gchar **argv, TrackConv *converter);
 static gchar *get_filename_from_stdout(TrackConv *converter);
-static gchar *checking_converted_file (TrackConv *converter, Track *track);
+static gchar *checking_converted_file (TrackConv *converter);
 #if 0
 static gchar **cmdline_to_argv(const gchar *cmdline, Track *track); /* TODO: could be extern for other needs */
 #endif
@@ -68,23 +68,19 @@ static gchar **cmdline_to_argv(const gchar *cmdline, Track *track); /* TODO: cou
  * converts a track by launching the external command given in the prefs 
  *
  */
-extern GError *file_convert_pre_copy(Track *track)
+extern GError *file_convert_pre_copy (TrackConv *converter)
 {   
     ExtraTrackData *etr=NULL;
-    TrackConv *converter=NULL;          /* the converter struct */
     GError *error=NULL;                 /* error if any */
     const gchar *type=NULL;             /* xxx (ogg) */
-    gchar *conv_str=NULL;               /* path_conv_xxx or ext_conv_xxx */
     gchar *convert_command=NULL;        /* from prefs */
     gchar **argv;                       /* for conversion external process */
 
-    /* sanity checks */ 
-    g_return_val_if_fail (track,NULL);
-    etr=track->userdata;
-    g_return_val_if_fail (etr,NULL);
-    converter=etr->conv;
-    g_return_val_if_fail (converter,NULL);
-
+    /* sanity checks */
+    g_return_val_if_fail (converter, NULL);
+    g_return_val_if_fail (converter->track, NULL);
+    etr=converter->track->userdata;
+    g_return_val_if_fail (etr, NULL);
 
     /* Find the correct script for conversion */
     switch (converter->type) {
@@ -105,15 +101,12 @@ extern GError *file_convert_pre_copy(Track *track)
             return NULL; /*FIXME: error? */
             break;
         case FILE_TYPE_OGG:
-            type="ogg";/*FIXME: get it directly for type. */
+	    convert_command = prefs_get_string ("path_conv_ogg");
             break;
         case FILE_TYPE_FLAC:
-            type="flac";/*FIXME: get it directly for type. */
+	    convert_command = prefs_get_string ("path_conv_flac");
             break;
     }
-    conv_str=g_strdup_printf("path_conv_%s",type);
-    convert_command=prefs_get_string (conv_str);
-    g_free(conv_str);
  
     debug("convert_command:%s\n",convert_command);
     /* Check that everything is ok before continuing */
@@ -133,7 +126,7 @@ extern GError *file_convert_pre_copy(Track *track)
 
     /* Convert the file */
 
-    error=execute_conv (argv, track); /* frees all cmdline strings */
+    error=execute_conv (argv, converter); /* frees all cmdline strings */
 
     return error;
 }
@@ -145,22 +138,19 @@ extern GError *file_convert_pre_copy(Track *track)
  * FIXME: check converted file extension sounds good. 
  *
  */
-extern GError *file_convert_wait_for_conversion(Track *track)
+GError *file_convert_wait_for_conversion (TrackConv *converter)
 {
     ExtraTrackData *etr=NULL;
-    TrackConv *converter=NULL;
     gint exit_status;
     GPid wait;
     gchar *error_msg=NULL;
     GError *error=NULL;
 
     /* sanity checks */ 
-    g_return_val_if_fail (track,NULL);
-    etr=track->userdata;
-    g_return_val_if_fail (etr,NULL);
-    converter=etr->conv;
-    g_return_val_if_fail (converter,NULL);
-    g_return_val_if_fail (converter->child_pid>0, NULL);
+    g_return_val_if_fail (converter, NULL);
+    g_return_val_if_fail (converter->track, NULL);
+    etr = converter->track->userdata;
+    g_return_val_if_fail (etr, NULL);
 
     debug("Waiting for child (PID=%d)\n",converter->child_pid);
 
@@ -208,7 +198,7 @@ extern GError *file_convert_wait_for_conversion(Track *track)
 
     /* Checking file exists */
     if (!error_msg)
-        error_msg = checking_converted_file (converter, track);
+        error_msg = checking_converted_file (converter);
 
     /* Checking errors */
     if (error_msg){
@@ -237,25 +227,25 @@ extern GError *file_convert_wait_for_conversion(Track *track)
  * Remove files created by file_convert_pre_copy() if necessary (TODO).
  *
  */
-extern GError * file_convert_post_copy(Track *track)
+GError * file_convert_post_copy (TrackConv *converter)
 {
     GError *error=NULL;
-    ExtraTrackData *etr=NULL;
-    TrackConv *converter=NULL;
+    ExtraTrackData *etr;
+    Track *track;
 
     /* sanity checks */ 
-    g_return_val_if_fail (track,NULL);
-    etr=track->userdata;
-    g_return_val_if_fail (etr,NULL);
-    converter=etr->conv;
     g_return_val_if_fail (converter,NULL);
-    g_return_val_if_fail (converter->converted_file, NULL);
+    track = converter->track;
+    g_return_val_if_fail (track, NULL);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, NULL);
 
     debug("file_convert_post_copy(%s)\n",converter->converted_file);
     /*TODO: check prefs to not remove file */
-    g_unlink (converter->converted_file);
+    if (converter->converted_file)
+	g_unlink (converter->converted_file);
     g_free (converter->converted_file);
-    converter->converted_file=NULL;
+    converter->converted_file = NULL;
     /*FIXME: restore track->size ????? */
     return error; 
 }
@@ -281,10 +271,9 @@ extern GError * file_convert_post_copy(Track *track)
 /*
  * Call the external command given in @tokens for the given @track
  */
-static GError *execute_conv(gchar **argv,Track *track)
+static GError *execute_conv (gchar **argv, TrackConv *converter)
 {
     ExtraTrackData *etr=NULL;
-    TrackConv *converter=NULL;
     GError *error=NULL;
     gchar *command_line=NULL;
     GError *spawn_error=NULL;
@@ -293,13 +282,12 @@ static GError *execute_conv(gchar **argv,Track *track)
     gint child_stdout;
 
     /* sanity checks */ 
-    g_return_val_if_fail (track,NULL);
-    etr=track->userdata;
-    g_return_val_if_fail (etr,NULL);
-    converter=etr->conv;
-    g_return_val_if_fail (converter,NULL);
+    g_return_val_if_fail (converter, NULL);
+    g_return_val_if_fail (converter->track, NULL);
+    etr = converter->track->userdata;
+    g_return_val_if_fail (etr, NULL);
 
-    g_return_val_if_fail (argv!=NULL, NULL);
+    g_return_val_if_fail (argv, NULL);
 
     /* Building command_line string (for output only) */
     for(i=0; argv[i]!=NULL; ++i) 
@@ -391,10 +379,16 @@ static gchar *get_filename_from_stdout(TrackConv *converter)
 /*
  *  checking_converted_file()
  */
-static gchar *checking_converted_file (TrackConv *converter, Track *track)
+static gchar *checking_converted_file (TrackConv *converter)
 {
+    Track *track;
     gchar *error=NULL;
-    struct stat stat_file;             
+    struct stat stat_file;
+
+    g_return_val_if_fail (converter, NULL);
+    track = converter->track;
+    g_return_val_if_fail (track, NULL);
+      
     /* Fix some stuff for the iPod */
     if (g_file_test(converter->converted_file,G_FILE_TEST_EXISTS) &&
         stat(converter->converted_file,&stat_file)==0){

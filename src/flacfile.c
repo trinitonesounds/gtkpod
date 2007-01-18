@@ -36,8 +36,6 @@ Track *flac_get_file_info (gchar *flacFileName)
     }
     else
     {
-        ExtraTrackData *etr = NULL;
-
         track = gp_track_new ();
 	track->description = g_strdup ("FLAC audio file");
 
@@ -101,9 +99,6 @@ Track *flac_get_file_info (gchar *flacFileName)
 
             FLAC__metadata_object_delete (tags);
 	}
-        etr = track->userdata;
-        etr->conv = g_new0(TrackConv, 1);
-        etr->conv->type = FILE_TYPE_FLAC; /* FIXME: is it useful? */
         /* TODO: immediate conversion if thread ? */
     }
 

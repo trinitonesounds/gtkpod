@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-16 22:05:01 jcs>
+/* Time-stamp: <2007-01-19 00:59:20 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -114,7 +114,7 @@ Track *video_get_file_info (gchar *filename)
  * -jlt
  */
 
-FileType determine_file_type (gchar *path)
+FileType determine_file_type (const gchar *path)
 {
     gchar *path_utf8, *suf;
     FileType type = FILE_TYPE_UNKNOWN;

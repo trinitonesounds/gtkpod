@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-23 00:45:42 jcs>
+/* Time-stamp: <2007-01-19 00:56:32 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1179,30 +1179,58 @@ static gpointer th_copy (gpointer data)
 {
     Track *track = data;
     ExtraTrackData *etr;
+    FileType type;
+    TrackConv *converter = NULL;
     GError *error = NULL;
     g_return_val_if_fail (track, NULL);
     etr = track->userdata;
     g_return_val_if_fail (etr, NULL);
-    gchar *file_to_transfer=etr->pc_path_locale;
+    const gchar *file_to_transfer=etr->pc_path_locale;
 
-
-    if (etr->conv!=NULL)
+    /* check if we need to convert the file */
+    type = determine_file_type (file_to_transfer);
+    switch (type)
     {
-        error = file_convert_pre_copy(track);
+    case FILE_TYPE_UNKNOWN:
+    case FILE_TYPE_MP3:
+    case FILE_TYPE_M4A:
+    case FILE_TYPE_M4P:
+    case FILE_TYPE_M4B:
+    case FILE_TYPE_WAV:
+    case FILE_TYPE_M4V:
+    case FILE_TYPE_MP4:
+    case FILE_TYPE_MOV:
+    case FILE_TYPE_MPG:
+    case FILE_TYPE_M3U:
+    case FILE_TYPE_PLS:
+    case FILE_TYPE_IMAGE:
+    case FILE_TYPE_DIRECTORY:
+	converter = NULL;
+	break;
+    case FILE_TYPE_OGG:
+    case FILE_TYPE_FLAC:
+	converter = g_new0 (TrackConv, 1);
+	converter->type = type;
+	converter->track = track;
+	error = file_convert_pre_copy (converter);
         if (!error) 
         {
-            error= file_convert_wait_for_conversion(track);
+            error = file_convert_wait_for_conversion (converter);
             if (!error)
-                file_to_transfer=etr->conv->converted_file;
+                file_to_transfer = converter->converted_file;
         }
+	break;
     }
 
     if (error == NULL)
     {
-        fprintf(stderr,"Trying to copy: %s\n",file_to_transfer);
+        fprintf (stderr, "Trying to copy: %s\n", file_to_transfer);
         itdb_cp_track_to_ipod (track, file_to_transfer, &error);
-        if (etr->conv != NULL)
-            file_convert_post_copy(track);
+        if (converter)
+	{
+            file_convert_post_copy (converter);
+	    g_free (converter);
+	}
     }
 
     /* delete old size */

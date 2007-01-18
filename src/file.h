@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-01 22:00:03 jcs>
+/* Time-stamp: <2007-01-19 00:59:21 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -71,7 +71,7 @@ typedef enum
 
 typedef void (*AddTrackFunc)(Playlist *plitem, Track *track, gpointer data);
 
-FileType determine_file_type(gchar *path);
+FileType determine_file_type (const gchar *path);
 gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
 				Playlist *plitem, gboolean descend,
 				AddTrackFunc addtrackfunc, gpointer data);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-16 14:08:05 jcs>
+/* Time-stamp: <2007-01-19 00:56:31 jcs>
 |
 |  Copyright (C) 2007 Marc d[r]eadlock <m.dreadlock at gmail com>
 |  Part of the gtkpod project.
@@ -77,8 +77,6 @@ Track *ogg_get_file_info (gchar *oggFileName)
 	}
         else
         {
-            TrackConv *aConv=NULL;
-            ExtraTrackData *etr=NULL;
 	    track = gp_track_new ();
 	    track->description = g_strdup ("OGG audio file");
             vorbis_info *vi=ov_info(&oggFile,-1);
@@ -128,10 +126,6 @@ Track *ogg_get_file_info (gchar *oggFileName)
                     
             }
             ov_clear(&oggFile); /* performs the fclose(file); */
-            etr=track->userdata;
-            aConv=g_new0(TrackConv, 1);
-            etr->conv=aConv;
-            aConv->type=FILE_TYPE_OGG;/* track->type; FIXME: is it usefull ?*/
             /* TODO: immediate conversion if thread ? */
 	}
     }
