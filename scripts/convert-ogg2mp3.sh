@@ -55,7 +55,7 @@ if [ "$genre" != "" ]; then
 fi
 
 # Launch command
-exec oggdec --output - -- "$oggfile" | lame -h --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$tracknum" --tg "$genre" - "$mp3file"
+exec oggdec --output - -- "$oggfile" | lame --preset standard --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$tracknum" --tg "$genre" - "$mp3file"
 # Check result
 if [ "x$?" != "x0" ]; then
     exit 6
