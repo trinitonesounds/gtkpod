@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-19 00:56:32 jcs>
+/* Time-stamp: <2007-01-19 01:52:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -943,7 +943,7 @@ gboolean gp_eject_ipod (iTunesDB *itdb)
  *
  * @itdb: repository to save
  *
- * return value: TRUE on succes, FALSE when an error occured.
+ * return value: TRUE on succes, FALSE when an error occurred.
  */
 gboolean gp_save_itdb (iTunesDB *itdb)
 {
@@ -1332,7 +1332,7 @@ static GtkWidget *create_file_dialog (GtkWidget **progress_bar,
 
 /* Removes all tracks that were marked for deletion from the iPod or
    the local harddisk (for itdb->usertype == GP_ITDB_TYPE_LOCAL) */
-/* Returns TRUE on success, FALSE if some error occured and not all
+/* Returns TRUE on success, FALSE if some error occurred and not all
    files were removed */
 static gboolean delete_files (iTunesDB *itdb)
 {
@@ -1440,7 +1440,7 @@ static gboolean delete_files (iTunesDB *itdb)
 
 
 /* Flushes all non-transferred tracks to the iPod filesystem
-   Returns TRUE on success, FALSE if some error occured or not all
+   Returns TRUE on success, FALSE if some error occurred or not all
    tracks were written. */
 static gboolean flush_tracks (iTunesDB *itdb)
 {
@@ -1515,7 +1515,7 @@ static gboolean flush_tracks (iTunesDB *itdb)
 	  error = th_copy (track);
 #endif
 	  if (error)
-	  {   /* an error occured */
+	  {   /* an error occurred */
 	      result = FALSE;
 	      if (error->message)
 		  gtkpod_warning ("%s\n\n", error->message);
@@ -1680,7 +1680,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
   {   /* write to the iPod */
       GError *error = NULL;
       if (!itdb_write (itdb, &error))
-      {   /* an error occured */
+      {   /* an error occurred */
 	  success = FALSE;
 	  if (error && error->message)
 	      gtkpod_warning ("%s\n\n", error->message);
@@ -1693,7 +1693,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
       if (success)
       {   /* write shuffle data */
 	  if (!itdb_shuffle_write (itdb, &error))
-	  {   /* an error occured */
+	  {   /* an error occurred */
 	      success = FALSE;
 	      if (error && error->message)
 		  gtkpod_warning ("%s\n\n", error->message);
@@ -1759,7 +1759,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
   {   /* write to cfgdir */
       GError *error = NULL;
       if (!itdb_write_file (itdb, eitdb->offline_filename, &error))
-      {   /* an error occured */
+      {   /* an error occurred */
 	  success = FALSE;
 	  if (error && error->message)
 	      gtkpod_warning ("%s\n\n", error->message);
@@ -1779,7 +1779,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
   {   /* write to cfgdir */
       GError *error = NULL;
       if (!itdb_write_file (itdb, NULL, &error))
-      {   /* an error occured */
+      {   /* an error occurred */
 	  success = FALSE;
 	  if (error && error->message)
 	      gtkpod_warning ("%s\n\n", error->message);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-23 00:45:43 jcs>
+/* Time-stamp: <2007-01-19 01:52:30 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -270,7 +270,7 @@ void server_shutdown (void)
    running instance of gtkpod and transfer the filename, or write the
    name to ~/.gtkpod/offline_playcounts.
    Return value: TRUE on success, FALSE if a non-recoverable error
-   occured */
+   occurred */
 gboolean client_playcount (gchar *file)
 {
     if (socket_used ())

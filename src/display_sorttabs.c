@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-16 19:20:13 jcs>
+/* Time-stamp: <2007-01-19 01:52:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -379,7 +379,7 @@ static TimeInfo *sp_get_timeinfo_ptr (guint32 inst, T_item item)
    has changed. TRUE will re-evaluate the string (and print an error
    message again, if necessary */
 /* Return value: pointer to the corresponding TimeInfo struct (for
-   convenience) or NULL if error occured */
+   convenience) or NULL if error occurred */
 TimeInfo *sp_update_date_interval_from_string (guint32 inst,
 					       T_item item,
 					       gboolean force_update)

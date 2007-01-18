@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-24 20:49:39 jcs>
+/* Time-stamp: <2007-01-19 01:52:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -69,7 +69,7 @@ void gtkpod_warning (const gchar *format, ...)
     gtkpod_confirmation (CONF_ID_GTKPOD_WARNING,    /* gint id, */
 			 FALSE,                     /* gboolean modal, */
 			 _("Warning"),              /* title */
-			 _("The following has occured:"),
+			 _("The following has occurred:"),
 			 text,                /* text to be displayed */
 			 NULL, 0, NULL,       /* option 1 */
 			 NULL, 0, NULL,       /* option 2 */

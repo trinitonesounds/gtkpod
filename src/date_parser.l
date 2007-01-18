@@ -1,5 +1,5 @@
 /* -*- mode: c -*-
-| Time-stamp: <2005-04-29 12:13:19 jcs>
+| Time-stamp: <2007-01-19 01:52:29 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -430,8 +430,8 @@ static void round_reltime (void)
  *
  * Return value:
  *
- * TRUE:  no error occured
- * FALSE: error occured
+ * TRUE:  no error occurred
+ * FALSE: error occurred
  */
 gboolean dp_parse (gchar *dp_str, time_t *result,
 		   gboolean lower_margin, gboolean strict)
@@ -443,7 +443,7 @@ gboolean dp_parse (gchar *dp_str, time_t *result,
     parsed_time = FALSE;
     /* did not yet parse any relative time string */
     reltime = DP_INF;
-    /* no error occured (yet) */
+    /* no error occurred (yet) */
     dp_error = FALSE;
     /* set parameters */
     lower = lower_margin;

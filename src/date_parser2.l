@@ -1,5 +1,5 @@
 /* -*- mode: c -*-
-|  Time-stamp: <2005-04-29 12:13:18 jcs>
+|  Time-stamp: <2007-01-19 01:52:29 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -31,7 +31,7 @@
 #include "date_parser.h"
 #include "misc.h"
 #include "itdb.h"
-/* Will be set to TRUE if error occured */
+/* Will be set to TRUE if error occurred */
     static gboolean dp_error;
 /* Will be set to TRUE if construct (< date, = date...) was not
    recognized */
@@ -201,7 +201,7 @@ void dp2_parse (TimeInfo *ti)
     gchar *str = g_strdup_printf ("%s\n", ti->int_str);
     /* set string to parse */
     dp_strp = str;
-    /* no error occured (yet) */
+    /* no error occurred (yet) */
     dp_error = FALSE;
     dp_construct_error = FALSE;
     /* set interval type to normal */
@@ -216,13 +216,13 @@ void dp2_parse (TimeInfo *ti)
 	gtkpod_warning ("Date parser: did not recognize construct:\n   '%s'\n",
 			ti->int_str);
     if (dp_error)
-    {   /* error occured -> invalidate TimeInfo */
+    {   /* error occurred -> invalidate TimeInfo */
 	ti->valid = FALSE;
 	ti->lower = 0;
 	ti->upper = 0;
     }
     else
-    {   /* no error occured -> set the information accordingly */
+    {   /* no error occurred -> set the information accordingly */
 	ti->valid = TRUE;
 	if (dp_int_type & INT_NO_LOWER) ti->lower = 0;
 	else   	ti->lower = itdb_time_host_to_mac (lower_stamp);

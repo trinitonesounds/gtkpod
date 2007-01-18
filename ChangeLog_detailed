@@ -18,6 +18,14 @@
 	  copying, not at the time of adding to ensure that drag and
 	  drops from the Local repository work as expected.
 
+	* src/clientserver.c
+	  src/date_parser.l
+	  src/date_parser2.l
+	  src/display_sorttabs.c
+	  src/file_itunesdb.c
+	  src/misc_confirm.c
+	  src/tools.c: corrected typo (occured -> occurred)
+
 2007-01-16 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* scripts/convert-flac2mp3.sh

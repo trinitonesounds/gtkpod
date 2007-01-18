@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 01:38:20 jcs>
+/* Time-stamp: <2007-01-19 01:52:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -80,7 +80,7 @@ static gboolean mutex_data = FALSE;
  * added at the end.
  *
  * Return value: TRUE if the command ran successfully, FALSE if any
- * error occured.
+ * error occurred.
  */
 static gboolean run_exec_on_track (const gchar *commandline,
 				   const gchar *track_path)
