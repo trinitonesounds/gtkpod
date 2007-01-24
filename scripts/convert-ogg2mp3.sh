@@ -14,6 +14,7 @@
 oggfile=$1
 # Build output file
 mp3file=`basename $oggfile`
+mp3file=${mp3file%%.ogg}
 mp3file="/tmp/$mp3file.mp3"
 
 # Default values
@@ -41,8 +42,12 @@ year=`ogginfo $oggfile | grep date= | cut -d = -f 2`
 genre=`ogginfo $oggfile | grep genre= | cut -d = -f 2`
 tracknum=`ogginfo $oggfile | grep tracknumber= | cut -d = -f 2`
 comment_t=`ogginfo $oggfile | grep comment= | cut -d = -f 2`
+comment_a=`ogginfo $oggfile | grep albumcomment= | cut -d = -f 2`
 if [ "$comment_t" != "" ]; then
     comment=$comment_t
+fi
+if [ "$comment_a" != "" ]; then
+    comment="$comment_a $comment"
 fi
 
 #Fix unrecognised genre for lame
