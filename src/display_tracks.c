@@ -855,6 +855,12 @@ tm_cell_edited (GtkCellRendererText *renderer,
      case TM_COLUMN_BITRATE:
      case TM_COLUMN_SAMPLERATE:
      case TM_COLUMN_BPM:
+     case TM_COLUMN_MEDIA_TYPE:
+     case TM_COLUMN_TV_SHOW:
+     case TM_COLUMN_TV_EPISODE:
+     case TM_COLUMN_TV_NETWORK:
+     case TM_COLUMN_SEASON_NR:
+     case TM_COLUMN_EPISODE_NR:
 	 changed = track_set_text (track, new_text, TM_to_T (column));
 	 if (changed && (column == TM_COLUMN_TRACKLEN))
 	 {  /* be on the safe side and reset starttime, stoptime and
@@ -970,9 +976,18 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   case TM_COLUMN_TIME_MODIFIED:
   case TM_COLUMN_TIME_ADDED:
   case TM_COLUMN_TIME_RELEASED:
+  case TM_COLUMN_TV_SHOW:
+  case TM_COLUMN_TV_EPISODE:
+  case TM_COLUMN_TV_NETWORK:
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "editable", TRUE,
+		    "xalign", 0.0, NULL);
+      break;
+  case TM_COLUMN_MEDIA_TYPE:
+      g_object_set (G_OBJECT (renderer),
+		    "text", text,
+		    "editable", FALSE,
 		    "xalign", 0.0, NULL);
       break;
   case TM_COLUMN_TRACK_NR:
@@ -986,6 +1001,8 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   case TM_COLUMN_VOLUME:
   case TM_COLUMN_SOUNDCHECK:
   case TM_COLUMN_TRACKLEN:
+  case TM_COLUMN_SEASON_NR:
+  case TM_COLUMN_EPISODE_NR:
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "editable", TRUE,
@@ -1429,6 +1446,9 @@ static gint tm_data_compare (Track *track1, Track *track2,
   case TM_COLUMN_PODCASTURL:
   case TM_COLUMN_PODCASTRSS:
   case TM_COLUMN_SUBTITLE:
+  case TM_COLUMN_TV_SHOW:
+  case TM_COLUMN_TV_EPISODE:
+  case TM_COLUMN_TV_NETWORK:
       /* string_compare_func is set to either compare_string_fuzzy or
 	 compare_string in tm_sort_column_changed() which is called
 	 once before the comparing begins. */
@@ -1517,6 +1537,15 @@ static gint tm_data_compare (Track *track1, Track *track2,
   case TM_COLUMN_YEAR:
       cmp = track1->year - track2->year;
       break;
+  case TM_COLUMN_SEASON_NR:
+      cmp = track1->season_nr - track2->season_nr;
+      break;
+  case TM_COLUMN_EPISODE_NR:
+      cmp = track1->episode_nr - track2->episode_nr;
+      break;
+  case TM_COLUMN_MEDIA_TYPE:
+      cmp = track1->mediatype - track2->mediatype;
+      break;
   default:
       g_warning ("Programming error: tm_data_compare_func: no sort method for tm_item %d\n", tm_item);
       break;
@@ -1586,6 +1615,12 @@ gboolean tm_search_equal_func (GtkTreeModel *model,
   case TM_COLUMN_SAMPLERATE:
   case TM_COLUMN_BPM:
   case TM_COLUMN_TIME_RELEASED:
+  case TM_COLUMN_MEDIA_TYPE:
+  case TM_COLUMN_TV_SHOW:
+  case TM_COLUMN_TV_EPISODE:
+  case TM_COLUMN_TV_NETWORK:
+  case TM_COLUMN_SEASON_NR:
+  case TM_COLUMN_EPISODE_NR:
   case TM_NUM_COLUMNS:
       g_warning ("Programming error: tm_search_equal_func: no sort method for column %d\n", column);
       break;
@@ -1733,6 +1768,12 @@ static void tm_set_search_column (gint newcol)
     case TM_COLUMN_SAMPLERATE:
     case TM_COLUMN_BPM:
     case TM_COLUMN_TIME_RELEASED:
+    case TM_COLUMN_MEDIA_TYPE:
+    case TM_COLUMN_TV_SHOW:
+    case TM_COLUMN_TV_EPISODE:
+    case TM_COLUMN_TV_NETWORK:
+    case TM_COLUMN_SEASON_NR:
+    case TM_COLUMN_EPISODE_NR:
     case TM_NUM_COLUMNS:
 	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (track_treeview), FALSE);
 	break;
@@ -1909,6 +1950,12 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   case TM_COLUMN_IPOD_PATH:
   case TM_COLUMN_THUMB_PATH:
   case TM_COLUMN_SIZE:
+  case TM_COLUMN_MEDIA_TYPE:
+  case TM_COLUMN_TV_SHOW:
+  case TM_COLUMN_TV_EPISODE:
+  case TM_COLUMN_TV_NETWORK:
+  case TM_COLUMN_SEASON_NR:
+  case TM_COLUMN_EPISODE_NR:
       break;
   /* for some column names we want to use shorter alternatives to
      get_tm_string() */

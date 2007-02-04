@@ -1271,13 +1271,6 @@ gboolean track_set_text (Track *track, const gchar *new_text, T_item item)
         }
         break;
     case T_MEDIA_TYPE:
-        nr = atoi (new_text);
-        if ((nr >= 0) && (nr != track->mediatype))
-        {
-	    track->mediatype = nr;
-	    changed = TRUE;
-        }
-        break;
     case T_PC_PATH:
     case T_IPOD_PATH:
     case T_IPOD_ID:

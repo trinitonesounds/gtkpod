@@ -37,7 +37,7 @@ if test "y$have_pkgconfig" = "y"; then
 fi
 
 dnl check for libs that are managed with pkg-config
-PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 >= 2.6.0 gthread-2.0 >= 0.14.0 glib-2.0 > 2.4.0 libglade-2.0  >=  2.4.0 gmodule-2.0 libgpod-1.0 >= 0.4.0],,[AC_MSG_FAILURE([*** $PACKAGE_PKG_ERRORS])])
+PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 >= 2.6.0 gthread-2.0 >= 0.14.0 glib-2.0 > 2.4.0 libglade-2.0  >=  2.4.0 gmodule-2.0 libgpod-1.0 >= 0.4.2],,[AC_MSG_FAILURE([*** $PACKAGE_PKG_ERRORS])])
 AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(PACKAGE_LIBS)
 
@@ -74,8 +74,10 @@ dnl 'df' to determine free space on the iPod
 AC_CHECK_FUNCS(statvfs)
 
 dnl Check for libid3tag
-AC_CHECK_LIB([id3tag], [id3_frame_field], ,
-             AC_MSG_ERROR([*** id3tag >= 0.15 lib not found (0.14 will not work!)]))
+AC_SEARCH_LIBS([id3_frame_field],
+	["id3tag" "id3tag -lz"],
+	,
+	AC_MSG_ERROR([*** id3tag >= 0.15 lib not found (0.14 will not work!)]))
 
 # was needed for podcast fetch -- disabled.
 # AC_CHECK_LIB([curl],  [curl_easy_init], ,

@@ -203,6 +203,12 @@ T_item TM_to_T (TM_item tm)
     case TM_COLUMN_SUBTITLE:      return T_SUBTITLE;
     case TM_COLUMN_TIME_RELEASED: return T_TIME_RELEASED;
     case TM_COLUMN_THUMB_PATH:    return T_THUMB_PATH;
+    case TM_COLUMN_MEDIA_TYPE:    return T_MEDIA_TYPE;
+    case TM_COLUMN_TV_SHOW:       return T_TV_SHOW;
+    case TM_COLUMN_TV_EPISODE:    return T_TV_EPISODE;
+    case TM_COLUMN_TV_NETWORK:    return T_TV_NETWORK;
+    case TM_COLUMN_SEASON_NR:     return T_SEASON_NR;
+    case TM_COLUMN_EPISODE_NR:    return T_EPISODE_NR;
     case TM_NUM_COLUMNS:          g_return_val_if_reached (-1);
     }
     return -1;

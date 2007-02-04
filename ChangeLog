@@ -3,7 +3,11 @@ gtkpod V0.99.9CVS
        NEW FEATURE: lastfm support. Thanks to Anant Narayanan.
 
        NEW FEATURE: on-the-fly conversion of FLAC and OGG files during
-       export to the iPod. Thanks to Marc d[readlock] and Simon Naunton!
+       export to the iPod. Thanks to Marc d[readlock] and Simon
+       Naunton!
+
+       NEW FEATURE: editing of TV show metadata and track media
+       type. Thanks to Mario Rossi.
 
 gtkpod V0.99.8
 
