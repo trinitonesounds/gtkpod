@@ -3,15 +3,19 @@
 # sync ipod with webcalendar
 
 # Usage:
-# 
-# sync-webcalendar.sh [-i <ipod mountpoint>] [-d <webcalendar uri>]
 #
-# with the following defaults: 
+# sync-webcalendar.sh [-i <ipod mountpoint>] [-d <webcalendar uri>] [-c <calendar name>]
+#
+# with the following defaults:
 
-IPOD_MOUNT='/mnt/ipod'				# mount point of ipod
-DATAFILE='https://native.intern.net/projekte/webcalendar/publish.php/daniel.ics'	# uri for webcalendar
-
-WGET_OPTIONS='--no-check-certificate'							# special options for wget
+# mount point of ipod
+IPOD_MOUNT='/mnt/ipod'
+# uri for webcalendar
+DATAFILE=' https://native.intern.net/projekte/webcalendar/publish.php/daniel.ics'
+# calendar name
+CALENDAR='webcalendar'
+# special options for wget
+WGET_OPTIONS='--no-check-certificate'
 
 # About the encoding used by the iPod (by Jorg Schuler):
 #
@@ -31,21 +35,26 @@ WGET_OPTIONS='--no-check-certificate'							# special options for wget
 # Japanese           SHIFT-JIS
 
 # Changelog
+#
+# 2007/02/01 (Giray Devlet <giray@devlet.cc>): Multi Calendar Support
+#
 # 2005/06/15 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
 # Received original script from Daniel Kercher and added command line
 # options
+#
 # FIXME: some way to convert the character set
 
 # overwrite default settings with optional command line arguments
-while getopts i:d: option; do
+while getopts i:d:c: option; do
     case $option in
         i) IPOD_MOUNT=$OPTARG;;
         d) DATAFILE=$OPTARG;;
-        \?) echo "Usage: `basename $0` [-i <ipod mountpoint>] [-d <webcalendar uri>]"
-	    exit 1;;
+        c) CALENDAR=$OPTARG;;
+        \?) echo "Usage: `basename $0` [-i <ipod mountpoint>] [-d <webcalendar uri>] [-c <calendar_name>]"
+            exit 1;;
     esac
 done
 
-echo -n "Syncing webcalendar to iPod... "
-wget -q $WGET_OPTIONS -O ${IPOD_MOUNT}/Calendars/webcalendar.ics $DATAFILE
+echo -n "Syncing Web Calendar \"${CALENDAR}\" to iPod... "
+wget -q $WGET_OPTIONS -O ${IPOD_MOUNT}/Calendars/${CALENDAR}.ics $DATAFILE
 echo "done!"

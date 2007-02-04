@@ -11,6 +11,9 @@
 
 	* scripts/Makefile.am: added convert-og2m4a.sh to script list.
 
+	* scripts/sync-webcalendar.sh: applied patch from Giray Devlet
+          for support of differently named calendars.
+
 2007-01-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* scripts/convert-flac2mp3.sh: fixed typo (thanks to Peter Edwards)
