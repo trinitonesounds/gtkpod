@@ -9,6 +9,8 @@
 
 	* configure.in: require libgpod >= 0.4.2
 
+	* scripts/Makefile.am: added convert-og2m4a.sh to script list.
+
 2007-01-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* scripts/convert-flac2mp3.sh: fixed typo (thanks to Peter Edwards)

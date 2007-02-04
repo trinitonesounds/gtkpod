@@ -21,6 +21,7 @@ script_SCRIPTS = \
 	ldif2vcf.sh \
 	mab2vcard \
 	convert-ogg2mp3.sh \
+	convert-ogg2m4a.sh \
 	convert-flac2mp3.sh \
 	convert-flac2m4a.sh
 
