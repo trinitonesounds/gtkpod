@@ -5,7 +5,7 @@
           src/display_tracks.c
           src/misc_conversion.c
           src/misc_track.c: Patch by Mario Rossi to allow editing of
-          Video metadata and media type. Big thanks!
+          TV show metadata and media type. Big thanks!
 
 	* configure.in: require libgpod >= 0.4.2
 
