@@ -1,5 +1,10 @@
 2007-02-04 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/details.c
+	  gtkpod.glade: small fixes for "Edit Details Window" by Mario Rossi.
+
+2007-02-04 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
         * gtkpod.glade
           src/display.h
           src/display_tracks.c

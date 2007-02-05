@@ -14121,7 +14121,6 @@ when syncing playlists</property>
 </widget>
 
 <widget class="GtkWindow" id="details_window">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">Details</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
