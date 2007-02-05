@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-16 18:34:24 jcs>
+/* Time-stamp: <2007-02-05 17:42:24 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Copyright (C) 2006 James Liggett <jrliggett at cox.net>
@@ -160,10 +160,17 @@ static void set_default_preferences()
     str = g_build_filename (SCRIPTDIR, "convert-ogg2mp3.sh", NULL);
     prefs_set_string ("path_conv_ogg", str);
     g_free (str);
+    prefs_set_int ("convert_ogg", TRUE);
 
     str = g_build_filename (SCRIPTDIR, "convert-flac2mp3.sh", NULL);
     prefs_set_string ("path_conv_flac", str);
     g_free (str);
+    prefs_set_int ("convert_flac", TRUE);
+
+    str = g_build_filename (SCRIPTDIR, "convert-wav2mp3.sh", NULL);
+    prefs_set_string ("path_conv_wav", str);
+    g_free (str);
+    prefs_set_int ("convert_wav", FALSE);
 
 
     /* Set sorting tab defaults */

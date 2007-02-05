@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-19 00:59:21 jcs>
+/* Time-stamp: <2007-02-05 12:53:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -98,6 +98,8 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb);
 gboolean gp_eject_ipod(iTunesDB *itdb);
 gboolean gp_save_itdb (iTunesDB *itdb);
 void handle_export (void);
+void details_log_clear (void);
+void details_log_append (gchar *text);
 void data_changed (iTunesDB *itdb);
 void data_unchanged (iTunesDB *itdb);
 gboolean files_are_saved (void);

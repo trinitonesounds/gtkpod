@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-19 00:55:02 jcs>
+/* Time-stamp: <2007-02-05 15:49:25 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -36,7 +36,7 @@
 
 #include <gtk/gtk.h>
 #include "itdb.h"
-#include "file.h"
+#include "file_convert.h"
 
 struct itdbs_head
 {

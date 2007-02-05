@@ -1,9 +1,9 @@
 #!/bin/sh
-# Simple script that converts a flac file into an mp3 file
+# Simple script that converts a wav file into an m4a file
 #
 # USAGE:
 #
-# convert-flac2mp3.sh [options] flacfile
+# convert-wav2m4a.sh [options] wavfile
 #
 # 	-a	Artist tag
 #	-A 	Album tag
@@ -36,51 +36,45 @@ while getopts a:A:T:t:g:c: opt ; do
 	esac
 done
 shift $(($OPTIND - 1))
-flacfile="$1"
+wavfile="$1"
 
 # Build output file
-mp3file=`basename "$flacfile"`
-mp3file=${mp3file%%.flac}
-mp3file="/tmp/$mp3file.mp3"
+m4afile=`basename "$wavfile"`
+m4afile=${m4afile%%.wav}
+m4afile="/tmp/$m4afile.m4a"
 
 # Default values
-[ -z "$comment"] && comment="Encoded for gtkpod with lame"
+[ -z "$comment"] && comment="Encoded for gtkpod with faac"
 
-#echo "Converting \"$flacfile\" into \"$mp3file\""
+#echo "Converting \"$wavfile\" into \"$m4afile\""
 
 # Checking input file
-if [ "$flacfile" = "" ]; then
+if [ "$wavfile" = "" ]; then
     exit 1
 fi
-if [ ! -f "$flacfile" ]; then
+if [ ! -f "$wavfile" ]; then
     exit 1
 fi
 
 # Checking output file
-touch "$mp3file"
+touch "$m4afile"
 if [ "x$?" != "x0" ]; then
     exit 2
 fi
 
-# Check for the existence of flac
-flac=`which flac`
-if [ -z "$flac" ]; then
-    exit 4
-fi
-
-# Check for the existence of lame
-lame=`which lame`
-if [ -z "$lame" ]; then
+# Check for the existence of faac
+faac=`which faac`
+if [ -z "$faac" ]; then
     exit 5
 fi
 
 # Launch command
-exec "$flac" -d -c -- "$flacfile" | "$lame" --preset standard --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$tracknum" --tg "$genre" - "$mp3file"
+"$faac" -o "$m4afile" -q 150 -c 22000 -w --artist "$artist" --title "$title" --year "$year" --album "$album" --track "$tracknum" --genre "$genre" --comment "$comment" "$wavfile"
 
 # Check result
 if [ "x$?" != "x0" ]; then
     exit 6
 fi
 # Seems to be ok: display filename for gtkpod
-echo $mp3file
+echo $m4afile
 exit 0

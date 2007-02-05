@@ -38,8 +38,10 @@ gtkpod_SOURCES = \
     display_itdb.c display_itdb.h \
     display_spl.c display_tracks.c \
     file.c file.h file_export.c \
+    file_convert.c file_convert.h \
     file_itunesdb.c \
     fileselection.h fileselection.c \
+    flacfile.c flacfile.h \
     info.c info.h \
     ipod_init.c ipod_init.h \
     itdb.h \
@@ -52,6 +54,7 @@ gtkpod_SOURCES = \
     misc_track.c misc_track.h \
     mp3file.c mp3file.h \
     mp4file.c mp4file.h \
+    oggfile.c oggfile.h \
     podcast.c podcast.h \
     prefs.c prefs.h \
     prefs_window.c prefs_window.h \
@@ -59,10 +62,7 @@ gtkpod_SOURCES = \
     sha1.c sha1.h \
     syncdir.c syncdir.h \
     tools.c tools.h \
-    wavfile.c wavfile.h \
-    oggfile.c oggfile.h \
-    flacfile.c flacfile.h \
-    file_convert.c file_convert.h
+    wavfile.c wavfile.h
 
 gtkpod_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@
 

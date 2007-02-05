@@ -1,9 +1,9 @@
 #!/bin/sh
-# Simple script that converts a flac file into an mp3 file
+# Simple script that converts an mp3 file into an m4a file
 #
 # USAGE:
 #
-# convert-flac2mp3.sh [options] flacfile
+# convert-mp32m4a.sh [options] mp3file
 #
 # 	-a	Artist tag
 #	-A 	Album tag
@@ -23,6 +23,7 @@
 #   5 cannot exec encoding
 #   6 conversion failed
 
+
 # Get parameters
 while getopts a:A:T:t:g:c: opt ; do
 	case "$opt" in
@@ -36,51 +37,51 @@ while getopts a:A:T:t:g:c: opt ; do
 	esac
 done
 shift $(($OPTIND - 1))
-flacfile="$1"
+mp3file="$1"
 
 # Build output file
-mp3file=`basename "$flacfile"`
-mp3file=${mp3file%%.flac}
-mp3file="/tmp/$mp3file.mp3"
+m4afile=`basename "$mp3file"`
+m4afile=${m4afile%%.mp3}
+m4afile="/tmp/$m4afile.m4a"
 
 # Default values
-[ -z "$comment"] && comment="Encoded for gtkpod with lame"
+[ -z "$comment"] && comment="Encoded for gtkpod with faac"
 
-#echo "Converting \"$flacfile\" into \"$mp3file\""
+#echo "Converting \"$m4afile\" into \"$mp3file\""
 
 # Checking input file
-if [ "$flacfile" = "" ]; then
+if [ "$mp3file" = "" ]; then
     exit 1
 fi
-if [ ! -f "$flacfile" ]; then
+if [ ! -f "$mp3file" ]; then
     exit 1
 fi
 
 # Checking output file
-touch "$mp3file"
+touch "$m4afile"
 if [ "x$?" != "x0" ]; then
     exit 2
-fi
-
-# Check for the existence of flac
-flac=`which flac`
-if [ -z "$flac" ]; then
-    exit 4
 fi
 
 # Check for the existence of lame
 lame=`which lame`
 if [ -z "$lame" ]; then
+    exit 4
+fi
+
+# Check for the existence of faac
+faac=`which faac`
+if [ -z "$faac" ]; then
     exit 5
 fi
 
 # Launch command
-exec "$flac" -d -c -- "$flacfile" | "$lame" --preset standard --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$tracknum" --tg "$genre" - "$mp3file"
+exec "$lame" --decode "$mp3file" - | "$faac" -o "$m4afile" -q 150 -c 22000 -w --artist "$artist" --title "$title" --year "$year" --album "$album" --track "$tracknum" --genre "$genre" --comment "$comment" -
 
 # Check result
 if [ "x$?" != "x0" ]; then
     exit 6
 fi
 # Seems to be ok: display filename for gtkpod
-echo $mp3file
+echo $m4afile
 exit 0

@@ -1,7 +1,30 @@
-2007-02-04 Jorg Schuler <jcsjcs at users.sourceforge.net>
+2007-02-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/details.c
 	  gtkpod.glade: small fixes for "Edit Details Window" by Mario Rossi.
+
+        * gtkpod.glade
+          scripts/convert-flac2m4a.sh
+          scripts/convert-flac2mp3.sh
+          scripts/convert-ogg2m4a.sh
+          scripts/convert-ogg2mp3.sh
+          scripts/Makefile.am
+          src/display_itdb.h
+          src/file.h
+          src/file_convert.c
+          src/file_convert.h
+          src/file_itunesdb.c
+          src/prefs_window.c
+	  src/prefs.c: display of conversion progress and improved
+          conversion scripts (receive meta tags by command line
+          arguments). Thanks to Simon Naunton!
+
+          scripts/convert-m4a2mp3.sh
+          scripts/convert-mp32m4a.sh
+          scripts/convert-wav2m4a.sh
+          scripts/convert-wav2mp3.sh: new scripts for mp3, m4a and wav
+          conversion.
+
 
 2007-02-04 Jorg Schuler <jcsjcs at users.sourceforge.net>
 

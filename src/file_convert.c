@@ -70,26 +70,26 @@ static gchar **cmdline_to_argv(const gchar *cmdline, Track *track); /* TODO: cou
  */
 extern GError *file_convert_pre_copy (TrackConv *converter)
 {   
-    ExtraTrackData *etr=NULL;
-    GError *error=NULL;                 /* error if any */
-    const gchar *type=NULL;             /* xxx (ogg) */
-    gchar *convert_command=NULL;        /* from prefs */
-    gchar **argv;                       /* for conversion external process */
+    Track *track = NULL;
+    ExtraTrackData *etr = NULL;
+    GError *error = NULL;                 /* error if any */
+    const gchar *type = NULL;             /* xxx (ogg) */
+    gchar *convert_command = NULL;        /* from prefs */
+    gchar **argv;                         /* for conversion external process */
+    gint i;
 
     /* sanity checks */
     g_return_val_if_fail (converter, NULL);
     g_return_val_if_fail (converter->track, NULL);
-    etr=converter->track->userdata;
+    track = converter->track;
+    etr = track->userdata;
     g_return_val_if_fail (etr, NULL);
 
     /* Find the correct script for conversion */
     switch (converter->type) {
         case FILE_TYPE_UNKNOWN:
-        case FILE_TYPE_MP3:
-        case FILE_TYPE_M4A:
         case FILE_TYPE_M4P:
         case FILE_TYPE_M4B:
-        case FILE_TYPE_WAV:
         case FILE_TYPE_M4V:
         case FILE_TYPE_MP4:
         case FILE_TYPE_MOV:
@@ -99,6 +99,15 @@ extern GError *file_convert_pre_copy (TrackConv *converter)
         case FILE_TYPE_IMAGE:
         case FILE_TYPE_DIRECTORY:
             return NULL; /*FIXME: error? */
+            break;
+        case FILE_TYPE_M4A:
+            convert_command = prefs_get_string ("path_conv_m4a");
+            break;
+        case FILE_TYPE_WAV:
+            convert_command = prefs_get_string ("path_conv_wav");
+            break;
+        case FILE_TYPE_MP3:
+            convert_command = prefs_get_string ("path_conv_mp3");
             break;
         case FILE_TYPE_OGG:
 	    convert_command = prefs_get_string ("path_conv_ogg");
@@ -118,15 +127,60 @@ extern GError *file_convert_pre_copy (TrackConv *converter)
                           type);
     }
     /* FIXME: check that %s is present (at least) */
-    
+   
     /* Build the command args */
-    argv = g_malloc0(sizeof(gchar*) * 3);
-    argv[0] = convert_command;
-    argv[1] = etr->pc_path_locale;
+    argv = g_malloc0(sizeof(gchar*) * 17);
+
+    argv[0] = g_strdup (convert_command);
+    i = 1;
+    if (track->artist) {
+        argv[i] = g_strdup ("-a");
+        ++i;
+        argv[i] = g_strdup (track->artist);
+        ++i;
+    }
+    if (track->album) {
+        argv[i] = g_strdup ("-A");
+        ++i;
+        argv[i] = g_strdup (track->album);
+        ++i;
+    }
+    if (track->track_nr) {
+        argv[i] = g_strdup ("-T");
+        ++i;
+        argv[i] = g_strdup_printf("%d", track->track_nr);
+        ++i;
+    }
+    if (track->title) {
+        argv[i] = g_strdup ("-t");
+        ++i;
+        argv[i] = g_strdup (track->title);
+        ++i;
+    }
+    if (track->genre) {
+        argv[i] = g_strdup ("-g");
+        ++i;
+        argv[i] = g_strdup (track->genre);
+        ++i;
+    }
+    if (track->year) {
+        argv[i] = g_strdup ("-y");
+        ++i;
+        argv[i] = g_strdup_printf("%d", track->year);
+        ++i;
+    }
+    if (track->comment) {
+        argv[i] = g_strdup ("-c");
+        ++i;
+        argv[i] = g_strdup (track->comment);
+        ++i;
+    }
+    argv[i] = g_strdup (etr->pc_path_locale);
+
+    argv = g_realloc(argv, (i + 1) * sizeof(gchar*));
 
     /* Convert the file */
-
-    error=execute_conv (argv, converter); /* frees all cmdline strings */
+    error = execute_conv (argv, converter); /* frees all cmdline strings */
 
     return error;
 }
@@ -145,6 +199,7 @@ GError *file_convert_wait_for_conversion (TrackConv *converter)
     GPid wait;
     gchar *error_msg=NULL;
     GError *error=NULL;
+    gboolean aborted = FALSE;
 
     /* sanity checks */ 
     g_return_val_if_fail (converter, NULL);
@@ -174,8 +229,11 @@ GError *file_convert_wait_for_conversion (TrackConv *converter)
             }
         }else if (WIFSIGNALED(exit_status)) {
             debug(":0x%X -> %d\n",exit_status,WTERMSIG(exit_status));
+            aborted = TRUE;
+/*
             error_msg = g_strdup_printf ("Execution failed. Received signal %d (%s)",
                                          WTERMSIG(exit_status),(error?error->message:""));
+*/
         }else if (WIFSTOPPED(exit_status)) {
             debug(":0x%X -> %d\n",exit_status,WSTOPSIG(exit_status));
             error_msg = g_strdup_printf ("Execution stopped. Received signal %d (%s)",
@@ -192,24 +250,34 @@ GError *file_convert_wait_for_conversion (TrackConv *converter)
     }
     debug("Error: %s\n",(error_msg?error_msg:"N/A"));
 
-    /* Getting filename from child's STDOUT */
-    if (!error_msg)
-        error_msg = get_filename_from_stdout (converter);
+    if(aborted) error = conv_error(_("Aborted.\n"));
+    else {
+        /* Getting filename from child's STDOUT */
+        if (!error_msg)
+            error_msg = get_filename_from_stdout (converter);
 
-    /* Checking file exists */
-    if (!error_msg)
-        error_msg = checking_converted_file (converter);
+        /* Checking file exists */
+        if (!error_msg)
+            error_msg = checking_converted_file (converter);
 
-    /* Checking errors */
-    if (error_msg){
-        error=conv_error(_("Cannot convert '%s'.\nExecuting `%s'\nGave error: %s\n\n"),
-                         etr->pc_path_locale,
-                         converter->command_line,
-                         error_msg);
-        g_free (error_msg);
+        /* Checking errors */
+        if (error_msg){
+            error=conv_error(_("Cannot convert '%s'.\nExecuting `%s'\nGave error: %s\n\n"),
+                             etr->pc_path_locale,
+                             converter->command_line,
+                             error_msg);
+            g_free (error_msg);
+        }
     }
+
     /* Freeing data */
     if (converter->child_pid) {
+        details_log_clear ();
+
+        if (!g_source_remove (converter->source_id)) {
+             error = conv_error(_("Failed to remove watch\n\n"));
+        }
+
         g_spawn_close_pid(converter->child_pid);
         converter->child_pid=0;
     }
@@ -263,9 +331,40 @@ GError * file_convert_post_copy (TrackConv *converter)
  *
  */
 
+/*
+ * Called by watch on stderr to update details log
+ */
+static gboolean execute_conv_cb(GIOChannel *source, GIOCondition condition,  TrackConv *converter)
+{
+    GIOStatus status;
+    gchar buf[255];
+    gsize bytes_read;
 
+    if (converter->aborted) return FALSE;
 
+    while (1) {
+      status = g_io_channel_read_chars (source, buf, sizeof(buf) - 1, &bytes_read, NULL);
+      buf[bytes_read] = '\0';
+      switch (status) {
 
+        case G_IO_STATUS_ERROR :
+          return FALSE;
+
+        case G_IO_STATUS_EOF :
+          details_log_append(buf);
+          return FALSE;
+
+        case G_IO_STATUS_NORMAL :
+          details_log_append(buf);
+          break;
+
+        case G_IO_STATUS_AGAIN :
+          return TRUE;
+      }
+    }
+
+    return FALSE; 
+}
 
 
 /*
@@ -273,13 +372,15 @@ GError * file_convert_post_copy (TrackConv *converter)
  */
 static GError *execute_conv (gchar **argv, TrackConv *converter)
 {
-    ExtraTrackData *etr=NULL;
-    GError *error=NULL;
-    gchar *command_line=NULL;
-    GError *spawn_error=NULL;
-    guint i=0;
+    ExtraTrackData *etr = NULL;
+    GError *error = NULL;
+    gchar *command_line = NULL;
+    GError *spawn_error = NULL;
+    guint i = 0;
     GPid child_pid;
     gint child_stdout;
+    gint child_stderr;
+    GIOChannel *gio_channel;
 
     /* sanity checks */ 
     g_return_val_if_fail (converter, NULL);
@@ -290,13 +391,14 @@ static GError *execute_conv (gchar **argv, TrackConv *converter)
     g_return_val_if_fail (argv, NULL);
 
     /* Building command_line string (for output only) */
-    for(i=0; argv[i]!=NULL; ++i) 
+    for (i = 0; argv[i] != NULL; ++i) 
     {
-        gchar *p=command_line;
+
+        gchar *p = command_line;
         if (!p) 
-            command_line=g_strdup(argv[i]);                      /* program name (1st token) */
+            command_line = g_strdup(argv[i]);                      /* program name (1st token) */
         else {
-            command_line=g_strdup_printf("%s \"%s\"",p,argv[i]); /* arg (other tokens) */
+            command_line = g_strdup_printf("%s \"%s\"",p,argv[i]); /* arg (other tokens) */
             g_free(p);
         }
     }
@@ -314,22 +416,33 @@ static GError *execute_conv (gchar **argv, TrackConv *converter)
                                  &child_pid,                /* child's PID */
                                  NULL,                      /* child's stdin */
                                  &child_stdout,             /* child's stdout */
-                                 NULL,                      /* child's stderr FIXME: get this for "debug"    (result?) */
-                                 &spawn_error)==FALSE){     /* error */
+                                 &child_stderr,             /* child's stderr FIXME: get this for "debug"    (result?) */
+                                 &spawn_error)==FALSE)
+    {     /* error */
         debug("error: error:%p (message:%s)",error, (error?error->message:"NoErrorMessage"));
         error = conv_error(_("Cannot convert '%s'.\nExecuting `%s'\nGave error: %s\n\n"),
-                             etr->pc_path_locale,
-                             command_line,
-                             (spawn_error&&spawn_error->message)?spawn_error->message:"no explanation. Please report.");
+			   etr->pc_path_locale,
+			   command_line,
+			   (spawn_error&&spawn_error->message)?spawn_error->message:"no explanation. Please report.");
         if (spawn_error)
-            g_free (spawn_error);   /* FIXME: memory leak i guess (at least for message if any). */
+	{
+            g_free (spawn_error);   /* FIXME: memory leak i guess (at
+				     * least for message if any). */
+	}
         g_free (command_line);
-    } else {
-        converter->child_pid=child_pid;
-        converter->child_stdout=child_stdout;
-        converter->command_line=command_line;
     }
-
+    else
+    {
+        converter->child_pid = child_pid;
+        converter->child_stdout = child_stdout;
+        converter->command_line = command_line;
+        gio_channel = g_io_channel_unix_new (child_stderr);
+        g_io_channel_set_flags (gio_channel, G_IO_FLAG_NONBLOCK, NULL);
+        converter->source_id = g_io_add_watch (gio_channel, G_IO_IN, (GIOFunc)execute_conv_cb, converter);
+        g_io_channel_set_close_on_unref (gio_channel, TRUE);
+        g_io_channel_unref (gio_channel);
+        converter->aborted = FALSE;
+    }
     /* Freeing data */
     for(i=0; argv[i]!=NULL; ++i){
         g_free (argv[i]);

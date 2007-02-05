@@ -1,9 +1,9 @@
 #!/bin/sh
-# Simple script that converts a flac file into an mp3 file
+# Simple script that converts a wav file into an mp3 file
 #
 # USAGE:
 #
-# convert-flac2mp3.sh [options] flacfile
+# convert-wav2mp3.sh [options] wavfile
 #
 # 	-a	Artist tag
 #	-A 	Album tag
@@ -36,23 +36,23 @@ while getopts a:A:T:t:g:c: opt ; do
 	esac
 done
 shift $(($OPTIND - 1))
-flacfile="$1"
+wavfile="$1"
 
 # Build output file
-mp3file=`basename "$flacfile"`
-mp3file=${mp3file%%.flac}
+mp3file=`basename "$wavfile"`
+mp3file=${mp3file%%.wav}
 mp3file="/tmp/$mp3file.mp3"
 
 # Default values
 [ -z "$comment"] && comment="Encoded for gtkpod with lame"
 
-#echo "Converting \"$flacfile\" into \"$mp3file\""
+#echo "Converting \"$wavfile\" into \"$mp3file\""
 
 # Checking input file
-if [ "$flacfile" = "" ]; then
+if [ "$wavfile" = "" ]; then
     exit 1
 fi
-if [ ! -f "$flacfile" ]; then
+if [ ! -f "$wavfile" ]; then
     exit 1
 fi
 
@@ -62,12 +62,6 @@ if [ "x$?" != "x0" ]; then
     exit 2
 fi
 
-# Check for the existence of flac
-flac=`which flac`
-if [ -z "$flac" ]; then
-    exit 4
-fi
-
 # Check for the existence of lame
 lame=`which lame`
 if [ -z "$lame" ]; then
@@ -75,7 +69,7 @@ if [ -z "$lame" ]; then
 fi
 
 # Launch command
-exec "$flac" -d -c -- "$flacfile" | "$lame" --preset standard --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$tracknum" --tg "$genre" - "$mp3file"
+"$lame" --preset standard --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$tracknum" --tg "$genre" "$wavfile" "$mp3file"
 
 # Check result
 if [ "x$?" != "x0" ]; then

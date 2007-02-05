@@ -67,7 +67,18 @@ static void prefs_window_set_sort_tab_num (gint num);
 static void standard_toggle_toggled (GtkToggleButton *togglebutton,
 				     const gchar *key);
 
+static void on_convert_toggle_toggled (GtkToggleButton *togglebutton,
+				     gpointer not_used);
 
+static const gchar *convert_names[] =
+{
+    "convert_ogg",
+    "convert_flac",
+    "convert_m4a",
+    "convert_mp3",
+    "convert_wav",
+    NULL
+};
 
 /* Definition of path button names.
    path_fileselector_titles[] specifies the title for the file
@@ -84,6 +95,9 @@ static const gchar *path_button_names[] =
     "mserv_trackinfo_root_button",
     "path_conv_ogg_button",
     "path_conv_flac_button",
+    "path_conv_m4a_button",
+    "path_conv_mp3_button",
+    "path_conv_wav_button",
     NULL
 };
 static const gchar *path_key_names[] =
@@ -96,6 +110,9 @@ static const gchar *path_key_names[] =
     "path_mserv_trackinfo_root",
     "path_conv_ogg",
     "path_conv_flac",
+    "path_conv_m4a",
+    "path_conv_mp3",
+    "path_conv_wav",
     NULL
 };
 const gchar *path_entry_names[] =
@@ -108,6 +125,9 @@ const gchar *path_entry_names[] =
     "mserv_trackinfo_root_entry",
     "path_conv_ogg_entry",
     "path_conv_flac_entry",
+    "path_conv_m4a_entry",
+    "path_conv_mp3_entry",
+    "path_conv_wav_entry",
     NULL
 };
 static const gchar *path_fileselector_titles[] =
@@ -120,6 +140,9 @@ static const gchar *path_fileselector_titles[] =
     N_("Select the mserv trackinfo root directory"),
     N_("Select the ogg/vorbis converter command"),
     N_("Select the flac converter command"),
+    N_("Select the m4a converter command."),
+    N_("Select the mp3 converter command."),
+    N_("Select the wav converter command."),
     NULL
 };
 static const GtkFileChooserAction path_type[] =
@@ -130,6 +153,9 @@ static const GtkFileChooserAction path_type[] =
     GTK_FILE_CHOOSER_ACTION_OPEN,
     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER, /* select folder */
     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+    GTK_FILE_CHOOSER_ACTION_OPEN,
+    GTK_FILE_CHOOSER_ACTION_OPEN,
+    GTK_FILE_CHOOSER_ACTION_OPEN,
     GTK_FILE_CHOOSER_ACTION_OPEN,
     GTK_FILE_CHOOSER_ACTION_OPEN,
     -1
@@ -267,7 +293,19 @@ void prefs_window_show_hide_tooltips (void)
     else                                     gtk_tooltips_disable (tt);
 }
 
+static void convert_table_set_children_initial_sensitivity (GtkTable *table)
+{
+    GList *list_item;
+    GtkTableChild *child;
 
+    list_item = table->children;
+    while (list_item) {
+        child = (GtkTableChild*)list_item->data;
+        gtk_widget_set_sensitive (child->widget, 
+                                     GTK_IS_TOGGLE_BUTTON (child->widget));
+        list_item = g_list_next (list_item);
+    }
+}
 
 /**
  * create_gtk_prefs_window
@@ -690,9 +728,25 @@ prefs_window_create (gint page)
 	gtk_entry_set_text(GTK_ENTRY(w), buf);
 	g_free(buf);
     }
-    
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "convert_table");
+    convert_table_set_children_initial_sensitivity (GTK_TABLE (w));
+    for (i=0; convert_names[i]; ++i)
+    {
+         w = gtkpod_xml_get_widget (prefs_window_xml, convert_names[i]);
+         g_signal_connect ((gpointer)w,
+			      "toggled",
+			      G_CALLBACK (on_convert_toggle_toggled),
+			      NULL);
+         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), prefs_get_int (convert_names[i]) );
+
+    }
+
     prefs_window_show_hide_tooltips ();
     gtk_widget_show(prefs_window);
+
+
+
 }
 
 
@@ -1063,6 +1117,45 @@ static void standard_toggle_toggled (GtkToggleButton *togglebutton,
     temp_prefs_set_int (temp_prefs, key, 
 			gtk_toggle_button_get_active (togglebutton));
 }
+
+static void on_convert_toggle_toggled (GtkToggleButton *togglebutton,
+				     gpointer not_used)
+{
+    GtkTable *parent;
+    GList *list_item;
+    GtkTableChild *child;
+    guint16 row = 0;
+    gboolean active;
+
+    parent = (GtkTable*)gtk_widget_get_parent (GTK_WIDGET (togglebutton));    
+    g_return_if_fail (GTK_IS_TABLE (parent));
+
+    /* Find row of togglebutton */
+    list_item = parent->children;
+    while (list_item) {
+        child = (GtkTableChild*)list_item->data;
+        if (child->widget == (GtkWidget*)togglebutton) {
+            row = child->top_attach;
+            break;
+        }
+        list_item = g_list_next (list_item);
+    }
+
+    active = gtk_toggle_button_get_active (togglebutton);
+
+    temp_prefs_set_int (temp_prefs, gtk_widget_get_name (GTK_WIDGET (togglebutton)), 
+			active);
+
+    /* set sensitivity of all widgets on togglebuttons row, except togglebutton */
+    list_item = parent->children;
+    while (list_item) {
+        child = (GtkTableChild*)list_item->data;
+        if (child->top_attach == row && child->widget != (GtkWidget*)togglebutton) 
+            gtk_widget_set_sensitive (child->widget, active);
+        list_item = g_list_next (list_item);
+    }
+}
+
 
 void
 on_sync_confirm_delete_toggled     (GtkToggleButton *togglebutton,

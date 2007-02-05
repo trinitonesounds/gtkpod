@@ -6,18 +6,21 @@
 #endif
 
 #include <gtk/gtk.h>
-#include "display_itdb.h"
+#include <itdb.h>
+#include <file.h>
 
 typedef struct
 {
-    Track   *track;                 /* Track to convert */
-    gchar   *converted_file;        /* PC filename of the "mp3" file 
-                                       != NULL if the file exists   */
-    gint32   old_size;              /* size of the original file    */
-    FileType type;                  /* type of the original file    */
-    GPid     child_pid;             /* PID of conversion process    */
-    gint     child_stdout;          /* STDOUT of conversion process */
-    gchar   *command_line;          /* used for conversion */
+    Track   *track;                /* Track to convert */
+    gchar   *converted_file;       /* PC filename of the "mp3" file 
+                                      != NULL if the file exists   */
+    gint32   old_size;             /* size of the original file    */
+    FileType type;                 /* type of the original file    */
+    GPid     child_pid;            /* PID of conversion process    */
+    gint     child_stdout;         /* STDOUT of conversion process */
+    gchar    *command_line;        /* used for conversion */
+    gint     source_id;
+    gboolean aborted;
 } TrackConv;
 
 

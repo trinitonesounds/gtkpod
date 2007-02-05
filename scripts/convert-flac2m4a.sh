@@ -1,5 +1,18 @@
 #!/bin/sh
 # Simple script that converts a flac file into an m4a file
+#
+# USAGE:
+#
+# convert-flac2m4a.sh [options] flacfile
+#
+# 	-a	Artist tag
+#	-A 	Album tag
+#	-T	Track tag
+#	-t	Title tag
+#	-g	Genre tag
+#	-y	Year tag
+#	-c	Comment tag
+#
 # STDOUT's last line is the converted filename.
 # Return Codes:
 #   0 ok
@@ -10,8 +23,20 @@
 #   5 cannot exec encoding
 #   6 conversion failed
 
-# Get parameter
-flacfile=$1
+# Get parameters
+while getopts a:A:T:t:g:c: opt ; do
+	case "$opt" in
+		a)	artist="$OPTARG" ;;
+		A)	album="$OPTARG" ;;
+		T)	track="$OPTARG" ;;
+		t)	title="$OPTARG" ;;
+		g)	genre="$OPTARG" ;;
+		y)	year="$OPTARG" ;;
+		c)	comment="$OPTARG" ;;
+	esac
+done
+shift $(($OPTIND - 1))
+flacfile="$1"
 
 # Build output file
 m4afile=`basename "$flacfile"`
@@ -19,7 +44,7 @@ m4afile=${m4afile%%.flac}
 m4afile="/tmp/$m4afile.m4a"
 
 # Default values
-comment="Encoded for gtkpod with faac"
+[ -z "$comment"] && comment="Encoded for gtkpod with faac"
 
 #echo "Converting \"$flacfile\" into \"$m4afile\""
 
@@ -37,24 +62,21 @@ if [ "x$?" != "x0" ]; then
     exit 2
 fi
 
-# Getting flac info
-album=`metaflac --show-tag=album "$1" | cut -d \= -f 2`
-title=`metaflac --show-tag=title "$1" | cut -d \= -f 2`
-artist=`metaflac --show-tag=artist "$1" | cut -d \= -f 2`
-year=`metaflac --show-tag=date "$1" | cut -d \= -f 2`
-genre=`metaflac --show-tag=genre "$1" | cut -d \= -f 2`
-tracknum=`metaflac --show-tag=tracknumber "$1" | cut -d \= -f 2`
-comment_t=`metaflac --show-tag=comment "$1" | cut -d \= -f 2`
-comment_a=`metaflac --show-tag=albumcomment "$1" | cut -d \= -f 2`
-if [ "$comment_t" != "" ]; then
-    comment=$comment_t
+# Check for the existence of flac
+flac=`which flac`
+if [ -z "$flac" ]; then
+    exit 4
 fi
-if [ "$comment_a" != "" ]; then
-    comment="$comment_a $comment"
+
+# Check for the existence of faac
+faac=`which faac`
+if [ -z "$faac" ]; then
+    exit 5
 fi
 
 # Launch command
-exec flac -d -c -- "$flacfile" | faac -o "$m4afile" -q 150 -c 22000 -w --artist "$artist" --title "$title" --year "$year" --album "$album" --track "$tracknum" --genre "$genre" --comment "$comment" -
+exec "$flac" -d -c -- "$flacfile" | "$faac" -o "$m4afile" -q 150 -c 22000 -w --artist "$artist" --title "$title" --year "$year" --album "$album" --track "$tracknum" --genre "$genre" --comment "$comment" -
+
 # Check result
 if [ "x$?" != "x0" ]; then
     exit 6

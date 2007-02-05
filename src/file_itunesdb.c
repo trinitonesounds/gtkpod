@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-19 01:52:28 jcs>
+/* Time-stamp: <2007-02-05 17:27:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -33,6 +33,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <signal.h>
 #include "charset.h"
 #include "display.h"
 #include "file.h"
@@ -79,9 +80,17 @@ struct track_extended_info
     gboolean transferred;
 };
 
+typedef struct {
+    GMutex *mutex;         /* lock when modifying struct! */
+    gboolean abort;        /* TRUE = abort                */
+    Track *track;          /* Current track               */
+    GPid converter_pid;    /* Converter used for track    */
+} TransferData;
+
+
 #ifdef G_THREADS_ENABLED
 /* Thread specific */
-static  GMutex *mutex = NULL;
+static GMutex *mutex = NULL;
 static GCond  *cond = NULL;
 static gboolean mutex_data = FALSE;
 #endif
@@ -92,9 +101,49 @@ static GHashTable *extendedinfohash_md5 = NULL;
 static GList *extendeddeletion = NULL;
 static float extendedinfoversion = 0.0;
 
+static volatile GtkWidget *details_log; /* Details log on file dialog */
 
 /* Some declarations */
 static gboolean gp_write_itdb (iTunesDB *itdb);
+
+void details_log_append(gchar *text) 
+{
+  GtkTextBuffer *buf;
+  GtkTextIter start, end;
+  gchar *ptr = text, *next;
+
+  g_return_if_fail (GTK_IS_TEXT_VIEW(details_log));
+
+  buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (details_log));
+  gtk_text_buffer_get_end_iter (buf, &end);
+  while (*ptr) {
+    if (!details_log) return;
+    next = g_utf8_find_next_char (ptr, NULL);
+    if (*ptr == '\b') {
+      start = end;
+      if (gtk_text_iter_backward_char (&start))
+         gtk_text_buffer_delete (buf, &start, &end);
+    }
+    else if(*ptr == '\r') {
+      start = end;
+      gtk_text_iter_set_line_offset (&start, 0);
+      gtk_text_buffer_delete (buf, &start, &end);
+    }
+    else gtk_text_buffer_insert (buf, &end, ptr, next - ptr);
+    ptr = next;
+  }
+  gtk_text_view_scroll_to_iter (GTK_TEXT_VIEW (details_log), &end, 0.0, FALSE, 0.0, 0.0); 
+}
+
+void details_log_clear(void) 
+{
+  GtkTextBuffer *buf;
+
+  g_return_if_fail (GTK_IS_TEXT_VIEW(details_log));
+
+  buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (details_log));
+  gtk_text_buffer_set_text (buf, "", -1);
+}
 
 
 /* fills in extended info if available */
@@ -1155,6 +1204,20 @@ static gboolean write_extended_info (iTunesDB *itdb)
 }
 
 
+TransferData *transfer_data_new (void)
+{
+    TransferData *transfer_data;
+    transfer_data = g_new0 (TransferData, 1);
+    transfer_data->mutex = g_mutex_new ();
+    transfer_data->converter_pid = -1;
+    return transfer_data;
+}
+
+void transfer_data_free (TransferData *transfer_data)
+{
+    if (transfer_data->mutex) g_mutex_free (transfer_data->mutex);
+    g_free (transfer_data);
+}
 
 #ifdef G_THREADS_ENABLED
 /* Threaded remove file */
@@ -1172,31 +1235,31 @@ static gpointer th_remove (gpointer filename)
 }
 #endif
 
-
 /* Threaded copy of ipod track */
 /* Returns: GError *error */
 static gpointer th_copy (gpointer data)
 {
-    Track *track = data;
+    TransferData *transfer_data = data;
+    Track *track;
     ExtraTrackData *etr;
     FileType type;
     TrackConv *converter = NULL;
     GError *error = NULL;
+    g_return_val_if_fail (transfer_data, NULL);
+    track = transfer_data->track;
     g_return_val_if_fail (track, NULL);
     etr = track->userdata;
     g_return_val_if_fail (etr, NULL);
     const gchar *file_to_transfer=etr->pc_path_locale;
+    gboolean convert = FALSE;
 
     /* check if we need to convert the file */
     type = determine_file_type (file_to_transfer);
     switch (type)
     {
     case FILE_TYPE_UNKNOWN:
-    case FILE_TYPE_MP3:
-    case FILE_TYPE_M4A:
     case FILE_TYPE_M4P:
     case FILE_TYPE_M4B:
-    case FILE_TYPE_WAV:
     case FILE_TYPE_M4V:
     case FILE_TYPE_MP4:
     case FILE_TYPE_MOV:
@@ -1205,21 +1268,45 @@ static gpointer th_copy (gpointer data)
     case FILE_TYPE_PLS:
     case FILE_TYPE_IMAGE:
     case FILE_TYPE_DIRECTORY:
-	converter = NULL;
 	break;
+    case FILE_TYPE_M4A:
+	convert = prefs_get_int ("convert_m4a");
+  	break;
+    case FILE_TYPE_WAV:
+	convert = prefs_get_int ("convert_wav");
+  	break;
+    case FILE_TYPE_MP3:
+	convert = prefs_get_int ("convert_mp3");
+  	break;
     case FILE_TYPE_OGG:
+	convert = prefs_get_int ("convert_ogg");
+  	break;
     case FILE_TYPE_FLAC:
+	convert = prefs_get_int ("convert_flac");
+	break;
+    }
+
+    if (convert)
+    {
 	converter = g_new0 (TrackConv, 1);
 	converter->type = type;
 	converter->track = track;
 	error = file_convert_pre_copy (converter);
         if (!error) 
         {
+	    g_mutex_lock (transfer_data->mutex);
+	    transfer_data->converter_pid = converter->child_pid;
+	    g_mutex_unlock (transfer_data->mutex);
+
             error = file_convert_wait_for_conversion (converter);
+
+	    g_mutex_lock (transfer_data->mutex);
+	    transfer_data->converter_pid = -1;
+	    g_mutex_unlock (transfer_data->mutex);
+
             if (!error)
                 file_to_transfer = converter->converted_file;
         }
-	break;
     }
 
     if (error == NULL)
@@ -1246,11 +1333,22 @@ static gpointer th_copy (gpointer data)
 
 /* This function is called when the user presses the abort button
  * during flush_tracks() */
-static void file_dialog_abort (gboolean *abort_flag)
+static void file_dialog_abort (TransferData *transfer_data)
 {
-    *abort_flag = TRUE;
-}
+    g_return_if_fail (transfer_data);
 
+    g_mutex_lock (transfer_data->mutex);
+
+    transfer_data->abort = TRUE;
+
+    /* kill conversion if in progress */
+    if (transfer_data->converter_pid != -1)
+    {
+	kill (transfer_data->converter_pid, SIGTERM);
+    }
+
+    g_mutex_unlock (transfer_data->mutex);
+}
 
 /* check if iPod directory stucture is present */
 static gboolean ipod_dirs_present (const gchar *mountpoint)
@@ -1282,9 +1380,10 @@ static gboolean ipod_dirs_present (const gchar *mountpoint)
 
 
 static GtkWidget *create_file_dialog (GtkWidget **progress_bar,
-				      gboolean *abort_flag)
+				      GtkWidget **text_view,
+				      TransferData *transfer_data)
 {
-  GtkWidget *dialog, *label, *image, *hbox;
+  GtkWidget *dialog, *label, *image, *hbox, *expander, *scrolled_window;
 
   /* create the dialog window */
   dialog = gtk_dialog_new_with_buttons (_("Information"),
@@ -1310,20 +1409,32 @@ static GtkWidget *create_file_dialog (GtkWidget **progress_bar,
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
   /* Create the progress bar */
-  if (progress_bar)
+  if (progress_bar) {
       *progress_bar = gtk_progress_bar_new ();
+      gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+			  *progress_bar, FALSE, FALSE, 0);
+  }
+
+  /* Create details log */
+  if (text_view) {
+      expander = gtk_expander_new (_("Details..."));
+      scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+      *text_view = gtk_text_view_new();
+      gtk_container_add (GTK_CONTAINER (scrolled_window), *text_view);
+      gtk_container_add (GTK_CONTAINER (expander), scrolled_window);
+      gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+                      expander, TRUE, TRUE, 0);
+  }
 
   /* Indicate that user wants to abort */
   g_signal_connect_swapped (GTK_OBJECT (dialog), "response",
 			    G_CALLBACK (file_dialog_abort),
-			    abort_flag);
+			    transfer_data);
 
   /* Add the image/label + progress bar to dialog */
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
                       hbox, FALSE, FALSE, 0);
-  if (progress_bar)
-      gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
-			  *progress_bar, FALSE, FALSE, 0);
+
   gtk_widget_show_all (dialog);
 
   return dialog;
@@ -1339,7 +1450,7 @@ static gboolean delete_files (iTunesDB *itdb)
   GtkWidget *dialog, *progress_bar;
   gchar *progtext = NULL;
   gboolean result = TRUE;
-  static gboolean abort_flag;
+  TransferData *transfer_data;
   ExtraiTunesDBData *eitdb;
 #ifdef G_THREADS_ENABLED
   GThread *thread = NULL;
@@ -1347,8 +1458,6 @@ static gboolean delete_files (iTunesDB *itdb)
   if (!mutex) mutex = g_mutex_new ();
   if (!cond) cond = g_cond_new ();
 #endif
-
-
 
   g_return_val_if_fail (itdb, FALSE);
   eitdb = itdb->userdata;
@@ -1364,16 +1473,16 @@ static gboolean delete_files (iTunesDB *itdb)
       g_return_val_if_fail (itdb_get_mountpoint (itdb), FALSE);
   }
 
-  abort_flag = FALSE;
+  transfer_data = transfer_data_new ();
 
-  dialog = create_file_dialog (&progress_bar, &abort_flag);
+  dialog = create_file_dialog (&progress_bar, NULL, transfer_data);
   progtext = g_strdup (_("deleting..."));
   gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   g_free (progtext);
 
   /* lets clean up those pending deletions */
-  while (!abort_flag && eitdb->pending_deletion)
+  while (!transfer_data->abort && eitdb->pending_deletion)
   {
       gchar *filename = NULL;
       Track *track = eitdb->pending_deletion->data;
@@ -1407,6 +1516,10 @@ static gboolean delete_files (iTunesDB *itdb)
 		  g_get_current_time (&gtime);
 		  g_time_val_add (&gtime, 20000);
 		  g_cond_timed_wait (cond, mutex, &gtime);
+                  /* Waits until this thread is woken up on cond, but
+		     not longer than until the time specified by
+		     abs_time. The mutex is unlocked before falling
+		     asleep and locked again before resuming. */
 	      } while(!mutex_data);
 	      g_mutex_unlock (mutex);
 	      rmres = GPOINTER_TO_UINT(g_thread_join (thread));
@@ -1432,7 +1545,8 @@ static gboolean delete_files (iTunesDB *itdb)
 	  gtk_main_iteration ();
   }
   gtk_widget_destroy (dialog);
-  if (abort_flag) result = FALSE;
+  if (transfer_data->abort) result = FALSE;
+  transfer_data_free (transfer_data);
   return result;
 }
 
@@ -1447,7 +1561,7 @@ static gboolean flush_tracks (iTunesDB *itdb)
   GList *gl;
   gint count, n;
   gboolean result = TRUE;
-  static gboolean abort_flag;
+  TransferData *transfer_data;
   GtkWidget *dialog, *progress_bar;
   time_t start;
   gchar *progtext = NULL;
@@ -1465,33 +1579,42 @@ static gboolean flush_tracks (iTunesDB *itdb)
 
   n = itdb_tracks_number_nontransferred (itdb);
 
-  if (n==0) return TRUE;
+  if (n == 0) return TRUE;
 
-  abort_flag = FALSE;
+  transfer_data = transfer_data_new ();
+
   /* create the dialog window */
-  dialog = create_file_dialog (&progress_bar, &abort_flag);
+  dialog = create_file_dialog (&progress_bar,
+			       (GtkWidget**)&details_log,
+			       transfer_data);
   progtext = g_strdup (_("preparing to copy..."));
   gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progress_bar), progtext);
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   g_free (progtext);
 
+  transfer_data->abort = FALSE;
+
   /* count number of tracks to be transferred */
   count = 0; /* tracks transferred */
   start = time (NULL);
 
-  for (gl=itdb->tracks; gl && !abort_flag; gl=gl->next)
+  for (gl=itdb->tracks; gl && !transfer_data->abort; gl=gl->next)
   {
       time_t diff, fullsecs, hrs, mins, secs;
       Track *track = gl->data;
       g_return_val_if_fail (track, FALSE); /* this will hang the
 					      application :-( */
+      g_mutex_lock (transfer_data->mutex);
+      transfer_data->track = track;
+      g_mutex_unlock (transfer_data->mutex);
+
       if (!track->transferred)             /* but this would crash
 					      it otherwise... */
       {
 	  GError *error = NULL;
 #ifdef G_THREADS_ENABLED
 	  mutex_data = FALSE;
-	  thread = g_thread_create (th_copy, track, TRUE, NULL);
+	  thread = g_thread_create (th_copy, transfer_data, TRUE, NULL);
 	  if (thread)
 	  {
 	      g_mutex_lock (mutex);
@@ -1509,18 +1632,20 @@ static gboolean flush_tracks (iTunesDB *itdb)
 	  }
 	  else {
 	      g_warning ("Thread creation failed, falling back to default.\n");
-	      error = th_copy (track);
+	      error = th_copy (transfer_data);
 	  }
 #else
-	  error = th_copy (track);
+	  error = th_copy (transfer_data);
 #endif
 	  if (error)
 	  {   /* an error occurred */
-	      result = FALSE;
-	      if (error->message)
-		  gtkpod_warning ("%s\n\n", error->message);
-	      else
-		  g_warning ("error->message == NULL!\n");
+             if(!transfer_data->abort) {
+	          result = FALSE;
+	          if (error->message)
+		      gtkpod_warning ("%s\n\n", error->message);
+	          else
+		      g_warning ("error->message == NULL!\n");
+             }
 	      g_error_free (error);
 	  }
 	  data_changed (itdb); /* otherwise new free space status from
@@ -1561,12 +1686,14 @@ static gboolean flush_tracks (iTunesDB *itdb)
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   } /* for (.;.;.) */
 
-  if (abort_flag)      result = FALSE;   /* negative result if user aborted */
+  if (transfer_data->abort)  result = FALSE;   /* negative result if user aborted */
   if (result == FALSE)
       gtkpod_statusbar_message (_("Some tracks were not written to iPod. Export aborted!"));
   gtkpod_statusbar_timeout (0);
   gtk_widget_destroy (dialog);
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+
+  g_free (transfer_data);
   return result;
 }
 
