@@ -1,3 +1,16 @@
+2007-02-06 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+        * gtkpod/scripts/convert-flac2m4a.sh
+          gtkpod/scripts/convert-flac2mp3.sh
+          gtkpod/scripts/convert-m4a2mp3.sh
+          gtkpod/scripts/convert-mp32m4a.sh
+          gtkpod/scripts/convert-ogg2m4a.sh
+          gtkpod/scripts/convert-ogg2mp3.sh
+          gtkpod/scripts/convert-wav2m4a.sh
+          gtkpod/scripts/convert-wav2mp3.sh: fixed some bugs in
+          conversion scripts (Mario Rossi).
+
+
 2007-02-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/details.c

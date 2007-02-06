@@ -25,7 +25,7 @@
 
 
 # Get parameters
-while getopts a:A:T:t:g:c: opt ; do
+while getopts a:A:T:t:g:c:y: opt ; do
 	case "$opt" in
 		a)	artist="$OPTARG" ;;
 		A)	album="$OPTARG" ;;
@@ -45,7 +45,7 @@ mp3file=${mp3file%%.m4a}
 mp3file="/tmp/$mp3file.mp3"
 
 # Default values
-[ -z "$comment"] && comment="Encoded for gtkpod with lame"
+[ -z "$comment" ] && comment="Encoded for gtkpod with lame"
 
 #echo "Converting \"$m4afile\" into \"$mp3file\""
 

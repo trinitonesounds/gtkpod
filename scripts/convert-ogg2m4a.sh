@@ -24,7 +24,7 @@
 #   6 conversion failed
 
 # Get parameters
-while getopts a:A:T:t:g:c: opt ; do
+while getopts a:A:T:t:g:c:y: opt ; do
 	case "$opt" in
 		a)	artist="$OPTARG" ;;
 		A)	album="$OPTARG" ;;
@@ -44,7 +44,7 @@ m4afile=${m4afile%%.ogg}
 m4afile="/tmp/$m4afile.m4a"
 
 # Default values
-[ -z "$comment"] && comment="Encoded for gtkpod with faac"
+[ -z "$comment" ] && comment="Encoded for gtkpod with faac"
 
 #echo "Converting \"$oggfile\" into \"$m4afile\""
 
