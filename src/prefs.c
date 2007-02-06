@@ -237,6 +237,14 @@ static void set_default_preferences()
     prefs_set_int("size_info.x", 510);
     prefs_set_int("size_info.y", 300);
 
+    /* size of file dialog if there is not a details textview */
+    prefs_set_int("size_file_dialog.x", 320);
+    prefs_set_int("size_file_dialog.y", 140);
+
+    /* size of file dialog if there is a details textview */
+    prefs_set_int("size_file_dialog_details.x", 320);
+    prefs_set_int("size_file_dialog_details.y", 140);
+
     prefs_set_int("autoimport", FALSE);
     prefs_set_int("readtags", TRUE);
     prefs_set_int("write_extended_info", TRUE);
@@ -265,6 +273,7 @@ static void set_default_preferences()
     prefs_set_int("block_display", FALSE);
     prefs_set_int("md5", TRUE);
     prefs_set_string("export_template", "%o;%a - %t.mp3;%t.wav");
+    prefs_set_int("file_dialog_details_expanded", FALSE);
 
     /* Set last browsed directory */
     str = g_get_current_dir();

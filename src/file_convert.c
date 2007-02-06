@@ -40,7 +40,7 @@
 #include "misc.h"           /* T_item */
 #include "misc_track.h"     /* track_get_item_pointer */
 
-#define DEBUG_CONV
+/* #define DEBUG_CONV */
 #ifdef DEBUG_CONV
 #   define _TO_STR(x) #x
 #   define TO_STR(x) _TO_STR(x)

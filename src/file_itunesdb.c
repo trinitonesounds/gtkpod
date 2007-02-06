@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-05 17:27:00 jcs>
+/* Time-stamp: <2007-02-06 21:57:48 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1251,7 +1251,8 @@ static gpointer th_copy (gpointer data)
     etr = track->userdata;
     g_return_val_if_fail (etr, NULL);
     const gchar *file_to_transfer=etr->pc_path_locale;
-    gboolean convert = FALSE;
+    gboolean convert = FALSE, must_convert = FALSE;
+    const gchar *typestr = "";
 
     /* check if we need to convert the file */
     type = determine_file_type (file_to_transfer);
@@ -1280,9 +1281,13 @@ static gpointer th_copy (gpointer data)
   	break;
     case FILE_TYPE_OGG:
 	convert = prefs_get_int ("convert_ogg");
+        must_convert = TRUE;
+        typestr = _("Ogg Vorbis");
   	break;
     case FILE_TYPE_FLAC:
 	convert = prefs_get_int ("convert_flac");
+        must_convert = TRUE;
+        typestr = _("FLAC");
 	break;
     }
 
@@ -1307,6 +1312,14 @@ static gpointer th_copy (gpointer data)
             if (!error)
                 file_to_transfer = converter->converted_file;
         }
+    }
+    else if (must_convert)
+    {
+        error = g_error_new(G_FILE_ERROR, 0, 
+            _("Unable to copy %s and no converstion script is set in preferences.\n"
+              "\niPods do not support %s files natively."
+              " Please set up and turn on the correct conversion Script in preferences\n"),
+              file_to_transfer, typestr );
     }
 
     if (error == NULL)
@@ -1377,13 +1390,22 @@ static gboolean ipod_dirs_present (const gchar *mountpoint)
     return result;
 }
 
+static void file_dialog_expander_notify (GtkExpander *expander, GParamSpec *param_spec, gpointer user_data)
+{
+  gboolean expanded;
 
+  /* Save the state of the expander to preferences */
+  expanded = gtk_expander_get_expanded (expander);
+  prefs_set_int("file_dialog_details_expanded", expanded);
+}
 
 static GtkWidget *create_file_dialog (GtkWidget **progress_bar,
 				      GtkWidget **text_view,
 				      TransferData *transfer_data)
 {
   GtkWidget *dialog, *label, *image, *hbox, *expander, *scrolled_window;
+  gint defx = 0, defy = 0;
+  gboolean details_expanded;
 
   /* create the dialog window */
   dialog = gtk_dialog_new_with_buttons (_("Information"),
@@ -1424,7 +1446,23 @@ static GtkWidget *create_file_dialog (GtkWidget **progress_bar,
       gtk_container_add (GTK_CONTAINER (expander), scrolled_window);
       gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
                       expander, TRUE, TRUE, 0);
+
+      defx =  prefs_get_int ("size_file_dialog_details.x");
+      defy =  prefs_get_int ("size_file_dialog_details.y");
+      details_expanded = prefs_get_int ("file_dialog_details_expanded");
+      gtk_expander_set_expanded (GTK_EXPANDER (expander), details_expanded);
+      
+      g_signal_connect (GTK_OBJECT (expander), "notify::expanded",
+                      G_CALLBACK (file_dialog_expander_notify),
+		      NULL);
+
   }
+  else {
+      defx =  prefs_get_int ("size_file_dialog.x");
+      defy =  prefs_get_int ("size_file_dialog.y");
+  }
+
+  gtk_window_set_default_size(GTK_WINDOW (dialog), defx, defy);
 
   /* Indicate that user wants to abort */
   g_signal_connect_swapped (GTK_OBJECT (dialog), "response",
@@ -1434,12 +1472,11 @@ static GtkWidget *create_file_dialog (GtkWidget **progress_bar,
   /* Add the image/label + progress bar to dialog */
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
                       hbox, FALSE, FALSE, 0);
-
+  
   gtk_widget_show_all (dialog);
 
   return dialog;
 }
-
 
 /* Removes all tracks that were marked for deletion from the iPod or
    the local harddisk (for itdb->usertype == GP_ITDB_TYPE_LOCAL) */
@@ -1450,6 +1487,7 @@ static gboolean delete_files (iTunesDB *itdb)
   GtkWidget *dialog, *progress_bar;
   gchar *progtext = NULL;
   gboolean result = TRUE;
+  gint w, h;
   TransferData *transfer_data;
   ExtraiTunesDBData *eitdb;
 #ifdef G_THREADS_ENABLED
@@ -1544,6 +1582,12 @@ static gboolean delete_files (iTunesDB *itdb)
       while (widgets_blocked && gtk_events_pending ())
 	  gtk_main_iteration ();
   }
+
+  /* Save size of file dialog */ 
+  gtk_window_get_size (GTK_WINDOW(dialog), &w, &h);
+  prefs_set_int("size_file_dialog.x", w);
+  prefs_set_int("size_file_dialog.y", h);
+
   gtk_widget_destroy (dialog);
   if (transfer_data->abort) result = FALSE;
   transfer_data_free (transfer_data);
@@ -1559,7 +1603,7 @@ static gboolean delete_files (iTunesDB *itdb)
 static gboolean flush_tracks (iTunesDB *itdb)
 {
   GList *gl;
-  gint count, n;
+  gint count, n, w, h;
   gboolean result = TRUE;
   TransferData *transfer_data;
   GtkWidget *dialog, *progress_bar;
@@ -1690,6 +1734,12 @@ static gboolean flush_tracks (iTunesDB *itdb)
   if (result == FALSE)
       gtkpod_statusbar_message (_("Some tracks were not written to iPod. Export aborted!"));
   gtkpod_statusbar_timeout (0);
+
+  /* Save size of file dialog */ 
+  gtk_window_get_size (GTK_WINDOW(dialog), &w, &h);
+  prefs_set_int("size_file_dialog_details.x", w);
+  prefs_set_int("size_file_dialog_details.y", h);
+
   gtk_widget_destroy (dialog);
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 
