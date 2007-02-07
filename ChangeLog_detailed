@@ -1,3 +1,8 @@
+2007-02-07 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/file_itunesdb.c: changed message string (thanks to
+          Daniele Forsi)
+
 2007-02-06 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
         * scripts/convert-flac2m4a.sh

@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-06 21:57:48 jcs>
+/* Time-stamp: <2007-02-08 00:00:07 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1316,9 +1316,8 @@ static gpointer th_copy (gpointer data)
     else if (must_convert)
     {
         error = g_error_new(G_FILE_ERROR, 0, 
-            _("Unable to copy %s and no converstion script is set in preferences.\n"
-              "\niPods do not support %s files natively."
-              " Please set up and turn on the correct conversion Script in preferences\n"),
+          _("\"%s\" wasn't copied because iPods do not support %s files natively.\n"
+	    "Go to the Preferences to set up and turn on a suitable conversion script.\n"),
               file_to_transfer, typestr );
     }
 
