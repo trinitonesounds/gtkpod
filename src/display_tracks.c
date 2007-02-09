@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-16 18:29:49 jcs>
+/* Time-stamp: <2007-02-10 01:10:16 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1594,6 +1594,9 @@ gboolean tm_search_equal_func (GtkTreeModel *model,
   case TM_COLUMN_IPOD_PATH:
   case TM_COLUMN_COMPILATION:
   case TM_COLUMN_THUMB_PATH:
+  case TM_COLUMN_TV_SHOW:
+  case TM_COLUMN_TV_EPISODE:
+  case TM_COLUMN_TV_NETWORK:
     cmp = (compare_string_start_case_insensitive (
 	  track_get_item (track1, TM_to_T (column)),
 	  key) != 0);
@@ -1616,9 +1619,6 @@ gboolean tm_search_equal_func (GtkTreeModel *model,
   case TM_COLUMN_BPM:
   case TM_COLUMN_TIME_RELEASED:
   case TM_COLUMN_MEDIA_TYPE:
-  case TM_COLUMN_TV_SHOW:
-  case TM_COLUMN_TV_EPISODE:
-  case TM_COLUMN_TV_NETWORK:
   case TM_COLUMN_SEASON_NR:
   case TM_COLUMN_EPISODE_NR:
   case TM_NUM_COLUMNS:
@@ -1749,6 +1749,9 @@ static void tm_set_search_column (gint newcol)
     case TM_COLUMN_IPOD_PATH:
     case TM_COLUMN_COMPILATION:
     case TM_COLUMN_THUMB_PATH:
+    case TM_COLUMN_TV_SHOW:
+    case TM_COLUMN_TV_EPISODE:
+    case TM_COLUMN_TV_NETWORK:
 	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (track_treeview), TRUE);
 	break;
     case TM_COLUMN_TRACK_NR:
@@ -1769,9 +1772,6 @@ static void tm_set_search_column (gint newcol)
     case TM_COLUMN_BPM:
     case TM_COLUMN_TIME_RELEASED:
     case TM_COLUMN_MEDIA_TYPE:
-    case TM_COLUMN_TV_SHOW:
-    case TM_COLUMN_TV_EPISODE:
-    case TM_COLUMN_TV_NETWORK:
     case TM_COLUMN_SEASON_NR:
     case TM_COLUMN_EPISODE_NR:
     case TM_NUM_COLUMNS:

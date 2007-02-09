@@ -1,3 +1,9 @@
+2007-02-09 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_tracks.c (tm_search_equal_func,
+          tm_set_search_column): make tv-show, -episode and -network
+          searchable.
+
 2007-02-07 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_itunesdb.c: changed message string (thanks to
