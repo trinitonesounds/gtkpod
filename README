@@ -481,18 +481,24 @@ Restoring your iPod after file system error
 -------------------------------------------
 If iPod's file system gets corrpted and you need to reformat your
 iPod, there is a way to restore the contents semi-automatically if you
-have been using the "backup to ~/.gtkpod" and "write extended
-information file" (iTunesDB.ext) options:
+have been using the "write extended information file" (iTunesDB.ext)
+options:
 
-1) Make gtkpod think it still needs to copy the tracks 
-  
-$ perl -p -i -e 's/transferred=1/transferred=0/g' ~/.gtkpod/iTunesDB.ext
+ - If the directory structure on the iPod doesn't exist yet,
+   load the iPod in gtkpod and have it created for you. Then unload
+   the iPod again.
 
-2) Import the iTunesDB in "Offline" mode
+ - copy your backup files in .gtkpod/ (usually iTunesDB and
+   iTunesDB.ext) to your iPod (usually
+   <mountpoint>/iPod_Control/iTunes/
+   On the iPod the files must be named iTunesDB and iTunesDB.ext.
 
-3) Switch to "Online" mode
+ - load the iPod in gtkpod
 
-4) Export iTunesDB
+ - select the iPod repository and start "Check iPod's files" from the
+   File menu
+
+ - unload the iPod (or save changes)
 
 This should restore your iPod to what it was before, provided you
 didn't move or remove any of the original tracks on your harddrive, and

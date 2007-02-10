@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-23 00:45:42 jcs>
+/* Time-stamp: <2007-02-10 17:46:56 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -943,9 +943,9 @@ static void export_playlist_file_write (struct fcd *fcd)
 
     num = g_list_length (fcd->tracks);
 
-    prefs_get_int_value (EXPORT_PLAYLIST_FILE_TYPE, &type);
-    prefs_get_int_value (EXPORT_PLAYLIST_FILE_SOURCE, &source);
-    prefs_get_string_value (EXPORT_PLAYLIST_FILE_TPL, &template);
+    type = prefs_get_int (EXPORT_PLAYLIST_FILE_TYPE);
+    source = prefs_get_int (EXPORT_PLAYLIST_FILE_SOURCE);
+    template = prefs_get_string (EXPORT_PLAYLIST_FILE_TPL);
     if (!template)
 	template = g_strdup (EXPORT_PLAYLIST_FILE_TPL_DFLT);
 

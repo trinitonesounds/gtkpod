@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-05 12:53:44 jcs>
+/* Time-stamp: <2007-02-10 17:52:19 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -60,12 +60,16 @@ typedef enum
     FILE_TYPE_DIRECTORY
 } FileType;
 
+
+/* Don't change the order of this enum -- when exporting playlists the
+   file requester depends on having these in order because the toggle
+   buttons are arranged that way */
 typedef enum
 {
     SOURCE_PREFER_LOCAL = 0,
-    SOURCE_PREFER_IPOD,
     SOURCE_LOCAL,
-    SOURCE_IPOD
+    SOURCE_IPOD,
+    SOURCE_PREFER_IPOD
 } FileSource;
 
 

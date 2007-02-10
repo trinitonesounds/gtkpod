@@ -23,7 +23,7 @@ TASKFILES=`find ~/.evolution/tasks/local/ -name "tasks.ics"`
 
 ENCODING=ISO-8859-15                          # encoding used by ipod
 
-# Unless called with "-e=none" this script requires "iconv" available
+# Unless called with "-e none" this script requires "iconv" available
 # from http://www.gnu.org/software/libiconv/
 
 # About the encoding used by the iPod (by Jorg Schuler):
@@ -65,7 +65,7 @@ ENCODING=ISO-8859-15                          # encoding used by ipod
 # Added Usage-line, added check for vcard file, rearranged source
 #
 # 2004/07/03 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
-# Made "iconv" optional (call with -e="none")
+# Made "iconv" optional (call with "-e none")
 #
 # Removed "dos2unix" as my iPod (firmware 1.3) happily accepted
 # DOS-type vcards as well. Instead changed the "grep" pattern to
