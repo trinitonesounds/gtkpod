@@ -100,8 +100,8 @@ Tracks
 - You can rename ID3 tags by editing the fields in gtkpod. You can
   change an entire group of ID3 tags by editing an entry in the sort
   tab (or mark several tracks and edit the first).
-- Cou can specify which tags to display in the preferences window
-- Cou can specify (in the prefs window) if the ID3 tags of the
+- You can specify which tags to display in the preferences window
+- You can specify (in the prefs window) if the ID3 tags of the
   corresponding mp3 file(s) should also be updated
 
 
@@ -312,7 +312,7 @@ iTunesDB.ext).
 At this time "album gain" functionality is not supported. "Album gain"
 means that the volume of all tracks of one album is adjusted by the
 same gain, such that the relative volume level remains the same. It is
-planned to realize this in on of the next versions.
+planned to realize this in one of the next versions.
 
 Also, please be aware that tracks are not normalized on a 'per
 playlist' fashion. If a track is normalized, it's normalized in all
@@ -327,7 +327,7 @@ field. Use 'Update Track' to re-read the tag from the file.
 Podcasts
 --------
 
-You have to download podcasts using a third party tool like bashpooder
+You have to download podcasts using a third party tool like bashpodder
 (http://linc.homeunix.org:8080/scripts/bashpodder/) or gpodder
 (http://perli.net/projekte/gpodder/)
 
@@ -354,7 +354,7 @@ It is possible to modify your iTunesDB "offline", i.e. without your
 iPod connected to your computer. You can then synchronize the contents
 of your iPod at any later time.
 
-To to this, you must have a backup of your iTunes database and the
+To do this, you must have a backup of your iTunes database and the
 extended information file in the ~/.gtkpod/ directory (choose the
 backup option in the prefs menu for automatic backups).
 
@@ -394,7 +394,7 @@ Encoding of ID3 tags (charsets)
 If you use correctly written unicode ID3V2 tags you don't have to
 worry about the charset setting.
 
-Otherwise you must specify the carset to be used for representing ID3
+Otherwise you must specify the charset to be used for representing ID3
 tags in the preferences menu. The default is "System Charset", which
 is the charset associated with the locale gtkpod is running under. If
 your tags are stored in a different encoding, you should set it
@@ -406,7 +406,7 @@ tags are imported correctly, changing the charset has no influence.
 
 If you chose "Japanese (automatic detection)", gtkpod will try to
 determine if the string is in ISO-2022-JP, Shift_JIS, or EUC-JP
-(Hankaku Katakana (1-byte Katakana) may not be recognised correctly --
+(Hankaku Katakana (1-byte Katakana) may not be recognized correctly --
 specify the correct encoding if you run into this problem). The actual
 encoding used for the ID tags will be stored and will be used when
 writing tags or doing updates/syncs. Check the "Use selected charset
@@ -425,14 +425,14 @@ Extracting tag information from the filename
 --------------------------------------------
 Tags can also be extracted from the filename if you activate the
 option 'Use this template to parse filename for tag information' and
-supply a template that explains how the filanames are constructed.
+supply a template that explains how the filenames are constructed.
 
 For filenames like 
     music/new/latin1/alan_jackson - drive/01 drive_for_daddy_gene.mp3
 you could use
     %a - %A/%T %*.mp3
 
-to extract artist, alabum, track number and title.
+to extract artist, album, track number and title.
 
 The following character sequences are supported:
 
@@ -479,7 +479,7 @@ restored with the next sync.
 
 Restoring your iPod after file system error
 -------------------------------------------
-If iPod's file system gets corrpted and you need to reformat your
+If iPod's file system gets corrupted and you need to reformat your
 iPod, there is a way to restore the contents semi-automatically if you
 have been using the "write extended information file" (iTunesDB.ext)
 options:
@@ -509,7 +509,7 @@ Playcounts & Rating
 -------------------
 
 Whenever you play a track completely on the iPod (firmware version 1.3
-or higher) a counter in a the "Play Counts" file will be increased by
+or higher) a counter in the "Play Counts" file will be increased by
 one. The same file also contains the rating you can set with the 3rd
 generation iPods.
 
@@ -573,8 +573,8 @@ forget about the excerpt above.
 However, the "Add Files" and "Add Playlists" dialogue (at the moment)
 uses the standard GTK+-2.0 file selection dialogue. Therefore I have
 no access on the conversion functions used, and a warning is printed
-when filenames are encountered that are encoded in a an encoding other
-than the once of the current locale. ID3 tags are still read currectly
+when filenames are encountered that are encoded in an encoding other
+than the one of the current locale. ID3 tags are still read correctly
 (according to the charset set in the preference dialogue).
 
 
@@ -688,7 +688,7 @@ At least for the new 4Gs and iPod minis you should _disable_
 4) Write rules for udev (/etc/udev/udev.rules, add at the beginning)
    to recognize your iPod automatically (mind the spaces within
    "iPod...", and be aware that some distributions require a double
-   equal after the BUS keyworkd (BUS=="scsi"...)):
+   equal after the BUS keyword (BUS=="scsi"...)):
 
 BUS="scsi", SYSFS{model}="iPod            ", KERNEL="sd?2", NAME="%k", SYMLINK="ipod"
 
@@ -1042,7 +1042,7 @@ atmos   ALL= NOPASSWD : IPOD
 ------------------------------- End Here -----------------------------------
 I use the force inquiry hack cause I have an older iPod, if you normally can
 get by with /sbin/modprobe sbp2 then ignore the inquiry hack stuff.  Note
-that explicitly specifying with module to probe/remove keeps the user from
+that explicitly specifying which module to probe/remove keeps the user from
 being able to add/remove arbitrary modules.  This allows us to keep gtkpod
 as a user process, and execute commands the user wouldn't usually have
 enough rights to.
@@ -1135,4 +1135,4 @@ Good Luck.
   iTunesDB, sometimes the interface freezes. I tried to track this
   problem down but only found out that gtk+ does not return control
   back to gtkpod. Selecting the "All" filter tabs seems to unfreeze the
-  interace again.
+  interface again.
