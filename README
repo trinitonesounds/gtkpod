@@ -260,17 +260,16 @@ You can also select entries in the filter tab or entire playlists for
 refresh.
 
 
-Synchronize Directories
------------------------
+Synchronize with Directories
+----------------------------
 
 If you have added files to directories or changed files in directories
 you have previously added tracks from, you can use the "Synchronize
 Dirs" utility to update your iTunesDB.
 
-"Synchronize Dirs" will use the selected tracks to make a list of
-directories to update, so you should activate the "Write Extended
-Information" option in the export section of the preferences
-dialogue.
+"Synchronize with Dir(s)" will use the selected tracks to make a list
+of directories to update, so you should activate the "Write Extended
+Information" option in the export section of the preferences dialogue.
 
 It will then add all non-existing tracks in those directories and
 update (see "Refresh") all existing tracks. The tracks are also added to
@@ -281,6 +280,7 @@ from the iTunesDB if this option is checked in the option dialogue.
 
 For best results you should also activate duplicate detection. This
 avoids unnecessary copying of unchanged tracks.
+
 
 
 Volume Normalization
