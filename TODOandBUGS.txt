@@ -1,5 +1,7 @@
 BUGS, TODO:
 
+- don't keep iTunesDB on iPod when syncing (takes up valuable space)
+
 - fileselection_select_script(): display @additional_text.
 
 - modify "warning" when matching checksums: Send a patch that changes
