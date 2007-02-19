@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-19 15:41:48 jcs>
+/* Time-stamp: <2007-02-19 23:22:36 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -67,7 +67,7 @@ extern gint stop_add;
 void pm_create_treeview (void);
 void pm_set_selected_playlist(Playlist *pl);
 void pm_remove_all_playlists (gboolean clear_sort);
-void pm_add_all_playlists (void);
+void pm_add_all_itdbs (void);
 void tm_create_treeview (void);
 void tm_track_changed (Track *track);
 void tm_remove_track (Track *track);

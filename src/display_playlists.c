@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-26 17:39:43 jcs>
+/* Time-stamp: <2007-02-19 23:22:37 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1486,7 +1486,7 @@ void pm_add_itdb (iTunesDB *itdb, gint pos)
 
 
 /* Helper function: add all playlists to playlist model */
-void pm_add_all_playlists (void)
+void pm_add_all_itdbs (void)
 {
     GList *gl_itdb;    
     struct itdbs_head *itdbs_head;
@@ -1564,7 +1564,7 @@ static void pm_unsort ()
     pm_set_selected_playlist (cur_pl);
 
     /* add playlists back to model (without selecting) */
-    pm_add_all_playlists ();
+    pm_add_all_itdbs ();
 
     pm_selection_blocked = FALSE;
     /* reset sort counter */

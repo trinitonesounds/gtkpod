@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-25 00:22:56 jcs>
+/* Time-stamp: <2007-02-19 23:22:35 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -135,7 +135,7 @@ void display_reset (gint inst)
 
     pm_set_selected_playlist (cur_pl);
     /* add playlists back to model (without selecting) */
-    pm_add_all_playlists ();
+    pm_add_all_itdbs ();
 }
 
 

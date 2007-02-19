@@ -1,3 +1,10 @@
+2007-02-19 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	 * src/display.c
+	   src/display_playlists.c
+	   src/display_private.h: renamed pm_add_all_playlists() to
+	   pm_add_all_itdbs().
+
 2007-02-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	 * po/es.po: updated -- thanks to Alex Lamas.
