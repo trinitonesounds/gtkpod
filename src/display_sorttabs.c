@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-19 01:52:28 jcs>
+/* Time-stamp: <2007-02-20 23:05:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2028,11 +2028,87 @@ static void st_sort_inst (guint32 inst, GtkSortType order)
 
 void st_sort (GtkSortType order)
 {
-    gint i;
-    for (i=0; i < prefs_get_int("sort_tab_num"); ++i)
-	st_sort_inst (i, order);
+  gint i;
+  for (i=0; i < prefs_get_int("sort_tab_num"); ++i)
+		st_sort_inst (i, order);
+	
+	Playlist *plitem = pm_get_selected_playlist ();
+	coverart_set_images (plitem->members);
 }
 
+gboolean st_set_selection (Itdb_Track *track)
+{
+	GtkTreeSelection *selection;
+  GtkTreeView *treeview;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	TabEntry *entry = NULL;
+	gboolean status;
+	
+	gtk_notebook_set_current_page (sorttab[0]->notebook, ST_CAT_ARTIST); 
+  st_page_selected (sorttab[0]->notebook, ST_CAT_ARTIST);
+  
+	while (gtk_events_pending ()) gtk_main_iteration ();
+	
+	/* ######## Select the artist from the first sorttab ######## */
+  treeview = sorttab[0]->treeview[ST_CAT_ARTIST];
+  model = gtk_tree_view_get_model (treeview);
+  selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+  
+  status = gtk_tree_model_get_iter_first (model, &iter);
+  g_return_val_if_fail (status, FALSE);
+  
+  do
+  {
+  	gtk_tree_model_get (model, &iter, ST_COLUMN_ENTRY, &entry , -1);
+		g_return_val_if_fail (entry, FALSE);
+		
+		if (g_ascii_strcasecmp (entry->name, track->artist) == 0)
+		{
+			/* break out the loop once the correct iter has been found */
+			break;
+		}
+  }
+  while (gtk_tree_model_iter_next (model, &iter));
+  
+  while (gtk_events_pending ()) gtk_main_iteration ();
+  
+  gtk_tree_selection_select_iter (selection, &iter);
+    	
+	while (gtk_events_pending ()) gtk_main_iteration ();
+	
+	/* ######## Select the album from the second sorttab ######## */
+	gtk_notebook_set_current_page (sorttab[1]->notebook, ST_CAT_ALBUM); 
+  st_page_selected (sorttab[1]->notebook, ST_CAT_ALBUM);
+  
+  while (gtk_events_pending ()) gtk_main_iteration ();
+	
+  treeview = sorttab[1]->treeview[ST_CAT_ALBUM];
+  model = gtk_tree_view_get_model (treeview);
+  selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+  
+  status = gtk_tree_model_get_iter_first (model, &iter);
+  g_return_val_if_fail (status, FALSE);
+  
+  do
+  {
+  	gtk_tree_model_get (model, &iter, ST_COLUMN_ENTRY, &entry , -1);
+		g_return_val_if_fail (entry, FALSE);
+		
+		if (g_ascii_strcasecmp (entry->name, track->album) == 0)
+		{
+    	/* break out the loop once the correct iter has been found */
+    	break;
+		}
+  }
+  while (gtk_tree_model_iter_next (model, &iter));
+  
+  while (gtk_events_pending ()) gtk_main_iteration ();
+	  	
+  gtk_tree_selection_select_iter (selection, &iter);
+    	
+	return TRUE;	
+}
 
 static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 {
@@ -2072,8 +2148,8 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
       gtk_tree_model_get (model, &iter,
 			  ST_COLUMN_ENTRY, &new_entry,
 			  -1);
-      /* printf("selected instance %d, entry %x (was: %x)\n", inst,
-       * new_entry, st->current_entry);*/
+      /*printf("selected instance %d, entry %x (was: %x)\n", inst,
+       *new_entry, st->current_entry);*/
 
       /* initialize next instance */
       st_init (-1, inst+1);
@@ -2099,6 +2175,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	      g_get_current_time (&time);
 	  }
 	  st_enable_disable_view_sort (inst+1, FALSE);
+	  	  
 	  for (gl=new_entry->members; gl; gl=gl->next)
 	  { /* add all member tracks to next instance */
 	      Track *track = gl->data;
@@ -2131,7 +2208,17 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	  }
       }
       gtkpod_tracks_statusbar_update();
+      
+      /* Select the cover in the coverart_display */
+      GList *gl = g_list_first(new_entry->members);
+      if (gl != NULL)
+      {
+	  		Track *track = gl->data;
+	  		if (track != NULL)
+	  			coverart_select_cover (track);
+      }
   }
+  
 #if DEBUG_TIMING
   g_get_current_time (&time);
   printf ("st_selection_changed_cb exit:  %ld.%06ld sec\n",

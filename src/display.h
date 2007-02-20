@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-10-21 19:15:20 jcs>
+/* Time-stamp: <2007-02-20 23:05:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -38,6 +38,7 @@
 #include <glade/glade.h>
 #include "itdb.h"
 #include "display_itdb.h"
+#include "display_coverart.h"
 
 /* Main XML glade file */
 GladeXML *main_window_xml;
@@ -312,6 +313,7 @@ void pm_set_renderer_text (GtkCellRenderer *renderer,
 
 void st_stop_editing (gint inst, gboolean cancel);
 void st_page_selected (GtkNotebook *notebook, guint page);
+gboolean st_set_selection (Itdb_Track *track);
 void st_redisplay (guint32 inst);
 void st_sort (GtkSortType order);
 void st_remove_entry (TabEntry *entry, guint32 inst);

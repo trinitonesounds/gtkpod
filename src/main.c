@@ -36,6 +36,7 @@
 
 #include "display.h"
 #include "clientserver.h"
+#include "display_coverart.h"
 #include "prefs.h"
 #include "misc.h"
 #include "file.h"
@@ -122,10 +123,12 @@ main (int argc, char *argv[])
   gtkpod_window = gtkpod_xml_get_widget (main_window_xml, "gtkpod");
   
   init_prefs(argc, argv); 
-  
-  display_create ();
 
-  gtk_widget_show (gtkpod_window);
+  init_default_file (argv[0]);
+
+  display_create ();
+	
+	gtk_widget_show (gtkpod_window);
 
   init_data (gtkpod_window);   /* setup base data */
 

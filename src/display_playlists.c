@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-19 23:22:37 jcs>
+/* Time-stamp: <2007-02-20 23:05:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1410,6 +1410,10 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
       }
       gtkpod_tracks_statusbar_update();
   }
+    
+  /* Set the coverart display based on the selected playlist */
+  coverart_set_images (new_playlist->members);
+    
 #if DEBUG_TIMING
   g_get_current_time (&time);
   printf ("pm_selection_changed_cb exit:  %ld.%06ld sec\n",

@@ -53,6 +53,7 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "fileselection.h"
+#include "display_coverart.h"
 
 /* 
  * Data global to this module only
@@ -128,9 +129,14 @@ static void add_files_ok(GtkFileChooser* filechooser)
     else
 	gtkpod_statusbar_message (_("Some files were not added successfully"));
 	
+		/* Reinitialise coverart display for selected playlist */
+    coverart_set_images (playlist->members);
+    
     /* Clean up the names list */
     delete_file_list(names);
     release_widgets ();
+    
+    
 }
 
 /* 
@@ -680,6 +686,8 @@ static void add_dir_selected (gchar *dir)
 			       NULL, NULL);
 	prefs_set_string ("last_dir_browsed", dir);
 	gtkpod_tracks_statusbar_update();
+	/* Reinitialise coverart display for selected playlist */
+  coverart_set_images (plitem->members);
     }
     else
     {

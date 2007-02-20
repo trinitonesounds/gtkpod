@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-19 01:52:28 jcs>
+/* Time-stamp: <2007-02-20 23:05:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -39,6 +39,7 @@
 #include "misc.h"
 #include "prefs.h"
 #include "info.h"
+#include "display_coverart.h"
 
 #ifdef HAVE_STATVFS
 #include <sys/types.h>
@@ -248,6 +249,9 @@ void delete_track_ok (struct DeleteData *dd)
     /* should never happen */
     if (!dd->tracks)	delete_track_cancel (dd);
 
+		/* Deafen the coverart display while deletion is occurring */
+		coverart_block_change (TRUE);
+		
     /* nr of tracks to be deleted */
     n = g_list_length (dd->tracks);
     if (dd->itdb->usertype & GP_ITDB_TYPE_IPOD)
@@ -308,6 +312,10 @@ void delete_track_ok (struct DeleteData *dd)
 	gp_playlist_remove_track (dd->pl, l->data, dd->deleteaction);
     }
 
+		/* Awaken coverart selection and update the 
+		 * coverart display and ensure it is sorted correctly */
+		coverart_block_change (FALSE);
+		coverart_set_images (dd->pl->members);
     g_list_free (dd->tracks);
     g_free (dd);
 
@@ -648,6 +656,8 @@ static void delete_playlist_ok (struct DeleteData *dd)
     delete_playlist_cleanup (dd);
 
     gtkpod_tracks_statusbar_update ();
+    
+    coverart_clear_images ();
 }
 
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-10 01:10:16 jcs>
+/* Time-stamp: <2007-02-20 23:05:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2124,6 +2124,15 @@ tm_selection_changed_event(GtkTreeSelection *selection, gpointer data)
 	if (col_id != -1)  tm_set_search_column (col_id);
     }
     info_update_track_view_selected ();
+    
+    /* update the coverart display */
+    GList *selected = display_get_selection (prefs_get_int("sort_tab_num"));
+    if (selected != NULL)
+    {
+    	Track *track = selected->data;
+    	if(track != NULL)
+    		coverart_select_cover (track);
+    }
 }
 
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-19 23:22:36 jcs>
+/* Time-stamp: <2007-02-20 23:05:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -36,6 +36,7 @@
 
 #include "display.h"
 #include "misc.h"
+#include "display_coverart.h"
 
 /* tree sort cannot be unsorted by choosing the default sort
  * column. Set to 1 if it's broken, 0 if it's not broken */
