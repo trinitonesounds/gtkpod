@@ -113,7 +113,7 @@ static GdkPixbuf *draw_blank_cdimage ()
 	gdouble height = 4;
 	gint pixel_offset, rowstride, x, y;
 	guchar *drawbuf;
-	
+
 	drawbuf = g_malloc ((gint) (width * 16) * (gint) height);
 	
 	/* drawing buffer length multiplied by 4
@@ -155,7 +155,8 @@ static void set_highlight (Cover_Item *cover)
 {
     GdkPixbuf *image;
     GError *error = NULL;
-	
+    GdkPixbuf *scaled;
+
     image = gdk_pixbuf_new_from_file(HIGHLIGHT_FILE, &error);
     if(error != NULL)
     {	
@@ -163,11 +164,13 @@ static void set_highlight (Cover_Item *cover)
 	g_return_if_fail (image);
     }
 
-    image = gdk_pixbuf_scale_simple(image, cover->img_width, ((cover->img_height * 2) + 6), GDK_INTERP_NEAREST);
+    scaled = gdk_pixbuf_scale_simple(image, cover->img_width, ((cover->img_height * 2) + 6), GDK_INTERP_NEAREST);
+    gdk_pixbuf_unref (image);
 		
     gnome_canvas_item_set (cover->highlight,
-			   "pixbuf", image,
+			   "pixbuf", scaled,
 			   NULL);
+    gdk_pixbuf_unref (scaled);
 
     gnome_canvas_item_hide (cover->highlight);				
 }
@@ -218,7 +221,6 @@ static void set_covers ()
     Itdb_Track *track;
     Cover_Item *cover;
 
-  
     for(i = 0; i < IMG_TOTAL; ++i)
     {
 	cover = g_ptr_array_index(cdwidget->cdcovers, i);
@@ -238,17 +240,21 @@ static void set_covers ()
 
 	if (imgbuf != NULL)
 	{
+	    GdkPixbuf *scaled;
 	    /* Set the pixbuf into the cd image */
 	    cover->track = track;
-	    imgbuf = gdk_pixbuf_scale_simple (imgbuf, cover->img_width, cover->img_height, GDK_INTERP_NEAREST);
+	    scaled = gdk_pixbuf_scale_simple (imgbuf, cover->img_width, cover->img_height, GDK_INTERP_NEAREST);
+	    gdk_pixbuf_unref (imgbuf);
 	    gnome_canvas_item_set (cover->cdimage,
-				   "pixbuf", imgbuf,
+				   "pixbuf", scaled,
 				   NULL);
 	    /* flip image vertically to create reflection */
-	    reflection = gdk_pixbuf_flip (imgbuf, FALSE);
+	    reflection = gdk_pixbuf_flip (scaled, FALSE);
 	    gnome_canvas_item_set (cover->cdreflection,
 				   "pixbuf", reflection,
 				   NULL);
+	    gdk_pixbuf_unref (scaled);
+	    gdk_pixbuf_unref (reflection);
 	}
 
 	if (i == IMG_MAIN)
@@ -645,7 +651,6 @@ gboolean on_paned0_button_release_event (GtkWidget *widget, GdkEventButton *even
 {
 	gint width, i;
 	Cover_Item *cover;
-	GdkPixbuf *pixbuf;
 	
 	width = gtk_paned_get_position (GTK_PANED(widget));
 	if (width >= DEFAULT_WIDTH)
@@ -659,14 +664,7 @@ gboolean on_paned0_button_release_event (GtkWidget *widget, GdkEventButton *even
   	{
   		cover = g_ptr_array_index(cdwidget->cdcovers, i);
   		set_cover_dimensions (cover, i);
-  		
-  		
-  		gtk_object_get (GTK_OBJECT(cover->highlight),
-  														"pixbuf", &pixbuf,
-  														NULL);
-  		
-  		g_object_unref(pixbuf);
-  		set_highlight (cover);	
+		set_highlight (cover);	
   	}
 		
 		set_covers ();
@@ -728,11 +726,9 @@ static void set_display_dimensions ()
 	podpane = gtkpod_xml_get_widget (main_window_xml, "paned0");	
 	g_return_if_fail (podpane);
 
-	WIDTH = HEIGHT / 1.2;	
+	WIDTH = HEIGHT;	
 	gtk_paned_set_position (GTK_PANED(podpane), WIDTH);
 	DEFAULT_WIDTH = WIDTH;
-		
-	printf("SET DIMENSION WIDTH = %d, HEIGHT = %d\n", WIDTH, HEIGHT);
 }
 
 /**
@@ -1092,7 +1088,9 @@ void coverart_set_images (GList *tracks)
 	
 	coverart_clear_images ();
 	cdwidget->first_imgindex = 0;
-	cdwidget->displaytracks = NULL;
+  
+  g_list_free (cdwidget->displaytracks);
+	cdwidget->displaytracks = NULL; 
 	
 	if (tracks == NULL)
 		return;
