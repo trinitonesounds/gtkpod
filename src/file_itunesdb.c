@@ -48,6 +48,7 @@
 #include "ipod_init.h"
 #include "lastfm.h"
 #include "file_convert.h"
+#include "display_coverart.h"
 
 #define _TO_STR(x) #x
 #define TO_STR(x) _TO_STR(x)
@@ -2049,6 +2050,10 @@ void data_changed (iTunesDB *itdb)
     eitdb->data_changed = TRUE;
     pm_name_changed (itdb_playlist_mpl (itdb));
     space_data_update ();
+    
+    /* data has been modified so re-initialise the coverart display */
+    Playlist *plitem = pm_get_selected_playlist ();
+		coverart_set_images (plitem->members);
 }
 
 

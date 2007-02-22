@@ -1336,6 +1336,11 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	  time.tv_sec % 3600, time.tv_usec);
 #endif
 
+	/* Avoid track selection errors on coverart while enacting a change
+	 * in playlist
+	 */
+	 coverart_block_change (TRUE);
+  
   if (gtk_tree_selection_get_selected (selection, &model, &iter) == FALSE)
   {  /* no selection -> reset sort tabs */
       st_init (-1, 0);
@@ -1410,9 +1415,15 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
       }
       gtkpod_tracks_statusbar_update();
   }
-    
+  
+  /* Reallow the coverart selection update */
+	 coverart_block_change (FALSE);
+	 
   /* Set the coverart display based on the selected playlist */
-  coverart_set_images (new_playlist->members);
+  if (new_playlist != NULL)
+  	coverart_set_images (new_playlist->members);
+  else
+  	coverart_clear_images ();
     
 #if DEBUG_TIMING
   g_get_current_time (&time);

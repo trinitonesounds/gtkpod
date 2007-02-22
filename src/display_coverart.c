@@ -657,7 +657,7 @@ gboolean on_paned0_button_release_event (GtkWidget *widget, GdkEventButton *even
 	Cover_Item *cover;
 	
 	width = gtk_paned_get_position (GTK_PANED(widget));
-	if (width >= DEFAULT_WIDTH)
+	if ((width >= DEFAULT_WIDTH) && (width != WIDTH))
 	{
 		WIDTH = width;
 		gnome_canvas_item_set (GNOME_CANVAS_ITEM(cdwidget->cvrtext), 
@@ -1143,5 +1143,6 @@ void coverart_set_images (GList *tracks)
  */
 void coverart_block_change (gboolean val)
 {
-	cdwidget->block_display_change = val;
+	if (cdwidget != NULL)
+		cdwidget->block_display_change = val;
 }
