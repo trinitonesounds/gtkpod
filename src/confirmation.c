@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-14 19:17:48 jcs>
+/* Time-stamp: <2007-02-23 00:04:30 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -77,12 +77,13 @@ static void cleanup (gpointer id)
 		prefs_set_int("size_conf.x", defx);
 		prefs_set_int("size_conf.y", defy);
 	}
+
 	gtk_widget_destroy (cd->window);
+	g_free (cd->option1_key);
+	g_free (cd->option2_key);
+	g_free (cd->confirm_again_key);
+
 	g_hash_table_remove (id_hash, id);
-  
-  g_free(cd->option1_key);
-  g_free(cd->option2_key);
-  g_free(cd->confirm_again_key);
     }
 }
 

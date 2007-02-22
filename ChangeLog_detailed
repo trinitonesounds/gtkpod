@@ -1,3 +1,20 @@
+2007-02-22 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* main.c, display_coverart.c: fixed possible access to
+          uninitialized pointer
+
+	* confirmation.c (cleanup): don't access free'd pointer.
+
+2007-02-22 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+	* display_coverart.c 
+	  - Added "Album Art" title label to display_coverart pane
+	  - Changed set_display_dimensions to make WIDTH=HEIGHT giving
+	    aspect ratio default of 1 rather than 1.2
+	  - Added patch to dispay_coverart.c to correctly cleanup
+	    pixbuf memory leakag. (All credit for this to Christophe
+	    (teuf at gnome.org))
+
 2007-02-20 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* Modified Files:

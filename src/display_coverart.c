@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-20 22:11:42 jcs>
+/* Time-stamp: <2007-02-23 00:04:30 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -583,13 +583,13 @@ void init_default_file (gchar *progpath)
   	}
     
     g_free (progname);
-    if (!g_file_test (DEFAULT_FILE, G_FILE_TEST_EXISTS))
+    if (DEFAULT_FILE && !g_file_test (DEFAULT_FILE, G_FILE_TEST_EXISTS))
     {
 	  	g_free (DEFAULT_FILE);
 	  	DEFAULT_FILE = NULL;
     }
     
-    if (!g_file_test (HIGHLIGHT_FILE, G_FILE_TEST_EXISTS))
+    if (HIGHLIGHT_FILE && !g_file_test (HIGHLIGHT_FILE, G_FILE_TEST_EXISTS))
     {
 	  	g_free (HIGHLIGHT_FILE);
 	  	HIGHLIGHT_FILE = NULL;
@@ -598,11 +598,15 @@ void init_default_file (gchar *progpath)
   }
   
   if (!DEFAULT_FILE)
+  {
       DEFAULT_FILE = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "pixmaps", "default-cover.png", NULL);
-
-	if (!HIGHLIGHT_FILE)
+  }
+  if (!HIGHLIGHT_FILE)
+  {
       HIGHLIGHT_FILE = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "pixmaps", "cdshine.png", NULL);
+  }
 }
+
 
 /**
  * on_cover_up_button_clicked:

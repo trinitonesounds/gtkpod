@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-24 20:49:39 jcs>
+/* Time-stamp: <2007-02-23 00:05:25 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -42,7 +42,7 @@
 #include "file.h"
 
 /* path to gtkpod.glade */
-gchar *xml_file;
+gchar *xml_file = NULL;
 
 int
 main (int argc, char *argv[])
@@ -103,7 +103,7 @@ main (int argc, char *argv[])
 	  }
       }
       g_free (progname);
-      if (!g_file_test (xml_file, G_FILE_TEST_EXISTS))
+      if (xml_file && !g_file_test (xml_file, G_FILE_TEST_EXISTS))
       {
 	  g_free (xml_file);
 	  xml_file = NULL;
