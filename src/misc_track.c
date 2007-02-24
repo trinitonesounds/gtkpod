@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-23 00:45:41 jcs>
+/* Time-stamp: <2007-02-24 14:33:56 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1378,8 +1378,42 @@ static void add_tracks_to_playlist (Playlist *pl,
 	    {   /* DND between different itdbs -- need to duplicate the
 		   track before inserting */
 		Track *duptr, *addtr;
+		ExtraTrackData *eduptr;
 		/* duplicate track */
 		duptr = itdb_track_duplicate (track);
+		eduptr = duptr->userdata;
+		g_return_if_fail (eduptr);
+
+		duptr->transferred = FALSE;
+
+		/* check if adding to iPod and track is on different iPod */
+		if ((from_itdb->usertype & GP_ITDB_TYPE_IPOD) &&
+		    (to_itdb->usertype & GP_ITDB_TYPE_IPOD))
+		{
+		    /* Check if track exists locally */
+		    if (!(eduptr->pc_path_locale &&
+			  g_file_test (eduptr->pc_path_locale, G_FILE_TEST_EXISTS)))
+		    {   /* No. Use iPod path as source */
+			g_free (eduptr->pc_path_locale);
+			g_free (eduptr->pc_path_utf8);
+			eduptr->pc_path_locale = itdb_filename_on_ipod (track);
+			eduptr->pc_path_utf8 = charset_to_utf8 (eduptr->pc_path_locale);
+			/* Remove old reference to iPod path */
+			g_free (duptr->ipod_path);
+			duptr->ipod_path = g_strdup ("");
+		    }
+		}
+
+		if (!eduptr->pc_path_locale)
+		{
+		    gchar *buf;
+		    buf = get_track_info (track, FALSE);
+		    gtkpod_warning (_("Could not find source file for '%s'. Track not copied."));
+		    g_free (buf);
+		    itdb_track_free (duptr);
+		    return;
+		}
+
 		/* add to database -- if duplicate detection is on and the
 		   same track already exists in the database, the already
 		   existing track is returned and @duptr is freed */

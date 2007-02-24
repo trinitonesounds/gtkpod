@@ -1,19 +1,37 @@
+2007-02-22 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/file_export.c (export_trackglist_when_necessary):
+          cosmetic change (!a || !b) -> !(a && b)
+
+	* src/misc_track.c (add_tracks_to_playlist): bugfix: dragging
+          tracks between iPods did not work if no local path was
+          available.
+
+
 2007-02-23 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* display_coverart.c
-		- Avoided null pointer exceptions by testing cdwidget first in coverart_block_change()
-		- Ensured the pande0 button release event only initiaties if a width change has truly occurred
+		- Avoided null pointer exceptions by testing cdwidget
+		  first in coverart_block_change()
+		- Ensured the pande0 button release event only
+		  initiaties if a width change has truly occurred
 		  ie. gtk_paned_get_position() != WIDTH
 
 	* display_playlists.c
-		- Blocked other coverart related changes while a pm_playlist_change_cb is being enacted.
-		- Blocking is lifted prior to the call to coverart_set_images
-		- pm_playlist_change_cb() will occur on deletion of a playlist. In this case the deleted playlist
-		  will be nullified. In this case, clear any coverart images rather than setting them (none to set)
+		- Blocked other coverart related changes while a
+		  pm_playlist_change_cb is being enacted.
+		- Blocking is lifted prior to the call to
+	          coverart_set_images
+		- pm_playlist_change_cb() will occur on deletion of a
+	          playlist. In this case the deleted playlist
+		  will be nullified. In this case, clear any coverart
+		  images rather than setting them (none to set)
 
 	* file_itunesdb.c
-		- data_changed function called whenever track details are changed. Added a resettting of the coverart
-		  to this function so all tracks in coverart display are synced with database data
+		- data_changed function called whenever track details
+		  are changed. Added a resettting of the coverart to
+		  this function so all tracks in coverart display are
+		  synced with database data
 
 2007-02-22 Jorg Schuler <jcsjcs at users.sourceforge.net>
 

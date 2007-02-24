@@ -9,6 +9,11 @@ gtkpod V0.99.9CVS
        NEW FEATURE: editing of TV show metadata and track media
        type. Thanks to Mario Rossi.
 
+       NEW FEATURE: Display of Album Art. Thanks to P.G. Richardson.
+
+       BUGFIX: dragging tracks between two iPods would sometimes not
+       actually copy the file.
+
 gtkpod V0.99.8
 
        NEW FEATURE: Support of several iPods (currently you need to

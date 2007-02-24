@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-08 00:00:07 jcs>
+/* Time-stamp: <2007-02-23 21:49:12 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2053,7 +2053,7 @@ void data_changed (iTunesDB *itdb)
     
     /* data has been modified so re-initialise the coverart display */
     Playlist *plitem = pm_get_selected_playlist ();
-		coverart_set_images (plitem->members);
+    coverart_set_images (plitem->members);
 }
 
 

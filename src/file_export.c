@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-10 17:46:56 jcs>
+/* Time-stamp: <2007-02-24 13:22:58 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -716,8 +716,8 @@ GList *export_trackglist_when_necessary (iTunesDB *itdb_s,
     g_return_val_if_fail (itdb_d, NULL);
     g_return_val_if_fail (gtkpod_window, NULL);
 
-    if (!(itdb_s->usertype & GP_ITDB_TYPE_IPOD) ||
-	!(itdb_d->usertype & GP_ITDB_TYPE_LOCAL))
+    if (!((itdb_s->usertype & GP_ITDB_TYPE_IPOD) &&
+	  (itdb_d->usertype & GP_ITDB_TYPE_LOCAL)))
     {   /* drag is not from iPod to local database -> return copy of
 	 * @tracks */
 	return g_list_copy (tracks);
