@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-20 23:05:44 jcs>
+/* Time-stamp: <2007-02-24 15:22:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Copyright (C) 2006 James Liggett <jrliggett at cox.net>
@@ -261,7 +261,6 @@ static void set_default_preferences()
     prefs_set_int("info_window", FALSE);
     prefs_set_int("last_prefs_page", 0);
     prefs_set_int("tmp_disable_sort", TRUE);
-    prefs_set_int("display_artcovers", FALSE);
     prefs_set_int("multi_edit_title", TRUE);
     prefs_set_int("multi_edit", FALSE);
     prefs_set_int("not_played_track", TRUE);
@@ -896,6 +895,7 @@ static void cleanup_keys()
     prefs_set_string("fix_path", NULL);
     prefs_set_string("write_gaintag", NULL);
     prefs_set_string("automount", NULL);
+    prefs_set_string("display_artcovers", NULL);
 
 
     /* sp_created_cond renamed to sp_added_cond */

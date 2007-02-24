@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-23 00:04:30 jcs>
+/* Time-stamp: <2007-02-24 15:22:41 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -38,6 +38,7 @@
 #include "display_coverart.h"
 
 /* Declarations */
+static gint sort_tracks (Itdb_Track *a, Itdb_Track *b);
 static void set_display_dimensions ();
 static GdkPixbuf *draw_blank_cdimage ();
 static void set_highlight (Cover_Item *cover);
@@ -50,6 +51,9 @@ static void on_cover_display_slider_value_changed (GtkRange *range, gpointer use
 static void set_cover_dimensions (Cover_Item *cover, int cover_index);
 static void prepare_canvas ();
 static void set_covers ();
+
+/* Prefs keys */
+const gchar *KEY_DISPLAY_COVERART="display_coverart";
 
 /* The structure that holds values used throughout all the functions */
 static CD_Widget *cdwidget = NULL;
@@ -620,6 +624,7 @@ void init_default_file (gchar *progpath)
 void on_cover_up_button_clicked (GtkWidget *widget, gpointer data)
 {
 	gtk_widget_show_all (cdwidget->contentpanel);
+	prefs_set_int (KEY_DISPLAY_COVERART, TRUE);
 }
 
 /**
@@ -634,6 +639,7 @@ void on_cover_up_button_clicked (GtkWidget *widget, gpointer data)
 void on_cover_down_button_clicked (GtkWidget *widget, gpointer data)
 {
 	gtk_widget_hide_all (cdwidget->contentpanel);
+	prefs_set_int (KEY_DISPLAY_COVERART, FALSE);
 }
 
 /**
@@ -915,23 +921,23 @@ static void prepare_canvas ()
  * Initialise the boxes and canvases of the coverart_display.
  *  
  */
-static void coverart_init_display ()
+void coverart_init_display ()
 {		
 	cdwidget = g_new0(CD_Widget, 1);
 	
-  cdwidget->canvasbox = gtkpod_xml_get_widget (main_window_xml, "cover_display_canvasbox"); 
+	cdwidget->canvasbox = gtkpod_xml_get_widget (main_window_xml, "cover_display_canvasbox"); 
 	cdwidget->contentpanel = gtkpod_xml_get_widget (main_window_xml, "cover_display_window");
-  cdwidget->controlbox = gtkpod_xml_get_widget (main_window_xml, "cover_display_controlbox");
-  cdwidget->leftbutton = GTK_BUTTON (gtkpod_xml_get_widget (main_window_xml, "cover_display_leftbutton"));
-  cdwidget->rightbutton = GTK_BUTTON (gtkpod_xml_get_widget (main_window_xml, "cover_display_rightbutton"));
-  cdwidget->cdslider = GTK_HSCALE (gtkpod_xml_get_widget (main_window_xml, "cover_display_scaler"));
+	cdwidget->controlbox = gtkpod_xml_get_widget (main_window_xml, "cover_display_controlbox");
+	cdwidget->leftbutton = GTK_BUTTON (gtkpod_xml_get_widget (main_window_xml, "cover_display_leftbutton"));
+	cdwidget->rightbutton = GTK_BUTTON (gtkpod_xml_get_widget (main_window_xml, "cover_display_rightbutton"));
+	cdwidget->cdslider = GTK_HSCALE (gtkpod_xml_get_widget (main_window_xml, "cover_display_scaler"));
   
 	g_return_if_fail (cdwidget->contentpanel);
 	g_return_if_fail (cdwidget->canvasbox);
 	g_return_if_fail (cdwidget->controlbox);
 	g_return_if_fail (cdwidget->leftbutton);
-  g_return_if_fail (cdwidget->rightbutton);
-  g_return_if_fail (cdwidget->cdslider);
+	g_return_if_fail (cdwidget->rightbutton);
+	g_return_if_fail (cdwidget->cdslider);
   
 	set_display_dimensions ();
 	
@@ -953,7 +959,22 @@ static void coverart_init_display ()
   		
 	coverart_block_change (FALSE);
 	
-	gtk_widget_show_all (cdwidget->contentpanel);
+	/* show/hide coverart display -- default to show */
+	if (prefs_get_int_value (KEY_DISPLAY_COVERART, NULL))
+	{
+	    if (prefs_get_int (KEY_DISPLAY_COVERART))
+	    {
+		gtk_widget_show_all (cdwidget->contentpanel);
+	    }
+	    else
+	    {
+		gtk_widget_hide_all (cdwidget->contentpanel);
+	    }
+	}
+	else
+	{
+	    gtk_widget_show_all (cdwidget->contentpanel);
+	}
 }
 
 /**
@@ -970,7 +991,7 @@ static void coverart_init_display ()
  * integer indicating order of tracks
  *  
  */
-gint sort_tracks (Itdb_Track *a, Itdb_Track *b)
+static gint sort_tracks (Itdb_Track *a, Itdb_Track *b)
 {
 	gint artistval;
 	

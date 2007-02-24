@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-20 23:05:44 jcs>
+/* Time-stamp: <2007-02-24 15:18:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -96,6 +96,9 @@ void display_create (void)
     gtkpod_statusbar_init ();
     gtkpod_tracks_statusbar_init ();
     gtkpod_space_statusbar_init ();
+
+    /* Initialize the coverart display */
+    coverart_init_display ();
 
     /* set the menu item for the info window correctly */
     /* CAREFUL: must be done after calling ..._space_statusbar_init() */

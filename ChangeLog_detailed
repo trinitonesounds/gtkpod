@@ -7,6 +7,14 @@
           tracks between iPods did not work if no local path was
           available.
 
+	* gtkpod.glade: left-justify "Album Art" in cover display.
+
+	* src/prefs_window.c
+	  src/prefs.c: removed references to "display_artcovers".
+
+	* src/displac.c
+	  src/display_coverart.c: remember if coverart was last shown
+	  or hidden.
 
 2007-02-23 P.G. Richardson <phantom_sf at users.sourceforge.net>
 

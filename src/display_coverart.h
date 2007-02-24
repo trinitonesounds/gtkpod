@@ -38,15 +38,14 @@ typedef struct {
 	gboolean block_display_change;
 } CD_Widget;
 
+
+extern const gchar *DISPLAY_COVER_SHOW;
+
 void init_default_file (gchar *progpath);
 void coverart_sort_images (GtkSortType order);
 void coverart_select_cover (Itdb_Track *track);
 void coverart_set_images (GList *tracks);
 void coverart_clear_images ();
 void coverart_block_change ();
-gint sort_tracks (Itdb_Track *a, Itdb_Track *b);
-void on_cover_up_button_clicked (GtkWidget *widget, gpointer data);
-void on_cover_down_button_clicked (GtkWidget *widget, gpointer data);
-void on_paned0_check_resize (GtkContainer *container, gpointer data);
-
+void coverart_init_display ();
 #endif

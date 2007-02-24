@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-20 23:05:44 jcs>
+/* Time-stamp: <2007-02-24 15:17:58 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -453,10 +453,6 @@ prefs_window_create (gint page)
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_display_tooltips_prefs");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 prefs_get_int("display_tooltips_prefs"));
-		
-		w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_display_artcovers");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 prefs_get_int("display_artcovers"));
 		
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_multi_edit");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
