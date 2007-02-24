@@ -1572,7 +1572,7 @@
 		  <child>
 		    <widget class="GtkLabel" id="lbl_albumart">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Abum Art</property>
+		      <property name="label" translatable="yes">Album Art</property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">False</property>
 		      <property name="justify">GTK_JUSTIFY_CENTER</property>
