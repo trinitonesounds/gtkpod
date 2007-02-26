@@ -11,6 +11,10 @@ gtkpod V0.99.9CVS
 
        NEW FEATURE: Display of Album Art. Thanks to P.G. Richardson.
 
+       UPDATE: Smart playlists now support the following new fields:
+       album artist, tv show, last skipped, season number, skipcount
+       and video kind.
+
        BUGFIX: dragging tracks between two iPods would sometimes not
        actually copy the file.
 

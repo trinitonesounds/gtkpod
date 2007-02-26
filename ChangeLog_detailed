@@ -1,3 +1,11 @@
+2007-02-26 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_spl.c: Smart playlists now support the following
+	  new fields: album artist, tv show, last skipped, season
+	  number, skipcount and video kind.
+
+	* configure.in: require libgpod >= 0.4.3
+
 2007-02-22 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_export.c (export_trackglist_when_necessary):

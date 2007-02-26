@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-15 00:24:11 jcs>
+/* Time-stamp: <2007-02-26 22:07:30 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -46,6 +46,7 @@ static const gchar *SPL_WINDOW_DEFY="spl_window_defy";
 static void spl_display_checklimits (GtkWidget *spl_window);
 static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr);
 static void spl_update_rules_from_row (GtkWidget *spl_window, gint row);
+static void spl_action_changed (GtkComboBox *combobox, GtkWidget *spl_window);
 
 #define WNLEN 100 /* max length for widget names */
 #define XPAD 1    /* padding for g_table_attach () */
@@ -103,6 +104,12 @@ static const ComboEntry splfield_comboentries[] =
     { SPLFIELD_BPM,            N_("BPM") },
     { SPLFIELD_GROUPING,       N_("Grouping") },
     { SPLFIELD_PLAYLIST,       N_("Playlist") },
+    { SPLFIELD_VIDEO_KIND,     N_("Video Kind") },
+    { SPLFIELD_TVSHOW,         N_("TV Show") },
+    { SPLFIELD_SEASON_NR,      N_("Season number") },
+    { SPLFIELD_SKIPCOUNT,      N_("Skip count") },
+    { SPLFIELD_LAST_SKIPPED,   N_("Last skipped") },
+    { SPLFIELD_ALBUMARTIST,    N_("Album artist") },
     { 0,                       NULL }
 };
 
@@ -153,6 +160,19 @@ static const ComboEntry splaction_ftplaylist_comboentries[] =
     { 0,                    NULL }
 };
 
+static const ComboEntry splaction_ftbinaryand_comboentries[] =
+{
+    { SPLACTION_BINARY_AND, N_("is") },
+    { SPLACTION_BINARY_AND, N_("is not") },
+    { 0,                    NULL }
+};
+
+static const ComboEntry splaction_notsupported_comboentries[] =
+{
+    { -1,     N_("Not supported") },
+    { 0,                    NULL }
+};
+
 /* Strings for limittypes */
 static const ComboEntry limittype_comboentries[] =
 {
@@ -183,6 +203,23 @@ static const ComboEntry limitsort_comboentries[] =
     { 0,                               NULL }
 };
 
+/* Strings for Video Kind */
+static const ComboEntry videokind_comboentries_is[] =
+{
+    { ITDB_MEDIATYPE_MOVIE,      N_("Movie") },
+    { ITDB_MEDIATYPE_MUSICVIDEO, N_("Music Video") },
+    { ITDB_MEDIATYPE_TVSHOW,     N_("TV Show") },
+    { 0,                         NULL }
+};
+
+/* Strings for Video Kind */
+static const ComboEntry videokind_comboentries_is_not[] =
+{
+    { 0x0e00 | ITDB_MEDIATYPE_MUSICVIDEO | ITDB_MEDIATYPE_TVSHOW,    N_("Movie") },
+    { 0x0e00 | ITDB_MEDIATYPE_MOVIE | ITDB_MEDIATYPE_TVSHOW,   N_("Music Video") },
+    { 0x0e00 | ITDB_MEDIATYPE_MOVIE | ITDB_MEDIATYPE_MUSICVIDEO,   N_("TV Show") },
+    { 0,                                                                    NULL }
+};
 
 /* types used for entries (from, to, date...) */
 enum entrytype
@@ -207,6 +244,11 @@ static gint comboentry_index_from_id (const ComboEntry centries[],
     gint i;
 
     g_return_val_if_fail (centries, -1);
+
+    /* handle field types not yet supported */
+    if (centries == splaction_notsupported_comboentries)
+	return 0;
+
     for (i=0; centries[i].str; ++i)
     {
 	if (centries[i].id == id)  return i;
@@ -232,28 +274,24 @@ static gint pl_ids_index_from_id (GArray *pl_ids, guint64 id)
 }
 
 
-/* Initialize/update ComboBox @cb with strings from @centries and
-   select @id. If @cb_func is != NULL, connect @cb_func to signal
-   "changed" with data @cb_data. */
-static void spl_set_combobox (GtkComboBox *cb,
-			      const ComboEntry centries[], guint32 id,
-			      GCallback cb_func, gpointer cb_data)
+/* called by spl_set_combobox() */
+static void spl_setup_combobox (GtkComboBox *cb,
+				const ComboEntry centries[], gint index,
+				GCallback cb_func, gpointer cb_data)
 {
-    gint index;
+    const ComboEntry *old_centries = g_object_get_data (G_OBJECT (cb),
+							"spl_centries");
 
-    g_return_if_fail (cb);
-    g_return_if_fail (centries);
-
-    index = comboentry_index_from_id (centries, id);
-
-    if (g_object_get_data (G_OBJECT (cb), "combo_set") == NULL)
+    if ((g_object_get_data (G_OBJECT (cb), "combo_set") == NULL) ||
+	(centries != old_centries))
     {   /* the combo has not yet been initialized */
 	const ComboEntry *ce = centries;
 	GtkCellRenderer *cell;
 	GtkListStore *store;
 
-	/* since the transition to libglade we have to set the model
-	   ourselves */
+	/* Set the model -- that is you cannot do a
+	   gtk_combo_box_new_text()! This gives us the flexibility to
+	   expand this function to set some graphic next to the text. */
 	store = gtk_list_store_new (1, G_TYPE_STRING);
 	gtk_combo_box_set_model (cb, GTK_TREE_MODEL (store));
 	g_object_unref (store);
@@ -269,6 +307,7 @@ static void spl_set_combobox (GtkComboBox *cb,
 	    gtk_combo_box_append_text (cb, _(ce->str));
 	    ++ce;
 	}
+	g_object_set_data (G_OBJECT (cb), "spl_centries", (gpointer)centries);
 	g_object_set_data (G_OBJECT (cb), "combo_set", "set");
 	if (cb_func)
 	    g_signal_connect (cb, "changed", cb_func, cb_data);
@@ -278,6 +317,26 @@ static void spl_set_combobox (GtkComboBox *cb,
 	gtk_combo_box_set_active (cb, index);
     }
 }
+
+
+/* Initialize/update ComboBox @cb with strings from @centries and
+   select @id. If @cb_func is != NULL, connect @cb_func to signal
+   "changed" with data @cb_data. */
+static void spl_set_combobox (GtkComboBox *cb,
+			      const ComboEntry centries[], guint32 id,
+			      GCallback cb_func, gpointer cb_data)
+{
+    gint index;
+
+    g_return_if_fail (cb);
+    g_return_if_fail (centries);
+
+    index = comboentry_index_from_id (centries, id);
+
+    spl_setup_combobox (cb, centries, index, cb_func, cb_data);
+
+}
+
 
 /* Callbacks */
 static void spl_all_radio_toggled (GtkToggleButton *togglebutton,
@@ -421,8 +480,7 @@ static void spl_limitsort_changed (GtkComboBox *combobox,
 
 
 /* Rule field has been changed */
-static void spl_field_changed (GtkComboBox *combobox,
-			       GtkWidget *spl_window)
+static void spl_field_changed (GtkComboBox *combobox, GtkWidget *spl_window)
 {
     Playlist *spl;
     SPLRule *splr;
@@ -446,11 +504,11 @@ static void spl_field_changed (GtkComboBox *combobox,
 
 
 /* Action field has been changed */
-static void spl_action_changed (GtkComboBox *combobox,
-				GtkWidget *spl_window)
+static void spl_action_changed (GtkComboBox *combobox, GtkWidget *spl_window)
 {
     Playlist *spl;
     SPLRule *splr;
+    SPLFieldType ft;
     const ComboEntry *centries;
     gint index = gtk_combo_box_get_active (combobox);
 
@@ -465,22 +523,80 @@ static void spl_action_changed (GtkComboBox *combobox,
     centries = g_object_get_data (G_OBJECT (combobox), "spl_centries");
     g_return_if_fail (centries);
 
-    if (index != -1)
+    ft = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (combobox), "spl_fieldtype"));
+
+/* printf ("(action) value changed: %04x...", (gint)splr->fromvalue); */
+    switch (ft)
     {
+    case splft_binary_and:
+	if (splr->field == SPLFIELD_VIDEO_KIND)
+	{   /* traet Video Kind differently */
+	    gint oldindex = GPOINTER_TO_INT (
+		g_object_get_data (G_OBJECT (combobox), "spl_binary_and_index"));
+	    if (oldindex != index)
+	    {   /* data changed */
+		/* inverse the video bits */
+		splr->fromvalue = (~splr->fromvalue) &
+		    (0x0e00 | ITDB_MEDIATYPE_MOVIE | ITDB_MEDIATYPE_MUSICVIDEO | ITDB_MEDIATYPE_TVSHOW);
+		spl_update_rule (spl_window, splr);
+	    }
+	}
+	else
+	{   /* treat as standard */
+	    if (splr->action != centries[index].id)
+	    {   /* data changed */
+		splr->action = centries[index].id;
+		/* update display */
+		spl_update_rule (spl_window, splr);
+	    }
+	}
+	break;
+    default:
 	if (splr->action != centries[index].id)
 	{   /* data changed */
 	    splr->action = centries[index].id;
 	    /* update display */
 	    spl_update_rule (spl_window, splr);
 	}
+	break;
     }
+/* printf ("%04x\n", (gint)splr->fromvalue); */
+}
+
+
+/*  field has been changed */
+static void spl_videokind_comboentry_changed (GtkComboBox *combobox,
+					      GtkWidget *spl_window)
+{
+    Playlist *spl;
+    SPLRule *splr;
+    const ComboEntry *centries;
+    gint index = gtk_combo_box_get_active (combobox);
+
+    g_return_if_fail (index != -1);
+    g_return_if_fail (spl_window);
+
+    spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
+    g_return_if_fail (spl);
+
+    splr = g_object_get_data (G_OBJECT (combobox), "spl_rule");
+    g_return_if_fail (splr);
+
+    centries = g_object_get_data (G_OBJECT (combobox), "spl_centries");
+    g_return_if_fail (centries);
+
+/* printf ("(entry) value changed: %04x...", (gint)splr->fromvalue); */
+    if (splr->fromvalue != centries[index].id)
+    {   /* data changed */
+	splr->fromvalue = centries[index].id;
+    }
+/* printf ("%04x\n", (gint)splr->fromvalue); */
 }
 
 
 /* The enter key was pressed inside a rule entry (fromvalue, fromdate,
  * tovalue, todate, string...)  --> redisplay */
-static void splr_entry_redisplay (GtkEditable *editable,
-				  GtkWidget *spl_window)
+static void splr_entry_redisplay (GtkEditable *editable, GtkWidget *spl_window)
 {
     SPLRule *splr;
     enum entrytype type;
@@ -1124,11 +1240,39 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 			  G_CALLBACK (spl_playlist_changed),
 			  spl_window);
 	break;
+    case splat_binary_and:
+	if (splr->field == SPLFIELD_VIDEO_KIND)
+	{
+	    const ComboEntry *use_centries = NULL;
+	    combobox = gtk_combo_box_new ();
+	    gtk_widget_show (combobox);
+	    gtk_box_pack_start (GTK_BOX (hbox), combobox, TRUE, TRUE, 0);
+	    if (comboentry_index_from_id (videokind_comboentries_is,
+					  splr->fromvalue) != -1)
+	    {
+		use_centries = videokind_comboentries_is;
+	    }
+	    else
+	    {
+		use_centries = videokind_comboentries_is_not;
+	    }
+	    g_object_set_data (G_OBJECT (combobox), "spl_rule", splr);
+	    spl_set_combobox (GTK_COMBO_BOX (combobox),
+			      use_centries,
+			      splr->fromvalue,
+			      G_CALLBACK (spl_videokind_comboentry_changed),
+			      spl_window);
+	}
+	else
+	{   /* not supported: display as standard INT */
+	    entry = hbox_add_entry (hbox, splr, spl_ET_FROMVALUE);
+	}
+	break;
     case splat_none:
 	break;
     case splat_unknown:
     case splat_invalid:
-	/* never reached !! */
+	/* hopefully never reached !! */
 	break;
     }
     return hbox;
@@ -1144,7 +1288,7 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
     gchar name[WNLEN];
     SPLFieldType ft;
     SPLActionType at;
-    gint row;
+    gint row, index;
     const ComboEntry *centries = NULL;
 
 
@@ -1183,9 +1327,32 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
     /* Combobox for action */
     /* ------------------- */
     ft = itdb_splr_get_field_type (splr);
-    g_return_if_fail (ft != splft_unknown);
     snprintf (name, WNLEN, "spl_actioncombo%d", row);
     combobox = g_object_get_data (G_OBJECT (table), name);
+
+    if (combobox)
+    {   /* check if existing combobox is of same type */
+	SPLFieldType old_ft = GPOINTER_TO_INT (
+	    g_object_get_data (G_OBJECT (combobox), "spl_fieldtype"));
+	if (old_ft != ft)
+	{
+	    gtk_widget_destroy (combobox);
+	    combobox = NULL;
+	}
+    }
+
+    if (!combobox)
+    {  /* create combo for action */
+	combobox = gtk_combo_box_new ();
+	gtk_widget_show (combobox);
+	gtk_table_attach (table, combobox, 1,2, row,row+1,
+			  GTK_FILL,0,   /* expand options */
+			  XPAD,YPAD);   /* padding options */
+	g_object_set_data (G_OBJECT (table), name, combobox);
+    }
+    g_object_set_data (G_OBJECT (combobox), "spl_rule", splr);
+    g_object_set_data (G_OBJECT (combobox), "spl_fieldtype", GINT_TO_POINTER (ft));
+
     switch (ft)
     {
     case splft_string:
@@ -1203,60 +1370,70 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
     case splft_playlist:
 	centries = splaction_ftplaylist_comboentries;
 	break;
+    case splft_binary_and:
+	centries = splaction_ftbinaryand_comboentries;
+	break;
     case splft_unknown:
-	centries = NULL; /* never reached! */
+	centries = splaction_notsupported_comboentries;
 	break;
     }
+
+    if (centries == NULL)
+    {   /* Handle non-supported action types */
+	centries = splaction_notsupported_comboentries;
+    }
+
     if (comboentry_index_from_id (centries, splr->action) == -1)
     {   /* Action currently set is not a legal action for the type of
 	   field. --> adjust */
-	splr->action = centries[0].id;
+	if (centries)    splr->action = centries[0].id;
     }
-    if (combobox)
-    {   /* check if existing combobox is of same type */
-	const ComboEntry *old_ce = g_object_get_data (
-	    G_OBJECT (combobox), "spl_centries");
-	if (old_ce != centries)
-	{
-	    gtk_widget_destroy (combobox);
-	    combobox = NULL;
+
+    if ((splr->field == SPLFIELD_VIDEO_KIND) && (ft == splft_binary_and))
+    {   /* this field needs to be handled differently from everything
+	   else */
+	if (comboentry_index_from_id (videokind_comboentries_is,
+				      splr->fromvalue) != -1)
+	{   /* found value to be part of "Is" */
+	    index = 0;
 	}
+	else
+	{   /* assume value to be part of "Is Not" */
+	    index = 1;
+	}
+	g_object_set_data (G_OBJECT (combobox), "spl_binary_and_index",
+			   GINT_TO_POINTER (index));
+	spl_setup_combobox (GTK_COMBO_BOX (combobox), centries, index,
+			    G_CALLBACK (spl_action_changed), spl_window);
     }
-    if (!combobox)
-    {  /* create combo for action */
-	combobox = gtk_combo_box_new ();
-	gtk_widget_show (combobox);
-	gtk_table_attach (table, combobox, 1,2, row,row+1,
-			  GTK_FILL,0,   /* expand options */
-			  XPAD,YPAD);   /* padding options */
-	g_object_set_data (G_OBJECT (table), name, combobox);
-	g_object_set_data (G_OBJECT (combobox),
-			   "spl_centries", (gpointer)centries);
+    else
+    {
+	spl_set_combobox (GTK_COMBO_BOX (combobox), centries, splr->action,
+			  G_CALLBACK (spl_action_changed), spl_window);
+
     }
-    g_object_set_data (G_OBJECT (combobox), "spl_rule", splr);
-    spl_set_combobox (GTK_COMBO_BOX (combobox),
-		      centries,
-		      splr->action,
-		      G_CALLBACK (spl_action_changed),
-		      spl_window);
 
     /* input fields (range, string, date...) */
     /* ------------------------------------- */
     at = itdb_splr_get_action_type (splr);
-    g_return_if_fail (at != splat_unknown);
-    g_return_if_fail (at != splat_invalid);
     snprintf (name, WNLEN, "spl_actionhbox%d", row);
     hbox = g_object_get_data (G_OBJECT (table), name);
     if (hbox)
     {
 	gtk_widget_destroy (hbox);
-	hbox = NULL;
+	g_object_set_data (G_OBJECT (table), name, NULL);
     }
-    hbox = spl_create_hbox (spl_window, splr);
-    gtk_table_attach (table, hbox, 2,3, row,row+1,
-		      GTK_FILL,0,   /* expand options */
-		      XPAD,YPAD);   /* padding options */
-    g_object_set_data (G_OBJECT (table), name, hbox);
+    if (centries != splaction_notsupported_comboentries)
+    {
+	g_return_if_fail (at != splat_unknown);
+	g_return_if_fail (at != splat_invalid);
+	hbox = spl_create_hbox (spl_window, splr);
+	gtk_table_attach (table, hbox, 2,3, row,row+1,
+			  GTK_FILL,0,   /* expand options */
+			  XPAD,YPAD);   /* padding options */
+	g_object_set_data (G_OBJECT (table), name, hbox);
+    }
+
     /* +/- buttons */
     /* ----------- */
     snprintf (name, WNLEN, "spl_buttonhbox%d", row);
