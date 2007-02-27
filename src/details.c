@@ -383,8 +383,11 @@ static void details_button_apply_clicked (GtkButton *button,
     detail->changed = FALSE;
 
     if (changed)
-	data_changed (detail->itdb);
-
+    {
+			data_changed (detail->itdb);
+			coverart_set_images ();
+    }
+    
     details_update_headline (detail);
 
     details_update_buttons (detail);

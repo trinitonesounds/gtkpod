@@ -1097,10 +1097,12 @@ void coverart_sort_images (GtkSortType order)
  * @tracks: list of tracks taken from a playlist
  *  
  */
-void coverart_set_images (GList *tracks)
+void coverart_set_images ()
 {
 	gint i;
+	GList *tracks;
 	Itdb_Track *track;
+	Playlist *playlist;
 
 	/* initialize display if not already done */
 	if (!cdwidget)  coverart_init_display();
@@ -1110,8 +1112,17 @@ void coverart_set_images (GList *tracks)
 	 */
 	if (cdwidget->block_display_change)
 		return;
-	
+
+	/* Reset the display back to black, black and more black */
 	coverart_clear_images ();
+	
+	/* Find the selected playlist */
+	playlist = pm_get_selected_playlist ();
+	if (playlist == NULL)
+		return;
+		
+  tracks = playlist->members;
+  
 	cdwidget->first_imgindex = 0;
   
   g_list_free (cdwidget->displaytracks);

@@ -44,7 +44,7 @@ extern const gchar *DISPLAY_COVER_SHOW;
 void init_default_file (gchar *progpath);
 void coverart_sort_images (GtkSortType order);
 void coverart_select_cover (Itdb_Track *track);
-void coverart_set_images (GList *tracks);
+void coverart_set_images ();
 void coverart_clear_images ();
 void coverart_block_change ();
 void coverart_init_display ();

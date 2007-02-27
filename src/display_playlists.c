@@ -1420,10 +1420,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	 coverart_block_change (FALSE);
 	 
   /* Set the coverart display based on the selected playlist */
-  if (new_playlist != NULL)
-  	coverart_set_images (new_playlist->members);
-  else
-  	coverart_clear_images ();
+  coverart_set_images ();
     
 #if DEBUG_TIMING
   g_get_current_time (&time);
