@@ -1,3 +1,8 @@
+2007-03-11 Todd Zullinger <tmzullinger at users.sourceforge.net>
+
+	* src/prefs_window.c: hide Last.FM tab when not built with
+	  curl libs
+
 2007-02-27 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* display_coverart.c: Changed coverart_set_images to internally

@@ -519,6 +519,7 @@ prefs_window_create (gint page)
 				 prefs_get_int("autoimport"));
 
     /* last.fm */
+#if HAVE_CURL
     int x = prefs_get_int("lastfm_active");
     GtkWidget *u = gtkpod_xml_get_widget (prefs_window_xml, "lastfm_username");
     GtkWidget *p = gtkpod_xml_get_widget (prefs_window_xml, "lastfm_password");
@@ -529,6 +530,12 @@ prefs_window_create (gint page)
     gtk_entry_set_text(GTK_ENTRY(p), prefs_get_string("lastfm_password"));
     gtk_widget_set_sensitive (u, x);
     gtk_widget_set_sensitive (p, x);
+# else
+    w = gtkpod_xml_get_widget (prefs_window_xml, "labelfm");
+    gtk_widget_hide(w);
+    w = gtkpod_xml_get_widget (prefs_window_xml, "vboxfm");
+    gtk_widget_hide(w);
+#endif
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "autoselect_hbox");
     for (i=0; i<SORT_TAB_MAX; ++i)
