@@ -1,3 +1,7 @@
+2007-03-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* po/de.po: update supplied by Kai-Ove Pietsch.
+
 2007-03-11 Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* src/prefs_window.c: hide Last.FM tab when not built with
@@ -6,18 +10,19 @@
 2007-02-27 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* display_coverart.c: Changed coverart_set_images to internally
-					get the playlist and checks whether the playlist is null
-					or not. Thus, all calls to coverart_set_images require
-					no checking of parameters beforehand.
+	  get the playlist and checks whether the playlist is null
+	  or not. Thus, all calls to coverart_set_images require
+	  no checking of parameters beforehand.
 					
 	* details.c,
-		display_playlists.c
-		file_itunesdb.c
-		fileselection.c
-		misc_confirm.c: functions updated to call modified version of 
-					coverart_set_images. data_changed function no longer calls
-					coverart_set_images since this is used in too many other places
-					where setting coverart is unnecessary and error prone.
+	  display_playlists.c
+	  file_itunesdb.c
+	  fileselection.c
+	  misc_confirm.c: functions updated to call modified version
+	  of coverart_set_images. data_changed function no longer
+	  calls coverart_set_images since this is used in too many
+	  other places where setting coverart is unnecessary and error
+	  prone.
 
 2007-02-26 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
