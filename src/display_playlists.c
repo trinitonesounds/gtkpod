@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-20 23:05:44 jcs>
+/* Time-stamp: <2007-03-18 23:04:55 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1322,9 +1322,9 @@ void pm_unselect_playlist (Playlist *playlist)
 }
 
 
-static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
+static void pm_selection_changed_cb (GtkTreeSelection *selection,
+				     gpointer user_data2)
 {
-  GtkTreeSelection *selection = (GtkTreeSelection *)user_data1;
   GtkTreeModel *model;
   GtkTreeIter  iter;
   Playlist *new_playlist = NULL;
@@ -1371,56 +1371,27 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	  itdb_spl_update (new_playlist);
       if (new_playlist->members)
       {
-	  GTimeVal time;
-	  float max_count = REFRESH_INIT_COUNT;
-	  gint count = max_count - 1;
-	  float ms;
 	  GList *gl;
 
-	  if (!prefs_get_int("block_display"))
-	  {
-	      block_selection (-1);
-	      g_get_current_time (&time);
-	  }
 	  st_enable_disable_view_sort (0, FALSE);
 	  for (gl=new_playlist->members; gl; gl=gl->next)
 	  { /* add all tracks to sort tab 0 */
 	      Track *track = gl->data;
-	      if (stop_add == -1)  break;
 	      st_add_track (track, FALSE, TRUE, 0);
-	      --count;
-	      if ((count < 0) && !prefs_get_int("block_display"))
-	      {
-		  gtkpod_tracks_statusbar_update();
-		  while (gtk_events_pending ())       gtk_main_iteration ();
-		  ms = get_ms_since (&time, TRUE);
-		  /* first time takes significantly longer, so we adjust
-		     the max_count */
-		  if (max_count == REFRESH_INIT_COUNT) max_count *= 2.5;
-		  /* average the new and the old max_count */
-		  max_count *= (1 + 2 * REFRESH_MS / ms) / 3;
-		  count = max_count - 1;
-#if DEBUG_TIMING
-		  printf("pm_s_c ms: %f mc: %f\n", ms, max_count);
-#endif
-	      }
 	  }
 	  st_enable_disable_view_sort (0, TRUE);
-	  if (stop_add != -1) st_add_track (NULL, TRUE, TRUE, 0);
-	  if (!prefs_get_int("block_display"))
-	  {
-	      while (gtk_events_pending ())	      gtk_main_iteration ();
-	      release_selection (-1);
-	  }
+	  st_add_track (NULL, TRUE, TRUE, 0);
       }
       gtkpod_tracks_statusbar_update();
   }
   
   /* Reallow the coverart selection update */
-	 coverart_block_change (FALSE);
+  coverart_block_change (FALSE);
 	 
   /* Set the coverart display based on the selected playlist */
   coverart_set_images ();
+
+  space_data_update ();
     
 #if DEBUG_TIMING
   g_get_current_time (&time);
@@ -1433,16 +1404,11 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 
 /* Callback function called when the selection
    of the playlist view has changed */
-/* Instead of handling the selection directly, we add a
-   "callback". Currently running display updates will be stopped
-   before the pm_selection_changed_cb is actually called */
 static void pm_selection_changed (GtkTreeSelection *selection,
 				  gpointer user_data)
 {
-    space_data_update ();
     if (!pm_selection_blocked)
-	add_selection_callback (-1, pm_selection_changed_cb,
-				(gpointer)selection, user_data);
+	pm_selection_changed_cb (selection, user_data);
 }
 
 

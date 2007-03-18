@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-24 15:17:58 jcs>
+/* Time-stamp: <2007-03-18 21:45:41 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -476,10 +476,6 @@ prefs_window_create (gint page)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 prefs_get_int("update_charset"));
 
-    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_block_display");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 prefs_get_int("block_display"));
-
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_id3_write");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 prefs_get_int("id3_write"));
@@ -693,10 +689,6 @@ prefs_window_create (gint page)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				     prefs_get_int("group_compilations"));
     }
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_tmp_disable_sort");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 prefs_get_int("tmp_disable_sort"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_startup_messages");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -1026,14 +1018,6 @@ on_cfg_md5tracks_toggled                (GtkToggleButton *togglebutton,
 
     temp_prefs_set_int(temp_prefs, "md5", val);
     if(w)	gtk_widget_set_sensitive (w, val);
-}
-
-void
- on_cfg_block_display_toggled           (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    temp_prefs_set_int(temp_prefs, "block_display",
-		       gtk_toggle_button_get_active(togglebutton));
 }
 
 void
@@ -1494,13 +1478,6 @@ void prefs_window_set_toolbar_style (GtkToolbarStyle style)
 {
 }
 
-void
-on_cfg_temporarily_disable_sorting     (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    temp_prefs_set_int(temp_prefs, "tmp_disable_sort",
-		       gtk_toggle_button_get_active(togglebutton));
-}
 void
 on_cfg_startup_messages                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)

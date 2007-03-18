@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-24 14:33:56 jcs>
+/* Time-stamp: <2007-03-18 21:43:39 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -337,7 +337,7 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
  */
 void gp_itdb_hash (iTunesDB *itdb)
 {
-   gint ns, count, track_nr;
+   gint ns, track_nr;
    Track *track, *oldtrack;
 
    g_return_if_fail (itdb);
@@ -351,22 +351,12 @@ void gp_itdb_hash (iTunesDB *itdb)
    block_widgets (); /* block widgets -- this might take a while,
 			so we'll do refreshs */
    sha1_free (itdb);  /* release md5 hash */
-   count = 0;
    track_nr = 0;
    /* populate the hash table */
    while ((track = g_list_nth_data (itdb->tracks, track_nr)))
    {
        oldtrack = sha1_track_exists_insert (itdb, track);
-       ++count;
 /*        printf("%d:%d:%p:%p\n", count, track_nr, track, oldtrack); */
-       if (!prefs_get_int("block_display") &&
-	   (((count % 20) == 1) || (count == ns)))
-       { /* update for count == 1, 21, 41 ... and for count == n */
-	   gtkpod_statusbar_message (ngettext ("Hashed %d of %d track.",
-					       "Hashed %d of %d tracks.", ns),
-				     count, ns);
-	   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
-       }
        if (oldtrack)
        {
 	   gp_duplicate_remove (oldtrack, track);

@@ -1,5 +1,24 @@
 2007-03-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* gtkpod.glade
+	  src/display.c
+	  src/display.h
+	  src/display_playlists.c
+	  src/display_private.h
+	  src/display_sorttabs.c
+	  src/display_tracks.c
+	  src/misc.c
+	  src/misc.h
+	  src/misc_track.c
+	  src/prefs.c
+	  src/prefs_window.c: Clicking on an item with the right mouse
+	  button will select and open the context menu, which is the
+	  intended behavior. As a consequence, the interface will
+	  remain blocked while the selection is being updated and
+	  displayed.
+
+2007-03-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* po/de.po: update supplied by Kai-Ove Pietsch.
 
 2007-03-11 Todd Zullinger <tmzullinger at users.sourceforge.net>

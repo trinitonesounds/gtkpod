@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-20 23:05:44 jcs>
+/* Time-stamp: <2007-03-18 23:04:55 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -55,14 +55,6 @@
 #define DEBUG_CB_INIT 0
 /* print info when adding tracks */
 #define DEBUG_ADD_TRACK 0
-
-/* used for stopping of display refresh */
-typedef void (*br_callback)(gpointer user_data1, gpointer user_data2);
-void block_selection (gint inst);
-void release_selection (gint inst);
-void add_selection_callback (gint inst, br_callback brc, gpointer user_data1, gpointer user_data2);
-gboolean selection_callback_timeout (gpointer data);
-extern gint stop_add;
 
 /* used for display organization */
 void pm_create_treeview (void);

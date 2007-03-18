@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-20 23:05:44 jcs>
+/* Time-stamp: <2007-03-18 21:34:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2337,8 +2337,7 @@ void tm_enable_disable_view_sort (gboolean enable)
 	    fprintf (stderr, "Programming error: disable_count < 0\n");
 	if (disable_count == 0 && track_treeview)
 	{
-	    if ((prefs_get_int("tm_sort") != SORT_NONE) &&
-		sorting_disabled())
+	    if (prefs_get_int("tm_sort") != SORT_NONE)
 	    {
 		/* Re-enable sorting */
 		GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
@@ -2363,8 +2362,7 @@ void tm_enable_disable_view_sort (gboolean enable)
     {
 	if (disable_count == 0 && track_treeview)
 	{
-	    if ((prefs_get_int("tm_sort") != SORT_NONE) &&
-		sorting_disabled ())
+	    if (prefs_get_int("tm_sort") != SORT_NONE)
 	    {
 		/* Disable sorting */
 		GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);

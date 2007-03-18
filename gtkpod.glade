@@ -1447,20 +1447,7 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkToolButton" id="stop_button">
-	      <property name="tooltip" translatable="yes">Stop Display Update</property>
-	      <property name="label" translatable="yes">Stop</property>
-	      <property name="use_underline">True</property>
-	      <property name="stock_id">gtk-stop</property>
-	      <property name="visible_horizontal">True</property>
-	      <property name="visible_vertical">True</property>
-	      <property name="is_important">False</property>
-	      <signal name="clicked" handler="on_stop_button_clicked" last_modification_time="Tue, 18 Feb 2003 05:40:30 GMT"/>
-	    </widget>
-	    <packing>
-	      <property name="expand">False</property>
-	      <property name="homogeneous">True</property>
-	    </packing>
+	    <placeholder/>
 	  </child>
 	</widget>
 	<packing>
@@ -12173,50 +12160,6 @@ filename if they are (still) empty:</property>
 				  <property name="spacing">6</property>
 
 				  <child>
-				    <widget class="GtkCheckButton" id="cfg_tmp_disable_sort">
-				      <property name="visible">True</property>
-				      <property name="tooltip" translatable="yes">It is much faster to sort the display after all tracks have been added. Some people might feel irritated by this behaviour and should uncheck this option.</property>
-				      <property name="can_focus">True</property>
-				      <property name="label" translatable="yes">Temporarily disable sorting when changing playlist
-or tab entry (faster!)</property>
-				      <property name="use_underline">True</property>
-				      <property name="relief">GTK_RELIEF_NORMAL</property>
-				      <property name="focus_on_click">True</property>
-				      <property name="active">False</property>
-				      <property name="inconsistent">False</property>
-				      <property name="draw_indicator">True</property>
-				      <signal name="toggled" handler="on_cfg_temporarily_disable_sorting" last_modification_time="Mon, 20 Sep 2004 10:59:24 GMT"/>
-				    </widget>
-				    <packing>
-				      <property name="padding">0</property>
-				      <property name="expand">False</property>
-				      <property name="fill">False</property>
-				    </packing>
-				  </child>
-
-				  <child>
-				    <widget class="GtkCheckButton" id="cfg_block_display">
-				      <property name="visible">True</property>
-				      <property name="tooltip" translatable="yes">The display can be blocked after changing a selection. The display update is faster, but you have to wait until it's finished. When using this option, sorting is also temporarily disabled (see option above).</property>
-				      <property name="can_focus">True</property>
-				      <property name="label" translatable="yes">Block display when changing playlist or tab
- entry (faster!)</property>
-				      <property name="use_underline">True</property>
-				      <property name="relief">GTK_RELIEF_NORMAL</property>
-				      <property name="focus_on_click">True</property>
-				      <property name="active">False</property>
-				      <property name="inconsistent">False</property>
-				      <property name="draw_indicator">True</property>
-				      <signal name="toggled" handler="on_cfg_block_display_toggled" last_modification_time="Sun, 09 Feb 2003 11:14:32 GMT"/>
-				    </widget>
-				    <packing>
-				      <property name="padding">0</property>
-				      <property name="expand">False</property>
-				      <property name="fill">False</property>
-				    </packing>
-				  </child>
-
-				  <child>
 				    <widget class="GtkCheckButton" id="cfg_startup_messages">
 				      <property name="visible">True</property>
 				      <property name="tooltip" translatable="yes">This option will be re-activated when you upgrade gtkpod.</property>
@@ -12314,6 +12257,14 @@ or tab entry (faster!)</property>
 				      <property name="expand">False</property>
 				      <property name="fill">False</property>
 				    </packing>
+				  </child>
+
+				  <child>
+				    <placeholder/>
+				  </child>
+
+				  <child>
+				    <placeholder/>
 				  </child>
 				</widget>
 				<packing>

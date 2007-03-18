@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-16 17:50:43 jcs>
+/* Time-stamp: <2007-03-18 21:34:23 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -253,7 +253,6 @@ void set_itdb_prefs_int (iTunesDB *itdb, const gchar *subkey, gint value);
 void set_itdb_index_prefs_int (gint index,
 			       const gchar *subkey, gint value);
 gboolean get_offline (iTunesDB *itdb);
-gboolean sorting_disabled();
 
 guint32 guiToDB(gint gui);
 gint dbToGUI(guint32 db);

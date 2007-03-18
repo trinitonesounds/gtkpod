@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-20 23:05:44 jcs>
+/* Time-stamp: <2007-03-18 22:42:37 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -87,12 +87,6 @@ enum {
 
 /* max. number of stars */
 #define RATING_MAX 5
-
-/* time between display refreshs in ms */
-#define REFRESH_MS 200
-/* initial count number between display refreshs -- will be
-   re-calculated to match the time interval specified above */
-#define REFRESH_INIT_COUNT 5
 
 /* struct for each entry in sort tab */
 typedef struct {
@@ -289,7 +283,6 @@ void display_show_hide_toolbar (void);
 void display_reset (gint inst);
 GList *display_get_selection (guint32 inst);
 GList *display_get_selected_members (gint inst);
-void display_enable_disable_view_sort (gboolean enable);
 void display_remove_autoscroll_row_timeout (GtkWidget *widget);
 void display_install_autoscroll_row_timeout (GtkWidget *widget);
 
@@ -351,7 +344,6 @@ void display_update_default_sizes (void);
 void display_set_default_sizes (void);
 void display_show_hide_tooltips (void);
 void display_set_info_window_menu (void);
-void display_stop_update (gint inst);
 
 void spl_edit (Playlist *spl);
 void spl_edit_new (iTunesDB *itdb, gchar *name, gint32 pos);

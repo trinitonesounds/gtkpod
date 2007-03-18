@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-20 23:05:44 jcs>
+/* Time-stamp: <2007-03-18 23:14:37 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -618,52 +618,20 @@ static void sp_go_cb (gpointer user_data1, gpointer user_data2)
 
     if (st->sp_members)
     {
-	GTimeVal time;
-	float max_count = REFRESH_INIT_COUNT;
-	gint count = max_count - 1;
-	float ms;
 	GList *gl;
 
-	if (!prefs_get_int("block_display"))
-	{
-	    block_selection (inst);
-	    g_get_current_time (&time);
-	}
 	st_enable_disable_view_sort (inst+1, FALSE);
 	for (gl=st->sp_members; gl; gl=gl->next)
 	{ /* add all member tracks to next instance */
 	    Track *track = (Track *)gl->data;
-	    if (stop_add <= (gint)inst) break;
 	    if (sp_check_track (track, inst))
 	    {
 		st->sp_selected = g_list_append (st->sp_selected, track);
 		st_add_track (track, FALSE, TRUE, inst+1);
 	    }
-	    --count;
-	    if ((count < 0) && !prefs_get_int("block_display"))
-	    {
-		gtkpod_tracks_statusbar_update();
-		while (gtk_events_pending ())       gtk_main_iteration ();
-		ms = get_ms_since (&time, TRUE);
-		/* first time takes significantly longer, so we adjust
-		   the max_count */
-		if (max_count == REFRESH_INIT_COUNT) max_count *= 2.5;
-		/* average the new and the old max_count */
-		max_count *= (1 + 2 * REFRESH_MS / ms) / 3;
-		count = max_count - 1;
-#if DEBUG_TIMING
-		printf("st_s_c ms: %f mc: %f\n", ms, max_count);
-#endif
-	    }
 	}
 	st_enable_disable_view_sort (inst+1, TRUE);
-	if (stop_add > (gint)inst)
-	    st_add_track (NULL, TRUE, st->final, inst+1);
-	if (!prefs_get_int("block_display"))
-	{
-	    while (gtk_events_pending ())	  gtk_main_iteration ();
-	    release_selection (inst);
-	}
+	st_add_track (NULL, TRUE, st->final, inst+1);
     }
     gtkpod_tracks_statusbar_update();
 #if DEBUG_TIMING
@@ -716,11 +684,7 @@ void sp_go (guint32 inst)
      * being used (maybe the user 'forgot' to press enter */
     sp_store_sp_entries (inst);
 
-    /* Instead of handling the selection directly, we add a
-       "callback". Currently running display updates will be stopped
-       before the sp_go_cb is actually called */
-    add_selection_callback (inst, sp_go_cb,
-			    GUINT_TO_POINTER(inst), NULL);
+    sp_go_cb (GUINT_TO_POINTER(inst), NULL);
 }
 
 
@@ -1881,7 +1845,6 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 /*  printf("ps%d: cat: %d\n", inst, page);*/
 
   if (inst == -1) return; /* invalid notebook */
-  if (stop_add < (gint)inst)  return;
   st = sorttab[inst];
   /* remember old is_go state and current page */
   is_go = st->is_go;
@@ -1894,55 +1857,21 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
   copy = display_get_selected_members (inst-1);
   if (copy)
   {
-      GTimeVal time;
-      float max_count = REFRESH_INIT_COUNT;
-      gint count = max_count - 1;
-      float ms;
       GList *gl;
-      /* block playlist view and all sort tab notebooks <= inst */
-      if (!prefs_get_int("block_display"))
-      {
-	  block_selection (inst-1);
-	  g_get_current_time (&time);
-      }
+      gboolean final;
       /* add all tracks previously present to sort tab */
       st_enable_disable_view_sort (inst, FALSE);
       for (gl=copy; gl; gl=gl->next)
       {
 	  Track *track = gl->data;
-	  if (stop_add < (gint)inst)  break;
 	  st_add_track (track, FALSE, TRUE, inst);
-	  --count;
-	  if ((count < 0) && !prefs_get_int("block_display"))
-	  {
-	      gtkpod_tracks_statusbar_update();
-	      while (gtk_events_pending ())       gtk_main_iteration ();
-	      ms = get_ms_since (&time, TRUE);
-	      /* first time takes significantly longer, so we adjust
-		 the max_count */
-	      if (max_count == REFRESH_INIT_COUNT) max_count *= 2.5;
-	      /* average the new and the old max_count */
-	      max_count *= (1 + 2 * REFRESH_MS / ms) / 3;
-	      count = max_count - 1;
-#if DEBUG_TIMING
-	      printf("st_p_s ms: %f mc: %f\n", ms, max_count);
-#endif
-	  }
       }
       st_enable_disable_view_sort (inst, TRUE);
-      if (stop_add >= (gint)inst)
-      {
-	  gboolean final = TRUE;  /* playlist is always complete */
-	  /* if playlist is not source, get final flag from
-	   * corresponding sorttab */
-	  if ((inst > 0) && (sorttab[inst-1])) final = sorttab[inst-1]->final;
-	  st_add_track (NULL, final, TRUE, inst);
-      }
-      if (!prefs_get_int("block_display"))
-      {
-	  while (gtk_events_pending ())      gtk_main_iteration ();
-	  release_selection (inst-1);
-      }
+      final = TRUE;  /* playlist is always complete */
+      /* if playlist is not source, get final flag from
+       * corresponding sorttab */
+      if ((inst > 0) && (sorttab[inst-1])) final = sorttab[inst-1]->final;
+      st_add_track (NULL, final, TRUE, inst);
   }
 #if DEBUG_TIMING
   g_get_current_time (&time);
@@ -1954,9 +1883,6 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 
 
 /* Called when page in sort tab is selected */
-/* Instead of handling the selection directly, we add a
-   "callback". Currently running display updates will be stopped
-   before the st_page_selected_cb is actually called */
 void st_page_selected (GtkNotebook *notebook, guint page)
 {
   guint32 inst;
@@ -1969,8 +1895,7 @@ void st_page_selected (GtkNotebook *notebook, guint page)
   /* inst-1: changing a page in the first sort tab is like selecting a
      new playlist and so on. Therefore we subtract 1 from the
      instance. */
-  add_selection_callback (inst-1, st_page_selected_cb,
-			  (gpointer)notebook, GUINT_TO_POINTER(page));
+  st_page_selected_cb (notebook, GUINT_TO_POINTER(page));
 }
 
 
@@ -2164,48 +2089,16 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 
       if (new_entry->members)
       {
-	  GTimeVal time;
-	  float max_count = REFRESH_INIT_COUNT;
-	  gint count = max_count - 1;
-	  float ms;
 	  GList *gl;
-	  if (!prefs_get_int("block_display"))
-	  {
-	      block_selection (inst);
-	      g_get_current_time (&time);
-	  }
 	  st_enable_disable_view_sort (inst+1, FALSE);
 	  	  
 	  for (gl=new_entry->members; gl; gl=gl->next)
 	  { /* add all member tracks to next instance */
 	      Track *track = gl->data;
-	      if (stop_add <= (gint)inst) break;
 	      st_add_track (track, FALSE, TRUE, inst+1);
-	      --count;
-	      if ((count < 0) && !prefs_get_int("block_display"))
-	      {
-		  gtkpod_tracks_statusbar_update();
-		  while (gtk_events_pending ())       gtk_main_iteration ();
-		  ms = get_ms_since (&time, TRUE);
-		  /* first time takes significantly longer, so we adjust
-		     the max_count */
-		  if (max_count == REFRESH_INIT_COUNT) max_count *= 2.5;
-		  /* average the new and the old max_count */
-		  max_count *= (1 + 2 * REFRESH_MS / ms) / 3;
-		  count = max_count - 1;
-#if DEBUG_TIMING
-		  printf("st_s_c ms: %f mc: %f\n", ms, max_count);
-#endif
-	      }
 	  }
 	  st_enable_disable_view_sort (inst+1, TRUE);
-	  if (stop_add > (gint)inst)
-	      st_add_track (NULL, TRUE, st->final, inst+1);
-	  if (!prefs_get_int("block_display"))
-	  {
-	      while (gtk_events_pending ())	  gtk_main_iteration ();
-	      release_selection (inst);
-	  }
+	  st_add_track (NULL, TRUE, st->final, inst+1);
       }
       gtkpod_tracks_statusbar_update();
       
@@ -2218,7 +2111,9 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	  			coverart_select_cover (track);
       }
   }
-  
+
+  space_data_update ();
+
 #if DEBUG_TIMING
   g_get_current_time (&time);
   printf ("st_selection_changed_cb exit:  %ld.%06ld sec\n",
@@ -2238,9 +2133,7 @@ static void st_selection_changed (GtkTreeSelection *selection,
 #if DEBUG_CB_INIT
     printf("st_s_c enter (inst: %d)\n", (gint)user_data);
 #endif
-    space_data_update ();
-    add_selection_callback ((gint)GPOINTER_TO_INT(user_data), st_selection_changed_cb,
-			    (gpointer)selection, user_data);
+    st_selection_changed_cb ((gpointer)selection, user_data);
 #if DEBUG_CB_INIT
     printf("st_s_c exit (inst: %d)\n", (gint)user_data);
 #endif
@@ -2524,8 +2417,7 @@ void st_enable_disable_view_sort (gint inst, gboolean enable)
 	if (disable_count[inst] == 0)
 	{
 	    /* Re-enable sorting */
-	    if ((prefs_get_int("st_sort") != SORT_NONE) &&
-		sorting_disabled ())
+	    if (prefs_get_int("st_sort") != SORT_NONE)
 	    {
 		SortTab *st = sorttab[inst];
 		if (st && 
@@ -2556,8 +2448,7 @@ void st_enable_disable_view_sort (gint inst, gboolean enable)
 	if (disable_count[inst] == 0)
 	{
 	    /* Disable sorting */
-	    if ((prefs_get_int("st_sort") != SORT_NONE) &&
-		sorting_disabled ())
+	    if (prefs_get_int("st_sort") != SORT_NONE)
 	    {
 		SortTab *st = sorttab[inst];
 		if (st && 

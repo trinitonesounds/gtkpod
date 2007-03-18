@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2007-01-16 22:58:57 jcs>
+|  Time-stamp: <2007-03-18 21:34:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1558,14 +1558,6 @@ void set_itdb_index_prefs_int (gint index,
     key = get_itdb_prefs_key (index, subkey);
     prefs_set_int (key, value);
     g_free (key);
-}
-
-/* Sorting gets disabled if either tmp disable sort or
- * block display are true */
-gboolean sorting_disabled()
-{
-    return (prefs_get_int("block_display") || 
-	    prefs_get_int("tmp_disable_sort"));
 }
 
 /* retrieve offline mode from itdb (convenience function) */

@@ -15,6 +15,11 @@ gtkpod V0.99.9CVS
        album artist, tv show, last skipped, season number, skipcount
        and video kind.
 
+       IMPROVEMENT: Clicking on an item with the right mouse button
+       will select and open the context menu, which is the intended
+       behavior. As a consequence, the interface will remain blocked
+       while the selection is being updated and displayed.
+
        BUGFIX: dragging tracks between two iPods would sometimes not
        actually copy the file.
 
