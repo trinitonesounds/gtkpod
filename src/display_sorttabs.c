@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-03-18 23:14:37 jcs>
+/* Time-stamp: <2007-03-19 23:29:07 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -51,6 +51,8 @@ static GtkPaned *st_paned[PANED_NUM_ST];
 /* compare function to be used for string comparisons */
 
 static void sp_store_sp_entries (gint inst);
+static void st_page_selected (GtkNotebook *notebook, guint page);
+static void st_create_notebook (gint inst);
 
 /* Drag and drop definitions */
 static GtkTargetEntry st_drag_types [] = {
@@ -266,6 +268,8 @@ on_st_switch_page                 (GtkNotebook     *notebook,
 {
     gchar *buf;
     guint inst = GPOINTER_TO_UINT( user_data );
+
+    
 
 /*     printf ("switch_page: inst/page: %d/%d\n", inst, page_num); */
     /* set compare function for strings (to speed up sorting) */
@@ -1883,7 +1887,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 
 
 /* Called when page in sort tab is selected */
-void st_page_selected (GtkNotebook *notebook, guint page)
+static void st_page_selected (GtkNotebook *notebook, guint page)
 {
   guint32 inst;
 
@@ -2503,8 +2507,8 @@ void st_select_current_position (gint inst, gint x, gint y)
 
 /* Make the appropriate number of sort tab instances visible */
 /* Also: make the menu items "more/less sort tabs" active/inactive as
- * needed */
-void st_show_visible (void)
+ * needed. */
+static void st_adjust_visible (void)
 {
     gint i,n;
     GtkWidget *w;
@@ -2539,6 +2543,15 @@ void st_show_visible (void)
     w = gtkpod_xml_get_widget (main_window_xml, "more_sort_tabs");
     if (n == SORT_TAB_MAX) gtk_widget_set_sensitive (w, FALSE);
     else                   gtk_widget_set_sensitive (w, TRUE);
+}
+
+/* Make the appropriate number of sort tab instances visible */
+/* Also: make the menu items "more/less sort tabs" active/inactive as
+ * needed. */
+void st_show_visible (void)
+{
+    /* Adjust visibility */
+    st_adjust_visible ();
 
     /* redisplay */
     st_redisplay (0);
@@ -3002,7 +3015,7 @@ static void st_create_pages (gint inst)
 
 
 /* Create notebook and fill in sorttab[@inst] */
-void st_create_notebook (gint inst)
+static void st_create_notebook (gint inst)
 {
   GtkWidget *st0_notebook;
   GtkPaned *paned;
@@ -3036,9 +3049,6 @@ void st_create_notebook (gint inst)
   else
       gtk_paned_pack1 (paned, st0_notebook, FALSE, TRUE);
   gtk_notebook_set_scrollable (GTK_NOTEBOOK (st0_notebook), TRUE);
-  g_signal_connect ((gpointer) st0_notebook, "switch_page",
-                    G_CALLBACK (on_st_switch_page),
-                    GINT_TO_POINTER(inst));
 
   st->notebook = GTK_NOTEBOOK (st0_notebook);
   st_create_pages (inst);
@@ -3047,6 +3057,10 @@ void st_create_notebook (gint inst)
   gtk_notebook_set_current_page (st->notebook, page);
   if (prefs_get_int("st_sort") != SORT_NONE)
     st_sort_inst (inst, prefs_get_int("st_sort"));
+
+  g_signal_connect ((gpointer) st0_notebook, "switch_page",
+                    G_CALLBACK (on_st_switch_page),
+                    GINT_TO_POINTER(inst));
 }
 
 
@@ -3064,7 +3078,10 @@ void st_create_tabs (void)
 	sorttab[inst]->string_compare_func = compare_string;
 	st_create_notebook (inst);
   }
-  st_show_visible ();
+  /* adjust number of visible sorttabs (cannot use st_show_visible()
+     because the latter calls st_redisplay(0) which refers to the
+     playlist view which hasn't yet set up) */
+  st_adjust_visible ();
 }
 
 /* Clean up the memory used by sort tabs (program quit). */

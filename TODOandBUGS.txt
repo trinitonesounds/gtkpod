@@ -1,5 +1,8 @@
 BUGS, TODO:
 
+- when creating new repository: make sure backup repository filename isn't
+  already used.
+
 - write ID3 tags when editing in details window
 
 - don't keep iTunesDB on iPod when syncing (takes up valuable space)

@@ -1,4 +1,16 @@
-2007-03-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
+2007-03-19 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* display.c (display_create): removed reference to stop_button
+
+	* src/display.c
+	  src/display.h
+	  src/display_private.h
+	  src/display_sorttabs.c:
+	  sorted out remaining assertions produced after last night's
+	  changes. Made st_page_selected() and st_create_notebook()
+	  static.
+
+2007-03-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* gtkpod.glade
 	  src/display.c

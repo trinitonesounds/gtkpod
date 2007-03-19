@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-03-18 23:17:19 jcs>
+/* Time-stamp: <2007-03-19 23:13:41 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -51,7 +51,6 @@ GtkWidget *gtkpod_window = NULL;
 /* Create the listviews etc */
 void display_create (void)
 {
-    GtkWidget *stop_button;
     gint defx, defy;
     GtkTooltips *main_tooltips;
 
@@ -77,9 +76,6 @@ void display_create (void)
     st_create_tabs ();
     st_set_default_sizes ();
     pm_create_treeview ();
-    /* Hide the "stop_button" */
-    stop_button = gtkpod_xml_get_widget (main_window_xml, "stop_button");
-    if (stop_button) gtk_widget_hide (stop_button);
     /* Hide/Show the toolbar */
     display_show_hide_toolbar ();
     /* Hide/Show tooltips */

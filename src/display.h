@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-03-18 22:42:37 jcs>
+/* Time-stamp: <2007-03-19 23:00:45 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -305,7 +305,6 @@ void pm_set_renderer_text (GtkCellRenderer *renderer,
 			   Playlist *playlist);
 
 void st_stop_editing (gint inst, gboolean cancel);
-void st_page_selected (GtkNotebook *notebook, guint page);
 gboolean st_set_selection (Itdb_Track *track);
 void st_redisplay (guint32 inst);
 void st_sort (GtkSortType order);

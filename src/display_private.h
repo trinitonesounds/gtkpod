@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-03-18 23:04:55 jcs>
+/* Time-stamp: <2007-03-19 23:11:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -71,7 +71,6 @@ void st_add_track (Track *track, gboolean final, gboolean display, guint32 inst)
 void st_create_tabs (void);
 void st_remove_track (Track *track, guint32 inst);
 void st_init (ST_CAT_item new_category, guint32 inst);
-void st_create_notebook (gint inst);
 void st_cleanup (void);
 void st_set_default_sizes (void);
 void st_update_default_sizes (void);
