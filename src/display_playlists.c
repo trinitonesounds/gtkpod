@@ -1015,6 +1015,11 @@ void pm_remove_track (Playlist *playlist, Track *track)
 	    }
 	}
     }
+    
+  if (prefs_get_int (KEY_DISPLAY_COVERART))
+  {
+  	coverart_set_images ();
+  }
 }
 
 
@@ -1026,6 +1031,11 @@ void pm_add_track (Playlist *playlist, Track *track, gboolean display)
     {
 	st_add_track (track, TRUE, display, 0); /* Add to first sort tab */
     }
+    
+    if (prefs_get_int (KEY_DISPLAY_COVERART))
+  {
+  	coverart_set_images ();
+  }
 }
 
 /* Used by pm_name_changed() to find the playlist that
@@ -1068,6 +1078,11 @@ void pm_track_changed (Track *track)
   /* Check if track is member of current playlist */
   if (g_list_find (current_playlist->members, track))
       st_track_changed (track, FALSE, 0);
+      
+  if (prefs_get_int (KEY_DISPLAY_COVERART))
+  {
+  	coverart_set_images ();
+  }
 }
 
 
@@ -1387,10 +1402,9 @@ static void pm_selection_changed_cb (GtkTreeSelection *selection,
   
   /* Reallow the coverart selection update */
   coverart_block_change (FALSE);
-	 
   /* Set the coverart display based on the selected playlist */
-  coverart_set_images ();
-
+  coverart_set_images();
+	 
   space_data_update ();
     
 #if DEBUG_TIMING

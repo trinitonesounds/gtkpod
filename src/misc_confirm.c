@@ -312,10 +312,9 @@ void delete_track_ok (struct DeleteData *dd)
 	gp_playlist_remove_track (dd->pl, l->data, dd->deleteaction);
     }
 
-		/* Awaken coverart selection and update the 
-		 * coverart display and ensure it is sorted correctly */
+		/* Awaken coverart selection */
 		coverart_block_change (FALSE);
-		coverart_set_images ();
+		coverart_set_images();
     g_list_free (dd->tracks);
     g_free (dd);
 

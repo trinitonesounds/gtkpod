@@ -385,7 +385,6 @@ static void details_button_apply_clicked (GtkButton *button,
     if (changed)
     {
 			data_changed (detail->itdb);
-			coverart_set_images ();
     }
     
     details_update_headline (detail);

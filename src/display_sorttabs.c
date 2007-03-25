@@ -1961,8 +1961,7 @@ void st_sort (GtkSortType order)
   for (i=0; i < prefs_get_int("sort_tab_num"); ++i)
 		st_sort_inst (i, order);
 	
-	Playlist *plitem = pm_get_selected_playlist ();
-	coverart_set_images (plitem->members);
+	coverart_set_images ();
 }
 
 gboolean st_set_selection (Itdb_Track *track)

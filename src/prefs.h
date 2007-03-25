@@ -56,6 +56,7 @@ extern const gchar *KEY_PATH_SYNC_CALENDAR;
 extern const gchar *KEY_PATH_SYNC_NOTES;
 extern const gchar *KEY_SYNCMODE;
 extern const gchar *KEY_MANUAL_SYNCDIR;
+extern const gchar *KEY_DISPLAY_COVERART;
 
 /* New prefs backend. Will replace the stuff above */
 

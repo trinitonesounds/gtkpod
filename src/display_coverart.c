@@ -974,6 +974,7 @@ void coverart_init_display ()
 	else
 	{
 	    gtk_widget_show_all (cdwidget->contentpanel);
+	    prefs_set_int (KEY_DISPLAY_COVERART, TRUE);
 	}
 }
 

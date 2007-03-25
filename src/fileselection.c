@@ -128,10 +128,7 @@ static void add_files_ok(GtkFileChooser* filechooser)
 	gtkpod_statusbar_message (_("Successfully added files"));
     else
 	gtkpod_statusbar_message (_("Some files were not added successfully"));
-	
-		/* Reinitialise coverart display for selected playlist */
-    coverart_set_images ();
-    
+	    
     /* Clean up the names list */
     delete_file_list(names);
     release_widgets ();
@@ -686,8 +683,6 @@ static void add_dir_selected (gchar *dir)
 			       NULL, NULL);
 	prefs_set_string ("last_dir_browsed", dir);
 	gtkpod_tracks_statusbar_update();
-	/* Reinitialise coverart display for selected playlist */
-  coverart_set_images ();
     }
     else
     {
