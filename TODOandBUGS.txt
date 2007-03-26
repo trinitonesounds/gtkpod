@@ -1,5 +1,7 @@
 BUGS, TODO:
 
+- make it impossible to add tracks to an iPod that's not loaded.
+
 - when creating new repository: make sure backup repository filename isn't
   already used.
 

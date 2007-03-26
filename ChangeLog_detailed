@@ -2,6 +2,10 @@
 
 	* misc.c: corrected copyright to show 2002-2007.
 
+	* context_menus.c: Implemented Andrzej Palejko's patch to
+          allow copying of tracks and playlists from within the
+          context menu without using DND.
+
 2007-03-25 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* details.c: removal of coverart_set_images from

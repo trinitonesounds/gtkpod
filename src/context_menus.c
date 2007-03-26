@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-24 20:14:54 jcs>
+/* Time-stamp: <2007-03-26 22:20:32 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -33,8 +33,10 @@
 #endif
 
 #include "itdb.h"
+#include "info.h"
 #include "details.h"
 #include "display.h"
+#include "display_itdb.h"
 #include "file.h"
 #include "misc.h"
 #include "misc_track.h"
@@ -314,6 +316,169 @@ static void save_changes (GtkMenuItem *mi, gpointer data)
 
 
 
+
+/* ------------------------------------------------------------
+
+      Copying selected item(s) to target destination
+
+   ------------------------------------------------------------ */
+
+
+/*
+ * Copy the selected playlist to a specified itdb.
+ */
+void
+copy_playlist_to_target_itdb (Playlist     *pl,
+			      iTunesDB     *t_itdb)
+{
+    Playlist	*pl_n;
+    GList	*addtracks = NULL;
+    g_return_if_fail (pl);
+    g_return_if_fail (t_itdb);
+    if (pl->itdb != t_itdb)
+    {
+	addtracks = export_trackglist_when_necessary (pl->itdb,
+						      t_itdb,
+						      pl->members);
+	if (addtracks || !pl->members)
+	{
+	    pl_n = gp_playlist_add_new(t_itdb, pl->name, FALSE, -1);
+	    add_trackglist_to_playlist (pl_n, addtracks);
+	    gtkpod_statusbar_message (_("Copied \"%s\" playlist to %s"),
+				      pl->name, (itdb_playlist_mpl (t_itdb))->name);
+	}
+	g_list_free (addtracks);
+	addtracks = NULL;
+    }
+    else
+    {
+	pl_n = itdb_playlist_duplicate (pl);
+	g_return_if_fail (pl_n);
+	gp_playlist_add (t_itdb, pl_n, -1);
+    }
+}
+
+
+/*
+ * Copy selected tracks to a specified itdb.
+ */
+void
+copy_tracks_to_target_itdb (GList        *tracks,
+			    iTunesDB     *t_itdb)
+{
+    GList       *addtracks = NULL;
+    Track	*first = tracks->data;
+    Playlist    *mpl;
+    gint        n;
+
+    g_return_if_fail(tracks);
+    g_return_if_fail(t_itdb);
+
+    mpl = itdb_playlist_mpl (t_itdb);
+    g_return_if_fail(mpl);
+
+    addtracks = export_trackglist_when_necessary (first->itdb, t_itdb, tracks);
+
+    if (addtracks)
+    {
+	add_trackglist_to_playlist (mpl, addtracks);
+	n = g_list_length (addtracks);
+	gtkpod_statusbar_message (ngettext ("Copied %d track to '%s'",
+					    "Copied %d tracks to '%s'", n),
+				  n, mpl->name);
+	g_list_free (addtracks);
+	addtracks = NULL;
+    }
+}
+
+
+void
+copy_playlist_to_target_playlist (Playlist     *pl,
+				  Playlist     *t_pl)
+{
+    GList	*addtracks = NULL;
+    Playlist    *t_mpl;
+
+    g_return_if_fail (pl);
+    g_return_if_fail (t_pl);
+
+    t_mpl = itdb_playlist_mpl (t_pl->itdb);
+    g_return_if_fail(t_mpl);
+
+    addtracks = export_trackglist_when_necessary (pl->itdb,
+						  t_pl->itdb,
+						  pl->members);
+    if (addtracks || !pl->members)
+    {
+	add_trackglist_to_playlist (t_pl, addtracks);
+	gtkpod_statusbar_message (_("Copied '%s' playlist to '%s' in '%s'"),
+				  pl->name, t_pl->name, t_mpl->name);
+	g_list_free(addtracks);
+	addtracks = NULL;
+    }
+}
+
+
+
+void
+copy_tracks_to_target_playlist (GList        *tracks,
+				Playlist     *t_pl)
+{
+    GList	*addtracks = NULL;
+    Track	*first;
+    Playlist    *mpl;
+    gint        n;
+
+    g_return_if_fail (tracks);
+    g_return_if_fail (t_pl);
+    g_return_if_fail (t_pl->itdb);
+
+    mpl = itdb_playlist_mpl (t_pl->itdb);
+    g_return_if_fail(mpl);
+
+    if (tracks)
+    {
+	first = tracks->data;
+	g_return_if_fail (first);
+	addtracks = export_trackglist_when_necessary (first->itdb, t_pl->itdb, tracks);
+	add_trackglist_to_playlist (t_pl, addtracks);
+    }
+    n = g_list_length (addtracks);
+    gtkpod_statusbar_message (ngettext ("Copied %d track to '%s' in '%s'",
+					"Copied %d tracks to %s in '%s'", n),
+			      n, t_pl->name, mpl->name);
+    g_list_free (addtracks);
+    addtracks = NULL;
+}
+
+
+
+static void copy_selected_to_target_itdb (GtkMenuItem *mi, gpointer *userdata)
+{
+    iTunesDB *t_itdb = *userdata;
+    g_return_if_fail (t_itdb);
+    if (selected_playlist)
+	copy_playlist_to_target_itdb (selected_playlist, t_itdb);
+    else if (selected_entry)
+	copy_tracks_to_target_itdb (selected_entry->members, t_itdb);
+    else if (selected_tracks)
+	copy_tracks_to_target_itdb (selected_tracks, t_itdb);
+}
+
+
+static void copy_selected_to_target_playlist (GtkMenuItem *mi, gpointer *userdata)
+{
+    Playlist *t_pl = *userdata;
+    g_return_if_fail (t_pl);
+    if (selected_playlist)
+	copy_playlist_to_target_playlist (selected_playlist, t_pl);
+    else if (selected_entry)
+	copy_tracks_to_target_playlist (selected_entry->members, t_pl);
+    else if (selected_tracks)
+	copy_tracks_to_target_playlist (selected_tracks, t_pl);
+}
+
+
 /* Attach a menu item to your context menu */
 /* @m - the GtkMenu we're attaching to
  * @str - a gchar* with the menu label
@@ -321,7 +486,11 @@ static void save_changes (GtkMenuItem *mi, gpointer data)
  * @func - the callback for when the item is selected (or NULL)
  * @mi - the GtkWidget we're gonna hook into the menu
  */
-GtkWidget *hookup_mi (GtkWidget *m, gchar *str, gchar *stock, GCallback func, gpointer userdata)
+GtkWidget *hookup_mi (GtkWidget *m,
+		      const gchar *str,
+		      const gchar *stock,
+		      GCallback func,
+		      gpointer userdata)
 {
     GtkWidget *mi;
 
@@ -359,6 +528,77 @@ GtkWidget *add_separator (GtkWidget *m)
 	gtk_container_add (GTK_CONTAINER (m), sep);
     }
     return sep;
+}
+
+
+static GtkWidget *add_copy_selected_to_target_itdb (GtkWidget *menu,
+						    const gchar *title)
+{
+    GtkWidget *mi;
+    GtkWidget *sub;
+    GtkWidget *pl_mi;
+    GtkWidget *pl_sub;
+    GList *itdbs;
+    GList *db;
+    struct itdbs_head *itdbs_head;
+    iTunesDB *itdb;
+    gchar *stock_id = NULL;
+    Playlist *pl;
+
+  
+    g_return_val_if_fail (gtkpod_window, NULL);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+                                    "itdbs_head");
+
+    mi = hookup_mi (menu, title,
+		    GTK_STOCK_COPY,
+		    NULL, NULL);
+    sub = gtk_menu_new ();
+    gtk_widget_show (sub);
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM (mi), sub);
+
+    for (itdbs=itdbs_head->itdbs; itdbs; itdbs=itdbs->next)
+	    {
+		itdb = itdbs->data;
+		ExtraiTunesDBData *eitdb=itdb->userdata;
+		if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+		{
+			stock_id = GTK_STOCK_HARDDISK;
+		}
+		else
+		{
+		    if (eitdb->itdb_imported)
+		    {
+		        stock_id = GTK_STOCK_CONNECT;
+		    }
+		    else
+		    {
+		        stock_id = GTK_STOCK_DISCONNECT;
+		    }
+		}
+		pl_mi = hookup_mi (sub, _(itdb_playlist_mpl(itdb)->name),
+				   stock_id, NULL, NULL);
+		pl_sub = gtk_menu_new ();
+		gtk_widget_show (pl_sub);
+		gtk_menu_item_set_submenu (GTK_MENU_ITEM (pl_mi), pl_sub);
+		hookup_mi (pl_sub, _(itdb_playlist_mpl(itdb)->name),
+			   stock_id, G_CALLBACK(copy_selected_to_target_itdb), &itdbs->data);
+		add_separator(pl_sub);
+		for (db=itdb->playlists; db; db=db->next)
+		{
+			pl=db->data;
+			if (!itdb_playlist_is_mpl (pl))
+			{
+				if (pl->is_spl)
+					stock_id = GTK_STOCK_PROPERTIES;
+				else
+					stock_id = GTK_STOCK_JUSTIFY_LEFT;
+				hookup_mi(pl_sub, _(pl->name), stock_id, 
+				G_CALLBACK(copy_selected_to_target_playlist) , &db->data);
+			}
+		}
+	    }
+    return mi;
 }
 
 
@@ -658,6 +898,8 @@ void create_context_menu (CM_type type)
 			add_delete_including_tracks (menu);
 			add_delete_but_keep_tracks (menu);
 		    }
+		    add_copy_selected_to_target_itdb (menu,
+						      _("Copy selected playlist to..."));
 		    add_separator (menu);
 		    add_edit_track_details (menu);
 		    if (pl->is_spl)
@@ -705,6 +947,8 @@ void create_context_menu (CM_type type)
 		    add_delete_including_tracks_harddisk (menu);
 		    add_delete_but_keep_tracks (menu);
 		}
+		add_copy_selected_to_target_itdb (menu,
+						  _("Copy selected playlist to..."));
 		add_separator (menu);
 		add_edit_track_details (menu);
 		if (pl->is_spl)
@@ -756,6 +1000,8 @@ void create_context_menu (CM_type type)
 		    add_delete_from_playlist (menu);
 		}
 	    }
+	    add_copy_selected_to_target_itdb (menu,
+					      _("Copy selected track(s) to..."));
 	    add_separator (menu);
 	    add_edit_track_details (menu);
 #if LOCALDEBUG
