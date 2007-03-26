@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2007-03-18 21:34:22 jcs>
+|  Time-stamp: <2007-03-26 21:23:31 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -86,7 +86,7 @@ void open_about_window ()
   g_free (label_text);
   {
       gchar *text[] = {_("\
-(C) 2002 - 2005\n\
+(C) 2002 - 2007\n\
 Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n\
 Corey Donohoe (atmos at atmos dot org)\n\
 \n\

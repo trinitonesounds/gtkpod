@@ -1,22 +1,36 @@
+2007-03-26 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* misc.c: corrected copyright to show 2002-2007.
+
 2007-03-25 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * details.c: 	 				  removal of coverart_set_images from details_button_apply_clicked()
-  * display_coverart.c:   set prefs key in coverart_init_display() when coverart display
-  										    is displayed
-  * display_playlists.c:  added coverart_set_images to pm_add_track, pm_remove_track, 
-  												pm_track_changed.
-  												retained coverart_set_images call in pn_selection_changed_cb as this
-  												displays the coverart when a playlist is selected
-  * display_sorttabs.c:   coverart_set_images retained in st_sort() as a reiniting of the coverart
-  												is never fired during an alphabetize operation
-  * fileselection.c: 			calls to coverart_set_images removed as this is taken care of by 
-  												pm_add_track() in display_playlists.c
-  * delete_track_ok.c:		call to coverart_set_images retained as although pm_remove_track 
-  												correctly calls this function, it is too early in the delete process
-  												and the deleted track is still displayed
-	* prefs.h:							addition of KEY_DISPLAY_COVERART key for use by display_playlists
-													functions
-													
+	* details.c: removal of coverart_set_images from
+	  details_button_apply_clicked()
+
+  	* display_coverart.c: set prefs key in coverart_init_display()
+	  when coverart display is displayed
+
+	* display_playlists.c: added coverart_set_images to
+	  pm_add_track, pm_remove_track, pm_track_changed.
+	  retained coverart_set_images call in pn_selection_changed_cb
+	  as this displays the coverart when a playlist is selected
+
+	* display_sorttabs.c: coverart_set_images retained in
+	  st_sort() as a reiniting of the coverart is never fired
+	  during an alphabetize operation
+
+	* fileselection.c: calls to coverart_set_images removed as
+          this is taken care of by pm_add_track() in
+          display_playlists.c
+
+	* delete_track_ok.c: call to coverart_set_images retained as
+          although pm_remove_track correctly calls this function, it
+          is too early in the delete process and the deleted track is
+          still displayed
+
+	* prefs.h: addition of KEY_DISPLAY_COVERART key for use by
+          display_playlists functions
+
 2007-03-25 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* gtkpod.glade: added hbox into which the sorttab/tracklist
