@@ -1,3 +1,15 @@
+2007-03-28 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/file.c
+	  src/file_itunesdb.c
+	  src/misc_track.c: When podcasts were first introduced,
+	  iTunes did not add podcasts to the master playlist and only
+	  showed them in the Podcast playlist. This has changed in the
+	  meanwhile and Podcasts also appear in the master playlist
+	  (i.e. when browsing through the music files on an
+	  iPod). This patch make gtkpod behave the same. Old iTunesDBs
+	  with podcasts not listed in the MPL are automagically updated.
+
 2007-03-26 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* misc.c: corrected copyright to show 2002-2007.

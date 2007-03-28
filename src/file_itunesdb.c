@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-02-23 21:49:12 jcs>
+/* Time-stamp: <2007-03-28 22:53:36 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -454,6 +454,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 {
     gchar *cfgdir = prefs_get_cfgdir ();
     GList *gl;
+    Playlist *pod_pl;
     ExtraiTunesDBData *eitdb;
     iTunesDB *itdb = NULL;
     GError *error = NULL;
@@ -756,6 +757,23 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	g_hash_table_destroy (track_hash);
 	/* copy data_changed flag */
 	eitdb->data_changed = old_eitdb->data_changed;
+    }
+
+    /* Repair old iTunesDB where we didn't add podcasts to the MPL */
+    pod_pl = itdb_playlist_podcasts (itdb);
+    if (pod_pl)
+    {
+	Playlist *mpl = itdb_playlist_mpl (itdb);
+	for (gl=pod_pl->members; gl; gl=gl->next)
+	{
+	    Track *tr = gl->data;
+	    g_return_val_if_fail (tr, NULL);
+	    if (!itdb_playlist_contains_track (mpl, tr))
+	    {   /* track contained in Podcasts playlist but not in MPL
+		   -> add to MPL */
+		itdb_playlist_add_track (mpl, tr, -1);
+	    }
+	}
     }
 
     release_widgets();

@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-19 00:59:20 jcs>
+/* Time-stamp: <2007-03-28 23:12:46 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1731,7 +1731,7 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
    position in the track view */
 gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
 				Playlist *plitem, gboolean descend,
-			       AddTrackFunc addtrackfunc, gpointer data)
+				AddTrackFunc addtrackfunc, gpointer data)
 {
   static gint count = 0; /* do a gtkpod_tracks_statusbar_update() every
 			    10 tracks */
@@ -1888,7 +1888,9 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
 	      }
 	  }
 	  else
-	  {   /* add track to master playlist if it wasn't a
+	  {
+#if 0 /* initially iTunes didn't add podcasts to the MPL */
+	      /* add track to master playlist if it wasn't a
 	       * duplicate and plitem is not the podcasts playlist
 	       */
 	      if (added_track == track)
@@ -1896,6 +1898,12 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
 		  if (!itdb_playlist_is_podcasts (plitem))
 		      gp_playlist_add_track (mpl, added_track, TRUE);
 	      }
+#else
+	      if (added_track == track)
+	      {
+		  gp_playlist_add_track (mpl, added_track, TRUE);
+	      }
+#endif
 	      /* add track to specified playlist -- unless adding
 	       * to podcasts list and track already exists there */
 	      if (itdb_playlist_is_podcasts (plitem) &&

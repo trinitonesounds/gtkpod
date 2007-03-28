@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-03-18 21:43:39 jcs>
+/* Time-stamp: <2007-03-28 22:53:37 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1341,12 +1341,13 @@ static void add_tracks_to_playlist (Playlist *pl,
 		/* set flags to 'podcast' if adding to podcast list */
 		if (itdb_playlist_is_podcasts (pl))
 		    gp_track_set_flags_podcast (track);
-
+#if 0 /* initially iTunes didn't add podcasts to the MPL */
 		if (!itdb_playlist_contains_track (to_mpl, track))
 		{   /* add to MPL if not already present (will happen
 		     * if dragged from the podcasts playlist */
 		    gp_playlist_add_track (to_mpl, track, TRUE);
 		}
+#endif
 		if (!itdb_playlist_is_mpl (pl))
 		{
 		    /* add to designated playlist -- unless adding
@@ -1415,6 +1416,7 @@ static void add_tracks_to_playlist (Playlist *pl,
 
 		if (addtr == duptr)
 		{   /* no duplicate */
+#if 0 /* initially iTunes didn't add podcasts to the MPL */
 		    /* we need to add to the MPL if the track is no
 		       duplicate and will not be added to the podcasts
 		       playlist */
@@ -1423,7 +1425,13 @@ static void add_tracks_to_playlist (Playlist *pl,
 			   playlist */
 			gp_playlist_add_track (to_mpl, addtr, TRUE);
 		    }
+#else
+		    /* we need to add to the MPL if the track is no
+		       duplicate */
+		    gp_playlist_add_track (to_mpl, addtr, TRUE);
+#endif
 		}
+#if 0 /* initially iTunes didn't add podcasts to the MPL */
 		else
 		{   /* duplicate */
 		    /* we also need to add to the MPL if the track is a
@@ -1436,6 +1444,7 @@ static void add_tracks_to_playlist (Playlist *pl,
 			gp_playlist_add_track (to_mpl, addtr, TRUE);
 		    }
 		}
+#endif
 		/* add to designated playlist (if not mpl) -- unless
 		 * adding to podcasts list and track already * exists
 		 * there */
