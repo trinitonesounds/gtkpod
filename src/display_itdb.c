@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-23 00:45:43 jcs>
+/* Time-stamp: <2007-03-29 23:16:27 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -464,20 +464,11 @@ void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb)
     }
 
     /* get position of @old_itdb */
-    mpl = itdb_playlist_mpl (old_itdb);
-    g_return_if_fail (mpl);
-    path = pm_get_path (mpl);
-    if (path)
-    {
-	gint *indices = gtk_tree_path_get_indices (path);
-	if (indices)
-	    pos = indices[0];
-	gtk_tree_path_free (path);
-    }
+    pos = pm_get_position_for_itdb (old_itdb);
 
     /* remove @old_itdb (all playlists are removed if the MPL is
        removed and add @new_itdb at its place */
-    pm_remove_playlist (mpl, FALSE);
+    pm_remove_playlist (itdb_playlist_mpl (old_itdb), FALSE);
 
     /* replace old_itdb with new_itdb */
     new_eitdb->itdbs_head = itdbs_head;

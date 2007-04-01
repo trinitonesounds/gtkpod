@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-03-18 23:04:55 jcs>
+/* Time-stamp: <2007-03-30 21:55:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -66,7 +66,12 @@ static GtkTargetEntry pm_drop_types [] = {
 };
 
 
-void pm_rows_reordered (void);
+static void pm_rows_reordered (void);
+static GtkTreePath *pm_get_path_for_itdb (iTunesDB *itdb);
+static GtkTreePath *pm_get_path_for_playlist (Playlist *pl);
+static gint pm_get_position_for_playlist (Playlist *pl);
+static gboolean pm_get_iter_for_itdb (iTunesDB *itdb, GtkTreeIter *iter);
+static gboolean pm_get_iter_for_playlist (Playlist *pl, GtkTreeIter *iter);
 
 
 
@@ -206,7 +211,7 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 
     if(gtk_tree_model_get_iter (model, &iter_d, path))
     {
-	gtk_tree_model_get (model, &iter_d, 0, &pl_d, -1);
+	gtk_tree_model_get (model, &iter_d, PM_COLUMN_PLAYLIST, &pl_d, -1);
     }
     g_return_val_if_fail (pl_d, FALSE);
 
@@ -295,7 +300,7 @@ on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     g_return_if_fail (data);
 
     /* get current playlist */
-    gtk_tree_model_get(tm, iter, PM_COLUMN_PLAYLIST, &pl, -1); 
+    gtk_tree_model_get (tm, iter, PM_COLUMN_PLAYLIST, &pl, -1); 
     g_return_if_fail (pl);
 
     for (gl=pl->members; gl; gl=gl->next)
@@ -330,7 +335,7 @@ on_pm_dnd_get_uri_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     g_return_if_fail (data);
 
     /* get current playlist */
-    gtk_tree_model_get(tm, iter, PM_COLUMN_PLAYLIST, &pl, -1); 
+    gtk_tree_model_get (tm, iter, PM_COLUMN_PLAYLIST, &pl, -1); 
     g_return_if_fail (pl);
 
     for (gl=pl->members; gl; gl=gl->next)
@@ -578,7 +583,7 @@ static void pm_drag_data_received (GtkWidget       *widget,
 				   gpointer         user_data)
 {
     GtkTreeIter iter_d, iter_s;
-    GtkTreePath *path_d=NULL, *path_s;
+    GtkTreePath *path_d=NULL;
     GtkTreePath *path_m;
     GtkTreeModel *model;
     GtkTreeViewDropPosition pos = 0;
@@ -614,7 +619,7 @@ static void pm_drag_data_received (GtkWidget       *widget,
 	g_object_set_data (G_OBJECT (widget), "drag_data_by_motion_pos", NULL);
 	if(gtk_tree_model_get_iter (model, &iter_d, path_m))
 	{
-	    gtk_tree_model_get (model, &iter_d, 0, &pl, -1);
+	    gtk_tree_model_get (model, &iter_d, PM_COLUMN_PLAYLIST, &pl, -1);
 	}
 	gtk_tree_path_free (path_m);
 
@@ -673,26 +678,16 @@ static void pm_drag_data_received (GtkWidget       *widget,
     }
     g_return_if_fail (path_d);
 
-    if(gtk_tree_model_get_iter(model, &iter_d, path_d))
+    if(gtk_tree_model_get_iter (model, &iter_d, path_d))
     {
-	gtk_tree_model_get(model, &iter_d, 0, &pl, -1);
-    }
-    g_return_if_fail (pl);
-
-    /* get position of current path */
-    if (gtk_tree_path_get_depth (path_d) == 1)
-    {   /* MPL */
-	position = 0;
-    }
-    else
-    {
-	gint *indices = gtk_tree_path_get_indices (path_d);
-	/* need to add 1 because MPL is one level higher and not
-	   counted */
-	position = indices[1] + 1;
+	gtk_tree_model_get (model, &iter_d, PM_COLUMN_PLAYLIST, &pl, -1);
     }
     gtk_tree_path_free (path_d);
     path_d = NULL;
+
+    g_return_if_fail (pl);
+
+    position = pm_get_position_for_playlist (pl);
 
 /*  printf("position: %d\n", position); */
     switch (info)
@@ -846,26 +841,28 @@ static void pm_drag_data_received (GtkWidget       *widget,
 		gtk_drag_finish (dc, TRUE, FALSE, time);
 		break;
 	    case GDK_ACTION_MOVE:
-		if (prefs_get_int("pm_sort") != SORT_NONE)
-		{
-		    gtkpod_statusbar_message (_("Can't reorder sorted treeview."));
-		    gtk_drag_finish (dc, FALSE, FALSE, time);
-		    return;
-		}
-		path_s = pm_get_path (pl_s);
-		g_return_if_fail (path_s);
-		g_return_if_fail (gtk_tree_model_get_iter (
-				      model, &iter_s, path_s));
-		gtk_tree_path_free (path_s);
+		pm_get_iter_for_playlist (pl_s, &iter_s);
 		switch (pos)
 		{
 		case GTK_TREE_VIEW_DROP_BEFORE:
+		    if (prefs_get_int("pm_sort") != SORT_NONE)
+		    {
+			gtkpod_statusbar_message (_("Can't reorder sorted treeview."));
+			gtk_drag_finish (dc, FALSE, FALSE, time);
+			return;
+		    }
 		    gtk_tree_store_move_before (GTK_TREE_STORE (model),
 						&iter_s, &iter_d);
 		    pm_rows_reordered ();
 		    gtk_drag_finish (dc, TRUE, FALSE, time);
 		    break;
 		case GTK_TREE_VIEW_DROP_AFTER:
+		    if (prefs_get_int("pm_sort") != SORT_NONE)
+		    {
+			gtkpod_statusbar_message (_("Can't reorder sorted treeview."));
+			gtk_drag_finish (dc, FALSE, FALSE, time);
+			return;
+		    }
 		    gtk_tree_store_move_after (GTK_TREE_STORE (model),
 					       &iter_s, &iter_d);
 		    pm_rows_reordered ();
@@ -875,7 +872,7 @@ static void pm_drag_data_received (GtkWidget       *widget,
 		    pl_d = pl;
 		    if (pl_d != pl_s)
 			add_trackglist_to_playlist (pl_d, pl_s->members);
-		    gtk_drag_finish (dc, TRUE, TRUE, time);
+		    gtk_drag_finish (dc, TRUE, FALSE, time);
 		    break;
 		}
 		break;
@@ -993,6 +990,105 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 
 
 /* ---------------------------------------------------------------- */
+/* Section for playlist display helper functions                    */
+/* ---------------------------------------------------------------- */
+
+
+/* Find the iter that represents the repository @itdb
+ *
+ * Return TRUE if the repository could be found. In that case @itdb_iter
+ * will be set to the corresponding iter. The value of @itdb_iter is
+ * undefined when the repository couldn't be found, in which case FALSE
+ * is returned. */
+static gboolean pm_get_iter_for_itdb (iTunesDB *itdb, GtkTreeIter *itdb_iter)
+{
+    GtkTreeModel *model;
+
+    g_return_val_if_fail (playlist_treeview, FALSE);
+    g_return_val_if_fail (itdb, FALSE);
+    g_return_val_if_fail (itdb_iter, FALSE);
+
+    model = GTK_TREE_MODEL (gtk_tree_view_get_model (playlist_treeview));
+
+    if (gtk_tree_model_get_iter_first (model, itdb_iter))
+    {
+	do
+	{
+	    iTunesDB *itdb_model;
+	    gtk_tree_model_get (model, itdb_iter,
+				PM_COLUMN_ITDB, &itdb_model,
+				-1);
+	    g_return_val_if_fail (itdb_model, FALSE);
+	    if (itdb == itdb_model)
+	    {
+		return TRUE;
+	    }
+	} while (gtk_tree_model_iter_next (model, itdb_iter));
+    }
+    return FALSE;
+}
+
+
+/* Find the iter that contains Playlist @playlist
+ *
+ * Return TRUE if the playlist could be found. In that case @pl_iter
+ * will be set to the corresponding iter. The value of @pl_iter is
+ * undefined when the playlist couldn't be found, in which case FALSE
+ * is returned. */
+static gboolean pm_get_iter_for_playlist (Playlist *playlist, GtkTreeIter *pl_iter)
+{
+    GtkTreeIter itdb_iter;
+
+    g_return_val_if_fail (playlist_treeview, FALSE);
+    g_return_val_if_fail (playlist, FALSE);
+    g_return_val_if_fail (pl_iter, FALSE);
+
+    /* First get the iter with the itdb in it */
+
+    if (pm_get_iter_for_itdb (playlist->itdb, &itdb_iter))
+    {
+	GtkTreeModel *model;
+	Playlist *pl;
+
+	model = GTK_TREE_MODEL (gtk_tree_view_get_model (playlist_treeview));
+
+	/* Check if this is already the right iter */
+	gtk_tree_model_get (model, &itdb_iter,
+			    PM_COLUMN_PLAYLIST, &pl,
+			    -1);
+	g_return_val_if_fail (pl, FALSE);
+	if (pl == playlist)
+	{
+	    *pl_iter = itdb_iter;
+	    return TRUE;
+	}
+
+	/* no -- go down one hirarchy and try all other iters */
+	if (!gtk_tree_model_iter_children (model, pl_iter, &itdb_iter))
+	{   /* This indicates screwed up programming so we better cry
+	       out */
+	    g_return_val_if_reached (FALSE);
+	}
+
+	do
+	{
+	    gtk_tree_model_get (model, pl_iter,
+				PM_COLUMN_PLAYLIST, &pl,
+				-1);
+	    g_return_val_if_fail (pl, FALSE);
+	    if (pl == playlist)
+	    {
+		return TRUE;
+	    }
+	} while (gtk_tree_model_iter_next (model, pl_iter));
+    }
+    return FALSE;
+}
+
+
+
+
+/* ---------------------------------------------------------------- */
 /* Section for playlist display                                     */
 /* ---------------------------------------------------------------- */
 
@@ -1038,34 +1134,23 @@ void pm_add_track (Playlist *playlist, Track *track, gboolean display)
   }
 }
 
-/* Used by pm_name_changed() to find the playlist that
-   changed name. If found, emit a "row changed" signal to display the change */
-static gboolean sr_model_playlist_name_changed (GtkTreeModel *model,
-						GtkTreePath *path,
-						GtkTreeIter *iter,
-						gpointer data)
-{
-  Playlist *playlist=NULL;
-
-  gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
-  if(playlist == (Playlist *)data) {
-    gtk_tree_model_row_changed (model, path, iter);
-    return TRUE;
-  }
-  return FALSE;
-}
-
-
 /* One of the playlist names has changed (this happens when the
    iTunesDB is read */
-void pm_name_changed (Playlist *pl)
+void pm_itdb_name_changed (iTunesDB *itdb)
 {
-  GtkTreeModel *model = gtk_tree_view_get_model (playlist_treeview);
+  GtkTreeIter iter;
 
-  g_return_if_fail (pl);
-  g_return_if_fail (model);
+  g_return_if_fail (itdb);
 
-  gtk_tree_model_foreach (model, sr_model_playlist_name_changed, pl);
+  if (pm_get_iter_for_itdb (itdb, &iter))
+  {
+      GtkTreeModel *model;
+      GtkTreePath *path;
+      model = GTK_TREE_MODEL (gtk_tree_view_get_model (playlist_treeview));
+      path = gtk_tree_model_get_path (model, &iter);
+      gtk_tree_model_row_changed (model, path, &iter);
+      gtk_tree_path_free (path);
+  }
 }
 
 
@@ -1085,7 +1170,6 @@ void pm_track_changed (Track *track)
   }
 }
 
-
 /* Add playlist to the playlist model */
 /* If @position = -1: append to end */
 /* If @position >=0: insert at that position (count starts with MPL as
@@ -1097,6 +1181,7 @@ void pm_add_playlist (Playlist *playlist, gint pos)
   GtkTreeIter iter;
   GtkTreeModel *model;
   GtkTreeSelection *selection;
+  iTunesDB *itdb;
 
   g_return_if_fail (playlist_treeview);
   g_return_if_fail (playlist);
@@ -1107,36 +1192,28 @@ void pm_add_playlist (Playlist *playlist, gint pos)
   if (itdb_playlist_is_mpl (playlist))
   {   /* MPLs are always added top-level */
       mpl = NULL;
+      itdb = playlist->itdb;
   }
   else
   {   /* We need to find the iter with the mpl in it */
-      if (gtk_tree_model_get_iter_first (model, &mpl_iter))
+      if (pm_get_iter_for_itdb (playlist->itdb, &mpl_iter))
       {
-	  do
-	  {
-	      Playlist *pl;
-	      gtk_tree_model_get (model, &mpl_iter,
-				  PM_COLUMN_PLAYLIST, &pl, -1);
-	      g_return_if_fail (pl);
-	      if (pl->itdb == playlist->itdb)
-	      {
-		  mpl = &mpl_iter;
-	      }
-	  } while ((mpl == NULL) &&
-		   gtk_tree_model_iter_next (model, &mpl_iter));
+	  mpl = &mpl_iter;
       }
-      if (!mpl)
+      else
       {
 	  g_warning ("Programming error: need to add mpl before adding normal playlists.\n");
       }
       /* reduce position by one because the MPL is not included in the
 	 tree model's count */
       --pos;
+      itdb = NULL;
   }
 
   gtk_tree_store_insert (GTK_TREE_STORE (model), &iter, mpl, pos);
 
   gtk_tree_store_set (GTK_TREE_STORE (model), &iter,
+		      PM_COLUMN_ITDB, itdb,
 		      PM_COLUMN_PLAYLIST, playlist,
 		      -1);
 
@@ -1162,22 +1239,6 @@ void pm_add_playlist (Playlist *playlist, gint pos)
 
 
 
-    /* former inline function: used by pm_remove_playlist() */
-    static gboolean pm_delete_playlist_fe (GtkTreeModel *model,
-					   GtkTreePath *path,
-					   GtkTreeIter *iter,
-					   gpointer data)
-	{
-	    Playlist *playlist=NULL;
-	    
-	    gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
-	    if(playlist == (Playlist *)data) {
-		gtk_tree_store_remove (GTK_TREE_STORE (model), iter);
-		return TRUE;
-	    }
-	    return FALSE;
-	}
-
 /* Remove "playlist" from the display model. 
    "select": TRUE: a new playlist is selected
              FALSE: no selection is taking place
@@ -1186,7 +1247,7 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
 {
     GtkTreeModel *model;
     gboolean have_iter = FALSE;
-    GtkTreeIter i;
+    GtkTreeIter select_iter, delete_iter;
     GtkTreeSelection *ts = NULL;
 
   g_return_if_fail (playlist);
@@ -1208,10 +1269,10 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
   if (select && (current_playlist == playlist))
   {   /* We are about to delete the currently selected
 	 playlist. Try to select the next. */
-      if (gtk_tree_selection_get_selected (ts, NULL, &i))
+      if (gtk_tree_selection_get_selected (ts, NULL, &select_iter))
       {
-	  GtkTreePath *path = gtk_tree_model_get_path (model, &i);
-	  if(gtk_tree_model_iter_next (model, &i))
+	  GtkTreePath *path = gtk_tree_model_get_path (model, &select_iter);
+	  if(gtk_tree_model_iter_next (model, &select_iter))
 	  {
 	      have_iter = TRUE;
 	  }
@@ -1219,7 +1280,7 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
 	  {   /* no next iter -- try previous iter */
 	      if (gtk_tree_path_prev (path))
 	      {   /* OK -- make iter from it */
-		  gtk_tree_model_get_iter (model, &i, path);
+		  gtk_tree_model_get_iter (model, &select_iter, path);
 		  have_iter = TRUE;
 	      }
 	  }
@@ -1227,10 +1288,13 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
       }
   }
 
-  /* find the pl and delete it */
-  gtk_tree_model_foreach (model, pm_delete_playlist_fe, playlist);
+  if (pm_get_iter_for_playlist (playlist, &delete_iter))
+  {
+      gtk_tree_store_remove (GTK_TREE_STORE (model), &delete_iter);
+  }
+
   /* select our new iter !!! */
-  if (have_iter && select)   gtk_tree_selection_select_iter(ts, &i);
+  if (have_iter && select)   gtk_tree_selection_select_iter(ts, &select_iter);
 }
 
 
@@ -1265,75 +1329,37 @@ void pm_remove_all_playlists (gboolean clear_sort)
 }
 
 
-    /* former inline function: used by pm_select_playlist */
-    static gboolean pm_select_playlist_fe (GtkTreeModel *model,
-					   GtkTreePath *path,
-					   GtkTreeIter *iter,
-					   gpointer data)
-	{
-	    Playlist *playlist=NULL;
-
-	    gtk_tree_model_get (model, iter,
-				PM_COLUMN_PLAYLIST, &playlist, -1);
-	    if(playlist == data)
-	    {
-		GtkTreeSelection *ts = gtk_tree_view_get_selection (
-		    playlist_treeview);
-		gtk_tree_selection_select_iter (ts, iter);
-		return TRUE;
-	    }
-	    return FALSE;
-	}
-
 /* Select specified playlist */
 void pm_select_playlist (Playlist *playlist)
 {
-    GtkTreeModel *model;
+    GtkTreeIter iter;
 
     g_return_if_fail (playlist_treeview);
     g_return_if_fail (playlist);
-    model = gtk_tree_view_get_model (playlist_treeview);
-    g_return_if_fail (model);
 
-    /* find the pl and select it */
-    gtk_tree_model_foreach (model, pm_select_playlist_fe,
-			    playlist);
+    if (pm_get_iter_for_playlist (playlist, &iter))
+    {
+	GtkTreeSelection *ts;
+	ts = gtk_tree_view_get_selection (playlist_treeview);
+	gtk_tree_selection_select_iter (ts, &iter);
+    }
 }
 
-
-    /* former inline function: used by pm_unselect_playlist */
-    static gboolean pm_unselect_playlist_fe (GtkTreeModel *model,
-					     GtkTreePath *path,
-					     GtkTreeIter *iter,
-					     gpointer data)
-	{
-	    Playlist *playlist=NULL;
-
-	    gtk_tree_model_get (model, iter,
-				PM_COLUMN_PLAYLIST, &playlist, -1);
-	    if(playlist == data)
-	    {
-		GtkTreeSelection *ts = gtk_tree_view_get_selection (
-		    playlist_treeview);
-		gtk_tree_selection_unselect_iter (ts, iter);
-		return TRUE;
-	    }
-	    return FALSE;
-	}
 
 /* Unselect specified playlist */
 void pm_unselect_playlist (Playlist *playlist)
 {
-    GtkTreeModel *model;
+    GtkTreeIter iter;
 
     g_return_if_fail (playlist_treeview);
     g_return_if_fail (playlist);
-    model = gtk_tree_view_get_model (playlist_treeview);
-    g_return_if_fail (model);
 
-    /* find the pl and unselect it */
-    gtk_tree_model_foreach (model, pm_unselect_playlist_fe,
-			    playlist);
+    if (pm_get_iter_for_playlist (playlist, &iter))
+    {
+	GtkTreeSelection *ts;
+	ts = gtk_tree_view_get_selection (playlist_treeview);
+	gtk_tree_selection_unselect_iter (ts, &iter);
+    }
 }
 
 
@@ -1496,48 +1522,97 @@ void pm_add_all_itdbs (void)
 }
 
 
-/* Return path of playlist @pl. After use the return value must be
- * freed by calling gtk_tree_path_free() */
-GtkTreePath *pm_get_path (Playlist *pl)
+/* Return GtkTreePath for playlist @playlist. The returned path must be
+   freed using gtk_tree_path_free() after it is no needed any more */
+static GtkTreePath *pm_get_path_for_playlist (Playlist *playlist)
 {
-    struct userdata
-    {
-	Playlist *pl;
-	GtkTreePath *path;
-    };
-    GtkTreeModel *model;
-    struct userdata userdata;
-    gboolean pm_get_path_fe (GtkTreeModel *model,
-				    GtkTreePath *path,
-				    GtkTreeIter *iter,
-				    gpointer data)
-	{
-	    struct userdata *ud = data;
-	    Playlist *pl;
+    GtkTreeIter iter;
 
-	    gtk_tree_model_get (model, iter,
-				PM_COLUMN_PLAYLIST, &pl, -1);
-	    if(pl == ud->pl)
-	    {
-		ud->path = gtk_tree_model_get_path (model, iter);
-		return TRUE;
-	    }
-	    return FALSE;
-	}
     g_return_val_if_fail (playlist_treeview, NULL);
-    g_return_val_if_fail (pl, NULL);
-    model = gtk_tree_view_get_model (playlist_treeview);
-    g_return_val_if_fail (model, NULL);
+    g_return_val_if_fail (playlist, NULL);
 
-    userdata.pl = pl;
-    userdata.path = NULL;
-
-    /* find the pl and fill in path */
-    gtk_tree_model_foreach (model, pm_get_path_fe, &userdata);
-
-    return userdata.path;
+    if (pm_get_iter_for_playlist (playlist, &iter))
+    {
+	GtkTreeModel *model;
+	model = gtk_tree_view_get_model (playlist_treeview);
+	return gtk_tree_model_get_path (model, &iter);
+    }
+    return NULL;
 }
 
+
+/* Return GtkTreePath for repository @itdb. The returned path must be
+   freed using gtk_tree_path_free() after it is no needed any more */
+GtkTreePath *pm_get_path_for_itdb (iTunesDB *itdb)
+{
+    GtkTreeIter iter;
+
+    g_return_val_if_fail (playlist_treeview, NULL);
+    g_return_val_if_fail (itdb, NULL);
+
+    if (pm_get_iter_for_itdb (itdb, &iter))
+    {
+	GtkTreeModel *model;
+	model = gtk_tree_view_get_model (playlist_treeview);
+	return gtk_tree_model_get_path (model, &iter);
+    }
+    return NULL;
+}
+
+
+/* Return position of repository @itdb */
+gint pm_get_position_for_itdb (iTunesDB *itdb)
+{
+    GtkTreePath *path;
+    gint position = -1;
+
+    g_return_val_if_fail (playlist_treeview, -1);
+    g_return_val_if_fail (itdb, -1);
+
+    path = pm_get_path_for_itdb (itdb);
+
+    if (path)
+    {
+	gint *indices = gtk_tree_path_get_indices (path);
+	if (indices)
+	{
+	    position = indices[0];
+	}
+	gtk_tree_path_free (path);
+    }
+    return position;
+}
+
+
+/* Return position of repository @itdb */
+static gint pm_get_position_for_playlist (Playlist *playlist)
+{
+    GtkTreePath *path;
+    gint position = -1;
+
+    g_return_val_if_fail (playlist_treeview, -1);
+    g_return_val_if_fail (playlist, -1);
+
+    path = pm_get_path_for_playlist (playlist);
+
+    if (path)
+    {
+	/* get position of current path */
+	if (gtk_tree_path_get_depth (path) == 1)
+	{   /* MPL */
+	    position = 0;
+	}
+	else
+	{
+	    gint *indices = gtk_tree_path_get_indices (path);
+	    /* need to add 1 because MPL is one level higher and not
+	       counted */
+	    position = indices[1] + 1;
+	}
+	gtk_tree_path_free (path);
+    }
+    return position;
+}
 
 
 /* "unsort" the playlist view without causing the sort tabs to be
@@ -2164,7 +2239,7 @@ void pm_create_treeview (void)
   gtk_container_add (GTK_CONTAINER (playlist_window), tree);
 
   /* create model */
-  model =   gtk_tree_store_new (PM_NUM_COLUMNS, G_TYPE_POINTER);
+  model =   gtk_tree_store_new (PM_NUM_COLUMNS, G_TYPE_POINTER, G_TYPE_POINTER);
 
   /* set tree model */
   gtk_tree_view_set_model (playlist_treeview, GTK_TREE_MODEL (model));

@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-03-19 23:00:45 jcs>
+/* Time-stamp: <2007-03-29 23:22:15 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -258,7 +258,8 @@ typedef enum {
 
 /* "Column numbers" in playlist model */
 enum  {
-  PM_COLUMN_PLAYLIST = 0,
+  PM_COLUMN_ITDB = 0,
+  PM_COLUMN_PLAYLIST,
   PM_NUM_COLUMNS
 };
 
@@ -286,8 +287,8 @@ GList *display_get_selected_members (gint inst);
 void display_remove_autoscroll_row_timeout (GtkWidget *widget);
 void display_install_autoscroll_row_timeout (GtkWidget *widget);
 
-Playlist* pm_get_selected_playlist(void);
-GtkTreePath *pm_get_path (Playlist *pl);
+Playlist* pm_get_selected_playlist (void);
+gint pm_get_position_for_itdb (iTunesDB *itdb);
 void pm_remove_playlist (Playlist *playlist, gboolean select);
 void pm_add_playlist (Playlist *playlist, gint position);
 void pm_add_itdb (iTunesDB *itdb, gint pos);
@@ -295,7 +296,7 @@ void pm_select_playlist (Playlist *playlist);
 void pm_unselect_playlist (Playlist *playlist);
 void pm_remove_track (Playlist *playlist, Track *track);
 void pm_add_track (Playlist *playlist, Track *track, gboolean display);
-void pm_name_changed (Playlist *playlist);
+void pm_itdb_name_changed (iTunesDB *itdb);
 void pm_track_changed (Track *track);
 void pm_sort (GtkSortType order);
 void pm_stop_editing (gboolean cancel);

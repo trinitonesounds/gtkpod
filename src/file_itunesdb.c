@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-03-28 22:53:36 jcs>
+/* Time-stamp: <2007-03-29 22:53:42 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2066,7 +2066,7 @@ void data_changed (iTunesDB *itdb)
     g_return_if_fail (eitdb);
 
     eitdb->data_changed = TRUE;
-    pm_name_changed (itdb_playlist_mpl (itdb));
+    pm_itdb_name_changed (itdb);
     space_data_update ();
 }
 
@@ -2081,7 +2081,7 @@ void data_unchanged (iTunesDB *itdb)
     g_return_if_fail (eitdb);
 
     eitdb->data_changed = FALSE;
-    pm_name_changed (itdb_playlist_mpl (itdb));
+    pm_itdb_name_changed (itdb);
     space_data_update ();
 }
 

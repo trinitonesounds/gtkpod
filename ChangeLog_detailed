@@ -1,3 +1,21 @@
+2007-03-29 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_playlist.c (pm_drag_data_received): bugfix:
+          allow to drop contents of one playlist into another playlist
+          even if playlist view is "sorted". (Sorting currently
+          disabled anyway)
+
+	* src/display_playlist.c: small rework in preparation of
+          future changes. New support functions
+          pm_get_position_for_itdb(), pm_get_position_for_playlist(),
+          pm_get_iter_for_itdb(), pm_get_iter_for_playlist() replace
+          some of in-function code. pm_name_changed() changed to
+          pm_itdb_name_changed().
+
+	* src/file_itunesdb.c
+	  src/display_itdb.c: use of new support functions above
+	  instead of dedicated code.
+
 2007-03-28 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file.c
