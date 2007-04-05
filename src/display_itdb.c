@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-03-29 23:16:27 jcs>
+/* Time-stamp: <2007-04-03 23:14:35 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -441,7 +441,6 @@ void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb)
     Playlist *old_pl, *mpl;
     GList *old_link;
     gchar *old_pl_name = NULL;
-    GtkTreePath *path;
     gint pos = -1; /* default: add to the end */
 
     g_return_if_fail (old_itdb);

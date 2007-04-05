@@ -45,6 +45,9 @@ ENCODING=ISO-8859-15         # encoding used by ipod
 #
 # 2004/12/15 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
 # Split evolution support into a new file.
+#
+# 2007/04/02 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
+# Allow syncing of contacts containing pictures. Thanks to Lars Friedrichs.
 
 
 # overwrite default settings with optional command line arguments
@@ -88,5 +91,5 @@ fi
 # remove all empty lines and recode if necessary
 echo -n "Syncing iPod ... [Contacts] "
 # Redirect STDERR to avoid the "FIXME : wait for completion unimplemented" warning
-evolution-addressbook-export 2>&1 | grep -v '^[[:space:]]$\|^$' | $RECODE > $IPOD_MOUNT/Contacts/evolution
+evolution-addressbook-export 2>&1 | grep -v '^[[:space:]]$\|^$' | $RECODE | sed -e "s/PHOTO;ENCODING=b;TYPE=\"X-EVOLUTION-UNKNOWN\"/PHOTO;BASE64/g" > $IPOD_MOUNT/Contacts/evolution
 echo "done!"

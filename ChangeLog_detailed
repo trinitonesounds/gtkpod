@@ -1,3 +1,8 @@
+2007-04-02 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* scripts/sync-evolution: make syncing of contacts containing
+          pictures possible. Thanks to Lars Friedrichs.
+
 2007-03-29 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/display_playlist.c (pm_drag_data_received): bugfix:
