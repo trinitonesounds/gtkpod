@@ -1,5 +1,4 @@
-/* Time-stamp: <2007-03-28 23:12:46 jcs>
-|
+/*
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
@@ -1222,7 +1221,7 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	   have to worry about it when we are handling the
 	   strings. Also, validate_entries() will fill in the utf16
 	   strings if that hasn't already been done. */
-	/* exception: md5_hash, charset and hostname: these may be
+	/* exception: sha1_hash, charset and hostname: these may be
 	 * NULL. */
 
 	gp_track_validate_entries (nti);
@@ -1648,7 +1647,7 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 
     if (trackpath && get_track_info_from_file (trackpath, track))
     { /* update successfull */
-	/* remove track from md5 hash and reinsert it
+	/* remove track from sha1 hash and reinsert it
 	   (hash value may have changed!) */
 	gchar *name_on_ipod;
 	gchar *oldhash = etr->sha1_hash;
@@ -1868,7 +1867,7 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
 	      etr->hostname = g_strdup (str);
 	  }
 	  /* add_track may return pointer to a different track if an
-	     identical one (MD5 checksum) was found */
+	     identical one (SHA1 checksum) was found */
 	  added_track = gp_track_add (itdb, track);
 	  g_return_val_if_fail (added_track, FALSE);
 
@@ -2046,7 +2045,7 @@ gboolean write_tags_to_file (Track *track)
 	}
 	g_free (ipod_fullpath);
     }
-    /* remove track from md5 hash and reinsert it (hash value has changed!) */
+    /* remove track from sha1 hash and reinsert it (hash value has changed!) */
     sha1_track_remove (track);
     C_FREE (etr->sha1_hash);  /* need to remove the old value manually! */
     oldtrack = sha1_track_exists_insert (itdb, track);
@@ -2119,7 +2118,7 @@ gchar *get_file_name_from_source (Track *track, FileSource source)
    ------------------------------------------------------------ */
 
 /* Read the ~/.gtkpod/offline_playcount file and adjust the
-   playcounts. The tracks will first be matched by their md5 sum, if
+   playcounts. The tracks will first be matched by their sha1 sum, if
    that fails, by their filename.
    If tracks could not be matched, the user will be queried whether to
    forget about them or write them back into the offline_playcount
@@ -2156,7 +2155,7 @@ void parse_offline_playcount (void)
 	while (fgets (buf, 2*PATH_MAX, file))
 	{
 	    gchar *buf_utf8 = charset_to_utf8 (buf);
-	    gchar *md5=NULL;
+	    gchar *sha1=NULL;
 	    gchar *filename=NULL;
 	    gchar *ptr1, *ptr2;
 	    /* skip strings that do not start with "PLCT:" */
@@ -2165,9 +2164,9 @@ void parse_offline_playcount (void)
 		gtkpod_warning (_("Malformed line in '%s': %s\n"), offlplyc, buf);
 		goto cont;
 	    }
-	    /* start of MD5 string */
+	    /* start of SHA1 string */
 	    ptr1 = buf + strlen (SOCKET_PLYC);
-	    /* end of MD5 string */
+	    /* end of SHA1 string */
 	    ptr2 = strchr (ptr1, ' ');
 	    if (ptr2 == NULL)
 	    {   /* error! */
@@ -2175,7 +2174,7 @@ void parse_offline_playcount (void)
 				offlplyc, buf_utf8);
 		goto cont;
 	    }
-	    if (ptr1 != ptr2)    md5 = g_strndup (ptr1, ptr2-ptr1);
+	    if (ptr1 != ptr2)    sha1 = g_strndup (ptr1, ptr2-ptr1);
 	    /* start of filename */
 	    ptr1 = ptr2 + 1;
 	    /* end of filename string */
@@ -2196,7 +2195,7 @@ void parse_offline_playcount (void)
 				offlplyc, buf_utf8);
 		goto cont;
 	    }
-	    if (gp_increase_playcount (md5, filename, 1) == FALSE)
+	    if (gp_increase_playcount (sha1, filename, 1) == FALSE)
 	    {   /* didn't find the track -> store */
 		gchar *filename_utf8 = charset_to_utf8 (filename);
 /* 		if (gstr->len == 0) */
@@ -2210,7 +2209,7 @@ void parse_offline_playcount (void)
 	    }
 	  cont:
 	    g_free (buf_utf8);
-	    g_free (md5);
+	    g_free (sha1);
 	    g_free (filename);
 	}
 

@@ -1,5 +1,4 @@
-/* Time-stamp: <2007-03-18 21:45:41 jcs>
-|
+/*
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -402,9 +401,9 @@ prefs_window_create (gint page)
     w = gtkpod_xml_get_widget (prefs_window_xml, "charset_combo");
     charset_init_combo (GTK_COMBO (w));
     
-    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_md5tracks");
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sha1tracks");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 prefs_get_int("md5"));
+				 prefs_get_int("sha1"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_update_existing");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -413,7 +412,7 @@ prefs_window_create (gint page)
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_duplicates");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 prefs_get_int("show_duplicates"));
-    if (!prefs_get_int("md5")) gtk_widget_set_sensitive (w, FALSE);
+    if (!prefs_get_int("sha1")) gtk_widget_set_sensitive (w, FALSE);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_updated");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -763,8 +762,8 @@ prefs_window_set(void)
      if (temp_prefs_get_int_value(temp_prefs, "sort_tab_num", NULL))
       st_show_visible();
 
-     /* Set up/free md5 hash table if changed */
-     if (temp_prefs_get_int_value(temp_prefs, "md5", NULL))
+     /* Set up/free sha1 hash table if changed */
+     if (temp_prefs_get_int_value(temp_prefs, "sha1", NULL))
 	 setup_sha1();
    }
   
@@ -1010,13 +1009,13 @@ on_prefs_apply_clicked                 (GtkButton       *button,
 
 
 void
-on_cfg_md5tracks_toggled                (GtkToggleButton *togglebutton,
+on_cfg_sha1tracks_toggled                (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
     gboolean val = gtk_toggle_button_get_active(togglebutton);
     GtkWidget *w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_duplicates");
 
-    temp_prefs_set_int(temp_prefs, "md5", val);
+    temp_prefs_set_int(temp_prefs, "sha1", val);
     if(w)	gtk_widget_set_sensitive (w, val);
 }
 

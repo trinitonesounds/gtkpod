@@ -1,5 +1,4 @@
-/* Time-stamp: <2007-03-28 22:53:37 jcs>
-|
+/*
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
@@ -45,12 +44,12 @@
 
 /* ------------------------------------------------------------ *\
 |                                                                |
-|         functions for md5 checksums                            |
+|         functions for sha1 checksums                            |
 |                                                                |
 \* ------------------------------------------------------------ */
 
 /**
- * Register all tracks in the md5 hash and remove duplicates (while
+ * Register all tracks in the sha1 hash and remove duplicates (while
  * preserving playlists)
  */
 void gp_sha1_hash_tracks_itdb (iTunesDB *itdb)
@@ -60,13 +59,13 @@ void gp_sha1_hash_tracks_itdb (iTunesDB *itdb)
 
    g_return_if_fail (itdb);
 
-   if (!prefs_get_int("md5")) return;
+   if (!prefs_get_int("sha1")) return;
    ns = itdb_tracks_number (itdb);   /* number of tracks */
    if (ns == 0)                 return;
 
    block_widgets (); /* block widgets -- this might take a while,
 			so we'll do refreshs */
-   sha1_free (itdb);  /* release md5 hash */
+   sha1_free (itdb);  /* release sha1 hash */
    count = 0;
    /* populate the hash table */
    gl=itdb->tracks;
@@ -123,12 +122,12 @@ void gp_sha1_hash_tracks (void)
 
 
 /**
- * Call sha1_free() for each itdb and delete md5 checksums in all tracks.
+ * Call sha1_free() for each itdb and delete sha1 checksums in all tracks.
  *
  */
 void gp_sha1_free_hash (void)
 {
-    void rm_md5 (gpointer track, gpointer user_data)
+    void rm_sha1 (gpointer track, gpointer user_data)
 	{
 	    ExtraTrackData *etr;
 	    g_return_if_fail (track);
@@ -149,7 +148,7 @@ void gp_sha1_free_hash (void)
 	iTunesDB *itdb = gl->data;
 	g_return_if_fail (itdb);
 	sha1_free (itdb);
-	g_list_foreach (itdb->tracks, rm_md5, NULL);
+	g_list_foreach (itdb->tracks, rm_sha1, NULL);
     }
 }
 
@@ -157,7 +156,7 @@ void gp_sha1_free_hash (void)
 /* This function removes a duplicate track "track" from memory while
  * preserving the playlists.
  *
- * The md5 hash is not modified.
+ * The sha1 hash is not modified.
  *
  * The playcount/recent_playcount are modified to show the cumulative
  * playcounts for that track.
@@ -301,7 +300,7 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
 	       g_return_if_fail (pl);
 	       /* if "track" is in playlist pl, we remove it and add
 		  the "oldtrack" instead (this way round we don't have
-		  to worry about changing md5 hash entries */
+		  to worry about changing sha1 hash entries */
 	       if (itdb_playlist_contains_track (pl, track))
 	       {
 		   gp_playlist_remove_track (pl, track,
@@ -331,7 +330,7 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
 
 
 /**
- * Register all tracks in the md5 hash and remove duplicates (while
+ * Register all tracks in the sha1 hash and remove duplicates (while
  * preserving playlists).
  * Call  gp_duplicate_remove (NULL, NULL); to show an info dialogue
  */
@@ -343,14 +342,14 @@ void gp_itdb_hash (iTunesDB *itdb)
    g_return_if_fail (itdb);
 
 
-   if (!prefs_get_int("md5")) return;
+   if (!prefs_get_int("sha1")) return;
 
    ns = itdb_tracks_number (itdb);
    if (ns == 0)                 return;
 
    block_widgets (); /* block widgets -- this might take a while,
 			so we'll do refreshs */
-   sha1_free (itdb);  /* release md5 hash */
+   sha1_free (itdb);  /* release sha1 hash */
    track_nr = 0;
    /* populate the hash table */
    while ((track = g_list_nth_data (itdb->tracks, track_nr)))

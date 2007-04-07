@@ -1,3 +1,17 @@
+2007-04-07 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* gtkpod.glade
+	  src/clientserver.c
+	  src/display_itdb.c
+	  src/display_itdb.h
+	  src/file.c
+	  src/file_itunesdb.c
+	  src/misc_playlist.c
+	  src/misc_track.c
+	  src/prefs.c
+	  src/prefs_window.c
+	  src/sha1.c: finished renaming of wrong md5 references to sha1.
+
 2007-04-02 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* scripts/sync-evolution: make syncing of contacts containing

@@ -1,5 +1,4 @@
-/* Time-stamp: <2006-11-23 00:45:41 jcs>
-|
+/*
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
@@ -922,8 +921,8 @@ check_db_danglingok1 (gpointer user_data1, gpointer user_data2)
 
 	/* Indicate that file needs to be transfered */
 	track->transferred=FALSE;
-	/* Update MD5 information */
-	/* remove track from md5 hash and reinsert it
+	/* Update SHA1 information */
+	/* remove track from sha1 hash and reinsert it
 	   (hash value may have changed!) */
 	sha1_track_remove (track);
 	/* need to remove the old value manually! */
@@ -985,7 +984,7 @@ void check_db (iTunesDB *itdb)
     Playlist* pl_orphaned = NULL;
     GList * l_dangling[2] = {NULL, NULL}; /* 2 kinds of dangling tracks: with approp
 					   * files and without */
-    /* 1 - Original file is present on PC and has the same md5*/
+    /* 1 - Original file is present on PC and has the same sha1*/
     /* 0 - Doesn't exist */
 
     gpointer foundtrack ;

@@ -1,5 +1,4 @@
-/* Time-stamp: <2007-03-29 22:53:42 jcs>
-|
+/*
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
@@ -98,7 +97,7 @@ static gboolean mutex_data = FALSE;
 /* Used to keep the "extended information" until the iTunesDB is
    loaded */
 static GHashTable *extendedinfohash = NULL;
-static GHashTable *extendedinfohash_md5 = NULL;
+static GHashTable *extendedinfohash_sha1 = NULL;
 static GList *extendeddeletion = NULL;
 static float extendedinfoversion = 0.0;
 
@@ -148,7 +147,7 @@ void details_log_clear(void)
 
 
 /* fills in extended info if available */
-/* num/total are used to give updates in case the md5 checksums have
+/* num/total are used to give updates in case the sha1 checksums have
    to be matched against the files which is very time consuming */
 void fill_in_extended_info (Track *track, gint32 total, gint32 num)
 {
@@ -166,10 +165,10 @@ void fill_in_extended_info (Track *track, gint32 total, gint32 num)
       ipod_id = track->id;
       sei = g_hash_table_lookup (extendedinfohash, &ipod_id);
   }
-  if (!sei && extendedinfohash_md5)
+  if (!sei && extendedinfohash_sha1)
   {
       gtkpod_statusbar_message (
-	  _("Matching MD5 checksum for file %d/%d"),
+	  _("Matching SHA1 checksum for file %d/%d"),
 	  num, total);
       while (widgets_blocked && gtk_events_pending ())
 	  gtk_main_iteration ();
@@ -182,7 +181,7 @@ void fill_in_extended_info (Track *track, gint32 total, gint32 num)
       }
       if (etr->sha1_hash)
       {
-	  sei = g_hash_table_lookup (extendedinfohash_md5, etr->sha1_hash);
+	  sei = g_hash_table_lookup (extendedinfohash_sha1, etr->sha1_hash);
       }
   }
   if (sei) /* found info for this id! */
@@ -211,7 +210,7 @@ void fill_in_extended_info (Track *track, gint32 total, gint32 num)
       if (track->rating == 0)
 	  track->rating = sei->rating;
       track->transferred = sei->transferred;
-      /* don't remove the md5-hash -- there may be duplicates... */
+      /* don't remove the sha1-hash -- there may be duplicates... */
       if (extendedinfohash)
 	  g_hash_table_remove (extendedinfohash, &ipod_id);
   }
@@ -244,10 +243,10 @@ static void destroy_extendedinfohash (void)
 	g_hash_table_destroy (extendedinfohash);
 	extendedinfohash = NULL;
     }
-    if (extendedinfohash_md5)
+    if (extendedinfohash_sha1)
     {
-	g_hash_table_destroy (extendedinfohash_md5);
-	extendedinfohash_md5 = NULL;
+	g_hash_table_destroy (extendedinfohash_sha1);
+	extendedinfohash_sha1 = NULL;
     }
     if (extendeddeletion)
     {
@@ -266,7 +265,7 @@ static void destroy_extendedinfohash (void)
 /* Return TRUE on success, FALSE otherwise */
 static gboolean read_extended_info (gchar *name, gchar *itunes)
 {
-    gchar *md5, buf[PATH_MAX], *arg, *line, *bufp;
+    gchar *sha1, buf[PATH_MAX], *arg, *line, *bufp;
     gboolean success = TRUE;
     gboolean expect_hash, hash_matched=FALSE;
     gint len;
@@ -281,8 +280,8 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 			name);
 	return FALSE;
     }
-    md5 = sha1_hash_on_filename (itunes, FALSE);
-    if (!md5)
+    sha1 = sha1_hash_on_filename (itunes, FALSE);
+    if (!sha1)
     {
 	gtkpod_warning (_("Could not create hash value from itunesdb\n"));
 	fclose (fp);
@@ -312,10 +311,10 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 	{
 	    if(g_ascii_strcasecmp (line, "itunesdb_hash") == 0)
 	    {
-		if (strcmp (arg, md5) != 0)
+		if (strcmp (arg, sha1) != 0)
 		{
 		    hash_matched = FALSE;
-		    gtkpod_warning (_("iTunesDB '%s' does not match checksum in extended information file '%s'\ngtkpod will try to match the information using MD5 checksums. This may take a long time.\n\n"), itunes, name);
+		    gtkpod_warning (_("iTunesDB '%s' does not match checksum in extended information file '%s'\ngtkpod will try to match the information using SHA1 checksums. This may take a long time.\n\n"), itunes, name);
 		    while (widgets_blocked && gtk_events_pending ())
 			gtk_main_iteration ();
 		}
@@ -351,12 +350,12 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 			}
 			else if (sei->sha1_hash)
 			{
-			    if (!extendedinfohash_md5)
+			    if (!extendedinfohash_sha1)
 			    {
-				extendedinfohash_md5 = g_hash_table_new_full (
+				extendedinfohash_sha1 = g_hash_table_new_full (
 				    g_str_hash,g_str_equal, NULL,hash_delete);
 			    }
-			    g_hash_table_insert (extendedinfohash_md5,
+			    g_hash_table_insert (extendedinfohash_sha1,
 						 sei->sha1_hash, sei);
 			}
 			else
@@ -428,11 +427,11 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		sei->mtime = (time_t)g_ascii_strtoull (arg, NULL, 10);
 	    }
     }
-    g_free (md5);
+    g_free (sha1);
     fclose (fp);
-    if (success && !hash_matched && !extendedinfohash_md5)
+    if (success && !hash_matched && !extendedinfohash_sha1)
     {
-	gtkpod_warning (_("No MD5 checksums on individual tracks are available.\n\nTo avoid this situation in the future either switch on duplicate detection (will provide MD5 checksums) or avoid using the iPod with programs other than gtkpod.\n\n"), itunes, name);
+	gtkpod_warning (_("No SHA1 checksums on individual tracks are available.\n\nTo avoid this situation in the future either switch on duplicate detection (will provide SHA1 checksums) or avoid using the iPod with programs other than gtkpod.\n\n"), itunes, name);
 	success = FALSE;
     }
     if (!success) destroy_extendedinfohash ();
@@ -1127,14 +1126,14 @@ void unmark_track_for_deletion (iTunesDB *itdb, Track *track)
 \*------------------------------------------------------------------*/
 
 
-/* Writes extended info (md5 hash, PC-filename...) of @itdb into file
+/* Writes extended info (sha1 hash, PC-filename...) of @itdb into file
  * @itdb->filename+".ext". @itdb->filename will also be used to
- * calculate the md5 checksum of the corresponding iTunesDB */
+ * calculate the sha1 checksum of the corresponding iTunesDB */
 static gboolean write_extended_info (iTunesDB *itdb)
 {
   ExtraiTunesDBData *eitdb;
   FILE *fp;
-  gchar *md5;
+  gchar *sha1;
   GList *gl;
   gchar *name;
 
@@ -1156,11 +1155,11 @@ static gboolean write_extended_info (iTunesDB *itdb)
   }
   g_free (name);
   name = NULL;
-  md5 = sha1_hash_on_filename (itdb->filename, FALSE);
-  if (md5)
+  sha1 = sha1_hash_on_filename (itdb->filename, FALSE);
+  if (sha1)
   {
-      fprintf(fp, "itunesdb_hash=%s\n", md5);
-      g_free (md5);
+      fprintf(fp, "itunesdb_hash=%s\n", sha1);
+      g_free (sha1);
   }
   else
   {

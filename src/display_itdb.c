@@ -1,5 +1,4 @@
-/* Time-stamp: <2007-04-03 23:14:35 jcs>
-|
+/*
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
@@ -587,7 +586,7 @@ guint gp_playlist_remove_by_name (iTunesDB *itdb, gchar *pl_name)
    No action is taken if "track" is not in the playlist.
    If "plitem" == NULL, remove from master playlist.
    If the track is removed from the MPL, it's also removed
-   from memory completely (i.e. from the tracklist and md5 hash).
+   from memory completely (i.e. from the tracklist and sha1 hash).
    Depending on @deleteaction, the track is either marked for deletion
    on the ipod/hard disk or just removed from the database
  */
@@ -1009,15 +1008,15 @@ iTunesDB *setup_itdb_n (gint i)
 }
 
 
-/* Increase playcount of filename <file> by <num>. If md5 is activated,
-   use md5 to find the track. Otherwise use the filename. If @md5 is
+/* Increase playcount of filename <file> by <num>. If sha1 is activated,
+   use sha1 to find the track. Otherwise use the filename. If @sha1 is
    set, this value is used directly to look up the track in the
    database (instead of calculating it from the file).
 
    Return value:
    TRUE: OK (playcount increased in GP_ITDB_TYPE_IPOD)
    FALSE: file could not be found in the GP_ITDB_TYPE_IPOD */
-gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num)
+gboolean gp_increase_playcount (gchar *sha1, gchar *file, gint num)
 {
     gboolean result = FALSE;
     Track *track = NULL;
@@ -1030,7 +1029,7 @@ gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num)
 	iTunesDB *itdb = gl->data;
 	g_return_val_if_fail (itdb, FALSE);
 
-	if (md5) track = sha1_sha1_exists (itdb, md5);
+	if (sha1) track = sha1_sha1_exists (itdb, sha1);
 	else     track = sha1_file_exists (itdb, file, TRUE);
 	if (!track)	  track = gp_track_by_filename (itdb, file);
 	if (track)

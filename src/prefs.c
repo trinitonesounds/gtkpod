@@ -1,5 +1,4 @@
-/* Time-stamp: <2007-03-18 21:34:21 jcs>
-|
+/*
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Copyright (C) 2006 James Liggett <jrliggett at cox.net>
 |  Part of the gtkpod project.
@@ -269,7 +268,7 @@ static void set_default_preferences()
     prefs_set_int("display_tooltips_prefs", TRUE);
     prefs_set_int("display_toolbar", TRUE);
     prefs_set_int("toolbar_style", GTK_TOOLBAR_BOTH);
-    prefs_set_int("md5", TRUE);
+    prefs_set_int("sha1", TRUE);
     prefs_set_string("export_template", "%o;%a - %t.mp3;%t.wav");
     prefs_set_int("file_dialog_details_expanded", FALSE);
 
@@ -739,9 +738,15 @@ static void cleanup_keys()
 	prefs_set_string("tm_sort_", NULL);
     }
 
+    /* rename md5 to sha1 */
+    if (prefs_get_string_value("md5", &buf))
+    {
+	prefs_set_string("sha1", buf);
+	g_free(buf);
+	prefs_set_string("md5", NULL);
+    }
 
     /* Convert old path numbered keys to named ones */
-  
   
     /* Play Now */
     if (prefs_get_string_value_index("path", PATH_PLAY_NOW, &buf))

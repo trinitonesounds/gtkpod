@@ -1,5 +1,4 @@
-/* Time-stamp: <2007-02-05 15:49:25 jcs>
-|
+/*
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
@@ -46,7 +45,7 @@ struct itdbs_head
 typedef struct
 {
     struct itdbs_head *itdbs_head; /* pointer to the master itdbs_head */
-    GHashTable *md5hash;           /* md5 hash information             */
+    GHashTable *sha1hash;          /* sha1 hash information            */
     GList *pending_deletion;       /* tracks marked for removal from
 				      media                            */
     gchar *offline_filename;       /* filename for offline database
@@ -147,7 +146,7 @@ void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display);
 
 void gp_playlist_add_extra (Playlist *pl);
 
-gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num);
+gboolean gp_increase_playcount (gchar *sha1, gchar *file, gint num);
 iTunesDB *gp_get_selected_itdb (void);
 iTunesDB *gp_get_ipod_itdb (void);
 iTunesDB *gp_get_podcast_itdb (void);
