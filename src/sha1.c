@@ -1,6 +1,6 @@
 /*
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/

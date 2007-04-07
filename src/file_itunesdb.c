@@ -1,5 +1,5 @@
 /*
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -75,8 +75,8 @@ struct track_extended_info
     gchar *hostname;
     gchar *ipod_path;
     gint32 oldsize;
-    guint32 playcount;
-    guint32 rating;        /* still read but never written */
+    guint64 local_itdb_id;
+    guint64 local_track_dbid;
     gboolean transferred;
 };
 
@@ -203,12 +203,9 @@ void fill_in_extended_info (Track *track, gint32 total, gint32 num)
 	  etr->charset = g_strdup (sei->charset);
       if (sei->hostname && !etr->hostname)
 	  etr->hostname = g_strdup (sei->hostname);
+      etr->local_itdb_id = sei->local_itdb_id;
+      etr->local_track_dbid = sei->local_track_dbid;
       etr->oldsize = sei->oldsize;
-      track->playcount += sei->playcount;
-      /* FIXME: This means that the rating can never be reset to 0
-       * by the iPod */
-      if (track->rating == 0)
-	  track->rating = sei->rating;
       track->transferred = sei->transferred;
       /* don't remove the sha1-hash -- there may be duplicates... */
       if (extendedinfohash)
@@ -414,18 +411,16 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		sei->charset = g_strdup (arg);
 	    else if (g_ascii_strcasecmp (line, "oldsize") == 0)
 		sei->oldsize = atoi (arg);
-	    else if (g_ascii_strcasecmp (line, "playcount") == 0)
-		sei->playcount = atoi (arg);
-	    else if (g_ascii_strcasecmp (line, "rating") == 0)
-		sei->rating = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "transferred") == 0)
 		sei->transferred = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "filename_ipod") == 0)
 		sei->ipod_path = g_strdup (arg);
 	    else if (g_ascii_strcasecmp (line, "pc_mtime") == 0)
-	    {
 		sei->mtime = (time_t)g_ascii_strtoull (arg, NULL, 10);
-	    }
+	    else if (g_ascii_strcasecmp (line, "local_itdb_id") == 0)
+		sei->local_itdb_id = (guint64)g_ascii_strtoull (arg, NULL, 10);
+	    else if (g_ascii_strcasecmp (line, "local_track_dbid") == 0)
+		sei->local_track_dbid = (guint64)g_ascii_strtoull (arg, NULL, 10);
     }
     g_free (sha1);
     fclose (fp);
@@ -630,9 +625,9 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     {
 	Track *track = gl->data;
    
-    /* Send eligible tracks to last.fm cache */
-    if (track->recent_playcount > 0)
-        lastfm_add_track(track);
+	/* Send eligible tracks to last.fm cache */
+	if (track->recent_playcount > 0)
+	    lastfm_add_track(track);
 
 	ExtraTrackData *etr;
 	g_return_val_if_fail (track, (release_widgets(), NULL));
@@ -667,6 +662,10 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	    gp_track_set_thumbnails (track, filename);
 	    g_free (filename);
 	}
+
+	/* add to filename hash */
+	gp_itdb_pc_path_hash_add_track (track);
+
 	++num;
     }
     /* take over the pending deletion information */
@@ -681,7 +680,8 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 
     /* delete hash information (if present) */
     destroy_extendedinfohash ();
-    /* find duplicates */
+
+    /* find duplicates and create sha1 hash*/
     gp_sha1_hash_tracks_itdb (itdb);
 
     /* mark the data as unchanged */
@@ -1198,6 +1198,12 @@ static gboolean write_extended_info (iTunesDB *itdb)
 	  fprintf (fp, "oldsize=%d\n", etr->oldsize);
       if (etr->mtime)
 	  fprintf (fp, "pc_mtime=%llu\n", (unsigned long long)etr->mtime);
+      if (etr->local_itdb_id)
+	  fprintf (fp, "local_itdb_id=%" G_GUINT64_FORMAT "\n",
+		   etr->local_itdb_id);
+      if (etr->local_track_dbid)
+	  fprintf (fp, "local_track_dbid=%" G_GUINT64_FORMAT "\n",
+		   etr->local_track_dbid);
       fprintf (fp, "transferred=%d\n", track->transferred);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }

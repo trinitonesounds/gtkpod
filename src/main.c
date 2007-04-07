@@ -1,6 +1,5 @@
-/* Time-stamp: <2007-02-23 00:05:25 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -130,7 +129,8 @@ main (int argc, char *argv[])
 	
 	gtk_widget_show (gtkpod_window);
 
-  init_data (gtkpod_window);   /* setup base data */
+  init_data (gtkpod_window);   /* setup base data, importing all local
+				* repositories */
 
   /* stuff to be done before starting gtkpod */
   call_script ("gtkpod.in", NULL);

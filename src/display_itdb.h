@@ -1,5 +1,5 @@
 /*
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -46,6 +46,7 @@ typedef struct
 {
     struct itdbs_head *itdbs_head; /* pointer to the master itdbs_head */
     GHashTable *sha1hash;          /* sha1 hash information            */
+    GHashTable *pc_path_hash;      /* hash with local filenames        */
     GList *pending_deletion;       /* tracks marked for removal from
 				      media                            */
     gchar *offline_filename;       /* filename for offline database
@@ -71,10 +72,14 @@ typedef struct
   gchar   *thumb_path_locale; /* same for thumbnail                  */
   gchar   *thumb_path_utf8;   /* same for thumbnail                  */
   gchar   *hostname;      /* name of host this file has been imported on*/
-  gchar   *sha1_hash;     /* sha1 hash of file (or NULL)              */
+  gchar   *sha1_hash;     /* sha1 hash of file (or NULL)             */
   gchar   *charset;       /* charset used for ID3 tags               */
   gint32  sortindex;      /* used for stable sorting (current order) */
   gboolean tchanged;      /* temporary use, e.g. in detail.c         */
+  guint64 local_itdb_id;  /* when using DND from local to iPod: original itdb   */
+  guint64 local_track_dbid;/* when using DND from local to iPod: original track */
+  gboolean pc_path_hashed;/* for programming error detection (see    */
+			  /* gp_itdb_local_path_hash_add_track()     */
 } ExtraTrackData;
 
 /* types for iTunesDB */

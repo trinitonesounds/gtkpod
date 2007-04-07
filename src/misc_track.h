@@ -1,6 +1,5 @@
-/* Time-stamp: <2006-11-17 16:36:11 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -41,6 +40,14 @@ void gp_sha1_hash_tracks_itdb (iTunesDB *itdb);
 void gp_sha1_hash_tracks (void);
 void gp_sha1_free_hash (void);
 Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename);
+
+void gp_itdb_pc_path_hash_init (ExtraiTunesDBData *eitdb);
+void gp_itdb_pc_path_hash_destroy (ExtraiTunesDBData *eitdb);
+void gp_itdb_pc_path_hash_add_track (Track *track);
+void gp_itdb_pc_path_hash_remove_track (Track *track);
+GList *gp_itdb_pc_path_hash_find_tracks (iTunesDB *itdb, const gchar *filename);
+GList *gp_itdb_find_same_tracks (iTunesDB *itdb, Track *track);
+
 gchar **track_get_item_pointer (Track *track, T_item t_item);
 const gchar *track_get_item (Track *track, T_item t_item);
 guint32 *track_get_timestamp_ptr (Track *track, T_item t_item);

@@ -1,5 +1,5 @@
 /*
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -63,6 +63,7 @@ void gp_itdb_extra_destroy (ExtraiTunesDBData *eitdb)
     if (eitdb)
     {
 	sha1_free_eitdb (eitdb);
+	gp_itdb_pc_path_hash_destroy (eitdb);
 	g_free (eitdb);
     }
 }
@@ -168,12 +169,13 @@ void gp_itdb_add_extra (iTunesDB *itdb)
 	    (ItdbUserDataDuplicateFunc)gp_itdb_extra_duplicate;
 	eitdb->data_changed = FALSE;
 	eitdb->itdb_imported = FALSE;
+	gp_itdb_pc_path_hash_init (eitdb);
     }
 }
 
 
 /* Validate a complete @itdb (including tracks and playlists),
- * i.e. add the Extra*Data and validate the track entries */
+ * i.e. add the Extra*Data */
 void gp_itdb_add_extra_full (iTunesDB *itdb)
 {
     GList *gl;
@@ -276,6 +278,7 @@ Track *gp_track_add (iTunesDB *itdb, Track *track)
 	/* exception: sha1_hash, hostname, charset: these may be NULL. */
 	gp_track_validate_entries (track);
 	itdb_track_add (itdb, track, -1);
+	gp_itdb_pc_path_hash_add_track (track);
 	result = track;
     }
     data_changed (itdb);
@@ -291,6 +294,10 @@ void gp_track_remove (Track *track)
 {
     /* currently only the details window may be accessing the tracks */
     details_remove_track (track);
+    /* remove from SHA1 hash */
+    sha1_track_remove (track);
+    /* remove from pc_path_hash */
+    gp_itdb_pc_path_hash_remove_track (track);
     /* remove from database */
     itdb_track_remove (track);
 }
@@ -304,6 +311,10 @@ void gp_track_unlink (Track *track)
 {
     /* currently only the details window may be accessing the tracks */
     details_remove_track (track);
+    /* remove from SHA1 hash */
+    sha1_track_remove (track);
+    /* remove from pc_path_hash */
+    gp_itdb_pc_path_hash_remove_track (track);
     /* remove from database */
     itdb_track_unlink (track);
 }
@@ -674,7 +685,6 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
 
     if (remove_track)
     {
-	sha1_track_remove (track);
 	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	{
 	    switch (deleteaction)

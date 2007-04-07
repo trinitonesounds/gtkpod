@@ -1,5 +1,5 @@
 /*
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -280,13 +280,18 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
        oldtrack->time_added =  MIN (oldtrack->time_added, track->time_added);
 
        /* Update filename if new track has filename set (should be
-	* always!?) */
+	  always!?) and old filename is not available or no longer
+	  valid */
        if (etr->pc_path_locale)
        {
-	   g_free (oldetr->pc_path_locale);
-	   g_free (oldetr->pc_path_utf8);
-	   oldetr->pc_path_locale = g_strdup (etr->pc_path_locale);
-	   oldetr->pc_path_utf8 = g_strdup (etr->pc_path_utf8);
+	   if (!oldetr->pc_path_locale ||
+	       !g_file_test (oldetr->pc_path_locale, G_FILE_TEST_IS_REGULAR))
+	   {
+	       g_free (oldetr->pc_path_locale);
+	       g_free (oldetr->pc_path_utf8);
+	       oldetr->pc_path_locale = g_strdup (etr->pc_path_locale);
+	       oldetr->pc_path_utf8 = g_strdup (etr->pc_path_utf8);
+	   }
        }
        if (itdb_playlist_contains_track (itdb_playlist_mpl (itdb),
 					 track))
@@ -380,7 +385,7 @@ void gp_itdb_hash (iTunesDB *itdb)
 
 
 /* Returns the track with the filename @name or NULL, if none can be
- * found. This function also works if @name is on the iPod. */
+ * found. This function also works if @filename is on the iPod. */
 Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
 {
     gchar *musicdir = NULL;
@@ -442,6 +447,278 @@ Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
     }
     g_free (musicdir);
     return result;
+}
+
+
+/* Find @track in repository @itdb by the following methods and return
+   the matches:
+
+   1) DND origin data
+   2) filename matches
+   3) SHA1 match 
+
+   If DND origin data is available and valid only one track is
+   returned. Otherwise all tracks matching the filename and the SHA1
+   are returned.
+
+   If DND origin data is found to be invalid it is deleted.
+
+   Return value: a GList with matching tracks. You must call
+   g_list_free() on the list when it is no longer needed.
+*/
+GList *gp_itdb_find_same_tracks (iTunesDB *itdb, Track *track)
+{
+    ExtraTrackData *etr;
+    Track *itr;
+    GList *tracks = NULL;
+
+    g_return_val_if_fail (itdb, NULL);
+    g_return_val_if_fail (track, NULL);
+
+    etr = track->userdata;
+    g_return_val_if_fail (etr, NULL);
+
+    if (itdb->id == etr->local_itdb_id)
+    {   /* we can probably find the original track from the DND data */
+	GList *gl;
+	for (gl=itdb->tracks; gl; gl=gl->next)
+	{
+	    itr = gl->data;
+	    g_return_val_if_fail (itr, NULL);
+	    if (itr->dbid == etr->local_track_dbid)
+	    {   /* found track */
+		tracks = g_list_prepend (tracks, itr);
+		return tracks;
+	    }
+	}
+	/* DND origin data is no longer valid */
+	etr->local_itdb_id = 0;
+	etr->local_track_dbid = 0;
+    }
+
+    /* No luck so far -- let's get filename matches */
+    tracks = gp_itdb_pc_path_hash_find_tracks (itdb, etr->pc_path_utf8);
+
+    /* And also try SHA1 match */
+    itr = sha1_sha1_exists (itdb, etr->sha1_hash);
+
+    if (itr)
+    {   /* insert into tracks list if not already present */
+	if (!g_list_find (tracks, itr))
+	{
+	    tracks = g_list_prepend (tracks, itr);
+	}
+    }
+
+    return tracks;
+}
+
+
+
+/* ------------------------------------------------------------ *\
+|                                                                |
+|         functions for local path hashtable                     |
+|                                                                |
+\* ------------------------------------------------------------ */
+
+/* set up hash table for local filenames */
+void gp_itdb_pc_path_hash_init (ExtraiTunesDBData *eitdb)
+{
+    g_return_if_fail (eitdb);
+
+    if (!eitdb->pc_path_hash)
+    {
+	eitdb->pc_path_hash = g_hash_table_new_full (
+	    g_str_hash, g_str_equal,
+	    g_free, NULL);
+    }
+}
+
+
+/* function for destroying hash value, used when destroying the hash
+ * table in gp_itdb_local_path_hash_destroy() below. */
+static void pc_path_hash_free_value (gpointer key,
+					gpointer value,
+					gpointer userdata)
+{
+    g_list_free (value);
+}
+
+
+/* free all memory associated with the local_path_hash */
+void gp_itdb_pc_path_hash_destroy (ExtraiTunesDBData *eitdb)
+{
+    g_return_if_fail (eitdb);
+
+    if (eitdb->pc_path_hash)
+    {
+	g_hash_table_foreach (eitdb->pc_path_hash,
+			      pc_path_hash_free_value,
+			      NULL);
+	g_hash_table_destroy (eitdb->pc_path_hash);
+	eitdb->pc_path_hash = NULL;
+    }
+}
+
+
+/* Add track to filehash. This function must only be called once for
+ * each track. */
+void gp_itdb_pc_path_hash_add_track (Track *track)
+{
+    iTunesDB *itdb;
+    ExtraTrackData *etr;
+    ExtraiTunesDBData *eitdb;
+
+    g_return_if_fail (track);
+    etr = track->userdata;
+    g_return_if_fail (etr);
+
+    itdb = track->itdb;
+    g_return_if_fail (itdb);
+
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+    g_return_if_fail (eitdb->pc_path_hash);
+
+    g_return_if_fail (track);
+    etr = track->userdata;
+    g_return_if_fail (etr);
+
+    /* This is only to detect programming errors */
+    g_return_if_fail (!etr->pc_path_hashed);
+
+    if (etr->pc_path_utf8 && *etr->pc_path_utf8)
+    {   /* add to hash table */
+	GList *tracks;
+	tracks = g_hash_table_lookup (eitdb->pc_path_hash, etr->pc_path_utf8);
+	tracks = g_list_prepend (tracks, track);
+	g_hash_table_replace (eitdb->pc_path_hash,
+			      g_strdup (etr->pc_path_utf8),
+			      tracks);
+	/* This is only to detect programming errors */
+	etr->pc_path_hashed = TRUE;
+    }
+}
+
+/* used in the next two functions */
+struct pc_path_hash_find_track_data
+{
+    Track *track;
+    gchar *key;
+};
+
+
+/* Used in the next function. Return TRUE and the current key if
+   td->track is contained in the list for key */
+static gboolean pc_path_hash_find_track (gpointer key,
+					 gpointer value,
+					 gpointer user_data)
+{
+    GList *tracks = value;
+    struct pc_path_hash_find_track_data *td = user_data;
+
+    if (g_list_find (tracks, td->track))
+    {
+	td->key = g_strdup (key);
+	return TRUE;
+    }
+    return FALSE;
+}
+
+
+
+/* remove track from filehash */
+void gp_itdb_pc_path_hash_remove_track (Track *track)
+{
+    struct pc_path_hash_find_track_data td;
+    ExtraTrackData *etr;
+    iTunesDB *itdb;
+    ExtraiTunesDBData *eitdb;
+    GList *tracks;
+
+    g_return_if_fail (track);
+    etr = track->userdata;
+    g_return_if_fail (etr);
+
+    itdb = track->itdb;
+    g_return_if_fail (itdb);
+
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+    g_return_if_fail (eitdb->pc_path_hash);
+
+    if (!etr->pc_path_hashed)	return;
+
+    if (etr->pc_path_utf8 && *etr->pc_path_utf8)
+    {   /* try lookup with filename */
+	GList *tracks;
+	tracks = g_hash_table_lookup (eitdb->pc_path_hash, etr->pc_path_utf8);
+	if (tracks)
+	{   /* filename exists */
+	    GList *link = g_list_find (tracks, track);
+	    if (link)
+	    {   /* track found */
+		tracks = g_list_remove_link (tracks, link);
+		if (tracks)
+		{   /* still tracks left under this filename */
+		    g_hash_table_replace (eitdb->pc_path_hash,
+					  g_strdup (etr->pc_path_utf8),
+					  tracks);
+		}
+		else
+		{   /* no more tracks left under this filename */
+		    g_hash_table_remove (eitdb->pc_path_hash,
+					 etr->pc_path_utf8);
+		}
+		etr->pc_path_hashed = FALSE;
+		return;
+	    }
+	}
+    }
+
+    /* We didn't find the track by filename, or now filename is
+     * available any more) -> search through the list */
+    td.track = track;
+    td.key = NULL;
+    tracks = g_hash_table_find (eitdb->pc_path_hash,
+				pc_path_hash_find_track,
+				&td);
+    if (tracks)
+    {
+	tracks = g_list_remove (tracks, track);
+	if (tracks)
+	{   /* still tracks left under this filename */
+	    g_hash_table_replace (eitdb->pc_path_hash,
+				  g_strdup (td.key),
+				  tracks);
+	}
+	else
+	{   /* no more tracks left under this filename */
+	    g_hash_table_remove (eitdb->pc_path_hash,
+				 td.key);
+	}
+	etr->pc_path_hashed = FALSE;
+	g_free (td.key);
+    }
+}
+
+
+/* Return all tracks with @filename (@filename in UTF8).
+   You must g_list_free the returned list when it is not longer needed. */
+GList *gp_itdb_pc_path_hash_find_tracks (iTunesDB *itdb, const gchar *filename)
+{
+    ExtraiTunesDBData *eitdb;
+    GList *tracks = NULL;
+
+    g_return_val_if_fail (itdb, NULL);
+    eitdb = itdb->userdata;
+    g_return_val_if_fail (eitdb, NULL);
+    g_return_val_if_fail (eitdb->pc_path_hash, NULL);
+
+    if (filename && *filename)
+	tracks = g_hash_table_lookup (eitdb->pc_path_hash, filename);
+
+    return g_list_copy (tracks);
 }
 
 

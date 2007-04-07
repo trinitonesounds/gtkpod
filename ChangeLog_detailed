@@ -1,5 +1,21 @@
 2007-04-07 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* misc_track.c: when adding a duplicate keep the original
+          filename information if it's still valid.
+
+	* file_itunesdb.c: removed rating and playcount completely
+          from extended info hash routines. Added local_itdb_id and
+          local_track_dbid.
+
+	* src/display_itdb.c
+	  src/display_itdb.h
+	  src/file_itunesdb.c
+	  src/main.c
+	  src/misc_track.c
+	  src/misc_track.h: introduced and maintain a filename hash
+	  for each repository. Will be used to cross-reference between
+	  repositories for playcounts and on-the-fly conversion.
+
 	* gtkpod.glade
 	  src/clientserver.c
 	  src/display_itdb.c
