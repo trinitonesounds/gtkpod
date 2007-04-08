@@ -866,6 +866,10 @@ iTunesDB *gp_merge_itdb (iTunesDB *old_itdb)
  * gp_load_ipod: loads the contents of an iPod into @itdb. If data
  * already exists in @itdb, data is merged.
  *
+ * If new countrate and rating information is available, this
+ * information is adjusted within the local databases as well if the
+ * track can be identified in the local databases.
+ *
  * @itdb: repository to load iPod contents into. mountpoint must be
  * set, and the iPod must not be loaded already
  * (eitdb->itdb_imported).
@@ -878,7 +882,7 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
     iTunesDB *new_itdb = NULL;
     gchar *mountpoint;
     gchar *itunesdb;
-    gboolean load = TRUE;
+    gboolean ok_to_load = TRUE;
 
     g_return_val_if_fail (itdb, NULL);
     g_return_val_if_fail (itdb->usertype & GP_ITDB_TYPE_IPOD, NULL);
@@ -907,21 +911,22 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
 
 	if (result == GTK_RESPONSE_YES)
 	{
-	    load = gp_ipod_init (itdb);
+	    ok_to_load = gp_ipod_init (itdb);
 	}
 	else
 	{
-	    load = FALSE;
+	    ok_to_load = FALSE;
 	}
     }
     g_free (itunesdb);
     g_free (mountpoint);
 
-    if (load)
+    if (ok_to_load)
     {
 	new_itdb = gp_merge_itdb (itdb);
 	if (new_itdb)
 	{
+	    GList *gl;
 	    gchar *old_model = get_itdb_prefs_string (new_itdb,
 						      KEY_IPOD_MODEL);
 	    gchar *new_model = itdb_device_get_sysinfo (new_itdb->device,
@@ -952,6 +957,37 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
                 }
 #endif		
 		set_itdb_prefs_string (new_itdb, KEY_IPOD_MODEL, new_model);
+	    }
+	    /* adjust rating and playcount in local databases */
+	    for (gl=new_itdb->tracks; gl; gl=gl->next)
+	    {
+		Track *itr = gl->data;
+		g_return_val_if_fail (itr, new_itdb);
+		if ((itr->recent_playcount != 0) ||
+		    (itr->app_rating != itr->rating))
+		{
+		    GList *gl;
+		    GList *tracks = gp_itdb_find_same_tracks_in_local_itdbs (itr);
+		    for (gl=tracks; gl; gl=gl->next)
+		    {
+			Track *ltr = gl->data;
+			g_return_val_if_fail (ltr, new_itdb);
+
+			if (itr->recent_playcount != 0)
+			{
+			    ltr->playcount += itr->recent_playcount;
+			    ltr->recent_playcount += itr->recent_playcount;
+			}
+			if (itr->rating != itr->app_rating)
+			{
+			    ltr->app_rating = ltr->rating;
+			    ltr->rating = itr->rating;
+			}
+			pm_track_changed (ltr);
+			data_changed (ltr->itdb);
+		    }
+		    g_list_free (tracks);
+		}
 	    }
 	}
     }

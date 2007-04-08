@@ -1,3 +1,17 @@
+2007-04-08 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* misc_track.c (add_tracks_to_playlist):
+	  - when dragging tracks from one iPod to another: remove
+	    original iPod path on copied track.
+	  - set DND origin data when dragging from a local repository
+	    to the iPod.
+
+	* misc_track.[ch]: added
+          gp_itdb_find_same_tracks_in_local_itdbs()
+
+	* files_itunesdb.c: adjust rating and playcount in local
+          databases when loading ipod.
+
 2007-04-07 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* misc_track.c: when adding a duplicate keep the original

@@ -514,6 +514,36 @@ GList *gp_itdb_find_same_tracks (iTunesDB *itdb, Track *track)
 }
 
 
+/* Find @track in all local repositories and return a list.
+
+   This function calls gp_itdb_find_same_tracks() for each local
+   repository and concatenates the results into one list.
+
+   Return value: a GList with matching tracks. You must call
+   g_list_free() on the list when it is no longer neede.
+*/
+GList *gp_itdb_find_same_tracks_in_local_itdbs (Track *track)
+{
+    GList *gl, *tracks=NULL;
+    struct itdbs_head *ih = gp_get_itdbs_head (gtkpod_window);
+
+    g_return_val_if_fail (ih, NULL);
+    g_return_val_if_fail (track, NULL);
+
+    for (gl=ih->itdbs; gl; gl=gl->next)
+    {
+	iTunesDB *itdb = gl->data;
+	g_return_val_if_fail (itdb, tracks);
+	if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	{
+	    GList *addtracks = gp_itdb_find_same_tracks (itdb, track);
+	    tracks = g_list_concat (tracks, addtracks);
+	}
+    }
+    return tracks;
+}
+
+
 
 /* ------------------------------------------------------------ *\
 |                                                                |
@@ -1665,10 +1695,10 @@ static void add_tracks_to_playlist (Playlist *pl,
 			g_free (eduptr->pc_path_utf8);
 			eduptr->pc_path_locale = itdb_filename_on_ipod (track);
 			eduptr->pc_path_utf8 = charset_to_utf8 (eduptr->pc_path_locale);
-			/* Remove old reference to iPod path */
-			g_free (duptr->ipod_path);
-			duptr->ipod_path = g_strdup ("");
 		    }
+		    /* Remove old reference to iPod path */
+		    g_free (duptr->ipod_path);
+		    duptr->ipod_path = g_strdup ("");
 		}
 
 		if (!eduptr->pc_path_locale)
@@ -1679,6 +1709,13 @@ static void add_tracks_to_playlist (Playlist *pl,
 		    g_free (buf);
 		    itdb_track_free (duptr);
 		    return;
+		}
+
+		if ((from_itdb->usertype & GP_ITDB_TYPE_LOCAL) &&
+		    (to_itdb->usertype & GP_ITDB_TYPE_IPOD))
+		{   /* make sure the DND origin data is set correctly */
+		    eduptr->local_itdb_id = from_itdb->id;
+		    eduptr->local_track_dbid = track->dbid;
 		}
 
 		/* add to database -- if duplicate detection is on and the

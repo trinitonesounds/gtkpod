@@ -47,6 +47,7 @@ void gp_itdb_pc_path_hash_add_track (Track *track);
 void gp_itdb_pc_path_hash_remove_track (Track *track);
 GList *gp_itdb_pc_path_hash_find_tracks (iTunesDB *itdb, const gchar *filename);
 GList *gp_itdb_find_same_tracks (iTunesDB *itdb, Track *track);
+GList *gp_itdb_find_same_tracks_in_local_itdbs (Track *track);
 
 gchar **track_get_item_pointer (Track *track, T_item t_item);
 const gchar *track_get_item (Track *track, T_item t_item);
