@@ -1,5 +1,4 @@
-/* Time-stamp: <2006-06-25 15:57:02 jcs>
-|
+/*
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Copyright (C) 2006 James Liggett <jrliggett at cox.net>
 |  Part of the gtkpod project.
@@ -140,7 +139,6 @@ gboolean temp_prefs_subkey_exists (TempPrefs *temp_prefs,
  * Temp prefs functions
  */
 TempPrefs *temp_prefs_create (void);
-TempPrefs *prefs_create_subset (const gchar *subkey);
 TempPrefs *temp_prefs_create_subset (TempPrefs *temp_prefs,
 				     const gchar *subkey);
 void temp_prefs_destroy (TempPrefs *temp_prefs);

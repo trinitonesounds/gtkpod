@@ -1,23 +1,27 @@
 2007-04-08 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
-	* misc_track.c (add_tracks_to_playlist):
+	* src/misc_track.c (add_tracks_to_playlist):
 	  - when dragging tracks from one iPod to another: remove
 	    original iPod path on copied track.
 	  - set DND origin data when dragging from a local repository
 	    to the iPod.
 
-	* misc_track.[ch]: added
+	* src/misc_track.[ch]: added
           gp_itdb_find_same_tracks_in_local_itdbs()
 
-	* files_itunesdb.c: adjust rating and playcount in local
+	* src/files_itunesdb.c: adjust rating and playcount in local
           databases when loading ipod.
+
+	* src/prefs.[ch]: make prefs_create_subset() static, make
+          prefs system thread safe, which should be useful when
+          creating other threads doing things in the background.
 
 2007-04-07 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
-	* misc_track.c: when adding a duplicate keep the original
+	* src/misc_track.c: when adding a duplicate keep the original
           filename information if it's still valid.
 
-	* file_itunesdb.c: removed rating and playcount completely
+	* src/file_itunesdb.c: removed rating and playcount completely
           from extended info hash routines. Added local_itdb_id and
           local_track_dbid.
 

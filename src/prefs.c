@@ -50,6 +50,18 @@
  *
  * ---------------------------------------------------------------- */
 
+/* ----------------------------------------------------------------
+ *
+ * The prefs module should be thread safe. The hash table is locked
+ * before each read or write access.
+ *
+ * The temp_prefs module is not thread-safe. If necessary a locking
+ * mechanism can be implemented.
+ *
+ * ---------------------------------------------------------------- */
+
+
+
 
 /* This tells Alpha OSF/1 not to define a getopt prototype in <stdio.h>.
    Ditto for AIX 3.2 and <stdlib.h>.  */
@@ -75,13 +87,8 @@
 #endif
 
 #include "clientserver.h"
-#include "display.h"
-#include "info.h"
 #include "misc.h"
-#include "misc_track.h"
 #include "prefs.h"
-
-/* New prefs backend. Will replace stuff above */
 
 /*
  * Data global to this module only
@@ -101,6 +108,7 @@ struct sub_data
 
 /* Pointer to prefrences hash table */
 static GHashTable *prefs_table = NULL;
+static GMutex *prefs_table_mutex = NULL;
 
 /*
  * Functions used by this module only
@@ -130,6 +138,23 @@ enum {
   GP_AUTO,
   GP_PRINT_HASH,
 };
+
+
+/* Lock the prefs table. If the table is already locked the calling
+ * thread will remain blocked until the lock is released by the other thread. */
+static void lock_prefs_table ()
+{
+    g_return_if_fail (prefs_table_mutex);
+    g_mutex_lock (prefs_table_mutex);
+}
+
+/* Unlock the prefs table again. */
+static void unlock_prefs_table ()
+{
+    g_return_if_fail (prefs_table_mutex);
+    g_mutex_unlock (prefs_table_mutex);
+}
+
 
 /* Set default prefrences */
 static void set_default_preferences()
@@ -1076,10 +1101,17 @@ static void finalize_prefs()
 /* Initialize the prefs table and read configuration */
 void init_prefs(int argc, char *argv[])
 {
+    if (!prefs_table_mutex)
+	prefs_table_mutex = g_mutex_new ();
+
+    lock_prefs_table ();
+
     /* Create the prefs hash table */
     prefs_table = g_hash_table_new_full(g_str_hash, g_str_equal, g_free,
 					g_free);
-	
+
+    unlock_prefs_table ();
+
     /* Load preferences */
     load_prefs();
 
@@ -1096,18 +1128,21 @@ void init_prefs(int argc, char *argv[])
 /* Save prefs data to a file, and then delete the hash table */
 void cleanup_prefs()
 {
-    if (prefs_table)
-    {
-	/* Let prefs do some things before saving */
-	finalize_prefs();
+    /* Let prefs do some things before saving */
+    finalize_prefs();
     
-	/* Save prefs */
-	save_prefs();
-		
-	/* Delete the prefs hash table */
-	g_hash_table_destroy(prefs_table);
-	prefs_table = NULL;
-    }
+    /* Save prefs */
+    save_prefs();
+
+    lock_prefs_table ();
+
+    /* Delete the prefs hash table */
+    g_hash_table_destroy(prefs_table);
+    prefs_table = NULL;
+
+    unlock_prefs_table ();
+
+    /* We can't free the prefs_table_mutex in a thread-safe way */
 }
 
 /* Create the temp prefs tree */
@@ -1154,11 +1189,11 @@ void temp_prefs_apply(TempPrefs *temp_prefs)
 
 /* Create a temp_prefs tree containing a subset of keys in the
    permanent prefs table (those starting with @subkey */
-TempPrefs *prefs_create_subset (const gchar *subkey)
+static TempPrefs *prefs_create_subset (const gchar *subkey)
 {
     struct sub_data sub_data;
 
-    g_return_val_if_fail (prefs_table, NULL);
+    g_return_val_if_fail (prefs_table, (unlock_prefs_table(), NULL));
 
     sub_data.temp_prefs = temp_prefs_create ();
     sub_data.subkey = subkey;
@@ -1195,7 +1230,11 @@ void temp_prefs_flush(TempPrefs *temp_prefs)
     g_return_if_fail (temp_prefs);
     g_return_if_fail (temp_prefs->tree);
 
+    lock_prefs_table ();
+
     g_tree_foreach (temp_prefs->tree, flush_key, NULL);
+
+    unlock_prefs_table ();
 }
 
 /* Return the number of keys stored in @temp_prefs */
@@ -1231,9 +1270,17 @@ gboolean temp_prefs_subkey_exists (TempPrefs *temp_prefs,
 /* Remove all keys that start with @subkey */
 void prefs_flush_subkey (const gchar *subkey)
 {
-    g_return_if_fail (prefs_table);
+    lock_prefs_table ();
+
+    if (!prefs_table)
+    {
+	unlock_prefs_table ();
+	g_return_if_reached ();
+    }
 
     g_hash_table_foreach_remove (prefs_table, match_subkey, (gchar *)subkey);
+
+    unlock_prefs_table ();
 }
 
 
@@ -1242,9 +1289,16 @@ void prefs_flush_subkey (const gchar *subkey)
 void prefs_rename_subkey (const gchar *subkey_old, const gchar *subkey_new){
     struct sub_data sub_data;
 
-    g_return_if_fail (prefs_table);
     g_return_if_fail (subkey_old);
     g_return_if_fail (subkey_new);
+
+    lock_prefs_table ();
+
+    if (!prefs_table)
+    {
+	unlock_prefs_table ();
+	g_return_if_reached ();
+    }
 
     sub_data.temp_prefs = prefs_create_subset (subkey_old);
     sub_data.temp_prefs_orig = NULL;
@@ -1257,6 +1311,8 @@ void prefs_rename_subkey (const gchar *subkey_old, const gchar *subkey_new){
     }
 
     temp_prefs_destroy (sub_data.temp_prefs);
+
+    unlock_prefs_table ();
 }
 
 
@@ -1294,14 +1350,21 @@ void prefs_set_string(const gchar *key, const gchar *value)
 {
     g_return_if_fail (key);
 
-    if (prefs_table)
+    lock_prefs_table ();
+
+    if (!prefs_table)
     {
-	if (value)
-	    g_hash_table_insert (prefs_table,
-				 g_strdup(key), g_strdup(value));
-	else
-	    g_hash_table_remove (prefs_table, key);
+	unlock_prefs_table ();
+	g_return_if_reached ();
     }
+
+    if (value)
+	g_hash_table_insert (prefs_table,
+			     g_strdup(key), g_strdup(value));
+    else
+	g_hash_table_remove (prefs_table, key);
+
+    unlock_prefs_table ();
 }
 
 /* Set a key value to a given integer */
@@ -1309,11 +1372,18 @@ void prefs_set_int(const gchar *key, const gint value)
 {
     gchar *strvalue; /* String value converted from integer */
 
-    if (prefs_table)
+    lock_prefs_table ();
+
+    if (!prefs_table)
     {
-	strvalue = g_strdup_printf("%i", value);
-	g_hash_table_insert(prefs_table, g_strdup(key), strvalue);
+	unlock_prefs_table ();
+	g_return_if_reached ();
     }
+
+    strvalue = g_strdup_printf("%i", value);
+    g_hash_table_insert(prefs_table, g_strdup(key), strvalue);
+
+    unlock_prefs_table ();
 }
 
 /* Set a key to an int64 value */
@@ -1321,49 +1391,75 @@ void prefs_set_int64(const gchar *key, const gint64 value)
 {
     gchar *strvalue; /* String value converted from int64 */
 	
-    if (prefs_table)
+    lock_prefs_table ();
+
+    if (!prefs_table)
     {
-	strvalue = g_strdup_printf("%" G_GINT64_FORMAT, value);
-	g_hash_table_insert(prefs_table, g_strdup(key), strvalue);	
+	unlock_prefs_table ();
+	g_return_if_reached ();
     }
+
+    strvalue = g_strdup_printf("%" G_GINT64_FORMAT, value);
+    g_hash_table_insert(prefs_table, g_strdup(key), strvalue);	
+
+    unlock_prefs_table ();
 }
 
 void prefs_set_double(const gchar *key, gdouble value)
 {
     gchar *strvalue; /* String value converted from integer */
 
-    if (prefs_table)
+    lock_prefs_table ();
+
+    if (!prefs_table)
     {
-	strvalue = g_strdup_printf("%f", value);
-	g_hash_table_insert(prefs_table, g_strdup(key), strvalue);
+	unlock_prefs_table ();
+	g_return_if_reached ();
     }
+
+    strvalue = g_strdup_printf("%f", value);
+    g_hash_table_insert(prefs_table, g_strdup(key), strvalue);
+
+    unlock_prefs_table ();
 }
 
 /* Get a string value associated with a key. Free returned string. */
 gchar *prefs_get_string(const gchar *key)
-{	
-    if (prefs_table)
-	return g_strdup(g_hash_table_lookup(prefs_table, key));
-    else
-	return NULL;
+{
+    gchar *string = NULL;
+
+    lock_prefs_table ();
+
+    g_return_val_if_fail (prefs_table, (unlock_prefs_table(), NULL));
+
+    string = g_strdup(g_hash_table_lookup(prefs_table, key));
+
+    unlock_prefs_table ();
+
+    return string;
 }
 
 /* Use this if you need to know if the given key actually exists */
 /* The value parameter can be NULL if you don't need the value itself. */
 gboolean prefs_get_string_value(const gchar *key, gchar **value)
 {
-    gchar *string;  /* String value from prefs table */
-	
-    if (prefs_table)
-    {
-	string = g_hash_table_lookup(prefs_table, key);
+    const gchar *string;  /* String value from prefs table */
+    gboolean valid = FALSE;
+
+    lock_prefs_table ();
+
+    g_return_val_if_fail (prefs_table, (unlock_prefs_table(), FALSE));
+
+    string = g_hash_table_lookup(prefs_table, key);
 		
-	if (value)
-	    *value = g_strdup (string);
-	if (string)
-	    return TRUE;
-    }
-    return FALSE;
+    if (value)
+	*value = g_strdup (string);
+    if (string)
+	valid = TRUE;
+
+    unlock_prefs_table ();
+
+    return valid;
 }
 
 /* Get an integer value from a key */
@@ -1374,13 +1470,16 @@ gint prefs_get_int(const gchar *key)
 	
     value = 0;
 	
-    if (prefs_table)
-    {
-	string = g_hash_table_lookup(prefs_table, key);
+    lock_prefs_table ();
+
+    g_return_val_if_fail (prefs_table, (unlock_prefs_table(), value));
+
+    string = g_hash_table_lookup(prefs_table, key);
 		
-	if (string)
-	    value = atoi(string);
-    }
+    if (string)
+	value = atoi(string);
+
+    unlock_prefs_table ();
 
     return value;
 }
@@ -1390,23 +1489,28 @@ gint prefs_get_int(const gchar *key)
 gboolean prefs_get_int_value(const gchar *key, gint *value)
 {
     gchar *string;  /* String value from prefs table */
-	
-    if (prefs_table)
+    gboolean valid = FALSE;
+
+    lock_prefs_table ();
+
+    g_return_val_if_fail (prefs_table, (unlock_prefs_table(), FALSE));
+
+    string = g_hash_table_lookup(prefs_table, key);
+
+    if (value)
     {
-	string = g_hash_table_lookup(prefs_table, key);
-
-	if (value)
-	{
-	    if (string)
-		*value = atoi(string);
-	    else
-		*value = 0;
-	}
-
 	if (string)
-	    return TRUE;
+	    *value = atoi(string);
+	else
+	    *value = 0;
     }
-    return FALSE;
+
+    if (string)
+	valid = TRUE;
+
+    unlock_prefs_table ();
+
+    return valid;
 }
 
 /* Get a 64 bit integer value from a key */
@@ -1417,13 +1521,16 @@ gint64 prefs_get_int64(const gchar *key)
 	
     value = 0;
 
-    if (prefs_table)
-    {
-	string = g_hash_table_lookup(prefs_table, key);
+    lock_prefs_table ();
 
-	if (string)
-	    value = g_ascii_strtoull(string, NULL, 10);
-    }
+    g_return_val_if_fail (prefs_table, (unlock_prefs_table(), value));
+
+    string = g_hash_table_lookup(prefs_table, key);
+
+    if (string)
+	value = g_ascii_strtoull(string, NULL, 10);
+
+    unlock_prefs_table ();
 	
     return value;
 }
@@ -1434,20 +1541,28 @@ gint64 prefs_get_int64(const gchar *key)
 gboolean prefs_get_int64_value(const gchar *key, gint64 *value)
 {
     gchar *string;  /* String value from prefs table */
-	
-    if (prefs_table)
-    {
-	string = g_hash_table_lookup(prefs_table, key);
+    gboolean valid = FALSE;
+
+    lock_prefs_table ();
+
+    g_return_val_if_fail (prefs_table, (unlock_prefs_table(), FALSE));
+
+    string = g_hash_table_lookup(prefs_table, key);
 		
+    if (value)
+    {
 	if (string)
-	{
-	    if (value)
-		*value = g_ascii_strtoull(string, NULL, 10);
-			
-	    return TRUE;
-	}
+	    *value = g_ascii_strtoull(string, NULL, 10);
+	else
+	    *value = 0;
     }
-    return FALSE;
+
+    if (string)
+	valid = TRUE;
+
+    unlock_prefs_table ();
+
+    return valid;
 }
 
 gdouble prefs_get_double(const gchar *key)
@@ -1457,13 +1572,16 @@ gdouble prefs_get_double(const gchar *key)
 	
     value = 0;
 
-    if (prefs_table)
-    {
-	string = g_hash_table_lookup(prefs_table, key);
+    lock_prefs_table ();
 
-	if (string)
-	    value = g_ascii_strtod(string, NULL);
-    }
+    g_return_val_if_fail (prefs_table, (unlock_prefs_table(), value));
+
+    string = g_hash_table_lookup(prefs_table, key);
+
+    if (string)
+	value = g_ascii_strtod(string, NULL);
+
+    unlock_prefs_table ();
 	
     return value;
 }
@@ -1471,20 +1589,28 @@ gdouble prefs_get_double(const gchar *key)
 gboolean prefs_get_double_value(const gchar *key, gdouble *value)
 {
     gchar *string;  /* String value from prefs table */
-	
-    if (prefs_table)
+    gboolean valid = FALSE;
+
+    lock_prefs_table ();
+
+    g_return_val_if_fail (prefs_table, (unlock_prefs_table(), FALSE));
+
+    string = g_hash_table_lookup(prefs_table, key);
+
+    if (value)
     {
-	string = g_hash_table_lookup(prefs_table, key);
-		
 	if (string)
-	{
-	    if (value)
-		*value = g_ascii_strtod(string, NULL);
-			
-	    return TRUE;
-	}
+	    *value = g_ascii_strtod(string, NULL);
+	else
+	    *value = 0;
     }
-    return FALSE;
+
+    if (string)
+	valid = TRUE;
+
+    unlock_prefs_table ();
+
+    return valid;
 }
 
 /* Functions for numbered pref keys */
