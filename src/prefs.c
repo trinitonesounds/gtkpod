@@ -625,8 +625,17 @@ static void read_prefs_from_file(FILE *fp)
 /* Write prefs to file */
 static void write_prefs_to_file(FILE *fp)
 {
-    if (prefs_table)
-	g_hash_table_foreach(prefs_table, write_key, (gpointer)fp);
+    lock_prefs_table ();
+
+    if (!prefs_table)
+    {
+	unlock_prefs_table ();
+	g_return_if_reached ();
+    }
+
+    g_hash_table_foreach(prefs_table, write_key, (gpointer)fp);
+
+    unlock_prefs_table ();
 }
 
 /* Load preferences, first loading the defaults, and then overwrite that with
@@ -670,7 +679,7 @@ static void load_prefs()
 }
 
 /* Save preferences to user home folder (~/gtkpod/prefs) */
-static void save_prefs()
+void prefs_save ()
 {
     gchar *filename;  /* Path of file to write to */
     gchar *config_dir;   /* Folder where prefs file is */
@@ -1088,18 +1097,8 @@ static void cleanup_keys()
     prefs_set_string ("version", VERSION);
 }
 
-/* Do things that need to be done before saving prefs */
-static void finalize_prefs()
-{
-  /* Sort column order needs to be stored */
-  tm_store_col_order();
-  
-  /* Update default sizes */
-  display_update_default_sizes();
-}
-
 /* Initialize the prefs table and read configuration */
-void init_prefs(int argc, char *argv[])
+void prefs_init (int argc, char *argv[])
 {
     if (!prefs_table_mutex)
 	prefs_table_mutex = g_mutex_new ();
@@ -1125,16 +1124,16 @@ void init_prefs(int argc, char *argv[])
     read_commandline(argc, argv);  
 }
 
-/* Save prefs data to a file, and then delete the hash table */
-void cleanup_prefs()
+/* Delete the hash table */
+void prefs_shutdown ()
 {
-    /* Let prefs do some things before saving */
-    finalize_prefs();
-    
-    /* Save prefs */
-    save_prefs();
-
     lock_prefs_table ();
+
+    if (!prefs_table)
+    {
+	unlock_prefs_table ();
+	g_return_if_reached ();
+    }
 
     /* Delete the prefs hash table */
     g_hash_table_destroy(prefs_table);
@@ -1193,12 +1192,16 @@ static TempPrefs *prefs_create_subset (const gchar *subkey)
 {
     struct sub_data sub_data;
 
+    lock_prefs_table ();
+
     g_return_val_if_fail (prefs_table, (unlock_prefs_table(), NULL));
 
     sub_data.temp_prefs = temp_prefs_create ();
     sub_data.subkey = subkey;
 
     g_hash_table_foreach (prefs_table, (GHFunc)get_subset, &sub_data);
+
+    unlock_prefs_table ();
 
     return sub_data.temp_prefs;
 }

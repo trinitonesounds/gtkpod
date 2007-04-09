@@ -76,8 +76,9 @@ typedef struct
 } TempLists;
 
 /* Prefrences setup and cleanup */
-void init_prefs(int argc, char *argv[]);
-void cleanup_prefs();
+void prefs_init (int argc, char *argv[]);
+void prefs_save (void);
+void prefs_shutdown (void);
 
 /*
  * Functions that are used to manipulate prefrences.

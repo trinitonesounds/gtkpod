@@ -1,6 +1,5 @@
-/* Time-stamp: <2007-02-20 23:05:44 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -874,7 +873,13 @@ gtkpod_main_quit(void)
     {
 	server_shutdown (); /* stop accepting requests for playcount updates */
 
-	cleanup_prefs();
+	/* Sort column order needs to be stored */
+	tm_store_col_order();
+  
+	/* Update default sizes */
+	display_update_default_sizes();
+
+	prefs_save ();
 
 /* FIXME: release memory in a clean way */
 #if 0
@@ -884,6 +889,8 @@ gtkpod_main_quit(void)
 	remove_all_tracks ();
 #endif
 	display_cleanup ();
+
+	prefs_shutdown ();
 
 	call_script ("gtkpod.out", NULL);
 	gtk_main_quit ();

@@ -121,7 +121,7 @@ main (int argc, char *argv[])
   
   gtkpod_window = gtkpod_xml_get_widget (main_window_xml, "gtkpod");
   
-  init_prefs(argc, argv); 
+  prefs_init (argc, argv); 
 
   init_default_file (argv[0]);
 

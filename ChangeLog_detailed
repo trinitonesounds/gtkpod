@@ -1,5 +1,12 @@
 2007-04-08 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/main.c
+	  src/misc_confirm.c
+	  src/prefs.c
+	  src/prefs.h: avoid assertions when shutting gtkpod down.
+
+2007-04-08 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/misc_track.c (add_tracks_to_playlist):
 	  - when dragging tracks from one iPod to another: remove
 	    original iPod path on copied track.
