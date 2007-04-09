@@ -1,3 +1,34 @@
+/*
+|  File conversion started by Simon Naunton <snaunton gmail.com> in 2007
+|
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Part of the gtkpod project.
+|
+|  URL: http://gtkpod.sourceforge.net/
+|  URL: http://www.gtkpod.org
+|
+|  This program is free software; you can redistribute it and/or modify
+|  it under the terms of the GNU General Public License as published by
+|  the Free Software Foundation; either version 2 of the License, or
+|  (at your option) any later version.
+|
+|  This program is distributed in the hope that it will be useful,
+|  but WITHOUT ANY WARRANTY; without even the implied warranty of
+|  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+|  GNU General Public License for more details.
+|
+|  You should have received a copy of the GNU General Public License
+|  along with this program; if not, write to the Free Software
+|  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+|
+|  iTunes and iPod are trademarks of Apple
+|
+|  This product is not supported/written/published by Apple!
+|
+|  $Id$
+*/
+
+
 #ifdef HAVE_CONFIG_H
 #   include <config.h>
 #endif
@@ -602,5 +633,58 @@ static gchar **cmdline_to_argv(const gchar *cmdline, Track *track)
     /*    argv=g_realloc (argv, (argc+1) * sizeof(gchar *)); // not really usefull ... */
     debug("cmdline_to_argv() -> %p / %d\n",argv,argc);
     return argv;
+}
+#endif
+
+
+
+/* ----------------------------------------------------------------
+ *
+ * Functions for threaded background conversion
+ *
+ * ---------------------------------------------------------------- */
+
+typedef struct _Conversion Conversion;
+
+struct _Conversion
+{
+    GList *scheduled;
+    GList *finished;
+    GMutex *mutex;
+};
+
+static Conversion *conversion;
+
+
+/* Set up conversion infrastructure. Must only be called once. */
+void conversion_init ()
+{
+    g_return_if_fail (conversion==NULL);
+
+    conversion = g_new0 (Conversion, 1);
+    conversion->mutex = g_mutex_new ();
+}
+
+
+/* Shut down conversion infrastructure */
+void conversion_shutdown ()
+{
+    g_return_if_fail (conversion);
+
+    /* nothing to do so far */
+}
+
+#if 0
+static void conversion_lock ()
+{
+    g_return_if_fail (conversion);
+    g_mutex_lock (conversion->mutex);
+}
+
+
+static void conversion_unlock ()
+{
+    g_return_if_fail (conversion);
+    g_mutex_unlock (conversion->mutex);
 }
 #endif

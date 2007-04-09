@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2007-03-26 21:23:31 jcs>
+|  Time-stamp: <2007-04-09 22:20:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -40,6 +40,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include "charset.h"
+#include "clientserver.h"
 #include "misc.h"
 #include "prefs.h"
 #include "misc_track.h"
@@ -1615,4 +1616,133 @@ gint dbToGUI(guint32 db)
       gui = 0;
     };
   return gui;
+}
+
+/* ----------------------------------------------------------------
+ *
+ * Main program init and shutdown
+ *
+ * ---------------------------------------------------------------- */
+
+/**
+ * gtkpod_init
+ *
+ * initialize prefs and other services as well as display
+ */
+void gtkpod_init (int argc, char *argv[])
+{
+    gchar *progname;
+
+    /* initialize xml_file: if gtkpod is called in the build directory
+       (".../src/gtkpod") use the local gtkpod.glade (the symlink in the
+       pixmaps directory), otherwise use
+       "PACKAGE_DATA_DIR/PACKAGE/pixmaps/gtkpod.glade" */
+
+    progname = g_find_program_in_path (argv[0]);
+    if (progname)
+    {
+	static const gchar *SEPsrcSEPgtkpod = G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S "gtkpod";
+
+	if (!g_path_is_absolute (progname))
+	{
+	    gchar *cur_dir = g_get_current_dir ();
+	    gchar *prog_absolute;
+
+	    if (g_str_has_prefix (progname, "." G_DIR_SEPARATOR_S))
+		prog_absolute = g_build_filename (cur_dir,progname+2,NULL);
+	    else
+		prog_absolute = g_build_filename (cur_dir,progname,NULL);
+	    g_free (progname);
+	    g_free (cur_dir);
+	    progname = prog_absolute;
+	}
+
+	if (g_str_has_suffix (progname, SEPsrcSEPgtkpod))
+	{
+	    gchar *suffix = g_strrstr (progname, SEPsrcSEPgtkpod);
+	    if (suffix)
+	    {
+		*suffix = 0;
+		xml_file = g_build_filename (progname, "pixmaps", "gtkpod.glade", NULL);
+	    }
+	}
+	g_free (progname);
+	if (xml_file && !g_file_test (xml_file, G_FILE_TEST_EXISTS))
+	{
+	    g_free (xml_file);
+	    xml_file = NULL;
+	}
+    }
+    if (!xml_file)
+	xml_file = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "pixmaps", "gtkpod.glade", NULL);
+    else
+    {
+	printf ("Using local gtkpod.glade file since program was started from source directory:\n%s\n", xml_file);
+    }
+
+    main_window_xml = glade_xml_new (xml_file, "gtkpod", NULL);
+
+    glade_xml_signal_autoconnect (main_window_xml);
+  
+    gtkpod_window = gtkpod_xml_get_widget (main_window_xml, "gtkpod");
+
+    prefs_init (argc, argv); 
+
+    init_default_file (argv[0]);
+
+    conversion_init ();
+
+    display_create ();
+	
+    gtk_widget_show (gtkpod_window);
+
+    init_data (gtkpod_window);   /* setup base data, importing all local
+				  * repositories */
+
+    /* stuff to be done before starting gtkpod */
+    call_script ("gtkpod.in", NULL);
+
+    if(prefs_get_int("autoimport") || prefs_get_int("autoimport_commandline"))
+	gp_load_ipods ();
+
+    server_setup ();   /* start server to accept playcount updates */
+}
+
+
+
+/**
+ * gtkpod_shutdown
+ *
+ * free memory, shutdown services and call gtk_main_quit ()
+ */
+void gtkpod_shutdown ()
+{
+    /* stop accepting requests for playcount updates */
+    server_shutdown ();
+
+    /* Sort column order needs to be stored */
+    tm_store_col_order();
+  
+    /* Update default sizes */
+    display_update_default_sizes();
+
+    /* shut down conversion infrastructure */
+    conversion_shutdown ();
+
+    /* Save prefs */
+    prefs_save ();
+
+/* FIXME: release memory in a clean way */
+#if 0
+    remove_all_playlists ();  /* first remove playlists, then tracks!
+			       * (otherwise non-existing *tracks may
+			       * be accessed) */
+    remove_all_tracks ();
+#endif
+    display_cleanup ();
+
+    prefs_shutdown ();
+
+    call_script ("gtkpod.out", NULL);
+    gtk_main_quit ();
 }

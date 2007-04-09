@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-03-18 21:34:23 jcs>
+/* Time-stamp: <2007-04-09 22:13:55 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -105,10 +105,11 @@ float get_ms_since (GTimeVal *old_time, gboolean update);
 gint get_sort_tab_number (gchar *text);
 void open_about_window (void);
 void close_about_window (void);
-gboolean parse_tracks_from_string(gchar **s, Track **track);
-gboolean gtkpod_main_quit(void);
+gboolean parse_tracks_from_string (gchar **s, Track **track);
+void gtkpod_init (int argc, char *argv[]);
+void gtkpod_shutdown (void);
 
-gchar *get_allowed_percent_char(void);
+gchar *get_allowed_percent_char (void);
 T_item TM_to_T (TM_item sm);
 T_item char_to_T (char c);
 T_item ST_to_T (ST_CAT_item st);

@@ -33,7 +33,6 @@
 #include <gtk/gtk.h>
 #include <string.h>
 #include <sys/stat.h>
-#include "clientserver.h"
 #include "confirmation.h"
 #include "misc.h"
 #include "prefs.h"
@@ -825,35 +824,13 @@ void delete_playlist_head (DeleteAction deleteaction)
 
 
 
-/* callback for quit menu entry */
-void
-on_quit1_activate                      (GtkMenuItem     *menuitem,
-					gpointer         user_data)
-{
-  if (!widgets_blocked) gtkpod_main_quit ();
-}
-
-
-/* callback for gtkpod window's close button */
-gboolean
-on_gtkpod_delete_event                 (GtkWidget       *widget,
-					GdkEvent        *event,
-					gpointer         user_data)
-{
-    if (!widgets_blocked)
-    {
-	return gtkpod_main_quit ();
-    }
-    return TRUE; /* don't quit -- would cause numerous error messages */
-}
-
 /**
- * gtkpod_main_quit
+ * gtkpod_shutdown
  *
- * return value: FALSE if it's OK to quit.
+ * return value: TRUE if it's OK to quit.
  */
-gboolean
-gtkpod_main_quit(void)
+static gboolean
+ok_to_close_gtkpod (void)
 {
     gint result = GTK_RESPONSE_YES;
 
@@ -871,30 +848,40 @@ gtkpod_main_quit(void)
 
     if (result == GTK_RESPONSE_YES)
     {
-	server_shutdown (); /* stop accepting requests for playcount updates */
-
-	/* Sort column order needs to be stored */
-	tm_store_col_order();
-  
-	/* Update default sizes */
-	display_update_default_sizes();
-
-	prefs_save ();
-
-/* FIXME: release memory in a clean way */
-#if 0
-	remove_all_playlists ();  /* first remove playlists, then
-				   * tracks! (otherwise non-existing
-				   *tracks may be accessed) */
-	remove_all_tracks ();
-#endif
-	display_cleanup ();
-
-	prefs_shutdown ();
-
-	call_script ("gtkpod.out", NULL);
-	gtk_main_quit ();
-	return FALSE;
+	return TRUE;
     }
-    return TRUE;
+    return FALSE;
+}
+
+
+/* callback for gtkpod window's close button */
+gboolean
+on_gtkpod_delete_event                 (GtkWidget       *widget,
+					GdkEvent        *event,
+					gpointer         user_data)
+{
+    if (!widgets_blocked)
+    {
+	if (ok_to_close_gtkpod ())
+	{
+	    gtkpod_shutdown ();
+	    return FALSE;
+	}
+    }
+    return TRUE; /* don't quit -- would cause numerous error messages */
+}
+
+
+/* callback for quit menu entry */
+void
+on_quit1_activate                      (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    if (!widgets_blocked)
+    {
+	if (ok_to_close_gtkpod ())
+	{
+	    gtkpod_shutdown ();
+	}
+    }
 }

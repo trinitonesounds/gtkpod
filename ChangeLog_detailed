@@ -5,6 +5,17 @@
 	  src/prefs.c
 	  src/prefs.h: avoid assertions when shutting gtkpod down.
 
+	* src/main.c
+	  src/misc.c
+	  src/misc.h
+	  src/misc_confirm.c: moved gtkpod_main_quit() from
+	  misc_confirm.c to misc.c and renamed to
+	  gtkpod_shutdown(). Added ok_to_close_gtkpod().
+	  Moved initialization from main.c to misc.c in gtkpod_init().
+
+	* src/file_convert.c
+	  src/file_convert.h: added header information.
+
 2007-04-08 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/misc_track.c (add_tracks_to_playlist):
