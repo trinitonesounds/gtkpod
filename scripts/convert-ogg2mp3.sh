@@ -74,8 +74,25 @@ if [ -z "$lame" ]; then
     exit 5
 fi
 
+# Check if the genre is one which lame supports
+if [ -n "$genre" ] && `$lame --genre-list | grep -qi "\b$genre\b"`; then
+    genreopt="--tg \"$genre\""
+else
+    # check for id3v2
+    id3v2=`which id3v2`
+    if [ -n "$id3v2" ]; then
+        useid3v2=1
+    fi
+fi
+
 # Launch command
-exec "$oggdec" --output - -- "$oggfile" | "$lame" --preset standard --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$tracknum" --tg "$genre" - "$mp3file"
+exec "$oggdec" --output - -- "$oggfile" | "$lame" --preset standard --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$tracknum" $genreopt - "$mp3file"
+
+# Try to set the genre with id3v2 if needed.  This may fail as older versions of
+# id3v2 did not support genre strings in place of numberic genre id's
+if [ -n "$useid3v2" ]; then
+    $id3v2 -g "$genre" "$mp3file" || :
+fi
 
 # Check result
 if [ "x$?" != "x0" ]; then

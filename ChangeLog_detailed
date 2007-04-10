@@ -1,3 +1,8 @@
+2007-04-10 Todd Zullinger <tmzullinger at users.sourceforge.net>
+
+	* scripts/convert-ogg2mp3.sh: Try to use id3v2 as a fallback
+	  for setting genres that lame doesn't handle
+
 2007-04-08 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/main.c
