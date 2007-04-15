@@ -73,13 +73,9 @@
 #  include <config.h>
 #endif
 
-#include <ctype.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include <glib/gstdio.h>
 #ifdef HAVE_GETOPT_LONG_ONLY
 #  include <getopt.h>
 #else
@@ -106,7 +102,7 @@ struct sub_data
     gboolean exists;
 };
 
-/* Pointer to prefrences hash table */
+/* Pointer to preferences hash table */
 static GHashTable *prefs_table = NULL;
 static GMutex *prefs_table_mutex = NULL;
 
@@ -156,7 +152,7 @@ static void unlock_prefs_table ()
 }
 
 
-/* Set default prefrences */
+/* Set default preferences */
 static void set_default_preferences()
 {
     int i;
@@ -219,7 +215,7 @@ static void set_default_preferences()
     
     prefs_set_int("sort_tab_num", 2);
     
-    /* Set colum prefrences */
+    /* Set colum preferences */
     for (i = 0; i < TM_NUM_COLUMNS; i++)
     {
 	prefs_set_int_index("tm_col_width", i, 80);
@@ -559,9 +555,9 @@ gchar *prefs_get_cfgdir()
 	
     if (!g_file_test(folder, G_FILE_TEST_IS_DIR))
     {
-	if ((mkdir(folder, 0755)) == -1)
+	if ((g_mkdir(folder, 0777)) == -1)
 	{
-	    printf("Couldn't create ~/.gtkpod");
+	    printf(_("Couldn't create ~/.gtkpod\n"));
 	    return NULL;
 	}
     }

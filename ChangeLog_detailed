@@ -1,3 +1,10 @@
+2007-04-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/prefs.[ch]: fixed typos ("prefrences") -- thanks to
+          Daniele Forsi.
+	  Changed mkdir() to g_mkdir() and reduced number of #include
+          headers.
+
 2007-04-10 Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* scripts/convert-ogg2mp3.sh: Try to use id3v2 as a fallback

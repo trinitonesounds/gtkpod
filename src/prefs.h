@@ -60,10 +60,10 @@ extern const gchar *KEY_DISPLAY_COVERART;
 /* New prefs backend. Will replace the stuff above */
 
 /* 
- * Wrapper data types for temp prefrences
+ * Wrapper data types for temp preferences
  */
 
-/* A wrapper around a GTree for regular temporary prefrences */
+/* A wrapper around a GTree for regular temporary preferences */
 typedef struct 
 {
 	GTree *tree;
@@ -81,11 +81,11 @@ void prefs_save (void);
 void prefs_shutdown (void);
 
 /*
- * Functions that are used to manipulate prefrences.
- * The prefrences table shouldn't be modified directly.
+ * Functions that are used to manipulate preferences.
+ * The preferences table shouldn't be modified directly.
  */
 
-/* Functions that set prefrence values */
+/* Functions that set preference values */
 
 void prefs_set_string(const gchar *key, const gchar *value);
 void prefs_set_int(const gchar *key, const gint value);
@@ -103,7 +103,7 @@ void prefs_set_int64_index(const gchar *key, guint index,
 void prefs_set_double_index(const gchar *key, guint index,
 			    gdouble value);
 
-/* Functions that get prefrence values */
+/* Functions that get preference values */
 gchar *prefs_get_string(const gchar *key);
 gboolean prefs_get_string_value(const gchar *key, gchar **value);
 gint prefs_get_int(const gchar *key);
@@ -173,7 +173,7 @@ gdouble temp_prefs_get_double(TempPrefs *temp_prefs, const gchar *key);
 gboolean temp_prefs_get_double_value(TempPrefs *temp_prefs, const gchar *key,
 				    gdouble *value);
 
-/* Numbered prefrences functions */
+/* Numbered preferences functions */
 void temp_prefs_set_string_index(TempPrefs *temp_prefs, const gchar *key,
 				 const guint index, const gchar *value);
 void temp_prefs_set_int_index(TempPrefs *temp_prefs, const gchar *key,
