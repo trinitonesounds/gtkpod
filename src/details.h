@@ -36,9 +36,29 @@
  
 #include <gtk/gtk.h>
 #include "itdb.h"
+#include <glade/glade.h>
+
+struct _Detail
+{
+    GladeXML *xml;      /* XML info                           */
+    GtkWidget *window;  /* pointer to details window          */
+    iTunesDB *itdb;     /* pointer to the original itdb       */
+    GList *orig_tracks; /* tracks displayed in details window */
+    GList *tracks;      /* tracks displayed in details window */
+    Track *track;       /* currently displayed track          */
+    gboolean artwork_ok;/* artwork can be displayed or not    */
+    gboolean changed;   /* at lease one track was changed     */
+
+};
+
+typedef struct _Detail Detail;
 
 /* details window */
 void details_edit (GList *selected_tracks);
 void details_update_default_sizes (void);
 void details_remove_track (Track *track);
+gboolean details_writethrough (Detail *detail);
+void details_update_thumbnail (Detail *detail);
+void details_update_buttons (Detail *detail);
+Detail *details_get_selected_detail ();
 #endif

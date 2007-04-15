@@ -41,11 +41,17 @@ typedef struct {
 
 extern const gchar *DISPLAY_COVER_SHOW;
 
-void init_default_file (gchar *progpath);
+void coverart_display_big_artwork (GList *tracks);
+GList *coverart_get_displayed_tracks (void);
+GdkPixbuf *coverart_get_default_track_thumb (void);
+void coverart_init (gchar *progpath);
 void coverart_sort_images (GtkSortType order);
 void coverart_select_cover (Itdb_Track *track);
 void coverart_set_images ();
 void coverart_clear_images ();
-void coverart_block_change ();
+void coverart_block_change (gboolean val);
 void coverart_init_display ();
+GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device);
+void coverart_set_cover_from_file ();
+void coverart_set_cover_from_web ();
 #endif

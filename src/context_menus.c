@@ -1,7 +1,6 @@
-/* Time-stamp: <2007-03-26 22:20:32 jcs>
-|
+/*
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
-|  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+|  Copyright (C) 2003-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -44,6 +43,7 @@
 #include "tools.h"
 #include "repository.h"
 #include "syncdir.h"
+#include "display_coverart.h"
 
 #define LOCALDEBUG 0
 
@@ -57,7 +57,8 @@ typedef enum {
     CM_PL = 0,
     CM_ST,
     CM_TM,
-    CM_NUM
+    CM_NUM,
+    CM_CAD
 } CM_type;
 
 
@@ -79,7 +80,6 @@ do_special(GtkWidget *w, gpointer data)
 	gchar *mp;
 	Track *tr = gl->data;
 	g_return_if_fail (tr);
-
 	g_object_get (tr->itdb->device, "mount-point", &mp, NULL);
 	printf ("mountpoint: %s\n", mp);
 	g_free (mp);
@@ -165,6 +165,18 @@ edit_details_entries(GtkMenuItem *mi, gpointer data)
 	details_edit (selected_entry->members);
     else if(selected_tracks)
 	details_edit (selected_tracks);
+}
+
+/*
+ * display the dialog with the full size cd artwork cover
+ * @mi - the menu item selected
+ * @data - Ignored, should be NULL
+ */
+static void
+display_track_artwork(GtkMenuItem *mi, gpointer data)
+{
+	if (selected_tracks)
+		coverart_display_big_artwork (selected_tracks);
 }
 
 /*
@@ -736,6 +748,27 @@ static GtkWidget *add_edit_track_details (GtkWidget *menu)
 		      G_CALLBACK (edit_details_entries), NULL);
 }
 
+static GtkWidget *add_display_big_coverart (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("View Full Size Artwork"),
+		      GTK_STOCK_FULLSCREEN,
+		      G_CALLBACK (display_track_artwork), NULL);	
+}
+
+static GtkWidget *add_get_cover_from_file (GtkWidget *menu)
+{
+		return hookup_mi (menu, _("Select Cover From File"),
+					GTK_STOCK_FLOPPY,
+					G_CALLBACK (coverart_set_cover_from_file), NULL);
+}
+
+static GtkWidget *add_get_cover_from_web (GtkWidget *menu)
+{
+	return hookup_mi (menu, _("Find Cover on Web"),
+					GTK_STOCK_NETWORK,
+					G_CALLBACK (coverart_set_cover_from_web), NULL);
+}
+
 static GtkWidget *add_check_ipod_files (GtkWidget *menu)
 {
     /* FIXME */
@@ -1013,6 +1046,12 @@ void create_context_menu (CM_type type)
 	    }
 #endif
 	    break;
+	case CM_CAD:
+			add_get_cover_from_file (menu);
+			add_get_cover_from_web (menu);
+			add_display_big_coverart (menu);
+			add_edit_track_details (menu);
+			break;
 	case CM_NUM:
 	    g_return_if_reached ();
 	}
@@ -1048,6 +1087,27 @@ tm_context_menu_init(void)
     if(selected_tracks)
     {
 	create_context_menu (CM_TM);
+    }
+}
+/**
+ * cad_context_menu_init - initialize the right click menu for coverart display 
+ */
+void
+cad_context_menu_init(void)
+{
+    if (widgets_blocked) return;
+    
+    selected_entry = NULL; 
+    selected_playlist = NULL;
+    active_itdb = gp_get_selected_itdb ();
+    entry_inst = -1;
+    
+    if (selected_tracks)  g_list_free (selected_tracks);
+    selected_tracks = coverart_get_displayed_tracks();
+    
+    if(selected_tracks)
+    {
+			create_context_menu (CM_CAD);
     }
 }
 /**

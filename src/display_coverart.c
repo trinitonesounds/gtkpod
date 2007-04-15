@@ -1,6 +1,5 @@
-/* Time-stamp: <2007-02-24 15:22:41 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 |
 |  URL: http://www.gtkpod.org/
@@ -36,21 +35,25 @@
 #include "itdb.h"
 #include "prefs.h"
 #include "display_coverart.h"
+#include "context_menus.h"
+#include "details.h"
+#include "fileselection.h"
+#include "fetchcover.h"
 
 /* Declarations */
-static gint sort_tracks (Itdb_Track *a, Itdb_Track *b);
+static gint sort_tracks (Track *a, Track *b);
 static void set_display_dimensions ();
 static GdkPixbuf *draw_blank_cdimage ();
-static void set_highlight (Cover_Item *cover);
+static void set_highlight (Cover_Item *cover, gboolean ismain);
 static void raise_cdimages (GPtrArray *cdcovers);
-static GdkPixbuf *get_thumb (Itdb_Track *track);
 /*static void scroll_covers (gint direction);*/
 static void on_cover_display_button_clicked (GtkWidget *widget, gpointer data);
-static void on_main_cover_image_clicked (GnomeCanvas *canvas, GdkEvent *event, gpointer data);
+static gint on_main_cover_image_clicked (GnomeCanvasItem *canvasitem, GdkEvent *event, gpointer data);
 static void on_cover_display_slider_value_changed (GtkRange *range, gpointer user_data);
 static void set_cover_dimensions (Cover_Item *cover, int cover_index);
 static void prepare_canvas ();
 static void set_covers ();
+static gint search_tracks (Track *a, Track *b);
 
 /* Prefs keys */
 const gchar *KEY_DISPLAY_COVERART="display_coverart";
@@ -72,13 +75,15 @@ static gdouble BIG_IMG_HEIGHT;
 static gchar *DEFAULT_FILE;
 /* Path of the png file used for the highlighting of cd covers */
 static gchar *HIGHLIGHT_FILE;
+/* Path of the png file used for the display of the main cd cover */
+static gchar *HIGHLIGHT_FILE_MAIN;
 
 #if 0
 static void debug_albums ()
 {
 	gint i;
 	Cover_Item *cover;
-	Itdb_Track *track;
+	Track *track;
 	
 	printf("Album list\n");
 	for(i = 0; i < g_list_length(cdwidget->displaytracks); ++i)
@@ -155,13 +160,17 @@ static GdkPixbuf *draw_blank_cdimage ()
  * @cover: A Cover_Item object which the higlighted is added to.
  *  
  */
-static void set_highlight (Cover_Item *cover)
+static void set_highlight (Cover_Item *cover, gboolean ismain)
 {
     GdkPixbuf *image;
     GError *error = NULL;
     GdkPixbuf *scaled;
 
-    image = gdk_pixbuf_new_from_file(HIGHLIGHT_FILE, &error);
+		if(ismain)
+			image = gdk_pixbuf_new_from_file(HIGHLIGHT_FILE_MAIN, &error);
+		else
+    	image = gdk_pixbuf_new_from_file(HIGHLIGHT_FILE, &error);
+    
     if(error != NULL)
     {	
 	printf("Error occurred loading file - \nCode: %d\nMessage: %s\n", error->code, error->message); 
@@ -222,7 +231,7 @@ static void set_covers ()
 {
     GdkPixbuf *imgbuf, *reflection; 
     gint i, dataindex;
-    Itdb_Track *track;
+    Track *track;
     Cover_Item *cover;
 
     for(i = 0; i < IMG_TOTAL; ++i)
@@ -238,7 +247,7 @@ static void set_covers ()
 	}
 	else
 	{
-	    imgbuf = get_thumb (track);
+	    imgbuf = coverart_get_track_thumb (track, track->itdb->device);
 	    gnome_canvas_item_show (cover->highlight);	
 	}
 
@@ -283,55 +292,6 @@ static void set_covers ()
     }
 }
 
-#if 0
-/**
- * scroll_covers:
- *
- * Performs the work of cycling the cd covers when the left or
- * right buttons are clicked.
- * 
- * @direction: the direction of the cycling of the covers, either
- * IMG_PREV or IMG_NEXT.
- */
-static void scroll_covers(gint direction)
-{
-	gint displaytotal;
-  
-  displaytotal = g_list_length(cdwidget->displaytracks);
-  
-  if (displaytotal <= 0)
-  	return;
-  
-  switch (direction)
-	{
-		case IMG_NEXT:
-  		cdwidget->first_imgindex++;
-   		/* Check there is another possible image to display */
-  		if ((cdwidget->first_imgindex + IMG_TOTAL) > displaytotal)
-  		{
-  			/* Return to as it was and get out */
-  			cdwidget->first_imgindex--;
-  			return;
-  		}
-  		break;
-  	case IMG_PREV:
-  		cdwidget->first_imgindex--;
-   		/* Check the index has not dropped below 0 */
-  		if (cdwidget->first_imgindex < 0)
-  		{
-  			/* Return to as it was and get out */
-  			cdwidget->first_imgindex++;
-  			return;
-  		}
-  		break;
-	}
-  
-  set_covers();
-  
-}
-#endif
-
-
 /**
  * on_cover_display_slider_value_changed:
  *
@@ -353,16 +313,14 @@ static void on_cover_display_slider_value_changed (GtkRange *range, gpointer use
   
   if (displaytotal <= 0)
   	return;
-  
+    
   /* Use the index value from the slider for the main image index */
-  cdwidget->first_imgindex = index - IMG_MAIN - 1;
-  if (cdwidget->first_imgindex < 0)
-  	cdwidget->first_imgindex = 0;
-  else if((cdwidget->first_imgindex + IMG_TOTAL) >= displaytotal)
-  	cdwidget->first_imgindex = displaytotal - IMG_TOTAL;
-      
-  set_covers ();
+  cdwidget->first_imgindex = index;
   
+  if (cdwidget->first_imgindex > (displaytotal - 4))
+  	cdwidget->first_imgindex = displaytotal - 4;
+	
+  set_covers ();
 }
 
 /**
@@ -379,6 +337,7 @@ static void on_cover_display_button_clicked (GtkWidget *widget, gpointer data)
 {
 	GtkButton *button;
 	const gchar *label;
+	gint displaytotal;
   
   button = GTK_BUTTON(widget);
   label = gtk_button_get_label(button);
@@ -387,9 +346,20 @@ static void on_cover_display_button_clicked (GtkWidget *widget, gpointer data)
   	cdwidget->first_imgindex++;
   else
    	cdwidget->first_imgindex--;
-    	
+   	
+  displaytotal = g_list_length(cdwidget->displaytracks) - 8;
+  
+  if (displaytotal <= 0)
+  	return;
+  
+  /* Use the index value from the slider for the main image index */
+  if (cdwidget->first_imgindex < 0)
+  	cdwidget->first_imgindex = 0;
+  else if (cdwidget->first_imgindex > (displaytotal - 1))
+  	cdwidget->first_imgindex = displaytotal - 1;
+      	
 	/* Change the value of the slider to do the work of scrolling the covers */
-	gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), (cdwidget->first_imgindex + IMG_MAIN + 1));
+	gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), cdwidget->first_imgindex);
 
 	/* debug_albums(); */
 }
@@ -405,28 +375,48 @@ static void on_cover_display_button_clicked (GtkWidget *widget, gpointer data)
  * @data: any data needed by the function (not required) 
  *  
  */
-static void on_main_cover_image_clicked (GnomeCanvas *canvas, GdkEvent *event, gpointer data)
+static gint on_main_cover_image_clicked (GnomeCanvasItem *canvasitem, GdkEvent *event, gpointer data)
 {
 	Cover_Item *cover;
 	gboolean status;
+	guint mbutton;
 	
 	if(event->type != GDK_BUTTON_PRESS)
-		return;
+		return FALSE;
+		
+	mbutton = event->button.button;
 	
-	cover = g_ptr_array_index(cdwidget->cdcovers, IMG_MAIN);
+	if (mbutton == 1)
+	{
+		/* Left mouse button clicked so find all tracks with displayed cover */
+		cover = g_ptr_array_index(cdwidget->cdcovers, IMG_MAIN);
+		/* Stop redisplay of the artwork as its already
+		 * in the correct location
+		 */
+		coverart_block_change (TRUE);
 	
-	/* Stop redisplay of the artwork as its already
-	 * in the correct location
-	 */
-	coverart_block_change (TRUE);
+		/* Select the correct track in the sorttabs */
+		status = st_set_selection (cover->track);
 	
-	/* Select the correct track in the sorttabs */
-	status = st_set_selection (cover->track);
+		/* Turn the display change back on */
+		coverart_block_change (FALSE);
+	}
+	else if ((mbutton == 3) && (event->button.state & GDK_SHIFT_MASK))
+	{
+		/* Right mouse button clicked and shift pressed.
+		 * Go straight to edit details window
+		 */
+		details_edit (coverart_get_displayed_tracks());
+	}
+	else if (mbutton == 3)
+	{
+		/* Right mouse button clicked on its own so display
+		 * popup menu
+		 */
+		cad_context_menu_init ();
+	}
 	
-	/* Turn the display change back on */
-	coverart_block_change (FALSE);
-	
-	g_return_if_fail (status);
+	return FALSE;
 }
 
 /**
@@ -472,7 +462,7 @@ void coverart_clear_images ()
 }
 
 /**
- * get_thumb:
+ * coverart_get_track_thumb:
  *
  * Retrieve the artwork pixbuf from the given track.
  * 
@@ -482,34 +472,194 @@ void coverart_clear_images ()
  * pixbuf referenced by the provided track or the pixbuf of the
  * default file if track has no cover art.
  */
-static GdkPixbuf *get_thumb (Itdb_Track *track)
+GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device)
 {
 	Itdb_Thumb *thumb = NULL;
 	GdkPixbuf *pixbuf = NULL;
-	GError *error = NULL;
 		
 	thumb = itdb_artwork_get_thumb_by_type (track->artwork, ITDB_THUMB_COVER_LARGE);
 	if(thumb == NULL)
 		thumb = itdb_artwork_get_thumb_by_type (track->artwork, ITDB_THUMB_COVER_SMALL);
 	
-	/* Track has a viable thumbnail */
+	/* Track has a viable thumb but check it has data */
 	if(thumb != NULL)
 	{
 		pixbuf = GDK_PIXBUF (
-	  				itdb_thumb_get_gdk_pixbuf (track->itdb->device, thumb) 
+	  				itdb_thumb_get_gdk_pixbuf (device, thumb) 
 						);
+	}
+	
+	/* Either thumb was null or the attempt at getting a pixbuf failed
+	 * due to invalid file. For example, some nut (like me) decided to
+	 * apply an mp3 file to the track as its cover file
+	 */
+	if (pixbuf ==  NULL)
+	{
+	 	/* Could not get a viable thumbnail so get default pixbuf */
+	 	pixbuf = coverart_get_default_track_thumb ();
+	}
+	
+	return pixbuf;
+}
+
+/**
+ * coverart_get_displayed_tracks:
+ *
+ * Get all tracks suggested by the displayed album cover.
+ * 
+ * Returns:
+ * GList containing references to all the displayed covered tracks
+ */
+GList *coverart_get_displayed_tracks (void)
+{
+	Playlist *playlist;
+	Cover_Item *cover;
+	GList *tracks;
+	GList *matches = NULL;
+	Track *track;
+	
+	/* Find the selected playlist */
+	playlist = pm_get_selected_playlist ();
+	if (playlist == NULL)
+		g_return_val_if_fail (playlist, NULL);
+
+	tracks = playlist->members;
+	g_return_val_if_fail (tracks, NULL);
+	
+	cover = g_ptr_array_index(cdwidget->cdcovers, IMG_MAIN);
+	g_return_val_if_fail (cover, NULL);
+	
+	/* Need to search through the list of tracks in the selected playlist
+	 * for all tracks matching artist and then album
+	 */
+	while (tracks)
+	{
+		track = tracks->data;
+		
+		if (search_tracks (cover->track, track) == 0)
+		{
+			/* Track details match the displayed cover->track */
+			matches = g_list_prepend (matches, track);
+		}	
+		tracks = tracks->next;
+	}
+	
+	matches = g_list_reverse(matches);
+	
+	return matches;
+}
+
+/**
+ * 
+ * Display a big version of the artwork in a dialog
+ * 
+ */
+void coverart_display_big_artwork (GList *tracks)
+{
+	GtkWidget *dialog;
+	Cover_Item *cover;
+	GdkPixbuf *imgbuf;
+	
+	cover = g_ptr_array_index(cdwidget->cdcovers, IMG_MAIN);
+	g_return_if_fail (cover);
+	
+	/* Set the dialog title */
+	gchar *text = g_strconcat (cover->track->artist, ": ", cover->track->album, NULL);
+	dialog = gtk_dialog_new_with_buttons (	text,
+																																	GTK_WINDOW (gtkpod_xml_get_widget (main_window_xml, "gtkpod")),
+																																	GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+																																	"_Close",
+																																	GTK_RESPONSE_CLOSE,
+																																	NULL);
+	
+	g_free (text);
+	
+	/* Get the filename of the cover art from the track's thumb */
+	Itdb_Thumb *thumb = itdb_artwork_get_thumb_by_type (cover->track->artwork, ITDB_THUMB_COVER_LARGE);
+	GError *error = NULL;
+	if (thumb)
+	{
+		gchar *artpath = itdb_thumb_get_filename (cover->track->itdb->device, thumb);
+		if (g_str_has_suffix (artpath, ".ithmb"))
+		{
+			/* playlist is on the ipod so display the file as appears on ipod */
+			imgbuf = coverart_get_track_thumb (cover->track, cover->track->itdb->device);
+		}
+		else
+		{
+			/* image is maybe in local playlist so should be normal file */
+			imgbuf = gdk_pixbuf_new_from_file(artpath, &error);
+			if (error != NULL)
+			{
+				printf("Error occurred loading the image file - \nCode: %d\nMessage: %s\n", error->code, error->message);
+				/* Artwork failed to load from file so try loading default */
+				imgbuf = coverart_get_default_track_thumb ();
+				g_error_free (error);
+			}
+		}
+		g_free(artpath);
 	}
 	else
 	{
-	 	/* Could not get a viable thumbnail so get default pixbuf */
-	 	pixbuf = gdk_pixbuf_new_from_file(DEFAULT_FILE, &error);
-		if (error != NULL)
-		{
-			printf("Error occurred loading the default file - \nCode: %d\nMessage: %s\n", error->code, error->message);
-			g_return_val_if_fail(pixbuf, NULL);
-		}
+		/* No thumb extractable from track */
+		imgbuf = coverart_get_default_track_thumb ();
 	}
 	
+	gint pixheight = gdk_pixbuf_get_height (imgbuf);
+	gint pixwidth = gdk_pixbuf_get_width (imgbuf);
+	
+	gtk_window_resize ( GTK_WINDOW(dialog), pixwidth, pixheight + 40);
+	
+	GnomeCanvas *canvas;
+	canvas = GNOME_CANVAS (gnome_canvas_new());
+	gtk_widget_set_size_request ( GTK_WIDGET(canvas),
+																									pixwidth,
+																									pixheight);
+	gnome_canvas_set_scroll_region (	canvas,
+																													0.0, 0.0, 
+																													pixwidth,
+																													pixheight);
+	GnomeCanvasItem *canvasitem;											
+	canvasitem = gnome_canvas_item_new(	gnome_canvas_root(canvas),
+																																		GNOME_TYPE_CANVAS_PIXBUF, NULL);
+	
+	/* Apply the image to the canvas */
+	gnome_canvas_item_set (	canvasitem,
+																						"pixbuf", imgbuf);
+
+	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), GTK_WIDGET(canvas));
+	gdk_pixbuf_unref (imgbuf);
+	
+	/* Display the dialog and block everything else until the
+	 * dialog is closed.
+	 */
+	gtk_widget_show_all (dialog);
+	gtk_dialog_run (GTK_DIALOG(dialog));
+	
+	/* Destroy the dialog as no longer required */
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+/**
+ * coverart_get_default_track_thumb:
+ *
+ * Retrieve the artwork pixbuf from the default image file.
+ * 
+ * Returns:
+ * pixbuf of the default file for tracks with no cover art.
+ */
+GdkPixbuf *coverart_get_default_track_thumb (void)
+{
+	GdkPixbuf *pixbuf = NULL;
+	GError *error = NULL;
+	
+	pixbuf = gdk_pixbuf_new_from_file(DEFAULT_FILE, &error);
+	if (error != NULL)
+	{
+			printf("Error occurred loading the default file - \nCode: %d\nMessage: %s\n", error->code, error->message);
+			g_return_val_if_fail(pixbuf, NULL);
+	}
+
 	return pixbuf;
 }
 
@@ -527,7 +677,7 @@ static GdkPixbuf *get_thumb (Itdb_Track *track)
  * -1 if the two tracks are different
  *  
  */
-static gint search_tracks (Itdb_Track *a, Itdb_Track *b)
+static gint search_tracks (Track *a, Track *b)
 {
 	if(a == NULL || b == NULL)
 		return -1;
@@ -549,7 +699,7 @@ static gint search_tracks (Itdb_Track *a, Itdb_Track *b)
  * @progpath: path of the gtkpod binary being loaded.
  *  
  */
-void init_default_file (gchar *progpath)
+void coverart_init (gchar *progpath)
 {
 	gchar *progname;
 	
@@ -583,6 +733,7 @@ void init_default_file (gchar *progpath)
 	     	*suffix = 0;
 	     	DEFAULT_FILE = g_build_filename (progname, "pixmaps", "default-cover.png", NULL);
 	     	HIGHLIGHT_FILE = g_build_filename (progname, "pixmaps", "cdshine.png", NULL);
+	     	HIGHLIGHT_FILE_MAIN = g_build_filename (progname, "pixmaps", "cdshine_main.png", NULL);
 	  	}
   	}
     
@@ -599,6 +750,11 @@ void init_default_file (gchar *progpath)
 	  	HIGHLIGHT_FILE = NULL;
     }
     
+    if (HIGHLIGHT_FILE_MAIN && !g_file_test (HIGHLIGHT_FILE_MAIN, G_FILE_TEST_EXISTS))
+    {
+	  	g_free (HIGHLIGHT_FILE_MAIN);
+	  	HIGHLIGHT_FILE_MAIN = NULL;
+    }
   }
   
   if (!DEFAULT_FILE)
@@ -609,8 +765,11 @@ void init_default_file (gchar *progpath)
   {
       HIGHLIGHT_FILE = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "pixmaps", "cdshine.png", NULL);
   }
+  if (!HIGHLIGHT_FILE_MAIN)
+  {
+      HIGHLIGHT_FILE_MAIN = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "pixmaps", "cdshine_main.png", NULL);
+  }
 }
-
 
 /**
  * on_cover_up_button_clicked:
@@ -625,6 +784,10 @@ void on_cover_up_button_clicked (GtkWidget *widget, gpointer data)
 {
 	gtk_widget_show_all (cdwidget->contentpanel);
 	prefs_set_int (KEY_DISPLAY_COVERART, TRUE);
+	gtk_widget_hide (widget);
+	
+	GtkWidget *downbutton = gtkpod_xml_get_widget (main_window_xml, "cover_down_button");
+	gtk_widget_show (downbutton);
 }
 
 /**
@@ -640,6 +803,10 @@ void on_cover_down_button_clicked (GtkWidget *widget, gpointer data)
 {
 	gtk_widget_hide_all (cdwidget->contentpanel);
 	prefs_set_int (KEY_DISPLAY_COVERART, FALSE);
+	gtk_widget_hide (widget);
+	
+	GtkWidget *upbutton = gtkpod_xml_get_widget (main_window_xml, "cover_up_button");
+	gtk_widget_show (upbutton);
 }
 
 /**
@@ -674,7 +841,10 @@ gboolean on_paned0_button_release_event (GtkWidget *widget, GdkEventButton *even
   	{
   		cover = g_ptr_array_index(cdwidget->cdcovers, i);
   		set_cover_dimensions (cover, i);
-		set_highlight (cover);	
+  		if(i == IMG_MAIN)
+				set_highlight (cover, FALSE);
+			else
+				set_highlight (cover, TRUE);
   	}
 		
 		set_covers ();
@@ -888,11 +1058,11 @@ static void prepare_canvas ()
 		cover->highlight = gnome_canvas_item_new((GnomeCanvasGroup *) cover->cdcvrgrp,
 																						GNOME_TYPE_CANVAS_PIXBUF,
 	    	   																	NULL);		
-
-		set_highlight (cover);
 		
 		if(i == IMG_MAIN)
 		{
+			set_highlight (cover, TRUE);
+		
 			/* set up some callback events on the main scaled image */
 			g_signal_connect(GTK_OBJECT(cover->cdimage), "event", GTK_SIGNAL_FUNC(on_main_cover_image_clicked), NULL);
 		
@@ -907,6 +1077,8 @@ static void prepare_canvas ()
   									"font", "-*-clean-medium-r-normal-*-12-*-*-*-*-*-*",
 										NULL));
 		}
+		else
+			set_highlight (cover, FALSE);
 		
 		g_ptr_array_add(cdwidget->cdcovers, cover);
 		cover = NULL;
@@ -959,22 +1131,30 @@ void coverart_init_display ()
   		
 	coverart_block_change (FALSE);
 	
+	GtkWidget *upbutton = gtkpod_xml_get_widget (main_window_xml, "cover_up_button");
+	GtkWidget *downbutton = gtkpod_xml_get_widget (main_window_xml, "cover_down_button");
+	
 	/* show/hide coverart display -- default to show */
 	if (prefs_get_int_value (KEY_DISPLAY_COVERART, NULL))
 	{
 	    if (prefs_get_int (KEY_DISPLAY_COVERART))
 	    {
 		gtk_widget_show_all (cdwidget->contentpanel);
+		gtk_widget_hide (upbutton);
+		gtk_widget_show (downbutton);
 	    }
 	    else
 	    {
 		gtk_widget_hide_all (cdwidget->contentpanel);
+		gtk_widget_show (upbutton);
+		gtk_widget_hide (downbutton);
 	    }
 	}
 	else
 	{
 	    gtk_widget_show_all (cdwidget->contentpanel);
-	    prefs_set_int (KEY_DISPLAY_COVERART, TRUE);
+	    gtk_widget_hide (upbutton);
+			gtk_widget_show (downbutton);
 	}
 }
 
@@ -992,7 +1172,7 @@ void coverart_init_display ()
  * integer indicating order of tracks
  *  
  */
-static gint sort_tracks (Itdb_Track *a, Itdb_Track *b)
+static gint sort_tracks (Track *a, Track *b)
 {
 	gint artistval;
 	
@@ -1017,7 +1197,7 @@ static gint sort_tracks (Itdb_Track *a, Itdb_Track *b)
  * @track: chosen album
  * 
  */
-void coverart_select_cover (Itdb_Track *track)
+void coverart_select_cover (Track *track)
 {
  	GList *selectedtrk;
   gint displaytotal, index;
@@ -1102,11 +1282,11 @@ void coverart_set_images ()
 {
 	gint i;
 	GList *tracks;
-	Itdb_Track *track;
+	Track *track;
 	Playlist *playlist;
 
 	/* initialize display if not already done */
-	if (!cdwidget)  coverart_init_display();
+	if (!cdwidget)  coverart_init_display ();
 
 	/* Ensure that the setting of images hasnt been turned off
 	 * due to being in the middle of a selection operation
@@ -1155,8 +1335,11 @@ void coverart_set_images ()
 	
 	set_covers ();
 	
-	/* Set the scale range */
-	gtk_range_set_range (GTK_RANGE (cdwidget->cdslider), 0, g_list_length (cdwidget->displaytracks) - 1);
+	/* Set the scale range - maximum value should be display
+	 * track list length - (8 NULL images + 1 as index value), 
+	 * ie. the ones either end of the list.
+	 */
+	gtk_range_set_range (GTK_RANGE (cdwidget->cdslider), 0, g_list_length (cdwidget->displaytracks) - 9);
 	
 	gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), 0);
 	
@@ -1169,7 +1352,7 @@ void coverart_set_images ()
  * coverart_block_change:
  *
  * Select covers events can be switched off when automatic
- * slections of tracks are taking place.
+ * selections of tracks are taking place.
  *
  * @val: indicating whether to block or unblock select cover events
  *  
@@ -1178,4 +1361,54 @@ void coverart_block_change (gboolean val)
 {
 	if (cdwidget != NULL)
 		cdwidget->block_display_change = val;
+}
+
+/**
+ * coverart_set_cover_from_file:
+ *
+ * Add a cover to the displayed track by setting it from a
+ * picture file.
+ *
+ */
+void coverart_set_cover_from_file ()
+{
+	gchar *filename;
+	Track *track;
+	GList *tracks = NULL;
+	
+  filename = fileselection_get_cover_filename ();
+
+	if (filename)
+  {
+		tracks = coverart_get_displayed_tracks ();
+		while (tracks)
+		{
+			track = tracks->data;
+		
+ 			if (gp_track_set_thumbnails (track, filename))
+ 				data_changed (track->itdb);
+ 				
+ 			tracks = tracks->next;
+		}
+  }
+    
+  g_free (filename);
+  
+  set_covers ();
+}
+
+/**
+ * coverart_set_cover_from_web:
+ *
+ * Find a cover on tinternet and apply it as the cover
+ * of the main displayed album
+ *
+ */
+void coverart_set_cover_from_web ()
+{
+	GList *tracks = coverart_get_displayed_tracks ();
+			
+	on_coverart_context_menu_click (tracks);
+	
+	set_covers ();
 }

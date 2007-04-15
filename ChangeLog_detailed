@@ -1,9 +1,46 @@
 2007-04-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* merged fetchcover_development_branch back to HEAD
+
 	* src/prefs.[ch]: fixed typos ("prefrences") -- thanks to
           Daniele Forsi.
 	  Changed mkdir() to g_mkdir() and reduced number of #include
           headers.
+
+2007-04-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* (fetchcover branch) src/fetchcover.c: add NULL pointer at
+	  the end of some variable argument calls to avoid segfaults.
+
+2007-04-14 P.G. Richardson <phantom_sf at users.sourceforge.net>
+(fetchcover branch)
+ - Context menu on display artwork updated with new items:
+   -- Selection of cover from a file
+   -- Download of cover from the web
+ - Fetch Cover button moved up in Edit Details window
+ - Display Coverart slider values sorted out so as to better reflect index
+   of covers
+ - Display Coverart up/down arrows are shown/hidden depending on window start
+ - Fetchcover dialog bordered to clarify a blank image is displayed
+ - Fetchcover dialog added to glade-2 xml file
+ - Hightlighting toned down for main image in Display Coverart window
+ 
+2007-04-01 P.G. Richardson <phantom_sf at users.sourceforge.net>
+(fetchcover branch)
+gtkpod.glade:
+	* rename Fetch Cover button
+
+context_menus.c:
+	* create context menu for main coverart display image
+	* new context action hooks to display artwork in a dialog
+
+display_coverart.c:
+	* coverart_display_big_artwork() for displaying a dialog containing an originally sized coverart image
+	* coverart_get_displayed_tracks() for returning all tracks relating to the main coverart display image
+
+fetchcover.c
+	* completed functionality, including next, previous, cancel and save buttons
+	* status bar to indicate whether images have been recovered
 
 2007-04-10 Todd Zullinger <tmzullinger at users.sourceforge.net>
 

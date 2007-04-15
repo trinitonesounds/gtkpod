@@ -32,5 +32,6 @@
 void tm_context_menu_init(void);
 void st_context_menu_init(gint inst);
 void pm_context_menu_init(void);
+void cad_context_menu_init(void);
 
 #endif

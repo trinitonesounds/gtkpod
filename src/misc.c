@@ -1679,6 +1679,9 @@ void gtkpod_init (int argc, char *argv[])
 	printf ("Using local gtkpod.glade file since program was started from source directory:\n%s\n", xml_file);
     }
 
+    /* Initialisation of libxml */
+    LIBXML_TEST_VERSION;
+
     main_window_xml = glade_xml_new (xml_file, "gtkpod", NULL);
 
     glade_xml_signal_autoconnect (main_window_xml);
@@ -1687,7 +1690,7 @@ void gtkpod_init (int argc, char *argv[])
 
     prefs_init (argc, argv); 
 
-    init_default_file (argv[0]);
+    coverart_init (argv[0]);
 
     conversion_init ();
 
@@ -1742,6 +1745,9 @@ void gtkpod_shutdown ()
 
     prefs_shutdown ();
 
+    xmlCleanupParser();
+    xmlMemoryDump();
+	
     call_script ("gtkpod.out", NULL);
     gtk_main_quit ();
 }

@@ -37,11 +37,14 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 #include <stdio.h>
+#include <libxml/xmlversion.h>
+#include <libxml/xmlmemory.h>
 #include "file.h"
 #include "display_itdb.h"
 #include "display.h"
 #include "confirmation.h"
 #include "time.h"
+
 
 #define C_FREE(a) {g_free(a); a=NULL;}
 

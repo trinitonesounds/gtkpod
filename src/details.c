@@ -1,6 +1,5 @@
-/* Time-stamp: <2006-11-26 23:51:17 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -34,6 +33,7 @@
 #include "details.h"
 #include "fileselection.h"
 #include "misc.h"
+#include "fetchcover.h"
 #include "misc_track.h"
 #include "prefs.h"
 #include <string.h>
@@ -48,22 +48,6 @@ void details_remove_track (Track *track);
 /* List with all detail windows */
 static GList *details = NULL;
 
-struct _Detail
-{
-    GladeXML *xml;      /* XML info                           */
-    GtkWidget *window;  /* pointer to details window          */
-    iTunesDB *itdb;     /* pointer to the original itdb       */
-    GList *orig_tracks; /* tracks displayed in details window */
-    GList *tracks;      /* tracks displayed in details window */
-    Track *track;       /* currently displayed track          */
-    gboolean artwork_ok;/* artwork can be displayed or not    */
-    gboolean changed;   /* at lease one track was changed     */
-
-};
-
-typedef struct _Detail Detail;
-
-
 /* string constants for preferences */
 static const gchar *DETAILS_WINDOW_DEFX="details_window_defx";
 static const gchar *DETAILS_WINDOW_DEFY="details_window_defy";
@@ -71,8 +55,6 @@ static const gchar *DETAILS_WINDOW_NOTEBOOK_PAGE="details_window_notebook_page";
 
 
 /* Declarations */
-static void details_update_buttons (Detail *detail);
-static void details_update_thumbnail (Detail *detail);
 static void details_set_track (Detail *detail, Track *track);
 static void details_free (Detail *detail);
 static void details_get_item (Detail *detail, T_item item,
@@ -105,7 +87,7 @@ static void details_store_window_state (Detail *detail)
 
 
 /* Query the state of the writethrough checkbox */
-static gboolean details_writethrough (Detail *detail)
+gboolean details_writethrough (Detail *detail)
 {
     GtkWidget *w;
 
@@ -1101,7 +1083,7 @@ static void details_get_item (Detail *detail, T_item item,
 
 
 /* Render the Apply button insensitive as long as no changes were done */
-static void details_update_buttons (Detail *detail)
+void details_update_buttons (Detail *detail)
 {
     GtkWidget *w;
     gchar *buf;
@@ -1198,7 +1180,7 @@ static void details_update_buttons (Detail *detail)
 }
 
 /* Update the displayed thumbnail */
-static void details_update_thumbnail (Detail *detail)
+void details_update_thumbnail (Detail *detail)
 {
     Thumb *thumb;
     GtkImage *img;
@@ -1266,7 +1248,6 @@ static void details_update_headline (Detail *detail)
     gtk_label_set_markup (GTK_LABEL (w), buf);
     g_free (buf);
 }
-
 
 /* Set the display to @track */
 static void details_set_track (Detail *detail, Track *track)
@@ -1382,7 +1363,7 @@ static void details_free (Detail *detail)
 {
     g_return_if_fail (detail);
 
-    /* FIXME: how do we free the detail->xml? */
+    g_object_unref (detail->xml);
 
     if (detail->window)
     {
@@ -1463,6 +1444,11 @@ void details_edit (GList *selected_tracks)
 		      G_CALLBACK (details_button_set_artwork_clicked),
 		      detail);
 
+		w = gtkpod_xml_get_widget (detail->xml, "details_button_fetch_cover");
+    g_signal_connect (w, "clicked",
+    			G_CALLBACK (on_fetchcover_fetch_button),
+          detail);
+		
     w = gtkpod_xml_get_widget (detail->xml, "details_button_remove_artwork");
     g_signal_connect (w, "clicked",
 		      G_CALLBACK (details_button_remove_artwork_clicked),
@@ -1548,4 +1534,10 @@ void details_remove_track (Track *track)
 	g_return_if_fail (detail);
 	details_remove_track_intern (detail, track);
     }
+}
+
+/* Returns the detail struct currently selected in details */
+Detail *details_get_selected_detail ()
+{
+        return details->data;
 }
