@@ -10,7 +10,8 @@
 #define FETCHCOVER_DEBUG 1
 
 static void fetchcover_statusbar_update (gchar *message);
-static void fetchcover_cancel ();
+static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device);
+static void fetchcover_debug(const gchar *format, ...);
 
 typedef struct
 {
@@ -37,13 +38,16 @@ static GtkWidget *next_button;
 static GtkWidget *prev_button;
 /* Status bar for displaying status messages */
 static GtkWidget *fetchcover_statusbar;
+/* Flag indicating whether a new net search should be initiated */
+static gboolean netsearched = FALSE;
+
+#define IMGSCALE 256
 
 #ifdef HAVE_CURL
 
 #include <curl/curl.h>
 
 /* Declarations */
-static void fetchcover_debug(const gchar *format, ...);
 static void free_fetchcover_list();
 static void *safe_realloc(void *ptr, size_t size);
 static size_t curl_write_fetchcover_func(void *ptr, size_t itemsize, size_t numitems, void *data);
@@ -53,7 +57,6 @@ static void fetchcover_next_button_clicked (GtkWidget *widget, gpointer data);
 static void fetchcover_prev_button_clicked (GtkWidget *widget, gpointer data);
 static void fetchcover_cleanup();
 static gchar *fetchcover_save ();
-static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device);
 
 struct chunk
 {
@@ -61,10 +64,6 @@ struct chunk
 	size_t size;
 };
 
-#define IMGSCALE 256
-
-/* Flag indicating whether a new net search should be initiated */
-static gboolean netsearched = FALSE;
 /* Data structure for use with curl */
 struct chunk fetchcover_curl_data;
 
@@ -494,37 +493,62 @@ static void fetchcover_prev_button_clicked (GtkWidget *widget, gpointer data)
 	return;
 }
 
-static void fetchcover_debug(const gchar *format, ...)
-{
-	if (FETCHCOVER_DEBUG)
-	{
-		va_list args;
-		va_start(args, format);
-		gchar *s = g_strdup_vprintf(format, args);
-		va_end(args);
-		printf("%s\n", s);
-		fflush(stdout);
-		g_free(s);
-	}
-}
-
-#endif /* HAVE_CURL */
-
 /**
- * fetchcover_statusbar_update:
+ * fetchcover_save:
  * 
- * @gchar*: messagel
+ * @Detail: detail
  *
- * Display a message in the status bar component of the dialog
+ * Save the displayed cover.
+ * Set thumbnails, update details window.
+ * Called on response to the clicking of the save button in the dialog
+ * 
+ * Returns:
+ * Filename of chosen cover image file
  */
-static void fetchcover_statusbar_update (gchar *message)
+gchar *fetchcover_save ()
 {
-	if (fetchcover_statusbar)
+	gchar *newname = NULL;
+	
+	/* The default cover image will have both dir and filename set
+	 * to null because no need to save because it is already saved (!!)
+	 * Thus, this whole process is avoided. Added bonus that pressing
+	 * save by accident if, for instance, no images are found means the
+	 * whole thing safely completes
+	 */
+	if (displayed_cover->dir && displayed_cover->filename)
 	{
-		gtk_statusbar_pop(GTK_STATUSBAR(fetchcover_statusbar), 1);
-		gtk_statusbar_push(GTK_STATUSBAR(fetchcover_statusbar), 1,  message);
+		/* path is valid so first move the file to be the folder.jpg or 
+		 * whatever is the preferred preference
+		 */
+		
+		/* Split the existing filename to remove the prefix */
+		gchar **fname_items = g_strsplit(displayed_cover->filename, "_@_", 2);
+		/* Assign the filename ready to rename the file */
+		newname = g_build_filename(displayed_cover->dir, fname_items[1], NULL);
+		fetchcover_debug("New name of file is %s\n", newname);
+				
+		if (g_file_test (newname, G_FILE_TEST_EXISTS))
+		{
+			/* file with the new name exists so delete the file */
+			g_remove (newname);
+		}
+		
+		gchar *oldname = g_build_filename(displayed_cover->dir, displayed_cover->filename, NULL);
+		g_rename (oldname, newname);
+		
+		/* Tidy up to ensure the path will not get cleaned up
+		 * by fetchcover_clean_up
+		 */
+		g_free (oldname);
+		g_strfreev(fname_items);
+		g_free (displayed_cover->dir);
+		g_free (displayed_cover->filename);		
+		displayed_cover->dir = NULL;
+		displayed_cover->filename = NULL;
 	}
+	return newname;	
 }
+#endif /* HAVE_CURL */
 
 /**
  * free_fetchcover:
@@ -597,75 +621,6 @@ static void fetchcover_cleanup()
 		
 	/* Clear the status bar */
 	gtk_statusbar_pop(GTK_STATUSBAR(fetchcover_statusbar), 1);
-}
-
-/**
- * fetchcover_cancel:
- *
- * Called on response to the clicking of the cancel button in the dialog.
- */
-static void fetchcover_cancel ()
-{
-	fetchcover_cleanup();
-}
-
-/**
- * fetchcover_save:
- * 
- * @Detail: detail
- *
- * Save the displayed cover.
- * Set thumbnails, update details window.
- * Called on response to the clicking of the save button in the dialog
- * 
- * Returns:
- * Filename of chosen cover image file
- */
-gchar *fetchcover_save ()
-{
-	#ifdef HAVE_CURL
-	gchar *newname = NULL;
-	;	
-	/* The default cover image will have both dir and filename set
-	 * to null because no need to save because it is already saved (!!)
-	 * Thus, this whole process is avoided. Added bonus that pressing
-	 * save by accident if, for instance, no images are found means the
-	 * whole thing safely completes
-	 */
-	if (displayed_cover->dir && displayed_cover->filename)
-	{
-		/* path is valid so first move the file to be the folder.jpg or 
-		 * whatever is the preferred preference
-		 */
-		
-		/* Split the existing filename to remove the prefix */
-		gchar **fname_items = g_strsplit(displayed_cover->filename, "_@_", 2);
-		/* Assign the filename ready to rename the file */
-		newname = g_build_filename(displayed_cover->dir, fname_items[1], NULL);
-		fetchcover_debug("New name of file is %s\n", newname);
-				
-		if (g_file_test (newname, G_FILE_TEST_EXISTS))
-		{
-			/* file with the new name exists so delete the file */
-			g_remove (newname);
-		}
-		
-		gchar *oldname = g_build_filename(displayed_cover->dir, displayed_cover->filename, NULL);
-		g_rename (oldname, newname);
-		
-		/* Tidy up to ensure the path will not get cleaned up
-		 * by fetchcover_clean_up
-		 */
-		g_free (oldname);
-		g_strfreev(fname_items);
-		g_free (displayed_cover->dir);
-		g_free (displayed_cover->filename);		
-		displayed_cover->dir = NULL;
-		displayed_cover->filename = NULL;
-	}
-	return newname;
-	
-	#endif /* HAVE_CURL */
 }
 
 /**
@@ -792,17 +747,17 @@ static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device)
 	/* Assign the status message bar */
 	fetchcover_statusbar = gtkpod_xml_get_widget (fetchcover_xml, "fetchcover_statusbar");
 		
-
-  #ifdef HAVE_CURL
+	fetchcover_track = track;
   next_button = gtkpod_xml_get_widget (fetchcover_xml, "next_button");
+	prev_button = gtkpod_xml_get_widget (fetchcover_xml, "prev_button");
+	
+  #ifdef HAVE_CURL
+  
   g_signal_connect (G_OBJECT(next_button), "clicked",
 		      G_CALLBACK(fetchcover_next_button_clicked), NULL);	
 	
-	prev_button = gtkpod_xml_get_widget (fetchcover_xml, "prev_button");
 	g_signal_connect (G_OBJECT(prev_button), "clicked",
 		      G_CALLBACK(fetchcover_prev_button_clicked), NULL);	
-	
-	fetchcover_track = track;
 	
 	/* Check there are valid values for artist and album, otherwise disable everything */
 	if (fetchcover_track->artist == NULL || fetchcover_track->album == NULL)
@@ -817,10 +772,11 @@ static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device)
 		fetchcover_statusbar_update (buf);
 		g_free (buf);
 	}
+	
 	#else
 		gtk_widget_set_sensitive (next_button, FALSE);
-		gtk_widget_set_sensitive (prev_button, FALSE):
-		fetchcover_statusbar_update ("CURL has not been installed so recovery of album covers cannot be performed");
+		gtk_widget_set_sensitive (prev_button, FALSE);
+		fetchcover_statusbar_update ("CURL has not been installed so this function is not available");
 	#endif /* HAVE_CURL */
 	
 	
@@ -832,6 +788,43 @@ static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device)
 }
 
 /**
+ * fetchcover_debug:
+ *
+ * Print debug messages for debugging purposes
+ *
+ * @format of messages and message string
+ */
+static void fetchcover_debug(const gchar *format, ...)
+{
+	if (FETCHCOVER_DEBUG)
+	{
+		va_list args;
+		va_start(args, format);
+		gchar *s = g_strdup_vprintf(format, args);
+		va_end(args);
+		printf("%s\n", s);
+		fflush(stdout);
+		g_free(s);
+	}
+}
+
+/**
+ * fetchcover_statusbar_update:
+ * 
+ * @gchar*: messagel
+ *
+ * Display a message in the status bar component of the dialog
+ */
+static void fetchcover_statusbar_update (gchar *message)
+{
+	if (fetchcover_statusbar)
+	{
+		gtk_statusbar_pop(GTK_STATUSBAR(fetchcover_statusbar), 1);
+		gtk_statusbar_push(GTK_STATUSBAR(fetchcover_statusbar), 1,  message);
+	}
+}
+
+/**
  * on_coverart_context_menu_click:
  *
  * @Track: track
@@ -840,7 +833,6 @@ static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device)
  */
 void on_coverart_context_menu_click (GList *tracks)
 {
-	gchar *filename = NULL;
 	Track *track;
 	
 	track = tracks->data;
@@ -849,9 +841,12 @@ void on_coverart_context_menu_click (GList *tracks)
 	g_return_if_fail (dialog);
 	
 	gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+  #ifdef HAVE_CURL
+  gchar *filename = NULL;
+    	
   switch (result)
   {
-  	case GTK_RESPONSE_ACCEPT:
+  	case GTK_RESPONSE_ACCEPT:	
     	filename = fetchcover_save ();
     	if (filename)
   		{
@@ -864,12 +859,12 @@ void on_coverart_context_menu_click (GList *tracks)
   			}
   		}
   		g_free (filename);
-  		fetchcover_cleanup ();
-      break;
   	default:
-      fetchcover_cancel ();
-     break;
+  		break;
 	}
+	#endif /* HAVE_CURL */
+	
+	fetchcover_cleanup();
   gtk_widget_destroy (GTK_WIDGET (dialog));	
 }
 
@@ -889,11 +884,13 @@ void on_fetchcover_fetch_button (GtkWidget *widget, gpointer data)
 	g_return_if_fail (dialog);
 	
 	gint result = gtk_dialog_run (GTK_DIALOG (dialog));
-	gchar *filename = NULL;
 	
+	#ifdef HAVE_CURL
+    	
+  gchar *filename = NULL;
   switch (result)
   {
-  	case GTK_RESPONSE_ACCEPT:
+  	case GTK_RESPONSE_ACCEPT:  	
     	filename = fetchcover_save ();
     	if (filename)
     	{
@@ -927,12 +924,11 @@ void on_fetchcover_fetch_button (GtkWidget *widget, gpointer data)
 				details_update_thumbnail(detail);
 				details_update_buttons(detail);
     	}
-			
-			fetchcover_cleanup();
-      break;
-  	default:
-      fetchcover_cancel ();
-     break;
+			default:
+				break;
 	}
+	#endif /* HAVE_CURL */
+	
+	fetchcover_cleanup();
   gtk_widget_destroy (GTK_WIDGET (dialog));
 }
