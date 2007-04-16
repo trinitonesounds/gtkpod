@@ -41,7 +41,7 @@ typedef struct {
 
 extern const gchar *DISPLAY_COVER_SHOW;
 
-void coverart_display_big_artwork (GList *tracks);
+void coverart_display_big_artwork ();
 GList *coverart_get_displayed_tracks (void);
 GdkPixbuf *coverart_get_default_track_thumb (void);
 void coverart_init (gchar *progpath);

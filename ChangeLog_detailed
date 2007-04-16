@@ -1,3 +1,10 @@
+2007-04-16 P.G. Richardson <phantom_sf at users.sourceforge.net>
+  * fetchcover.c: corrected operations if curl is and is not available
+  * removed calls to itdb_thumb_get_filename() from fetchcover.c and
+    display_coverart.c
+  * corrected behaviour of coverart display slider if only one album 
+    is in the selected playlist
+
 2007-04-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* merged fetchcover_development_branch back to HEAD

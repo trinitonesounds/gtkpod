@@ -647,45 +647,26 @@ static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device)
 	fetchcover_xml = glade_xml_new (xml_file, "fetchcover_dialog", NULL);
 	fetchcover_dialog = gtkpod_xml_get_widget (fetchcover_xml, "fetchcover_dialog");
 	
-	gboolean trkartfail = FALSE;
-	GError *error = NULL;
-	/* Find the image cover from the track */
-	Itdb_Thumb *thumb = itdb_artwork_get_thumb_by_type (track->artwork, ITDB_THUMB_COVER_LARGE);
-	if(thumb == NULL)
-		thumb = itdb_artwork_get_thumb_by_type (track->artwork, ITDB_THUMB_COVER_SMALL);
-	
-	if (thumb)
+	ExtraTrackData *etd;
+	etd = track->userdata;
+	if (etd && etd->thumb_path_locale)
 	{
-		gchar *artpath = itdb_thumb_get_filename (device, thumb);
-		if (g_str_has_suffix (artpath, ".ithmb"))
-		{
-			/* playlist is on the ipod so display the file as appears on ipod */
-			imgbuf = coverart_get_track_thumb (track, device);
-		}
-		else
-		{
-			imgbuf = gdk_pixbuf_new_from_file(artpath, &error);
-		}
-		
+		GError *error = NULL;
+		imgbuf = gdk_pixbuf_new_from_file(etd->thumb_path_locale, &error);
 		if (error != NULL)
 		{
-			printf("Error occurred loading the artwork file - \nCode: %d\nMessage: %s\n", error->code, error->message);
-			/* Artwork failed to load from file */
-			trkartfail = TRUE;
+			printf("Error occurred loading the image file - \nCode: %d\nMessage: %s\n", error->code, error->message);
+			/* Artwork failed to load from file so try loading default */
+			imgbuf = coverart_get_track_thumb (track, device);
 			g_error_free (error);
 		}
-		g_free(artpath);
 	}
 	else
 	{
-		/* No thumb extractable from track */
-		trkartfail = TRUE;
-	}	
-	
-	if (trkartfail)
-	{
-		/* Track art failed in some way so load the default file instead */
-		imgbuf = coverart_get_default_track_thumb ();
+		/* No thumb path available, fall back to getting the small thumbnail
+		 * and if that fails, the default thumbnail image.
+		 */
+		imgbuf = coverart_get_track_thumb (track, device);
 	}
 	
 	/* Add the cover to the image list */

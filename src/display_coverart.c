@@ -550,11 +550,12 @@ GList *coverart_get_displayed_tracks (void)
 }
 
 /**
+ * coverart_display_big_artwork:
  * 
  * Display a big version of the artwork in a dialog
  * 
  */
-void coverart_display_big_artwork (GList *tracks)
+void coverart_display_big_artwork ()
 {
 	GtkWidget *dialog;
 	Cover_Item *cover;
@@ -574,35 +575,27 @@ void coverart_display_big_artwork (GList *tracks)
 	
 	g_free (text);
 	
-	/* Get the filename of the cover art from the track's thumb */
-	Itdb_Thumb *thumb = itdb_artwork_get_thumb_by_type (cover->track->artwork, ITDB_THUMB_COVER_LARGE);
-	GError *error = NULL;
-	if (thumb)
+	ExtraTrackData *etd;
+	
+	etd = cover->track->userdata;
+	if (etd && etd->thumb_path_locale)
 	{
-		gchar *artpath = itdb_thumb_get_filename (cover->track->itdb->device, thumb);
-		if (g_str_has_suffix (artpath, ".ithmb"))
+		GError *error = NULL;
+		imgbuf = gdk_pixbuf_new_from_file(etd->thumb_path_locale, &error);
+		if (error != NULL)
 		{
-			/* playlist is on the ipod so display the file as appears on ipod */
+			printf("Error occurred loading the image file - \nCode: %d\nMessage: %s\n", error->code, error->message);
+			/* Artwork failed to load from file so try loading default */
 			imgbuf = coverart_get_track_thumb (cover->track, cover->track->itdb->device);
+			g_error_free (error);
 		}
-		else
-		{
-			/* image is maybe in local playlist so should be normal file */
-			imgbuf = gdk_pixbuf_new_from_file(artpath, &error);
-			if (error != NULL)
-			{
-				printf("Error occurred loading the image file - \nCode: %d\nMessage: %s\n", error->code, error->message);
-				/* Artwork failed to load from file so try loading default */
-				imgbuf = coverart_get_default_track_thumb ();
-				g_error_free (error);
-			}
-		}
-		g_free(artpath);
 	}
 	else
 	{
-		/* No thumb extractable from track */
-		imgbuf = coverart_get_default_track_thumb ();
+		/* No thumb path available, fall back to getting the small thumbnail
+		 * and if that fails, the default thumbnail image.
+		 */
+		imgbuf = coverart_get_track_thumb (cover->track, cover->track->itdb->device);
 	}
 	
 	gint pixheight = gdk_pixbuf_get_height (imgbuf);
@@ -1339,8 +1332,26 @@ void coverart_set_images ()
 	 * track list length - (8 NULL images + 1 as index value), 
 	 * ie. the ones either end of the list.
 	 */
-	gtk_range_set_range (GTK_RANGE (cdwidget->cdslider), 0, g_list_length (cdwidget->displaytracks) - 9);
+	gint slider_ubound = g_list_length (cdwidget->displaytracks) - 9;
+	if(slider_ubound < 1)
+	{
+		/* If only one album cover is displayed then slider_ubbound returns
+		 * 0 and causes a slider assertion error. Avoid this by disabling the
+		 * slider, which makes sense because only one cover is displayed.
+		 */
+		slider_ubound = 1;
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), FALSE); 
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), FALSE); 
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), FALSE); 
+	}
+	else
+	{
+	 	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), TRUE);
+	 	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), TRUE); 
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), TRUE);
+	}
 	
+	gtk_range_set_range (GTK_RANGE (cdwidget->cdslider), 0, slider_ubound);
 	gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), 0);
 	
 	/*printf("######### ORIGINAL LINE UP ########\n");
