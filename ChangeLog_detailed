@@ -1,3 +1,7 @@
+2007-04-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/misc_confirm.c: fixed typo -- thanks to Daniele Forsi.
+
 2007-04-16 P.G. Richardson <phantom_sf at users.sourceforge.net>
   * fetchcover.c: corrected operations if curl is and is not available
   * removed calls to itdb_thumb_get_filename() from fetchcover.c and

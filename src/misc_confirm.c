@@ -124,7 +124,7 @@ void delete_populate_settings (struct DeleteData *dd,
 	    if (title)
 		*title = g_strdup (
 		    ngettext ("Delete Track Completely from iPod?",
-			      "Delete Tracks Completey from iPod?", n));
+			      "Delete Tracks Completely from iPod?", n));
 	    if (confirm_again)
 		*confirm_again = prefs_get_int("delete_ipod");
 	    if (confirm_again_key)
