@@ -1,5 +1,10 @@
 2007-04-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/mp3file.c: fixed "comparison with string literal" issues
+	  by using strcmp instead. Thanks to Petr Gajdos.
+
+2007-04-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/misc_confirm.c: fixed typo -- thanks to Daniele Forsi.
 
 2007-04-16 P.G. Richardson <phantom_sf at users.sourceforge.net>

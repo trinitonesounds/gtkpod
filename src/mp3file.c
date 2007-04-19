@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-27 22:38:49 jcs>
+/* Time-stamp: <2007-04-19 20:18:03 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1156,7 +1156,7 @@ static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
 
     if (!string) return NULL;
 
-    if (frame_name == ID3_FRAME_GENRE)
+    if (strcmp (frame_name, ID3_FRAME_GENRE) == 0)
        string = id3_genre_name (string);
 
     if (encoding == ID3_FIELD_TEXTENCODING_ISO_8859_1)
@@ -1206,7 +1206,7 @@ static void id3_set_string (struct id3_tag *tag,
     field = id3_frame_field (frame, 0);
     id3_field_settextencoding(field, encoding);
    
-    if (frame_name == ID3_FRAME_COMMENT)
+    if (strcmp (frame_name, ID3_FRAME_COMMENT) == 0)
     {
 	field = id3_frame_field (frame, 3);
 	field->type = ID3_FIELD_TYPE_STRINGFULL;
@@ -1221,7 +1221,7 @@ static void id3_set_string (struct id3_tag *tag,
     /* maybe could be optimized see
        http://www.mars.org/mailman/public/mad-dev/2002-October/000739.html
     */
-    if (frame_name == ID3_FRAME_GENRE)
+    if (strcmp (frame_name, ID3_FRAME_GENRE) == 0)
     {
 	id3_ucs4_t *tmp_ucs4 = id3_utf8_ucs4duplicate ((id3_utf8_t *)data);
 	int index = id3_genre_number (tmp_ucs4);
@@ -1271,7 +1271,7 @@ static void id3_set_string (struct id3_tag *tag,
 	}
     }
 
-    if (frame_name == ID3_FRAME_COMMENT)
+    if (strcmp (frame_name, ID3_FRAME_COMMENT) == 0)
 	res = id3_field_setfullstring (field, ucs4);
     else
 	res = id3_field_setstrings (field, 1, &ucs4);
