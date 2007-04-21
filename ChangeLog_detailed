@@ -1,4 +1,9 @@
-2007-04-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
+2007-04-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/context_menus.c: fixed compile issue when compiling with
+	  GTK+ <V2.8 -- thanks to Daniele Forsi for pointing out.
+
+2007-04-19 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/mp3file.c: fixed "comparison with string literal" issues
 	  by using strcmp instead. Thanks to Petr Gajdos.
