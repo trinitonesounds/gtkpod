@@ -3,6 +3,10 @@
 	* src/context_menus.c: fixed compile issue when compiling with
 	  GTK+ <V2.8 -- thanks to Daniele Forsi for pointing out.
 
+2007-04-20 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* po/POTFILES.in: renamed display_songs.c to display_tracks.c
+
 2007-04-19 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/mp3file.c: fixed "comparison with string literal" issues
