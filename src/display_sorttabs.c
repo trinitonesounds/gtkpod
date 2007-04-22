@@ -1961,7 +1961,13 @@ void st_sort (GtkSortType order)
   for (i=0; i < prefs_get_int("sort_tab_num"); ++i)
 		st_sort_inst (i, order);
 	
-	coverart_set_images ();
+	/* Reset the cover images. Unfortunately the track order is not maintained when the 
+	 * display list of tracks is created. Thus, if the desired track order is the original order
+	 * then unfortunately the tracks must be collected from the playlist once again and the
+	 * displaytracks list in coverart recreated.
+	 * ie. easy to sort ascending and descending but difficult to return to unsorted state
+	 */
+	coverart_set_images (order == SORT_NONE);
 }
 
 gboolean st_set_selection (Itdb_Track *track)

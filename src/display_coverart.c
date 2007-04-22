@@ -51,7 +51,9 @@ static void on_cover_display_button_clicked (GtkWidget *widget, gpointer data);
 static gint on_main_cover_image_clicked (GnomeCanvasItem *canvasitem, GdkEvent *event, gpointer data);
 static void on_cover_display_slider_value_changed (GtkRange *range, gpointer user_data);
 static void set_cover_dimensions (Cover_Item *cover, int cover_index);
+static void coverart_sort_images (GtkSortType order);
 static void prepare_canvas ();
+static void set_slider_range (gint index);
 static void set_covers ();
 static gint search_tracks (Track *a, Track *b);
 
@@ -905,7 +907,7 @@ static void set_display_dimensions ()
 }
 
 /**
- * set_cover_dimensions::
+ * set_cover_dimensions:
  *
  * Utility function for set all the x, y, width and height
  * dimensions applicable to a single cover widget
@@ -998,6 +1000,42 @@ static void set_cover_dimensions (Cover_Item *cover, int cover_index)
 				       NULL);
 }
 
+/**
+ * 
+ * set_scale_range:
+ * 
+ * Set the scale range - maximum value should be display
+ * track list length - (8 NULL images + 1 as index value), 
+ * ie. the ones either end of the list.
+ * 
+ */
+static void set_slider_range (gint index)
+{
+	gint slider_ubound = g_list_length (cdwidget->displaytracks) - 9;
+	if(slider_ubound < 1)
+	{
+		/* If only one album cover is displayed then slider_ubbound returns
+		 * 0 and causes a slider assertion error. Avoid this by disabling the
+		 * slider, which makes sense because only one cover is displayed.
+		 */
+		slider_ubound = 1;
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), FALSE); 
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), FALSE); 
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), FALSE); 
+	}
+	else
+	{
+	 	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), TRUE);
+	 	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), TRUE); 
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), TRUE);
+	}
+	
+	gtk_range_set_range (GTK_RANGE (cdwidget->cdslider), 0, slider_ubound);
+	if (index >= 0 && index <= slider_ubound)
+		gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), index);
+	else
+		gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), 0);
+}
 /**
  * prepare_canvas:
  *
@@ -1205,7 +1243,14 @@ void coverart_select_cover (Track *track)
   	
  	/* Find the track that matches the given album */
  	selectedtrk = g_list_find_custom (cdwidget->displaytracks, track, (GCompareFunc) search_tracks); 
- 	g_return_if_fail (selectedtrk);
+ 	if (selectedtrk == NULL)
+ 	{
+ 		/* Maybe the track has just been created so might not be in the list yet
+ 		 * Not a perfect solution but avoid throwing around block_display_change
+ 		 * and potentially leaving everything permanently blocked
+ 		 */
+ 		 return;
+ 	}
  
  	/* Determine the index of the found track */
  	index = g_list_position (cdwidget->displaytracks, selectedtrk);
@@ -1232,19 +1277,8 @@ void coverart_select_cover (Track *track)
  * @order: order type
  * 
  */
-void coverart_sort_images (GtkSortType order)
-{ 
- 	/*
-	if (order == SORT_NONE)
- 	{
- 		pl = pm_get_selected_playlist ();
- 		newlist = pl->members;
- 		return;
- 	}
- 	else
- 	{
- 	*/
- 	
+static void coverart_sort_images (GtkSortType order)
+{
  	if (order == SORT_NONE)
  	{
  		/* Due to list being prepended together and remaining unsorted need to reverse */
@@ -1252,8 +1286,6 @@ void coverart_sort_images (GtkSortType order)
  	}
  	else
  	{
- 		/* Remove all the null tracks before sorting */	
- 		cdwidget->displaytracks = g_list_remove_all (cdwidget->displaytracks, NULL);
  		cdwidget->displaytracks = g_list_sort (cdwidget->displaytracks, (GCompareFunc) sort_tracks);
  	}
  	
@@ -1264,14 +1296,149 @@ void coverart_sort_images (GtkSortType order)
  }
 
 /**
+ * 
+ * Convenience function that will only allow set images to be
+ * called if the track that was affected was in the list of displaytracks
+ * used by the coverart display. So if a whole album is deleted then this
+ * will only reset the display if the first track in the album is deleted.
+ * 
+ * @track: affected track
+ */
+void coverart_track_changed (Track *track, gint signal)
+{
+	GList *trkpos;
+	gint index;
+	
+	cdwidget->block_display_change = TRUE;
+	
+	/*
+	 * Scenarios:
+	 * a) A track is being deleted that is not in the display
+	 * b) A track is being deleted that is in the display
+	 * c) A track has changed is some way so maybe the coverart
+	 * d) A track has been created and its artist and album are already in the displaylist
+	 * e) A track has been created and its artist and album are not in the displaylist
+	 */
+	trkpos = g_list_find_custom (cdwidget->displaytracks, track, (GCompareFunc) search_tracks);
+			
+	switch (signal)
+	{
+		case COVERART_REMOVE_SIGNAL:
+			if (trkpos == NULL)
+			{
+				/* Track is not in the displaylist so can safely ignore its deletion */
+				cdwidget->block_display_change = FALSE;
+				return;
+			}
+				
+			/* Track in displaylist is going to be removed so remove from display 
+			 * and remove any references to it
+			 */
+			
+			/* Determine the index of the found track */
+ 			index = g_list_position (cdwidget->displaytracks, trkpos);
+ 	
+ 			/* Use the index value to determine if the cover is being displayed */
+ 			if (index >= cdwidget->first_imgindex && index <= (cdwidget->first_imgindex + IMG_TOTAL))
+ 			{
+ 				/* Cover is being displayed so need to do some clearing up */
+ 					
+ 				/* Reset the display back to black, black and more black 
+ 				 * Frees the cdcover widget of the track ready for deletion
+ 				 */
+				coverart_clear_images ();
+				/* Remove the track from displaytracks */
+				cdwidget->displaytracks = g_list_delete_link (cdwidget->displaytracks, trkpos);
+				/* reset the covers and should reset to original position but without the index */
+				set_covers ();
+ 			}
+ 			else
+ 			{
+ 				/* index value is outside the displayed covers so safe to just remove the track from displaytracks */
+ 				/* Remove the track from displaytracks */
+				cdwidget->displaytracks = g_list_remove (cdwidget->displaytracks, trkpos);
+ 			}
+ 			
+ 			/* Size of displaytracks has changed so reset the slider to appropriate range and index */
+ 			set_slider_range (index);
+			break;
+		case COVERART_CREATE_SIGNAL:
+			if (trkpos != NULL)
+			{
+				/* A track with the same artist and album already exists in the displaylist so there is no
+				 * need to add it to the displaylist so can safely ignore its creation
+				 */
+				 cdwidget->block_display_change = FALSE;
+				 return;
+			}
+			gint i = 0;
+			
+			/* Track details have not been seen before so need to add to the displaylist */
+		
+			/* Remove all null tracks before any sorting should take place */	
+ 			cdwidget->displaytracks = g_list_remove_all (cdwidget->displaytracks, NULL);
+ 			
+			if (prefs_get_int("st_sort") == SORT_ASCENDING)
+			{
+				cdwidget->displaytracks = g_list_insert_sorted (cdwidget->displaytracks, track, (GCompareFunc) sort_tracks);
+			}
+			else if (prefs_get_int("st_sort") == SORT_DESCENDING)
+			{
+				/* Already in descending order so reverse into ascending order */
+				cdwidget->displaytracks = g_list_reverse (cdwidget->displaytracks);
+				/* Insert the track */
+				cdwidget->displaytracks = g_list_insert_sorted (cdwidget->displaytracks, track, (GCompareFunc) sort_tracks);
+				/* Reverse again */
+				cdwidget->displaytracks = g_list_reverse (cdwidget->displaytracks);
+			}
+			else
+			{
+				/* NO SORT */
+				cdwidget->displaytracks = g_list_append (cdwidget->displaytracks, track);
+			}
+			
+			/* Readd in the null tracks */
+			/* Add 4 null tracks to the end of the track list for padding */
+			for (i = 0; i < IMG_MAIN; ++i)
+				cdwidget->displaytracks = g_list_append (cdwidget->displaytracks, NULL);
+	
+			/* Add 4 null tracks to the start of the track list for padding */
+			for (i = 0; i < IMG_MAIN; ++i)
+				cdwidget->displaytracks = g_list_prepend (cdwidget->displaytracks, NULL);
+		
+			set_covers ();
+			
+			/* Size of displaytracks has changed so reset the slider to appropriate range and index */
+ 			set_slider_range (g_list_index(cdwidget->displaytracks, track));
+			break;
+		case COVERART_CHANGE_SIGNAL:
+			/* A track is declaring itself as changed so what to do? */
+			if (trkpos == NULL)
+			{
+				/* The track is not in the displaylist so who cares if it has changed! */
+				cdwidget->block_display_change = FALSE;
+				 return;
+			}
+			
+			/* Track is in the displaylist and something about it has changed.
+			 * Dont know how it has changed so all I can really do is resort the list according
+			 * to the current sort order and redisplay
+			 */
+			 coverart_set_images (FALSE);
+	}
+	
+	cdwidget->block_display_change = FALSE;
+}
+
+/**
  * coverart_set_images:
  *
  * Takes a list of tracks and sets the 9 image cover display.
  *
- * @tracks: list of tracks taken from a playlist
+ * @gboolean: flag indicating whether to clear the displaytracks list or not
  *  
  */
-void coverart_set_images ()
+void coverart_set_images (gboolean clear_track_list)
 {
 	gint i;
 	GList *tracks;
@@ -1290,31 +1457,37 @@ void coverart_set_images ()
 	/* Reset the display back to black, black and more black */
 	coverart_clear_images ();
 	
-	/* Find the selected playlist */
-	playlist = pm_get_selected_playlist ();
-	if (playlist == NULL)
-		return;
-		
-  tracks = playlist->members;
-  
-	cdwidget->first_imgindex = 0;
-  
-  g_list_free (cdwidget->displaytracks);
-	cdwidget->displaytracks = NULL; 
-	
-	if (tracks == NULL)
-		return;
-		
-	while (tracks)
+	if (clear_track_list)
 	{
-		track = tracks->data;
+		/* Find the selected playlist */
+		playlist = pm_get_selected_playlist ();
+		if (playlist == NULL)
+			return;
 		
-		if (g_list_find_custom (cdwidget->displaytracks, track, (GCompareFunc) search_tracks) == NULL)
-			cdwidget->displaytracks = g_list_prepend (cdwidget->displaytracks, track);
-
-		tracks = tracks->next;
-	}
+  	tracks = playlist->members;
+    
+  	g_list_free (cdwidget->displaytracks);
+		cdwidget->displaytracks = NULL; 
 	
+		if (tracks == NULL)
+			return;
+		
+		while (tracks)
+		{
+			track = tracks->data;
+		
+			if (g_list_find_custom (cdwidget->displaytracks, track, (GCompareFunc) search_tracks) == NULL)
+				cdwidget->displaytracks = g_list_prepend (cdwidget->displaytracks, track);
+
+			tracks = tracks->next;
+		}
+		
+		cdwidget->first_imgindex = 0;
+	}
+		
+	/* Remove all null tracks before any sorting should take place */	
+ 	cdwidget->displaytracks = g_list_remove_all (cdwidget->displaytracks, NULL);
+ 		
 	/* Sort the tracks to the order set in the preference */
 	coverart_sort_images (prefs_get_int("st_sort"));
 	
@@ -1325,34 +1498,10 @@ void coverart_set_images ()
 	/* Add 4 null tracks to the start of the track list for padding */
 	for (i = 0; i < IMG_MAIN; ++i)
 		cdwidget->displaytracks = g_list_prepend (cdwidget->displaytracks, NULL);
-	
+		
 	set_covers ();
 	
-	/* Set the scale range - maximum value should be display
-	 * track list length - (8 NULL images + 1 as index value), 
-	 * ie. the ones either end of the list.
-	 */
-	gint slider_ubound = g_list_length (cdwidget->displaytracks) - 9;
-	if(slider_ubound < 1)
-	{
-		/* If only one album cover is displayed then slider_ubbound returns
-		 * 0 and causes a slider assertion error. Avoid this by disabling the
-		 * slider, which makes sense because only one cover is displayed.
-		 */
-		slider_ubound = 1;
-		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), FALSE); 
-		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), FALSE); 
-		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), FALSE); 
-	}
-	else
-	{
-	 	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), TRUE);
-	 	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), TRUE); 
-		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), TRUE);
-	}
-	
-	gtk_range_set_range (GTK_RANGE (cdwidget->cdslider), 0, slider_ubound);
-	gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), 0);
+	set_slider_range (cdwidget->first_imgindex);
 	
 	/*printf("######### ORIGINAL LINE UP ########\n");
 	debug_albums ();

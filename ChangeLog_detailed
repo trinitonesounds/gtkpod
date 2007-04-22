@@ -1,3 +1,26 @@
+2007-04-21 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+	* Changed the way coverart display is updated when a track is
+	  removed, added and changed (Thanks to Jorg for thoughts on
+	  this. Much quicker response):
+	    ** display_coverart.h & display_coverart.c:
+	       - coverart_sort_images() made static
+	       - slider initialization broken out into own function
+	       - select_cover() will silently return rather than
+	         throwing an error if selected trk not found in display.
+	       - coverart_track_changed() added for deciding action to
+	         be taken when a track changes. Instead of expensive call
+	         to coverart_set_images()
+	       - coverart_set_images() extra parameter to stop recreation
+	         of display track list every time its called.
+	    ** display_playlists.c: pm_add_track, pm_remove_track, 
+	       pm_track_changed all call coverart_track_changed
+	    ** display_sorttabs.c: resets coverart but only reloads all
+	       tracks if sort is set to none. No way to detect original
+	       sort order efficiently.
+	    ** misc_confirm.c: removal of coverart_set_image calls so pm
+	       functions relied on instead.
+
 2007-04-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/context_menus.c: fixed compile issue when compiling with

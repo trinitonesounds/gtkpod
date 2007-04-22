@@ -1114,7 +1114,7 @@ void pm_remove_track (Playlist *playlist, Track *track)
     
   if (prefs_get_int (KEY_DISPLAY_COVERART))
   {
-  	coverart_set_images ();
+  	coverart_track_changed (track, COVERART_REMOVE_SIGNAL);
   }
 }
 
@@ -1126,12 +1126,13 @@ void pm_add_track (Playlist *playlist, Track *track, gboolean display)
     if (playlist == current_playlist)
     {
 	st_add_track (track, TRUE, display, 0); /* Add to first sort tab */
-    }
     
-    if (prefs_get_int (KEY_DISPLAY_COVERART))
-  {
-  	coverart_set_images ();
-  }
+    	/* As with add_track above, only add to the playlist if it is the current one */
+    	if (prefs_get_int (KEY_DISPLAY_COVERART))
+  		{
+  			coverart_track_changed (track, COVERART_CREATE_SIGNAL);
+  		}
+    }
 }
 
 /* One of the playlist names has changed (this happens when the
@@ -1166,7 +1167,7 @@ void pm_track_changed (Track *track)
       
   if (prefs_get_int (KEY_DISPLAY_COVERART))
   {
-  	coverart_set_images ();
+  	coverart_track_changed (track, COVERART_CHANGE_SIGNAL);
   }
 }
 
@@ -1429,7 +1430,7 @@ static void pm_selection_changed_cb (GtkTreeSelection *selection,
   /* Reallow the coverart selection update */
   coverart_block_change (FALSE);
   /* Set the coverart display based on the selected playlist */
-  coverart_set_images();
+  coverart_set_images(TRUE);
 	 
   space_data_update ();
     

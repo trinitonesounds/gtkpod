@@ -10,6 +10,10 @@
 #define IMG_TOTAL 9
 #define BORDER 10
 
+#define COVERART_REMOVE_SIGNAL 1
+#define COVERART_CREATE_SIGNAL 2
+#define COVERART_CHANGE_SIGNAL 3
+
 typedef struct {
 	Itdb_Track *track;
 	gdouble img_x;
@@ -45,9 +49,9 @@ void coverart_display_big_artwork ();
 GList *coverart_get_displayed_tracks (void);
 GdkPixbuf *coverart_get_default_track_thumb (void);
 void coverart_init (gchar *progpath);
-void coverart_sort_images (GtkSortType order);
 void coverart_select_cover (Itdb_Track *track);
-void coverart_set_images ();
+void coverart_set_images (gboolean clear_track_list);
+void coverart_track_changed (Track *track, gint signal);
 void coverart_clear_images ();
 void coverart_block_change (gboolean val);
 void coverart_init_display ();

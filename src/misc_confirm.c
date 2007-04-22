@@ -312,7 +312,6 @@ void delete_track_ok (struct DeleteData *dd)
 
 		/* Awaken coverart selection */
 		coverart_block_change (FALSE);
-		coverart_set_images();
     g_list_free (dd->tracks);
     g_free (dd);
 
@@ -653,8 +652,6 @@ static void delete_playlist_ok (struct DeleteData *dd)
     delete_playlist_cleanup (dd);
 
     gtkpod_tracks_statusbar_update ();
-    
-    coverart_set_images ();
 }
 
 
