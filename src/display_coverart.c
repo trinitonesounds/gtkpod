@@ -56,6 +56,7 @@ static void prepare_canvas ();
 static void set_slider_range (gint index);
 static void set_covers ();
 static gint search_tracks (Track *a, Track *b);
+static gint search_other_tracks (Track *a, Track *b);
 
 /* Prefs keys */
 const gchar *KEY_DISPLAY_COVERART="display_coverart";
@@ -664,7 +665,7 @@ GdkPixbuf *coverart_get_default_track_thumb (void)
  * find function used by glist_find_custom to compare 2
  * tracks
  * 
- * @a: First track to compare
+ * @a: First track to compare from GList
  * @b: Second track to compare
  * 
  * Returns:
@@ -681,6 +682,41 @@ static gint search_tracks (Track *a, Track *b)
 		return 0;
 				
 	return -1;
+}
+
+/**
+ * search_other_tracks:
+ *
+ * find function used by glist_find_custom to compare 2
+ * tracks but only return if tracks are from the same album
+ * BUT not the same track.
+ * 
+ * @a: First track to compare from GList
+ * @b: Second track to compare
+ * 
+ * Returns:
+ * 0 if the two tracks match
+ * -1 if the two tracks are different
+ *  
+ */
+static gint search_other_tracks (Track *a, Track *b)
+{
+	if(a == NULL || b == NULL)
+		return -1;
+	
+	/* Are a and b referencing the same track */
+	if (a == b)
+		return -1;
+		
+	/* Are the tracks by the same artist? */
+	if (g_ascii_strcasecmp (a->artist, b->artist) != 0)
+		return -1;
+	
+	/* Is the track from the same album? */
+	if (g_ascii_strcasecmp (a->album, b->album) != 0)
+		return -1;
+				
+	return 0;
 }
 
 /**
@@ -1347,8 +1383,26 @@ void coverart_track_changed (Track *track, gint signal)
  				 * Frees the cdcover widget of the track ready for deletion
  				 */
 				coverart_clear_images ();
+				
+				/* Need to address scenario that user deleted the first track in the display but 
+				 * left the rest of the album!! Find another track from the same album.
+				 */
+				GList *new_trk_item;
+				Playlist *playlist = pm_get_selected_playlist ();
+				g_return_if_fail (playlist);
+				
+				new_trk_item = g_list_find_custom (playlist->members, track, (GCompareFunc) search_other_tracks);
+				if (new_trk_item != NULL)
+				{
+					/* A different track from the album was returned so insert it into the
+					 * list before the to-be-deleted track
+					 */
+					   cdwidget->displaytracks = g_list_insert_before (cdwidget->displaytracks, trkpos, new_trk_item->data);
+				}
+				
 				/* Remove the track from displaytracks */
 				cdwidget->displaytracks = g_list_delete_link (cdwidget->displaytracks, trkpos);
+				
 				/* reset the covers and should reset to original position but without the index */
 				set_covers ();
  			}

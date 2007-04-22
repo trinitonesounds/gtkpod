@@ -1,5 +1,13 @@
 2007-04-21 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
+	* Consideration of extra scenario for removal of a track with
+	  respect to display of coverart. Basically, needed to cater
+	  for situation where user removes the first track in an album
+	  but leaves the remaining tracks behind. Need to remove the
+	  first track from displaytracks list but add in the second.
+
+2007-04-21 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
 	* Changed the way coverart display is updated when a track is
 	  removed, added and changed (Thanks to Jorg for thoughts on
 	  this. Much quicker response):
