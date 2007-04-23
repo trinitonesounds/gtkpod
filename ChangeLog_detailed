@@ -1,3 +1,23 @@
+2007-04-23 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* merge threaded_conversion_branch back to HEAD.
+
+	* src/file_convert.c: avoid GTK assertion with uninitialized
+	  statusbar.
+
+	* gtkpod.glade
+	  src/file.h
+	  src/file_itunesdb.c
+	  src/display.c
+	  src/file.h
+	  src/file_convert.c
+	  src/file_convert.h
+	  src/file_itunesdb.c
+	  src/prefs_window.c
+	  src/info.c: handle closing of window if user
+	  clicks on the 'close-window' buton, general cleanup,
+	  created log window for file conversion output.
+
 2007-04-21 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* Consideration of extra scenario for removal of a track with
@@ -38,7 +58,33 @@
 
 	* po/POTFILES.in: renamed display_songs.c to display_tracks.c
 
+2007-04-20 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* gtkpod.glade
+	  src/file_itunesdb.c
+	  src/prefs.c: unified progress dialog across
+	  delete/transfer/writing iTunesDB for better user experience.
+
+	* src/file_convert.c
+	  src/file_convert.h
+	  src/prefs_window.c: set up preferences dialog (number of
+	  background threads, max. cache dir size)
+
+	  src/file_itunesdb.c: avoid mutex deadlock when trying to
+	  cancel delete/transfer of tracks.
+
+2007-04-20 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* gtkpod.glade
+	  src/file_convert.c
+	  src/file_itunesdb.c: Adapted export progress dialog and
+	  moved layout to gtkpod.glade
+
 2007-04-19 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* Multi-threaded background file conversion, first round
+
+2007-04-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/mp3file.c: fixed "comparison with string literal" issues
 	  by using strcmp instead. Thanks to Petr Gajdos.

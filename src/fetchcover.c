@@ -310,7 +310,7 @@ static void net_retrieve_image (GString *url)
 	gchar *template = prefs_get_string("coverart_template");
 	gchar **template_items = g_strsplit(template, ";", 0);
 	
-	gchar *filename = get_string_from_template(fetchcover_track, *template_items, FALSE);
+	gchar *filename = get_string_from_template(fetchcover_track, *template_items, FALSE, FALSE);
 	
 	/* Use the index position of the cover in the glist to create a unique filename
 	 * Convert the index number to a string and prefix with a dot (hidden file)

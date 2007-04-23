@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-25 00:22:55 jcs>
+/* Time-stamp: <2007-04-23 22:22:23 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -206,7 +206,7 @@ void info_update_default_sizes (void)
 	gint defx, defy;
 	gtk_window_get_size (GTK_WINDOW (info_window), &defx, &defy);
 	prefs_set_int("size_info.x", defx);
-  prefs_set_int("size_info.y", defy);
+	prefs_set_int("size_info.y", defy);
     }
 }
 

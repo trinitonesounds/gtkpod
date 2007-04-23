@@ -1000,7 +1000,7 @@ static void add_coverart (Track *tr)
     while (*tplp && !filename_local)
     {
 	gchar *filename_utf8;
-	gchar *fname = get_string_from_template (tr, *tplp, FALSE);
+	gchar *fname = get_string_from_template (tr, *tplp, FALSE, FALSE);
 	if (fname)
 	{
 	    if (strchr (*tplp, '.') != NULL)

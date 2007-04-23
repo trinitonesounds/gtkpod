@@ -33,13 +33,14 @@
 
 #include <errno.h>
 #include <gtk/gtk.h>
-#include <stdlib.h>
+#include <glib/gstdio.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include "charset.h"
 #include "clientserver.h"
+#include "file_convert.h"
 #include "misc.h"
 #include "prefs.h"
 #include "misc_track.h"
@@ -343,6 +344,7 @@ GList *glist_duplicate (GList *list)
  *
  **************************************************************************/
 
+
 /* tries to call "/bin/sh @script" with command line options */
 static void do_script (const gchar *script, va_list args)
 {
@@ -419,6 +421,37 @@ void call_script (gchar *script, ...)
     g_free (file);
     g_free (cfgdir);
 }
+
+
+
+/* Create a NULL-terminated array of strings given in the command
+   line. The last argument must be NULL.
+   You must free the returned array with g_strfreev() after use. */
+gchar **build_argv_from_strings (const gchar *first_arg, ...)
+{
+    gchar **argv;
+    va_list args;
+    const gchar *str;
+    GPtrArray *ptra = g_ptr_array_sized_new (20);
+
+    g_ptr_array_add (ptra, g_strdup (first_arg));
+    /* add the rest of the strings */
+    if (first_arg)
+    {
+	va_start (args, first_arg);
+	do
+	{
+	    str = va_arg (args, const gchar *);
+	    g_ptr_array_add (ptra, g_strdup (str));
+	}
+	while (str);
+	va_end (args);
+    }
+    argv = (gchar **)g_ptr_array_free (ptra, FALSE);
+
+    return argv;
+}
+
 
 
 
@@ -980,10 +1013,14 @@ static gchar *select_template (Track *track, const gchar *p)
 
 /* Return a string for @track built according to @template.
 
-   @is_filename: if TRUE, remove potentially harmful characters.*/
+   @is_filename: if TRUE, remove potentially harmful characters.
+   @silent: don't print error messages (no gtk_*() calls -- thread
+   safe)
+*/
 gchar *get_string_from_template (Track *track,
 				 const gchar *template,
-				 gboolean is_filename)
+				 gboolean is_filename,
+				 gboolean silent)
 {
     GString *result;
     gchar *res_utf8;
@@ -1086,8 +1123,11 @@ gchar *get_string_from_template (Track *track,
 		tmp = "%";
 		break;
 	    default:
-		gtkpod_warning (_("Unknown token '%%%c' in template '%s'"),
-				*p, template);
+		if (!silent)
+		{
+		    gtkpod_warning (_("Unknown token '%%%c' in template '%s'"),
+				    *p, template);
+		}
 		break;
 	    }
 	    if (tmp)
@@ -1186,7 +1226,7 @@ gchar *get_string_from_full_template (Track *track,
 	}
     }
 
-    res_utf8 = get_string_from_template (track, template, is_filename);
+    res_utf8 = get_string_from_template (track, template, is_filename, FALSE);
 
     g_free (template);
 
@@ -1224,9 +1264,12 @@ gchar *which (const gchar *exe)
 
 /**
  * Recursively make directories.
+ *
+ * @silent: don't print error messages via gtk (->thread safe)
+ *
  * @return FALSE is this is not possible.
  */
-gboolean mkdirhier(const gchar *dirname)
+gboolean mkdirhier(const gchar *dirname, gboolean silent)
 {
     gchar *dn, *p;
 
@@ -1247,10 +1290,13 @@ gboolean mkdirhier(const gchar *dirname)
 
 	if (!g_file_test(dn, G_FILE_TEST_EXISTS))
 	{
-	    if (mkdir(dn, 0777) == -1)
+	    if (g_mkdir(dn, 0777) == -1)
 	    {
-		gtkpod_warning (_("Error creating %s: %s\n"),
-				dn, g_strerror(errno));
+		if (!silent)
+		{
+		    gtkpod_warning (_("Error creating %s: %s\n"),
+				    dn, g_strerror(errno));
+		}
 		g_free (dn);
 		return FALSE;
 	    }
@@ -1270,7 +1316,7 @@ gboolean mkdirhierfile(const gchar *filename)
 {
     gboolean result;
     gchar *dirname = g_path_get_dirname (filename);
-    result = mkdirhier (dirname);
+    result = mkdirhier (dirname, FALSE);
     g_free (dirname);
     return result;
 }
@@ -1292,6 +1338,51 @@ gchar *convert_filename (const gchar *filename)
   }
   
   return NULL;
+}
+
+
+/**
+ * get_size_of_directory
+ *
+ * Determine the total size in bytes of all files in @dir including
+ * subdirectories. This function ignores errors in the sense that if a
+ * directory or file cannot be accessed, a size of 0 is assumed.
+ */
+gint64 get_size_of_directory (const gchar *dir)
+{
+    GDir *gdir;
+    const gchar *fname;
+    gint64 tsize = 0;
+
+    g_return_val_if_fail (dir, 0);
+
+    gdir = g_dir_open (dir, 0, NULL);
+
+    /* Check for error */
+    if (!gdir)
+	return 0;
+
+    while ((fname = g_dir_read_name (gdir)))
+    {
+	gchar *fullname = g_build_filename (dir, fname, NULL);
+	if (g_file_test (fullname, G_FILE_TEST_IS_DIR))
+	{
+	    tsize += get_size_of_directory (fullname);
+	}
+	else if (g_file_test (fullname, G_FILE_TEST_IS_REGULAR))
+	{
+	    struct stat statbuf;
+	    if (g_stat (fullname, &statbuf) == 0)
+	    {   /* OK, add size */
+		tsize += statbuf.st_size;
+	    }
+	}
+	g_free (fullname);
+    }
+
+    g_dir_close (gdir);
+
+    return tsize;
 }
 
 
@@ -1692,7 +1783,7 @@ void gtkpod_init (int argc, char *argv[])
 
     coverart_init (argv[0]);
 
-    conversion_init ();
+    file_convert_init ();
 
     display_create ();
 	
@@ -1729,7 +1820,7 @@ void gtkpod_shutdown ()
     display_update_default_sizes();
 
     /* shut down conversion infrastructure */
-    conversion_shutdown ();
+    file_convert_shutdown ();
 
     /* Save prefs */
     prefs_save ();

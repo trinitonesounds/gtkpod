@@ -520,7 +520,7 @@ GList *gp_itdb_find_same_tracks (iTunesDB *itdb, Track *track)
    repository and concatenates the results into one list.
 
    Return value: a GList with matching tracks. You must call
-   g_list_free() on the list when it is no longer neede.
+   g_list_free() on the list when it is no longer needed.
 */
 GList *gp_itdb_find_same_tracks_in_local_itdbs (Track *track)
 {
@@ -539,6 +539,35 @@ GList *gp_itdb_find_same_tracks_in_local_itdbs (Track *track)
 	    GList *addtracks = gp_itdb_find_same_tracks (itdb, track);
 	    tracks = g_list_concat (tracks, addtracks);
 	}
+    }
+    return tracks;
+}
+
+
+
+/* Find @track in all repositories (local and iPod) and return a list.
+
+   This function calls gp_itdb_find_same_tracks() for each
+   repository and concatenates the results into one list.
+
+   Return value: a GList with matching tracks. You must call
+   g_list_free() on the list when it is no longer needed.
+*/
+GList *gp_itdb_find_same_tracks_in_itdbs (Track *track)
+{
+    GList *gl, *tracks=NULL;
+    struct itdbs_head *ih = gp_get_itdbs_head (gtkpod_window);
+
+    g_return_val_if_fail (ih, NULL);
+    g_return_val_if_fail (track, NULL);
+
+    for (gl=ih->itdbs; gl; gl=gl->next)
+    {
+	GList *addtracks;
+	iTunesDB *itdb = gl->data;
+	g_return_val_if_fail (itdb, tracks);
+	addtracks = gp_itdb_find_same_tracks (itdb, track);
+	tracks = g_list_concat (tracks, addtracks);
     }
     return tracks;
 }

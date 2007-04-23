@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-03-19 23:13:41 jcs>
+/* Time-stamp: <2007-04-23 22:24:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -35,6 +35,7 @@
 #include "display_private.h"
 #include "info.h"
 #include "ipod_init.h"
+#include "file_convert.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
@@ -429,15 +430,16 @@ void display_update_default_sizes (void)
     /* x,y size of main window */
     if (gtkpod_window)
     {
-			gtk_window_get_size (GTK_WINDOW (gtkpod_window), &x, &y);
-			prefs_set_int("size_gtkpod.x", x);
-			prefs_set_int("size_gtkpod.y", y);
+	gtk_window_get_size (GTK_WINDOW (gtkpod_window), &x, &y);
+	prefs_set_int("size_gtkpod.x", x);
+	prefs_set_int("size_gtkpod.y", y);
     }
     tm_update_default_sizes ();
     st_update_default_sizes ();
     prefs_window_update_default_sizes ();
     info_update_default_sizes ();
     details_update_default_sizes ();
+    file_convert_update_default_sizes ();
 }
 
 
@@ -1625,6 +1627,22 @@ on_info_window1_activate               (GtkMenuItem     *menuitem,
 	 info_open_window ();
     else info_close_window ();
 }
+
+void
+on_conversion_log1_activate               (GtkMenuItem     *menuitem,
+					   gpointer         user_data)
+{
+    gboolean state;
+
+    state = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem));
+
+    if (state != prefs_get_int (FILE_CONVERT_DISPLAY_LOG))
+    {
+	prefs_set_int (FILE_CONVERT_DISPLAY_LOG, state);
+	file_convert_prefs_changed ();
+    }
+}
+
 
 void
 on_sync_all_activate                   (GtkMenuItem     *menuitem,

@@ -39,6 +39,7 @@
 #include "display.h"
 #include "sha1.h"
 #include "file.h"
+#include "file_convert.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "info.h"
@@ -124,11 +125,14 @@ ExtraTrackData *gp_track_extra_duplicate (ExtraTrackData *etr)
 	etr_dup->year_str = g_strdup (etr->year_str);
 	etr_dup->pc_path_locale = g_strdup (etr->pc_path_locale);
 	etr_dup->pc_path_utf8 = g_strdup (etr->pc_path_utf8);
+	etr_dup->converted_file = g_strdup (etr->converted_file);
 	etr_dup->thumb_path_locale = g_strdup (etr->thumb_path_locale);
 	etr_dup->thumb_path_utf8 = g_strdup (etr->thumb_path_utf8);
 	etr_dup->hostname = g_strdup (etr->hostname);
 	etr_dup->sha1_hash = g_strdup (etr->sha1_hash);
 	etr_dup->charset = g_strdup (etr->charset);
+	/* clear the pc_path_hashed flag */
+	etr_dup->pc_path_hashed = FALSE;
     }
     return etr_dup;
 }
@@ -150,6 +154,10 @@ void gp_itdb_free (iTunesDB *itdb)
     {
 	space_set_ipod_itdb (NULL);
     }
+
+    /* cancel all pending conversions */
+    file_convert_cancel_itdb (itdb);
+
     itdb_free (itdb);
 }
 
@@ -278,10 +286,13 @@ Track *gp_track_add (iTunesDB *itdb, Track *track)
 	/* exception: sha1_hash, hostname, charset: these may be NULL. */
 	gp_track_validate_entries (track);
 	itdb_track_add (itdb, track, -1);
+	/* add to filename hash */
 	gp_itdb_pc_path_hash_add_track (track);
+	/* add to background conversion if necessary */
+	file_convert_add_track (track);
 	result = track;
+	data_changed (itdb);
     }
-    data_changed (itdb);
     return result;
 }
 
@@ -292,8 +303,10 @@ Track *gp_track_add (iTunesDB *itdb, Track *track)
    playlist -- see gp_playlist_remove_track for details */
 void gp_track_remove (Track *track)
 {
-    /* currently only the details window may be accessing the tracks */
+    /* the details window may be accessing the tracks */
     details_remove_track (track);
+    /* cancel pending conversions */
+    file_convert_cancel_track (track);
     /* remove from SHA1 hash */
     sha1_track_remove (track);
     /* remove from pc_path_hash */

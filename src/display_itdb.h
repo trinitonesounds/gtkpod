@@ -64,22 +64,27 @@ typedef struct
 
 typedef struct
 {
-  gint32  oldsize;        /* used when updating tracks: size on iPod */
-  gchar   *year_str;      /* year as string -- always identical to year */
-  gchar   *pc_path_locale;/* path on PC (local encoding)             */
-  gchar   *pc_path_utf8;  /* PC filename in utf8 encoding            */
-  time_t  mtime;          /* modification date of PC file            */
-  gchar   *thumb_path_locale; /* same for thumbnail                  */
-  gchar   *thumb_path_utf8;   /* same for thumbnail                  */
-  gchar   *hostname;      /* name of host this file has been imported on*/
-  gchar   *sha1_hash;     /* sha1 hash of file (or NULL)             */
-  gchar   *charset;       /* charset used for ID3 tags               */
-  gint32  sortindex;      /* used for stable sorting (current order) */
-  gboolean tchanged;      /* temporary use, e.g. in detail.c         */
-  guint64 local_itdb_id;  /* when using DND from local to iPod: original itdb   */
-  guint64 local_track_dbid;/* when using DND from local to iPod: original track */
-  gboolean pc_path_hashed;/* for programming error detection (see    */
-			  /* gp_itdb_local_path_hash_add_track()     */
+  gint32  oldsize;          /* used when updating tracks: size on iPod     */
+  gchar   *year_str;        /* year as string -- always identical to year  */
+  gchar   *pc_path_locale;  /* path on PC (local encoding)                 */
+  gchar   *pc_path_utf8;    /* PC filename in utf8 encoding                */
+  time_t  mtime;            /* modification date of PC file                */
+  gboolean pc_path_hashed;  /* for programming error detection (see
+			       gp_itdb_local_path_hash_add_track()         */
+  gchar   *converted_file;  /* if converted file exists: name in utf8      */
+  gint32  orig_filesize;    /* size of original file (if converted)        */
+  FileConvertStatus conversion_status; /* current status of conversion     */
+  gchar   *thumb_path_locale;/* same for thumbnail                         */
+  gchar   *thumb_path_utf8;  /* same for thumbnail                         */
+  gchar   *hostname;        /* name of host this file has been imported on */
+  gchar   *sha1_hash;       /* sha1 hash of file (or NULL)                 */
+  gchar   *charset;         /* charset used for ID3 tags                   */
+  gint32  sortindex;        /* used for stable sorting (current order)     */
+  gboolean tchanged;        /* temporary use, e.g. in detail.c             */
+  guint64 local_itdb_id;    /* when using DND from local to iPod:
+			       original itdb                               */
+  guint64 local_track_dbid; /* when using DND from local to iPod:
+			       original track                              */
 } ExtraTrackData;
 
 /* types for iTunesDB */

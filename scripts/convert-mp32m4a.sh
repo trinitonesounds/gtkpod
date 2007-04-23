@@ -5,6 +5,8 @@
 #
 # convert-mp32m4a.sh [options] mp3file
 #
+#       -x      Print converted filename extension and exit
+#       -f      Set converted filename
 # 	-a	Artist tag
 #	-A 	Album tag
 #	-T	Track tag
@@ -22,11 +24,16 @@
 #   4 cannot exec decoding
 #   5 cannot exec encoding
 #   6 conversion failed
+#   7 unknown option
 
+# Constants
+extension="m4a"
 
 # Get parameters
-while getopts a:A:T:t:g:c:y: opt ; do
+while getopts a:A:T:t:g:c:y:f:x opt ; do
 	case "$opt" in
+	        x)      echo "$extension"; exit 0 ;;
+	        f)      outfile="$OPTARG" ;;
 		a)	artist="$OPTARG" ;;
 		A)	album="$OPTARG" ;;
 		T)	track="$OPTARG" ;;
@@ -34,31 +41,34 @@ while getopts a:A:T:t:g:c:y: opt ; do
 		g)	genre="$OPTARG" ;;
 		y)	year="$OPTARG" ;;
 		c)	comment="$OPTARG" ;;
+	        ?)      exit 7 ;;
 	esac
 done
 shift $(($OPTIND - 1))
-mp3file="$1"
+infile="$1"
 
-# Build output file
-m4afile=`basename "$mp3file"`
-m4afile=${m4afile%%.mp3}
-m4afile="/tmp/$m4afile.m4a"
+if [ "$outfile" = "" ]; then
+    # Build output file
+    outfile=`basename "$infile"`
+    outfile=${outfile%%.flac}
+    outfile="/tmp/$outfile.$extension"
+fi
 
 # Default values
 [ -z "$comment" ] && comment="Encoded for gtkpod with faac"
 
-#echo "Converting \"$m4afile\" into \"$mp3file\""
+#echo "Converting \"$infile\" into \"$outfile\""
 
 # Checking input file
-if [ "$mp3file" = "" ]; then
+if [ "$infile" = "" ]; then
     exit 1
 fi
-if [ ! -f "$mp3file" ]; then
+if [ ! -f "$infile" ]; then
     exit 1
 fi
 
 # Checking output file
-touch "$m4afile"
+touch "$outfile"
 if [ "x$?" != "x0" ]; then
     exit 2
 fi
@@ -76,12 +86,12 @@ if [ -z "$faac" ]; then
 fi
 
 # Launch command
-exec "$lame" --decode "$mp3file" - | "$faac" -o "$m4afile" -q 150 -c 22000 -w --artist "$artist" --title "$title" --year "$year" --album "$album" --track "$tracknum" --genre "$genre" --comment "$comment" -
+exec "$lame" --decode "$infile" - | "$faac" -o "$outfile" -q 150 -c 22000 -w --artist "$artist" --title "$title" --year "$year" --album "$album" --track "$tracknum" --genre "$genre" --comment "$comment" -
 
 # Check result
 if [ "x$?" != "x0" ]; then
     exit 6
 fi
 # Seems to be ok: display filename for gtkpod
-echo $m4afile
+echo $outfile
 exit 0

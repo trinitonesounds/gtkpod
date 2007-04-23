@@ -36,32 +36,34 @@
 #   include <config.h>
 #endif
 
-#include <gtk/gtk.h>
 #include <itdb.h>
-#include <file.h>
 
-typedef struct
+extern const gchar *FILE_CONVERT_CACHEDIR;
+extern const gchar *FILE_CONVERT_MAXDIRSIZE;
+extern const gchar *FILE_CONVERT_TEMPLATE;
+extern const gchar *FILE_CONVERT_MAX_THREADS_NUM;
+extern const gchar *FILE_CONVERT_DISPLAY_LOG;
+
+typedef enum
 {
-    Track   *track;                /* Track to convert */
-    gchar   *converted_file;       /* PC filename of the "mp3" file 
-                                      != NULL if the file exists   */
-    gint32   old_size;             /* size of the original file    */
-    FileType type;                 /* type of the original file    */
-    GPid     child_pid;            /* PID of conversion process    */
-    gint     child_stdout;         /* STDOUT of conversion process */
-    gchar    *command_line;        /* used for conversion */
-    gint     source_id;
-    gboolean aborted;
-} TrackConv;
+    FILE_CONVERT_INACTIVE = 0,
+    FILE_CONVERT_REQUIRED,
+    FILE_CONVERT_SCHEDULED,
+    FILE_CONVERT_PROCESSING,
+    FILE_CONVERT_FAILED,
+    FILE_CONVERT_REQUIRED_FAILED,
+    FILE_CONVERT_KILLED,
+    FILE_CONVERT_CONVERTED
+} FileConvertStatus;
 
-
-GError *file_convert_pre_copy (TrackConv *converter);
-GError *file_convert_post_copy (TrackConv *converter);
-GError *file_convert_wait_for_conversion (TrackConv *converter);
-
-/* extern gchar **cmdline_to_argv(const gchar *cmdline, Track *track); */
-
-void conversion_init (void);
-void conversion_shutdown (void);
+void file_convert_init (void);
+void file_convert_shutdown (void);
+void file_convert_prefs_changed (void);
+void file_convert_update_default_sizes (void);
+gboolean file_convert_add_track (Track *track);
+void file_convert_itdb_first (iTunesDB *itdb);
+void file_convert_cancel_itdb (iTunesDB *itdb);
+void file_convert_cancel_track (Track *track);
+Track *file_convert_timed_wait (iTunesDB* itdb, gint ms);
 
 #endif

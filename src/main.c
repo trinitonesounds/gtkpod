@@ -53,8 +53,10 @@ main (int argc, char *argv[])
     g_thread_init (NULL);
     /* FIXME: this call causes gtkpod to freeze as soon as tracks should be
        displayed */
-/*   gdk_threads_init (); */
+    gdk_threads_init ();
 #endif
+
+    gdk_threads_enter ();
 
     gtk_init (&argc, &argv);
 
@@ -62,9 +64,9 @@ main (int argc, char *argv[])
 
     gtkpod_init (argc, argv);
 
-/*   gdk_threads_enter (); */
     gtk_main ();
-/*   gdk_threads_leave (); */
+
+    gdk_threads_leave ();
 
     /* all the cleanup is already done in gtkpod_main_shutdown () in misc.c */
     return 0;

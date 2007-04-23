@@ -331,6 +331,7 @@ prefs_window_create (gint page)
 	"sync_confirm_dirs_toggle",
 	"sync_delete_tracks_toggle",
 	"sync_show_summary_toggle",
+	"file_convert_display_log_button",
 	NULL
     };
     /* ... and corresponding keys */
@@ -338,6 +339,7 @@ prefs_window_create (gint page)
 	KEY_SYNC_CONFIRM_DIRS,
 	KEY_SYNC_DELETE_TRACKS,
 	KEY_SYNC_SHOW_SUMMARY,
+	FILE_CONVERT_DISPLAY_LOG,
 	NULL
     };
 
@@ -740,6 +742,21 @@ prefs_window_create (gint page)
 
     }
 
+    w = gtkpod_xml_get_widget (prefs_window_xml, "file_convert_max_threads_num_spinbutton");
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(w),
+			       prefs_get_int (FILE_CONVERT_MAX_THREADS_NUM));
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "file_convert_maxdirsize_spinbutton");
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(w),
+			       prefs_get_double (FILE_CONVERT_MAXDIRSIZE));
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "file_convert_cachedir_entry");
+    buf = prefs_get_string (FILE_CONVERT_CACHEDIR);
+    if (buf)
+	gtk_entry_set_text (GTK_ENTRY(w), buf);
+    g_free (buf);
+
+
     prefs_window_show_hide_tooltips ();
     gtk_widget_show(prefs_window);
 
@@ -775,6 +792,9 @@ prefs_window_set(void)
    st_show_visible();
    display_show_hide_tooltips();
    display_show_hide_toolbar();
+
+   /* update file_conversion data */
+   file_convert_prefs_changed ();
 }
 
 /* save current window size */
@@ -845,25 +865,7 @@ void prefs_window_delete(void)
 void
 prefs_window_ok (void)
 {
-    gint defx, defy;
-    GtkWidget *nb;
-
-    /* Commit temp prefs to prefs table */
-    temp_prefs_apply(temp_prefs);
-    temp_lists_apply(temp_lists);
-  
-    /* save current settings */
-    prefs_window_set ();
-
-    /* save current notebook page */
-    nb = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
-    prefs_set_int("last_prefs_page",gtk_notebook_get_current_page (
-		  GTK_NOTEBOOK (nb)));
-
-    /* save current window size */
-    gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
-    prefs_set_int("size_prefs.x", defx);
-    prefs_set_int("size_prefs.y", defy);
+    prefs_window_apply ();
 
     /* close the window */
     if(prefs_window)
@@ -904,6 +906,7 @@ prefs_window_apply (void)
    Callbacks
 
    ----------------------------------------------------------------- */
+
 
 void
 on_sorting_clicked                     (GtkButton       *button,
@@ -1005,6 +1008,23 @@ on_prefs_apply_clicked                 (GtkButton       *button,
 {
     prefs_window_apply ();
     gtkpod_statusbar_message(_("Preferences applied"));
+}
+
+
+void on_file_convert_max_threads_num_spinbutton_value_changed (
+    GtkSpinButton *spinbutton,
+    gpointer       user_data)
+{
+    temp_prefs_set_int (temp_prefs, FILE_CONVERT_MAX_THREADS_NUM,
+			gtk_spin_button_get_value_as_int (spinbutton));
+}
+
+void on_file_convert_maxdirsize_spinbutton_value_changed (
+    GtkSpinButton *spinbutton,
+    gpointer       user_data)
+{
+    temp_prefs_set_double (temp_prefs, FILE_CONVERT_MAXDIRSIZE,
+			   gtk_spin_button_get_value (spinbutton));
 }
 
 

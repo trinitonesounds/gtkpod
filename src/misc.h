@@ -138,6 +138,8 @@ void update_blocked_widget (GtkWidget *w, gboolean sens);
   void unmount_ipod(void);*/
 void call_script (gchar *script, ...);
 
+gchar **build_argv_from_strings (const gchar *first_arg, ...);
+
 void delete_track_ok (struct DeleteData *dd);
 
 void gtkpod_warning (const gchar *format, ...);
@@ -187,8 +189,9 @@ gunichar2 *utf16_strdup (gunichar2 *utf16);
 
 void check_db (iTunesDB *db);
 
-gboolean mkdirhier(const gchar *dirname);
+gboolean mkdirhier(const gchar *dirname, gboolean silent);
 gboolean mkdirhierfile(const gchar *filename);
+gint64 get_size_of_directory (const gchar *dir);
 gchar *convert_filename (const gchar *filename);
 
 guint32 replaygain_to_soundcheck (gdouble gain);
@@ -226,7 +229,8 @@ gboolean option_get_toggle_button (GladeXML *win_xml,
 
 gchar *get_string_from_template (Track *track,
 				 const gchar *template,
-				 gboolean is_filename);
+				 gboolean is_filename,
+				 gboolean silent);
 gchar *get_string_from_full_template (Track *track,
 				      const gchar *full_template,
 				      gboolean is_filename);

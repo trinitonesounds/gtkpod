@@ -931,6 +931,10 @@ static void cleanup_keys()
     prefs_set_string("display_artcovers", NULL);
     prefs_set_string("block_display", NULL);
     prefs_set_string("tmp_disable_sort", NULL);
+    prefs_set_string("size_file_dialog.x", NULL);
+    prefs_set_string("size_file_dialog.y", NULL);
+    prefs_set_string("size_file_dialog_details.x", NULL);
+    prefs_set_string("size_file_dialog_details.y", NULL);
 
     /* sp_created_cond renamed to sp_added_cond */
     for (i = 0; i < SORT_TAB_MAX; i++)
