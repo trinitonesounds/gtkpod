@@ -1,5 +1,9 @@
 2007-04-23 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* gtkpod.glade
+	  src/prefs_window.c: make sure prefs window is usable on
+	  laptops with screen only 800 pixels high.
+
 	* merge threaded_conversion_branch back to HEAD.
 
 	* src/file_convert.c: avoid GTK assertion with uninitialized

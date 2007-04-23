@@ -375,6 +375,11 @@ prefs_window_create (gint page)
 
     defx = prefs_get_int("size_prefs.x");
     defy = prefs_get_int("size_prefs.y");
+    if (defx == 0)
+	defx = 500;
+    if (defy == 0)
+	defy = 600;
+
     gtk_window_set_default_size (GTK_WINDOW (prefs_window), defx, defy);
 
     /* Code to add subscriptions list box */
