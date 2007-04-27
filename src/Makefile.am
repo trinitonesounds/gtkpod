@@ -47,9 +47,7 @@ gtkpod_SOURCES = \
     info.c info.h \
     ipod_init.c ipod_init.h \
     itdb.h \
-    lastfm.c lastfm.h \
     main.c \
-    md5.c md5.h \
     misc.c misc.h \
     misc_confirm.c misc_conversion.c misc_input.c \
     misc_playlist.c \

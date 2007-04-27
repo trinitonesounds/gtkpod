@@ -34,7 +34,7 @@
 #include "info.h"
 #include "fileselection.h"
 #include "sha1.h"
-#include "md5.h"
+/*#include "md5.h"*/
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
@@ -520,8 +520,8 @@ prefs_window_create (gint page)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 prefs_get_int("autoimport"));
 
-    /* last.fm */
-#if HAVE_CURL
+#if 0
+    /* last.fm -- disabled, we'll hide the prefs window */
     int x = prefs_get_int("lastfm_active");
     GtkWidget *u = gtkpod_xml_get_widget (prefs_window_xml, "lastfm_username");
     GtkWidget *p = gtkpod_xml_get_widget (prefs_window_xml, "lastfm_password");
@@ -1551,6 +1551,7 @@ void
 on_lastfm_active_toggled              (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
+#if 0
     int x = gtk_toggle_button_get_active(togglebutton);
     GtkWidget *u = gtkpod_xml_get_widget  (prefs_window_xml, "lastfm_username");
     GtkWidget *p = gtkpod_xml_get_widget  (prefs_window_xml, "lastfm_password");
@@ -1558,22 +1559,26 @@ on_lastfm_active_toggled              (GtkToggleButton *togglebutton,
 
     gtk_widget_set_sensitive (u, x);
     gtk_widget_set_sensitive (p, x);
+#endif
 }
 
 void
 on_lastfm_username_entry_changed          (GtkEditable     *editable,
 					gpointer         user_data)
 {
+#if 0
     gchar *uname;
     uname = gtk_editable_get_chars (editable, 0, -1);
     temp_prefs_set_string(temp_prefs, "lastfm_username", uname);
     g_free (uname);
+#endif
 }
 
 void
 on_lastfm_password_entry_changed          (GtkEditable     *editable,
 					gpointer         user_data)
 {
+#if 0
     gchar *upass, *upass_old;
 
     upass = gtk_editable_get_chars (editable, 0, -1);
@@ -1596,6 +1601,7 @@ on_lastfm_password_entry_changed          (GtkEditable     *editable,
     }
     g_free (upass);
     g_free (upass_old);
+#endif
 }
 
 

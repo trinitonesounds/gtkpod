@@ -44,7 +44,6 @@
 #include "syncdir.h"
 #include "tools.h"
 #include "ipod_init.h"
-#include "lastfm.h"
 #include "file_convert.h"
 #include "display_coverart.h"
 
@@ -587,10 +586,6 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     {
 	Track *track = gl->data;
    
-	/* Send eligible tracks to last.fm cache */
-	if (track->recent_playcount > 0)
-	    lastfm_add_track(track);
-
 	ExtraTrackData *etr;
 	g_return_val_if_fail (track, (release_widgets(), NULL));
 	etr = track->userdata;

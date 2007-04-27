@@ -814,38 +814,40 @@ static void fetchcover_statusbar_update (gchar *message)
  */
 void on_coverart_context_menu_click (GList *tracks)
 {
-	Track *track;
-	
-	track = tracks->data;
-	
-	GtkDialog *dialog = fetchcover_display_dialog (track, track->itdb->device);
-	g_return_if_fail (dialog);
-	
-	gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+    Track *track;
+    gint result;
+
+    track = tracks->data;
+
+    GtkDialog *dialog = fetchcover_display_dialog (track, track->itdb->device);
+    g_return_if_fail (dialog);
+
+    result = gtk_dialog_run (GTK_DIALOG (dialog));
+
   #ifdef HAVE_CURL
   gchar *filename = NULL;
     	
   switch (result)
   {
-  	case GTK_RESPONSE_ACCEPT:	
-    	filename = fetchcover_save ();
-    	if (filename)
-  		{
-  			while (tracks)
-  			{
-  				track = tracks->data;
- 					if (gp_track_set_thumbnails (track, filename))
- 						data_changed (track->itdb);
- 					tracks = tracks->next;
-  			}
-  		}
-  		g_free (filename);
-  	default:
+  case GTK_RESPONSE_ACCEPT:	
+      filename = fetchcover_save ();
+      if (filename)
+      {
+	  while (tracks)
+	  {
+	      track = tracks->data;
+	      if (gp_track_set_thumbnails (track, filename))
+		  data_changed (track->itdb);
+	      tracks = tracks->next;
+	  }
+      }
+      g_free (filename);
+  default:
   		break;
 	}
-	#endif /* HAVE_CURL */
+#endif /* HAVE_CURL */
 	
-	fetchcover_cleanup();
+  fetchcover_cleanup();
   gtk_widget_destroy (GTK_WIDGET (dialog));	
 }
 
@@ -860,56 +862,57 @@ void on_coverart_context_menu_click (GList *tracks)
  */
 void on_fetchcover_fetch_button (GtkWidget *widget, gpointer data)
 {
-	Detail *detail = details_get_selected_detail ();
-	GtkDialog *dialog = fetchcover_display_dialog (detail->track, detail->itdb->device);
-	g_return_if_fail (dialog);
+    gint result;
+    Detail *detail = details_get_selected_detail ();
+    GtkDialog *dialog = fetchcover_display_dialog (detail->track, detail->itdb->device);
+    g_return_if_fail (dialog);
 	
-	gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+    result = gtk_dialog_run (GTK_DIALOG (dialog));
 	
-	#ifdef HAVE_CURL
+#ifdef HAVE_CURL
     	
-  gchar *filename = NULL;
-  switch (result)
-  {
-  	case GTK_RESPONSE_ACCEPT:  	
+    gchar *filename = NULL;
+    switch (result)
+    {
+    case GTK_RESPONSE_ACCEPT:  	
     	filename = fetchcover_save ();
     	if (filename)
     	{
-    		if (details_writethrough(detail))
-				{
-					GList *list;
-					for (list = detail->tracks; list; list = list->next)
-					{
-						ExtraTrackData *etd;
-						Track *track = list->data;
-				
-						if (!track)
-							break;
-			
-						etd = track->userdata;
-						gp_track_set_thumbnails(track, filename);
-						etd->tchanged = TRUE;
-					}
-				}
-				else
-				{
-					ExtraTrackData *etd = fetchcover_track->userdata;
-					if (etd)
-					{
-						gp_track_set_thumbnails(fetchcover_track, filename);
-						etd->tchanged = TRUE;
-					}
-				}
-		
-				detail->changed = TRUE;
-				details_update_thumbnail(detail);
-				details_update_buttons(detail);
+	    if (details_writethrough(detail))
+	    {
+		GList *list;
+		for (list = detail->tracks; list; list = list->next)
+		{
+		    ExtraTrackData *etd;
+		    Track *track = list->data;
+		    
+		    if (!track)
+			break;
+		    
+		    etd = track->userdata;
+		    gp_track_set_thumbnails(track, filename);
+		    etd->tchanged = TRUE;
+		}
+	    }
+	    else
+	    {
+		ExtraTrackData *etd = fetchcover_track->userdata;
+		if (etd)
+		{
+		    gp_track_set_thumbnails(fetchcover_track, filename);
+		    etd->tchanged = TRUE;
+		}
+	    }
+	    
+	    detail->changed = TRUE;
+	    details_update_thumbnail(detail);
+	    details_update_buttons(detail);
     	}
-			default:
-				break;
-	}
-	#endif /* HAVE_CURL */
+    default:
+	break;
+    }
+#endif /* HAVE_CURL */
 	
-	fetchcover_cleanup();
-  gtk_widget_destroy (GTK_WIDGET (dialog));
+    fetchcover_cleanup();
+    gtk_widget_destroy (GTK_WIDGET (dialog));
 }

@@ -87,12 +87,13 @@ dnl Check for libcurl
 PKG_CHECK_MODULES(CURL, [libcurl >= 7.10.0], have_curl=yes, have_curl=no)
 if test "$have_curl" != "no"; then
     AC_DEFINE(HAVE_CURL, 1, ["libcurl support"])
+    have_curl="yes -- will build with coverart download support"
     CPPFLAGS="$CPPFLAGS $CURL_CFLAGS"
     CFLAGS="$CFLAGS $CURL_CFLAGS"
     LDFLAGS="$LDFLAGS $CURL_LIBS"
 else
-    echo "*** libcurl could not be found, not building last.fm support"
-    have_curl="no -- will build without last.fm support"
+    echo "*** libcurl could not be found, not building coverart download support"
+    have_curl="no -- will build without coverart download support"
 fi
 
 dnl Check for libmp4v2 (and mp4.h)

@@ -1,5 +1,15 @@
 2007-04-27 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* configure.in
+	  src/Makefile.am
+	  src/fetchcover.c
+	  src/file_itunesdb.c
+	  src/prefs_window.c
+	  src/lastfm.[ch]: removed lastfm support because the code is
+	  not ready and abandoned. I've left the tab in the prefs
+	  window and the md5.[ch] files in CVS in case someone else
+	  wants to have another try.
+
 	* src/date_parser2.l
 	  src/display.h
 	  src/display_playlists.c
