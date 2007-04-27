@@ -1,6 +1,5 @@
-/* Time-stamp: <2007-02-26 22:07:30 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
+/*
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 |
 |  URL: http://gtkpod.sourceforge.net/
@@ -645,7 +644,7 @@ static void splr_entry_changed (GtkEditable *editable,
     case spl_ET_FROMVALUE_DATE:
 	t = time_string_to_fromtime (str);
 	if (t != -1)
-	    splr->fromvalue = itdb_time_host_to_mac (t);
+	    splr->fromvalue = t;
 	break;
     case spl_ET_FROMDATE:
 	splr->fromdate = atol (str);
@@ -660,7 +659,7 @@ static void splr_entry_changed (GtkEditable *editable,
     case spl_ET_TOVALUE_DATE:
 	t = time_string_to_totime (str);
 	if (t != -1)
-	    splr->tovalue = itdb_time_host_to_mac (t);
+	    splr->tovalue = t;
 	break;
     case spl_ET_TODATE:
 	splr->todate = atol (str);
@@ -983,7 +982,7 @@ void set_timestring (gchar *str, guint64 value, enum entrytype et)
 
     g_return_if_fail (str != NULL);
 
-    t = itdb_time_mac_to_host (value);
+    t = (time_t)value;
     if (et == spl_ET_FROMVALUE_DATE)
     {
 	resstr = time_fromtime_to_string (t);

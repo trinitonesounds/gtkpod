@@ -1213,9 +1213,9 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	}
 
 	/* Set modification date to the files modified date */
-	nti->time_modified = itdb_time_host_to_mac(enti->mtime);
+	nti->time_modified = enti->mtime;
 	/* Set added date to *now* */
-	nti->time_added = itdb_time_get_mac_time ();
+	nti->time_added = time (NULL);
 
 	/* Make sure all strings are initialized -- that way we don't
 	   have to worry about it when we are handling the
@@ -2080,7 +2080,12 @@ gchar *get_file_name_from_source (Track *track, FileSource source)
     case SOURCE_PREFER_LOCAL:
 	result = get_file_name_from_source (track, SOURCE_LOCAL);
 	if (!result)
-	    result = get_file_name_from_source (track, SOURCE_IPOD);
+	{
+	    if (track->itdb && (track->itdb->usertype & GP_ITDB_TYPE_IPOD))
+	    {
+		result = get_file_name_from_source (track, SOURCE_IPOD);
+	    }
+	}
 	break;
     case SOURCE_PREFER_IPOD:
 	result = get_file_name_from_source (track, SOURCE_IPOD);

@@ -1,5 +1,4 @@
-/* Time-stamp: <2007-03-19 23:29:07 jcs>
-|
+/*
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 |
@@ -53,6 +52,9 @@ static GtkPaned *st_paned[PANED_NUM_ST];
 static void sp_store_sp_entries (gint inst);
 static void st_page_selected (GtkNotebook *notebook, guint page);
 static void st_create_notebook (gint inst);
+static TimeInfo *sp_update_date_interval_from_string (guint32 inst,
+						      T_item item,
+						      gboolean force_update);
 
 /* Drag and drop definitions */
 static GtkTargetEntry st_drag_types [] = {
@@ -384,9 +386,9 @@ static TimeInfo *sp_get_timeinfo_ptr (guint32 inst, T_item item)
    message again, if necessary */
 /* Return value: pointer to the corresponding TimeInfo struct (for
    convenience) or NULL if error occurred */
-TimeInfo *sp_update_date_interval_from_string (guint32 inst,
-					       T_item item,
-					       gboolean force_update)
+static TimeInfo *sp_update_date_interval_from_string (guint32 inst,
+						      T_item item,
+						      gboolean force_update)
 {
     SortTab *st;
     TimeInfo *ti;
@@ -2242,7 +2244,7 @@ st_cell_edited (GtkCellRendererText *renderer,
 		  g_free (*itemp_utf8);
 		  *itemp_utf8 = g_strdup (new_text);
 	      }
-	      track->time_modified = itdb_time_get_mac_time ();
+	      track->time_modified = time (NULL);
 	      pm_track_changed (track);
 	      /* If prefs say to write changes to file, do so */
 	      if (prefs_get_int("id3_write"))
@@ -3241,16 +3243,16 @@ static void cal_set_time_widgets (GtkCalendar *cal,
 				  GtkSpinButton *hour,
 				  GtkSpinButton *min,
 				  GtkToggleButton *no_margin,
-				  guint32 mactime)
+				  time_t timet)
 {
     struct tm *tm;
     time_t tt = time (NULL);
 
     /* 0, -1 are treated in a special way (no lower/upper margin
      * -> set calendar to current time */
-    if ((mactime != 0) && (mactime != -1))
+    if ((timet != 0) && (timet != -1))
     {
-	tt = itdb_time_mac_to_host (mactime);
+	tt = timet;
 	if (no_margin)  gtk_toggle_button_set_active (no_margin, FALSE);
     }
     else if (no_margin) gtk_toggle_button_set_active (no_margin, TRUE);
@@ -3270,7 +3272,7 @@ static void cal_set_time_widgets (GtkCalendar *cal,
 }
 
 
-static void cal_set_time (GtkWidget *cal, MarginType type, guint32 mactime)
+static void cal_set_time (GtkWidget *cal, MarginType type, time_t timet)
 {
     GtkCalendar *calendar = NULL;
     GtkSpinButton *hour = NULL;
@@ -3292,7 +3294,7 @@ static void cal_set_time (GtkWidget *cal, MarginType type, guint32 mactime)
 	no_margin = GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (cal_xml, "no_upper_margin"));
 	break;
     }
-    cal_set_time_widgets (calendar, hour, min, no_margin, mactime);
+    cal_set_time_widgets (calendar, hour, min, no_margin, timet);
 }
 
 

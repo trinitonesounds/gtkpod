@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-24 15:25:27 jcs>
+/* Time-stamp: <2007-04-28 00:06:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -473,7 +473,7 @@ void sync_playlist (Playlist *playlist,
 {
     GHashTable *dirs_hash;
     gboolean delete_tracks, is_mpl;
-    guint64 current_time;
+    time_t current_time;
     GList *tracks_to_delete_from_ipod = NULL;
     GList *tracks_to_delete_from_playlist = NULL;
     GList *tracks_updated = NULL;
@@ -557,7 +557,7 @@ void sync_playlist (Playlist *playlist,
 
     /* current_time can be used to recognize newly added/updated
        tracks */
-    current_time = itdb_time_get_mac_time ();
+    current_time = time (NULL);
 
     /* Add all files in all directories entered into dirs_hash */
     afd.playlist = playlist;

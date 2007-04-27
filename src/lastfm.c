@@ -1,6 +1,5 @@
-/* Time-stamp: <2006-11-17 17:27:06 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -153,9 +152,9 @@ void lastfm_add_track(Track *track)
 #ifdef HAVE_CURL
     GString *tr = g_string_new(NULL);
     gint32 length = (track->tracklen) / 100.0;
-    guint32 time  = (track->time_played) - 2082844800;
-    g_string_printf(tr, "artist=%s&track=%s&album=%s&length=%d&time=%d\n",
-                    track->artist, track->title, track->album, length, time);
+    time_t timet  = track->time_played;
+    g_string_printf(tr, "artist=%s&track=%s&album=%s&length=%d&time=%ld\n",
+                    track->artist, track->title, track->album, length, (long)timet);
     tracks = g_slist_prepend(tracks, tr);
     g_string_free(tr, TRUE);
 #endif

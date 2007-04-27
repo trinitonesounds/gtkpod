@@ -1160,7 +1160,7 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
 /* return a pointer to the specified timestamp. @t_item is one of (the
    applicable) T_* defined in track.h.  If the parameters are illegal,
    "0" is returned. */
-guint32 *track_get_timestamp_ptr (Track *track, T_item t_item)
+time_t *track_get_timestamp_ptr (Track *track, T_item t_item)
 {
     g_return_val_if_fail (track, NULL);
 
@@ -1183,9 +1183,9 @@ guint32 *track_get_timestamp_ptr (Track *track, T_item t_item)
 /* return the specified timestamp. @t_item is one of
    (the * applicable) T_* defined in track.h. If the parameters are
    illegal, "0" is returned. */
-guint32 track_get_timestamp (Track *track, T_item t_item)
+time_t track_get_timestamp (Track *track, T_item t_item)
 {
-    guint32 *ptr;
+    time_t *ptr;
     g_return_val_if_fail (track, 0);
 
     ptr = track_get_timestamp_ptr (track, t_item);

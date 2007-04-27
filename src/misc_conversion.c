@@ -1,6 +1,5 @@
-/* Time-stamp: <2007-01-16 14:08:05 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -482,7 +481,7 @@ time_t time_get_time (Track *track, T_item t_item)
 	mactime = 0;
 	break;
     }
-    return (itdb_time_mac_to_host (mactime));
+    return mactime;
 }
 
 
@@ -494,23 +493,23 @@ gchar *time_field_to_string (Track *track, T_item t_item)
 
 
 /* get the timestamp TM_COLUMN_TIME_CREATE/PLAYED/MODIFIED/RELEASED */
-void time_set_time (Track *track, time_t time, T_item t_item)
+void time_set_time (Track *track, time_t timet, T_item t_item)
 {
-    guint32 mactime = itdb_time_host_to_mac (time);
+    g_return_if_fail (track);
 
-    if (track) switch (t_item)
+    switch (t_item)
     {
     case T_TIME_ADDED:
-	track->time_added = mactime;
+	track->time_added = timet;
 	break;
     case T_TIME_PLAYED:
-	track->time_played = mactime;
+	track->time_played = timet;
 	break;
     case T_TIME_MODIFIED:
-	track->time_modified = mactime;
+	track->time_modified = timet;
 	break;
     case T_TIME_RELEASED:
-	track->time_released = mactime;
+	track->time_released = timet;
 	break;
     default:
 	break;

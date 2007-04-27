@@ -1,6 +1,5 @@
-/* Time-stamp: <2007-03-18 21:34:22 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 |
 |  URL: http://www.gtkpod.org/
@@ -901,7 +900,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
 /*      printf ("  changed: %d\n", changed); */
      if (changed)
      {
-        track->time_modified = itdb_time_get_mac_time ();
+	track->time_modified = time (NULL);
         pm_track_changed (track);    /* notify playlist model... */
         data_changed (track->itdb); /* indicate that data has changed */
 
@@ -1108,7 +1107,7 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
 /*      printf ("  changed: %d\n", changed); */
      if (changed)
      {
-        track->time_modified = itdb_time_get_mac_time ();
+	track->time_modified = time (NULL);
 /*        pm_track_changed (track);  notify playlist model... -- not
  *        necessary here because only the track model is affected */
         data_changed (track->itdb);  /* indicate that data has changed */

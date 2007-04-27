@@ -1,6 +1,5 @@
-/* Time-stamp: <2007-03-29 23:22:15 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -100,8 +99,8 @@ typedef struct {
 typedef struct {
     gchar *int_str;   /* copy of string specified in the sort tab */
     gboolean valid;   /* is current string valid? */
-    guint32 lower;    /* MAC timestamp for lower limit */
-    guint32 upper;    /* MAC timestamp for upper limit ("-1": no limit) */
+    time_t lower;     /* timestamp for lower limit */
+    time_t upper;     /* timestamp for upper limit ("-1": no limit) */
     GtkWidget *entry; /* pointer to GtkEntry in sort tab */
     GtkWidget *active;/* pointer to toggle button */
 } TimeInfo;
@@ -320,9 +319,6 @@ void cal_open_calendar (gint inst, T_item item);
 void sp_go (guint32 inst);
 void sp_conditions_changed (guint32 inst);
 
-TimeInfo *sp_update_date_interval_from_string (guint32 inst,
-					       T_item item,
-					       gboolean force_update);
 void tm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter);
 gint tm_get_nr_of_tracks(void);
 void tm_rows_reordered(void);

@@ -52,8 +52,8 @@ GList *gp_itdb_find_same_tracks_in_local_itdbs (Track *track);
 
 gchar **track_get_item_pointer (Track *track, T_item t_item);
 const gchar *track_get_item (Track *track, T_item t_item);
-guint32 *track_get_timestamp_ptr (Track *track, T_item t_item);
-guint32 track_get_timestamp (Track *track, T_item t_item);
+time_t *track_get_timestamp_ptr (Track *track, T_item t_item);
+time_t track_get_timestamp (Track *track, T_item t_item);
 gchar *track_get_text (Track *track, T_item item);
 gboolean track_set_text (Track *track,
 			 const gchar *new_text, T_item item);
