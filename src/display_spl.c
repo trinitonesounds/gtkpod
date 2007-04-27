@@ -43,7 +43,7 @@ static const gchar *SPL_WINDOW_DEFX="spl_window_defx";
 static const gchar *SPL_WINDOW_DEFY="spl_window_defy";
 
 static void spl_display_checklimits (GtkWidget *spl_window);
-static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr);
+static void spl_update_rule (GtkWidget *spl_window, Itdb_SPLRule *splr);
 static void spl_update_rules_from_row (GtkWidget *spl_window, gint row);
 static void spl_action_changed (GtkComboBox *combobox, GtkWidget *spl_window);
 
@@ -61,108 +61,108 @@ GladeXML *spl_window_xml;
 
 static const ComboEntry splat_inthelast_units_comboentries[] =
 {
-    { SPLACTION_LAST_DAYS_VALUE,   N_("days") },
-    { SPLACTION_LAST_WEEKS_VALUE,  N_("weeks") },
-    { SPLACTION_LAST_MONTHS_VALUE, N_("months") },
+    { ITDB_SPLACTION_LAST_DAYS_VALUE,   N_("days") },
+    { ITDB_SPLACTION_LAST_WEEKS_VALUE,  N_("weeks") },
+    { ITDB_SPLACTION_LAST_MONTHS_VALUE, N_("months") },
     { 0,                           NULL }
 };
 
 
 static const ComboEntry splfield_units[] =
 {
-    { SPLFIELD_BITRATE,        N_("kbps") },
-    { SPLFIELD_SAMPLE_RATE,    N_("Hz") },
-    { SPLFIELD_SIZE,           N_("MB") },
-    { SPLFIELD_TIME,           N_("secs") },
+    { ITDB_SPLFIELD_BITRATE,        N_("kbps") },
+    { ITDB_SPLFIELD_SAMPLE_RATE,    N_("Hz") },
+    { ITDB_SPLFIELD_SIZE,           N_("MB") },
+    { ITDB_SPLFIELD_TIME,           N_("secs") },
     { 0,                       NULL }
 };
 
 
 static const ComboEntry splfield_comboentries[] =
 {
-    { SPLFIELD_SONG_NAME,      N_("Title") },
-    { SPLFIELD_ALBUM,          N_("Album") },
-    { SPLFIELD_ARTIST,         N_("Artist") },
-    { SPLFIELD_BITRATE,        N_("Bitrate") },
-    { SPLFIELD_SAMPLE_RATE,    N_("Samplerate") },
-    { SPLFIELD_YEAR,           N_("Year") },
-    { SPLFIELD_GENRE,          N_("Genre") },
-    { SPLFIELD_KIND,           N_("Kind") },
-    { SPLFIELD_DATE_MODIFIED,  N_("Date modified") },
-    { SPLFIELD_TRACKNUMBER,    N_("Track number") },
-    { SPLFIELD_SIZE,           N_("Size") },
-    { SPLFIELD_TIME,           N_("Time") },
-    { SPLFIELD_COMMENT,        N_("Comment") },
-    { SPLFIELD_DATE_ADDED,     N_("Date added") },
-    { SPLFIELD_COMPOSER,       N_("Composer") },
-    { SPLFIELD_PLAYCOUNT,      N_("Playcount") },
-    { SPLFIELD_LAST_PLAYED,    N_("Last played") },
-    { SPLFIELD_DISC_NUMBER,    N_("Disc number") },
-    { SPLFIELD_RATING,         N_("Rating") },
-    { SPLFIELD_COMPILATION,    N_("Compilation") },
-    { SPLFIELD_BPM,            N_("BPM") },
-    { SPLFIELD_GROUPING,       N_("Grouping") },
-    { SPLFIELD_PLAYLIST,       N_("Playlist") },
-    { SPLFIELD_VIDEO_KIND,     N_("Video Kind") },
-    { SPLFIELD_TVSHOW,         N_("TV Show") },
-    { SPLFIELD_SEASON_NR,      N_("Season number") },
-    { SPLFIELD_SKIPCOUNT,      N_("Skip count") },
-    { SPLFIELD_LAST_SKIPPED,   N_("Last skipped") },
-    { SPLFIELD_ALBUMARTIST,    N_("Album artist") },
+    { ITDB_SPLFIELD_SONG_NAME,      N_("Title") },
+    { ITDB_SPLFIELD_ALBUM,          N_("Album") },
+    { ITDB_SPLFIELD_ARTIST,         N_("Artist") },
+    { ITDB_SPLFIELD_BITRATE,        N_("Bitrate") },
+    { ITDB_SPLFIELD_SAMPLE_RATE,    N_("Samplerate") },
+    { ITDB_SPLFIELD_YEAR,           N_("Year") },
+    { ITDB_SPLFIELD_GENRE,          N_("Genre") },
+    { ITDB_SPLFIELD_KIND,           N_("Kind") },
+    { ITDB_SPLFIELD_DATE_MODIFIED,  N_("Date modified") },
+    { ITDB_SPLFIELD_TRACKNUMBER,    N_("Track number") },
+    { ITDB_SPLFIELD_SIZE,           N_("Size") },
+    { ITDB_SPLFIELD_TIME,           N_("Time") },
+    { ITDB_SPLFIELD_COMMENT,        N_("Comment") },
+    { ITDB_SPLFIELD_DATE_ADDED,     N_("Date added") },
+    { ITDB_SPLFIELD_COMPOSER,       N_("Composer") },
+    { ITDB_SPLFIELD_PLAYCOUNT,      N_("Playcount") },
+    { ITDB_SPLFIELD_LAST_PLAYED,    N_("Last played") },
+    { ITDB_SPLFIELD_DISC_NUMBER,    N_("Disc number") },
+    { ITDB_SPLFIELD_RATING,         N_("Rating") },
+    { ITDB_SPLFIELD_COMPILATION,    N_("Compilation") },
+    { ITDB_SPLFIELD_BPM,            N_("BPM") },
+    { ITDB_SPLFIELD_GROUPING,       N_("Grouping") },
+    { ITDB_SPLFIELD_PLAYLIST,       N_("Playlist") },
+    { ITDB_SPLFIELD_VIDEO_KIND,     N_("Video Kind") },
+    { ITDB_SPLFIELD_TVSHOW,         N_("TV Show") },
+    { ITDB_SPLFIELD_SEASON_NR,      N_("Season number") },
+    { ITDB_SPLFIELD_SKIPCOUNT,      N_("Skip count") },
+    { ITDB_SPLFIELD_LAST_SKIPPED,   N_("Last skipped") },
+    { ITDB_SPLFIELD_ALBUMARTIST,    N_("Album artist") },
     { 0,                       NULL }
 };
 
 static const ComboEntry splaction_ftstring_comboentries[] =
 {
-    { SPLACTION_CONTAINS,         N_("contains") },
-    { SPLACTION_DOES_NOT_CONTAIN, N_("does not contain") },
-    { SPLACTION_IS_STRING,        N_("is") },
-    { SPLACTION_IS_NOT,           N_("is not") },
-    { SPLACTION_STARTS_WITH,      N_("starts with") },
-    { SPLACTION_ENDS_WITH,        N_("ends with") },
+    { ITDB_SPLACTION_CONTAINS,         N_("contains") },
+    { ITDB_SPLACTION_DOES_NOT_CONTAIN, N_("does not contain") },
+    { ITDB_SPLACTION_IS_STRING,        N_("is") },
+    { ITDB_SPLACTION_IS_NOT,           N_("is not") },
+    { ITDB_SPLACTION_STARTS_WITH,      N_("starts with") },
+    { ITDB_SPLACTION_ENDS_WITH,        N_("ends with") },
     { 0,                          NULL }
 };
 
 static const ComboEntry splaction_ftint_comboentries[] =
 {
-    { SPLACTION_IS_INT,          N_("is") },
-    { SPLACTION_IS_NOT_INT,      N_("is not") },
-    { SPLACTION_IS_GREATER_THAN, N_("is greater than") },
-    { SPLACTION_IS_LESS_THAN,    N_("is less than") },
-    { SPLACTION_IS_IN_THE_RANGE, N_("is in the range") },
+    { ITDB_SPLACTION_IS_INT,          N_("is") },
+    { ITDB_SPLACTION_IS_NOT_INT,      N_("is not") },
+    { ITDB_SPLACTION_IS_GREATER_THAN, N_("is greater than") },
+    { ITDB_SPLACTION_IS_LESS_THAN,    N_("is less than") },
+    { ITDB_SPLACTION_IS_IN_THE_RANGE, N_("is in the range") },
     { 0,                         NULL }
 };
 
 static const ComboEntry splaction_ftdate_comboentries[] =
 {
-    { SPLACTION_IS_INT,             N_("is") },
-    { SPLACTION_IS_NOT_INT,         N_("is not") },
-    { SPLACTION_IS_GREATER_THAN,    N_("is after") },
-    { SPLACTION_IS_LESS_THAN,       N_("is before") },
-    { SPLACTION_IS_IN_THE_LAST,     N_("in the last") },
-    { SPLACTION_IS_NOT_IN_THE_LAST, N_("not in the last") },
-    { SPLACTION_IS_IN_THE_RANGE,    N_("is in the range") },
+    { ITDB_SPLACTION_IS_INT,             N_("is") },
+    { ITDB_SPLACTION_IS_NOT_INT,         N_("is not") },
+    { ITDB_SPLACTION_IS_GREATER_THAN,    N_("is after") },
+    { ITDB_SPLACTION_IS_LESS_THAN,       N_("is before") },
+    { ITDB_SPLACTION_IS_IN_THE_LAST,     N_("in the last") },
+    { ITDB_SPLACTION_IS_NOT_IN_THE_LAST, N_("not in the last") },
+    { ITDB_SPLACTION_IS_IN_THE_RANGE,    N_("is in the range") },
     { 0,                            NULL }
 };
 
 static const ComboEntry splaction_ftboolean_comboentries[] =
 {
-    { SPLACTION_IS_INT,     N_("is set") },
-    { SPLACTION_IS_NOT_INT, N_("is not set") },
+    { ITDB_SPLACTION_IS_INT,     N_("is set") },
+    { ITDB_SPLACTION_IS_NOT_INT, N_("is not set") },
     { 0,                    NULL }
 };
 
 static const ComboEntry splaction_ftplaylist_comboentries[] =
 {
-    { SPLACTION_IS_INT,     N_("is") },
-    { SPLACTION_IS_NOT_INT, N_("is not") },
+    { ITDB_SPLACTION_IS_INT,     N_("is") },
+    { ITDB_SPLACTION_IS_NOT_INT, N_("is not") },
     { 0,                    NULL }
 };
 
 static const ComboEntry splaction_ftbinaryand_comboentries[] =
 {
-    { SPLACTION_BINARY_AND, N_("is") },
-    { SPLACTION_BINARY_AND, N_("is not") },
+    { ITDB_SPLACTION_BINARY_AND, N_("is") },
+    { ITDB_SPLACTION_BINARY_AND, N_("is not") },
     { 0,                    NULL }
 };
 
@@ -175,30 +175,30 @@ static const ComboEntry splaction_notsupported_comboentries[] =
 /* Strings for limittypes */
 static const ComboEntry limittype_comboentries[] =
 {
-    { LIMITTYPE_MINUTES, N_("minutes") },
-    { LIMITTYPE_MB,      N_("MB") },
-    { LIMITTYPE_SONGS,   N_("tracks") },
-    { LIMITTYPE_HOURS,   N_("hours") },
-    { LIMITTYPE_GB,      N_("GB") },
+    { ITDB_LIMITTYPE_MINUTES, N_("minutes") },
+    { ITDB_LIMITTYPE_MB,      N_("MB") },
+    { ITDB_LIMITTYPE_SONGS,   N_("tracks") },
+    { ITDB_LIMITTYPE_HOURS,   N_("hours") },
+    { ITDB_LIMITTYPE_GB,      N_("GB") },
     { 0,                 NULL }
 };
 
 /* Strings for limitsort */
 static const ComboEntry limitsort_comboentries[] =
 {
-    { LIMITSORT_RANDOM,                N_("random order") },
-    { LIMITSORT_SONG_NAME,             N_("title") },
-    { LIMITSORT_ALBUM,                 N_("album") },
-    { LIMITSORT_ARTIST,                N_("artist") },
-    { LIMITSORT_GENRE,                 N_("genre") },
-    { LIMITSORT_MOST_RECENTLY_ADDED,   N_("most recently added") },
-    { LIMITSORT_LEAST_RECENTLY_ADDED,  N_("least recently added") },
-    { LIMITSORT_MOST_OFTEN_PLAYED,     N_("most often played") },
-    { LIMITSORT_LEAST_OFTEN_PLAYED,    N_("least often played") },
-    { LIMITSORT_MOST_RECENTLY_PLAYED,  N_("most recently played") },
-    { LIMITSORT_LEAST_RECENTLY_PLAYED, N_("least recently played") },
-    { LIMITSORT_HIGHEST_RATING,        N_("highest rating") },
-    { LIMITSORT_LOWEST_RATING,         N_("lowest rating") },
+    { ITDB_LIMITSORT_RANDOM,                N_("random order") },
+    { ITDB_LIMITSORT_SONG_NAME,             N_("title") },
+    { ITDB_LIMITSORT_ALBUM,                 N_("album") },
+    { ITDB_LIMITSORT_ARTIST,                N_("artist") },
+    { ITDB_LIMITSORT_GENRE,                 N_("genre") },
+    { ITDB_LIMITSORT_MOST_RECENTLY_ADDED,   N_("most recently added") },
+    { ITDB_LIMITSORT_LEAST_RECENTLY_ADDED,  N_("least recently added") },
+    { ITDB_LIMITSORT_MOST_OFTEN_PLAYED,     N_("most often played") },
+    { ITDB_LIMITSORT_LEAST_OFTEN_PLAYED,    N_("least often played") },
+    { ITDB_LIMITSORT_MOST_RECENTLY_PLAYED,  N_("most recently played") },
+    { ITDB_LIMITSORT_LEAST_RECENTLY_PLAYED, N_("least recently played") },
+    { ITDB_LIMITSORT_HIGHEST_RATING,        N_("highest rating") },
+    { ITDB_LIMITSORT_LOWEST_RATING,         N_("lowest rating") },
     { 0,                               NULL }
 };
 
@@ -233,7 +233,7 @@ enum entrytype
     spl_ET_STRING,
 };
 
-static const gchar *entry_get_string (gchar *str, SPLRule *splr,
+static const gchar *entry_get_string (gchar *str, Itdb_SPLRule *splr,
 				      enum entrytype et);
 
 /* Get index from ID (returns -1 if ID could not be found) */
@@ -352,7 +352,7 @@ static void spl_all_radio_toggled (GtkToggleButton *togglebutton,
 	g_return_if_fail (frame);
 	gtk_widget_set_sensitive (frame, TRUE);
 	spl->splpref.checkrules = TRUE;
-	spl->splrules.match_operator = SPLMATCH_AND;
+	spl->splrules.match_operator = ITDB_SPLMATCH_AND;
     }
 }
 
@@ -370,7 +370,7 @@ static void spl_any_radio_toggled (GtkToggleButton *togglebutton,
 	g_return_if_fail (frame);
 	gtk_widget_set_sensitive (frame, TRUE);
 	spl->splpref.checkrules = TRUE;
-	spl->splrules.match_operator = SPLMATCH_OR;
+	spl->splrules.match_operator = ITDB_SPLMATCH_OR;
     }
 }
 
@@ -482,7 +482,7 @@ static void spl_limitsort_changed (GtkComboBox *combobox,
 static void spl_field_changed (GtkComboBox *combobox, GtkWidget *spl_window)
 {
     Playlist *spl;
-    SPLRule *splr;
+    Itdb_SPLRule *splr;
     gint index = gtk_combo_box_get_active (combobox);
 
     g_return_if_fail (index != -1);
@@ -506,8 +506,8 @@ static void spl_field_changed (GtkComboBox *combobox, GtkWidget *spl_window)
 static void spl_action_changed (GtkComboBox *combobox, GtkWidget *spl_window)
 {
     Playlist *spl;
-    SPLRule *splr;
-    SPLFieldType ft;
+    Itdb_SPLRule *splr;
+    ItdbSPLFieldType ft;
     const ComboEntry *centries;
     gint index = gtk_combo_box_get_active (combobox);
 
@@ -527,8 +527,8 @@ static void spl_action_changed (GtkComboBox *combobox, GtkWidget *spl_window)
 /* printf ("(action) value changed: %04x...", (gint)splr->fromvalue); */
     switch (ft)
     {
-    case splft_binary_and:
-	if (splr->field == SPLFIELD_VIDEO_KIND)
+    case ITDB_SPLFT_BINARY_AND:
+	if (splr->field == ITDB_SPLFIELD_VIDEO_KIND)
 	{   /* traet Video Kind differently */
 	    gint oldindex = GPOINTER_TO_INT (
 		g_object_get_data (G_OBJECT (combobox), "spl_binary_and_index"));
@@ -568,7 +568,7 @@ static void spl_videokind_comboentry_changed (GtkComboBox *combobox,
 					      GtkWidget *spl_window)
 {
     Playlist *spl;
-    SPLRule *splr;
+    Itdb_SPLRule *splr;
     const ComboEntry *centries;
     gint index = gtk_combo_box_get_active (combobox);
 
@@ -597,7 +597,7 @@ static void spl_videokind_comboentry_changed (GtkComboBox *combobox,
  * tovalue, todate, string...)  --> redisplay */
 static void splr_entry_redisplay (GtkEditable *editable, GtkWidget *spl_window)
 {
-    SPLRule *splr;
+    Itdb_SPLRule *splr;
     enum entrytype type;
     gchar str[WNLEN];
     const gchar *strp;
@@ -619,7 +619,7 @@ static void splr_entry_redisplay (GtkEditable *editable, GtkWidget *spl_window)
 static void splr_entry_changed (GtkEditable *editable,
 				GtkWidget *spl_window)
 {
-    SPLRule *splr;
+    Itdb_SPLRule *splr;
     gchar *str;
     time_t t;
     enum entrytype type;
@@ -636,7 +636,7 @@ static void splr_entry_changed (GtkEditable *editable,
     {
     case spl_ET_FROMVALUE:
 	splr->fromvalue = atol (str);
-	if (splr->field == SPLFIELD_RATING)
+	if (splr->field == ITDB_SPLFIELD_RATING)
 	{
 	    splr->fromvalue *= ITDB_RATING_STEP;
 	}
@@ -651,7 +651,7 @@ static void splr_entry_changed (GtkEditable *editable,
 	break;
     case spl_ET_TOVALUE:
 	splr->tovalue = atol (str);
-	if (splr->field == SPLFIELD_RATING)
+	if (splr->field == ITDB_SPLFIELD_RATING)
 	{
 	    splr->tovalue *= ITDB_RATING_STEP;
 	}
@@ -685,7 +685,7 @@ static void splr_entry_changed (GtkEditable *editable,
 static void spl_fromunits_changed (GtkComboBox *combobox,
 				   GtkWidget *spl_window)
 {
-    SPLRule *splr;
+    Itdb_SPLRule *splr;
     gint index = gtk_combo_box_get_active (combobox);
 
     g_return_if_fail (index != -1);
@@ -703,7 +703,7 @@ static void spl_fromunits_changed (GtkComboBox *combobox,
 static void spl_playlist_changed (GtkComboBox *combobox,
 				  GtkWidget *spl_window)
 {
-    SPLRule *splr;
+    Itdb_SPLRule *splr;
     GArray *pl_ids;
     gint index;
 
@@ -754,7 +754,7 @@ static void spl_button_minus_clicked (GtkButton *button,
 				      GtkWidget *spl_window)
 {
     Playlist *spl;
-    SPLRule *splr;
+    Itdb_SPLRule *splr;
     gint row;
 
     g_return_if_fail (spl_window);
@@ -779,7 +779,7 @@ static void spl_button_plus_clicked (GtkButton *button,
 				     GtkWidget *spl_window)
 {
     Playlist *spl;
-    SPLRule *splr;
+    Itdb_SPLRule *splr;
     gint row;
 
     g_return_if_fail (spl_window);
@@ -1000,7 +1000,7 @@ void set_timestring (gchar *str, guint64 value, enum entrytype et)
 /* set the string @str for rule @splr (entrytype: @et) */
 /* @str must be WNLEN chars long. Returns a pointer to the string to
  * be used */
-const gchar *entry_get_string (gchar *str, SPLRule *splr,
+const gchar *entry_get_string (gchar *str, Itdb_SPLRule *splr,
 			       enum entrytype et)
 {
     gchar *strp = str;
@@ -1009,7 +1009,7 @@ const gchar *entry_get_string (gchar *str, SPLRule *splr,
     g_return_val_if_fail (str, NULL);
     g_return_val_if_fail (splr, NULL);
 
-    if (splr->field == SPLFIELD_RATING)
+    if (splr->field == ITDB_SPLFIELD_RATING)
     {
 	stepsize = ITDB_RATING_STEP;
     }
@@ -1017,12 +1017,12 @@ const gchar *entry_get_string (gchar *str, SPLRule *splr,
     switch (et)
     {
     case spl_ET_FROMVALUE:
-	if (splr->fromvalue == SPLDATE_IDENTIFIER)
+	if (splr->fromvalue == ITDB_SPL_DATE_IDENTIFIER)
 	    splr->fromvalue = 0;
 	snprintf (str, WNLEN, "%lld", (long long int)(splr->fromvalue / stepsize));
 	break;
     case spl_ET_FROMVALUE_DATE:
-	if (splr->fromvalue == SPLDATE_IDENTIFIER)
+	if (splr->fromvalue == ITDB_SPL_DATE_IDENTIFIER)
 	    splr->fromvalue = 0;
 	set_timestring (str, splr->fromvalue, et);
 	break;
@@ -1030,12 +1030,12 @@ const gchar *entry_get_string (gchar *str, SPLRule *splr,
 	snprintf (str, WNLEN, "%lld",  (long long int)splr->fromdate);
 	break;
     case spl_ET_TOVALUE:
-	if (splr->tovalue == SPLDATE_IDENTIFIER)
+	if (splr->tovalue == ITDB_SPL_DATE_IDENTIFIER)
 	    splr->tovalue = 0;
 	snprintf (str, WNLEN, "%lld",  (long long int)(splr->tovalue / stepsize));
 	break;
     case spl_ET_TOVALUE_DATE:
-	if (splr->tovalue == SPLDATE_IDENTIFIER)
+	if (splr->tovalue == ITDB_SPL_DATE_IDENTIFIER)
 	    splr->tovalue = 0;
 	set_timestring (str, splr->tovalue, et);
 	break;
@@ -1060,7 +1060,7 @@ const gchar *entry_get_string (gchar *str, SPLRule *splr,
 
 
 static GtkWidget *hbox_add_entry (GtkWidget *hbox,
-				  SPLRule *splr,
+				  Itdb_SPLRule *splr,
 				  enum entrytype et)
 {
     GtkWidget *spl_window;
@@ -1080,7 +1080,7 @@ static GtkWidget *hbox_add_entry (GtkWidget *hbox,
     gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, TRUE, 0);
     if (et == spl_ET_STRING)
 	  gtk_entry_set_max_length (GTK_ENTRY (entry),
-				    SPL_STRING_MAXLEN);
+				    ITDB_SPL_STRING_MAXLEN);
     else  gtk_entry_set_max_length (GTK_ENTRY (entry), 50);
     strp = entry_get_string (str, splr, et);
     if (strp)  gtk_entry_set_text (GTK_ENTRY (entry), strp);
@@ -1109,10 +1109,10 @@ void spl_pl_ids_destroy (GArray *array)
 
 /* Create the widgets to hold the action data (range, date,
  * string...) */
-GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
+GtkWidget *spl_create_hbox (GtkWidget *spl_window, Itdb_SPLRule *splr)
 {
     GtkWidget *hbox = NULL;
-    SPLActionType at;
+    ItdbSPLActionType at;
     GtkWidget *entry, *label, *combobox;
     gint index;
     GArray *pl_ids = NULL;
@@ -1131,8 +1131,8 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
     g_return_val_if_fail (itdb, NULL);
 
     at = itdb_splr_get_action_type (splr);
-    g_return_val_if_fail (at != splat_unknown, NULL);
-    g_return_val_if_fail (at != splat_invalid, NULL);
+    g_return_val_if_fail (at != ITDB_SPLAT_UNKNOWN, NULL);
+    g_return_val_if_fail (at != ITDB_SPLAT_INVALID, NULL);
 
     hbox = gtk_hbox_new (FALSE, 3);
     gtk_widget_show (hbox);
@@ -1140,10 +1140,10 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 
     switch (at)
     {
-    case splat_string:
+    case ITDB_SPLAT_STRING:
 	entry = hbox_add_entry (hbox, splr, spl_ET_STRING);
 	break;
-    case splat_int:
+    case ITDB_SPLAT_INT:
 	entry = hbox_add_entry (hbox, splr, spl_ET_FROMVALUE);
 	/* check for unit */
 	index = comboentry_index_from_id (splfield_units, splr->field);
@@ -1154,10 +1154,10 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 	    gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 	}
 	break;
-    case splat_date:
+    case ITDB_SPLAT_DATE:
 	entry = hbox_add_entry (hbox, splr, spl_ET_FROMVALUE_DATE);
 	break;
-    case splat_range_int:
+    case ITDB_SPLAT_RANGE_INT:
 	entry = hbox_add_entry (hbox, splr, spl_ET_FROMVALUE);
 	label = gtk_label_new (_("to"));
 	gtk_widget_show (label);
@@ -1172,7 +1172,7 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 	    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	}
 	break;
-    case splat_range_date:
+    case ITDB_SPLAT_RANGE_DATE:
 	entry = hbox_add_entry (hbox, splr, spl_ET_FROMVALUE_DATE);
 	label = gtk_label_new (_("to"));
 	gtk_widget_show (label);
@@ -1187,7 +1187,7 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 	    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	}
 	break;
-    case splat_inthelast:
+    case ITDB_SPLAT_INTHELAST:
 	if (comboentry_index_from_id (
 		splat_inthelast_units_comboentries,
 		splr->fromunits) == -1)
@@ -1208,7 +1208,7 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 			  G_CALLBACK (spl_fromunits_changed),
 			  spl_window);
 	break;
-    case splat_playlist:
+    case ITDB_SPLAT_PLAYLIST:
 	combobox = gtk_combo_box_new_text ();
 	gtk_widget_show (combobox);
 	gtk_box_pack_start (GTK_BOX (hbox), combobox, TRUE, TRUE, 0);
@@ -1231,7 +1231,7 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 	g_object_set_data_full (G_OBJECT (combobox), "spl_pl_ids",
 				pl_ids,
 				(GDestroyNotify)spl_pl_ids_destroy);
-	if (splr->fromvalue == SPLDATE_IDENTIFIER)
+	if (splr->fromvalue == ITDB_SPL_DATE_IDENTIFIER)
 	    splr->fromvalue = g_array_index (pl_ids, guint64, 0);
 	index = pl_ids_index_from_id (pl_ids, splr->fromvalue);
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combobox), index);
@@ -1239,8 +1239,8 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 			  G_CALLBACK (spl_playlist_changed),
 			  spl_window);
 	break;
-    case splat_binary_and:
-	if (splr->field == SPLFIELD_VIDEO_KIND)
+    case ITDB_SPLAT_BINARY_AND:
+	if (splr->field == ITDB_SPLFIELD_VIDEO_KIND)
 	{
 	    const ComboEntry *use_centries = NULL;
 	    combobox = gtk_combo_box_new ();
@@ -1267,10 +1267,10 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 	    entry = hbox_add_entry (hbox, splr, spl_ET_FROMVALUE);
 	}
 	break;
-    case splat_none:
+    case ITDB_SPLAT_NONE:
 	break;
-    case splat_unknown:
-    case splat_invalid:
+    case ITDB_SPLAT_UNKNOWN:
+    case ITDB_SPLAT_INVALID:
 	/* hopefully never reached !! */
 	break;
     }
@@ -1279,14 +1279,14 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 
 
 /* Display/update rule @n in @spl_window */
-static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
+static void spl_update_rule (GtkWidget *spl_window, Itdb_SPLRule *splr)
 {
     GtkTable *table;
     Playlist *spl;
     GtkWidget *combobox, *hbox, *button;
     gchar name[WNLEN];
-    SPLFieldType ft;
-    SPLActionType at;
+    ItdbSPLFieldType ft;
+    ItdbSPLActionType at;
     gint row, index;
     const ComboEntry *centries = NULL;
 
@@ -1331,7 +1331,7 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
 
     if (combobox)
     {   /* check if existing combobox is of same type */
-	SPLFieldType old_ft = GPOINTER_TO_INT (
+	ItdbSPLFieldType old_ft = GPOINTER_TO_INT (
 	    g_object_get_data (G_OBJECT (combobox), "spl_fieldtype"));
 	if (old_ft != ft)
 	{
@@ -1354,25 +1354,25 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
 
     switch (ft)
     {
-    case splft_string:
+    case ITDB_SPLFT_STRING:
 	centries = splaction_ftstring_comboentries;
 	break;
-    case splft_int:
+    case ITDB_SPLFT_INT:
 	centries = splaction_ftint_comboentries;
 	break;
-    case splft_boolean:
+    case ITDB_SPLFT_BOOLEAN:
 	centries = splaction_ftboolean_comboentries;
 	break;
-    case splft_date:
+    case ITDB_SPLFT_DATE:
 	centries = splaction_ftdate_comboentries;
 	break;
-    case splft_playlist:
+    case ITDB_SPLFT_PLAYLIST:
 	centries = splaction_ftplaylist_comboentries;
 	break;
-    case splft_binary_and:
+    case ITDB_SPLFT_BINARY_AND:
 	centries = splaction_ftbinaryand_comboentries;
 	break;
-    case splft_unknown:
+    case ITDB_SPLFT_UNKNOWN:
 	centries = splaction_notsupported_comboentries;
 	break;
     }
@@ -1388,7 +1388,7 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
 	if (centries)    splr->action = centries[0].id;
     }
 
-    if ((splr->field == SPLFIELD_VIDEO_KIND) && (ft == splft_binary_and))
+    if ((splr->field == ITDB_SPLFIELD_VIDEO_KIND) && (ft == ITDB_SPLFT_BINARY_AND))
     {   /* this field needs to be handled differently from everything
 	   else */
 	if (comboentry_index_from_id (videokind_comboentries_is,
@@ -1424,8 +1424,8 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
     }
     if (centries != splaction_notsupported_comboentries)
     {
-	g_return_if_fail (at != splat_unknown);
-	g_return_if_fail (at != splat_invalid);
+	g_return_if_fail (at != ITDB_SPLAT_UNKNOWN);
+	g_return_if_fail (at != ITDB_SPLAT_INVALID);
 	hbox = spl_create_hbox (spl_window, splr);
 	gtk_table_attach (table, hbox, 2,3, row,row+1,
 			  GTK_FILL,0,   /* expand options */
@@ -1605,7 +1605,7 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
 			  spl_window);
 	gtk_toggle_button_set_active (
 	    GTK_TOGGLE_BUTTON (w),
-	    (spl_dup->splrules.match_operator == SPLMATCH_AND));
+	    (spl_dup->splrules.match_operator == ITDB_SPLMATCH_AND));
     }
     if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_any_radio")))
     {
@@ -1614,7 +1614,7 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
 			  spl_window);
 	gtk_toggle_button_set_active (
 	    GTK_TOGGLE_BUTTON (w),
-	    (spl_dup->splrules.match_operator == SPLMATCH_OR));
+	    (spl_dup->splrules.match_operator == ITDB_SPLMATCH_OR));
     }
     if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_none_radio")))
     {
