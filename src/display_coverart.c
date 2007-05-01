@@ -80,6 +80,8 @@ static gchar *DEFAULT_FILE;
 static gchar *HIGHLIGHT_FILE;
 /* Path of the png file used for the display of the main cd cover */
 static gchar *HIGHLIGHT_FILE_MAIN;
+/* signal handler id for the slider */
+static gulong slide_signal_id;
 
 #if 0
 static void debug_albums ()
@@ -1190,7 +1192,7 @@ void coverart_init_display ()
 	g_signal_connect (G_OBJECT(cdwidget->rightbutton), "clicked",
 		      G_CALLBACK(on_cover_display_button_clicked), NULL);	
 	
-	g_signal_connect (G_OBJECT(cdwidget->cdslider), "value-changed",
+	slide_signal_id = g_signal_connect (G_OBJECT(cdwidget->cdslider), "value-changed",
 		      G_CALLBACK(on_cover_display_slider_value_changed), NULL);
 	
 	g_signal_connect (gtkpod_window, "configure_event", 
@@ -1299,6 +1301,13 @@ void coverart_select_cover (Track *track)
   	cdwidget->first_imgindex = displaytotal - IMG_TOTAL;
       
   set_covers ();
+  
+  /* Set the index value of the slider but avoid causing an infinite
+   * cover selection by blocking the event
+   */
+  g_signal_handler_block (cdwidget->cdslider, slide_signal_id);
+	gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), index);
+	g_signal_handler_unblock (cdwidget->cdslider, slide_signal_id);
  }
 
 

@@ -1,3 +1,9 @@
+2007-05-01 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * display_coverart.c:
+    When select_cover (track) is called, slider value is
+    adjusted accordingly.
+
 2007-05-01 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* README: removed references to Offline-Mode which is no
