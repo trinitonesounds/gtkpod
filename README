@@ -30,7 +30,6 @@ for details.
      - Synchronize Directories
      - Volume Normalization
      - Podcasts
-     - Offline Mode
      - Export of Tracks (Copy from iPod)
      - Encoding of ID3 tags (charsets)
      - Extracting tag information from the filename
@@ -238,9 +237,6 @@ Using an extended information file will also allow modification of ID3
 tags in the track files after the initial import, because the full
 filenames are still available.
 
-The extended information file is also used for the "Offline Mode"
-described below.
-
 
 Refresh (Update) Track Info From File
 ------------------------------------
@@ -304,10 +300,7 @@ gain and write a replay-gain tag. Since this procedure is very time
 consuming, it is not done automatically during import. You need to
 install mp3gain in the default path or set the full path in the
 'Tools' section of the preferences dialog. If the iPod is connected,
-the tag is written to the file stored on the iPod. If the iPod is not
-connected (i.e. in 'offline mode') the original file on the PC is used
-if the filename is available (requires the extended information file
-iTunesDB.ext).
+the tag is written to the file stored on the iPod.
 
 At this time "album gain" functionality is not supported. "Album gain"
 means that the volume of all tracks of one album is adjusted by the
@@ -345,34 +338,6 @@ The podcast 'repository' is a local repository (like 'Local') where
 you can keep all local podcasts. No mechanism exists to automatically
 synchronize the iPod repository with the Podcast repository at this
 time. You have to drag the podcasts over manually.
-
-
-Offline Mode
-------------
-
-It is possible to modify your iTunesDB "offline", i.e. without your
-iPod connected to your computer. You can then synchronize the contents
-of your iPod at any later time.
-
-To do this, you must have a backup of your iTunes database and the
-extended information file in the ~/.gtkpod/ directory (choose the
-backup option in the prefs menu for automatic backups).
-
-Before importing your iTunes database, you must select the "Offline"
-option in the "Files" menu. (The import and export of your iTunes
-database will then be done from or to ~/.gtkpod/.) Then import your
-iTunes database.
-
-You can modify (add tracks, add playlists, modify playlists, delete
-playlists, delete tracks) as usual. When you export your iTunesDB, it
-will be written to ~/.gtkpod/ along with an extended information file
-(even if you have not chosen that option in the prefs menu), tagging
-the tracks not yet transferred.
-
-Next time around you can import the database as described above,
-switch off the offline mode, and export the iTunes database to your
-iPod. The contents of your iPod hard drive are then brought up to
-date.
 
 
 Export of Tracks (Copy from iPod)

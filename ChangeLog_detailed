@@ -1,3 +1,8 @@
+2007-05-01 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* README: removed references to Offline-Mode which is no
+          longer supported.
+
 2007-04-27 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/display_spl.c:
