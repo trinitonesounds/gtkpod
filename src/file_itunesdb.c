@@ -1458,8 +1458,10 @@ static gboolean delete_files (iTunesDB *itdb, TransferData *td)
 	  td->finished = FALSE;
 	  td->filename = filename;
 
-	  thread = g_thread_create (th_remove, td, TRUE, NULL);
 	  g_mutex_lock (td->mutex);
+
+	  thread = g_thread_create (th_remove, td, TRUE, NULL);
+
 	  do
 	  {
 	      GTimeVal gtime;
@@ -1565,11 +1567,11 @@ static gboolean transfer_tracks (iTunesDB *itdb, TransferData *td)
 	      case FILE_CONVERT_CONVERTED:
 		  /* Conversion has finished */
 		  file_to_transfer = etr->converted_file;
-		  /* Remove from conversion list */
-		  file_convert_cancel_track (track);
 		  /* Verify if file is still present */
 		  if (!g_file_test (file_to_transfer, G_FILE_TEST_IS_REGULAR))
 		  {   /* no -- someone deleted it :-/ convert again */
+		      /* Remove from conversion list */
+		      file_convert_cancel_track (track);
 		      file_convert_add_track (track);
 		      file_to_transfer = NULL;
 		  }
@@ -1578,8 +1580,7 @@ static gboolean transfer_tracks (iTunesDB *itdb, TransferData *td)
 		  /* Conversion of this track has failed. */
 		  gtkpod_warning (_("Conversion of file '%s' has failed. The original file will be transferred instead.\n\n"), buf);
 		  file_to_transfer = etr->pc_path_locale;
-		  /* Remove from conversion list */
-		  file_convert_cancel_track (track);
+		  break;
 	      case FILE_CONVERT_REQUIRED_FAILED:
 		  /* This track needs conversion, but conversion failed
 		     for some reason */
@@ -1593,6 +1594,8 @@ static gboolean transfer_tracks (iTunesDB *itdb, TransferData *td)
 		     set up */
 		  gtkpod_warning (_("The type of file '%s' is not supported by the iPod. Please go to the Preferences to set up and turn on a suitable conversion script.\n\n"), buf);
 		  ++trackserrnum;
+		  /* Remove from conversion list */
+		  file_convert_cancel_track (track);
 		  break;
 	      case FILE_CONVERT_KILLED:
 		  /* This should not happen. Ignore */
@@ -1601,7 +1604,6 @@ static gboolean transfer_tracks (iTunesDB *itdb, TransferData *td)
 		  ++trackserrnum;
 		  break;
 	      case FILE_CONVERT_SCHEDULED:
-	      case FILE_CONVERT_PROCESSING:
 		  /* Try again later */
 		  break;
 	      }
@@ -1617,14 +1619,15 @@ static gboolean transfer_tracks (iTunesDB *itdb, TransferData *td)
 		  gtk_label_set_text (GTK_LABEL(td->textlabel),
 				      _("Status: Copying track"));
 
+		  g_mutex_lock (td->mutex);
+
 		  thread = g_thread_create (th_copy, td, TRUE, NULL);
 
-		  g_mutex_lock (td->mutex);
 		  do
 		  {
 		      GTimeVal gtime;
 
-		      set_progressbar (td->progressbar, start, n, count);
+		      set_progressbar (td->progressbar, start, n, count+trackserrnum);
 
 		      g_mutex_unlock (td->mutex);
 
@@ -1639,10 +1642,14 @@ static gboolean transfer_tracks (iTunesDB *itdb, TransferData *td)
 		      g_cond_timed_wait (td->finished_cond,
 					 td->mutex, &gtime);
 
-		  } while(td->finished);
+		  } while(!td->finished);
 
 		  g_mutex_unlock (td->mutex);
 		  error = g_thread_join (thread);
+
+		  /* Remove from conversion list, now that we have
+		   * copied the file */
+		  file_convert_cancel_track (track);
 
 		  if (error)
 		  {   /* an error occurred */
@@ -1656,24 +1663,27 @@ static gboolean transfer_tracks (iTunesDB *itdb, TransferData *td)
 		      g_error_free (error);
 		      ++trackserrnum;
 		  }
+		  else
+		  {
+		      ++count;
+		  }
 
 		  data_changed (itdb); /* otherwise new free space status from
 					  iPod is never read and free space
 					  keeps increasing while we copy more
 					  and more files to the iPod */
-		  ++count;
 	      }
 	  }
       } /* for (gl=itdb->tracks;.;.) */
 
-      set_progressbar (td->progressbar, start, n, count);
+      set_progressbar (td->progressbar, start, n, count+trackserrnum);
 
       tracksleftnum = itdb_tracks_number_nontransferred (itdb);
       if (tracksleftnum > trackserrnum)
       {   /* waiting for files to finish conversion */
 	  do
 	  {
-	      set_progressbar (td->progressbar, start, n, count);
+	      set_progressbar (td->progressbar, start, n, count+trackserrnum);
 
 	      gtk_label_set_text (GTK_LABEL(td->textlabel),
 				  _("Status: Waiting for conversion to complete"));

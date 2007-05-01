@@ -3,6 +3,11 @@
 	* README: removed references to Offline-Mode which is no
           longer supported.
 
+	* gtkpod.glade
+	  src/file_convert.c
+	  src/file_convert.h
+	  src/file_itunesdb.c: hopefully worked out some quirks.
+
 2007-04-27 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/display_spl.c:

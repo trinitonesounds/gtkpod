@@ -65,6 +65,54 @@
  *
  * ---------------------------------------------------------------- */
 
+/* How does it work?
+
+   If a track is added to an iTunesDB with gp_track_add(), it is
+   passed on file_convert_add_track().
+
+   This function determines if conversion is needed for the track and
+   then places the track either into the "scheduled" or "finished"
+   lists. If conversion is needed because the type of track is not
+   supported directly by the iPod, the track is added to the "failed"
+   list.
+
+   A timeout function examines the "scheduled" list and starts new
+   conversion threads as long as the maximum number of allowed threads
+   hasn't been reached and there are still tracks in the "scheduled"
+   list.
+
+   IO-Output of tracks in the processing, failed, and converted list
+   is redirected to a multi-thread log window. Once a track appears in
+   the "finished" or "failed" lists, the redirection IO-channel will
+   be closed.
+
+   The conversion threads continue processing tracks in the
+   "scheduled" list as long as there are tracks left in the
+   "scheduled" list and the maximum number of threads is not
+   exceeded. If either is condition is not met, the thread will
+   terminate after processing of the current track has
+   finished. Tracks being processed are moved to the "processing"
+   list. If the conversion was finished successfully, they are moved
+   to the "converted" list, in case of failure to the "failed" list.
+
+   Tracks that are removed from an iTunesDB with gp_track_remove() are
+   propagated to file_convert_cancel_track() and flagged "invalid" in
+   all lists. If currently being processed, the conversion process is
+   kill()ed.
+
+   If a whole iTunesDB is removed from the system, the event is
+   propagated to file_convert_cancel_itdb() and all tracks in that
+   iTunesDB are treated as explained for file_convert_cancel_track()
+   above.
+
+   Conversion of tracks is done in a FIFO fashion. Preference can be
+   given to a specific iTunesDB with file_convert_itdb_first(), which
+   should be called when the user wants write changes to an iPod or
+   eject an iPod, so that conversion of the tracks needed next are
+   processed next.
+*/
+
+
 /* Preferences keys */
 const gchar *FILE_CONVERT_CACHEDIR = "file_convert_cachedir";
 const gchar *FILE_CONVERT_MAXDIRSIZE = "file_convert_maxdirsize";
@@ -799,7 +847,7 @@ Track *conversion_timed_wait_sub (Conversion *conv, iTunesDB *itdb)
     for (gl=g_list_last (conv->finished); gl && (!result); gl=gl->prev)
     {
 	ConvTrack *ctr = gl->data;
-	g_return_val_if_fail (ctr, (g_mutex_unlock (conv->mutex), NULL));
+	g_return_val_if_fail (ctr, NULL);
 
 	if (ctr->valid)
 	{
@@ -885,15 +933,38 @@ static gboolean conversion_add_track (Conversion *conv, Track *track)
 
     if ((track->itdb->usertype & GP_ITDB_TYPE_LOCAL) ||
 	(track->transferred))
-    {   /* no conversion needed */
+    {   /* no conversion or transfer needed */
 	return TRUE;
     }
+
+    /* Create ConvTrack structure */
+    ctr = g_new0 (ConvTrack, 1);
+    ctr->track = track;
+    ctr->itdb = track->itdb;
+    ctr->conv = conv;
+    ctr->orig_file = g_strdup (etr->pc_path_locale);
+    ctr->converted_file = g_strdup (etr->converted_file);
+    ctr->artist    = g_strdup (track->artist);
+    ctr->album     = g_strdup (track->album);
+    ctr->track_nr  = g_strdup_printf ("%02d", track->track_nr);
+    ctr->title     = g_strdup (track->title);
+    ctr->genre     = g_strdup (track->genre);
+    ctr->year      = g_strdup (etr->year_str);
+    ctr->comment   = g_strdup (track->comment);
+    ctr->valid = TRUE;
 
     if (!etr->pc_path_locale || (strlen (etr->pc_path_locale) == 0))
     {
 	gchar *buf = get_track_info (track, FALSE);
 	gtkpod_warning (_("Original filename not available for '%s.'\n"), buf);
 	g_free (buf);
+
+	etr->conversion_status = FILE_CONVERT_FAILED;
+	/* add to failed list */
+	g_mutex_lock (conv->mutex);
+	conv->failed = g_list_prepend (conv->failed, ctr);
+	g_mutex_unlock (conv->mutex);
+	debug ("added track to failed %p\n", track);
 	return FALSE;
     }
 
@@ -903,6 +974,13 @@ static gboolean conversion_add_track (Conversion *conv, Track *track)
 	gtkpod_warning (_("Filename '%s' is no longer valid for '%s'.\n"),
 			etr->pc_path_utf8, buf);
 	g_free (buf);
+
+	etr->conversion_status = FILE_CONVERT_FAILED;
+	/* add to failed list */
+	g_mutex_lock (conv->mutex);
+	conv->failed = g_list_prepend (conv->failed, ctr);
+	g_mutex_unlock (conv->mutex);
+	debug ("added track to failed %p\n", track);
 	return FALSE;
     }	
 
@@ -921,8 +999,13 @@ static gboolean conversion_add_track (Conversion *conv, Track *track)
         case FILE_TYPE_IMAGE:
         case FILE_TYPE_DIRECTORY:
 	    /* we don't convert these (yet) */
+	    etr->conversion_status = FILE_CONVERT_INACTIVE;
+	    /* add to finished */
+	    g_mutex_lock (conv->mutex);
+	    conv->finished = g_list_prepend (conv->finished, ctr);
+	    g_mutex_unlock (conv->mutex);
+	    debug ("added track to finished %p\n", track);
             return TRUE;
-            break;
         case FILE_TYPE_M4A:
 	    convert = prefs_get_int ("convert_m4a");
             conversion_cmd = prefs_get_string ("path_conv_m4a");
@@ -949,6 +1032,10 @@ static gboolean conversion_add_track (Conversion *conv, Track *track)
             break;
     }
 
+    ctr->must_convert = must_convert;
+    ctr->conversion_cmd = conversion_cmd;
+    conversion_cmd = NULL;
+
     if (convert)
     {
 	gchar *template;
@@ -957,32 +1044,15 @@ static gboolean conversion_add_track (Conversion *conv, Track *track)
 	template = g_strdup (conv->template);
 	g_mutex_unlock (conv->mutex);
 
-	ctr = g_new0 (ConvTrack, 1);
-	ctr->track = track;
-	ctr->itdb = track->itdb;
-	ctr->conv = conv;
-	ctr->must_convert = must_convert;
-	ctr->conversion_cmd = conversion_cmd;
-	conversion_cmd = NULL;
-	ctr->orig_file = g_strdup (etr->pc_path_locale);
-	ctr->converted_file = g_strdup (etr->converted_file);
-	ctr->artist    = g_strdup (track->artist);
-	ctr->album     = g_strdup (track->album);
-	ctr->track_nr  = g_strdup_printf ("%02d", track->track_nr);
-	ctr->title     = g_strdup (track->title);
-	ctr->genre     = g_strdup (track->genre);
-	ctr->year      = g_strdup (etr->year_str);
-	ctr->comment   = g_strdup (track->comment);
-	ctr->valid = TRUE;
 	ctr->fname_root = get_string_from_template (track, template, TRUE, TRUE);
 	ctr->fname_extension = conversion_get_fname_extension (NULL, ctr);
 	if (ctr->fname_extension)
-	{   /* add to list */
+	{
+	    etr->conversion_status = FILE_CONVERT_SCHEDULED;
+	    /* add to scheduled list */
 	    g_mutex_lock (conv->mutex);
 	    conv->scheduled = g_list_prepend (conv->scheduled, ctr);
 	    g_mutex_unlock (conv->mutex);
-
-	    etr->conversion_status = FILE_CONVERT_SCHEDULED;
 
 	    result = TRUE;
 	    debug ("added track %p\n", track);
@@ -991,11 +1061,20 @@ static gboolean conversion_add_track (Conversion *conv, Track *track)
 	{   /* an error has occured */
 	    if (ctr->errormessage)
 	    {
+puts(ctr->errormessage);
 		gtkpod_warning (ctr->errormessage);
 	    }
-	    etr->conversion_status = FILE_CONVERT_FAILED;
+
+	    if (must_convert)
+		etr->conversion_status = FILE_CONVERT_REQUIRED_FAILED;
+	    else
+		etr->conversion_status = FILE_CONVERT_FAILED;
+	    /* add to failed list */
+	    g_mutex_lock (conv->mutex);
+	    conv->failed = g_list_prepend (conv->failed, ctr);
+	    g_mutex_unlock (conv->mutex);
 	    result = FALSE;
-	    debug ("adding track failed %p\n", track);
+	    debug ("added track to failed %p\n", track);
 	}
 	g_free (template);
     }
@@ -1005,12 +1084,23 @@ static gboolean conversion_add_track (Conversion *conv, Track *track)
 	g_return_val_if_fail (typestr, FALSE);
 	gtkpod_warning (_("Files of type '%s' are not supported by the iPod. Please go to the Preferences to set up and turn on a suitable conversion script for '%s'.\n\n"), typestr, buf);
 	g_free (buf);
+
 	etr->conversion_status = FILE_CONVERT_REQUIRED;
+	/* add to failed list */
+	g_mutex_lock (conv->mutex);
+	conv->failed = g_list_prepend (conv->failed, ctr);
+	g_mutex_unlock (conv->mutex);
 	result = FALSE;
+	debug ("added track to failed %p\n", track);
     }
     else
     {
 	etr->conversion_status = FILE_CONVERT_INACTIVE;
+	/* add to finished */
+	g_mutex_lock (conv->mutex);
+	conv->finished = g_list_prepend (conv->finished, ctr);
+	g_mutex_unlock (conv->mutex);
+	debug ("added track to finished %p\n", track);
     }
     g_free (conversion_cmd);
     return result;
@@ -1248,7 +1338,10 @@ static gboolean conversion_scheduler (gpointer data)
 		etr = ctr->track->userdata;
 		if (ctr->must_convert)
 		{
-		    etr->conversion_status = FILE_CONVERT_REQUIRED_FAILED;
+		    if (etr->conversion_status != FILE_CONVERT_REQUIRED)
+		    {
+			etr->conversion_status = FILE_CONVERT_REQUIRED_FAILED;
+		    }
 		}
 		else
 		{
@@ -1292,20 +1385,31 @@ static gboolean conversion_scheduler (gpointer data)
 		    g_return_val_if_fail (tr && tr->itdb && tr->userdata,
 					  (g_mutex_unlock (conv->mutex), TRUE));
 		    etr = tr->userdata;
-		    g_free (etr->converted_file);
-		    etr->converted_file = g_strdup (ctr->converted_file);
-		    if (etr->orig_filesize == 0)
+
+		    /* spread information to local databases for
+		       future reference */
+		    if (tr->itdb->usertype & GP_ITDB_TYPE_LOCAL)
 		    {
-			etr->orig_filesize = tr->size;
+			g_free (etr->converted_file);
+			etr->converted_file = g_strdup (ctr->converted_file);
+			pm_track_changed (tr);
+			data_changed (tr->itdb);
 		    }
-		    tr->size = ctr->converted_size;
+
+		    /* don't forget to copy conversion data to the
+		       track itself */
+		    if (tr == ctr->track)
+		    {
+			g_free (etr->converted_file);
+			etr->converted_file = g_strdup (ctr->converted_file);
+			etr->conversion_status = FILE_CONVERT_CONVERTED;
+			tr->size = ctr->converted_size;
+			pm_track_changed (tr);
+			data_changed (tr->itdb);
+		    }
 
 printf ("converted %p/%p: %s\n", tr->itdb, tr, ctr->converted_file);
 
-                    etr->conversion_status = FILE_CONVERT_CONVERTED;
-
-		    pm_track_changed (tr);
-		    data_changed (tr->itdb);
 		}
 		g_list_free (tracks);
 		/* add ctr to finished */
@@ -1957,27 +2061,28 @@ static gboolean conversion_convert_track (Conversion *conv, ConvTrack *ctr)
 		    ctr->converted_file = NULL;
 		    result = FALSE;
 		}
-		else
-		{   /* determine size of new file */
-		    struct stat statbuf;
-		    if (g_stat (ctr->converted_file, &statbuf) == 0)
-		    {
-			ctr->converted_size = statbuf.st_size;
-		    }
-		    else
-		    {   /* an error occured after all */
-			gchar *buf = conversion_get_track_info (NULL, ctr);
-			ctr->errormessage = 
-			    g_strdup_printf (_("Conversion of '%s' failed: could not stat the converted file '%s'.\n\n"),
-					     buf,
-					     ctr->converted_file);
-			g_free (buf);
-			g_free (ctr->converted_file);
-			ctr->converted_file = NULL;
-			result = FALSE;
-		    }
-		}
 	    }
+	}
+    }
+
+    if (result == TRUE)
+    {   /* determine size of new file */
+	struct stat statbuf;
+	if (g_stat (ctr->converted_file, &statbuf) == 0)
+	{
+	    ctr->converted_size = statbuf.st_size;
+	}
+	else
+	{   /* an error occured after all */
+	    gchar *buf = conversion_get_track_info (NULL, ctr);
+	    ctr->errormessage = 
+		g_strdup_printf (_("Conversion of '%s' failed: could not stat the converted file '%s'.\n\n"),
+				 buf,
+				 ctr->converted_file);
+	    g_free (buf);
+	    g_free (ctr->converted_file);
+	    ctr->converted_file = NULL;
+	    result = FALSE;
 	}
     }
 
