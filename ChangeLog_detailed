@@ -1,3 +1,8 @@
+2007-05-01 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* scripts/convert-wav2mp3.sh: added genre-patch for
+	  genre types not supported by lame.
+
 2007-05-05 Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* scripts/convert-flac2mp3.sh: fixed a typo, thanks to Andy.
