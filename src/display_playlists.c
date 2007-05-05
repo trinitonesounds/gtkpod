@@ -1106,15 +1106,11 @@ void pm_remove_track (Playlist *playlist, Track *track)
 	    if ((playlist == current_playlist) ||
 		itdb_playlist_is_mpl (current_playlist))
 	    {
+	  coverart_track_changed (track, COVERART_REMOVE_SIGNAL);
 		st_remove_track (track, 0);
 	    }
 	}
     }
-    
-  if (prefs_get_int (KEY_DISPLAY_COVERART))
-  {
-  	coverart_track_changed (track, COVERART_REMOVE_SIGNAL);
-  }
 }
 
 
@@ -1127,10 +1123,7 @@ void pm_add_track (Playlist *playlist, Track *track, gboolean display)
 	st_add_track (track, TRUE, display, 0); /* Add to first sort tab */
     
     	/* As with add_track above, only add to the playlist if it is the current one */
-    	if (prefs_get_int (KEY_DISPLAY_COVERART))
-  		{
-  			coverart_track_changed (track, COVERART_CREATE_SIGNAL);
-  		}
+  		coverart_track_changed (track, COVERART_CREATE_SIGNAL);
     }
 }
 
@@ -1163,11 +1156,8 @@ void pm_track_changed (Track *track)
   /* Check if track is member of current playlist */
   if (g_list_find (current_playlist->members, track))
       st_track_changed (track, FALSE, 0);
-      
-  if (prefs_get_int (KEY_DISPLAY_COVERART))
-  {
-  	coverart_track_changed (track, COVERART_CHANGE_SIGNAL);
-  }
+  
+  coverart_track_changed (track, COVERART_CHANGE_SIGNAL);
 }
 
 /* Add playlist to the playlist model */

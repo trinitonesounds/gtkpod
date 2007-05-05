@@ -97,7 +97,7 @@ static void debug_albums ()
 		if (track == NULL)
 			printf("Track is null\n");
 		else
-			printf("Track Details: Artist = %s, Album = %s\n", track->artist, track->album);
+			printf("Index = %d -> Track Details: Artist = %s, Album = %s\n", i, track->artist, track->album);
 	}
 	
 	printf("Cover List\n");
@@ -677,13 +677,42 @@ GdkPixbuf *coverart_get_default_track_thumb (void)
  */
 static gint search_tracks (Track *a, Track *b)
 {
+	gint status = -2;
+	
 	if(a == NULL || b == NULL)
-		return -1;
+	{
+		status = -1;
+/*		printf ("Either a or b was null - Status = %d\n", status);*/
+		return status;
+	}
+	
+	if(a->artist == NULL || b->artist == NULL)
+	{
+		status = -1;
+/*		printf ("Either a or b's artist was null - Status = %d\n", status);*/
+		return status;
+	}
 		
-	if ((g_ascii_strcasecmp (a->artist, b->artist) == 0) && (g_ascii_strcasecmp (a->album, b->album) == 0))
-		return 0;
-				
-	return -1;
+	if(a->album == NULL || b->album == NULL)
+	{
+		status = -1;
+/*		printf ("Either a or b's album was null - Status = %d\n", status);*/
+		return status;
+	}
+	
+	if (status != -1)
+	{
+		if ((g_ascii_strcasecmp (a->artist, b->artist) == 0) && (g_ascii_strcasecmp (a->album, b->album) == 0))
+			status = 0;
+		else
+		{
+/*			printf ("Track a was %s:%s", a->artist, a->album);*/
+			status = -1;
+		}
+	}	
+	
+/*	printf (" - Status = %d\n", status);*/
+	return status;
 }
 
 /**
@@ -923,11 +952,7 @@ static gboolean gtkpod_window_configure_callback (GtkWidget *widget, GdkEventCon
  */
 static void set_display_dimensions ()
 {
-	GtkWidget *gtkpod_window;
 	GtkWidget *podpane;
-
-	gtkpod_window = gtkpod_xml_get_widget (main_window_xml, "gtkpod");
-	g_return_if_fail (gtkpod_window);
 		  		
 	g_object_get (gtkpod_window,
 								"default_height", &HEIGHT,
@@ -1352,10 +1377,7 @@ static void coverart_sort_images (GtkSortType order)
 void coverart_track_changed (Track *track, gint signal)
 {
 	GList *trkpos;
-	gint index;
-	
-	cdwidget->block_display_change = TRUE;
-	
+	gint index;	
 	/*
 	 * Scenarios:
 	 * a) A track is being deleted that is not in the display
@@ -1369,10 +1391,10 @@ void coverart_track_changed (Track *track, gint signal)
 	switch (signal)
 	{
 		case COVERART_REMOVE_SIGNAL:
+			
 			if (trkpos == NULL)
 			{
 				/* Track is not in the displaylist so can safely ignore its deletion */
-				cdwidget->block_display_change = FALSE;
 				return;
 			}
 				
@@ -1381,45 +1403,49 @@ void coverart_track_changed (Track *track, gint signal)
 			 */
 			
 			/* Determine the index of the found track */
- 			index = g_list_position (cdwidget->displaytracks, trkpos);
- 	
+			index = g_list_position (cdwidget->displaytracks, trkpos);
+
  			/* Use the index value to determine if the cover is being displayed */
  			if (index >= cdwidget->first_imgindex && index <= (cdwidget->first_imgindex + IMG_TOTAL))
  			{
  				/* Cover is being displayed so need to do some clearing up */
- 					
- 				/* Reset the display back to black, black and more black 
- 				 * Frees the cdcover widget of the track ready for deletion
- 				 */
 				coverart_clear_images ();
-				
-				/* Need to address scenario that user deleted the first track in the display but 
-				 * left the rest of the album!! Find another track from the same album.
+ 			}
+ 			
+			/* Need to address scenario that user deleted the first track in the display but 
+				* left the rest of the album!! Find another track from the same album.
+				*/
+			GList *new_trk_item;
+			Track *new_track;
+			Playlist *playlist = pm_get_selected_playlist ();
+			g_return_if_fail (playlist);
+						
+			new_trk_item = g_list_find_custom (playlist->members, track, (GCompareFunc) search_other_tracks);
+			if (new_trk_item != NULL)
+			{
+				/* A different track from the album was returned so insert it into the
+				 * list before the to-be-deleted track
 				 */
-				GList *new_trk_item;
-				Playlist *playlist = pm_get_selected_playlist ();
-				g_return_if_fail (playlist);
+				 new_track = new_trk_item->data;
+				 cdwidget->displaytracks = g_list_insert_before (cdwidget->displaytracks, trkpos, new_track);
+			}
 				
-				new_trk_item = g_list_find_custom (playlist->members, track, (GCompareFunc) search_other_tracks);
-				if (new_trk_item != NULL)
-				{
-					/* A different track from the album was returned so insert it into the
-					 * list before the to-be-deleted track
-					 */
-					   cdwidget->displaytracks = g_list_insert_before (cdwidget->displaytracks, trkpos, new_trk_item->data);
-				}
-				
-				/* Remove the track from displaytracks */
-				cdwidget->displaytracks = g_list_delete_link (cdwidget->displaytracks, trkpos);
-				
+			/* Remove the track from displaytracks */
+			cdwidget->displaytracks = g_list_remove_link (cdwidget->displaytracks, trkpos);
+ 			
+ 			if (index < (cdwidget->first_imgindex + IMG_MAIN))
+ 			{
+ 				/* if index of track is less than visible cover's indexes then subtract 1 from first img index.
+ 				 * Will mean that if deleting a whole artist's albums then set covers will be called at the
+ 				 * correct times.
+ 				 */
+ 				cdwidget->first_imgindex--;
+ 			}
+ 			 				
+			if (index >= cdwidget->first_imgindex && index <= (cdwidget->first_imgindex + IMG_TOTAL))
+ 			{	
 				/* reset the covers and should reset to original position but without the index */
 				set_covers ();
- 			}
- 			else
- 			{
- 				/* index value is outside the displayed covers so safe to just remove the track from displaytracks */
- 				/* Remove the track from displaytracks */
-				cdwidget->displaytracks = g_list_remove (cdwidget->displaytracks, trkpos);
  			}
  			
  			/* Size of displaytracks has changed so reset the slider to appropriate range and index */
@@ -1431,7 +1457,7 @@ void coverart_track_changed (Track *track, gint signal)
 				/* A track with the same artist and album already exists in the displaylist so there is no
 				 * need to add it to the displaylist so can safely ignore its creation
 				 */
-				 cdwidget->block_display_change = FALSE;
+				 //cdwidget->block_display_change = FALSE;
 				 return;
 			}
 			gint i = 0;
@@ -1479,7 +1505,7 @@ void coverart_track_changed (Track *track, gint signal)
 			if (trkpos == NULL)
 			{
 				/* The track is not in the displaylist so who cares if it has changed! */
-				cdwidget->block_display_change = FALSE;
+				//cdwidget->block_display_change = FALSE;
 				 return;
 			}
 			
@@ -1490,7 +1516,7 @@ void coverart_track_changed (Track *track, gint signal)
 			 coverart_set_images (FALSE);
 	}
 	
-	cdwidget->block_display_change = FALSE;
+	//cdwidget->block_display_change = FALSE;
 }
 
 /**
@@ -1582,6 +1608,14 @@ void coverart_set_images (gboolean clear_track_list)
  */
 void coverart_block_change (gboolean val)
 {
+  if (GTK_WIDGET_REALIZED(gtkpod_window))
+  {
+		if (val)
+			gdk_window_set_cursor (gtkpod_window->window, gdk_cursor_new (GDK_WATCH));
+		else
+			gdk_window_set_cursor (gtkpod_window->window, NULL);
+	}
+	
 	if (cdwidget != NULL)
 		cdwidget->block_display_change = val;
 }

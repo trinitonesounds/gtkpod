@@ -1,3 +1,17 @@
+2007-05-05 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * display_playlists.c:
+    Coverart display updated regardless of whether it is
+    displayed.
+
+  * display_coverart.c:
+    - coverart_block_change changes the cursor icon to waiting
+      then turns it back after.
+    - search_tracks improved to make debugging easier.
+    - reworking of display_track_changed Delete case. Did not
+      adequately deal with deletion of multiple albums by same
+      or different artists. Thanks to Jorg for good spot.
+
 2007-05-01 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* scripts/convert-wav2mp3.sh: added genre-patch for
