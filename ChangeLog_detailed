@@ -1,5 +1,8 @@
 2007-05-06 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+  * src/display_tracks.c: quick fix for the annoying multi-edit when
+    dragging multiple tracks from track view to another playlist.
+
   * src/display_coverart.c: ignore simple track changes for
     performance reasons 
 

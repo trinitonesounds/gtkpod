@@ -239,7 +239,7 @@ static void tm_drag_begin (GtkWidget *widget,
 			   GdkDragContext *dc,
 			   gpointer user_data)
 {
-/*     puts ("tm_drag_begin"); */
+    tm_stop_editing (TRUE);
 }
 
 
