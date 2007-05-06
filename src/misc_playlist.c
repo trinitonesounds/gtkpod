@@ -926,6 +926,7 @@ check_db_danglingok1 (gpointer user_data1, gpointer user_data2)
 	   (hash value may have changed!) */
 	sha1_track_remove (track);
 	/* need to remove the old value manually! */
+	g_free (etr->sha1_hash);
 	etr->sha1_hash = NULL;
 	oldtrack = sha1_track_exists_insert (itdb, track);
 	if (oldtrack) { /* track exists, remove old track
@@ -934,6 +935,8 @@ check_db_danglingok1 (gpointer user_data1, gpointer user_data2)
 	    gp_duplicate_remove (track, oldtrack);
 	    sha1_track_exists_insert (itdb, track);
 	}
+	/* mark for conversion / transfer */
+	file_convert_add_track (track);
     }
     g_list_free(l_dangling);
     data_changed (itdb);

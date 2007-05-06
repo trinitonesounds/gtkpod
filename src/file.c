@@ -44,6 +44,7 @@
 #include "confirmation.h"
 #include "info.h"
 #include "file.h"
+#include "file_convert.h"
 #include "itdb.h"
 #include "sha1.h"
 #include "misc.h"
@@ -1649,7 +1650,6 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
     { /* update successfull */
 	/* remove track from sha1 hash and reinsert it
 	   (hash value may have changed!) */
-	gchar *name_on_ipod;
 	gchar *oldhash = etr->sha1_hash;
 
 	sha1_track_remove (track);
@@ -1662,35 +1662,62 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	    gp_duplicate_remove (track, oldtrack);
 	    sha1_track_exists_insert (itdb, track);
 	}
-	/* track may have to be copied to iPod on next export */
-	/* since it will copied under the same name as before, we
-	   don't have to manually remove it */
-	name_on_ipod = get_file_name_from_source (track, SOURCE_IPOD);
-	if (name_on_ipod && (strcmp (name_on_ipod, trackpath) != 0))
-	{   /* trackpath is not on the iPod */
-	    if (oldhash && etr->sha1_hash)
-	    {   /* do we really have to copy the track again? */
-		if (strcmp (oldhash, etr->sha1_hash) != 0)
-		{
-		    track->transferred = FALSE;
-		    data_changed (itdb);
+
+	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	{   /* track may have to be copied to iPod on next export */
+	    gchar *name_on_ipod;
+	    gboolean transfer_again = FALSE;
+
+	    name_on_ipod = get_file_name_from_source (track, SOURCE_IPOD);
+	    if (name_on_ipod && (strcmp (name_on_ipod, trackpath) != 0))
+	    {   /* trackpath is not on the iPod */
+		if (oldhash && etr->sha1_hash)
+		{   /* do we really have to copy the track again? */
+		    if (strcmp (oldhash, etr->sha1_hash) != 0)
+		    {
+			transfer_again = TRUE;
+		    }
+		}
+		else
+		{   /* no hash available -- copy! */
+		    transfer_again = TRUE;
 		}
 	    }
 	    else
-	    {   /* no hash available -- copy! */
-		track->transferred = FALSE;
+	    {
 		data_changed (itdb);
 	    }
+
+	    if (transfer_again)
+	    {   /* We need to copy the track back to the iPod. That's done
+		   marking a copy of the original track for deletion and
+		   then adding the original track to the
+		   conversion/transfer list */
+		Track *new_track = gp_track_new ();
+		ExtraTrackData *new_etr = new_track->userdata;
+		g_return_if_fail (new_etr);
+
+		new_track->size = oldsize;
+		new_track->ipod_path = track->ipod_path;
+		track->ipod_path = g_strdup ("");
+		track->transferred = FALSE;
+
+		/* cancel conversion/transfer of track */
+		file_convert_cancel_track (track);
+		/* mark the track for deletion on the ipod */
+		mark_track_for_deletion (itdb, new_track);
+		/* reschedule conversion/transfer of track */
+
+		data_changed (itdb);
+	    }
+
+	    g_free (name_on_ipod);
 	}
 	else
 	{
 	    data_changed (itdb);
 	}
-	g_free (name_on_ipod);
-	
-	/* set old size if track has to be transferred (for free space
-	 * calculation) */
-	if (!track->transferred) etr->oldsize = oldsize;
+
 	/* notify display model */
 	pm_track_changed (track);
 	display_updated (track, NULL);

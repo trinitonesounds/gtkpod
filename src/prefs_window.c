@@ -332,6 +332,7 @@ prefs_window_create (gint page)
 	"sync_delete_tracks_toggle",
 	"sync_show_summary_toggle",
 	"file_convert_display_log_button",
+	"file_convert_background_transfer_button",
 	NULL
     };
     /* ... and corresponding keys */
@@ -340,6 +341,7 @@ prefs_window_create (gint page)
 	KEY_SYNC_DELETE_TRACKS,
 	KEY_SYNC_SHOW_SUMMARY,
 	FILE_CONVERT_DISPLAY_LOG,
+	FILE_CONVERT_BACKGROUND_TRANSFER,
 	NULL
     };
 

@@ -1,6 +1,5 @@
-/* Time-stamp: <2006-06-24 01:39:23 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -58,7 +57,6 @@ void gtkpod_tracks_statusbar_init(void);
 void gtkpod_tracks_statusbar_update(void);
 
 /* space stuff */
-#define SPACE_TIMEOUT 4000   /* update interval in ms */
 void space_set_ipod_itdb (iTunesDB *itdb);
 iTunesDB *space_get_ipod_itdb (void);
 void space_data_update (void);

@@ -541,7 +541,7 @@ static void delete_playlist_ok (struct DeleteData *dd)
 		msg = g_strdup_printf (_("Removed all podcasts from the iPod"));
 		if (pm_get_selected_playlist () == dd->pl)
 		    st_redisplay (0);
-//		display_reset (0);
+/*		display_reset (0);*/
 	    }
 	    else
 	    {

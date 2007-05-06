@@ -303,16 +303,12 @@ Track *gp_track_add (iTunesDB *itdb, Track *track)
    playlist -- see gp_playlist_remove_track for details */
 void gp_track_remove (Track *track)
 {
-    /* the details window may be accessing the tracks */
-    details_remove_track (track);
-    /* cancel pending conversions */
-    file_convert_cancel_track (track);
-    /* remove from SHA1 hash */
-    sha1_track_remove (track);
-    /* remove from pc_path_hash */
-    gp_itdb_pc_path_hash_remove_track (track);
-    /* remove from database */
-    itdb_track_remove (track);
+    /* call gp_track_unlink() and itdb_track_free() instead of
+       itdb_track_remove() so we don't have to maintain two remove
+       functions separately. If something needs to be done before
+       removing the track do it in gp_track_unlink */
+    gp_track_unlink (track);
+    itdb_track_free (track);
 }
 
 
@@ -322,8 +318,10 @@ void gp_track_remove (Track *track)
    playlist -- see gp_playlist_remove_track for details */
 void gp_track_unlink (Track *track)
 {
-    /* currently only the details window may be accessing the tracks */
+    /* the details window may be accessing the tracks */
     details_remove_track (track);
+    /* cancel pending conversions */
+    file_convert_cancel_track (track);
     /* remove from SHA1 hash */
     sha1_track_remove (track);
     /* remove from pc_path_hash */

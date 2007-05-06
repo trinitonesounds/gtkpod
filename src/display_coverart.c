@@ -1513,7 +1513,9 @@ void coverart_track_changed (Track *track, gint signal)
 			 * Dont know how it has changed so all I can really do is resort the list according
 			 * to the current sort order and redisplay
 			 */
-			 coverart_set_images (FALSE);
+			/* for performance reasons we'll ignore track
+			   changes for now */
+/* 			 coverart_set_images (FALSE); */
 	}
 	
 	/* cdwidget->block_display_change = FALSE; */

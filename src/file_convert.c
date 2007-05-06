@@ -33,19 +33,20 @@
 #   include <config.h>
 #endif
 
+#include "display_itdb.h"
+#include "file_convert.h"
+#include "info.h"
+#include "misc.h"
+#include "misc_track.h"
+#include "prefs.h"
 #include <errno.h>
 #include <glib/gstdio.h>
-#include <unistd.h>
-#include <sys/types.h>
 #include <signal.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/types.h>
 #include <sys/wait.h>
-#include "prefs.h"
-#include "misc.h"
-#include "misc_track.h"
-#include "file_convert.h"
-#include "display_itdb.h"
+#include <unistd.h>
 
 #define DEBUG_CONV
 #ifdef DEBUG_CONV
@@ -55,8 +56,6 @@
 #else
 #   define debug(...)
 #endif
-
-#define conv_error(...) g_error_new(G_FILE_ERROR, 0, __VA_ARGS__)
 
 
 /* ----------------------------------------------------------------
@@ -121,9 +120,11 @@ const gchar *FILE_CONVERT_MAX_THREADS_NUM = "file_convert_max_threads_num";
 const gchar *FILE_CONVERT_DISPLAY_LOG = "file_convert_display_log";
 const gchar *FILE_CONVERT_LOG_SIZE_X = "file_convert_log_size.x";
 const gchar *FILE_CONVERT_LOG_SIZE_Y = "file_convert_log_size.y";
+const gchar *FILE_CONVERT_BACKGROUND_TRANSFER = "file_convert_background_transfer";
 
 typedef struct _Conversion Conversion;
 typedef struct _ConvTrack ConvTrack;
+typedef struct _TransferItdb TransferItdb;
 
 static gboolean conversion_scheduler (gpointer data);
 static void conversion_update_default_sizes (Conversion *conv);
@@ -140,8 +141,24 @@ static void conversion_prefs_changed (Conversion *conv);
 static void conversion_itdb_first (Conversion *conv, iTunesDB *itdb);
 static void conversion_cancel_itdb (Conversion *conv, iTunesDB *itdb);
 static void conversion_cancel_track (Conversion *conv, Track *track);
-static Track *conversion_timed_wait (Conversion *conv, iTunesDB *itdb, gint ms);
+static void conversion_continue (Conversion *conv);
 
+static TransferItdb *transfer_get_tri (Conversion *conv, iTunesDB *itdb);
+static void transfer_free_transfer_itdb (TransferItdb *tri);
+static gpointer transfer_thread (gpointer data);
+static GList *transfer_get_failed_tracks (Conversion *conv, iTunesDB *itdb);
+static FileTransferStatus transfer_get_status (Conversion *conv,
+					       iTunesDB *itdb,
+					       gint *to_convert_num,
+					       gint *converting_num,
+					       gint *to_transfer_num,
+					       gint *transferred_num,
+					       gint *failed_num);
+static void transfer_ack_itdb (Conversion *conv, iTunesDB *itdb);
+static void transfer_continue (Conversion *conv, iTunesDB *itdb);
+static void transfer_activate (Conversion *conv, iTunesDB *itdb, gboolean active);
+static void transfer_reset (Conversion *conv, iTunesDB *itdb);
+static void transfer_reschedule (Conversion *conv, iTunesDB *itdb);
 
 struct _Conversion
 {
@@ -168,6 +185,8 @@ struct _Conversion
     GCond  *dirsize_cond;   /* signal when dirsize has been updated     */
     gboolean prune_in_progress;   /* currently pruning directory        */
     GCond  *prune_cond;     /* signal when dir has been pruned          */
+    gboolean force_prune_in_progress; /* do another prune right after
+					 the current process finishes   */
     guint  timeout_id;
     /* data for log display */
     GtkWidget *log_window;  /* display log window                       */
@@ -180,6 +199,9 @@ struct _Conversion
     GList *pages;           /* list with pages currently added          */
     GtkStatusbar *log_statusbar;  /* statusbar of log display           */
     guint log_context_id;   /* context ID for statusbar                 */
+    /* data for background transfer */
+    GList *transfer_itdbs;  /* list with TransferItdbs for background
+			       transfer                                 */
 };
 
 struct _ConvTrack
@@ -208,7 +230,27 @@ struct _ConvTrack
     gchar *genre;
     gchar *year;
     gchar *comment;
+    /* needed for transfering */
+    gchar *dest_filename;
+    gchar *mountpoint;
 };
+
+
+struct _TransferItdb
+{
+    gboolean valid;                /* TRUE if still valid                  */
+    iTunesDB *itdb;                /* for reference                        */
+    Conversion *conv;              /* pointer back to conv                 */
+    gboolean transfer;             /* OK to transfer in the background?    */
+    FileTransferStatus status;     /* current status                       */
+    GThread *thread;               /* thread working on transfer           */
+    GList  *scheduled;             /* ConvTracks scheduled for transfer    */
+    GList  *processing;            /* ConvTracks currently transferring    */
+    GList  *transferred;           /* ConvTracks copied to the iPod        */
+    GList  *finished;              /* ConvTracks copied to the iPod        */
+    GList  *failed;                /* ConvTracks failed to transfer/convert*/
+};
+
 
 enum 
 {
@@ -216,7 +258,6 @@ enum
 };
 
 static Conversion *conversion;
-
 
 
 /* Set up conversion infrastructure. Must only be called once. */
@@ -243,6 +284,11 @@ void file_convert_init ()
     if (!prefs_get_string_value (FILE_CONVERT_DISPLAY_LOG, NULL))
     {
 	prefs_set_int (FILE_CONVERT_DISPLAY_LOG, TRUE);
+    }
+
+    if (!prefs_get_string_value (FILE_CONVERT_BACKGROUND_TRANSFER, NULL))
+    {
+	prefs_set_int (FILE_CONVERT_BACKGROUND_TRANSFER, TRUE);
     }
 
     conversion->dirsize = CONV_DIRSIZE_INVALID;
@@ -336,15 +382,79 @@ void file_convert_cancel_track (Track *track)
     conversion_cancel_track (conversion, track);
 }
 
-/* Wait at most @ms milliseconds for the next track in @itdb to finish
- * conversion. If a track has finished conversion return a pointer to
- * that track, NULL otherwise. Returns immediately if a track in @itdb
- * is already in the finished list. If @itdb == NULL, wait for track
- * of any itdb. If @ms is zero, wait indefinitely. */
-Track *file_convert_timed_wait (iTunesDB *itdb, gint ms)
+void file_convert_continue ()
 {
-    return conversion_timed_wait (conversion, itdb, ms);
+    conversion_continue (conversion);
 }
+
+
+
+/* ----------------------------------------------------------------
+
+   from here on file_transfer_... functions
+
+   ---------------------------------------------------------------- */
+
+/* return current status of transfer process */
+FileTransferStatus file_transfer_get_status (iTunesDB *itdb,
+					     gint *to_convert_num,
+					     gint *converting_num,
+					     gint *to_transfer_num,
+					     gint *transferred_num,
+					     gint *failed_num)
+{
+    return transfer_get_status (conversion, itdb, 
+				to_convert_num, converting_num, 
+				to_transfer_num, transferred_num, failed_num);
+}
+
+/* This has to be called after all tracks have been transferred and the
+   iTunesDB has been written, otherwise the transferred tracks will be
+   removed again when calling file_convert_cancel_itdb */
+void file_transfer_ack_itdb (iTunesDB *itdb)
+{
+    transfer_ack_itdb (conversion, itdb);
+}
+
+/* Call this to force transfer to continue in case of a
+ * FILE_TRANSFER_DISK_FULL status. Of course, you should make sure
+ * additional space is available. */
+void file_transfer_continue (iTunesDB *itdb)
+{
+    transfer_continue (conversion, itdb);
+}
+
+
+/* Call this to make sure the transfer process is active independently
+   from the settings in the preferences */
+void file_transfer_activate (iTunesDB *itdb, gboolean active)
+{
+    transfer_activate (conversion, itdb, active);
+}
+
+/* Call this to set the transfer process to on/off as determined by
+ * the preferences */
+void file_transfer_reset (iTunesDB *itdb)
+{
+    transfer_reset (conversion, itdb);
+}
+
+
+/* Get a list of tracks (Track *) that failed either transfer or
+   conversion */
+GList *file_transfer_get_failed_tracks (iTunesDB *itdb)
+{
+    return transfer_get_failed_tracks (conversion, itdb);
+}
+
+
+/* Reschedule all tracks for conversion/transfer that have previously
+   failed conversion/transfer */
+void file_transfer_reschedule (iTunesDB *itdb)
+{
+    transfer_reschedule (conversion, itdb);
+}
+
 
 
 /* ----------------------------------------------------------------
@@ -511,7 +621,9 @@ static void conversion_log_add_pages (Conversion *conv, gint threads)
 
 static void conversion_prefs_changed (Conversion *conv)
 {
+    gboolean background_transfer;
     gdouble maxsize;
+    GList *gl;
 
     g_return_if_fail (conv);
 
@@ -561,10 +673,23 @@ static void conversion_prefs_changed (Conversion *conv)
 				       NULL);       /* error      */
     }
 
+    background_transfer = prefs_get_int (FILE_CONVERT_BACKGROUND_TRANSFER);
+    for (gl=conv->transfer_itdbs; gl; gl=gl->next)
+    {
+	TransferItdb *tri = gl->data;
+	if (!tri)
+	{
+	    g_mutex_unlock (conv->mutex);
+	    g_return_if_reached ();
+	}
+	tri->transfer = background_transfer;
+    }
+
     conversion_display_hide_log_window (conv);
 
     g_mutex_unlock (conv->mutex);
 }
+
 
 
 /* Reorder the scheduled list so that tracks in @itdb are converted first */
@@ -706,6 +831,32 @@ static void conversion_display_log (ConvTrack *ctr)
 }
 
 
+static void conversion_cancel_mark_track (ConvTrack *ctr)
+{
+    g_return_if_fail (ctr && ctr->track);
+
+    if (ctr->valid)
+    {
+	ExtraTrackData *etr = ctr->track->userdata;
+	g_return_if_fail (etr);
+	ctr->valid = FALSE;
+	if (ctr->pid)
+	{   /* if a conversion or transfer process is running kill
+	     * the entire process group (i.e. all processes
+	     * started within the shell) */
+	    kill (-ctr->pid, SIGTERM);
+	    etr->conversion_status = FILE_CONVERT_KILLED;
+	}
+	/* if a file has already been copied remove it again */
+	if (ctr->dest_filename)
+	{
+	    g_unlink (ctr->dest_filename);
+	    g_free (ctr->dest_filename);
+	    ctr->dest_filename = NULL;
+	}
+    }
+}
+
 
 /* called by conversion_cancel_itdb to mark nodes invalid that are in
    the specified itdb */
@@ -716,24 +867,41 @@ static void conversion_cancel_itdb_fe (gpointer data, gpointer userdata)
 
     g_return_if_fail (ctr && ctr->track && ctr->track->userdata);
 
-    if (ctr->valid && (ctr->itdb == itdb))
+    if (ctr->itdb == itdb)
     {
-	ExtraTrackData *etr = ctr->track->userdata;
-	ctr->valid = FALSE;
-	if (ctr->pid)
-	{   /* if a conversion process is running kill the entire
-	     * process group (i.e. all processes started within the shell) */
-	    kill (-ctr->pid, SIGTERM);
-	}
-	if (etr->conversion_status != FILE_CONVERT_CONVERTED)
-	    etr->conversion_status = FILE_CONVERT_KILLED;
+	conversion_cancel_mark_track (ctr);
     }
 }
+
+/* Marks all tracks in @*ctracks as invalid. If a dest_filename
+ * exists, the file is removed. If @remove is TRUE, the element is
+ * removed from the list altogether. */
+static void conversion_cancel_itdb_sub (GList **ctracks, gboolean remove)
+{
+    GList *gl, *next;
+
+    g_return_if_fail (ctracks);
+
+    for (gl=*ctracks; gl; gl=next)
+    {
+	ConvTrack *ctr = gl->data;
+	g_return_if_fail (ctr);
+	next = gl->next;
+	conversion_cancel_mark_track (ctr);
+	if (remove)
+	{
+	    *ctracks = g_list_delete_link (*ctracks, gl);
+	    conversion_convtrack_free (ctr);
+	}
+    }
+}
+	
+
 
 /* Cancel conversion for all tracks of @itdb */
 static void conversion_cancel_itdb (Conversion *conv, iTunesDB *itdb)
 {
-    GList *gl, *next;
+    TransferItdb *itr;
 
     g_return_if_fail (conv);
     g_return_if_fail (itdb);
@@ -745,22 +913,13 @@ static void conversion_cancel_itdb (Conversion *conv, iTunesDB *itdb)
     g_list_foreach (conv->failed, conversion_cancel_itdb_fe, itdb);
     g_list_foreach (conv->converted, conversion_cancel_itdb_fe, itdb);
 
-    /* The finished list is more complicated because we remove all
-       elements no longer valid */
-    for (gl=conv->finished; gl; gl=next)
-    {
-	ConvTrack *ctr = gl->data;
-	g_return_if_fail (ctr);
-	next = gl->next;
-
-	conversion_cancel_itdb_fe (ctr, itdb);
-
-	if (!ctr->valid)
-	{
-	    conv->finished = g_list_delete_link (conv->finished, gl);
-	    conversion_convtrack_free (ctr);
-	}
-    }
+    itr = transfer_get_tri (conv, itdb);
+    conversion_cancel_itdb_sub (&itr->scheduled, TRUE);
+    conversion_cancel_itdb_sub (&itr->processing, FALSE);
+    conversion_cancel_itdb_sub (&itr->transferred, FALSE);
+    conversion_cancel_itdb_sub (&itr->finished, TRUE);
+    conversion_cancel_itdb_sub (&itr->failed, TRUE);
+    itr->valid = FALSE;
 
     g_mutex_unlock (conv->mutex);
 }
@@ -783,8 +942,9 @@ static int conversion_cancel_track_cmp (gconstpointer a, gconstpointer b)
 }
 
 
-/* Finds @track in @ctracks and marks it as invalid. If @remove is
-   TRUE, the element is removed from the list altogether. */
+/* Finds @track in @ctracks and marks it as invalid. If a
+ * dest_filename exists, the file is removed. If @remove is TRUE, the
+ * element is removed from the list altogether. */
 static void conversion_cancel_track_sub (GList **ctracks,
 					 Track *track,
 					 gboolean remove)
@@ -797,17 +957,10 @@ static void conversion_cancel_track_sub (GList **ctracks,
     if (gl)
     {
 	ConvTrack *ctr = gl->data;
-	if (ctr->valid && (ctr->track == track))
+	g_return_if_fail (ctr);
+	if (ctr->track == track)
 	{
-	    ExtraTrackData *etr = track->userdata;
-	    ctr->valid = FALSE;
-	    if (ctr->pid)
-	    {   /* if a conversion process is running kill the entire
-		 * process group (i.e. all processes started within the shell) */
-		kill (-ctr->pid, SIGTERM);
-	    }
-	    if (etr->conversion_status != FILE_CONVERT_CONVERTED)
-		etr->conversion_status = FILE_CONVERT_KILLED;
+	    conversion_cancel_mark_track (ctr);
 	}
 	if (remove)
 	{
@@ -831,84 +984,33 @@ static void conversion_cancel_track (Conversion *conv, Track *track)
     conversion_cancel_track_sub (&conv->failed, track, FALSE);
     conversion_cancel_track_sub (&conv->converted, track, FALSE);
     conversion_cancel_track_sub (&conv->finished, track, TRUE);
-	
-    g_mutex_unlock (conv->mutex);
-}
-
-
-/* used by conversion_timed_wait() to find a matching track in
-   conv->finished */
-Track *conversion_timed_wait_sub (Conversion *conv, iTunesDB *itdb)
-{
-    GList *gl;
-    Track *result = NULL;
-
-    /* see if a track is already in the finished list */
-    for (gl=g_list_last (conv->finished); gl && (!result); gl=gl->prev)
+    if (track->itdb)
     {
-	ConvTrack *ctr = gl->data;
-	g_return_val_if_fail (ctr, NULL);
-
-	if (ctr->valid)
-	{
-	    if ((itdb == NULL) || (ctr->itdb == itdb))
-	    {
-		result = ctr->track;
-	    }
-	}
+	TransferItdb *itr = transfer_get_tri (conv, track->itdb);
+	conversion_cancel_track_sub (&itr->scheduled, track, TRUE);
+	conversion_cancel_track_sub (&itr->processing, track, FALSE);
+	conversion_cancel_track_sub (&itr->transferred, track, FALSE);
+	conversion_cancel_track_sub (&itr->finished, track, TRUE);
+	conversion_cancel_track_sub (&itr->failed, track, TRUE);
     }
-
-    return result;
-}
-
-
-/* Wait at most @ms milliseconds for the next track in @itdb to finish
- * conversion. If a track has finished conversion return a pointer to
- * that track, NULL otherwise. Returns immediately if a track in @itdb
- * is already in the finished list. If @itdb == NULL, wait for track
- * of any itdb. If @ms is zero, wait indefinitely. */
-static Track *conversion_timed_wait (Conversion *conv, iTunesDB *itdb, gint ms)
-{
-    Track *result = NULL;
-
-    g_return_val_if_fail (conv, NULL);
-    
-    g_mutex_lock (conv->mutex);
-
-    result = conversion_timed_wait_sub (conv, itdb);
-
-    if (!result)
-    {   /* no result so far -- let's wait */
-	GTimeVal *abs_time = NULL;
-
-	if (ms != 0)
-	{
-	    abs_time = g_new (GTimeVal, 1);
-	    g_get_current_time (abs_time);
-	    g_time_val_add (abs_time, ((glong)ms)*1000);
-	}
-
-	do
-	{
-	    /* make sure at least one thread is started even if the
-	     * dirsize is too large */
-	    if (conv->threads_num == 0)
-		conv->conversion_force = TRUE;
-
-	    if (g_cond_timed_wait (conv->finished_cond, conv->mutex, abs_time))
-	    {   /* a track has actually finished conversion! */
-		result = conversion_timed_wait_sub (conv, itdb);
-	    }
-	} while ((ms == 0) && !result);
-
-	g_free (abs_time);
-    }
-
     g_mutex_unlock (conv->mutex);
-
-    return result;
 }
 
+
+/* Force the conversion process to continue even if the allocated
+ * disk space is used up */
+static void conversion_continue (Conversion *conv)
+{
+    g_return_if_fail (conv);
+
+    g_mutex_lock (conv->mutex);
+    if (conv->threads_num == 0)
+    {   /* make sure at least one conversion is started even if
+	   directory is full */
+	conv->conversion_force = TRUE;
+    }
+    g_mutex_unlock (conv->mutex);
+}
 
 
 /* Add @track to the list of tracks to be converted if conversion is
@@ -1061,8 +1163,9 @@ static gboolean conversion_add_track (Conversion *conv, Track *track)
 	{   /* an error has occured */
 	    if (ctr->errormessage)
 	    {
-puts(ctr->errormessage);
 		gtkpod_warning (ctr->errormessage);
+		g_free (ctr->errormessage);
+		ctr->errormessage = NULL;
 	    }
 
 	    if (must_convert)
@@ -1096,6 +1199,11 @@ puts(ctr->errormessage);
     else
     {
 	etr->conversion_status = FILE_CONVERT_INACTIVE;
+	/* remove reference to any former converted file */
+	g_free (etr->converted_file);
+	etr->converted_file = NULL;
+	g_free (ctr->converted_file);
+	ctr->converted_file = NULL;
 	/* add to finished */
 	g_mutex_lock (conv->mutex);
 	conv->finished = g_list_prepend (conv->finished, ctr);
@@ -1132,6 +1240,11 @@ static void conversion_convtrack_free (ConvTrack *ctr)
     {
 	g_spawn_close_pid (ctr->pid);
     }
+
+    /* transfer stuff */
+    g_free (ctr->dest_filename);
+    g_free (ctr->mountpoint);
+
     g_free (ctr);
 }
 
@@ -1242,28 +1355,22 @@ static void conversion_free_resources (ConvTrack *ctr)
 }
 
 
-/* timeout function, add new threads if unscheduled tracks are in the
-   queue and maximum number of threads hasn't been reached */
-static gboolean conversion_scheduler (gpointer data)
+/* the scheduler code without the locking mechanism -- has to be
+   called with conv->mutex locked */
+static gboolean conversion_scheduler_unlocked (Conversion *conv)
 {
-    Conversion *conv = data;
+    GList *gli, *nextgli;
 
-    g_return_val_if_fail (conv, FALSE);
-
-/*     debug ("conversion_scheduler enter\n"); */
-
-    g_mutex_lock (conv->mutex);
+    g_return_val_if_fail (conv, TRUE);
 
     if (!conv->cachedir)
     {
 	/* Cachedir is not available. Not good! Remove the timeout function. */
-	g_mutex_unlock (conv->mutex);
 	g_return_val_if_reached (FALSE);
     }
 
     if (conv->dirsize == CONV_DIRSIZE_INVALID)
     {   /* dirsize has not been set up. Wait until that has been done. */
-	g_mutex_unlock (conv->mutex);
 	return TRUE;
     }
 
@@ -1297,9 +1404,10 @@ static gboolean conversion_scheduler (gpointer data)
 	    ++conv->threads_num;
 	}
     }
-
-    /* reset the conversion_force flag */
-    conv->conversion_force = FALSE;
+    else
+    {
+	conv->conversion_force = FALSE;
+    }
 
     if (conv->processing)
     {
@@ -1307,7 +1415,7 @@ static gboolean conversion_scheduler (gpointer data)
 	for (gl=conv->processing; gl; gl=gl->next)
 	{
 	    ConvTrack *ctr = gl->data;
-	    g_return_val_if_fail (ctr, (g_mutex_unlock (conv->mutex), TRUE));
+	    g_return_val_if_fail (ctr, TRUE);
 	    if (ctr->valid && ctr->gio_channel)
 	    {
 		conversion_display_log (ctr);
@@ -1321,7 +1429,7 @@ static gboolean conversion_scheduler (gpointer data)
 	for (gl=conv->failed; gl; gl=gl->next)
 	{
 	    ConvTrack *ctr = gl->data;
-	    g_return_val_if_fail (ctr, (g_mutex_unlock (conv->mutex), TRUE));
+	    g_return_val_if_fail (ctr, TRUE);
 
 	    /* free resources (pid, flush io-channel) */
 	    conversion_free_resources (ctr);
@@ -1332,9 +1440,10 @@ static gboolean conversion_scheduler (gpointer data)
 		if (ctr->errormessage)
 		{
 		    gtkpod_warning (ctr->errormessage);
+		    g_free (ctr->errormessage);
+		    ctr->errormessage = NULL;
 		}
-		g_return_val_if_fail (ctr->track && ctr->track->userdata,
-				      (g_mutex_unlock (conv->mutex), TRUE));
+		g_return_val_if_fail (ctr->track && ctr->track->userdata, TRUE);
 		etr = ctr->track->userdata;
 		if (ctr->must_convert)
 		{
@@ -1350,7 +1459,6 @@ static gboolean conversion_scheduler (gpointer data)
 		/* Add to finished so we can find it in case user
 		   waits for next converted file */
 		conv->finished = g_list_prepend (conv->finished, ctr);
-		g_cond_broadcast (conv->finished_cond);
 	    }
 	    else
 	    {   /* track is not valid any more */
@@ -1367,7 +1475,7 @@ static gboolean conversion_scheduler (gpointer data)
 	for (gl=conv->converted; gl; gl=gl->next)
 	{
 	    ConvTrack *ctr = gl->data;
-	    g_return_val_if_fail (ctr, (g_mutex_unlock (conv->mutex), TRUE));
+	    g_return_val_if_fail (ctr, TRUE);
 
 	    /* free resources (pid / flush io-channel) */
 	    conversion_free_resources (ctr);
@@ -1375,15 +1483,14 @@ static gboolean conversion_scheduler (gpointer data)
 	    if (ctr->valid)
 	    {
 		GList *trackgl;
-		g_return_val_if_fail (ctr->track,
-				      (g_mutex_unlock (conv->mutex), TRUE));
+		g_return_val_if_fail (ctr->track, TRUE);
 		GList *tracks = gp_itdb_find_same_tracks_in_itdbs (ctr->track);
 		for (trackgl=tracks; trackgl; trackgl=trackgl->next)
 		{
 		    ExtraTrackData *etr;
 		    Track *tr = trackgl->data;
 		    g_return_val_if_fail (tr && tr->itdb && tr->userdata,
-					  (g_mutex_unlock (conv->mutex), TRUE));
+					  TRUE);
 		    etr = tr->userdata;
 
 		    /* spread information to local databases for
@@ -1407,14 +1514,10 @@ static gboolean conversion_scheduler (gpointer data)
 			pm_track_changed (tr);
 			data_changed (tr->itdb);
 		    }
-
-printf ("converted %p/%p: %s\n", tr->itdb, tr, ctr->converted_file);
-
 		}
 		g_list_free (tracks);
 		/* add ctr to finished */
 		conv->finished = g_list_prepend (conv->finished, ctr);
-		g_cond_broadcast (conv->finished_cond);
 	    }
 	    else
 	    {   /* track is not valid any more */
@@ -1425,17 +1528,199 @@ printf ("converted %p/%p: %s\n", tr->itdb, tr, ctr->converted_file);
 	conv->converted = NULL;
     }
 
+    if (conv->finished)
+    {
+	GList *gl;
+	for (gl=conv->finished; gl; gl=gl->next)
+	{
+	    ConvTrack *ctr = gl->data;
+	    g_return_val_if_fail (ctr, TRUE);
+	    if (ctr->valid)
+	    {
+		TransferItdb *tri;
+		ExtraTrackData *etr;
+		Track *tr = ctr->track;
+		g_return_val_if_fail (tr && tr->itdb && tr->userdata, TRUE);
+		etr = tr->userdata;
+		/* broadcast finished track */
+		g_cond_broadcast (conv->finished_cond);
+
+		tri = transfer_get_tri (conv, tr->itdb);
+		g_return_val_if_fail (tri, TRUE);
+		/* Provide mountpoint */
+		ctr->mountpoint = g_strdup (itdb_get_mountpoint (ctr->itdb));
+
+		switch (etr->conversion_status)
+		{
+		case FILE_CONVERT_INACTIVE:
+		case FILE_CONVERT_CONVERTED:
+		    tri->scheduled =
+			g_list_prepend (tri->scheduled, ctr);
+		    break;
+		case FILE_CONVERT_FAILED:
+		case FILE_CONVERT_REQUIRED_FAILED:
+		case FILE_CONVERT_REQUIRED:
+		    tri->failed = g_list_prepend (tri->failed, ctr);
+		    break;
+		case FILE_CONVERT_KILLED:
+		case FILE_CONVERT_SCHEDULED:
+		    fprintf (stderr, "Programming error, conversion type %d not expected in conversion_scheduler()\n", etr->conversion_status);
+		    conversion_convtrack_free (ctr);
+		    break;
+		}
+	    }
+	    else
+	    {   /* track is not valid any more */
+		conversion_convtrack_free (ctr);
+	    }
+	}
+	g_list_free (conv->finished);
+	conv->finished = NULL;
+    }
+
+    for (gli=conv->transfer_itdbs; gli; gli=nextgli)
+    {
+	TransferItdb *tri = gli->data;
+	nextgli = gli->next;
+
+	g_return_val_if_fail (tri, TRUE);
+	if (tri->scheduled)
+	{
+	    if ((tri->thread == NULL) && (tri->transfer == TRUE) &&
+		(tri->status != FILE_TRANSFER_DISK_FULL))
+	    {   /* start new thread */
+		tri->thread = g_thread_create_full (transfer_thread,
+						    tri,    /* user data  */
+						    0,      /* stack size */
+						    FALSE,  /* joinable   */
+						    TRUE,   /* bound      */
+						    G_THREAD_PRIORITY_LOW,
+						    NULL);  /* error      */
+	    }
+	}
+
+	if (tri->transferred)
+	{
+	    GList *gl;
+	    for (gl=tri->transferred; gl; gl=gl->next)
+	    {
+		ConvTrack *ctr = gl->data;
+		GError *error;
+		g_return_val_if_fail (ctr, TRUE);
+
+		if (tri->valid && ctr->valid)
+		{
+		    if (itdb_cp_finalize (ctr->track,
+					  NULL,
+					  ctr->dest_filename, &error))
+		    {   /* everything's fine */
+			tri->finished = g_list_prepend (tri->finished, ctr);
+			/* otherwise new free space status from iPod
+			   is never read and free space keeps
+			   increasing while we copy more and more
+			   files to the iPod */
+			space_data_update ();
+			debug ("transfer finalized: %s (%d)\n",
+			       conversion_get_track_info (NULL, ctr),
+			       ctr->track->transferred);
+		    }
+		    else
+		    {   /* error!? */
+			tri->failed = g_list_prepend (tri->failed, ctr);
+			gchar *buf = conversion_get_track_info (NULL, ctr);
+			gtkpod_warning (_("Transfer of '%s' failed. %s\n\n"),
+					buf,
+					error? error->message:"");
+			g_free (buf);
+			if (error)
+			{
+			    g_error_free (error);
+			}
+		    }
+		    pm_track_changed (ctr->track);
+		    data_changed (ctr->itdb);
+		}
+		else
+		{   /* track is not valid any more */
+		    conversion_convtrack_free (ctr);
+		}
+	    }
+	    g_list_free (tri->transferred);
+	    tri->transferred = NULL;
+	}
+
+	if (tri->failed)
+	{
+	    GList *gl;
+	    for (gl=tri->failed; gl; gl=gl->next)
+	    {
+		ConvTrack *ctr = gl->data;
+		g_return_val_if_fail (ctr, TRUE);
+
+		if (tri->valid && ctr->valid)
+		{
+		    if (ctr->errormessage)
+		    {
+			gtkpod_warning (ctr->errormessage);
+			g_free (ctr->errormessage);
+			ctr->errormessage = NULL;
+		    }
+		    tri->finished = g_list_prepend (tri->finished, ctr);
+		}
+		else
+		{   /* track is not valid any more */
+		    conversion_convtrack_free (ctr);
+		}
+	    }
+	    g_list_free (tri->failed);
+	    tri->failed = NULL;
+	}
+
+
+	/* remove TransferItdb completely if invalid and all tracks
+	 * have been removed */
+	if (!tri->valid)
+	{
+	    if (!!tri->scheduled && !tri->processing && !tri->transferred &&
+		!tri->finished && !tri->failed && !tri->thread)
+	    {
+		transfer_free_transfer_itdb (tri);
+		conv->transfer_itdbs =
+		    g_list_delete_link (conv->transfer_itdbs, gli);
+	    }
+	}
+    }
+
+
     /* update the log window */
     if (conv->log_window_shown)
     {
 	conversion_log_set_status (conv);
     }
 
+    return TRUE;
+}
+
+
+/* timeout function, add new threads if unscheduled tracks are in the
+   queue and maximum number of threads hasn't been reached */
+static gboolean conversion_scheduler (gpointer data)
+{
+    Conversion *conv = data;
+    gboolean result;
+    g_return_val_if_fail (data, FALSE);
+
+/*     debug ("conversion_scheduler enter\n"); */
+
+    g_mutex_lock (conv->mutex);
+
+    result = conversion_scheduler_unlocked (conv);
+
     g_mutex_unlock (conv->mutex);
 
 /*    debug ("conversion_scheduler exit\n");*/
 
-    return TRUE;
+    return result;
 }
 
 
@@ -1566,6 +1851,27 @@ static void conversion_prune_freefunc (gpointer data, gpointer user_data)
 }
 
 
+/* Add tracks still needed to hash. Called by conversion_prune_dir() */
+static void conversion_prune_needed_add (GHashTable *hash_needed_files,
+					 GList *ctracks)
+{
+    GList *gl;
+
+    g_return_if_fail (hash_needed_files);
+
+    for (gl=ctracks; gl; gl=gl->next)
+    {
+	ConvTrack *ctr = gl->data;
+	g_return_if_fail (ctr);
+	if (ctr->valid && ctr->converted_file)
+	{
+	    g_hash_table_insert (hash_needed_files,
+				 g_strdup (ctr->converted_file), ctr);
+	}
+    }
+}
+
+
 /* Prune the directory of unused files */
 static gpointer conversion_prune_dir (gpointer data)
 {
@@ -1593,9 +1899,6 @@ static gpointer conversion_prune_dir (gpointer data)
     if (dir)
     {
 	GHashTable *hash_needed_files;
-	GList **tracklists[] = {&conv->scheduled, &conv->processing,
-				&conv->converted, &conv->finished, NULL};
-	gint i;
 	GList *gl;
 	GList *files = NULL;
 
@@ -1611,22 +1914,21 @@ static gpointer conversion_prune_dir (gpointer data)
 						   g_free, NULL);
 	g_mutex_lock (conv->mutex);
 
-	/* we have to collect all valid filenames in all 4 track lists */
-	for (i=0; tracklists[i]; ++i)
+	/* add needed files to hash */
+	conversion_prune_needed_add (hash_needed_files, conv->scheduled);
+	conversion_prune_needed_add (hash_needed_files, conv->processing);
+	conversion_prune_needed_add (hash_needed_files, conv->converted);
+	conversion_prune_needed_add (hash_needed_files, conv->finished);
+	for (gl=conv->transfer_itdbs; gl; gl=gl->next)
 	{
-	    for (gl=*tracklists[i]; gl; gl=gl->next)
-	    {
-		ConvTrack *ctr = gl->data;
-		g_return_val_if_fail (ctr, (conv->prune_in_progress = FALSE,
-					    g_cond_broadcast (conv->prune_cond),
-					    g_mutex_unlock(conv->mutex),
-					    NULL));
-		if (ctr->valid && ctr->converted_file)
-		{
-		    g_hash_table_insert (hash_needed_files,
-					 g_strdup (ctr->converted_file), ctr);
-		}
-	    }
+	    TransferItdb *tri = gl->data;
+	    g_return_val_if_fail (tri, (conv->prune_in_progress = FALSE,
+					g_cond_broadcast (conv->prune_cond),
+					g_mutex_unlock(conv->mutex),
+					NULL));
+	    conversion_prune_needed_add (hash_needed_files, tri->scheduled);
+	    conversion_prune_needed_add (hash_needed_files, tri->processing);
+	    conversion_prune_needed_add (hash_needed_files, tri->failed);
 	}
 
 	g_mutex_unlock (conv->mutex);
@@ -2092,7 +2394,6 @@ static gboolean conversion_convert_track (Conversion *conv, ConvTrack *ctr)
 }
 
 
-
 /* Work through the conv->scheduled list and convert the next waiting
    track.
    As long as there is a track in conv->scheduled, the conversion runs
@@ -2143,6 +2444,8 @@ static gpointer conversion_thread (gpointer data)
 		continue;
 	    }
 
+	    conv->conversion_force = FALSE;
+
 	    g_mutex_unlock (conv->mutex);
 
 	    debug ("%p thread converting\n", g_thread_self ());
@@ -2188,7 +2491,7 @@ static gpointer conversion_thread (gpointer data)
 
 	    g_mutex_lock (conv->mutex);
 
-	} while ((conv->dirsize <= conv->max_dirsize) &&
+	} while (((conv->dirsize <= conv->max_dirsize) || conv->conversion_force) &&
 		 (conv->threads_num <= conv->max_threads_num) &&
 		 (conv->scheduled != NULL));
     }
@@ -2204,12 +2507,686 @@ static gpointer conversion_thread (gpointer data)
 	fprintf (stderr, "***** programming error -- g_thread_self not found in threads list\n");
     }
 
+    /* reset force flag if we weren't cancelled because of too many
+       threads */
+    if (conv->threads_num <= conv->max_threads_num)
+	conv->conversion_force = FALSE;
+
     /* reduce count of running threads */
     --conv->threads_num;
 
     g_mutex_unlock (conv->mutex);
 
     debug ("%p thread exit\n", g_thread_self ());
+
+    return NULL;
+}
+
+
+/* ------------------------------------------------------------
+ *
+ * Background-transfer specific code
+ *
+ * ------------------------------------------------------------*/
+
+
+/* Count the number of ConvTracks in @list that belong to @itdb */
+static gint transfer_get_status_count (iTunesDB *itdb, GList *list)
+{
+    GList *gl;
+    gint count = 0;
+    for (gl=list; gl; gl=gl->next)
+    {
+	ConvTrack *ctr = gl->data;
+	g_return_val_if_fail (ctr, 0);
+	if (ctr->valid && (ctr->itdb == itdb))
+	{
+	    ++count;
+	}
+    }
+    return count;
+}
+
+
+/* return the status of the current transfer process or -1 when an
+ * assertion fails. */
+static FileTransferStatus transfer_get_status (Conversion *conv,
+					       iTunesDB *itdb,
+					       gint *to_convert_num,
+					       gint *converting_num,
+					       gint *to_transfer_num,
+					       gint *transferred_num,
+					       gint *failed_num)
+{
+    TransferItdb *tri;
+    FileTransferStatus status;
+
+    g_return_val_if_fail (conv && itdb, -1);
+
+    g_mutex_lock (conv->mutex);
+
+    tri = transfer_get_tri (conv, itdb);
+    g_return_val_if_fail (tri, (g_mutex_unlock (conv->mutex), -1));
+    status = tri->status;
+
+    if (to_convert_num)
+    {
+	*to_convert_num =
+	    transfer_get_status_count (itdb, conv->scheduled) +
+	    transfer_get_status_count (itdb, conv->processing);
+    }
+
+    if (converting_num)
+    {
+	*converting_num = transfer_get_status_count (itdb, conv->processing);
+    }
+
+    if (to_transfer_num)
+    {
+	*to_transfer_num =
+	    transfer_get_status_count (itdb, conv->converted) +
+	    transfer_get_status_count (itdb, conv->finished) +
+	    transfer_get_status_count (itdb, tri->scheduled) +
+	    transfer_get_status_count (itdb, tri->processing);
+    }
+
+    if (transferred_num || failed_num)
+    {
+	GList *gl;
+	gint transferred = 0;
+	gint failed = 0;
+
+	for (gl=tri->finished; gl; gl=gl->next)
+	{
+	    ConvTrack *ctr = gl->data;
+	    g_return_val_if_fail (ctr, (g_mutex_unlock (conv->mutex), -1));
+
+	    if (ctr->valid)
+	    {
+		if (ctr->track->transferred) ++transferred;
+		else                         ++failed;
+	    }
+	}
+
+	if (transferred_num)
+	{
+	    *transferred_num = transferred +
+		transfer_get_status_count (itdb, tri->transferred);
+	}
+
+	if (failed_num)
+	{
+	    *failed_num = failed +
+		transfer_get_status_count (itdb, conv->failed) +
+		transfer_get_status_count (itdb, tri->failed);
+	}
+    }
+
+    g_mutex_unlock (conv->mutex);
+
+    return status;
+}
+
+/* removes all transferred tracks of @itdb to make sure the files will
+   not be removed from the iPod when file_convert_cancel is
+   called. This function will wait until all tracks in the
+   'transferred' list have been finalized and put into 'finished'. */
+static void transfer_ack_itdb (Conversion *conv, iTunesDB *itdb)
+{
+    GList *gl;
+    TransferItdb *tri;
+
+    g_return_if_fail (conv && itdb);
+
+    g_mutex_lock (conv->mutex);
+
+    tri = transfer_get_tri (conv, itdb);
+    if (!tri)
+    {
+	g_mutex_unlock (conv->mutex);
+	g_return_if_reached ();
+    }
+
+    if (tri->transferred)
+    {   /* finalize the tracks by calling the scheduler directly */
+	conversion_scheduler_unlocked (conv);
+    }
+
+    for (gl=tri->finished; gl; gl=gl->next)
+    {
+	ConvTrack *ctr = gl->data;
+	if (!ctr)
+	{
+	    g_mutex_unlock (conv->mutex);
+	    g_return_if_reached ();
+	}
+	conversion_convtrack_free (ctr);
+    }
+    g_list_free (tri->finished);
+    tri->finished = NULL;
+
+    g_mutex_unlock (conv->mutex);
+}
+
+
+/* Get a list of all failed tracks. Examine etr->conversion_status to
+   see whether the conversion or transfer has failed. In the latter
+   conversion_status is either FILE_CONVERT_INACTIVE or
+   FILE_CONVERT_CONVERTED. You must g_list_free() the returned list
+   after use. */
+static GList *transfer_get_failed_tracks (Conversion *conv, iTunesDB *itdb)
+{
+    TransferItdb *tri;
+    GList *gl;
+    GList *tracks = NULL;
+
+    g_return_val_if_fail (conv && itdb, NULL);
+
+    g_mutex_lock (conv->mutex);
+
+    tri = transfer_get_tri (conv, itdb);
+    g_return_val_if_fail (tri, (g_mutex_unlock (conv->mutex), NULL));
+
+    if (conv->failed || tri->failed)
+    {   /* move the tracks over to tri->finished by calling the
+	   scheduler directly */
+	conversion_scheduler_unlocked (conv);
+    }
+
+    for (gl=tri->finished; gl; gl=gl->next)
+    {
+	ConvTrack *ctr = gl->data;
+	g_return_val_if_fail (ctr, (g_mutex_unlock (conv->mutex), NULL));
+
+	if (ctr->valid)
+	{
+	    if (!ctr->dest_filename)
+	    {
+		tracks = g_list_prepend (tracks, ctr->track);
+	    }
+	}
+    }
+
+    g_mutex_unlock (conv->mutex);
+
+    return tracks;
+}
+
+
+static void transfer_reschedule (Conversion *conv, iTunesDB *itdb)
+{
+    TransferItdb *tri;
+    GList *gl, *next;
+    GList *tracks = NULL;
+
+    g_return_if_fail (conv && itdb);
+
+    g_mutex_lock (conv->mutex);
+
+    tri = transfer_get_tri (conv, itdb);
+    if (!tri)
+    {
+	g_mutex_unlock (conv->mutex);
+	g_return_if_reached ();
+    }
+
+    if (conv->failed || tri->failed)
+    {   /* move the tracks over to tri->finished by calling the
+	   scheduler directly */
+	conversion_scheduler_unlocked (conv);
+    }
+
+    for (gl=tri->finished; gl; gl=next)
+    {
+	ConvTrack *ctr = gl->data;
+	next = gl->next;
+	if (!ctr)
+	{
+	    g_mutex_unlock (conv->mutex);
+	    g_return_if_reached ();
+	}
+
+	if (ctr->valid)
+	{
+	    if (!ctr->dest_filename)
+	    {
+		ExtraTrackData *etr;
+		if (!ctr->track || !ctr->track->userdata)
+		{
+		    g_mutex_unlock (conv->mutex);
+		    g_return_if_reached ();
+		}
+		etr = ctr->track->userdata;
+		switch (etr->conversion_status)
+		{
+		case FILE_CONVERT_INACTIVE:
+		case FILE_CONVERT_CONVERTED:
+		    /* This track failed during transfer */
+		    tri->finished = g_list_remove_link (tri->finished, gl);
+		    tri->scheduled = g_list_concat (gl, tri->scheduled);
+		    break;
+		default:
+		    /* This track failed during conversion */
+		    tri->finished = g_list_delete_link (tri->finished, gl);
+		    tracks = g_list_prepend (tracks, ctr->track);
+		    conversion_convtrack_free (ctr);
+		    break;
+		}
+	    }
+	}
+    }
+
+    g_mutex_unlock (conv->mutex);
+
+    /* reschedule all failed conversion tracks */
+    for (gl=tracks; gl; gl=gl->next)
+    {
+	conversion_add_track (conv, gl->data);
+    }
+
+    g_list_free (tracks);
+}
+
+
+/* reset the FILE_TRANSFER_DISK_FULL status to force the continuation
+   of the transfering process even if the disk was previously full. At
+   the same time the conversion process is forced to restart even if
+   the disk space was already used up. */
+static void transfer_continue (Conversion *conv, iTunesDB *itdb)
+{
+    TransferItdb *tri;
+
+    g_return_if_fail (conv && itdb);
+
+    g_mutex_lock (conv->mutex);
+
+    tri = transfer_get_tri (conv, itdb);
+    if (!tri)
+    {
+	g_mutex_unlock (conv->mutex);
+	g_return_if_reached ();
+    }
+
+    /* signal to continue transfer even if disk was full previously */
+    if (tri->status == FILE_TRANSFER_DISK_FULL)
+    {
+	tri->status = FILE_TRANSFER_IDLE;
+    }
+
+    /* make sure at least one thread is started even if the
+     * dirsize is too large */
+    if (conv->threads_num == 0)
+	conv->conversion_force = TRUE;
+
+    g_mutex_unlock (conv->mutex);
+}    
+
+
+/* set the tri->transfer flag to TRUE */
+static void transfer_activate (Conversion *conv, iTunesDB *itdb, gboolean active)
+{
+    TransferItdb *tri;
+
+    g_return_if_fail (conv && itdb);
+
+    g_mutex_lock (conv->mutex);
+
+    tri = transfer_get_tri (conv, itdb);
+    if (!tri)
+    {
+	g_mutex_unlock (conv->mutex);
+	g_return_if_reached ();
+    }
+
+    /* signal to continue transfer even if disk was full previously */
+    tri->transfer = active;
+
+    g_mutex_unlock (conv->mutex);
+}
+
+
+/* set the tri->transfer flag to whatever the preferences settings are */
+static void transfer_reset (Conversion *conv, iTunesDB *itdb)
+{
+    TransferItdb *tri;
+
+    g_return_if_fail (conv && itdb);
+
+    g_mutex_lock (conv->mutex);
+
+    tri = transfer_get_tri (conv, itdb);
+    if (!tri)
+    {
+	g_mutex_unlock (conv->mutex);
+	g_return_if_reached ();
+    }
+
+    /* signal to continue transfer even if disk was full previously */
+    tri->transfer = prefs_get_int (FILE_CONVERT_BACKGROUND_TRANSFER);
+
+    g_mutex_unlock (conv->mutex);
+}
+
+
+/* You must free the GLists before calling this function. */
+static void transfer_free_transfer_itdb (TransferItdb *tri)
+{
+    g_return_if_fail (tri);
+    g_return_if_fail (!tri->scheduled && !tri->processing &&
+		      !tri->transferred && !tri->finished &&
+		      !tri->failed);
+    g_return_if_fail (tri->thread);
+
+    g_free (tri);
+}
+
+
+/* Add a TransferItdb entry for @itdb. conv->mutex must be locked. */
+static TransferItdb *transfer_add_itdb (Conversion *conv, iTunesDB *itdb)
+{
+    TransferItdb *tri;
+
+    g_return_val_if_fail (conv && itdb, NULL);
+
+    tri = g_new0 (TransferItdb, 1);
+    tri->transfer = prefs_get_int (FILE_CONVERT_BACKGROUND_TRANSFER);
+    tri->status = FILE_TRANSFER_IDLE;
+    tri->valid = TRUE;
+    tri->conv = conv;
+    tri->itdb = itdb;
+    conv->transfer_itdbs = g_list_prepend (conv->transfer_itdbs, tri);
+
+    return tri;
+}
+
+
+static int transfer_get_tri_cmp (gconstpointer a, gconstpointer b)
+{
+    const TransferItdb *tri = a;
+    const iTunesDB *itdb = b;
+
+    g_return_val_if_fail (tri, 0);
+
+    if (tri->itdb == itdb) return 0;
+    return -1;
+}
+
+
+/* Return a pointer to the TransferItdb belonging to @itdb. You must
+ * lock conv->mutex yourself. If no entry exists, one is created. If
+ * the TransferItdb is invalid, a new one is created. */
+static TransferItdb *transfer_get_tri (Conversion *conv, iTunesDB *itdb)
+{
+    GList *link;
+
+    g_return_val_if_fail (conv && itdb, NULL);
+
+    link = g_list_find_custom (conv->transfer_itdbs, itdb, transfer_get_tri_cmp);
+
+    if (link)
+    {
+	TransferItdb *tri = link->data;
+	g_return_val_if_fail (tri, NULL);
+	/* only return if valid */
+	if (tri->valid)  return tri;
+    }
+
+    /* no entry exists -- let's create one */
+    return transfer_add_itdb (conv, itdb);
+}
+
+
+/* force at least one new call to conversion_prune_dir */
+static gpointer transfer_force_prune_dir (gpointer data)
+{
+    Conversion *conv = data;
+
+    g_mutex_lock (conv->mutex);
+
+    if (conv->prune_in_progress)
+    {   /* wait until current prune process is finished before calling
+	   conversion_prune_dir() again */
+	if (conv->force_prune_in_progress)
+	{   /* we already have another process waiting  */
+	    g_mutex_unlock (conv->mutex);
+	    return NULL;
+	}
+	conv->force_prune_in_progress = TRUE;
+	g_cond_wait (conv->prune_cond, conv->mutex);
+	conv->force_prune_in_progress = FALSE;
+    }
+
+    g_mutex_unlock (conv->mutex);
+
+    return conversion_prune_dir (conv);
+}
+
+
+/* return value:
+   FILE_TRANSFER_DISK_FULL: file could not be copied because the iPod
+   is full. tri->status is set as well.
+   FILE_TRANSFER_ERROR: another error occurred
+   FILE_TRANSFER_ACTIVE: copy went fine.
+*/
+static FileTransferStatus transfer_transfer_track (TransferItdb *tri,
+						   ConvTrack *ctr)
+{
+    FileTransferStatus result = FILE_TRANSFER_ERROR;
+    gboolean copy_success;
+    const gchar *source_file = NULL;
+    gchar *dest_file = NULL;
+    gchar *mountpoint = NULL;
+    Conversion *conv;
+    GError *error = NULL;
+
+    g_return_val_if_fail (tri && tri->conv, result);
+    g_return_val_if_fail (ctr, result);
+
+    conv = tri->conv;
+
+    g_mutex_lock (conv->mutex);
+
+    if (ctr->converted_file)
+    {
+	source_file = ctr->converted_file;
+    }
+    else
+    {
+	source_file = ctr->orig_file;
+    }
+
+    mountpoint = g_strdup (ctr->mountpoint);
+
+    g_mutex_unlock (conv->mutex);
+
+    g_return_val_if_fail (source_file && mountpoint, FALSE);
+
+    dest_file = itdb_cp_get_dest_filename (NULL, mountpoint, source_file, &error);
+
+    /* an error occurred */
+    if (!dest_file)
+    {
+	g_mutex_lock (conv->mutex);
+	if (error)
+	{
+	    ctr->errormessage = g_strdup (error->message);
+	    g_error_free (error);
+	}
+	g_mutex_unlock (conv->mutex);
+	return result;
+    }
+
+    g_mutex_unlock (conv->mutex);
+
+    copy_success = itdb_cp (source_file, dest_file, &error);
+
+    g_mutex_lock (conv->mutex);
+
+    if (!copy_success)
+    {
+	if (error && (error->code == G_FILE_ERROR_NOSPC))
+	{   /* no space left on device */
+	    tri->status = FILE_TRANSFER_DISK_FULL;
+	    result = FILE_TRANSFER_DISK_FULL;
+	}
+	else
+	{
+	    if (ctr->valid)
+	    {
+		gchar *buf = conversion_get_track_info (NULL, ctr);
+		ctr->errormessage =
+		    g_strdup_printf (_("Transfer of '%s' failed. %s\n\n"),
+				     buf,
+				     error? error->message:"");
+		g_free (buf);
+	    }
+	}
+	if (error)
+	{
+	    g_error_free (error);
+	    error = NULL;
+	}
+    }
+    else
+    {   /* copy was successful */
+	debug ("%p copied\n", tri->itdb);
+	if (ctr->valid)
+	{
+	    ctr->dest_filename = dest_file;
+	    dest_file = NULL;
+	    result = FILE_TRANSFER_ACTIVE;
+	}
+    }
+
+    g_mutex_unlock (conv->mutex);
+
+    if (dest_file)
+    {   /* unsuccessful -- remove destination file if exists */
+	if (g_file_test (dest_file, G_FILE_TEST_EXISTS))
+	{
+	    g_remove (dest_file);
+	}
+    }
+
+    g_free (dest_file);
+    g_free (mountpoint);
+
+    return result;
+}
+	    
+
+
+
+
+static gpointer transfer_thread (gpointer data)
+{
+    TransferItdb *tri = data;
+    Conversion *conv;
+
+    g_return_val_if_fail (tri && tri->conv, NULL);
+    conv = tri->conv;
+
+    g_mutex_lock (conv->mutex);
+
+    debug ("%p transfer thread enter\n", tri->itdb);
+
+    while (tri->scheduled && (tri->transfer == TRUE) &&
+	   (tri->status != FILE_TRANSFER_DISK_FULL))
+    {
+	GList *gl;
+	ConvTrack *ctr;
+	FileTransferStatus status;
+
+	/* reset transfer force flag */
+	tri->status = FILE_TRANSFER_ACTIVE;
+
+	/* remove first scheduled entry and add it to processing */
+	gl = g_list_last (tri->scheduled);
+	g_return_val_if_fail (gl, (g_mutex_unlock(conv->mutex), NULL));
+
+	ctr = gl->data;
+	tri->scheduled = g_list_remove_link (tri->scheduled, gl);
+	g_return_val_if_fail (ctr, (g_mutex_unlock(conv->mutex), NULL));
+	if (tri->valid && ctr->valid)
+	{   /* attach to processing queue */
+	    tri->processing = g_list_concat (gl, tri->processing);
+	    /* indicate thread number processing this track */
+	    gl = NULL; /* gl is not guaranteed to remain the same
+			  for a given ctr -- make sure we don't
+			  use it by accident */
+	}
+	else
+	{   /* this node is not valid any more */
+	    conversion_convtrack_free (ctr);
+	    g_list_free (gl);
+	    continue;
+	}
+
+	g_mutex_unlock (conv->mutex);
+
+	debug ("%p thread transfer\n", ctr->itdb);
+
+	status = transfer_transfer_track (tri, ctr);
+
+	debug ("%p thread transfer finished (%d:%s)\n",
+	       ctr->itdb,
+	       status,
+	       ctr->dest_filename);
+
+	g_mutex_lock (conv->mutex);
+	
+	/* remove from processing queue */
+	gl = g_list_find (tri->processing, ctr);
+	g_return_val_if_fail (gl, (g_mutex_unlock(conv->mutex), NULL));
+	tri->processing = g_list_remove_link (tri->processing, gl);
+
+	if (ctr->valid)
+	{   /* track is still valid */
+	    if (status == FILE_TRANSFER_ACTIVE)
+	    {   /* add to converted */
+		tri->transferred = g_list_concat (gl, tri->transferred);
+	    }
+	    else if (status == FILE_TRANSFER_DISK_FULL)
+	    {   /* reschedule */
+		tri->scheduled = g_list_concat (tri->scheduled, gl);
+	    }
+	    else /* status == -1 */
+	    {   /* add to failed */
+		tri->failed = g_list_concat (gl, tri->failed);
+	    }
+	}
+	else
+	{   /* track is no longer valid -> remove the copied file and
+	     * drop the track */
+	    g_list_free (gl);
+	    if (ctr->dest_filename)
+	    {
+		g_unlink (ctr->dest_filename);
+	    }
+	    conversion_convtrack_free (ctr);
+	}
+
+	if (conv->dirsize > conv->max_dirsize)
+	{   /* we just transferred a track -- there should be space
+	       available again -> force a directory prune */
+	    g_thread_create_full (transfer_force_prune_dir,
+				  conv,        /* user data  */
+				  0,           /* stack size */
+				  FALSE,       /* joinable   */
+				  TRUE,        /* bound      */
+				  G_THREAD_PRIORITY_NORMAL,
+				  NULL);       /* error      */
+	}
+	
+    }
+
+    tri->thread = NULL;
+    if (tri->status != FILE_TRANSFER_DISK_FULL)
+	tri->status = FILE_TRANSFER_IDLE;
+
+    g_mutex_unlock (conv->mutex);
+
+    debug ("%p transfer thread exit\n", tri->itdb);
 
     return NULL;
 }

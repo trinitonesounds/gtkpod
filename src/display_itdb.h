@@ -44,17 +44,17 @@ struct itdbs_head
 
 typedef struct
 {
-    struct itdbs_head *itdbs_head; /* pointer to the master itdbs_head */
-    GHashTable *sha1hash;          /* sha1 hash information            */
-    GHashTable *pc_path_hash;      /* hash with local filenames        */
+    struct itdbs_head *itdbs_head; /* pointer to the master itdbs_head     */
+    GHashTable *sha1hash;          /* sha1 hash information                */
+    GHashTable *pc_path_hash;      /* hash with local filenames            */
     GList *pending_deletion;       /* tracks marked for removal from
-				      media                            */
+				      media                                */
     gchar *offline_filename;       /* filename for offline database
-				      (only for GP_ITDP_TYPE_IPOD)     */
-    gboolean offline;              /* offline mode?                    */
-    gboolean data_changed;         /* data changed since import?       */
-    gboolean itdb_imported;        /* has in iTunesDB been imported?   */
-    gboolean ipod_ejected;         /* if iPod was ejected              */
+				      (only for GP_ITDP_TYPE_IPOD)         */
+    gboolean offline;              /* offline mode?                        */
+    gboolean data_changed;         /* data changed since import?           */
+    gboolean itdb_imported;        /* has in iTunesDB been imported?       */
+    gboolean ipod_ejected;         /* if iPod was ejected                  */
 } ExtraiTunesDBData;
 
 typedef struct
@@ -64,7 +64,6 @@ typedef struct
 
 typedef struct
 {
-  gint32  oldsize;          /* used when updating tracks: size on iPod     */
   gchar   *year_str;        /* year as string -- always identical to year  */
   gchar   *pc_path_locale;  /* path on PC (local encoding)                 */
   gchar   *pc_path_utf8;    /* PC filename in utf8 encoding                */

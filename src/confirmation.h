@@ -1,5 +1,5 @@
 /*
-|  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 |
 |  URL: http://gtkpod.sourceforge.net/
@@ -70,7 +70,8 @@ enum {
     CONF_ID_GTKPOD_WARNING,
     CONF_ID_DANGLING0,
     CONF_ID_DANGLING1,
-    CONF_ID_SYNC_SUMMARY
+    CONF_ID_SYNC_SUMMARY,
+    CONF_ID_TRANSFER
 } CONF_ID;
 
 void CONF_NULL_HANDLER (gpointer d1, gpointer d2);

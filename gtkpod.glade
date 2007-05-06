@@ -8430,10 +8430,6 @@ for this filename.</property>
 				  <property name="spacing">6</property>
 
 				  <child>
-				    <placeholder/>
-				  </child>
-
-				  <child>
 				    <widget class="GtkHBox" id="hbox205">
 				      <property name="visible">True</property>
 				      <property name="homogeneous">False</property>
@@ -8571,12 +8567,32 @@ for this filename.</property>
 				  </child>
 
 				  <child>
+				    <widget class="GtkCheckButton" id="file_convert_background_transfer_button">
+				      <property name="visible">True</property>
+				      <property name="tooltip" translatable="yes">Tracks can be transferred in the background as soon as they are added to an iPod repository. Otherwise they will be transferred when ejecting the contents of the iPod completely unchanged until then.</property>
+				      <property name="can_focus">True</property>
+				      <property name="label" translatable="yes">Transfer tracks to the iPod in the background</property>
+				      <property name="use_underline">True</property>
+				      <property name="relief">GTK_RELIEF_NORMAL</property>
+				      <property name="focus_on_click">True</property>
+				      <property name="active">False</property>
+				      <property name="inconsistent">False</property>
+				      <property name="draw_indicator">True</property>
+				      <signal name="toggled" handler="on_cfg_update_charset_toggled" last_modification_time="Thu, 14 Apr 2005 19:38:42 GMT"/>
+				    </widget>
+				    <packing>
+				      <property name="padding">0</property>
+				      <property name="expand">False</property>
+				      <property name="fill">False</property>
+				    </packing>
+				  </child>
+
+				  <child>
 				    <widget class="GtkCheckButton" id="cfg_update_charset">
 				      <property name="visible">True</property>
 				      <property name="tooltip" translatable="yes">Normally the charset specified when first importing the track will be used to update the track information. If you have chosen a wrong charset when first importing a track and want to correct it using the 'Update Track' function, you must check this option. Note: the charset info is stored in the extended information file (see 'Writing of iTunesDB' below) and tracks imported before V0.51 will have no charset stored. Instead the charset specified above will be used then.</property>
 				      <property name="can_focus">True</property>
-				      <property name="label" translatable="yes">Use selected encoding also when updating 
-or syncing tracks</property>
+				      <property name="label" translatable="yes">Use selected encoding also when updating or syncing tracks</property>
 				      <property name="use_underline">True</property>
 				      <property name="relief">GTK_RELIEF_NORMAL</property>
 				      <property name="focus_on_click">True</property>

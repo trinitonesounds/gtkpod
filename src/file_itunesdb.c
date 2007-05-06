@@ -73,7 +73,6 @@ struct track_extended_info
     gchar *charset;
     gchar *hostname;
     gchar *ipod_path;
-    gint32 oldsize;
     guint64 local_itdb_id;
     guint64 local_track_dbid;
     gboolean transferred;
@@ -87,6 +86,7 @@ typedef struct {
     Track *track;            /* Current track                  */
     const gchar *filename;   /* Filename to copy/remove        */
     /* Widgets for progress dialog */
+    GtkWidget *dialog;
     GtkWidget *textlabel;
     GtkProgressBar *progressbar;
 } TransferData;
@@ -163,7 +163,6 @@ void fill_in_extended_info (Track *track, gint32 total, gint32 num)
 	  etr->converted_file = g_strdup (sei->converted_file);
       etr->local_itdb_id = sei->local_itdb_id;
       etr->local_track_dbid = sei->local_track_dbid;
-      etr->oldsize = sei->oldsize;
       track->transferred = sei->transferred;
       /* don't remove the sha1-hash -- there may be duplicates... */
       if (extendedinfohash)
@@ -370,8 +369,6 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 	    }
 	    else if (g_ascii_strcasecmp (line, "charset") == 0)
 		sei->charset = g_strdup (arg);
-	    else if (g_ascii_strcasecmp (line, "oldsize") == 0)
-		sei->oldsize = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "transferred") == 0)
 		sei->transferred = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "filename_ipod") == 0)
@@ -1071,51 +1068,28 @@ void gp_info_deleted_tracks (iTunesDB *itdb,
 	etr = tr->userdata;
 	g_return_if_fail (tr);
 
-	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
-	{
-	    if (tr->transferred)
-	    {   /* I don't understand why "- etr->oldsize" (JCS) --
-		 * supposedly related to update_track_from_file() but
-		 I can't see how. */
-		if (size)  *size += tr->size - etr->oldsize;
-	    }
-	}
-	if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
-	{   /* total size on hard disk */
-	    if (size) *size += tr->size;
-	}
-
+	if (size)  *size += tr->size;
 	if (num)   *num += 1;
     }
 }
 
+
+/* Adds @track to the list of tracks to be deleted. The following
+   information is required: 
+   - userdata with ExtraTrackData
+   - size of track to be deleted
+   - either track->ipod_path or etr->pc_path_local */
 void mark_track_for_deletion (iTunesDB *itdb, Track *track)
 {
     ExtraiTunesDBData *eitdb;
-    g_return_if_fail (itdb);
-    g_return_if_fail (track);
+    g_return_if_fail (itdb && itdb->userdata && track);
     g_return_if_fail (track->itdb == NULL);
     eitdb = itdb->userdata;
-    g_return_if_fail (eitdb);
 
     eitdb->pending_deletion = g_list_append (eitdb->pending_deletion,
 					     track);
 }
 
-/* It might be necessary to unmark for deletion like in case of
-   dangling tracks with no real files on ipod */
-void unmark_track_for_deletion (iTunesDB *itdb, Track *track)
-{
-    ExtraiTunesDBData *eitdb;
-    g_return_if_fail (itdb);
-    g_return_if_fail (track);
-    eitdb = itdb->userdata;
-    g_return_if_fail (eitdb);
-
-    if (track != NULL)
-        eitdb->pending_deletion = g_list_remove (
-	    eitdb->pending_deletion, track);
-}
 
 
 /*------------------------------------------------------------------*\
@@ -1195,8 +1169,6 @@ static gboolean write_extended_info (iTunesDB *itdb)
 	  fprintf (fp, "sha1_hash=%s\n", etr->sha1_hash);
       if (etr->charset && *etr->charset)
 	  fprintf (fp, "charset=%s\n", etr->charset);
-      if (!track->transferred && etr->oldsize)
-	  fprintf (fp, "oldsize=%d\n", etr->oldsize);
       if (etr->mtime)
 	  fprintf (fp, "pc_mtime=%llu\n", (unsigned long long)etr->mtime);
       if (etr->local_itdb_id)
@@ -1262,29 +1234,6 @@ static gpointer th_remove (gpointer userdata)
     return GINT_TO_POINTER(result);
 }
 
-/* Threaded copy of ipod track */
-/* Returns: GError *error */
-static gpointer th_copy (gpointer data)
-{
-    TransferData *td = data;
-    ExtraTrackData *etr;
-    GError *error = NULL;
-    g_return_val_if_fail (td && td->filename &&
-			  td->track && td->track->userdata, NULL);
-    etr = td->track->userdata;
-
-/*    fprintf (stderr, "Trying to copy: %s\n", td->filename);*/
-    itdb_cp_track_to_ipod (td->track, td->filename, &error);
-
-    /* delete old size */
-    if (td->track->transferred) etr->oldsize = 0;
-    g_mutex_lock (td->mutex);
-    td->finished = TRUE;   /* signal that thread will end */
-    g_cond_signal (td->finished_cond);
-    g_mutex_unlock (td->mutex);
-    return error;
-}
-
 /* This function is called when the user presses the abort button
  * during transfer_tracks() or delete_tracks() */
 static void file_dialog_abort (TransferData *transfer_data)
@@ -1344,6 +1293,9 @@ static GtkWidget *create_transfer_information_dialog (TransferData *td)
     dialog = gtkpod_xml_get_widget (dialog_xml, "file_transfer_information_dialog");
     g_return_val_if_fail (dialog, NULL);
 
+    /* the window itself */
+    td->dialog = dialog;
+
     /* text label */
     td->textlabel = gtkpod_xml_get_widget (dialog_xml, "textlabel");
 
@@ -1367,22 +1319,32 @@ static GtkWidget *create_transfer_information_dialog (TransferData *td)
 
 
 static void set_progressbar (GtkProgressBar *progressbar,
-			     time_t start, gint n, gint count)
+			     time_t start, gint n, gint count, gint init_count)
 {
+    gchar *progtext;
+    gdouble fraction;
+
     g_return_if_fail (progressbar);
 
-    gchar *progtext;
-
-    if (count == 0)
+    if (n==0)
     {
-	progtext = g_strdup (_("0% (First Track)"));
+	fraction = 1;
+    }
+    else
+    {
+	fraction = (gdouble)count/n;
+    }
+
+    if (count-init_count == 0)
+    {
+	progtext = g_strdup_printf (_("%d%%"), (gint)(fraction*100));
     }
     else
     {
 	time_t diff, fullsecs, hrs, mins, secs;
 
 	diff = time(NULL) - start;
-	fullsecs = (diff*n/count)-diff+5;
+	fullsecs = (diff*(n-init_count)/(count-init_count))-diff+5;
 	hrs  = fullsecs / 3600;
 	mins = (fullsecs % 3600) / 60;
 	secs = ((fullsecs % 60) / 5) * 5;
@@ -1390,10 +1352,10 @@ static void set_progressbar (GtkProgressBar *progressbar,
 	/* left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
 	progtext = g_strdup_printf (
 	    _("%d%% (%d/%d  %d:%02d:%02d left)"),
-	    count*100/n, count, n, (gint)hrs, (gint)mins, (gint)secs);
+	    (gint)(fraction*100), count, n, (gint)hrs, (gint)mins, (gint)secs);
     }
 
-    gtk_progress_bar_set_fraction(progressbar, (gdouble)count/n);
+    gtk_progress_bar_set_fraction(progressbar, fraction);
     gtk_progress_bar_set_text(progressbar, progtext);
     g_free (progtext);
 }
@@ -1427,6 +1389,10 @@ static gboolean delete_files (iTunesDB *itdb, TransferData *td)
       g_return_val_if_fail (itdb_get_mountpoint (itdb), FALSE);
   }
 
+  /* stop file transfer while we're deleting to avoid time-consuming
+     interference with slow access harddisks */
+  file_transfer_activate (itdb, FALSE);
+
   gtk_label_set_text (GTK_LABEL (td->textlabel), _("Status: Deleting File"));
 
   n = g_list_length (eitdb->pending_deletion);
@@ -1440,16 +1406,16 @@ static gboolean delete_files (iTunesDB *itdb, TransferData *td)
       Track *track = eitdb->pending_deletion->data;
       g_return_val_if_fail (track, FALSE);
 
+      track->itdb = itdb;
       if (itdb->usertype & GP_ITDB_TYPE_IPOD)
       {
-	  track->itdb = itdb;
 	  filename = get_file_name_from_source (track, SOURCE_IPOD);
-	  track->itdb = NULL;
       }
       if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
       {
 	  filename = get_file_name_from_source (track, SOURCE_LOCAL);
       }
+      track->itdb = NULL;
 
       if(filename)
       {
@@ -1466,7 +1432,7 @@ static gboolean delete_files (iTunesDB *itdb, TransferData *td)
 	  {
 	      GTimeVal gtime;
 
-	      set_progressbar (td->progressbar, start, n, count);
+	      set_progressbar (td->progressbar, start, n, count, 0);
 
 	      g_mutex_unlock (td->mutex);
 
@@ -1503,208 +1469,263 @@ static gboolean delete_files (iTunesDB *itdb, TransferData *td)
 	  eitdb->pending_deletion, eitdb->pending_deletion);
   }
 
-  set_progressbar (td->progressbar, start, n, count);
+  set_progressbar (td->progressbar, start, n, count, 0);
 
   while (widgets_blocked && gtk_events_pending ())
       gtk_main_iteration ();
 
   if (td->abort) result = FALSE;
 
+  file_transfer_reset (itdb);
+
   return result;
 }
 
 
+/* Reschedule tracks that failed during transfer. This is a hack as
+ * the @itdb could have been removed in the meanwhile. The clean
+ * solution would be to integrate the error display into the
+ * file_convert.c framework */
+static void transfer_reschedule (gpointer user_data1, gpointer user_data2)
+{
+    struct itdbs_head *ihead = gp_get_itdbs_head (gtkpod_window);
+    iTunesDB *itdb = user_data1;
+    GList *gl;
+
+    g_return_if_fail (itdb && ihead);
+
+    for (gl=ihead->itdbs; gl; gl=gl->next)
+    {
+	iTunesDB *it = gl->data;
+	g_return_if_fail (it);
+	if (it == itdb)
+	{   /* itdb is still valid --> reschedule tracks */
+	    file_transfer_reschedule (itdb);
+	    break;
+	}
+    }
+}
 
 
 
+/* Show an error message that not all tracks were transferred */
+static void transfer_tracks_show_failed (iTunesDB *itdb, TransferData *td)
+{
+    GString *string_transfer, *string_convert, *string;
+    gint failed_transfer, failed_conversion;
+    GList *tracks, *gl;
 
-/* Flushes all non-transferred tracks to the iPod filesystem
-   Returns TRUE on success, FALSE if some error occurred or not all
-   tracks were written. */
+    g_return_if_fail (itdb && td);
+
+    gtk_widget_hide (td->dialog);
+
+    string_transfer = g_string_sized_new (1000);
+    string_convert = g_string_sized_new (1000);
+    string = g_string_sized_new (1000);
+    failed_transfer = 0;
+    failed_conversion = 0;
+
+    tracks = file_transfer_get_failed_tracks (itdb);
+    /* since failed_num is not 0, tracks cannot be empty */
+    g_return_if_fail (tracks);
+    /* Add information about failed tracks to the respective
+       string */
+    for (gl=tracks; gl; gl=gl->next)
+    {
+	ExtraTrackData *etr;
+	gchar *buf;
+	Track *tr = gl->data;
+	g_return_if_fail (tr && tr->userdata);
+
+	etr = tr->userdata;
+
+	buf = get_track_info (tr, FALSE);
+
+	switch (etr->conversion_status)
+	{
+	case FILE_CONVERT_INACTIVE:
+	case FILE_CONVERT_CONVERTED:	 
+   /* This track was converted successfully (or did not
+	     * neeed conversion) and failed during transfer */
+	    ++failed_transfer;
+	    g_string_append_printf (string_transfer, "%s\n", buf);
+	    break;
+	default:
+	    /* These tracks failed during conversion */
+	    ++failed_conversion;
+	    g_string_append_printf (string_convert, "%s\n", buf);
+	    break;
+	}
+	g_free (buf);
+    }
+
+    if (failed_conversion != 0)
+    {
+	g_string_append (string,
+			 ngettext ("The following track could not be converted successfully:\n\n",
+				   "The following tracks could not be converted successfully:\n\n",
+				   failed_conversion));
+	g_string_append (string, string_convert->str);
+	g_string_append (string, "\n\n");
+    }
+
+    if (failed_transfer != 0)
+    {
+	g_string_append (string,
+			 ngettext ("The following track could not be transferred successfully:\n\n",
+				   "The following tracks could not be transferred successfully:\n\n",
+				   failed_transfer));
+	g_string_append (string, string_transfer->str);
+	g_string_append (string, "\n\n");
+    }
+
+    gtkpod_confirmation (CONF_ID_TRANSFER,    /* ID     */
+			 FALSE,               /* modal, */
+			 _("Warning"),        /* title  */
+			 _("The iPod could not be ejected. Please fix the problems mentioned below and then eject the iPod again. Pressing 'OK' will re-schedule the failed tracks for conversion and transfer."),
+			 string->str,         /* text to be displayed */
+			 NULL, 0, NULL,       /* option 1 */
+			 NULL, 0, NULL,       /* option 2 */
+			 TRUE,                /* gboolean confirm_again, */
+			 NULL,                /* confirm_again_key, */
+			 transfer_reschedule, /* ConfHandler ok_handler,*/
+			 NULL,                /* don't show "Apply" */
+			 CONF_NULL_HANDLER,   /* cancel_handler,*/
+			 itdb,                /* gpointer user_data1,*/
+			 NULL);               /* gpointer user_data2,*/
+
+    g_string_free (string_transfer, TRUE);
+    g_string_free (string_convert, TRUE);
+    g_string_free (string, TRUE);
+}
+
+
+
+/* Initiates and waits for transfer of tracks to the iPod */
 static gboolean transfer_tracks (iTunesDB *itdb, TransferData *td)
 {
-  GList *gl;
-  gint count, n, trackserrnum, tracksleftnum;
-  gboolean result = TRUE;
-  time_t start;
-  ExtraiTunesDBData *eitdb;
-  GThread *thread = NULL;
+    gint to_convert_num, converting_num, to_transfer_num;
+    gint transferred_num, failed_num, transferred_init;
+    gboolean result = TRUE;
+    FileTransferStatus status;
+    ExtraiTunesDBData *eitdb;
+    time_t start;
 
-  g_return_val_if_fail (itdb, FALSE);
-  eitdb = itdb->userdata;
-  g_return_val_if_fail (eitdb, FALSE);
+    g_return_val_if_fail (itdb && td, FALSE);
+    eitdb = itdb->userdata;
+    g_return_val_if_fail (eitdb, FALSE);
 
-  n = itdb_tracks_number_nontransferred (itdb);
+    /* make sure background transfer is running */
+    file_transfer_activate (itdb, TRUE);
+    file_transfer_continue (itdb);
+    /* reschedule previously failed tracks */
+    file_transfer_reschedule (itdb);
 
-  if (n == 0) return TRUE;
+    /* find out how many tracks have already been processed */
+    file_transfer_get_status (itdb,
+			      NULL, NULL, NULL, &transferred_num, &failed_num);
+    transferred_init = transferred_num + failed_num;
 
-  /* count number of tracks to be transferred */
-  count = 0; /* tracks transferred */
-  start = time (NULL);
+    start = time (NULL);
 
-  do
-  {
-      trackserrnum = 0;
-      for (gl=itdb->tracks; gl && !td->abort; gl=gl->next)
-      {
-	  const gchar *file_to_transfer = NULL;
-	  Track *track = gl->data;
-	  ExtraTrackData *etr;
-	  g_return_val_if_fail (track && track->userdata, FALSE);
-	  etr = track->userdata;
+    do
+    {
+	gchar *buf;
 
-	  if (!track->transferred)
-	  {
-	      GError *error = NULL;
+	status = file_transfer_get_status (itdb,
+					   &to_convert_num, &converting_num,
+					   &to_transfer_num, &transferred_num,
+					   &failed_num);
 
-	      gchar *buf = get_track_info (track, TRUE);
-	      switch (etr->conversion_status)
-	      {
-	      case FILE_CONVERT_INACTIVE:
-		  /* No conversion is scheduled or carried out. */
-		  file_to_transfer = etr->pc_path_locale;
-		  break;
-	      case FILE_CONVERT_CONVERTED:
-		  /* Conversion has finished */
-		  file_to_transfer = etr->converted_file;
-		  /* Verify if file is still present */
-		  if (!g_file_test (file_to_transfer, G_FILE_TEST_IS_REGULAR))
-		  {   /* no -- someone deleted it :-/ convert again */
-		      /* Remove from conversion list */
-		      file_convert_cancel_track (track);
-		      file_convert_add_track (track);
-		      file_to_transfer = NULL;
-		  }
-		  break;
-	      case FILE_CONVERT_FAILED:
-		  /* Conversion of this track has failed. */
-		  gtkpod_warning (_("Conversion of file '%s' has failed. The original file will be transferred instead.\n\n"), buf);
-		  file_to_transfer = etr->pc_path_locale;
-		  break;
-	      case FILE_CONVERT_REQUIRED_FAILED:
-		  /* This track needs conversion, but conversion failed
-		     for some reason */
-		  gtkpod_warning (_("The type of file '%s' is not supported by the iPod and conversion failed. Please go to the Preferences to set up a suitable conversion script.\n\n"), buf);
-		  ++trackserrnum;
-		  /* Remove from conversion list */
-		  file_convert_cancel_track (track);
-		  break;
-	      case FILE_CONVERT_REQUIRED:
-		  /* This track needs conversion, but conversion was not
-		     set up */
-		  gtkpod_warning (_("The type of file '%s' is not supported by the iPod. Please go to the Preferences to set up and turn on a suitable conversion script.\n\n"), buf);
-		  ++trackserrnum;
-		  /* Remove from conversion list */
-		  file_convert_cancel_track (track);
-		  break;
-	      case FILE_CONVERT_KILLED:
-		  /* This should not happen. Ignore */
-		  fprintf (stderr, "Programming error: reached FILE_CONVERT_KILLED.\n");
-		  file_convert_cancel_track (track);
-		  ++trackserrnum;
-		  break;
-	      case FILE_CONVERT_SCHEDULED:
-		  /* Try again later */
-		  break;
-	      }
-	      g_free (buf);
-	      buf = NULL;
+	set_progressbar (td->progressbar, start,
+			 to_convert_num+to_transfer_num+failed_num+transferred_num,
+			 transferred_num+failed_num,
+			 transferred_init);
 
-	      if (file_to_transfer)
-	      {
-		  td->finished = FALSE;
-		  td->track = track;
-		  td->filename = file_to_transfer;
+	if (to_transfer_num > 0)
+	{
+	    buf = g_strdup_printf (_("Status: Copying track"));
+	}
+	else
+	{
+	    if ((to_convert_num + converting_num) > 0)
+	    {
+		buf = g_strdup_printf (_("Status: Waiting for conversion to complete"));
+	    }
+	    else
+	    {
+		buf = g_strdup_printf (_("Status: Finished transfer"));
+	    }
+	}
 
-		  gtk_label_set_text (GTK_LABEL(td->textlabel),
-				      _("Status: Copying track"));
+/*	buf = g_strdup_printf (_("Status: %d. To convert: %d. To transfer: %d\n"
+				 "Transferred: %d. Failed: %d"),
+			       status, to_convert_num, to_transfer_num,
+			       transferred_num, failed_num);*/
+	gtk_label_set_text (GTK_LABEL(td->textlabel), buf);
+	g_free (buf);
 
-		  g_mutex_lock (td->mutex);
+	if ((to_convert_num != 0) && (converting_num == 0))
+	{   /* Force the conversion to continue. Not sure if this scenario
+	     * is likely to happen, but better be safe then sorry */
+	    file_convert_continue ();
+	}
 
-		  thread = g_thread_create (th_copy, td, TRUE, NULL);
+	while (widgets_blocked && gtk_events_pending ())
+	    gtk_main_iteration ();
 
-		  do
-		  {
-		      GTimeVal gtime;
+	/* sleep 20 ms */
+	g_usleep (20*1000);
+    } while (!td->abort &&
+	     (status != FILE_TRANSFER_DISK_FULL) &&
+	     (to_convert_num + to_transfer_num) > 0);
 
-		      set_progressbar (td->progressbar, start, n, count+trackserrnum);
+    /* reset background transfer to value in prefs */
+    file_transfer_reset (itdb);
 
-		      g_mutex_unlock (td->mutex);
+    if (td->abort)
+    {
+	result = FALSE;
+    }
+    else if (status == FILE_TRANSFER_DISK_FULL)
+    {
+	gchar *buf;
+	GtkWidget *dialog;
 
-		      while (widgets_blocked && gtk_events_pending ())
-			  gtk_main_iteration ();
+	gtk_widget_hide (td->dialog);
 
-		      g_mutex_lock (td->mutex);
+	buf = g_strdup_printf (ngettext (
+				   "One track could not be transferred because your iPod is full. Either delete some tracks or otherwise create space on the iPod before ejecting the iPod again.",
+				   "%d tracks could not be transferred because your iPod is full. Either delete some tracks or otherwise create space on the iPod before ejecting the iPod again.", to_transfer_num),
+			       to_transfer_num);
 
-		      /* wait a maximum of 20 ms */
-		      g_get_current_time (&gtime);
-		      g_time_val_add (&gtime, 20*1000);
-		      g_cond_timed_wait (td->finished_cond,
-					 td->mutex, &gtime);
+	dialog = gtk_message_dialog_new (
+	    GTK_WINDOW (gtkpod_window),
+	    GTK_DIALOG_DESTROY_WITH_PARENT,
+	    GTK_MESSAGE_WARNING,
+	    GTK_BUTTONS_OK,
+	    buf);
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
+	g_free (buf);
+	result = FALSE;
+    }
+    else if (failed_num != 0)    /* one error message is enough -> else{... */
+    {
+	transfer_tracks_show_failed (itdb, td);
+	result = FALSE;
+    }
 
-		  } while(!td->finished);
+    if (result == TRUE)
+    {
+	/* remove transferred tracks from list so they won't be removed
+	   when deleting the itdb */
+	file_transfer_ack_itdb (itdb);
+    }
 
-		  g_mutex_unlock (td->mutex);
-		  error = g_thread_join (thread);
-
-		  /* Remove from conversion list, now that we have
-		   * copied the file */
-		  file_convert_cancel_track (track);
-
-		  if (error)
-		  {   /* an error occurred */
-		      if(!td->abort) {
-			  result = FALSE;
-			  if (error->message)
-			      gtkpod_warning ("%s\n\n", error->message);
-			  else
-			      g_warning ("error->message == NULL!\n");
-		      }
-		      g_error_free (error);
-		      ++trackserrnum;
-		  }
-		  else
-		  {
-		      ++count;
-		  }
-
-		  data_changed (itdb); /* otherwise new free space status from
-					  iPod is never read and free space
-					  keeps increasing while we copy more
-					  and more files to the iPod */
-	      }
-	  }
-      } /* for (gl=itdb->tracks;.;.) */
-
-      set_progressbar (td->progressbar, start, n, count+trackserrnum);
-
-      tracksleftnum = itdb_tracks_number_nontransferred (itdb);
-      if (tracksleftnum > trackserrnum)
-      {   /* waiting for files to finish conversion */
-	  do
-	  {
-	      set_progressbar (td->progressbar, start, n, count+trackserrnum);
-
-	      gtk_label_set_text (GTK_LABEL(td->textlabel),
-				  _("Status: Waiting for conversion to complete"));
-
-	      while (widgets_blocked && gtk_events_pending ())
-		  gtk_main_iteration ();
-
-	  } while (!td->abort &&
-		   !file_convert_timed_wait (itdb, 20));
-      }
-  } while (!td->abort &&
-	   (itdb_tracks_number_nontransferred (itdb) > trackserrnum));
-
-
-  if (td->abort)  result = FALSE;   /* negative result if user aborted */
-
-  if (result == FALSE)
-      gtkpod_statusbar_message (_("Some tracks were not written to iPod. Export aborted!"));
-
-  return result;
+    return result;
 }
+
 
 
 static gboolean gp_write_itdb (iTunesDB *itdb)
@@ -1796,7 +1817,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
 	  success = delete_files (itdb, transferdata);
 	  if (!success)
 	  {
-	      gtkpod_statusbar_message (_("Some tracks could not be deleted from the iPod. Export aborted!"));
+	      gtkpod_warning (_("Some tracks could not be deleted from the iPod. Export aborted!"));
 	  }
       }
       if (success)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-04-23 21:48:53 jcs>
+/* Time-stamp: <2007-05-06 20:20:31 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -107,7 +107,6 @@ gboolean files_are_saved (void);
 gchar *get_file_name_from_source (Track *track, FileSource source);
 gchar* get_preferred_track_name_format(Track *s);
 void mark_track_for_deletion (iTunesDB *itdb, Track *track);
-void unmark_track_for_deletion (iTunesDB *itdb, Track *track);
 void gp_info_deleted_tracks (iTunesDB *itdb,
 			     gdouble *size, guint32 *num);
 void update_charset_info (Track *track);

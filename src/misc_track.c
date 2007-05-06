@@ -1639,7 +1639,7 @@ void gp_info_nontransferred_tracks (iTunesDB *itdb,
 	g_return_if_fail (etr);
 	if (!tr->transferred)
 	{
-	    if (size)  *size += tr->size - etr->oldsize;
+	    if (size)  *size += tr->size;
 	    if (num)   *num += 1;
 	}
     }

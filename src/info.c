@@ -1,6 +1,5 @@
-/* Time-stamp: <2007-04-23 22:22:23 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -52,6 +51,7 @@ static GtkWidget *gtkpod_space_statusbar = NULL;
 static guint statusbar_timeout_id = 0;
 static guint statusbar_timeout = STATUSBAR_TIMEOUT;
 
+#define SPACE_TIMEOUT 1000
 /* lock for size related variables (used by child and parent) */
 static GMutex *space_mutex = NULL;
 static GThread *space_thread = NULL;

@@ -1,3 +1,33 @@
+2007-05-06 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+  * src/display_coverart.c: ignore simple track changes for
+    performance reasons 
+
+  * src/display_coverart.c:
+    src/misc_confirm.c: changed '//' to '/*' for compatibility
+    reasons.
+
+  * src/confirmation.h
+    src/display_coverart.c
+    src/display_itdb.c
+    src/display_itdb.h
+    src/file.c
+    src/file.h
+    src/file_convert.c
+    src/file_convert.h
+    src/file_itunesdb.c
+    src/info.c
+    src/info.h
+    src/misc_playlist.c
+    src/misc_track.c:
+
+    - Copying of tracks to the iPod in the background.
+    - Remove 'oldsize' entry in ExtraTrackData formerly used when
+      updating tracks.
+    - Reduce SPACE_TIMEOUT from 4 to 1 seconds (probing device for
+      free space)
+
+
 2007-05-05 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * display_playlists.c:
@@ -12,7 +42,7 @@
       adequately deal with deletion of multiple albums by same
       or different artists. Thanks to Jorg for good spot.
 
-2007-05-01 Jorg Schuler <jcsjcs at users.sourceforge.net>
+2007-05-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* scripts/convert-wav2mp3.sh: added genre-patch for
 	  genre types not supported by lame.

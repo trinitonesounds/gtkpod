@@ -43,6 +43,7 @@ extern const gchar *FILE_CONVERT_MAXDIRSIZE;
 extern const gchar *FILE_CONVERT_TEMPLATE;
 extern const gchar *FILE_CONVERT_MAX_THREADS_NUM;
 extern const gchar *FILE_CONVERT_DISPLAY_LOG;
+extern const gchar *FILE_CONVERT_BACKGROUND_TRANSFER;
 
 typedef enum
 {
@@ -55,14 +56,34 @@ typedef enum
     FILE_CONVERT_CONVERTED
 } FileConvertStatus;
 
+typedef enum
+{
+    FILE_TRANSFER_ERROR = -1,
+    FILE_TRANSFER_IDLE = 0,
+    FILE_TRANSFER_ACTIVE,
+    FILE_TRANSFER_DISK_FULL
+} FileTransferStatus;
+
 void file_convert_init (void);
 void file_convert_shutdown (void);
 void file_convert_prefs_changed (void);
 void file_convert_update_default_sizes (void);
 gboolean file_convert_add_track (Track *track);
 void file_convert_itdb_first (iTunesDB *itdb);
+void file_convert_continue (void);
 void file_convert_cancel_itdb (iTunesDB *itdb);
 void file_convert_cancel_track (Track *track);
-Track *file_convert_timed_wait (iTunesDB* itdb, gint ms);
 
+GList *file_transfer_get_failed_tracks (iTunesDB *itdb);
+FileTransferStatus file_transfer_get_status (iTunesDB *itdb,
+					     gint *to_convert_num,
+					     gint *converting_num,
+					     gint *to_transfer_num,
+					     gint *transferred_num,
+					     gint *failed_num);
+void file_transfer_ack_itdb (iTunesDB *itdb);
+void file_transfer_continue (iTunesDB *itdb);
+void file_transfer_activate (iTunesDB *itdb, gboolean active);
+void file_transfer_reset (iTunesDB *itdb);
+void file_transfer_reschedule (iTunesDB *itdb);
 #endif
