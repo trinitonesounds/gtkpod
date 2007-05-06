@@ -1457,7 +1457,7 @@ void coverart_track_changed (Track *track, gint signal)
 				/* A track with the same artist and album already exists in the displaylist so there is no
 				 * need to add it to the displaylist so can safely ignore its creation
 				 */
-				 //cdwidget->block_display_change = FALSE;
+			    /* cdwidget->block_display_change = FALSE; */
 				 return;
 			}
 			gint i = 0;
@@ -1505,7 +1505,7 @@ void coverart_track_changed (Track *track, gint signal)
 			if (trkpos == NULL)
 			{
 				/* The track is not in the displaylist so who cares if it has changed! */
-				//cdwidget->block_display_change = FALSE;
+				/* cdwidget->block_display_change = FALSE; */
 				 return;
 			}
 			
@@ -1516,7 +1516,7 @@ void coverart_track_changed (Track *track, gint signal)
 			 coverart_set_images (FALSE);
 	}
 	
-	//cdwidget->block_display_change = FALSE;
+	/* cdwidget->block_display_change = FALSE; */
 }
 
 /**
