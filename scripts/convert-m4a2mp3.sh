@@ -86,7 +86,7 @@ if [ -z "$lame" ]; then
 fi
 
 # Launch command
-exec "$faad" -o - "$infile" | "$lame" --preset standard --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$tracknum" --tg "$genre" - "$outfile"
+exec "$faad" -o - "$infile" | "$lame" --preset standard --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$track" --tg "$genre" - "$outfile"
 
 # Check result
 if [ "x$?" != "x0" ]; then

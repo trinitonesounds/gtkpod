@@ -97,7 +97,7 @@ else
 fi
 
 # Launch command
-exec "$flac" -d -c -- "$infile" | "$lame" --preset standard --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$tracknum" $genreopt - "$outfile"
+exec "$flac" -d -c -- "$infile" | "$lame" --preset standard --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$track" $genreopt - "$outfile"
 
 # Check result
 if [ "x$?" != "x0" ]; then

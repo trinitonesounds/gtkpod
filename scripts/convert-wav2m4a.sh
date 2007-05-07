@@ -80,7 +80,7 @@ if [ -z "$faac" ]; then
 fi
 
 # Launch command
-"$faac" -o "$outfile" -q 150 -c 22000 -w --artist "$artist" --title "$title" --year "$year" --album "$album" --track "$tracknum" --genre "$genre" --comment "$comment" "$infile"
+"$faac" -o "$outfile" -q 150 -c 22000 -w --artist "$artist" --title "$title" --year "$year" --album "$album" --track "$track" --genre "$genre" --comment "$comment" "$infile"
 
 # Check result
 if [ "x$?" != "x0" ]; then
