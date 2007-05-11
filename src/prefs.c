@@ -1192,7 +1192,7 @@ static TempPrefs *prefs_create_subset (const gchar *subkey)
 {
     struct sub_data sub_data;
 
-    g_return_val_if_fail (prefs_table, (unlock_prefs_table(), NULL));
+    g_return_val_if_fail (prefs_table, NULL);
 
     sub_data.temp_prefs = temp_prefs_create ();
     sub_data.subkey = subkey;
