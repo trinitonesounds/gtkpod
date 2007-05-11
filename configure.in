@@ -79,10 +79,6 @@ AC_SEARCH_LIBS([id3_frame_field],
 	,
 	AC_MSG_ERROR([*** id3tag >= 0.15 lib not found (0.14 will not work!)]))
 
-# was needed for podcast fetch -- disabled.
-# AC_CHECK_LIB([curl],  [curl_easy_init], ,
-#	     AC_MSG_ERROR([*** curl lib not found!]))
-
 dnl Check for libcurl
 PKG_CHECK_MODULES(CURL, [libcurl >= 7.10.0], have_curl=yes, have_curl=no)
 if test "$have_curl" != "no"; then
@@ -93,8 +89,50 @@ if test "$have_curl" != "no"; then
     LDFLAGS="$LDFLAGS $CURL_LIBS"
 else
     echo "*** libcurl could not be found, not building coverart download support"
-    have_curl="no -- will build without coverart download support"
+    have_curl="*no -- will build without coverart download support"
 fi
+
+dnl Check for gnome-vfs
+AC_ARG_WITH(gnome-vfs,
+	    AC_HELP_STRING([--without-gnome-vfs],[Disable autodetection support]))
+if test "x$with_gnome_vfs" != "xno"; then
+  PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0 >= 2.6.0], enable_gnome_vfs=yes, enable_gnome_vfs=no)
+  if test "x$enable_gnome_vfs" != "xyes" -a "x$with_gnome_vfs" = "xyes"; then
+      AC_MSG_ERROR([gnome-vfs support explicitly requested but gnome-vfs couldn't be found])
+  fi
+fi
+if test "x$enable_gnome_vfs" = "xyes"; then
+    have_gnomevfs="yes -- will build with automount support"
+    AC_DEFINE(HAVE_GNOME_VFS, 1, [Define if you have gnome-vfs support])
+    CPPFLAGS="$CPPFLAGS $GNOME_VFS_CFLAGS"
+    CFLAGS="$CFLAGS $GNOME_VFS_CFLAGS"
+    LDFLAGS="$LDFLAGS $GNOME_VFS_LIBS"
+else
+    echo "*** gnome-vfs-2 not found or disabled, not building iPod autodetection support"
+    have_gnomevfs="*no -- will build without iPod autodetection support"
+fi
+AM_CONDITIONAL(HAVE_GNOME_VFS, test x"$enable_gnome_vfs" = xyes)
+
+#dnl Check for HAL
+AC_ARG_WITH(hal,
+	    AC_HELP_STRING([--without-hal],[Disable HAL support]))
+if test "x$with_hal" != "xno"; then
+  PKG_CHECK_MODULES(HAL, hal >= 0.5 hal < 0.6, enable_hal=yes, enable_hal=no)
+  if test "x$enable_hal" != "xyes" -a "x$with_hal" = "xyes"; then
+      AC_MSG_ERROR([HAL support explicitly requested but HAL couldn't be found])
+  fi
+fi
+if test "x$enable_hal" = "xyes"; then
+  have_hal="yes -- will build with HAL support"
+  AC_DEFINE(HAVE_HAL, 1, [Define if you want HAL support])
+  CPPFLAGS="$CPPFLAGS $HAL_CFLAGS"
+  CFLAGS="$CFLAGS $HAL_CFLAGS"
+  LDFLAGS="$LDFLAGS $HAL_LIBS"
+else
+  have_hal="*no -- will build without HAL support"
+fi
+AM_CONDITIONAL(HAVE_HAL, test x"$enable_hal" = xyes)
+
 
 dnl Check for libmp4v2 (and mp4.h)
 AC_SEARCH_LIBS(MP4FileInfo,
@@ -104,7 +142,7 @@ AC_SEARCH_LIBS(MP4FileInfo,
 	  [echo "*** mp4.h cannot be found. Check your mp4v2 installation."])])
 
 if test "y$have_mp4v2" = "y"; then
-	have_mp4v2="*** no -- will build without aac support"
+	have_mp4v2="*no -- will build without aac support"
 fi
 
 dnl Check for libvorbisfile 
@@ -114,7 +152,7 @@ AC_SEARCH_LIBS(ov_open,
           [have_vorbisfile="yes -- will build with ogg support" AC_DEFINE_UNQUOTED(HAVE_LIBVORBISFILE, 1, ["Define to 1 if you have the ogg library"])],
           [echo "*** vorbisfile.h cannot be found. Check your ogg/vorbis installation."])])
 if test "y$have_vorbisfile" = "y"; then
-        have_vorbisfile="*** no -- will build without ogg support"
+        have_vorbisfile="*no -- will build without ogg support"
 fi
 
 dnl Check for FLAC
@@ -124,7 +162,7 @@ AC_SEARCH_LIBS(FLAC__metadata_get_streaminfo,
           [have_flac="yes -- will build with FLAC support" AC_DEFINE_UNQUOTED(HAVE_FLAC, 1, ["Define to 1 if you have the flac library"])],
           [echo "*** FLAC/metadata.h cannot be found. Check your FLAC installation."])])
 if test "y$have_flac" = "y"; then
-        have_flac="*** no -- will build without FLAC support"
+        have_flac="*no -- will build without FLAC support"
 fi
 
 dnl Additional libs maybe needed when compiling under solaris
@@ -148,16 +186,17 @@ Configuration for $PACKAGE $VERSION :
 
  Host System Type .....: $host
  Install path .........: $prefix
- Preprocessor .........: $CC $CPPFLAGS
- Compiler .............: $CC $CFLAGS $PACKAGE_CFLAGS
- Linker ...............: $CC $LDFLAGS $LIBS $PACKAGE_LIBS
  GTK2 version .........: `pkg-config gtk+-2.0 --modversion`
  GLib2/GThread version : `pkg-config gthread-2.0 --modversion`
- id3tag lib ...........: yes
+ gnome-vfs.............: $have_gnomevfs
+ hal...................: $have_hal
  libcurl ..............: $have_curl
  mp4v2 ................: $have_mp4v2
  vorbisfile ...........: $have_vorbisfile
  FLAC .................: $have_flac
+ Preprocessor .........: $CC $CPPFLAGS
+ Compiler .............: $CC $CFLAGS $PACKAGE_CFLAGS
+ Linker ...............: $CC $LDFLAGS $LIBS $PACKAGE_LIBS
 
  Now type 'make' to build $PACKAGE $VERSION,
  and then 'make install' for installation.

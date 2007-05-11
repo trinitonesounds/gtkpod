@@ -518,10 +518,6 @@ prefs_window_create (gint page)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 prefs_get_int("delete_database"));
 
-    w = gtkpod_xml_get_widget (prefs_window_xml,  "cfg_autoimport");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 prefs_get_int("autoimport"));
-
 #if 0
     /* last.fm -- disabled, we'll hide the prefs window */
     int x = prefs_get_int("lastfm_active");
@@ -1197,14 +1193,6 @@ on_sync_confirm_delete_toggled     (GtkToggleButton *togglebutton,
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), active);
 }
 
-
-void
-on_cfg_autoimport_toggled              (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    temp_prefs_set_int(temp_prefs, "autoimport",
-		       gtk_toggle_button_get_active(togglebutton));
-}
 
 void
 on_charset_combo_entry_changed          (GtkEditable     *editable,

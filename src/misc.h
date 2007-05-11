@@ -259,6 +259,10 @@ void set_itdb_index_prefs_string (gint index,
 void set_itdb_prefs_int (iTunesDB *itdb, const gchar *subkey, gint value);
 void set_itdb_index_prefs_int (gint index,
 			       const gchar *subkey, gint value);
+void remove_itdb_prefs (iTunesDB *itdb);
+void load_ipod_prefs (iTunesDB *itdb, const gchar *mountpoint);
+gboolean save_ipod_prefs (iTunesDB *itdb, const gchar *mountpoint);
+
 gboolean get_offline (iTunesDB *itdb);
 
 guint32 guiToDB(gint gui);

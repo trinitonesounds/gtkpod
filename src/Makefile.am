@@ -27,6 +27,7 @@ LEX_OUTPUT_ROOT = lex.yy
 
 
 gtkpod_SOURCES = \
+    autodetection.c autodetection.h \
     charset.c charset.h \
     clientserver.c clientserver.h \
     confirmation.c confirmation.h \

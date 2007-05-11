@@ -90,8 +90,9 @@ typedef struct
 typedef enum
 {
     GP_ITDB_TYPE_LOCAL = 1<<0,    /* local browsing, normal music */
-    GP_ITDB_TYPE_IPOD  = 1<<1,    /* iPod */
-    GP_ITDB_TYPE_PODCASTS = 1<<2, /* local browsing, podcasts */
+    GP_ITDB_TYPE_IPOD  = 1<<1,    /* iPod                         */
+    GP_ITDB_TYPE_PODCASTS = 1<<2, /* local browsing, podcasts     */
+    GP_ITDB_TYPE_AUTOMATIC = 1<<3,/* repository was automounted   */
 } GpItdbType;
 
 /* Delete actions */

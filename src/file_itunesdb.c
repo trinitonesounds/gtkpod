@@ -848,6 +848,9 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
     mountpoint = get_itdb_prefs_string (itdb, KEY_MOUNTPOINT);
     call_script ("gtkpod.load", mountpoint, NULL);
 
+    /* read preferences keys from the iPod if available */
+    load_ipod_prefs (itdb, mountpoint);
+
     itdb_device_set_mountpoint (itdb->device, mountpoint);
 
     itunesdb = itdb_get_itunesdb_path (mountpoint);
@@ -969,25 +972,38 @@ gboolean gp_eject_ipod (iTunesDB *itdb)
     {
 	gint index;
 	gchar *mountpoint;
-	iTunesDB *new_itdb;
 
 	mountpoint = get_itdb_prefs_string (itdb, KEY_MOUNTPOINT);
+
+	/* save prefs relevant for this iPod to the iPod */
+	save_ipod_prefs (itdb, mountpoint);
+
 	call_script ("gtkpod.eject", mountpoint, FALSE);
 	g_free (mountpoint);
 
 	index = get_itdb_index (itdb);
-	new_itdb = setup_itdb_n (index);
-	if (new_itdb)
-	{
-	    ExtraiTunesDBData *new_eitdb;
 
-	    new_eitdb = new_itdb->userdata;
-	    g_return_val_if_fail (new_eitdb, TRUE);
+	if (itdb->usertype & GP_ITDB_TYPE_AUTOMATIC)
+	{   /* remove itdb from display */
+	    remove_itdb_prefs (itdb);
+	    gp_itdb_remove (itdb);
+	    gp_itdb_free (itdb);
+	}
+	else
+	{   /* switch to an empty itdb */
+	    iTunesDB *new_itdb = setup_itdb_n (index);
+	    if (new_itdb)
+	    {
+		ExtraiTunesDBData *new_eitdb;
 
-	    gp_replace_itdb (itdb, new_itdb);
+		new_eitdb = new_itdb->userdata;
+		g_return_val_if_fail (new_eitdb, TRUE);
 
-	    new_eitdb->ipod_ejected = TRUE;
-    	}
+		gp_replace_itdb (itdb, new_itdb);
+
+		new_eitdb->ipod_ejected = TRUE;
+	    }
+	}
 	return TRUE;
     }
     return FALSE;

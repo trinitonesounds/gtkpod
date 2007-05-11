@@ -38,6 +38,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include "autodetection.h"
 #include "charset.h"
 #include "clientserver.h"
 #include "file_convert.h"
@@ -1404,7 +1405,51 @@ GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, const gchar *name)
 }
 
 
-  gchar    *ipod_mount;     /* mount point of iPod */
+guint32 guiToDB(gint gui)
+{
+  guint32 db = 0;
+  switch (gui)
+    {
+    case 0: db = 0x00000000; break;
+    case 1: db = 0x00000001; break;
+    case 2: db = 0x00000002; break;
+    case 3: db = 0x00000004; break;
+    case 4: db = 0x00000006; break;
+    case 5: db = 0x00000008; break;
+    case 6: db = 0x00000020; break;
+    case 7: db = 0x00000040; break;
+    case 8: db = 0x00000060; break;
+    default:
+      /* This is an error */
+      g_warning ("Programming error: GUI is not in sync with Media Types.\n");
+      db = 0;
+    };
+
+  return db;
+}
+
+gint dbToGUI(guint32 db)
+{
+  gint gui = 0;
+  switch (db)
+    {
+    case 0x00000000: gui = 0; break;
+    case 0x00000001: gui = 1; break;
+    case 0x00000002: gui = 2; break;
+    case 0x00000004: gui = 3; break;
+    case 0x00000006: gui = 4; break;
+    case 0x00000008: gui = 5; break;
+    case 0x00000020: gui = 6; break;
+    case 0x00000040: gui = 7; break;
+    case 0x00000060: gui = 8; break;
+    default:
+      /* Warning */
+      g_warning ("Unknown media type found: %#.8x\n", db);
+      gui = 0;
+    };
+  return gui;
+}
+
 /* ------------------------------------------------------------
  *
  *        Helper functions for pref keys
@@ -1651,6 +1696,169 @@ void set_itdb_index_prefs_int (gint index,
     g_free (key);
 }
 
+/**
+ * Helper function to remove all prefs strings for itdb @index and
+ * move all subsequent itdb strings forward. You can call this even
+ * after your have removed the itdb from itdbs_head.
+ * 
+ **/
+static void remove_itdb_index_prefs (gint index)
+{
+    struct itdbs_head *itdbs_head;
+    gchar *subkey;
+    gint i, n;
+
+    itdbs_head = gp_get_itdbs_head (gtkpod_window);
+    g_return_if_fail (itdbs_head);
+
+    n = g_list_length (itdbs_head->itdbs);
+    subkey = get_itdb_prefs_key (index, "");
+    prefs_flush_subkey (subkey);
+    g_free (subkey);
+    
+    for (i=index; i<=n; ++i)
+    {
+	gchar *from_key = get_itdb_prefs_key (i+1, "");
+	gchar *to_key = get_itdb_prefs_key (i, "");
+	prefs_rename_subkey (from_key, to_key);
+	g_free (from_key);
+	g_free (to_key);
+    }
+}
+
+
+/**
+ * Helper function to remove all prefs strings for @itdb and move all
+ * subsequent itdb strings forward. Call this before removing the itdb
+ * from itdbs_head.
+ * 
+ **/
+void remove_itdb_prefs (iTunesDB *itdb)
+{
+    g_return_if_fail (itdb);
+
+    remove_itdb_index_prefs (get_itdb_index (itdb));
+}
+
+/* Save all itdb_<index>_* keys to the iPod
+ * (<ControlDir>/gtkpod.prefs).
+ *
+ * Return value: TRUE on succes, FALSE on error
+ */
+gboolean save_ipod_index_prefs (gint index, const gchar *mountpoint)
+{
+    TempPrefs *temp_prefs;
+    gboolean result = FALSE;
+    gchar *subkey, *dir;
+
+    g_return_val_if_fail (mountpoint, FALSE);
+
+    /* isolate all 'itdb_<index>_*' keys */
+    subkey = get_itdb_prefs_key (index, "");
+    temp_prefs = prefs_create_subset (subkey);
+
+    /* rename to 'itdb_*' */
+    temp_prefs_rename_subkey (temp_prefs, subkey, "itdb_");
+
+    /* remove some keys */
+    temp_prefs_remove_key (temp_prefs, "itdb_mountpoint");
+    temp_prefs_remove_key (temp_prefs, "itdb_name");
+    temp_prefs_remove_key (temp_prefs, "itdb_type");
+
+    /* build filename path */
+    dir = itdb_get_itunes_dir (mountpoint);
+    if (dir)
+    {
+	GError *error = NULL;
+	gchar *path = g_build_filename (dir, "gtkpod.prefs", NULL);
+	result = temp_prefs_save (temp_prefs, path, &error);
+	if (result == FALSE)
+	{
+	    gtkpod_warning (_("Writing preferences file '%s' failed (%s).\n\n"),
+			    path,
+			    error? error->message:_("unspecified error"));
+	    g_error_free (error);
+	}
+	g_free (path);
+	g_free (dir);
+    }
+    else
+    {
+	gtkpod_warning (_("Writing preferences to the iPod (%s) failed: could not get path to Control Directory.\n\n"),
+			mountpoint);
+    }
+
+    temp_prefs_destroy (temp_prefs);
+    g_free (subkey);
+
+    return result;
+}
+
+
+
+/* Save all itdb_<index>_* keys to the iPod
+ * (<ControlDir>/gtkpod.prefs).
+ *
+ * Return value: TRUE on succes, FALSE on error
+ */
+gboolean save_ipod_prefs (iTunesDB *itdb, const gchar *mountpoint)
+{
+    g_return_val_if_fail (itdb && mountpoint, FALSE);
+    return save_ipod_index_prefs (get_itdb_index (itdb), mountpoint);
+}
+
+
+/* Load preferences file from the iPod and merge them into the general
+ * prefs system.
+ */
+static void load_ipod_index_prefs (gint index, const gchar *mountpoint)
+{
+    gchar *dir;
+
+    g_return_if_fail (mountpoint);
+
+    /* build filename path */
+    dir = itdb_get_itunes_dir (mountpoint);
+    if (dir)
+    {
+	TempPrefs *temp_prefs;
+	GError *error = NULL;
+	gchar *path = g_build_filename (dir, "gtkpod.prefs", NULL);
+	temp_prefs = temp_prefs_load (path, &error);
+	if (temp_prefs)
+	{
+	    gchar *subkey;
+	    subkey = get_itdb_prefs_key (index, "");
+	    /* rename 'itdb_*' to 'itdb_<index>_*' */
+	    temp_prefs_rename_subkey (temp_prefs, "itdb_", subkey);
+	    /* merge with real prefs */
+	    temp_prefs_apply (temp_prefs);
+	    /* destroy temp prefs */
+	    temp_prefs_destroy (temp_prefs);
+	}
+	else
+	{
+	    /* we ignore errors -- no need to be concerned about them */
+	    g_error_free (error);
+	}
+	g_free (dir);
+    }
+}
+
+
+
+/* Load preferences file from the iPod and merge them into the general
+ * prefs system.
+ */
+void load_ipod_prefs (iTunesDB *itdb, const gchar *mountpoint)
+{
+    g_return_if_fail (mountpoint);
+    load_ipod_index_prefs (get_itdb_index (itdb), mountpoint);
+}
+
+
+
+
 /* retrieve offline mode from itdb (convenience function) */
 gboolean get_offline (iTunesDB *itdb)
 {
@@ -1661,51 +1869,6 @@ gboolean get_offline (iTunesDB *itdb)
     g_return_val_if_fail (eitdb, FALSE);
 
     return eitdb->offline;
-}
-
-guint32 guiToDB(gint gui)
-{
-  guint32 db = 0;
-  switch (gui)
-    {
-    case 0: db = 0x00000000; break;
-    case 1: db = 0x00000001; break;
-    case 2: db = 0x00000002; break;
-    case 3: db = 0x00000004; break;
-    case 4: db = 0x00000006; break;
-    case 5: db = 0x00000008; break;
-    case 6: db = 0x00000020; break;
-    case 7: db = 0x00000040; break;
-    case 8: db = 0x00000060; break;
-    default:
-      /* This is an error */
-      g_warning ("Programming error: GUI is not in sync with Media Types.\n");
-      db = 0;
-    };
-
-  return db;
-}
-
-gint dbToGUI(guint32 db)
-{
-  gint gui = 0;
-  switch (db)
-    {
-    case 0x00000000: gui = 0; break;
-    case 0x00000001: gui = 1; break;
-    case 0x00000002: gui = 2; break;
-    case 0x00000004: gui = 3; break;
-    case 0x00000006: gui = 4; break;
-    case 0x00000008: gui = 5; break;
-    case 0x00000020: gui = 6; break;
-    case 0x00000040: gui = 7; break;
-    case 0x00000060: gui = 8; break;
-    default:
-      /* Warning */
-      g_warning ("Unknown media type found: %#.8x\n", db);
-      gui = 0;
-    };
-  return gui;
 }
 
 /* ----------------------------------------------------------------
@@ -1786,7 +1949,7 @@ void gtkpod_init (int argc, char *argv[])
     file_convert_init ();
 
     display_create ();
-	
+
     gtk_widget_show (gtkpod_window);
 
     init_data (gtkpod_window);   /* setup base data, importing all local
@@ -1795,9 +1958,8 @@ void gtkpod_init (int argc, char *argv[])
     /* stuff to be done before starting gtkpod */
     call_script ("gtkpod.in", NULL);
 
-    if(prefs_get_int("autoimport") || prefs_get_int("autoimport_commandline"))
-	gp_load_ipods ();
-
+    autodetection_init ();
+	
     server_setup ();   /* start server to accept playcount updates */
 }
 

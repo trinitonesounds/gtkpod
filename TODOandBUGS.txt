@@ -1,5 +1,7 @@
 BUGS, TODO:
 
+- when auto-loading iPods: set backup path if not set.
+
 - move part of free-space-update to file_convert.c
 
 - make it impossible to add tracks to an iPod that's not loaded.

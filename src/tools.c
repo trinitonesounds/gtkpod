@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-19 01:52:28 jcs>
+/* Time-stamp: <2007-05-09 22:23:27 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -562,7 +562,7 @@ static void tools_sync_replace_percent_i (iTunesDB *itdb, gchar **argv)
 
     if (!itdb) return;
 
-    ipod_mount = get_itdb_prefs_string (itdb, "mountpoint");
+    ipod_mount = get_itdb_prefs_string (itdb, KEY_MOUNTPOINT);
 
     if (!ipod_mount) ipod_mount = g_strdup ("");
 

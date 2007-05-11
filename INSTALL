@@ -41,8 +41,12 @@ How to compile/install gtkpod:
 
    Optional packages:
 
-        gettext (for internationalization)
         libmpv4 (for AAC/M4A support)
+	libvorbis (for ogg libvorbis support)
+	libflac (for FLAC support)
+	libcurl (for coverart download support)
+	libgnome-vfs-2.0 >2.6 (for iPod autodetection under GNOME)
+	libhal >0.5 <0.6 (in combination with libgnome-vfs: better detection of iPods)
 
 
 2. If you install libraries to /usr/local/lib please don't forget to

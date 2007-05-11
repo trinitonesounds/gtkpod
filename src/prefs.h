@@ -128,6 +128,7 @@ gdouble prefs_get_double_index(const gchar *key,
 gboolean prefs_get_double_value_index(const gchar *key, guint index,
 				      gdouble *value);
 /* Special functions */
+TempPrefs *prefs_create_subset (const gchar *subkey);
 void prefs_flush_subkey (const gchar *subkey);
 void prefs_rename_subkey (const gchar *subkey_old, const gchar *subkey_new);
 void temp_prefs_rename_subkey (TempPrefs *temp_prefs,
@@ -140,6 +141,10 @@ gboolean temp_prefs_subkey_exists (TempPrefs *temp_prefs,
  * Temp prefs functions
  */
 TempPrefs *temp_prefs_create (void);
+TempPrefs *temp_prefs_load (const gchar *filename, GError **error);
+gboolean temp_prefs_save (TempPrefs *temp_prefs,
+			  const gchar *filename,
+			  GError **error);
 TempPrefs *temp_prefs_create_subset (TempPrefs *temp_prefs,
 				     const gchar *subkey);
 void temp_prefs_destroy (TempPrefs *temp_prefs);

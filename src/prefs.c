@@ -93,6 +93,13 @@
 /* End-of-list marker for variable-length lists */
 #define LIST_END_MARKER "----++++----"
 
+struct temp_prefs_save
+{
+    GIOChannel *gio;
+    GError **error;
+    gboolean success;
+};
+
 struct sub_data
 {
     TempPrefs *temp_prefs;
@@ -131,7 +138,6 @@ enum {
   GP_HELP,
   GP_PLAYCOUNT,
   GP_MOUNT,
-  GP_AUTO,
   GP_PRINT_HASH,
 };
 
@@ -265,7 +271,6 @@ static void set_default_preferences()
     prefs_set_int("size_file_dialog_details.x", 320);
     prefs_set_int("size_file_dialog_details.y", 140);
 
-    prefs_set_int("autoimport", FALSE);
     prefs_set_int("readtags", TRUE);
     prefs_set_int("write_extended_info", TRUE);
     prefs_set_int("parsetags", FALSE);
@@ -372,8 +377,6 @@ static void read_commandline(int argc, char *argv[])
 	    { "hash",        required_argument, NULL, GP_PRINT_HASH },
 	    { "m",           required_argument,	NULL, GP_MOUNT },
 	    { "mountpoint",  required_argument,	NULL, GP_MOUNT },
-	    { "a",           no_argument,	NULL, GP_AUTO },
-	    { "auto",        no_argument,	NULL, GP_AUTO },
 	    { 0, 0, 0, 0 }
 	};
 	
@@ -396,9 +399,6 @@ static void read_commandline(int argc, char *argv[])
 	    break;
 	case GP_MOUNT:
 	    prefs_set_string("initial_mountpoint", optarg);
-	    break;
-	case GP_AUTO:
-	    prefs_set_int("autoimport_commandline", TRUE);
 	    break;
 	default:
 	    locale_fprintf(stderr, "Unknown option: %s\n", argv[optind]);
@@ -508,7 +508,7 @@ static gboolean check_subkey (gpointer key, gpointer value, gpointer user_data)
 
 /* Add key/value to temp_prefs if it matches subkey -- called by
  * prefs_create_subset() and temp_prefs_create_subset() */
-gboolean get_subset (gpointer key, gpointer value, gpointer user_data)
+static gboolean get_subset (gpointer key, gpointer value, gpointer user_data)
 {
     struct sub_data *sub_data = user_data;
 
@@ -565,55 +565,65 @@ gchar *prefs_get_cfgdir()
     return folder;
 }
 
+
+/* get @key and @value from a string like "key=value" */
+static gboolean read_prefs_get_key_value (const gchar *buf,
+					  gchar **key, gchar **value)
+{
+    size_t len;  /* string length */
+    const gchar *buf_start; /* Pointer to where actual useful data starts in line */
+
+    g_return_val_if_fail (buf && key && value, FALSE);
+
+    /* Strip out any comments (lines that begin with ; or #) */
+    if ((buf[0] == ';') || (buf[0] == '#')) 
+	return FALSE;
+
+    /* Find the key and value, and look for malformed lines */
+    buf_start = strchr (buf, '=');
+
+    if ((!buf_start) || (buf_start == buf))
+    {
+	printf("Parse error reading prefs: %s", buf);
+	return FALSE;
+    }
+
+    /* Find the key name */
+    *key = g_strndup (buf, (buf_start - buf));
+
+    /* Strip whitespace */
+    g_strstrip (*key);
+
+    /* Find the value string */
+    *value = strdup (buf_start+1);
+
+    /* remove newline */
+    len = strlen (*value);
+    if ((len > 0) && ((*value)[len - 1] == 0x0a))
+	(*value)[len - 1] = 0;
+
+    /* Strip whitespace */
+    g_strstrip (*value);
+
+    return TRUE;
+}
+
+
 /* Read preferences from a file */
 static void read_prefs_from_file(FILE *fp)
 {
     gchar buf[PATH_MAX];  /* Buffer that contains one line */
-    gchar *buf_start; /* Pointer to where actual useful data starts in line */
     gchar *key;  /* Pref value key */
     gchar *value; /* Pref value */
-    size_t len;  /* string length */
-	
-    if (fp)
+
+
+    g_return_if_fail (prefs_table && fp);
+
+    while (fgets(buf, PATH_MAX, fp))
     {
-	while (fgets(buf, PATH_MAX, fp))
+	if (read_prefs_get_key_value (buf, &key, &value))
 	{
-	    /* Strip out any comments (lines that begin with ; or #) */
-	    if ((buf[0] == ';') || (buf[0] == '#')) 
-		continue;
-			
-	    /* Find the key and value, and look for malformed lines */
-	    value = strchr(buf, '=');
-			
-	    if ((!value) || (value == buf))
-		printf("Parse error reading prefs: %s", buf);
-			
-	    /* Strip off whitespace */
-	    buf_start = buf;
-			
-	    while (g_ascii_isspace(*buf_start))
-		buf_start++;
-			
-	    /* Find the key name */
-	    key = g_strndup(buf, (value - buf_start));
-	    value++;
-			
-	    /* remove newline */
-	    len = strlen(value);
-			
-	    if ((len > 0) && (value[len - 1] == 0x0a))
-		value[len - 1] = 0;
-			
-	    /* Strip whitespace off the key value */
-	    while (g_ascii_isspace(*value))
-		value++;
-			
-	    /* Finally, load each key/value pair into the pref hash table */
-	    if (prefs_table)
-	    {
-		g_hash_table_insert(prefs_table, (gpointer)key, 
-				    (gpointer)g_strdup(value));
-	    }
+	    g_hash_table_insert (prefs_table, key, value);
 	}
     }
 }
@@ -704,6 +714,98 @@ void prefs_save ()
 	g_free(config_dir);
     }
 }
+
+
+static gboolean temp_prefs_save_fe (gchar *key, gchar *value,
+				    struct temp_prefs_save *tps)
+{
+    gchar *buf;
+    GIOStatus status;
+
+    buf=g_strdup_printf ("%s=%s\n", key, value);
+    status = g_io_channel_write_chars (tps->gio, buf, -1, NULL, tps->error);
+    g_free (buf);
+    if (status != G_IO_STATUS_NORMAL)
+    {
+	tps->success = FALSE;
+	return TRUE;  /* stop traversal */
+    }
+    return FALSE;
+}
+
+
+/* Save @temp_prefs to @filename in the same manner as prefs_save is
+ * saving to ~/.gtkpod/prefs. @error: location where to store
+ * information about errors or NULL.
+ * 
+ * Return value: TRUE on success, FALSE if an error occured, in which
+ * case @error will be set accordingly.
+ */
+gboolean temp_prefs_save (TempPrefs *temp_prefs,
+			  const gchar *filename,
+			  GError **error)
+{
+    GIOChannel *gio;
+    struct temp_prefs_save tps;
+
+    g_return_val_if_fail (temp_prefs && filename, FALSE);
+
+    gio = g_io_channel_new_file (filename, "w", error);
+    tps.gio = gio;
+    tps.error = error;
+    tps.success = TRUE;
+    if (gio)
+    {
+	g_tree_foreach (temp_prefs->tree, (GTraverseFunc)temp_prefs_save_fe, &tps);
+	g_io_channel_unref (gio);
+    }
+
+    return tps.success;
+}
+
+
+TempPrefs *temp_prefs_load (const gchar *filename, GError **error)
+{
+    GIOChannel *gio;
+    TempPrefs *temp_prefs = NULL;
+
+    g_return_val_if_fail (filename, NULL);
+
+    gio = g_io_channel_new_file (filename, "r", error);
+    if (gio)
+    {
+	GIOStatus status;
+
+	temp_prefs = temp_prefs_create ();
+
+	do
+	{
+	    gchar *line;
+
+	    status = g_io_channel_read_line (gio, &line, NULL, NULL, error);
+	    if (status == G_IO_STATUS_NORMAL)
+	    {
+		gchar *key, *value;
+		if (read_prefs_get_key_value (line, &key, &value))
+		{
+		    temp_prefs_set_string (temp_prefs, key, value);
+		}
+		g_free (line);
+	    }
+	} while (status == G_IO_STATUS_NORMAL);
+
+	g_io_channel_unref (gio);
+
+	if (status != G_IO_STATUS_EOF)
+	{
+	    temp_prefs_destroy (temp_prefs);
+	    temp_prefs = NULL;
+	}
+    }
+
+    return temp_prefs;
+}
+
 
 /* Removes already existing list keys from the prefs table */
 static void wipe_list(const gchar *key)
@@ -935,6 +1037,8 @@ static void cleanup_keys()
     prefs_set_string("size_file_dialog.y", NULL);
     prefs_set_string("size_file_dialog_details.x", NULL);
     prefs_set_string("size_file_dialog_details.y", NULL);
+    prefs_set_string("autoimport", NULL);
+    prefs_set_string("auto_import", NULL);
 
     /* sp_created_cond renamed to sp_added_cond */
     for (i = 0; i < SORT_TAB_MAX; i++)
@@ -1006,13 +1110,6 @@ static void cleanup_keys()
 	prefs_set_string("size_info.y", NULL);
     }
     
-    /* auto_import reanmed to autoimport */
-    if (prefs_get_int_value("auto_import", &int_buf))
-    {
-	prefs_set_int("autoimport", int_buf);
-	prefs_set_string("auto_import", NULL);
-    }
-
     /* not_played_song renamed to not_played_track */
     if (prefs_get_int_value("not_played_song", &int_buf))
     {
@@ -1146,7 +1243,7 @@ void prefs_shutdown ()
 
 /* Create the temp prefs tree */
 /* Free the returned structure with delete_temp_prefs() */
-TempPrefs *temp_prefs_create()
+TempPrefs *temp_prefs_create ()
 {
     TempPrefs *temp_prefs;  /* Retunred temp prefs structure */
 
@@ -1159,7 +1256,7 @@ TempPrefs *temp_prefs_create()
 }
 
 /* Delete temp prefs */
-void temp_prefs_destroy(TempPrefs *temp_prefs)
+void temp_prefs_destroy (TempPrefs *temp_prefs)
 {
     g_return_if_fail (temp_prefs);
     g_return_if_fail (temp_prefs->tree);
@@ -1169,7 +1266,7 @@ void temp_prefs_destroy(TempPrefs *temp_prefs)
 }
 
 /* Copy key data from the temp prefs tree to the hash table */
-static gboolean copy_key(gpointer key, gpointer value, gpointer user_data)
+static gboolean copy_key (gpointer key, gpointer value, gpointer user_data)
 {
     prefs_set_string(key, value);
 	
@@ -1177,7 +1274,7 @@ static gboolean copy_key(gpointer key, gpointer value, gpointer user_data)
 }
 
 /* Copy the data from the temp prefs tree to the permanent prefs table */
-void temp_prefs_apply(TempPrefs *temp_prefs)
+void temp_prefs_apply (TempPrefs *temp_prefs)
 {
     g_return_if_fail (temp_prefs);
     g_return_if_fail (temp_prefs->tree);
@@ -1188,7 +1285,7 @@ void temp_prefs_apply(TempPrefs *temp_prefs)
 
 /* Create a temp_prefs tree containing a subset of keys in the
    permanent prefs table (those starting with @subkey */
-static TempPrefs *prefs_create_subset (const gchar *subkey)
+static TempPrefs *prefs_create_subset_unlocked (const gchar *subkey)
 {
     struct sub_data sub_data;
 
@@ -1200,6 +1297,21 @@ static TempPrefs *prefs_create_subset (const gchar *subkey)
     g_hash_table_foreach (prefs_table, (GHFunc)get_subset, &sub_data);
 
     return sub_data.temp_prefs;
+}
+
+/* Create a temp_prefs tree containing a subset of keys in the
+   permanent prefs table (those starting with @subkey */
+TempPrefs *prefs_create_subset (const gchar *subkey)
+{
+    TempPrefs *temp_prefs;
+
+    lock_prefs_table ();
+
+    temp_prefs = prefs_create_subset_unlocked (subkey);
+
+    unlock_prefs_table ();
+
+    return temp_prefs;
 }
 
 
@@ -1224,7 +1336,7 @@ TempPrefs *temp_prefs_create_subset (TempPrefs *temp_prefs,
 
 /* Remove all keys in the temp prefs tree from the permanent prefs
    table */
-void temp_prefs_flush(TempPrefs *temp_prefs)
+void temp_prefs_flush (TempPrefs *temp_prefs)
 {
     g_return_if_fail (temp_prefs);
     g_return_if_fail (temp_prefs->tree);
@@ -1299,7 +1411,7 @@ void prefs_rename_subkey (const gchar *subkey_old, const gchar *subkey_new){
 	g_return_if_reached ();
     }
 
-    sub_data.temp_prefs = prefs_create_subset (subkey_old);
+    sub_data.temp_prefs = prefs_create_subset_unlocked (subkey_old);
     sub_data.temp_prefs_orig = NULL;
 
     if (temp_prefs_size (sub_data.temp_prefs) > 0)
@@ -1775,7 +1887,7 @@ gboolean prefs_get_double_value_index(const gchar *key, guint index,
  * temp_prefs_remove_key() to remove key from the temp prefs. Setting
  * it to NULL will not remove the key. It will instead remove the key
  * in the main prefs table when you call temp_prefs_apply(). */
-void temp_prefs_set_string(TempPrefs *temp_prefs, const gchar *key, 
+void temp_prefs_set_string (TempPrefs *temp_prefs, const gchar *key, 
 			   const gchar *value)
 {
     g_return_if_fail (temp_prefs && temp_prefs->tree);

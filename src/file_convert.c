@@ -1712,11 +1712,13 @@ static gboolean conversion_scheduler (gpointer data)
 
 /*     debug ("conversion_scheduler enter\n"); */
 
+    gdk_threads_enter();
     g_mutex_lock (conv->mutex);
 
     result = conversion_scheduler_unlocked (conv);
 
     g_mutex_unlock (conv->mutex);
+    gdk_threads_leave();
 
 /*    debug ("conversion_scheduler exit\n");*/
 

@@ -1,3 +1,48 @@
+2007-05-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* INSTALL
+	  configure.in
+	  src/Makefile.am
+	  src/autodetection.c (new)
+	  src/autodetection.h (new)
+	  src/display_itdb.h
+	  src/file_convert.c
+	  src/file_itunesdb.c
+	  src/misc.c
+	  src/misc.h
+	  src/misc_input.c
+	  src/tools.c:
+
+	  Autodetection and auto-loading of iPods. This loads iPods
+	  automatically on start-up when they are connected or later
+	  when they are mounted. Uses gnome-vfs for detection of
+	  mounted volumes and HAL for determining if the mounted
+	  volume is an iPod. Works fine without HAL, and compiles fine
+	  without gnome-vfs, but without autodection facility.
+
+	  iPod repositories are added automatically when necessary and
+	  removed when ejecting an iPod. Preferences referring to an
+	  iPod are saved into the iTunes directory (gtkpod.prefs).
+
+
+	  gtkpod.glade
+	  src/prefs_windows.c:
+	  src/prefs.c
+	  - removed old auto-import functionality. Auto-import is no
+	    longer supported without gnome-vfs. Code to support
+	    automounting on KDE should be easy to add -- please
+	    contribute.
+	  
+
+	  src/prefs.c
+	  src/prefs.h:
+	  - new code to save/load temporary preferences to an
+	    aribtrary file (temp_prefs_load/save(), used by
+	    load/save_ipod_prefs() in misc.c).
+	  - new code to create a subset of keys from the prefs
+
+	    structure.
+
 2007-05-10 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/prefs.c (prefs_create_subset): removed double-lock of

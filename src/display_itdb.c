@@ -839,32 +839,37 @@ void init_data (GtkWidget *window)
     {
 	/* databases have not been set up previously -- take care of
 	   this */
-	gchar *mountpoint, *filename;
-
-	/* iPod database */
-	mountpoint = prefs_get_string ("initial_mountpoint");
-	filename = g_build_filename (cfgdir, "iTunesDB", NULL);
-	prefs_set_int ("itdb_0_type", GP_ITDB_TYPE_IPOD);
-	prefs_set_string ("itdb_0_name", _("iPod"));
-	prefs_set_string ("itdb_0_filename", filename);
-	prefs_set_string ("itdb_0_mountpoint", mountpoint);
-	g_free (mountpoint);
-	g_free (filename);
+#ifndef HAVE_GNOME_VFS
+	gchar *mountpoint;
+#endif
+	gchar *filename;
 
 	/* Local database */
 	filename = g_build_filename (cfgdir, "local_0.itdb", NULL);
-	prefs_set_int ("itdb_1_type", GP_ITDB_TYPE_LOCAL);
-	prefs_set_string ("itdb_1_name", _("Local"));
-	prefs_set_string ("itdb_1_filename", filename);
+	prefs_set_int ("itdb_0_type", GP_ITDB_TYPE_LOCAL);
+	prefs_set_string ("itdb_0_name", _("Local"));
+	prefs_set_string ("itdb_0_filename", filename);
 	g_free (filename);
 
 	/* Podcasts database */
 	filename = g_build_filename (cfgdir, "podcasts.itdb", NULL);
-	prefs_set_int ("itdb_2_type",
+	prefs_set_int ("itdb_1_type",
 		       GP_ITDB_TYPE_PODCASTS|GP_ITDB_TYPE_LOCAL);
-	prefs_set_string ("itdb_2_name", _("Podcasts"));
-	prefs_set_string ("itdb_2_filename", filename);
+	prefs_set_string ("itdb_1_name", _("Podcasts"));
+	prefs_set_string ("itdb_1_filename", filename);
 	g_free (filename);
+
+#ifndef HAVE_GNOME_VFS
+	/* iPod database -- only set up if autodetection is not active */
+	mountpoint = prefs_get_string ("initial_mountpoint");
+	filename = g_build_filename (cfgdir, "iTunesDB", NULL);
+	prefs_set_int ("itdb_2_type", GP_ITDB_TYPE_IPOD);
+	prefs_set_string ("itdb_2_name", _("iPod"));
+	prefs_set_string ("itdb_2_filename", filename);
+	prefs_set_string ("itdb_2_mountpoint", mountpoint);
+	g_free (mountpoint);
+	g_free (filename);
+#endif
     }
 
 
