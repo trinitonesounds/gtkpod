@@ -1,3 +1,25 @@
+2007-05-13  P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+	* context_menus.c
+
+	  Fixed segfault in cad_context_menu_init() to avoid freeing
+	  tracks unnecessarily.
+
+	* display_playlist.c
+
+	  Coverart display will only be updated with a track change,
+	  addition or deletion if it is visible and not minimized.
+
+	* display_coverart.h
+	  display_coverart.c
+
+	  New Album_Item structure introduced for storage of tracks in
+	  coverart display. Replacement of displaytracks GList with a
+	  key list related to an Album_Item hashmap. Track_changed
+	  function changed to speed up changed, removal and addition
+	  operations. Other functions updated to reflect introduction of
+	  Album_Item and hashmap. 
+	  
 2007-05-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* INSTALL

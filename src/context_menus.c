@@ -1103,6 +1103,7 @@ tm_context_menu_init(void)
 	create_context_menu (CM_TM);
     }
 }
+
 /**
  * cad_context_menu_init - initialize the right click menu for coverart display 
  */
@@ -1113,16 +1114,23 @@ cad_context_menu_init(void)
     
     selected_entry = NULL; 
     selected_playlist = NULL;
+    selected_tracks = NULL;
     active_itdb = gp_get_selected_itdb ();
     entry_inst = -1;
     
-    if (selected_tracks)  g_list_free (selected_tracks);
-    selected_tracks = coverart_get_displayed_tracks();
-    
-    if(selected_tracks)
+     if (selected_tracks) g_list_free (selected_tracks);
+    	selected_tracks = g_list_copy (coverart_get_displayed_tracks());
+    /*
+    int i;
+    for (i = 0; i < g_list_length(selected_tracks); ++i)
     {
-			create_context_menu (CM_CAD);
+    	Track *track;
+    	track = g_list_nth_data (selected_tracks, i);
+    	printf ("context_menu_init - Artist:%s  Album:%s  Title:%s\n", track->artist, track->album, track->title);
     }
+    */
+    if(selected_tracks)
+			create_context_menu (CM_CAD);
 }
 /**
  * pm_context_menu_init - initialize the right click menu for playlists 

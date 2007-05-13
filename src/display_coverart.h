@@ -15,7 +15,14 @@
 #define COVERART_CHANGE_SIGNAL 3
 
 typedef struct {
-	Itdb_Track *track;
+	GList *tracks;
+	gchar *albumname;
+	gchar *artist;
+	GdkPixbuf *albumart;
+} Album_Item;
+
+typedef struct {
+	Album_Item *album;
 	gdouble img_x;
 	gdouble img_y;
 	gdouble img_width;
@@ -37,11 +44,9 @@ typedef struct {
 	GtkHScale *cdslider;
 	GtkButton *rightbutton;
 	GPtrArray *cdcovers;
-	GList *displaytracks;
 	gint first_imgindex;
 	gboolean block_display_change;
 } CD_Widget;
-
 
 extern const gchar *DISPLAY_COVER_SHOW;
 

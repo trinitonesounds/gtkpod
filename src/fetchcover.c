@@ -655,7 +655,6 @@ static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device)
 		imgbuf = gdk_pixbuf_new_from_file(etd->thumb_path_locale, &error);
 		if (error != NULL)
 		{
-			printf("Error occurred loading the image file - \nCode: %d\nMessage: %s\n", error->code, error->message);
 			/* Artwork failed to load from file so try loading default */
 			imgbuf = coverart_get_track_thumb (track, device);
 			g_error_free (error);
@@ -814,22 +813,27 @@ static void fetchcover_statusbar_update (gchar *message)
  */
 void on_coverart_context_menu_click (GList *tracks)
 {
-    Track *track;
-    gint result;
+	Track *track;
+  gint result;
 
-    track = tracks->data;
+  track = tracks->data;
+	if (track == NULL)
+	{
+		g_fprintf (stderr, "Track was null so fetchcover dialog was not displayed.\nLenght of glist was %d\n", g_list_length (tracks));
+		return;
+	}
+	
+  GtkDialog *dialog = fetchcover_display_dialog (track, track->itdb->device);
+  g_return_if_fail (dialog);
 
-    GtkDialog *dialog = fetchcover_display_dialog (track, track->itdb->device);
-    g_return_if_fail (dialog);
+  result = gtk_dialog_run (GTK_DIALOG (dialog));
 
-    result = gtk_dialog_run (GTK_DIALOG (dialog));
-
-  #ifdef HAVE_CURL
-  gchar *filename = NULL;
+ #ifdef HAVE_CURL
+ gchar *filename = NULL;
     	
-  switch (result)
-  {
-  case GTK_RESPONSE_ACCEPT:	
+ switch (result)
+ {
+ 	case GTK_RESPONSE_ACCEPT:	
       filename = fetchcover_save ();
       if (filename)
       {
