@@ -1217,10 +1217,14 @@ static void prepare_canvas ()
  */ 
 static void free_album (Album_Item *album)
 {
-	g_list_free (album->tracks);
-	g_free (album->albumname);
-	g_free (album->artist);
-	gdk_pixbuf_unref (album->albumart);
+	if (album != NULL)
+	{
+		g_list_free (album->tracks);
+		g_free (album->albumname);
+		g_free (album->artist);
+		if (album->albumart)
+			gdk_pixbuf_unref (album->albumart);
+	}
 }
 
 /**
@@ -1698,8 +1702,12 @@ void coverart_set_images (gboolean clear_track_list)
 		
 		tracks = playlist->members;
 		/* Free up the hash table and the key list */
-    g_hash_table_remove_all (album_hash);
-    g_list_free (album_key_list);
+		if (glib_check_version(2, 12, 0) == NULL)
+			g_hash_table_remove_all (album_hash);
+		else
+			g_hash_table_foreach_remove(album_hash, (GHRFunc) gtk_true, NULL);
+				
+		g_list_free (album_key_list);
     
     album_key_list = NULL;;
     
