@@ -1,3 +1,11 @@
+2007-05-16 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* scripts/convert-flac2mp3.sh
+	  scripts/convert-ogg2mp3.sh
+	  scripts/convert-wav2mp3.sh:
+	  Added quotes around $genreopts to make script more
+	  robust. Thanks to Andy.
+
 2007-05-13  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* context_menus.c
