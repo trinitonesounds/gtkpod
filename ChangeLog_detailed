@@ -6,6 +6,9 @@
 	  Added quotes around $genreopts to make script more
 	  robust. Thanks to Andy.
 
+	* src/display_itdb.c (gp_playlist_remove_track): podcasts
+          could not be removed from the iPod.
+
 2007-05-13  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* context_menus.c

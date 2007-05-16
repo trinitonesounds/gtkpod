@@ -628,10 +628,8 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
     case DELETE_ACTION_IPOD:
     case DELETE_ACTION_LOCAL:
     case DELETE_ACTION_DATABASE:
-	/* remove from MPL in these cases (unless we are removing
-	   podcasts) */
-	if (!(plitem && itdb_playlist_is_podcasts (plitem)))
-	    plitem = NULL;
+	/* remove from MPL in these cases */
+	plitem = NULL;
 	break;
     case DELETE_ACTION_PLAYLIST:
 	/* cannot remove from MPL */
@@ -652,6 +650,8 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
     /* remove track from playlist */
     itdb_playlist_remove_track (plitem, track);
 
+#if 0
+    /* podcasts are no longer treated differently from other playlists */
     /* if we removed a podcasts, remove it from memory as well, unless
        it's present in the MPL (this happens if this podcast was on
        the iPod as podcast as well as standard track) */
@@ -673,6 +673,7 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
 	    gp_track_set_flags_default (track);
 	}
     }
+#endif
 
     if (itdb_playlist_is_mpl (plitem))
     { /* if it's the MPL, we remove the track permanently */
