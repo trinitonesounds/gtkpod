@@ -1,3 +1,7 @@
+2007-05-16  Todd Zullinger <tmzullinger at users.sourceforge.net>
+
+	* src/tools.c: Fixed a few typos. (Daniele Forsi)
+
 2007-05-16  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * display_coverart.c

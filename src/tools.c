@@ -116,7 +116,7 @@ static gboolean run_exec_on_track (const gchar *commandline,
 
     if (!command_full_path)
     {
-	gtkpod_warning (_("Could not find '%s'\n. Please specifiy the exact path in the Tools section of the preference dialog or install the programm if it is not installed on your system.\n\n"), command);
+	gtkpod_warning (_("Could not find '%s'.\nPlease specifiy the exact path in the Tools section of the preference dialog or install the program if it is not installed on your system.\n\n"), command);
 	goto cleanup;
     }
 
