@@ -1,3 +1,11 @@
+2007-05-17  P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * display_coverart.c
+
+    Completely forgot compile time errors for
+    g_hash_table_remove_all so removed glib_version call to ensure
+    back compilation compatibility.
+    
 2007-05-16  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* src/tools.c: Fixed a few typos. (Daniele Forsi)

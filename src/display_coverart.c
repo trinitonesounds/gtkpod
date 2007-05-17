@@ -1702,10 +1702,7 @@ void coverart_set_images (gboolean clear_track_list)
 		
 		tracks = playlist->members;
 		/* Free up the hash table and the key list */
-		if (glib_check_version(2, 12, 0) == NULL)
-			g_hash_table_remove_all (album_hash);
-		else
-			g_hash_table_foreach_remove(album_hash, (GHRFunc) gtk_true, NULL);
+		g_hash_table_foreach_remove(album_hash, (GHRFunc) gtk_true, NULL);
 				
 		g_list_free (album_key_list);
     
