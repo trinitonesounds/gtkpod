@@ -48,6 +48,6 @@ dist-hook:
 	for gladefile in gtkpod.glade gtkpod.gladep; do \
 	    rm -f $(distdir)/pixmaps/$$gladefile; \
 	done
-	rm -rf $(distdir)/pixmaps/CVS
+	rm -rf $(distdir)/pixmaps/.svn
 
 

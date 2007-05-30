@@ -10,10 +10,10 @@ How to compile/install gtkpod:
    library -- they are not related. libid3tag is part of the MAD
    project (http://sourceforge.net/projects/mad/).
 
-   Starting with version 0.96 gtkpod is using the gpod
-   library. libgpod should soon be available as a standard package for
-   major linux distributions. You can also install the library from
-   source. Download instructions for the tarball or CVS snapshot can
+   Starting with version 0.96 gtkpod is using the gpod library.
+   libgpod should soon be available as a standard package for major
+   linux distributions. You can also install the library from source.
+   Download instructions for the tarball or development snapshot can
    be found at http://www.gtkpod.org/libgpod.html
 
    The libmp4v2 package is ONLY NEEDED if you need AAC support.  You
