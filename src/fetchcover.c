@@ -398,6 +398,8 @@ static void fetchcover_next_button_clicked (GtkWidget *widget, gpointer data)
 	fetchcover_debug("fetchcover_next_button: getting cover for:\n- Artist: %s\n- Album:  %s",
 																			fetchcover_track->artist, fetchcover_track->album);
 	
+	fetchcover_statusbar_update ("");
+	
 	if (netsearched == FALSE)
 	{
 		net_search_track ();
@@ -436,7 +438,12 @@ static void fetchcover_next_button_clicked (GtkWidget *widget, gpointer data)
 	if (displayed_cover->image == NULL)
 	{
 		net_retrieve_image (displayed_cover->url);
-		g_return_if_fail (displayed_cover->image);
+		if (displayed_cover->image == NULL)
+		{
+			gdk_window_set_cursor (window, NULL);
+			fetchcover_statusbar_update ("Failed to retrieve image.");
+			g_return_if_fail (displayed_cover->image);
+		}
 	}
 	
 	fetchcover_debug("Displayed Image path: %s/%s\n", displayed_cover->dir, displayed_cover->filename);
@@ -444,7 +451,7 @@ static void fetchcover_next_button_clicked (GtkWidget *widget, gpointer data)
 	GdkPixbuf *scaled = gdk_pixbuf_scale_simple(displayed_cover->image, IMGSCALE, IMGSCALE, GDK_INTERP_NEAREST);
 	gnome_canvas_item_set(fetchcover_canvasitem, "pixbuf", scaled, NULL);
 	
-	gdk_window_set_cursor (window, gdk_cursor_new (GDK_LEFT_PTR));
+	gdk_window_set_cursor (window, NULL);
 	
 	return;
 }
@@ -459,6 +466,8 @@ static void fetchcover_prev_button_clicked (GtkWidget *widget, gpointer data)
 {
 	/* decrease the index by 1 */
 	displayed_cover_index--;
+	
+	fetchcover_statusbar_update ("");
 	
 	if (displayed_cover_index <= 0)
 	{
@@ -484,7 +493,11 @@ static void fetchcover_prev_button_clicked (GtkWidget *widget, gpointer data)
 	if (displayed_cover->image == NULL)
 	{
 		net_retrieve_image (displayed_cover->url);
-		g_return_if_fail (displayed_cover->image);
+		if (displayed_cover->image == NULL)
+		{
+			fetchcover_statusbar_update ("Failed to retrieve image.");
+			g_return_if_fail (displayed_cover->image);
+		}
 	}
 	
 	GdkPixbuf *scaled = gdk_pixbuf_scale_simple(displayed_cover->image, IMGSCALE, IMGSCALE, GDK_INTERP_NEAREST);

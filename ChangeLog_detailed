@@ -1,3 +1,17 @@
+2007-05-30  P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * display_coverart.c
+  
+    Changed the on_main_cover_image_clicked so that only the
+    tracks belonging to the album are displayed in the track
+    listing. The sorttabs are no longer updated. A lot
+    quicker and doesnt rely on the artist/album sorttabs
+    being visible.
+    
+  * fetchcover.c
+
+    Status bar content changes in case album is not found.
+
 2007-05-30  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* configure.in

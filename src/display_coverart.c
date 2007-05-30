@@ -23,7 +23,7 @@
 |
 |  This product is not supported/written/published by Apple!
 |
-|  $Id$
+|  $Id: display_coverart.c,v 1.19 2007/05/17 20:06:03 phantom_sf Exp $
 */
 
 #ifdef HAVE_CONFIG_H
@@ -501,7 +501,6 @@ static void on_cover_display_button_clicked (GtkWidget *widget, gpointer data)
 static gint on_main_cover_image_clicked (GnomeCanvasItem *canvasitem, GdkEvent *event, gpointer data)
 {
 	Cover_Item *cover;
-	gboolean status;
 	guint mbutton;
 	
 	if(event->type != GDK_BUTTON_PRESS)
@@ -522,9 +521,19 @@ static gint on_main_cover_image_clicked (GnomeCanvasItem *canvasitem, GdkEvent *
 	
 		/* Select the correct track in the sorttabs */
 		album = cover->album;
-		track = g_list_nth_data (album->tracks, 0);
-		status = st_set_selection (track);
-	
+		g_return_val_if_fail (album, FALSE);
+		
+		/* Clear the tracks listed in the display */
+		tm_remove_all_tracks ();
+		
+		GList *tracks = album->tracks;
+		while (tracks)
+		{
+			track = (Track *) tracks->data;
+			tm_add_track_to_track_model (track, NULL);
+			tracks = tracks->next;
+		}
+		
 		/* Turn the display change back on */
 		coverart_block_change (FALSE);
 	}
