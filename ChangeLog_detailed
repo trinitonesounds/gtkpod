@@ -1,16 +1,20 @@
+2007-05-16 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/autodetection.c: fix non-responsive buttons introduced
+          with automounting.
+
 2007-05-30  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * display_coverart.c
+	* display_coverart.c
   
-    Changed the on_main_cover_image_clicked so that only the
-    tracks belonging to the album are displayed in the track
-    listing. The sorttabs are no longer updated. A lot
-    quicker and doesnt rely on the artist/album sorttabs
-    being visible.
+	  Changed the on_main_cover_image_clicked so that only the
+	  tracks belonging to the album are displayed in the track
+	  listing. The sorttabs are no longer updated. A lot quicker
+	  and doesnt rely on the artist/album sorttabs being visible.
     
-  * fetchcover.c
+        * fetchcover.c
 
-    Status bar content changes in case album is not found.
+	  Status bar content changes in case album is not found.
 
 2007-05-30  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
@@ -22,11 +26,11 @@
 
 2007-05-17  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * display_coverart.c
+        * display_coverart.c
 
-    Completely forgot compile time errors for
-    g_hash_table_remove_all so removed glib_version call to ensure
-    back compilation compatibility.
+	  Completely forgot compile time errors for
+	  g_hash_table_remove_all so removed glib_version call to
+	  ensure back compilation compatibility.
     
 2007-05-16  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
@@ -34,13 +38,12 @@
 
 2007-05-16  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * display_coverart.c
+	* display_coverart.c
   
-    Null checks placed in free_album.
-    g_hash_table_remove_all only used if running GLib version is
-    newer than 2.12.0.
-    Otherwise falls back on g_hash_table_foreach_remove.
-    Thanks to Mario Rossi for squashing these bugs.
+	  Null checks placed in free_album.  g_hash_table_remove_all
+	  only used if running GLib version is newer than 2.12.0.
+	  Otherwise falls back on g_hash_table_foreach_remove.  Thanks
+	  to Mario Rossi for squashing these bugs.
 
 2007-05-16 Jorg Schuler <jcsjcs at users.sourceforge.net>
 

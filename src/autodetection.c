@@ -23,7 +23,7 @@
 |
 |  This product is not supported/written/published by Apple!
 |
-|  $Id$
+|  $Id: autodetection.c,v 1.1 2007/05/11 15:41:53 jcsjcs Exp $
 */
 
 
@@ -350,8 +350,8 @@ static gboolean ad_timeout_cb (gpointer data)
     if (!widgets_blocked)
     {
 	gdk_threads_enter ();
-	block_widgets ();
 	g_mutex_lock (ad->mutex);
+
 	while (ad->new_ipod_uris)
 	{
 	    iTunesDB *itdb, *loaded_itdb = NULL;
@@ -374,6 +374,8 @@ static gboolean ad_timeout_cb (gpointer data)
 
 	    itdbs = gp_get_itdbs_head (gtkpod_window);
 	    g_return_val_if_fail (itdbs, (gdk_threads_leave(), release_widgets(), TRUE));
+
+	    block_widgets ();
 
 	    if (itdb)
 	    {
@@ -422,12 +424,13 @@ static gboolean ad_timeout_cb (gpointer data)
 		debug ("...OK (new)\n");
 	    }
 
+	    release_widgets ();
+
 	    g_free (mountpoint);
 
 	    g_mutex_lock (ad->mutex);
 	}
 	g_mutex_unlock (ad->mutex);
-	release_widgets ();
 	gdk_threads_leave();
     }
 
