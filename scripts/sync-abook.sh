@@ -10,7 +10,7 @@
 # with the following defaults: 
 
 IPOD_MOUNT='/mnt/ipod'				# mount point of ipod
-DATAFILE='/home/daniel/.abook/addressbook'	# the abook db
+DATAFILE='~/.abook/addressbook'	                # the abook db
 ENCODING_FROM=UTF-8                             # encoding used by abook
 ENCODING=ISO-8859-15                            # encoding used by ipod
 
@@ -38,6 +38,10 @@ ENCODING=ISO-8859-15                            # encoding used by ipod
 # 2005/06/15 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
 # Received original script from Daniel Kercher and added character
 # conversion and command line options.
+#
+# 2007/05/31 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
+# Set a more reasonable default datafile.
+#
 
 # overwrite default settings with optional command line arguments
 while getopts i:d:e:f: option; do

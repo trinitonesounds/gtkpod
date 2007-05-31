@@ -4,16 +4,16 @@
 
 # Usage:
 # 
-# sync-notes.sh [-i <ipod mountpoint>] [-p <path to folder containing notes (~/ipod_notes by default)>]
+# sync-notes.sh [-i <ipod mountpoint>] [-d <path to folder containing notes (~/ipod_notes by default)>]
 #           ...        [-e <encoding>]
 #
 # with the following defaults: 
 
-IPOD_MOUNT=/media/PERLIPOD                          # mountpoint of ipod
-NOTESPATH=~/Desktop/Notizen		  # path to folder containing notes
-ENCODING=ISO-8859-15                          # encoding used by ipod
+IPOD_MOUNT=/media/ipod            # mountpoint of ipod
+NOTESPATH=~/Desktop/notes         # path to folder containing notes
+ENCODING=ISO-8859-15              # encoding used by ipod
 
-# Unless called with "-e none" this script requires "iconv" available
+# Unless called with "-e=none" this script requires "iconv" available
 # from http://www.gnu.org/software/libiconv/
 
 # About the encoding used by the iPod (by Jorg Schuler):
@@ -50,7 +50,7 @@ ENCODING=ISO-8859-15                          # encoding used by ipod
 # Added Usage-line, added check for vcard file, rearranged source
 #
 # 2004/07/03 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
-# Made "iconv" optional (call with "-e none")
+# Made "iconv" optional (call with "-e=none")
 #
 # Removed "dos2unix" as my iPod (firmware 1.3) happily accepted
 # DOS-type vcards as well. Instead changed the "grep" pattern to
@@ -70,6 +70,12 @@ ENCODING=ISO-8859-15                          # encoding used by ipod
 # 2005/06/12 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
 # * added patch by Alexey Dokuchaev to replace recode by iconv
 # * changed check for recode to check of iconv
+#
+# 2007/05/31 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
+# Corrections By Oliver Sherouse <oliver.sherouse AT gmail DOT com>
+# (replaced some arithmetic expressions), fixed "-e=none", correctly
+# indicate "-d" in 'usage' instead of "-p")
+
 
 # overwrite default settings with optional command line arguments
 while getopts i:d:e: option; do
@@ -122,8 +128,8 @@ I=0
 find -type f |
 (
   read FILE
-  while [ "$?" == "0" ]; do
-	((++I))
+  while [ "$?" = "0" ]; do
+	I=`expr $I + 1`
 	mkdir -p "$IPOD_MOUNT/Notes/`dirname "$FILE"`/"
 	cat "$FILE" | $RECODE > "$IPOD_MOUNT/Notes/$FILE"
 	read FILE

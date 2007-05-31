@@ -10,8 +10,8 @@
 
 # mount point of ipod
 IPOD_MOUNT='/mnt/ipod'
-# uri for webcalendar
-DATAFILE=' https://native.intern.net/projekte/webcalendar/publish.php/daniel.ics'
+# uri for webcalendar (example)
+DATAFILE='https://somewhere.local/calendar.ics'
 # calendar name
 CALENDAR='webcalendar'
 # special options for wget
@@ -41,6 +41,9 @@ WGET_OPTIONS='--no-check-certificate'
 # 2005/06/15 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
 # Received original script from Daniel Kercher and added command line
 # options
+#
+# 2007/05/31 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
+# Set a more reasonable default datafile.
 #
 # FIXME: some way to convert the character set
 

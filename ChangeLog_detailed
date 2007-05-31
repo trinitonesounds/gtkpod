@@ -3,6 +3,13 @@
 	* src/autodetection.c: fix non-responsive buttons introduced
           with automounting.
 
+	* scripts/sync-tomboy.sh
+	  scripts/sync-notes.sh: fixes by Oliver Sherouse
+
+	* scripts/sync-abook.sh
+	  scripts/sync-webcalendar.sh:
+	  set more reasonable default path.
+
 2007-05-30  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* display_coverart.c
