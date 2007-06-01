@@ -90,6 +90,7 @@ static gulong slide_signal_id;
 static gulong rbutton_signal_id;
 static gulong lbutton_signal_id;
 static gulong window_signal_id;
+static gulong contentpanel_signal_id;
 
 #if 0
 static void debug_albums ()
@@ -948,6 +949,32 @@ gboolean on_paned0_button_release_event (GtkWidget *widget, GdkEventButton *even
 	return FALSE;
 }
 
+static gboolean on_contentpanel_scroll_wheel_turned (GtkWidget *widget, GdkEventScroll *event, gpointer user_data)
+{
+	gint displaytotal;
+	
+	if (event->direction == GDK_SCROLL_DOWN)
+		cdwidget->first_imgindex++;
+  else
+   	cdwidget->first_imgindex--;
+   	
+  displaytotal = g_list_length(album_key_list) - 8;
+  
+  if (displaytotal <= 0)
+  	return TRUE;
+  
+  /* Use the index value from the slider for the main image index */
+  if (cdwidget->first_imgindex < 0)
+  	cdwidget->first_imgindex = 0;
+  else if (cdwidget->first_imgindex > (displaytotal - 1))
+  	cdwidget->first_imgindex = displaytotal - 1;
+      	
+	/* Change the value of the slider to do the work of scrolling the covers */
+	gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), cdwidget->first_imgindex);
+	
+	return TRUE;	
+}
+      
 /**
  * gtkpod_window_configure_callback:
  *
@@ -1296,6 +1323,9 @@ void coverart_init_display ()
 	
 	gtk_box_pack_start_defaults (GTK_BOX(cdwidget->canvasbox), GTK_WIDGET(cdwidget->canvas));
 			
+	contentpanel_signal_id = g_signal_connect (G_OBJECT(cdwidget->contentpanel), "scroll-event",
+					G_CALLBACK(on_contentpanel_scroll_wheel_turned), NULL);
+					
 	lbutton_signal_id = g_signal_connect (G_OBJECT(cdwidget->leftbutton), "clicked",
 		      G_CALLBACK(on_cover_display_button_clicked), NULL);
 		      
@@ -1569,6 +1599,8 @@ void coverart_track_changed (Track *track, gint signal)
 			  * album items track list. If it does then b) is true and nothing more is required.
 			  */
 			  album = g_hash_table_lookup (album_hash, trk_key);
+			  g_return_if_fail (album);
+			  
 			  index = g_list_index (album->tracks, track);
 			  if (index != -1)
 			  {

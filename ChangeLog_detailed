@@ -1,4 +1,18 @@
-2007-05-16 Jorg Schuler <jcsjcs at users.sourceforge.net>
+2007-06-01  P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * display_coverart.c
+
+		Added callback on display_coverart content panel for acting
+		on scroll events with the mouse wheel. Result is that moving
+		the scroll wheel while the mouse is over the coverart display
+		will scroll the covers in the respective direction.
+		
+		Avoided possible null pointer in track_changed function.
+		Thanks to Daniele Forsi for raising it. May need further work
+		if this does not solve it.
+
+
+2007-05-31 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/autodetection.c: fix non-responsive buttons introduced
           with automounting.

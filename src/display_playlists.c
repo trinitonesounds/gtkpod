@@ -23,7 +23,7 @@
 | 
 |  This product is not supported/written/published by Apple!
 |
-|  $Id$
+|  $Id: display_playlists.c,v 1.105 2007/05/13 17:08:21 phantom_sf Exp $
 */
 
 #ifdef HAVE_CONFIG_H
@@ -1493,10 +1493,10 @@ void pm_add_itdb (iTunesDB *itdb, gint pos)
 
     for (gl_pl=itdb->playlists; gl_pl; gl_pl=gl_pl->next)
     {
-	Playlist *pl = gl_pl->data;
-	g_return_if_fail (pl);
-	if (itdb_playlist_is_mpl (pl))     pm_add_playlist (pl, pos);
-	else                               pm_add_playlist (pl, -1);
+			Playlist *pl = gl_pl->data;
+			g_return_if_fail (pl);
+			if (itdb_playlist_is_mpl (pl))     pm_add_playlist (pl, pos);
+			else                               pm_add_playlist (pl, -1);
     }
 }
 
