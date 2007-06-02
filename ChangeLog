@@ -29,6 +29,8 @@ gtkpod V0.99.9CVS
        BUGFIX: dragging tracks between two iPods would sometimes not
        actually copy the file.
 
+       UPDATED: Italian translation (thanks to Daniele Forsi)
+
 gtkpod V0.99.8
 
        NEW FEATURE: Support of several iPods (currently you need to
