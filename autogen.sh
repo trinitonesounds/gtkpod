@@ -106,7 +106,7 @@ xlc )
   am_opt=--include-deps;;
 esac
 
-for coin in `find $srcdir -path $srcdir/CVS -prune -o -name configure.in -print`
+for coin in `find $srcdir -name configure.in -print`
 do 
   dr=`dirname $coin`
   if test -f $dr/NO-AUTO-GEN; then
