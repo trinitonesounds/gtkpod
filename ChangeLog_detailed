@@ -1,5 +1,12 @@
 2007-06-05  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
+  * fetchcover.*
+  
+    Add license headers to source files.
+    
+    
+2007-06-05  P.G. Richardson <phantom_sf at users.sourceforge.net>
+
   * display_coverart.c
   
     Fixed free_CDWidget() function which tried to free visible
