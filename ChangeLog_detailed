@@ -1,3 +1,13 @@
+2007-06-05  P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * display_coverart.c
+  
+    Fixed free_CDWidget() function which tried to free visible
+    albums twice. Also click hide button on coverart display once
+    again hides the slider and navigation buttons. Thanks to Todd
+    for the spot.
+    
+    
 2007-06-02  Daniele Forsi <dforsi at users.sourceforge.net>
 
         * po/it.po: updated Italian translation

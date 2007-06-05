@@ -133,43 +133,50 @@ static void debug_albums ()
  */
  static void free_CDWidget()
  {
- 		g_signal_handler_disconnect (cdwidget->leftbutton, lbutton_signal_id);
- 		g_signal_handler_disconnect (cdwidget->rightbutton, rbutton_signal_id);
- 		g_signal_handler_disconnect (gtkpod_window, window_signal_id);
- 		
- 		/* Components not freed as they are part of the glade xml file */
- 		cdwidget->leftbutton = NULL;
- 		cdwidget->rightbutton = NULL;
- 		cdwidget->cdslider = NULL;
- 		cdwidget->contentpanel = NULL;
- 		cdwidget->canvasbox = NULL;
-		cdwidget->controlbox = NULL;
-		
-		/* native variables rather than references so should be destroyed when freed */
- 		cdwidget->first_imgindex = 0;
- 		cdwidget->block_display_change = FALSE;
+ 	gint i;
+ 	g_signal_handler_disconnect (cdwidget->leftbutton, lbutton_signal_id);
+ 	g_signal_handler_disconnect (cdwidget->rightbutton, rbutton_signal_id);
+ 	g_signal_handler_disconnect (cdwidget->cdslider, slide_signal_id);
+ 	g_signal_handler_disconnect (cdwidget->contentpanel, contentpanel_signal_id);
+ 	g_signal_handler_disconnect (gtkpod_window, window_signal_id);
 
-		int i;
-		Cover_Item *cover;
-		for(i = 0; i < IMG_TOTAL; ++i)
-  	{
-  		cover = g_ptr_array_index(cdwidget->cdcovers, i);
-  		free_album (cover->album);
-  	}
-  	
- 		g_ptr_array_free (cdwidget->cdcovers, TRUE);
- 		
- 		/* Destroying canvas should destroy the background and cvrtext */
- 		cdwidget->bground = NULL;
- 		cdwidget->cvrtext = NULL;
- 		gtk_widget_destroy (GTK_WIDGET(cdwidget->canvas));
-	
-		g_hash_table_destroy (album_hash);
-		g_list_free (album_key_list);
+ 	/* Components not freed as they are part of the glade xml file */
+ 	cdwidget->leftbutton = NULL;
+ 	cdwidget->rightbutton = NULL;
+ 	cdwidget->cdslider = NULL;
+ 	cdwidget->contentpanel = NULL;
+ 	cdwidget->canvasbox = NULL;
+	cdwidget->controlbox = NULL;
 		
-		g_free (cdwidget);
-		cdwidget = NULL;
- }
+	/* native variables rather than references so should be destroyed when freed */
+ 	cdwidget->first_imgindex = 0;
+ 	cdwidget->block_display_change = FALSE;
+
+	Cover_Item *cover;
+	for(i = 0; i < IMG_TOTAL; ++i)
+  {
+  	cover = g_ptr_array_index(cdwidget->cdcovers, i);
+  	/* Nullify pointer to album reference. Will be freed below */
+  	cover->album = NULL;
+  }
+  	
+ 	g_ptr_array_free (cdwidget->cdcovers, TRUE);
+ 		
+ 	/* Destroying canvas should destroy the background and cvrtext */
+ 	cdwidget->bground = NULL;
+ 	cdwidget->cvrtext = NULL;
+ 	gtk_widget_destroy (GTK_WIDGET(cdwidget->canvas));
+	
+	/* Remove all null tracks before any sorting should take place */	
+ 	album_key_list = g_list_remove_all (album_key_list, NULL);
+ 		
+ 	g_hash_table_foreach_remove(album_hash, (GHRFunc) gtk_true, NULL);
+	g_hash_table_destroy (album_hash);
+	g_list_free (album_key_list);
+		
+	g_free (cdwidget);
+	cdwidget = NULL;
+}
  
 /**
  * draw_blank_cdimage:
@@ -869,6 +876,10 @@ void on_cover_up_button_clicked (GtkWidget *widget, gpointer data)
 		coverart_set_images (TRUE);
 		
 	gtk_widget_show_all (cdwidget->contentpanel);
+	gtk_widget_show (GTK_WIDGET(cdwidget->cdslider));
+	gtk_widget_show (GTK_WIDGET(cdwidget->leftbutton));
+	gtk_widget_show (GTK_WIDGET(cdwidget->rightbutton));
+	
 	gtk_widget_hide (widget);
 	
 	GtkWidget *downbutton = gtkpod_xml_get_widget (main_window_xml, "cover_down_button");
@@ -889,6 +900,9 @@ void on_cover_down_button_clicked (GtkWidget *widget, gpointer data)
 	prefs_set_int (KEY_DISPLAY_COVERART, FALSE);
 	
 	gtk_widget_hide_all (cdwidget->contentpanel);
+	gtk_widget_hide (GTK_WIDGET(cdwidget->cdslider));
+	gtk_widget_hide (GTK_WIDGET(cdwidget->leftbutton));
+	gtk_widget_hide (GTK_WIDGET(cdwidget->rightbutton));
 	
 	if (cdwidget != NULL)
 	{
@@ -1255,9 +1269,14 @@ static void free_album (Album_Item *album)
 {
 	if (album != NULL)
 	{
-		g_list_free (album->tracks);
+		if (album->tracks)
+		{
+			g_list_free (album->tracks);
+		}
+		
 		g_free (album->albumname);
 		g_free (album->artist);
+		
 		if (album->albumart)
 			gdk_pixbuf_unref (album->albumart);
 	}
@@ -1276,12 +1295,18 @@ void coverart_init_display ()
 	 */
 	GtkWidget *upbutton = gtkpod_xml_get_widget (main_window_xml, "cover_up_button");
 	GtkWidget *downbutton = gtkpod_xml_get_widget (main_window_xml, "cover_down_button");
-	
+	GtkWidget *lbutton = gtkpod_xml_get_widget (main_window_xml, "cover_display_leftbutton");
+	GtkWidget *rbutton = gtkpod_xml_get_widget (main_window_xml, "cover_display_rightbutton");
+	GtkWidget *slider = gtkpod_xml_get_widget (main_window_xml, "cover_display_scaler");
+		
 	/* show/hide coverart display -- default to show */
 	if (prefs_get_int (KEY_DISPLAY_COVERART))
 	{
 		gtk_widget_hide (upbutton);
 		gtk_widget_show (downbutton);
+		gtk_widget_show (lbutton);
+		gtk_widget_show (rbutton);
+		gtk_widget_show (slider);
 		if (cdwidget != NULL)
 			gtk_widget_show_all (cdwidget->contentpanel);
 	}
@@ -1289,6 +1314,9 @@ void coverart_init_display ()
 	{
 		gtk_widget_show (upbutton);
 		gtk_widget_hide (downbutton);
+		gtk_widget_hide (lbutton);
+		gtk_widget_hide (rbutton);
+		gtk_widget_hide (slider);
 		if (cdwidget != NULL)
 			gtk_widget_hide_all (cdwidget->contentpanel);
 		return;
@@ -1775,7 +1803,7 @@ void coverart_set_images (gboolean clear_track_list)
 				/* Insert the new Album Item into the hash */
 				g_hash_table_insert (album_hash, album_key, album);
 				/* Add the key to the list for sorting and other functions */
-				album_key_list = g_list_append (album_key_list, album_key);
+				album_key_list = g_list_append (album_key_list, g_strdup(album_key));
 			}
 			else
 			{
