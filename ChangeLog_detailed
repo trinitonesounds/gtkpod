@@ -1,37 +1,32 @@
 2007-06-05  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * fetchcover.*
-  
-    Add license headers to source files.
-    
-    
+	* src/fetchcover.c
+	  src/fetchcover.h:  
+	  Add license headers to source files.
+
 2007-06-05  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * display_coverart.c
-  
-    Fixed free_CDWidget() function which tried to free visible
-    albums twice. Also click hide button on coverart display once
-    again hides the slider and navigation buttons. Thanks to Todd
-    for the spot.
-    
-    
+	* src/display_coverart.c:
+	  Fixed free_CDWidget() function which tried to free visible
+	  albums twice. Also click hide button on coverart display
+	  once again hides the slider and navigation buttons. Thanks
+	  to Todd for the spot.
+
 2007-06-02  Daniele Forsi <dforsi at users.sourceforge.net>
 
-        * po/it.po: updated Italian translation
+	* po/it.po: updated Italian translation
 
 2007-06-01  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * display_coverart.c
-
-		Added callback on display_coverart content panel for acting
-		on scroll events with the mouse wheel. Result is that moving
-		the scroll wheel while the mouse is over the coverart display
-		will scroll the covers in the respective direction.
+	* src/display_coverart.c:
+	  Added callback on display_coverart content panel for acting
+	  on scroll events with the mouse wheel. Result is that moving
+	  the scroll wheel while the mouse is over the coverart
+	  display will scroll the covers in the respective direction.
 		
-		Avoided possible null pointer in track_changed function.
-		Thanks to Daniele Forsi for raising it. May need further work
-		if this does not solve it.
-
+	  Avoided possible null pointer in track_changed function.
+	  Thanks to Daniele Forsi for raising it. May need further
+	  work if this does not solve it.
 
 2007-05-31 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
@@ -47,15 +42,13 @@
 
 2007-05-30  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-	* display_coverart.c
-  
+	* src/display_coverart.c:
 	  Changed the on_main_cover_image_clicked so that only the
 	  tracks belonging to the album are displayed in the track
 	  listing. The sorttabs are no longer updated. A lot quicker
 	  and doesnt rely on the artist/album sorttabs being visible.
-    
-        * fetchcover.c
 
+        * /src/fetchcover.c:
 	  Status bar content changes in case album is not found.
 
 2007-05-30  Todd Zullinger <tmzullinger at users.sourceforge.net>
@@ -73,15 +66,14 @@
 	  Completely forgot compile time errors for
 	  g_hash_table_remove_all so removed glib_version call to
 	  ensure back compilation compatibility.
-    
+
 2007-05-16  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* src/tools.c: Fixed a few typos. (Daniele Forsi)
 
 2007-05-16  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-	* display_coverart.c
-  
+	* src/display_coverart.c:
 	  Null checks placed in free_album.  g_hash_table_remove_all
 	  only used if running GLib version is newer than 2.12.0.
 	  Otherwise falls back on g_hash_table_foreach_remove.  Thanks
