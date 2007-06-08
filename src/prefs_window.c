@@ -533,7 +533,7 @@ prefs_window_create (gint page)
 # else
     w = gtkpod_xml_get_widget (prefs_window_xml, "labelfm");
     gtk_widget_hide(w);
-    w = gtkpod_xml_get_widget (prefs_window_xml, "vboxfm");
+    w = gtkpod_xml_get_widget (prefs_window_xml, "scrolledwindowfm");
     gtk_widget_hide(w);
 #endif
 

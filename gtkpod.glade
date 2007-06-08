@@ -14356,7 +14356,7 @@ when syncing playlists</property>
 	  </child>
 
 	  <child>
-	    <widget class="GtkScrolledWindow" id="scrolledwindow32">
+	    <widget class="GtkScrolledWindow" id="scrolledwindowfm">
 	      <property name="visible">True</property>
 	      <property name="can_focus">True</property>
 	      <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>

@@ -1,3 +1,9 @@
+2007-06-08  Todd Zullinger <tmzullinger at users.sourceforge.net>
+
+	* gtkpod.glade
+	  src/prefs_window.c:
+	  hide Last.FM tab (déjà vu)
+
 2007-06-05  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* src/fetchcover.c
