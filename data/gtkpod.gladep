@@ -4,5 +4,6 @@
 <glade-project>
   <name>Gtkpod</name>
   <program_name>gtkpod</program_name>
+  <pixmaps_directory>.</pixmaps_directory>
   <gnome_support>FALSE</gnome_support>
 </glade-project>

@@ -23,7 +23,7 @@
 |
 |  This product is not supported/written/published by Apple!
 |
-|  $Id: display_coverart.c,v 1.19 2007/05/17 20:06:03 phantom_sf Exp $
+|  $Id$
 */
 
 #ifdef HAVE_CONFIG_H
@@ -819,9 +819,9 @@ void coverart_init (gchar *progpath)
 	  	if (suffix)
 	  	{
 	     	*suffix = 0;
-	     	DEFAULT_FILE = g_build_filename (progname, "pixmaps", "default-cover.png", NULL);
-	     	HIGHLIGHT_FILE = g_build_filename (progname, "pixmaps", "cdshine.png", NULL);
-	     	HIGHLIGHT_FILE_MAIN = g_build_filename (progname, "pixmaps", "cdshine_main.png", NULL);
+	     	DEFAULT_FILE = g_build_filename (progname, "data", "default-cover.png", NULL);
+	     	HIGHLIGHT_FILE = g_build_filename (progname, "data", "cdshine.png", NULL);
+	     	HIGHLIGHT_FILE_MAIN = g_build_filename (progname, "data", "cdshine_main.png", NULL);
 	  	}
   	}
     
@@ -847,15 +847,15 @@ void coverart_init (gchar *progpath)
   
   if (!DEFAULT_FILE)
   {
-      DEFAULT_FILE = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "pixmaps", "default-cover.png", NULL);
+      DEFAULT_FILE = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "default-cover.png", NULL);
   }
   if (!HIGHLIGHT_FILE)
   {
-      HIGHLIGHT_FILE = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "pixmaps", "cdshine.png", NULL);
+      HIGHLIGHT_FILE = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "cdshine.png", NULL);
   }
   if (!HIGHLIGHT_FILE_MAIN)
   {
-      HIGHLIGHT_FILE_MAIN = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "pixmaps", "cdshine_main.png", NULL);
+      HIGHLIGHT_FILE_MAIN = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "cdshine_main.png", NULL);
   }
 }
 

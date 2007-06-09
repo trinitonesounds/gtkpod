@@ -4,6 +4,25 @@
 	  src/prefs_window.c:
 	  hide Last.FM tab (déjà vu)
 
+	* configure.in
+	  src/display_coverart.c
+	  src/Makefile.am
+	  src/misc.c
+	  data/gtkpod.gladep
+	  data/Makefile.am
+	  Makefile.am
+	  po/es.po
+	  po/fr.po
+	  po/de.po
+	  po/sv.po
+	  po/ja.po
+	  po/gtkpod.pot
+	  po/he.po
+	  po/it.po
+	  po/POTFILES.in
+	  po/POTFILES.skip:
+	  Fixup 'make distcheck' and add some files missing for i18n.
+
 2007-06-05  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* src/fetchcover.c

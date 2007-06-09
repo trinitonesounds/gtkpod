@@ -11,16 +11,6 @@ INCLUDES = @PACKAGE_CFLAGS@ \
 
 bin_PROGRAMS = gtkpod
 
-BUILT_SOURCES = \
-        ../pixmaps/gtkpod.glade \
-        ../pixmaps/gtkpod.gladep
-
-../pixmaps/gtkpod.glade:
-	ln -s ../gtkpod.glade ../pixmaps/gtkpod.glade
-
-../pixmaps/gtkpod.gladep:
-	ln -s ../gtkpod.gladep ../pixmaps/gtkpod.gladep
-
 ## I'm using %option outfile="lex.yy.c" in the parser files,
 ## so this should be portable
 LEX_OUTPUT_ROOT = lex.yy
@@ -68,3 +58,5 @@ gtkpod_SOURCES = \
 gtkpod_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@
 
 EXTRA_DIST = getopt.h
+
+CLEANFILES = date_parser.c date_parser2.c

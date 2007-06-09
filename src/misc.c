@@ -1887,9 +1887,9 @@ void gtkpod_init (int argc, char *argv[])
     gchar *progname;
 
     /* initialize xml_file: if gtkpod is called in the build directory
-       (".../src/gtkpod") use the local gtkpod.glade (the symlink in the
-       pixmaps directory), otherwise use
-       "PACKAGE_DATA_DIR/PACKAGE/pixmaps/gtkpod.glade" */
+       (".../src/gtkpod") use the local gtkpod.glade (in the data
+       directory), otherwise use
+       "PACKAGE_DATA_DIR/PACKAGE/data/gtkpod.glade" */
 
     progname = g_find_program_in_path (argv[0]);
     if (progname)
@@ -1916,7 +1916,7 @@ void gtkpod_init (int argc, char *argv[])
 	    if (suffix)
 	    {
 		*suffix = 0;
-		xml_file = g_build_filename (progname, "pixmaps", "gtkpod.glade", NULL);
+		xml_file = g_build_filename (progname, "data", "gtkpod.glade", NULL);
 	    }
 	}
 	g_free (progname);
@@ -1927,7 +1927,7 @@ void gtkpod_init (int argc, char *argv[])
 	}
     }
     if (!xml_file)
-	xml_file = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "pixmaps", "gtkpod.glade", NULL);
+	xml_file = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "gtkpod.glade", NULL);
     else
     {
 	printf ("Using local gtkpod.glade file since program was started from source directory:\n%s\n", xml_file);

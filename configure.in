@@ -178,6 +178,7 @@ Makefile
 src/Makefile
 po/Makefile.in
 scripts/Makefile
+data/Makefile
 ])
 
 echo "

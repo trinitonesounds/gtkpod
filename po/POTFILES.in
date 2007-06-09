@@ -1,31 +1,34 @@
 # List of source files containing translatable strings (output of
-# ls src/*.[cl] gtkpod.glade)
+# ls src/*.[cl] data/*.glade | grep -vf po/POTFILES.skip
+# in a clean checkout)
 
-gtkpod.glade
+data/gtkpod.glade
 src/charset.c
 src/clientserver.c
 src/confirmation.c
 src/context_menus.c
-#src/date_parser2.c
 src/date_parser2.l
-#src/date_parser.c
 src/date_parser.l
 src/details.c
 src/display.c
+src/display_coverart.c
 src/display_itdb.c
 src/display_playlists.c
-src/display_tracks.c
 src/display_sorttabs.c
 src/display_spl.c
+src/display_tracks.c
+src/fetchcover.c
 src/file.c
+src/file_convert.c
 src/file_export.c
 src/file_itunesdb.c
 src/fileselection.c
+src/flacfile.c
 src/getopt1.c
 src/getopt.c
 src/info.c
+src/ipod_init.c
 src/main.c
-src/md5.c
 src/misc.c
 src/misc_confirm.c
 src/misc_conversion.c
@@ -34,10 +37,11 @@ src/misc_playlist.c
 src/misc_track.c
 src/mp3file.c
 src/mp4file.c
-#src/podcast.c
+src/oggfile.c
 src/prefs.c
 src/prefs_window.c
 src/repository.c
+src/sha1.c
 src/syncdir.c
 src/tools.c
 src/wavfile.c
