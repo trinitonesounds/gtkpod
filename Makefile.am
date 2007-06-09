@@ -2,10 +2,18 @@
 
 SUBDIRS = src po scripts data
 
-EXTRA_DIST = \
-	autogen.sh \
-	TROUBLESHOOTING \
+EXTRA_DIST =			\
+	autogen.sh		\
+	intltool-extract.in	\
+	intltool-merge.in	\
+	intltool-update.in	\
+	TROUBLESHOOTING		\
 	TODOandBUGS.txt
+
+DISTCLEANFILES =		\
+	intltool-extract	\
+	intltool-merge		\
+	intltool-update
 
 uninstall-hook:
 	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)/data

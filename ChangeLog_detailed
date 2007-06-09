@@ -23,6 +23,22 @@
 	  po/POTFILES.skip:
 	  Fixup 'make distcheck' and add some files missing for i18n.
 
+	* configure.in
+	  Makefile.am
+	  data/gtkpod.desktop.in
+	  data/Makefile.am
+	  data/icons
+	  data/icons/48x48
+	  data/icons/48x48/Makefile.am
+	  data/icons/32x32
+	  data/icons/32x32/Makefile.am
+	  data/icons/Makefile.am
+	  data/icons/64x64
+	  data/icons/64x64/Makefile.am
+	  autogen.sh
+	  po/POTFILES.in:
+	  Add a .desktop file and reorganize the icons.
+
 2007-06-05  P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* src/fetchcover.c

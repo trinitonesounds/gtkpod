@@ -1,7 +1,8 @@
 # List of source files containing translatable strings (output of
-# ls src/*.[cl] data/*.glade | grep -vf po/POTFILES.skip
+# ls src/*.[cl] data/*.glade data/*.desktop.in | grep -vf po/POTFILES.skip
 # in a clean checkout)
 
+data/gtkpod.desktop.in
 data/gtkpod.glade
 src/charset.c
 src/clientserver.c

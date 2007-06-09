@@ -12,6 +12,8 @@ AC_ISC_POSIX
 AC_PROG_CC
 AM_PROG_CC_STDC
 
+IT_PROG_INTLTOOL([0.33])
+
 dnl Only use -Wall if we have gcc
 if test "x$GCC" = "xyes"; then
   if test -z "`echo "$CFLAGS" | grep "\-Wall" 2> /dev/null`" ; then
@@ -179,6 +181,10 @@ src/Makefile
 po/Makefile.in
 scripts/Makefile
 data/Makefile
+data/icons/Makefile
+data/icons/32x32/Makefile
+data/icons/48x48/Makefile
+data/icons/64x64/Makefile
 ])
 
 echo "

@@ -6,11 +6,11 @@ test -z "$srcdir" && srcdir=.
 DIE=0
 
 if [ -n "$GNOME2_DIR" ]; then
-	ACLOCAL_FLAGS="-I $GNOME2_DIR/share/aclocal $ACLOCAL_FLAGS"
-	LD_LIBRARY_PATH="$GNOME2_DIR/lib:$LD_LIBRARY_PATH"
-	PATH="$GNOME2_DIR/bin:$PATH"
-	export PATH
-	export LD_LIBRARY_PATH
+    ACLOCAL_FLAGS="-I $GNOME2_DIR/share/aclocal $ACLOCAL_FLAGS"
+    LD_LIBRARY_PATH="$GNOME2_DIR/lib:$LD_LIBRARY_PATH"
+    PATH="$GNOME2_DIR/bin:$PATH"
+    export PATH
+    export LD_LIBRARY_PATH
 fi
 
 (test -f $srcdir/configure.in) || {
@@ -27,7 +27,7 @@ fi
   DIE=1
 }
 
-(grep "^AC_PROG_INTLTOOL" $srcdir/configure.in >/dev/null) && {
+(grep "^IT_PROG_INTLTOOL" $srcdir/configure.in >/dev/null) && {
   (intltoolize --version) < /dev/null > /dev/null 2>&1 || {
     echo 
     echo "**Error**: You must have \`intltool' installed."
@@ -60,13 +60,13 @@ fi
   (grep "sed.*POTFILES" $srcdir/configure.in) > /dev/null || \
   (glib-gettextize --version) < /dev/null > /dev/null 2>&1 || {
     if [ -f /etc/debian_version ]
-    then	
-   	echo "**Error**: Please apt-get install libglib2.0-dev"
-    else	
-    	echo
-    	echo "**Error**: You must have \`glib' installed."
-    	echo "You can get it from: ftp://ftp.gtk.org/pub/gtk."
-	echo "When using packages, make sure you also install the -dev package."
+    then
+        echo "**Error**: Please apt-get install libglib2.0-dev"
+    else
+        echo
+        echo "**Error**: You must have \`glib' installed."
+        echo "You can get it from: ftp://ftp.gtk.org/pub/gtk."
+        echo "When using packages, make sure you also install the -dev package."
     fi
     DIE=1
   }
@@ -118,32 +118,32 @@ do
       aclocalinclude="$ACLOCAL_FLAGS"
 
       if grep "^AM_GLIB_GNU_GETTEXT" configure.in >/dev/null; then
-	echo "Creating $dr/aclocal.m4 ..."
-	test -r $dr/aclocal.m4 || touch $dr/aclocal.m4
-	echo "Running glib-gettextize...  Ignore non-fatal messages."
-	echo "no" | glib-gettextize --force --copy
-	echo "Making $dr/aclocal.m4 writable ..."
-	test -r $dr/aclocal.m4 && chmod u+w $dr/aclocal.m4
+        echo "Creating $dr/aclocal.m4 ..."
+        test -r $dr/aclocal.m4 || touch $dr/aclocal.m4
+        echo "Running glib-gettextize...  Ignore non-fatal messages."
+        echo "no" | glib-gettextize --force --copy
+        echo "Making $dr/aclocal.m4 writable ..."
+        test -r $dr/aclocal.m4 && chmod u+w $dr/aclocal.m4
       fi
-      if grep "^AC_PROG_INTLTOOL" configure.in >/dev/null; then
+      if grep "^IT_PROG_INTLTOOL" configure.in >/dev/null; then
         echo "Running intltoolize..."
-	intltoolize --copy --force --automake
+        intltoolize --copy --force --automake
       fi
       if grep "^AM_PROG_XML_I18N_TOOLS" configure.in >/dev/null; then
         echo "Running xml-i18n-toolize..."
-	xml-i18n-toolize --copy --force --automake
+        xml-i18n-toolize --copy --force --automake
       fi
       if grep "^AM_PROG_LIBTOOL" configure.in >/dev/null; then
-	if test -z "$NO_LIBTOOLIZE" ; then 
-	  echo "Running libtoolize..."
-	  ${LIBTOOLIZE:-libtoolize} --force --copy
-	fi
+        if test -z "$NO_LIBTOOLIZE" ; then 
+          echo "Running libtoolize..."
+          ${LIBTOOLIZE:-libtoolize} --force --copy
+        fi
       fi
       echo "Running aclocal $aclocalinclude ..."
       ${ACLOCAL:-aclocal} $aclocalinclude
       if grep "^AM_CONFIG_HEADER" configure.in >/dev/null; then
-	echo "Running autoheader..."
-	${AUTOHEADER:-autoheader}
+        echo "Running autoheader..."
+        ${AUTOHEADER:-autoheader}
       fi
       echo "Running automake --gnu $am_opt ..."
       ${AUTOMAKE:-automake} --add-missing --gnu $am_opt
