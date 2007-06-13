@@ -602,8 +602,8 @@ static gboolean read_prefs_get_key_value (const gchar *buf,
     if ((len > 0) && ((*value)[len - 1] == 0x0a))
 	(*value)[len - 1] = 0;
 
-    /* Strip whitespace */
-    g_strstrip (*value);
+    /* Don't strip whitespace! If there is any, there's a reason for it. */
+    /* g_strstrip (*value); */
 
     return TRUE;
 }

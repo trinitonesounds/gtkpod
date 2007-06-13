@@ -261,6 +261,20 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
 }
 
 
+/* set string compare function according to whether the ignore field
+   is set or not */
+static void st_set_string_compare_func (guint inst, guint page_num)
+{
+    gchar *buf;
+    buf = g_strdup_printf ("sort_ign_field_%d", ST_to_T (page_num));
+    if (prefs_get_int (buf))
+	sorttab[inst]->string_compare_func = compare_string_fuzzy;
+    else
+	sorttab[inst]->string_compare_func = compare_string;
+    g_free (buf);
+}
+
+
 /* callback */
 static void
 on_st_switch_page                 (GtkNotebook     *notebook,
@@ -268,7 +282,6 @@ on_st_switch_page                 (GtkNotebook     *notebook,
 				   guint            page_num,
 				   gpointer         user_data)
 {
-    gchar *buf;
     guint inst = GPOINTER_TO_UINT( user_data );
 
     
@@ -277,12 +290,7 @@ on_st_switch_page                 (GtkNotebook     *notebook,
     /* set compare function for strings (to speed up sorting) */
     if (page_num != ST_CAT_SPECIAL)
     {
-	buf = g_strdup_printf ("sort_ign_field_%d", ST_to_T (page_num));
-	if (prefs_get_int (buf))
-	    sorttab[inst]->string_compare_func = compare_string_fuzzy;
-	else
-	    sorttab[inst]->string_compare_func = compare_string;
-	g_free (buf);
+	st_set_string_compare_func (inst, page_num);
     }
     space_data_update ();
     st_page_selected (notebook, page_num);
@@ -3062,6 +3070,8 @@ static void st_create_notebook (gint inst)
   page = prefs_get_int_index("st_category", inst);
   st->current_category = page;
   gtk_notebook_set_current_page (st->notebook, page);
+  st_set_string_compare_func (inst, page);
+
   if (prefs_get_int("st_sort") != SORT_NONE)
     st_sort_inst (inst, prefs_get_int("st_sort"));
 
@@ -3082,7 +3092,6 @@ void st_create_tabs (void)
   for (inst=SORT_TAB_MAX-1; inst>=0; --inst)
   {
 	sorttab[inst] = g_malloc0 (sizeof (SortTab));
-	sorttab[inst]->string_compare_func = compare_string;
 	st_create_notebook (inst);
   }
   /* adjust number of visible sorttabs (cannot use st_show_visible()

@@ -1,3 +1,13 @@
+2007-06-13 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/prefs.c (read_prefs_get_key_value): don't strip
+	  whitespace from prefs values. This is none of this
+	  function's business! (Thanks to Todd for tracking this down)
+
+	* src/display_sorttabs.c (st_create_notebook): set up compare
+          function so that the ignore strings work right after startup.
+          (Thanks to Todd for tracking this down)
+
 2007-06-08  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* gtkpod.glade
