@@ -1156,8 +1156,10 @@ static void cleanup_keys()
     /* This string was a wrong autoconvert--just ignore it */
     buf = prefs_get_string("export_template");
     
-    if (strcmp(buf, "%a - %a/%T - %T.mp3") == 0)
+    if (buf && strcmp(buf, "%a - %a/%T - %T.mp3") == 0)
 	prefs_set_string("export_template", NULL);
+
+    g_free (buf);
 
     /* We changed the meaning of the %x in export_template */
     if (version < 0.72)

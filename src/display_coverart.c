@@ -1857,14 +1857,18 @@ void coverart_block_change (gboolean val)
 {
   if (GTK_WIDGET_REALIZED(gtkpod_window))
   {
-		if (val)
-			gdk_window_set_cursor (gtkpod_window->window, gdk_cursor_new (GDK_WATCH));
-		else
-			gdk_window_set_cursor (gtkpod_window->window, NULL);
-	}
-	
-	if (cdwidget != NULL)
-		cdwidget->block_display_change = val;
+      if (val)
+      {
+	  GdkCursor *cursor = gdk_cursor_new (GDK_WATCH);
+	  gdk_window_set_cursor (gtkpod_window->window, cursor);
+	  gdk_cursor_unref (cursor);
+      }
+      else
+	  gdk_window_set_cursor (gtkpod_window->window, NULL);
+  }
+
+  if (cdwidget != NULL)
+      cdwidget->block_display_change = val;
 }
 
 /**

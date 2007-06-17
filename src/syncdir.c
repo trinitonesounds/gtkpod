@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-04-28 00:06:00 jcs>
+/* Time-stamp: <2007-06-17 23:01:18 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -613,6 +613,7 @@ void sync_playlist (Playlist *playlist,
 		    remove = TRUE;
 		}
 	    }
+	    g_free (dirname_local);
 	}
 
 	if (remove)

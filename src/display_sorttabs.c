@@ -2841,7 +2841,6 @@ static void st_create_special (gint inst, GtkWidget *window)
 			"clicked",
 			G_CALLBACK (on_sp_cal_button_clicked),
 			GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
-      
       g_free(buf);
 
       /* MODIFIED */
@@ -2866,7 +2865,6 @@ static void st_create_special (gint inst, GtkWidget *window)
 			"clicked",
 			G_CALLBACK (on_sp_cal_button_clicked),
 			GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
-      
       g_free(buf);
 
       /* ADDED */
@@ -2902,6 +2900,7 @@ static void st_create_special (gint inst, GtkWidget *window)
 			GINT_TO_POINTER(inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				   prefs_get_int_index("sp_autodisplay", inst));
+      g_free (buf);
 
       /* Safe pointer to tooltips */
       st->sp_tooltips_data = gtk_tooltips_data_get(gtkpod_xml_get_widget (special_xml, "sp_modified_entry"));

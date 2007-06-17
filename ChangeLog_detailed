@@ -1,3 +1,18 @@
+2007-06-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/info.c (gtkpod_statusbar_message): fixed memory leak --
+          thanks to Daniele Forsi.
+
+	* src/display_sorttabs.c (st_create_special): fixed memory
+          leak.
+
+	* src/prefs.c (init_prefs): fixed memory leak.
+
+	* src/syncdir.c (sync_playlist): fixed memory leak.
+
+	* src/display_coverart.c (coverart_block_change): fixed memory
+          leak.
+
 2007-06-14 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* po/es.po: new version updated by Alejandro Lamas Daviña.

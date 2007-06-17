@@ -220,7 +220,7 @@ static void destroy_extendedinfohash (void)
 /* Return TRUE on success, FALSE otherwise */
 static gboolean read_extended_info (gchar *name, gchar *itunes)
 {
-    gchar *sha1, buf[PATH_MAX], *arg, *line, *bufp;
+    gchar *sha1, buf[PATH_MAX];
     gboolean success = TRUE;
     gboolean expect_hash, hash_matched=FALSE;
     gint len;
@@ -247,6 +247,8 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
     expect_hash = TRUE; /* next we expect the hash value (checksum) */
     while (success && fgets (buf, PATH_MAX, fp))
     {
+	gchar *line, *arg, *bufp;
+
 	/* allow comments */
 	if ((buf[0] == ';') || (buf[0] == '#')) continue;
 	arg = strchr (buf, '=');
@@ -283,102 +285,104 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 	    {
 		gtkpod_warning (_("%s:\nExpected \"itunesdb_hash=\" but got:\"%s\"\n"), name, buf);
 		success = FALSE;
+		g_free (line);
 		break;
 	    }
 	}
-	else
-	    if(g_ascii_strcasecmp (line, "id") == 0)
-	    { /* found new id */
-		if (sei)
-		{
-		    if (sei->ipod_id != 0)
-		    { /* normal extended information */
-			if (hash_matched)
+	else if(g_ascii_strcasecmp (line, "id") == 0)
+	{ /* found new id */
+	    if (sei)
+	    {
+		if (sei->ipod_id != 0)
+		{ /* normal extended information */
+		    if (hash_matched)
+		    {
+			if (!extendedinfohash)
 			{
-			    if (!extendedinfohash)
-			    {
-				extendedinfohash = g_hash_table_new_full (
-				    g_int_hash,g_int_equal, NULL,hash_delete);
-			    }
-			    g_hash_table_insert (extendedinfohash,
-						 &sei->ipod_id, sei);
+			    extendedinfohash = g_hash_table_new_full (
+				g_int_hash,g_int_equal, NULL,hash_delete);
 			}
-			else if (sei->sha1_hash)
+			g_hash_table_insert (extendedinfohash,
+					     &sei->ipod_id, sei);
+		    }
+		    else if (sei->sha1_hash)
+		    {
+			if (!extendedinfohash_sha1)
 			{
-			    if (!extendedinfohash_sha1)
-			    {
-				extendedinfohash_sha1 = g_hash_table_new_full (
-				    g_str_hash,g_str_equal, NULL,hash_delete);
-			    }
-			    g_hash_table_insert (extendedinfohash_sha1,
-						 sei->sha1_hash, sei);
+			    extendedinfohash_sha1 = g_hash_table_new_full (
+				g_str_hash,g_str_equal, NULL,hash_delete);
 			}
-			else
-			{
-			    hash_delete ((gpointer)sei);
-			}
+			g_hash_table_insert (extendedinfohash_sha1,
+					     sei->sha1_hash, sei);
 		    }
 		    else
-		    { /* this is a deleted track that hasn't yet been
-		         removed from the iPod's hard drive */
-			Track *track = gp_track_new ();
-			track->ipod_path = g_strdup (sei->ipod_path);
-			extendeddeletion = g_list_append (extendeddeletion,
-							  track);
-			hash_delete ((gpointer)sei); /* free sei */
+		    {
+			hash_delete ((gpointer)sei);
 		    }
-		    sei = NULL;
 		}
-		if (strcmp (arg, "xxx") != 0)
-		{
-		    sei = g_malloc0 (sizeof (struct track_extended_info));
-		    sei->ipod_id = atoi (arg);
+		else
+		{ /* this is a deleted track that hasn't yet been
+		     removed from the iPod's hard drive */
+		    Track *track = gp_track_new ();
+		    track->ipod_path = g_strdup (sei->ipod_path);
+		    extendeddeletion = g_list_append (extendeddeletion,
+						      track);
+		    hash_delete ((gpointer)sei); /* free sei */
 		}
+		sei = NULL;
 	    }
-	    else if (g_ascii_strcasecmp (line, "version") == 0)
-	    { /* found version */
-		extendedinfoversion = g_ascii_strtod (arg, NULL);
-	    }
-	    else if (sei == NULL)
+	    if (strcmp (arg, "xxx") != 0)
 	    {
-		gtkpod_warning (_("%s:\nFormat error: %s\n"), name, buf);
-		success = FALSE;
-		break;
+		sei = g_malloc0 (sizeof (struct track_extended_info));
+		sei->ipod_id = atoi (arg);
 	    }
-	    else if (g_ascii_strcasecmp (line, "hostname") == 0)
-		sei->hostname = g_strdup (arg);
-	    else if (g_ascii_strcasecmp (line, "converted_file") == 0)
-		sei->converted_file = g_strdup (arg);
-	    else if (g_ascii_strcasecmp (line, "filename_locale") == 0)
-		sei->pc_path_locale = g_strdup (arg);
-	    else if (g_ascii_strcasecmp (line, "filename_utf8") == 0)
-		sei->pc_path_utf8 = g_strdup (arg);
-	    else if (g_ascii_strcasecmp (line, "thumbnail_locale") == 0)
-		sei->thumb_path_locale = g_strdup (arg);
-	    else if (g_ascii_strcasecmp (line, "thumbnail_utf8") == 0)
-		sei->thumb_path_utf8 = g_strdup (arg);
-	    else if ((g_ascii_strcasecmp (line, "md5_hash") == 0) ||
-		     (g_ascii_strcasecmp (line, "sha1_hash") == 0))
-	    {   /* only accept hash value if version is >= 0.53 or
-		   PATH_MAX is 4096 -- in 0.53 I changed the MD5 hash
-		   routine to using blocks of 4096 Bytes in
-		   length. Before it was PATH_MAX, which might be
-		   different on different architectures. */
-		if ((extendedinfoversion >= 0.53) || (PATH_MAX == 4096))
-		    sei->sha1_hash = g_strdup (arg);
-	    }
-	    else if (g_ascii_strcasecmp (line, "charset") == 0)
-		sei->charset = g_strdup (arg);
-	    else if (g_ascii_strcasecmp (line, "transferred") == 0)
-		sei->transferred = atoi (arg);
-	    else if (g_ascii_strcasecmp (line, "filename_ipod") == 0)
-		sei->ipod_path = g_strdup (arg);
-	    else if (g_ascii_strcasecmp (line, "pc_mtime") == 0)
-		sei->mtime = (time_t)g_ascii_strtoull (arg, NULL, 10);
-	    else if (g_ascii_strcasecmp (line, "local_itdb_id") == 0)
-		sei->local_itdb_id = (guint64)g_ascii_strtoull (arg, NULL, 10);
-	    else if (g_ascii_strcasecmp (line, "local_track_dbid") == 0)
-		sei->local_track_dbid = (guint64)g_ascii_strtoull (arg, NULL, 10);
+	}
+	else if (g_ascii_strcasecmp (line, "version") == 0)
+	{ /* found version */
+	    extendedinfoversion = g_ascii_strtod (arg, NULL);
+	}
+	else if (sei == NULL)
+	{
+	    gtkpod_warning (_("%s:\nFormat error: %s\n"), name, buf);
+	    success = FALSE;
+	    g_free (line);
+	    break;
+	}
+	else if (g_ascii_strcasecmp (line, "hostname") == 0)
+	    sei->hostname = g_strdup (arg);
+	else if (g_ascii_strcasecmp (line, "converted_file") == 0)
+	    sei->converted_file = g_strdup (arg);
+	else if (g_ascii_strcasecmp (line, "filename_locale") == 0)
+	    sei->pc_path_locale = g_strdup (arg);
+	else if (g_ascii_strcasecmp (line, "filename_utf8") == 0)
+	    sei->pc_path_utf8 = g_strdup (arg);
+	else if (g_ascii_strcasecmp (line, "thumbnail_locale") == 0)
+	    sei->thumb_path_locale = g_strdup (arg);
+	else if (g_ascii_strcasecmp (line, "thumbnail_utf8") == 0)
+	    sei->thumb_path_utf8 = g_strdup (arg);
+	else if ((g_ascii_strcasecmp (line, "md5_hash") == 0) ||
+		 (g_ascii_strcasecmp (line, "sha1_hash") == 0))
+	{   /* only accept hash value if version is >= 0.53 or
+	       PATH_MAX is 4096 -- in 0.53 I changed the MD5 hash
+	       routine to using blocks of 4096 Bytes in
+	       length. Before it was PATH_MAX, which might be
+	       different on different architectures. */
+	    if ((extendedinfoversion >= 0.53) || (PATH_MAX == 4096))
+		sei->sha1_hash = g_strdup (arg);
+	}
+	else if (g_ascii_strcasecmp (line, "charset") == 0)
+	    sei->charset = g_strdup (arg);
+	else if (g_ascii_strcasecmp (line, "transferred") == 0)
+	    sei->transferred = atoi (arg);
+	else if (g_ascii_strcasecmp (line, "filename_ipod") == 0)
+	    sei->ipod_path = g_strdup (arg);
+	else if (g_ascii_strcasecmp (line, "pc_mtime") == 0)
+	    sei->mtime = (time_t)g_ascii_strtoull (arg, NULL, 10);
+	else if (g_ascii_strcasecmp (line, "local_itdb_id") == 0)
+	    sei->local_itdb_id = (guint64)g_ascii_strtoull (arg, NULL, 10);
+	else if (g_ascii_strcasecmp (line, "local_track_dbid") == 0)
+	    sei->local_track_dbid = (guint64)g_ascii_strtoull (arg, NULL, 10);
+	g_free (line);
     }
     g_free (sha1);
     fclose (fp);

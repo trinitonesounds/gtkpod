@@ -454,6 +454,9 @@ gtkpod_statusbar_message(const gchar *message, ...)
 
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), context);
 	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_statusbar), context,  text);
+
+	g_free (text);
+
 	gtkpod_statusbar_reset_timeout ();
     }
 }
