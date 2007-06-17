@@ -1,5 +1,7 @@
 2007-06-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* README: some changes initiated by Daniele Forsi.
+
 	* src/info.c (gtkpod_statusbar_message): fixed memory leak --
           thanks to Daniele Forsi.
 

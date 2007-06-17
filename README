@@ -49,29 +49,36 @@ for details.
 *----------------------------------*
 
 
-Follow steps 1-7 in the "Connecting your iPod to a Linux box"
-(basically you need to get the iPod partition mounted to /mnt/ipod)
+1) If your iPod is not mounted automatically when connecting it to
+   your computer follow steps 1-7 in the "Connecting your iPod to a
+   Linux box" (basically you need to get the iPod partition mounted to
+   /mnt/ipod).  In most cases this should not be necessary any more
+   these days.
 
+2) If you are using GNOME, starting with V1.0 of gtkpod your iPod will
+   be automatically loaded and displayed within gtkpod once you
+   connect it to your box. Otherwise:
 
-1) The faint-of-heart make a backup of their iTunesDB:
+   - Use "Load iPods" to import the contents of your old iTunesDB (you
+     may have to specify the correct mountpoint: right-button click on
+     the "iPod" repository, select "Edit iPod's Properties" and change
+     the mountpoint).
 
-cp /mnt/ipod/iPod_Control/iTunes/iTunesDB /mnt/ipod/iPod_Control/iTunes/iTunesDB.bak
-
-2) Start gtkpod
-
-3) Use "Import" to import the contents of your old iTunesDB.
-
-4) Use "Add Files", "Add Directories" or DND to add files or
+3) Use "Add Files", "Add Directories" or DND to add files or
    directories.
 
-5) Use "Sync" to write the added files to the iPod and create a new
-   iTunesDB.
+4) Use "Eject iPod" in the context menu or click on the icon to the
+   right of the iPod name to write the added files to the iPod and
+   create a new iTunesDB and unload the iPod from gtkpod.
 
-6) Quit the program.
+5) Unmount your iPod. The easiest way is to use the windowmanager. If
+   this is not an option for you continue with step 8-11 of the
+   "Connecting your iPod to a Linux box" section (basically describing
+   how to unmount and disconnect your iPod).
 
-and continue with step 8-11 of the "Connecting your iPod to a Linux
-box" section (basically describing how to unmount and disconnect your
-iPod).
+   You can automate the unmounting by adding creating a
+   ~/.gtkpod/gtkpod.eject file with the following line in it (without
+   the quotation marks): "eject $1"
 
 
 *----------------------------------*
@@ -203,7 +210,7 @@ Duplicate Detection
 -------------------
 
 You can instruct gtkpod (in the prefs window) to use
-file-size-dependent MD5 checksums to prevent the same file from
+file-size-dependent SHA1 checksums to prevent the same file from
 being copied to your iPod twice.
 
 If a duplicate is detected, gtkpod will print out the the filenames
@@ -220,10 +227,16 @@ Some (I believe) essential information is not stored in Apple's iTunes
 database. You can therefore instruct gtkpod to write an additional
 file (iTunesDB.ext) with extended information. For each track it stores
 
-  - MD5 hash
+  - SHA1 hash
   - filename in the locale's encoding
   - filename in UTF8 encoding
   - hostname where the file was added (not used for anything yet)
+  - filename of an associated converted file (for example an .mp3 for
+    a .flac file)
+  - if the file is present in the local database a reference to there
+    in order for playcounts to work on the local database as well
+  - last modification time
+  - the charset used for the file when adding it
 
 Since the extended information file is only valid with the
 corresponding standard iTunes database, a checksum of the iTunes
@@ -231,7 +244,7 @@ database is also stored in the extended information file.
 
 Using an extended information file will considerably speed up the
 import of an existing iTunes database when using duplicate detection,
-since the MD5 checksums do not have to be re-calculated.
+since the SHA1 checksums do not have to be re-calculated.
 
 Using an extended information file will also allow modification of ID3
 tags in the track files after the initial import, because the full
