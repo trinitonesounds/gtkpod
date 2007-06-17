@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-04-19 20:18:03 jcs>
+/* Time-stamp: <2007-06-18 00:48:53 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -66,7 +66,6 @@ struct _File_Tag
     gchar *comment;        /* Comment */
     gchar *composer;	   /* Composer */
     guint32 songlen;       /* Length of file in ms */
-    /* CD/disc number handling */
     gchar *cdnostring;    /* Position of disc in the album */
     gchar *cdno_total;    /* The number of discs in the album (ex: 1/2) */
     gchar *compilation;   /* The track is a member of a compilation */
@@ -75,6 +74,7 @@ struct _File_Tag
     gchar *podcastrss;
     gchar *time_released;
     gchar *subtitle;
+    gchar *BPM;           /* beats per minute */
     gchar *lyrics;        /* does not appear to be the full lyrics --
 			     only used to set the flag 'lyrics_flag'
 			     of the Track structure */
@@ -1423,6 +1423,7 @@ gboolean id3_tag_read (gchar *filename, File_Tag *tag)
 	tag->podcastrss = id3_get_string (id3tag, "YWFD");
 	tag->description = id3_get_string (id3tag, "YTDS");
 	tag->time_released = id3_get_string (id3tag, "YTDR");
+	tag->BPM = id3_get_string (id3tag, "TBPM");
 
 	string = id3_get_string (id3tag, "TLEN");
 	if (string)
@@ -1590,6 +1591,10 @@ gboolean mp3_write_file_info (gchar *filename, Track *track)
 
 	string1 = g_strdup_printf("%d", track->year);
 	id3_set_string(id3tag, ID3_FRAME_YEAR, string1, encoding);
+	g_free(string1);
+
+	string1 = g_strdup_printf("%d", track->BPM);
+	id3_set_string(id3tag, "TBPM", string1, encoding);
 	g_free(string1);
 
 	if (track->tracks)
@@ -2303,6 +2308,16 @@ Track *mp3_get_file_info (gchar *name)
 	{
 	    track->compilation = atoi(filetag.compilation);
 	    g_free (filetag.compilation);
+	}
+
+	if (filetag.BPM == NULL)
+	{
+	    track->BPM = 0;
+	}
+	else
+	{
+	    track->BPM = atoi(filetag.BPM);
+	    g_free (filetag.BPM);
 	}
 
 	if (filetag.lyrics)

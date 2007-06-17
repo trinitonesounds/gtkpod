@@ -1,5 +1,14 @@
 2007-06-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/mp4file.c
+	  src/mp3file.c: read/write tempo (BPM) value from/to tags.
+
+	  src/flacfile.c
+	  src/oggfile.c: read tempo (BPM) value from tags (not sure
+	  if this is correct)
+
+	  src/file.c (copy_new_info): copy BPM after having read it.
+
 	* README: some changes initiated by Daniele Forsi.
 
 	* src/info.c (gtkpod_statusbar_message): fixed memory leak --

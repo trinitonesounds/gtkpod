@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-10-15 23:48:05 jcs>
+/* Time-stamp: <2007-06-18 00:48:52 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -75,6 +75,8 @@
    guint16 samplerate;        /+ e.g.: CD is 44100     +/
    guint32 peak_signal;	      /+ LAME Peak Signal * 0x800000         +/
    gboolean compilation;      /+ Track is part of a compilation CD   +/
+   gboolean lyrics_flag;
+   gint16 bpm;
 
    If prefs_get_int("readtags") returns FALSE you only should fill in
    tracklen, bitrate, samplerate, soundcheck and filetype
@@ -347,6 +349,10 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 			track->genre = charset_to_utf8 (value);
 			g_free(value);
 		    }
+		    if (MP4GetMetadataTempo (mp4File, &numvalue))
+		    {
+			track->BPM = numvalue;
+		    }
 		}
 		mp4_scan_soundcheck (mp4File, track);
 		audio_or_video_found = TRUE;
@@ -451,6 +457,8 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 	    MP4SetMetadataTrack (mp4File, track->track_nr, track->tracks);
 
 	    MP4SetMetadataDisk (mp4File, track->cd_nr, track->cds);
+
+	    MP4SetMetadataTempo (mp4File, track->BPM);
 
 	    value = charset_from_utf8 (track->genre);
 	    MP4SetMetadataGenre (mp4File, value);

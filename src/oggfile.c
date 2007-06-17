@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-19 00:56:31 jcs>
+/* Time-stamp: <2007-06-18 00:48:50 jcs>
 |
 |  Copyright (C) 2007 Marc d[r]eadlock <m.dreadlock at gmail com>
 |  Part of the gtkpod project.
@@ -121,6 +121,10 @@ Track *ogg_get_file_info (gchar *oggFileName)
                     }
                     if ((str=vorbis_comment_query(vc,"cds",0))!=NULL){
 		        track->cds = atoi(str);
+                    }
+		    /* I'm not sure if "bpm" is correct */ 
+                    if ((str=vorbis_comment_query(vc,"bpm",0))!=NULL){
+		        track->BPM = atoi(str);
                     }
                 }
                     

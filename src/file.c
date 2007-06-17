@@ -873,6 +873,7 @@ static void copy_new_info (Track *from, Track *to)
     to->mediatype = from->mediatype;
     to->lyrics_flag = from->lyrics_flag;
     to->movie_flag = from->movie_flag;
+    to->BPM = from->BPM;
 }
 
 /* Updates mserv data (rating only) of @track using filename @name to

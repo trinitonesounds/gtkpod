@@ -93,13 +93,16 @@ Track *flac_get_file_info (gchar *flacFileName)
                     }
                     if (g_ascii_strncasecmp("CDS=", tag, 4) == 0) {
                         track->cds = atoi (tag  + 4);
+		    }
+		    /* I'm not sure if "BPM=" is correct */ 
+                    if (g_ascii_strncasecmp("BPM=", tag, 4) == 0) {
+                        track->BPM = atoi (tag  + 4);
                     }
                 }
             }
 
             FLAC__metadata_object_delete (tags);
 	}
-        /* TODO: immediate conversion if thread ? */
     }
 
     return track;
