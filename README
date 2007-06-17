@@ -68,7 +68,7 @@ for details.
    directories.
 
 4) Use "Eject iPod" in the context menu or click on the icon to the
-   right of the iPod name to write the added files to the iPod and
+   left of the iPod name to write the added files to the iPod and
    create a new iTunesDB and unload the iPod from gtkpod.
 
 5) Unmount your iPod. The easiest way is to use the windowmanager. If
