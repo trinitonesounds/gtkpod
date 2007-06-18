@@ -34,6 +34,7 @@
 #include "fileselection.h"
 #include "misc.h"
 #include "fetchcover.h"
+#include "display_coverart.h"
 #include "misc_track.h"
 #include "prefs.h"
 #include <string.h>
@@ -514,8 +515,6 @@ static gboolean details_copy_artwork (Track *frtrack, Track *totrack)
     g_return_val_if_fail (fretr->thumb_path_locale, FALSE);
     g_return_val_if_fail (toetr->thumb_path_locale, FALSE);
 
-    if (strcmp (fretr->thumb_path_locale, toetr->thumb_path_locale) != 0)
-    {
 	itdb_artwork_free (totrack->artwork);
 	totrack->artwork = itdb_artwork_duplicate (frtrack->artwork);
 	totrack->artwork_size = frtrack->artwork_size;
@@ -526,13 +525,19 @@ static gboolean details_copy_artwork (Track *frtrack, Track *totrack)
 	toetr->thumb_path_locale = g_strdup (fretr->thumb_path_locale);
 	toetr->thumb_path_utf8 = g_strdup (fretr->thumb_path_utf8);
 	changed = TRUE;
-    }
+    
     /* make sure artwork gets removed, even if both thumb_paths were
        unset ("") */
     if (!frtrack->artwork->thumbnails)
     {
 	changed |= gp_track_remove_thumbnails (totrack);
     }
+    
+    /* Since no data changes affect the coverart display.
+     * Need to force a change by calling set covers directly.
+     */
+     force_update_covers ();
+    
     return changed;
 }
 

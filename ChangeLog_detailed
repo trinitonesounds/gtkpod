@@ -1,3 +1,32 @@
+2007-06-17 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+	Bug fixes spotted by Daniele Forsi.
+	
+	Change in coverart not made to coverart display when apply button
+	clicked on Details window.
+	Fetchcover behaved awkwardly with naming the downloaded image files if
+	the tracks concerned lacked album info in their ID3 tags.
+	Coverart files from fetchcover subject to template values in the prefs.
+	Should always be a default value of folder.jpg if none of the templates
+	provide a non-null value.
+
+	* details.c:
+	  details_copy_artwork() has to now always recopy the artwork
+	  from file. The reason being, fetchcover overwrites the artwork hence
+	  the file name will still be the same while different artwork.
+	  
+	* display_coverart.h
+	  display_coverart.c:
+	  set_covers() and set_cover_item() now has a
+	  parameter to force an update of the cover images from file. Only used
+	  by details_copy_artwork() when the apply button is clicked on the
+	  details window.
+	  
+	* fetchcover.c:
+	  dialog will now appear if a cover image file already exists in the
+	  tracks directory. Gives the options to overwrite, save as unique name
+	  or cancel completely.
+	  
 2007-06-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/misc.h

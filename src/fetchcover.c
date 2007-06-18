@@ -67,6 +67,8 @@ static GtkWidget *prev_button;
 static GtkWidget *fetchcover_statusbar;
 /* Flag indicating whether a new net search should be initiated */
 static gboolean netsearched = FALSE;
+/* Display a dialog explaining the options if a file with the proposed name already exists */
+static gchar *display_file_exist_dialog (gchar *filename);
 
 #define IMGSCALE 256
 
@@ -337,19 +339,33 @@ static void net_retrieve_image (GString *url)
 	gchar *template = prefs_get_string("coverart_template");
 	gchar **template_items = g_strsplit(template, ";", 0);
 	
-	gchar *filename = get_string_from_template(fetchcover_track, *template_items, FALSE, FALSE);
+	gint i;
+	gchar *filename = NULL;
 	
+	for (i = 0; filename == NULL && i < g_strv_length (template_items); ++i)
+	{
+		filename = get_string_from_template(fetchcover_track, template_items[i], FALSE, FALSE);
+		if (strlen(filename) == 0)
+			filename = NULL;
+	}
+	
+	/* Check filename still equals null then take a default stance
+	 * to ensure the file has a name.
+	 */
+	if (filename == NULL)
+		filename = "folder.jpg";
+		
 	/* Use the index position of the cover in the glist to create a unique filename
 	 * Convert the index number to a string and prefix with a dot (hidden file)
 	 */
 	gint display_cover_index;
 	display_cover_index = g_list_index (fetchcover_image_list, displayed_cover);	
 	gchar *dcstr_index = NULL;
-	dcstr_index = (gchar *) g_malloc (4);
+	dcstr_index = (gchar *) g_malloc (sizeof(gint) + (sizeof(gchar) * 3));
 	g_sprintf (dcstr_index, ".%d_@_", display_cover_index);
 	
 	gchar *fname = NULL;
-	if (g_str_has_suffix(*template_items, ".jpg"))
+	if (g_str_has_suffix(filename, ".jpg"))
 		fname = g_strconcat(dcstr_index, filename, NULL);
 	else
 		fname = g_strconcat(dcstr_index, filename, ".jpg", NULL);
@@ -566,14 +582,24 @@ gchar *fetchcover_save ()
 		/* Assign the filename ready to rename the file */
 		newname = g_build_filename(displayed_cover->dir, fname_items[1], NULL);
 		fetchcover_debug("New name of file is %s\n", newname);
-				
-		if (g_file_test (newname, G_FILE_TEST_EXISTS))
+
+		while (g_file_test (newname, G_FILE_TEST_EXISTS))
 		{
-			/* file with the new name exists so delete the file */
-			g_remove (newname);
+			newname = display_file_exist_dialog (newname);
+			if (newname == NULL)
+				break;
 		}
 		
+		/* Carry the nullified value back to the original called so the
+		 * entire fetchcover process can be cancelled
+		 */
+		if (newname == NULL)
+			return NULL;
+		
 		gchar *oldname = g_build_filename(displayed_cover->dir, displayed_cover->filename, NULL);
+		/* Rename the preferred choice, ie. .2_@_After_Forever.jpg, to the preferred name, 
+		 * ie. After_Forever.jpg
+		 */
 		g_rename (oldname, newname);
 		
 		/* Tidy up to ensure the path will not get cleaned up
@@ -589,6 +615,75 @@ gchar *fetchcover_save ()
 	return newname;	
 }
 #endif /* HAVE_CURL */
+
+static gchar *display_file_exist_dialog (gchar *filename)
+{
+	gint result;
+	gchar **splitarr = NULL;
+	gchar *basename = NULL;
+	gint i;
+	gchar *message;	
+	GtkWidget *label;
+	GtkWidget *dialog = gtk_dialog_new_with_buttons ("Coverart file already exists",
+                                            NULL,
+                                            GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                            GTK_STOCK_YES,
+                                            GTK_RESPONSE_YES,
+                                            GTK_STOCK_NO,
+                                            GTK_RESPONSE_NO,
+                                            GTK_STOCK_CANCEL,
+                                            GTK_RESPONSE_REJECT,
+                                            NULL);
+	message = g_strdup_printf (_("The picture file %s already exists. \
+\nThis may be associated with other music files in the directory. \
+\n\n-  Clicking Yes will overwrite the existing file, possibly associating \
+\n   other music files in the same directory with this coverart file. \
+\n-  Clicking No will save the file with a unique file name. \
+\n-  Clicking Cancel will abort the fetchcover operation."), filename);
+		           
+	label = gtk_label_new (message);
+   
+ 	/* Add the label, and show everything we've added to the dialog. */
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), label);
+			
+	gtk_widget_show_all (dialog);	
+	result = gtk_dialog_run (GTK_DIALOG(dialog));
+	g_free (message);
+			
+	switch (result)
+	{
+		case GTK_RESPONSE_REJECT:
+			/* Cancel has been clicked so no save */
+			gtk_widget_destroy (dialog);
+			return NULL;
+		case GTK_RESPONSE_YES:
+			/* Yes clicked so overwrite the file is okay. Leave final_filename intact
+			 * and remove the original
+			 */
+			g_remove (filename);
+			gtk_widget_destroy (dialog);
+			return filename;
+		case GTK_RESPONSE_NO:
+			/* User doesnt want to overwrite anything so need to do some work on filename */
+			splitarr = g_strsplit (filename, ".", 0);
+			basename = splitarr[0];
+			
+			for (i = 1; g_file_test (filename, G_FILE_TEST_EXISTS); ++i)
+			{
+				g_sprintf (filename, "%s%d.jpg", basename, i);
+			}
+			
+			/* Should have found a filename that really doesnt exist so this needs to be returned */
+			basename = NULL;
+			g_strfreev(splitarr);
+			gtk_widget_destroy (dialog);
+			
+			return filename;
+		default:
+			gtk_widget_destroy (dialog);
+			return NULL;
+	}	
+}
 
 /**
  * free_fetchcover:
@@ -658,9 +753,6 @@ static void fetchcover_cleanup()
 	}
 	#endif /* CURL */
 	free_fetchcover_list();
-		
-	/* Clear the status bar */
-	gtk_statusbar_pop(GTK_STATUSBAR(fetchcover_statusbar), 1);
 }
 
 /**
@@ -798,8 +890,7 @@ static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device)
 		gtk_widget_set_sensitive (prev_button, FALSE);
 		fetchcover_statusbar_update ("CURL has not been installed so this function is not available");
 	#endif /* HAVE_CURL */
-	
-	
+		
   gtk_widget_show_all (fetchcover_dialog);
   
   g_object_unref (fetchcover_xml);
@@ -828,6 +919,7 @@ static void fetchcover_debug(const gchar *format, ...)
 	}
 }
 
+
 /**
  * fetchcover_statusbar_update:
  * 
@@ -843,6 +935,7 @@ static void fetchcover_statusbar_update (gchar *message)
 		gtk_statusbar_push(GTK_STATUSBAR(fetchcover_statusbar), 1,  message);
 	}
 }
+
 
 /**
  * on_coverart_context_menu_click:
@@ -867,13 +960,15 @@ void on_coverart_context_menu_click (GList *tracks)
   g_return_if_fail (dialog);
 
   result = gtk_dialog_run (GTK_DIALOG (dialog));
-
+	gtk_widget_hide (GTK_WIDGET(dialog));
+	gtk_widget_destroy (GTK_WIDGET(dialog));
+	
  #ifdef HAVE_CURL
  gchar *filename = NULL;
     	
  switch (result)
  {
- 	case GTK_RESPONSE_ACCEPT:	
+ 	case GTK_RESPONSE_ACCEPT:
       filename = fetchcover_save ();
       if (filename)
       {
@@ -892,7 +987,6 @@ void on_coverart_context_menu_click (GList *tracks)
 #endif /* HAVE_CURL */
 	
   fetchcover_cleanup();
-  gtk_widget_destroy (GTK_WIDGET (dialog));	
 }
 
 /**
@@ -912,7 +1006,8 @@ void on_fetchcover_fetch_button (GtkWidget *widget, gpointer data)
     g_return_if_fail (dialog);
 	
     result = gtk_dialog_run (GTK_DIALOG (dialog));
-	
+		gtk_widget_hide (GTK_WIDGET(dialog));
+		gtk_widget_destroy (GTK_WIDGET(dialog));
 #ifdef HAVE_CURL
     	
     gchar *filename = NULL;
@@ -958,5 +1053,4 @@ void on_fetchcover_fetch_button (GtkWidget *widget, gpointer data)
 #endif /* HAVE_CURL */
 	
     fetchcover_cleanup();
-    gtk_widget_destroy (GTK_WIDGET (dialog));
 }

@@ -42,7 +42,7 @@
 
 /* Declarations */
 static void free_album (Album_Item *album);
- static void free_CDWidget ();
+static void free_CDWidget ();
 static gint compare_album_keys (gchar *a, gchar *b);
 static void set_display_dimensions ();
 static GdkPixbuf *draw_blank_cdimage ();
@@ -57,8 +57,8 @@ static void set_cover_dimensions (Cover_Item *cover, int cover_index);
 static void coverart_sort_images (GtkSortType order);
 static void prepare_canvas ();
 static void set_slider_range (gint index);
-static void set_covers ();
-static void set_cover_item (gint ndex, Cover_Item *cover, gchar *key);
+static void set_covers (gboolean force_imgupdate);
+static void set_cover_item (gint ndex, Cover_Item *cover, gchar *key, gboolean force_imgupdate);
 
 /* Prefs keys */
 const gchar *KEY_DISPLAY_COVERART="display_coverart";
@@ -291,14 +291,29 @@ static void raise_cdimages (GPtrArray *cdcovers)
 }
 
 /**
+ * 
+ * force_update_covers:
+ * 
+ * Call the resetting of the covers and override the cached images so that they
+ * are loaded with the latest files existing on the filesystem.
+ * 
+ */
+void force_update_covers ()
+{
+	set_covers (TRUE);
+}
+
+/**
  * set_covers:
  *
  * Internal function responsible for the resetting of the artwork
  * covers in response to some kind of change in selection, eg. new
  * selection in sort tab, button click etc...
  * 
+ * @force_imgupdate: forces the resetting of the cached images so that the
+ * values are reread from the tracks and updated. Used sparingly.
  */
-static void set_covers ()
+static void set_covers (gboolean force_imgupdate)
 { 
   gint i, dataindex;
   gchar *key;
@@ -314,7 +329,7 @@ static void set_covers ()
 		 */
 		key = g_list_nth_data (album_key_list, dataindex);
 		
-		set_cover_item (i, cover, key);	
+		set_cover_item (i, cover, key, force_imgupdate);	
   }
 }
 
@@ -324,7 +339,7 @@ static void set_covers ()
  * Internal function called  by set_covers to reset an artwork cover.
  * 
  */
-static void set_cover_item (gint index, Cover_Item *cover, gchar *key)
+static void set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean force_imgupdate)
 {
 	GdkPixbuf *reflection;
 	GdkPixbuf *scaled;
@@ -375,6 +390,12 @@ static void set_cover_item (gint index, Cover_Item *cover, gchar *key)
 	cover->album = album;
 	
 	Track *track;
+	if (force_imgupdate)
+	{
+		gdk_pixbuf_unref (album->albumart);
+		album->albumart = NULL;
+	}
+	
 	if (album->albumart == NULL)
 	{
 		track = g_list_nth_data (album->tracks, 0);
@@ -451,7 +472,7 @@ static void on_cover_display_slider_value_changed (GtkRange *range, gpointer use
   if (cdwidget->first_imgindex > (displaytotal - IMG_MAIN))
   	cdwidget->first_imgindex = displaytotal - IMG_MAIN;
 	
-  set_covers ();
+  set_covers (FALSE);
 }
 
 /**
@@ -956,7 +977,7 @@ gboolean on_paned0_button_release_event (GtkWidget *widget, GdkEventButton *even
 				set_highlight (cover, TRUE);
   	}
 		
-		set_covers ();
+		set_covers (FALSE);
 		
 	}
 		
@@ -1412,7 +1433,7 @@ void coverart_select_cover (Track *track)
   else if((cdwidget->first_imgindex + IMG_TOTAL) >= displaytotal)
   	cdwidget->first_imgindex = displaytotal - IMG_TOTAL;
       
-  set_covers ();
+  set_covers (FALSE);
   
   /* Set the index value of the slider but avoid causing an infinite
    * cover selection by blocking the event
@@ -1523,7 +1544,7 @@ void coverart_track_changed (Track *track, gint signal)
 			if (index >= cdwidget->first_imgindex && index <= (cdwidget->first_imgindex + IMG_TOTAL))
  			{	
 				/* reset the covers and should reset to original position but without the index */
-				set_covers ();
+				set_covers (FALSE);
  			}
  			
  			/* Size of key list may have changed so reset the slider 
@@ -1583,7 +1604,7 @@ void coverart_track_changed (Track *track, gint signal)
 				for (i = 0; i < IMG_MAIN; ++i)
 					album_key_list = g_list_prepend (album_key_list, NULL);
 		
-				set_covers ();
+				set_covers (FALSE);
 			}
 			else
 			{
@@ -1632,7 +1653,7 @@ void coverart_track_changed (Track *track, gint signal)
 			  index = g_list_index (album->tracks, track);
 			  if (index != -1)
 			  {
-			  	/* Track exists in the album list so return and ignore the change */
+			  	/* Track exists in the album list so ignore the change and return */
 			  	return;
 			  }
 			  else
@@ -1668,7 +1689,7 @@ void coverart_track_changed (Track *track, gint signal)
 						 	* under the new album key
 						 	*/
 					 		remove_track_from_album (album, track, key, index, klist);
- 							set_covers();
+ 							set_covers(FALSE);
 					 		/* Found the album and removed so no need to continue the loop */
 					 		break;
 						}
@@ -1833,7 +1854,7 @@ void coverart_set_images (gboolean clear_track_list)
 	for (i = 0; i < IMG_MAIN; ++i)
 		album_key_list = g_list_prepend (album_key_list, NULL);
 		
-	set_covers ();
+	set_covers (FALSE);
 	
 	set_slider_range (cdwidget->first_imgindex);
 	
@@ -1908,7 +1929,7 @@ void coverart_set_cover_from_file ()
     
   g_free (filename);
   
-  set_covers ();
+  set_covers (FALSE);
 }
 
 /**
@@ -1946,5 +1967,5 @@ void coverart_set_cover_from_web ()
 	 
 	on_coverart_context_menu_click (tracks);
 	
-	set_covers ();
+	set_covers (FALSE);
 }

@@ -54,6 +54,7 @@ void coverart_display_big_artwork ();
 GList *coverart_get_displayed_tracks (void);
 GdkPixbuf *coverart_get_default_track_thumb (void);
 void coverart_init (gchar *progpath);
+void force_update_covers ();
 void coverart_select_cover (Itdb_Track *track);
 void coverart_set_images (gboolean clear_track_list);
 void coverart_track_changed (Track *track, gint signal);
