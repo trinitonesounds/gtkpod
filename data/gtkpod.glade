@@ -16174,16 +16174,6 @@ simultaneously</property>
 				  <child>
 				    <widget class="GtkComboBox" id="details_combobox_41">
 				      <property name="visible">True</property>
-				      <property name="items" translatable="yes">Audio/Video
-Audio
-Video
-Podcast
-Video Podcast
-Audiobook
-Music Video
-TV Show
-TV Show &amp; Music Video
-</property>
 				      <property name="add_tearoffs">False</property>
 				      <property name="focus_on_click">True</property>
 				    </widget>

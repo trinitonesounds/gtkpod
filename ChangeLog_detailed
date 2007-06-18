@@ -1,5 +1,14 @@
 2007-06-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/misc.h
+	  src/details.c
+	  src/misc.c
+	  data/gtkpod.glade: moved mediatype combobox handling in edit
+	  details window completely inside details.c for easier
+	  maintenance.
+
+2007-06-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/mp4file.c
 	  src/mp3file.c: read/write tempo (BPM) value from/to tags.
 

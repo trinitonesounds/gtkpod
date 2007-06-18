@@ -264,8 +264,4 @@ void load_ipod_prefs (iTunesDB *itdb, const gchar *mountpoint);
 gboolean save_ipod_prefs (iTunesDB *itdb, const gchar *mountpoint);
 
 gboolean get_offline (iTunesDB *itdb);
-
-guint32 guiToDB(gint gui);
-gint dbToGUI(guint32 db);
-
 #endif

@@ -53,6 +53,40 @@ static const gchar *DETAILS_WINDOW_DEFX="details_window_defx";
 static const gchar *DETAILS_WINDOW_DEFY="details_window_defy";
 static const gchar *DETAILS_WINDOW_NOTEBOOK_PAGE="details_window_notebook_page";
 
+/* enum types */
+typedef enum
+{
+    DETAILS_MEDIATYPE_AUDIO_VIDEO = 0,
+    DETAILS_MEDIATYPE_AUDIO,
+    DETAILS_MEDIATYPE_MOVIE,
+    DETAILS_MEDIATYPE_PODCAST,
+    DETAILS_MEDIATYPE_VIDEO_PODCAST,
+    DETAILS_MEDIATYPE_AUDIOBOOK,
+    DETAILS_MEDIATYPE_MUSICVIDEO,
+    DETAILS_MEDIATYPE_TVSHOW,
+    DETAILS_MEDIATYPE_MUSICVIDEO_TVSHOW
+} DETAILS_MEDIATYPE;
+
+typedef struct
+{
+    guint32 id;
+    const gchar *str;
+} ComboEntry;
+
+/* strings for mediatype combobox */
+static const ComboEntry mediatype_comboentries[] =
+{
+    { 0,                                               N_("Audio/Video") },
+    { ITDB_MEDIATYPE_AUDIO,                            N_("Audio") },
+    { ITDB_MEDIATYPE_MOVIE,                            N_("Video") },
+    { ITDB_MEDIATYPE_PODCAST,                          N_("Podcast") },
+    { ITDB_MEDIATYPE_PODCAST|ITDB_MEDIATYPE_MOVIE,     N_("Video Podcast") },
+    { ITDB_MEDIATYPE_AUDIOBOOK,                        N_("Audiobook") },
+    { ITDB_MEDIATYPE_MUSICVIDEO,                       N_("Music Video") },
+    { ITDB_MEDIATYPE_TVSHOW,                           N_("TV Show") },
+    { ITDB_MEDIATYPE_TVSHOW|ITDB_MEDIATYPE_MUSICVIDEO, N_("TV Show & Music Video") },
+    { 0,                                               NULL }
+};
 
 /* Declarations */
 static void details_set_track (Detail *detail, Track *track);
@@ -550,6 +584,55 @@ static void details_get_changes (Detail *detail)
 }
 
 
+/****** comboentries helper functions ******/
+
+/* Get index from ID (returns -1 if ID could not be found) */
+static gint comboentry_index_from_id (const ComboEntry centries[],
+				      guint32 id)
+{
+    gint i;
+
+    g_return_val_if_fail (centries, -1);
+
+    for (i=0; centries[i].str; ++i)
+    {
+	if (centries[i].id == id)  return i;
+    }
+    return -1;
+}
+
+
+/* initialize a combobox with the corresponding entry strings */
+static void details_setup_combobox (GtkWidget *cb,
+				    const ComboEntry centries[])
+{
+    const ComboEntry *ce = centries;
+    GtkCellRenderer *cell;
+    GtkListStore *store;
+
+    g_return_if_fail (cb);
+    g_return_if_fail (centries);
+
+    /* clear any renderers that may have been set */
+    gtk_cell_layout_clear (GTK_CELL_LAYOUT (cb));
+    /* set new model */
+    store = gtk_list_store_new (1, G_TYPE_STRING);
+    gtk_combo_box_set_model (GTK_COMBO_BOX (cb), GTK_TREE_MODEL (store));
+    g_object_unref (store);
+
+    cell = gtk_cell_renderer_text_new ();
+    gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (cb), cell, TRUE);
+    gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (cb), cell,
+				    "text", 0,
+				    NULL);
+
+    while (ce->str != NULL)
+    {
+	gtk_combo_box_append_text (GTK_COMBO_BOX (cb), _(ce->str));
+	++ce;
+    }
+}
+
 
 /****** Setup of widgets ******/
 static void details_setup_widget (Detail *detail, T_item item)
@@ -655,6 +738,7 @@ static void details_setup_widget (Detail *detail, T_item item)
     case T_MEDIA_TYPE:
 	buf = g_strdup_printf ("details_combobox_%d", item);
 	w = gtkpod_xml_get_widget (detail->xml, buf);
+	details_setup_combobox (w, mediatype_comboentries);
 	g_signal_connect (w, "changed",
 			  G_CALLBACK (details_combobox_changed),
 			  detail);
@@ -820,13 +904,18 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
     case T_MEDIA_TYPE:
 	if ((w = gtkpod_xml_get_widget (detail->xml, combobox)))
 	{
-	  if (track)
+	    gint index = -1;
+	    if (track)
 	    {
-	      gint gui = dbToGUI(track->mediatype);
-	      gtk_combo_box_set_active (GTK_COMBO_BOX (w), gui);
+		index = comboentry_index_from_id (mediatype_comboentries,
+						  track->mediatype);
+		if (index == -1)
+		{
+		    gtkpod_warning (_("Please report unknown mediatype %x\n"),
+				    track->mediatype);
+		}
 	    }
-	    else
-	      gtk_combo_box_set_active (GTK_COMBO_BOX (w), 0);
+	    gtk_combo_box_set_active (GTK_COMBO_BOX (w), index);
 	}
 	break;
     case T_ALL:
@@ -838,6 +927,7 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
     g_free (entry);
     g_free (checkbutton);
     g_free (textview);
+    g_free (combobox);
     g_free (text);
 }
 
@@ -1024,12 +1114,15 @@ static void details_get_item (Detail *detail, T_item item,
 	{
 	    gint active;
 	    active = gtk_combo_box_get_active (GTK_COMBO_BOX (w));
-	    guint32 mediatype_db = guiToDB(active);
-
-	    if (track->mediatype != mediatype_db)
+	    if (active != -1)
 	    {
-		track->mediatype = mediatype_db;
-		changed = TRUE;
+		guint32 new_mediatype = mediatype_comboentries[active].id;
+
+		if (track->mediatype != new_mediatype)
+		{
+		    track->mediatype = new_mediatype;
+		    changed = TRUE;
+		}
 	    }
 	}
 	break;
@@ -1077,6 +1170,7 @@ static void details_get_item (Detail *detail, T_item item,
     g_free (entry);
     g_free (checkbutton);
     g_free (textview);
+    g_free (combobox);
 
     details_update_buttons (detail);
 }
@@ -1486,10 +1580,9 @@ void details_edit (GList *selected_tracks)
 		      G_CALLBACK (details_writethrough_toggled),
 		      detail);
 
-
-
     g_signal_connect (detail->window, "delete_event",
 		      G_CALLBACK (details_delete_event), detail);
+
 
     details_set_tracks (detail, selected_tracks);
 

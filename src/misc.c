@@ -1405,51 +1405,6 @@ GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, const gchar *name)
 }
 
 
-guint32 guiToDB(gint gui)
-{
-  guint32 db = 0;
-  switch (gui)
-    {
-    case 0: db = 0x00000000; break;
-    case 1: db = 0x00000001; break;
-    case 2: db = 0x00000002; break;
-    case 3: db = 0x00000004; break;
-    case 4: db = 0x00000006; break;
-    case 5: db = 0x00000008; break;
-    case 6: db = 0x00000020; break;
-    case 7: db = 0x00000040; break;
-    case 8: db = 0x00000060; break;
-    default:
-      /* This is an error */
-      g_warning ("Programming error: GUI is not in sync with Media Types.\n");
-      db = 0;
-    };
-
-  return db;
-}
-
-gint dbToGUI(guint32 db)
-{
-  gint gui = 0;
-  switch (db)
-    {
-    case 0x00000000: gui = 0; break;
-    case 0x00000001: gui = 1; break;
-    case 0x00000002: gui = 2; break;
-    case 0x00000004: gui = 3; break;
-    case 0x00000006: gui = 4; break;
-    case 0x00000008: gui = 5; break;
-    case 0x00000020: gui = 6; break;
-    case 0x00000040: gui = 7; break;
-    case 0x00000060: gui = 8; break;
-    default:
-      /* Warning */
-      g_warning ("Unknown media type found: %#.8x\n", db);
-      gui = 0;
-    };
-  return gui;
-}
-
 /* ------------------------------------------------------------
  *
  *        Helper functions for pref keys
