@@ -1754,6 +1754,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
   gboolean success = TRUE;
   ExtraiTunesDBData *eitdb;
   GtkWidget *dialog;
+  Playlist *mpl;
   TransferData *transferdata;
 
   g_return_val_if_fail (itdb, FALSE);
@@ -1762,6 +1763,9 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
 
   cfgdir = prefs_get_cfgdir ();
   g_return_val_if_fail (cfgdir, FALSE);
+
+  mpl = itdb_playlist_mpl (itdb);
+  g_return_val_if_fail (mpl, FALSE);
 
   if (!eitdb->itdb_imported)
   {   /* No iTunesDB was read but user wants to export current
@@ -1854,8 +1858,10 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
 
   if (success)
   {
-      gtk_label_set_text (GTK_LABEL (transferdata->textlabel),
-			  _("Now writing database. Please wait..."));
+      gchar *buf;
+      buf = g_strdup_printf (_("Now writing database '%s'. Please wait..."), mpl->name);
+      gtk_label_set_text (GTK_LABEL (transferdata->textlabel), buf);
+      g_free (buf);
 
       while (widgets_blocked && gtk_events_pending ())
 	  gtk_main_iteration ();
@@ -1983,8 +1989,6 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
   /* indicate that files and/or database is saved */
   if (success)
   {
-      Playlist *mpl = itdb_playlist_mpl (itdb);
-      g_return_val_if_fail (mpl, success);
       data_unchanged (itdb);
       if (itdb->usertype & GP_ITDB_TYPE_IPOD)
       {
