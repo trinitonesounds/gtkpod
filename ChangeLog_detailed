@@ -8,6 +8,10 @@
 
 	* src/file.c: set mediatype to 'audiobook' for .mb4 files.
 
+	* src/ipod_init.c (gp_ipod_init_set_model): avoid segfault if
+          iPod model cannot be selected (possibly GTK+ or glade version
+          incompatibility?).
+
 2007-06-18 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	Bug fixes spotted by Daniele Forsi.

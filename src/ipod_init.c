@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-25 00:50:21 jcs>
+/* Time-stamp: <2007-06-19 22:52:52 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -458,7 +458,11 @@ void gp_ipod_init_set_model (iTunesDB *itdb, const gchar *old_model)
     case GTK_RESPONSE_OK:
 	model = gtk_combo_box_get_active_text (
 	    GTK_COMBO_BOX (GET_WIDGET (MODEL_COMBO)));
-	if (strcmp (model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0)
+	if (!model)
+	{
+	    gtkpod_warning (_("Could not determine the model you selected -- this could be a bug or incompatibilty in the GTK+ or glade library.\n\n"));
+	}
+	else if (strcmp (model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0)
 	{   /* User didn't choose a model */
 	    g_free (model);
 	    model = NULL;
