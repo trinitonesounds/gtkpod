@@ -6,6 +6,8 @@
 	* data/gtkpod.glade: Todd's patch to substitute custom button
           with stock button in the export dialog.
 
+	* src/file.c: set mediatype to 'audiobook' for .mb4 files.
+
 2007-06-18 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	Bug fixes spotted by Daniele Forsi.

@@ -1106,16 +1106,23 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
     case FILE_TYPE_MP3:
 	nti = mp3_get_file_info (name);
 	/* Set mediatype to audio */
-	if (nti) nti->mediatype = 0x00000001;
+	if (nti) nti->mediatype = ITDB_MEDIATYPE_AUDIO;
 	break;
     case FILE_TYPE_M4A:
     case FILE_TYPE_M4P:
-    case FILE_TYPE_M4B:
 	nti = mp4_get_file_info (name);
 	/* Set mediatype to audio */
 	if (nti)
 	{
-	    nti->mediatype = 0x00000001;
+	    nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+	}
+	break;
+    case FILE_TYPE_M4B:
+	nti = mp4_get_file_info (name);
+	/* Set mediatype to audiobook */
+	if (nti)
+	{
+	    nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
 	}
 	break;
     case FILE_TYPE_WAV:
@@ -1123,7 +1130,7 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	/* Set mediatype to audio */
 	if (nti)
 	{
-	    nti->mediatype = 0x00000001;
+	    nti->mediatype = ITDB_MEDIATYPE_AUDIO;
 	}
 	break;
     case FILE_TYPE_OGG:
@@ -1131,7 +1138,7 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
         /* Set unk208 to audio */
         if (nti)
         {
-            nti->mediatype = 0x00000001;
+            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
         }
         break;
     case FILE_TYPE_FLAC:
@@ -1139,7 +1146,7 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
         /* Set unk208 to audio */
         if (nti)
         {
-            nti->mediatype = 0x00000001;
+            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
         }
         break;
     case FILE_TYPE_M4V:
@@ -1151,7 +1158,7 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	/* Set mediatype to video */
 	if (nti)
 	{
-	    nti->mediatype = 0x00000002;
+	    nti->mediatype = ITDB_MEDIATYPE_MOVIE;
 	    nti->movie_flag = 0x01;
 	}	
 	break;
@@ -1162,7 +1169,7 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	/* Set mediatype to video */
 	if (nti)
 	{
-	    nti->mediatype = 0x00000002;
+	    nti->mediatype = ITDB_MEDIATYPE_MOVIE;
 	    nti->movie_flag = 0x01;
 	}
 	break;
