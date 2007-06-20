@@ -306,6 +306,100 @@ static void convert_table_set_children_initial_sensitivity (GtkTable *table)
     }
 }
 
+static gint setup_visible_cols_buttons_sort (gconstpointer a, gconstpointer b)
+{
+    const gint *aa = a;
+    const gint *bb = b;
+
+    g_return_val_if_fail (a&&b, 0);
+
+    return g_utf8_collate (gettext (get_tm_string (*aa)),
+			   gettext (get_tm_string (*bb)));
+}
+
+/* Creates the toggle buttons to select the visible columns */
+static void setup_visible_cols_buttons ( GtkTooltips *tt)
+{
+    GArray *array;
+    GtkWidget *hbox;
+    GtkWidget *table;
+    gint i, rows, columns, r, c;
+
+    /* Sort the available colums alphabetically */
+    array = g_array_new (FALSE, FALSE, sizeof (gint));
+    for (i=0; i<TM_NUM_COLUMNS; ++i)
+    {
+	g_array_append_val (array, i);
+    }
+    g_array_sort (array, setup_visible_cols_buttons_sort);
+
+#if 0
+    for (i=0; i<TM_NUM_COLUMNS; ++i)
+    {
+	printf ("%s\n", gettext (get_tm_string (g_array_index (array, gint, i))));
+    }
+#endif
+
+    hbox = gtkpod_xml_get_widget (prefs_window_xml, "visible_cols_hbox");
+
+    /* how big must the table be to keep all column labels? */
+    columns = 5;
+    rows = (TM_NUM_COLUMNS + (columns - 1)) / columns;
+    table = gtk_table_new (rows, columns, TRUE);
+
+    for (r=0; r*columns < TM_NUM_COLUMNS; ++r)
+    {
+	for (c=0; c<columns; ++c)
+	{
+	    i = r*columns+c;
+	    if (i < TM_NUM_COLUMNS)
+	    {
+		GtkWidget *button;
+		gint j;
+		j = g_array_index (array, gint, i);
+		/* Create button */
+		button = gtk_check_button_new_with_label (
+		    gettext (get_tm_string (j)));
+		/* set active/inactive */
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button),
+					     prefs_get_int_index("col_visible", j));
+		/* set tooltip if available */
+		if (get_tm_tooltip (j))
+		{
+		    gtk_tooltips_set_tip (tt, button, 
+					  gettext (get_tm_tooltip (j)),
+					  NULL);
+		}
+		/* connect the signal handler */
+		g_signal_connect ((gpointer)button,
+				  "toggled",
+				  G_CALLBACK (on_cfg_col_visible_toggled),
+				  GUINT_TO_POINTER(j));
+		/* attach button to table */
+		gtk_table_attach (GTK_TABLE (table),
+				  button,
+				  c, c+1,
+				  r, r+1,
+				  GTK_FILL, GTK_SHRINK,
+				  0, 0);
+		/* show the button */
+		gtk_widget_show (button);
+	    }
+	}
+    }
+    /* Set table spacings */
+    gtk_table_set_row_spacings (GTK_TABLE (table), 4);
+    gtk_table_set_col_spacings (GTK_TABLE (table), 4);
+    /* Make table visible */
+    gtk_widget_show (table);
+    /* pack the table into the hbox */
+    gtk_box_pack_start (GTK_BOX (hbox), table, TRUE, TRUE, 0);
+
+    /* free memory */
+    g_array_free (array, TRUE);
+}
+
+
 /**
  * create_gtk_prefs_window
  * Create, Initialize, and Show the preferences window
@@ -647,34 +741,8 @@ prefs_window_create (gint page)
     }
     gtk_widget_set_sensitive (w, prefs_get_int("coverart_file"));
 
-    for (i=0; i<TM_NUM_COLUMNS; ++i)
-    {
-	buf = g_strdup_printf ("col_visible%d", i);
-	if((w = gtkpod_xml_get_widget (prefs_window_xml, buf)))
-	{
-	    /* set label */
-	    gtk_button_set_label (GTK_BUTTON (w),
-				  gettext (get_tm_string (i)));
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 prefs_get_int_index("col_visible", i));
-	    /* set tooltip if available */
-	    if (get_tm_tooltip (i))
-	    {
-		gtk_tooltips_set_tip (tt, w, 
-				      gettext (get_tm_tooltip (i)),
-				      NULL);
-	    }
-	    /* glade makes a "GTK_OBJECT (i)" which segfaults
-	       because "i" is not a GTK object. So we have to set
-	       up the signal handlers ourselves */
-	    g_signal_connect ((gpointer)w,
-			      "toggled",
-			      G_CALLBACK (on_cfg_col_visible_toggled),
-			      GUINT_TO_POINTER(i));
-	}
-	g_free (buf);
-    }
-    
+    setup_visible_cols_buttons (tt);
+
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_write_extended");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 prefs_get_int("write_extended_info"));
