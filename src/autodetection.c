@@ -23,7 +23,7 @@
 |
 |  This product is not supported/written/published by Apple!
 |
-|  $Id: autodetection.c,v 1.1 2007/05/11 15:41:53 jcsjcs Exp $
+|  $Id$
 */
 
 
@@ -44,7 +44,7 @@
 #include <dbus/dbus.h>
 #endif
 
-#define DEBUG_AUTO
+#undef DEBUG_AUTO
 #ifdef DEBUG_AUTO
 #   define _TO_STR(x) #x
 #   define TO_STR(x) _TO_STR(x)

@@ -1,3 +1,9 @@
+2007-06-20  Todd Zullinger <tmzullinger at users.sourceforge.net>
+
+	* src/file_convert.c
+	  src/autodetection.c:
+	  disable debug output for release
+
 2007-06-19 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_itunesdb.c: Todd's patch to display the repository

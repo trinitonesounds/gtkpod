@@ -48,7 +48,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#define DEBUG_CONV
+#undef DEBUG_CONV
 #ifdef DEBUG_CONV
 #   define _TO_STR(x) #x
 #   define TO_STR(x) _TO_STR(x)
