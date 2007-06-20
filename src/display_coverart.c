@@ -319,8 +319,10 @@ static void set_covers (gboolean force_imgupdate)
   gchar *key;
   Cover_Item *cover;
 
-  for(i = 0; i < IMG_TOTAL; ++i)
+  if (cdwidget && cdwidget->cdcovers)
   {
+    for(i = 0; i < IMG_TOTAL; ++i)
+    {
 		cover = g_ptr_array_index(cdwidget->cdcovers, i);
 		dataindex = cdwidget->first_imgindex + i;
 
@@ -330,6 +332,7 @@ static void set_covers (gboolean force_imgupdate)
 		key = g_list_nth_data (album_key_list, dataindex);
 		
 		set_cover_item (i, cover, key, force_imgupdate);	
+    }
   }
 }
 

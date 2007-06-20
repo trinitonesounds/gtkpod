@@ -4,6 +4,10 @@
 	  src/autodetection.c:
 	  disable debug output for release
 
+	* src/display_coverart.c:
+	  fix a segfault when the coverart display is minimized and
+	  set_covers is called
+
 2007-06-19 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_itunesdb.c: Todd's patch to display the repository
