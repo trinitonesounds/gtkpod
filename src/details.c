@@ -38,6 +38,7 @@
 #include "misc_track.h"
 #include "prefs.h"
 #include <string.h>
+#include <glib/gstdio.h>
 
 /*
 void details_close (void);
@@ -500,11 +501,11 @@ static void details_delete_event (GtkWidget *widget,
 /****** Copy artwork data if filaname has changed ****** */
 static gboolean details_copy_artwork (Track *frtrack, Track *totrack)
 {
-    gboolean changed = FALSE;
-    ExtraTrackData *fretr, *toetr;
+		gboolean changed = FALSE;
+  	ExtraTrackData *fretr, *toetr;
 
-    g_return_val_if_fail (frtrack, FALSE);
-    g_return_val_if_fail (totrack, FALSE);
+  	g_return_val_if_fail (frtrack, FALSE);
+  	g_return_val_if_fail (totrack, FALSE);
 
     fretr = frtrack->userdata;
     toetr = totrack->userdata;
@@ -514,18 +515,30 @@ static gboolean details_copy_artwork (Track *frtrack, Track *totrack)
 
     g_return_val_if_fail (fretr->thumb_path_locale, FALSE);
     g_return_val_if_fail (toetr->thumb_path_locale, FALSE);
-
-	itdb_artwork_free (totrack->artwork);
-	totrack->artwork = itdb_artwork_duplicate (frtrack->artwork);
-	totrack->artwork_size = frtrack->artwork_size;
-	totrack->artwork_count = frtrack->artwork_count;
-	totrack->has_artwork = frtrack->has_artwork;
-	g_free (toetr->thumb_path_locale);
-	g_free (toetr->thumb_path_utf8);
-	toetr->thumb_path_locale = g_strdup (fretr->thumb_path_locale);
-	toetr->thumb_path_utf8 = g_strdup (fretr->thumb_path_utf8);
-	changed = TRUE;
-    
+	
+	if (strcmp (fretr->thumb_path_locale, toetr->thumb_path_locale) != 0)
+  {
+  	/* If filename ends with a ~ then remove it as we are preparing to save */
+  	if (g_str_has_suffix(fretr->thumb_path_locale, "~"))
+  	{
+  		gchar **basename = g_strsplit(fretr->thumb_path_locale, "~", 0);
+  		g_rename (fretr->thumb_path_locale, basename[0]);
+  		
+  		gp_track_set_thumbnails (frtrack, basename[0]);
+  		g_strfreev(basename);
+  	}
+  	
+		itdb_artwork_free (totrack->artwork);
+		totrack->artwork = itdb_artwork_duplicate (frtrack->artwork);
+		totrack->artwork_size = frtrack->artwork_size;
+		totrack->artwork_count = frtrack->artwork_count;
+		totrack->has_artwork = frtrack->has_artwork;
+		g_free (toetr->thumb_path_locale);
+		g_free (toetr->thumb_path_utf8);
+		toetr->thumb_path_locale = g_strdup (fretr->thumb_path_locale);
+		toetr->thumb_path_utf8 = g_strdup (fretr->thumb_path_utf8);
+		changed = TRUE;
+	}
     /* make sure artwork gets removed, even if both thumb_paths were
        unset ("") */
     if (!frtrack->artwork->thumbnails)

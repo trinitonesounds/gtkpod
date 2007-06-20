@@ -37,7 +37,7 @@
 #define FETCHCOVER_DEBUG 1
 
 static void fetchcover_statusbar_update (gchar *message);
-static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device);
+static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device, GtkWindow *parent);
 static void fetchcover_debug(const gchar *format, ...);
 
 typedef struct
@@ -67,8 +67,8 @@ static GtkWidget *prev_button;
 static GtkWidget *fetchcover_statusbar;
 /* Flag indicating whether a new net search should be initiated */
 static gboolean netsearched = FALSE;
-/* Display a dialog explaining the options if a file with the proposed name already exists */
-static gchar *display_file_exist_dialog (gchar *filename);
+/* Flag indicating whether the tilda should be used for the naming of the new file */
+static gboolean USE_TILDA = FALSE;
 
 #define IMGSCALE 256
 
@@ -85,7 +85,9 @@ static void net_retrieve_image (GString *url);
 static void fetchcover_next_button_clicked (GtkWidget *widget, gpointer data);
 static void fetchcover_prev_button_clicked (GtkWidget *widget, gpointer data);
 static void fetchcover_cleanup();
-static gchar *fetchcover_save ();
+static gchar *fetchcover_save (GtkWindow *parent);
+/* Display a dialog explaining the options if a file with the proposed name already exists */
+static gchar *display_file_exist_dialog (gchar *filename, GtkWindow *parent);
 
 struct chunk
 {
@@ -561,10 +563,10 @@ static void fetchcover_prev_button_clicked (GtkWidget *widget, gpointer data)
  * Returns:
  * Filename of chosen cover image file
  */
-gchar *fetchcover_save ()
+gchar *fetchcover_save (GtkWindow *parent)
 {
 	gchar *newname = NULL;
-	
+	gchar *tildaname = NULL;	
 	/* The default cover image will have both dir and filename set
 	 * to null because no need to save because it is already saved (!!)
 	 * Thus, this whole process is avoided. Added bonus that pressing
@@ -585,7 +587,7 @@ gchar *fetchcover_save ()
 
 		while (g_file_test (newname, G_FILE_TEST_EXISTS))
 		{
-			newname = display_file_exist_dialog (newname);
+			newname = display_file_exist_dialog (newname, parent);
 			if (newname == NULL)
 				break;
 		}
@@ -598,9 +600,19 @@ gchar *fetchcover_save ()
 		
 		gchar *oldname = g_build_filename(displayed_cover->dir, displayed_cover->filename, NULL);
 		/* Rename the preferred choice, ie. .2_@_After_Forever.jpg, to the preferred name, 
-		 * ie. After_Forever.jpg
+		 * ie. After_Forever.jpg~. The tilda denotes that the file has changed so provides a
+		 * signal for the details window to call copy_artwork
 		 */
-		g_rename (oldname, newname);
+		 
+		 if (USE_TILDA)
+		 {
+		 	tildaname = g_strconcat (newname, "~", NULL);
+			g_rename (oldname, tildaname);
+		 }
+		 else
+		 {
+		 	g_rename (oldname, newname);
+		 }
 		
 		/* Tidy up to ensure the path will not get cleaned up
 		 * by fetchcover_clean_up
@@ -612,11 +624,18 @@ gchar *fetchcover_save ()
 		displayed_cover->dir = NULL;
 		displayed_cover->filename = NULL;
 	}
-	return newname;	
+	
+	if (USE_TILDA)
+	{
+		g_free (newname);
+		return tildaname;
+	}
+	
+	return newname;
 }
 #endif /* HAVE_CURL */
 
-static gchar *display_file_exist_dialog (gchar *filename)
+static gchar *display_file_exist_dialog (gchar *filename, GtkWindow *parent)
 {
 	gint result;
 	gchar **splitarr = NULL;
@@ -625,7 +644,7 @@ static gchar *display_file_exist_dialog (gchar *filename)
 	gchar *message;	
 	GtkWidget *label;
 	GtkWidget *dialog = gtk_dialog_new_with_buttons ("Coverart file already exists",
-                                            NULL,
+                                            parent,
                                             GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                             GTK_STOCK_YES,
                                             GTK_RESPONSE_YES,
@@ -762,7 +781,7 @@ static void fetchcover_cleanup()
  *
  * @track: track to look up images for
  */
-static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device)
+static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device, GtkWindow *parent)
 {
 	GnomeCanvasItem *art_border;
 	GtkBox *canvasbutton_hbox;
@@ -778,6 +797,7 @@ static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device)
 	
 	fetchcover_xml = glade_xml_new (xml_file, "fetchcover_dialog", NULL);
 	fetchcover_dialog = gtkpod_xml_get_widget (fetchcover_xml, "fetchcover_dialog");
+	gtk_window_set_transient_for (GTK_WINDOW(fetchcover_dialog), parent);
 	
 	ExtraTrackData *etd;
 	etd = track->userdata;
@@ -956,7 +976,9 @@ void on_coverart_context_menu_click (GList *tracks)
 		return;
 	}
 	
-  GtkDialog *dialog = fetchcover_display_dialog (track, track->itdb->device);
+	USE_TILDA = FALSE;
+	GtkWindow *parent = GTK_WINDOW (gtkpod_xml_get_widget (main_window_xml, "gtkpod"));
+  GtkDialog *dialog = fetchcover_display_dialog (track, track->itdb->device, parent);
   g_return_if_fail (dialog);
 
   result = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -969,7 +991,7 @@ void on_coverart_context_menu_click (GList *tracks)
  switch (result)
  {
  	case GTK_RESPONSE_ACCEPT:
-      filename = fetchcover_save ();
+      filename = fetchcover_save (parent);
       if (filename)
       {
 	  while (tracks)
@@ -1002,9 +1024,12 @@ void on_fetchcover_fetch_button (GtkWidget *widget, gpointer data)
 {
     gint result;
     Detail *detail = details_get_selected_detail ();
-    GtkDialog *dialog = fetchcover_display_dialog (detail->track, detail->itdb->device);
+    GtkWindow *parent = GTK_WINDOW(detail->window);
+    GtkDialog *dialog = fetchcover_display_dialog (detail->track, detail->itdb->device, parent);
     g_return_if_fail (dialog);
-	
+		
+		/* Set the tilda flag for the naming of the new artwork file */
+		USE_TILDA = TRUE;
     result = gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_hide (GTK_WIDGET(dialog));
 		gtk_widget_destroy (GTK_WIDGET(dialog));
@@ -1014,7 +1039,7 @@ void on_fetchcover_fetch_button (GtkWidget *widget, gpointer data)
     switch (result)
     {
     case GTK_RESPONSE_ACCEPT:  	
-    	filename = fetchcover_save ();
+    	filename = fetchcover_save (parent);
     	if (filename)
     	{
 	    if (details_writethrough(detail))

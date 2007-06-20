@@ -1,3 +1,18 @@
+2007-06-20 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+	* details.c - details_copy_artwork
+	  Reintroduced if clause on whether to copy the artwork. If
+	  image file has been set by fetchcover then a tilde is appended
+	  to the filename. This method removes the tilde, renames the
+	  file and copies the artwork with the proper filename.
+	  
+	* fetchcover.c
+	  Introduced flag USE_TILDA that is true when Details window calls
+	  fetchcover and false for when display coverart calls it. Tilda
+	  symbol added to end of filename if USE_TILDA set to true.
+	  Added references to dialog parents to properly control which
+	  windows can receive focus while dialogs are displayed.
+
 2007-06-20 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* data/gtkpod.glade
