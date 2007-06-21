@@ -1,3 +1,8 @@
+2007-06-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/file_convert.c (transfer_transfer_track): add newline to
+          libgpod error messages. Thanks to Daniele Forsi.
+
 2007-06-20 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* details.c - details_copy_artwork

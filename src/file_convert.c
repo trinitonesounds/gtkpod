@@ -3011,7 +3011,7 @@ static FileTransferStatus transfer_transfer_track (TransferItdb *tri,
 	g_mutex_lock (conv->mutex);
 	if (error)
 	{
-	    ctr->errormessage = g_strdup (error->message);
+	    ctr->errormessage = g_strdup_printf ("%s\n", error->message);
 	    g_error_free (error);
 	}
 	g_mutex_unlock (conv->mutex);
