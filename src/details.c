@@ -723,6 +723,13 @@ static void details_setup_widget (Detail *detail, T_item item)
     case T_TV_NETWORK:
     case T_SEASON_NR:
     case T_EPISODE_NR:
+    case T_ALBUMARTIST:
+    case T_SORT_ARTIST:
+    case T_SORT_TITLE:
+    case T_SORT_ALBUM:
+    case T_SORT_ALBUMARTIST:
+    case T_SORT_COMPOSER:
+    case T_SORT_TVSHOW:
 	buf = g_strdup_printf ("details_entry_%d", item);
 	w = gtkpod_xml_get_widget (detail->xml, buf);
 	g_signal_connect (w, "activate",
@@ -848,6 +855,13 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
     case T_TV_NETWORK:
     case T_SEASON_NR:
     case T_EPISODE_NR:
+    case T_ALBUMARTIST:
+    case T_SORT_ARTIST:
+    case T_SORT_TITLE:
+    case T_SORT_ALBUM:
+    case T_SORT_ALBUMARTIST:
+    case T_SORT_COMPOSER:
+    case T_SORT_TVSHOW:
 	w = gtkpod_xml_get_widget (detail->xml, entry);
 	g_signal_handlers_block_by_func (w, details_text_changed, detail);
 	gtk_entry_set_text (GTK_ENTRY (w), text);
@@ -1012,6 +1026,13 @@ static void details_get_item (Detail *detail, T_item item,
     case T_TV_NETWORK:
     case T_SEASON_NR:
     case T_EPISODE_NR:
+    case T_ALBUMARTIST:
+    case T_SORT_ARTIST:
+    case T_SORT_TITLE:
+    case T_SORT_ALBUM:
+    case T_SORT_ALBUMARTIST:
+    case T_SORT_COMPOSER:
+    case T_SORT_TVSHOW:
 	if ((w = gtkpod_xml_get_widget (detail->xml, entry)))
 	{
 	    const gchar *text;

@@ -138,12 +138,6 @@ typedef enum  {
 } ST_item;
 
 /* Column numbers in track model */
-/* Note: the toggle buttons for tag_autoset and display_col
- * in the prefs_window are
- * named after the numbers (Title: tag_autoset0, Artist: tag_autoset1
- * etc.). Since the labels to the buttons are set in prefs_window.c
- * when creating the window, you only need to name the buttons in the
- * intended order using glade-2. There is no need to label them. */
 /* Note: add corresponding entries to T_item and TM_to_T() as well 
  * (below and in misc_conversion.c). 
  * IMPORTANT: Do not change the order -- always add new entries at the
@@ -190,6 +184,13 @@ typedef enum  {
   TM_COLUMN_TV_NETWORK,
   TM_COLUMN_SEASON_NR,
   TM_COLUMN_EPISODE_NR,       /* 40 */
+  TM_COLUMN_ALBUMARTIST,
+  TM_COLUMN_SORT_ARTIST,
+  TM_COLUMN_SORT_TITLE,
+  TM_COLUMN_SORT_ALBUM,
+  TM_COLUMN_SORT_ALBUMARTIST, /* 45 */
+  TM_COLUMN_SORT_COMPOSER,
+  TM_COLUMN_SORT_TVSHOW,
   TM_NUM_COLUMNS
 } TM_item;
 
@@ -248,6 +249,13 @@ typedef enum {
     T_TV_NETWORK,
     T_SEASON_NR,    /* 45 */
     T_EPISODE_NR,
+    T_ALBUMARTIST,
+    T_SORT_ARTIST,
+    T_SORT_TITLE,
+    T_SORT_ALBUM,   /* 50 */
+    T_SORT_ALBUMARTIST,
+    T_SORT_COMPOSER,
+    T_SORT_TVSHOW,
     T_ITEM_NUM,
 } T_item;
 

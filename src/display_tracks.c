@@ -978,6 +978,13 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   case TM_COLUMN_TV_SHOW:
   case TM_COLUMN_TV_EPISODE:
   case TM_COLUMN_TV_NETWORK:
+  case TM_COLUMN_ALBUMARTIST:
+  case TM_COLUMN_SORT_ARTIST:
+  case TM_COLUMN_SORT_TITLE:
+  case TM_COLUMN_SORT_ALBUM:
+  case TM_COLUMN_SORT_ALBUMARTIST:
+  case TM_COLUMN_SORT_COMPOSER:
+  case TM_COLUMN_SORT_TVSHOW:
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "editable", TRUE,
@@ -1955,6 +1962,13 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   case TM_COLUMN_TV_NETWORK:
   case TM_COLUMN_SEASON_NR:
   case TM_COLUMN_EPISODE_NR:
+  case TM_COLUMN_ALBUMARTIST:
+  case TM_COLUMN_SORT_ARTIST:
+  case TM_COLUMN_SORT_TITLE:
+  case TM_COLUMN_SORT_ALBUM:
+  case TM_COLUMN_SORT_ALBUMARTIST:
+  case TM_COLUMN_SORT_COMPOSER:
+  case TM_COLUMN_SORT_TVSHOW:
       break;
   /* for some column names we want to use shorter alternatives to
      get_tm_string() */

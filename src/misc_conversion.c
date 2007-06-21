@@ -103,6 +103,13 @@ static const gchar *t_strings[] = {
     N_("TV Network"),
     N_("Season Nr"),         /* 45 */
     N_("Episode Nr"),
+    N_("Album Artist"),
+    N_("Sort Artist"),
+    N_("Sort Title"),
+    N_("Sort Album"),        /* 50 */
+    N_("Sort Album Artist"),
+    N_("Sort Composer"),
+    N_("Sort TV Show"),
     NULL };
 
 /* Tooltips for prefs window */
@@ -156,7 +163,14 @@ static const gchar *t_tooltips[] = {
     NULL,
     NULL,
     NULL,   /* 45 */
-    NULL
+    NULL,
+    NULL,
+    N_("Used for sorting on the iPod"),
+    N_("Used for sorting on the iPod"),
+    N_("Used for sorting on the iPod"),  /* 50 */
+    N_("Used for sorting on the iPod"),
+    N_("Used for sorting on the iPod"),
+    N_("Used for sorting on the iPod")
  };
 
 
@@ -208,6 +222,13 @@ T_item TM_to_T (TM_item tm)
     case TM_COLUMN_TV_NETWORK:    return T_TV_NETWORK;
     case TM_COLUMN_SEASON_NR:     return T_SEASON_NR;
     case TM_COLUMN_EPISODE_NR:    return T_EPISODE_NR;
+    case TM_COLUMN_ALBUMARTIST:   return T_ALBUMARTIST;
+    case TM_COLUMN_SORT_ARTIST:   return T_SORT_ARTIST;
+    case TM_COLUMN_SORT_TITLE:    return T_SORT_TITLE;
+    case TM_COLUMN_SORT_ALBUM:    return T_SORT_ALBUM;
+    case TM_COLUMN_SORT_ALBUMARTIST: return T_SORT_ALBUMARTIST;
+    case TM_COLUMN_SORT_COMPOSER: return T_SORT_COMPOSER;
+    case TM_COLUMN_SORT_TVSHOW:   return T_SORT_TVSHOW;
     case TM_NUM_COLUMNS:          g_return_val_if_reached (-1);
     }
     return -1;

@@ -803,6 +803,13 @@ void gp_track_validate_entries (Track *track)
     if (!track->tvshow)          track->tvshow = g_strdup("");
     if (!track->tvepisode)       track->tvepisode = g_strdup("");
     if (!track->tvnetwork)       track->tvnetwork = g_strdup("");
+    if (!track->albumartist)     track->albumartist = g_strdup ("");
+    if (!track->sort_artist)     track->sort_artist = g_strdup ("");
+    if (!track->sort_title)      track->sort_title = g_strdup ("");
+    if (!track->sort_album)      track->sort_album = g_strdup ("");
+    if (!track->sort_albumartist)track->sort_albumartist = g_strdup ("");
+    if (!track->sort_composer)   track->sort_composer = g_strdup ("");
+    if (!track->sort_tvshow)     track->sort_tvshow = g_strdup ("");
     if (!etr->pc_path_utf8)      etr->pc_path_utf8 = g_strdup ("");
     if (!etr->pc_path_locale)    etr->pc_path_locale = g_strdup ("");
     if (!etr->thumb_path_utf8)   etr->thumb_path_utf8 = g_strdup ("");

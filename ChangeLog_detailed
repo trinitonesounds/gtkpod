@@ -3,6 +3,17 @@
 	* src/file_convert.c (transfer_transfer_track): add newline to
           libgpod error messages. Thanks to Daniele Forsi.
 
+	* src/display.h
+	  src/misc_conversion.c
+	  src/display_itdb.c
+	  src/display_tracks.c
+	  src/misc_track.c
+	  src/details.c
+	  data/gtkpod.glade:
+	  added support for new text fields supported by libgpod
+	  0.5.0: album artist, sort artist, sort title, sort album,
+	  sort albumartist, sort_composer, sort_tvshow.
+
 2007-06-20 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* details.c - details_copy_artwork

@@ -861,6 +861,27 @@ gchar **track_get_item_pointer (Track *track, T_item t_item)
     case T_TV_NETWORK:
         result = &track->tvnetwork;
         break;
+    case T_ALBUMARTIST:
+	result = &track->albumartist;
+	break;
+    case T_SORT_ARTIST:
+	result = &track->sort_artist;
+	break;
+    case T_SORT_TITLE:
+	result = &track->sort_title;
+	break;
+    case T_SORT_ALBUM:
+	result = &track->sort_album;
+	break;
+    case T_SORT_ALBUMARTIST:
+	result = &track->sort_albumartist;
+	break;
+    case T_SORT_COMPOSER:
+	result = &track->sort_composer;
+	break;
+    case T_SORT_TVSHOW:
+	result = &track->sort_tvshow;
+	break;
     case T_ALL:
     case T_IPOD_ID:
     case T_TRACK_NR:
@@ -954,6 +975,13 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
     case T_TV_SHOW:
     case T_TV_EPISODE:
     case T_TV_NETWORK:
+    case T_ALBUMARTIST:
+    case T_SORT_ARTIST:
+    case T_SORT_TITLE:
+    case T_SORT_ALBUM:
+    case T_SORT_ALBUMARTIST:
+    case T_SORT_COMPOSER:
+    case T_SORT_TVSHOW:
 	fritem = track_get_item (frtrack, item);
 	toitem_ptr = track_get_item_pointer (totrack, item);
 	g_return_val_if_fail (fritem, FALSE);
@@ -1235,6 +1263,13 @@ gchar *track_get_text (Track *track, T_item item)
     case T_TV_SHOW:
     case T_TV_EPISODE:
     case T_TV_NETWORK:
+    case T_ALBUMARTIST:
+    case T_SORT_ARTIST:
+    case T_SORT_TITLE:
+    case T_SORT_ALBUM:
+    case T_SORT_ALBUMARTIST:
+    case T_SORT_COMPOSER:
+    case T_SORT_TVSHOW:
 	text = g_strdup (track_get_item (track, item));
 	break;
     case T_TRACK_NR:
@@ -1415,6 +1450,13 @@ gboolean track_set_text (Track *track, const gchar *new_text, T_item item)
     case T_TV_SHOW:
     case T_TV_EPISODE:
     case T_TV_NETWORK:
+    case T_ALBUMARTIST:
+    case T_SORT_ARTIST:
+    case T_SORT_TITLE:
+    case T_SORT_ALBUM:
+    case T_SORT_ALBUMARTIST:
+    case T_SORT_COMPOSER:
+    case T_SORT_TVSHOW:
         itemp_utf8 = track_get_item_pointer (track, item);
         if (g_utf8_collate (*itemp_utf8, new_text) != 0)
         {
