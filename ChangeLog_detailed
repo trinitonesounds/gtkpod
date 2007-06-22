@@ -1,3 +1,28 @@
+2007-06-22 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/mp3file.c:
+	  added reading/writing of tags for sort artist, sort album,
+	  sort title, sort albumartist and sort composer.
+
+	* src/mp4file.c:
+
+	  Added reading/writing of the grouping tag, whatever that
+	  is.
+
+	  The sort tags are written by iTunes as fields of the
+	  iTunes_CDDB_IDs tag which I don't seem to be able to access
+	  (only the first field seems available without hacking). For
+	  reference: the field names are soar (artist), sonm (title),
+	  soal (album), soaa (album artist), soco (composer) and sosn
+	  (show).
+
+	  Added reading of coverart tag. Displayed by the iPod but not
+	  by the coverart display. Properly displayed in the details
+	  window.
+
+	* src/file.c (copy_new_info): use switch() to avoid missing
+          copying new items (like the sort keys).
+
 2007-06-22  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* src/fetchcover.c:

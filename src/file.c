@@ -782,6 +782,7 @@ void update_charset_info (Track *track)
 static void copy_new_info (Track *from, Track *to)
 {
     ExtraTrackData *efrom, *eto;
+    T_item item;
 
     g_return_if_fail (from);
     g_return_if_fail (to);
@@ -790,56 +791,124 @@ static void copy_new_info (Track *from, Track *to)
     g_return_if_fail (efrom);
     g_return_if_fail (eto);
 
-    g_free (to->title);
-    to->title = g_strdup (from->title);
 
-    g_free (to->artist);
-    to->artist = g_strdup (from->artist);
+    for (item=0; item<T_ITEM_NUM; ++item)
+    {
+	gchar **fromcp, **tocp;
+	switch (item)
+	{
+	case T_ALBUM:
+	case T_ARTIST:
+	case T_TITLE:
+	case T_GENRE:
+	case T_COMMENT:
+	case T_COMPOSER:
+	case T_FILETYPE:
+	case T_DESCRIPTION:
+	case T_PODCASTURL:
+	case T_PODCASTRSS:
+	case T_SUBTITLE:
+	case T_TV_SHOW:
+	case T_TV_EPISODE:
+	case T_TV_NETWORK:
+	case T_THUMB_PATH:
+	case T_PC_PATH:
+	case T_ALBUMARTIST:
+	case T_SORT_ARTIST:
+	case T_SORT_TITLE:
+	case T_SORT_ALBUM:
+	case T_SORT_ALBUMARTIST:
+	case T_SORT_COMPOSER:
+	case T_SORT_TVSHOW:
+	    fromcp = track_get_item_pointer (from, item);
+	    tocp = track_get_item_pointer (to, item);
+	    g_free (*tocp);
+	    *tocp = g_strdup (*fromcp);
+	    break;
+	case T_GROUPING:
+	case T_CATEGORY:
+	    /* not implemented from tags */
+	    break;
+	case T_RATING:
+	case T_REMEMBER_PLAYBACK_POSITION:
+	case T_SKIP_WHEN_SHUFFLING:
+	case T_CHECKED:
+	case T_TIME_PLAYED:
+	case T_IPOD_PATH:
+	case T_ALL:
+	case T_IPOD_ID:
+	case T_TRANSFERRED:
+	case T_PLAYCOUNT:
+	case T_VOLUME:
+	    /* not applicable */
+	    break;
+	case T_YEAR:
+	    g_free (eto->year_str);
+	    eto->year_str = g_strdup (efrom->year_str);
+	    to->year = from->year;
+	    break;
+	case T_TRACK_NR:
+	    to->track_nr = from->track_nr;
+	    to->tracks = from->tracks;
+	    break;
+	case T_SIZE:
+	    to->size = from->size;
+	    break;
+	case T_TRACKLEN:
+	    to->tracklen = from->tracklen;
+	    break;
+	case T_STARTTIME:
+	    to->starttime = from->starttime;
+	    break;
+	case T_STOPTIME:
+	    to->stoptime = from->stoptime;
+	    break;
+	case T_BITRATE:
+	    to->bitrate = from->bitrate;
+	    break;
+	case T_SAMPLERATE:
+	    to->samplerate = from->samplerate;
+	    break;
+	case T_BPM:
+	    to->BPM = from->BPM;
+	    break;
+	case T_TIME_ADDED:
+	    to->time_added = from->time_added;
+	    break;
+	case T_TIME_MODIFIED:
+	    to->time_modified = from->time_modified;
+	    eto->mtime = efrom->mtime;
+	    break;
+	case T_TIME_RELEASED:
+	    to->time_released = from->time_released;
+	    break;
+	case T_SOUNDCHECK:
+	    to->soundcheck = from->soundcheck;
+	    break;
+	case T_CD_NR:
+	    to->cd_nr = from->cd_nr;
+	    to->cds = from->cds;
+	    break;
+	case T_COMPILATION:
+	    to->compilation = from->compilation;
+	    break;
+	case T_MEDIA_TYPE:
+	    to->mediatype = from->mediatype;
+	    break;
+	case T_SEASON_NR:
+	    to->season_nr = from->season_nr;
+	    break;
+	case T_EPISODE_NR:
+	    to->episode_nr = from->episode_nr;
+	    break;
+	case T_ITEM_NUM:
+	    g_return_if_reached ();
+	}
+    }
 
-    g_free (to->album);
-    to->album = g_strdup (from->album);
-
-    g_free (to->genre);
-    to->genre = g_strdup (from->genre);
-
-    g_free (to->composer);
-    to->composer = g_strdup (from->composer);
-
-    g_free (to->comment);
-    to->comment = g_strdup (from->comment);
-
-    g_free (to->filetype);
-    to->filetype = g_strdup (from->filetype);
-
-    g_free (to->description);
-    to->description = g_strdup (from->description);
-
-    g_free (to->podcasturl);
-    to->podcasturl = g_strdup (from->podcasturl);
-
-    g_free (to->podcastrss);
-    to->podcastrss = g_strdup (from->podcastrss);
-
-    g_free (to->subtitle);
-    to->subtitle = g_strdup (from->subtitle);
-
-    g_free (to->tvshow);
-    to->tvshow = g_strdup (from->tvshow);
-
-    g_free (to->tvepisode);
-    to->tvepisode = g_strdup (from->tvepisode);
-
-    g_free (to->tvnetwork);
-    to->tvnetwork = g_strdup (from->tvnetwork);
-
-    g_free (eto->thumb_path_utf8);
-    eto->thumb_path_utf8 = g_strdup (efrom->thumb_path_utf8);
 
     g_free (eto->thumb_path_locale);
     eto->thumb_path_locale = g_strdup (efrom->thumb_path_locale);
-
-    g_free (eto->pc_path_utf8);
-    eto->pc_path_utf8 = g_strdup (efrom->pc_path_utf8);
 
     g_free (eto->pc_path_locale);
     eto->pc_path_locale = g_strdup (efrom->pc_path_locale);
@@ -847,33 +916,14 @@ static void copy_new_info (Track *from, Track *to)
     g_free (eto->charset);
     eto->charset = g_strdup (efrom->charset);
 
-    g_free (eto->year_str);
-    eto->year_str = g_strdup_printf ("%d", to->year);
-
     itdb_artwork_free (to->artwork);
     to->artwork = itdb_artwork_duplicate (from->artwork);
     to->artwork_size = from->artwork_size;
     to->artwork_count = from->artwork_count;
     to->has_artwork = from->has_artwork;
 
-    to->size = from->size;
-    to->tracklen = from->tracklen;
-    to->cd_nr = from->cd_nr;
-    to->cds = from->cds;
-    to->track_nr = from->track_nr;
-    to->tracks = from->tracks;
-    to->bitrate = from->bitrate;
-    to->samplerate = from->samplerate;
-    to->soundcheck = from->soundcheck;
-    eto->mtime = efrom->mtime;
-    to->time_added = from->time_added;
-    to->time_modified = from->time_modified;
-    to->year = from->year;
-    to->compilation = from->compilation;
-    to->mediatype = from->mediatype;
     to->lyrics_flag = from->lyrics_flag;
     to->movie_flag = from->movie_flag;
-    to->BPM = from->BPM;
 }
 
 /* Updates mserv data (rating only) of @track using filename @name to

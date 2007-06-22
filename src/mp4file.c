@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-06-18 00:48:52 jcs>
+/* Time-stamp: <2007-06-23 02:24:54 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -344,6 +344,11 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 			track->cd_nr = numvalue;
 			track->cds = numvalue2;
 		    }
+		    if (MP4GetMetadataGrouping(mp4File, &value) && value != NULL)
+		    {
+			track->grouping = charset_to_utf8 (value);
+			g_free (value);
+		    }
 		    if (MP4GetMetadataGenre(mp4File, &value) && value != NULL)
 		    {
 			track->genre = charset_to_utf8 (value);
@@ -356,6 +361,26 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 		}
 		mp4_scan_soundcheck (mp4File, track);
 		audio_or_video_found = TRUE;
+
+		if (prefs_get_int("coverart_apic"))
+		{
+		    u_int8_t *image_data;
+		    u_int32_t image_data_len;
+		    if (MP4GetMetadataCoverArt (mp4File,
+						&image_data, &image_data_len))
+		    {
+			if (image_data)
+			{
+/*			    FILE *file = fopen ("/tmp/tttt", "w");
+			    fwrite (image_data, 1, image_data_len, file);
+			    fclose (file);*/
+			    gp_track_set_thumbnails_from_data (track,
+							       image_data,
+							       image_data_len);
+			    g_free (image_data);
+			}
+		    }
+		}
 	    }
 	}
 	if (!audio_or_video_found)
@@ -459,6 +484,8 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 	    MP4SetMetadataDisk (mp4File, track->cd_nr, track->cds);
 
 	    MP4SetMetadataTempo (mp4File, track->BPM);
+
+	    MP4SetMetadataGrouping (mp4File, track->grouping);
 
 	    value = charset_from_utf8 (track->genre);
 	    MP4SetMetadataGenre (mp4File, value);

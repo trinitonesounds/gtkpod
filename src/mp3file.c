@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-06-18 00:48:53 jcs>
+/* Time-stamp: <2007-06-23 01:34:40 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -70,6 +70,11 @@ struct _File_Tag
     gchar *cdno_total;    /* The number of discs in the album (ex: 1/2) */
     gchar *compilation;   /* The track is a member of a compilation */
     gchar *podcasturl;    /* The following are mainly used for podcasts */
+    gchar *sort_artist;
+    gchar *sort_title;
+    gchar *sort_album;
+    gchar *sort_albumartist;
+    gchar *sort_composer;
     gchar *description;
     gchar *podcastrss;
     gchar *time_released;
@@ -1424,6 +1429,11 @@ gboolean id3_tag_read (gchar *filename, File_Tag *tag)
 	tag->description = id3_get_string (id3tag, "YTDS");
 	tag->time_released = id3_get_string (id3tag, "YTDR");
 	tag->BPM = id3_get_string (id3tag, "TBPM");
+	tag->sort_artist = id3_get_string (id3tag, "TSOP");
+	tag->sort_album = id3_get_string (id3tag, "TSOA");
+	tag->sort_title = id3_get_string (id3tag, "TSOT");
+	tag->sort_albumartist = id3_get_string (id3tag, "TSO2");
+	tag->sort_composer = id3_get_string (id3tag, "TSOC");
 
 	string = id3_get_string (id3tag, "TLEN");
 	if (string)
@@ -1582,6 +1592,11 @@ gboolean mp3_write_file_info (gchar *filename, Track *track)
 	id3_set_string (id3tag, ID3_FRAME_GENRE, track->genre, encoding);
 	id3_set_string (id3tag, ID3_FRAME_COMMENT, track->comment, encoding);
 	id3_set_string (id3tag, "TIT3", track->subtitle, encoding);
+	id3_set_string (id3tag, "TSOP", track->sort_artist, encoding);
+	id3_set_string (id3tag, "TSOA", track->sort_album, encoding);
+	id3_set_string (id3tag, "TSOT", track->sort_title, encoding);
+	id3_set_string (id3tag, "TSO2", track->sort_albumartist, encoding);
+	id3_set_string (id3tag, "TSOC", track->sort_composer, encoding);
 
 	set_uncommon_tag (id3tag, "YTID", track->podcasturl, encoding);
 	set_uncommon_tag (id3tag, "YTDS", track->description, encoding);
@@ -2248,6 +2263,31 @@ Track *mp3_get_file_info (gchar *name)
 	if (filetag.description)
 	{
 	    track->description = filetag.description;
+	}
+
+	if (filetag.sort_artist)
+	{
+	    track->sort_artist = filetag.sort_artist;
+	}
+
+	if (filetag.sort_title)
+	{
+	    track->sort_title = filetag.sort_title;
+	}
+
+	if (filetag.sort_album)
+	{
+	    track->sort_album = filetag.sort_album;
+	}
+
+	if (filetag.sort_albumartist)
+	{
+	    track->sort_albumartist = filetag.sort_albumartist;
+	}
+
+	if (filetag.sort_composer)
+	{
+	    track->sort_composer = filetag.sort_composer;
 	}
 
 	if (filetag.year == NULL)
