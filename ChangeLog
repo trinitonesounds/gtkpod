@@ -31,6 +31,9 @@ gtkpod V0.99.9CVS
 
        UPDATED: Italian translation (thanks to Daniele Forsi)
 
+       PACKAGING: Install a .desktop file and icons according to the
+       freedesktop.org specification.
+
 gtkpod V0.99.8
 
        NEW FEATURE: Support of several iPods (currently you need to
