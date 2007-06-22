@@ -1,3 +1,8 @@
+2007-06-22  Todd Zullinger <tmzullinger at users.sourceforge.net>
+
+	* src/fetchcover.c:
+	  disable debug output for release
+
 2007-06-21  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* data/gtkpod.glade:

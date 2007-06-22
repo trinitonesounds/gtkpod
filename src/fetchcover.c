@@ -34,7 +34,7 @@
 #include <glib/gprintf.h>
 #include <glib/gstdio.h>
 
-#define FETCHCOVER_DEBUG 1
+#undef FETCHCOVER_DEBUG
 
 static void fetchcover_statusbar_update (gchar *message);
 static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device, GtkWindow *parent);
@@ -927,18 +927,16 @@ static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device, 
  */
 static void fetchcover_debug(const gchar *format, ...)
 {
-	if (FETCHCOVER_DEBUG)
-	{
-		va_list args;
-		va_start(args, format);
-		gchar *s = g_strdup_vprintf(format, args);
-		va_end(args);
-		printf("%s\n", s);
-		fflush(stdout);
-		g_free(s);
-	}
+#ifdef FETCHCOVER_DEBUG
+    va_list args;
+    va_start (args, format);
+    gchar *s = g_strdup_vprintf (format, args);
+    va_end (args);
+    printf ("%s\n", s);
+    fflush (stdout);
+    g_free (s);
+#endif
 }
-
 
 /**
  * fetchcover_statusbar_update:
