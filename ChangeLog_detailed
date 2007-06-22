@@ -28,6 +28,9 @@
 	* src/fetchcover.c:
 	  disable debug output for release
 
+	* po/de.po:
+	  remove duplicate header comments
+
 2007-06-21  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* data/gtkpod.glade:
