@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-06-23 02:24:54 jcs>
+/* Time-stamp: <2007-06-23 02:49:08 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -485,7 +485,9 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 
 	    MP4SetMetadataTempo (mp4File, track->BPM);
 
-	    MP4SetMetadataGrouping (mp4File, track->grouping);
+	    value = charset_from_utf8 (track->grouping);
+	    MP4SetMetadataGrouping (mp4File, value);
+	    g_free (value);
 
 	    value = charset_from_utf8 (track->genre);
 	    MP4SetMetadataGenre (mp4File, value);
