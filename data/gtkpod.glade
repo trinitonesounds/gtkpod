@@ -14070,7 +14070,7 @@ when syncing playlists</property>
 			      <child>
 				<widget class="GtkLabel" id="label341">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">Set Cover Art from File</property>
+				  <property name="label" translatable="yes">Set Cover Art from _File</property>
 				  <property name="use_underline">True</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -14245,7 +14245,7 @@ simultaneously</property>
 			      <child>
 				<widget class="GtkLabel" id="label444">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">Set Cover Art from Web</property>
+				  <property name="label" translatable="yes">Set Cover Art from _Web</property>
 				  <property name="use_underline">True</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -14323,7 +14323,7 @@ simultaneously</property>
 			      <child>
 				<widget class="GtkLabel" id="label389">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">Remove Cover Art</property>
+				  <property name="label" translatable="yes">_Remove Cover Art</property>
 				  <property name="use_underline">True</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -15593,8 +15593,8 @@ simultaneously</property>
 		  <child>
 		    <widget class="GtkLabel" id="label465">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Sorting</property>
-		      <property name="use_underline">False</property>
+		      <property name="label" translatable="yes">_Sorting</property>
+		      <property name="use_underline">True</property>
 		      <property name="use_markup">False</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
@@ -15603,6 +15603,7 @@ simultaneously</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
+		      <property name="mnemonic_widget">details_notebook</property>
 		      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
 		      <property name="width_chars">-1</property>
 		      <property name="single_line_mode">False</property>
@@ -17215,7 +17216,7 @@ simultaneously</property>
 		  <child>
 		    <widget class="GtkLabel" id="label346">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">_Other</property>
+		      <property name="label" translatable="yes">_Misc.</property>
 		      <property name="use_underline">True</property>
 		      <property name="use_markup">False</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -17587,7 +17588,7 @@ simultaneously</property>
 			  <child>
 			    <widget class="GtkLabel" id="label391">
 			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">_Undo Track</property>
+			      <property name="label" translatable="yes">Undo _Track</property>
 			      <property name="use_underline">True</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -20173,7 +20174,7 @@ Local Repository (Podcasts)
 		    <widget class="GtkButton" id="next_button">
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
-		      <property name="label" translatable="yes">_Find New</property>
+		      <property name="label" translatable="yes">Find _New</property>
 		      <property name="use_underline">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
 		      <property name="focus_on_click">True</property>
@@ -20189,7 +20190,7 @@ Local Repository (Podcasts)
 		    <widget class="GtkButton" id="prev_button">
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
-		      <property name="label" translatable="yes">Previous</property>
+		      <property name="label" translatable="yes">_Previous</property>
 		      <property name="use_underline">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
 		      <property name="focus_on_click">True</property>
@@ -20264,7 +20265,7 @@ Local Repository (Podcasts)
       <child>
 	<widget class="GtkLabel" id="textlabel">
 	  <property name="visible">True</property>
-	  <property name="label">textlabel</property>
+	  <property name="label">Some placeholder text to assure reasonable size.</property>
 	  <property name="use_underline">False</property>
 	  <property name="use_markup">False</property>
 	  <property name="justify">GTK_JUSTIFY_LEFT</property>

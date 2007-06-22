@@ -1,3 +1,9 @@
+2007-06-21  Todd Zullinger <tmzullinger at users.sourceforge.net>
+
+	* data/gtkpod.glade:
+	  add/update keyboard mnemonics in the Details and Download
+	  Cover windows to avoid missing/duplicated mnemonics
+
 2007-06-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_convert.c (transfer_transfer_track): add newline to
