@@ -132,8 +132,7 @@ static const gchar *t_tooltips[] = {
     NULL,
     NULL,                                              /* 15 */
     NULL,
-    N_("Supposedly something that tells the iPod to "
-       "increase or decrease the playback speed"),
+    N_("Beats per minute"),
     N_("Number of times the track has been played"),
     N_("Star rating from 0 to 5"),
     N_("Date and time track has been added"),          /* 20 */

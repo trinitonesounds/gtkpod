@@ -1,6 +1,9 @@
 2007-06-23 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
-	* src/file_convert.c: fixed typo (thankse to Danielle Forsi).
+	* src/file_convert.c: fixed typo (thanks to Danielle Forsi).
+
+	* src/misc_conversion.c: corrected tooltip for BPM (thanks to
+	  Danielle Forsi).
 
 2007-06-22 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
