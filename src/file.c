@@ -820,12 +820,27 @@ static void copy_new_info (Track *from, Track *to)
 	case T_SORT_ALBUMARTIST:
 	case T_SORT_COMPOSER:
 	case T_SORT_TVSHOW:
-	    fromcp = track_get_item_pointer (from, item);
-	    tocp = track_get_item_pointer (to, item);
-	    g_free (*tocp);
-	    *tocp = g_strdup (*fromcp);
-	    break;
+	case T_YEAR:
+	case T_TRACK_NR:
+	case T_SIZE:
+	case T_TRACKLEN:
+	case T_STARTTIME:
+	case T_STOPTIME:
+	case T_BITRATE:
+	case T_SAMPLERATE:
+	case T_BPM:
+	case T_TIME_ADDED:
+	case T_TIME_MODIFIED:
+	case T_TIME_RELEASED:
+	case T_SOUNDCHECK:
+	case T_CD_NR:
+	case T_COMPILATION:
+	case T_MEDIA_TYPE:
+	case T_SEASON_NR:
+	case T_EPISODE_NR:
 	case T_GROUPING:
+	    track_copy_item (from, to, item);
+	    break;
 	case T_CATEGORY:
 	    /* not implemented from tags */
 	    break;
@@ -842,70 +857,10 @@ static void copy_new_info (Track *from, Track *to)
 	case T_VOLUME:
 	    /* not applicable */
 	    break;
-	case T_YEAR:
-	    g_free (eto->year_str);
-	    eto->year_str = g_strdup (efrom->year_str);
-	    to->year = from->year;
-	    break;
-	case T_TRACK_NR:
-	    to->track_nr = from->track_nr;
-	    to->tracks = from->tracks;
-	    break;
-	case T_SIZE:
-	    to->size = from->size;
-	    break;
-	case T_TRACKLEN:
-	    to->tracklen = from->tracklen;
-	    break;
-	case T_STARTTIME:
-	    to->starttime = from->starttime;
-	    break;
-	case T_STOPTIME:
-	    to->stoptime = from->stoptime;
-	    break;
-	case T_BITRATE:
-	    to->bitrate = from->bitrate;
-	    break;
-	case T_SAMPLERATE:
-	    to->samplerate = from->samplerate;
-	    break;
-	case T_BPM:
-	    to->BPM = from->BPM;
-	    break;
-	case T_TIME_ADDED:
-	    to->time_added = from->time_added;
-	    break;
-	case T_TIME_MODIFIED:
-	    to->time_modified = from->time_modified;
-	    eto->mtime = efrom->mtime;
-	    break;
-	case T_TIME_RELEASED:
-	    to->time_released = from->time_released;
-	    break;
-	case T_SOUNDCHECK:
-	    to->soundcheck = from->soundcheck;
-	    break;
-	case T_CD_NR:
-	    to->cd_nr = from->cd_nr;
-	    to->cds = from->cds;
-	    break;
-	case T_COMPILATION:
-	    to->compilation = from->compilation;
-	    break;
-	case T_MEDIA_TYPE:
-	    to->mediatype = from->mediatype;
-	    break;
-	case T_SEASON_NR:
-	    to->season_nr = from->season_nr;
-	    break;
-	case T_EPISODE_NR:
-	    to->episode_nr = from->episode_nr;
-	    break;
 	case T_ITEM_NUM:
 	    g_return_if_reached ();
 	}
     }
-
 
     g_free (eto->thumb_path_locale);
     eto->thumb_path_locale = g_strdup (efrom->thumb_path_locale);

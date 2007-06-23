@@ -14,9 +14,12 @@
 	  thumbnail through libgpod and not from thumbnail filenames
 	  because these are not always set.
 
-	* src/deatils.c (details_button_apply_clicked): write tags
+	* src/details.c (details_button_apply_clicked): write tags
           back to file if option is selected. Change modification time
           of changed tracks.
+
+	* src/file.c (copy_new_info): further simplification by using
+	  track_copy_item() instead of duplicating code.
 
 2007-06-22 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
