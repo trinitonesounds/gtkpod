@@ -653,26 +653,19 @@ void coverart_clear_images ()
 GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device)
 {
 	GdkPixbuf *pixbuf = NULL;	
+	Thumb *thumb;
 	ExtraTrackData *etd;
-	
+
 	etd = track->userdata;
-	if (etd && etd->thumb_path_locale)
+	g_return_val_if_fail (etd, NULL);
+
+	thumb = itdb_artwork_get_thumb_by_type (track->artwork,
+						ITDB_THUMB_COVER_LARGE);
+	if (thumb)
 	{
-		GError *error = NULL;
-		pixbuf = gdk_pixbuf_new_from_file (etd->thumb_path_locale, &error);
-		if (error != NULL)
-		{
-			/*
-			printf("Error occurred loading the image file - \nCode: %d\nMessage: %s\n", error->code, error->message);
-			*/
-			g_error_free (error);
-		}
+	    pixbuf = itdb_thumb_get_gdk_pixbuf (device, thumb);
 	}
 	
-	/* Either thumb was null or the attempt at getting a pixbuf failed
-	 * due to invalid file. For example, some nut (like me) decided to
-	 * apply an mp3 file to the track as its cover file
-	 */
 	if (pixbuf ==  NULL)
 	{
 	 	/* Could not get a viable thumbnail so get default pixbuf */
