@@ -359,6 +359,7 @@ static void details_button_apply_clicked (GtkButton *button,
 {
     GList *gl, *gl_orig;
     gboolean changed = FALSE;
+    GList *changed_tracks = NULL;
 
     g_return_if_fail (detail);
 
@@ -391,8 +392,18 @@ static void details_button_apply_clicked (GtkButton *button,
 
 	    if (tr_changed)
 	    {
+		tr_orig->time_modified = time (NULL);
 		pm_track_changed (tr_orig);
 	    }
+
+	    if (prefs_get_int("id3_write"))
+	    {
+		/* add tracks to a list because write_tags_to_file()
+		   can remove newly created duplicates which is not a
+		   good idea from within a for() loop over tracks */
+		changed_tracks = g_list_prepend (changed_tracks, tr_orig);
+	    }
+
 	    changed |= tr_changed;
 	    etr->tchanged = FALSE;
 	}
@@ -402,9 +413,24 @@ static void details_button_apply_clicked (GtkButton *button,
 
     if (changed)
     {
-			data_changed (detail->itdb);
+	data_changed (detail->itdb);
     }
     
+    if (prefs_get_int("id3_write"))
+    {
+	if (changed_tracks)
+	{
+	    for (gl=changed_tracks; gl; gl=gl->next)
+	    {
+		Track *tr = gl->data;
+		write_tags_to_file (tr);
+		/* display possible duplicates that have been removed */
+	    }
+	    gp_duplicate_remove (NULL, NULL);
+	}
+    }
+    g_list_free (changed_tracks);
+
     details_update_headline (detail);
 
     details_update_buttons (detail);
