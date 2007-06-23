@@ -2152,7 +2152,7 @@ static gboolean conversion_set_valid_filename (Conversion *conv, ConvTrack *ctr)
 			{   /* error reading original file */
 			    char *buf = conversion_get_track_info (NULL, ctr);
 			    ctr->errormessage =
-				g_strdup_printf (_("Covnersion of '%s' failed: Could not access original file '%s' (%s).\n\n"),
+				g_strdup_printf (_("Conversion of '%s' failed: Could not access original file '%s' (%s).\n\n"),
 						 buf,
 						 ctr->orig_file,
 						 strerror (errno));
