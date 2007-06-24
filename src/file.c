@@ -791,10 +791,8 @@ static void copy_new_info (Track *from, Track *to)
     g_return_if_fail (efrom);
     g_return_if_fail (eto);
 
-
     for (item=0; item<T_ITEM_NUM; ++item)
     {
-	gchar **fromcp, **tocp;
 	switch (item)
 	{
 	case T_ALBUM:

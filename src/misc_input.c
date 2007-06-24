@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-05-10 00:39:18 jcs>
+/* Time-stamp: <2007-06-25 00:53:20 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -316,7 +316,6 @@ static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
 	    }
 	    sort_window_block ();
 	    prefs_window_block ();
-	    dirbrowser_block ();
 	    widgets_blocked = TRUE;
 	}
 	break;
@@ -334,7 +333,6 @@ static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
 		}
 		sort_window_release ();
 		prefs_window_release ();
-		dirbrowser_release ();
 		widgets_blocked = FALSE;
 	    }
 	}

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-23 23:59:03 jcs>
+/* Time-stamp: <2007-06-25 00:56:37 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -59,61 +59,62 @@
  * Data global to this module only
  */
 
-static iTunesDB *fc_active_itdb = NULL;  /* the active iTunesDB, if any */
+static Playlist *db_active_pl = NULL;    /* playlist for dirbrowser */
 
-/* Cleans up the GSList of filenames returned by the file chooser */
-static void delete_file_list(GSList* list)
+static void error_dialog (const gchar *str)
 {
-    GSList* current;  /* Current node in list */
-	
-    /* Delete the string contained in each node */
-    current = list;
-	
-    while (current != NULL)
-    {
-	g_free(current->data);
-	current = current->next;
-    }
-	
-    g_slist_free(list);
+    GtkWidget *dialog;
+
+    g_return_if_fail (str);
+
+    dialog = gtk_message_dialog_new (GTK_WINDOW (gtkpod_window),
+				     GTK_DIALOG_DESTROY_WITH_PARENT,
+				     GTK_MESSAGE_WARNING,
+				     GTK_BUTTONS_OK,
+				     str);
+    gtk_dialog_run (GTK_DIALOG (dialog));
+    gtk_widget_destroy (dialog);
 }
 
+
 /* OK button */
-static void add_files_ok(GtkFileChooser* filechooser)
+static void add_files_ok(GtkFileChooser* filechooser, Playlist *playlist)
 {
     GSList* names;   /* List of selected names */
-    GSList* current; /* Current node in list */
-    Playlist* playlist; /* Playlist to add songs to */
+    GSList* gsl;     /* Current node in list */
     gboolean result = TRUE;  /* Result of file adding */
 	
     /* If we don't have a playlist to add to, don't add anything */
-    g_return_if_fail(fc_active_itdb);
+    g_return_if_fail (playlist);
 	
     block_widgets ();
 
-    playlist = pm_get_selected_playlist();
+    names = gtk_file_chooser_get_filenames (filechooser);
 
-    names = gtk_file_chooser_get_filenames(filechooser);
-    current = names;
-
-    if (current)
+    if (names)
     {
 	gchar *dirname = gtk_file_chooser_get_current_folder (filechooser);
 	prefs_set_string ("last_dir_browsed", dirname);
 	g_free (dirname);
     }
 
+    block_widgets ();
+
     /* Get the filenames and add them */
-    while (current != NULL)
+    for (gsl=names; gsl; gsl=gsl->next)
     {
-	result &= add_track_by_filename(fc_active_itdb,
-					(gchar*)current->data,
+	result &= add_track_by_filename(playlist->itdb,
+					gsl->data,
 					playlist,
-					prefs_get_int("add_recursively"),
+					prefs_get_int ("add_recursively"),
 					NULL, NULL);
-	current = current->next;
+	g_free (gsl->data);
     }
-	
+    g_slist_free (names);
+    names = NULL;
+
+    release_widgets ();
+
     /* clear log of non-updated tracks */
     display_non_updated ((void *)-1, NULL);
   
@@ -129,11 +130,7 @@ static void add_files_ok(GtkFileChooser* filechooser)
     else
 	gtkpod_statusbar_message (_("Some files were not added successfully"));
 	    
-    /* Clean up the names list */
-    delete_file_list(names);
     release_widgets ();
-    
-    
 }
 
 /* 
@@ -142,22 +139,57 @@ static void add_files_ok(GtkFileChooser* filechooser)
 /* ATTENTION: directly used as callback in gtkpod.glade -- if you
    change the arguments of this function make sure you define a
    separate callback for gtkpod.glade */
-void create_add_files_dialog (void)
+void create_add_files_callback (void)
+{
+    Playlist *pl;
+
+    pl = pm_get_selected_playlist ();
+
+    create_add_files_dialog (pl);
+}
+
+
+/* Open a modal file selection dialog for adding individual files */
+void create_add_files_dialog (Playlist *pl)
 {
     GtkWidget* fc;  /* The file chooser dialog */
     gint response;  /* The response of the filechooser */
-    gchar *last_dir;
-	
-    /* Grab the current playlist to add songs to */
-    fc_active_itdb = gp_get_selected_itdb ();
-    if (!fc_active_itdb)
+    gchar *last_dir, *str;
+    iTunesDB *itdb;
+    ExtraiTunesDBData *eitdb;
+    Playlist *mpl;
+
+    if (!pl)
     {
-	message_sb_no_itdb_selected ();
+	error_dialog (_("Please select a playlist or repository before adding tracks."));
 	return;
     }
-	
-    /* Create the file chooser, and handle the response */
-    fc = gtk_file_chooser_dialog_new (_("Add Files"),
+
+    itdb = pl->itdb;
+    g_return_if_fail (itdb);
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+
+    if (!eitdb->itdb_imported)
+    {
+	error_dialog (_("Please load the iPod before adding tracks."));
+	return;
+    }
+
+    mpl = itdb_playlist_mpl (itdb);
+    g_return_if_fail (mpl);
+
+    /* Create window title */
+    if (mpl == pl)
+    {
+	str = g_strdup_printf (_("Add files to '%s'"), mpl->name);
+    }
+    else
+    {
+	str = g_strdup_printf (_("Add files to '%s/%s'"), mpl->name, pl->name);
+    }
+    /* Create the file chooser */
+    fc = gtk_file_chooser_dialog_new (str,
 				      NULL,
 				      GTK_FILE_CHOOSER_ACTION_OPEN,
 				      GTK_STOCK_CANCEL,
@@ -165,8 +197,12 @@ void create_add_files_dialog (void)
 				      GTK_STOCK_OPEN,
 				      GTK_RESPONSE_ACCEPT,
 				      NULL);
+    g_free (str);
 
+    /* allow multiple selection of files */
     gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (fc), TRUE);
+
+    /* set same directory as last time */
     last_dir = prefs_get_string ("last_dir_browsed");
     if (last_dir)
     {
@@ -175,57 +211,67 @@ void create_add_files_dialog (void)
 	g_free (last_dir);
     }
 
-    response = gtk_dialog_run(GTK_DIALOG(fc));
-	
+    /* Run the dialog */
+    response = gtk_dialog_run (GTK_DIALOG(fc));
+
+    /* Handle the response */
     switch (response)
     {
     case GTK_RESPONSE_ACCEPT:
-	add_files_ok(GTK_FILE_CHOOSER(fc));
+	add_files_ok (GTK_FILE_CHOOSER (fc), pl);
 	break;
     case GTK_RESPONSE_CANCEL:
 	break;
     default:	/* Fall through */
 	break;
-    }		
-    gtk_widget_destroy(fc);
+    }
+    gtk_widget_destroy (fc);
 }
 
 
 /* OK Button */
-static void add_playlists_ok(GtkFileChooser* filechooser)
+static void add_playlists_ok (GtkFileChooser* filechooser, iTunesDB *itdb)
 {
     GSList* names;  /* List of selected names */
-    GSList* current;  /* Current node in names list */
+    GSList* gsl;
 	
     /* Get the names of the playlist(s) and add them */
 	
-    /* If we don't have a playlist to add to, return */
-    g_return_if_fail(fc_active_itdb);
+    g_return_if_fail (itdb);
 	
-    block_widgets ();
-
     names = gtk_file_chooser_get_filenames(filechooser);
-    current = names;
 
-    if (current)
+    if (names)
     {
 	gchar *dirname = gtk_file_chooser_get_current_folder (filechooser);
 	prefs_set_string ("last_dir_browsed", dirname);
 	g_free (dirname);
     }
 
-    while (current != NULL)
+    block_widgets ();
+
+    for (gsl=names; gsl; gsl=gsl->next)
     {
-	add_playlist_by_filename (fc_active_itdb,
-				  (gchar*)current->data, NULL, 
+	add_playlist_by_filename (itdb,
+				  gsl->data, NULL, 
 				  -1, NULL, NULL);
-	current = current->next;
+	g_free (gsl->data);
     }
-		
-    gtkpod_tracks_statusbar_update();
-    delete_file_list(names);
+    g_slist_free (names);
+    names = NULL;
 
     release_widgets ();
+
+    /* clear log of non-updated tracks */
+    display_non_updated ((void *)-1, NULL);
+  
+    /* display log of updated tracks */
+    display_updated (NULL, NULL);
+  
+    /* display log of detected duplicates */
+    gp_duplicate_remove (NULL, NULL);
+	
+    gtkpod_tracks_statusbar_update();
 }
 
 
@@ -235,22 +281,48 @@ static void add_playlists_ok(GtkFileChooser* filechooser)
 /* ATTENTION: directly used as callback in gtkpod.glade -- if you
    change the arguments of this function make sure you define a
    separate callback for gtkpod.glade */
-void create_add_playlists_dialog(void)
+void create_add_playlists_callback (void)
+{
+    iTunesDB *itdb;
+
+    itdb = gp_get_selected_itdb ();
+
+    create_add_playlists_dialog (itdb);
+}
+
+
+/* Open a modal file selection dialog for adding playlist files */
+void create_add_playlists_dialog (iTunesDB *itdb)
 {
     GtkWidget* fc ; /* The file chooser dialog */
     gint response;  /* The response of the filechooser */
-    gchar *last_dir;
-	
-    /* Grab the current playlist to add songs to */
-    fc_active_itdb = gp_get_selected_itdb ();
-    if (!fc_active_itdb)
+    gchar *last_dir, *str;
+    ExtraiTunesDBData *eitdb;
+    Playlist *mpl;
+
+    if (!itdb)
     {
-	message_sb_no_itdb_selected ();
+	error_dialog (_("Please select a playlist or repository before adding tracks."));
 	return;
     }
-	
-    /* Create the file chooser, and handle the response */
-    fc = gtk_file_chooser_dialog_new (_("Add Playlists"),
+
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+
+    if (!eitdb->itdb_imported)
+    {
+	error_dialog (_("Please load the iPod before adding tracks."));
+	return;
+    }
+
+    mpl = itdb_playlist_mpl (itdb);
+    g_return_if_fail (mpl);
+
+    /* Create window title */
+    str = g_strdup_printf (_("Add playlist files to '%s'"), mpl->name);
+
+    /* Create the file chooser */
+    fc = gtk_file_chooser_dialog_new (str,
 				      NULL, 
 				      GTK_FILE_CHOOSER_ACTION_OPEN,
 				      GTK_STOCK_CANCEL,
@@ -258,8 +330,12 @@ void create_add_playlists_dialog(void)
 				      GTK_STOCK_OPEN,
 				      GTK_RESPONSE_ACCEPT,
 				      NULL);
+    g_free (str);
 	
+    /* allow multiple selection of files */
     gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (fc), TRUE);
+
+    /* set same directory as last time */
     last_dir = prefs_get_string ("last_dir_browsed");
     if (last_dir)
     {
@@ -268,12 +344,14 @@ void create_add_playlists_dialog(void)
 	g_free (last_dir);
     }
 
-    response = gtk_dialog_run(GTK_DIALOG(fc));
+    /* Run the dialog */
+    response = gtk_dialog_run (GTK_DIALOG(fc));
 	
+    /* Handle the response */
     switch (response)
     {
     case GTK_RESPONSE_ACCEPT:
-	add_playlists_ok(GTK_FILE_CHOOSER(fc));
+	add_playlists_ok(GTK_FILE_CHOOSER (fc), itdb);
 	break;
     case GTK_RESPONSE_CANCEL:
 	break;
@@ -639,10 +717,11 @@ static char *db_ofolder[] =
 static GdkPixmap *db_folder_pixmap = NULL, *db_ofolder_pixmap;
 static GdkBitmap *db_folder_mask, *db_ofolder_mask;
 static GtkWidget *dirbrowser = NULL;
-static iTunesDB *db_active_itdb = NULL;
 
-
-static GtkWidget *xmms_create_dir_browser(const gchar * title, const gchar * current_path, GtkSelectionMode mode, void (*handler) (gchar *));
+static GtkWidget *xmms_create_dir_browser(const gchar *title,
+					  const gchar *current_path,
+					  GtkSelectionMode mode,
+					  void (*handler) (gchar *));
 
 struct dirnode
 {
@@ -656,33 +735,18 @@ struct dirnode
  * functions added for gtkpod                                   *
  * ------------------------------------------------------------ */
 
-/* turn the dirbrowser insensitive (if it's open) */
-void dirbrowser_block (void)
-{
-    if (dirbrowser)
-	gtk_widget_set_sensitive (dirbrowser, FALSE);
-}
-
-/* turn the dirbrowser sensitive (if it's open) */
-void dirbrowser_release (void)
-{
-    if (dirbrowser)
-	gtk_widget_set_sensitive (dirbrowser, TRUE);
-}
-
 /* Callback after one directory has been added */
 static void add_dir_selected (gchar *dir)
 {
-    g_return_if_fail (db_active_itdb);
+    g_return_if_fail (db_active_pl);
 
     if (dir)
     {
-	Playlist *plitem = pm_get_selected_playlist ();
-	add_directory_by_name (db_active_itdb, dir, plitem,
-			       prefs_get_int("add_recursively"),
+	add_directory_by_name (db_active_pl->itdb, dir, db_active_pl,
+			       prefs_get_int ("add_recursively"),
 			       NULL, NULL);
 	prefs_set_string ("last_dir_browsed", dir);
-	gtkpod_tracks_statusbar_update();
+	gtkpod_tracks_statusbar_update ();
     }
     else
     {
@@ -699,30 +763,71 @@ static void add_dir_selected (gchar *dir)
 /* ATTENTION: directly used as callback in gtkpod.glade -- if you
    change the arguments of this function make sure you define a
    separate callback for gtkpod.glade */
-void dirbrowser_create (void)
+void dirbrowser_create_callback (void)
 {
-    gchar *cur_dir;
+    Playlist *pl;
 
-    if (dirbrowser)
-    {   /* file selector already open -- raise to the top */
-	gdk_window_raise (dirbrowser->window);
+    pl = pm_get_selected_playlist ();
+
+    dirbrowser_create (pl);
+}
+
+
+
+
+
+void dirbrowser_create (Playlist *pl)
+{
+    gchar *cur_dir, *str;
+    iTunesDB *itdb;
+    ExtraiTunesDBData *eitdb;
+    Playlist *mpl;
+
+    /* we only allow one modal dirbrowser */
+    g_return_if_fail (dirbrowser==NULL);
+
+
+    if (!pl)
+    {
+	error_dialog (_("Please select a playlist or repository before adding tracks."));
 	return;
     }
 
-    db_active_itdb = gp_get_selected_itdb ();
-    if (!db_active_itdb)
+    itdb = pl->itdb;
+    g_return_if_fail (itdb);
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+
+    if (!eitdb->itdb_imported)
     {
-	message_sb_no_itdb_selected ();
+	error_dialog (_("Please load the iPod before adding tracks."));
 	return;
+    }
+
+    /* FIXME: I don't like global variables */
+    db_active_pl = pl;
+
+    mpl = itdb_playlist_mpl (itdb);
+    g_return_if_fail (mpl);
+
+    /* Create window title */
+    if (mpl == pl)
+    {
+	str = g_strdup_printf (_("Add directories to '%s'"), mpl->name);
+    }
+    else
+    {
+	str = g_strdup_printf (_("Add directories to '%s/%s'"), mpl->name, pl->name);
     }
 
     cur_dir = prefs_get_string ("last_dir_browsed");
-    dirbrowser = xmms_create_dir_browser (
-	_("Select directory to add recursively"),
-	cur_dir,
-	GTK_SELECTION_MULTIPLE,
-	add_dir_selected);
+    dirbrowser = xmms_create_dir_browser (str,
+					  cur_dir,
+					  GTK_SELECTION_MULTIPLE,
+					  add_dir_selected);
     g_free (cur_dir);
+    g_free (str);
+    gtk_window_set_modal (GTK_WINDOW (dirbrowser), TRUE);
     gtk_widget_show (dirbrowser);
 }
 

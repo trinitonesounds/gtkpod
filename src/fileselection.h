@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-22 23:18:47 jcs>
+/* Time-stamp: <2007-06-25 00:53:20 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -41,8 +41,8 @@
 
 #include "prefs.h"
 
-void create_add_files_dialog(void);
-void create_add_playlists_dialog(void);
+void create_add_files_dialog (Playlist *pl);
+void create_add_playlists_dialog (iTunesDB *itdb);
 gchar *fileselection_get_cover_filename(void);
 gchar *fileselection_get_file_or_dir (const gchar *title,
 				      const gchar *cur_file,
@@ -53,7 +53,5 @@ gchar *fileselection_select_script (const gchar *opath,
 				    const gchar *additional_text);
 
 /* dirbrowser */
-void dirbrowser_block (void);
-void dirbrowser_release (void);
-void dirbrowser_create (void);
+void dirbrowser_create (Playlist *pl);
 #endif

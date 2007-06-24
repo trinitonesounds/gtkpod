@@ -1,3 +1,20 @@
+2007-06-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/misc_input.c: removed calls to dirbrowser_block() and
+	  dirbrowser_release() (obsolete because dirbrowser became
+	  modal)
+
+	* src/fileselection.c
+	  src/fileselection.h
+          data/gtkpod.glade: (adding of tracks, directories and
+	  playlist files): do not allow adding of tracks if no
+	  playlist is selected or if the iPod is not loaded into the
+	  selected repository. Better names for file chooser
+	  directories, dirbrowser modal, separate functions for glade
+	  callback.
+
+	* src/file.c (copy_new_info): removed unused variables.
+
 2007-06-23  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* configure.in:
