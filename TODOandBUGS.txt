@@ -4,9 +4,6 @@ BUGS, TODO:
 
 - move part of free-space-update to file_convert.c
 
-- make it impossible to add tracks to an iPod that's not loaded (TODO:
-  drag and drop!)
-
 - when creating new repository: make sure backup repository filename isn't
   already used.
 

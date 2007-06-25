@@ -345,6 +345,8 @@ static gboolean tm_drag_motion (GtkWidget *widget,
     GdkAtom target;
     GtkTreePath *path = NULL;
     GtkTreeViewDropPosition pos;
+    iTunesDB *itdb;
+    ExtraiTunesDBData *eitdb;
 
 /*     printf ("drag_motion  suggested: %d actions: %d\n", */
 /*  	    dc->suggested_action, dc->actions); */
@@ -356,6 +358,22 @@ static gboolean tm_drag_motion (GtkWidget *widget,
     treeview = GTK_TREE_VIEW (widget);
 
     display_install_autoscroll_row_timeout (widget);
+
+    itdb = gp_get_selected_itdb ();
+    /* no drop is possible if no playlist/repository is selected */
+    if (itdb == NULL)
+    {
+	gdk_drag_status (dc, 0, time);
+	return FALSE;
+    }
+    eitdb = itdb->userdata;
+    g_return_val_if_fail (eitdb, FALSE);
+    /* no drop is possible if no repository is loaded */
+    if (!eitdb->itdb_imported)
+    {
+	gdk_drag_status (dc, 0, time);
+	return FALSE;
+    }
 
     /* optically set destination row if available */
     if (gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW (widget),
@@ -387,14 +405,6 @@ static gboolean tm_drag_motion (GtkWidget *widget,
 					 GTK_TREE_VIEW_DROP_BEFORE);
 	gtk_tree_path_free (path);
 	path = NULL;
-    }
-
-
-
-    if (pm_get_selected_playlist () == NULL)
-    {   /* no drop possible if no playlist is selected */
-	gdk_drag_status (dc, 0, time);
-	return FALSE;
     }
 
     target = gtk_drag_dest_find_target (widget, dc, NULL);

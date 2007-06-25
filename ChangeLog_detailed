@@ -1,3 +1,21 @@
+2007-06-25 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_playlists.c (pm_drag_motion): don't allow drops
+          into non-loaded repositories. (pm_create_treeview): don't
+          use GTK_DEFAULT_MOTION as this gives optical feedback that
+          drops into the column header is allowed, even though it is
+          not.
+
+	* src/display_sorttabs.c (st_create_listview): renamed to
+          st_create_treeview(), simplified and merged with parts of
+          st_create_page which did part of creating the treeview. This
+          is the point when I realize that DND into the sort tabs is
+          not supported and I don't have to do anything. Code is
+          easier to read and understand now.
+
+	* src/display_tracks.c (tm_drag_motion): don't allow drops
+          into non-loaded repositories.
+
 2007-06-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/misc_input.c: removed calls to dirbrowser_block() and

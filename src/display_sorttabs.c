@@ -1982,19 +1982,19 @@ void st_sort (GtkSortType order)
 
 gboolean st_set_selection (Itdb_Track *track)
 {
-	GtkTreeSelection *selection;
-  GtkTreeView *treeview;
-	GtkTreeModel *model;
-	GtkTreeIter iter;
-	TabEntry *entry = NULL;
-	gboolean status;
+    GtkTreeSelection *selection;
+    GtkTreeView *treeview;
+    GtkTreeModel *model;
+    GtkTreeIter iter;
+    TabEntry *entry = NULL;
+    gboolean status;
 	
-	gtk_notebook_set_current_page (sorttab[0]->notebook, ST_CAT_ARTIST); 
-  st_page_selected (sorttab[0]->notebook, ST_CAT_ARTIST);
+    gtk_notebook_set_current_page (sorttab[0]->notebook, ST_CAT_ARTIST); 
+    st_page_selected (sorttab[0]->notebook, ST_CAT_ARTIST);
   
-	while (gtk_events_pending ()) gtk_main_iteration ();
+    while (gtk_events_pending ()) gtk_main_iteration ();
 	
-	/* ######## Select the artist from the first sorttab ######## */
+  /* ######## Select the artist from the first sorttab ######## */
   treeview = sorttab[0]->treeview[ST_CAT_ARTIST];
   model = gtk_tree_view_get_model (treeview);
   selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
@@ -2682,61 +2682,71 @@ st_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
 }
 
 /* Create tracks listview */
-static void st_create_listview (gint inst)
+static void st_create_treeview (gint inst, ST_CAT_item st_cat)
 {
-  GtkTreeModel *model;
-  GtkListStore *liststore;
-  gint i;
   SortTab *st = sorttab[inst];
+  GtkTreeSelection *selection;
+  GtkTreeView *treeview;
+  GtkCellRenderer *renderer;
+  GtkTreeViewColumn *column;
 
-  /* create model */
-  if (st->model)
-  {
-      g_object_unref (G_OBJECT (st->model));
-      st->model = NULL;
-  }
-  liststore = gtk_list_store_new (ST_NUM_COLUMNS, G_TYPE_POINTER);
-  model = GTK_TREE_MODEL (liststore);
-  st->model = model;
-  /* set tree views */
-  for (i=0; i<ST_CAT_NUM; ++i)
-  {
-      if (i != ST_CAT_SPECIAL)
-      {
-	  GtkTreeSelection *selection;
-	  GtkTreeView *treeview;
-	  GtkCellRenderer *renderer;
-	  GtkTreeViewColumn *column;
+  /* create treeview */
+  treeview = GTK_TREE_VIEW (gtk_tree_view_new ());
+  gtk_widget_show (GTK_WIDGET (treeview));
+  st->treeview[st_cat] = treeview;
+  gtk_container_add (GTK_CONTAINER (st->window[st_cat]),
+		     GTK_WIDGET (treeview));
+  gtk_tree_view_set_model (treeview, st->model);
+  g_signal_connect_after ((gpointer) treeview, "key_release_event",
+			  G_CALLBACK (on_st_treeview_key_release_event),
+			  NULL);
+  gtk_drag_source_set (GTK_WIDGET (treeview), GDK_BUTTON1_MASK,
+		       st_drag_types, TGNR (st_drag_types),
+		       GDK_ACTION_COPY|GDK_ACTION_MOVE);
+  g_signal_connect (G_OBJECT (treeview), "button-press-event",
+		    G_CALLBACK (st_button_press_event), GINT_TO_POINTER(inst));
+  g_signal_connect ((gpointer) treeview, "drag_data_get",
+		    G_CALLBACK (st_drag_data_get),
+		    NULL);
+  g_signal_connect ((gpointer) treeview, "drag-end",
+		    G_CALLBACK (st_drag_end),
+		    NULL);
+  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
+  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
+  gtk_tree_view_set_enable_search (GTK_TREE_VIEW (treeview), TRUE);
+  gtk_tree_view_set_search_column (GTK_TREE_VIEW (treeview), 0);
+  gtk_tree_view_set_search_equal_func (GTK_TREE_VIEW (treeview), 
+				       st_search_equal_func,
+				       NULL,
+				       NULL);
 
-	  treeview = st->treeview[i];
-	  gtk_tree_view_set_model (treeview, model);
-	  selection = gtk_tree_view_get_selection (treeview);
-	  gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
-	  g_signal_connect (G_OBJECT (selection), "changed",
-			    G_CALLBACK (st_selection_changed),
-			    GINT_TO_POINTER(inst));
-	  /* Add column */
-	  renderer = gtk_cell_renderer_text_new ();
-	  g_signal_connect (G_OBJECT (renderer), "edited",
-			    G_CALLBACK (st_cell_edited),
-			    GINT_TO_POINTER(inst));
-	  g_object_set_data (G_OBJECT (renderer), "column",
-			     (gint *)ST_COLUMN_ENTRY);
-	  column = gtk_tree_view_column_new ();
-	  gtk_tree_view_column_pack_start (column, renderer, TRUE);
-	  column = gtk_tree_view_column_new_with_attributes ("", renderer, NULL);
-	  gtk_tree_view_column_set_cell_data_func (column, renderer,
-						   st_cell_data_func, NULL, NULL);
-	  gtk_tree_view_column_set_sort_column_id (column, ST_COLUMN_ENTRY);
-	  gtk_tree_view_column_set_resizable (column, TRUE);
-	  gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
-	  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (liststore),
-					   ST_COLUMN_ENTRY,
-					   st_data_compare_func, GINT_TO_POINTER(inst), NULL);
-	  gtk_tree_view_append_column (treeview, column);
-      }
-  }
+  selection = gtk_tree_view_get_selection (treeview);
+  gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
+  g_signal_connect (G_OBJECT (selection), "changed",
+		    G_CALLBACK (st_selection_changed),
+		    GINT_TO_POINTER(inst));
+  /* Add column */
+  renderer = gtk_cell_renderer_text_new ();
+  g_signal_connect (G_OBJECT (renderer), "edited",
+		    G_CALLBACK (st_cell_edited),
+		    GINT_TO_POINTER(inst));
+  g_object_set_data (G_OBJECT (renderer), "column",
+		     (gint *)ST_COLUMN_ENTRY);
+  column = gtk_tree_view_column_new ();
+  gtk_tree_view_column_pack_start (column, renderer, TRUE);
+  column = gtk_tree_view_column_new_with_attributes ("", renderer, NULL);
+  gtk_tree_view_column_set_cell_data_func (column, renderer,
+					   st_cell_data_func, NULL, NULL);
+  gtk_tree_view_column_set_sort_column_id (column, ST_COLUMN_ENTRY);
+  gtk_tree_view_column_set_resizable (column, TRUE);
+  gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
+  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (st->model),
+				   ST_COLUMN_ENTRY,
+				   st_data_compare_func,
+				   GINT_TO_POINTER(inst), NULL);
+  gtk_tree_view_append_column (treeview, column);
 }
+
 
 
 /* Create the "special" page in the notebook and connect all the
@@ -2975,48 +2985,36 @@ static void st_create_page (gint inst, ST_CAT_item st_cat)
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (st0_notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (st0_notebook), st_cat), st0_label0);
   gtk_label_set_justify (GTK_LABEL (st0_label0), GTK_JUSTIFY_LEFT);
 
-  if (st_cat == ST_CAT_SPECIAL)
+  if (st_cat != ST_CAT_SPECIAL)
   {
-      /* create special window */
-      st_create_special (inst, st0_window0);
+      st_create_treeview (inst, st_cat);
   }
   else
   {
-      GtkWidget *treeview;
-      /* create treeview */
-      treeview = gtk_tree_view_new ();
-      st->treeview[st_cat] = GTK_TREE_VIEW (treeview);
-      gtk_widget_show (treeview);
-      gtk_container_add (GTK_CONTAINER (st0_window0), treeview);
-      g_signal_connect_after ((gpointer) treeview, "key_release_event",
-			      G_CALLBACK (on_st_treeview_key_release_event),
-			      NULL);
-      gtk_drag_source_set (GTK_WIDGET (treeview), GDK_BUTTON1_MASK,
-			   st_drag_types, TGNR (st_drag_types),
-			   GDK_ACTION_COPY|GDK_ACTION_MOVE);
-      g_signal_connect (G_OBJECT (treeview), "button-press-event",
-			G_CALLBACK (st_button_press_event), GINT_TO_POINTER(inst));
-      g_signal_connect ((gpointer) treeview, "drag_data_get",
-			G_CALLBACK (st_drag_data_get),
-			NULL);
-      g_signal_connect ((gpointer) treeview, "drag-end",
-			G_CALLBACK (st_drag_end),
-			NULL);
-      gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
-      gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
-      gtk_tree_view_set_enable_search (GTK_TREE_VIEW (treeview), TRUE);
-      gtk_tree_view_set_search_column (GTK_TREE_VIEW (treeview), 0);
-      gtk_tree_view_set_search_equal_func (GTK_TREE_VIEW (treeview), 
-					   st_search_equal_func,
-					   NULL,
-					   NULL);
+      st_create_special (inst, st0_window0);
   }
 }
+
 
 /* create all ST_CAT_NUM treeviews and the special page in sort tab of
  * instance @inst, then set the model */
 static void st_create_pages (gint inst)
 {
+  GtkTreeModel *model;
+  GtkListStore *liststore;
+  SortTab *st = sorttab[inst];
+
+  /* remove old model */
+  if (st->model)
+  {
+      g_object_unref (G_OBJECT (st->model));
+      st->model = NULL;
+  }
+  /* create model */
+  liststore = gtk_list_store_new (ST_NUM_COLUMNS, G_TYPE_POINTER);
+  model = GTK_TREE_MODEL (liststore);
+  st->model = model;
+
   st_create_page (inst, ST_CAT_ARTIST);
   st_create_page (inst, ST_CAT_ALBUM);
   st_create_page (inst, ST_CAT_GENRE);
@@ -3024,7 +3022,6 @@ static void st_create_pages (gint inst)
   st_create_page (inst, ST_CAT_TITLE);
   st_create_page (inst, ST_CAT_YEAR);
   st_create_page (inst, ST_CAT_SPECIAL);
-  st_create_listview (inst);
 }
 
 

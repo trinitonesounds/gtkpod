@@ -23,7 +23,7 @@
 | 
 |  This product is not supported/written/published by Apple!
 |
-|  $Id: display_playlists.c,v 1.105 2007/05/13 17:08:21 phantom_sf Exp $
+|  $Id$
 */
 
 #ifdef HAVE_CONFIG_H
@@ -186,6 +186,8 @@ static gboolean pm_drag_motion (GtkWidget *widget,
     GdkAtom target;
     guint info;
     Playlist *pl_d;
+    iTunesDB *itdb;
+    ExtraiTunesDBData *eitdb;
 
     g_return_val_if_fail (widget, FALSE);
     g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
@@ -213,14 +215,26 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 	gtk_tree_model_get (model, &iter_d, PM_COLUMN_PLAYLIST, &pl_d, -1);
     }
     g_return_val_if_fail (pl_d, FALSE);
+    itdb = pl_d->itdb;
+    g_return_val_if_fail (itdb, FALSE);
+    eitdb = itdb->userdata;
+    g_return_val_if_fail (eitdb, FALSE);
 
     target = gtk_drag_dest_find_target (widget, dc, NULL);
+
+    /* no drop possible if repository is not loaded */
+    if (!eitdb->itdb_imported)
+    {
+	gtk_tree_path_free (path);
+	gdk_drag_status (dc, 0, time);
+	return FALSE;
+    }
 
     /* no drop possible if no valid target can be found */
     if (target == GDK_NONE)
     {
-	gdk_drag_status (dc, 0, time);
 	gtk_tree_path_free (path);
+	gdk_drag_status (dc, 0, time);
 	return FALSE;
     }
 
@@ -229,8 +243,8 @@ static gboolean pm_drag_motion (GtkWidget *widget,
     {   /* MPL */
 	if (pos == GTK_TREE_VIEW_DROP_BEFORE)
 	{
-	    gdk_drag_status (dc, 0, time);
 	    gtk_tree_path_free (path);
+	    gdk_drag_status (dc, 0, time);
 	    return FALSE;
 	}
     }
@@ -239,8 +253,8 @@ static gboolean pm_drag_motion (GtkWidget *widget,
     if (!gtk_target_list_find (
 	    gtk_drag_dest_get_target_list (widget), target, &info))
     {
-	gdk_drag_status (dc, 0, time);
 	gtk_tree_path_free (path);
+	gdk_drag_status (dc, 0, time);
 	return FALSE;
     }
 
@@ -259,8 +273,8 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 	    if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
 		(pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
 	    {
-		gdk_drag_status (dc, 0, time);
 		gtk_tree_path_free (path);
+		gdk_drag_status (dc, 0, time);
 		return FALSE;
 	    }
 	}
@@ -2254,7 +2268,7 @@ void pm_create_treeview (void)
 		       pm_drag_types, TGNR (pm_drag_types),
 		       GDK_ACTION_COPY|GDK_ACTION_MOVE);
   gtk_drag_dest_set (GTK_WIDGET (playlist_treeview),
-		     GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT,
+		     GTK_DEST_DEFAULT_HIGHLIGHT,
 		     pm_drop_types, TGNR (pm_drop_types),
 		     GDK_ACTION_COPY|GDK_ACTION_MOVE);
 
