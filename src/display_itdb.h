@@ -80,6 +80,7 @@ typedef struct
   gchar   *charset;         /* charset used for ID3 tags                   */
   gint32  sortindex;        /* used for stable sorting (current order)     */
   gboolean tchanged;        /* temporary use, e.g. in detail.c             */
+  gboolean tartwork_changed;			/* temporary use for artwork, eg. in detail.c          */
   guint64 local_itdb_id;    /* when using DND from local to iPod:
 			       original itdb                               */
   guint64 local_track_dbid; /* when using DND from local to iPod:

@@ -67,8 +67,6 @@ static GtkWidget *prev_button;
 static GtkWidget *fetchcover_statusbar;
 /* Flag indicating whether a new net search should be initiated */
 static gboolean netsearched = FALSE;
-/* Flag indicating whether the tilda should be used for the naming of the new file */
-static gboolean USE_TILDA = FALSE;
 
 #define IMGSCALE 256
 
@@ -450,6 +448,7 @@ static void fetchcover_next_button_clicked (GtkWidget *widget, gpointer data)
 		net_search_track ();
 		netsearched = TRUE;
 		gtk_button_set_label (GTK_BUTTON(next_button), "_Next");
+		gtk_widget_show (prev_button);
 	}
 	
 	/* Whether net search this time or not, should be another image to display
@@ -472,7 +471,7 @@ static void fetchcover_next_button_clicked (GtkWidget *widget, gpointer data)
 		
 	if (displayed_cover_index > 0)
 	{
-		/* stop anymore prev button press if first in the list */
+		/* enable prev button if not first in list */
 		gtk_widget_set_sensitive (prev_button, TRUE);
 	}
 		
@@ -566,7 +565,6 @@ static void fetchcover_prev_button_clicked (GtkWidget *widget, gpointer data)
 gchar *fetchcover_save (GtkWindow *parent)
 {
 	gchar *newname = NULL;
-	gchar *tildaname = NULL;	
 	/* The default cover image will have both dir and filename set
 	 * to null because no need to save because it is already saved (!!)
 	 * Thus, this whole process is avoided. Added bonus that pressing
@@ -600,19 +598,9 @@ gchar *fetchcover_save (GtkWindow *parent)
 		
 		gchar *oldname = g_build_filename(displayed_cover->dir, displayed_cover->filename, NULL);
 		/* Rename the preferred choice, ie. .2_@_After_Forever.jpg, to the preferred name, 
-		 * ie. After_Forever.jpg~. The tilda denotes that the file has changed so provides a
-		 * signal for the details window to call copy_artwork
+		 * ie. After_Forever.jpg.
 		 */
-		 
-		 if (USE_TILDA)
-		 {
-		 	tildaname = g_strconcat (newname, "~", NULL);
-			g_rename (oldname, tildaname);
-		 }
-		 else
-		 {
 		 	g_rename (oldname, newname);
-		 }
 		
 		/* Tidy up to ensure the path will not get cleaned up
 		 * by fetchcover_clean_up
@@ -624,13 +612,6 @@ gchar *fetchcover_save (GtkWindow *parent)
 		displayed_cover->dir = NULL;
 		displayed_cover->filename = NULL;
 	}
-	
-	if (USE_TILDA)
-	{
-		g_free (newname);
-		return tildaname;
-	}
-	
 	return newname;
 }
 #endif /* HAVE_CURL */
@@ -912,6 +893,7 @@ static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device, 
 	#endif /* HAVE_CURL */
 		
   gtk_widget_show_all (fetchcover_dialog);
+  gtk_widget_hide (prev_button);
   
   g_object_unref (fetchcover_xml);
   
@@ -974,7 +956,6 @@ void on_coverart_context_menu_click (GList *tracks)
 		return;
 	}
 	
-	USE_TILDA = FALSE;
 	GtkWindow *parent = GTK_WINDOW (gtkpod_xml_get_widget (main_window_xml, "gtkpod"));
   GtkDialog *dialog = fetchcover_display_dialog (track, track->itdb->device, parent);
   g_return_if_fail (dialog);
@@ -1026,9 +1007,7 @@ void on_fetchcover_fetch_button (GtkWidget *widget, gpointer data)
     GtkDialog *dialog = fetchcover_display_dialog (detail->track, detail->itdb->device, parent);
     g_return_if_fail (dialog);
 		
-		/* Set the tilda flag for the naming of the new artwork file */
-		USE_TILDA = TRUE;
-    result = gtk_dialog_run (GTK_DIALOG (dialog));
+		result = gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_hide (GTK_WIDGET(dialog));
 		gtk_widget_destroy (GTK_WIDGET(dialog));
 #ifdef HAVE_CURL
@@ -1054,6 +1033,7 @@ void on_fetchcover_fetch_button (GtkWidget *widget, gpointer data)
 		    etd = track->userdata;
 		    gp_track_set_thumbnails(track, filename);
 		    etd->tchanged = TRUE;
+		    etd->tartwork_changed = TRUE;
 		}
 	    }
 	    else

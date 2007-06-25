@@ -542,18 +542,9 @@ static gboolean details_copy_artwork (Track *frtrack, Track *totrack)
     g_return_val_if_fail (fretr->thumb_path_locale, FALSE);
     g_return_val_if_fail (toetr->thumb_path_locale, FALSE);
 	
-	if (strcmp (fretr->thumb_path_locale, toetr->thumb_path_locale) != 0)
+	if (strcmp (fretr->thumb_path_locale, toetr->thumb_path_locale) != 0
+			|| fretr->tartwork_changed == TRUE)
   {
-  	/* If filename ends with a ~ then remove it as we are preparing to save */
-  	if (g_str_has_suffix(fretr->thumb_path_locale, "~"))
-  	{
-  		gchar **basename = g_strsplit(fretr->thumb_path_locale, "~", 0);
-  		g_rename (fretr->thumb_path_locale, basename[0]);
-  		
-  		gp_track_set_thumbnails (frtrack, basename[0]);
-  		g_strfreev(basename);
-  	}
-  	
 		itdb_artwork_free (totrack->artwork);
 		totrack->artwork = itdb_artwork_duplicate (frtrack->artwork);
 		totrack->artwork_size = frtrack->artwork_size;
@@ -1472,6 +1463,7 @@ static void details_set_tracks (Detail *detail, GList *tracks)
 	etr_dup = tr_dup->userdata;
 	g_return_if_fail (etr_dup);
 	etr_dup->tchanged = FALSE;
+	etr_dup->tartwork_changed = FALSE;
 	detail->tracks = g_list_prepend (detail->tracks, tr_dup);
     }
 

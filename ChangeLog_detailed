@@ -1,3 +1,15 @@
+2007-06-25 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+	* display_itdb.h: added tartwork_changed flag to ExtraTrackData
+	
+	* details.c: initialise tartwork_changed flag to FALSE. Use this
+		flag in details_copy_artwork as additional check if artwork
+		has changed. Removal of all tilda related cruff.
+		
+	* fetchcover.c: removal of tilda related cruff with use of the
+		tartwork_changed flag from ExtraTrackData. Set Prev Button
+		initially to hidden until images from the net are retrieved.
+
 2007-06-25 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/display_playlists.c (pm_drag_motion): don't allow drops
