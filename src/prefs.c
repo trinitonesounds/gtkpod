@@ -684,7 +684,7 @@ static void load_prefs()
     set_default_list_entries();
 }
 
-/* Save preferences to user home folder (~/gtkpod/prefs) */
+/* Save preferences to user home folder (~/.gtkpod/prefs) */
 void prefs_save ()
 {
     gchar *filename;  /* Path of file to write to */
@@ -1247,7 +1247,7 @@ void prefs_shutdown ()
 /* Free the returned structure with delete_temp_prefs() */
 TempPrefs *temp_prefs_create ()
 {
-    TempPrefs *temp_prefs;  /* Retunred temp prefs structure */
+    TempPrefs *temp_prefs;  /* Returned temp prefs structure */
 
     temp_prefs = (TempPrefs*)g_malloc(sizeof(TempPrefs));
 
@@ -1579,7 +1579,7 @@ gboolean prefs_get_string_value(const gchar *key, gchar **value)
 gint prefs_get_int(const gchar *key)
 {
     gchar *string; /* Hash value string */
-    gint value;  /* Retunred value */
+    gint value;  /* Returned value */
 	
     value = 0;
 	
@@ -1630,7 +1630,7 @@ gboolean prefs_get_int_value(const gchar *key, gint *value)
 gint64 prefs_get_int64(const gchar *key)
 {
     gchar *string;  /* Key value string */
-    gint64 value;  /* Retunred value */
+    gint64 value;  /* Returned value */
 	
     value = 0;
 
@@ -1681,7 +1681,7 @@ gboolean prefs_get_int64_value(const gchar *key, gint64 *value)
 gdouble prefs_get_double(const gchar *key)
 {
     gchar *string;  /* Key value string */
-    gdouble value;  /* Retunred value */
+    gdouble value;  /* Returned value */
 	
     value = 0;
 
@@ -1980,7 +1980,7 @@ gboolean temp_prefs_get_string_value(TempPrefs *temp_prefs,
 gint temp_prefs_get_int(TempPrefs *temp_prefs, const gchar *key)
 {
     gchar *string; /* Hash value string */
-    gint value;  /* Retunred value */
+    gint value;  /* Returned value */
 	
     g_return_val_if_fail (temp_prefs && temp_prefs->tree, 0);
     g_return_val_if_fail (key, 0);
@@ -2025,7 +2025,7 @@ gdouble temp_prefs_get_double(TempPrefs *temp_prefs,
 			      const gchar *key)
 {
     gchar *string; /* Hash value string */
-    gdouble value;  /* Retunred value */
+    gdouble value;  /* Returned value */
 	
     g_return_val_if_fail (temp_prefs && temp_prefs->tree, 0);
     g_return_val_if_fail (key, 0);
@@ -2196,7 +2196,7 @@ GList *prefs_get_list(const gchar *key)
 {
     guint end_marker_hash;  /* Hash value of the list end marker */
     guint item_hash;  /* Hash value of current list string */
-    gchar *item_string;  /* List iterm string */
+    gchar *item_string;  /* List item string */
     guint i;  /* Counter */
     GList *list;  /* List that contains items */
 	

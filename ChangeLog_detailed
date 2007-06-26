@@ -13,6 +13,7 @@
 	  src/display_sorttabs.c
 	  src/fetchcover.c
 	  src/file.c
+	  src/prefs.c
 	  src/prefs.h
 	  src/tools.c: fix typos in comments
 
