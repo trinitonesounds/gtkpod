@@ -1,3 +1,8 @@
+2007-06-26  Todd Zullinger <tmzullinger at users.sourceforge.net>
+
+	* COPYING:
+	  update license text from http://www.gnu.org/licenses/gpl.txt
+
 2007-06-26 Daniele Forsi <dforsi at users.sourceforge.net>
 
 	* src/fetchcover.c
