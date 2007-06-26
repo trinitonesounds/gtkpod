@@ -22,6 +22,8 @@
 	  src/prefs.h
 	  src/tools.c: fix typos in comments
 
+	* po/it.po: updated Italian translation
+
 2007-06-25  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* src/file.c
