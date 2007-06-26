@@ -1,7 +1,7 @@
 # translation of gtkpod.es.po to spanish
 # Alejandro Lamas Daviña <alejandro.lamas@ific.uv.es>, 2006, 2007.
 # This file is distributed under the same license as the gtkpod package.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"

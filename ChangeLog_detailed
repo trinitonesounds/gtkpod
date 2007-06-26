@@ -7,6 +7,10 @@
 	  preliminary support for parsing gapless playback data from
 	  mp3 files.  Thanks to Michael Tiffany.
 
+	* po/es.po
+	  po/he.po:
+	  remove generic copyright header.
+
 2007-06-25 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* display_itdb.h: added tartwork_changed flag to ExtraTrackData
