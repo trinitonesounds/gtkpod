@@ -876,7 +876,7 @@ void prefs_window_update_default_sizes (void)
 	gint defx, defy;
 	gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
 	prefs_set_int("size_prefs.x", defx);
-  prefs_set_int("size_prefs.y", defy);
+	prefs_set_int("size_prefs.y", defy);
     }
 }
 
@@ -922,7 +922,7 @@ void prefs_window_delete(void)
 
     /* save current window size */
     gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
-	  prefs_set_int("size_prefs.x", defx);
+    prefs_set_int("size_prefs.x", defx);
     prefs_set_int("size_prefs.y", defy);
 
     /* close the window */
