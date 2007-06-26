@@ -54,7 +54,7 @@ static Track *fetchcover_track = NULL;
 static GList *fetchcover_image_list = NULL;
 /* Index for controlling which cover image to display */
 static gint displayed_cover_index = 0;
-/* Pointer to the currently display cover */
+/* Pointer to the currently displayed cover */
 static Fetch_Cover *displayed_cover;
 /* Canvas widget for display of cover */
 static GnomeCanvas *fetchcover_canvas;
@@ -250,7 +250,7 @@ static void net_search_track ()
 				if ((!xmlStrcmp(details->name, (const xmlChar*)"ImageUrlLarge")))
 				{
 					key = xmlNodeListGetString (doc, details->xmlChildrenNode, 1);
-					/* Create a fetchcover object and the add to the list */
+					/* Create a fetchcover object and then add it to the list */
 					fcover = g_new0(Fetch_Cover, 1);
 					fcover->url = g_string_new ((gchar*) key);
 					fcover->image = NULL;
@@ -664,7 +664,7 @@ static gchar *display_file_exist_dialog (gchar *filename, GtkWindow *parent)
 			gtk_widget_destroy (dialog);
 			return filename;
 		case GTK_RESPONSE_NO:
-			/* User doesnt want to overwrite anything so need to do some work on filename */
+			/* User doesn't want to overwrite anything so need to do some work on filename */
 			splitarr = g_strsplit (filename, ".", 0);
 			basename = splitarr[0];
 			
@@ -673,7 +673,7 @@ static gchar *display_file_exist_dialog (gchar *filename, GtkWindow *parent)
 				g_sprintf (filename, "%s%d.jpg", basename, i);
 			}
 			
-			/* Should have found a filename that really doesnt exist so this needs to be returned */
+			/* Should have found a filename that really doesn't exist so this needs to be returned */
 			basename = NULL;
 			g_strfreev(splitarr);
 			gtk_widget_destroy (dialog);
@@ -852,7 +852,7 @@ static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device, 
 	
 	gnome_canvas_item_raise_to_top (art_border);
 	
-	/* Add canvas to horizonontal box */
+	/* Add canvas to horizontal box */
 	canvasbutton_hbox = GTK_BOX (gtkpod_xml_get_widget (fetchcover_xml, "canvasbutton_hbox"));
 	gtk_widget_set_size_request (GTK_WIDGET(canvasbutton_hbox), IMGSCALE + 150, IMGSCALE + 20);
 	gtk_box_pack_start_defaults ( canvasbutton_hbox, GTK_WIDGET (fetchcover_canvas));

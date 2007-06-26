@@ -2602,7 +2602,7 @@ static void st_set_visible_sort_tab_paned (void)
 }
 
 
-/* Regularily arrange the visible sort tabs */
+/* Regularly arrange the visible sort tabs */
 void st_arrange_visible_sort_tabs (void)
 {
     gint i, num;

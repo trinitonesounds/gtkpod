@@ -1166,7 +1166,7 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	break;
     case FILE_TYPE_OGG:
         nti = ogg_get_file_info (name);
-        /* Set unk208 to audio */
+        /* Set mediatype to audio */
         if (nti)
         {
             nti->mediatype = ITDB_MEDIATYPE_AUDIO;
@@ -1174,7 +1174,7 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
         break;
     case FILE_TYPE_FLAC:
         nti = flac_get_file_info (name);
-        /* Set unk208 to audio */
+        /* Set mediatype to audio */
         if (nti)
         {
             nti->mediatype = ITDB_MEDIATYPE_AUDIO;

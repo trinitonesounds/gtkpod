@@ -658,7 +658,7 @@ static gboolean tools_sync_script (iTunesDB *itdb, SyncType type)
 
     /*create the pipe*/
     pipe(fdpipe);
-    /*than fork*/
+    /*then fork*/
     pid=fork();
 
     /*and cast mp3gain*/

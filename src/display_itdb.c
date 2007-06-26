@@ -553,7 +553,7 @@ Playlist *gp_playlist_by_name_or_add (iTunesDB *itdb, gchar *pl_name,
     g_return_val_if_fail (pl_name, pl);
     pl = itdb_playlist_by_name (itdb, pl_name);
     if (pl)
-    {   /* check if the it's the same type (spl or normal) */
+    {   /* check if it's the same type (spl or normal) */
 	if (pl->is_spl == spl) return pl;
     }
     /* Create a new playlist */

@@ -47,7 +47,7 @@ struct _Detail
     GList *tracks;      /* tracks displayed in details window */
     Track *track;       /* currently displayed track          */
     gboolean artwork_ok;/* artwork can be displayed or not    */
-    gboolean changed;   /* at lease one track was changed     */
+    gboolean changed;   /* at least one track was changed     */
 
 };
 

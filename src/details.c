@@ -524,7 +524,7 @@ static void details_delete_event (GtkWidget *widget,
 }
 
 
-/****** Copy artwork data if filaname has changed ****** */
+/****** Copy artwork data if filename has changed ****** */
 static gboolean details_copy_artwork (Track *frtrack, Track *totrack)
 {
 		gboolean changed = FALSE;

@@ -1076,7 +1076,7 @@ static gboolean pm_get_iter_for_playlist (Playlist *playlist, GtkTreeIter *pl_it
 	    return TRUE;
 	}
 
-	/* no -- go down one hirarchy and try all other iters */
+	/* no -- go down one hierarchy and try all other iters */
 	if (!gtk_tree_model_iter_children (model, pl_iter, &itdb_iter))
 	{   /* This indicates screwed up programming so we better cry
 	       out */

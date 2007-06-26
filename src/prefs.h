@@ -75,7 +75,7 @@ typedef struct
 	GTree *tree;
 } TempLists;
 
-/* Prefrences setup and cleanup */
+/* Preferences setup and cleanup */
 void prefs_init (int argc, char *argv[]);
 void prefs_save (void);
 void prefs_shutdown (void);

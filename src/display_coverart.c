@@ -65,7 +65,7 @@ const gchar *KEY_DISPLAY_COVERART="display_coverart";
 
 /* The structure that holds values used throughout all the functions */
 static CD_Widget *cdwidget = NULL;
-/* The backing hash for the albums and it associated key list */
+/* The backing hash for the albums and its associated key list */
 static GHashTable *album_hash;
 static GList *album_key_list;
 /* Dimensions used for the canvas */
@@ -1527,7 +1527,7 @@ void coverart_track_changed (Track *track, gint signal)
 			g_return_if_fail (keypos);
 			g_free (trk_key);
 			
-			/* Reassign trk_key to the ky from the list */
+			/* Reassign trk_key to the key from the list */
  			trk_key = keypos->data;
  			index = g_list_position (album_key_list, keypos);
  	

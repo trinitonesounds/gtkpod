@@ -5,6 +5,17 @@
 	  src/misc_playlist.c: change some strings to match existing ones
 	  (this will hopefully help translators a little bit) 
 
+	* src/details.c
+	  src/details.h
+	  src/display_coverart.c
+	  src/display_itdb.c
+	  src/display_playlists.c
+	  src/display_sorttabs.c
+	  src/fetchcover.c
+	  src/file.c
+	  src/prefs.h
+	  src/tools.c: fix typos in comments
+
 2007-06-25  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* src/file.c
