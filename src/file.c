@@ -779,17 +779,20 @@ void update_charset_info (Track *track)
 
 
 /* Copy "new" info read from file to an old Track structure. */
-static void copy_new_info (Track *from, Track *to)
+/* Return value: TRUE: at least one item was changed. FALSE: track was
+   unchanged */
+static gboolean copy_new_info (Track *from, Track *to)
 {
     ExtraTrackData *efrom, *eto;
     T_item item;
+    gboolean changed = FALSE;
 
-    g_return_if_fail (from);
-    g_return_if_fail (to);
+    g_return_val_if_fail (from, FALSE);
+    g_return_val_if_fail (to, FALSE);
     efrom = from->userdata;
     eto = to->userdata;
-    g_return_if_fail (efrom);
-    g_return_if_fail (eto);
+    g_return_val_if_fail (efrom, FALSE);
+    g_return_val_if_fail (eto, FALSE);
 
     for (item=0; item<T_ITEM_NUM; ++item)
     {
@@ -837,7 +840,7 @@ static void copy_new_info (Track *from, Track *to)
 	case T_SEASON_NR:
 	case T_EPISODE_NR:
 	case T_GROUPING:
-	    track_copy_item (from, to, item);
+	    changed |= track_copy_item (from, to, item);
 	    break;
 	case T_CATEGORY:
 	    /* not implemented from tags */
@@ -856,27 +859,52 @@ static void copy_new_info (Track *from, Track *to)
 	    /* not applicable */
 	    break;
 	case T_ITEM_NUM:
-	    g_return_if_reached ();
+	    g_return_val_if_reached (FALSE);
 	}
     }
 
-    g_free (eto->thumb_path_locale);
-    eto->thumb_path_locale = g_strdup (efrom->thumb_path_locale);
-
-    g_free (eto->pc_path_locale);
-    eto->pc_path_locale = g_strdup (efrom->pc_path_locale);
-
-    g_free (eto->charset);
-    eto->charset = g_strdup (efrom->charset);
+    if ((eto->charset == NULL) || (strcmp (efrom->charset, eto->charset) != 0))
+    {
+	g_free (eto->charset);
+	eto->charset = g_strdup (efrom->charset);
+	changed = TRUE;
+    }
 
     itdb_artwork_free (to->artwork);
     to->artwork = itdb_artwork_duplicate (from->artwork);
-    to->artwork_size = from->artwork_size;
-    to->artwork_count = from->artwork_count;
-    to->has_artwork = from->has_artwork;
+    if ((to->artwork_size != from->artwork_size) ||
+	(to->artwork_count != from->artwork_count) ||
+	(to->has_artwork != from->has_artwork))
+    {   /* FIXME -- artwork might have changed nevertheless */
+	changed = TRUE;
+	to->artwork_size = from->artwork_size;
+	to->artwork_count = from->artwork_count;
+	to->has_artwork = from->has_artwork;
+    }
 
-    to->lyrics_flag = from->lyrics_flag;
-    to->movie_flag = from->movie_flag;
+    if ((to->lyrics_flag != from->lyrics_flag) ||
+	(to->movie_flag != from->movie_flag))
+    {
+	changed = TRUE;
+	to->lyrics_flag = from->lyrics_flag;
+	to->movie_flag = from->movie_flag;
+    }
+
+    if ((to->pregap != from->pregap) ||
+	(to->postgap != from->postgap) ||
+	(to->samplecount != from->samplecount) ||
+	(to->gapless_data != from->gapless_data) ||
+	(to->gapless_track_flag != from->gapless_track_flag))
+    {
+	changed = TRUE;
+	to->pregap = from->pregap;
+	to->postgap = from->postgap;
+	to->samplecount = from->samplecount;
+	to->gapless_data = from->gapless_data;
+	to->gapless_track_flag = from->gapless_track_flag;
+    }
+
+    return changed;
 }
 
 /* Updates mserv data (rating only) of @track using filename @name to
@@ -1226,8 +1254,15 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 
 	/* Set modification date to the files modified date */
 	nti->time_modified = enti->mtime;
-	/* Set added date to *now* */
-	nti->time_added = time (NULL);
+	/* Set added date to *now* (unless orig_track is present) */
+	if (orig_track)
+	{
+	    nti->time_added = orig_track->time_added;
+	}
+	else
+	{
+	    nti->time_added = time (NULL);
+	}
 
 	/* Make sure all strings are initialized -- that way we don't
 	   have to worry about it when we are handling the
@@ -1241,13 +1276,11 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	if (orig_track)
 	{ /* we need to copy all information over to the original
 	   * track */
-	    guint32 time_added = orig_track->time_added;
+	    ExtraTrackData *eorigtr=orig_track->userdata;
 
-	    copy_new_info (nti, orig_track);
+	    g_return_val_if_fail (eorigtr, NULL);
 
-	    /* restore time_added */
-	    if (time_added != 0)
-		orig_track->time_added = time_added;
+	    eorigtr->tchanged = copy_new_info (nti, orig_track);
 
 	    track = orig_track;
 	    itdb_track_free (nti);
@@ -1591,7 +1624,7 @@ void display_mserv_problems (Track *track, gchar *txt)
    "gp_duplicate_remove (NULL, (void *)-1)"*/
 void update_track_from_file (iTunesDB *itdb, Track *track)
 {
-    ExtraTrackData *etr;
+    ExtraTrackData *oetr;
     Track *oldtrack;
     gchar *prefs_charset = NULL;
     gchar *trackpath = NULL;
@@ -1600,27 +1633,27 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 
     g_return_if_fail (itdb);
     g_return_if_fail (track);
-    etr = track->userdata;
-    g_return_if_fail (etr);
+    oetr = track->userdata;
+    g_return_if_fail (oetr);
     /* remember size of track on iPod */
     if (track->transferred) oldsize = track->size;
     else                    oldsize = 0;
 
     /* remember if charset was set */
-    if (etr->charset)  charset_set = TRUE;
+    if (oetr->charset)  charset_set = TRUE;
     else               charset_set = FALSE;
 
     if (!prefs_get_int("update_charset") && charset_set)
     {   /* we should use the initial charset for the update */
 	prefs_charset = prefs_get_string("charset");
 	/* use the charset used when first importing the track */
-	prefs_set_string("charset", etr->charset);
+	prefs_set_string("charset", oetr->charset);
     }
 
     trackpath = get_file_name_from_source (track, SOURCE_PREFER_LOCAL);
 
     
-    if (!(etr->pc_path_locale && *etr->pc_path_locale))
+    if (!(oetr->pc_path_locale && *oetr->pc_path_locale))
     { /* no path available */
 	if (trackpath)
 	{
@@ -1638,7 +1671,7 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	    }
 	}
     }
-    else if (!g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS))
+    else if (!g_file_test (oetr->pc_path_locale, G_FILE_TEST_EXISTS))
     {
 	if (trackpath)
 	{
@@ -1658,14 +1691,16 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
     }
 
     if (trackpath && get_track_info_from_file (trackpath, track))
-    { /* update successfull */
+    { /* update successful */
+	ExtraTrackData *netr = track->userdata;
+
 	/* remove track from sha1 hash and reinsert it
 	   (hash value may have changed!) */
-	gchar *oldhash = etr->sha1_hash;
+	gchar *oldhash = oetr->sha1_hash;
 
 	sha1_track_remove (track);
 	/* need to remove the old value manually! */
-	etr->sha1_hash = NULL;
+	oetr->sha1_hash = NULL;
 	oldtrack = sha1_track_exists_insert (itdb, track);
 	if (oldtrack) { /* track exists, remove old track
 			  and register the new version */
@@ -1682,9 +1717,9 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	    name_on_ipod = get_file_name_from_source (track, SOURCE_IPOD);
 	    if (name_on_ipod && (strcmp (name_on_ipod, trackpath) != 0))
 	    {   /* trackpath is not on the iPod */
-		if (oldhash && etr->sha1_hash)
+		if (oldhash && oetr->sha1_hash)
 		{   /* do we really have to copy the track again? */
-		    if (strcmp (oldhash, etr->sha1_hash) != 0)
+		    if (strcmp (oldhash, oetr->sha1_hash) != 0)
 		    {
 			transfer_again = TRUE;
 		    }
@@ -1718,25 +1753,27 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 		/* mark the track for deletion on the ipod */
 		mark_track_for_deletion (itdb, new_track);
 		/* reschedule conversion/transfer of track */
+		file_convert_add_track (track);
 
-		data_changed (itdb);
+		netr->tchanged = TRUE;
 	    }
 
 	    g_free (name_on_ipod);
 	}
-	else
-	{
-	    data_changed (itdb);
-	}
 
 	/* notify display model */
-	pm_track_changed (track);
+	if (netr->tchanged)
+	{
+	    pm_track_changed (track);
+	    data_changed (itdb);
+	    netr->tchanged = FALSE;
+	}
 	display_updated (track, NULL);
         g_free (oldhash);
     }
     else if (trackpath)
     { /* update not successful -- log this track for later display */
-	display_non_updated (track, _("update failed (format no supported?)"));
+	display_non_updated (track, _("update failed (format not supported?)"));
     }
 
     if (!prefs_get_int("update_charset") && charset_set)

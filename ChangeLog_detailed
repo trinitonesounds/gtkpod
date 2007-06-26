@@ -1,3 +1,12 @@
+2007-06-25  Todd Zullinger <tmzullinger at users.sourceforge.net>
+
+	* src/file.c
+	  src/misc_track.c
+	  src/mp3file.c
+	  src/mp3file.h:
+	  preliminary support for parsing gapless playback data from
+	  mp3 files.  Thanks to Michael Tiffany.
+
 2007-06-25 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* display_itdb.h: added tartwork_changed flag to ExtraTrackData

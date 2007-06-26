@@ -35,5 +35,6 @@
 gboolean mp3_write_file_info (gchar *filename, Track *track);
 Track *mp3_get_file_info (gchar *name);
 gboolean mp3_read_soundcheck (gchar *path, Track *track);
+gboolean mp3_read_gapless (gchar *path, Track *track);
 
 #endif

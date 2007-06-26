@@ -946,10 +946,16 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
     gboolean changed = FALSE;
     const gchar *fritem;
     gchar **toitem_ptr;
+    ExtraTrackData *efrtr, *etotr;
 
     g_return_val_if_fail (frtrack, FALSE);
     g_return_val_if_fail (totrack, FALSE);
     g_return_val_if_fail ((item > 0) && (item < T_ITEM_NUM), FALSE);
+
+    efrtr = frtrack->userdata;
+    etotr = totrack->userdata;
+    g_return_val_if_fail (efrtr, FALSE);
+    g_return_val_if_fail (etotr, FALSE);
 
     if (frtrack == totrack) return FALSE;
 
@@ -997,6 +1003,27 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
 	    if (totrack->year != frtrack->year)
 	    {
 		totrack->year = frtrack->year;
+		changed = TRUE;
+	    }
+	}
+	/* handle items that have two entries */
+	if (item == T_PC_PATH)
+	{
+	    if ((etotr->pc_path_locale == NULL) ||
+		(strcmp (efrtr->pc_path_locale, etotr->pc_path_locale) != 0))
+	    {
+		g_free (etotr->pc_path_locale);
+		etotr->pc_path_locale = g_strdup (efrtr->pc_path_locale);
+		changed = TRUE;
+	    }
+	}
+	if (item == T_THUMB_PATH)
+	{
+	    if ((etotr->thumb_path_locale == NULL) ||
+		(strcmp (efrtr->thumb_path_locale, etotr->thumb_path_locale) != 0))
+	    {
+		g_free (etotr->thumb_path_locale);
+		etotr->thumb_path_locale = g_strdup (efrtr->thumb_path_locale);
 		changed = TRUE;
 	    }
 	}
