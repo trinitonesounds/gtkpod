@@ -1,3 +1,10 @@
+2007-06-26 Daniele Forsi <dforsi at users.sourceforge.net>
+
+	* src/fetchcover.c
+	  src/file.c
+	  src/misc_playlist.c: change some strings to match existing ones
+	  (this will hopefully help translators a little bit) 
+
 2007-06-25  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* src/file.c

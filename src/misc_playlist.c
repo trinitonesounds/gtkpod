@@ -913,7 +913,7 @@ check_db_danglingok1 (gpointer user_data1, gpointer user_data2)
         /* printf("Handling track %d\n", track->ipod_id); */
 
 	buf = get_track_info (track, TRUE);
-	gtkpod_statusbar_message (_("Processing '%s'"), buf);
+	gtkpod_statusbar_message (_("Processing '%s'..."), buf);
 	g_free (buf);
 				  
 	while (widgets_blocked && gtk_events_pending ())

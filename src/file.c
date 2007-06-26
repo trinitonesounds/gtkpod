@@ -1864,7 +1864,7 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
 
       if (excludefile(basename))
       {
-          gtkpod_warning (_("File skipped. match exclude masks: '%s'\n"), basename);
+          gtkpod_warning (_("Skipping '%s' because it matches exclude masks.\n"), basename);
 	  while (widgets_blocked && gtk_events_pending ())
 	      gtk_main_iteration ();
 	  g_free (basename);

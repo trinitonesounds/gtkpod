@@ -889,7 +889,7 @@ static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device, 
 	#else
 		gtk_widget_set_sensitive (next_button, FALSE);
 		gtk_widget_set_sensitive (prev_button, FALSE);
-		fetchcover_statusbar_update ("CURL has not been installed so this function is not available");
+		fetchcover_statusbar_update ("This function is not available. You must compile the gtkpod source together with the curl library.");
 	#endif /* HAVE_CURL */
 		
   gtk_widget_show_all (fetchcover_dialog);
