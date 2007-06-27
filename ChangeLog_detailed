@@ -1,3 +1,10 @@
+2007-06-27  Todd Zullinger <tmzullinger at users.sourceforge.net>
+
+	* src/display_coverart.c
+	  src/display_coverart.h
+	  src/flacfile.c:
+	  add/update copyright headers (Daniele)
+
 2007-06-26  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* COPYING:
