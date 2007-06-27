@@ -1,5 +1,8 @@
 2007-06-27  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
+	* configure.in:
+	  bump version for 0.99.11SVN new development
+
 	* ChangeLog:
 	  bump version to 0.99.10
 	  note Michael's work on gapless playback
