@@ -1,5 +1,5 @@
 /*
-|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
+|  Copyright (C) 2007 P.G. Richardson <phantom_sf at users.sourceforge.net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
@@ -23,6 +23,7 @@
 | 
 |  This product is not supported/written/published by Apple!
 |
+|  $Id$
 */
 
 #ifndef __FETCHCOVER_H__

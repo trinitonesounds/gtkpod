@@ -1,5 +1,10 @@
 2007-06-27  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
+	* src/fetchcover.c
+	  src/fetchcover.h:
+	  give credit where credit is due
+	  add Id keyword (Daniele)
+
 	* src/display_coverart.c
 	  src/display_coverart.h
 	  src/flacfile.c:
