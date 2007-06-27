@@ -1,4 +1,4 @@
-gtkpod V0.99.9CVS
+gtkpod V0.99.10
 
        NEW FEATURE: on-the-fly conversion of WAV, FLAC and OGG (as well
        as MP3 and M4A). Thanks to Marc d[readlock], Simon Naunton and
@@ -16,6 +16,10 @@ gtkpod V0.99.9CVS
        NEW FEATURE: copy playlists and tracks from within the context
        menu without DND can simplify life with many playlists. Thanks
        to Andrzej Palejko for his patch.
+
+       NEW FEATURE: preliminary support for calculating gapless
+       playback information (lame encoded mp3 files only).  Thanks to
+       Michael Tiffany.
 
        UPDATE: Smart playlists now support the following new fields:
        album artist, tv show, last skipped, season number, skipcount
