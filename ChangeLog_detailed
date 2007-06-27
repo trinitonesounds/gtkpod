@@ -1,5 +1,9 @@
 2007-06-27  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
+	* configure.in:
+	  bump version for 0.99.10 release
+	  look for MP4GetMetadataGrouping in libmp4v2 check
+
 	* src/fetchcover.c
 	  src/fetchcover.h:
 	  give credit where credit is due
