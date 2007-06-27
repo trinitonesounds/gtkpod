@@ -1,3 +1,13 @@
+2007-06-27 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+	* gtkpod.glade:
+		Changed fetchcover dialog's buttons to display icons only.
+		
+	* fetchcover.c:
+		Added in gettext macros for status messages.
+		Disabled next button if net_retrieve fails to get any images
+		from the downloaded xml file (Thanks Daniele).
+
 2007-06-27  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* po/es.po
