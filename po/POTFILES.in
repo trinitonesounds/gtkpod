@@ -5,6 +5,7 @@
 data/gtkpod.desktop.in
 data/gtkpod.glade
 src/charset.c
+src/autodetection.c
 src/clientserver.c
 src/confirmation.c
 src/context_menus.c

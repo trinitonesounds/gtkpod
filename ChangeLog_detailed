@@ -1,5 +1,16 @@
 2007-06-27  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
+	* po/es.po
+	  po/fr.po
+	  po/de.po
+	  po/sv.po
+	  po/ja.po
+	  po/gtkpod.pot
+	  po/he.po
+	  po/it.po
+	  po/POTFILES.in:
+	  add src/autodetection.c to POTFILES.in and update po files
+
 	* configure.in:
 	  bump version for 0.99.11SVN new development
 

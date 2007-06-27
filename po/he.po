@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-14 22:57+0900\n"
+"POT-Creation-Date: 2007-06-27 16:10-0400\n"
 "PO-Revision-Date: 2007-01-13 20:48+0200\n"
 "Last-Translator: \n"
 "Language-Team: HEBREW <kde-il@yahoogroups.com>\n"
@@ -297,8 +297,8 @@ msgstr "הוסף מאגר/iPod חדש"
 msgid "Add playlist from file"
 msgstr "הוספת רשימת השמעה מקובץ"
 
-#: ../data/gtkpod.glade.h:68 ../src/display_sorttabs.c:3232
-#: ../src/display_tracks.c:1996
+#: ../data/gtkpod.glade.h:68 ../src/display_sorttabs.c:3228
+#: ../src/display_tracks.c:2020
 msgid "Added"
 msgstr "הוספו"
 
@@ -307,7 +307,7 @@ msgid "Advanced Sorting Options"
 msgstr "אפשרויות מיון מתקדמות"
 
 #. 0
-#: ../data/gtkpod.glade.h:70 ../src/display_sorttabs.c:2954
+#: ../data/gtkpod.glade.h:70 ../src/display_sorttabs.c:2963
 #: ../src/display_spl.c:84 ../src/misc_conversion.c:60
 msgid "Album"
 msgstr "כותר"
@@ -345,7 +345,7 @@ msgstr "כתוב תמיד תגיות ID3v2.4 (תקף רק ל-MP3)"
 msgid "Any (OR)"
 msgstr "או (כל אחד)"
 
-#: ../data/gtkpod.glade.h:79 ../src/display_sorttabs.c:2951
+#: ../data/gtkpod.glade.h:79 ../src/display_sorttabs.c:2960
 #: ../src/display_spl.c:85 ../src/misc_conversion.c:61
 msgid "Artist"
 msgstr "אמן"
@@ -363,23 +363,10 @@ msgid "Ascending"
 msgstr "עולה"
 
 #: ../data/gtkpod.glade.h:83
-msgid ""
-"Audio/Video\n"
-"Audio\n"
-"Video\n"
-"Podcast\n"
-"Video Podcast\n"
-"Audiobook\n"
-"Music Video\n"
-"TV Show\n"
-"TV Show & Music Video\n"
-msgstr ""
-
-#: ../data/gtkpod.glade.h:93
 msgid "Auto Store"
 msgstr "שמירה אוטומטית"
 
-#: ../data/gtkpod.glade.h:94
+#: ../data/gtkpod.glade.h:84
 msgid ""
 "Automatically start displaying tracks that match the criteria entered above. "
 "If not selected, you must press 'Display' to start displaying."
@@ -387,52 +374,52 @@ msgstr ""
 "הצג אוטומטית רצועות שמתאימות לקריטריונים המוכנסים למעלה. אם אפשרות זו לא "
 "נבחרה, חובה עליך ללחוץ 'תצוגה' על מנת להראות את הרצועות."
 
-#: ../data/gtkpod.glade.h:95
+#: ../data/gtkpod.glade.h:85
 msgid "Before removing playlists or tracks from a playlist"
 msgstr "לפני הסרת רשימות השמעה או רצועות מרשימת השמעה"
 
-#: ../data/gtkpod.glade.h:96
+#: ../data/gtkpod.glade.h:86
 msgid "Before removing tracks from the harddisk"
 msgstr "לפני הסרת רצועות מהדיסק הקשיח"
 
-#: ../data/gtkpod.glade.h:97
+#: ../data/gtkpod.glade.h:87
 msgid "Before removing tracks from the iPod"
 msgstr "לפני הסרת רצועות מה-iPod"
 
-#: ../data/gtkpod.glade.h:98
+#: ../data/gtkpod.glade.h:88
 msgid "Before removing tracks from the local database"
 msgstr "לפני הסרת רצועות ממסד הנתונים המקומי"
 
-#: ../data/gtkpod.glade.h:99
+#: ../data/gtkpod.glade.h:89
 msgid "Best Rated Tracks"
 msgstr "הרצועות המדורגות בראש"
 
-#: ../data/gtkpod.glade.h:100
+#: ../data/gtkpod.glade.h:90
 msgid "Browse"
 msgstr "סייר"
 
-#: ../data/gtkpod.glade.h:101
+#: ../data/gtkpod.glade.h:91
 #, fuzzy
 msgid "Cache directory:"
 msgstr "הוספת _תיקיות"
 
-#: ../data/gtkpod.glade.h:102
+#: ../data/gtkpod.glade.h:92
 msgid "Calendar"
 msgstr "יומן"
 
-#: ../data/gtkpod.glade.h:103
+#: ../data/gtkpod.glade.h:93
 msgid "Calendar sync command:"
 msgstr "פקודת סנכרון ליומן:"
 
-#: ../data/gtkpod.glade.h:104
+#: ../data/gtkpod.glade.h:94
 msgid "Call automatically when synchronizing iTunesDB"
 msgstr "קרא אוטומטית בזמן סנכרון iTunesDB"
 
-#: ../data/gtkpod.glade.h:105
+#: ../data/gtkpod.glade.h:95
 msgid "Category: "
 msgstr "קטגוריה:"
 
-#: ../data/gtkpod.glade.h:106
+#: ../data/gtkpod.glade.h:96
 msgid ""
 "Change all tracks\n"
 "simultaneously"
@@ -440,29 +427,29 @@ msgstr ""
 "שנה את כל הרצועות\n"
 "בבת אחת"
 
-#: ../data/gtkpod.glade.h:108
+#: ../data/gtkpod.glade.h:98
 msgid "Check for existing files when copying from iPod."
 msgstr "בדוק קבצים קיימים בזמן העתקה מה-iPod."
 
-#: ../data/gtkpod.glade.h:109
+#: ../data/gtkpod.glade.h:99
 msgid "Command for 'Enqueue':"
 msgstr "פקודה עבור 'הכנס לתור':"
 
-#: ../data/gtkpod.glade.h:110
+#: ../data/gtkpod.glade.h:100
 msgid "Command for 'Play now':"
 msgstr "פקודה עבור 'נגן עכשיו':"
 
 #. 5
-#: ../data/gtkpod.glade.h:111 ../src/display_spl.c:97
+#: ../data/gtkpod.glade.h:101 ../src/display_spl.c:97
 #: ../src/misc_conversion.c:65
 msgid "Composer"
 msgstr "יוצר"
 
-#: ../data/gtkpod.glade.h:112
+#: ../data/gtkpod.glade.h:102
 msgid "Confirm before removing tracks from the iPod or repository"
 msgstr "אשר לפני הסרת רצועות מה-iPod או המאגר"
 
-#: ../data/gtkpod.glade.h:113
+#: ../data/gtkpod.glade.h:103
 msgid ""
 "Confirm before removing tracks from the iPod or repository\n"
 "when syncing playlists"
@@ -470,74 +457,74 @@ msgstr ""
 "אשר לפני הסרת רצועות מה־iPod או המאגר\n"
 "בזמן סנכרון רשימות ההשמעה"
 
-#: ../data/gtkpod.glade.h:115
+#: ../data/gtkpod.glade.h:105
 msgid "Confirm lists of directories"
 msgstr "וודא רשימה של תיקיות"
 
-#: ../data/gtkpod.glade.h:116
+#: ../data/gtkpod.glade.h:106
 msgid "Contacts sync command:"
 msgstr "פקודת סנכרון לאנשי קשר:"
 
-#: ../data/gtkpod.glade.h:117
+#: ../data/gtkpod.glade.h:107
 msgid "Containing Displayed Tracks"
 msgstr "המכילה רצועות נראות"
 
-#: ../data/gtkpod.glade.h:118
+#: ../data/gtkpod.glade.h:108
 msgid "Containing Selected Tracks"
 msgstr "המכילה רצועות נבחרות"
 
-#: ../data/gtkpod.glade.h:119
+#: ../data/gtkpod.glade.h:109
 msgid "Conversion Progress Display"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:120
+#: ../data/gtkpod.glade.h:110
 msgid "Cover"
 msgstr "עטיפה"
 
-#: ../data/gtkpod.glade.h:121
+#: ../data/gtkpod.glade.h:111
 msgid "Create New Playlist"
 msgstr "יצירת רשימת השמעה חדשה"
 
-#: ../data/gtkpod.glade.h:122
+#: ../data/gtkpod.glade.h:112
 msgid "Create Repository"
 msgstr "צור מאגר"
 
-#: ../data/gtkpod.glade.h:123
+#: ../data/gtkpod.glade.h:113
 msgid "Create _Playlist File"
 msgstr "יצירת קובץ _רשימת השמעה"
 
-#: ../data/gtkpod.glade.h:124
+#: ../data/gtkpod.glade.h:114
 msgid "Credits"
 msgstr "קרדיט"
 
-#: ../data/gtkpod.glade.h:125
+#: ../data/gtkpod.glade.h:115
 msgid "Currently only rating is supported."
 msgstr "נכון לעכשיו רק המדרוג נתמך."
 
-#: ../data/gtkpod.glade.h:126
+#: ../data/gtkpod.glade.h:116
 msgid "Delete repository"
 msgstr "מחק מהמאגר"
 
-#: ../data/gtkpod.glade.h:127
+#: ../data/gtkpod.glade.h:117
 #, fuzzy
 msgid ""
 "Delete tracks that are no longer present from the\n"
 "iPod or repository"
 msgstr "מחק רצועות שכבר לא קיימות מה־iPod או המאגר"
 
-#: ../data/gtkpod.glade.h:129
+#: ../data/gtkpod.glade.h:119
 msgid "Deleted tracks"
 msgstr "רצועות נמחקות"
 
-#: ../data/gtkpod.glade.h:130
+#: ../data/gtkpod.glade.h:120
 msgid "Descending"
 msgstr "יורד"
 
-#: ../data/gtkpod.glade.h:131
+#: ../data/gtkpod.glade.h:121
 msgid "Details"
 msgstr "פרטים"
 
-#: ../data/gtkpod.glade.h:133
+#: ../data/gtkpod.glade.h:123
 #, no-c-format
 msgid ""
 "Determines how the string for the info field should be constructed, e.g '%a/%"
@@ -554,7 +541,7 @@ msgstr ""
 "אמן: a%, כותר: A%, יוצר: c%, שם הרצועה: t%, סגנון: G%, מספר רצועה: T%, מספר "
 "תקליטור: C%, שנה: Y%, שם מקורי (דרוש מידע מורחב): o%, הסימן '%': %%."
 
-#: ../data/gtkpod.glade.h:135
+#: ../data/gtkpod.glade.h:125
 #, no-c-format
 msgid ""
 "Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t."
@@ -572,7 +559,7 @@ msgstr ""
 "תקליטור: C%, שנה: Y%, שם מקורי (דרוש מידע מורחב): o%, רשימת ההשמעה הנוכחית: p"
 "%, הסימן '%': %%."
 
-#: ../data/gtkpod.glade.h:137
+#: ../data/gtkpod.glade.h:127
 #, no-c-format
 msgid ""
 "Determines the name of the file with the cover art. You can separate several "
@@ -587,66 +574,66 @@ msgstr ""
 "%, מספר רצועה: T%, מספר תקליטור: C%, שנה: Y%, שם מקורי (דרוש מידע מורחב): o"
 "%, שם מקורי ללא סיומת: %O, רשימת ההשמעה הנוכחית: p%, הסימן '%': %%."
 
-#: ../data/gtkpod.glade.h:138
+#: ../data/gtkpod.glade.h:128
 msgid ""
 "Directories to sync with are determined from the filenames of the tracks in "
 "the playlist."
 msgstr "התיקיות לסנכרון נקבעות לפי שמות הקבצים של הרצועות ברשימת ההשמעה."
 
-#: ../data/gtkpod.glade.h:139
+#: ../data/gtkpod.glade.h:129
 msgid "Dirs"
 msgstr "תיקיות"
 
-#: ../data/gtkpod.glade.h:140
+#: ../data/gtkpod.glade.h:130
 msgid "Display a list of tracks that could actually be updated."
 msgstr "הצג רשימה של רצועות שאפשר לעדכן אותן."
 
-#: ../data/gtkpod.glade.h:141
+#: ../data/gtkpod.glade.h:131
 msgid "Display a list of tracks that could not be updated."
 msgstr "הצג רשימה של רצועות שאי אפשר לעדכן אותן."
 
-#: ../data/gtkpod.glade.h:142
+#: ../data/gtkpod.glade.h:132
 msgid "Display conversion log"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:143
+#: ../data/gtkpod.glade.h:133
 msgid "Display info about detected duplicates"
 msgstr "הצג מידע אודות כפילויות מזוהות"
 
-#: ../data/gtkpod.glade.h:144
+#: ../data/gtkpod.glade.h:134
 msgid "Display info about non-updated tracks"
 msgstr "הצג מידע על רצועות שלא עודכנו בזמן סנכרון תיקיות"
 
-#: ../data/gtkpod.glade.h:145
+#: ../data/gtkpod.glade.h:135
 msgid "Display info about updated tracks"
 msgstr "הצג מידע אודות רצועות מעודכנות"
 
-#: ../data/gtkpod.glade.h:146
+#: ../data/gtkpod.glade.h:136
 msgid "Display messages and warnings at startup"
 msgstr "הראה הודעות ואזהרות בתחילת התוכנית"
 
-#: ../data/gtkpod.glade.h:147
+#: ../data/gtkpod.glade.h:137
 msgid ""
 "Display the list of duplicates that have been detected after adding files."
 msgstr "הצג את רשימת הכפילויות שזוהו אחרי הוספת הקבצים."
 
-#: ../data/gtkpod.glade.h:148
+#: ../data/gtkpod.glade.h:138
 msgid "Display toolbar..."
 msgstr "הראה סרגל כלים..."
 
-#: ../data/gtkpod.glade.h:149
+#: ../data/gtkpod.glade.h:139
 msgid "Display tooltips in main window"
 msgstr "הצג תוויות מידע בחלון הראשי"
 
-#: ../data/gtkpod.glade.h:150
+#: ../data/gtkpod.glade.h:140
 msgid "Display tooltips in prefs window"
 msgstr "הצג תוויות מידע בחלון האפשרויות"
 
-#: ../data/gtkpod.glade.h:151
+#: ../data/gtkpod.glade.h:141
 msgid "Display tracks that match the criteria entered above."
 msgstr "הצג רצועות המתאימות לקריטריונים המוכנסים למעלה."
 
-#: ../data/gtkpod.glade.h:152
+#: ../data/gtkpod.glade.h:142
 msgid ""
 "Displayed\n"
 "Tracks"
@@ -654,72 +641,83 @@ msgstr ""
 "רצועות\n"
 "מוצגות"
 
-#: ../data/gtkpod.glade.h:154
+#: ../data/gtkpod.glade.h:144
 msgid "Don't allow file duplication"
 msgstr "אל תרשה כפילויות של קבצים"
 
-#: ../data/gtkpod.glade.h:155
+#: ../data/gtkpod.glade.h:145
 msgid "Don't automatically sync on startup"
 msgstr "אל תסנכרן אוטומטית בתחילת התוכנית"
 
-#: ../data/gtkpod.glade.h:156
+#: ../data/gtkpod.glade.h:146
 msgid "Download Cover"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:157
+#: ../data/gtkpod.glade.h:147
 #, fuzzy
 msgid "Duplicate Recognition is based on a (modified) sha1 hash over the file."
 msgstr "זיהוי כפילויות מתבסס על חישוב קוד ערבוב md5 על הקובץ."
 
-#: ../data/gtkpod.glade.h:158
+#: ../data/gtkpod.glade.h:148
 msgid "Edit Repository/iPod Options"
 msgstr "ערוך מאגר/אפשרויות iPod"
 
-#: ../data/gtkpod.glade.h:159 ../src/context_menus.c:659
+#: ../data/gtkpod.glade.h:149 ../src/context_menus.c:659
 msgid "Edit Smart Playlist"
 msgstr "ערוך רשימת השמעה חכמה"
 
-#: ../data/gtkpod.glade.h:160 ../src/context_menus.c:746
+#: ../data/gtkpod.glade.h:150 ../src/context_menus.c:746
 msgid "Edit Track Details"
 msgstr "ערוך פרטי רצועה"
 
-#: ../data/gtkpod.glade.h:161
+#: ../data/gtkpod.glade.h:151
 msgid "Edit _Preferences"
 msgstr "עריכת _העדפות"
 
-#: ../data/gtkpod.glade.h:162
+#: ../data/gtkpod.glade.h:152
 msgid "Effective free space"
 msgstr "מקום פנוי אפקטיבי"
 
-#: ../data/gtkpod.glade.h:163
+#: ../data/gtkpod.glade.h:153
 msgid "Empty Playlist"
 msgstr "רשימת השמעה ריקה"
 
-#: ../data/gtkpod.glade.h:164
+#: ../data/gtkpod.glade.h:154
 msgid "Exclude file mask(s)"
 msgstr "אל תכלול מסכה(ות) קבצים"
 
-#: ../data/gtkpod.glade.h:165
+#: ../data/gtkpod.glade.h:155
+#, fuzzy
+msgid "Export can be continued at a later time if canceled."
+msgstr ""
+"לחץ על הכפתור לביטול.\n"
+"בכל עת ניתן להמשיך את היצוא."
+
+#: ../data/gtkpod.glade.h:156
 msgid "File size"
 msgstr "גודל קובץ"
 
-#: ../data/gtkpod.glade.h:166
+#: ../data/gtkpod.glade.h:157
 msgid "File size (deleted)"
 msgstr "גודל קובץ (נמחק)"
 
-#: ../data/gtkpod.glade.h:167
+#: ../data/gtkpod.glade.h:158
 msgid "File size (non-transferred)"
 msgstr "גודל קובץ (לא-מועבר)"
 
-#: ../data/gtkpod.glade.h:168
+#: ../data/gtkpod.glade.h:159
 msgid "Filename Format: "
 msgstr "תבנית הקובץ:"
 
-#: ../data/gtkpod.glade.h:169
+#: ../data/gtkpod.glade.h:160
 msgid "Files"
 msgstr "קבצים"
 
-#: ../data/gtkpod.glade.h:170
+#: ../data/gtkpod.glade.h:161
+msgid "Find _New"
+msgstr ""
+
+#: ../data/gtkpod.glade.h:162
 #, fuzzy
 msgid ""
 "Find orphan files (files with no track info in DB) and dangling tracks "
@@ -728,17 +726,17 @@ msgstr ""
 "מצא קבצים יתומים (קבצים ללא מידע רצועה במסד הנתונים) ורצועות מתנדנדות "
 "(רצועות ללא קבצים מתאימים על ה-iPod)"
 
-#: ../data/gtkpod.glade.h:171
+#: ../data/gtkpod.glade.h:163
 #, fuzzy
 msgid "First try <i>folder.jpg</i>, then <i><artist>.jpg</i>"
 msgstr ""
 "תחילה נסה את try <i>folder.jpg</i>, ואחר כך את <i>&lt;artist&gt;.jpg</i>"
 
-#: ../data/gtkpod.glade.h:172
+#: ../data/gtkpod.glade.h:164
 msgid "Flac with :"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:174
+#: ../data/gtkpod.glade.h:166
 #, no-c-format
 msgid ""
 "For example, 'xmms %s' will clear xmms' current playlist, add the selected "
@@ -747,7 +745,7 @@ msgstr ""
 "לדוגמא, 'xmms %s' ינקה את רשימת ההשמעה הנוכחית של xmms, יוסיף את הרצועות "
 "הנבחרות ויתחיל לנגן."
 
-#: ../data/gtkpod.glade.h:176
+#: ../data/gtkpod.glade.h:168
 #, no-c-format
 msgid ""
 "For example, 'xmms -e %s' will append (enqueue) the selected tracks to xmms' "
@@ -755,16 +753,16 @@ msgid ""
 msgstr ""
 "לדוגמא, 'xmms -e %s' יוסיף את הרצועות הנבחרות לרשימת ההשמעה הנוכחית ב-xmms."
 
-#: ../data/gtkpod.glade.h:177 ../src/display_sorttabs.c:2957
+#: ../data/gtkpod.glade.h:169 ../src/display_sorttabs.c:2966
 #: ../src/display_spl.c:89 ../src/misc_conversion.c:63
 msgid "Genre"
 msgstr "סגנון"
 
-#: ../data/gtkpod.glade.h:178
+#: ../data/gtkpod.glade.h:170
 msgid "Group artists on compilation CDs"
 msgstr "קבץ אמנים בתקליטורי שיצרת"
 
-#: ../data/gtkpod.glade.h:179
+#: ../data/gtkpod.glade.h:171
 #, fuzzy
 msgid ""
 "Highly recommended for faster import when taking advantage of the "
@@ -778,12 +776,12 @@ msgstr ""
 "ID3 לדיסק הקשיח, ואפילו בניה מחדש של תוכן ה-iPod במקרה של בעיה במערכת הקבצים "
 "(שנה את שדה ה-\"הועבר\" במסד הנתונים המגובה)."
 
-#: ../data/gtkpod.glade.h:180 ../src/context_menus.c:682
+#: ../data/gtkpod.glade.h:172 ../src/context_menus.c:682
 #: ../src/context_menus.c:700 ../src/context_menus.c:824
 msgid "I'm sure"
 msgstr "אני בטוח"
 
-#: ../data/gtkpod.glade.h:181
+#: ../data/gtkpod.glade.h:173
 msgid ""
 "If available, the local copy of the track is referenced in the playlist. "
 "Otherwise the file on the iPod is used."
@@ -791,11 +789,11 @@ msgstr ""
 "אם זמין, העותק המקומי של הרצועה יקושר מרשימת ההשמעה. אחרת נשתמש בקובץ על ה-"
 "iPod."
 
-#: ../data/gtkpod.glade.h:182
+#: ../data/gtkpod.glade.h:174
 msgid "If both options are selected, embedded APIC data takes precedence."
 msgstr "אם שתי האפשרויות נבחרו, מידע מוכל בתוך ה־APIC יהיה בעל עדיפות ראשונה."
 
-#: ../data/gtkpod.glade.h:183
+#: ../data/gtkpod.glade.h:175
 msgid ""
 "If checked, sorting will be case sensitive. Please note that case sensitive "
 "sorting will not work well with most charsets."
@@ -803,7 +801,7 @@ msgstr ""
 "אם יסומן, המיון יבחין בין אותיות קטנות לגדולות. שים לב שהבחנה זאת לא תעבוד "
 "היטב ברוב ערכות התווים."
 
-#: ../data/gtkpod.glade.h:184
+#: ../data/gtkpod.glade.h:176
 msgid ""
 "If the filename (full path) of an existing track matches that of a track to "
 "be added, this option allows you to update the information about the "
@@ -815,11 +813,11 @@ msgstr ""
 "מאפשרת לך לעדכן את המידע על הרצועה הקיימת במקום רק לדלג על הרצועה בכלל. שום "
 "עדכון לא יתבצע אם הקובץ לא השתנה ובחרת באפשרות לא לאפשר כפילות בקבצים למעלה."
 
-#: ../data/gtkpod.glade.h:185
+#: ../data/gtkpod.glade.h:177
 msgid "If you check this, gtkpod will descend into subdirectories recursively."
 msgstr "אם תסמן אופציה זו, gtkpod יכנס לתוך תיקיות משנה רקורסיבית."
 
-#: ../data/gtkpod.glade.h:186
+#: ../data/gtkpod.glade.h:178
 msgid ""
 "If you check this, information (cover art and meta information) changed for "
 "this track will be copied to all other selected tracks as well. Use with "
@@ -828,7 +826,7 @@ msgstr ""
 "אם תסמן את זה, שינויים במידע (עטיפה ומידע מטה) עבור רצועה זאת יועתקו אל כל "
 "הרצועות הנבחרות גם כן. השתמש בזהירות."
 
-#: ../data/gtkpod.glade.h:187
+#: ../data/gtkpod.glade.h:179
 msgid ""
 "If you don't select the master playlist automatically, the initial database "
 "import is much faster because the display dosn't have to be updated."
@@ -836,7 +834,7 @@ msgstr ""
 "אם לא תבחר את רשימת ההשמעה הראשית אוטומטית, יבוא מסד הנתונים הראשוני יהיה "
 "יותר מהיר בעקבות כך שהתצוגה לא תהיה חייבת להתעדכן."
 
-#: ../data/gtkpod.glade.h:188
+#: ../data/gtkpod.glade.h:180
 msgid ""
 "If you select several tracks in the track list and edit a tag of the first "
 "track, the tags in the other tracks are updated as well."
@@ -844,11 +842,11 @@ msgstr ""
 "אם אתה בוחר מספר רצועות ברשימת הרצועות ועורך תגית של הרצועה הראשונה, התגיות "
 "ברצועות הממוינות מתעדכנות גם כן."
 
-#: ../data/gtkpod.glade.h:189
+#: ../data/gtkpod.glade.h:181
 msgid "Ignore these words when at the beginning of the following fields:"
 msgstr "התעלם ממילים אלו כאשר הן מופיעות בתחילת השדות הבאים:"
 
-#: ../data/gtkpod.glade.h:190
+#: ../data/gtkpod.glade.h:182
 msgid ""
 "In order to save the displayed track order to the iPod choose 'Save "
 "Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
@@ -856,11 +854,11 @@ msgstr ""
 "על מנת לשמור את סדר הרצועות הנראות אל ה-iPod בחר 'שמור סדר רצועות נראות' "
 "מתפריט ה-'עריכה' או בחר 'שמירה אוטומטית' למטה."
 
-#: ../data/gtkpod.glade.h:191
+#: ../data/gtkpod.glade.h:183
 msgid "Initialize iPod"
 msgstr "אתחל iPod"
 
-#: ../data/gtkpod.glade.h:192
+#: ../data/gtkpod.glade.h:184
 msgid ""
 "Insert before\n"
 "Insert after"
@@ -868,68 +866,68 @@ msgstr ""
 "הכנס לפני\n"
 "הכנס אחרי"
 
-#: ../data/gtkpod.glade.h:194
+#: ../data/gtkpod.glade.h:186
 msgid "Keeps all compilation CDs grouped together in the artists sort tab."
 msgstr ""
 "שמור את כל תקליטורי היצירות מקובצים ביחד בתוך כרטיסיות המיון של האמנים."
 
-#: ../data/gtkpod.glade.h:195
+#: ../data/gtkpod.glade.h:187
 msgid "Live _updating"
 msgstr "עדכון _חי"
 
-#: ../data/gtkpod.glade.h:196
+#: ../data/gtkpod.glade.h:188
 msgid "Load iPod(s)"
 msgstr "טען iPod(ים)"
 
-#: ../data/gtkpod.glade.h:197
+#: ../data/gtkpod.glade.h:189
 msgid "Lower Margin"
 msgstr "שוליים תחתונים"
 
-#: ../data/gtkpod.glade.h:198
+#: ../data/gtkpod.glade.h:190
 msgid "M4A with :"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:199
+#: ../data/gtkpod.glade.h:191
 msgid "MP3 with :"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:200
+#: ../data/gtkpod.glade.h:192
 msgid "Match al_l of the following"
 msgstr "התאם את _כל הבאים"
 
-#: ../data/gtkpod.glade.h:201
+#: ../data/gtkpod.glade.h:193
 msgid "Match an_y of the following"
 msgstr "התאם _כל אחד מן הבאים"
 
-#: ../data/gtkpod.glade.h:202
+#: ../data/gtkpod.glade.h:194
 msgid "Match only _checked tracks"
 msgstr "התאם רק רצועות _מסומנות"
 
-#: ../data/gtkpod.glade.h:203
+#: ../data/gtkpod.glade.h:195
 msgid "Maximum number of background threads:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:204
+#: ../data/gtkpod.glade.h:196
 msgid "Maximum size of cache directory (in GB):"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:205
+#: ../data/gtkpod.glade.h:197
 msgid "Model:"
 msgstr "דגם:"
 
-#: ../data/gtkpod.glade.h:206 ../src/display_tracks.c:1993
+#: ../data/gtkpod.glade.h:198 ../src/display_tracks.c:2017
 msgid "Modified"
 msgstr "שונה"
 
-#: ../data/gtkpod.glade.h:207
+#: ../data/gtkpod.glade.h:199
 msgid "Most Recently Played Tracks"
 msgstr "הרצועות שהושמעו הכי לאחרונה"
 
-#: ../data/gtkpod.glade.h:208
+#: ../data/gtkpod.glade.h:200
 msgid "Music Root:"
 msgstr "שורש המוזיקה:"
 
-#: ../data/gtkpod.glade.h:209
+#: ../data/gtkpod.glade.h:201
 msgid ""
 "Music files can have images embedded in the APIC tag. Currently this is only "
 "supported for MP3 files."
@@ -937,31 +935,31 @@ msgstr ""
 "קבצי מוסיקה יכולים להכיל תמונות בתוך תווית ה־APIC. כרגע זה רק נתמך על ידי "
 "קבצי MP3."
 
-#: ../data/gtkpod.glade.h:210
+#: ../data/gtkpod.glade.h:202
 msgid "Never show this dialogue again"
 msgstr "אל תראה חלון דו-שיח זה בעתיד"
 
-#: ../data/gtkpod.glade.h:211
+#: ../data/gtkpod.glade.h:203
 msgid "New PL"
 msgstr "ר\"ה חדשה"
 
-#: ../data/gtkpod.glade.h:212
+#: ../data/gtkpod.glade.h:204
 msgid "No lower margin"
 msgstr "ללא שוליים תחתונים"
 
-#: ../data/gtkpod.glade.h:213
+#: ../data/gtkpod.glade.h:205
 msgid "No upper margin"
 msgstr "ללא שוליים עליונים"
 
-#: ../data/gtkpod.glade.h:214
+#: ../data/gtkpod.glade.h:206
 msgid "Non-transferred tracks"
 msgstr "רצועות לא מועברות"
 
-#: ../data/gtkpod.glade.h:215
+#: ../data/gtkpod.glade.h:207
 msgid "None"
 msgstr "ללא"
 
-#: ../data/gtkpod.glade.h:216
+#: ../data/gtkpod.glade.h:208
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "for the filename. If you set this option you can set a different charset "
@@ -977,7 +975,7 @@ msgstr ""
 "0.51 לא תהיה להם ערכת תווים שמורה. במקום זאת ערכת התווים המצוינת למעלה תהיה "
 "זו שנשתמש בה."
 
-#: ../data/gtkpod.glade.h:217
+#: ../data/gtkpod.glade.h:209
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "to update the track information. If you have chosen a wrong charset when "
@@ -994,7 +992,7 @@ msgstr ""
 "ורצועות שיובאו לפני גרסה 0.51 לא תהיה להם ערכת תווים שמורה. במקום זאת ערכת "
 "התווים המצוינת למעלה תהיה זו שנשתמש בה אז."
 
-#: ../data/gtkpod.glade.h:218
+#: ../data/gtkpod.glade.h:210
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "to write the tags. If you have chosen a wrong charset when first importing a "
@@ -1010,7 +1008,7 @@ msgstr ""
 "(ראה 'כתיבת iTunesDB' בעמוד קלט/פלט) ורצועות שיובאו לפני גרסה 0.51 לא תהייה "
 "להן ערכה שמורה -- הערכה המצוינת בעמוד קלט/פלט יעשה בה שימוש."
 
-#: ../data/gtkpod.glade.h:219
+#: ../data/gtkpod.glade.h:211
 msgid ""
 "Normally, if a track is no longer present in the sync directory, it will be "
 "removed from the playlist, but not from the iPod or local repository.\n"
@@ -1022,23 +1020,23 @@ msgid ""
 "means removing from the iPod."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:222
+#: ../data/gtkpod.glade.h:214
 msgid "Notes sync command:"
 msgstr "פקודת סנכרון לפתקאות (notes):"
 
-#: ../data/gtkpod.glade.h:223
+#: ../data/gtkpod.glade.h:215
 msgid "Number of playlists"
 msgstr "מספר רשימות ההשמעה"
 
-#: ../data/gtkpod.glade.h:224
+#: ../data/gtkpod.glade.h:216
 msgid "Number of tracks"
 msgstr "מספר רצועות"
 
-#: ../data/gtkpod.glade.h:225
+#: ../data/gtkpod.glade.h:217
 msgid "Number of tracks in generated playlists:"
 msgstr "מספר הרצועות ברשימת השמעה:"
 
-#: ../data/gtkpod.glade.h:226
+#: ../data/gtkpod.glade.h:218
 msgid ""
 "Number of tracks in the generated playlists 'Most Often Listened', 'Best "
 "Rated' and 'Most Recently Played'. Choose '0' for 'no limit'."
@@ -1046,179 +1044,163 @@ msgstr ""
 "מספר הרצועות ברשימות ההשמעה הנוצרות 'המושמעים ביותר', 'הדירוג הכי גבוה' "
 "ו-'נוגנו הכי לאחרונה'. בחר '0' עבור 'ללא מגבלה'."
 
-#: ../data/gtkpod.glade.h:227
+#: ../data/gtkpod.glade.h:219
 msgid "Ogg with :"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:228
+#: ../data/gtkpod.glade.h:220
 msgid "On startup automatically sync with playlist directories"
 msgstr "בתחילה התכנית סנכרן אוטומטית עם תיקיות רשימות ההשמעה"
 
-#: ../data/gtkpod.glade.h:229
+#: ../data/gtkpod.glade.h:221
 msgid "On startup automatically sync with the following directory"
 msgstr "בתחילת התוכנית סנכרן אוטומטית עם התיקייה הבאה"
 
-#: ../data/gtkpod.glade.h:230
+#: ../data/gtkpod.glade.h:222
 msgid "On startup automatically update (Live Playlist)"
 msgstr "בתחילת התוכנית עדכ אוטומטית (רשימת השמעה חיה)"
 
-#: ../data/gtkpod.glade.h:231
+#: ../data/gtkpod.glade.h:223
 msgid "One for each Album"
 msgstr "אחת לכל כותר"
 
-#: ../data/gtkpod.glade.h:232
+#: ../data/gtkpod.glade.h:224
 msgid "One for each Artist"
 msgstr "אחת לכל אמן"
 
-#: ../data/gtkpod.glade.h:233
+#: ../data/gtkpod.glade.h:225
 msgid "One for each Composer"
 msgstr "אחת לכל יוצר"
 
-#: ../data/gtkpod.glade.h:234
+#: ../data/gtkpod.glade.h:226
 msgid "One for each Genre"
 msgstr "אחת לכל סגנון"
 
-#: ../data/gtkpod.glade.h:235
+#: ../data/gtkpod.glade.h:227
 msgid "One for each Rating"
 msgstr "אחת לכל מדרוג"
 
-#: ../data/gtkpod.glade.h:236
+#: ../data/gtkpod.glade.h:228
 msgid "One for each Year"
 msgstr "אחת לכל שנה"
 
-#: ../data/gtkpod.glade.h:237
+#: ../data/gtkpod.glade.h:229
 msgid "Overwrite tags that are already set"
 msgstr "שכתב תגיות שכבר כתובות"
 
-#: ../data/gtkpod.glade.h:238
+#: ../data/gtkpod.glade.h:230
 msgid "Password:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:239
+#: ../data/gtkpod.glade.h:231
 msgid "Path:"
 msgstr "נתיב:"
 
-#: ../data/gtkpod.glade.h:240
+#: ../data/gtkpod.glade.h:232
 msgid "Play time"
 msgstr "זמן השמעה"
 
-#: ../data/gtkpod.glade.h:241 ../src/display_spl.c:98
+#: ../data/gtkpod.glade.h:233 ../src/display_spl.c:98
 #: ../src/misc_conversion.c:77
 msgid "Playcount"
 msgstr "מספור השמעות"
 
-#: ../data/gtkpod.glade.h:242 ../src/display_tracks.c:1990
+#: ../data/gtkpod.glade.h:234 ../src/display_tracks.c:2014
 msgid "Played"
 msgstr "הושמע"
 
-#: ../data/gtkpod.glade.h:243 ../src/display_spl.c:105
+#: ../data/gtkpod.glade.h:235 ../src/display_spl.c:105
 msgid "Playlist"
 msgstr "רשימת השמעה"
 
-#: ../data/gtkpod.glade.h:244
+#: ../data/gtkpod.glade.h:236
 msgid "Playlist name:"
 msgstr "שם רשימת ההשמעה:"
 
-#: ../data/gtkpod.glade.h:245
+#: ../data/gtkpod.glade.h:237
 msgid "Playlist type:"
 msgstr "סוג רשימת ההשמעה:"
 
-#: ../data/gtkpod.glade.h:246 ../src/display_playlists.c:2176
+#: ../data/gtkpod.glade.h:238 ../src/display_playlists.c:2190
 msgid "Playlists"
 msgstr "רשימות השמעה"
 
-#: ../data/gtkpod.glade.h:247
+#: ../data/gtkpod.glade.h:239
 msgid "Please refer to the notice below."
 msgstr "הסתכל בבקשה בהודעה למטה."
 
-#: ../data/gtkpod.glade.h:248
+#: ../data/gtkpod.glade.h:240
 msgid "Please specify a time interval"
 msgstr "אנא ציין מרווח זמן"
 
-#: ../data/gtkpod.glade.h:249
+#: ../data/gtkpod.glade.h:241
 msgid "Preferences"
 msgstr "הגדרות"
 
-#: ../data/gtkpod.glade.h:250
-msgid ""
-"Press button to abort.\n"
-"Export can be continued at a later time."
-msgstr ""
-"לחץ על הכפתור לביטול.\n"
-"בכל עת ניתן להמשיך את היצוא."
-
-#: ../data/gtkpod.glade.h:252
-msgid "Previous"
-msgstr ""
-
-#: ../data/gtkpod.glade.h:253
+#: ../data/gtkpod.glade.h:242
 #, fuzzy
 msgid "Progress Information"
 msgstr "מידע"
 
-#: ../data/gtkpod.glade.h:254
+#: ../data/gtkpod.glade.h:243
 msgid "Random Playlist from Displayed Tracks"
 msgstr "רשימת השמעה אקראית מהרצועות הנראות"
 
-#: ../data/gtkpod.glade.h:255
+#: ../data/gtkpod.glade.h:244
 msgid "Randomize Current Playlist"
 msgstr "יצירת רשימת השמעה אקראית"
 
-#: ../data/gtkpod.glade.h:256 ../src/display_spl.c:101
+#: ../data/gtkpod.glade.h:245 ../src/display_spl.c:101
 #: ../src/misc_conversion.c:78
 msgid "Rating"
 msgstr "מדרוג"
 
-#: ../data/gtkpod.glade.h:257
+#: ../data/gtkpod.glade.h:246
 msgid "Read coverart from embedded APIC data"
 msgstr "קרא תמונת עטיפה מתוך מידע ה־APIC"
 
-#: ../data/gtkpod.glade.h:258
+#: ../data/gtkpod.glade.h:247
 msgid "Read tags from file contents (e.g. ID3 tags in MP3 files)"
 msgstr "קרא תגיות מתוכן הקובץ (כלומר תגיות ID3 של קבצי MP3)"
 
-#: ../data/gtkpod.glade.h:259
-msgid "Remove Cover Art"
-msgstr "הסר עטיפה"
-
-#: ../data/gtkpod.glade.h:260
+#: ../data/gtkpod.glade.h:248
 msgid "Repository Options"
 msgstr "אפשרויות מאגר"
 
-#: ../data/gtkpod.glade.h:261
+#: ../data/gtkpod.glade.h:249
 msgid "Repository name:"
 msgstr "שם המאגר:"
 
-#: ../data/gtkpod.glade.h:262
+#: ../data/gtkpod.glade.h:250
 msgid "Repository type:"
 msgstr "סוג מאגר:"
 
-#: ../data/gtkpod.glade.h:263
+#: ../data/gtkpod.glade.h:251
 msgid "Root directory of mserv database (trackinfo root)."
 msgstr "תיקיית שורש או מסד נתונים mserv (השורש של trackinfo)."
 
-#: ../data/gtkpod.glade.h:264
+#: ../data/gtkpod.glade.h:252
 msgid "Rules"
 msgstr "חוקים"
 
-#: ../data/gtkpod.glade.h:265 ../src/context_menus.c:808
+#: ../data/gtkpod.glade.h:253 ../src/context_menus.c:808
 msgid "Save Changes"
 msgstr "שמור שינויים"
 
-#: ../data/gtkpod.glade.h:266
+#: ../data/gtkpod.glade.h:254
 #, fuzzy
 msgid "Scrobble Tracks?"
 msgstr "ר_צועות נבחרות"
 
-#: ../data/gtkpod.glade.h:267
+#: ../data/gtkpod.glade.h:255
 msgid "Select '-1' for no upper limit."
 msgstr "בחר '-1' עבור ביטול גבול עליון."
 
-#: ../data/gtkpod.glade.h:268
+#: ../data/gtkpod.glade.h:256
 msgid "Select '0' for no lower limit."
 msgstr "בחר '0' עבור ביטול גבול תחתון."
 
-#: ../data/gtkpod.glade.h:269
+#: ../data/gtkpod.glade.h:257
 msgid ""
 "Selected\n"
 "Playlist"
@@ -1226,7 +1208,7 @@ msgstr ""
 "רשימות השמעה\n"
 "נבחרות"
 
-#: ../data/gtkpod.glade.h:271
+#: ../data/gtkpod.glade.h:259
 msgid ""
 "Selected\n"
 "Tracks"
@@ -1234,161 +1216,161 @@ msgstr ""
 "רצועות\n"
 "נבחרות"
 
-#: ../data/gtkpod.glade.h:273
+#: ../data/gtkpod.glade.h:261
 msgid "Selected Tab _Entry"
 msgstr "רשומות _כרטיסיה נבחרות"
 
-#: ../data/gtkpod.glade.h:274
+#: ../data/gtkpod.glade.h:262
 msgid "Selected _Playlist"
 msgstr "_רשימות השמעה נבחרות"
 
-#: ../data/gtkpod.glade.h:275
+#: ../data/gtkpod.glade.h:263
 msgid "Selected _Tracks"
 msgstr "ר_צועות נבחרות"
 
-#: ../data/gtkpod.glade.h:276
+#: ../data/gtkpod.glade.h:264
 msgid "Selected filter tab entry from database"
 msgstr "נבחרה רשומת כרטיסיית מסנן ממסד הנתונים"
 
-#: ../data/gtkpod.glade.h:277
+#: ../data/gtkpod.glade.h:265
 msgid "Selected filter tab entry from harddisk"
 msgstr "נבחרה רשומת כרטיסיית מסנן מהדיסק הקשיח"
 
-#: ../data/gtkpod.glade.h:278
+#: ../data/gtkpod.glade.h:266
 msgid "Selected filter tab entry from iPod"
 msgstr "נבחרה רשומת כרטיסיית מסנן מה־iPod"
 
-#: ../data/gtkpod.glade.h:279
+#: ../data/gtkpod.glade.h:267
 msgid "Selected filter tab entry from playlist"
 msgstr "נבחרה רשומת כרטיסיית מסנן מרשימת ההשמעה"
 
-#: ../data/gtkpod.glade.h:280
+#: ../data/gtkpod.glade.h:268
 msgid "Selected playlist"
 msgstr "רשימות השמעה נבחרות"
 
-#: ../data/gtkpod.glade.h:281
+#: ../data/gtkpod.glade.h:269
 msgid "Selected playlist including tracks from database"
 msgstr "נבחרה רשימת השמעה נבחרת כוללת רצועות ממסד הנתונים"
 
-#: ../data/gtkpod.glade.h:282
+#: ../data/gtkpod.glade.h:270
 msgid "Selected playlist including tracks from harddisk"
 msgstr "נבחרה רשימת השמעה נבחרת כוללת רצועות מהדיסק הקשיח"
 
-#: ../data/gtkpod.glade.h:283
+#: ../data/gtkpod.glade.h:271
 msgid "Selected playlist including tracks from iPod"
 msgstr "נבחרה רשימת השמעה נבחרת כוללת רצועות מה־iPod"
 
-#: ../data/gtkpod.glade.h:284
+#: ../data/gtkpod.glade.h:272
 msgid "Selected tracks from database"
 msgstr "הרצועות הנבחרות ממסד הנתונים"
 
-#: ../data/gtkpod.glade.h:285
+#: ../data/gtkpod.glade.h:273
 msgid "Selected tracks from harddisk"
 msgstr "הרצועות הנבחרות מהדיסק הקשיח"
 
-#: ../data/gtkpod.glade.h:286
+#: ../data/gtkpod.glade.h:274
 msgid "Selected tracks from iPod"
 msgstr "הרצועות הנבחרות מה־iPod"
 
-#: ../data/gtkpod.glade.h:287
+#: ../data/gtkpod.glade.h:275
 msgid "Selected tracks from playlist"
 msgstr "הרצועות הנבחרות מרשימות ההשמעה"
 
-#: ../data/gtkpod.glade.h:288
+#: ../data/gtkpod.glade.h:276
 #, fuzzy
 msgid "Semicolon separated list of file exclusion masks, e.g. '*.mp3'"
 msgstr "רשימת מופרדת פסיקים של מסכות שלילה, לדוגמה: \"*.mp3"
 
-#: ../data/gtkpod.glade.h:289
+#: ../data/gtkpod.glade.h:277
 #, fuzzy
-msgid "Set Cover Art from File"
+msgid "Set Cover Art from _File"
 msgstr "קבע עטיפה"
 
-#: ../data/gtkpod.glade.h:290
+#: ../data/gtkpod.glade.h:278
 #, fuzzy
-msgid "Set Cover Art from Web"
+msgid "Set Cover Art from _Web"
 msgstr "קבע עטיפה"
 
-#: ../data/gtkpod.glade.h:291
+#: ../data/gtkpod.glade.h:279
 msgid "Set mountpoint or edit repository options"
 msgstr "קבע נקודות עגינה או ערוך אפשרויות מאגר"
 
-#: ../data/gtkpod.glade.h:292
+#: ../data/gtkpod.glade.h:280
 msgid "Set options for Calendar/Contacts/Notes"
 msgstr "קבע אפשרויות עבור יומן/אנשי קשר/תזכורות"
 
-#: ../data/gtkpod.glade.h:293
+#: ../data/gtkpod.glade.h:281
 msgid ""
 "Set this to 'aacgain -q -k' to use the 'Normalize volume' functionality in "
 "the Tools Menu. If this is set, missing normalization data for .m4a and .m4b "
 "files will be calculated and written to your music file using this command."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:294
+#: ../data/gtkpod.glade.h:282
 msgid ""
 "Set this to 'mp3gain -q -k' to use the 'Normalize volume' functionality in "
 "the Tools Menu. If this is set, missing normalization data for mp3 files "
 "will be calculated and written to your mp3 file using this command."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:295
+#: ../data/gtkpod.glade.h:283
 msgid "Set this to your last.fm password"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:296
+#: ../data/gtkpod.glade.h:284
 msgid "Set this to your last.fm username"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:297
+#: ../data/gtkpod.glade.h:285
 msgid ""
 "Set to 0 to effectively disable caching (a maximum of one track will be "
 "cached at a time)."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:298
+#: ../data/gtkpod.glade.h:286
 msgid ""
 "Set to 0 to use as many background threads as CPUs are available on your "
 "system."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:299
+#: ../data/gtkpod.glade.h:287
 msgid "Show information about problems when accessing mserv"
 msgstr "הצג מידע על בעיות בגישה ל-mserv"
 
-#: ../data/gtkpod.glade.h:300
+#: ../data/gtkpod.glade.h:288
 msgid "Show summary of sync result"
 msgstr "הצג סיכום של תוצאות סינכרון"
 
-#: ../data/gtkpod.glade.h:301 ../src/misc_playlist.c:96
+#: ../data/gtkpod.glade.h:289 ../src/misc_playlist.c:96
 #: ../src/repository.c:1356
 msgid "Smart Playlist"
 msgstr "רשימת השמעה חכמה"
 
-#: ../data/gtkpod.glade.h:302
+#: ../data/gtkpod.glade.h:290
 msgid "Sort tracks according to: "
 msgstr "מיין רצועות לפי:"
 
-#: ../data/gtkpod.glade.h:303
+#: ../data/gtkpod.glade.h:291
 msgid "Sorting Options"
 msgstr "אפשרויות מיון"
 
-#: ../data/gtkpod.glade.h:304
+#: ../data/gtkpod.glade.h:292
 msgid "Sorting case sensitive"
 msgstr "מיון עם תלות בגודל (case)"
 
-#: ../data/gtkpod.glade.h:305
+#: ../data/gtkpod.glade.h:293
 msgid "Sorttab: "
 msgstr "כרטיסייה מיון:"
 
-#: ../data/gtkpod.glade.h:306
+#: ../data/gtkpod.glade.h:294
 msgid "Sorttabs"
 msgstr "כרטיסיות מיון"
 
-#: ../data/gtkpod.glade.h:307
+#: ../data/gtkpod.glade.h:295
 msgid "Source:"
 msgstr "מקור:"
 
-#: ../data/gtkpod.glade.h:309
+#: ../data/gtkpod.glade.h:297
 #, no-c-format
 msgid ""
 "Specify exact path including command line options. '%i' will be replaced "
@@ -1397,39 +1379,39 @@ msgstr ""
 "מציין נתיב מלא כולל אפשרויות שורת פקודה. המחרוזת '%i' תוחלף עם נקודת העגינה "
 "של ה-iPod."
 
-#: ../data/gtkpod.glade.h:310
+#: ../data/gtkpod.glade.h:298
 msgid "Specify interval"
 msgstr "ציין מרווח"
 
-#: ../data/gtkpod.glade.h:311
+#: ../data/gtkpod.glade.h:299
 msgid "Start display automatically"
 msgstr "התחל תצוגה אוטומטית"
 
-#: ../data/gtkpod.glade.h:312
+#: ../data/gtkpod.glade.h:300
 msgid "Synchronise Contacts, Calendar and Notes"
 msgstr "סנכרן אנשי קשר, יומן ופתקים"
 
-#: ../data/gtkpod.glade.h:313
+#: ../data/gtkpod.glade.h:301
 msgid "Synchronize All"
 msgstr "סנכרן הכל"
 
-#: ../data/gtkpod.glade.h:314
+#: ../data/gtkpod.glade.h:302
 msgid "Synchronize Calendar"
 msgstr "סנכרן יומן"
 
-#: ../data/gtkpod.glade.h:315
+#: ../data/gtkpod.glade.h:303
 msgid "Synchronize Contacts"
 msgstr "סנכרן אנשי קשר"
 
-#: ../data/gtkpod.glade.h:316
+#: ../data/gtkpod.glade.h:304
 msgid "Synchronize Notes"
 msgstr "סנכרן פתקים"
 
-#: ../data/gtkpod.glade.h:317
+#: ../data/gtkpod.glade.h:305
 msgid "Template for info field: "
 msgstr "תבנית עבור שדה המידע:"
 
-#: ../data/gtkpod.glade.h:318
+#: ../data/gtkpod.glade.h:306
 msgid ""
 "The local copy of the track is referenced in the playlist. If the track is "
 "not available locally, an error message is displayed."
@@ -1437,28 +1419,28 @@ msgstr ""
 "העותק המקומי של הרצועה יקושר מרשימת ההשמעה. אם הרצועה לא זמינה מקומית, תוצג "
 "הודעת שגיאה."
 
-#: ../data/gtkpod.glade.h:319
+#: ../data/gtkpod.glade.h:307
 msgid ""
 "The output of the background conversion scripts is copied below. Each page "
 "of the notebook corresponds to one background thread."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:320
+#: ../data/gtkpod.glade.h:308
 #, fuzzy
 msgid ""
 "The tags are written to the files on your harddrive and on the iPod (if "
 "available)."
 msgstr "התגיות נכתבות לקבצים על הדיסק הקשיח ועל ה-iPod (אם זמין)."
 
-#: ../data/gtkpod.glade.h:321
+#: ../data/gtkpod.glade.h:309
 msgid "The track on the iPod is referenced in the playlist file."
 msgstr "הרצועה על ה-iPod מקושרת בקובץ רשימת ההשמעה."
 
-#: ../data/gtkpod.glade.h:322
+#: ../data/gtkpod.glade.h:310
 msgid "This is the same option as in 'Edit/Delete Confirmation'"
 msgstr "זוהי אופציה זהה לזו שב- 'עריכה/ווידוא מחיקה'"
 
-#: ../data/gtkpod.glade.h:323
+#: ../data/gtkpod.glade.h:311
 msgid ""
 "This is the way to go, but maybe not all programs support it yet. ID3v2.4 "
 "uses unicode to store the tags, so you won't have to worry about charsets "
@@ -1471,20 +1453,20 @@ msgstr ""
 "gtkpod ישתמש ב־UTF8 כי זה לא יגדיל את הגודל של תגיות ASCII טהורות. תגיות "
 "ID3V2.2/4 יכתבו גם אם הן כבר קיימות בקובץ שכותבים עליו."
 
-#: ../data/gtkpod.glade.h:324
+#: ../data/gtkpod.glade.h:312
 msgid "This option will be re-activated when you upgrade gtkpod."
 msgstr "האפשרות הזאת תופעל מחדש בזמן שדרוג gtkpod."
 
-#: ../data/gtkpod.glade.h:325
+#: ../data/gtkpod.glade.h:313
 msgid "Time:"
 msgstr "זמן:"
 
-#: ../data/gtkpod.glade.h:326 ../src/display_sorttabs.c:2963
+#: ../data/gtkpod.glade.h:314 ../src/display_sorttabs.c:2972
 #: ../src/display_spl.c:83 ../src/misc_conversion.c:62
 msgid "Title"
 msgstr "שם הרצועה"
 
-#: ../data/gtkpod.glade.h:327
+#: ../data/gtkpod.glade.h:315
 msgid ""
 "Total\n"
 "(iPod)"
@@ -1492,7 +1474,7 @@ msgstr ""
 "סך הכל\n"
 "(iPod)"
 
-#: ../data/gtkpod.glade.h:329
+#: ../data/gtkpod.glade.h:317
 msgid ""
 "Total\n"
 "(local)"
@@ -1500,38 +1482,38 @@ msgstr ""
 "סך הכל\n"
 "(מקומי)"
 
-#: ../data/gtkpod.glade.h:331
+#: ../data/gtkpod.glade.h:319
 msgid "Tracks"
 msgstr "רצועות"
 
-#: ../data/gtkpod.glade.h:332
+#: ../data/gtkpod.glade.h:320
 msgid "Tracks Most Often Listened To"
 msgstr "הרצועות שהכי מאזינים להן"
 
-#: ../data/gtkpod.glade.h:333
+#: ../data/gtkpod.glade.h:321
 msgid ""
 "Tracks can be transferred in the background as soon as they are added to an "
 "iPod repository. Otherwise they will be transferred when ejecting the "
 "contents of the iPod completely unchanged until then."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:334
+#: ../data/gtkpod.glade.h:322
 msgid "Tracks in Selected Tab _Entry"
 msgstr "רצועות ב_רשומות כרטיסיות נבחרות"
 
-#: ../data/gtkpod.glade.h:335
+#: ../data/gtkpod.glade.h:323
 msgid "Tracks in Selected _Playlist"
 msgstr "רצועות ב_רשימות השמעה נבחרות"
 
-#: ../data/gtkpod.glade.h:336
+#: ../data/gtkpod.glade.h:324
 msgid "Transfer tracks to the iPod in the background"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:337
+#: ../data/gtkpod.glade.h:325
 msgid "Translators"
 msgstr "מתרגמים"
 
-#: ../data/gtkpod.glade.h:338
+#: ../data/gtkpod.glade.h:326
 msgid ""
 "Try to load contents of all connected iPods. For each iPod a separate "
 "repository must be set up."
@@ -1539,53 +1521,58 @@ msgstr ""
 "מנסה לטעון תוכן של כל ה־iPod-ים המחוברים. עבור כל iPod חייב להיות מוקם מאגר "
 "נפרד."
 
-#: ../data/gtkpod.glade.h:339
+#: ../data/gtkpod.glade.h:327
+#, fuzzy
+msgid "Undo _Track"
+msgstr "_בטל פעולה על רצועה"
+
+#: ../data/gtkpod.glade.h:328
 msgid "Update _mserv Data from File"
 msgstr "עדכון _נתוני mserv מקובץ"
 
-#: ../data/gtkpod.glade.h:340
+#: ../data/gtkpod.glade.h:329
 msgid "Update/Sync all playlists now"
 msgstr "עדכן/סנכרן את כל רשימות ההשמעה עכשיו"
 
-#: ../data/gtkpod.glade.h:341
+#: ../data/gtkpod.glade.h:330
 msgid "Update/Sync playlist now"
 msgstr "עדכן/סנכרן את רשימת הניגון עכשיו"
 
-#: ../data/gtkpod.glade.h:342
+#: ../data/gtkpod.glade.h:331
 msgid "Upper margin"
 msgstr "שוליים עליונים"
 
-#: ../data/gtkpod.glade.h:343
+#: ../data/gtkpod.glade.h:332
 msgid "Use 'Multi-Edit' also for title field"
 msgstr "השתמש ב-'עריכה מרובה' גם עבור שדה שם הרצועה"
 
-#: ../data/gtkpod.glade.h:344
+#: ../data/gtkpod.glade.h:333
 msgid "Use 'Multi-Edit' for tracks selections"
 msgstr "השתמש ב-'עריכה מרובה' עבור בחירת רצועות"
 
-#: ../data/gtkpod.glade.h:345
+#: ../data/gtkpod.glade.h:334
 #, fuzzy
 msgid "Use <i><Album>.jpg</i> in the parent directory"
 msgstr "השתמש ב־ <i>&lt;Album&gt;.jpg</i> בתור תיקייה אב"
 
-#: ../data/gtkpod.glade.h:346
+#: ../data/gtkpod.glade.h:335
 #, fuzzy
 msgid "Use <i><Album>.jpg</i>, <i><Album>.png</i>..."
 msgstr "השתמש ב־ <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>..."
 
-#: ../data/gtkpod.glade.h:347
+#: ../data/gtkpod.glade.h:336
 msgid "Use <i>folder.jpg</i> as cover art."
 msgstr "השתמש ב <i>folder.jpg</i> בתור עטיפה."
 
-#: ../data/gtkpod.glade.h:348
+#: ../data/gtkpod.glade.h:337
 msgid "Use <i>folder.jpg</i>, <i>folder.png</i>..."
 msgstr "השתמש ב־ <i>folder.jpg</i>, <i>folder.png</i>..."
 
-#: ../data/gtkpod.glade.h:349
+#: ../data/gtkpod.glade.h:338
 msgid "Use mserv database to fill additional information"
 msgstr "השתמש במסד נתונים של mserv על מנת למלא מידע נוסף"
 
-#: ../data/gtkpod.glade.h:350
+#: ../data/gtkpod.glade.h:339
 msgid ""
 "Use selected charset (Preferences/'Adding/Updating/ Syncing')\n"
 "for this filename."
@@ -1593,7 +1580,7 @@ msgstr ""
 "השתמש בערכת התווים הנבחרת (אפשרויות/'הוספה/עדכון/סנכרון')\n"
 "עבור הקובץ הזה."
 
-#: ../data/gtkpod.glade.h:352
+#: ../data/gtkpod.glade.h:341
 msgid ""
 "Use selected encoding (on the 'General' page)\n"
 "when writing tags"
@@ -1601,24 +1588,24 @@ msgstr ""
 "השתמש בערכת תווים הנבחרת (בעמוד 'כללי')\n"
 "בזמן כתיבת התגיות"
 
-#: ../data/gtkpod.glade.h:354
+#: ../data/gtkpod.glade.h:343
 #, fuzzy
 msgid "Use selected encoding also when updating or syncing tracks"
 msgstr "השתמש בערכת תווים נבחרת גם בזמן עדכון או סנכרון רצועות"
 
-#: ../data/gtkpod.glade.h:355
+#: ../data/gtkpod.glade.h:344
 msgid "Use this template to parse filename for tag information:"
 msgstr "השתמש בתבנית הזאת על מנת לנתח את הקובץ למידע תגית:"
 
-#: ../data/gtkpod.glade.h:356
+#: ../data/gtkpod.glade.h:345
 msgid "Username to be used for mserv database lookup."
 msgstr "שם משתמש הנועד לשימוש במסד הנתונים של mserv."
 
-#: ../data/gtkpod.glade.h:357
+#: ../data/gtkpod.glade.h:346
 msgid "Username:"
 msgstr "שם משתמש:"
 
-#: ../data/gtkpod.glade.h:358
+#: ../data/gtkpod.glade.h:347
 msgid ""
 "Usually you don't want to set the title of several tracks to the same text. "
 "This option might avoid unwanted results (especially since there is no "
@@ -1627,11 +1614,11 @@ msgstr ""
 "בדרך כלל אתה לא תרצה לקבוע את שם הרצועה של מספר רצועות לאותו טקסט. אפשרות "
 "זאת עלולה למנוע תוצאות לא רצויות (במיוחד שאין עדיין אפשרות 'בטל')"
 
-#: ../data/gtkpod.glade.h:359
+#: ../data/gtkpod.glade.h:348
 msgid "WAV with :"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:360
+#: ../data/gtkpod.glade.h:349
 msgid ""
 "When adding dirs/files, update information of\n"
 "existing tracks with identical filenames"
@@ -1639,7 +1626,7 @@ msgstr ""
 "בזמן הוספת תיקיות/קבצים, עדכן את המידע על\n"
 "רצועות קיימות עם שמות קבצים זהים"
 
-#: ../data/gtkpod.glade.h:362
+#: ../data/gtkpod.glade.h:351
 msgid ""
 "When copying from iPod no check is performed on whether the destination file "
 "exists. Enabling this option will make gtkpod check whether the length of "
@@ -1650,26 +1637,26 @@ msgstr ""
 "והתכנית תבדוק האם גודלו של קובץ היעד הוא זהה לקובץ שעל ה-iPod. אם כן נדלג על "
 "הקובץ, ובכך נאפשר סנכרון מהיר של תוכן ה-iPod."
 
-#: ../data/gtkpod.glade.h:363
+#: ../data/gtkpod.glade.h:352
 msgid "When syncing playlists"
 msgstr "בזמן סנכרון רשימות השמעה"
 
-#: ../data/gtkpod.glade.h:364
+#: ../data/gtkpod.glade.h:353
 msgid ""
 "Will show a list of tracks removed and a list of tracks newly added or "
 "updated."
 msgstr ""
 "יראה רשימה של רצועות שהוסרו ורשימות של רצועות שהוספו או עודכנו לאחרונה."
 
-#: ../data/gtkpod.glade.h:365
+#: ../data/gtkpod.glade.h:354
 msgid "Write ID3 tags to disk when modified in gtkpod"
 msgstr "כתוב תגיות ID3 לדיסק כאשר הן משתנות ב-gtkpod"
 
-#: ../data/gtkpod.glade.h:366
+#: ../data/gtkpod.glade.h:355
 msgid "Write all changes made to the disk and the iPod(s)."
 msgstr "שמור את כל השינויים שנעשו אל הדיסק ואל ה־iPod-ים."
 
-#: ../data/gtkpod.glade.h:367
+#: ../data/gtkpod.glade.h:356
 #, fuzzy
 msgid ""
 "Write extended information (PC filenames, SHA1 hashes,\n"
@@ -1678,7 +1665,7 @@ msgstr ""
 "כתוב מידע מורחב (שמות קבצים ב-PC,\n"
 " ערבובי MD5, ערכות תווים). מומלץ."
 
-#: ../data/gtkpod.glade.h:369
+#: ../data/gtkpod.glade.h:358
 msgid ""
 "You can also use the table headers, but this allows you to sort according to "
 "a column that is not displayed."
@@ -1686,205 +1673,206 @@ msgstr ""
 "אתה גם יכול להשתמש בכותרות הטבלאות, אבל זה יאפשר לך למיין רק לפי העמודה "
 "המוצגת."
 
-#: ../data/gtkpod.glade.h:370
+#: ../data/gtkpod.glade.h:359
 msgid "_About"
 msgstr "_אודות"
 
-#: ../data/gtkpod.glade.h:371
+#: ../data/gtkpod.glade.h:360
 msgid "_All Tracks"
 msgstr "_כל הרצועות"
 
-#: ../data/gtkpod.glade.h:372
+#: ../data/gtkpod.glade.h:361
 msgid "_Arrange Sort Tabs"
 msgstr "_סדר כרטיסיות מיון"
 
-#: ../data/gtkpod.glade.h:373
+#: ../data/gtkpod.glade.h:362
 msgid "_Check iPod's Files"
 msgstr "_בדיקת קבצי iPod"
 
-#: ../data/gtkpod.glade.h:374
+#: ../data/gtkpod.glade.h:363
 msgid "_Conversion Log"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:375
+#: ../data/gtkpod.glade.h:364
 msgid "_Create Playlists"
 msgstr "_יצירת רשימות השמעה"
 
-#: ../data/gtkpod.glade.h:376
+#: ../data/gtkpod.glade.h:365
 msgid "_Create iPod's Directories"
 msgstr "_יצירת תיקיות iPod"
 
-#: ../data/gtkpod.glade.h:377
+#: ../data/gtkpod.glade.h:366
 msgid "_Delete"
 msgstr "_מחק"
 
-#: ../data/gtkpod.glade.h:378
+#: ../data/gtkpod.glade.h:367
 msgid "_Display"
 msgstr "_תצוגה"
 
-#: ../data/gtkpod.glade.h:379
+#: ../data/gtkpod.glade.h:368
 msgid "_Displayed Tracks"
 msgstr "_הראה רצועות"
 
-#: ../data/gtkpod.glade.h:380
+#: ../data/gtkpod.glade.h:369
 msgid "_Edit"
 msgstr "_עריכה"
 
-#: ../data/gtkpod.glade.h:381
+#: ../data/gtkpod.glade.h:370
 msgid "_Encoding (ID3, files):"
 msgstr "_ערכת תווים (ID3, קבצים):"
 
-#: ../data/gtkpod.glade.h:382
+#: ../data/gtkpod.glade.h:371
 msgid "_Enqueue"
 msgstr "_הכנס לתור"
 
-#: ../data/gtkpod.glade.h:383
+#: ../data/gtkpod.glade.h:372
 msgid "_Export Tracks from Database"
 msgstr "_ייצא רצועות ממסד הנתונים"
 
-#: ../data/gtkpod.glade.h:384
+#: ../data/gtkpod.glade.h:373
 msgid "_File"
 msgstr "_קובץ"
 
-#: ../data/gtkpod.glade.h:385
-msgid "_Find New"
-msgstr ""
-
-#: ../data/gtkpod.glade.h:386
+#: ../data/gtkpod.glade.h:374
 msgid "_General"
 msgstr "_כללי"
 
-#: ../data/gtkpod.glade.h:387
+#: ../data/gtkpod.glade.h:375
 msgid "_Help"
 msgstr "_עזרה"
 
-#: ../data/gtkpod.glade.h:388
+#: ../data/gtkpod.glade.h:376
 msgid "_Ignore rules"
 msgstr "_התעלם מחוקים"
 
-#: ../data/gtkpod.glade.h:389
+#: ../data/gtkpod.glade.h:377
 msgid "_Info Window"
 msgstr "_חלון מידע"
 
-#: ../data/gtkpod.glade.h:390
+#: ../data/gtkpod.glade.h:378
 msgid "_Last.FM"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:391
+#: ../data/gtkpod.glade.h:379
 msgid "_Less Sort Tabs"
 msgstr "_פחות כרטיסיות מיון"
 
-#: ../data/gtkpod.glade.h:392
+#: ../data/gtkpod.glade.h:380
 msgid "_Limit to"
 msgstr "_הגבל ל"
 
-#: ../data/gtkpod.glade.h:393
+#: ../data/gtkpod.glade.h:381
 msgid "_Load iPod(s)"
 msgstr "_טען iPod"
 
-#: ../data/gtkpod.glade.h:394
+#: ../data/gtkpod.glade.h:382
 msgid "_Local"
 msgstr "_מקומי"
 
-#: ../data/gtkpod.glade.h:395
+#: ../data/gtkpod.glade.h:383
 msgid "_M3U"
 msgstr "_M3U"
 
-#: ../data/gtkpod.glade.h:396
+#: ../data/gtkpod.glade.h:384
+msgid "_Misc."
+msgstr ""
+
+#: ../data/gtkpod.glade.h:385
 msgid "_More Sort Tabs"
 msgstr "_יותר כרטיסיות מיון"
 
-#: ../data/gtkpod.glade.h:397
+#: ../data/gtkpod.glade.h:386
 msgid "_Newly Added Tracks"
 msgstr "_רצועות חדשות שהוספו"
 
-#: ../data/gtkpod.glade.h:398
+#: ../data/gtkpod.glade.h:387
 msgid "_Normalize Volume"
 msgstr "_נרמל עוצמת קול"
 
-#: ../data/gtkpod.glade.h:399
+#: ../data/gtkpod.glade.h:388
 msgid "_Number of sort tabs:"
 msgstr "_מספר כרטיסיות המיון:"
 
-#: ../data/gtkpod.glade.h:400
-msgid "_Other"
-msgstr "_אחר"
-
-#: ../data/gtkpod.glade.h:401
+#: ../data/gtkpod.glade.h:389
 msgid "_PLS"
 msgstr "_PLS"
 
-#: ../data/gtkpod.glade.h:402
+#: ../data/gtkpod.glade.h:390
 msgid "_Play Now"
 msgstr "_נגן עכשיו"
 
-#: ../data/gtkpod.glade.h:403
+#: ../data/gtkpod.glade.h:391
 msgid "_Podcasts"
 msgstr "_פודקסטים"
 
-#: ../data/gtkpod.glade.h:404
+#: ../data/gtkpod.glade.h:392
 msgid "_Prefer Local"
 msgstr "_העדף מקומי"
 
-#: ../data/gtkpod.glade.h:405
+#: ../data/gtkpod.glade.h:393
+msgid "_Previous"
+msgstr ""
+
+#: ../data/gtkpod.glade.h:394
+#, fuzzy
+msgid "_Remove Cover Art"
+msgstr "הסר עטיפה"
+
+#: ../data/gtkpod.glade.h:395
 msgid "_Save Changes"
 msgstr "_שמור שינויים"
 
-#: ../data/gtkpod.glade.h:406
+#: ../data/gtkpod.glade.h:396
 msgid "_Save Displayed Track Order"
 msgstr "_שמירת סדר רצועות נראות"
 
-#: ../data/gtkpod.glade.h:407
+#: ../data/gtkpod.glade.h:397
 msgid "_Sorting"
 msgstr "_מיון"
 
-#: ../data/gtkpod.glade.h:408
+#: ../data/gtkpod.glade.h:398
 #, fuzzy
 msgid "_Synchronize Playlist with Dir(s)"
 msgstr "סנכרן את רשימת ההשמעה עם התיקיה(יות)"
 
-#: ../data/gtkpod.glade.h:409
+#: ../data/gtkpod.glade.h:399
 msgid "_Toolbar"
 msgstr "_סרגל כלים"
 
-#: ../data/gtkpod.glade.h:410
+#: ../data/gtkpod.glade.h:400
 msgid "_Tools"
 msgstr "_כלים"
 
-#: ../data/gtkpod.glade.h:411
+#: ../data/gtkpod.glade.h:401
 msgid "_Tooltips"
 msgstr "_תוויות מידע"
 
-#: ../data/gtkpod.glade.h:412
+#: ../data/gtkpod.glade.h:402
 msgid "_Track Info"
 msgstr "_מידע רצועה"
 
-#: ../data/gtkpod.glade.h:413
+#: ../data/gtkpod.glade.h:403
 msgid "_Undo All"
 msgstr "_בטל הכל"
 
-#: ../data/gtkpod.glade.h:414
-msgid "_Undo Track"
-msgstr "_בטל פעולה על רצועה"
-
-#: ../data/gtkpod.glade.h:415
+#: ../data/gtkpod.glade.h:404
 msgid "_Update Tracks from File"
 msgstr "_סנכרון רצועות מקובץ"
 
-#: ../data/gtkpod.glade.h:416
+#: ../data/gtkpod.glade.h:405
 #, fuzzy
 msgid "_Video"
 msgstr "_תצוגה"
 
-#: ../data/gtkpod.glade.h:417
+#: ../data/gtkpod.glade.h:406
 msgid "_View"
 msgstr "_תצוגה"
 
-#: ../data/gtkpod.glade.h:418
+#: ../data/gtkpod.glade.h:407
 msgid "_iPod"
 msgstr "_iPod"
 
-#: ../data/gtkpod.glade.h:420
+#: ../data/gtkpod.glade.h:409
 #, no-c-format
 msgid ""
 "artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD "
@@ -1897,28 +1885,28 @@ msgstr ""
 "אפשר להפריד בין מספר תבניות על ידי ';'. הראשון שיתאים לקובץ יבחר. לדוגמה:\n"
 " '%a - %A/%T %t.mp3;%t.wav'."
 
-#: ../data/gtkpod.glade.h:421
+#: ../data/gtkpod.glade.h:410
 msgid "folder"
 msgstr "תיקיה"
 
-#: ../data/gtkpod.glade.h:422
+#: ../data/gtkpod.glade.h:411
 msgid "folder.jpg"
 msgstr "folder.jpg"
 
-#: ../data/gtkpod.glade.h:424
+#: ../data/gtkpod.glade.h:413
 #, no-c-format
 msgid "folder.jpg;%a.jpg"
 msgstr "folder.jpg;%a.jpg"
 
-#: ../data/gtkpod.glade.h:425
+#: ../data/gtkpod.glade.h:414
 msgid "gtkpod"
 msgstr "gtkpod"
 
-#: ../data/gtkpod.glade.h:426
+#: ../data/gtkpod.glade.h:415
 msgid "gtkpod Info"
 msgstr "מידע gtkpod"
 
-#: ../data/gtkpod.glade.h:427
+#: ../data/gtkpod.glade.h:416
 msgid ""
 "gtkpod expects the ID3 tags and the filenames to be in the encoding "
 "specified here. You can change it for consecutive 'Add Files' and 'Add Dirs' "
@@ -1928,12 +1916,12 @@ msgstr ""
 "לשנות זאת בשביל פעולות עוקבות של 'הוספת קבצים' ו 'הוספת תיקיות'. 'ערכת "
 "התווים של המערכת' היא ערכת התווים בשימוש עבור הלוקל הנוכחי שלך."
 
-#: ../data/gtkpod.glade.h:428
+#: ../data/gtkpod.glade.h:417
 msgid "gtkpod options"
 msgstr "אפשרויות ה-gtkpod"
 
 #. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
-#: ../data/gtkpod.glade.h:430
+#: ../data/gtkpod.glade.h:419
 msgid ""
 "iPod\n"
 "Local Repository (Standard)\n"
@@ -1943,32 +1931,32 @@ msgstr ""
 "מאגר מקומי (סטנדרטי)\n"
 "מאגר מקומי (פודקסטים)\n"
 
-#: ../data/gtkpod.glade.h:434
+#: ../data/gtkpod.glade.h:423
 msgid "iPod mountpoint:"
 msgstr "נקודת העגינה של ה-iPod:"
 
-#: ../data/gtkpod.glade.h:435
+#: ../data/gtkpod.glade.h:424
 msgid "iTunesDB backup:"
 msgstr "גיבוי ה־iTunesDB:"
 
-#: ../data/gtkpod.glade.h:436
+#: ../data/gtkpod.glade.h:425
 #, fuzzy
 msgid "label"
 msgstr "label21"
 
-#: ../data/gtkpod.glade.h:437
+#: ../data/gtkpod.glade.h:426
 msgid "mserv Root:"
 msgstr "שורש ה-mserv:"
 
-#: ../data/gtkpod.glade.h:438
+#: ../data/gtkpod.glade.h:427
 msgid "mserv database lookup will be done for music in this directory."
 msgstr "החיפוש במסד הנתונים mserv יתבצע בתיקייה זאת עבור מוזיקה."
 
-#: ../data/gtkpod.glade.h:439 ../src/details.c:1175
+#: ../data/gtkpod.glade.h:428 ../src/details.c:1325
 msgid "n/a"
 msgstr "ל/ז"
 
-#: ../data/gtkpod.glade.h:440
+#: ../data/gtkpod.glade.h:429
 msgid "special_sorttab -- Don't translate!"
 msgstr "special_sorttab -- Don't translate!"
 
@@ -2178,6 +2166,22 @@ msgstr "מערבי (Windows-1252)"
 msgid "System Charset"
 msgstr "ערכת התווים של המערכת"
 
+#: ../src/autodetection.c:310
+msgid "Could not initialize GnomeVFS\n"
+msgstr ""
+
+#: ../src/autodetection.c:395
+#, c-format
+msgid ""
+"Newly mounted iPod at '%s' appearss to be already loaded!\n"
+"\n"
+msgstr ""
+
+#: ../src/autodetection.c:407
+#, fuzzy
+msgid "New iPod"
+msgstr "ר\"ה חדשה"
+
 #. we are not the first instance of gtkpod -- the socket is
 #. already being used, so we pass
 #: ../src/clientserver.c:214
@@ -2338,12 +2342,60 @@ msgstr "רצועות נמחקות"
 msgid "Date format error: unrecognized character: '%s'\n"
 msgstr "פורמט תאריך שגוי: תו לא מזוהה: '%s'\n"
 
-#: ../src/details.c:700
+#: ../src/details.c:81
+#, fuzzy
+msgid "Audio/Video"
+msgstr "שורש המוזיקה:"
+
+#: ../src/details.c:82
+msgid "Audio"
+msgstr ""
+
+#: ../src/details.c:83
+#, fuzzy
+msgid "Video"
+msgstr "_תצוגה"
+
+#: ../src/details.c:84
+#, fuzzy
+msgid "Podcast"
+msgstr "פודקסטים"
+
+#: ../src/details.c:85
+#, fuzzy
+msgid "Video Podcast"
+msgstr "פודקסטים"
+
+#: ../src/details.c:86
+msgid "Audiobook"
+msgstr ""
+
+#: ../src/details.c:87 ../src/display_spl.c:209 ../src/display_spl.c:218
+#, fuzzy
+msgid "Music Video"
+msgstr "שורש המוזיקה:"
+
+#: ../src/details.c:88 ../src/display_spl.c:107 ../src/display_spl.c:210
+#: ../src/display_spl.c:219 ../src/misc_conversion.c:101
+msgid "TV Show"
+msgstr ""
+
+#: ../src/details.c:89
+#, fuzzy
+msgid "TV Show & Music Video"
+msgstr "שורש המוזיקה:"
+
+#: ../src/details.c:826
 #, c-format
 msgid "%s (image data corrupted or unreadable)"
 msgstr ""
 
-#: ../src/details.c:1246
+#: ../src/details.c:963
+#, c-format
+msgid "Please report unknown mediatype %x\n"
+msgstr ""
+
+#: ../src/details.c:1396
 msgid "<b>n/a</b>"
 msgstr "<b>לא זמין</b>"
 
@@ -2352,7 +2404,7 @@ msgid "Edit selected entry of which sort tab?"
 msgstr "מאיזה כרטיסיית מיון לערוך את הרשומה הנבחרת?"
 
 #. no entry selected
-#: ../src/display.c:654 ../src/misc_confirm.c:435 ../src/misc_track.c:2059
+#: ../src/display.c:654 ../src/misc_confirm.c:435 ../src/misc_track.c:2128
 msgid "No entry selected."
 msgstr "לא נבחרה רשומה."
 
@@ -2411,7 +2463,7 @@ msgstr "באיזה כרטיסיית מיון של רשומה נבחרת להוס
 msgid "Normalize tracks in selected entry of which sort tab?"
 msgstr "באיזה כרטיסיית מיון של רשומה נבחרת לנרמל רצועות?"
 
-#: ../src/display_coverart.c:1714
+#: ../src/display_coverart.c:1731
 msgid "Failed to remove the album from the album hash store."
 msgstr ""
 
@@ -2420,44 +2472,44 @@ msgstr ""
 msgid "Failed to set cover art: '%s'\n"
 msgstr "כשלון בקביעת עטיפה: '%s'\n"
 
-#: ../src/display_itdb.c:851 ../src/display_itdb.c:984
+#: ../src/display_itdb.c:858 ../src/display_itdb.c:991
 msgid "Local"
 msgstr "מקומי"
 
 #. add podcast playlist
-#: ../src/display_itdb.c:859 ../src/display_itdb.c:982
-#: ../src/display_itdb.c:1010
+#: ../src/display_itdb.c:866 ../src/display_itdb.c:989
+#: ../src/display_itdb.c:1017
 msgid "Podcasts"
 msgstr "פודקסטים"
 
-#: ../src/display_itdb.c:868 ../src/display_itdb.c:986
+#: ../src/display_itdb.c:875 ../src/display_itdb.c:993
 #: ../src/repository.c:1186
 msgid "iPod"
 msgstr "iPod"
 
-#: ../src/display_itdb.c:1069
+#: ../src/display_itdb.c:1076
 #, c-format
 msgid "Increased playcount for '%s'"
 msgstr "הועלתה ספירת השמעות עבור '%s'"
 
 #. give a notice on the statusbar -- otherwise the user
 #. * will never know why the drag is not possible
-#: ../src/display_playlists.c:500 ../src/display_playlists.c:542
+#: ../src/display_playlists.c:514 ../src/display_playlists.c:556
 msgid "Error: drag from iPod not possible in offline mode."
 msgstr "שגיאה: גרירה מה-iPod היא לא אפשרית במצב לא מקוון."
 
-#: ../src/display_playlists.c:569 ../src/display_tracks.c:286
+#: ../src/display_playlists.c:583 ../src/display_tracks.c:286
 #, c-format
 msgid "Copied one track"
 msgid_plural "Copied %d tracks"
 msgstr[0] "רצועה אחת הועתקה"
 msgstr[1] "הועתקו %d רצועות"
 
-#: ../src/display_playlists.c:849 ../src/display_playlists.c:861
+#: ../src/display_playlists.c:863 ../src/display_playlists.c:875
 msgid "Can't reorder sorted treeview."
 msgstr "אי אפשר לסדר מחדש עץ ממוין."
 
-#: ../src/display_playlists.c:938
+#: ../src/display_playlists.c:952
 #, c-format
 msgid ""
 "This DND type (%d) is not (yet) supported. If you feel implementing this "
@@ -2488,24 +2540,24 @@ msgstr "הכל"
 msgid "Compilations"
 msgstr "יצירות"
 
-#: ../src/display_sorttabs.c:2960
+#: ../src/display_sorttabs.c:2969
 msgid "Comp."
 msgstr "יצירה"
 
-#: ../src/display_sorttabs.c:2966 ../src/display_spl.c:88
-#: ../src/display_tracks.c:2002 ../src/misc_conversion.c:84
+#: ../src/display_sorttabs.c:2975 ../src/display_spl.c:88
+#: ../src/display_tracks.c:2026 ../src/misc_conversion.c:84
 msgid "Year"
 msgstr "שנה"
 
-#: ../src/display_sorttabs.c:2969
+#: ../src/display_sorttabs.c:2978
 msgid "Special"
 msgstr "מיוחד"
 
-#: ../src/display_sorttabs.c:3230
+#: ../src/display_sorttabs.c:3226
 msgid "Last Played"
 msgstr "הושמע לאחרונה"
 
-#: ../src/display_sorttabs.c:3231
+#: ../src/display_sorttabs.c:3227
 msgid "Last Modified"
 msgstr "שונה לאחרונה"
 
@@ -2529,7 +2581,7 @@ msgstr "קס\"ש"
 msgid "Hz"
 msgstr "הרץ"
 
-#: ../src/display_spl.c:75 ../src/display_spl.c:179 ../src/info.c:777
+#: ../src/display_spl.c:75 ../src/display_spl.c:179 ../src/info.c:780
 msgid "MB"
 msgstr "מ\"ב"
 
@@ -2562,7 +2614,7 @@ msgstr "מספר רצועה"
 msgid "Size"
 msgstr "גודל"
 
-#: ../src/display_spl.c:94 ../src/display_tracks.c:1984
+#: ../src/display_spl.c:94 ../src/display_tracks.c:2008
 msgid "Time"
 msgstr "זמן"
 
@@ -2596,11 +2648,6 @@ msgstr "קיבוץ"
 
 #: ../src/display_spl.c:106
 msgid "Video Kind"
-msgstr ""
-
-#: ../src/display_spl.c:107 ../src/display_spl.c:210 ../src/display_spl.c:219
-#: ../src/misc_conversion.c:101
-msgid "TV Show"
 msgstr ""
 
 #: ../src/display_spl.c:108
@@ -2701,7 +2748,7 @@ msgstr "רצועות"
 msgid "hours"
 msgstr "שעות"
 
-#: ../src/display_spl.c:182 ../src/info.c:777
+#: ../src/display_spl.c:182 ../src/info.c:780
 msgid "GB"
 msgstr "ג\"ב"
 
@@ -2762,11 +2809,6 @@ msgstr "מדרוג נמוך ביותר"
 msgid "Movie"
 msgstr "שונה"
 
-#: ../src/display_spl.c:209 ../src/display_spl.c:218
-#, fuzzy
-msgid "Music Video"
-msgstr "שורש המוזיקה:"
-
 #: ../src/display_spl.c:1162 ../src/display_spl.c:1177
 msgid "to"
 msgstr "אל "
@@ -2793,7 +2835,7 @@ msgid_plural "Moved %d tracks"
 msgstr[0] "רצועה אחת הועברה"
 msgstr[1] "הועברו %d רצועות"
 
-#: ../src/display_tracks.c:1717
+#: ../src/display_tracks.c:1734
 #, c-format
 msgid ""
 "Cannot unsort track view because of a bug in the GTK lib you are using (%d.%"
@@ -2805,45 +2847,57 @@ msgstr ""
 "< 2.5.4). ברגע שמיינת את תוגת העץ, אי אפשר לחזור חזרה למצב הלא ממוין.\n"
 "\n"
 
-#: ../src/display_tracks.c:1962
+#: ../src/display_tracks.c:1986
 msgid "Rtng"
 msgstr "מדרוג"
 
-#: ../src/display_tracks.c:1965
+#: ../src/display_tracks.c:1989
 msgid "#"
 msgstr "#"
 
-#: ../src/display_tracks.c:1968
+#: ../src/display_tracks.c:1992
 msgid "CD"
 msgstr "דיסק שמע"
 
-#: ../src/display_tracks.c:1971
+#: ../src/display_tracks.c:1995
 msgid "ID"
 msgstr "מזהה"
 
-#: ../src/display_tracks.c:1974
+#: ../src/display_tracks.c:1998
 msgid "Trnsfrd"
 msgstr "העברה"
 
-#: ../src/display_tracks.c:1978
+#: ../src/display_tracks.c:2002
 msgid "Cmpl"
 msgstr "יצירה"
 
-#: ../src/display_tracks.c:1987
+#: ../src/display_tracks.c:2011
 msgid "Plycnt"
 msgstr "ספירת שמע"
 
-#: ../src/display_tracks.c:1999
+#: ../src/display_tracks.c:2023
 msgid "Released"
 msgstr "שוחרר"
 
-#: ../src/display_tracks.c:2005
+#: ../src/display_tracks.c:2029
 msgid "Vol."
 msgstr "עוצמה"
 
-#: ../src/display_tracks.c:2008
+#: ../src/display_tracks.c:2032
 msgid "Sndchk."
 msgstr "בדיקת קול"
+
+#: ../src/fetchcover.c:638
+#, c-format
+msgid ""
+"The picture file %s already exists. \n"
+"This may be associated with other music files in the directory. \n"
+"\n"
+"-  Clicking Yes will overwrite the existing file, possibly associating \n"
+"   other music files in the same directory with this coverart file. \n"
+"-  Clicking No will save the file with a unique file name. \n"
+"-  Clicking Cancel will abort the fetchcover operation."
+msgstr ""
 
 #: ../src/file.c:236
 #, c-format
@@ -2887,71 +2941,71 @@ msgstr "מדלג על '%s' על מנת להתחמק מהוספת קובץ רשי
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr "הסימן '%s' בתבנית '%s' לא ידוע\n"
 
-#: ../src/file.c:890
+#: ../src/file.c:922
 #, c-format
 msgid "Local filename not valid (%s)"
 msgstr "שם קובץ מקומי לא תקין (%s)"
 
-#: ../src/file.c:949
+#: ../src/file.c:981
 #, c-format
 msgid "No information found for user '%s' in '%s'"
 msgstr "לא קיים מידע למשתמש '%s' ב- '%s'"
 
-#: ../src/file.c:958
+#: ../src/file.c:990
 #, c-format
 msgid "mserv data file (%s) not available for track (%s)"
 msgstr "מידע קובץ mserv (%s) לא זמין עבור רצועה (%s)"
 
-#: ../src/file.c:966
+#: ../src/file.c:998
 #, c-format
 msgid "Track (%s) not in mserv music root directory (%s)"
 msgstr "הרצועה (%s) לא קיימת בתיקיית השורש של mserv (%s)"
 
-#: ../src/file.c:1090
+#: ../src/file.c:1122
 #, c-format
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
 msgstr "אי אפשר לעבד את הרצועה הבאה (הקובץ לא קיים): '%s'\n"
 
-#: ../src/file.c:1169
+#: ../src/file.c:1208
 #, c-format
 msgid "The following track could not be processed (filetype unknown): '%s'\n"
 msgstr "אי אפשר לעבד את הרצועה הבאה (סוג קובץ לא ידוע): '%s'\n"
 
-#: ../src/file.c:1262
+#: ../src/file.c:1306
 #, c-format
 msgid ""
 "The following track could not be processed (filetype is known but analysis "
 "failed): '%s'\n"
 msgstr "אי אפשר לעבד את הרצועה הבאה (סוג קובץ ידוע, אך הבדיקה נכשלה): '%s'\n"
 
-#: ../src/file.c:1292 ../src/file.c:1346
+#: ../src/file.c:1336 ../src/file.c:1390
 msgid "Nothing to update"
 msgstr "אין מה לעדכן"
 
-#: ../src/file.c:1313
+#: ../src/file.c:1357
 #, c-format
 msgid "Updating %s"
 msgstr "מעדכן %s"
 
-#: ../src/file.c:1327
+#: ../src/file.c:1371
 msgid "Updated selected tracks with info from file."
 msgstr "מעדכן רצועות נבחרות עם מידע מקובץ."
 
-#: ../src/file.c:1361
+#: ../src/file.c:1405
 #, c-format
 msgid "Retrieving mserv data %s"
 msgstr "מאחזר נתוני mserv %s"
 
-#: ../src/file.c:1366
+#: ../src/file.c:1410
 msgid "no filename available"
 msgstr "קובץ לא קיים"
 
-#: ../src/file.c:1371
+#: ../src/file.c:1415
 msgid "Updated selected tracks with data from mserv."
 msgstr "עודכנו רצועות נבחרות עם נתונים מ-mserv"
 
-#: ../src/file.c:1392
+#: ../src/file.c:1436
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -2960,11 +3014,11 @@ msgstr[1] "%d הרצועות הבאות אינן יכולות להתעדכן"
 
 #. gint id,
 #. gboolean modal,
-#: ../src/file.c:1398
+#: ../src/file.c:1442
 msgid "Failed Track Update"
 msgstr "עדכון רצועה נכשל"
 
-#: ../src/file.c:1456
+#: ../src/file.c:1500
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -2973,11 +3027,11 @@ msgstr[1] "עודכנו %d הרצועות הבאות"
 
 #. gint id,
 #. gboolean modal,
-#: ../src/file.c:1462
+#: ../src/file.c:1506
 msgid "Successful Track Update"
 msgstr "הרצועה עודכנה בהצלחה"
 
-#: ../src/file.c:1521
+#: ../src/file.c:1565
 #, c-format
 msgid "No mserv information could be retrieved for the following track"
 msgid_plural ""
@@ -2987,46 +3041,47 @@ msgstr[1] "לא ניתן להשיג מידע mserv מ-%d הרצועות הבאו
 
 #. gint id,
 #. gboolean modal,
-#: ../src/file.c:1527
+#: ../src/file.c:1571
 msgid "mserv data retrieval problem"
 msgstr "בעיה בהשגת מידע מ-mserv"
 
-#: ../src/file.c:1616
+#: ../src/file.c:1660
 msgid "no local filename available, file on the iPod will be used instead"
 msgstr "קובץ מקומי לא זמין, יעשה שימוש בקובץ על ה־iPod"
 
-#: ../src/file.c:1622
+#: ../src/file.c:1666
 msgid "no local filename available and copy on iPod cannot be found"
 msgstr "קובץ מקומי לא זמין ועותק על ה־iPod גם כן לא זמין"
 
-#: ../src/file.c:1626 ../src/file.c:1644
+#: ../src/file.c:1670 ../src/file.c:1688
 msgid "no local filename available"
 msgstr "קובץ מקומי לא זמין"
 
-#: ../src/file.c:1634
+#: ../src/file.c:1678
 msgid "local file could not be found, file on the iPod will be used instead"
 msgstr "קובץ מקומי לא קיים, יעשה שימוש בקובץ על ה־iPod"
 
-#: ../src/file.c:1640
+#: ../src/file.c:1684
 msgid "local file as well as copy on the iPod cannot be found"
 msgstr "לא נמצא קובץ מקומי וגם העותק על ה־iPod לא נמצא"
 
 #. update not successful -- log this track for later display
-#: ../src/file.c:1728
-msgid "update failed (format no supported?)"
+#: ../src/file.c:1776
+#, fuzzy
+msgid "update failed (format not supported?)"
 msgstr "העדכון נכשל (התבנית לא נתמכת?)"
 
-#: ../src/file.c:1813
+#: ../src/file.c:1861 ../src/misc_playlist.c:916
 #, c-format
 msgid "Processing '%s'..."
 msgstr "מעבד '%s'..."
 
-#: ../src/file.c:1819
-#, c-format
-msgid "File skipped. match exclude masks: '%s'\n"
-msgstr "דילגנו על הקובץ. תבנית מסכת שלילה: '%s'\n"
+#: ../src/file.c:1867
+#, fuzzy, c-format
+msgid "Skipping '%s' because it matches exclude masks.\n"
+msgstr "מדלג על '%s' בגלל שהוא תיקייה.\n"
 
-#: ../src/file.c:1939 ../src/misc_track.c:1694 ../src/misc_track.c:1799
+#: ../src/file.c:1987 ../src/misc_track.c:1763 ../src/misc_track.c:1868
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
@@ -3035,7 +3090,7 @@ msgstr ""
 "הפודקסט כבר קיים: '%s'\n"
 "\n"
 
-#: ../src/file.c:2004
+#: ../src/file.c:2052
 #, c-format
 msgid ""
 "Writing to video files not yet supported (%s).\n"
@@ -3044,35 +3099,35 @@ msgstr ""
 "כתיבת קבצי וידאו עדיין לא נתמך (%s).\n"
 "\n"
 
-#: ../src/file.c:2056 ../src/file.c:2070
+#: ../src/file.c:2104 ../src/file.c:2118
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "לא מסוגל לשנות תג של קובץ: %s\n"
 
-#: ../src/file.c:2172
+#: ../src/file.c:2220
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr "אי אפשר לפתוח את '%s' לקריאה וכתיבה.\n"
 
-#: ../src/file.c:2179
+#: ../src/file.c:2227
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr "אי אשפר להשיג נעילה על '%s'.\n"
 
 #. error!
-#: ../src/file.c:2196 ../src/file.c:2205 ../src/file.c:2216 ../src/file.c:2226
+#: ../src/file.c:2244 ../src/file.c:2253 ../src/file.c:2264 ../src/file.c:2274
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr "שורה לא תקינה ב '%s' : %s\n"
 
 #. gint id,
 #. gboolean modal,
-#: ../src/file.c:2255
+#: ../src/file.c:2303
 msgid "Remove offline playcounts?"
 msgstr "הסר מספור השמעות לא מקוון?"
 
 #. title
-#: ../src/file.c:2256
+#: ../src/file.c:2304
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
@@ -3080,12 +3135,12 @@ msgstr ""
 "אי אפשר לאתר מספר רצועות שנוגנו בצורה לא מקוונת ב-iTunesDB. לחץ על 'אישור' "
 "להסיר אותן ממספור ההשמעה הלא מקוון, ועל 'ביטול' להשאיר אותן."
 
-#: ../src/file.c:2273
+#: ../src/file.c:2321
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr "תקלה בכתיבה ל-'%s'.\n"
 
-#: ../src/file.c:2330 ../src/tools.c:271
+#: ../src/file.c:2378 ../src/tools.c:271
 #, c-format
 msgid ""
 "Normalization failed: file type not supported (%s).\n"
@@ -3094,7 +3149,7 @@ msgstr ""
 "נרמול נכשל: סוג קובץ לא נתמך(%s).\n"
 "\n"
 
-#: ../src/file.c:2346 ../src/tools.c:288
+#: ../src/file.c:2394 ../src/tools.c:288
 #, c-format
 msgid ""
 "Normalization failed: file not available (%s).\n"
@@ -3192,11 +3247,13 @@ msgid ""
 msgstr ""
 
 #: ../src/file_convert.c:2155
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Covnersion of '%s' failed: Could not access original file '%s' (%s).\n"
+"Conversion of '%s' failed: Could not access original file '%s' (%s).\n"
 "\n"
 msgstr ""
+"הביצוע של '%s' נכשל.\n"
+"\n"
 
 #: ../src/file_convert.c:2210
 #, c-format
@@ -3347,12 +3404,12 @@ msgstr "אי אפשר לפתוח את \"iTunesDB.ext\" לקריאת מידע מ�
 msgid "Could not create hash value from itunesdb\n"
 msgstr "אי אפשר ליצור ערך ערבוב עבור itunesdb\n"
 
-#: ../src/file_itunesdb.c:255
+#: ../src/file_itunesdb.c:257
 #, c-format
 msgid "Error while reading extended info: %s\n"
 msgstr "תקלה בזמן קריאת מידע מורחב: %s\n"
 
-#: ../src/file_itunesdb.c:272
+#: ../src/file_itunesdb.c:274
 #, fuzzy, c-format
 msgid ""
 "iTunesDB '%s' does not match checksum in extended information file '%s'\n"
@@ -3365,7 +3422,7 @@ msgstr ""
 "gtkpod ינסה להתאים את המידע על ידי שימוש ב-MD5. דבר זה עלול לקחת זמן רב.\n"
 "\n"
 
-#: ../src/file_itunesdb.c:284
+#: ../src/file_itunesdb.c:286
 #, c-format
 msgid ""
 "%s:\n"
@@ -3374,7 +3431,7 @@ msgstr ""
 "%s:\n"
 "מצפים ל \"itunesdb_hash=\" אבל קיבלנו:\"%s\"\n"
 
-#: ../src/file_itunesdb.c:344
+#: ../src/file_itunesdb.c:346
 #, c-format
 msgid ""
 "%s:\n"
@@ -3383,7 +3440,7 @@ msgstr ""
 "%s:\n"
 "תקלת פורמט: %s\n"
 
-#: ../src/file_itunesdb.c:387
+#: ../src/file_itunesdb.c:391
 #, fuzzy
 msgid ""
 "No SHA1 checksums on individual tracks are available.\n"
@@ -3398,7 +3455,7 @@ msgstr ""
 "ביקורת) או הימנע משימוש בתוכנות אחרות מלבד gtkpod.\n"
 "\n"
 
-#: ../src/file_itunesdb.c:451
+#: ../src/file_itunesdb.c:455
 msgid ""
 "Extended info will not be used. If you have non-transferred tracks,\n"
 "these will be lost.\n"
@@ -3406,15 +3463,15 @@ msgstr ""
 "מידע מורחב לא יהיה בשימוש. אם יש לך רצועות שלא הועברו,\n"
 "הן ילכו לאיבוד.\n"
 
-#: ../src/file_itunesdb.c:459
+#: ../src/file_itunesdb.c:463
 msgid "Offline iPod database successfully imported"
 msgstr "מסד נתונים לא מקוון של iPod יובא בהצלחה."
 
-#: ../src/file_itunesdb.c:462
+#: ../src/file_itunesdb.c:466
 msgid "Local database successfully imported"
 msgstr "מסד נתונים מקומי יובא בהצלחה"
 
-#: ../src/file_itunesdb.c:470
+#: ../src/file_itunesdb.c:474
 #, c-format
 msgid ""
 "Offline iPod database import failed: '%s'\n"
@@ -3423,7 +3480,7 @@ msgstr ""
 "כישלון ביבוא מסד נתונים לא מקוון של iPod: '%s'\n"
 "\n"
 
-#: ../src/file_itunesdb.c:474
+#: ../src/file_itunesdb.c:478
 #, c-format
 msgid ""
 "Local database import failed: '%s'\n"
@@ -3432,7 +3489,7 @@ msgstr ""
 "כישלון ביבוא מסד נתונים מקומי: '%s'\n"
 "\n"
 
-#: ../src/file_itunesdb.c:481
+#: ../src/file_itunesdb.c:485
 msgid ""
 "Offline iPod database import failed: \n"
 "\n"
@@ -3440,7 +3497,7 @@ msgstr ""
 "כישלון ביבוא מסד נתונים לא מקוון של iPod: \n"
 "\n"
 
-#: ../src/file_itunesdb.c:484
+#: ../src/file_itunesdb.c:488
 msgid ""
 "Local database import failed: \n"
 "\n"
@@ -3448,7 +3505,7 @@ msgstr ""
 "כישלון ביבוא מסד נתונים מקומי: \n"
 "\n"
 
-#: ../src/file_itunesdb.c:491
+#: ../src/file_itunesdb.c:495
 #, c-format
 msgid ""
 "'%s' does not exist. Import aborted.\n"
@@ -3457,15 +3514,15 @@ msgstr ""
 "יבוא בוטל. לא קיים '%s'\n"
 "\n"
 
-#: ../src/file_itunesdb.c:514
+#: ../src/file_itunesdb.c:518
 msgid "Extended info will not be used.\n"
 msgstr "מידע מורחב לא יהיה בשימוש.\n"
 
-#: ../src/file_itunesdb.c:521
+#: ../src/file_itunesdb.c:525
 msgid "iPod Database Successfully Imported"
 msgstr "מסד נתונים של iPod יובא בהצלחה."
 
-#: ../src/file_itunesdb.c:528
+#: ../src/file_itunesdb.c:532
 #, c-format
 msgid ""
 "iPod Database Import Failed: '%s'\n"
@@ -3474,7 +3531,7 @@ msgstr ""
 "כישלון ביבוא מסד נתונים של iPod: '%s'\n"
 "\n"
 
-#: ../src/file_itunesdb.c:534
+#: ../src/file_itunesdb.c:538
 msgid ""
 "iPod Database Import Failed.\n"
 "\n"
@@ -3482,7 +3539,7 @@ msgstr ""
 "כישלון ביבוא מסד נתונים של iPod: \n"
 "\n"
 
-#: ../src/file_itunesdb.c:543
+#: ../src/file_itunesdb.c:547
 #, c-format
 msgid ""
 "'%s' (or similar) does not exist. Import aborted.\n"
@@ -3491,7 +3548,7 @@ msgstr ""
 "ה־'%s' לא קיים. היבוא בוטל.\n"
 "\n"
 
-#: ../src/file_itunesdb.c:859
+#: ../src/file_itunesdb.c:863
 #, c-format
 msgid ""
 "Could not find iPod directory structure at '%s'.\n"
@@ -3501,30 +3558,30 @@ msgid ""
 "Do you want to create the directory structure now?\n"
 msgstr ""
 
-#: ../src/file_itunesdb.c:1140
+#: ../src/file_itunesdb.c:1144
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr "אי אפשר לפתוח \"%s\" לכתיבת מידע מורחב.\n"
 
-#: ../src/file_itunesdb.c:1155
+#: ../src/file_itunesdb.c:1159
 msgid "Aborted writing of extended info.\n"
 msgstr "כתיבת מידע מורחב בוטלה.\n"
 
-#: ../src/file_itunesdb.c:1356
+#: ../src/file_itunesdb.c:1360
 #, c-format
 msgid "%d%%"
 msgstr ""
 
-#: ../src/file_itunesdb.c:1370
+#: ../src/file_itunesdb.c:1374
 #, fuzzy, c-format
 msgid "%d%% (%d/%d  %d:%02d:%02d left)"
 msgstr "%d%% (%d:%02d:%02d נותרו)"
 
-#: ../src/file_itunesdb.c:1412
+#: ../src/file_itunesdb.c:1416
 msgid "Status: Deleting File"
 msgstr ""
 
-#: ../src/file_itunesdb.c:1473
+#: ../src/file_itunesdb.c:1477
 #, fuzzy, c-format
 msgid ""
 "Could not remove the following file: '%s'\n"
@@ -3533,7 +3590,7 @@ msgstr ""
 "אי אפשר לפתוח את '%s' לכתיבה (%s).\n"
 "\n"
 
-#: ../src/file_itunesdb.c:1581
+#: ../src/file_itunesdb.c:1585
 #, fuzzy
 msgid ""
 "The following track could not be converted successfully:\n"
@@ -3544,7 +3601,7 @@ msgid_plural ""
 msgstr[0] "הרצועה הבאה איננה יכולה להתעדכן"
 msgstr[1] "%d הרצועות הבאות אינן יכולות להתעדכן"
 
-#: ../src/file_itunesdb.c:1591
+#: ../src/file_itunesdb.c:1595
 #, fuzzy
 msgid ""
 "The following track could not be transferred successfully:\n"
@@ -3559,31 +3616,31 @@ msgstr[1] "%d הרצועות הבאות אינן יכולות להתעדכן"
 #. modal,
 #. gint id,
 #. gboolean modal,
-#: ../src/file_itunesdb.c:1600 ../src/misc_confirm.c:70
+#: ../src/file_itunesdb.c:1604 ../src/misc_confirm.c:70
 msgid "Warning"
 msgstr "אזהרה"
 
 #. title
-#: ../src/file_itunesdb.c:1601
+#: ../src/file_itunesdb.c:1605
 msgid ""
 "The iPod could not be ejected. Please fix the problems mentioned below and "
 "then eject the iPod again. Pressing 'OK' will re-schedule the failed tracks "
 "for conversion and transfer."
 msgstr ""
 
-#: ../src/file_itunesdb.c:1663
+#: ../src/file_itunesdb.c:1667
 msgid "Status: Copying track"
 msgstr ""
 
-#: ../src/file_itunesdb.c:1669
+#: ../src/file_itunesdb.c:1673
 msgid "Status: Waiting for conversion to complete"
 msgstr ""
 
-#: ../src/file_itunesdb.c:1673
+#: ../src/file_itunesdb.c:1677
 msgid "Status: Finished transfer"
 msgstr ""
 
-#: ../src/file_itunesdb.c:1714
+#: ../src/file_itunesdb.c:1718
 #, c-format
 msgid ""
 "One track could not be transferred because your iPod is full. Either delete "
@@ -3596,7 +3653,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/file_itunesdb.c:1792
+#: ../src/file_itunesdb.c:1800
 #, c-format
 msgid ""
 "You did not import the existing iTunesDB ('%s'). This is most likely "
@@ -3612,81 +3669,104 @@ msgstr ""
 "לחץ אישור אם תרצה להמשיך בכל זאת או ביטול לדלג על השמירה. אם תבטל, תוכל "
 "לייבא את מסד הנתונים הקיים לפני קריאה לפונקציה זו שוב.\n"
 
-#: ../src/file_itunesdb.c:1827
+#: ../src/file_itunesdb.c:1835
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
 msgstr "מבנה התיקיות של ה-iPod חייב להיות זמין לפני סנכרון ה-iPod.\n"
 
-#: ../src/file_itunesdb.c:1836
+#: ../src/file_itunesdb.c:1844
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr "מספר רצועות לא יכלו להימחק מה-iPod. יצוא בוטל!"
 
-#: ../src/file_itunesdb.c:1854
-msgid "Now writing database. Please wait..."
+#: ../src/file_itunesdb.c:1862
+#, fuzzy, c-format
+msgid "Now writing database '%s'. Please wait..."
 msgstr "כותב כעת מסד נתונים. אנא המתן..."
 
-#: ../src/file_itunesdb.c:1901
+#: ../src/file_itunesdb.c:1911
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "קובץ מידע מורחב לא נמחק: '%s'"
 
-#: ../src/file_itunesdb.c:1987
+#: ../src/file_itunesdb.c:1995
 #, c-format
 msgid "%s: Database saved"
 msgstr "מסד נתונים של iPod נשמר :%s"
 
-#: ../src/file_itunesdb.c:1991
+#: ../src/file_itunesdb.c:1999
 #, c-format
 msgid "%s: Changes saved"
 msgstr "%s: שינויים נשמרו"
 
-#: ../src/fileselection.c:128
+#: ../src/fileselection.c:129
 msgid "Successfully added files"
 msgstr "קבצים הוספו בהצלחה"
 
-#: ../src/fileselection.c:130
+#: ../src/fileselection.c:131
 msgid "Some files were not added successfully"
 msgstr "מספר קבצים לא הוספו בהצלחה"
 
-#. Create the file chooser, and handle the response
-#: ../src/fileselection.c:160
-msgid "Add Files"
+#: ../src/fileselection.c:164 ../src/fileselection.c:305
+#: ../src/fileselection.c:792
+msgid "Please select a playlist or repository before adding tracks."
+msgstr ""
+
+#: ../src/fileselection.c:175 ../src/fileselection.c:314
+#: ../src/fileselection.c:803
+msgid "Please load the iPod before adding tracks."
+msgstr ""
+
+#: ../src/fileselection.c:185
+#, fuzzy, c-format
+msgid "Add files to '%s'"
 msgstr "הוספת קבצים"
 
-#. Create the file chooser, and handle the response
-#: ../src/fileselection.c:253
-msgid "Add Playlists"
-msgstr "הוספת רשימת השמעה"
+#: ../src/fileselection.c:189
+#, c-format
+msgid "Add files to '%s/%s'"
+msgstr ""
+
+#. Create window title
+#: ../src/fileselection.c:322
+#, fuzzy, c-format
+msgid "Add playlist files to '%s'"
+msgstr "הוספת רשימת השמעה מקובץ"
 
 #. Create the file chooser, and handle the response
-#: ../src/fileselection.c:300
+#: ../src/fileselection.c:378
 msgid "Set Cover"
 msgstr "קבע עטיפה"
 
-#: ../src/fileselection.c:721
-msgid "Select directory to add recursively"
-msgstr "בחר תיקייה להוספה רקורסיבית"
+#: ../src/fileselection.c:816
+#, fuzzy, c-format
+msgid "Add directories to '%s'"
+msgstr "הוספת תיקיות בצורה רקורסיבית"
 
-#: ../src/fileselection.c:992
+#: ../src/fileselection.c:820
+#, fuzzy, c-format
+msgid "Add directories to '%s/%s'"
+msgstr "הוספת תיקיות בצורה רקורסיבית"
+
+#: ../src/fileselection.c:1097
 msgid "Ok"
 msgstr "אישור"
 
-#: ../src/fileselection.c:1001
+#: ../src/fileselection.c:1106
 msgid "Cancel"
 msgstr "ביטול"
 
-#: ../src/flacfile.c:33
+#: ../src/flacfile.c:61
 #, fuzzy, c-format
 msgid "'%s' does not appear to be an FLAC audio file.\n"
 msgstr "הקובץ '%s' הוא כנראה לא קובץ שמע mp4.\n"
 
-#: ../src/flacfile.c:52
+#: ../src/flacfile.c:80
 #, fuzzy, c-format
 msgid "Error retrieving tags for '%s'.\n"
 msgstr "תקלה בכתיבה ל-'%s'.\n"
 
-#: ../src/flacfile.c:119
+#: ../src/flacfile.c:150
 #, fuzzy, c-format
 msgid ""
 "Import of '%s' failed: FLAC not supported without the FLAC library. You must "
@@ -3695,7 +3775,7 @@ msgstr ""
 "הייבוא של '%s' נכשל: m4a/m4p/m4b לא נתמך ללא הספריה mp4v2. אתה חייב להדר את "
 "קוד המקור gtkpod ביחד עם הספריה mp4v2.\n"
 
-#: ../src/flacfile.c:125
+#: ../src/flacfile.c:156
 #, fuzzy, c-format
 msgid ""
 "FLAC metadata update for '%s' failed: FLAC not supported without the FLAC "
@@ -3768,54 +3848,54 @@ msgstr "%s: אפשרות`-W %s' אינה מאפשרת ארגומנט\n"
 msgid "n/c"
 msgstr "n/c"
 
-#: ../src/info.c:388 ../src/info.c:835
+#: ../src/info.c:388 ../src/info.c:838
 msgid "offline"
 msgstr "לא מקוון"
 
-#: ../src/info.c:483
+#: ../src/info.c:486
 #, c-format
 msgid " P:%d T:%d/%d"
 msgstr " P:%d T:%d/%d"
 
-#: ../src/info.c:777
+#: ../src/info.c:780
 msgid "B"
 msgstr "בתים"
 
-#: ../src/info.c:777
+#: ../src/info.c:780
 msgid "kB"
 msgstr "ק\"ב"
 
-#: ../src/info.c:777
+#: ../src/info.c:780
 msgid "TB"
 msgstr "ט\"ב"
 
-#: ../src/info.c:820
+#: ../src/info.c:823
 #, c-format
 msgid " %s Free"
 msgstr " %s זמין"
 
-#: ../src/info.c:825
+#: ../src/info.c:828
 #, c-format
 msgid " %s Pending"
 msgstr " %s ממתין"
 
-#: ../src/info.c:830
+#: ../src/info.c:833
 msgid " disconnected"
 msgstr " מנותק"
 
-#: ../src/info.c:881
+#: ../src/info.c:884
 msgid "No database or playlist selected"
 msgstr "לא נבחרו מסד נתונים את רשימת השמעה"
 
-#: ../src/info.c:886
+#: ../src/info.c:889
 msgid "No tracks selected"
 msgstr "לא נבחרו רצועות"
 
-#: ../src/info.c:891
+#: ../src/info.c:894
 msgid "No playlist selected"
 msgstr "לא נבחרה רשימת השמעה"
 
-#: ../src/info.c:896
+#: ../src/info.c:899
 msgid "No iPod or iPod playlist selected"
 msgstr "לא נבחר iPod או לא נבחרה רשימת השמעה של iPod"
 
@@ -3841,6 +3921,13 @@ msgstr ""
 #, fuzzy, c-format
 msgid "<b>Please select your iPod model at </b><i>%s</i>"
 msgstr "<b>אנא בחר נקודת עגינה ואת הדגם של ה־iPod</b>"
+
+#: ../src/ipod_init.c:463
+msgid ""
+"Could not determine the model you selected -- this could be a bug or "
+"incompatibilty in the GTK+ or glade library.\n"
+"\n"
+msgstr ""
 
 #: ../src/misc.c:86
 #, c-format
@@ -4131,7 +4218,7 @@ msgstr "התבנית ('%s') לא מתאימה לסוג הקובץ '%s'\n"
 msgid "Error creating %s: %s\n"
 msgstr "תקלה ביצירת %s: %s\n"
 
-#: ../src/misc.c:1777
+#: ../src/misc.c:1732
 #, fuzzy, c-format
 msgid ""
 "Writing preferences file '%s' failed (%s).\n"
@@ -4140,11 +4227,11 @@ msgstr ""
 "הביצוע של '%s' נכשל.\n"
 "\n"
 
-#: ../src/misc.c:1779
+#: ../src/misc.c:1734
 msgid "unspecified error"
 msgstr ""
 
-#: ../src/misc.c:1787
+#: ../src/misc.c:1742
 #, c-format
 msgid ""
 "Writing preferences to the iPod (%s) failed: could not get path to Control "
@@ -4505,55 +4592,88 @@ msgstr ""
 msgid "Episode Nr"
 msgstr ""
 
-#: ../src/misc_conversion.c:118
+#: ../src/misc_conversion.c:106
+#, fuzzy
+msgid "Album Artist"
+msgstr "אמן"
+
+#: ../src/misc_conversion.c:107
+#, fuzzy
+msgid "Sort Artist"
+msgstr "אמן"
+
+#: ../src/misc_conversion.c:108
+#, fuzzy
+msgid "Sort Title"
+msgstr "כתובית"
+
+#: ../src/misc_conversion.c:109
+#, fuzzy
+msgid "Sort Album"
+msgstr "כותר"
+
+#. 50
+#: ../src/misc_conversion.c:110
+#, fuzzy
+msgid "Sort Album Artist"
+msgstr "אמן"
+
+#: ../src/misc_conversion.c:111
+#, fuzzy
+msgid "Sort Composer"
+msgstr "יוצר"
+
+#: ../src/misc_conversion.c:112
+msgid "Sort TV Show"
+msgstr ""
+
+#: ../src/misc_conversion.c:125
 msgid "Name of file on PC, if available"
 msgstr "שם הקובץ על ה-PC, אם קיים"
 
-#: ../src/misc_conversion.c:119
+#: ../src/misc_conversion.c:126
 msgid "Name of file on the iPod"
 msgstr "שם הקובץ על ה-iPod"
 
 #. 10
-#: ../src/misc_conversion.c:121
+#: ../src/misc_conversion.c:128
 msgid "Track Nr. and total number of tracks on CD"
 msgstr "מספר רצועה וסך כל מספר הרצועות על דיסק השמע"
 
-#: ../src/misc_conversion.c:122
+#: ../src/misc_conversion.c:129
 msgid "Whether the file has already been transferred to the iPod or not"
 msgstr "האם הקובץ הועבר כבר אל ה-iPod או לא"
 
-#: ../src/misc_conversion.c:128
-msgid ""
-"Supposedly something that tells the iPod to increase or decrease the "
-"playback speed"
-msgstr "לכאורה משהו המסמן ל-iPod להגביר או להנמיך את מהירות ההשמעה"
+#: ../src/misc_conversion.c:135
+msgid "Beats per minute"
+msgstr ""
 
-#: ../src/misc_conversion.c:130
+#: ../src/misc_conversion.c:136
 msgid "Number of times the track has been played"
 msgstr "מספר הפעמים שהרצועה הושמעה"
 
-#: ../src/misc_conversion.c:131
+#: ../src/misc_conversion.c:137
 msgid "Star rating from 0 to 5"
 msgstr "דירוג כוכבים החל מ 0 עד 5"
 
-#: ../src/misc_conversion.c:132
+#: ../src/misc_conversion.c:138
 msgid "Date and time track has been added"
 msgstr "תאריך ושעה שהרצועה הוספה"
 
 #. 20
-#: ../src/misc_conversion.c:133
+#: ../src/misc_conversion.c:139
 msgid "Date and time track has last been played"
 msgstr "תאריך ושעה שהרצועה הושמעה לאחרונה"
 
-#: ../src/misc_conversion.c:134
+#: ../src/misc_conversion.c:140
 msgid "Date and time track has last been modified"
 msgstr "תאריך ושעה שהרצועה שונתה לאחרונה"
 
-#: ../src/misc_conversion.c:135
+#: ../src/misc_conversion.c:141
 msgid "Manual volume adjust"
 msgstr "שינוי עוצמת קול ידנית"
 
-#: ../src/misc_conversion.c:136
+#: ../src/misc_conversion.c:142
 msgid ""
 "Volume adjust in dB (replay gain) -- you need to activate 'soundcheck' on "
 "the iPod"
@@ -4561,44 +4681,52 @@ msgstr ""
 "תיקון עוצמת קול בדציבלים (הגבר השמעה) -- צריך להפעיל 'soundcheck' על ה-iPod"
 
 #. 25
-#: ../src/misc_conversion.c:139
+#: ../src/misc_conversion.c:145
 msgid "CD Nr. and total number of CDS in set"
 msgstr "מספר דיסק שמע וסך כל דיסקי השמע בקבוצה"
 
-#: ../src/misc_conversion.c:142
+#: ../src/misc_conversion.c:148
 msgid ""
 "The category (e.g. 'Technology' or 'Music') where the podcast was located."
 msgstr "הקטגוריה (לדוגמה \"טכנולוגיה\" או מוזיקה) שבה הפודקסט מוקם."
 
-#: ../src/misc_conversion.c:143
+#: ../src/misc_conversion.c:149
 msgid "Accessible by selecting the center button on the iPod."
 msgstr "זמין על ידי לחיצה על הכפתור המרכזי של ה־iPod."
 
-#: ../src/misc_conversion.c:147
+#: ../src/misc_conversion.c:153
 msgid "Release date (for podcasts displayed next to the title on the iPod)"
 msgstr "זמן שחרור (עבור פודקסטים מוצג ליד הכותרת ב־iPod)"
 
-#: ../src/misc_conversion.c:713
+#. 50
+#: ../src/misc_conversion.c:167 ../src/misc_conversion.c:168
+#: ../src/misc_conversion.c:169 ../src/misc_conversion.c:170
+#: ../src/misc_conversion.c:171 ../src/misc_conversion.c:172
+#, fuzzy
+msgid "Used for sorting on the iPod"
+msgstr "שם הקובץ על ה-iPod"
+
+#: ../src/misc_conversion.c:733
 #, c-format
 msgid "The URI '%s' is not an absolute URI using the file scheme"
 msgstr "הנתיב '%s' הוא נתיב לא מוחלט המשתמש בתבנית הקובץ"
 
-#: ../src/misc_conversion.c:723
+#: ../src/misc_conversion.c:743
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
 msgstr "שם הקובץ המקומי בנתיב '%s' לא יכול לכלול '#'"
 
-#: ../src/misc_conversion.c:740
+#: ../src/misc_conversion.c:760
 #, c-format
 msgid "The URI '%s' is invalid"
 msgstr "הנתיב '%s' הוא לא חוקי"
 
-#: ../src/misc_conversion.c:752
+#: ../src/misc_conversion.c:772
 #, c-format
 msgid "The hostname of the URI '%s' is invalid"
 msgstr "שם השרת של הנתיב '%s' הוא לא חוקי."
 
-#: ../src/misc_conversion.c:768
+#: ../src/misc_conversion.c:788
 #, c-format
 msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "הנתיב URI '%s' מכיל תווים לא חוקיים"
@@ -4704,11 +4832,6 @@ msgstr "טיפול ברצועות מתנדנדות ללא קבצים על ה-PC 
 #: ../src/misc_playlist.c:882
 msgid "Dangling tracks with no files on PC were removed."
 msgstr "רצועות מתנדנדות ללא קבצים על ה-PC הוסרו."
-
-#: ../src/misc_playlist.c:916
-#, c-format
-msgid "Processing '%s'"
-msgstr "מעבד '%s'"
 
 #: ../src/misc_playlist.c:943
 msgid "Dangling tracks with files on PC were handled."
@@ -4836,72 +4959,72 @@ msgstr[1] "הרצועות הכפולות (%d) הבאות לא הוספו לרש�
 msgid "Duplicate detection"
 msgstr "זיהוי כפילויות"
 
-#: ../src/misc_track.c:1269
+#: ../src/misc_track.c:1331
 msgid "Local Database"
 msgstr "מסד נתונים מקומי"
 
 #. artwork is set
-#: ../src/misc_track.c:1280
+#: ../src/misc_track.c:1342
 msgid "Embedded or filename was lost"
 msgstr "מוטבע או ששם הקובץ אבד"
 
-#: ../src/misc_track.c:1284
+#: ../src/misc_track.c:1346
 msgid "Artwork not set"
 msgstr "לא נקבעו תמונות"
 
-#: ../src/misc_track.c:1737
+#: ../src/misc_track.c:1806
 #, fuzzy, c-format
 msgid "Could not find source file for '%s'. Track not copied."
 msgstr "אי אפשר למצוא את הקובץ '%s' על ה-iPod\n"
 
-#: ../src/misc_track.c:1973
+#: ../src/misc_track.c:2042
 #, c-format
 msgid "drag and drop: ignored '%s'\n"
 msgstr "גרור ושחרר: התעלמות מ '%s'\n"
 
-#: ../src/mp3file.c:1282
+#: ../src/mp3file.c:1295
 #, c-format
 msgid "Error setting ID3 field: %s\n"
 msgstr "שגיאה בקביעת שדה ID3: %s\n"
 
-#: ../src/mp3file.c:1306 ../src/mp3file.c:1399 ../src/mp3file.c:1548
-#: ../src/mp3file.c:2186
+#: ../src/mp3file.c:1319 ../src/mp3file.c:1412 ../src/mp3file.c:1567
+#: ../src/mp3file.c:2459
 #, c-format
 msgid "ERROR while opening file: '%s' (%s).\n"
 msgstr "שגיאה בזמן פתיחת קובץ: '%s' (%s).\n"
 
-#: ../src/mp3file.c:1619
+#: ../src/mp3file.c:1647
 #, c-format
 msgid "ERROR while writing tag to file: '%s' (%s).\n"
 msgstr "שגיאה בזמן כתיבת תג לקובץ: '%s' (%s).\n"
 
 #. Tracks with zero play length are ignored by iPod...
-#: ../src/mp3file.c:2352
+#: ../src/mp3file.c:2671
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr "הקובץ \"%s\" בעל זמן אפס. מתעלם.\n"
 
-#: ../src/mp4file.c:227 ../src/mp4file.c:359
+#: ../src/mp4file.c:229 ../src/mp4file.c:390
 #, fuzzy, c-format
 msgid "'%s' does not appear to be a mp4 audio or video file.\n"
 msgstr "הקובץ '%s' הוא כנראה לא קובץ שמע mp4.\n"
 
-#: ../src/mp4file.c:237 ../src/mp4file.c:369
+#: ../src/mp4file.c:239 ../src/mp4file.c:400
 #, c-format
 msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
 msgstr "אי אפשר לפתוח את '%s' לקריאה, או הקובץ הוא לא קובץ שמע mp4.\n"
 
-#: ../src/mp4file.c:478
+#: ../src/mp4file.c:515
 #, c-format
 msgid "'%s' does not appear to be a mp4 audio file.\n"
 msgstr "הקובץ '%s' הוא כנראה לא קובץ שמע mp4.\n"
 
-#: ../src/mp4file.c:489
+#: ../src/mp4file.c:526
 #, c-format
 msgid "Could not open '%s' for writing, or file is not an mp4 file.\n"
 msgstr "אי אפשר לפתוח את '%s' לכתיבה, או הקובץ הוא לא קובץ שמע mp4.\n"
 
-#: ../src/mp4file.c:502
+#: ../src/mp4file.c:539
 #, c-format
 msgid ""
 "Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
@@ -4910,7 +5033,7 @@ msgstr ""
 "הייבוא של '%s' נכשל: m4a/m4p/m4b לא נתמך ללא הספריה mp4v2. אתה חייב להדר את "
 "קוד המקור gtkpod ביחד עם הספריה mp4v2.\n"
 
-#: ../src/mp4file.c:508
+#: ../src/mp4file.c:545
 #, c-format
 msgid ""
 "m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
@@ -4921,7 +5044,7 @@ msgstr ""
 "ללא הספריה mp4v2. אתה חייב להדר את קוד המקור של gtkpod ביחד עם ספריית "
 "mp4v2.\n"
 
-#: ../src/mp4file.c:514
+#: ../src/mp4file.c:551
 #, c-format
 msgid ""
 "m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
@@ -4942,7 +5065,7 @@ msgstr "לא מסוגל לפתוח את '%s' לכתיבה.\n"
 msgid "'%s' does not appear to be an ogg audio file.\n"
 msgstr "הקובץ '%s' הוא כנראה לא קובץ שמע mp4.\n"
 
-#: ../src/oggfile.c:150
+#: ../src/oggfile.c:154
 #, fuzzy, c-format
 msgid ""
 "Import of '%s' failed: ogg not supported without the ogg library. You must "
@@ -4951,7 +5074,7 @@ msgstr ""
 "הייבוא של '%s' נכשל: m4a/m4p/m4b לא נתמך ללא הספריה mp4v2. אתה חייב להדר את "
 "קוד המקור gtkpod ביחד עם הספריה mp4v2.\n"
 
-#: ../src/oggfile.c:156
+#: ../src/oggfile.c:160
 #, fuzzy, c-format
 msgid ""
 "ogg metadata update for '%s' failed: ogg not supported without the ogg "
@@ -5054,11 +5177,11 @@ msgstr ""
 "<i>הסתכל על קבצי האצווה המופיעים ב-'%s'. אם תכתוב קובץ אצווה חדש, שלח אותו "
 "בבקשה אל jcsjcs ב- users.sourceforge.net להכללה בגרסה הבאה.</i>"
 
-#: ../src/prefs_window.c:986 ../src/prefs_window.c:1004
+#: ../src/prefs_window.c:1054 ../src/prefs_window.c:1072
 msgid "Preferences not updated"
 msgstr "העדפות לא עודכנו"
 
-#: ../src/prefs_window.c:1013
+#: ../src/prefs_window.c:1081
 msgid "Preferences applied"
 msgstr "העדפות עודכנו"
 
@@ -5276,6 +5399,26 @@ msgstr "לא מסוגל למצוא פקודה '%s' אשר צוינה עבור '%
 #, c-format
 msgid "%s does not appear to be a supported wav file.\n"
 msgstr "הקובץ %s הוא כנראה לא קובץ wav נתמך.\n"
+
+#~ msgid "_Other"
+#~ msgstr "_אחר"
+
+#~ msgid "File skipped. match exclude masks: '%s'\n"
+#~ msgstr "דילגנו על הקובץ. תבנית מסכת שלילה: '%s'\n"
+
+#~ msgid "Add Playlists"
+#~ msgstr "הוספת רשימת השמעה"
+
+#~ msgid "Select directory to add recursively"
+#~ msgstr "בחר תיקייה להוספה רקורסיבית"
+
+#~ msgid ""
+#~ "Supposedly something that tells the iPod to increase or decrease the "
+#~ "playback speed"
+#~ msgstr "לכאורה משהו המסמן ל-iPod להגביר או להנמיך את מהירות ההשמעה"
+
+#~ msgid "Processing '%s'"
+#~ msgstr "מעבד '%s'"
 
 #, fuzzy
 #~ msgid "label21"
