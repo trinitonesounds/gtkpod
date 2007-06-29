@@ -690,6 +690,7 @@ static void details_setup_widget (Detail *detail, T_item item)
 	w = gtkpod_xml_get_widget (detail->xml, buf);
 	gtk_button_set_label (GTK_BUTTON (w),
 			      gettext (get_t_string (item)));
+	g_free (buf);
 	break;
     default:
 	buf = g_strdup_printf ("details_label_%d", item);

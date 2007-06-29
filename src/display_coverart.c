@@ -1797,9 +1797,9 @@ void coverart_set_images (gboolean clear_track_list)
 		if (tracks == NULL)
 			return;
 		
-		gchar *album_key;
 		while (tracks)
 		{
+		    gchar *album_key;
 			track = tracks->data;
 			
 			album_key = g_strconcat (track->artist, "_", track->album, NULL);
@@ -1820,14 +1820,15 @@ void coverart_set_images (gboolean clear_track_list)
 				/* Insert the new Album Item into the hash */
 				g_hash_table_insert (album_hash, album_key, album);
 				/* Add the key to the list for sorting and other functions */
-				album_key_list = g_list_append (album_key_list, g_strdup(album_key));
+				album_key_list = g_list_append (album_key_list, album_key);
 			}
 			else
 			{
-				/* Album Item found in the album hash so append the track to
-				 * the end of the track list
-				 */
-				 album->tracks = g_list_append (album->tracks, track);
+			    /* Album Item found in the album hash so
+			     * append the track to the end of the
+			     * track list */
+			    g_free (album_key);
+			    album->tracks = g_list_append (album->tracks, track);
 			}
 			
 			tracks = tracks->next;
