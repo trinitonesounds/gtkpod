@@ -1,20 +1,23 @@
 2007-06-25 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/details.c (details_setup_widget): fixed memory leak
-	  (thanks to Daniele).
+	  (thanks to Daniele) (thanks to Gabriel C).
 
 	* src/display_coverart.c (coverart_set_images): fixed memory
           leak (thanks to Daniele).
 
+	* src/Makefile.am: remove EJECT_BIN line as it is no longer
+          used.
+
 2007-06-27 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* data/gtkpod.glade:
-		Changed fetchcover dialog's buttons to display icons only.
+	  Changed fetchcover dialog's buttons to display icons only.
 		
 	* src/fetchcover.c:
-		Added in gettext macros for status messages.
-		Disabled next button if net_retrieve fails to get any images
-		from the downloaded xml file (Thanks Daniele).
+	  Added in gettext macros for status messages.  Disabled next
+	  button if net_retrieve fails to get any images from the
+	  downloaded xml file (Thanks Daniele).
 
 2007-06-27  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
