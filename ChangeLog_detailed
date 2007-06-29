@@ -1,4 +1,4 @@
-2007-06-25 Jorg Schuler <jcsjcs at users.sourceforge.net>
+2007-06-29 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/details.c (details_setup_widget): fixed memory leak
 	  (thanks to Daniele) (thanks to Gabriel C).
