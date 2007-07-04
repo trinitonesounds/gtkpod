@@ -4,6 +4,9 @@
 	  src/Makefile.am:
 	  fix compile with --as-needed (thanks to Santiago M. Mola)
 
+	* po/fr.po:
+	  updated French translation (thanks to Eric Lassauge)
+
 2007-06-29 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/details.c (details_setup_widget): fixed memory leak

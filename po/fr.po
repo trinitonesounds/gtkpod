@@ -1,5 +1,5 @@
 # French language translation for gtkpod 
-# Copyright (C) 2005-2006 Eric Lassauge
+# Copyright (C) 2005-2007 Eric Lassauge
 # Eric Lassauge <lassauge@users.sf.net>, 2006.
 # Copyright (C) 2003 David Le Brun
 # David Le Brun <david@dyn-ns.net>, 2003.
@@ -7,11 +7,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gtkpod 0.94\n"
+"Project-Id-Version: gtkpod 0.99\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-27 16:10-0400\n"
-"PO-Revision-Date: 2007-01-08 21:37+0900\n"
-"Last-Translator: Eric Lassauge <lassauge@users.sf.net>\n"
+"PO-Revision-Date: 2007-07-03 16:28+0100\n"
+"Last-Translator: Éric Lassauge <rpmfarm@free.fr>\n"
 "Language-Team: FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,17 +19,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 
 #: ../data/gtkpod.desktop.in.h:1
-#, fuzzy
 msgid "GtkPod"
-msgstr "gtkpod"
+msgstr "GtkPod"
 
 #: ../data/gtkpod.desktop.in.h:2
 msgid "Manage music and video on an Apple iPod"
-msgstr ""
+msgstr "Gérer musiques et vidéos sur un iPod Apple"
 
 #: ../data/gtkpod.desktop.in.h:3
 msgid "iPod Manager"
-msgstr ""
+msgstr "Gestionnaire iPod"
 
 #: ../data/gtkpod.glade.h:1
 msgid " "
@@ -74,11 +73,11 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:11
 msgid "'aacgain' executable:"
-msgstr "Chemin de l'exécutable «aacgain» :"
+msgstr "Chemin de l'exécutable « aacgain » :"
 
 #: ../data/gtkpod.glade.h:12
 msgid "'mp3gain' executable:"
-msgstr "Chemin de l'exécutable «mp3gain» :"
+msgstr "Chemin de l'exécutable « mp3gain » :"
 
 #: ../data/gtkpod.glade.h:13
 msgid "(Checked)"
@@ -86,23 +85,23 @@ msgstr "(Coché)"
 
 #: ../data/gtkpod.glade.h:14
 msgid "...as icons"
-msgstr "...avec seulement les icônes"
+msgstr "…avec seulement les icônes"
 
 #: ../data/gtkpod.glade.h:15
 msgid "...as text"
-msgstr "...avec seulement les libellés"
+msgstr "…avec seulement les libellés"
 
 #: ../data/gtkpod.glade.h:16
 msgid "...both as icons and text"
-msgstr "...avec les icônes et libellés"
+msgstr "…avec les icônes et libellés"
 
 #: ../data/gtkpod.glade.h:17
 msgid "...entry 'All' in sort tab..."
-msgstr "...onglet «Tous» dans la zone de tri..."
+msgstr "…onglet « Tous » dans la zone de tri…"
 
 #: ../data/gtkpod.glade.h:18
 msgid "...master playlist"
-msgstr "...liste de lecture principale"
+msgstr "…liste de lecture principale"
 
 #: ../data/gtkpod.glade.h:20
 #, no-c-format
@@ -139,21 +138,19 @@ msgstr " :"
 
 #: ../data/gtkpod.glade.h:28
 msgid "<"
-msgstr ""
+msgstr "<"
 
 #: ../data/gtkpod.glade.h:29
-#, fuzzy
 msgid "<b>Account Information</b>"
-msgstr "<b>Confirmation de suppression</b>"
+msgstr "<b>Informations du compte</b>"
 
 #: ../data/gtkpod.glade.h:30
 msgid "<b>Adding/Updating/Syncing</b>"
 msgstr "<b>Ajout/Mise à jour/Synchronisation</b>"
 
 #: ../data/gtkpod.glade.h:31
-#, fuzzy
 msgid "<b>Audioscrobbler</b>"
-msgstr "<b>Barre d'outils</b>"
+msgstr "<b>Audioscrobbler</b>"
 
 #: ../data/gtkpod.glade.h:32
 msgid "<b>Auto-Generated Playlists</b>"
@@ -161,7 +158,7 @@ msgstr "<b>Listes de lecture générées automatiquement</b>"
 
 #: ../data/gtkpod.glade.h:33
 msgid "<b>Automatically select...</b>"
-msgstr "<b>Sélection automatique...</b>"
+msgstr "<b>Sélection automatique…</b>"
 
 #: ../data/gtkpod.glade.h:34
 msgid "<b>Calendar/Contacts/Notes</b>"
@@ -196,9 +193,8 @@ msgid "<b>Mountpoint and individual repository/playlist options</b>"
 msgstr "<b>Point de montage et options pour dépots/listes</b>"
 
 #: ../data/gtkpod.glade.h:42
-#, fuzzy
 msgid "<b>On-the-fly Conversion</b>"
-msgstr "<b>Confirmation de suppression</b>"
+msgstr "<b>Conversion au fil de l'eau</b>"
 
 #: ../data/gtkpod.glade.h:43
 msgid "<b>Play</b>"
@@ -258,7 +254,7 @@ msgstr "<b>mserv</b>"
 
 #: ../data/gtkpod.glade.h:57
 msgid ">"
-msgstr ""
+msgstr ">"
 
 #: ../data/gtkpod.glade.h:58
 msgid "About gtkpod"
@@ -295,11 +291,11 @@ msgstr "Ajouter les répertoires récursivement"
 
 #: ../data/gtkpod.glade.h:66
 msgid "Add new repository/iPod"
-msgstr "Ajouter un nouvel iPod/dépot"
+msgstr "Ajouter un nouvel iPod/dépôt"
 
 #: ../data/gtkpod.glade.h:67
 msgid "Add playlist from file"
-msgstr "Ajouter une liste de lecture depuis un fichier."
+msgstr "Ajouter une liste de lecture depuis un fichier"
 
 #: ../data/gtkpod.glade.h:68 ../src/display_sorttabs.c:3228
 #: ../src/display_tracks.c:2020
@@ -317,9 +313,8 @@ msgid "Album"
 msgstr "Album"
 
 #: ../data/gtkpod.glade.h:71
-#, fuzzy
 msgid "Album Art"
-msgstr "Album"
+msgstr "Affichage pochette"
 
 #: ../data/gtkpod.glade.h:72
 msgid "All (AND)"
@@ -378,7 +373,7 @@ msgid ""
 "If not selected, you must press 'Display' to start displaying."
 msgstr ""
 "Affiche automatiquement les morceaux qui correspondent aux critères saisis."
-"En désactivant cette option, vous devrez appuyer sur «Afficher»."
+"En désactivant cette option, vous devrez appuyer sur « Afficher »."
 
 #: ../data/gtkpod.glade.h:85
 msgid "Before removing playlists or tracks from a playlist"
@@ -406,9 +401,8 @@ msgid "Browse"
 msgstr "Parcourir"
 
 #: ../data/gtkpod.glade.h:91
-#, fuzzy
 msgid "Cache directory:"
-msgstr "Ajouter un _répertoire"
+msgstr "Dossier de cache :"
 
 #: ../data/gtkpod.glade.h:92
 msgid "Calendar"
@@ -441,11 +435,11 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:99
 msgid "Command for 'Enqueue':"
-msgstr "Ligne de commande pour «Ajouter à la file d'attente» :"
+msgstr "Ligne de commande pour « Ajouter à la file d'attente » :"
 
 #: ../data/gtkpod.glade.h:100
 msgid "Command for 'Play now':"
-msgstr "Ligne de commande pour «Jouer maintenant» :"
+msgstr "Ligne de commande pour « Jouer maintenant » :"
 
 #. 5
 #: ../data/gtkpod.glade.h:101 ../src/display_spl.c:97
@@ -455,14 +449,14 @@ msgstr "Compositeur"
 
 #: ../data/gtkpod.glade.h:102
 msgid "Confirm before removing tracks from the iPod or repository"
-msgstr "Confirmer avant de supprimer les morceaux de l'iPod ou du dépot"
+msgstr "Confirmer avant de supprimer les morceaux de l'iPod ou du dépôt"
 
 #: ../data/gtkpod.glade.h:103
 msgid ""
 "Confirm before removing tracks from the iPod or repository\n"
 "when syncing playlists"
 msgstr ""
-"Confirmer avant de supprimer les morceaux de l'iPod ou du dépot\n"
+"Confirmer avant de supprimer les morceaux de l'iPod ou du dépôt\n"
 "lors de la synchronisation des listes"
 
 #: ../data/gtkpod.glade.h:105
@@ -483,7 +477,7 @@ msgstr "Contenant les morceaux sélectionnés"
 
 #: ../data/gtkpod.glade.h:109
 msgid "Conversion Progress Display"
-msgstr ""
+msgstr "Afficher une boîte de dialogue de barre de progression"
 
 #: ../data/gtkpod.glade.h:110
 msgid "Cover"
@@ -499,7 +493,7 @@ msgstr "Créer un dépot"
 
 #: ../data/gtkpod.glade.h:113
 msgid "Create _Playlist File"
-msgstr "Créer un _fichier de liste"
+msgstr "Créer un fichier de _liste"
 
 #: ../data/gtkpod.glade.h:114
 msgid "Credits"
@@ -514,13 +508,12 @@ msgid "Delete repository"
 msgstr "Supprimer le dépot"
 
 #: ../data/gtkpod.glade.h:117
-#, fuzzy
 msgid ""
 "Delete tracks that are no longer present from the\n"
 "iPod or repository"
 msgstr ""
 "Effacer les morceaux qui ne sont plus présents\n"
-"dans l'iPod ou le dépot"
+"dans l'iPod ou le dépôt"
 
 #: ../data/gtkpod.glade.h:119
 msgid "Deleted tracks"
@@ -607,7 +600,7 @@ msgstr "Afficher la liste des morceaux qui ne peuvent pas être mis à jour."
 
 #: ../data/gtkpod.glade.h:132
 msgid "Display conversion log"
-msgstr ""
+msgstr "Afficher les traces des conversions"
 
 #: ../data/gtkpod.glade.h:133
 msgid "Display info about detected duplicates"
@@ -632,7 +625,7 @@ msgstr "Afficher la liste des doublons détectés lors de l'ajout de fichier."
 
 #: ../data/gtkpod.glade.h:138
 msgid "Display toolbar..."
-msgstr "Afficher la barre d'outils..."
+msgstr "Afficher la barre d'outils…"
 
 #: ../data/gtkpod.glade.h:139
 msgid "Display tooltips in main window"
@@ -664,13 +657,13 @@ msgstr "Ne pas synchroniser automatiquement au démarrage"
 
 #: ../data/gtkpod.glade.h:146
 msgid "Download Cover"
-msgstr ""
+msgstr "Télécharger la pochette"
 
 #: ../data/gtkpod.glade.h:147
-#, fuzzy
 msgid "Duplicate Recognition is based on a (modified) sha1 hash over the file."
 msgstr ""
-"La détection de doublons est basée sur la somme de contrôle md5 des fichiers."
+"La détection de doublons est basée sur la somme de contrôle sha1 des "
+"fichiers."
 
 #: ../data/gtkpod.glade.h:148
 msgid "Edit Repository/iPod Options"
@@ -701,11 +694,8 @@ msgid "Exclude file mask(s)"
 msgstr "Masque(s) d'exclusion de fichiers :"
 
 #: ../data/gtkpod.glade.h:155
-#, fuzzy
 msgid "Export can be continued at a later time if canceled."
-msgstr ""
-"Appuyer sur le bouton pour Interrompre.\n"
-"L'export peut être repris plus tard."
+msgstr "L'export peut être repris plus tard après l'annulation."
 
 #: ../data/gtkpod.glade.h:156
 msgid "File size"
@@ -729,10 +719,9 @@ msgstr "Fichiers"
 
 #: ../data/gtkpod.glade.h:161
 msgid "Find _New"
-msgstr ""
+msgstr "Trouver des _Nouveaux"
 
 #: ../data/gtkpod.glade.h:162
-#, fuzzy
 msgid ""
 "Find orphan files (files with no track info in DB) and dangling tracks "
 "(tracks with no corresponding files on iPod)"
@@ -741,13 +730,12 @@ msgstr ""
 "et les morceaux fictifs (morceaux sans fichier correspondant sur l'iPod)."
 
 #: ../data/gtkpod.glade.h:163
-#, fuzzy
 msgid "First try <i>folder.jpg</i>, then <i><artist>.jpg</i>"
 msgstr "Essaye <i>répertoire.jpg</i>, puis <i>&lt;artiste&gt;.jpg</i>"
 
 #: ../data/gtkpod.glade.h:164
 msgid "Flac with :"
-msgstr ""
+msgstr "FLAC avec :"
 
 #: ../data/gtkpod.glade.h:166
 #, no-c-format
@@ -755,8 +743,8 @@ msgid ""
 "For example, 'xmms %s' will clear xmms' current playlist, add the selected "
 "tracks and start playing."
 msgstr ""
-"Par exemple «xmms %s» videra la liste de lecture actuelle de xmms, ajoutera "
-"les morceaux sélectionnés et commencera la lecture."
+"Par exemple « xmms %s » videra la liste de lecture actuelle de xmms, "
+"ajoutera les morceaux sélectionnés et commencera la lecture."
 
 #: ../data/gtkpod.glade.h:168
 #, no-c-format
@@ -764,8 +752,8 @@ msgid ""
 "For example, 'xmms -e %s' will append (enqueue) the selected tracks to xmms' "
 "current playlist."
 msgstr ""
-"Par exemple «xmms -e %s» ajoutera à la liste de lecture de xmms les morceaux "
-"sélectionnés."
+"Par exemple « xmms -e %s » ajoutera à la liste de lecture de xmms les "
+"morceaux sélectionnés."
 
 #: ../data/gtkpod.glade.h:169 ../src/display_sorttabs.c:2966
 #: ../src/display_spl.c:89 ../src/misc_conversion.c:63
@@ -777,7 +765,6 @@ msgid "Group artists on compilation CDs"
 msgstr "Grouper les artistes pour les CDs de compilation"
 
 #: ../data/gtkpod.glade.h:171
-#, fuzzy
 msgid ""
 "Highly recommended for faster import when taking advantage of the "
 "duplication recognition. Also, having the PC filenames allows writing "
@@ -788,7 +775,8 @@ msgstr ""
 "Cette option est plus que recommandée pour des raisons de performance lors "
 "de l'import en prenant en compte les doublons. De plus, cela permet de "
 "mettre à jour les attributs ID3 des fichiers sur disque, et de restaurer le "
-"contenu de votre iPod en cas de corruption du système de fichiers."
+"contenu de votre iPod en cas de corruption du système de fichiers (change "
+"l'entrée « transferred= » dans la sauvegarde de la base de données)."
 
 #: ../data/gtkpod.glade.h:172 ../src/context_menus.c:682
 #: ../src/context_menus.c:700 ../src/context_menus.c:824
@@ -874,8 +862,8 @@ msgid ""
 "Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
 msgstr ""
 "Afin de trier par ordre alphabétique sur l'iPod, vous devez cliquer sur le "
-"menu «Édition» puis «Sauver l'ordre de tri des morceaux affichés» ou "
-"l'option «Sauver automatiquement» ci-dessus."
+"menu « Édition » puis « Sauver l'ordre de tri des morceaux affichés » ou "
+"l'option « Sauver automatiquement » ci-dessus."
 
 #: ../data/gtkpod.glade.h:183
 msgid "Initialize iPod"
@@ -907,11 +895,11 @@ msgstr "Borne inférieure"
 
 #: ../data/gtkpod.glade.h:190
 msgid "M4A with :"
-msgstr ""
+msgstr "M4A avec :"
 
 #: ../data/gtkpod.glade.h:191
 msgid "MP3 with :"
-msgstr ""
+msgstr "MP3 avec :"
 
 #: ../data/gtkpod.glade.h:192
 msgid "Match al_l of the following"
@@ -927,11 +915,11 @@ msgstr "Seulement les morceaux _cochés"
 
 #: ../data/gtkpod.glade.h:195
 msgid "Maximum number of background threads:"
-msgstr ""
+msgstr "Nombre maximum de threads en arrière-plan :"
 
 #: ../data/gtkpod.glade.h:196
 msgid "Maximum size of cache directory (in GB):"
-msgstr ""
+msgstr "Taille maximale du dossier cache (en Go) :"
 
 #: ../data/gtkpod.glade.h:197
 msgid "Model:"
@@ -1083,7 +1071,7 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:219
 msgid "Ogg with :"
-msgstr ""
+msgstr "Ogg avec :"
 
 #: ../data/gtkpod.glade.h:220
 msgid "On startup automatically sync with playlist directories"
@@ -1129,7 +1117,7 @@ msgstr "Écraser les attributs déjà présents"
 
 #: ../data/gtkpod.glade.h:230
 msgid "Password:"
-msgstr ""
+msgstr "Mot de passe :"
 
 #: ../data/gtkpod.glade.h:231
 msgid "Path:"
@@ -1177,9 +1165,8 @@ msgid "Preferences"
 msgstr "Préférences"
 
 #: ../data/gtkpod.glade.h:242
-#, fuzzy
 msgid "Progress Information"
-msgstr "Information"
+msgstr "Afficher des informations de progression"
 
 #: ../data/gtkpod.glade.h:243
 msgid "Random Playlist from Displayed Tracks"
@@ -1229,9 +1216,8 @@ msgid "Save Changes"
 msgstr "Enregistrer"
 
 #: ../data/gtkpod.glade.h:254
-#, fuzzy
 msgid "Scrobble Tracks?"
-msgstr "Morceaux sélec_tionnés"
+msgstr "« scrobbling » des morceaux ?"
 
 #: ../data/gtkpod.glade.h:255
 msgid "Select '-1' for no upper limit."
@@ -1319,21 +1305,18 @@ msgid "Selected tracks from playlist"
 msgstr "Morceaux sélectionnés de la liste de lecture"
 
 #: ../data/gtkpod.glade.h:276
-#, fuzzy
 msgid "Semicolon separated list of file exclusion masks, e.g. '*.mp3'"
 msgstr ""
-"Liste de fichiers à exclure séparés par des points-virgules, par exemple «*."
-"mp3»"
+"Liste de fichiers à exclure séparés par des points-virgules, par exemple « *."
+"mp3 »"
 
 #: ../data/gtkpod.glade.h:277
-#, fuzzy
 msgid "Set Cover Art from _File"
-msgstr "Modifier la pochette"
+msgstr "Pochette à partir du _fichier"
 
 #: ../data/gtkpod.glade.h:278
-#, fuzzy
 msgid "Set Cover Art from _Web"
-msgstr "Modifier la pochette"
+msgstr "Pochette depuis le _Web"
 
 #: ../data/gtkpod.glade.h:279
 msgid "Set mountpoint or edit repository options"
@@ -1349,10 +1332,10 @@ msgid ""
 "the Tools Menu. If this is set, missing normalization data for .m4a and .m4b "
 "files will be calculated and written to your music file using this command."
 msgstr ""
-"Choisissez «aacgain -q -k» pour la fonctionnalité «Normaliser le volume» du "
-"menu Outils. Si ceci est validé, les données manquantes de normalisation des "
-"fichiers .m4a et .m4b seront calculées et ajoutées aux fichiers avec cette "
-"commande."
+"Choisissez « aacgain -q -k » pour la fonctionnalité « Normaliser le volume » "
+"du menu Outils. Si ceci est validé, les données manquantes de normalisation "
+"des fichiers .m4a et .m4b seront calculées et ajoutées aux fichiers avec "
+"cette commande."
 
 #: ../data/gtkpod.glade.h:282
 msgid ""
@@ -1360,29 +1343,31 @@ msgid ""
 "the Tools Menu. If this is set, missing normalization data for mp3 files "
 "will be calculated and written to your mp3 file using this command."
 msgstr ""
-"Choisissez «mp3gain -q -k» pour la fonctionnalité «Normaliser le volume» du "
-"menu Outils. Si ceci est validé, les données manquantes de normalisation des "
-"fichiers MP3 seront calculées et ajoutées aux fichiers avec cette commande."
+"Choisissez « mp3gain -q -k » pour la fonctionnalité « Normaliser le volume » "
+"du menu Outils. Si ceci est validé, les données manquantes de normalisation "
+"des fichiers MP3 seront calculées et ajoutées aux fichiers avec cette "
+"commande."
 
 #: ../data/gtkpod.glade.h:283
 msgid "Set this to your last.fm password"
-msgstr ""
+msgstr "Remplir avec le mot de passe last.fm"
 
 #: ../data/gtkpod.glade.h:284
 msgid "Set this to your last.fm username"
-msgstr ""
+msgstr "Remplir avec le nom d'utilisateur last.fm"
 
 #: ../data/gtkpod.glade.h:285
 msgid ""
 "Set to 0 to effectively disable caching (a maximum of one track will be "
 "cached at a time)."
 msgstr ""
+"Mettre à 0 pour inhiber le cache (un morceau au maximum dans le cache)."
 
 #: ../data/gtkpod.glade.h:286
 msgid ""
 "Set to 0 to use as many background threads as CPUs are available on your "
 "system."
-msgstr ""
+msgstr "Mettre à 0 pour utiliser autant de « threads » que possible."
 
 #: ../data/gtkpod.glade.h:287
 msgid "Show information about problems when accessing mserv"
@@ -1427,8 +1412,8 @@ msgid ""
 "Specify exact path including command line options. '%i' will be replaced "
 "with the mount point of the iPod."
 msgstr ""
-"Indiquer le chemin exact ainsi que les paramètres de ligne de commande. «%i» "
-"sera remplacé par le point de montage de l'iPod."
+"Indiquer le chemin exact ainsi que les paramètres de ligne de commande. « %"
+"i » sera remplacé par le point de montage de l'iPod."
 
 #: ../data/gtkpod.glade.h:298
 msgid "Specify interval"
@@ -1475,9 +1460,10 @@ msgid ""
 "The output of the background conversion scripts is copied below. Each page "
 "of the notebook corresponds to one background thread."
 msgstr ""
+"La sortie du script de conversion est donnée ci-dessous. Chaque onglet "
+"correspond à une tâche d'arrière-plan."
 
 #: ../data/gtkpod.glade.h:308
-#, fuzzy
 msgid ""
 "The tags are written to the files on your harddrive and on the iPod (if "
 "available)."
@@ -1492,7 +1478,7 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:310
 msgid "This is the same option as in 'Edit/Delete Confirmation'"
-msgstr "C'est la même option que dans «Édition/Confirmation de suppression»"
+msgstr "C'est la même option que dans « Édition/Confirmation de suppression »"
 
 #: ../data/gtkpod.glade.h:311
 msgid ""
@@ -1508,7 +1494,7 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:312
 msgid "This option will be re-activated when you upgrade gtkpod."
-msgstr "Cette option se réactivera quans vous mettrez à jour gtkpod"
+msgstr "Cette option se réactivera quand vous mettrez à jour gtkpod"
 
 #: ../data/gtkpod.glade.h:313
 msgid "Time:"
@@ -1549,6 +1535,9 @@ msgid ""
 "iPod repository. Otherwise they will be transferred when ejecting the "
 "contents of the iPod completely unchanged until then."
 msgstr ""
+"Les morceaux seront copiés en tâche de fond dès qu'ils sont ajoutés au dépôt "
+"d'un iPod. Dans le cas contraire ils seront copiés uniquement à l'éjection "
+"du iPod."
 
 #: ../data/gtkpod.glade.h:322
 msgid "Tracks in Selected Tab _Entry"
@@ -1561,6 +1550,8 @@ msgstr "Morceaux de la _Liste de lecture sélectionnée"
 #: ../data/gtkpod.glade.h:324
 msgid "Transfer tracks to the iPod in the background"
 msgstr ""
+"Confirmer avant de supprimer les morceaux de l'iPod ou du dépot\n"
+"lors de la synchronisation des listes"
 
 #: ../data/gtkpod.glade.h:325
 msgid "Translators"
@@ -1575,7 +1566,6 @@ msgstr ""
 "différent doit être créé."
 
 #: ../data/gtkpod.glade.h:327
-#, fuzzy
 msgid "Undo _Track"
 msgstr "Annuler pour le _Morceau"
 
@@ -1597,21 +1587,19 @@ msgstr "Borne supérieure"
 
 #: ../data/gtkpod.glade.h:332
 msgid "Use 'Multi-Edit' also for title field"
-msgstr "Utiliser «Édition multiple» aussi pour les titres"
+msgstr "Utiliser « Édition multiple » également pour les titres"
 
 #: ../data/gtkpod.glade.h:333
 msgid "Use 'Multi-Edit' for tracks selections"
-msgstr "Utiliser «Édition multiple» pour les morceaux sélectionnés"
+msgstr "Utiliser « Édition multiple » pour les morceaux sélectionnés"
 
 #: ../data/gtkpod.glade.h:334
-#, fuzzy
 msgid "Use <i><Album>.jpg</i> in the parent directory"
 msgstr "Utilise <i>&lt;Album&gt;.jpg</i> dans le répertoire parent"
 
 #: ../data/gtkpod.glade.h:335
-#, fuzzy
 msgid "Use <i><Album>.jpg</i>, <i><Album>.png</i>..."
-msgstr "Utilise <i>&lt;Album&gt;.jpg</i>; <i>&lt;Album&gt;.png</i> ..."
+msgstr "Utilise <i>&lt;Album&gt;.jpg</i>; <i>&lt;Album&gt;.png</i>…"
 
 #: ../data/gtkpod.glade.h:336
 msgid "Use <i>folder.jpg</i> as cover art."
@@ -1619,7 +1607,7 @@ msgstr "Utilise <i>répertoire.jpg</i> pour la pochette."
 
 #: ../data/gtkpod.glade.h:337
 msgid "Use <i>folder.jpg</i>, <i>folder.png</i>..."
-msgstr "Utilise <i>répertoire.jpg</i>, <i>répertoire.png</i> ..."
+msgstr "Utilise <i>répertoire.jpg</i>, <i>répertoire.png</i>…"
 
 #: ../data/gtkpod.glade.h:338
 msgid "Use mserv database to fill additional information"
@@ -1631,18 +1619,17 @@ msgid ""
 "for this filename."
 msgstr ""
 "Utilise le jeu de caractère sélectionné pour ce fichier\n"
-"(voir la section ci-dessus : «Ajout/Mise à jour/Synchronisation»)."
+"(voir la section ci-dessus : « Ajout/Mise à jour/Synchronisation »)."
 
 #: ../data/gtkpod.glade.h:341
 msgid ""
 "Use selected encoding (on the 'General' page)\n"
 "when writing tags"
 msgstr ""
-"Utiliser le jeu de caractère sélectionné (dans l'onglet «Général») pour "
+"Utiliser le jeu de caractère sélectionné (dans l'onglet « Général ») pour "
 "l'écriture des attributs"
 
 #: ../data/gtkpod.glade.h:343
-#, fuzzy
 msgid "Use selected encoding also when updating or syncing tracks"
 msgstr ""
 "Le jeu de caractères sélectionné sera utilisé pour\n"
@@ -1672,7 +1659,7 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:348
 msgid "WAV with :"
-msgstr ""
+msgstr "WAV avec :"
 
 #: ../data/gtkpod.glade.h:349
 msgid ""
@@ -1715,16 +1702,15 @@ msgstr ""
 #: ../data/gtkpod.glade.h:355
 msgid "Write all changes made to the disk and the iPod(s)."
 msgstr ""
-"Ecrire toutes les modifications faites dans le disque et le(s) iPod(s)."
+"Écrire toutes les modifications faites dans le disque et le(s) iPod(s)."
 
 #: ../data/gtkpod.glade.h:356
-#, fuzzy
 msgid ""
 "Write extended information (PC filenames, SHA1 hashes,\n"
 "encoding...). Recommended."
 msgstr ""
 "Écrire les infos supplémentaires (noms de fichiers PC,\n"
-"somme de contrôle MD5, jeu de caractères). Recommandé."
+"somme de contrôle SHA1, jeu de caractères…). Recommandé."
 
 #: ../data/gtkpod.glade.h:358
 msgid ""
@@ -1752,7 +1738,7 @@ msgstr "_Contrôler les fichiers de l'iPod"
 
 #: ../data/gtkpod.glade.h:363
 msgid "_Conversion Log"
-msgstr ""
+msgstr "_Trace des conversions"
 
 #: ../data/gtkpod.glade.h:364
 msgid "_Create Playlists"
@@ -1812,7 +1798,7 @@ msgstr "_Fenêtre d'infos"
 
 #: ../data/gtkpod.glade.h:378
 msgid "_Last.FM"
-msgstr ""
+msgstr "_Last.FM"
 
 #: ../data/gtkpod.glade.h:379
 msgid "_Less Sort Tabs"
@@ -1836,7 +1822,7 @@ msgstr "_M3U"
 
 #: ../data/gtkpod.glade.h:384
 msgid "_Misc."
-msgstr ""
+msgstr "_Divers"
 
 #: ../data/gtkpod.glade.h:385
 msgid "_More Sort Tabs"
@@ -1864,7 +1850,7 @@ msgstr "_Jouer maintenant"
 
 #: ../data/gtkpod.glade.h:391
 msgid "_Podcasts"
-msgstr ""
+msgstr "_Podcasts"
 
 #: ../data/gtkpod.glade.h:392
 msgid "_Prefer Local"
@@ -1872,12 +1858,11 @@ msgstr "Locale de _préférence"
 
 #: ../data/gtkpod.glade.h:393
 msgid "_Previous"
-msgstr ""
+msgstr "_Précédent"
 
 #: ../data/gtkpod.glade.h:394
-#, fuzzy
 msgid "_Remove Cover Art"
-msgstr "Supprimer la pochette"
+msgstr "_Supprimer la pochette"
 
 #: ../data/gtkpod.glade.h:395
 msgid "_Save Changes"
@@ -1892,9 +1877,8 @@ msgid "_Sorting"
 msgstr "_Tri"
 
 #: ../data/gtkpod.glade.h:398
-#, fuzzy
 msgid "_Synchronize Playlist with Dir(s)"
-msgstr "Sync les listes avec le(s) répertoire(s)"
+msgstr "_Sync les listes avec le(s) répertoire(s)"
 
 #: ../data/gtkpod.glade.h:399
 msgid "_Toolbar"
@@ -1921,9 +1905,8 @@ msgid "_Update Tracks from File"
 msgstr "_Mettre à jour les morceaux à partir des fichiers"
 
 #: ../data/gtkpod.glade.h:405
-#, fuzzy
 msgid "_Video"
-msgstr "_Affichage"
+msgstr "_Vidéo"
 
 #: ../data/gtkpod.glade.h:406
 msgid "_View"
@@ -1974,8 +1957,8 @@ msgid ""
 "operation. 'System Charset' is the charset used by your current locale."
 msgstr ""
 "gtkpod utilisera le jeu de caractères spécifié ici pour les attributs ID3 et "
-"les fichiers. Vous pouvez le modifier entre chaque opération d'ajout. «Jeu "
-"de caractères du système» est le jeu de caractère défini par les locales de "
+"les fichiers. Vous pouvez le modifier entre chaque opération d'ajout. « Jeu "
+"de caractères du système » est le jeu de caractère défini par les locales de "
 "votre système."
 
 #: ../data/gtkpod.glade.h:417
@@ -2002,9 +1985,8 @@ msgid "iTunesDB backup:"
 msgstr "Sauvegarde iTunesDB :"
 
 #: ../data/gtkpod.glade.h:425
-#, fuzzy
 msgid "label"
-msgstr "label21"
+msgstr "étiquette"
 
 #: ../data/gtkpod.glade.h:426
 msgid "mserv Root:"
@@ -2259,26 +2241,26 @@ msgstr "Message de confirmation"
 #: ../src/context_menus.c:359
 #, c-format
 msgid "Copied \"%s\" playlist to %s"
-msgstr ""
+msgstr "Copie liste de lecture « %s » vers %s"
 
 #: ../src/context_menus.c:398
-#, fuzzy, c-format
+#, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
-msgstr[0] "%d morceau copiés sur %d."
-msgstr[1] "%d morceaux copiés sur %d."
+msgstr[0] "Extraction de %d morceau %d vers « %s »"
+msgstr[1] "Extraction de %d morceaux vers « %s »"
 
 #: ../src/context_menus.c:426
 #, c-format
 msgid "Copied '%s' playlist to '%s' in '%s'"
-msgstr ""
+msgstr "Extraction liste de lecture « %s » vers « %s » dans « %s »"
 
 #: ../src/context_menus.c:459
-#, fuzzy, c-format
+#, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
-msgstr[0] "%d morceau supprimé de la liste de lecture «%s»"
-msgstr[1] "%d morceaux supprimés de la liste de lecture «%s»"
+msgstr[0] "Extraction de %d morceau %d vers « %s » dans « %s »"
+msgstr[1] "Extraction de %d morceaux %d vers « %s » dans « %s »"
 
 #: ../src/context_menus.c:619 ../src/tools.c:854
 msgid "Play Now"
@@ -2306,7 +2288,7 @@ msgstr "Mette à jour les morceaux depuis le fichier"
 
 #: ../src/context_menus.c:666
 msgid "Sync Playlist with Dir(s)"
-msgstr "Sync les listes avec le(s) répertoire(s)"
+msgstr "Sync. les listes avec le(s) répertoire(s)"
 
 #: ../src/context_menus.c:676
 msgid "Remove All Tracks from iPod"
@@ -2329,9 +2311,8 @@ msgid "Edit iPod Properties"
 msgstr "Editer les propriétes de l'iPod"
 
 #: ../src/context_menus.c:732
-#, fuzzy
 msgid "Edit Repository Properties"
-msgstr "Editer les propriétes de l'iPod"
+msgstr "Éditer les propriétés du dépôt"
 
 #: ../src/context_menus.c:739
 msgid "Edit Playlist Properties"
@@ -2339,16 +2320,15 @@ msgstr "Editer les propriétes de la liste de lecture"
 
 #: ../src/context_menus.c:767
 msgid "View Full Size Artwork"
-msgstr ""
+msgstr "Voir les pochettes en taille réelle"
 
 #: ../src/context_menus.c:774
-#, fuzzy
 msgid "Select Cover From File"
-msgstr "Supprimer de l'iPod"
+msgstr "Choisir la pochette à partir d'un fichier"
 
 #: ../src/context_menus.c:781
 msgid "Find Cover on Web"
-msgstr ""
+msgstr "Chercher la pochette sur le web"
 
 #: ../src/context_menus.c:794
 msgid "Load iPod"
@@ -2391,71 +2371,64 @@ msgid "Alphabetize"
 msgstr "Trier"
 
 #: ../src/context_menus.c:949 ../src/context_menus.c:998
-#, fuzzy
 msgid "Copy selected playlist to..."
-msgstr "_Liste de lecture sélectionnée"
+msgstr "Copier la liste de lecture sélectionné vers …"
 
 #: ../src/context_menus.c:1051
-#, fuzzy
 msgid "Copy selected track(s) to..."
-msgstr "Morceaux supprimés"
+msgstr "Copier le(s) morceau(x) sélectionné(s) vers …"
 
 #: ../src/date_parser.l:269
 #, c-format
 msgid "Date format error: unrecognized character: '%s'\n"
-msgstr "Erreur dans le format de date : caractère inconnu : «%s»\n"
+msgstr "Erreur dans le format de date : caractère inconnu : « %s »\n"
 
 #: ../src/details.c:81
-#, fuzzy
 msgid "Audio/Video"
-msgstr "Racine musique :"
+msgstr "Audio/Vidéo"
 
 #: ../src/details.c:82
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 #: ../src/details.c:83
-#, fuzzy
 msgid "Video"
-msgstr "_Affichage"
+msgstr "Vidéo"
 
 #: ../src/details.c:84
-#, fuzzy
 msgid "Podcast"
-msgstr "URL du podcast"
+msgstr "Podcast"
 
 #: ../src/details.c:85
 msgid "Video Podcast"
-msgstr ""
+msgstr "Podcast vidéo"
 
 #: ../src/details.c:86
 msgid "Audiobook"
-msgstr ""
+msgstr "Livre Audio"
 
 #: ../src/details.c:87 ../src/display_spl.c:209 ../src/display_spl.c:218
-#, fuzzy
 msgid "Music Video"
-msgstr "Racine musique :"
+msgstr "Vidéo musicale"
 
 #: ../src/details.c:88 ../src/display_spl.c:107 ../src/display_spl.c:210
 #: ../src/display_spl.c:219 ../src/misc_conversion.c:101
 msgid "TV Show"
-msgstr ""
+msgstr "Émission télé"
 
 #: ../src/details.c:89
-#, fuzzy
 msgid "TV Show & Music Video"
-msgstr "Racine musique :"
+msgstr "Émission télé & vidéo musicale"
 
 #: ../src/details.c:826
 #, c-format
 msgid "%s (image data corrupted or unreadable)"
-msgstr ""
+msgstr "%s (données de l'image corrompues ou invalides)"
 
 #: ../src/details.c:963
 #, c-format
 msgid "Please report unknown mediatype %x\n"
-msgstr ""
+msgstr "Type de média %x inconnu\n"
 
 #: ../src/details.c:1396
 msgid "<b>n/a</b>"
@@ -2489,9 +2462,8 @@ msgid "Remove tracks in selected entry of which filter tab from the harddisk?"
 msgstr "Supprimer les morceaux de quelle zone de tri du disque dur ?"
 
 #: ../src/display.c:912
-#, fuzzy
 msgid "Remove tracks in selected entry of which filter tab from playlist?"
-msgstr "Supprimer les morceaux de quelle zone de tri de liste de lecture ?"
+msgstr "Supprimer les morceaux de quelle zone de tri de la liste de lecture ?"
 
 #: ../src/display.c:939 ../src/display.c:977
 #, c-format
@@ -2499,7 +2471,7 @@ msgid ""
 "iPod at '%s' is not loaded.\n"
 "Please load it first."
 msgstr ""
-"L'iPod en «%s» n'est pas chargé.\n"
+"L'iPod en « %s » n'est pas chargé.\n"
 "Charger d'abord."
 
 #: ../src/display.c:1014 ../src/display.c:1041
@@ -2531,12 +2503,12 @@ msgstr ""
 
 #: ../src/display_coverart.c:1731
 msgid "Failed to remove the album from the album hash store."
-msgstr ""
+msgstr "Impossible d'enlever l'album de la table de hachage des albums."
 
 #: ../src/display_itdb.c:376
 #, c-format
 msgid "Failed to set cover art: '%s'\n"
-msgstr "Impossible d'écrire la pochette :«%s»\n"
+msgstr "Impossible d'écrire la pochette : « %s »\n"
 
 #: ../src/display_itdb.c:858 ../src/display_itdb.c:991
 msgid "Local"
@@ -2546,7 +2518,7 @@ msgstr "Local"
 #: ../src/display_itdb.c:866 ../src/display_itdb.c:989
 #: ../src/display_itdb.c:1017
 msgid "Podcasts"
-msgstr ""
+msgstr "Podcasts"
 
 #: ../src/display_itdb.c:875 ../src/display_itdb.c:993
 #: ../src/repository.c:1186
@@ -2556,7 +2528,7 @@ msgstr "iPod"
 #: ../src/display_itdb.c:1076
 #, c-format
 msgid "Increased playcount for '%s'"
-msgstr "Compteur de lecture incrémenté pour «%s»"
+msgstr "Compteur de lecture incrémenté pour « %s »"
 
 #. give a notice on the statusbar -- otherwise the user
 #. * will never know why the drag is not possible
@@ -2587,15 +2559,15 @@ msgstr ""
 
 #: ../src/display_sorttabs.c:473
 msgid "'Played' condition ignored because of error."
-msgstr "Condition «Joué le» ignorée à cause d'une erreur."
+msgstr "Condition « Joué le » ignorée à cause d'une erreur."
 
 #: ../src/display_sorttabs.c:476
 msgid "'Modified' condition ignored because of error."
-msgstr "Condition «Modifié le» ignorée à cause d'une erreur."
+msgstr "Condition « Modifié le » ignorée à cause d'une erreur."
 
 #: ../src/display_sorttabs.c:479
 msgid "'Added' condition ignored because of error."
-msgstr "Condition «Ajouté le» ignorée à cause d'une erreur."
+msgstr "Condition « Ajouté le » ignorée à cause d'une erreur."
 
 #: ../src/display_sorttabs.c:1563 ../src/misc_conversion.c:59
 msgid "All"
@@ -2713,26 +2685,23 @@ msgstr "Regroupement"
 
 #: ../src/display_spl.c:106
 msgid "Video Kind"
-msgstr ""
+msgstr "Type de vidéo"
 
 #: ../src/display_spl.c:108
-#, fuzzy
 msgid "Season number"
-msgstr "N° de disque"
+msgstr "Numéro de saison"
 
 #: ../src/display_spl.c:109
 msgid "Skip count"
-msgstr ""
+msgstr "Nombre de fois ignoré"
 
 #: ../src/display_spl.c:110
-#, fuzzy
 msgid "Last skipped"
-msgstr "Dernière fois joué"
+msgstr "Dernière fois ignoré"
 
 #: ../src/display_spl.c:111
-#, fuzzy
 msgid "Album artist"
-msgstr "artiste"
+msgstr "Artiste de l'album"
 
 #: ../src/display_spl.c:117
 msgid "contains"
@@ -2797,9 +2766,8 @@ msgid "is not set"
 msgstr "n'est pas rempli"
 
 #: ../src/display_spl.c:171
-#, fuzzy
 msgid "Not supported"
-msgstr "Jamais écoutés"
+msgstr "Non supporté"
 
 #: ../src/display_spl.c:178
 msgid "minutes"
@@ -2870,9 +2838,8 @@ msgid "lowest rating"
 msgstr "les moins bien notés"
 
 #: ../src/display_spl.c:208 ../src/display_spl.c:217
-#, fuzzy
 msgid "Movie"
-msgstr "Modifié le"
+msgstr "Film"
 
 #: ../src/display_spl.c:1162 ../src/display_spl.c:1177
 msgid "to"
@@ -2954,7 +2921,7 @@ msgid "Sndchk."
 msgstr "Ctrl. Son"
 
 #: ../src/fetchcover.c:638
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "The picture file %s already exists. \n"
 "This may be associated with other music files in the directory. \n"
@@ -2964,6 +2931,15 @@ msgid ""
 "-  Clicking No will save the file with a unique file name. \n"
 "-  Clicking Cancel will abort the fetchcover operation."
 msgstr ""
+"Le fichier d'image %s existe déjà.\n"
+"Il peut être déjà associé avec d'autres morceaux de musique dans le "
+"dossier.\n"
+"\n"
+"- avec le bouton Oui le fichier sera écrasé, avec la possibilité d'avoir\n"
+"  l'association de ce fichier de pochette avec d'autres morceaux\n"
+"  de musique dans ce même dossier.\n"
+"- avec le bouton Non le fichier sera enregistré sous un nom unique.\n"
+"- avec le bouton Annuler l'opération de gestion de la pochette sera annulée."
 
 #: ../src/file.c:236
 #, c-format
@@ -2971,7 +2947,7 @@ msgid ""
 "'%s' is a directory, not a playlist file.\n"
 "\n"
 msgstr ""
-"«%s» est un répertoire, pas un fichier de liste.\n"
+"« %s » est un répertoire, pas un fichier de liste.\n"
 "\n"
 
 #: ../src/file.c:266
@@ -2980,7 +2956,7 @@ msgid ""
 "'%s' is a not a known playlist file.\n"
 "\n"
 msgstr ""
-"«%s» n'est pas un fichier connu de liste\n"
+"« %s » n'est pas un fichier de liste reconnu\n"
 "\n"
 
 #: ../src/file.c:283
@@ -2989,24 +2965,24 @@ msgid ""
 "Cannot open '%s' for reading.\n"
 "\n"
 msgstr ""
-"Ne peut ouvrir en lecture le fichier «%s».\n"
+"Ne peut ouvrir en lecture le fichier « %s ».\n"
 "\n"
 
 #: ../src/file.c:369
 #, c-format
 msgid "Skipping '%s' because it is a directory.\n"
-msgstr "Saut de «%s» parce qu'il s'agit d'un répertoire.\n"
+msgstr "Saut de « %s » parce qu'il s'agit d'un répertoire.\n"
 
 #: ../src/file.c:374
 #, c-format
 msgid "Skipping '%s' to avoid adding playlist file recursively\n"
 msgstr ""
-"Saut de «%s» pour éviter d'ajouter une liste de lecture récursivement\n"
+"Saut de « %s » pour éviter d'ajouter une liste de lecture récursivement\n"
 
 #: ../src/file.c:629
 #, c-format
 msgid "Unknown token '%s' in template '%s'\n"
-msgstr "Paramètre «%s» inconnu dans le modèle «%s»\n"
+msgstr "Paramètre « %s » inconnu dans le modèle « %s »\n"
 
 #: ../src/file.c:922
 #, c-format
@@ -3016,7 +2992,7 @@ msgstr "Nom de fichier local invalide (%s)"
 #: ../src/file.c:981
 #, c-format
 msgid "No information found for user '%s' in '%s'"
-msgstr "Aucune info pour l'utilisateur «%s» dans «%s»"
+msgstr "Aucune info pour l'utilisateur « %s » dans « %s »"
 
 #: ../src/file.c:990
 #, c-format
@@ -3033,14 +3009,15 @@ msgstr "Morceau (%s) non présent dans le répertoire de musique mserv (%s)"
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
 msgstr ""
-"Le morceau suivant ne peut pas être mis à jour (fichier inexistant) : «%s»\n"
+"Le morceau suivant ne peut pas être mis à jour (fichier inexistant) : « %"
+"s »\n"
 
 #: ../src/file.c:1208
 #, c-format
 msgid "The following track could not be processed (filetype unknown): '%s'\n"
 msgstr ""
-"Le morceau suivant ne peut pas être mis à jour (type de fichier inconnu) : «%"
-"s»\n"
+"Le morceau suivant ne peut pas être mis à jour (type de fichier inconnu) : "
+"« %s »\n"
 
 #: ../src/file.c:1306
 #, c-format
@@ -3049,7 +3026,7 @@ msgid ""
 "failed): '%s'\n"
 msgstr ""
 "Le morceau suivant ne peut pas être mis à jour (type de fichier connu mais "
-"échec de l'analyse) : «%s»\n"
+"échec de l'analyse) : « %s »\n"
 
 #: ../src/file.c:1336 ../src/file.c:1390
 msgid "Nothing to update"
@@ -3143,19 +3120,18 @@ msgstr "fichier local et copie sur le iPod introuvables"
 
 #. update not successful -- log this track for later display
 #: ../src/file.c:1776
-#, fuzzy
 msgid "update failed (format not supported?)"
-msgstr "echec de la mise à jour (format non supporté ?)"
+msgstr "échec de la mise à jour (format non supporté ?)"
 
 #: ../src/file.c:1861 ../src/misc_playlist.c:916
 #, c-format
 msgid "Processing '%s'..."
-msgstr "Traitement de «%s» ..."
+msgstr "Traitement de « %s » …"
 
 #: ../src/file.c:1867
-#, fuzzy, c-format
+#, c-format
 msgid "Skipping '%s' because it matches exclude masks.\n"
-msgstr "Saut de «%s» parce qu'il s'agit d'un répertoire.\n"
+msgstr "Saut de « %s » parce qu'il correspond à un masque d'exclusion.\n"
 
 #: ../src/file.c:1987 ../src/misc_track.c:1763 ../src/misc_track.c:1868
 #, c-format
@@ -3163,7 +3139,7 @@ msgid ""
 "Podcast already present: '%s'\n"
 "\n"
 msgstr ""
-"Podcast déjà présent : «%s»\n"
+"Podcast déjà présent : « %s »\n"
 "\n"
 
 #: ../src/file.c:2052
@@ -3178,23 +3154,23 @@ msgstr ""
 #: ../src/file.c:2104 ../src/file.c:2118
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
-msgstr "Impossible de changer les attributs du fichier : %s\n"
+msgstr "Impossible de changer les attributs du fichier : « %s »\n"
 
 #: ../src/file.c:2220
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
-msgstr "Impossible d'ouvrir en lecture/écriture le fichier «%s».\n"
+msgstr "Impossible d'ouvrir en lecture/écriture le fichier « %s ».\n"
 
 #: ../src/file.c:2227
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
-msgstr "Impossible de verrouiller «%s».\n"
+msgstr "Impossible de verrouiller « %s ».\n"
 
 #. error!
 #: ../src/file.c:2244 ../src/file.c:2253 ../src/file.c:2264 ../src/file.c:2274
 #, c-format
 msgid "Malformed line in '%s': %s\n"
-msgstr "Ligne incomplète dans «%s» : %s\n"
+msgstr "Ligne incomplète dans « %s » : %s\n"
 
 #. gint id,
 #. gboolean modal,
@@ -3214,7 +3190,7 @@ msgstr ""
 #: ../src/file.c:2321
 #, c-format
 msgid "Error writing to '%s'.\n"
-msgstr "Erreur d'écriture du fichier «%s».\n"
+msgstr "Erreur d'écriture du fichier « %s ».\n"
 
 #: ../src/file.c:2378 ../src/tools.c:271
 #, c-format
@@ -3232,38 +3208,38 @@ msgstr "Échec de la normalisation : fichier non disponible (%s).\n"
 
 #: ../src/file_convert.c:316
 msgid "Summary status of conversion processes"
-msgstr ""
+msgstr "État de la conversion"
 
 #: ../src/file_convert.c:564
 msgid "active"
-msgstr ""
+msgstr "actif"
 
 #: ../src/file_convert.c:569
 msgid "inactive"
-msgstr ""
+msgstr "inactif"
 
 #: ../src/file_convert.c:580
 #, c-format
 msgid "Active threads: %d. Scheduled tracks: %d."
-msgstr ""
+msgstr "threads actifs : %d. Morceaux prévus : %d."
 
 #: ../src/file_convert.c:1061
-#, fuzzy, c-format
+#, c-format
 msgid "Original filename not available for '%s.'\n"
-msgstr "Échec de la normalisation : fichier non disponible (%s).\n"
+msgstr "Nom de fichier original introuvable pour « %s ».\n"
 
 #: ../src/file_convert.c:1076
 #, c-format
 msgid "Filename '%s' is no longer valid for '%s'.\n"
-msgstr ""
+msgstr "Le nom de fichier « %s » n'est plus valide pour « %s ».\n"
 
 #: ../src/file_convert.c:1127
 msgid "Ogg Vorbis"
-msgstr ""
+msgstr "Ogg Vorbis"
 
 #: ../src/file_convert.c:1133
 msgid "FLAC"
-msgstr ""
+msgstr "Audio FLAC"
 
 #: ../src/file_convert.c:1188
 #, c-format
@@ -3272,33 +3248,35 @@ msgid ""
 "Preferences to set up and turn on a suitable conversion script for '%s'.\n"
 "\n"
 msgstr ""
+"Les fichiers de type « %s » ne sont pas reconnus par le iPod. Allez dans les "
+"préférences pour configurer un script de conversion adéquat pour « %s ».\n"
+"\n"
 
 #: ../src/file_convert.c:1274
-#, fuzzy
 msgid "No information available"
-msgstr "pas de nom de fichier disponible"
+msgstr "Pas d'information disponible."
 
 #: ../src/file_convert.c:1313
 #, c-format
 msgid "Could not create '%s'. Filetype conversion will not work.\n"
-msgstr ""
+msgstr "Impossible de créer « %s ». La conversion ne fonctionnera pas.\n"
 
 #: ../src/file_convert.c:1631 ../src/file_convert.c:3040
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Transfer of '%s' failed. %s\n"
 "\n"
 msgstr ""
-"Échec de l'exécution de «%s».\n"
+"Échec du transfert de « %s ». %s\n"
 "\n"
 
 #: ../src/file_convert.c:2035 ../src/file_convert.c:2313
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Conversion of '%s' failed: '%s'.\n"
 "\n"
 msgstr ""
-"Échec de l'exécution de «%s».\n"
+"Échec de la conversion de « %s » : « %s ».\n"
 "\n"
 
 #: ../src/file_convert.c:2050
@@ -3307,6 +3285,8 @@ msgid ""
 "Conversion of '%s' failed: '%s %s' returned exit status %d.\n"
 "\n"
 msgstr ""
+"Échec de la conversion de « %s » : « %s %s » a un code de retour de %d.\n"
+"\n"
 
 #: ../src/file_convert.c:2079
 #, c-format
@@ -3315,14 +3295,18 @@ msgid ""
 "expected.\n"
 "\n"
 msgstr ""
+"Échec de la conversion de « %s » : « %s %s » n'a pas retourné une extension "
+"de fichier comme attendu.\n"
+"\n"
 
 #: ../src/file_convert.c:2155
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Conversion of '%s' failed: Could not access original file '%s' (%s).\n"
 "\n"
 msgstr ""
-"Échec de l'exécution de «%s».\n"
+"Échec de la conversion de « %s » : impossible d'accéder au fichier original "
+"« %s » (%s).\n"
 "\n"
 
 #: ../src/file_convert.c:2210
@@ -3331,6 +3315,9 @@ msgid ""
 "Conversion of '%s' failed: Could not create directory '%s'.\n"
 "\n"
 msgstr ""
+"Échec de la conversion de « %s » : impossible de créer le répertoire « %"
+"s ».\n"
+"\n"
 
 #: ../src/file_convert.c:2344
 #, c-format
@@ -3338,6 +3325,8 @@ msgid ""
 "Conversion of '%s' failed: '%s' returned exit status %d.\n"
 "\n"
 msgstr ""
+"Échec de la conversion de « %s » : « %s » a un code de retour de %d.\n"
+"\n"
 
 #: ../src/file_convert.c:2383
 #, c-format
@@ -3345,36 +3334,38 @@ msgid ""
 "Conversion of '%s' failed: could not stat the converted file '%s'.\n"
 "\n"
 msgstr ""
+"Échec de la conversion de « %s » : fichier résultat « %s » introuvable.\n"
+"\n"
 
 #: ../src/file_export.c:182
 #, c-format
 msgid "Skipping existing file with same length: '%s'\n"
-msgstr "Saut du fichier existant de même taille : «%s»\n"
+msgstr "Saut du fichier existant de même taille : « %s »\n"
 
 #: ../src/file_export.c:190
 #, c-format
 msgid "Overwriting existing file: '%s'\n"
-msgstr "Ecrasement du fichier existant : «%s»\n"
+msgstr "Écrasement du fichier existant : « %s »\n"
 
 #: ../src/file_export.c:207
 #, c-format
 msgid "Error copying '%s' to '%s': Permission Error (%s)\n"
-msgstr "Impossible de copier «%s» vers «%s» : Autorisation refusée (%s)\n"
+msgstr "Impossible de copier « %s » vers « %s » : Autorisation refusée (%s)\n"
 
 #: ../src/file_export.c:209
 #, c-format
 msgid "Error copying '%s' to '%s' (%s)\n"
-msgstr "Impossible de copier «%s» vers «%s» (%s)\n"
+msgstr "Impossible de copier « %s » vers « %s » (%s)\n"
 
 #: ../src/file_export.c:217
 #, c-format
 msgid "Unable to open '%s' for reading\n"
-msgstr "Impossible d'ouvrir le fichier «%s» en lecture\n"
+msgstr "Impossible d'ouvrir le fichier « %s » en lecture\n"
 
 #: ../src/file_export.c:327
 #, c-format
 msgid "Could find file for '%s' on the iPod\n"
-msgstr "Impossible de trouver le fichier pour «%s» sur l'iPod\n"
+msgstr "Impossible de trouver le fichier pour « %s » sur l'iPod\n"
 
 #. create the dialog window
 #: ../src/file_export.c:395 ../src/tools.c:361
@@ -3387,12 +3378,12 @@ msgstr "Appuyer sur le bouton pour interrompre"
 
 #: ../src/file_export.c:419
 msgid "copying..."
-msgstr "copie ..."
+msgstr "copie …"
 
 #: ../src/file_export.c:476
 #, c-format
 msgid "Failed to write '%s-%s'\n"
-msgstr "Impossible d'écrire «%s-%s»\n"
+msgstr "Impossible d'écrire « %s-%s »\n"
 
 #: ../src/file_export.c:489
 #, c-format
@@ -3458,17 +3449,17 @@ msgstr[1] "Liste de lecture créée avec %d morceaux."
 msgid ""
 "Could not open '%s' for writing (%s).\n"
 "\n"
-msgstr "Ne peut ouvrir le fichier «%s» en lecture (%s).\n"
+msgstr "Ne peut ouvrir le fichier « %s » en lecture (%s).\n"
 
 #: ../src/file_itunesdb.c:127
-#, fuzzy, c-format
+#, c-format
 msgid "Matching SHA1 checksum for file %d/%d"
-msgstr "Correspondance des sommes de contrôles MD5 pour le fichier %d/%d"
+msgstr "Correspondance des sommes de contrôles SHA1 pour le fichier %d/%d"
 
 #: ../src/file_itunesdb.c:234
 msgid "Could not open \"iTunesDB.ext\" for reading extended info.\n"
 msgstr ""
-"Ne peut ouvrir le fichier «iTunesDB.ext» pour lire les infos étendues.\n"
+"Ne peut ouvrir le fichier « iTunesDB.ext » pour lire les infos étendues.\n"
 
 #: ../src/file_itunesdb.c:241
 msgid "Could not create hash value from itunesdb\n"
@@ -3480,17 +3471,17 @@ msgid "Error while reading extended info: %s\n"
 msgstr "Erreur lors de la lecture des infos étendues : %s\n"
 
 #: ../src/file_itunesdb.c:274
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "iTunesDB '%s' does not match checksum in extended information file '%s'\n"
 "gtkpod will try to match the information using SHA1 checksums. This may take "
 "a long time.\n"
 "\n"
 msgstr ""
-"La base iTunesDB «%s» ne correspond pas au hachage MD5 des infos étendues du "
-"fichier «%s».\n"
+"La base iTunesDB « %s » ne correspond pas à la somme de contrôle des infos "
+"étendues du fichier « %s ».\n"
 "gtkpod essaiera de faire concorder l'information en utilisant les sommes de "
-"contrôle MD5. Cela peut prendre du temps.\n"
+"contrôle SHA1. Cela peut prendre du temps.\n"
 "\n"
 
 #: ../src/file_itunesdb.c:286
@@ -3500,7 +3491,7 @@ msgid ""
 "Expected \"itunesdb_hash=\" but got:\"%s\"\n"
 msgstr ""
 "%s :\n"
-"«itunesdb_hash=» attendue mais réception de : «%s»\n"
+"« itunesdb_hash= » attendue mais réception de : « %s »\n"
 
 #: ../src/file_itunesdb.c:346
 #, c-format
@@ -3512,7 +3503,6 @@ msgstr ""
 "Erreur de format : %s\n"
 
 #: ../src/file_itunesdb.c:391
-#, fuzzy
 msgid ""
 "No SHA1 checksums on individual tracks are available.\n"
 "\n"
@@ -3521,11 +3511,11 @@ msgid ""
 "than gtkpod.\n"
 "\n"
 msgstr ""
-"Pas de sommes de contrôle MD5 disponibles pour les morceaux.\n"
+"Pas de sommes de contrôle SHA1 disponibles pour les morceaux.\n"
 "\n"
 "Pour éviter cette situation dans le futur, activez la détection des doublons "
-"(afin de générer les sommes de contrôle MD5) ou bien éviter d'utiliser votre "
-"iPod avec d'autres programmes que gtkpod.\n"
+"(afin de générer les sommes de contrôle SHA1) ou bien évitez d'utiliser "
+"votre iPod avec d'autres programmes que gtkpod.\n"
 "\n"
 
 #: ../src/file_itunesdb.c:455
@@ -3552,7 +3542,7 @@ msgid ""
 "Offline iPod database import failed: '%s'\n"
 "\n"
 msgstr ""
-"Échec de l'import de la base de l'iPod en mode déconnecté : «%s»\n"
+"Échec de l'import de la base de l'iPod en mode déconnecté : « %s »\n"
 "\n"
 
 #: ../src/file_itunesdb.c:478
@@ -3561,7 +3551,7 @@ msgid ""
 "Local database import failed: '%s'\n"
 "\n"
 msgstr ""
-"Échec de l'import de la base de données locale : «%s»\n"
+"Échec de l'import de la base de données locale : « %s »\n"
 "\n"
 
 #: ../src/file_itunesdb.c:485
@@ -3586,7 +3576,7 @@ msgid ""
 "'%s' does not exist. Import aborted.\n"
 "\n"
 msgstr ""
-"«%s» n'existe pas. Import annulé.\n"
+"« %s » n'existe pas. Import annulé.\n"
 "\n"
 
 #: ../src/file_itunesdb.c:518
@@ -3603,7 +3593,7 @@ msgid ""
 "iPod Database Import Failed: '%s'\n"
 "\n"
 msgstr ""
-"Échec de l'import de la base de l'iPod : «%s»\n"
+"Échec de l'import de la base de l'iPod : « %s »\n"
 "\n"
 
 #: ../src/file_itunesdb.c:538
@@ -3620,7 +3610,7 @@ msgid ""
 "'%s' (or similar) does not exist. Import aborted.\n"
 "\n"
 msgstr ""
-"«%s» (ou similaire) n'existe pas. Import annulé.\n"
+"« %s » (ou similaire) n'existe pas. Import annulé.\n"
 "\n"
 
 #: ../src/file_itunesdb.c:863
@@ -3632,14 +3622,14 @@ msgid ""
 "\n"
 "Do you want to create the directory structure now?\n"
 msgstr ""
-"Impossible de trouver les répertoires système de l'iPod dans «%s».\n"
-"Si vous êtes certain que le iPod est correctement monté en «%s», gtkpod peut "
-"créer ces répertoires pour vous.\n"
+"Impossible de trouver les répertoires système de l'iPod dans « %s ».\n"
+"Si vous êtes certain que le iPod est correctement monté en « %s », gtkpod "
+"peut créer ces répertoires pour vous.\n"
 
 #: ../src/file_itunesdb.c:1144
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
-msgstr "Ne peut ouvrir en écriture le fichier d'infos étendues «%s».\n"
+msgstr "Ne peut ouvrir en écriture le fichier d'infos étendues « %s ».\n"
 
 #: ../src/file_itunesdb.c:1159
 msgid "Aborted writing of extended info.\n"
@@ -3648,45 +3638,45 @@ msgstr "Écriture des infos étendues interrompue.\n"
 #: ../src/file_itunesdb.c:1360
 #, c-format
 msgid "%d%%"
-msgstr ""
+msgstr "%d%%"
 
 #: ../src/file_itunesdb.c:1374
-#, fuzzy, c-format
+#, c-format
 msgid "%d%% (%d/%d  %d:%02d:%02d left)"
 msgstr "%d%% (%d:%02d:%02d restant)"
 
 #: ../src/file_itunesdb.c:1416
 msgid "Status: Deleting File"
-msgstr ""
+msgstr "État : suppression de fichier"
 
 #: ../src/file_itunesdb.c:1477
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not remove the following file: '%s'\n"
 "\n"
-msgstr "Ne peut ouvrir le fichier «%s» en lecture (%s).\n"
+msgstr ""
+"Impossible de supprimer le fichier : « %s »\n"
+"\n"
 
 #: ../src/file_itunesdb.c:1585
-#, fuzzy
 msgid ""
 "The following track could not be converted successfully:\n"
 "\n"
 msgid_plural ""
 "The following tracks could not be converted successfully:\n"
 "\n"
-msgstr[0] "Le morceau suivant ne peut pas être mis à jour."
-msgstr[1] "Les %d morceaux suivants ne peuvent pas être mis à jour."
+msgstr[0] "Le morceau suivant ne peut pas être converti :\n"
+msgstr[1] "Les morceaux suivants ne peuvent pas être converti :\n"
 
 #: ../src/file_itunesdb.c:1595
-#, fuzzy
 msgid ""
 "The following track could not be transferred successfully:\n"
 "\n"
 msgid_plural ""
 "The following tracks could not be transferred successfully:\n"
 "\n"
-msgstr[0] "Le morceau suivant ne peut pas être mis à jour."
-msgstr[1] "Les %d morceaux suivants ne peuvent pas être mis à jour."
+msgstr[0] "Le morceau suivant ne peut pas être transféré :\n"
+msgstr[1] "Les morceaux suivants ne peuvent pas être transféré :\n"
 
 #. ID
 #. modal,
@@ -3703,18 +3693,22 @@ msgid ""
 "then eject the iPod again. Pressing 'OK' will re-schedule the failed tracks "
 "for conversion and transfer."
 msgstr ""
+"Impossible d'éjecter le iPod. Veuillez résoudre les problèmes indiqués ci-"
+"dessous avant d'éjecter de nouveau le iPod. Avec le bouton « OK » la "
+"conversion et le transfert des morceaux qui ont eu des problèmes sera re-"
+"planifiée."
 
 #: ../src/file_itunesdb.c:1667
 msgid "Status: Copying track"
-msgstr ""
+msgstr "État : copie de morceau"
 
 #: ../src/file_itunesdb.c:1673
 msgid "Status: Waiting for conversion to complete"
-msgstr ""
+msgstr "État : attente de la fin de la conversion"
 
 #: ../src/file_itunesdb.c:1677
 msgid "Status: Finished transfer"
-msgstr ""
+msgstr "État : fin du transfert"
 
 #: ../src/file_itunesdb.c:1718
 #, c-format
@@ -3727,7 +3721,11 @@ msgid_plural ""
 "some tracks or otherwise create space on the iPod before ejecting the iPod "
 "again."
 msgstr[0] ""
+"Un morceau n'a pas pu être transféré car le iPod est plein. Éliminez "
+"quelques morceaux ou faites de la place avant de l'éjecter de nouveau."
 msgstr[1] ""
+"%d morceaux n'ont pas pu être transféré car le iPod est plein. Éliminez "
+"quelques morceaux ou faites de la place avant de l'éjecter de nouveau."
 
 #: ../src/file_itunesdb.c:1800
 #, c-format
@@ -3739,8 +3737,8 @@ msgid ""
 "cancel, you can import the existing database before calling this function "
 "again.\n"
 msgstr ""
-"Vous n'avez pas importé la base iTunesDB («%s») existante. C'est souvent une "
-"erreur et cela impliquera la perte de la base existante.\n"
+"Vous n'avez pas importé la base iTunesDB (« %s ») existante. C'est souvent "
+"une erreur et cela impliquera la perte de la base existante.\n"
 "\n"
 "Appuyer sur «OK» pour continuer ou «Annuler» pour interrompre. Si vous "
 "annulez, vous pouvez importer la base existante avant d'appeler de nouveau "
@@ -3759,14 +3757,14 @@ msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr "Des morceaux ne peuvent pas être supprimés de l'iPod. Export annulé !"
 
 #: ../src/file_itunesdb.c:1862
-#, fuzzy, c-format
+#, c-format
 msgid "Now writing database '%s'. Please wait..."
-msgstr "Écriture de la base iTunesDB. Veuillez patienter ..."
+msgstr "Écriture de la base « %s ». Veuillez patienter …"
 
 #: ../src/file_itunesdb.c:1911
 #, c-format
 msgid "Extended information file not deleted: '%s'"
-msgstr "Fichier d'infos étendues non supprimé : «%s»"
+msgstr "Fichier d'infos étendues non supprimé : « %s »"
 
 #: ../src/file_itunesdb.c:1995
 #, c-format
@@ -3789,28 +3787,28 @@ msgstr "Echec de l'ajout de quelques fichiers"
 #: ../src/fileselection.c:164 ../src/fileselection.c:305
 #: ../src/fileselection.c:792
 msgid "Please select a playlist or repository before adding tracks."
-msgstr ""
+msgstr "Choisir une liste de lecture ou un dépôt avant d'ajouter des morceaux."
 
 #: ../src/fileselection.c:175 ../src/fileselection.c:314
 #: ../src/fileselection.c:803
 msgid "Please load the iPod before adding tracks."
-msgstr ""
+msgstr "Charger le iPod avant d'ajouter des morceaux."
 
 #: ../src/fileselection.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "Add files to '%s'"
-msgstr "Ajouter des fichiers"
+msgstr "Ajoute des fichiers à « %s »"
 
 #: ../src/fileselection.c:189
 #, c-format
 msgid "Add files to '%s/%s'"
-msgstr ""
+msgstr "Ajoute des fichiers à « %s/%s »"
 
 #. Create window title
 #: ../src/fileselection.c:322
-#, fuzzy, c-format
+#, c-format
 msgid "Add playlist files to '%s'"
-msgstr "Ajouter une liste de lecture depuis un fichier."
+msgstr "Ajouter les fichiers de liste de lecture à « %s »"
 
 #. Create the file chooser, and handle the response
 #: ../src/fileselection.c:378
@@ -3818,14 +3816,14 @@ msgid "Set Cover"
 msgstr "Modifier la pochette"
 
 #: ../src/fileselection.c:816
-#, fuzzy, c-format
+#, c-format
 msgid "Add directories to '%s'"
-msgstr "Ajouter les répertoires récursivement"
+msgstr "Ajouter les dossier à « %s »"
 
 #: ../src/fileselection.c:820
-#, fuzzy, c-format
+#, c-format
 msgid "Add directories to '%s/%s'"
-msgstr "Ajouter les répertoires récursivement"
+msgstr "Ajouter les dossiers à « %s/%s »"
 
 #: ../src/fileselection.c:1097
 msgid "Ok"
@@ -3836,64 +3834,64 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #: ../src/flacfile.c:61
-#, fuzzy, c-format
+#, c-format
 msgid "'%s' does not appear to be an FLAC audio file.\n"
-msgstr "«%s» n'est pas un fichier audio mp4.\n"
+msgstr "« %s » n'est pas un fichier audio FLAC.\n"
 
 #: ../src/flacfile.c:80
-#, fuzzy, c-format
+#, c-format
 msgid "Error retrieving tags for '%s'.\n"
-msgstr "Erreur d'écriture du fichier «%s».\n"
+msgstr "Échec de la récupération des attributs de « %s ».\n"
 
 #: ../src/flacfile.c:150
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Import of '%s' failed: FLAC not supported without the FLAC library. You must "
 "compile the gtkpod source together with the FLAC library.\n"
 msgstr ""
-"Echec de l'import de «%s» : pas de support des formats m4a/m4p. Vous devez "
-"compiler gtkpod avec la bibliothèque mp4v2.\n"
+"Échec de l'import de « %s » : pas de support des formats FLAC. Vous devez "
+"compiler gtkpod avec la bibliothèque FLAC.\n"
 
 #: ../src/flacfile.c:156
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "FLAC metadata update for '%s' failed: FLAC not supported without the FLAC "
 "library. You must compile the gtkpod source together with the FLAC library.\n"
 msgstr ""
-"Echec de la mise à jour des données m4a/m4p pour «%s» : pas de support des "
-"formats m4a/m4p. Vous devez compiler gtkpod avec la bibliothèque mp4v2.\n"
+"Échec de la mise à jour des données FLAC pour « %s » : pas de support des "
+"formats FLAC. Vous devez compiler gtkpod avec la bibliothèque FLAC.\n"
 
 #: ../src/getopt.c:681
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
-msgstr "%s : option «%s» ambigüe\n"
+msgstr "%s : option « %s » ambiguë\n"
 
 #: ../src/getopt.c:706
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
-msgstr "%s : l'option «--%s» n'autorise pas d'argument\n"
+msgstr "%s : l'option « --%s » n'autorise pas d'argument\n"
 
 #: ../src/getopt.c:711
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
-msgstr "%s : l'option «%c%s» n'autorise pas d'argument\n"
+msgstr "%s : l'option « %c%s » n'autorise pas d'argument\n"
 
 #: ../src/getopt.c:729 ../src/getopt.c:902
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
-msgstr "%s : l'option «%s» nécessite un argument\n"
+msgstr "%s : l'option « %s » nécessite un argument\n"
 
 #. --option
 #: ../src/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
-msgstr "%s : option «--%s» non reconnue\n"
+msgstr "%s : option « --%s » non reconnue\n"
 
 #. +option or -option
 #: ../src/getopt.c:762
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
-msgstr "%s : option «%c%s» non reconnue\n"
+msgstr "%s : option « %c%s » non reconnue\n"
 
 #. 1003.2 specifies the format of this message.
 #: ../src/getopt.c:788
@@ -3915,12 +3913,12 @@ msgstr "%s : l'option -- %c nécessite un argument\n"
 #: ../src/getopt.c:868
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
-msgstr "%s : l'option «-W %s» est ambigüe\n"
+msgstr "%s : l'option « -W %s » est ambiguë\n"
 
 #: ../src/getopt.c:886
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
-msgstr "%s : l'option «-W %s» n'autorise pas d'argument\n"
+msgstr "%s : l'option « -W %s » n'autorise pas d'argument\n"
 
 #: ../src/info.c:383
 msgid "n/c"
@@ -3980,25 +3978,25 @@ msgstr "Aucun iPod ou liste de lecture sélectionné(e)"
 #. Strings used several times
 #: ../src/ipod_init.c:48
 msgid "Select or enter your model"
-msgstr ""
+msgstr "Choisir ou entrer le modèle"
 
 #: ../src/ipod_init.c:79 ../src/repository.c:546 ../src/repository.c:2369
 msgid "Select mountpoint"
 msgstr "Point de montage de l'iPod :"
 
 #: ../src/ipod_init.c:359
-#, fuzzy, c-format
+#, c-format
 msgid "Error initialising iPod: %s\n"
-msgstr "Erreur d'écriture du fichier «%s».\n"
+msgstr "Erreur d'initialisation du iPod : %s\n"
 
 #: ../src/ipod_init.c:366
 msgid "Error initialising iPod, unknown error\n"
-msgstr ""
+msgstr "Erreur d'initialisation du iPod, erreur inconnue\n"
 
 #: ../src/ipod_init.c:422
-#, fuzzy, c-format
+#, c-format
 msgid "<b>Please select your iPod model at </b><i>%s</i>"
-msgstr "<b>Sélectionnez le point de montage et le modèle de votre iPod</b>"
+msgstr "<b>Sélectionnez le modèle de votre iPod dans</b><i>%s</i>"
 
 #: ../src/ipod_init.c:463
 msgid ""
@@ -4006,6 +4004,9 @@ msgid ""
 "incompatibilty in the GTK+ or glade library.\n"
 "\n"
 msgstr ""
+"Impossible de détecter le modèle sélectionné. Ceci peut être du à une erreur "
+"ou une incompatibilité dans GTK+ ou GLADE.\n"
+"\n"
 
 #: ../src/misc.c:86
 #, c-format
@@ -4017,7 +4018,6 @@ msgstr ""
 "d'Apple."
 
 #: ../src/misc.c:90
-#, fuzzy
 msgid ""
 "(C) 2002 - 2007\n"
 "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
@@ -4025,7 +4025,7 @@ msgid ""
 "\n"
 "\n"
 msgstr ""
-"© 2002 - 2005\n"
+"© 2002 - 2007\n"
 "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 "Corey Donohoe (atmos at atmos dot org)\n"
 "\n"
@@ -4078,8 +4078,8 @@ msgstr ""
 #: ../src/misc.c:106
 msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)\n"
 msgstr ""
-"Ramesh Dharan : 'Édition multiple' (édition de tags de plusieurs fichiers en "
-"même temps)\n"
+"Ramesh Dharan : « Édition multiple » (édition des attributs de plusieurs "
+"fichiers en même temps)\n"
 
 #: ../src/misc.c:108
 msgid "Hiroshi Kawashima: Japanese charset autodetecion feature\n"
@@ -4115,16 +4115,16 @@ msgid ""
 "Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
 "dialogue during sync\n"
 msgstr ""
-"Graeme Wilford : lecture et écriture des tags 'Compositeur', barre de "
-"progression durant les synchro\n"
+"Graeme Wilford : lecture et écriture des attributs  « Compositeur », barre "
+"de progression durant les synchro.\n"
 
 #: ../src/misc.c:120
 msgid ""
 "Edward Matteucci: debugging, special playlist creation, most of the volume "
 "normalizing code\n"
 msgstr ""
-"Edward Matteucci : debogage, création de liste de lectures, majeure partie "
-"de la normalisation du volume\n"
+"Edward Matteucci : mise au point, création de liste de lectures, majeure "
+"partie de la normalisation du volume\n"
 
 #: ../src/misc.c:122
 msgid "Jens Lautenbach: some optical improvements\n"
@@ -4150,14 +4150,14 @@ msgid ""
 "Ero Carrera: Filename validation and quick sync when copying tracks from the "
 "iPod\n"
 msgstr ""
-"Ero Carrera : Validation du nom de fichier et synchro rapide lors de la "
+"Ero Carrera : Validation du nom de fichier et synchro. rapide lors de la "
 "copie de l'iPod\n"
 
 #: ../src/misc.c:132
 msgid "Jens Taprogge: Support for LAME's replay gain tag to normalize volume\n"
 msgstr ""
-"Jens Taprogge : Support du tag 'replay gain' de LAME pour normaliser le "
-"volume\n"
+"Jens Taprogge : Support de l'attribut « replay gain » de LAME pour "
+"normaliser le volume\n"
 
 #: ../src/misc.c:134
 msgid "Armando Atienza: Support with external playcounts\n"
@@ -4328,35 +4328,35 @@ msgstr "Suèdois : Stefan Asserhall (stefan asserhall at comhem dot se)\n"
 #: ../src/misc.c:975
 #, c-format
 msgid "Could not process '%s' (no filename available)"
-msgstr "Impossible de traiter «%s» (pas de nom de fichier disponible)"
+msgstr "Impossible de traiter « %s » (pas de nom de fichier disponible)"
 
 #: ../src/misc.c:1129
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
-msgstr "Paramêtre «%%%c» inconnu dans le modèle «%s»"
+msgstr "Paramètre « %%%c » inconnu dans le modèle « %s »"
 
 #: ../src/misc.c:1212
 #, c-format
 msgid "Template ('%s') does not match file type '%s'\n"
-msgstr "Le modèle («%s») ne correspond pas au type de fichier «%s»\n"
+msgstr "Le modèle (« %s ») ne correspond pas au type de fichier « %s »\n"
 
 #: ../src/misc.c:1298
 #, c-format
 msgid "Error creating %s: %s\n"
-msgstr "Erreur à la création de «%s» : %s\n"
+msgstr "Erreur à la création de « %s » : %s\n"
 
 #: ../src/misc.c:1732
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Writing preferences file '%s' failed (%s).\n"
 "\n"
 msgstr ""
-"Échec de l'exécution de «%s».\n"
+"Échec de l'enregistrement du fichier de préférences « %s » (%s).\n"
 "\n"
 
 #: ../src/misc.c:1734
 msgid "unspecified error"
-msgstr ""
+msgstr "Erreur non spécifiée"
 
 #: ../src/misc.c:1742
 #, c-format
@@ -4365,12 +4365,14 @@ msgid ""
 "Directory.\n"
 "\n"
 msgstr ""
+"Échec de l'écriture des préférences dans le iPod (%s°) : impossible de "
+"trouver le répertoire « Control ».\n"
+"\n"
 
 #. title
 #: ../src/misc_confirm.c:71
-#, fuzzy
 msgid "The following has occurred:"
-msgstr "Le problème suivant est survenu :"
+msgstr "L'erreur suivante est survenue  :"
 
 #: ../src/misc_confirm.c:122
 msgid ""
@@ -4402,9 +4404,9 @@ msgid_plural ""
 "Are you sure you want to remove the following tracks from the playlist \"%s"
 "\"?"
 msgstr[0] ""
-"Êtes-vous sûr de vouloir supprimer le morceau suivant de la liste \"%s\" ?"
+"Êtes-vous sûr de vouloir supprimer le morceau suivant de la liste « %s » ?"
 msgstr[1] ""
-"Êtes-vous sûr de vouloir supprimer les morceaux suivants de la liste \"%s\" ?"
+"Êtes-vous sûr de vouloir supprimer les morceaux suivants de la liste « %s » ?"
 
 #: ../src/misc_confirm.c:141 ../src/misc_confirm.c:182
 msgid "Remove Track From Playlist?"
@@ -4471,8 +4473,8 @@ msgstr[1] "Suppression de %d morceaux de l'iPod"
 #, c-format
 msgid "Deleted %d track from playlist '%s'"
 msgid_plural "Deleted %d tracks from playlist '%s'"
-msgstr[0] "%d morceau supprimé de la liste de lecture «%s»"
-msgstr[1] "%d morceaux supprimés de la liste de lecture «%s»"
+msgstr[0] "%d morceau supprimé de la liste de lecture « %s »"
+msgstr[1] "%d morceaux supprimés de la liste de lecture « %s »"
 
 #: ../src/misc_confirm.c:285
 #, c-format
@@ -4490,7 +4492,7 @@ msgstr[1] "%d morceaux supprimés de la base de données locale"
 
 #: ../src/misc_confirm.c:442
 msgid "Cannot remove entry 'All'"
-msgstr "Ne peut supprimer l'entrée «Tous»"
+msgstr "Ne peut supprimer l'entrée « Tous »"
 
 #: ../src/misc_confirm.c:536
 #, c-format
@@ -4505,21 +4507,23 @@ msgstr "Suppression de tous les podcasts de l'iPod"
 #, c-format
 msgid "Deleted playlist '%s' including %d member track"
 msgid_plural "Deleted playlist '%s' including %d member tracks"
-msgstr[0] "Liste de lecture «%s» supprimée avec %d morceau"
-msgstr[1] "Liste de lecture «%s» supprimée avec %d morceaux"
+msgstr[0] "Liste de lecture « %s » supprimée avec %d morceau"
+msgstr[1] "Liste de lecture « %s » supprimée avec %d morceaux"
 
 #. first use playlist name
 #: ../src/misc_confirm.c:566 ../src/misc_confirm.c:640
 #, c-format
 msgid "Deleted playlist '%s'"
-msgstr "Liste de lecture effacée «%s»"
+msgstr "Liste de lecture « %s » supprimée"
 
 #: ../src/misc_confirm.c:600
 #, c-format
 msgid "Deleted playlist '%s' including %d member track on harddisk"
 msgid_plural "Deleted playlist '%s' including %d member tracks on harddisk"
-msgstr[0] "Liste de lecture «%s» supprimée avec %d morceau sur le disque dur."
-msgstr[1] "Liste de lecture «%s» supprimée avec %d morceaux sur le disque dur."
+msgstr[0] ""
+"Liste de lecture « %s » supprimée avec %d morceau sur le disque dur."
+msgstr[1] ""
+"Liste de lecture « %s » supprimée avec %d morceaux sur le disque dur."
 
 #: ../src/misc_confirm.c:617
 #, c-format
@@ -4545,18 +4549,18 @@ msgid_plural ""
 "completely from your ipod? The number of playlists the tracks are member of "
 "is indicated in parentheses."
 msgstr[0] ""
-"Êtes-vous sûr de vouloir supprimer la liste «%s» et le morceau suivant de "
+"Êtes-vous sûr de vouloir supprimer la liste « %s » et le morceau suivant de "
 "votre iPod ? Le nombre de liste dont ce morceau fait partie est indiqué "
 "entre parenthèses."
 msgstr[1] ""
-"Êtes-vous sûr de vouloir supprimer la liste «%s» et les morceaux suivants de "
-"votre iPod ? Le nombre de liste dont ces morceaux font partie est indiqué "
+"Êtes-vous sûr de vouloir supprimer la liste « %s » et les morceaux suivants "
+"de votre iPod ? Le nombre de liste dont ces morceaux font partie est indiqué "
 "entre parenthèses."
 
 #: ../src/misc_confirm.c:719 ../src/misc_confirm.c:774
 #, c-format
 msgid "Are you sure you want to delete the playlist '%s'?"
-msgstr "Êtes-vous sûr de vouloir supprimer la liste de lecture «%s» ?"
+msgstr "Êtes-vous sûr de vouloir supprimer la liste de lecture « %s » ?"
 
 #: ../src/misc_confirm.c:745
 #, c-format
@@ -4569,12 +4573,12 @@ msgid_plural ""
 "tracks from your harddisk? The number of playlists the tracks are member of "
 "is indicated in parentheses."
 msgstr[0] ""
-"Êtes-vous sûr de vouloir supprimer la liste «%s» et le morceau suivant de "
+"Êtes-vous sûr de vouloir supprimer la liste « %s » et le morceau suivant de "
 "votre disque dur ? Le nombre de liste dont ce morceau fait partie est "
 "indiqué entre parenthèses."
 msgstr[1] ""
-"Êtes-vous sûr de vouloir supprimer la liste «%s» et les morceaux suivants de "
-"votre disque dur ? Le nombre de liste dont ces morceaux font partie est "
+"Êtes-vous sûr de vouloir supprimer la liste « %s » et les morceaux suivants "
+"de votre disque dur ? Le nombre de liste dont ces morceaux font partie est "
 "indiqué entre parenthèses."
 
 #: ../src/misc_confirm.c:753
@@ -4593,13 +4597,13 @@ msgid_plural ""
 "tracks from the database? The number of playlists the tracks are member of "
 "is indicated in parentheses."
 msgstr[0] ""
-"Êtes-vous sûr de vouloir supprimer la liste «%s» et le morceau suivant de "
+"Êtes-vous sûr de vouloir supprimer la liste « %s » et le morceau suivant de "
 "votre base de données ? Le nombre de liste dont ce morceau fait partie est "
 "indiqué entre parenthèses."
 msgstr[1] ""
-"Êtes-vous sûr de vouloir supprimer la liste «%s» et les morceaux suivants de "
-"votre base de données ? Le nombre de liste dont ces morceaux font partie est "
-"indiqué entre parenthèses."
+"Êtes-vous sûr de vouloir supprimer la liste « %s » et les morceaux suivants "
+"de votre base de données ? Le nombre de liste dont ces morceaux font partie "
+"est indiqué entre parenthèses."
 
 #: ../src/misc_confirm.c:841
 msgid ""
@@ -4713,59 +4717,53 @@ msgstr "Chemin de la pochette"
 #. 40
 #: ../src/misc_conversion.c:100
 msgid "Media Type"
-msgstr ""
+msgstr "Type de média"
 
 #: ../src/misc_conversion.c:102
 msgid "TV Episode"
-msgstr ""
+msgstr "Épisode télé"
 
 #: ../src/misc_conversion.c:103
 msgid "TV Network"
-msgstr ""
+msgstr "Réseau câblé"
 
 #: ../src/misc_conversion.c:104
 msgid "Season Nr"
-msgstr ""
+msgstr "N° de saison"
 
 #. 45
 #: ../src/misc_conversion.c:105
 msgid "Episode Nr"
-msgstr ""
+msgstr "N° d'épisode"
 
 #: ../src/misc_conversion.c:106
-#, fuzzy
 msgid "Album Artist"
-msgstr "artiste"
+msgstr "Artiste de l'album"
 
 #: ../src/misc_conversion.c:107
-#, fuzzy
 msgid "Sort Artist"
-msgstr "Artiste"
+msgstr "Trier par Artiste"
 
 #: ../src/misc_conversion.c:108
-#, fuzzy
 msgid "Sort Title"
-msgstr "Sous-titre"
+msgstr "Trier par Titre"
 
 #: ../src/misc_conversion.c:109
-#, fuzzy
 msgid "Sort Album"
-msgstr "Album"
+msgstr "Trier par Album"
 
 #. 50
 #: ../src/misc_conversion.c:110
-#, fuzzy
 msgid "Sort Album Artist"
-msgstr "artiste"
+msgstr "Trier par Artiste de l'album"
 
 #: ../src/misc_conversion.c:111
-#, fuzzy
 msgid "Sort Composer"
-msgstr "Compositeur"
+msgstr "Trier par Compositeur"
 
 #: ../src/misc_conversion.c:112
 msgid "Sort TV Show"
-msgstr ""
+msgstr "Trier les Émissions télé"
 
 #: ../src/misc_conversion.c:125
 msgid "Name of file on PC, if available"
@@ -4786,7 +4784,7 @@ msgstr "Fichier déjà transféré sur l'iPod ou non"
 
 #: ../src/misc_conversion.c:135
 msgid "Beats per minute"
-msgstr ""
+msgstr "Battement Par Minute"
 
 #: ../src/misc_conversion.c:136
 msgid "Number of times the track has been played"
@@ -4818,8 +4816,8 @@ msgid ""
 "Volume adjust in dB (replay gain) -- you need to activate 'soundcheck' on "
 "the iPod"
 msgstr ""
-"Ajustement du volume en dB (replay gain) -- vous devez activer «Contrôle du "
-"son» sur l'iPod"
+"Ajustement du volume en dB (replay gain) -- vous devez activer « Contrôle du "
+"son » sur l'iPod"
 
 #. 25
 #: ../src/misc_conversion.c:145
@@ -4830,7 +4828,7 @@ msgstr "N° de CD et nombre total de CD"
 msgid ""
 "The category (e.g. 'Technology' or 'Music') where the podcast was located."
 msgstr ""
-"La catégorie (par ex. «Technologie» ou «Musique») où se situe le podcast."
+"La catégorie (par ex. « Technologie » ou « Musique ») où se situe le podcast."
 
 #: ../src/misc_conversion.c:149
 msgid "Accessible by selecting the center button on the iPod."
@@ -4844,34 +4842,33 @@ msgstr "Date de sortie (pour les podcasts affiché à côté du titre sur l'iPod
 #: ../src/misc_conversion.c:167 ../src/misc_conversion.c:168
 #: ../src/misc_conversion.c:169 ../src/misc_conversion.c:170
 #: ../src/misc_conversion.c:171 ../src/misc_conversion.c:172
-#, fuzzy
 msgid "Used for sorting on the iPod"
-msgstr "Nom du fichier sur l'iPod"
+msgstr "Utilisé pour trier sur l'iPod"
 
 #: ../src/misc_conversion.c:733
 #, c-format
 msgid "The URI '%s' is not an absolute URI using the file scheme"
-msgstr "L'URI «%s» n'est pas une URI absolue utilisant le schéma de fichier"
+msgstr "L'URI « %s » n'est pas une URI absolue utilisant le schéma de fichier"
 
 #: ../src/misc_conversion.c:743
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
-msgstr "L'URI de fichier local «%s» ne peut pas inclure un '#'"
+msgstr "L'URI de fichier local « %s » ne peut pas inclure un '#'"
 
 #: ../src/misc_conversion.c:760
 #, c-format
 msgid "The URI '%s' is invalid"
-msgstr "L'URI «%s» est invalide"
+msgstr "L'URI « %s » est invalide"
 
 #: ../src/misc_conversion.c:772
 #, c-format
 msgid "The hostname of the URI '%s' is invalid"
-msgstr "Le nom d'hôte de l'URI «%s» est invalide"
+msgstr "Le nom d'hôte de l'URI « %s » est invalide"
 
 #: ../src/misc_conversion.c:788
 #, c-format
 msgid "The URI '%s' contains invalidly escaped characters"
-msgstr "L'URI «%s» contient des caractères d'échappements invalides"
+msgstr "L'URI « %s » contient des caractères d'échappement invalides"
 
 #: ../src/misc_playlist.c:67 ../src/misc_playlist.c:94
 #: ../src/misc_playlist.c:429
@@ -4923,8 +4920,8 @@ msgstr "Jamais écoutés"
 #, c-format
 msgid "Created playlist '%s' with %d track."
 msgid_plural "Created playlist '%s' with %d tracks."
-msgstr[0] "Liste de lecture «%s» créée avec %d morceau."
-msgstr[1] "Liste de lecture «%s» créée avec %d morceaux."
+msgstr[0] "Liste de lecture « %s » créée avec %d morceau."
+msgstr[1] "Liste de lecture « %s » créée avec %d morceaux."
 
 #. n==0
 #: ../src/misc_playlist.c:417
@@ -5008,7 +5005,7 @@ msgstr ""
 
 #: ../src/misc_playlist.c:1033
 msgid "Creating a tree of known files"
-msgstr "Création l'arborescence des fichiers reconnus"
+msgstr "Création de l'arborescence des fichiers reconnus"
 
 #: ../src/misc_playlist.c:1077
 msgid "Checking iPOD files against known files in DB"
@@ -5035,7 +5032,7 @@ msgstr ""
 #: ../src/misc_playlist.c:1175
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Processing..."
-msgstr "%d orphelins et %d morceaux fictifs. Traitement en cours ..."
+msgstr "%d orphelins et %d morceaux fictifs. Traitement en cours …"
 
 #: ../src/misc_playlist.c:1199
 #, c-format
@@ -5133,14 +5130,14 @@ msgid "Artwork not set"
 msgstr "Pochette non renseigné"
 
 #: ../src/misc_track.c:1806
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find source file for '%s'. Track not copied."
-msgstr "Impossible de trouver le fichier pour «%s» sur l'iPod\n"
+msgstr "Impossible de trouver le fichier pour « %s ». Morceau pas copié."
 
 #: ../src/misc_track.c:2042
 #, c-format
 msgid "drag and drop: ignored '%s'\n"
-msgstr "Glisser/déposer : «%s» ignoré\n"
+msgstr "Glisser/déposer : « %s » ignoré\n"
 
 #: ../src/mp3file.c:1295
 #, c-format
@@ -5151,38 +5148,38 @@ msgstr "Erreur en remplissant le champ ID3 : %s\n"
 #: ../src/mp3file.c:2459
 #, c-format
 msgid "ERROR while opening file: '%s' (%s).\n"
-msgstr "Erreur à l'ouverture du fichier : «%s» (%s).\n"
+msgstr "Erreur à l'ouverture du fichier : « %s » (%s).\n"
 
 #: ../src/mp3file.c:1647
 #, c-format
 msgid "ERROR while writing tag to file: '%s' (%s).\n"
-msgstr "ERREUR à l'écriture de l'attribut dans le fichier : «%s» (%s).\n"
+msgstr "ERREUR à l'écriture de l'attribut dans le fichier : « %s » (%s).\n"
 
 #. Tracks with zero play length are ignored by iPod...
 #: ../src/mp3file.c:2671
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
-msgstr "Le fichier «%s» à une durée de zéro. Ignoré.\n"
+msgstr "Le fichier « %s » à une durée de zéro. Ignoré.\n"
 
 #: ../src/mp4file.c:229 ../src/mp4file.c:390
-#, fuzzy, c-format
+#, c-format
 msgid "'%s' does not appear to be a mp4 audio or video file.\n"
-msgstr "«%s» n'est pas un fichier audio mp4.\n"
+msgstr "« %s » n'est pas un fichier audio ou vidéo mp4.\n"
 
 #: ../src/mp4file.c:239 ../src/mp4file.c:400
 #, c-format
 msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
-msgstr "Ne peut pas lire le fichier «%s» ou n'est pas un fichier mp4.\n"
+msgstr "Ne peut pas lire le fichier « %s » ou n'est pas un fichier mp4.\n"
 
 #: ../src/mp4file.c:515
 #, c-format
 msgid "'%s' does not appear to be a mp4 audio file.\n"
-msgstr "«%s» n'est pas un fichier audio mp4.\n"
+msgstr "« %s » n'est pas un fichier audio mp4.\n"
 
 #: ../src/mp4file.c:526
 #, c-format
 msgid "Could not open '%s' for writing, or file is not an mp4 file.\n"
-msgstr "Ne peut pas écrire le fichier «%s» ou n'est pas un fichier mp4.\n"
+msgstr "Ne peut pas écrire le fichier « %s » ou n'est pas un fichier mp4.\n"
 
 #: ../src/mp4file.c:539
 #, c-format
@@ -5190,7 +5187,7 @@ msgid ""
 "Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
 "You must compile the gtkpod source together with the mp4v2 library.\n"
 msgstr ""
-"Echec de l'import de «%s» : pas de support des formats m4a/m4p. Vous devez "
+"Échec de l'import de « %s » : pas de support des formats m4a/m4p. Vous devez "
 "compiler gtkpod avec la bibliothèque mp4v2.\n"
 
 #: ../src/mp4file.c:545
@@ -5200,7 +5197,7 @@ msgid ""
 "without the mp4v2 library. You must compile the gtkpod source together with "
 "the mp4v2 library.\n"
 msgstr ""
-"Echec de la mise à jour des données m4a/m4p pour «%s» : pas de support des "
+"Échec de la mise à jour des données m4a/m4p pour « %s » : pas de support des "
 "formats m4a/m4p. Vous devez compiler gtkpod avec la bibliothèque mp4v2.\n"
 
 #: ../src/mp4file.c:551
@@ -5210,36 +5207,36 @@ msgid ""
 "without the mp4v2 library. You must compile the gtkpod source together with "
 "the mp4v2 library.\n"
 msgstr ""
-"Echec du contrôle du son m4a/m4p pour «%s» : pas de support des formats m4a/"
-"m4p. Vous devez compiler gtkpod avec la bibliothèque mp4v2.\n"
+"Échec du contrôle du son m4a/m4p pour « %s » : pas de support des formats "
+"m4a/m4p. Vous devez compiler gtkpod avec la bibliothèque mp4v2.\n"
 
 #: ../src/oggfile.c:62 ../src/wavfile.c:107
 #, c-format
 msgid "Could not open '%s' for reading.\n"
-msgstr "Ne peut ouvrir en lecture le fichier «%s».\n"
+msgstr "Ne peut ouvrir en lecture le fichier « %s ».\n"
 
 #: ../src/oggfile.c:73
-#, fuzzy, c-format
+#, c-format
 msgid "'%s' does not appear to be an ogg audio file.\n"
-msgstr "«%s» n'est pas un fichier audio mp4.\n"
+msgstr "« %s » n'est pas un fichier audio ogg.\n"
 
 #: ../src/oggfile.c:154
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Import of '%s' failed: ogg not supported without the ogg library. You must "
 "compile the gtkpod source together with the ogg library.\n"
 msgstr ""
-"Echec de l'import de «%s» : pas de support des formats m4a/m4p. Vous devez "
-"compiler gtkpod avec la bibliothèque mp4v2.\n"
+"Échec de l'import de « %s » : pas de support du format ogg. Vous devez "
+"compiler gtkpod avec la bibliothèque ogg.\n"
 
 #: ../src/oggfile.c:160
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "ogg metadata update for '%s' failed: ogg not supported without the ogg "
 "library. You must compile the gtkpod source together with the ogg library.\n"
 msgstr ""
-"Echec de la mise à jour des données m4a/m4p pour «%s» : pas de support des "
-"formats m4a/m4p. Vous devez compiler gtkpod avec la bibliothèque mp4v2.\n"
+"Échec de la mise à jour des données ogg pour « %s » : pas de support du "
+"format ogg. Vous devez compiler gtkpod avec la bibliothèque ogg.\n"
 
 #: ../src/prefs.c:356
 #, c-format
@@ -5251,13 +5248,12 @@ msgid "  -h, --help:   display this message\n"
 msgstr "  -h, --help :   affiche ce message\n"
 
 #: ../src/prefs.c:358
-#, fuzzy
 msgid "  -p <file>:    increment playcount for file by one\n"
 msgstr "  -p <fichier> : incrémente le compteur de lecture du fichier\n"
 
 #: ../src/prefs.c:359
 msgid "  --hash <file>:print gtkpod hash for file\n"
-msgstr ""
+msgstr "  -- hash <fichier> : affiche la valeur de hachage pour les fichiers\n"
 
 #: ../src/prefs.c:360
 msgid "  -m path:      define the mountpoint of your iPod\n"
@@ -5265,7 +5261,7 @@ msgstr "  -m chemin :    définit le point de montage de votre iPod\n"
 
 #: ../src/prefs.c:361
 msgid "  --mountpoint: same as '-m'.\n"
-msgstr "  --mountpoint : identique à «-m».\n"
+msgstr "  --mountpoint : identique à « -m ».\n"
 
 #: ../src/prefs.c:362
 msgid "  -a:           import database automatically after start.\n"
@@ -5275,28 +5271,28 @@ msgstr ""
 
 #: ../src/prefs.c:363
 msgid "  --auto:       same as '-a'.\n"
-msgstr "  --auto :       identique à «-a».\n"
+msgstr "  --auto :       identique à « -a ».\n"
 
 #: ../src/prefs.c:560
 #, c-format
 msgid "Couldn't create ~/.gtkpod\n"
-msgstr ""
+msgstr "Impossible de créer « ~/.gtkpod »\n"
 
 #: ../src/prefs_window.c:134
 msgid "Please select command for 'Play Now'"
-msgstr "Ligne de commande pour «Jouer maintenant»"
+msgstr "Ligne de commande pour « Jouer maintenant »"
 
 #: ../src/prefs_window.c:135
 msgid "Please select command for 'Enqueue'"
-msgstr "Ligne de commande pour «Mettre dans la file d'attente»"
+msgstr "Ligne de commande pour « Mettre dans la file d'attente »"
 
 #: ../src/prefs_window.c:136
 msgid "Please select the mp3gain executable"
-msgstr "Chemin de l'exécutable «mp3gain»"
+msgstr "Chemin de l'exécutable « mp3gain »"
 
 #: ../src/prefs_window.c:137
 msgid "Please select the aacgain executable"
-msgstr "Chemin de l'exécutable «aacgain»"
+msgstr "Chemin de l'exécutable « aacgain »"
 
 #: ../src/prefs_window.c:138
 msgid "Select the mserv music root directory"
@@ -5308,34 +5304,34 @@ msgstr "Sélectionner le répertoire racine d'infos mserv"
 
 #: ../src/prefs_window.c:140
 msgid "Select the ogg/vorbis converter command"
-msgstr ""
+msgstr "Choisir la commande pour le convertisseur ogg/vorbis"
 
 #: ../src/prefs_window.c:141
 msgid "Select the flac converter command"
-msgstr ""
+msgstr "Ligne de commande pour la conversion FLAC"
 
 #: ../src/prefs_window.c:142
 msgid "Select the m4a converter command."
-msgstr ""
+msgstr "Ligne de commande pour la conversion M4a"
 
 #: ../src/prefs_window.c:143
 msgid "Select the mp3 converter command."
-msgstr ""
+msgstr "Ligne de commande pour la conversion MP3"
 
 #: ../src/prefs_window.c:144
 msgid "Select the wav converter command."
-msgstr ""
+msgstr "Ligne de commande pour la conversion Wav"
 
 #: ../src/prefs_window.c:211 ../src/repository.c:662
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "<i>Have a look at the scripts provided in '%s'. If you write a new script or "
 "improve an existing one, please send it to jcsjcs at users.sourceforge.net "
 "for inclusion into the next release.</i>"
 msgstr ""
-"<i>Des scripts d'exemple sont présents dans le répertoire «%s». Si vous "
-"écrivez un nouveau script, veuillez s'il vous plait l'envoyer à jcsjcs at "
-"users.sourceforge.net afin qu'il soit ajouté dans les prochaines versions de "
+"<i>Des scripts d'exemple sont présents dans le répertoire « %s ». Si vous "
+"écrivez un nouveau script, veuillez s'il vous plaît l'envoyer à jcsjcs at "
+"users.sourceforge.net afin qu'il soit inclus dans les prochaines versions de "
 "gtkpod.</i>"
 
 #: ../src/prefs_window.c:1054 ../src/prefs_window.c:1072
@@ -5403,9 +5399,10 @@ msgid "Hashed file is 0 bytes long\n"
 msgstr "Le fichier est vide\n"
 
 #: ../src/sha1.c:239
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open '%s' to calculate SHA1 checksum: %s\n"
-msgstr "Impossible d'ouvrir «%s» pour calculer la somme de contrôle MD5 : %s\n"
+msgstr ""
+"Impossible d'ouvrir « %s » pour calculer la somme de contrôle SHA1 : %s\n"
 
 #: ../src/syncdir.c:237
 #, c-format
@@ -5429,8 +5426,8 @@ msgstr[1] "Les morceaux suivants ont été supprimés de l'iPod :\n"
 #: ../src/syncdir.c:264
 msgid "The following track has been removed from the repository:\n"
 msgid_plural "The following tracks have been removed from the repository:\n"
-msgstr[0] "Le morceau suivant a été supprimé du dépot :\n"
-msgstr[1] "Les morceaux suivants ont été supprimés du dépot :\n"
+msgstr[0] "Le morceau suivant a été supprimé du dépôt :\n"
+msgstr[1] "Les morceaux suivants ont été supprimés du dépôt :\n"
 
 #: ../src/syncdir.c:271
 msgid "The following track has been removed from the playlist:\n"
@@ -5447,16 +5444,16 @@ msgid "Sync summary"
 msgstr "Résumé de synchronisation"
 
 #: ../src/tools.c:119
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not find '%s'.\n"
 "Please specifiy the exact path in the Tools section of the preference dialog "
 "or install the program if it is not installed on your system.\n"
 "\n"
 msgstr ""
-"Impossible de trouver le fichier «%s».\n"
-"Veuillez donnerréciser le chemin exact dans l'onglet «Outils» de la fenêtre "
-"des préférences ou installez le programme sur votre système si nécessaire.\n"
+"Impossible de trouver le fichier « %s ».\n"
+"Veuillez préciser le chemin exact dans l'onglet « Outils » de la fenêtre des "
+"préférences ou installez le programme sur votre système si nécessaire.\n"
 "\n"
 
 #: ../src/tools.c:204
@@ -5465,7 +5462,7 @@ msgid ""
 "Execution of '%s' failed.\n"
 "\n"
 msgstr ""
-"Échec de l'exécution de «%s».\n"
+"Échec de l'exécution de « %s ».\n"
 "\n"
 
 #: ../src/tools.c:249
@@ -5474,8 +5471,8 @@ msgid ""
 "Did not normalize '%s'. Set mp3gain path in the Tools section of the "
 "preferences.\n"
 msgstr ""
-"Impossible de normaliser le fichier «%s».\n"
-"Veuillez donner le chemin exact de mp3gain dans l'onglet «Outils» de la "
+"Impossible de normaliser le fichier « %s ».\n"
+"Veuillez donner le chemin exact de mp3gain dans l'onglet « Outils » de la "
 "fenêtre des préférences.\n"
 
 #: ../src/tools.c:259
@@ -5484,13 +5481,13 @@ msgid ""
 "Did not normalize '%s'. Set aacgain path in the Tools section of the "
 "preferences.\n"
 msgstr ""
-"Impossible de normaliser le fichier «%s».\n"
-"Veuillez donner le chemin exact de aacgain dans l'onglet «Outils» de la "
+"Impossible de normaliser le fichier « %s ».\n"
+"Veuillez donner le chemin exact de aacgain dans l'onglet « Outils » de la "
 "fenêtre des préférences.\n"
 
 #: ../src/tools.c:386
 msgid "Normalizing..."
-msgstr "Normalisation ..."
+msgstr "Normalisation …"
 
 #: ../src/tools.c:436
 #, c-format
@@ -5499,7 +5496,7 @@ msgstr "%s - %s"
 
 #: ../src/tools.c:462
 msgid "Aborting..."
-msgstr "Annulation ..."
+msgstr "Annulation …"
 
 #: ../src/tools.c:466
 msgid "Will abort after current mp3gain process ends."
@@ -5511,7 +5508,7 @@ msgid ""
 "'%s-%s' (%s) could not be normalized.\n"
 "\n"
 msgstr ""
-"«%s-%s» (%s) ne peut pas être normalisé.\n"
+"« %s-%s » (%s) ne peut pas être normalisé.\n"
 "\n"
 
 #: ../src/tools.c:531
@@ -5526,7 +5523,7 @@ msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
 msgstr ""
-"Veuillez renseigner la commande à appeler dans l'onglet «Outils» de la "
+"Veuillez renseigner la commande à appeler dans l'onglet « Outils » de la "
 "fenêtre des préférences.\n"
 
 #: ../src/tools.c:646
@@ -5537,9 +5534,9 @@ msgid ""
 "Please verify the setting in the 'Tools' section of the preferences dialog.\n"
 "\n"
 msgstr ""
-"Impossible de trouver la commande «%s».\n"
+"Impossible de trouver la commande « %s ».\n"
 "\n"
-"Veuillez contrôler l'onglet «Outils» dans la fenêtre des préférences.\n"
+"Veuillez contrôler l'onglet « Outils » dans la fenêtre des préférences.\n"
 "\n"
 
 #: ../src/tools.c:687
@@ -5548,115 +5545,32 @@ msgid ""
 "'%s' returned the following output:\n"
 "%s\n"
 msgstr ""
-"«%s» a retourné le résultat suivant :\n"
+"« %s » a retourné le résultat suivant :\n"
 "%s\n"
 
 #: ../src/tools.c:754
 #, c-format
 msgid "No command set for '%s'"
-msgstr "Aucune commande renseignée pour «%s»"
+msgstr "Aucune commande renseignée pour « %s »"
 
 #: ../src/tools.c:774
 #, c-format
 msgid "Could not find command '%s' specified for '%s'"
-msgstr "Impossible d'exécuter la commande «%s» spécifiée pour «%s»"
+msgstr "Impossible d'exécuter la commande « %s » spécifiée pour « %s »"
 
 #: ../src/wavfile.c:181
 #, c-format
 msgid "%s does not appear to be a supported wav file.\n"
 msgstr "%s ne semble pas être un format wav supporté.\n"
 
-#~ msgid "_Other"
-#~ msgstr "_Autre"
-
-#~ msgid "File skipped. match exclude masks: '%s'\n"
-#~ msgstr "Fichier sauté. Correspond au masque d'exclusion : «%s»\n"
-
-#~ msgid "Add Playlists"
-#~ msgstr "Ajouter des listes de lecture"
-
-#~ msgid "Select directory to add recursively"
-#~ msgstr "Sélectionner un répertoire à ajouter récursivement"
-
-#~ msgid ""
-#~ "Supposedly something that tells the iPod to increase or decrease the "
-#~ "playback speed"
-#~ msgstr ""
-#~ "Un réglage qui est supposé indiquer à l'iPod d'augmenter ou diminuer la "
-#~ "vitesse de lecture"
-
-#~ msgid "Processing '%s'"
-#~ msgstr "Traitement de «%s»"
+#, fuzzy
+#~ msgid "Failed to retrieve any images"
+#~ msgstr "Impossible d'écrire la pochette : « %s »\n"
 
 #, fuzzy
-#~ msgid "label21"
-#~ msgstr "label21"
-
-#~ msgid "window1"
-#~ msgstr "window1"
-
-#~ msgid "<b>Import</b>"
-#~ msgstr "<b>Importer</b>"
-
-#~ msgid "Automatically import iTunesDBs on startup"
-#~ msgstr ""
-#~ "Importer automatiquement les données de l'iPod au démarrage de gtkpod"
-
-#~ msgid "Couldn't find pixmap file: %s"
-#~ msgstr "Fichier pixmap introuvable : %s"
-
-#~ msgid "_Synchronize Playlist"
-#~ msgstr "_Synchroniser la liste de lecture"
-
-#~ msgid "Stop Display Update"
-#~ msgstr "Annuler la mise à jour de l'affichage"
-
-#~ msgid "Stop"
-#~ msgstr "Interrompre"
-
 #~ msgid ""
-#~ "It is much faster to sort the display after all tracks have been added. "
-#~ "Some people might feel irritated by this behaviour and should uncheck "
-#~ "this option."
+#~ "This function is not available. You must compile the gtkpod source "
+#~ "together with the curl library."
 #~ msgstr ""
-#~ "Il est plus rapide d'effectuer le tri après que tous les fichiers aient "
-#~ "été ajoutés. Certaines personnes peuvent être génées par ce comportement "
-#~ "et peuvent désactiver cette option."
-
-#~ msgid ""
-#~ "Temporarily disable sorting when changing playlist\n"
-#~ "or tab entry (faster!)"
-#~ msgstr ""
-#~ "Bloquer le tri lors du changement de liste\n"
-#~ "ou d'onglet (plus rapide !)"
-
-#~ msgid ""
-#~ "The display can be blocked after changing a selection. The display update "
-#~ "is faster, but you have to wait until it's finished. When using this "
-#~ "option, sorting is also temporarily disabled (see option above)."
-#~ msgstr ""
-#~ "L'application peut se trouver figée lors d'un changement de sélection. "
-#~ "L'affichage est plus rapide, mais vous devez attendre la fin de "
-#~ "l'opération. En activant l'option, le tri est désactivé temporairement "
-#~ "(voir ci-dessus)."
-
-#~ msgid ""
-#~ "Block display when changing playlist or tab\n"
-#~ " entry (faster!)"
-#~ msgstr ""
-#~ "Bloquer l'affichage lors du changement de liste de lecture ou d'entrée\n"
-#~ "(plus rapide !)"
-
-#~ msgid "deleting..."
-#~ msgstr "suppression ..."
-
-#~ msgid "preparing to copy..."
-#~ msgstr "préparation de la copie ..."
-
-#~ msgid "Copied %d of %d new track."
-#~ msgid_plural "Copied %d of %d new tracks."
-#~ msgstr[0] "%d sur %d du nouveau morceau copié."
-#~ msgstr[1] "%d sur %d des nouveaux morceaux copiés."
-
-#~ msgid "Some tracks were not written to iPod. Export aborted!"
-#~ msgstr "Des morceaux n'ont pas été copiés sur l'iPod. Export annulé !"
+#~ "Échec de l'import de « %s » : pas de support du format ogg. Vous devez "
+#~ "compiler gtkpod avec la bibliothèque ogg.\n"
