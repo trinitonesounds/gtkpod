@@ -1061,6 +1061,7 @@ void on_fetchcover_fetch_button (GtkWidget *widget, gpointer data)
 						{
 			    		gp_track_set_thumbnails(fetchcover_track, filename);
 			    		etd->tchanged = TRUE;
+			    		etd->tartwork_changed = TRUE;
 						}
 		    	}
 				detail->changed = TRUE;

@@ -301,6 +301,7 @@ static void details_button_set_artwork_clicked (GtkButton *button,
 		g_return_if_fail (etr);
 		gp_track_set_thumbnails (tr, filename);
 		etr->tchanged = TRUE;
+		etr->tartwork_changed = TRUE;
 	    }
 	}
 	else
@@ -309,6 +310,7 @@ static void details_button_set_artwork_clicked (GtkButton *button,
 	    g_return_if_fail (etr);
 	    gp_track_set_thumbnails (detail->track, filename);
 	    etr->tchanged = TRUE;
+	    etr->tartwork_changed = TRUE;
 	}
 	detail->changed = TRUE;
 	details_update_thumbnail (detail);

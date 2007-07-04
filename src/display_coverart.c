@@ -45,15 +45,13 @@ static void free_album (Album_Item *album);
 static void free_CDWidget ();
 static gint compare_album_keys (gchar *a, gchar *b);
 static void set_display_dimensions ();
-static GdkPixbuf *draw_blank_cdimage ();
-static void set_highlight (Cover_Item *cover, gboolean ismain);
+static void set_highlight (Cover_Item *cover, gint index);
 static void raise_cdimages (GPtrArray *cdcovers);
-/*static void scroll_covers (gint direction);*/
 static void remove_track_from_album (Album_Item *album, Track *track, gchar *key, gint index, GList *keylistitem);
 static void on_cover_display_button_clicked (GtkWidget *widget, gpointer data);
 static gint on_main_cover_image_clicked (GnomeCanvasItem *canvasitem, GdkEvent *event, gpointer data);
 static void on_cover_display_slider_value_changed (GtkRange *range, gpointer user_data);
-static void set_cover_dimensions (Cover_Item *cover, int cover_index);
+static void set_cover_dimensions (Cover_Item *cover, int cover_index, gdouble img_width, gdouble img_height);
 static void coverart_sort_images (GtkSortType order);
 static void prepare_canvas ();
 static void set_slider_range (gint index);
@@ -73,12 +71,6 @@ static gint WIDTH;
 static gint HEIGHT;
 static gint DEFAULT_WIDTH;
 static gint DEFAULT_HEIGHT;
-/* Dimensions used for the smaller 8 cd cover images */
-static gdouble SMALL_IMG_WIDTH;
-static gdouble SMALL_IMG_HEIGHT;
-/* Dimensions used for the main cd cover image */
-static gdouble BIG_IMG_WIDTH;
-static gdouble BIG_IMG_HEIGHT;
 /* Path of the png file used for albums without cd covers */
 static gchar *DEFAULT_FILE;
 /* Path of the png file used for the highlighting of cd covers */
@@ -179,50 +171,6 @@ static void debug_albums ()
 }
  
 /**
- * draw_blank_cdimage:
- *
- * creates a blank "black" pixbuf cd image to represent the
- * display when the playlist has no tracks in it.
- * 
- * Returns:
- * pixbuf of blank pixbuf
- */
-static GdkPixbuf *draw_blank_cdimage ()
-{	
-	gdouble width = 4;
-	gdouble height = 4;
-	gint pixel_offset, rowstride, x, y;
-	guchar *drawbuf;
-
-	drawbuf = g_malloc ((gint) (width * 16) * (gint) height);
-	
-	/* drawing buffer length multiplied by 4
-	 * due to 1 width per R, G, B & ALPHA
-	 */
-	rowstride = width * 4;
-			
-  for(y = 0; y < height; ++y)
-  {
-  	for(x = 0; x < width; ++x)
-  	{
-  		pixel_offset = (y * rowstride) + (x * 4);
-  		drawbuf[pixel_offset] = 0;
-  		drawbuf[pixel_offset + 1] = 0;
-  		drawbuf[pixel_offset + 2] = 0;
-  		drawbuf[pixel_offset + 3] = 255;
-  	}
-  }
-  return gdk_pixbuf_new_from_data(drawbuf,
-  									GDK_COLORSPACE_RGB,
-  									TRUE,
-  									8,
-  									width,
-  									height,
-  									rowstride,
-  									(GdkPixbufDestroyNotify) g_free, NULL);
-}
-
-/**
  * set_highlight:
  *
  * Sets the highlighted image to the cover to give shine 
@@ -231,32 +179,30 @@ static GdkPixbuf *draw_blank_cdimage ()
  * @cover: A Cover_Item object which the higlighted is added to.
  *  
  */
-static void set_highlight (Cover_Item *cover, gboolean ismain)
+static void set_highlight (Cover_Item *cover, gint index)
 {
-    GdkPixbuf *image;
-    GError *error = NULL;
-    GdkPixbuf *scaled;
-
-		if(ismain)
-			image = gdk_pixbuf_new_from_file(HIGHLIGHT_FILE_MAIN, &error);
-		else
-    	image = gdk_pixbuf_new_from_file(HIGHLIGHT_FILE, &error);
+  GdkPixbuf *image;
+  GError *error = NULL;
+  GdkPixbuf *scaled;
+	    	   																		
+	if(index == IMG_MAIN)
+		image = gdk_pixbuf_new_from_file(HIGHLIGHT_FILE_MAIN, &error);
+	else
+  	image = gdk_pixbuf_new_from_file(HIGHLIGHT_FILE, &error);
     
-    if(error != NULL)
-    {	
-	printf("Error occurred loading file - \nCode: %d\nMessage: %s\n", error->code, error->message); 
-	g_return_if_fail (image);
-    }
+  if(error != NULL)
+  {	
+		printf("Error occurred loading file - \nCode: %d\nMessage: %s\n", error->code, error->message); 
+		g_return_if_fail (image);
+	}
 
-    scaled = gdk_pixbuf_scale_simple(image, cover->img_width, ((cover->img_height * 2) + 6), GDK_INTERP_NEAREST);
-    gdk_pixbuf_unref (image);
+  scaled = gdk_pixbuf_scale_simple(image, cover->img_width, ((cover->img_height * 2) + 6), GDK_INTERP_NEAREST);
+  gdk_pixbuf_unref (image);
 		
-    gnome_canvas_item_set (cover->highlight,
+  gnome_canvas_item_set (cover->highlight,
 			   "pixbuf", scaled,
 			   NULL);
-    gdk_pixbuf_unref (scaled);
-
-    gnome_canvas_item_hide (cover->highlight);				
+  gdk_pixbuf_unref (scaled);				
 }
 
 /**
@@ -350,39 +296,19 @@ static void set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean 
   
 	if (key == NULL)
 	{
-		GdkPixbuf *imgbuf;
-		album = NULL;
-	 	imgbuf = draw_blank_cdimage ();
-	 	
-	 	/* Hide the highlight */
-	 	gnome_canvas_item_hide (cover->highlight);
-	 	
-	 	/* Set the cover */
-	 	scaled = gdk_pixbuf_scale_simple (imgbuf, cover->img_width, cover->img_height, GDK_INTERP_NEAREST);
-	  gnome_canvas_item_set (cover->cdimage,
-			 		"pixbuf", scaled,
-			 		NULL);
-	  
+		/* Clear everything */
+	  gnome_canvas_item_hide (cover->cdimage);
 	  /* Set the reflection to blank too */
-	 reflection = gdk_pixbuf_flip (scaled, FALSE);
-	 gnome_canvas_item_set (cover->cdreflection,
-		  "pixbuf", reflection,
-		  NULL);
-	 
+	  gnome_canvas_item_hide (cover->cdreflection);
+		/* Set the highlight to black too */
+		if (cover->highlight != NULL)
+			gnome_canvas_item_hide (cover->highlight);
+		 
 	 	if (index == IMG_MAIN)
 		{
-	 		/* Set the text to blank */
-	 		gnome_canvas_item_set (GNOME_CANVAS_ITEM (cdwidget->cvrtext),
-				   	"text", "No Artist",
-				   	"fill_color", "black",
-				   	"justification", GTK_JUSTIFY_CENTER,
-				   	NULL);
-		}
-		
-		gdk_pixbuf_unref (reflection);		   
-		gdk_pixbuf_unref (scaled);
-		gdk_pixbuf_unref (imgbuf);
-		
+	 		/* Hide the artist/album text*/
+	 		gnome_canvas_item_hide (GNOME_CANVAS_ITEM (cdwidget->cvrtext));
+		}		
 		return;
 	}
 	
@@ -392,20 +318,29 @@ static void set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean 
 	album  = g_hash_table_lookup (album_hash, key);
 	cover->album = album;
 	
-	Track *track;
 	if (force_imgupdate)
 	{
 		gdk_pixbuf_unref (album->albumart);
 		album->albumart = NULL;
 	}
 	
+	Track *track;
 	if (album->albumart == NULL)
 	{
 		track = g_list_nth_data (album->tracks, 0);
-		album->albumart = coverart_get_track_thumb (track, track->itdb->device);
+		album->albumart = coverart_get_track_thumb (track, track->itdb->device);				
 	}
 	
+	/* Set the x, y, height and width of the CD cover */
+	set_cover_dimensions (
+				cover,
+				index,
+				gdk_pixbuf_get_width (album->albumart),
+				gdk_pixbuf_get_height (album->albumart));
+	
 	/* Display the highlight */
+	set_highlight (cover, index);
+	
 	gnome_canvas_item_show (cover->highlight);	
 	
 	/* Set the Cover */
@@ -413,12 +348,21 @@ static void set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean 
 	gnome_canvas_item_set (cover->cdimage,
 	 		"pixbuf", scaled,
 	 		NULL);
-	    		
+	 		
+	gnome_canvas_item_show (cover->cdimage);
+	    
+	 gnome_canvas_item_set (cover->cdcvrgrp,
+			"x", (gdouble) cover->img_x,
+			"y", (gdouble) cover->img_y,	       
+			NULL);
+		
 	 /* flip image vertically to create reflection */
 	reflection = gdk_pixbuf_flip (scaled, FALSE);
 	gnome_canvas_item_set (cover->cdreflection,
 		  "pixbuf", reflection,
+		  "y", (gdouble) (cover->img_height + 4),
 		  NULL);
+	gnome_canvas_item_show (cover->cdreflection);
 	    	
 	gdk_pixbuf_unref (reflection);
 	gdk_pixbuf_unref (scaled);
@@ -431,19 +375,12 @@ static void set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean 
 		gnome_canvas_item_set (GNOME_CANVAS_ITEM (cdwidget->cvrtext),
 				 "text", text,
 				 "fill_color", "white",
+				 "y", (gdouble) cover->img_y + cover->img_height + 10,
 				 "justification", GTK_JUSTIFY_CENTER,
 				 NULL);
+				 
+		gnome_canvas_item_show (GNOME_CANVAS_ITEM (cdwidget->cvrtext));
 		g_free (text);
-		
-		/*
-		int i;
-		Track *track;
-		for (i = 0; i < g_list_length(album->tracks); ++i)
-		{
-			track = g_list_nth_data (album->tracks, i);
-			printf ("Track artist:%s album:%s  title:%s\n", track->artist, track->album, track->title);
-		}
-		*/
 	}
 }
 
@@ -607,36 +544,24 @@ void coverart_clear_images ()
 {
 	gint i;
 	Cover_Item *cover = NULL;
-	GdkPixbuf *buf;
-	
-	buf = draw_blank_cdimage ();
 	
 	for (i = 0; i < IMG_TOTAL; i++)
 	{
-	  GdkPixbuf *buf2;
 		/* Reset the pixbuf */
 		cover = g_ptr_array_index(cdwidget->cdcovers, i);
 		cover->album = NULL;
-		buf2 = gdk_pixbuf_scale_simple(buf, cover->img_width, cover->img_height, GDK_INTERP_NEAREST);
-		gnome_canvas_item_set(cover->cdimage, "pixbuf", buf2, NULL);
-		gnome_canvas_item_set(cover->cdreflection, "pixbuf", buf2, NULL);
-		gnome_canvas_item_hide (cover->highlight);
+		gnome_canvas_item_hide (cover->cdimage);
+		gnome_canvas_item_hide (cover->cdreflection);
 		
-		gdk_pixbuf_unref (buf2);
-		
-		/* Reset track list too */
-		cover->album = NULL;
+		if (cover->highlight != NULL)
+			gnome_canvas_item_hide (cover->highlight);
 		
 		if (i == IMG_MAIN)
 		{
 			/* Set the text to display details of the main image */
-		    gnome_canvas_item_set (GNOME_CANVAS_ITEM (cdwidget->cvrtext),
-					   "text", "No Artist",
-					   "fill_color", "black",
-					   NULL);
+			gnome_canvas_item_hide (GNOME_CANVAS_ITEM (cdwidget->cvrtext));
 		}
 	}
-	gdk_pixbuf_unref(buf);
 }
 
 /**
@@ -702,7 +627,8 @@ void coverart_display_big_artwork ()
 {
 	GtkWidget *dialog;
 	Cover_Item *cover;
-	GdkPixbuf *imgbuf;
+	GdkPixbuf *imgbuf = NULL;
+	ExtraTrackData *etd;
 	
 	cover = g_ptr_array_index(cdwidget->cdcovers, IMG_MAIN);
 	g_return_if_fail (cover);
@@ -721,15 +647,32 @@ void coverart_display_big_artwork ()
 	
 	g_free (text);
 	
-	if (cover->album->albumart != NULL)
-		imgbuf = cover->album->albumart;
-	else
+	Track *track;
+	track = g_list_nth_data (cover->album->tracks, 0);
+	etd = track->userdata;
+	if (etd && etd->thumb_path_locale)
 	{
-		Track *track;
-		track = g_list_nth_data (cover->album->tracks, 0);
-		imgbuf = coverart_get_track_thumb (track, track->itdb->device);
+		GError *error = NULL;
+		imgbuf = gdk_pixbuf_new_from_file (etd->thumb_path_locale, &error);
+		if (error != NULL)
+		{
+			/*
+			printf("Error occurred loading the image file - \nCode: %d\nMessage: %s\n", error->code, error->message);
+			*/
+			g_error_free (error);
+		}
 	}
-		
+	
+	/* Either thumb was null or the attempt at getting a pixbuf failed
+	 * due to invalid file. For example, some nut (like me) decided to
+	 * apply an mp3 file to the track as its cover file
+	 */
+	if (imgbuf ==  NULL)
+	{
+	 	/* Could not get a viable thumbnail so get default pixbuf */
+	 	imgbuf = coverart_get_default_track_thumb ();
+	}
+	
 	gint pixheight = gdk_pixbuf_get_height (imgbuf);
 	gint pixwidth = gdk_pixbuf_get_width (imgbuf);
 	
@@ -781,6 +724,8 @@ void coverart_display_big_artwork ()
 GdkPixbuf *coverart_get_default_track_thumb (void)
 {
 	GdkPixbuf *pixbuf = NULL;
+	GdkPixbuf *scaled = NULL;
+	gdouble default_size = 140;
 	GError *error = NULL;
 	
 	pixbuf = gdk_pixbuf_new_from_file(DEFAULT_FILE, &error);
@@ -789,8 +734,12 @@ GdkPixbuf *coverart_get_default_track_thumb (void)
 			printf("Error occurred loading the default file - \nCode: %d\nMessage: %s\n", error->code, error->message);
 			g_return_val_if_fail(pixbuf, NULL);
 	}
+	
+	scaled = gdk_pixbuf_scale_simple(pixbuf, default_size, default_size, GDK_INTERP_NEAREST);
+  gdk_pixbuf_unref (pixbuf);
+	
 
-	return pixbuf;
+	return scaled;
 }
 
 /**
@@ -952,8 +901,7 @@ gboolean on_paned0_button_release_event (GtkWidget *widget, GdkEventButton *even
 		if ( ! prefs_get_int (KEY_DISPLAY_COVERART))
 		return FALSE;
 		
-	gint width, i;
-	Cover_Item *cover;
+	gint width;
 	
 	width = gtk_paned_get_position (GTK_PANED(widget));
 	if ((width >= DEFAULT_WIDTH) && (width != WIDTH))
@@ -963,18 +911,7 @@ gboolean on_paned0_button_release_event (GtkWidget *widget, GdkEventButton *even
 				       "x", (gdouble) WIDTH / 2,
 				       NULL);
 		
-		for(i = 0; i < IMG_TOTAL; ++i)
-  	{
-  		cover = g_ptr_array_index(cdwidget->cdcovers, i);
-  		set_cover_dimensions (cover, i);
-  		if(i == IMG_MAIN)
-				set_highlight (cover, FALSE);
-			else
-				set_highlight (cover, TRUE);
-  	}
-		
-		set_covers (FALSE);
-		
+		set_covers (FALSE);		
 	}
 		
 	return FALSE;
@@ -1072,88 +1009,81 @@ static void set_display_dimensions ()
  * @cover_index: index of the widget. Used to determine whether
  * 												cover is the main cover or not
  */
-static void set_cover_dimensions (Cover_Item *cover, int cover_index)
+static void set_cover_dimensions (Cover_Item *cover, int cover_index, gdouble img_width, gdouble img_height)
 {
-	gdouble x = 0, y = 0, img_width = 0, img_height = 0;
+	gdouble x = 0, y = 0;
+	gdouble small_img_width, small_img_height;
+	gdouble display_width = 0, display_diff = 0, display_ratio = 0;
+	gint temp_index = 0;
 	
-	SMALL_IMG_WIDTH = WIDTH / 3;
-	SMALL_IMG_HEIGHT = HEIGHT / 3;
-	BIG_IMG_WIDTH = WIDTH / 2;
-	BIG_IMG_HEIGHT = HEIGHT / 2;
+	small_img_width = img_width * 0.75;
+	small_img_height = img_height * 0.75;
 	
-	img_width = SMALL_IMG_WIDTH;
-	img_height = SMALL_IMG_HEIGHT;
+	display_width = (WIDTH / 2) - (BORDER * 2);
+	display_diff = display_width - small_img_width;	
+	
+	/* Set the x location of the cover image */
+	switch(cover_index) {
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+			display_ratio = ((gdouble) cover_index) / 4;
+			x = BORDER + (display_ratio * display_diff);
+			break;
+		case IMG_MAIN:
+			/* The Main Image CD Cover Image */
+			x = (WIDTH - img_width) / 2;
+			break;
+		case 5:
+		case 6:
+		case 7:
+		case 8:			
+			temp_index = cover_index - 8;
+			if (temp_index < 0)
+				temp_index = temp_index * -1; 
+	
+			display_ratio = ((gdouble) temp_index) / 4;
+			x = WIDTH - (BORDER + small_img_width + (display_ratio * display_diff)); 
+			break;
+	}
 		
-		/* Set the x location of the cover image */
-		switch(cover_index) {
-			case 0:
-				x = BORDER;
-				break;
-			case 1:
-				x = BORDER * 1.6;
-				break;
-			case 2:
-				x = BORDER * 2.2;
-				break;
-			case 3:
-				x = BORDER * 2.8;
-				break;
-			case IMG_MAIN:
-				/* The Main Image CD Cover Image */
-				x = (WIDTH - BIG_IMG_WIDTH) / 2;
-				img_width = BIG_IMG_WIDTH;
-				break;
-			case 5:
-				x = WIDTH - (SMALL_IMG_WIDTH + (BORDER * 2.8));
-				break;
-			case 6:
-				x = WIDTH - (SMALL_IMG_WIDTH + (BORDER * 2.2));
-				break;
-			case 7:
-				x = WIDTH - (SMALL_IMG_WIDTH + (BORDER * 1.6));
-				break;
-			case 8:
-				x =	WIDTH - (SMALL_IMG_WIDTH + BORDER);
-				break;
-		}
+	/* Set the y location of the cover image */		
+	switch(cover_index) {
+		case 0:
+		case 8:
+			y = BORDER;
+			break;
+		case 1:
+		case 7:
+			y = BORDER * 3;
+			break;
+		case 2:
+		case 6:
+			y = BORDER * 5;
+			break;
+		case 3:
+		case 5:
+			y = BORDER * 7;
+			break;
+		case IMG_MAIN:
+			/* The Main Image CD Cover Image */
+			y = HEIGHT - (img_height + (BORDER * 4));	
+	}
+			
+	cover->img_x = x;
+	cover->img_y = y;
 		
-		/* Set the y location of the cover image */		
-		switch(cover_index) {
-			case 0:
-			case 8:
-				y = BORDER;
-				break;
-			case 1:
-			case 7:
-				y = BORDER * 3;
-				break;
-			case 2:
-			case 6:
-				y = BORDER * 5;
-				break;
-			case 3:
-			case 5:
-				y = BORDER * 7;
-				break;
-			case IMG_MAIN:
-				/* The Main Image CD Cover Image */
-				y = HEIGHT - (BIG_IMG_HEIGHT + (BORDER * 4));
-				img_height = BIG_IMG_HEIGHT;	
-		}
-		
-		cover->img_x = x;
-		cover->img_y = y;
+	if (cover_index == IMG_MAIN)
+	{
 		cover->img_height = img_height;
 		cover->img_width = img_width;
-		
-		gnome_canvas_item_set (cover->cdcvrgrp,
-				       "x", (gdouble) cover->img_x,
-				       "y", (gdouble) cover->img_y,
-				       NULL);
-		
-		gnome_canvas_item_set (cover->cdreflection,
-				       "y", (gdouble) (cover->img_height + 4),
-				       NULL);
+	}
+	else
+	{
+		cover->img_height = small_img_height;
+		cover->img_width = small_img_width;
+	}
 }
 
 /**
@@ -1240,34 +1170,28 @@ static void prepare_canvas ()
 		cover->cdreflection = gnome_canvas_item_new((GnomeCanvasGroup *) cover->cdcvrgrp,
 										GNOME_TYPE_CANVAS_PIXBUF,
 										NULL);
-	
-		set_cover_dimensions (cover, i);
 		
 		cover->highlight = gnome_canvas_item_new((GnomeCanvasGroup *) cover->cdcvrgrp,
 																						GNOME_TYPE_CANVAS_PIXBUF,
-	    	   																	NULL);		
-		
+	    	   																	NULL);	
+			
 		if(i == IMG_MAIN)
-		{
-			set_highlight (cover, TRUE);
-		
+		{	
 			/* set up some callback events on the main scaled image */
 			g_signal_connect(GTK_OBJECT(cover->cdimage), "event", GTK_SIGNAL_FUNC(on_main_cover_image_clicked), NULL);
 		
 			cdwidget->cvrtext = GNOME_CANVAS_TEXT(gnome_canvas_item_new(gnome_canvas_root(cdwidget->canvas),
 										GNOME_TYPE_CANVAS_TEXT,
-										"text", "No Artist",
+										"text", " ",
 										"x", (gdouble) WIDTH / 2,
-										"y", (gdouble) cover->img_y + cover ->img_height,
+										"y", (gdouble) 0,
 										"justification", GTK_JUSTIFY_CENTER,
   									"anchor", GTK_ANCHOR_NORTH,
-  									"fill_color", "black",
+  									"fill_color", "white",
   									"font", "-*-clean-medium-r-normal-*-12-*-*-*-*-*-*",
 										NULL));
 		}
-		else
-			set_highlight (cover, FALSE);
-		
+
 		g_ptr_array_add(cdwidget->cdcovers, cover);
 		cover = NULL;
 	}
