@@ -88,7 +88,7 @@ if test "$have_curl" != "no"; then
     have_curl="yes -- will build with coverart download support"
     CPPFLAGS="$CPPFLAGS $CURL_CFLAGS"
     CFLAGS="$CFLAGS $CURL_CFLAGS"
-    LDFLAGS="$LDFLAGS $CURL_LIBS"
+    LIBS="$LIBS $CURL_LIBS"
 else
     echo "*** libcurl could not be found, not building coverart download support"
     have_curl="*no -- will build without coverart download support"
@@ -108,7 +108,7 @@ if test "x$enable_gnome_vfs" = "xyes"; then
     AC_DEFINE(HAVE_GNOME_VFS, 1, [Define if you have gnome-vfs support])
     CPPFLAGS="$CPPFLAGS $GNOME_VFS_CFLAGS"
     CFLAGS="$CFLAGS $GNOME_VFS_CFLAGS"
-    LDFLAGS="$LDFLAGS $GNOME_VFS_LIBS"
+    LIBS="$LIBS $GNOME_VFS_LIBS"
 else
     echo "*** gnome-vfs-2 not found or disabled, not building iPod autodetection support"
     have_gnomevfs="*no -- will build without iPod autodetection support"
@@ -129,7 +129,7 @@ if test "x$enable_hal" = "xyes"; then
   AC_DEFINE(HAVE_HAL, 1, [Define if you want HAL support])
   CPPFLAGS="$CPPFLAGS $HAL_CFLAGS"
   CFLAGS="$CFLAGS $HAL_CFLAGS"
-  LDFLAGS="$LDFLAGS $HAL_LIBS"
+  LIBS="$LIBS $HAL_LIBS"
 else
   have_hal="*no -- will build without HAL support"
 fi

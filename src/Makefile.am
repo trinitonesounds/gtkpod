@@ -54,7 +54,7 @@ gtkpod_SOURCES = \
     tools.c tools.h \
     wavfile.c wavfile.h
 
-gtkpod_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@
+gtkpod_LDADD = $(LIBS) @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@
 
 EXTRA_DIST = getopt.h
 
