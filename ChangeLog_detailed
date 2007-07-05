@@ -33,13 +33,13 @@
 2007-06-29 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/details.c (details_setup_widget): fixed memory leak
-	  (thanks to Daniele) (thanks to Gabriel C).
+	  (thanks to Daniele).
 
 	* src/display_coverart.c (coverart_set_images): fixed memory
           leak (thanks to Daniele).
 
 	* src/Makefile.am: remove EJECT_BIN line as it is no longer
-          used.
+	  used (thanks to Gabriel C).
 
 2007-06-27 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
