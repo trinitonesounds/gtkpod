@@ -1,3 +1,8 @@
+2007-07-05  Todd Zullinger <tmzullinger at users.sourceforge.net>
+
+	* src/autodection.c:
+	  add missing string replacement
+
 2007-07-04 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * src/details.c: tartwork_changed flag defined when a new

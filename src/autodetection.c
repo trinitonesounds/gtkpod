@@ -392,7 +392,8 @@ static gboolean ad_timeout_cb (gpointer data)
 		}
 		else
 		{
-		    gtkpod_warning (_("Newly mounted iPod at '%s' appearss to be already loaded!\n\n"));
+		    gtkpod_warning (_("Newly mounted iPod at '%s' appears to be already loaded!\n\n"),
+                                    mountpoint);
 		}
 		debug ("...OK (used)\n");
 	    }
