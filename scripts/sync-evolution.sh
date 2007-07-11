@@ -14,8 +14,15 @@
 # with the following defaults: 
 
 IPOD_MOUNT=/mnt/ipod         # mountpoint of ipod
-EVOPATH='/opt/gnome/libexec/evolution/2.0:/usr/lib/evolution/2.0:/opt/gnome/bin'                        # additional path
 ENCODING=ISO-8859-15         # encoding used by ipod
+
+# try to find the path to evolution-addressbook-export
+for i in {/opt/gnome,/usr,/usr/local}/{bin,lib*}/{,evolution/*/}evolution-addressbook-export; do
+    if [ -x "$i" ]; then
+        EVOPATH=`dirname "$i"`
+        break
+    fi
+done
 
 # Unless called with "-e=none" this script requires "iconv" available
 # from http://www.gnu.org/software/libiconv/
@@ -80,10 +87,10 @@ PATH=$EVOPATH:$PATH
 evolution-addressbook-export --help  >/dev/null 2>&1
 
 if [ ! $? == 0 ]; then
-	echo "** Error: Couldn't find evolution-addressbook-export in your PATH:"
-	echo $PATH
-	echo ""
-	echo "Please specify \"-d <path to evolution-addressbook-export>\" when you call this script"
+    echo "** Error: Couldn't find evolution-addressbook-export in your PATH:"
+    echo $PATH
+    echo ""
+    echo "Please specify \"-d <path to evolution-addressbook-export>\" when you call this script"
     exit 1
 fi
 
