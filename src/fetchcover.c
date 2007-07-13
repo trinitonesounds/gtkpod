@@ -803,7 +803,7 @@ static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device, 
 		if (error != NULL)
 		{
 			/* Artwork failed to load from file so try loading default */
-			imgbuf = coverart_get_track_thumb (track, device);
+			imgbuf = coverart_get_track_thumb (track, device, IMGSCALE);
 			g_error_free (error);
 		}
 	}
@@ -812,7 +812,7 @@ static GtkDialog *fetchcover_display_dialog (Track *track, Itdb_Device *device, 
 		/* No thumb path available, fall back to getting the small thumbnail
 		 * and if that fails, the default thumbnail image.
 		 */
-		imgbuf = coverart_get_track_thumb (track, device);
+		imgbuf = coverart_get_track_thumb (track, device, IMGSCALE);
 	}
 		
 	/* Add the cover to the image list */

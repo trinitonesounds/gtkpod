@@ -328,7 +328,7 @@ static void set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean 
 	if (album->albumart == NULL)
 	{
 		track = g_list_nth_data (album->tracks, 0);
-		album->albumart = coverart_get_track_thumb (track, track->itdb->device);				
+		album->albumart = coverart_get_track_thumb (track, track->itdb->device, 0);				
 	}
 	
 	/* Set the x, y, height and width of the CD cover */
@@ -570,12 +570,15 @@ void coverart_clear_images ()
  * Retrieve the artwork pixbuf from the given track.
  * 
  * @track: Track from where the pixbuf is obtained.
+ * @device: Reference to the device upon which the track is located
+ * @default_img_size: If the default image must be used then this may contain a default value
+ * 		for its size.
  * 
  * Returns:
  * pixbuf referenced by the provided track or the pixbuf of the
  * default file if track has no cover art.
  */
-GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device)
+GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint default_img_size)
 {
 	GdkPixbuf *pixbuf = NULL;	
 	Thumb *thumb;
@@ -594,7 +597,7 @@ GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device)
 	if (pixbuf ==  NULL)
 	{
 	 	/* Could not get a viable thumbnail so get default pixbuf */
-	 	pixbuf = coverart_get_default_track_thumb ();
+	 	pixbuf = coverart_get_default_track_thumb (default_img_size);
 	}
 	
 	return pixbuf;
@@ -670,7 +673,7 @@ void coverart_display_big_artwork ()
 	if (imgbuf ==  NULL)
 	{
 	 	/* Could not get a viable thumbnail so get default pixbuf */
-	 	imgbuf = coverart_get_default_track_thumb ();
+	 	imgbuf = coverart_get_default_track_thumb (256);
 	}
 	
 	gint pixheight = gdk_pixbuf_get_height (imgbuf);
@@ -721,12 +724,15 @@ void coverart_display_big_artwork ()
  * Returns:
  * pixbuf of the default file for tracks with no cover art.
  */
-GdkPixbuf *coverart_get_default_track_thumb (void)
+GdkPixbuf *coverart_get_default_track_thumb (gint default_img_size)
 {
 	GdkPixbuf *pixbuf = NULL;
 	GdkPixbuf *scaled = NULL;
 	gdouble default_size = 140;
 	GError *error = NULL;
+	
+	if (default_img_size != 0)
+		default_size = (gdouble) default_img_size;
 	
 	pixbuf = gdk_pixbuf_new_from_file(DEFAULT_FILE, &error);
 	if (error != NULL)

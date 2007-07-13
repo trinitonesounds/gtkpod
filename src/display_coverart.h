@@ -80,7 +80,7 @@ extern const gchar *DISPLAY_COVER_SHOW;
 
 void coverart_display_big_artwork ();
 GList *coverart_get_displayed_tracks (void);
-GdkPixbuf *coverart_get_default_track_thumb (void);
+GdkPixbuf *coverart_get_default_track_thumb (gint default_img_size);
 void coverart_init (gchar *progpath);
 void force_update_covers ();
 void coverart_select_cover (Itdb_Track *track);
@@ -89,7 +89,7 @@ void coverart_track_changed (Track *track, gint signal);
 void coverart_clear_images ();
 void coverart_block_change (gboolean val);
 void coverart_init_display ();
-GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device);
+GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint default_img_size);
 void coverart_set_cover_from_file ();
 void coverart_set_cover_from_web ();
 #endif
