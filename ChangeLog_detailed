@@ -1,3 +1,8 @@
+2007-07-13 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_tracks.c (tm_cell_edited, tm_cell_compare): add
+          newly added fields (bugfix, thanks to Michael Tiffany)
+
 2007-07-12 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* configure.in

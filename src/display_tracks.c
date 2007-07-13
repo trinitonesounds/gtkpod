@@ -838,6 +838,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
      {
      case TM_COLUMN_TITLE:
      case TM_COLUMN_ALBUM:
+     case TM_COLUMN_ALBUMARTIST:
      case TM_COLUMN_ARTIST:
      case TM_COLUMN_GENRE:
      case TM_COLUMN_COMPOSER:
@@ -870,6 +871,12 @@ tm_cell_edited (GtkCellRendererText *renderer,
      case TM_COLUMN_TV_NETWORK:
      case TM_COLUMN_SEASON_NR:
      case TM_COLUMN_EPISODE_NR:
+     case TM_COLUMN_SORT_TITLE:
+     case TM_COLUMN_SORT_ALBUM:
+     case TM_COLUMN_SORT_ALBUMARTIST:
+     case TM_COLUMN_SORT_COMPOSER:
+     case TM_COLUMN_SORT_TVSHOW:
+     case TM_COLUMN_SORT_ARTIST:
 	 changed = track_set_text (track, new_text, TM_to_T (column));
 	 if (changed && (column == TM_COLUMN_TRACKLEN))
 	 {  /* be on the safe side and reset starttime, stoptime and
@@ -903,9 +910,16 @@ tm_cell_edited (GtkCellRendererText *renderer,
 	     break;
 	 }
 	 break;
-     default:
-        g_warning ("Programming error: tm_cell_edited: unknown track cell (%d) edited\n", column);
-        break;
+     case TM_COLUMN_IPOD_ID:
+     case TM_COLUMN_PC_PATH:
+     case TM_COLUMN_TRANSFERRED:
+     case TM_COLUMN_SIZE:
+     case TM_COLUMN_IPOD_PATH:
+     case TM_COLUMN_COMPILATION:
+     case TM_COLUMN_THUMB_PATH:
+     case TM_NUM_COLUMNS:
+	 /* These are not editable text fields */
+	 break;
      }
 /*      printf ("  changed: %d\n", changed); */
      if (changed)
@@ -1451,6 +1465,7 @@ static gint tm_data_compare (Track *track1, Track *track2,
   {
   case TM_COLUMN_TITLE:
   case TM_COLUMN_ALBUM:
+  case TM_COLUMN_ALBUMARTIST:
   case TM_COLUMN_GENRE:
   case TM_COLUMN_COMPOSER:
   case TM_COLUMN_COMMENT:
@@ -1465,6 +1480,12 @@ static gint tm_data_compare (Track *track1, Track *track2,
   case TM_COLUMN_TV_SHOW:
   case TM_COLUMN_TV_EPISODE:
   case TM_COLUMN_TV_NETWORK:
+  case TM_COLUMN_SORT_TITLE:
+  case TM_COLUMN_SORT_ALBUM:
+  case TM_COLUMN_SORT_ARTIST:
+  case TM_COLUMN_SORT_ALBUMARTIST:
+  case TM_COLUMN_SORT_COMPOSER:
+  case TM_COLUMN_SORT_TVSHOW:
       /* string_compare_func is set to either compare_string_fuzzy or
 	 compare_string in tm_sort_column_changed() which is called
 	 once before the comparing begins. */
@@ -1562,8 +1583,7 @@ static gint tm_data_compare (Track *track1, Track *track2,
   case TM_COLUMN_MEDIA_TYPE:
       cmp = track1->mediatype - track2->mediatype;
       break;
-  default:
-      g_warning ("Programming error: tm_data_compare_func: no sort method for tm_item %d\n", tm_item);
+  case TM_NUM_COLUMNS:
       break;
   }
 
