@@ -64,12 +64,9 @@ Track *flac_get_file_info (gchar *flacFileName)
     }
     else
     {
-        track = gp_track_new ();
-	track->description = g_strdup ("FLAC audio file");
+	gboolean flac_metadata_ok = FALSE;
 
-        track->bitrate = stream_data.data.stream_info.bits_per_sample/1000;
-        track->samplerate = stream_data.data.stream_info.sample_rate;
-        track->tracklen = stream_data.data.stream_info.total_samples / (stream_data.data.stream_info.sample_rate / 1000);
+        track = gp_track_new ();
 
         if (prefs_get_int("readtags")) 
         {
@@ -84,6 +81,11 @@ Track *flac_get_file_info (gchar *flacFileName)
             }
             else {
                 gint i;
+
+		if (tags->data.vorbis_comment.num_comments > 0)
+		{
+		    flac_metadata_ok = TRUE;
+		}
 
                 for (i = 0 ; i < tags->data.vorbis_comment.num_comments ; i++) 
                 {
@@ -130,7 +132,19 @@ Track *flac_get_file_info (gchar *flacFileName)
             }
 
             FLAC__metadata_object_delete (tags);
+
+	    if (!flac_metadata_ok)
+	    {   /* fall back on ID3 */
+		id3_read_tags (flacFileName, track);
+	    }
 	}
+
+	g_free (track->description);
+	track->description = g_strdup ("FLAC audio file");
+
+        track->bitrate = stream_data.data.stream_info.bits_per_sample/1000;
+        track->samplerate = stream_data.data.stream_info.sample_rate;
+        track->tracklen = stream_data.data.stream_info.total_samples / (stream_data.data.stream_info.sample_rate / 1000);
     }
 
     return track;

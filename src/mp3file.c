@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-06-26 00:39:11 jcs>
+/* Time-stamp: <2007-07-14 15:47:57 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1300,7 +1300,7 @@ static void id3_set_string (struct id3_tag *tag,
  * Reads id3v1.x / id3v2 apic data
  * @returns: TRUE on success, else FALSE.
  */
-static gboolean id3_apic_read (gchar *filename,
+static gboolean id3_apic_read (const gchar *filename,
 			       guchar **image_data, gsize *image_data_len)
 {
     struct id3_file *id3file;
@@ -1394,7 +1394,7 @@ static gboolean id3_apic_read (gchar *filename,
  * stays to NULL
  * @returns: TRUE on success, else FALSE.
  */
-gboolean id3_tag_read (gchar *filename, File_Tag *tag)
+gboolean id3_tag_read (const gchar *filename, File_Tag *tag)
 {
     struct id3_file *id3file;
     struct id3_tag *id3tag;
@@ -2365,7 +2365,6 @@ gboolean mp3_get_track_lame_gapless (gchar *path, GaplessData *gd)
 }
 
 
-
 /** 
  * mp3_read_gapless:
  *
@@ -2422,51 +2421,19 @@ gboolean mp3_read_gapless (char *path, Track *track)
 }
 
 
-
-/* ----------------------------------------------------------------------
-
-	      From here starts original gtkpod code
-
----------------------------------------------------------------------- */
-
-/* Return a Track structure with all information read from the mp3
-   file filled in */
-Track *mp3_get_file_info (gchar *name)
+/* Read ID3 tags of filename @name into track structure @track */
+/* Return value: TRUE if tags could be read, FALSE if an error
+   occured */
+gboolean id3_read_tags (const gchar *name, Track *track)
 {
-    Track *track = NULL;
     File_Tag filetag;
-    MP3Info *mp3i=NULL;
-    FILE *file;
-    guchar *image_data = NULL;
-    gsize image_data_len = 0;
 
-    g_return_val_if_fail (name, NULL);
+    g_return_val_if_fail (name && track, FALSE);
 
-    /* Attempt to open the file */
-    file = fopen (name, "r");
-    if (file)
+    if (id3_tag_read (name, &filetag))
     {
-	mp3i = g_malloc0 (sizeof (MP3Info));
-	mp3i->filename = name;
-	mp3i->file = file;
-	get_mp3_info (mp3i);
-	mp3i->file = NULL;
-	fclose (file);
-    }
-    else
-    {
-	gchar *fbuf = charset_to_utf8 (name);
-    	gtkpod_warning(_("ERROR while opening file: '%s' (%s).\n"),
-		       fbuf, g_strerror(errno));
-	g_free (fbuf);
-	return NULL;
-    }
-
-    track = gp_track_new ();
-    track->filetype = g_strdup ("MPEG audio file");
-
-    if (prefs_get_int("readtags") && (id3_tag_read (name, &filetag) == TRUE))
-    {
+	guchar *image_data = NULL;
+	gsize image_data_len = 0;
 
 	if (filetag.album)
 	{
@@ -2622,18 +2589,66 @@ Track *mp3_get_file_info (gchar *name)
 	{
 	    track->lyrics_flag = 0x00;
 	}
+
+	if (prefs_get_int("coverart_apic") &&
+	    (id3_apic_read (name, &image_data, &image_data_len) == TRUE))
+	{
+	    if (image_data)
+	    {
+		gp_track_set_thumbnails_from_data (track,
+						   image_data,
+						   image_data_len);
+		g_free (image_data);
+	    }
+	}
+	return TRUE;
+    }
+    return FALSE;
+}
+    
+
+/* ----------------------------------------------------------------------
+
+	      From here starts original gtkpod code
+
+---------------------------------------------------------------------- */
+
+/* Return a Track structure with all information read from the mp3
+   file filled in */
+Track *mp3_get_file_info (gchar *name)
+{
+    Track *track = NULL;
+    MP3Info *mp3i=NULL;
+    FILE *file;
+
+    g_return_val_if_fail (name, NULL);
+
+    /* Attempt to open the file */
+    file = fopen (name, "r");
+    if (file)
+    {
+	mp3i = g_malloc0 (sizeof (MP3Info));
+	mp3i->filename = name;
+	mp3i->file = file;
+	get_mp3_info (mp3i);
+	mp3i->file = NULL;
+	fclose (file);
+    }
+    else
+    {
+	gchar *fbuf = charset_to_utf8 (name);
+    	gtkpod_warning(_("ERROR while opening file: '%s' (%s).\n"),
+		       fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return NULL;
     }
 
-    if (prefs_get_int("coverart_apic") &&
-	(id3_apic_read (name, &image_data, &image_data_len) == TRUE))
+    track = gp_track_new ();
+    track->filetype = g_strdup ("MPEG audio file");
+
+    if (prefs_get_int("readtags"))
     {
-	if (image_data)
-	{
-	    gp_track_set_thumbnails_from_data (track,
-					       image_data,
-					       image_data_len);
-	    g_free (image_data);
-	}
+	id3_read_tags (name, track);
     }
 
     mp3_read_soundcheck (name, track);
