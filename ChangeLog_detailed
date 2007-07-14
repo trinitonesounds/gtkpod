@@ -1,10 +1,15 @@
+2007-07-14 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_tracks.c (tm_set_search_column,
+          tm_search_equal_func): add newly added fields (bugfix).
+
 2007-07-13 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * src/display_coverart.c
-    src/display_coverart.h
-    src/fetchcover.c
-    Added parameter to coverart_get_track_thumb so that the default
-    cover image can be provided with a default size if required.
+  	* src/display_coverart.c
+	  src/display_coverart.h
+	  src/fetchcover.c
+	  Added parameter to coverart_get_track_thumb so that the default
+	  cover image can be provided with a default size if required.
 
 2007-07-13 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
@@ -29,20 +34,20 @@
 
 2007-07-04 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * src/details.c: tartwork_changed flag defined when a new
-    artwork file is selected from the filesystem.
+	* src/details.c: tartwork_changed flag defined when a new
+          artwork file is selected from the filesystem.
     
-  * src/fetchcover.c: tartwork_changed flag added for all
-    occurrences of artwork being changed.
+	* src/fetchcover.c: tartwork_changed flag added for all
+	  occurrences of artwork being changed.
     
-  * src/display_coverart.c: reworking of the code to fix the
-    sizes of the covers according to the ipod thumbnail size.
-    When the pane is expanded, the coverart display's spacing is
-    widened rather than the individual covers being stretched.
-    Instead of the highlights, reflections and covers images
-    being redrawn as black when null, the containing items are
-    hidden. They are redisplayed when a new cover image is
-  	required.
+        * src/display_coverart.c: reworking of the code to fix the
+	  sizes of the covers according to the ipod thumbnail size.
+	  When the pane is expanded, the coverart display's spacing is
+	  widened rather than the individual covers being stretched.
+	  Instead of the highlights, reflections and covers images
+	  being redrawn as black when null, the containing items are
+	  hidden. They are redisplayed when a new cover image is
+	  required.
 
 2007-07-04  Todd Zullinger <tmzullinger at users.sourceforge.net>
 

@@ -1610,7 +1610,7 @@ gboolean tm_search_equal_func (GtkTreeModel *model,
   Track *track1;
   gboolean cmp = 0;
   gtk_tree_model_get (model, iter, READOUT_COL, &track1, -1);
-  switch (column)
+  switch ((TM_item)column)
   {
   case TM_COLUMN_TITLE:
   case TM_COLUMN_ALBUM:
@@ -1633,10 +1633,17 @@ gboolean tm_search_equal_func (GtkTreeModel *model,
   case TM_COLUMN_TV_SHOW:
   case TM_COLUMN_TV_EPISODE:
   case TM_COLUMN_TV_NETWORK:
-    cmp = (compare_string_start_case_insensitive (
-	  track_get_item (track1, TM_to_T (column)),
-	  key) != 0);
-    break;
+  case TM_COLUMN_ALBUMARTIST:
+  case TM_COLUMN_SORT_ARTIST:
+  case TM_COLUMN_SORT_TITLE:
+  case TM_COLUMN_SORT_ALBUM:
+  case TM_COLUMN_SORT_ALBUMARTIST:
+  case TM_COLUMN_SORT_COMPOSER:
+  case TM_COLUMN_SORT_TVSHOW:
+      cmp = (compare_string_start_case_insensitive (
+		 track_get_item (track1, TM_to_T (column)),
+		 key) != 0);
+      break;
   case TM_COLUMN_TRACK_NR:
   case TM_COLUMN_IPOD_ID:
   case TM_COLUMN_TRANSFERRED:
@@ -1658,7 +1665,6 @@ gboolean tm_search_equal_func (GtkTreeModel *model,
   case TM_COLUMN_SEASON_NR:
   case TM_COLUMN_EPISODE_NR:
   case TM_NUM_COLUMNS:
-      g_warning ("Programming error: tm_search_equal_func: no sort method for column %d\n", column);
       break;
   }
   return cmp;
@@ -1758,7 +1764,7 @@ static void tm_unsort (void)
 }
 
 
-static void tm_set_search_column (gint newcol)
+static void tm_set_search_column (TM_item newcol)
 {
 /*     printf ("track_treeview: %p, col: %d\n", track_treeview, newcol); */
     g_return_if_fail (track_treeview);
@@ -1788,6 +1794,13 @@ static void tm_set_search_column (gint newcol)
     case TM_COLUMN_TV_SHOW:
     case TM_COLUMN_TV_EPISODE:
     case TM_COLUMN_TV_NETWORK:
+    case TM_COLUMN_ALBUMARTIST:
+    case TM_COLUMN_SORT_ARTIST:
+    case TM_COLUMN_SORT_TITLE:
+    case TM_COLUMN_SORT_ALBUM:
+    case TM_COLUMN_SORT_ALBUMARTIST:
+    case TM_COLUMN_SORT_COMPOSER:
+    case TM_COLUMN_SORT_TVSHOW:
 	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (track_treeview), TRUE);
 	break;
     case TM_COLUMN_TRACK_NR:
