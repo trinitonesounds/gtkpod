@@ -3,6 +3,9 @@
 	* src/display_tracks.c (tm_set_search_column,
           tm_search_equal_func): add newly added fields (bugfix).
 
+	* src/display_tracks.c (tm_cell_toggled): removed "default"
+          case to make sure newly added fields are not forgotten.
+
 2007-07-13 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   	* src/display_coverart.c

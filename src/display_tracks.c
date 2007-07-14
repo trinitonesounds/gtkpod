@@ -1071,6 +1071,39 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 
 
 
+/* This function is analogous to tm_cell_data_func(), but is only used
+   for the title column to distinguish between the text and the toggle
+   button there. The other toggle buttons (e.g. compilation) can
+   easily be handled in the original tm_cell_data_func() */
+static void tm_cell_data_func_toggle (GtkTreeViewColumn *tree_column,
+				      GtkCellRenderer   *renderer,
+				      GtkTreeModel      *model,
+				      GtkTreeIter       *iter,
+				      gpointer           data)
+{
+  Track *track;
+  TM_item column;
+
+  column = (TM_item)g_object_get_data (G_OBJECT (renderer), "column");
+  gtk_tree_model_get (model, iter, READOUT_COL, &track, -1);
+
+  /* printf ("tm_cell_data_func_toggle() entered\n"); */
+
+  switch (column)
+  {
+  case TM_COLUMN_TITLE:
+      g_object_set (G_OBJECT (renderer),
+		    "active", !track->checked,
+		    "activatable", TRUE, NULL);
+      break;
+  default:
+      g_warning ("Programming error: unknown column in tm_cell_data_func_toggle: %d\n", column);
+      break;
+  }
+}
+
+
+
 /* Called when a toggle cell is being changed. Stores new data to the
    track list. */
 static void
@@ -1091,7 +1124,7 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
   selection = gtk_tree_view_get_selection(track_treeview);
   row_list = gtk_tree_selection_get_selected_rows(selection, &model);
 
-/*  printf("tm_cell_toggled: column: %d, arg1: %p\n", column, arg1); */
+  /* printf("tm_cell_toggled: column: %d, arg1: %p\n", column, arg1); */
 
   sel_rows_num = g_list_length (row_list);
 
@@ -1131,9 +1164,55 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
 	 if (!active) track->compilation = 1;
 	 else        track->compilation = 0;
         break;
-     default:
-        g_warning ("Programming error: tm_cell_toggled: unknown track cell (%d) edited\n", column);
-        break;
+     case TM_COLUMN_ARTIST:
+     case TM_COLUMN_ALBUM:
+     case TM_COLUMN_GENRE:
+     case TM_COLUMN_COMPOSER:
+     case TM_COLUMN_TRACK_NR:
+     case TM_COLUMN_IPOD_ID:
+     case TM_COLUMN_PC_PATH:
+     case TM_COLUMN_TRANSFERRED:
+     case TM_COLUMN_SIZE:
+     case TM_COLUMN_TRACKLEN:
+     case TM_COLUMN_BITRATE:
+     case TM_COLUMN_PLAYCOUNT:
+     case TM_COLUMN_RATING:
+     case TM_COLUMN_TIME_PLAYED:
+     case TM_COLUMN_TIME_MODIFIED:
+     case TM_COLUMN_VOLUME:
+     case TM_COLUMN_YEAR:
+     case TM_COLUMN_CD_NR:
+     case TM_COLUMN_TIME_ADDED:
+     case TM_COLUMN_IPOD_PATH:
+     case TM_COLUMN_SOUNDCHECK:
+     case TM_COLUMN_SAMPLERATE:
+     case TM_COLUMN_BPM:
+     case TM_COLUMN_FILETYPE:
+     case TM_COLUMN_GROUPING:
+     case TM_COLUMN_COMMENT:
+     case TM_COLUMN_CATEGORY:
+     case TM_COLUMN_DESCRIPTION:
+     case TM_COLUMN_PODCASTURL:
+     case TM_COLUMN_PODCASTRSS:
+     case TM_COLUMN_SUBTITLE:
+     case TM_COLUMN_TIME_RELEASED:
+     case TM_COLUMN_THUMB_PATH:
+     case TM_COLUMN_MEDIA_TYPE:
+     case TM_COLUMN_TV_SHOW:
+     case TM_COLUMN_TV_EPISODE:
+     case TM_COLUMN_TV_NETWORK:
+     case TM_COLUMN_SEASON_NR:
+     case TM_COLUMN_EPISODE_NR:
+     case TM_COLUMN_ALBUMARTIST:
+     case TM_COLUMN_SORT_ARTIST:
+     case TM_COLUMN_SORT_TITLE:
+     case TM_COLUMN_SORT_ALBUM:
+     case TM_COLUMN_SORT_ALBUMARTIST:
+     case TM_COLUMN_SORT_COMPOSER:
+     case TM_COLUMN_SORT_TVSHOW:
+     case TM_NUM_COLUMNS:
+	 /* these are not toggle buttons */
+	 break;
      }
 /*      printf ("  changed: %d\n", changed); */
      if (changed)
@@ -1161,35 +1240,6 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
 
 
 
-/* The track data is stored in a separate list (static GList *tracks)
-   and only pointers to the corresponding Track structure are placed
-   into the model.
-   This function reads the data for the given cell from the list and
-   passes it to the renderer. */
-static void tm_cell_data_func_toggle (GtkTreeViewColumn *tree_column,
-				      GtkCellRenderer   *renderer,
-				      GtkTreeModel      *model,
-				      GtkTreeIter       *iter,
-				      gpointer           data)
-{
-  Track *track;
-  TM_item column;
-
-  column = (TM_item)g_object_get_data (G_OBJECT (renderer), "column");
-  gtk_tree_model_get (model, iter, READOUT_COL, &track, -1);
-
-  switch (column)
-  {
-  case TM_COLUMN_TITLE:
-      g_object_set (G_OBJECT (renderer),
-		    "active", !track->checked,
-		    "activatable", TRUE, NULL);
-      break;
-  default:
-      g_warning ("Programming error: unknown column in tm_cell_data_func_toggle: %d\n", column);
-      break;
-  }
-}
 
 /**
  * tm_get_nr_of_tracks - get the number of tracks displayed
