@@ -1,3 +1,8 @@
+2007-07-15 Michael Tiffany <tiffman at users.sourceforge.net>
+
+	* src/mp3file.c (mp3_get_track_lame_gapless): wasn't properly closing
+	  files (bugfix).
+
 2007-07-14 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/display_tracks.c (tm_set_search_column,

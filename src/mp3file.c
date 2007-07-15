@@ -2354,6 +2354,7 @@ gboolean mp3_get_track_lame_gapless (gchar *path, GaplessData *gd)
     /* total samples minus pre/postgap */
     gd->samplecount = totalframes * mysamplesperframe - gd->pregap - gd->postgap;
 
+    fclose (file);
     return TRUE;
 
 
