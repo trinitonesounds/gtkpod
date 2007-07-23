@@ -556,6 +556,7 @@ static gboolean details_copy_artwork (Track *frtrack, Track *totrack)
 		g_free (toetr->thumb_path_utf8);
 		toetr->thumb_path_locale = g_strdup (fretr->thumb_path_locale);
 		toetr->thumb_path_utf8 = g_strdup (fretr->thumb_path_utf8);
+		toetr->tartwork_changed = TRUE;
 		changed = TRUE;
 	}
     /* make sure artwork gets removed, even if both thumb_paths were
@@ -564,12 +565,7 @@ static gboolean details_copy_artwork (Track *frtrack, Track *totrack)
     {
 	changed |= gp_track_remove_thumbnails (totrack);
     }
-    
-    /* Since no data changes affect the coverart display.
-     * Need to force a change by calling set covers directly.
-     */
-     force_update_covers ();
-    
+        
     return changed;
 }
 

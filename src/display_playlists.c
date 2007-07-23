@@ -1174,8 +1174,7 @@ void pm_track_changed (Track *track)
 {
   if (!current_playlist) return;
   
-  if (prefs_get_int (KEY_DISPLAY_COVERART))
-  	coverart_track_changed (track, COVERART_CHANGE_SIGNAL);
+ coverart_track_changed (track, COVERART_CHANGE_SIGNAL);
   
   /* Check if track is member of current playlist */
   if (g_list_find (current_playlist->members, track))

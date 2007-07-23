@@ -1,3 +1,18 @@
+2007-07-23 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+	* src/details.c: set tartwork_changed flag to TRUE rather than relying on
+	  using force_update_cover function. Former picked up by pm_track_changed()
+
+	* src/display_coverart.c: coverart_track_change responds to track changes
+		and redisplays covers if tartwork_changed flag has been set.
+	
+	* src/display_playlists.c: KEY_DISPLAY_COVERART pref test removed from
+	  pm_track_changed and placed inside coverart_track_changed instead.
+	  
+	* file.c: update_track_from_file function updates calls for redisplay of the
+	  coverart regardless of any file data changes to ensure that any coverart
+	  changes do not go unnoticed.
+
 2007-07-15 Michael Tiffany <tiffman at users.sourceforge.net>
 
 	* src/mp3file.c (mp3_get_track_lame_gapless): wasn't properly closing
@@ -20,8 +35,8 @@
 2007-07-13 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   	* src/display_coverart.c
-	  src/display_coverart.h
-	  src/fetchcover.c
+	    src/display_coverart.h
+	    src/fetchcover.c
 	  Added parameter to coverart_get_track_thumb so that the default
 	  cover image can be provided with a default size if required.
 

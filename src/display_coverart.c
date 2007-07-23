@@ -119,11 +119,12 @@ static void debug_albums ()
 
 /**
  * 
+ * free_CDWidget
+ * 
  * destroy the CD Widget and free everything currently
  * in memory.
- * 
  */
- static void free_CDWidget()
+ static void free_CDWidget ()
  {
  	gint i;
  	g_signal_handler_disconnect (cdwidget->leftbutton, lbutton_signal_id);
@@ -819,16 +820,16 @@ void coverart_init (gchar *progpath)
   
   if (!DEFAULT_FILE)
   {
-      DEFAULT_FILE = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "default-cover.png", NULL);
+		DEFAULT_FILE = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "default-cover.png", NULL);
   }
   if (!HIGHLIGHT_FILE)
   {
-      HIGHLIGHT_FILE = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "cdshine.png", NULL);
+		HIGHLIGHT_FILE = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "cdshine.png", NULL);
   }
   if (!HIGHLIGHT_FILE_MAIN)
   {
-      HIGHLIGHT_FILE_MAIN = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "cdshine_main.png", NULL);
-  }
+		HIGHLIGHT_FILE_MAIN = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "cdshine_main.png", NULL);
+	}
 }
 
 /**
@@ -1447,6 +1448,10 @@ void coverart_track_changed (Track *track, gint signal)
 	 * e) A track has been created and its artist and album are not in the displaylist
 	 */
 
+	/* If coverart not displayed then ignore */
+	if (! prefs_get_int (KEY_DISPLAY_COVERART))
+  	return;
+  		
 	trk_key = g_strconcat (track->artist, "_", track->album, NULL); 	
  	/* Determine the index of the found album */
  	keypos = g_list_find_custom (album_key_list, trk_key, (GCompareFunc) compare_album_keys);
@@ -1580,6 +1585,14 @@ void coverart_track_changed (Track *track, gint signal)
 			  if (index != -1)
 			  {
 			  	/* Track exists in the album list so ignore the change and return */
+			  	ExtraTrackData *etd;
+			  	etd = track->userdata;
+			  	if (etd->tartwork_changed == TRUE)
+			  	{
+			  		etd->tartwork_changed = FALSE;
+			  		set_covers(TRUE);
+			  	}
+			  	
 			  	return;
 			  }
 			  else

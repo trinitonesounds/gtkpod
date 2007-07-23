@@ -1761,6 +1761,9 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	    g_free (name_on_ipod);
 	}
 
+	/* Set this flag to true to ensure artwork is reread from file */
+	netr->tartwork_changed = TRUE;
+	
 	/* notify display model */
 	if (netr->tchanged)
 	{
@@ -1768,6 +1771,14 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	    data_changed (itdb);
 	    netr->tchanged = FALSE;
 	}
+	else
+	{
+		/* Rather than depend on the track data being changed, only the artwork may have changed
+		 * hence the reason for the user updating from file
+		 */
+		coverart_track_changed (track, COVERART_CHANGE_SIGNAL);
+	}
+	
 	display_updated (track, NULL);
         g_free (oldhash);
     }
