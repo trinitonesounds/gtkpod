@@ -256,6 +256,7 @@ typedef enum {
     T_SORT_ALBUMARTIST,
     T_SORT_COMPOSER,
     T_SORT_TVSHOW,
+    T_GAPLESS_TRACK_FLAG,
     T_ITEM_NUM,
 } T_item;
 

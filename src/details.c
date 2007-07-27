@@ -760,6 +760,7 @@ static void details_setup_widget (Detail *detail, T_item item)
     case T_CHECKED:
     case T_REMEMBER_PLAYBACK_POSITION:
     case T_SKIP_WHEN_SHUFFLING:
+    case T_GAPLESS_TRACK_FLAG:
 	buf = g_strdup_printf ("details_checkbutton_%d", item);
 	w = gtkpod_xml_get_widget (detail->xml, buf);
 	g_signal_connect (w, "toggled",
@@ -964,6 +965,17 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
 		}
 	    }
 	    gtk_combo_box_set_active (GTK_COMBO_BOX (w), index);
+	}
+	break;
+    case T_GAPLESS_TRACK_FLAG:
+	if ((w = gtkpod_xml_get_widget (detail->xml, checkbutton)))
+	{
+	    if (track)
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w),
+					      track->gapless_track_flag);
+	    else
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w),
+					      FALSE);
 	}
 	break;
     case T_ALL:
@@ -1186,6 +1198,7 @@ static void details_get_item (Detail *detail, T_item item,
     case T_IPOD_PATH:
     case T_IPOD_ID:
     case T_THUMB_PATH:
+    case T_GAPLESS_TRACK_FLAG:
 	/* These are read-only only */
 	break;
 	break;

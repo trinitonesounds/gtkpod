@@ -110,6 +110,7 @@ static const gchar *t_strings[] = {
     N_("Sort Album Artist"),
     N_("Sort Composer"),
     N_("Sort TV Show"),
+    N_("Gapless Track Flag"),
     NULL };
 
 /* Tooltips for prefs window */
@@ -169,7 +170,8 @@ static const gchar *t_tooltips[] = {
     N_("Used for sorting on the iPod"),  /* 50 */
     N_("Used for sorting on the iPod"),
     N_("Used for sorting on the iPod"),
-    N_("Used for sorting on the iPod")
+    N_("Used for sorting on the iPod"),
+    NULL
  };
 
 

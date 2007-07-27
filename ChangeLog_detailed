@@ -1,3 +1,7 @@
+2007-07-26 Michael Tiffany <tiffman at users.sourceforge.net>
+
+	* merge gapless_playback_branch back to HEAD.
+
 2007-07-23 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* src/details.c: set tartwork_changed flag to TRUE rather than relying on
@@ -15,8 +19,8 @@
 
 2007-07-15 Michael Tiffany <tiffman at users.sourceforge.net>
 
-	* src/mp3file.c (mp3_get_track_lame_gapless): wasn't properly closing
-	  files (bugfix).
+	* src/mp3file.c: fixed memory leak: wasn't closing files in
+	  mp3_read_lame_tag.
 
 2007-07-14 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
@@ -56,6 +60,24 @@
 	  try harder to find evolution-addressbook-export (thanks to
 	  Götz Waschk)
 
+2007-07-08  Michael Tiffany <tiffman at users.sourceforge.net>
+
+	* src/mp3file.c: modified mp3_read_lame_tag() to check the info tag
+	  crc and return the result of the check.  Changed the replaygain and
+	  gapless functions to check the return value and only use tag data if
+	  the crc matched.
+
+2007-07-06  Michael Tiffany <tiffman at users.sourceforge.net>
+
+	* src/display.h
+	  src/misc_conversion.c
+	  src/misc_track.c
+	  src/file.c
+	  src/details.c
+	  data/gtkpod.glade:
+	  added a read-only checkbox to the Misc tab in the Details window to
+	  show the state of the gapless track flag.
+
 2007-07-05  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* src/autodection.c:
@@ -86,6 +108,13 @@
 
 	* po/fr.po:
 	  updated French translation (thanks to Eric Lassauge)
+
+2007-07-02  Michael Tiffany <tiffman at users.sourceforge.net>
+
+	* src/mp3file.c: created struct to store the lame tag, and a function to
+	  parse it.  Changed the replaygain and gapless functions to use this to
+	  get any necessary lame data.  Added an info tag CRC function from the
+	  libmad code (GPL) to check the validity of the lame tag.
 
 2007-06-29 Jorg Schuler <jcsjcs at users.sourceforge.net>
 

@@ -39,6 +39,9 @@
  * mpg123 code used in xmms-1.2.7 (Input/mpg123). Only the code needed
  * for the playlength calculation has been extracted. */
 
+/* The code in the third section of this file is taken from the
+ * crc code used in libmad (crc.h). */
+
 /* The code in the last section of this file is original gtkpod
  * code. */
 
@@ -54,6 +57,7 @@
 typedef struct _File_Tag File_Tag;
 typedef struct _GainData GainData;
 typedef struct _GaplessData GaplessData;
+typedef struct _LameTag LameTag;
 
 struct _File_Tag
 {
@@ -105,6 +109,41 @@ struct _GaplessData
     guint64 samplecount;  /* number of actual music samples */
     guint32 postgap;      /* number of postgap samples */
     guint32 gapless_data; /* number of bytes from the first sync frame to the 8th to last frame */
+};
+
+#define LAME_TAG_SIZE 0x24
+#define INFO_TAG_CRC_SIZE 0xBE	/* number of bytes to pass to crc_compute */
+
+/* A structure to hold the various data found in a LAME info tag.
+ * Please see http://gabriel.mp3-tech.org/mp3infotag.html for full
+ * documentation.
+ */
+struct _LameTag
+{
+    gchar encoder[4];
+    gchar version_string[5];
+    guint8 info_tag_revision;
+    guint8 vbr_method;
+    guint8 lowpass;
+    float peak_signal_amplitude;
+    guint16 radio_replay_gain;
+    guint16 audiophile_replay_gain;
+    guint8 encoding_flags;
+    guint8 ath_type;
+    guint8 bitrate;
+    guint16 delay;
+    guint16 padding;
+    guint8 noise_shaping;
+    guint8 stereo_mode;
+    gboolean unwise_settings;
+    guint8 source_sample_frequency;
+    guint8 mp3_gain;
+    guint8 surround_info;
+    guint16 preset;
+    guint32 music_length;
+    guint16 music_crc;
+    guint16 info_tag_crc;
+    guint16 calculated_info_tag_crc;
 };
 
 /* This code is taken from the mp3info code. Only the code needed for
@@ -198,6 +237,8 @@ typedef struct {
 static guint get_track_time(gchar *path);
 
 
+/* This is for soundcheck code */
+gboolean mp3_read_lame_tag (gchar *path, LameTag *lt);
 
 /* ------------------------------------------------------------
 
@@ -1658,6 +1699,82 @@ gboolean mp3_write_file_info (gchar *filename, Track *track)
 
 
 /*
+ * Code used to calculate the CRC-16 of the info tag.  Used to check the
+ * validity of the data read from the lame tag.
+ * Code taken from the libmad project, licensed under GPL
+ */
+
+static
+unsigned short const crc_table[256] = {
+  0x0000, 0xc0c1, 0xc181, 0x0140, 0xc301, 0x03c0, 0x0280, 0xc241,
+  0xc601, 0x06c0, 0x0780, 0xc741, 0x0500, 0xc5c1, 0xc481, 0x0440,
+  0xcc01, 0x0cc0, 0x0d80, 0xcd41, 0x0f00, 0xcfc1, 0xce81, 0x0e40,
+  0x0a00, 0xcac1, 0xcb81, 0x0b40, 0xc901, 0x09c0, 0x0880, 0xc841,
+  0xd801, 0x18c0, 0x1980, 0xd941, 0x1b00, 0xdbc1, 0xda81, 0x1a40,
+  0x1e00, 0xdec1, 0xdf81, 0x1f40, 0xdd01, 0x1dc0, 0x1c80, 0xdc41,
+  0x1400, 0xd4c1, 0xd581, 0x1540, 0xd701, 0x17c0, 0x1680, 0xd641,
+  0xd201, 0x12c0, 0x1380, 0xd341, 0x1100, 0xd1c1, 0xd081, 0x1040,
+
+  0xf001, 0x30c0, 0x3180, 0xf141, 0x3300, 0xf3c1, 0xf281, 0x3240,
+  0x3600, 0xf6c1, 0xf781, 0x3740, 0xf501, 0x35c0, 0x3480, 0xf441,
+  0x3c00, 0xfcc1, 0xfd81, 0x3d40, 0xff01, 0x3fc0, 0x3e80, 0xfe41,
+  0xfa01, 0x3ac0, 0x3b80, 0xfb41, 0x3900, 0xf9c1, 0xf881, 0x3840,
+  0x2800, 0xe8c1, 0xe981, 0x2940, 0xeb01, 0x2bc0, 0x2a80, 0xea41,
+  0xee01, 0x2ec0, 0x2f80, 0xef41, 0x2d00, 0xedc1, 0xec81, 0x2c40,
+  0xe401, 0x24c0, 0x2580, 0xe541, 0x2700, 0xe7c1, 0xe681, 0x2640,
+  0x2200, 0xe2c1, 0xe381, 0x2340, 0xe101, 0x21c0, 0x2080, 0xe041,
+
+  0xa001, 0x60c0, 0x6180, 0xa141, 0x6300, 0xa3c1, 0xa281, 0x6240,
+  0x6600, 0xa6c1, 0xa781, 0x6740, 0xa501, 0x65c0, 0x6480, 0xa441,
+  0x6c00, 0xacc1, 0xad81, 0x6d40, 0xaf01, 0x6fc0, 0x6e80, 0xae41,
+  0xaa01, 0x6ac0, 0x6b80, 0xab41, 0x6900, 0xa9c1, 0xa881, 0x6840,
+  0x7800, 0xb8c1, 0xb981, 0x7940, 0xbb01, 0x7bc0, 0x7a80, 0xba41,
+  0xbe01, 0x7ec0, 0x7f80, 0xbf41, 0x7d00, 0xbdc1, 0xbc81, 0x7c40,
+  0xb401, 0x74c0, 0x7580, 0xb541, 0x7700, 0xb7c1, 0xb681, 0x7640,
+  0x7200, 0xb2c1, 0xb381, 0x7340, 0xb101, 0x71c0, 0x7080, 0xb041,
+
+  0x5000, 0x90c1, 0x9181, 0x5140, 0x9301, 0x53c0, 0x5280, 0x9241,
+  0x9601, 0x56c0, 0x5780, 0x9741, 0x5500, 0x95c1, 0x9481, 0x5440,
+  0x9c01, 0x5cc0, 0x5d80, 0x9d41, 0x5f00, 0x9fc1, 0x9e81, 0x5e40,
+  0x5a00, 0x9ac1, 0x9b81, 0x5b40, 0x9901, 0x59c0, 0x5880, 0x9841,
+  0x8801, 0x48c0, 0x4980, 0x8941, 0x4b00, 0x8bc1, 0x8a81, 0x4a40,
+  0x4e00, 0x8ec1, 0x8f81, 0x4f40, 0x8d01, 0x4dc0, 0x4c80, 0x8c41,
+  0x4400, 0x84c1, 0x8581, 0x4540, 0x8701, 0x47c0, 0x4680, 0x8641,
+  0x8201, 0x42c0, 0x4380, 0x8341, 0x4100, 0x81c1, 0x8081, 0x4040
+};
+
+unsigned short crc_compute(char const *data, unsigned int length,
+			   unsigned short init)
+{
+  register unsigned int crc;
+
+  for (crc = init; length >= 8; length -= 8) {
+    crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+    crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+    crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+    crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+    crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+    crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+    crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+    crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+  }
+
+  switch (length) {
+  case 7: crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+  case 6: crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+  case 5: crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+  case 4: crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+  case 3: crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+  case 2: crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+  case 1: crc = crc_table[(crc ^ *data++) & 0xff] ^ (crc >> 8);
+  case 0: break;
+  }
+
+  return crc;
+}
+
+
+/*
  * Code to read the ReplayGain Values stored by LAME in its own tag.
  *
  * Most of the relevant information has been extracted from them LAME sources
@@ -1779,6 +1896,9 @@ static inline guint32 parse_lame_uint32(char *buf) {
 		| (buf[2] & 0xff) << 8 | (buf[3] & 0xff);
 }
 
+static inline guint16 parse_lame_uint16(char *buf) {
+	return (buf[0] & 0xff) << 8 | (buf[1] & 0xff);
+}
 
 /* 
  * mp3_get_track_lame_replaygain - read the specified file and scan for LAME Tag
@@ -1794,22 +1914,12 @@ static inline guint32 parse_lame_uint32(char *buf) {
 
 gboolean mp3_get_track_lame_replaygain (gchar *path, GainData *gd)
 {
-	struct {
-		/* All members are defined in terms of chars so padding does not
-		 * occur. Is there a cleaner way to keep the compiler from
-		 * padding? */
-		
-		char     id[3];
-		char     version[2];
-		char     flags;
-		char     size[4];
-	} id3head;
+	g_return_val_if_fail (path, FALSE);
 
-	FILE *file = NULL;
-	char buf[4], version[5];
+	LameTag lt;
+	if (!mp3_read_lame_tag (path, &lt))
+	    goto rg_fail;
 	int gain_adjust = 0;
-	int sideinfo;
-	guint32 ps;
 
 	g_return_val_if_fail (gd, FALSE);
 
@@ -1820,106 +1930,23 @@ gboolean mp3_get_track_lame_replaygain (gchar *path, GainData *gd)
 	gd->audiophile_gain_set = FALSE;
 	gd->peak_signal_set = FALSE;
 	
-	if (!path)
-		goto rg_fail;
-	
-	file = fopen (path, "r");
-
-	if (!file)
-	    goto rg_fail;
-
-	/* Skip ID3 header if appropriate */
-	if (fread(&id3head, 1, sizeof(id3head), file) != 
-			sizeof(id3head))
-		goto rg_fail;
-	
-	if (!strncmp(id3head.id, "ID3", 3)) {
-		int realsize = 0;
-		
-		realsize = (id3head.size[0] & 0x7f) << 21 
-			| (id3head.size[1] & 0x7f) << 14 
-			| (id3head.size[2] & 0x7f) << 7 
-			| (id3head.size[3] & 0x7f);
-
-		if (id3head.flags & TAG_FOOTER) {
-			/* footer is copy of header */
-			realsize += sizeof(id3head);
-		}
-
-		if (fseek(file, realsize-1, SEEK_CUR) ||
-				(!fread(&buf[0], 1, 1, file)))
-			goto rg_fail;
-	} else {
-		/* no ID3 Tag - go back */
-		fseek(file, -sizeof(id3head), SEEK_CUR);
-	}
-
-	/* Search Xing header. The location is dependant on the MPEG Layer and
-	 * whether the stream is mono or not. */
-	if (fread(buf, 1, 4, file) != 4) goto rg_fail;
-	
-	/* should start with 0xff 0xf? (synch) */
-	if (((buf[0] & 0xff) != 0xff) 
-			|| ((buf[1] & 0xf0) != 0xf0)) goto rg_fail;
-	
-	/* determine the length of the sideinfo */
-	if (buf[1] & 0x08) {
-		sideinfo = ((buf[3] & 0xc0) == 0xc0) ? 
-			SIDEINFO_MPEG1_MONO : SIDEINFO_MPEG1_MULTI;
-	} else {
-		sideinfo = ((buf[3] & 0xc0) == 0xc0) ? 
-			SIDEINFO_MPEG2_MONO : SIDEINFO_MPEG2_MULTI;
-	}
-	
-	if (fseek(file, sideinfo, SEEK_CUR) ||
-			(fread(&buf[0], 1, 4, file) != 4))
-		goto rg_fail;
-	
-	/* Is this really a Xing or Info Header? 
-	 * FIXME: Apparently (according to madplay sources) there is a different
-	 * possible location for the Xing header ("due to an unfortunate
-	 * historical event"). I do not thing we need to care though since
-	 * RaplayGain information is only conatined in recent files.  */
-	if (strncmp(buf, "Xing", 4) && strncmp(buf, "Info", 4))
-		goto rg_fail;
-
-	/* Check for LAME Tag */
-	if (fseek(file, LAME_OFFSET, SEEK_CUR) ||
-				(fread(&buf[0], 1, 4, file) != 4))
-		goto rg_fail;
-	if (strncmp(buf, "LAME", 4))
-		goto rg_fail;
-	
-	/* Check LAME Version */
-	if (fread(version, 1, 5, file) != 5)
-		goto rg_fail;
-	
-	/* Skip really old versions altogether. I am not sure when radio_gain
-	 * information was introduced. 3.89 does not seem to supprt it though.
-	 * */
-	if (lame_vcmp(version, "3.90") < 0) {
+	if (lame_vcmp(lt.version_string, "3.90") < 0) {
 /*		fprintf(stderr, "Old lame version (%c%c%c%c%c). Not used.\n",
 				version[0], version[1], version[2], version[3], version[4]); */
 		goto rg_fail;
 	}
 		
-	if (fseek(file, 0x2, SEEK_CUR) || (fread(buf, 1, 4, file) != 4))
-		goto rg_fail;
-
-	/* get the peak signal. */
-	ps = parse_lame_uint32(buf);
-	
 	/* Don't know when fixed-point PeakSingleAmplitude
 	 * was introduced exactly. 3.94b will be used for now.) */
-	if ((lame_vcmp(version, "3.94b") >= 0)) {
-		if ((!gd->peak_signal_set) && ps) {
-			gd->peak_signal = ps;
+	if ((lame_vcmp(lt.version_string, "3.94b") >= 0)) {
+		if ((!gd->peak_signal_set) && lt.peak_signal_amplitude) {
+			gd->peak_signal = lt.peak_signal_amplitude;
 			gd->peak_signal_set = TRUE;
 /*			printf("peak_signal (lame): %f\n", (double)
 					gd->peak_signal / 0x800000);*/
 		}
 	} else {
-		float f = *((float *) (void *) (&ps)) * 0x800000;
+		float f = *((float *) (void *) (&lt.peak_signal_amplitude)) * 0x800000;
 		gd->peak_signal = (guint32) f;
 		/* I would like to see an example of that. */
 /*		printf("peak_signal (lame floating point): %f. PLEASE report.\n", 
@@ -1930,33 +1957,26 @@ gboolean mp3_get_track_lame_replaygain (gchar *path, GainData *gd)
 	 * Versions prior to 3.95.1 used a reference volume of 83dB.
 	 * (As compared to the currently used 89dB.)
 	 */
-	if ((lame_vcmp(version, "3.95.") < 0)) {
+	if ((lame_vcmp(lt.version_string, "3.95.") < 0)) {
 		gain_adjust = 60;
 /*		fprintf(stderr, "Old lame version (%c%c%c%c%c). Adjusting gain.\n",
 				version[0], version[1], version[2], version[3], version[4]); */
 	}
 
-	if (fread(&buf[0], 1, 2, file) != 2)
-		goto rg_fail;
-
+	unsigned char ubuf[2];
 	/* radio gain */
-	read_lame_replaygain (buf, gd, gain_adjust);
-
-	if (fread(&buf[0], 1, 2, file) != 2)
-		goto rg_fail;
+	memcpy(ubuf,&lt.radio_replay_gain,2);
+	read_lame_replaygain (ubuf, gd, gain_adjust);
 
 	/* audiophile gain */
-	read_lame_replaygain (buf, gd, gain_adjust);
+	memcpy(ubuf,&lt.audiophile_replay_gain,2);
+	read_lame_replaygain (ubuf, gd, gain_adjust);
 
-	fclose(file);
 	return TRUE;
 
 rg_fail:
-	if (file)
-		fclose(file);
 	return FALSE;
 }
-
 
 /* 
  * mp3_get_track_ape_replaygain - read the specified file and scan for Ape Tag
@@ -2180,8 +2200,13 @@ gboolean mp3_read_soundcheck (gchar *path, Track *track)
 
 
 
+/* ----------------------------------------------------------------------
 
-/* mp3 slot size in bytes */
+	      From here starts original gtkpod code
+
+---------------------------------------------------------------------- */
+
+/* mpeg audio slot size in bytes */
 int slotsize[3] = {4,1,1}; /* layer 1, layer 2, layer 3 */
 
 int samplesperframe[2][3] = {
@@ -2196,47 +2221,41 @@ int samplesperframe[2][3] = {
 
 
 /* 
- * mp3_get_track_lame_gapless - read the specified file and scan for LAME Tag
- * gapless information.
+ * mp3_read_lame_tag - read the data from the lame tag (if it exists)
  *
- * @path: localtion of the file
- * @track: structure holding track information
- *
- * TODO: Split off non-LAME stuff (samplecount, gapless_data) to a separate function since it's generic
+ * @path: location of the file
+ * @lt: pointer to structure to be filled
  */
-gboolean mp3_get_track_lame_gapless (gchar *path, GaplessData *gd)
+gboolean mp3_read_lame_tag (gchar *path, LameTag *lt)
 {
-    FILE *file = NULL;
-    char buf[4], version[5];
-    unsigned char ubuf[4];
+    unsigned char ubuf[LAME_TAG_SIZE];
     int sideinfo;
-    int i;
 
-    g_return_val_if_fail (gd, FALSE);
+    unsigned char full_info_tag[INFO_TAG_CRC_SIZE];
 
-    if (!path)
-	goto gp_fail;
+    g_return_val_if_fail (path, FALSE);
 
-    file = fopen (path, "rb");
-
+    /* Attempt to open the file */
+    FILE *file = fopen (path, "r");
     if (!file)
-	goto gp_fail;
+	goto lt_fail;
 
-    /* use get_first_header() to seek to the first mp3 header */
     MP3Info *mp3i = NULL;
     mp3i = g_malloc0 (sizeof (MP3Info));
     mp3i->filename = path;
     mp3i->file = file;
     get_mp3_info (mp3i);
+
+    /* use get_first_header() to seek to the first mp3 header */
     get_first_header (mp3i, 0);
 
-    int xing_header_offset = ftell (file);
+    if (fread (full_info_tag, 1, INFO_TAG_CRC_SIZE, mp3i->file) != INFO_TAG_CRC_SIZE)
+	goto lt_fail;
+    fseek(mp3i->file, -INFO_TAG_CRC_SIZE, SEEK_CUR);
 
     MP3Header h;
-    if (!get_header (file, &h))
-	goto gp_fail;
-
-    int mysamplesperframe = samplesperframe[h.version & 1][3 - h.layer];
+    if (!get_header (mp3i->file, &h))
+	goto lt_fail;
 
     /* Determine offset of Xing header based on sideinfo size */
     if (h.version & 0x1)
@@ -2250,21 +2269,21 @@ gboolean mp3_get_track_lame_gapless (gchar *path, GaplessData *gd)
 	    SIDEINFO_MPEG2_MONO : SIDEINFO_MPEG2_MULTI;
     }
 
-    if (fseek (file, sideinfo, SEEK_CUR) ||
-	(fread (&buf[0], 1, 4, file) != 4))
-	goto gp_fail;
+    if (fseek (mp3i->file, sideinfo, SEEK_CUR) ||
+	(fread (&ubuf[0], 1, 4, mp3i->file) != 4))
+	goto lt_fail;
 
     /* Is this really a Xing or Info Header? 
      * FIXME: Apparently (according to madplay sources) there is a different
      * possible location for the Xing header ("due to an unfortunate
      * historical event"). I do not thing we need to care though since
      * ReplayGain information is only contained in recent files.  */
-    if (strncmp (buf, "Xing", 4) && strncmp (buf, "Info", 4))
-	goto gp_fail;
+    if (strncmp (ubuf, "Xing", 4) && strncmp (ubuf, "Info", 4))
+	goto lt_fail;
 
     /* Determine the offset of the LAME tag based on contents of the Xing header */
     int flags;
-    fread (&flags, 4, 1, file);
+    fread (&flags, 4, 1, mp3i->file);
     int toskip = 0;
     if (flags | 0x1)
     {				/* frames field is set */
@@ -2284,38 +2303,90 @@ gboolean mp3_get_track_lame_gapless (gchar *path, GaplessData *gd)
     }
 
     /* Check for LAME Tag */
-    if (fseek (file, toskip, SEEK_CUR) || (fread (&buf[0], 1, 4, file) != 4))
-	goto gp_fail;
-    if (strncmp (buf, "LAME", 4))
-	goto gp_fail;
+    if (fseek (mp3i->file, toskip, SEEK_CUR) || (fread (ubuf, 1, LAME_TAG_SIZE, mp3i->file) != LAME_TAG_SIZE))
+	goto lt_fail;
+    if (strncmp (ubuf, "LAME", 4))
+	goto lt_fail;
 
-    /* Check LAME Version */
-    if (fread (version, 1, 5, file) != 5)
-	goto gp_fail;
+    strncpy(lt->encoder, &ubuf[0x0], 4);
 
-    /* XXX skip old LAME versions, or just assume that pre/postgap
-     * turn out zeros anyway, or check the CRC to vaidate the tag? */
+    strncpy(lt->version_string, &ubuf[0x4], 5);
 
-    gboolean cbr = FALSE;
-    if (fread (ubuf, 1, 1, file) != 1)
-	goto gp_fail;
+    lt->info_tag_revision = (ubuf[0x9] >> 4);
+    lt->vbr_method = (ubuf[0x9] & 0xf);
+    lt->lowpass = ubuf[0xa];
 
-    if ((ubuf[0] & 0xf) == 0x1)
-	cbr = TRUE;
+    memcpy(&lt->peak_signal_amplitude,&ubuf[0xb],4);
+    memcpy(&lt->radio_replay_gain,&ubuf[0xf],2);
+    memcpy(&lt->audiophile_replay_gain,&ubuf[0x11],2);
 
-    if (fseek (file, 0xB, SEEK_CUR) || (fread (ubuf, 1, 4, file) != 4))
-	goto gp_fail;
+    lt->encoding_flags = ubuf[0x13] >> 4;
+    lt->ath_type = ubuf[0x13] & 0xf;
 
-    /* set pregap and postgap directly from LAME header */
-    gd->pregap = (ubuf[0] << 4) + (ubuf[1] >> 4);
-    gd->postgap = ((ubuf[1] & 0xf) << 8) + ubuf[2];
+    lt->bitrate = ubuf[0x14];
 
-    /* jump the end of the frame with the xing header */
-    if (fseek (file, xing_header_offset + frame_length (&h), SEEK_SET))
+    lt->delay = (ubuf[0x15] << 4) + (ubuf[0x16] >> 4);
+    lt->padding = ((ubuf[0x16] & 0xf) << 8) + ubuf[0x17];
+
+    lt->noise_shaping = ubuf[0x18] & 0x3;
+    lt->stereo_mode = (ubuf[0x18] >> 2) & 0x7;
+    lt->unwise_settings = (ubuf[0x18] >> 5) & 0x1;
+    lt->source_sample_frequency = (ubuf[0x18] >> 6) & 0x3;
+
+    lt->mp3_gain = ubuf[0x19];
+
+    lt->surround_info = (ubuf[0x1a] >> 3) & 0x7;
+    lt->preset = ((ubuf[0x1a] & 0x7) << 8) + ubuf[0x1b];
+
+    lt->music_length = parse_lame_uint32(&ubuf[0x1c]);
+
+    lt->music_crc = parse_lame_uint16(&ubuf[0x20]);
+    lt->info_tag_crc = parse_lame_uint16(&ubuf[0x22]);
+
+    lt->calculated_info_tag_crc = crc_compute(full_info_tag, INFO_TAG_CRC_SIZE, 0x0000);
+
+    fclose(file);
+    return (lt->calculated_info_tag_crc == lt->info_tag_crc);
+
+  lt_fail:
+    if (file)
+	fclose(file);
+    return FALSE;
+
+}
+
+
+/* 
+ * mp3_get_track_gapless - read the specified file and calculate gapless
+ * information: totalsamples and gapless_data
+ *
+ * @mp3i: MP3Info of the file; should already have run get_mp3_info() on it
+ * @gd: structure holding gapless information; should have pregap and
+ * 	postgap already filled
+ */
+
+gboolean mp3_get_track_gapless (MP3Info *mp3i, GaplessData *gd)
+{
+    int i;
+
+    g_return_val_if_fail (mp3i, FALSE);
+    g_return_val_if_fail (gd, FALSE);
+
+    /* use get_first_header() to seek to the first mp3 header */
+    get_first_header (mp3i, 0);
+
+    int xing_header_offset = ftell (mp3i->file);
+
+    get_header(mp3i->file, &(mp3i->header));
+
+    int mysamplesperframe = samplesperframe[mp3i->header.version & 1][3 - mp3i->header.layer];
+
+    /* jump to the end of the frame with the xing header */
+    if (fseek (mp3i->file, xing_header_offset + frame_length (&(mp3i->header)), SEEK_SET))
 	goto gp_fail;
 
     /* counts bytes from the start of the 1st sync frame */
-    int totaldatasize = frame_length (&h);
+    int totaldatasize = frame_length (&(mp3i->header));
 
     /* keeps track of the last 8 frame sizes */
     int lastframes[8];
@@ -2325,19 +2396,14 @@ gboolean mp3_get_track_lame_gapless (gchar *path, GaplessData *gd)
 
     /* quickly parse the file, reading only frame headers */
     int l = 0;
-    while ((l = get_header (file, &h)) != 0)
+    while ((l = get_header (mp3i->file, &(mp3i->header))) != 0)
     {
-	for (i = 7; i > 0; i--)
-	{
-	    lastframes[i] = lastframes[i - 1];
-	}
-	lastframes[0] = l;
+	lastframes[totalframes%8] = l;
 	totaldatasize += l;
 	totalframes++;
 
-	if (fseek (file, l - FRAME_HEADER_SIZE, SEEK_CUR))
+	if (fseek (mp3i->file, l - FRAME_HEADER_SIZE, SEEK_CUR))
 	    goto gp_fail;
-
     }
 
     int finaleight = 0;
@@ -2346,7 +2412,12 @@ gboolean mp3_get_track_lame_gapless (gchar *path, GaplessData *gd)
 	finaleight += lastframes[i];
     }
 
-    if (cbr)
+    /* For some reason, iTunes appears to add an extra frames worth of
+     * samples to the samplecount for CBR files.  CBR files don't currently
+     * (2 Jul 07) play gaplessly whether uploaded from iTunes or gtkpod,
+     * even with apparently correct values, but we will attempt to emulate
+     * iTunes' behavior */
+    if (mp3i->vbr == 0) // CBR
 	totalframes++;
 
     /* all but last eight frames */
@@ -2354,13 +2425,10 @@ gboolean mp3_get_track_lame_gapless (gchar *path, GaplessData *gd)
     /* total samples minus pre/postgap */
     gd->samplecount = totalframes * mysamplesperframe - gd->pregap - gd->postgap;
 
-    fclose (file);
     return TRUE;
 
 
   gp_fail:
-    if (file)
-	fclose (file);
     return FALSE;
 
 }
@@ -2382,8 +2450,11 @@ gboolean mp3_get_track_lame_gapless (gchar *path, GaplessData *gd)
  * set. etrack->tchanged is set to TRUE if data has been changed,
  * FALSE otherwise.
  */
-gboolean mp3_read_gapless (char *path, Track *track)
-{
+
+gboolean mp3_read_gapless (gchar *path, Track *track) {
+    MP3Info *mp3i=NULL;
+    FILE *file;
+
     GaplessData gd;
     ExtraTrackData *etr;
 
@@ -2393,30 +2464,51 @@ gboolean mp3_read_gapless (char *path, Track *track)
 
     memset (&gd, 0, sizeof (GaplessData));
 
-    gd.pregap = 0;
-    gd.samplecount = 0;
-    gd.postgap = 0;
-    gd.gapless_data = 0;
 
-    mp3_get_track_lame_gapless (path, &gd);
+    g_return_val_if_fail (path, FALSE);
 
-    etr->tchanged = FALSE;
-
-    if ((gd.pregap) && (gd.samplecount) && (gd.postgap) && (gd.gapless_data))
+    /* Attempt to open the file */
+    file = fopen (path, "r");
+    if (file)
     {
-	if ((track->pregap != gd.pregap) ||
-	    (track->samplecount != gd.samplecount) ||
-	    (track->postgap != gd.postgap) ||
-	    (track->gapless_data != gd.gapless_data) ||
-	    (track->gapless_track_flag == FALSE))
-	{
-	    etr->tchanged = TRUE;
-	    track->pregap = gd.pregap;
-	    track->samplecount = gd.samplecount;
-	    track->postgap = gd.postgap;
-	    track->gapless_data = gd.gapless_data;
-	    track->gapless_track_flag = TRUE;
+	mp3i = g_malloc0 (sizeof (MP3Info));
+	mp3i->filename = path;
+	mp3i->file = file;
+	get_mp3_info (mp3i);
+
+	/* Try the LAME tag for pregap and postgap */
+	LameTag lt;
+	if (mp3_read_lame_tag (path, &lt)) {
+	    gd.pregap = lt.delay;
+	    gd.postgap = lt.padding;
+	} else {
+	    /* insert non-LAME methods of finding pregap and postgap */
+	    fclose(file);
+	    return FALSE;
 	}
+	    
+	mp3_get_track_gapless (mp3i, &gd);
+	    
+	etr->tchanged = FALSE;
+
+	if ((gd.pregap) && (gd.samplecount) && (gd.postgap) && (gd.gapless_data))
+	{
+	    if ((track->pregap != lt.delay) ||
+		(track->samplecount != gd.samplecount) ||
+		(track->postgap != lt.padding) ||
+		(track->gapless_data != gd.gapless_data) ||
+		(track->gapless_track_flag == FALSE))
+	    {
+		etr->tchanged = TRUE;
+		track->pregap = lt.delay;
+		track->samplecount = gd.samplecount;
+		track->postgap = lt.padding;
+		track->gapless_data = gd.gapless_data;
+		track->gapless_track_flag = TRUE;
+	    }
+	}
+	fclose(file);
+	return TRUE;
     }
     return FALSE;
 }
@@ -2655,15 +2747,6 @@ Track *mp3_get_file_info (gchar *name)
     mp3_read_soundcheck (name, track);
 
     mp3_read_gapless (name, track);
-
-#if LOCALDEBUG
-	printf("%s\n", name);
-    printf("\tpregap: %i\n", track->pregap);
-    printf("\tpostgap: %i\n", track->postgap);
-    printf("\tsamplecount: %li\n", track->samplecount);
-    printf("\tgaplessdata: %i\n", track->gapless_data);
-#endif
-
 
     /* Get additional info (play time and bitrate */
     if (mp3i)

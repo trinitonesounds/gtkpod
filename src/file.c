@@ -856,6 +856,7 @@ static gboolean copy_new_info (Track *from, Track *to)
 	case T_TRANSFERRED:
 	case T_PLAYCOUNT:
 	case T_VOLUME:
+	case T_GAPLESS_TRACK_FLAG:
 	    /* not applicable */
 	    break;
 	case T_ITEM_NUM:

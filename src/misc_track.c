@@ -909,6 +909,7 @@ gchar **track_get_item_pointer (Track *track, T_item t_item)
     case T_MEDIA_TYPE:
     case T_SEASON_NR:
     case T_EPISODE_NR:
+    case T_GAPLESS_TRACK_FLAG:
     case T_ITEM_NUM:
 	g_return_val_if_reached (NULL);
     }
@@ -1203,6 +1204,13 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
 	    changed = TRUE;
 	}
 	break;
+    case T_GAPLESS_TRACK_FLAG:
+	if (frtrack->gapless_track_flag != totrack->gapless_track_flag)
+	{
+	    totrack->gapless_track_flag = frtrack->gapless_track_flag;
+	    changed = TRUE;
+	}
+	break;
     case T_ITEM_NUM:
     case T_ALL:
 	g_return_val_if_reached (FALSE);
@@ -1408,6 +1416,7 @@ gchar *track_get_text (Track *track, T_item item)
     case T_ALL:
     case T_CHECKED:
     case T_ITEM_NUM:
+    case T_GAPLESS_TRACK_FLAG:
 	break;
     }
     return text;
@@ -1674,6 +1683,7 @@ gboolean track_set_text (Track *track, const gchar *new_text, T_item item)
     case T_SKIP_WHEN_SHUFFLING:
     case T_CHECKED:
     case T_ALL:
+    case T_GAPLESS_TRACK_FLAG:
     case T_ITEM_NUM:
     case T_THUMB_PATH: // TODO: this should in fact be settable
 	gtkpod_warning ("Programming error: track_set_text() called with illegal argument (item: %d)\n", item);
