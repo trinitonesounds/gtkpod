@@ -1,3 +1,9 @@
+2007-07-30 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * src/fetchcover.c: improved return status of net_retrieve_image function
+    so that if one image fails to be retrieved then the dialog does not have
+    to be cancelled. 
+
 2007-07-26 Michael Tiffany <tiffman at users.sourceforge.net>
 
 	* merge gapless_playback_branch back to HEAD.

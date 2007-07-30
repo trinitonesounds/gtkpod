@@ -80,7 +80,7 @@ static gboolean netsearched = FALSE;
 	static void *safe_realloc(void *ptr, size_t size);
 	static size_t curl_write_fetchcover_func(void *ptr, size_t itemsize, size_t numitems, void *data);
 	static void net_search_track ();
-	static void net_retrieve_image (GString *url);
+	static gboolean net_retrieve_image (GString *url);
 	static void fetchcover_next_button_clicked (GtkWidget *widget, gpointer data);
 	static void fetchcover_prev_button_clicked (GtkWidget *widget, gpointer data);
 	static void fetchcover_cleanup();
@@ -300,7 +300,7 @@ static gboolean netsearched = FALSE;
 	 * save it to a file inside the track's parent directory then display
 	 * it as a pixbuf
 	 */
-	static void net_retrieve_image (GString *url)
+	static gboolean net_retrieve_image (GString *url)
 	{
 		gchar *path = NULL;
 		
@@ -320,19 +320,24 @@ static gboolean netsearched = FALSE;
 		curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
 		
-		g_return_if_fail(fetchcover_curl_data.memory);
+		if (fetchcover_curl_data.memory == NULL)
+		{
+			fetchcover_statusbar_update (_("Image could not be retrieved."));
+			fetchcover_debug("fetchcover_next: fetchcover_curl_data.memory is null\n");
+			return FALSE;
+		}
 	
 		/* Check that the page returned is a valid web page */	
 		if (strstr(fetchcover_curl_data.memory, "<html>") != NULL)
 		{
 			fetchcover_statusbar_update (_("Image appears to no longer exist at http location"));
 			fetchcover_debug("fetchcover_next: http error (probably 404 or server error\n");
-			return;
+			return FALSE;
 		}
 		
 		FILE *tmpf = NULL;
 		ExtraTrackData *etd = fetchcover_track->userdata;
-		g_return_if_fail(etd);
+		g_return_val_if_fail(etd, FALSE);
 		
 		gchar *dir = g_path_get_dirname(etd->pc_path_utf8);
 		gchar *template = prefs_get_string("coverart_template");
@@ -371,34 +376,43 @@ static gboolean netsearched = FALSE;
 		
 		displayed_cover->dir = dir;
 		displayed_cover->filename = fname;
-				
+
+		g_free(filename);
+						
 		fetchcover_debug("fetchcover_next: saving tmp cover image to %s / %s", displayed_cover->dir, displayed_cover->filename);
 		
 		path = g_build_filename(displayed_cover->dir, displayed_cover->filename, NULL);
 		if ((tmpf = fopen(path, "wb")) == NULL)
 		{
 			fetchcover_debug("fetchcover_next: fopen failed\n");
-			fetchcover_statusbar_update (_("Downloaded image cover failed to open"));
+			fetchcover_statusbar_update (_("A file could not be created for the downloaded image"));
 			if (fetchcover_curl_data.memory)
 			{
 				g_free(fetchcover_curl_data.memory);
 				fetchcover_curl_data.memory = NULL;
 				fetchcover_curl_data.size = 0;
 			}
+			g_strfreev(template_items);
+			g_free(template);
 			g_free (path);
-			return;
+			return FALSE;
 		}
 		g_free (path);
 		
 		if (fwrite(fetchcover_curl_data.memory, fetchcover_curl_data.size, 1, tmpf) != 1)
 		{
 			fetchcover_debug("fetchcover_next: fwrite failed\n");
+			fetchcover_statusbar_update (_("The downloaded image could not be saved to the filesystem"));
 			if (fetchcover_curl_data.memory)
 			{
 				g_free(fetchcover_curl_data.memory);
 				fetchcover_curl_data.memory = NULL;
 				fetchcover_curl_data.size = 0;
 			}
+			fclose(tmpf);
+			g_strfreev(template_items);
+			g_free(template);
+			return FALSE;
 		}
 		
 		fclose(tmpf);
@@ -410,21 +424,28 @@ static gboolean netsearched = FALSE;
 		{
 			g_error_free (error);
 			fetchcover_debug("fetchcover_next: gdk_pixbuf_new_from_file failed\n");
+			fetchcover_statusbar_update (_("Downloaded image file could not be displayed"));
 			if (fetchcover_curl_data.memory)
 			{
 				g_free(fetchcover_curl_data.memory);
 				fetchcover_curl_data.memory = NULL;
 				fetchcover_curl_data.size = 0;
 			}
+			g_strfreev(template_items);
+			g_free(template);
+			g_free(path);
+			return FALSE;
 		}
 		
-		g_free(fetchcover_curl_data.memory);
+		if (fetchcover_curl_data.memory)
+			g_free(fetchcover_curl_data.memory);
+		
 		fetchcover_curl_data.memory = NULL;
 		fetchcover_curl_data.size = 0;
 		g_strfreev(template_items);
 		g_free(template);
-		g_free(filename);
 		g_free(path);
+		return TRUE;
 	}
 	
 	/**
@@ -483,28 +504,25 @@ static gboolean netsearched = FALSE;
 		/* Set the displayed cover to be the new image */	
 		displayed_cover = g_list_nth_data (fetchcover_image_list, displayed_cover_index);
 		
+		GdkPixbuf *scaled;
 		/* If the image has not been retrieved then get it from the net */
 		if (displayed_cover->image == NULL)
 		{
-			net_retrieve_image (displayed_cover->url);
-			if (displayed_cover->image == NULL)
+			if (! net_retrieve_image (displayed_cover->url) || displayed_cover->image == NULL)
 			{
 				/* XML file downloaded ok but image could not be retrieved */
-				gtk_widget_hide (prev_button);
-				gtk_widget_set_sensitive (next_button, FALSE);
+				gnome_canvas_item_hide (fetchcover_canvasitem);
 				gdk_window_set_cursor (window, NULL);
-				fetchcover_statusbar_update (_("Failed to retrieve any images"));
-				g_return_if_fail (displayed_cover->image);
+				return;
 			}
 		}
 		
 		fetchcover_debug("Displayed Image path: %s/%s\n", displayed_cover->dir, displayed_cover->filename);
 		
-		GdkPixbuf *scaled = gdk_pixbuf_scale_simple(displayed_cover->image, IMGSCALE, IMGSCALE, GDK_INTERP_NEAREST);
+		scaled = gdk_pixbuf_scale_simple(displayed_cover->image, IMGSCALE, IMGSCALE, GDK_INTERP_NEAREST);
 		gnome_canvas_item_set(fetchcover_canvasitem, "pixbuf", scaled, NULL);
-		
+		gnome_canvas_item_show (fetchcover_canvasitem);
 		gdk_window_set_cursor (window, NULL);
-		
 		return;
 	}
 	
@@ -541,20 +559,23 @@ static gboolean netsearched = FALSE;
 		/* Set the displayed cover to be the new image */	
 		displayed_cover = g_list_nth_data (fetchcover_image_list, displayed_cover_index);
 		
+		GdkPixbuf *scaled;
 		/* If the image has not been retrieved then get it from the net */
 		if (displayed_cover->image == NULL)
 		{
-			net_retrieve_image (displayed_cover->url);
-			if (displayed_cover->image == NULL)
+			if (! net_retrieve_image (displayed_cover->url) || displayed_cover->image == NULL)
 			{
-				fetchcover_statusbar_update (_("Failed to retrieve image."));
-				g_return_if_fail (displayed_cover->image);
+				/* XML file downloaded ok but image could not be retrieved */
+				gnome_canvas_item_hide (fetchcover_canvasitem);
+				return;
 			}
 		}
 		
-		GdkPixbuf *scaled = gdk_pixbuf_scale_simple(displayed_cover->image, IMGSCALE, IMGSCALE, GDK_INTERP_NEAREST);
-		gnome_canvas_item_set(fetchcover_canvasitem, "pixbuf", scaled, NULL);
+		fetchcover_debug("Displayed Image path: %s/%s\n", displayed_cover->dir, displayed_cover->filename);
 		
+		scaled = gdk_pixbuf_scale_simple(displayed_cover->image, IMGSCALE, IMGSCALE, GDK_INTERP_NEAREST);
+		gnome_canvas_item_set(fetchcover_canvasitem, "pixbuf", scaled, NULL);
+		gnome_canvas_item_show (fetchcover_canvasitem);
 		return;
 	}
 	
