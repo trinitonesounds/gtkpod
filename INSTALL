@@ -32,21 +32,24 @@ How to compile/install gtkpod:
 
         autoconf (at least 2.55)
         flex (or lex)
-	glib (at least 2.4.0)
+        gettext
+        glib (at least 2.4.0)
         gtk+ (at least 2.6.0)
         libglade (at least 2.4.0)
-        libgpod (at least 0.4.0)
+        libgnomecanvas (at least 2.14.0)
+        libgpod (at least 0.5.2)
         libid3tag (at least 0.15)
+        perl XML::Parser module
         pkgconfig
 
    Optional packages:
 
+        libcurl (for coverart download support)
+        libflac (for FLAC support)
+        libgnome-vfs-2.0 >2.6 (for iPod autodetection under GNOME)
+        libhal >0.5 <0.6 (in combination with libgnome-vfs: better detection of iPods)
+        libvorbis (for ogg libvorbis support)
         libmpv4 (for AAC/M4A support)
-	libvorbis (for ogg libvorbis support)
-	libflac (for FLAC support)
-	libcurl (for coverart download support)
-	libgnome-vfs-2.0 >2.6 (for iPod autodetection under GNOME)
-	libhal >0.5 <0.6 (in combination with libgnome-vfs: better detection of iPods)
 
 
 2. If you install libraries to /usr/local/lib please don't forget to
