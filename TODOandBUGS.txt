@@ -19,6 +19,8 @@ BUGS, TODO:
 - save extended database when rehash was done, even if main database
   is not changed.
 
+- handle missing .ext file more decently
+
 CoverArt_display:
 - Remove the preference and add by default, complete with arrows to minimize the display if required.
 # Add a title to the display indicating the album displayed.
