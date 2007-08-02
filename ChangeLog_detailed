@@ -1,3 +1,8 @@
+2007-08-02  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* data/gtkpod.glade:
+	  add fetchcover_dialog_test
+
 2007-07-31  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* INSTALL:
