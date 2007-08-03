@@ -1,3 +1,12 @@
+2007-08-03 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * src/display_coverart.h: added DEFAULT_IMG_SIZE
+  * src/display_coverart.c: improvements to image dimension setting
+    algorithms for both x and y. Using ITDB_THUMB_COVER_LARGE for
+    the preferred image means the coverart can be too big in the
+    coverart display window. Thus, introduces a default maximum and
+    algorithm to set it.
+
 2007-08-02  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* data/gtkpod.glade:

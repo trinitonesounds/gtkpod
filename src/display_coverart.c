@@ -329,7 +329,7 @@ static void set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean 
 	if (album->albumart == NULL)
 	{
 		track = g_list_nth_data (album->tracks, 0);
-		album->albumart = coverart_get_track_thumb (track, track->itdb->device, 0);				
+		album->albumart = coverart_get_track_thumb (track, track->itdb->device, DEFAULT_IMG_SIZE);				
 	}
 	
 	/* Set the x, y, height and width of the CD cover */
@@ -579,12 +579,15 @@ void coverart_clear_images ()
  * pixbuf referenced by the provided track or the pixbuf of the
  * default file if track has no cover art.
  */
-GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint default_img_size)
+GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint default_size)
 {
-	GdkPixbuf *pixbuf = NULL;	
+	GdkPixbuf *pixbuf = NULL;
+	GdkPixbuf *image = NULL;	
 	Thumb *thumb;
 	ExtraTrackData *etd;
-
+	gint w, h;
+	float ratio;
+	
 	etd = track->userdata;
 	g_return_val_if_fail (etd, NULL);
 
@@ -592,13 +595,44 @@ GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint def
 						ITDB_THUMB_COVER_LARGE);
 	if (thumb)
 	{
-	    pixbuf = itdb_thumb_get_gdk_pixbuf (device, thumb);
+		image = itdb_thumb_get_gdk_pixbuf (device, thumb);
+	  w = gdk_pixbuf_get_width (image);
+	  h = gdk_pixbuf_get_height (image);
+		if (default_size > 0 && (w > default_size || h > default_size))
+		{
+			/* need to scale the image back down to size */
+			if (w == h)
+			{
+				w = default_size;
+				h = default_size;
+			}
+			else if (h > w)
+			{
+				ratio = h / w;
+				h = default_size;
+				w = (gint) (default_size / ratio);
+			}
+			else
+			{
+				ratio = w / h;
+				w = default_size;
+				h = (gint) (default_size / ratio);
+			}
+			
+		pixbuf = gdk_pixbuf_scale_simple(image, w, h, GDK_INTERP_NEAREST);
+  	gdk_pixbuf_unref (image);
+		}
+		else
+		{
+			pixbuf = gdk_pixbuf_scale_simple(image, DEFAULT_IMG_SIZE, DEFAULT_IMG_SIZE, GDK_INTERP_NEAREST);
+  		gdk_pixbuf_unref (image);
+		}
 	}
 	
 	if (pixbuf ==  NULL)
 	{
 	 	/* Could not get a viable thumbnail so get default pixbuf */
-	 	pixbuf = coverart_get_default_track_thumb (default_img_size);
+	 	pixbuf = coverart_get_default_track_thumb (default_size);
 	}
 	
 	return pixbuf;
@@ -1020,13 +1054,18 @@ static void set_cover_dimensions (Cover_Item *cover, int cover_index, gdouble im
 {
 	gdouble x = 0, y = 0;
 	gdouble small_img_width, small_img_height;
-	gdouble display_width = 0, display_diff = 0, display_ratio = 0;
+	gdouble display_width = 0, display_height = 0;
+	gdouble display_diff = 0, display_ratio = 0;
 	gint temp_index = 0;
 	
 	small_img_width = img_width * 0.75;
 	small_img_height = img_height * 0.75;
 	
+	/* WIDTH is the width of the display_coverart window
+	 * BORDER is the 10 pixel frame around the images
+	 */
 	display_width = (WIDTH / 2) - (BORDER * 2);
+	
 	display_diff = display_width - small_img_width;	
 	
 	/* Set the x location of the cover image */
@@ -1055,23 +1094,27 @@ static void set_cover_dimensions (Cover_Item *cover, int cover_index, gdouble im
 			break;
 	}
 		
-	/* Set the y location of the cover image */		
+	/* Set the y location of the cover image. The y location must be determined by
+	 * height of the cover image so that the hightlight and shadow fit in correctly.
+	 */
+	display_height = HEIGHT - (BORDER * 2);
+	
 	switch(cover_index) {
 		case 0:
 		case 8:
-			y = BORDER;
+			y = display_height - (small_img_height + (BORDER * 15));
 			break;
 		case 1:
 		case 7:
-			y = BORDER * 3;
+			y = display_height - (small_img_height + (BORDER * 12));
 			break;
 		case 2:
 		case 6:
-			y = BORDER * 5;
+			y = display_height - (small_img_height + (BORDER * 9));
 			break;
 		case 3:
 		case 5:
-			y = BORDER * 7;
+			y = display_height - (small_img_height + (BORDER * 6)); 
 			break;
 		case IMG_MAIN:
 			/* The Main Image CD Cover Image */
