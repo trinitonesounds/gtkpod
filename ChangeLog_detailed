@@ -1,11 +1,19 @@
+2007-08-06 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* flacfile.c: include "mp3file.h" to avoid compile time
+          warning.
+
+
 2007-08-03 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * src/display_coverart.h: added DEFAULT_IMG_SIZE
-  * src/display_coverart.c: improvements to image dimension setting
-    algorithms for both x and y. Using ITDB_THUMB_COVER_LARGE for
-    the preferred image means the coverart can be too big in the
-    coverart display window. Thus, introduces a default maximum and
-    algorithm to set it.
+	* src/display_coverart.h: added DEFAULT_IMG_SIZE
+
+	* src/display_coverart.c: improvements to image dimension
+	  setting algorithms for both x and y. Using
+	  ITDB_THUMB_COVER_LARGE for the preferred image means the
+	  coverart can be too big in the coverart display
+	  window. Thus, introduces a default maximum and algorithm to
+	  set it.
 
 2007-08-02  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
@@ -19,9 +27,9 @@
 
 2007-07-30 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-	* src/fetchcover.c: improved return status of net_retrieve_image function
-	  so that if one image fails to be retrieved then the dialog does not have
-	  to be cancelled. 
+	* src/fetchcover.c: improved return status of
+	  net_retrieve_image function so that if one image fails to be
+	  retrieved then the dialog does not have to be cancelled.
 
 2007-07-26 Michael Tiffany <tiffman at users.sourceforge.net>
 
@@ -29,18 +37,21 @@
 
 2007-07-23 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-	* src/details.c: set tartwork_changed flag to TRUE rather than relying on
-	  using force_update_cover function. Former picked up by pm_track_changed()
+	* src/details.c: set tartwork_changed flag to TRUE rather than
+	  relying on using force_update_cover function. Former picked
+	  up by pm_track_changed()
 
-	* src/display_coverart.c: coverart_track_change responds to track changes
-		and redisplays covers if tartwork_changed flag has been set.
+	* src/display_coverart.c: coverart_track_change responds to
+	  track changes and redisplays covers if tartwork_changed flag
+	  has been set.
 	
 	* src/display_playlists.c: KEY_DISPLAY_COVERART pref test removed from
 	  pm_track_changed and placed inside coverart_track_changed instead.
 	  
-	* file.c: update_track_from_file function updates calls for redisplay of the
-	  coverart regardless of any file data changes to ensure that any coverart
-	  changes do not go unnoticed.
+	* file.c: update_track_from_file function updates calls for
+	  redisplay of the coverart regardless of any file data
+	  changes to ensure that any coverart changes do not go
+	  unnoticed.
 
 2007-07-15 Michael Tiffany <tiffman at users.sourceforge.net>
 

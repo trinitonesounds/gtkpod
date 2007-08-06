@@ -34,6 +34,7 @@
 #include "itdb.h"
 #include "misc.h"
 #include "flacfile.h"
+#include "mp3file.h"
 
 /* Info on how to implement new file formats: see mp3file.c for more info */
 
