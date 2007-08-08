@@ -59,7 +59,6 @@ static GtkWidget *autoselect_widget[SORT_TAB_MAX];
 
 static void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect);
 static void prefs_window_set_autosettags (gint category, gboolean autoset);
-static void prefs_window_set_col_visible (gint column, gboolean visible);
 static void prefs_window_set_sort_tab_num (gint num);
 
 /* Some declarations */
@@ -172,15 +171,6 @@ static void on_cfg_autosettags_toggled (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
     prefs_window_set_autosettags (
-	GPOINTER_TO_UINT(user_data),
-	gtk_toggle_button_get_active(togglebutton));
-}
-
-
-static void on_cfg_col_visible_toggled (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_col_visible (
 	GPOINTER_TO_UINT(user_data),
 	gtk_toggle_button_get_active(togglebutton));
 }
@@ -306,97 +296,253 @@ static void convert_table_set_children_initial_sensitivity (GtkTable *table)
     }
 }
 
-static gint setup_visible_cols_buttons_sort (gconstpointer a, gconstpointer b)
+enum {
+    TRACK_COLUMNS_TEXT,
+    TRACK_COLUMNS_INT,
+    TRACK_N_COLUMNS
+};
+
+typedef enum {
+    HIDE,
+    SHOW
+} TrackColumnsType;
+
+
+static gint visible_cols_sort (GtkTreeModel *model,
+			       GtkTreeIter *a,
+			       GtkTreeIter *b,
+			       gpointer user_data)
 {
-    const gint *aa = a;
-    const gint *bb = b;
+    gchar *str1, *str2;
+    gint result;
 
-    g_return_val_if_fail (a&&b, 0);
+    gtk_tree_model_get (model, a, TRACK_COLUMNS_TEXT, &str1, -1);
+    gtk_tree_model_get (model, b, TRACK_COLUMNS_TEXT, &str2, -1);
 
-    return g_utf8_collate (gettext (get_tm_string (*aa)),
-			   gettext (get_tm_string (*bb)));
+    result = g_utf8_collate (str1, str2);
+
+    g_free (str1);
+    g_free (str2);
+
+    return result;
 }
 
-/* Creates the toggle buttons to select the visible columns */
-static void setup_visible_cols_buttons ( GtkTooltips *tt)
+
+static GtkWidget *visible_cols_get_treeview (TrackColumnsType type)
 {
-    GArray *array;
-    GtkWidget *hbox;
-    GtkWidget *table;
-    gint i, rows, columns, r, c;
+    GtkWidget *w=NULL;
 
-    /* Sort the available colums alphabetically */
-    array = g_array_new (FALSE, FALSE, sizeof (gint));
+    switch (type)
+    {
+    case HIDE:
+	w = gtkpod_xml_get_widget (prefs_window_xml, "track_cols_hide_tv");
+	break;
+    case SHOW:
+	w = gtkpod_xml_get_widget (prefs_window_xml, "track_cols_show_tv");
+	break;
+    default:
+	g_return_val_if_reached (NULL);
+    }
+
+    return w;
+}
+
+static GtkWidget *visible_cols_get_treeview_other (TrackColumnsType type)
+{
+    GtkWidget *w=NULL;
+
+    switch (type)
+    {
+    case SHOW:
+	w = gtkpod_xml_get_widget (prefs_window_xml, "track_cols_hide_tv");
+	break;
+    case HIDE:
+	w = gtkpod_xml_get_widget (prefs_window_xml, "track_cols_show_tv");
+	break;
+    default:
+	g_return_val_if_reached (NULL);
+    }
+
+    return w;
+}
+
+
+static void setup_visible_cols_liststore (TrackColumnsType type)
+{
+    GtkTreeSelection *selection;
+    GtkWidget *treeview;
+    GtkListStore *store;
+    GtkTreeIter iter;
+    GtkTreeViewColumn *column;
+    GtkCellRenderer *renderer;
+    gint i;
+
+    treeview = visible_cols_get_treeview (type);
+
+    store = gtk_list_store_new (TRACK_N_COLUMNS, G_TYPE_STRING, G_TYPE_INT);
+
+    column = gtk_tree_view_column_new ();
+
+    renderer = gtk_cell_renderer_text_new ();
+    gtk_tree_view_column_pack_start (column, renderer, TRUE);
+
+    gtk_tree_view_column_set_attributes (column, renderer,
+					 "text", TRACK_COLUMNS_TEXT, NULL);
+
+    gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
+    gtk_tree_view_set_model (GTK_TREE_VIEW (treeview),
+			    (GTK_TREE_MODEL (store)));
+
+    selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview));
+
+    gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
+
+    g_object_unref (G_OBJECT (store));
+
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
-	g_array_append_val (array, i);
+	gint visible;
+	visible = prefs_get_int_index("col_visible", i);
+	if (((type == HIDE) && visible) || ((type == SHOW) && !visible))
+	    continue;
+	gtk_list_store_append (store, &iter);
+	gtk_list_store_set(store, &iter,
+			   TRACK_COLUMNS_TEXT, gettext (get_tm_string (i)),
+			   TRACK_COLUMNS_INT, i, -1);
     }
-    g_array_sort (array, setup_visible_cols_buttons_sort);
+    /* sort model alphabetically */
+    gtk_tree_sortable_set_default_sort_func (GTK_TREE_SORTABLE (store),
+					     visible_cols_sort,
+					     NULL,
+					     NULL);
+    gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (store),
+					  GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID,
+					  GTK_SORT_ASCENDING);
+}
 
-#if 0
-    for (i=0; i<TM_NUM_COLUMNS; ++i)
+
+static void visible_cols_move (GtkButton *button, gpointer data)
+{
+    GtkTreeSelection *selection_from, *selection_to;
+    gchar *text;
+    gint index;
+    TrackColumnsType type;
+    GtkWidget *treeview_from, *treeview_to;
+    GtkTreeModel *model_from, *model_to;
+    GList *gl, *selected_paths, *selected_refs=NULL;
+
+    type = GPOINTER_TO_INT (data);
+
+    treeview_from = visible_cols_get_treeview_other (type);
+    model_from = gtk_tree_view_get_model (GTK_TREE_VIEW (treeview_from));
+    selection_from = gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview_from));
+
+    treeview_to = visible_cols_get_treeview (type);
+    model_to = gtk_tree_view_get_model (GTK_TREE_VIEW (treeview_to));
+    selection_to = gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview_to));
+
+    /* unselect the "to" selection */
+    gtk_tree_selection_unselect_all (selection_to);
+
+    /* Get a list of paths */
+    selected_paths = gtk_tree_selection_get_selected_rows (selection_from,
+							   &model_from);
+
+    /* Since we are modifying the model as we go along, we cannot use
+       paths -> convert the paths into references */
+    for (gl=selected_paths; gl; gl=gl->next)
     {
-	printf ("%s\n", gettext (get_tm_string (g_array_index (array, gint, i))));
+	selected_refs = g_list_append (selected_refs,
+				       gtk_tree_row_reference_new (model_from,
+								   gl->data));
+	gtk_tree_path_free (gl->data);
     }
-#endif
+    g_list_free (selected_paths);
 
-    hbox = gtkpod_xml_get_widget (prefs_window_xml, "visible_cols_hbox");
-
-    /* how big must the table be to keep all column labels? */
-    columns = 5;
-    rows = (TM_NUM_COLUMNS + (columns - 1)) / columns;
-    table = gtk_table_new (rows, columns, TRUE);
-
-    for (r=0; r*columns < TM_NUM_COLUMNS; ++r)
+    for (gl=selected_refs; gl; gl=gl->next)
     {
-	for (c=0; c<columns; ++c)
+	GtkTreeIter iter;
+	GtkTreePath *path_from = gtk_tree_row_reference_get_path (gl->data);
+	if (gtk_tree_model_get_iter (model_from, &iter, path_from))
 	{
-	    i = r*columns+c;
-	    if (i < TM_NUM_COLUMNS)
-	    {
-		GtkWidget *button;
-		gint j;
-		j = g_array_index (array, gint, i);
-		/* Create button */
-		button = gtk_check_button_new_with_label (
-		    gettext (get_tm_string (j)));
-		/* set active/inactive */
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button),
-					     prefs_get_int_index("col_visible", j));
-		/* set tooltip if available */
-		if (get_tm_tooltip (j))
-		{
-		    gtk_tooltips_set_tip (tt, button, 
-					  gettext (get_tm_tooltip (j)),
-					  NULL);
-		}
-		/* connect the signal handler */
-		g_signal_connect ((gpointer)button,
-				  "toggled",
-				  G_CALLBACK (on_cfg_col_visible_toggled),
-				  GUINT_TO_POINTER(j));
-		/* attach button to table */
-		gtk_table_attach (GTK_TABLE (table),
-				  button,
-				  c, c+1,
-				  r, r+1,
-				  GTK_FILL, GTK_SHRINK,
-				  0, 0);
-		/* show the button */
-		gtk_widget_show (button);
-	    }
+	    GtkTreePath *path_to;
+	    gtk_tree_model_get (model_from, &iter,
+				TRACK_COLUMNS_TEXT, &text,
+				TRACK_COLUMNS_INT, &index, -1);
+	    gtk_list_store_remove (GTK_LIST_STORE (model_from), &iter);
+	    gtk_list_store_append (GTK_LIST_STORE (model_to), &iter);
+	    gtk_list_store_set (GTK_LIST_STORE (model_to), &iter,
+				TRACK_COLUMNS_TEXT, text, -1);
+	    /* select all newly moved items */
+	    gtk_tree_selection_select_iter (selection_to, &iter);
+	    /* make newly moved item visible */
+	    path_to = gtk_tree_model_get_path (model_to, &iter);
+	    gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (treeview_to),
+					  path_to, NULL,
+					  FALSE, 0, 0);
+	    gtk_tree_path_free (path_to);
+	    temp_prefs_set_int_index(temp_prefs, "col_visible", index, type);
 	}
+	gtk_tree_path_free (path_from);
+	gtk_tree_row_reference_free (gl->data);
     }
-    /* Set table spacings */
-    gtk_table_set_row_spacings (GTK_TABLE (table), 4);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-    /* Make table visible */
-    gtk_widget_show (table);
-    /* pack the table into the hbox */
-    gtk_box_pack_start (GTK_BOX (hbox), table, TRUE, TRUE, 0);
+    g_list_free (selected_refs);
+}
 
-    /* free memory */
-    g_array_free (array, TRUE);
+
+static gboolean visible_cols_double_clicked (GtkWidget      *widget,
+					     GdkEventButton *event,
+					     gpointer        user_data)
+{
+    TrackColumnsType type;
+
+    type = GPOINTER_TO_INT (user_data);
+
+    switch (event->type)
+    {
+    case GDK_2BUTTON_PRESS:
+	/* pretend the "show/hide" button was pressed */
+	visible_cols_move (NULL, user_data);
+	/* don't propagate event */
+	return TRUE;
+    default:
+	/* propagate event */
+	return FALSE;
+    }
+}
+
+
+/* Note that the tooltips are not currently used.  Gtk+ >= 2.11.6 has a new
+ * tooltip API which allows tooltips in treeview cells.  Prior to that, various
+ * hacks are required.  See the patch in http://bugzilla.gnome.org/130983 for
+ * one possible method. -- tmz */
+static void setup_visible_cols (GtkTooltips *tt)
+{
+    GtkWidget *hide_button;
+    GtkWidget *show_button;
+
+    setup_visible_cols_liststore (HIDE);
+    setup_visible_cols_liststore (SHOW);
+
+    hide_button = gtkpod_xml_get_widget (prefs_window_xml,
+					 "track_cols_hide_button");
+    show_button = gtkpod_xml_get_widget (prefs_window_xml,
+					 "track_cols_show_button");
+
+    /* connect signals */
+    g_signal_connect (hide_button, "clicked",
+		      G_CALLBACK (visible_cols_move), GINT_TO_POINTER(HIDE));
+    g_signal_connect (show_button, "clicked",
+		      G_CALLBACK (visible_cols_move), GINT_TO_POINTER(SHOW));
+
+
+    g_signal_connect (visible_cols_get_treeview (HIDE), "button-press-event",
+		      G_CALLBACK (visible_cols_double_clicked),
+		      GINT_TO_POINTER (SHOW));
+    g_signal_connect (visible_cols_get_treeview (SHOW), "button-press-event",
+		      G_CALLBACK (visible_cols_double_clicked),
+		      GINT_TO_POINTER (HIDE));
+
 }
 
 
@@ -741,7 +887,7 @@ prefs_window_create (gint page)
     }
     gtk_widget_set_sensitive (w, prefs_get_int("coverart_file"));
 
-    setup_visible_cols_buttons (tt);
+    setup_visible_cols (tt);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_write_extended");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -1366,12 +1512,6 @@ on_coverart_template_changed             (GtkEditable     *editable,
 {
     temp_prefs_set_string(temp_prefs, "coverart_template",
 			  gtk_editable_get_chars (editable,0, -1));
-}
-
-void prefs_window_set_col_visible (gint column, gboolean visible)
-{
-    if (column < TM_NUM_COLUMNS)
-	    temp_prefs_set_int_index(temp_prefs, "col_visible", column, visible);
 }
 
 void

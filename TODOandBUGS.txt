@@ -21,6 +21,11 @@ BUGS, TODO:
 
 - handle missing .ext file more decently
 
+- Add tooltips back to the track attributes section of the prefs or find a
+  way to not need them.  Perhaps using shorter versions of the previous
+  tooltips in the lists would work.  That way, users wouldn't even need to
+  wait for the tooltip popup to know what the attribute was for.
+
 CoverArt_display:
 - Remove the preference and add by default, complete with arrows to minimize the display if required.
 # Add a title to the display indicating the album displayed.

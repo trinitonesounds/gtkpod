@@ -1,8 +1,16 @@
+2007-08-08  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* data/gtkpod.glade
+	  src/prefs_window.c
+	  TODOandBUGS:
+	  Convert the Track Attributes preference from a series of
+	  checkboxes to an Available and Displayed list.  Jorg did a
+	  bit of cleanup and added many nice features.
+
 2007-08-06 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* flacfile.c: include "mp3file.h" to avoid compile time
           warning.
-
 
 2007-08-03 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
