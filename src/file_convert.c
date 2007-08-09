@@ -739,7 +739,7 @@ static void conversion_log_append (Conversion *conv,
     GtkWidget *textview;
     GtkTextBuffer *textbuffer;
     GtkTextIter start, end;
-    const gchar *ptr, *next;
+    const gchar *run, *ptr, *next;
 
     g_return_if_fail (conv);
 
@@ -753,13 +753,18 @@ static void conversion_log_append (Conversion *conv,
     textbuffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textview));
     gtk_text_buffer_get_end_iter (textbuffer, &end);
 
-    ptr = text;
+    run = ptr = text;
 
     while (*ptr)
     {
 	next = g_utf8_find_next_char (ptr, NULL);
 	if (*ptr == '\b')
 	{
+	    if (ptr > run)
+	    {
+		gtk_text_buffer_insert (textbuffer, &end, run, ptr - run);
+	    }
+	    run = next;
 	    start = end;
 	    if (gtk_text_iter_backward_char (&start))
 	    {
@@ -768,15 +773,20 @@ static void conversion_log_append (Conversion *conv,
 	}
 	else if(*ptr == '\r')
 	{
+	    if (ptr > run)
+	    {
+		gtk_text_buffer_insert (textbuffer, &end, run, ptr - run);
+	    }
+	    run = next;
 	    start = end;
 	    gtk_text_iter_set_line_offset (&start, 0);
 	    gtk_text_buffer_delete (textbuffer, &start, &end);
 	}
-	else
-	{
-	    gtk_text_buffer_insert (textbuffer, &end, ptr, next - ptr);
-	}
 	ptr = next;
+    }
+    if (ptr > run)
+    {
+	gtk_text_buffer_insert (textbuffer, &end, run, ptr - run);
     }
     gtk_text_view_scroll_to_iter (GTK_TEXT_VIEW (textview),
 				  &end, 0.0, FALSE, 0.0, 0.0); 

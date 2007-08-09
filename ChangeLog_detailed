@@ -1,3 +1,9 @@
+2007-08-09 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/file_convert.c (conversion_log_append): don't append
+	  character by character as this takes up too much CPU
+	  time. Thanks to Javier Kohen for the patch.
+
 2007-08-08  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* data/gtkpod.glade
