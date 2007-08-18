@@ -6,6 +6,9 @@
 	* src/file_itunesdb.c (set_progressbar): only update window if
           a change occured.
 
+	* src/tools.c (tools_sync_script): make sure the stderr of
+          scripts is displayed as well.
+
 2007-08-09 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_convert.c (conversion_log_append): don't append

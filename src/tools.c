@@ -1,6 +1,5 @@
-/* Time-stamp: <2007-05-09 22:23:27 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 |
 |  URL: http://www.gtkpod.org/
@@ -669,6 +668,7 @@ static gboolean tools_sync_script (iTunesDB *itdb, SyncType type)
     case 0: /*child*/
 	close(fdpipe[READ]);
 	dup2(fdpipe[WRITE],fileno(stdout));
+	dup2(fdpipe[WRITE],fileno(stderr));
 	close(fdpipe[WRITE]);
 	execv(script_path, argv);
 	break;
