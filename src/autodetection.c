@@ -387,8 +387,16 @@ static gboolean ad_timeout_cb (gpointer data)
 		if (!eitdb->itdb_imported)
 		{
 		    loaded_itdb = gp_load_ipod (itdb);
-		    loaded_itdb->usertype |= GP_ITDB_TYPE_AUTOMATIC;
-		    set_itdb_prefs_int (loaded_itdb, "type", loaded_itdb->usertype);
+		    if (loaded_itdb)
+		    {
+			loaded_itdb->usertype |= GP_ITDB_TYPE_AUTOMATIC;
+			set_itdb_prefs_int (loaded_itdb, "type", loaded_itdb->usertype);
+		    }
+		    else
+		    {
+			gtkpod_warning (_("Newly mounted iPod at '%s' could not be loaded into gtkpod.\n\n"),
+					mountpoint);
+		    }
 		}
 		else
 		{

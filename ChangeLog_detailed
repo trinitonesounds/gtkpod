@@ -1,3 +1,8 @@
+2007-08-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/autodetection.c (ad_timeout_cb): avoid crash when
+          iTunesDB could not be read successfully.
+
 2007-08-09 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_convert.c (conversion_log_append): don't append
