@@ -1342,7 +1342,8 @@ static void set_progressbar (GtkProgressBar *progressbar,
 			     time_t start, gint n, gint count, gint init_count)
 {
     gchar *progtext;
-    gdouble fraction;
+    const gchar *progtext_old;
+    gdouble fraction, fraction_old;
 
     g_return_if_fail (progressbar);
 
@@ -1375,8 +1376,18 @@ static void set_progressbar (GtkProgressBar *progressbar,
 	    (gint)(fraction*100), count, n, (gint)hrs, (gint)mins, (gint)secs);
     }
 
-    gtk_progress_bar_set_fraction(progressbar, fraction);
-    gtk_progress_bar_set_text(progressbar, progtext);
+    progtext_old = gtk_progress_bar_get_text (progressbar);
+    if (!progtext_old || (strcmp (progtext_old, progtext) != 0))
+    {   /* only update progressbar text if it has changed */
+	gtk_progress_bar_set_text(progressbar, progtext);
+    }
+
+    fraction_old = gtk_progress_bar_get_fraction (progressbar);
+    if (fraction_old != fraction)
+    {   /* only update progressbar fraction if it has changed */
+	gtk_progress_bar_set_fraction(progressbar, fraction);
+    }
+
     g_free (progtext);
 }
 
@@ -1651,6 +1662,7 @@ static gboolean transfer_tracks (iTunesDB *itdb, TransferData *td)
     do
     {
 	gchar *buf;
+	const gchar *buf_old;
 
 	status = file_transfer_get_status (itdb,
 					   &to_convert_num, &converting_num,
@@ -1682,7 +1694,11 @@ static gboolean transfer_tracks (iTunesDB *itdb, TransferData *td)
 				 "Transferred: %d. Failed: %d"),
 			       status, to_convert_num, to_transfer_num,
 			       transferred_num, failed_num);*/
-	gtk_label_set_text (GTK_LABEL(td->textlabel), buf);
+	buf_old = gtk_label_get_text (GTK_LABEL(td->textlabel));
+	if (!buf_old || (strcmp (buf_old, buf) != 0))
+	{   /* only set label if it has changed */
+	    gtk_label_set_text (GTK_LABEL(td->textlabel), buf);
+	}
 	g_free (buf);
 
 	if ((to_convert_num != 0) && (converting_num == 0))
