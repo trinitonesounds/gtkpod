@@ -431,7 +431,7 @@ Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
     else
     {   /* handle track on local filesystem */
 	GList *gl;
-	for (gl=itdb->tracks; gl; gl=gl->next)
+	for (gl=itdb->tracks; gl&&!result; gl=gl->next)
 	{
 	    Track *track = gl->data;
 	    ExtraTrackData *etr;

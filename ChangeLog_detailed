@@ -1,3 +1,9 @@
+2007-08-25 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/misc_track.c (gp_track_by_filename): stop iteration when
+          result is found. Thanks to Clarke Brunsdon for bringing this
+          to my attention.
+
 2007-08-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/autodetection.c (ad_timeout_cb): avoid crash when
