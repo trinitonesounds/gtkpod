@@ -41,8 +41,8 @@
 #include "display_coverart.h"
 #include "prefs.h"
 
-
+/* /* Commented out due to licensing problems
 void on_coverart_context_menu_click (GList *tracks);
 void on_fetchcover_fetch_button (GtkWidget *widget, gpointer data);
-
+*/
 #endif

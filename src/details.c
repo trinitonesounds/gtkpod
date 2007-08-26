@@ -1607,11 +1607,12 @@ void details_edit (GList *selected_tracks)
 		      G_CALLBACK (details_button_set_artwork_clicked),
 		      detail);
 
+    /* Commented out due to licensing problems
 		w = gtkpod_xml_get_widget (detail->xml, "details_button_fetch_cover");
     g_signal_connect (w, "clicked",
     			G_CALLBACK (on_fetchcover_fetch_button),
           detail);
-		
+		*/
     w = gtkpod_xml_get_widget (detail->xml, "details_button_remove_artwork");
     g_signal_connect (w, "clicked",
 		      G_CALLBACK (details_button_remove_artwork_clicked),

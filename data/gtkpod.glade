@@ -14414,7 +14414,7 @@ simultaneously</property>
 		    </packing>
 		  </child>
 
-		  <child>
+		  <!--child>
 		    <widget class="GtkButton" id="details_button_fetch_cover">
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
@@ -14490,7 +14490,7 @@ simultaneously</property>
 		      <property name="expand">False</property>
 		      <property name="fill">False</property>
 		    </packing>
-		  </child>
+		  </child-->
 
 		  <child>
 		    <widget class="GtkButton" id="details_button_remove_artwork">

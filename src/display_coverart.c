@@ -1924,24 +1924,16 @@ void coverart_set_cover_from_file ()
  */
 void coverart_set_cover_from_web ()
 {
+	/* Commented out due to licensing problems
 	GList *tracks;
 	Cover_Item *cover;
 	
 	cover = g_ptr_array_index(cdwidget->cdcovers, IMG_MAIN);
 	tracks = cover->album->tracks;
 	
-	/*
-	int i;
-	for (i = 0; i < g_list_length (tracks); ++i)
-	{
-		Track *trk = g_list_nth_data(tracks, i);
-		printf ("Track: %s-%s\n", trk->artist, trk->album);
-	}
-	*/
-	
-	/* Nullify and free the album art pixbuf so that it will pick it up
+	* Nullify and free the album art pixbuf so that it will pick it up
 	 * from the art assigned to the tracks
-	 */
+	 *
 	 if (cover->album->albumart)
 	 {
 		gdk_pixbuf_unref (cover->album->albumart);
@@ -1951,4 +1943,5 @@ void coverart_set_cover_from_web ()
 	on_coverart_context_menu_click (tracks);
 	
 	set_covers (FALSE);
+	*/
 }

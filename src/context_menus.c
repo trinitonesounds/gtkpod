@@ -1062,7 +1062,9 @@ void create_context_menu (CM_type type)
 	    break;
 	case CM_CAD:
 			add_get_cover_from_file (menu);
+			/* Commented out due to licensing problems
 			add_get_cover_from_web (menu);
+			*/
 			add_display_big_coverart (menu);
 			add_edit_track_details (menu);
 			break;

@@ -1,3 +1,15 @@
+2007-08-26 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * src/fetchcover.c
+  * src/fetchcover.h
+  * src/display_coverart.c
+  * src/details.c
+  * src/context_menus.c
+  * gtkpod.glade
+  
+  Commented out fetchcover due to licensing problems. Wiil re-enable
+  once a new approach has been fully considered.
+
 2007-08-25 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/misc_track.c (gp_track_by_filename): stop iteration when
