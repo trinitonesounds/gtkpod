@@ -74,7 +74,7 @@ if [ "x$?" != "x0" ]; then
 fi
 
 # Check for the existence of faad
-faac=`which faad`
+faad=`which faad`
 if [ -z "$faad" ]; then
     exit 4
 fi

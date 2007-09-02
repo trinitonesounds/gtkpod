@@ -1,3 +1,8 @@
+2007-09-02  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* scripts/convert-m4a2mp3.sh: fixed a typo, spotted by Peter
+	van der Does.
+
 2007-08-26 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * src/fetchcover.c
