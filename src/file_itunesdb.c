@@ -30,6 +30,7 @@
 #  include <config.h>
 #endif
 
+#include <ctype.h>
 #include <string.h>
 #include <glib/gstdio.h>
 #include "charset.h"
@@ -774,7 +775,7 @@ void gp_load_ipods (void)
  *
  * Return value: pointer to the new repository
  */
-iTunesDB *gp_merge_itdb (iTunesDB *old_itdb)
+static iTunesDB *gp_merge_itdb (iTunesDB *old_itdb)
 {
     ExtraiTunesDBData *old_eitdb;
     iTunesDB *new_itdb;
@@ -885,41 +886,72 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
 
     if (ok_to_load)
     {
+	gchar *prefs_model = get_itdb_prefs_string (itdb, KEY_IPOD_MODEL);
+	gchar *ipod_model = itdb_device_get_sysinfo (itdb->device, "ModelNumStr");
+	if (!prefs_model && ipod_model)
+	{   /* let's believe what the iPod says */
+	    set_itdb_prefs_string (itdb, KEY_IPOD_MODEL, ipod_model);
+	}
+	else if (prefs_model && !ipod_model)
+	{   /* verify with the user if the model is correct --
+	     * incorrect mdoel information can result in loss of
+	     * Artwork */
+	    gp_ipod_init_set_model (itdb, prefs_model);
+	    /* write out new SysInfo file -- otherwise libpod won't
+	       use it. Ignore error for now. */
+	    itdb_device_write_sysinfo (itdb->device, NULL);
+	}
+	else if (!prefs_model && !ipod_model)
+	{
+	    /* ask the user to set the model information */
+	    gp_ipod_init_set_model (itdb, NULL);
+	    /* write out new SysInfo file -- otherwise libpod won't
+	       use it. Ignore error for now. */
+	    itdb_device_write_sysinfo (itdb->device, NULL);
+	}
+	else
+	{   /* prefs_model && ipod_model are set */
+	    const gchar *prefs_ptr = prefs_model;
+	    const gchar *ipod_ptr = ipod_model;
+	    /* Normalize model number */
+	    if (isalpha (prefs_model[0]))  ++prefs_ptr;
+	    if (isalpha (ipod_model[0]))   ++ipod_ptr;
+	    if (strcmp (prefs_ptr, ipod_ptr) != 0)
+	    {   /* Model number is different -- confirm */
+		gp_ipod_init_set_model (itdb, ipod_model);
+		/* write out new SysInfo file -- otherwise libpod won't
+		   use it. Ignore error for now. */
+		itdb_device_write_sysinfo (itdb->device, NULL);
+	    }
+	}
+	g_free (prefs_model);
+	g_free (ipod_model);
+
 	new_itdb = gp_merge_itdb (itdb);
+
 	if (new_itdb)
 	{
 	    GList *gl;
-	    gchar *old_model = get_itdb_prefs_string (new_itdb,
-						      KEY_IPOD_MODEL);
 	    gchar *new_model = itdb_device_get_sysinfo (new_itdb->device,
 							"ModelNumStr");
 
-	    if (!old_model && new_model)
-	    {
-		set_itdb_prefs_string (new_itdb, KEY_IPOD_MODEL, new_model);
+	    if (!new_model)
+	    {   /* Something went wrong with setting the ipod model
+		 * above */
+		prefs_model = get_itdb_prefs_string (new_itdb, KEY_IPOD_MODEL);
+		if (prefs_model)
+		{
+		    itdb_device_set_sysinfo (new_itdb->device, "ModelNumStr",
+					     prefs_model);
+		}
+		else
+		{   /* ask again... */
+		    gp_ipod_init_set_model (new_itdb, NULL);
+		}
+		g_free (prefs_model);
 	    }
-	    else if (old_model && !new_model)
-	    {
-		gp_ipod_init_set_model (new_itdb, old_model);
-	    }
-	    else if (!old_model && !new_model)
-	    {
-		gp_ipod_init_set_model (new_itdb, NULL);
-	    }
-	    else
-	    {   /* old_model && new_model are set */
-#if 0
-		const gchar *old_ptr = old_model;
-		const gchar *new_ptr = new_model;
-		/* Normalize model number */
-		if (isalpha (old_model[0]))   ++old_ptr;
-		if (isalpha (new_model[0]))   ++new_ptr;
-		if (strcmp (old_ptr, new_ptr) != 0)
-		{   /* Model number has changed -- confirm */
-                }
-#endif		
-		set_itdb_prefs_string (new_itdb, KEY_IPOD_MODEL, new_model);
-	    }
+	    g_free (new_model);
+
 	    /* adjust rating and playcount in local databases */
 	    for (gl=new_itdb->tracks; gl; gl=gl->next)
 	    {
