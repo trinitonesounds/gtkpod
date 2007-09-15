@@ -427,6 +427,11 @@ void call_script (gchar *script, ...)
 
 /* Create a NULL-terminated array of strings given in the command
    line. The last argument must be NULL.
+
+   As a special feature, the first argument is split up into
+   individual strings to allow the use of "convert-2mp3 -q <special
+   settings>". Set the first argument to NULL if you don't want this.
+
    You must free the returned array with g_strfreev() after use. */
 gchar **build_argv_from_strings (const gchar *first_arg, ...)
 {
@@ -435,19 +440,31 @@ gchar **build_argv_from_strings (const gchar *first_arg, ...)
     const gchar *str;
     GPtrArray *ptra = g_ptr_array_sized_new (20);
 
-    g_ptr_array_add (ptra, g_strdup (first_arg));
-    /* add the rest of the strings */
     if (first_arg)
     {
-	va_start (args, first_arg);
-	do
+	gchar **strings = g_strsplit (first_arg, " ", 0);
+	gchar **strp = strings;
+	while (*strp)
 	{
-	    str = va_arg (args, const gchar *);
-	    g_ptr_array_add (ptra, g_strdup (str));
+	    if (**strp)
+	    {   /* ignore empty strings */
+		g_ptr_array_add (ptra, g_strdup(*strp));
+	    }
+	    ++strp;
 	}
-	while (str);
-	va_end (args);
+	g_strfreev (strings);
     }
+
+    va_start (args, first_arg);
+    do
+    {
+	str = va_arg (args, const gchar *);
+	g_ptr_array_add (ptra, g_strdup (str));
+    }
+    while (str);
+
+    va_end (args);
+
     argv = (gchar **)g_ptr_array_free (ptra, FALSE);
 
     return argv;

@@ -20,16 +20,9 @@ script_SCRIPTS = \
 	sync-webcalendar.sh \
 	ldif2vcf.sh \
 	mab2vcard \
-	convert-ogg2mp3.sh \
-	convert-ogg2m4a.sh \
-	convert-flac2mp3.sh \
-        convert-flac2m4a.sh \
-        convert-m4a2mp3.sh \
-        convert-mp32m4a.sh \
-        convert-ogg2mp3.sh \
-        convert-ogg2m4a.sh \
-        convert-wav2mp3.sh \
-        convert-wav2m4a.sh
+	convert-2mp3.sh \
+	convert-2mp4.sh \
+	gtkpod-convert-common.sh 
 
 # these scripts will of course also go in the distribution tarball.
 EXTRA_DIST=$(script_SCRIPTS)

@@ -1192,7 +1192,49 @@ static void cleanup_keys()
     /* For versions < 0.91, remove all itdb keys */
     if (version < 0.91)
 	prefs_flush_subkey("itdb_");
-   
+
+    /* rename convert scripts */
+    if (version <= 0.99001)
+    {
+
+	const gchar **keyp;
+	const gchar *keys[] =
+	    {"path_conv_m4a", "path_conv_wav", "path_conv_mp3",
+	     "path_conv_ogg", "path_conv_flac", NULL};
+
+	for (keyp=keys; *keyp; ++keyp)
+	{
+	    buf = prefs_get_string (*keyp);
+	    if (buf)
+	    {
+		const gchar *needles[] =
+		    { "convert-flac2mp3.sh", "convert-m4a2mp3.sh",
+		      "convert-ogg2mp3.sh", "convert-wav2mp3.sh",
+		      "convert-flac2m4a.sh", "convert-m4a2m4a.sh",
+		      "convert-ogg2m4a.sh", "convert-wav2m4a.sh", NULL };
+		const gchar *replacements[] =
+		    { "convert-2mp3.sh    ", "convert-2mp3.sh   ",
+		      "convert-2mp3.sh   ", "convert-2mp3.sh   " ,
+		      "convert-2m4a.sh    ", "convert-2m4a.sh   ",
+		      "convert-2m4a.sh   ", "convert-2m4a.sh   " };
+		const gchar **needlep;
+		const gchar **replp;
+		replp = replacements;
+		for (needlep=needles; *needlep; ++needlep, ++replp)
+		{
+		    gchar *bufp = strstr (buf, *needlep);
+		    if (bufp)
+		    {
+			g_memmove (bufp, *replp, strlen (*replp));
+			prefs_set_string (*keyp, buf);
+			break;
+		    }
+		}
+		g_free (buf);
+	    }
+	}
+    }
+
     prefs_set_string ("version", VERSION);
 }
 

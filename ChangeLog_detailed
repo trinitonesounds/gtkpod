@@ -6,6 +6,16 @@
 	  loading the iTunesDB, libgpod will not read the ArtworkDB,
 	  thereby losing all artwork.
 
+	* scripts/ removed previous
+	  convert-{flac|ogg|mp3|m4a|wav}2{mp3|m4a} scripts and
+	  replaced with convert-2{mp3|m4a} drafted by Peter van der
+	  Does. These scripts share gtkpod-convert-common.sh.
+
+	  scripts/Makefile.am: added/removed the files mentioned above.
+
+	* src/prefs.c: automatically replace prefs settings to use the
+          new generic conversion scripts.
+
 2007-09-02  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* scripts/convert-m4a2mp3.sh: fixed a typo, spotted by Peter

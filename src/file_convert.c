@@ -2086,7 +2086,7 @@ static gchar *conversion_get_fname_extension (Conversion *conv, ConvTrack *ctr)
 	{
 	    gchar *buf = conversion_get_track_info (NULL, ctr);
 	    ctr->errormessage =
-		g_strdup_printf (_("Conversion of '%s' failed: '%s %s' did not return filename extension as expected.\n\n"),
+		g_strdup_printf (_("Conversion of '%s' failed: '\"%s\" %s' did not return filename extension as expected.\n\n"),
 				 buf,
 				 argv[0], argv[1]);
 	    g_free (buf);
