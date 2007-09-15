@@ -21,7 +21,7 @@ script_SCRIPTS = \
 	ldif2vcf.sh \
 	mab2vcard \
 	convert-2mp3.sh \
-	convert-2mp4.sh \
+	convert-2m4a.sh \
 	gtkpod-convert-common.sh 
 
 # these scripts will of course also go in the distribution tarball.

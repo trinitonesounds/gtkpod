@@ -1,5 +1,5 @@
 #!/bin/sh
-# Script that converts a file into an mp3 file
+# Script that converts a file into an mp3 or an m4a file
 #
 # USAGE:
 #

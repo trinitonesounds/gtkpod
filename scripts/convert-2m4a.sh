@@ -1,9 +1,9 @@
 #!/bin/sh
-# Script that converts a file into an mp3 file
+# Script that converts a file into an m4a file
 #
 # USAGE:
 #
-# convert-2mp3.sh [options] inputfile
+# convert-2m4a.sh [options] inputfile
 #
 # For a list of allowed options please consult gtkpod-convert-common.sh
 #
