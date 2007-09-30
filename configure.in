@@ -16,15 +16,15 @@ IT_PROG_INTLTOOL([0.33])
 
 dnl Only use -Wall if we have gcc
 if test "x$GCC" = "xyes"; then
-  if test -z "`echo "$CFLAGS" | grep "\-Wall" 2> /dev/null`" ; then
-    CFLAGS="$CFLAGS -Wall"
-  fi
-  # gcc < 4.0 does not know '-Wno-pointer-sign'. Try to find out
-  # whether we can set this option or not.
-  CFLAGS_orig=$CFLAGS
-  CFLAGS="$CFLAGS -Wno-pointer-sign"
-  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>]])],
-                    [], [CFLAGS=$CFLAGS_orig])
+    if test -z "`echo "$CFLAGS" | grep "\-Wall" 2> /dev/null`" ; then
+        CFLAGS="$CFLAGS -Wall"
+    fi
+    # gcc < 4.0 does not know '-Wno-pointer-sign'. Try to find out
+    # whether we can set this option or not.
+    CFLAGS_orig=$CFLAGS
+    CFLAGS="$CFLAGS -Wno-pointer-sign"
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>]])],
+                      [], [CFLAGS=$CFLAGS_orig])
 fi
 
 GETTEXT_PACKAGE=gtkpod
@@ -32,23 +32,31 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE",["Gettext package name"])
 
 dnl check if pkg-config exists -- if not print a meaningful error message
-AC_CHECK_PROG([have_pkgconfig], [pkg-config], ["ok"])
-
-if test "y$have_pkgconfig" = "y"; then
-	AC_MSG_FAILURE([**** pkg-config required (http://www.freedesktop.org/software/pkgconfig)])
+AC_PATH_TOOL([PKG_CONFIG], [pkg-config])
+if test -z "$PKG_CONFIG"; then
+    AC_MSG_FAILURE([*** pkg-config required (http://www.freedesktop.org/software/pkgconfig)])
+else
+    ac_cv_env_PKG_CONFIG_set=set
 fi
 
-dnl check for libs that are managed with pkg-config
-PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 >= 2.6.0 gthread-2.0 >= 0.14.0 glib-2.0 > 2.4.0 libglade-2.0  >=  2.4.0 libgnomecanvas-2.0 >= 2.14.0 gmodule-2.0 libgpod-1.0 >= 0.5.2],,[AC_MSG_FAILURE([*** $PACKAGE_PKG_ERRORS])])
-AC_SUBST(PACKAGE_CFLAGS)
-AC_SUBST(PACKAGE_LIBS)
+dnl check for required libs that are managed with pkg-config
+PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.6.0,, [AC_MSG_FAILURE([*** $GTK_PKG_ERRORS])])
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.4.0,, [AC_MSG_FAILURE([*** $GLIB_PKG_ERRORS])])
+PKG_CHECK_MODULES(GMODULE, gmodule-2.0,, [AC_MSG_FAILURE([*** $GMODULE_PKG_ERRORS])])
+PKG_CHECK_MODULES(GTHREAD, gthread-2.0 >= 0.14.0,, [AC_MSG_FAILURE([*** $GTHREAD_PKG_ERRORS])])
+PKG_CHECK_MODULES(LIBGLADE, libglade-2.0 >= 2.4.0,, [AC_MSG_FAILURE([*** $LIBGLADE_PKG_ERRORS])])
+PKG_CHECK_MODULES(LIBGNOMECANVAS, libgnomecanvas-2.0 >= 2.14.0,, [AC_MSG_FAILURE([*** $LIBGNOMECANVAS_PKG_ERRORS])])
+PKG_CHECK_MODULES(LIBGPOD, libgpod-1.0 >= 0.5.2,, [AC_MSG_FAILURE([*** $LIBGPOD_PKG_ERRORS])])
+
+CFLAGS="$CFLAGS $GTK_CFLAGS $GLIB_CFLAGS $GMODULE_CFLAGS $GTHREAD_CFLAGS $LIBGLADE_CFLAGS $LIBGNOMECANVAS_CFLAGS $LIBGPOD_CFLAGS"
+LIBS="$LIBS $GTK_LIBS $GLIB_LIBS $GMODULE_LIBS $GTHREAD_LIBS $LIBGLADE_LIBS $LIBGNOMECANVAS_LIBS $LIBGPOD_LIBS"
 
 dnl we need 'flex'
 AM_PROG_LEX
 if ! test "y$LEX" = "yflex"; then
-  if ! test "y$LEX" = "ylex"; then
-    AC_MSG_FAILURE([**** flex or lex required])
-  fi
+    if ! test "y$LEX" = "ylex"; then
+        AC_MSG_FAILURE([*** flex or lex required])
+    fi
 fi
 
 dnl Retrieve the path of mount and umount binaries
@@ -67,109 +75,140 @@ dnl (providing getopt_long*) will be included into the binary.
 AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt)]) 
 AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt1)]) 
 
-dnl Check if flock() is available (seems to be missing on some
-dnl solaris versions)
+dnl Check if flock() is available (seems to be missing on some solaris versions)
 AC_CHECK_FUNCS(flock)
 
-dnl Check if statvfs() is available (otherwise we fall back on
-dnl 'df' to determine free space on the iPod
+dnl Check if statvfs() is available (otherwise we fall back on 'df' to determine
+dnl free space on the iPod
 AC_CHECK_FUNCS(statvfs)
 
 dnl Check for libid3tag
-AC_SEARCH_LIBS([id3_frame_field],
-	["id3tag" "id3tag -lz"],
-	,
-	AC_MSG_ERROR([*** id3tag >= 0.15 lib not found (0.14 will not work!)]))
+AC_SEARCH_LIBS([id3_frame_field], ["id3tag" "id3tag -lz"],,
+    AC_MSG_ERROR([*** id3tag >= 0.15 lib not found (0.14 will not work!)]))
 
 dnl Check for libcurl
-PKG_CHECK_MODULES(CURL, [libcurl >= 7.10.0], have_curl=yes, have_curl=no)
-if test "$have_curl" != "no"; then
-    AC_DEFINE(HAVE_CURL, 1, ["libcurl support"])
+AC_ARG_WITH(curl, AC_HELP_STRING([--without-curl], [Disable coverart download support]))
+if test "x$with_curl" != "xno"; then
+    PKG_CHECK_MODULES(CURL, [libcurl >= 7.10.0], have_curl=yes, have_curl=no)
+    if test "x$with_curl" = "xyes" -a "x$have_curl" = "xno"; then
+        AC_MSG_ERROR([curl support explicitly requested but curl couldn't be found])
+    fi
+fi
+AM_CONDITIONAL(HAVE_CURL, test "x$have_curl" = "xyes")
+if test "x$have_curl" = "xyes"; then
+    AC_DEFINE(HAVE_CURL, 1, [Define if you have curl support])
     have_curl="yes -- will build with coverart download support"
     CPPFLAGS="$CPPFLAGS $CURL_CFLAGS"
     CFLAGS="$CFLAGS $CURL_CFLAGS"
     LIBS="$LIBS $CURL_LIBS"
 else
-    echo "*** libcurl could not be found, not building coverart download support"
     have_curl="*no -- will build without coverart download support"
 fi
 
 dnl Check for gnome-vfs
-AC_ARG_WITH(gnome-vfs,
-	    AC_HELP_STRING([--without-gnome-vfs],[Disable autodetection support]))
+AC_ARG_WITH(gnome-vfs, AC_HELP_STRING([--without-gnome-vfs],[Disable autodetection support]))
 if test "x$with_gnome_vfs" != "xno"; then
-  PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0 >= 2.6.0], enable_gnome_vfs=yes, enable_gnome_vfs=no)
-  if test "x$enable_gnome_vfs" != "xyes" -a "x$with_gnome_vfs" = "xyes"; then
-      AC_MSG_ERROR([gnome-vfs support explicitly requested but gnome-vfs couldn't be found])
-  fi
+    PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0 >= 2.6.0], have_gnome_vfs=yes, have_gnome_vfs=no)
+    if test "x$with_gnome_vfs" = "xyes" -a "x$have_gnome_vfs" = "xno"; then
+        AC_MSG_ERROR([gnome-vfs support explicitly requested but gnome-vfs couldn't be found])
+    fi
 fi
-if test "x$enable_gnome_vfs" = "xyes"; then
-    have_gnomevfs="yes -- will build with automount support"
+AM_CONDITIONAL(HAVE_GNOME_VFS, test "x$have_gnome_vfs" = "xyes")
+if test "x$have_gnome_vfs" = "xyes"; then
+    have_gnome_vfs="yes -- will build with automount support"
     AC_DEFINE(HAVE_GNOME_VFS, 1, [Define if you have gnome-vfs support])
     CPPFLAGS="$CPPFLAGS $GNOME_VFS_CFLAGS"
     CFLAGS="$CFLAGS $GNOME_VFS_CFLAGS"
     LIBS="$LIBS $GNOME_VFS_LIBS"
 else
-    echo "*** gnome-vfs-2 not found or disabled, not building iPod autodetection support"
-    have_gnomevfs="*no -- will build without iPod autodetection support"
+    have_gnome_vfs="*no -- will build without iPod autodetection support"
 fi
-AM_CONDITIONAL(HAVE_GNOME_VFS, test x"$enable_gnome_vfs" = xyes)
 
 #dnl Check for HAL
-AC_ARG_WITH(hal,
-	    AC_HELP_STRING([--without-hal],[Disable HAL support]))
+AC_ARG_WITH(hal, AC_HELP_STRING([--without-hal],[Disable HAL support]))
 if test "x$with_hal" != "xno"; then
-  PKG_CHECK_MODULES(HAL, hal >= 0.5 hal < 0.6, enable_hal=yes, enable_hal=no)
-  if test "x$enable_hal" != "xyes" -a "x$with_hal" = "xyes"; then
-      AC_MSG_ERROR([HAL support explicitly requested but HAL couldn't be found])
-  fi
+    PKG_CHECK_MODULES(HAL, hal >= 0.5 hal < 0.6, have_hal=yes, have_hal=no)
+    if test "x$with_hal" = "xyes" -a "x$have_hal" = "xno"; then
+        AC_MSG_ERROR([HAL support explicitly requested but HAL couldn't be found])
+    fi
 fi
-if test "x$enable_hal" = "xyes"; then
-  have_hal="yes -- will build with HAL support"
-  AC_DEFINE(HAVE_HAL, 1, [Define if you want HAL support])
-  CPPFLAGS="$CPPFLAGS $HAL_CFLAGS"
-  CFLAGS="$CFLAGS $HAL_CFLAGS"
-  LIBS="$LIBS $HAL_LIBS"
+AM_CONDITIONAL(HAVE_HAL, test "x$have_hal" = "xyes")
+if test "x$have_hal" = "xyes"; then
+    have_hal="yes -- will build with HAL support"
+    AC_DEFINE(HAVE_HAL, 1, [Define if you have HAL support])
+    CPPFLAGS="$CPPFLAGS $HAL_CFLAGS"
+    CFLAGS="$CFLAGS $HAL_CFLAGS"
+    LIBS="$LIBS $HAL_LIBS"
 else
-  have_hal="*no -- will build without HAL support"
+    have_hal="*no -- will build without HAL support"
 fi
-AM_CONDITIONAL(HAVE_HAL, test x"$enable_hal" = xyes)
-
 
 dnl Check for libmp4v2 (and mp4.h)
-AC_SEARCH_LIBS(MP4GetMetadataGrouping,
-	["mp4v2" "mp4v2 -lstdc++" "mp4v2 -lz" "mp4v2 -lz -lstdc++"],
-	[AC_CHECK_HEADER(mp4.h,
-	  [have_mp4v2="yes -- will build with aac support" AC_DEFINE_UNQUOTED(HAVE_LIBMP4V2, 1, ["Define to 1 if you have the mp4v2 library"])],
-	  [echo "*** mp4.h cannot be found. Check your mp4v2 installation."])])
-
-if test "y$have_mp4v2" = "y"; then
-	have_mp4v2="*no -- will build without aac support"
+AC_ARG_WITH(mp4v2, AC_HELP_STRING([--without-mp4v2], [Disable MP4/AAC support]))
+if test "x$with_mp4v2" != "xno"; then
+    AC_SEARCH_LIBS(MP4GetMetadataGrouping,
+        ["mp4v2" "mp4v2 -lstdc++" "mp4v2 -lz" "mp4v2 -lz -lstdc++"],
+        [AC_CHECK_HEADER(mp4.h, have_mp4v2=yes, have_mp4v2_header=no)], have_mp4v2=no)
+    if test "x$have_mp4v2_header" = "xno"; then
+        have_mp4v2="no"
+        AC_MSG_WARN([mp4.h cannot be found or is unusable. Check your mp4v2 installation.])
+    fi
+    if test "x$with_mp4v2" = "xyes" -a "x$have_mp4v2" = "xno"; then
+        AC_MSG_ERROR([MP4/AAC support explicitly requested but libmp4v2 couldn't be found])
+    fi
+fi
+AM_CONDITIONAL(HAVE_LIBMP4V2, test "x$have_mp4v2" = "xyes")
+if test "x$have_mp4v2" = "xyes"; then
+    have_mp4v2="yes -- will build with aac support"
+    AC_DEFINE(HAVE_LIBMP4V2, 1, [Define if you have the mp4v2 library])
+else
+    have_mp4v2="*no -- will build without aac support"
 fi
 
-dnl Check for libvorbisfile 
-AC_SEARCH_LIBS(ov_open,
-        ["vorbisfile"],
-        [AC_CHECK_HEADER(vorbis/vorbisfile.h,
-          [have_vorbisfile="yes -- will build with ogg support" AC_DEFINE_UNQUOTED(HAVE_LIBVORBISFILE, 1, ["Define to 1 if you have the ogg library"])],
-          [echo "*** vorbisfile.h cannot be found. Check your ogg/vorbis installation."])])
-if test "y$have_vorbisfile" = "y"; then
-        have_vorbisfile="*no -- will build without ogg support"
+dnl Check for libvorbisfile
+AC_ARG_WITH(ogg, AC_HELP_STRING([--without-ogg], [Disable Ogg/Vorbis support]))
+if test "x$with_ogg" != "xno"; then
+    AC_SEARCH_LIBS(ov_open, ["vorbisfile"],
+        [AC_CHECK_HEADER(vorbis/vorbisfile.h, have_ogg=yes, have_ogg_header=no)], have_ogg=no)
+    if test "x$have_ogg_header" = "xno"; then
+        have_ogg="no"
+        AC_MSG_WARN([vorbis/vorbisfile.h cannot be found or is unusable. Check your ogg/vorbis installation.])
+    fi
+    if test "x$with_ogg" = "xyes" -a "x$have_ogg" = "xno"; then
+        AC_MSG_ERROR([Ogg/Vorbis support explicitly requested but ogg/vorbis libs couldn't be found])
+    fi
+fi
+AM_CONDITIONAL(HAVE_LIBVORBISFILE, test "x$have_ogg" = "xyes")
+if test "x$have_ogg" = "xyes"; then
+    have_ogg="yes -- will build with ogg support"
+    AC_DEFINE(HAVE_LIBVORBISFILE, 1, [Define if you have the ogg/vorbis library])
+else
+    have_ogg="*no -- will build without ogg support"
 fi
 
 dnl Check for FLAC
-AC_SEARCH_LIBS(FLAC__metadata_get_streaminfo,
-	["FLAC"],
-	[AC_CHECK_HEADER(FLAC/metadata.h,
-          [have_flac="yes -- will build with FLAC support" AC_DEFINE_UNQUOTED(HAVE_FLAC, 1, ["Define to 1 if you have the flac library"])],
-          [echo "*** FLAC/metadata.h cannot be found. Check your FLAC installation."])])
-if test "y$have_flac" = "y"; then
-        have_flac="*no -- will build without FLAC support"
+AC_ARG_WITH(flac, AC_HELP_STRING([--without-flac], [Disable FLAC support]))
+if test "x$with_flac" != "xno"; then
+    AC_SEARCH_LIBS(FLAC__metadata_get_streaminfo, ["FLAC"],
+        [AC_CHECK_HEADER(FLAC/metadata.h, have_flac=yes, have_flac_header=no)], have_flac=no)
+    if test "x$have_flac_header" = "xno"; then
+        have_flac="no"
+        AC_MSG_WARN([FLAC/metadata.h cannot be found or is unusable. Check your FLACinstallation.])
+    fi
+    if test "xwith_flac" = "xyes" -a "x$have_flac" = "xno"; then
+        AC_MSG_ERROR([FLAC support explicitly requested but flac libs couldn't be found])
+    fi
+fi
+AM_CONDITIONAL(HAVE_FLAC, test "x$have_flac" = "xyes")
+if test "x$have_flac" = "xyes"; then
+    have_flac="yes -- will build with FLAC support"
+    AC_DEFINE(HAVE_FLAC, 1, [Define if you have the flac library])
+else
+    have_flac="*no -- will build without FLAC support"
 fi
 
 dnl Additional libs maybe needed when compiling under solaris
-AC_SEARCH_LIBS(bind,
-	      ["socket" "nsl" "socket -lnsl"])
+AC_SEARCH_LIBS(bind, ["socket" "nsl" "socket -lnsl"])
 
 dnl Check for Linux-specific headers (so we can compile Linux-specific
 dnl stuff only when compiling under Linux)
@@ -195,15 +234,15 @@ Configuration for $PACKAGE $VERSION :
  Install path .........: $prefix
  GTK2 version .........: `pkg-config gtk+-2.0 --modversion`
  GLib2/GThread version : `pkg-config gthread-2.0 --modversion`
- gnome-vfs.............: $have_gnomevfs
+ gnome-vfs.............: $have_gnome_vfs
  hal...................: $have_hal
  libcurl ..............: $have_curl
  mp4v2 ................: $have_mp4v2
- vorbisfile ...........: $have_vorbisfile
+ vorbisfile ...........: $have_ogg
  FLAC .................: $have_flac
  Preprocessor .........: $CC $CPPFLAGS
- Compiler .............: $CC $CFLAGS $PACKAGE_CFLAGS
- Linker ...............: $CC $LDFLAGS $LIBS $PACKAGE_LIBS
+ Compiler .............: $CC $CFLAGS
+ Linker ...............: $CC $LDFLAGS $LIBS
 
  Now type 'make' to build $PACKAGE $VERSION,
  and then 'make install' for installation.

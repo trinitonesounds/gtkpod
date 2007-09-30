@@ -1,9 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-AM_CFLAGS = @PACKAGE_CFLAGS@
-
-INCLUDES = @PACKAGE_CFLAGS@ \
-	   -DMOUNT_BIN=\""@MOUNT@\"" \
+INCLUDES = -DMOUNT_BIN=\""@MOUNT@\"" \
 	   -DUMOUNT_BIN=\""@UMOUNT@\"" \
 	   -DPACKAGE_DATA_DIR=\""$(datadir)"\" \
 	   -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" 
@@ -54,7 +51,7 @@ gtkpod_SOURCES = \
     tools.c tools.h \
     wavfile.c wavfile.h
 
-gtkpod_LDADD = $(LIBS) @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@
+gtkpod_LDADD = $(LIBS) $(INTLLIBS) @LIBOBJS@
 
 EXTRA_DIST = getopt.h
 

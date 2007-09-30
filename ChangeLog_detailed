@@ -1,3 +1,15 @@
+2007-09-30  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* configure.in
+	  src/Makefile.am:
+	  add --with/--without options to configure for curl, flac,
+	  libmp4v2, and ogg vorbis dependencies.
+
+	  separate pkg-config calls so that the configure output is
+	  more informative when one of the required deps is missing.
+
+	  minor cosmetic cleanups.
+
 2007-09-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_itunesdb.c (gp_load_ipod): make sure the ipod model
