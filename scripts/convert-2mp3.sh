@@ -28,8 +28,9 @@ ENCODER="lame"
 
 # Check if the genre is one which lame supports
 if [ -n "$genre" ] && `"$encoder" --genre-list | grep -qi "\b$genre\b"`; then
-    genreopt="--tg \"$genre\""
+    usegenre=$genre
 else
+    usegenre=""
     # check for id3v2
     id3v2=`which id3v2`
     if [ -n "$id3v2" ]; then
@@ -38,9 +39,9 @@ else
 fi
 
 if [ $filetype = "wav" ]; then
-    "$encoder" $ENCODER_OPTS --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$track" "$genreopt" "$infile" "$outfile"
+    "$encoder" $ENCODER_OPTS --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$track" --tg "$usegenre" "$infile" "$outfile"
 else
-    "$decoder" $options "$infile" | "$encoder" $ENCODER_OPTS --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$track" "$genreopt" - "$outfile"
+    "$decoder" $options "$infile" | "$encoder" $ENCODER_OPTS --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$track" --tg "$usegenre" - "$outfile"
 fi
 # Check result
 if [ "x$?" != "x0" ]; then

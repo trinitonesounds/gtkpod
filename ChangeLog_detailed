@@ -8,6 +8,8 @@
              next time
 	  Thanks to Mario Rossi.
 
+	* scripts/convert-2mp3.sh: fix handling of genre option
+
 2007-09-30  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* configure.in
