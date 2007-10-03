@@ -1659,7 +1659,7 @@ void details_edit (GList *selected_tracks)
     /* set notebook page */
     w = gtkpod_xml_get_widget (detail->xml, "details_notebook");
     page = prefs_get_int (DETAILS_WINDOW_NOTEBOOK_PAGE);
-    if ((page >= 0) && (page <= 3))
+    if ((page >= 0) && (page <= 4))
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (w), page);
 
     /* set default size */
