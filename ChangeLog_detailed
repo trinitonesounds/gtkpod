@@ -1,3 +1,9 @@
+2007-10-07 Michael Tiffany <tiffman at users.sourceforge.net>
+
+	* src/display_itdb.c: patch to set "changed" and "imported" to
+	  TRUE for non-ipod (local and podcast) databases
+	  Thanks to Mario Rossi.
+
 2007-10-04 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/details.c

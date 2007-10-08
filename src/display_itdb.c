@@ -998,8 +998,16 @@ iTunesDB *setup_itdb_n (gint i)
 	    itdb_playlist_set_mpl (pl);
 	    itdb_playlist_add (itdb, pl, -1);
 
-	    eitdb->data_changed = FALSE;
-	    eitdb->itdb_imported = FALSE;
+           if ((type & GP_ITDB_TYPE_PODCASTS) || (type & GP_ITDB_TYPE_LOCAL))
+             {
+               eitdb->data_changed = TRUE;
+               eitdb->itdb_imported = TRUE;
+             }
+           else
+             {
+               eitdb->data_changed = FALSE;
+               eitdb->itdb_imported = FALSE;
+             }
 	}
 	else
 	{
