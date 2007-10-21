@@ -162,7 +162,15 @@ Drag and Drop can be used in several ways:
   playlist view or track view. Drops between two existing playlists
   create a new playlist.
 
+3) between external web browser and gtkpod
 
+- jpg files can be displayed in a web browser (eg. firefox, konqueror)
+  and dragged onto the coverart display or the image in the Edit Details
+  window. This will download the jpg to the album's directory then apply
+  it to the album's tracks. In the case of Edit Details, the jpg will
+  only be applied to the selected tracks (or only the one track if the
+  "Change all track simultaneously).
+  
 Preferences File
 ----------------
 

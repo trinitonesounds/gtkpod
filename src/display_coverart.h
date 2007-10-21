@@ -92,5 +92,4 @@ void coverart_block_change (gboolean val);
 void coverart_init_display ();
 GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint default_img_size);
 void coverart_set_cover_from_file ();
-void coverart_set_cover_from_web ();
 #endif

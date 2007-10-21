@@ -41,8 +41,18 @@
 #include "display_coverart.h"
 #include "prefs.h"
 
-/* Commented out due to licensing problems
-void on_coverart_context_menu_click (GList *tracks);
-void on_fetchcover_fetch_button (GtkWidget *widget, gpointer data);
-*/
+typedef struct
+{
+	GdkPixbuf *image;
+	GString *url;
+	gchar *dir;
+	gchar *filename;
+	GList *tracks;
+	gchar *err_msg;
+} Fetch_Cover;
+
+Fetch_Cover *fetchcover_new (gchar *url_path, GList *trks);
+gboolean net_retrieve_image (Fetch_Cover *fetch_cover, GtkWindow *window);
+void free_fetchcover (Fetch_Cover *fcover);
+
 #endif

@@ -1,3 +1,41 @@
+2007-10-21 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * src/fetchcover.c
+  * src/fetchcover.h
+
+  Changed purpose of fetchcover. It no longer displays a
+  dialog window for dealing with covers. Instead it
+  provides the internal curl retrieve functions only.
+
+  * src/context_menus.c
+
+  Removed fetchcover context menu entries as no longer
+  required.
+
+  * src/details.c
+
+  Added drag and drop receive function to thumbnail cover
+  image. Drag a jpg file displayed in firefox or konqueror
+  onto the cover artwork thumbnail in the Edit Details
+  window to download it and set it as the track's artwork.
+
+  * src/display_coverart.c
+  * src/display_coverart.h
+
+  Added drag and drop receive function to main image on
+  coverart display. Drag a jpg file displayed in firefox or
+  konqueror onto the main image to set it as the coverart
+  for the album's tracks.
+  
+  * data/gtkpod.glade
+
+  Removed fetchcover dialog from the glade file.
+
+  * README
+
+  Updated drag and drop section to include information about
+  dnd'ing jpgs onto coverart display and Edit Details dialog.
+  
 2007-10-07 Michael Tiffany <tiffman at users.sourceforge.net>
 
 	* src/display_itdb.c: patch to set "changed" and "imported" to

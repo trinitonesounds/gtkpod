@@ -776,13 +776,6 @@ static GtkWidget *add_get_cover_from_file (GtkWidget *menu)
 					G_CALLBACK (coverart_set_cover_from_file), NULL);
 }
 
-static GtkWidget *add_get_cover_from_web (GtkWidget *menu)
-{
-	return hookup_mi (menu, _("Find Cover on Web"),
-					GTK_STOCK_NETWORK,
-					G_CALLBACK (coverart_set_cover_from_web), NULL);
-}
-
 static GtkWidget *add_check_ipod_files (GtkWidget *menu)
 {
     /* FIXME */
@@ -1062,9 +1055,6 @@ void create_context_menu (CM_type type)
 	    break;
 	case CM_CAD:
 			add_get_cover_from_file (menu);
-			/* Commented out due to licensing problems
-			add_get_cover_from_web (menu);
-			*/
 			add_display_big_coverart (menu);
 			add_edit_track_details (menu);
 			break;

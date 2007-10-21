@@ -27,7 +27,7 @@
 */
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+	#include <config.h>
 #endif
 
 #include "display_private.h"
@@ -38,7 +38,10 @@
 #include "context_menus.h"
 #include "details.h"
 #include "fileselection.h"
+#include <glib/gprintf.h>
 #include "fetchcover.h"
+
+#define DEBUG 0
 
 /* Declarations */
 static void free_album (Album_Item *album);
@@ -57,6 +60,9 @@ static void prepare_canvas ();
 static void set_slider_range (gint index);
 static void set_covers (gboolean force_imgupdate);
 static void set_cover_item (gint ndex, Cover_Item *cover, gchar *key, gboolean force_imgupdate);
+static gboolean dnd_coverart_drag_drop(GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, guint time, gpointer user_data);
+static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x, gint y, GtkSelectionData *data, guint info, guint time, gpointer user_data);
+static gboolean dnd_coverart_drag_motion (GtkWidget *widget, GdkDragContext *dc, gint x, gint y, guint time, gpointer user_data);
 
 /* Prefs keys */
 const gchar *KEY_DISPLAY_COVERART="display_coverart";
@@ -83,6 +89,13 @@ static gulong rbutton_signal_id;
 static gulong lbutton_signal_id;
 static gulong window_signal_id;
 static gulong contentpanel_signal_id;
+
+static GtkTargetEntry coverart_drop_types [] = {
+/*		{ DND_TEXT_UNICODE_TYPE, 0, DND_TEXT_UNICODE_TYPE_ID }, */
+/*		{ DND_FETCHCOVER_TEXT_PLAIN_TYPE, 0, DND_FETCHCOVER_TEXT_PLAIN_TYPE_ID }, */
+		{ "text/plain", 0, DND_TEXT_PLAIN },
+		{ "STRING", 0, DND_TEXT_PLAIN }
+};
 
 #if 0
 static void debug_albums ()
@@ -598,7 +611,8 @@ GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint def
 		image = itdb_thumb_get_gdk_pixbuf (device, thumb);
 	  w = gdk_pixbuf_get_width (image);
 	  h = gdk_pixbuf_get_height (image);
-		if (default_size > 0 && (w > default_size || h > default_size))
+	  
+	  if (default_size > 0 && (w > default_size || h > default_size))
 		{
 			/* need to scale the image back down to size */
 			if (w == h)
@@ -618,9 +632,9 @@ GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint def
 				w = default_size;
 				h = (gint) (default_size / ratio);
 			}
-			
-		pixbuf = gdk_pixbuf_scale_simple(image, w, h, GDK_INTERP_NEAREST);
-  	gdk_pixbuf_unref (image);
+		
+			pixbuf = gdk_pixbuf_scale_simple(image, w, h, GDK_INTERP_NEAREST);
+			gdk_pixbuf_unref (image);
 		}
 		else
 		{
@@ -1341,7 +1355,27 @@ void coverart_init_display ()
 	prepare_canvas ();
 	
 	gtk_box_pack_start_defaults (GTK_BOX(cdwidget->canvasbox), GTK_WIDGET(cdwidget->canvas));
-			
+				
+/* Dnd destinaton for foreign image files */
+	gtk_drag_dest_set (
+			cdwidget->canvasbox, 
+			0, 
+			coverart_drop_types, 
+			TGNR (coverart_drop_types), 
+			GDK_ACTION_COPY|GDK_ACTION_MOVE);
+
+	g_signal_connect ((gpointer) cdwidget->canvasbox, "drag-drop",
+			G_CALLBACK (dnd_coverart_drag_drop), 
+			NULL);
+	
+	g_signal_connect ((gpointer) cdwidget->canvasbox, "drag-data-received",
+			G_CALLBACK (dnd_coverart_drag_data_received), 
+			NULL);
+	
+	g_signal_connect ((gpointer) cdwidget->canvasbox, "drag-motion",
+			G_CALLBACK (dnd_coverart_drag_motion),
+			NULL);
+	
 	contentpanel_signal_id = g_signal_connect (G_OBJECT(cdwidget->contentpanel), "scroll-event",
 					G_CALLBACK(on_contentpanel_scroll_wheel_turned), NULL);
 					
@@ -1915,33 +1949,144 @@ void coverart_set_cover_from_file ()
   set_covers (FALSE);
 }
 
-/**
- * coverart_set_cover_from_web:
- *
- * Find a cover on tinternet and apply it as the cover
- * of the main displayed album
- *
- */
-void coverart_set_cover_from_web ()
+static gboolean dnd_coverart_drag_drop(GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, guint time, gpointer user_data)
 {
-	/* Commented out due to licensing problems
-	GList *tracks;
-	Cover_Item *cover;
+	GdkAtom target;
+	target = gtk_drag_dest_find_target (widget, drag_context, NULL);
+
+	gchar *typeName = 0;
+	typeName = gdk_atom_name(target);
 	
-	cover = g_ptr_array_index(cdwidget->cdcovers, IMG_MAIN);
-	tracks = cover->album->tracks;
+	if (target != GDK_NONE)
+	{
+		gtk_drag_get_data (widget, drag_context, target, time);
+		return TRUE;	
+	}
+	printf ("drop item\n");
+	gint i = 0;
+	for (i = 0; i < g_list_length(drag_context->targets); ++i)
+	{
+		target = g_list_nth_data (drag_context->targets, i);
+		printf ("Atom: %s\n", gdk_atom_name(target));
+	}
 	
-	* Nullify and free the album art pixbuf so that it will pick it up
-	 * from the art assigned to the tracks
-	 *
-	 if (cover->album->albumart)
-	 {
-		gdk_pixbuf_unref (cover->album->albumart);
-		cover->album->albumart = NULL;
-	 }
-	 
-	on_coverart_context_menu_click (tracks);
-	
-	set_covers (FALSE);
-	*/
+	return TRUE;
 }
+
+static gboolean dnd_coverart_drag_motion (GtkWidget *widget,
+				GdkDragContext *dc,
+				gint x,
+				gint y,
+				guint time,
+				gpointer user_data)
+{
+	GdkAtom target;
+	iTunesDB *itdb;
+	ExtraiTunesDBData *eitdb;
+
+	itdb = gp_get_selected_itdb ();
+	/* no drop is possible if no playlist/repository is selected */
+	if (itdb == NULL)
+	{
+		gdk_drag_status (dc, 0, time);
+		return FALSE;
+	}
+	
+	eitdb = itdb->userdata;
+	g_return_val_if_fail (eitdb, FALSE);
+	/* no drop is possible if no repository is loaded */
+	if (!eitdb->itdb_imported)
+	{
+		gdk_drag_status (dc, 0, time);
+		return FALSE;
+	}
+	    
+	target = gtk_drag_dest_find_target (widget, dc, NULL);
+	/* no drop possible if no valid target can be found */
+	if (target == GDK_NONE)
+	{
+		gdk_drag_status (dc, 0, time);
+		return FALSE;
+	}
+	    
+	gdk_drag_status (dc, dc->suggested_action, time);
+
+  return TRUE;
+}
+
+static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x, gint y, GtkSelectionData *data, guint info,
+		guint time, gpointer user_data)
+{
+	g_return_if_fail (widget);
+	g_return_if_fail (dc);
+	g_return_if_fail (data);
+	g_return_if_fail (data->data);
+	
+#ifdef HAVE_CURL
+	
+	 /* Deal with what we are given from source */
+	if((data != NULL) && (data-> length >= 0))
+	{
+		
+#if DEBUG
+		printf ("data length = %d\n", data->length);
+		printf ("data->data = %s\n", data->data);
+#endif
+		
+		Cover_Item *cover;
+		GList *tracks;
+		gchar *url = NULL;
+		Fetch_Cover *fcover;
+		Track *track;
+		gchar *filename;
+			
+		/* Find the display cover item in the cover display */
+		cover = g_ptr_array_index(cdwidget->cdcovers, IMG_MAIN);
+		tracks = cover->album->tracks;
+		
+		/* initialise the url string with the data from the dnd */
+		url = (gchar *) data->data;
+		/* Initialise a fetchcover object */
+		fcover = fetchcover_new (url, tracks);
+		coverart_block_change (TRUE);
+		
+		if (net_retrieve_image (fcover, NULL))
+		{
+#if DEBUG
+			printf ("Successfully retrieved\n");
+			printf ("Url of fetch cover: %s\n", fcover->url->str);
+			printf ("filename of fetch cover: %s\n", fcover->filename);
+#endif
+			filename = g_build_filename(fcover->dir, fcover->filename, NULL);
+			
+			coverart_block_change (FALSE);
+			
+			while (tracks)
+			{
+				track = tracks->data;
+					
+				if (gp_track_set_thumbnails (track, filename))
+					data_changed (track->itdb);
+			 				
+			 	tracks = tracks->next;
+			}
+			/* Nullify so that the album art is picked up from the tracks again */
+			cover->album->albumart = NULL;
+			    
+			set_covers (FALSE);
+		}
+		else
+		{
+			gtkpod_warning (_("%s\n"), fcover->err_msg);
+			coverart_block_change (FALSE);
+		}
+		
+		free_fetchcover (fcover);
+	}
+#endif /* only if we have curl */
+
+	gtk_drag_finish (dc, FALSE, FALSE, time);
+	return;
+}
+	
+	
