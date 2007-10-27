@@ -139,6 +139,20 @@
 #include <string.h>
 #include "mp4.h"
 
+#ifndef FREEFORM_ACCEPTS_EXTRA_ARG
+/* Version 1.6 of libmp4v2 introduces an index argument for MP4GetMetadataFreeForm. For C++ sources it defaults
+   to 0, but in C we have to specify it on our own. 
+*/
+#define MP4GetMetadataFreeForm(mp4File, name, pValue, pValueSize, owner)  MP4GetMetadataFreeForm(mp4File, name, pValue, pValueSize)
+#endif
+
+#ifndef COVERART_ACCEPTS_EXTRA_ARG
+/* Version 1.6 of libmp4v2 introduces an index argument for MP4GetMetadataCoverart. For C++ sources it defaults
+   to NULL, but in C we have to specify it on our own. 
+*/
+#define MP4GetMetadataCoverArt(hFile, coverArt, size, index) MP4GetMetadataCoverArt(hFile, coverArt, size)
+#endif
+
 static gboolean mp4_scan_soundcheck (MP4FileHandle mp4File, Track *track)
 {
     gboolean success = FALSE;
@@ -149,7 +163,7 @@ static gboolean mp4_scan_soundcheck (MP4FileHandle mp4File, Track *track)
     g_return_val_if_fail (mp4File != MP4_INVALID_FILE_HANDLE, FALSE);
 
     if (MP4GetMetadataFreeForm(mp4File, "iTunNORM",
-			       &ppValue, &pValueSize))
+			       &ppValue, &pValueSize, NULL))
     {
 	gchar *str;
 	guint sc1=0, sc2=0;
@@ -171,7 +185,7 @@ static gboolean mp4_scan_soundcheck (MP4FileHandle mp4File, Track *track)
     }
 
     if (MP4GetMetadataFreeForm(mp4File, "replaygain_track_gain",
-			       &ppValue, &pValueSize))
+			       &ppValue, &pValueSize, NULL))
     {
 	gchar *str;
 	gdouble rg;
@@ -367,7 +381,7 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 		    u_int8_t *image_data;
 		    u_int32_t image_data_len;
 		    if (MP4GetMetadataCoverArt (mp4File,
-						&image_data, &image_data_len))
+						&image_data, &image_data_len, 0))
 		    {
 			if (image_data)
 			{
@@ -452,7 +466,7 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 	    MP4GetMetadataAlbum (mp4File, &m_album);
 	    MP4GetMetadataGenre (mp4File, &m_genre);*/
 	    MP4GetMetadataTool (mp4File, &m_tool);
-	    MP4GetMetadataCoverArt (mp4File, &m_covert, &m_size);
+	    MP4GetMetadataCoverArt (mp4File, &m_covert, &m_size, 0);
 	    MP4MetadataDelete (mp4File);
 #endif
 	    value = charset_from_utf8 (track->title);

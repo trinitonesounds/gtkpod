@@ -1,7 +1,12 @@
 2007-10-27 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
   * src/fetchcover.c (fetchcover_cleanup): function only used if curl
-    is available -- avoid compilation warning
+    is available -- avoid compilation warning.
+
+  * configure.in
+    src/mp4file.c: recognize if additional argument is needed for
+    MP4GetMetadataFreeForm() and MP4GetMetadataCoverArt(). Thanks to
+    Felix Homann.
 
 2007-10-27 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
