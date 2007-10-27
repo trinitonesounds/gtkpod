@@ -460,14 +460,14 @@ void free_fetchcover (Fetch_Cover *fcover)
  *
  * Cleanup fetchcover bits and pieces
  */
+#ifdef HAVE_CURL
 static void fetchcover_cleanup()
 {	
-	#ifdef HAVE_CURL
 		if (fetchcover_curl_data.memory)
 		{
 			g_free (fetchcover_curl_data.memory);
 			fetchcover_curl_data.memory = NULL;
 			fetchcover_curl_data.size = 0;
 		}
-	#endif /* CURL */
 }
+#endif

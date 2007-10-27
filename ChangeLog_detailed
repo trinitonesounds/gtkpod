@@ -1,3 +1,8 @@
+2007-10-27 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+  * src/fetchcover.c (fetchcover_cleanup): function only used if curl
+    is available -- avoid compilation warning
+
 2007-10-27 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * src/display_coverart.c
