@@ -677,9 +677,7 @@ GList *coverart_get_displayed_tracks (void)
  */
 void coverart_display_big_artwork ()
 {
-	GtkWidget *dialog;
 	Cover_Item *cover;
-	GdkPixbuf *imgbuf = NULL;
 	ExtraTrackData *etd;
 	
 	cover = g_ptr_array_index(cdwidget->cdcovers, IMG_MAIN);
@@ -688,17 +686,31 @@ void coverart_display_big_artwork ()
 	if (cover->album == NULL)
 		return;
 	
+	GladeXML *preview_xml;
+	GtkWidget *dialog;
+	GtkWidget *canvasbox;
+	GtkWidget *res_label;
+	GdkPixbuf *imgbuf = NULL;
+	GdkPixbuf *scaled = NULL;
+	gchar *text;
+	
+	preview_xml = glade_xml_new (xml_file, "coverart_preview_dialog", NULL);
+	
+	dialog = gtkpod_xml_get_widget (preview_xml, "coverart_preview_dialog");
+	canvasbox = gtkpod_xml_get_widget (preview_xml, "coverart_preview_dialog_vbox");
+	res_label = gtkpod_xml_get_widget (preview_xml, "coverart_preview_dialog_res_lbl");
+	g_return_if_fail (dialog);
+	g_return_if_fail (canvasbox);
+	g_return_if_fail (res_label);
+	
+	/* Set the dialog parent */
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gtkpod_window));
+	
 	/* Set the dialog title */
-	gchar *text = g_strconcat (cover->album->artist, ": ", cover->album->albumname, NULL);
-	dialog = gtk_dialog_new_with_buttons (	text,
-																																	GTK_WINDOW (gtkpod_xml_get_widget (main_window_xml, "gtkpod")),
-																																	GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-																																	GTK_STOCK_CLOSE,
-																																	GTK_RESPONSE_CLOSE,
-																																	NULL);
-	
+	text = g_strconcat (cover->album->artist, ": ", cover->album->albumname, NULL);
+	gtk_window_set_title (GTK_WINDOW(dialog), text);
 	g_free (text);
-	
+		
 	Track *track;
 	track = g_list_nth_data (cover->album->tracks, 0);
 	etd = track->userdata;
@@ -708,9 +720,6 @@ void coverart_display_big_artwork ()
 		imgbuf = gdk_pixbuf_new_from_file (etd->thumb_path_locale, &error);
 		if (error != NULL)
 		{
-			/*
-			printf("Error occurred loading the image file - \nCode: %d\nMessage: %s\n", error->code, error->message);
-			*/
 			g_error_free (error);
 		}
 	}
@@ -728,7 +737,28 @@ void coverart_display_big_artwork ()
 	gint pixheight = gdk_pixbuf_get_height (imgbuf);
 	gint pixwidth = gdk_pixbuf_get_width (imgbuf);
 	
-	gtk_window_resize ( GTK_WINDOW(dialog), pixwidth, pixheight + 40);
+	/* Set the resolution in the label */
+	gchar *resvalues = (gchar *) g_malloc (sizeof(gint) + (sizeof(gchar) * 3) + sizeof(gint));
+	g_sprintf (resvalues, "%d x %d", pixwidth, pixheight);
+	text = g_markup_printf_escaped ("<b>Image Dimensions: %s</b>", resvalues);
+	gtk_label_set_markup (GTK_LABEL (res_label), text);
+	g_free (text);
+	
+	gint scrheight = gdk_screen_height() - 100;
+	gint scrwidth = gdk_screen_width() - 100;
+	
+	gdouble ratio = (gdouble) pixwidth / (gdouble) pixheight;
+	if (pixwidth > scrwidth)
+	{
+		pixwidth = scrwidth;
+		pixheight = pixwidth / ratio;
+	}
+	
+	if (pixheight > scrheight)
+	{
+		pixheight = scrheight;
+		pixwidth = pixheight * ratio;
+	}
 	
 	GnomeCanvas *canvas;
 	canvas = GNOME_CANVAS (gnome_canvas_new());
@@ -743,11 +773,13 @@ void coverart_display_big_artwork ()
 	canvasitem = gnome_canvas_item_new(	gnome_canvas_root(canvas),
 																																		GNOME_TYPE_CANVAS_PIXBUF, NULL);
 	
+	scaled = gdk_pixbuf_scale_simple (imgbuf, pixwidth, pixheight, GDK_INTERP_NEAREST);
+	
 	/* Apply the image to the canvas */
 	gnome_canvas_item_set (	canvasitem,
-																						"pixbuf", imgbuf);
+																						"pixbuf", scaled);
 
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), GTK_WIDGET(canvas));
+	gtk_box_pack_start_defaults (GTK_BOX(canvasbox), GTK_WIDGET (canvas));
 	
 	/* Unreference pixbuf if it is not pointing to
 	 * the album's artwork
@@ -762,6 +794,7 @@ void coverart_display_big_artwork ()
 	gtk_dialog_run (GTK_DIALOG(dialog));
 	
 	/* Destroy the dialog as no longer required */
+	gdk_pixbuf_unref (scaled);
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 

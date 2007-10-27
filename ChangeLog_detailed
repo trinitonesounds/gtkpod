@@ -1,3 +1,13 @@
+2007-10-27 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * src/display_coverart.c
+  * data/gtkpod.glade
+
+  Improved the preview fullsize artwork dialog. Now scales the
+  image to respect the size of the desktop, while displaying
+  the true resolution in a label below it. Preview dialog now
+  constructed in glade file rather than from scratch.
+
 2007-10-21 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * src/fetchcover.c
