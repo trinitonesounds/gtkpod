@@ -1,4 +1,10 @@
-2007-10-27 P.G. Richardson <phantom_sf at users.sourceforge.net>
+2007-11-01 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * README
+  
+  Updated README with some instructions on using the photo window.
+
+2007-11-01 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * src/display_photo.c
   * src/display_photo.h

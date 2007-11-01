@@ -20,6 +20,7 @@ for details.
      - Tracks
      - Filter Tabs
      - Playlists
+     - Photos
      - Drag and Drop
      - Duplicate Detection
      - Preferences File
@@ -133,6 +134,35 @@ Playlists
 - You can rename playlists.
 - You can delete playlists by selecting the desired playlist and pressing
   "Ctrl-D", or by selecting "Delete Playlist" from the Edit menu.
+
+
+Photos
+------
+
+If your ipod supports photos then a special dynamic playlist is created in
+the playlist tree. YOU CANNOT DELETE IT! Indeed when clicking on it all the
+usual track related ipod functions are disabled or removed.
+
+Instead, the track window elements are replaced with the photo management pane.
+This displays the Photo Library and all the saved photos from the ipod and
+allows you to add new albums, add new images, remove albums, remove images and
+drag n drop image between albums.
+
+You cannot delete the Photo Library as this is the original photo database. All
+images are stored in it and thus clicking on it, all the images on the ipod are
+displayed in it. Subsequent albums display a subset of the Photo Library's images.
+
+Removing an image from an album will remove it from the album but it will still
+be stored on the ipod in the Photo Library.
+
+Removing an image from the Photo Library will delete it completely from the ipod.
+
+You can select a set of images from a selected album (inc. the Photo Library) and
+drag n drop them into another album.
+
+Any changes made in the photo management window will change the Photo playlist to
+italics indicating that a "Save Changes" should occur before exiting in order to
+preserve those changes.
 
 
 Drag and Drop
