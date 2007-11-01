@@ -1,3 +1,46 @@
+2007-10-27 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * src/display_photo.c
+  * src/display_photo.h
+  
+  Photo support added to gtkpod.
+  
+  * data/gtkpod.glade: photo window gui components added.
+  
+  * src/context_menus.c
+  * src/context_menus.h
+  
+  Disable right-click menu if Photo "playlist" is selected.
+  Add context menus to album and icon views in Photo window.
+  
+  * src/display_itdb.h
+  
+  Photo database and photodb data changed flag added to Extra iTunes
+  db data structure
+  
+  * src/display_playlists.c
+  
+  Photo playlist added to playlist tree if ipod has a photo db or
+  a new one is created photos are supported.
+  
+  * src/display_private.h
+  * src/display_sorttabs.c
+  
+  Getter and Setter added for control of the selected sorttabs. Allows
+  sorttabs to be returned to their status prior to the photo window
+  being opened.
+  
+  * src/file_itunesdb.c: support for loading of ipod photo database.
+  * src/itdb.h: typedefs for photo database.
+  * src/Makefile.am: compile photo source files.
+  
+  * src/misc.c
+  * src/misc.h
+  
+  Parse artwork from string function. Used in photo DnD operations. 
+  
+  * fetchcover.c: removal of fetchcover_cleanup as no longer needed.
+  
 2007-10-27 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
   * src/fetchcover.c (fetchcover_cleanup): function only used if curl

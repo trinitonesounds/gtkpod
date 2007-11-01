@@ -20542,4 +20542,269 @@ Local Repository (Podcasts)
   </child>
 </widget>
 
+<widget class="GtkWindow" id="photo_panel">
+  <property name="visible">True</property>
+  <property name="title" translatable="yes">Photo Window</property>
+  <property name="type">GTK_WINDOW_TOPLEVEL</property>
+  <property name="window_position">GTK_WIN_POS_NONE</property>
+  <property name="modal">False</property>
+  <property name="resizable">True</property>
+  <property name="destroy_with_parent">False</property>
+  <property name="decorated">True</property>
+  <property name="skip_taskbar_hint">False</property>
+  <property name="skip_pager_hint">False</property>
+  <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
+  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+  <property name="focus_on_map">True</property>
+  <property name="urgency_hint">False</property>
+
+  <child>
+    <widget class="GtkViewport" id="photo_viewport">
+      <property name="visible">True</property>
+      <property name="shadow_type">GTK_SHADOW_IN</property>
+
+      <child>
+  <widget class="GtkVBox" id="vbox182">
+    <property name="visible">True</property>
+    <property name="homogeneous">False</property>
+    <property name="spacing">0</property>
+
+    <child>
+      <widget class="GtkMenuBar" id="menubar1">
+        <property name="visible">True</property>
+        <property name="pack_direction">GTK_PACK_DIRECTION_LTR</property>
+        <property name="child_pack_direction">GTK_PACK_DIRECTION_LTR</property>
+
+        <child>
+    <widget class="GtkImageMenuItem" id="menuitem14">
+      <property name="visible">True</property>
+      <property name="label" translatable="yes">_Add</property>
+      <property name="use_underline">True</property>
+
+      <child internal-child="image">
+        <widget class="GtkImage" id="image4095">
+          <property name="visible">True</property>
+          <property name="stock">gtk-add</property>
+          <property name="icon_size">1</property>
+          <property name="xalign">0.5</property>
+          <property name="yalign">0.5</property>
+          <property name="xpad">0</property>
+          <property name="ypad">0</property>
+        </widget>
+      </child>
+
+      <child>
+        <widget class="GtkMenu" id="menuitem14_menu">
+
+          <child>
+      <widget class="GtkImageMenuItem" id="photo_add_album_menuItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Add _Album</property>
+        <property name="use_underline">True</property>
+
+        <child internal-child="image">
+          <widget class="GtkImage" id="image4096">
+            <property name="visible">True</property>
+            <property name="stock">gtk-justify-fill</property>
+            <property name="icon_size">1</property>
+            <property name="xalign">0.5</property>
+            <property name="yalign">0.5</property>
+            <property name="xpad">0</property>
+            <property name="ypad">0</property>
+          </widget>
+        </child>
+      </widget>
+          </child>
+
+          <child>
+      <widget class="GtkImageMenuItem" id="photo_add_image_menuItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Add _Image</property>
+        <property name="use_underline">True</property>
+
+        <child internal-child="image">
+          <widget class="GtkImage" id="image4097">
+            <property name="visible">True</property>
+            <property name="stock">gtk-file</property>
+            <property name="icon_size">1</property>
+            <property name="xalign">0.5</property>
+            <property name="yalign">0.5</property>
+            <property name="xpad">0</property>
+            <property name="ypad">0</property>
+          </widget>
+        </child>
+      </widget>
+          </child>
+
+          <child>
+      <widget class="GtkImageMenuItem" id="photo_add_image_dir_menuItem">
+        <property name="visible">True</property>
+        <property name="tooltip" translatable="yes">Add Images from a Directory</property>
+        <property name="label" translatable="yes">Add Image_s</property>
+        <property name="use_underline">True</property>
+
+        <child internal-child="image">
+          <widget class="GtkImage" id="image4098">
+            <property name="visible">True</property>
+            <property name="stock">gtk-directory</property>
+            <property name="icon_size">1</property>
+            <property name="xalign">0.5</property>
+            <property name="yalign">0.5</property>
+            <property name="xpad">0</property>
+            <property name="ypad">0</property>
+          </widget>
+        </child>
+      </widget>
+          </child>
+        </widget>
+      </child>
+    </widget>
+        </child>
+
+        <child>
+    <widget class="GtkImageMenuItem" id="menuitem15">
+      <property name="visible">True</property>
+      <property name="label" translatable="yes">_Remove</property>
+      <property name="use_underline">True</property>
+
+      <child internal-child="image">
+        <widget class="GtkImage" id="image4099">
+          <property name="visible">True</property>
+          <property name="stock">gtk-delete</property>
+          <property name="icon_size">1</property>
+          <property name="xalign">0.5</property>
+          <property name="yalign">0.5</property>
+          <property name="xpad">0</property>
+          <property name="ypad">0</property>
+        </widget>
+      </child>
+
+      <child>
+        <widget class="GtkMenu" id="menuitem15_menu">
+
+          <child>
+      <widget class="GtkImageMenuItem" id="photo_remove_album_menuItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Remove _Album</property>
+        <property name="use_underline">True</property>
+
+        <child internal-child="image">
+          <widget class="GtkImage" id="image4100">
+            <property name="visible">True</property>
+            <property name="stock">gtk-remove</property>
+            <property name="icon_size">1</property>
+            <property name="xalign">0.5</property>
+            <property name="yalign">0.5</property>
+            <property name="xpad">0</property>
+            <property name="ypad">0</property>
+          </widget>
+        </child>
+      </widget>
+          </child>
+
+          <child>
+      <widget class="GtkImageMenuItem" id="photo_remove_image_menuItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Remove _Images</property>
+        <property name="use_underline">True</property>
+
+        <child internal-child="image">
+          <widget class="GtkImage" id="image4101">
+            <property name="visible">True</property>
+            <property name="stock">gtk-missing-image</property>
+            <property name="icon_size">1</property>
+            <property name="xalign">0.5</property>
+            <property name="yalign">0.5</property>
+            <property name="xpad">0</property>
+            <property name="ypad">0</property>
+          </widget>
+        </child>
+      </widget>
+          </child>
+        </widget>
+      </child>
+    </widget>
+        </child>
+      </widget>
+      <packing>
+        <property name="padding">0</property>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+      </packing>
+    </child>
+
+    <child>
+      <widget class="GtkHBox" id="hbox214">
+        <property name="visible">True</property>
+        <property name="homogeneous">True</property>
+        <property name="spacing">0</property>
+
+        <child>
+    <widget class="GtkScrolledWindow" id="photo_album_window">
+      <property name="visible">True</property>
+      <property name="can_focus">True</property>
+      <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+      <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+      <property name="shadow_type">GTK_SHADOW_IN</property>
+      <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
+
+      <child>
+        <placeholder/>
+      </child>
+    </widget>
+    <packing>
+      <property name="padding">0</property>
+      <property name="expand">True</property>
+      <property name="fill">True</property>
+    </packing>
+        </child>
+
+        <child>
+    <widget class="GtkImage" id="photo_preview_image">
+      <property name="width_request">230</property>
+      <property name="height_request">186</property>
+      <property name="visible">True</property>
+      <property name="xalign">0.5</property>
+      <property name="yalign">0.5</property>
+      <property name="xpad">0</property>
+      <property name="ypad">0</property>
+    </widget>
+    <packing>
+      <property name="padding">2</property>
+      <property name="expand">False</property>
+      <property name="fill">True</property>
+    </packing>
+        </child>
+      </widget>
+      <packing>
+        <property name="padding">0</property>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+      </packing>
+    </child>
+
+    <child>
+      <widget class="GtkScrolledWindow" id="photo_thumbnail_window">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+        <property name="shadow_type">GTK_SHADOW_NONE</property>
+        <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
+
+        <child>
+    <placeholder/>
+        </child>
+      </widget>
+      <packing>
+        <property name="padding">2</property>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+      </packing>
+    </child>
+  </widget>
+      </child>
+    </widget>
+  </child>
+</widget>
 </glade-interface>

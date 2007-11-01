@@ -108,6 +108,7 @@ gint get_sort_tab_number (gchar *text);
 void open_about_window (void);
 void close_about_window (void);
 gboolean parse_tracks_from_string (gchar **s, Track **track);
+gboolean parse_artwork_from_string(gchar **s, Artwork **artwork);
 void gtkpod_init (int argc, char *argv[]);
 void gtkpod_shutdown (void);
 

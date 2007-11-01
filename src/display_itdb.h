@@ -53,8 +53,10 @@ typedef struct
 				      (only for GP_ITDP_TYPE_IPOD)         */
     gboolean offline;              /* offline mode?                        */
     gboolean data_changed;         /* data changed since import?           */
+    gboolean photo_data_changed;	/* photo data changed since import?		*/
     gboolean itdb_imported;        /* has in iTunesDB been imported?       */
     gboolean ipod_ejected;         /* if iPod was ejected                  */
+    PhotoDB *photodb;            /* Photo DB reference used if the ipod supports photos */
 } ExtraiTunesDBData;
 
 typedef struct

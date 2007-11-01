@@ -24,6 +24,7 @@ gtkpod_SOURCES = \
     display.c display_playlists.c display_sorttabs.c \
     display.h display_private.h \
     display_itdb.c display_itdb.h \
+    display_photo.c display_photo.h \
     display_spl.c display_tracks.c \
     fetchcover.c fetchcover.h \
     file.c file.h file_export.c \

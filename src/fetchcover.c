@@ -47,8 +47,7 @@
 	/* Declarations */
 	static void *safe_realloc(void *ptr, size_t size);
 	static size_t curl_write_fetchcover_func(void *ptr, size_t itemsize, size_t numitems, void *data);
-	static void fetchcover_cleanup();
-	/* Display a dialog explaining the options if a file with the proposed name already exists */
+  /* Display a dialog explaining the options if a file with the proposed name already exists */
 	static gchar *display_file_exist_dialog (Fetch_Cover *fetch_cover, GtkWindow *parent);
 	static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover, GtkWindow *window);
 	
@@ -453,21 +452,3 @@ void free_fetchcover (Fetch_Cover *fcover)
 	if (fcover->err_msg)
 		g_free (fcover->err_msg);
 }
-	
-
-/****
- * fetchcover_cleanup:
- *
- * Cleanup fetchcover bits and pieces
- */
-#ifdef HAVE_CURL
-static void fetchcover_cleanup()
-{	
-		if (fetchcover_curl_data.memory)
-		{
-			g_free (fetchcover_curl_data.memory);
-			fetchcover_curl_data.memory = NULL;
-			fetchcover_curl_data.size = 0;
-		}
-}
-#endif

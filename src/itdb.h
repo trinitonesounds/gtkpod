@@ -48,4 +48,6 @@ typedef Itdb_Track Track;
 typedef Itdb_Thumb Thumb;
 typedef Itdb_Artwork Artwork;
 typedef Itdb_IpodInfo IpodInfo;
+typedef Itdb_PhotoDB PhotoDB;
+typedef Itdb_PhotoAlbum PhotoAlbum;
 #endif

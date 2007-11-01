@@ -40,6 +40,7 @@
 #include "misc_track.h"
 #include "info.h"
 #include "context_menus.h"
+#include "display_photo.h"
 
 /* pointer to the treeview for the playlist display */
 static GtkTreeView *playlist_treeview = NULL;
@@ -1413,12 +1414,24 @@ static void pm_selection_changed_cb (GtkTreeSelection *selection,
       {
 	  space_set_ipod_itdb (new_playlist->itdb);
       }
+      
+      if (gphoto_is_photo_playlist (new_playlist))
+      {
+				/* This is the photo playlist so need to load photo database
+      * rather than get tracks.
+				*/
+				gphoto_display_photo_window (new_playlist->itdb);
+      }
+      else
+      {
+				gphoto_change_to_photo_window (FALSE);
+      }
 
       /* remove all entries from sort tab 0 */
       /* printf ("removing entries: %x\n", current_playlist);*/
       st_init (-1, 0);
 
-      current_playlist = new_playlist;
+     current_playlist = new_playlist;
       if (new_playlist->is_spl && new_playlist->splpref.liveupdate)
 	  itdb_spl_update (new_playlist);
       if (new_playlist->members)
@@ -1511,6 +1524,54 @@ void pm_add_itdb (iTunesDB *itdb, gint pos)
 			if (itdb_playlist_is_mpl (pl))     pm_add_playlist (pl, pos);
 			else                               pm_add_playlist (pl, -1);
     }
+    
+    /* Add the photo playlist onto IPOD itdb if the
+	 * IPOD supports photos
+	 */
+	if (gphoto_ipod_supports_photos (itdb))
+	{   /* add photo playlist */
+/*		printf ("Photos supported. Adding node.\n"); */
+		GtkTreeIter itdb_iter;
+		
+		if (pm_get_iter_for_itdb (itdb, &itdb_iter))
+    {
+			gboolean createpl = TRUE;
+   	GtkTreeIter pl_iter;
+   	GtkTreeModel *model;
+			Playlist *pl;
+
+			model = GTK_TREE_MODEL (gtk_tree_view_get_model (playlist_treeview));
+
+			/* go down one hierarchy and try all other iters */
+			if (gtk_tree_model_iter_children (model, &pl_iter, &itdb_iter))
+			{
+				do
+				{
+	   		gtk_tree_model_get (model, &pl_iter,
+					PM_COLUMN_PLAYLIST, &pl,
+					-1);
+	    		if (pl->type == GP_PL_TYPE_PHOTO)
+	    		{
+	    			/* Photo playlist already found so dont need to readd */
+	    		createpl = FALSE;
+	    			break;
+	    		}
+				} while (gtk_tree_model_iter_next (model, &pl_iter));
+    	}
+    	
+    	if (createpl)
+    	{
+    		/* no existing photo playlist found so add one
+    	 * either itdb had no children or none of them
+    	 * were of the photo type.
+    	 */
+				Playlist *pl = itdb_playlist_new (_("Photos"), FALSE);
+				pl->type = GP_PL_TYPE_PHOTO;
+				pl->itdb = itdb;
+				pm_add_playlist (pl, -1);
+			}
+    }
+	}
 }
 
 

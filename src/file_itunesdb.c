@@ -47,6 +47,7 @@
 #include "ipod_init.h"
 #include "file_convert.h"
 #include "display_coverart.h"
+#include "display_photo.h"
 
 #define _TO_STR(x) #x
 #define TO_STR(x) _TO_STR(x)
@@ -985,6 +986,9 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
 	    }
 	}
     }
+    
+    /* All successfully loaded so try loading the photo database */
+    gphoto_load_photodb (new_itdb);
     return new_itdb;
 }
 
@@ -2033,6 +2037,29 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
 	  success = write_extended_info (itdb);
       }
   }
+  
+  /* If the ipod supports photos and the photo_data_changed
+   * flag has been set to true then wrtie the photo database
+   */
+  if (success &&  
+		  (itdb->usertype & GP_ITDB_TYPE_IPOD) &&
+		  gphoto_ipod_supports_photos (itdb) &&
+		  eitdb->photodb != NULL &&
+		  eitdb->photo_data_changed == TRUE)
+  {
+	  GError *error = NULL;
+	  if (!itdb_photodb_write (eitdb->photodb, &error))
+	  {
+		  success = FALSE;
+		  if (error && error->message)
+			  gtkpod_warning ("%s\n\n", error->message);
+		  else
+			  g_warning ("error->message == NULL!\n");
+	  
+		  g_error_free (error);
+		  error = NULL;
+	  }
+  }
 
   /* indicate that files and/or database is saved */
   if (success)
@@ -2127,6 +2154,9 @@ void data_unchanged (iTunesDB *itdb)
     g_return_if_fail (eitdb);
 
     eitdb->data_changed = FALSE;
+    if (eitdb->photo_data_changed == TRUE)
+    	eitdb->photo_data_changed = FALSE;
+    
     pm_itdb_name_changed (itdb);
     space_data_update ();
 }

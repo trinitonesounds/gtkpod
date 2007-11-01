@@ -1032,7 +1032,6 @@ gint st_get_instance_from_treeview (GtkTreeView *tv)
     return -1;
 }
 
-
 /* returns the selected entry */
 TabEntry *st_get_selected_entry (gint inst)
 {
@@ -1980,6 +1979,25 @@ void st_sort (GtkSortType order)
 	coverart_set_images (order == SORT_NONE);
 }
 
+gint st_get_sorttab_page_number (int inst)
+{
+	if (sorttab[inst])
+		return gtk_notebook_get_current_page (sorttab[inst]->notebook);
+	else
+		return -1;
+}
+
+void st_set_sorttab_page (gint inst, gint category)
+{
+	if (sorttab[inst])
+	{
+		gtk_notebook_set_current_page (sorttab[inst]->notebook, category); 
+		st_page_selected (sorttab[inst]->notebook, category);
+  
+  	while (gtk_events_pending ()) gtk_main_iteration ();
+	}
+}
+
 gboolean st_set_selection (Itdb_Track *track)
 {
     GtkTreeSelection *selection;
@@ -2053,6 +2071,7 @@ gboolean st_set_selection (Itdb_Track *track)
     	
 	return TRUE;	
 }
+
 
 static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 {

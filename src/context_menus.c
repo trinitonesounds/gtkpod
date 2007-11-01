@@ -44,6 +44,7 @@
 #include "repository.h"
 #include "syncdir.h"
 #include "display_coverart.h"
+#include "display_photo.h"
 
 #define LOCALDEBUG 0
 
@@ -58,7 +59,9 @@ typedef enum {
     CM_ST,
     CM_TM,
     CM_NUM,
-    CM_CAD
+    CM_CAD,
+    CM_PH_AV,
+    CM_PH_IV
 } CM_type;
 
 
@@ -885,6 +888,25 @@ static GtkWidget *add_special (GtkWidget *menu)
 }
 #endif
 
+GtkWidget *gphoto_menuitem_remove_album_from_db_item(GtkWidget *menu)
+{
+	return hookup_mi (
+			menu, 
+			_("Remove Album"), 
+			GTK_STOCK_DELETE, 
+			G_CALLBACK (gphoto_remove_album_from_database), 
+			NULL);
+}
+
+GtkWidget *gphoto_menuitem_remove_photo_from_album_item(GtkWidget *menu)
+{
+	return hookup_mi (
+			menu, 
+			_("Remove Photo"),
+			GTK_STOCK_DELETE, 
+			G_CALLBACK (gphoto_remove_selected_photos_from_album), 
+			NULL);
+}
 
 void create_context_menu (CM_type type)
 {
@@ -1058,6 +1080,12 @@ void create_context_menu (CM_type type)
 			add_display_big_coverart (menu);
 			add_edit_track_details (menu);
 			break;
+	case CM_PH_AV:
+			gphoto_menuitem_remove_album_from_db_item (menu);
+			break;
+	case CM_PH_IV:
+			gphoto_menuitem_remove_photo_from_album_item (menu);
+			break;
 	case CM_NUM:
 	    g_return_if_reached ();
 	}
@@ -1124,6 +1152,33 @@ cad_context_menu_init(void)
     if(selected_tracks)
 			create_context_menu (CM_CAD);
 }
+
+/**
+ * photo_context_menu_init - initialize the right click menu for photo management display 
+ */
+void
+gphoto_context_menu_init (gint component)
+{
+    if (widgets_blocked) return;
+    
+    selected_entry = NULL; 
+    selected_playlist = NULL;
+    selected_tracks = NULL;
+    active_itdb = gp_get_selected_itdb ();
+    entry_inst = -1;
+    
+     if (selected_tracks) g_list_free (selected_tracks);
+
+     switch (component)
+     {
+    	 case GPHOTO_ALBUM_VIEW:
+    		 create_context_menu (CM_PH_AV);
+    		 break;
+    	 case GPHOTO_ICON_VIEW:
+    		 create_context_menu (CM_PH_IV);
+     }
+}
+
 /**
  * pm_context_menu_init - initialize the right click menu for playlists 
  */
@@ -1131,7 +1186,7 @@ void
 pm_context_menu_init(void)
 {
     if (widgets_blocked) return;
-
+    
     pm_stop_editing (TRUE);
 
     if (selected_tracks)  g_list_free (selected_tracks);
@@ -1139,6 +1194,10 @@ pm_context_menu_init(void)
     selected_entry = NULL;
     entry_inst = -1;
     selected_playlist = pm_get_selected_playlist();
+    
+    /* Dont allow context menu to display if the playlist is the photo one */
+    if (gphoto_is_photo_playlist (selected_playlist)) return;
+        
     active_itdb = gp_get_selected_itdb ();
     if(selected_playlist)
     {
@@ -1146,6 +1205,7 @@ pm_context_menu_init(void)
 	create_context_menu (CM_PL);
     }
 }
+
 /**
  * st_context_menu_init - initialize the right click menu for sort tabs 
  * FIXME: This needs to be hooked in.

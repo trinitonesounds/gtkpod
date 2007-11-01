@@ -74,9 +74,11 @@ void st_init (ST_CAT_item new_category, guint32 inst);
 void st_cleanup (void);
 void st_set_default_sizes (void);
 void st_update_default_sizes (void);
+void st_set_sorttab_page (int inst, gint category);
 void tm_update_default_sizes (void);
 void st_show_hide_tooltips (void);
 GList *st_get_selected_members (guint32 inst);
+gint st_get_sorttab_page_number (int inst);
 
 void st_enable_disable_view_sort (gint inst, gboolean enable);
 void tm_enable_disable_view_sort (gboolean enable);

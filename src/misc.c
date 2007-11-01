@@ -45,6 +45,7 @@
 #include "misc.h"
 #include "prefs.h"
 #include "misc_track.h"
+#include "display_photo.h"
 
 
 #define DEBUG_MISC 0
@@ -324,7 +325,34 @@ parse_tracks_from_string(gchar **s, Track **track)
     return FALSE;
 }
 
+gboolean
+parse_artwork_from_string(gchar **s, Artwork **artwork)
+{
+    g_return_val_if_fail (artwork, FALSE);
+    *artwork = NULL;
+    g_return_val_if_fail (s, FALSE);
 
+    if(*s)
+    {
+	gchar *str = *s;
+	gchar *strp = strchr (str, '\n');
+	int tokens;
+
+	if (strp == NULL)
+	{
+	    *artwork = NULL;
+	    *s = NULL;
+	    return FALSE;
+	}
+	tokens = sscanf (str, "%p", artwork);
+	++strp;
+	if (*strp) *s = strp;
+	else       *s = NULL;
+	if (tokens == 1) 	return TRUE;
+	else                    return FALSE;
+    }
+    return FALSE;
+}
 
 /* Duplicate a GList (shallow copy) */
 GList *glist_duplicate (GList *list)
@@ -1947,6 +1975,11 @@ void gtkpod_shutdown ()
     /* stop accepting requests for playcount updates */
     server_shutdown ();
 
+		/* Change the windows back to track view to ensure the
+		 * sorttab state is saved correctly/
+		 */
+		gphoto_change_to_photo_window (FALSE);
+		
     /* Sort column order needs to be stored */
     tm_store_col_order();
   
