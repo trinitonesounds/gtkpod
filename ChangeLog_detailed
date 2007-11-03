@@ -1,3 +1,10 @@
+2007-11-03 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * src/display_coverart.c
+  
+  Fixed bug in display coverart. Irregular sized album images were
+  being scaled to the default sizes. 
+  
 2007-11-01 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * README

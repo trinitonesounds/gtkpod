@@ -612,28 +612,33 @@ GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint def
 	  w = gdk_pixbuf_get_width (image);
 	  h = gdk_pixbuf_get_height (image);
 	  
-	  if (default_size > 0 && (w > default_size || h > default_size))
+	  if (default_size > 0)
 		{
-			/* need to scale the image back down to size */
-			if (w == h)
-			{
-				w = default_size;
-				h = default_size;
-			}
-			else if (h > w)
-			{
-				ratio = h / w;
-				h = default_size;
-				w = (gint) (default_size / ratio);
-			}
-			else
-			{
-				ratio = w / h;
-				w = default_size;
-				h = (gint) (default_size / ratio);
-			}
-		
-			pixbuf = gdk_pixbuf_scale_simple(image, w, h, GDK_INTERP_NEAREST);
+	  	if (w > default_size || h > default_size)
+	  	{
+	  		/* need to scale the image back down to size */
+	  		if (w == h)
+	  		{
+	  			w = default_size;
+	  			h = default_size;
+	  		}
+	  		else if (h > w)
+	  		{
+	  			ratio = h / w;
+	  			h = default_size;
+	  			w = (gint) (default_size / ratio);
+	  		}
+	  		else
+	  		{
+	  			ratio = w / h;
+	  			w = default_size;
+	  			h = (gint) (default_size / ratio);
+	  		}
+	  		pixbuf = gdk_pixbuf_scale_simple(image, w, h, GDK_INTERP_NEAREST);
+	  	}
+	  	else
+	  		pixbuf = gdk_pixbuf_copy (image);
+			
 			gdk_pixbuf_unref (image);
 		}
 		else
