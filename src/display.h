@@ -277,7 +277,8 @@ enum {
     DND_GTKPOD_TM_PATHLIST,
     DND_GTKPOD_PLAYLISTLIST,
     DND_TEXT_URI_LIST,
-    DND_TEXT_PLAIN
+    DND_TEXT_PLAIN,
+    DND_IMAGE_JPEG
 };
 
 /* used for the ST_CAT_SPECIAL user_data (see st_create_special and

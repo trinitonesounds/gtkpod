@@ -49,10 +49,12 @@ typedef struct
 	gchar *filename;
 	GList *tracks;
 	gchar *err_msg;
+	GtkWindow *parent_window;
 } Fetch_Cover;
 
 Fetch_Cover *fetchcover_new (gchar *url_path, GList *trks);
-gboolean net_retrieve_image (Fetch_Cover *fetch_cover, GtkWindow *window);
+gboolean fetchcover_net_retrieve_image (Fetch_Cover *fetch_cover);
+gboolean fetchcover_select_filename (Fetch_Cover *fetch_cover);
 void free_fetchcover (Fetch_Cover *fcover);
 
 #endif

@@ -37,6 +37,7 @@
 #include "display_coverart.h"
 #include "misc_track.h"
 #include "prefs.h"
+#include "info.h"
 #include <string.h>
 #include <glib/gstdio.h>
 
@@ -92,6 +93,7 @@ static const ComboEntry mediatype_comboentries[] =
 
 /* Detail image drag types for dnd */
 GtkTargetEntry cover_image_drag_types [] = {
+		{ "image/jpeg", 0, DND_IMAGE_JPEG },
 		{ "text/uri-list", 0, DND_TEXT_URI_LIST },
 		{ "text/plain", 0, DND_TEXT_PLAIN },
 		{ "STRING", 0, DND_TEXT_PLAIN }
@@ -1662,23 +1664,23 @@ void details_edit (GList *selected_tracks)
     
     gtk_drag_dest_set (
     		GTK_WIDGET(img), 
-    		GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT, 
+    		0, 
     		cover_image_drag_types, 
     		TGNR (cover_image_drag_types), 
-    		GDK_ACTION_COPY);
+    		GDK_ACTION_COPY|GDK_ACTION_MOVE);
 
     g_signal_connect ((gpointer) img, "drag-drop",
     		G_CALLBACK (dnd_details_art_drag_drop), 
     		NULL);
-    
-    g_signal_connect ((gpointer) img, "drag-motion",
-        		G_CALLBACK (dnd_details_art_drag_motion), 
-        		NULL);
-    
+        
     g_signal_connect ((gpointer) img, "drag-data-received",
     		G_CALLBACK (dnd_details_art_drag_data_received), 
     		NULL);
 
+    g_signal_connect ((gpointer) img, "drag-motion",
+    		G_CALLBACK (dnd_details_art_drag_motion), 
+    		NULL);
+    
     details_set_tracks (detail, selected_tracks);
 
     /* set notebook page */
@@ -1734,9 +1736,6 @@ static gboolean dnd_details_art_drag_drop(GtkWidget *widget, GdkDragContext *dra
 {
 	GdkAtom target;
 	target = gtk_drag_dest_find_target (widget, drag_context, NULL);
-
-	gchar *typeName = 0;
-	typeName = gdk_atom_name(target);
 	
 	if (target != GDK_NONE)
 	{
@@ -1757,7 +1756,7 @@ static gboolean dnd_details_art_drag_motion (GtkWidget *widget,
 	GdkAtom target;
 	iTunesDB *itdb;
 	ExtraiTunesDBData *eitdb;
-
+	
 	itdb = gp_get_selected_itdb ();
 	/* no drop is possible if no playlist/repository is selected */
 	if (itdb == NULL)
@@ -1794,85 +1793,163 @@ static void dnd_details_art_drag_data_received(GtkWidget *widget, GdkDragContext
 	g_return_if_fail (dc);
 	g_return_if_fail (data);
 	g_return_if_fail (data->data);
-		
-	#ifdef HAVE_CURL
-		
-		 /* Deal with what we are given from source */
-		if((data != NULL) && (data-> length >= 0))
-		{
-			
-	#if DEBUG
-			printf ("data length = %d\n", data->length);
-			printf ("data->data = %s\n", data->data);
-	#endif
-			
-			Detail *detail;
-			GList *tracks;
-			gchar *url = NULL;
-			Fetch_Cover *fcover;
-			gchar *filename;
-						
-			/* Find the selected detail item for the coverart image */
-			detail = details_get_selected_detail ();
-			tracks = detail->tracks;
-					
-			/* initialise the url string with the data from the dnd */
-			url = (gchar *) data->data;
-			/* Initialise a fetchcover object */
-			fcover = fetchcover_new (url, tracks);
-			coverart_block_change (TRUE);
-			
-			if (net_retrieve_image (fcover, GTK_WINDOW(detail->window)))
-			{
-	#if DEBUG
-				printf ("Successfully retrieved\n");
-				printf ("Url of fetch cover: %s\n", fcover->url->str);
-				printf ("filename of fetch cover: %s\n", fcover->filename);
-	#endif
-				filename = g_build_filename(fcover->dir, fcover->filename, NULL);
-				
-				coverart_block_change (FALSE);
-				
-				if (details_writethrough(detail))
-				{
-					GList *list;
-					for (list = detail->tracks; list; list = list->next)
-					{
-						ExtraTrackData *etd;
-						Track *track = list->data;
-					    
-						if (!track)
-							break;
+	g_return_if_fail (data->length > 0);
 
-						etd = track->userdata;
-						gp_track_set_thumbnails(track, filename);
-						etd->tchanged = TRUE;
-						etd->tartwork_changed = TRUE;
-					}
-				}
-				else
+#if DEBUG
+		printf ("data length = %d\n", data->length);
+		printf ("data->data = %s\n", data->data);
+#endif
+			
+	Detail *detail;
+	GList *tracks;
+	gchar *url = NULL;
+	Fetch_Cover *fcover;
+	gchar *filename = NULL;
+	gboolean image_status = FALSE;
+	gchar *image_error = NULL;
+	/* For use with DND_IMAGE_JPEG */
+	GdkPixbuf *pixbuf;
+	GError *error = NULL;
+	
+	/* Find the selected detail item for the coverart image */
+	detail = details_get_selected_detail ();
+	tracks = detail->tracks;
+	
+	switch (info)
+	{
+		case DND_IMAGE_JPEG:			
+#if DEBUG
+			printf ("Using DND_IMAGE_JPEG\n");
+#endif
+			pixbuf = gtk_selection_data_get_pixbuf (data);
+			if (pixbuf != NULL)
+			{
+				/* initialise the url string with a safe value as not used if already have image */
+				url = "local image";
+				/* Initialise a fetchcover object */
+				fcover = fetchcover_new (url, tracks);
+				fcover->parent_window =  GTK_WINDOW(detail->window);
+				coverart_block_change (TRUE);
+								
+				/* find the filename with which to save the pixbuf to */
+				if (fetchcover_select_filename (fcover))
 				{
-					ExtraTrackData *etd = detail->track->userdata;
-					if (etd)
+					filename = g_build_filename(fcover->dir, fcover->filename, NULL);
+					if (! gdk_pixbuf_save (pixbuf, filename, "jpeg", &error, NULL))
 					{
-				 		gp_track_set_thumbnails(detail->track, filename);
-				 		etd->tchanged = TRUE;
-				 		etd->tartwork_changed = TRUE;
+						/* Save failed for some reason */
+						fcover->err_msg = g_strdup (error->message);
+						g_error_free (error);
+					}
+					else
+					{
+						/* Image successfully saved */
+						image_status = TRUE;
 					}
 				}
-				detail->changed = TRUE;
-				details_update_thumbnail(detail);
-				details_update_buttons(detail);
+				/* record any errors and free the fetchcover */
+				if (fcover->err_msg != NULL)
+					image_error = g_strdup(fcover->err_msg);
+								
+				free_fetchcover (fcover);
+				gdk_pixbuf_unref (pixbuf);
+				coverart_block_change (FALSE);
 			}
 			else
 			{
-				gtkpod_warning (_("%s\n"), fcover->err_msg);
-				coverart_block_change (FALSE);
+				/* despite the data being of type image/jpeg, the pixbuf is NULL */
+				image_error = "jpeg data flavour was used but the data did not contain a GdkPixbuf object";
 			}
-			free_fetchcover (fcover);
-		}
-	#endif /* only if we have curl */
-
+			break;
+		case DND_TEXT_PLAIN:
+#if DEBUG
+				printf ("Defaulting to using DND_TEXT_PLAIN\n");
+#endif
+							
+#ifdef HAVE_CURL
+				/* initialise the url string with the data from the dnd */
+				url = g_strdup ((gchar *) data->data);
+				/* Initialise a fetchcover object */
+				fcover = fetchcover_new (url, tracks);
+				/* assign details window as the parent window so the file exists dialog is
+				 * properly centred and visible if a file has to be overwritten
+				 */
+				fcover->parent_window =  GTK_WINDOW(detail->window);
+				coverart_block_change (TRUE);
+						
+				if (fetchcover_net_retrieve_image (fcover))
+				{
+#if DEBUG
+					printf ("Successfully retrieved\n");
+					printf ("Url of fetch cover: %s\n", fcover->url->str);
+					printf ("filename of fetch cover: %s\n", fcover->filename);
+#endif
+							
+					filename = g_build_filename(fcover->dir, fcover->filename, NULL);
+					image_status = TRUE;
+				}
+								
+				/* record any errors and free the fetchcover */
+				if (fcover->err_msg != NULL)
+					image_error = g_strdup(fcover->err_msg);
+												
+				free_fetchcover (fcover);
+				coverart_block_change (FALSE);
+#else
+			image_error = "Item had to be downloaded but gtkpod was not compiled with curl.";
+			image_status = FALSE;
+#endif
+	}
+				
+	if (!image_status || filename == NULL)
+	{
+		gtkpod_warning (_("Error occurred dropping an image onto the details window: %s\n"), image_error);
+		
+		if (image_error)
+			g_free (image_error);
+		if (filename)
+			g_free (filename);
+				
 		gtk_drag_finish (dc, FALSE, FALSE, time);
 		return;
+	}
+	
+	if (details_writethrough(detail))
+	{
+		GList *list;
+		for (list = detail->tracks; list; list = list->next)
+		{
+			ExtraTrackData *etd;
+			Track *track = list->data;
+					    
+			if (!track)
+				break;
+
+			etd = track->userdata;
+			gp_track_set_thumbnails(track, filename);
+			etd->tchanged = TRUE;
+			etd->tartwork_changed = TRUE;
+		}
+	}
+	else
+	{
+		ExtraTrackData *etd = detail->track->userdata;
+		if (etd)
+		{
+			gp_track_set_thumbnails(detail->track, filename);
+			etd->tchanged = TRUE;
+			etd->tartwork_changed = TRUE;
+		}
+	}
+	detail->changed = TRUE;
+	details_update_thumbnail(detail);
+	details_update_buttons(detail);
+
+	if (image_error)
+		g_free (image_error);
+		
+	g_free (filename);	
+	gtkpod_statusbar_message (_("Successfully set new coverart for selected tracks"));
+	gtk_drag_finish (dc, FALSE, FALSE, time);
+	return;
 }

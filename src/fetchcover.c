@@ -40,6 +40,10 @@
 
 #define IMGSCALE 256
 	
+/* Display a dialog explaining the options if a file with the proposed name already exists */
+static gchar *display_file_exist_dialog (Fetch_Cover *fetch_cover);
+static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover);
+	
 #ifdef HAVE_CURL
 	
 	#include <curl/curl.h>
@@ -47,10 +51,7 @@
 	/* Declarations */
 	static void *safe_realloc(void *ptr, size_t size);
 	static size_t curl_write_fetchcover_func(void *ptr, size_t itemsize, size_t numitems, void *data);
-  /* Display a dialog explaining the options if a file with the proposed name already exists */
-	static gchar *display_file_exist_dialog (Fetch_Cover *fetch_cover, GtkWindow *parent);
-	static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover, GtkWindow *window);
-	
+  
 	struct chunk
 	{
 		gchar *memory;
@@ -103,11 +104,13 @@
 		}
 		return size;
 	}
+#endif
 		
 	/*****
-	 * net_retrieve_image:
+	 * fetchcover_new:
 	 *
 	 * @GString: url
+	 * @GList: trks
 	 *
 	 * Initialise a new fetch cover object for use with the fetchcover functions
 	 **/
@@ -120,10 +123,13 @@
 		fcover->url = g_string_new ((gchar*) url_path);
 		fcover->image = NULL;
 		fcover->tracks = trks;
-							
+		fcover->err_msg = NULL;
+		fcover->parent_window = NULL;
+		
 		return fcover;
 	}	
 	
+#ifdef HAVE_CURL
 	/*****
 	 * net_retrieve_image:
 	 *
@@ -133,17 +139,18 @@
 	 * save it to a file inside the track's parent directory then display
 	 * it as a pixbuf
 	 **/
-	gboolean net_retrieve_image (Fetch_Cover *fetch_cover, GtkWindow *window)
+	gboolean fetchcover_net_retrieve_image (Fetch_Cover *fetch_cover)
 	{
 		g_return_val_if_fail (fetch_cover, FALSE);
 		
 		if (! g_str_has_suffix(fetch_cover->url->str, ".jpg") && ! g_str_has_suffix(fetch_cover->url->str, ".JPG"))
 		{
-			fetch_cover->err_msg = "Only jpg images are currently supported at this time\n";
+			fetch_cover->err_msg = g_strdup("Only jpg images are currently supported at this time\n");
 			return FALSE;
 		}
 		
-			gchar *path = NULL;
+		gchar *path = NULL;
+		FILE *tmpf = NULL;
 		
 		fetchcover_curl_data.size = 0;
 		fetchcover_curl_data.memory = NULL;
@@ -161,23 +168,95 @@
 		
 		if (fetchcover_curl_data.memory == NULL)
 		{
-			fetch_cover->err_msg = "fetchcover curl data memory is null so failed to download anything!\n";
+			fetch_cover->err_msg = g_strdup("fetchcover curl data memory is null so failed to download anything!\n");
 			return FALSE;
 		}
 	
 		/* Check that the page returned is a valid web page */	
 		if (strstr(fetchcover_curl_data.memory, "<html>") != NULL)
 		{
-			fetch_cover->err_msg = "fetchcover memory contains <html> tag so not a valid jpg image\n";
+			fetch_cover->err_msg = g_strdup("fetchcover memory contains <html> tag so not a valid jpg image\n");
 			return FALSE;
 		}
 		
-		FILE *tmpf = NULL;
+		if (! fetchcover_select_filename (fetch_cover))
+			return FALSE;
+		
+		path = g_build_filename(fetch_cover->dir, fetch_cover->filename, NULL);
+#if DEBUG
+		printf ("path of download file is %s\n", path);
+#endif
+		if ((tmpf = fopen(path, "wb")) == NULL)
+		{
+			if (fetchcover_curl_data.memory)
+			{
+				g_free(fetchcover_curl_data.memory);
+				fetchcover_curl_data.memory = NULL;
+				fetchcover_curl_data.size = 0;
+			}
+			g_free (path);
+			fetch_cover->err_msg = g_strdup ("Failed to create a file with the filename\n");
+			return FALSE;
+		}
+				
+		if (fwrite(fetchcover_curl_data.memory, fetchcover_curl_data.size, 1, tmpf) != 1)
+		{
+			if (fetchcover_curl_data.memory)
+			{
+				g_free(fetchcover_curl_data.memory);
+				fetchcover_curl_data.memory = NULL;
+				fetchcover_curl_data.size = 0;
+			}
+			fclose(tmpf);
+			g_free (path);
+			fetch_cover->err_msg = g_strdup("fetchcover failed to write the data to the new file\n");
+			return FALSE;
+		}
+		
+		fclose(tmpf);
+		
+		/* Check the file is a valid pixbuf type file */
+		GdkPixbufFormat *fileformat= NULL;
+		fileformat = gdk_pixbuf_get_file_info (path, NULL, NULL);
+		if (fileformat == NULL)
+		{
+			fetch_cover->err_msg = g_strdup("fetchcover downloaded file is not a valid image file\n");
+			return FALSE;
+		}
+				
+		GError *error = NULL;				
+		fetch_cover->image = gdk_pixbuf_new_from_file(path, &error);
+		if (error != NULL)
+		{
+			g_error_free (error);
+			if (fetchcover_curl_data.memory)
+			{
+				g_free(fetchcover_curl_data.memory);
+				fetchcover_curl_data.memory = NULL;
+				fetchcover_curl_data.size = 0;
+			}
+			g_free(path);
+			fetch_cover->err_msg = g_strconcat ("fetchcover error occurred while creating a pixbuf from the file\n", error->message, NULL);
+			return FALSE;
+		}
+		
+		if (fetchcover_curl_data.memory)
+			g_free(fetchcover_curl_data.memory);
+		
+		fetchcover_curl_data.memory = NULL;
+		fetchcover_curl_data.size = 0;
+		g_free(path);
+		return TRUE;
+	}
+#endif
+
+	gboolean fetchcover_select_filename (Fetch_Cover *fetch_cover)
+	{
 		GList *tracks = fetch_cover->tracks;
 		
 		if (tracks == NULL || g_list_length (tracks) <= 0)
 		{
-			fetch_cover->err_msg = "fetchcover object's tracks list either NULL or no tracks were selected\n";
+			fetch_cover->err_msg = g_strdup("fetchcover object's tracks list either NULL or no tracks were selected\n");
 			return FALSE;
 		}
 		
@@ -196,6 +275,9 @@
 				fetch_cover->filename = NULL;
 		}
 		
+		g_strfreev(template_items);
+		g_free(template);
+		
 		/* Check filename still equals null then take a default stance
 		 * to ensure the file has a name. Default stance applies if the
 		 * extra track data has been left as NULL
@@ -212,88 +294,16 @@
 				g_free (oldname);
 			}
 		}
-	
-		if (fetchcover_check_file_exists (fetch_cover, window) == NULL)
+		
+		if (fetchcover_check_file_exists (fetch_cover) == NULL)
 		{
-			fetch_cover->err_msg = "operation cancelled\n";
+			fetch_cover->err_msg = g_strdup("operation cancelled\n");
 			return FALSE;
 		}
 		
-		path = g_build_filename(fetch_cover->dir, fetch_cover->filename, NULL);
-#if DEBUG
-		printf ("path of download file is %s\n", path);
-#endif
-		if ((tmpf = fopen(path, "wb")) == NULL)
-		{
-			if (fetchcover_curl_data.memory)
-			{
-				g_free(fetchcover_curl_data.memory);
-				fetchcover_curl_data.memory = NULL;
-				fetchcover_curl_data.size = 0;
-			}
-			g_strfreev(template_items);
-			g_free(template);
-			g_free (path);
-			fetch_cover->err_msg = "Failed to create a file with the filename\n";
-			return FALSE;
-		}
-				
-		if (fwrite(fetchcover_curl_data.memory, fetchcover_curl_data.size, 1, tmpf) != 1)
-		{
-			if (fetchcover_curl_data.memory)
-			{
-				g_free(fetchcover_curl_data.memory);
-				fetchcover_curl_data.memory = NULL;
-				fetchcover_curl_data.size = 0;
-			}
-			fclose(tmpf);
-			g_strfreev(template_items);
-			g_free(template);
-			g_free (path);
-			fetch_cover->err_msg = "fetchcover failed to write the data to the new file\n";
-			return FALSE;
-		}
-		
-		fclose(tmpf);
-		
-		/* Check the file is a valid pixbuf type file */
-		GdkPixbufFormat *fileformat= NULL;
-		fileformat = gdk_pixbuf_get_file_info (path, NULL, NULL);
-		if (fileformat == NULL)
-		{
-			fetch_cover->err_msg = "fetchcover downloaded file is not a valid image file\n";
-			return FALSE;
-		}
-				
-		GError *error = NULL;				
-		fetch_cover->image = gdk_pixbuf_new_from_file(path, &error);
-		if (error != NULL)
-		{
-			g_error_free (error);
-			if (fetchcover_curl_data.memory)
-			{
-				g_free(fetchcover_curl_data.memory);
-				fetchcover_curl_data.memory = NULL;
-				fetchcover_curl_data.size = 0;
-			}
-			g_strfreev(template_items);
-			g_free(template);
-			g_free(path);
-			fetch_cover->err_msg = g_strconcat ("fetchcover error occurred while creating a pixbuf from the file\n", error->message, NULL);
-			return FALSE;
-		}
-		
-		if (fetchcover_curl_data.memory)
-			g_free(fetchcover_curl_data.memory);
-		
-		fetchcover_curl_data.memory = NULL;
-		fetchcover_curl_data.size = 0;
-		g_strfreev(template_items);
-		g_free(template);
-		g_free(path);
 		return TRUE;
 	}
-		
+	
 	/*****
 	 * fetchcover_check_file_exists:
 	 * 
@@ -306,7 +316,7 @@
 	 * Returns:
 	 * Filename of chosen cover image file
 	 ***/
-	static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover, GtkWindow *window)
+	static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover)
 	{
 		gchar *newname = NULL;
 		/* The default cover image will have both dir and filename set
@@ -326,13 +336,13 @@
 		
 			if (g_file_test (newname, G_FILE_TEST_EXISTS))
 			{
-				newname = display_file_exist_dialog (fetch_cover, window);
+				newname = display_file_exist_dialog (fetch_cover);
 			}
 		}
 		return newname;
 	}
 
-	static gchar *display_file_exist_dialog (Fetch_Cover *fetch_cover, GtkWindow *parent)
+	static gchar *display_file_exist_dialog (Fetch_Cover *fetch_cover)
 	{
 		gchar *filepath;
 		gint result;
@@ -342,11 +352,11 @@
 		gchar *message;	
 		GtkWidget *label;
 		
-		if (parent == NULL)
-			parent = GTK_WINDOW(gtkpod_window);
+		if (fetch_cover->parent_window == NULL)
+			fetch_cover->parent_window = GTK_WINDOW(gtkpod_window);
 		
 		GtkWidget *dialog = gtk_dialog_new_with_buttons (_("Coverart file already exists"),
-																							parent,
+																							fetch_cover->parent_window,
 																							GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 																							GTK_STOCK_YES,
 																							GTK_RESPONSE_YES,
@@ -423,8 +433,6 @@
 		}	
 	}
 
-#endif /* HAVE_CURL */
-
 /****
  * free_fetchcover:
  * 
@@ -451,4 +459,9 @@ void free_fetchcover (Fetch_Cover *fcover)
 	
 	if (fcover->err_msg)
 		g_free (fcover->err_msg);
+	
+	if (fcover->parent_window)
+		fcover->parent_window = NULL;
+	
+	g_free (fcover);
 }

@@ -40,6 +40,7 @@
 #include "fileselection.h"
 #include <glib/gprintf.h>
 #include "fetchcover.h"
+#include "info.h"
 
 #define DEBUG 0
 
@@ -91,8 +92,10 @@ static gulong window_signal_id;
 static gulong contentpanel_signal_id;
 
 static GtkTargetEntry coverart_drop_types [] = {
-/*		{ DND_TEXT_UNICODE_TYPE, 0, DND_TEXT_UNICODE_TYPE_ID }, */
-/*		{ DND_FETCHCOVER_TEXT_PLAIN_TYPE, 0, DND_FETCHCOVER_TEXT_PLAIN_TYPE_ID }, */
+		/* Konqueror supported flavours */
+		{ "image/jpeg", 0, DND_IMAGE_JPEG },
+		
+		/* Fallback flavours */
 		{ "text/plain", 0, DND_TEXT_PLAIN },
 		{ "STRING", 0, DND_TEXT_PLAIN }
 };
@@ -1992,23 +1995,23 @@ static gboolean dnd_coverart_drag_drop(GtkWidget *widget, GdkDragContext *drag_c
 	GdkAtom target;
 	target = gtk_drag_dest_find_target (widget, drag_context, NULL);
 
-	gchar *typeName = 0;
-	typeName = gdk_atom_name(target);
-	
 	if (target != GDK_NONE)
 	{
 		gtk_drag_get_data (widget, drag_context, target, time);
 		return TRUE;	
 	}
+	/*
 	printf ("drop item\n");
 	gint i = 0;
 	for (i = 0; i < g_list_length(drag_context->targets); ++i)
 	{
 		target = g_list_nth_data (drag_context->targets, i);
 		printf ("Atom: %s\n", gdk_atom_name(target));
+		gtk_drag_get_data (widget, drag_context, target, time);
+		return TRUE;
 	}
-	
-	return TRUE;
+	*/
+	return FALSE;
 }
 
 static gboolean dnd_coverart_drag_motion (GtkWidget *widget,
@@ -2059,70 +2062,149 @@ static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *d
 	g_return_if_fail (dc);
 	g_return_if_fail (data);
 	g_return_if_fail (data->data);
+	g_return_if_fail (data->length > 0);
 	
-#ifdef HAVE_CURL
-	
-	 /* Deal with what we are given from source */
-	if((data != NULL) && (data-> length >= 0))
-	{
-		
+	/* mozilla bug 402394 */
+
 #if DEBUG
 		printf ("data length = %d\n", data->length);
 		printf ("data->data = %s\n", data->data);
 #endif
 		
-		Cover_Item *cover;
-		GList *tracks;
-		gchar *url = NULL;
-		Fetch_Cover *fcover;
-		Track *track;
-		gchar *filename;
+	Cover_Item *cover;
+	GList *tracks;
+	gchar *url = NULL;
+	Fetch_Cover *fcover;
+	Track *track;
+	gchar *filename = NULL;
+	gboolean image_status = FALSE;
+	gchar *image_error = NULL;
+	/* For use with DND_IMAGE_JPEG */
+	GdkPixbuf *pixbuf;
+	GError *error = NULL;
+		
+	/* Find the display cover item in the cover display */
+	cover = g_ptr_array_index(cdwidget->cdcovers, IMG_MAIN);
+	tracks = cover->album->tracks;
 			
-		/* Find the display cover item in the cover display */
-		cover = g_ptr_array_index(cdwidget->cdcovers, IMG_MAIN);
-		tracks = cover->album->tracks;
-		
-		/* initialise the url string with the data from the dnd */
-		url = (gchar *) data->data;
-		/* Initialise a fetchcover object */
-		fcover = fetchcover_new (url, tracks);
-		coverart_block_change (TRUE);
-		
-		if (net_retrieve_image (fcover, NULL))
-		{
+	switch (info)
+	{
+		case DND_IMAGE_JPEG:
 #if DEBUG
-			printf ("Successfully retrieved\n");
-			printf ("Url of fetch cover: %s\n", fcover->url->str);
-			printf ("filename of fetch cover: %s\n", fcover->filename);
+			printf ("Using DND_IMAGE_JPEG\n");
 #endif
-			filename = g_build_filename(fcover->dir, fcover->filename, NULL);
-			
-			coverart_block_change (FALSE);
-			
-			while (tracks)
+			pixbuf = gtk_selection_data_get_pixbuf (data);
+			if (pixbuf != NULL)
 			{
-				track = tracks->data;
-					
-				if (gp_track_set_thumbnails (track, filename))
-					data_changed (track->itdb);
-			 				
-			 	tracks = tracks->next;
+				/* initialise the url string with a safe value as not used if already have image */
+				url = "local image";
+				/* Initialise a fetchcover object */
+				fcover = fetchcover_new (url, tracks);
+				coverart_block_change (TRUE);
+				
+				/* find the filename with which to save the pixbuf to */
+				if (fetchcover_select_filename (fcover))
+				{
+					filename = g_build_filename(fcover->dir, fcover->filename, NULL);
+					if (! gdk_pixbuf_save (pixbuf, filename, "jpeg", &error, NULL))
+					{
+						/* Save failed for some reason */
+						if (error->message)
+							fcover->err_msg = g_strdup (error->message);
+						else
+							fcover->err_msg = "Saving image to file failed. No internal error message was returned.";
+						
+						g_error_free (error);
+					}
+					else
+					{
+						/* Image successfully saved */
+						image_status = TRUE;
+					}
+				}
+				/* record any errors and free the fetchcover */
+				if (fcover->err_msg != NULL)
+					image_error = g_strdup(fcover->err_msg);
+				
+				free_fetchcover (fcover);
+				gdk_pixbuf_unref (pixbuf);
+				coverart_block_change (FALSE);
 			}
-			/* Nullify so that the album art is picked up from the tracks again */
-			cover->album->albumart = NULL;
-			    
-			set_covers (FALSE);
-		}
-		else
-		{
-			gtkpod_warning (_("%s\n"), fcover->err_msg);
-			coverart_block_change (FALSE);
-		}
+			else
+			{
+				/* despite the data being of type image/jpeg, the pixbuf is NULL */
+				image_error = "jpeg data flavour was used but the data did not contain a GdkPixbuf object";
+			}
+			break;
+		case DND_TEXT_PLAIN:
+#if DEBUG
+			printf ("Defaulting to using DND_TEXT_PLAIN\n");
+#endif
+			
+#ifdef HAVE_CURL
+			/* initialise the url string with the data from the dnd */
+			url = g_strdup ((gchar *) data->data);
+			/* Initialise a fetchcover object */
+			fcover = fetchcover_new (url, tracks);
+			coverart_block_change (TRUE);
 		
-		free_fetchcover (fcover);
+			if (fetchcover_net_retrieve_image (fcover))
+			{
+			#if DEBUG
+				printf ("Successfully retrieved\n");
+				printf ("Url of fetch cover: %s\n", fcover->url->str);
+				printf ("filename of fetch cover: %s\n", fcover->filename);
+			#endif
+			
+				filename = g_build_filename(fcover->dir, fcover->filename, NULL);
+				image_status = TRUE;
+			}
+				
+			/* record any errors and free the fetchcover */
+			if (fcover->err_msg != NULL)
+				image_error = g_strdup(fcover->err_msg);
+								
+			free_fetchcover (fcover);
+			coverart_block_change (FALSE);			
+#else
+			image_error = g_strdup ("Item had to be downloaded but gtkpod was not compiled with curl.");
+			image_status = FALSE;
+#endif
 	}
-#endif /* only if we have curl */
+	
+	if (!image_status || filename == NULL)
+	{
+		gtkpod_warning (_("Error occurred dropping an image onto the coverart display: %s\n"), image_error);
+		
+		if (image_error)
+			g_free (image_error);
+		if (filename)
+			g_free (filename);
+		
+		gtk_drag_finish (dc, FALSE, FALSE, time);
+		return;
+	}
+	
+	while (tracks)
+	{
+		track = tracks->data;
+					
+		if (gp_track_set_thumbnails (track, filename))
+			data_changed (track->itdb);
+			 				
+		tracks = tracks->next;
+	}
+	/* Nullify so that the album art is picked up from the tracks again */
+	cover->album->albumart = NULL;
+			    
+	set_covers (FALSE);
 
+	if (image_error)
+		g_free (image_error);
+	
+	g_free (filename);
+	
+	gtkpod_statusbar_message (_("Successfully set new coverart for selected tracks"));
 	gtk_drag_finish (dc, FALSE, FALSE, time);
 	return;
 }
