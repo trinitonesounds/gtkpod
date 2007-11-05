@@ -1994,7 +1994,14 @@ void pm_set_renderer_pix (GtkCellRenderer *renderer,
 	}
 	else if (!itdb_playlist_is_mpl (playlist))
 	{
-	    stock_id = GTK_STOCK_JUSTIFY_LEFT;
+	    if (gphoto_is_photo_playlist (playlist))
+	    {
+		stock_id = GTK_STOCK_SELECT_COLOR;
+	    }
+	    else
+	    {
+		stock_id = GTK_STOCK_JUSTIFY_LEFT;
+	    }
 	}
 	else
 	{

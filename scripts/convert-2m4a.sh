@@ -22,6 +22,9 @@
 # Constants
 extension="m4a"
 ENCODER_OPTS="-q 150 -c 22000"
+# use the following for better quality (25% increase in file size) or simply
+# specify your options with "-q ..."
+#ENCODER_OPTS="-q 256 -c 44100"
 ENCODER="faac"
 
 . ${0%/*}/gtkpod-convert-common.sh

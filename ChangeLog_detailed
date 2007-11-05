@@ -1,3 +1,9 @@
+2007-11-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+  * src/display_playlists.c (pm_set_renderer_pix): display a different
+    icon for the photo playlist. Customized icons welcome for both
+    standard playlists and the photo "playlist".
+
 2007-11-04 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * src/display_photos.c
