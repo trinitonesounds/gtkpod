@@ -1,3 +1,28 @@
+2007-11-04 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * src/fetchcover.c
+  
+  Opened up filename handling functions to rest of gtkpod.
+  Reduced number of functions hidden if curl is not available.
+  Fetch_Cover object used as vehicle for handling the filename
+  even if image is not being downloaded.
+  
+  * src/fetchcover.h: parent_window added to Fetch_Cover object.
+  
+  * src/display.h
+  
+  Support for IMAGE_JPEG target type.
+  
+  * src/details.c
+  * src/display_coverart.c
+  
+  Support for image/jpeg target in drag and drop operations on
+  cover art. This target is provided by konqueror (not by firefox
+  at the moment but supposedly at some point) and carries the
+  displayed jpeg image as its data so redownloading is not required.
+  
+  Downloading option used as fallback if this target is not provided.
+  
 2007-11-03 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * src/display_coverart.c
