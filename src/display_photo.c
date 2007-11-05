@@ -81,6 +81,15 @@ static GtkTargetEntry photo_drop_types [] = {
 		{ "STRING", 0, DND_TEXT_PLAIN }
 };
 
+/* Photo types to try and use in displaying thumbnails */
+static gint photo_types[] = {
+				ITDB_THUMB_PHOTO_SMALL,
+		    ITDB_THUMB_PHOTO_LARGE,
+		    ITDB_THUMB_PHOTO_FULL_SCREEN,
+		    ITDB_THUMB_PHOTO_TV_SCREEN
+		    };
+static gint PHOTO_TYPES_SIZE = 4;
+
 /* Declarations */
 static void gphoto_create_albumview();
 static void gphoto_create_thumbnailview();
@@ -594,43 +603,49 @@ static void gphoto_thumb_selection_changed(GtkIconView *iconview, gpointer user_
 /* Display the selected thumbnail image in the preview window */
 static void gphoto_display_photo_preview(Artwork *artwork)
 {
-	Thumb *thumb;
+	Thumb *thumb = NULL;
 	GdkPixbuf *pixbuf, *scaled;
 	gint width, height;
 	gdouble ratio;
-
+	gint i;
+	
 	g_return_if_fail (artwork);
 
-	thumb= itdb_artwork_get_thumb_by_type (artwork, ITDB_THUMB_PHOTO_FULL_SCREEN);
-	if (thumb)
+	for (i = (PHOTO_TYPES_SIZE - 1); i >= 0 && thumb == NULL; --i)
 	{
-		pixbuf = itdb_thumb_get_gdk_pixbuf (device, thumb);
-		g_return_if_fail (pixbuf);
-
-		/* Size of the preview GtkImage is set to 220x176, technically 
-		 * the same as PHOTO_FULL_SCREEN for a normal ipod.
-		 */
-		width = gdk_pixbuf_get_width (pixbuf);
-		height = gdk_pixbuf_get_height (pixbuf);
-		ratio = (gdouble) width / (gdouble) height;
-
-		if (height > PHOTO_FULL_SCREEN_HEIGHT)
-		{
-			height = PHOTO_FULL_SCREEN_HEIGHT;
-			width = ratio * height;
-		}
-
-		if (width > PHOTO_FULL_SCREEN_WIDTH)
-		{
-			width = PHOTO_FULL_SCREEN_WIDTH;
-			height = width / ratio;
-		}
-
-		scaled= gdk_pixbuf_scale_simple (pixbuf, width, height, GDK_INTERP_NEAREST);
-		gdk_pixbuf_unref (pixbuf);
-
-		gtk_image_set_from_pixbuf (photo_preview_image, scaled);
+		/* Start from biggest photo type and go smaller */
+		thumb = itdb_artwork_get_thumb_by_type (artwork, photo_types[i]);
 	}
+			
+	/* should have a thumb now but check anyway and fire off a warning if it is still null */
+	g_return_if_fail (thumb);
+	
+	pixbuf = itdb_thumb_get_gdk_pixbuf (device, thumb);
+	g_return_if_fail (pixbuf);
+
+	/* Size of the preview GtkImage is set to 220x176, technically 
+	 * the same as PHOTO_FULL_SCREEN for a normal ipod.
+	 */
+	width = gdk_pixbuf_get_width (pixbuf);
+	height = gdk_pixbuf_get_height (pixbuf);
+	ratio = (gdouble) width / (gdouble) height;
+
+	if (height > PHOTO_FULL_SCREEN_HEIGHT)
+	{
+		height = PHOTO_FULL_SCREEN_HEIGHT;
+		width = ratio * height;
+	}
+
+	if (width > PHOTO_FULL_SCREEN_WIDTH)
+	{
+		width = PHOTO_FULL_SCREEN_WIDTH;
+		height = width / ratio;
+	}
+
+	scaled = gdk_pixbuf_scale_simple (pixbuf, width, height, GDK_INTERP_NEAREST);
+	gdk_pixbuf_unref (pixbuf);
+
+	gtk_image_set_from_pixbuf (photo_preview_image, scaled);
 }
 
 /* Convenience function that sets the flags on the Extra iTunes Database
@@ -643,6 +658,8 @@ static void signal_data_changed()
 	eitdb = ipod_itdb->userdata;
 	eitdb->photo_data_changed = TRUE;
 	eitdb->data_changed = TRUE;
+	
+	gtk_image_clear (photo_preview_image);
 }
 
 /**
@@ -738,27 +755,55 @@ static void gphoto_add_image_to_database(gchar *photo_filename)
 static void gphoto_add_image_to_iconview(Artwork *photo, gint index)
 {
 	GdkPixbuf *pixbuf= NULL;
-	Thumb *thumb= NULL;
-	GtkListStore *model= NULL;
-	GtkTreeIter iter;
+		GdkPixbuf *scaled = NULL;
+		Thumb *thumb= NULL;
+		GtkListStore *model= NULL;
+		GtkTreeIter iter;
+		gint i;
+		/* default sizes taken from smallest photo image type in itdb_device.c */
+		gint icon_width = 42, icon_height = 30;
+		gfloat pixbuf_width, pixbuf_height;
+		gfloat ratio;
 
-	model = GTK_LIST_STORE (gtk_icon_view_get_model (thumbnail_view));
-
-	thumb = itdb_artwork_get_thumb_by_type (photo, ITDB_THUMB_PHOTO_LARGE);
-	if (thumb)
-	{
+		model = GTK_LIST_STORE (gtk_icon_view_get_model (thumbnail_view));
+		for (i = 0; i < PHOTO_TYPES_SIZE && thumb == NULL; ++i)
+		{
+			thumb = itdb_artwork_get_thumb_by_type (photo, photo_types[i]);
+		}
+		
+		/* should have a thumb now but check anyway and fire off a warning if it is still null */
+		g_return_if_fail (thumb);
+		
 		pixbuf = itdb_thumb_get_gdk_pixbuf (device, thumb);
 		g_return_if_fail (pixbuf);
 
+		pixbuf_width = gdk_pixbuf_get_width (pixbuf);
+		pixbuf_height = gdk_pixbuf_get_height (pixbuf);
+		ratio = pixbuf_width / pixbuf_height;
+		
+		if (pixbuf_width > icon_width)
+		{
+			pixbuf_width = icon_width;
+			pixbuf_height = pixbuf_width / ratio;
+		}
+		
+		if (pixbuf_height > icon_height)
+		{
+			pixbuf_height = icon_height;
+			pixbuf_width = pixbuf_height * ratio;
+		}
+		
+		scaled = gdk_pixbuf_scale_simple(pixbuf, pixbuf_width, pixbuf_height, GDK_INTERP_NEAREST);
+		gdk_pixbuf_unref (pixbuf);
+		
 		gchar *index_str= NULL;
 		index_str = (gchar *) g_malloc (sizeof(gint));
 		g_sprintf (index_str, "%d", index);
-
+		
 		/* Add a new row to the model */
 		gtk_list_store_append (model, &iter);
-		gtk_list_store_set (model, &iter, COL_THUMB_NAIL, pixbuf, COL_THUMB_FILENAME, index_str, COL_THUMB_ARTWORK, photo, -1);
+		gtk_list_store_set (model, &iter, COL_THUMB_NAIL, scaled, COL_THUMB_FILENAME, index_str, COL_THUMB_ARTWORK, photo, -1);
 		g_free (index_str);
-	}
 }
 
 /**

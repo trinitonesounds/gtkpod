@@ -1,5 +1,19 @@
 2007-11-04 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
+  * src/display_photos.c
+  
+  New ipods do not necessarily have ITDB_THUMB_PHOTO_LARGE or any
+  other photo format so cannot assume these in display of thumbs in
+  iconview or preview components.
+  
+  Fix is to find the first existing smalled thumb in the case of the
+  iconview and biggest in the case of preview and scale the pixbufs
+  to uniform sizes.
+  
+  Also, fix to clear the preview when a data change like remove occurs.
+
+2007-11-04 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
   * src/fetchcover.c
   
   Opened up filename handling functions to rest of gtkpod.
