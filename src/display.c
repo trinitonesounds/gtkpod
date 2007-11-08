@@ -45,6 +45,7 @@
 #include "tools.h"
 #include <stdlib.h>
 #include <string.h>
+#include <glib/gprintf.h>
 
 
 GtkWidget *gtkpod_window = NULL;
@@ -442,6 +443,96 @@ void display_update_default_sizes (void)
     file_convert_update_default_sizes ();
 }
 
+/**
+ * display_image_dialog
+ * 
+ * @GdkPixbuf: image
+ * 
+ * function to load a transient dialog displaying the provided image at either
+ * it maximum size or the size of the screen (whichever is smallest).
+ * 
+ */
+void display_image_dialog (GdkPixbuf *image)
+{
+	g_return_if_fail (image);
+	
+	GladeXML *preview_xml;
+	GtkWidget *dialog;
+	GtkWidget *canvasbox;
+	GtkWidget *res_label;
+	GdkPixbuf *scaled = NULL;
+	gchar *text;
+		
+	preview_xml = glade_xml_new (xml_file, "coverart_preview_dialog", NULL);
+		
+	dialog = gtkpod_xml_get_widget (preview_xml, "coverart_preview_dialog");
+	canvasbox = gtkpod_xml_get_widget (preview_xml, "coverart_preview_dialog_vbox");
+	res_label = gtkpod_xml_get_widget (preview_xml, "coverart_preview_dialog_res_lbl");
+	g_return_if_fail (dialog);
+	g_return_if_fail (canvasbox);
+	g_return_if_fail (res_label);
+		
+	/* Set the dialog parent */
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gtkpod_window));
+			
+	gint pixheight = gdk_pixbuf_get_height (image);
+	gint pixwidth = gdk_pixbuf_get_width (image);
+		
+	/* Set the resolution in the label */
+	gchar *resvalues = (gchar *) g_malloc (sizeof(gint) + (sizeof(gchar) * 3) + sizeof(gint));
+	g_sprintf (resvalues, "%d x %d", pixwidth, pixheight);
+	text = g_markup_printf_escaped ("<b>Image Dimensions: %s</b>", resvalues);
+	gtk_label_set_markup (GTK_LABEL (res_label), text);
+	g_free (text);
+	
+	gint scrheight = gdk_screen_height() - 100;
+	gint scrwidth = gdk_screen_width() - 100;
+		
+	gdouble ratio = (gdouble) pixwidth / (gdouble) pixheight;
+	if (pixwidth > scrwidth)
+	{
+		pixwidth = scrwidth;
+		pixheight = pixwidth / ratio;
+	}
+		
+	if (pixheight > scrheight)
+	{
+		pixheight = scrheight;
+		pixwidth = pixheight * ratio;
+	}
+		
+	GnomeCanvas *canvas;
+	canvas = GNOME_CANVAS (gnome_canvas_new());
+	gtk_widget_set_size_request ( GTK_WIDGET(canvas),
+			pixwidth,
+			pixheight);
+	
+	gnome_canvas_set_scroll_region (	canvas,
+																														0.0, 0.0, 
+																														pixwidth,
+																														pixheight);
+	GnomeCanvasItem *canvasitem;											
+	canvasitem = gnome_canvas_item_new(	gnome_canvas_root(canvas),
+																																			GNOME_TYPE_CANVAS_PIXBUF, NULL);
+		
+	scaled = gdk_pixbuf_scale_simple (image, pixwidth, pixheight, GDK_INTERP_NEAREST);
+		
+	/* Apply the image to the canvas */
+	gnome_canvas_item_set (	canvasitem,
+																							"pixbuf", scaled);
+
+	gtk_box_pack_start_defaults (GTK_BOX(canvasbox), GTK_WIDGET (canvas));
+		
+	/* Display the dialog and block everything else until the
+	 * dialog is closed.
+	 */
+	gtk_widget_show_all (dialog);
+	gtk_dialog_run (GTK_DIALOG(dialog));
+			
+	/* Destroy the dialog as no longer required */
+	gdk_pixbuf_unref (scaled);
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+}
 
 
 /* Utility function: returns a copy of the tracks currently

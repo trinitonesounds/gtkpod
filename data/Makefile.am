@@ -20,7 +20,13 @@ appdata_DATA =				\
 	gtkpod-logo.png			\
 	gtkpod-new-playlist.png		\
 	gtkpod-read.png			\
-	gtkpod-sync.png
+	gtkpod-sync.png     \
+	gphoto_album_menuitem-32.png   \
+	gphoto_album_menuitem-48.png   \
+	gphoto_images_menuitem-32.png  \
+	gphoto_images_menuitem-48.png  \
+	gphoto_tools_menuitem-32.png   \
+	gphoto_tools_menuitem-48.png
 
 EXTRA_DIST = 				\
 	$(desktop_in_files)		\

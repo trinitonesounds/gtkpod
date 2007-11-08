@@ -34,6 +34,7 @@
 #include <glib/gprintf.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <string.h>
+#include "display.h"
 
 
 #define DEBUG 0
@@ -62,11 +63,13 @@ static GtkIconView *thumbnail_view= NULL;
 /* pointer to the gtkimage that holds the preview image */
 static GtkImage *photo_preview_image= NULL;
 /* Menu Items */
-static GtkMenuItem *photo_add_album_menuItem= NULL;
-static GtkMenuItem *photo_add_image_menuItem= NULL;
-static GtkMenuItem *photo_add_image_dir_menuItem= NULL;
-static GtkMenuItem *photo_remove_album_menuItem= NULL;
-static GtkMenuItem *photo_remove_image_menuItem= NULL;
+static GtkMenuItem *photo_add_album_menuItem = NULL;
+static GtkMenuItem *photo_add_image_menuItem = NULL;
+static GtkMenuItem *photo_add_image_dir_menuItem = NULL;
+static GtkMenuItem *photo_remove_album_menuItem = NULL;
+static GtkMenuItem *photo_remove_image_menuItem = NULL;
+static GtkMenuItem *photo_view_full_size_menuItem = NULL;
+static GtkMenuItem *photo_rename_album_menuItem = NULL;
 
 /* Drag n Drop Definitions */
 static GtkTargetEntry photo_drag_types [] = {
@@ -102,6 +105,8 @@ void on_photodb_add_image_menuItem_activate(GtkMenuItem *menuItem, gpointer user
 void on_photodb_add_image_dir_menuItem_activate(GtkMenuItem *menuItem, gpointer user_data);
 void on_photodb_remove_album_menuItem_activate(GtkMenuItem *menuItem, gpointer user_data);
 void on_photodb_remove_image_menuItem_activate(GtkMenuItem *menuItem, gpointer user_data);
+void on_photodb_view_full_size_menuItem_activate (GtkMenuItem *menuItem, gpointer user_data);
+void on_photodb_rename_album_menuItem_activate (GtkMenuItem *menuItem, gpointer user_data);
 static void signal_data_changed();
 static gchar *gphoto_get_selected_album_name();
 static void gphoto_add_image_to_database(gchar *photo_filename);
@@ -323,7 +328,9 @@ void gphoto_change_to_photo_window(gboolean showflag)
 			photo_add_image_dir_menuItem = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_xml, "photo_add_image_dir_menuItem"));
 			photo_remove_album_menuItem = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_xml, "photo_remove_album_menuItem"));
 			photo_remove_image_menuItem = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_xml, "photo_remove_image_menuItem"));
-
+			photo_view_full_size_menuItem = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_xml, "photo_view_full_size_menuItem"));
+			photo_rename_album_menuItem = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_xml, "photo_rename_album_menuItem"));
+			
 			photo_viewport = gtkpod_xml_get_widget (photo_xml, "photo_viewport");
 			g_object_ref (photo_album_window);
 			g_object_ref (photo_thumb_window);
@@ -348,6 +355,11 @@ void gphoto_change_to_photo_window(gboolean showflag)
 		NULL);
 		g_signal_connect (G_OBJECT(photo_remove_image_menuItem), "activate", G_CALLBACK(on_photodb_remove_image_menuItem_activate), 
 		NULL);
+		g_signal_connect (G_OBJECT(photo_view_full_size_menuItem), "activate", G_CALLBACK(on_photodb_view_full_size_menuItem_activate), 
+				NULL);
+		g_signal_connect (G_OBJECT(photo_rename_album_menuItem), "activate", G_CALLBACK(on_photodb_rename_album_menuItem_activate),
+				NULL);
+		
 	} else
 	{
 		if (!GTK_WIDGET_VISIBLE (paned1))
@@ -431,7 +443,7 @@ static void gphoto_create_albumview()
 		g_return_if_fail (album);
 
 		gchar *name = album->name ? album->name : _("<Unnamed>");
-		printf ("name of album: %s\n", name);
+		/*printf ("name of album: %s\n", name);*/
 		/* Add a new row to the model */
 		gtk_list_store_append (model, &iter);
 		gtk_list_store_set (model, &iter, COL_ALBUM_NAME, name, -1);
@@ -471,8 +483,6 @@ static void gphoto_create_albumview()
 	g_signal_connect ((gpointer) album_view, "drag-data-received",
 			G_CALLBACK (dnd_album_drag_data_received), 
 			NULL);
-
-
 }
 
 /* Create thumbnail view */
@@ -558,12 +568,17 @@ static void gphoto_build_thumbnail_model(gchar *album_name)
 
 	/* Disable the remove image menu item until an image is selected */
 	gtk_widget_set_sensitive (GTK_WIDGET(photo_remove_image_menuItem), FALSE);
+	/* Disable the view full size menu item until an image is selected */
+	gtk_widget_set_sensitive (GTK_WIDGET(photo_view_full_size_menuItem), FALSE);
+	/* Disable the rename menu item untill an album is selected */
+	gtk_widget_set_sensitive (GTK_WIDGET(photo_rename_album_menuItem), FALSE);
 }
 
 /* Callback when the selection of the album is changed */
 static void gphoto_album_selection_changed(GtkTreeSelection *selection, gpointer user_data)
 {
 	gchar *album_name= NULL;
+	PhotoAlbum *selected_album = NULL;
 
 	album_name = gphoto_get_selected_album_name (selection);
 
@@ -574,7 +589,17 @@ static void gphoto_album_selection_changed(GtkTreeSelection *selection, gpointer
 	{
 		/* Enable the remove album menu item now that one is selected */
 		gtk_widget_set_sensitive (GTK_WIDGET(photo_remove_album_menuItem), TRUE);
+		
+		selected_album = itdb_photodb_photoalbum_by_name (photodb, album_name);
+		if (selected_album->album_type != 0x01)
+		{
+			/* Only allow renaming of album if not the Photo Library */
+			gtk_widget_set_sensitive (GTK_WIDGET(photo_rename_album_menuItem), TRUE);
+			return;
+		}
 	}
+	gtk_widget_set_sensitive (GTK_WIDGET(photo_rename_album_menuItem), FALSE);
+	return;
 }
 
 /* Callback when the selection of a thumbnail image is changed */
@@ -598,6 +623,8 @@ static void gphoto_thumb_selection_changed(GtkIconView *iconview, gpointer user_
 
 	/* Enable the remove image menu item until an album is selected */
 	gtk_widget_set_sensitive (GTK_WIDGET(photo_remove_image_menuItem), TRUE);
+	/* Enable the view full size menu item */
+	gtk_widget_set_sensitive (GTK_WIDGET(photo_view_full_size_menuItem), TRUE);
 }
 
 /* Display the selected thumbnail image in the preview window */
@@ -646,6 +673,7 @@ static void gphoto_display_photo_preview(Artwork *artwork)
 	gdk_pixbuf_unref (pixbuf);
 
 	gtk_image_set_from_pixbuf (photo_preview_image, scaled);
+	gtk_misc_set_padding (GTK_MISC(photo_preview_image), 20, 20);
 }
 
 /* Convenience function that sets the flags on the Extra iTunes Database
@@ -959,10 +987,12 @@ void on_photodb_add_album_menuItem_activate(GtkMenuItem *menuItem, gpointer user
 	GtkTreeIter iter;
 	GtkListStore *model;
 
-	gchar *album_name = get_user_string (_("New Photo Album"), _("Please enter a name for the new photo album"), 
-	NULL, 
-	NULL, 
-	NULL);
+	gchar *album_name = get_user_string (
+			_("New Photo Album"),
+			_("Please enter a name for the new photo album"), 
+			NULL, 
+			NULL, 
+			NULL);
 
 	if (album_name == NULL|| strlen (album_name) == 0)
 		return;
@@ -1076,6 +1106,122 @@ void on_photodb_remove_album_menuItem_activate(GtkMenuItem *menuItem, gpointer u
 void on_photodb_remove_image_menuItem_activate(GtkMenuItem *menuItem, gpointer user_data)
 {
 	gphoto_remove_selected_photos_from_album (TRUE);
+}
+
+/**
+ * on_photodb_view_full_size_menuItem_activate
+ *
+ * Callback used to display a dialog contain a full size / screen size version of the selected image. Same as
+ * that used in coverart display.
+ * 
+ */
+void on_photodb_view_full_size_menuItem_activate (GtkMenuItem *menuItem, gpointer user_data)
+{
+	GList * selected_images;
+	GtkTreeModel *model;
+	GtkTreePath *treePath = NULL;
+	GtkTreeIter iter;
+	Artwork *artwork = NULL;
+	GdkPixbuf * pixbuf;
+	gint i;
+	Thumb *thumb = NULL;
+	
+	/* Find which images are selected */
+	selected_images = gtk_icon_view_get_selected_items (GTK_ICON_VIEW(thumbnail_view));
+	if (selected_images == NULL|| g_list_length (selected_images) == 0)
+		return;
+
+	/* Using the model find the first Artwork object from the selected images list
+	 * Should only be one in the list if the toolbar button is being enabled/disabled
+	 * correctly.
+	 */
+	model = gtk_icon_view_get_model (GTK_ICON_VIEW(thumbnail_view));
+				
+	treePath = g_list_nth_data (selected_images, 0);
+	gtk_tree_model_get_iter (model, &iter, treePath);
+	gtk_tree_model_get (model, &iter, COL_THUMB_ARTWORK, &artwork, -1);
+	
+	/* Find the biggest thumb that exists on the pod */
+	for (i = (PHOTO_TYPES_SIZE - 1); i >= 0 && thumb == NULL; --i)
+	{
+		/* Start from biggest photo type and go smaller */
+		thumb = itdb_artwork_get_thumb_by_type (artwork, photo_types[i]);
+	}
+	/* should have a thumb now but check anyway and fire off a warning if it is still null */
+	g_return_if_fail (thumb);
+		
+	pixbuf = itdb_thumb_get_gdk_pixbuf (device, thumb);
+	g_return_if_fail (pixbuf);
+	
+	display_image_dialog (pixbuf);
+
+}
+
+/**
+ * on_photodb_rename_album_menuItem_activate
+ *
+ * Callback used to rename an album.
+ * 
+ */
+void on_photodb_rename_album_menuItem_activate (GtkMenuItem *menuItem, gpointer user_data)
+{
+	gchar *album_name= NULL;
+	PhotoAlbum *selected_album;
+	GtkTreeSelection *selection;
+
+	/* Get the currently selected album */
+	selection = gtk_tree_view_get_selection (album_view);
+	album_name= gphoto_get_selected_album_name (selection);
+
+	/* Find the selected album. If no selection then returns the Main Album */
+	selected_album = itdb_photodb_photoalbum_by_name (photodb, album_name);
+	g_return_if_fail (selected_album);
+	
+	if (selected_album->album_type == 0x01)
+	{
+		/* Dont rename the Photo Library */
+		return;
+	}
+	
+	gchar *new_album_name = get_user_string (
+			_("New Photo Album Name"),
+			_("Please enter a new name for the photo album"), 
+			NULL, 
+			NULL, 
+			NULL);
+
+	if (new_album_name == NULL|| strlen (new_album_name) == 0)
+		return;
+
+	/* Check an album with this name doesnt already exist */
+	PhotoAlbum *curr_album;
+	curr_album = itdb_photodb_photoalbum_by_name (photodb, new_album_name);
+	if (curr_album != NULL)
+	{
+		gtkpod_warning (_("An album with that name already exists."));
+		g_free (new_album_name);
+		return;
+	}
+	
+	/* Rename the album in the database */
+	selected_album->name = g_strdup (new_album_name);
+	
+	/* Update the row in the album view */
+	GtkTreeModel *album_model;
+	GtkTreeIter iter;
+	
+	album_model = gtk_tree_view_get_model (album_view);
+	if (gtk_tree_selection_get_selected (selection, &album_model, &iter) == TRUE)
+	{
+		gtk_list_store_set (GTK_LIST_STORE(album_model), &iter, COL_ALBUM_NAME, new_album_name, -1);;
+	}
+	
+	g_free (new_album_name);
+	
+	signal_data_changed();
+	
+	/* Using the existing selection, reselect the album so it reloads the preview of the first image */
+	gphoto_album_selection_changed (selection, NULL);
 }
 
 /* -----------------------------------------------------------*/

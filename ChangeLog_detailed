@@ -1,3 +1,27 @@
+2007-11-07 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * data/gphoto*.png
+  * data/Makefile.am
+  
+  New icons for menu items in photo window.
+  
+  * data/gtkpod.glade
+  
+  Components of photo window changed around to make more sense from
+  a user perspective.
+  
+  * src/display.c
+  * src/display.h
+  
+  Generic display_image_dialog function added for displaying a bare
+  transient dialog with only the required pixbuf image in it. Used
+  for coverart display and photo window.
+  
+  * src/display_photo.c
+  
+  View full size action added to menus.
+  Rename selected album added to menus.
+    
 2007-11-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
   * src/display_playlists.c (pm_set_renderer_pix): display a different
