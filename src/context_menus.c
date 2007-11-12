@@ -908,6 +908,16 @@ GtkWidget *gphoto_menuitem_remove_photo_from_album_item(GtkWidget *menu)
 			NULL);
 }
 
+GtkWidget *gphoto_menuitem_rename_photoalbum_item(GtkWidget *menu)
+{
+	return hookup_mi (
+			menu, 
+			_("Rename Album"),
+			GTK_STOCK_DELETE, 
+			G_CALLBACK (gphoto_rename_selected_album), 
+			NULL);
+}
+
 void create_context_menu (CM_type type)
 {
     static GtkWidget *menu = NULL;
@@ -1082,6 +1092,7 @@ void create_context_menu (CM_type type)
 			break;
 	case CM_PH_AV:
 			gphoto_menuitem_remove_album_from_db_item (menu);
+			gphoto_menuitem_rename_photoalbum_item (menu);
 			break;
 	case CM_PH_IV:
 			gphoto_menuitem_remove_photo_from_album_item (menu);

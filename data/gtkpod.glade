@@ -12255,6 +12255,27 @@ when syncing playlists</property>
 				      <property name="fill">False</property>
 				    </packing>
 				  </child>
+
+				  <child>
+				    <widget class="GtkCheckButton" id="photo_library_confirm_delete_toggle">
+				      <property name="visible">True</property>
+				      <property name="can_focus">True</property>
+				      <property name="label" translatable="yes">Check before removing photos from a photo album whether
+they should be deleted from the Photo Database.</property>
+				      <property name="use_underline">True</property>
+				      <property name="relief">GTK_RELIEF_NORMAL</property>
+				      <property name="focus_on_click">True</property>
+				      <property name="active">False</property>
+				      <property name="inconsistent">False</property>
+				      <property name="draw_indicator">True</property>
+				      <signal name="toggled" handler="on_photo_library_confirm_delete_toggled" last_modification_time="Fri, 09 Nov 2007 01:03:03 GMT"/>
+				    </widget>
+				    <packing>
+				      <property name="padding">0</property>
+				      <property name="expand">False</property>
+				      <property name="fill">False</property>
+				    </packing>
+				  </child>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>

@@ -46,7 +46,7 @@
 #include "prefs.h"
 #include "misc_track.h"
 #include "display_photo.h"
-
+#include "stock_icons.h"
 
 #define DEBUG_MISC 0
 
@@ -1945,6 +1945,7 @@ void gtkpod_init (int argc, char *argv[])
     prefs_init (argc, argv); 
 
     coverart_init (argv[0]);
+    stockid_init (argv[0]);
 
     file_convert_init ();
 

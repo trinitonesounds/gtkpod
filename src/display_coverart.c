@@ -208,7 +208,8 @@ static void set_highlight (Cover_Item *cover, gint index)
     
   if(error != NULL)
   {	
-		printf("Error occurred loading file - \nCode: %d\nMessage: %s\n", error->code, error->message); 
+		printf("Error occurred loading file - \nCode: %d\nMessage: %s\n", error->code, error->message);
+		g_error_free (error);
 		g_return_if_fail (image);
 	}
 

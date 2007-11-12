@@ -26,7 +26,9 @@ appdata_DATA =				\
 	gphoto_images_menuitem-32.png  \
 	gphoto_images_menuitem-48.png  \
 	gphoto_tools_menuitem-32.png   \
-	gphoto_tools_menuitem-48.png
+	gphoto_tools_menuitem-48.png   \
+	gphoto_playlist_icon-48.png    \
+	tunes_playlist_icon-48.png
 
 EXTRA_DIST = 				\
 	$(desktop_in_files)		\

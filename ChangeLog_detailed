@@ -1,3 +1,42 @@
+2007-11-12 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * data/gtkpod.glade
+  * src/prefs.c
+  * src/prefs_window.c
+  
+  Preference added for controlling display of delete confirmation
+  dialog in display_photo window for removal of a photo album.
+  
+  * src/display_photo.c
+  * src/diaplay_photo.h
+  
+  Rename action added for renaming a photo album.
+  Dialog altered in remove album function so that on clicking
+  "Yes Do Not Display Again", the preference is set to stop the
+  dialog displaying again.
+  
+  * src/context_menus.c
+  
+  Popup menuitem for photo album rename action.
+
+  * data/gphoto_playlist_icon-48.png
+  * data/tunes_playlist_icon-48.png
+  * data/Makefile.am
+  * src/stock_icons.c
+  * src/stock_icons.h
+  * src/Makefile.am
+  * src/misc.c
+  
+  Stock icons created from image files for use as playlist icons.
+  stockid_init() is called from misc.c upon loading of application.
+  This finds the correct paths of the specified icon images and loads
+  pixbufs of them. These are then added to the default stock factory.
+  Stock ids of these images can then be used throughout the application.
+  
+  * src/display_playlists.c
+  
+  Uses the new stock ids for the playlist icons.
+
 2007-11-07 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * data/gphoto*.png

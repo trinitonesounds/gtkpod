@@ -39,6 +39,8 @@
 
 #define DEBUG 0
 
+#define PHOTO_YES_DONT_DISPLAY_RESPONSE 1
+
 /* Array recording the current pages of the sorttabs so they can be redisplayed
  * if another playlist is selected.
  */
@@ -172,6 +174,8 @@ void gphoto_load_photodb(iTunesDB *itdb)
 	/* Set the reference to the photo database */
 	eitdb->photodb = db;
 	/*printf ("Reference to photo db successfully set\n");*/
+	
+	/* A photo database is */
 }
 
 /**
@@ -185,13 +189,8 @@ void gphoto_load_photodb(iTunesDB *itdb)
  */
 gboolean gphoto_ipod_supports_photos(iTunesDB *itdb)
 {
-	gboolean status =itdb_device_supports_photo (itdb->device);
-/*
-	if (status)
-		printf ("device supports photos\n");
-	else
-		printf ("photos not supported\n");
-*/
+	gboolean status = itdb_device_supports_photo (itdb->device);
+	
 	return status;
 }
 
@@ -862,7 +861,8 @@ void gphoto_remove_album_from_database()
 	/* Find the selected album. If no selection then returns the Main Album */
 	selected_album = itdb_photodb_photoalbum_by_name (photodb, album_name);
 	g_return_if_fail (selected_album);
-
+	g_free (album_name);
+	
 	if (selected_album->album_type == 0x01)
 	{
 		gtkpod_warning (_("The Photo Library album cannot be removed"));
@@ -870,7 +870,15 @@ void gphoto_remove_album_from_database()
 	}
 
 	gboolean remove_pics = FALSE;
-	if (g_list_length (selected_album->members) > 0)
+	if (g_list_length (selected_album->members) <= 0)
+		return;
+	
+	if (prefs_get_int("photo_library_confirm_delete") == FALSE)
+	{
+		/* User has chosen to assume yes and not display a confirm dialog */
+		remove_pics = TRUE;
+	}
+	else
 	{
 		/* Display a dialog asking if the user wants the photos removed as well */
 		gint result;
@@ -878,27 +886,40 @@ void gphoto_remove_album_from_database()
 		GtkWidget *dialog = gtk_message_dialog_new (parent,
 				GTK_DIALOG_DESTROY_WITH_PARENT,
 				GTK_MESSAGE_QUESTION,
-				GTK_BUTTONS_YES_NO,
+				GTK_BUTTONS_NONE,
 				_("Do you want to remove the album's photos too?"));
-
+			gtk_dialog_add_buttons (
+				GTK_DIALOG (dialog),
+				GTK_STOCK_YES, GTK_RESPONSE_YES,
+				GTK_STOCK_NO, GTK_RESPONSE_NO,
+				GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+				_("Yes. Do Not Display Again"), PHOTO_YES_DONT_DISPLAY_RESPONSE,
+				NULL);
+	
 		result = gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
 
 		switch (result)
 		{
+			case PHOTO_YES_DONT_DISPLAY_RESPONSE:
+				prefs_set_int("photo_library_confirm_delete", FALSE);
 			case GTK_RESPONSE_YES:
 				remove_pics = TRUE;
 				break;
+				case GTK_RESPONSE_NO:
+				remove_pics = FALSE;
+				break;
+			case GTK_RESPONSE_CANCEL:
+				return;
 			default:
 				break;
 		}
 	}
+	
 	album_model = gtk_tree_view_get_model (album_view);
 	gtk_list_store_remove (GTK_LIST_STORE(album_model), &iter);
 
 	itdb_photodb_photoalbum_remove (photodb, selected_album, remove_pics);
-
-	g_free (album_name);
 
 	/* Display the default Photo Library */
 	gphoto_build_thumbnail_model (NULL);
@@ -961,6 +982,70 @@ void gphoto_remove_selected_photos_from_album (gboolean show_dialogs)
 	g_free (album_name);
 
 	signal_data_changed ();
+}
+
+/**
+ * gphoto_rename_selected_album
+ *
+ * Remove the selected image from the album
+ * 
+ */
+void gphoto_rename_selected_album ()
+{
+	gchar *album_name= NULL;
+	PhotoAlbum *selected_album;
+	GtkTreeSelection *selection;
+	/* Get the currently selected album */
+	selection = gtk_tree_view_get_selection (album_view);
+	album_name= gphoto_get_selected_album_name (selection);
+	/* Find the selected album. If no selection then returns the Main Album */
+	selected_album = itdb_photodb_photoalbum_by_name (photodb, album_name);
+	g_return_if_fail (selected_album);
+	
+	if (selected_album->album_type == 0x01)
+	{
+		/* Dont rename the Photo Library */
+		return;
+	}
+	
+	gchar *new_album_name = get_user_string (
+			_("New Photo Album Name"),
+			_("Please enter a new name for the photo album"), 
+			NULL, 
+			NULL, 
+			NULL);
+	if (new_album_name == NULL|| strlen (new_album_name) == 0)
+		return;
+	
+	/* Check an album with this name doesnt already exist */
+	PhotoAlbum *curr_album;
+	curr_album = itdb_photodb_photoalbum_by_name (photodb, new_album_name);
+	if (curr_album != NULL)
+	{
+		gtkpod_warning (_("An album with that name already exists."));
+		g_free (new_album_name);
+		return;
+	}
+	
+	/* Rename the album in the database */
+	selected_album->name = g_strdup (new_album_name);
+	
+	/* Update the row in the album view */
+	GtkTreeModel *album_model;
+	GtkTreeIter iter;
+	
+	album_model = gtk_tree_view_get_model (album_view);
+	if (gtk_tree_selection_get_selected (selection, &album_model, &iter) == TRUE)
+	{
+		gtk_list_store_set (GTK_LIST_STORE(album_model), &iter, COL_ALBUM_NAME, new_album_name, -1);;
+	}
+		
+	g_free (new_album_name);
+	
+	signal_data_changed();
+	
+	/* Using the existing selection, reselect the album so it reloads the preview of the first image */
+	gphoto_album_selection_changed (selection, NULL);
 }
 
 /* When right mouse button is pressed on one of the widgets,
@@ -1165,63 +1250,7 @@ void on_photodb_view_full_size_menuItem_activate (GtkMenuItem *menuItem, gpointe
  */
 void on_photodb_rename_album_menuItem_activate (GtkMenuItem *menuItem, gpointer user_data)
 {
-	gchar *album_name= NULL;
-	PhotoAlbum *selected_album;
-	GtkTreeSelection *selection;
-
-	/* Get the currently selected album */
-	selection = gtk_tree_view_get_selection (album_view);
-	album_name= gphoto_get_selected_album_name (selection);
-
-	/* Find the selected album. If no selection then returns the Main Album */
-	selected_album = itdb_photodb_photoalbum_by_name (photodb, album_name);
-	g_return_if_fail (selected_album);
-	
-	if (selected_album->album_type == 0x01)
-	{
-		/* Dont rename the Photo Library */
-		return;
-	}
-	
-	gchar *new_album_name = get_user_string (
-			_("New Photo Album Name"),
-			_("Please enter a new name for the photo album"), 
-			NULL, 
-			NULL, 
-			NULL);
-
-	if (new_album_name == NULL|| strlen (new_album_name) == 0)
-		return;
-
-	/* Check an album with this name doesnt already exist */
-	PhotoAlbum *curr_album;
-	curr_album = itdb_photodb_photoalbum_by_name (photodb, new_album_name);
-	if (curr_album != NULL)
-	{
-		gtkpod_warning (_("An album with that name already exists."));
-		g_free (new_album_name);
-		return;
-	}
-	
-	/* Rename the album in the database */
-	selected_album->name = g_strdup (new_album_name);
-	
-	/* Update the row in the album view */
-	GtkTreeModel *album_model;
-	GtkTreeIter iter;
-	
-	album_model = gtk_tree_view_get_model (album_view);
-	if (gtk_tree_selection_get_selected (selection, &album_model, &iter) == TRUE)
-	{
-		gtk_list_store_set (GTK_LIST_STORE(album_model), &iter, COL_ALBUM_NAME, new_album_name, -1);;
-	}
-	
-	g_free (new_album_name);
-	
-	signal_data_changed();
-	
-	/* Using the existing selection, reselect the album so it reloads the preview of the first image */
-	gphoto_album_selection_changed (selection, NULL);
+	gphoto_rename_selected_album ();
 }
 
 /* -----------------------------------------------------------*/

@@ -61,6 +61,6 @@ void gphoto_change_to_photo_window (gboolean showflag);
 
 void gphoto_remove_selected_photos_from_album (gboolean show_dialogs);
 void gphoto_remove_album_from_database ();
-
+void gphoto_rename_selected_album ();
 
 #endif /*DISPLAY_PHOTO_H_*/

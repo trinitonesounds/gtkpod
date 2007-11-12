@@ -757,6 +757,11 @@ prefs_window_create (gint page)
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_track_database_deletion");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 prefs_get_int("delete_database"));
+    
+    w = gtkpod_xml_get_widget (prefs_window_xml, "photo_library_confirm_delete_toggle");
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+    				 prefs_get_int("photo_library_confirm_delete"));
+        
 
 #if 0
     /* last.fm -- disabled, we'll hide the prefs window */
@@ -1407,6 +1412,13 @@ on_sync_confirm_delete_toggled     (GtkToggleButton *togglebutton,
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), active);
 }
 
+void
+on_photo_library_confirm_delete_toggled (GtkToggleButton *togglebutton,
+    gpointer         user_data)
+{
+	temp_prefs_set_int(temp_prefs, "photo_library_confirm_delete",
+	                     gtk_toggle_button_get_active(togglebutton));
+}
 
 void
 on_charset_combo_entry_changed          (GtkEditable     *editable,

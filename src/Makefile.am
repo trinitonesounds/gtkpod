@@ -48,6 +48,7 @@ gtkpod_SOURCES = \
     prefs_window.c prefs_window.h \
     repository.c repository.h \
     sha1.c sha1.h \
+    stock_icons.c stock_icons.h \
     syncdir.c syncdir.h \
     tools.c tools.h \
     wavfile.c wavfile.h

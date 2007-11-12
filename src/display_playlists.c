@@ -41,6 +41,7 @@
 #include "info.h"
 #include "context_menus.h"
 #include "display_photo.h"
+#include "stock_icons.h"
 
 /* pointer to the treeview for the playlist display */
 static GtkTreeView *playlist_treeview = NULL;
@@ -1994,14 +1995,14 @@ void pm_set_renderer_pix (GtkCellRenderer *renderer,
 	}
 	else if (!itdb_playlist_is_mpl (playlist))
 	{
-	    if (gphoto_is_photo_playlist (playlist))
-	    {
-		stock_id = GTK_STOCK_SELECT_COLOR;
-	    }
-	    else
-	    {
-		stock_id = GTK_STOCK_JUSTIFY_LEFT;
-	    }
+		if (gphoto_is_photo_playlist (playlist))
+		{
+			stock_id = GPHOTO_PLAYLIST_ICON_STOCK_ID;
+		}
+		else
+		{
+			stock_id = TUNES_PLAYLIST_ICON_STOCK_ID;
+		}
 	}
 	else
 	{

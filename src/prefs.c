@@ -173,6 +173,7 @@ static void set_default_preferences()
     prefs_set_int("show_duplicates", TRUE);
     prefs_set_int("show_non_updated", TRUE);
     prefs_set_int("show_updated", TRUE);
+    prefs_set_int("photo_library_confirm_delete", TRUE);
     prefs_set_int("mserv_report_probs", TRUE);
     prefs_set_int("delete_ipod", TRUE);
     prefs_set_int("delete_file", TRUE);
