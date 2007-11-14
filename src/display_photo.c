@@ -909,7 +909,7 @@ void gphoto_remove_album_from_database()
 				case GTK_RESPONSE_NO:
 				remove_pics = FALSE;
 				break;
-			case GTK_RESPONSE_CANCEL:
+			case GTK_RESPONSE_REJECT:
 				return;
 			default:
 				break;
@@ -953,19 +953,61 @@ void gphoto_remove_selected_photos_from_album (gboolean show_dialogs)
 
 	selected_album = itdb_photodb_photoalbum_by_name (photodb, album_name);
 	GtkWindow *parent = GTK_WINDOW (gtkpod_xml_get_widget (main_window_xml, "gtkpod"));
-
-	gchar *message;
-	if (selected_album != NULL&& selected_album->album_type != 0x01)
-		message
-				= _("The photo selection will be removed from the selected album.\nTo remove the photo from the database, remove it from the Photo Library album.");
-	else
-		message = _("The photo selection will be deleted from the Photo Library album");
-
+	GtkWidget *dialog;
+	gboolean delete_pics = FALSE;
+	
 	if (show_dialogs)
 	{
-		GtkWidget *dialog = gtk_message_dialog_new (parent, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, message);
-		gtk_dialog_run (GTK_DIALOG (dialog));
+		if (selected_album != NULL&& selected_album->album_type != 0x01)
+		{
+			dialog = gtk_message_dialog_new (parent,
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_MESSAGE_QUESTION,
+					GTK_BUTTONS_NONE,
+					_("This will remove the photo selection from the selected album.\n Do you want to delete them from the database as well?"));
+		
+			gtk_dialog_add_buttons (
+					GTK_DIALOG (dialog),
+					GTK_STOCK_YES, GTK_RESPONSE_YES,
+					GTK_STOCK_NO, GTK_RESPONSE_NO,
+					GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+					NULL);
+		}
+		else
+		{
+			dialog = gtk_message_dialog_new (parent,
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_MESSAGE_QUESTION,
+					GTK_BUTTONS_NONE,
+					_("This will delete the photo selection from the Photo Library and all albums. Are you sure?"));
+			
+			gtk_dialog_add_buttons (
+					GTK_DIALOG (dialog),
+					GTK_STOCK_YES, GTK_RESPONSE_YES,
+					GTK_STOCK_NO, GTK_RESPONSE_REJECT,
+					NULL);
+		}
+		/* Display the dialog  */
+		gint result = gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
+
+		switch (result)
+		{
+			case GTK_RESPONSE_YES:
+				delete_pics = TRUE;
+				break;
+			case GTK_RESPONSE_NO:
+				delete_pics = FALSE;
+				break;
+			case GTK_RESPONSE_REJECT:
+				return;
+			default:
+				return;
+		}
+	}
+	else
+	{
+		delete_pics = FALSE;
 	}
 	
 	thumbnail_model = gtk_icon_view_get_model (thumbnail_view);
@@ -976,7 +1018,10 @@ void gphoto_remove_selected_photos_from_album (gboolean show_dialogs)
 		gtk_tree_model_get (thumbnail_model, &image_iter, COL_THUMB_ARTWORK, &image, -1);
 
 		gtk_list_store_remove (GTK_LIST_STORE(thumbnail_model), &image_iter);
-		itdb_photodb_remove_photo (photodb, selected_album, image);
+		if (delete_pics)
+			itdb_photodb_remove_photo (photodb, NULL, image); /* pass in NULL to delete pics as well */
+		else
+			itdb_photodb_remove_photo (photodb, selected_album, image);
 	}
 
 	g_free (album_name);

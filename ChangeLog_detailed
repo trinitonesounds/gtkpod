@@ -1,4 +1,13 @@
-2007-11-13 P.G. Richardson <phantom_sf at users.sourceforge.net>
+2007-11-14 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * src/display_photos.c
+  
+  Fix for cancel button when removing a photo album.
+  Photo image removal action display a proper question dialog
+  as to whether the photo should be deleted from the database
+  as well as removing the photo from the selected album.
+  
+2007-11-14 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * data/stock_icons.c: corrected new name of photo icon
 
