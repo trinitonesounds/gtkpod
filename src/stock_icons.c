@@ -89,7 +89,7 @@ void stockid_init (gchar *progpath)
 				
 		if (!GPHOTO_PLAYLIST_ICON_PATH)
 		{
-			GPHOTO_PLAYLIST_ICON_PATH = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "gphoto_playlist_icon.png", NULL);
+			GPHOTO_PLAYLIST_ICON_PATH = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "gphoto_playlist_icon-48.png", NULL);
 		}
 		
 		/* Normal Playlist icon */
