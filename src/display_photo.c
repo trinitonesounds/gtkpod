@@ -1102,7 +1102,7 @@ static gboolean gphoto_button_press(GtkWidget *w, GdkEventButton *e, gpointer da
 	switch (e->button)
 	{
 		case 3:
-			gphoto_context_menu_init ((gint) data);
+			gphoto_context_menu_init (GPOINTER_TO_INT(data));
 			return TRUE;
 		default:
 			break;

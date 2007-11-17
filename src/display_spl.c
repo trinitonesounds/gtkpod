@@ -91,7 +91,7 @@ static const ComboEntry splfield_comboentries[] =
     { ITDB_SPLFIELD_DATE_MODIFIED,  N_("Date modified") },
     { ITDB_SPLFIELD_TRACKNUMBER,    N_("Track number") },
     { ITDB_SPLFIELD_SIZE,           N_("Size") },
-    { ITDB_SPLFIELD_TIME,           N_("Time") },
+    { ITDB_SPLFIELD_TIME,           N_("Play time") },
     { ITDB_SPLFIELD_COMMENT,        N_("Comment") },
     { ITDB_SPLFIELD_DATE_ADDED,     N_("Date added") },
     { ITDB_SPLFIELD_COMPOSER,       N_("Composer") },
@@ -635,10 +635,17 @@ static void splr_entry_changed (GtkEditable *editable,
     switch (type)
     {
     case spl_ET_FROMVALUE:
-	splr->fromvalue = atol (str);
-	if (splr->field == ITDB_SPLFIELD_RATING)
+	switch (splr->field)
 	{
-	    splr->fromvalue *= ITDB_RATING_STEP;
+	case ITDB_SPLFIELD_RATING:
+	    splr->fromvalue = ITDB_RATING_STEP * atol (str);
+	    break;
+	case ITDB_SPLFIELD_TIME:
+	    splr->fromvalue = 1000 * strtod (str, NULL);
+	    break;
+	default:
+	    splr->fromvalue = atol (str);
+	    break;
 	}
 	break;
     case spl_ET_FROMVALUE_DATE:
@@ -650,10 +657,17 @@ static void splr_entry_changed (GtkEditable *editable,
 	splr->fromdate = atol (str);
 	break;
     case spl_ET_TOVALUE:
-	splr->tovalue = atol (str);
-	if (splr->field == ITDB_SPLFIELD_RATING)
+	switch (splr->field)
 	{
-	    splr->tovalue *= ITDB_RATING_STEP;
+	case ITDB_SPLFIELD_RATING:
+	    splr->tovalue = ITDB_RATING_STEP * atol (str);
+	    break;
+	case ITDB_SPLFIELD_TIME:
+	    splr->tovalue = 1000 * strtod (str, NULL);
+	    break;
+	default:
+	    splr->tovalue = atol (str);
+	    break;
 	}
 	break;
     case spl_ET_TOVALUE_DATE:
@@ -1004,22 +1018,27 @@ const gchar *entry_get_string (gchar *str, Itdb_SPLRule *splr,
 			       enum entrytype et)
 {
     gchar *strp = str;
-    gint stepsize = 1; /* for FROMVALUE/TOVALUE (20 for rating) */
 
     g_return_val_if_fail (str, NULL);
     g_return_val_if_fail (splr, NULL);
-
-    if (splr->field == ITDB_SPLFIELD_RATING)
-    {
-	stepsize = ITDB_RATING_STEP;
-    }
 
     switch (et)
     {
     case spl_ET_FROMVALUE:
 	if (splr->fromvalue == ITDB_SPL_DATE_IDENTIFIER)
 	    splr->fromvalue = 0;
-	snprintf (str, WNLEN, "%lld", (long long int)(splr->fromvalue / stepsize));
+	switch (splr->field)
+	{
+	case ITDB_SPLFIELD_RATING:
+	    snprintf (str, WNLEN, "%lld", (long long int)(splr->fromvalue / ITDB_RATING_STEP));
+	    break;
+	case ITDB_SPLFIELD_TIME:
+	    snprintf (str, WNLEN, "%.10g", ((gdouble)splr->fromvalue/1000));
+	    break;
+	default:
+	    snprintf (str, WNLEN, "%lld", (long long int)(splr->fromvalue));
+	    break;
+	}
 	break;
     case spl_ET_FROMVALUE_DATE:
 	if (splr->fromvalue == ITDB_SPL_DATE_IDENTIFIER)
@@ -1032,7 +1051,18 @@ const gchar *entry_get_string (gchar *str, Itdb_SPLRule *splr,
     case spl_ET_TOVALUE:
 	if (splr->tovalue == ITDB_SPL_DATE_IDENTIFIER)
 	    splr->tovalue = 0;
-	snprintf (str, WNLEN, "%lld",  (long long int)(splr->tovalue / stepsize));
+	switch (splr->field )
+	{
+	case ITDB_SPLFIELD_RATING:
+	    snprintf (str, WNLEN, "%lld",  (long long int)(splr->tovalue / ITDB_RATING_STEP));
+	    break;
+	case ITDB_SPLFIELD_TIME:
+	    snprintf (str, WNLEN, "%.10g", ((gdouble)splr->tovalue/1000));
+	    break;
+	default:
+	    snprintf (str, WNLEN, "%lld", (long long int)(splr->tovalue));
+	    break;
+	}
 	break;
     case spl_ET_TOVALUE_DATE:
 	if (splr->tovalue == ITDB_SPL_DATE_IDENTIFIER)

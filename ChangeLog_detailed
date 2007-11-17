@@ -1,3 +1,17 @@
+2007-11-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+  * src/display_spl.c:
+    Renamed "Time" to "Track length" for better understanding.
+    Fixed track length display (unit was seconds but msecs had to be
+    entered. Furthermore, due to a bug in libgpod offline playlist
+    generation assumed the track length was given in seconds whereas
+    the live-update on the iPod assumed it was given in msecs. You
+    need at least libgpod SVN version 1797 for this to work
+    consistently. libgpod 0.6.0 does not contain the fix.
+
+    src/display_photo.c:
+    Squashed warning about pointer to integer conversion.
+
 2007-11-14 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * src/display_photos.c
