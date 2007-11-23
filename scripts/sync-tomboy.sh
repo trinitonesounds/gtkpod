@@ -110,7 +110,7 @@ if [ ! -d $NOTESPATH ]; then
 fi
 
 # check if iPod mountpoint exists
-if [ ! -d $IPOD_MOUNT/Notes ]; then
+if [ ! -d "$IPOD_MOUNT/Notes" ]; then
     echo "Error: Cannot find iPod at $IPOD_MOUNT"
     exit 1
 fi
@@ -120,7 +120,7 @@ fi
 # Seeing all notes should be under 4K, easier to delete and recopy rather than checking all files sizes
 
 echo -n "Syncing iPod ... [Notes] "
-rm -rf $IPOD_MOUNT/Notes/*
+rm -rf "$IPOD_MOUNT/Notes/*"
 rm -f $NOTESPATH/*~
 cd $NOTESPATH
 
@@ -137,18 +137,20 @@ ls *.note |
 	START=`echo $LIMITS | cut -d " " -f 1`
 	END=`echo $LIMITS | cut -d " " -f 2`
 
-	# Get the notes titles, we can use this as the filename
-	TITLE=`cat "$FILE" | cut -d "
-" -f $START | cut -d ">" -f 3`
-	
-	# Get the Lines with the useful data
-	DATA=`cat "$FILE" | cut -d "
-" -f $(( $START + 2 ))-$END`
+	DATA=`cat "$FILE"`
 
 	# Strip the tomboy stuff :(
 	for i in "<\/note-content>" "<\/text>" "<link:broken>" "<\/link:broken>" "<link:internal>" "<\/link:internal>" "<link:external>" "<\/link:external>" "<\/list>" "<list>" "<\/list-item>" "<list-item dir=\"ltr\">"; do
 		DATA=`printf "$DATA" | sed "s/$i//g"`
 	done
+
+	# Get the notes titles, we can use this as the filename
+	TITLE=`echo "$DATA" | cut -d "
+" -f $START | cut -d ">" -f 3 | tr : -`
+
+	# Get the Lines with the useful data
+	DATA=`echo "$DATA" | cut -d "
+" -f $(( $START + 2 ))-$END`
 
 	printf "$DATA" | $RECODE > "$IPOD_MOUNT/Notes/$TITLE"
 

@@ -1,3 +1,14 @@
+2007-11-23 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+  * scripts/sync-tomboy.sh:
+
+    Fixes by Javier Kohen: "First, it escapes the mount point to allow
+    white space in it. Second, it removes tags from the whole note
+    contents so that links in the title don't end up in the file
+    name. Last, but not least, colons are converted to hyphens, since
+    the former are not valid characters in the FAT family of file
+    systems, which the iPod uses."
+
 2007-11-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
   * src/display_spl.c:
