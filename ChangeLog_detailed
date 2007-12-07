@@ -1,3 +1,8 @@
+2007-12-06  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+    * data/gtkpod.desktop.in:
+      better Icon Theme Specification compliance
+
 2007-11-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
   * configure.in: raised required libgpod version to 0.6.0

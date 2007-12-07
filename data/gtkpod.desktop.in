@@ -3,6 +3,6 @@ _Name=GtkPod
 _GenericName=iPod Manager
 _Comment=Manage music and video on an Apple iPod
 Exec=gtkpod
-Icon=gtkpod.png
+Icon=gtkpod
 Type=Application
 Categories=GTK;AudioVideo;
