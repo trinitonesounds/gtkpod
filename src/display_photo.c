@@ -404,7 +404,14 @@ void gphoto_change_to_photo_window(gboolean showflag)
 	}
 }
 
-/* Create album listview */
+/**
+ * gphoto_create_albumview:
+ *
+ * Construct the album tree based upon the albums
+ * stored on the iPod. If necessary destory and old
+ * existing tree object.
+ * 
+ */
 static void gphoto_create_albumview()
 {
 	GtkListStore *model;
@@ -484,7 +491,14 @@ static void gphoto_create_albumview()
 			NULL);
 }
 
-/* Create thumbnail view */
+/**
+ * gphoto_create_thumbnailview:
+ *
+ * Construct the thumbnail tree based upon the
+ * photos stored on the iPod associated with the
+ * selected album.
+ * 
+ */
 static void gphoto_create_thumbnailview()
 {
 	/* destroy old listview */
@@ -521,7 +535,15 @@ static void gphoto_create_thumbnailview()
 			NULL);
 }
 
-/* Build the thumbnail model */
+/**
+ * gphoto_build_thumbnail_model:
+ *
+ * Create the model for the thumbnail view
+ * based upon the selected album.
+ * 
+ * @ album_name: name of the selected album or null if none selected
+ * 
+ */
 static void gphoto_build_thumbnail_model(gchar *album_name)
 {
 	GtkListStore *model;
@@ -573,7 +595,16 @@ static void gphoto_build_thumbnail_model(gchar *album_name)
 	gtk_widget_set_sensitive (GTK_WIDGET(photo_rename_album_menuItem), FALSE);
 }
 
-/* Callback when the selection of the album is changed */
+/**
+ * gphoto_album_selection_changed:
+ *
+ * When the album selection is changed, rebuild the thumbnail model
+ * to display those thumbnails only associated with the album.
+ * 
+ * @ selection: album name selection
+ * @ user_data: not used.
+ * 
+ */
 static void gphoto_album_selection_changed(GtkTreeSelection *selection, gpointer user_data)
 {
 	gchar *album_name= NULL;
@@ -601,7 +632,16 @@ static void gphoto_album_selection_changed(GtkTreeSelection *selection, gpointer
 	return;
 }
 
-/* Callback when the selection of a thumbnail image is changed */
+/**
+ * gphoto_thumb_selection_changed:
+ *
+ * When the thumb view selection is changed, update the
+ * preview image to display that which is selected.
+ * 
+ * @ iconview: thumbnail view
+ * @ user_data: not used
+ * 
+ */
 static void gphoto_thumb_selection_changed(GtkIconView *iconview, gpointer user_data)
 {
 	GtkTreeModel *model;
@@ -626,7 +666,14 @@ static void gphoto_thumb_selection_changed(GtkIconView *iconview, gpointer user_
 	gtk_widget_set_sensitive (GTK_WIDGET(photo_view_full_size_menuItem), TRUE);
 }
 
-/* Display the selected thumbnail image in the preview window */
+/**
+ * gphoto_display_photo_preview:
+ *
+ * Display the supplied photo is the preview window.
+ * 
+ * @ artwork: photo to be displayed
+ * 
+ */
 static void gphoto_display_photo_preview(Artwork *artwork)
 {
 	Thumb *thumb = NULL;
@@ -675,8 +722,13 @@ static void gphoto_display_photo_preview(Artwork *artwork)
 	gtk_misc_set_padding (GTK_MISC(photo_preview_image), 20, 20);
 }
 
-/* Convenience function that sets the flags on the Extra iTunes Database
+/**
+ * 
+ * signal_data_changed:
+ * 
+ * Convenience function that sets the flags on the Extra iTunes Database
  * that the photo database has changed and will need saving
+ * 
  */
 static void signal_data_changed()
 {
@@ -1093,8 +1145,16 @@ void gphoto_rename_selected_album ()
 	gphoto_album_selection_changed (selection, NULL);
 }
 
-/* When right mouse button is pressed on one of the widgets,
+/**
+ * 
+ * gphoto_button_press:
+ * 
+ *  When right mouse button is pressed on one of the widgets,
  * a popup menu is displayed.
+ * 
+ * @ w: widget upon which button press has occurred
+ * @ e: button event
+ * @ data: not used
  */
 static gboolean gphoto_button_press(GtkWidget *w, GdkEventButton *e, gpointer data)
 {
@@ -1111,6 +1171,16 @@ static gboolean gphoto_button_press(GtkWidget *w, GdkEventButton *e, gpointer da
 }
 
 /* Callbacks for the menu items in the photo window */
+
+/**
+ * on_photodb_add_album_menuItem_activate:
+ *
+ * Callback for add album menu item
+ * 
+ * @ menuitem: add album menu item
+ * @ user_data: not used
+ * 
+ */
 void on_photodb_add_album_menuItem_activate(GtkMenuItem *menuItem, gpointer user_data)
 {
 	PhotoAlbum *new_album;
@@ -1153,6 +1223,15 @@ void on_photodb_add_album_menuItem_activate(GtkMenuItem *menuItem, gpointer user
 	signal_data_changed ();
 }
 
+/**
+ * on_photodb_add_image_menuItem_activate:
+ *
+ * Callback for add image menu item
+ * 
+ * @ menuitem: add image menu item
+ * @ user_data: not used
+ * 
+ */
 void on_photodb_add_image_menuItem_activate(GtkMenuItem *menuItem, gpointer user_data)
 {
 	gchar *image_name = fileselection_get_file_or_dir (_("Add Image to iPod"), 
@@ -1166,6 +1245,44 @@ void on_photodb_add_image_menuItem_activate(GtkMenuItem *menuItem, gpointer user
 	g_free (image_name);
 }
 
+/**
+ * _strptrcmp:
+ *
+ * Comparision function for comparing the filenames
+ * of newly added images.
+ * 
+ * @ a: filename 1
+ * @ b: filename 2
+ * 
+ */
+static int _strptrcmp(const void* _a, const void* _b)
+{
+	const char* const* a = (const char* const*) _a;
+	const char* const* b = (const char* const*) _b;
+
+	/* paranoia */
+	if (a == b)
+		return 0;
+	else if (!a)
+		return -1;
+	else if (!b)
+		return 1;
+	/* real work */
+	else if (*a == *b)
+		return 0;
+	else
+		return strcmp(*a, *b);
+}
+
+/**
+ * on_photodb_add_image_dir_menuItem_activate:
+ *
+ * Callback for add image directory menu item
+ * 
+ * @ menuitem: add album menu item
+ * @ user_data: not used
+ * 
+ */
 void on_photodb_add_image_dir_menuItem_activate(GtkMenuItem *menuItem, gpointer user_data)
 {
 	GDir *directory;
@@ -1204,35 +1321,70 @@ void on_photodb_add_image_dir_menuItem_activate(GtkMenuItem *menuItem, gpointer 
 	 * files. If they are then add them to the database.
 	 */
 	G_CONST_RETURN gchar *filename;
+	GPtrArray* filename_arr = g_ptr_array_new();
+	unsigned u;
+	
 	do
 	{
 		filename = g_dir_read_name(directory);
 		if (filename != NULL)
 		{
-			gchar *full_filename = g_build_filename (dir_name, filename, NULL);
-
-			/* Only allow valid image files to be added to the photo db. If it file is not a
-			 * valid image according to pixbuf then that is good enough for me!
-			 */
-			GdkPixbufFormat *fileformat= NULL;
-			fileformat = gdk_pixbuf_get_file_info (full_filename, NULL, NULL);
-			if (fileformat != NULL)
-			{
-				gphoto_add_image_to_database (full_filename);
-			}
-			g_free (full_filename);
+			g_ptr_array_add(filename_arr, (void*) filename);
 		}
 	} while (filename != NULL);
+	
+	/* Conduct an alphabetical sort on the filenames so
+	 * they are added in order.
+	 */
+	g_ptr_array_sort(filename_arr, _strptrcmp);
 
+	for (u = 0; u < filename_arr->len; ++u)
+	{
+		gchar *full_filename;
+		GdkPixbufFormat *fileformat= NULL;
+
+		filename = g_ptr_array_index(filename_arr, u);
+		full_filename = g_build_filename (dir_name, filename, NULL);
+
+		/* Only allow valid image files to be added to the photo db. If it file is not a
+		 * valid image according to pixbuf then that is good enough for me!
+		 */
+		fileformat = gdk_pixbuf_get_file_info (full_filename, NULL, NULL);
+		if (fileformat != NULL)
+		{
+			gphoto_add_image_to_database (full_filename);
+		}
+		g_free (full_filename);
+	}
+
+	g_ptr_array_free(filename_arr, TRUE);
 	g_dir_close(directory);
 	g_free(dir_name);
 }
 
+/**
+ * on_photodb_remove_album_menuItem_activate:
+ *
+ * Callback for remove album menu item
+ * 
+ * @ menuitem: remove album menu item
+ * @ user_data: not used
+ * 
+ */
 void on_photodb_remove_album_menuItem_activate(GtkMenuItem *menuItem, gpointer user_data)
 {
 	gphoto_remove_album_from_database ();
 }
 
+/**
+ * on_photodb_remove_image_menuItem_activate:
+ *
+ * Callback for remove image menu item
+ * 
+ * @ menuitem: remove image menu item
+ * @ user_data: not used
+ * 
+ */
 void on_photodb_remove_image_menuItem_activate(GtkMenuItem *menuItem, gpointer user_data)
 {
 	gphoto_remove_selected_photos_from_album (TRUE);
@@ -1241,8 +1393,12 @@ void on_photodb_remove_image_menuItem_activate(GtkMenuItem *menuItem, gpointer u
 /**
  * on_photodb_view_full_size_menuItem_activate
  *
- * Callback used to display a dialog contain a full size / screen size version of the selected image. Same as
- * that used in coverart display.
+ * Callback used to display a dialog contain a full 
+ * size / screen size version of the selected image.
+ * Same as that used in coverart display.
+ * 
+ * @ menuitem: remove image menu item
+ * @ user_data: not used
  * 
  */
 void on_photodb_view_full_size_menuItem_activate (GtkMenuItem *menuItem, gpointer user_data)
@@ -1292,6 +1448,9 @@ void on_photodb_view_full_size_menuItem_activate (GtkMenuItem *menuItem, gpointe
  *
  * Callback used to rename an album.
  * 
+ * @ menuitem: remove image menu item
+ * @ user_data: not used
+ * 
  */
 void on_photodb_rename_album_menuItem_activate (GtkMenuItem *menuItem, gpointer user_data)
 {
@@ -1303,8 +1462,14 @@ void on_photodb_rename_album_menuItem_activate (GtkMenuItem *menuItem, gpointer 
 /* drag and drop                                                   */
 /* -----------------------------------------------------------*/
 
-/* remove dragged playlist after successful MOVE */
-
+/**
+ * dnd_album_drag_drop:
+ *
+ * Allow dnd of an image onto an album row in the
+ * album tree. Gives ability to add an image to a
+ * different album.
+ * 
+ */
 static gboolean dnd_album_drag_drop(GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, guint time, gpointer user_data)
 {
 	GdkAtom target;
@@ -1327,6 +1492,13 @@ static gboolean dnd_album_drag_drop(GtkWidget *widget, GdkDragContext *drag_cont
 	return FALSE;
 }
 
+/**
+ * dnd_images_drag_data_get:
+ *
+ * Provide the images which are to be dnded
+ * onto the new album in the album tree.
+ * 
+ */
 static void dnd_images_drag_data_get(GtkWidget *widget, GdkDragContext *dc, GtkSelectionData *data, guint info, guint time,
 		gpointer user_data)
 {
@@ -1369,6 +1541,14 @@ static void dnd_images_drag_data_get(GtkWidget *widget, GdkDragContext *dc, GtkS
 	}
 }
 
+/**
+ * dnd_album_data_received:
+ *
+ * The final part of the dnd images onto album dnd
+ * operation. This uses the data received and adds
+ * the images to the new album.
+ * 
+ */
 static void dnd_album_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x, gint y, GtkSelectionData *data, guint info,
 		guint time, gpointer user_data)
 {

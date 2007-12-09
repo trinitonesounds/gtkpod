@@ -1,3 +1,13 @@
+2007-12-09 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * src/display_photos.c:
+  
+  When adding multiple images to photo collection, they are now
+  added in alphabetical order by filename. Thansk to Andrew W.
+  Nosenko for the patch.
+  
+  Improved doc comments around photo functions.
+
 2007-12-06  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
     * data/gtkpod.desktop.in:
