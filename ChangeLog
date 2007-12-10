@@ -1,3 +1,57 @@
+gtkpod V0.99.12
+
+       NEW FEATURE: Import and management of photographs on ipods
+       that support them. Update of README to include photo management.
+       
+       UPDATE: Application requires libgpod version 0.6.0 or higher.
+      
+       UPDATE: Better icon them specification compliance.
+
+       BUGFIX: Fixes to tomboy script. Thanks to Javier Kohen.
+
+       BUGFIX: Issues with display of track length. Inconsistent units used
+       in conjunction with libgpod (Jorg).
+
+       UPDATE: Cover art preview window either displays an album cover
+       to its full size or to a size consistent with the user's desktop.       
+
+       UPDATE: Download of Album Art from the net feature modified to the
+       ability of dragging-and-dropping a .jpg image from a web browser. This
+       has been changed due to licensing concerns over album art. Drag and 
+       Drop section of README updated accordingly (Paul).
+
+       BUGFIX: Issues on detecting changed local / podcast database. Thanks to
+       Mario Rossi.
+
+       BUGFIX: Issues addressed on Details Window.
+
+       BUGFIX: Crash avoided when auto-detecting an iTunes database that 
+       cannot be read.
+
+       UPDATE: Display of error output of scripts (Jorg).
+
+       IMPROVEMENT: Configuring and Compilation support (Todd).
+
+       UPDATE: New scripts for flac, ogg, mp3, m4a, wav conversion to mp3 and
+       m4a. Thanks to Peter van de Does.  
+
+       BUGFIX: Model number identified and written to ipod upon loading to ensure
+       libgpod can read the ipod's artwork.
+
+       NEW FEATURE: Added Romanian translation support. Thanks to 
+       Alex Eftimie.
+
+       UPDATE: Updates and bug fixes to gapless playback. Thanks to
+       Michael Tiffany.
+
+       BUGFIX: When Cover Art Display is widened, covers space out rather
+       than stretch.       
+
+       UPDATE: French Translation. Thanks to Eric Lassauge.
+     
+       BUGFIX: Fixed memory leaks in CoverArt Display and Details window.
+       Thanks to Daniele Forsi.
+
 gtkpod V0.99.10
 
        NEW FEATURE: on-the-fly conversion of WAV, FLAC and OGG (as well

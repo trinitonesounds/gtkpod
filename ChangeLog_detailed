@@ -1,5 +1,9 @@
 2007-12-09 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
+  * Added updates since July to ChangeLog. 
+
+2007-12-09 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
   * src/display_photos.c:
   
   When adding multiple images to photo collection, they are now
