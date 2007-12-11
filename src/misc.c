@@ -61,208 +61,117 @@ const gchar *SCRIPTDIR = PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARA
  *                                                                  *
 \*------------------------------------------------------------------*/
 
-static GtkWidget *about_window = NULL;
-
 /* ATTENTION: directly used as callback in gtkpod.glade -- if you
    change the arguments of this function make sure you define a
    separate callback for gtkpod.glade */
 void open_about_window ()
 {
-  GtkLabel *about_label;
-  gchar *label_text;
-  GtkTextView *textview;
-  GtkTextIter ti;
-  GtkTextBuffer *tb;
-  GladeXML *about_xml;
+	const gchar *authors[] = {
+		_("© 2002 - 2007\n"
+		    "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
+		    "Corey Donohoe (atmos at atmos dot org)\n"
+		    ""),
+		_("Patches were supplied by the following people (list may be incomplete -- please contact me)\n"),
+		_("Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"),
+		_("Hiroshi Kawashima: Japanese charset autodetecion feature"),
+		_("Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"),
+		_("Walter Bell: correct handling of DND URIs with escaped characters and/or cr/newlines at the end"),
+		_("Sam Clegg: user defined filenames when exporting tracks from the iPod"),
+		_("Chris Cutler: automatic creation of various playlist types"),
+		_("Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress dialogue during sync"),
+		_("Edward Matteucci: debugging, special playlist creation, most of the volume normalizing code"),
+		_("Jens Lautenbach: some optical improvements"),
+		_("Alex Tribble: iPod eject patch"),
+		_("Yaroslav Halchenko: Orphaned and dangling tracks handling"),
+		_("Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"),
+		_("Ero Carrera: Filename validation and quick sync when copying tracks from the iPod"),
+		_("Jens Taprogge: Support for LAME's replay gain tag to normalize volume"),
+		_("Armando Atienza: Support with external playcounts"),
+		_("D.L. Sharp: Support for m4b files (bookmarkable AAC files)"),
+		_("Jim Hall: Decent INSTALL file"),
+		_("Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/contacts to the iPod"),    /* J"urgen! */
+		_("Flavio Stanchina: bugfixes"),
+		_("Chris Micacchi: when sorting ignore 'the' and similar at the beginning of the title"),
+		_("Steve Jay: use statvfs() instead of df (better portability, faster)"),
+		"",
+		_("Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 tags"),
+		"",
+		_("James Liggett:\n"
+		    "replacement of old GTK file selection dialogs with new GTK filechooser dialogs\n"
+		    "refactored user preferences system."),
+		"",
+		_("Daniel Kercher: sync scripts for abook and webcalendar"),
+		"",
+		_("Clinton Gormley: sync scripts for thunderbird"),
+		"",
+		_("Sebastien Beridot: sync script for ldif addressbook format"),
+		"",
+		_("Sebastian Scherer: sync script for kNotes"),
+		"",
+		_("Nick Piper: sync script for Palm, type-ahead search"),
+		"",
+		_("Uwe Hermann: help with support for iPod Video"),
+		"",
+		_("Iain Benson: support for compilation tag in mp3 files and separate display of compilations in the sort tab."),
+		_("Nicolas Chariot: icons of buttons\n"
+		    "\n"),
+		_("This program borrows code from the following projects:"),
+		_("gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  (http://www.gnu.org/software/gnupod/)"),
+		_("iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some code for smart playlists is based on his C++-classes."),
+		_("mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"),
+		_("xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"),
+		"",
+		_("The GUI was created with the help of glade-2 (http://glade.gnome.org/)."),
+		NULL };
 
-  if (about_window != NULL) return;
-  /* about_window = create_gtkpod_about_window (); */
+	gchar  *translators[] = {
+		_("French: David Le Brun (david at dyn-ns dot net)"),
+		_("German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"),
+		_("Hebrew: Assaf Gillat (gillata at gmail dot com)"),
+		_("Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot net)"),
+		_("Japanese: Ayako Sano"),
+		_("Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"),
+		_("Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)"),
+		NULL
+	};
 
-  about_xml = glade_xml_new (xml_file, "gtkpod_about_window", NULL);
-  glade_xml_signal_autoconnect (about_xml);
-  about_window = gtkpod_xml_get_widget (about_xml, "gtkpod_about_window");
-  
-  
-  about_label = GTK_LABEL (gtkpod_xml_get_widget (about_xml, "about_label"));
-  label_text = g_strdup_printf (_("gtkpod Version %s: Cross-Platform Multi-Lingual Interface to Apple's iPod(tm)."), VERSION);
-  gtk_label_set_text (about_label, label_text);
-  g_free (label_text);
-  {
-      gchar *text[] = {_("\
-(C) 2002 - 2007\n\
-Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n\
-Corey Donohoe (atmos at atmos dot org)\n\
-\n\
-\n"),
-		       _("\
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n\
-\n\
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\
-\n\
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.\n\
-\n\
-\n"),
-		       _("\
-Patches were supplied by the following people (list may be incomplete -- please contact me)\n\n"),
-		       _("\
-Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)\n"),
-		       _("\
-Hiroshi Kawashima: Japanese charset autodetecion feature\n"),
-		       _("\
-Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n"),
-		       _("\
-Walter Bell: correct handling of DND URIs with escaped characters and/or cr/newlines at the end\n"),
-		       _("\
-Sam Clegg: user defined filenames when exporting tracks from the iPod\n"),
-		       _("\
-Chris Cutler: automatic creation of various playlist types\n"),
-		       _("\
-Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress dialogue during sync\n"),
-		       _("\
-Edward Matteucci: debugging, special playlist creation, most of the volume normalizing code\n"),
-		       _("\
-Jens Lautenbach: some optical improvements\n"),
-		       _("\
-Alex Tribble: iPod eject patch\n"),
-		       _("\
-Yaroslav Halchenko: Orphaned and dangling tracks handling\n"),
-		       _("\
-Andrew Huntwork: Filename case sensitivity fix and various other bugfixes\n"),
-		       _("\
-Ero Carrera: Filename validation and quick sync when copying tracks from the iPod\n"),
-		       _("\
-Jens Taprogge: Support for LAME's replay gain tag to normalize volume\n"),
-		       _("\
-Armando Atienza: Support with external playcounts\n"),
-		       _("\
-D.L. Sharp: Support for m4b files (bookmarkable AAC files)\n"),
-		       _("\
-Jim Hall: Decent INSTALL file\n"),
-		       _("\
-Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/contacts to the iPod\n"),    /* J"urgen! */
-		       _("\
-Flavio Stanchina: bugfixes\n"),
-		       _("\
-Chris Micacchi: when sorting ignore 'the' and similar at the beginning of the title\n"),
-		       _("\
-Steve Jay: use statvfs() instead of df (better portability, faster)\n"),
-		       "\n",
-		       _("\
-Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 tags\n"),
-		       "\n",
-		       _("\
-James Liggett:\n\
-     replacement of old GTK file selection dialogs with new GTK filechooser dialogs\n\
-     refactored user preferences system.\n"),
-                       "\n",
-		       _("\
-Daniel Kercher: sync scripts for abook and webcalendar\n"),
-		       "\n",
-		       _("\
-Clinton Gormley: sync scripts for thunderbird\n"),
-		       "\n",
-		       _("\
-Sebastien Beridot: sync script for ldif addressbook format\n"),
-		       "\n",
-		       _("\
-Sebastian Scherer: sync script for kNotes\n"),
-		       "\n",
-		       _("\
-Nick Piper: sync script for Palm, type-ahead search\n"),
-		       "\n",
-		       _("\
-Uwe Hermann: help with support for iPod Video\n"),
-		       "\n",
-		       _("\
-Iain Benson: support for compilation tag in mp3 files and separate display of compilations in the sort tab.\n"),
-		       _("\
-Nicolas Chariot: icons of buttons\n\
-\n\
-\n"),
-		       _("\
-This program borrows code from the following projects:\n"),
-		       _("\
-    gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB (http://www.gnu.org/software/gnupod/)\n"),
-		       _("\
-    iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some code for smart playlists is based on his C++-classes.\n"),
-		       _("\
-    mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n"),
-		       _("\
-    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"),
-		       "\n",
-		       _("\
-The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"),
-		       NULL };
-      gchar **strp = text;
-      textview = GTK_TEXT_VIEW (gtkpod_xml_get_widget (about_xml, "credits_textview"));
-      tb = gtk_text_view_get_buffer (textview);
-      while (*strp)
-      {
-	  gtk_text_buffer_get_end_iter (tb, &ti);
-	  gtk_text_buffer_insert (tb, &ti, *strp, -1);
-	  ++strp;
-      }
-  }
+	gchar *license = _(
+		"This program is free software; you can redistribute it and/or\n"
+		"modify it under the terms of the GNU General Public License as\n"
+		"published by the Free Software Foundation; either version 2 of the\n"
+		"License, or (at your option) any later version.\n"
+		"\n"
+		"This program is distributed in the hope that it will be useful, but\n"
+		"WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+		"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
+		"the GNU General Public License for more details.\n"
+		"\n"
+		"You should have received a copy of the GNU General Public\n"
+		"License along with this program; if not, write to the Free Software\n"
+		"Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n02111-1307, USA."
+	);
 
- {
-     gchar  *text[] = { _("\
-French:   David Le Brun (david at dyn-ns dot net)\n"),
-				     _("\
-German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"),
-			             _("\
-Hebrew: Assaf Gillat (gillata at gmail dot com)\n"),
-				     _("\
-Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot net)\n"),
-				     _("\
-Japanese: Ayako Sano\n"),
-				     _("\
-Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"),
-				     _("\
-Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)\n"),
-				     NULL };
-      gchar **strp = text;
-      textview = GTK_TEXT_VIEW (gtkpod_xml_get_widget (about_xml, "translators_textview"));
-      tb = gtk_text_view_get_buffer (textview);
-      while (*strp)
-      {
-	  gtk_text_buffer_get_end_iter (tb, &ti);
-	  gtk_text_buffer_insert (tb, &ti, *strp, -1);
-	  ++strp;
-      }
-  }
+	gchar *copyright = _("© 2002-2007\nJorg Schuler <jcsjcs@users.sourceforge.net>\nCorey Donohoe <atmos@atmos.org>");
+	gchar *translator_credits = g_strjoinv("\n", translators);
+	GdkPixbuf *icon = gdk_pixbuf_new_from_file(PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "data" G_DIR_SEPARATOR_S "gtkpod-logo.png", NULL);
 
-  gtk_widget_show (about_window);
+	gtk_show_about_dialog(GTK_WINDOW(gtkpod_window),
+		"name", "gtkpod",
+		"version", VERSION,
+		"logo", icon,
+		"comments", _("Cross-platform multilingual interface to Apple's iPod™"),
+		"copyright", copyright,
+		"website", "http://gtkpod.org",
+		"license", license,
+		"authors", authors,
+		"translator_credits", translator_credits,
+		NULL);
+
+	g_free(translator_credits);
+
+	if(icon)
+		g_object_unref(icon);
 }
-
-
-/* callback for close button */
-void
-on_about_window_close_button           (GtkButton       *button,
-					gpointer         user_data)
-{
-  close_about_window (); /* in misc.c */
-}
-
-
-/* callback for window close button */
-gboolean
-on_about_window_close                  (GtkWidget       *widget,
-					GdkEvent        *event,
-					gpointer         user_data)
-{
-  close_about_window (); /* in misc.c */
-  return FALSE;
-}
-
-
-void close_about_window (void)
-{
-  g_return_if_fail (about_window != NULL);
-  gtk_widget_destroy (about_window);
-  about_window = NULL;
-}
-
-
 
 
 /*------------------------------------------------------------------*\

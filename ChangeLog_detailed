@@ -9,6 +9,9 @@
           non-transfered tracks. Unable to reproduce the problem
           myself so I have no way to say whether this is a fix or not.
 
+	* src/misc.h
+	  src/misc.c: use standard gtk_about_dialog(). Thanks to Sikon.
+
 2007-12-11  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* data/gtkpod.glade:
