@@ -1,11 +1,22 @@
 2007-12-11  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
-    * data/gtkpod.glade:
-      map ctrl-s to "Save Changes" instead of "Sorting Options"
+	* data/gtkpod.glade:
+	  map ctrl-s to "Save Changes" instead of "Sorting Options"
 
-    * po/POTFILES.in
-      po/POTFILES.skip:
-      add some missing files
+	* po/POTFILES.in
+	  po/POTFILES.skip:
+	  add some missing files
+
+	* po/es.po
+	  po/fr.po
+	  po/de.po
+	  po/sv.po
+	  po/ja.po
+	  po/gtkpod.pot
+	  po/he.po
+	  po/it.po
+	  po/ro.po:
+	  update translation templates
 
 2007-12-09 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
