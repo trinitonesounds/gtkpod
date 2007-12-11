@@ -69,6 +69,7 @@
 		      <property name="label" translatable="yes">_Save Changes</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="on_save_changes_mi" last_modification_time="Sat, 20 May 2006 14:22:12 GMT"/>
+		      <accelerator key="s" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
 			<widget class="GtkImage" id="image3993">
@@ -861,7 +862,6 @@
 		      <property name="label" translatable="yes">_Sorting</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="on_sorting_activate" last_modification_time="Mon, 22 Sep 2003 08:00:42 GMT"/>
-		      <accelerator key="s" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
 			<widget class="GtkImage" id="image4006">

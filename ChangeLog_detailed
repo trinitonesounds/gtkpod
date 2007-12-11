@@ -1,3 +1,8 @@
+2007-12-11  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+    * data/gtkpod.glade:
+      map ctrl-s to "Save Changes" instead of "Sorting Options"
+
 2007-12-09 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * Added updates since July to ChangeLog. 
