@@ -1,3 +1,14 @@
+2007-12-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/mp3file.c(get_mp3_info): fix integer overlow in
+          calculation of track length of very long tracks. Thanks to
+          Dylan Hall.
+
+	* src/file_convert.c(conversion_scheduler_unlocked,
+          transfer_get_failed_tracks): attempt to fix the problem of
+          non-transfered tracks. Unable to reproduce the problem
+          myself so I have no way to say whether this is a fix or not.
+
 2007-12-11  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* data/gtkpod.glade:

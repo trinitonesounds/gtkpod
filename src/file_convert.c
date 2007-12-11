@@ -1675,6 +1675,8 @@ static gboolean conversion_scheduler_unlocked (Conversion *conv)
 			g_free (ctr->errormessage);
 			ctr->errormessage = NULL;
 		    }
+		    g_free (ctr->dest_filename);
+		    ctr->dest_filename = NULL;
 		    tri->finished = g_list_prepend (tri->finished, ctr);
 		}
 		else
@@ -2699,11 +2701,8 @@ static GList *transfer_get_failed_tracks (Conversion *conv, iTunesDB *itdb)
     tri = transfer_get_tri (conv, itdb);
     g_return_val_if_fail (tri, (g_mutex_unlock (conv->mutex), NULL));
 
-    if (conv->failed || tri->failed)
-    {   /* move the tracks over to tri->finished by calling the
-	   scheduler directly */
-	conversion_scheduler_unlocked (conv);
-    }
+    /* Make sure all failed tracks are forwarded to tri->finished */
+    conversion_scheduler_unlocked (conv);
 
     for (gl=tri->finished; gl; gl=gl->next)
     {

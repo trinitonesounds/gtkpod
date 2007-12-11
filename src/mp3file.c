@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-07-14 15:47:57 jcs>
+/* Time-stamp: <2007-12-11 21:31:57 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -418,7 +418,7 @@ gint get_next_header(MP3Info *mp3)
 void get_mp3_info(MP3Info *mp3)
 {
   gint frame_type[15]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  float milliseconds=0,total_rate=0;
+  double milliseconds=0,total_rate=0;
   gint frames=0,frame_types=0,frames_so_far=0;
   gint vbr_median=-1;
   guint bitrate;
@@ -447,7 +447,7 @@ void get_mp3_info(MP3Info *mp3)
 	      frames_so_far += frame_type[counter];
 	      header_bitrate = mp3file_header_bitrate(&header);
 	      if (header_bitrate != 0)
-		  milliseconds += (float)(8*frame_length(&header)*frame_type[counter])/header_bitrate;
+                 milliseconds += 8*(double)frame_length(&header)*(double)frame_type[counter]/header_bitrate;
 	      total_rate += header_bitrate*frame_type[counter];
 	      if((vbr_median == -1) && (frames_so_far >= frames/2))
 		  vbr_median=counter;
