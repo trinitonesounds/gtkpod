@@ -4,8 +4,8 @@
 
 data/gtkpod.desktop.in
 data/gtkpod.glade
-src/charset.c
 src/autodetection.c
+src/charset.c
 src/clientserver.c
 src/confirmation.c
 src/context_menus.c
@@ -15,6 +15,7 @@ src/details.c
 src/display.c
 src/display_coverart.c
 src/display_itdb.c
+src/display_photo.c
 src/display_playlists.c
 src/display_sorttabs.c
 src/display_spl.c

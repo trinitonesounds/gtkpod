@@ -3,6 +3,10 @@
     * data/gtkpod.glade:
       map ctrl-s to "Save Changes" instead of "Sorting Options"
 
+    * po/POTFILES.in
+      po/POTFILES.skip:
+      add some missing files
+
 2007-12-09 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * Added updates since July to ChangeLog. 
