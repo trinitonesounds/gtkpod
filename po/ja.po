@@ -7,12 +7,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-11 06:15-0500\n"
+"POT-Creation-Date: 2007-12-13 00:57+0900\n"
 "PO-Revision-Date: 2005-06-20 23:25+0900\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: n/a\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=euc-jp\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
@@ -47,15 +47,15 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:5
 msgid "   Sort by:"
-msgstr "   ¥½¡¼¥È½ç:"
+msgstr "   ã‚½ãƒ¼ãƒˆé †:"
 
 #: ../data/gtkpod.glade.h:6
 msgid " <= cts <= "
-msgstr " <= ²ó¿ô <= "
+msgstr " <= å›æ•° <= "
 
 #: ../data/gtkpod.glade.h:7
 msgid " Logic: "
-msgstr "¾ò·ï: "
+msgstr "æ¡ä»¶: "
 
 #: ../data/gtkpod.glade.h:9
 #, no-c-format
@@ -67,42 +67,42 @@ msgid ""
 "'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when "
 "finished."
 msgstr ""
-"'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' ¤Î¤è¤¦¤ËÀßÄê¤·¤Æ¤¯¤À¤µ¤¤. ½ñ¤­¹ş¤ó"
-"¤À¤é 'enter' ¥­¡¼¤ò²¡¤·¤Æ¤¯¤À¤µ¤¤."
+"'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' ã®ã‚ˆã†ã«è¨­å®šã—ã¦ãã ã•ã„. æ›¸ãè¾¼ã‚“"
+"ã ã‚‰ 'enter' ã‚­ãƒ¼ã‚’æŠ¼ã—ã¦ãã ã•ã„."
 
 #: ../data/gtkpod.glade.h:11
 #, fuzzy
 msgid "'aacgain' executable:"
-msgstr "'mp3gain' ¥³¥Ş¥ó¥É¤Î¾ì½ê:"
+msgstr "'mp3gain' ã‚³ãƒãƒ³ãƒ‰ã®å ´æ‰€:"
 
 #: ../data/gtkpod.glade.h:12
 msgid "'mp3gain' executable:"
-msgstr "'mp3gain' ¥³¥Ş¥ó¥É¤Î¾ì½ê:"
+msgstr "'mp3gain' ã‚³ãƒãƒ³ãƒ‰ã®å ´æ‰€:"
 
 #: ../data/gtkpod.glade.h:13
 #, fuzzy
 msgid "(Checked)"
-msgstr "¥Á¥§¥Ã¥¯ºÑ¤ß"
+msgstr "ãƒã‚§ãƒƒã‚¯æ¸ˆã¿"
 
 #: ../data/gtkpod.glade.h:14
 msgid "...as icons"
-msgstr "¥¢¥¤¥³¥ó¤Î¤ß"
+msgstr "ã‚¢ã‚¤ã‚³ãƒ³ã®ã¿"
 
 #: ../data/gtkpod.glade.h:15
 msgid "...as text"
-msgstr "¥Æ¥­¥¹¥È¤Î¤ß"
+msgstr "ãƒ†ã‚­ã‚¹ãƒˆã®ã¿"
 
 #: ../data/gtkpod.glade.h:16
 msgid "...both as icons and text"
-msgstr "¥¢¥¤¥³¥ó¤È¥Æ¥­¥¹¥È"
+msgstr "ã‚¢ã‚¤ã‚³ãƒ³ã¨ãƒ†ã‚­ã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:17
 msgid "...entry 'All' in sort tab..."
-msgstr "...°Ê²¼¤Î¥½¡¼¥È¥¿¥ÖÆâ¤Î¡Ö¤¹¤Ù¤Æ¡×¤Î¹àÌÜ"
+msgstr "...ä»¥ä¸‹ã®ã‚½ãƒ¼ãƒˆã‚¿ãƒ–å†…ã®ã€Œã™ã¹ã¦ã€ã®é …ç›®"
 
 #: ../data/gtkpod.glade.h:18
 msgid "...master playlist"
-msgstr "...¥Ş¥¹¥¿¡¼¥×¥ì¥¤¥ê¥¹¥È"
+msgstr "...ãƒã‚¹ã‚¿ãƒ¼ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:20
 #, no-c-format
@@ -144,24 +144,24 @@ msgstr ""
 #: ../data/gtkpod.glade.h:29
 #, fuzzy
 msgid "<b>Account Information</b>"
-msgstr "<b>ºï½ü¤Î³ÎÇ§</b>"
+msgstr "<b>å‰Šé™¤ã®ç¢ºèª</b>"
 
 #: ../data/gtkpod.glade.h:30
 msgid "<b>Adding/Updating/Syncing</b>"
-msgstr "<b>ÅĞÏ¿/¹¹¿·/Æ±´ü</b>"
+msgstr "<b>ç™»éŒ²/æ›´æ–°/åŒæœŸ</b>"
 
 #: ../data/gtkpod.glade.h:31
 #, fuzzy
 msgid "<b>Audioscrobbler</b>"
-msgstr "<b>¥Ä¡¼¥ë¥Ğ¡¼</b>"
+msgstr "<b>ãƒ„ãƒ¼ãƒ«ãƒãƒ¼</b>"
 
 #: ../data/gtkpod.glade.h:32
 msgid "<b>Auto-Generated Playlists</b>"
-msgstr "<b>¥×¥ì¥¤¥ê¥¹¥È¤Î¼«Æ°À¸À®</b>"
+msgstr "<b>ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®è‡ªå‹•ç”Ÿæˆ</b>"
 
 #: ../data/gtkpod.glade.h:33
 msgid "<b>Automatically select...</b>"
-msgstr "<b>¼«Æ°Åª¤ËÁªÂò...</b>"
+msgstr "<b>è‡ªå‹•çš„ã«é¸æŠ...</b>"
 
 #: ../data/gtkpod.glade.h:34
 msgid "<b>Calendar/Contacts/Notes</b>"
@@ -170,15 +170,15 @@ msgstr ""
 #: ../data/gtkpod.glade.h:35
 #, fuzzy
 msgid "<b>Coverart</b>"
-msgstr "<b>¥¤¥ó¥İ¡¼¥È</b>"
+msgstr "<b>ã‚¤ãƒ³ãƒãƒ¼ãƒˆ</b>"
 
 #: ../data/gtkpod.glade.h:36
 msgid "<b>Delete Confirmation</b>"
-msgstr "<b>ºï½ü¤Î³ÎÇ§</b>"
+msgstr "<b>å‰Šé™¤ã®ç¢ºèª</b>"
 
 #: ../data/gtkpod.glade.h:37
 msgid "<b>Examples</b>"
-msgstr "<b>Îã</b>"
+msgstr "<b>ä¾‹</b>"
 
 #: ../data/gtkpod.glade.h:38
 msgid "<b>Ignore Frequent Words</b>"
@@ -186,7 +186,7 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:39
 msgid "<b>Misc</b>"
-msgstr "<b>¤½¤ÎÂ¾</b>"
+msgstr "<b>ãã®ä»–</b>"
 
 #: ../data/gtkpod.glade.h:40
 msgid "<b>Mountpoint and individual repository/playlist options</b>"
@@ -195,16 +195,16 @@ msgstr ""
 #: ../data/gtkpod.glade.h:41
 #, fuzzy
 msgid "<b>On-the-fly Conversion</b>"
-msgstr "<b>ºï½ü¤Î³ÎÇ§</b>"
+msgstr "<b>å‰Šé™¤ã®ç¢ºèª</b>"
 
 #: ../data/gtkpod.glade.h:42
 msgid "<b>Play</b>"
-msgstr "<b>ºÆÀ¸</b>"
+msgstr "<b>å†ç”Ÿ</b>"
 
 #: ../data/gtkpod.glade.h:43
 #, fuzzy
 msgid "<b>Playlists</b>"
-msgstr "<b>ºÆÀ¸</b>"
+msgstr "<b>å†ç”Ÿ</b>"
 
 #: ../data/gtkpod.glade.h:44
 msgid "<b>Please select mountpoint and your iPod model</b>"
@@ -213,20 +213,20 @@ msgstr ""
 #: ../data/gtkpod.glade.h:45
 #, fuzzy
 msgid "<b>Repositories</b>"
-msgstr "<b>¥Ä¡¼¥ë¥Á¥Ã¥×</b>"
+msgstr "<b>ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—</b>"
 
 #: ../data/gtkpod.glade.h:46
 #, fuzzy
 msgid "<b>Resolution:</b>"
-msgstr "<b>¥Ä¡¼¥ë¥Á¥Ã¥×</b>"
+msgstr "<b>ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—</b>"
 
 #: ../data/gtkpod.glade.h:47
 msgid "<b>Sort Order</b>"
-msgstr "<b>¥½¡¼¥È½ç</b>"
+msgstr "<b>ã‚½ãƒ¼ãƒˆé †</b>"
 
 #: ../data/gtkpod.glade.h:48
 msgid "<b>Sort Tabs</b>"
-msgstr "<b>¥½¡¼¥È¥¿¥Ö</b>"
+msgstr "<b>ã‚½ãƒ¼ãƒˆã‚¿ãƒ–</b>"
 
 #: ../data/gtkpod.glade.h:49
 msgid "<b>Sync</b>"
@@ -234,32 +234,32 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:50
 msgid "<b>Synchronization</b>"
-msgstr "<b>Æ±´ü</b>"
+msgstr "<b>åŒæœŸ</b>"
 
 #: ../data/gtkpod.glade.h:51
 msgid "<b>Tag Reading</b>"
-msgstr "<b>¥¿¥°¤ÎÆÉ¤ß¹ş¤ß</b>"
+msgstr "<b>ã‚¿ã‚°ã®èª­ã¿è¾¼ã¿</b>"
 
 #: ../data/gtkpod.glade.h:52
 msgid "<b>Toolbar</b>"
-msgstr "<b>¥Ä¡¼¥ë¥Ğ¡¼</b>"
+msgstr "<b>ãƒ„ãƒ¼ãƒ«ãƒãƒ¼</b>"
 
 #: ../data/gtkpod.glade.h:53
 msgid "<b>Tooltips</b>"
-msgstr "<b>¥Ä¡¼¥ë¥Á¥Ã¥×</b>"
+msgstr "<b>ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—</b>"
 
 #: ../data/gtkpod.glade.h:54
 #, fuzzy
 msgid "<b>Track Attributes</b>"
-msgstr "<b>É½¼¨¤¹¤ë¶ÊÂ°À­</b>"
+msgstr "<b>è¡¨ç¤ºã™ã‚‹æ›²å±æ€§</b>"
 
 #: ../data/gtkpod.glade.h:55
 msgid "<b>Track Editing</b>"
-msgstr "<b>¶Ê¤ÎÊÔ½¸</b>"
+msgstr "<b>æ›²ã®ç·¨é›†</b>"
 
 #: ../data/gtkpod.glade.h:56
 msgid "<b>Volume Normalization</b>"
-msgstr "<b>²»ÎÌ¤ÎÊ¿¶Ñ²½</b>"
+msgstr "<b>éŸ³é‡ã®å¹³å‡åŒ–</b>"
 
 #: ../data/gtkpod.glade.h:57
 msgid "<b>mserv</b>"
@@ -271,297 +271,313 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:59
 msgid "About gtkpod"
-msgstr "gtkpod ¤Ë¤Ä¤¤¤Æ"
+msgstr "gtkpod ã«ã¤ã„ã¦"
 
 #: ../data/gtkpod.glade.h:60
 msgid "Add Directories Recursively"
-msgstr "¥Ç¥£¥ì¥¯¥È¥ê¤òºÆµ¢Åª¤ËÄÉ²Ã¤·¤Ş¤¹"
+msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å†å¸°çš„ã«è¿½åŠ ã—ã¾ã™"
 
 #: ../data/gtkpod.glade.h:61
-msgid "Add Files or Directories"
-msgstr "¥Õ¥¡¥¤¥ë¤Ş¤¿¤Ï¥Ç¥£¥ì¥¯¥È¥ê¤òÄÉ²Ã¤·¤Ş¤¹"
+#, fuzzy
+msgid "Add Files"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã™ã‚‹(_F)"
 
 #: ../data/gtkpod.glade.h:62
-msgid "Add Image_s"
-msgstr ""
+msgid "Add Files or Directories"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã¾ãŸã¯ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¿½åŠ ã—ã¾ã™"
 
 #: ../data/gtkpod.glade.h:63
 #, fuzzy
-msgid "Add Images from a Directory"
-msgstr "¥Õ¥¡¥¤¥ë¤Ş¤¿¤Ï¥Ç¥£¥ì¥¯¥È¥ê¤òÄÉ²Ã¤·¤Ş¤¹"
+msgid "Add Fol_der"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã™ã‚‹(_F)"
 
 #: ../data/gtkpod.glade.h:64
-msgid "Add _Directory"
-msgstr "¥Ç¥£¥ì¥¯¥È¥ê¤òÄÉ²Ã¤¹¤ë(_D)"
+#, fuzzy
+msgid "Add Folder"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã™ã‚‹(_F)"
 
 #: ../data/gtkpod.glade.h:65
-msgid "Add _Files"
-msgstr "¥Õ¥¡¥¤¥ë¤òÄÉ²Ã¤¹¤ë(_F)"
+msgid "Add Image_s"
+msgstr ""
 
 #: ../data/gtkpod.glade.h:66
-msgid "Add _Playlist"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤òÄÉ²Ã¤¹¤ë(_P)"
+#, fuzzy
+msgid "Add Images from a Directory"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã¾ãŸã¯ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¿½åŠ ã—ã¾ã™"
 
 #: ../data/gtkpod.glade.h:67
 #, fuzzy
-msgid "Add coverart from file using the following template"
-msgstr "¼¡¤Î¥Æ¥ó¥×¥ì¡¼¥È¤Ë¹ç¤¦¥Õ¥¡¥¤¥ë¤ò¥¢¡¼¥È¥ï¡¼¥¯¤È¤·¤ÆÅĞÏ¿¤¹¤ë"
+msgid "Add Playlist"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’è¿½åŠ ã™ã‚‹(_P)"
 
 #: ../data/gtkpod.glade.h:68
-msgid "Add directories recursively"
-msgstr "¥Ç¥£¥ì¥¯¥È¥ê¤òºÆµ¢Åª¤ËÄÉ²Ã¤¹¤ë"
+msgid "Add _Files"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã™ã‚‹(_F)"
 
 #: ../data/gtkpod.glade.h:69
+msgid "Add _Playlist"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’è¿½åŠ ã™ã‚‹(_P)"
+
+#: ../data/gtkpod.glade.h:70
+#, fuzzy
+msgid "Add coverart from file using the following template"
+msgstr "æ¬¡ã®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã«åˆã†ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¢ãƒ¼ãƒˆãƒ¯ãƒ¼ã‚¯ã¨ã—ã¦ç™»éŒ²ã™ã‚‹"
+
+#: ../data/gtkpod.glade.h:71
+msgid "Add directories recursively"
+msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å†å¸°çš„ã«è¿½åŠ ã™ã‚‹"
+
+#: ../data/gtkpod.glade.h:72
 msgid "Add new repository/iPod"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:70
+#: ../data/gtkpod.glade.h:73
 msgid "Add playlist from file"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤ò¥Õ¥¡¥¤¥ë¤«¤éÆÉ¤ß¹ş¤ó¤ÇÄÉ²Ã¤·¤Ş¤¹"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­ã¿è¾¼ã‚“ã§è¿½åŠ ã—ã¾ã™"
 
-#: ../data/gtkpod.glade.h:71 ../src/display_sorttabs.c:3247
+#: ../data/gtkpod.glade.h:74 ../src/display_sorttabs.c:3247
 #: ../src/display_tracks.c:2103
 msgid "Added"
-msgstr "ÅĞÏ¿Æü"
+msgstr "ç™»éŒ²æ—¥"
 
-#: ../data/gtkpod.glade.h:72
+#: ../data/gtkpod.glade.h:75
 msgid "Advanced Sorting Options"
 msgstr ""
 
 #. 0
-#: ../data/gtkpod.glade.h:73 ../src/display_sorttabs.c:2982
+#: ../data/gtkpod.glade.h:76 ../src/display_sorttabs.c:2982
 #: ../src/display_spl.c:84 ../src/misc_conversion.c:60
 msgid "Album"
-msgstr "¥¢¥ë¥Ğ¥à"
-
-#: ../data/gtkpod.glade.h:74
-#, fuzzy
-msgid "Album Art"
-msgstr "¥¢¥ë¥Ğ¥à"
-
-#: ../data/gtkpod.glade.h:75
-msgid "All (AND)"
-msgstr "¤¹¤Ù¤Æ(AND)"
-
-#: ../data/gtkpod.glade.h:76
-msgid "All Tracks Never Listened To"
-msgstr "°ìÅÙ¤âÄ°¤¤¤¿»ö¤¬¤Ê¤¤¶Ê"
+msgstr "ã‚¢ãƒ«ãƒãƒ "
 
 #: ../data/gtkpod.glade.h:77
-msgid "All Tracks Played Since Last Time"
-msgstr "Á°²ó°Ê¹ßºÆÀ¸¤µ¤ì¤¿¶Ê"
+#, fuzzy
+msgid "Album Art"
+msgstr "ã‚¢ãƒ«ãƒãƒ "
 
 #: ../data/gtkpod.glade.h:78
-msgid "All Tracks not Listed in any Playlist"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤ËºÜ¤Ã¤Æ¤¤¤Ê¤¤¤¹¤Ù¤Æ¤Î¶Ê"
+msgid "All (AND)"
+msgstr "ã™ã¹ã¦(AND)"
 
 #: ../data/gtkpod.glade.h:79
-msgid "Also include tracks never played in \"Best Rated\" playlist"
-msgstr ""
-"¡ÖÉ¾²Á¤Î¹â¤¤¶Ê¡×¤Î¥ê¥¹¥È¤òºî¤ëºİ¤Ë¡¢°ìÅÙ¤â\n"
-"ºÆÀ¸¤µ¤ì¤¿»ö¤Î¤Ê¤¤¶Ê¤âÂĞ¾İ¤È¤·¤Ş¤¹¡£"
+msgid "All Tracks Never Listened To"
+msgstr "ä¸€åº¦ã‚‚è´ã„ãŸäº‹ãŒãªã„æ›²"
 
 #: ../data/gtkpod.glade.h:80
-msgid "Always write ID3v2.4 tags (only applies to MP3)"
-msgstr "¾ï¤Ë ID3v2.4 ¥¿¥°¤ò½ñ¤­¹ş¤à (MP3 ¤Î¤ß)"
+msgid "All Tracks Played Since Last Time"
+msgstr "å‰å›ä»¥é™å†ç”Ÿã•ã‚ŒãŸæ›²"
 
 #: ../data/gtkpod.glade.h:81
-msgid "Any (OR)"
-msgstr "¤¤¤º¤ì¤«(OR)"
+msgid "All Tracks not Listed in any Playlist"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã«è¼‰ã£ã¦ã„ãªã„ã™ã¹ã¦ã®æ›²"
 
-#: ../data/gtkpod.glade.h:82 ../src/display_sorttabs.c:2979
-#: ../src/display_spl.c:85 ../src/misc_conversion.c:61
-msgid "Artist"
-msgstr "¥¢¡¼¥Æ¥£¥¹¥È"
+#: ../data/gtkpod.glade.h:82
+msgid "Also include tracks never played in \"Best Rated\" playlist"
+msgstr ""
+"ã€Œè©•ä¾¡ã®é«˜ã„æ›²ã€ã®ãƒªã‚¹ãƒˆã‚’ä½œã‚‹éš›ã«ã€ä¸€åº¦ã‚‚\n"
+"å†ç”Ÿã•ã‚ŒãŸäº‹ã®ãªã„æ›²ã‚‚å¯¾è±¡ã¨ã—ã¾ã™ã€‚"
 
 #: ../data/gtkpod.glade.h:83
-#, fuzzy
-msgid "Artwork Preview"
-msgstr "¤¬ÀßÄê¤µ¤ì¤Æ¤¤¤Ê¤¤"
+msgid "Always write ID3v2.4 tags (only applies to MP3)"
+msgstr "å¸¸ã« ID3v2.4 ã‚¿ã‚°ã‚’æ›¸ãè¾¼ã‚€ (MP3 ã®ã¿)"
 
 #: ../data/gtkpod.glade.h:84
+msgid "Any (OR)"
+msgstr "ã„ãšã‚Œã‹(OR)"
+
+#: ../data/gtkpod.glade.h:85 ../src/display_sorttabs.c:2979
+#: ../src/display_spl.c:85 ../src/misc_conversion.c:61
+msgid "Artist"
+msgstr "ã‚¢ãƒ¼ãƒ†ã‚£ã‚¹ãƒˆ"
+
+#: ../data/gtkpod.glade.h:86
+#, fuzzy
+msgid "Artwork Preview"
+msgstr "ãŒè¨­å®šã•ã‚Œã¦ã„ãªã„"
+
+#: ../data/gtkpod.glade.h:87
 msgid ""
 "As a last resort set the following tags to the\n"
 "filename if they are (still) empty:"
 msgstr ""
-"ºÇ¸å¤Î¼êÃÊ¤È¤·¤Æ¡¢°Ê²¼¤Î¥¿¥°¤¬Ì¤ÀßÄê¤Î¾ì¹ç¤Ë¥Õ¥¡¥¤¥ëÌ¾¤ò¤½¤ÎÃÍ¤È¤·¤Æ»ÈÍÑ¤¹¤ë:"
+"æœ€å¾Œã®æ‰‹æ®µã¨ã—ã¦ã€ä»¥ä¸‹ã®ã‚¿ã‚°ãŒæœªè¨­å®šã®å ´åˆã«ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ãã®å€¤ã¨ã—ã¦ä½¿ç”¨ã™ã‚‹:"
 
-#: ../data/gtkpod.glade.h:86
+#: ../data/gtkpod.glade.h:89
 msgid "Ascending"
-msgstr "¾º½ç"
+msgstr "æ˜‡é †"
 
-#: ../data/gtkpod.glade.h:87
+#: ../data/gtkpod.glade.h:90
 msgid "Auto Store"
-msgstr "¼«Æ°ÊİÂ¸"
+msgstr "è‡ªå‹•ä¿å­˜"
 
-#: ../data/gtkpod.glade.h:88
+#: ../data/gtkpod.glade.h:91
 msgid ""
 "Automatically start displaying tracks that match the criteria entered above. "
 "If not selected, you must press 'Display' to start displaying."
 msgstr ""
-"³Æ¹àÌÜ¤¬ÆşÎÏ¤µ¤ì¤ë¤È¤¹¤°¤ËÉ½¼¨¤ò¹¹¿·¤·¤Ş¤¹. ¤³¤Î¹àÌÜ¤¬ÁªÂò¤µ¤ì¤Æ¤¤¤Ê¤¤»ş¤Ë"
-"¤Ï¡¢¡ÖÉ½¼¨¡×¥Ü¥¿¥ó¤ò²¡¤¹¤³¤È¤Ç¹¹¿·¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤¹."
+"å„é …ç›®ãŒå…¥åŠ›ã•ã‚Œã‚‹ã¨ã™ãã«è¡¨ç¤ºã‚’æ›´æ–°ã—ã¾ã™. ã“ã®é …ç›®ãŒé¸æŠã•ã‚Œã¦ã„ãªã„æ™‚ã«"
+"ã¯ã€ã€Œè¡¨ç¤ºã€ãƒœã‚¿ãƒ³ã‚’æŠ¼ã™ã“ã¨ã§æ›´æ–°ã™ã‚‹ã“ã¨ãŒã§ãã¾ã™."
 
-#: ../data/gtkpod.glade.h:89
+#: ../data/gtkpod.glade.h:92
 msgid "Available:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:90
-msgid "Before removing playlists or tracks from a playlist"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤ä¡¢¥×¥ì¥¤¥ê¥¹¥È¤«¤é¶Ê¤òºï½ü¤¹¤ë»ş"
-
-#: ../data/gtkpod.glade.h:91
-msgid "Before removing tracks from the harddisk"
-msgstr "¶Ê¤ò¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤«¤é´°Á´¤Ëºï½ü¤¹¤ë»ş"
-
-#: ../data/gtkpod.glade.h:92
-msgid "Before removing tracks from the iPod"
-msgstr "¶Ê¤òiPod¤«¤é´°Á´¤Ëºï½ü¤¹¤ë»ş"
-
 #: ../data/gtkpod.glade.h:93
-msgid "Before removing tracks from the local database"
-msgstr "¶Ê¤ò¥í¡¼¥«¥ë¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤éºï½ü¤¹¤ë»ş"
+msgid "Before removing playlists or tracks from a playlist"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚„ã€ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‹ã‚‰æ›²ã‚’å‰Šé™¤ã™ã‚‹æ™‚"
 
 #: ../data/gtkpod.glade.h:94
-msgid "Best Rated Tracks"
-msgstr "É¾²Á¤Î¹â¤¤¶Ê"
+msgid "Before removing tracks from the harddisk"
+msgstr "æ›²ã‚’ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã‹ã‚‰å®Œå…¨ã«å‰Šé™¤ã™ã‚‹æ™‚"
 
 #: ../data/gtkpod.glade.h:95
-msgid "Browse"
-msgstr "¥Ö¥é¥¦¥º"
+msgid "Before removing tracks from the iPod"
+msgstr "æ›²ã‚’iPodã‹ã‚‰å®Œå…¨ã«å‰Šé™¤ã™ã‚‹æ™‚"
 
 #: ../data/gtkpod.glade.h:96
-#, fuzzy
-msgid "Cache directory:"
-msgstr "¥Ç¥£¥ì¥¯¥È¥ê¤òÄÉ²Ã¤¹¤ë(_D)"
+msgid "Before removing tracks from the local database"
+msgstr "æ›²ã‚’ãƒ­ãƒ¼ã‚«ãƒ«ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰å‰Šé™¤ã™ã‚‹æ™‚"
 
 #: ../data/gtkpod.glade.h:97
-msgid "Calendar"
-msgstr "¥«¥ì¥ó¥À¡¼"
+msgid "Best Rated Tracks"
+msgstr "è©•ä¾¡ã®é«˜ã„æ›²"
 
 #: ../data/gtkpod.glade.h:98
+msgid "Browse"
+msgstr "ãƒ–ãƒ©ã‚¦ã‚º"
+
+#: ../data/gtkpod.glade.h:99
+#, fuzzy
+msgid "Cache directory:"
+msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¿½åŠ ã™ã‚‹(_D)"
+
+#: ../data/gtkpod.glade.h:100
+msgid "Calendar"
+msgstr "ã‚«ãƒ¬ãƒ³ãƒ€ãƒ¼"
+
+#: ../data/gtkpod.glade.h:101
 msgid "Calendar sync command:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:99
+#: ../data/gtkpod.glade.h:102
 msgid "Call automatically when synchronizing iTunesDB"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:100
+#: ../data/gtkpod.glade.h:103
 msgid "Category: "
-msgstr "¥«¥Æ¥´¥ê: "
+msgstr "ã‚«ãƒ†ã‚´ãƒª: "
 
-#: ../data/gtkpod.glade.h:101
+#: ../data/gtkpod.glade.h:104
 msgid ""
 "Change all tracks\n"
 "simultaneously"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:103
+#: ../data/gtkpod.glade.h:106
 msgid ""
 "Check before removing photos from a photo album whether\n"
 "they should be deleted from the Photo Database."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:105
+#: ../data/gtkpod.glade.h:108
 msgid "Check for existing files when copying from iPod."
-msgstr "iPod ¤«¤é¥³¥Ô¡¼¤¹¤ëºİ¤ËÆ±¤¸¥Õ¥¡¥¤¥ë¤«¤É¤¦¤«¤ò¥Á¥§¥Ã¥¯¤¹¤ë"
-
-#: ../data/gtkpod.glade.h:106
-msgid "Command for 'Enqueue':"
-msgstr "¡Ö±éÁÕ¥­¥å¡¼¤ËÆş¤ì¤ë¡×¤¿¤á¤Î¥³¥Ş¥ó¥É:"
-
-#: ../data/gtkpod.glade.h:107
-msgid "Command for 'Play now':"
-msgstr "¡Öº£¤¹¤°±éÁÕ¡×¤Î¤¿¤á¤Î¥³¥Ş¥ó¥É:"
-
-#. 5
-#: ../data/gtkpod.glade.h:108 ../src/display_spl.c:97
-#: ../src/misc_conversion.c:65
-msgid "Composer"
-msgstr "ºî¶Ê¼Ô"
+msgstr "iPod ã‹ã‚‰ã‚³ãƒ”ãƒ¼ã™ã‚‹éš›ã«åŒã˜ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:109
-#, fuzzy
-msgid "Confirm before removing tracks from the iPod or repository"
-msgstr "¶Ê¤òiPod¤«¤é´°Á´¤Ëºï½ü¤¹¤ë»ş"
+msgid "Command for 'Enqueue':"
+msgstr "ã€Œæ¼”å¥ã‚­ãƒ¥ãƒ¼ã«å…¥ã‚Œã‚‹ã€ãŸã‚ã®ã‚³ãƒãƒ³ãƒ‰:"
 
 #: ../data/gtkpod.glade.h:110
+msgid "Command for 'Play now':"
+msgstr "ã€Œä»Šã™ãæ¼”å¥ã€ã®ãŸã‚ã®ã‚³ãƒãƒ³ãƒ‰:"
+
+#. 5
+#: ../data/gtkpod.glade.h:111 ../src/display_spl.c:97
+#: ../src/misc_conversion.c:65
+msgid "Composer"
+msgstr "ä½œæ›²è€…"
+
+#: ../data/gtkpod.glade.h:112
+#, fuzzy
+msgid "Confirm before removing tracks from the iPod or repository"
+msgstr "æ›²ã‚’iPodã‹ã‚‰å®Œå…¨ã«å‰Šé™¤ã™ã‚‹æ™‚"
+
+#: ../data/gtkpod.glade.h:113
 msgid ""
 "Confirm before removing tracks from the iPod or repository\n"
 "when syncing playlists"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:112
+#: ../data/gtkpod.glade.h:115
 msgid "Confirm lists of directories"
-msgstr "¥Ç¥£¥ì¥¯¥È¥ê¤Î¥ê¥¹¥È¤ò³ÎÇ§¤¹¤ë"
+msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒªã‚¹ãƒˆã‚’ç¢ºèªã™ã‚‹"
 
-#: ../data/gtkpod.glade.h:113
+#: ../data/gtkpod.glade.h:116
 msgid "Contacts sync command:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:114
+#: ../data/gtkpod.glade.h:117
 msgid "Containing Displayed Tracks"
-msgstr "É½¼¨¤µ¤ì¤Æ¤¤¤ë¶Ê¤«¤éºîÀ®"
+msgstr "è¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹æ›²ã‹ã‚‰ä½œæˆ"
 
-#: ../data/gtkpod.glade.h:115
+#: ../data/gtkpod.glade.h:118
 msgid "Containing Selected Tracks"
-msgstr "ÁªÂò¤µ¤ì¤Æ¤¤¤ë¶Ê¤«¤éºîÀ®"
+msgstr "é¸æŠã•ã‚Œã¦ã„ã‚‹æ›²ã‹ã‚‰ä½œæˆ"
 
-#: ../data/gtkpod.glade.h:116
+#: ../data/gtkpod.glade.h:119
 msgid "Conversion Progress Display"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:117
-msgid "Cover"
-msgstr "¥«¥Ğ¡¼"
-
-#: ../data/gtkpod.glade.h:118
-msgid "Create New Playlist"
-msgstr "¿·¤·¤¯¥×¥ì¥¤¥ê¥¹¥È¤òºîÀ®¤·¤Ş¤¹"
-
-#: ../data/gtkpod.glade.h:119
-#, fuzzy
-msgid "Create Repository"
-msgstr "iPod¤«¤éºï½ü"
-
 #: ../data/gtkpod.glade.h:120
-msgid "Create _Playlist File"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¥Õ¥¡¥¤¥ë¤òºîÀ® (_P)"
+msgid "Cover"
+msgstr "ã‚«ãƒãƒ¼"
 
 #: ../data/gtkpod.glade.h:121
-msgid "Credits"
-msgstr "¸¢ÍøÉ½¼¨"
+msgid "Create New Playlist"
+msgstr "æ–°ã—ããƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’ä½œæˆã—ã¾ã™"
 
 #: ../data/gtkpod.glade.h:122
-msgid "Currently only rating is supported."
-msgstr "¸½ºß¤ÏÉ¾²Á¾ğÊó¤Î¤ß»ÈÍÑ"
+#, fuzzy
+msgid "Create Repository"
+msgstr "iPodã‹ã‚‰å‰Šé™¤"
 
 #: ../data/gtkpod.glade.h:123
-#, fuzzy
-msgid "Delete repository"
-msgstr "iPod¤«¤éºï½ü"
+msgid "Create _Playlist File"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆ (_P)"
 
 #: ../data/gtkpod.glade.h:124
+msgid "Credits"
+msgstr "æ¨©åˆ©è¡¨ç¤º"
+
+#: ../data/gtkpod.glade.h:125
+msgid "Currently only rating is supported."
+msgstr "ç¾åœ¨ã¯è©•ä¾¡æƒ…å ±ã®ã¿ä½¿ç”¨"
+
+#: ../data/gtkpod.glade.h:126
+#, fuzzy
+msgid "Delete repository"
+msgstr "iPodã‹ã‚‰å‰Šé™¤"
+
+#: ../data/gtkpod.glade.h:127
 #, fuzzy
 msgid ""
 "Delete tracks that are no longer present from the\n"
 "iPod or repository"
-msgstr "°Ê²¼¤Î½ÅÊ£¤·¤¿%d¶Ê¤¬ºï½ü¤µ¤ì¤Ş¤·¤¿¡£"
+msgstr "ä»¥ä¸‹ã®é‡è¤‡ã—ãŸ%dæ›²ãŒå‰Šé™¤ã•ã‚Œã¾ã—ãŸã€‚"
 
-#: ../data/gtkpod.glade.h:126
+#: ../data/gtkpod.glade.h:129
 msgid "Deleted tracks"
-msgstr "ºï½ü¤µ¤ì¤¿¶Ê"
-
-#: ../data/gtkpod.glade.h:127
-msgid "Descending"
-msgstr "¹ß½ç"
-
-#: ../data/gtkpod.glade.h:128
-msgid "Details"
-msgstr "¾ÜºÙ"
+msgstr "å‰Šé™¤ã•ã‚ŒãŸæ›²"
 
 #: ../data/gtkpod.glade.h:130
+msgid "Descending"
+msgstr "é™é †"
+
+#: ../data/gtkpod.glade.h:131
+msgid "Details"
+msgstr "è©³ç´°"
+
+#: ../data/gtkpod.glade.h:133
 #, no-c-format
 msgid ""
 "Determines how the string for the info field should be constructed, e.g '%a/%"
@@ -571,13 +587,13 @@ msgid ""
 "nr: %C, year: %Y, original filename (requires extended information file): %"
 "o, the character '%': %%."
 msgstr ""
-"¶Ê¾ğÊó¤òÃê½Ğ¤¹¤ë¤¿¤á¤Î·Á¼°¾ğÊó¤òÀßÄê¤·¤Ş¤¹. Îã: '%a/%A/%T - %t.mp3' ¤ä '%o'."
-"Ê£¿ô¤Î·Á¼°¾ğÊó¤ò¥»¥ß¥³¥í¥ó¤Ç¶èÀÚ¤Ã¤ÆÏ¢Â³¤·¤Æ½ñ¤¯¤³¤È¤¬¤Ç¤­¤Ş¤¹ -- gtkpod ¤Ï¤É"
-"¤Î·Á¼°¤ò»È¤¨¤Ğ¤¤¤¤¤«¤ò, ¥Õ¥¡¥¤¥ëÌ¾¤Î³ÈÄ¥»Ò¤«¤éÈ½ÃÇ¤·¤Ş¤¹.¥¢¡¼¥Æ¥£¥¹¥È: %a, ¥¢"
-"¥ë¥Ğ¥à: %A, ºî¶Ê¼Ô: %c, Ì¾Á°: %t, ¥¸¥ã¥ó¥ë: %G, ¶ÊÈÖ¹æ: %T, ¥Ç¥£¥¹¥¯ÈÖ¹æ: %"
-"C, Ç¯: %Y, ¸µ¤Î¥Õ¥¡¥¤¥ëÌ¾ (³ÈÄ¥¾ğÊó¥Õ¥¡¥¤¥ë¤¬É¬Í×): %o, ¡Ö%¡×: %%."
+"æ›²æƒ…å ±ã‚’æŠ½å‡ºã™ã‚‹ãŸã‚ã®å½¢å¼æƒ…å ±ã‚’è¨­å®šã—ã¾ã™. ä¾‹: '%a/%A/%T - %t.mp3' ã‚„ '%o'."
+"è¤‡æ•°ã®å½¢å¼æƒ…å ±ã‚’ã‚»ãƒŸã‚³ãƒ­ãƒ³ã§åŒºåˆ‡ã£ã¦é€£ç¶šã—ã¦æ›¸ãã“ã¨ãŒã§ãã¾ã™ -- gtkpod ã¯ã©"
+"ã®å½¢å¼ã‚’ä½¿ãˆã°ã„ã„ã‹ã‚’, ãƒ•ã‚¡ã‚¤ãƒ«åã®æ‹¡å¼µå­ã‹ã‚‰åˆ¤æ–­ã—ã¾ã™.ã‚¢ãƒ¼ãƒ†ã‚£ã‚¹ãƒˆ: %a, ã‚¢"
+"ãƒ«ãƒãƒ : %A, ä½œæ›²è€…: %c, åå‰: %t, ã‚¸ãƒ£ãƒ³ãƒ«: %G, æ›²ç•ªå·: %T, ãƒ‡ã‚£ã‚¹ã‚¯ç•ªå·: %"
+"C, å¹´: %Y, å…ƒã®ãƒ•ã‚¡ã‚¤ãƒ«å (æ‹¡å¼µæƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ãŒå¿…è¦): %o, ã€Œ%ã€: %%."
 
-#: ../data/gtkpod.glade.h:132
+#: ../data/gtkpod.glade.h:135
 #, no-c-format
 msgid ""
 "Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t."
@@ -587,14 +603,14 @@ msgid ""
 "year: %Y, original filename (requires extended information file): %o, "
 "current playlist: %p, the character '%': %%."
 msgstr ""
-"iPod¤«¤é¥³¥Ô¡¼¤·¤¿¶Ê¤ËÉÕ¤±¤é¤ì¤ë¥Õ¥¡¥¤¥ëÌ¾¤òÀßÄê¤·¤Ş¤¹. Îã:'%a/%A/%T - %t."
-"mp3' ¤ä '%o'. Ê£¿ô¤Î½ñ¼°¤ò¥»¥ß¥³¥í¥ó¤Ç¶èÀÚ¤Ã¤ÆÏ¢Â³¤·¤Æ½ñ¤¯¤³¤È¤â¤Ç¤­¤Ş¤¹ -- "
-"gtkpod ¤Ï¤É¤Î½ñ¼°¤ò»È¤¨¤Ğ¤¤¤¤¤«¤ò, ¥Õ¥¡¥¤¥ëÌ¾¤Î³ÈÄ¥»Ò¤«¤éÈ½ÃÇ¤·¤Ş¤¹.¥¢¡¼¥Æ¥£"
-"¥¹¥È: %a, ¥¢¥ë¥Ğ¥à: %A, ºî¶Ê¼Ô: %c, Ì¾Á°: %t, ¥¸¥ã¥ó¥ë: %G, ¶ÊÈÖ¹æ: %T, ¥Ç¥£"
-"¥¹¥¯ÈÖ¹æ: %C, Ç¯: %Y, ¸µ¤Î¥Õ¥¡¥¤¥ëÌ¾ (³ÈÄ¥¾ğÊó¥Õ¥¡¥¤¥ë¤¬É¬Í×): %o, ¥×¥ì¥¤¥ê¥¹"
-"¥È: %p, ¡Ö%¡×: %%."
+"iPodã‹ã‚‰ã‚³ãƒ”ãƒ¼ã—ãŸæ›²ã«ä»˜ã‘ã‚‰ã‚Œã‚‹ãƒ•ã‚¡ã‚¤ãƒ«åã‚’è¨­å®šã—ã¾ã™. ä¾‹:'%a/%A/%T - %t."
+"mp3' ã‚„ '%o'. è¤‡æ•°ã®æ›¸å¼ã‚’ã‚»ãƒŸã‚³ãƒ­ãƒ³ã§åŒºåˆ‡ã£ã¦é€£ç¶šã—ã¦æ›¸ãã“ã¨ã‚‚ã§ãã¾ã™ -- "
+"gtkpod ã¯ã©ã®æ›¸å¼ã‚’ä½¿ãˆã°ã„ã„ã‹ã‚’, ãƒ•ã‚¡ã‚¤ãƒ«åã®æ‹¡å¼µå­ã‹ã‚‰åˆ¤æ–­ã—ã¾ã™.ã‚¢ãƒ¼ãƒ†ã‚£"
+"ã‚¹ãƒˆ: %a, ã‚¢ãƒ«ãƒãƒ : %A, ä½œæ›²è€…: %c, åå‰: %t, ã‚¸ãƒ£ãƒ³ãƒ«: %G, æ›²ç•ªå·: %T, ãƒ‡ã‚£"
+"ã‚¹ã‚¯ç•ªå·: %C, å¹´: %Y, å…ƒã®ãƒ•ã‚¡ã‚¤ãƒ«å (æ‹¡å¼µæƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ãŒå¿…è¦): %o, ãƒ—ãƒ¬ã‚¤ãƒªã‚¹"
+"ãƒˆ: %p, ã€Œ%ã€: %%."
 
-#: ../data/gtkpod.glade.h:134
+#: ../data/gtkpod.glade.h:137
 #, fuzzy, no-c-format
 msgid ""
 "Determines the name of the file with the cover art. You can separate several "
@@ -604,197 +620,189 @@ msgid ""
 "filename without file extension: %O, current playlist: %p, the character "
 "'%': %%."
 msgstr ""
-"iPod¤«¤é¥³¥Ô¡¼¤·¤¿¶Ê¤ËÉÕ¤±¤é¤ì¤ë¥Õ¥¡¥¤¥ëÌ¾¤òÀßÄê¤·¤Ş¤¹¡£Îã:'%A/%d%t - %n' ¤ä "
-"'%o' ¤Ê¤É¡£%A: ¥¢¡¼¥Æ¥£¥¹¥È; %n: ¥¿¥¤¥È¥ë; %t: ¥È¥é¥Ã¥¯No.; %o: ¸µ¤Î¥Õ¥¡¥¤¥ë"
-"Ì¾ (³ÈÄ¥¾ğÊó¥Õ¥¡¥¤¥ë¤¬É¬Í×)"
+"iPodã‹ã‚‰ã‚³ãƒ”ãƒ¼ã—ãŸæ›²ã«ä»˜ã‘ã‚‰ã‚Œã‚‹ãƒ•ã‚¡ã‚¤ãƒ«åã‚’è¨­å®šã—ã¾ã™ã€‚ä¾‹:'%A/%d%t - %n' ã‚„ "
+"'%o' ãªã©ã€‚%A: ã‚¢ãƒ¼ãƒ†ã‚£ã‚¹ãƒˆ; %n: ã‚¿ã‚¤ãƒˆãƒ«; %t: ãƒˆãƒ©ãƒƒã‚¯No.; %o: å…ƒã®ãƒ•ã‚¡ã‚¤ãƒ«"
+"å (æ‹¡å¼µæƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ãŒå¿…è¦)"
 
-#: ../data/gtkpod.glade.h:135
+#: ../data/gtkpod.glade.h:138
 msgid ""
 "Directories to sync with are determined from the filenames of the tracks in "
 "the playlist."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:136
-msgid "Dirs"
-msgstr "¥Ç¥£¥ì¥¯¥È¥ê"
-
-#: ../data/gtkpod.glade.h:137
-msgid "Display a list of tracks that could actually be updated."
-msgstr "¼Âºİ¤Ë¹¹¿·¤µ¤ì¤¿¶Ê¤Î¥ê¥¹¥È¤òÉ½¼¨¤·¤Ş¤¹¡£"
-
-#: ../data/gtkpod.glade.h:138
-msgid "Display a list of tracks that could not be updated."
-msgstr "¼Âºİ¤Ë¤Ï¹¹¿·¤µ¤ì¤Ê¤«¤Ã¤¿¶Ê¤Î¥ê¥¹¥È¤òÉ½¼¨¤·¤Ş¤¹¡£"
-
 #: ../data/gtkpod.glade.h:139
+msgid "Display a list of tracks that could actually be updated."
+msgstr "å®Ÿéš›ã«æ›´æ–°ã•ã‚ŒãŸæ›²ã®ãƒªã‚¹ãƒˆã‚’è¡¨ç¤ºã—ã¾ã™ã€‚"
+
+#: ../data/gtkpod.glade.h:140
+msgid "Display a list of tracks that could not be updated."
+msgstr "å®Ÿéš›ã«ã¯æ›´æ–°ã•ã‚Œãªã‹ã£ãŸæ›²ã®ãƒªã‚¹ãƒˆã‚’è¡¨ç¤ºã—ã¾ã™ã€‚"
+
+#: ../data/gtkpod.glade.h:141
 msgid "Display conversion log"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:140
-msgid "Display info about detected duplicates"
-msgstr "½ÅÊ£¤ò¸«¤Ä¤±¤¿ºİ¤ËÊó¹ğ¤¹¤ë"
-
-#: ../data/gtkpod.glade.h:141
-msgid "Display info about non-updated tracks"
-msgstr "¹¹¿·¤µ¤ì¤Ê¤«¤Ã¤¿¶Ê¤òÉ½¼¨¤¹¤ë"
-
 #: ../data/gtkpod.glade.h:142
-msgid "Display info about updated tracks"
-msgstr "¹¹¿·¤µ¤ì¤¿¶Ê¤Î¾ğÊó¤òÉ½¼¨¤¹¤ë"
+msgid "Display info about detected duplicates"
+msgstr "é‡è¤‡ã‚’è¦‹ã¤ã‘ãŸéš›ã«å ±å‘Šã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:143
-msgid "Display messages and warnings at startup"
-msgstr "µ¯Æ°»ş¤Ë¥á¥Ã¥»¡¼¥¸¤ä·Ù¹ğ¤òÉ½¼¨¤¹¤ë"
+msgid "Display info about non-updated tracks"
+msgstr "æ›´æ–°ã•ã‚Œãªã‹ã£ãŸæ›²ã‚’è¡¨ç¤ºã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:144
-msgid ""
-"Display the list of duplicates that have been detected after adding files."
-msgstr "¥Õ¥¡¥¤¥ë¤òÄÉ²Ã¤·¤¿ºİ¤ËÈ¯¸«¤·¤¿¡¢½ÅÊ£¤¹¤ë¶Ê¤Î¥ê¥¹¥È¤òÉ½¼¨¤·¤Ş¤¹¡£"
+msgid "Display info about updated tracks"
+msgstr "æ›´æ–°ã•ã‚ŒãŸæ›²ã®æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:145
-msgid "Display toolbar..."
-msgstr "¥Ä¡¼¥ë¥Ğ¡¼¤ÎÉ½¼¨..."
+msgid "Display messages and warnings at startup"
+msgstr "èµ·å‹•æ™‚ã«ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚„è­¦å‘Šã‚’è¡¨ç¤ºã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:146
-msgid "Display tooltips in main window"
-msgstr "¥Ä¡¼¥ë¥Á¥Ã¥×¤ò¥á¥¤¥ó²èÌÌ¤ÇÉ½¼¨¤¹¤ë"
+msgid ""
+"Display the list of duplicates that have been detected after adding files."
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã—ãŸéš›ã«ç™ºè¦‹ã—ãŸã€é‡è¤‡ã™ã‚‹æ›²ã®ãƒªã‚¹ãƒˆã‚’è¡¨ç¤ºã—ã¾ã™ã€‚"
 
 #: ../data/gtkpod.glade.h:147
-msgid "Display tooltips in prefs window"
-msgstr "¥Ä¡¼¥ë¥Á¥Ã¥×¤òÀßÄê²èÌÌ¤ÇÉ½¼¨¤¹¤ë"
+msgid "Display toolbar..."
+msgstr "ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ã®è¡¨ç¤º..."
 
 #: ../data/gtkpod.glade.h:148
-msgid "Display tracks that match the criteria entered above."
-msgstr "¾å¤Ç»ØÄê¤µ¤ì¤¿¾ò·ï¤Ë¹çÃ×¤¹¤ë¶Ê¤òÉ½¼¨¤·¤Ş¤¹."
+msgid "Display tooltips in main window"
+msgstr "ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ã‚’ãƒ¡ã‚¤ãƒ³ç”»é¢ã§è¡¨ç¤ºã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:149
+msgid "Display tooltips in prefs window"
+msgstr "ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ã‚’è¨­å®šç”»é¢ã§è¡¨ç¤ºã™ã‚‹"
+
+#: ../data/gtkpod.glade.h:150
+msgid "Display tracks that match the criteria entered above."
+msgstr "ä¸Šã§æŒ‡å®šã•ã‚ŒãŸæ¡ä»¶ã«åˆè‡´ã™ã‚‹æ›²ã‚’è¡¨ç¤ºã—ã¾ã™."
+
+#: ../data/gtkpod.glade.h:151
 msgid ""
 "Displayed\n"
 "Tracks"
 msgstr ""
-"É½¼¨¤µ¤ì\n"
-"¤Æ¤¤¤ë¶Ê"
-
-#: ../data/gtkpod.glade.h:151
-#, fuzzy
-msgid "Displayed:"
-msgstr "É½¼¨(_D)"
-
-#: ../data/gtkpod.glade.h:152
-msgid "Don't allow file duplication"
-msgstr "¥Õ¥¡¥¤¥ë¤Î½ÅÊ£¤òµö¤µ¤Ê¤¤"
+"è¡¨ç¤ºã•ã‚Œ\n"
+"ã¦ã„ã‚‹æ›²"
 
 #: ../data/gtkpod.glade.h:153
 #, fuzzy
-msgid "Don't automatically sync on startup"
-msgstr "µ¯Æ°»ş¤Ë¼«Æ°Åª¤Ë iTunesDB ¤òÆÉ¤ß¹ş¤à"
+msgid "Displayed:"
+msgstr "è¡¨ç¤º(_D)"
 
 #: ../data/gtkpod.glade.h:154
-#, fuzzy
-msgid "Duplicate Recognition is based on a (modified) sha1 hash over the file."
-msgstr "md5¤òÍøÍÑ¤·¤¿½ÅÊ£¥Á¥§¥Ã¥¯¤ò¹Ô¤¦¤è¤¦¤Ë¤Ê¤ê¤Ş¤¹¡£"
+msgid "Don't allow file duplication"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã®é‡è¤‡ã‚’è¨±ã•ãªã„"
 
 #: ../data/gtkpod.glade.h:155
+#, fuzzy
+msgid "Don't automatically sync on startup"
+msgstr "èµ·å‹•æ™‚ã«è‡ªå‹•çš„ã« iTunesDB ã‚’èª­ã¿è¾¼ã‚€"
+
+#: ../data/gtkpod.glade.h:156
+#, fuzzy
+msgid "Duplicate Recognition is based on a (modified) sha1 hash over the file."
+msgstr "md5ã‚’åˆ©ç”¨ã—ãŸé‡è¤‡ãƒã‚§ãƒƒã‚¯ã‚’è¡Œã†ã‚ˆã†ã«ãªã‚Šã¾ã™ã€‚"
+
+#: ../data/gtkpod.glade.h:157
 msgid "Edit Repository/iPod Options"
-msgstr "iPod ¤ÎÀßÄê"
+msgstr "iPod ã®è¨­å®š"
 
-#: ../data/gtkpod.glade.h:156 ../src/context_menus.c:662
+#: ../data/gtkpod.glade.h:158 ../src/context_menus.c:662
 msgid "Edit Smart Playlist"
-msgstr "¥¹¥Ş¡¼¥È¥×¥ì¥¤¥ê¥¹¥È¤ÎÊÔ½¸"
+msgstr "ã‚¹ãƒãƒ¼ãƒˆãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®ç·¨é›†"
 
-#: ../data/gtkpod.glade.h:157 ../src/context_menus.c:749
+#: ../data/gtkpod.glade.h:159 ../src/context_menus.c:749
 msgid "Edit Track Details"
-msgstr "¶Ê¾ğÊó¤òÊÔ½¸"
-
-#: ../data/gtkpod.glade.h:158
-msgid "Edit _Preferences"
-msgstr "ÀßÄê(_P)"
-
-#: ../data/gtkpod.glade.h:159
-msgid "Effective free space"
-msgstr "¶õ¤­ÍÆÎÌ"
+msgstr "æ›²æƒ…å ±ã‚’ç·¨é›†"
 
 #: ../data/gtkpod.glade.h:160
-msgid "Empty Playlist"
-msgstr "¶õ¥ê¥¹¥È"
+msgid "Edit _Preferences"
+msgstr "è¨­å®š(_P)"
 
 #: ../data/gtkpod.glade.h:161
-msgid "Exclude file mask(s)"
-msgstr "Å¬ÍÑ¤·¤Ê¤¤¥Õ¥¡¥¤¥ë"
+msgid "Effective free space"
+msgstr "ç©ºãå®¹é‡"
 
 #: ../data/gtkpod.glade.h:162
+msgid "Empty Playlist"
+msgstr "ç©ºãƒªã‚¹ãƒˆ"
+
+#: ../data/gtkpod.glade.h:163
+msgid "Exclude file mask(s)"
+msgstr "é©ç”¨ã—ãªã„ãƒ•ã‚¡ã‚¤ãƒ«"
+
+#: ../data/gtkpod.glade.h:164
 #, fuzzy
 msgid "Export can be continued at a later time if canceled."
 msgstr ""
-"¥Ü¥¿¥ó¤ò²¡¤¹¤ÈÃæÃÇ¤·¤Ş¤¹¡£\n"
-"¥Õ¥¡¥¤¥ë¤Î¥¨¥¯¥¹¥İ¡¼¥È¤Ï¸å¤ÇºÆ³«¤¹¤ë»ö¤¬¤Ç¤­¤Ş¤¹¡£"
-
-#: ../data/gtkpod.glade.h:163
-msgid "File size"
-msgstr "¥Õ¥¡¥¤¥ë¥µ¥¤¥º"
-
-#: ../data/gtkpod.glade.h:164
-msgid "File size (deleted)"
-msgstr "ºï½ü¤µ¤ì¤¿¥Õ¥¡¥¤¥ë¥µ¥¤¥º"
+"ãƒœã‚¿ãƒ³ã‚’æŠ¼ã™ã¨ä¸­æ–­ã—ã¾ã™ã€‚\n"
+"ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã¯å¾Œã§å†é–‹ã™ã‚‹äº‹ãŒã§ãã¾ã™ã€‚"
 
 #: ../data/gtkpod.glade.h:165
-msgid "File size (non-transferred)"
-msgstr "Ì¤Å¾Á÷¤Î¥Õ¥¡¥¤¥ë¥µ¥¤¥º"
+msgid "File size"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚º"
 
 #: ../data/gtkpod.glade.h:166
-msgid "Filename Format: "
-msgstr "¥Õ¥¡¥¤¥ëÌ¾¤Î½ñ¼°: "
+msgid "File size (deleted)"
+msgstr "å‰Šé™¤ã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚º"
 
 #: ../data/gtkpod.glade.h:167
-msgid "Files"
-msgstr "¥Õ¥¡¥¤¥ë"
+msgid "File size (non-transferred)"
+msgstr "æœªè»¢é€ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚º"
 
 #: ../data/gtkpod.glade.h:168
+msgid "Filename Format: "
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«åã®æ›¸å¼: "
+
+#: ../data/gtkpod.glade.h:169
 #, fuzzy
 msgid ""
 "Find orphan files (files with no track info in DB) and dangling tracks "
 "(tracks with no corresponding files on iPod)"
 msgstr ""
-"¤ß¤Ê¤·¤´¥Õ¥¡¥¤¥ë (¥Ç¡¼¥¿¥Ù¡¼¥¹¤Ë¶Ê¾ğÊó¤¬ÅĞÏ¿¤µ¤ì¤Æ¤¤¤Ê¤¤¥Õ¥¡¥¤¥ë) ¤ä¤Ö¤é¤µ¤¬"
-"¤ê¶Ê (¶Ê¾ğÊó¤¬¤¢¤ë¤Î¤Ë¥Õ¥¡¥¤¥ë¼«ÂÎ¤¬ iPod ¾å¤ËÂ¸ºß¤·¤Ê¤¤) ¤òÃµ¤¹"
-
-#: ../data/gtkpod.glade.h:169
-#, fuzzy
-msgid "First try <i>folder.jpg</i>, then <i>&lt;artist&gt;.jpg</i>"
-msgstr "ºÇ½é¤Ë <i>folder.jpg</i> ¤ò»î¤·¡¢Ìµ¤±¤ì¤Ğ <i>&lt;artist&gt;.jpg</i>"
+"ã¿ãªã—ã”ãƒ•ã‚¡ã‚¤ãƒ« (ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã«æ›²æƒ…å ±ãŒç™»éŒ²ã•ã‚Œã¦ã„ãªã„ãƒ•ã‚¡ã‚¤ãƒ«) ã‚„ã¶ã‚‰ã•ãŒ"
+"ã‚Šæ›² (æ›²æƒ…å ±ãŒã‚ã‚‹ã®ã«ãƒ•ã‚¡ã‚¤ãƒ«è‡ªä½“ãŒ iPod ä¸Šã«å­˜åœ¨ã—ãªã„) ã‚’æ¢ã™"
 
 #: ../data/gtkpod.glade.h:170
+#, fuzzy
+msgid "First try <i>folder.jpg</i>, then <i>&lt;artist&gt;.jpg</i>"
+msgstr "æœ€åˆã« <i>folder.jpg</i> ã‚’è©¦ã—ã€ç„¡ã‘ã‚Œã° <i>&lt;artist&gt;.jpg</i>"
+
+#: ../data/gtkpod.glade.h:171
 msgid "Flac with :"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:172
+#: ../data/gtkpod.glade.h:173
 #, fuzzy, no-c-format
 msgid ""
 "For example, 'xmms %s' will clear xmms' current playlist, add the selected "
 "tracks and start playing."
 msgstr ""
-"Îã¤¨¤Ğ 'xmms -p %s' ¤È¤¹¤ë¤È¡¢xmms ¤Î¤½¤Î»ş¤Î¥×¥ì¥¤¥ê¥¹¥È¤ò¥¯¥ê¥¢¤·¡¢ÁªÂò¤·¤¿"
-"¶Ê¤ò¥×¥ì¥¤¥ê¥¹¥È¤ÎÀèÆ¬¤Ë²Ã¤¨¤Æ±éÁÕ¤ò»Ï¤á¤Ş¤¹¡£"
+"ä¾‹ãˆã° 'xmms -p %s' ã¨ã™ã‚‹ã¨ã€xmms ã®ãã®æ™‚ã®ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’ã‚¯ãƒªã‚¢ã—ã€é¸æŠã—ãŸ"
+"æ›²ã‚’ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®å…ˆé ­ã«åŠ ãˆã¦æ¼”å¥ã‚’å§‹ã‚ã¾ã™ã€‚"
 
-#: ../data/gtkpod.glade.h:174
+#: ../data/gtkpod.glade.h:175
 #, no-c-format
 msgid ""
 "For example, 'xmms -e %s' will append (enqueue) the selected tracks to xmms' "
 "current playlist."
 msgstr ""
-"Îã¤¨¤Ğ 'xmms -e %s' ¤È¤¹¤ë¤È¡¢ÁªÂò¤µ¤ì¤¿¶Ê¤ò xmms ¤Î¤½¤Î»ş¤Î¥×¥ì¥¤¥ê¥¹¥È¤ÎºÇ"
-"¸åÈø¤ËÄÉ²Ã¤·¤Ş¤¹"
+"ä¾‹ãˆã° 'xmms -e %s' ã¨ã™ã‚‹ã¨ã€é¸æŠã•ã‚ŒãŸæ›²ã‚’ xmms ã®ãã®æ™‚ã®ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®æœ€"
+"å¾Œå°¾ã«è¿½åŠ ã—ã¾ã™"
 
-#: ../data/gtkpod.glade.h:175 ../src/display_sorttabs.c:2985
+#: ../data/gtkpod.glade.h:176 ../src/display_sorttabs.c:2985
 #: ../src/display_spl.c:89 ../src/misc_conversion.c:63
 msgid "Genre"
-msgstr "¥¸¥ã¥ó¥ë"
+msgstr "ã‚¸ãƒ£ãƒ³ãƒ«"
 
-#: ../data/gtkpod.glade.h:176
+#: ../data/gtkpod.glade.h:177
 msgid "Group artists on compilation CDs"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:177
+#: ../data/gtkpod.glade.h:178
 #, fuzzy
 msgid ""
 "Highly recommended for faster import when taking advantage of the "
@@ -803,37 +811,37 @@ msgid ""
 "case of file system corruption (change the \"transferred=\" entries in your "
 "backuped database)."
 msgstr ""
-"½ÅÊ£¥Á¥§¥Ã¥¯¤ò¹âÂ®²½¤¹¤ë¤¿¤á¤Ë¤Ï¡¢¤³¤Î¹àÌÜ¤òÍ­¸ú¤Ë¤¹¤ë»ö¤¬¶¯¤¯¿ä¾©¤µ¤ì¤Ş¤¹¡£"
-"¤Ş¤¿¡¢¥Õ¥¡¥¤¥ëÌ¾¤òÊİ»ı¤¹¤ë»ö¤ÇID3¥¿¥°¤ÎÊÑ¹¹¤òiPod¤ËÈ¿±Ç¤µ¤»¤ë»ö¤¬²ÄÇ½¤Ë¤Ê¤ê¡¢"
-"²¾¤ËiPod¤ÎÃæ¿È¤¬²õ¤ì¤¿¤ê¤·¤¿¾ì¹ç¤Ë¤â¡¢ºÆ¹½À®¤òÍÆ°×¤Ë¤·¤Ş¤¹¡£(¥Ç¡¼¥¿¥Ù¡¼¥¹¤Î"
-"¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Õ¥¡¥¤¥ë¤ÎÃæ¤Î \"transferred=\" ¤Î¹àÌÜ¤òÊÑ¹¹¤¹¤ì¤Ğ¤è¤¤)"
+"é‡è¤‡ãƒã‚§ãƒƒã‚¯ã‚’é«˜é€ŸåŒ–ã™ã‚‹ãŸã‚ã«ã¯ã€ã“ã®é …ç›®ã‚’æœ‰åŠ¹ã«ã™ã‚‹äº‹ãŒå¼·ãæ¨å¥¨ã•ã‚Œã¾ã™ã€‚"
+"ã¾ãŸã€ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ä¿æŒã™ã‚‹äº‹ã§ID3ã‚¿ã‚°ã®å¤‰æ›´ã‚’iPodã«åæ˜ ã•ã›ã‚‹äº‹ãŒå¯èƒ½ã«ãªã‚Šã€"
+"ä»®ã«iPodã®ä¸­èº«ãŒå£Šã‚ŒãŸã‚Šã—ãŸå ´åˆã«ã‚‚ã€å†æ§‹æˆã‚’å®¹æ˜“ã«ã—ã¾ã™ã€‚(ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®"
+"ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¸­ã® \"transferred=\" ã®é …ç›®ã‚’å¤‰æ›´ã™ã‚Œã°ã‚ˆã„)"
 
-#: ../data/gtkpod.glade.h:178 ../src/context_menus.c:685
+#: ../data/gtkpod.glade.h:179 ../src/context_menus.c:685
 #: ../src/context_menus.c:703 ../src/context_menus.c:820
 msgid "I'm sure"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:179
+#: ../data/gtkpod.glade.h:180
 msgid ""
 "If available, the local copy of the track is referenced in the playlist. "
 "Otherwise the file on the iPod is used."
 msgstr ""
-"²ÄÇ½¤Ç¤¢¤ì¤Ğ, ¥×¥ì¥¤¥ê¥¹¥È¤Ï¤³¤Î¶Ê¤Î¥Ï¡¼¥É¥Ç¥£¥¹¥¯¾å¤Î¥Õ¥¡¥¤¥ë¤ò»²¾È¤·¤Ş¤¹.¸«"
-"¤Ä¤«¤é¤Ê¤¤¾ì¹ç¤Ë¤Ï iPod ¾å¤Î¥Õ¥¡¥¤¥ë¤ò»²¾È¤·¤Ş¤¹."
+"å¯èƒ½ã§ã‚ã‚Œã°, ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã¯ã“ã®æ›²ã®ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ä¸Šã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‚ç…§ã—ã¾ã™.è¦‹"
+"ã¤ã‹ã‚‰ãªã„å ´åˆã«ã¯ iPod ä¸Šã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‚ç…§ã—ã¾ã™."
 
-#: ../data/gtkpod.glade.h:180
+#: ../data/gtkpod.glade.h:181
 msgid "If both options are selected, embedded APIC data takes precedence."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:181
+#: ../data/gtkpod.glade.h:182
 msgid ""
 "If checked, sorting will be case sensitive. Please note that case sensitive "
 "sorting will not work well with most charsets."
 msgstr ""
-"ÊÂ¤Ù´¹¤¨¤Îºİ¤Ë, ¥¢¥ë¥Õ¥¡¥Ù¥Ã¥È¤ÎÂçÊ¸»ú¤È¾®Ê¸»ú¤ò¶èÊÌ¤·¤Ş¤¹. ¤³¤Îµ¡Ç½¤Ï¥¢¥ë"
-"¥Õ¥¡¥Ù¥Ã¥È°Ê³°¤Î¤Û¤È¤ó¤É¤ÎÊ¸»ú¤Ë¤ÏÂĞ±ş¤·¤Æ¤¤¤Ş¤»¤ó."
+"ä¸¦ã¹æ›ãˆã®éš›ã«, ã‚¢ãƒ«ãƒ•ã‚¡ãƒ™ãƒƒãƒˆã®å¤§æ–‡å­—ã¨å°æ–‡å­—ã‚’åŒºåˆ¥ã—ã¾ã™. ã“ã®æ©Ÿèƒ½ã¯ã‚¢ãƒ«"
+"ãƒ•ã‚¡ãƒ™ãƒƒãƒˆä»¥å¤–ã®ã»ã¨ã‚“ã©ã®æ–‡å­—ã«ã¯å¯¾å¿œã—ã¦ã„ã¾ã›ã‚“."
 
-#: ../data/gtkpod.glade.h:182
+#: ../data/gtkpod.glade.h:183
 msgid ""
 "If the filename (full path) of an existing track matches that of a track to "
 "be added, this option allows you to update the information about the "
@@ -841,155 +849,158 @@ msgid ""
 "will take place if the file hasn't changed and you have selected the 'Don't "
 "allow file duplication' option above."
 msgstr ""
-"¤¹¤Ç¤Ëµ­Ï¿¤µ¤ì¤Æ¤¤¤ë¶Ê¤ÈÆ±¤¸¥Õ¥¡¥¤¥ëÌ¾(¥Õ¥ë¥Ñ¥¹¤Ç)¤ò»ı¤Ä¶Ê¤òÄÉ²Ã¤·¤è¤¦¤È¤·¤¿"
-"¾ì¹ç¡¢¤³¤Î¹àÌÜ¤¬Í­¸ú¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤È¡¢¤½¤Î¶Ê¤òÌµ»ë¤¹¤ëÂå¤ï¤ê¤Ëµ­Ï¿¤µ¤ì¤Æ¤¤¤ë¶Ê"
-"¤Î¾ğÊó¤ò¹¹¿·¤·¤Ş¤¹¡£¤â¤·¥Õ¥¡¥¤¥ë¤ËÊÑ¹¹¤¬¤Ê¤¯¡¢¡Ö¥Õ¥¡¥¤¥ë¤Î½ÅÊ£¤òµö¤µ¤Ê¤¤¡×¤Î"
-"¹àÌÜ¤òÍ­¸ú¤Ë¤·¤Æ¤¤¤ë¾ì¹ç¤Ï¡¢¹¹¿·¤Ï¤Ê¤µ¤ì¤Ş¤»¤ó¡£"
-
-#: ../data/gtkpod.glade.h:183
-msgid "If you check this, gtkpod will descend into subdirectories recursively."
-msgstr "¤³¤Î¹àÌÜ¤òÍ­¸ú¤Ë¤¹¤ë¤È¡¢gtkpod¤Ï¥µ¥Ö¥Ç¥£¥ì¥¯¥È¥ê¤òºÆµ¢Åª¤ËÃ©¤ê¤Ş¤¹¡£"
+"ã™ã§ã«è¨˜éŒ²ã•ã‚Œã¦ã„ã‚‹æ›²ã¨åŒã˜ãƒ•ã‚¡ã‚¤ãƒ«å(ãƒ•ãƒ«ãƒ‘ã‚¹ã§)ã‚’æŒã¤æ›²ã‚’è¿½åŠ ã—ã‚ˆã†ã¨ã—ãŸ"
+"å ´åˆã€ã“ã®é …ç›®ãŒæœ‰åŠ¹ã«ãªã£ã¦ã„ã‚‹ã¨ã€ãã®æ›²ã‚’ç„¡è¦–ã™ã‚‹ä»£ã‚ã‚Šã«è¨˜éŒ²ã•ã‚Œã¦ã„ã‚‹æ›²"
+"ã®æƒ…å ±ã‚’æ›´æ–°ã—ã¾ã™ã€‚ã‚‚ã—ãƒ•ã‚¡ã‚¤ãƒ«ã«å¤‰æ›´ãŒãªãã€ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã®é‡è¤‡ã‚’è¨±ã•ãªã„ã€ã®"
+"é …ç›®ã‚’æœ‰åŠ¹ã«ã—ã¦ã„ã‚‹å ´åˆã¯ã€æ›´æ–°ã¯ãªã•ã‚Œã¾ã›ã‚“ã€‚"
 
 #: ../data/gtkpod.glade.h:184
+msgid "If you check this, gtkpod will descend into subdirectories recursively."
+msgstr "ã“ã®é …ç›®ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã¨ã€gtkpodã¯ã‚µãƒ–ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å†å¸°çš„ã«è¾¿ã‚Šã¾ã™ã€‚"
+
+#: ../data/gtkpod.glade.h:185
 msgid ""
 "If you check this, information (cover art and meta information) changed for "
 "this track will be copied to all other selected tracks as well. Use with "
 "care."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:185
+#: ../data/gtkpod.glade.h:186
 msgid ""
 "If you don't select the master playlist automatically, the initial database "
 "import is much faster because the display dosn't have to be updated."
 msgstr ""
-"¥Ş¥¹¥¿¡¼¥×¥ì¥¤¥ê¥¹¥È¤ò¼«Æ°Åª¤ËÁªÂò¤·¤Ê¤¤¤è¤¦¤Ë¤¹¤ë¤È¡¢µ¯Æ°»ş¤Ë¥Ç¡¼¥¿¥Ù¡¼¥¹¤ò"
-"ÆÉ¤ß¹ş¤àºİ¤Ë¤Ï²¿¤âÉ½¼¨¤·¤Ê¤¯¤Ê¤ë¤Î¤Ç¡¢¥¹¥Ô¡¼¥É¤¬Â®¤¯¤Ê¤ê¤Ş¤¹¡£"
+"ãƒã‚¹ã‚¿ãƒ¼ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’è‡ªå‹•çš„ã«é¸æŠã—ãªã„ã‚ˆã†ã«ã™ã‚‹ã¨ã€èµ·å‹•æ™‚ã«ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚’"
+"èª­ã¿è¾¼ã‚€éš›ã«ã¯ä½•ã‚‚è¡¨ç¤ºã—ãªããªã‚‹ã®ã§ã€ã‚¹ãƒ”ãƒ¼ãƒ‰ãŒé€Ÿããªã‚Šã¾ã™ã€‚"
 
-#: ../data/gtkpod.glade.h:186
+#: ../data/gtkpod.glade.h:187
 msgid ""
 "If you select several tracks in the track list and edit a tag of the first "
 "track, the tags in the other tracks are updated as well."
 msgstr ""
-"¶Ê¥ê¥¹¥È¤Î¶Ê¤òÆó¤Ä°Ê¾åÁªÂò¤·¤Æ¡¢ºÇ½é¤Î¶Ê¤Î¥¿¥°¤òÊÑ¹¹¤¹¤ë¤ÈÂ¾¤Î¶Ê¤Ë¤â¤½¤ÎÊÑ¹¹"
-"¤òÅ¬ÍÑ¤·¤Ş¤¹¡£"
-
-#: ../data/gtkpod.glade.h:187
-msgid "Ignore these words when at the beginning of the following fields:"
-msgstr "¤³¤ì¤é¤Î¸ì¤¬°Ê²¼¤Î¹àÌÜ¤ÎËÁÆ¬¤Ë¤¢¤Ã¤¿¾ì¹ç¤Ë¤ÏÌµ»ë¤·¤Ş¤¹:"
+"æ›²ãƒªã‚¹ãƒˆã®æ›²ã‚’äºŒã¤ä»¥ä¸Šé¸æŠã—ã¦ã€æœ€åˆã®æ›²ã®ã‚¿ã‚°ã‚’å¤‰æ›´ã™ã‚‹ã¨ä»–ã®æ›²ã«ã‚‚ãã®å¤‰æ›´"
+"ã‚’é©ç”¨ã—ã¾ã™ã€‚"
 
 #: ../data/gtkpod.glade.h:188
+msgid "Ignore these words when at the beginning of the following fields:"
+msgstr "ã“ã‚Œã‚‰ã®èªãŒä»¥ä¸‹ã®é …ç›®ã®å†’é ­ã«ã‚ã£ãŸå ´åˆã«ã¯ç„¡è¦–ã—ã¾ã™:"
+
+#: ../data/gtkpod.glade.h:189
 msgid ""
 "In order to save the displayed track order to the iPod choose 'Save "
 "Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
 msgstr ""
-"É½¼¨¤µ¤ì¤Æ¤¤¤ë¶Ê½ç¤ò iPod ¤ËÊİÂ¸¤¹¤ë¤Ë¤Ï,¡ÖÊÔ½¸¡×¥á¥Ë¥å¡¼¤«¤é¡Ö¸½ºß¤Î¶Ê½ç¤òÊİ"
-"Â¸¡×¤òÁªÂò¤¹¤ë¤«, ¤³¤Î²¼¤Î¡Ö¼«Æ°ÊİÂ¸¡×¤òÁªÂò¤·¤Æ¤¯¤À¤µ¤¤."
+"è¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹æ›²é †ã‚’ iPod ã«ä¿å­˜ã™ã‚‹ã«ã¯,ã€Œç·¨é›†ã€ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‹ã‚‰ã€Œç¾åœ¨ã®æ›²é †ã‚’ä¿"
+"å­˜ã€ã‚’é¸æŠã™ã‚‹ã‹, ã“ã®ä¸‹ã®ã€Œè‡ªå‹•ä¿å­˜ã€ã‚’é¸æŠã—ã¦ãã ã•ã„."
 
-#: ../data/gtkpod.glade.h:189
+#: ../data/gtkpod.glade.h:190
 msgid "Initialize iPod"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:190
+#: ../data/gtkpod.glade.h:191
 msgid ""
 "Insert before\n"
 "Insert after"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:192
+#: ../data/gtkpod.glade.h:193
 msgid "Keeps all compilation CDs grouped together in the artists sort tab."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:193
+#: ../data/gtkpod.glade.h:194
 msgid "Live _updating"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:194
-msgid "Load iPod(s)"
-msgstr "iPod ¤«¤éÆÉ¤ß¹ş¤ß"
-
 #: ../data/gtkpod.glade.h:195
-msgid "Lower Margin"
-msgstr "²¼¸Â"
+msgid "Load iPod(s)"
+msgstr "iPod ã‹ã‚‰èª­ã¿è¾¼ã¿"
 
 #: ../data/gtkpod.glade.h:196
+msgid "Lower Margin"
+msgstr "ä¸‹é™"
+
+#: ../data/gtkpod.glade.h:197
 msgid "M4A with :"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:197
+#: ../data/gtkpod.glade.h:198
 msgid "MP3 with :"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:198
-msgid "Match al_l of the following"
-msgstr "°Ê²¼¤Î¤¹¤Ù¤Æ¤Ë³ºÅö¤¹¤ë¤â¤Î(_l)"
-
 #: ../data/gtkpod.glade.h:199
-msgid "Match an_y of the following"
-msgstr "°Ê²¼¤Î¤¤¤º¤ì¤«¤Ë³ºÅö¤¹¤ë¤â¤Î(_y)"
+msgid "Match al_l of the following"
+msgstr "ä»¥ä¸‹ã®ã™ã¹ã¦ã«è©²å½“ã™ã‚‹ã‚‚ã®(_l)"
 
 #: ../data/gtkpod.glade.h:200
+msgid "Match an_y of the following"
+msgstr "ä»¥ä¸‹ã®ã„ãšã‚Œã‹ã«è©²å½“ã™ã‚‹ã‚‚ã®(_y)"
+
+#: ../data/gtkpod.glade.h:201
 msgid "Match only _checked tracks"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:201
+#: ../data/gtkpod.glade.h:202
 msgid "Maximum number of background threads:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:202
+#: ../data/gtkpod.glade.h:203
 msgid "Maximum size of cache directory (in GB):"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:203
+#: ../data/gtkpod.glade.h:204
 msgid "Model:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:204 ../src/display_tracks.c:2100
+#: ../data/gtkpod.glade.h:205 ../src/display_tracks.c:2100
 msgid "Modified"
-msgstr "ÊÑ¹¹Æü"
-
-#: ../data/gtkpod.glade.h:205
-msgid "Most Recently Played Tracks"
-msgstr "ºÇ¶áºÆÀ¸¤µ¤ì¤¿¶Ê"
+msgstr "å¤‰æ›´æ—¥"
 
 #: ../data/gtkpod.glade.h:206
+msgid "Most Recently Played Tracks"
+msgstr "æœ€è¿‘å†ç”Ÿã•ã‚ŒãŸæ›²"
+
+#: ../data/gtkpod.glade.h:207
 msgid "Move selected attributes to the displayed list"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:207
+#: ../data/gtkpod.glade.h:208
 msgid "Music Root:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:208
+#: ../data/gtkpod.glade.h:209
 msgid ""
 "Music files can have images embedded in the APIC tag. Currently this is only "
 "supported for MP3 files."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:209
-msgid "Never show this dialogue again"
-msgstr "¤³¤Î¼ÁÌä¤òÆóÅÙ¤ÈÉ½¼¨¤·¤Ê¤¤"
-
 #: ../data/gtkpod.glade.h:210
-msgid "New PL"
-msgstr "¿·µ¬¥×¥ì¥¤¥ê¥¹¥È"
+msgid "Never show this dialogue again"
+msgstr "ã“ã®è³ªå•ã‚’äºŒåº¦ã¨è¡¨ç¤ºã—ãªã„"
 
-#: ../data/gtkpod.glade.h:211
-msgid "No lower margin"
-msgstr "²¼¸Â¤ò»ØÄê¤·¤Ê¤¤"
+#: ../data/gtkpod.glade.h:211 ../src/display_spl.c:1719
+#: ../src/misc_playlist.c:66 ../src/misc_playlist.c:68
+#: ../src/misc_playlist.c:93 ../src/misc_playlist.c:95
+#: ../src/misc_playlist.c:428 ../src/misc_playlist.c:430
+msgid "New Playlist"
+msgstr "æ–°è¦ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:212
-msgid "No upper margin"
-msgstr "¾å¸Â¤ò»ØÄê¤·¤Ê¤¤"
+msgid "No lower margin"
+msgstr "ä¸‹é™ã‚’æŒ‡å®šã—ãªã„"
 
 #: ../data/gtkpod.glade.h:213
-msgid "Non-transferred tracks"
-msgstr "Ì¤Å¾Á÷¤Î¶Ê¿ô"
+msgid "No upper margin"
+msgstr "ä¸Šé™ã‚’æŒ‡å®šã—ãªã„"
 
 #: ../data/gtkpod.glade.h:214
-msgid "None"
-msgstr "Ìµ»ØÄê"
+msgid "Non-transferred tracks"
+msgstr "æœªè»¢é€ã®æ›²æ•°"
 
 #: ../data/gtkpod.glade.h:215
+msgid "None"
+msgstr "ç„¡æŒ‡å®š"
+
+#: ../data/gtkpod.glade.h:216
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "for the filename. If you set this option you can set a different charset "
@@ -998,14 +1009,14 @@ msgid ""
 "Preferences/'Writing of the iTunesDB'). Tracks imported before V0.51 will "
 "have no charset stored. Instead the charset specified will be used."
 msgstr ""
-"ÄÌ¾ï¤Ï, ºÇ½é¤Ë¶Ê¤òÅĞÏ¿¤·¤¿»ş¤Ë»ØÄê¤µ¤ì¤¿Ê¸»ú¥³¡¼¥É¤ò¥Õ¥¡¥¤¥ëÌ¾¤Ë¤â»ÈÍÑ¤·¤Ş¤¹"
-"¤¬, ¤³¤Î¹àÌÜ¤òÍ­¸ú¤Ë¤¹¤ë¤È, ÀßÄê¥á¥Ë¥å¡¼¤Î¡ÖÄÉ²Ã/¹¹¿·/Æ±´ü¡×¤Î¹àÌÜ¤Ç»ØÄê¤·¤¿"
-"Ê¸»ú¥³¡¼¥É¤ò¤«¤ï¤ê¤Ë»ÈÍÑ¤Ç¤­¤Ş¤¹. Ãí°Õ: Ê¸»ú¥³¡¼¥É¤Î¾ğÊó¤Ï³ÈÄ¥¾ğÊó¥Õ¥¡¥¤¥ë "
-"(¡ÖiTunesDB¤Ø¤Î½ñ¤­¹ş¤ß¡×¤ò»²¾È)¤Ëµ­Ï¿¤µ¤ì¤Ş¤¹. ¥Ğ¡¼¥¸¥ç¥ó0.51°ÊÁ°¤Î gtkpod "
-"¤ÇÅĞÏ¿¤µ¤ì¤¿¶Ê¤Ë¤Ï¤³¤Î¾ğÊó¤¬µ­Ï¿¤µ¤ì¤Æ¤¤¤Ş¤»¤ó. ¤³¤Î¾ì¹ç, ¾å¤Ç»ØÄê¤µ¤ì¤¿Ê¸»ú"
-"¥³¡¼¥É¤¬º£¸å»È¤ï¤ì¤ë¤è¤¦¤Ë¤Ê¤ê¤Ş¤¹."
+"é€šå¸¸ã¯, æœ€åˆã«æ›²ã‚’ç™»éŒ²ã—ãŸæ™‚ã«æŒ‡å®šã•ã‚ŒãŸæ–‡å­—ã‚³ãƒ¼ãƒ‰ã‚’ãƒ•ã‚¡ã‚¤ãƒ«åã«ã‚‚ä½¿ç”¨ã—ã¾ã™"
+"ãŒ, ã“ã®é …ç›®ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã¨, è¨­å®šãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ã€Œè¿½åŠ /æ›´æ–°/åŒæœŸã€ã®é …ç›®ã§æŒ‡å®šã—ãŸ"
+"æ–‡å­—ã‚³ãƒ¼ãƒ‰ã‚’ã‹ã‚ã‚Šã«ä½¿ç”¨ã§ãã¾ã™. æ³¨æ„: æ–‡å­—ã‚³ãƒ¼ãƒ‰ã®æƒ…å ±ã¯æ‹¡å¼µæƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ« "
+"(ã€ŒiTunesDBã¸ã®æ›¸ãè¾¼ã¿ã€ã‚’å‚ç…§)ã«è¨˜éŒ²ã•ã‚Œã¾ã™. ãƒãƒ¼ã‚¸ãƒ§ãƒ³0.51ä»¥å‰ã® gtkpod "
+"ã§ç™»éŒ²ã•ã‚ŒãŸæ›²ã«ã¯ã“ã®æƒ…å ±ãŒè¨˜éŒ²ã•ã‚Œã¦ã„ã¾ã›ã‚“. ã“ã®å ´åˆ, ä¸Šã§æŒ‡å®šã•ã‚ŒãŸæ–‡å­—"
+"ã‚³ãƒ¼ãƒ‰ãŒä»Šå¾Œä½¿ã‚ã‚Œã‚‹ã‚ˆã†ã«ãªã‚Šã¾ã™."
 
-#: ../data/gtkpod.glade.h:216
+#: ../data/gtkpod.glade.h:217
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "to update the track information. If you have chosen a wrong charset when "
@@ -1015,14 +1026,14 @@ msgid ""
 "imported before V0.51 will have no charset stored. Instead the charset "
 "specified above will be used then."
 msgstr ""
-"ÄÌ¾ï¤Ï, ¶Ê¤ò¥¤¥ó¥İ¡¼¥È¤¹¤ëºİ¤Ë»ØÄê¤µ¤ì¤¿Ê¸»ú¥³¡¼¥É¤¬¤½¤Î¸å¤â»È¤ï¤ì¤Ş¤¹¤¬, ¤â"
-"¤·¤½¤Î»ş¤Ë´Ö°ã¤Ã¤¿Ê¸»ú¥³¡¼¥É¤ò»ØÄê¤·¤Æ¤·¤Ş¤Ã¤Æ¤¤¤Æ,¡Ö¶Ê¤Î¹¹¿·¡×¤ò»È¤Ã¤Æ¤½¤ì¤ò"
-"Ä¾¤·¤¿¤¤¤Î¤Ç¤¢¤ì¤Ğ, ¤³¤Î¹àÌÜ¤òÍ­¸ú¤Ë¤·¤Æ¤¯¤À¤µ¤¤. Ãí°Õ: Ê¸»ú¥³¡¼¥É¤Î¾ğÊó¤Ï³È"
-"Ä¥¾ğÊó¥Õ¥¡¥¤¥ë¤Ëµ­Ï¿¤µ¤ì¤Ş¤¹¤¬(¡ÖiTunesDB¤Ø¤Î½ñ¤­¹ş¤ß¡×¤Î¹àÌÜ¤ò»²¾È), ¥Ğ¡¼"
-"¥¸¥ç¥ó0.51°ÊÁ°¤Î gtkpod ¤Ç¥¤¥ó¥İ¡¼¥È¤µ¤ì¤¿¶Ê¤Ï¤³¤Î¾ğÊó¤¬µ­Ï¿¤µ¤Æ¤¤¤Ş¤»¤ó. ¤³"
-"¤Î¾ì¹ç, ¤³¤³¤Ç»ØÄê¤µ¤ì¤¿Ê¸»ú¥³¡¼¥É¤¬º£¸å»È¤ï¤ì¤ë¤è¤¦¤Ë¤Ê¤ê¤Ş¤¹."
+"é€šå¸¸ã¯, æ›²ã‚’ã‚¤ãƒ³ãƒãƒ¼ãƒˆã™ã‚‹éš›ã«æŒ‡å®šã•ã‚ŒãŸæ–‡å­—ã‚³ãƒ¼ãƒ‰ãŒãã®å¾Œã‚‚ä½¿ã‚ã‚Œã¾ã™ãŒ, ã‚‚"
+"ã—ãã®æ™‚ã«é–“é•ã£ãŸæ–‡å­—ã‚³ãƒ¼ãƒ‰ã‚’æŒ‡å®šã—ã¦ã—ã¾ã£ã¦ã„ã¦,ã€Œæ›²ã®æ›´æ–°ã€ã‚’ä½¿ã£ã¦ãã‚Œã‚’"
+"ç›´ã—ãŸã„ã®ã§ã‚ã‚Œã°, ã“ã®é …ç›®ã‚’æœ‰åŠ¹ã«ã—ã¦ãã ã•ã„. æ³¨æ„: æ–‡å­—ã‚³ãƒ¼ãƒ‰ã®æƒ…å ±ã¯æ‹¡"
+"å¼µæƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã«è¨˜éŒ²ã•ã‚Œã¾ã™ãŒ(ã€ŒiTunesDBã¸ã®æ›¸ãè¾¼ã¿ã€ã®é …ç›®ã‚’å‚ç…§), ãƒãƒ¼"
+"ã‚¸ãƒ§ãƒ³0.51ä»¥å‰ã® gtkpod ã§ã‚¤ãƒ³ãƒãƒ¼ãƒˆã•ã‚ŒãŸæ›²ã¯ã“ã®æƒ…å ±ãŒè¨˜éŒ²ã•ã¦ã„ã¾ã›ã‚“. ã“"
+"ã®å ´åˆ, ã“ã“ã§æŒ‡å®šã•ã‚ŒãŸæ–‡å­—ã‚³ãƒ¼ãƒ‰ãŒä»Šå¾Œä½¿ã‚ã‚Œã‚‹ã‚ˆã†ã«ãªã‚Šã¾ã™."
 
-#: ../data/gtkpod.glade.h:217
+#: ../data/gtkpod.glade.h:218
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "to write the tags. If you have chosen a wrong charset when first importing a "
@@ -1032,15 +1043,15 @@ msgid ""
 "before V0.51 will have no charset stored -- the charset specified on the "
 "'Input/Output' page will be used."
 msgstr ""
-"ÄÌ¾ï¤Ï¡¢ºÇ½é¤Ë¶Ê¤òÊİÂ¸¤·¤¿»ş¤Ë»ØÄê¤µ¤ì¤¿Ê¸»ú¥³¡¼¥É¤ò¥¿¥°¤ò½ñ¤­¹ş¤à»ş¤Ë¤â»ÈÍÑ"
-"¤·¤Ş¤¹¡£¤â¤·ºÇ½é¤Ë´Ö°ã¤Ã¤¿Ê¸»ú¥³¡¼¥É¤ò»ØÄê¤·¤Æ¤·¤Ş¤Ã¤¿¾ì¹ç¤Ë¤Ï¡¢Àµ¤·¤¤Ê¸»ú"
-"¥³¡¼¥É¤òÁªÂò¤·¤¿¸å¤Ë¤³¤Î¥ª¥×¥·¥ç¥ó¤òÁªÂò¤·¤Æ¤¯¤À¤µ¤¤¡£Ãí°Õ: Ê¸»ú¥³¡¼¥É¤Î¾ğÊó"
-"¤òÊİÂ¸¤¹¤ë¤¿¤á¤Ë¡¢³ÈÄ¥¾ğÊó¥Õ¥¡¥¤¥ë¤ò»ÈÍÑ¤·¤Æ¤¯¤À¤µ¤¤(¡ÖÆş½ĞÎÏ¡×¤Î¥Ú¡¼¥¸¤Î"
-"¡ÖiTunesDB¤Ø¤Î½ñ¤­¹ş¤ß¡×¤Î¹à¤ò»²¾È)¡£¤Ş¤¿¡¢¥Ğ¡¼¥¸¥ç¥ó0.51°ÊÁ°¤ËÅĞÏ¿¤µ¤ì¤¿¶Ê¤Ë"
-"¤Ä¤¤¤Æ¤ÏÊ¸»ú¥³¡¼¥É¾ğÊó¤¬ÊİÂ¸¤µ¤ì¤Æ¤¤¤Ş¤»¤ó¡£¡ÖÆş½ĞÎÏ¡×¤Î¹àÌÜ¤Ç»ØÄê¤µ¤ì¤¿Ê¸»ú"
-"¥³¡¼¥É¤¬Å¬ÍÑ¤µ¤ì¤Ş¤¹¡£"
+"é€šå¸¸ã¯ã€æœ€åˆã«æ›²ã‚’ä¿å­˜ã—ãŸæ™‚ã«æŒ‡å®šã•ã‚ŒãŸæ–‡å­—ã‚³ãƒ¼ãƒ‰ã‚’ã‚¿ã‚°ã‚’æ›¸ãè¾¼ã‚€æ™‚ã«ã‚‚ä½¿ç”¨"
+"ã—ã¾ã™ã€‚ã‚‚ã—æœ€åˆã«é–“é•ã£ãŸæ–‡å­—ã‚³ãƒ¼ãƒ‰ã‚’æŒ‡å®šã—ã¦ã—ã¾ã£ãŸå ´åˆã«ã¯ã€æ­£ã—ã„æ–‡å­—"
+"ã‚³ãƒ¼ãƒ‰ã‚’é¸æŠã—ãŸå¾Œã«ã“ã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’é¸æŠã—ã¦ãã ã•ã„ã€‚æ³¨æ„: æ–‡å­—ã‚³ãƒ¼ãƒ‰ã®æƒ…å ±"
+"ã‚’ä¿å­˜ã™ã‚‹ãŸã‚ã«ã€æ‹¡å¼µæƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½¿ç”¨ã—ã¦ãã ã•ã„(ã€Œå…¥å‡ºåŠ›ã€ã®ãƒšãƒ¼ã‚¸ã®"
+"ã€ŒiTunesDBã¸ã®æ›¸ãè¾¼ã¿ã€ã®é …ã‚’å‚ç…§)ã€‚ã¾ãŸã€ãƒãƒ¼ã‚¸ãƒ§ãƒ³0.51ä»¥å‰ã«ç™»éŒ²ã•ã‚ŒãŸæ›²ã«"
+"ã¤ã„ã¦ã¯æ–‡å­—ã‚³ãƒ¼ãƒ‰æƒ…å ±ãŒä¿å­˜ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚ã€Œå…¥å‡ºåŠ›ã€ã®é …ç›®ã§æŒ‡å®šã•ã‚ŒãŸæ–‡å­—"
+"ã‚³ãƒ¼ãƒ‰ãŒé©ç”¨ã•ã‚Œã¾ã™ã€‚"
 
-#: ../data/gtkpod.glade.h:218
+#: ../data/gtkpod.glade.h:219
 msgid ""
 "Normally, if a track is no longer present in the sync directory, it will be "
 "removed from the playlist, but not from the iPod or local repository.\n"
@@ -1052,135 +1063,131 @@ msgid ""
 "means removing from the iPod."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:221
+#: ../data/gtkpod.glade.h:222
 msgid "Notes sync command:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:222
-msgid "Number of playlists"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤Î¿ô"
-
 #: ../data/gtkpod.glade.h:223
-msgid "Number of tracks"
-msgstr "¶Ê¿ô"
+msgid "Number of playlists"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®æ•°"
 
 #: ../data/gtkpod.glade.h:224
-msgid "Number of tracks in generated playlists:"
-msgstr "À¸À®¤¹¤ë¥×¥ì¥¤¥ê¥¹¥È¤Ë²Ã¤¨¤ë¶Ê¿ô:"
+msgid "Number of tracks"
+msgstr "æ›²æ•°"
 
 #: ../data/gtkpod.glade.h:225
+msgid "Number of tracks in generated playlists:"
+msgstr "ç”Ÿæˆã™ã‚‹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã«åŠ ãˆã‚‹æ›²æ•°:"
+
+#: ../data/gtkpod.glade.h:226
 msgid ""
 "Number of tracks in the generated playlists 'Most Often Listened', 'Best "
 "Rated' and 'Most Recently Played'. Choose '0' for 'no limit'."
 msgstr ""
-"¥×¥ì¥¤¥ê¥¹¥È¤Î¿·µ¬ºîÀ®¤Ç¡¢¡ÖºÆÀ¸²ó¿ô¤ÎÂ¿¤¤¶Ê¡×¡ÖÉ¾²Á¤Î¹â¤¤¶Ê¡×¡ÖºÇ¶áºÆÀ¸¤µ¤ì"
-"¤¿¶Ê¡×¤òÁªÂò¤·¤¿ºİ¤Ë¥ê¥¹¥È¤ËÅĞÏ¿¤¹¤ë¶Ê¤Î¿ô¤ò»ØÄê¤·¤Ş¤¹¡£0¤ò»ØÄê¤¹¤ë¤È¡¢¶Ê¿ô¤ò"
-"À©¸Â¤·¤Ş¤»¤ó¡£"
+"ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®æ–°è¦ä½œæˆã§ã€ã€Œå†ç”Ÿå›æ•°ã®å¤šã„æ›²ã€ã€Œè©•ä¾¡ã®é«˜ã„æ›²ã€ã€Œæœ€è¿‘å†ç”Ÿã•ã‚Œ"
+"ãŸæ›²ã€ã‚’é¸æŠã—ãŸéš›ã«ãƒªã‚¹ãƒˆã«ç™»éŒ²ã™ã‚‹æ›²ã®æ•°ã‚’æŒ‡å®šã—ã¾ã™ã€‚0ã‚’æŒ‡å®šã™ã‚‹ã¨ã€æ›²æ•°ã‚’"
+"åˆ¶é™ã—ã¾ã›ã‚“ã€‚"
 
-#: ../data/gtkpod.glade.h:226
+#: ../data/gtkpod.glade.h:227
 msgid "Ogg with :"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:227
+#: ../data/gtkpod.glade.h:228
 msgid "On startup automatically sync with playlist directories"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:228
+#: ../data/gtkpod.glade.h:229
 #, fuzzy
 msgid "On startup automatically sync with the following directory"
-msgstr "°Ê²¼¤Î¥Ç¥£¥ì¥¯¥È¥ê¤ÇÆ±´ü½èÍı¤ò¤·¤Æ¤â¤è¤í¤·¤¤¤Ç¤¹¤«?"
+msgstr "ä»¥ä¸‹ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã§åŒæœŸå‡¦ç†ã‚’ã—ã¦ã‚‚ã‚ˆã‚ã—ã„ã§ã™ã‹?"
 
-#: ../data/gtkpod.glade.h:229
+#: ../data/gtkpod.glade.h:230
 msgid "On startup automatically update (Live Playlist)"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:230
-msgid "One for each Album"
-msgstr "³Æ¥¢¥ë¥Ğ¥à¤´¤È¤Î¥ê¥¹¥È"
-
 #: ../data/gtkpod.glade.h:231
-msgid "One for each Artist"
-msgstr "³Æ¥¢¡¼¥Æ¥£¥¹¥È¤´¤È¤Î¥ê¥¹¥È"
+msgid "One for each Album"
+msgstr "å„ã‚¢ãƒ«ãƒãƒ ã”ã¨ã®ãƒªã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:232
-msgid "One for each Composer"
-msgstr "³Æºî¶Ê¼Ô¤´¤È¤Î¥ê¥¹¥È"
+msgid "One for each Artist"
+msgstr "å„ã‚¢ãƒ¼ãƒ†ã‚£ã‚¹ãƒˆã”ã¨ã®ãƒªã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:233
-msgid "One for each Genre"
-msgstr "³Æ¥¸¥ã¥ó¥ë¤´¤È¤Î¥ê¥¹¥È"
+msgid "One for each Composer"
+msgstr "å„ä½œæ›²è€…ã”ã¨ã®ãƒªã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:234
-msgid "One for each Rating"
-msgstr "³ÆÉ¾²ÁÃÍ¤´¤È¤Î¥ê¥¹¥È"
+msgid "One for each Genre"
+msgstr "å„ã‚¸ãƒ£ãƒ³ãƒ«ã”ã¨ã®ãƒªã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:235
-msgid "One for each Year"
-msgstr "³ÆÇ¯¤´¤È¤Î¥ê¥¹¥È"
+msgid "One for each Rating"
+msgstr "å„è©•ä¾¡å€¤ã”ã¨ã®ãƒªã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:236
-msgid "Overwrite tags that are already set"
-msgstr "¤¹¤Ç¤Ë¤¢¥¿¥°¾ğÊó¤ò¾å½ñ¤­¤¹¤ë"
+msgid "One for each Year"
+msgstr "å„å¹´ã”ã¨ã®ãƒªã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:237
+msgid "Overwrite tags that are already set"
+msgstr "ã™ã§ã«ã‚ã‚¿ã‚°æƒ…å ±ã‚’ä¸Šæ›¸ãã™ã‚‹"
+
+#: ../data/gtkpod.glade.h:238
 msgid "Password:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:238
+#: ../data/gtkpod.glade.h:239
 msgid "Path:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:239
+#: ../data/gtkpod.glade.h:240
 #, fuzzy
 msgid "Photo Window"
-msgstr "¾ğÊó(_I)"
+msgstr "æƒ…å ±(_I)"
 
-#: ../data/gtkpod.glade.h:240 ../src/display_spl.c:94
+#: ../data/gtkpod.glade.h:241 ../src/display_spl.c:94
 msgid "Play time"
-msgstr "±éÁÕ»ş´Ö"
+msgstr "æ¼”å¥æ™‚é–“"
 
-#: ../data/gtkpod.glade.h:241 ../src/display_spl.c:98
+#: ../data/gtkpod.glade.h:242 ../src/display_spl.c:98
 #: ../src/misc_conversion.c:77
 msgid "Playcount"
-msgstr "ºÆÀ¸²ó¿ô"
+msgstr "å†ç”Ÿå›æ•°"
 
-#: ../data/gtkpod.glade.h:242 ../src/display_tracks.c:2097
+#: ../data/gtkpod.glade.h:243 ../src/display_tracks.c:2097
 msgid "Played"
-msgstr "±éÁÕÆü"
-
-#: ../data/gtkpod.glade.h:243 ../src/display_spl.c:105
-msgid "Playlist"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È"
+msgstr "æ¼”å¥æ—¥"
 
 #: ../data/gtkpod.glade.h:244
 msgid "Playlist name:"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤ÎÌ¾Á°:"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®åå‰:"
 
 #: ../data/gtkpod.glade.h:245
 #, fuzzy
 msgid "Playlist type:"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:246 ../src/display_playlists.c:2258
 msgid "Playlists"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:247
 msgid "Please refer to the notice below."
-msgstr "²¼µ­¤ÎÃí°Õ¤ò»²¾È¤·¤Æ¤¯¤À¤µ¤¤¡£"
+msgstr "ä¸‹è¨˜ã®æ³¨æ„ã‚’å‚ç…§ã—ã¦ãã ã•ã„ã€‚"
 
 #: ../data/gtkpod.glade.h:248
 msgid "Please specify a time interval"
-msgstr "´ü´Ö¤ò»ØÄê¤·¤Æ¤¯¤À¤µ¤¤"
+msgstr "æœŸé–“ã‚’æŒ‡å®šã—ã¦ãã ã•ã„"
 
 #: ../data/gtkpod.glade.h:249
 msgid "Preferences"
-msgstr "ÀßÄê"
+msgstr "è¨­å®š"
 
 #: ../data/gtkpod.glade.h:250
 #, fuzzy
 msgid "Progress Information"
-msgstr "¾ğÊó"
+msgstr "æƒ…å ±"
 
 #: ../data/gtkpod.glade.h:251
 msgid "R_ename Album"
@@ -1188,16 +1195,16 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:252
 msgid "Random Playlist from Displayed Tracks"
-msgstr "É½¼¨¤µ¤ì¤Æ¤¤¤ë¶Ê¤«¤é¥é¥ó¥À¥à¤ËºîÀ®"
+msgstr "è¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹æ›²ã‹ã‚‰ãƒ©ãƒ³ãƒ€ãƒ ã«ä½œæˆ"
 
 #: ../data/gtkpod.glade.h:253
 msgid "Randomize Current Playlist"
-msgstr "¸½ºß¤Î¥×¥ì¥¤¥ê¥¹¥È¤ò¥é¥ó¥À¥à¤ËÊÂ¤Ù´¹¤¨¤ë"
+msgstr "ç¾åœ¨ã®ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’ãƒ©ãƒ³ãƒ€ãƒ ã«ä¸¦ã¹æ›ãˆã‚‹"
 
 #: ../data/gtkpod.glade.h:254 ../src/display_spl.c:101
 #: ../src/misc_conversion.c:78
 msgid "Rating"
-msgstr "É¾²Á"
+msgstr "è©•ä¾¡"
 
 #: ../data/gtkpod.glade.h:255
 msgid "Read coverart from embedded APIC data"
@@ -1205,138 +1212,149 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:256
 msgid "Read tags from file contents (e.g. ID3 tags in MP3 files)"
-msgstr "¥Õ¥¡¥¤¥ë¤«¤é¥¿¥°¾ğÊó¤òÆÉ¤ß¹ş¤à (MP3 ¥Õ¥¡¥¤¥ë¤Î ID3 ¥¿¥°¤Ê¤É)"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ã‚¿ã‚°æƒ…å ±ã‚’èª­ã¿è¾¼ã‚€ (MP3 ãƒ•ã‚¡ã‚¤ãƒ«ã® ID3 ã‚¿ã‚°ãªã©)"
 
 #: ../data/gtkpod.glade.h:257
 #, fuzzy
 msgid "Remove selected attributes from the displayed list"
-msgstr "ÁªÂò¤µ¤ì¤¿¶Ê¤ò¥×¥ì¥¤¥ê¥¹¥È¤«¤éºï½ü¤¹¤ë"
+msgstr "é¸æŠã•ã‚ŒãŸæ›²ã‚’ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:258
 #, fuzzy
 msgid "Repository Options"
-msgstr "¥½¡¼¥È¤ÎÀßÄê"
+msgstr "ã‚½ãƒ¼ãƒˆã®è¨­å®š"
 
 #: ../data/gtkpod.glade.h:259
 #, fuzzy
 msgid "Repository name:"
-msgstr "¥½¡¼¥È¤ÎÀßÄê"
+msgstr "ã‚½ãƒ¼ãƒˆã®è¨­å®š"
 
 #: ../data/gtkpod.glade.h:260
 #, fuzzy
 msgid "Repository type:"
-msgstr "¥½¡¼¥È¤ÎÀßÄê"
+msgstr "ã‚½ãƒ¼ãƒˆã®è¨­å®š"
 
 #: ../data/gtkpod.glade.h:261
 msgid "Root directory of mserv database (trackinfo root)."
-msgstr "mserv ¥Ç¡¼¥¿¥Ù¡¼¥¹¤Î¤¢¤ë¥Ç¥£¥ì¥¯¥È¥ê¡£(trackinfo root)"
+msgstr "mserv ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®ã‚ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã€‚(trackinfo root)"
 
 #: ../data/gtkpod.glade.h:262
 msgid "Rules"
-msgstr "¥ë¡¼¥ë"
+msgstr "ãƒ«ãƒ¼ãƒ«"
 
 #: ../data/gtkpod.glade.h:263 ../src/context_menus.c:804
 msgid "Save Changes"
-msgstr "ÊÑ¹¹¤òÊİÂ¸"
+msgstr "å¤‰æ›´ã‚’ä¿å­˜"
 
 #: ../data/gtkpod.glade.h:264
 #, fuzzy
 msgid "Scrobble Tracks?"
-msgstr "ÁªÂò¤µ¤ì¤¿¶Ê(_T)"
+msgstr "é¸æŠã•ã‚ŒãŸæ›²(_T)"
 
 #: ../data/gtkpod.glade.h:265
 msgid "Select '-1' for no upper limit."
-msgstr "¾å¸Â¤ò»ØÄê¤·¤Ê¤¤¾ì¹ç¤Ï '-1' ¤òÁª¤ó¤Ç¤¯¤À¤µ¤¤¡£"
+msgstr "ä¸Šé™ã‚’æŒ‡å®šã—ãªã„å ´åˆã¯ '-1' ã‚’é¸ã‚“ã§ãã ã•ã„ã€‚"
 
 #: ../data/gtkpod.glade.h:266
 msgid "Select '0' for no lower limit."
-msgstr "²¼¸Â¤ò»ØÄê¤·¤Ê¤¤¾ì¹ç¤Ï '0' ¤òÁª¤ó¤Ç¤¯¤À¤µ¤¤."
+msgstr "ä¸‹é™ã‚’æŒ‡å®šã—ãªã„å ´åˆã¯ '0' ã‚’é¸ã‚“ã§ãã ã•ã„."
 
 #: ../data/gtkpod.glade.h:267
 msgid ""
 "Selected\n"
 "Playlist"
 msgstr ""
-"ÁªÂò¤µ¤ì¤¿\n"
-"¥×¥ì¥¤¥ê¥¹¥È"
+"é¸æŠã•ã‚ŒãŸ\n"
+"ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:269
 msgid ""
 "Selected\n"
 "Tracks"
 msgstr ""
-"ÁªÂò¤µ¤ì\n"
-"¤Æ¤¤¤ë¶Ê"
+"é¸æŠã•ã‚Œ\n"
+"ã¦ã„ã‚‹æ›²"
 
 #: ../data/gtkpod.glade.h:271
-msgid "Selected Tab _Entry"
-msgstr "ÁªÂò¤µ¤ì¤¿¥½¡¼¥È¥¿¥Ö(_E)"
+#, fuzzy
+msgid "Selected Filter Tab Entry from Database"
+msgstr "é¸æŠã•ã‚ŒãŸã‚¿ãƒ–ã§æŒ‡å®šã—ãŸæ›²ã‚’ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰å‰Šé™¤ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:272
-msgid "Selected _Playlist"
-msgstr "ÁªÂò¤µ¤ì¤¿¥×¥ì¥¤¥ê¥¹¥È(_P)"
+#, fuzzy
+msgid "Selected Filter Tab Entry from Hard Disk"
+msgstr "é¸æŠã•ã‚ŒãŸã‚¿ãƒ–ã§æŒ‡å®šã—ãŸæ›²ã‚’ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã‹ã‚‰å‰Šé™¤ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:273
-msgid "Selected _Tracks"
-msgstr "ÁªÂò¤µ¤ì¤¿¶Ê(_T)"
+#, fuzzy
+msgid "Selected Filter Tab Entry from Playlist"
+msgstr "é¸æŠã•ã‚ŒãŸã‚¿ãƒ–ã§æŒ‡å®šã—ãŸæ›²ã‚’ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:274
-msgid "Selected filter tab entry from database"
-msgstr "ÁªÂò¤µ¤ì¤¿¥¿¥Ö¤Ç»ØÄê¤·¤¿¶Ê¤ò¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤éºï½ü¤¹¤ë"
+#, fuzzy
+msgid "Selected Filter Tab Entry from iPod"
+msgstr "é¸æŠã•ã‚ŒãŸã‚¿ãƒ–ã§æŒ‡å®šã—ãŸæ›²ã‚’ iPod ã‹ã‚‰å‰Šé™¤ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:275
-msgid "Selected filter tab entry from harddisk"
-msgstr "ÁªÂò¤µ¤ì¤¿¥¿¥Ö¤Ç»ØÄê¤·¤¿¶Ê¤ò¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤«¤éºï½ü¤¹¤ë"
+#, fuzzy
+msgid "Selected Playlist Including Tracks from Database"
+msgstr "é¸æŠã•ã‚ŒãŸãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’æ›²ã”ã¨ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰å‰Šé™¤ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:276
-msgid "Selected filter tab entry from iPod"
-msgstr "ÁªÂò¤µ¤ì¤¿¥¿¥Ö¤Ç»ØÄê¤·¤¿¶Ê¤ò iPod ¤«¤éºï½ü¤¹¤ë"
+#, fuzzy
+msgid "Selected Playlist Including Tracks from Hard Disk"
+msgstr "é¸æŠã•ã‚ŒãŸãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’æ›²ã”ã¨ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰å‰Šé™¤ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:277
-msgid "Selected filter tab entry from playlist"
-msgstr "ÁªÂò¤µ¤ì¤¿¥¿¥Ö¤Ç»ØÄê¤·¤¿¶Ê¤ò¥×¥ì¥¤¥ê¥¹¥È¤«¤éºï½ü¤¹¤ë"
+#, fuzzy
+msgid "Selected Playlist Including Tracks from iPod"
+msgstr "é¸æŠã•ã‚ŒãŸãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’æ›²ã”ã¨ iPod ã‹ã‚‰å‰Šé™¤ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:278
-msgid "Selected playlist"
-msgstr "ÁªÂò¤µ¤ì¤¿¥×¥ì¥¤¥ê¥¹¥È"
+msgid "Selected Tab _Entry"
+msgstr "é¸æŠã•ã‚ŒãŸã‚½ãƒ¼ãƒˆã‚¿ãƒ–(_E)"
 
 #: ../data/gtkpod.glade.h:279
-msgid "Selected playlist including tracks from database"
-msgstr "ÁªÂò¤µ¤ì¤¿¥×¥ì¥¤¥ê¥¹¥È¤ò¶Ê¤´¤È¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤éºï½ü¤¹¤ë"
+#, fuzzy
+msgid "Selected Tracks from Database"
+msgstr "é¸æŠã•ã‚ŒãŸæ›²ã‚’ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰å‰Šé™¤ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:280
-msgid "Selected playlist including tracks from harddisk"
-msgstr "ÁªÂò¤µ¤ì¤¿¥×¥ì¥¤¥ê¥¹¥È¤ò¶Ê¤´¤È¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤éºï½ü¤¹¤ë"
+#, fuzzy
+msgid "Selected Tracks from Hard Disk"
+msgstr "é¸æŠã•ã‚ŒãŸæ›²ã‚’ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã‹ã‚‰å‰Šé™¤ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:281
-msgid "Selected playlist including tracks from iPod"
-msgstr "ÁªÂò¤µ¤ì¤¿¥×¥ì¥¤¥ê¥¹¥È¤ò¶Ê¤´¤È iPod ¤«¤éºï½ü¤¹¤ë"
+#, fuzzy
+msgid "Selected Tracks from Playlist"
+msgstr "é¸æŠã•ã‚ŒãŸæ›²ã‚’ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:282
-msgid "Selected tracks from database"
-msgstr "ÁªÂò¤µ¤ì¤¿¶Ê¤ò¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤éºï½ü¤¹¤ë"
+#, fuzzy
+msgid "Selected Tracks from iPod"
+msgstr "é¸æŠã•ã‚ŒãŸæ›²ã‚’ iPod ã‹ã‚‰å‰Šé™¤ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:283
-msgid "Selected tracks from harddisk"
-msgstr "ÁªÂò¤µ¤ì¤¿¶Ê¤ò¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤«¤éºï½ü¤¹¤ë"
+msgid "Selected _Playlist"
+msgstr "é¸æŠã•ã‚ŒãŸãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ(_P)"
 
 #: ../data/gtkpod.glade.h:284
-msgid "Selected tracks from iPod"
-msgstr "ÁªÂò¤µ¤ì¤¿¶Ê¤ò iPod ¤«¤éºï½ü¤¹¤ë"
+msgid "Selected _Tracks"
+msgstr "é¸æŠã•ã‚ŒãŸæ›²(_T)"
 
 #: ../data/gtkpod.glade.h:285
-msgid "Selected tracks from playlist"
-msgstr "ÁªÂò¤µ¤ì¤¿¶Ê¤ò¥×¥ì¥¤¥ê¥¹¥È¤«¤éºï½ü¤¹¤ë"
+msgid "Selected playlist"
+msgstr "é¸æŠã•ã‚ŒãŸãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:286
 #, fuzzy
 msgid "Semicolon separated list of file exclusion masks, e.g. '*.mp3'"
-msgstr "¥»¥ß¥³¥í¥ó¤Ç¶èÀÚ¤é¤ì¤¿, Å¬ÍÑ¤·¤Ê¤¤¥Õ¥¡¥¤¥ë¤Î¥Ş¥¹¥¯¥ê¥¹¥È. Îã: '*.mp3'"
+msgstr "ã‚»ãƒŸã‚³ãƒ­ãƒ³ã§åŒºåˆ‡ã‚‰ã‚ŒãŸ, é©ç”¨ã—ãªã„ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒã‚¹ã‚¯ãƒªã‚¹ãƒˆ. ä¾‹: '*.mp3'"
 
 #: ../data/gtkpod.glade.h:287
 #, fuzzy
 msgid "Set Cover Art from _File"
-msgstr "mserv ¥Ç¡¼¥¿¤ò¹¹¿·¤¹¤ë(_m)"
+msgstr "mserv ãƒ‡ãƒ¼ã‚¿ã‚’æ›´æ–°ã™ã‚‹(_m)"
 
 #: ../data/gtkpod.glade.h:288
 msgid "Set mountpoint or edit repository options"
@@ -1382,7 +1400,7 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:296
 msgid "Show information about problems when accessing mserv"
-msgstr "mserv ¤Ø¥¢¥¯¥»¥¹¤¹¤ë¤È¤­¡¢ÌäÂê¤ÎÊó¹ğ¤òÉ½¼¨¤¹¤ë"
+msgstr "mserv ã¸ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹ã¨ãã€å•é¡Œã®å ±å‘Šã‚’è¡¨ç¤ºã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:297
 msgid "Show summary of sync result"
@@ -1391,31 +1409,31 @@ msgstr ""
 #: ../data/gtkpod.glade.h:298 ../src/misc_playlist.c:96
 #: ../src/repository.c:1356
 msgid "Smart Playlist"
-msgstr "¥¹¥Ş¡¼¥È¥×¥ì¥¤¥ê¥¹¥È"
+msgstr "ã‚¹ãƒãƒ¼ãƒˆãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:299
 msgid "Sort tracks according to: "
-msgstr "¶Ê½ç¤ò¼¡¤Î½ç¤ÇÊÂ¤Ù´¹¤¨¤ë: "
+msgstr "æ›²é †ã‚’æ¬¡ã®é †ã§ä¸¦ã¹æ›ãˆã‚‹: "
 
 #: ../data/gtkpod.glade.h:300
 msgid "Sorting Options"
-msgstr "¥½¡¼¥È¤ÎÀßÄê"
+msgstr "ã‚½ãƒ¼ãƒˆã®è¨­å®š"
 
 #: ../data/gtkpod.glade.h:301
 msgid "Sorting case sensitive"
-msgstr "ÊÂ¤Ù´¹¤¨¤Îºİ¤ËÂçÊ¸»ú¾®Ê¸»ú¤ò¶èÊÌ¤¹¤ë"
+msgstr "ä¸¦ã¹æ›ãˆã®éš›ã«å¤§æ–‡å­—å°æ–‡å­—ã‚’åŒºåˆ¥ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:302
 msgid "Sorttab: "
-msgstr "¥½¡¼¥È¥¿¥Ö: "
+msgstr "ã‚½ãƒ¼ãƒˆã‚¿ãƒ–: "
 
 #: ../data/gtkpod.glade.h:303
 msgid "Sorttabs"
-msgstr "¥½¡¼¥È¥¿¥Ö"
+msgstr "ã‚½ãƒ¼ãƒˆã‚¿ãƒ–"
 
 #: ../data/gtkpod.glade.h:304
 msgid "Source:"
-msgstr "»²¾ÈÀè:"
+msgstr "å‚ç…§å…ˆ:"
 
 #: ../data/gtkpod.glade.h:306
 #, no-c-format
@@ -1426,31 +1444,31 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:307
 msgid "Specify interval"
-msgstr "ÈÏ°Ï¤ò»ØÄê¤·¤Æ¤¯¤À¤µ¤¤"
+msgstr "ç¯„å›²ã‚’æŒ‡å®šã—ã¦ãã ã•ã„"
 
 #: ../data/gtkpod.glade.h:308
 msgid "Start display automatically"
-msgstr "¼«Æ°Åª¤ËÉ½¼¨¤ò¹¹¿·¤¹¤ë"
+msgstr "è‡ªå‹•çš„ã«è¡¨ç¤ºã‚’æ›´æ–°ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:309
 msgid "Synchronise Contacts, Calendar and Notes"
-msgstr "¥¢¥É¥ì¥¹¥Ç¡¼¥¿,¥«¥ì¥ó¥À¡¼,¥á¥â¤òÆ±´ü¤¹¤ë"
+msgstr "ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ‡ãƒ¼ã‚¿,ã‚«ãƒ¬ãƒ³ãƒ€ãƒ¼,ãƒ¡ãƒ¢ã‚’åŒæœŸã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:310
 msgid "Synchronize All"
-msgstr "¤¹¤Ù¤ÆÆ±´ü"
+msgstr "ã™ã¹ã¦åŒæœŸ"
 
 #: ../data/gtkpod.glade.h:311
 msgid "Synchronize Calendar"
-msgstr "¥«¥ì¥ó¥À¡¼¤òÆ±´ü"
+msgstr "ã‚«ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚’åŒæœŸ"
 
 #: ../data/gtkpod.glade.h:312
 msgid "Synchronize Contacts"
-msgstr "¥¢¥É¥ì¥¹¥Ç¡¼¥¿¤òÆ±´ü"
+msgstr "ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ‡ãƒ¼ã‚¿ã‚’åŒæœŸ"
 
 #: ../data/gtkpod.glade.h:313
 msgid "Synchronize Notes"
-msgstr "¥á¥â¤òÆ±´ü"
+msgstr "ãƒ¡ãƒ¢ã‚’åŒæœŸ"
 
 #: ../data/gtkpod.glade.h:314
 msgid "Template for info field: "
@@ -1461,8 +1479,8 @@ msgid ""
 "The local copy of the track is referenced in the playlist. If the track is "
 "not available locally, an error message is displayed."
 msgstr ""
-"¥Ï¡¼¥É¥Ç¥£¥¹¥¯¾å¤Ë¤¢¤ëÂĞ±ş¤¹¤ë¶Ê¤ò¾ï¤Ë»²¾È¤·¤Ş¤¹. ¸«¤Ä¤«¤é¤Ê¤¤¾ì¹ç¤Ë¤Ï¥¨¥é¡¼"
-"¥á¥Ã¥»¡¼¥¸¤òÉ½¼¨¤·¤Ş¤¹."
+"ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ä¸Šã«ã‚ã‚‹å¯¾å¿œã™ã‚‹æ›²ã‚’å¸¸ã«å‚ç…§ã—ã¾ã™. è¦‹ã¤ã‹ã‚‰ãªã„å ´åˆã«ã¯ã‚¨ãƒ©ãƒ¼"
+"ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã¾ã™."
 
 #: ../data/gtkpod.glade.h:316
 msgid ""
@@ -1476,15 +1494,15 @@ msgid ""
 "The tags are written to the files on your harddrive and on the iPod (if "
 "available)."
 msgstr ""
-"¥¿¥°¤Ï»È¤Ã¤Æ¤¤¤ë¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤È(²ÄÇ½¤Ç¤¢¤ì¤Ğ)iPod¤ÎÎ¾Êı¤Ç½¤Àµ¤µ¤ì¤Ş¤¹¡£"
+"ã‚¿ã‚°ã¯ä½¿ã£ã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã¨(å¯èƒ½ã§ã‚ã‚Œã°)iPodã®ä¸¡æ–¹ã§ä¿®æ­£ã•ã‚Œã¾ã™ã€‚"
 
 #: ../data/gtkpod.glade.h:318
 msgid "The track on the iPod is referenced in the playlist file."
-msgstr "iPod ¾å¤Î¶Ê¤ò¾ï¤Ë»²¾È¤·¤Ş¤¹."
+msgstr "iPod ä¸Šã®æ›²ã‚’å¸¸ã«å‚ç…§ã—ã¾ã™."
 
 #: ../data/gtkpod.glade.h:319
 msgid "This is the same option as in 'Edit/Delete Confirmation'"
-msgstr "¡ÖÊÔ½¸/ºï½ü¤Î³ÎÇ§¡×¤Î¹àÌÜ¤ÈÆ±¤¸¤Ç¤¹"
+msgstr "ã€Œç·¨é›†/å‰Šé™¤ã®ç¢ºèªã€ã®é …ç›®ã¨åŒã˜ã§ã™"
 
 #: ../data/gtkpod.glade.h:320
 msgid ""
@@ -1501,19 +1519,19 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:322
 msgid "Time:"
-msgstr "»ş¹ï:"
+msgstr "æ™‚åˆ»:"
 
 #: ../data/gtkpod.glade.h:323 ../src/display_sorttabs.c:2991
 #: ../src/display_spl.c:83 ../src/misc_conversion.c:62
 msgid "Title"
-msgstr "¥¿¥¤¥È¥ë"
+msgstr "ã‚¿ã‚¤ãƒˆãƒ«"
 
 #: ../data/gtkpod.glade.h:324
 msgid ""
 "Total\n"
 "(iPod)"
 msgstr ""
-"¹ç·×\n"
+"åˆè¨ˆ\n"
 "(iPod)"
 
 #: ../data/gtkpod.glade.h:326
@@ -1521,16 +1539,16 @@ msgid ""
 "Total\n"
 "(local)"
 msgstr ""
-"¹ç·×\n"
-"(¥í¡¼¥«¥ë)"
+"åˆè¨ˆ\n"
+"(ãƒ­ãƒ¼ã‚«ãƒ«)"
 
 #: ../data/gtkpod.glade.h:328
 msgid "Tracks"
-msgstr "¶Ê¥ê¥¹¥È"
+msgstr "æ›²ãƒªã‚¹ãƒˆ"
 
 #: ../data/gtkpod.glade.h:329
 msgid "Tracks Most Often Listened To"
-msgstr "ºÆÀ¸²ó¿ô¤ÎÂ¿¤¤¶Ê"
+msgstr "å†ç”Ÿå›æ•°ã®å¤šã„æ›²"
 
 #: ../data/gtkpod.glade.h:330
 msgid ""
@@ -1541,11 +1559,11 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:331
 msgid "Tracks in Selected Tab _Entry"
-msgstr "ÁªÂò¤µ¤ì¤¿¥¿¥Ö¤Î¶Ê(_E)"
+msgstr "é¸æŠã•ã‚ŒãŸã‚¿ãƒ–ã®æ›²(_E)"
 
 #: ../data/gtkpod.glade.h:332
 msgid "Tracks in Selected _Playlist"
-msgstr "ÁªÂò¤µ¤ì¤¿¥×¥ì¥¤¥ê¥¹¥È¤Î¶Ê(_P)"
+msgstr "é¸æŠã•ã‚ŒãŸãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®æ›²(_P)"
 
 #: ../data/gtkpod.glade.h:333
 msgid "Transfer tracks to the iPod in the background"
@@ -1553,24 +1571,24 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:334
 msgid "Translators"
-msgstr "ËİÌõÃ´Åö"
+msgstr "ç¿»è¨³æ‹…å½“"
 
 #: ../data/gtkpod.glade.h:335
 msgid ""
 "Try to load contents of all connected iPods. For each iPod a separate "
 "repository must be set up."
 msgstr ""
-"ÀÜÂ³¤µ¤ì¤Æ¤¤¤ë¤¹¤Ù¤Æ¤Î iPod ¤ÎÆâÍÆ¤òÆÉ¤ß¹ş¤ß¤Ş¤¹. ¤½¤ì¤¾¤ì¤Î iPod ¤´¤È¤Ë¸ÄÊÌ"
-"¤ËÀßÄê¤ò¤·¤Æ¤ª¤¯É¬Í×¤¬¤¢¤ê¤Ş¤¹."
+"æ¥ç¶šã•ã‚Œã¦ã„ã‚‹ã™ã¹ã¦ã® iPod ã®å†…å®¹ã‚’èª­ã¿è¾¼ã¿ã¾ã™. ãã‚Œãã‚Œã® iPod ã”ã¨ã«å€‹åˆ¥"
+"ã«è¨­å®šã‚’ã—ã¦ãŠãå¿…è¦ãŒã‚ã‚Šã¾ã™."
 
 #: ../data/gtkpod.glade.h:336
 #, fuzzy
 msgid "Undo _Track"
-msgstr "Ì¤É¾²Á¤Î¶Ê"
+msgstr "æœªè©•ä¾¡ã®æ›²"
 
 #: ../data/gtkpod.glade.h:337
 msgid "Update _mserv Data from File"
-msgstr "mserv ¥Ç¡¼¥¿¤ò¹¹¿·¤¹¤ë(_m)"
+msgstr "mserv ãƒ‡ãƒ¼ã‚¿ã‚’æ›´æ–°ã™ã‚‹(_m)"
 
 #: ../data/gtkpod.glade.h:338
 msgid "Update/Sync all playlists now"
@@ -1582,45 +1600,45 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:340
 msgid "Upper margin"
-msgstr "¾å¸Â"
+msgstr "ä¸Šé™"
 
 #: ../data/gtkpod.glade.h:341
 msgid "Use 'Multi-Edit' also for title field"
-msgstr "¥¿¥¤¥È¥ë¤Î¹àÌÜ¤â¡Ö°ìÀÆÊÔ½¸¡×¤ò²ÄÇ½¤Ë¤¹¤ë"
+msgstr "ã‚¿ã‚¤ãƒˆãƒ«ã®é …ç›®ã‚‚ã€Œä¸€æ–‰ç·¨é›†ã€ã‚’å¯èƒ½ã«ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:342
 msgid "Use 'Multi-Edit' for tracks selections"
-msgstr "ÁªÂò¤µ¤ì¤¿¶Ê¤ò¡Ö°ìÀÆÊÔ½¸¡×¤¹¤ë"
+msgstr "é¸æŠã•ã‚ŒãŸæ›²ã‚’ã€Œä¸€æ–‰ç·¨é›†ã€ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:343
 #, fuzzy
 msgid "Use <i>&lt;Album&gt;.jpg</i> in the parent directory"
-msgstr "¿Æ¥Ç¥£¥ì¥¯¥È¥ê¤Ë¤¢¤ë <i>&lt;Album&gt;.jpg</i> ¤ò»È¤¦"
+msgstr "è¦ªãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã«ã‚ã‚‹ <i>&lt;Album&gt;.jpg</i> ã‚’ä½¿ã†"
 
 #: ../data/gtkpod.glade.h:344
 #, fuzzy
 msgid "Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>..."
-msgstr "<i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i> ¤Ê¤É"
+msgstr "<i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i> ãªã©"
 
 #: ../data/gtkpod.glade.h:345
 msgid "Use <i>folder.jpg</i> as cover art."
-msgstr "<i>folder.jpg</i> ¤ò¥«¥Ğ¡¼¥¢¡¼¥È¤Ë»È¤¦"
+msgstr "<i>folder.jpg</i> ã‚’ã‚«ãƒãƒ¼ã‚¢ãƒ¼ãƒˆã«ä½¿ã†"
 
 #: ../data/gtkpod.glade.h:346
 msgid "Use <i>folder.jpg</i>, <i>folder.png</i>..."
-msgstr "<i>folder.jpg</i>, <i>folder.png</i> ¤Ê¤É"
+msgstr "<i>folder.jpg</i>, <i>folder.png</i> ãªã©"
 
 #: ../data/gtkpod.glade.h:347
 msgid "Use mserv database to fill additional information"
-msgstr "mserv ¤Î¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤éÄÉ²Ã¾ğÊó¤ò¼èÆÀ¤¹¤ë"
+msgstr "mserv ã®ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰è¿½åŠ æƒ…å ±ã‚’å–å¾—ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:348
 msgid ""
 "Use selected charset (Preferences/'Adding/Updating/ Syncing')\n"
 "for this filename."
 msgstr ""
-"»ØÄê¤µ¤ì¤¿Ê¸»ú¥³¡¼¥É (¡ÖÀßÄê¡×Æâ¡ÖÅĞÏ¿/¹¹¿·/Æ±´ü¡×¤ò»²¾È)\n"
-"¤ò¥Õ¥¡¥¤¥ëÌ¾¤Ë¤â»ÈÍÑ¤¹¤ë¡£"
+"æŒ‡å®šã•ã‚ŒãŸæ–‡å­—ã‚³ãƒ¼ãƒ‰ (ã€Œè¨­å®šã€å†…ã€Œç™»éŒ²/æ›´æ–°/åŒæœŸã€ã‚’å‚ç…§)\n"
+"ã‚’ãƒ•ã‚¡ã‚¤ãƒ«åã«ã‚‚ä½¿ç”¨ã™ã‚‹ã€‚"
 
 #: ../data/gtkpod.glade.h:350
 #, fuzzy
@@ -1628,25 +1646,25 @@ msgid ""
 "Use selected encoding (on the 'General' page)\n"
 "when writing tags"
 msgstr ""
-"¡Ö´ğËÜÀßÄê¡×¤Î¥Ú¡¼¥¸¤Ç»ØÄê¤µ¤ì¤¿Ê¸»ú¥³¡¼¥É¤ò\n"
-"¥¿¥°¤ÎÆÉ¤ß½ñ¤­¤Ë¤â»ÈÍÑ¤¹¤ë"
+"ã€ŒåŸºæœ¬è¨­å®šã€ã®ãƒšãƒ¼ã‚¸ã§æŒ‡å®šã•ã‚ŒãŸæ–‡å­—ã‚³ãƒ¼ãƒ‰ã‚’\n"
+"ã‚¿ã‚°ã®èª­ã¿æ›¸ãã«ã‚‚ä½¿ç”¨ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:352
 #, fuzzy
 msgid "Use selected encoding also when updating or syncing tracks"
-msgstr "ÁªÂò¤µ¤ì¤¿Ê¸»ú¥³¡¼¥É¤ò¹¹¿·¡¦Æ±´ü½èÍı¤Ç¤â»ÈÍÑ¤¹¤ë"
+msgstr "é¸æŠã•ã‚ŒãŸæ–‡å­—ã‚³ãƒ¼ãƒ‰ã‚’æ›´æ–°ãƒ»åŒæœŸå‡¦ç†ã§ã‚‚ä½¿ç”¨ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:353
 msgid "Use this template to parse filename for tag information:"
-msgstr "°Ê²¼¤Î¥Æ¥ó¥×¥ì¡¼¥È¤ò¡¢¥Õ¥¡¥¤¥ëÌ¾¤«¤é¥¿¥°¾ğÊó¤òÃê½Ğ¤¹¤ë¤Î¤Ë»ÈÍÑ¤¹¤ë:"
+msgstr "ä»¥ä¸‹ã®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã‚’ã€ãƒ•ã‚¡ã‚¤ãƒ«åã‹ã‚‰ã‚¿ã‚°æƒ…å ±ã‚’æŠ½å‡ºã™ã‚‹ã®ã«ä½¿ç”¨ã™ã‚‹:"
 
 #: ../data/gtkpod.glade.h:354
 msgid "Username to be used for mserv database lookup."
-msgstr "¥æ¡¼¥¶¡¼Ì¾¤Ï mserv ¥Ç¡¼¥¿¥Ù¡¼¥¹¤Î»²¾È¤Ë»È¤¤¤Ş¤¹¡£"
+msgstr "ãƒ¦ãƒ¼ã‚¶ãƒ¼åã¯ mserv ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®å‚ç…§ã«ä½¿ã„ã¾ã™ã€‚"
 
 #: ../data/gtkpod.glade.h:355
 msgid "Username:"
-msgstr "¥æ¡¼¥¶¡¼Ì¾:"
+msgstr "ãƒ¦ãƒ¼ã‚¶ãƒ¼å:"
 
 #: ../data/gtkpod.glade.h:356
 msgid ""
@@ -1654,14 +1672,14 @@ msgid ""
 "This option might avoid unwanted results (especially since there is no "
 "'undo' yet)."
 msgstr ""
-"ÉáÄÌ¤ÏÊ£¿ô¤Î¶Ê¤Î¥¿¥¤¥È¥ë¤òÆ±¤¸¤â¤Î¤Ë¤¹¤ëÉ¬Í×¤Ï¤Ê¤¤¤Ç¤·¤ç¤¦¡£¤³¤Î¥ª¥×¥·¥ç¥ó¤ò"
-"ÁªÂò¤¹¤ë¤ÈÂçÄñ¤ÏË¾¤Ş¤·¤¯¤Ê¤¤·ë²Ì¤òÆÀ¤ë»ö¤Ë¤Ê¤ê¤Ş¤¹¡£(ÆÃ¤Ë¡¢º£¤Î¤È¤³¤í¡Ö¤ä¤êÄ¾"
-"¤·¡×¤Ï¸ú¤«¤Ê¤¤¤Î¤Ç¡¢ÁªÂò¤¹¤ë¤Ù¤­¤Ç¤Ï¤¢¤ê¤Ş¤»¤ó)"
+"æ™®é€šã¯è¤‡æ•°ã®æ›²ã®ã‚¿ã‚¤ãƒˆãƒ«ã‚’åŒã˜ã‚‚ã®ã«ã™ã‚‹å¿…è¦ã¯ãªã„ã§ã—ã‚‡ã†ã€‚ã“ã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’"
+"é¸æŠã™ã‚‹ã¨å¤§æŠµã¯æœ›ã¾ã—ããªã„çµæœã‚’å¾—ã‚‹äº‹ã«ãªã‚Šã¾ã™ã€‚(ç‰¹ã«ã€ä»Šã®ã¨ã“ã‚ã€Œã‚„ã‚Šç›´"
+"ã—ã€ã¯åŠ¹ã‹ãªã„ã®ã§ã€é¸æŠã™ã‚‹ã¹ãã§ã¯ã‚ã‚Šã¾ã›ã‚“)"
 
 #: ../data/gtkpod.glade.h:357
 #, fuzzy
 msgid "View Full Size"
-msgstr "¥Õ¥¡¥¤¥ë¥µ¥¤¥º"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚º"
 
 #: ../data/gtkpod.glade.h:358
 msgid "WAV with :"
@@ -1672,8 +1690,8 @@ msgid ""
 "When adding dirs/files, update information of\n"
 "existing tracks with identical filenames"
 msgstr ""
-"¥Õ¥¡¥¤¥ë¤ä¥Ç¥£¥ì¥¯¥È¥ê¤òÄÉ²Ã¤¹¤ëºİ¤Ë¡¢Æ±¤¸¥Õ¥¡¥¤¥ëÌ¾¤Î\n"
-"¶Ê¤¬¤¹¤Ç¤Ë¤¢¤Ã¤¿¤é¾ì¹ç¤Ë¤Ï¡¢¤½¤Á¤é¤ò¹¹¿·¤¹¤ë"
+"ãƒ•ã‚¡ã‚¤ãƒ«ã‚„ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¿½åŠ ã™ã‚‹éš›ã«ã€åŒã˜ãƒ•ã‚¡ã‚¤ãƒ«åã®\n"
+"æ›²ãŒã™ã§ã«ã‚ã£ãŸã‚‰å ´åˆã«ã¯ã€ãã¡ã‚‰ã‚’æ›´æ–°ã™ã‚‹"
 
 #: ../data/gtkpod.glade.h:361
 msgid ""
@@ -1682,15 +1700,15 @@ msgid ""
 "the destination file is the same as the file in the iPod. If so the file is "
 "skipped, allowing a quick sync of the iPod's contents."
 msgstr ""
-"iPod ¤«¤é¶Ê¤ò¥³¥Ô¡¼¤¹¤ëºİ¤Ë¤Ï, Æ±¤¸Ì¾Á°¤Î¥Õ¥¡¥¤¥ë¤¬¤¢¤Ã¤Æ¤âÃ±½ã¤Ë¾å½ñ¤­¤·¤Ş"
-"¤¹. ¤³¤Î¹àÌÜ¤òÁªÂò¤¹¤ë¤È gtkpod ¤ÏÆ±¤¸Ì¾Á°¤Î¥Õ¥¡¥¤¥ë¤¬¤¢¤Ã¤¿¾ì¹ç¤Ë¤½¤Î¥µ¥¤¥º"
-"¤ò iPod ¾å¤Î¥Õ¥¡¥¤¥ë¤ÈÈæ³Ó¤·¤Æ, Æ±¤¸¤À¤Ã¤¿¾ì¹ç¤Ë¤ÏÈô¤Ğ¤·¤Ş¤¹. ·ë²Ì¤È¤·¤ÆÆ±´ü"
-"½èÍı¤ò¹âÂ®¤Ë¹Ô¤¨¤Ş¤¹."
+"iPod ã‹ã‚‰æ›²ã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹éš›ã«ã¯, åŒã˜åå‰ã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã£ã¦ã‚‚å˜ç´”ã«ä¸Šæ›¸ãã—ã¾"
+"ã™. ã“ã®é …ç›®ã‚’é¸æŠã™ã‚‹ã¨ gtkpod ã¯åŒã˜åå‰ã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã£ãŸå ´åˆã«ãã®ã‚µã‚¤ã‚º"
+"ã‚’ iPod ä¸Šã®ãƒ•ã‚¡ã‚¤ãƒ«ã¨æ¯”è¼ƒã—ã¦, åŒã˜ã ã£ãŸå ´åˆã«ã¯é£›ã°ã—ã¾ã™. çµæœã¨ã—ã¦åŒæœŸ"
+"å‡¦ç†ã‚’é«˜é€Ÿã«è¡Œãˆã¾ã™."
 
 #: ../data/gtkpod.glade.h:362
 #, fuzzy
 msgid "When syncing playlists"
-msgstr "¥Ç¥£¥ì¥¯¥È¥ê¤ÎÆ±´ü½èÍı»ş"
+msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®åŒæœŸå‡¦ç†æ™‚"
 
 #: ../data/gtkpod.glade.h:363
 msgid ""
@@ -1700,11 +1718,11 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:364
 msgid "Write ID3 tags to disk when modified in gtkpod"
-msgstr "gtkpodÆâ¤ÇÊÑ¹¹¤¬¤¢¤Ã¤¿ID3¥¿¥°¤ò¥Ç¥£¥¹¥¯¤Ë½ñ¤­¹ş¤à"
+msgstr "gtkpodå†…ã§å¤‰æ›´ãŒã‚ã£ãŸID3ã‚¿ã‚°ã‚’ãƒ‡ã‚£ã‚¹ã‚¯ã«æ›¸ãè¾¼ã‚€"
 
 #: ../data/gtkpod.glade.h:365
 msgid "Write all changes made to the disk and the iPod(s)."
-msgstr "¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤È iPod ¤ËÂĞ¤¹¤ëÊÑ¹¹¤ò¤¹¤Ù¤ÆÊİÂ¸¤·¤Ş¤¹."
+msgstr "ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã¨ iPod ã«å¯¾ã™ã‚‹å¤‰æ›´ã‚’ã™ã¹ã¦ä¿å­˜ã—ã¾ã™."
 
 #: ../data/gtkpod.glade.h:366
 #, fuzzy
@@ -1712,25 +1730,26 @@ msgid ""
 "Write extended information (PC filenames, SHA1 hashes,\n"
 "encoding...). Recommended."
 msgstr ""
-"³ÈÄ¥¾ğÊó(PC¾å¤Î¥Õ¥¡¥¤¥ëÌ¾,MD5ÃÍ,Ê¸»ú¥³¡¼¥É)¤ò½ñ¤­¹ş¤à¡£\n"
-"¿ä¾©¤µ¤ì¤ëÀßÄê¤Ç¤¹¡£"
+"æ‹¡å¼µæƒ…å ±(PCä¸Šã®ãƒ•ã‚¡ã‚¤ãƒ«å,MD5å€¤,æ–‡å­—ã‚³ãƒ¼ãƒ‰)ã‚’æ›¸ãè¾¼ã‚€ã€‚\n"
+"æ¨å¥¨ã•ã‚Œã‚‹è¨­å®šã§ã™ã€‚"
 
 #: ../data/gtkpod.glade.h:368
 msgid ""
 "You can also use the table headers, but this allows you to sort according to "
 "a column that is not displayed."
 msgstr ""
-"É½¤Î¥Ø¥Ã¥À¤òÁàºî¤·¤Æ¤âÊÂ¤Ù´¹¤¨¤Ï¤Ç¤­¤Ş¤¹¤¬, ¤³¤Îµ¡Ç½¤ò»È¤¦¤ÈÉ½¼¨¤µ¤ì¤Æ¤¤¤Ê¤¤"
-"¹àÌÜ¤ò»È¤Ã¤ÆÊÂ¤Ù´¹¤¨¤ë¤³¤È¤¬¤Ç¤­¤Ş¤¹."
+"è¡¨ã®ãƒ˜ãƒƒãƒ€ã‚’æ“ä½œã—ã¦ã‚‚ä¸¦ã¹æ›ãˆã¯ã§ãã¾ã™ãŒ, ã“ã®æ©Ÿèƒ½ã‚’ä½¿ã†ã¨è¡¨ç¤ºã•ã‚Œã¦ã„ãªã„"
+"é …ç›®ã‚’ä½¿ã£ã¦ä¸¦ã¹æ›ãˆã‚‹ã“ã¨ãŒã§ãã¾ã™."
 
 #: ../data/gtkpod.glade.h:369
-msgid "_About"
-msgstr "gtkpod¤Ë¤Ä¤¤¤Æ(_A)"
+#, fuzzy
+msgid "_About gtkpod"
+msgstr "gtkpod ã«ã¤ã„ã¦"
 
 #: ../data/gtkpod.glade.h:370
 #, fuzzy
 msgid "_Add Album"
-msgstr "¥¢¥ë¥Ğ¥à"
+msgstr "ã‚¢ãƒ«ãƒãƒ "
 
 #: ../data/gtkpod.glade.h:371
 msgid "_Add Image"
@@ -1739,19 +1758,19 @@ msgstr ""
 #: ../data/gtkpod.glade.h:372
 #, fuzzy
 msgid "_Album"
-msgstr "¥¢¥ë¥Ğ¥à"
+msgstr "ã‚¢ãƒ«ãƒãƒ "
 
 #: ../data/gtkpod.glade.h:373
 msgid "_All Tracks"
-msgstr "¤¹¤Ù¤Æ¤Î¶Ê(_A)"
+msgstr "ã™ã¹ã¦ã®æ›²(_A)"
 
 #: ../data/gtkpod.glade.h:374
 msgid "_Arrange Sort Tabs"
-msgstr "¥½¡¼¥È¥¿¥Ö¤òºÆÇÛÃÖ(_A)"
+msgstr "ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã‚’å†é…ç½®(_A)"
 
 #: ../data/gtkpod.glade.h:375
 msgid "_Check iPod's Files"
-msgstr "iPod ¤Î¥Õ¥¡¥¤¥ë¤ò¥Á¥§¥Ã¥¯(_C)"
+msgstr "iPod ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒã‚§ãƒƒã‚¯(_C)"
 
 #: ../data/gtkpod.glade.h:376
 msgid "_Conversion Log"
@@ -1759,55 +1778,55 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:377
 msgid "_Create Playlists"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤òºîÀ®(_C)"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’ä½œæˆ(_C)"
 
 #: ../data/gtkpod.glade.h:378
 msgid "_Create iPod's Directories"
-msgstr "iPod¤Î½é´üÀßÄê(_C)"
+msgstr "iPodã®åˆæœŸè¨­å®š(_C)"
 
 #: ../data/gtkpod.glade.h:379
 msgid "_Delete"
-msgstr "ºï½ü(_D)"
+msgstr "å‰Šé™¤(_D)"
 
 #: ../data/gtkpod.glade.h:380
 msgid "_Display"
-msgstr "É½¼¨(_D)"
+msgstr "è¡¨ç¤º(_D)"
 
 #: ../data/gtkpod.glade.h:381
 msgid "_Displayed Tracks"
-msgstr "É½¼¨¤µ¤ì¤Æ¤¤¤ë¶Ê(_D)"
+msgstr "è¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹æ›²(_D)"
 
 #: ../data/gtkpod.glade.h:382
 msgid "_Edit"
-msgstr "ÊÔ½¸(_E)"
+msgstr "ç·¨é›†(_E)"
 
 #: ../data/gtkpod.glade.h:383
 msgid "_Encoding (ID3, files):"
-msgstr "Ê¸»ú¥³¡¼¥É(_E) (ID3, ¥Õ¥¡¥¤¥ë):"
+msgstr "æ–‡å­—ã‚³ãƒ¼ãƒ‰(_E) (ID3, ãƒ•ã‚¡ã‚¤ãƒ«):"
 
 #: ../data/gtkpod.glade.h:384
 msgid "_Enqueue"
-msgstr "±éÁÕ¥­¥å¡¼¤ËÆş¤ì¤ë(_E)"
+msgstr "æ¼”å¥ã‚­ãƒ¥ãƒ¼ã«å…¥ã‚Œã‚‹(_E)"
 
 #: ../data/gtkpod.glade.h:385
 msgid "_Export Tracks from Database"
-msgstr "¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤é¶Ê¤ò¼è¤ê½Ğ¤¹(_E)"
+msgstr "ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰æ›²ã‚’å–ã‚Šå‡ºã™(_E)"
 
 #: ../data/gtkpod.glade.h:386
 msgid "_File"
-msgstr "¥Õ¥¡¥¤¥ë(_F)"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«(_F)"
 
 #: ../data/gtkpod.glade.h:387
 msgid "_General"
-msgstr "´ğËÜÀßÄê(_G)"
+msgstr "åŸºæœ¬è¨­å®š(_G)"
 
 #: ../data/gtkpod.glade.h:388
 msgid "_Help"
-msgstr "¥Ø¥ë¥×(_H)"
+msgstr "ãƒ˜ãƒ«ãƒ—(_H)"
 
 #: ../data/gtkpod.glade.h:389
 msgid "_Ignore rules"
-msgstr "¥ë¡¼¥ë¤òÌµ»ë(_I)"
+msgstr "ãƒ«ãƒ¼ãƒ«ã‚’ç„¡è¦–(_I)"
 
 #: ../data/gtkpod.glade.h:390
 msgid "_Image"
@@ -1815,7 +1834,7 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:391
 msgid "_Info Window"
-msgstr "¾ğÊó(_I)"
+msgstr "æƒ…å ±(_I)"
 
 #: ../data/gtkpod.glade.h:392
 msgid "_Last.FM"
@@ -1823,19 +1842,19 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:393
 msgid "_Less Sort Tabs"
-msgstr "¥½¡¼¥È¥¿¥Ö¤Îºï½ü(_L)"
+msgstr "ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã®å‰Šé™¤(_L)"
 
 #: ../data/gtkpod.glade.h:394
 msgid "_Limit to"
-msgstr "À©¸Â(_L)"
+msgstr "åˆ¶é™(_L)"
 
 #: ../data/gtkpod.glade.h:395
 msgid "_Load iPod(s)"
-msgstr "iPod ¤«¤éÆÉ¤ß¹ş¤ß(_L)"
+msgstr "iPod ã‹ã‚‰èª­ã¿è¾¼ã¿(_L)"
 
 #: ../data/gtkpod.glade.h:396
 msgid "_Local"
-msgstr "¥Ç¥£¥¹¥¯(_L)"
+msgstr "ãƒ‡ã‚£ã‚¹ã‚¯(_L)"
 
 #: ../data/gtkpod.glade.h:397
 msgid "_M3U"
@@ -1847,19 +1866,19 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:399
 msgid "_More Sort Tabs"
-msgstr "¥½¡¼¥È¥¿¥Ö¤ÎÄÉ²Ã(_M)"
+msgstr "ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã®è¿½åŠ (_M)"
 
 #: ../data/gtkpod.glade.h:400
 msgid "_Newly Added Tracks"
-msgstr "¿·¤¿¤ËÄÉ²Ã¤µ¤ì¤¿¶Ê(_N)"
+msgstr "æ–°ãŸã«è¿½åŠ ã•ã‚ŒãŸæ›²(_N)"
 
 #: ../data/gtkpod.glade.h:401
 msgid "_Normalize Volume"
-msgstr "¥Ü¥ê¥å¡¼¥à¤ÎÊ¿¶Ñ²½"
+msgstr "ãƒœãƒªãƒ¥ãƒ¼ãƒ ã®å¹³å‡åŒ–"
 
 #: ../data/gtkpod.glade.h:402
 msgid "_Number of sort tabs:"
-msgstr "¥½¡¼¥È¥¿¥Ö¤Î¿ô(_N):"
+msgstr "ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã®æ•°(_N):"
 
 #: ../data/gtkpod.glade.h:403
 msgid "_PLS"
@@ -1867,7 +1886,7 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:404
 msgid "_Play Now"
-msgstr "º£¤¹¤°±éÁÕ(_P)"
+msgstr "ä»Šã™ãæ¼”å¥(_P)"
 
 #: ../data/gtkpod.glade.h:405
 msgid "_Podcasts"
@@ -1875,12 +1894,12 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:406
 msgid "_Prefer Local"
-msgstr "¤Ç¤­¤ì¤Ğ¥Ç¥£¥¹¥¯(_P)"
+msgstr "ã§ãã‚Œã°ãƒ‡ã‚£ã‚¹ã‚¯(_P)"
 
 #: ../data/gtkpod.glade.h:407
 #, fuzzy
 msgid "_Remove Cover Art"
-msgstr "¥«¥Ğ¡¼¥¢¡¼¥È¤òºï½ü"
+msgstr "ã‚«ãƒãƒ¼ã‚¢ãƒ¼ãƒˆã‚’å‰Šé™¤"
 
 #: ../data/gtkpod.glade.h:408
 msgid "_Remove Images"
@@ -1892,53 +1911,53 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:410
 msgid "_Save Changes"
-msgstr "ÊÑ¹¹¤ÎÊİÂ¸(_S)"
+msgstr "å¤‰æ›´ã®ä¿å­˜(_S)"
 
 #: ../data/gtkpod.glade.h:411
 msgid "_Save Displayed Track Order"
-msgstr "¸½ºß¤Î¶Ê½ç¤òÊİÂ¸(_S)"
+msgstr "ç¾åœ¨ã®æ›²é †ã‚’ä¿å­˜(_S)"
 
 #: ../data/gtkpod.glade.h:412
 msgid "_Sorting"
-msgstr "ÊÂ¤Ù´¹¤¨(_S)"
+msgstr "ä¸¦ã¹æ›ãˆ(_S)"
 
 #: ../data/gtkpod.glade.h:413
 #, fuzzy
 msgid "_Synchronize Playlist with Dir(s)"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤òÆ±´ü¤¹¤ë(_S)"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’åŒæœŸã™ã‚‹(_S)"
 
 #: ../data/gtkpod.glade.h:414
 msgid "_Toolbar"
-msgstr "¥Ä¡¼¥ë¥Ğ¡¼(_T)"
+msgstr "ãƒ„ãƒ¼ãƒ«ãƒãƒ¼(_T)"
 
 #: ../data/gtkpod.glade.h:415
 msgid "_Tools"
-msgstr "¥Ä¡¼¥ë(_T)"
+msgstr "ãƒ„ãƒ¼ãƒ«(_T)"
 
 #: ../data/gtkpod.glade.h:416
 msgid "_Tooltips"
-msgstr "¥Ä¡¼¥ë¥Á¥Ã¥×(_T)"
+msgstr "ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—(_T)"
 
 #: ../data/gtkpod.glade.h:417
 msgid "_Track Info"
-msgstr "¶Ê¾ğÊó(_T)"
+msgstr "æ›²æƒ…å ±(_T)"
 
 #: ../data/gtkpod.glade.h:418
 msgid "_Undo All"
-msgstr "¤¹¤Ù¤Æ¤ä¤êÄ¾¤·(_U)"
+msgstr "ã™ã¹ã¦ã‚„ã‚Šç›´ã—(_U)"
 
 #: ../data/gtkpod.glade.h:419
 msgid "_Update Tracks from File"
-msgstr "¥Õ¥¡¥¤¥ë¤ò¸µ¤Ë¶Ê¤ò¹¹¿·¤¹¤ë(_U)"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å…ƒã«æ›²ã‚’æ›´æ–°ã™ã‚‹(_U)"
 
 #: ../data/gtkpod.glade.h:420
 #, fuzzy
 msgid "_Video"
-msgstr "É½¼¨(_V)"
+msgstr "è¡¨ç¤º(_V)"
 
 #: ../data/gtkpod.glade.h:421
 msgid "_View"
-msgstr "É½¼¨(_V)"
+msgstr "è¡¨ç¤º(_V)"
 
 #: ../data/gtkpod.glade.h:422
 msgid "_iPod"
@@ -1952,10 +1971,10 @@ msgid ""
 "several templates by a ';'. The first one matching the filename will be "
 "used. Example: '%a - %A/%T %t.mp3;%t.wav'."
 msgstr ""
-"¥¢¡¼¥Æ¥£¥¹¥È: %a, ¥¢¥ë¥Ğ¥à: %A, ºî¶Ê¼Ô: %c, ¥¿¥¤¥È¥ë: %t, ¥¸¥ã¥ó¥ë: %G, ¥È"
-"¥é¥Ã¥¯ÈÖ¹æ: %T, CD ÈÖ¹æ: %C, Ç¯: %Y, ¥¹¥­¥Ã¥×: %*, ¥Ñ¡¼¥»¥ó¥Èµ­¹æ: %%¡£¤¤¤¯¤Ä"
-"¤«¤Î¥Æ¥ó¥×¥ì¡¼¥È¤ò';' ¤Ç¶èÀÚ¤Ã¤ÆÊÂ¤Ù¤ë¤³¤È¤¬¤Ç¤­¤Ş¤¹¡£ºÇ½é¤Ë¹ç¤Ã¤¿¥Æ¥ó¥×¥ì¡¼"
-"¥È¤¬»È¤ï¤ì¤Ş¤¹¡£Îã: '%a - %A/%T %t.mp3;%t.wav'."
+"ã‚¢ãƒ¼ãƒ†ã‚£ã‚¹ãƒˆ: %a, ã‚¢ãƒ«ãƒãƒ : %A, ä½œæ›²è€…: %c, ã‚¿ã‚¤ãƒˆãƒ«: %t, ã‚¸ãƒ£ãƒ³ãƒ«: %G, ãƒˆ"
+"ãƒ©ãƒƒã‚¯ç•ªå·: %T, CD ç•ªå·: %C, å¹´: %Y, ã‚¹ã‚­ãƒƒãƒ—: %*, ãƒ‘ãƒ¼ã‚»ãƒ³ãƒˆè¨˜å·: %%ã€‚ã„ãã¤"
+"ã‹ã®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã‚’';' ã§åŒºåˆ‡ã£ã¦ä¸¦ã¹ã‚‹ã“ã¨ãŒã§ãã¾ã™ã€‚æœ€åˆã«åˆã£ãŸãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼"
+"ãƒˆãŒä½¿ã‚ã‚Œã¾ã™ã€‚ä¾‹: '%a - %A/%T %t.mp3;%t.wav'."
 
 #: ../data/gtkpod.glade.h:425
 msgid "folder"
@@ -1985,14 +2004,14 @@ msgid ""
 "specified here. You can change it for consecutive 'Add Files' and 'Add Dirs' "
 "operation. 'System Charset' is the charset used by your current locale."
 msgstr ""
-"gtkpod ¤Ï¤³¤³¤Ç»ØÄê¤µ¤ì¤¿Ê¸»ú¥³¡¼¥É¤¬, ID3¤Î¥¿¥°¤ä¥Õ¥¡¥¤¥ëÌ¾¤Ë»È¤ï¤ì¤Æ¤¤¤ë¤â"
-"¤Î¤È¤·¤Æ½èÍı¤·¤Ş¤¹.¡Ö¥Õ¥¡¥¤¥ë¤ÎÄÉ²Ã¡×¤ä¡Ö¥Ç¥£¥ì¥¯¥È¥ê¤´¤ÈÄÉ²Ã¡×¤ò¼Â¹Ô¤¹¤ëÁ°¤Ë"
-"¤³¤ÎÀßÄê¤òÊÑ¹¹¤¹¤ì¤Ğ, ¤³¤ì¤é¤Î½èÍı¤ËÀßÄê¤¬È¿±Ç¤µ¤ì¤Ş¤¹.¡Ö¥·¥¹¥Æ¥àÊ¸»ú¡×¤òÁªÂò"
-"¤¹¤ë¤È, ¥í¥±¡¼¥ë¤Ç»ØÄê¤µ¤ì¤¿¥³¡¼¥É¤¬»È¤ï¤ì¤Ş¤¹."
+"gtkpod ã¯ã“ã“ã§æŒ‡å®šã•ã‚ŒãŸæ–‡å­—ã‚³ãƒ¼ãƒ‰ãŒ, ID3ã®ã‚¿ã‚°ã‚„ãƒ•ã‚¡ã‚¤ãƒ«åã«ä½¿ã‚ã‚Œã¦ã„ã‚‹ã‚‚"
+"ã®ã¨ã—ã¦å‡¦ç†ã—ã¾ã™.ã€Œãƒ•ã‚¡ã‚¤ãƒ«ã®è¿½åŠ ã€ã‚„ã€Œãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã”ã¨è¿½åŠ ã€ã‚’å®Ÿè¡Œã™ã‚‹å‰ã«"
+"ã“ã®è¨­å®šã‚’å¤‰æ›´ã™ã‚Œã°, ã“ã‚Œã‚‰ã®å‡¦ç†ã«è¨­å®šãŒåæ˜ ã•ã‚Œã¾ã™.ã€Œã‚·ã‚¹ãƒ†ãƒ æ–‡å­—ã€ã‚’é¸æŠ"
+"ã™ã‚‹ã¨, ãƒ­ã‚±ãƒ¼ãƒ«ã§æŒ‡å®šã•ã‚ŒãŸã‚³ãƒ¼ãƒ‰ãŒä½¿ã‚ã‚Œã¾ã™."
 
 #: ../data/gtkpod.glade.h:432
 msgid "gtkpod options"
-msgstr "gtkpod ¤Î¥ª¥×¥·¥ç¥ó"
+msgstr "gtkpod ã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³"
 
 #. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
 #: ../data/gtkpod.glade.h:434
@@ -2005,7 +2024,7 @@ msgstr ""
 #: ../data/gtkpod.glade.h:438
 #, fuzzy
 msgid "iPod mountpoint:"
-msgstr "iPod¤Î¥Ş¥¦¥ó¥È¾ì½ê(_P):"
+msgstr "iPodã®ãƒã‚¦ãƒ³ãƒˆå ´æ‰€(_P):"
 
 #: ../data/gtkpod.glade.h:439
 msgid "iTunesDB backup:"
@@ -2021,11 +2040,11 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:442
 msgid "mserv database lookup will be done for music in this directory."
-msgstr "¤³¤Î¥Ç¥£¥ì¥¯¥È¥êÆâ¤Î¶Ê¤ËÂĞ¤·¡¢mserv ¤Î¥Ç¡¼¥¿¥Ù¡¼¥¹¤ò»²¾È¤·¤Ş¤¹¡£"
+msgstr "ã“ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå†…ã®æ›²ã«å¯¾ã—ã€mserv ã®ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚’å‚ç…§ã—ã¾ã™ã€‚"
 
 #: ../data/gtkpod.glade.h:443 ../src/details.c:1347
 msgid "n/a"
-msgstr "ÉÔ²Ä"
+msgstr "ä¸å¯"
 
 #: ../data/gtkpod.glade.h:444
 msgid "special_sorttab -- Don't translate!"
@@ -2052,155 +2071,155 @@ msgstr ""
 #: ../src/autodetection.c:416
 #, fuzzy
 msgid "New iPod"
-msgstr "¿·µ¬¥×¥ì¥¤¥ê¥¹¥È"
+msgstr "æ–°è¦ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
 
 #: ../src/charset.c:53
 msgid "Arabic (IBM-864)"
-msgstr "¥¢¥é¥Ó¥¢¸ì (IBM-864)"
+msgstr "ã‚¢ãƒ©ãƒ“ã‚¢èª (IBM-864)"
 
 #: ../src/charset.c:54
 msgid "Arabic (ISO-8859-6)"
-msgstr "¥¢¥é¥Ó¥¢¸ì (ISO-8859-6)"
+msgstr "ã‚¢ãƒ©ãƒ“ã‚¢èª (ISO-8859-6)"
 
 #: ../src/charset.c:55
 msgid "Arabic (Windows-1256)"
-msgstr "¥¢¥é¥Ó¥¢¸ì (Windows-1256)"
+msgstr "ã‚¢ãƒ©ãƒ“ã‚¢èª (Windows-1256)"
 
 #: ../src/charset.c:56
 msgid "Baltic (ISO-8859-13)"
-msgstr "¥Ğ¥ë¥È¸ì (ISO-8859-13)"
+msgstr "ãƒãƒ«ãƒˆèª (ISO-8859-13)"
 
 #: ../src/charset.c:57
 msgid "Baltic (ISO-8859-4)"
-msgstr "¥Ğ¥ë¥È¸ì (ISO-8859-4)"
+msgstr "ãƒãƒ«ãƒˆèª (ISO-8859-4)"
 
 #: ../src/charset.c:58
 msgid "Baltic (Windows-1257)"
-msgstr "¥Ğ¥ë¥È¸ì (Windows-1257)"
+msgstr "ãƒãƒ«ãƒˆèª (Windows-1257)"
 
 #: ../src/charset.c:59
 msgid "Celtic (ISO-8859-14)"
-msgstr "¥±¥ë¥È¸ì (ISO-8859-14)"
+msgstr "ã‚±ãƒ«ãƒˆèª (ISO-8859-14)"
 
 #: ../src/charset.c:60
 msgid "Central European (IBM-852)"
-msgstr "Ãæ±û¥è¡¼¥í¥Ã¥Ñ (IBM-852)"
+msgstr "ä¸­å¤®ãƒ¨ãƒ¼ãƒ­ãƒƒãƒ‘ (IBM-852)"
 
 #: ../src/charset.c:61
 msgid "Central European (ISO-8859-2)"
-msgstr "Ãæ±û¥è¡¼¥í¥Ã¥Ñ (ISO-8859-2)"
+msgstr "ä¸­å¤®ãƒ¨ãƒ¼ãƒ­ãƒƒãƒ‘ (ISO-8859-2)"
 
 #: ../src/charset.c:62
 msgid "Central European (Windows-1250)"
-msgstr "Ãæ±û¥è¡¼¥í¥Ã¥Ñ (Windows-1250)"
+msgstr "ä¸­å¤®ãƒ¨ãƒ¼ãƒ­ãƒƒãƒ‘ (Windows-1250)"
 
 #: ../src/charset.c:63
 msgid "Chinese Simplified (GB18030)"
-msgstr "Ãæ¹ñ¸ì ´ÊÂÎ»ú (GB18030)"
+msgstr "ä¸­å›½èª ç°¡ä½“å­— (GB18030)"
 
 #: ../src/charset.c:64
 msgid "Chinese Simplified (GB2312)"
-msgstr "Ãæ¹ñ¸ì ´ÊÂÎ»ú (GB2312)"
+msgstr "ä¸­å›½èª ç°¡ä½“å­— (GB2312)"
 
 #: ../src/charset.c:65
 msgid "Chinese Traditional (Big5)"
-msgstr "Ãæ¹ñ¸ì ÈËÂÎ»ú (Big5)"
+msgstr "ä¸­å›½èª ç¹ä½“å­— (Big5)"
 
 #: ../src/charset.c:66
 msgid "Chinese Traditional (Big5-HKSCS)"
-msgstr "Ãæ¹ñ¸ì ÈËÂÎ»ú (Big5-HKSCS)"
+msgstr "ä¸­å›½èª ç¹ä½“å­— (Big5-HKSCS)"
 
 #: ../src/charset.c:67
 msgid "Cyrillic (IBM-855)"
-msgstr "¥­¥ê¥ë¸ì (IBM-855)"
+msgstr "ã‚­ãƒªãƒ«èª (IBM-855)"
 
 #: ../src/charset.c:68
 msgid "Cyrillic (ISO-8859-5)"
-msgstr "¥­¥ê¥ë¸ì (ISO-8859-5)"
+msgstr "ã‚­ãƒªãƒ«èª (ISO-8859-5)"
 
 #: ../src/charset.c:69
 msgid "Cyrillic (ISO-IR-111)"
-msgstr "¥­¥ê¥ë¸ì (ISO-IR-111)"
+msgstr "ã‚­ãƒªãƒ«èª (ISO-IR-111)"
 
 #: ../src/charset.c:70
 msgid "Cyrillic (KOI8-R)"
-msgstr "¥­¥ê¥ë¸ì (KOI8-R)"
+msgstr "ã‚­ãƒªãƒ«èª (KOI8-R)"
 
 #: ../src/charset.c:71
 msgid "Cyrillic (Windows-1251)"
-msgstr "¥­¥ê¥ë¸ì (Windows-1251)"
+msgstr "ã‚­ãƒªãƒ«èª (Windows-1251)"
 
 #: ../src/charset.c:72
 msgid "Cyrillic/Russian (CP-866)"
-msgstr "¥­¥ê¥ë/¥í¥·¥¢¸ì (CP-866)"
+msgstr "ã‚­ãƒªãƒ«/ãƒ­ã‚·ã‚¢èª (CP-866)"
 
 #: ../src/charset.c:73
 msgid "Cyrillic/Ukrainian (KOI8-U)"
-msgstr "¥­¥ê¥ë/¥¦¥¯¥é¥¤¥Ê¸ì (KOI8-U)"
+msgstr "ã‚­ãƒªãƒ«/ã‚¦ã‚¯ãƒ©ã‚¤ãƒŠèª (KOI8-U)"
 
 #: ../src/charset.c:74
 msgid "English (US-ASCII)"
-msgstr "±Ñ¸ì (US-ASCII)"
+msgstr "è‹±èª (US-ASCII)"
 
 #: ../src/charset.c:75
 msgid "Greek (ISO-8859-7)"
-msgstr "¥®¥ê¥·¥¢¸ì (ISO-8859-7)"
+msgstr "ã‚®ãƒªã‚·ã‚¢èª (ISO-8859-7)"
 
 #: ../src/charset.c:76
 msgid "Greek (Windows-1253)"
-msgstr "¥®¥ê¥·¥¢¸ì (Windows-1253)"
+msgstr "ã‚®ãƒªã‚·ã‚¢èª (Windows-1253)"
 
 #: ../src/charset.c:77
 msgid "Hebrew (IBM-862)"
-msgstr "¥Ø¥Ö¥é¥¤¸ì (IBM-862)"
+msgstr "ãƒ˜ãƒ–ãƒ©ã‚¤èª (IBM-862)"
 
 #: ../src/charset.c:78
 msgid "Hebrew (Windows-1255)"
-msgstr "¥Ø¥Ö¥é¥¤¸ì (Windows-1255)"
+msgstr "ãƒ˜ãƒ–ãƒ©ã‚¤èª (Windows-1255)"
 
 #: ../src/charset.c:79
 msgid "Japanese (automatic detection)"
-msgstr "ÆüËÜ¸ì (¼«Æ°È½ÊÌ)"
+msgstr "æ—¥æœ¬èª (è‡ªå‹•åˆ¤åˆ¥)"
 
 #: ../src/charset.c:80
 msgid "Japanese (EUC-JP)"
-msgstr "ÆüËÜ¸ì (EUC-JP)"
+msgstr "æ—¥æœ¬èª (EUC-JP)"
 
 #: ../src/charset.c:81
 msgid "Japanese (ISO-2022-JP)"
-msgstr "ÆüËÜ¸ì (ISO-2022-JP)"
+msgstr "æ—¥æœ¬èª (ISO-2022-JP)"
 
 #: ../src/charset.c:82
 msgid "Japanese (Shift_JIS)"
-msgstr "ÆüËÜ¸ì (Shift_JIS)"
+msgstr "æ—¥æœ¬èª (Shift_JIS)"
 
 #: ../src/charset.c:83
 msgid "Korean (EUC-KR)"
-msgstr "´Ú¹ñ¸ì (EUC-KR)"
+msgstr "éŸ“å›½èª (EUC-KR)"
 
 #: ../src/charset.c:84
 msgid "Nordic (ISO-8859-10)"
-msgstr "ËÌ²¤¸ì (ISO-8859-10)"
+msgstr "åŒ—æ¬§èª (ISO-8859-10)"
 
 #: ../src/charset.c:85
 msgid "South European (ISO-8859-3)"
-msgstr "ÆîÉô¥è¡¼¥í¥Ã¥Ñ¸ì (ISO-8859-3)"
+msgstr "å—éƒ¨ãƒ¨ãƒ¼ãƒ­ãƒƒãƒ‘èª (ISO-8859-3)"
 
 #: ../src/charset.c:86
 msgid "Thai (TIS-620)"
-msgstr "¥¿¥¤¸ì (TIS-620)"
+msgstr "ã‚¿ã‚¤èª (TIS-620)"
 
 #: ../src/charset.c:87
 msgid "Turkish (IBM-857)"
-msgstr "¥È¥ë¥³¸ì (IBM-857)"
+msgstr "ãƒˆãƒ«ã‚³èª (IBM-857)"
 
 #: ../src/charset.c:88
 msgid "Turkish (ISO-8859-9)"
-msgstr "¥È¥ë¥³¸ì (ISO-8859-9)"
+msgstr "ãƒˆãƒ«ã‚³èª (ISO-8859-9)"
 
 #: ../src/charset.c:89
 msgid "Turkish (Windows-1254)"
-msgstr "¥È¥ë¥³¸ì (Windows-1254)"
+msgstr "ãƒˆãƒ«ã‚³èª (Windows-1254)"
 
 #: ../src/charset.c:90
 msgid "Unicode (UTF-7)"
@@ -2228,48 +2247,48 @@ msgstr "Unicode (UTF-32LE)"
 
 #: ../src/charset.c:96
 msgid "Vietnamese (VISCII)"
-msgstr "¥Ù¥È¥Ê¥à¸ì (VISCII)"
+msgstr "ãƒ™ãƒˆãƒŠãƒ èª (VISCII)"
 
 #: ../src/charset.c:97
 msgid "Vietnamese (Windows-1258)"
-msgstr "¥Ù¥È¥Ê¥à¸ì (Windows-1258)"
+msgstr "ãƒ™ãƒˆãƒŠãƒ èª (Windows-1258)"
 
 #: ../src/charset.c:98
 msgid "Visual Hebrew (ISO-8859-8)"
-msgstr "»ë³Ğ·İ½Ñ¸ş¤±¥Ø¥Ö¥é¥¤¸ì (ISO-8859-8)"
+msgstr "è¦–è¦šèŠ¸è¡“å‘ã‘ãƒ˜ãƒ–ãƒ©ã‚¤èª (ISO-8859-8)"
 
 #: ../src/charset.c:99
 msgid "Western (IBM-850)"
-msgstr "À¾ÍÎ (IBM-850)"
+msgstr "è¥¿æ´‹ (IBM-850)"
 
 #: ../src/charset.c:100
 msgid "Western (ISO-8859-1)"
-msgstr "À¾ÍÎ (ISO-8859-1)"
+msgstr "è¥¿æ´‹ (ISO-8859-1)"
 
 #: ../src/charset.c:101
 msgid "Western (ISO-8859-15)"
-msgstr "À¾ÍÎ (ISO-8859-15)"
+msgstr "è¥¿æ´‹ (ISO-8859-15)"
 
 #: ../src/charset.c:102
 msgid "Western (Windows-1252)"
-msgstr "À¾ÍÎ (Windows-1252)"
+msgstr "è¥¿æ´‹ (Windows-1252)"
 
 #. sanity!
 #. check for "System Charset" and return NULL
 #: ../src/charset.c:160 ../src/charset.c:170 ../src/charset.c:223
 msgid "System Charset"
-msgstr "¥·¥¹¥Æ¥àÊ¸»ú"
+msgstr "ã‚·ã‚¹ãƒ†ãƒ æ–‡å­—"
 
 #. we are not the first instance of gtkpod -- the socket is
 #. already being used, so we pass
 #: ../src/clientserver.c:214
 msgid ""
 "Another instance of gtkpod was detected. Playcount server not started.\n"
-msgstr "gtkpod ¤¬¤¹¤Ç¤ËÆ°ºîÃæ¤Ç¤¹¡£¥×¥ì¥¤¥«¥¦¥ó¥È¥µ¡¼¥Ğ¡¼¤Ïµ¯Æ°¤·¤Ş¤»¤ó¡£\n"
+msgstr "gtkpod ãŒã™ã§ã«å‹•ä½œä¸­ã§ã™ã€‚ãƒ—ãƒ¬ã‚¤ã‚«ã‚¦ãƒ³ãƒˆã‚µãƒ¼ãƒãƒ¼ã¯èµ·å‹•ã—ã¾ã›ã‚“ã€‚\n"
 
 #: ../src/confirmation.c:377
 msgid "Confirmation Dialogue"
-msgstr "³ÎÇ§"
+msgstr "ç¢ºèª"
 
 #: ../src/context_menus.c:362
 #, c-format
@@ -2280,7 +2299,7 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
-msgstr[0] "%2$d¶ÊÃæ %1$d¶Ê¤ò¥³¥Ô¡¼¤·¤Ş¤·¤¿¡£"
+msgstr[0] "%2$dæ›²ä¸­ %1$dæ›²ã‚’ã‚³ãƒ”ãƒ¼ã—ã¾ã—ãŸã€‚"
 
 #: ../src/context_menus.c:429
 #, c-format
@@ -2291,32 +2310,32 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
-msgstr[0] "¥×¥ì¥¤¥ê¥¹¥È '%2$s' ¤«¤é %1$d ¶Êºï½ü¤·¤Ş¤·¤¿"
+msgstr[0] "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ '%2$s' ã‹ã‚‰ %1$d æ›²å‰Šé™¤ã—ã¾ã—ãŸ"
 
 #: ../src/context_menus.c:622 ../src/tools.c:854
 msgid "Play Now"
-msgstr "º£¤¹¤°±éÁÕ"
+msgstr "ä»Šã™ãæ¼”å¥"
 
 #: ../src/context_menus.c:628 ../src/tools.c:867
 msgid "Enqueue"
-msgstr "±éÁÕ¥­¥å¡¼¤Ë²Ã¤¨¤ë"
+msgstr "æ¼”å¥ã‚­ãƒ¥ãƒ¼ã«åŠ ãˆã‚‹"
 
 #: ../src/context_menus.c:634
 msgid "Copy Tracks to Filesystem"
-msgstr "¶Ê¤ò¥Õ¥¡¥¤¥ë¥·¥¹¥Æ¥à¤Ë¥³¥Ô¡¼¤¹¤ë"
+msgstr "æ›²ã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã‚·ã‚¹ãƒ†ãƒ ã«ã‚³ãƒ”ãƒ¼ã™ã‚‹"
 
 #: ../src/context_menus.c:641 ../src/file_export.c:1085
 msgid "Create Playlist File"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¥Õ¥¡¥¤¥ë¤òºîÀ®"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆ"
 
 #: ../src/context_menus.c:648
 msgid "Create new Playlist"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤Î¿·µ¬ºîÀ®"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®æ–°è¦ä½œæˆ"
 
 #: ../src/context_menus.c:655
 #, fuzzy
 msgid "Update Tracks from File"
-msgstr "¥Õ¥¡¥¤¥ë¤ò¸µ¤Ë¶Ê¤ò¹¹¿·¤¹¤ë(_U)"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å…ƒã«æ›²ã‚’æ›´æ–°ã™ã‚‹(_U)"
 
 #: ../src/context_menus.c:669
 msgid "Sync Playlist with Dir(s)"
@@ -2324,34 +2343,34 @@ msgstr ""
 
 #: ../src/context_menus.c:679
 msgid "Remove All Tracks from iPod"
-msgstr "iPod¤«¤é¶Ê¤òºï½ü"
+msgstr "iPodã‹ã‚‰æ›²ã‚’å‰Šé™¤"
 
 #: ../src/context_menus.c:697
 msgid "Remove All Podcasts from iPod"
-msgstr "¤¹¤Ù¤Æ¤Î Podcast ¤ò iPod ¤«¤éºï½ü"
+msgstr "ã™ã¹ã¦ã® Podcast ã‚’ iPod ã‹ã‚‰å‰Šé™¤"
 
 #: ../src/context_menus.c:712
 msgid "Delete Including Tracks"
-msgstr "Ãæ¤Î¶Ê¤´¤Èºï½ü"
+msgstr "ä¸­ã®æ›²ã”ã¨å‰Šé™¤"
 
 #: ../src/context_menus.c:720
 msgid "Delete But Keep Tracks"
-msgstr "¶Ê¤Ï»Ä¤·¤¿¤Ş¤Şºï½ü"
+msgstr "æ›²ã¯æ®‹ã—ãŸã¾ã¾å‰Šé™¤"
 
 #: ../src/context_menus.c:728
 #, fuzzy
 msgid "Edit iPod Properties"
-msgstr "iPod¤Î½é´üÀßÄê"
+msgstr "iPodã®åˆæœŸè¨­å®š"
 
 #: ../src/context_menus.c:735
 #, fuzzy
 msgid "Edit Repository Properties"
-msgstr "iPod¤Î½é´üÀßÄê"
+msgstr "iPodã®åˆæœŸè¨­å®š"
 
 #: ../src/context_menus.c:742
 #, fuzzy
 msgid "Edit Playlist Properties"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤ò¥Õ¥¡¥¤¥ë¤«¤éÆÉ¤ß¹ş¤ó¤ÇÄÉ²Ã¤·¤Ş¤¹"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­ã¿è¾¼ã‚“ã§è¿½åŠ ã—ã¾ã™"
 
 #: ../src/context_menus.c:770
 msgid "View Full Size Artwork"
@@ -2360,12 +2379,12 @@ msgstr ""
 #: ../src/context_menus.c:777
 #, fuzzy
 msgid "Select Cover From File"
-msgstr "iPod¤«¤éºï½ü"
+msgstr "iPodã‹ã‚‰å‰Šé™¤"
 
 #: ../src/context_menus.c:790
 #, fuzzy
 msgid "Load iPod"
-msgstr "iPod ¥Õ¥¡¥¤¥ë"
+msgstr "iPod ãƒ•ã‚¡ã‚¤ãƒ«"
 
 #: ../src/context_menus.c:797
 msgid "Eject iPod"
@@ -2373,45 +2392,45 @@ msgstr ""
 
 #: ../src/context_menus.c:814
 msgid "Remove All Tracks from Database"
-msgstr "¤¹¤Ù¤Æ¤Î¶Ê¤ò¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤éºï½ü"
+msgstr "ã™ã¹ã¦ã®æ›²ã‚’ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰å‰Šé™¤"
 
 #: ../src/context_menus.c:829
 msgid "Delete Including Tracks (Harddisk)"
-msgstr "Ãæ¤Î¶Ê¤´¤Èºï½ü (¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤«¤é)"
+msgstr "ä¸­ã®æ›²ã”ã¨å‰Šé™¤ (ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã‹ã‚‰)"
 
 #: ../src/context_menus.c:837
 msgid "Delete Including Tracks (Database)"
-msgstr "Ãæ¤Î¶Ê¤´¤Èºï½ü (¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤é)"
+msgstr "ä¸­ã®æ›²ã”ã¨å‰Šé™¤ (ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰)"
 
 #: ../src/context_menus.c:845
 msgid "Delete From iPod"
-msgstr "iPod¤«¤éºï½ü"
+msgstr "iPodã‹ã‚‰å‰Šé™¤"
 
 #: ../src/context_menus.c:853
 msgid "Delete From Playlist"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤«¤éºï½ü"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤"
 
 #: ../src/context_menus.c:861
 msgid "Delete From Harddisk"
-msgstr "¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤«¤éºï½ü"
+msgstr "ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã‹ã‚‰å‰Šé™¤"
 
 #: ../src/context_menus.c:869
 msgid "Delete From Database"
-msgstr "¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤éºï½ü"
+msgstr "ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰å‰Šé™¤"
 
 #: ../src/context_menus.c:877
 msgid "Alphabetize"
-msgstr "ÊÂ¤Ù´¹¤¨"
+msgstr "ä¸¦ã¹æ›ãˆ"
 
 #: ../src/context_menus.c:895
 #, fuzzy
 msgid "Remove Album"
-msgstr "¥¢¥ë¥Ğ¥à"
+msgstr "ã‚¢ãƒ«ãƒãƒ "
 
 #: ../src/context_menus.c:905
 #, fuzzy
 msgid "Remove Photo"
-msgstr "¥«¥Ğ¡¼¥¢¡¼¥È¤òºï½ü"
+msgstr "ã‚«ãƒãƒ¼ã‚¢ãƒ¼ãƒˆã‚’å‰Šé™¤"
 
 #: ../src/context_menus.c:915
 msgid "Rename Album"
@@ -2420,17 +2439,17 @@ msgstr ""
 #: ../src/context_menus.c:974 ../src/context_menus.c:1023
 #, fuzzy
 msgid "Copy selected playlist to..."
-msgstr "ÁªÂò¤µ¤ì¤¿¥×¥ì¥¤¥ê¥¹¥È"
+msgstr "é¸æŠã•ã‚ŒãŸãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
 
 #: ../src/context_menus.c:1076
 #, fuzzy
 msgid "Copy selected track(s) to..."
-msgstr "ºï½ü¤µ¤ì¤¿¶Ê"
+msgstr "å‰Šé™¤ã•ã‚ŒãŸæ›²"
 
 #: ../src/date_parser.l:269
 #, c-format
 msgid "Date format error: unrecognized character: '%s'\n"
-msgstr "¥Ç¡¼¥¿¥¨¥é¡¼: ¼¡¤ÎÊ¸»ú¤Ï»ÈÍÑ¤Ç¤­¤Ş¤»¤ó: '%s'\n"
+msgstr "ãƒ‡ãƒ¼ã‚¿ã‚¨ãƒ©ãƒ¼: æ¬¡ã®æ–‡å­—ã¯ä½¿ç”¨ã§ãã¾ã›ã‚“: '%s'\n"
 
 #: ../src/details.c:82
 msgid "Audio/Video"
@@ -2443,7 +2462,7 @@ msgstr ""
 #: ../src/details.c:84
 #, fuzzy
 msgid "Video"
-msgstr "É½¼¨(_V)"
+msgstr "è¡¨ç¤º(_V)"
 
 #: ../src/details.c:85
 msgid "Podcast"
@@ -2482,7 +2501,7 @@ msgstr ""
 
 #: ../src/details.c:1418
 msgid "<b>n/a</b>"
-msgstr "<b>ÉÔ²Ä</b>"
+msgstr "<b>ä¸å¯</b>"
 
 #: ../src/details.c:1906
 #, c-format
@@ -2493,67 +2512,67 @@ msgstr ""
 msgid "Successfully set new coverart for selected tracks"
 msgstr ""
 
-#: ../src/display.c:738
+#: ../src/display.c:743
 msgid "Edit selected entry of which sort tab?"
-msgstr "¤É¤Î¥½¡¼¥È¥¿¥Ö¤ÇÁªÂò¤µ¤ì¤¿¤â¤Î¤òÊÔ½¸¤·¤Ş¤¹¤«¡©"
+msgstr "ã©ã®ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã§é¸æŠã•ã‚ŒãŸã‚‚ã®ã‚’ç·¨é›†ã—ã¾ã™ã‹ï¼Ÿ"
 
 #. no entry selected
-#: ../src/display.c:745 ../src/misc_confirm.c:435 ../src/misc_track.c:2138
+#: ../src/display.c:750 ../src/misc_confirm.c:435 ../src/misc_track.c:2138
 msgid "No entry selected."
-msgstr "²¿¤âÁªÂò¤µ¤ì¤Æ¤¤¤Ş¤»¤ó¡£"
+msgstr "ä½•ã‚‚é¸æŠã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚"
 
-#: ../src/display.c:904 ../src/display.c:1224 ../src/display.c:1280
-#: ../src/display.c:1334 ../src/display.c:1389 ../src/display.c:1650
+#: ../src/display.c:909 ../src/display.c:1229 ../src/display.c:1285
+#: ../src/display.c:1339 ../src/display.c:1394 ../src/display.c:1655
 #, c-format
 msgid "No entry selected in Sort Tab %d"
-msgstr "¥½¡¼¥È¥¿¥Ö %d Æâ¤Ç¤Ï²¿¤âÁªÂò¤µ¤ì¤Æ¤¤¤Ş¤»¤ó¡£"
+msgstr "ã‚½ãƒ¼ãƒˆã‚¿ãƒ– %d å†…ã§ã¯ä½•ã‚‚é¸æŠã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚"
 
-#: ../src/display.c:943
+#: ../src/display.c:948
 msgid "Remove entry of which sort tab from database?"
-msgstr "¤É¤Î¥½¡¼¥È¥¿¥Ö¤ÇÁªÂò¤µ¤ì¤¿¤â¤Î¤ò¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤éºï½ü¤·¤Ş¤¹¤«¡©"
+msgstr "ã©ã®ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã§é¸æŠã•ã‚ŒãŸã‚‚ã®ã‚’ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ"
 
-#: ../src/display.c:951
+#: ../src/display.c:956
 msgid "Remove tracks in selected entry of which filter tab from the iPod?"
-msgstr "¤É¤Î¥½¡¼¥È¥¿¥Ö¤ÇÁªÂò¤µ¤ì¤¿¶Ê¤òiPod¤«¤éºï½ü¤·¤Ş¤¹¤«¡©"
+msgstr "ã©ã®ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã§é¸æŠã•ã‚ŒãŸæ›²ã‚’iPodã‹ã‚‰å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ"
 
-#: ../src/display.c:973
+#: ../src/display.c:978
 msgid "Remove tracks in selected entry of which filter tab from the harddisk?"
-msgstr "¤É¤Î¥½¡¼¥È¥¿¥Ö¤ÇÁªÂò¤µ¤ì¤¿¶Ê¤ò¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤«¤éºï½ü¤·¤Ş¤¹¤«¡©"
+msgstr "ã©ã®ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã§é¸æŠã•ã‚ŒãŸæ›²ã‚’ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã‹ã‚‰å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ"
 
-#: ../src/display.c:1003
+#: ../src/display.c:1008
 msgid "Remove tracks in selected entry of which filter tab from playlist?"
-msgstr "¤É¤Î¥½¡¼¥È¥¿¥Ö¤ÇÁªÂò¤µ¤ì¤¿¶Ê¤ò¥×¥ì¥¤¥ê¥¹¥È¤«¤éºï½ü¤·¤Ş¤¹¤«¡©"
+msgstr "ã©ã®ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã§é¸æŠã•ã‚ŒãŸæ›²ã‚’ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ"
 
-#: ../src/display.c:1030 ../src/display.c:1068
+#: ../src/display.c:1035 ../src/display.c:1073
 #, c-format
 msgid ""
 "iPod at '%s' is not loaded.\n"
 "Please load it first."
 msgstr ""
 
-#: ../src/display.c:1105 ../src/display.c:1132
+#: ../src/display.c:1110 ../src/display.c:1137
 msgid "Update selected entry of which sort tab?"
-msgstr "¤É¤Î¥½¡¼¥È¥¿¥Ö¤ÇÁªÂò¤µ¤ì¤¿¤â¤Î¤ò¹¹¿·¤·¤Ş¤¹¤«¡©"
+msgstr "ã©ã®ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã§é¸æŠã•ã‚ŒãŸã‚‚ã®ã‚’æ›´æ–°ã—ã¾ã™ã‹ï¼Ÿ"
 
-#: ../src/display.c:1218
+#: ../src/display.c:1223
 msgid "Export selected entry of which sort tab?"
-msgstr "¤É¤Î¥½¡¼¥È¥¿¥Ö¤ÇÁªÂò¤µ¤ì¤¿¤â¤Î¤ò¥¨¥¯¥¹¥İ¡¼¥È¤·¤Ş¤¹¤«¡©"
+msgstr "ã©ã®ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã§é¸æŠã•ã‚ŒãŸã‚‚ã®ã‚’ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã—ã¾ã™ã‹ï¼Ÿ"
 
-#: ../src/display.c:1274
+#: ../src/display.c:1279
 msgid "Create playlist file from selected entry of which sort tab?"
-msgstr "¤É¤Î¥½¡¼¥È¥¿¥Ö¤ÇÁªÂò¤µ¤ì¤¿¤â¤Î¤«¤é¥×¥ì¥¤¥ê¥¹¥È¤òºîÀ®¤·¤Ş¤¹¤«¡©"
+msgstr "ã©ã®ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã§é¸æŠã•ã‚ŒãŸã‚‚ã®ã‹ã‚‰ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’ä½œæˆã—ã¾ã™ã‹ï¼Ÿ"
 
-#: ../src/display.c:1328
+#: ../src/display.c:1333
 msgid "Play tracks in selected entry of which sort tab?"
-msgstr "¤É¤Î¥½¡¼¥È¥¿¥Ö¤ÇÁªÂò¤µ¤ì¤¿¶Ê¤ò±éÁÕ¤·¤Ş¤¹¤«¡©"
+msgstr "ã©ã®ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã§é¸æŠã•ã‚ŒãŸæ›²ã‚’æ¼”å¥ã—ã¾ã™ã‹ï¼Ÿ"
 
-#: ../src/display.c:1383
+#: ../src/display.c:1388
 msgid "Enqueue tracks in selected entry of which sort tab?"
-msgstr "¤É¤Î¥½¡¼¥È¥¿¥Ö¤ÇÁªÂò¤µ¤ì¤¿¶Ê¤ò±éÁÕ¥­¥å¡¼¤Ë²Ã¤¨¤Ş¤¹¤«¡©"
+msgstr "ã©ã®ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã§é¸æŠã•ã‚ŒãŸæ›²ã‚’æ¼”å¥ã‚­ãƒ¥ãƒ¼ã«åŠ ãˆã¾ã™ã‹ï¼Ÿ"
 
-#: ../src/display.c:1640
+#: ../src/display.c:1645
 msgid "Normalize tracks in selected entry of which sort tab?"
-msgstr "¤É¤Î¥½¡¼¥È¥¿¥Ö¤ÇÁªÂò¤µ¤ì¤¿¶Ê¤òÊ¿¶Ñ²½¤·¤Ş¤¹¤«¡©"
+msgstr "ã©ã®ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã§é¸æŠã•ã‚ŒãŸæ›²ã‚’å¹³å‡åŒ–ã—ã¾ã™ã‹ï¼Ÿ"
 
 #: ../src/display_coverart.c:1713
 msgid "Failed to remove the album from the album hash store."
@@ -2567,7 +2586,7 @@ msgstr ""
 #: ../src/display_itdb.c:376
 #, fuzzy, c-format
 msgid "Failed to set cover art: '%s'\n"
-msgstr "¥«¥Ğ¡¼¥¢¡¼¥È¤¬ÀßÄê¤Ç¤­¤Ş¤»¤ó: '%s'"
+msgstr "ã‚«ãƒãƒ¼ã‚¢ãƒ¼ãƒˆãŒè¨­å®šã§ãã¾ã›ã‚“: '%s'"
 
 #: ../src/display_itdb.c:858 ../src/display_itdb.c:991
 msgid "Local"
@@ -2583,12 +2602,12 @@ msgstr ""
 #: ../src/repository.c:1186
 #, fuzzy
 msgid "iPod"
-msgstr "iPod ¥Õ¥¡¥¤¥ë"
+msgstr "iPod ãƒ•ã‚¡ã‚¤ãƒ«"
 
 #: ../src/display_itdb.c:1084
 #, c-format
 msgid "Increased playcount for '%s'"
-msgstr "'%s' ¤ÎºÆÀ¸²ó¿ô¤òÁı¤ä¤·¤Ş¤·¤¿"
+msgstr "'%s' ã®å†ç”Ÿå›æ•°ã‚’å¢—ã‚„ã—ã¾ã—ãŸ"
 
 #: ../src/display_photo.c:163
 #, c-format
@@ -2606,7 +2625,7 @@ msgstr ""
 #: ../src/display_photo.c:441
 #, fuzzy
 msgid "Photo Albums"
-msgstr "¥¢¥ë¥Ğ¥à"
+msgstr "ã‚¢ãƒ«ãƒãƒ "
 
 #: ../src/display_photo.c:451 ../src/display_photo.c:1666
 msgid "<Unnamed>"
@@ -2619,7 +2638,7 @@ msgstr ""
 #: ../src/display_photo.c:942
 #, fuzzy
 msgid "Do you want to remove the album's photos too?"
-msgstr "¤¹¤Ù¤Æ¤Î Podcast ¤ò iPod ¤«¤éºï½ü¤·¤Æ¤âËÜÅö¤Ë¤è¤í¤·¤¤¤Ç¤¹¤«?"
+msgstr "ã™ã¹ã¦ã® Podcast ã‚’ iPod ã‹ã‚‰å‰Šé™¤ã—ã¦ã‚‚æœ¬å½“ã«ã‚ˆã‚ã—ã„ã§ã™ã‹?"
 
 #: ../src/display_photo.c:948
 msgid "Yes. Do Not Display Again"
@@ -2644,7 +2663,7 @@ msgstr ""
 #: ../src/display_photo.c:1110
 #, fuzzy
 msgid "Please enter a new name for the photo album"
-msgstr "¿·¤·¤¤¥×¥ì¥¤¥ê¥¹¥È¤ÎÌ¾Á°¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤"
+msgstr "æ–°ã—ã„ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®åå‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„"
 
 #: ../src/display_photo.c:1122 ../src/display_photo.c:1204
 msgid "An album with that name already exists."
@@ -2653,12 +2672,12 @@ msgstr ""
 #: ../src/display_photo.c:1191
 #, fuzzy
 msgid "New Photo Album"
-msgstr "¥¢¥ë¥Ğ¥à"
+msgstr "ã‚¢ãƒ«ãƒãƒ "
 
 #: ../src/display_photo.c:1192
 #, fuzzy
 msgid "Please enter a name for the new photo album"
-msgstr "¿·¤·¤¤¥×¥ì¥¤¥ê¥¹¥È¤ÎÌ¾Á°¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤"
+msgstr "æ–°ã—ã„ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®åå‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„"
 
 #: ../src/display_photo.c:1213
 msgid "The new album failed to be created."
@@ -2682,17 +2701,17 @@ msgstr ""
 #. * will never know why the drag is not possible
 #: ../src/display_playlists.c:516 ../src/display_playlists.c:558
 msgid "Error: drag from iPod not possible in offline mode."
-msgstr "¥¨¥é¡¼: ¥ª¥Õ¥é¥¤¥ó¥â¡¼¥É¤Ç¤Ï iPod ¤«¤é¤Î¥É¥é¥Ã¥°Áàºî¤Ï¤Ç¤­¤Ş¤»¤ó¡£"
+msgstr "ã‚¨ãƒ©ãƒ¼: ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ãƒ¢ãƒ¼ãƒ‰ã§ã¯ iPod ã‹ã‚‰ã®ãƒ‰ãƒ©ãƒƒã‚°æ“ä½œã¯ã§ãã¾ã›ã‚“ã€‚"
 
 #: ../src/display_playlists.c:585 ../src/display_tracks.c:286
 #, c-format
 msgid "Copied one track"
 msgid_plural "Copied %d tracks"
-msgstr[0] "%d¶Ê¥³¥Ô¡¼¤·¤Ş¤·¤¿"
+msgstr[0] "%dæ›²ã‚³ãƒ”ãƒ¼ã—ã¾ã—ãŸ"
 
 #: ../src/display_playlists.c:865 ../src/display_playlists.c:877
 msgid "Can't reorder sorted treeview."
-msgstr "¥½¡¼¥È¤µ¤ì¤Æ¤¤¤ë½çÈÖ¤òÊÑ¹¹¤¹¤ë¤³¤È¤Ï¤Ç¤­¤Ş¤»¤ó"
+msgstr "ã‚½ãƒ¼ãƒˆã•ã‚Œã¦ã„ã‚‹é †ç•ªã‚’å¤‰æ›´ã™ã‚‹ã“ã¨ã¯ã§ãã¾ã›ã‚“"
 
 #: ../src/display_playlists.c:954
 #, c-format
@@ -2701,8 +2720,8 @@ msgid ""
 "would be useful, please contact the author.\n"
 "\n"
 msgstr ""
-"¤³¤Î¼ïÎà¤Î¥É¥é¥Ã¥°&¥É¥í¥Ã¥× (DND type %d) ¤ÏÌ¤ÂĞ±ş¤Ç¤¹¡£¤â¤·¤³¤ÎÁàºî¤ò¥µ¥İ¡¼"
-"¥È¤¹¤ë¤³¤È¤¬Í­ÍÑ¤À¤È¤ª¹Í¤¨¤Ç¤·¤¿¤é¡¢ºî¼Ô¤ËÏ¢Íí¤·¤Æ¤¯¤À¤µ¤¤¡£\n"
+"ã“ã®ç¨®é¡ã®ãƒ‰ãƒ©ãƒƒã‚°&ãƒ‰ãƒ­ãƒƒãƒ— (DND type %d) ã¯æœªå¯¾å¿œã§ã™ã€‚ã‚‚ã—ã“ã®æ“ä½œã‚’ã‚µãƒãƒ¼"
+"ãƒˆã™ã‚‹ã“ã¨ãŒæœ‰ç”¨ã ã¨ãŠè€ƒãˆã§ã—ãŸã‚‰ã€ä½œè€…ã«é€£çµ¡ã—ã¦ãã ã•ã„ã€‚\n"
 "\n"
 
 #. no existing photo playlist found so add one
@@ -2715,56 +2734,56 @@ msgstr ""
 
 #: ../src/display_sorttabs.c:473
 msgid "'Played' condition ignored because of error."
-msgstr "¡Ö±éÁÕÆü¡×¤Î¾ò·ï¤Ï¥¨¥é¡¼¤Î¤¿¤á¤ËÌµ»ë¤µ¤ì¤Ş¤·¤¿¡£"
+msgstr "ã€Œæ¼”å¥æ—¥ã€ã®æ¡ä»¶ã¯ã‚¨ãƒ©ãƒ¼ã®ãŸã‚ã«ç„¡è¦–ã•ã‚Œã¾ã—ãŸã€‚"
 
 #: ../src/display_sorttabs.c:476
 msgid "'Modified' condition ignored because of error."
-msgstr "¡ÖÊÑ¹¹Æü¡×¤Î¾ò·ï¤Ï¥¨¥é¡¼¤Î¤¿¤á¤ËÌµ»ë¤µ¤ì¤Ş¤·¤¿¡£"
+msgstr "ã€Œå¤‰æ›´æ—¥ã€ã®æ¡ä»¶ã¯ã‚¨ãƒ©ãƒ¼ã®ãŸã‚ã«ç„¡è¦–ã•ã‚Œã¾ã—ãŸã€‚"
 
 #: ../src/display_sorttabs.c:479
 msgid "'Added' condition ignored because of error."
-msgstr "¡ÖÅĞÏ¿Æü¡×¤Î¾ò·ï¤Ï¥¨¥é¡¼¤Î¤¿¤á¤ËÌµ»ë¤µ¤ì¤Ş¤·¤¿¡£"
+msgstr "ã€Œç™»éŒ²æ—¥ã€ã®æ¡ä»¶ã¯ã‚¨ãƒ©ãƒ¼ã®ãŸã‚ã«ç„¡è¦–ã•ã‚Œã¾ã—ãŸã€‚"
 
 #: ../src/display_sorttabs.c:1562 ../src/misc_conversion.c:59
 msgid "All"
-msgstr "¤¹¤Ù¤Æ"
+msgstr "ã™ã¹ã¦"
 
 #: ../src/display_sorttabs.c:1588
 msgid "Compilations"
-msgstr "¥³¥ó¥Ô¥ì¡¼¥·¥ç¥ó"
+msgstr "ã‚³ãƒ³ãƒ”ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³"
 
 #: ../src/display_sorttabs.c:2988
 msgid "Comp."
-msgstr "ºî¶Ê¼Ô"
+msgstr "ä½œæ›²è€…"
 
 #: ../src/display_sorttabs.c:2994 ../src/display_spl.c:88
 #: ../src/display_tracks.c:2109 ../src/misc_conversion.c:84
 msgid "Year"
-msgstr "Ç¯"
+msgstr "å¹´"
 
 #: ../src/display_sorttabs.c:2997
 msgid "Special"
-msgstr "¥¹¥Ú¥·¥ã¥ë"
+msgstr "ã‚¹ãƒšã‚·ãƒ£ãƒ«"
 
 #: ../src/display_sorttabs.c:3245
 msgid "Last Played"
-msgstr "ºÇ¸å¤Ë±éÁÕ¤·¤¿Æü"
+msgstr "æœ€å¾Œã«æ¼”å¥ã—ãŸæ—¥"
 
 #: ../src/display_sorttabs.c:3246
 msgid "Last Modified"
-msgstr "ºÇ¸å¤ËÊÑ¹¹¤·¤¿Æü"
+msgstr "æœ€å¾Œã«å¤‰æ›´ã—ãŸæ—¥"
 
 #: ../src/display_spl.c:64
 msgid "days"
-msgstr "Æü"
+msgstr "æ—¥"
 
 #: ../src/display_spl.c:65
 msgid "weeks"
-msgstr "½µ"
+msgstr "é€±"
 
 #: ../src/display_spl.c:66
 msgid "months"
-msgstr "·î"
+msgstr "æœˆ"
 
 #: ../src/display_spl.c:73
 msgid "kbps"
@@ -2780,52 +2799,52 @@ msgstr ""
 
 #: ../src/display_spl.c:76
 msgid "secs"
-msgstr "ÉÃ"
+msgstr "ç§’"
 
 #: ../src/display_spl.c:86 ../src/misc_conversion.c:74
 msgid "Bitrate"
-msgstr "¥Ó¥Ã¥È¥ì¡¼¥È"
+msgstr "ãƒ“ãƒƒãƒˆãƒ¬ãƒ¼ãƒˆ"
 
 #. 15
 #: ../src/display_spl.c:87 ../src/misc_conversion.c:75
 msgid "Samplerate"
-msgstr "¥µ¥ó¥×¥ê¥ó¥°¥ì¡¼¥È"
+msgstr "ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ãƒ¬ãƒ¼ãƒˆ"
 
 #: ../src/display_spl.c:90
 msgid "Kind"
-msgstr "¼ïÎà"
+msgstr "ç¨®é¡"
 
 #: ../src/display_spl.c:91 ../src/misc_conversion.c:81
 msgid "Date modified"
-msgstr "ÊÑ¹¹Æü"
+msgstr "å¤‰æ›´æ—¥"
 
 #: ../src/display_spl.c:92
 msgid "Track number"
-msgstr "¶ÊÈÖ¹æ"
+msgstr "æ›²ç•ªå·"
 
 #: ../src/display_spl.c:93
 msgid "Size"
-msgstr "¥µ¥¤¥º"
+msgstr "ã‚µã‚¤ã‚º"
 
 #: ../src/display_spl.c:95 ../src/misc_conversion.c:64
 msgid "Comment"
-msgstr "¥³¥á¥ó¥È"
+msgstr "ã‚³ãƒ¡ãƒ³ãƒˆ"
 
 #: ../src/display_spl.c:96 ../src/misc_conversion.c:79
 msgid "Date added"
-msgstr "ÅĞÏ¿Æü"
+msgstr "ç™»éŒ²æ—¥"
 
 #: ../src/display_spl.c:99
 msgid "Last played"
-msgstr "ºÇ¸å¤Ë±éÁÕ¤·¤¿Æü"
+msgstr "æœ€å¾Œã«æ¼”å¥ã—ãŸæ—¥"
 
 #: ../src/display_spl.c:100
 msgid "Disc number"
-msgstr "CD ÈÖ¹æ"
+msgstr "CD ç•ªå·"
 
 #: ../src/display_spl.c:102 ../src/misc_conversion.c:87
 msgid "Compilation"
-msgstr "¥³¥ó¥Ô¥ì¡¼¥·¥ç¥ó"
+msgstr "ã‚³ãƒ³ãƒ”ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³"
 
 #: ../src/display_spl.c:103 ../src/misc_conversion.c:76
 msgid "BPM"
@@ -2833,7 +2852,11 @@ msgstr ""
 
 #: ../src/display_spl.c:104 ../src/misc_conversion.c:86
 msgid "Grouping"
-msgstr "¥°¥ë¡¼¥×"
+msgstr "ã‚°ãƒ«ãƒ¼ãƒ—"
+
+#: ../src/display_spl.c:105
+msgid "Playlist"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
 
 #: ../src/display_spl.c:106
 msgid "Video Kind"
@@ -2842,7 +2865,7 @@ msgstr ""
 #: ../src/display_spl.c:108
 #, fuzzy
 msgid "Season number"
-msgstr "CD ÈÖ¹æ"
+msgstr "CD ç•ªå·"
 
 #: ../src/display_spl.c:109
 msgid "Skip count"
@@ -2851,91 +2874,91 @@ msgstr ""
 #: ../src/display_spl.c:110
 #, fuzzy
 msgid "Last skipped"
-msgstr "ºÇ¸å¤Ë±éÁÕ¤·¤¿Æü"
+msgstr "æœ€å¾Œã«æ¼”å¥ã—ãŸæ—¥"
 
 #: ../src/display_spl.c:111
 #, fuzzy
 msgid "Album artist"
-msgstr "¥¢¡¼¥Æ¥£¥¹¥È"
+msgstr "ã‚¢ãƒ¼ãƒ†ã‚£ã‚¹ãƒˆ"
 
 #: ../src/display_spl.c:117
 msgid "contains"
-msgstr "¤¬¼¡¤Î¤â¤Î¤ò´Ş¤à"
+msgstr "ãŒæ¬¡ã®ã‚‚ã®ã‚’å«ã‚€"
 
 #: ../src/display_spl.c:118
 msgid "does not contain"
-msgstr "¤¬¼¡¤Î¤â¤Î¤ò´Ş¤Ş¤Ê¤¤"
+msgstr "ãŒæ¬¡ã®ã‚‚ã®ã‚’å«ã¾ãªã„"
 
 #: ../src/display_spl.c:119 ../src/display_spl.c:128 ../src/display_spl.c:138
 #: ../src/display_spl.c:157 ../src/display_spl.c:164
 msgid "is"
-msgstr "¤¬¼¡¤Î¤â¤Î¤Ç¤¢¤ë"
+msgstr "ãŒæ¬¡ã®ã‚‚ã®ã§ã‚ã‚‹"
 
 #: ../src/display_spl.c:120 ../src/display_spl.c:129 ../src/display_spl.c:139
 #: ../src/display_spl.c:158 ../src/display_spl.c:165
 msgid "is not"
-msgstr "¤¬¼¡¤Î¤â¤Î¤Ç¤Ê¤¤"
+msgstr "ãŒæ¬¡ã®ã‚‚ã®ã§ãªã„"
 
 #: ../src/display_spl.c:121
 msgid "starts with"
-msgstr "¤¬¼¡¤Î¤â¤Î¤«¤é»Ï¤Ş¤ë"
+msgstr "ãŒæ¬¡ã®ã‚‚ã®ã‹ã‚‰å§‹ã¾ã‚‹"
 
 #: ../src/display_spl.c:122
 msgid "ends with"
-msgstr "¤¬¼¡¤Î¤â¤Î¤Ç½ª¤ï¤ë"
+msgstr "ãŒæ¬¡ã®ã‚‚ã®ã§çµ‚ã‚ã‚‹"
 
 #: ../src/display_spl.c:130
 msgid "is greater than"
-msgstr "¤¬¼¡¤ÎÃÍ¤è¤êÂç¤­¤¤"
+msgstr "ãŒæ¬¡ã®å€¤ã‚ˆã‚Šå¤§ãã„"
 
 #: ../src/display_spl.c:131
 msgid "is less than"
-msgstr "¤¬¼¡¤ÎÃÍ¤è¤ê¾®¤µ¤¤"
+msgstr "ãŒæ¬¡ã®å€¤ã‚ˆã‚Šå°ã•ã„"
 
 #: ../src/display_spl.c:132 ../src/display_spl.c:144
 msgid "is in the range"
-msgstr "¤¬¼¡¤ÎÈÏ°Ï¤ËÆş¤ë"
+msgstr "ãŒæ¬¡ã®ç¯„å›²ã«å…¥ã‚‹"
 
 #: ../src/display_spl.c:140
 msgid "is after"
-msgstr "¤¬¼¡¤Î¤â¤Î°Ê¹ß"
+msgstr "ãŒæ¬¡ã®ã‚‚ã®ä»¥é™"
 
 #: ../src/display_spl.c:141
 msgid "is before"
-msgstr "¤¬¼¡¤Î¤â¤Î°ÊÁ°"
+msgstr "ãŒæ¬¡ã®ã‚‚ã®ä»¥å‰"
 
 #: ../src/display_spl.c:142
 msgid "in the last"
-msgstr "¤¬¼¡¤ÎÃÍ°ÊÆâ"
+msgstr "ãŒæ¬¡ã®å€¤ä»¥å†…"
 
 #: ../src/display_spl.c:143
 msgid "not in the last"
-msgstr "¤¬¼¡¤ÎÃÍ¤è¤ê¸Å¤¤"
+msgstr "ãŒæ¬¡ã®å€¤ã‚ˆã‚Šå¤ã„"
 
 #: ../src/display_spl.c:150
 msgid "is set"
-msgstr "¤¬ÀßÄê¤µ¤ì¤Æ¤¤¤ë"
+msgstr "ãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹"
 
 #: ../src/display_spl.c:151
 msgid "is not set"
-msgstr "¤¬ÀßÄê¤µ¤ì¤Æ¤¤¤Ê¤¤"
+msgstr "ãŒè¨­å®šã•ã‚Œã¦ã„ãªã„"
 
 #: ../src/display_spl.c:171
 #, fuzzy
 msgid "Not supported"
-msgstr "¥ê¥¹¥È¤ËºÜ¤Ã¤Æ¤Ê¤¤¶Ê"
+msgstr "ãƒªã‚¹ãƒˆã«è¼‰ã£ã¦ãªã„æ›²"
 
 #: ../src/display_spl.c:178
 msgid "minutes"
-msgstr "Ê¬"
+msgstr "åˆ†"
 
 #: ../src/display_spl.c:180
 msgid "tracks"
-msgstr "¶Ê"
+msgstr "æ›²"
 
 #: ../src/display_spl.c:181
 msgid "hours"
-msgstr "»ş´Ö"
+msgstr "æ™‚é–“"
 
 #: ../src/display_spl.c:182 ../src/info.c:780
 msgid "GB"
@@ -2943,64 +2966,64 @@ msgstr ""
 
 #: ../src/display_spl.c:189
 msgid "random order"
-msgstr "¥é¥ó¥À¥à¤Ê½ç"
+msgstr "ãƒ©ãƒ³ãƒ€ãƒ ãªé †"
 
 #: ../src/display_spl.c:190
 msgid "title"
-msgstr "¥¿¥¤¥È¥ë"
+msgstr "ã‚¿ã‚¤ãƒˆãƒ«"
 
 #: ../src/display_spl.c:191
 msgid "album"
-msgstr "¥¢¥ë¥Ğ¥à"
+msgstr "ã‚¢ãƒ«ãƒãƒ "
 
 #: ../src/display_spl.c:192
 msgid "artist"
-msgstr "¥¢¡¼¥Æ¥£¥¹¥È"
+msgstr "ã‚¢ãƒ¼ãƒ†ã‚£ã‚¹ãƒˆ"
 
 #: ../src/display_spl.c:193
 msgid "genre"
-msgstr "¥¸¥ã¥ó¥ë"
+msgstr "ã‚¸ãƒ£ãƒ³ãƒ«"
 
 #: ../src/display_spl.c:194
 msgid "most recently added"
-msgstr "ºÇ¶áÅĞÏ¿¤µ¤ì¤¿¶Ê"
+msgstr "æœ€è¿‘ç™»éŒ²ã•ã‚ŒãŸæ›²"
 
 #: ../src/display_spl.c:195
 msgid "least recently added"
-msgstr "¸Å¤¯¤ËÅĞÏ¿¤µ¤ì¤¿¶Ê"
+msgstr "å¤ãã«ç™»éŒ²ã•ã‚ŒãŸæ›²"
 
 #: ../src/display_spl.c:196
 msgid "most often played"
-msgstr "¤è¤¯ºÆÀ¸¤µ¤ì¤ë¶Ê"
+msgstr "ã‚ˆãå†ç”Ÿã•ã‚Œã‚‹æ›²"
 
 #: ../src/display_spl.c:197
 msgid "least often played"
-msgstr "¤¢¤Ş¤êºÆÀ¸¤µ¤ì¤Ê¤¤¶Ê"
+msgstr "ã‚ã¾ã‚Šå†ç”Ÿã•ã‚Œãªã„æ›²"
 
 #: ../src/display_spl.c:198
 msgid "most recently played"
-msgstr "ºÇ¶áºÆÀ¸¤µ¤ì¤¿¶Ê"
+msgstr "æœ€è¿‘å†ç”Ÿã•ã‚ŒãŸæ›²"
 
 #: ../src/display_spl.c:199
 msgid "least recently played"
-msgstr "ºÇ¶áºÆÀ¸¤µ¤ì¤Ê¤¤¶Ê"
+msgstr "æœ€è¿‘å†ç”Ÿã•ã‚Œãªã„æ›²"
 
 #: ../src/display_spl.c:200
 msgid "highest rating"
-msgstr "É¾²Á¤Î¹â¤¤¶Ê"
+msgstr "è©•ä¾¡ã®é«˜ã„æ›²"
 
 #: ../src/display_spl.c:201
 msgid "lowest rating"
-msgstr "É¾²Á¤ÎÄã¤¤¶Ê"
+msgstr "è©•ä¾¡ã®ä½ã„æ›²"
 
 #: ../src/display_spl.c:208 ../src/display_spl.c:217
 #, fuzzy
 msgid "Movie"
-msgstr "ÊÑ¹¹Æü"
+msgstr "å¤‰æ›´æ—¥"
 
 #: ../src/display_spl.c:1192 ../src/display_spl.c:1207
 msgid "to"
-msgstr "¤«¤é"
+msgstr "ã‹ã‚‰"
 
 #: ../src/display_spl.c:1485
 msgid "-"
@@ -3010,18 +3033,11 @@ msgstr ""
 msgid "+"
 msgstr ""
 
-#: ../src/display_spl.c:1719 ../src/misc_playlist.c:66
-#: ../src/misc_playlist.c:68 ../src/misc_playlist.c:93
-#: ../src/misc_playlist.c:95 ../src/misc_playlist.c:428
-#: ../src/misc_playlist.c:430
-msgid "New Playlist"
-msgstr "¿·µ¬¥×¥ì¥¤¥ê¥¹¥È"
-
 #: ../src/display_tracks.c:281
 #, c-format
 msgid "Moved one track"
 msgid_plural "Moved %d tracks"
-msgstr[0] "%d¶Ê¤ò°ÜÆ°¤·¤Ş¤·¤¿"
+msgstr[0] "%dæ›²ã‚’ç§»å‹•ã—ã¾ã—ãŸ"
 
 #: ../src/display_tracks.c:1810
 #, c-format
@@ -3031,14 +3047,14 @@ msgid ""
 "unsorted state.\n"
 "\n"
 msgstr ""
-"»È¤ï¤ì¤Æ¤¤¤ë GTK+ ¥é¥¤¥Ö¥é¥ê %d.%d.%d < 2.5.4) ¤Î¥Ğ¥°¤Î¤¿¤á¡¢¥½¡¼¥ÈÉ½¼¨¤ò²ò½ü"
-"¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó¡£°ìÅÙ¥½¡¼¥ÈÉ½¼¨¤òÁª¤ó¤Ç¤·¤Ş¤¦¤È¡¢Èó¥½¡¼¥ÈÉ½¼¨¤ËÌá¤¹¤³¤È"
-"¤Ï¤Ç¤­¤Ş¤»¤ó¡£\n"
+"ä½¿ã‚ã‚Œã¦ã„ã‚‹ GTK+ ãƒ©ã‚¤ãƒ–ãƒ©ãƒª %d.%d.%d < 2.5.4) ã®ãƒã‚°ã®ãŸã‚ã€ã‚½ãƒ¼ãƒˆè¡¨ç¤ºã‚’è§£é™¤"
+"ã™ã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“ã€‚ä¸€åº¦ã‚½ãƒ¼ãƒˆè¡¨ç¤ºã‚’é¸ã‚“ã§ã—ã¾ã†ã¨ã€éã‚½ãƒ¼ãƒˆè¡¨ç¤ºã«æˆ»ã™ã“ã¨"
+"ã¯ã§ãã¾ã›ã‚“ã€‚\n"
 "\n"
 
 #: ../src/display_tracks.c:2069
 msgid "Rtng"
-msgstr "É¾²Á"
+msgstr "è©•ä¾¡"
 
 #: ../src/display_tracks.c:2072
 msgid "#"
@@ -3054,31 +3070,31 @@ msgstr "ID"
 
 #: ../src/display_tracks.c:2081
 msgid "Trnsfrd"
-msgstr "Å¾Á÷ºÑ¤ß"
+msgstr "è»¢é€æ¸ˆã¿"
 
 #: ../src/display_tracks.c:2085
 msgid "Cmpl"
-msgstr "¥³¥ó¥Ô"
+msgstr "ã‚³ãƒ³ãƒ”"
 
 #: ../src/display_tracks.c:2091
 msgid "Time"
-msgstr "±éÁÕ»ş´Ö"
+msgstr "æ¼”å¥æ™‚é–“"
 
 #: ../src/display_tracks.c:2094
 msgid "Plycnt"
-msgstr "ºÆÀ¸²ó¿ô"
+msgstr "å†ç”Ÿå›æ•°"
 
 #: ../src/display_tracks.c:2106
 msgid "Released"
-msgstr "¸ø³«Æü"
+msgstr "å…¬é–‹æ—¥"
 
 #: ../src/display_tracks.c:2112
 msgid "Vol."
-msgstr "²»ÎÌ"
+msgstr "éŸ³é‡"
 
 #: ../src/display_tracks.c:2115
 msgid "Sndchk."
-msgstr "¥µ¥¦¥ó¥É¥Á¥§¥Ã¥¯"
+msgstr "ã‚µã‚¦ãƒ³ãƒ‰ãƒã‚§ãƒƒã‚¯"
 
 #: ../src/fetchcover.c:358
 msgid "Coverart file already exists"
@@ -3104,7 +3120,7 @@ msgid ""
 "'%s' is a directory, not a playlist file.\n"
 "\n"
 msgstr ""
-"'%s' ¤Ï¥×¥ì¥¤¥ê¥¹¥È¥Õ¥¡¥¤¥ë¤Ç¤Ï¤Ê¤¯¡¢¥Ç¥£¥ì¥¯¥È¥ê¤Ç¤¹¡£\n"
+"'%s' ã¯ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã§ã¯ãªãã€ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã§ã™ã€‚\n"
 "\n"
 
 #: ../src/file.c:266
@@ -3113,7 +3129,7 @@ msgid ""
 "'%s' is a not a known playlist file.\n"
 "\n"
 msgstr ""
-"'%s' ¤Ï ¥×¥ì¥¤¥ê¥¹¥È¥Õ¥¡¥¤¥ë¤Ç¤Ï¤Ê¤¤¤è¤¦¤Ç¤¹¡£\n"
+"'%s' ã¯ ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã§ã¯ãªã„ã‚ˆã†ã§ã™ã€‚\n"
 "\n"
 
 #: ../src/file.c:283
@@ -3122,54 +3138,54 @@ msgid ""
 "Cannot open '%s' for reading.\n"
 "\n"
 msgstr ""
-"¥Õ¥¡¥¤¥ë '%s' ¤òÆÉ¤ß¹ş¤â¤¦¤È¤·¤Ş¤·¤¿¤¬¡¢³«¤¯¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó¡£\n"
+"ãƒ•ã‚¡ã‚¤ãƒ« '%s' ã‚’èª­ã¿è¾¼ã‚‚ã†ã¨ã—ã¾ã—ãŸãŒã€é–‹ãã“ã¨ãŒã§ãã¾ã›ã‚“ã€‚\n"
 "\n"
 
 #: ../src/file.c:369
 #, c-format
 msgid "Skipping '%s' because it is a directory.\n"
-msgstr "'%s' ¤Ï¥Ç¥£¥ì¥¯¥È¥ê¤Ê¤Î¤ÇÈô¤Ğ¤·¤Ş¤¹¡£\n"
+msgstr "'%s' ã¯ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãªã®ã§é£›ã°ã—ã¾ã™ã€‚\n"
 
 #: ../src/file.c:374
 #, c-format
 msgid "Skipping '%s' to avoid adding playlist file recursively\n"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¥Õ¥¡¥¤¥ë¤ÎºÆµ¢Åª¤ÊÅĞÏ¿¤òÈò¤±¤ë¤¿¤á¡¢'%s' ¤ÏÈô¤Ğ¤·¤Ş¤¹¡£\n"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã®å†å¸°çš„ãªç™»éŒ²ã‚’é¿ã‘ã‚‹ãŸã‚ã€'%s' ã¯é£›ã°ã—ã¾ã™ã€‚\n"
 
 #: ../src/file.c:629
 #, c-format
 msgid "Unknown token '%s' in template '%s'\n"
-msgstr "Ì¤ÃÎ¤Î¥È¡¼¥¯¥ó '%s' ¤¬¥Æ¥ó¥×¥ì¡¼¥È '%s' Ãæ¤Ë¤¢¤ê¤Ş¤¹¡£\n"
+msgstr "æœªçŸ¥ã®ãƒˆãƒ¼ã‚¯ãƒ³ '%s' ãŒãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ '%s' ä¸­ã«ã‚ã‚Šã¾ã™ã€‚\n"
 
 #: ../src/file.c:923
 #, c-format
 msgid "Local filename not valid (%s)"
-msgstr "¥í¡¼¥«¥ë¤Î¥Õ¥¡¥¤¥ëÌ¾¤¬ÉÔÀµ¤Ç¤¹ (%s)"
+msgstr "ãƒ­ãƒ¼ã‚«ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«åãŒä¸æ­£ã§ã™ (%s)"
 
 #: ../src/file.c:982
 #, c-format
 msgid "No information found for user '%s' in '%s'"
-msgstr "¥æ¡¼¥¶¡¼ '%s' ¤Î¾ğÊó¤¬ '%s' Æâ¤Ë¸«¤Ä¤«¤ê¤Ş¤»¤ó"
+msgstr "ãƒ¦ãƒ¼ã‚¶ãƒ¼ '%s' ã®æƒ…å ±ãŒ '%s' å†…ã«è¦‹ã¤ã‹ã‚Šã¾ã›ã‚“"
 
 #: ../src/file.c:991
 #, c-format
 msgid "mserv data file (%s) not available for track (%s)"
-msgstr "¤³¤Î¶Ê (%2$s) ÍÑ¤Î mserv ¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë (%1$s) ¤¬¤¢¤ê¤Ş¤»¤ó"
+msgstr "ã“ã®æ›² (%2$s) ç”¨ã® mserv ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ« (%1$s) ãŒã‚ã‚Šã¾ã›ã‚“"
 
 #: ../src/file.c:999
 #, c-format
 msgid "Track (%s) not in mserv music root directory (%s)"
-msgstr "¤³¤Î¶Ê (%s) ¤Ï mserv ¤Î¥ë¡¼¥È¥Ç¥£¥ì¥¯¥È¥ê (%s) ¤Ë¤ÏÆş¤Ã¤Æ¤¤¤Ş¤»¤ó"
+msgstr "ã“ã®æ›² (%s) ã¯ mserv ã®ãƒ«ãƒ¼ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª (%s) ã«ã¯å…¥ã£ã¦ã„ã¾ã›ã‚“"
 
 #: ../src/file.c:1123
 #, c-format
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
-msgstr "°Ê²¼¤Î¶Ê¤ò½èÍı¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿ (¥Õ¥¡¥¤¥ë¤¬Â¸ºß¤·¤Ê¤¤¤¿¤á): '%s'\n"
+msgstr "ä»¥ä¸‹ã®æ›²ã‚’å‡¦ç†ã§ãã¾ã›ã‚“ã§ã—ãŸ (ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã—ãªã„ãŸã‚): '%s'\n"
 
 #: ../src/file.c:1209
 #, c-format
 msgid "The following track could not be processed (filetype unknown): '%s'\n"
-msgstr "°Ê²¼¤Î¶Ê¤ò½èÍı¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿ (¥Õ¥¡¥¤¥ë·Á¼°¤¬ÉÔÌÀ¤Ê¤¿¤á): '%s'\n"
+msgstr "ä»¥ä¸‹ã®æ›²ã‚’å‡¦ç†ã§ãã¾ã›ã‚“ã§ã—ãŸ (ãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼ãŒä¸æ˜ãªãŸã‚): '%s'\n"
 
 #: ../src/file.c:1307
 #, c-format
@@ -3177,71 +3193,71 @@ msgid ""
 "The following track could not be processed (filetype is known but analysis "
 "failed): '%s'\n"
 msgstr ""
-"°Ê²¼¤Î¶Ê¤ò½èÍı¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿ (¥Õ¥¡¥¤¥ë·Á¼°¤Ï´ûÃÎ¤À¤¬²òÀÏ¤Ë¼ºÇÔ¤·¤¿¤¿¤á): '%"
+"ä»¥ä¸‹ã®æ›²ã‚’å‡¦ç†ã§ãã¾ã›ã‚“ã§ã—ãŸ (ãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼ã¯æ—¢çŸ¥ã ãŒè§£æã«å¤±æ•—ã—ãŸãŸã‚): '%"
 "s'\n"
 
 #: ../src/file.c:1337 ../src/file.c:1391
 msgid "Nothing to update"
-msgstr "¹¹¿·¤µ¤ì¤ë¥Ç¡¼¥¿¤Ï¤¢¤ê¤Ş¤»¤ó"
+msgstr "æ›´æ–°ã•ã‚Œã‚‹ãƒ‡ãƒ¼ã‚¿ã¯ã‚ã‚Šã¾ã›ã‚“"
 
 #: ../src/file.c:1358
 #, c-format
 msgid "Updating %s"
-msgstr "%s ¤ò¹¹¿·Ãæ"
+msgstr "%s ã‚’æ›´æ–°ä¸­"
 
 #: ../src/file.c:1372
 msgid "Updated selected tracks with info from file."
-msgstr "ÁªÂò¤µ¤ì¤¿¶Ê¤Î¾ğÊó¤ò¡¢¥Õ¥¡¥¤¥ë¤ò¸µ¤Ë¹¹¿·¤·¤Ş¤·¤¿¡£"
+msgstr "é¸æŠã•ã‚ŒãŸæ›²ã®æƒ…å ±ã‚’ã€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å…ƒã«æ›´æ–°ã—ã¾ã—ãŸã€‚"
 
 #: ../src/file.c:1406
 #, c-format
 msgid "Retrieving mserv data %s"
-msgstr "mserv data %s ¤ò¼èÆÀÃæ"
+msgstr "mserv data %s ã‚’å–å¾—ä¸­"
 
 #: ../src/file.c:1411
 msgid "no filename available"
-msgstr "¥Õ¥¡¥¤¥ëÌ¾¤¬¤ï¤«¤ê¤Ş¤»¤ó"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«åãŒã‚ã‹ã‚Šã¾ã›ã‚“"
 
 #: ../src/file.c:1416
 msgid "Updated selected tracks with data from mserv."
-msgstr "ÁªÂò¤µ¤ì¤¿¶Ê¤ò mserv ¤Î¥Ç¡¼¥¿¤ò¸µ¤Ë¹¹¿·¤·¤Ş¤·¤¿¡£"
+msgstr "é¸æŠã•ã‚ŒãŸæ›²ã‚’ mserv ã®ãƒ‡ãƒ¼ã‚¿ã‚’å…ƒã«æ›´æ–°ã—ã¾ã—ãŸã€‚"
 
 #: ../src/file.c:1437
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
-msgstr[0] "°Ê²¼¤Î%d¶Ê¤ò¹¹¿·¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr[0] "ä»¥ä¸‹ã®%dæ›²ã‚’æ›´æ–°ã™ã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“ã§ã—ãŸ"
 
 #. gint id,
 #. gboolean modal,
 #: ../src/file.c:1443
 msgid "Failed Track Update"
-msgstr "¶Ê¤Î¹¹¿·¤Ë¼ºÇÔ"
+msgstr "æ›²ã®æ›´æ–°ã«å¤±æ•—"
 
 #: ../src/file.c:1501
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
-msgstr[0] "°Ê²¼¤Î%d¶Ê¤ò¹¹¿·¤·¤Ş¤·¤¿"
+msgstr[0] "ä»¥ä¸‹ã®%dæ›²ã‚’æ›´æ–°ã—ã¾ã—ãŸ"
 
 #. gint id,
 #. gboolean modal,
 #: ../src/file.c:1507
 msgid "Successful Track Update"
-msgstr "¶Ê¤Î¹¹¿·¤ò´°Î»"
+msgstr "æ›²ã®æ›´æ–°ã‚’å®Œäº†"
 
 #: ../src/file.c:1566
 #, c-format
 msgid "No mserv information could be retrieved for the following track"
 msgid_plural ""
 "No mserv information could be retrieved for the following %d tracks"
-msgstr[0] "°Ê²¼¤Î%d¶Ê¤Ë¤Ä¤¤¤Æ¡¢mserv ¤«¤é¾ğÊó¤ò¼èÆÀ¤Ç¤­¤Ş¤»¤ó"
+msgstr[0] "ä»¥ä¸‹ã®%dæ›²ã«ã¤ã„ã¦ã€mserv ã‹ã‚‰æƒ…å ±ã‚’å–å¾—ã§ãã¾ã›ã‚“"
 
 #. gint id,
 #. gboolean modal,
 #: ../src/file.c:1572
 msgid "mserv data retrieval problem"
-msgstr "mserv ¤«¤é¤Î¥Ç¡¼¥¿¼èÆÀ¤ËÌäÂê¤¬¤¢¤ê¤Ş¤¹"
+msgstr "mserv ã‹ã‚‰ã®ãƒ‡ãƒ¼ã‚¿å–å¾—ã«å•é¡ŒãŒã‚ã‚Šã¾ã™"
 
 #: ../src/file.c:1661
 msgid "no local filename available, file on the iPod will be used instead"
@@ -3254,7 +3270,7 @@ msgstr ""
 #: ../src/file.c:1671 ../src/file.c:1689
 #, fuzzy
 msgid "no local filename available"
-msgstr "¥Õ¥¡¥¤¥ëÌ¾¤¬¤ï¤«¤ê¤Ş¤»¤ó"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«åãŒã‚ã‹ã‚Šã¾ã›ã‚“"
 
 #: ../src/file.c:1679
 msgid "local file could not be found, file on the iPod will be used instead"
@@ -3268,17 +3284,17 @@ msgstr ""
 #: ../src/file.c:1788
 #, fuzzy
 msgid "update failed (format not supported?)"
-msgstr "ÂĞ±ş¤·¤Æ¤¤¤Ê¤¤·Á¼°¤Ç¤¹"
+msgstr "å¯¾å¿œã—ã¦ã„ãªã„å½¢å¼ã§ã™"
 
 #: ../src/file.c:1873 ../src/misc_playlist.c:916
 #, c-format
 msgid "Processing '%s'..."
-msgstr "'%s' ¤Î½èÍıÃæ..."
+msgstr "'%s' ã®å‡¦ç†ä¸­..."
 
 #: ../src/file.c:1879
 #, fuzzy, c-format
 msgid "Skipping '%s' because it matches exclude masks.\n"
-msgstr "'%s' ¤Ï¥Ç¥£¥ì¥¯¥È¥ê¤Ê¤Î¤ÇÈô¤Ğ¤·¤Ş¤¹¡£\n"
+msgstr "'%s' ã¯ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãªã®ã§é£›ã°ã—ã¾ã™ã€‚\n"
 
 #: ../src/file.c:1999 ../src/misc_track.c:1773 ../src/misc_track.c:1878
 #, c-format
@@ -3286,7 +3302,7 @@ msgid ""
 "Podcast already present: '%s'\n"
 "\n"
 msgstr ""
-"Podcast ¤Ï¤¹¤Ç¤ËÂ¸ºß¤·¤Ş¤¹: '%s'\n"
+"Podcast ã¯ã™ã§ã«å­˜åœ¨ã—ã¾ã™: '%s'\n"
 "\n"
 
 #: ../src/file.c:2064
@@ -3295,35 +3311,35 @@ msgid ""
 "Writing to video files not yet supported (%s).\n"
 "\n"
 msgstr ""
-"¥Ó¥Ç¥ª¥Õ¥¡¥¤¥ë¤Ø¤Î½ñ¤­¹ş¤ß¤Ï¤Ş¤À¤Ç¤­¤Ş¤»¤ó (%s).\n"
+"ãƒ“ãƒ‡ã‚ªãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®æ›¸ãè¾¼ã¿ã¯ã¾ã ã§ãã¾ã›ã‚“ (%s).\n"
 "\n"
 
 #: ../src/file.c:2116 ../src/file.c:2130
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
-msgstr "¼¡¤Î¥Õ¥¡¥¤¥ë¤Î¥¿¥°¤òÊÑ¹¹¤Ç¤­¤Ş¤»¤ó: %s\n"
+msgstr "æ¬¡ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¿ã‚°ã‚’å¤‰æ›´ã§ãã¾ã›ã‚“: %s\n"
 
 #: ../src/file.c:2232
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
-msgstr "¥Õ¥¡¥¤¥ë '%s' ¤ÎÆÉ¤ß¹ş¤ß¤ª¤è¤Ó½ñ¤­¹ş¤ß¤¬¤Ç¤­¤Ş¤»¤ó¡£\n"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ« '%s' ã®èª­ã¿è¾¼ã¿ãŠã‚ˆã³æ›¸ãè¾¼ã¿ãŒã§ãã¾ã›ã‚“ã€‚\n"
 
 #: ../src/file.c:2239
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
-msgstr "'%s' ¤ò¥í¥Ã¥¯¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿¡£\n"
+msgstr "'%s' ã‚’ãƒ­ãƒƒã‚¯ã™ã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“ã§ã—ãŸã€‚\n"
 
 #. error!
 #: ../src/file.c:2256 ../src/file.c:2265 ../src/file.c:2276 ../src/file.c:2286
 #, c-format
 msgid "Malformed line in '%s': %s\n"
-msgstr "'%s' ¤Ë¤ª¤«¤·¤Ê¹Ô¤¬¤¢¤ê¤Ş¤¹: %s\n"
+msgstr "'%s' ã«ãŠã‹ã—ãªè¡ŒãŒã‚ã‚Šã¾ã™: %s\n"
 
 #. gint id,
 #. gboolean modal,
 #: ../src/file.c:2315
 msgid "Remove offline playcounts?"
-msgstr "¥ª¥Õ¥é¥¤¥ó¤Ç¤ÎºÆÀ¸²ó¿ô¤òºï½ü¤·¤Ş¤¹¤«"
+msgstr "ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ã§ã®å†ç”Ÿå›æ•°ã‚’å‰Šé™¤ã—ã¾ã™ã‹"
 
 #. title
 #: ../src/file.c:2316
@@ -3331,14 +3347,14 @@ msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
 msgstr ""
-"¥ª¥Õ¥é¥¤¥ó¤Ç±éÁÕ¤µ¤ì¤¿¤¤¤¯¤Ä¤«¤Î¶Ê¤¬ iTunesDB ¤Ë¤Ï¸«ÉÕ¤«¤ê¤Ş¤»¤ó¡£'OK' ¤ò²¡¤¹"
-"¤È¤½¤ì¤é¤Î¶Ê¤ÎºÆÀ¸²ó¿ô¤Ï¥Õ¥¡¥¤¥ë¤«¤éºï½ü¤µ¤ì¤Ş¤¹¡£'¥­¥ã¥ó¥»¥ë' ¤ò²¡¤»¤Ğºï½ü¤µ"
-"¤ì¤º»Ä¤ê¤Ş¤¹¡£"
+"ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ã§æ¼”å¥ã•ã‚ŒãŸã„ãã¤ã‹ã®æ›²ãŒ iTunesDB ã«ã¯è¦‹ä»˜ã‹ã‚Šã¾ã›ã‚“ã€‚'OK' ã‚’æŠ¼ã™"
+"ã¨ãã‚Œã‚‰ã®æ›²ã®å†ç”Ÿå›æ•°ã¯ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰å‰Šé™¤ã•ã‚Œã¾ã™ã€‚'ã‚­ãƒ£ãƒ³ã‚»ãƒ«' ã‚’æŠ¼ã›ã°å‰Šé™¤ã•"
+"ã‚Œãšæ®‹ã‚Šã¾ã™ã€‚"
 
 #: ../src/file.c:2333
 #, c-format
 msgid "Error writing to '%s'.\n"
-msgstr "'%s'¤Î½ñ¤­¹ş¤ßÃæ¤Ë¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿¡£\n"
+msgstr "'%s'ã®æ›¸ãè¾¼ã¿ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚\n"
 
 #: ../src/file.c:2390 ../src/tools.c:270
 #, c-format
@@ -3346,7 +3362,7 @@ msgid ""
 "Normalization failed: file type not supported (%s).\n"
 "\n"
 msgstr ""
-"Ê¿¶Ñ²½¤Ë¼ºÇÔ: ¤³¤Î¥Õ¥¡¥¤¥ë·Á¼°¤Ï°·¤¨¤Ş¤»¤ó (%s).\n"
+"å¹³å‡åŒ–ã«å¤±æ•—: ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼ã¯æ‰±ãˆã¾ã›ã‚“ (%s).\n"
 "\n"
 
 #: ../src/file.c:2406 ../src/tools.c:287
@@ -3355,7 +3371,7 @@ msgid ""
 "Normalization failed: file not available (%s).\n"
 "\n"
 msgstr ""
-"Ê¿¶Ñ²½¤Ë¼ºÇÔ: ¥Õ¥¡¥¤¥ë¤¬¼èÆÀ¤Ç¤­¤Ş¤»¤ó (%s).\n"
+"å¹³å‡åŒ–ã«å¤±æ•—: ãƒ•ã‚¡ã‚¤ãƒ«ãŒå–å¾—ã§ãã¾ã›ã‚“ (%s).\n"
 "\n"
 
 #: ../src/file_convert.c:316
@@ -3379,7 +3395,7 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Original filename not available for '%s.'\n"
 msgstr ""
-"Ê¿¶Ñ²½¤Ë¼ºÇÔ: ¥Õ¥¡¥¤¥ë¤¬¼èÆÀ¤Ç¤­¤Ş¤»¤ó (%s).\n"
+"å¹³å‡åŒ–ã«å¤±æ•—: ãƒ•ã‚¡ã‚¤ãƒ«ãŒå–å¾—ã§ãã¾ã›ã‚“ (%s).\n"
 "\n"
 
 #: ../src/file_convert.c:1086
@@ -3406,35 +3422,35 @@ msgstr ""
 #: ../src/file_convert.c:1284
 #, fuzzy
 msgid "No information available"
-msgstr "¥Õ¥¡¥¤¥ëÌ¾¤¬¤ï¤«¤ê¤Ş¤»¤ó"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«åãŒã‚ã‹ã‚Šã¾ã›ã‚“"
 
 #: ../src/file_convert.c:1323
 #, c-format
 msgid "Could not create '%s'. Filetype conversion will not work.\n"
 msgstr ""
 
-#: ../src/file_convert.c:1641 ../src/file_convert.c:3050
+#: ../src/file_convert.c:1641 ../src/file_convert.c:3049
 #, c-format
 msgid ""
 "Transfer of '%s' failed. %s\n"
 "\n"
 msgstr ""
 
-#: ../src/file_convert.c:2045 ../src/file_convert.c:2323
+#: ../src/file_convert.c:2047 ../src/file_convert.c:2325
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s'.\n"
 "\n"
 msgstr ""
 
-#: ../src/file_convert.c:2060
+#: ../src/file_convert.c:2062
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s %s' returned exit status %d.\n"
 "\n"
 msgstr ""
 
-#: ../src/file_convert.c:2089
+#: ../src/file_convert.c:2091
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '\"%s\" %s' did not return filename extension as "
@@ -3442,28 +3458,28 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../src/file_convert.c:2165
+#: ../src/file_convert.c:2167
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not access original file '%s' (%s).\n"
 "\n"
 msgstr ""
 
-#: ../src/file_convert.c:2220
+#: ../src/file_convert.c:2222
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not create directory '%s'.\n"
 "\n"
 msgstr ""
 
-#: ../src/file_convert.c:2354
+#: ../src/file_convert.c:2356
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s' returned exit status %d.\n"
 "\n"
 msgstr ""
 
-#: ../src/file_convert.c:2393
+#: ../src/file_convert.c:2395
 #, c-format
 msgid ""
 "Conversion of '%s' failed: could not stat the converted file '%s'.\n"
@@ -3473,81 +3489,81 @@ msgstr ""
 #: ../src/file_export.c:182
 #, c-format
 msgid "Skipping existing file with same length: '%s'\n"
-msgstr "Æ±¤¸Âç¤­¤µ¤Î¥Õ¥¡¥¤¥ë¤òÈô¤Ğ¤·¤Ş¤¹: '%s'\n"
+msgstr "åŒã˜å¤§ãã•ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é£›ã°ã—ã¾ã™: '%s'\n"
 
 #: ../src/file_export.c:190
 #, c-format
 msgid "Overwriting existing file: '%s'\n"
-msgstr "¥Õ¥¡¥¤¥ë¤ò¾å½ñ¤­¤·¤Ş¤¹: '%s'\n"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¸Šæ›¸ãã—ã¾ã™: '%s'\n"
 
 #: ../src/file_export.c:207
 #, c-format
 msgid "Error copying '%s' to '%s': Permission Error (%s)\n"
-msgstr "'%s' ¤ò '%s' ¤Ë¥³¥Ô¡¼Ãæ¤Ë¥¨¥é¡¼È¯À¸: µö²Ä¤¬¤¢¤ê¤Ş¤»¤ó (%s)\n"
+msgstr "'%s' ã‚’ '%s' ã«ã‚³ãƒ”ãƒ¼ä¸­ã«ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ: è¨±å¯ãŒã‚ã‚Šã¾ã›ã‚“ (%s)\n"
 
 #: ../src/file_export.c:209
 #, c-format
 msgid "Error copying '%s' to '%s' (%s)\n"
-msgstr "'%s' ¤ò '%s' ¤Ë¥³¥Ô¡¼Ãæ¤Ë¥¨¥é¡¼È¯À¸: (%s)\n"
+msgstr "'%s' ã‚’ '%s' ã«ã‚³ãƒ”ãƒ¼ä¸­ã«ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ: (%s)\n"
 
 #: ../src/file_export.c:217
 #, c-format
 msgid "Unable to open '%s' for reading\n"
-msgstr "'%s' ¤òÆÉ¤ß¹ş¤ßÍÑ¤Ë³«¤¯¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó\n"
+msgstr "'%s' ã‚’èª­ã¿è¾¼ã¿ç”¨ã«é–‹ãã“ã¨ãŒã§ãã¾ã›ã‚“\n"
 
 #: ../src/file_export.c:327
 #, c-format
 msgid "Could find file for '%s' on the iPod\n"
-msgstr "iPod ¾å¤Î '%s' ¤ËÁêÅö¤¹¤ë¥Õ¥¡¥¤¥ë¤¬¸«¤Ä¤«¤ê¤Ş¤»¤ó\n"
+msgstr "iPod ä¸Šã® '%s' ã«ç›¸å½“ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“\n"
 
 #. create the dialog window
 #: ../src/file_export.c:395 ../src/tools.c:360
 msgid "Information"
-msgstr "¾ğÊó"
+msgstr "æƒ…å ±"
 
 #: ../src/file_export.c:406 ../src/tools.c:372
 msgid "Press button to abort."
-msgstr "¥Ü¥¿¥ó¤ò²¡¤¹¤ÈÃæ»ß¤·¤Ş¤¹¡£"
+msgstr "ãƒœã‚¿ãƒ³ã‚’æŠ¼ã™ã¨ä¸­æ­¢ã—ã¾ã™ã€‚"
 
 #: ../src/file_export.c:419
 msgid "copying..."
-msgstr "¥³¥Ô¡¼Ãæ..."
+msgstr "ã‚³ãƒ”ãƒ¼ä¸­..."
 
 #: ../src/file_export.c:476
 #, c-format
 msgid "Failed to write '%s-%s'\n"
-msgstr "ÊİÂ¸¤¬¤Ç¤­¤Ş¤»¤ó '%s-%s'\n"
+msgstr "ä¿å­˜ãŒã§ãã¾ã›ã‚“ '%s-%s'\n"
 
 #: ../src/file_export.c:489
 #, c-format
 msgid "Copied %d of %d track."
 msgid_plural "Copied %d of %d tracks."
-msgstr[0] "%2$d¶ÊÃæ %1$d¶Ê¤ò¥³¥Ô¡¼¤·¤Ş¤·¤¿¡£"
+msgstr[0] "%2$dæ›²ä¸­ %1$dæ›²ã‚’ã‚³ãƒ”ãƒ¼ã—ã¾ã—ãŸã€‚"
 
 #: ../src/file_export.c:505 ../src/tools.c:518
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
-msgstr "%d%% (»Ä¤ê %d:%02d:%02d)"
+msgstr "%d%% (æ®‹ã‚Š %d:%02d:%02d)"
 
 #: ../src/file_export.c:514
 msgid "Some tracks were not copied."
-msgstr "°ìÉô¤Î¶Ê¤¬¥³¥Ô¡¼¤µ¤ì¤Ş¤»¤ó¤Ç¤·¤¿¡£"
+msgstr "ä¸€éƒ¨ã®æ›²ãŒã‚³ãƒ”ãƒ¼ã•ã‚Œã¾ã›ã‚“ã§ã—ãŸã€‚"
 
 #: ../src/file_export.c:579
 msgid "Export from iPod database not possible in offline mode."
-msgstr "¥ª¥Õ¥é¥¤¥ó¥â¡¼¥É¤Ç¤Ï iPod ¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤é¤Î¥¨¥¯¥¹¥İ¡¼¥È¤Ï¤Ç¤­¤Ş¤»¤ó¡£"
+msgstr "ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ãƒ¢ãƒ¼ãƒ‰ã§ã¯ iPod ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰ã®ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã¯ã§ãã¾ã›ã‚“ã€‚"
 
 #: ../src/file_export.c:587
 msgid "Select Export Destination Directory"
-msgstr "¥Õ¥¡¥¤¥ë¤Î¥¨¥¯¥¹¥İ¡¼¥ÈÀè¥Ç¥£¥ì¥¯¥È¥ê¤òÁªÂò¤·¤Æ¤¯¤À¤µ¤¤"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆå…ˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’é¸æŠã—ã¦ãã ã•ã„"
 
 #: ../src/file_export.c:736
 msgid "Drag from iPod database not possible in offline mode."
-msgstr "¥ª¥Õ¥é¥¤¥ó¥â¡¼¥É¤Ç¤Ï iPod ¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤é¤Î¥É¥é¥Ã¥°Áàºî¤Ï¤Ç¤­¤Ş¤»¤ó¡£"
+msgstr "ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ãƒ¢ãƒ¼ãƒ‰ã§ã¯ iPod ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰ã®ãƒ‰ãƒ©ãƒƒã‚°æ“ä½œã¯ã§ãã¾ã›ã‚“ã€‚"
 
 #: ../src/file_export.c:770
 msgid "The following tracks have to be copied to your harddisk"
-msgstr "°Ê²¼¤Î¶Ê¤¬¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤Ë¥³¥Ô¡¼¤µ¤ì¤Ş¤·¤¿"
+msgstr "ä»¥ä¸‹ã®æ›²ãŒãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã«ã‚³ãƒ”ãƒ¼ã•ã‚Œã¾ã—ãŸ"
 
 #: ../src/file_export.c:815
 msgid ""
@@ -3555,21 +3571,21 @@ msgid ""
 "included in the current drag and drop operation.\n"
 "\n"
 msgstr ""
-"°ìÉô¤Î¶Ê¤Ï¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤Ë¥³¥Ô¡¼¤µ¤ì¤Ş¤»¤ó¤Ç¤·¤¿¡£¥³¥Ô¡¼¤µ¤ì¤¿¶Ê¤Î¤ß¤¬¡¢º£¤Î"
-"¥É¥é¥Ã¥°&¥É¥í¥Ã¥×Áàºî¤Ë´Ş¤Ş¤ì¤Æ¤¤¤Ş¤¹¡£\n"
+"ä¸€éƒ¨ã®æ›²ã¯ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã«ã‚³ãƒ”ãƒ¼ã•ã‚Œã¾ã›ã‚“ã§ã—ãŸã€‚ã‚³ãƒ”ãƒ¼ã•ã‚ŒãŸæ›²ã®ã¿ãŒã€ä»Šã®"
+"ãƒ‰ãƒ©ãƒƒã‚°&ãƒ‰ãƒ­ãƒƒãƒ—æ“ä½œã«å«ã¾ã‚Œã¦ã„ã¾ã™ã€‚\n"
 
 #: ../src/file_export.c:1010
 #, c-format
 msgid ""
 "No valid filename for: %s\n"
 "\n"
-msgstr "'%s' ¤Î¥Õ¥¡¥¤¥ëÌ¾¤¬ÉÔÀµ¤Ç¤¹¡£\n"
+msgstr "'%s' ã®ãƒ•ã‚¡ã‚¤ãƒ«åãŒä¸æ­£ã§ã™ã€‚\n"
 
 #: ../src/file_export.c:1026
 #, c-format
 msgid "Created playlist with one track."
 msgid_plural "Created playlist with %d tracks."
-msgstr[0] "¿·µ¬¥×¥ì¥¤¥ê¥¹¥È¤Ë %d¶ÊÅĞÏ¿¤·¤Ş¤·¤¿¡£"
+msgstr[0] "æ–°è¦ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã« %dæ›²ç™»éŒ²ã—ã¾ã—ãŸã€‚"
 
 #: ../src/file_export.c:1031
 #, c-format
@@ -3577,26 +3593,26 @@ msgid ""
 "Could not open '%s' for writing (%s).\n"
 "\n"
 msgstr ""
-"'%s' ¤ò½ñ¤­¹ş¤ßÍÑ¤Ë³«¤¯¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó¡£(%s)\n"
+"'%s' ã‚’æ›¸ãè¾¼ã¿ç”¨ã«é–‹ãã“ã¨ãŒã§ãã¾ã›ã‚“ã€‚(%s)\n"
 "\n"
 
 #: ../src/file_itunesdb.c:129
 #, fuzzy, c-format
 msgid "Matching SHA1 checksum for file %d/%d"
-msgstr "MD5 ¥Á¥§¥Ã¥¯¥µ¥à¤Î¾È¹çÃæ %d/%d"
+msgstr "MD5 ãƒã‚§ãƒƒã‚¯ã‚µãƒ ã®ç…§åˆä¸­ %d/%d"
 
 #: ../src/file_itunesdb.c:236
 msgid "Could not open \"iTunesDB.ext\" for reading extended info.\n"
-msgstr "³ÈÄ¥¾ğÊó¤ò³ÊÇ¼¤·¤¿¥Õ¥¡¥¤¥ë \"iTunesDB.ext\" ¤ò³«¤±¤Ş¤»¤ó¡£\n"
+msgstr "æ‹¡å¼µæƒ…å ±ã‚’æ ¼ç´ã—ãŸãƒ•ã‚¡ã‚¤ãƒ« \"iTunesDB.ext\" ã‚’é–‹ã‘ã¾ã›ã‚“ã€‚\n"
 
 #: ../src/file_itunesdb.c:243
 msgid "Could not create hash value from itunesdb\n"
-msgstr "itunesdb ¤«¤é¥Ï¥Ã¥·¥åÃÍ¤òÆÉ¤ß¹ş¤á¤Ş¤»¤ó¤Ç¤·¤¿¡£\n"
+msgstr "itunesdb ã‹ã‚‰ãƒãƒƒã‚·ãƒ¥å€¤ã‚’èª­ã¿è¾¼ã‚ã¾ã›ã‚“ã§ã—ãŸã€‚\n"
 
 #: ../src/file_itunesdb.c:259
 #, c-format
 msgid "Error while reading extended info: %s\n"
-msgstr "³ÈÄ¥¾ğÊó¥Õ¥¡¥¤¥ë¤ÎÆÉ¤ß¹ş¤ßÃæ¤Ë°Ê²¼¤Î¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿: %s\n"
+msgstr "æ‹¡å¼µæƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿ä¸­ã«ä»¥ä¸‹ã®ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ: %s\n"
 
 #: ../src/file_itunesdb.c:276
 #, fuzzy, c-format
@@ -3606,9 +3622,9 @@ msgid ""
 "a long time.\n"
 "\n"
 msgstr ""
-"iTunesDB '%s' ¤È¡¢³ÈÄ¥¾ğÊó¥Õ¥¡¥¤¥ë '%s' ¤È¤Ç¥Á¥§¥Ã¥¯¥µ¥à¤¬¹ç¤¤¤Ş¤»¤ó¡£\n"
-"gtkpod ¤Ï MD5 ¥Á¥§¥Ã¥¯¥µ¥à¤ò»È¤Ã¤Æ¤µ¤é¤Ë¾È¹ç¤ò¿Ê¤á¤Ş¤¹¡£¤³¤ì¤Ë¤Ï»ş´Ö¤¬¤«¤«¤ê"
-"¤Ş¤¹¡£\n"
+"iTunesDB '%s' ã¨ã€æ‹¡å¼µæƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ« '%s' ã¨ã§ãƒã‚§ãƒƒã‚¯ã‚µãƒ ãŒåˆã„ã¾ã›ã‚“ã€‚\n"
+"gtkpod ã¯ MD5 ãƒã‚§ãƒƒã‚¯ã‚µãƒ ã‚’ä½¿ã£ã¦ã•ã‚‰ã«ç…§åˆã‚’é€²ã‚ã¾ã™ã€‚ã“ã‚Œã«ã¯æ™‚é–“ãŒã‹ã‹ã‚Š"
+"ã¾ã™ã€‚\n"
 "\n"
 
 #: ../src/file_itunesdb.c:288
@@ -3618,7 +3634,7 @@ msgid ""
 "Expected \"itunesdb_hash=\" but got:\"%s\"\n"
 msgstr ""
 "%s:\n"
-"\"itunesdb_hash=\" ¤¬½ñ¤«¤ì¤Æ¤¤¤ë¤Ù¤­²Õ½ê¤Ë°ã¤¦ÆâÍÆ¤¬½ñ¤«¤ì¤Æ¤¤¤Ş¤¹: \"%s\"\n"
+"\"itunesdb_hash=\" ãŒæ›¸ã‹ã‚Œã¦ã„ã‚‹ã¹ãç®‡æ‰€ã«é•ã†å†…å®¹ãŒæ›¸ã‹ã‚Œã¦ã„ã¾ã™: \"%s\"\n"
 
 #: ../src/file_itunesdb.c:348
 #, c-format
@@ -3627,7 +3643,7 @@ msgid ""
 "Format error: %s\n"
 msgstr ""
 "%s:\n"
-"½ñ¼°¥¨¥é¡¼: %s\n"
+"æ›¸å¼ã‚¨ãƒ©ãƒ¼: %s\n"
 
 #: ../src/file_itunesdb.c:393
 #, fuzzy
@@ -3639,11 +3655,11 @@ msgid ""
 "than gtkpod.\n"
 "\n"
 msgstr ""
-"³Æ¶Ê¤ÎMD5 ¥Á¥§¥Ã¥¯¥µ¥à¤¬ÊİÂ¸¤µ¤ì¤Æ¤¤¤Ş¤»¤ó¡£\n"
+"å„æ›²ã®MD5 ãƒã‚§ãƒƒã‚¯ã‚µãƒ ãŒä¿å­˜ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚\n"
 "\n"
-"°Ê¹ß¤³¤Î¾õ¶·¤ò²óÈò¤¹¤ë¤Ë¤Ï¡¢½ÅÊ£¸¡½Ğ¤òÍ­¸ú¤Ë¤¹¤ë¤«(¤½¤ì¤Ë¤è¤êMD5¥Á¥§¥Ã¥¯¥µ¥à"
-"¤¬ÊİÂ¸¤µ¤ì¤ë¤è¤¦¤Ë¤Ê¤ê¤Ş¤¹)¡¢gtkpod °Ê³°¤Î¥½¥Õ¥È¥¦¥§¥¢¤ÇiPod¤ò»ÈÍÑ¤·¤Ê¤¤¤è¤¦"
-"¤Ë¤·¤Æ¤¯¤À¤µ¤¤¡£\n"
+"ä»¥é™ã“ã®çŠ¶æ³ã‚’å›é¿ã™ã‚‹ã«ã¯ã€é‡è¤‡æ¤œå‡ºã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹(ãã‚Œã«ã‚ˆã‚ŠMD5ãƒã‚§ãƒƒã‚¯ã‚µãƒ "
+"ãŒä¿å­˜ã•ã‚Œã‚‹ã‚ˆã†ã«ãªã‚Šã¾ã™)ã€gtkpod ä»¥å¤–ã®ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢ã§iPodã‚’ä½¿ç”¨ã—ãªã„ã‚ˆã†"
+"ã«ã—ã¦ãã ã•ã„ã€‚\n"
 "\n"
 
 #: ../src/file_itunesdb.c:457
@@ -3651,16 +3667,16 @@ msgid ""
 "Extended info will not be used. If you have non-transferred tracks,\n"
 "these will be lost.\n"
 msgstr ""
-"³ÈÄ¥¾ğÊó¤Ï»ÈÍÑ¤µ¤ì¤Ş¤»¤ó¡£iPodËÜÂÎ¤Ë¤Ş¤ÀÅ¾Á÷¤·¤Æ¤¤¤Ê¤¤¶Ê¤Î¾ğÊó¤Ï\n"
-"½ªÎ»»ş¤Ë¼º¤ï¤ì¤Ş¤¹¡£\n"
+"æ‹¡å¼µæƒ…å ±ã¯ä½¿ç”¨ã•ã‚Œã¾ã›ã‚“ã€‚iPodæœ¬ä½“ã«ã¾ã è»¢é€ã—ã¦ã„ãªã„æ›²ã®æƒ…å ±ã¯\n"
+"çµ‚äº†æ™‚ã«å¤±ã‚ã‚Œã¾ã™ã€‚\n"
 
 #: ../src/file_itunesdb.c:465
 msgid "Offline iPod database successfully imported"
-msgstr "¥ª¥Õ¥é¥¤¥ó¤ÇiPod¥Ç¡¼¥¿¥Ù¡¼¥¹¤òÆÉ¤ß¹ş¤ß¤Ş¤·¤¿"
+msgstr "ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ã§iPodãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚’èª­ã¿è¾¼ã¿ã¾ã—ãŸ"
 
 #: ../src/file_itunesdb.c:468
 msgid "Local database successfully imported"
-msgstr "¥í¡¼¥«¥ë¥Ç¡¼¥¿¥Ù¡¼¥¹¤òÆÉ¤ß¹ş¤ß¤Ş¤·¤¿"
+msgstr "ãƒ­ãƒ¼ã‚«ãƒ«ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚’èª­ã¿è¾¼ã¿ã¾ã—ãŸ"
 
 #: ../src/file_itunesdb.c:476
 #, c-format
@@ -3668,7 +3684,7 @@ msgid ""
 "Offline iPod database import failed: '%s'\n"
 "\n"
 msgstr ""
-"¥ª¥Õ¥é¥¤¥ó¤Ç¤ÎiPod¥Ç¡¼¥¿¥Ù¡¼¥¹¤ÎÆÉ¤ß¹ş¤ß¤Ë¼ºÇÔ¤·¤Ş¤·¤¿: '%s'\n"
+"ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ã§ã®iPodãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸ: '%s'\n"
 "\n"
 
 #: ../src/file_itunesdb.c:480
@@ -3677,7 +3693,7 @@ msgid ""
 "Local database import failed: '%s'\n"
 "\n"
 msgstr ""
-"¥í¡¼¥«¥ë¥Ç¡¼¥¿¥Ù¡¼¥¹¤ÎÆÉ¤ß¹ş¤ß¤Ë¼ºÇÔ¤·¤Ş¤·¤¿: '%s'\n"
+"ãƒ­ãƒ¼ã‚«ãƒ«ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸ: '%s'\n"
 "\n"
 
 #: ../src/file_itunesdb.c:487
@@ -3685,7 +3701,7 @@ msgid ""
 "Offline iPod database import failed: \n"
 "\n"
 msgstr ""
-"¥ª¥Õ¥é¥¤¥ó¤Ç¤ÎiPod¥Ç¡¼¥¿¥Ù¡¼¥¹¤ÎÆÉ¤ß¹ş¤ß¤Ë¼ºÇÔ¤·¤Ş¤·¤¿\n"
+"ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ã§ã®iPodãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸ\n"
 "\n"
 
 #: ../src/file_itunesdb.c:490
@@ -3693,7 +3709,7 @@ msgid ""
 "Local database import failed: \n"
 "\n"
 msgstr ""
-"¥í¡¼¥«¥ë¥Ç¡¼¥¿¥Ù¡¼¥¹¤ÎÆÉ¤ß¹ş¤ß¤Ë¼ºÇÔ¤·¤Ş¤·¤¿: \n"
+"ãƒ­ãƒ¼ã‚«ãƒ«ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸ: \n"
 "\n"
 
 #: ../src/file_itunesdb.c:497
@@ -3702,16 +3718,16 @@ msgid ""
 "'%s' does not exist. Import aborted.\n"
 "\n"
 msgstr ""
-"'%s' ¤Ï¸«¤Ä¤«¤ê¤Ş¤»¤ó¡£ÆÉ¤ß¹ş¤ß¤òÃæ»ß¤·¤Ş¤¹¡£\n"
+"'%s' ã¯è¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚èª­ã¿è¾¼ã¿ã‚’ä¸­æ­¢ã—ã¾ã™ã€‚\n"
 "\n"
 
 #: ../src/file_itunesdb.c:520
 msgid "Extended info will not be used.\n"
-msgstr "³ÈÄ¥¾ğÊó¤Ï»ÈÍÑ¤µ¤ì¤Ş¤»¤ó¡£\n"
+msgstr "æ‹¡å¼µæƒ…å ±ã¯ä½¿ç”¨ã•ã‚Œã¾ã›ã‚“ã€‚\n"
 
 #: ../src/file_itunesdb.c:527
 msgid "iPod Database Successfully Imported"
-msgstr "iPod ¤«¤é¥Ç¡¼¥¿¥Ù¡¼¥¹¤òÆÉ¤ß¹ş¤ß¤Ş¤·¤¿"
+msgstr "iPod ã‹ã‚‰ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚’èª­ã¿è¾¼ã¿ã¾ã—ãŸ"
 
 #: ../src/file_itunesdb.c:534
 #, c-format
@@ -3719,7 +3735,7 @@ msgid ""
 "iPod Database Import Failed: '%s'\n"
 "\n"
 msgstr ""
-"iPod ¤«¤é¤Î¥Ç¡¼¥¿¥Ù¡¼¥¹¤ÎÆÉ¤ß¹ş¤ß¤Ë¼ºÇÔ¤·¤Ş¤·¤¿: '%s'\n"
+"iPod ã‹ã‚‰ã®ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸ: '%s'\n"
 "\n"
 
 #: ../src/file_itunesdb.c:540
@@ -3727,7 +3743,7 @@ msgid ""
 "iPod Database Import Failed.\n"
 "\n"
 msgstr ""
-"iPod¤«¤é¤Î¥Ç¡¼¥¿¥Ù¡¼¥¹¤ÎÆÉ¤ß¹ş¤ß¤Ë¼ºÇÔ¤·¤Ş¤·¤¿¡£\n"
+"iPodã‹ã‚‰ã®ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸã€‚\n"
 "\n"
 
 #: ../src/file_itunesdb.c:549
@@ -3736,7 +3752,7 @@ msgid ""
 "'%s' (or similar) does not exist. Import aborted.\n"
 "\n"
 msgstr ""
-"'%s' ¤Ï¸«¤Ä¤«¤ê¤Ş¤»¤ó¡£ÆÉ¤ß¹ş¤ß¤òÃæ»ß¤·¤Ş¤¹¡£\n"
+"'%s' ã¯è¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚èª­ã¿è¾¼ã¿ã‚’ä¸­æ­¢ã—ã¾ã™ã€‚\n"
 "\n"
 
 #: ../src/file_itunesdb.c:865
@@ -3752,11 +3768,11 @@ msgstr ""
 #: ../src/file_itunesdb.c:1180
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
-msgstr "'%s' ¤ò³«¤±¤Ê¤¤¤¿¤á¡¢³ÈÄ¥¾ğÊó¤òµ­Ï¿¤Ç¤­¤Ş¤»¤ó¡£\n"
+msgstr "'%s' ã‚’é–‹ã‘ãªã„ãŸã‚ã€æ‹¡å¼µæƒ…å ±ã‚’è¨˜éŒ²ã§ãã¾ã›ã‚“ã€‚\n"
 
 #: ../src/file_itunesdb.c:1195
 msgid "Aborted writing of extended info.\n"
-msgstr "³ÈÄ¥¾ğÊó¤Î½ñ¤­¹ş¤ß¤ÏÃæ»ß¤µ¤ì¤Ş¤·¤¿¡£\n"
+msgstr "æ‹¡å¼µæƒ…å ±ã®æ›¸ãè¾¼ã¿ã¯ä¸­æ­¢ã•ã‚Œã¾ã—ãŸã€‚\n"
 
 #: ../src/file_itunesdb.c:1397
 #, c-format
@@ -3766,7 +3782,7 @@ msgstr ""
 #: ../src/file_itunesdb.c:1411
 #, fuzzy, c-format
 msgid "%d%% (%d/%d  %d:%02d:%02d left)"
-msgstr "%d%% (»Ä¤ê %d:%02d:%02d)"
+msgstr "%d%% (æ®‹ã‚Š %d:%02d:%02d)"
 
 #: ../src/file_itunesdb.c:1463
 msgid "Status: Deleting File"
@@ -3778,7 +3794,7 @@ msgid ""
 "Could not remove the following file: '%s'\n"
 "\n"
 msgstr ""
-"'%s' ¤ò½ñ¤­¹ş¤ßÍÑ¤Ë³«¤¯¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó¡£(%s)\n"
+"'%s' ã‚’æ›¸ãè¾¼ã¿ç”¨ã«é–‹ãã“ã¨ãŒã§ãã¾ã›ã‚“ã€‚(%s)\n"
 "\n"
 
 #: ../src/file_itunesdb.c:1632
@@ -3789,7 +3805,7 @@ msgid ""
 msgid_plural ""
 "The following tracks could not be converted successfully:\n"
 "\n"
-msgstr[0] "°Ê²¼¤Î%d¶Ê¤ò¹¹¿·¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr[0] "ä»¥ä¸‹ã®%dæ›²ã‚’æ›´æ–°ã™ã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“ã§ã—ãŸ"
 
 #: ../src/file_itunesdb.c:1642
 #, fuzzy
@@ -3799,7 +3815,7 @@ msgid ""
 msgid_plural ""
 "The following tracks could not be transferred successfully:\n"
 "\n"
-msgstr[0] "°Ê²¼¤Î%d¶Ê¤ò¹¹¿·¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr[0] "ä»¥ä¸‹ã®%dæ›²ã‚’æ›´æ–°ã™ã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“ã§ã—ãŸ"
 
 #. ID
 #. modal,
@@ -3807,7 +3823,7 @@ msgstr[0] "°Ê²¼¤Î%d¶Ê¤ò¹¹¿·¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿"
 #. gboolean modal,
 #: ../src/file_itunesdb.c:1651 ../src/misc_confirm.c:70
 msgid "Warning"
-msgstr "·Ù¹ğ"
+msgstr "è­¦å‘Š"
 
 #. title
 #: ../src/file_itunesdb.c:1652
@@ -3854,39 +3870,39 @@ msgid ""
 "cancel, you can import the existing database before calling this function "
 "again.\n"
 msgstr ""
-"¤¢¤Ê¤¿¤Ï´û¤Ë¤¢¤ë iTunesDB ('%s') ¤òÆÉ¤ß¹ş¤Ş¤º¤Ë¤³¤ÎÁàºî¤ò¤·¤Æ¤¤¤Ş¤¹¡£¤³¤ì¤ÏÉá"
-"ÄÌ¤Ï¹Ô¤ï¤Ê¤¤»ö¤Ç¤¢¤ê¡¢º£¤¢¤ë¥Ç¡¼¥¿¥Ù¡¼¥¹¤Ï¼º¤ï¤ì¤ë¤³¤È¤Ë¤Ê¤ê¤Ş¤¹¡£\n"
+"ã‚ãªãŸã¯æ—¢ã«ã‚ã‚‹ iTunesDB ('%s') ã‚’èª­ã¿è¾¼ã¾ãšã«ã“ã®æ“ä½œã‚’ã—ã¦ã„ã¾ã™ã€‚ã“ã‚Œã¯æ™®"
+"é€šã¯è¡Œã‚ãªã„äº‹ã§ã‚ã‚Šã€ä»Šã‚ã‚‹ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã¯å¤±ã‚ã‚Œã‚‹ã“ã¨ã«ãªã‚Šã¾ã™ã€‚\n"
 "\n"
-"¤â¤·¤½¤ì¤Ç¤â¤è¤±¤ì¤Ğ¡¢'OK' ¤ò¡¢ÊİÂ¸¤ò¼è¤ê»ß¤á¤ë¤Ê¤é '¥­¥ã¥ó¥»¥ë' ¤ò²¡¤·¤Æ¤¯¤À"
-"¤µ¤¤¡£¥­¥ã¥ó¥»¥ë¤·¤¿¾ì¹ç¤Ï¡¢´û¤Ë¤¢¤ë¥Ç¡¼¥¿¥Ù¡¼¥¹¤ò¼è¤ê¹ş¤ó¤Ç¤«¤éºÆ¤Ó¤³¤ÎÁàºî"
-"¤ò¹Ô¤¦¤³¤È¤¬¤Ç¤­¤Ş¤¹¡£\n"
+"ã‚‚ã—ãã‚Œã§ã‚‚ã‚ˆã‘ã‚Œã°ã€'OK' ã‚’ã€ä¿å­˜ã‚’å–ã‚Šæ­¢ã‚ã‚‹ãªã‚‰ 'ã‚­ãƒ£ãƒ³ã‚»ãƒ«' ã‚’æŠ¼ã—ã¦ãã "
+"ã•ã„ã€‚ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã—ãŸå ´åˆã¯ã€æ—¢ã«ã‚ã‚‹ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚’å–ã‚Šè¾¼ã‚“ã§ã‹ã‚‰å†ã³ã“ã®æ“ä½œ"
+"ã‚’è¡Œã†ã“ã¨ãŒã§ãã¾ã™ã€‚\n"
 
 #: ../src/file_itunesdb.c:1887
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
 msgstr ""
-"iPod ¤Ø¤ÎÆ±´ü¤ò¹Ô¤¦¤¿¤á¤Ë¤Ï¡¢¤Ş¤º iPod ¤Î¥Ç¥£¥ì¥¯¥È¥ê¹½Â¤¤ò¤¢¤é¤«¤¸¤áºîÀ®¤·¤Æ"
-"¤ª¤¯É¬Í×¤¬¤¢¤ê¤Ş¤¹¡£\n"
+"iPod ã¸ã®åŒæœŸã‚’è¡Œã†ãŸã‚ã«ã¯ã€ã¾ãš iPod ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªæ§‹é€ ã‚’ã‚ã‚‰ã‹ã˜ã‚ä½œæˆã—ã¦"
+"ãŠãå¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚\n"
 
 #: ../src/file_itunesdb.c:1896
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
-msgstr "°ìÉô¤Î¶Ê¤òiPod¤«¤éºï½ü¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿¡£¥¨¥¯¥¹¥İ¡¼¥È¤òÃæÃÇ¤·¤Ş¤¹¡£"
+msgstr "ä¸€éƒ¨ã®æ›²ã‚’iPodã‹ã‚‰å‰Šé™¤ã§ãã¾ã›ã‚“ã§ã—ãŸã€‚ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã‚’ä¸­æ–­ã—ã¾ã™ã€‚"
 
 #: ../src/file_itunesdb.c:1914
 #, fuzzy, c-format
 msgid "Now writing database '%s'. Please wait..."
-msgstr "iTunesDB¤Î½ñ¤­¹ş¤ßÃæ¡£¤·¤Ğ¤é¤¯¤ªÂÔ¤Á¤¯¤À¤µ¤¤..."
+msgstr "iTunesDBã®æ›¸ãè¾¼ã¿ä¸­ã€‚ã—ã°ã‚‰ããŠå¾…ã¡ãã ã•ã„..."
 
 #: ../src/file_itunesdb.c:1963
 #, c-format
 msgid "Extended information file not deleted: '%s'"
-msgstr "³ÈÄ¥¾ğÊó¥Õ¥¡¥¤¥ë¤òºï½ü¤Ç¤­¤Ş¤»¤ó: '%s'"
+msgstr "æ‹¡å¼µæƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‰Šé™¤ã§ãã¾ã›ã‚“: '%s'"
 
 #: ../src/file_itunesdb.c:2070
 #, fuzzy, c-format
 msgid "%s: Database saved"
-msgstr "iPod¥Ç¡¼¥¿¥Ù¡¼¥¹¤òÊİÂ¸¤·¤Ş¤·¤¿"
+msgstr "iPodãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚’ä¿å­˜ã—ã¾ã—ãŸ"
 
 #: ../src/file_itunesdb.c:2074
 #, c-format
@@ -3895,11 +3911,11 @@ msgstr ""
 
 #: ../src/fileselection.c:129
 msgid "Successfully added files"
-msgstr "¥Õ¥¡¥¤¥ë¤ÎÄÉ²Ã¤ËÀ®¸ù¤·¤Ş¤·¤¿"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã®è¿½åŠ ã«æˆåŠŸã—ã¾ã—ãŸ"
 
 #: ../src/fileselection.c:131
 msgid "Some files were not added successfully"
-msgstr "°ìÉô¤Î¥Õ¥¡¥¤¥ë¤ÎÄÉ²Ã¤Ë¼ºÇÔ¤·¤Ş¤·¤¿"
+msgstr "ä¸€éƒ¨ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®è¿½åŠ ã«å¤±æ•—ã—ã¾ã—ãŸ"
 
 #: ../src/fileselection.c:164 ../src/fileselection.c:305
 #: ../src/fileselection.c:792
@@ -3914,7 +3930,7 @@ msgstr ""
 #: ../src/fileselection.c:185
 #, fuzzy, c-format
 msgid "Add files to '%s'"
-msgstr "¥Õ¥¡¥¤¥ë¤òÄÉ²Ã¤¹¤ë"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã™ã‚‹"
 
 #: ../src/fileselection.c:189
 #, c-format
@@ -3925,22 +3941,22 @@ msgstr ""
 #: ../src/fileselection.c:322
 #, fuzzy, c-format
 msgid "Add playlist files to '%s'"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤ò¥Õ¥¡¥¤¥ë¤«¤éÆÉ¤ß¹ş¤ó¤ÇÄÉ²Ã¤·¤Ş¤¹"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­ã¿è¾¼ã‚“ã§è¿½åŠ ã—ã¾ã™"
 
 #. Create the file chooser, and handle the response
 #: ../src/fileselection.c:378
 msgid "Set Cover"
-msgstr "¥«¥Ğ¡¼¥¢¡¼¥È¤òÀßÄê"
+msgstr "ã‚«ãƒãƒ¼ã‚¢ãƒ¼ãƒˆã‚’è¨­å®š"
 
 #: ../src/fileselection.c:816
 #, fuzzy, c-format
 msgid "Add directories to '%s'"
-msgstr "¥Ç¥£¥ì¥¯¥È¥ê¤òºÆµ¢Åª¤ËÄÉ²Ã¤¹¤ë"
+msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å†å¸°çš„ã«è¿½åŠ ã™ã‚‹"
 
 #: ../src/fileselection.c:820
 #, fuzzy, c-format
 msgid "Add directories to '%s/%s'"
-msgstr "¥Ç¥£¥ì¥¯¥È¥ê¤òºÆµ¢Åª¤ËÄÉ²Ã¤¹¤ë"
+msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å†å¸°çš„ã«è¿½åŠ ã™ã‚‹"
 
 #: ../src/fileselection.c:1097
 msgid "Ok"
@@ -3948,17 +3964,17 @@ msgstr "OK"
 
 #: ../src/fileselection.c:1106
 msgid "Cancel"
-msgstr "¥­¥ã¥ó¥»¥ë"
+msgstr "ã‚­ãƒ£ãƒ³ã‚»ãƒ«"
 
 #: ../src/flacfile.c:62
 #, fuzzy, c-format
 msgid "'%s' does not appear to be an FLAC audio file.\n"
-msgstr "'%s' ¤Ï mp4 ¥ª¡¼¥Ç¥£¥ª¥Õ¥¡¥¤¥ë¤È¤ÏÇ§¼±¤Ç¤­¤Ş¤»¤ó¡£\n"
+msgstr "'%s' ã¯ mp4 ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒ•ã‚¡ã‚¤ãƒ«ã¨ã¯èªè­˜ã§ãã¾ã›ã‚“ã€‚\n"
 
 #: ../src/flacfile.c:78
 #, fuzzy, c-format
 msgid "Error retrieving tags for '%s'.\n"
-msgstr "'%s'¤Î½ñ¤­¹ş¤ßÃæ¤Ë¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿¡£\n"
+msgstr "'%s'ã®æ›¸ãè¾¼ã¿ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚\n"
 
 #: ../src/flacfile.c:165
 #, fuzzy, c-format
@@ -3966,8 +3982,8 @@ msgid ""
 "Import of '%s' failed: FLAC not supported without the FLAC library. You must "
 "compile the gtkpod source together with the FLAC library.\n"
 msgstr ""
-"'%s'¤ÎÆÉ¤ß¹ş¤ß¤Ë¼ºÇÔ: m4a/m4p ¤Î¼è¤ê°·¤¤¤Ë¤Ï mp4v2 ¥é¥¤¥Ö¥é¥ê¤¬É¬Í×¤Ç¤¹¡£"
-"mp4v2 ¥é¥¤¥Ö¥é¥ê¤ò»È¤Ã¤Æ gtkpod ¤òºÆÅÙ¥³¥ó¥Ñ¥¤¥ë¤·¤Æ¤¯¤À¤µ¤¤¡£\n"
+"'%s'ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—: m4a/m4p ã®å–ã‚Šæ‰±ã„ã«ã¯ mp4v2 ãƒ©ã‚¤ãƒ–ãƒ©ãƒªãŒå¿…è¦ã§ã™ã€‚"
+"mp4v2 ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ä½¿ã£ã¦ gtkpod ã‚’å†åº¦ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã—ã¦ãã ã•ã„ã€‚\n"
 
 #: ../src/flacfile.c:171
 #, fuzzy, c-format
@@ -3975,68 +3991,68 @@ msgid ""
 "FLAC metadata update for '%s' failed: FLAC not supported without the FLAC "
 "library. You must compile the gtkpod source together with the FLAC library.\n"
 msgstr ""
-"'%s' ¤Î m4a/m4p ¥á¥¿¥Ç¡¼¥¿¤Î¹¹¿·¤Ë¼ºÇÔ: m4a/m4p ¤Î¼è¤ê°·¤¤¤Ë¤Ï mp4v2 ¥é¥¤¥Ö¥é"
-"¥ê¤¬É¬Í×¤Ç¤¹¡£mp4v2 ¥é¥¤¥Ö¥é¥ê¤ò»È¤Ã¤Æ gtkpod ¤òºÆÅÙ¥³¥ó¥Ñ¥¤¥ë¤·¤Æ¤¯¤À¤µ"
-"¤¤¡£\n"
+"'%s' ã® m4a/m4p ãƒ¡ã‚¿ãƒ‡ãƒ¼ã‚¿ã®æ›´æ–°ã«å¤±æ•—: m4a/m4p ã®å–ã‚Šæ‰±ã„ã«ã¯ mp4v2 ãƒ©ã‚¤ãƒ–ãƒ©"
+"ãƒªãŒå¿…è¦ã§ã™ã€‚mp4v2 ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ä½¿ã£ã¦ gtkpod ã‚’å†åº¦ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã—ã¦ãã ã•"
+"ã„ã€‚\n"
 
 #: ../src/getopt.c:681
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
-msgstr "%s: »ØÄê¤µ¤ì¤¿¥ª¥×¥·¥ç¥ó `%s' ¤Ç¤Ïµ­½Ò¤¬Û£Ëæ¤Ç¤¹\n"
+msgstr "%s: æŒ‡å®šã•ã‚ŒãŸã‚ªãƒ—ã‚·ãƒ§ãƒ³ `%s' ã§ã¯è¨˜è¿°ãŒæ›–æ˜§ã§ã™\n"
 
 #: ../src/getopt.c:706
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
-msgstr "%s: »ØÄê¤µ¤ì¤¿¥ª¥×¥·¥ç¥ó `--%s' ¤Ï°ú¿ô¤ò¼è¤ê¤Ş¤»¤ó\n"
+msgstr "%s: æŒ‡å®šã•ã‚ŒãŸã‚ªãƒ—ã‚·ãƒ§ãƒ³ `--%s' ã¯å¼•æ•°ã‚’å–ã‚Šã¾ã›ã‚“\n"
 
 #: ../src/getopt.c:711
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
-msgstr "%s: »ØÄê¤µ¤ì¤¿¥ª¥×¥·¥ç¥ó `%c%s' ¤Ï°ú¿ô¤ò¼è¤ê¤Ş¤»¤ó\n"
+msgstr "%s: æŒ‡å®šã•ã‚ŒãŸã‚ªãƒ—ã‚·ãƒ§ãƒ³ `%c%s' ã¯å¼•æ•°ã‚’å–ã‚Šã¾ã›ã‚“\n"
 
 #: ../src/getopt.c:729 ../src/getopt.c:902
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
-msgstr "%s: »ØÄê¤µ¤ì¤¿¥ª¥×¥·¥ç¥ó `%s' ¤Ë¤Ï°ú¿ô¤¬É¬Í×¤Ç¤¹\n"
+msgstr "%s: æŒ‡å®šã•ã‚ŒãŸã‚ªãƒ—ã‚·ãƒ§ãƒ³ `%s' ã«ã¯å¼•æ•°ãŒå¿…è¦ã§ã™\n"
 
 #. --option
 #: ../src/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
-msgstr "%s: Ç§¼±¤Ç¤­¤Ê¤¤¥ª¥×¥·¥ç¥ó `--%s' ¤Ç¤¹\n"
+msgstr "%s: èªè­˜ã§ããªã„ã‚ªãƒ—ã‚·ãƒ§ãƒ³ `--%s' ã§ã™\n"
 
 #. +option or -option
 #: ../src/getopt.c:762
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
-msgstr "%s: Ç§¼±¤Ç¤­¤Ê¤¤¥ª¥×¥·¥ç¥ó `%c%s' ¤Ç¤¹\n"
+msgstr "%s: èªè­˜ã§ããªã„ã‚ªãƒ—ã‚·ãƒ§ãƒ³ `%c%s' ã§ã™\n"
 
 #. 1003.2 specifies the format of this message.
 #: ../src/getopt.c:788
 #, c-format
 msgid "%s: illegal option -- %c\n"
-msgstr "%s: ¥ª¥×¥·¥ç¥ó¤¬°ã¤¤¤Ş¤¹ -- %c\n"
+msgstr "%s: ã‚ªãƒ—ã‚·ãƒ§ãƒ³ãŒé•ã„ã¾ã™ -- %c\n"
 
 #: ../src/getopt.c:791
 #, c-format
 msgid "%s: invalid option -- %c\n"
-msgstr "%s: ÉÔÀµ¤Ê¥ª¥×¥·¥ç¥ó¤Ç¤¹ -- %c\n"
+msgstr "%s: ä¸æ­£ãªã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§ã™ -- %c\n"
 
 #. 1003.2 specifies the format of this message.
 #: ../src/getopt.c:821 ../src/getopt.c:951
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
-msgstr "%s: »ØÄê¤µ¤ì¤¿¥ª¥×¥·¥ç¥ó¤Ë¤Ï°ú¿ô¤¬É¬Í×¤Ç¤¹ -- %c\n"
+msgstr "%s: æŒ‡å®šã•ã‚ŒãŸã‚ªãƒ—ã‚·ãƒ§ãƒ³ã«ã¯å¼•æ•°ãŒå¿…è¦ã§ã™ -- %c\n"
 
 #: ../src/getopt.c:868
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
-msgstr "%s: »ØÄê¤µ¤ì¤¿¥ª¥×¥·¥ç¥ó `-W %s' ¤Ç¤Ïµ­½Ò¤¬Û£Ëæ¤Ç¤¹\n"
+msgstr "%s: æŒ‡å®šã•ã‚ŒãŸã‚ªãƒ—ã‚·ãƒ§ãƒ³ `-W %s' ã§ã¯è¨˜è¿°ãŒæ›–æ˜§ã§ã™\n"
 
 #: ../src/getopt.c:886
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
-msgstr "%s: »ØÄê¤µ¤ì¤¿¥ª¥×¥·¥ç¥ó `-W %s' ¤Ï°ú¿ô¤ò¼è¤ê¤Ş¤»¤ó\n"
+msgstr "%s: æŒ‡å®šã•ã‚ŒãŸã‚ªãƒ—ã‚·ãƒ§ãƒ³ `-W %s' ã¯å¼•æ•°ã‚’å–ã‚Šã¾ã›ã‚“\n"
 
 #: ../src/info.c:383
 msgid "n/c"
@@ -4044,7 +4060,7 @@ msgstr ""
 
 #: ../src/info.c:388 ../src/info.c:838
 msgid "offline"
-msgstr "¥ª¥Õ¥é¥¤¥ó"
+msgstr "ã‚ªãƒ•ãƒ©ã‚¤ãƒ³"
 
 #: ../src/info.c:486
 #, c-format
@@ -4066,34 +4082,34 @@ msgstr ""
 #: ../src/info.c:823
 #, c-format
 msgid " %s Free"
-msgstr "%s ¶õ¤­"
+msgstr "%s ç©ºã"
 
 #: ../src/info.c:828
 #, c-format
 msgid " %s Pending"
-msgstr "%s ÉÔÂ­"
+msgstr "%s ä¸è¶³"
 
 #: ../src/info.c:833
 msgid " disconnected"
-msgstr "Ì¤ÀÜÂ³"
+msgstr "æœªæ¥ç¶š"
 
 #: ../src/info.c:884
 #, fuzzy
 msgid "No database or playlist selected"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤¬ÁªÂò¤µ¤ì¤Æ¤¤¤Ş¤»¤ó"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆãŒé¸æŠã•ã‚Œã¦ã„ã¾ã›ã‚“"
 
 #: ../src/info.c:889
 msgid "No tracks selected"
-msgstr "¶Ê¤¬ÁªÂò¤µ¤ì¤Æ¤¤¤Ş¤»¤ó¡£"
+msgstr "æ›²ãŒé¸æŠã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚"
 
 #: ../src/info.c:894
 msgid "No playlist selected"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤¬ÁªÂò¤µ¤ì¤Æ¤¤¤Ş¤»¤ó"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆãŒé¸æŠã•ã‚Œã¦ã„ã¾ã›ã‚“"
 
 #: ../src/info.c:899
 #, fuzzy
 msgid "No iPod or iPod playlist selected"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È¤¬ÁªÂò¤µ¤ì¤Æ¤¤¤Ş¤»¤ó"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆãŒé¸æŠã•ã‚Œã¦ã„ã¾ã›ã‚“"
 
 #. Strings used several times
 #: ../src/ipod_init.c:48
@@ -4103,12 +4119,12 @@ msgstr ""
 #: ../src/ipod_init.c:79 ../src/repository.c:546 ../src/repository.c:2369
 #, fuzzy
 msgid "Select mountpoint"
-msgstr "iPod¤Î¥Ş¥¦¥ó¥È¾ì½ê(_P):"
+msgstr "iPodã®ãƒã‚¦ãƒ³ãƒˆå ´æ‰€(_P):"
 
 #: ../src/ipod_init.c:359
 #, fuzzy, c-format
 msgid "Error initialising iPod: %s\n"
-msgstr "'%s'¤Î½ñ¤­¹ş¤ßÃæ¤Ë¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿¡£\n"
+msgstr "'%s'ã®æ›¸ãè¾¼ã¿ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚\n"
 
 #: ../src/ipod_init.c:366
 msgid "Error initialising iPod, unknown error\n"
@@ -4126,304 +4142,301 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../src/misc.c:87
-#, c-format
+#: ../src/misc.c:70
 msgid ""
-"gtkpod Version %s: Cross-Platform Multi-Lingual Interface to Apple's iPod"
-"(tm)."
+"Â© 2002 - 2007\n"
+"Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
+"Corey Donohoe (atmos at atmos dot org)\n"
+msgstr ""
+
+#: ../src/misc.c:74
+msgid ""
+"Patches were supplied by the following people (list may be incomplete -- "
+"please contact me)\n"
+msgstr ""
+
+#: ../src/misc.c:75
+msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
+msgstr ""
+
+#: ../src/misc.c:76
+msgid "Hiroshi Kawashima: Japanese charset autodetecion feature"
+msgstr ""
+
+#: ../src/misc.c:77
+msgid "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
+msgstr ""
+
+#: ../src/misc.c:78
+msgid ""
+"Walter Bell: correct handling of DND URIs with escaped characters and/or cr/"
+"newlines at the end"
+msgstr ""
+
+#: ../src/misc.c:79
+msgid "Sam Clegg: user defined filenames when exporting tracks from the iPod"
+msgstr ""
+
+#: ../src/misc.c:80
+msgid "Chris Cutler: automatic creation of various playlist types"
+msgstr ""
+
+#: ../src/misc.c:81
+msgid ""
+"Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
+"dialogue during sync"
+msgstr ""
+
+#: ../src/misc.c:82
+msgid ""
+"Edward Matteucci: debugging, special playlist creation, most of the volume "
+"normalizing code"
+msgstr ""
+
+#: ../src/misc.c:83
+msgid "Jens Lautenbach: some optical improvements"
+msgstr ""
+
+#: ../src/misc.c:84
+msgid "Alex Tribble: iPod eject patch"
+msgstr ""
+
+#: ../src/misc.c:85
+msgid "Yaroslav Halchenko: Orphaned and dangling tracks handling"
+msgstr ""
+
+#: ../src/misc.c:86
+msgid ""
+"Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
+msgstr ""
+
+#: ../src/misc.c:87
+msgid ""
+"Ero Carrera: Filename validation and quick sync when copying tracks from the "
+"iPod"
+msgstr ""
+
+#: ../src/misc.c:88
+msgid "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
+msgstr ""
+
+#: ../src/misc.c:89
+msgid "Armando Atienza: Support with external playcounts"
+msgstr ""
+
+#: ../src/misc.c:90
+msgid "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
 msgstr ""
 
 #: ../src/misc.c:91
+msgid "Jim Hall: Decent INSTALL file"
+msgstr ""
+
+#: ../src/misc.c:92
 msgid ""
-"(C) 2002 - 2007\n"
-"Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
-"Corey Donohoe (atmos at atmos dot org)\n"
-"\n"
-"\n"
+"Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
+"contacts to the iPod"
+msgstr ""
+
+#. J"urgen!
+#: ../src/misc.c:93
+msgid "Flavio Stanchina: bugfixes"
+msgstr ""
+
+#: ../src/misc.c:94
+msgid ""
+"Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
+"the title"
+msgstr ""
+
+#: ../src/misc.c:95
+msgid "Steve Jay: use statvfs() instead of df (better portability, faster)"
 msgstr ""
 
 #: ../src/misc.c:97
 msgid ""
-"This program is free software; you can redistribute it and/or modify it "
-"under the terms of the GNU General Public License as published by the Free "
-"Software Foundation; either version 2 of the License, or (at your option) "
-"any later version.\n"
-"\n"
-"This program is distributed in the hope that it will be useful, but WITHOUT "
-"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
-"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
-"more details.\n"
-"\n"
-"You should have received a copy of the GNU General Public License along with "
-"this program; if not, write to the Free Software Foundation, Inc., 59 Temple "
-"Place, Suite 330, Boston, MA 02111-1307, USA.\n"
-"\n"
-"\n"
+"Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 "
+"tags"
 msgstr ""
-"¤³¤Î¥×¥í¥°¥é¥à¤Ï¥Õ¥ê¡¼¥½¥Õ¥È¥¦¥§¥¢¤Ç¤¹¡£¤¢¤Ê¤¿¤Ï¤³¤ì¤ò¡¢¥Õ¥ê¡¼¥½¥Õ¥È¥¦¥§¥¢ºâ"
-"ÃÄ¤Ë¤è¤Ã¤ÆÈ¯¹Ô¤µ¤ì¤¿ GNU °ìÈÌ¸ø½°ÍøÍÑµöÂú·ÀÌó½ñ(¥Ğ¡¼¥¸¥ç¥ó2¤«¡¢´õË¾¤Ë¤è¤Ã¤Æ¤Ï"
-"¤½¤ì°Ê¹ß¤Î¥Ğ¡¼¥¸¥ç¥ó¤Î¤¦¤Á¤É¤ì¤«)¤ÎÄê¤á¤ë¾ò·ï¤Î²¼¤ÇºÆÈÒÉÛ¤Ş¤¿¤Ï²şÊÑ¤¹¤ë¤³¤È¤¬"
-"¤Ç¤­¤Ş¤¹¡£\n"
-"\n"
-"¤³¤Î¥×¥í¥°¥é¥à¤ÏÍ­ÍÑ¤Ç¤¢¤ë¤³¤È¤ò´ê¤Ã¤ÆÈÒÉÛ¤µ¤ì¤Ş¤¹¤¬¡¢*Á´¤¯¤ÎÌµÊİ¾Ú*¤Ç¤¹¡£¾¦"
-"¶È²ÄÇ½À­¤ÎÊİ¾Ú¤äÆÃÄê¤ÎÌÜÅª¤Ø¤ÎÅ¬¹çÀ­¤Ï¡¢¸À³°¤Ë¼¨¤µ¤ì¤¿¤â¤Î¤â´Ş¤áÁ´¤¯Â¸ºß¤·¤Ş"
-"¤»¤ó¡£¾Ü¤·¤¯¤ÏGNU °ìÈÌ¸ø½°ÍøÍÑµöÂú·ÀÌó½ñ¤ò¤´Í÷¤¯¤À¤µ¤¤¡£\n"
-"\n"
-"¤¢¤Ê¤¿¤Ï¤³¤Î¥×¥í¥°¥é¥à¤È¶¦¤Ë¡¢GNU °ìÈÌ¸ø½°ÍøÍÑµöÂú·ÀÌó½ñ¤ÎÊ£À½Êª¤ò°ìÉô¼õ¤±"
-"¼è¤Ã¤¿¤Ï¤º¤Ç¤¹¡£¤â¤·¼õ¤±¼è¤Ã¤Æ¤¤¤Ê¤±¤ì¤Ğ¡¢¥Õ¥ê¡¼¥½¥Õ¥È¥¦¥§¥¢ºâÃÄ¤Ş¤ÇÀÁµá¤·¤Æ"
-"¤¯¤À¤µ¤¤(°¸Àè¤Ï the Free Software Foundation, Inc., 59 Temple Place,Suite "
-"330, Boston, MA 02111-1307 USA)¡£\n"
-"\n"
-"\n"
+
+#: ../src/misc.c:99
+msgid ""
+"James Liggett:\n"
+"replacement of old GTK file selection dialogs with new GTK filechooser "
+"dialogs\n"
+"refactored user preferences system."
+msgstr ""
+
+#: ../src/misc.c:103
+msgid "Daniel Kercher: sync scripts for abook and webcalendar"
+msgstr ""
 
 #: ../src/misc.c:105
-msgid ""
-"Patches were supplied by the following people (list may be incomplete -- "
-"please contact me)\n"
-"\n"
+msgid "Clinton Gormley: sync scripts for thunderbird"
 msgstr ""
 
 #: ../src/misc.c:107
-msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)\n"
+msgid "Sebastien Beridot: sync script for ldif addressbook format"
 msgstr ""
 
 #: ../src/misc.c:109
-msgid "Hiroshi Kawashima: Japanese charset autodetecion feature\n"
+msgid "Sebastian Scherer: sync script for kNotes"
 msgstr ""
 
 #: ../src/misc.c:111
-msgid "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n"
+msgid "Nick Piper: sync script for Palm, type-ahead search"
 msgstr ""
 
 #: ../src/misc.c:113
-msgid ""
-"Walter Bell: correct handling of DND URIs with escaped characters and/or cr/"
-"newlines at the end\n"
+msgid "Uwe Hermann: help with support for iPod Video"
 msgstr ""
 
 #: ../src/misc.c:115
-msgid "Sam Clegg: user defined filenames when exporting tracks from the iPod\n"
+msgid ""
+"Iain Benson: support for compilation tag in mp3 files and separate display "
+"of compilations in the sort tab."
 msgstr ""
 
-#: ../src/misc.c:117
-msgid "Chris Cutler: automatic creation of various playlist types\n"
+#: ../src/misc.c:116
+msgid ""
+"Nicolas Chariot: icons of buttons\n"
+"\n"
+msgstr ""
+
+#: ../src/misc.c:118
+msgid "This program borrows code from the following projects:"
 msgstr ""
 
 #: ../src/misc.c:119
 msgid ""
-"Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
-"dialogue during sync\n"
+"gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  (http://"
+"www.gnu.org/software/gnupod/)"
+msgstr ""
+
+#: ../src/misc.c:120
+msgid ""
+"iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some code "
+"for smart playlists is based on his C++-classes."
 msgstr ""
 
 #: ../src/misc.c:121
-msgid ""
-"Edward Matteucci: debugging, special playlist creation, most of the volume "
-"normalizing code\n"
+msgid "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
 msgstr ""
 
-#: ../src/misc.c:123
-msgid "Jens Lautenbach: some optical improvements\n"
+#: ../src/misc.c:122
+msgid "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
 msgstr ""
 
-#: ../src/misc.c:125
-msgid "Alex Tribble: iPod eject patch\n"
+#: ../src/misc.c:124
+msgid "The GUI was created with the help of glade-2 (http://glade.gnome.org/)."
 msgstr ""
 
-#: ../src/misc.c:127
-msgid "Yaroslav Halchenko: Orphaned and dangling tracks handling\n"
+#: ../src/misc.c:128
+msgid "French: David Le Brun (david at dyn-ns dot net)"
 msgstr ""
 
 #: ../src/misc.c:129
-msgid ""
-"Andrew Huntwork: Filename case sensitivity fix and various other bugfixes\n"
+msgid "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
+msgstr ""
+
+#: ../src/misc.c:130
+msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)"
 msgstr ""
 
 #: ../src/misc.c:131
 msgid ""
-"Ero Carrera: Filename validation and quick sync when copying tracks from the "
-"iPod\n"
+"Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot net)"
+msgstr ""
+
+#: ../src/misc.c:132
+msgid "Japanese: Ayako Sano"
 msgstr ""
 
 #: ../src/misc.c:133
-msgid "Jens Taprogge: Support for LAME's replay gain tag to normalize volume\n"
+msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
 msgstr ""
 
-#: ../src/misc.c:135
-msgid "Armando Atienza: Support with external playcounts\n"
-msgstr ""
-
-#: ../src/misc.c:137
-msgid "D.L. Sharp: Support for m4b files (bookmarkable AAC files)\n"
+#: ../src/misc.c:134
+msgid "Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)"
 msgstr ""
 
 #: ../src/misc.c:139
-msgid "Jim Hall: Decent INSTALL file\n"
-msgstr ""
-
-#: ../src/misc.c:141
+#, fuzzy
 msgid ""
-"Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
-"contacts to the iPod\n"
+"This program is free software; you can redistribute it and/or\n"
+"modify it under the terms of the GNU General Public License as\n"
+"published by the Free Software Foundation; either version 2 of the\n"
+"License, or (at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful, but\n"
+"WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
+"the GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public\n"
+"License along with this program; if not, write to the Free Software\n"
+"Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
+"02111-1307, USA."
 msgstr ""
-
-#. J"urgen!
-#: ../src/misc.c:143
-msgid "Flavio Stanchina: bugfixes\n"
-msgstr ""
-
-#: ../src/misc.c:145
-msgid ""
-"Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
-"the title\n"
-msgstr ""
-
-#: ../src/misc.c:147
-msgid "Steve Jay: use statvfs() instead of df (better portability, faster)\n"
-msgstr ""
-
-#: ../src/misc.c:150
-msgid ""
-"Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 "
-"tags\n"
-msgstr ""
-
-#: ../src/misc.c:153
-msgid ""
-"James Liggett:\n"
-"     replacement of old GTK file selection dialogs with new GTK filechooser "
-"dialogs\n"
-"     refactored user preferences system.\n"
-msgstr ""
-
-#: ../src/misc.c:158
-msgid "Daniel Kercher: sync scripts for abook and webcalendar\n"
-msgstr ""
-
-#: ../src/misc.c:161
-msgid "Clinton Gormley: sync scripts for thunderbird\n"
-msgstr ""
-
-#: ../src/misc.c:164
-msgid "Sebastien Beridot: sync script for ldif addressbook format\n"
-msgstr ""
-
-#: ../src/misc.c:167
-msgid "Sebastian Scherer: sync script for kNotes\n"
-msgstr ""
-
-#: ../src/misc.c:170
-msgid "Nick Piper: sync script for Palm, type-ahead search\n"
-msgstr ""
-
-#: ../src/misc.c:173
-msgid "Uwe Hermann: help with support for iPod Video\n"
-msgstr ""
-
-#: ../src/misc.c:176
-msgid ""
-"Iain Benson: support for compilation tag in mp3 files and separate display "
-"of compilations in the sort tab.\n"
-msgstr ""
-
-#: ../src/misc.c:178
-msgid ""
-"Nicolas Chariot: icons of buttons\n"
+"ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¯ãƒ•ãƒªãƒ¼ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢ã§ã™ã€‚ã‚ãªãŸã¯ã“ã‚Œã‚’ã€ãƒ•ãƒªãƒ¼ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢è²¡"
+"å›£ã«ã‚ˆã£ã¦ç™ºè¡Œã•ã‚ŒãŸ GNU ä¸€èˆ¬å…¬è¡†åˆ©ç”¨è¨±è«¾å¥‘ç´„æ›¸(ãƒãƒ¼ã‚¸ãƒ§ãƒ³2ã‹ã€å¸Œæœ›ã«ã‚ˆã£ã¦ã¯"
+"ãã‚Œä»¥é™ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã®ã†ã¡ã©ã‚Œã‹)ã®å®šã‚ã‚‹æ¡ä»¶ã®ä¸‹ã§å†é ’å¸ƒã¾ãŸã¯æ”¹å¤‰ã™ã‚‹ã“ã¨ãŒ"
+"ã§ãã¾ã™ã€‚\n"
+"\n"
+"ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¯æœ‰ç”¨ã§ã‚ã‚‹ã“ã¨ã‚’é¡˜ã£ã¦é ’å¸ƒã•ã‚Œã¾ã™ãŒã€*å…¨ãã®ç„¡ä¿è¨¼*ã§ã™ã€‚å•†"
+"æ¥­å¯èƒ½æ€§ã®ä¿è¨¼ã‚„ç‰¹å®šã®ç›®çš„ã¸ã®é©åˆæ€§ã¯ã€è¨€å¤–ã«ç¤ºã•ã‚ŒãŸã‚‚ã®ã‚‚å«ã‚å…¨ãå­˜åœ¨ã—ã¾"
+"ã›ã‚“ã€‚è©³ã—ãã¯GNU ä¸€èˆ¬å…¬è¡†åˆ©ç”¨è¨±è«¾å¥‘ç´„æ›¸ã‚’ã”è¦§ãã ã•ã„ã€‚\n"
+"\n"
+"ã‚ãªãŸã¯ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¨å…±ã«ã€GNU ä¸€èˆ¬å…¬è¡†åˆ©ç”¨è¨±è«¾å¥‘ç´„æ›¸ã®è¤‡è£½ç‰©ã‚’ä¸€éƒ¨å—ã‘"
+"å–ã£ãŸã¯ãšã§ã™ã€‚ã‚‚ã—å—ã‘å–ã£ã¦ã„ãªã‘ã‚Œã°ã€ãƒ•ãƒªãƒ¼ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢è²¡å›£ã¾ã§è«‹æ±‚ã—ã¦"
+"ãã ã•ã„(å®›å…ˆã¯ the Free Software Foundation, Inc., 59 Temple Place,Suite "
+"330, Boston, MA 02111-1307 USA)ã€‚\n"
 "\n"
 "\n"
-msgstr ""
 
-#: ../src/misc.c:182
-msgid "This program borrows code from the following projects:\n"
-msgstr ""
-
-#: ../src/misc.c:184
+#: ../src/misc.c:154
 msgid ""
-"    gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB "
-"(http://www.gnu.org/software/gnupod/)\n"
+"Â© 2002-2007\n"
+"Jorg Schuler <jcsjcs@users.sourceforge.net>\n"
+"Corey Donohoe <atmos@atmos.org>"
 msgstr ""
 
-#: ../src/misc.c:186
-msgid ""
-"    iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some "
-"code for smart playlists is based on his C++-classes.\n"
+#: ../src/misc.c:162
+msgid "Cross-platform multilingual interface to Apple's iPodâ„¢"
 msgstr ""
 
-#: ../src/misc.c:188
-msgid "    mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n"
-msgstr ""
-
-#: ../src/misc.c:190
-msgid ""
-"    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"
-msgstr ""
-
-#: ../src/misc.c:193
-msgid ""
-"The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"
-msgstr ""
-
-#: ../src/misc.c:208
-msgid "French:   David Le Brun (david at dyn-ns dot net)\n"
-msgstr ""
-
-#: ../src/misc.c:210
-msgid "German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
-msgstr ""
-
-#: ../src/misc.c:212
-msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)\n"
-msgstr ""
-
-#: ../src/misc.c:214
-msgid ""
-"Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot "
-"net)\n"
-msgstr ""
-
-#: ../src/misc.c:216
-msgid "Japanese: Ayako Sano\n"
-msgstr ""
-
-#: ../src/misc.c:218
-msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
-msgstr ""
-
-#: ../src/misc.c:220
-msgid "Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)\n"
-msgstr ""
-
-#: ../src/misc.c:1020
+#: ../src/misc.c:929
 #, fuzzy, c-format
 msgid "Could not process '%s' (no filename available)"
-msgstr "¥Õ¥¡¥¤¥ëÌ¾¤¬¤ï¤«¤ê¤Ş¤»¤ó"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«åãŒã‚ã‹ã‚Šã¾ã›ã‚“"
 
-#: ../src/misc.c:1174
+#: ../src/misc.c:1083
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
-msgstr "Ì¤ÃÎ¤Î¥È¡¼¥¯¥ó '%%%c' ¤¬¥Æ¥ó¥×¥ì¡¼¥È '%s' Ãæ¤Ë¤¢¤ê¤Ş¤¹"
+msgstr "æœªçŸ¥ã®ãƒˆãƒ¼ã‚¯ãƒ³ '%%%c' ãŒãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ '%s' ä¸­ã«ã‚ã‚Šã¾ã™"
 
-#: ../src/misc.c:1257
+#: ../src/misc.c:1166
 #, c-format
 msgid "Template ('%s') does not match file type '%s'\n"
-msgstr "¥Æ¥ó¥×¥ì¡¼¥È ('%s') ¤¬¥Õ¥¡¥¤¥ë·Á¼° '%s' ¤Ë¹ç¤¤¤Ş¤»¤ó¡£\n"
+msgstr "ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ ('%s') ãŒãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼ '%s' ã«åˆã„ã¾ã›ã‚“ã€‚\n"
 
-#: ../src/misc.c:1343
+#: ../src/misc.c:1252
 #, c-format
 msgid "Error creating %s: %s\n"
-msgstr "'%s'¤ÎºîÀ®¤Ë¼ºÇÔ: %s\n"
+msgstr "'%s'ã®ä½œæˆã«å¤±æ•—: %s\n"
 
-#: ../src/misc.c:1777
+#: ../src/misc.c:1686
 #, c-format
 msgid ""
 "Writing preferences file '%s' failed (%s).\n"
 "\n"
 msgstr ""
 
-#: ../src/misc.c:1779
+#: ../src/misc.c:1688
 msgid "unspecified error"
 msgstr ""
 
-#: ../src/misc.c:1787
+#: ../src/misc.c:1696
 #, c-format
 msgid ""
 "Writing preferences to the iPod (%s) failed: could not get path to Control "
@@ -4435,7 +4448,7 @@ msgstr ""
 #: ../src/misc_confirm.c:71
 #, fuzzy
 msgid "The following has occurred:"
-msgstr "°Ê²¼¤ÎÌäÂê¤¬È¯À¸¤·¤Ş¤·¤¿:"
+msgstr "ä»¥ä¸‹ã®å•é¡ŒãŒç™ºç”Ÿã—ã¾ã—ãŸ:"
 
 #: ../src/misc_confirm.c:122
 msgid ""
@@ -4447,13 +4460,13 @@ msgid_plural ""
 "iPod? The number of playlists the tracks are member of is indicated in "
 "parentheses."
 msgstr[0] ""
-"°Ê²¼¤Î¶Ê¤ò iPod ¤«¤é´°Á´¤Ëºï½ü¤·¤Æ¤âËÜÅö¤Ë¤è¤í¤·¤¤¤Ç¤¹¤«? ³ç¸Ì¤ÎÃæ¤Î¿ô»ú¤Ï¡¢"
-"¤³¤Î¶Ê¤¬¤¤¤¯¤Ä¤Î¥×¥ì¥¤¥ê¥¹¥È¤ËÅĞÏ¿¤µ¤ì¤Æ¤¤¤ë¤«¤ò¼¨¤·¤Æ¤¤¤Ş¤¹¡£"
+"ä»¥ä¸‹ã®æ›²ã‚’ iPod ã‹ã‚‰å®Œå…¨ã«å‰Šé™¤ã—ã¦ã‚‚æœ¬å½“ã«ã‚ˆã‚ã—ã„ã§ã™ã‹? æ‹¬å¼§ã®ä¸­ã®æ•°å­—ã¯ã€"
+"ã“ã®æ›²ãŒã„ãã¤ã®ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã‹ã‚’ç¤ºã—ã¦ã„ã¾ã™ã€‚"
 
 #: ../src/misc_confirm.c:126
 msgid "Delete Track Completely from iPod?"
 msgid_plural "Delete Tracks Completely from iPod?"
-msgstr[0] "iPod ¤«¤é´°Á´¤Ëºï½ü¤·¤Ş¤¹¤«?"
+msgstr[0] "iPod ã‹ã‚‰å®Œå…¨ã«å‰Šé™¤ã—ã¾ã™ã‹?"
 
 #: ../src/misc_confirm.c:137 ../src/misc_confirm.c:178
 #, c-format
@@ -4462,12 +4475,12 @@ msgid ""
 msgid_plural ""
 "Are you sure you want to remove the following tracks from the playlist \"%s"
 "\"?"
-msgstr[0] "°Ê²¼¤Î¶Ê¤ò¥×¥ì¥¤¥ê¥¹¥È \"%s\" ¤«¤éºï½ü¤·¤Æ¤â¤è¤í¤·¤¤¤Ç¤¹¤«?"
+msgstr[0] "ä»¥ä¸‹ã®æ›²ã‚’ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ \"%s\" ã‹ã‚‰å‰Šé™¤ã—ã¦ã‚‚ã‚ˆã‚ã—ã„ã§ã™ã‹?"
 
 #: ../src/misc_confirm.c:141 ../src/misc_confirm.c:182
 msgid "Remove Track From Playlist?"
 msgid_plural "Remove Tracks From Playlist?"
-msgstr[0] "¤³¤ì¤é¶Ê¤ò¥×¥ì¥¤¥ê¥¹¥È¤«¤éºï½ü¤·¤Ş¤¹¤«?"
+msgstr[0] "ã“ã‚Œã‚‰æ›²ã‚’ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤ã—ã¾ã™ã‹?"
 
 #: ../src/misc_confirm.c:163
 msgid ""
@@ -4479,13 +4492,13 @@ msgid_plural ""
 "harddisk? The number of playlists the tracks are member of is indicated in "
 "parentheses."
 msgstr[0] ""
-"°Ê²¼¤Î¶Ê¤ò¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤«¤é´°Á´¤Ëºï½ü¤·¤Æ¤â¤è¤í¤·¤¤¤Ç¤¹¤«? ³ç¸Ì¤ÎÃæ¤Î¿ô»ú"
-"¤Ï¡¢¤³¤Î¶Ê¤¬¤¤¤¯¤Ä¤Î¥×¥ì¥¤¥ê¥¹¥È¤ËÅĞÏ¿¤µ¤ì¤Æ¤¤¤ë¤«¤ò¼¨¤·¤Æ¤¤¤Ş¤¹¡£"
+"ä»¥ä¸‹ã®æ›²ã‚’ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã‹ã‚‰å®Œå…¨ã«å‰Šé™¤ã—ã¦ã‚‚ã‚ˆã‚ã—ã„ã§ã™ã‹? æ‹¬å¼§ã®ä¸­ã®æ•°å­—"
+"ã¯ã€ã“ã®æ›²ãŒã„ãã¤ã®ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã‹ã‚’ç¤ºã—ã¦ã„ã¾ã™ã€‚"
 
 #: ../src/misc_confirm.c:167
 msgid "Delete Track from Harddisk?"
 msgid_plural "Delete Tracks from Harddisk?"
-msgstr[0] "¤³¤ì¤é¤Î¶Ê¤ò¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤«¤éºï½ü¤·¤Ş¤¹¤«?"
+msgstr[0] "ã“ã‚Œã‚‰ã®æ›²ã‚’ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã‹ã‚‰å‰Šé™¤ã—ã¾ã™ã‹?"
 
 #: ../src/misc_confirm.c:192
 msgid ""
@@ -4497,84 +4510,84 @@ msgid_plural ""
 "local database? The number of playlists the tracks are member of is "
 "indicated in parentheses."
 msgstr[0] ""
-"°Ê²¼¤Î¶Ê¤ò¥í¡¼¥«¥ë¤Î¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤é´°Á´¤Ëºï½ü¤·¤Æ¤â¤è¤í¤·¤¤¤Ç¤¹¤«? ³ç¸Ì¤ÎÃæ"
-"¤Î¿ô»ú¤Ï¡¢¤³¤ì¤é¤Î¶Ê¤¬¤¤¤¯¤Ä¤Î¥×¥ì¥¤¥ê¥¹¥È¤ËÅĞÏ¿¤µ¤ì¤Æ¤¤¤ë¤«¤ò¼¨¤·¤Æ¤¤¤Ş¤¹¡£"
+"ä»¥ä¸‹ã®æ›²ã‚’ãƒ­ãƒ¼ã‚«ãƒ«ã®ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰å®Œå…¨ã«å‰Šé™¤ã—ã¦ã‚‚ã‚ˆã‚ã—ã„ã§ã™ã‹? æ‹¬å¼§ã®ä¸­"
+"ã®æ•°å­—ã¯ã€ã“ã‚Œã‚‰ã®æ›²ãŒã„ãã¤ã®ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã‹ã‚’ç¤ºã—ã¦ã„ã¾ã™ã€‚"
 
 #: ../src/misc_confirm.c:196
 msgid "Remove Track from Local Database?"
 msgid_plural "Remove Tracks from Local Database?"
-msgstr[0] "¤³¤ì¤é¤Î¶Ê¤ò¥í¡¼¥«¥ë¤Î¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤éºï½ü¤·¤Ş¤¹¤«?"
+msgstr[0] "ã“ã‚Œã‚‰ã®æ›²ã‚’ãƒ­ãƒ¼ã‚«ãƒ«ã®ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰å‰Šé™¤ã—ã¾ã™ã‹?"
 
 #: ../src/misc_confirm.c:261
 #, c-format
 msgid "Deleted one track completely from iPod"
 msgid_plural "Deleted %d tracks completely from iPod"
-msgstr[0] "iPod¤«¤é%d¶Ê´°Á´¤Ëºï½ü¤·¤Ş¤·¤¿"
+msgstr[0] "iPodã‹ã‚‰%dæ›²å®Œå…¨ã«å‰Šé™¤ã—ã¾ã—ãŸ"
 
 #: ../src/misc_confirm.c:267 ../src/misc_confirm.c:291
 #, c-format
 msgid "Deleted %d track from playlist '%s'"
 msgid_plural "Deleted %d tracks from playlist '%s'"
-msgstr[0] "¥×¥ì¥¤¥ê¥¹¥È '%2$s' ¤«¤é %1$d ¶Êºï½ü¤·¤Ş¤·¤¿"
+msgstr[0] "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ '%2$s' ã‹ã‚‰ %1$d æ›²å‰Šé™¤ã—ã¾ã—ãŸ"
 
 #: ../src/misc_confirm.c:285
 #, c-format
 msgid "Deleted one track from harddisk"
 msgid_plural "Deleted %d tracks from harddisk"
-msgstr[0] "¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤«¤é%d¶Êºï½ü¤·¤Ş¤·¤¿"
+msgstr[0] "ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã‹ã‚‰%dæ›²å‰Šé™¤ã—ã¾ã—ãŸ"
 
 #: ../src/misc_confirm.c:297
 #, c-format
 msgid "Deleted track from local database"
 msgid_plural "Deleted %d tracks from local database"
-msgstr[0] "¥í¡¼¥«¥ë¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤é%d¶Êºï½ü¤·¤Ş¤·¤¿"
+msgstr[0] "ãƒ­ãƒ¼ã‚«ãƒ«ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰%dæ›²å‰Šé™¤ã—ã¾ã—ãŸ"
 
 #: ../src/misc_confirm.c:442
 msgid "Cannot remove entry 'All'"
-msgstr "'¤¹¤Ù¤Æ' ¤Î¹àÌÜ¤òºï½ü¤¹¤ë¤³¤È¤Ï¤Ç¤­¤Ş¤»¤ó"
+msgstr "'ã™ã¹ã¦' ã®é …ç›®ã‚’å‰Šé™¤ã™ã‚‹ã“ã¨ã¯ã§ãã¾ã›ã‚“"
 
 #: ../src/misc_confirm.c:536
 #, c-format
 msgid "Removed all %d tracks from the iPod"
-msgstr "Á´%d¶Ê¤ò iPod ¤«¤éºï½ü¤·¤Ş¤·¤¿"
+msgstr "å…¨%dæ›²ã‚’ iPod ã‹ã‚‰å‰Šé™¤ã—ã¾ã—ãŸ"
 
 #: ../src/misc_confirm.c:541
 #, c-format
 msgid "Removed all podcasts from the iPod"
-msgstr "¤¹¤Ù¤Æ¤Î Podcast ¤ò iPod ¤«¤éºï½ü¤·¤Ş¤·¤¿"
+msgstr "ã™ã¹ã¦ã® Podcast ã‚’ iPod ã‹ã‚‰å‰Šé™¤ã—ã¾ã—ãŸ"
 
 #: ../src/misc_confirm.c:550 ../src/misc_confirm.c:624
 #, c-format
 msgid "Deleted playlist '%s' including %d member track"
 msgid_plural "Deleted playlist '%s' including %d member tracks"
-msgstr[0] "¥×¥ì¥¤¥ê¥¹¥È '%s' (%d¶Ê) ¤òºï½ü¤·¤Ş¤·¤¿"
+msgstr[0] "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ '%s' (%dæ›²) ã‚’å‰Šé™¤ã—ã¾ã—ãŸ"
 
 #. first use playlist name
 #: ../src/misc_confirm.c:566 ../src/misc_confirm.c:640
 #, c-format
 msgid "Deleted playlist '%s'"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È '%s' ¤òºï½ü"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ '%s' ã‚’å‰Šé™¤"
 
 #: ../src/misc_confirm.c:600
 #, c-format
 msgid "Deleted playlist '%s' including %d member track on harddisk"
 msgid_plural "Deleted playlist '%s' including %d member tracks on harddisk"
-msgstr[0] "¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤«¤é¥×¥ì¥¤¥ê¥¹¥È '%s' (%d¶Ê) ¤òºï½ü¤·¤Ş¤·¤¿"
+msgstr[0] "ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã‹ã‚‰ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ '%s' (%dæ›²) ã‚’å‰Šé™¤ã—ã¾ã—ãŸ"
 
 #: ../src/misc_confirm.c:617
 #, c-format
 msgid "Removed all %d tracks from the database"
-msgstr "¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤éÁ´%d¶Ê¤òºï½ü¤·¤Ş¤·¤¿"
+msgstr "ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰å…¨%dæ›²ã‚’å‰Šé™¤ã—ã¾ã—ãŸ"
 
 #: ../src/misc_confirm.c:695
 #, c-format
 msgid "Are you sure you want to remove all tracks from your iPod?"
-msgstr "iPod ¤Î¤¹¤Ù¤Æ¤Î¶Ê¤òºï½ü¤·¤Æ¤âËÜÅö¤Ë¤è¤í¤·¤¤¤Ç¤¹¤«?"
+msgstr "iPod ã®ã™ã¹ã¦ã®æ›²ã‚’å‰Šé™¤ã—ã¦ã‚‚æœ¬å½“ã«ã‚ˆã‚ã—ã„ã§ã™ã‹?"
 
 #: ../src/misc_confirm.c:700
 #, c-format
 msgid "Are you sure you want to remove all podcasts from your iPod?"
-msgstr "¤¹¤Ù¤Æ¤Î Podcast ¤ò iPod ¤«¤éºï½ü¤·¤Æ¤âËÜÅö¤Ë¤è¤í¤·¤¤¤Ç¤¹¤«?"
+msgstr "ã™ã¹ã¦ã® Podcast ã‚’ iPod ã‹ã‚‰å‰Šé™¤ã—ã¦ã‚‚æœ¬å½“ã«ã‚ˆã‚ã—ã„ã§ã™ã‹?"
 
 #: ../src/misc_confirm.c:708
 #, c-format
@@ -4587,14 +4600,14 @@ msgid_plural ""
 "completely from your ipod? The number of playlists the tracks are member of "
 "is indicated in parentheses."
 msgstr[0] ""
-"¥×¥ì¥¤¥ê¥¹¥È '%s' µÚ¤Ó¤½¤ì¤Ë´Ş¤Ş¤ì¤ë°Ê²¼¤Î¶Ê¤ò iPod ¤«¤éºï½ü¤·¤Æ¤âËÜÅö¤Ë¤è¤í"
-"¤·¤¤¤Ç¤¹¤«? ³ç¸Ì¤ÎÃæ¤Î¿ô»ú¤Ï¡¢¤½¤ì¤¾¤ì¤Î¶Ê¤¬¤¤¤¯¤Ä¤Î¥×¥ì¥¤¥ê¥¹¥È¤ËÅĞÏ¿¤µ¤ì¤Æ"
-"¤¤¤ë¤«¤ò¼¨¤·¤Æ¤¤¤Ş¤¹¡£"
+"ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ '%s' åŠã³ãã‚Œã«å«ã¾ã‚Œã‚‹ä»¥ä¸‹ã®æ›²ã‚’ iPod ã‹ã‚‰å‰Šé™¤ã—ã¦ã‚‚æœ¬å½“ã«ã‚ˆã‚"
+"ã—ã„ã§ã™ã‹? æ‹¬å¼§ã®ä¸­ã®æ•°å­—ã¯ã€ãã‚Œãã‚Œã®æ›²ãŒã„ãã¤ã®ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã«ç™»éŒ²ã•ã‚Œã¦"
+"ã„ã‚‹ã‹ã‚’ç¤ºã—ã¦ã„ã¾ã™ã€‚"
 
 #: ../src/misc_confirm.c:719 ../src/misc_confirm.c:774
 #, c-format
 msgid "Are you sure you want to delete the playlist '%s'?"
-msgstr "¥×¥ì¥¤¥ê¥¹¥È '%s' ¤òËÜÅö¤Ëºï½ü¤·¤Æ¤â¤¤¤¤¤Ç¤¹¤«?"
+msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ '%s' ã‚’æœ¬å½“ã«å‰Šé™¤ã—ã¦ã‚‚ã„ã„ã§ã™ã‹?"
 
 #: ../src/misc_confirm.c:745
 #, c-format
@@ -4607,14 +4620,14 @@ msgid_plural ""
 "tracks from your harddisk? The number of playlists the tracks are member of "
 "is indicated in parentheses."
 msgstr[0] ""
-"¥×¥ì¥¤¥ê¥¹¥È '%s' µÚ¤Ó¤½¤ì¤Ë´Ş¤Ş¤ì¤ë°Ê²¼¤Î¶Ê¤ò¥Ï¡¼¥É¥Ç¥£¥¹¥¯¤«¤éºï½ü¤·¤Æ¤âËÜ"
-"Åö¤Ë¤è¤í¤·¤¤¤Ç¤¹¤«? ³ç¸Ì¤ÎÃæ¤Î¿ô»ú¤Ï¡¢¤½¤ì¤¾¤ì¤Î¶Ê¤¬¤¤¤¯¤Ä¤Î¥×¥ì¥¤¥ê¥¹¥È¤ËÅĞ"
-"Ï¿¤µ¤ì¤Æ¤¤¤ë¤«¤ò¼¨¤·¤Æ¤¤¤Ş¤¹¡£"
+"ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ '%s' åŠã³ãã‚Œã«å«ã¾ã‚Œã‚‹ä»¥ä¸‹ã®æ›²ã‚’ãƒãƒ¼ãƒ‰ãƒ‡ã‚£ã‚¹ã‚¯ã‹ã‚‰å‰Šé™¤ã—ã¦ã‚‚æœ¬"
+"å½“ã«ã‚ˆã‚ã—ã„ã§ã™ã‹? æ‹¬å¼§ã®ä¸­ã®æ•°å­—ã¯ã€ãã‚Œãã‚Œã®æ›²ãŒã„ãã¤ã®ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã«ç™»"
+"éŒ²ã•ã‚Œã¦ã„ã‚‹ã‹ã‚’ç¤ºã—ã¦ã„ã¾ã™ã€‚"
 
 #: ../src/misc_confirm.c:753
 #, c-format
 msgid "Are you sure you want to remove all tracks from the database?"
-msgstr "¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤é¤¹¤Ù¤Æ¤Î¶Ê¤òºï½ü¤·¤Æ¤âËÜÅö¤Ë¤è¤í¤·¤¤¤Ç¤¹¤«?"
+msgstr "ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰ã™ã¹ã¦ã®æ›²ã‚’å‰Šé™¤ã—ã¦ã‚‚æœ¬å½“ã«ã‚ˆã‚ã—ã„ã§ã™ã‹?"
 
 #: ../src/misc_confirm.c:762
 #, c-format
@@ -4627,29 +4640,29 @@ msgid_plural ""
 "tracks from the database? The number of playlists the tracks are member of "
 "is indicated in parentheses."
 msgstr[0] ""
-"¥×¥ì¥¤¥ê¥¹¥È '%s' µÚ¤Ó¤½¤ì¤Ë´Ş¤Ş¤ì¤ë°Ê²¼¤Î¶Ê¤ò¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤éºï½ü¤·¤Æ¤âËÜÅö"
-"¤Ë¤è¤í¤·¤¤¤Ç¤¹¤«? ³ç¸Ì¤ÎÃæ¤Î¿ô»ú¤Ï¡¢¤½¤ì¤¾¤ì¤Î¶Ê¤¬¤¤¤¯¤Ä¤Î¥×¥ì¥¤¥ê¥¹¥È¤ËÅĞÏ¿"
-"¤µ¤ì¤Æ¤¤¤ë¤«¤ò¼¨¤·¤Æ¤¤¤Ş¤¹¡£"
+"ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ '%s' åŠã³ãã‚Œã«å«ã¾ã‚Œã‚‹ä»¥ä¸‹ã®æ›²ã‚’ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰å‰Šé™¤ã—ã¦ã‚‚æœ¬å½“"
+"ã«ã‚ˆã‚ã—ã„ã§ã™ã‹? æ‹¬å¼§ã®ä¸­ã®æ•°å­—ã¯ã€ãã‚Œãã‚Œã®æ›²ãŒã„ãã¤ã®ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã«ç™»éŒ²"
+"ã•ã‚Œã¦ã„ã‚‹ã‹ã‚’ç¤ºã—ã¦ã„ã¾ã™ã€‚"
 
 #: ../src/misc_confirm.c:841
 msgid ""
 "Data has been changed and not been saved.\n"
 "OK to exit gtkpod?"
 msgstr ""
-"ÊÑ¹¹¤Î¤¢¤Ã¤¿¥Ç¡¼¥¿¤Ï¥»¡¼¥Ö¤µ¤ì¤Æ¤¤¤Ş¤»¤ó¡£\n"
-"ËÜÅö¤Ë½ªÎ»¤·¤Ş¤¹¤«?"
+"å¤‰æ›´ã®ã‚ã£ãŸãƒ‡ãƒ¼ã‚¿ã¯ã‚»ãƒ¼ãƒ–ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚\n"
+"æœ¬å½“ã«çµ‚äº†ã—ã¾ã™ã‹?"
 
 #: ../src/misc_conversion.c:66
 msgid "File type"
-msgstr "¥Õ¥¡¥¤¥ë·Á¼°"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼"
 
 #: ../src/misc_conversion.c:67
 msgid "PC File"
-msgstr "PC¥Õ¥¡¥¤¥ë"
+msgstr "PCãƒ•ã‚¡ã‚¤ãƒ«"
 
 #: ../src/misc_conversion.c:68
 msgid "iPod File"
-msgstr "iPod ¥Õ¥¡¥¤¥ë"
+msgstr "iPod ãƒ•ã‚¡ã‚¤ãƒ«"
 
 #: ../src/misc_conversion.c:69
 msgid "iPod ID"
@@ -4658,45 +4671,45 @@ msgstr ""
 #. 10
 #: ../src/misc_conversion.c:70
 msgid "Track Nr (#)"
-msgstr "¥È¥é¥Ã¥¯No.(#)"
+msgstr "ãƒˆãƒ©ãƒƒã‚¯No.(#)"
 
 #: ../src/misc_conversion.c:71
 msgid "Transferred"
-msgstr "Å¾Á÷ºÑ¤ß"
+msgstr "è»¢é€æ¸ˆã¿"
 
 #: ../src/misc_conversion.c:72
 msgid "File Size"
-msgstr "¥Õ¥¡¥¤¥ë¥µ¥¤¥º"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚º"
 
 #: ../src/misc_conversion.c:73
 msgid "Play Time"
-msgstr "±éÁÕ»ş´Ö"
+msgstr "æ¼”å¥æ™‚é–“"
 
 #. 20
 #: ../src/misc_conversion.c:80
 msgid "Date played"
-msgstr "ºÇ¸å¤Ë±éÁÕ¤·¤¿Æü"
+msgstr "æœ€å¾Œã«æ¼”å¥ã—ãŸæ—¥"
 
 #: ../src/misc_conversion.c:82
 msgid "Volume"
-msgstr "²»ÎÌ"
+msgstr "éŸ³é‡"
 
 #: ../src/misc_conversion.c:83
 msgid "Soundcheck"
-msgstr "¥µ¥¦¥ó¥É¥Á¥§¥Ã¥¯"
+msgstr "ã‚µã‚¦ãƒ³ãƒ‰ãƒã‚§ãƒƒã‚¯"
 
 #. 25
 #: ../src/misc_conversion.c:85
 msgid "CD Nr"
-msgstr "CDÈÖ¹æ"
+msgstr "CDç•ªå·"
 
 #: ../src/misc_conversion.c:88
 msgid "Category"
-msgstr "¥«¥Æ¥´¥ê"
+msgstr "ã‚«ãƒ†ã‚´ãƒª"
 
 #: ../src/misc_conversion.c:89
 msgid "Description"
-msgstr "ÀâÌÀ"
+msgstr "èª¬æ˜"
 
 #. 30
 #: ../src/misc_conversion.c:90
@@ -4709,26 +4722,26 @@ msgstr ""
 
 #: ../src/misc_conversion.c:92
 msgid "Subtitle"
-msgstr "¥µ¥Ö¥¿¥¤¥È¥ë"
+msgstr "ã‚µãƒ–ã‚¿ã‚¤ãƒˆãƒ«"
 
 #: ../src/misc_conversion.c:93
 msgid "Date released"
-msgstr "¸ø³«Æü"
+msgstr "å…¬é–‹æ—¥"
 
 #: ../src/misc_conversion.c:94
 msgid "Checked"
-msgstr "¥Á¥§¥Ã¥¯ºÑ¤ß"
+msgstr "ãƒã‚§ãƒƒã‚¯æ¸ˆã¿"
 
 #. 35
 #: ../src/misc_conversion.c:95
 #, fuzzy
 msgid "Start time"
-msgstr "Á°²ó°Ê¹ß"
+msgstr "å‰å›ä»¥é™"
 
 #: ../src/misc_conversion.c:96
 #, fuzzy
 msgid "Stop time"
-msgstr "Ãæ»ß"
+msgstr "ä¸­æ­¢"
 
 #: ../src/misc_conversion.c:97
 msgid "Remember Playback Position"
@@ -4767,33 +4780,33 @@ msgstr ""
 #: ../src/misc_conversion.c:106
 #, fuzzy
 msgid "Album Artist"
-msgstr "¥¢¡¼¥Æ¥£¥¹¥È"
+msgstr "ã‚¢ãƒ¼ãƒ†ã‚£ã‚¹ãƒˆ"
 
 #: ../src/misc_conversion.c:107
 #, fuzzy
 msgid "Sort Artist"
-msgstr "¥¢¡¼¥Æ¥£¥¹¥È"
+msgstr "ã‚¢ãƒ¼ãƒ†ã‚£ã‚¹ãƒˆ"
 
 #: ../src/misc_conversion.c:108
 #, fuzzy
 msgid "Sort Title"
-msgstr "¥µ¥Ö¥¿¥¤¥È¥ë"
+msgstr "ã‚µãƒ–ã‚¿ã‚¤ãƒˆãƒ«"
 
 #: ../src/misc_conversion.c:109
 #, fuzzy
 msgid "Sort Album"
-msgstr "¥¢¥ë¥Ğ¥à"
+msgstr "ã‚¢ãƒ«ãƒãƒ "
 
 #. 50
 #: ../src/misc_conversion.c:110
 #, fuzzy
 msgid "Sort Album Artist"
-msgstr "¥¢¡¼¥Æ¥£¥¹¥È"
+msgstr "ã‚¢ãƒ¼ãƒ†ã‚£ã‚¹ãƒˆ"
 
 #: ../src/misc_conversion.c:111
 #, fuzzy
 msgid "Sort Composer"
-msgstr "ºî¶Ê¼Ô"
+msgstr "ä½œæ›²è€…"
 
 #: ../src/misc_conversion.c:112
 msgid "Sort TV Show"
@@ -4805,20 +4818,20 @@ msgstr ""
 
 #: ../src/misc_conversion.c:126
 msgid "Name of file on PC, if available"
-msgstr "PC ¾å¤Ç¤Î¥Õ¥¡¥¤¥ëÌ¾ (ÅĞÏ¿¤µ¤ì¤Æ¤¤¤ë¾ì¹ç)"
+msgstr "PC ä¸Šã§ã®ãƒ•ã‚¡ã‚¤ãƒ«å (ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹å ´åˆ)"
 
 #: ../src/misc_conversion.c:127
 msgid "Name of file on the iPod"
-msgstr "iPod ¾å¤Ç¤Î¥Õ¥¡¥¤¥ëÌ¾"
+msgstr "iPod ä¸Šã§ã®ãƒ•ã‚¡ã‚¤ãƒ«å"
 
 #. 10
 #: ../src/misc_conversion.c:129
 msgid "Track Nr. and total number of tracks on CD"
-msgstr "¶ÊÈÖ¹æ¤ª¤è¤Ó CD ¤ÎÁí¶Ê¿ô"
+msgstr "æ›²ç•ªå·ãŠã‚ˆã³ CD ã®ç·æ›²æ•°"
 
 #: ../src/misc_conversion.c:130
 msgid "Whether the file has already been transferred to the iPod or not"
-msgstr "¤³¤Î¥Õ¥¡¥¤¥ë¤¬ iPod ¤ËÅ¾Á÷ºÑ¤ß¤«¤É¤¦¤«¤ò¼¨¤¹"
+msgstr "ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒ iPod ã«è»¢é€æ¸ˆã¿ã‹ã©ã†ã‹ã‚’ç¤ºã™"
 
 #: ../src/misc_conversion.c:136
 msgid "Beats per minute"
@@ -4826,54 +4839,54 @@ msgstr ""
 
 #: ../src/misc_conversion.c:137
 msgid "Number of times the track has been played"
-msgstr "¶Ê¤¬±éÁÕ¤µ¤ì¤¿²ó¿ô"
+msgstr "æ›²ãŒæ¼”å¥ã•ã‚ŒãŸå›æ•°"
 
 #: ../src/misc_conversion.c:138
 msgid "Star rating from 0 to 5"
-msgstr "É¾²Á (0¤«¤é5)"
+msgstr "è©•ä¾¡ (0ã‹ã‚‰5)"
 
 #: ../src/misc_conversion.c:139
 msgid "Date and time track has been added"
-msgstr "ÅĞÏ¿¤µ¤ì¤¿¤È¤­¤ÎÆüÉÕ¤È»ş¹ï"
+msgstr "ç™»éŒ²ã•ã‚ŒãŸã¨ãã®æ—¥ä»˜ã¨æ™‚åˆ»"
 
 #. 20
 #: ../src/misc_conversion.c:140
 msgid "Date and time track has last been played"
-msgstr "ºÇ¸å¤Ë±éÁÕ¤µ¤ì¤¿¤È¤­¤ÎÆüÉÕ¤È»ş¹ï"
+msgstr "æœ€å¾Œã«æ¼”å¥ã•ã‚ŒãŸã¨ãã®æ—¥ä»˜ã¨æ™‚åˆ»"
 
 #: ../src/misc_conversion.c:141
 msgid "Date and time track has last been modified"
-msgstr "ºÇ¸å¤ËÊÑ¹¹¤µ¤ì¤¿¤È¤­¤ÎÆüÉÕ¤È»ş¹ï"
+msgstr "æœ€å¾Œã«å¤‰æ›´ã•ã‚ŒãŸã¨ãã®æ—¥ä»˜ã¨æ™‚åˆ»"
 
 #: ../src/misc_conversion.c:142
 msgid "Manual volume adjust"
-msgstr "²»ÎÌ¤ÎÄ´À°ÃÍ"
+msgstr "éŸ³é‡ã®èª¿æ•´å€¤"
 
 #: ../src/misc_conversion.c:143
 msgid ""
 "Volume adjust in dB (replay gain) -- you need to activate 'soundcheck' on "
 "the iPod"
 msgstr ""
-"²»ÎÌ¤ÎÄ´À°ÃÍ (dB) ¡½ iPod ¤ÎÀßÄê¤Ç¡Ö¥µ¥¦¥ó¥É¥Á¥§¥Ã¥¯¡×¤ò ON ¤Ë¤·¤Æ¤ª¤¯É¬Í×¤¬"
-"¤¢¤ê¤Ş¤¹"
+"éŸ³é‡ã®èª¿æ•´å€¤ (dB) â€• iPod ã®è¨­å®šã§ã€Œã‚µã‚¦ãƒ³ãƒ‰ãƒã‚§ãƒƒã‚¯ã€ã‚’ ON ã«ã—ã¦ãŠãå¿…è¦ãŒã‚"
+"ã‚Šã¾ã™"
 
 #. 25
 #: ../src/misc_conversion.c:146
 msgid "CD Nr. and total number of CDS in set"
-msgstr "CD ÈÖ¹æ¤È¡¢¥»¥Ã¥È¤Ë´Ş¤Ş¤ì¤ë CD ¤ÎÁíËç¿ô"
+msgstr "CD ç•ªå·ã¨ã€ã‚»ãƒƒãƒˆã«å«ã¾ã‚Œã‚‹ CD ã®ç·æšæ•°"
 
 #: ../src/misc_conversion.c:149
 msgid ""
 "The category (e.g. 'Technology' or 'Music') where the podcast was located."
-msgstr "Podcast ¤Î¥«¥Æ¥´¥ê (Îã: 'µ»½Ñ·Ï' ¤ä '²»³Ú')"
+msgstr "Podcast ã®ã‚«ãƒ†ã‚´ãƒª (ä¾‹: 'æŠ€è¡“ç³»' ã‚„ 'éŸ³æ¥½')"
 
 #: ../src/misc_conversion.c:150
 msgid "Accessible by selecting the center button on the iPod."
-msgstr "iPod ¤Î¿¿Ãæ¤Î¥Ü¥¿¥ó¤ò²¡¤¹¤È¸«¤ë¤³¤È¤¬¤Ç¤­¤ë"
+msgstr "iPod ã®çœŸä¸­ã®ãƒœã‚¿ãƒ³ã‚’æŠ¼ã™ã¨è¦‹ã‚‹ã“ã¨ãŒã§ãã‚‹"
 
 #: ../src/misc_conversion.c:154
 msgid "Release date (for podcasts displayed next to the title on the iPod)"
-msgstr "¸ø³«Æü (Podcast ÍÑ¡£iPod ¾å¤Ç¥¿¥¤¥È¥ë¤Î²£¤ËÉ½¼¨¤µ¤ì¤ë)"
+msgstr "å…¬é–‹æ—¥ (Podcast ç”¨ã€‚iPod ä¸Šã§ã‚¿ã‚¤ãƒˆãƒ«ã®æ¨ªã«è¡¨ç¤ºã•ã‚Œã‚‹)"
 
 #. 50
 #: ../src/misc_conversion.c:168 ../src/misc_conversion.c:169
@@ -4881,37 +4894,37 @@ msgstr "¸ø³«Æü (Podcast ÍÑ¡£iPod ¾å¤Ç¥¿¥¤¥È¥ë¤Î²£¤ËÉ½¼¨¤µ¤ì¤ë)"
 #: ../src/misc_conversion.c:172 ../src/misc_conversion.c:173
 #, fuzzy
 msgid "Used for sorting on the iPod"
-msgstr "iPod ¾å¤Ç¤Î¥Õ¥¡¥¤¥ëÌ¾"
+msgstr "iPod ä¸Šã§ã®ãƒ•ã‚¡ã‚¤ãƒ«å"
 
 #: ../src/misc_conversion.c:735
 #, c-format
 msgid "The URI '%s' is not an absolute URI using the file scheme"
-msgstr "»ØÄê¤µ¤ì¤¿URI '%s' ¤Ï file ¥¹¥­¡¼¥à¤¬ÀßÄê¤µ¤ì¤Æ¤¤¤Ê¤¤¡¢ÉÔ´°Á´¤ÊURI¤Ç¤¹"
+msgstr "æŒ‡å®šã•ã‚ŒãŸURI '%s' ã¯ file ã‚¹ã‚­ãƒ¼ãƒ ãŒè¨­å®šã•ã‚Œã¦ã„ãªã„ã€ä¸å®Œå…¨ãªURIã§ã™"
 
 #: ../src/misc_conversion.c:745
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
-msgstr "¥í¡¼¥«¥ë¥Õ¥¡¥¤¥ë¤ò»Ø¤¹URI '%s' ¤Ë¤Ï '#' ¤Ï´Ş¤Ş¤ì¤Æ¤Ï¤Ê¤ê¤Ş¤»¤ó"
+msgstr "ãƒ­ãƒ¼ã‚«ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒ‡ã™URI '%s' ã«ã¯ '#' ã¯å«ã¾ã‚Œã¦ã¯ãªã‚Šã¾ã›ã‚“"
 
 #: ../src/misc_conversion.c:762
 #, c-format
 msgid "The URI '%s' is invalid"
-msgstr "»ØÄê¤µ¤ì¤¿URI '%s' ¤ÏÉÔÀµ¤Ç¤¹"
+msgstr "æŒ‡å®šã•ã‚ŒãŸURI '%s' ã¯ä¸æ­£ã§ã™"
 
 #: ../src/misc_conversion.c:774
 #, c-format
 msgid "The hostname of the URI '%s' is invalid"
-msgstr "»ØÄê¤µ¤ì¤¿URI '%s' ¤Î¥Û¥¹¥ÈÌ¾¤¬ÉÔÀµ¤Ç¤¹"
+msgstr "æŒ‡å®šã•ã‚ŒãŸURI '%s' ã®ãƒ›ã‚¹ãƒˆåãŒä¸æ­£ã§ã™"
 
 #: ../src/misc_conversion.c:790
 #, c-format
 msgid "The URI '%s' contains invalidly escaped characters"
-msgstr "»ØÄê¤µ¤ì¤¿URI '%s' ¤ÏÉÔÀµ¤Ê¥¨¥¹¥±¡¼¥×Ê¸»ú¤ò´Ş¤ó¤Ç¤¤¤Ş¤¹"
+msgstr "æŒ‡å®šã•ã‚ŒãŸURI '%s' ã¯ä¸æ­£ãªã‚¨ã‚¹ã‚±ãƒ¼ãƒ—æ–‡å­—ã‚’å«ã‚“ã§ã„ã¾ã™"
 
 #: ../src/misc_playlist.c:67 ../src/misc_playlist.c:94
 #: ../src/misc_playlist.c:429
 msgid "Please enter a name for the new playlist"
-msgstr "¿·¤·¤¤¥×¥ì¥¤¥ê¥¹¥È¤ÎÌ¾Á°¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤"
+msgstr "æ–°ã—ã„ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®åå‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„"
 
 #: ../src/misc_playlist.c:154
 msgid "AR:"
@@ -4935,68 +4948,68 @@ msgstr ""
 
 #: ../src/misc_playlist.c:194
 msgid "Unknown"
-msgstr "ÉÔÌÀ"
+msgstr "ä¸æ˜"
 
 #: ../src/misc_playlist.c:272
 #, c-format
 msgid "Random (%d)"
-msgstr "¥é¥ó¥À¥à (%d)"
+msgstr "ãƒ©ãƒ³ãƒ€ãƒ  (%d)"
 
 #: ../src/misc_playlist.c:297
 msgid ""
 "Auto Store of track view disabled.\n"
 "\n"
 msgstr ""
-"¶Ê½ç¤Î¼«Æ°ÊİÂ¸¤¬Ìµ¸ú¤Ë¤Ê¤Ã¤Æ¤¤¤Ş¤¹¡£\n"
+"æ›²é †ã®è‡ªå‹•ä¿å­˜ãŒç„¡åŠ¹ã«ãªã£ã¦ã„ã¾ã™ã€‚\n"
 "\n"
 
 #: ../src/misc_playlist.c:356
 msgid "Not Listed"
-msgstr "¥ê¥¹¥È¤ËºÜ¤Ã¤Æ¤Ê¤¤¶Ê"
+msgstr "ãƒªã‚¹ãƒˆã«è¼‰ã£ã¦ãªã„æ›²"
 
 #: ../src/misc_playlist.c:406
 #, c-format
 msgid "Created playlist '%s' with %d track."
 msgid_plural "Created playlist '%s' with %d tracks."
-msgstr[0] "¿·¤·¤¯¥×¥ì¥¤¥ê¥¹¥È'%s'(%d¶Ê)¤òºîÀ®¤·¤Ş¤·¤¿"
+msgstr[0] "æ–°ã—ããƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ'%s'(%dæ›²)ã‚’ä½œæˆã—ã¾ã—ãŸ"
 
 #. n==0
 #: ../src/misc_playlist.c:417
 msgid "No tracks available, playlist not created"
-msgstr "¶Ê¤¬¸«ÉÕ¤«¤é¤Ê¤¤¤Î¤Ç¡¢¥×¥ì¥¤¥ê¥¹¥È¤Ïºî¤ì¤Ş¤»¤ó"
+msgstr "æ›²ãŒè¦‹ä»˜ã‹ã‚‰ãªã„ã®ã§ã€ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã¯ä½œã‚Œã¾ã›ã‚“"
 
 #: ../src/misc_playlist.c:543
 #, c-format
 msgid "Most Listened (%d)"
-msgstr "ÎÉ¤¯Ä°¤¯¶Ê (%d)"
+msgstr "è‰¯ãè´ãæ›² (%d)"
 
 #: ../src/misc_playlist.c:584
 #, c-format
 msgid "Never Listened"
-msgstr "Ä°¤¤¤¿¤³¤È¤¬¤Ê¤¤¶Ê"
+msgstr "è´ã„ãŸã“ã¨ãŒãªã„æ›²"
 
 #: ../src/misc_playlist.c:624
 #, c-format
 msgid "Best Rated (%d)"
-msgstr "É¾²Á¤Î¹â¤¤¶Ê (%d)"
+msgstr "è©•ä¾¡ã®é«˜ã„æ›² (%d)"
 
 #: ../src/misc_playlist.c:666
 msgid "Unrated tracks"
-msgstr "Ì¤É¾²Á¤Î¶Ê"
+msgstr "æœªè©•ä¾¡ã®æ›²"
 
 #: ../src/misc_playlist.c:671
 #, c-format
 msgid "Rated %d"
-msgstr "É¾²Á¤µ¤ì¤¿¶Ê (%d)"
+msgstr "è©•ä¾¡ã•ã‚ŒãŸæ›² (%d)"
 
 #: ../src/misc_playlist.c:714
 #, c-format
 msgid "Recent (%d)"
-msgstr "ºÇ¶áÄ°¤¤¤¿¶Ê (%d)"
+msgstr "æœ€è¿‘è´ã„ãŸæ›² (%d)"
 
 #: ../src/misc_playlist.c:753
 msgid "Last Time"
-msgstr "Á°²ó°Ê¹ß"
+msgstr "å‰å›ä»¥é™"
 
 #: ../src/misc_playlist.c:844
 msgid "Removal of dangling tracks with no files on PC was canceled."
@@ -5016,7 +5029,7 @@ msgstr ""
 
 #: ../src/misc_playlist.c:976
 msgid "Track"
-msgstr "¶Ê"
+msgstr "æ›²"
 
 #: ../src/misc_playlist.c:1019
 msgid ""
@@ -5094,13 +5107,13 @@ msgstr ""
 #, c-format
 msgid "Hashed %d of %d track."
 msgid_plural "Hashed %d of %d tracks."
-msgstr[0] "%2$d¶ÊÃæ %1$d¶Ê¤Î¥Ï¥Ã¥·¥å¤òÀ¸À®¤·¤Ş¤·¤¿¡£"
+msgstr[0] "%2$dæ›²ä¸­ %1$dæ›²ã®ãƒãƒƒã‚·ãƒ¥ã‚’ç”Ÿæˆã—ã¾ã—ãŸã€‚"
 
 #: ../src/misc_track.c:198
 #, c-format
 msgid "The following duplicate track has been removed."
 msgid_plural "The following %d duplicate tracks have been removed."
-msgstr[0] "°Ê²¼¤Î½ÅÊ£¤·¤¿%d¶Ê¤¬ºï½ü¤µ¤ì¤Ş¤·¤¿¡£"
+msgstr[0] "ä»¥ä¸‹ã®é‡è¤‡ã—ãŸ%dæ›²ãŒå‰Šé™¤ã•ã‚Œã¾ã—ãŸã€‚"
 
 #: ../src/misc_track.c:205
 #, c-format
@@ -5109,13 +5122,13 @@ msgid ""
 msgid_plural ""
 "The following %d duplicate tracks have not been added to the master play "
 "list."
-msgstr[0] "°Ê²¼¤Î½ÅÊ£¤·¤¿%d¶Ê¤Ï¥Ş¥¹¥¿¡¼¥×¥ì¥¤¥ê¥¹¥È¤ËÄÉ²Ã¤µ¤ì¤Ş¤»¤ó¤Ç¤·¤¿¡£"
+msgstr[0] "ä»¥ä¸‹ã®é‡è¤‡ã—ãŸ%dæ›²ã¯ãƒã‚¹ã‚¿ãƒ¼ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã«è¿½åŠ ã•ã‚Œã¾ã›ã‚“ã§ã—ãŸã€‚"
 
 #. gint id,
 #. gboolean modal,
 #: ../src/misc_track.c:212
 msgid "Duplicate detection"
-msgstr "½ÅÊ£¤Î¸¡½Ğ"
+msgstr "é‡è¤‡ã®æ¤œå‡º"
 
 #: ../src/misc_track.c:1339
 msgid "Local Database"
@@ -5129,59 +5142,59 @@ msgstr ""
 #: ../src/misc_track.c:1354
 #, fuzzy
 msgid "Artwork not set"
-msgstr "¤¬ÀßÄê¤µ¤ì¤Æ¤¤¤Ê¤¤"
+msgstr "ãŒè¨­å®šã•ã‚Œã¦ã„ãªã„"
 
 #: ../src/misc_track.c:1816
 #, fuzzy, c-format
 msgid "Could not find source file for '%s'. Track not copied."
-msgstr "iPod ¾å¤Î '%s' ¤ËÁêÅö¤¹¤ë¥Õ¥¡¥¤¥ë¤¬¸«¤Ä¤«¤ê¤Ş¤»¤ó\n"
+msgstr "iPod ä¸Šã® '%s' ã«ç›¸å½“ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“\n"
 
 #: ../src/misc_track.c:2052
 #, c-format
 msgid "drag and drop: ignored '%s'\n"
-msgstr "¥É¥é¥Ã¥°¥¢¥ó¥É¥É¥í¥Ã¥×: '%s'¤ÏÌµ»ë¤·¤Ş¤¹\n"
+msgstr "ãƒ‰ãƒ©ãƒƒã‚°ã‚¢ãƒ³ãƒ‰ãƒ‰ãƒ­ãƒƒãƒ—: '%s'ã¯ç„¡è¦–ã—ã¾ã™\n"
 
 #: ../src/mp3file.c:1336
 #, fuzzy, c-format
 msgid "Error setting ID3 field: %s\n"
-msgstr "'%s'¤ÎºîÀ®¤Ë¼ºÇÔ: %s\n"
+msgstr "'%s'ã®ä½œæˆã«å¤±æ•—: %s\n"
 
 #: ../src/mp3file.c:1360 ../src/mp3file.c:1453 ../src/mp3file.c:1608
 #: ../src/mp3file.c:2733
 #, c-format
 msgid "ERROR while opening file: '%s' (%s).\n"
-msgstr "¥Õ¥¡¥¤¥ë '%s' ¤ò³«¤¯ºİ¤Ë¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿¡£ (%s)\n"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ« '%s' ã‚’é–‹ãéš›ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚ (%s)\n"
 
 #: ../src/mp3file.c:1688
 #, fuzzy, c-format
 msgid "ERROR while writing tag to file: '%s' (%s).\n"
-msgstr "¥Õ¥¡¥¤¥ë '%s' ¤ò³«¤¯ºİ¤Ë¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿¡£ (%s)\n"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ« '%s' ã‚’é–‹ãéš›ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚ (%s)\n"
 
 #. Tracks with zero play length are ignored by iPod...
 #: ../src/mp3file.c:2770
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
-msgstr "¥Õ¥¡¥¤¥ë \"%s\" ¤ÏÄ¹¤µ¤¬0¤Ê¤Î¤ÇÌµ»ë¤·¤Ş¤¹¡£\n"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ« \"%s\" ã¯é•·ã•ãŒ0ãªã®ã§ç„¡è¦–ã—ã¾ã™ã€‚\n"
 
 #: ../src/mp4file.c:243 ../src/mp4file.c:404
 #, fuzzy, c-format
 msgid "'%s' does not appear to be a mp4 audio or video file.\n"
-msgstr "'%s' ¤Ï mp4 ¥ª¡¼¥Ç¥£¥ª¥Õ¥¡¥¤¥ë¤È¤ÏÇ§¼±¤Ç¤­¤Ş¤»¤ó¡£\n"
+msgstr "'%s' ã¯ mp4 ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒ•ã‚¡ã‚¤ãƒ«ã¨ã¯èªè­˜ã§ãã¾ã›ã‚“ã€‚\n"
 
 #: ../src/mp4file.c:253 ../src/mp4file.c:414
 #, c-format
 msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
-msgstr "'%s' ¤ÏÆÉ¤ß¹ş¤ß¤¬µö²Ä¤µ¤ì¤Æ¤¤¤Ê¤¤¤«¡¢mp4 ¥Õ¥¡¥¤¥ë¤Ç¤Ï¤¢¤ê¤Ş¤»¤ó¡£\n"
+msgstr "'%s' ã¯èª­ã¿è¾¼ã¿ãŒè¨±å¯ã•ã‚Œã¦ã„ãªã„ã‹ã€mp4 ãƒ•ã‚¡ã‚¤ãƒ«ã§ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚\n"
 
 #: ../src/mp4file.c:529
 #, c-format
 msgid "'%s' does not appear to be a mp4 audio file.\n"
-msgstr "'%s' ¤Ï mp4 ¥ª¡¼¥Ç¥£¥ª¥Õ¥¡¥¤¥ë¤È¤ÏÇ§¼±¤Ç¤­¤Ş¤»¤ó¡£\n"
+msgstr "'%s' ã¯ mp4 ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒ•ã‚¡ã‚¤ãƒ«ã¨ã¯èªè­˜ã§ãã¾ã›ã‚“ã€‚\n"
 
 #: ../src/mp4file.c:540
 #, c-format
 msgid "Could not open '%s' for writing, or file is not an mp4 file.\n"
-msgstr "'%s' ¤Ï½ñ¤­¹ş¤ß¤¬µö²Ä¤µ¤ì¤Æ¤¤¤Ê¤¤¤«¡¢mp4 ¥Õ¥¡¥¤¥ë¤Ç¤Ï¤¢¤ê¤Ş¤»¤ó¡£\n"
+msgstr "'%s' ã¯æ›¸ãè¾¼ã¿ãŒè¨±å¯ã•ã‚Œã¦ã„ãªã„ã‹ã€mp4 ãƒ•ã‚¡ã‚¤ãƒ«ã§ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚\n"
 
 #: ../src/mp4file.c:553
 #, fuzzy, c-format
@@ -5189,8 +5202,8 @@ msgid ""
 "Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
 "You must compile the gtkpod source together with the mp4v2 library.\n"
 msgstr ""
-"'%s'¤ÎÆÉ¤ß¹ş¤ß¤Ë¼ºÇÔ: m4a/m4p ¤Î¼è¤ê°·¤¤¤Ë¤Ï mp4v2 ¥é¥¤¥Ö¥é¥ê¤¬É¬Í×¤Ç¤¹¡£"
-"mp4v2 ¥é¥¤¥Ö¥é¥ê¤ò»È¤Ã¤Æ gtkpod ¤òºÆÅÙ¥³¥ó¥Ñ¥¤¥ë¤·¤Æ¤¯¤À¤µ¤¤¡£\n"
+"'%s'ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—: m4a/m4p ã®å–ã‚Šæ‰±ã„ã«ã¯ mp4v2 ãƒ©ã‚¤ãƒ–ãƒ©ãƒªãŒå¿…è¦ã§ã™ã€‚"
+"mp4v2 ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ä½¿ã£ã¦ gtkpod ã‚’å†åº¦ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã—ã¦ãã ã•ã„ã€‚\n"
 
 #: ../src/mp4file.c:559
 #, fuzzy, c-format
@@ -5199,9 +5212,9 @@ msgid ""
 "without the mp4v2 library. You must compile the gtkpod source together with "
 "the mp4v2 library.\n"
 msgstr ""
-"'%s' ¤Î m4a/m4p ¥á¥¿¥Ç¡¼¥¿¤Î¹¹¿·¤Ë¼ºÇÔ: m4a/m4p ¤Î¼è¤ê°·¤¤¤Ë¤Ï mp4v2 ¥é¥¤¥Ö¥é"
-"¥ê¤¬É¬Í×¤Ç¤¹¡£mp4v2 ¥é¥¤¥Ö¥é¥ê¤ò»È¤Ã¤Æ gtkpod ¤òºÆÅÙ¥³¥ó¥Ñ¥¤¥ë¤·¤Æ¤¯¤À¤µ"
-"¤¤¡£\n"
+"'%s' ã® m4a/m4p ãƒ¡ã‚¿ãƒ‡ãƒ¼ã‚¿ã®æ›´æ–°ã«å¤±æ•—: m4a/m4p ã®å–ã‚Šæ‰±ã„ã«ã¯ mp4v2 ãƒ©ã‚¤ãƒ–ãƒ©"
+"ãƒªãŒå¿…è¦ã§ã™ã€‚mp4v2 ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ä½¿ã£ã¦ gtkpod ã‚’å†åº¦ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã—ã¦ãã ã•"
+"ã„ã€‚\n"
 
 #: ../src/mp4file.c:565
 #, fuzzy, c-format
@@ -5210,19 +5223,19 @@ msgid ""
 "without the mp4v2 library. You must compile the gtkpod source together with "
 "the mp4v2 library.\n"
 msgstr ""
-"'%s' ¤Î m4a/m4p ¥á¥¿¥Ç¡¼¥¿¤Î¹¹¿·¤Ë¼ºÇÔ: m4a/m4p ¤Î¼è¤ê°·¤¤¤Ë¤Ï mp4v2 ¥é¥¤¥Ö¥é"
-"¥ê¤¬É¬Í×¤Ç¤¹¡£mp4v2 ¥é¥¤¥Ö¥é¥ê¤ò»È¤Ã¤Æ gtkpod ¤òºÆÅÙ¥³¥ó¥Ñ¥¤¥ë¤·¤Æ¤¯¤À¤µ"
-"¤¤¡£\n"
+"'%s' ã® m4a/m4p ãƒ¡ã‚¿ãƒ‡ãƒ¼ã‚¿ã®æ›´æ–°ã«å¤±æ•—: m4a/m4p ã®å–ã‚Šæ‰±ã„ã«ã¯ mp4v2 ãƒ©ã‚¤ãƒ–ãƒ©"
+"ãƒªãŒå¿…è¦ã§ã™ã€‚mp4v2 ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ä½¿ã£ã¦ gtkpod ã‚’å†åº¦ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã—ã¦ãã ã•"
+"ã„ã€‚\n"
 
 #: ../src/oggfile.c:62 ../src/wavfile.c:107
 #, c-format
 msgid "Could not open '%s' for reading.\n"
-msgstr "¥Õ¥¡¥¤¥ë '%s' ¤òÆÉ¤ß¹ş¤â¤¦¤È¤·¤Ş¤·¤¿¤¬¡¢³«¤¯¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó¡£\n"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ« '%s' ã‚’èª­ã¿è¾¼ã‚‚ã†ã¨ã—ã¾ã—ãŸãŒã€é–‹ãã“ã¨ãŒã§ãã¾ã›ã‚“ã€‚\n"
 
 #: ../src/oggfile.c:73
 #, fuzzy, c-format
 msgid "'%s' does not appear to be an ogg audio file.\n"
-msgstr "'%s' ¤Ï mp4 ¥ª¡¼¥Ç¥£¥ª¥Õ¥¡¥¤¥ë¤È¤ÏÇ§¼±¤Ç¤­¤Ş¤»¤ó¡£\n"
+msgstr "'%s' ã¯ mp4 ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒ•ã‚¡ã‚¤ãƒ«ã¨ã¯èªè­˜ã§ãã¾ã›ã‚“ã€‚\n"
 
 #: ../src/oggfile.c:154
 #, fuzzy, c-format
@@ -5230,8 +5243,8 @@ msgid ""
 "Import of '%s' failed: ogg not supported without the ogg library. You must "
 "compile the gtkpod source together with the ogg library.\n"
 msgstr ""
-"'%s'¤ÎÆÉ¤ß¹ş¤ß¤Ë¼ºÇÔ: m4a/m4p ¤Î¼è¤ê°·¤¤¤Ë¤Ï mp4v2 ¥é¥¤¥Ö¥é¥ê¤¬É¬Í×¤Ç¤¹¡£"
-"mp4v2 ¥é¥¤¥Ö¥é¥ê¤ò»È¤Ã¤Æ gtkpod ¤òºÆÅÙ¥³¥ó¥Ñ¥¤¥ë¤·¤Æ¤¯¤À¤µ¤¤¡£\n"
+"'%s'ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—: m4a/m4p ã®å–ã‚Šæ‰±ã„ã«ã¯ mp4v2 ãƒ©ã‚¤ãƒ–ãƒ©ãƒªãŒå¿…è¦ã§ã™ã€‚"
+"mp4v2 ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ä½¿ã£ã¦ gtkpod ã‚’å†åº¦ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã—ã¦ãã ã•ã„ã€‚\n"
 
 #: ../src/oggfile.c:160
 #, fuzzy, c-format
@@ -5239,18 +5252,18 @@ msgid ""
 "ogg metadata update for '%s' failed: ogg not supported without the ogg "
 "library. You must compile the gtkpod source together with the ogg library.\n"
 msgstr ""
-"'%s' ¤Î m4a/m4p ¥á¥¿¥Ç¡¼¥¿¤Î¹¹¿·¤Ë¼ºÇÔ: m4a/m4p ¤Î¼è¤ê°·¤¤¤Ë¤Ï mp4v2 ¥é¥¤¥Ö¥é"
-"¥ê¤¬É¬Í×¤Ç¤¹¡£mp4v2 ¥é¥¤¥Ö¥é¥ê¤ò»È¤Ã¤Æ gtkpod ¤òºÆÅÙ¥³¥ó¥Ñ¥¤¥ë¤·¤Æ¤¯¤À¤µ"
-"¤¤¡£\n"
+"'%s' ã® m4a/m4p ãƒ¡ã‚¿ãƒ‡ãƒ¼ã‚¿ã®æ›´æ–°ã«å¤±æ•—: m4a/m4p ã®å–ã‚Šæ‰±ã„ã«ã¯ mp4v2 ãƒ©ã‚¤ãƒ–ãƒ©"
+"ãƒªãŒå¿…è¦ã§ã™ã€‚mp4v2 ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ä½¿ã£ã¦ gtkpod ã‚’å†åº¦ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã—ã¦ãã ã•"
+"ã„ã€‚\n"
 
 #: ../src/prefs.c:357
 #, c-format
 msgid "gtkpod version %s usage:\n"
-msgstr "gtkpod version %s »È¤¤Êı:\n"
+msgstr "gtkpod version %s ä½¿ã„æ–¹:\n"
 
 #: ../src/prefs.c:358
 msgid "  -h, --help:   display this message\n"
-msgstr "  -h, --help:   ¤³¤Î¥Ø¥ë¥×¤òÉ½¼¨¤·¤Ş¤¹\n"
+msgstr "  -h, --help:   ã“ã®ãƒ˜ãƒ«ãƒ—ã‚’è¡¨ç¤ºã—ã¾ã™\n"
 
 #: ../src/prefs.c:359
 msgid "  -p <file>:    increment playcount for file by one\n"
@@ -5262,19 +5275,19 @@ msgstr ""
 
 #: ../src/prefs.c:361
 msgid "  -m path:      define the mountpoint of your iPod\n"
-msgstr "  -m path:      iPod¤Î¥Ş¥¦¥ó¥È¥İ¥¤¥ó¥È¤ò»ØÄê¤·¤Ş¤¹\n"
+msgstr "  -m path:      iPodã®ãƒã‚¦ãƒ³ãƒˆãƒã‚¤ãƒ³ãƒˆã‚’æŒ‡å®šã—ã¾ã™\n"
 
 #: ../src/prefs.c:362
 msgid "  --mountpoint: same as '-m'.\n"
-msgstr "  --mountpoint: '-m'¤ÈÆ±¤¸\n"
+msgstr "  --mountpoint: '-m'ã¨åŒã˜\n"
 
 #: ../src/prefs.c:363
 msgid "  -a:           import database automatically after start.\n"
-msgstr "  -a:           µ¯Æ°»ş¤Ë¥Ç¡¼¥¿¥Ù¡¼¥¹¤ò¼«Æ°Åª¤ËÆÉ¤ß¹ş¤ß¤Ş¤¹\n"
+msgstr "  -a:           èµ·å‹•æ™‚ã«ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚’è‡ªå‹•çš„ã«èª­ã¿è¾¼ã¿ã¾ã™\n"
 
 #: ../src/prefs.c:364
 msgid "  --auto:       same as '-a'.\n"
-msgstr "  --auto:       '-a'¤ÈÆ±¤¸\n"
+msgstr "  --auto:       '-a'ã¨åŒã˜\n"
 
 #: ../src/prefs.c:561
 #, c-format
@@ -5335,11 +5348,11 @@ msgstr ""
 
 #: ../src/prefs_window.c:1205 ../src/prefs_window.c:1223
 msgid "Preferences not updated"
-msgstr "ÀßÄê¤Ï¹¹¿·¤µ¤ì¤Ş¤»¤ó"
+msgstr "è¨­å®šã¯æ›´æ–°ã•ã‚Œã¾ã›ã‚“"
 
 #: ../src/prefs_window.c:1232
 msgid "Preferences applied"
-msgstr "ÀßÄê¤òÅ¬ÍÑ¤·¤Ş¤·¤¿"
+msgstr "è¨­å®šã‚’é©ç”¨ã—ã¾ã—ãŸ"
 
 #: ../src/repository.c:573 ../src/repository.c:2395
 msgid "Set backup file"
@@ -5348,7 +5361,7 @@ msgstr ""
 #: ../src/repository.c:612
 #, fuzzy
 msgid "Select directory for synchronization"
-msgstr "ºÆµ¢Åª¤ËÄÉ²Ã¤¹¤ë¥Ç¥£¥ì¥¯¥È¥ê¤òÁªÂò¤·¤Æ¤¯¤À¤µ¤¤"
+msgstr "å†å¸°çš„ã«è¿½åŠ ã™ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’é¸æŠã—ã¦ãã ã•ã„"
 
 #: ../src/repository.c:638
 msgid "Please select command to sync contacts"
@@ -5365,51 +5378,51 @@ msgstr ""
 #: ../src/repository.c:729
 #, fuzzy
 msgid "Smart playlist updated."
-msgstr "¥¹¥Ş¡¼¥È¥×¥ì¥¤¥ê¥¹¥È"
+msgstr "ã‚¹ãƒãƒ¼ãƒˆãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
 
 #: ../src/repository.c:1190
 #, fuzzy
 msgid "Podcasts Repository"
-msgstr "iPod¤«¤éºï½ü"
+msgstr "iPodã‹ã‚‰å‰Šé™¤"
 
 #: ../src/repository.c:1194
 #, fuzzy
 msgid "Local Repository"
-msgstr "iPod¤«¤éºï½ü"
+msgstr "iPodã‹ã‚‰å‰Šé™¤"
 
 #: ../src/repository.c:1348
 #, fuzzy
 msgid "Master Playlist"
-msgstr "...¥Ş¥¹¥¿¡¼¥×¥ì¥¤¥ê¥¹¥È"
+msgstr "...ãƒã‚¹ã‚¿ãƒ¼ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
 
 #: ../src/repository.c:1352
 #, fuzzy
 msgid "Podcasts Playlist"
-msgstr "¥¹¥Ş¡¼¥È¥×¥ì¥¤¥ê¥¹¥È"
+msgstr "ã‚¹ãƒãƒ¼ãƒˆãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
 
 #: ../src/repository.c:1360
 #, fuzzy
 msgid "Regular Playlist"
-msgstr "¥¹¥Ş¡¼¥È¥×¥ì¥¤¥ê¥¹¥È"
+msgstr "ã‚¹ãƒãƒ¼ãƒˆãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
 
 #: ../src/repository.c:2423
 #, fuzzy
 msgid "Set local repository file"
-msgstr "iPod¤«¤éºï½ü"
+msgstr "iPodã‹ã‚‰å‰Šé™¤"
 
 #: ../src/repository.c:2522
 #, fuzzy
 msgid "New Repository"
-msgstr "iPod¤«¤éºï½ü"
+msgstr "iPodã‹ã‚‰å‰Šé™¤"
 
 #: ../src/sha1.c:186
 msgid "Hashed file is 0 bytes long\n"
-msgstr "¥Õ¥¡¥¤¥ë¤ÎÂç¤­¤µ¤¬ 0 ¥Ğ¥¤¥È¤Ç¤¹\n"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã®å¤§ãã•ãŒ 0 ãƒã‚¤ãƒˆã§ã™\n"
 
 #: ../src/sha1.c:239
 #, fuzzy, c-format
 msgid "Could not open '%s' to calculate SHA1 checksum: %s\n"
-msgstr "'%s' ¤ò³«¤±¤Ê¤¤¤¿¤á¡¢MD5 ¥Á¥§¥Ã¥¯¥µ¥à¤¬·×»»¤Ç¤­¤Ş¤»¤ó: %s\n"
+msgstr "'%s' ã‚’é–‹ã‘ãªã„ãŸã‚ã€MD5 ãƒã‚§ãƒƒã‚¯ã‚µãƒ ãŒè¨ˆç®—ã§ãã¾ã›ã‚“: %s\n"
 
 #: ../src/syncdir.c:237
 #, c-format
@@ -5420,28 +5433,28 @@ msgstr ""
 #, fuzzy
 msgid "The following track has been added or updated:\n"
 msgid_plural "The following tracks have been added or updated:\n"
-msgstr[0] "°Ê²¼¤Î¶Ê¤ò¹¹¿·¤·¤Ş¤·¤¿"
-msgstr[1] "°Ê²¼¤Î%d¶Ê¤ò¹¹¿·¤·¤Ş¤·¤¿"
+msgstr[0] "ä»¥ä¸‹ã®æ›²ã‚’æ›´æ–°ã—ã¾ã—ãŸ"
+msgstr[1] "ä»¥ä¸‹ã®%dæ›²ã‚’æ›´æ–°ã—ã¾ã—ãŸ"
 
 #: ../src/syncdir.c:255
 #, fuzzy
 msgid "The following track has been completely removed from the iPod:\n"
 msgid_plural ""
 "The following tracks have been completely removed from the iPod:\n"
-msgstr[0] "°Ê²¼¤Î¶Ê¤ò¹¹¿·¤·¤Ş¤·¤¿"
-msgstr[1] "°Ê²¼¤Î%d¶Ê¤ò¹¹¿·¤·¤Ş¤·¤¿"
+msgstr[0] "ä»¥ä¸‹ã®æ›²ã‚’æ›´æ–°ã—ã¾ã—ãŸ"
+msgstr[1] "ä»¥ä¸‹ã®%dæ›²ã‚’æ›´æ–°ã—ã¾ã—ãŸ"
 
 #: ../src/syncdir.c:264
 #, fuzzy
 msgid "The following track has been removed from the repository:\n"
 msgid_plural "The following tracks have been removed from the repository:\n"
-msgstr[0] "°Ê²¼¤Î½ÅÊ£¤·¤¿%d¶Ê¤¬ºï½ü¤µ¤ì¤Ş¤·¤¿¡£"
+msgstr[0] "ä»¥ä¸‹ã®é‡è¤‡ã—ãŸ%dæ›²ãŒå‰Šé™¤ã•ã‚Œã¾ã—ãŸã€‚"
 
 #: ../src/syncdir.c:271
 #, fuzzy
 msgid "The following track has been removed from the playlist:\n"
 msgid_plural "The following tracks have been removed from the playlist:\n"
-msgstr[0] "°Ê²¼¤Î½ÅÊ£¤·¤¿%d¶Ê¤Ï¥Ş¥¹¥¿¡¼¥×¥ì¥¤¥ê¥¹¥È¤ËÄÉ²Ã¤µ¤ì¤Ş¤»¤ó¤Ç¤·¤¿¡£"
+msgstr[0] "ä»¥ä¸‹ã®é‡è¤‡ã—ãŸ%dæ›²ã¯ãƒã‚¹ã‚¿ãƒ¼ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã«è¿½åŠ ã•ã‚Œã¾ã›ã‚“ã§ã—ãŸã€‚"
 
 #: ../src/syncdir.c:277
 msgid "Nothing was changed.\n"
@@ -5483,7 +5496,7 @@ msgstr ""
 
 #: ../src/tools.c:385
 msgid "Normalizing..."
-msgstr "Ê¿¶Ñ²½Ãæ..."
+msgstr "å¹³å‡åŒ–ä¸­..."
 
 #: ../src/tools.c:435
 #, c-format
@@ -5492,11 +5505,11 @@ msgstr ""
 
 #: ../src/tools.c:461
 msgid "Aborting..."
-msgstr "Ãæ»ß½èÍıÃæ..."
+msgstr "ä¸­æ­¢å‡¦ç†ä¸­..."
 
 #: ../src/tools.c:465
 msgid "Will abort after current mp3gain process ends."
-msgstr "¸½ºß¼Â¹ÔÃæ¤Î mp3gain ¤¬½ªÎ»¼¡Âè¡¢½èÍı¤òÃæ»ß¤·¤Ş¤¹¡£"
+msgstr "ç¾åœ¨å®Ÿè¡Œä¸­ã® mp3gain ãŒçµ‚äº†æ¬¡ç¬¬ã€å‡¦ç†ã‚’ä¸­æ­¢ã—ã¾ã™ã€‚"
 
 #: ../src/tools.c:491
 #, c-format
@@ -5509,7 +5522,7 @@ msgstr ""
 #, c-format
 msgid "Normalized %d of %d tracks."
 msgid_plural "Normalized %d of %d tracks."
-msgstr[0] "%2$d¶ÊÃæ %1$d¶Ê¤Î²»ÎÌ¤òÊ¿¶Ñ²½¤·¤Ş¤·¤¿¡£"
+msgstr[0] "%2$dæ›²ä¸­ %1$dæ›²ã®éŸ³é‡ã‚’å¹³å‡åŒ–ã—ã¾ã—ãŸã€‚"
 
 #: ../src/tools.c:633
 msgid ""
@@ -5536,86 +5549,101 @@ msgstr ""
 #: ../src/tools.c:754
 #, c-format
 msgid "No command set for '%s'"
-msgstr "'%s' ¤Î¤¿¤á¤Î¥³¥Ş¥ó¥É¤¬ÀßÄê¤µ¤ì¤Æ¤¤¤Ş¤»¤ó"
+msgstr "'%s' ã®ãŸã‚ã®ã‚³ãƒãƒ³ãƒ‰ãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“"
 
 #: ../src/tools.c:774
 #, c-format
 msgid "Could not find command '%s' specified for '%s'"
-msgstr "'%s' ¤Î¤¿¤á¤Î¥³¥Ş¥ó¥É '%s' ¤¬¸«ÉÕ¤«¤ê¤Ş¤»¤ó"
+msgstr "'%s' ã®ãŸã‚ã®ã‚³ãƒãƒ³ãƒ‰ '%s' ãŒè¦‹ä»˜ã‹ã‚Šã¾ã›ã‚“"
 
 #: ../src/wavfile.c:181
 #, c-format
 msgid "%s does not appear to be a supported wav file.\n"
 msgstr ""
 
+#~ msgid "Add _Directory"
+#~ msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¿½åŠ ã™ã‚‹(_D)"
+
+#~ msgid "Dirs"
+#~ msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª"
+
+#~ msgid "Files"
+#~ msgstr "ãƒ•ã‚¡ã‚¤ãƒ«"
+
+#~ msgid "New PL"
+#~ msgstr "æ–°è¦ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ"
+
+#~ msgid "_About"
+#~ msgstr "gtkpodã«ã¤ã„ã¦(_A)"
+
 #, fuzzy
 #~ msgid "Set Cover Art from _Web"
-#~ msgstr "mserv ¥Ç¡¼¥¿¤ò¹¹¿·¤¹¤ë(_m)"
+#~ msgstr "mserv ãƒ‡ãƒ¼ã‚¿ã‚’æ›´æ–°ã™ã‚‹(_m)"
 
 #~ msgid "Add Playlists"
-#~ msgstr "¥×¥ì¥¤¥ê¥¹¥È¤òÄÉ²Ã¤¹¤ë"
+#~ msgstr "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’è¿½åŠ ã™ã‚‹"
 
 #~ msgid "Select directory to add recursively"
-#~ msgstr "ºÆµ¢Åª¤ËÄÉ²Ã¤¹¤ë¥Ç¥£¥ì¥¯¥È¥ê¤òÁªÂò¤·¤Æ¤¯¤À¤µ¤¤"
+#~ msgstr "å†å¸°çš„ã«è¿½åŠ ã™ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’é¸æŠã—ã¦ãã ã•ã„"
 
 #~ msgid ""
 #~ "Supposedly something that tells the iPod to increase or decrease the "
 #~ "playback speed"
-#~ msgstr "¤ª¤½¤é¤¯¡¢iPod ¤ËºÆÀ¸Â®ÅÙ¤ÎÊÑ¹¹¤òÅÁ¤¨¤ë¤¿¤á¤ÎÃÍ"
+#~ msgstr "ãŠãã‚‰ãã€iPod ã«å†ç”Ÿé€Ÿåº¦ã®å¤‰æ›´ã‚’ä¼ãˆã‚‹ãŸã‚ã®å€¤"
 
 #~ msgid "Processing '%s'"
-#~ msgstr "'%s' ¤Î½èÍıÃæ"
+#~ msgstr "'%s' ã®å‡¦ç†ä¸­"
 
 #~ msgid "<b>Import</b>"
-#~ msgstr "<b>¥¤¥ó¥İ¡¼¥È</b>"
+#~ msgstr "<b>ã‚¤ãƒ³ãƒãƒ¼ãƒˆ</b>"
 
 #, fuzzy
 #~ msgid "Automatically import iTunesDBs on startup"
-#~ msgstr "µ¯Æ°»ş¤Ë¼«Æ°Åª¤Ë iTunesDB ¤òÆÉ¤ß¹ş¤à"
+#~ msgstr "èµ·å‹•æ™‚ã«è‡ªå‹•çš„ã« iTunesDB ã‚’èª­ã¿è¾¼ã‚€"
 
 #, fuzzy
 #~ msgid "Couldn't find pixmap file: %s"
-#~ msgstr "¼¡¤Î¥Õ¥¡¥¤¥ë¤Î¥¿¥°¤òÊÑ¹¹¤Ç¤­¤Ş¤»¤ó: %s\n"
+#~ msgstr "æ¬¡ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¿ã‚°ã‚’å¤‰æ›´ã§ãã¾ã›ã‚“: %s\n"
 
 #~ msgid "Stop Display Update"
-#~ msgstr "É½¼¨¤Î¹¹¿·¤ò»ß¤á¤ë"
+#~ msgstr "è¡¨ç¤ºã®æ›´æ–°ã‚’æ­¢ã‚ã‚‹"
 
 #~ msgid "Stop"
-#~ msgstr "Ãæ»ß"
+#~ msgstr "ä¸­æ­¢"
 
 #~ msgid ""
 #~ "Temporarily disable sorting when changing playlist\n"
 #~ "or tab entry (faster!)"
 #~ msgstr ""
-#~ "¥×¥ì¥¤¥ê¥¹¥È¤ä¥½¡¼¥È¥¿¥Ö¤òÊÑ¹¹¤·¤¿»ş¤Î¼«Æ°ÊÂ¤Ù´¹¤¨¤ò\n"
-#~ "ÍŞÀ©¤¹¤ë (Æ°ºî¤¬Â®¤¯¤Ê¤ë)"
+#~ "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚„ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã‚’å¤‰æ›´ã—ãŸæ™‚ã®è‡ªå‹•ä¸¦ã¹æ›ãˆã‚’\n"
+#~ "æŠ‘åˆ¶ã™ã‚‹ (å‹•ä½œãŒé€Ÿããªã‚‹)"
 
 #~ msgid ""
 #~ "The display can be blocked after changing a selection. The display update "
 #~ "is faster, but you have to wait until it's finished. When using this "
 #~ "option, sorting is also temporarily disabled (see option above)."
 #~ msgstr ""
-#~ "ÁªÂò¤òÊÑ¹¹¤·¤¿»ş¤Ë¡¢¶Ê¤Î¥ê¥¹¥È¤ò¹¹¿·¤·½ª¤ï¤ë¤Ş¤ÇÅÓÃæ·Ğ²á¤òÉ½¼¨¤·¤Ş¤»¤ó¡£¹¹"
-#~ "¿·¤Î¥¹¥Ô¡¼¥É¤ÏÂ®¤¯¤Ê¤ê¤Ş¤¹¤¬¡¢¤½¤ì¤¬½ª¤ï¤ë¤Ş¤Ç¤Ï²¿¤â¤¹¤ë»ö¤¬¤Ç¤­¤Ê¤¯¤Ê¤ê¤Ş"
-#~ "¤¹¡£¤³¤ÎÀßÄê¤òÍ­¸ú¤Ë¤·¤¿¾ì¹ç¡¢ÊÂ¤Ù´¹¤¨¤Ï°ì»şÅª¤Ë¤Ç¤­¤Ê¤¯¤Ê¤ê¤Ş¤¹ (¾å¤ÎÀßÄê"
-#~ "¤ò»²¾È)¡£"
+#~ "é¸æŠã‚’å¤‰æ›´ã—ãŸæ™‚ã«ã€æ›²ã®ãƒªã‚¹ãƒˆã‚’æ›´æ–°ã—çµ‚ã‚ã‚‹ã¾ã§é€”ä¸­çµŒéã‚’è¡¨ç¤ºã—ã¾ã›ã‚“ã€‚æ›´"
+#~ "æ–°ã®ã‚¹ãƒ”ãƒ¼ãƒ‰ã¯é€Ÿããªã‚Šã¾ã™ãŒã€ãã‚ŒãŒçµ‚ã‚ã‚‹ã¾ã§ã¯ä½•ã‚‚ã™ã‚‹äº‹ãŒã§ããªããªã‚Šã¾"
+#~ "ã™ã€‚ã“ã®è¨­å®šã‚’æœ‰åŠ¹ã«ã—ãŸå ´åˆã€ä¸¦ã¹æ›ãˆã¯ä¸€æ™‚çš„ã«ã§ããªããªã‚Šã¾ã™ (ä¸Šã®è¨­å®š"
+#~ "ã‚’å‚ç…§)ã€‚"
 
 #~ msgid ""
 #~ "Block display when changing playlist or tab\n"
 #~ " entry (faster!)"
 #~ msgstr ""
-#~ "¥×¥ì¥¤¥ê¥¹¥È¤ä¥½¡¼¥È¥¿¥Ö¤òÊÑ¹¹¤·¤¿»ş¤ËÅÓÃæ·Ğ²á¤Î\n"
-#~ "É½¼¨¤òÍŞÀ©¤¹¤ë(Æ°ºî¤¬Â®¤¯¤Ê¤ë)"
+#~ "ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚„ã‚½ãƒ¼ãƒˆã‚¿ãƒ–ã‚’å¤‰æ›´ã—ãŸæ™‚ã«é€”ä¸­çµŒéã®\n"
+#~ "è¡¨ç¤ºã‚’æŠ‘åˆ¶ã™ã‚‹(å‹•ä½œãŒé€Ÿããªã‚‹)"
 
 #~ msgid "deleting..."
-#~ msgstr "ºï½üÃæ..."
+#~ msgstr "å‰Šé™¤ä¸­..."
 
 #~ msgid "preparing to copy..."
-#~ msgstr "¥³¥Ô¡¼¤Î½àÈ÷Ãæ..."
+#~ msgstr "ã‚³ãƒ”ãƒ¼ã®æº–å‚™ä¸­..."
 
 #~ msgid "Copied %d of %d new track."
 #~ msgid_plural "Copied %d of %d new tracks."
-#~ msgstr[0] "%2$d¶ÊÃæ %1$d¶Ê¤ò¥³¥Ô¡¼¤·¤Ş¤·¤¿¡£"
+#~ msgstr[0] "%2$dæ›²ä¸­ %1$dæ›²ã‚’ã‚³ãƒ”ãƒ¼ã—ã¾ã—ãŸã€‚"
 
 #~ msgid "Some tracks were not written to iPod. Export aborted!"
-#~ msgstr "°ìÉô¤Î¶Ê¤òiPod¤ËÅ¾Á÷¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿¡£¥¨¥¯¥¹¥İ¡¼¥È¤òÃæ»ß¤·¤Ş¤¹!"
+#~ msgstr "ä¸€éƒ¨ã®æ›²ã‚’iPodã«è»¢é€ã§ãã¾ã›ã‚“ã§ã—ãŸã€‚ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã‚’ä¸­æ­¢ã—ã¾ã™!"
