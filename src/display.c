@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-04-23 22:24:05 jcs>
+/* Time-stamp: <2007-12-13 00:34:53 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -76,8 +76,13 @@ void display_create (void)
 
     tm_create_treeview ();
     st_create_tabs ();
-    st_set_default_sizes ();
     pm_create_treeview ();
+
+    /* initialize sorting */
+    tm_sort (prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
+
+    st_set_default_sizes ();
+
     /* Hide/Show the toolbar */
     display_show_hide_toolbar ();
     /* Hide/Show tooltips */

@@ -2345,8 +2345,6 @@ void tm_create_treeview (void)
 		    G_CALLBACK (tm_sort_column_changed),
 		    (gpointer)0);
 
-  /* initialize sorting */
-  tm_sort (prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
   /* set correct column for typeahead */
   if (prefs_get_int_value (TM_PREFS_SEARCH_COLUMN, &col))
   {

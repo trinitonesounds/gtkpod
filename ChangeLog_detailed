@@ -1,3 +1,10 @@
+2007-12-12 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_tracks.c (tm_create_treeview)
+	  src/display.c (display_create):
+	  moved initialisation of track view sorting to after the
+	  entire display is set up to avoid assertion errors.
+
 2007-12-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/mp3file.c(get_mp3_info): fix integer overlow in
