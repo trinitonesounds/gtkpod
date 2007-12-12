@@ -28,6 +28,10 @@
 	* po/*.po
 	  po/gtkpod.pot: run 'make update-po'
 
+	* src/display.c (display_adjust_menus)
+	  Disable 'Edit Smart Playlist' menu when no playlist is
+	  displayed. Thanks to Daniele Forsi.
+
 2007-12-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/mp3file.c(get_mp3_info): fix integer overlow in

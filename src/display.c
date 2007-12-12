@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-12-13 00:34:53 jcs>
+/* Time-stamp: <2007-12-13 01:02:57 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -207,6 +207,7 @@ void display_adjust_menus (void)
 	gtk_widget_set_sensitive (edit3, FALSE);
 	gtk_widget_set_sensitive (edit4, FALSE);
 	gtk_widget_set_sensitive (edit5, FALSE);
+	gtk_widget_set_sensitive (espl, FALSE);
     }
     else
     {
