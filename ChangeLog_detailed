@@ -22,6 +22,9 @@
 
 	* data/Makefile.am: added gtkpod-read-16.png
 
+	* scripts/Makefile.am: sorted files alphabetically for ease of
+	  checking.
+
 2007-12-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/mp3file.c(get_mp3_info): fix integer overlow in
