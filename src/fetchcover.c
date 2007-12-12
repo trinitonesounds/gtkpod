@@ -368,12 +368,12 @@ static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover);
 	
 		filepath = g_build_filename(fetch_cover->dir, fetch_cover->filename, NULL);
 
-		message = g_strdup_printf (_("The picture file %s already exists. \
-				\nThis may be associated with other music files in the directory. \
-				\n\n-  Clicking Yes will overwrite the existing file, possibly associating \
-				\n   other music files in the same directory with this coverart file. \
-				\n-  Clicking No will save the file with a unique file name. \
-				\n-  Clicking Cancel will abort the fetchcover operation."), filepath);
+		message = g_strdup_printf (_("The picture file %s already exists.\n" \
+				"This may be associated with other music files in the directory.\n\n" \
+				"-  Clicking Yes will overwrite the existing file, possibly associating\n" \
+				"   other music files in the same directory with this coverart file.\n" \
+				"-  Clicking No will save the file with a unique file name.\n" \
+				"-  Clicking Cancel will abort the fetchcover operation."), filepath);
 			           
 		label = gtk_label_new (message);
 	   

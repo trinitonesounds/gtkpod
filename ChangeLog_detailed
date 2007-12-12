@@ -1,3 +1,12 @@
+2007-12-12 Daniele Forsi <dforsi at users.sourceforge.net>
+	* src/misc_confirm.c
+	  src/display_photo.c
+	  src/fetchcover.c
+	  src/misc.c
+	  data/gtkpod.glade: fix typos
+
+	* src/misc.c: update list of translators
+
 2007-12-12  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* po/POTFILES.in:

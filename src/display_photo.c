@@ -235,7 +235,7 @@ void gphoto_display_photo_window(iTunesDB *itdb)
 
 	if (!photodb)
 	{
-		gtkpod_warning (_("Could not access the ipod's photo database."));
+		gtkpod_warning (_("Could not access the iPod's photo database."));
 		return;
 	}
 

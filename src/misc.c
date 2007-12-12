@@ -73,7 +73,7 @@ void open_about_window ()
 		    ""),
 		_("Patches were supplied by the following people (list may be incomplete -- please contact me)\n"),
 		_("Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"),
-		_("Hiroshi Kawashima: Japanese charset autodetecion feature"),
+		_("Hiroshi Kawashima: Japanese charset autodetection feature"),
 		_("Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"),
 		_("Walter Bell: correct handling of DND URIs with escaped characters and/or cr/newlines at the end"),
 		_("Sam Clegg: user defined filenames when exporting tracks from the iPod"),
@@ -126,12 +126,17 @@ void open_about_window ()
 
 	gchar  *translators[] = {
 		_("French: David Le Brun (david at dyn-ns dot net)"),
+		_("French: Éric Lassauge (rpmfarm at free dot fr)"),
 		_("German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"),
+		_("German: Kai-Ove"),
 		_("Hebrew: Assaf Gillat (gillata at gmail dot com)"),
 		_("Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot net)"),
+		_("Italian: Daniele Forsi (dforsi at gmail dot com)"),
 		_("Japanese: Ayako Sano"),
 		_("Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"),
-		_("Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)"),
+		_("Romanian: Alex Eftimie (alexeftimie at gmail dot com)"),
+		_("Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"),
+		_("Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"),
 		NULL
 	};
 

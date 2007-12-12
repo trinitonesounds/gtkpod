@@ -705,8 +705,8 @@ void delete_playlist_head (DeleteAction deleteaction)
 		 * delete_populate_settings() further down */
 		dd->tracks = g_list_copy (pl->members);
 		label = g_strdup_printf (
-		    ngettext ("Are you sure you want to delete playlist '%s' and the following track completely from your ipod? The number of playlists this track is a member of is indicated in parentheses.",
-			      "Are you sure you want to delete playlist '%s' and the following tracks completely from your ipod? The number of playlists the tracks are member of is indicated in parentheses.", n), pl->name);
+		    ngettext ("Are you sure you want to delete playlist '%s' and the following track completely from your iPod? The number of playlists this track is a member of is indicated in parentheses.",
+			      "Are you sure you want to delete playlist '%s' and the following tracks completely from your iPod? The number of playlists the tracks are member of is indicated in parentheses.", n), pl->name);
 	    }
 	    break;
 	case DELETE_ACTION_PLAYLIST:

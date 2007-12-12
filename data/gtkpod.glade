@@ -20672,7 +20672,7 @@ Local Repository (Podcasts)
 			  <child>
 			    <widget class="GtkImageMenuItem" id="photo_remove_album_menuItem">
 			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">_Remove _Album</property>
+			      <property name="label" translatable="yes">_Remove Album</property>
 			      <property name="use_underline">True</property>
 
 			      <child internal-child="image">
