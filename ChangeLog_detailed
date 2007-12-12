@@ -10,6 +10,16 @@
 	  moved initialisation of track view sorting to after the
 	  entire display is set up to avoid assertion errors.
 
+	* data/gtkpod.glade
+	  data/gtkpod-add-dirs.png (modified)
+	  data/gtkpod-logo.png (modified)
+	  data/menus-toolbars.diff (modified)
+	  data/gtkpod-add-files.png (modified)
+	  data/gtkpod-read-16.png (new)
+	  data/gtkpod-add-playlists.png (modified)
+	  data/gtkpod-read.png (modified)
+	  Usability patch by Sikon
+
 2007-12-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/mp3file.c(get_mp3_info): fix integer overlow in
