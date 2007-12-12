@@ -14701,7 +14701,7 @@ simultaneously</property>
 				  <child>
 				    <widget class="GtkLabel" id="details_label_41">
 				      <property name="visible">True</property>
-				      <property name="label" translatable="yes">label</property>
+				      <property name="label">label</property>
 				      <property name="use_underline">False</property>
 				      <property name="use_markup">False</property>
 				      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -15499,7 +15499,7 @@ simultaneously</property>
 			      <child>
 				<widget class="GtkLabel" id="details_label_48">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">label</property>
+				  <property name="label">label</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -15527,7 +15527,7 @@ simultaneously</property>
 			      <child>
 				<widget class="GtkLabel" id="details_label_50">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">label</property>
+				  <property name="label">label</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -15555,7 +15555,7 @@ simultaneously</property>
 			      <child>
 				<widget class="GtkLabel" id="details_label_49">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">label</property>
+				  <property name="label">label</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -15583,7 +15583,7 @@ simultaneously</property>
 			      <child>
 				<widget class="GtkLabel" id="details_label_52">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">label</property>
+				  <property name="label">label</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -15716,7 +15716,7 @@ simultaneously</property>
 			      <child>
 				<widget class="GtkLabel" id="details_label_53">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">label</property>
+				  <property name="label">label</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -16251,7 +16251,7 @@ simultaneously</property>
 			      <child>
 				<widget class="GtkLabel" id="details_label_43">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">label</property>
+				  <property name="label">label</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -16279,7 +16279,7 @@ simultaneously</property>
 			      <child>
 				<widget class="GtkLabel" id="details_label_44">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">label</property>
+				  <property name="label">label</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -16307,7 +16307,7 @@ simultaneously</property>
 			      <child>
 				<widget class="GtkLabel" id="details_label_45">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">label</property>
+				  <property name="label">label</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -16335,7 +16335,7 @@ simultaneously</property>
 			      <child>
 				<widget class="GtkLabel" id="details_label_46">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">label</property>
+				  <property name="label">label</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -17373,7 +17373,7 @@ simultaneously</property>
 				  <child>
 				    <widget class="GtkLabel" id="details_label_54">
 				      <property name="visible">True</property>
-				      <property name="label" translatable="yes">label</property>
+				      <property name="label">label</property>
 				      <property name="use_underline">False</property>
 				      <property name="use_markup">False</property>
 				      <property name="justify">GTK_JUSTIFY_LEFT</property>
