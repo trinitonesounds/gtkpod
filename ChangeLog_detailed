@@ -1,3 +1,8 @@
+2007-12-12  Todd Zullinger <tmzullinger at users.sourceforge.net>
+
+	* po/POTFILES.in:
+	  tell gettext/intltool to treat translation strings as utf-8
+
 2007-12-12 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/display_tracks.c (tm_create_treeview)
