@@ -27,7 +27,7 @@
 
 #include "stock_icons.h"
 
-static void register_stock_icon (gchar *path, int stockid);
+static void register_stock_icon (gchar *path, const gchar *stockid);
 
 /**
  * stockid_init
@@ -116,7 +116,7 @@ void stockid_init (gchar *progpath)
  * as stock items should they be required.
  *  
  */
-static void register_stock_icon (gchar *path, int stockid)
+static void register_stock_icon (gchar *path, const gchar *stockid)
 {
 	 GError *error = NULL;
 	 GdkPixbuf *image;

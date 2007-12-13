@@ -1,5 +1,11 @@
 2007-12-13 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
+  * stock_icons.c
+  
+    Squashed some compiler warnings.
+    
+2007-12-13 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
   * src/context_menus.c
     src/display_photo.h
     src/display_photo.c
