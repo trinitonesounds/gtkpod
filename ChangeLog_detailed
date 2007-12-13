@@ -4,6 +4,10 @@
 	* src/file_export.c
 	  src/file_itunesdb.c: make strings identical to existing ones
 
+	* src/display.c
+	  data/gtkpod.glade: a string marked translatable in glade must
+	  be translated in code instead
+
 2007-12-12 Daniele Forsi <dforsi at users.sourceforge.net>
 	* src/misc_confirm.c
 	  src/display_photo.c

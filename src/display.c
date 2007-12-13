@@ -487,7 +487,7 @@ void display_image_dialog (GdkPixbuf *image)
 	/* Set the resolution in the label */
 	gchar *resvalues = (gchar *) g_malloc (sizeof(gint) + (sizeof(gchar) * 3) + sizeof(gint));
 	g_sprintf (resvalues, "%d x %d", pixwidth, pixheight);
-	text = g_markup_printf_escaped ("<b>Image Dimensions: %s</b>", resvalues);
+	text = g_markup_printf_escaped (_("<b>Image Dimensions: %s</b>"), resvalues);
 	gtk_label_set_markup (GTK_LABEL (res_label), text);
 	g_free (text);
 	
