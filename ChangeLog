@@ -5,7 +5,7 @@ gtkpod V0.99.12
        
        UPDATE: Application requires libgpod version 0.6.0 or higher.
       
-       UPDATE: Better icon them specification compliance.
+       UPDATE: Better icon theme specification compliance.
 
        BUGFIX: Fixes to tomboy script. Thanks to Javier Kohen.
 
@@ -51,6 +51,8 @@ gtkpod V0.99.12
      
        BUGFIX: Fixed memory leaks in CoverArt Display and Details window.
        Thanks to Daniele Forsi.
+
+       UPDATE: Italina Translation. Thanks to Daniele Forsi.
 
 gtkpod V0.99.10
 
