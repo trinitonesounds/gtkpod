@@ -280,7 +280,7 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
     /* attempt to open playlist file */
     if (!(fp = fopen (plfile, "r")))
     {
-	gtkpod_warning (_("Cannot open '%s' for reading.\n\n"));
+	gtkpod_warning (_("Could not open '%s' for reading.\n"), plfile);
 	g_free (plname);
 	return FALSE;  /* definitely not! */
     }

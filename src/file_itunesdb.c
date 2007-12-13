@@ -233,7 +233,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
     fp = fopen (name, "r");
     if (!fp)
     {
-	gtkpod_warning (_("Could not open \"iTunesDB.ext\" for reading extended info.\n"),
+	gtkpod_warning (_("Could not open \"%s\" for reading extended info.\n"),
 			name);
 	return FALSE;
     }

@@ -214,7 +214,7 @@ copy_file(gchar *file, gchar *dest)
     }
     else
     {
-	gtkpod_warning (_("Unable to open '%s' for reading\n"), file);
+	gtkpod_warning (_("Could not open '%s' for reading.\n"), file);
     }
     return(result);
 }

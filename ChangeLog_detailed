@@ -1,3 +1,9 @@
+2007-12-13 Daniele Forsi <dforsi at users.sourceforge.net>
+        * src/file.c: add variable for existing %s directive
+
+	* src/file_export.c
+	  src/file_itunesdb.c: make strings identical to existing ones
+
 2007-12-12 Daniele Forsi <dforsi at users.sourceforge.net>
 	* src/misc_confirm.c
 	  src/display_photo.c
