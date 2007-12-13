@@ -58,7 +58,7 @@ gboolean gphoto_ipod_supports_photos (iTunesDB *itdb);
 gboolean gphoto_is_photo_playlist (Playlist *pl);
 void gphoto_display_photo_window (iTunesDB *itdb);
 void gphoto_change_to_photo_window (gboolean showflag);
-
+gint gphoto_get_selected_photo_count ();
 void gphoto_remove_selected_photos_from_album (gboolean show_dialogs);
 void gphoto_remove_album_from_database ();
 void gphoto_rename_selected_album ();

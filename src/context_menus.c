@@ -900,12 +900,19 @@ GtkWidget *gphoto_menuitem_remove_album_from_db_item(GtkWidget *menu)
 
 GtkWidget *gphoto_menuitem_remove_photo_from_album_item(GtkWidget *menu)
 {
-	return hookup_mi (
+	GtkWidget *mitem = hookup_mi (
 			menu, 
 			_("Remove Photo"),
 			GTK_STOCK_DELETE, 
 			G_CALLBACK (gphoto_remove_selected_photos_from_album), 
 			NULL);
+	
+	if (gphoto_get_selected_photo_count() == 0)
+		gtk_widget_set_sensitive (mitem, FALSE);
+	else
+		gtk_widget_set_sensitive (mitem, TRUE);
+	
+	return mitem;
 }
 
 GtkWidget *gphoto_menuitem_rename_photoalbum_item(GtkWidget *menu)

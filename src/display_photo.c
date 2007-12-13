@@ -770,6 +770,25 @@ static gchar *gphoto_get_selected_album_name(GtkTreeSelection *selection)
 }
 
 /**
+ * gphoto_get_selected_photo_count
+ *
+ * Function to return the number of photos
+ * currently selected in the iconview.
+ * 
+ */
+gint gphoto_get_selected_photo_count ()
+{
+	GList *selected_items= NULL;
+
+	selected_items = gtk_icon_view_get_selected_items (thumbnail_view);
+
+	if (selected_items == NULL)
+		return 0;
+	
+	return g_list_length (selected_items);
+}
+
+/**
  * gphoto_add_image_to_database
  *
  * Add a photo from file name to the photo database and
@@ -922,12 +941,12 @@ void gphoto_remove_album_from_database()
 	}
 
 	gboolean remove_pics = FALSE;
-	if (g_list_length (selected_album->members) <= 0)
-		return;
-	
-	if (prefs_get_int("photo_library_confirm_delete") == FALSE)
+	if (prefs_get_int("photo_library_confirm_delete") == FALSE ||
+			g_list_length (selected_album->members) <= 0)
 	{
-		/* User has chosen to assume yes and not display a confirm dialog */
+		/* User has chosen to assume yes and not display a confirm dialog
+		 * or the album is empty
+		 */
 		remove_pics = TRUE;
 	}
 	else

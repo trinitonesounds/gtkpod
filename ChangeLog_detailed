@@ -1,3 +1,15 @@
+2007-12-13 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * src/context_menus.c
+    src/display_photo.h
+    src/display_photo.c
+    
+    Bug fixes made to photo window. Remove photo action disabled
+    on thumbnail view context menu when no thumbs selected. The
+    Remove album action was not removing an album unless the
+    album contained photos. Thanks to Alex Eftimie for raising
+    the bugs.
+
 2007-12-13 Daniele Forsi <dforsi at users.sourceforge.net>
         * src/file.c: add variable for existing %s directive
 
