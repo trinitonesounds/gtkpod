@@ -1,3 +1,9 @@
+2007-12-13  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* po/*.po
+	  po/gtkpod.pot:
+	  update translation templates
+
 2007-12-13 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * stock_icons.c

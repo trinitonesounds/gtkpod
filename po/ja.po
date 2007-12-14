@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-13 00:57+0900\n"
+"POT-Creation-Date: 2007-12-13 18:36-0500\n"
 "PO-Revision-Date: 2005-06-20 23:25+0900\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: n/a\n"
@@ -216,201 +216,196 @@ msgid "<b>Repositories</b>"
 msgstr "<b>ツールチップ</b>"
 
 #: ../data/gtkpod.glade.h:46
-#, fuzzy
-msgid "<b>Resolution:</b>"
-msgstr "<b>ツールチップ</b>"
-
-#: ../data/gtkpod.glade.h:47
 msgid "<b>Sort Order</b>"
 msgstr "<b>ソート順</b>"
 
-#: ../data/gtkpod.glade.h:48
+#: ../data/gtkpod.glade.h:47
 msgid "<b>Sort Tabs</b>"
 msgstr "<b>ソートタブ</b>"
 
-#: ../data/gtkpod.glade.h:49
+#: ../data/gtkpod.glade.h:48
 msgid "<b>Sync</b>"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:50
+#: ../data/gtkpod.glade.h:49
 msgid "<b>Synchronization</b>"
 msgstr "<b>同期</b>"
 
-#: ../data/gtkpod.glade.h:51
+#: ../data/gtkpod.glade.h:50
 msgid "<b>Tag Reading</b>"
 msgstr "<b>タグの読み込み</b>"
 
-#: ../data/gtkpod.glade.h:52
+#: ../data/gtkpod.glade.h:51
 msgid "<b>Toolbar</b>"
 msgstr "<b>ツールバー</b>"
 
-#: ../data/gtkpod.glade.h:53
+#: ../data/gtkpod.glade.h:52
 msgid "<b>Tooltips</b>"
 msgstr "<b>ツールチップ</b>"
 
-#: ../data/gtkpod.glade.h:54
+#: ../data/gtkpod.glade.h:53
 #, fuzzy
 msgid "<b>Track Attributes</b>"
 msgstr "<b>表示する曲属性</b>"
 
-#: ../data/gtkpod.glade.h:55
+#: ../data/gtkpod.glade.h:54
 msgid "<b>Track Editing</b>"
 msgstr "<b>曲の編集</b>"
 
-#: ../data/gtkpod.glade.h:56
+#: ../data/gtkpod.glade.h:55
 msgid "<b>Volume Normalization</b>"
 msgstr "<b>音量の平均化</b>"
 
-#: ../data/gtkpod.glade.h:57
+#: ../data/gtkpod.glade.h:56
 msgid "<b>mserv</b>"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:58
+#: ../data/gtkpod.glade.h:57
 msgid ">"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:59
+#: ../data/gtkpod.glade.h:58
 msgid "About gtkpod"
 msgstr "gtkpod について"
 
-#: ../data/gtkpod.glade.h:60
+#: ../data/gtkpod.glade.h:59
 msgid "Add Directories Recursively"
 msgstr "ディレクトリを再帰的に追加します"
 
-#: ../data/gtkpod.glade.h:61
+#: ../data/gtkpod.glade.h:60
 #, fuzzy
 msgid "Add Files"
 msgstr "ファイルを追加する(_F)"
 
-#: ../data/gtkpod.glade.h:62
+#: ../data/gtkpod.glade.h:61
 msgid "Add Files or Directories"
 msgstr "ファイルまたはディレクトリを追加します"
 
-#: ../data/gtkpod.glade.h:63
+#: ../data/gtkpod.glade.h:62
 #, fuzzy
 msgid "Add Fol_der"
 msgstr "ファイルを追加する(_F)"
 
-#: ../data/gtkpod.glade.h:64
+#: ../data/gtkpod.glade.h:63
 #, fuzzy
 msgid "Add Folder"
 msgstr "ファイルを追加する(_F)"
 
-#: ../data/gtkpod.glade.h:65
+#: ../data/gtkpod.glade.h:64
 msgid "Add Image_s"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:66
+#: ../data/gtkpod.glade.h:65
 #, fuzzy
 msgid "Add Images from a Directory"
 msgstr "ファイルまたはディレクトリを追加します"
 
-#: ../data/gtkpod.glade.h:67
+#: ../data/gtkpod.glade.h:66
 #, fuzzy
 msgid "Add Playlist"
 msgstr "プレイリストを追加する(_P)"
 
-#: ../data/gtkpod.glade.h:68
+#: ../data/gtkpod.glade.h:67
 msgid "Add _Files"
 msgstr "ファイルを追加する(_F)"
 
-#: ../data/gtkpod.glade.h:69
+#: ../data/gtkpod.glade.h:68
 msgid "Add _Playlist"
 msgstr "プレイリストを追加する(_P)"
 
-#: ../data/gtkpod.glade.h:70
+#: ../data/gtkpod.glade.h:69
 #, fuzzy
 msgid "Add coverart from file using the following template"
 msgstr "次のテンプレートに合うファイルをアートワークとして登録する"
 
-#: ../data/gtkpod.glade.h:71
+#: ../data/gtkpod.glade.h:70
 msgid "Add directories recursively"
 msgstr "ディレクトリを再帰的に追加する"
 
-#: ../data/gtkpod.glade.h:72
+#: ../data/gtkpod.glade.h:71
 msgid "Add new repository/iPod"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:73
+#: ../data/gtkpod.glade.h:72
 msgid "Add playlist from file"
 msgstr "プレイリストをファイルから読み込んで追加します"
 
-#: ../data/gtkpod.glade.h:74 ../src/display_sorttabs.c:3247
+#: ../data/gtkpod.glade.h:73 ../src/display_sorttabs.c:3247
 #: ../src/display_tracks.c:2103
 msgid "Added"
 msgstr "登録日"
 
-#: ../data/gtkpod.glade.h:75
+#: ../data/gtkpod.glade.h:74
 msgid "Advanced Sorting Options"
 msgstr ""
 
 #. 0
-#: ../data/gtkpod.glade.h:76 ../src/display_sorttabs.c:2982
+#: ../data/gtkpod.glade.h:75 ../src/display_sorttabs.c:2982
 #: ../src/display_spl.c:84 ../src/misc_conversion.c:60
 msgid "Album"
 msgstr "アルバム"
 
-#: ../data/gtkpod.glade.h:77
+#: ../data/gtkpod.glade.h:76
 #, fuzzy
 msgid "Album Art"
 msgstr "アルバム"
 
-#: ../data/gtkpod.glade.h:78
+#: ../data/gtkpod.glade.h:77
 msgid "All (AND)"
 msgstr "すべて(AND)"
 
-#: ../data/gtkpod.glade.h:79
+#: ../data/gtkpod.glade.h:78
 msgid "All Tracks Never Listened To"
 msgstr "一度も聴いた事がない曲"
 
-#: ../data/gtkpod.glade.h:80
+#: ../data/gtkpod.glade.h:79
 msgid "All Tracks Played Since Last Time"
 msgstr "前回以降再生された曲"
 
-#: ../data/gtkpod.glade.h:81
+#: ../data/gtkpod.glade.h:80
 msgid "All Tracks not Listed in any Playlist"
 msgstr "プレイリストに載っていないすべての曲"
 
-#: ../data/gtkpod.glade.h:82
+#: ../data/gtkpod.glade.h:81
 msgid "Also include tracks never played in \"Best Rated\" playlist"
 msgstr ""
 "「評価の高い曲」のリストを作る際に、一度も\n"
 "再生された事のない曲も対象とします。"
 
-#: ../data/gtkpod.glade.h:83
+#: ../data/gtkpod.glade.h:82
 msgid "Always write ID3v2.4 tags (only applies to MP3)"
 msgstr "常に ID3v2.4 タグを書き込む (MP3 のみ)"
 
-#: ../data/gtkpod.glade.h:84
+#: ../data/gtkpod.glade.h:83
 msgid "Any (OR)"
 msgstr "いずれか(OR)"
 
-#: ../data/gtkpod.glade.h:85 ../src/display_sorttabs.c:2979
+#: ../data/gtkpod.glade.h:84 ../src/display_sorttabs.c:2979
 #: ../src/display_spl.c:85 ../src/misc_conversion.c:61
 msgid "Artist"
 msgstr "アーティスト"
 
-#: ../data/gtkpod.glade.h:86
+#: ../data/gtkpod.glade.h:85
 #, fuzzy
 msgid "Artwork Preview"
 msgstr "が設定されていない"
 
-#: ../data/gtkpod.glade.h:87
+#: ../data/gtkpod.glade.h:86
 msgid ""
 "As a last resort set the following tags to the\n"
 "filename if they are (still) empty:"
 msgstr ""
 "最後の手段として、以下のタグが未設定の場合にファイル名をその値として使用する:"
 
-#: ../data/gtkpod.glade.h:89
+#: ../data/gtkpod.glade.h:88
 msgid "Ascending"
 msgstr "昇順"
 
-#: ../data/gtkpod.glade.h:90
+#: ../data/gtkpod.glade.h:89
 msgid "Auto Store"
 msgstr "自動保存"
 
-#: ../data/gtkpod.glade.h:91
+#: ../data/gtkpod.glade.h:90
 msgid ""
 "Automatically start displaying tracks that match the criteria entered above. "
 "If not selected, you must press 'Display' to start displaying."
@@ -418,166 +413,166 @@ msgstr ""
 "各項目が入力されるとすぐに表示を更新します. この項目が選択されていない時に"
 "は、「表示」ボタンを押すことで更新することができます."
 
-#: ../data/gtkpod.glade.h:92
+#: ../data/gtkpod.glade.h:91
 msgid "Available:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:93
+#: ../data/gtkpod.glade.h:92
 msgid "Before removing playlists or tracks from a playlist"
 msgstr "プレイリストや、プレイリストから曲を削除する時"
 
-#: ../data/gtkpod.glade.h:94
+#: ../data/gtkpod.glade.h:93
 msgid "Before removing tracks from the harddisk"
 msgstr "曲をハードディスクから完全に削除する時"
 
-#: ../data/gtkpod.glade.h:95
+#: ../data/gtkpod.glade.h:94
 msgid "Before removing tracks from the iPod"
 msgstr "曲をiPodから完全に削除する時"
 
-#: ../data/gtkpod.glade.h:96
+#: ../data/gtkpod.glade.h:95
 msgid "Before removing tracks from the local database"
 msgstr "曲をローカルデータベースから削除する時"
 
-#: ../data/gtkpod.glade.h:97
+#: ../data/gtkpod.glade.h:96
 msgid "Best Rated Tracks"
 msgstr "評価の高い曲"
 
-#: ../data/gtkpod.glade.h:98
+#: ../data/gtkpod.glade.h:97
 msgid "Browse"
 msgstr "ブラウズ"
 
-#: ../data/gtkpod.glade.h:99
+#: ../data/gtkpod.glade.h:98
 #, fuzzy
 msgid "Cache directory:"
 msgstr "ディレクトリを追加する(_D)"
 
-#: ../data/gtkpod.glade.h:100
+#: ../data/gtkpod.glade.h:99
 msgid "Calendar"
 msgstr "カレンダー"
 
-#: ../data/gtkpod.glade.h:101
+#: ../data/gtkpod.glade.h:100
 msgid "Calendar sync command:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:102
+#: ../data/gtkpod.glade.h:101
 msgid "Call automatically when synchronizing iTunesDB"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:103
+#: ../data/gtkpod.glade.h:102
 msgid "Category: "
 msgstr "カテゴリ: "
 
-#: ../data/gtkpod.glade.h:104
+#: ../data/gtkpod.glade.h:103
 msgid ""
 "Change all tracks\n"
 "simultaneously"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:106
+#: ../data/gtkpod.glade.h:105
 msgid ""
 "Check before removing photos from a photo album whether\n"
 "they should be deleted from the Photo Database."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:108
+#: ../data/gtkpod.glade.h:107
 msgid "Check for existing files when copying from iPod."
 msgstr "iPod からコピーする際に同じファイルかどうかをチェックする"
 
-#: ../data/gtkpod.glade.h:109
+#: ../data/gtkpod.glade.h:108
 msgid "Command for 'Enqueue':"
 msgstr "「演奏キューに入れる」ためのコマンド:"
 
-#: ../data/gtkpod.glade.h:110
+#: ../data/gtkpod.glade.h:109
 msgid "Command for 'Play now':"
 msgstr "「今すぐ演奏」のためのコマンド:"
 
 #. 5
-#: ../data/gtkpod.glade.h:111 ../src/display_spl.c:97
+#: ../data/gtkpod.glade.h:110 ../src/display_spl.c:97
 #: ../src/misc_conversion.c:65
 msgid "Composer"
 msgstr "作曲者"
 
-#: ../data/gtkpod.glade.h:112
+#: ../data/gtkpod.glade.h:111
 #, fuzzy
 msgid "Confirm before removing tracks from the iPod or repository"
 msgstr "曲をiPodから完全に削除する時"
 
-#: ../data/gtkpod.glade.h:113
+#: ../data/gtkpod.glade.h:112
 msgid ""
 "Confirm before removing tracks from the iPod or repository\n"
 "when syncing playlists"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:115
+#: ../data/gtkpod.glade.h:114
 msgid "Confirm lists of directories"
 msgstr "ディレクトリのリストを確認する"
 
-#: ../data/gtkpod.glade.h:116
+#: ../data/gtkpod.glade.h:115
 msgid "Contacts sync command:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:117
+#: ../data/gtkpod.glade.h:116
 msgid "Containing Displayed Tracks"
 msgstr "表示されている曲から作成"
 
-#: ../data/gtkpod.glade.h:118
+#: ../data/gtkpod.glade.h:117
 msgid "Containing Selected Tracks"
 msgstr "選択されている曲から作成"
 
-#: ../data/gtkpod.glade.h:119
+#: ../data/gtkpod.glade.h:118
 msgid "Conversion Progress Display"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:120
+#: ../data/gtkpod.glade.h:119
 msgid "Cover"
 msgstr "カバー"
 
-#: ../data/gtkpod.glade.h:121
+#: ../data/gtkpod.glade.h:120
 msgid "Create New Playlist"
 msgstr "新しくプレイリストを作成します"
 
-#: ../data/gtkpod.glade.h:122
+#: ../data/gtkpod.glade.h:121
 #, fuzzy
 msgid "Create Repository"
 msgstr "iPodから削除"
 
-#: ../data/gtkpod.glade.h:123
+#: ../data/gtkpod.glade.h:122
 msgid "Create _Playlist File"
 msgstr "プレイリストファイルを作成 (_P)"
 
-#: ../data/gtkpod.glade.h:124
+#: ../data/gtkpod.glade.h:123
 msgid "Credits"
 msgstr "権利表示"
 
-#: ../data/gtkpod.glade.h:125
+#: ../data/gtkpod.glade.h:124
 msgid "Currently only rating is supported."
 msgstr "現在は評価情報のみ使用"
 
-#: ../data/gtkpod.glade.h:126
+#: ../data/gtkpod.glade.h:125
 #, fuzzy
 msgid "Delete repository"
 msgstr "iPodから削除"
 
-#: ../data/gtkpod.glade.h:127
+#: ../data/gtkpod.glade.h:126
 #, fuzzy
 msgid ""
 "Delete tracks that are no longer present from the\n"
 "iPod or repository"
 msgstr "以下の重複した%d曲が削除されました。"
 
-#: ../data/gtkpod.glade.h:129
+#: ../data/gtkpod.glade.h:128
 msgid "Deleted tracks"
 msgstr "削除された曲"
 
-#: ../data/gtkpod.glade.h:130
+#: ../data/gtkpod.glade.h:129
 msgid "Descending"
 msgstr "降順"
 
-#: ../data/gtkpod.glade.h:131
+#: ../data/gtkpod.glade.h:130
 msgid "Details"
 msgstr "詳細"
 
-#: ../data/gtkpod.glade.h:133
+#: ../data/gtkpod.glade.h:132
 #, no-c-format
 msgid ""
 "Determines how the string for the info field should be constructed, e.g '%a/%"
@@ -593,7 +588,7 @@ msgstr ""
 "ルバム: %A, 作曲者: %c, 名前: %t, ジャンル: %G, 曲番号: %T, ディスク番号: %"
 "C, 年: %Y, 元のファイル名 (拡張情報ファイルが必要): %o, 「%」: %%."
 
-#: ../data/gtkpod.glade.h:135
+#: ../data/gtkpod.glade.h:134
 #, no-c-format
 msgid ""
 "Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t."
@@ -610,7 +605,7 @@ msgstr ""
 "スク番号: %C, 年: %Y, 元のファイル名 (拡張情報ファイルが必要): %o, プレイリス"
 "ト: %p, 「%」: %%."
 
-#: ../data/gtkpod.glade.h:137
+#: ../data/gtkpod.glade.h:136
 #, fuzzy, no-c-format
 msgid ""
 "Determines the name of the file with the cover art. You can separate several "
@@ -624,62 +619,62 @@ msgstr ""
 "'%o' など。%A: アーティスト; %n: タイトル; %t: トラックNo.; %o: 元のファイル"
 "名 (拡張情報ファイルが必要)"
 
-#: ../data/gtkpod.glade.h:138
+#: ../data/gtkpod.glade.h:137
 msgid ""
 "Directories to sync with are determined from the filenames of the tracks in "
 "the playlist."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:139
+#: ../data/gtkpod.glade.h:138
 msgid "Display a list of tracks that could actually be updated."
 msgstr "実際に更新された曲のリストを表示します。"
 
-#: ../data/gtkpod.glade.h:140
+#: ../data/gtkpod.glade.h:139
 msgid "Display a list of tracks that could not be updated."
 msgstr "実際には更新されなかった曲のリストを表示します。"
 
-#: ../data/gtkpod.glade.h:141
+#: ../data/gtkpod.glade.h:140
 msgid "Display conversion log"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:142
+#: ../data/gtkpod.glade.h:141
 msgid "Display info about detected duplicates"
 msgstr "重複を見つけた際に報告する"
 
-#: ../data/gtkpod.glade.h:143
+#: ../data/gtkpod.glade.h:142
 msgid "Display info about non-updated tracks"
 msgstr "更新されなかった曲を表示する"
 
-#: ../data/gtkpod.glade.h:144
+#: ../data/gtkpod.glade.h:143
 msgid "Display info about updated tracks"
 msgstr "更新された曲の情報を表示する"
 
-#: ../data/gtkpod.glade.h:145
+#: ../data/gtkpod.glade.h:144
 msgid "Display messages and warnings at startup"
 msgstr "起動時にメッセージや警告を表示する"
 
-#: ../data/gtkpod.glade.h:146
+#: ../data/gtkpod.glade.h:145
 msgid ""
 "Display the list of duplicates that have been detected after adding files."
 msgstr "ファイルを追加した際に発見した、重複する曲のリストを表示します。"
 
-#: ../data/gtkpod.glade.h:147
+#: ../data/gtkpod.glade.h:146
 msgid "Display toolbar..."
 msgstr "ツールバーの表示..."
 
-#: ../data/gtkpod.glade.h:148
+#: ../data/gtkpod.glade.h:147
 msgid "Display tooltips in main window"
 msgstr "ツールチップをメイン画面で表示する"
 
-#: ../data/gtkpod.glade.h:149
+#: ../data/gtkpod.glade.h:148
 msgid "Display tooltips in prefs window"
 msgstr "ツールチップを設定画面で表示する"
 
-#: ../data/gtkpod.glade.h:150
+#: ../data/gtkpod.glade.h:149
 msgid "Display tracks that match the criteria entered above."
 msgstr "上で指定された条件に合致する曲を表示します."
 
-#: ../data/gtkpod.glade.h:151
+#: ../data/gtkpod.glade.h:150
 msgid ""
 "Displayed\n"
 "Tracks"
@@ -687,77 +682,77 @@ msgstr ""
 "表示され\n"
 "ている曲"
 
-#: ../data/gtkpod.glade.h:153
+#: ../data/gtkpod.glade.h:152
 #, fuzzy
 msgid "Displayed:"
 msgstr "表示(_D)"
 
-#: ../data/gtkpod.glade.h:154
+#: ../data/gtkpod.glade.h:153
 msgid "Don't allow file duplication"
 msgstr "ファイルの重複を許さない"
 
-#: ../data/gtkpod.glade.h:155
+#: ../data/gtkpod.glade.h:154
 #, fuzzy
 msgid "Don't automatically sync on startup"
 msgstr "起動時に自動的に iTunesDB を読み込む"
 
-#: ../data/gtkpod.glade.h:156
+#: ../data/gtkpod.glade.h:155
 #, fuzzy
 msgid "Duplicate Recognition is based on a (modified) sha1 hash over the file."
 msgstr "md5を利用した重複チェックを行うようになります。"
 
-#: ../data/gtkpod.glade.h:157
+#: ../data/gtkpod.glade.h:156
 msgid "Edit Repository/iPod Options"
 msgstr "iPod の設定"
 
-#: ../data/gtkpod.glade.h:158 ../src/context_menus.c:662
+#: ../data/gtkpod.glade.h:157 ../src/context_menus.c:662
 msgid "Edit Smart Playlist"
 msgstr "スマートプレイリストの編集"
 
-#: ../data/gtkpod.glade.h:159 ../src/context_menus.c:749
+#: ../data/gtkpod.glade.h:158 ../src/context_menus.c:749
 msgid "Edit Track Details"
 msgstr "曲情報を編集"
 
-#: ../data/gtkpod.glade.h:160
+#: ../data/gtkpod.glade.h:159
 msgid "Edit _Preferences"
 msgstr "設定(_P)"
 
-#: ../data/gtkpod.glade.h:161
+#: ../data/gtkpod.glade.h:160
 msgid "Effective free space"
 msgstr "空き容量"
 
-#: ../data/gtkpod.glade.h:162
+#: ../data/gtkpod.glade.h:161
 msgid "Empty Playlist"
 msgstr "空リスト"
 
-#: ../data/gtkpod.glade.h:163
+#: ../data/gtkpod.glade.h:162
 msgid "Exclude file mask(s)"
 msgstr "適用しないファイル"
 
-#: ../data/gtkpod.glade.h:164
+#: ../data/gtkpod.glade.h:163
 #, fuzzy
 msgid "Export can be continued at a later time if canceled."
 msgstr ""
 "ボタンを押すと中断します。\n"
 "ファイルのエクスポートは後で再開する事ができます。"
 
-#: ../data/gtkpod.glade.h:165
+#: ../data/gtkpod.glade.h:164
 msgid "File size"
 msgstr "ファイルサイズ"
 
-#: ../data/gtkpod.glade.h:166
+#: ../data/gtkpod.glade.h:165
 msgid "File size (deleted)"
 msgstr "削除されたファイルサイズ"
 
-#: ../data/gtkpod.glade.h:167
+#: ../data/gtkpod.glade.h:166
 msgid "File size (non-transferred)"
 msgstr "未転送のファイルサイズ"
 
-#: ../data/gtkpod.glade.h:168
+#: ../data/gtkpod.glade.h:167
 msgid "Filename Format: "
 msgstr "ファイル名の書式: "
 
-#: ../data/gtkpod.glade.h:169
+#: ../data/gtkpod.glade.h:168
 #, fuzzy
 msgid ""
 "Find orphan files (files with no track info in DB) and dangling tracks "
@@ -766,16 +761,16 @@ msgstr ""
 "みなしごファイル (データベースに曲情報が登録されていないファイル) やぶらさが"
 "り曲 (曲情報があるのにファイル自体が iPod 上に存在しない) を探す"
 
-#: ../data/gtkpod.glade.h:170
+#: ../data/gtkpod.glade.h:169
 #, fuzzy
 msgid "First try <i>folder.jpg</i>, then <i>&lt;artist&gt;.jpg</i>"
 msgstr "最初に <i>folder.jpg</i> を試し、無ければ <i>&lt;artist&gt;.jpg</i>"
 
-#: ../data/gtkpod.glade.h:171
+#: ../data/gtkpod.glade.h:170
 msgid "Flac with :"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:173
+#: ../data/gtkpod.glade.h:172
 #, fuzzy, no-c-format
 msgid ""
 "For example, 'xmms %s' will clear xmms' current playlist, add the selected "
@@ -784,7 +779,7 @@ msgstr ""
 "例えば 'xmms -p %s' とすると、xmms のその時のプレイリストをクリアし、選択した"
 "曲をプレイリストの先頭に加えて演奏を始めます。"
 
-#: ../data/gtkpod.glade.h:175
+#: ../data/gtkpod.glade.h:174
 #, no-c-format
 msgid ""
 "For example, 'xmms -e %s' will append (enqueue) the selected tracks to xmms' "
@@ -793,16 +788,16 @@ msgstr ""
 "例えば 'xmms -e %s' とすると、選択された曲を xmms のその時のプレイリストの最"
 "後尾に追加します"
 
-#: ../data/gtkpod.glade.h:176 ../src/display_sorttabs.c:2985
+#: ../data/gtkpod.glade.h:175 ../src/display_sorttabs.c:2985
 #: ../src/display_spl.c:89 ../src/misc_conversion.c:63
 msgid "Genre"
 msgstr "ジャンル"
 
-#: ../data/gtkpod.glade.h:177
+#: ../data/gtkpod.glade.h:176
 msgid "Group artists on compilation CDs"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:178
+#: ../data/gtkpod.glade.h:177
 #, fuzzy
 msgid ""
 "Highly recommended for faster import when taking advantage of the "
@@ -816,12 +811,12 @@ msgstr ""
 "仮にiPodの中身が壊れたりした場合にも、再構成を容易にします。(データベースの"
 "バックアップファイルの中の \"transferred=\" の項目を変更すればよい)"
 
-#: ../data/gtkpod.glade.h:179 ../src/context_menus.c:685
+#: ../data/gtkpod.glade.h:178 ../src/context_menus.c:685
 #: ../src/context_menus.c:703 ../src/context_menus.c:820
 msgid "I'm sure"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:180
+#: ../data/gtkpod.glade.h:179
 msgid ""
 "If available, the local copy of the track is referenced in the playlist. "
 "Otherwise the file on the iPod is used."
@@ -829,11 +824,11 @@ msgstr ""
 "可能であれば, プレイリストはこの曲のハードディスク上のファイルを参照します.見"
 "つからない場合には iPod 上のファイルを参照します."
 
-#: ../data/gtkpod.glade.h:181
+#: ../data/gtkpod.glade.h:180
 msgid "If both options are selected, embedded APIC data takes precedence."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:182
+#: ../data/gtkpod.glade.h:181
 msgid ""
 "If checked, sorting will be case sensitive. Please note that case sensitive "
 "sorting will not work well with most charsets."
@@ -841,7 +836,7 @@ msgstr ""
 "並べ換えの際に, アルファベットの大文字と小文字を区別します. この機能はアル"
 "ファベット以外のほとんどの文字には対応していません."
 
-#: ../data/gtkpod.glade.h:183
+#: ../data/gtkpod.glade.h:182
 msgid ""
 "If the filename (full path) of an existing track matches that of a track to "
 "be added, this option allows you to update the information about the "
@@ -854,18 +849,18 @@ msgstr ""
 "の情報を更新します。もしファイルに変更がなく、「ファイルの重複を許さない」の"
 "項目を有効にしている場合は、更新はなされません。"
 
-#: ../data/gtkpod.glade.h:184
+#: ../data/gtkpod.glade.h:183
 msgid "If you check this, gtkpod will descend into subdirectories recursively."
 msgstr "この項目を有効にすると、gtkpodはサブディレクトリを再帰的に辿ります。"
 
-#: ../data/gtkpod.glade.h:185
+#: ../data/gtkpod.glade.h:184
 msgid ""
 "If you check this, information (cover art and meta information) changed for "
 "this track will be copied to all other selected tracks as well. Use with "
 "care."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:186
+#: ../data/gtkpod.glade.h:185
 msgid ""
 "If you don't select the master playlist automatically, the initial database "
 "import is much faster because the display dosn't have to be updated."
@@ -873,7 +868,7 @@ msgstr ""
 "マスタープレイリストを自動的に選択しないようにすると、起動時にデータベースを"
 "読み込む際には何も表示しなくなるので、スピードが速くなります。"
 
-#: ../data/gtkpod.glade.h:187
+#: ../data/gtkpod.glade.h:186
 msgid ""
 "If you select several tracks in the track list and edit a tag of the first "
 "track, the tags in the other tracks are updated as well."
@@ -881,11 +876,11 @@ msgstr ""
 "曲リストの曲を二つ以上選択して、最初の曲のタグを変更すると他の曲にもその変更"
 "を適用します。"
 
-#: ../data/gtkpod.glade.h:188
+#: ../data/gtkpod.glade.h:187
 msgid "Ignore these words when at the beginning of the following fields:"
 msgstr "これらの語が以下の項目の冒頭にあった場合には無視します:"
 
-#: ../data/gtkpod.glade.h:189
+#: ../data/gtkpod.glade.h:188
 msgid ""
 "In order to save the displayed track order to the iPod choose 'Save "
 "Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
@@ -893,114 +888,114 @@ msgstr ""
 "表示されている曲順を iPod に保存するには,「編集」メニューから「現在の曲順を保"
 "存」を選択するか, この下の「自動保存」を選択してください."
 
-#: ../data/gtkpod.glade.h:190
+#: ../data/gtkpod.glade.h:189
 msgid "Initialize iPod"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:191
+#: ../data/gtkpod.glade.h:190
 msgid ""
 "Insert before\n"
 "Insert after"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:193
+#: ../data/gtkpod.glade.h:192
 msgid "Keeps all compilation CDs grouped together in the artists sort tab."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:194
+#: ../data/gtkpod.glade.h:193
 msgid "Live _updating"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:195
+#: ../data/gtkpod.glade.h:194
 msgid "Load iPod(s)"
 msgstr "iPod から読み込み"
 
-#: ../data/gtkpod.glade.h:196
+#: ../data/gtkpod.glade.h:195
 msgid "Lower Margin"
 msgstr "下限"
 
-#: ../data/gtkpod.glade.h:197
+#: ../data/gtkpod.glade.h:196
 msgid "M4A with :"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:198
+#: ../data/gtkpod.glade.h:197
 msgid "MP3 with :"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:199
+#: ../data/gtkpod.glade.h:198
 msgid "Match al_l of the following"
 msgstr "以下のすべてに該当するもの(_l)"
 
-#: ../data/gtkpod.glade.h:200
+#: ../data/gtkpod.glade.h:199
 msgid "Match an_y of the following"
 msgstr "以下のいずれかに該当するもの(_y)"
 
-#: ../data/gtkpod.glade.h:201
+#: ../data/gtkpod.glade.h:200
 msgid "Match only _checked tracks"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:202
+#: ../data/gtkpod.glade.h:201
 msgid "Maximum number of background threads:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:203
+#: ../data/gtkpod.glade.h:202
 msgid "Maximum size of cache directory (in GB):"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:204
+#: ../data/gtkpod.glade.h:203
 msgid "Model:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:205 ../src/display_tracks.c:2100
+#: ../data/gtkpod.glade.h:204 ../src/display_tracks.c:2100
 msgid "Modified"
 msgstr "変更日"
 
-#: ../data/gtkpod.glade.h:206
+#: ../data/gtkpod.glade.h:205
 msgid "Most Recently Played Tracks"
 msgstr "最近再生された曲"
 
-#: ../data/gtkpod.glade.h:207
+#: ../data/gtkpod.glade.h:206
 msgid "Move selected attributes to the displayed list"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:208
+#: ../data/gtkpod.glade.h:207
 msgid "Music Root:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:209
+#: ../data/gtkpod.glade.h:208
 msgid ""
 "Music files can have images embedded in the APIC tag. Currently this is only "
 "supported for MP3 files."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:210
+#: ../data/gtkpod.glade.h:209
 msgid "Never show this dialogue again"
 msgstr "この質問を二度と表示しない"
 
-#: ../data/gtkpod.glade.h:211 ../src/display_spl.c:1719
+#: ../data/gtkpod.glade.h:210 ../src/display_spl.c:1719
 #: ../src/misc_playlist.c:66 ../src/misc_playlist.c:68
 #: ../src/misc_playlist.c:93 ../src/misc_playlist.c:95
 #: ../src/misc_playlist.c:428 ../src/misc_playlist.c:430
 msgid "New Playlist"
 msgstr "新規プレイリスト"
 
-#: ../data/gtkpod.glade.h:212
+#: ../data/gtkpod.glade.h:211
 msgid "No lower margin"
 msgstr "下限を指定しない"
 
-#: ../data/gtkpod.glade.h:213
+#: ../data/gtkpod.glade.h:212
 msgid "No upper margin"
 msgstr "上限を指定しない"
 
-#: ../data/gtkpod.glade.h:214
+#: ../data/gtkpod.glade.h:213
 msgid "Non-transferred tracks"
 msgstr "未転送の曲数"
 
-#: ../data/gtkpod.glade.h:215
+#: ../data/gtkpod.glade.h:214
 msgid "None"
 msgstr "無指定"
 
-#: ../data/gtkpod.glade.h:216
+#: ../data/gtkpod.glade.h:215
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "for the filename. If you set this option you can set a different charset "
@@ -1016,7 +1011,7 @@ msgstr ""
 "で登録された曲にはこの情報が記録されていません. この場合, 上で指定された文字"
 "コードが今後使われるようになります."
 
-#: ../data/gtkpod.glade.h:217
+#: ../data/gtkpod.glade.h:216
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "to update the track information. If you have chosen a wrong charset when "
@@ -1033,7 +1028,7 @@ msgstr ""
 "ジョン0.51以前の gtkpod でインポートされた曲はこの情報が記録さていません. こ"
 "の場合, ここで指定された文字コードが今後使われるようになります."
 
-#: ../data/gtkpod.glade.h:218
+#: ../data/gtkpod.glade.h:217
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "to write the tags. If you have chosen a wrong charset when first importing a "
@@ -1051,7 +1046,7 @@ msgstr ""
 "ついては文字コード情報が保存されていません。「入出力」の項目で指定された文字"
 "コードが適用されます。"
 
-#: ../data/gtkpod.glade.h:219
+#: ../data/gtkpod.glade.h:218
 msgid ""
 "Normally, if a track is no longer present in the sync directory, it will be "
 "removed from the playlist, but not from the iPod or local repository.\n"
@@ -1063,23 +1058,23 @@ msgid ""
 "means removing from the iPod."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:222
+#: ../data/gtkpod.glade.h:221
 msgid "Notes sync command:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:223
+#: ../data/gtkpod.glade.h:222
 msgid "Number of playlists"
 msgstr "プレイリストの数"
 
-#: ../data/gtkpod.glade.h:224
+#: ../data/gtkpod.glade.h:223
 msgid "Number of tracks"
 msgstr "曲数"
 
-#: ../data/gtkpod.glade.h:225
+#: ../data/gtkpod.glade.h:224
 msgid "Number of tracks in generated playlists:"
 msgstr "生成するプレイリストに加える曲数:"
 
-#: ../data/gtkpod.glade.h:226
+#: ../data/gtkpod.glade.h:225
 msgid ""
 "Number of tracks in the generated playlists 'Most Often Listened', 'Best "
 "Rated' and 'Most Recently Played'. Choose '0' for 'no limit'."
@@ -1088,178 +1083,178 @@ msgstr ""
 "た曲」を選択した際にリストに登録する曲の数を指定します。0を指定すると、曲数を"
 "制限しません。"
 
-#: ../data/gtkpod.glade.h:227
+#: ../data/gtkpod.glade.h:226
 msgid "Ogg with :"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:228
+#: ../data/gtkpod.glade.h:227
 msgid "On startup automatically sync with playlist directories"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:229
+#: ../data/gtkpod.glade.h:228
 #, fuzzy
 msgid "On startup automatically sync with the following directory"
 msgstr "以下のディレクトリで同期処理をしてもよろしいですか?"
 
-#: ../data/gtkpod.glade.h:230
+#: ../data/gtkpod.glade.h:229
 msgid "On startup automatically update (Live Playlist)"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:231
+#: ../data/gtkpod.glade.h:230
 msgid "One for each Album"
 msgstr "各アルバムごとのリスト"
 
-#: ../data/gtkpod.glade.h:232
+#: ../data/gtkpod.glade.h:231
 msgid "One for each Artist"
 msgstr "各アーティストごとのリスト"
 
-#: ../data/gtkpod.glade.h:233
+#: ../data/gtkpod.glade.h:232
 msgid "One for each Composer"
 msgstr "各作曲者ごとのリスト"
 
-#: ../data/gtkpod.glade.h:234
+#: ../data/gtkpod.glade.h:233
 msgid "One for each Genre"
 msgstr "各ジャンルごとのリスト"
 
-#: ../data/gtkpod.glade.h:235
+#: ../data/gtkpod.glade.h:234
 msgid "One for each Rating"
 msgstr "各評価値ごとのリスト"
 
-#: ../data/gtkpod.glade.h:236
+#: ../data/gtkpod.glade.h:235
 msgid "One for each Year"
 msgstr "各年ごとのリスト"
 
-#: ../data/gtkpod.glade.h:237
+#: ../data/gtkpod.glade.h:236
 msgid "Overwrite tags that are already set"
 msgstr "すでにあタグ情報を上書きする"
 
-#: ../data/gtkpod.glade.h:238
+#: ../data/gtkpod.glade.h:237
 msgid "Password:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:239
+#: ../data/gtkpod.glade.h:238
 msgid "Path:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:240
+#: ../data/gtkpod.glade.h:239
 #, fuzzy
 msgid "Photo Window"
 msgstr "情報(_I)"
 
-#: ../data/gtkpod.glade.h:241 ../src/display_spl.c:94
+#: ../data/gtkpod.glade.h:240 ../src/display_spl.c:94
 msgid "Play time"
 msgstr "演奏時間"
 
-#: ../data/gtkpod.glade.h:242 ../src/display_spl.c:98
+#: ../data/gtkpod.glade.h:241 ../src/display_spl.c:98
 #: ../src/misc_conversion.c:77
 msgid "Playcount"
 msgstr "再生回数"
 
-#: ../data/gtkpod.glade.h:243 ../src/display_tracks.c:2097
+#: ../data/gtkpod.glade.h:242 ../src/display_tracks.c:2097
 msgid "Played"
 msgstr "演奏日"
 
-#: ../data/gtkpod.glade.h:244
+#: ../data/gtkpod.glade.h:243
 msgid "Playlist name:"
 msgstr "プレイリストの名前:"
 
-#: ../data/gtkpod.glade.h:245
+#: ../data/gtkpod.glade.h:244
 #, fuzzy
 msgid "Playlist type:"
 msgstr "プレイリスト"
 
-#: ../data/gtkpod.glade.h:246 ../src/display_playlists.c:2258
+#: ../data/gtkpod.glade.h:245 ../src/display_playlists.c:2258
 msgid "Playlists"
 msgstr "プレイリスト"
 
-#: ../data/gtkpod.glade.h:247
+#: ../data/gtkpod.glade.h:246
 msgid "Please refer to the notice below."
 msgstr "下記の注意を参照してください。"
 
-#: ../data/gtkpod.glade.h:248
+#: ../data/gtkpod.glade.h:247
 msgid "Please specify a time interval"
 msgstr "期間を指定してください"
 
-#: ../data/gtkpod.glade.h:249
+#: ../data/gtkpod.glade.h:248
 msgid "Preferences"
 msgstr "設定"
 
-#: ../data/gtkpod.glade.h:250
+#: ../data/gtkpod.glade.h:249
 #, fuzzy
 msgid "Progress Information"
 msgstr "情報"
 
-#: ../data/gtkpod.glade.h:251
+#: ../data/gtkpod.glade.h:250
 msgid "R_ename Album"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:252
+#: ../data/gtkpod.glade.h:251
 msgid "Random Playlist from Displayed Tracks"
 msgstr "表示されている曲からランダムに作成"
 
-#: ../data/gtkpod.glade.h:253
+#: ../data/gtkpod.glade.h:252
 msgid "Randomize Current Playlist"
 msgstr "現在のプレイリストをランダムに並べ換える"
 
-#: ../data/gtkpod.glade.h:254 ../src/display_spl.c:101
+#: ../data/gtkpod.glade.h:253 ../src/display_spl.c:101
 #: ../src/misc_conversion.c:78
 msgid "Rating"
 msgstr "評価"
 
-#: ../data/gtkpod.glade.h:255
+#: ../data/gtkpod.glade.h:254
 msgid "Read coverart from embedded APIC data"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:256
+#: ../data/gtkpod.glade.h:255
 msgid "Read tags from file contents (e.g. ID3 tags in MP3 files)"
 msgstr "ファイルからタグ情報を読み込む (MP3 ファイルの ID3 タグなど)"
 
-#: ../data/gtkpod.glade.h:257
+#: ../data/gtkpod.glade.h:256
 #, fuzzy
 msgid "Remove selected attributes from the displayed list"
 msgstr "選択された曲をプレイリストから削除する"
 
-#: ../data/gtkpod.glade.h:258
+#: ../data/gtkpod.glade.h:257
 #, fuzzy
 msgid "Repository Options"
 msgstr "ソートの設定"
 
-#: ../data/gtkpod.glade.h:259
+#: ../data/gtkpod.glade.h:258
 #, fuzzy
 msgid "Repository name:"
 msgstr "ソートの設定"
 
-#: ../data/gtkpod.glade.h:260
+#: ../data/gtkpod.glade.h:259
 #, fuzzy
 msgid "Repository type:"
 msgstr "ソートの設定"
 
-#: ../data/gtkpod.glade.h:261
+#: ../data/gtkpod.glade.h:260
 msgid "Root directory of mserv database (trackinfo root)."
 msgstr "mserv データベースのあるディレクトリ。(trackinfo root)"
 
-#: ../data/gtkpod.glade.h:262
+#: ../data/gtkpod.glade.h:261
 msgid "Rules"
 msgstr "ルール"
 
-#: ../data/gtkpod.glade.h:263 ../src/context_menus.c:804
+#: ../data/gtkpod.glade.h:262 ../src/context_menus.c:804
 msgid "Save Changes"
 msgstr "変更を保存"
 
-#: ../data/gtkpod.glade.h:264
+#: ../data/gtkpod.glade.h:263
 #, fuzzy
 msgid "Scrobble Tracks?"
 msgstr "選択された曲(_T)"
 
-#: ../data/gtkpod.glade.h:265
+#: ../data/gtkpod.glade.h:264
 msgid "Select '-1' for no upper limit."
 msgstr "上限を指定しない場合は '-1' を選んでください。"
 
-#: ../data/gtkpod.glade.h:266
+#: ../data/gtkpod.glade.h:265
 msgid "Select '0' for no lower limit."
 msgstr "下限を指定しない場合は '0' を選んでください."
 
-#: ../data/gtkpod.glade.h:267
+#: ../data/gtkpod.glade.h:266
 msgid ""
 "Selected\n"
 "Playlist"
@@ -1267,7 +1262,7 @@ msgstr ""
 "選択された\n"
 "プレイリスト"
 
-#: ../data/gtkpod.glade.h:269
+#: ../data/gtkpod.glade.h:268
 msgid ""
 "Selected\n"
 "Tracks"
@@ -1275,206 +1270,206 @@ msgstr ""
 "選択され\n"
 "ている曲"
 
-#: ../data/gtkpod.glade.h:271
+#: ../data/gtkpod.glade.h:270
 #, fuzzy
 msgid "Selected Filter Tab Entry from Database"
 msgstr "選択されたタブで指定した曲をデータベースから削除する"
 
-#: ../data/gtkpod.glade.h:272
+#: ../data/gtkpod.glade.h:271
 #, fuzzy
 msgid "Selected Filter Tab Entry from Hard Disk"
 msgstr "選択されたタブで指定した曲をハードディスクから削除する"
 
-#: ../data/gtkpod.glade.h:273
+#: ../data/gtkpod.glade.h:272
 #, fuzzy
 msgid "Selected Filter Tab Entry from Playlist"
 msgstr "選択されたタブで指定した曲をプレイリストから削除する"
 
-#: ../data/gtkpod.glade.h:274
+#: ../data/gtkpod.glade.h:273
 #, fuzzy
 msgid "Selected Filter Tab Entry from iPod"
 msgstr "選択されたタブで指定した曲を iPod から削除する"
 
-#: ../data/gtkpod.glade.h:275
+#: ../data/gtkpod.glade.h:274
 #, fuzzy
 msgid "Selected Playlist Including Tracks from Database"
 msgstr "選択されたプレイリストを曲ごとデータベースから削除する"
 
-#: ../data/gtkpod.glade.h:276
+#: ../data/gtkpod.glade.h:275
 #, fuzzy
 msgid "Selected Playlist Including Tracks from Hard Disk"
 msgstr "選択されたプレイリストを曲ごとデータベースから削除する"
 
-#: ../data/gtkpod.glade.h:277
+#: ../data/gtkpod.glade.h:276
 #, fuzzy
 msgid "Selected Playlist Including Tracks from iPod"
 msgstr "選択されたプレイリストを曲ごと iPod から削除する"
 
-#: ../data/gtkpod.glade.h:278
+#: ../data/gtkpod.glade.h:277
 msgid "Selected Tab _Entry"
 msgstr "選択されたソートタブ(_E)"
 
-#: ../data/gtkpod.glade.h:279
+#: ../data/gtkpod.glade.h:278
 #, fuzzy
 msgid "Selected Tracks from Database"
 msgstr "選択された曲をデータベースから削除する"
 
-#: ../data/gtkpod.glade.h:280
+#: ../data/gtkpod.glade.h:279
 #, fuzzy
 msgid "Selected Tracks from Hard Disk"
 msgstr "選択された曲をハードディスクから削除する"
 
-#: ../data/gtkpod.glade.h:281
+#: ../data/gtkpod.glade.h:280
 #, fuzzy
 msgid "Selected Tracks from Playlist"
 msgstr "選択された曲をプレイリストから削除する"
 
-#: ../data/gtkpod.glade.h:282
+#: ../data/gtkpod.glade.h:281
 #, fuzzy
 msgid "Selected Tracks from iPod"
 msgstr "選択された曲を iPod から削除する"
 
-#: ../data/gtkpod.glade.h:283
+#: ../data/gtkpod.glade.h:282
 msgid "Selected _Playlist"
 msgstr "選択されたプレイリスト(_P)"
 
-#: ../data/gtkpod.glade.h:284
+#: ../data/gtkpod.glade.h:283
 msgid "Selected _Tracks"
 msgstr "選択された曲(_T)"
 
-#: ../data/gtkpod.glade.h:285
+#: ../data/gtkpod.glade.h:284
 msgid "Selected playlist"
 msgstr "選択されたプレイリスト"
 
-#: ../data/gtkpod.glade.h:286
+#: ../data/gtkpod.glade.h:285
 #, fuzzy
 msgid "Semicolon separated list of file exclusion masks, e.g. '*.mp3'"
 msgstr "セミコロンで区切られた, 適用しないファイルのマスクリスト. 例: '*.mp3'"
 
-#: ../data/gtkpod.glade.h:287
+#: ../data/gtkpod.glade.h:286
 #, fuzzy
 msgid "Set Cover Art from _File"
 msgstr "mserv データを更新する(_m)"
 
-#: ../data/gtkpod.glade.h:288
+#: ../data/gtkpod.glade.h:287
 msgid "Set mountpoint or edit repository options"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:289
+#: ../data/gtkpod.glade.h:288
 msgid "Set options for Calendar/Contacts/Notes"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:290
+#: ../data/gtkpod.glade.h:289
 msgid ""
 "Set this to 'aacgain -q -k' to use the 'Normalize volume' functionality in "
 "the Tools Menu. If this is set, missing normalization data for .m4a and .m4b "
 "files will be calculated and written to your music file using this command."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:291
+#: ../data/gtkpod.glade.h:290
 msgid ""
 "Set this to 'mp3gain -q -k' to use the 'Normalize volume' functionality in "
 "the Tools Menu. If this is set, missing normalization data for mp3 files "
 "will be calculated and written to your mp3 file using this command."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:292
+#: ../data/gtkpod.glade.h:291
 msgid "Set this to your last.fm password"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:293
+#: ../data/gtkpod.glade.h:292
 msgid "Set this to your last.fm username"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:294
+#: ../data/gtkpod.glade.h:293
 msgid ""
 "Set to 0 to effectively disable caching (a maximum of one track will be "
 "cached at a time)."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:295
+#: ../data/gtkpod.glade.h:294
 msgid ""
 "Set to 0 to use as many background threads as CPUs are available on your "
 "system."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:296
+#: ../data/gtkpod.glade.h:295
 msgid "Show information about problems when accessing mserv"
 msgstr "mserv へアクセスするとき、問題の報告を表示する"
 
-#: ../data/gtkpod.glade.h:297
+#: ../data/gtkpod.glade.h:296
 msgid "Show summary of sync result"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:298 ../src/misc_playlist.c:96
+#: ../data/gtkpod.glade.h:297 ../src/misc_playlist.c:96
 #: ../src/repository.c:1356
 msgid "Smart Playlist"
 msgstr "スマートプレイリスト"
 
-#: ../data/gtkpod.glade.h:299
+#: ../data/gtkpod.glade.h:298
 msgid "Sort tracks according to: "
 msgstr "曲順を次の順で並べ換える: "
 
-#: ../data/gtkpod.glade.h:300
+#: ../data/gtkpod.glade.h:299
 msgid "Sorting Options"
 msgstr "ソートの設定"
 
-#: ../data/gtkpod.glade.h:301
+#: ../data/gtkpod.glade.h:300
 msgid "Sorting case sensitive"
 msgstr "並べ換えの際に大文字小文字を区別する"
 
-#: ../data/gtkpod.glade.h:302
+#: ../data/gtkpod.glade.h:301
 msgid "Sorttab: "
 msgstr "ソートタブ: "
 
-#: ../data/gtkpod.glade.h:303
+#: ../data/gtkpod.glade.h:302
 msgid "Sorttabs"
 msgstr "ソートタブ"
 
-#: ../data/gtkpod.glade.h:304
+#: ../data/gtkpod.glade.h:303
 msgid "Source:"
 msgstr "参照先:"
 
-#: ../data/gtkpod.glade.h:306
+#: ../data/gtkpod.glade.h:305
 #, no-c-format
 msgid ""
 "Specify exact path including command line options. '%i' will be replaced "
 "with the mount point of the iPod."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:307
+#: ../data/gtkpod.glade.h:306
 msgid "Specify interval"
 msgstr "範囲を指定してください"
 
-#: ../data/gtkpod.glade.h:308
+#: ../data/gtkpod.glade.h:307
 msgid "Start display automatically"
 msgstr "自動的に表示を更新する"
 
-#: ../data/gtkpod.glade.h:309
+#: ../data/gtkpod.glade.h:308
 msgid "Synchronise Contacts, Calendar and Notes"
 msgstr "アドレスデータ,カレンダー,メモを同期する"
 
-#: ../data/gtkpod.glade.h:310
+#: ../data/gtkpod.glade.h:309
 msgid "Synchronize All"
 msgstr "すべて同期"
 
-#: ../data/gtkpod.glade.h:311
+#: ../data/gtkpod.glade.h:310
 msgid "Synchronize Calendar"
 msgstr "カレンダーを同期"
 
-#: ../data/gtkpod.glade.h:312
+#: ../data/gtkpod.glade.h:311
 msgid "Synchronize Contacts"
 msgstr "アドレスデータを同期"
 
-#: ../data/gtkpod.glade.h:313
+#: ../data/gtkpod.glade.h:312
 msgid "Synchronize Notes"
 msgstr "メモを同期"
 
-#: ../data/gtkpod.glade.h:314
+#: ../data/gtkpod.glade.h:313
 msgid "Template for info field: "
 msgstr ""
 
-#: ../data/gtkpod.glade.h:315
+#: ../data/gtkpod.glade.h:314
 msgid ""
 "The local copy of the track is referenced in the playlist. If the track is "
 "not available locally, an error message is displayed."
@@ -1482,13 +1477,13 @@ msgstr ""
 "ハードディスク上にある対応する曲を常に参照します. 見つからない場合にはエラー"
 "メッセージを表示します."
 
-#: ../data/gtkpod.glade.h:316
+#: ../data/gtkpod.glade.h:315
 msgid ""
 "The output of the background conversion scripts is copied below. Each page "
 "of the notebook corresponds to one background thread."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:317
+#: ../data/gtkpod.glade.h:316
 #, fuzzy
 msgid ""
 "The tags are written to the files on your harddrive and on the iPod (if "
@@ -1496,15 +1491,15 @@ msgid ""
 msgstr ""
 "タグは使っているハードディスクと(可能であれば)iPodの両方で修正されます。"
 
-#: ../data/gtkpod.glade.h:318
+#: ../data/gtkpod.glade.h:317
 msgid "The track on the iPod is referenced in the playlist file."
 msgstr "iPod 上の曲を常に参照します."
 
-#: ../data/gtkpod.glade.h:319
+#: ../data/gtkpod.glade.h:318
 msgid "This is the same option as in 'Edit/Delete Confirmation'"
 msgstr "「編集/削除の確認」の項目と同じです"
 
-#: ../data/gtkpod.glade.h:320
+#: ../data/gtkpod.glade.h:319
 msgid ""
 "This is the way to go, but maybe not all programs support it yet. ID3v2.4 "
 "uses unicode to store the tags, so you won't have to worry about charsets "
@@ -1513,20 +1508,20 @@ msgid ""
 "present in the file to write to."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:321
+#: ../data/gtkpod.glade.h:320
 msgid "This option will be re-activated when you upgrade gtkpod."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:322
+#: ../data/gtkpod.glade.h:321
 msgid "Time:"
 msgstr "時刻:"
 
-#: ../data/gtkpod.glade.h:323 ../src/display_sorttabs.c:2991
+#: ../data/gtkpod.glade.h:322 ../src/display_sorttabs.c:2991
 #: ../src/display_spl.c:83 ../src/misc_conversion.c:62
 msgid "Title"
 msgstr "タイトル"
 
-#: ../data/gtkpod.glade.h:324
+#: ../data/gtkpod.glade.h:323
 msgid ""
 "Total\n"
 "(iPod)"
@@ -1534,7 +1529,7 @@ msgstr ""
 "合計\n"
 "(iPod)"
 
-#: ../data/gtkpod.glade.h:326
+#: ../data/gtkpod.glade.h:325
 msgid ""
 "Total\n"
 "(local)"
@@ -1542,38 +1537,38 @@ msgstr ""
 "合計\n"
 "(ローカル)"
 
-#: ../data/gtkpod.glade.h:328
+#: ../data/gtkpod.glade.h:327
 msgid "Tracks"
 msgstr "曲リスト"
 
-#: ../data/gtkpod.glade.h:329
+#: ../data/gtkpod.glade.h:328
 msgid "Tracks Most Often Listened To"
 msgstr "再生回数の多い曲"
 
-#: ../data/gtkpod.glade.h:330
+#: ../data/gtkpod.glade.h:329
 msgid ""
 "Tracks can be transferred in the background as soon as they are added to an "
 "iPod repository. Otherwise they will be transferred when ejecting the "
 "contents of the iPod completely unchanged until then."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:331
+#: ../data/gtkpod.glade.h:330
 msgid "Tracks in Selected Tab _Entry"
 msgstr "選択されたタブの曲(_E)"
 
-#: ../data/gtkpod.glade.h:332
+#: ../data/gtkpod.glade.h:331
 msgid "Tracks in Selected _Playlist"
 msgstr "選択されたプレイリストの曲(_P)"
 
-#: ../data/gtkpod.glade.h:333
+#: ../data/gtkpod.glade.h:332
 msgid "Transfer tracks to the iPod in the background"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:334
+#: ../data/gtkpod.glade.h:333
 msgid "Translators"
 msgstr "翻訳担当"
 
-#: ../data/gtkpod.glade.h:335
+#: ../data/gtkpod.glade.h:334
 msgid ""
 "Try to load contents of all connected iPods. For each iPod a separate "
 "repository must be set up."
@@ -1581,58 +1576,58 @@ msgstr ""
 "接続されているすべての iPod の内容を読み込みます. それぞれの iPod ごとに個別"
 "に設定をしておく必要があります."
 
-#: ../data/gtkpod.glade.h:336
+#: ../data/gtkpod.glade.h:335
 #, fuzzy
 msgid "Undo _Track"
 msgstr "未評価の曲"
 
-#: ../data/gtkpod.glade.h:337
+#: ../data/gtkpod.glade.h:336
 msgid "Update _mserv Data from File"
 msgstr "mserv データを更新する(_m)"
 
-#: ../data/gtkpod.glade.h:338
+#: ../data/gtkpod.glade.h:337
 msgid "Update/Sync all playlists now"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:339
+#: ../data/gtkpod.glade.h:338
 msgid "Update/Sync playlist now"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:340
+#: ../data/gtkpod.glade.h:339
 msgid "Upper margin"
 msgstr "上限"
 
-#: ../data/gtkpod.glade.h:341
+#: ../data/gtkpod.glade.h:340
 msgid "Use 'Multi-Edit' also for title field"
 msgstr "タイトルの項目も「一斉編集」を可能にする"
 
-#: ../data/gtkpod.glade.h:342
+#: ../data/gtkpod.glade.h:341
 msgid "Use 'Multi-Edit' for tracks selections"
 msgstr "選択された曲を「一斉編集」する"
 
-#: ../data/gtkpod.glade.h:343
+#: ../data/gtkpod.glade.h:342
 #, fuzzy
 msgid "Use <i>&lt;Album&gt;.jpg</i> in the parent directory"
 msgstr "親ディレクトリにある <i>&lt;Album&gt;.jpg</i> を使う"
 
-#: ../data/gtkpod.glade.h:344
+#: ../data/gtkpod.glade.h:343
 #, fuzzy
 msgid "Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>..."
 msgstr "<i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i> など"
 
-#: ../data/gtkpod.glade.h:345
+#: ../data/gtkpod.glade.h:344
 msgid "Use <i>folder.jpg</i> as cover art."
 msgstr "<i>folder.jpg</i> をカバーアートに使う"
 
-#: ../data/gtkpod.glade.h:346
+#: ../data/gtkpod.glade.h:345
 msgid "Use <i>folder.jpg</i>, <i>folder.png</i>..."
 msgstr "<i>folder.jpg</i>, <i>folder.png</i> など"
 
-#: ../data/gtkpod.glade.h:347
+#: ../data/gtkpod.glade.h:346
 msgid "Use mserv database to fill additional information"
 msgstr "mserv のデータベースから追加情報を取得する"
 
-#: ../data/gtkpod.glade.h:348
+#: ../data/gtkpod.glade.h:347
 msgid ""
 "Use selected charset (Preferences/'Adding/Updating/ Syncing')\n"
 "for this filename."
@@ -1640,7 +1635,7 @@ msgstr ""
 "指定された文字コード (「設定」内「登録/更新/同期」を参照)\n"
 "をファイル名にも使用する。"
 
-#: ../data/gtkpod.glade.h:350
+#: ../data/gtkpod.glade.h:349
 #, fuzzy
 msgid ""
 "Use selected encoding (on the 'General' page)\n"
@@ -1649,24 +1644,24 @@ msgstr ""
 "「基本設定」のページで指定された文字コードを\n"
 "タグの読み書きにも使用する"
 
-#: ../data/gtkpod.glade.h:352
+#: ../data/gtkpod.glade.h:351
 #, fuzzy
 msgid "Use selected encoding also when updating or syncing tracks"
 msgstr "選択された文字コードを更新・同期処理でも使用する"
 
-#: ../data/gtkpod.glade.h:353
+#: ../data/gtkpod.glade.h:352
 msgid "Use this template to parse filename for tag information:"
 msgstr "以下のテンプレートを、ファイル名からタグ情報を抽出するのに使用する:"
 
-#: ../data/gtkpod.glade.h:354
+#: ../data/gtkpod.glade.h:353
 msgid "Username to be used for mserv database lookup."
 msgstr "ユーザー名は mserv データベースの参照に使います。"
 
-#: ../data/gtkpod.glade.h:355
+#: ../data/gtkpod.glade.h:354
 msgid "Username:"
 msgstr "ユーザー名:"
 
-#: ../data/gtkpod.glade.h:356
+#: ../data/gtkpod.glade.h:355
 msgid ""
 "Usually you don't want to set the title of several tracks to the same text. "
 "This option might avoid unwanted results (especially since there is no "
@@ -1676,16 +1671,16 @@ msgstr ""
 "選択すると大抵は望ましくない結果を得る事になります。(特に、今のところ「やり直"
 "し」は効かないので、選択するべきではありません)"
 
-#: ../data/gtkpod.glade.h:357
+#: ../data/gtkpod.glade.h:356
 #, fuzzy
 msgid "View Full Size"
 msgstr "ファイルサイズ"
 
-#: ../data/gtkpod.glade.h:358
+#: ../data/gtkpod.glade.h:357
 msgid "WAV with :"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:359
+#: ../data/gtkpod.glade.h:358
 msgid ""
 "When adding dirs/files, update information of\n"
 "existing tracks with identical filenames"
@@ -1693,7 +1688,7 @@ msgstr ""
 "ファイルやディレクトリを追加する際に、同じファイル名の\n"
 "曲がすでにあったら場合には、そちらを更新する"
 
-#: ../data/gtkpod.glade.h:361
+#: ../data/gtkpod.glade.h:360
 msgid ""
 "When copying from iPod no check is performed on whether the destination file "
 "exists. Enabling this option will make gtkpod check whether the length of "
@@ -1705,26 +1700,26 @@ msgstr ""
 "を iPod 上のファイルと比較して, 同じだった場合には飛ばします. 結果として同期"
 "処理を高速に行えます."
 
-#: ../data/gtkpod.glade.h:362
+#: ../data/gtkpod.glade.h:361
 #, fuzzy
 msgid "When syncing playlists"
 msgstr "ディレクトリの同期処理時"
 
-#: ../data/gtkpod.glade.h:363
+#: ../data/gtkpod.glade.h:362
 msgid ""
 "Will show a list of tracks removed and a list of tracks newly added or "
 "updated."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:364
+#: ../data/gtkpod.glade.h:363
 msgid "Write ID3 tags to disk when modified in gtkpod"
 msgstr "gtkpod内で変更があったID3タグをディスクに書き込む"
 
-#: ../data/gtkpod.glade.h:365
+#: ../data/gtkpod.glade.h:364
 msgid "Write all changes made to the disk and the iPod(s)."
 msgstr "ハードディスクと iPod に対する変更をすべて保存します."
 
-#: ../data/gtkpod.glade.h:366
+#: ../data/gtkpod.glade.h:365
 #, fuzzy
 msgid ""
 "Write extended information (PC filenames, SHA1 hashes,\n"
@@ -1733,7 +1728,7 @@ msgstr ""
 "拡張情報(PC上のファイル名,MD5値,文字コード)を書き込む。\n"
 "推奨される設定です。"
 
-#: ../data/gtkpod.glade.h:368
+#: ../data/gtkpod.glade.h:367
 msgid ""
 "You can also use the table headers, but this allows you to sort according to "
 "a column that is not displayed."
@@ -1741,160 +1736,165 @@ msgstr ""
 "表のヘッダを操作しても並べ換えはできますが, この機能を使うと表示されていない"
 "項目を使って並べ換えることができます."
 
-#: ../data/gtkpod.glade.h:369
+#: ../data/gtkpod.glade.h:368
 #, fuzzy
 msgid "_About gtkpod"
 msgstr "gtkpod について"
 
-#: ../data/gtkpod.glade.h:370
+#: ../data/gtkpod.glade.h:369
 #, fuzzy
 msgid "_Add Album"
 msgstr "アルバム"
 
-#: ../data/gtkpod.glade.h:371
+#: ../data/gtkpod.glade.h:370
 msgid "_Add Image"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:372
+#: ../data/gtkpod.glade.h:371
 #, fuzzy
 msgid "_Album"
 msgstr "アルバム"
 
-#: ../data/gtkpod.glade.h:373
+#: ../data/gtkpod.glade.h:372
 msgid "_All Tracks"
 msgstr "すべての曲(_A)"
 
-#: ../data/gtkpod.glade.h:374
+#: ../data/gtkpod.glade.h:373
 msgid "_Arrange Sort Tabs"
 msgstr "ソートタブを再配置(_A)"
 
-#: ../data/gtkpod.glade.h:375
+#: ../data/gtkpod.glade.h:374
 msgid "_Check iPod's Files"
 msgstr "iPod のファイルをチェック(_C)"
 
-#: ../data/gtkpod.glade.h:376
+#: ../data/gtkpod.glade.h:375
 msgid "_Conversion Log"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:377
+#: ../data/gtkpod.glade.h:376
 msgid "_Create Playlists"
 msgstr "プレイリストを作成(_C)"
 
-#: ../data/gtkpod.glade.h:378
+#: ../data/gtkpod.glade.h:377
 msgid "_Create iPod's Directories"
 msgstr "iPodの初期設定(_C)"
 
-#: ../data/gtkpod.glade.h:379
+#: ../data/gtkpod.glade.h:378
 msgid "_Delete"
 msgstr "削除(_D)"
 
-#: ../data/gtkpod.glade.h:380
+#: ../data/gtkpod.glade.h:379
 msgid "_Display"
 msgstr "表示(_D)"
 
-#: ../data/gtkpod.glade.h:381
+#: ../data/gtkpod.glade.h:380
 msgid "_Displayed Tracks"
 msgstr "表示されている曲(_D)"
 
-#: ../data/gtkpod.glade.h:382
+#: ../data/gtkpod.glade.h:381
 msgid "_Edit"
 msgstr "編集(_E)"
 
-#: ../data/gtkpod.glade.h:383
+#: ../data/gtkpod.glade.h:382
 msgid "_Encoding (ID3, files):"
 msgstr "文字コード(_E) (ID3, ファイル):"
 
-#: ../data/gtkpod.glade.h:384
+#: ../data/gtkpod.glade.h:383
 msgid "_Enqueue"
 msgstr "演奏キューに入れる(_E)"
 
-#: ../data/gtkpod.glade.h:385
+#: ../data/gtkpod.glade.h:384
 msgid "_Export Tracks from Database"
 msgstr "データベースから曲を取り出す(_E)"
 
-#: ../data/gtkpod.glade.h:386
+#: ../data/gtkpod.glade.h:385
 msgid "_File"
 msgstr "ファイル(_F)"
 
-#: ../data/gtkpod.glade.h:387
+#: ../data/gtkpod.glade.h:386
 msgid "_General"
 msgstr "基本設定(_G)"
 
-#: ../data/gtkpod.glade.h:388
+#: ../data/gtkpod.glade.h:387
 msgid "_Help"
 msgstr "ヘルプ(_H)"
 
-#: ../data/gtkpod.glade.h:389
+#: ../data/gtkpod.glade.h:388
 msgid "_Ignore rules"
 msgstr "ルールを無視(_I)"
 
-#: ../data/gtkpod.glade.h:390
+#: ../data/gtkpod.glade.h:389
 msgid "_Image"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:391
+#: ../data/gtkpod.glade.h:390
 msgid "_Info Window"
 msgstr "情報(_I)"
 
-#: ../data/gtkpod.glade.h:392
+#: ../data/gtkpod.glade.h:391
 msgid "_Last.FM"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:393
+#: ../data/gtkpod.glade.h:392
 msgid "_Less Sort Tabs"
 msgstr "ソートタブの削除(_L)"
 
-#: ../data/gtkpod.glade.h:394
+#: ../data/gtkpod.glade.h:393
 msgid "_Limit to"
 msgstr "制限(_L)"
 
-#: ../data/gtkpod.glade.h:395
+#: ../data/gtkpod.glade.h:394
 msgid "_Load iPod(s)"
 msgstr "iPod から読み込み(_L)"
 
-#: ../data/gtkpod.glade.h:396
+#: ../data/gtkpod.glade.h:395
 msgid "_Local"
 msgstr "ディスク(_L)"
 
-#: ../data/gtkpod.glade.h:397
+#: ../data/gtkpod.glade.h:396
 msgid "_M3U"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:398
+#: ../data/gtkpod.glade.h:397
 msgid "_Misc."
 msgstr ""
 
-#: ../data/gtkpod.glade.h:399
+#: ../data/gtkpod.glade.h:398
 msgid "_More Sort Tabs"
 msgstr "ソートタブの追加(_M)"
 
-#: ../data/gtkpod.glade.h:400
+#: ../data/gtkpod.glade.h:399
 msgid "_Newly Added Tracks"
 msgstr "新たに追加された曲(_N)"
 
-#: ../data/gtkpod.glade.h:401
+#: ../data/gtkpod.glade.h:400
 msgid "_Normalize Volume"
 msgstr "ボリュームの平均化"
 
-#: ../data/gtkpod.glade.h:402
+#: ../data/gtkpod.glade.h:401
 msgid "_Number of sort tabs:"
 msgstr "ソートタブの数(_N):"
 
-#: ../data/gtkpod.glade.h:403
+#: ../data/gtkpod.glade.h:402
 msgid "_PLS"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:404
+#: ../data/gtkpod.glade.h:403
 msgid "_Play Now"
 msgstr "今すぐ演奏(_P)"
 
-#: ../data/gtkpod.glade.h:405
+#: ../data/gtkpod.glade.h:404
 msgid "_Podcasts"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:406
+#: ../data/gtkpod.glade.h:405
 msgid "_Prefer Local"
 msgstr "できればディスク(_P)"
+
+#: ../data/gtkpod.glade.h:406
+#, fuzzy
+msgid "_Remove Album"
+msgstr "アルバム"
 
 #: ../data/gtkpod.glade.h:407
 #, fuzzy
@@ -1906,64 +1906,60 @@ msgid "_Remove Images"
 msgstr ""
 
 #: ../data/gtkpod.glade.h:409
-msgid "_Remove _Album"
-msgstr ""
-
-#: ../data/gtkpod.glade.h:410
 msgid "_Save Changes"
 msgstr "変更の保存(_S)"
 
-#: ../data/gtkpod.glade.h:411
+#: ../data/gtkpod.glade.h:410
 msgid "_Save Displayed Track Order"
 msgstr "現在の曲順を保存(_S)"
 
-#: ../data/gtkpod.glade.h:412
+#: ../data/gtkpod.glade.h:411
 msgid "_Sorting"
 msgstr "並べ換え(_S)"
 
-#: ../data/gtkpod.glade.h:413
+#: ../data/gtkpod.glade.h:412
 #, fuzzy
 msgid "_Synchronize Playlist with Dir(s)"
 msgstr "プレイリストを同期する(_S)"
 
-#: ../data/gtkpod.glade.h:414
+#: ../data/gtkpod.glade.h:413
 msgid "_Toolbar"
 msgstr "ツールバー(_T)"
 
-#: ../data/gtkpod.glade.h:415
+#: ../data/gtkpod.glade.h:414
 msgid "_Tools"
 msgstr "ツール(_T)"
 
-#: ../data/gtkpod.glade.h:416
+#: ../data/gtkpod.glade.h:415
 msgid "_Tooltips"
 msgstr "ツールチップ(_T)"
 
-#: ../data/gtkpod.glade.h:417
+#: ../data/gtkpod.glade.h:416
 msgid "_Track Info"
 msgstr "曲情報(_T)"
 
-#: ../data/gtkpod.glade.h:418
+#: ../data/gtkpod.glade.h:417
 msgid "_Undo All"
 msgstr "すべてやり直し(_U)"
 
-#: ../data/gtkpod.glade.h:419
+#: ../data/gtkpod.glade.h:418
 msgid "_Update Tracks from File"
 msgstr "ファイルを元に曲を更新する(_U)"
 
-#: ../data/gtkpod.glade.h:420
+#: ../data/gtkpod.glade.h:419
 #, fuzzy
 msgid "_Video"
 msgstr "表示(_V)"
 
-#: ../data/gtkpod.glade.h:421
+#: ../data/gtkpod.glade.h:420
 msgid "_View"
 msgstr "表示(_V)"
 
-#: ../data/gtkpod.glade.h:422
+#: ../data/gtkpod.glade.h:421
 msgid "_iPod"
 msgstr "iPod(_i)"
 
-#: ../data/gtkpod.glade.h:424
+#: ../data/gtkpod.glade.h:423
 #, no-c-format
 msgid ""
 "artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD "
@@ -1976,29 +1972,29 @@ msgstr ""
 "かのテンプレートを';' で区切って並べることができます。最初に合ったテンプレー"
 "トが使われます。例: '%a - %A/%T %t.mp3;%t.wav'."
 
-#: ../data/gtkpod.glade.h:425
+#: ../data/gtkpod.glade.h:424
 msgid "folder"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:426
+#: ../data/gtkpod.glade.h:425
 msgid "folder.jpg"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:428
+#: ../data/gtkpod.glade.h:427
 #, no-c-format
 msgid "folder.jpg;%a.jpg"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:429
+#: ../data/gtkpod.glade.h:428
 msgid "gtkpod"
 msgstr "gtkpod"
 
-#: ../data/gtkpod.glade.h:430
+#: ../data/gtkpod.glade.h:429
 #, fuzzy
 msgid "gtkpod Info"
 msgstr "gtkpod"
 
-#: ../data/gtkpod.glade.h:431
+#: ../data/gtkpod.glade.h:430
 msgid ""
 "gtkpod expects the ID3 tags and the filenames to be in the encoding "
 "specified here. You can change it for consecutive 'Add Files' and 'Add Dirs' "
@@ -2009,44 +2005,40 @@ msgstr ""
 "この設定を変更すれば, これらの処理に設定が反映されます.「システム文字」を選択"
 "すると, ロケールで指定されたコードが使われます."
 
-#: ../data/gtkpod.glade.h:432
+#: ../data/gtkpod.glade.h:431
 msgid "gtkpod options"
 msgstr "gtkpod のオプション"
 
 #. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
-#: ../data/gtkpod.glade.h:434
+#: ../data/gtkpod.glade.h:433
 msgid ""
 "iPod\n"
 "Local Repository (Standard)\n"
 "Local Repository (Podcasts)\n"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:438
+#: ../data/gtkpod.glade.h:437
 #, fuzzy
 msgid "iPod mountpoint:"
 msgstr "iPodのマウント場所(_P):"
 
-#: ../data/gtkpod.glade.h:439
+#: ../data/gtkpod.glade.h:438
 msgid "iTunesDB backup:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:440
-msgid "label"
-msgstr ""
-
-#: ../data/gtkpod.glade.h:441
+#: ../data/gtkpod.glade.h:439
 msgid "mserv Root:"
 msgstr ""
 
-#: ../data/gtkpod.glade.h:442
+#: ../data/gtkpod.glade.h:440
 msgid "mserv database lookup will be done for music in this directory."
 msgstr "このディレクトリ内の曲に対し、mserv のデータベースを参照します。"
 
-#: ../data/gtkpod.glade.h:443 ../src/details.c:1347
+#: ../data/gtkpod.glade.h:441 ../src/details.c:1347
 msgid "n/a"
 msgstr "不可"
 
-#: ../data/gtkpod.glade.h:444
+#: ../data/gtkpod.glade.h:442
 msgid "special_sorttab -- Don't translate!"
 msgstr ""
 
@@ -2432,16 +2424,16 @@ msgstr "アルバム"
 msgid "Remove Photo"
 msgstr "カバーアートを削除"
 
-#: ../src/context_menus.c:915
+#: ../src/context_menus.c:922
 msgid "Rename Album"
 msgstr ""
 
-#: ../src/context_menus.c:974 ../src/context_menus.c:1023
+#: ../src/context_menus.c:981 ../src/context_menus.c:1030
 #, fuzzy
 msgid "Copy selected playlist to..."
 msgstr "選択されたプレイリスト"
 
-#: ../src/context_menus.c:1076
+#: ../src/context_menus.c:1083
 #, fuzzy
 msgid "Copy selected track(s) to..."
 msgstr "削除された曲"
@@ -2512,65 +2504,70 @@ msgstr ""
 msgid "Successfully set new coverart for selected tracks"
 msgstr ""
 
-#: ../src/display.c:743
+#: ../src/display.c:490
+#, c-format
+msgid "<b>Image Dimensions: %s</b>"
+msgstr ""
+
+#: ../src/display.c:744
 msgid "Edit selected entry of which sort tab?"
 msgstr "どのソートタブで選択されたものを編集しますか？"
 
 #. no entry selected
-#: ../src/display.c:750 ../src/misc_confirm.c:435 ../src/misc_track.c:2138
+#: ../src/display.c:751 ../src/misc_confirm.c:435 ../src/misc_track.c:2138
 msgid "No entry selected."
 msgstr "何も選択されていません。"
 
-#: ../src/display.c:909 ../src/display.c:1229 ../src/display.c:1285
-#: ../src/display.c:1339 ../src/display.c:1394 ../src/display.c:1655
+#: ../src/display.c:910 ../src/display.c:1230 ../src/display.c:1286
+#: ../src/display.c:1340 ../src/display.c:1395 ../src/display.c:1656
 #, c-format
 msgid "No entry selected in Sort Tab %d"
 msgstr "ソートタブ %d 内では何も選択されていません。"
 
-#: ../src/display.c:948
+#: ../src/display.c:949
 msgid "Remove entry of which sort tab from database?"
 msgstr "どのソートタブで選択されたものをデータベースから削除しますか？"
 
-#: ../src/display.c:956
+#: ../src/display.c:957
 msgid "Remove tracks in selected entry of which filter tab from the iPod?"
 msgstr "どのソートタブで選択された曲をiPodから削除しますか？"
 
-#: ../src/display.c:978
+#: ../src/display.c:979
 msgid "Remove tracks in selected entry of which filter tab from the harddisk?"
 msgstr "どのソートタブで選択された曲をハードディスクから削除しますか？"
 
-#: ../src/display.c:1008
+#: ../src/display.c:1009
 msgid "Remove tracks in selected entry of which filter tab from playlist?"
 msgstr "どのソートタブで選択された曲をプレイリストから削除しますか？"
 
-#: ../src/display.c:1035 ../src/display.c:1073
+#: ../src/display.c:1036 ../src/display.c:1074
 #, c-format
 msgid ""
 "iPod at '%s' is not loaded.\n"
 "Please load it first."
 msgstr ""
 
-#: ../src/display.c:1110 ../src/display.c:1137
+#: ../src/display.c:1111 ../src/display.c:1138
 msgid "Update selected entry of which sort tab?"
 msgstr "どのソートタブで選択されたものを更新しますか？"
 
-#: ../src/display.c:1223
+#: ../src/display.c:1224
 msgid "Export selected entry of which sort tab?"
 msgstr "どのソートタブで選択されたものをエクスポートしますか？"
 
-#: ../src/display.c:1279
+#: ../src/display.c:1280
 msgid "Create playlist file from selected entry of which sort tab?"
 msgstr "どのソートタブで選択されたものからプレイリストを作成しますか？"
 
-#: ../src/display.c:1333
+#: ../src/display.c:1334
 msgid "Play tracks in selected entry of which sort tab?"
 msgstr "どのソートタブで選択された曲を演奏しますか？"
 
-#: ../src/display.c:1388
+#: ../src/display.c:1389
 msgid "Enqueue tracks in selected entry of which sort tab?"
 msgstr "どのソートタブで選択された曲を演奏キューに加えますか？"
 
-#: ../src/display.c:1645
+#: ../src/display.c:1646
 msgid "Normalize tracks in selected entry of which sort tab?"
 msgstr "どのソートタブで選択された曲を平均化しますか？"
 
@@ -2619,7 +2616,7 @@ msgid "Error reading iPod photo database.\n"
 msgstr ""
 
 #: ../src/display_photo.c:238
-msgid "Could not access the ipod's photo database."
+msgid "Could not access the iPod's photo database."
 msgstr ""
 
 #: ../src/display_photo.c:441
@@ -2627,72 +2624,72 @@ msgstr ""
 msgid "Photo Albums"
 msgstr "アルバム"
 
-#: ../src/display_photo.c:451 ../src/display_photo.c:1666
+#: ../src/display_photo.c:451 ../src/display_photo.c:1685
 msgid "<Unnamed>"
 msgstr ""
 
-#: ../src/display_photo.c:920
+#: ../src/display_photo.c:939
 msgid "The Photo Library album cannot be removed"
 msgstr ""
 
-#: ../src/display_photo.c:942
+#: ../src/display_photo.c:961
 #, fuzzy
 msgid "Do you want to remove the album's photos too?"
 msgstr "すべての Podcast を iPod から削除しても本当によろしいですか?"
 
-#: ../src/display_photo.c:948
+#: ../src/display_photo.c:967
 msgid "Yes. Do Not Display Again"
 msgstr ""
 
-#: ../src/display_photo.c:1019
+#: ../src/display_photo.c:1038
 msgid ""
 "This will remove the photo selection from the selected album.\n"
 " Do you want to delete them from the database as well?"
 msgstr ""
 
-#: ../src/display_photo.c:1034
+#: ../src/display_photo.c:1053
 msgid ""
 "This will delete the photo selection from the Photo Library and all albums. "
 "Are you sure?"
 msgstr ""
 
-#: ../src/display_photo.c:1109
+#: ../src/display_photo.c:1128
 msgid "New Photo Album Name"
 msgstr ""
 
-#: ../src/display_photo.c:1110
+#: ../src/display_photo.c:1129
 #, fuzzy
 msgid "Please enter a new name for the photo album"
 msgstr "新しいプレイリストの名前を入力してください"
 
-#: ../src/display_photo.c:1122 ../src/display_photo.c:1204
+#: ../src/display_photo.c:1141 ../src/display_photo.c:1223
 msgid "An album with that name already exists."
 msgstr ""
 
-#: ../src/display_photo.c:1191
+#: ../src/display_photo.c:1210
 #, fuzzy
 msgid "New Photo Album"
 msgstr "アルバム"
 
-#: ../src/display_photo.c:1192
+#: ../src/display_photo.c:1211
 #, fuzzy
 msgid "Please enter a name for the new photo album"
 msgstr "新しいプレイリストの名前を入力してください"
 
-#: ../src/display_photo.c:1213
+#: ../src/display_photo.c:1232
 msgid "The new album failed to be created."
 msgstr ""
 
-#: ../src/display_photo.c:1237
+#: ../src/display_photo.c:1256
 msgid "Add Image to iPod"
 msgstr ""
 
 #. Open a dialog directory chooser window
-#: ../src/display_photo.c:1292
+#: ../src/display_photo.c:1311
 msgid "Add a Directory of Images to the iPod. Select the Directory."
 msgstr ""
 
-#: ../src/display_photo.c:1680
+#: ../src/display_photo.c:1699
 #, c-format
 msgid "<No members>\n"
 msgstr ""
@@ -3103,14 +3100,12 @@ msgstr ""
 #: ../src/fetchcover.c:371
 #, c-format
 msgid ""
-"The picture file %s already exists. \t\t\t\t\n"
-"This may be associated with other music files in the directory. \t\t\t\t\n"
+"The picture file %s already exists.\n"
+"This may be associated with other music files in the directory.\n"
 "\n"
-"-  Clicking Yes will overwrite the existing file, possibly associating \t\t\t"
-"\t\n"
-"   other music files in the same directory with this coverart file. \t\t\t"
-"\t\n"
-"-  Clicking No will save the file with a unique file name. \t\t\t\t\n"
+"-  Clicking Yes will overwrite the existing file, possibly associating\n"
+"   other music files in the same directory with this coverart file.\n"
+"-  Clicking No will save the file with a unique file name.\n"
 "-  Clicking Cancel will abort the fetchcover operation."
 msgstr ""
 
@@ -3132,14 +3127,11 @@ msgstr ""
 "'%s' は プレイリストファイルではないようです。\n"
 "\n"
 
-#: ../src/file.c:283
+#: ../src/file.c:283 ../src/file_export.c:217 ../src/oggfile.c:62
+#: ../src/wavfile.c:107
 #, c-format
-msgid ""
-"Cannot open '%s' for reading.\n"
-"\n"
-msgstr ""
-"ファイル '%s' を読み込もうとしましたが、開くことができません。\n"
-"\n"
+msgid "Could not open '%s' for reading.\n"
+msgstr "ファイル '%s' を読み込もうとしましたが、開くことができません。\n"
 
 #: ../src/file.c:369
 #, c-format
@@ -3506,11 +3498,6 @@ msgstr "'%s' を '%s' にコピー中にエラー発生: 許可がありませ�
 msgid "Error copying '%s' to '%s' (%s)\n"
 msgstr "'%s' を '%s' にコピー中にエラー発生: (%s)\n"
 
-#: ../src/file_export.c:217
-#, c-format
-msgid "Unable to open '%s' for reading\n"
-msgstr "'%s' を読み込み用に開くことができません\n"
-
 #: ../src/file_export.c:327
 #, c-format
 msgid "Could find file for '%s' on the iPod\n"
@@ -3602,8 +3589,9 @@ msgid "Matching SHA1 checksum for file %d/%d"
 msgstr "MD5 チェックサムの照合中 %d/%d"
 
 #: ../src/file_itunesdb.c:236
-msgid "Could not open \"iTunesDB.ext\" for reading extended info.\n"
-msgstr "拡張情報を格納したファイル \"iTunesDB.ext\" を開けません。\n"
+#, fuzzy, c-format
+msgid "Could not open \"%s\" for reading extended info.\n"
+msgstr "'%s' を開けないため、拡張情報を記録できません。\n"
 
 #: ../src/file_itunesdb.c:243
 msgid "Could not create hash value from itunesdb\n"
@@ -4160,7 +4148,7 @@ msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
 msgstr ""
 
 #: ../src/misc.c:76
-msgid "Hiroshi Kawashima: Japanese charset autodetecion feature"
+msgid "Hiroshi Kawashima: Japanese charset autodetection feature"
 msgstr ""
 
 #: ../src/misc.c:77
@@ -4336,31 +4324,51 @@ msgid "French: David Le Brun (david at dyn-ns dot net)"
 msgstr ""
 
 #: ../src/misc.c:129
-msgid "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
+msgid "French: Éric Lassauge (rpmfarm at free dot fr)"
 msgstr ""
 
 #: ../src/misc.c:130
-msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)"
+msgid "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
 msgstr ""
 
 #: ../src/misc.c:131
+msgid "German: Kai-Ove"
+msgstr ""
+
+#: ../src/misc.c:132
+msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)"
+msgstr ""
+
+#: ../src/misc.c:133
 msgid ""
 "Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot net)"
 msgstr ""
 
-#: ../src/misc.c:132
+#: ../src/misc.c:134
+msgid "Italian: Daniele Forsi (dforsi at gmail dot com)"
+msgstr ""
+
+#: ../src/misc.c:135
 msgid "Japanese: Ayako Sano"
 msgstr ""
 
-#: ../src/misc.c:133
+#: ../src/misc.c:136
 msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
 msgstr ""
 
-#: ../src/misc.c:134
-msgid "Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)"
+#: ../src/misc.c:137
+msgid "Romanian: Alex Eftimie (alexeftimie at gmail dot com)"
+msgstr ""
+
+#: ../src/misc.c:138
+msgid "Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
 msgstr ""
 
 #: ../src/misc.c:139
+msgid "Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"
+msgstr ""
+
+#: ../src/misc.c:144
 #, fuzzy
 msgid ""
 "This program is free software; you can redistribute it and/or\n"
@@ -4394,49 +4402,49 @@ msgstr ""
 "\n"
 "\n"
 
-#: ../src/misc.c:154
+#: ../src/misc.c:159
 msgid ""
 "© 2002-2007\n"
 "Jorg Schuler <jcsjcs@users.sourceforge.net>\n"
 "Corey Donohoe <atmos@atmos.org>"
 msgstr ""
 
-#: ../src/misc.c:162
+#: ../src/misc.c:167
 msgid "Cross-platform multilingual interface to Apple's iPod™"
 msgstr ""
 
-#: ../src/misc.c:929
+#: ../src/misc.c:934
 #, fuzzy, c-format
 msgid "Could not process '%s' (no filename available)"
 msgstr "ファイル名がわかりません"
 
-#: ../src/misc.c:1083
+#: ../src/misc.c:1088
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
 msgstr "未知のトークン '%%%c' がテンプレート '%s' 中にあります"
 
-#: ../src/misc.c:1166
+#: ../src/misc.c:1171
 #, c-format
 msgid "Template ('%s') does not match file type '%s'\n"
 msgstr "テンプレート ('%s') がファイル形式 '%s' に合いません。\n"
 
-#: ../src/misc.c:1252
+#: ../src/misc.c:1257
 #, c-format
 msgid "Error creating %s: %s\n"
 msgstr "'%s'の作成に失敗: %s\n"
 
-#: ../src/misc.c:1686
+#: ../src/misc.c:1691
 #, c-format
 msgid ""
 "Writing preferences file '%s' failed (%s).\n"
 "\n"
 msgstr ""
 
-#: ../src/misc.c:1688
+#: ../src/misc.c:1693
 msgid "unspecified error"
 msgstr ""
 
-#: ../src/misc.c:1696
+#: ../src/misc.c:1701
 #, c-format
 msgid ""
 "Writing preferences to the iPod (%s) failed: could not get path to Control "
@@ -4590,14 +4598,14 @@ msgid "Are you sure you want to remove all podcasts from your iPod?"
 msgstr "すべての Podcast を iPod から削除しても本当によろしいですか?"
 
 #: ../src/misc_confirm.c:708
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and the following track "
-"completely from your ipod? The number of playlists this track is a member of "
+"completely from your iPod? The number of playlists this track is a member of "
 "is indicated in parentheses."
 msgid_plural ""
 "Are you sure you want to delete playlist '%s' and the following tracks "
-"completely from your ipod? The number of playlists the tracks are member of "
+"completely from your iPod? The number of playlists the tracks are member of "
 "is indicated in parentheses."
 msgstr[0] ""
 "プレイリスト '%s' 及びそれに含まれる以下の曲を iPod から削除しても本当によろ"
@@ -5227,11 +5235,6 @@ msgstr ""
 "リが必要です。mp4v2 ライブラリを使って gtkpod を再度コンパイルしてくださ"
 "い。\n"
 
-#: ../src/oggfile.c:62 ../src/wavfile.c:107
-#, c-format
-msgid "Could not open '%s' for reading.\n"
-msgstr "ファイル '%s' を読み込もうとしましたが、開くことができません。\n"
-
 #: ../src/oggfile.c:73
 #, fuzzy, c-format
 msgid "'%s' does not appear to be an ogg audio file.\n"
@@ -5560,6 +5563,23 @@ msgstr "'%s' のためのコマンド '%s' が見付かりません"
 #, c-format
 msgid "%s does not appear to be a supported wav file.\n"
 msgstr ""
+
+#, fuzzy
+#~ msgid "<b>Resolution:</b>"
+#~ msgstr "<b>ツールチップ</b>"
+
+#~ msgid ""
+#~ "Cannot open '%s' for reading.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "ファイル '%s' を読み込もうとしましたが、開くことができません。\n"
+#~ "\n"
+
+#~ msgid "Unable to open '%s' for reading\n"
+#~ msgstr "'%s' を読み込み用に開くことができません\n"
+
+#~ msgid "Could not open \"iTunesDB.ext\" for reading extended info.\n"
+#~ msgstr "拡張情報を格納したファイル \"iTunesDB.ext\" を開けません。\n"
 
 #~ msgid "Add _Directory"
 #~ msgstr "ディレクトリを追加する(_D)"

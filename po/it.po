@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-13 14:45+0100\n"
+"POT-Creation-Date: 2007-12-13 18:36-0500\n"
 "PO-Revision-Date: 2007-12-13 14:55+0100\n"
 "Last-Translator: Daniele Forsi <dforsi@gmail.com>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -650,7 +650,8 @@ msgid "Display messages and warnings at startup"
 msgstr "Mostra messaggi e avvertimenti all'avvio"
 
 #: ../data/gtkpod.glade.h:145
-msgid "Display the list of duplicates that have been detected after adding files."
+msgid ""
+"Display the list of duplicates that have been detected after adding files."
 msgstr ""
 "Mostra la lista dei duplicati che sono stati individuati dopo l'aggiunta dei "
 "file."
@@ -1224,7 +1225,8 @@ msgstr "Leggi la copertina dai dati APIC incorporati"
 
 #: ../data/gtkpod.glade.h:255
 msgid "Read tags from file contents (e.g. ID3 tags in MP3 files)"
-msgstr "Leggi le etichette dal contenuto del file (es. etichette ID3 nei file MP3)"
+msgstr ""
+"Leggi le etichette dal contenuto del file (es. etichette ID3 nei file MP3)"
 
 #: ../data/gtkpod.glade.h:256
 msgid "Remove selected attributes from the displayed list"
@@ -1513,7 +1515,8 @@ msgstr "Il file della playlist fa riferimento alla traccia sull'iPod."
 
 #: ../data/gtkpod.glade.h:318
 msgid "This is the same option as in 'Edit/Delete Confirmation'"
-msgstr "Questa è la stessa opzione che si trova in «Modifica/Conferma l'eliminazione»"
+msgstr ""
+"Questa è la stessa opzione che si trova in «Modifica/Conferma l'eliminazione»"
 
 #: ../data/gtkpod.glade.h:319
 msgid ""
@@ -2296,7 +2299,8 @@ msgstr "Codifica di sistema"
 #. we are not the first instance of gtkpod -- the socket is
 #. already being used, so we pass
 #: ../src/clientserver.c:214
-msgid "Another instance of gtkpod was detected. Playcount server not started.\n"
+msgid ""
+"Another instance of gtkpod was detected. Playcount server not started.\n"
 msgstr ""
 "È stata rilevata un'altra istanza di gtkpod. Server conta riproduzioni non "
 "avviato.\n"
@@ -2441,15 +2445,15 @@ msgstr "Rimuovi album"
 msgid "Remove Photo"
 msgstr "Rimuovi foto"
 
-#: ../src/context_menus.c:915
+#: ../src/context_menus.c:922
 msgid "Rename Album"
 msgstr "Rinomina album"
 
-#: ../src/context_menus.c:974 ../src/context_menus.c:1023
+#: ../src/context_menus.c:981 ../src/context_menus.c:1030
 msgid "Copy selected playlist to..."
 msgstr "Copia la playlist selezionata su..."
 
-#: ../src/context_menus.c:1076
+#: ../src/context_menus.c:1083
 msgid "Copy selected track(s) to..."
 msgstr "Copia le tracce selezionate su..."
 
@@ -2581,11 +2585,13 @@ msgstr "Esportare la voce selezionata di quale scheda di ordinamento?"
 
 #: ../src/display.c:1280
 msgid "Create playlist file from selected entry of which sort tab?"
-msgstr "Creare la playlist dalle voci selezionate di quale scheda di ordinamento?"
+msgstr ""
+"Creare la playlist dalle voci selezionate di quale scheda di ordinamento?"
 
 #: ../src/display.c:1334
 msgid "Play tracks in selected entry of which sort tab?"
-msgstr "Riprodurre le tracce nella voce selezionata di quale scheda di ordinamento?"
+msgstr ""
+"Riprodurre le tracce nella voce selezionata di quale scheda di ordinamento?"
 
 #: ../src/display.c:1389
 msgid "Enqueue tracks in selected entry of which sort tab?"
@@ -2595,7 +2601,8 @@ msgstr ""
 
 #: ../src/display.c:1646
 msgid "Normalize tracks in selected entry of which sort tab?"
-msgstr "Normalizzare le tracce nella voce selezionata di quale scheda di ordinamento?"
+msgstr ""
+"Normalizzare le tracce nella voce selezionata di quale scheda di ordinamento?"
 
 #: ../src/display_coverart.c:1713
 msgid "Failed to remove the album from the album hash store."
@@ -2650,23 +2657,23 @@ msgstr "Impossibile accedere al database delle foto dell'iPod."
 msgid "Photo Albums"
 msgstr "Album fotografici"
 
-#: ../src/display_photo.c:451 ../src/display_photo.c:1666
+#: ../src/display_photo.c:451 ../src/display_photo.c:1685
 msgid "<Unnamed>"
 msgstr "<senza_nome>"
 
-#: ../src/display_photo.c:920
+#: ../src/display_photo.c:939
 msgid "The Photo Library album cannot be removed"
 msgstr "L'album Photo Library non può essere rimosso"
 
-#: ../src/display_photo.c:942
+#: ../src/display_photo.c:961
 msgid "Do you want to remove the album's photos too?"
 msgstr "Eliminare anche le foto contenute nell'album?"
 
-#: ../src/display_photo.c:948
+#: ../src/display_photo.c:967
 msgid "Yes. Do Not Display Again"
 msgstr "Sì. Non chiedere più"
 
-#: ../src/display_photo.c:1019
+#: ../src/display_photo.c:1038
 msgid ""
 "This will remove the photo selection from the selected album.\n"
 " Do you want to delete them from the database as well?"
@@ -2674,7 +2681,7 @@ msgstr ""
 "Questo rimuoverà le foto selezionate dall'album selezionato.\n"
 " Eliminarle anche dal database?"
 
-#: ../src/display_photo.c:1034
+#: ../src/display_photo.c:1053
 msgid ""
 "This will delete the photo selection from the Photo Library and all albums. "
 "Are you sure?"
@@ -2682,40 +2689,40 @@ msgstr ""
 "Questo rimuoverà le foto selezionate da Photo Library e da tutti gli album. "
 "Procedere?"
 
-#: ../src/display_photo.c:1109
+#: ../src/display_photo.c:1128
 msgid "New Photo Album Name"
 msgstr "Nome del  nuovo album fotografico"
 
-#: ../src/display_photo.c:1110
+#: ../src/display_photo.c:1129
 msgid "Please enter a new name for the photo album"
 msgstr "Inserire un nuovo nome per l'album fotografico"
 
-#: ../src/display_photo.c:1122 ../src/display_photo.c:1204
+#: ../src/display_photo.c:1141 ../src/display_photo.c:1223
 msgid "An album with that name already exists."
 msgstr "Un album con quel nome esiste già."
 
-#: ../src/display_photo.c:1191
+#: ../src/display_photo.c:1210
 msgid "New Photo Album"
 msgstr "Nuovo album fotografico"
 
-#: ../src/display_photo.c:1192
+#: ../src/display_photo.c:1211
 msgid "Please enter a name for the new photo album"
 msgstr "Inserire un nome per il nuovo album fotografico"
 
-#: ../src/display_photo.c:1213
+#: ../src/display_photo.c:1232
 msgid "The new album failed to be created."
 msgstr "La creazione del nuovo album è fallita."
 
-#: ../src/display_photo.c:1237
+#: ../src/display_photo.c:1256
 msgid "Add Image to iPod"
 msgstr "Aggiungi un'immagine all'iPod"
 
 #. Open a dialog directory chooser window
-#: ../src/display_photo.c:1292
+#: ../src/display_photo.c:1311
 msgid "Add a Directory of Images to the iPod. Select the Directory."
 msgstr "Aggiungi una directory di immagini all'iPod. Selezionare la directory."
 
-#: ../src/display_photo.c:1680
+#: ../src/display_photo.c:1699
 #, c-format
 msgid "<No members>\n"
 msgstr "<Nessun membro>\n"
@@ -2724,7 +2731,8 @@ msgstr "<Nessun membro>\n"
 #. * will never know why the drag is not possible
 #: ../src/display_playlists.c:516 ../src/display_playlists.c:558
 msgid "Error: drag from iPod not possible in offline mode."
-msgstr "Errore: il trascinamento dall'iPod non è possibile in modalità non in linea."
+msgstr ""
+"Errore: il trascinamento dall'iPod non è possibile in modalità non in linea."
 
 #: ../src/display_playlists.c:585 ../src/display_tracks.c:286
 #, c-format
@@ -3203,8 +3211,10 @@ msgstr "La traccia (%s) non è nella directory radice musicale di mserv (%s)"
 
 #: ../src/file.c:1123
 #, c-format
-msgid "The following track could not be processed (file does not exist): '%s'\n"
-msgstr "La traccia seguente non può essere elaborata (il file non esiste): «%s»\n"
+msgid ""
+"The following track could not be processed (file does not exist): '%s'\n"
+msgstr ""
+"La traccia seguente non può essere elaborata (il file non esiste): «%s»\n"
 
 #: ../src/file.c:1209
 #, c-format
@@ -3277,7 +3287,8 @@ msgstr "Aggiornamento delle tracce completato con successo"
 #: ../src/file.c:1566
 #, c-format
 msgid "No mserv information could be retrieved for the following track"
-msgid_plural "No mserv information could be retrieved for the following %d tracks"
+msgid_plural ""
+"No mserv information could be retrieved for the following %d tracks"
 msgstr[0] ""
 "Non è stato possibile raccogliere alcuna informazione mserv per la traccia "
 "seguente"
@@ -3309,7 +3320,8 @@ msgstr "il nome del file locale non è disponibile"
 
 #: ../src/file.c:1679
 msgid "local file could not be found, file on the iPod will be used instead"
-msgstr "il file locale non è stato trovato, al suo posto sarà usato il file sull'iPod"
+msgstr ""
+"il file locale non è stato trovato, al suo posto sarà usato il file sull'iPod"
 
 #: ../src/file.c:1685
 msgid "local file as well as copy on the iPod cannot be found"
@@ -3461,7 +3473,8 @@ msgstr "Nessuna informazione disponibile"
 #: ../src/file_convert.c:1323
 #, c-format
 msgid "Could not create '%s'. Filetype conversion will not work.\n"
-msgstr "Impossibile creare «%s». La conversione del tipo di file non funzionerà.\n"
+msgstr ""
+"Impossibile creare «%s». La conversione del tipo di file non funzionerà.\n"
 
 #: ../src/file_convert.c:1641 ../src/file_convert.c:3049
 #, c-format
@@ -3610,7 +3623,8 @@ msgstr "Selezionare la directory di destinazione dell'esportazione"
 
 #: ../src/file_export.c:736
 msgid "Drag from iPod database not possible in offline mode."
-msgstr "Impossibile trascinare dal database dell'iPod in modalità non in linea."
+msgstr ""
+"Impossibile trascinare dal database dell'iPod in modalità non in linea."
 
 #: ../src/file_export.c:770
 msgid "The following tracks have to be copied to your harddisk"
@@ -3906,14 +3920,17 @@ msgstr ""
 "messe in coda per la conversione e il trasferimento."
 
 #: ../src/file_itunesdb.c:1715
+#, c-format
 msgid "Status: Copying track"
 msgstr "Status: copia traccia in corso"
 
 #: ../src/file_itunesdb.c:1721
+#, c-format
 msgid "Status: Waiting for conversion to complete"
 msgstr "Status: in attesa del completamento della conversione"
 
 #: ../src/file_itunesdb.c:1725
+#, c-format
 msgid "Status: Finished transfer"
 msgstr "Status: trasferimento completato"
 
@@ -4250,7 +4267,8 @@ msgstr "Hiroshi Kawashima: riconoscimento automatico della codifica giapponese"
 
 #: ../src/misc.c:77
 msgid "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
-msgstr "Adrian Ulrich: porting del codice della playlist da mktunes.pl a itunesdb.c"
+msgstr ""
+"Adrian Ulrich: porting del codice della playlist da mktunes.pl a itunesdb.c"
 
 #: ../src/misc.c:78
 msgid ""
@@ -4299,7 +4317,8 @@ msgid "Yaroslav Halchenko: Orphaned and dangling tracks handling"
 msgstr "Yaroslav Halchenko: gestione delle tracce orfane e fantasma"
 
 #: ../src/misc.c:86
-msgid "Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
+msgid ""
+"Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
 msgstr ""
 "Andrew Huntwork: correzione di maiuscole/minuscole nei nomi dei file e "
 "correzione di vari altri bug"
@@ -4353,7 +4372,8 @@ msgstr ""
 
 #: ../src/misc.c:95
 msgid "Steve Jay: use statvfs() instead of df (better portability, faster)"
-msgstr "Steve Jay: usa statvfs() invece di df (migliore portabilità, più veloce)"
+msgstr ""
+"Steve Jay: usa statvfs() invece di df (migliore portabilità, più veloce)"
 
 #: ../src/misc.c:97
 msgid ""
@@ -4385,7 +4405,8 @@ msgstr "Clinton Gormley: script di sincronizzazione per thunderbird"
 
 #: ../src/misc.c:107
 msgid "Sebastien Beridot: sync script for ldif addressbook format"
-msgstr "Sebastien Beridot: script di sincronizzazione per la rubrica in formato ldif "
+msgstr ""
+"Sebastien Beridot: script di sincronizzazione per la rubrica in formato ldif "
 
 #: ../src/misc.c:109
 msgid "Sebastian Scherer: sync script for kNotes"
@@ -4450,7 +4471,8 @@ msgstr ""
 
 #: ../src/misc.c:124
 msgid "The GUI was created with the help of glade-2 (http://glade.gnome.org/)."
-msgstr "La GUI è stata creata con l'aiuto di glade-2 (http://glade.gnome.org/)."
+msgstr ""
+"La GUI è stata creata con l'aiuto di glade-2 (http://glade.gnome.org/)."
 
 #: ../src/misc.c:128
 msgid "French: David Le Brun (david at dyn-ns dot net)"
@@ -4473,8 +4495,10 @@ msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)"
 msgstr "Ebraico: Assaf Gillat (gillata at gmail dot com)"
 
 #: ../src/misc.c:133
-msgid "Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot net)"
-msgstr "Italiano: Edward Matteucci (edward_matteucc at users dot sourceforge dot)"
+msgid ""
+"Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot net)"
+msgstr ""
+"Italiano: Edward Matteucci (edward_matteucc at users dot sourceforge dot)"
 
 #: ../src/misc.c:134
 msgid "Italian: Daniele Forsi (dforsi at gmail dot com)"
@@ -4494,7 +4518,8 @@ msgstr "Rumeno: Alex Eftimie (alexeftimie at gmail dot com)"
 
 #: ../src/misc.c:138
 msgid "Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
-msgstr "Spagnolo: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
+msgstr ""
+"Spagnolo: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
 
 #: ../src/misc.c:139
 msgid "Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"
@@ -4621,7 +4646,8 @@ msgstr[1] "Cancellare completamente le tracce dall'iPod?"
 
 #: ../src/misc_confirm.c:137 ../src/misc_confirm.c:178
 #, c-format
-msgid "Are you sure you want to remove the following track from the playlist \"%s\"?"
+msgid ""
+"Are you sure you want to remove the following track from the playlist \"%s\"?"
 msgid_plural ""
 "Are you sure you want to remove the following tracks from the playlist \"%s"
 "\"?"
@@ -4720,6 +4746,7 @@ msgid "Removed all %d tracks from the iPod"
 msgstr "Eliminate tutte le %d tracce dall'iPod"
 
 #: ../src/misc_confirm.c:541
+#, c-format
 msgid "Removed all podcasts from the iPod"
 msgstr "Eliminati tutti i podcast dall'iPod"
 
@@ -4740,8 +4767,10 @@ msgstr "Playlist «%s» eliminata"
 #, c-format
 msgid "Deleted playlist '%s' including %d member track on harddisk"
 msgid_plural "Deleted playlist '%s' including %d member tracks on harddisk"
-msgstr[0] "Cancellata la playlist «%s» con %d traccia appartenente sul disco fisso"
-msgstr[1] "Cancellata la playlist «%s» con le %d tracce appartenenti sul disco fisso"
+msgstr[0] ""
+"Cancellata la playlist «%s» con %d traccia appartenente sul disco fisso"
+msgstr[1] ""
+"Cancellata la playlist «%s» con le %d tracce appartenenti sul disco fisso"
 
 #: ../src/misc_confirm.c:617
 #, c-format
@@ -4749,10 +4778,12 @@ msgid "Removed all %d tracks from the database"
 msgstr "Rimosse tutte le %d tracce dal database"
 
 #: ../src/misc_confirm.c:695
+#, c-format
 msgid "Are you sure you want to remove all tracks from your iPod?"
 msgstr "Eliminare veramente tutte le tracce dall'iPod?"
 
 #: ../src/misc_confirm.c:700
+#, c-format
 msgid "Are you sure you want to remove all podcasts from your iPod?"
 msgstr "Eliminare veramente tutti i podcast dall'iPod?"
 
@@ -4800,6 +4831,7 @@ msgstr[1] ""
 "tra parentesi."
 
 #: ../src/misc_confirm.c:753
+#, c-format
 msgid "Are you sure you want to remove all tracks from the database?"
 msgstr "Eliminare veramente tutte le tracce dal database?"
 
@@ -5046,8 +5078,10 @@ msgid "CD Nr. and total number of CDS in set"
 msgstr "N° CD e numero totale dei CD nel cofanetto"
 
 #: ../src/misc_conversion.c:149
-msgid "The category (e.g. 'Technology' or 'Music') where the podcast was located."
-msgstr "La categoria (es. «Tecnologia» o «Musica») in cui si trovava il podcast."
+msgid ""
+"The category (e.g. 'Technology' or 'Music') where the podcast was located."
+msgstr ""
+"La categoria (es. «Tecnologia» o «Musica») in cui si trovava il podcast."
 
 #: ../src/misc_conversion.c:150
 msgid "Accessible by selecting the center button on the iPod."
@@ -5055,7 +5089,8 @@ msgstr "Accessibile selezionando il bottone centrale sull'iPod."
 
 #: ../src/misc_conversion.c:154
 msgid "Release date (for podcasts displayed next to the title on the iPod)"
-msgstr "Data di pubblicazione (per i podcast è mostrata accanto al titolo sull'iPod)"
+msgstr ""
+"Data di pubblicazione (per i podcast è mostrata accanto al titolo sull'iPod)"
 
 #. 50
 #: ../src/misc_conversion.c:168 ../src/misc_conversion.c:169
@@ -5153,6 +5188,7 @@ msgid "Most Listened (%d)"
 msgstr "Più ascoltate (%d)"
 
 #: ../src/misc_playlist.c:584
+#, c-format
 msgid "Never Listened"
 msgstr "Mai ascoltate"
 
@@ -5181,11 +5217,13 @@ msgstr "Ultima volta"
 
 #: ../src/misc_playlist.c:844
 msgid "Removal of dangling tracks with no files on PC was canceled."
-msgstr "La rimozione delle tracce fantasma senza file sul PC è stata annullata."
+msgstr ""
+"La rimozione delle tracce fantasma senza file sul PC è stata annullata."
 
 #: ../src/misc_playlist.c:854
 msgid "Handling of dangling tracks with files on PC was canceled."
-msgstr "La gestione delle tracce fantasma con file presenti sul PC è stata annullata."
+msgstr ""
+"La gestione delle tracce fantasma con file presenti sul PC è stata annullata."
 
 #: ../src/misc_playlist.c:882
 msgid "Dangling tracks with no files on PC were removed."
@@ -5307,11 +5345,13 @@ msgstr[1] "Le seguenti %d tracce duplicate sono state rimosse."
 
 #: ../src/misc_track.c:205
 #, c-format
-msgid "The following duplicate track has not been added to the master play list."
+msgid ""
+"The following duplicate track has not been added to the master play list."
 msgid_plural ""
 "The following %d duplicate tracks have not been added to the master play "
 "list."
-msgstr[0] "La seguente traccia duplicata non è stata aggiunta alla playlist principale."
+msgstr[0] ""
+"La seguente traccia duplicata non è stata aggiunta alla playlist principale."
 msgstr[1] ""
 "Le seguenti %d tracce duplicate non sono state aggiunte alla playlist "
 "principale."
@@ -5619,7 +5659,8 @@ msgstr[1] "Le %d tracce seguenti sono state aggiunte o aggiornate:\n"
 
 #: ../src/syncdir.c:255
 msgid "The following track has been completely removed from the iPod:\n"
-msgid_plural "The following tracks have been completely removed from the iPod:\n"
+msgid_plural ""
+"The following tracks have been completely removed from the iPod:\n"
 msgstr[0] "La traccia seguente è stata completamente rimossa dall'iPod:\n"
 msgstr[1] "La tracce seguenti sono state completamente rimosse dall'iPod:\n"
 
@@ -5627,13 +5668,15 @@ msgstr[1] "La tracce seguenti sono state completamente rimosse dall'iPod:\n"
 msgid "The following track has been removed from the repository:\n"
 msgid_plural "The following tracks have been removed from the repository:\n"
 msgstr[0] "La traccia seguente è stata completamente rimossa dall'archivio:\n"
-msgstr[1] "Le tracce seguenti sono state completamente rimosse dall'archivio:\n"
+msgstr[1] ""
+"Le tracce seguenti sono state completamente rimosse dall'archivio:\n"
 
 #: ../src/syncdir.c:271
 msgid "The following track has been removed from the playlist:\n"
 msgid_plural "The following tracks have been removed from the playlist:\n"
 msgstr[0] "La traccia seguente è stata completamente rimossa dalla playlist:\n"
-msgstr[1] "Le tracce seguenti sono state completamente rimosse dalla playlist:\n"
+msgstr[1] ""
+"Le tracce seguenti sono state completamente rimosse dalla playlist:\n"
 
 #: ../src/syncdir.c:277
 msgid "Nothing was changed.\n"
@@ -5764,4 +5807,3 @@ msgstr "Impossibile trovare il comando «%s» specificato per «%s»"
 #, c-format
 msgid "%s does not appear to be a supported wav file.\n"
 msgstr "%s non sembra essere un file wav supportato.\n"
-
