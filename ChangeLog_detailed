@@ -1,10 +1,13 @@
+2007-12-16 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* configure.in: added Russian translation.
+
 2007-12-16 Matvey Kozhev <sikon at users.sourceforge.net>
 
-  * po/ru.po
-  
-    Added Russian translation.
+        * po/ru.po
+          Added Russian translation.
 
-2007-12-13  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+2007-12-13 Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* po/*.po
 	  po/gtkpod.pot:
@@ -12,21 +15,21 @@
 
 2007-12-13 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * stock_icons.c
+	* stock_icons.c
   
-    Squashed some compiler warnings.
+          Squashed some compiler warnings.
     
 2007-12-13 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * src/context_menus.c
-    src/display_photo.h
-    src/display_photo.c
+	* src/context_menus.c
+	  src/display_photo.h
+	  src/display_photo.c
     
-    Bug fixes made to photo window. Remove photo action disabled
-    on thumbnail view context menu when no thumbs selected. The
-    Remove album action was not removing an album unless the
-    album contained photos. Thanks to Alex Eftimie for raising
-    the bugs.
+	  Bug fixes made to photo window. Remove photo action disabled
+	  on thumbnail view context menu when no thumbs selected. The
+	  Remove album action was not removing an album unless the
+	  album contained photos. Thanks to Alex Eftimie for raising
+	  the bugs.
 
 2007-12-13 Daniele Forsi <dforsi at users.sourceforge.net>
         * src/file.c: add variable for existing %s directive
