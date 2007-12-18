@@ -38,21 +38,28 @@ gtkpod V0.99.12
        BUGFIX: Model number identified and written to ipod upon loading to ensure
        libgpod can read the ipod's artwork.
 
-       NEW FEATURE: Added Romanian translation support. Thanks to 
-       Alex Eftimie.
-
        UPDATE: Updates and bug fixes to gapless playback. Thanks to
        Michael Tiffany.
 
        BUGFIX: When Cover Art Display is widened, covers space out rather
        than stretch.       
 
-       UPDATE: French Translation. Thanks to Eric Lassauge.
-     
        BUGFIX: Fixed memory leaks in CoverArt Display and Details window.
        Thanks to Daniele Forsi.
 
-       UPDATE: Italina Translation. Thanks to Daniele Forsi.
+       UPDATE: French translation. Thanks to Éric Lassauge.
+     
+       UPDATE: Italian translation. Thanks to Daniele Forsi.
+
+       UPDATE: Hebrew translation. Thanks to Assaf Gillat.
+
+       UPDATE: Swedish translation. Thanks to Stefan Asserhäll.
+
+       NEW FEATURE: Added Romanian translation support. Thanks to 
+       Alex Eftimie.
+
+       NEW FEATURE: Added Russian translation support. Thanks to
+       Matvey Kozhev.
 
 gtkpod V0.99.10
 

@@ -1,3 +1,14 @@
+2007-12-17  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* po/he.po:
+	  update Hebrew translation (Assaf Gillat)
+
+	* po/ro.po:
+	  update Romanian translation (Alex Eftimie)
+
+	* po/sv.po:
+	  update Swedish translation (Stefan Asserhäll)
+
 2007-12-16 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* configure.in: added Russian translation.

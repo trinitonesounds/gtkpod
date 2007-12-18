@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-13 18:36-0500\n"
-"PO-Revision-Date: 2007-07-10 19:08+0200\n"
+"POT-Creation-Date: 2007-12-14 08:06-0500\n"
+"PO-Revision-Date: 2007-12-14 12:21+0200\n"
 "Last-Translator: Alex Eftimie <alexeftimie at gmail dot com>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -236,9 +236,8 @@ msgid "<b>Tooltips</b>"
 msgstr "<b>Indicii</b>"
 
 #: ../data/gtkpod.glade.h:53
-#, fuzzy
 msgid "<b>Track Attributes</b>"
-msgstr "<b>Atribute piesă afişate</b>"
+msgstr "<b>Atribute piesă</b>"
 
 #: ../data/gtkpod.glade.h:54
 msgid "<b>Track Editing</b>"
@@ -265,37 +264,32 @@ msgid "Add Directories Recursively"
 msgstr "Adaugă dosare recursiv"
 
 #: ../data/gtkpod.glade.h:60
-#, fuzzy
 msgid "Add Files"
-msgstr "Adaugă _fişiere"
+msgstr "Adaugă fişiere"
 
 #: ../data/gtkpod.glade.h:61
 msgid "Add Files or Directories"
 msgstr "Adaugă fişiere sau dosare"
 
 #: ../data/gtkpod.glade.h:62
-#, fuzzy
 msgid "Add Fol_der"
-msgstr "Adaugă _fişiere"
+msgstr "Adaugă _dosar"
 
 #: ../data/gtkpod.glade.h:63
-#, fuzzy
 msgid "Add Folder"
-msgstr "Adaugă _fişiere"
+msgstr "Adaugă dosar"
 
 #: ../data/gtkpod.glade.h:64
 msgid "Add Image_s"
-msgstr ""
+msgstr "Adaugă imagi_ni"
 
 #: ../data/gtkpod.glade.h:65
-#, fuzzy
 msgid "Add Images from a Directory"
-msgstr "Adaugă fişiere sau dosare"
+msgstr "Adaugă imagini dintr-un dosar"
 
 #: ../data/gtkpod.glade.h:66
-#, fuzzy
 msgid "Add Playlist"
-msgstr "Adaugă _listă de redare"
+msgstr "Adaugă listă"
 
 #: ../data/gtkpod.glade.h:67
 msgid "Add _Files"
@@ -319,7 +313,7 @@ msgstr "Adaugă un nou depozit/iPod"
 
 #: ../data/gtkpod.glade.h:72
 msgid "Add playlist from file"
-msgstr "Adaugă listă de redare din fişier"
+msgstr "Adaugă fișier listă de redare"
 
 #: ../data/gtkpod.glade.h:73 ../src/display_sorttabs.c:3247
 #: ../src/display_tracks.c:2103
@@ -375,9 +369,8 @@ msgid "Artist"
 msgstr "Artist"
 
 #: ../data/gtkpod.glade.h:85
-#, fuzzy
 msgid "Artwork Preview"
-msgstr "Cale copertă"
+msgstr "Previzualizare copertă"
 
 #: ../data/gtkpod.glade.h:86
 msgid ""
@@ -405,7 +398,7 @@ msgstr ""
 
 #: ../data/gtkpod.glade.h:91
 msgid "Available:"
-msgstr ""
+msgstr "Disponibil:"
 
 #: ../data/gtkpod.glade.h:92
 msgid "Before removing playlists or tracks from a playlist"
@@ -464,6 +457,8 @@ msgid ""
 "Check before removing photos from a photo album whether\n"
 "they should be deleted from the Photo Database."
 msgstr ""
+"Verifică înainte de a șterge imagini dintr-un album foto dacă\n"
+"ar trebui șterse din baza de date foto."
 
 #: ../data/gtkpod.glade.h:107
 msgid "Check for existing files when copying from iPod."
@@ -471,7 +466,7 @@ msgstr "Verifică dacă fişierele există deja când copiez de pe iPod."
 
 #: ../data/gtkpod.glade.h:108
 msgid "Command for 'Enqueue':"
-msgstr "Comandă 'Adaugă în coadă':"
+msgstr "Comandă pentru 'Adaugă în coadă':"
 
 #: ../data/gtkpod.glade.h:109
 msgid "Command for 'Play now':"
@@ -681,9 +676,8 @@ msgstr ""
 "afişate"
 
 #: ../data/gtkpod.glade.h:152
-#, fuzzy
 msgid "Displayed:"
-msgstr "_Afişare"
+msgstr "Afişate:"
 
 #: ../data/gtkpod.glade.h:153
 msgid "Don't allow file duplication"
@@ -756,9 +750,8 @@ msgstr ""
 "care nu au fişiere corespunzătoare pe iPod)"
 
 #: ../data/gtkpod.glade.h:169
-#, fuzzy
 msgid "First try <i>folder.jpg</i>, then <i>&lt;artist&gt;.jpg</i>"
-msgstr "Încearcă mai întâi <i>dosar.jpg</i>, apoi <i><artist>.jpg</i>"
+msgstr "Încearcă mai întâi <i>folder.jpg</i>, apoi <i>&lt;artist&gt;.jpg</i>"
 
 #: ../data/gtkpod.glade.h:170
 msgid "Flac with :"
@@ -963,7 +956,7 @@ msgstr "Piese redate recent"
 
 #: ../data/gtkpod.glade.h:206
 msgid "Move selected attributes to the displayed list"
-msgstr ""
+msgstr "Mută atributele selectate către lista afișată"
 
 #: ../data/gtkpod.glade.h:207
 msgid "Music Root:"
@@ -986,7 +979,7 @@ msgstr "Nu afişa acest dialog din nou"
 #: ../src/misc_playlist.c:93 ../src/misc_playlist.c:95
 #: ../src/misc_playlist.c:428 ../src/misc_playlist.c:430
 msgid "New Playlist"
-msgstr "Listă de redare nouă"
+msgstr "Listă nouă"
 
 #: ../data/gtkpod.glade.h:211
 msgid "No lower margin"
@@ -1158,9 +1151,8 @@ msgid "Path:"
 msgstr "Cale:"
 
 #: ../data/gtkpod.glade.h:239
-#, fuzzy
 msgid "Photo Window"
-msgstr "_Fereastră informaţii"
+msgstr "Fereastră foto"
 
 #: ../data/gtkpod.glade.h:240 ../src/display_spl.c:94
 msgid "Play time"
@@ -1205,7 +1197,7 @@ msgstr "Informaţii progres"
 
 #: ../data/gtkpod.glade.h:250
 msgid "R_ename Album"
-msgstr ""
+msgstr "R_edenumește album"
 
 #: ../data/gtkpod.glade.h:251
 msgid "Random Playlist from Displayed Tracks"
@@ -1229,9 +1221,8 @@ msgid "Read tags from file contents (e.g. ID3 tags in MP3 files)"
 msgstr "Citeşte etichete din fişier (e.g. etichete ID3 din fişiere MP3)"
 
 #: ../data/gtkpod.glade.h:256
-#, fuzzy
 msgid "Remove selected attributes from the displayed list"
-msgstr "Piese selectate din lista de redare"
+msgstr "Șterge atributele selectate din lista afișată"
 
 #: ../data/gtkpod.glade.h:257
 msgid "Repository Options"
@@ -1286,37 +1277,30 @@ msgstr ""
 "selectate"
 
 #: ../data/gtkpod.glade.h:270
-#, fuzzy
 msgid "Selected Filter Tab Entry from Database"
 msgstr "Categorie selectată din baza de date"
 
 #: ../data/gtkpod.glade.h:271
-#, fuzzy
 msgid "Selected Filter Tab Entry from Hard Disk"
 msgstr "Categorie selectată de pe discul dur"
 
 #: ../data/gtkpod.glade.h:272
-#, fuzzy
 msgid "Selected Filter Tab Entry from Playlist"
 msgstr "Categorie selectată din lista de redare"
 
 #: ../data/gtkpod.glade.h:273
-#, fuzzy
 msgid "Selected Filter Tab Entry from iPod"
 msgstr "Categorie selectată de pe iPod"
 
 #: ../data/gtkpod.glade.h:274
-#, fuzzy
 msgid "Selected Playlist Including Tracks from Database"
 msgstr "Lista de redare selectată incluzând piesele din baza de date"
 
 #: ../data/gtkpod.glade.h:275
-#, fuzzy
 msgid "Selected Playlist Including Tracks from Hard Disk"
 msgstr "Lista de redare selectată incluzând piesele de pe discul dur"
 
 #: ../data/gtkpod.glade.h:276
-#, fuzzy
 msgid "Selected Playlist Including Tracks from iPod"
 msgstr "Lista de redare selectată incluzând piesele de pe iPod"
 
@@ -1325,24 +1309,20 @@ msgid "Selected Tab _Entry"
 msgstr "Cat_egoria selectată"
 
 #: ../data/gtkpod.glade.h:278
-#, fuzzy
 msgid "Selected Tracks from Database"
 msgstr "Piese selectate din baza de date"
 
 #: ../data/gtkpod.glade.h:279
-#, fuzzy
 msgid "Selected Tracks from Hard Disk"
 msgstr "Piese selectate de pe discul dur"
 
 #: ../data/gtkpod.glade.h:280
-#, fuzzy
 msgid "Selected Tracks from Playlist"
 msgstr "Piese selectate din lista de redare"
 
 #: ../data/gtkpod.glade.h:281
-#, fuzzy
 msgid "Selected Tracks from iPod"
-msgstr "Piese selectate de pe iPod"
+msgstr "Piese selectate de pe iPod "
 
 #: ../data/gtkpod.glade.h:282
 msgid "Selected _Playlist"
@@ -1645,14 +1625,12 @@ msgid "Use 'Multi-Edit' for tracks selections"
 msgstr "Foloseşte 'Editare multiplă' pentru selecţii de piese"
 
 #: ../data/gtkpod.glade.h:342
-#, fuzzy
 msgid "Use <i>&lt;Album&gt;.jpg</i> in the parent directory"
-msgstr "Foloseşte <i><Album>.jpg</i> în dosarul părinte"
+msgstr "Foloseşte <i>&lt;Album&gt;.jpg</i> în dosarul părinte"
 
 #: ../data/gtkpod.glade.h:343
-#, fuzzy
 msgid "Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>..."
-msgstr "Foloseşte <i><Album>.jpg</i>, <i><Album>.png</i>..."
+msgstr "Foloseşte <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>..."
 
 #: ../data/gtkpod.glade.h:344
 msgid "Use <i>folder.jpg</i> as cover art."
@@ -1715,9 +1693,8 @@ msgstr ""
 "nu este nici o opţiune 'Refacere' deocamdată)."
 
 #: ../data/gtkpod.glade.h:356
-#, fuzzy
 msgid "View Full Size"
-msgstr "Vizualizeză coperta la dimensiunea reală"
+msgstr "Vizualizeză la dimensiunea reală"
 
 #: ../data/gtkpod.glade.h:357
 msgid "WAV with :"
@@ -1780,23 +1757,20 @@ msgstr ""
 "să sortaţi conform unei coloane care nu este afişată."
 
 #: ../data/gtkpod.glade.h:368
-#, fuzzy
 msgid "_About gtkpod"
-msgstr "Despre gtkpod"
+msgstr "_Despre gtkpod"
 
 #: ../data/gtkpod.glade.h:369
-#, fuzzy
 msgid "_Add Album"
-msgstr "Album"
+msgstr "_Adaugă album"
 
 #: ../data/gtkpod.glade.h:370
 msgid "_Add Image"
-msgstr ""
+msgstr "_Adaugă imagine"
 
 #: ../data/gtkpod.glade.h:371
-#, fuzzy
 msgid "_Album"
-msgstr "Album"
+msgstr "_Album"
 
 #: ../data/gtkpod.glade.h:372
 msgid "_All Tracks"
@@ -1868,7 +1842,7 @@ msgstr "_Ignoră reguli"
 
 #: ../data/gtkpod.glade.h:389
 msgid "_Image"
-msgstr ""
+msgstr "_Imagine"
 
 #: ../data/gtkpod.glade.h:390
 msgid "_Info Window"
@@ -1935,9 +1909,8 @@ msgid "_Prefer Local"
 msgstr "_Preferă local"
 
 #: ../data/gtkpod.glade.h:406
-#, fuzzy
 msgid "_Remove Album"
-msgstr "Album sortare"
+msgstr "Ște_rge album"
 
 #: ../data/gtkpod.glade.h:407
 msgid "_Remove Cover Art"
@@ -1945,7 +1918,7 @@ msgstr "_Şterge coperta"
 
 #: ../data/gtkpod.glade.h:408
 msgid "_Remove Images"
-msgstr ""
+msgstr "Ște_rge imagini"
 
 #: ../data/gtkpod.glade.h:409
 msgid "_Save Changes"
@@ -2090,21 +2063,21 @@ msgid "Could not initialize GnomeVFS\n"
 msgstr "Nu am putut iniţializa GnomeVFS\n"
 
 #: ../src/autodetection.c:397
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Newly mounted iPod at '%s' could not be loaded into gtkpod.\n"
 "\n"
 msgstr ""
-"iPod montat de curând la '%s' pare să fie deja încărcat!\n"
+"iPod-ul montat de curând la '%s' nu a putut fi încărcat în gtkpod\n"
 "\n"
 
 #: ../src/autodetection.c:403
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Newly mounted iPod at '%s' appears to be already loaded!\n"
 "\n"
 msgstr ""
-"iPod montat de curând la '%s' pare să fie deja încărcat!\n"
+"iPod-ul montat de curând la '%s' pare să fie deja încărcat!\n"
 "\n"
 
 #: ../src/autodetection.c:416
@@ -2459,18 +2432,16 @@ msgid "Alphabetize"
 msgstr "Sortează alfabetic"
 
 #: ../src/context_menus.c:895
-#, fuzzy
 msgid "Remove Album"
-msgstr "Album sortare"
+msgstr "Șterge album"
 
 #: ../src/context_menus.c:905
-#, fuzzy
 msgid "Remove Photo"
-msgstr "_Şterge coperta"
+msgstr "_Şterge imagine"
 
 #: ../src/context_menus.c:922
 msgid "Rename Album"
-msgstr ""
+msgstr "Redenumește album"
 
 #: ../src/context_menus.c:981 ../src/context_menus.c:1030
 msgid "Copy selected playlist to..."
@@ -2539,16 +2510,16 @@ msgstr "<b>n/a</b>"
 #: ../src/details.c:1906
 #, c-format
 msgid "Error occurred dropping an image onto the details window: %s\n"
-msgstr ""
+msgstr "Eroare la tragerea unei imagini în fereastra de detalii: %s\n"
 
 #: ../src/details.c:1952 ../src/display_coverart.c:2128
 msgid "Successfully set new coverart for selected tracks"
-msgstr ""
+msgstr "Copertă nouă stabilită cu succes pentru piesele selectate"
 
 #: ../src/display.c:490
 #, c-format
 msgid "<b>Image Dimensions: %s</b>"
-msgstr ""
+msgstr "<b>Dimensiuni imagine: %s</b>"
 
 #: ../src/display.c:744
 msgid "Edit selected entry of which sort tab?"
@@ -2624,7 +2595,7 @@ msgstr "Ştergerea albumului din memoria hash a albumelor eşuată."
 #: ../src/display_coverart.c:2098
 #, c-format
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
-msgstr ""
+msgstr "Eroare la tragerea unei imagini în căsuța afișare copertă: %s\n"
 
 #: ../src/display_itdb.c:376
 #, c-format
@@ -2654,93 +2625,89 @@ msgstr "Număr redări incrementat pentru '%s'"
 #: ../src/display_photo.c:163
 #, c-format
 msgid "Error reading iPod photo database (%s).\n"
-msgstr ""
+msgstr "Eroare la citirea bazei de date foto a iPod-ului (%s).\n"
 
 #: ../src/display_photo.c:168
 msgid "Error reading iPod photo database.\n"
-msgstr ""
+msgstr "Eroare la citirea bazei de date foto a iPod-ului.\n"
 
 #: ../src/display_photo.c:238
 msgid "Could not access the iPod's photo database."
-msgstr ""
+msgstr "Nu am putut accesa baza de date foto a iPod-ului"
 
 #: ../src/display_photo.c:441
-#, fuzzy
 msgid "Photo Albums"
-msgstr "Album sortare"
+msgstr "Albume foto"
 
 #: ../src/display_photo.c:451 ../src/display_photo.c:1685
 msgid "<Unnamed>"
-msgstr ""
+msgstr "<Fără nume>"
 
 #: ../src/display_photo.c:939
 msgid "The Photo Library album cannot be removed"
-msgstr ""
+msgstr "Albumul Bibliotecă foto nu poate fi șters"
 
 #: ../src/display_photo.c:961
-#, fuzzy
 msgid "Do you want to remove the album's photos too?"
-msgstr ""
-"Sunteţi sigur că doriţi să ştergeţi toate podcasturile de pe iPod-ul dvs '%"
-"s'?"
+msgstr "Sunteţi sigur că doriţi să ştergeţi de asemenea imaginile din album?"
 
 #: ../src/display_photo.c:967
 msgid "Yes. Do Not Display Again"
-msgstr ""
+msgstr "Da. Nu afișa mesajul din nou"
 
 #: ../src/display_photo.c:1038
 msgid ""
 "This will remove the photo selection from the selected album.\n"
 " Do you want to delete them from the database as well?"
 msgstr ""
+"Veți șterge selecția de imagini din albumul curent.\n"
+" Doriți ștergerea selecției și din baza de date?"
 
 #: ../src/display_photo.c:1053
 msgid ""
 "This will delete the photo selection from the Photo Library and all albums. "
 "Are you sure?"
 msgstr ""
+"Veți șterge selecția de imagini din Biblioteca foto și din toate albumele. "
+"Sigur doriți acest lucru?"
 
 #: ../src/display_photo.c:1128
 msgid "New Photo Album Name"
-msgstr ""
+msgstr "Nume album foto nou"
 
 #: ../src/display_photo.c:1129
-#, fuzzy
 msgid "Please enter a new name for the photo album"
-msgstr "Vă rugăm introduceţi un nume pentru lista de redare nouă"
+msgstr "Vă rugăm să introduceţi un nume nou pentru albumul foto"
 
 #: ../src/display_photo.c:1141 ../src/display_photo.c:1223
 msgid "An album with that name already exists."
-msgstr ""
+msgstr "Un album cu același nume există deja."
 
 #: ../src/display_photo.c:1210
-#, fuzzy
 msgid "New Photo Album"
-msgstr "Album sortare"
+msgstr "Album foto nou"
 
 #: ../src/display_photo.c:1211
-#, fuzzy
 msgid "Please enter a name for the new photo album"
-msgstr "Vă rugăm introduceţi un nume pentru lista de redare nouă"
+msgstr "Vă rugăm să introduceţi un nume pentru albumul foto"
 
 #: ../src/display_photo.c:1232
 msgid "The new album failed to be created."
-msgstr ""
+msgstr "Noul album nu a putut fi creat."
 
 #: ../src/display_photo.c:1256
-#, fuzzy
 msgid "Add Image to iPod"
-msgstr "Adaugă un nou depozit/iPod"
+msgstr "Adaugă imagine la iPod"
 
 #. Open a dialog directory chooser window
 #: ../src/display_photo.c:1311
 msgid "Add a Directory of Images to the iPod. Select the Directory."
-msgstr ""
+msgstr "Adaugare dosar cu imagini la iPod. Selectați dosarul."
 
 #: ../src/display_photo.c:1699
 #, c-format
 msgid "<No members>\n"
-msgstr ""
+msgstr "<Lipsă membri>\n"
 
 #. give a notice on the statusbar -- otherwise the user
 #. * will never know why the drag is not possible
@@ -2776,7 +2743,7 @@ msgstr ""
 #.
 #: ../src/display_playlists.c:1569
 msgid "Photos"
-msgstr ""
+msgstr "Fotografii"
 
 #: ../src/display_sorttabs.c:473
 msgid "'Played' condition ignored because of error."
@@ -3140,10 +3107,10 @@ msgstr "Verif."
 
 #: ../src/fetchcover.c:358
 msgid "Coverart file already exists"
-msgstr ""
+msgstr "Fișierul copertă există deja"
 
 #: ../src/fetchcover.c:371
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The picture file %s already exists.\n"
 "This may be associated with other music files in the directory.\n"
@@ -3159,8 +3126,7 @@ msgstr ""
 "- Dând click pe Da se va suprascrie fişierul existent, fiind posibilă \n"
 "  asocierea altor fişiere muzicale din acelaşi dosar cu acesta. \n"
 "- Dând click pe Nu se va salva fişierul cu un nume unic.\n"
-"- Dând click pe Revocare se va abandona operaţia de obţinere a \n"
-"  coperţii."
+"- Dând click pe Revocare se va abandona obţinerea coperţii."
 
 #: ../src/file.c:236
 #, c-format
@@ -3510,13 +3476,14 @@ msgstr ""
 "\n"
 
 #: ../src/file_convert.c:2091
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Conversion of '%s' failed: '\"%s\" %s' did not return filename extension as "
 "expected.\n"
 "\n"
 msgstr ""
-"Conversia '%s' eşuată: '%s %s' nu a returnat extensia de fişier aşteptată.\n"
+"Conversia '%s' eşuată: '\"%s\" %s' nu a returnat extensia de fişier "
+"aşteptată.\n"
 "\n"
 
 #: ../src/file_convert.c:2167
@@ -3672,9 +3639,9 @@ msgid "Matching SHA1 checksum for file %d/%d"
 msgstr "Potrivesc suma de control SHA1 pentru fişierul %d/%d"
 
 #: ../src/file_itunesdb.c:236
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open \"%s\" for reading extended info.\n"
-msgstr "Nu am putut deschide \"%s\" pentru scrierea informaţiilor extinse.\n"
+msgstr "Nu am putut deschide \"%s\" pentru citirea informaţiilor extinse.\n"
 
 #: ../src/file_itunesdb.c:243
 msgid "Could not create hash value from itunesdb\n"
@@ -3726,9 +3693,9 @@ msgid ""
 "than gtkpod.\n"
 "\n"
 msgstr ""
-"Suma de control SHA1 a unor piese individuale nu este disponibilă.\n"
+"Suma de control SHA1 a unor piese nu este disponibilă.\n"
 "\n"
-"Pentru a evita această situaţie pe viitor fie porniţi detecţia dublurilor "
+"Pentru a evita această situaţie pe viitor fie activați detecţia dublurilor "
 "(va oferi sumele de siguranţă SHA1) sau evitaţi să folosiţi iPod-ul cu alte "
 "programe decât gtkpod.\n"
 "\n"
@@ -3794,7 +3761,7 @@ msgstr ""
 
 #: ../src/file_itunesdb.c:520
 msgid "Extended info will not be used.\n"
-msgstr "Informaţii extinse nu vor fi folosite.\n"
+msgstr "Informaţiile extinse nu vor fi folosite.\n"
 
 #: ../src/file_itunesdb.c:527
 msgid "iPod Database Successfully Imported"
@@ -4239,174 +4206,143 @@ msgstr ""
 "\n"
 
 #: ../src/misc.c:70
-#, fuzzy
 msgid ""
 "© 2002 - 2007\n"
 "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 "Corey Donohoe (atmos at atmos dot org)\n"
 msgstr ""
-"(C) 2002 - 2007\n"
+"© 2002 - 2007\n"
 "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 "Corey Donohoe (atmos at atmos dot org)\n"
-"\n"
-"\n"
 
 #: ../src/misc.c:74
-#, fuzzy
 msgid ""
 "Patches were supplied by the following people (list may be incomplete -- "
 "please contact me)\n"
 msgstr ""
 "Petice şi îmbunăţiri au fost oferite de către următoarele persoane (lista "
 "poate fi incompletă, vă rog contactaţi-mă)\n"
-"\n"
 
 #: ../src/misc.c:75
-#, fuzzy
 msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
-msgstr "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)\n"
+msgstr "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
 
 #: ../src/misc.c:76
-#, fuzzy
 msgid "Hiroshi Kawashima: Japanese charset autodetection feature"
-msgstr "Hiroshi Kawashima: Japanese charset autodetecion feature\n"
+msgstr "Hiroshi Kawashima: Japanese charset autodetecion feature"
 
 #: ../src/misc.c:77
-#, fuzzy
 msgid "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
-msgstr ""
-"Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n"
+msgstr "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
 
 #: ../src/misc.c:78
-#, fuzzy
 msgid ""
 "Walter Bell: correct handling of DND URIs with escaped characters and/or cr/"
 "newlines at the end"
 msgstr ""
 "Walter Bell: correct handling of DND URIs with escaped characters and/or cr/"
-"newlines at the end\n"
+"newlines at the end"
 
 #: ../src/misc.c:79
-#, fuzzy
 msgid "Sam Clegg: user defined filenames when exporting tracks from the iPod"
-msgstr ""
-"Sam Clegg: user defined filenames when exporting tracks from the iPod\n"
+msgstr "Sam Clegg: user defined filenames when exporting tracks from the iPod"
 
 #: ../src/misc.c:80
-#, fuzzy
 msgid "Chris Cutler: automatic creation of various playlist types"
-msgstr "Chris Cutler: automatic creation of various playlist types\n"
+msgstr "Chris Cutler: automatic creation of various playlist types"
 
 #: ../src/misc.c:81
-#, fuzzy
 msgid ""
 "Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
 "dialogue during sync"
 msgstr ""
 "Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
-"dialogue during sync\n"
+"dialogue during sync"
 
 #: ../src/misc.c:82
-#, fuzzy
 msgid ""
 "Edward Matteucci: debugging, special playlist creation, most of the volume "
 "normalizing code"
 msgstr ""
 "Edward Matteucci: debugging, special playlist creation, most of the volume "
-"normalizing code\n"
+"normalizing code"
 
 #: ../src/misc.c:83
-#, fuzzy
 msgid "Jens Lautenbach: some optical improvements"
-msgstr "Jens Lautenbach: some optical improvements\n"
+msgstr "Jens Lautenbach: some optical improvements"
 
 #: ../src/misc.c:84
-#, fuzzy
 msgid "Alex Tribble: iPod eject patch"
-msgstr "Alex Tribble: iPod eject patch\n"
+msgstr "Alex Tribble: iPod eject patch"
 
 #: ../src/misc.c:85
-#, fuzzy
 msgid "Yaroslav Halchenko: Orphaned and dangling tracks handling"
-msgstr "Yaroslav Halchenko: Orphaned and dangling tracks handling\n"
+msgstr "Yaroslav Halchenko: Orphaned and dangling tracks handling"
 
 #: ../src/misc.c:86
-#, fuzzy
 msgid ""
 "Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
 msgstr ""
-"Andrew Huntwork: Filename case sensitivity fix and various other bugfixes\n"
+"Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
 
 #: ../src/misc.c:87
-#, fuzzy
 msgid ""
 "Ero Carrera: Filename validation and quick sync when copying tracks from the "
 "iPod"
 msgstr ""
 "Ero Carrera: Filename validation and quick sync when copying tracks from the "
-"iPod\n"
+"iPod"
 
 #: ../src/misc.c:88
-#, fuzzy
 msgid "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
-msgstr ""
-"Jens Taprogge: Support for LAME's replay gain tag to normalize volume\n"
+msgstr "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
 
 #: ../src/misc.c:89
-#, fuzzy
 msgid "Armando Atienza: Support with external playcounts"
-msgstr "Armando Atienza: Support with external playcounts\n"
+msgstr "Armando Atienza: Support with external playcounts"
 
 #: ../src/misc.c:90
-#, fuzzy
 msgid "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
-msgstr "D.L. Sharp: Support for m4b files (bookmarkable AAC files)\n"
+msgstr "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
 
 #: ../src/misc.c:91
-#, fuzzy
 msgid "Jim Hall: Decent INSTALL file"
-msgstr "Jim Hall: Decent INSTALL file\n"
+msgstr "Jim Hall: Decent INSTALL file"
 
 #: ../src/misc.c:92
-#, fuzzy
 msgid ""
 "Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
 "contacts to the iPod"
 msgstr ""
 "Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
-"contacts to the iPod\n"
+"contacts to the iPod"
 
 #. J"urgen!
 #: ../src/misc.c:93
-#, fuzzy
 msgid "Flavio Stanchina: bugfixes"
-msgstr "Flavio Stanchina: bugfixes\n"
+msgstr "Flavio Stanchina: bugfixes"
 
 #: ../src/misc.c:94
-#, fuzzy
 msgid ""
 "Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
 "the title"
 msgstr ""
 "Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
-"the title\n"
+"the title"
 
 #: ../src/misc.c:95
-#, fuzzy
 msgid "Steve Jay: use statvfs() instead of df (better portability, faster)"
-msgstr "Steve Jay: use statvfs() instead of df (better portability, faster)\n"
+msgstr "Steve Jay: use statvfs() instead of df (better portability, faster)"
 
 #: ../src/misc.c:97
-#, fuzzy
 msgid ""
 "Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 "
 "tags"
 msgstr ""
 "Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 "
-"tags\n"
+"tags"
 
 #: ../src/misc.c:99
-#, fuzzy
 msgid ""
 "James Liggett:\n"
 "replacement of old GTK file selection dialogs with new GTK filechooser "
@@ -4414,160 +4350,137 @@ msgid ""
 "refactored user preferences system."
 msgstr ""
 "James Liggett:\n"
-"     replacement of old GTK file selection dialogs with new GTK filechooser "
+"replacement of old GTK file selection dialogs with new GTK filechooser "
 "dialogs\n"
-"     refactored user preferences system.\n"
+"refactored user preferences system."
 
 #: ../src/misc.c:103
-#, fuzzy
 msgid "Daniel Kercher: sync scripts for abook and webcalendar"
-msgstr "Daniel Kercher: sync scripts for abook and webcalendar\n"
+msgstr "Daniel Kercher: sync scripts for abook and webcalendar"
 
 #: ../src/misc.c:105
-#, fuzzy
 msgid "Clinton Gormley: sync scripts for thunderbird"
-msgstr "Clinton Gormley: sync scripts for thunderbird\n"
+msgstr "Clinton Gormley: sync scripts for thunderbird"
 
 #: ../src/misc.c:107
-#, fuzzy
 msgid "Sebastien Beridot: sync script for ldif addressbook format"
-msgstr "Sebastien Beridot: sync script for ldif addressbook format\n"
+msgstr "Sebastien Beridot: sync script for ldif addressbook format"
 
 #: ../src/misc.c:109
-#, fuzzy
 msgid "Sebastian Scherer: sync script for kNotes"
-msgstr "Sebastian Scherer: sync script for kNotes\n"
+msgstr "Sebastian Scherer: sync script for kNotes"
 
 #: ../src/misc.c:111
-#, fuzzy
 msgid "Nick Piper: sync script for Palm, type-ahead search"
-msgstr "Nick Piper: sync script for Palm, type-ahead search\n"
+msgstr "Nick Piper: sync script for Palm, type-ahead search"
 
 #: ../src/misc.c:113
-#, fuzzy
 msgid "Uwe Hermann: help with support for iPod Video"
-msgstr "Uwe Hermann: help with support for iPod Video\n"
+msgstr "Uwe Hermann: help with support for iPod Video"
 
 #: ../src/misc.c:115
-#, fuzzy
 msgid ""
 "Iain Benson: support for compilation tag in mp3 files and separate display "
 "of compilations in the sort tab."
 msgstr ""
 "Iain Benson: support for compilation tag in mp3 files and separate display "
-"of compilations in the sort tab.\n"
+"of compilations in the sort tab."
 
 #: ../src/misc.c:116
-#, fuzzy
 msgid ""
 "Nicolas Chariot: icons of buttons\n"
 "\n"
 msgstr ""
 "Nicolas Chariot: iconurile butoanelor\n"
 "\n"
-"\n"
 
 #: ../src/misc.c:118
-#, fuzzy
 msgid "This program borrows code from the following projects:"
-msgstr "Programul împrumută cod de la următoarele proiecte:\n"
+msgstr "Programul împrumută cod de la următoarele proiecte:"
 
 #: ../src/misc.c:119
-#, fuzzy
 msgid ""
 "gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  (http://"
 "www.gnu.org/software/gnupod/)"
 msgstr ""
-"    gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB "
-"(http://www.gnu.org/software/gnupod/)\n"
+"gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB (http://"
+"www.gnu.org/software/gnupod/)"
 
 #: ../src/misc.c:120
-#, fuzzy
 msgid ""
 "iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some code "
 "for smart playlists is based on his C++-classes."
 msgstr ""
-"    iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some "
-"code for smart playlists is based on his C++-classes.\n"
+"iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some code "
+"for smart playlists is based on his C++-classes."
 
 #: ../src/misc.c:121
-#, fuzzy
 msgid "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
-msgstr "    mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n"
+msgstr "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
 
 #: ../src/misc.c:122
-#, fuzzy
 msgid "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
-msgstr ""
-"    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"
+msgstr "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
 
 #: ../src/misc.c:124
-#, fuzzy
 msgid "The GUI was created with the help of glade-2 (http://glade.gnome.org/)."
 msgstr ""
 "Interfaţa utilizator grafică (GUI) a fost creată cu ajutorul glade-2 (http://"
-"glade.gnome.org/).\n"
+"glade.gnome.org/)."
 
 #: ../src/misc.c:128
-#, fuzzy
 msgid "French: David Le Brun (david at dyn-ns dot net)"
-msgstr "French:   David Le Brun (david at dyn-ns dot net)\n"
+msgstr "Franceză:   David Le Brun (david at dyn-ns dot net)"
 
 #: ../src/misc.c:129
 msgid "French: Éric Lassauge (rpmfarm at free dot fr)"
-msgstr ""
+msgstr "Franceză: Éric Lassauge (rpmfarm at free dot fr)"
 
 #: ../src/misc.c:130
-#, fuzzy
 msgid "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
-msgstr "German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
+msgstr "Germană:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
 
 #: ../src/misc.c:131
 msgid "German: Kai-Ove"
-msgstr ""
+msgstr "Germană: Kai-Ove"
 
 #: ../src/misc.c:132
-#, fuzzy
 msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)"
-msgstr "Hebrew: Assaf Gillat (gillata at gmail dot com)\n"
+msgstr "Ebraică: Assaf Gillat (gillata at gmail dot com)"
 
 #: ../src/misc.c:133
-#, fuzzy
 msgid ""
 "Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot net)"
 msgstr ""
-"Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot "
-"net)\n"
+"Italiană:  Edward Matteucci (edward_matteucc at users dot sourceforge dot "
+"net)"
 
 #: ../src/misc.c:134
 msgid "Italian: Daniele Forsi (dforsi at gmail dot com)"
-msgstr ""
+msgstr "Italiană: Daniele Forsi (dforsi at gmail dot com)"
 
 #: ../src/misc.c:135
-#, fuzzy
 msgid "Japanese: Ayako Sano"
-msgstr "Japanese: Ayako Sano\n"
+msgstr "Japoneză: Ayako Sano"
 
 #: ../src/misc.c:136
-#, fuzzy
 msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
-msgstr "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
+msgstr "Japoneză: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
 
 #: ../src/misc.c:137
 msgid "Romanian: Alex Eftimie (alexeftimie at gmail dot com)"
-msgstr ""
+msgstr "Română: Alex Eftimie (alexeftimie at gmail dot com)"
 
 #: ../src/misc.c:138
 msgid "Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
 msgstr ""
+"Spaniolă: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
 
 #: ../src/misc.c:139
-#, fuzzy
 msgid "Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"
-msgstr "Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)\n"
+msgstr "Suedeză: Stefan Asserhall (stefan asserhall at comhem dot se)"
 
 #: ../src/misc.c:144
-#, fuzzy
 msgid ""
 "This program is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License as\n"
@@ -4593,26 +4506,24 @@ msgstr ""
 "GARANŢIE, fără garanţie implicită de vandabilitate şi conformitate unui "
 "anumit scop.  Citiţi Licenţa Publică Generală GNU pentru detalii.\n"
 "\n"
+"Ar trebui să fi primit o copie a Licenței Publice Generale GNU\n"
+"alături de acest program; dacă nu, puteți scrie către Free Software\n"
+"Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
+"02111-1307, USA."
 
 #: ../src/misc.c:159
-#, fuzzy
 msgid ""
 "© 2002-2007\n"
 "Jorg Schuler <jcsjcs@users.sourceforge.net>\n"
 "Corey Donohoe <atmos@atmos.org>"
 msgstr ""
-"(C) 2002 - 2007\n"
-"Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
-"Corey Donohoe (atmos at atmos dot org)\n"
-"\n"
-"\n"
+"© 2002 - 2007\n"
+"Jorg Schuler <jcsjcs at users dot sourceforge dot net>\n"
+"Corey Donohoe <atmos at atmos dot org>"
 
 #: ../src/misc.c:167
-#, fuzzy
 msgid "Cross-platform multilingual interface to Apple's iPod™"
-msgstr ""
-"gtkpod Versiunea %s: Interfaţă cross-platform multilingvă pentru iPod-ul "
-"Apple (tm)"
+msgstr "Interfaţă multiplatformă multilingvă pentru iPod-ul Apple™"
 
 #: ../src/misc.c:934
 #, c-format
@@ -4825,20 +4736,18 @@ msgid "Removed all %d tracks from the database"
 msgstr "Am şters toate %d piese din baza de date"
 
 #: ../src/misc_confirm.c:695
-#, fuzzy, c-format
+#, c-format
 msgid "Are you sure you want to remove all tracks from your iPod?"
-msgstr ""
-"Sunteţi sigur că doriţi să ştergeţi toate piesele de pe iPod-ul dvs '%s'?"
+msgstr "Sunteţi sigur că doriţi să ştergeţi toate piesele de pe iPod-ul dvs?"
 
 #: ../src/misc_confirm.c:700
-#, fuzzy, c-format
+#, c-format
 msgid "Are you sure you want to remove all podcasts from your iPod?"
 msgstr ""
-"Sunteţi sigur că doriţi să ştergeţi toate podcasturile de pe iPod-ul dvs '%"
-"s'?"
+"Sunteţi sigur că doriţi să ştergeţi toate podcasturile de pe iPod-ul dvs?"
 
 #: ../src/misc_confirm.c:708
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and the following track "
 "completely from your iPod? The number of playlists this track is a member of "
@@ -4850,11 +4759,11 @@ msgid_plural ""
 msgstr[0] ""
 "Sunteţi sigur că doriţi să ştergeţi lista de redare '%s' şi următoarea piesă "
 "de pe iPod? Numărul listelor de redare în care această piesă este membră "
-"este indicat în paranteze."
+"este indicat între paranteze."
 msgstr[1] ""
 "Sunteţi sigur că doriţi să ştergeţi lista de redare '%s' şi următoarele "
 "piese de pe iPod? Numărul listelor de redare în care aceste piese sunt "
-"membre este indicat în paranteze."
+"membre este indicat între paranteze."
 
 #: ../src/misc_confirm.c:719 ../src/misc_confirm.c:774
 #, c-format
@@ -5066,7 +4975,7 @@ msgstr "Emisiune TV sortare"
 
 #: ../src/misc_conversion.c:113
 msgid "Gapless Track Flag"
-msgstr ""
+msgstr "Indicator de piesă gapless"
 
 #: ../src/misc_conversion.c:126
 msgid "Name of file on PC, if available"
@@ -5175,7 +5084,7 @@ msgstr "URI '%s' conţine caractere întârziate invalid"
 #: ../src/misc_playlist.c:67 ../src/misc_playlist.c:94
 #: ../src/misc_playlist.c:429
 msgid "Please enter a name for the new playlist"
-msgstr "Vă rugăm introduceţi un nume pentru lista de redare nouă"
+msgstr "Vă rugăm să introduceţi un nume pentru lista de redare nouă"
 
 #: ../src/misc_playlist.c:154
 msgid "AR:"
