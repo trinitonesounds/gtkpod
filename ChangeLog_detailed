@@ -1,3 +1,8 @@
+2007-12-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* configure.in:
+	  bump version for future development (0.99.13SVN)
+
 2007-12-17  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* configure.in:
