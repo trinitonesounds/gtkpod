@@ -1,3 +1,13 @@
+2007-12-18 Matvey Kozhev <sikon at users.sourceforge.net>
+
+	* src/confirmation.c:
+	* src/confirmation.h:
+	  Added the gtkpod_confirmation_hig and gtkpod_confirmation_simple
+	  functions for HIG-compliant confirmation messages.
+	  
+    * src/file_itunesdb.c:
+      Migrated the "directory structure" dialog to the HIG functions.
+
 2007-12-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* configure.in:
