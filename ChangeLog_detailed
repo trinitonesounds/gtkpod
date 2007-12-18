@@ -1,5 +1,10 @@
 2007-12-17  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
+	* configure.in:
+	  bump version for 0.99.12 release
+
+2007-12-17  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
 	* po/he.po:
 	  update Hebrew translation (Assaf Gillat)
 
