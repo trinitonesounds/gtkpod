@@ -540,3 +540,59 @@ GtkResponseType gtkpod_confirmation (gint id,
 	return GTK_RESPONSE_ACCEPT;
     }
 }
+
+gint gtkpod_confirmation_simple (GtkWindow *parent,
+								 GtkMessageType icon,
+								 const gchar *primary_text,
+								 const gchar *secondary_text,
+								 const gchar *accept_button_text)
+{
+	return gtkpod_confirmation_hig(parent, icon, primary_text, secondary_text,
+								    accept_button_text, NULL, NULL, NULL);
+}
+
+gint gtkpod_confirmation_hig (GtkWindow *parent,
+							  GtkMessageType icon,
+							  const gchar *primary_text,
+							  const gchar *secondary_text,
+							  const gchar *accept_button_text,
+							  const gchar *cancel_button_text,
+							  const gchar *third_button_text,
+							  const gchar *help_context)
+{
+	gint result;
+	
+	GtkWidget *dialog =
+		gtk_message_dialog_new(parent,
+							   GTK_DIALOG_MODAL | GTK_DIALOG_NO_SEPARATOR,
+							   icon,
+							   GTK_BUTTONS_NONE,
+							   "%s",
+							   primary_text);
+	
+	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG(dialog),
+												"%s",
+												secondary_text);
+	
+	if(third_button_text)
+		gtk_dialog_add_button(GTK_DIALOG(dialog), third_button_text, GTK_RESPONSE_APPLY);
+	
+	gtk_dialog_add_buttons(GTK_DIALOG(dialog),
+						   cancel_button_text ? cancel_button_text : GTK_STOCK_CANCEL,
+						   GTK_RESPONSE_CANCEL,
+						   accept_button_text ? accept_button_text : GTK_STOCK_OK,
+						   GTK_RESPONSE_OK,
+						   NULL);
+
+	result = gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
+	
+	switch (result)
+	{
+	case GTK_RESPONSE_OK:
+	case GTK_RESPONSE_APPLY:
+	    return result;
+	default:
+	    return GTK_RESPONSE_CANCEL;
+	};
+}

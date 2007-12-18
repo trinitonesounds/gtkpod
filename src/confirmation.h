@@ -64,6 +64,21 @@ GtkResponseType gtkpod_confirmation (gint id,
 				     gpointer user_data1,
 				     gpointer user_data2);
 
+gint gtkpod_confirmation_simple (GtkWindow *parent,
+								 GtkMessageType icon,
+								 const gchar *primary_text,
+								 const gchar *secondary_text,
+								 const gchar *accept_button_text);
+
+gint gtkpod_confirmation_hig (GtkWindow *parent,
+							  GtkMessageType icon,
+							  const gchar *primary_text,
+							  const gchar *secondary_text,
+							  const gchar *accept_button_text,
+							  const gchar *cancel_button_text,
+							  const gchar *third_button_text,
+							  const gchar *help_context);
+
 /* predefined IDs for use with gtkpod_confirmation() */
 enum {
     CONF_ID_IPOD_DIR = 0,

@@ -862,25 +862,24 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
     itunesdb = itdb_get_itunesdb_path (mountpoint);
     if (!itunesdb)
     {
-	gchar *str = g_strdup_printf (_("Could not find iPod directory structure at '%s'.\nIf you are sure that the iPod is properly mounted at '%s', gtkpod can create the directory structure for you.\n\nDo you want to create the directory structure now?\n"), mountpoint, mountpoint);
-	GtkWidget *dialog = gtk_message_dialog_new (
-	    GTK_WINDOW (gtkpod_window),
-	    GTK_DIALOG_DESTROY_WITH_PARENT,
-	    GTK_MESSAGE_WARNING,
-	    GTK_BUTTONS_YES_NO,
-	    str);
-	gint result = gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (dialog);
-	g_free (str);
+		gchar *str = g_strdup_printf (_("Could not find iPod directory structure at '%s'.\n\nIf you are sure that the iPod is properly mounted at '%s', it may not be initialized for use. In this case, gtkpod can initialize it for you.\n\nDo you want to create the directory structure now?"), mountpoint, mountpoint);
+		
+		gint result = gtkpod_confirmation_simple (GTK_WINDOW (gtkpod_window),
+												  GTK_MESSAGE_WARNING,
+												  _("iPod directory structure not found"),
+												  str,
+												  _("Create directory structure"));
+			
+		g_free (str);
 
-	if (result == GTK_RESPONSE_YES)
-	{
-	    ok_to_load = gp_ipod_init (itdb);
-	}
-	else
-	{
-	    ok_to_load = FALSE;
-	}
+		if (result == GTK_RESPONSE_OK)
+		{
+			ok_to_load = gp_ipod_init (itdb);
+		}
+		else
+		{
+			ok_to_load = FALSE;
+		}
     }
     g_free (itunesdb);
     g_free (mountpoint);
