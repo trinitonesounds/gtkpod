@@ -51,7 +51,9 @@ gtkpod_SOURCES = \
     stock_icons.c stock_icons.h \
     syncdir.c syncdir.h \
     tools.c tools.h \
-    wavfile.c wavfile.h
+    wavfile.c wavfile.h \
+    help.c \
+    help.h
 
 gtkpod_LDADD = $(LIBS) $(INTLLIBS) @LIBOBJS@
 

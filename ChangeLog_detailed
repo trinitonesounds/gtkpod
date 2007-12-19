@@ -1,3 +1,34 @@
+2007-12-19 Matvey Kozhev <sikon at users.sourceforge.net>
+
+	* COPYING-DOCS:
+	  Text of the GFDL 1.2. Documentation should be under the GFDL to
+	  ensure that it remains license-compatible with the wiki.
+	
+	* doc/gtkpod.xml:
+	  Initial, very incomplete documentation import from the wiki.
+	  
+	  Do not modify the HTML files directly. They are generated from
+	  the DocBook XML file. Use "make update-docs" to regenerate them.
+	
+	* Makefile.am:
+	* doc/Makefile.am:
+	  Added the update-docs rule to generate HTML documentation from XML.
+	  
+	* src/misc.c:
+	* src/misc.h:
+	  Moved open_about_window to help.c.
+	  
+	* src/help.c:
+	* src/help.h:
+	* src/gtkpod.glade:
+	  Support for help contents, online help, and report bug menus.
+	  
+	  To use context-sensitive help, call gtkpod_open_help_context
+	  (in help.h) using the ID of the chapter or sect1 in the DocBook/XML
+	  file as the context. It will first try to open the XML file in yelp
+	  (the GNOME help viewer), and if that fails, will open the
+	  corresponding HTML file in the browser.
+
 2007-12-18 Matvey Kozhev <sikon at users.sourceforge.net>
 
 	* src/confirmation.c:

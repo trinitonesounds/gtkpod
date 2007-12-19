@@ -1,0 +1,649 @@
+<html xmlns:set="http://exslt.org/sets">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Setting iPod properties</title>
+<link rel="previous" href="hooking-up-the-ipod.html" title="Hooking up the iPod">
+<link rel="next" href="troubleshooting-faq.html" title="Troubleshooting FAQ">
+<link rel="top" href="gtkpod.html" title="The gtkpod Manual">
+<style type="text/css">
+
+html { height: 100%; }
+body {
+  margin: 0px; padding: 12px;
+  background-color: #f9f9f6;
+  min-height: 100%;
+  direction: ltr;
+}
+div, p, pre, blockquote { margin: 0; padding: 0; }
+p img { vertical-align: middle; }
+sub { font-size: 0.83em; }
+sub sub { font-size: 1em; }
+sup { font-size: 0.83em; }
+sup sup { font-size: 1em; }
+table { border-collapse: collapse; }
+table.table-pgwide { width: 100%; }
+td { vertical-align: top; }
+td { padding: 0.2em 0.83em 0.2em 0.83em; }
+th { padding: 0 0.83em 0 0.83em; }
+tr.tr-shade {
+  background-color: #f9f9f6;
+}
+td.td-colsep { border-right: solid 1px; }
+td.td-rowsep { border-bottom: solid 1px; }
+thead { border-top: solid 2px; border-bottom: solid 2px; }
+tfoot { border-top: solid 2px; border-bottom: solid 2px; }
+div.body {
+  padding: 1em;
+  max-width: 60em;
+  background-color: #ffffff;
+  border: solid 1px #e0e0df;
+}
+div.body-sidebar {
+  
+  margin-right: 13em;
+}
+div.division div.division { margin-top: 1.72em; }
+div.division div.division div.division { margin-top: 1.44em; }
+div.header {
+  margin: 0;
+  color: #3f3f3f;
+  border-bottom: solid 1px #e0e0df;
+}
+h1, h2, h3, h4, h5, h6, h7 {
+  margin: 0; padding: 0;
+  color: #3f3f3f;
+}
+h1.title { font-size: 1.72em; }
+h2.title { font-size: 1.44em; }
+h3.title { font-size: 1.2em; }
+h4.title, h5.title, h6.title, h7.title { font-size: 1em; }
+.block { margin-top: 1em; }
+.block .block-first { margin-top: 0; }
+.block-indent {
+  
+  margin-left: 1.72em;
+  
+  margin-right: 1em;
+}
+.block-indent .block-indent { margin-left: 0em; margin-right: 0em; }
+td .block-indent  { margin-left: 0em; margin-right: 0em; }
+dd .block-indent  { margin-left: 0em; margin-right: 0em; }
+.block-verbatim { white-space: pre; }
+div.title {
+  margin-bottom: 0.2em;
+  font-weight: bold;
+  color: #3f3f3f;
+}
+div.title-formal { padding-left: 0.2em; padding-right: 0.2em; }
+div.title-formal .label { font-weight: normal; }
+a {
+  color: #1f609f;
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+a:visited { color: #9f1f6f; }
+ul, ol, dl { margin: 0; padding: 0; }
+li {
+  margin-top: 1em;
+  
+  margin-left: 2.4em;
+  
+  padding: 0;
+}
+li.li-first { margin-top: 0; }
+dt { margin: 1em 0 0 0; }
+dt.dt-first { margin: 0; }
+dd {
+  
+  margin-left: 1.72em;
+  margin-top: 0.5em;
+}
+dl.dl-compact dt { margin-top: 0; }
+dl.dl-compact dd { margin-top: 0; margin-bottom: 0; }
+
+
+ul.linktrail {
+  display: block;
+  margin: 0.2em 0 0 0;
+  
+  text-align: right;
+}
+li.linktrail { display: inline; margin: 0; padding: 0; }
+
+li.linktrail::before {
+  content: '  /  ';
+  color: #3f3f3f;
+}
+
+li.linktrail-first::before, li.linktrail-only::before { content: ''; }
+
+
+div.navbar {
+  padding: 0.5em 1em 0.5em 1em;
+  max-width: 60em;
+  background-color: #ffffff;
+  border: solid 1px #e0e0df;
+}
+div.navbar-top { margin-bottom: 1em; }
+div.navbar-bottom { margin-top: 1em; clear: both; }
+div.navbar img { border: 0; vertical-align: -0.4em; }
+table.navbar { width: 100%; margin: 0; border: none; }
+table.navbar td { padding: 0; border: none; }
+td.navbar-next {
+  
+  text-align: right;
+}
+a.navbar-prev::before {
+  
+  content: '◀  ';
+  color: #3f3f3f;
+}
+a.navbar-next::after {
+  
+  content: '  ▶';
+  color: #3f3f3f;
+}
+
+
+div.sidebar {
+  
+  float: right;
+  padding: 0; margin: 0; width: 12em;
+}
+div.sidenav {
+  padding: 0.5em 1em 0 1em;
+  background-color: #ffffff;
+  border: solid 1px #e0e0df;
+}
+div.sidenav div.autotoc {
+  background-color: #ffffff;
+  border: none; padding: 0; margin: 0;
+}
+div.sidenav div.autotoc div.autotoc { margin-top: 0.5em; }
+div.sidenav div.autotoc li { margin-bottom: 0.5em; }
+div.sidenav div.autotoc div.autotoc div.autotoc {
+  
+  margin-left: 1em;
+  margin-top: 0;
+}
+div.sidenav div.autotoc div.autotoc div.autotoc li { margin-bottom: 0; }
+
+
+div.autotoc {
+  
+  display: table;
+  margin-top: 1em;
+  
+  margin-left: 1.72em;
+  padding: 0.5em 1em 0.5em 1em;
+  background-color: #f0f9ff;
+  border: solid 1px #c0c9ff;
+}
+div.autotoc ul { margin: 0; padding: 0; }
+div.autotoc li { list-style-type: none; margin: 0; }
+div.autotoc div.autotoc-title { margin-bottom: 0.5em; }
+div.autotoc div.autotoc { border: none; padding: 0; margin-top: 0; margin-bottom: 0.5em; }
+div.autotoc div.autotoc div.autotoc { margin-bottom: 0; }
+
+
+span.bibliolabel {
+  color: #3f3f3f;
+}
+
+
+div.admonition {
+  padding: 0.5em 1em 0.5em 1em;
+  
+  padding-left: 60px;
+  min-height: 48px;
+  border: solid 1px #e0e0df;
+  background-color: #fffff0;
+  
+  background-position: 6px 0.5em;
+  background-repeat: no-repeat;
+}
+div.caution {
+  background-image: url("admon-caution.png");
+}
+div.important {
+  background-image: url("admon-important.png");
+}
+div.note {
+  background-image: url("admon-note.png");
+}
+div.note-bug {
+  background-image: url("admon-bug.png");
+}
+div.tip {
+  background-image: url("admon-tip.png");
+}
+div.warning {
+  background-image: url("admon-warning.png");
+}
+div.blockquote {
+  
+  background-image: url('../../../data/icons/yelp-watermark-blockquote-201C.png');
+  background-repeat: no-repeat;
+  
+  background-position: top left;
+  padding: 0.5em;
+  
+  padding-left: 4em;
+}
+div.attribution {
+  margin-top: 0.5em;
+  color: #3f3f3f;
+}
+div.attribution::before {
+  
+  content: '― ';
+}
+div.epigraph {
+  
+  text-align: right;
+  
+  margin-left: 20%;
+  
+  margin-right: 0;
+  color: #3f3f3f;
+}
+div.figure, div.informalfigure {
+  
+  display: table;
+  padding: 0.5em;
+  background-color: #f9f9f6;
+  border: solid 1px #e0e0df;
+}
+div.figure-inner, div.informalfigure-inner {
+  padding: 0.5em;
+  background-color: #ffffff;
+  border: solid 1px #e0e0df;
+}
+div.caption { margin-top: 0.5em; }
+div.programlisting {
+  padding: 0.5em;
+  
+  background-color: #f9f9f6;
+  border: solid 1px #e0e0df;
+}
+div.screen {
+  padding: 0.5em;
+  
+  background-color: #f9f9f6;
+  border: solid 1px #e0e0df;
+}
+div.screen .prompt {
+  color: #3f3f3f;
+}
+div.screen .userinput {
+  font-weight: bold;
+  color: #3f3f3f;
+}
+pre.linenumbering {
+  color: #3f3f3f;
+  margin: 0;
+  
+  padding-right: 1em;
+  
+  float: left;
+  
+  text-align: right;
+}
+
+
+
+dl.index dt { margin-top: 0; }
+dl.index dd { margin-top: 0; margin-bottom: 0; }
+dl.indexdiv dt { margin-top: 0; }
+dl.indexdiv dd { margin-top: 0; margin-bottom: 0; }
+dl.setindex dt { margin-top: 0; }
+dl.setindex dd { margin-top: 0; margin-bottom: 0; }
+div.list div.title-formal span.title {
+  border-bottom: solid 1px #e0e0df;
+}
+div.simplelist {
+  
+  margin-left: 1.72em;
+}
+div.simplelist table { margin-left: 0; border: none; }
+div.simplelist td {
+  padding: 0.5em;
+  border-left: solid 1px #e0e0df;
+}
+div.simplelist td.td-first {
+  
+  padding-left: 0;
+  
+  border-left: 0;
+}
+div.synopsis {
+  padding: 0.5em;
+  
+  background-color: #f9f9f6;
+  border-top: solid 2px #c0c9ff;
+  border-bottom: solid 2px #c0c9ff;
+}
+div.synopsis div.synopsis {
+  padding: 0;
+  border: none;
+}
+div.synopsis div.block { margin-top: 0.2em; }
+div.synopsis div.block-first { margin-top: 0; }
+
+
+span.accel { text-decoration: underline; }
+span.acronym { font-family: sans-serif; }
+span.application { font-style: italic; }
+span.classname, span.exceptionname, span.interfacename { font-family: monospace; }
+span.code {
+  font-family: monospace;
+  border: solid 1px #e0e0df;
+  
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+pre span.code { border: none; padding: 0; }
+span.command {
+  font-family: monospace;
+  border: solid 1px #e0e0df;
+  
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+pre span.command { border: none; padding: 0; }
+span.computeroutput { font-family: monospace; }
+
+span.constant { font-family: monospace; }
+span.database { font-family: monospace; }
+span.email { font-family: monospace; }
+span.emphasis { font-style: italic; }
+span.emphasis-bold { font-style: normal; font-weight: bold; }
+span.envar { font-family: monospace; }
+
+span.filename { font-family: monospace; }
+span.firstterm { font-style: italic; }
+span.foreignphrase { font-style: italic; }
+span.function { font-family: monospace; }
+
+dt.glossterm span.glossterm { font-style: normal; }
+
+
+span.glossterm { font-style: italic; }
+
+span.guibutton, span.guilabel, span.guimenu, span.guimenuitem, span.guisubmenu, span.interface {
+  font-weight: bold;
+  color: #3f3f3f;
+}
+span.keycap {
+  font-weight: bold;
+  color: #3f3f3f;
+}
+span.lineannotation { font-style: italic; }
+span.literal { font-family: monospace; }
+span.markup  { font-family: monospace; }
+span.medialabel { font-style: italic; }
+span.methodname { font-family: monospace; }
+span.ooclass, span.ooexception, span.oointerface { font-family: monospace; }
+span.option { font-family: monospace; }
+span.parameter { font-family: monospace; }
+span.paramdef span.parameter { font-style: italic; }
+span.prompt { font-family: monospace; }
+span.property { font-family: monospace; }
+span.replaceable  { font-style: italic; }
+span.returnvalue { font-family: monospace; }
+span.sgmltag { font-family: monospace; }
+span.structfield, span.structname { font-family: monospace; }
+span.symbol { font-family: monospace; }
+span.systemitem { font-family: monospace; }
+span.token { font-family: monospace; }
+span.type { font-family: monospace; }
+span.uri { font-family: monospace; }
+span.userinput { font-family: monospace; }
+span.varname { font-family: monospace; }
+span.wordasword { font-style: italic; }
+
+
+
+div.footnotes { font-style: italic; font-size: 0.8em; }
+div.footnote { margin-top: 1.44em; }
+span.footnote-number { display: inline; padding-right: 0.83em; }
+span.footnote-number + p { display: inline; }
+a.footnote { text-decoration: none; font-size: 0.8em; }
+a.footnote-ref { text-decoration: none; }
+
+span.co {
+  margin-left: 0.2em; margin-right: 0.2em;
+  padding-left: 0.4em; padding-right: 0.4em;
+  border: solid 1px #000000;
+  -moz-border-radius: 8px;
+  background-color: #000000;
+  color: #FFFFFF;
+  font-size: 8px;
+}
+span.co:hover {
+  border-color: #333333;
+  background-color: #333333;
+  color: #FFFFFF;
+}
+span.co a { text-decoration: none; }
+span.co a:hover { text-decoration: none; }
+
+div.cmdsynopsis { font-family: monospace; }
+
+dt.question { margin-left: 0em; }
+dt.question div.label { float: left; }
+dd + dt.question { margin-top: 1em; }
+dd.answer {
+  margin-top: 1em;
+  margin-left: 2em;
+  margin-right: 1em;
+}
+dd.answer div.label { float: left; }
+</style>
+</head>
+<body>
+<div class="navbar navbar-top"><table class="navbar"><tr>
+<td class="navbar-prev"><a class="navbar-prev" href="hooking-up-the-ipod.html" title="Hooking up the iPod">Hooking up the iPod</a></td>
+<td class="navbar-next"><a class="navbar-next" href="troubleshooting-faq.html" title="Troubleshooting FAQ">Troubleshooting FAQ</a></td>
+</tr></table></div>
+<div class="sidebar"><div class="sidenav"><div class="autotoc"><ul>
+<li><a href="gtkpod-info.html" title="About This Document">About This Document</a></li>
+<li>
+<a class="xref" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a><div class="autotoc"><ul><li>
+<a class="xref" href="getting-started.html" title="Getting started">Getting started</a><div class="autotoc"><ul>
+<li><a class="xref" href="hooking-up-the-ipod.html" title="Hooking up the iPod">Hooking up the iPod</a></li>
+<li>Setting iPod properties</li>
+<li><a class="xref" href="troubleshooting-faq.html" title="Troubleshooting FAQ">Troubleshooting FAQ</a></li>
+<li><a class="xref" href="the-sysinfo-file.html" title="The Sysinfo File">The Sysinfo File</a></li>
+<li><a class="xref" href="ipod-file-recovery.html" title="iPod file recovery">iPod file recovery</a></li>
+</ul></div>
+</li></ul></div>
+</li>
+</ul></div></div></div>
+<div class="body body-sidebar"><div class="division sect1">
+<a name="setting-ipod-properties"></a><div class="header"><h1 class="sect1 title"><span class="title">Setting iPod properties</span></h1></div>
+<ul class="linktrail">
+<li class="linktrail linktrail-first"><a class="linktrail" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></li>
+<li class="linktrail linktrail-last"><a class="linktrail" href="getting-started.html" title="Getting started">Getting started</a></li>
+</ul>
+<div class="autotoc"><ul>
+<li>
+<span class="label">1.2.1. </span><a class="xref" href="setting-ipod-properties.html#preferences-file" title="Preferences File">Preferences File</a>
+</li>
+<li>
+<span class="label">1.2.2. </span><a class="xref" href="setting-ipod-properties.html#changing-preferences" title="Changing Preferences">Changing Preferences</a>
+</li>
+<li>
+<span class="label">1.2.3. </span><a class="xref" href="setting-ipod-properties.html#duplicate-detection" title="Duplicate Detection">Duplicate Detection</a>
+</li>
+<li>
+<span class="label">1.2.4. </span><a class="xref" href="setting-ipod-properties.html#and-ltfilename-and-gt#extended-information-file-and-lt-slash-filename-and-gtextended-information-file" title="Extended Information File">Extended Information File</a>
+</li>
+<li>
+<span class="label">1.2.5. </span><a class="xref" href="setting-ipod-properties.html#encoding-of-id-three-tags-op-charsets-cp" title="Encoding of ID3 tags (charsets)">Encoding of ID3 tags (charsets)</a>
+</li>
+<li>
+<span class="label">1.2.6. </span><a class="xref" href="setting-ipod-properties.html#extracting-tag-information-from-the-filename" title="Extracting tag information from the filename">Extracting tag information from the filename</a>
+</li>
+<li>
+<span class="label">1.2.7. </span><a class="xref" href="setting-ipod-properties.html#startup-and-shutdown-scripts" title="Startup and Shutdown Scripts">Startup and Shutdown Scripts</a>
+</li>
+</ul></div>
+<div class="division sect2">
+<a name="preferences-file"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="preferences-file-title"></a><span class="label">1.2.1. </span>Preferences File</span></h2></div>
+<p class="para block block-first">On startup gtkpod will read the preferences from ~/.gtkpod/prefs (or /etc/gtkpod/prefs if the former doesn't exist). The file is created if preferences are changed using the Preference window.
+                </p>
+</div>
+<div class="division sect2">
+<a name="changing-preferences"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="changing-preferences-title"></a><span class="label">1.2.2. </span>Changing Preferences</span></h2></div>
+<p class="para block block-first">Preferences can be changed by opending the Preference window. This is displayed by clicking on Edit &gt; Edit Preferences or hitting Ctrl+P.
+                </p>
+</div>
+<div class="division sect2">
+<a name="duplicate-detection"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="duplicate-detection-title"></a><span class="label">1.2.3. </span>Duplicate Detection</span></h2></div>
+<p class="para block block-first">You can instruct gtkpod (in the prefs window) to use file-size-dependent SHA1 checksums to prevent the same file from being copied to your iPod twice.
+                </p>
+<p class="para block">If a duplicate is detected, gtkpod will print out the the filenames of the duplicate files. If the filename of the already existing file is not available (it is not stored in the iTunes database, see "Extended Information File" below), other available information of the track is printed.
+                </p>
+</div>
+<div class="division sect2">
+<a name="and-ltfilename-and-gt#extended-information-file-and-lt-slash-filename-and-gtextended-information-file"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="and-ltfilename-and-gt#extended-information-file-and-lt-slash-filename-and-gtextended-information-file-title"></a><span class="label">1.2.4. </span>Extended Information File</span></h2></div>
+<p class="para block block-first">Some (I believe) essential information is not stored in Apple's iTunes database. You can therefore instruct gtkpod to write an additional file (iTunesDB.ext) with extended information. For each track it stores
+                    <div class="block list itemizedlist"><ul class="itemizedlist">
+<li class="li-first">
+                            <span class="para">SHA1 hash
+                            </span>
+                        </li>
+<li>
+                            <span class="para">filename in the locale's encoding
+                            </span>
+                        </li>
+<li>
+                            <span class="para">filename in UTF8 encoding
+                            </span>
+                        </li>
+<li>
+                            <span class="para">hostname where the file was added (not used for anything yet)
+                            </span>
+                        </li>
+<li>
+                            <span class="para">filename of an associated converted file (for example an .mp3 for a .flac file)
+                            </span>
+                        </li>
+<li>
+                            <span class="para">if the file is present in the local database a reference to there
+                            </span>
+                        </li>
+<li>
+                            <span class="para">in order for playcounts to work on the local database as well
+                            </span>
+                        </li>
+<li>
+                            <span class="para">last modification time
+                            </span>
+                        </li>
+<li>
+                            <span class="para">the charset used for the file when adding it
+                            </span>
+                        </li>
+</ul></div>
+                </p>
+<p class="para block">
+                    Since the extended information file is only valid with the corresponding standard iTunes database, a checksum of the iTunes database is also stored in the extended information file. 
+                </p>
+<p class="para block">Using an extended information file will considerably speed up the import of an existing iTunes database when using duplicate detection,
+                    since the SHA1 checksums do not have to be re-calculated. 
+                </p>
+<p class="para block">Using an extended information file will also allow modification of ID3 tags in the track files after the initial import, because the full
+                    filenames are still available. 
+                </p>
+</div>
+<div class="division sect2">
+<a name="encoding-of-id-three-tags-op-charsets-cp"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="encoding-of-id-three-tags-op-charsets-cp-title"></a><span class="label">1.2.5. </span>Encoding of ID3 tags (charsets)</span></h2></div>
+<p class="para block block-first">If you use correctly written unicode ID3V2 tags you don't have to worry about the charset setting. Otherwise you must specify the charset to be used for representing ID3 tags in the preferences menu. The default is "System Charset", which is the charset associated with the locale gtkpod is running under. If your tags are stored in a different encoding, you should set it appropriately.
+                </p>
+<p class="para block">Please note that if necessary you can change the charset each time you add files or directories: the iTunesDB itself is using UTF16, so once tags are imported correctly, changing the charset has no influence.
+                </p>
+<p class="para block">If you chose "Japanese (automatic detection)", gtkpod will try to determine if the string is in ISO-2022-JP, Shift_JIS, or EUC-JP (Hankaku Katakana (1-byte Katakana) may not be recognized correctly -- specify the correct encoding if you run into this problem). The actual encoding used for the ID tags will be stored and will be used when writing tags or doing updates/syncs. Check the "Use selected charset also when updating or syncing tracks" and "Use selected charset when writing tags" options if you want to specify a particular character set when writing or updating/syncing. The default charset is "EUC-JP" -- it will be used when the charset cannot be autodetected, as well as when writing tags if a specific charset could not be determined before.
+                </p>
+<p class="para block">gtkpod will recognize ID3V2 tags encoded in unicode automatically and ignore your charset setting when necessary.
+                </p>
+</div>
+<div class="division sect2">
+<a name="extracting-tag-information-from-the-filename"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="extracting-tag-information-from-the-filename-title"></a><span class="label">1.2.6. </span>Extracting tag information from the filename</span></h2></div>
+<p class="para block block-first">Tags can also be extracted from the filename if you activate the option 'Use this template to parse filename for tag information' and supply a template that explains how the filenames are constructed.
+                </p>
+<p class="para block">For filenames like
+                    <span class="filename">code</span> 
+                    music/new/latin1/alan_jackson - drive/01 drive_for_daddy_gene.mp3 
+                    <span class="filename">code</span> 
+                    you could use 
+                    <span class="filename">code</span> 
+                    %a - %A/%T %*.mp3 
+                    <span class="filename">code</span> 
+                    to extract artist, album, track number and title. 
+                </p>
+<p class="para block">The following character sequences are supported:
+                    <div class="block list itemizedlist"><ul class="itemizedlist">
+<li class="li-first">
+                            <span class="para">%t: title
+                            </span>
+                        </li>
+<li>
+                            <span class="para">%a: artist
+                            </span>
+                        </li>
+<li>
+                            <span class="para">%A: album
+                            </span>
+                        </li>
+<li>
+                            <span class="para">%c: composer
+                            </span>
+                        </li>
+<li>
+                            <span class="para">%t: title
+                            </span>
+                        </li>
+<li>
+                            <span class="para">%g: genre
+                            </span>
+                        </li>
+<li>
+                            <span class="para">%T: track number
+                            </span>
+                        </li>
+<li>
+                            <span class="para">%C: CD number
+                            </span>
+                        </li>
+<li>
+                            <span class="para">%*: placeholder, ignore data
+                            </span>
+                        </li>
+<li>
+                            <span class="para">%%: the character '%'
+                            </span>
+                        </li>
+</ul></div>
+                </p>
+<p class="para block">
+                    You cannot supply a template like "%a%t.mp3" because gtkpod would not know how to separate artist and title. "%a_%t.mp3" would be correct, if artist and title are separated by an underscore. You can also omit the trailing ".mp3" if you want the template to apply to all files instead of only to mp3 files. 
+                </p>
+</div>
+<div class="division sect2">
+<a name="startup-and-shutdown-scripts"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="startup-and-shutdown-scripts-title"></a><span class="label">1.2.7. </span>Startup and Shutdown Scripts</span></h2></div>
+<p class="para block block-first">During startup and after reading the preferences file, gtkpod will try to execute
+                    <div class=" block programlisting block-indent block-first"><pre class="programlisting">~/.gtkpod/gtkpod.in or /etc/gtkpod/gtkpod.in</pre></div> 
+                    Just before exiting the program, gtkpod will try to execute 
+                    <div class=" block programlisting block-indent"><pre class="programlisting">~/.gtkpod/gtkpod.out or /etc/gtkpod/gtkpod.out</pre></div> 
+                    Thus, extra arguments can be entered into these scripts and gtkpod will run them. An example of this could be uploading data to last.fm. 
+                </p>
+</div>
+</div></div>
+<div class="navbar navbar-bottom"><table class="navbar"><tr>
+<td class="navbar-prev"><a class="navbar-prev" href="hooking-up-the-ipod.html" title="Hooking up the iPod">Hooking up the iPod</a></td>
+<td class="navbar-next"><a class="navbar-next" href="troubleshooting-faq.html" title="Troubleshooting FAQ">Troubleshooting FAQ</a></td>
+</tr></table></div>
+</body>
+</html>

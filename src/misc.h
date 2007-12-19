@@ -105,7 +105,6 @@ gchar *concat_dir_if_relative (G_CONST_RETURN gchar *base_dir,
 			       G_CONST_RETURN gchar *rel_dir);
 float get_ms_since (GTimeVal *old_time, gboolean update);
 gint get_sort_tab_number (gchar *text);
-void open_about_window (void);
 gboolean parse_tracks_from_string (gchar **s, Track **track);
 gboolean parse_artwork_from_string(gchar **s, Artwork **artwork);
 void gtkpod_init (int argc, char *argv[]);

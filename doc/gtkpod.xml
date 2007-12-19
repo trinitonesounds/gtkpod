@@ -1,0 +1,634 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<book id="gtkpod">
+	<bookinfo>
+		<title>The gtkpod Manual</title>
+		<abstract role="description">
+			This is the user manual for gtkpod, a GTK+ iPod manager.
+		</abstract>
+		<subtitle>This is the user manual for gtkpod, a GTK+ iPod manager.</subtitle>
+		<copyright>
+			<year>2007</year>
+			<holder>gtkpod wiki contributors</holder>
+		</copyright>
+		<legalnotice>
+			<title>Legal Notices</title>
+			<para>
+				Permission is granted to copy, distribute and/or modify this
+				document under the terms of the GNU Free Documentation
+				License (GFDL), Version 1.2 or any later version published
+				by the Free Software Foundation with no Invariant Sections,
+				no Front-Cover Texts, and no Back-Cover Texts.  You can find
+				a copy of the GFDL at this <ulink type="help"
+					url="ghelp:fdl">link</ulink> or in the file COPYING-DOCS
+				distributed with this manual.
+			</para>
+		</legalnotice>
+	</bookinfo>
+    <chapter id="getting-started">
+        <title>Getting started</title>
+        <sect1 id="hooking-up-the-ipod">
+            <title>Hooking up the iPod</title>
+            <sect2>
+                <title>Introduction</title>
+                <para>The iPod has largely been an USB device yet there are older models of iPods that used IEEE1394/ / firewire for their connection interface. Historically, it took something of an effort for linux to recognise the iPod model correctly. However, this situation has greatly improved in recent times where it is now possible to simply plug the iPod into a USB port and have your distro recognise it straight off.</para>
+                <para>gtkpod first and foremost relies on the successful mounting of a recognised iPod. Thus, if the iPod cannot be mounted then gtkpod is NOT going to do it for you! Thus, before firing up gtkpod make sure you can see the filesystem of your iPod at its desginated mount point, eg. /mnt/ipod.</para>
+            </sect2>
+            <sect2>
+                <title>Using udev</title><para>For linux distros installed with hal and udev, plugging an ipod in and mounting it becomes a trivial exercise. A device node will normally be created under /dev, eg. /dev/sdc.</para><para>Using udev rules it is possible to "play" and refine this device node to reflect personal requirements. For example, including these udev rules will allow 2 ipods to be loaded at the same time without interfering with one another:</para><programlisting>
+<![CDATA[#80GB IPOD
+SUBSYSTEMS=="usb", ATTRS{serial}=="000A2700XXXXXXXX", KERNEL=="sd?2", \
+NAME="80gbipod", MODE="0664", OPTIONS="last_rule"
+ 
+#4GB IPOD NANO
+SUBSYSTEMS=="usb", ATTRS{serial}=="000A2700YYYYYYYY", KERNEL=="sd?2", \
+NAME="4gbnano", MODE="0664", OPTIONS="last_rule"]]>
+</programlisting>
+                <para>By including the test against the serial number it is possible to uniquely identify an individual iPod and load it appropriately.</para>
+            </sect2>
+            <sect2>
+                <title>Mounting</title>
+                <para>
+                    The result of this is that the ipod will be located on a device node and this can be mounted manually using the command (performed as root):
+                </para>
+                <programlisting>mount /dev/sdc2 /mnt/ipod</programlisting>
+                <para>This assumes an iPod is loaded onto the device /dev/sdc and that it is a 2 partition model. It seems that post-2006, iPods have become 1-partition items.</para>
+                <para>However, it should be noted that moden window managers such as gnome and kde take on the responsibility of managing connected devices. Thus, the result of connecting an iPod will be an icon on the desktop which will either be mounted automatically or can be mounted by the user with a click of the mouse on a popup menu.</para>
+            </sect2>
+            <sect2>
+                <title>Environment variables</title>
+                <para>
+                    The following environment variables can be set if needed:
+                    <itemizedlist>
+                        <listitem>
+                            IPOD_MOUNTPOINT: Defines the mountpoint of the iPod. This overwrites the value stored in the preferences, but is overwritten by the command line argument "-m" or "--mountpoint".
+                        </listitem>
+                        <listitem>
+                            GTKPOD_DF_COMMAND: Only used on systems without statvfs(). Defines the "df" command to be used for probing the free space on the iPod including command line arguments. Default is "df -k -P". On some systems it may be necessary to remove the "-P" option. The mount point is added to this command line automatically. You can switch off calls to df by setting this environment variable to an empty string.
+                        </listitem>
+                    </itemizedlist>
+                </para>
+            </sect2>
+        </sect1>
+        <sect1 id="setting-ipod-properties">
+            <title>Setting iPod properties</title>
+            <sect2 id='preferences-file'>
+                <title id='preferences-file-title'>Preferences File</title>
+                <para>On startup gtkpod will read the preferences from ~/.gtkpod/prefs (or /etc/gtkpod/prefs if the former doesn't exist). The file is created if preferences are changed using the Preference window.
+                </para>
+            </sect2>
+            <sect2 id='changing-preferences'>
+                <title id='changing-preferences-title'>Changing Preferences</title>
+                <para>Preferences can be changed by opending the Preference window. This is displayed by clicking on Edit > Edit Preferences or hitting Ctrl+P.
+                </para>
+            </sect2>
+            <sect2 id='duplicate-detection'>
+                <title id='duplicate-detection-title'>Duplicate Detection</title>
+                <para>You can instruct gtkpod (in the prefs window) to use file-size-dependent SHA1 checksums to prevent the same file from being copied to your iPod twice.
+                </para>
+                <para>If a duplicate is detected, gtkpod will print out the the filenames of the duplicate files. If the filename of the already existing file is not available (it is not stored in the iTunes database, see "Extended Information File" below), other available information of the track is printed.
+                </para>
+            </sect2>
+            <sect2 id='and-ltfilename-and-gt#extended-information-file-and-lt-slash-filename-and-gtextended-information-file'>
+                <title id='and-ltfilename-and-gt#extended-information-file-and-lt-slash-filename-and-gtextended-information-file-title'>Extended Information File</title>
+                <para>Some (I believe) essential information is not stored in Apple's iTunes database. You can therefore instruct gtkpod to write an additional file (iTunesDB.ext) with extended information. For each track it stores
+                    <itemizedlist>
+                        <listitem>
+                            <para>SHA1 hash
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>filename in the locale's encoding
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>filename in UTF8 encoding
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>hostname where the file was added (not used for anything yet)
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>filename of an associated converted file (for example an .mp3 for a .flac file)
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>if the file is present in the local database a reference to there
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>in order for playcounts to work on the local database as well
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>last modification time
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>the charset used for the file when adding it
+                            </para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+                <para>
+                    Since the extended information file is only valid with the corresponding standard iTunes database, a checksum of the iTunes database is also stored in the extended information file. 
+                </para>
+                <para>Using an extended information file will considerably speed up the import of an existing iTunes database when using duplicate detection,
+                    since the SHA1 checksums do not have to be re-calculated. 
+                </para>
+                <para>Using an extended information file will also allow modification of ID3 tags in the track files after the initial import, because the full
+                    filenames are still available. 
+                </para>
+            </sect2>
+            <sect2 id='encoding-of-id-three-tags-op-charsets-cp'>
+                <title id='encoding-of-id-three-tags-op-charsets-cp-title'>Encoding of ID3 tags (charsets)</title>
+                <para>If you use correctly written unicode ID3V2 tags you don't have to worry about the charset setting. Otherwise you must specify the charset to be used for representing ID3 tags in the preferences menu. The default is "System Charset", which is the charset associated with the locale gtkpod is running under. If your tags are stored in a different encoding, you should set it appropriately.
+                </para>
+                <para>Please note that if necessary you can change the charset each time you add files or directories: the iTunesDB itself is using UTF16, so once tags are imported correctly, changing the charset has no influence.
+                </para>
+                <para>If you chose "Japanese (automatic detection)", gtkpod will try to determine if the string is in ISO-2022-JP, Shift_JIS, or EUC-JP (Hankaku Katakana (1-byte Katakana) may not be recognized correctly -- specify the correct encoding if you run into this problem). The actual encoding used for the ID tags will be stored and will be used when writing tags or doing updates/syncs. Check the "Use selected charset also when updating or syncing tracks" and "Use selected charset when writing tags" options if you want to specify a particular character set when writing or updating/syncing. The default charset is "EUC-JP" -- it will be used when the charset cannot be autodetected, as well as when writing tags if a specific charset could not be determined before.
+                </para>
+                <para>gtkpod will recognize ID3V2 tags encoded in unicode automatically and ignore your charset setting when necessary.
+                </para>
+            </sect2>
+            <sect2 id='extracting-tag-information-from-the-filename'>
+                <title id='extracting-tag-information-from-the-filename-title'>Extracting tag information from the filename</title>
+                <para>Tags can also be extracted from the filename if you activate the option 'Use this template to parse filename for tag information' and supply a template that explains how the filenames are constructed.
+                </para>
+                <para>For filenames like
+                    <filename>code</filename> 
+                    music/new/latin1/alan_jackson - drive/01 drive_for_daddy_gene.mp3 
+                    <filename>code</filename> 
+                    you could use 
+                    <filename>code</filename> 
+                    %a - %A/%T %*.mp3 
+                    <filename>code</filename> 
+                    to extract artist, album, track number and title. 
+                </para>
+                <para>The following character sequences are supported:
+                    <itemizedlist>
+                        <listitem>
+                            <para>%t: title
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>%a: artist
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>%A: album
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>%c: composer
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>%t: title
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>%g: genre
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>%T: track number
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>%C: CD number
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>%*: placeholder, ignore data
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>%%: the character '%'
+                            </para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+                <para>
+                    You cannot supply a template like "%a%t.mp3" because gtkpod would not know how to separate artist and title. "%a_%t.mp3" would be correct, if artist and title are separated by an underscore. You can also omit the trailing ".mp3" if you want the template to apply to all files instead of only to mp3 files. 
+                </para>
+            </sect2>
+            <sect2 id='startup-and-shutdown-scripts'>
+                <title id='startup-and-shutdown-scripts-title'>Startup and Shutdown Scripts</title>
+                <para>During startup and after reading the preferences file, gtkpod will try to execute
+                    <programlisting>~/.gtkpod/gtkpod.in or /etc/gtkpod/gtkpod.in</programlisting> 
+                    Just before exiting the program, gtkpod will try to execute 
+                    <programlisting>~/.gtkpod/gtkpod.out or /etc/gtkpod/gtkpod.out</programlisting> 
+                    Thus, extra arguments can be entered into these scripts and gtkpod will run them. An example of this could be uploading data to last.fm. 
+                </para>
+            </sect2>
+        </sect1>
+        <sect1 id="troubleshooting-faq">
+            <title>Troubleshooting FAQ</title>
+            <sect2 id='contents:'>
+                <title id='contents:-title'>Contents:</title>
+                <itemizedlist>
+                    <listitem>
+                        <para>My iPhone or iTouch doesnt have a USB connection. How can I mount it on my linux box?
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>My iPod is an iPhone, iTouch, Classic or nano3g. My tunes show up in gtkpod but I see nothing on the iPod when I eject?
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>Installed libmp4v2 or libgpod from source to /usr/local/lib, but gtkpod is unable to locate libmp4.so.0 or libgpod.so.0
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>Files copied to gtkpod but they don't appear in the database (0.80, Tony Williams)
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>Filenames on the iPod appear in DOS 8.3 format and syncing to the iPod is not working as expected.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>./autogen.sh does not work
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>The following error message is displayed when accessing the device (Markus Gaugusch, Justin Thiessen):
+                        </para>
+                        <programlisting><![CDATA[** ieee1394: sbp2: aborting sbp2 command
+** Test Unit Ready 00 00 00 00 00]]>
+                        </programlisting>
+                    </listitem>
+                    <listitem>
+                        <para>The following error message is displayed when accessing the device (Ingo Reimann)
+                        </para>
+                        <programlisting><![CDATA[** usb-storage: Attempting to get CSW...
+** usb-storage: usb_stor_bulk_transfer_buf: xfer 13 bytes
+** usb-storage: Status code -75; transferred 0/13
+]]>
+                        </programlisting>
+                    </listitem>
+                    <listitem>
+                        <para>When connecting an iPod via USB to a 2.6 kernel machine the iPod will be recognized but not work correctly. In /var/log/messages you'll see the a bunch of "Buffer I/O error on device sd?" when connecting the iPod (Jonas Bergler, Kevin Venkiteswaran)
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>SHUFFLE won't play music after reformatting (Mark Davis)
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>Calendar entries mixed up
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>m4a files created by faac cannot be added by gtkpod (gentoo)
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>gtkpod crashes when reading the iTunesDB (Fedora)
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>Problems connecting the iPod to Solaris/SPARC
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                
+                <para>My iPhone or iTouch doesnt have a USB connection. How can I mount it on my linux box?
+                </para>
+                <para>Solution:
+                </para>
+                <para>The iPhone or iTouch, at present has to be mounted using sshfs.
+                </para>
+                
+                <para>My iPod is an iPhone, iTouch, Classic or Nano3g. My tunes show up in gtkpod but I see nothing on the iPod when I eject?
+                </para>
+                <para>Solution:
+                </para>
+                <para>This is to do with requiring your iPod model number in a sysinfo file located on the iPod. Please see here for details.
+                </para>
+                
+                <para>Installed libmp4v2 or libgpod from source to /usr/local/lib, but gtkpod is unable to locate libmp4.so.0 or libgpod.so.0?
+                </para>
+                <para>Solution:
+                </para>
+                <para>If you install to /usr/local/lib please don't forget to add the path to LD_LIBRARY_PATH:
+                </para>
+                <programlisting><![CDATA[LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+export LD_LIBRARY_PATH]]>
+                </programlisting>
+                <para>You can add those lines to your ~/.bashrc or add it globally to
+                    /etc/profile. 
+                </para>
+                
+                <para>Files copied to gtkpod but they don't appear in the database (0.80, Tony Williams)?
+                </para>
+                <para>I'm having a problem that I wonder if you've seen. I've setup gtkpod. launch it and add files. I can hear the ipod harddrive spin up. If I go onto the ipod directly I can see the space being used and can even see the new files on the ipod. However the ipod interface doesn't show the new files and gtkpod keeps telling me that there are orphaned files.
+                </para>
+                <para>Solution:
+                </para>
+                <para>I finally figured out the problem. In my fstab I had the filesystem set to 'auto' and it was mounting as msdos instead of vfat. I specified vfat in fstab and voila! I'm a happy happy man.
+                </para>
+                
+                <para>Filenames on the iPod appear in DOS 8.3 format and syncing to the iPod is not working as expected?
+                </para>
+                <para>Solution:
+                    You need to specify "vfat" as file system type. How to do that depends on which way you use to mount the iPod -- see the README file for more details. 
+                </para>
+                
+                <para>./autogen.sh does not work?
+                </para>
+                <para>Solution:
+                </para>
+                <para>A ubuntu user has reported that he had to set
+                </para>
+                <programlisting>ACLOCAL_FLAGS=" -I /usr/share/aclocal/"
+                </programlisting>
+                <para>in order to get ./autogen.sh to work.
+                </para>
+                
+                <para>The following error message is displayed when accessing the device:
+                </para>
+                <programlisting><![CDATA[ieee1394: sbp2: aborting sbp2 command
+Test Unit Ready 00 00 00 00 00 ]]>
+                </programlisting>
+                <para>Solution:
+                </para>
+                <para>(Markus Gaugusch):
+                    It is possible that hotplug and the "sg" support are not working well together. Try disabling "sg" support in the kernel configuration or 
+                    unload the "sg" module if you are using modules. 
+                </para>
+                <para>(Justin Thiessen):
+                    Forcing the sbp2 module to serialized I/O seems (so far) to have solved the problem. 
+                </para>
+                <para>Ref.:
+                    <itemizedlist>
+                        <listitem>
+                            http://www.netzwerk-aktiv.com/pub/doc/newsletters/linux1394-user/html/1676.html 
+                        </listitem>
+                        <listitem>
+                            http://www.ubuntuforums.org/printthread.php?t=6678 
+                        </listitem>
+                        <listitem>
+                            http://66.102.7.104/search?q=cache:Xh_gu43y6w8J:themikecam.com/newmikecam/blog/index.php/geek/2005/+ipod+serialize_io&amp;hl=en 
+                        </listitem>
+                    </itemizedlist>
+                </para>
+                <para>Looks like the driver is going to be set to default to serialized I/O in kernel 2.6.14, anyways.
+                </para>
+                <para>http://linuxtoday.com/developer/2005093001026NWKNDV
+                </para>
+                
+                <para>The following error message is displayed when accessing the device
+                </para>
+                <programlisting>
+<![CDATA[usb-storage: Attempting to get CSW...
+usb-storage: usb_stor_bulk_transfer_buf: xfer 13 bytes 
+usb-storage: Status code -75; transferred 0/13 ]]>
+                </programlisting>
+                <para>Solution (by Ingo Reimann):
+                </para>
+                <para>I tried to use an iPod Mini with my nforce2-Board, kernel 2.6.14/2.6.15 debian sid and got messages like [above] in dmesg. /dev/sda appeared, but fdisk -l did not show anything
+                </para>
+                <para>The solution, that i found in a discussion on http://kerneltrap.org/node/3844 was to unload ehci_hcd.
+                </para>
+                
+                <para>When connecting an iPod via USB to a 2.6 kernel machine the iPod wil be recognized but not work correctly. In /var/log/messages you'll see the a bunch of "Buffer I/O error on device sd?" when connecting the iPod (Jonas Bergler, Kevin Venkiteswaran)
+                </para>
+                <para>Solution (by "jeffmock"):
+                </para>
+                <para>Disable CONFIG_EFI_PARTITION (File Systems -> Partition Types -> Advanced Partition Selection -> EFI GUID Partition support) in your kernel configuration, recompile.
+                    Details can be found at http://www.linuxquestions.org/questions/showthread.php?postid=1197015#post1197015 
+                </para>
+                <para>Excerpt:
+                </para>
+                <para>"This problem could potentially happen with both 2.4 and 2.6 kernels."
+                </para>
+                <para>A longer story follows and perhaps someone can come up with a more sensible solution for the long run.
+                </para>
+                <para>The iPod looks like a removable disk drive to the host computer. When it is attached to the computer, the mini iPod reports a capacity of 7999488 512-byte sectors (or about 4GB). This turns out to be wrong for whatever reason. The mini iPod only really has 7999376 sectors and it exaggerates by 112 sectors. The other quality of the iPod is that if the computer attempts to read a sector greater than the actual capacity but less than the reported capacity, the iPod will dutifully report an I/O error, but it won't respond to any future requests until you unplug/plug the iPod."
+                </para>
+                <para>I followed the kernel recompile instructions for distro, disabled only the CONFIG_EFI_PARTITION option, and things ran perfectly for me afterwards. As indicated above, hopefully a better long-term solution will emerge soon."
+                </para>
+                <para>(Jorg Schuler: it seems a patch was introduced in kernel version 2.6.10: "&lt;phil@ipom.com&gt; [PATCH] USB Storage: Add unusual_devs entry for iPod This patch adds an unusual_devs.h entry for the Apple iPod as it reports one too many sectors. The patch was submitted by Avi Kivity &lt;avi@argo.co.il&gt; and re-diffed by me.")
+                </para>
+                
+                <para>SHUFFLE won't play music after reformatting
+                </para>
+                <para>Solution (by Mark Davis):
+                </para>
+                <para>The SHUFFLE seems to care about the volume name which has to be "IPOD". Try to format as (replace /dev/sda1 with the appropriate device file for your SHUFFLE!):
+                </para>
+                <programlisting>mkdosfs -F32 -n IPOD /dev/sda1
+                </programlisting>
+                
+                <para>Calendar entries mixed up?
+                </para>
+                <para>Solution:
+                </para>
+                <para>The iPod does not appear to like times specified in UTC (indicated by a trailing 'Z'). KOrganizer seems to do this. If you know how to work around it let me know.
+                </para>
+                
+                <para>m4a files created by faac cannot be added by gtkpod (gentoo)?
+                </para>
+                <para>Solution:
+                </para>
+                <para>There appear to be some versions of faac that do not create 'good' m4a files. The problem could be solved under gentoo by using version 1.24.
+                    In order to make error tracking easier, more detailled error messages are displayed when tracks could not be added for any reason starting with version 0.91-CVS of gtkpod. 
+                </para>
+                
+                <para>gtkpod crashes when reading the iTunesDB (Fedora)
+                </para>
+                <para>Solution:
+                </para>
+                <para>It appears that crashes were observed with kernel version 2.6.11-1.35_FC3. An upgrade to 2.6.12-1.1376_FC3 got rid of the problem. This was with gtkpod-0.94.0 and Athlon64 3000+.
+                </para>
+                <para>After updating the firmware of a 1st-gen iPod nano**, crashes are also observed with Fedora Core 5, kernel 2.6.20-1.2320.fc5, gtkpod 0.99.4 (which worked with the previous firmware). Downloading, building, and installing gtkpod 0.99.10 and libgpod 0.6.0 solved the problem.
+                </para>
+                
+                <para>Problems connecting the iPod to Solaris/SPARC
+                </para>
+                <para>Solution:
+                </para>
+                <para>Current (as of 2006/03/30) versions of the Solaris pcfs SPARC driver have a bug where the correct filesystem/partition layout may not be
+                    recognized, and this is true for iPods. This prevents the iPod partition from being mounted on Solaris SPARC. In order to work 
+                    around this, one must prevent pcfs from detecting the first FAT32 filesystem, forcing it to move on to the second one. This can be done 
+                    by changing the filesystem identifier like so: 
+                </para>
+                <programlisting>
+<![CDATA[# dd if=/dev/rdsk/c3t0d0s2 of=/tmp/ipod.orig count=1
+# cp /tmp/ipod.orig /tmp/ipod.modified <edit /tmp/ipod.modified and change the first occurance of "FAT32" (at offset 0x52 for me) to something else like "CAT32">
+# dd if=/tmp/ipod.modified of=/dev/rdsk/c3t0d0s2 count=1]]>
+                </programlisting>
+            </sect2>
+        </sect1>
+        <sect1 id="the-sysinfo-file">
+            <title>The Sysinfo File</title>
+            <para>Starting with the 2007 generation of iPods, libgpod needs an additional configuration step to correctly modify the iPod content. libgpod
+                needs to know the so-called iPod "firewire id", otherwise the iPod won't recognize what libgpod wrote to it and will behave as if it's empty. 
+            </para>
+            
+            <sect2 id='the-iphone-and-itouch'>
+                <title id='the-iphone-and-itouch-title'>The iPhone and iTouch</title>
+                <sect3 id='global-assumptions-and-scope-of-this-tutorial'>
+                    <title id='global-assumptions-and-scope-of-this-tutorial-title'>Global Assumptions and Scope of this Tutorial</title>
+                    <para>touch_ip -- denotes the IP address that is assigned to your iPod Touch
+                        (e.g. 192.168.0.27). 
+                    </para>
+                    <para>touch_mnt -- denotes the mount point to your iPod Touch (i.e. the
+                        directory the iPod is mounted on). 
+                    </para>
+                    <para>To make effective use of the following you have to jailbreak your iPod Touch first (in order to access it via SSH). This document won't go into detail on this topic. One possibility to do this using a computer that runs Microsoft Windows (XP) can be found at:
+                    </para>
+                    <para>http://iphone.cricblogs.com/one-click-ipod-touch-jailbreak-for-windows-by-msbasher/
+                    </para>
+                </sect3>
+                <sect3 id='compiling-libgpod-and-gtkpod-op-subversion-versions-cp'>
+                    <title id='compiling-libgpod-and-gtkpod-op-subversion-versions-cp-title'>Compiling libgpod &amp; gtkpod (subversion versions)</title>
+                    <para>
+                        Install and compile libgpod and gtkpod from subversion. See <filename>Compiling and Installing|here</filename> for details.
+                    </para>
+                    <para>Configure libgpod. The '--prefix' option will make sure that is not installed globally but locally within your home directory (note: replace '~' by the absolute path to your home directory):
+                    </para>
+                    <programlisting>~/libgpod$ ./autogen.sh --prefix=~/local
+                    </programlisting>
+                    <para>Otherwise make sure all dependencies are met ('gtk-doc' is a candidate likely to be missing, proper version of automake is another).
+                    </para>
+                    <para>Repeat this process for gtkpod ('PKG_CONFIG_PATH' make sure it builds on the freshly compiled version of libgpod; again, replace '~' by absolute path to your home directory):
+                    </para>
+                    <programlisting>~/gtkpod$ PKG_CONFIG_PATH=~/local/lib/pkgconfig ./autogen.sh --prefix=~/local
+                    </programlisting>
+                    <programlisting>~/gtkpod$ make &amp;&amp; make install
+                    </programlisting>
+                    <para>Assuming that everything went well you should be able to start gtkpod:
+                    </para>
+                    <programlisting>~$ LD_LIBRARY_PATH=~/local/lib ~/local/bin/gtkpod
+                    </programlisting>
+                    <para>You won't be able to fully use it at this point so close it for now.
+                    </para>
+                </sect3>
+                <sect3 id='determining-the-firewire-guid'>
+                    <title id='determining-the-firewire-guid-title'>Determining the Firewire GUID</title>
+                    <para>Connect your iPod Touch via USB (to your Linux machine) and issue the command:
+                    </para>
+                    <programlisting>sudo lsusb -v | grep -i iSerial
+                    </programlisting>
+                    <para>This should print something similar to this:
+                    </para>
+                    <programlisting><![CDATA[iSerial 3 fd98145617c113dc15ab151601001ff12354b139
+[ ... ] ]]>
+                    </programlisting>
+                    <para>The first 16 characters constitute the FirewireGUID, i.e. in this example the FwGUID is:
+                    </para>
+                    <programlisting>fd98 1456 17c1 13dc
+                    </programlisting>
+                </sect3>
+                <sect3 id='making-libgpod-aware-of-the-firewire-guid'>
+                    <title id='making-libgpod-aware-of-the-firewire-guid-title'>Making libgpod Aware of the Firewire GUID</title>
+                    <para>Mount your iPod Touch via:
+                    </para>
+                    <programlisting>sudo sshfs root@touch_ip:Media touch_mnt/ -o allow_other
+                    </programlisting>
+                    <para>Go to the directory 'iTunes_Control' and create (if it does not already exist) a directory named 'Device':
+                    </para>
+                    <programlisting><![CDATA[~/touch_mnt/iTunesControl$ mkdir Device; cd Device
+~/touch_mnt/iTunesControl/Device$ echo "FirewireGuid: 0xfd98145617c113dc" > SysInfo ]]>
+                    </programlisting>
+                    <para>Test if libgpod is able to retrieve the FWGUID by changing into the 'tests' subdirectory of libgpod's source directory and runnning:
+                    </para>
+                    <programlisting>./test-firewire-id touch_mnt/
+                    </programlisting>
+                </sect3>
+                <sect3 id='gtkpod-revisited'>
+                    <title id='gtkpod-revisited-title'>gtkpod Revisited</title>
+                    <para>With your iPod Touch still mounted start up gtkpod once more:
+                    </para>
+                    <programlisting>~$ LD_LIBRARY_PATH=~/local/lib ~/local/bin/gtkpod
+                    </programlisting>
+                    <para>You should now be able to sync songs to your iPod Touch. After syncing is complete go into "Music" on your iPod Touch: The songs you have just synced won't show up at this point. To make them appear press and hold the "Home"-Button until the springboard is reloaded. Going to "Music" now will show your music.
+                    </para>
+                    <para>Don't forget to unmount it after you're completely done.
+                    </para>
+                    <para>Tutorial compiled by staciemonroe (tobias kreisel gmail com)
+                    </para>
+                    
+                </sect3>
+            </sect2>
+            <sect2 id='the-classic-and-nano-three-g'>
+                <title id='the-classic-and-nano-three-g-title'>The Classic and Nano3g</title>
+                <para>There are two ways to set up the iPod to make libgpod able to find its firewire id.
+                </para>
+                <para>The 1st one is mostly automated. First, make sure you have libsgutils installed before running configure/autogen.sh. If you built libgpod without it, install it and run configure/make/make install. You should now have an ipod-read-sysinfo-extended tool available. Run it with the iPod device path (eg /dev/sda) and the iPod mount point (eg /mnt/ipod) as arguments. This may require root privileges. ipod-read-sysinfo-extended will read an XMLfile from the iPod and write it as /mnt/ipod/iPod_Control/Device/SysInfoExtended. See http://ipodlinux.org/Device_Information for more details about the method used.
+                </para>
+                <para>Having that file is enough for libgpod to figure out the iPod firewire id.
+                </para>
+                <para>The 2nd method requires more manual intervention. First, you need to get your firewire id manually. To do that, run "sudo lsusb -v | grep -i Serial" (without the "") with your iPod plugged in, this should print a 16 character long string like 00A1234567891231. For an iPod Touch, this number will be much longer than 16 characters, the firewire ID is constituted by the first 16 characters. Once you have that number, create/edit /mnt/ipod/iPod_Control/Device/SysInfo (if your iPod is mounted at /mnt/ipod). Add to that file the line below:
+                </para>
+                <programlisting>FirewireGuid: 0xffffffffffffffff
+                </programlisting>
+                <para>(replace ffffffffffffffff with the string you obtained at the previous step and don't forget the trailing 0x before the string)
+                </para>
+                <para>Save that file, and you should be all set. Be careful when using apps which lets you manually specify which iPod model you own, they may overwrite that file when you do that. So if after doing that libgpod still seems to write invalid content to the iPod, double-check the content of that SysInfo file to make sure the FirewireGuid line you added isn't gone. If that happens, read it to the end of the file, and make sure libgpod rewrite the iPod content.
+                </para>
+                <para>Once that is done, if you compiled libgpod from source, you can test that libgpod can find the firewire ID on your iPod by running
+                </para>
+                <programlisting>libgpod/tests/test-firewire-id /ipod/mount/point
+                </programlisting>
+            </sect2>
+        </sect1>
+        <sect1 id="ipod-file-recovery">
+            <title>iPod file recovery</title>
+            <sect2 id='checking-ipod-and-#-three-nine-s-files'>
+                <title id='checking-ipod-and-#-three-nine-s-files-title'>Checking iPod's Files</title>
+                <para>For whatever reason -- it may happen that tracks are present in your iTunesDB that are no longer present on the iPod (dangling tracks), or
+                    that tracks are on the iPod but not in the iTunesDB (orphaned tracks). The function "Checking iPod's Files" under the "File" menu will identify both types and take the following actions: 
+                </para>
+                <sect3 id='orphaned-tracks'>
+                    <title id='orphaned-tracks-title'>Orphaned tracks</title>
+                    <para>A new playlist "[Orphaned]" will be created with all orphaned tracks in it. The only exception are orphaned tracks that would become duplicates (if duplicate detection is activated). Those are marked for deletion with the next sync.
+                    </para>
+                </sect3>
+                <sect3 id='dangling-tracks'>
+                    <title id='dangling-tracks-title'>Dangling tracks</title>
+                    <para>These tracks will be marked for deletion with the next sync unless the original PC file is still available. In that case you can have them restored with the next sync.
+                    </para>
+                </sect3>
+            </sect2>
+            <sect2 id='restoring-yourthe-ipod-after-file-system-error-eq-eq-after-a-file-system-error'>
+                <title id='restoring-yourthe-ipod-after-file-system-error-eq-eq-after-a-file-system-error-title'>After a File System Error</title>
+                <para>If iPod's file system gets corrupted and you need to reformat your iPod, there is a way to restore the contents semi-automatically if you have been using the "write extended information file" (iTunesDB.ext) options:
+                    <itemizedlist>
+                        <listitem>
+                            <para>If the directory structure on the iPod doesn't exist yet, load the iPod in gtkpod and have it created for you. Then unload the iPod again.
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>Copy your backup files in .gtkpod/ (usually iTunesDB and iTunesDB.ext) to your iPod (usually &lt;mountpoint&gt;/iPod_Control/iTunes/
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>On the iPod the files must be named iTunesDB and iTunesDB.ext.
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>Load the iPod in gtkpod.
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>Select the iPod repository and start "Check iPod's files" from the File menu.
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>Unload the iPod (or save changes).
+                            </para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+                <para>
+                    This should restore your iPod to what it was before, provided you didn't move or remove any of the original tracks on your harddrive, and the charset information was stored correctly. 
+                </para>
+            </sect2>
+        </sect1>
+    </chapter>
+</book>

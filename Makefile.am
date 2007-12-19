@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = src po scripts data
+SUBDIRS = src po scripts data  doc
 
 EXTRA_DIST =			\
 	autogen.sh		\
@@ -19,3 +19,6 @@ uninstall-hook:
 	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)/data
 	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)/scripts
 	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)
+
+update-docs:
+	cd doc && make update-docs

@@ -1,0 +1,609 @@
+<html xmlns:set="http://exslt.org/sets">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>The Sysinfo File</title>
+<link rel="previous" href="troubleshooting-faq.html" title="Troubleshooting FAQ">
+<link rel="next" href="ipod-file-recovery.html" title="iPod file recovery">
+<link rel="top" href="gtkpod.html" title="The gtkpod Manual">
+<style type="text/css">
+
+html { height: 100%; }
+body {
+  margin: 0px; padding: 12px;
+  background-color: #f9f9f6;
+  min-height: 100%;
+  direction: ltr;
+}
+div, p, pre, blockquote { margin: 0; padding: 0; }
+p img { vertical-align: middle; }
+sub { font-size: 0.83em; }
+sub sub { font-size: 1em; }
+sup { font-size: 0.83em; }
+sup sup { font-size: 1em; }
+table { border-collapse: collapse; }
+table.table-pgwide { width: 100%; }
+td { vertical-align: top; }
+td { padding: 0.2em 0.83em 0.2em 0.83em; }
+th { padding: 0 0.83em 0 0.83em; }
+tr.tr-shade {
+  background-color: #f9f9f6;
+}
+td.td-colsep { border-right: solid 1px; }
+td.td-rowsep { border-bottom: solid 1px; }
+thead { border-top: solid 2px; border-bottom: solid 2px; }
+tfoot { border-top: solid 2px; border-bottom: solid 2px; }
+div.body {
+  padding: 1em;
+  max-width: 60em;
+  background-color: #ffffff;
+  border: solid 1px #e0e0df;
+}
+div.body-sidebar {
+  
+  margin-right: 13em;
+}
+div.division div.division { margin-top: 1.72em; }
+div.division div.division div.division { margin-top: 1.44em; }
+div.header {
+  margin: 0;
+  color: #3f3f3f;
+  border-bottom: solid 1px #e0e0df;
+}
+h1, h2, h3, h4, h5, h6, h7 {
+  margin: 0; padding: 0;
+  color: #3f3f3f;
+}
+h1.title { font-size: 1.72em; }
+h2.title { font-size: 1.44em; }
+h3.title { font-size: 1.2em; }
+h4.title, h5.title, h6.title, h7.title { font-size: 1em; }
+.block { margin-top: 1em; }
+.block .block-first { margin-top: 0; }
+.block-indent {
+  
+  margin-left: 1.72em;
+  
+  margin-right: 1em;
+}
+.block-indent .block-indent { margin-left: 0em; margin-right: 0em; }
+td .block-indent  { margin-left: 0em; margin-right: 0em; }
+dd .block-indent  { margin-left: 0em; margin-right: 0em; }
+.block-verbatim { white-space: pre; }
+div.title {
+  margin-bottom: 0.2em;
+  font-weight: bold;
+  color: #3f3f3f;
+}
+div.title-formal { padding-left: 0.2em; padding-right: 0.2em; }
+div.title-formal .label { font-weight: normal; }
+a {
+  color: #1f609f;
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+a:visited { color: #9f1f6f; }
+ul, ol, dl { margin: 0; padding: 0; }
+li {
+  margin-top: 1em;
+  
+  margin-left: 2.4em;
+  
+  padding: 0;
+}
+li.li-first { margin-top: 0; }
+dt { margin: 1em 0 0 0; }
+dt.dt-first { margin: 0; }
+dd {
+  
+  margin-left: 1.72em;
+  margin-top: 0.5em;
+}
+dl.dl-compact dt { margin-top: 0; }
+dl.dl-compact dd { margin-top: 0; margin-bottom: 0; }
+
+
+ul.linktrail {
+  display: block;
+  margin: 0.2em 0 0 0;
+  
+  text-align: right;
+}
+li.linktrail { display: inline; margin: 0; padding: 0; }
+
+li.linktrail::before {
+  content: '  /  ';
+  color: #3f3f3f;
+}
+
+li.linktrail-first::before, li.linktrail-only::before { content: ''; }
+
+
+div.navbar {
+  padding: 0.5em 1em 0.5em 1em;
+  max-width: 60em;
+  background-color: #ffffff;
+  border: solid 1px #e0e0df;
+}
+div.navbar-top { margin-bottom: 1em; }
+div.navbar-bottom { margin-top: 1em; clear: both; }
+div.navbar img { border: 0; vertical-align: -0.4em; }
+table.navbar { width: 100%; margin: 0; border: none; }
+table.navbar td { padding: 0; border: none; }
+td.navbar-next {
+  
+  text-align: right;
+}
+a.navbar-prev::before {
+  
+  content: '◀  ';
+  color: #3f3f3f;
+}
+a.navbar-next::after {
+  
+  content: '  ▶';
+  color: #3f3f3f;
+}
+
+
+div.sidebar {
+  
+  float: right;
+  padding: 0; margin: 0; width: 12em;
+}
+div.sidenav {
+  padding: 0.5em 1em 0 1em;
+  background-color: #ffffff;
+  border: solid 1px #e0e0df;
+}
+div.sidenav div.autotoc {
+  background-color: #ffffff;
+  border: none; padding: 0; margin: 0;
+}
+div.sidenav div.autotoc div.autotoc { margin-top: 0.5em; }
+div.sidenav div.autotoc li { margin-bottom: 0.5em; }
+div.sidenav div.autotoc div.autotoc div.autotoc {
+  
+  margin-left: 1em;
+  margin-top: 0;
+}
+div.sidenav div.autotoc div.autotoc div.autotoc li { margin-bottom: 0; }
+
+
+div.autotoc {
+  
+  display: table;
+  margin-top: 1em;
+  
+  margin-left: 1.72em;
+  padding: 0.5em 1em 0.5em 1em;
+  background-color: #f0f9ff;
+  border: solid 1px #c0c9ff;
+}
+div.autotoc ul { margin: 0; padding: 0; }
+div.autotoc li { list-style-type: none; margin: 0; }
+div.autotoc div.autotoc-title { margin-bottom: 0.5em; }
+div.autotoc div.autotoc { border: none; padding: 0; margin-top: 0; margin-bottom: 0.5em; }
+div.autotoc div.autotoc div.autotoc { margin-bottom: 0; }
+
+
+span.bibliolabel {
+  color: #3f3f3f;
+}
+
+
+div.admonition {
+  padding: 0.5em 1em 0.5em 1em;
+  
+  padding-left: 60px;
+  min-height: 48px;
+  border: solid 1px #e0e0df;
+  background-color: #fffff0;
+  
+  background-position: 6px 0.5em;
+  background-repeat: no-repeat;
+}
+div.caution {
+  background-image: url("admon-caution.png");
+}
+div.important {
+  background-image: url("admon-important.png");
+}
+div.note {
+  background-image: url("admon-note.png");
+}
+div.note-bug {
+  background-image: url("admon-bug.png");
+}
+div.tip {
+  background-image: url("admon-tip.png");
+}
+div.warning {
+  background-image: url("admon-warning.png");
+}
+div.blockquote {
+  
+  background-image: url('../../../data/icons/yelp-watermark-blockquote-201C.png');
+  background-repeat: no-repeat;
+  
+  background-position: top left;
+  padding: 0.5em;
+  
+  padding-left: 4em;
+}
+div.attribution {
+  margin-top: 0.5em;
+  color: #3f3f3f;
+}
+div.attribution::before {
+  
+  content: '― ';
+}
+div.epigraph {
+  
+  text-align: right;
+  
+  margin-left: 20%;
+  
+  margin-right: 0;
+  color: #3f3f3f;
+}
+div.figure, div.informalfigure {
+  
+  display: table;
+  padding: 0.5em;
+  background-color: #f9f9f6;
+  border: solid 1px #e0e0df;
+}
+div.figure-inner, div.informalfigure-inner {
+  padding: 0.5em;
+  background-color: #ffffff;
+  border: solid 1px #e0e0df;
+}
+div.caption { margin-top: 0.5em; }
+div.programlisting {
+  padding: 0.5em;
+  
+  background-color: #f9f9f6;
+  border: solid 1px #e0e0df;
+}
+div.screen {
+  padding: 0.5em;
+  
+  background-color: #f9f9f6;
+  border: solid 1px #e0e0df;
+}
+div.screen .prompt {
+  color: #3f3f3f;
+}
+div.screen .userinput {
+  font-weight: bold;
+  color: #3f3f3f;
+}
+pre.linenumbering {
+  color: #3f3f3f;
+  margin: 0;
+  
+  padding-right: 1em;
+  
+  float: left;
+  
+  text-align: right;
+}
+
+
+
+dl.index dt { margin-top: 0; }
+dl.index dd { margin-top: 0; margin-bottom: 0; }
+dl.indexdiv dt { margin-top: 0; }
+dl.indexdiv dd { margin-top: 0; margin-bottom: 0; }
+dl.setindex dt { margin-top: 0; }
+dl.setindex dd { margin-top: 0; margin-bottom: 0; }
+div.list div.title-formal span.title {
+  border-bottom: solid 1px #e0e0df;
+}
+div.simplelist {
+  
+  margin-left: 1.72em;
+}
+div.simplelist table { margin-left: 0; border: none; }
+div.simplelist td {
+  padding: 0.5em;
+  border-left: solid 1px #e0e0df;
+}
+div.simplelist td.td-first {
+  
+  padding-left: 0;
+  
+  border-left: 0;
+}
+div.synopsis {
+  padding: 0.5em;
+  
+  background-color: #f9f9f6;
+  border-top: solid 2px #c0c9ff;
+  border-bottom: solid 2px #c0c9ff;
+}
+div.synopsis div.synopsis {
+  padding: 0;
+  border: none;
+}
+div.synopsis div.block { margin-top: 0.2em; }
+div.synopsis div.block-first { margin-top: 0; }
+
+
+span.accel { text-decoration: underline; }
+span.acronym { font-family: sans-serif; }
+span.application { font-style: italic; }
+span.classname, span.exceptionname, span.interfacename { font-family: monospace; }
+span.code {
+  font-family: monospace;
+  border: solid 1px #e0e0df;
+  
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+pre span.code { border: none; padding: 0; }
+span.command {
+  font-family: monospace;
+  border: solid 1px #e0e0df;
+  
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+pre span.command { border: none; padding: 0; }
+span.computeroutput { font-family: monospace; }
+
+span.constant { font-family: monospace; }
+span.database { font-family: monospace; }
+span.email { font-family: monospace; }
+span.emphasis { font-style: italic; }
+span.emphasis-bold { font-style: normal; font-weight: bold; }
+span.envar { font-family: monospace; }
+
+span.filename { font-family: monospace; }
+span.firstterm { font-style: italic; }
+span.foreignphrase { font-style: italic; }
+span.function { font-family: monospace; }
+
+dt.glossterm span.glossterm { font-style: normal; }
+
+
+span.glossterm { font-style: italic; }
+
+span.guibutton, span.guilabel, span.guimenu, span.guimenuitem, span.guisubmenu, span.interface {
+  font-weight: bold;
+  color: #3f3f3f;
+}
+span.keycap {
+  font-weight: bold;
+  color: #3f3f3f;
+}
+span.lineannotation { font-style: italic; }
+span.literal { font-family: monospace; }
+span.markup  { font-family: monospace; }
+span.medialabel { font-style: italic; }
+span.methodname { font-family: monospace; }
+span.ooclass, span.ooexception, span.oointerface { font-family: monospace; }
+span.option { font-family: monospace; }
+span.parameter { font-family: monospace; }
+span.paramdef span.parameter { font-style: italic; }
+span.prompt { font-family: monospace; }
+span.property { font-family: monospace; }
+span.replaceable  { font-style: italic; }
+span.returnvalue { font-family: monospace; }
+span.sgmltag { font-family: monospace; }
+span.structfield, span.structname { font-family: monospace; }
+span.symbol { font-family: monospace; }
+span.systemitem { font-family: monospace; }
+span.token { font-family: monospace; }
+span.type { font-family: monospace; }
+span.uri { font-family: monospace; }
+span.userinput { font-family: monospace; }
+span.varname { font-family: monospace; }
+span.wordasword { font-style: italic; }
+
+
+
+div.footnotes { font-style: italic; font-size: 0.8em; }
+div.footnote { margin-top: 1.44em; }
+span.footnote-number { display: inline; padding-right: 0.83em; }
+span.footnote-number + p { display: inline; }
+a.footnote { text-decoration: none; font-size: 0.8em; }
+a.footnote-ref { text-decoration: none; }
+
+span.co {
+  margin-left: 0.2em; margin-right: 0.2em;
+  padding-left: 0.4em; padding-right: 0.4em;
+  border: solid 1px #000000;
+  -moz-border-radius: 8px;
+  background-color: #000000;
+  color: #FFFFFF;
+  font-size: 8px;
+}
+span.co:hover {
+  border-color: #333333;
+  background-color: #333333;
+  color: #FFFFFF;
+}
+span.co a { text-decoration: none; }
+span.co a:hover { text-decoration: none; }
+
+div.cmdsynopsis { font-family: monospace; }
+
+dt.question { margin-left: 0em; }
+dt.question div.label { float: left; }
+dd + dt.question { margin-top: 1em; }
+dd.answer {
+  margin-top: 1em;
+  margin-left: 2em;
+  margin-right: 1em;
+}
+dd.answer div.label { float: left; }
+</style>
+</head>
+<body>
+<div class="navbar navbar-top"><table class="navbar"><tr>
+<td class="navbar-prev"><a class="navbar-prev" href="troubleshooting-faq.html" title="Troubleshooting FAQ">Troubleshooting FAQ</a></td>
+<td class="navbar-next"><a class="navbar-next" href="ipod-file-recovery.html" title="iPod file recovery">iPod file recovery</a></td>
+</tr></table></div>
+<div class="sidebar"><div class="sidenav"><div class="autotoc"><ul>
+<li><a href="gtkpod-info.html" title="About This Document">About This Document</a></li>
+<li>
+<a class="xref" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a><div class="autotoc"><ul><li>
+<a class="xref" href="getting-started.html" title="Getting started">Getting started</a><div class="autotoc"><ul>
+<li><a class="xref" href="hooking-up-the-ipod.html" title="Hooking up the iPod">Hooking up the iPod</a></li>
+<li><a class="xref" href="setting-ipod-properties.html" title="Setting iPod properties">Setting iPod properties</a></li>
+<li><a class="xref" href="troubleshooting-faq.html" title="Troubleshooting FAQ">Troubleshooting FAQ</a></li>
+<li>The Sysinfo File</li>
+<li><a class="xref" href="ipod-file-recovery.html" title="iPod file recovery">iPod file recovery</a></li>
+</ul></div>
+</li></ul></div>
+</li>
+</ul></div></div></div>
+<div class="body body-sidebar"><div class="division sect1">
+<a name="the-sysinfo-file"></a><div class="header"><h1 class="sect1 title"><span class="title">The Sysinfo File</span></h1></div>
+<ul class="linktrail">
+<li class="linktrail linktrail-first"><a class="linktrail" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></li>
+<li class="linktrail linktrail-last"><a class="linktrail" href="getting-started.html" title="Getting started">Getting started</a></li>
+</ul>
+<p class="para block block-first">Starting with the 2007 generation of iPods, libgpod needs an additional configuration step to correctly modify the iPod content. libgpod
+                needs to know the so-called iPod "firewire id", otherwise the iPod won't recognize what libgpod wrote to it and will behave as if it's empty. 
+            </p>
+<div class="autotoc"><ul>
+<li>
+<span class="label">1.4.1. </span><a class="xref" href="the-sysinfo-file.html#the-iphone-and-itouch" title="The iPhone and iTouch">The iPhone and iTouch</a>
+</li>
+<li>
+<span class="label">1.4.2. </span><a class="xref" href="the-sysinfo-file.html#the-classic-and-nano-three-g" title="The Classic and Nano3g">The Classic and Nano3g</a>
+</li>
+</ul></div>
+<div class="division sect2">
+<a name="the-iphone-and-itouch"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="the-iphone-and-itouch-title"></a><span class="label">1.4.1. </span>The iPhone and iTouch</span></h2></div>
+<div class="autotoc"><ul>
+<li>
+<span class="label">1.4.1.1. </span><a class="xref" href="the-sysinfo-file.html#global-assumptions-and-scope-of-this-tutorial" title="Global Assumptions and Scope of this Tutorial">Global Assumptions and Scope of this Tutorial</a>
+</li>
+<li>
+<span class="label">1.4.1.2. </span><a class="xref" href="the-sysinfo-file.html#compiling-libgpod-and-gtkpod-op-subversion-versions-cp" title="Compiling libgpod &amp; gtkpod (subversion versions)">Compiling libgpod &amp; gtkpod (subversion versions)</a>
+</li>
+<li>
+<span class="label">1.4.1.3. </span><a class="xref" href="the-sysinfo-file.html#determining-the-firewire-guid" title="Determining the Firewire GUID">Determining the Firewire GUID</a>
+</li>
+<li>
+<span class="label">1.4.1.4. </span><a class="xref" href="the-sysinfo-file.html#making-libgpod-aware-of-the-firewire-guid" title="Making libgpod Aware of the Firewire GUID">Making libgpod Aware of the Firewire GUID</a>
+</li>
+<li>
+<span class="label">1.4.1.5. </span><a class="xref" href="the-sysinfo-file.html#gtkpod-revisited" title="gtkpod Revisited">gtkpod Revisited</a>
+</li>
+</ul></div>
+<div class="division sect3">
+<a name="global-assumptions-and-scope-of-this-tutorial"></a><div class="header"><h3 class="sect3 title"><span class="title"><a name="global-assumptions-and-scope-of-this-tutorial-title"></a><span class="label">1.4.1.1. </span>Global Assumptions and Scope of this Tutorial</span></h3></div>
+<p class="para block block-first">touch_ip -- denotes the IP address that is assigned to your iPod Touch
+                        (e.g. 192.168.0.27). 
+                    </p>
+<p class="para block">touch_mnt -- denotes the mount point to your iPod Touch (i.e. the
+                        directory the iPod is mounted on). 
+                    </p>
+<p class="para block">To make effective use of the following you have to jailbreak your iPod Touch first (in order to access it via SSH). This document won't go into detail on this topic. One possibility to do this using a computer that runs Microsoft Windows (XP) can be found at:
+                    </p>
+<p class="para block">http://iphone.cricblogs.com/one-click-ipod-touch-jailbreak-for-windows-by-msbasher/
+                    </p>
+</div>
+<div class="division sect3">
+<a name="compiling-libgpod-and-gtkpod-op-subversion-versions-cp"></a><div class="header"><h3 class="sect3 title"><span class="title"><a name="compiling-libgpod-and-gtkpod-op-subversion-versions-cp-title"></a><span class="label">1.4.1.2. </span>Compiling libgpod &amp; gtkpod (subversion versions)</span></h3></div>
+<p class="para block block-first">
+                        Install and compile libgpod and gtkpod from subversion. See <span class="filename">Compiling and Installing|here</span> for details.
+                    </p>
+<p class="para block">Configure libgpod. The '--prefix' option will make sure that is not installed globally but locally within your home directory (note: replace '~' by the absolute path to your home directory):
+                    </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">~/libgpod$ ./autogen.sh --prefix=~/local
+                    </pre></div>
+<p class="para block">Otherwise make sure all dependencies are met ('gtk-doc' is a candidate likely to be missing, proper version of automake is another).
+                    </p>
+<p class="para block">Repeat this process for gtkpod ('PKG_CONFIG_PATH' make sure it builds on the freshly compiled version of libgpod; again, replace '~' by absolute path to your home directory):
+                    </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">~/gtkpod$ PKG_CONFIG_PATH=~/local/lib/pkgconfig ./autogen.sh --prefix=~/local
+                    </pre></div>
+<div class=" block programlisting block-indent"><pre class="programlisting">~/gtkpod$ make &amp;&amp; make install
+                    </pre></div>
+<p class="para block">Assuming that everything went well you should be able to start gtkpod:
+                    </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">~$ LD_LIBRARY_PATH=~/local/lib ~/local/bin/gtkpod
+                    </pre></div>
+<p class="para block">You won't be able to fully use it at this point so close it for now.
+                    </p>
+</div>
+<div class="division sect3">
+<a name="determining-the-firewire-guid"></a><div class="header"><h3 class="sect3 title"><span class="title"><a name="determining-the-firewire-guid-title"></a><span class="label">1.4.1.3. </span>Determining the Firewire GUID</span></h3></div>
+<p class="para block block-first">Connect your iPod Touch via USB (to your Linux machine) and issue the command:
+                    </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">sudo lsusb -v | grep -i iSerial
+                    </pre></div>
+<p class="para block">This should print something similar to this:
+                    </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">iSerial 3 fd98145617c113dc15ab151601001ff12354b139
+[ ... ] 
+                    </pre></div>
+<p class="para block">The first 16 characters constitute the FirewireGUID, i.e. in this example the FwGUID is:
+                    </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">fd98 1456 17c1 13dc
+                    </pre></div>
+</div>
+<div class="division sect3">
+<a name="making-libgpod-aware-of-the-firewire-guid"></a><div class="header"><h3 class="sect3 title"><span class="title"><a name="making-libgpod-aware-of-the-firewire-guid-title"></a><span class="label">1.4.1.4. </span>Making libgpod Aware of the Firewire GUID</span></h3></div>
+<p class="para block block-first">Mount your iPod Touch via:
+                    </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">sudo sshfs root@touch_ip:Media touch_mnt/ -o allow_other
+                    </pre></div>
+<p class="para block">Go to the directory 'iTunes_Control' and create (if it does not already exist) a directory named 'Device':
+                    </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">~/touch_mnt/iTunesControl$ mkdir Device; cd Device
+~/touch_mnt/iTunesControl/Device$ echo "FirewireGuid: 0xfd98145617c113dc" &gt; SysInfo 
+                    </pre></div>
+<p class="para block">Test if libgpod is able to retrieve the FWGUID by changing into the 'tests' subdirectory of libgpod's source directory and runnning:
+                    </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">./test-firewire-id touch_mnt/
+                    </pre></div>
+</div>
+<div class="division sect3">
+<a name="gtkpod-revisited"></a><div class="header"><h3 class="sect3 title"><span class="title"><a name="gtkpod-revisited-title"></a><span class="label">1.4.1.5. </span>gtkpod Revisited</span></h3></div>
+<p class="para block block-first">With your iPod Touch still mounted start up gtkpod once more:
+                    </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">~$ LD_LIBRARY_PATH=~/local/lib ~/local/bin/gtkpod
+                    </pre></div>
+<p class="para block">You should now be able to sync songs to your iPod Touch. After syncing is complete go into "Music" on your iPod Touch: The songs you have just synced won't show up at this point. To make them appear press and hold the "Home"-Button until the springboard is reloaded. Going to "Music" now will show your music.
+                    </p>
+<p class="para block">Don't forget to unmount it after you're completely done.
+                    </p>
+<p class="para block">Tutorial compiled by staciemonroe (tobias kreisel gmail com)
+                    </p>
+</div>
+</div>
+<div class="division sect2">
+<a name="the-classic-and-nano-three-g"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="the-classic-and-nano-three-g-title"></a><span class="label">1.4.2. </span>The Classic and Nano3g</span></h2></div>
+<p class="para block block-first">There are two ways to set up the iPod to make libgpod able to find its firewire id.
+                </p>
+<p class="para block">The 1st one is mostly automated. First, make sure you have libsgutils installed before running configure/autogen.sh. If you built libgpod without it, install it and run configure/make/make install. You should now have an ipod-read-sysinfo-extended tool available. Run it with the iPod device path (eg /dev/sda) and the iPod mount point (eg /mnt/ipod) as arguments. This may require root privileges. ipod-read-sysinfo-extended will read an XMLfile from the iPod and write it as /mnt/ipod/iPod_Control/Device/SysInfoExtended. See http://ipodlinux.org/Device_Information for more details about the method used.
+                </p>
+<p class="para block">Having that file is enough for libgpod to figure out the iPod firewire id.
+                </p>
+<p class="para block">The 2nd method requires more manual intervention. First, you need to get your firewire id manually. To do that, run "sudo lsusb -v | grep -i Serial" (without the "") with your iPod plugged in, this should print a 16 character long string like 00A1234567891231. For an iPod Touch, this number will be much longer than 16 characters, the firewire ID is constituted by the first 16 characters. Once you have that number, create/edit /mnt/ipod/iPod_Control/Device/SysInfo (if your iPod is mounted at /mnt/ipod). Add to that file the line below:
+                </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">FirewireGuid: 0xffffffffffffffff
+                </pre></div>
+<p class="para block">(replace ffffffffffffffff with the string you obtained at the previous step and don't forget the trailing 0x before the string)
+                </p>
+<p class="para block">Save that file, and you should be all set. Be careful when using apps which lets you manually specify which iPod model you own, they may overwrite that file when you do that. So if after doing that libgpod still seems to write invalid content to the iPod, double-check the content of that SysInfo file to make sure the FirewireGuid line you added isn't gone. If that happens, read it to the end of the file, and make sure libgpod rewrite the iPod content.
+                </p>
+<p class="para block">Once that is done, if you compiled libgpod from source, you can test that libgpod can find the firewire ID on your iPod by running
+                </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">libgpod/tests/test-firewire-id /ipod/mount/point
+                </pre></div>
+</div>
+</div></div>
+<div class="navbar navbar-bottom"><table class="navbar"><tr>
+<td class="navbar-prev"><a class="navbar-prev" href="troubleshooting-faq.html" title="Troubleshooting FAQ">Troubleshooting FAQ</a></td>
+<td class="navbar-next"><a class="navbar-next" href="ipod-file-recovery.html" title="iPod file recovery">iPod file recovery</a></td>
+</tr></table></div>
+</body>
+</html>

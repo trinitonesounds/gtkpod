@@ -1,0 +1,698 @@
+<html xmlns:set="http://exslt.org/sets">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Troubleshooting FAQ</title>
+<link rel="previous" href="setting-ipod-properties.html" title="Setting iPod properties">
+<link rel="next" href="the-sysinfo-file.html" title="The Sysinfo File">
+<link rel="top" href="gtkpod.html" title="The gtkpod Manual">
+<style type="text/css">
+
+html { height: 100%; }
+body {
+  margin: 0px; padding: 12px;
+  background-color: #f9f9f6;
+  min-height: 100%;
+  direction: ltr;
+}
+div, p, pre, blockquote { margin: 0; padding: 0; }
+p img { vertical-align: middle; }
+sub { font-size: 0.83em; }
+sub sub { font-size: 1em; }
+sup { font-size: 0.83em; }
+sup sup { font-size: 1em; }
+table { border-collapse: collapse; }
+table.table-pgwide { width: 100%; }
+td { vertical-align: top; }
+td { padding: 0.2em 0.83em 0.2em 0.83em; }
+th { padding: 0 0.83em 0 0.83em; }
+tr.tr-shade {
+  background-color: #f9f9f6;
+}
+td.td-colsep { border-right: solid 1px; }
+td.td-rowsep { border-bottom: solid 1px; }
+thead { border-top: solid 2px; border-bottom: solid 2px; }
+tfoot { border-top: solid 2px; border-bottom: solid 2px; }
+div.body {
+  padding: 1em;
+  max-width: 60em;
+  background-color: #ffffff;
+  border: solid 1px #e0e0df;
+}
+div.body-sidebar {
+  
+  margin-right: 13em;
+}
+div.division div.division { margin-top: 1.72em; }
+div.division div.division div.division { margin-top: 1.44em; }
+div.header {
+  margin: 0;
+  color: #3f3f3f;
+  border-bottom: solid 1px #e0e0df;
+}
+h1, h2, h3, h4, h5, h6, h7 {
+  margin: 0; padding: 0;
+  color: #3f3f3f;
+}
+h1.title { font-size: 1.72em; }
+h2.title { font-size: 1.44em; }
+h3.title { font-size: 1.2em; }
+h4.title, h5.title, h6.title, h7.title { font-size: 1em; }
+.block { margin-top: 1em; }
+.block .block-first { margin-top: 0; }
+.block-indent {
+  
+  margin-left: 1.72em;
+  
+  margin-right: 1em;
+}
+.block-indent .block-indent { margin-left: 0em; margin-right: 0em; }
+td .block-indent  { margin-left: 0em; margin-right: 0em; }
+dd .block-indent  { margin-left: 0em; margin-right: 0em; }
+.block-verbatim { white-space: pre; }
+div.title {
+  margin-bottom: 0.2em;
+  font-weight: bold;
+  color: #3f3f3f;
+}
+div.title-formal { padding-left: 0.2em; padding-right: 0.2em; }
+div.title-formal .label { font-weight: normal; }
+a {
+  color: #1f609f;
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+a:visited { color: #9f1f6f; }
+ul, ol, dl { margin: 0; padding: 0; }
+li {
+  margin-top: 1em;
+  
+  margin-left: 2.4em;
+  
+  padding: 0;
+}
+li.li-first { margin-top: 0; }
+dt { margin: 1em 0 0 0; }
+dt.dt-first { margin: 0; }
+dd {
+  
+  margin-left: 1.72em;
+  margin-top: 0.5em;
+}
+dl.dl-compact dt { margin-top: 0; }
+dl.dl-compact dd { margin-top: 0; margin-bottom: 0; }
+
+
+ul.linktrail {
+  display: block;
+  margin: 0.2em 0 0 0;
+  
+  text-align: right;
+}
+li.linktrail { display: inline; margin: 0; padding: 0; }
+
+li.linktrail::before {
+  content: '  /  ';
+  color: #3f3f3f;
+}
+
+li.linktrail-first::before, li.linktrail-only::before { content: ''; }
+
+
+div.navbar {
+  padding: 0.5em 1em 0.5em 1em;
+  max-width: 60em;
+  background-color: #ffffff;
+  border: solid 1px #e0e0df;
+}
+div.navbar-top { margin-bottom: 1em; }
+div.navbar-bottom { margin-top: 1em; clear: both; }
+div.navbar img { border: 0; vertical-align: -0.4em; }
+table.navbar { width: 100%; margin: 0; border: none; }
+table.navbar td { padding: 0; border: none; }
+td.navbar-next {
+  
+  text-align: right;
+}
+a.navbar-prev::before {
+  
+  content: '◀  ';
+  color: #3f3f3f;
+}
+a.navbar-next::after {
+  
+  content: '  ▶';
+  color: #3f3f3f;
+}
+
+
+div.sidebar {
+  
+  float: right;
+  padding: 0; margin: 0; width: 12em;
+}
+div.sidenav {
+  padding: 0.5em 1em 0 1em;
+  background-color: #ffffff;
+  border: solid 1px #e0e0df;
+}
+div.sidenav div.autotoc {
+  background-color: #ffffff;
+  border: none; padding: 0; margin: 0;
+}
+div.sidenav div.autotoc div.autotoc { margin-top: 0.5em; }
+div.sidenav div.autotoc li { margin-bottom: 0.5em; }
+div.sidenav div.autotoc div.autotoc div.autotoc {
+  
+  margin-left: 1em;
+  margin-top: 0;
+}
+div.sidenav div.autotoc div.autotoc div.autotoc li { margin-bottom: 0; }
+
+
+div.autotoc {
+  
+  display: table;
+  margin-top: 1em;
+  
+  margin-left: 1.72em;
+  padding: 0.5em 1em 0.5em 1em;
+  background-color: #f0f9ff;
+  border: solid 1px #c0c9ff;
+}
+div.autotoc ul { margin: 0; padding: 0; }
+div.autotoc li { list-style-type: none; margin: 0; }
+div.autotoc div.autotoc-title { margin-bottom: 0.5em; }
+div.autotoc div.autotoc { border: none; padding: 0; margin-top: 0; margin-bottom: 0.5em; }
+div.autotoc div.autotoc div.autotoc { margin-bottom: 0; }
+
+
+span.bibliolabel {
+  color: #3f3f3f;
+}
+
+
+div.admonition {
+  padding: 0.5em 1em 0.5em 1em;
+  
+  padding-left: 60px;
+  min-height: 48px;
+  border: solid 1px #e0e0df;
+  background-color: #fffff0;
+  
+  background-position: 6px 0.5em;
+  background-repeat: no-repeat;
+}
+div.caution {
+  background-image: url("admon-caution.png");
+}
+div.important {
+  background-image: url("admon-important.png");
+}
+div.note {
+  background-image: url("admon-note.png");
+}
+div.note-bug {
+  background-image: url("admon-bug.png");
+}
+div.tip {
+  background-image: url("admon-tip.png");
+}
+div.warning {
+  background-image: url("admon-warning.png");
+}
+div.blockquote {
+  
+  background-image: url('../../../data/icons/yelp-watermark-blockquote-201C.png');
+  background-repeat: no-repeat;
+  
+  background-position: top left;
+  padding: 0.5em;
+  
+  padding-left: 4em;
+}
+div.attribution {
+  margin-top: 0.5em;
+  color: #3f3f3f;
+}
+div.attribution::before {
+  
+  content: '― ';
+}
+div.epigraph {
+  
+  text-align: right;
+  
+  margin-left: 20%;
+  
+  margin-right: 0;
+  color: #3f3f3f;
+}
+div.figure, div.informalfigure {
+  
+  display: table;
+  padding: 0.5em;
+  background-color: #f9f9f6;
+  border: solid 1px #e0e0df;
+}
+div.figure-inner, div.informalfigure-inner {
+  padding: 0.5em;
+  background-color: #ffffff;
+  border: solid 1px #e0e0df;
+}
+div.caption { margin-top: 0.5em; }
+div.programlisting {
+  padding: 0.5em;
+  
+  background-color: #f9f9f6;
+  border: solid 1px #e0e0df;
+}
+div.screen {
+  padding: 0.5em;
+  
+  background-color: #f9f9f6;
+  border: solid 1px #e0e0df;
+}
+div.screen .prompt {
+  color: #3f3f3f;
+}
+div.screen .userinput {
+  font-weight: bold;
+  color: #3f3f3f;
+}
+pre.linenumbering {
+  color: #3f3f3f;
+  margin: 0;
+  
+  padding-right: 1em;
+  
+  float: left;
+  
+  text-align: right;
+}
+
+
+
+dl.index dt { margin-top: 0; }
+dl.index dd { margin-top: 0; margin-bottom: 0; }
+dl.indexdiv dt { margin-top: 0; }
+dl.indexdiv dd { margin-top: 0; margin-bottom: 0; }
+dl.setindex dt { margin-top: 0; }
+dl.setindex dd { margin-top: 0; margin-bottom: 0; }
+div.list div.title-formal span.title {
+  border-bottom: solid 1px #e0e0df;
+}
+div.simplelist {
+  
+  margin-left: 1.72em;
+}
+div.simplelist table { margin-left: 0; border: none; }
+div.simplelist td {
+  padding: 0.5em;
+  border-left: solid 1px #e0e0df;
+}
+div.simplelist td.td-first {
+  
+  padding-left: 0;
+  
+  border-left: 0;
+}
+div.synopsis {
+  padding: 0.5em;
+  
+  background-color: #f9f9f6;
+  border-top: solid 2px #c0c9ff;
+  border-bottom: solid 2px #c0c9ff;
+}
+div.synopsis div.synopsis {
+  padding: 0;
+  border: none;
+}
+div.synopsis div.block { margin-top: 0.2em; }
+div.synopsis div.block-first { margin-top: 0; }
+
+
+span.accel { text-decoration: underline; }
+span.acronym { font-family: sans-serif; }
+span.application { font-style: italic; }
+span.classname, span.exceptionname, span.interfacename { font-family: monospace; }
+span.code {
+  font-family: monospace;
+  border: solid 1px #e0e0df;
+  
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+pre span.code { border: none; padding: 0; }
+span.command {
+  font-family: monospace;
+  border: solid 1px #e0e0df;
+  
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+pre span.command { border: none; padding: 0; }
+span.computeroutput { font-family: monospace; }
+
+span.constant { font-family: monospace; }
+span.database { font-family: monospace; }
+span.email { font-family: monospace; }
+span.emphasis { font-style: italic; }
+span.emphasis-bold { font-style: normal; font-weight: bold; }
+span.envar { font-family: monospace; }
+
+span.filename { font-family: monospace; }
+span.firstterm { font-style: italic; }
+span.foreignphrase { font-style: italic; }
+span.function { font-family: monospace; }
+
+dt.glossterm span.glossterm { font-style: normal; }
+
+
+span.glossterm { font-style: italic; }
+
+span.guibutton, span.guilabel, span.guimenu, span.guimenuitem, span.guisubmenu, span.interface {
+  font-weight: bold;
+  color: #3f3f3f;
+}
+span.keycap {
+  font-weight: bold;
+  color: #3f3f3f;
+}
+span.lineannotation { font-style: italic; }
+span.literal { font-family: monospace; }
+span.markup  { font-family: monospace; }
+span.medialabel { font-style: italic; }
+span.methodname { font-family: monospace; }
+span.ooclass, span.ooexception, span.oointerface { font-family: monospace; }
+span.option { font-family: monospace; }
+span.parameter { font-family: monospace; }
+span.paramdef span.parameter { font-style: italic; }
+span.prompt { font-family: monospace; }
+span.property { font-family: monospace; }
+span.replaceable  { font-style: italic; }
+span.returnvalue { font-family: monospace; }
+span.sgmltag { font-family: monospace; }
+span.structfield, span.structname { font-family: monospace; }
+span.symbol { font-family: monospace; }
+span.systemitem { font-family: monospace; }
+span.token { font-family: monospace; }
+span.type { font-family: monospace; }
+span.uri { font-family: monospace; }
+span.userinput { font-family: monospace; }
+span.varname { font-family: monospace; }
+span.wordasword { font-style: italic; }
+
+
+
+div.footnotes { font-style: italic; font-size: 0.8em; }
+div.footnote { margin-top: 1.44em; }
+span.footnote-number { display: inline; padding-right: 0.83em; }
+span.footnote-number + p { display: inline; }
+a.footnote { text-decoration: none; font-size: 0.8em; }
+a.footnote-ref { text-decoration: none; }
+
+span.co {
+  margin-left: 0.2em; margin-right: 0.2em;
+  padding-left: 0.4em; padding-right: 0.4em;
+  border: solid 1px #000000;
+  -moz-border-radius: 8px;
+  background-color: #000000;
+  color: #FFFFFF;
+  font-size: 8px;
+}
+span.co:hover {
+  border-color: #333333;
+  background-color: #333333;
+  color: #FFFFFF;
+}
+span.co a { text-decoration: none; }
+span.co a:hover { text-decoration: none; }
+
+div.cmdsynopsis { font-family: monospace; }
+
+dt.question { margin-left: 0em; }
+dt.question div.label { float: left; }
+dd + dt.question { margin-top: 1em; }
+dd.answer {
+  margin-top: 1em;
+  margin-left: 2em;
+  margin-right: 1em;
+}
+dd.answer div.label { float: left; }
+</style>
+</head>
+<body>
+<div class="navbar navbar-top"><table class="navbar"><tr>
+<td class="navbar-prev"><a class="navbar-prev" href="setting-ipod-properties.html" title="Setting iPod properties">Setting iPod properties</a></td>
+<td class="navbar-next"><a class="navbar-next" href="the-sysinfo-file.html" title="The Sysinfo File">The Sysinfo File</a></td>
+</tr></table></div>
+<div class="sidebar"><div class="sidenav"><div class="autotoc"><ul>
+<li><a href="gtkpod-info.html" title="About This Document">About This Document</a></li>
+<li>
+<a class="xref" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a><div class="autotoc"><ul><li>
+<a class="xref" href="getting-started.html" title="Getting started">Getting started</a><div class="autotoc"><ul>
+<li><a class="xref" href="hooking-up-the-ipod.html" title="Hooking up the iPod">Hooking up the iPod</a></li>
+<li><a class="xref" href="setting-ipod-properties.html" title="Setting iPod properties">Setting iPod properties</a></li>
+<li>Troubleshooting FAQ</li>
+<li><a class="xref" href="the-sysinfo-file.html" title="The Sysinfo File">The Sysinfo File</a></li>
+<li><a class="xref" href="ipod-file-recovery.html" title="iPod file recovery">iPod file recovery</a></li>
+</ul></div>
+</li></ul></div>
+</li>
+</ul></div></div></div>
+<div class="body body-sidebar"><div class="division sect1">
+<a name="troubleshooting-faq"></a><div class="header"><h1 class="sect1 title"><span class="title">Troubleshooting FAQ</span></h1></div>
+<ul class="linktrail">
+<li class="linktrail linktrail-first"><a class="linktrail" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></li>
+<li class="linktrail linktrail-last"><a class="linktrail" href="getting-started.html" title="Getting started">Getting started</a></li>
+</ul>
+<div class="autotoc"><ul><li>
+<span class="label">1.3.1. </span><a class="xref" href="troubleshooting-faq.html#contents:" title="Contents:">Contents:</a>
+</li></ul></div>
+<div class="division sect2">
+<a name="contents:"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="contents:-title"></a><span class="label">1.3.1. </span>Contents:</span></h2></div>
+<div class="block list itemizedlist"><ul class="itemizedlist">
+<li class="li-first">
+                        <p class="para block block-first">My iPhone or iTouch doesnt have a USB connection. How can I mount it on my linux box?
+                        </p>
+                    </li>
+<li>
+                        <p class="para block block-first">My iPod is an iPhone, iTouch, Classic or nano3g. My tunes show up in gtkpod but I see nothing on the iPod when I eject?
+                        </p>
+                    </li>
+<li>
+                        <p class="para block block-first">Installed libmp4v2 or libgpod from source to /usr/local/lib, but gtkpod is unable to locate libmp4.so.0 or libgpod.so.0
+                        </p>
+                    </li>
+<li>
+                        <p class="para block block-first">Files copied to gtkpod but they don't appear in the database (0.80, Tony Williams)
+                        </p>
+                    </li>
+<li>
+                        <p class="para block block-first">Filenames on the iPod appear in DOS 8.3 format and syncing to the iPod is not working as expected.
+                        </p>
+                    </li>
+<li>
+                        <p class="para block block-first">./autogen.sh does not work
+                        </p>
+                    </li>
+<li>
+                        <p class="para block block-first">The following error message is displayed when accessing the device (Markus Gaugusch, Justin Thiessen):
+                        </p>
+                        <div class=" block programlisting block-indent"><pre class="programlisting">** ieee1394: sbp2: aborting sbp2 command
+** Test Unit Ready 00 00 00 00 00
+                        </pre></div>
+                    </li>
+<li>
+                        <p class="para block block-first">The following error message is displayed when accessing the device (Ingo Reimann)
+                        </p>
+                        <div class=" block programlisting block-indent"><pre class="programlisting">** usb-storage: Attempting to get CSW...
+** usb-storage: usb_stor_bulk_transfer_buf: xfer 13 bytes
+** usb-storage: Status code -75; transferred 0/13
+
+                        </pre></div>
+                    </li>
+<li>
+                        <p class="para block block-first">When connecting an iPod via USB to a 2.6 kernel machine the iPod will be recognized but not work correctly. In /var/log/messages you'll see the a bunch of "Buffer I/O error on device sd?" when connecting the iPod (Jonas Bergler, Kevin Venkiteswaran)
+                        </p>
+                    </li>
+<li>
+                        <p class="para block block-first">SHUFFLE won't play music after reformatting (Mark Davis)
+                        </p>
+                    </li>
+<li>
+                        <p class="para block block-first">Calendar entries mixed up
+                        </p>
+                    </li>
+<li>
+                        <p class="para block block-first">m4a files created by faac cannot be added by gtkpod (gentoo)
+                        </p>
+                    </li>
+<li>
+                        <p class="para block block-first">gtkpod crashes when reading the iTunesDB (Fedora)
+                        </p>
+                    </li>
+<li>
+                        <p class="para block block-first">Problems connecting the iPod to Solaris/SPARC
+                        </p>
+                    </li>
+</ul></div>
+<p class="para block">My iPhone or iTouch doesnt have a USB connection. How can I mount it on my linux box?
+                </p>
+<p class="para block">Solution:
+                </p>
+<p class="para block">The iPhone or iTouch, at present has to be mounted using sshfs.
+                </p>
+<p class="para block">My iPod is an iPhone, iTouch, Classic or Nano3g. My tunes show up in gtkpod but I see nothing on the iPod when I eject?
+                </p>
+<p class="para block">Solution:
+                </p>
+<p class="para block">This is to do with requiring your iPod model number in a sysinfo file located on the iPod. Please see here for details.
+                </p>
+<p class="para block">Installed libmp4v2 or libgpod from source to /usr/local/lib, but gtkpod is unable to locate libmp4.so.0 or libgpod.so.0?
+                </p>
+<p class="para block">Solution:
+                </p>
+<p class="para block">If you install to /usr/local/lib please don't forget to add the path to LD_LIBRARY_PATH:
+                </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+export LD_LIBRARY_PATH
+                </pre></div>
+<p class="para block">You can add those lines to your ~/.bashrc or add it globally to
+                    /etc/profile. 
+                </p>
+<p class="para block">Files copied to gtkpod but they don't appear in the database (0.80, Tony Williams)?
+                </p>
+<p class="para block">I'm having a problem that I wonder if you've seen. I've setup gtkpod. launch it and add files. I can hear the ipod harddrive spin up. If I go onto the ipod directly I can see the space being used and can even see the new files on the ipod. However the ipod interface doesn't show the new files and gtkpod keeps telling me that there are orphaned files.
+                </p>
+<p class="para block">Solution:
+                </p>
+<p class="para block">I finally figured out the problem. In my fstab I had the filesystem set to 'auto' and it was mounting as msdos instead of vfat. I specified vfat in fstab and voila! I'm a happy happy man.
+                </p>
+<p class="para block">Filenames on the iPod appear in DOS 8.3 format and syncing to the iPod is not working as expected?
+                </p>
+<p class="para block">Solution:
+                    You need to specify "vfat" as file system type. How to do that depends on which way you use to mount the iPod -- see the README file for more details. 
+                </p>
+<p class="para block">./autogen.sh does not work?
+                </p>
+<p class="para block">Solution:
+                </p>
+<p class="para block">A ubuntu user has reported that he had to set
+                </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">ACLOCAL_FLAGS=" -I /usr/share/aclocal/"
+                </pre></div>
+<p class="para block">in order to get ./autogen.sh to work.
+                </p>
+<p class="para block">The following error message is displayed when accessing the device:
+                </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">ieee1394: sbp2: aborting sbp2 command
+Test Unit Ready 00 00 00 00 00 
+                </pre></div>
+<p class="para block">Solution:
+                </p>
+<p class="para block">(Markus Gaugusch):
+                    It is possible that hotplug and the "sg" support are not working well together. Try disabling "sg" support in the kernel configuration or 
+                    unload the "sg" module if you are using modules. 
+                </p>
+<p class="para block">(Justin Thiessen):
+                    Forcing the sbp2 module to serialized I/O seems (so far) to have solved the problem. 
+                </p>
+<p class="para block">Ref.:
+                    <div class="block list itemizedlist"><ul class="itemizedlist">
+<li class="li-first">
+                            http://www.netzwerk-aktiv.com/pub/doc/newsletters/linux1394-user/html/1676.html 
+                        </li>
+<li>
+                            http://www.ubuntuforums.org/printthread.php?t=6678 
+                        </li>
+<li>
+                            http://66.102.7.104/search?q=cache:Xh_gu43y6w8J:themikecam.com/newmikecam/blog/index.php/geek/2005/+ipod+serialize_io&amp;hl=en 
+                        </li>
+</ul></div>
+                </p>
+<p class="para block">Looks like the driver is going to be set to default to serialized I/O in kernel 2.6.14, anyways.
+                </p>
+<p class="para block">http://linuxtoday.com/developer/2005093001026NWKNDV
+                </p>
+<p class="para block">The following error message is displayed when accessing the device
+                </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">usb-storage: Attempting to get CSW...
+usb-storage: usb_stor_bulk_transfer_buf: xfer 13 bytes 
+usb-storage: Status code -75; transferred 0/13 
+                </pre></div>
+<p class="para block">Solution (by Ingo Reimann):
+                </p>
+<p class="para block">I tried to use an iPod Mini with my nforce2-Board, kernel 2.6.14/2.6.15 debian sid and got messages like [above] in dmesg. /dev/sda appeared, but fdisk -l did not show anything
+                </p>
+<p class="para block">The solution, that i found in a discussion on http://kerneltrap.org/node/3844 was to unload ehci_hcd.
+                </p>
+<p class="para block">When connecting an iPod via USB to a 2.6 kernel machine the iPod wil be recognized but not work correctly. In /var/log/messages you'll see the a bunch of "Buffer I/O error on device sd?" when connecting the iPod (Jonas Bergler, Kevin Venkiteswaran)
+                </p>
+<p class="para block">Solution (by "jeffmock"):
+                </p>
+<p class="para block">Disable CONFIG_EFI_PARTITION (File Systems -&gt; Partition Types -&gt; Advanced Partition Selection -&gt; EFI GUID Partition support) in your kernel configuration, recompile.
+                    Details can be found at http://www.linuxquestions.org/questions/showthread.php?postid=1197015#post1197015 
+                </p>
+<p class="para block">Excerpt:
+                </p>
+<p class="para block">"This problem could potentially happen with both 2.4 and 2.6 kernels."
+                </p>
+<p class="para block">A longer story follows and perhaps someone can come up with a more sensible solution for the long run.
+                </p>
+<p class="para block">The iPod looks like a removable disk drive to the host computer. When it is attached to the computer, the mini iPod reports a capacity of 7999488 512-byte sectors (or about 4GB). This turns out to be wrong for whatever reason. The mini iPod only really has 7999376 sectors and it exaggerates by 112 sectors. The other quality of the iPod is that if the computer attempts to read a sector greater than the actual capacity but less than the reported capacity, the iPod will dutifully report an I/O error, but it won't respond to any future requests until you unplug/plug the iPod."
+                </p>
+<p class="para block">I followed the kernel recompile instructions for distro, disabled only the CONFIG_EFI_PARTITION option, and things ran perfectly for me afterwards. As indicated above, hopefully a better long-term solution will emerge soon."
+                </p>
+<p class="para block">(Jorg Schuler: it seems a patch was introduced in kernel version 2.6.10: "&lt;phil@ipom.com&gt; [PATCH] USB Storage: Add unusual_devs entry for iPod This patch adds an unusual_devs.h entry for the Apple iPod as it reports one too many sectors. The patch was submitted by Avi Kivity &lt;avi@argo.co.il&gt; and re-diffed by me.")
+                </p>
+<p class="para block">SHUFFLE won't play music after reformatting
+                </p>
+<p class="para block">Solution (by Mark Davis):
+                </p>
+<p class="para block">The SHUFFLE seems to care about the volume name which has to be "IPOD". Try to format as (replace /dev/sda1 with the appropriate device file for your SHUFFLE!):
+                </p>
+<div class=" block programlisting block-indent"><pre class="programlisting">mkdosfs -F32 -n IPOD /dev/sda1
+                </pre></div>
+<p class="para block">Calendar entries mixed up?
+                </p>
+<p class="para block">Solution:
+                </p>
+<p class="para block">The iPod does not appear to like times specified in UTC (indicated by a trailing 'Z'). KOrganizer seems to do this. If you know how to work around it let me know.
+                </p>
+<p class="para block">m4a files created by faac cannot be added by gtkpod (gentoo)?
+                </p>
+<p class="para block">Solution:
+                </p>
+<p class="para block">There appear to be some versions of faac that do not create 'good' m4a files. The problem could be solved under gentoo by using version 1.24.
+                    In order to make error tracking easier, more detailled error messages are displayed when tracks could not be added for any reason starting with version 0.91-CVS of gtkpod. 
+                </p>
+<p class="para block">gtkpod crashes when reading the iTunesDB (Fedora)
+                </p>
+<p class="para block">Solution:
+                </p>
+<p class="para block">It appears that crashes were observed with kernel version 2.6.11-1.35_FC3. An upgrade to 2.6.12-1.1376_FC3 got rid of the problem. This was with gtkpod-0.94.0 and Athlon64 3000+.
+                </p>
+<p class="para block">After updating the firmware of a 1st-gen iPod nano**, crashes are also observed with Fedora Core 5, kernel 2.6.20-1.2320.fc5, gtkpod 0.99.4 (which worked with the previous firmware). Downloading, building, and installing gtkpod 0.99.10 and libgpod 0.6.0 solved the problem.
+                </p>
+<p class="para block">Problems connecting the iPod to Solaris/SPARC
+                </p>
+<p class="para block">Solution:
+                </p>
+<p class="para block">Current (as of 2006/03/30) versions of the Solaris pcfs SPARC driver have a bug where the correct filesystem/partition layout may not be
+                    recognized, and this is true for iPods. This prevents the iPod partition from being mounted on Solaris SPARC. In order to work 
+                    around this, one must prevent pcfs from detecting the first FAT32 filesystem, forcing it to move on to the second one. This can be done 
+                    by changing the filesystem identifier like so: 
+                </p>
+<div class=" block programlisting block-indent"><pre class="programlisting"># dd if=/dev/rdsk/c3t0d0s2 of=/tmp/ipod.orig count=1
+# cp /tmp/ipod.orig /tmp/ipod.modified &lt;edit /tmp/ipod.modified and change the first occurance of "FAT32" (at offset 0x52 for me) to something else like "CAT32"&gt;
+# dd if=/tmp/ipod.modified of=/dev/rdsk/c3t0d0s2 count=1
+                </pre></div>
+</div>
+</div></div>
+<div class="navbar navbar-bottom"><table class="navbar"><tr>
+<td class="navbar-prev"><a class="navbar-prev" href="setting-ipod-properties.html" title="Setting iPod properties">Setting iPod properties</a></td>
+<td class="navbar-next"><a class="navbar-next" href="the-sysinfo-file.html" title="The Sysinfo File">The Sysinfo File</a></td>
+</tr></table></div>
+</body>
+</html>
