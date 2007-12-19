@@ -1008,23 +1008,26 @@ void check_db (iTunesDB *itdb)
        a mistake and we should tell him about it */
     if (!eitdb->itdb_imported)
     {
-	gchar *itunesdb_filename = itdb_get_itunesdb_path (mountpoint);
-	if (itunesdb_filename)
-	{
-	    GtkWidget *dialog = gtk_message_dialog_new (
-		GTK_WINDOW (gtkpod_window),
-		GTK_DIALOG_DESTROY_WITH_PARENT,
-		GTK_MESSAGE_WARNING,
-		GTK_BUTTONS_OK_CANCEL,
-		_("You did not import the existing iTunesDB. This is most likely incorrect and will result in the loss of the existing database.\n\nPress 'OK' if you want to proceed anyhow or 'Cancel' to abort. If you cancel, you can import the existing database before calling this function again.\n"));
-	    gint result = gtk_dialog_run (GTK_DIALOG (dialog));
-	    gtk_widget_destroy (dialog);
-	    g_free (itunesdb_filename);
-	    if (result == GTK_RESPONSE_CANCEL)
-	    {
-		return;
-	    }
-	}
+		gchar *itunesdb_filename = itdb_get_itunesdb_path (mountpoint);
+
+		if (itunesdb_filename)
+		{
+			const gchar *str = _("You did not import the existing iTunesDB. This is most likely incorrect and will result in the loss of the existing database.\n\nIf you abort the operation, you can import the existing database before calling this function again.\n");
+
+			gint result = gtkpod_confirmation_hig (GTK_WINDOW (gtkpod_window),
+												   GTK_MESSAGE_WARNING,
+												   _("Existing iTunes database not imported"),
+												   str,
+												   _("Proceed anyway"),
+												   _("Abort operation"),
+												   NULL,
+												   NULL);
+
+			if (result == GTK_RESPONSE_CANCEL)
+			{
+				return;
+			}
+		}
     }
 
     gtkpod_statusbar_timeout (30*STATUSBAR_TIMEOUT);

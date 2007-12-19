@@ -1848,21 +1848,24 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
       }
       if (g_file_test (tunes, G_FILE_TEST_EXISTS))
       {
-	  gchar *str = g_strdup_printf (_("You did not import the existing iTunesDB ('%s'). This is most likely incorrect and will result in the loss of the existing database.\n\nPress 'OK' if you want to proceed anyhow or 'Cancel' to skip storing. If you cancel, you can import the existing database before calling this function again.\n"), tunes);
-	  GtkWidget *dialog = gtk_message_dialog_new (
-	      GTK_WINDOW (gtkpod_window),
-	      GTK_DIALOG_DESTROY_WITH_PARENT,
-	      GTK_MESSAGE_WARNING,
-	      GTK_BUTTONS_OK_CANCEL,
-	      str);
-	  gint result = gtk_dialog_run (GTK_DIALOG (dialog));
-	  gtk_widget_destroy (dialog);
-	  g_free (str);
-	  if (result == GTK_RESPONSE_CANCEL)
-	  {
-	      g_free (cfgdir);
-	      return FALSE;
-	  }
+		  gchar *str = g_strdup_printf (_("You did not import the existing iTunesDB ('%s'). This is most likely incorrect and will result in the loss of the existing database.\n\nIf you skip storing, you can import the existing database before calling this function again.\n"), tunes);
+
+		  gint result = gtkpod_confirmation_hig (GTK_WINDOW (gtkpod_window),
+											     GTK_MESSAGE_WARNING,
+											     _("Existing iTunes database not imported"),
+											     str,
+											     _("Proceed anyway"),
+												 _("Skip storing"),
+												 NULL,
+												 NULL);
+			
+		  g_free (str);
+		  
+		  if (result == GTK_RESPONSE_CANCEL)
+		  {
+			  g_free (cfgdir);
+			  return FALSE;
+		  }
       }
   }
 

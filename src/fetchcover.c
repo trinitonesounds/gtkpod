@@ -350,54 +350,41 @@ static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover);
 		gchar *basename = NULL;
 		gint i;
 		gchar *message;	
-		GtkWidget *label;
 		
 		if (fetch_cover->parent_window == NULL)
 			fetch_cover->parent_window = GTK_WINDOW(gtkpod_window);
 		
-		GtkWidget *dialog = gtk_dialog_new_with_buttons (_("Coverart file already exists"),
-																							fetch_cover->parent_window,
-																							GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-																							GTK_STOCK_YES,
-																							GTK_RESPONSE_YES,
-	                                            GTK_STOCK_NO,
-	                                            GTK_RESPONSE_NO,
-	                                            GTK_STOCK_CANCEL,
-	                                            GTK_RESPONSE_REJECT,
-	                                            NULL);
-	
 		filepath = g_build_filename(fetch_cover->dir, fetch_cover->filename, NULL);
 
 		message = g_strdup_printf (_("The picture file %s already exists.\n" \
 				"This may be associated with other music files in the directory.\n\n" \
-				"-  Clicking Yes will overwrite the existing file, possibly associating\n" \
-				"   other music files in the same directory with this coverart file.\n" \
-				"-  Clicking No will save the file with a unique file name.\n" \
-				"-  Clicking Cancel will abort the fetchcover operation."), filepath);
+				"Do you want to overwrite the existing file, possibly associating\n" \
+				"other music files in the same directory with this cover art file,\n" \
+				"to save the file with a unique file name, or to abort the fetchcover operation?"),
+								   filepath);
 			           
-		label = gtk_label_new (message);
-	   
-		/* Add the label, and show everything we've added to the dialog. */
-		gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), label);
-				
-		gtk_widget_show_all (dialog);	
-		result = gtk_dialog_run (GTK_DIALOG(dialog));
+		result = gtkpod_confirmation_hig (fetch_cover->parent_window,
+									      GTK_MESSAGE_WARNING,
+									      _("Cover art file already exists"),
+									      message,
+									      _("Overwrite"),
+									      _("Rename"),
+									      _("Abort"),
+									      NULL);
 		g_free (message);
 				
 		switch (result)
 		{
-			case GTK_RESPONSE_REJECT:
-				/* Cancel has been clicked so no save */
-				gtk_widget_destroy (dialog);
+			case GTK_RESPONSE_APPLY:
+				/* Abort has been clicked so no save */
 				return NULL;
-			case GTK_RESPONSE_YES:
-				/*** Yes clicked so overwrite the file is okay. Leave final_filename intact
+			case GTK_RESPONSE_OK:
+				/*** Overwrite clicked so overwrite the file is okay. Leave final_filename intact
 				 * and remove the original
 				 **/
 				g_remove (filepath);
-				gtk_widget_destroy (dialog);
 				return filepath;
-			case GTK_RESPONSE_NO:
+			case GTK_RESPONSE_CANCEL:
 				/* User doesn't want to overwrite anything so need to do some work on filename */
 				/* Remove the suffix from the end of the filename */
 				splitarr = g_strsplit (fetch_cover->filename, ".", 0);
@@ -424,11 +411,9 @@ static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover);
 				newfilename = NULL;
 				basename = NULL;
 				g_strfreev(splitarr);
-				gtk_widget_destroy (dialog);
 				
 				return filepath;
 			default:
-				gtk_widget_destroy (dialog);
 				return NULL;
 		}	
 	}

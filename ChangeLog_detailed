@@ -28,6 +28,12 @@
 	  file as the context. It will first try to open the XML file in yelp
 	  (the GNOME help viewer), and if that fails, will open the
 	  corresponding HTML file in the browser.
+	  
+	* src/misc_confirm.c:
+	* src/file_itunesdb.c:
+	* src/misc_playlist.c:
+	* src/fetchcover.c:
+	  More message box HIGification.
 
 2007-12-18 Matvey Kozhev <sikon at users.sourceforge.net>
 
