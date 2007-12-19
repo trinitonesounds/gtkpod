@@ -1,9 +1,402 @@
-gtkpod V0.90
-	Complete rewrite of reading/writing the iTunesDB
+gtkpod V0.99.12
 
-	IMPROVEMENT: local database to browse local content
+       NEW FEATURE: Import and management of photographs on ipods
+       that support them. Update of README to include photo management.
+       
+       UPDATE: Application requires libgpod version 0.6.0 or higher.
+      
+       UPDATE: Better icon theme specification compliance.
+
+       BUGFIX: Fixes to tomboy script. Thanks to Javier Kohen.
+
+       BUGFIX: Issues with display of track length. Inconsistent units used
+       in conjunction with libgpod (Jorg).
+
+       UPDATE: Cover art preview window either displays an album cover
+       to its full size or to a size consistent with the user's desktop.       
+
+       UPDATE: Download of Album Art from the net feature modified to the
+       ability of dragging-and-dropping a .jpg image from a web browser. This
+       has been changed due to licensing concerns over album art. Drag and 
+       Drop section of README updated accordingly (Paul).
+
+       BUGFIX: Issues on detecting changed local / podcast database. Thanks to
+       Mario Rossi.
+
+       BUGFIX: Issues addressed on Details Window.
+
+       BUGFIX: Crash avoided when auto-detecting an iTunes database that 
+       cannot be read.
+
+       UPDATE: Display of error output of scripts (Jorg).
+
+       IMPROVEMENT: Configuring and Compilation support (Todd).
+
+       UPDATE: New scripts for flac, ogg, mp3, m4a, wav conversion to mp3 and
+       m4a. Thanks to Peter van de Does.  
+
+       BUGFIX: Model number identified and written to ipod upon loading to ensure
+       libgpod can read the ipod's artwork.
+
+       UPDATE: Updates and bug fixes to gapless playback. Thanks to
+       Michael Tiffany.
+
+       BUGFIX: When Cover Art Display is widened, covers space out rather
+       than stretch.       
+
+       BUGFIX: Fixed memory leaks in CoverArt Display and Details window.
+       Thanks to Daniele Forsi.
+
+       UPDATE: French translation. Thanks to Éric Lassauge.
+     
+       UPDATE: Italian translation. Thanks to Daniele Forsi.
+
+       UPDATE: Hebrew translation. Thanks to Assaf Gillat.
+
+       UPDATE: Swedish translation. Thanks to Stefan Asserhäll.
+
+       NEW FEATURE: Added Romanian translation support. Thanks to 
+       Alex Eftimie.
+
+       NEW FEATURE: Added Russian translation support. Thanks to
+       Matvey Kozhev.
+
+gtkpod V0.99.10
+
+       NEW FEATURE: on-the-fly conversion of WAV, FLAC and OGG (as well
+       as MP3 and M4A). Thanks to Marc d[readlock], Simon Naunton and
+       Peter Edwards! Multi-threaded background conversion was added by
+       Jorg Schuler.
+
+       NEW FEATURE: editing of TV show metadata and track media
+       type. Thanks to Mario Rossi.
+
+       NEW FEATURE: Display of Album Art. Thanks to P.G. Richardson.
+
+       NEW FEATURE: Download of Album Art from the net. Thanks to
+       P.G. Richardson.
+
+       NEW FEATURE: copy playlists and tracks from within the context
+       menu without DND can simplify life with many playlists. Thanks
+       to Andrzej Palejko for his patch.
+
+       NEW FEATURE: preliminary support for calculating gapless
+       playback information (lame encoded mp3 files only).  Thanks to
+       Michael Tiffany.
+
+       UPDATE: Smart playlists now support the following new fields:
+       album artist, tv show, last skipped, season number, skipcount
+       and video kind.
+
+       IMPROVEMENT: Clicking on an item with the right mouse button
+       will select and open the context menu, which is the intended
+       behavior. As a consequence, the interface will remain blocked
+       while the selection is being updated and displayed.
+
+       BUGFIX: dragging tracks between two iPods would sometimes not
+       actually copy the file.
+
+       UPDATED: Italian translation (thanks to Daniele Forsi)
+
+       PACKAGING: Install a .desktop file and icons according to the
+       freedesktop.org specification.
+
+gtkpod V0.99.8
+
+       NEW FEATURE: Support of several iPods (currently you need to
+       edit the itdb_* entries in ~/.gtkpod/prefs to add
+       repositories). Each iPod can be loaded/ejected
+       individually. Scripts are called before loading (gtkpod.load)
+       and after saving (gtkpod.eject) with the mountpoint as the
+       first argument. If you need to mount the iPod manually, put the
+       mount command in gtkpod.load.
+
+       NEW FEATURE: Support for mobile phones supporting iTunes (see
+       Changelog_detailed for details)
+
+       NEW FEATURE: Lyrics are displayed on the iPod when available.
+
+       NEW FEATURE: Preliminary (no meta data) support of h.264 video
+       format via the libmp4v2 interface. Thanks to Peter Lieverdink.
+
+       NEW FEATURE: Script to sync notes from Tomboy to the
+       iPod. Thanks to Tejas Dinkar.
+
+       NEW FEATURE: Support of iTunes iTunNORM tag for volume
+       normalisation of mp4 tracks.
+
+       NEW FEATURE: Support of aacgain's replay gain tag for volume
+       normalisation of mp4 tracks (takes precedence over the iTunNORM
+       tag, see http://altosdesign.com/aacgain/)
+
+       NEW FEATURE: Support for start time, stop time, skip when
+       shuffling and remember playback position.
+
+       IMPROVEMENT: Support for coverart has been improved. You may
+       have to select your iPod model from a list of available models
+       if your iPod cannot be identified automatically, as is the case
+       for iTunes mobile phones or the new 6th generation iPod Nanos.
+       Coverart embedded in the music file (APIC tag) can now also
+       read. Support to read the coverart from specified files is
+       still available though. Please note that at present APIC
+       support only works when adding tracks directly to the iPod. It
+       does not work when you add tracks to a LOCAL repository first
+       and use Drag and Drop to move the track to your iPod.
+
+       IMPROVEMENT: Podcasts are marked as unplayed (on the iPod, with
+       a bullet in front of the title) when newly added to the podcast
+       list, and unmarked once they have been played once on the iPod.
+
+       IMPROVEMENT: Support to sync thunderbird's address book to an
+       iPod Nano with old firmware that would otherwise only display
+       the first address. This script may be useful to other users as
+       well as it writes out one vcf file per contact instead of just
+       one big file containing all contacts. Thanks to Paul Oremland.
+
+       IMPROVEMENT: Handle multiple calendar and task files in
+       sync-evocalendar script. Thanks to Michele C. Soccio
+
+       NEW: Spanish translation. Thanks to Alejandro Lamas.
+
+       BUGFIX: Pressing 'OK' when syncing directories several times
+       could crash gtkpod. Thanks to dforsi.
+
+       BUGFIX: Exporting tracks did not work if the template
+       extensions (.mp3...) did not match case-sensitively, possibly
+       leading to non-exported tracks. Thanks to Mattias Wadman.
+
+       BUGFIX: When updating tracks, the filename of the music file
+       and the filename of the thumbnail could be messed up. Fixed.
+
+       BUGFIX: The Edit Detail dialog did not handle the 'Year' field
+       correctly.
+
+       BUGFIX: When updating tracks, files were not copied to the iPod
+       even if the file was changed.
+
+       BUGFIX: Removing playlists could crash gtkpod.
+
+       WORKAROUND: Disable sorting of playlist view as this crashed
+       gtkpod.
+
+gtkpod V0.99.4
+
+       BUGFIX: Options for exporting playlist files could not be
+       changed.
+
+       BUGFIX: Fixed segfault when updating tracks or directories with
+       artowrk present.
+
+       BUGFIX: Browse button for "Sync Notes Script" opened a
+       directory browser instead of a file browser.
+
+       BUGFIX: Writing ID3v2.4 tags in UTF8 did not always
+       work. Thanks to 't0c' for the patch.
+
+       BUGFIX: Context Menus for removing playlists from the iPod were
+       not displayed. Thanks to 'rob/biffhero' for pointing this out.
+
+gtkpod V0.99.2
+       BUGFIX: Fix segfault when applying preferences.
+
+       BUGFIX: Don't require libcurl (not actively used).
+
+       UPDATE: Swedish translation catalog
+
+       IMPROVEMENT: Allow export of multiple thunderbird address
+       books (by naming the output filename).
+
+gtkpod V0.99.0
+       NEW: type-ahead search functionality. Thanks to Nick Piper,
+       http://www.nickpiper.co.uk/ -- please note that the list view
+       you want to search in needs to have keyboard focus. Selection
+       of the search column is done by clicking anywhere inside the
+       column.
+
+       NEW: Handle Compilations decently. The compilation mp3 tag is
+       read and written, and compilation artists can be grouped into
+       "Compilations" in the Artist filter tab. Thanks to Iain Benson!
+
+       NEW: Window for edit of track details, including functionality
+       to set thumbnails. The thumbnails are not stored as tags in the
+       file as iTunes does it. Instead, the original filename is
+       stored.
+
+       NEW: Display and setting/removing of thumbnail images. Choose
+       "Show Details" from the context menu (right mouse-button). New
+       thumbnails are displayed by the iPod but get wiped by iTunes,
+       however.
+
+       NEW: Automatic adding of thumbnail images when adding new
+       tracks or updating existing ones. See the option on the 'Track
+       Info' page of the preferences dialog for settings about which
+       filename will be used. Any filename is possible, even filenames
+       constructed from the album or artist name.
+
+       NEW: very basic iPod video support (you can add Videos but no
+       metadata is filled in). Thanks to Uwe Herman for the input.
+
+       NEW: script to sync contacts from a Palm (via jppy
+       http://wiki.zanu.org.uk/jppy). Thanks to Nick Piper,
+       http://www.nickpiper.co.uk/)
+
+       NEW: basic podcast support (use e.g. bashpodder or gpodder to
+       download podcasts, then add them directly into the podcast
+       playlist on the iPod).
+
+       NEW: transition to libgpod to read/write iTunesDB. See
+       www.gtkpod.org/libgpod.html for details.
+
+       IMPROVEMENT: added comment, category, description, podcast url,
+       podcast rss, subtitle fields and release date to displayable
+       fields.
+
+       IMPROVEMENT: Support playcounts on iPod Shuffle as well
+
+       IMPROVEMENT: Remember size of 'Edit Smart Playlist' dialog and
+       use scrolled window for the rules display.
+
+       IMPROVEMENT: Update smart playlists automatically (on
+       load/display/save) if 'live updating' is set.
+
+       IMPROVEMENT: Support for more mp3 file tags: Compilation
+       (TCMP), Podcast URL/Title (TID), Podcast Description (TDS),
+       Podcast Subtitle (TT3), Podcast RSS (WFD), Podcast Release Date
+       (TDR). Mostly reading only because of limited support on
+       id3tag's side.
+
+       UPDATED: Italian translation (thanks to Edward Matteucci)
+
+       BUGFIX: 'Check iPod's files' could crash under certain
+       circumstances (thanks to David Mansfield for the patch).
+
+       BUGFIX: Lame's Replay Gain was read incorrectly for certain
+       values. Thanks to Chris Brotherton for tracking this down.
+
+       BUGFIX: Prevent that all rules in a smart playlist get deleted,
+       which would mess up the iTunesDB.
+
+       BUGFIX: Choosing 'Delete' from the menu (not context menu) now
+       works again.
+
+gtkpod V0.95.CVS
+       NEW: script to sync addressbooks in ldif format provided by
+       Sebastien BERIDOT.
+
+       NEW: script to sync kNotes (KDE note program) provided by
+       Sebastian Scherer.
+
+       CHANGE: MP3 tags: use 'Band/Orchestra/Accompaniment' (TPE2) as
+       artist if it exists. Otherwise use 'Lead artist/Lead
+       performer/Soloist/Performing group' (TPE1) as before. Let me
+       know if this causes problems for you.
+
+       UPDATED Hebrew translation (thanks to Assaf Gillat)
+
+       SAFETY: call sync() and flush all buffers to the iPod after
+       writing the iTunesDB -- should minimise filesystem errors
+       caused by people disconnecting the iPod without unmounting.
+
+       BUGFIX: Copying playlists by drag and drop could confuse smart
+       playlists referencing these playlists. Fixed.
+
+       After copying playlists by drag and drop, smart playlists
+       refering to these playlists could become confused.
+
+gtkpod V0.94.0
+       NEW FEATURE: stable sorting of track view. This allows you, for
+       example, to first sort by title, then by artist. The list will
+       then be sorted by artist, but all titles of each artist remain
+       sorted as well (before the tiles were random).
+       Arbitrary depth and order of stable sorting is possible by
+       clicking the sort columns in the desired order.
+
+       NEW FEATURE: define your own ignore list of words that should
+       be ignored during sorting (sort options: ctrl-s).
+
+       IMPROVEMENT: improved handling of dangling files (files that
+       are referenced in the iTunesDB but are not present on the
+       iPod).
+
+       IMPROVEMENT: use 'eject' instead of 'umount'. Also fixes the
+       bug that 'could not unmount' was always displayed, even if the
+       umount was successful (thanks to Andreas Hauber).
+
+       BUGFIX: Some iTunesDB files written by iTunes could not be read
+       because of an error in the parse code (gtkpod would attempt to
+       read beyond the end of the file).
+
+       BUGFIX: Fixed compatibility issue with new firmware 3.1 and
+       iTunes 4.9 (only 256 tracks were shown on the iPod, iTunes
+       removed the majority of the tracks from the iPod). Podcasts are
+       still not supported, however, and will be lost when handled by
+       gtkpod.
+
+       BUGFIX: Fixed On-The-Go playlist handling (thanks to "Todd").
+
+       UPDATE: Hebrew translation catalog. Thanks to Assaf Gillat!
+
+gtkpod V0.93.1
+       BUGFIX: When changing the mountpoint, the change was not
+       written to the preferences file correctly.
+
+       BUGFIX: 'Copy from iPod' just failed in offline mode instead of
+       giving meaningful error messages -> fixed.
+
+       IMPROVEMENT: 'Copy from iPod' is now 'Export from Database' and
+       allows to export from the local database as well. This is
+       useful if you want to rename files in a consistant manner.
+
+gtkpod V0.93
+	Complete rewrite of reading/writing the iTunesDB. The code for
+	reading and writing the iTunesDB (and other iPod/Shuffle
+	files) is completely self-contained (itdb*.[ch]) and can
+	easily be used in other projects.
+
+	NEW FEATURE: Support of 'local database' containing tracks on
+	local harddisk. The contents of the local hard disk can be
+	browsed in the known gtkpod-fashion: by artist or genre or
+	album etc. Tracks and entire playlists can be dragged over to
+	the iPod or Shuffle database. By using smart playlists with
+	defined size in MBytes, the Shuffle can be filled effectively.
+
+	Drag and drop also works in the opposite direction: drag
+	tracks or entire playlists from the iPod/Shuffle database into
+	your local database. If necessary, the tracks are copied to
+	your harddisk automatically.
+
+	NEW FEATURE: sync-abook.sh and sync-webcalendar.sh scripts
+	provided by Daniel Kercher.
+
+	NEW FEATURE: sync-thunderbird.sh script	provided by Clinton
+	Gormley.
 
 	IMPROVEMENT: support MP3 disc numbers (thanks to Leigh Dyer)
+
+	IMPROVEMENT: Use of GTK filechoosers instead of fileselectors
+	(thanks to James Ligget)
+
+	IMPROVEMENT: sync-notes.sh now also works on directories (thanks
+	to Thomas Perl)
+
+	UPDATE: use 'iconv' instead of 'recode' in the provided export
+	scripts. Thanks to Alexey Dokuchaev.
+
+	UPDATE: All translation catlogs updated (French, German,
+	Italian, Japanese and Swedish)
+
+	BUGFIX: display and reading of compilation flag fixed (thanks
+	to Julien Oster for the patch)
+
+	BUGFIX: don't hang when parsing playlist files with empty
+	lines (thanks to Mattias Wadman)
+
+	BUGFIX: When exporting from the iPod: if the original filename
+        of a track was available, the track was not copied from the
+        iPod but from the original location on the user's
+        harddisk. Had the original file been removed or the export was
+        done on another computer (where the original file was not
+        present), the export failed.
 
 gtkpod V0.88.2
 	IMPROVEMENT: Added '%p' (current playlist) identifier when
