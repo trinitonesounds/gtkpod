@@ -53,7 +53,8 @@ gtkpod_SOURCES = \
     tools.c tools.h \
     wavfile.c wavfile.h \
     help.c \
-    help.h
+    help.h \
+    prefsdlg.c
 
 gtkpod_LDADD = $(LIBS) $(INTLLIBS) @LIBOBJS@
 
