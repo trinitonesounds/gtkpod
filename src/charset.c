@@ -44,8 +44,8 @@
 static gchar *auto_charset = NULL;
 
 typedef struct {
-	gchar *descr;
-	gchar *name;
+	const gchar *descr;
+	const gchar *name;
 } CharsetInfo;
 
 

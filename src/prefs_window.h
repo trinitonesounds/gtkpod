@@ -51,7 +51,6 @@ void sort_window_show_hide_tooltips (void);
 void sort_window_ok (void);
 void sort_window_apply (void);
 void sort_window_cancel (void);
-void sort_window_create (void);
 void sort_window_delete (void);
 void sort_window_set_pm_autostore (gboolean val);
 void sort_window_set_tm_autostore (gboolean val);

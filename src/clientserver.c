@@ -105,8 +105,9 @@ static gboolean socket_used ()
 	    if (connect(csock, (struct sockaddr *)server,
 			sizeof(struct sockaddr_un)) != -1)
 	    {
-		if (write(csock, SOCKET_TEST, strlen(SOCKET_TEST)) == 
-		    strlen (SOCKET_TEST))
+		size_t socket_test_len = strlen(SOCKET_TEST);
+		if (write(csock, SOCKET_TEST, socket_test_len) == 
+		    (ssize_t) socket_test_len)
 		    result = TRUE;
 	    }
 	    close(csock);
@@ -289,7 +290,8 @@ gboolean client_playcount (gchar *file)
 		{
 		    gchar *buf = g_strdup_printf ("%s%s",
 						  SOCKET_PLYC, file);
-		    if (write(csock, buf, strlen(buf)) != strlen (buf))
+		    size_t buf_len = strlen(buf);
+		    if (write(csock, buf, buf_len) != (ssize_t) buf_len)
 		    {
 			fprintf (stderr, "Error communicating to server. Playcount registered in offline database.\n");
 			register_playcount (file);

@@ -1435,7 +1435,7 @@ on_charset_combo_entry_changed          (GtkEditable     *editable,
 
 void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect)
 {
-    if ((inst >= 0) && (inst < SORT_TAB_MAX))
+    if (inst < SORT_TAB_MAX)
     {
       temp_prefs_set_int_index(temp_prefs, "st_autoselect", inst, 
                                autoselect);

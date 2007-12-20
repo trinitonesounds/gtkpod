@@ -557,7 +557,7 @@ static GtkWidget *add_copy_selected_to_target_itdb (GtkWidget *menu,
     GList *db;
     struct itdbs_head *itdbs_head;
     iTunesDB *itdb;
-    gchar *stock_id = NULL;
+    const gchar *stock_id = NULL;
     Playlist *pl;
 
   
