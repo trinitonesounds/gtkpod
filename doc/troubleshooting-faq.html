@@ -622,7 +622,7 @@ Test Unit Ready 00 00 00 00 00
                 </p>
 <p class="para block">The following error message is displayed when accessing the device
                 </p>
-<div class=" block programlisting block-indent"><pre class="programlisting">usb-storage: Attempting to get CSW...
+<div class=" block programlisting block-indent"><pre class="programlisting">                    usb-storage: Attempting to get CSW...
 usb-storage: usb_stor_bulk_transfer_buf: xfer 13 bytes 
 usb-storage: Status code -75; transferred 0/13 
                 </pre></div>
@@ -689,7 +689,7 @@ usb-storage: Status code -75; transferred 0/13
                     around this, one must prevent pcfs from detecting the first FAT32 filesystem, forcing it to move on to the second one. This can be done 
                     by changing the filesystem identifier like so: 
                 </p>
-<div class=" block programlisting block-indent"><pre class="programlisting"># dd if=/dev/rdsk/c3t0d0s2 of=/tmp/ipod.orig count=1
+<div class=" block programlisting block-indent"><pre class="programlisting">                    # dd if=/dev/rdsk/c3t0d0s2 of=/tmp/ipod.orig count=1
 # cp /tmp/ipod.orig /tmp/ipod.modified &lt;edit /tmp/ipod.modified and change the first occurance of "FAT32" (at offset 0x52 for me) to something else like "CAT32"&gt;
 # dd if=/tmp/ipod.modified of=/dev/rdsk/c3t0d0s2 count=1
                 </pre></div>

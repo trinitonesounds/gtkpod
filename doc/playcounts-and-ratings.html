@@ -474,20 +474,20 @@ dd.answer div.label { float: left; }
 <li class="linktrail linktrail-last"><a class="linktrail" href="ipod-and-content.html" title="iPod and content">iPod and content</a></li>
 </ul>
 <p class="para block block-first">Whenever a track is played completely on the iPod (firmware version 1.3 or higher) a counter in the "Play Counts" file will be increased by one. The same file also contains the rating set with the 3rd generation (and later) iPods. This file appears to be deleted whenever the iPod resets itself, e.g. because the iPod is disconnected from the computer. Therefore, be careful! Charging the iPod seems to do no harm.
-</p>
+            </p>
 <p class="para block">When gtkpod is started, it will also read this file and incorporate the information into the iTunesDB that can be written back to the iPod. There have been several requests to also register playcounts when playing a track on the local machine. This is possible by calling gtkpod as
-</p>
+            </p>
 <div class=" block programlisting block-indent"><pre class="programlisting">gtkpod -p &lt;filename&gt;</pre></div>
 <p class="para block">If gtkpod is already running, the playcount of that track there will be increased by one. If gtkpod is not already running, the playcount will be registered in ~/.gtkpod/offline_playcount. This file will be read the next time you import the iTunesDB from your iPod, and the playcounts will be updated accordingly.
-</p>
+            </p>
 <p class="para block">Please note that if you start several instances of gtkpod, only the first instance will register playcounts through "gtkpod -p".
-</p>
+            </p>
 <p class="para block">Now all that is required is to tell your favorite player to call gtkpod with the filename of the played track.
-</p>
+            </p>
 <p class="para block">For xmms this is possible as of July 18th, 2004 (CVS version). Versions before that (including 1.2.10) only allow you to have an external program called at the beginning of a track. Our patch allows to have an external program called also at the end of a track.
-</p>
+            </p>
 <p class="para block">In each case you will need to activate the "General Plugin" called "song_change" and configure it to call 'gtkpod -p "%f"'.
-</p>
+            </p>
 </div></div>
 <div class="navbar navbar-bottom"><table class="navbar"><tr>
 <td class="navbar-prev"><a class="navbar-prev" href="copying-content-to-the-ipod.html" title="Copying content to the iPod">Copying content to the iPod</a></td>

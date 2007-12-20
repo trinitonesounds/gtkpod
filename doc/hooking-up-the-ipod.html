@@ -494,14 +494,14 @@ dd.answer div.label { float: left; }
 <div class="header"><h2 class="sect2 title"><span class="title"><span class="label">1.1.2. </span>Using udev</span></h2></div>
 <p class="para block block-first">For linux distros installed with hal and udev, plugging an ipod in and mounting it becomes a trivial exercise. A device node will normally be created under /dev, eg. /dev/sdc.</p>
 <p class="para block">Using udev rules it is possible to "play" and refine this device node to reflect personal requirements. For example, including these udev rules will allow 2 ipods to be loaded at the same time without interfering with one another:</p>
-<div class=" block programlisting block-indent"><pre class="programlisting">#80GB IPOD
+<div class=" block programlisting block-indent"><pre class="programlisting">                    #80GB IPOD
 SUBSYSTEMS=="usb", ATTRS{serial}=="000A2700XXXXXXXX", KERNEL=="sd?2", \
 NAME="80gbipod", MODE="0664", OPTIONS="last_rule"
  
 #4GB IPOD NANO
 SUBSYSTEMS=="usb", ATTRS{serial}=="000A2700YYYYYYYY", KERNEL=="sd?2", \
 NAME="4gbnano", MODE="0664", OPTIONS="last_rule"
-</pre></div>
+                </pre></div>
 <p class="para block">By including the test against the serial number it is possible to uniquely identify an individual iPod and load it appropriately.</p>
 </div>
 <div class="division sect2">
