@@ -26,6 +26,10 @@
     * doc/figures/*:
       Completed import of documentation from the wiki.
 
+2007-12-20 Daniele Forsi <dforsi at users.sourceforge.net>
+	* display.c: add NULL terminator to the argument list for a call
+	  to gnome_canvas_item_set()
+
 2007-12-19 Matvey Kozhev <sikon at users.sourceforge.net>
 
 	* COPYING-DOCS:

@@ -525,7 +525,8 @@ void display_image_dialog (GdkPixbuf *image)
 		
 	/* Apply the image to the canvas */
 	gnome_canvas_item_set (	canvasitem,
-																							"pixbuf", scaled);
+					"pixbuf", scaled,
+					NULL);
 
 	gtk_box_pack_start_defaults (GTK_BOX(canvasbox), GTK_WIDGET (canvas));
 		
