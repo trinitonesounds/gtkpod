@@ -1,3 +1,18 @@
+2007-12-20 Matvey Kozhev <sikon at users.sourceforge.net>
+
+    * data/gtkpod.glade:
+    * src/prefsdlg.c:
+    * src/Makefile.am:
+      Mockup of the new preferences dialog, available in
+      Edit -> Preferences (Experimental).
+      
+    * src/display_itdb.c:
+      gtkpod.track_add_extra.typo.awn.1.patch by Andrew W. Nosenko
+      <andrew.w.nosenko@gmail.com>:
+      
+      Fix typo, avoid re-creating ExtraTrackData if it already exists
+      as consequence.
+
 2007-12-19 Matvey Kozhev <sikon at users.sourceforge.net>
 
 	* COPYING-DOCS:

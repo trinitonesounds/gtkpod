@@ -251,7 +251,7 @@ void gp_track_add_extra (Track *track)
 {
     g_return_if_fail (track);
 
-    if (!track->userdata);
+    if (!track->userdata)
     {
 	ExtraTrackData *etr = g_new0 (ExtraTrackData, 1);
 	track->userdata = etr;
