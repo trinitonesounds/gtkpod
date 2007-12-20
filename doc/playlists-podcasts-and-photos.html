@@ -1,8 +1,10 @@
 <html xmlns:set="http://exslt.org/sets">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>The gtkpod Manual</title>
-<link rel="next" href="gtkpod.html" title="The gtkpod Manual">
+<title>Playlists, podcasts and photos</title>
+<link rel="previous" href="managing-playlists.html" title="Managing playlists">
+<link rel="next" href="advanced-features.html" title="Advanced features">
+<link rel="top" href="gtkpod.html" title="The gtkpod Manual">
 <style type="text/css">
 
 html { height: 100%; }
@@ -441,46 +443,110 @@ dd.answer div.label { float: left; }
 </head>
 <body>
 <div class="navbar navbar-top"><table class="navbar"><tr>
-<td class="navbar-prev"></td>
-<td class="navbar-next"><a class="navbar-next" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></td>
+<td class="navbar-prev"><a class="navbar-prev" href="managing-playlists.html" title="Managing playlists">Managing playlists</a></td>
+<td class="navbar-next"><a class="navbar-next" href="advanced-features.html" title="Advanced features">Advanced features</a></td>
 </tr></table></div>
 <div class="sidebar"><div class="sidenav"><div class="autotoc"><ul>
-<li>About This Document</li>
+<li><a href="gtkpod-info.html" title="About This Document">About This Document</a></li>
 <li>
 <a class="xref" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a><div class="autotoc"><ul>
 <li><a class="xref" href="getting-started.html" title="Getting started">Getting started</a></li>
 <li><a class="xref" href="ipod-and-content.html" title="iPod and content">iPod and content</a></li>
-<li><a class="xref" href="managing-playlists.html" title="Managing playlists">Managing playlists</a></li>
+<li>
+<a class="xref" href="managing-playlists.html" title="Managing playlists">Managing playlists</a><div class="autotoc"><ul><li>Playlists, podcasts and photos</li></ul></div>
+</li>
 <li><a class="xref" href="advanced-features.html" title="Advanced features">Advanced features</a></li>
 </ul></div>
 </li>
 </ul></div></div></div>
-<div class="body body-sidebar"><div class="division bookinfo">
-<a name="bookinfo"></a><div class="header">
-<h1 class="title">The gtkpod Manual</h1>
-<h2 class="subtitle">This is the user manual for gtkpod, a GTK+ iPod manager.</h2>
+<div class="body body-sidebar"><div class="division sect1">
+<a name="playlists-podcasts-and-photos"></a><div class="header"><h1 class="sect1 title"><span class="title">Playlists, podcasts and photos</span></h1></div>
+<ul class="linktrail">
+<li class="linktrail linktrail-first"><a class="linktrail" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></li>
+<li class="linktrail linktrail-last"><a class="linktrail" href="managing-playlists.html" title="Managing playlists">Managing playlists</a></li>
+</ul>
+<div class="autotoc"><ul>
+<li>
+<span class="label">3.1.1. </span><a class="xref" href="playlists-podcasts-and-photos.html#playlists-ppp" title="Playlists">Playlists</a>
+</li>
+<li>
+<span class="label">3.1.2. </span><a class="xref" href="playlists-podcasts-and-photos.html#podcasts" title="Podcasts">Podcasts</a>
+</li>
+<li>
+<span class="label">3.1.3. </span><a class="xref" href="playlists-podcasts-and-photos.html#photos" title="Photos">Photos</a>
+</li>
+</ul></div>
+<div class="division sect2">
+<a name="playlists-ppp"></a><div class="header"><h2 class="sect2 title"><span class="title"><span class="label">3.1.1. </span>Playlists</span></h2></div>
+<p class="para block block-first">Playlists reside under the iPod repository node in the left hand pane of gtkpod. Clicking on them will display the tracks associated with them, effectively filtering the other gtkpod panes. You can ...
+</p>
+<div class="block list itemizedlist"><ul class="itemizedlist">
+<li class="li-first">
+<span class="para">create playlists with the &lt;New Playlist&gt; button on the toolbar or pressing "Ctrl-n" in the playlist listview.
+</span>
+</li>
+<li>
+<span class="para">create playlists by adding an existing playlist file with &lt;Add file&gt; or &lt;Add playlist&gt;.
+</span>
+</li>
+<li>
+<span class="para">add tracks to playlists by marking the tracks you want to add, and then dragging them onto the playlist.
+</span>
+</li>
+<li>
+<span class="para">rename playlists.
+</span>
+</li>
+<li>
+<span class="para">delete playlists by selecting the desired playlist and pressing "Ctrl-D", or by selecting "Delete Playlist" from the Edit menu.
+</span>
+</li>
+</ul></div>
 </div>
-<div class="division">
-<h2 class="title copyright">Copyright</h2>
-<div class="block block-first"><dl class="dl-compact"><dt class="copyright">Copyright © <span class="year">2007</span>  <span class="holder">gtkpod wiki contributors</span>
-</dt></dl></div>
+<div class="division sect2">
+<a name="podcasts"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="podcasts-title"></a><span class="label">3.1.2. </span>Podcasts</span></h2></div>
+<p class="para block block-first">You have to download podcasts using a third party tool like <a class="ulink" href="http://linc.homeunix.org:8080/scripts/bashpodder/" title="http://linc.homeunix.org:8080/scripts/bashpodder/"><span class="citetitle"><span style="font-style: italic; ">bashpodder</span></span></a> or <a class="ulink" href="http://perli.net/projekte/gpodder/%29" title="http://perli.net/projekte/gpodder/%29"><span class="citetitle"><span style="font-style: italic; ">gpodder</span></span></a> .
+</p>
+<p class="para block">Podcasts should be added directly into the 'Podcasts' playlist of the iPod repository, for example by selecting the Podcasts playlist before manually adding files/directories. Podcasts will then appear only in the Podcasts section on the iPod. If you add podcasts to the main playlist 'gtkpod/iPod' or any other iPod playlist first and then drag them over to the Podcasts playlist, the podcasts will appear in the Podcasts section on the iPod, as well as in the normal music section.
+</p>
+<p class="para block">The podcast 'repository' is a local repository (like 'Local') where you can keep all local podcasts. No mechanism exists to automatically synchronize the iPod repository with the Podcast repository at this time. You have to drag the podcasts over manually.
+</p>
 </div>
-<div class="division legalnotice">
-			<h2 class="title legalnotice">Legal Notices</h2>
-			<p class="para block block-first">
-				Permission is granted to copy, distribute and/or modify this
-				document under the terms of the GNU Free Documentation
-				License (GFDL), Version 1.2 or any later version published
-				by the Free Software Foundation with no Invariant Sections,
-				no Front-Cover Texts, and no Back-Cover Texts.  You can find
-				a copy of the GFDL at this <a class="ulink" href="ghelp:fdl" title="ghelp:fdl">link</a> or in the file COPYING-DOCS
-				distributed with this manual.
-			</p>
-		</div>
+<div class="division sect2">
+<a name="photos"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="photos-title"></a><span class="label">3.1.3. </span>Photos</span></h2></div>
+<p class="para block block-first">If your ipod supports photos then a special dynamic playlist is created in the playlist tree. <span class="emphasis emphasis-bold">YOU CANNOT DELETE IT!</span> Indeed when clicking on it all the usual track related ipod functions are disabled or removed.
+</p>
+<div class="block list itemizedlist"><ul class="itemizedlist">
+<li class="li-first">
+<span class="para">The track window elements are replaced with the photo management pane. This displays the Photo Library and all the saved photos from the ipod and allows you to add new albums, add new images, remove albums, remove images and drag n drop image between albums.
+</span>
+</li>
+<li>
+<span class="para">You cannot delete the Photo Library as this is the original photo database. All images are stored in it and thus clicking on it, all the images on the ipod are displayed in it. Subsequent albums display a subset of the Photo Library's images.
+</span>
+</li>
+<li>
+<span class="para">Removing an image from an album will remove it from the album but it will still be stored on the ipod in the Photo Library.
+</span>
+</li>
+<li>
+<span class="para">Removing an image from the Photo Library will delete it completely from the ipod.
+</span>
+</li>
+<li>
+<span class="para">You can select a set of images from a selected album (inc. the Photo Library) and drag n drop them into another album.
+</span>
+</li>
+<li>
+<span class="para">Any changes made in the photo management window will change the Photo playlist to italics indicating that a "Save Changes" should occur before exiting in order to preserve those changes.
+</span>
+</li>
+</ul></div>
+</div>
 </div></div>
 <div class="navbar navbar-bottom"><table class="navbar"><tr>
-<td class="navbar-prev"></td>
-<td class="navbar-next"><a class="navbar-next" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></td>
+<td class="navbar-prev"><a class="navbar-prev" href="managing-playlists.html" title="Managing playlists">Managing playlists</a></td>
+<td class="navbar-next"><a class="navbar-next" href="advanced-features.html" title="Advanced features">Advanced features</a></td>
 </tr></table></div>
 </body>
 </html>

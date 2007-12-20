@@ -89,8 +89,8 @@ NAME="4gbnano", MODE="0664", OPTIONS="last_rule"]]>
                 <para>If a duplicate is detected, gtkpod will print out the the filenames of the duplicate files. If the filename of the already existing file is not available (it is not stored in the iTunes database, see "Extended Information File" below), other available information of the track is printed.
                 </para>
             </sect2>
-            <sect2 id='and-ltfilename-and-gt#extended-information-file-and-lt-slash-filename-and-gtextended-information-file'>
-                <title id='and-ltfilename-and-gt#extended-information-file-and-lt-slash-filename-and-gtextended-information-file-title'>Extended Information File</title>
+            <sect2 id='extended-information-file'>
+                <title>Extended Information File</title>
                 <para>Some (I believe) essential information is not stored in Apple's iTunes database. You can therefore instruct gtkpod to write an additional file (iTunesDB.ext) with extended information. For each track it stores
                     <itemizedlist>
                         <listitem>
@@ -464,7 +464,7 @@ usb-storage: Status code -75; transferred 0/13 ]]>
             </sect2>
         </sect1>
         <sect1 id="the-sysinfo-file">
-            <title>The Sysinfo File</title>
+            <title>The sysinfo file</title>
             <para>Starting with the 2007 generation of iPods, libgpod needs an additional configuration step to correctly modify the iPod content. libgpod
                 needs to know the so-called iPod "firewire id", otherwise the iPod won't recognize what libgpod wrote to it and will behave as if it's empty. 
             </para>
@@ -631,4 +631,639 @@ usb-storage: Status code -75; transferred 0/13 ]]>
             </sect2>
         </sect1>
     </chapter>
+	<chapter id="ipod-and-content">
+	<title>iPod and content</title>
+	<sect1 id="layout-of-gtkpod">
+	<title>Layout of gtkpod</title>
+	<para>
+		<figure>
+		<title>Typical layout of gtkpod</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="figures/gtkpod.png"/>
+					</imageobject>
+				</mediaobject>
+		</figure>
+	</para>
+	<sect2 id='what-is-a-repository-question'><title id='what-is-a-repository-question-title'>What is a Repository?</title>
+<para>The left hand pane in gtkpod displays all the repositories that have been created. A repository is (like it implies) a collection of all music tracks, videos and photographs imported into it. They are associated together by a binary XML database file that is the same format as the one that sits on an iPod.
+</para>
+<para>By default, gtkpod creates a Local repository and a Podcast Repository. These sit on the computer with gtkpod (they can be found under the ~/.gtkpod directory). By having a local repository, it is possible to import tracks into gtkpod without needing to copy them straight to an iPod. This means that if the cover art, for example, needs to be changed then tracks can be managed without even having the iPod plugged in.
+</para>
+<para>Of course, gtkpod is pointless without accessing an iPod. In the same pane as the local repository, new iPod repositories can be created. These repositories related to iPods by model and mount point. Normally, one repository is sufficient but as you can see below, it is possible to set up multiple iPod repositories on the same computer.
+</para>
+</sect2>
+<sect2 id='repository-pane'><title id='repository-pane-title'>Repository Pane</title>
+<itemizedlist>
+<listitem>
+<para>Below each repository, available playlists are listed along with a podcast playlist.
+</para>
+</listitem>
+<listitem>
+<para>Under iPods that support photographs, a special dynamic node is created that, when clicked, invokes the photo management tool. This allows straight addition of photos to the iPod as well as management of photo albums on the iPod. **Note:** this photo node cannot be deleted!! There is no point trying as it is created by gtkpod for the sole purpose of displaying the photo management tool.
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+<sect2 id='menus-and-toolbar'><title id='menus-and-toolbar-title'>Menus and Toolbar</title>
+<itemizedlist>
+<listitem>
+<para>Menus across the top provide alternative access to the most frequently used functions.
+</para>
+</listitem>
+<listitem>
+<para>Toolbar provides the following actions:
+<itemizedlist>
+<listitem>
+<para>Load iPod(s) -> used for manually mounting any iPods already set up in gtkpod
+</para>
+</listitem>
+<listitem>
+<para>Save Changes -> vital button! The Save All function that save any changes made to loaded iPods or the local database.
+</para>
+</listitem>
+<listitem>
+<para>Files -> Add individual music files to the selected repository.
+</para>
+</listitem>
+<listitem>
+<para>Dirs -> Add any music files located in the selected directories to the selected repository.
+</para>
+</listitem>
+<listitem>
+<para>Playlist -> Add a playlist file to the selected repository.
+</para>
+</listitem>
+<listitem>
+<para>New PL -> Create a new playlist on the selected repository.
+</para>
+</listitem>
+</itemizedlist>
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+<sect2 id='filter-tabs'><title id='filter-tabs-title'>Filter Tabs</title>
+<itemizedlist>
+<listitem>
+<para>The two notebooks above the track display are called "Filter Tabs".
+</para>
+</listitem>
+<listitem>
+<para>They allow you to filter which tracks are displayed.
+</para>
+</listitem>
+<listitem>
+<para>If you edit an entry in the filter tab, the corresponding entry in all associated tracks will be updated as well. When writing the tags to disk as well, updating of a large number of tracks may take a while.
+</para>
+</listitem>
+<listitem>
+<para>So in the image above, choosing "Alice Cooper" on the first filter tab and "Trash" on the second filter tab will only display the tracks from that most excellent of albums (no dissenting opinions required! ;-) ).
+</para>
+</listitem>
+<listitem>
+<para>Obviously, these filters can be altered to suit. Selecting ALL on a sort tab effectively removes the filter and displays all tracks.
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+<sect2 id='track-window'><title id='track-window-title'>Track Window</title>
+<itemizedlist>
+<listitem>
+<para>Displays all tracks residing in the selected repository and conforming to the selected filters.
+</para>
+</listitem>
+<listitem>
+<para>The columns can be sorted and are interchangeable.
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+<sect2 id='cover-art-display'><title id='cover-art-display-title'>Cover Art Display</title>
+<itemizedlist>
+<listitem>
+<para>Displays the cover art of all albums stored in the repository.
+</para>
+</listitem>
+<listitem>
+<para>If no cover art exists for an album then the default "?" image is displayed.
+</para>
+</listitem>
+<listitem>
+<para>See <link linkend="cover-art">the Cover Art section</link> for more information.
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+	</sect1>
+	<sect1 id="adding-files-and-folders"><title>Adding files and folders</title>
+	<sect2 id='getting-tracks-into-gtkpod'><title id='getting-tracks-into-gtkpod-title'>Getting Tracks into gtkpod</title>
+<itemizedlist>
+<listitem>
+<para>You can add individual tracks, entire directories recursively, or existing playlists using "Add Files". A file selection dialogue will appear. By default existing tracks (same full filename) will be skipped.
+</para>
+</listitem>
+<listitem>
+<para>You can add directories recursively using "Add Dirs". A directory selection dialogue will appear.
+</para>
+</listitem>
+<listitem>
+<para>You can add existing playlists using "Add Playlists"
+</para>
+</listitem>
+<listitem>
+<para>You can delete tracks by marking them and pressing the "Ctrl-d" . If you delete tracks from the master playlist (the topmost playlist, called "gtkpod" by default). You can also delete tracks by selecting them, and using "Delete Track" in the Edit menu or from the context menu.
+</para>
+</listitem>
+<listitem>
+<para>You can update ID3 tags of selected tracks in gtkpod from the mp3 file by pressing "Ctrl-u" or choose "Update track info from file" in the Edit menu or from the context menu.
+</para>
+</listitem>
+<listitem>
+<para>You can rename ID3 tags by editing the fields in gtkpod. You can change an entire group of ID3 tags by editing an entry in the sort tab (or mark several tracks and edit the first).
+</para>
+</listitem>
+<listitem>
+<para>You can specify which tags to display in the preferences window.
+</para>
+</listitem>
+<listitem>
+<para>You can specify (in the prefs window) if the ID3 tags of the corresponding mp3 file(s) should also be updated.
+    <figure>
+		<title>The Add Folders dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="figures/add-folders.png"/>
+					</imageobject>
+				</mediaobject>
+    </figure>
+</para>
+</listitem>
+<listitem>
+<para>Can add music and video files invidually using Add Files.
+</para>
+</listitem>
+<listitem>
+<para>Can add directories of music and video file using Add Directories.
+</para>
+</listitem>
+<listitem>
+<para>The files are imported into the selected <link linkend="what-is-a-repository-question">repository.</link> If the selected repository is an iPod then the files will be copied directly onto it.
+</para>
+</listitem>
+<listitem>
+<para>See <link linkend="supported-file-types">Supported File Types</link> for types of files that can be imported.
+</para>
+<para>Note: gtkpod is an iPod management tool. Tracks, videos and photographs already need to be on the computer filesystem before they can be imported. If adding a CD is the requirement then it needs to be ripped first. Have a look at:
+<itemizedlist>
+<listitem>
+<para><ulink url='http://nostatic.org/grip/'><citetitle>grip</citetitle></ulink>
+</para>
+</listitem>
+<listitem>
+<para><ulink url='http://live.gnome.org/SoundJuicer'><citetitle>Sound Juicer</citetitle></ulink>
+</para>
+</listitem>
+<listitem>
+<para><ulink url='http://docs.kde.org/stable/en/kdemultimedia/kaudiocreator/index.html'><citetitle>kaudiocreator</citetitle></ulink>
+</para>
+</listitem>
+</itemizedlist>
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+<sect2 id='dragging-and-dropping'><title id='dragging-and-dropping-title'>Dragging and Dropping</title>
+<itemizedlist>
+<listitem>
+<para>Once imported tracks can be dragged around gtkpod, including inbetween repositories, playlists, filter tabs and the track display pane.
+</para>
+</listitem>
+<listitem>
+<para>A drop <emphasis role="italic">onto</emphasis> an existing playlist will add the tracks to that playlist.
+</para>
+</listitem>
+<listitem>
+    <para>A drop <emphasis role="italic">between</emphasis> two existing playlists or behind the last playlist will create a new playlist to which the tracks are added.
+</para>
+</listitem>
+<listitem>
+<para>The default action for the drop is either move or copy as appears appropriate (e.g. playlists are moved within a database ('local' or 'iPod/Shuffle'), but copied when dragged across different databases). The applicable action is displayed within the drag icon and can be changed by pressing the control key during the drop.
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+	</sect1>
+	<sect1 id="view-and-edit-track-details">
+	<title>View and edit track details</title>
+<sect2 id='edit-track-details'><title id='edit-track-details-title'>Edit Track Details</title>
+<para>The Edit Track Details window can be displayed from a couple places.</para>
+<itemizedlist>
+<listitem>
+<para>Select a track from the Track window, right-click and select "Edit Track Details" from the popup.
+</para>
+</listitem>
+<listitem>
+<para>Make a selection in any of the categories, eg. Album, Genre, and right-clicking "Edit Track Details will display the window and allow all tracks in that category to be edited.
+</para>
+</listitem>
+<listitem>
+<para>Right-clicking "Edit Track Details" from the popup menu on the CoverArt Display displays the window , allowing all tracks belonging to the album to be edited.
+</para>
+<para>
+    <figure>
+		<title>The Edit Track Details dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="figures/edit-track-details.png"/>
+					</imageobject>
+				</mediaobject>
+    </figure>
+</para>
+</listitem>
+<listitem>
+<para>The window allows multiple tracks to be edited at the same time. By selecting the "Change all Tracks Simulaneously" check box **BEFORE** making any edits, all the selected tracks can be updated with the new information.
+</para>
+</listitem>
+<listitem>
+<para>The coverart can be dragged n dropped on from a web browser in the same way as the Cover Art Display. However, dropping a new cover onto this window will update the cover art of the tracks and not the album! This is an important distinction as it is possible to have different cover art for tracks in the same album! (why anyone would but its possible)!
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+<sect2 id='refresh-op-update-cp-track-info-from-file'><title id='refresh-op-update-cp-track-info-from-file-title'>Refresh (Update) Track Info From File</title>
+<para>If you have changed the ID3 tags of your original file, you can update the ID3 tags stored in gtkpod without removing and re-adding the track. Simply select the track to be updated and press "Ctrl-u" or choose "Update Track Info From File" from the Edit menu. Since gtkpod needs to know the filename of the track, the "Extended Information File" (see <link linkend="extended-information-file">here</link>) is needed.
+</para>
+<para>"Update" will also re-read the replay-gain tags from disk, if available, and set the soundcheck field. If no replay-gain tag is available, the soundcheck field will be erased. You can also select entries in the filter tab or entire playlists for refresh.
+</para>
+</sect2>
+<sect2 id='synchronize-with-directories'><title id='synchronize-with-directories-title'>Synchronize with Directories</title>
+<para>If you have added files to directories or changed files in directories you have previously added tracks from, you can use the "Synchronize Dirs" utility to update your iTunesDB.
+</para>
+<para>"Synchronize with Dir(s)" will use the selected tracks to make a list of directories to update, so you should activate the "Write Extended Information" option in the export section of the Preferences dialogue.
+</para>
+<para>It will then add all non-existing tracks in those directories and update all existing tracks. The tracks are also added to the currently selected playlist, if they aren't already a member.
+</para>
+<para>Tracks that have been removed from the directory will only be removed from the iTunesDB if this option is checked in the option dialogue.
+</para>
+<para>For best results you should also activate duplicate detection. This avoids unnecessary copying of unchanged tracks.
+</para>
+</sect2>
+<sect2 id='volume-normalization'><title id='volume-normalization-title'>Volume Normalization</title>
+<para>There are two fields in the iTunes Database (iTunesDB) that allow for the adjustment of the volume of an individual track:</para>
+<itemizedlist>
+<listitem>
+<para>the volume field (a signed integer)</para>
+</listitem>
+<listitem>
+<para>the soundcheck field (in dB).
+</para>
+</listitem>
+</itemizedlist>
+<para>
+The volume is always active, whereas the soundcheck field is only active when you select 'soundcheck' on the iPod. Further, the soundcheck field only affects the earphone output but not the line output of the iPod. 
+</para>
+<para>
+gtkpod will set the soundcheck according to the replay-gain tag set in your mp3 file. Newer versions of 'lame' automatically include the replay-gain tag when encoding. In that case the soundcheck field will be filled in when you first import a track. 
+</para>
+<para>If no replay-gain tag is set, you can use the function 'Normalize Volume' to call mp3gain (mp3gain.sourceforge.net) to calculate the gain and write a replay-gain tag. Since this procedure is very time consuming, it is not done automatically during import. You need to install mp3gain in the default path or set the full path in the 'Tools' section of the preferences dialog. If the iPod is connected, the tag is written to the file stored on the iPod.
+</para>
+<para>At this time "album gain" functionality is not supported. "Album gain" means that the volume of all tracks of one album is adjusted by the same gain, such that the relative volume level remains the same. It is planned to realize this in one of the next versions.
+</para>
+<para>Also, please be aware that tracks are not normalized on a 'per playlist' fashion. If a track is normalized, it's normalized in all playlists it is a member of.
+</para>
+<para>Once the replay-gain tag has been read, it is stored in the extended information file 'iTunesDB.ext'. When you call 'Normalize volume' again, the stored value will be used to re-populate the soundcheck field. Use 'Update Track' to re-read the tag from the file.
+</para>
+</sect2>
+	</sect1>
+	<sect1 id="cover-art">
+	<title>Cover art</title>
+<para>Cover art is a visual element of your gtkpod music collection. It changes the black and white database of artists and title names back into something related to the physical CDs and DVDs that have been imported.
+</para>
+<sect2 id='coverart-display'><title id='coverart-display-title'>CoverArt Display</title>
+<para>The display consists of 9 covers displayed at any one time. The entire album collection can be cycled through from one end to another. The main image is slighly larger and lacking in "shine" for viewing clarity.
+</para>
+<para>
+    <figure>
+        <title>Cover art display</title>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="figures/coverart.png"/>
+            </imageobject>
+        </mediaobject>
+    </figure>
+</para>
+<itemizedlist>
+<listitem>
+<para>Use the scrollbar to quickly slide back and forth over the album collection.
+</para>
+</listitem>
+<listitem>
+<para>Use the scrollbar buttons to more precisely step through each album.
+</para>
+</listitem>
+<listitem>
+<para>Click on the main album cover image (one at the front and in the centre) once to display just the album's tracks in the right pane of gtkpod
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+<sect2 id='coverart-popup-menu'><title id='coverart-popup-menu-title'>CoverArt Popup Menu</title>
+<para>
+    <figure>
+        <title>Cover art popup menu</title>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="figures/cover-popupmenu.png"/>
+            </imageobject>
+        </mediaobject>
+    </figure>
+</para>
+<itemizedlist>
+<listitem>
+<para>Right-click on the main album cover image to display the popup menu with 3 options:</para>
+<itemizedlist>
+<listitem>
+<para>Select Cover From File
+</para>
+</listitem>
+<listitem>
+<para>View Full Size Artwork
+</para>
+</listitem>
+<listitem>
+<para>Edit Track Details
+</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+<sect3 id='select-cover-from-file'><title id='select-cover-from-file-title'>Select Cover From File</title>
+<para>
+    <figure>
+        <title>Select cover from file</title>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="figures/cover-setfromfile.png"/>
+            </imageobject>
+        </mediaobject>
+    </figure>
+</para>
+<itemizedlist>
+<listitem>
+<para>Selecting this option displays a file chooser dialog. Select the preferred image file and click OK. The album cover changes to a scaled version of the new image, while all the tracks in the album have their artwork path modified to the path of the preferred image.
+</para>
+</listitem>
+</itemizedlist>
+</sect3>
+<sect3 id='view-full-size-artwork'><title id='view-full-size-artwork-title'>View Full Size Artwork</title>
+<para>
+    <figure>
+        <title>View full size artwork</title>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="figures/cover-fullsize.png"/>
+            </imageobject>
+        </mediaobject>
+    </figure>
+</para>
+<itemizedlist>
+<listitem>
+<para>Selecting this options opens a dialog displaying the cover image. The image is either its true size of the biggest size it can be while still fitting on the desktop. Its true resolution is displayed underneath in the format width x height.
+</para>
+</listitem>
+<listitem>
+<para>The dialog is modal so must be closed before moving on. The OK button closes the dialog.
+</para>
+</listitem>
+</itemizedlist>
+</sect3>
+<sect3 id='edit-track-details-coverart'><title>Edit Track Details</title>
+<itemizedlist>
+<listitem>
+<para>This provides a shortcut to the "Edit Track Details" dialog for editing the ID3 tag information for all tracks belonging to the album displayed.
+</para>
+</listitem>
+</itemizedlist>
+</sect3>
+</sect2>
+	</sect1>
+	<sect1 id="adding-cover-art-from-a-browser">
+	<title>Adding cover art from a browser</title>
+<para>Unlike other applications, cover art in gtkpod is not hidden away in a "difficult to find" image cache. In fact, cover art files, for a local database, can be located anywhere on the filesystem.
+</para>
+<sect2 id='setting-image-on-track-import'><title id='setting-image-on-track-import-title'>Setting Image on Track Import</title>
+<para>Locating the image file in the same directory as the tracks gives the additional benefit that gtkpod will analyse the image upon track import and set the image as the album's cover artwork. It is Important to ensure the image's filename corresponds to at least one of the image filename templates entered in the Preferences window.
+</para>
+</sect2>
+<sect2 id='setting-image-on-existing-album'><title id='setting-image-on-existing-album-title'>Setting Image on Existing Album</title>
+<para>The use of the popup menu to select a cover art file from the filesystem has been documented <filename>Cover Art|here</filename>. It is also possible to download a cover art image file from the internet and drag n drop it into gtkpod.
+</para>
+<sect3 id='drag-and-#-three-nine-n-drop-using-firefox'><title id='drag-and-#-three-nine-n-drop-using-firefox-title'>Drag 'n Drop Using Firefox</title>
+<orderedlist>
+<listitem>
+<para>Locate the preferred image and display it in firefox.
+</para>
+</listitem>
+<listitem>
+<para>Ensure the url of the image ends with ".jpg" or ".JPG" (other file extensions could be supported if demand warrants it).
+</para>
+</listitem>
+<listitem>
+<para>Drag the image from Firefox and drop it onto the Cover Art Display's centre/main cover image. The main cover image should be displaying the album which requires the new cover.
+</para>
+</listitem>
+<listitem>
+<para>If a cover already exists with the same filename then gtkpod will ask whether the existing image be overwritten or the new image be named something else.
+</para>
+</listitem>
+<listitem>
+<para>The image will be downloaded from the url location, saved in the album's directory on the filesystem and applied to each track belonging to that album.
+</para>
+</listitem>
+</orderedlist>
+</sect3>
+<sect3 id='drag-and-#-three-nine-n-drop-using-konqueror'><title id='drag-and-#-three-nine-n-drop-using-konqueror-title'>Drag 'n Drop Using Konqueror</title>
+<itemizedlist>
+<listitem>
+<para>A limitation of the dnd in Firefox is that only the url can be used to get at the image file. Thus, the page must be displaying just the image and gtkpod must redownload the image internally (using curl and the image url).
+</para>
+</listitem>
+<listitem>
+<para>Konqueror offers the additional functionality that the image file can be extracted directly from its cache. This has the benefits of avoiding the internal curl download and that the url is not restricted to those ending in ".jpg"
+</para>
+</listitem>
+<listitem>
+<para>The importance of the latter benefit concerns websites that do not offer the direct download of cover art images. <ulink url='http://www.allcdcovers.com'><citetitle>allcdcovers.com</citetitle></ulink> is one such site, where its images are displayed in the browser but the image url cannot be used a second time to download the same image. Thus, allcdcovers.com cannot be used as a download dnd source in Firefox. However, in Konqueror, simply open a full image from allcdcovers then just drag 'n drop into gtkpod.
+</para>
+</listitem>
+<listitem>
+<para>Maybe Firefox will do this some day too..
+</para>
+</listitem>
+</itemizedlist>
+</sect3>
+</sect2>
+	</sect1>
+	<sect1 id="copying-content-to-the-ipod"><title>Copying content to the iPod</title>
+<sect2 id='getting-tracks-onto-the-ipod'><title id='getting-tracks-onto-the-ipod-title'>Getting Tracks onto the iPod</title>
+<itemizedlist>
+<listitem>
+<para>Tracks can be imported directly to an iPod by ensuring the latter is the selected repository before clicking Add Files or Add Directories.
+</para>
+</listitem>
+<listitem>
+<para>Normally though, tracks will already have been imported into the Local repository. To copy them onto the iPod simply select the tracks in the Track Window and drag them onto the iPod repository icon.
+</para>
+</listitem>
+<listitem>
+<para>To copy a whole album, selected the album in one of the sort tabs and drag that onto the iPod repository.
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+<sect2 id='playlists'><title id='playlists-title'>Playlists</title>
+<itemizedlist>
+<listitem>
+<para>Use playlists to group together a set of tracks. Simply create a new playlist in the Local repository then drag n drop the tracks onto it.
+</para>
+</listitem>
+<listitem>
+<para>Tracks are not actually copied into a playlist so should a track be deleted then it will be deleted from all playlists.
+</para>
+</listitem>
+<listitem>
+<para>Drag n drop a playlist onto the iPod repository icon to copy it and all its tracks to the iPod. The playlist will be available in the Playlist section of the iPod's control system as well as all tracks being copied to the iPod.
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+<sect2 id='save-changes'><title id='save-changes-title'>Save Changes</title>
+<itemizedlist>
+<listitem>
+<para>At any change to a repository, eg. track addition, deletion, edit ..., a change has occurred that requires a database save. To highlight this, the name of the repository is changed to italics, ie. Local -> <emphasis role="italic">Local</emphasis>. This shows the repository requires saving.
+</para>
+</listitem>
+<listitem>
+<para>Should gtkpod be closed prior to any saving then a dialog is displayed informing that data changes will be lost if a save is not performed.
+</para>
+</listitem>
+<listitem>
+<para>Clicking the "Save Changes" button will save all changes made to all of the repositories. This is the point where tracks are actually copied to the iPod and the iPod database updated. Only after a save is performed will the tracks copied to the iPod, be playable on the iPod.
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+	</sect1>
+	<sect1 id="playcounts-and-ratings"><title>Playcounts and ratings</title>
+<para>Whenever a track is played completely on the iPod (firmware version 1.3 or higher) a counter in the "Play Counts" file will be increased by one. The same file also contains the rating set with the 3rd generation (and later) iPods. This file appears to be deleted whenever the iPod resets itself, e.g. because the iPod is disconnected from the computer. Therefore, be careful! Charging the iPod seems to do no harm.
+</para>
+<para>When gtkpod is started, it will also read this file and incorporate the information into the iTunesDB that can be written back to the iPod. There have been several requests to also register playcounts when playing a track on the local machine. This is possible by calling gtkpod as
+</para>
+<programlisting>gtkpod -p &lt;filename&gt;</programlisting>
+<para>If gtkpod is already running, the playcount of that track there will be increased by one. If gtkpod is not already running, the playcount will be registered in ~/.gtkpod/offline_playcount. This file will be read the next time you import the iTunesDB from your iPod, and the playcounts will be updated accordingly.
+</para>
+<para>Please note that if you start several instances of gtkpod, only the first instance will register playcounts through "gtkpod -p".
+</para>
+<para>Now all that is required is to tell your favorite player to call gtkpod with the filename of the played track.
+</para>
+<para>For xmms this is possible as of July 18th, 2004 (CVS version). Versions before that (including 1.2.10) only allow you to have an external program called at the beginning of a track. Our patch allows to have an external program called also at the end of a track.
+</para>
+<para>In each case you will need to activate the "General Plugin" called "song_change" and configure it to call 'gtkpod -p "%f"'.
+</para>
+</sect1>
+	</chapter>
+	<chapter id="managing-playlists">
+	<title>Managing playlists</title>
+	<sect1 id="playlists-podcasts-and-photos"><title>Playlists, podcasts and photos</title>
+<sect2 id='playlists-ppp'><title>Playlists</title>
+<para>Playlists reside under the iPod repository node in the left hand pane of gtkpod. Clicking on them will display the tracks associated with them, effectively filtering the other gtkpod panes. You can ...
+</para>
+<itemizedlist>
+<listitem>
+<para>create playlists with the &lt;New Playlist&gt; button on the toolbar or pressing "Ctrl-n" in the playlist listview.
+</para>
+</listitem>
+<listitem>
+<para>create playlists by adding an existing playlist file with &lt;Add file&gt; or &lt;Add playlist&gt;.
+</para>
+</listitem>
+<listitem>
+<para>add tracks to playlists by marking the tracks you want to add, and then dragging them onto the playlist.
+</para>
+</listitem>
+<listitem>
+<para>rename playlists.
+</para>
+</listitem>
+<listitem>
+<para>delete playlists by selecting the desired playlist and pressing "Ctrl-D", or by selecting "Delete Playlist" from the Edit menu.
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+<sect2 id='podcasts'><title id='podcasts-title'>Podcasts</title>
+<para>You have to download podcasts using a third party tool like <ulink url='http://linc.homeunix.org:8080/scripts/bashpodder/'><citetitle>bashpodder</citetitle></ulink> or <ulink url='http://perli.net/projekte/gpodder/%29'><citetitle>gpodder</citetitle></ulink> .
+</para>
+<para>Podcasts should be added directly into the 'Podcasts' playlist of the iPod repository, for example by selecting the Podcasts playlist before manually adding files/directories. Podcasts will then appear only in the Podcasts section on the iPod. If you add podcasts to the main playlist 'gtkpod/iPod' or any other iPod playlist first and then drag them over to the Podcasts playlist, the podcasts will appear in the Podcasts section on the iPod, as well as in the normal music section.
+</para>
+<para>The podcast 'repository' is a local repository (like 'Local') where you can keep all local podcasts. No mechanism exists to automatically synchronize the iPod repository with the Podcast repository at this time. You have to drag the podcasts over manually.
+</para>
+</sect2>
+<sect2 id='photos'><title id='photos-title'>Photos</title>
+<para>If your ipod supports photos then a special dynamic playlist is created in the playlist tree. <emphasis role="bold">YOU CANNOT DELETE IT!</emphasis> Indeed when clicking on it all the usual track related ipod functions are disabled or removed.
+</para>
+<itemizedlist>
+<listitem>
+<para>The track window elements are replaced with the photo management pane. This displays the Photo Library and all the saved photos from the ipod and allows you to add new albums, add new images, remove albums, remove images and drag n drop image between albums.
+</para>
+</listitem>
+<listitem>
+<para>You cannot delete the Photo Library as this is the original photo database. All images are stored in it and thus clicking on it, all the images on the ipod are displayed in it. Subsequent albums display a subset of the Photo Library's images.
+</para>
+</listitem>
+<listitem>
+<para>Removing an image from an album will remove it from the album but it will still be stored on the ipod in the Photo Library.
+</para>
+</listitem>
+<listitem>
+<para>Removing an image from the Photo Library will delete it completely from the ipod.
+</para>
+</listitem>
+<listitem>
+<para>You can select a set of images from a selected album (inc. the Photo Library) and drag n drop them into another album.
+</para>
+</listitem>
+<listitem>
+<para>Any changes made in the photo management window will change the Photo playlist to italics indicating that a "Save Changes" should occur before exiting in order to preserve those changes.
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+	</sect1>
+	</chapter>
+	<chapter id="advanced-features">
+	<title>Advanced features</title>
+		<sect1 id="exporting-files-from-the-ipod">
+			<title>Exporting files from the iPod</title>
+<sect2 id='copying-from-the-ipod'><title id='copying-from-the-ipod-title'>Copying from the iPod</title>
+<para>Unlike other iPod management applications, it is possible to copy tracks resident on the iPod back onto a PC, using gtkpod.
+</para>
+<itemizedlist>
+<listitem>
+<para>Mark the tracks you want to export and select "Export Tracks from Database" from the file menu (or use the context sensitive menu).
+</para>
+</listitem>
+<listitem>
+<para>A file selection dialog window appears and you can choose the directory you'd like the selected files to be written to.
+</para>
+</listitem>
+<listitem>
+<para>You can specify the output filename in the prefs dialog by specifying a template (e.g. "%A/%a - %t"). You can specify multiple templates for different file formats by separating them by a semicolon (e.g. "%A/%a - %t.mp3;%t.wav"). See the tooltip in the preferences window for a list of identifiers.
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+		</sect1>
+	</chapter>
 </book>

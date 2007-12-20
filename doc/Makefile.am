@@ -1,5 +1,7 @@
 ## File created by the gnome-build tools
 
+SUBDIRS = figures
+
 docdir = $(pkgdatadir)/doc
 doc_DATA = \
 	gtkpod.xml \

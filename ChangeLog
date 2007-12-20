@@ -21,6 +21,10 @@
       by Andrew W. Nosenko:
       
       Eliminate some GCC warnings.
+      
+    * doc/*:
+    * doc/figures/*:
+      Completed import of documentation from the wiki.
 
 2007-12-19 Matvey Kozhev <sikon at users.sourceforge.net>
 

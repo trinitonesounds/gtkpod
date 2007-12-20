@@ -1,8 +1,10 @@
 <html xmlns:set="http://exslt.org/sets">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>The gtkpod Manual</title>
-<link rel="next" href="gtkpod.html" title="The gtkpod Manual">
+<title>Adding cover art from a browser</title>
+<link rel="previous" href="cover-art.html" title="Cover art">
+<link rel="next" href="copying-content-to-the-ipod.html" title="Copying content to the iPod">
+<link rel="top" href="gtkpod.html" title="The gtkpod Manual">
 <style type="text/css">
 
 html { height: 100%; }
@@ -441,46 +443,114 @@ dd.answer div.label { float: left; }
 </head>
 <body>
 <div class="navbar navbar-top"><table class="navbar"><tr>
-<td class="navbar-prev"></td>
-<td class="navbar-next"><a class="navbar-next" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></td>
+<td class="navbar-prev"><a class="navbar-prev" href="cover-art.html" title="Cover art">Cover art</a></td>
+<td class="navbar-next"><a class="navbar-next" href="copying-content-to-the-ipod.html" title="Copying content to the iPod">Copying content to the iPod</a></td>
 </tr></table></div>
 <div class="sidebar"><div class="sidenav"><div class="autotoc"><ul>
-<li>About This Document</li>
+<li><a href="gtkpod-info.html" title="About This Document">About This Document</a></li>
 <li>
 <a class="xref" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a><div class="autotoc"><ul>
 <li><a class="xref" href="getting-started.html" title="Getting started">Getting started</a></li>
-<li><a class="xref" href="ipod-and-content.html" title="iPod and content">iPod and content</a></li>
+<li>
+<a class="xref" href="ipod-and-content.html" title="iPod and content">iPod and content</a><div class="autotoc"><ul>
+<li><a class="xref" href="layout-of-gtkpod.html" title="Layout of gtkpod">Layout of gtkpod</a></li>
+<li><a class="xref" href="adding-files-and-folders.html" title="Adding files and folders">Adding files and folders</a></li>
+<li><a class="xref" href="view-and-edit-track-details.html" title="View and edit track details">View and edit track details</a></li>
+<li><a class="xref" href="cover-art.html" title="Cover art">Cover art</a></li>
+<li>Adding cover art from a browser</li>
+<li><a class="xref" href="copying-content-to-the-ipod.html" title="Copying content to the iPod">Copying content to the iPod</a></li>
+<li><a class="xref" href="playcounts-and-ratings.html" title="Playcounts and ratings">Playcounts and ratings</a></li>
+</ul></div>
+</li>
 <li><a class="xref" href="managing-playlists.html" title="Managing playlists">Managing playlists</a></li>
 <li><a class="xref" href="advanced-features.html" title="Advanced features">Advanced features</a></li>
 </ul></div>
 </li>
 </ul></div></div></div>
-<div class="body body-sidebar"><div class="division bookinfo">
-<a name="bookinfo"></a><div class="header">
-<h1 class="title">The gtkpod Manual</h1>
-<h2 class="subtitle">This is the user manual for gtkpod, a GTK+ iPod manager.</h2>
+<div class="body body-sidebar"><div class="division sect1">
+<a name="adding-cover-art-from-a-browser"></a><div class="header"><h1 class="sect1 title"><span class="title">Adding cover art from a browser</span></h1></div>
+<ul class="linktrail">
+<li class="linktrail linktrail-first"><a class="linktrail" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></li>
+<li class="linktrail linktrail-last"><a class="linktrail" href="ipod-and-content.html" title="iPod and content">iPod and content</a></li>
+</ul>
+<p class="para block block-first">Unlike other applications, cover art in gtkpod is not hidden away in a "difficult to find" image cache. In fact, cover art files, for a local database, can be located anywhere on the filesystem.
+</p>
+<div class="autotoc"><ul>
+<li>
+<span class="label">2.5.1. </span><a class="xref" href="adding-cover-art-from-a-browser.html#setting-image-on-track-import" title="Setting Image on Track Import">Setting Image on Track Import</a>
+</li>
+<li>
+<span class="label">2.5.2. </span><a class="xref" href="adding-cover-art-from-a-browser.html#setting-image-on-existing-album" title="Setting Image on Existing Album">Setting Image on Existing Album</a>
+</li>
+</ul></div>
+<div class="division sect2">
+<a name="setting-image-on-track-import"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="setting-image-on-track-import-title"></a><span class="label">2.5.1. </span>Setting Image on Track Import</span></h2></div>
+<p class="para block block-first">Locating the image file in the same directory as the tracks gives the additional benefit that gtkpod will analyse the image upon track import and set the image as the album's cover artwork. It is Important to ensure the image's filename corresponds to at least one of the image filename templates entered in the Preferences window.
+</p>
 </div>
-<div class="division">
-<h2 class="title copyright">Copyright</h2>
-<div class="block block-first"><dl class="dl-compact"><dt class="copyright">Copyright © <span class="year">2007</span>  <span class="holder">gtkpod wiki contributors</span>
-</dt></dl></div>
+<div class="division sect2">
+<a name="setting-image-on-existing-album"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="setting-image-on-existing-album-title"></a><span class="label">2.5.2. </span>Setting Image on Existing Album</span></h2></div>
+<p class="para block block-first">The use of the popup menu to select a cover art file from the filesystem has been documented <span class="filename">Cover Art|here</span>. It is also possible to download a cover art image file from the internet and drag n drop it into gtkpod.
+</p>
+<div class="autotoc"><ul>
+<li>
+<span class="label">2.5.2.1. </span><a class="xref" href="adding-cover-art-from-a-browser.html#drag-and-#-three-nine-n-drop-using-firefox" title="Drag 'n Drop Using Firefox">Drag 'n Drop Using Firefox</a>
+</li>
+<li>
+<span class="label">2.5.2.2. </span><a class="xref" href="adding-cover-art-from-a-browser.html#drag-and-#-three-nine-n-drop-using-konqueror" title="Drag 'n Drop Using Konqueror">Drag 'n Drop Using Konqueror</a>
+</li>
+</ul></div>
+<div class="division sect3">
+<a name="drag-and-#-three-nine-n-drop-using-firefox"></a><div class="header"><h3 class="sect3 title"><span class="title"><a name="drag-and-#-three-nine-n-drop-using-firefox-title"></a><span class="label">2.5.2.1. </span>Drag 'n Drop Using Firefox</span></h3></div>
+<div class="block list orderedlist"><ol class="orderedlist">
+<li class="li-first">
+<span class="para">Locate the preferred image and display it in firefox.
+</span>
+</li>
+<li>
+<span class="para">Ensure the url of the image ends with ".jpg" or ".JPG" (other file extensions could be supported if demand warrants it).
+</span>
+</li>
+<li>
+<span class="para">Drag the image from Firefox and drop it onto the Cover Art Display's centre/main cover image. The main cover image should be displaying the album which requires the new cover.
+</span>
+</li>
+<li>
+<span class="para">If a cover already exists with the same filename then gtkpod will ask whether the existing image be overwritten or the new image be named something else.
+</span>
+</li>
+<li>
+<span class="para">The image will be downloaded from the url location, saved in the album's directory on the filesystem and applied to each track belonging to that album.
+</span>
+</li>
+</ol></div>
 </div>
-<div class="division legalnotice">
-			<h2 class="title legalnotice">Legal Notices</h2>
-			<p class="para block block-first">
-				Permission is granted to copy, distribute and/or modify this
-				document under the terms of the GNU Free Documentation
-				License (GFDL), Version 1.2 or any later version published
-				by the Free Software Foundation with no Invariant Sections,
-				no Front-Cover Texts, and no Back-Cover Texts.  You can find
-				a copy of the GFDL at this <a class="ulink" href="ghelp:fdl" title="ghelp:fdl">link</a> or in the file COPYING-DOCS
-				distributed with this manual.
-			</p>
-		</div>
+<div class="division sect3">
+<a name="drag-and-#-three-nine-n-drop-using-konqueror"></a><div class="header"><h3 class="sect3 title"><span class="title"><a name="drag-and-#-three-nine-n-drop-using-konqueror-title"></a><span class="label">2.5.2.2. </span>Drag 'n Drop Using Konqueror</span></h3></div>
+<div class="block list itemizedlist"><ul class="itemizedlist">
+<li class="li-first">
+<span class="para">A limitation of the dnd in Firefox is that only the url can be used to get at the image file. Thus, the page must be displaying just the image and gtkpod must redownload the image internally (using curl and the image url).
+</span>
+</li>
+<li>
+<span class="para">Konqueror offers the additional functionality that the image file can be extracted directly from its cache. This has the benefits of avoiding the internal curl download and that the url is not restricted to those ending in ".jpg"
+</span>
+</li>
+<li>
+<span class="para">The importance of the latter benefit concerns websites that do not offer the direct download of cover art images. <a class="ulink" href="http://www.allcdcovers.com" title="http://www.allcdcovers.com"><span class="citetitle"><span style="font-style: italic; ">allcdcovers.com</span></span></a> is one such site, where its images are displayed in the browser but the image url cannot be used a second time to download the same image. Thus, allcdcovers.com cannot be used as a download dnd source in Firefox. However, in Konqueror, simply open a full image from allcdcovers then just drag 'n drop into gtkpod.
+</span>
+</li>
+<li>
+<span class="para">Maybe Firefox will do this some day too..
+</span>
+</li>
+</ul></div>
+</div>
+</div>
 </div></div>
 <div class="navbar navbar-bottom"><table class="navbar"><tr>
-<td class="navbar-prev"></td>
-<td class="navbar-next"><a class="navbar-next" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></td>
+<td class="navbar-prev"><a class="navbar-prev" href="cover-art.html" title="Cover art">Cover art</a></td>
+<td class="navbar-next"><a class="navbar-next" href="copying-content-to-the-ipod.html" title="Copying content to the iPod">Copying content to the iPod</a></td>
 </tr></table></div>
 </body>
 </html>

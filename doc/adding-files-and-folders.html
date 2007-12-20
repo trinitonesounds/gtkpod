@@ -1,8 +1,10 @@
 <html xmlns:set="http://exslt.org/sets">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>The gtkpod Manual</title>
-<link rel="next" href="gtkpod.html" title="The gtkpod Manual">
+<title>Adding files and folders</title>
+<link rel="previous" href="layout-of-gtkpod.html" title="Layout of gtkpod">
+<link rel="next" href="view-and-edit-track-details.html" title="View and edit track details">
+<link rel="top" href="gtkpod.html" title="The gtkpod Manual">
 <style type="text/css">
 
 html { height: 100%; }
@@ -441,46 +443,145 @@ dd.answer div.label { float: left; }
 </head>
 <body>
 <div class="navbar navbar-top"><table class="navbar"><tr>
-<td class="navbar-prev"></td>
-<td class="navbar-next"><a class="navbar-next" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></td>
+<td class="navbar-prev"><a class="navbar-prev" href="layout-of-gtkpod.html" title="Layout of gtkpod">Layout of gtkpod</a></td>
+<td class="navbar-next"><a class="navbar-next" href="view-and-edit-track-details.html" title="View and edit track details">View and edit track details</a></td>
 </tr></table></div>
 <div class="sidebar"><div class="sidenav"><div class="autotoc"><ul>
-<li>About This Document</li>
+<li><a href="gtkpod-info.html" title="About This Document">About This Document</a></li>
 <li>
 <a class="xref" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a><div class="autotoc"><ul>
 <li><a class="xref" href="getting-started.html" title="Getting started">Getting started</a></li>
-<li><a class="xref" href="ipod-and-content.html" title="iPod and content">iPod and content</a></li>
+<li>
+<a class="xref" href="ipod-and-content.html" title="iPod and content">iPod and content</a><div class="autotoc"><ul>
+<li><a class="xref" href="layout-of-gtkpod.html" title="Layout of gtkpod">Layout of gtkpod</a></li>
+<li>Adding files and folders</li>
+<li><a class="xref" href="view-and-edit-track-details.html" title="View and edit track details">View and edit track details</a></li>
+<li><a class="xref" href="cover-art.html" title="Cover art">Cover art</a></li>
+<li><a class="xref" href="adding-cover-art-from-a-browser.html" title="Adding cover art from a browser">Adding cover art from a browser</a></li>
+<li><a class="xref" href="copying-content-to-the-ipod.html" title="Copying content to the iPod">Copying content to the iPod</a></li>
+<li><a class="xref" href="playcounts-and-ratings.html" title="Playcounts and ratings">Playcounts and ratings</a></li>
+</ul></div>
+</li>
 <li><a class="xref" href="managing-playlists.html" title="Managing playlists">Managing playlists</a></li>
 <li><a class="xref" href="advanced-features.html" title="Advanced features">Advanced features</a></li>
 </ul></div>
 </li>
 </ul></div></div></div>
-<div class="body body-sidebar"><div class="division bookinfo">
-<a name="bookinfo"></a><div class="header">
-<h1 class="title">The gtkpod Manual</h1>
-<h2 class="subtitle">This is the user manual for gtkpod, a GTK+ iPod manager.</h2>
+<div class="body body-sidebar"><div class="division sect1">
+<a name="adding-files-and-folders"></a><div class="header"><h1 class="sect1 title"><span class="title">Adding files and folders</span></h1></div>
+<ul class="linktrail">
+<li class="linktrail linktrail-first"><a class="linktrail" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></li>
+<li class="linktrail linktrail-last"><a class="linktrail" href="ipod-and-content.html" title="iPod and content">iPod and content</a></li>
+</ul>
+<div class="autotoc"><ul>
+<li>
+<span class="label">2.2.1. </span><a class="xref" href="adding-files-and-folders.html#getting-tracks-into-gtkpod" title="Getting Tracks into gtkpod">Getting Tracks into gtkpod</a>
+</li>
+<li>
+<span class="label">2.2.2. </span><a class="xref" href="adding-files-and-folders.html#dragging-and-dropping" title="Dragging and Dropping">Dragging and Dropping</a>
+</li>
+</ul></div>
+<div class="division sect2">
+<a name="getting-tracks-into-gtkpod"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="getting-tracks-into-gtkpod-title"></a><span class="label">2.2.1. </span>Getting Tracks into gtkpod</span></h2></div>
+<div class="block list itemizedlist"><ul class="itemizedlist">
+<li class="li-first">
+<p class="para block block-first">You can add individual tracks, entire directories recursively, or existing playlists using "Add Files". A file selection dialogue will appear. By default existing tracks (same full filename) will be skipped.
+</p>
+</li>
+<li>
+<p class="para block block-first">You can add directories recursively using "Add Dirs". A directory selection dialogue will appear.
+</p>
+</li>
+<li>
+<p class="para block block-first">You can add existing playlists using "Add Playlists"
+</p>
+</li>
+<li>
+<p class="para block block-first">You can delete tracks by marking them and pressing the "Ctrl-d" . If you delete tracks from the master playlist (the topmost playlist, called "gtkpod" by default). You can also delete tracks by selecting them, and using "Delete Track" in the Edit menu or from the context menu.
+</p>
+</li>
+<li>
+<p class="para block block-first">You can update ID3 tags of selected tracks in gtkpod from the mp3 file by pressing "Ctrl-u" or choose "Update track info from file" in the Edit menu or from the context menu.
+</p>
+</li>
+<li>
+<p class="para block block-first">You can rename ID3 tags by editing the fields in gtkpod. You can change an entire group of ID3 tags by editing an entry in the sort tab (or mark several tracks and edit the first).
+</p>
+</li>
+<li>
+<p class="para block block-first">You can specify which tags to display in the preferences window.
+</p>
+</li>
+<li>
+<p class="para block block-first">You can specify (in the prefs window) if the ID3 tags of the corresponding mp3 file(s) should also be updated.
+    <div class=" block figure block-first block-indent">
+<div class="block block-first title title-formal"><span class="title"><span class="label"><span style="font-style: italic; ">Figure 2-2</span> </span>The Add Folders dialog</span></div>
+<div class="figure-inner">
+		
+				<div class="mediaobject"><img src="figures/add-folders.png"></div>
+    </div>
 </div>
-<div class="division">
-<h2 class="title copyright">Copyright</h2>
-<div class="block block-first"><dl class="dl-compact"><dt class="copyright">Copyright © <span class="year">2007</span>  <span class="holder">gtkpod wiki contributors</span>
-</dt></dl></div>
+</p>
+</li>
+<li>
+<p class="para block block-first">Can add music and video files invidually using Add Files.
+</p>
+</li>
+<li>
+<p class="para block block-first">Can add directories of music and video file using Add Directories.
+</p>
+</li>
+<li>
+<p class="para block block-first">The files are imported into the selected <a class="link" href="layout-of-gtkpod.html#what-is-a-repository-question" title="What is a Repository?">repository.</a> If the selected repository is an iPod then the files will be copied directly onto it.
+</p>
+</li>
+<li>
+<p class="para block block-first">See <a class="link" href=".html#supported-file-types" title="">Supported File Types</a> for types of files that can be imported.
+</p>
+<p class="para block">Note: gtkpod is an iPod management tool. Tracks, videos and photographs already need to be on the computer filesystem before they can be imported. If adding a CD is the requirement then it needs to be ripped first. Have a look at:
+<div class="block list itemizedlist"><ul class="itemizedlist">
+<li class="li-first">
+<span class="para"><a class="ulink" href="http://nostatic.org/grip/" title="http://nostatic.org/grip/"><span class="citetitle"><span style="font-style: italic; ">grip</span></span></a>
+</span>
+</li>
+<li>
+<span class="para"><a class="ulink" href="http://live.gnome.org/SoundJuicer" title="http://live.gnome.org/SoundJuicer"><span class="citetitle"><span style="font-style: italic; ">Sound Juicer</span></span></a>
+</span>
+</li>
+<li>
+<span class="para"><a class="ulink" href="http://docs.kde.org/stable/en/kdemultimedia/kaudiocreator/index.html" title="http://docs.kde.org/stable/en/kdemultimedia/kaudiocreator/index.html"><span class="citetitle"><span style="font-style: italic; ">kaudiocreator</span></span></a>
+</span>
+</li>
+</ul></div>
+</p>
+</li>
+</ul></div>
 </div>
-<div class="division legalnotice">
-			<h2 class="title legalnotice">Legal Notices</h2>
-			<p class="para block block-first">
-				Permission is granted to copy, distribute and/or modify this
-				document under the terms of the GNU Free Documentation
-				License (GFDL), Version 1.2 or any later version published
-				by the Free Software Foundation with no Invariant Sections,
-				no Front-Cover Texts, and no Back-Cover Texts.  You can find
-				a copy of the GFDL at this <a class="ulink" href="ghelp:fdl" title="ghelp:fdl">link</a> or in the file COPYING-DOCS
-				distributed with this manual.
-			</p>
-		</div>
+<div class="division sect2">
+<a name="dragging-and-dropping"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="dragging-and-dropping-title"></a><span class="label">2.2.2. </span>Dragging and Dropping</span></h2></div>
+<div class="block list itemizedlist"><ul class="itemizedlist">
+<li class="li-first">
+<span class="para">Once imported tracks can be dragged around gtkpod, including inbetween repositories, playlists, filter tabs and the track display pane.
+</span>
+</li>
+<li>
+<span class="para">A drop <span class="emphasis">onto</span> an existing playlist will add the tracks to that playlist.
+</span>
+</li>
+<li>
+    <span class="para">A drop <span class="emphasis">between</span> two existing playlists or behind the last playlist will create a new playlist to which the tracks are added.
+</span>
+</li>
+<li>
+<span class="para">The default action for the drop is either move or copy as appears appropriate (e.g. playlists are moved within a database ('local' or 'iPod/Shuffle'), but copied when dragged across different databases). The applicable action is displayed within the drag icon and can be changed by pressing the control key during the drop.
+</span>
+</li>
+</ul></div>
+</div>
 </div></div>
 <div class="navbar navbar-bottom"><table class="navbar"><tr>
-<td class="navbar-prev"></td>
-<td class="navbar-next"><a class="navbar-next" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></td>
+<td class="navbar-prev"><a class="navbar-prev" href="layout-of-gtkpod.html" title="Layout of gtkpod">Layout of gtkpod</a></td>
+<td class="navbar-next"><a class="navbar-next" href="view-and-edit-track-details.html" title="View and edit track details">View and edit track details</a></td>
 </tr></table></div>
 </body>
 </html>

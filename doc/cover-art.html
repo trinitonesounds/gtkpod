@@ -1,8 +1,10 @@
 <html xmlns:set="http://exslt.org/sets">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>The gtkpod Manual</title>
-<link rel="next" href="gtkpod.html" title="The gtkpod Manual">
+<title>Cover art</title>
+<link rel="previous" href="view-and-edit-track-details.html" title="View and edit track details">
+<link rel="next" href="adding-cover-art-from-a-browser.html" title="Adding cover art from a browser">
+<link rel="top" href="gtkpod.html" title="The gtkpod Manual">
 <style type="text/css">
 
 html { height: 100%; }
@@ -441,46 +443,163 @@ dd.answer div.label { float: left; }
 </head>
 <body>
 <div class="navbar navbar-top"><table class="navbar"><tr>
-<td class="navbar-prev"></td>
-<td class="navbar-next"><a class="navbar-next" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></td>
+<td class="navbar-prev"><a class="navbar-prev" href="view-and-edit-track-details.html" title="View and edit track details">View and edit track details</a></td>
+<td class="navbar-next"><a class="navbar-next" href="adding-cover-art-from-a-browser.html" title="Adding cover art from a browser">Adding cover art from a browser</a></td>
 </tr></table></div>
 <div class="sidebar"><div class="sidenav"><div class="autotoc"><ul>
-<li>About This Document</li>
+<li><a href="gtkpod-info.html" title="About This Document">About This Document</a></li>
 <li>
 <a class="xref" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a><div class="autotoc"><ul>
 <li><a class="xref" href="getting-started.html" title="Getting started">Getting started</a></li>
-<li><a class="xref" href="ipod-and-content.html" title="iPod and content">iPod and content</a></li>
+<li>
+<a class="xref" href="ipod-and-content.html" title="iPod and content">iPod and content</a><div class="autotoc"><ul>
+<li><a class="xref" href="layout-of-gtkpod.html" title="Layout of gtkpod">Layout of gtkpod</a></li>
+<li><a class="xref" href="adding-files-and-folders.html" title="Adding files and folders">Adding files and folders</a></li>
+<li><a class="xref" href="view-and-edit-track-details.html" title="View and edit track details">View and edit track details</a></li>
+<li>Cover art</li>
+<li><a class="xref" href="adding-cover-art-from-a-browser.html" title="Adding cover art from a browser">Adding cover art from a browser</a></li>
+<li><a class="xref" href="copying-content-to-the-ipod.html" title="Copying content to the iPod">Copying content to the iPod</a></li>
+<li><a class="xref" href="playcounts-and-ratings.html" title="Playcounts and ratings">Playcounts and ratings</a></li>
+</ul></div>
+</li>
 <li><a class="xref" href="managing-playlists.html" title="Managing playlists">Managing playlists</a></li>
 <li><a class="xref" href="advanced-features.html" title="Advanced features">Advanced features</a></li>
 </ul></div>
 </li>
 </ul></div></div></div>
-<div class="body body-sidebar"><div class="division bookinfo">
-<a name="bookinfo"></a><div class="header">
-<h1 class="title">The gtkpod Manual</h1>
-<h2 class="subtitle">This is the user manual for gtkpod, a GTK+ iPod manager.</h2>
+<div class="body body-sidebar"><div class="division sect1">
+<a name="cover-art"></a><div class="header"><h1 class="sect1 title"><span class="title">Cover art</span></h1></div>
+<ul class="linktrail">
+<li class="linktrail linktrail-first"><a class="linktrail" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></li>
+<li class="linktrail linktrail-last"><a class="linktrail" href="ipod-and-content.html" title="iPod and content">iPod and content</a></li>
+</ul>
+<p class="para block block-first">Cover art is a visual element of your gtkpod music collection. It changes the black and white database of artists and title names back into something related to the physical CDs and DVDs that have been imported.
+</p>
+<div class="autotoc"><ul>
+<li>
+<span class="label">2.4.1. </span><a class="xref" href="cover-art.html#coverart-display" title="CoverArt Display">CoverArt Display</a>
+</li>
+<li>
+<span class="label">2.4.2. </span><a class="xref" href="cover-art.html#coverart-popup-menu" title="CoverArt Popup Menu">CoverArt Popup Menu</a>
+</li>
+</ul></div>
+<div class="division sect2">
+<a name="coverart-display"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="coverart-display-title"></a><span class="label">2.4.1. </span>CoverArt Display</span></h2></div>
+<p class="para block block-first">The display consists of 9 covers displayed at any one time. The entire album collection can be cycled through from one end to another. The main image is slighly larger and lacking in "shine" for viewing clarity.
+</p>
+<p class="para block">
+    <div class=" block figure block-first block-indent">
+<div class="block block-first title title-formal"><span class="title"><span class="label"><span style="font-style: italic; ">Figure 2-4</span> </span>Cover art display</span></div>
+<div class="figure-inner">
+        
+        <div class="mediaobject"><img src="figures/coverart.png"></div>
+    </div>
 </div>
-<div class="division">
-<h2 class="title copyright">Copyright</h2>
-<div class="block block-first"><dl class="dl-compact"><dt class="copyright">Copyright © <span class="year">2007</span>  <span class="holder">gtkpod wiki contributors</span>
-</dt></dl></div>
+</p>
+<div class="block list itemizedlist"><ul class="itemizedlist">
+<li class="li-first">
+<span class="para">Use the scrollbar to quickly slide back and forth over the album collection.
+</span>
+</li>
+<li>
+<span class="para">Use the scrollbar buttons to more precisely step through each album.
+</span>
+</li>
+<li>
+<span class="para">Click on the main album cover image (one at the front and in the centre) once to display just the album's tracks in the right pane of gtkpod
+</span>
+</li>
+</ul></div>
 </div>
-<div class="division legalnotice">
-			<h2 class="title legalnotice">Legal Notices</h2>
-			<p class="para block block-first">
-				Permission is granted to copy, distribute and/or modify this
-				document under the terms of the GNU Free Documentation
-				License (GFDL), Version 1.2 or any later version published
-				by the Free Software Foundation with no Invariant Sections,
-				no Front-Cover Texts, and no Back-Cover Texts.  You can find
-				a copy of the GFDL at this <a class="ulink" href="ghelp:fdl" title="ghelp:fdl">link</a> or in the file COPYING-DOCS
-				distributed with this manual.
-			</p>
-		</div>
+<div class="division sect2">
+<a name="coverart-popup-menu"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="coverart-popup-menu-title"></a><span class="label">2.4.2. </span>CoverArt Popup Menu</span></h2></div>
+<p class="para block block-first">
+    <div class=" block figure block-first block-indent">
+<div class="block block-first title title-formal"><span class="title"><span class="label"><span style="font-style: italic; ">Figure 2-5</span> </span>Cover art popup menu</span></div>
+<div class="figure-inner">
+        
+        <div class="mediaobject"><img src="figures/cover-popupmenu.png"></div>
+    </div>
+</div>
+</p>
+<div class="block list itemizedlist"><ul class="itemizedlist"><li class="li-first">
+<p class="para block block-first">Right-click on the main album cover image to display the popup menu with 3 options:</p>
+<div class="block list itemizedlist"><ul class="itemizedlist">
+<li class="li-first">
+<span class="para">Select Cover From File
+</span>
+</li>
+<li>
+<span class="para">View Full Size Artwork
+</span>
+</li>
+<li>
+<span class="para">Edit Track Details
+</span>
+</li>
+</ul></div>
+</li></ul></div>
+<div class="autotoc"><ul>
+<li>
+<span class="label">2.4.2.1. </span><a class="xref" href="cover-art.html#select-cover-from-file" title="Select Cover From File">Select Cover From File</a>
+</li>
+<li>
+<span class="label">2.4.2.2. </span><a class="xref" href="cover-art.html#view-full-size-artwork" title="View Full Size Artwork">View Full Size Artwork</a>
+</li>
+<li>
+<span class="label">2.4.2.3. </span><a class="xref" href="cover-art.html#edit-track-details-coverart" title="Edit Track Details">Edit Track Details</a>
+</li>
+</ul></div>
+<div class="division sect3">
+<a name="select-cover-from-file"></a><div class="header"><h3 class="sect3 title"><span class="title"><a name="select-cover-from-file-title"></a><span class="label">2.4.2.1. </span>Select Cover From File</span></h3></div>
+<p class="para block block-first">
+    <div class=" block figure block-first block-indent">
+<div class="block block-first title title-formal"><span class="title"><span class="label"><span style="font-style: italic; ">Figure 2-6</span> </span>Select cover from file</span></div>
+<div class="figure-inner">
+        
+        <div class="mediaobject"><img src="figures/cover-setfromfile.png"></div>
+    </div>
+</div>
+</p>
+<div class="block list itemizedlist"><ul class="itemizedlist"><li class="li-first">
+<span class="para">Selecting this option displays a file chooser dialog. Select the preferred image file and click OK. The album cover changes to a scaled version of the new image, while all the tracks in the album have their artwork path modified to the path of the preferred image.
+</span>
+</li></ul></div>
+</div>
+<div class="division sect3">
+<a name="view-full-size-artwork"></a><div class="header"><h3 class="sect3 title"><span class="title"><a name="view-full-size-artwork-title"></a><span class="label">2.4.2.2. </span>View Full Size Artwork</span></h3></div>
+<p class="para block block-first">
+    <div class=" block figure block-first block-indent">
+<div class="block block-first title title-formal"><span class="title"><span class="label"><span style="font-style: italic; ">Figure 2-7</span> </span>View full size artwork</span></div>
+<div class="figure-inner">
+        
+        <div class="mediaobject"><img src="figures/cover-fullsize.png"></div>
+    </div>
+</div>
+</p>
+<div class="block list itemizedlist"><ul class="itemizedlist">
+<li class="li-first">
+<span class="para">Selecting this options opens a dialog displaying the cover image. The image is either its true size of the biggest size it can be while still fitting on the desktop. Its true resolution is displayed underneath in the format width x height.
+</span>
+</li>
+<li>
+<span class="para">The dialog is modal so must be closed before moving on. The OK button closes the dialog.
+</span>
+</li>
+</ul></div>
+</div>
+<div class="division sect3">
+<a name="edit-track-details-coverart"></a><div class="header"><h3 class="sect3 title"><span class="title"><span class="label">2.4.2.3. </span>Edit Track Details</span></h3></div>
+<div class="block list itemizedlist"><ul class="itemizedlist"><li class="li-first">
+<span class="para">This provides a shortcut to the "Edit Track Details" dialog for editing the ID3 tag information for all tracks belonging to the album displayed.
+</span>
+</li></ul></div>
+</div>
+</div>
 </div></div>
 <div class="navbar navbar-bottom"><table class="navbar"><tr>
-<td class="navbar-prev"></td>
-<td class="navbar-next"><a class="navbar-next" href="gtkpod.html" title="The gtkpod Manual">The gtkpod Manual</a></td>
+<td class="navbar-prev"><a class="navbar-prev" href="view-and-edit-track-details.html" title="View and edit track details">View and edit track details</a></td>
+<td class="navbar-next"><a class="navbar-next" href="adding-cover-art-from-a-browser.html" title="Adding cover art from a browser">Adding cover art from a browser</a></td>
 </tr></table></div>
 </body>
 </html>
