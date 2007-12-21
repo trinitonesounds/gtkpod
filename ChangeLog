@@ -11,6 +11,10 @@
 	  Applied patch to fix crash (ST_CAT_SPECIAL) in misc_conversion.c,
 	  by Andrea <mariofutire@googlemail.com>
 	  [misc_conversion.c: line 300 (ST_to_T): should not be reached]
+	  
+	* data/gtkpod.glade:
+	* src/prefsdlg.c:
+	  Fully implemented the first tab (Display).
 
 2007-12-20 Daniele Forsi <dforsi at users.sourceforge.net>
 	* display.c: add NULL terminator to the argument list for a call
