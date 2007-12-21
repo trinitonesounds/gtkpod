@@ -564,7 +564,7 @@ gint gtkpod_confirmation_hig (GtkWindow *parent,
 	
 	GtkWidget *dialog =
 		gtk_message_dialog_new(parent,
-							   GTK_DIALOG_MODAL | GTK_DIALOG_NO_SEPARATOR,
+							   GTK_DIALOG_MODAL,
 							   icon,
 							   GTK_BUTTONS_NONE,
 							   "%s",

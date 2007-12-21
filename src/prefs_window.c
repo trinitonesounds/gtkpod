@@ -1969,28 +1969,34 @@ void sort_window_create (void)
 	/* Set Sort-Column-Combo */
 	/* create the list in the order of the columns displayed */
 	tm_store_col_order ();
-	for (i=0; i<TM_NUM_COLUMNS; ++i)
-	{   /* first the visible columns */
-	    TM_item col = prefs_get_int_index("col_order", i);
-	    if (col != -1)
-	    {
-		if (prefs_get_int_index("col_visible", col))
-		    collist = g_list_append (collist,
-					     gettext (get_tm_string (col)));
-	    }
-	}
-	for (i=0; i<TM_NUM_COLUMNS; ++i)
-	{   /* first the visible columns */
-	    TM_item col = prefs_get_int_index("col_order", i);
-	    if (col != -1)
-	    {
-		if (!prefs_get_int_index("col_visible", col))
-		    collist = g_list_append (collist,
-					     gettext (get_tm_string (col)));
-	    }
-	}
+
 	w = gtkpod_xml_get_widget (sort_window_xml, "sort_combo");
-	gtk_combo_set_popdown_strings (GTK_COMBO (w), collist);
+	gtk_combo_box_remove_text (GTK_COMBO_BOX (w), 0);
+
+	for (i=0; i<TM_NUM_COLUMNS; ++i)
+	{   /* first the visible columns */
+	    TM_item col = prefs_get_int_index("col_order", i);
+	    if (col != -1)
+	    {
+			if (prefs_get_int_index("col_visible", col))
+				gtk_combo_box_append_text (GTK_COMBO_BOX (w), gettext (get_tm_string (col)));
+/*		    collist = g_list_append (collist,
+					     gettext (get_tm_string (col))); */
+	    }
+	}
+
+	for (i=0; i<TM_NUM_COLUMNS; ++i)
+	{   /* first the visible columns */
+	    TM_item col = prefs_get_int_index("col_order", i);
+	    if (col != -1)
+	    {
+			if (!prefs_get_int_index("col_visible", col))
+				gtk_combo_box_append_text (GTK_COMBO_BOX (w), gettext (get_tm_string (col)));
+/*		    collist = g_list_append (collist,
+					     gettext (get_tm_string (col))); */
+	    }
+	}
+/*	gtk_combo_set_popdown_strings (GTK_COMBO (w), collist); */
 	g_list_free (collist);
 	collist = NULL;
 
@@ -2009,69 +2015,71 @@ void sort_window_update (void)
 {
     if (sort_window)
     {
-	gchar *str;
-	GtkWidget *w = NULL;
+	/*	gchar *str; */
+		GtkWidget *w = NULL;
 
-	switch (prefs_get_int("pm_sort"))
-	{
-	case SORT_ASCENDING:
-	    w = gtkpod_xml_get_widget (sort_window_xml, "pm_ascend");
-	    break;
-	case SORT_DESCENDING:
-	    w = gtkpod_xml_get_widget (sort_window_xml, "pm_descend");
-	    break;
-	case SORT_NONE:
-	    w = gtkpod_xml_get_widget (sort_window_xml, "pm_none");
-	    break;
-	}
-	if (w)
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
+		switch (prefs_get_int("pm_sort"))
+		{
+		case SORT_ASCENDING:
+			w = gtkpod_xml_get_widget (sort_window_xml, "pm_ascend");
+			break;
+		case SORT_DESCENDING:
+			w = gtkpod_xml_get_widget (sort_window_xml, "pm_descend");
+			break;
+		case SORT_NONE:
+			w = gtkpod_xml_get_widget (sort_window_xml, "pm_none");
+			break;
+		}
+		if (w)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
-	w = NULL;
-	switch (prefs_get_int("st_sort"))
-	{
-	case SORT_ASCENDING:
-	    w = gtkpod_xml_get_widget (sort_window_xml, "st_ascend");
-	    break;
-	case SORT_DESCENDING:
-	    w = gtkpod_xml_get_widget (sort_window_xml, "st_descend");
-	    break;
-	case SORT_NONE:
-	    w = gtkpod_xml_get_widget (sort_window_xml, "st_none");
-	    break;
-	}
-	if (w)
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
+		w = NULL;
+		switch (prefs_get_int("st_sort"))
+		{
+		case SORT_ASCENDING:
+			w = gtkpod_xml_get_widget (sort_window_xml, "st_ascend");
+			break;
+		case SORT_DESCENDING:
+			w = gtkpod_xml_get_widget (sort_window_xml, "st_descend");
+			break;
+		case SORT_NONE:
+			w = gtkpod_xml_get_widget (sort_window_xml, "st_none");
+			break;
+		}
+		if (w)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
-	switch (prefs_get_int("tm_sort"))
-	{
-	case SORT_ASCENDING:
-	    w = gtkpod_xml_get_widget (sort_window_xml, "tm_ascend");
-	    break;
-	case SORT_DESCENDING:
-	    w = gtkpod_xml_get_widget (sort_window_xml, "tm_descend");
-	    break;
-	case SORT_NONE:
-	    w = gtkpod_xml_get_widget (sort_window_xml, "tm_none");
-	    break;
-	}
-	if (w)
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
+		switch (prefs_get_int("tm_sort"))
+		{
+		case SORT_ASCENDING:
+			w = gtkpod_xml_get_widget (sort_window_xml, "tm_ascend");
+			break;
+		case SORT_DESCENDING:
+			w = gtkpod_xml_get_widget (sort_window_xml, "tm_descend");
+			break;
+		case SORT_NONE:
+			w = gtkpod_xml_get_widget (sort_window_xml, "tm_none");
+			break;
+		}
+		if (w)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
-	w = gtkpod_xml_get_widget (sort_window_xml, "tm_autostore");
-	if (w)
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 prefs_get_int("tm_autostore"));
+		w = gtkpod_xml_get_widget (sort_window_xml, "tm_autostore");
+		if (w)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+						 prefs_get_int("tm_autostore"));
 
-	if((w = gtkpod_xml_get_widget (sort_window_xml, "cfg_case_sensitive")))
-	{
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 prefs_get_int("case_sensitive"));
-	}
-	/* set standard entry in combo */
-	str = gettext (get_tm_string (prefs_get_int("tm_sortcol")));
-	w = gtkpod_xml_get_widget (sort_window_xml, "sort_combo");
-	gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), str);
+		if((w = gtkpod_xml_get_widget (sort_window_xml, "cfg_case_sensitive")))
+		{
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+						 prefs_get_int("case_sensitive"));
+		}
+		/* set standard entry in combo */
+	/*	str = gettext (get_tm_string (prefs_get_int("tm_sortcol")));
+		w = gtkpod_xml_get_widget (sort_window_xml, "sort_combo");
+		gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), str); */
+		w = gtkpod_xml_get_widget (sort_window_xml, "sort_combo");
+		gtk_combo_box_set_active(GTK_COMBO_BOX(w), prefs_get_int("tm_sortcol"));
     }
 }
 
@@ -2099,7 +2107,7 @@ void sort_window_show_hide_tooltips (void)
     {
 	GtkTooltips *tt;
 	GtkTooltipsData *tooltips_data;
-	tooltips_data = gtk_tooltips_data_get (gtkpod_xml_get_widget (sort_window_xml, "sort_combo-entry"));
+	tooltips_data = gtk_tooltips_data_get (gtkpod_xml_get_widget (sort_window_xml, "sort_combo"));
 	tt = tooltips_data->tooltips;
 	if (tt)
 	{
@@ -2124,7 +2132,7 @@ static TM_item sort_window_get_sort_col (void)
     gint i = -1;
 
     w = gtkpod_xml_get_widget (sort_window_xml, "sort_combo");
-    str = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (w)->entry));
+    str = gtk_combo_box_get_active_text (GTK_COMBO_BOX (w));
     /* Check which string is selected in the combo */
     if (str)
 	for (i=0; get_tm_string (i); ++i)

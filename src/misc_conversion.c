@@ -296,8 +296,8 @@ T_item ST_to_T (ST_CAT_item st)
     case ST_CAT_COMPOSER:    return T_COMPOSER;
     case ST_CAT_TITLE:       return T_TITLE;
     case ST_CAT_YEAR:        return T_YEAR;
-    case ST_CAT_SPECIAL:
-    case ST_CAT_NUM:         g_return_val_if_reached (-1);
+    case ST_CAT_SPECIAL:     break;
+    default:                 g_return_val_if_reached (-1);
     }
     return -1;
 }

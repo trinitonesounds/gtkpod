@@ -1,3 +1,21 @@
+2007-12-21 Matvey Kozhev <sikon at users.sourceforge.net>
+	* src/confirmation.c:
+	  Remove GTK_DIALOG_NO_SEPARATOR from the GtkMessageDialog.
+	  
+	* data/gtkpod.glade:
+	* src/prefs_window.c:
+	  Migrate to GtkComboBox for sort_combo (fixes crash regression).
+	  
+	* src/misc_conversion.c:
+	* src/display_sorttabs.c:
+	  Applied patch to fix crash (ST_CAT_SPECIAL) in misc_conversion.c,
+	  by Andrea <mariofutire@googlemail.com>
+	  [misc_conversion.c: line 300 (ST_to_T): should not be reached]
+
+2007-12-20 Daniele Forsi <dforsi at users.sourceforge.net>
+	* display.c: add NULL terminator to the argument list for a call
+	  to gnome_canvas_item_set()
+
 2007-12-20 Matvey Kozhev <sikon at users.sourceforge.net>
 
     * data/gtkpod.glade:
@@ -25,10 +43,6 @@
     * doc/*:
     * doc/figures/*:
       Completed import of documentation from the wiki.
-
-2007-12-20 Daniele Forsi <dforsi at users.sourceforge.net>
-	* display.c: add NULL terminator to the argument list for a call
-	  to gnome_canvas_item_set()
 
 2007-12-19 Matvey Kozhev <sikon at users.sourceforge.net>
 

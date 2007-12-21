@@ -1474,8 +1474,8 @@ void st_track_changed (Track *track, gboolean removed, guint32 inst)
       case ST_CAT_SPECIAL:
 	  st_track_changed_special (track, removed, inst);
 	  break;
-      case ST_CAT_NUM:
-	  break;
+      default:
+	  g_return_if_reached();
       }
   }
 }
@@ -1706,8 +1706,8 @@ void st_add_track (Track *track, gboolean final, gboolean display, guint32 inst)
       case ST_CAT_SPECIAL:
 	  st_add_track_special (track, final, display, inst);
 	  break;
-      case ST_CAT_NUM:
-	  break;
+      default:
+	  g_return_if_reached();
       }
   }
 }
@@ -1759,8 +1759,8 @@ void st_remove_track (Track *track, guint32 inst)
 	case ST_CAT_SPECIAL:
 	    st_remove_track_special (track, inst);
 	    break;
-	case ST_CAT_NUM:
-	    break;
+        default:
+	    g_return_if_reached();
 	}
     }
 }
@@ -1824,8 +1824,8 @@ void st_init (ST_CAT_item new_category, guint32 inst)
       case ST_CAT_SPECIAL:
 	  sp_remove_all_members (inst);
 	  break;
-      case ST_CAT_NUM:
-	  break;
+      default:
+	g_return_if_reached();
       }
       if (new_category != -1)
       {
@@ -1956,8 +1956,9 @@ static void st_sort_inst (guint32 inst, GtkSortType order)
 		}
 		break;
 	    case ST_CAT_SPECIAL:
-	    case ST_CAT_NUM:
 		break;
+	    default:
+	        g_return_if_reached();
 	    }
 	}
     }
@@ -2996,9 +2997,8 @@ static void st_create_page (gint inst, ST_CAT_item st_cat)
   case ST_CAT_SPECIAL:
       st0_label0 = gtk_label_new (_("Special"));
       break;
-  case ST_CAT_NUM: /* should not happen... */
+  default: /* should not happen... */
       g_return_if_reached ();
-      break;
   }
   gtk_widget_show (st0_label0);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (st0_notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (st0_notebook), st_cat), st0_label0);
