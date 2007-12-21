@@ -1147,6 +1147,7 @@
               <widget class="GtkToolButton" id="load_ipods_button">
                 <property name="visible">True</property>
                 <property name="tooltip" translatable="yes">Try to load contents of all connected iPods. For each iPod a separate repository must be set up.</property>
+                <property name="is_important">True</property>
                 <property name="label" translatable="yes">Load iPod(s)</property>
                 <property name="use_underline">True</property>
                 <property name="icon">gtkpod-read.png</property>
@@ -1230,6 +1231,7 @@
               <widget class="GtkToolButton" id="new_PL_button">
                 <property name="visible">True</property>
                 <property name="tooltip" translatable="yes">Create New Playlist</property>
+                <property name="is_important">True</property>
                 <property name="label" translatable="yes">New Playlist</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-new</property>
