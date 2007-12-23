@@ -1,3 +1,7 @@
+2007-12-23  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* configure.in: bump gtk+ requirement to 2.8.0 or newer
+	
 2007-12-21 Matvey Kozhev <sikon at users.sourceforge.net>
 	* src/confirmation.c:
 	  Remove GTK_DIALOG_NO_SEPARATOR from the GtkMessageDialog.
