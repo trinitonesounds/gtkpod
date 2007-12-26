@@ -1460,7 +1460,7 @@ void
 on_readtags_toggled                    (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    temp_prefs_set_int(temp_prefs, "readtags",
+    temp_prefs_set_int(temp_prefs, "readtags""readtags",
 		       gtk_toggle_button_get_active(togglebutton));
 }
 

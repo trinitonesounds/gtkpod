@@ -1,3 +1,10 @@
+2007-12-26 Matvey Kozhev <sikon at users.sourceforge.net>
+
+	* src/prefsdlg.c:
+	* data/gtkpod.glade:
+	  New preferences dialog mostly working, except for "advanced" buttons
+	  and format conversion settings (greyed out).
+
 2007-12-23  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* configure.in: bump gtk+ requirement to 2.8.0 or newer

@@ -57,14 +57,49 @@ ind_string toolbar_styles[] = {
 
 /*
 	Begin data
+
+	0: checkbox glade ID
+	1: preference
+	2: dependency glade IDs, comma-separated
 */
-const gchar *checkbox_map[][2] = {
-	/* "checkbox_id", "preference" */
-	{ "group_compilations", "group_compilations" },
-	{ "include_neverplayed", "not_played_track" },
-	{ "add_subfolders", "add_recursively" },
-	{ "allow_duplicates", "!sha1" },
-	{ "delete_missing", "sync_delete_tracks" },
+const gchar *checkbox_map[][3] = {
+	/* Display tab */
+	{ "group_compilations", "group_compilations", NULL },
+	{ "include_neverplayed", "not_played_track", NULL },
+	/* Music tab */
+	{ "add_subfolders", "add_recursively", NULL },
+	{ "allow_duplicates", "!sha1", NULL },
+	{ "delete_missing", "sync_delete_tracks", NULL },
+	{ "update_existing_track", "update_existing", NULL },
+	/* Metadata tab */
+	{ "read_tags", "readtags", NULL },
+	{ "parse_filename_tags", "parsetags", NULL },
+	{ "last_resort_tags", NULL, "tag_title,tag_artist,tag_album,tag_composer,tag_genre" },
+	{ "write_tags", "id3_write", "write_tags_legacy,mass_modify_tags" },
+	{ "write_tags_legacy", "!id3_write_id3v24", NULL },
+	{ "mass_modify_tags", "multi_edit", NULL },
+	{ "read_coverart", "coverart_apic", NULL },
+	{ "template_coverart", "coverart_file", NULL },
+	/* Feedback tab */
+	{ "confirm_del_tracks", NULL, "confirm_from_ipod,confirm_from_hdd,confirm_from_db" },
+	{ "confirm_from_ipod", "delete_ipod", NULL },
+	{ "confirm_from_hdd", "delete_local_file", NULL },
+	{ "confirm_from_db", "delete_database", NULL },
+	{ "confirm_del_pl", "delete_file", NULL },
+	{ "confirm_del_sync", "sync_confirm_delete", NULL },
+	{ "msg_startup", "startup_messages", NULL },
+	{ "msg_duplicates", "show_duplicates", NULL },
+	{ "msg_results", "sync_show_summary", NULL },
+	{ "msg_updated", "show_updated", NULL },
+	{ "msg_unupdated", "show_non_updated", NULL },
+};
+
+ind_string tag_checkbox_map[] = {
+	{ 0, "tag_title" },
+	{ 1, "tag_artist" },
+	{ 2, "tag_album" },
+	{ 3, "tag_genre" },
+	{ 4, "tag_composer" },
 };
 
 static GladeXML *prefs_xml = NULL;
@@ -106,14 +141,41 @@ void ind_string_fill_combo (ind_string *array, GtkComboBox *combo)
 	}
 }
 
-void init_checkbox (GtkToggleButton *checkbox, const gchar *pref)
+void update_checkbox_deps (GtkToggleButton *checkbox, const gchar *deps)
+{
+	/* Enable or disable dependent checkboxes */
+	gboolean active = gtk_toggle_button_get_active (checkbox);
+	gchar **deparray;
+	int i;
+
+	if(!deps)
+		return;
+
+	deparray = g_strsplit (deps, ",", 0);
+	
+	for(i = 0; deparray[i]; i++)
+	{
+		GtkWidget *dep = gtkpod_xml_get_widget (prefs_xml, deparray[i]);
+		gtk_widget_set_sensitive (dep, active);
+	}
+	
+	g_strfreev (deparray);
+}
+
+void init_checkbox (GtkToggleButton *checkbox, const gchar *pref, const gchar *deps)
 {
 	g_object_set_data(G_OBJECT(checkbox), "pref", (gchar *) pref);
+	g_object_set_data(G_OBJECT(checkbox), "deps", (gchar *) deps);
 	
-	if(pref[0] == '!')		/* Checkbox is !preference */
-		gtk_toggle_button_set_active(checkbox, !prefs_get_int(pref + 1));
-	else
-		gtk_toggle_button_set_active(checkbox, prefs_get_int(pref));
+	if(pref)
+	{	
+		if(pref[0] == '!')		/* Checkbox is !preference */
+			gtk_toggle_button_set_active(checkbox, !prefs_get_int(pref + 1));
+		else
+			gtk_toggle_button_set_active(checkbox, prefs_get_int(pref));
+	}
+	
+	update_checkbox_deps (checkbox, deps);
 }
 
 static gint column_tree_sort (GtkTreeModel *model,
@@ -200,6 +262,7 @@ void setup_prefs_dlg (GladeXML *xml, GtkWidget *dlg)
 {
 	gint i;
 	GtkWidget *toolbar_style_combo = gtkpod_xml_get_widget (xml, "toolbar_style");
+	GtkWidget *skip_track_update_radio = gtkpod_xml_get_widget (xml, "skip_track_update");
 	
 	/* Display */
 	
@@ -225,13 +288,28 @@ void setup_prefs_dlg (GladeXML *xml, GtkWidget *dlg)
 	
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (gtkpod_xml_get_widget (xml, "filter_tabs_count")),
 							   prefs_get_int("sort_tab_num"));
+
+	gtk_spin_button_set_value (GTK_SPIN_BUTTON (gtkpod_xml_get_widget (xml, "agp_track_count")),
+							   prefs_get_int("misc_track_nr"));
 	
 	/* Check boxes */
 	for (i = 0; i < COUNTOF(checkbox_map); i++)
 	{
 		init_checkbox (GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (xml, checkbox_map[i][0])),
-					   checkbox_map[i][1]);
+					   checkbox_map[i][1], checkbox_map[i][2]);
 	}
+	
+	for (i = 0; i < COUNTOF(tag_checkbox_map); i++)
+	{
+		GtkWidget *widget = gtkpod_xml_get_widget (xml, tag_checkbox_map[i].string);
+		g_object_set_data (G_OBJECT (widget), "index", &tag_checkbox_map[i].index);
+
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget),
+									  prefs_get_int_index ("tag_autoset", tag_checkbox_map[i].index));
+	}
+	
+	if(!prefs_get_int("update_existing"))
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (skip_track_update_radio), TRUE);
 }
 
 void open_prefs_dlg ()
@@ -289,6 +367,15 @@ void on_filter_tabs_count_value_changed (GtkSpinButton *sender, gpointer e)
 /*
 	glade callback
 */
+void on_agp_track_count_value_changed (GtkSpinButton *sender, gpointer e)
+{
+    gint num = gtk_spin_button_get_value_as_int (sender);
+    prefs_set_int ("misc_track_nr", num);
+}
+
+/*
+	glade callback
+*/
 void on_toolbar_style_changed (GtkComboBox *sender, gpointer e)
 {
 	gint index = toolbar_styles[gtk_combo_box_get_active(sender)].index;
@@ -313,11 +400,26 @@ void on_simple_checkbox_toggled (GtkToggleButton *sender, gpointer e)
 {
 	gboolean active = gtk_toggle_button_get_active (sender);
 	gchar *pref = (gchar *) g_object_get_data (G_OBJECT(sender), "pref");
+	gchar *deps = (gchar *) g_object_get_data (G_OBJECT(sender), "deps");
 	
-	if(pref[0] == '!')		/* Checkbox is !preference */
-		prefs_set_int(pref + 1, !active);
-	else
-		prefs_set_int(pref, active);
+	if(pref)
+	{
+		if(pref[0] == '!')		/* Checkbox is !preference */
+			prefs_set_int(pref + 1, !active);
+		else
+			prefs_set_int(pref, active);
+	}
+	
+	update_checkbox_deps (sender, deps);
+}
+
+/*
+	glade callback
+*/
+void on_tag_checkbox_toggled (GtkToggleButton *sender, gpointer e)
+{
+	gint index = *(gint *) g_object_get_data (G_OBJECT(sender), "index");
+	prefs_set_int_index ("tag_autoset", index, gtk_toggle_button_get_active (sender));
 }
 
 /*
@@ -396,6 +498,23 @@ void on_column_remove_clicked (GtkButton *sender, gpointer e)
 }
 
 /*
-	ADD COLUMN DIALOG
+	glade callback
 */
+void on_unsetdeps_checkbox_toggled (GtkToggleButton *sender, gpointer e)
+{
+	if(!gtk_toggle_button_get_active (sender))
+	{
+		int i;
+		gchar *deps = (gchar *) g_object_get_data (G_OBJECT(sender), "deps");
+		gchar **deparray = g_strsplit (deps, ",", 0);
+		
+		for(i = 0; deparray[i]; i++)
+		{
+			GtkWidget *dep = gtkpod_xml_get_widget (prefs_xml, deparray[i]);
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(dep), FALSE);
+		}
+	}
 
+	/* and then call the default handler */
+	on_simple_checkbox_toggled (sender, e);
+}
