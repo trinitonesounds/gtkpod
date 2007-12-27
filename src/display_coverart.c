@@ -40,6 +40,7 @@
 #include "fileselection.h"
 #include "fetchcover.h"
 #include "info.h"
+#include "gdk/gdk.h"
 
 #define DEBUG 0
 
@@ -49,6 +50,7 @@ static void free_CDWidget ();
 static gint compare_album_keys (gchar *a, gchar *b);
 static void set_display_dimensions ();
 static void set_highlight (Cover_Item *cover, gint index);
+static void set_shadow_reflection (Cover_Item *cover);
 static void raise_cdimages (GPtrArray *cdcovers);
 static void remove_track_from_album (Album_Item *album, Track *track, gchar *key, gint index, GList *keylistitem);
 static void on_cover_display_button_clicked (GtkWidget *widget, gpointer data);
@@ -59,10 +61,11 @@ static void coverart_sort_images (GtkSortType order);
 static void prepare_canvas ();
 static void set_slider_range (gint index);
 static void set_covers (gboolean force_imgupdate);
-static void set_cover_item (gint ndex, Cover_Item *cover, gchar *key, gboolean force_imgupdate);
+static gint set_cover_item (gint ndex, Cover_Item *cover, gchar *key, gboolean force_imgupdate);
 static gboolean dnd_coverart_drag_drop(GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, guint time, gpointer user_data);
 static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x, gint y, GtkSelectionData *data, guint info, guint time, gpointer user_data);
 static gboolean dnd_coverart_drag_motion (GtkWidget *widget, GdkDragContext *dc, gint x, gint y, guint time, gpointer user_data);
+static GdkColor *convert_hexstring_to_gdk_color (gchar *hexstring);
 
 /* Prefs keys */
 const gchar *KEY_DISPLAY_COVERART="display_coverart";
@@ -202,9 +205,9 @@ static void set_highlight (Cover_Item *cover, gint index)
   GdkPixbuf *scaled;
 	    	   																		
 	if(index == IMG_MAIN)
-		image = gdk_pixbuf_new_from_file(HIGHLIGHT_FILE_MAIN, &error);
-	else
-  	image = gdk_pixbuf_new_from_file(HIGHLIGHT_FILE, &error);
+		return;
+	
+	image = gdk_pixbuf_new_from_file(HIGHLIGHT_FILE, &error);
     
   if(error != NULL)
   {	
@@ -213,13 +216,81 @@ static void set_highlight (Cover_Item *cover, gint index)
 		g_return_if_fail (image);
 	}
 
-  scaled = gdk_pixbuf_scale_simple(image, cover->img_width, ((cover->img_height * 2) + 6), GDK_INTERP_NEAREST);
+  scaled = gdk_pixbuf_scale_simple(image, cover->img_width, ((cover->img_height * 2)), GDK_INTERP_NEAREST);
   gdk_pixbuf_unref (image);
 		
   gnome_canvas_item_set (cover->highlight,
 			   "pixbuf", scaled,
 			   NULL);
-  gdk_pixbuf_unref (scaled);				
+  gdk_pixbuf_unref (scaled);
+}
+
+/**
+ * set_shadow_reflection:
+ *
+ * Sets the shadow reflection to the same as the 
+ * background of the display.
+ * 
+ * @cover: A Cover_Item object which the higlighted is added to.
+ *  
+ */
+static void set_shadow_reflection (Cover_Item *cover)
+{
+  GdkPixbuf *image;
+  gint pixel_offset, rowstride, x, y, width, height;
+  guchar *drawbuf;
+  gint floor = 1;
+  	
+  width = cover->img_width;
+  height = cover->img_height + floor;
+
+  drawbuf = g_malloc((gint) (width * 16) * (gint) height);  	
+  /* drawing buffer length multiplied by 4
+  * due to 1 width per R, G, B & ALPHA
+  */
+  
+  GdkColor *bgcolour = coverart_get_background_display_colour();
+
+  rowstride = width * 4;
+  for(y = 0; y < height; ++y)
+  {
+  	for(x = 0; x < width; ++x)
+  	{
+  		pixel_offset = (y * rowstride) + (x * 4);
+  		drawbuf[pixel_offset] = bgcolour->red >> 8;
+  		drawbuf[pixel_offset + 1] = bgcolour->green >> 8;
+  		drawbuf[pixel_offset + 2] = bgcolour->blue >> 8;
+  		if (y < floor)
+  		{
+  			drawbuf[pixel_offset + 3] = 255;
+  		}
+  		else if (y > (height  / 2))
+  		{
+  			drawbuf[pixel_offset + 3] = 255;
+  		}
+  		else
+  		{
+  			gint gradient = y * (255 / (height / 2)) + 50;
+  			drawbuf[pixel_offset + 3] = gradient > 255 ? 255 : gradient;
+  			//drawbuf[pixel_offset + 3] = 255;
+  		}
+  	}
+  }
+  
+  image =  gdk_pixbuf_new_from_data(drawbuf,
+    									GDK_COLORSPACE_RGB,
+    									TRUE,
+    									8,
+    									width,
+    									height,
+    									rowstride,
+    									(GdkPixbufDestroyNotify) g_free, NULL);
+
+  gnome_canvas_item_set (cover->shadowreflection,
+			   "pixbuf", image,
+			   "y", (gdouble) (cover->img_height - floor),
+			   NULL);
+  gdk_pixbuf_unref (image);
 }
 
 /**
@@ -278,23 +349,40 @@ void force_update_covers ()
  */
 static void set_covers (gboolean force_imgupdate)
 { 
-  gint i, dataindex;
+  gint i, dataindex, nullkeys;
   gchar *key;
   Cover_Item *cover;
 
   if (cdwidget && cdwidget->cdcovers)
   {
+  	nullkeys = 0;
     for(i = 0; i < IMG_TOTAL; ++i)
     {
-		cover = g_ptr_array_index(cdwidget->cdcovers, i);
-		dataindex = cdwidget->first_imgindex + i;
+    	cover = g_ptr_array_index(cdwidget->cdcovers, i);
+    	dataindex = cdwidget->first_imgindex + i;
 
-		/* Get the key from the key list appropriate to the index
-		 * provided by the first image index property
-		 */
-		key = g_list_nth_data (album_key_list, dataindex);
-		
-		set_cover_item (i, cover, key, force_imgupdate);	
+    	/* Get the key from the key list appropriate to the index
+    	 * provided by the first image index property
+    	 */
+    	key = g_list_nth_data (album_key_list, dataindex);
+    	
+    	nullkeys += set_cover_item (i, cover, key, force_imgupdate);	
+    }
+    
+    /* If all the albums were null then the playlist/repository is empty so change
+    * the colour of the coverart_display to white
+    */
+    GdkColor *back_colour = coverart_get_background_display_colour ();
+    
+    if (! back_colour)
+    	gnome_canvas_item_set (cdwidget->bground,
+    	    				    "fill-color-rgba", 0xFFFFFFFF,
+    	    				    NULL);
+    else
+    {
+    	gnome_canvas_item_set (cdwidget->bground,
+    	    				    "fill-color-gdk", back_colour,
+        				    NULL);
     }
   }
 }
@@ -305,7 +393,7 @@ static void set_covers (gboolean force_imgupdate)
  * Internal function called  by set_covers to reset an artwork cover.
  * 
  */
-static void set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean force_imgupdate)
+static gint set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean force_imgupdate)
 {
 	GdkPixbuf *reflection;
 	GdkPixbuf *scaled;
@@ -325,8 +413,8 @@ static void set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean 
 		{
 	 		/* Hide the artist/album text*/
 	 		gnome_canvas_item_hide (GNOME_CANVAS_ITEM (cdwidget->cvrtext));
-		}		
-		return;
+		}
+		return 1;
 	}
 	
 	/* Key is not null */
@@ -358,7 +446,11 @@ static void set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean 
 	/* Display the highlight */
 	set_highlight (cover, index);
 	
+	/* Set the reflection shadow */
+	set_shadow_reflection (cover);
+	
 	gnome_canvas_item_show (cover->highlight);	
+	gnome_canvas_item_show (cover->shadowreflection);
 	
 	/* Set the Cover */
 	scaled = gdk_pixbuf_scale_simple (album->albumart, cover->img_width, cover->img_height, GDK_INTERP_NEAREST);
@@ -377,7 +469,7 @@ static void set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean 
 	reflection = gdk_pixbuf_flip (scaled, FALSE);
 	gnome_canvas_item_set (cover->cdreflection,
 		  "pixbuf", reflection,
-		  "y", (gdouble) (cover->img_height + 4),
+		  "y", (gdouble) (cover->img_height),
 		  NULL);
 	gnome_canvas_item_show (cover->cdreflection);
 	    	
@@ -399,6 +491,7 @@ static void set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean 
 		gnome_canvas_item_show (GNOME_CANVAS_ITEM (cdwidget->cvrtext));
 		g_free (text);
 	}
+	return 0;
 }
 
 /**
@@ -562,6 +655,16 @@ void coverart_clear_images ()
 	gint i;
 	Cover_Item *cover = NULL;
 	
+	/* Clear background to white */
+	gnome_canvas_item_set (cdwidget->bground,
+	    				    "fill-color-rgba", 0xFFFFFFFF,
+	    				    NULL);
+	
+	/* Disable the display coverart controls */
+	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), FALSE); 
+	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), FALSE); 
+	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), FALSE);
+			
 	for (i = 0; i < IMG_TOTAL; i++)
 	{
 		/* Reset the pixbuf */
@@ -569,6 +672,7 @@ void coverart_clear_images ()
 		cover->album = NULL;
 		gnome_canvas_item_hide (cover->cdimage);
 		gnome_canvas_item_hide (cover->cdreflection);
+		gnome_canvas_item_hide (cover->shadowreflection);
 		
 		if (cover->highlight != NULL)
 			gnome_canvas_item_hide (cover->highlight);
@@ -1175,9 +1279,9 @@ static void prepare_canvas ()
 			    "y1",(double) 0,
 			    "x2",(double) WIDTH,
 			    "y2",(double) HEIGHT,
-			    "fill_color", "black",
+			    "fill-color-rgba", 0xFFFFFFFF,
 			    NULL);
-			    
+	
 	gnome_canvas_item_lower_to_bottom(cdwidget->bground);
 	
 	cdwidget->cdcovers = g_ptr_array_sized_new (IMG_TOTAL);
@@ -1200,7 +1304,11 @@ static void prepare_canvas ()
 		cover->highlight = gnome_canvas_item_new((GnomeCanvasGroup *) cover->cdcvrgrp,
 																						GNOME_TYPE_CANVAS_PIXBUF,
 	    	   																	NULL);	
-			
+		
+		cover->shadowreflection = gnome_canvas_item_new((GnomeCanvasGroup *) cover->cdcvrgrp,
+																															GNOME_TYPE_CANVAS_PIXBUF,
+																															NULL);
+		
 		if(i == IMG_MAIN)
 		{	
 			/* set up some callback events on the main scaled image */
@@ -1305,7 +1413,7 @@ void coverart_init_display ()
 	g_return_if_fail (cdwidget->rightbutton);
 	g_return_if_fail (cdwidget->cdslider);
   
-  /* Initialise the album has backing store */
+  /* Initialise the album hash backing store */
   album_hash = g_hash_table_new_full ( g_str_hash,
   																																			g_str_equal,
   																																			(GDestroyNotify) g_free,
@@ -1758,7 +1866,7 @@ void coverart_set_images (gboolean clear_track_list)
 	if (cdwidget->block_display_change)
 		return;
 
-	/* Reset the display back to black, black and more black */
+	/* Reset the display back to white, white and more white */
 	coverart_clear_images ();
 	
 	if (clear_track_list)
@@ -1909,6 +2017,18 @@ void coverart_set_cover_from_file ()
   g_free (filename);
   
   set_covers (FALSE);
+}
+
+GdkColor *coverart_get_background_display_colour ()
+{
+	gchar *hex_string;
+	GdkColor *colour;
+	
+	if ( ! prefs_get_string_value ("coverart_display_bg_colour", &hex_string))
+			hex_string = "#000000";
+		
+	colour = convert_hexstring_to_gdk_color (hex_string);
+	return colour;
 }
 
 static gboolean dnd_coverart_drag_drop(GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, guint time, gpointer user_data)
@@ -2129,5 +2249,30 @@ static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *d
 	gtk_drag_finish (dc, FALSE, FALSE, time);
 	return;
 }
+
+/**
+ * convert_hexstring_to_gdk_color:
+ *
+ * Convert a #FFEEFF string to a GdkColor.
+ * Returns a freshly allocated GdkColor that should be freed.
+ *
+ * @GdkColor
+ */
+static GdkColor *convert_hexstring_to_gdk_color (gchar *hexstring) 
+{
+	GdkColor *colour;
+	GdkColormap *map;
+	map = gdk_colormap_get_system();
 	
+	colour = g_malloc (sizeof(GdkColor));
+	
+	if (! gdk_color_parse(hexstring, colour))
+		return NULL;
+	
+	if (! gdk_colormap_alloc_color(map, colour, FALSE, TRUE))
+		return NULL;
+	
+	return colour;
+}
+
 	

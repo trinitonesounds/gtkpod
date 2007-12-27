@@ -1,3 +1,29 @@
+2007-12-27 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * data/cdshine.png
+  * data/cdshine_main.png
+  * data/Makefile.am
+  
+    Removed reflection shadowing as this is done programmatically.
+    No higlighting required on main image to png removed entirely.
+    
+  * gtkpod.glade
+  
+    Added colour selection button for CoverArt Display background colour.
+    
+  * src/display_coverart.c
+  * src/display_coverart.h
+  * prefs_window.c
+  * prefs.c
+  
+    When a repository contains no tracks, the CoverArt Display background
+    returns to a default colour of white.
+    The default colour of a "live" CoverArt Display is black but can now be
+    changed with a preference option available from the preferences window.
+    To be added to the new preference dialog shortly.
+    To achieve this and keeps a proper reflection, the reflection shadow is
+    added programmatically using a gdkpixbuf created from data.
+      
 2007-12-27 Matvey Kozhev <sikon at users.sourceforge.net>
 
 	* INSTALL:

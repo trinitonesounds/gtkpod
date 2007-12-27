@@ -40,6 +40,7 @@
 #include "prefs.h"
 #include "prefs_window.h"
 #include "repository.h"
+#include "display_coverart.h"
 
 
 GladeXML *prefs_window_xml;
@@ -762,6 +763,9 @@ prefs_window_create (gint page)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
     				 prefs_get_int("photo_library_confirm_delete"));
         
+    w = gtkpod_xml_get_widget (prefs_window_xml, "coverart_display_bg_button");
+    GdkColor *color = coverart_get_background_display_colour();
+    gtk_color_button_set_color (GTK_COLOR_BUTTON(w), color);
 
 #if 0
     /* last.fm -- disabled, we'll hide the prefs window */
@@ -1129,6 +1133,18 @@ prefs_window_apply (void)
 
    ----------------------------------------------------------------- */
 
+void on_coverart_display_bg_color_set (GtkColorButton *widget, gpointer user_data)
+{
+	GdkColor colour;
+	gtk_color_button_get_color (widget, &colour);
+	gchar *hexstring;
+	
+	hexstring = g_strdup_printf("#%02X%02X%02X", colour.red >> 8, colour.green >> 8, colour.blue >> 8);
+	temp_prefs_set_string (
+			temp_prefs, 
+			"coverart_display_bg_colour",
+			hexstring);
+}
 
 G_MODULE_EXPORT void
 on_sorting_clicked                     (GtkButton       *button,

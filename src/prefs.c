@@ -183,7 +183,8 @@ static void set_default_preferences()
     prefs_set_string ("path_play_now", "xmms %s");
     prefs_set_string ("path_play_enqueue", "xmms -e %s");
     prefs_set_string ("path_mserv_trackinfo_root", "/var/lib/mserv/trackinfo/");
-
+    prefs_set_string ("coverart_display_bg_colour", "#000000");
+    
     str = g_build_filename (SCRIPTDIR, "convert-ogg2mp3.sh", NULL);
     prefs_set_string ("path_conv_ogg", str);
     g_free (str);

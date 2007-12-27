@@ -9,7 +9,6 @@ appdatadir = $(pkgdatadir)/data
 appdata_DATA =				\
 	gtkpod.glade			\
 	cdshine.png			\
-	cdshine_main.png		\
 	default-cover.png		\
 	gtkpod-add-dirs.png		\
 	gtkpod-add-files.png		\
