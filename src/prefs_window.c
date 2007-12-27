@@ -1133,7 +1133,7 @@ prefs_window_apply (void)
 
    ----------------------------------------------------------------- */
 
-void on_coverart_display_bg_color_set (GtkColorButton *widget, gpointer user_data)
+G_MODULE_EXPORT void on_coverart_display_bg_color_set (GtkColorButton *widget, gpointer user_data)
 {
 	GdkColor colour;
 	gtk_color_button_get_color (widget, &colour);
@@ -1144,6 +1144,7 @@ void on_coverart_display_bg_color_set (GtkColorButton *widget, gpointer user_dat
 			temp_prefs, 
 			"coverart_display_bg_colour",
 			hexstring);
+	g_free(hexstring);
 }
 
 G_MODULE_EXPORT void

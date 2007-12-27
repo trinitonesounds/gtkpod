@@ -1,5 +1,16 @@
 2007-12-27 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
+  * src/prefs_window.c
+  
+    Fixed potential memory leak in on_coverart_display_bg_color_set
+    
+  * data/gtkpod.glade
+  * src/prefsdlg.c
+  
+    Support for change background colour added to new prefs dialog
+
+2007-12-27 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
   * data/cdshine.png
   * data/cdshine_main.png
   * data/Makefile.am

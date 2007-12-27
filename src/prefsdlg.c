@@ -33,6 +33,7 @@
 #include "misc.h"
 #include "help.h"
 #include "prefs.h"
+#include "display_coverart.h"
 
 /*
 	Begin types
@@ -263,6 +264,7 @@ void setup_prefs_dlg (GladeXML *xml, GtkWidget *dlg)
 	gint i;
 	GtkWidget *toolbar_style_combo = gtkpod_xml_get_widget (xml, "toolbar_style");
 	GtkWidget *skip_track_update_radio = gtkpod_xml_get_widget (xml, "skip_track_update");
+	GtkWidget *coverart_colorselect_button = gtkpod_xml_get_widget (xml, "coverart_display_bg_button");
 	
 	/* Display */
 	
@@ -310,6 +312,10 @@ void setup_prefs_dlg (GladeXML *xml, GtkWidget *dlg)
 	
 	if(!prefs_get_int("update_existing"))
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (skip_track_update_radio), TRUE);
+	
+	GdkColor *color = coverart_get_background_display_colour();
+	gtk_color_button_set_color (GTK_COLOR_BUTTON(coverart_colorselect_button), color);
+	
 }
 
 void open_prefs_dlg ()
@@ -517,4 +523,19 @@ G_MODULE_EXPORT void on_unsetdeps_checkbox_toggled (GtkToggleButton *sender, gpo
 
 	/* and then call the default handler */
 	on_simple_checkbox_toggled (sender, e);
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_coverart_dialog_bg_color_set (GtkColorButton *widget, gpointer user_data)
+{
+	GdkColor colour;
+	gtk_color_button_get_color (widget, &colour);
+	gchar *hexstring;
+	
+	hexstring = g_strdup_printf("#%02X%02X%02X", colour.red >> 8, colour.green >> 8, colour.blue >> 8);
+	prefs_set_string ("coverart_display_bg_colour", hexstring);
+	g_free (hexstring);
+	force_update_covers ();
 }
