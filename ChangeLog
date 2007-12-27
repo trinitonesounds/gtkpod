@@ -2,6 +2,9 @@
 
 	* INSTALL:
 	  Updated dependency versions.
+	  
+	* src/file_convert.c:
+	  Renamed structure member "stderr", build issues reported
 
 2007-12-26 Matvey Kozhev <sikon at users.sourceforge.net>
 

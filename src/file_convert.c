@@ -216,7 +216,7 @@ struct _ConvTrack
     gchar *fname_root;      /* filename root of converted file          */
     gchar *fname_extension; /* filename extension of converted file     */
     GPid  pid;              /* PID of child doing the conversion        */
-    gint  stderr;           /* stderr of child doing the conversion     */
+    gint  child_stderr;     /* stderr of child doing the conversion     */
     Track *track;           /* for reference, don't access inside threads! */
     iTunesDB *itdb;         /* for reference, don't access inside threads! */
     gint  threadnum;        /* number of thread working on this track   */
@@ -2308,7 +2308,7 @@ static gboolean conversion_convert_track (Conversion *conv, ConvTrack *ctr)
 				  &ctr->pid,    /* child's PID    */
 				  NULL,         /* child's stdin  */
 				  NULL,         /* child's stdout */
-				  &ctr->stderr, /* child's stderr */
+				  &ctr->child_stderr, /* child's stderr */
 				  &error);
 
 	    child_pid = ctr->pid;
@@ -2334,7 +2334,7 @@ static gboolean conversion_convert_track (Conversion *conv, ConvTrack *ctr)
 		gint status;
 
 		/* set up i/o channel to main thread */
-		ctr->gio_channel = g_io_channel_unix_new (ctr->stderr);
+		ctr->gio_channel = g_io_channel_unix_new (ctr->child_stderr);
 		g_io_channel_set_flags (ctr->gio_channel,
 					G_IO_FLAG_NONBLOCK, NULL);
 		g_io_channel_set_close_on_unref (ctr->gio_channel, TRUE);
