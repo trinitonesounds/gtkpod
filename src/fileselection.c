@@ -139,7 +139,7 @@ static void add_files_ok(GtkFileChooser* filechooser, Playlist *playlist)
 /* ATTENTION: directly used as callback in gtkpod.glade -- if you
    change the arguments of this function make sure you define a
    separate callback for gtkpod.glade */
-void create_add_files_callback (void)
+G_MODULE_EXPORT void create_add_files_callback (void)
 {
     Playlist *pl;
 
@@ -281,7 +281,7 @@ static void add_playlists_ok (GtkFileChooser* filechooser, iTunesDB *itdb)
 /* ATTENTION: directly used as callback in gtkpod.glade -- if you
    change the arguments of this function make sure you define a
    separate callback for gtkpod.glade */
-void create_add_playlists_callback (void)
+G_MODULE_EXPORT void create_add_playlists_callback (void)
 {
     iTunesDB *itdb;
 
@@ -763,7 +763,7 @@ static void add_dir_selected (gchar *dir)
 /* ATTENTION: directly used as callback in gtkpod.glade -- if you
    change the arguments of this function make sure you define a
    separate callback for gtkpod.glade */
-void dirbrowser_create_callback (void)
+G_MODULE_EXPORT void dirbrowser_create_callback (void)
 {
     Playlist *pl;
 

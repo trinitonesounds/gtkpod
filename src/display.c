@@ -469,8 +469,7 @@ void display_image_dialog (GdkPixbuf *image)
 	GdkPixbuf *scaled = NULL;
 	gchar *text;
 		
-	preview_xml = glade_xml_new (xml_file, "coverart_preview_dialog", NULL);
-		
+	preview_xml = gtkpod_xml_new (xml_file, "coverart_preview_dialog");
 	dialog = gtkpod_xml_get_widget (preview_xml, "coverart_preview_dialog");
 	canvasbox = gtkpod_xml_get_widget (preview_xml, "coverart_preview_dialog_vbox");
 	res_label = gtkpod_xml_get_widget (preview_xml, "coverart_preview_dialog_res_lbl");
@@ -723,7 +722,8 @@ void display_install_autoscroll_row_timeout (GtkWidget *widget)
 */
 
 
-void on_edit_details_selected_playlist (GtkMenuItem     *menuitem,
+G_MODULE_EXPORT void
+on_edit_details_selected_playlist (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
     Playlist *pl = pm_get_selected_playlist ();
@@ -738,7 +738,8 @@ void on_edit_details_selected_playlist (GtkMenuItem     *menuitem,
     }
 }
 
-void on_edit_details_selected_tab_entry (GtkMenuItem     *menuitem,
+G_MODULE_EXPORT void
+on_edit_details_selected_tab_entry (GtkMenuItem     *menuitem,
 					 gpointer         user_data)
 {
     gint inst = get_sort_tab_number (
@@ -756,7 +757,8 @@ void on_edit_details_selected_tab_entry (GtkMenuItem     *menuitem,
     }
 }
 
-void on_edit_details_selected_tracks (GtkMenuItem     *menuitem,
+G_MODULE_EXPORT void
+on_edit_details_selected_tracks (GtkMenuItem     *menuitem,
 				      gpointer         user_data)
 {
     GList *tracks = tm_get_selected_tracks ();
@@ -774,7 +776,7 @@ void on_edit_details_selected_tracks (GtkMenuItem     *menuitem,
 
 
 /* callback for "add new playlist" button */
-void
+G_MODULE_EXPORT void
 on_new_playlist_button                 (GtkButton       *button,
 					gpointer         user_data)
 {
@@ -792,7 +794,7 @@ on_new_playlist_button                 (GtkButton       *button,
 
 
 /* callback for "add new playlist" menu */
-void
+G_MODULE_EXPORT void
 on_new_playlist1_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -808,14 +810,14 @@ on_new_playlist1_activate              (GtkMenuItem     *menuitem,
     }
 }
 
-void
+G_MODULE_EXPORT void
 on_edit_preferences_activate          (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
     if(!widgets_blocked)  prefs_window_create (-1);
 }
 
-void
+G_MODULE_EXPORT void
 on_edit_repository_options_activate          (GtkMenuItem     *menuitem,
 					      gpointer         user_data)
 {
@@ -831,7 +833,7 @@ on_edit_repository_options_activate          (GtkMenuItem     *menuitem,
     }
 }
 
-void
+G_MODULE_EXPORT void
 on_load_ipods_mi           (GtkMenuItem     *menuitem,
 			    gpointer         user_data)
 {
@@ -839,7 +841,7 @@ on_load_ipods_mi           (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_load_ipods_clicked               (GtkButton       *button,
 				     gpointer         user_data)
 {
@@ -847,7 +849,7 @@ on_load_ipods_clicked               (GtkButton       *button,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_save_changes_mi           (GtkMenuItem     *menuitem,
 			      gpointer         user_data)
 {
@@ -856,7 +858,7 @@ on_save_changes_mi           (GtkMenuItem     *menuitem,
 
 
 
-void
+G_MODULE_EXPORT void
 on_save_changes_clicked               (GtkButton       *button,
 				     gpointer         user_data)
 {
@@ -864,7 +866,7 @@ on_save_changes_clicked               (GtkButton       *button,
 }
 
 
-
+G_MODULE_EXPORT 
 void on_edit_smart_playlist (GtkMenuItem *mi,
 			     gpointer data)
 {
@@ -929,13 +931,14 @@ static void delete_selected_playlist (DeleteAction deleteaction)
     }
 }
 
-void on_delete_selected_tracks_from_database (GtkMenuItem *mi,
+G_MODULE_EXPORT void
+on_delete_selected_tracks_from_database (GtkMenuItem *mi,
 					      gpointer data)
 {
     delete_selected_tracks (DELETE_ACTION_DATABASE);
 }
 
-void
+G_MODULE_EXPORT void
 on_delete_selected_playlist_including_tracks_from_harddisk (GtkMenuItem *mi,
 							    gpointer data)
 {
@@ -943,7 +946,8 @@ on_delete_selected_playlist_including_tracks_from_harddisk (GtkMenuItem *mi,
 }
 
 
-void on_delete_selected_entry_from_database (GtkMenuItem *mi,
+G_MODULE_EXPORT void
+on_delete_selected_entry_from_database (GtkMenuItem *mi,
 					     gpointer data)
 {
     delete_selected_entry (DELETE_ACTION_DATABASE, 
@@ -951,7 +955,8 @@ void on_delete_selected_entry_from_database (GtkMenuItem *mi,
 }
 
 
-void on_delete_selected_entry_from_ipod (GtkMenuItem *mi,
+G_MODULE_EXPORT void
+on_delete_selected_entry_from_ipod (GtkMenuItem *mi,
 					 gpointer data)
 {
     delete_selected_entry (DELETE_ACTION_IPOD,
@@ -959,21 +964,24 @@ void on_delete_selected_entry_from_ipod (GtkMenuItem *mi,
 }
 
 
-void on_delete_selected_tracks_from_playlist (GtkMenuItem *mi,
+G_MODULE_EXPORT void
+on_delete_selected_tracks_from_playlist (GtkMenuItem *mi,
 					      gpointer data)
 {
     delete_selected_tracks (DELETE_ACTION_PLAYLIST);
 }
 
 
-void on_delete_selected_tracks_from_harddisk (GtkMenuItem *mi,
+G_MODULE_EXPORT void
+on_delete_selected_tracks_from_harddisk (GtkMenuItem *mi,
 					      gpointer data)
 {
     delete_selected_tracks (DELETE_ACTION_LOCAL);
 }
 
 
-void on_delete_selected_entry_from_harddisk (GtkMenuItem *mi,
+G_MODULE_EXPORT void
+on_delete_selected_entry_from_harddisk (GtkMenuItem *mi,
 					     gpointer data)
 {
     delete_selected_entry (DELETE_ACTION_LOCAL,
@@ -981,21 +989,23 @@ void on_delete_selected_entry_from_harddisk (GtkMenuItem *mi,
 }
 
 
-void on_delete_selected_tracks_from_ipod (GtkMenuItem *mi,
+G_MODULE_EXPORT void
+on_delete_selected_tracks_from_ipod (GtkMenuItem *mi,
 					  gpointer data)
 {
     delete_selected_tracks (DELETE_ACTION_IPOD);
 }
 
 
-void on_delete_selected_playlist (GtkMenuItem *mi,
+G_MODULE_EXPORT void
+on_delete_selected_playlist (GtkMenuItem *mi,
 				  gpointer data)
 {
     delete_selected_playlist (DELETE_ACTION_PLAYLIST);
 }
 
 
-void
+G_MODULE_EXPORT void
 on_delete_selected_playlist_including_tracks_from_database (GtkMenuItem *mi,
 							    gpointer data)
 {
@@ -1003,7 +1013,8 @@ on_delete_selected_playlist_including_tracks_from_database (GtkMenuItem *mi,
 }
 
 
-void on_delete_selected_entry_from_playlist (GtkMenuItem *mi,
+G_MODULE_EXPORT void
+on_delete_selected_entry_from_playlist (GtkMenuItem *mi,
 					     gpointer data)
 {
     delete_selected_entry (DELETE_ACTION_PLAYLIST,
@@ -1011,7 +1022,7 @@ void on_delete_selected_entry_from_playlist (GtkMenuItem *mi,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_delete_selected_playlist_including_tracks_from_ipod (GtkMenuItem *mi,
 							gpointer data)
 {
@@ -1019,7 +1030,7 @@ on_delete_selected_playlist_including_tracks_from_ipod (GtkMenuItem *mi,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_ipod_directories_menu               (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1057,7 +1068,7 @@ on_ipod_directories_menu               (GtkMenuItem     *menuitem,
     }
 }
 
-void
+G_MODULE_EXPORT void
 on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1096,7 +1107,7 @@ on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_update_playlist_activate (GtkMenuItem     *menuitem,
 			     gpointer         user_data)
 {
@@ -1104,7 +1115,7 @@ on_update_playlist_activate (GtkMenuItem     *menuitem,
 }
 
 /* update tracks in tab entry */
-void
+G_MODULE_EXPORT void
 on_update_tab_entry_activate        (GtkMenuItem     *menuitem,
 				     gpointer         user_data)
 {
@@ -1114,7 +1125,7 @@ on_update_tab_entry_activate        (GtkMenuItem     *menuitem,
     if (inst != -1) gp_do_selected_entry (update_tracks, inst);
 }
 
-void
+G_MODULE_EXPORT void
 on_update_tracks_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data)
 {
@@ -1122,7 +1133,7 @@ on_update_tracks_activate            (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_mserv_from_file_tracks_menu_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
@@ -1131,7 +1142,7 @@ on_mserv_from_file_tracks_menu_activate
 }
 
 
-void
+G_MODULE_EXPORT void
 on_mserv_from_file_entry_menu_activate (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
@@ -1142,7 +1153,7 @@ on_mserv_from_file_entry_menu_activate (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_sync_playlist_activate (GtkMenuItem     *menuitem,
 			     gpointer         user_data)
 {
@@ -1163,7 +1174,7 @@ on_sync_playlist_activate (GtkMenuItem     *menuitem,
     }
 }
 
-void
+G_MODULE_EXPORT void
 on_save_track_order1_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1171,7 +1182,7 @@ on_save_track_order1_activate           (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_toolbar_menu_activate               (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1181,7 +1192,7 @@ on_toolbar_menu_activate               (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_more_sort_tabs_activate             (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1190,7 +1201,7 @@ on_more_sort_tabs_activate             (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_less_sort_tabs_activate             (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1198,7 +1209,7 @@ on_less_sort_tabs_activate             (GtkMenuItem     *menuitem,
     st_show_visible();
 }
 
-void
+G_MODULE_EXPORT void
 on_export_playlist_activate  (GtkMenuItem     *menuitem,
 			      gpointer         user_data)
 {
@@ -1215,7 +1226,7 @@ on_export_playlist_activate  (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_export_tab_entry_activate (GtkMenuItem     *menuitem,
 			      gpointer         user_data)
 {
@@ -1236,7 +1247,7 @@ on_export_tab_entry_activate (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_export_tracks_activate     (GtkMenuItem     *menuitem,
 			      gpointer         user_data)
 {
@@ -1254,7 +1265,7 @@ on_export_tracks_activate     (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_playlist_file_playlist_activate     (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
@@ -1271,7 +1282,7 @@ on_playlist_file_playlist_activate     (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_playlist_file_tab_entry_activate    (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
@@ -1292,7 +1303,7 @@ on_playlist_file_tab_entry_activate    (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_playlist_file_tracks_activate       (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
@@ -1309,7 +1320,7 @@ on_playlist_file_tracks_activate       (GtkMenuItem     *menuitem,
     }
 }
 
-void
+G_MODULE_EXPORT void
 on_play_playlist_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1325,7 +1336,7 @@ on_play_playlist_activate              (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_play_tab_entry_activate             (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1346,7 +1357,7 @@ on_play_tab_entry_activate             (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_play_tracks_activate                 (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1364,7 +1375,7 @@ on_play_tracks_activate                 (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_enqueue_playlist_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1380,7 +1391,7 @@ on_enqueue_playlist_activate           (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_enqueue_tab_entry_activate          (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1401,7 +1412,7 @@ on_enqueue_tab_entry_activate          (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_enqueue_tracks_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1419,14 +1430,14 @@ on_enqueue_tracks_activate              (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_arrange_sort_tabs_activate          (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
     st_arrange_visible_sort_tabs ();
 }
 
-void
+G_MODULE_EXPORT void
 on_tooltips_menu_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1436,21 +1447,21 @@ on_tooltips_menu_activate              (GtkMenuItem     *menuitem,
     
 }
 
-void
+G_MODULE_EXPORT void
 on_pl_containing_displayed_tracks_activate (GtkMenuItem     *menuitem,
 					    gpointer         user_data)
 {
     generate_displayed_playlist ();
 }
 
-void
+G_MODULE_EXPORT void
 on_pl_containing_selected_tracks_activate (GtkMenuItem     *menuitem,
 					    gpointer         user_data)
 {
     generate_selected_playlist ();
 }
 
-void
+G_MODULE_EXPORT void
 on_pl_for_each_artist_activate         (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1466,7 +1477,7 @@ on_pl_for_each_artist_activate         (GtkMenuItem     *menuitem,
     }
 }
 
-void
+G_MODULE_EXPORT void
 on_pl_for_each_album_activate         (GtkMenuItem     *menuitem,
 				       gpointer         user_data)
 {
@@ -1482,7 +1493,7 @@ on_pl_for_each_album_activate         (GtkMenuItem     *menuitem,
     }
 }
 
-void
+G_MODULE_EXPORT void
 on_pl_for_each_genre_activate         (GtkMenuItem     *menuitem,
 				       gpointer         user_data)
 {
@@ -1498,7 +1509,7 @@ on_pl_for_each_genre_activate         (GtkMenuItem     *menuitem,
     }
 }
 
-void
+G_MODULE_EXPORT void
 on_pl_for_each_composer_activate         (GtkMenuItem     *menuitem,
 					  gpointer         user_data)
 {
@@ -1515,7 +1526,7 @@ on_pl_for_each_composer_activate         (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_pl_for_each_year_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
@@ -1532,7 +1543,7 @@ on_pl_for_each_year_activate           (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_most_listened_tracks1_activate       (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1549,7 +1560,7 @@ on_most_listened_tracks1_activate       (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_all_tracks_never_listened_to1_activate
 					(GtkMenuItem     *menuitem,
 					gpointer         user_data)
@@ -1566,7 +1577,7 @@ on_all_tracks_never_listened_to1_activate
     }
 }
 
-void
+G_MODULE_EXPORT void
 on_most_rated_tracks_playlist_s1_activate
 					(GtkMenuItem     *menuitem,
 					gpointer         user_data)
@@ -1584,7 +1595,7 @@ on_most_rated_tracks_playlist_s1_activate
 }
 
 
-void
+G_MODULE_EXPORT void
 on_most_recent_played_tracks_activate   (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1600,7 +1611,7 @@ on_most_recent_played_tracks_activate   (GtkMenuItem     *menuitem,
     }
 }
 
-void
+G_MODULE_EXPORT void
 on_played_since_last_time1_activate    (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1616,14 +1627,14 @@ on_played_since_last_time1_activate    (GtkMenuItem     *menuitem,
     }
 }
 
-void
+G_MODULE_EXPORT void
 on_sorting_activate                    (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
     sort_window_create ();
 }
 
-void
+G_MODULE_EXPORT void
 on_normalize_selected_playlist_activate
 					(GtkMenuItem     *menuitem,
 					gpointer         user_data)
@@ -1636,7 +1647,7 @@ on_normalize_selected_playlist_activate
 }
 
 
-void
+G_MODULE_EXPORT void
 on_normalize_selected_tab_entry_activate
 					(GtkMenuItem     *menuitem,
 					gpointer         user_data)
@@ -1661,7 +1672,7 @@ on_normalize_selected_tab_entry_activate
 }
 
 
-void
+G_MODULE_EXPORT void
 on_normalize_selected_tracks_activate   (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1671,7 +1682,7 @@ on_normalize_selected_tracks_activate   (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_normalize_displayed_tracks_activate  (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1681,7 +1692,7 @@ on_normalize_displayed_tracks_activate  (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_normalize_all_tracks                (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1700,7 +1711,7 @@ on_normalize_all_tracks                (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_normalize_newly_added_tracks        (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1717,7 +1728,7 @@ on_normalize_newly_added_tracks        (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_info_window1_activate               (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1726,7 +1737,7 @@ on_info_window1_activate               (GtkMenuItem     *menuitem,
     else info_close_window ();
 }
 
-void
+G_MODULE_EXPORT void
 on_conversion_log1_activate               (GtkMenuItem     *menuitem,
 					   gpointer         user_data)
 {
@@ -1742,7 +1753,7 @@ on_conversion_log1_activate               (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_sync_all_activate                   (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
@@ -1763,7 +1774,7 @@ on_sync_all_activate                   (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_sync_calendar_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1779,7 +1790,7 @@ on_sync_calendar_activate              (GtkMenuItem     *menuitem,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_sync_contacts_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1794,8 +1805,7 @@ on_sync_contacts_activate              (GtkMenuItem     *menuitem,
     }
 }
 
-
-void
+G_MODULE_EXPORT void
 on_sync_notes_activate                 (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
@@ -1809,8 +1819,7 @@ on_sync_notes_activate                 (GtkMenuItem     *menuitem,
 	message_sb_no_ipod_itdb_selected ();
     }
 }
-
-void
+G_MODULE_EXPORT void
 on_all_tracks_not_listed_in_any_playlist1_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
@@ -1827,8 +1836,7 @@ on_all_tracks_not_listed_in_any_playlist1_activate
     }
 }
 
-
-void
+G_MODULE_EXPORT void
 on_random_playlist_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
@@ -1844,15 +1852,13 @@ on_random_playlist_activate            (GtkMenuItem     *menuitem,
     }
 }
 
-
-void
+G_MODULE_EXPORT void
 on_randomize_current_playlist_activate (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
     randomize_current_playlist();
 }
-
-void
+G_MODULE_EXPORT void
 on_pl_for_each_rating_activate         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {

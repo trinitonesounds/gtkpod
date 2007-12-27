@@ -110,7 +110,7 @@ void add_new_pl_or_spl_user_name (iTunesDB *itdb,
 }
 
 /* callback */
-void
+G_MODULE_EXPORT void
 on_smart_playlist_activate             (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {

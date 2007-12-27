@@ -1577,7 +1577,7 @@ void details_edit (GList *selected_tracks)
 
     detail = g_malloc0 (sizeof (Detail));
 
-    detail->xml = glade_xml_new (xml_file, "details_window", NULL);
+    detail->xml = gtkpod_xml_new (xml_file, "details_window");
 /*  no signals to connect -> comment out */
 /*     glade_xml_signal_autoconnect (detail->xml); */
     detail->window = gtkpod_xml_get_widget (detail->xml, "details_window");

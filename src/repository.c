@@ -1933,7 +1933,7 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
 
     repwin = g_malloc0 (sizeof (RepWin));
 
-    repwin->xml = glade_xml_new (xml_file, "repository_window", NULL);
+    repwin->xml = gtkpod_xml_new (xml_file, "repository_window");
 /*  no signals to connect -> comment out */
 /*     glade_xml_signal_autoconnect (detail->xml); */
     repwin->window = gtkpod_xml_get_widget (repwin->xml,
@@ -2461,8 +2461,7 @@ static void create_repository (RepWin *repwin1)
     createrep = g_malloc0 (sizeof (CreateRep));
     cr = createrep;
 
-    cr->xml = glade_xml_new (xml_file, "create_repository_window",
-			     NULL);
+    cr->xml = gtkpod_xml_new (xml_file, "create_repository_window");
 /*  no signals to connect -> comment out */
 /*     glade_xml_signal_autoconnect (detail->xml); */
     cr->window = gtkpod_xml_get_widget (cr->xml,

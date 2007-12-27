@@ -2781,7 +2781,7 @@ static void st_create_special (gint inst, GtkWidget *window)
       GladeXML *special_xml;
       gchar *buf;
 
-      special_xml = glade_xml_new (xml_file, "special_sorttab", NULL);
+      special_xml = gtkpod_xml_new (xml_file, "special_sorttab");
       special = gtkpod_xml_get_widget (special_xml, "special_sorttab");
      
       viewport = gtkpod_xml_get_widget (special_xml, "special_viewport");
@@ -3616,7 +3616,7 @@ void cal_open_calendar (gint inst, T_item item)
     /* Sanity */
     if (!st) return;
 
-    cal_xml = glade_xml_new (xml_file, "calendar_window", NULL);
+    cal_xml = gtkpod_xml_new (xml_file, "calendar_window");
 
     glade_xml_signal_autoconnect (cal_xml);
 

@@ -294,7 +294,7 @@ void file_convert_init ()
     conversion->dirsize = CONV_DIRSIZE_INVALID;
 
     /* setup log window */
-    log_xml = glade_xml_new (xml_file, "conversion_log", NULL);
+    log_xml = gtkpod_xml_new (xml_file, "conversion_log");
     conversion->log_window = gtkpod_xml_get_widget (log_xml, "conversion_log");
     gtk_window_set_default_size (GTK_WINDOW (conversion->log_window),
 				 prefs_get_int (FILE_CONVERT_LOG_SIZE_X),

@@ -1608,7 +1608,7 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
     g_return_if_fail (spl->is_spl);
     g_return_if_fail (itdb != NULL);
 
-    spl_window_xml = glade_xml_new (xml_file, "spl_window", NULL);
+    spl_window_xml = gtkpod_xml_new (xml_file, "spl_window");
     spl_window = gtkpod_xml_get_widget (spl_window_xml, "spl_window");
     
     g_return_if_fail (spl_window != NULL);

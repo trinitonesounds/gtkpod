@@ -603,7 +603,7 @@ prefs_window_create (gint page)
     temp_prefs = temp_prefs_create();
     temp_lists = temp_lists_create();
 
-    prefs_window_xml = glade_xml_new (xml_file, "prefs_window", NULL);
+    prefs_window_xml = gtkpod_xml_new (xml_file, "prefs_window");
     glade_xml_signal_autoconnect (prefs_window_xml);
 
     prefs_window = gtkpod_xml_get_widget(prefs_window_xml,"prefs_window");
@@ -1130,7 +1130,7 @@ prefs_window_apply (void)
    ----------------------------------------------------------------- */
 
 
-void
+G_MODULE_EXPORT void
 on_sorting_clicked                     (GtkButton       *button,
 					gpointer         user_data)
 {
@@ -1138,7 +1138,7 @@ on_sorting_clicked                     (GtkButton       *button,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_edit_repository_clicked           (GtkButton       *button,
 				      gpointer         user_data)
 {
@@ -1154,7 +1154,7 @@ on_edit_repository_clicked           (GtkButton       *button,
     }
 }
 
-void
+G_MODULE_EXPORT void
 on_calendar_contact_notes_options_clicked (GtkButton       *button,
 					   gpointer         user_data)
 {
@@ -1196,7 +1196,7 @@ on_calendar_contact_notes_options_clicked (GtkButton       *button,
 }
 
 
-gboolean
+G_MODULE_EXPORT gboolean
 on_prefs_window_delete_event           (GtkWidget       *widget,
 					GdkEvent        *event,
 					gpointer         user_data)
@@ -1207,7 +1207,7 @@ on_prefs_window_delete_event           (GtkWidget       *widget,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_prefs_ok_clicked                    (GtkButton       *button,
 					gpointer         user_data)
 {
@@ -1215,7 +1215,7 @@ on_prefs_ok_clicked                    (GtkButton       *button,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_prefs_cancel_clicked                (GtkButton       *button,
 					gpointer         user_data)
 {
@@ -1224,7 +1224,7 @@ on_prefs_cancel_clicked                (GtkButton       *button,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_prefs_apply_clicked                 (GtkButton       *button,
 					gpointer         user_data)
 {
@@ -1233,6 +1233,7 @@ on_prefs_apply_clicked                 (GtkButton       *button,
 }
 
 
+G_MODULE_EXPORT
 void on_file_convert_max_threads_num_spinbutton_value_changed (
     GtkSpinButton *spinbutton,
     gpointer       user_data)
@@ -1241,6 +1242,7 @@ void on_file_convert_max_threads_num_spinbutton_value_changed (
 			gtk_spin_button_get_value_as_int (spinbutton));
 }
 
+G_MODULE_EXPORT
 void on_file_convert_maxdirsize_spinbutton_value_changed (
     GtkSpinButton *spinbutton,
     gpointer       user_data)
@@ -1250,7 +1252,7 @@ void on_file_convert_maxdirsize_spinbutton_value_changed (
 }
 
 
-void
+G_MODULE_EXPORT void
 on_cfg_sha1tracks_toggled                (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1261,7 +1263,7 @@ on_cfg_sha1tracks_toggled                (GtkToggleButton *togglebutton,
     if(w)	gtk_widget_set_sensitive (w, val);
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1276,7 +1278,7 @@ on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
 	gtk_widget_set_sensitive (w, val);
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_id3_write_toggled                (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1291,7 +1293,7 @@ on_cfg_id3_write_toggled                (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_cfg_id3_write_id3v24_toggled            (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1300,7 +1302,7 @@ on_cfg_id3_write_id3v24_toggled            (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_cfg_write_extended_info_toggled     (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1308,7 +1310,7 @@ on_cfg_write_extended_info_toggled     (GtkToggleButton *togglebutton,
 		       gtk_toggle_button_get_active(togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_delete_track_from_playlist_toggled (GtkToggleButton *togglebutton,
 					   gpointer         user_data)
 {
@@ -1317,7 +1319,7 @@ on_cfg_delete_track_from_playlist_toggled (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_cfg_delete_track_from_ipod_toggled  (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1325,7 +1327,7 @@ on_cfg_delete_track_from_ipod_toggled  (GtkToggleButton *togglebutton,
                      gtk_toggle_button_get_active(togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_track_local_file_deletion_toggled (GtkToggleButton *togglebutton,
 					  gpointer         user_data)
 {
@@ -1333,7 +1335,7 @@ on_cfg_track_local_file_deletion_toggled (GtkToggleButton *togglebutton,
                      gtk_toggle_button_get_active(togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_track_database_deletion_toggled (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1389,7 +1391,7 @@ static void on_convert_toggle_toggled (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_sync_confirm_delete_toggled     (GtkToggleButton *togglebutton,
 				    gpointer         user_data)
 {
@@ -1412,7 +1414,7 @@ on_sync_confirm_delete_toggled     (GtkToggleButton *togglebutton,
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), active);
 }
 
-void
+G_MODULE_EXPORT void
 on_photo_library_confirm_delete_toggled (GtkToggleButton *togglebutton,
     gpointer         user_data)
 {
@@ -1420,7 +1422,7 @@ on_photo_library_confirm_delete_toggled (GtkToggleButton *togglebutton,
 	                     gtk_toggle_button_get_active(togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_charset_combo_entry_changed          (GtkEditable     *editable,
 					gpointer         user_data)
 {
@@ -1442,7 +1444,7 @@ void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect)
     }
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_mpl_autoselect_toggled          (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1456,7 +1458,7 @@ void prefs_window_set_autosettags (gint category, gboolean autoset)
 			temp_prefs_set_int_index(temp_prefs, "tag_autoset", category, autoset);
 }
 
-void
+G_MODULE_EXPORT void
 on_readtags_toggled                    (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1464,7 +1466,7 @@ on_readtags_toggled                    (GtkToggleButton *togglebutton,
 		       gtk_toggle_button_get_active(togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_parsetags_toggled                   (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1478,7 +1480,7 @@ on_parsetags_toggled                   (GtkToggleButton *togglebutton,
     gtk_widget_set_sensitive (w, val);
 }
 
-void
+G_MODULE_EXPORT void
 on_parsetags_overwrite_toggled         (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1486,7 +1488,7 @@ on_parsetags_overwrite_toggled         (GtkToggleButton *togglebutton,
 		       gtk_toggle_button_get_active(togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_parsetags_template_changed             (GtkEditable     *editable,
 					   gpointer         user_data)
 {
@@ -1494,7 +1496,7 @@ on_parsetags_template_changed             (GtkEditable     *editable,
 			  gtk_editable_get_chars (editable,0, -1));
 }
 
-void
+G_MODULE_EXPORT void
 on_coverart_file_toggled                   (GtkToggleButton *togglebutton,
 					    gpointer         user_data)
 {
@@ -1506,7 +1508,7 @@ on_coverart_file_toggled                   (GtkToggleButton *togglebutton,
     gtk_widget_set_sensitive (w, val);
 }
 
-void
+G_MODULE_EXPORT void
 on_coverart_apic_toggled                   (GtkToggleButton *togglebutton,
 					    gpointer         user_data)
 {
@@ -1518,7 +1520,7 @@ on_coverart_apic_toggled                   (GtkToggleButton *togglebutton,
     gtk_widget_set_sensitive (w, val);
 }
 
-void
+G_MODULE_EXPORT void
 on_coverart_template_changed             (GtkEditable     *editable,
 					gpointer         user_data)
 {
@@ -1526,7 +1528,7 @@ on_coverart_template_changed             (GtkEditable     *editable,
 			  gtk_editable_get_chars (editable,0, -1));
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_show_duplicates_toggled         (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1536,7 +1538,7 @@ on_cfg_show_duplicates_toggled         (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_cfg_show_updated_toggled            (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1545,7 +1547,7 @@ on_cfg_show_updated_toggled            (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_cfg_show_non_updated_toggled        (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1553,7 +1555,7 @@ on_cfg_show_non_updated_toggled        (GtkToggleButton *togglebutton,
                        gtk_toggle_button_get_active (togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_display_tooltips_main_toggled   (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1561,7 +1563,7 @@ on_cfg_display_tooltips_main_toggled   (GtkToggleButton *togglebutton,
 		       gtk_toggle_button_get_active  (togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_display_tooltips_prefs_toggled  (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1569,7 +1571,7 @@ on_cfg_display_tooltips_prefs_toggled  (GtkToggleButton *togglebutton,
 		       gtk_toggle_button_get_active  (togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_display_toolbar_toggled         (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1585,7 +1587,7 @@ on_cfg_display_toolbar_toggled         (GtkToggleButton *togglebutton,
     if (w3) gtk_widget_set_sensitive (w3, val);
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_multi_edit_toggled              (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1597,7 +1599,7 @@ on_cfg_multi_edit_toggled              (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_cfg_multi_edit_title_toggled        (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1605,7 +1607,7 @@ on_cfg_multi_edit_title_toggled        (GtkToggleButton *togglebutton,
 		       gtk_toggle_button_get_active(togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_update_charset_toggled          (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1613,7 +1615,7 @@ on_cfg_update_charset_toggled          (GtkToggleButton *togglebutton,
 		       gtk_toggle_button_get_active (togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_write_charset_toggled           (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1621,7 +1623,7 @@ on_cfg_write_charset_toggled           (GtkToggleButton *togglebutton,
 		       gtk_toggle_button_get_active(togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_add_recursively_toggled         (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1629,7 +1631,7 @@ on_cfg_add_recursively_toggled         (GtkToggleButton *togglebutton,
 		       gtk_toggle_button_get_active (togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_not_played_track_toggled         (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1637,7 +1639,7 @@ on_cfg_not_played_track_toggled         (GtkToggleButton *togglebutton,
 		       gtk_toggle_button_get_active(togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_misc_track_nr_value_changed      (GtkSpinButton   *spinbutton,
 					gpointer         user_data)
 {
@@ -1657,7 +1659,7 @@ static void prefs_window_set_sort_tab_num (gint num)
     }
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_sort_tab_num_sb_value_changed   (GtkSpinButton   *spinbutton,
 					gpointer         user_data)
 {
@@ -1665,7 +1667,7 @@ on_cfg_sort_tab_num_sb_value_changed   (GtkSpinButton   *spinbutton,
 	gtk_spin_button_get_value (spinbutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_group_compilations_toggled      (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1673,7 +1675,7 @@ on_cfg_group_compilations_toggled      (GtkToggleButton *togglebutton,
 		       gtk_toggle_button_get_active (togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_toolbar_style_both_toggled      (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1685,7 +1687,7 @@ on_cfg_toolbar_style_both_toggled      (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_cfg_toolbar_style_text_toggled      (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1697,7 +1699,7 @@ on_cfg_toolbar_style_text_toggled      (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_cfg_toolbar_style_icons_toggled      (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1712,7 +1714,7 @@ void prefs_window_set_toolbar_style (GtkToolbarStyle style)
 {
 }
 
-void
+G_MODULE_EXPORT void
 on_cfg_startup_messages                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
@@ -1720,7 +1722,7 @@ on_cfg_startup_messages                (GtkToggleButton *togglebutton,
 			   gtk_toggle_button_get_active (togglebutton));
 }
 
-void
+G_MODULE_EXPORT G_MODULE_EXPORT void
 on_mserv_from_file_playlist_menu_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
@@ -1729,7 +1731,7 @@ on_mserv_from_file_playlist_menu_activate
 }
 
 
-void
+G_MODULE_EXPORT void
 on_mserv_use_toggled                   (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
@@ -1737,7 +1739,7 @@ on_mserv_use_toggled                   (GtkToggleButton *togglebutton,
 		       gtk_toggle_button_get_active(togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_mserv_report_probs_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
@@ -1745,7 +1747,7 @@ on_mserv_report_probs_toggled          (GtkToggleButton *togglebutton,
                        gtk_toggle_button_get_active (togglebutton));
 }
 
-void
+G_MODULE_EXPORT void
 on_mserv_username_entry_changed              (GtkEditable     *editable,
 					      gpointer         user_data)
 {
@@ -1757,7 +1759,7 @@ on_mserv_username_entry_changed              (GtkEditable     *editable,
 }
 
 /* last.fm callbacks */
-void
+G_MODULE_EXPORT void
 on_lastfm_active_toggled              (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1772,7 +1774,7 @@ on_lastfm_active_toggled              (GtkToggleButton *togglebutton,
 #endif
 }
 
-void
+G_MODULE_EXPORT void
 on_lastfm_username_entry_changed          (GtkEditable     *editable,
 					gpointer         user_data)
 {
@@ -1784,7 +1786,7 @@ on_lastfm_username_entry_changed          (GtkEditable     *editable,
 #endif
 }
 
-void
+G_MODULE_EXPORT void
 on_lastfm_password_entry_changed          (GtkEditable     *editable,
 					gpointer         user_data)
 {
@@ -1907,7 +1909,7 @@ void sort_window_create (void)
 	sort_temp_prefs = temp_prefs_create();
 	sort_temp_lists = temp_lists_create();
 
-	sort_window_xml = glade_xml_new (xml_file, "sort_window", NULL);
+	sort_window_xml = gtkpod_xml_new (xml_file, "sort_window");
 	glade_xml_signal_autoconnect (sort_window_xml);
 
 	sort_window = gtkpod_xml_get_widget (sort_window_xml, "sort_window");
@@ -2187,7 +2189,7 @@ static void sort_window_set ()
 
    ----------------------------------------------------------------- */
 
-void
+G_MODULE_EXPORT void
 on_st_ascend_toggled                   (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -2196,7 +2198,7 @@ on_st_ascend_toggled                   (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_st_descend_toggled                  (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -2205,7 +2207,7 @@ on_st_descend_toggled                  (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_st_none_toggled                     (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -2214,7 +2216,7 @@ on_st_none_toggled                     (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_pm_ascend_toggled                   (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -2223,7 +2225,7 @@ on_pm_ascend_toggled                   (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_pm_descend_toggled                  (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -2232,7 +2234,7 @@ on_pm_descend_toggled                  (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_pm_none_toggled                     (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -2241,7 +2243,7 @@ on_pm_none_toggled                     (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_tm_ascend_toggled                   (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -2250,7 +2252,7 @@ on_tm_ascend_toggled                   (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_tm_descend_toggled                  (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -2259,7 +2261,7 @@ on_tm_descend_toggled                  (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_tm_none_toggled                     (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -2267,7 +2269,7 @@ on_tm_none_toggled                     (GtkToggleButton *togglebutton,
 	sort_window_set_tm_sort (SORT_NONE);
 }
 
-void
+G_MODULE_EXPORT void
 on_tm_autostore_toggled                (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -2275,7 +2277,7 @@ on_tm_autostore_toggled                (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_sort_case_sensitive_toggled         (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -2284,7 +2286,7 @@ on_sort_case_sensitive_toggled         (GtkToggleButton *togglebutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_sort_apply_clicked                  (GtkButton       *button,
 					gpointer         user_data)
 {
@@ -2292,7 +2294,7 @@ on_sort_apply_clicked                  (GtkButton       *button,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_sort_cancel_clicked                 (GtkButton       *button,
 					gpointer         user_data)
 {
@@ -2300,7 +2302,7 @@ on_sort_cancel_clicked                 (GtkButton       *button,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_sort_ok_clicked                     (GtkButton       *button,
 					gpointer         user_data)
 {
@@ -2308,7 +2310,7 @@ on_sort_ok_clicked                     (GtkButton       *button,
 }
 
 
-gboolean
+G_MODULE_EXPORT gboolean
 on_sort_window_delete_event            (GtkWidget       *widget,
 					GdkEvent        *event,
 					gpointer         user_data)
@@ -2404,6 +2406,7 @@ void sort_window_set_case_sensitive (gboolean val)
 		       val);
 }
 
+G_MODULE_EXPORT
 void on_exclude_file_mask_entry_changed (GtkEditable	*editable,
 					 gpointer	user_data)
 {

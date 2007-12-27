@@ -320,7 +320,7 @@ void open_prefs_dlg ()
 		return;
 	}
 	
-	prefs_xml = glade_xml_new (xml_file, "prefs_dialog", NULL);
+	prefs_xml = gtkpod_xml_new (xml_file, "prefs_dialog");
 	prefs_dialog = gtkpod_xml_get_widget (prefs_xml, "prefs_dialog");
 	
 	setup_prefs_dlg(prefs_xml, prefs_dialog);
@@ -335,7 +335,7 @@ void open_prefs_dlg ()
 /*
 	glade callback
 */
-void on_prefs_dialog_help ()
+G_MODULE_EXPORT void on_prefs_dialog_help ()
 {
 	gtkpod_open_help_context ("gtkpod");
 }
@@ -343,7 +343,7 @@ void on_prefs_dialog_help ()
 /*
 	glade callback
 */
-void on_prefs_dialog_close ()
+G_MODULE_EXPORT void on_prefs_dialog_close ()
 {
 	gtk_widget_destroy(prefs_dialog);
 	g_object_unref(prefs_xml);
@@ -355,7 +355,7 @@ void on_prefs_dialog_close ()
 /*
 	glade callback
 */
-void on_filter_tabs_count_value_changed (GtkSpinButton *sender, gpointer e)
+G_MODULE_EXPORT void on_filter_tabs_count_value_changed (GtkSpinButton *sender, gpointer e)
 {
     gint num = gtk_spin_button_get_value_as_int (sender);
 
@@ -367,7 +367,7 @@ void on_filter_tabs_count_value_changed (GtkSpinButton *sender, gpointer e)
 /*
 	glade callback
 */
-void on_agp_track_count_value_changed (GtkSpinButton *sender, gpointer e)
+G_MODULE_EXPORT void on_agp_track_count_value_changed (GtkSpinButton *sender, gpointer e)
 {
     gint num = gtk_spin_button_get_value_as_int (sender);
     prefs_set_int ("misc_track_nr", num);
@@ -376,7 +376,7 @@ void on_agp_track_count_value_changed (GtkSpinButton *sender, gpointer e)
 /*
 	glade callback
 */
-void on_toolbar_style_changed (GtkComboBox *sender, gpointer e)
+G_MODULE_EXPORT void on_toolbar_style_changed (GtkComboBox *sender, gpointer e)
 {
 	gint index = toolbar_styles[gtk_combo_box_get_active(sender)].index;
 	
@@ -396,7 +396,7 @@ void on_toolbar_style_changed (GtkComboBox *sender, gpointer e)
 /*
 	generic glade callback, used by many checkboxes
 */
-void on_simple_checkbox_toggled (GtkToggleButton *sender, gpointer e)
+G_MODULE_EXPORT void on_simple_checkbox_toggled (GtkToggleButton *sender, gpointer e)
 {
 	gboolean active = gtk_toggle_button_get_active (sender);
 	gchar *pref = (gchar *) g_object_get_data (G_OBJECT(sender), "pref");
@@ -416,7 +416,7 @@ void on_simple_checkbox_toggled (GtkToggleButton *sender, gpointer e)
 /*
 	glade callback
 */
-void on_tag_checkbox_toggled (GtkToggleButton *sender, gpointer e)
+G_MODULE_EXPORT void on_tag_checkbox_toggled (GtkToggleButton *sender, gpointer e)
 {
 	gint index = *(gint *) g_object_get_data (G_OBJECT(sender), "index");
 	prefs_set_int_index ("tag_autoset", index, gtk_toggle_button_get_active (sender));
@@ -425,7 +425,7 @@ void on_tag_checkbox_toggled (GtkToggleButton *sender, gpointer e)
 /*
 	glade callback
 */
-void on_group_compilations_toggled (GtkToggleButton *sender, gpointer e)
+G_MODULE_EXPORT void on_group_compilations_toggled (GtkToggleButton *sender, gpointer e)
 {
 	gboolean active = gtk_toggle_button_get_active (sender);
 	
@@ -436,10 +436,10 @@ void on_group_compilations_toggled (GtkToggleButton *sender, gpointer e)
 /*
 	glade callback
 */
-void on_column_add_clicked (GtkButton *sender, gpointer e)
+G_MODULE_EXPORT void on_column_add_clicked (GtkButton *sender, gpointer e)
 {
 	gint i;
-	GladeXML *xml = glade_xml_new (xml_file, "prefs_columns_dialog", NULL);
+	GladeXML *xml = gtkpod_xml_new (xml_file, "prefs_columns_dialog");
 	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_columns_dialog");
 	GtkTreeView *view = GTK_TREE_VIEW (gtkpod_xml_get_widget (xml, "available_columns"));
 	GtkTreeModel *model;
@@ -479,7 +479,7 @@ void on_column_add_clicked (GtkButton *sender, gpointer e)
 /*
 	glade callback
 */
-void on_column_remove_clicked (GtkButton *sender, gpointer e)
+G_MODULE_EXPORT void on_column_remove_clicked (GtkButton *sender, gpointer e)
 {
 	gint i;
 	GtkTreeView *view = GTK_TREE_VIEW (gtkpod_xml_get_widget (prefs_xml, "displayed_columns"));
@@ -500,7 +500,7 @@ void on_column_remove_clicked (GtkButton *sender, gpointer e)
 /*
 	glade callback
 */
-void on_unsetdeps_checkbox_toggled (GtkToggleButton *sender, gpointer e)
+G_MODULE_EXPORT void on_unsetdeps_checkbox_toggled (GtkToggleButton *sender, gpointer e)
 {
 	if(!gtk_toggle_button_get_active (sender))
 	{

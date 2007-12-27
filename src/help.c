@@ -42,7 +42,7 @@
 /* ATTENTION: directly used as callback in gtkpod.glade -- if you
    change the arguments of this function, make sure you define a
    separate callback for gtkpod.glade */
-void open_about_window ()
+G_MODULE_EXPORT void open_about_window ()
 {
 	const gchar *authors[] = {
 		_("© 2002 - 2007\n"
@@ -160,7 +160,7 @@ void open_about_window ()
 /* ATTENTION: directly used as callback in gtkpod.glade -- if you
    change the arguments of this function make sure you define a
    separate callback for gtkpod.glade */
-void open_help_contents ()
+G_MODULE_EXPORT void open_help_contents ()
 {
 	gtkpod_open_help_context("gtkpod");
 }
@@ -168,7 +168,7 @@ void open_help_contents ()
 /* ATTENTION: directly used as callback in gtkpod.glade -- if you
    change the arguments of this function, make sure you define a
    separate callback for gtkpod.glade */
-void open_help_online ()
+G_MODULE_EXPORT void open_help_online ()
 {
 	gtkpod_open_in_browser("http://www.gtkpod.org/contact.html");
 }
@@ -176,7 +176,7 @@ void open_help_online ()
 /* ATTENTION: directly used as callback in gtkpod.glade -- if you
    change the arguments of this function, make sure you define a
    separate callback for gtkpod.glade */
-void open_help_reportbug ()
+G_MODULE_EXPORT void open_help_reportbug ()
 {
 	gtkpod_open_in_browser("http://sourceforge.net/tracker/?group_id=67873&atid=519273");
 }

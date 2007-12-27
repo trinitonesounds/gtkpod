@@ -317,7 +317,7 @@ void gphoto_change_to_photo_window(gboolean showflag)
 
 		if (photo_viewport == NULL)
 		{
-			photo_xml = glade_xml_new (xml_file, "photo_panel", NULL);
+			photo_xml = gtkpod_xml_new (xml_file, "photo_panel");
 			photowin = gtkpod_xml_get_widget (photo_xml, "photo_panel");
 			photo_album_window = gtkpod_xml_get_widget (photo_xml, "photo_album_window");
 			photo_thumb_window = gtkpod_xml_get_widget (photo_xml, "photo_thumbnail_window");

@@ -847,7 +847,7 @@ ok_to_close_gtkpod (void)
 
 
 /* callback for gtkpod window's close button */
-gboolean
+G_MODULE_EXPORT gboolean
 on_gtkpod_delete_event                 (GtkWidget       *widget,
 					GdkEvent        *event,
 					gpointer         user_data)
@@ -865,7 +865,7 @@ on_gtkpod_delete_event                 (GtkWidget       *widget,
 
 
 /* callback for quit menu entry */
-void
+G_MODULE_EXPORT void
 on_quit1_activate                      (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {

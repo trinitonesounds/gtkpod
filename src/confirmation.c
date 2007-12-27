@@ -353,7 +353,7 @@ GtkResponseType gtkpod_confirmation (gint id,
     }
 
     /* window = create_confirm_dialog (); */
-    confirm_xml = glade_xml_new (xml_file, "confirm_dialog", NULL);
+    confirm_xml = gtkpod_xml_new (xml_file, "confirm_dialog");
     window = gtkpod_xml_get_widget (confirm_xml, "confirm_dialog");
 
     /* insert ID into hash table */

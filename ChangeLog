@@ -1,10 +1,35 @@
 2007-12-27 Matvey Kozhev <sikon at users.sourceforge.net>
 
 	* INSTALL:
-	  Updated dependency versions.
+	* configure.in:
+	  Updated dependency versions (GTK 2.8, indirectly glib 2.8 for libgpod).
 	  
+	* src/misc.h:
+	* src/display.c:
+	* src/misc_confirm.c:
+	* src/file_itunesdb.c:
+	* src/ipod_init.c:
+	* src/repository.c:
+	* src/file_export.c:
+	* src/display_spl.c:
+	* src/info.c:
+	* src/tools.c:
+	* src/prefs_window.c:
+	* src/prefsdlg.c:
+	* src/display_coverart.c:
+	* src/misc_playlist.c:
 	* src/file_convert.c:
-	  Renamed structure member "stderr", build issues reported
+	* src/fileselection.c:
+	* src/confirmation.c:
+	* src/display_photo.c:
+	* src/details.c:
+	* src/display_sorttabs.c:
+	* src/help.c:
+	* src/misc.c:
+	  Patch for cygwin build, by Éric Lassauge:
+	  - Added new wrapper function, gtkpod_xml_new, for glade_xml_new.
+	  - Added G_MODULE_EXPORT calls to all glade callbacks.
+	  - Renamed struct member "stderr" in display_photo.c.
 
 2007-12-26 Matvey Kozhev <sikon at users.sourceforge.net>
 

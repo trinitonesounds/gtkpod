@@ -877,7 +877,7 @@ void tools_enqueue_tracks (GList *selected_tracks)
 
    ------------------------------------------------------------ */
 
-gboolean
+G_MODULE_EXPORT gboolean
 on_gtkpod_info_delete_event            (GtkWidget       *widget,
 					GdkEvent        *event,
 					gpointer         user_data)
@@ -887,7 +887,7 @@ on_gtkpod_info_delete_event            (GtkWidget       *widget,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_info_close_clicked                  (GtkButton       *button,
 					gpointer         user_data)
 {

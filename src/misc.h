@@ -238,6 +238,7 @@ GList *glist_duplicate (GList *list);
 
 gchar *which (const gchar *exe);
 
+GladeXML *gtkpod_xml_new (const gchar *xml_file, const gchar *name);
 GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, const gchar *name);
 
 gchar *get_itdb_prefs_key (gint index, const gchar *subkey);

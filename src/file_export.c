@@ -591,7 +591,7 @@ void export_files_init (GList *tracks, GList **filenames,
 	GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 	NULL);
 
-    export_files_xml = glade_xml_new (xml_file, "export_files_options", NULL);
+    export_files_xml = gtkpod_xml_new (xml_file, "export_files_options");
     win = gtkpod_xml_get_widget (export_files_xml, "export_files_options");
     options = gtkpod_xml_get_widget (export_files_xml, "options_frame");
     message_box = gtkpod_xml_get_widget (export_files_xml, "message_box");
@@ -1091,7 +1091,7 @@ void export_playlist_file_init (GList *tracks)
 	NULL);
     GladeXML *export_playlist_xml;
     
-    export_playlist_xml = glade_xml_new (xml_file, "export_playlist_file_options", NULL);
+    export_playlist_xml = gtkpod_xml_new (xml_file, "export_playlist_file_options");
     win = gtkpod_xml_get_widget (export_playlist_xml, "export_playlist_file_options");
 
     options = gtkpod_xml_get_widget (export_playlist_xml, "options_frame");

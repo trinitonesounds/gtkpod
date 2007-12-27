@@ -1224,21 +1224,42 @@ gint64 get_size_of_directory (const gchar *dir)
 
 
 /**
+ * Wrapper for glade_xml_new() for cygwin compatibility issues
+ *
+ **/
+GladeXML *gtkpod_xml_new (const gchar *xml_file, const gchar *name)
+{
+    GladeXML *xml;
+	
+#ifdef ENABLE_NLS
+	xml = glade_xml_new (xml_file, name, GETTEXT_PACKAGE);
+#else
+	xml = glade_xml_new (xml_file, name, NULL);
+#endif
+
+    if (!xml)
+		fprintf (stderr, "*** Programming error: Cannot create glade XML: '%s'\n",
+				 name);
+
+    return xml;
+}
+
+
+/**
  * Wrapper for gtkpod_xml_get_widget() giving out a warning if widget
  * could not be found.
  *
  **/
 GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, const gchar *name)
 {
-    GtkWidget *w=glade_xml_get_widget (xml, name);
+    GtkWidget *w = glade_xml_get_widget (xml, name);
 
     if (!w)
-	fprintf (stderr, "*** Programming error: Widget not found: '%s'\n",
-		 name);
+		fprintf (stderr, "*** Programming error: Widget not found: '%s'\n",
+				 name);
 
     return w;
 }
-
 
 /* ------------------------------------------------------------
  *
@@ -1726,7 +1747,7 @@ void gtkpod_init (int argc, char *argv[])
     /* Initialisation of libxml */
     LIBXML_TEST_VERSION;
 
-    main_window_xml = glade_xml_new (xml_file, "gtkpod", NULL);
+    main_window_xml = gtkpod_xml_new (xml_file, "gtkpod");
 
     glade_xml_signal_autoconnect (main_window_xml);
   

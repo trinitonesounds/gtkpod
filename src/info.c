@@ -164,7 +164,7 @@ void info_open_window (void)
 	return;
     }
     
-    info_xml = glade_xml_new (xml_file, "gtkpod_info", NULL);
+    info_xml = gtkpod_xml_new (xml_file, "gtkpod_info");
     glade_xml_signal_autoconnect (info_xml);
     info_window = gtkpod_xml_get_widget (info_xml, "gtkpod_info");
     

@@ -851,7 +851,7 @@ void coverart_init (gchar *progpath)
  * @widget, data unused standard parameters
  *  
  */
-void on_cover_up_button_clicked (GtkWidget *widget, gpointer data)
+G_MODULE_EXPORT void on_cover_up_button_clicked (GtkWidget *widget, gpointer data)
 {
 	prefs_set_int (KEY_DISPLAY_COVERART, TRUE);
 	
@@ -878,7 +878,7 @@ void on_cover_up_button_clicked (GtkWidget *widget, gpointer data)
  * @widget, data unused standard parameters
  *  
  */
-void on_cover_down_button_clicked (GtkWidget *widget, gpointer data)
+G_MODULE_EXPORT void on_cover_down_button_clicked (GtkWidget *widget, gpointer data)
 {
 	prefs_set_int (KEY_DISPLAY_COVERART, FALSE);
 	
@@ -913,7 +913,7 @@ void on_cover_down_button_clicked (GtkWidget *widget, gpointer data)
  * Returns:
  * boolean indicating whether other handlers should be run.
  */
-gboolean on_paned0_button_release_event (GtkWidget *widget, GdkEventButton *event, gpointer data)
+G_MODULE_EXPORT gboolean on_paned0_button_release_event (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
 		if ( ! prefs_get_int (KEY_DISPLAY_COVERART))
 		return FALSE;
