@@ -1,3 +1,8 @@
+2007-12-27 Matvey Kozhev <sikon at users.sourceforge.net>
+
+	* INSTALL:
+	  Updated dependency versions.
+
 2007-12-26 Matvey Kozhev <sikon at users.sourceforge.net>
 
 	* src/prefsdlg.c:
