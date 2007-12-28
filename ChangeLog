@@ -1,9 +1,19 @@
 2007-12-28 Matvey Kozhev <sikon at users.sourceforge.net>
 
-  * data/gtkpod.glade
+  * data/gtkpod.glade:
   
     Fixed sort window crash related to absence of tooltips. Marked
 	"Dummy - do not delete"	as not translatable.
+	
+  * src/charset.c:
+  * src/charset.h:
+  
+    Implemented charset_init_combo_box as a drop-in replacement
+	for charset_init_combo
+	
+  * src/prefsdlg.c:
+  
+    Encoding dialog
 
 2007-12-27 P.G. Richardson <phantom_sf at users.sourceforge.net>
 

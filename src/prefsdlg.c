@@ -30,6 +30,7 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
+#include "charset.h"
 #include "misc.h"
 #include "help.h"
 #include "prefs.h"
@@ -74,13 +75,13 @@ const gchar *checkbox_map[][3] = {
 	{ "update_existing_track", "update_existing", NULL },
 	/* Metadata tab */
 	{ "read_tags", "readtags", NULL },
-	{ "parse_filename_tags", "parsetags", NULL },
+	{ "parse_filename_tags", "parsetags", "customize_tags" },
 	{ "last_resort_tags", NULL, "tag_title,tag_artist,tag_album,tag_composer,tag_genre" },
-	{ "write_tags", "id3_write", "write_tags_legacy,mass_modify_tags" },
+	{ "write_tags", "id3_write", "tag_encoding,write_tags_legacy,mass_modify_tags" },
 	{ "write_tags_legacy", "!id3_write_id3v24", NULL },
 	{ "mass_modify_tags", "multi_edit", NULL },
 	{ "read_coverart", "coverart_apic", NULL },
-	{ "template_coverart", "coverart_file", NULL },
+	{ "template_coverart", "coverart_file", "customize_coverart" },
 	/* Feedback tab */
 	{ "confirm_del_tracks", NULL, "confirm_from_ipod,confirm_from_hdd,confirm_from_db" },
 	{ "confirm_from_ipod", "delete_ipod", NULL },
@@ -530,12 +531,48 @@ G_MODULE_EXPORT void on_unsetdeps_checkbox_toggled (GtkToggleButton *sender, gpo
 */
 G_MODULE_EXPORT void on_coverart_dialog_bg_color_set (GtkColorButton *widget, gpointer user_data)
 {
-	GdkColor colour;
-	gtk_color_button_get_color (widget, &colour);
-	gchar *hexstring;
+	GdkColor color;
+	gtk_color_button_get_color (widget, &color);
+	gchar *hexstring = g_strdup_printf("#%02X%02X%02X",
+									   color.red >> 8,
+									   color.green >> 8,
+									   color.blue >> 8);
 	
-	hexstring = g_strdup_printf("#%02X%02X%02X", colour.red >> 8, colour.green >> 8, colour.blue >> 8);
 	prefs_set_string ("coverart_display_bg_colour", hexstring);
 	g_free (hexstring);
 	force_update_covers ();
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void open_encoding_dialog (GtkButton *sender, gpointer e)
+{
+	GladeXML *xml = gtkpod_xml_new (xml_file, "prefs_encoding_dialog");
+	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_encoding_dialog");
+	GtkWidget *combo = gtkpod_xml_get_widget (xml, "encoding_combo");
+	
+	init_checkbox (GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (xml, "use_encoding_for_update")),
+									  "update_charset", NULL);
+
+	init_checkbox (GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (xml, "use_encoding_for_writing")),
+									  "write_charset", NULL);
+
+	charset_init_combo_box (GTK_COMBO_BOX (combo));
+	glade_xml_signal_autoconnect (xml);
+	gtk_dialog_run (GTK_DIALOG (dlg));
+	gtk_widget_destroy (dlg);
+	g_object_unref (xml);
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_encoding_combo_changed (GtkComboBox *sender, gpointer e)
+{
+	gchar *description = gtk_combo_box_get_active_text (sender);
+	gchar *charset = charset_from_description (description);
+	
+	prefs_set_string ("charset", charset);
+	g_free (charset);
 }

@@ -145,7 +145,10 @@ static const CharsetInfo charset_info[] = {
 
 /* Sets up the charsets to choose from in the "combo". It presets the
    charset stored in cfg->charset (or "System Charset" if none is set
-   there */
+   there
+
+   DEPRECATED - use charset_init_combo_box with GtkComboBox
+*/
 void charset_init_combo (GtkCombo *combo)
 {
     gchar *current_charset;
@@ -209,6 +212,108 @@ void charset_init_combo (GtkCombo *combo)
     g_free(current_charset);
 }
 
+/* Sets up the charsets to choose from in the "combo". It presets the
+   charset stored in cfg->charset (or "System Charset" if none is set
+   there */
+void charset_init_combo_box (GtkComboBox *combo)
+{
+    gchar *current_charset;
+    gchar *description;
+    const CharsetInfo *ci;
+	GtkCellRenderer *renderer;
+	GtkTreeIter use_iter;
+    static GtkListStore *charsets = NULL; /* list with choices -- takes a while to
+				     * initialize, so we only do it once */
+    
+    current_charset = prefs_get_string("charset");
+	
+    if ((current_charset == NULL) || (strlen (current_charset) == 0))
+    {
+		description = g_strdup (_("System Charset"));
+    }
+    else
+    {
+		description = charset_to_description (current_charset);
+    }
+	
+    if (charsets == NULL)
+    { /* set up list with charsets */
+		FILE *fp;
+		GtkTreeIter iter;
+
+		charsets = gtk_list_store_new (1, G_TYPE_STRING);
+		/* now add all the charset descriptions in the list above */
+		
+		gtk_list_store_append (charsets, &iter);
+		gtk_list_store_set (charsets, &iter, 0, _("System Charset"), -1);
+
+		for (ci = charset_info; ci->descr; ci++)
+		{
+			gtk_list_store_append (charsets, &iter);
+			gtk_list_store_set (charsets, &iter, 0, _(ci->descr), -1);
+		}
+		
+		/* let's add all available charsets returned by "iconv -l" */
+		/* The code assumes that "iconv -l" returns a list with the
+		   name of one charset in each line, each valid line being
+		   terminated by "//".  */
+		fp = popen ("iconv -l", "r");
+		
+		if (fp)
+		{
+			gchar buf[PATH_MAX];
+			
+			/* read one line of output at a time */
+			while (fgets (buf, PATH_MAX, fp))
+			{
+				/* only consider lines ending on "//" */
+				gchar *bufp = g_strrstr (buf, "//\n");
+				
+				if (bufp)
+				{
+					/* add everything before "//" to our charset list */
+					gchar *bufpp = buf;
+					*bufp = 0;  /* shorten string */
+					
+					while ((*bufpp == ' ') || (*bufpp == 0x09))
+						bufpp++; /* skip whitespace */
+					
+					if (*bufpp)
+					{
+						gtk_list_store_append (charsets, &iter);
+						gtk_list_store_set (charsets, &iter, 0, g_strdup (bufpp));
+
+					}
+				}
+			}
+			
+			pclose (fp);
+		}
+    }
+    /* set pull down items */
+	renderer = gtk_cell_renderer_text_new ();
+	
+    gtk_combo_box_set_model (GTK_COMBO_BOX (combo), GTK_TREE_MODEL (charsets));
+	gtk_cell_layout_clear (GTK_CELL_LAYOUT (combo));
+	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, FALSE);
+	gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (combo), renderer, "text", 0);
+	
+	for (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (charsets), &use_iter);
+		 gtk_list_store_iter_is_valid (charsets, &use_iter);
+		 gtk_tree_model_iter_next (GTK_TREE_MODEL (charsets), &use_iter))
+	{
+		gchar *cur_desc;
+		gtk_tree_model_get (GTK_TREE_MODEL (charsets), &use_iter, 0, &cur_desc, -1);
+		
+		if(!g_utf8_collate(description, cur_desc))
+			break;
+	}
+
+	gtk_combo_box_set_active_iter (GTK_COMBO_BOX (combo), &use_iter);
+	g_object_unref (renderer);
+    g_free (description);
+    g_free (current_charset);
+}
 
 /* returns the charset name belonging to the description "descr"
  * chosen from the combo. Return "NULL" when it could not be found, or
