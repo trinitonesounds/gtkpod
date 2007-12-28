@@ -3311,7 +3311,8 @@
                         <child>
                           <widget class="GtkComboBox" id="sort_combo">
                             <property name="visible">True</property>
-                            <property name="items" translatable="yes">Dummy - do not delete
+                            <property name="tooltip" translatable="yes">You can also use the table headers, but this allows you to sort according to a column that is not displayed.</property>
+                            <property name="items">Dummy - do not delete
 </property>
                           </widget>
                           <packing>
