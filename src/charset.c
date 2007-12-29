@@ -306,7 +306,12 @@ void charset_init_combo_box (GtkComboBox *combo)
 		gtk_tree_model_get (GTK_TREE_MODEL (charsets), &use_iter, 0, &cur_desc, -1);
 		
 		if(!g_utf8_collate(description, cur_desc))
+		{
+			g_free (cur_desc);
 			break;
+		}
+		
+		g_free (cur_desc);
 	}
 
 	gtk_combo_box_set_active_iter (GTK_COMBO_BOX (combo), &use_iter);

@@ -216,7 +216,7 @@ static void set_highlight (Cover_Item *cover, gint index)
 		g_return_if_fail (image);
 	}
 
-  scaled = gdk_pixbuf_scale_simple(image, cover->img_width, ((cover->img_height * 2)), GDK_INTERP_NEAREST);
+  scaled = gdk_pixbuf_scale_simple(image, cover->img_width, ((cover->img_height * 2)), GDK_INTERP_BILINEAR);
   gdk_pixbuf_unref (image);
 		
   gnome_canvas_item_set (cover->highlight,
@@ -453,7 +453,7 @@ static gint set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean 
 	gnome_canvas_item_show (cover->shadowreflection);
 	
 	/* Set the Cover */
-	scaled = gdk_pixbuf_scale_simple (album->albumart, cover->img_width, cover->img_height, GDK_INTERP_NEAREST);
+	scaled = gdk_pixbuf_scale_simple (album->albumart, cover->img_width, cover->img_height, GDK_INTERP_BILINEAR);
 	gnome_canvas_item_set (cover->cdimage,
 	 		"pixbuf", scaled,
 	 		NULL);
@@ -741,7 +741,7 @@ GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint def
 	  			w = default_size;
 	  			h = (gint) (default_size / ratio);
 	  		}
-	  		pixbuf = gdk_pixbuf_scale_simple(image, w, h, GDK_INTERP_NEAREST);
+	  		pixbuf = gdk_pixbuf_scale_simple(image, w, h, GDK_INTERP_BILINEAR);
 	  	}
 	  	else
 	  		pixbuf = gdk_pixbuf_copy (image);
@@ -750,7 +750,7 @@ GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint def
 		}
 		else
 		{
-			pixbuf = gdk_pixbuf_scale_simple(image, DEFAULT_IMG_SIZE, DEFAULT_IMG_SIZE, GDK_INTERP_NEAREST);
+			pixbuf = gdk_pixbuf_scale_simple(image, DEFAULT_IMG_SIZE, DEFAULT_IMG_SIZE, GDK_INTERP_BILINEAR);
   		gdk_pixbuf_unref (image);
 		}
 	}
@@ -856,7 +856,7 @@ GdkPixbuf *coverart_get_default_track_thumb (gint default_img_size)
 			g_return_val_if_fail(pixbuf, NULL);
 	}
 	
-	scaled = gdk_pixbuf_scale_simple(pixbuf, default_size, default_size, GDK_INTERP_NEAREST);
+	scaled = gdk_pixbuf_scale_simple(pixbuf, default_size, default_size, GDK_INTERP_BILINEAR);
   gdk_pixbuf_unref (pixbuf);
 	
 

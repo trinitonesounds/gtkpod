@@ -641,3 +641,114 @@ G_MODULE_EXPORT void on_coverart_pattern_changed (GtkEditable *sender, gpointer 
 {
 	prefs_set_string ("coverart_template", gtk_entry_get_text (GTK_ENTRY (sender)));
 }
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_exclusions_clicked (GtkButton *sender, gpointer e)
+{
+	GladeXML *xml = gtkpod_xml_new (xml_file, "prefs_exclusions_dialog");
+	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_exclusions_dialog");
+	GtkWidget *tree = gtkpod_xml_get_widget (xml, "exclusion_list");
+	GtkListStore *store = gtk_list_store_new (1, G_TYPE_STRING);
+    GtkTreeViewColumn *column = gtk_tree_view_column_new ();
+    GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
+	gchar *temp = prefs_get_string("exclude_file_mask");
+	
+	if (temp)
+	{
+		gint i;
+		gchar **masks = g_strsplit (temp, ";", 0);
+		GtkTreeIter iter;
+		
+		g_free (temp);
+		
+		for (i = 0; masks[i]; i++)
+		{
+			gtk_list_store_append (store, &iter);
+			gtk_list_store_set(store, &iter, 0, masks[i], -1);
+		}
+		
+		g_strfreev (masks);
+	}
+	
+	gtk_tree_view_column_pack_start (column, renderer, TRUE);
+    gtk_tree_view_column_set_attributes (column, renderer, "text", 0, NULL);
+    gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
+	gtk_tree_view_set_model (GTK_TREE_VIEW (tree), GTK_TREE_MODEL (store));
+	g_object_unref (store);
+	
+	g_object_set_data (G_OBJECT (gtkpod_xml_get_widget (xml, "add_exclusion")),
+					   "xml", xml);
+	
+	g_object_set_data (G_OBJECT (gtkpod_xml_get_widget (xml, "remove_exclusion")),
+					   "xml", xml);
+	
+	glade_xml_signal_autoconnect (xml);
+	gtk_dialog_run (GTK_DIALOG (dlg));
+	gtk_widget_destroy (dlg);
+	g_object_unref (xml);
+}
+
+static void update_exclusions (GtkListStore *store)
+{
+	GtkTreeModel *model = GTK_TREE_MODEL (store);
+	gint rows = gtk_tree_model_iter_n_children (model, NULL);
+	gchar **array = g_new (gchar *, rows + 1);
+	gchar *temp;
+	gint i;
+	GtkTreeIter iter;
+	
+	array[rows] = NULL;
+	
+	for (i = 0; i < rows; i++)
+	{
+		gtk_tree_model_iter_nth_child (model, &iter, NULL, i);
+		gtk_tree_model_get (model, &iter, 0, array + i, -1);
+	}
+	
+	temp = g_strjoinv (";", array);
+	prefs_set_string ("exclude_file_mask", temp);
+	g_free (temp);
+	g_strfreev (array);
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_add_exclusion_clicked (GtkButton *sender, gpointer e)
+{
+	GladeXML *xml = GLADE_XML (g_object_get_data (G_OBJECT (sender), "xml"));
+	GtkWidget *tree = gtkpod_xml_get_widget (xml, "exclusion_list");
+	GtkWidget *entry = gtkpod_xml_get_widget (xml, "new_exclusion");
+	const gchar *text = gtk_entry_get_text (GTK_ENTRY (entry));
+	
+	if (text && text[0])
+	{
+		GtkListStore *store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (tree)));
+		GtkTreeIter iter;
+		
+		gtk_list_store_append (store, &iter);
+		gtk_list_store_set(store, &iter, 0, text, -1);
+		gtk_entry_set_text (GTK_ENTRY (entry), "");
+		
+		update_exclusions (store);
+	}
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_remove_exclusion_clicked (GtkButton *sender, gpointer e)
+{
+	GladeXML *xml = GLADE_XML (g_object_get_data (G_OBJECT (sender), "xml"));
+	GtkWidget *tree = gtkpod_xml_get_widget (xml, "exclusion_list");
+	GtkListStore *store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (tree)));
+	GtkTreeIter iter = tree_get_current_iter (GTK_TREE_VIEW (tree));
+	
+	if(gtk_list_store_iter_is_valid (store, &iter))
+	{
+		gtk_list_store_remove (store, &iter);
+		update_exclusions (store);
+	}
+}

@@ -5,6 +5,15 @@
   
     Filename parse preferences
     Cover art search preferences
+	File mask exclusion preferences
+	
+  * data/default-cover.png:
+  
+    Less fugly and 1996-style picture
+	
+  * src/display_coverart.c:
+  
+    Set resize algorithm to GDK_INTERP_BILINEAR - yields nicer-looking images
 
 2007-12-28 Matvey Kozhev <sikon at users.sourceforge.net>
 
