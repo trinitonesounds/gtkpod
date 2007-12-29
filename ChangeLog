@@ -7,6 +7,7 @@
     Cover art search preferences
 	File mask exclusion preferences
 	mserv preferences
+	Commands preferences
 	
   * data/default-cover.png:
   
@@ -19,6 +20,10 @@
   * src/charset.c:
   
     Added missing call to g_free
+	
+  * src/display_spl.c:
+  
+    Initial HIGification of the smart playlist dialog.
 
 2007-12-28 Matvey Kozhev <sikon at users.sourceforge.net>
 

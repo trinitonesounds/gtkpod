@@ -233,6 +233,13 @@ enum entrytype
     spl_ET_STRING,
 };
 
+enum matchmode
+{
+	spl_MATCH_ANY = 0,
+	spl_MATCH_ALL,
+	spl_MATCH_IGNORE
+};
+
 static const gchar *entry_get_string (gchar *str, Itdb_SPLRule *splr,
 				      enum entrytype et);
 
@@ -334,62 +341,6 @@ static void spl_set_combobox (GtkComboBox *cb,
 
     spl_setup_combobox (cb, centries, index, cb_func, cb_data);
 
-}
-
-
-/* Callbacks */
-static void spl_all_radio_toggled (GtkToggleButton *togglebutton,
-				   GtkWidget *spl_window)
-{
-    Playlist *spl;
-
-    g_return_if_fail (spl_window);
-    spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
-    g_return_if_fail (spl);
-    if (gtk_toggle_button_get_active (togglebutton))
-    {
-	GtkWidget *frame = gtkpod_xml_get_widget (spl_window_xml, "spl_rules_frame");
-	g_return_if_fail (frame);
-	gtk_widget_set_sensitive (frame, TRUE);
-	spl->splpref.checkrules = TRUE;
-	spl->splrules.match_operator = ITDB_SPLMATCH_AND;
-    }
-}
-
-static void spl_any_radio_toggled (GtkToggleButton *togglebutton,
-				   GtkWidget *spl_window)
-{
-    Playlist *spl;
-
-    g_return_if_fail (spl_window);
-    spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
-    g_return_if_fail (spl);
-    if (gtk_toggle_button_get_active (togglebutton))
-    {
-	GtkWidget *frame = gtkpod_xml_get_widget (spl_window_xml, "spl_rules_frame");
-	g_return_if_fail (frame);
-	gtk_widget_set_sensitive (frame, TRUE);
-	spl->splpref.checkrules = TRUE;
-	spl->splrules.match_operator = ITDB_SPLMATCH_OR;
-    }
-}
-
-static void spl_none_radio_toggled (GtkToggleButton *togglebutton,
-				    GtkWidget *spl_window)
-{
-    Playlist *spl;
-    GtkWidget *frame;
-
-    g_return_if_fail (spl_window);
-    spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
-    g_return_if_fail (spl);
-    frame = gtkpod_xml_get_widget (spl_window_xml, "spl_rules_frame");
-    g_return_if_fail (frame);
-    if (gtk_toggle_button_get_active (togglebutton))
-    {
-	gtk_widget_set_sensitive (frame, FALSE);
-	spl->splpref.checkrules = FALSE;
-    }
 }
 
 static void spl_matchcheckedonly_toggled (GtkToggleButton *togglebutton,
@@ -1621,69 +1572,50 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
     g_object_set_data (G_OBJECT (spl_window), "spl_work", spl_dup);
     g_object_set_data (G_OBJECT (spl_window), "spl_pos",  GINT_TO_POINTER(pos));
     g_object_set_data (G_OBJECT (spl_window), "spl_itdb", itdb);
-    /* Set checkboxes and connect signal handlers */
+
+	/* Set checkboxes and connect signal handlers */
     if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_name_entry")))
     {
-	if (spl_dup->name)
-	    gtk_entry_set_text (GTK_ENTRY (w), spl_dup->name);	
-    }
-
-    if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_all_radio")))
-    {
-	g_signal_connect (w, "toggled",
-			  G_CALLBACK (spl_all_radio_toggled),
-			  spl_window);
-	gtk_toggle_button_set_active (
-	    GTK_TOGGLE_BUTTON (w),
-	    (spl_dup->splrules.match_operator == ITDB_SPLMATCH_AND));
-    }
-    if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_any_radio")))
-    {
-	g_signal_connect (w, "toggled",
-			  G_CALLBACK (spl_any_radio_toggled),
-			  spl_window);
-	gtk_toggle_button_set_active (
-	    GTK_TOGGLE_BUTTON (w),
-	    (spl_dup->splrules.match_operator == ITDB_SPLMATCH_OR));
-    }
-    if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_none_radio")))
-    {
-	g_signal_connect (w, "toggled",
-			  G_CALLBACK (spl_none_radio_toggled),
-			  spl_window);
-	gtk_toggle_button_set_active (
-	    GTK_TOGGLE_BUTTON (w), !spl_dup->splpref.checkrules);
+		if (spl_dup->name)
+			gtk_entry_set_text (GTK_ENTRY (w), spl_dup->name);	
     }
 
     if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_matchcheckedonly_button")))
     {
-	gtk_toggle_button_set_active (
-	    GTK_TOGGLE_BUTTON (w), spl_dup->splpref.matchcheckedonly);
-	g_signal_connect (w, "toggled",
-			  G_CALLBACK (spl_matchcheckedonly_toggled),
-			  spl_window);
+		gtk_toggle_button_set_active (
+			GTK_TOGGLE_BUTTON (w), spl_dup->splpref.matchcheckedonly);
+		g_signal_connect (w, "toggled",
+				  G_CALLBACK (spl_matchcheckedonly_toggled),
+				  spl_window);
     }
 
     if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_liveupdate_button")))
     {
-	gtk_toggle_button_set_active (
-	    GTK_TOGGLE_BUTTON (w), spl_dup->splpref.liveupdate);
-	g_signal_connect (w, "toggled",
-			  G_CALLBACK (spl_liveupdate_toggled),
-			  spl_window);
+		gtk_toggle_button_set_active (
+			GTK_TOGGLE_BUTTON (w), spl_dup->splpref.liveupdate);
+		g_signal_connect (w, "toggled",
+				  G_CALLBACK (spl_liveupdate_toggled),
+				  spl_window);
     }
 
     /* Signals for Cancel, OK, Delete */
     if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_cancel_button")))
     {
-	g_signal_connect (w, "clicked",
-		      G_CALLBACK (spl_cancel), spl_window);
+		g_signal_connect (w, "clicked",
+				  G_CALLBACK (spl_cancel), spl_window);
     }
-    if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_ok_button")))
+
+	if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_ok_button")))
     {
-	g_signal_connect (w, "clicked",
-		      G_CALLBACK (spl_ok), spl_window);
+		g_signal_connect (w, "clicked",
+				  G_CALLBACK (spl_ok), spl_window);
     }
+	
+	if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_match_rules")))
+    {
+		gtk_combo_box_set_active (GTK_COMBO_BOX (w), spl_MATCH_ALL);
+    }
+	
     g_signal_connect (spl_window, "delete_event",
 		      G_CALLBACK (spl_delete_event), spl_window);
 
@@ -1697,6 +1629,7 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
     if ((defx != 0) && (defy != 0))
 	gtk_window_set_default_size (GTK_WINDOW (spl_window), defx, defy);
 
+	glade_xml_signal_autoconnect (spl_window_xml);
     gtk_widget_show (spl_window);
 
     block_widgets ();
@@ -1720,3 +1653,37 @@ void spl_edit_new (iTunesDB *itdb, gchar *name, gint32 pos)
 
     spl_edit_all (itdb, spl, pos);
 }
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void spl_match_rules_changed (GtkComboBox *sender, gpointer e)
+{
+    Playlist *spl;
+	GtkWidget *spl_window = gtkpod_xml_get_widget (spl_window_xml, "spl_window");
+	GtkWidget *frame = gtkpod_xml_get_widget (spl_window_xml, "spl_rules_frame");
+
+    g_return_if_fail (spl_window);
+	g_return_if_fail (frame);
+    spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
+    g_return_if_fail (spl);
+	
+	switch (gtk_combo_box_get_active (sender))
+	{
+	case spl_MATCH_ANY:
+		gtk_widget_set_sensitive (frame, TRUE);
+		spl->splpref.checkrules = TRUE;
+		spl->splrules.match_operator = ITDB_SPLMATCH_OR;
+		break;
+	case spl_MATCH_ALL:
+		gtk_widget_set_sensitive (frame, TRUE);
+		spl->splpref.checkrules = TRUE;
+		spl->splrules.match_operator = ITDB_SPLMATCH_AND;
+		break;
+	default:
+		gtk_widget_set_sensitive (frame, FALSE);
+		spl->splpref.checkrules = FALSE;
+		break;
+    }
+}
+

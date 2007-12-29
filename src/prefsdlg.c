@@ -434,6 +434,36 @@ G_MODULE_EXPORT void on_tag_checkbox_toggled (GtkToggleButton *sender, gpointer 
 /*
 	glade callback
 */
+G_MODULE_EXPORT void on_browse_button_clicked (GtkButton *sender, gpointer e)
+{
+	GtkEntry *entry = GTK_ENTRY (g_object_get_data (G_OBJECT (sender), "entry"));
+	GtkWidget *dialog;
+
+	g_return_if_fail (entry);
+	
+	dialog = gtk_file_chooser_dialog_new (_("Browse"),
+										  GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (sender))),
+										  GTK_FILE_CHOOSER_ACTION_OPEN,
+										  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+										  GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+										  NULL);
+
+	gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog),
+								   gtk_entry_get_text (entry));
+	
+	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+	{
+		gchar *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+		gtk_entry_set_text (entry, filename);
+		g_free (filename);
+	}
+
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+/*
+	glade callback
+*/
 G_MODULE_EXPORT void on_group_compilations_toggled (GtkToggleButton *sender, gpointer e)
 {
 	gboolean active = gtk_toggle_button_get_active (sender);
@@ -829,4 +859,97 @@ G_MODULE_EXPORT void on_mserv_root_current_folder_changed (GtkFileChooser *sende
 {
 	prefs_set_string ("path_mserv_trackinfo_root",
 					  gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (sender)));
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_commands_clicked (GtkButton *sender, gpointer e)
+{
+	GladeXML *xml = gtkpod_xml_new (xml_file, "prefs_commands_dialog");
+	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_commands_dialog");
+	gchar *temp = prefs_get_string ("path_play_now");
+	
+	if(temp)
+	{
+		gtk_entry_set_text (GTK_ENTRY (gtkpod_xml_get_widget (xml, "cmd_playnow")),
+							temp);
+		
+		g_free (temp);
+	}
+
+	temp = prefs_get_string ("path_play_enqueue");
+	
+	if(temp)
+	{
+		gtk_entry_set_text (GTK_ENTRY (gtkpod_xml_get_widget (xml, "cmd_enqueue")),
+							temp);
+		
+		g_free (temp);
+	}
+
+	temp = prefs_get_string ("path_mp3gain");
+	
+	if(temp)
+	{
+		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (gtkpod_xml_get_widget (xml, "cmd_mp3gain")),
+									   temp);
+		
+		g_free (temp);
+	}
+
+	temp = prefs_get_string ("aacgain_path");
+	
+	if(temp)
+	{
+		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (gtkpod_xml_get_widget (xml, "cmd_aacgain")),
+									   temp);
+		
+		g_free (temp);
+	}
+	
+	g_object_set_data (G_OBJECT (gtkpod_xml_get_widget (xml, "browse_playnow")),
+					   "entry", gtkpod_xml_get_widget (xml, "cmd_playnow"));
+
+	g_object_set_data (G_OBJECT (gtkpod_xml_get_widget (xml, "browse_enqueue")),
+					   "entry", gtkpod_xml_get_widget (xml, "cmd_enqueue"));
+
+	glade_xml_signal_autoconnect (xml);
+	gtk_dialog_run (GTK_DIALOG (dlg));
+	gtk_widget_destroy (dlg);
+	g_object_unref (xml);
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_cmd_playnow_changed (GtkEditable *sender, gpointer e)
+{
+	prefs_set_string ("path_play_now", gtk_entry_get_text (GTK_ENTRY (sender)));
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_cmd_enqueue_changed (GtkEditable *sender, gpointer e)
+{
+	prefs_set_string ("path_play_enqueue", gtk_entry_get_text (GTK_ENTRY (sender)));
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_cmd_mp3gain_file_set (GtkFileChooserButton *sender, gpointer e)
+{
+	prefs_set_string ("path_mp3gain",
+					  gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (sender)));
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_cmd_aacgain_file_set (GtkFileChooserButton *sender, gpointer e)
+{
+	prefs_set_string ("aacgain_path",
+					  gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (sender)));
 }
