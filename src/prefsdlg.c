@@ -146,28 +146,30 @@ void ind_string_fill_combo (ind_string *array, GtkComboBox *combo)
 void update_checkbox_deps (GtkToggleButton *checkbox, const gchar *deps)
 {
 	/* Enable or disable dependent checkboxes */
+	GladeXML *xml = GLADE_XML (g_object_get_data (G_OBJECT (checkbox), "xml"));
 	gboolean active = gtk_toggle_button_get_active (checkbox);
 	gchar **deparray;
 	int i;
 
-	if(!deps)
+	if(!xml || !deps)
 		return;
 
 	deparray = g_strsplit (deps, ",", 0);
 	
 	for(i = 0; deparray[i]; i++)
 	{
-		GtkWidget *dep = gtkpod_xml_get_widget (prefs_xml, deparray[i]);
+		GtkWidget *dep = gtkpod_xml_get_widget (xml, deparray[i]);
 		gtk_widget_set_sensitive (dep, active);
 	}
 	
 	g_strfreev (deparray);
 }
 
-void init_checkbox (GtkToggleButton *checkbox, const gchar *pref, const gchar *deps)
+void init_checkbox (GtkToggleButton *checkbox, GladeXML *xml, const gchar *pref, const gchar *deps)
 {
 	g_object_set_data(G_OBJECT(checkbox), "pref", (gchar *) pref);
 	g_object_set_data(G_OBJECT(checkbox), "deps", (gchar *) deps);
+	g_object_set_data(G_OBJECT(checkbox), "xml", xml);
 	
 	if(pref)
 	{	
@@ -299,7 +301,7 @@ void setup_prefs_dlg (GladeXML *xml, GtkWidget *dlg)
 	for (i = 0; i < COUNTOF(checkbox_map); i++)
 	{
 		init_checkbox (GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (xml, checkbox_map[i][0])),
-					   checkbox_map[i][1], checkbox_map[i][2]);
+					   xml, checkbox_map[i][1], checkbox_map[i][2]);
 	}
 	
 	for (i = 0; i < COUNTOF(tag_checkbox_map); i++)
@@ -553,10 +555,10 @@ G_MODULE_EXPORT void open_encoding_dialog (GtkButton *sender, gpointer e)
 	GtkWidget *combo = gtkpod_xml_get_widget (xml, "encoding_combo");
 	
 	init_checkbox (GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (xml, "use_encoding_for_update")),
-									  "update_charset", NULL);
+				   xml, "update_charset", NULL);
 
 	init_checkbox (GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (xml, "use_encoding_for_writing")),
-									  "write_charset", NULL);
+				   xml, "write_charset", NULL);
 
 	charset_init_combo_box (GTK_COMBO_BOX (combo));
 	glade_xml_signal_autoconnect (xml);
@@ -595,7 +597,7 @@ G_MODULE_EXPORT void on_customize_tags_clicked (GtkButton *sender, gpointer e)
 	}
 	
 	init_checkbox (GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (xml, "overwrite_tags")),
-									  "parsetags_overwrite", NULL);
+				   xml, "parsetags_overwrite", NULL);
 	
 	glade_xml_signal_autoconnect (xml);
 	gtk_dialog_run (GTK_DIALOG (dlg));
@@ -751,4 +753,80 @@ G_MODULE_EXPORT void on_remove_exclusion_clicked (GtkButton *sender, gpointer e)
 		gtk_list_store_remove (store, &iter);
 		update_exclusions (store);
 	}
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_mserv_settings_clicked (GtkButton *sender, gpointer e)
+{
+	GladeXML *xml = gtkpod_xml_new (xml_file, "prefs_mserv_dialog");
+	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_mserv_dialog");
+	gchar *temp = prefs_get_string ("mserv_username");
+	
+	if(temp)
+	{
+		gtk_entry_set_text (GTK_ENTRY (gtkpod_xml_get_widget (xml, "mserv_username")),
+							temp);
+		
+		g_free (temp);
+	}
+	
+	temp = prefs_get_string ("path_mserv_music_root");
+	
+	if(temp)
+	{
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (gtkpod_xml_get_widget (xml, "music_root")),
+											 temp);
+		
+		g_free (temp);
+	}
+	
+	temp = prefs_get_string ("path_mserv_trackinfo_root");
+	
+	if(temp)
+	{
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (gtkpod_xml_get_widget (xml, "mserv_root")),
+											 temp);
+		
+		g_free (temp);
+	}
+	
+	init_checkbox (GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (xml, "use_mserv")),
+				   xml, "mserv_use", "mserv_settings_frame");
+	
+	init_checkbox (GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (xml, "report_mserv_problems")),
+				   xml, "mserv_report_probs", NULL);
+	
+	glade_xml_signal_autoconnect (xml);
+	gtk_dialog_run (GTK_DIALOG (dlg));
+	gtk_widget_destroy (dlg);
+	g_object_unref (xml);
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_mserv_username_changed (GtkEditable *sender, gpointer e)
+{
+	prefs_set_string ("mserv_username", gtk_entry_get_text (GTK_ENTRY (sender)));
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_music_root_current_folder_changed (GtkFileChooser *sender, gpointer e)
+{
+	printf ("Got here!\n");
+	prefs_set_string ("path_mserv_music_root",
+					  gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (sender)));
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_mserv_root_current_folder_changed (GtkFileChooser *sender, gpointer e)
+{
+	prefs_set_string ("path_mserv_trackinfo_root",
+					  gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (sender)));
 }

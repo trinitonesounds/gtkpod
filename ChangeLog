@@ -6,6 +6,7 @@
     Filename parse preferences
     Cover art search preferences
 	File mask exclusion preferences
+	mserv preferences
 	
   * data/default-cover.png:
   
@@ -14,6 +15,10 @@
   * src/display_coverart.c:
   
     Set resize algorithm to GDK_INTERP_BILINEAR - yields nicer-looking images
+	
+  * src/charset.c:
+  
+    Added missing call to g_free
 
 2007-12-28 Matvey Kozhev <sikon at users.sourceforge.net>
 
