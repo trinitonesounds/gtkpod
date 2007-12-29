@@ -576,3 +576,68 @@ G_MODULE_EXPORT void on_encoding_combo_changed (GtkComboBox *sender, gpointer e)
 	prefs_set_string ("charset", charset);
 	g_free (charset);
 }
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_customize_tags_clicked (GtkButton *sender, gpointer e)
+{
+	GladeXML *xml = gtkpod_xml_new (xml_file, "prefs_tag_parse_dialog");
+	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_tag_parse_dialog");
+	gchar *temp = prefs_get_string("parsetags_template");
+	
+	if(temp)
+	{
+		gtk_entry_set_text (GTK_ENTRY (gtkpod_xml_get_widget (xml, "filename_pattern")),
+							temp);
+		
+		g_free (temp);
+	}
+	
+	init_checkbox (GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (xml, "overwrite_tags")),
+									  "parsetags_overwrite", NULL);
+	
+	glade_xml_signal_autoconnect (xml);
+	gtk_dialog_run (GTK_DIALOG (dlg));
+	gtk_widget_destroy (dlg);
+	g_object_unref (xml);
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_filename_pattern_changed (GtkEditable *sender, gpointer e)
+{
+	prefs_set_string ("parsetags_template", gtk_entry_get_text (GTK_ENTRY (sender)));
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_customize_coverart_clicked (GtkButton *sender, gpointer e)
+{
+	GladeXML *xml = gtkpod_xml_new (xml_file, "prefs_coverart_dialog");
+	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_coverart_dialog");
+	gchar *temp = prefs_get_string("coverart_template");
+	
+	if(temp)
+	{
+		gtk_entry_set_text (GTK_ENTRY (gtkpod_xml_get_widget (xml, "coverart_pattern")),
+							temp);
+		
+		g_free (temp);
+	}
+	
+	glade_xml_signal_autoconnect (xml);
+	gtk_dialog_run (GTK_DIALOG (dlg));
+	gtk_widget_destroy (dlg);
+	g_object_unref (xml);
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_coverart_pattern_changed (GtkEditable *sender, gpointer e)
+{
+	prefs_set_string ("coverart_template", gtk_entry_get_text (GTK_ENTRY (sender)));
+}
