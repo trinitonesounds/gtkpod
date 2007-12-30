@@ -1,3 +1,10 @@
+2007-12-30 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * data/gtkpod.glade
+  
+  Added the photo window toolbar back in. Seems it may have been lost by
+  accident and it is required for some functions for the moment.
+
 2007-12-29 Matvey Kozhev <sikon at users.sourceforge.net>
 
   * data/gtkpod.glade:
