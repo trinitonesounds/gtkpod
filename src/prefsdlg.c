@@ -35,6 +35,7 @@
 #include "help.h"
 #include "prefs.h"
 #include "display_coverart.h"
+#include "prefs_window.h"
 
 /*
 	Begin types
@@ -343,11 +344,14 @@ void setup_prefs_dlg (GladeXML *xml, GtkWidget *dlg)
 	GdkColor *color = coverart_get_background_display_colour();
 	gtk_color_button_set_color (GTK_COLOR_BUTTON(coverart_colorselect_button), color);
 	
-	gtk_combo_box_set_active (GTK_COMBO_BOX (gtkpod_xml_get_widget (xml, "toolbar_style")),
+	gtk_combo_box_set_active (GTK_COMBO_BOX (gtkpod_xml_get_widget (xml, "target_format")),
 							  prefs_get_int ("conversion_target_format"));
 }
 
-void open_prefs_dlg ()
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void open_prefs_dlg ()
 {
 	if(prefs_dialog)
 	{
@@ -1065,5 +1069,14 @@ G_MODULE_EXPORT void on_target_format_changed (GtkComboBox *sender, gpointer e)
 			prefs_set_string (conv_paths[i].string, script);
 	}
 	
+	prefs_set_int ("conversion_target_format", index);
 	g_free (script);
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_sorting_button_clicked (GtkButton *sender, gpointer e)
+{
+	sort_window_create ();
 }
