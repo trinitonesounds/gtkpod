@@ -58,6 +58,11 @@ extern const gchar *KEY_MANUAL_SYNCDIR;
 extern const gchar *KEY_DISPLAY_COVERART;
 
 /* New prefs backend. Will replace the stuff above */
+enum conv_target_format
+{
+	TARGET_FORMAT_MP3 = 0,
+	TARGET_FORMAT_AAC,
+};
 
 /* 
  * Wrapper data types for temp preferences

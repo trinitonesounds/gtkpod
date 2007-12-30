@@ -1034,7 +1034,7 @@ static gboolean conversion_add_track (Conversion *conv, Track *track)
     ConvTrack *ctr;
     gchar *conversion_cmd = NULL;
     const gchar *typestr = NULL;
-    gboolean convert=FALSE, must_convert = FALSE;
+    gboolean convert = FALSE, must_convert = FALSE;
     gboolean result = TRUE;
 
     g_return_val_if_fail (conv, FALSE);
@@ -1043,10 +1043,11 @@ static gboolean conversion_add_track (Conversion *conv, Track *track)
     etr = track->userdata;
     g_return_val_if_fail (etr, FALSE);
 
-    if ((track->itdb->usertype & GP_ITDB_TYPE_LOCAL) ||
-	(track->transferred))
-    {   /* no conversion or transfer needed */
-	return TRUE;
+    if ((track->itdb->usertype & GP_ITDB_TYPE_LOCAL) || (track->transferred) ||
+		!prefs_get_int ("conversion_enable"))
+    {  
+		/* no conversion or transfer needed */
+		return TRUE;
     }
 
     /* Create ConvTrack structure */
@@ -1067,33 +1068,33 @@ static gboolean conversion_add_track (Conversion *conv, Track *track)
 
     if (!etr->pc_path_locale || (strlen (etr->pc_path_locale) == 0))
     {
-	gchar *buf = get_track_info (track, FALSE);
-	gtkpod_warning (_("Original filename not available for '%s.'\n"), buf);
-	g_free (buf);
+		gchar *buf = get_track_info (track, FALSE);
+		gtkpod_warning (_("Original filename not available for '%s.'\n"), buf);
+		g_free (buf);
 
-	etr->conversion_status = FILE_CONVERT_FAILED;
-	/* add to failed list */
-	g_mutex_lock (conv->mutex);
-	conv->failed = g_list_prepend (conv->failed, ctr);
-	g_mutex_unlock (conv->mutex);
-	debug ("added track to failed %p\n", track);
-	return FALSE;
+		etr->conversion_status = FILE_CONVERT_FAILED;
+		/* add to failed list */
+		g_mutex_lock (conv->mutex);
+		conv->failed = g_list_prepend (conv->failed, ctr);
+		g_mutex_unlock (conv->mutex);
+		debug ("added track to failed %p\n", track);
+		return FALSE;
     }
 
     if (!g_file_test (etr->pc_path_locale, G_FILE_TEST_IS_REGULAR))
     {
-	gchar *buf = get_track_info (track, FALSE);
-	gtkpod_warning (_("Filename '%s' is no longer valid for '%s'.\n"),
-			etr->pc_path_utf8, buf);
-	g_free (buf);
+		gchar *buf = get_track_info (track, FALSE);
+		gtkpod_warning (_("Filename '%s' is no longer valid for '%s'.\n"),
+				etr->pc_path_utf8, buf);
+		g_free (buf);
 
-	etr->conversion_status = FILE_CONVERT_FAILED;
-	/* add to failed list */
-	g_mutex_lock (conv->mutex);
-	conv->failed = g_list_prepend (conv->failed, ctr);
-	g_mutex_unlock (conv->mutex);
-	debug ("added track to failed %p\n", track);
-	return FALSE;
+		etr->conversion_status = FILE_CONVERT_FAILED;
+		/* add to failed list */
+		g_mutex_lock (conv->mutex);
+		conv->failed = g_list_prepend (conv->failed, ctr);
+		g_mutex_unlock (conv->mutex);
+		debug ("added track to failed %p\n", track);
+		return FALSE;
     }	
 
     /* Find the correct script for conversion */

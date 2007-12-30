@@ -1,3 +1,18 @@
+2007-12-30 Matvey Kozhev <sikon at users.sourceforge.net>
+
+  * data/man:
+  
+    Added manpage from Debian.
+
+  * data/icons/gtkpod.xpm:
+  * data/gtkpod.desktop.in:
+  
+    Added XPM icon from Debian (goes to /usr/share/pixmaps).
+	
+  * data/gtkpod.glade:
+  
+    Small fixes to the info window.
+
 2007-12-30 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * data/gtkpod.glade

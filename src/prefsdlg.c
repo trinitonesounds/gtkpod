@@ -73,6 +73,7 @@ const gchar *checkbox_map[][3] = {
 	{ "allow_duplicates", "!sha1", NULL },
 	{ "delete_missing", "sync_delete_tracks", NULL },
 	{ "update_existing_track", "update_existing", NULL },
+	{ "enable_conversion", "conversion_enable", "target_format,conversion_settings" },
 	/* Metadata tab */
 	{ "read_tags", "readtags", NULL },
 	{ "parse_filename_tags", "parsetags", "customize_tags" },
@@ -96,12 +97,27 @@ const gchar *checkbox_map[][3] = {
 	{ "msg_unupdated", "show_non_updated", NULL },
 };
 
+const gchar *conv_checkbox_map[][3] = {
+	{ "convert_ogg", "convert_ogg", NULL },
+	{ "convert_flac", "convert_flac", NULL },
+	{ "convert_compatible", NULL, "convert_mp3,convert_aac,convert_wav" },
+	{ "convert_mp3", "convert_mp3", NULL },
+	{ "convert_aac", "convert_m4a", NULL },
+	{ "convert_wav", "convert_wav", NULL },
+	{ "display_conversion_log", "", NULL },
+};
+
 ind_string tag_checkbox_map[] = {
 	{ 0, "tag_title" },
 	{ 1, "tag_artist" },
 	{ 2, "tag_album" },
 	{ 3, "tag_genre" },
 	{ 4, "tag_composer" },
+};
+
+const gchar *conv_scripts[] = {
+	"convert-2mp3.sh",
+	"convert-2m4a.sh",
 };
 
 static GladeXML *prefs_xml = NULL;
@@ -541,7 +557,9 @@ G_MODULE_EXPORT void on_column_remove_clicked (GtkButton *sender, gpointer e)
 */
 G_MODULE_EXPORT void on_unsetdeps_checkbox_toggled (GtkToggleButton *sender, gpointer e)
 {
-	if(!gtk_toggle_button_get_active (sender))
+	GladeXML *xml = GLADE_XML (g_object_get_data (G_OBJECT(sender), "xml"));
+	
+	if(xml && !gtk_toggle_button_get_active (sender))
 	{
 		int i;
 		gchar *deps = (gchar *) g_object_get_data (G_OBJECT(sender), "deps");
@@ -549,8 +567,8 @@ G_MODULE_EXPORT void on_unsetdeps_checkbox_toggled (GtkToggleButton *sender, gpo
 		
 		for(i = 0; deparray[i]; i++)
 		{
-			GtkWidget *dep = gtkpod_xml_get_widget (prefs_xml, deparray[i]);
-			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(dep), FALSE);
+			GtkWidget *dep = gtkpod_xml_get_widget (xml, deparray[i]);
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dep), FALSE);
 		}
 	}
 
@@ -847,7 +865,6 @@ G_MODULE_EXPORT void on_mserv_username_changed (GtkEditable *sender, gpointer e)
 */
 G_MODULE_EXPORT void on_music_root_current_folder_changed (GtkFileChooser *sender, gpointer e)
 {
-	printf ("Got here!\n");
 	prefs_set_string ("path_mserv_music_root",
 					  gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (sender)));
 }
@@ -952,4 +969,65 @@ G_MODULE_EXPORT void on_cmd_aacgain_file_set (GtkFileChooserButton *sender, gpoi
 {
 	prefs_set_string ("aacgain_path",
 					  gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (sender)));
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_conversion_settings_clicked (GtkButton *sender, gpointer e)
+{
+	GladeXML *xml = gtkpod_xml_new (xml_file, "prefs_conversion_dialog");
+	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_conversion_dialog");
+	gchar *temp = prefs_get_string ("file_convert_cachedir");
+	gint i;
+	
+	if(temp)
+	{
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (gtkpod_xml_get_widget (xml, "cache_folder")),
+											 temp);
+		
+		g_free (temp);
+	}
+	
+	gtk_spin_button_set_value (GTK_SPIN_BUTTON (gtkpod_xml_get_widget (xml, "bg_threads")),
+							   prefs_get_int("file_convert_max_threads_num"));
+	
+	gtk_spin_button_set_value (GTK_SPIN_BUTTON (gtkpod_xml_get_widget (xml, "cache_size")),
+							   prefs_get_int("file_convert_maxdirsize"));
+
+	for (i = 0; i < COUNTOF(conv_checkbox_map); i++)
+	{
+		init_checkbox (GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (xml, conv_checkbox_map[i][0])),
+					   xml, conv_checkbox_map[i][1], conv_checkbox_map[i][2]);
+	}
+
+	glade_xml_signal_autoconnect (xml);
+	gtk_dialog_run (GTK_DIALOG (dlg));
+	gtk_widget_destroy (dlg);
+	g_object_unref (xml);
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_cache_folder_current_folder_changed (GtkFileChooser *sender, gpointer e)
+{
+	prefs_set_string ("file_convert_cachedir",
+					  gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (sender)));
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_bg_threads_value_changed (GtkSpinButton *sender, gpointer e)
+{
+    prefs_set_int ("file_convert_max_threads_num", gtk_spin_button_get_value_as_int (sender));
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_cache_size_value_changed (GtkSpinButton *sender, gpointer e)
+{
+    prefs_set_int ("file_convert_maxdirsize", gtk_spin_button_get_value_as_int (sender));
 }

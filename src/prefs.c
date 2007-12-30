@@ -318,6 +318,10 @@ static void set_default_preferences()
     prefs_set_int("pm_sort", SORT_NONE);
     prefs_set_int("tm_sortcol", TM_COLUMN_TITLE);
     prefs_set_int("tm_sort", SORT_NONE);
+	
+	/* New conversion preferences */
+	prefs_set_int("conversion_enable", TRUE);
+	prefs_set_int("conversion_target_format", TRUE);
 }
 
 /* Initialize default variable-length list entries */

@@ -1,5 +1,9 @@
 SUBDIRS = 32x32 48x48 64x64
 
+pixmapsdir = $(datadir)/pixmaps
+pixmaps_DATA = gtkpod.xpm
+EXTRA_DIST = pixmaps_DATA
+
 gtk_update_icon_cache = gtk-update-icon-cache -f -t $(datadir)/icons/hicolor
 
 install-data-hook: update-icon-cache
