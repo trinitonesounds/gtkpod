@@ -12,6 +12,18 @@
   * data/gtkpod.glade:
   
     Small fixes to the info window.
+	
+  * src/prefs.c:
+  * src/prefs.h:
+  * src/file_convert.c:
+  
+    Added new settings:
+    - conversion_enable: skip any conversion if this is false (default: true)
+	- conversion_target_format: format to convert to (default: MP3; only used in prefsdlg.c)
+  
+  * src/prefsdlg.c:
+  
+    Conversion preferences.
 
 2007-12-30 P.G. Richardson <phantom_sf at users.sourceforge.net>
 

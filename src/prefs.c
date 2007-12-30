@@ -321,7 +321,7 @@ static void set_default_preferences()
 	
 	/* New conversion preferences */
 	prefs_set_int("conversion_enable", TRUE);
-	prefs_set_int("conversion_target_format", TRUE);
+	prefs_set_int("conversion_target_format", TARGET_FORMAT_MP3);
 }
 
 /* Initialize default variable-length list entries */
