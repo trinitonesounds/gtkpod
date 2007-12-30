@@ -604,7 +604,7 @@ G_MODULE_EXPORT void on_coverart_dialog_bg_color_set (GtkColorButton *widget, gp
 	
 	prefs_set_string ("coverart_display_bg_colour", hexstring);
 	g_free (hexstring);
-	force_update_covers ();
+	coverart_display_update (FALSE);
 }
 
 /*

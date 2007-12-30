@@ -8,7 +8,6 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 appdatadir = $(pkgdatadir)/data
 appdata_DATA =				\
 	gtkpod.glade			\
-	cdshine.png			\
 	default-cover.png		\
 	gtkpod-add-dirs.png		\
 	gtkpod-add-files.png		\

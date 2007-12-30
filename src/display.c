@@ -45,6 +45,7 @@
 #include "tools.h"
 #include <stdlib.h>
 #include <string.h>
+#include <cairo.h>
 #include <glib/gprintf.h>
 
 
@@ -450,6 +451,55 @@ void display_update_default_sizes (void)
 }
 
 /**
+ * on_drawing_area_exposed:
+ *
+ * Callback for the drawing area. When the drwaing area is covered,
+ * resized, changed etc.. This will be called the draw() function is then
+ * called from this and the cairo redrawing takes place.
+ * 
+ * @draw_area: drawing area where al the cairo drawing takes place 
+ * @event: gdk expose event
+ * 
+ * Returns:
+ * boolean indicating whether other handlers should be run.
+ */
+static gboolean on_coverart_preview_dialog_exposed (GtkWidget *drawarea, GdkEventExpose *event, gpointer data)
+{
+	gint width, height;
+	GdkPixbuf *image = data;
+	
+	/* Draw the image using cairo */
+		cairo_t *cairo_context;
+		
+		/* get a cairo_t */
+		cairo_context = gdk_cairo_create (drawarea->window);
+		/* set a clip region for the expose event */
+		cairo_rectangle (cairo_context,
+				event->area.x, event->area.y,
+				event->area.width, event->area.height);
+		cairo_clip (cairo_context);
+	
+		width = gdk_pixbuf_get_width (image);
+		height = gdk_pixbuf_get_height (image);
+		
+		cairo_rectangle (
+				cairo_context, 
+				0,
+				0,
+				width,
+				height);
+		gdk_cairo_set_source_pixbuf (
+				cairo_context,
+				image,
+				0,
+				0);
+		cairo_fill (cairo_context);
+		
+		cairo_destroy (cairo_context);
+		return FALSE;
+}
+
+/**
  * display_image_dialog
  * 
  * @GdkPixbuf: image
@@ -464,17 +514,17 @@ void display_image_dialog (GdkPixbuf *image)
 	
 	GladeXML *preview_xml;
 	GtkWidget *dialog;
-	GtkWidget *canvasbox;
+	GtkWidget *drawarea;
 	GtkWidget *res_label;
 	GdkPixbuf *scaled = NULL;
 	gchar *text;
 		
 	preview_xml = gtkpod_xml_new (xml_file, "coverart_preview_dialog");
 	dialog = gtkpod_xml_get_widget (preview_xml, "coverart_preview_dialog");
-	canvasbox = gtkpod_xml_get_widget (preview_xml, "coverart_preview_dialog_vbox");
+	drawarea = gtkpod_xml_get_widget (preview_xml, "coverart_preview_dialog_drawarea");
 	res_label = gtkpod_xml_get_widget (preview_xml, "coverart_preview_dialog_res_lbl");
 	g_return_if_fail (dialog);
-	g_return_if_fail (canvasbox);
+	g_return_if_fail (drawarea);
 	g_return_if_fail (res_label);
 		
 	/* Set the dialog parent */
@@ -505,30 +555,17 @@ void display_image_dialog (GdkPixbuf *image)
 		pixheight = scrheight;
 		pixwidth = pixheight * ratio;
 	}
-		
-	GnomeCanvas *canvas;
-	canvas = GNOME_CANVAS (gnome_canvas_new());
-	gtk_widget_set_size_request ( GTK_WIDGET(canvas),
-			pixwidth,
-			pixheight);
 	
-	gnome_canvas_set_scroll_region (	canvas,
-																														0.0, 0.0, 
-																														pixwidth,
-																														pixheight);
-	GnomeCanvasItem *canvasitem;											
-	canvasitem = gnome_canvas_item_new(	gnome_canvas_root(canvas),
-																																			GNOME_TYPE_CANVAS_PIXBUF, NULL);
-		
-	scaled = gdk_pixbuf_scale_simple (image, pixwidth, pixheight, GDK_INTERP_NEAREST);
-		
-	/* Apply the image to the canvas */
-	gnome_canvas_item_set (	canvasitem,
-					"pixbuf", scaled,
-					NULL);
+	scaled = gdk_pixbuf_scale_simple (
+					image, 
+					pixwidth, 
+					pixheight, 
+					GDK_INTERP_BILINEAR);
 
-	gtk_box_pack_start_defaults (GTK_BOX(canvasbox), GTK_WIDGET (canvas));
-		
+	/* Set the draw area's minimum size */
+	gtk_widget_set_size_request  (drawarea, pixwidth, pixheight);
+	g_signal_connect (G_OBJECT (drawarea), "expose_event",  G_CALLBACK (on_coverart_preview_dialog_exposed), scaled);
+	
 	/* Display the dialog and block everything else until the
 	 * dialog is closed.
 	 */
@@ -536,10 +573,10 @@ void display_image_dialog (GdkPixbuf *image)
 	gtk_dialog_run (GTK_DIALOG(dialog));
 			
 	/* Destroy the dialog as no longer required */
+	
 	gdk_pixbuf_unref (scaled);
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 }
-
 
 /* Utility function: returns a copy of the tracks currently
    selected. This means:

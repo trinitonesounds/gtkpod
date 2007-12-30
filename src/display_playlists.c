@@ -1454,7 +1454,7 @@ static void pm_selection_changed_cb (GtkTreeSelection *selection,
   /* Reallow the coverart selection update */
   coverart_block_change (FALSE);
   /* Set the coverart display based on the selected playlist */
-  coverart_set_images(TRUE);
+  coverart_display_update(TRUE);
 	 
   space_data_update ();
     

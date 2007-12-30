@@ -1977,7 +1977,7 @@ void st_sort (GtkSortType order)
 	 * displaytracks list in coverart recreated.
 	 * ie. easy to sort ascending and descending but difficult to return to unsorted state
 	 */
-	coverart_set_images (order == SORT_NONE);
+	coverart_display_update (order == SORT_NONE);
 }
 
 gint st_get_sorttab_page_number (int inst)

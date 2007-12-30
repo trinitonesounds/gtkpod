@@ -30,7 +30,7 @@
 #define __DISPLAY_COVERART_H__
 
 #include <gtk/gtk.h>
-#include <libgnomecanvas/libgnomecanvas.h>
+#include <cairo/cairo.h>
 
 #define IMG_MAIN 4
 #define IMG_NEXT 1
@@ -51,42 +51,41 @@ typedef struct {
 } Album_Item;
 
 typedef struct {
+	/* Data */
 	Album_Item *album;
 	gdouble img_x;
 	gdouble img_y;
 	gdouble img_width;
 	gdouble img_height;
-	GnomeCanvasItem *cdcvrgrp;
-	GnomeCanvasItem *cdimage;
-	GnomeCanvasItem *cdreflection;
-	GnomeCanvasItem *shadowreflection;
-	GnomeCanvasItem *highlight;
 } Cover_Item;
 
 typedef struct {
+  /* Gtk widgets */
 	GtkWidget *contentpanel;
 	GtkWidget *canvasbox;
 	GtkWidget *controlbox;
-	GnomeCanvas *canvas;
-	GnomeCanvasItem *bground;
-	GnomeCanvasText *cvrtext;
 	GtkButton *leftbutton;
 	GtkHScale *cdslider;
 	GtkButton *rightbutton;
+	
+	/* Utility data */
 	GPtrArray *cdcovers;
 	gint first_imgindex;
 	gboolean block_display_change;
+	
+	/* Drawing area related widgets */
+	GtkWidget *draw_area;	
 } CD_Widget;
 
 extern const gchar *DISPLAY_COVER_SHOW;
 
-void coverart_display_big_artwork ();
+
 GList *coverart_get_displayed_tracks (void);
 GdkPixbuf *coverart_get_default_track_thumb (gint default_img_size);
 void coverart_init (gchar *progpath);
-void force_update_covers ();
+void coverart_display_big_artwork ();
 void coverart_select_cover (Itdb_Track *track);
-void coverart_set_images (gboolean clear_track_list);
+void coverart_display_update (gboolean clear_track_list);
 void coverart_track_changed (Track *track, gint signal);
 void coverart_clear_images ();
 void coverart_block_change (gboolean val);

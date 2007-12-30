@@ -31,7 +31,6 @@
 
 #include <string.h>
 #include <gtk/gtk.h>
-#include <libgnomecanvas/libgnomecanvas.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include "display.h"

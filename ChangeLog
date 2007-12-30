@@ -1,3 +1,37 @@
+2007-12-30 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * data/cdshine.png
+  * data/Makefile.am
+  
+  png file removed as highlight now done programmatically with cairo.
+  
+  * data/gtkpod.glade
+  
+  GtkDrawingArea added to coverart preview dialog for use with cairo.
+  
+  * src/display_coverart.c
+  * src/display_coverart.h
+  
+  Refactored functions to use cairo for rendering coverart images
+  rather than libgnomecanvas.
+  
+  * src/display_playlists.c
+  * src/display_sorttabs.c
+  * src/prefsdlg.c
+  
+  References to some coverart functions updated.
+  
+  * src/display.c
+  
+  Generic function for display preview dialog refactored to use cairo
+  rather than libgnomecanvas.
+  
+  * src/fetchcover.h
+  * configure.in
+  * INSTALL
+
+  References to libgnomecanvas removed.  
+  
 2007-12-30 Matvey Kozhev <sikon at users.sourceforge.net>
 
   * data/man:

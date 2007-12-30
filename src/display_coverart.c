@@ -41,6 +41,7 @@
 #include "fetchcover.h"
 #include "info.h"
 #include "gdk/gdk.h"
+#include <math.h>
 
 #define DEBUG 0
 
@@ -48,24 +49,30 @@
 static void free_album (Album_Item *album);
 static void free_CDWidget ();
 static gint compare_album_keys (gchar *a, gchar *b);
-static void set_display_dimensions ();
-static void set_highlight (Cover_Item *cover, gint index);
-static void set_shadow_reflection (Cover_Item *cover);
-static void raise_cdimages (GPtrArray *cdcovers);
+static void set_display_window_dimensions ();
+static void set_highlight (Cover_Item *cover, gint index, cairo_t *cr);
+static void set_shadow_reflection (Cover_Item *cover, cairo_t *cr);
 static void remove_track_from_album (Album_Item *album, Track *track, gchar *key, gint index, GList *keylistitem);
+
+/* callback declarations */
+static gboolean on_gtkpod_window_configure (GtkWidget *widget, GdkEventConfigure *event, gpointer data);
 static void on_cover_display_button_clicked (GtkWidget *widget, gpointer data);
-static gint on_main_cover_image_clicked (GnomeCanvasItem *canvasitem, GdkEvent *event, gpointer data);
+static gboolean on_contentpanel_scroll_wheel_turned (GtkWidget *widget, GdkEventScroll *event, gpointer user_data);
+static gint on_main_cover_image_clicked (GtkWidget *widget, GdkEvent *event, gpointer data);
 static void on_cover_display_slider_value_changed (GtkRange *range, gpointer user_data);
-static void set_cover_dimensions (Cover_Item *cover, int cover_index, gdouble img_width, gdouble img_height);
-static void coverart_sort_images (GtkSortType order);
-static void prepare_canvas ();
-static void set_slider_range (gint index);
-static void set_covers (gboolean force_imgupdate);
-static gint set_cover_item (gint ndex, Cover_Item *cover, gchar *key, gboolean force_imgupdate);
+
+/* dnd declarations */
 static gboolean dnd_coverart_drag_drop(GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, guint time, gpointer user_data);
 static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x, gint y, GtkSelectionData *data, guint info, guint time, gpointer user_data);
 static gboolean dnd_coverart_drag_motion (GtkWidget *widget, GdkDragContext *dc, gint x, gint y, guint time, gpointer user_data);
+
+static void set_cover_dimensions (Cover_Item *cover, int cover_index, gdouble img_width, gdouble img_height);
+static void coverart_sort_images (GtkSortType order);
+static void set_slider_range (gint index);
 static GdkColor *convert_hexstring_to_gdk_color (gchar *hexstring);
+static gboolean on_drawing_area_exposed (GtkWidget *draw_area, GdkEventExpose *event);
+static void draw (cairo_t *cairo_context);
+static void redraw (gboolean force_pixbuf_update);
 
 /* Prefs keys */
 const gchar *KEY_DISPLAY_COVERART="display_coverart";
@@ -82,10 +89,8 @@ static gint DEFAULT_WIDTH;
 static gint DEFAULT_HEIGHT;
 /* Path of the png file used for albums without cd covers */
 static gchar *DEFAULT_FILE;
-/* Path of the png file used for the highlighting of cd covers */
-static gchar *HIGHLIGHT_FILE;
-/* Path of the png file used for the display of the main cd cover */
-static gchar *HIGHLIGHT_FILE_MAIN;
+/* Flag set to force an update of covers if a modification has been made */
+static gboolean force_pixbuf_covers = FALSE;
 /* signal handler id for the components */
 static gulong slide_signal_id;
 static gulong rbutton_signal_id;
@@ -136,59 +141,634 @@ static void debug_albums ()
 #endif
 
 /**
- * 
- * free_CDWidget
- * 
- * destroy the CD Widget and free everything currently
- * in memory.
+ * coverart_init:
+ *
+ * Initialises the image file used if an album has no cover. This
+ * needs to be loaded early as it uses the path of the binary
+ * to determine where to load the file from, in the same way as
+ * main() determines where to load the glade file from.
+ *
+ * @progpath: path of the gtkpod binary being loaded.
+ *  
  */
- static void free_CDWidget ()
- {
- 	gint i;
- 	g_signal_handler_disconnect (cdwidget->leftbutton, lbutton_signal_id);
- 	g_signal_handler_disconnect (cdwidget->rightbutton, rbutton_signal_id);
- 	g_signal_handler_disconnect (cdwidget->cdslider, slide_signal_id);
- 	g_signal_handler_disconnect (cdwidget->contentpanel, contentpanel_signal_id);
- 	g_signal_handler_disconnect (gtkpod_window, window_signal_id);
-
- 	/* Components not freed as they are part of the glade xml file */
- 	cdwidget->leftbutton = NULL;
- 	cdwidget->rightbutton = NULL;
- 	cdwidget->cdslider = NULL;
- 	cdwidget->contentpanel = NULL;
- 	cdwidget->canvasbox = NULL;
-	cdwidget->controlbox = NULL;
-		
-	/* native variables rather than references so should be destroyed when freed */
- 	cdwidget->first_imgindex = 0;
- 	cdwidget->block_display_change = FALSE;
-
-	Cover_Item *cover;
-	for(i = 0; i < IMG_TOTAL; ++i)
-  {
-  	cover = g_ptr_array_index(cdwidget->cdcovers, i);
-  	/* Nullify pointer to album reference. Will be freed below */
-  	cover->album = NULL;
-  }
-  	
- 	g_ptr_array_free (cdwidget->cdcovers, TRUE);
- 		
- 	/* Destroying canvas should destroy the background and cvrtext */
- 	cdwidget->bground = NULL;
- 	cdwidget->cvrtext = NULL;
- 	gtk_widget_destroy (GTK_WIDGET(cdwidget->canvas));
+void coverart_init (gchar *progpath)
+{
+	gchar *progname;
 	
+	progname = g_find_program_in_path (progpath);
+	static const gchar *SEPsrcSEPgtkpod = G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S "gtkpod";
+
+	if (!g_path_is_absolute (progname))
+	{
+		gchar *cur_dir = g_get_current_dir ();
+		gchar *prog_absolute;
+
+		if (g_str_has_prefix (progname, "." G_DIR_SEPARATOR_S))
+			prog_absolute = g_build_filename (cur_dir, progname+2, NULL);
+		else
+			prog_absolute = g_build_filename (cur_dir, progname, NULL);
+	  		
+		g_free (progname);
+		g_free (cur_dir);
+		progname = prog_absolute;
+	}
+
+	if (g_str_has_suffix (progname, SEPsrcSEPgtkpod))
+	{
+		gchar *suffix = g_strrstr (progname, SEPsrcSEPgtkpod);
+		
+		if (suffix)
+		{
+			*suffix = 0;
+			DEFAULT_FILE = g_build_filename (progname, "data", "default-cover.png", NULL);
+		}
+	}
+    
+	g_free (progname);
+	if (DEFAULT_FILE && !g_file_test (DEFAULT_FILE, G_FILE_TEST_EXISTS))
+	{
+		g_free (DEFAULT_FILE);
+		DEFAULT_FILE = NULL;
+	}
+  
+  if (!DEFAULT_FILE)
+  {
+		DEFAULT_FILE = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "default-cover.png", NULL);
+  }
+}
+
+/**
+ * coverart_init_display:
+ *
+ * Initialise the boxes and canvases of the coverart_display.
+ *  
+ */
+void coverart_init_display ()
+{
+	/* Alway initialise these buttons whether the coverart is displayed or not as these are the
+	 * up/down buttons on the display window and should be properly initialised
+	 */
+	GtkWidget *upbutton = gtkpod_xml_get_widget (main_window_xml, "cover_up_button");
+	GtkWidget *downbutton = gtkpod_xml_get_widget (main_window_xml, "cover_down_button");
+	GtkWidget *lbutton = gtkpod_xml_get_widget (main_window_xml, "cover_display_leftbutton");
+	GtkWidget *rbutton = gtkpod_xml_get_widget (main_window_xml, "cover_display_rightbutton");
+	GtkWidget *slider = gtkpod_xml_get_widget (main_window_xml, "cover_display_scaler");
+		
+	/* show/hide coverart display -- default to show */
+	if (prefs_get_int (KEY_DISPLAY_COVERART))
+	{
+		gtk_widget_hide (upbutton);
+		gtk_widget_show (downbutton);
+		gtk_widget_show (lbutton);
+		gtk_widget_show (rbutton);
+		gtk_widget_show (slider);
+		if (cdwidget != NULL)
+			gtk_widget_show_all (cdwidget->contentpanel);
+	}
+	else
+	{
+		gtk_widget_show (upbutton);
+		gtk_widget_hide (downbutton);
+		gtk_widget_hide (lbutton);
+		gtk_widget_hide (rbutton);
+		gtk_widget_hide (slider);
+		if (cdwidget != NULL)
+			gtk_widget_hide_all (cdwidget->contentpanel);
+		return;
+	}
+			
+	cdwidget = g_new0(CD_Widget, 1);
+	
+	cdwidget->canvasbox = gtkpod_xml_get_widget (main_window_xml, "cover_display_canvasbox"); 
+	cdwidget->contentpanel = gtkpod_xml_get_widget (main_window_xml, "cover_display_window");
+	cdwidget->controlbox = gtkpod_xml_get_widget (main_window_xml, "cover_display_controlbox");
+	cdwidget->leftbutton = GTK_BUTTON (gtkpod_xml_get_widget (main_window_xml, "cover_display_leftbutton"));
+	cdwidget->rightbutton = GTK_BUTTON (gtkpod_xml_get_widget (main_window_xml, "cover_display_rightbutton"));
+	cdwidget->cdslider = GTK_HSCALE (gtkpod_xml_get_widget (main_window_xml, "cover_display_scaler"));
+	/* create a new drawing area */
+	cdwidget->draw_area = gtk_drawing_area_new();
+	cdwidget->cdcovers = g_ptr_array_sized_new (IMG_TOTAL);
+			
+	g_return_if_fail (cdwidget->contentpanel);
+	g_return_if_fail (cdwidget->canvasbox);
+	g_return_if_fail (cdwidget->controlbox);
+	g_return_if_fail (cdwidget->leftbutton);
+	g_return_if_fail (cdwidget->rightbutton);
+	g_return_if_fail (cdwidget->cdslider);
+	g_return_if_fail (cdwidget->draw_area);
+		
+  /* Initialise the album hash backing store */
+  album_hash = g_hash_table_new_full ( g_str_hash,
+  																																			g_str_equal,
+  																																			(GDestroyNotify) g_free,
+  																																			(GDestroyNotify) free_album);
+	album_key_list = NULL;
+	set_display_window_dimensions ();
+
+	gint i;
+	Cover_Item *cover;			
+	for(i = 0; i < IMG_TOTAL; ++i)
+	{
+		cover = g_new0(Cover_Item, 1);	
+		g_ptr_array_add(cdwidget->cdcovers, cover);
+		cover = NULL;
+	}
+	gtk_box_pack_start_defaults (GTK_BOX(cdwidget->canvasbox), GTK_WIDGET(cdwidget->draw_area));
+				
+	/* create the expose event for the drawing area */
+	g_signal_connect (G_OBJECT (cdwidget->draw_area), "expose_event",  G_CALLBACK (on_drawing_area_exposed), NULL);
+	gtk_widget_add_events (cdwidget->draw_area, GDK_BUTTON_PRESS_MASK);
+	/* set up some callback events on the main scaled image */
+	g_signal_connect(GTK_OBJECT(cdwidget->draw_area), "button-press-event", GTK_SIGNAL_FUNC(on_main_cover_image_clicked), NULL);
+	
+	/* Dnd destinaton for foreign image files */
+	gtk_drag_dest_set (
+			cdwidget->canvasbox, 
+			0, 
+			coverart_drop_types, 
+			TGNR (coverart_drop_types), 
+			GDK_ACTION_COPY|GDK_ACTION_MOVE);
+
+	g_signal_connect ((gpointer) cdwidget->canvasbox, "drag-drop",
+			G_CALLBACK (dnd_coverart_drag_drop), 
+			NULL);
+	
+	g_signal_connect ((gpointer) cdwidget->canvasbox, "drag-data-received",
+			G_CALLBACK (dnd_coverart_drag_data_received), 
+			NULL);
+	
+	g_signal_connect ((gpointer) cdwidget->canvasbox, "drag-motion",
+			G_CALLBACK (dnd_coverart_drag_motion),
+			NULL);
+	
+	contentpanel_signal_id = g_signal_connect (G_OBJECT(cdwidget->contentpanel), "scroll-event",
+					G_CALLBACK(on_contentpanel_scroll_wheel_turned), NULL);
+					
+	lbutton_signal_id = g_signal_connect (G_OBJECT(cdwidget->leftbutton), "clicked",
+		      G_CALLBACK(on_cover_display_button_clicked), NULL);
+		      
+	rbutton_signal_id = g_signal_connect (G_OBJECT(cdwidget->rightbutton), "clicked",
+		      G_CALLBACK(on_cover_display_button_clicked), NULL);	
+	
+	slide_signal_id = g_signal_connect (G_OBJECT(cdwidget->cdslider), "value-changed",
+		      G_CALLBACK(on_cover_display_slider_value_changed), NULL);
+	
+	window_signal_id = g_signal_connect (gtkpod_window, "configure_event", 
+  		G_CALLBACK (on_gtkpod_window_configure), NULL);
+  
+  gtk_widget_show_all (cdwidget->contentpanel);
+  		
+	coverart_block_change (FALSE);
+}
+
+/**
+ * set_display_window_dimensions:
+ *
+ * Initialises the display component width and height.
+ * Sets the podpane's paned position value too.
+ */
+static void set_display_window_dimensions ()
+{
+	GtkWidget *podpane;
+		  		
+	g_object_get (gtkpod_window,
+								"default_height", &HEIGHT,
+								NULL);
+		
+	HEIGHT = HEIGHT / 2.5;
+	DEFAULT_HEIGHT = HEIGHT;
+	
+	podpane = gtkpod_xml_get_widget (main_window_xml, "paned0");	
+	g_return_if_fail (podpane);
+
+	WIDTH = HEIGHT;	
+	gtk_paned_set_position (GTK_PANED(podpane), WIDTH);
+	DEFAULT_WIDTH = WIDTH;
+	
+	gtk_widget_set_size_request(GTK_WIDGET(cdwidget->canvasbox), WIDTH, HEIGHT);
+	/* set the size of the drawing area */
+	gtk_widget_set_size_request (GTK_WIDGET(cdwidget->draw_area), WIDTH, HEIGHT);	
+}
+
+/**
+ * coverart_block_change:
+ *
+ * Select covers events can be switched off when automatic
+ * selections of tracks are taking place.
+ *
+ * @val: indicating whether to block or unblock select cover events
+ *  
+ */
+void coverart_block_change (gboolean val)
+{
+  if (GTK_WIDGET_REALIZED(gtkpod_window))
+  {
+      if (val)
+      {
+	  GdkCursor *cursor = gdk_cursor_new (GDK_WATCH);
+	  gdk_window_set_cursor (gtkpod_window->window, cursor);
+	  gdk_cursor_unref (cursor);
+      }
+      else
+	  gdk_window_set_cursor (gtkpod_window->window, NULL);
+  }
+
+  if (cdwidget != NULL)
+      cdwidget->block_display_change = val;
+}
+
+static void draw (cairo_t *cairo_context)
+{
+	gint cover_index[] = {0, 8, 1, 7, 2, 6, 3, 5, 4};
+	/* Draw the background */
+	GdkColor *color = coverart_get_background_display_colour ();
+	gdouble r = ((gdouble) (color->red >> 8)) / 255; 
+	gdouble g = ((gdouble) (color->green >>8)) / 255; 
+	gdouble b = ((gdouble) (color->blue >> 8)) / 255;
+	cairo_save (cairo_context);
+	cairo_set_source_rgb (cairo_context, r, 	g, b);
+	cairo_set_operator (cairo_context, CAIRO_OPERATOR_SOURCE);
+	cairo_paint (cairo_context);
+	cairo_restore (cairo_context);
+	g_free (color);
+	
+	Album_Item *album;
+	gint i, album_index;
+	Cover_Item *cover;
+	gchar *key;
+	
+	for(i = 0; i < IMG_TOTAL; ++i)
+	{
+		cover = g_ptr_array_index(cdwidget->cdcovers, cover_index[i]);
+		album_index = cdwidget->first_imgindex + cover_index[i];
+		
+		/* Get the key from the key list appropriate to the index
+		 * provided by the first image index property
+		 */
+		key = g_list_nth_data (album_key_list, album_index);
+	  
+		if (key == NULL)
+			continue;
+		
+		/* Find the Album Item appropriate to the key */
+		album  = g_hash_table_lookup (album_hash, key);
+		cover->album = album;
+		
+		if (force_pixbuf_covers)
+		{
+			gdk_pixbuf_unref (album->albumart);
+			album->albumart = NULL;
+		}
+		
+		Track *track;
+		if (album->albumart == NULL)
+		{
+			track = g_list_nth_data (album->tracks, 0);
+			album->albumart = coverart_get_track_thumb (track, track->itdb->device, DEFAULT_IMG_SIZE);				
+		}
+		
+		/* Set the x, y, height and width of the CD cover */
+		set_cover_dimensions (
+					cover,
+					cover_index[i],
+					gdk_pixbuf_get_width (album->albumart),
+					gdk_pixbuf_get_height (album->albumart));
+		
+		/* Set the Cover */
+		GdkPixbuf *scaled;
+		scaled = gdk_pixbuf_scale_simple (
+				album->albumart, 
+				cover->img_width, 
+				cover->img_height, 
+				GDK_INTERP_BILINEAR);
+		cairo_rectangle (
+								cairo_context, 
+								cover->img_x,
+								cover->img_y,
+								cover->img_width,
+								cover->img_height);
+		gdk_cairo_set_source_pixbuf (
+				cairo_context,
+				scaled,
+				cover->img_x,
+				cover->img_y);
+		cairo_fill (cairo_context);
+		
+		/* Draw a black line around the cd cover */
+		cairo_move_to (cairo_context, cover->img_x, cover->img_y);
+		cairo_rel_line_to (cairo_context, cover->img_width, 0);
+		cairo_rel_line_to (cairo_context, 0, cover->img_height);
+		cairo_rel_line_to (cairo_context, -(cover->img_width), 0);
+		cairo_close_path (cairo_context);
+		cairo_set_line_width (cairo_context, 1);
+		cairo_set_source_rgb (cairo_context, 0, 0, 0);
+		cairo_stroke (cairo_context);
+		
+		/* Display the highlight */
+		set_highlight (cover, cover_index[i], cairo_context);
+				
+		 /* flip image vertically to create reflection */
+		GdkPixbuf *reflection;
+		reflection = gdk_pixbuf_flip (scaled, FALSE);
+		cairo_rectangle (
+								cairo_context, 
+								cover->img_x,
+								cover->img_y + cover->img_height + 2,
+								cover->img_width,
+								cover->img_height);
+		gdk_cairo_set_source_pixbuf (
+						cairo_context,
+						reflection,
+						cover->img_x,
+						cover->img_y + cover->img_height + 2);
+		cairo_fill (cairo_context);
+			    	
+		gdk_pixbuf_unref (reflection);
+		gdk_pixbuf_unref (scaled);
+		
+		/* Set the reflection shadow */
+		set_shadow_reflection (cover, cairo_context);
+		
+		cairo_save(cairo_context);
+		/* Set the text if the index is the central image cover */
+		if (cover_index[i] == IMG_MAIN)
+		{
+			/* Set the font size and colour */
+			cairo_select_font_face (
+					cairo_context, 
+					"Sans", 
+					CAIRO_FONT_SLANT_NORMAL,
+					CAIRO_FONT_WEIGHT_BOLD);
+			cairo_set_font_size (cairo_context, 12.0);
+			cairo_set_source_rgb (cairo_context, 1, 1, 1);
+	
+			/* Centre the text using its extent and the width of the CoverArt Display */
+			cairo_text_extents_t extents;
+			gdouble x,y;
+	
+			cairo_text_extents (cairo_context, album->artist, &extents);
+			x = (WIDTH / 2) - (extents.width / 2);
+			y = cover->img_y + cover->img_height + 15;
+			/* Move to the correct location and show the text */
+			cairo_move_to (cairo_context, x, y);
+			cairo_show_text (cairo_context, album->artist);
+					
+			cairo_text_extents (cairo_context, album->albumname, &extents);
+			x = (WIDTH / 2) - (extents.width / 2);
+			y = cover->img_y + cover->img_height + 30;
+			/* Move to the correct location and show the text */
+			cairo_move_to (cairo_context, x, y);
+			cairo_show_text (cairo_context, album->albumname);
+
+			cairo_stroke (cairo_context);
+		}
+		cairo_restore(cairo_context);
+	}
+	
+	force_pixbuf_covers = FALSE;
+}
+
+/**
+ * coverart_display_update:
+ *
+ * Takes a list of tracks and sets the 9 image cover display.
+ *
+ * @clear_track_list: flag indicating whether to clear the displaytracks list or not
+ *  
+ */
+void coverart_display_update (gboolean clear_track_list)
+{
+	gint i;
+	GList *tracks;
+	Track *track;
+	Album_Item *album;
+	Playlist *playlist;
+
+	if ( ! prefs_get_int (KEY_DISPLAY_COVERART))
+		return;
+		
+	/* initialize display if not already done */
+	if (!cdwidget)
+		coverart_init_display ();
+
+	/* Ensure that the setting of images hasnt been turned off
+	 * due to being in the middle of a selection operation
+	 */
+	if (cdwidget->block_display_change)
+		return;
+	
+	if (clear_track_list)
+	{
+		/* Find the selected playlist */
+		playlist = pm_get_selected_playlist ();
+		if (playlist == NULL)
+			return;
+		
+		tracks = playlist->members;
+		/* Free up the hash table and the key list */
+		g_hash_table_foreach_remove(album_hash, (GHRFunc) gtk_true, NULL);
+				
+		g_list_free (album_key_list);
+    
+    album_key_list = NULL;;
+    
+		if (tracks == NULL)
+		{
+			redraw (FALSE);
+			return;
+		}
+		
+		while (tracks)
+		{
+	    gchar *album_key;
+			track = tracks->data;
+			
+			album_key = g_strconcat (track->artist, "_", track->album, NULL);
+			/* Check whether an album item has already been created in connection
+			 * with the track's artist and album
+			 */
+			album = g_hash_table_lookup (album_hash, album_key);
+			if (album == NULL)
+			{
+				/* Album item not found so create a new one and populate */
+				album = g_new0 (Album_Item, 1);
+				album->albumart = NULL;
+				album->albumname = g_strdup (track->album);
+				album->artist = g_strdup (track->artist);
+				album->tracks = NULL;
+				album->tracks = g_list_append (album->tracks, track);
+				
+				/* Insert the new Album Item into the hash */
+				g_hash_table_insert (album_hash, album_key, album);
+				/* Add the key to the list for sorting and other functions */
+				album_key_list = g_list_append (album_key_list, album_key);
+			}
+			else
+			{
+			    /* Album Item found in the album hash so
+			     * append the track to the end of the
+			     * track list */
+			    g_free (album_key);
+			    album->tracks = g_list_append (album->tracks, track);
+			}
+			
+			tracks = tracks->next;
+		}
+		
+		cdwidget->first_imgindex = 0;
+	}
+		
 	/* Remove all null tracks before any sorting should take place */	
  	album_key_list = g_list_remove_all (album_key_list, NULL);
  		
- 	g_hash_table_foreach_remove(album_hash, (GHRFunc) gtk_true, NULL);
-	g_hash_table_destroy (album_hash);
-	g_list_free (album_key_list);
-		
-	g_free (cdwidget);
-	cdwidget = NULL;
+	/* Sort the tracks to the order set in the preference */
+	coverart_sort_images (prefs_get_int("st_sort"));
+	
+	/* Add 4 null tracks to the end of the track list for padding */
+	for (i = 0; i < IMG_MAIN; ++i)
+		album_key_list = g_list_append (album_key_list, NULL);
+	
+	/* Add 4 null tracks to the start of the track list for padding */
+	for (i = 0; i < IMG_MAIN; ++i)
+		album_key_list = g_list_prepend (album_key_list, NULL);
+
+	redraw (FALSE);
+	
+	set_slider_range (cdwidget->first_imgindex);
+	
+	/*
+	printf("######### ORIGINAL LINE UP ########\n");
+	debug_albums ();
+	printf("######### END OF ORIGINAL LINE UP #######\n");
+	*/
 }
- 
+
+static void redraw (gboolean force_pixbuf_update)
+{
+	force_pixbuf_covers = force_pixbuf_update;
+	GdkRegion *region = gdk_drawable_get_clip_region (cdwidget->draw_area->window);
+	/* redraw the cairo canvas completely by exposing it */
+	gdk_window_invalidate_region (cdwidget->draw_area->window, region, TRUE);
+	gdk_window_process_updates (cdwidget->draw_area->window, TRUE);
+	gdk_region_destroy (region);
+	
+	if (g_list_length (album_key_list) <= 1)
+	{
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), FALSE); 
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), FALSE); 
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), FALSE);
+	}
+	else
+	{
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), TRUE); 
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), TRUE); 
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), TRUE);
+	}
+}
+
+/**
+ * set_cover_dimensions:
+ *
+ * Utility function for set all the x, y, width and height
+ * dimensions applicable to a single cover widget
+ * 
+ * @cover: cover widget for which dimensions are to be set
+ * @cover_index: index of the widget. Used to determine whether
+ * 												cover is the main cover or not
+ */
+static void set_cover_dimensions (Cover_Item *cover, int cover_index, gdouble img_width, gdouble img_height)
+{
+	gdouble x = 0, y = 0;
+	gdouble small_img_width, small_img_height;
+	gdouble display_width = 0, display_height = 0;
+	gdouble display_diff = 0, display_ratio = 0;
+	gint temp_index = 0;
+	
+	if (img_width > (WIDTH / 2))
+	{
+		display_ratio = img_width / img_height;
+		img_width = (WIDTH / 2);
+		img_height = img_width / display_ratio;
+	}
+	
+	small_img_width = img_width * 0.75;
+	small_img_height = img_height * 0.75;
+	
+	/* WIDTH is the width of the display_coverart window
+	 * BORDER is the 10 pixel frame around the images
+	 */
+	display_width = (WIDTH / 2) - (BORDER * 2);
+	
+	display_diff = display_width - small_img_width;	
+	
+	/* Set the x location of the cover image */
+	switch(cover_index) {
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+			display_ratio = ((gdouble) cover_index) / 4;
+			x = BORDER + (display_ratio * display_diff);
+			break;
+		case IMG_MAIN:
+			/* The Main Image CD Cover Image */
+			x = (WIDTH - img_width) / 2;
+			break;
+		case 5:
+		case 6:
+		case 7:
+		case 8:			
+			temp_index = cover_index - 8;
+			if (temp_index < 0)
+				temp_index = temp_index * -1; 
+	
+			display_ratio = ((gdouble) temp_index) / 4;
+			x = WIDTH - (BORDER + small_img_width + (display_ratio * display_diff)); 
+			break;
+	}
+		
+	/* Set the y location of the cover image. The y location must be determined by
+	 * height of the cover image so that the hightlight and shadow fit in correctly.
+	 */
+	display_height = HEIGHT - (BORDER * 2);
+	
+	switch(cover_index) {
+		case 0:
+		case 8:
+			y = display_height - (small_img_height + (BORDER * 15));
+			break;
+		case 1:
+		case 7:
+			y = display_height - (small_img_height + (BORDER * 12));
+			break;
+		case 2:
+		case 6:
+			y = display_height - (small_img_height + (BORDER * 9));
+			break;
+		case 3:
+		case 5:
+			y = display_height - (small_img_height + (BORDER * 6)); 
+			break;
+		case IMG_MAIN:
+			/* The Main Image CD Cover Image */
+			y = HEIGHT - (img_height + (BORDER * 4));	
+	}
+			
+	cover->img_x = x;
+	cover->img_y = y;
+		
+	if (cover_index == IMG_MAIN)
+	{
+		cover->img_height = img_height;
+		cover->img_width = img_width;
+	}
+	else
+	{
+		cover->img_height = small_img_height;
+		cover->img_width = small_img_width;
+	}
+}
+
 /**
  * set_highlight:
  *
@@ -198,31 +778,34 @@ static void debug_albums ()
  * @cover: A Cover_Item object which the higlighted is added to.
  *  
  */
-static void set_highlight (Cover_Item *cover, gint index)
-{
-  GdkPixbuf *image;
-  GError *error = NULL;
-  GdkPixbuf *scaled;
-	    	   																		
+static void set_highlight (Cover_Item *cover, gint index, cairo_t * cr)
+{	    	   																		
 	if(index == IMG_MAIN)
 		return;
-	
-	image = gdk_pixbuf_new_from_file(HIGHLIGHT_FILE, &error);
-    
-  if(error != NULL)
-  {	
-		printf("Error occurred loading file - \nCode: %d\nMessage: %s\n", error->code, error->message);
-		g_error_free (error);
-		g_return_if_fail (image);
-	}
-
-  scaled = gdk_pixbuf_scale_simple(image, cover->img_width, ((cover->img_height * 2)), GDK_INTERP_BILINEAR);
-  gdk_pixbuf_unref (image);
 		
-  gnome_canvas_item_set (cover->highlight,
-			   "pixbuf", scaled,
-			   NULL);
-  gdk_pixbuf_unref (scaled);
+	cairo_save(cr);
+	cairo_pattern_t *pat;
+	pat = cairo_pattern_create_linear (
+				cover->img_x,
+				cover->img_y,
+				cover->img_x,
+				cover->img_y + (((gdouble) cover->img_height) / 2.5));
+		cairo_pattern_add_color_stop_rgba (pat, 0.0, 1, 1, 1, 0);
+		cairo_pattern_add_color_stop_rgba (pat, 0.4, 1, 1, 1, 0.6);
+		cairo_pattern_add_color_stop_rgba (pat, 0.9, 1, 1, 1, 0);
+		cairo_pattern_set_extend (pat, CAIRO_EXTEND_REPEAT);
+		
+		cairo_rectangle (
+				cr, 
+				cover->img_x, 
+				cover->img_y, 
+				cover->img_width, 
+				cover->img_height);
+		cairo_rotate (cr, M_PI / 4);
+		cairo_set_source (cr, pat);
+		cairo_fill (cr);
+		cairo_pattern_destroy (pat);
+		cairo_restore(cr);
 }
 
 /**
@@ -234,295 +817,376 @@ static void set_highlight (Cover_Item *cover, gint index)
  * @cover: A Cover_Item object which the higlighted is added to.
  *  
  */
-static void set_shadow_reflection (Cover_Item *cover)
+static void set_shadow_reflection (Cover_Item *cover, cairo_t *cr)
 {
-  GdkPixbuf *image;
-  gint pixel_offset, rowstride, x, y, width, height;
-  guchar *drawbuf;
-  gint floor = 1;
-  	
-  width = cover->img_width;
-  height = cover->img_height + floor;
-
-  drawbuf = g_malloc((gint) (width * 16) * (gint) height);  	
-  /* drawing buffer length multiplied by 4
-  * due to 1 width per R, G, B & ALPHA
-  */
-  
-  GdkColor *bgcolour = coverart_get_background_display_colour();
-
-  rowstride = width * 4;
-  for(y = 0; y < height; ++y)
-  {
-  	for(x = 0; x < width; ++x)
-  	{
-  		pixel_offset = (y * rowstride) + (x * 4);
-  		drawbuf[pixel_offset] = bgcolour->red >> 8;
-  		drawbuf[pixel_offset + 1] = bgcolour->green >> 8;
-  		drawbuf[pixel_offset + 2] = bgcolour->blue >> 8;
-  		if (y < floor)
-  		{
-  			drawbuf[pixel_offset + 3] = 255;
-  		}
-  		else if (y > (height  / 2))
-  		{
-  			drawbuf[pixel_offset + 3] = 255;
-  		}
-  		else
-  		{
-  			gint gradient = y * (255 / (height / 2)) + 50;
-  			drawbuf[pixel_offset + 3] = gradient > 255 ? 255 : gradient;
-  			//drawbuf[pixel_offset + 3] = 255;
-  		}
-  	}
-  }
-  
-  image =  gdk_pixbuf_new_from_data(drawbuf,
-    									GDK_COLORSPACE_RGB,
-    									TRUE,
-    									8,
-    									width,
-    									height,
-    									rowstride,
-    									(GdkPixbufDestroyNotify) g_free, NULL);
-
-  gnome_canvas_item_set (cover->shadowreflection,
-			   "pixbuf", image,
-			   "y", (gdouble) (cover->img_height - floor),
-			   NULL);
-  gdk_pixbuf_unref (image);
-}
-
-/**
- * raise_cdimages:
- *
- * Ensures that once all the canvas items have been created on the
- * main canvas, they are have the correct Z-order, ie. main cd image
- * is at the top and fully visible.
- * 
- * @cdcovers: array of pointers to the cd cover objects
- *  
- */
-static void raise_cdimages (GPtrArray *cdcovers)
-{
-	Cover_Item *cover;
-	gint i, maxindex;
+	GdkColor *color = coverart_get_background_display_colour();
+	gdouble r = ((gdouble) (color->red >> 8)) / 255; 
+	gdouble g = ((gdouble) (color->green >>8)) / 255; 
+	gdouble b = ((gdouble) (color->blue >> 8)) / 255;
+	g_free (color);
 	
-	maxindex = IMG_TOTAL - 1;
-	
-	for(i = 0; i < maxindex / 2; ++i)
-	{
-		cover = g_ptr_array_index(cdcovers, i);
-		gnome_canvas_item_raise_to_top(cover->cdcvrgrp);
-		
-		cover = g_ptr_array_index(cdcovers, maxindex - i);
-		gnome_canvas_item_raise_to_top(cover->cdcvrgrp);
-	}	
-	cover = g_ptr_array_index(cdcovers, IMG_MAIN);
-	gnome_canvas_item_raise_to_top(cover->cdcvrgrp);
-	
-	gnome_canvas_item_raise_to_top(GNOME_CANVAS_ITEM(cdwidget->cvrtext));
+	cairo_pattern_t *pat;
+	pat = cairo_pattern_create_linear (
+			cover->img_x,
+			cover->img_y + cover->img_height + 2,
+			cover->img_x,
+			cover->img_y + cover->img_height + 2 + cover->img_height);
+	cairo_pattern_add_color_stop_rgba (pat, 0, r, g, b, 0.3);
+	cairo_pattern_add_color_stop_rgba (pat, 0.5, r, g, b, 1);
+	cairo_rectangle (
+			cr, 
+			cover->img_x, 
+			cover->img_y + cover->img_height + 2, 
+			cover->img_width + 10, 
+			cover->img_height);
+	cairo_set_source (cr, pat);
+	cairo_fill (cr);
+	cairo_pattern_destroy (pat);
 }
 
 /**
  * 
- * force_update_covers:
+ * Convenience function that will only allow set images to be
+ * called if the track that was affected was in the list of displaytracks
+ * used by the coverart display. So if a whole album is deleted then this
+ * will only reset the display if the first track in the album is deleted.
  * 
- * Call the resetting of the covers and override the cached images so that they
- * are loaded with the latest files existing on the filesystem.
- * 
+ * @track: affected track
  */
-void force_update_covers ()
+void coverart_track_changed (Track *track, gint signal)
 {
-	set_covers (TRUE);
-}
-
-/**
- * set_covers:
- *
- * Internal function responsible for the resetting of the artwork
- * covers in response to some kind of change in selection, eg. new
- * selection in sort tab, button click etc...
- * 
- * @force_imgupdate: forces the resetting of the cached images so that the
- * values are reread from the tracks and updated. Used sparingly.
- */
-static void set_covers (gboolean force_imgupdate)
-{ 
-  gint i, dataindex, nullkeys;
-  gchar *key;
-  Cover_Item *cover;
-
-  if (cdwidget && cdwidget->cdcovers)
-  {
-  	nullkeys = 0;
-    for(i = 0; i < IMG_TOTAL; ++i)
-    {
-    	cover = g_ptr_array_index(cdwidget->cdcovers, i);
-    	dataindex = cdwidget->first_imgindex + i;
-
-    	/* Get the key from the key list appropriate to the index
-    	 * provided by the first image index property
-    	 */
-    	key = g_list_nth_data (album_key_list, dataindex);
-    	
-    	nullkeys += set_cover_item (i, cover, key, force_imgupdate);	
-    }
-    
-    /* If all the albums were null then the playlist/repository is empty so change
-    * the colour of the coverart_display to white
-    */
-    GdkColor *back_colour = coverart_get_background_display_colour ();
-    
-    if (! back_colour)
-    	gnome_canvas_item_set (cdwidget->bground,
-    	    				    "fill-color-rgba", 0xFFFFFFFF,
-    	    				    NULL);
-    else
-    {
-    	gnome_canvas_item_set (cdwidget->bground,
-    	    				    "fill-color-gdk", back_colour,
-        				    NULL);
-    }
-  }
-}
-
-/**
- * set_cover_item:
- *
- * Internal function called  by set_covers to reset an artwork cover.
- * 
- */
-static gint set_cover_item (gint index, Cover_Item *cover, gchar *key, gboolean force_imgupdate)
-{
-	GdkPixbuf *reflection;
-	GdkPixbuf *scaled;
+	GList *keypos;
+	gchar *trk_key;
 	Album_Item *album;
-  
-	if (key == NULL)
+	gint index;
+	gboolean findremove;
+	/*
+	 * Scenarios:
+	 * a) A track is being deleted that is not in the display
+	 * b) A track is being deleted that is in the display
+	 * c) A track has changed is some way so maybe the coverart
+	 * d) A track has been created and its artist and album are already in the displaylist
+	 * e) A track has been created and its artist and album are not in the displaylist
+	 */
+
+	/* If coverart not displayed then ignore */
+	if (! prefs_get_int (KEY_DISPLAY_COVERART))
+  	return;
+  		
+	trk_key = g_strconcat (track->artist, "_", track->album, NULL); 	
+ 	/* Determine the index of the found album */
+ 	keypos = g_list_find_custom (album_key_list, trk_key, (GCompareFunc) compare_album_keys);
+	
+	switch (signal)
 	{
-		/* Clear everything */
-	  gnome_canvas_item_hide (cover->cdimage);
-	  /* Set the reflection to blank too */
-	  gnome_canvas_item_hide (cover->cdreflection);
-		/* Set the highlight to black too */
-		if (cover->highlight != NULL)
-			gnome_canvas_item_hide (cover->highlight);
-		 
-	 	if (index == IMG_MAIN)
-		{
-	 		/* Hide the artist/album text*/
-	 		gnome_canvas_item_hide (GNOME_CANVAS_ITEM (cdwidget->cvrtext));
-		}
-		return 1;
-	}
+		case COVERART_REMOVE_SIGNAL:				
+			g_return_if_fail (keypos);
+			g_free (trk_key);
+			
+			/* Reassign trk_key to the key from the list */
+ 			trk_key = keypos->data;
+ 			index = g_list_position (album_key_list, keypos);
+ 	
+			album = g_hash_table_lookup (album_hash, trk_key);
+			
+ 			/* Remove the track from the album item */
+ 			remove_track_from_album (album, track, trk_key, index, keypos);
+ 			 
+ 			/* Check if album is being displayed by checking the index */
+			if (index >= cdwidget->first_imgindex && index <= (cdwidget->first_imgindex + IMG_TOTAL))
+ 			{	
+				/* reset the covers and should reset to original position but without the index */
+				redraw (FALSE);
+ 			}
+ 			
+ 			/* Size of key list may have changed so reset the slider 
+ 			 * to appropriate range and index.
+ 			 */
+ 			set_slider_range (index - IMG_MAIN);
+			break;
+		case COVERART_CREATE_SIGNAL:
+			/* Check whether an album item has already been created in connection
+			 * with the track's artist and album
+			 */
+			album = g_hash_table_lookup (album_hash, trk_key);
+			if (album == NULL)
+			{
+				/* Album item not found so create a new one and populate */
+				album = g_new0 (Album_Item, 1);
+				album->albumart = NULL;
+				album->albumname = g_strdup (track->album);
+				album->artist = g_strdup (track->artist);
+				album->tracks = NULL;
+				album->tracks = g_list_append (album->tracks, track);
+				
+				/* Insert the new Album Item into the hash */
+				g_hash_table_insert (album_hash, trk_key, album);
+				
+				/* Add the key to the list for sorting and other functions */
+				/* But first ... */
+				/* Remove all null tracks before any sorting should take place */	
+ 				album_key_list = g_list_remove_all (album_key_list, NULL);
+ 			
+				if (prefs_get_int("st_sort") == SORT_ASCENDING)
+				{
+					album_key_list = g_list_insert_sorted (album_key_list, trk_key, (GCompareFunc) compare_album_keys);
+				}
+				else if (prefs_get_int("st_sort") == SORT_DESCENDING)
+				{
+					/* Already in descending order so reverse into ascending order */
+					album_key_list = g_list_reverse (album_key_list);
+					/* Insert the track */
+					album_key_list = g_list_insert_sorted (album_key_list, trk_key, (GCompareFunc) compare_album_keys);
+					/* Reverse again */
+					album_key_list = g_list_reverse (album_key_list);
+				}
+				else
+				{
+					/* NO SORT */
+					album_key_list = g_list_append (album_key_list, trk_key);
+				}
+			
+				/* Readd in the null tracks */
+				/* Add 4 null tracks to the end of the track list for padding */
+				gint i;
+				for (i = 0; i < IMG_MAIN; ++i)
+					album_key_list = g_list_append (album_key_list, NULL);
 	
-	/* Key is not null */
-	
-	/* Find the Album Item appropriate to the key */
-	album  = g_hash_table_lookup (album_hash, key);
-	cover->album = album;
-	
-	if (force_imgupdate)
-	{
-		gdk_pixbuf_unref (album->albumart);
-		album->albumart = NULL;
-	}
-	
-	Track *track;
-	if (album->albumart == NULL)
-	{
-		track = g_list_nth_data (album->tracks, 0);
-		album->albumart = coverart_get_track_thumb (track, track->itdb->device, DEFAULT_IMG_SIZE);				
-	}
-	
-	/* Set the x, y, height and width of the CD cover */
-	set_cover_dimensions (
-				cover,
-				index,
-				gdk_pixbuf_get_width (album->albumart),
-				gdk_pixbuf_get_height (album->albumart));
-	
-	/* Display the highlight */
-	set_highlight (cover, index);
-	
-	/* Set the reflection shadow */
-	set_shadow_reflection (cover);
-	
-	gnome_canvas_item_show (cover->highlight);	
-	gnome_canvas_item_show (cover->shadowreflection);
-	
-	/* Set the Cover */
-	scaled = gdk_pixbuf_scale_simple (album->albumart, cover->img_width, cover->img_height, GDK_INTERP_BILINEAR);
-	gnome_canvas_item_set (cover->cdimage,
-	 		"pixbuf", scaled,
-	 		NULL);
-	 		
-	gnome_canvas_item_show (cover->cdimage);
-	    
-	 gnome_canvas_item_set (cover->cdcvrgrp,
-			"x", (gdouble) cover->img_x,
-			"y", (gdouble) cover->img_y,	       
-			NULL);
+				/* Add 4 null tracks to the start of the track list for padding */
+				for (i = 0; i < IMG_MAIN; ++i)
+					album_key_list = g_list_prepend (album_key_list, NULL);
 		
-	 /* flip image vertically to create reflection */
-	reflection = gdk_pixbuf_flip (scaled, FALSE);
-	gnome_canvas_item_set (cover->cdreflection,
-		  "pixbuf", reflection,
-		  "y", (gdouble) (cover->img_height),
-		  NULL);
-	gnome_canvas_item_show (cover->cdreflection);
-	    	
-	gdk_pixbuf_unref (reflection);
-	gdk_pixbuf_unref (scaled);
-	
-	/* Set the text if the index is the central image cover */
-	if (index == IMG_MAIN)
-	{
-		gchar *text;
-		text = g_strconcat (album->artist, "\n", album->albumname, NULL);
-		gnome_canvas_item_set (GNOME_CANVAS_ITEM (cdwidget->cvrtext),
-				 "text", text,
-				 "fill_color", "white",
-				 "y", (gdouble) cover->img_y + cover->img_height + 10,
-				 "justification", GTK_JUSTIFY_CENTER,
-				 NULL);
-				 
-		gnome_canvas_item_show (GNOME_CANVAS_ITEM (cdwidget->cvrtext));
-		g_free (text);
+				redraw (FALSE);
+			}
+			else
+			{
+				/* Album Item found in the album hash so append the track to
+				 * the end of the track list
+				 */
+				 album->tracks = g_list_append (album->tracks, track);
+			}
+			
+			/* Set the slider to the newly inserted track.
+			 * In fact sets image_index to 4 albums previous
+			 * to newly inserted album to ensure this album is
+			 * the main middle one.
+			 */
+			keypos = g_list_find_custom (album_key_list, trk_key, (GCompareFunc) compare_album_keys);
+			index = g_list_position (album_key_list, keypos);
+ 			set_slider_range (index - IMG_MAIN);
+ 				
+			break;
+		case COVERART_CHANGE_SIGNAL:
+			/* A track is declaring itself as changed so what to do? */
+			findremove = FALSE;
+			if (keypos == NULL)
+			{
+				/* The track could not be found according to the key!
+				 * The ONLY way this could happen is if the user changed the
+				 * artist or album of the track. Well it should be rare but the only
+				 * way to remove it from its "old" album item is to search each one
+				 */
+				 findremove = TRUE;
+			}
+			else
+			{
+			/* Track has a valid key so can get the album back.
+			 * Either has happened:
+			 * a) Artist/Album key has been changed so the track is being moved to another existing album
+			 * b) Some other change has occurred that is irrelevant to this code.
+			 */
+			 
+			 /* To determine if a) is the case need to determine whether track exists in the 
+			  * album items track list. If it does then b) is true and nothing more is required.
+			  */
+			  album = g_hash_table_lookup (album_hash, trk_key);
+			  g_return_if_fail (album);
+			  
+			  index = g_list_index (album->tracks, track);
+			  if (index != -1)
+			  {
+			  	/* Track exists in the album list so ignore the change and return */
+			  	ExtraTrackData *etd;
+			  	etd = track->userdata;
+			  	if (etd->tartwork_changed == TRUE)
+			  	{
+			  		etd->tartwork_changed = FALSE;
+			  		redraw(TRUE);
+			  	}
+			  	
+			  	return;
+			  }
+			  else
+			  {
+			  	/* Track does not exist in the album list so the artist/album key has definitely changed */
+			  	findremove = TRUE;
+			  }
+			}
+			
+			if (findremove)
+			{
+				/* It has been determined that the track has had its key changed
+				 * and thus a search must be performed to find the "original" album
+				 * that the track belonged to, remove it then add the track to the new
+				 * album.
+				 */
+			  GList *klist;
+				gchar *key;
+				klist = g_list_first (album_key_list);
+				while (klist != NULL)
+				{
+					key = (gchar *) klist->data;
+					index = g_list_index (album_key_list, key); 
+					if (key != NULL)
+					{
+						album = g_hash_table_lookup (album_hash, key);
+						
+						gint album_trk_index;
+						album_trk_index = g_list_index (album->tracks, track);
+						if (album_trk_index != -1)
+						{
+							/* The track is in this album so remove it in preparation for readding
+						 	* under the new album key
+						 	*/
+					 		remove_track_from_album (album, track, key, index, klist);
+ 							redraw(FALSE);
+					 		/* Found the album and removed so no need to continue the loop */
+					 		break;
+						}
+					}
+					klist = klist->next;
+				}
+				
+				/* Create a new album item or find existing album to house the "brand new" track */
+				coverart_track_changed (track, COVERART_CREATE_SIGNAL);
+			}
 	}
-	return 0;
 }
 
 /**
- * on_cover_display_slider_value_changed:
+ * on_drawing_area_exposed:
  *
- * Call handler used for cycling the cover images with the slider.
+ * Callback for the drawing area. When the drwaing area is covered,
+ * resized, changed etc.. This will be called the draw() function is then
+ * called from this and the cairo redrawing takes place.
  * 
- * @range: GTKHScale object used as the slider
- * @user_data: any data needed by the function (not required) 
+ * @draw_area: drawing area where al the cairo drawing takes place 
+ * @event: gdk expose event
+ * 
+ * Returns:
+ * boolean indicating whether other handlers should be run.
+ */
+static gboolean on_drawing_area_exposed (GtkWidget *draw_area, GdkEventExpose *event)
+{
+	cairo_t *cairo_draw_context;
+
+	/* get a cairo_t */
+	cairo_draw_context = gdk_cairo_create (draw_area->window);
+
+	/* set a clip region for the expose event */
+	cairo_rectangle (cairo_draw_context,
+			event->area.x, event->area.y,
+			event->area.width, event->area.height);
+	cairo_clip (cairo_draw_context);
+	draw(cairo_draw_context);
+	cairo_destroy (cairo_draw_context);
+
+	return FALSE;
+}
+
+/**
+ * gtkpod_window_configure_callback:
+ *
+ * Callback for the gtkpod app window. When the window
+ * is resized the background of the cdwidget is given a size
+ * of the same size. Ensure the background is always black
+ * and no overlapping internal components occur.
+ * 
+ * @widget: gtkpod app window
+ * @event: gdk configure event
+ * @data: any user data passed to the function
+ * 
+ * Returns:
+ * boolean indicating whether other handlers should be run.
+ */
+static gboolean on_gtkpod_window_configure (GtkWidget *widget, GdkEventConfigure *event, gpointer data)
+{
+	if (cdwidget == NULL)
+		return FALSE;
+		
+	redraw (FALSE);
+	
+	return FALSE;
+}
+
+/**
+ * on_paned0_button_release_event:
+ *
+ * Callback fired when a button release event occurs on
+ * paned0. Only worthwhile things are carried out when
+ * the position of paned0 has changed, ie. the bar was moved.
+ * Moving the bar will scale the cover images appropriately.
+ * Signal connected via the glade XML file.
+ * 
+ * @widget: gtkpod app window
+ * @event: gdk event button
+ * @data: any user data passed to the function
+ * 
+ * Returns:
+ * boolean indicating whether other handlers should be run.
+ */
+G_MODULE_EXPORT gboolean on_paned0_button_release_event (GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+		if ( ! prefs_get_int (KEY_DISPLAY_COVERART))
+		return FALSE;
+		
+	gint width;
+	
+	width = gtk_paned_get_position (GTK_PANED(widget));
+	if ((width >= DEFAULT_WIDTH) && (width != WIDTH))
+	{
+		WIDTH = width;
+		redraw (FALSE);		
+	}
+		
+	return FALSE;
+}
+
+/**
+ * on_contentpanel_scroll_wheel_turned:
+ *
+ * Call handler for the scroll wheel. Cause the images to
+ * be cycled in the direction indicated by the scroll wheel.
+ * 
+ * @widget: CoverArt Display
+ * @event: scroll wheel event
+ * @data: any data needed by the function (not required) 
  *  
  */
-static void on_cover_display_slider_value_changed (GtkRange *range, gpointer user_data)
+static gboolean on_contentpanel_scroll_wheel_turned (GtkWidget *widget, GdkEventScroll *event, gpointer user_data)
 {
-  gint index, displaytotal;
+	gint displaytotal;
 	
-	if (cdwidget->block_display_change)
-		return;
-		
-	index = gtk_range_get_value (range);
-	displaytotal = g_list_length(album_key_list);
+	if (event->direction == GDK_SCROLL_DOWN)
+		cdwidget->first_imgindex++;
+  else
+   	cdwidget->first_imgindex--;
+   	
+  displaytotal = g_list_length(album_key_list) - 8;
   
   if (displaytotal <= 0)
-  	return;
-    
-  /* Use the index value from the slider for the main image index */
-  cdwidget->first_imgindex = index;
+  	return TRUE;
   
-  if (cdwidget->first_imgindex > (displaytotal - IMG_MAIN))
-  	cdwidget->first_imgindex = displaytotal - IMG_MAIN;
+  /* Use the index value from the slider for the main image index */
+  if (cdwidget->first_imgindex < 0)
+  	cdwidget->first_imgindex = 0;
+  else if (cdwidget->first_imgindex > (displaytotal - 1))
+  	cdwidget->first_imgindex = displaytotal - 1;
+      	
+	/* Change the value of the slider to do the work of scrolling the covers */
+	gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), cdwidget->first_imgindex);
 	
-  set_covers (FALSE);
+	return TRUE;	
 }
 
 /**
@@ -567,6 +1231,93 @@ static void on_cover_display_button_clicked (GtkWidget *widget, gpointer data)
 }
 
 /**
+ * on_cover_display_slider_value_changed:
+ *
+ * Call handler used for cycling the cover images with the slider.
+ * 
+ * @range: GTKHScale object used as the slider
+ * @user_data: any data needed by the function (not required) 
+ *  
+ */
+static void on_cover_display_slider_value_changed (GtkRange *range, gpointer user_data)
+{
+  gint index, displaytotal;
+	
+	if (cdwidget->block_display_change)
+		return;
+		
+	index = gtk_range_get_value (range);
+	displaytotal = g_list_length(album_key_list);
+  
+  if (displaytotal <= 0)
+  	return;
+    
+  /* Use the index value from the slider for the main image index */
+  cdwidget->first_imgindex = index;
+  
+  if (cdwidget->first_imgindex > (displaytotal - IMG_MAIN))
+  	cdwidget->first_imgindex = displaytotal - IMG_MAIN;
+	
+  redraw (FALSE);
+}
+
+/**
+ * on_cover_up_button_clicked:
+ *
+ * callback for the cover_up_button. Shows all the cover_art widgets
+ * when clicked.
+ *
+ * @widget, data unused standard parameters
+ *  
+ */
+G_MODULE_EXPORT void on_cover_up_button_clicked (GtkWidget *widget, gpointer data)
+{
+	prefs_set_int (KEY_DISPLAY_COVERART, TRUE);
+	
+	if (cdwidget == NULL)
+		coverart_display_update (TRUE);
+		
+	gtk_widget_show_all (cdwidget->contentpanel);
+	gtk_widget_show (GTK_WIDGET(cdwidget->cdslider));
+	gtk_widget_show (GTK_WIDGET(cdwidget->leftbutton));
+	gtk_widget_show (GTK_WIDGET(cdwidget->rightbutton));
+	
+	gtk_widget_hide (widget);
+	
+	GtkWidget *downbutton = gtkpod_xml_get_widget (main_window_xml, "cover_down_button");
+	gtk_widget_show (downbutton);
+}
+
+/**
+ * on_cover_down_button_clicked:
+ *
+ * callback for the cover_down_button. Hides all the cover_art widgets
+ * when clicked.
+ *
+ * @widget, data unused standard parameters
+ *  
+ */
+G_MODULE_EXPORT void on_cover_down_button_clicked (GtkWidget *widget, gpointer data)
+{
+	prefs_set_int (KEY_DISPLAY_COVERART, FALSE);
+	
+	gtk_widget_hide_all (cdwidget->contentpanel);
+	gtk_widget_hide (GTK_WIDGET(cdwidget->cdslider));
+	gtk_widget_hide (GTK_WIDGET(cdwidget->leftbutton));
+	gtk_widget_hide (GTK_WIDGET(cdwidget->rightbutton));
+	
+	if (cdwidget != NULL)
+	{
+		/* dispose of existing CD Widget */
+		free_CDWidget();
+	}
+	gtk_widget_hide (widget);
+	
+	GtkWidget *upbutton = gtkpod_xml_get_widget (main_window_xml, "cover_up_button");
+	gtk_widget_show (upbutton);
+}
+
+/**
  * on_main_cover_image_clicked:
  *
  * Call handler used for displaying the tracks associated with
@@ -577,7 +1328,7 @@ static void on_cover_display_button_clicked (GtkWidget *widget, gpointer data)
  * @data: any data needed by the function (not required) 
  *  
  */
-static gint on_main_cover_image_clicked (GnomeCanvasItem *canvasitem, GdkEvent *event, gpointer data)
+static gint on_main_cover_image_clicked (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
 	Cover_Item *cover;
 	guint mbutton;
@@ -641,48 +1392,6 @@ static gint on_main_cover_image_clicked (GnomeCanvasItem *canvasitem, GdkEvent *
 	}
 	
 	return FALSE;
-}
-
-/**
- * coverart_clear_images:
- *
- * reset the cd cover images to default blank pixbufs and
- * nullify the covers' pointers to any tracks.
- * 
- */
-void coverart_clear_images ()
-{
-	gint i;
-	Cover_Item *cover = NULL;
-	
-	/* Clear background to white */
-	gnome_canvas_item_set (cdwidget->bground,
-	    				    "fill-color-rgba", 0xFFFFFFFF,
-	    				    NULL);
-	
-	/* Disable the display coverart controls */
-	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), FALSE); 
-	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), FALSE); 
-	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), FALSE);
-			
-	for (i = 0; i < IMG_TOTAL; i++)
-	{
-		/* Reset the pixbuf */
-		cover = g_ptr_array_index(cdwidget->cdcovers, i);
-		cover->album = NULL;
-		gnome_canvas_item_hide (cover->cdimage);
-		gnome_canvas_item_hide (cover->cdreflection);
-		gnome_canvas_item_hide (cover->shadowreflection);
-		
-		if (cover->highlight != NULL)
-			gnome_canvas_item_hide (cover->highlight);
-		
-		if (i == IMG_MAIN)
-		{
-			/* Set the text to display details of the main image */
-			gnome_canvas_item_hide (GNOME_CANVAS_ITEM (cdwidget->cvrtext));
-		}
-	}
 }
 
 /**
@@ -782,6 +1491,126 @@ GList *coverart_get_displayed_tracks (void)
 }
 
 /**
+ * coverart_get_default_track_thumb:
+ *
+ * Retrieve the artwork pixbuf from the default image file.
+ * 
+ * Returns:
+ * pixbuf of the default file for tracks with no cover art.
+ */
+GdkPixbuf *coverart_get_default_track_thumb (gint default_img_size)
+{
+	GdkPixbuf *pixbuf = NULL;
+	GdkPixbuf *scaled = NULL;
+	gdouble default_size = 140;
+	GError *error = NULL;
+	
+	if (default_img_size != 0)
+		default_size = (gdouble) default_img_size;
+	
+	pixbuf = gdk_pixbuf_new_from_file(DEFAULT_FILE, &error);
+	if (error != NULL)
+	{
+			printf("Error occurred loading the default file - \nCode: %d\nMessage: %s\n", error->code, error->message);
+			g_return_val_if_fail(pixbuf, NULL);
+	}
+	
+	scaled = gdk_pixbuf_scale_simple(pixbuf, default_size, default_size, GDK_INTERP_BILINEAR);
+  gdk_pixbuf_unref (pixbuf);
+	
+
+	return scaled;
+}
+      
+/**
+ * 
+ * set_scale_range:
+ * 
+ * Set the scale range - maximum value should be display
+ * track list length - (8 NULL images + 1 as index value), 
+ * ie. the ones either end of the list.
+ * 
+ */
+static void set_slider_range (gint index)
+{
+	gint slider_ubound = g_list_length (album_key_list) - IMG_TOTAL;
+	if(slider_ubound < 1)
+	{
+		/* If only one album cover is displayed then slider_ubbound returns
+		 * 0 and causes a slider assertion error. Avoid this by disabling the
+		 * slider, which makes sense because only one cover is displayed.
+		 */
+		slider_ubound = 1;
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), FALSE); 
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), FALSE); 
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), FALSE); 
+	}
+	else
+	{
+	 	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), TRUE);
+	 	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), TRUE); 
+		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), TRUE);
+	}
+	
+	gtk_range_set_range (GTK_RANGE (cdwidget->cdslider), 0, slider_ubound);
+	if (index >= 0 && index <= slider_ubound)
+		gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), index);
+	else
+		gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), 0);
+}
+
+/**
+ * coverart_select_cover
+ * 
+ * When a track / album is selected, the artwork cover
+ * is selected in the display
+ * 
+ * @track: chosen track
+ * 
+ */
+void coverart_select_cover (Track *track)
+{
+  gint displaytotal, index;
+	
+	/* Only select covers if the display is visible */
+	if (! prefs_get_int (KEY_DISPLAY_COVERART) || cdwidget == NULL)
+		return;
+		
+	/* Only select covers if fire display change is enabled */
+	if (cdwidget->block_display_change)
+		return;
+			
+	displaytotal = g_list_length(album_key_list);
+  if (displaytotal <= 0)
+  	return;
+  	
+  gchar *trk_key;
+  trk_key = g_strconcat (track->artist, "_", track->album, NULL);
+ 	
+ 	/* Determine the index of the found track */
+ 	GList *key = g_list_find_custom (album_key_list, trk_key, (GCompareFunc) compare_album_keys);
+ 	g_return_if_fail (key);
+ 	index = g_list_position (album_key_list, key);
+ 	g_free (trk_key);
+ 	 
+ 	/* Use the index value for the main image index */
+  cdwidget->first_imgindex = index - IMG_MAIN;
+  if (cdwidget->first_imgindex < 0)
+  	cdwidget->first_imgindex = 0;
+  else if((cdwidget->first_imgindex + IMG_TOTAL) >= displaytotal)
+  	cdwidget->first_imgindex = displaytotal - IMG_TOTAL;
+      
+  redraw (FALSE);
+  
+  /* Set the index value of the slider but avoid causing an infinite
+   * cover selection by blocking the event
+   */
+  g_signal_handler_block (cdwidget->cdslider, slide_signal_id);
+	gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), index);
+	g_signal_handler_unblock (cdwidget->cdslider, slide_signal_id);
+ }
+
+/**
  * coverart_display_big_artwork:
  * 
  * Display a big version of the artwork in a dialog
@@ -832,692 +1661,6 @@ void coverart_display_big_artwork ()
 }
 
 /**
- * coverart_get_default_track_thumb:
- *
- * Retrieve the artwork pixbuf from the default image file.
- * 
- * Returns:
- * pixbuf of the default file for tracks with no cover art.
- */
-GdkPixbuf *coverart_get_default_track_thumb (gint default_img_size)
-{
-	GdkPixbuf *pixbuf = NULL;
-	GdkPixbuf *scaled = NULL;
-	gdouble default_size = 140;
-	GError *error = NULL;
-	
-	if (default_img_size != 0)
-		default_size = (gdouble) default_img_size;
-	
-	pixbuf = gdk_pixbuf_new_from_file(DEFAULT_FILE, &error);
-	if (error != NULL)
-	{
-			printf("Error occurred loading the default file - \nCode: %d\nMessage: %s\n", error->code, error->message);
-			g_return_val_if_fail(pixbuf, NULL);
-	}
-	
-	scaled = gdk_pixbuf_scale_simple(pixbuf, default_size, default_size, GDK_INTERP_BILINEAR);
-  gdk_pixbuf_unref (pixbuf);
-	
-
-	return scaled;
-}
-
-/**
- * coverart_init:
- *
- * Initialises the image file used if an album has no cover. This
- * needs to be loaded early as it uses the path of the binary
- * to determine where to load the file from, in the same way as
- * main() determines where to load the glade file from.
- *
- * @progpath: path of the gtkpod binary being loaded.
- *  
- */
-void coverart_init (gchar *progpath)
-{
-	gchar *progname;
-	
-	progname = g_find_program_in_path (progpath);
-
-  if (progname)
-  {
-  	static const gchar *SEPsrcSEPgtkpod = G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S "gtkpod";
-
-    if (!g_path_is_absolute (progname))
-    {
-	  	gchar *cur_dir = g_get_current_dir ();
-	  	gchar *prog_absolute;
-
-	  	if (g_str_has_prefix (progname, "." G_DIR_SEPARATOR_S))
-	     	prog_absolute = g_build_filename (cur_dir, progname+2, NULL);
-	  	else
-	     	prog_absolute = g_build_filename (cur_dir, progname, NULL);
-	  		
-	  	g_free (progname);
-	  	g_free (cur_dir);
-	  	progname = prog_absolute;
-  	}
-
-    if (g_str_has_suffix (progname, SEPsrcSEPgtkpod))
-    {
-	  	gchar *suffix = g_strrstr (progname, SEPsrcSEPgtkpod);
-
-	  	if (suffix)
-	  	{
-	     	*suffix = 0;
-	     	DEFAULT_FILE = g_build_filename (progname, "data", "default-cover.png", NULL);
-	     	HIGHLIGHT_FILE = g_build_filename (progname, "data", "cdshine.png", NULL);
-	     	HIGHLIGHT_FILE_MAIN = g_build_filename (progname, "data", "cdshine_main.png", NULL);
-	  	}
-  	}
-    
-    g_free (progname);
-    if (DEFAULT_FILE && !g_file_test (DEFAULT_FILE, G_FILE_TEST_EXISTS))
-    {
-	  	g_free (DEFAULT_FILE);
-	  	DEFAULT_FILE = NULL;
-    }
-    
-    if (HIGHLIGHT_FILE && !g_file_test (HIGHLIGHT_FILE, G_FILE_TEST_EXISTS))
-    {
-	  	g_free (HIGHLIGHT_FILE);
-	  	HIGHLIGHT_FILE = NULL;
-    }
-    
-    if (HIGHLIGHT_FILE_MAIN && !g_file_test (HIGHLIGHT_FILE_MAIN, G_FILE_TEST_EXISTS))
-    {
-	  	g_free (HIGHLIGHT_FILE_MAIN);
-	  	HIGHLIGHT_FILE_MAIN = NULL;
-    }
-  }
-  
-  if (!DEFAULT_FILE)
-  {
-		DEFAULT_FILE = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "default-cover.png", NULL);
-  }
-  if (!HIGHLIGHT_FILE)
-  {
-		HIGHLIGHT_FILE = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "cdshine.png", NULL);
-  }
-  if (!HIGHLIGHT_FILE_MAIN)
-  {
-		HIGHLIGHT_FILE_MAIN = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "cdshine_main.png", NULL);
-	}
-}
-
-/**
- * on_cover_up_button_clicked:
- *
- * callback for the cover_up_button. Shows all the cover_art widgets
- * when clicked.
- *
- * @widget, data unused standard parameters
- *  
- */
-G_MODULE_EXPORT void on_cover_up_button_clicked (GtkWidget *widget, gpointer data)
-{
-	prefs_set_int (KEY_DISPLAY_COVERART, TRUE);
-	
-	if (cdwidget == NULL)
-		coverart_set_images (TRUE);
-		
-	gtk_widget_show_all (cdwidget->contentpanel);
-	gtk_widget_show (GTK_WIDGET(cdwidget->cdslider));
-	gtk_widget_show (GTK_WIDGET(cdwidget->leftbutton));
-	gtk_widget_show (GTK_WIDGET(cdwidget->rightbutton));
-	
-	gtk_widget_hide (widget);
-	
-	GtkWidget *downbutton = gtkpod_xml_get_widget (main_window_xml, "cover_down_button");
-	gtk_widget_show (downbutton);
-}
-
-/**
- * on_cover_down_button_clicked:
- *
- * callback for the cover_down_button. Hides all the cover_art widgets
- * when clicked.
- *
- * @widget, data unused standard parameters
- *  
- */
-G_MODULE_EXPORT void on_cover_down_button_clicked (GtkWidget *widget, gpointer data)
-{
-	prefs_set_int (KEY_DISPLAY_COVERART, FALSE);
-	
-	gtk_widget_hide_all (cdwidget->contentpanel);
-	gtk_widget_hide (GTK_WIDGET(cdwidget->cdslider));
-	gtk_widget_hide (GTK_WIDGET(cdwidget->leftbutton));
-	gtk_widget_hide (GTK_WIDGET(cdwidget->rightbutton));
-	
-	if (cdwidget != NULL)
-	{
-		/* dispose of existing CD Widget */
-		free_CDWidget();
-	}
-	gtk_widget_hide (widget);
-	
-	GtkWidget *upbutton = gtkpod_xml_get_widget (main_window_xml, "cover_up_button");
-	gtk_widget_show (upbutton);
-}
-
-/**
- * on_paned0_button_release_event:
- *
- * Callback fired when a button release event occurs on
- * paned0. Only worthwhile things are carried out when
- * the position of paned0 has changed, ie. the bar was moved.
- * Moving the bar will scale the cover images appropriately.
- * 
- * @widget: gtkpod app window
- * @event: gdk event button
- * @data: any user data passed to the function
- * 
- * Returns:
- * boolean indicating whether other handlers should be run.
- */
-G_MODULE_EXPORT gboolean on_paned0_button_release_event (GtkWidget *widget, GdkEventButton *event, gpointer data)
-{
-		if ( ! prefs_get_int (KEY_DISPLAY_COVERART))
-		return FALSE;
-		
-	gint width;
-	
-	width = gtk_paned_get_position (GTK_PANED(widget));
-	if ((width >= DEFAULT_WIDTH) && (width != WIDTH))
-	{
-		WIDTH = width;
-		gnome_canvas_item_set (GNOME_CANVAS_ITEM(cdwidget->cvrtext), 
-				       "x", (gdouble) WIDTH / 2,
-				       NULL);
-		
-		set_covers (FALSE);		
-	}
-		
-	return FALSE;
-}
-
-static gboolean on_contentpanel_scroll_wheel_turned (GtkWidget *widget, GdkEventScroll *event, gpointer user_data)
-{
-	gint displaytotal;
-	
-	if (event->direction == GDK_SCROLL_DOWN)
-		cdwidget->first_imgindex++;
-  else
-   	cdwidget->first_imgindex--;
-   	
-  displaytotal = g_list_length(album_key_list) - 8;
-  
-  if (displaytotal <= 0)
-  	return TRUE;
-  
-  /* Use the index value from the slider for the main image index */
-  if (cdwidget->first_imgindex < 0)
-  	cdwidget->first_imgindex = 0;
-  else if (cdwidget->first_imgindex > (displaytotal - 1))
-  	cdwidget->first_imgindex = displaytotal - 1;
-      	
-	/* Change the value of the slider to do the work of scrolling the covers */
-	gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), cdwidget->first_imgindex);
-	
-	return TRUE;	
-}
-      
-/**
- * gtkpod_window_configure_callback:
- *
- * Callback for the gtkpod app window. When the window
- * is resized the background of the cdwidget is given a size
- * of the same size. Ensure the background is always black
- * and no overlapping internal components occur.
- * 
- * @widget: gtkpod app window
- * @event: gdk configure event
- * @data: any user data passed to the function
- * 
- * Returns:
- * boolean indicating whether other handlers should be run.
- */
-static gboolean gtkpod_window_configure_callback (GtkWidget *widget, GdkEventConfigure *event, gpointer data)
-{
-	if (cdwidget == NULL)
-		return FALSE;
-		
-	gnome_canvas_item_set (cdwidget->bground, 
-			       "x1",(double) 0, 
-			       "y1",(double) 0,
-			       "x2",(double) event->width,
-			       "y2",(double) event->height,
-			       NULL);
-	gnome_canvas_item_request_update (cdwidget->bground);
-				
-	return FALSE;
-}
-
-/**
- * set_display_dimensions:
- *
- * Initialises the display component width and height.
- * Sets the podpane's paned position value too.
- */
-static void set_display_dimensions ()
-{
-	GtkWidget *podpane;
-		  		
-	g_object_get (gtkpod_window,
-								"default_height", &HEIGHT,
-								NULL);
-		
-	HEIGHT = HEIGHT / 2.5;
-	DEFAULT_HEIGHT = HEIGHT;
-	
-	podpane = gtkpod_xml_get_widget (main_window_xml, "paned0");	
-	g_return_if_fail (podpane);
-
-	WIDTH = HEIGHT;	
-	gtk_paned_set_position (GTK_PANED(podpane), WIDTH);
-	DEFAULT_WIDTH = WIDTH;
-}
-
-/**
- * set_cover_dimensions:
- *
- * Utility function for set all the x, y, width and height
- * dimensions applicable to a single cover widget
- * 
- * @cover: cover widget for which dimensions are to be set
- * @cover_index: index of the widget. Used to determine whether
- * 												cover is the main cover or not
- */
-static void set_cover_dimensions (Cover_Item *cover, int cover_index, gdouble img_width, gdouble img_height)
-{
-	gdouble x = 0, y = 0;
-	gdouble small_img_width, small_img_height;
-	gdouble display_width = 0, display_height = 0;
-	gdouble display_diff = 0, display_ratio = 0;
-	gint temp_index = 0;
-	
-	small_img_width = img_width * 0.75;
-	small_img_height = img_height * 0.75;
-	
-	/* WIDTH is the width of the display_coverart window
-	 * BORDER is the 10 pixel frame around the images
-	 */
-	display_width = (WIDTH / 2) - (BORDER * 2);
-	
-	display_diff = display_width - small_img_width;	
-	
-	/* Set the x location of the cover image */
-	switch(cover_index) {
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-			display_ratio = ((gdouble) cover_index) / 4;
-			x = BORDER + (display_ratio * display_diff);
-			break;
-		case IMG_MAIN:
-			/* The Main Image CD Cover Image */
-			x = (WIDTH - img_width) / 2;
-			break;
-		case 5:
-		case 6:
-		case 7:
-		case 8:			
-			temp_index = cover_index - 8;
-			if (temp_index < 0)
-				temp_index = temp_index * -1; 
-	
-			display_ratio = ((gdouble) temp_index) / 4;
-			x = WIDTH - (BORDER + small_img_width + (display_ratio * display_diff)); 
-			break;
-	}
-		
-	/* Set the y location of the cover image. The y location must be determined by
-	 * height of the cover image so that the hightlight and shadow fit in correctly.
-	 */
-	display_height = HEIGHT - (BORDER * 2);
-	
-	switch(cover_index) {
-		case 0:
-		case 8:
-			y = display_height - (small_img_height + (BORDER * 15));
-			break;
-		case 1:
-		case 7:
-			y = display_height - (small_img_height + (BORDER * 12));
-			break;
-		case 2:
-		case 6:
-			y = display_height - (small_img_height + (BORDER * 9));
-			break;
-		case 3:
-		case 5:
-			y = display_height - (small_img_height + (BORDER * 6)); 
-			break;
-		case IMG_MAIN:
-			/* The Main Image CD Cover Image */
-			y = HEIGHT - (img_height + (BORDER * 4));	
-	}
-			
-	cover->img_x = x;
-	cover->img_y = y;
-		
-	if (cover_index == IMG_MAIN)
-	{
-		cover->img_height = img_height;
-		cover->img_width = img_width;
-	}
-	else
-	{
-		cover->img_height = small_img_height;
-		cover->img_width = small_img_width;
-	}
-}
-
-/**
- * 
- * set_scale_range:
- * 
- * Set the scale range - maximum value should be display
- * track list length - (8 NULL images + 1 as index value), 
- * ie. the ones either end of the list.
- * 
- */
-static void set_slider_range (gint index)
-{
-	gint slider_ubound = g_list_length (album_key_list) - IMG_TOTAL;
-	if(slider_ubound < 1)
-	{
-		/* If only one album cover is displayed then slider_ubbound returns
-		 * 0 and causes a slider assertion error. Avoid this by disabling the
-		 * slider, which makes sense because only one cover is displayed.
-		 */
-		slider_ubound = 1;
-		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), FALSE); 
-		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), FALSE); 
-		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), FALSE); 
-	}
-	else
-	{
-	 	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), TRUE);
-	 	gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), TRUE); 
-		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), TRUE);
-	}
-	
-	gtk_range_set_range (GTK_RANGE (cdwidget->cdslider), 0, slider_ubound);
-	if (index >= 0 && index <= slider_ubound)
-		gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), index);
-	else
-		gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), 0);
-}
-
-/**
- * prepare_canvas:
- *
- * Initialise the canvas and prepare the 9 cover items, along
- * with shadow and correct positions/dimensions.
- */
-static void prepare_canvas ()
-{
-	gint i;
-	Cover_Item *cover;
-	
-	gtk_widget_set_size_request(GTK_WIDGET(cdwidget->canvasbox), WIDTH, HEIGHT);
-	/* create a new canvas */
-	cdwidget->canvas = GNOME_CANVAS(gnome_canvas_new_aa());
-	g_return_if_fail (cdwidget->canvas);
-	
-	/* set the size and scroll region of the canvas */
-	gtk_widget_set_size_request(GTK_WIDGET(cdwidget->canvas), WIDTH, HEIGHT);
-	gnome_canvas_set_center_scroll_region (cdwidget->canvas, FALSE);
-	
-	cdwidget->bground = gnome_canvas_item_new(gnome_canvas_root(cdwidget->canvas),
-			    gnome_canvas_rect_get_type(),
-			    "x1",(double) 0, 
-			    "y1",(double) 0,
-			    "x2",(double) WIDTH,
-			    "y2",(double) HEIGHT,
-			    "fill-color-rgba", 0xFFFFFFFF,
-			    NULL);
-	
-	gnome_canvas_item_lower_to_bottom(cdwidget->bground);
-	
-	cdwidget->cdcovers = g_ptr_array_sized_new (IMG_TOTAL);
-	for(i = 0; i < IMG_TOTAL; ++i)
-	{
-		cover = g_new0(Cover_Item, 1);
-		
-		cover->cdcvrgrp = gnome_canvas_item_new(gnome_canvas_root(cdwidget->canvas),
-												gnome_canvas_group_get_type(),
-												NULL);
-												
-		cover->cdimage = gnome_canvas_item_new((GnomeCanvasGroup *) cover->cdcvrgrp,
-										GNOME_TYPE_CANVAS_PIXBUF,
-										NULL);
-		
-		cover->cdreflection = gnome_canvas_item_new((GnomeCanvasGroup *) cover->cdcvrgrp,
-										GNOME_TYPE_CANVAS_PIXBUF,
-										NULL);
-		
-		cover->highlight = gnome_canvas_item_new((GnomeCanvasGroup *) cover->cdcvrgrp,
-																						GNOME_TYPE_CANVAS_PIXBUF,
-	    	   																	NULL);	
-		
-		cover->shadowreflection = gnome_canvas_item_new((GnomeCanvasGroup *) cover->cdcvrgrp,
-																															GNOME_TYPE_CANVAS_PIXBUF,
-																															NULL);
-		
-		if(i == IMG_MAIN)
-		{	
-			/* set up some callback events on the main scaled image */
-			g_signal_connect(GTK_OBJECT(cover->cdimage), "event", GTK_SIGNAL_FUNC(on_main_cover_image_clicked), NULL);
-		
-			cdwidget->cvrtext = GNOME_CANVAS_TEXT(gnome_canvas_item_new(gnome_canvas_root(cdwidget->canvas),
-										GNOME_TYPE_CANVAS_TEXT,
-										"text", " ",
-										"x", (gdouble) WIDTH / 2,
-										"y", (gdouble) 0,
-										"justification", GTK_JUSTIFY_CENTER,
-  									"anchor", GTK_ANCHOR_NORTH,
-  									"fill_color", "white",
-  									"font", "-*-clean-medium-r-normal-*-12-*-*-*-*-*-*",
-										NULL));
-		}
-
-		g_ptr_array_add(cdwidget->cdcovers, cover);
-		cover = NULL;
-	}
-	
-	raise_cdimages (cdwidget->cdcovers);
-}
-
-/**
- * 
- * free_album:
- * 
- * Destroy an album struct once no longer needed.
- * 
- */ 
-static void free_album (Album_Item *album)
-{
-	if (album != NULL)
-	{
-		if (album->tracks)
-		{
-			g_list_free (album->tracks);
-		}
-		
-		g_free (album->albumname);
-		g_free (album->artist);
-		
-		if (album->albumart)
-			gdk_pixbuf_unref (album->albumart);
-	}
-}
-
-/**
- * coverart_init_display:
- *
- * Initialise the boxes and canvases of the coverart_display.
- *  
- */
-void coverart_init_display ()
-{
-	/* Alway initialise these buttons whether the coverart is displayed or not as these are the
-	 * up/down buttons on the display window and should be properly initialised
-	 */
-	GtkWidget *upbutton = gtkpod_xml_get_widget (main_window_xml, "cover_up_button");
-	GtkWidget *downbutton = gtkpod_xml_get_widget (main_window_xml, "cover_down_button");
-	GtkWidget *lbutton = gtkpod_xml_get_widget (main_window_xml, "cover_display_leftbutton");
-	GtkWidget *rbutton = gtkpod_xml_get_widget (main_window_xml, "cover_display_rightbutton");
-	GtkWidget *slider = gtkpod_xml_get_widget (main_window_xml, "cover_display_scaler");
-		
-	/* show/hide coverart display -- default to show */
-	if (prefs_get_int (KEY_DISPLAY_COVERART))
-	{
-		gtk_widget_hide (upbutton);
-		gtk_widget_show (downbutton);
-		gtk_widget_show (lbutton);
-		gtk_widget_show (rbutton);
-		gtk_widget_show (slider);
-		if (cdwidget != NULL)
-			gtk_widget_show_all (cdwidget->contentpanel);
-	}
-	else
-	{
-		gtk_widget_show (upbutton);
-		gtk_widget_hide (downbutton);
-		gtk_widget_hide (lbutton);
-		gtk_widget_hide (rbutton);
-		gtk_widget_hide (slider);
-		if (cdwidget != NULL)
-			gtk_widget_hide_all (cdwidget->contentpanel);
-		return;
-	}
-			
-	cdwidget = g_new0(CD_Widget, 1);
-	
-	cdwidget->canvasbox = gtkpod_xml_get_widget (main_window_xml, "cover_display_canvasbox"); 
-	cdwidget->contentpanel = gtkpod_xml_get_widget (main_window_xml, "cover_display_window");
-	cdwidget->controlbox = gtkpod_xml_get_widget (main_window_xml, "cover_display_controlbox");
-	cdwidget->leftbutton = GTK_BUTTON (gtkpod_xml_get_widget (main_window_xml, "cover_display_leftbutton"));
-	cdwidget->rightbutton = GTK_BUTTON (gtkpod_xml_get_widget (main_window_xml, "cover_display_rightbutton"));
-	cdwidget->cdslider = GTK_HSCALE (gtkpod_xml_get_widget (main_window_xml, "cover_display_scaler"));
-  
-	g_return_if_fail (cdwidget->contentpanel);
-	g_return_if_fail (cdwidget->canvasbox);
-	g_return_if_fail (cdwidget->controlbox);
-	g_return_if_fail (cdwidget->leftbutton);
-	g_return_if_fail (cdwidget->rightbutton);
-	g_return_if_fail (cdwidget->cdslider);
-  
-  /* Initialise the album hash backing store */
-  album_hash = g_hash_table_new_full ( g_str_hash,
-  																																			g_str_equal,
-  																																			(GDestroyNotify) g_free,
-  																																			(GDestroyNotify) free_album);
-	album_key_list = NULL;
-  
-	set_display_dimensions ();
-	
-	prepare_canvas ();
-	
-	gtk_box_pack_start_defaults (GTK_BOX(cdwidget->canvasbox), GTK_WIDGET(cdwidget->canvas));
-				
-/* Dnd destinaton for foreign image files */
-	gtk_drag_dest_set (
-			cdwidget->canvasbox, 
-			0, 
-			coverart_drop_types, 
-			TGNR (coverart_drop_types), 
-			GDK_ACTION_COPY|GDK_ACTION_MOVE);
-
-	g_signal_connect ((gpointer) cdwidget->canvasbox, "drag-drop",
-			G_CALLBACK (dnd_coverart_drag_drop), 
-			NULL);
-	
-	g_signal_connect ((gpointer) cdwidget->canvasbox, "drag-data-received",
-			G_CALLBACK (dnd_coverart_drag_data_received), 
-			NULL);
-	
-	g_signal_connect ((gpointer) cdwidget->canvasbox, "drag-motion",
-			G_CALLBACK (dnd_coverart_drag_motion),
-			NULL);
-	
-	contentpanel_signal_id = g_signal_connect (G_OBJECT(cdwidget->contentpanel), "scroll-event",
-					G_CALLBACK(on_contentpanel_scroll_wheel_turned), NULL);
-					
-	lbutton_signal_id = g_signal_connect (G_OBJECT(cdwidget->leftbutton), "clicked",
-		      G_CALLBACK(on_cover_display_button_clicked), NULL);
-		      
-	rbutton_signal_id = g_signal_connect (G_OBJECT(cdwidget->rightbutton), "clicked",
-		      G_CALLBACK(on_cover_display_button_clicked), NULL);	
-	
-	slide_signal_id = g_signal_connect (G_OBJECT(cdwidget->cdslider), "value-changed",
-		      G_CALLBACK(on_cover_display_slider_value_changed), NULL);
-	
-	window_signal_id = g_signal_connect (gtkpod_window, "configure_event", 
-  		G_CALLBACK (gtkpod_window_configure_callback), NULL);
-  
-  gtk_widget_show_all (cdwidget->contentpanel);
-  		
-	coverart_block_change (FALSE);
-}
-
-/**
- * coverart_select_cover
- * 
- * When a track / album is selected, the artwork cover
- * is selected in the display
- * 
- * @track: chosen track
- * 
- */
-void coverart_select_cover (Track *track)
-{
-  gint displaytotal, index;
-	
-	/* Only select covers if the display is visible */
-	if (! prefs_get_int (KEY_DISPLAY_COVERART) || cdwidget == NULL)
-		return;
-		
-	/* Only select covers if fire display change is enabled */
-	if (cdwidget->block_display_change)
-		return;
-			
-	displaytotal = g_list_length(album_key_list);
-  if (displaytotal <= 0)
-  	return;
-  	
-  gchar *trk_key;
-  trk_key = g_strconcat (track->artist, "_", track->album, NULL);
- 	
- 	/* Determine the index of the found track */
- 	GList *key = g_list_find_custom (album_key_list, trk_key, (GCompareFunc) compare_album_keys);
- 	g_return_if_fail (key);
- 	index = g_list_position (album_key_list, key);
- 	g_free (trk_key);
- 	 
- 	/* Use the index value for the main image index */
-  cdwidget->first_imgindex = index - IMG_MAIN;
-  if (cdwidget->first_imgindex < 0)
-  	cdwidget->first_imgindex = 0;
-  else if((cdwidget->first_imgindex + IMG_TOTAL) >= displaytotal)
-  	cdwidget->first_imgindex = displaytotal - IMG_TOTAL;
-      
-  set_covers (FALSE);
-  
-  /* Set the index value of the slider but avoid causing an infinite
-   * cover selection by blocking the event
-   */
-  g_signal_handler_block (cdwidget->cdslider, slide_signal_id);
-	gtk_range_set_value (GTK_RANGE (cdwidget->cdslider), index);
-	g_signal_handler_unblock (cdwidget->cdslider, slide_signal_id);
- }
-
-/**
  * compare_album_keys:
  * 
  * Comparison function for comparing keys in
@@ -1543,7 +1686,7 @@ void coverart_select_cover (Track *track)
  * 
  * When the alphabetize function is initiated this will
  * sort the covers in the same way. Used at any point to
- * sort the covers BUT must be called after an initial coverart_set_images
+ * sort the covers BUT must be called after an initial coverart_display_update
  * as the latter initialises the album_key_list list 
  * 
  * @order: order type
@@ -1553,7 +1696,7 @@ static void coverart_sort_images (GtkSortType order)
 {
  	if (order == SORT_NONE)
  	{
- 		/* No sorting means original order so this should have been called after a coverart_set_images (TRUE)
+ 		/* No sorting means original order so this should have been called after a coverart_display_update (TRUE)
  		 * when the TRUE means the tracks were freshly established from the playlist and the hash and key_list
  		 * recreated.
  		 */
@@ -1572,226 +1715,6 @@ static void coverart_sort_images (GtkSortType order)
 
 /**
  * 
- * Convenience function that will only allow set images to be
- * called if the track that was affected was in the list of displaytracks
- * used by the coverart display. So if a whole album is deleted then this
- * will only reset the display if the first track in the album is deleted.
- * 
- * @track: affected track
- */
-void coverart_track_changed (Track *track, gint signal)
-{
-	GList *keypos;
-	gchar *trk_key;
-	Album_Item *album;
-	gint index;
-	gboolean findremove;
-	/*
-	 * Scenarios:
-	 * a) A track is being deleted that is not in the display
-	 * b) A track is being deleted that is in the display
-	 * c) A track has changed is some way so maybe the coverart
-	 * d) A track has been created and its artist and album are already in the displaylist
-	 * e) A track has been created and its artist and album are not in the displaylist
-	 */
-
-	/* If coverart not displayed then ignore */
-	if (! prefs_get_int (KEY_DISPLAY_COVERART))
-  	return;
-  		
-	trk_key = g_strconcat (track->artist, "_", track->album, NULL); 	
- 	/* Determine the index of the found album */
- 	keypos = g_list_find_custom (album_key_list, trk_key, (GCompareFunc) compare_album_keys);
-	
-	switch (signal)
-	{
-		case COVERART_REMOVE_SIGNAL:				
-			g_return_if_fail (keypos);
-			g_free (trk_key);
-			
-			/* Reassign trk_key to the key from the list */
- 			trk_key = keypos->data;
- 			index = g_list_position (album_key_list, keypos);
- 	
-			album = g_hash_table_lookup (album_hash, trk_key);
-			
- 			/* Remove the track from the album item */
- 			remove_track_from_album (album, track, trk_key, index, keypos);
- 			 
- 			/* Check if album is being displayed by checking the index */
-			if (index >= cdwidget->first_imgindex && index <= (cdwidget->first_imgindex + IMG_TOTAL))
- 			{	
-				/* reset the covers and should reset to original position but without the index */
-				set_covers (FALSE);
- 			}
- 			
- 			/* Size of key list may have changed so reset the slider 
- 			 * to appropriate range and index.
- 			 */
- 			set_slider_range (index - IMG_MAIN);
-			break;
-		case COVERART_CREATE_SIGNAL:
-			/* Check whether an album item has already been created in connection
-			 * with the track's artist and album
-			 */
-			album = g_hash_table_lookup (album_hash, trk_key);
-			if (album == NULL)
-			{
-				/* Album item not found so create a new one and populate */
-				album = g_new0 (Album_Item, 1);
-				album->albumart = NULL;
-				album->albumname = g_strdup (track->album);
-				album->artist = g_strdup (track->artist);
-				album->tracks = NULL;
-				album->tracks = g_list_append (album->tracks, track);
-				
-				/* Insert the new Album Item into the hash */
-				g_hash_table_insert (album_hash, trk_key, album);
-				
-				/* Add the key to the list for sorting and other functions */
-				/* But first ... */
-				/* Remove all null tracks before any sorting should take place */	
- 				album_key_list = g_list_remove_all (album_key_list, NULL);
- 			
-				if (prefs_get_int("st_sort") == SORT_ASCENDING)
-				{
-					album_key_list = g_list_insert_sorted (album_key_list, trk_key, (GCompareFunc) compare_album_keys);
-				}
-				else if (prefs_get_int("st_sort") == SORT_DESCENDING)
-				{
-					/* Already in descending order so reverse into ascending order */
-					album_key_list = g_list_reverse (album_key_list);
-					/* Insert the track */
-					album_key_list = g_list_insert_sorted (album_key_list, trk_key, (GCompareFunc) compare_album_keys);
-					/* Reverse again */
-					album_key_list = g_list_reverse (album_key_list);
-				}
-				else
-				{
-					/* NO SORT */
-					album_key_list = g_list_append (album_key_list, trk_key);
-				}
-			
-				/* Readd in the null tracks */
-				/* Add 4 null tracks to the end of the track list for padding */
-				gint i;
-				for (i = 0; i < IMG_MAIN; ++i)
-					album_key_list = g_list_append (album_key_list, NULL);
-	
-				/* Add 4 null tracks to the start of the track list for padding */
-				for (i = 0; i < IMG_MAIN; ++i)
-					album_key_list = g_list_prepend (album_key_list, NULL);
-		
-				set_covers (FALSE);
-			}
-			else
-			{
-				/* Album Item found in the album hash so append the track to
-				 * the end of the track list
-				 */
-				 album->tracks = g_list_append (album->tracks, track);
-			}
-			
-			/* Set the slider to the newly inserted track.
-			 * In fact sets image_index to 4 albums previous
-			 * to newly inserted album to ensure this album is
-			 * the main middle one.
-			 */
-			keypos = g_list_find_custom (album_key_list, trk_key, (GCompareFunc) compare_album_keys);
-			index = g_list_position (album_key_list, keypos);
- 			set_slider_range (index - IMG_MAIN);
- 				
-			break;
-		case COVERART_CHANGE_SIGNAL:
-			/* A track is declaring itself as changed so what to do? */
-			findremove = FALSE;
-			if (keypos == NULL)
-			{
-				/* The track could not be found according to the key!
-				 * The ONLY way this could happen is if the user changed the
-				 * artist or album of the track. Well it should be rare but the only
-				 * way to remove it from its "old" album item is to search each one
-				 */
-				 findremove = TRUE;
-			}
-			else
-			{
-			/* Track has a valid key so can get the album back.
-			 * Either has happened:
-			 * a) Artist/Album key has been changed so the track is being moved to another existing album
-			 * b) Some other change has occurred that is irrelevant to this code.
-			 */
-			 
-			 /* To determine if a) is the case need to determine whether track exists in the 
-			  * album items track list. If it does then b) is true and nothing more is required.
-			  */
-			  album = g_hash_table_lookup (album_hash, trk_key);
-			  g_return_if_fail (album);
-			  
-			  index = g_list_index (album->tracks, track);
-			  if (index != -1)
-			  {
-			  	/* Track exists in the album list so ignore the change and return */
-			  	ExtraTrackData *etd;
-			  	etd = track->userdata;
-			  	if (etd->tartwork_changed == TRUE)
-			  	{
-			  		etd->tartwork_changed = FALSE;
-			  		set_covers(TRUE);
-			  	}
-			  	
-			  	return;
-			  }
-			  else
-			  {
-			  	/* Track does not exist in the album list so the artist/album key has definitely changed */
-			  	findremove = TRUE;
-			  }
-			}
-			
-			if (findremove)
-			{
-				/* It has been determined that the track has had its key changed
-				 * and thus a search must be performed to find the "original" album
-				 * that the track belonged to, remove it then add the track to the new
-				 * album.
-				 */
-			  GList *klist;
-				gchar *key;
-				klist = g_list_first (album_key_list);
-				while (klist != NULL)
-				{
-					key = (gchar *) klist->data;
-					index = g_list_index (album_key_list, key); 
-					if (key != NULL)
-					{
-						album = g_hash_table_lookup (album_hash, key);
-						
-						gint album_trk_index;
-						album_trk_index = g_list_index (album->tracks, track);
-						if (album_trk_index != -1)
-						{
-							/* The track is in this album so remove it in preparation for readding
-						 	* under the new album key
-						 	*/
-					 		remove_track_from_album (album, track, key, index, klist);
- 							set_covers(FALSE);
-					 		/* Found the album and removed so no need to continue the loop */
-					 		break;
-						}
-					}
-					klist = klist->next;
-				}
-				
-				/* Create a new album item or find existing album to house the "brand new" track */
-				coverart_track_changed (track, COVERART_CREATE_SIGNAL);
-			}
-			
-	}
-}
-
-/**
- * 
  * remove_track_from_album:
  * 
  * Removes track from an album item and removes the latter
@@ -1804,14 +1727,7 @@ void coverart_track_changed (Track *track, gint signal)
  * @keylistitem: the actual GList item in the album key list
  */
  static void remove_track_from_album (Album_Item *album, Track *track, gchar *key, gint index, GList *keylistitem)
- {
-	/* Use the index value to determine if the cover is being displayed */
- 	if (index >= cdwidget->first_imgindex && index <= (cdwidget->first_imgindex + IMG_TOTAL))
- 	{
- 		/* Cover is being displayed so need to do some clearing up */
-		coverart_clear_images ();
- 	}
- 			
+ {		
  	album->tracks = g_list_remove (album->tracks, track);
  	if (g_list_length (album->tracks) == 0)
  	{
@@ -1837,147 +1753,6 @@ void coverart_track_changed (Track *track, gint signal)
  		}
  	}
  }
-
-/**
- * coverart_set_images:
- *
- * Takes a list of tracks and sets the 9 image cover display.
- *
- * @clear_track_list: flag indicating whether to clear the displaytracks list or not
- *  
- */
-void coverart_set_images (gboolean clear_track_list)
-{
-	gint i;
-	GList *tracks;
-	Track *track;
-	Album_Item *album;
-	Playlist *playlist;
-
-	if ( ! prefs_get_int (KEY_DISPLAY_COVERART))
-		return;
-		
-	/* initialize display if not already done */
-	if (!cdwidget)  coverart_init_display ();
-
-	/* Ensure that the setting of images hasnt been turned off
-	 * due to being in the middle of a selection operation
-	 */
-	if (cdwidget->block_display_change)
-		return;
-
-	/* Reset the display back to white, white and more white */
-	coverart_clear_images ();
-	
-	if (clear_track_list)
-	{
-		/* Find the selected playlist */
-		playlist = pm_get_selected_playlist ();
-		if (playlist == NULL)
-			return;
-		
-		tracks = playlist->members;
-		/* Free up the hash table and the key list */
-		g_hash_table_foreach_remove(album_hash, (GHRFunc) gtk_true, NULL);
-				
-		g_list_free (album_key_list);
-    
-    album_key_list = NULL;;
-    
-		if (tracks == NULL)
-			return;
-		
-		while (tracks)
-		{
-		    gchar *album_key;
-			track = tracks->data;
-			
-			album_key = g_strconcat (track->artist, "_", track->album, NULL);
-			/* Check whether an album item has already been created in connection
-			 * with the track's artist and album
-			 */
-			album = g_hash_table_lookup (album_hash, album_key);
-			if (album == NULL)
-			{
-				/* Album item not found so create a new one and populate */
-				album = g_new0 (Album_Item, 1);
-				album->albumart = NULL;
-				album->albumname = g_strdup (track->album);
-				album->artist = g_strdup (track->artist);
-				album->tracks = NULL;
-				album->tracks = g_list_append (album->tracks, track);
-				
-				/* Insert the new Album Item into the hash */
-				g_hash_table_insert (album_hash, album_key, album);
-				/* Add the key to the list for sorting and other functions */
-				album_key_list = g_list_append (album_key_list, album_key);
-			}
-			else
-			{
-			    /* Album Item found in the album hash so
-			     * append the track to the end of the
-			     * track list */
-			    g_free (album_key);
-			    album->tracks = g_list_append (album->tracks, track);
-			}
-			
-			tracks = tracks->next;
-		}
-		
-		cdwidget->first_imgindex = 0;
-	}
-		
-	/* Remove all null tracks before any sorting should take place */	
- 	album_key_list = g_list_remove_all (album_key_list, NULL);
- 		
-	/* Sort the tracks to the order set in the preference */
-	coverart_sort_images (prefs_get_int("st_sort"));
-	
-	/* Add 4 null tracks to the end of the track list for padding */
-	for (i = 0; i < IMG_MAIN; ++i)
-		album_key_list = g_list_append (album_key_list, NULL);
-	
-	/* Add 4 null tracks to the start of the track list for padding */
-	for (i = 0; i < IMG_MAIN; ++i)
-		album_key_list = g_list_prepend (album_key_list, NULL);
-		
-	set_covers (FALSE);
-	
-	set_slider_range (cdwidget->first_imgindex);
-	
-	/*
-	printf("######### ORIGINAL LINE UP ########\n");
-	debug_albums ();
-	printf("######### END OF ORIGINAL LINE UP #######\n");
-	*/
-}
-
-/**
- * coverart_block_change:
- *
- * Select covers events can be switched off when automatic
- * selections of tracks are taking place.
- *
- * @val: indicating whether to block or unblock select cover events
- *  
- */
-void coverart_block_change (gboolean val)
-{
-  if (GTK_WIDGET_REALIZED(gtkpod_window))
-  {
-      if (val)
-      {
-	  GdkCursor *cursor = gdk_cursor_new (GDK_WATCH);
-	  gdk_window_set_cursor (gtkpod_window->window, cursor);
-	  gdk_cursor_unref (cursor);
-      }
-      else
-	  gdk_window_set_cursor (gtkpod_window->window, NULL);
-  }
-
-  if (cdwidget != NULL)
-      cdwidget->block_display_change = val;
-}
 
 /**
  * coverart_set_cover_from_file:
@@ -2016,7 +1791,7 @@ void coverart_set_cover_from_file ()
     
   g_free (filename);
   
-  set_covers (FALSE);
+  redraw (FALSE);
 }
 
 GdkColor *coverart_get_background_display_colour ()
@@ -2024,13 +1799,92 @@ GdkColor *coverart_get_background_display_colour ()
 	gchar *hex_string;
 	GdkColor *colour;
 	
-	if ( ! prefs_get_string_value ("coverart_display_bg_colour", &hex_string))
-			hex_string = "#000000";
+	if (album_key_list == NULL || g_list_length (album_key_list) == 0)
+		hex_string = "#FFFFFF";
+	else if ( ! prefs_get_string_value ("coverart_display_bg_colour", NULL))
+		hex_string = "#000000";
+	else
+		prefs_get_string_value ("coverart_display_bg_colour", &hex_string);
 		
 	colour = convert_hexstring_to_gdk_color (hex_string);
 	return colour;
 }
 
+/**
+ * 
+ * free_album:
+ * 
+ * Destroy an album struct once no longer needed.
+ * 
+ */ 
+static void free_album (Album_Item *album)
+{
+	if (album != NULL)
+	{
+		if (album->tracks)
+		{
+			g_list_free (album->tracks);
+		}
+		
+		g_free (album->albumname);
+		g_free (album->artist);
+		
+		if (album->albumart)
+			gdk_pixbuf_unref (album->albumart);
+	}
+}
+
+/**
+ * 
+ * free_CDWidget
+ * 
+ * destroy the CD Widget and free everything currently
+ * in memory.
+ */
+ static void free_CDWidget ()
+ {
+ 	gint i;
+ 	g_signal_handler_disconnect (cdwidget->leftbutton, lbutton_signal_id);
+ 	g_signal_handler_disconnect (cdwidget->rightbutton, rbutton_signal_id);
+ 	g_signal_handler_disconnect (cdwidget->cdslider, slide_signal_id);
+ 	g_signal_handler_disconnect (cdwidget->contentpanel, contentpanel_signal_id);
+ 	g_signal_handler_disconnect (gtkpod_window, window_signal_id);
+
+ 	/* Components not freed as they are part of the glade xml file */
+ 	cdwidget->leftbutton = NULL;
+ 	cdwidget->rightbutton = NULL;
+ 	cdwidget->cdslider = NULL;
+ 	cdwidget->contentpanel = NULL;
+ 	cdwidget->canvasbox = NULL;
+	cdwidget->controlbox = NULL;
+		
+	/* native variables rather than references so should be destroyed when freed */
+ 	cdwidget->first_imgindex = 0;
+ 	cdwidget->block_display_change = FALSE;
+
+	Cover_Item *cover;
+	for(i = 0; i < IMG_TOTAL; ++i)
+  {
+  	cover = g_ptr_array_index(cdwidget->cdcovers, i);
+  	/* Nullify pointer to album reference. Will be freed below */
+  	cover->album = NULL;
+  }
+  	
+ 	g_ptr_array_free (cdwidget->cdcovers, TRUE);
+ 		
+ 	/* Destroying canvas should destroy the background and cvrtext */
+ 	gtk_widget_destroy (GTK_WIDGET(cdwidget->draw_area));
+	
+	/* Remove all null tracks before using it to destory the hash table */	
+ 	album_key_list = g_list_remove_all (album_key_list, NULL);
+ 	g_hash_table_foreach_remove(album_hash, (GHRFunc) gtk_true, NULL);
+	g_hash_table_destroy (album_hash);
+	g_list_free (album_key_list);
+		
+	g_free (cdwidget);
+	cdwidget = NULL;
+}
+ 
 static gboolean dnd_coverart_drag_drop(GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, guint time, gpointer user_data)
 {
 	GdkAtom target;
@@ -2238,7 +2092,7 @@ static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *d
 	/* Nullify so that the album art is picked up from the tracks again */
 	cover->album->albumart = NULL;
 			    
-	set_covers (FALSE);
+	redraw (FALSE);
 
 	if (image_error)
 		g_free (image_error);
