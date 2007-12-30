@@ -1120,28 +1120,28 @@ static gboolean conversion_add_track (Conversion *conv, Track *track)
 	    debug ("added track to finished %p\n", track);
             return TRUE;
         case FILE_TYPE_M4A:
-	    convert = prefs_get_int ("convert_m4a");
             conversion_cmd = prefs_get_string ("path_conv_m4a");
+			convert = conversion_cmd && conversion_cmd[0] && prefs_get_int ("convert_m4a");
             break;
         case FILE_TYPE_WAV:
-	    convert = prefs_get_int ("convert_wav");
             conversion_cmd = prefs_get_string ("path_conv_wav");
+			convert = conversion_cmd && conversion_cmd[0] && prefs_get_int ("convert_wav");
             break;
         case FILE_TYPE_MP3:
-	    convert = prefs_get_int ("convert_mp3");
             conversion_cmd = prefs_get_string ("path_conv_mp3");
+			convert = conversion_cmd && conversion_cmd[0] && prefs_get_int ("convert_mp3");
             break;
         case FILE_TYPE_OGG:
-	    convert = prefs_get_int ("convert_ogg");
-	    conversion_cmd = prefs_get_string ("path_conv_ogg");
-	    must_convert = TRUE;
-	    typestr = _("Ogg Vorbis");
+			conversion_cmd = prefs_get_string ("path_conv_ogg");
+			convert = conversion_cmd && conversion_cmd[0] && prefs_get_int ("convert_ogg");
+			must_convert = TRUE;
+			typestr = _("Ogg Vorbis");
             break;
         case FILE_TYPE_FLAC:
-	    convert = prefs_get_int ("convert_flac");
-	    conversion_cmd = prefs_get_string ("path_conv_flac");
-	    must_convert = TRUE;
-	    typestr = _("FLAC");
+			conversion_cmd = prefs_get_string ("path_conv_flac");
+			convert = conversion_cmd && conversion_cmd[0] && prefs_get_int ("convert_flac");
+			must_convert = TRUE;
+			typestr = _("FLAC");
             break;
     }
 

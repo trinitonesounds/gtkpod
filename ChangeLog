@@ -24,6 +24,8 @@
   * src/prefsdlg.c:
   
     Conversion preferences.
+	Fixed a bug that prevented the dialog from being shown again if closed
+	using the X button.
 
 2007-12-30 P.G. Richardson <phantom_sf at users.sourceforge.net>
 

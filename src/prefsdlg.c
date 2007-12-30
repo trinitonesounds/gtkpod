@@ -120,6 +120,14 @@ const gchar *conv_scripts[] = {
 	"convert-2m4a.sh",
 };
 
+ind_string conv_paths[] = {
+	{ -1, "path_conv_ogg" },
+    { -1, "path_conv_flac" },
+    { TARGET_FORMAT_AAC, "path_conv_m4a" },
+    { TARGET_FORMAT_MP3, "path_conv_mp3" },
+    { -1, "path_conv_wav" },
+};
+
 static GladeXML *prefs_xml = NULL;
 static GtkWidget *prefs_dialog = NULL;
 
@@ -335,6 +343,8 @@ void setup_prefs_dlg (GladeXML *xml, GtkWidget *dlg)
 	GdkColor *color = coverart_get_background_display_colour();
 	gtk_color_button_set_color (GTK_COLOR_BUTTON(coverart_colorselect_button), color);
 	
+	gtk_combo_box_set_active (GTK_COMBO_BOX (gtkpod_xml_get_widget (xml, "toolbar_style")),
+							  prefs_get_int ("conversion_target_format"));
 }
 
 void open_prefs_dlg ()
@@ -1030,4 +1040,30 @@ G_MODULE_EXPORT void on_bg_threads_value_changed (GtkSpinButton *sender, gpointe
 G_MODULE_EXPORT void on_cache_size_value_changed (GtkSpinButton *sender, gpointer e)
 {
     prefs_set_int ("file_convert_maxdirsize", gtk_spin_button_get_value_as_int (sender));
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_target_format_changed (GtkComboBox *sender, gpointer e)
+{
+	gint index = gtk_combo_box_get_active (sender);
+	gchar *script = g_build_filename (SCRIPTDIR, conv_scripts[index], NULL);
+	gint i;
+	
+	for (i = 0; i < COUNTOF (conv_paths); i++)
+	{
+		if (conv_paths[i].index == index)
+		{
+			/*
+				The source format is the same as the target format -
+				we set "null conversion" without touching the boolean preference
+			*/
+			prefs_set_string (conv_paths[i].string, "");
+		}
+		else
+			prefs_set_string (conv_paths[i].string, script);
+	}
+	
+	g_free (script);
 }

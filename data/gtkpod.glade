@@ -13701,7 +13701,7 @@ Insert after</property>
     <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <property name="has_separator">False</property>
-    <signal name="close" handler="on_prefs_dialog_close"/>
+    <signal name="delete_event" handler="on_prefs_dialog_close"/>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox5">
         <property name="visible">True</property>
@@ -14365,6 +14365,7 @@ Insert after</property>
                                     <property name="items" translatable="yes">MP3
 AAC
 </property>
+                                    <signal name="changed" handler="on_target_format_changed"/>
                                   </widget>
                                   <packing>
                                     <property name="position">1</property>
@@ -14583,7 +14584,7 @@ AAC
                                       <packing>
                                         <property name="left_attach">1</property>
                                         <property name="right_attach">2</property>
-                                        <property name="x_options"></property>
+                                        <property name="x_options">GTK_FILL</property>
                                         <property name="y_options"></property>
                                       </packing>
                                     </child>
@@ -14602,7 +14603,7 @@ AAC
                                         <property name="right_attach">2</property>
                                         <property name="top_attach">1</property>
                                         <property name="bottom_attach">2</property>
-                                        <property name="x_options"></property>
+                                        <property name="x_options">GTK_FILL</property>
                                         <property name="y_options"></property>
                                       </packing>
                                     </child>
@@ -14619,7 +14620,7 @@ AAC
                                       <packing>
                                         <property name="left_attach">2</property>
                                         <property name="right_attach">3</property>
-                                        <property name="x_options"></property>
+                                        <property name="x_options">GTK_FILL</property>
                                         <property name="y_options"></property>
                                       </packing>
                                     </child>
@@ -14635,7 +14636,7 @@ AAC
                                         <signal name="toggled" handler="on_tag_checkbox_toggled"/>
                                       </widget>
                                       <packing>
-                                        <property name="x_options"></property>
+                                        <property name="x_options">GTK_FILL</property>
                                         <property name="y_options"></property>
                                       </packing>
                                     </child>
@@ -14652,7 +14653,7 @@ AAC
                                       <packing>
                                         <property name="top_attach">1</property>
                                         <property name="bottom_attach">2</property>
-                                        <property name="x_options"></property>
+                                        <property name="x_options">GTK_FILL</property>
                                         <property name="y_options"></property>
                                       </packing>
                                     </child>
