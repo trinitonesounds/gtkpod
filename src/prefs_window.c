@@ -1908,121 +1908,114 @@ static void sort_window_read_sort_ign ()
 void sort_window_create (void)
 {
     if (sort_window)
-    {  /* sort options already open --> simply raise to the top */
-	gdk_window_raise(sort_window->window);
+    {
+		/* sort options already open --> simply raise to the top */
+		gdk_window_raise(sort_window->window);
     }
     else
     {
-	GList *collist = NULL;
-	GList *sort_ign_strings;
-	GList *current;  /* current sort ignore item */
-	GtkWidget *w;
-	GtkTextView *tv;
-	GtkTextBuffer *tb;
-	gint i;
-	GtkTextIter ti;
-	gchar *str;
+		GList *collist = NULL;
+		GList *sort_ign_strings;
+		GList *current;  /* current sort ignore item */
+		GtkWidget *w;
+		GtkTextView *tv;
+		GtkTextBuffer *tb;
+		gint i;
+		GtkTextIter ti;
+		gchar *str;
+		GtkTooltips *tooltips;
 
-	sort_temp_prefs = temp_prefs_create();
-	sort_temp_lists = temp_lists_create();
+		sort_temp_prefs = temp_prefs_create();
+		sort_temp_lists = temp_lists_create();
 
-	sort_window_xml = gtkpod_xml_new (xml_file, "sort_window");
-	glade_xml_signal_autoconnect (sort_window_xml);
+		sort_window_xml = gtkpod_xml_new (xml_file, "sort_window");
+		glade_xml_signal_autoconnect (sort_window_xml);
 
-	sort_window = gtkpod_xml_get_widget (sort_window_xml, "sort_window");
+		sort_window = gtkpod_xml_get_widget (sort_window_xml, "sort_window");
 
-	/* label the ignore-field checkbox-labels */
-	for (i=0; sort_ign_fields[i] != -1; ++i)
-	{
-	    gchar *buf = g_strdup_printf ("sort_ign_field_%d",
-					  sort_ign_fields[i]);
-	    GtkWidget *w = gtkpod_xml_get_widget (sort_window_xml, buf);
-	    g_return_if_fail (w);
-	    gtk_button_set_label (
-		GTK_BUTTON (w),
-		gettext (get_t_string (sort_ign_fields[i])));
-	    gtk_toggle_button_set_active (
-		GTK_TOGGLE_BUTTON (w),
-		prefs_get_int (buf));
-	    /* set tooltip if available */
-/* 	    if (tm_col_tooltips[sort_ign_fields[i]]) */
-/* 	    { */
-/* 		gtk_tooltips_set_tip ( */
-/* 		    tt, w, */
-/* 		    gettext (tm_col_tooltips[sort_ign_fields[i]]), */
-/* 		    NULL); */
-/* 	    } */
-	    g_free (buf);
-	}
-	/* set the ignore strings */
-	tv = GTK_TEXT_VIEW (gtkpod_xml_get_widget (sort_window_xml,
-						  "sort_ign_strings"));
-	tb = gtk_text_view_get_buffer (tv);
-	if (!tb)
-	{   /* text buffer doesn't exist yet */
-	    tb = gtk_text_buffer_new (NULL);
-	    gtk_text_view_set_buffer(tv, tb);
-	    gtk_text_view_set_editable(tv, FALSE);
-	    gtk_text_view_set_cursor_visible(tv, FALSE);
-	}
-	
-	sort_ign_strings = prefs_get_list("sort_ign_string_");
-	current = sort_ign_strings;
-	while (current)
-	{
-	    str = (gchar *)current->data;
-	    current = g_list_next(current);
+		/* label the ignore-field checkbox-labels */
+		for (i=0; sort_ign_fields[i] != -1; ++i)
+		{
+			gchar *buf = g_strdup_printf ("sort_ign_field_%d",
+						  sort_ign_fields[i]);
+			GtkWidget *w = gtkpod_xml_get_widget (sort_window_xml, buf);
+			g_return_if_fail (w);
+			gtk_button_set_label (
+			GTK_BUTTON (w),
+			gettext (get_t_string (sort_ign_fields[i])));
+			gtk_toggle_button_set_active (
+			GTK_TOGGLE_BUTTON (w),
+			prefs_get_int (buf));
+			g_free (buf);
+		}
+		/* set the ignore strings */
+		tv = GTK_TEXT_VIEW (gtkpod_xml_get_widget (sort_window_xml,
+							  "sort_ign_strings"));
+		tb = gtk_text_view_get_buffer (tv);
+		if (!tb)
+		{   /* text buffer doesn't exist yet */
+			tb = gtk_text_buffer_new (NULL);
+			gtk_text_view_set_buffer(tv, tb);
+			gtk_text_view_set_editable(tv, FALSE);
+			gtk_text_view_set_cursor_visible(tv, FALSE);
+		}
+		
+		sort_ign_strings = prefs_get_list("sort_ign_string_");
+		current = sort_ign_strings;
+		while (current)
+		{
+			str = (gchar *)current->data;
+			current = g_list_next(current);
 
-	    /* append new text to the end */
-	    gtk_text_buffer_get_end_iter (tb, &ti);
-	    gtk_text_buffer_insert (tb, &ti, str, -1);
-	    /* append newline */
-	    gtk_text_buffer_get_end_iter (tb, &ti);
-	    gtk_text_buffer_insert (tb, &ti, "\n", -1);
-	}
-	
-	prefs_free_list(sort_ign_strings);
+			/* append new text to the end */
+			gtk_text_buffer_get_end_iter (tb, &ti);
+			gtk_text_buffer_insert (tb, &ti, str, -1);
+			/* append newline */
+			gtk_text_buffer_get_end_iter (tb, &ti);
+			gtk_text_buffer_insert (tb, &ti, "\n", -1);
+		}
+		
+		prefs_free_list(sort_ign_strings);
 
-	sort_window_read_sort_ign ();
+		sort_window_read_sort_ign ();
 
-	/* Set Sort-Column-Combo */
-	/* create the list in the order of the columns displayed */
-	tm_store_col_order ();
+		/* Set Sort-Column-Combo */
+		/* create the list in the order of the columns displayed */
+		tm_store_col_order ();
 
-	w = gtkpod_xml_get_widget (sort_window_xml, "sort_combo");
-	gtk_combo_box_remove_text (GTK_COMBO_BOX (w), 0);
+		w = gtkpod_xml_get_widget (sort_window_xml, "sort_combo");
+		gtk_combo_box_remove_text (GTK_COMBO_BOX (w), 0);
 
-	for (i=0; i<TM_NUM_COLUMNS; ++i)
-	{   /* first the visible columns */
-	    TM_item col = prefs_get_int_index("col_order", i);
-	    if (col != -1)
-	    {
-			if (prefs_get_int_index("col_visible", col))
-				gtk_combo_box_append_text (GTK_COMBO_BOX (w), gettext (get_tm_string (col)));
-/*		    collist = g_list_append (collist,
-					     gettext (get_tm_string (col))); */
-	    }
-	}
+		for (i = 0; i < TM_NUM_COLUMNS; ++i)
+		{   /* first the visible columns */
+			TM_item col = prefs_get_int_index("col_order", i);
+			if (col != -1)
+			{
+				if (prefs_get_int_index("col_visible", col))
+					gtk_combo_box_append_text (GTK_COMBO_BOX (w), gettext (get_tm_string (col)));
+			}
+		}
 
-	for (i=0; i<TM_NUM_COLUMNS; ++i)
-	{   /* first the visible columns */
-	    TM_item col = prefs_get_int_index("col_order", i);
-	    if (col != -1)
-	    {
-			if (!prefs_get_int_index("col_visible", col))
-				gtk_combo_box_append_text (GTK_COMBO_BOX (w), gettext (get_tm_string (col)));
-/*		    collist = g_list_append (collist,
-					     gettext (get_tm_string (col))); */
-	    }
-	}
-/*	gtk_combo_set_popdown_strings (GTK_COMBO (w), collist); */
-	g_list_free (collist);
-	collist = NULL;
+		for (i=0; i<TM_NUM_COLUMNS; ++i)
+		{   /* first the visible columns */
+			TM_item col = prefs_get_int_index("col_order", i);
+			if (col != -1)
+			{
+				if (!prefs_get_int_index("col_visible", col))
+					gtk_combo_box_append_text (GTK_COMBO_BOX (w), gettext (get_tm_string (col)));
+			}
+		}
 
-	sort_window_update ();
+		g_list_free (collist);
+		collist = NULL;
+			
+		tooltips = gtk_tooltips_new ();
+		gtk_tooltips_set_tip (tooltips, w, _("You can also use the table headers, but this allows you to sort according to a column that is not displayed."), NULL);
 
-	sort_window_show_hide_tooltips ();
-	gtk_widget_show (sort_window);
+		sort_window_update ();
+
+		sort_window_show_hide_tooltips ();
+		gtk_widget_show (sort_window);
     }
 }
 
@@ -2124,21 +2117,23 @@ void sort_window_show_hide_tooltips (void)
 {
     if (sort_window)
     {
-	GtkTooltips *tt;
-	GtkTooltipsData *tooltips_data;
-	tooltips_data = gtk_tooltips_data_get (gtkpod_xml_get_widget (sort_window_xml, "sort_combo"));
-	tt = tooltips_data->tooltips;
-	if (tt)
-	{
-	    if (prefs_get_int("display_tooltips_prefs")) 
-		gtk_tooltips_enable (tt);
-	    else                                     
-		gtk_tooltips_disable (tt);
-	}
-	else
-	{
-	    g_warning ("***tt is NULL***");
-	}
+		GtkTooltips *tt;
+		GtkTooltipsData *tooltips_data;
+		
+		tooltips_data = gtk_tooltips_data_get (gtkpod_xml_get_widget (sort_window_xml, "sort_combo"));
+		tt = tooltips_data->tooltips;
+
+		if (tt)
+		{
+			if (prefs_get_int("display_tooltips_prefs")) 
+			gtk_tooltips_enable (tt);
+			else                                     
+			gtk_tooltips_disable (tt);
+		}
+		else
+		{
+			g_warning ("***tt is NULL***");
+		}
     }
 }
 

@@ -94,7 +94,6 @@ static const gchar *SYNC_PLAYLIST_MODE_AUTOMATIC_RADIO="sync_playlist_mode_autom
 static const gchar *SYNC_PLAYLIST_MODE_MANUAL_RADIO="sync_playlist_mode_manual_radio";
 static const gchar *MANUAL_SYNCDIR_ENTRY="manual_syncdir_entry";
 static const gchar *MANUAL_SYNCDIR_BUTTON="manual_syncdir_button";
-static const gchar *DELETE_REPOSITORY_CHECKBUTTON="delete_repository_checkbutton";
 static const gchar *DELETE_REPOSITORY_BUTTON="delete_repository_button";
 static const gchar *REPOSITORY_VBOX="repository_vbox";
 static const gchar *IPOD_SYNC_LABEL="ipod_sync_label";
@@ -495,33 +494,29 @@ static void standard_playlist_checkbutton_toggled (GtkToggleButton *togglebutton
     finish_int_storage (repwin, key, active);
 }
 
-
-/* delete_repository_checkbutton was toggled */
-static void delete_repository_checkbutton_toggled (GtkToggleButton *togglebutton,
-						   RepWin *repwin)
-{
-    g_return_if_fail (repwin);
-    g_return_if_fail (repwin->temp_prefs);
-
-    if (!gtk_toggle_button_get_active (togglebutton))
-    {   /* Un-delete if necessary */
-	gchar *key = get_itdb_prefs_key (repwin->itdb_index, "deleted");
-
-	temp_prefs_remove_key (repwin->extra_prefs, key);
-	g_free (key);
-    }
-    update_buttons (repwin);
-}
-
-
-
 /* delete_repository_button was clicked */
 static void delete_repository_button_clicked (GtkButton *button,
 					      RepWin *repwin)
 {
+	Playlist *mpl;
+	gchar *message;
     gchar *key;
+	gint response;
 
     g_return_if_fail (repwin);
+	mpl = itdb_playlist_mpl (repwin->itdb);
+	message = g_strdup_printf (_("Are you sure you want to delete repository \"%s\"? This action cannot be undone!"), mpl->name);
+	
+	response = gtkpod_confirmation_simple (GTK_WINDOW (repwin->window),
+										   GTK_MESSAGE_WARNING,
+										   _("Delete repository?"),
+										   message,
+										   GTK_STOCK_DELETE);
+
+	g_free (message);
+	
+	if (response == GTK_RESPONSE_CANCEL)
+		return;
 
     key = get_itdb_prefs_key (repwin->itdb_index, "deleted");
 
@@ -1306,12 +1301,6 @@ static void display_repository_info (RepWin *repwin)
     {
 	g_return_if_reached ();
     }
-
-    key = get_itdb_prefs_key (index, "deleted");
-    gtk_toggle_button_set_active (
-	GTK_TOGGLE_BUTTON (GET_WIDGET (DELETE_REPOSITORY_CHECKBUTTON)),
-	temp_prefs_get_int (repwin->extra_prefs, key));
-    g_free (key);
 }
 
 
@@ -1739,11 +1728,12 @@ static void update_buttons (RepWin *repwin)
 	deleted = temp_prefs_get_int (repwin->extra_prefs, key);
 	g_free (key);
 
-	gtk_widget_set_sensitive (GET_WIDGET ("path_table_ipod"), !deleted);
+	gtk_widget_set_sensitive (GET_WIDGET ("general_frame"), !deleted);
+	gtk_widget_set_sensitive (GET_WIDGET ("sync_frame"), !deleted);
 	gtk_widget_set_sensitive (GET_WIDGET ("update_all_playlists_button"), !deleted);
-	gtk_widget_set_sensitive (GET_WIDGET ("playlist_frame"), !deleted);
-	gtk_widget_set_sensitive (GET_WIDGET ("delete_repository_button"),
-				  !deleted && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET (DELETE_REPOSITORY_CHECKBUTTON))));
+	gtk_widget_set_sensitive (GET_WIDGET ("playlist_tab_label"), !deleted);
+	gtk_widget_set_sensitive (GET_WIDGET ("playlist_tab_contents"), !deleted);
+	gtk_widget_set_sensitive (GET_WIDGET ("delete_repository_button"), !deleted);
 
 	if (repwin->playlist)
 	{
@@ -1991,10 +1981,6 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
 		      G_CALLBACK (sync_playlist_mode_automatic_toggled),
 		      repwin);
 
-    g_signal_connect (GET_WIDGET (DELETE_REPOSITORY_CHECKBUTTON),
-		      "toggled",
-		      G_CALLBACK (delete_repository_checkbutton_toggled),
-		      repwin);
     /* connect standard toggle buttons */
     for (i=0; playlist_widget_names_toggle[i]; ++i)
     {

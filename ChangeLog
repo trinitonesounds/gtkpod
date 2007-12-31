@@ -10,6 +10,18 @@
   * src/info.h:
   
     Support for hooks in info_update_*. Will be needed by the new info_dialog.
+	
+  * src/repository.c:
+  * data/gtkpod.glade:
+  
+    Redesigned the repository manager dialog.
+	The behavior of the Delete button is now much more intuitive
+	(thanks to godog for pointing this out).
+
+  * src/prefs_window.c:
+  
+    Hopefully fixed the Dreaded Sort Window Crash once and for all.
+	(Although it would still be better if all developers migrated to glade 3 ;))
 
 2007-12-31 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
