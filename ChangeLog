@@ -1,3 +1,14 @@
+2007-12-30 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * src/display_coverart.h
+  * src/display_coverart.c
+  
+  Visible scaled images are cached to improve performance. Only when
+  they are no longer visible is the scaled version unreferenced. If the
+  scaled version does not exist then a new scaled version is created as
+  usual. Thus, when moving along the collection, only 1 image should
+  be scaled when the drawing occurs rather than 9.
+
 2007-12-31 Matvey Kozhev <sikon at users.sourceforge.net>
 
   * src/prefs.c:

@@ -48,6 +48,7 @@ typedef struct {
 	gchar *albumname;
 	gchar *artist;
 	GdkPixbuf *albumart;
+	GdkPixbuf *scaled_art;
 } Album_Item;
 
 typedef struct {

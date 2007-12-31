@@ -422,7 +422,7 @@ static void draw (cairo_t *cairo_context)
 	cairo_paint (cairo_context);
 	cairo_restore (cairo_context);
 	g_free (color);
-	
+		
 	Album_Item *album;
 	gint i, album_index;
 	Cover_Item *cover;
@@ -449,6 +449,11 @@ static void draw (cairo_t *cairo_context)
 		{
 			g_object_unref (album->albumart);
 			album->albumart = NULL;
+			if (album->scaled_art != NULL)
+			{
+				g_object_unref (album->scaled_art);
+				album->scaled_art = NULL;
+			}
 		}
 		
 		Track *track;
@@ -467,11 +472,14 @@ static void draw (cairo_t *cairo_context)
 		
 		/* Set the Cover */
 		GdkPixbuf *scaled;
-		scaled = gdk_pixbuf_scale_simple (
-				album->albumart, 
-				cover->img_width, 
-				cover->img_height, 
-				GDK_INTERP_BILINEAR);
+		if (album->scaled_art == NULL)
+			scaled = gdk_pixbuf_scale_simple (
+					album->albumart, 
+					cover->img_width, 
+					cover->img_height, 
+					GDK_INTERP_BILINEAR);
+		else
+			scaled = album->scaled_art;
 
 		gdk_cairo_set_source_pixbuf (
 				cairo_context,
@@ -528,6 +536,31 @@ static void draw (cairo_t *cairo_context)
 	}
 	
 	force_pixbuf_covers = FALSE;
+	
+	/* free the scaled pixbufs from the non visible covers either side of the current display.
+	 * Experimental feature that should save on memory.
+	 */
+	key = g_list_nth_data (album_key_list, cdwidget->first_imgindex - 1);  
+	if (key != NULL)
+	{
+		album  = g_hash_table_lookup (album_hash, key);
+		if (album->scaled_art)
+		{
+			g_object_unref (album->scaled_art);
+			album->scaled_art = NULL;
+		}		
+	}
+	
+	key = g_list_nth_data (album_key_list, cdwidget->first_imgindex + IMG_TOTAL + 1);
+	if (key != NULL)
+	{
+		album  = g_hash_table_lookup (album_hash, key);
+		if (album->scaled_art)
+		{
+			g_object_unref (album->scaled_art);
+			album->scaled_art = NULL;
+		}
+	}
 }
 
 /**
@@ -595,6 +628,7 @@ void coverart_display_update (gboolean clear_track_list)
 				/* Album item not found so create a new one and populate */
 				album = g_new0 (Album_Item, 1);
 				album->albumart = NULL;
+				album->scaled_art = NULL;
 				album->albumname = g_strdup (track->album);
 				album->artist = g_strdup (track->artist);
 				album->tracks = NULL;
@@ -916,6 +950,7 @@ void coverart_track_changed (Track *track, gint signal)
 				/* Album item not found so create a new one and populate */
 				album = g_new0 (Album_Item, 1);
 				album->albumart = NULL;
+				album->scaled_art = NULL;
 				album->albumname = g_strdup (track->album);
 				album->artist = g_strdup (track->artist);
 				album->tracks = NULL;
@@ -1791,6 +1826,11 @@ void coverart_set_cover_from_file ()
 		/* Nullify so that the album art is picked up from the tracks again */
 		g_object_unref (cover->album->albumart);
 		cover->album->albumart = NULL;
+		if (cover->album->scaled_art != NULL)
+		{
+			g_object_unref (cover->album->scaled_art);
+			cover->album->scaled_art = NULL;
+		}
   }
     
   g_free (filename);
@@ -1851,6 +1891,9 @@ static void free_album (Album_Item *album)
 		
 		if (album->albumart)
 			g_object_unref (album->albumart);
+		
+		if (album->scaled_art)
+			g_object_unref (album->scaled_art);
 	}
 }
 
@@ -2111,6 +2154,11 @@ static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *d
 	}
 	/* Nullify so that the album art is picked up from the tracks again */
 	cover->album->albumart = NULL;
+	if (cover->album->scaled_art != NULL)
+	{
+		g_object_unref (cover->album->scaled_art);
+		cover->album->scaled_art = NULL;
+	}
 			    
 	redraw (FALSE);
 
