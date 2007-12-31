@@ -1,7 +1,16 @@
 gtkpod V0.99.13SVN
 
+       NEW FEATURE: Help system, still very prelimilary.
+
+       UPDATE: New application icon.
+
        UPDATE: Preferences dialog redesigned from the ground up
 	   for GNOME HIG compliance.
+
+       IMPROVEMENT: Removed dependency on libgnomecanvas.
+
+       IMPROVEMENT: Better support for Windows compilation in Cygwin,
+	   thanks to Éric Lassauge.
 
 gtkpod V0.99.12
 

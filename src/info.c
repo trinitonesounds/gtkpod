@@ -63,11 +63,78 @@ static iTunesDB *space_itdb = NULL; /* semi thread save access
 static gdouble space_ipod_free = 0; /* thread save access through mutex */
 static gdouble space_ipod_used = 0; /* thread save access through mutex */
 
+static GList *callbacks_info_update = NULL;
+static GList *callbacks_info_update_track_view = NULL;
+static GList *callbacks_info_update_playlist_view = NULL;
+static GList *callbacks_info_update_totals_view = NULL;
 
 static gdouble get_ipod_free_space(void);
 #if 0
 static gdouble get_ipod_used_space(void);
 #endif
+
+/* callback management */
+static void register_callback (GList **list, info_update_callback cb)
+{
+	if(*list && g_list_index (*list, cb) != -1)
+		return;
+	
+	*list = g_list_append (*list, cb);
+}
+
+static void unregister_callback (GList **list, info_update_callback cb)
+{
+	if(*list)
+		*list = g_list_remove (*list, cb);
+}
+
+static void callback_call_all (GList *list)
+{
+	for(; list; list = list->next)
+	{
+		((info_update_callback) list->data) ();
+	}
+}
+
+void register_info_update (info_update_callback cb)
+{
+	register_callback (&callbacks_info_update, cb);
+}
+
+void register_info_update_track_view (info_update_callback cb)
+{
+	register_callback (&callbacks_info_update_track_view, cb);
+}
+
+void register_info_update_playlist_view (info_update_callback cb)
+{
+	register_callback (&callbacks_info_update_playlist_view, cb);
+}
+
+void register_info_update_totals_view (info_update_callback cb)
+{
+	register_callback (&callbacks_info_update_totals_view, cb);
+}
+
+void unregister_info_update (info_update_callback cb)
+{
+	unregister_callback (&callbacks_info_update, cb);
+}
+
+void unregister_info_update_track_view (info_update_callback cb)
+{
+	unregister_callback (&callbacks_info_update_track_view, cb);
+}
+
+void unregister_info_update_playlist_view (info_update_callback cb)
+{
+	unregister_callback (&callbacks_info_update_playlist_view, cb);
+}
+
+void unregister_info_update_totals_view (info_update_callback cb)
+{
+	unregister_callback (&callbacks_info_update_totals_view, cb);
+}
 
 /* fill in tracks, playtime and filesize from track list @tl */
 static void fill_in_info (GList *tl, guint32 *tracks,
@@ -213,6 +280,8 @@ void info_update_default_sizes (void)
 /* update all sections of info window */
 void info_update (void)
 {
+	callback_call_all (callbacks_info_update);
+	
     if (!info_window) return; /* not open */
     info_update_track_view ();
     info_update_playlist_view ();
@@ -251,7 +320,9 @@ void info_update_track_view_selected (void)
 /* update track view section */
 void info_update_track_view (void)
 {
-    if (!info_window) return; /* not open */
+	callback_call_all (callbacks_info_update_track_view);
+
+	if (!info_window) return; /* not open */
     info_update_track_view_displayed ();
     info_update_track_view_selected ();
 }
@@ -259,7 +330,9 @@ void info_update_track_view (void)
 /* update playlist view section */
 void info_update_playlist_view (void)
 {
-    guint32 tracks, playtime; /* playtime in secs */
+	callback_call_all (callbacks_info_update_playlist_view);
+
+	guint32 tracks, playtime; /* playtime in secs */
     gdouble  filesize;        /* in bytes */
     GList   *tl;
 
@@ -324,7 +397,9 @@ void info_update_totals_view (void)
     Playlist *pl;
     iTunesDB *itdb;
 
-    if (!info_window) return; /* not open */
+	callback_call_all (callbacks_info_update_totals_view);
+
+	if (!info_window) return; /* not open */
     
     itdb = get_itdb_ipod ();
     if (itdb)

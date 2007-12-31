@@ -36,6 +36,19 @@
 #include <glib.h>
 #include "itdb.h"
 
+/* callbacks */
+typedef void (*info_update_callback) ();
+
+void register_info_update (info_update_callback cb);
+void register_info_update_track_view (info_update_callback cb);
+void register_info_update_playlist_view (info_update_callback cb);
+void register_info_update_totals_view (info_update_callback cb);
+
+void unregister_info_update (info_update_callback cb);
+void unregister_info_update_track_view (info_update_callback cb);
+void unregister_info_update_playlist_view (info_update_callback cb);
+void unregister_info_update_totals_view (info_update_callback cb);
+
 /* info window */
 void info_open_window (void);
 void info_close_window (void);

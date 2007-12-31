@@ -1,3 +1,16 @@
+2007-12-31 Matvey Kozhev <sikon at users.sourceforge.net>
+
+  * data/icons/*/gtkpod.png:
+  * data/icons/gtkpod.xpm:
+  * data/gtkpod-*.png:
+  
+    New Tango-style application icon.
+	
+  * src/info.c:
+  * src/info.h:
+  
+    Support for hooks in info_update_*. Will be needed by the new info_dialog.
+
 2007-12-31 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * src/display_coverart.h
