@@ -41,6 +41,7 @@
 #include "fetchcover.h"
 #include "info.h"
 #include "gdk/gdk.h"
+#include <pango/pangocairo.h>
 #include <math.h>
 
 #define DEBUG 0
@@ -377,11 +378,46 @@ void coverart_block_change (gboolean val)
       cdwidget->block_display_change = val;
 }
 
+static void draw_string (cairo_t *cairo_context,
+						 const gchar *text,
+						 gdouble x,
+						 gdouble y)
+{
+	static PangoFontDescription *desc = NULL;
+	GdkColor *color = coverart_get_foreground_display_color ();
+	PangoLayout *layout;
+	PangoRectangle extents;
+	
+	gdouble r = ((gdouble) (color->red >> 8)) / 255; 
+	gdouble g = ((gdouble) (color->green >>8)) / 255; 
+	gdouble b = ((gdouble) (color->blue >> 8)) / 255;
+	g_free (color);
+	
+	if(!desc)
+	{
+		desc = pango_font_description_from_string ("Sans Bold 9");
+	}
+
+	layout = pango_cairo_create_layout (cairo_context);
+	pango_layout_set_text (layout, text, -1);
+	pango_layout_set_font_description (layout, desc);
+	cairo_set_source_rgb (cairo_context, r, g, b);
+	pango_layout_get_pixel_extents (layout, NULL, &extents);
+	
+	cairo_move_to (cairo_context,
+				   x + extents.x - (extents.width / 2),
+				   y + extents.y - (extents.height / 2));
+	
+	pango_cairo_show_layout (cairo_context, layout);
+	
+	g_object_unref (layout);
+}
+
 static void draw (cairo_t *cairo_context)
 {
 	gint cover_index[] = {0, 8, 1, 7, 2, 6, 3, 5, 4};
 	/* Draw the background */
-	GdkColor *color = coverart_get_background_display_colour ();
+	GdkColor *color = coverart_get_background_display_color ();
 	gdouble r = ((gdouble) (color->red >> 8)) / 255; 
 	gdouble g = ((gdouble) (color->green >>8)) / 255; 
 	gdouble b = ((gdouble) (color->blue >> 8)) / 255;
@@ -493,32 +529,11 @@ static void draw (cairo_t *cairo_context)
 		/* Set the text if the index is the central image cover */
 		if (cover_index[i] == IMG_MAIN)
 		{
-			/* Set the font size and colour */
-			cairo_select_font_face (
-					cairo_context, 
-					"Sans", 
-					CAIRO_FONT_SLANT_NORMAL,
-					CAIRO_FONT_WEIGHT_BOLD);
-			cairo_set_font_size (cairo_context, 12.0);
-			cairo_set_source_rgb (cairo_context, 1, 1, 1);
-	
-			/* Centre the text using its extent and the width of the CoverArt Display */
-			cairo_text_extents_t extents;
-			gdouble x,y;
-	
-			cairo_text_extents (cairo_context, album->artist, &extents);
-			x = (WIDTH / 2) - (extents.width / 2);
-			y = cover->img_y + cover->img_height + 15;
-			/* Move to the correct location and show the text */
-			cairo_move_to (cairo_context, x, y);
-			cairo_show_text (cairo_context, album->artist);
+			draw_string (cairo_context, album->artist, WIDTH / 2,
+						 cover->img_y + cover->img_height + 15);
 					
-			cairo_text_extents (cairo_context, album->albumname, &extents);
-			x = (WIDTH / 2) - (extents.width / 2);
-			y = cover->img_y + cover->img_height + 30;
-			/* Move to the correct location and show the text */
-			cairo_move_to (cairo_context, x, y);
-			cairo_show_text (cairo_context, album->albumname);
+			draw_string (cairo_context, album->albumname, WIDTH / 2,
+						 cover->img_y + cover->img_height + 30);
 
 			cairo_stroke (cairo_context);
 		}
@@ -819,7 +834,7 @@ static void set_highlight (Cover_Item *cover, gint index, cairo_t * cr)
  */
 static void set_shadow_reflection (Cover_Item *cover, cairo_t *cr)
 {
-	GdkColor *color = coverart_get_background_display_colour();
+	GdkColor *color = coverart_get_background_display_color();
 	gdouble r = ((gdouble) (color->red >> 8)) / 255; 
 	gdouble g = ((gdouble) (color->green >>8)) / 255; 
 	gdouble b = ((gdouble) (color->blue >> 8)) / 255;
@@ -1794,20 +1809,36 @@ void coverart_set_cover_from_file ()
   redraw (FALSE);
 }
 
-GdkColor *coverart_get_background_display_colour ()
+GdkColor *coverart_get_background_display_color ()
 {
 	gchar *hex_string;
-	GdkColor *colour;
+	GdkColor *color;
 	
 	if (album_key_list == NULL || g_list_length (album_key_list) == 0)
 		hex_string = "#FFFFFF";
-	else if ( ! prefs_get_string_value ("coverart_display_bg_colour", NULL))
+	else if ( ! prefs_get_string_value ("coverart_display_bg_color", NULL))
 		hex_string = "#000000";
 	else
-		prefs_get_string_value ("coverart_display_bg_colour", &hex_string);
+		prefs_get_string_value ("coverart_display_bg_color", &hex_string);
 		
-	colour = convert_hexstring_to_gdk_color (hex_string);
-	return colour;
+	color = convert_hexstring_to_gdk_color (hex_string);
+	return color;
+}
+
+GdkColor *coverart_get_foreground_display_color ()
+{
+	gchar *hex_string;
+	GdkColor *color;
+	
+	if (album_key_list == NULL || g_list_length (album_key_list) == 0)
+		hex_string = "#000000";
+	else if ( ! prefs_get_string_value ("coverart_display_bg_color", NULL))
+		hex_string = "#FFFFFF";
+	else
+		prefs_get_string_value ("coverart_display_fg_color", &hex_string);
+		
+	color = convert_hexstring_to_gdk_color (hex_string);
+	return color;
 }
 
 /**

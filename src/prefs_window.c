@@ -764,7 +764,7 @@ prefs_window_create (gint page)
     				 prefs_get_int("photo_library_confirm_delete"));
         
     w = gtkpod_xml_get_widget (prefs_window_xml, "coverart_display_bg_button");
-    GdkColor *color = coverart_get_background_display_colour();
+    GdkColor *color = coverart_get_background_display_color();
     gtk_color_button_set_color (GTK_COLOR_BUTTON(w), color);
 
 #if 0
@@ -1142,7 +1142,7 @@ G_MODULE_EXPORT void on_coverart_display_bg_color_set (GtkColorButton *widget, g
 	hexstring = g_strdup_printf("#%02X%02X%02X", colour.red >> 8, colour.green >> 8, colour.blue >> 8);
 	temp_prefs_set_string (
 			temp_prefs, 
-			"coverart_display_bg_colour",
+			"coverart_display_bg_color",
 			hexstring);
 	g_free(hexstring);
 }

@@ -292,7 +292,9 @@ void setup_prefs_dlg (GladeXML *xml, GtkWidget *dlg)
 	gint i;
 	GtkWidget *toolbar_style_combo = gtkpod_xml_get_widget (xml, "toolbar_style");
 	GtkWidget *skip_track_update_radio = gtkpod_xml_get_widget (xml, "skip_track_update");
-	GtkWidget *coverart_colorselect_button = gtkpod_xml_get_widget (xml, "coverart_display_bg_button");
+	GtkWidget *coverart_bgcolorselect_button = gtkpod_xml_get_widget (xml, "coverart_display_bg_button");
+	GtkWidget *coverart_fgcolorselect_button = gtkpod_xml_get_widget (xml, "coverart_display_fg_button");
+	GdkColor *color;
 	
 	/* Display */
 	
@@ -341,8 +343,13 @@ void setup_prefs_dlg (GladeXML *xml, GtkWidget *dlg)
 	if(!prefs_get_int("update_existing"))
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (skip_track_update_radio), TRUE);
 	
-	GdkColor *color = coverart_get_background_display_colour();
-	gtk_color_button_set_color (GTK_COLOR_BUTTON(coverart_colorselect_button), color);
+	color = coverart_get_background_display_color();
+	gtk_color_button_set_color (GTK_COLOR_BUTTON(coverart_bgcolorselect_button), color);
+	g_free (color);
+	
+	color = coverart_get_foreground_display_color();
+	gtk_color_button_set_color (GTK_COLOR_BUTTON(coverart_fgcolorselect_button), color);
+	g_free (color);
 	
 	gtk_combo_box_set_active (GTK_COMBO_BOX (gtkpod_xml_get_widget (xml, "target_format")),
 							  prefs_get_int ("conversion_target_format"));
@@ -602,7 +609,24 @@ G_MODULE_EXPORT void on_coverart_dialog_bg_color_set (GtkColorButton *widget, gp
 									   color.green >> 8,
 									   color.blue >> 8);
 	
-	prefs_set_string ("coverart_display_bg_colour", hexstring);
+	prefs_set_string ("coverart_display_bg_color", hexstring);
+	g_free (hexstring);
+	coverart_display_update (FALSE);
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_coverart_dialog_fg_color_set (GtkColorButton *widget, gpointer user_data)
+{
+	GdkColor color;
+	gtk_color_button_get_color (widget, &color);
+	gchar *hexstring = g_strdup_printf("#%02X%02X%02X",
+									   color.red >> 8,
+									   color.green >> 8,
+									   color.blue >> 8);
+	
+	prefs_set_string ("coverart_display_fg_color", hexstring);
 	g_free (hexstring);
 	coverart_display_update (FALSE);
 }
