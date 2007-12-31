@@ -1502,44 +1502,27 @@ GList *coverart_get_displayed_tracks (void)
  */
 GdkPixbuf *coverart_get_default_track_thumb (gint default_img_size)
 {
-	static GHashTable *cache = NULL;
-	
 	GdkPixbuf *pixbuf = NULL;
 	GdkPixbuf *scaled = NULL;
 	gdouble default_size = 140;
 	GError *error = NULL;
 	
-	if (!cache)
-		cache = g_hash_table_new_full (g_int_hash, g_int_equal, g_free, g_object_unref);
+	if (default_img_size != 0)
+		default_size = (gdouble) default_img_size;
 	
-	scaled = GDK_PIXBUF (g_hash_table_lookup (cache, &default_img_size));
+	pixbuf = gdk_pixbuf_new_from_file(DEFAULT_FILE, &error);
 	
-	if (!scaled)
+	if (error != NULL)
 	{
-		gint *key;
+		printf("Error occurred loading the default file - \nCode: %d\nMessage: %s\n",
+			   error->code, error->message);
 		
-		if (default_img_size != 0)
-			default_size = (gdouble) default_img_size;
-		
-		pixbuf = gdk_pixbuf_new_from_file(DEFAULT_FILE, &error);
-		
-		if (error != NULL)
-		{
-			printf("Error occurred loading the default file - \nCode: %d\nMessage: %s\n",
-				   error->code, error->message);
-			
-			g_return_val_if_fail(pixbuf, NULL);
-		}
-		
-		scaled = gdk_pixbuf_scale_simple(pixbuf, default_size, default_size, GDK_INTERP_BILINEAR);
-g_object_unref (pixbuf);
-		
-		key = g_new (gint, 1);
-		*key = default_img_size;
-		
-		g_hash_table_insert (cache, key, scaled);
+		g_return_val_if_fail(pixbuf, NULL);
 	}
-
+	
+	scaled = gdk_pixbuf_scale_simple(pixbuf, default_size, default_size, GDK_INTERP_BILINEAR);
+g_object_unref (pixbuf);
+	
 	return scaled;
 }
       
