@@ -10,6 +10,7 @@
   * src/display_coverart.c:
   
     Fixed regression with CJK text rendering by using Pango to render.
+	Performance improvement.
 	
 2007-12-30 P.G. Richardson <phantom_sf at users.sourceforge.net>
 

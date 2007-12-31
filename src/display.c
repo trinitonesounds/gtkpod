@@ -465,7 +465,6 @@ void display_update_default_sizes (void)
  */
 static gboolean on_coverart_preview_dialog_exposed (GtkWidget *drawarea, GdkEventExpose *event, gpointer data)
 {
-	gint width, height;
 	GdkPixbuf *image = data;
 	
 	/* Draw the image using cairo */
@@ -479,21 +478,12 @@ static gboolean on_coverart_preview_dialog_exposed (GtkWidget *drawarea, GdkEven
 				event->area.width, event->area.height);
 		cairo_clip (cairo_context);
 	
-		width = gdk_pixbuf_get_width (image);
-		height = gdk_pixbuf_get_height (image);
-		
-		cairo_rectangle (
-				cairo_context, 
-				0,
-				0,
-				width,
-				height);
 		gdk_cairo_set_source_pixbuf (
 				cairo_context,
 				image,
 				0,
 				0);
-		cairo_fill (cairo_context);
+		cairo_paint (cairo_context);
 		
 		cairo_destroy (cairo_context);
 		return FALSE;

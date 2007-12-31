@@ -388,9 +388,7 @@ static void draw_string (cairo_t *cairo_context,
 	PangoLayout *layout;
 	PangoRectangle extents;
 	
-	gdouble r = ((gdouble) (color->red >> 8)) / 255; 
-	gdouble g = ((gdouble) (color->green >>8)) / 255; 
-	gdouble b = ((gdouble) (color->blue >> 8)) / 255;
+	gdk_cairo_set_source_color (cairo_context, color);
 	g_free (color);
 	
 	if(!desc)
@@ -401,7 +399,6 @@ static void draw_string (cairo_t *cairo_context,
 	layout = pango_cairo_create_layout (cairo_context);
 	pango_layout_set_text (layout, text, -1);
 	pango_layout_set_font_description (layout, desc);
-	cairo_set_source_rgb (cairo_context, r, g, b);
 	pango_layout_get_pixel_extents (layout, NULL, &extents);
 	
 	cairo_move_to (cairo_context,
@@ -418,11 +415,9 @@ static void draw (cairo_t *cairo_context)
 	gint cover_index[] = {0, 8, 1, 7, 2, 6, 3, 5, 4};
 	/* Draw the background */
 	GdkColor *color = coverart_get_background_display_color ();
-	gdouble r = ((gdouble) (color->red >> 8)) / 255; 
-	gdouble g = ((gdouble) (color->green >>8)) / 255; 
-	gdouble b = ((gdouble) (color->blue >> 8)) / 255;
+	
 	cairo_save (cairo_context);
-	cairo_set_source_rgb (cairo_context, r, 	g, b);
+	gdk_cairo_set_source_color (cairo_context, color);
 	cairo_set_operator (cairo_context, CAIRO_OPERATOR_SOURCE);
 	cairo_paint (cairo_context);
 	cairo_restore (cairo_context);
@@ -452,7 +447,7 @@ static void draw (cairo_t *cairo_context)
 		
 		if (force_pixbuf_covers)
 		{
-			gdk_pixbuf_unref (album->albumart);
+			g_object_unref (album->albumart);
 			album->albumart = NULL;
 		}
 		
@@ -477,27 +472,25 @@ static void draw (cairo_t *cairo_context)
 				cover->img_width, 
 				cover->img_height, 
 				GDK_INTERP_BILINEAR);
+
+		gdk_cairo_set_source_pixbuf (
+				cairo_context,
+				scaled,
+				cover->img_x,
+				cover->img_y);
+		cairo_paint (cairo_context);
+		
+		/* Draw a black line around the cd cover */
+		cairo_set_line_width (cairo_context, 1);
+		cairo_set_source_rgb (cairo_context, 0, 0, 0);
+
 		cairo_rectangle (
 								cairo_context, 
 								cover->img_x,
 								cover->img_y,
 								cover->img_width,
 								cover->img_height);
-		gdk_cairo_set_source_pixbuf (
-				cairo_context,
-				scaled,
-				cover->img_x,
-				cover->img_y);
-		cairo_fill (cairo_context);
 		
-		/* Draw a black line around the cd cover */
-		cairo_move_to (cairo_context, cover->img_x, cover->img_y);
-		cairo_rel_line_to (cairo_context, cover->img_width, 0);
-		cairo_rel_line_to (cairo_context, 0, cover->img_height);
-		cairo_rel_line_to (cairo_context, -(cover->img_width), 0);
-		cairo_close_path (cairo_context);
-		cairo_set_line_width (cairo_context, 1);
-		cairo_set_source_rgb (cairo_context, 0, 0, 0);
 		cairo_stroke (cairo_context);
 		
 		/* Display the highlight */
@@ -506,26 +499,22 @@ static void draw (cairo_t *cairo_context)
 		 /* flip image vertically to create reflection */
 		GdkPixbuf *reflection;
 		reflection = gdk_pixbuf_flip (scaled, FALSE);
-		cairo_rectangle (
-								cairo_context, 
-								cover->img_x,
-								cover->img_y + cover->img_height + 2,
-								cover->img_width,
-								cover->img_height);
+
 		gdk_cairo_set_source_pixbuf (
 						cairo_context,
 						reflection,
 						cover->img_x,
 						cover->img_y + cover->img_height + 2);
-		cairo_fill (cairo_context);
-			    	
-		gdk_pixbuf_unref (reflection);
-		gdk_pixbuf_unref (scaled);
+		cairo_paint (cairo_context);
+	
+		g_object_unref (reflection);
+		g_object_unref (scaled);
 		
 		/* Set the reflection shadow */
 		set_shadow_reflection (cover, cairo_context);
 		
 		cairo_save(cairo_context);
+		
 		/* Set the text if the index is the central image cover */
 		if (cover_index[i] == IMG_MAIN)
 		{
@@ -534,8 +523,6 @@ static void draw (cairo_t *cairo_context)
 					
 			draw_string (cairo_context, album->albumname, WIDTH / 2,
 						 cover->img_y + cover->img_height + 30);
-
-			cairo_stroke (cairo_context);
 		}
 		cairo_restore(cairo_context);
 	}
@@ -1470,12 +1457,12 @@ GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint def
 	  	else
 	  		pixbuf = gdk_pixbuf_copy (image);
 			
-			gdk_pixbuf_unref (image);
+			g_object_unref (image);
 		}
 		else
 		{
 			pixbuf = gdk_pixbuf_scale_simple(image, DEFAULT_IMG_SIZE, DEFAULT_IMG_SIZE, GDK_INTERP_BILINEAR);
-  		gdk_pixbuf_unref (image);
+  		g_object_unref (image);
 		}
 	}
 	
@@ -1515,24 +1502,43 @@ GList *coverart_get_displayed_tracks (void)
  */
 GdkPixbuf *coverart_get_default_track_thumb (gint default_img_size)
 {
+	static GHashTable *cache = NULL;
+	
 	GdkPixbuf *pixbuf = NULL;
 	GdkPixbuf *scaled = NULL;
 	gdouble default_size = 140;
 	GError *error = NULL;
 	
-	if (default_img_size != 0)
-		default_size = (gdouble) default_img_size;
+	if (!cache)
+		cache = g_hash_table_new_full (g_int_hash, g_int_equal, g_free, g_object_unref);
 	
-	pixbuf = gdk_pixbuf_new_from_file(DEFAULT_FILE, &error);
-	if (error != NULL)
+	scaled = GDK_PIXBUF (g_hash_table_lookup (cache, &default_img_size));
+	
+	if (!scaled)
 	{
-			printf("Error occurred loading the default file - \nCode: %d\nMessage: %s\n", error->code, error->message);
+		gint *key;
+		
+		if (default_img_size != 0)
+			default_size = (gdouble) default_img_size;
+		
+		pixbuf = gdk_pixbuf_new_from_file(DEFAULT_FILE, &error);
+		
+		if (error != NULL)
+		{
+			printf("Error occurred loading the default file - \nCode: %d\nMessage: %s\n",
+				   error->code, error->message);
+			
 			g_return_val_if_fail(pixbuf, NULL);
+		}
+		
+		scaled = gdk_pixbuf_scale_simple(pixbuf, default_size, default_size, GDK_INTERP_BILINEAR);
+g_object_unref (pixbuf);
+		
+		key = g_new (gint, 1);
+		*key = default_img_size;
+		
+		g_hash_table_insert (cache, key, scaled);
 	}
-	
-	scaled = gdk_pixbuf_scale_simple(pixbuf, default_size, default_size, GDK_INTERP_BILINEAR);
-  gdk_pixbuf_unref (pixbuf);
-	
 
 	return scaled;
 }
@@ -1672,7 +1678,7 @@ void coverart_display_big_artwork ()
 	 * the album's artwork
 	 */
 	if (cover->album->albumart == NULL)
-		gdk_pixbuf_unref (imgbuf);
+		g_object_unref (imgbuf);
 }
 
 /**
@@ -1800,7 +1806,7 @@ void coverart_set_cover_from_file ()
  			tracks = tracks->next;
 		}
 		/* Nullify so that the album art is picked up from the tracks again */
-		gdk_pixbuf_unref (cover->album->albumart);
+		g_object_unref (cover->album->albumart);
 		cover->album->albumart = NULL;
   }
     
@@ -1861,7 +1867,7 @@ static void free_album (Album_Item *album)
 		g_free (album->artist);
 		
 		if (album->albumart)
-			gdk_pixbuf_unref (album->albumart);
+			g_object_unref (album->albumart);
 	}
 }
 
@@ -2053,7 +2059,7 @@ static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *d
 					image_error = g_strdup(fcover->err_msg);
 				
 				free_fetchcover (fcover);
-				gdk_pixbuf_unref (pixbuf);
+				g_object_unref (pixbuf);
 				coverart_block_change (FALSE);
 			}
 			else
