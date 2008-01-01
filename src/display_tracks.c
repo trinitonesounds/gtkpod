@@ -2229,7 +2229,7 @@ tm_selection_changed_event(GtkTreeSelection *selection, gpointer data)
 	col_id = tm_lookup_col_id (column);
 	if (col_id != -1)  tm_set_search_column (col_id);
     }
-    info_update_track_view_selected ();
+    info_update_track_view ();
     
     /* update the coverart display */
     GList *selected = display_get_selection (prefs_get_int("sort_tab_num"));

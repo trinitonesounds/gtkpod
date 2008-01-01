@@ -30,8 +30,8 @@
 #  include <config.h>
 #endif
 
-
 #include "info.h"
+#include "infodlg.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "mp3file.h"
@@ -882,7 +882,7 @@ on_gtkpod_info_delete_event            (GtkWidget       *widget,
 					GdkEvent        *event,
 					gpointer         user_data)
 {
-    info_close_window ();
+    close_info_dialog ();
     return TRUE; /* don't close again -- info_close_window() already does it */
 }
 
@@ -891,5 +891,5 @@ G_MODULE_EXPORT void
 on_info_close_clicked                  (GtkButton       *button,
 					gpointer         user_data)
 {
-    info_close_window ();
+    close_info_dialog ();
 }

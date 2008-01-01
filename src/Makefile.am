@@ -55,7 +55,8 @@ gtkpod_SOURCES = \
     help.c \
     help.h \
     prefsdlg.c \
-    infodlg.c
+    infodlg.c \
+    infodlg.h
 
 gtkpod_LDADD = $(LIBS) $(INTLLIBS) @LIBOBJS@
 

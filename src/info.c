@@ -68,7 +68,6 @@ static GList *callbacks_info_update_track_view = NULL;
 static GList *callbacks_info_update_playlist_view = NULL;
 static GList *callbacks_info_update_totals_view = NULL;
 
-static gdouble get_ipod_free_space(void);
 #if 0
 static gdouble get_ipod_used_space(void);
 #endif
@@ -137,7 +136,7 @@ void unregister_info_update_totals_view (info_update_callback cb)
 }
 
 /* fill in tracks, playtime and filesize from track list @tl */
-static void fill_in_info (GList *tl, guint32 *tracks,
+void fill_in_info (GList *tl, guint32 *tracks,
 			  guint32 *playtime, gdouble *filesize)
 {
     GList *gl;
@@ -220,69 +219,11 @@ static void fill_label_string (gchar *w_name, const char *str)
     }
 }
 
-
-
-/* open info window */
-void info_open_window (void)
-{
-    if (info_window)
-    {   /* info window already open -- raise to the top */
-	gdk_window_raise (info_window->window);
-	return;
-    }
-    
-    info_xml = gtkpod_xml_new (xml_file, "gtkpod_info");
-    glade_xml_signal_autoconnect (info_xml);
-    info_window = gtkpod_xml_get_widget (info_xml, "gtkpod_info");
-    
-    if (info_window)
-    {
-	gint defx, defy;
-	defx = prefs_get_int("size_info.x");
-  defy = prefs_get_int("size_info.y");
-	gtk_window_set_default_size (GTK_WINDOW (info_window), defx, defy);
-	prefs_set_int("info_window", TRUE); /* notify prefs */
-	info_update ();
-	gtk_widget_show (info_window);
-	/* set the menu item for the info window correctly */
-	display_set_info_window_menu ();
-    }
-}
-
-/* close info window */
-void info_close_window (void)
-{
-    GtkWidget *win;
-
-    if (!info_window) return; /* not open */
-
-    info_update_default_sizes ();
-    win = info_window;
-    info_window = NULL;
-    gtk_widget_destroy (win);
-     prefs_set_int("info_window", FALSE); /* notify prefs */
-    /* set the menu item for the info window correctly */
-    display_set_info_window_menu ();
-}
-
-/* save current window size */
-void info_update_default_sizes (void)
-{
-    if (info_window)
-    {
-	gint defx, defy;
-	gtk_window_get_size (GTK_WINDOW (info_window), &defx, &defy);
-	prefs_set_int("size_info.x", defx);
-	prefs_set_int("size_info.y", defy);
-    }
-}
-
 /* update all sections of info window */
 void info_update (void)
 {
 	callback_call_all (callbacks_info_update);
 	
-    if (!info_window) return; /* not open */
     info_update_track_view ();
     info_update_playlist_view ();
     info_update_totals_view ();
@@ -294,7 +235,7 @@ static void info_update_track_view_displayed (void)
     gdouble  filesize;        /* in bytes */
     GList *displayed;
 
-    g_return_if_fail (info_window);
+    if (!info_window) return; /* not open */
     displayed = display_get_selected_members (prefs_get_int("sort_tab_num")-1);
     fill_in_info (displayed, &tracks, &playtime, &filesize);
     fill_label_uint ("tracks_displayed", tracks);
@@ -302,7 +243,7 @@ static void info_update_track_view_displayed (void)
     fill_label_size ("filesize_displayed", filesize);
 }
 
-void info_update_track_view_selected (void)
+static void info_update_track_view_selected (void)
 {
     guint32 tracks, playtime; /* playtime in secs */
     gdouble  filesize;        /* in bytes */
@@ -346,7 +287,7 @@ void info_update_playlist_view (void)
 
 
 /* Get the local itdb */
-static iTunesDB *get_itdb_local (void)
+iTunesDB *get_itdb_local (void)
 {
     struct itdbs_head *itdbs_head;
     GList *gl;
@@ -369,7 +310,7 @@ static iTunesDB *get_itdb_local (void)
 /* Get the iPod itdb */
 /* FIXME: This function must be expanded if support for several iPods
    is implemented */
-static iTunesDB *get_itdb_ipod (void)
+iTunesDB *get_itdb_ipod (void)
 {
     struct itdbs_head *itdbs_head;
     GList *gl;
@@ -388,6 +329,42 @@ static iTunesDB *get_itdb_ipod (void)
     return NULL;
 }
 
+/* update "free space" section of totals view */
+static void info_update_totals_view_space (void)
+{
+    gdouble nt_filesize, del_filesize;
+    guint32 nt_tracks, del_tracks;
+    iTunesDB *itdb;
+
+    if (!info_window) return;
+    itdb = get_itdb_ipod ();
+    if (itdb)
+    {
+	gp_info_nontransferred_tracks (itdb, &nt_filesize, &nt_tracks);
+	fill_label_uint ("non_transferred_tracks", nt_tracks);
+	fill_label_size ("non_transferred_filesize", nt_filesize);
+	gp_info_deleted_tracks (itdb, &del_filesize, &del_tracks);
+	fill_label_uint ("deleted_tracks", del_tracks);
+	fill_label_size ("deleted_filesize", del_filesize);
+	if (!get_offline (itdb))
+	{
+	    if (ipod_connected ())
+	    {
+		gdouble free_space = get_ipod_free_space()
+		    + del_filesize - nt_filesize;
+		fill_label_size ("free_space", free_space);
+	    }
+	    else
+	    {
+		fill_label_string ("free_space", _("n/c"));
+	    }
+	}
+	else
+	{
+	    fill_label_string ("free_space", _("offline"));
+	}
+    }
+}
 
 /* update "totals" view section */
 void info_update_totals_view (void)
@@ -427,44 +404,6 @@ void info_update_totals_view (void)
     }
     info_update_totals_view_space ();
 }
-
-/* update "free space" section of totals view */
-void info_update_totals_view_space (void)
-{
-    gdouble nt_filesize, del_filesize;
-    guint32 nt_tracks, del_tracks;
-    iTunesDB *itdb;
-
-    if (!info_window) return;
-    itdb = get_itdb_ipod ();
-    if (itdb)
-    {
-	gp_info_nontransferred_tracks (itdb, &nt_filesize, &nt_tracks);
-	fill_label_uint ("non_transferred_tracks", nt_tracks);
-	fill_label_size ("non_transferred_filesize", nt_filesize);
-	gp_info_deleted_tracks (itdb, &del_filesize, &del_tracks);
-	fill_label_uint ("deleted_tracks", del_tracks);
-	fill_label_size ("deleted_filesize", del_filesize);
-	if (!get_offline (itdb))
-	{
-	    if (ipod_connected ())
-	    {
-		gdouble free_space = get_ipod_free_space()
-		    + del_filesize - nt_filesize;
-		fill_label_size ("free_space", free_space);
-	    }
-	    else
-	    {
-		fill_label_string ("free_space", _("n/c"));
-	    }
-	}
-	else
-	{
-	    fill_label_string ("free_space", _("offline"));
-	}
-    }
-}
-
 
 /*------------------------------------------------------------------*\
  *                                                                  *
@@ -824,7 +763,7 @@ static gpointer th_space_thread (gpointer gp)
 
 
 /* in Bytes */
-static gdouble get_ipod_free_space(void)
+gdouble get_ipod_free_space(void)
 {
     gdouble result;
     g_mutex_lock (space_mutex);

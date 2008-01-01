@@ -34,6 +34,7 @@
 #include "details.h"
 #include "display_private.h"
 #include "info.h"
+#include "infodlg.h"
 #include "ipod_init.h"
 #include "file_convert.h"
 #include "misc.h"
@@ -105,7 +106,8 @@ void display_create (void)
     /* CAREFUL: must be done after calling ..._space_statusbar_init() */
     display_set_info_window_menu ();
     /* check if info window should be opened */
-    if (prefs_get_int("info_window"))  info_open_window ();
+    if (prefs_get_int("info_window"))
+		open_info_dialog ();
 }
 
 /* redisplay the entire display (playlists, sort tabs, track view) and
@@ -445,7 +447,7 @@ void display_update_default_sizes (void)
     tm_update_default_sizes ();
     st_update_default_sizes ();
     prefs_window_update_default_sizes ();
-    info_update_default_sizes ();
+    info_dialog_update_default_sizes ();
     details_update_default_sizes ();
     file_convert_update_default_sizes ();
 }
@@ -1760,8 +1762,9 @@ on_info_window1_activate               (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
     if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)))
-	 info_open_window ();
-    else info_close_window ();
+		open_info_dialog ();
+    else
+		close_info_dialog ();
 }
 
 G_MODULE_EXPORT void

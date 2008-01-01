@@ -17,6 +17,27 @@
   * data/icons/Makefile.am:
   
     Removed data/icons/gtkpod.xpm.
+	
+  * src/misc.h:
+  * src/misc_confirm.c:
+  
+    Simpler warning functions for cases when a single dialog box is enough
+	(gtkpod_warning_simple, a drop-in replacement for gtkpod-warning, and
+	gtkpod_warning_hig).
+	
+  * src/info.c:
+  * src/info.h:
+  * data/gtkpod.glade:
+  
+	Removed the old info window. (There is still some now-unused code left.)
+	Exported some info gathering functions for infodlg.c.
+	
+  * src/infodlg.c:
+  * src/infodlg.h:
+  * src/display.c:
+  * src/tools.c:
+  
+    Use the new info dialog.
 
 2007-12-31 Matvey Kozhev <sikon at users.sourceforge.net>
 

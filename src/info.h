@@ -49,16 +49,17 @@ void unregister_info_update_track_view (info_update_callback cb);
 void unregister_info_update_playlist_view (info_update_callback cb);
 void unregister_info_update_totals_view (info_update_callback cb);
 
+/* generic functions */
+void fill_in_info (GList *tl, guint32 *tracks, guint32 *playtime, gdouble *filesize);
+iTunesDB *get_itdb_ipod (void);
+iTunesDB *get_itdb_local (void);
+gdouble get_ipod_free_space(void);
+
 /* info window */
-void info_open_window (void);
-void info_close_window (void);
-void info_update_default_sizes (void);
 void info_update (void);
 void info_update_track_view (void);
-void info_update_track_view_selected (void);
 void info_update_playlist_view (void);
 void info_update_totals_view (void);
-void info_update_totals_view_space (void);
 
 /* statusbar stuff */
 #define STATUSBAR_TIMEOUT 4200

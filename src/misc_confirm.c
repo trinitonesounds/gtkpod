@@ -82,6 +82,40 @@ void gtkpod_warning (const gchar *format, ...)
     g_free (text);
 }
 
+void gtkpod_warning_simple (const gchar *format, ...)
+{
+    va_list arg;
+    gchar *text;
+
+    va_start (arg, format);
+    text = g_strdup_vprintf (format, arg);
+    va_end (arg);
+	
+	gtkpod_warning_hig (GTK_WINDOW (gtkpod_window), GTK_MESSAGE_WARNING, _("Warning"), text);
+	g_free (text);
+}
+
+void gtkpod_warning_hig (GtkWindow *parent,
+						 GtkMessageType icon,
+						 const gchar *primary_text,
+						 const gchar *secondary_text)
+{
+	GtkWidget *dialog =	gtk_message_dialog_new(parent,
+											   GTK_DIALOG_MODAL,
+											   icon,
+											   GTK_BUTTONS_OK,
+											   "%s",
+											   primary_text);
+	
+	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG(dialog),
+												"%s",
+												secondary_text);
+	
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
+
+}
+
 
 /*------------------------------------------------------------------*\
  *                                                                  *
