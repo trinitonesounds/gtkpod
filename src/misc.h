@@ -95,7 +95,7 @@ extern gchar *xml_file;
 
 
 gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
-			gchar *opt_msg, gboolean *opt_state);
+			gchar *opt_msg, gboolean *opt_state, const gchar *accept_button);
 Playlist *add_new_pl_user_name (iTunesDB *itdb, gchar *dflt, gint32 pos);
 void add_new_pl_or_spl_user_name (iTunesDB *itdb, gchar *dflt, gint32 pos);
 void create_add_files_fileselector (void);

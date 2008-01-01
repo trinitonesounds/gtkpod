@@ -235,6 +235,9 @@ dnl Check for Linux-specific headers (so we can compile Linux-specific
 dnl stuff only when compiling under Linux)
 AC_CHECK_HEADERS(linux/cdrom.h scsi/sg.h scsi/scsi.h scsi/scsi_ioctl.h)
 
+libgpod_version=`$PKG_CONFIG libgpod-1.0 --modversion`
+AC_DEFINE_UNQUOTED(LIBGPOD_VERSION, "${libgpod_version}", [Set this to the libgpod version])
+
 AC_OUTPUT([
 Makefile
 src/Makefile
@@ -256,8 +259,9 @@ Configuration for $PACKAGE $VERSION :
 
  Host System Type .....: $host
  Install path .........: $prefix
- GTK2 version .........: `pkg-config gtk+-2.0 --modversion`
- GLib2/GThread version : `pkg-config gthread-2.0 --modversion`
+ GTK2 version .........: `$PKG_CONFIG gtk+-2.0 --modversion`
+ GLib2/GThread version : `$PKG_CONFIG gthread-2.0 --modversion`
+ libgpod version ......: $libgpod_version
  gnome-vfs.............: $have_gnome_vfs
  hal...................: $have_hal
  libcurl ..............: $have_curl

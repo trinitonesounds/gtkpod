@@ -66,7 +66,7 @@ Playlist *add_new_pl_user_name (iTunesDB *itdb,
 	_("New Playlist"),
 	_("Please enter a name for the new playlist"),
 	dflt? dflt:_("New Playlist"),
-	NULL, NULL);
+	NULL, NULL, GTK_STOCK_ADD);
     if (name)
     {
 	result = gp_playlist_add_new (itdb, name, FALSE, position);
@@ -93,7 +93,7 @@ void add_new_pl_or_spl_user_name (iTunesDB *itdb,
 	_("New Playlist"),
 	_("Please enter a name for the new playlist"),
 	dflt? dflt:_("New Playlist"),
-	_("Smart Playlist"), &is_spl);
+	_("Smart Playlist"), &is_spl, GTK_STOCK_ADD);
 
     if (name)
     {
@@ -428,7 +428,7 @@ Playlist *generate_new_playlist (iTunesDB *itdb, GList *tracks)
 	_("New Playlist"),
 	_("Please enter a name for the new playlist"),
 	_("New Playlist"),
-	NULL, NULL);
+	NULL, NULL, GTK_STOCK_ADD);
     if (name)
 	return generate_playlist_with_name (itdb, tracks, name, FALSE);
     return NULL;

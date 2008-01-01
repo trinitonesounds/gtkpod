@@ -1124,12 +1124,12 @@ void gphoto_rename_selected_album ()
 		return;
 	}
 	
-	gchar *new_album_name = get_user_string (
-			_("New Photo Album Name"),
-			_("Please enter a new name for the photo album"), 
-			NULL, 
-			NULL, 
-			NULL);
+	gchar *new_album_name = get_user_string (_("New Photo Album Name"),
+											 _("Please enter a new name for the photo album"), 
+											 NULL, 
+											 NULL, 
+											 NULL,
+											 GTK_STOCK_ADD);
 	if (new_album_name == NULL|| strlen (new_album_name) == 0)
 		return;
 	
@@ -1207,11 +1207,12 @@ void on_photodb_add_album_menuItem_activate(GtkMenuItem *menuItem, gpointer user
 	GtkListStore *model;
 
 	gchar *album_name = get_user_string (
-			_("New Photo Album"),
-			_("Please enter a name for the new photo album"), 
-			NULL, 
-			NULL, 
-			NULL);
+										 _("New Photo Album"),
+										 _("Please enter a name for the new photo album"), 
+										 NULL, 
+										 NULL, 
+										 NULL,
+										 GTK_STOCK_ADD);
 
 	if (album_name == NULL|| strlen (album_name) == 0)
 		return;

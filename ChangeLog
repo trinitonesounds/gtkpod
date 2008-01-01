@@ -1,3 +1,23 @@
+2008-01-01 Matvey Kozhev <sikon at users.sourceforge.net>
+
+  * src/misc_input.c:
+  * src/misc.h:
+  * src/misc_playlist.c:
+  * src/display_photo.c:
+  * data/gtkpod.glade:
+  
+    Refactored get_user_string (input box) to use glade, as well
+	as for HIG compliance.
+	
+  * configure.in:
+  * src/help.c:
+  
+    Display libgpod version in the about dialog.
+	
+  * data/icons/Makefile.am:
+  
+    Removed data/icons/gtkpod.xpm.
+
 2007-12-31 Matvey Kozhev <sikon at users.sourceforge.net>
 
   * data/icons/*/gtkpod.png:

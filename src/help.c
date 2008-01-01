@@ -137,12 +137,19 @@ G_MODULE_EXPORT void open_about_window ()
 	gchar *copyright = _("© 2002-2007\nJorg Schuler <jcsjcs@users.sourceforge.net>\nCorey Donohoe <atmos@atmos.org>");
 	gchar *translator_credits = g_strjoinv("\n", translators);
 	GdkPixbuf *icon = gdk_pixbuf_new_from_file(PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "data" G_DIR_SEPARATOR_S "gtkpod-logo.png", NULL);
+	
+#ifdef LIBGPOD_VERSION
+	gchar *description = g_strdup_printf (_("Cross-platform multilingual interface to Apple's iPod™\n"
+											"(using libgpod %s)"), LIBGPOD_VERSION);
+#else
+	gchar *description = _("Cross-platform multilingual interface to Apple's iPod™");
+#endif
 
 	gtk_show_about_dialog(GTK_WINDOW(gtkpod_window),
 		"name", "gtkpod",
 		"version", VERSION,
 		"logo", icon,
-		"comments", _("Cross-platform multilingual interface to Apple's iPod™"),
+		"comments", description,
 		"copyright", copyright,
 		"website", "http://gtkpod.org",
 		"license", license,
@@ -150,7 +157,11 @@ G_MODULE_EXPORT void open_about_window ()
 		"translator_credits", translator_credits,
 		NULL);
 
-	g_free(translator_credits);
+	g_free (translator_credits);
+										 
+#ifdef LIBGPOD_VERSION
+	g_free (description);
+#endif
 
 	if(icon)
 		g_object_unref(icon);

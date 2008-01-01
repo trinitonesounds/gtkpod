@@ -76,49 +76,32 @@ gchar *concat_dir_if_relative (G_CONST_RETURN gchar *base_dir,
    return value: the string entered by the user or NULL if the dialog
    was cancelled. */
 gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
-			gchar *opt_msg, gboolean *opt_state)
+			gchar *opt_msg, gboolean *opt_state, const gchar *accept_button)
 {
-
-    GtkWidget *dialog, *image, *label=NULL;
-    GtkWidget *entry, *checkb=NULL, *hbox;
+	GladeXML *xml = gtkpod_xml_new (xml_file, "input_box");
+    GtkWidget *dialog = gtkpod_xml_get_widget (xml, "input_box");
+	GtkWidget *label = gtkpod_xml_get_widget (xml, "input_box_label");
+    GtkWidget *entry = gtkpod_xml_get_widget (xml, "input_box_entry");
+	GtkWidget *checkb = gtkpod_xml_get_widget (xml, "input_box_checkbox");
     gint response;
     gchar *result = NULL;
+	gchar *temp;
 
-    /* create the dialog window */
-    dialog = gtk_dialog_new_with_buttons (
-	title,
-	GTK_WINDOW (gtkpod_window),
-	GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-	GTK_STOCK_OK, GTK_RESPONSE_OK,
-	GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-	NULL);
-    gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+    gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+								GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+								accept_button ? accept_button : GTK_STOCK_OK, GTK_RESPONSE_OK,
+								NULL);
 
-    /* emulate gtk_message_dialog_new */
-    image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_QUESTION,
-				    GTK_ICON_SIZE_DIALOG);
-    gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);
-
-    if (message)
-    {
-	label = gtk_label_new (message);
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	gtk_label_set_selectable (GTK_LABEL (label), TRUE);
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	gtk_label_set_selectable (GTK_LABEL (label), TRUE);
-    }
-    /* hbox to put the image+label in */
-    hbox = gtk_hbox_new (FALSE, 6);
-    gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-    if (label) gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-
-    /* Create entry */
-    entry = gtk_entry_new ();
+    temp = g_markup_printf_escaped ("<span weight='bold' size='larger'>%s</span>\n\n%s", title, message);
+	gtk_label_set_markup (GTK_LABEL (label), temp);
+	g_free (temp);
+	
     if (dflt)
     {
-	gtk_entry_set_text (GTK_ENTRY (entry), dflt);
-	gtk_editable_select_region (GTK_EDITABLE (entry), 0, -1);
+		gtk_entry_set_text (GTK_ENTRY (entry), dflt);
+		gtk_editable_select_region (GTK_EDITABLE (entry), 0, -1);
     }
+
     /* Pressing enter should activate the default response (default
        response set above */
     gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
@@ -126,36 +109,25 @@ gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
     /* create option checkbox */
     if (opt_msg && opt_state)
     {
-	checkb = gtk_check_button_new_with_mnemonic (opt_msg);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkb),
-				      *opt_state);
+		gtk_widget_show (checkb);
+		gtk_button_set_label (GTK_BUTTON (checkb), opt_msg);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkb), *opt_state);
     }
 
-    /* add to vbox */
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
-			hbox, FALSE, FALSE, 2);
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
-			entry, FALSE, FALSE, 2);
-    if (checkb)
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
-			    checkb, FALSE, FALSE, 2);
-
-    /* Start the dialogue */
-    gtk_widget_show_all (dialog);
-    response = gtk_dialog_run (GTK_DIALOG (dialog));
+	response = gtk_dialog_run (GTK_DIALOG (dialog));
 
     if (response == GTK_RESPONSE_OK)
     {
-	result = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
-	/* get state of checkbox */
-	if (checkb)
-	{
-	    *opt_state = gtk_toggle_button_get_active (
-		GTK_TOGGLE_BUTTON (checkb));
-	}
+		result = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+		/* get state of checkbox */
+		if (checkb)
+		{
+			*opt_state = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkb));
+		}
     }
 
     gtk_widget_destroy (dialog);
+	g_object_unref (xml);
     return result;
 }
 
