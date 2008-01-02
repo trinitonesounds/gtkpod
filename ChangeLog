@@ -15,6 +15,7 @@
 	Fixed: 'assertion failed when clicking "remove" buttons'
 	Fixed: 'assertion `g_path_is_absolute (filename)' failed'
 	Fixed: 'signal `file_set' is invalid for instance `0x85d1160''
+	Fixed: 'g_object_unref: assertion `G_IS_OBJECT (object)' failed'
 	
   * src/fileselection.c:
   
@@ -25,6 +26,12 @@
   
     Redesigned confirmation window to use GtkTreeView, as well as for
 	HIG compliance.
+	
+  * src/charset.c:
+  
+    Fixed: 'Invalid column number -1077094488 added to iter'
+	(thanks to Daniele Forsi <dforsi@gmail.com>)
+	Fixed: 'g_object_unref: assertion `G_IS_OBJECT (object)' failed'
 
 2008-01-01 Matvey Kozhev <sikon at users.sourceforge.net>
 

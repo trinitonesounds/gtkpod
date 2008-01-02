@@ -281,7 +281,7 @@ void charset_init_combo_box (GtkComboBox *combo)
 					if (*bufpp)
 					{
 						gtk_list_store_append (charsets, &iter);
-						gtk_list_store_set (charsets, &iter, 0, g_strdup (bufpp));
+						gtk_list_store_set (charsets, &iter, 0, bufpp, -1);
 
 					}
 				}
@@ -315,7 +315,6 @@ void charset_init_combo_box (GtkComboBox *combo)
 	}
 
 	gtk_combo_box_set_active_iter (GTK_COMBO_BOX (combo), &use_iter);
-	g_object_unref (renderer);
     g_free (description);
     g_free (current_charset);
 }
