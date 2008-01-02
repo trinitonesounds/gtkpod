@@ -10,6 +10,15 @@
   * data/gtkpod.glade:
   
     Added Revert button.
+	Fixed: 'subwindows can be hidden by main window' (except for the sort
+	window, this is intended behavior and not a bug)
+	Fixed: 'assertion failed when clicking "remove" buttons'
+	Fixed: 'assertion `g_path_is_absolute (filename)' failed'
+	Fixed: 'signal `file_set' is invalid for instance `0x85d1160''
+	
+  * src/fileselection.c:
+  
+    Use the stock GTK directory selection dialog. Code cleanup.
 
 2008-01-01 Matvey Kozhev <sikon at users.sourceforge.net>
 

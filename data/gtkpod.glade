@@ -16210,6 +16210,7 @@ Examples:
                           <widget class="GtkFileChooserButton" id="cmd_aacgain">
                             <property name="visible">True</property>
                             <property name="title" translatable="yes">Select A File</property>
+                            <signal name="file_set" handler="on_cmd_aacgain_file_set"/>
                           </widget>
                           <packing>
                             <property name="left_attach">1</property>
@@ -16547,7 +16548,7 @@ Examples:
                                 </child>
                               </widget>
                               <packing>
-                                <property name="x_options"></property>
+                                <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -16568,7 +16569,7 @@ Examples:
                               <packing>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
-                                <property name="x_options"></property>
+                                <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>
@@ -16589,7 +16590,7 @@ Examples:
                               <packing>
                                 <property name="top_attach">2</property>
                                 <property name="bottom_attach">3</property>
-                                <property name="x_options"></property>
+                                <property name="x_options">GTK_FILL</property>
                                 <property name="y_options"></property>
                               </packing>
                             </child>

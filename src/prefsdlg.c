@@ -284,17 +284,20 @@ static void setup_column_tree (GtkTreeView *treeview, gboolean list_visible)
 	}
 }
 
-static GtkTreeIter tree_get_current_iter (GtkTreeView *view)
+static gboolean tree_get_current_iter (GtkTreeView *view, GtkTreeIter *iter)
 {
 	GtkTreeModel *model = gtk_tree_view_get_model (view);
 	GtkTreePath *path;
-	GtkTreeIter iter;
 
 	gtk_tree_view_get_cursor (view, &path, NULL);
-	gtk_tree_model_get_iter (model, &iter, path);
+	
+	if (!path)
+		return FALSE;
+	
+	gtk_tree_model_get_iter (model, iter, path);
 	gtk_tree_path_free (path);
 	
-	return iter;
+	return TRUE;
 }
 
 /*
@@ -616,6 +619,7 @@ G_MODULE_EXPORT void on_column_add_clicked (GtkButton *sender, gpointer e)
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	
+	gtk_window_set_transient_for (GTK_WINDOW (dlg), GTK_WINDOW (prefs_dialog));
 	setup_column_tree (view, FALSE);
 	
 	/* User pressed Cancel */
@@ -628,7 +632,7 @@ G_MODULE_EXPORT void on_column_add_clicked (GtkButton *sender, gpointer e)
 	
 	/* User pressed Add */
 	model = gtk_tree_view_get_model (view);
-	iter = tree_get_current_iter (view);
+	tree_get_current_iter (view, &iter);
 	gtk_tree_model_get (model, &iter, 1, &i, -1);
 	
 	gtk_widget_destroy (dlg);
@@ -655,9 +659,9 @@ G_MODULE_EXPORT void on_column_remove_clicked (GtkButton *sender, gpointer e)
 	gint i;
 	GtkTreeView *view = GTK_TREE_VIEW (gtkpod_xml_get_widget (prefs_xml, "displayed_columns"));
 	GtkTreeModel *model = gtk_tree_view_get_model (view);
-	GtkTreeIter iter = tree_get_current_iter (view);
+	GtkTreeIter iter;
 	
-	if(!gtk_list_store_iter_is_valid (GTK_LIST_STORE (model), &iter))
+	if(!tree_get_current_iter (view, &iter) || !gtk_list_store_iter_is_valid (GTK_LIST_STORE (model), &iter))
 		return;
 
 	gtk_tree_model_get (model, &iter, 1, &i, -1);
@@ -734,6 +738,8 @@ G_MODULE_EXPORT void open_encoding_dialog (GtkButton *sender, gpointer e)
 	GladeXML *xml = gtkpod_xml_new (xml_file, "prefs_encoding_dialog");
 	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_encoding_dialog");
 	GtkWidget *combo = gtkpod_xml_get_widget (xml, "encoding_combo");
+
+	gtk_window_set_transient_for (GTK_WINDOW (dlg), GTK_WINDOW (prefs_dialog));
 	
 	init_checkbox (GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (xml, "use_encoding_for_update")),
 				   xml, "update_charset", NULL);
@@ -769,6 +775,8 @@ G_MODULE_EXPORT void on_customize_tags_clicked (GtkButton *sender, gpointer e)
 	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_tag_parse_dialog");
 	gchar *temp = prefs_get_string("parsetags_template");
 	
+	gtk_window_set_transient_for (GTK_WINDOW (dlg), GTK_WINDOW (prefs_dialog));
+
 	if(temp)
 	{
 		gtk_entry_set_text (GTK_ENTRY (gtkpod_xml_get_widget (xml, "filename_pattern")),
@@ -803,6 +811,8 @@ G_MODULE_EXPORT void on_customize_coverart_clicked (GtkButton *sender, gpointer 
 	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_coverart_dialog");
 	gchar *temp = prefs_get_string("coverart_template");
 	
+	gtk_window_set_transient_for (GTK_WINDOW (dlg), GTK_WINDOW (prefs_dialog));
+
 	if(temp)
 	{
 		gtk_entry_set_text (GTK_ENTRY (gtkpod_xml_get_widget (xml, "coverart_pattern")),
@@ -838,6 +848,8 @@ G_MODULE_EXPORT void on_exclusions_clicked (GtkButton *sender, gpointer e)
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
 	gchar *temp = prefs_get_string("exclude_file_mask");
 	
+	gtk_window_set_transient_for (GTK_WINDOW (dlg), GTK_WINDOW (prefs_dialog));
+
 	if (temp)
 	{
 		gint i;
@@ -927,9 +939,9 @@ G_MODULE_EXPORT void on_remove_exclusion_clicked (GtkButton *sender, gpointer e)
 	GladeXML *xml = GLADE_XML (g_object_get_data (G_OBJECT (sender), "xml"));
 	GtkWidget *tree = gtkpod_xml_get_widget (xml, "exclusion_list");
 	GtkListStore *store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (tree)));
-	GtkTreeIter iter = tree_get_current_iter (GTK_TREE_VIEW (tree));
+		GtkTreeIter iter;
 	
-	if(gtk_list_store_iter_is_valid (store, &iter))
+	if(!tree_get_current_iter (GTK_TREE_VIEW (tree), &iter) || gtk_list_store_iter_is_valid (store, &iter))
 	{
 		gtk_list_store_remove (store, &iter);
 		update_exclusions (store);
@@ -945,6 +957,8 @@ G_MODULE_EXPORT void on_mserv_settings_clicked (GtkButton *sender, gpointer e)
 	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_mserv_dialog");
 	gchar *temp = prefs_get_string ("mserv_username");
 	
+	gtk_window_set_transient_for (GTK_WINDOW (dlg), GTK_WINDOW (prefs_dialog));
+
 	if(temp)
 	{
 		gtk_entry_set_text (GTK_ENTRY (gtkpod_xml_get_widget (xml, "mserv_username")),
@@ -1019,7 +1033,10 @@ G_MODULE_EXPORT void on_commands_clicked (GtkButton *sender, gpointer e)
 	GladeXML *xml = gtkpod_xml_new (xml_file, "prefs_commands_dialog");
 	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_commands_dialog");
 	gchar *temp = prefs_get_string ("path_play_now");
+	gchar *path;
 	
+	gtk_window_set_transient_for (GTK_WINDOW (dlg), GTK_WINDOW (prefs_dialog));
+
 	if(temp)
 	{
 		gtk_entry_set_text (GTK_ENTRY (gtkpod_xml_get_widget (xml, "cmd_playnow")),
@@ -1042,20 +1059,26 @@ G_MODULE_EXPORT void on_commands_clicked (GtkButton *sender, gpointer e)
 	
 	if(temp)
 	{
+		path = g_find_program_in_path (temp);
+		
 		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (gtkpod_xml_get_widget (xml, "cmd_mp3gain")),
-									   temp);
+									   path);
 		
 		g_free (temp);
+		g_free (path);
 	}
 
 	temp = prefs_get_string ("aacgain_path");
 	
 	if(temp)
 	{
+		path = g_find_program_in_path (temp);
+
 		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (gtkpod_xml_get_widget (xml, "cmd_aacgain")),
 									   temp);
 		
 		g_free (temp);
+		g_free (path);
 	}
 	
 	g_object_set_data (G_OBJECT (gtkpod_xml_get_widget (xml, "browse_playnow")),
@@ -1114,6 +1137,8 @@ G_MODULE_EXPORT void on_conversion_settings_clicked (GtkButton *sender, gpointer
 	gchar *temp = prefs_get_string ("file_convert_cachedir");
 	gint i;
 	
+	gtk_window_set_transient_for (GTK_WINDOW (dlg), GTK_WINDOW (prefs_dialog));
+
 	if(temp)
 	{
 		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (gtkpod_xml_get_widget (xml, "cache_folder")),
