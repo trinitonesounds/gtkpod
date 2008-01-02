@@ -1306,6 +1306,22 @@ TempPrefs *temp_prefs_create ()
     return temp_prefs;	
 }
 
+static void copy_key_to_temp_prefs (gpointer key, gpointer value, gpointer user_data)
+{
+    temp_prefs_set_string ((TempPrefs *)user_data, key, value);
+}
+
+void temp_prefs_copy_prefs (TempPrefs *temp_prefs)
+{
+    g_return_if_fail (prefs_table);
+    g_return_if_fail (temp_prefs);
+    g_return_if_fail (temp_prefs->tree);
+
+	lock_prefs_table ();
+    g_hash_table_foreach (prefs_table, copy_key_to_temp_prefs, temp_prefs);
+	unlock_prefs_table ();
+}
+
 /* Delete temp prefs */
 void temp_prefs_destroy (TempPrefs *temp_prefs)
 {

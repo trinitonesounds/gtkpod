@@ -70,6 +70,7 @@ const gchar *checkbox_map[][3] = {
 	{ "group_compilations", "group_compilations", NULL },
 	{ "include_neverplayed", "not_played_track", NULL },
 	/* Music tab */
+	{ "background_transfer", "file_convert_background_transfer", NULL },
 	{ "add_subfolders", "add_recursively", NULL },
 	{ "allow_duplicates", "!sha1", NULL },
 	{ "delete_missing", "sync_delete_tracks", NULL },
@@ -131,6 +132,7 @@ ind_string conv_paths[] = {
 
 static GladeXML *prefs_xml = NULL;
 static GtkWidget *prefs_dialog = NULL;
+static TempPrefs *temp_prefs = NULL;
 
 /*
 	Convenience functions
@@ -190,7 +192,7 @@ void update_checkbox_deps (GtkToggleButton *checkbox, const gchar *deps)
 	g_strfreev (deparray);
 }
 
-void init_checkbox (GtkToggleButton *checkbox, GladeXML *xml, const gchar *pref, const gchar *deps)
+static void init_checkbox (GtkToggleButton *checkbox, GladeXML *xml, const gchar *pref, const gchar *deps)
 {
 	g_object_set_data(G_OBJECT(checkbox), "pref", (gchar *) pref);
 	g_object_set_data(G_OBJECT(checkbox), "deps", (gchar *) deps);
@@ -231,6 +233,17 @@ static void setup_column_tree (GtkTreeView *treeview, gboolean list_visible)
     GtkTreeViewColumn *column;
     GtkCellRenderer *renderer;
     gint i;
+	
+	/* Delete any existing columns first */
+	while (TRUE)
+	{
+		column = gtk_tree_view_get_column (treeview, 0);
+		
+		if (!column)
+			break;
+		
+		gtk_tree_view_remove_column (treeview, column);
+	}
 
     store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_INT);
     column = gtk_tree_view_column_new ();
@@ -271,7 +284,7 @@ static void setup_column_tree (GtkTreeView *treeview, gboolean list_visible)
 	}
 }
 
-GtkTreeIter tree_get_current_iter (GtkTreeView *view)
+static GtkTreeIter tree_get_current_iter (GtkTreeView *view)
 {
 	GtkTreeModel *model = gtk_tree_view_get_model (view);
 	GtkTreePath *path;
@@ -282,6 +295,59 @@ GtkTreeIter tree_get_current_iter (GtkTreeView *view)
 	gtk_tree_path_free (path);
 	
 	return iter;
+}
+
+/*
+	Disconnects all signals connected to a GtkWidget.
+	The "data" paremeter is ignored.
+*/
+static void disconnect_signals_internal (GtkWidget *widget, gpointer data)
+{
+	GType type;
+	
+	for (type = G_TYPE_FROM_INSTANCE (widget);
+		 type && type != GTK_TYPE_OBJECT && type != GTK_TYPE_WIDGET;
+		 type = g_type_parent (type))
+	{	
+		guint i;
+		guint n_ids;
+		guint *ids;
+		
+		ids = g_signal_list_ids (type, &n_ids);
+		
+		for (i = 0; i < n_ids; i++)
+		{
+			gint handler;
+			
+			while (TRUE)
+			{
+				handler = g_signal_handler_find (widget, G_SIGNAL_MATCH_ID, ids[i], 0, NULL, NULL, NULL);
+				
+				if (!handler)
+					break;
+				
+				g_signal_handler_disconnect (widget, handler);
+			}
+		}
+	}
+}
+
+static void disconnect_all_internal (GtkWidget *widget, gpointer data)
+{
+	disconnect_signals_internal (widget, NULL);
+	
+	if (GTK_IS_CONTAINER (widget))
+	{
+		gtk_container_foreach (GTK_CONTAINER (widget), disconnect_all_internal, NULL);
+	}
+}
+
+/*
+	Recursively disconnects all signals connected to a GtkWidget and its children.
+*/
+static void disconnect_all (GtkWidget *widget)
+{
+	disconnect_all_internal (widget, NULL);
 }
 
 /*
@@ -366,6 +432,9 @@ G_MODULE_EXPORT void open_prefs_dlg ()
 		return;
 	}
 	
+    temp_prefs = temp_prefs_create();
+	temp_prefs_copy_prefs (temp_prefs);
+
 	prefs_xml = gtkpod_xml_new (xml_file, "prefs_dialog");
 	prefs_dialog = gtkpod_xml_get_widget (prefs_xml, "prefs_dialog");
 	
@@ -391,11 +460,37 @@ G_MODULE_EXPORT void on_prefs_dialog_help ()
 */
 G_MODULE_EXPORT void on_prefs_dialog_close ()
 {
+	if (!prefs_dialog)
+		return;
+	
 	gtk_widget_destroy(prefs_dialog);
 	g_object_unref(prefs_xml);
+    temp_prefs_destroy(temp_prefs);
 	
 	prefs_dialog = NULL;
 	prefs_xml = NULL;
+	temp_prefs = NULL;
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_prefs_dialog_revert ()
+{
+	disconnect_all (prefs_dialog);
+    temp_prefs_apply (temp_prefs);
+	setup_prefs_dlg (prefs_xml, prefs_dialog);
+	glade_xml_signal_autoconnect (prefs_xml);
+
+	/* Apply all */
+	tm_store_col_order ();
+
+	tm_show_preferred_columns();
+	st_show_visible();
+	display_show_hide_tooltips();
+	display_show_hide_toolbar();
+
+	file_convert_prefs_changed ();
 }
 
 /*
@@ -1043,6 +1138,7 @@ G_MODULE_EXPORT void on_conversion_settings_clicked (GtkButton *sender, gpointer
 	gtk_dialog_run (GTK_DIALOG (dlg));
 	gtk_widget_destroy (dlg);
 	g_object_unref (xml);
+	file_convert_prefs_changed ();
 }
 
 /*
@@ -1095,6 +1191,7 @@ G_MODULE_EXPORT void on_target_format_changed (GtkComboBox *sender, gpointer e)
 	
 	prefs_set_int ("conversion_target_format", index);
 	g_free (script);
+	file_convert_prefs_changed ();
 }
 
 /*

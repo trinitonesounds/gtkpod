@@ -1,3 +1,16 @@
+2008-01-02 Matvey Kozhev <sikon at users.sourceforge.net>
+
+  * src/prefs.c:
+  * src/prefs.h:
+  
+    Added function temp_prefs_copy_prefs to create copies of the current prefs
+	(for Revert buttons).
+	
+  * src/prefsdlg.c:
+  * data/gtkpod.glade:
+  
+    Added Revert button.
+
 2008-01-01 Matvey Kozhev <sikon at users.sourceforge.net>
 
   * src/misc_input.c:

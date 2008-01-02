@@ -146,6 +146,7 @@ gboolean temp_prefs_subkey_exists (TempPrefs *temp_prefs,
  * Temp prefs functions
  */
 TempPrefs *temp_prefs_create (void);
+void temp_prefs_copy_prefs (TempPrefs *temp_prefs);
 TempPrefs *temp_prefs_load (const gchar *filename, GError **error);
 gboolean temp_prefs_save (TempPrefs *temp_prefs,
 			  const gchar *filename,
