@@ -19,6 +19,12 @@
   * src/fileselection.c:
   
     Use the stock GTK directory selection dialog. Code cleanup.
+	
+  * src/confirmation.c:
+  * data/gtkpod.glade:
+  
+    Redesigned confirmation window to use GtkTreeView, as well as for
+	HIG compliance.
 
 2008-01-01 Matvey Kozhev <sikon at users.sourceforge.net>
 
