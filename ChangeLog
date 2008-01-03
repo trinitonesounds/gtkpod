@@ -4,9 +4,11 @@
   
     Killed prefs_window.
 	
-  * src/prefs_window.c:
+  * src/prefs_window.c -> src/sort_window.c:
+  * src/prefs_window.h -> src/sort_window.h:
   
     Removed all prefs_window code.
+	Renamed.
 
   * src/display_sorttabs.c:
   * data/gtkpod.glade:
@@ -29,6 +31,11 @@
   * data/gtkpod.glade:
   
     Added "Display tooltips" preference.
+	
+  * data/Makefile.am:
+  * data/*.png:
+  
+    Icon refresh. Removed unused icons.
 
 2008-01-02 Matvey Kozhev <sikon at users.sourceforge.net>
 

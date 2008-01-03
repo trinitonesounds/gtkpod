@@ -16,17 +16,10 @@ appdata_DATA =				\
 	gtkpod-icon-32.png		\
 	gtkpod-icon-48.png		\
 	gtkpod-logo.png			\
-	gtkpod-new-playlist.png		\
 	gtkpod-read.png			\
 	gtkpod-read-16.png		\
-	gtkpod-sync.png     		\
-	gphoto_album_menuitem-32.png   \
-	gphoto_album_menuitem-48.png   \
-	gphoto_images_menuitem-32.png  \
-	gphoto_images_menuitem-48.png  \
-	gphoto_tools_menuitem-32.png   \
-	gphoto_tools_menuitem-48.png   \
-	gphoto_playlist_icon-48.png    \
+	photo-toolbar-album.png \
+	photo-toolbar-photos.png	\
 	tunes_playlist_icon-48.png
 
 EXTRA_DIST = 				\

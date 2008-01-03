@@ -45,7 +45,7 @@ gtkpod_SOURCES = \
     oggfile.c oggfile.h \
     podcast.c podcast.h \
     prefs.c prefs.h \
-    prefs_window.c prefs_window.h \
+    sort_window.c sort_window.h \
     repository.c repository.h \
     sha1.c sha1.h \
     stock_icons.c stock_icons.h \

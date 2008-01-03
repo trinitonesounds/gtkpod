@@ -5,3 +5,12 @@ Adrian Ulrich <pab at blinkenlights.ch>
 The gtkpod icon is based on the gnome-icon-theme-extras project and licensed
 under the GPL v2. Originally created by Ryan Collier, modified by
 Rodney Dawes  <dobey.pwns@gmail.com>. ("multimedia-player-apple-ipod-video-white")
+
+This project uses icons from the Rhythmbox (http://rhythmbox.org) project,
+licensed under the GPL v2 or later:
+* data/tunes_playlist_icon-48.png
+
+This project uses icons from the F-Spot (http://f-spot.org) project,
+licensed under the GPL v2 or later:
+* data/photo-toolbar-album.png
+* data/photo-toolbar-photos.png
