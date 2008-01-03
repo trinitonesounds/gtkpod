@@ -22,6 +22,7 @@
   * src/display_playlists.c:
   
     mpl_autoselect is now ignored (always false).
+	Use larger icons in the playlist tree view.
 
   * src/display_tracks.c:
   
@@ -34,8 +35,14 @@
 	
   * data/Makefile.am:
   * data/*.png:
+  * data/icons/hicolor/*:
   
     Icon refresh. Removed unused icons.
+	
+  * src/stock_icons.c:
+  * src/stock_icons.h:
+  
+    Use GtkIconTheme for stock icon handling.
 
 2008-01-02 Matvey Kozhev <sikon at users.sourceforge.net>
 
