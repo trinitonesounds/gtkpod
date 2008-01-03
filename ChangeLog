@@ -1,3 +1,8 @@
+2008-01-03  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* data/icons/hicolor/*:
+	  ignore generated Makefiles
+
 2008-01-03 Matvey Kozhev <sikon at users.sourceforge.net>
 
   * data/gtkpod.glade:
