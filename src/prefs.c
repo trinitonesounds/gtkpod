@@ -251,8 +251,8 @@ static void set_default_preferences()
     prefs_set_int("mpl_autoselect", TRUE);
 	
     /* Set window sizes */
-    prefs_set_int("size_gtkpod.x", 600);
-    prefs_set_int("size_gtkpod.y", 500);
+    prefs_set_int("size_gtkpod.x", 780);
+    prefs_set_int("size_gtkpod.y", 580);
     prefs_set_int("size_cal.x", 500);
     prefs_set_int("size_cal.y", 300);
     prefs_set_int("size_conf_sw.x", 300);

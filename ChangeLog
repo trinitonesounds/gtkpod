@@ -27,6 +27,8 @@
   * src/display_tracks.c:
   
     multi_edit_title is now ignored (always true).
+	Find-as-you-type search implemented using GtkTreeModelFilter.
+	(Remember to use get_model instead of gtk_tree_view_get_model)
 	
   * src/prefsdlg.c:
   * data/gtkpod.glade:
@@ -43,6 +45,16 @@
   * src/stock_icons.h:
   
     Use GtkIconTheme for stock icon handling.
+	
+  * src/misc.c:
+  * src/misc.h:
+  
+    Added utf8_strcasestr (a copied g_utf8_strcasestr from GtkSourceView).
+	
+  * src/help.c:
+  
+    Translation string optimization, as suggested by Daniele Forsi and
+	Bastien Nocera <hadess@hadess.net>.
 
 2008-01-02 Matvey Kozhev <sikon at users.sourceforge.net>
 

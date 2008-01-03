@@ -139,8 +139,11 @@ G_MODULE_EXPORT void open_about_window ()
 	GdkPixbuf *icon = gdk_pixbuf_new_from_file(PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "data" G_DIR_SEPARATOR_S "gtkpod-logo.png", NULL);
 	
 #ifdef LIBGPOD_VERSION
-	gchar *description = g_strdup_printf (_("Cross-platform multilingual interface to Apple's iPod™\n"
-											"(using libgpod %s)"), LIBGPOD_VERSION);
+	gchar *version = g_strdup_printf (_("(using libgpod %s)"), LIBGPOD_VERSION);
+	gchar *description = g_strdup_printf ("%s\n%s", _("Cross-platform multilingual interface to Apple's iPod™"),
+											version);
+										  
+	g_free (version);
 #else
 	gchar *description = _("Cross-platform multilingual interface to Apple's iPod™");
 #endif

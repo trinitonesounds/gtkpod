@@ -105,7 +105,6 @@ void stockid_init (gchar *progpath)
 	if (!path)
 		path = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "icons", NULL);
 
-	printf ("Path: %s\n", path);
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (), path);
 	g_free (path);
 	

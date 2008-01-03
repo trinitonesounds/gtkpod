@@ -1376,14 +1376,14 @@ void pm_unselect_playlist (Playlist *playlist)
 static void pm_selection_changed_cb (GtkTreeSelection *selection,
 				     gpointer user_data2)
 {
-  GtkTreeModel *model;
-  GtkTreeIter  iter;
-  Playlist *new_playlist = NULL;
+	GtkTreeModel *model;
+	GtkTreeIter  iter;
+	Playlist *new_playlist = NULL;
 
 #if DEBUG_TIMING
-  GTimeVal time;
-  g_get_current_time (&time);
-  printf ("pm_selection_changed_cb enter: %ld.%06ld sec\n",
+	GTimeVal time;
+	g_get_current_time (&time);
+	printf ("pm_selection_changed_cb enter: %ld.%06ld sec\n",
 	  time.tv_sec % 3600, time.tv_usec);
 #endif
 
@@ -1391,77 +1391,93 @@ static void pm_selection_changed_cb (GtkTreeSelection *selection,
 	 * in playlist
 	 */
 	 coverart_block_change (TRUE);
-  
-  if (gtk_tree_selection_get_selected (selection, &model, &iter) == FALSE)
-  {  /* no selection -> reset sort tabs */
-      st_init (-1, 0);
-      current_playlist = NULL;
-  }
-  else
-  {   /* handle new selection */
-      gtk_tree_model_get (model, &iter, 
+
+	if (gtk_tree_selection_get_selected (selection, &model, &iter) == FALSE)
+	{  /* no selection -> reset sort tabs */
+		st_init (-1, 0);
+		current_playlist = NULL;
+	}
+	else
+	{
+		gchar *label_text;
+		
+		/* handle new selection */
+		gtk_tree_model_get (model, &iter, 
 			  PM_COLUMN_PLAYLIST, &new_playlist,
 			  -1);
 
-      /* If new playlist is in an iPod itdb, set the mountpoint for
-       * the free space display to this iPod (there may be several
-       * iPods connected */
-      g_return_if_fail (new_playlist);
-      g_return_if_fail (new_playlist->itdb);
-      if (new_playlist->itdb->usertype & GP_ITDB_TYPE_IPOD)
-      {
-	  space_set_ipod_itdb (new_playlist->itdb);
-      }
-      
-      if (gphoto_is_photo_playlist (new_playlist))
-      {
+		/* If new playlist is in an iPod itdb, set the mountpoint for
+		* the free space display to this iPod (there may be several
+		* iPods connected */
+		g_return_if_fail (new_playlist);
+		g_return_if_fail (new_playlist->itdb);
+
+		label_text = g_markup_printf_escaped ("<b>%s</b>", new_playlist->name);
+		
+		gtk_label_set_markup (GTK_LABEL (gtkpod_xml_get_widget (main_window_xml, "current_playlist_label")),
+							  label_text);
+		
+		g_free (label_text);
+
+		if (new_playlist->itdb->usertype & GP_ITDB_TYPE_IPOD)
+		{
+			space_set_ipod_itdb (new_playlist->itdb);
+		}
+
+		if (gphoto_is_photo_playlist (new_playlist))
+		{
 				/* This is the photo playlist so need to load photo database
-      * rather than get tracks.
+		* rather than get tracks.
 				*/
 				gphoto_display_photo_window (new_playlist->itdb);
-      }
-      else
-      {
+		}
+		else
+		{
 				gphoto_change_to_photo_window (FALSE);
-      }
+		}
 
-      /* remove all entries from sort tab 0 */
-      /* printf ("removing entries: %x\n", current_playlist);*/
-      st_init (-1, 0);
+		/* remove all entries from sort tab 0 */
+		/* printf ("removing entries: %x\n", current_playlist);*/
+		st_init (-1, 0);
 
-     current_playlist = new_playlist;
-      if (new_playlist->is_spl && new_playlist->splpref.liveupdate)
-	  itdb_spl_update (new_playlist);
-      if (new_playlist->members)
-      {
-	  GList *gl;
+		current_playlist = new_playlist;
+		if (new_playlist->is_spl && new_playlist->splpref.liveupdate)
+			itdb_spl_update (new_playlist);
+							  
+		if (new_playlist->members)
+		{
+			GList *gl;
 
-	  st_enable_disable_view_sort (0, FALSE);
-	  for (gl=new_playlist->members; gl; gl=gl->next)
-	  { /* add all tracks to sort tab 0 */
-	      Track *track = gl->data;
-	      st_add_track (track, FALSE, TRUE, 0);
-	  }
-	  st_enable_disable_view_sort (0, TRUE);
-	  st_add_track (NULL, TRUE, TRUE, 0);
-      }
-      gtkpod_tracks_statusbar_update();
-  }
-  
-  /* Reallow the coverart selection update */
-  coverart_block_change (FALSE);
-  /* Set the coverart display based on the selected playlist */
-  coverart_display_update(TRUE);
+			st_enable_disable_view_sort (0, FALSE);
+			
+			for (gl=new_playlist->members; gl; gl=gl->next)
+			{
+				/* add all tracks to sort tab 0 */
+				Track *track = gl->data;
+				st_add_track (track, FALSE, TRUE, 0);
+			}
+			
+			st_enable_disable_view_sort (0, TRUE);
+			st_add_track (NULL, TRUE, TRUE, 0);
+		}
+							  
+		gtkpod_tracks_statusbar_update();
+	}
+
+	/* Reallow the coverart selection update */
+	coverart_block_change (FALSE);
+	/* Set the coverart display based on the selected playlist */
+	coverart_display_update(TRUE);
 	 
-  space_data_update ();
-    
+	space_data_update ();
+
 #if DEBUG_TIMING
-  g_get_current_time (&time);
-  printf ("pm_selection_changed_cb exit:  %ld.%06ld sec\n",
+	g_get_current_time (&time);
+	printf ("pm_selection_changed_cb exit:  %ld.%06ld sec\n",
 	  time.tv_sec % 3600, time.tv_usec);
 #endif 
-  /* make only suitable delete menu items available */
-  display_adjust_menus ();
+	/* make only suitable delete menu items available */
+	display_adjust_menus ();
 }
 
 /* Callback function called when the selection
