@@ -801,8 +801,8 @@ tm_cell_edited (GtkCellRendererText *renderer,
 
   column = (TM_item) g_object_get_data(G_OBJECT(renderer), "column");
   multi_edit = prefs_get_int("multi_edit");
-  if (column == TM_COLUMN_TITLE)
-      multi_edit &= prefs_get_int("multi_edit_title");
+/*  if (column == TM_COLUMN_TITLE)
+      multi_edit &= prefs_get_int("multi_edit_title"); */
   selection = gtk_tree_view_get_selection(track_treeview);
   row_list = gtk_tree_selection_get_selected_rows(selection, &model);
 

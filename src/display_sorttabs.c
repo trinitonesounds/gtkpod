@@ -43,6 +43,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define ST_AUTOSELECT(i) TRUE
+/* #define ST_AUTOSELECT(i) (prefs_get_int_index("st_autoselect", (i))) */
+
 /* array with pointers to the sort tabs */
 static SortTab *sorttab[SORT_TAB_MAX];
 /* pointer to paned elements holding the sort tabs */
@@ -1241,7 +1244,7 @@ void st_remove_entry (TabEntry *entry, guint32 inst)
 		if (!valid) next = NULL;
 	    }
 	    /* don't select master entry 'All' until requested to do so */
-	    if (next && next->master && !prefs_get_int_index("st_autoselect", inst))
+	    if (next && next->master && !ST_AUTOSELECT (inst))
 		next = NULL;
 	}
     }
@@ -1610,7 +1613,7 @@ static void st_add_track_normal (Track *track, gboolean final,
 	    {
 		/* no last selection -- check if we should select "All" */
 		/* only select "All" when currently adding the first track */
-		if (first && prefs_get_int_index("st_autoselect", inst))
+		if (first && ST_AUTOSELECT (inst))
 		{
 		    select_entry = master_entry;
 		}
@@ -1633,7 +1636,7 @@ static void st_add_track_normal (Track *track, gboolean final,
        selected (including "select_entry", which is to be selected" and
        prefs_get_int_index("st_autoselect", index) allows us to select "All" */
     if (final && !st->current_entry && !select_entry &&
-	!st->unselected && prefs_get_int_index("st_autoselect", inst))
+	!st->unselected && ST_AUTOSELECT (inst))
     { /* auto-select entry "All" */
 	select_entry = g_list_nth_data (st->entries, 0);
     }
@@ -3241,12 +3244,6 @@ void st_show_hide_tooltips (void)
 
 /* Strings for 'Category-Combo' */
 
-const gchar *cat_strings[] = {
-    N_("Last Played"),
-    N_("Last Modified"),
-    N_("Added"),
-    NULL };
-
 /* enum to access cat_strings */
 enum {
     CAT_STRING_PLAYED = 0,
@@ -3413,34 +3410,31 @@ static struct tm *cal_get_time (GtkWidget *cal, MarginType type, struct tm *tm)
  * combo */
 static T_item cal_get_category (GtkWidget *cal)
 {
-    const gchar *str;
     GtkWidget *w;
     T_item item;
     gint i = -1;
 
     w = gtkpod_xml_get_widget (cal_xml, "cat_combo");
-    str = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (w)->entry));
-    /* Check which string is selected in the combo */
-    if (str)
-	for (i=0; cat_strings[i]; ++i)
-	    if (strcmp (gettext (cat_strings[i]), str) == 0)  break;
+    i = gtk_combo_box_get_active (GTK_COMBO_BOX (w));
+
     switch (i)
     {
     case CAT_STRING_PLAYED:
-	item = T_TIME_PLAYED;
-	break;
+		item = T_TIME_PLAYED;
+		break;
     case CAT_STRING_MODIFIED:
-	item = T_TIME_MODIFIED;
-	break;
+		item = T_TIME_MODIFIED;
+		break;
     case CAT_STRING_ADDED:
-	item = T_TIME_ADDED;
-	break;
+		item = T_TIME_ADDED;
+		break;
     default:
-	fprintf (stderr, "Programming error: cal_get_category () -- item not found.\n");
-	/* set to something reasonable at least */
-	item = T_TIME_PLAYED;
+		fprintf (stderr, "Programming error: cal_get_category () -- item not found.\n");
+		/* set to something reasonable at least */
+		item = T_TIME_PLAYED;
     }
-    return item;
+
+	return item;
 }
 
 
@@ -3603,8 +3597,7 @@ void cal_open_calendar (gint inst, T_item item)
     SortTab *st;
     GtkWidget *w;
     GtkWidget *cal;
-    gchar *str = NULL;
-    static GList *catlist = NULL;
+    int index = -1;
     gint defx, defy;
     TimeInfo *ti;
 
@@ -3634,41 +3627,38 @@ void cal_open_calendar (gint inst, T_item item)
     gtk_spin_button_set_value (GTK_SPIN_BUTTON (w), inst+1);
 
     /* Set Category-Combo */
-    if (!catlist)
-    {   /* create list */
-	const gchar **bp = cat_strings;
-	while (*bp)   catlist = g_list_append (catlist, gettext (*bp++));
-    }
-    w = gtkpod_xml_get_widget (cal_xml, "cat_combo");
-    gtk_combo_set_popdown_strings (GTK_COMBO (w), catlist);
+	w = gtkpod_xml_get_widget (cal_xml, "cat_combo");
+	
     switch (item)
     {
     case T_TIME_PLAYED:
-	str = gettext (cat_strings[CAT_STRING_PLAYED]);
-	break;
+		index = CAT_STRING_PLAYED;
+		break;
     case T_TIME_MODIFIED:
-	str = gettext (cat_strings[CAT_STRING_MODIFIED]);
-	break;
+		index = CAT_STRING_MODIFIED;
+		break;
     case T_TIME_ADDED:
-	str = gettext (cat_strings[CAT_STRING_ADDED]);
-	break;
+		index = CAT_STRING_ADDED;
+		break;
     default:
-	fprintf (stderr, "Programming error: cal_open_calendar() -- item not found\n");
-	break;
+		fprintf (stderr, "Programming error: cal_open_calendar() -- item not found\n");
+		break;
     }
-    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), str);
+	
+    gtk_combo_box_set_active (GTK_COMBO_BOX (w), index);
 
     /* Make sure we use the current contents of the entry */
     sp_store_sp_entries (inst);
     /* set calendar */
     ti = sp_update_date_interval_from_string (inst, item, TRUE);
-    /* set the calendar if we have a valid TimeInfo */
+    
+	/* set the calendar if we have a valid TimeInfo */
     if (ti)
     {
-	if (!ti->valid)
-	{   /* set to reasonable default */
-	    ti->lower = 0;
-	    ti->upper = 0;
+		if (!ti->valid)
+		{   /* set to reasonable default */
+			ti->lower = 0;
+			ti->upper = 0;
 	}
 
 	/* Lower Margin */

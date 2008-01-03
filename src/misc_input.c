@@ -281,13 +281,12 @@ static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
 	{ /* only block widgets, if they are not already blocked */
 	    for (l = bws; l; l = l->next)
 	    {
-		bw = (struct blocked_widget *)l->data;
-		/* remember the state the widget was in before */
-		bw->sensitive = GTK_WIDGET_SENSITIVE (bw->widget);
-		gtk_widget_set_sensitive (bw->widget, FALSE);
+			bw = (struct blocked_widget *)l->data;
+			/* remember the state the widget was in before */
+			bw->sensitive = GTK_WIDGET_SENSITIVE (bw->widget);
+			gtk_widget_set_sensitive (bw->widget, FALSE);
 	    }
 	    sort_window_block ();
-	    prefs_window_block ();
 	    widgets_blocked = TRUE;
 	}
 	break;
@@ -298,14 +297,14 @@ static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
 	    --count;
 	    if (count == 0)
 	    {
-		for (l = bws; l; l = l->next)
-		{
-		    bw = (struct blocked_widget *)l->data;
-		    gtk_widget_set_sensitive (bw->widget, bw->sensitive);
-		}
-		sort_window_release ();
-		prefs_window_release ();
-		widgets_blocked = FALSE;
+			for (l = bws; l; l = l->next)
+			{
+				bw = (struct blocked_widget *)l->data;
+				gtk_widget_set_sensitive (bw->widget, bw->sensitive);
+			}
+			
+			sort_window_release ();
+			widgets_blocked = FALSE;
 	    }
 	}
 	break;

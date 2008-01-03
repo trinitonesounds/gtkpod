@@ -68,13 +68,14 @@ ind_string toolbar_styles[] = {
 const gchar *checkbox_map[][3] = {
 	/* Display tab */
 	{ "group_compilations", "group_compilations", NULL },
-	{ "include_neverplayed", "not_played_track", NULL },
+	{ "display_tooltips", "display_tooltips_main", NULL },
 	/* Music tab */
 	{ "background_transfer", "file_convert_background_transfer", NULL },
 	{ "add_subfolders", "add_recursively", NULL },
 	{ "allow_duplicates", "!sha1", NULL },
 	{ "delete_missing", "sync_delete_tracks", NULL },
 	{ "update_existing_track", "update_existing", NULL },
+	{ "include_neverplayed", "not_played_track", NULL },
 	{ "enable_conversion", "conversion_enable", "target_format,conversion_settings" },
 	/* Metadata tab */
 	{ "read_tags", "readtags", NULL },
@@ -605,6 +606,17 @@ G_MODULE_EXPORT void on_group_compilations_toggled (GtkToggleButton *sender, gpo
 	
 	prefs_set_int ("group_compilations", active);
 	st_show_visible();
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_display_tooltips_toggled (GtkToggleButton *sender, gpointer e)
+{
+	gboolean active = gtk_toggle_button_get_active (sender);
+	
+	prefs_set_int ("display_tooltips", active);
+	display_show_hide_tooltips();
 }
 
 /*

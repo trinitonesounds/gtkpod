@@ -54,6 +54,9 @@
 #define debug(s) printf(__FILE__":" TO_STR(__LINE__) ":" s)
 #define debugx(s,...) printf(__FILE__":" TO_STR(__LINE__) ":" s,__VA_ARGS__)
 
+#define WRITE_EXTENDED_INFO TRUE
+/* #define WRITE_EXTENDED_INFO prefs_get_int("write_extended_info") */
+
 /*------------------------------------------------------------------*\
  *                                                                  *
  *      Handle Import of iTunesDB                                   *
@@ -450,7 +453,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 
 	if (g_file_test (name_db, G_FILE_TEST_EXISTS))
 	{
-	    if (prefs_get_int("write_extended_info"))
+	    if (WRITE_EXTENDED_INFO)
 	    {
 		if (!read_extended_info (name_ext, name_db))
 		{

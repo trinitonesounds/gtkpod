@@ -1237,17 +1237,14 @@ void pm_add_playlist (Playlist *playlist, gint pos)
       selection = gtk_tree_view_get_selection (playlist_treeview);
       gtk_tree_selection_select_iter (selection, &iter);
   }
-  else if (current_playlist == NULL)
+/*  else if (current_playlist == NULL)
   {
-      /* If it's the first playlist (no playlist selected AND playlist is
-	 the MPL, we select it, unless prefs_get_mpl_autoselect() says
-	 otherwise */
       if (itdb_playlist_is_mpl(playlist) && prefs_get_int("mpl_autoselect"))
       {
 	  selection = gtk_tree_view_get_selection (playlist_treeview);
 	  gtk_tree_selection_select_iter (selection, &iter);
       }
-  }
+  } */
 }
 
 

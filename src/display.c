@@ -422,8 +422,6 @@ void display_show_hide_tooltips (void)
     /* Show/Hide tooltips of the special sorttabs */
     st_show_hide_tooltips ();
     /* Show/Hide tooltips of the prefs window */
-    prefs_window_show_hide_tooltips ();
-    /* Show/Hide tooltips of the prefs window */
     sort_window_show_hide_tooltips ();
 }
 
@@ -446,7 +444,6 @@ void display_update_default_sizes (void)
     }
     tm_update_default_sizes ();
     st_update_default_sizes ();
-    prefs_window_update_default_sizes ();
     info_dialog_update_default_sizes ();
     details_update_default_sizes ();
     file_convert_update_default_sizes ();
@@ -837,13 +834,6 @@ on_new_playlist1_activate              (GtkMenuItem     *menuitem,
     {
 	message_sb_no_itdb_selected ();
     }
-}
-
-G_MODULE_EXPORT void
-on_edit_preferences_activate          (GtkMenuItem     *menuitem,
-					gpointer         user_data)
-{
-    if(!widgets_blocked)  prefs_window_create (-1);
 }
 
 G_MODULE_EXPORT void
