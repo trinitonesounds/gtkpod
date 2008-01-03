@@ -40,7 +40,7 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
-#include "prefs_window.h"
+#include "sort_window.h"
 #include "repository.h"
 #include "syncdir.h"
 #include "tools.h"

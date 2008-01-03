@@ -38,10 +38,6 @@
 #define GPHOTO_PLAYLIST_ICON_STOCK_ID "gtkpod-gphoto-playlist-icon"
 #define TUNES_PLAYLIST_ICON_STOCK_ID "gtkpod-tunes-playlist-icon"
 
-/* Icon File Paths */
-gchar *GPHOTO_PLAYLIST_ICON_PATH;
-gchar *TUNE_PLAYLIST_ICON_PATH;
-
 void stockid_init (gchar *progpath);
 
 #endif /*STOCK_ICONS_H_*/

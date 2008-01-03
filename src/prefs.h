@@ -35,7 +35,7 @@
 #endif
 
 #include <gtk/gtk.h>
-#include "prefs_window.h"
+#include "sort_window.h"
 #include "display.h"
 
 

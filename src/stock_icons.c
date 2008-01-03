@@ -27,7 +27,25 @@
 
 #include "stock_icons.h"
 
-static void register_stock_icon (gchar *path, const gchar *stockid);
+static void register_stock_icon (const gchar *name, const gchar *stockid)
+{
+	GtkIconSet *pl_iconset;
+	GtkIconSource *source;
+
+	g_return_if_fail (name);
+	g_return_if_fail (stockid);
+	
+	pl_iconset = gtk_icon_set_new ();
+	source = gtk_icon_source_new ();
+			
+	gtk_icon_source_set_icon_name (source, name);
+	gtk_icon_set_add_source (pl_iconset, source);
+	
+	GtkIconFactory *factory = gtk_icon_factory_new ();
+	gtk_icon_factory_add (factory, stockid, pl_iconset);
+	
+	gtk_icon_factory_add_default (factory);
+}
 
 /**
  * stockid_init
@@ -43,102 +61,55 @@ static void register_stock_icon (gchar *path, const gchar *stockid);
  */
 void stockid_init (gchar *progpath)
 {
-	gchar *progname;
-	
-	progname = g_find_program_in_path (progpath);
+	gchar *progname = g_find_program_in_path (progpath);
+	static const gchar *SEPsrcSEPgtkpod = G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S "gtkpod";
+	gchar *path;
 
-	if (progname)
+	if (!progname)
+		return;
+		
+	if (!g_path_is_absolute (progname))
 	{
-		static const gchar *SEPsrcSEPgtkpod = G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S "gtkpod";
-		
-		if (!g_path_is_absolute (progname))
-		{
-			gchar *cur_dir = g_get_current_dir ();
-			gchar *prog_absolute;
+		gchar *cur_dir = g_get_current_dir ();
+		gchar *prog_absolute;
 
-			if (g_str_has_prefix (progname, "." G_DIR_SEPARATOR_S))
-				prog_absolute = g_build_filename (cur_dir, progname+2, NULL);
-			else
-				prog_absolute = g_build_filename (cur_dir, progname, NULL);
-			
-			g_free (progname);
-			g_free (cur_dir);
-			progname = prog_absolute;
-		}
-		
-		if (g_str_has_suffix (progname, SEPsrcSEPgtkpod))
-		{
-			gchar *suffix = g_strrstr (progname, SEPsrcSEPgtkpod);
-			
-			if (suffix)
-			{
-				*suffix = 0;
-				GPHOTO_PLAYLIST_ICON_PATH = g_build_filename (progname, "data", "gphoto_playlist_icon-48.png", NULL);
-				TUNE_PLAYLIST_ICON_PATH = g_build_filename (progname, "data", "tunes_playlist_icon-48.png", NULL);
-			}
-		}
+		if (g_str_has_prefix (progname, "." G_DIR_SEPARATOR_S))
+			prog_absolute = g_build_filename (cur_dir, progname+2, NULL);
+		else
+			prog_absolute = g_build_filename (cur_dir, progname, NULL);
 		
 		g_free (progname);
-		
-		/* Photo playlist icon */
-		if (GPHOTO_PLAYLIST_ICON_PATH && !g_file_test (GPHOTO_PLAYLIST_ICON_PATH, G_FILE_TEST_EXISTS))
-		{
-			g_free (GPHOTO_PLAYLIST_ICON_PATH);
-			GPHOTO_PLAYLIST_ICON_PATH = NULL;
-		}
-				
-		if (!GPHOTO_PLAYLIST_ICON_PATH)
-		{
-			GPHOTO_PLAYLIST_ICON_PATH = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "gphoto_playlist_icon-48.png", NULL);
-		}
-		
-		/* Normal Playlist icon */
-		if (TUNE_PLAYLIST_ICON_PATH && !g_file_test (TUNE_PLAYLIST_ICON_PATH, G_FILE_TEST_EXISTS))
-		{
-			g_free (TUNE_PLAYLIST_ICON_PATH);
-			TUNE_PLAYLIST_ICON_PATH = NULL;
-		}
-						
-		if (!TUNE_PLAYLIST_ICON_PATH)
-		{
-			TUNE_PLAYLIST_ICON_PATH = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "tunes_playlist_icon-48.png", NULL);
-		}
-		
-		register_stock_icon (GPHOTO_PLAYLIST_ICON_PATH, GPHOTO_PLAYLIST_ICON_STOCK_ID);
-		register_stock_icon (TUNE_PLAYLIST_ICON_PATH, TUNES_PLAYLIST_ICON_STOCK_ID);
+		g_free (cur_dir);
+		progname = prog_absolute;
 	}
-}
-
-/**
- * register_stock_icons
- *
- * Add pixbuf images to the default icon factory for use
- * as stock items should they be required.
- *  
- */
-static void register_stock_icon (gchar *path, const gchar *stockid)
-{
-	 GError *error = NULL;
-	 GdkPixbuf *image;
+	
+	if (g_str_has_suffix (progname, SEPsrcSEPgtkpod))
+	{
+		gchar *suffix = g_strrstr (progname, SEPsrcSEPgtkpod);
 		
-	 g_return_if_fail (path);
-	 
-	 image = gdk_pixbuf_new_from_file (path, &error);
-	  
-	 if(error != NULL)
-	 {	
-		 printf("Error occurred loading photo icon - \nCode: %d\nMessage: %s\n", error->code, error->message); 
-		 g_error_free (error);
-		 g_return_if_fail (image);
-	 }
-	 
-	 GtkIconSet *pl_iconset = gtk_icon_set_new_from_pixbuf (image);
-	 GtkIconFactory *factory = gtk_icon_factory_new ();
-	 gtk_icon_factory_add (
-			 factory, 
-			 stockid,
-			 pl_iconset);
-	 gtk_icon_factory_add_default (factory);
-	 
-	 gdk_pixbuf_unref (image);
+		if (suffix)
+		{
+			*suffix = 0;
+		}
+	}
+	
+	path = g_build_filename (progname, "data", "icons", NULL);
+	g_free (progname);
+		
+	if (path && !g_file_test (path, G_FILE_TEST_EXISTS))
+	{
+		g_free (path);
+		path = NULL;
+	}
+	
+	if (!path)
+		path = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "icons", NULL);
+
+	printf ("Path: %s\n", path);
+	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (), path);
+	g_free (path);
+	
+	register_stock_icon ("playlist-photo", GPHOTO_PLAYLIST_ICON_STOCK_ID);
+	register_stock_icon ("playlist", TUNES_PLAYLIST_ICON_STOCK_ID);
+	
 }

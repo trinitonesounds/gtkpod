@@ -32,17 +32,8 @@
 
 #include <gtk/gtk.h>
 #include "prefs.h"
-extern const gchar *path_entry_names[];
 
-void prefs_window_update_default_sizes (void);
-void prefs_window_block (void);
-void prefs_window_release (void);
-void prefs_window_show_hide_tooltips (void);
-void prefs_window_ok (void);
-void prefs_window_apply (void);
-void prefs_window_cancel (void);
-void prefs_window_create (gint page);
-void prefs_window_delete (void);
+extern const gchar *path_entry_names[];
 
 void sort_window_create (void);
 void sort_window_block (void);

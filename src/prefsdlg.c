@@ -35,7 +35,7 @@
 #include "help.h"
 #include "prefs.h"
 #include "display_coverart.h"
-#include "prefs_window.h"
+#include "sort_window.h"
 
 /*
 	Begin types

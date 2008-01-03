@@ -19,8 +19,7 @@ appdata_DATA =				\
 	gtkpod-read.png			\
 	gtkpod-read-16.png		\
 	photo-toolbar-album.png \
-	photo-toolbar-photos.png	\
-	tunes_playlist_icon-48.png
+	photo-toolbar-photos.png
 
 EXTRA_DIST = 				\
 	$(desktop_in_files)		\

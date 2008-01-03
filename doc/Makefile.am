@@ -4,6 +4,7 @@ SUBDIRS = figures
 
 docdir = $(pkgdatadir)/doc
 doc_DATA = \
+	figures \
 	gtkpod.xml \
 	*.html
 
