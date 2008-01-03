@@ -1151,6 +1151,13 @@ on_update_tracks_activate            (GtkMenuItem     *menuitem,
     gp_do_selected_tracks (update_tracks);
 }
 
+G_MODULE_EXPORT void
+on_mserv_from_file_playlist_menu_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    gp_do_selected_playlist (mserv_from_file_tracks);
+}
 
 G_MODULE_EXPORT void
 on_mserv_from_file_tracks_menu_activate

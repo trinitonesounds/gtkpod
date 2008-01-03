@@ -1978,51 +1978,51 @@ void pm_set_renderer_pix (GtkCellRenderer *renderer,
 
     if (playlist)
     {
-	iTunesDB *itdb;
-	ExtraiTunesDBData *eitdb;
+		iTunesDB *itdb;
+		ExtraiTunesDBData *eitdb;
 
-	g_return_if_fail (playlist->itdb);
-	itdb = playlist->itdb;
-	g_return_if_fail (itdb->userdata);
-	eitdb = itdb->userdata;
+		g_return_if_fail (playlist->itdb);
+		itdb = playlist->itdb;
+		g_return_if_fail (itdb->userdata);
+		eitdb = itdb->userdata;
 
-	if (playlist->is_spl)
-	{
-	    stock_id = GTK_STOCK_PROPERTIES;
-	}
-	else if (!itdb_playlist_is_mpl (playlist))
-	{
-		if (gphoto_is_photo_playlist (playlist))
+		if (playlist->is_spl)
 		{
-			stock_id = GPHOTO_PLAYLIST_ICON_STOCK_ID;
+			stock_id = GTK_STOCK_PROPERTIES;
+		}
+		else if (!itdb_playlist_is_mpl (playlist))
+		{
+			if (gphoto_is_photo_playlist (playlist))
+			{
+				stock_id = GPHOTO_PLAYLIST_ICON_STOCK_ID;
+			}
+			else
+			{
+				stock_id = TUNES_PLAYLIST_ICON_STOCK_ID;
+			}
 		}
 		else
 		{
-			stock_id = TUNES_PLAYLIST_ICON_STOCK_ID;
+			if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+			{
+				stock_id = GTK_STOCK_HARDDISK;
+			}
+			else
+			{
+				if (eitdb->itdb_imported)
+				{
+					stock_id = GTK_STOCK_CONNECT;
+				}
+				else
+				{
+					stock_id = GTK_STOCK_DISCONNECT;
+				}
+			}
 		}
-	}
-	else
-	{
-	    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
-	    {
-		stock_id = GTK_STOCK_HARDDISK;
-	    }
-	    else
-	    {
-		if (eitdb->itdb_imported)
-		{
-		    stock_id = GTK_STOCK_CONNECT;
-		}
-		else
-		{
-		    stock_id = GTK_STOCK_DISCONNECT;
-		}
-	    }
-	}
     }
 
-  g_object_set (G_OBJECT (renderer),
-		"stock-id", stock_id, NULL);
+  g_object_set (G_OBJECT (renderer), "stock-id", stock_id, NULL);
+  g_object_set (G_OBJECT (renderer), "stock-size", GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
 }
 
 
