@@ -860,23 +860,33 @@ void delete_playlist_head (DeleteAction deleteaction)
  *
  * return value: TRUE if it's OK to quit.
  */
-static gboolean
-ok_to_close_gtkpod (void)
+static gboolean ok_to_close_gtkpod (void)
 {
     gint result = GTK_RESPONSE_OK;
 
     if (!files_are_saved ())
     {
-		const gchar *str = _("Data has been changed and not been saved. If you quit gtkpod, all unsaved changes will be lost.\n\nAre you sure you want to quit?");
+		const gchar *str = _("Data has been changed and not been saved. If you quit gtkpod, all unsaved changes will be lost.\n\nADo you want to save your changes first?");
 		
-		result = gtkpod_confirmation_simple(GTK_WINDOW (gtkpod_window),
+		result = gtkpod_confirmation_hig(GTK_WINDOW (gtkpod_window),
 											GTK_MESSAGE_WARNING,
-											_("Unsaved data present"),
+											_("Save changes before quiting?"),
 											str,
-											GTK_STOCK_QUIT);
+											GTK_STOCK_SAVE,
+											GTK_STOCK_CANCEL,
+											_("Quit without saving"),
+											NULL);
     }
 
-    return (result == GTK_RESPONSE_OK);
+	/* User pressed Cancel */
+    if (result == GTK_RESPONSE_CANCEL)
+		return FALSE;
+	
+	/* User pressed Save */
+	if (result == GTK_RESPONSE_OK)
+		handle_export ();
+	
+	return TRUE;
 }
 
 

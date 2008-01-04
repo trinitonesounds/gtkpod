@@ -5,6 +5,11 @@
   * src/display_playlists.c:
 
     A bit more UI polish in the main window. Sane defaults for pane sizes.
+	
+  * src/misc_confirm.c:
+  
+    Made the quit confirmation use three buttons (Quit without saving,
+	Cancel, Save), per HIG.
   
 2008-01-03  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
