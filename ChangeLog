@@ -1,3 +1,9 @@
+2008-01-03 Matvey Kozhev <sikon at users.sourceforge.net>
+
+  * data/gtkpod.glade:
+
+    A bit more UI polish in the main window. Sane defaults for pane sizes.
+  
 2008-01-03  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* data/icons/hicolor/*:

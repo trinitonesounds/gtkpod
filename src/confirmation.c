@@ -426,7 +426,7 @@ GtkResponseType gtkpod_confirmation (gint id,
 		defy = prefs_get_int("size_conf.y");
     }
 	
-    gtk_window_set_default_size (GTK_WINDOW (window), defx, defy);
+    gtk_widget_set_size_request (GTK_WIDGET (window), defx, defy);
 
     /* Set "Option 1" checkbox */
     w = gtkpod_xml_get_widget (confirm_xml, "option_vbox");

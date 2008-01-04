@@ -1412,7 +1412,7 @@ static void pm_selection_changed_cb (GtkTreeSelection *selection,
 		g_return_if_fail (new_playlist);
 		g_return_if_fail (new_playlist->itdb);
 
-		label_text = g_markup_printf_escaped ("<b>%s</b>", new_playlist->name);
+		label_text = g_markup_printf_escaped ("<span weight='bold' size='larger'>%s</span>", new_playlist->name);
 		
 		gtk_label_set_markup (GTK_LABEL (gtkpod_xml_get_widget (main_window_xml, "current_playlist_label")),
 							  label_text);
@@ -2336,7 +2336,7 @@ void pm_create_treeview (void)
 
   /* set tree model */
   gtk_tree_view_set_model (playlist_treeview, GTK_TREE_MODEL (model));
-  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (playlist_treeview), TRUE);
+ /* gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (playlist_treeview), TRUE); */
   gtk_tree_selection_set_mode (gtk_tree_view_get_selection (playlist_treeview),
 			       GTK_SELECTION_SINGLE);
   selection = gtk_tree_view_get_selection (playlist_treeview);
