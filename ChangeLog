@@ -1,6 +1,8 @@
 2008-01-03 Matvey Kozhev <sikon at users.sourceforge.net>
 
   * data/gtkpod.glade:
+  * src/confirmation.c:
+  * src/display_playlists.c:
 
     A bit more UI polish in the main window. Sane defaults for pane sizes.
   
