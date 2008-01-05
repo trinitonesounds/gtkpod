@@ -2258,47 +2258,48 @@ pm_button_press (GtkWidget *w, GdkEventButton *e, gpointer data)
 /* Adds the columns to our playlist_treeview */
 static void pm_add_columns (void)
 {
-  GtkTreeViewColumn *column;
-  GtkCellRenderer *renderer;
-  GtkTreeModel *model;
+	GtkTreeViewColumn *column;
+	GtkCellRenderer *renderer;
+	GtkTreeModel *model;
 
-  model = gtk_tree_view_get_model (playlist_treeview);
-  g_return_if_fail (model);
+	model = gtk_tree_view_get_model (playlist_treeview);
+	g_return_if_fail (model);
 
 
-  /* playlist column */
-  column = gtk_tree_view_column_new ();
-  gtk_tree_view_column_set_title (column, _("Playlists"));
-/* FIXME: see comments at pm_data_compare_func() */
-/*
-  gtk_tree_view_column_set_sort_column_id (column, PM_COLUMN_PLAYLIST);
-  gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
-  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
+	/* playlist column */
+	column = gtk_tree_view_column_new ();
+	gtk_tree_view_column_set_title (column, _("Playlists"));
+	/* FIXME: see comments at pm_data_compare_func() */
+	/*
+	gtk_tree_view_column_set_sort_column_id (column, PM_COLUMN_PLAYLIST);
+	gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
+	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
 				   PM_COLUMN_PLAYLIST,
 				   pm_data_compare_func, column, NULL);
-  gtk_tree_view_column_set_clickable(column, TRUE);
-  g_signal_connect (G_OBJECT (column), "clicked",
-		    G_CALLBACK (pm_track_column_button_clicked),
+	gtk_tree_view_column_set_clickable(column, TRUE);
+	g_signal_connect (G_OBJECT (column), "clicked",
+			G_CALLBACK (pm_track_column_button_clicked),
 				(gpointer)PM_COLUMN_PLAYLIST);
-*/
-  gtk_tree_view_append_column (playlist_treeview, column);
+	*/
 
-  /* cell for graphic indicator */
-  renderer = gtk_cell_renderer_pixbuf_new ();
+	gtk_tree_view_append_column (playlist_treeview, column);
 
-  gtk_tree_view_column_pack_start (column, renderer, FALSE); 
-  gtk_tree_view_column_set_cell_data_func (column, renderer,
+	/* cell for graphic indicator */
+	renderer = gtk_cell_renderer_pixbuf_new ();
+
+	gtk_tree_view_column_pack_start (column, renderer, FALSE); 
+	gtk_tree_view_column_set_cell_data_func (column, renderer,
 					   pm_cell_data_func_pix,
 					   NULL, NULL);
-  /* cell for playlist name */
-  renderer = gtk_cell_renderer_text_new ();
-  g_signal_connect (G_OBJECT (renderer), "edited",
-		    G_CALLBACK (pm_cell_edited), model);
-  gtk_tree_view_column_pack_start (column, renderer, FALSE);
-  gtk_tree_view_column_set_cell_data_func (column, renderer,
+	/* cell for playlist name */
+	renderer = gtk_cell_renderer_text_new ();
+	g_signal_connect (G_OBJECT (renderer), "edited",
+			G_CALLBACK (pm_cell_edited), model);
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_set_cell_data_func (column, renderer,
 					   pm_cell_data_func,
 					   NULL, NULL);
-  g_object_set (G_OBJECT (renderer),
+	g_object_set (G_OBJECT (renderer),
 		"editable", TRUE,
 		NULL);
 }

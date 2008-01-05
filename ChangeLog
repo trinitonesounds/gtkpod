@@ -1,4 +1,18 @@
-2008-01-03 Matvey Kozhev <sikon at users.sourceforge.net>
+2008-01-05 Matvey Kozhev <sikon at users.sourceforge.net>
+
+  * data/gtkpod.glade:
+  * src/display_tracks.c:
+  
+    Killed the horizontal scrollbar for good. The space is now first
+	allocated to "non-text" columns (like playcount and rating) and
+	then equally distributed between "text" columns. It isn't possible
+	to exceed the width of the track list.
+	
+  * src/prefs.c:
+  
+    Default columns set to title, artist, album, duration and rating.
+
+2008-01-04 Matvey Kozhev <sikon at users.sourceforge.net>
 
   * data/gtkpod.glade:
   * src/confirmation.c:

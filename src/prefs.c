@@ -240,8 +240,7 @@ static void set_default_preferences()
     prefs_set_int_index("col_visible", TM_COLUMN_ARTIST, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_ALBUM, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_TITLE, TRUE);
-    prefs_set_int_index("col_visible", TM_COLUMN_GENRE, TRUE);
-    prefs_set_int_index("col_visible", TM_COLUMN_PLAYCOUNT, TRUE);
+    prefs_set_int_index("col_visible", TM_COLUMN_TRACKLEN, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_RATING, TRUE);
 
     /* Set pane positions--Let gtk worry about position */

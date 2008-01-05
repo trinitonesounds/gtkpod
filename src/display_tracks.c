@@ -2062,166 +2062,196 @@ void tm_sort (TM_item col, GtkSortType order)
 /* Adds the columns to our track_treeview */
 static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
 {
-  GtkTreeModel *model = get_model (track_treeview);
-  GtkTreeViewColumn *col = NULL;
-  const gchar *text;
-  GtkCellRenderer *renderer = NULL;  /* default */
-  GtkTooltips *tt;
+	GtkTreeModel *model = get_model (track_treeview);
+	GtkTreeViewColumn *col = NULL;
+	const gchar *text;
+	GtkCellRenderer *renderer = NULL;  /* default */
+	GtkTooltips *tt;
 
-  g_return_val_if_fail (gtkpod_window, NULL);
-  tt = g_object_get_data (G_OBJECT (gtkpod_window), "main_tooltips");
-  g_return_val_if_fail (tt, NULL);
+	g_return_val_if_fail (gtkpod_window, NULL);
+	tt = g_object_get_data (G_OBJECT (gtkpod_window), "main_tooltips");
+	g_return_val_if_fail (tt, NULL);
 
-  g_return_val_if_fail (tm_item >= 0, NULL);
-  g_return_val_if_fail (tm_item < TM_NUM_COLUMNS, NULL);
+	g_return_val_if_fail (tm_item >= 0, NULL);
+	g_return_val_if_fail (tm_item < TM_NUM_COLUMNS, NULL);
 
-  text = gettext (get_tm_string (tm_item));
+	text = gettext (get_tm_string (tm_item));
 
-  g_return_val_if_fail (text, NULL);
+	g_return_val_if_fail (text, NULL);
 
-  col = gtk_tree_view_column_new ();
+	col = gtk_tree_view_column_new ();
 
-  switch (tm_item)
-  {
-  case TM_COLUMN_TITLE:
-      /* Add additional toggle box for 'checked' property */
-      renderer = gtk_cell_renderer_toggle_new ();
-      g_object_set_data (G_OBJECT (renderer), "column",
+	switch (tm_item)
+	{
+	case TM_COLUMN_TITLE:
+	  /* Add additional toggle box for 'checked' property */
+	  renderer = gtk_cell_renderer_toggle_new ();
+	  g_object_set_data (G_OBJECT (renderer), "column",
 			 (gint *)tm_item);
-      g_signal_connect (G_OBJECT (renderer), "toggled",
+	  g_signal_connect (G_OBJECT (renderer), "toggled",
 			G_CALLBACK (tm_cell_toggled), model);
-      gtk_tree_view_column_pack_start (col, renderer, FALSE);
-      gtk_tree_view_column_set_cell_data_func (col, renderer,
-					       tm_cell_data_func_toggle,
-					       NULL, NULL);
-      renderer = NULL;
-      break;
-  case TM_COLUMN_ARTIST:
-  case TM_COLUMN_ALBUM:
-  case TM_COLUMN_GENRE:
-  case TM_COLUMN_COMPOSER:
-  case TM_COLUMN_COMMENT:
-  case TM_COLUMN_FILETYPE:
-  case TM_COLUMN_GROUPING:
-  case TM_COLUMN_BITRATE:
-  case TM_COLUMN_SAMPLERATE:
-  case TM_COLUMN_BPM:
-  case TM_COLUMN_CATEGORY:
-  case TM_COLUMN_DESCRIPTION:
-  case TM_COLUMN_PODCASTURL:
-  case TM_COLUMN_PODCASTRSS:
-  case TM_COLUMN_SUBTITLE:
-  case TM_COLUMN_PC_PATH:
-  case TM_COLUMN_IPOD_PATH:
-  case TM_COLUMN_THUMB_PATH:
-  case TM_COLUMN_SIZE:
-  case TM_COLUMN_MEDIA_TYPE:
-  case TM_COLUMN_TV_SHOW:
-  case TM_COLUMN_TV_EPISODE:
-  case TM_COLUMN_TV_NETWORK:
-  case TM_COLUMN_SEASON_NR:
-  case TM_COLUMN_EPISODE_NR:
-  case TM_COLUMN_ALBUMARTIST:
-  case TM_COLUMN_SORT_ARTIST:
-  case TM_COLUMN_SORT_TITLE:
-  case TM_COLUMN_SORT_ALBUM:
-  case TM_COLUMN_SORT_ALBUMARTIST:
-  case TM_COLUMN_SORT_COMPOSER:
-  case TM_COLUMN_SORT_TVSHOW:
-      break;
-  /* for some column names we want to use shorter alternatives to
-     get_tm_string() */
-  case TM_COLUMN_RATING:
-      text = _("Rtng");
-      break;
-  case TM_COLUMN_TRACK_NR:
-      text = _("#");
-      break;
-  case TM_COLUMN_CD_NR:
-      text = _("CD");
-      break;
-  case TM_COLUMN_IPOD_ID:
-      text = _("ID");
-      break;
-  case TM_COLUMN_TRANSFERRED:
-      text = _("Trnsfrd");
-      renderer = gtk_cell_renderer_toggle_new ();
-      break;
-  case TM_COLUMN_COMPILATION:
-      text = _("Cmpl");
-      renderer = gtk_cell_renderer_toggle_new ();
-      g_signal_connect (G_OBJECT (renderer), "toggled",
+	  gtk_tree_view_column_pack_start (col, renderer, FALSE);
+	  gtk_tree_view_column_set_cell_data_func (col, renderer,
+						   tm_cell_data_func_toggle,
+						   NULL, NULL);
+	  renderer = NULL;
+	  break;
+	case TM_COLUMN_ARTIST:
+	case TM_COLUMN_ALBUM:
+	case TM_COLUMN_GENRE:
+	case TM_COLUMN_COMPOSER:
+	case TM_COLUMN_COMMENT:
+	case TM_COLUMN_FILETYPE:
+	case TM_COLUMN_GROUPING:
+	case TM_COLUMN_BITRATE:
+	case TM_COLUMN_SAMPLERATE:
+	case TM_COLUMN_BPM:
+	case TM_COLUMN_CATEGORY:
+	case TM_COLUMN_DESCRIPTION:
+	case TM_COLUMN_PODCASTURL:
+	case TM_COLUMN_PODCASTRSS:
+	case TM_COLUMN_SUBTITLE:
+	case TM_COLUMN_PC_PATH:
+	case TM_COLUMN_IPOD_PATH:
+	case TM_COLUMN_THUMB_PATH:
+	case TM_COLUMN_SIZE:
+	case TM_COLUMN_MEDIA_TYPE:
+	case TM_COLUMN_TV_SHOW:
+	case TM_COLUMN_TV_EPISODE:
+	case TM_COLUMN_TV_NETWORK:
+	case TM_COLUMN_SEASON_NR:
+	case TM_COLUMN_EPISODE_NR:
+	case TM_COLUMN_ALBUMARTIST:
+	case TM_COLUMN_SORT_ARTIST:
+	case TM_COLUMN_SORT_TITLE:
+	case TM_COLUMN_SORT_ALBUM:
+	case TM_COLUMN_SORT_ALBUMARTIST:
+	case TM_COLUMN_SORT_COMPOSER:
+	case TM_COLUMN_SORT_TVSHOW:
+	  break;
+	/* for some column names we want to use shorter alternatives to
+	 get_tm_string() */
+	case TM_COLUMN_RATING:
+	  text = _("Rtng");
+	  break;
+	case TM_COLUMN_TRACK_NR:
+	  text = _("#");
+	  break;
+	case TM_COLUMN_CD_NR:
+	  text = _("CD");
+	  break;
+	case TM_COLUMN_IPOD_ID:
+	  text = _("ID");
+	  break;
+	case TM_COLUMN_TRANSFERRED:
+	  text = _("Trnsfrd");
+	  renderer = gtk_cell_renderer_toggle_new ();
+	  break;
+	case TM_COLUMN_COMPILATION:
+	  text = _("Cmpl");
+	  renderer = gtk_cell_renderer_toggle_new ();
+	  g_signal_connect (G_OBJECT (renderer), "toggled",
 			G_CALLBACK (tm_cell_toggled), model);
-      break;
-  case TM_COLUMN_TRACKLEN:
-      text = _("Time");
-      break;
-  case TM_COLUMN_PLAYCOUNT:
-      text = _("Plycnt");
-      break;
-  case TM_COLUMN_TIME_PLAYED:
-      text = _("Played");
-      break;
-  case TM_COLUMN_TIME_MODIFIED:
-      text = _("Modified");
-      break;
-  case TM_COLUMN_TIME_ADDED:
-      text = _("Added");
-      break;
-  case TM_COLUMN_TIME_RELEASED:
-      text = _("Released");
-      break;
-  case TM_COLUMN_YEAR:
-      text = _("Year");
-      break;
-  case TM_COLUMN_VOLUME:
-      text = _("Vol.");
-      break;
-  case TM_COLUMN_SOUNDCHECK:
-      text = _("Sndchk.");
-      break;
-  case TM_NUM_COLUMNS:
-      g_return_val_if_reached (NULL);
-      break;
-  }
+	  break;
+	case TM_COLUMN_TRACKLEN:
+	  text = _("Time");
+	  break;
+	case TM_COLUMN_PLAYCOUNT:
+	  text = _("Plycnt");
+	  break;
+	case TM_COLUMN_TIME_PLAYED:
+	  text = _("Played");
+	  break;
+	case TM_COLUMN_TIME_MODIFIED:
+	  text = _("Modified");
+	  break;
+	case TM_COLUMN_TIME_ADDED:
+	  text = _("Added");
+	  break;
+	case TM_COLUMN_TIME_RELEASED:
+	  text = _("Released");
+	  break;
+	case TM_COLUMN_YEAR:
+	  text = _("Year");
+	  break;
+	case TM_COLUMN_VOLUME:
+	  text = _("Vol.");
+	  break;
+	case TM_COLUMN_SOUNDCHECK:
+	  text = _("Sndchk.");
+	  break;
+	case TM_NUM_COLUMNS:
+	  g_return_val_if_reached (NULL);
+	  break;
+	}
 
-  if (!renderer)
-  {   /* text renderer -- editable/not editable is done in
+	if (!renderer)
+	{   /* text renderer -- editable/not editable is done in
 	 tm_cell_data_func() */
-      renderer = gtk_cell_renderer_text_new ();
-      g_signal_connect (G_OBJECT (renderer), "edited",
+	  renderer = gtk_cell_renderer_text_new ();
+	  g_signal_connect (G_OBJECT (renderer), "edited",
 			G_CALLBACK (tm_cell_edited), model);
-  }
+	}
 
-  g_object_set_data (G_OBJECT (renderer), "column",
-		     (gint *)tm_item);
+	g_object_set_data (G_OBJECT (renderer), "column",
+			 (gint *)tm_item);
 
-  gtk_tree_view_column_set_title (col, text);
-  gtk_tree_view_column_pack_start (col, renderer, FALSE);
-  gtk_tree_view_column_set_cell_data_func (col, renderer,
+	gtk_tree_view_column_set_title (col, text);
+	gtk_tree_view_column_pack_start (col, renderer, FALSE);
+	gtk_tree_view_column_set_cell_data_func (col, renderer,
 					   tm_cell_data_func, NULL, NULL);
-  gtk_tree_view_column_set_sort_column_id (col, tm_item);
-  gtk_tree_view_column_set_resizable (col, TRUE);
-/*     gtk_tree_view_column_set_clickable(column, TRUE); */
-  gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
-  gtk_tree_view_column_set_fixed_width (col,
-					prefs_get_int_index("tm_col_width", tm_item));
-  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model), tm_item,
+	gtk_tree_view_column_set_sort_column_id (col, tm_item);
+	gtk_tree_view_column_set_resizable (col, TRUE);
+	gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
+	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model), tm_item,
 				   tm_data_compare_func, NULL, NULL);
-  gtk_tree_view_column_set_reorderable (col, TRUE);
-  gtk_tree_view_insert_column (track_treeview, col, pos);
-  tm_columns[tm_item] = col;
+	gtk_tree_view_column_set_reorderable (col, TRUE);
+	
+	gtk_tree_view_insert_column (track_treeview, col, pos);
+	tm_columns[tm_item] = col;
+	
+	switch (tm_item)
+	{
+	case TM_COLUMN_TITLE:
+	case TM_COLUMN_ARTIST:
+	case TM_COLUMN_ALBUM:
+	case TM_COLUMN_GENRE:
+	case TM_COLUMN_COMPOSER:
+	case TM_COLUMN_COMMENT:
+	case TM_COLUMN_CATEGORY:
+	case TM_COLUMN_DESCRIPTION:
+	case TM_COLUMN_PODCASTURL:
+	case TM_COLUMN_PODCASTRSS:
+	case TM_COLUMN_SUBTITLE:
+	case TM_COLUMN_PC_PATH:
+	case TM_COLUMN_IPOD_PATH:
+	case TM_COLUMN_THUMB_PATH:
+	case TM_COLUMN_TV_SHOW:
+	case TM_COLUMN_TV_EPISODE:
+	case TM_COLUMN_TV_NETWORK:
+	case TM_COLUMN_ALBUMARTIST:
+		gtk_tree_view_column_set_min_width (col, 0);
+		gtk_tree_view_column_set_expand (col, TRUE);
+		break;
+	default:
+		gtk_tree_view_column_set_min_width (col, 80);
+		gtk_tree_view_column_set_fixed_width (col,
+											  prefs_get_int_index("tm_col_width", tm_item));
+		
+		gtk_tree_view_column_set_expand (col, FALSE);
+		break;
+	}
 
-  if (pos != -1)
-  {
-      gtk_tree_view_column_set_visible (col,
+	if (pos != -1)
+	{
+	  gtk_tree_view_column_set_visible (col,
 					prefs_get_int_index("col_visible", tm_item));
-  }
-  if (get_tm_tooltip (tm_item))
-      gtk_tooltips_set_tip (tt, col->button, 
-			    gettext (get_tm_tooltip (tm_item)),
-			    NULL);
-  return col;
+	}
+	if (get_tm_tooltip (tm_item))
+	  gtk_tooltips_set_tip (tt, col->button, 
+				gettext (get_tm_tooltip (tm_item)),
+				NULL);
+	return col;
 }
 
 
