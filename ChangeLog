@@ -1,3 +1,11 @@
+2008-01-05  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* doc
+	  doc/figures
+	  data/icons/hicolor/16x16/status
+	  data/man:
+	  ignore generated Makefiles
+
 2008-01-05 Matvey Kozhev <sikon at users.sourceforge.net>
 
   * data/gtkpod.glade:
