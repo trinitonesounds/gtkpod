@@ -58,8 +58,6 @@ static GtkTreeViewColumn *tm_columns[TM_NUM_COLUMNS];
 /* column in which track pointer is stored */
 static const gint READOUT_COL = 0;
 
-static const gint RATING_STEP = 20;
-
 /* compare function to be used for string comparisons */
 static gint (*string_compare_func) (const gchar *str1, const gchar *str2) = compare_string;
 
@@ -867,9 +865,9 @@ static void tm_rating_edited (RBCellRendererRating *renderer,
 	gtk_tree_path_free (path);
 	gtk_tree_model_get(model, &iter, READOUT_COL, &track, -1);
 	
-	if ((int) rating * RATING_STEP != track->rating)
+	if ((int) rating * ITDB_RATING_STEP != track->rating)
 	{
-		track->rating = (int) rating * RATING_STEP;		
+		track->rating = (int) rating * ITDB_RATING_STEP;		
 		track->time_modified = time (NULL);
         pm_track_changed (track);
         data_changed (track->itdb);
@@ -1084,7 +1082,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 	{
 	case TM_COLUMN_RATING:
 		g_object_set (G_OBJECT (renderer),
-					  "rating", (double)(track->rating / RATING_STEP),
+					  "rating", (double)(track->rating / ITDB_RATING_STEP),
 					  NULL);
 		break;
 	case TM_COLUMN_TITLE:
