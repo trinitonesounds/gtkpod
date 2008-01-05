@@ -2671,7 +2671,20 @@ static void st_create_paned (void)
 	    g_return_if_fail (parent);
 	    g_return_if_fail (dummy);
 	    gtk_widget_destroy (dummy);
-	    gtk_paned_pack2 (GTK_PANED (parent), paned, TRUE, TRUE);
+		
+		if (!prefs_get_int ("filter_tabs_top"))
+		{
+			gtk_paned_pack2 (GTK_PANED (parent), paned, TRUE, TRUE);
+		}
+		else
+		{
+			GtkWidget *top = gtk_paned_get_child1 (GTK_PANED (parent));
+			g_object_ref (top);
+			gtk_container_remove (GTK_CONTAINER (parent), top);
+			gtk_paned_pack1 (GTK_PANED (parent), paned, TRUE, TRUE);
+			gtk_paned_pack2 (GTK_PANED (parent), top, TRUE, TRUE);
+			g_object_unref (top);
+		}
 	}
 	else
 	{

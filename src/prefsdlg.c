@@ -67,6 +67,8 @@ ind_string toolbar_styles[] = {
 */
 const gchar *checkbox_map[][3] = {
 	/* Display tab */
+	{ "filter_tabs_top", "filter_tabs_top", NULL },
+	{ "horizontal_scrollbar", "horizontal_scrollbar", NULL },
 	{ "group_compilations", "group_compilations", NULL },
 	{ "display_tooltips", "display_tooltips_main", NULL },
 	/* Music tab */
@@ -362,6 +364,7 @@ void setup_prefs_dlg (GladeXML *xml, GtkWidget *dlg)
 	gint i;
 	GtkWidget *toolbar_style_combo = gtkpod_xml_get_widget (xml, "toolbar_style");
 	GtkWidget *skip_track_update_radio = gtkpod_xml_get_widget (xml, "skip_track_update");
+	GtkWidget *filter_tabs_bottom_radio = gtkpod_xml_get_widget (xml, "filter_tabs_bottom");
 	GtkWidget *coverart_bgcolorselect_button = gtkpod_xml_get_widget (xml, "coverart_display_bg_button");
 	GtkWidget *coverart_fgcolorselect_button = gtkpod_xml_get_widget (xml, "coverart_display_fg_button");
 	GdkColor *color;
@@ -412,6 +415,9 @@ void setup_prefs_dlg (GladeXML *xml, GtkWidget *dlg)
 	
 	if(!prefs_get_int("update_existing"))
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (skip_track_update_radio), TRUE);
+	
+	if(!prefs_get_int("filter_tabs_top"))
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (filter_tabs_bottom_radio), TRUE);
 	
 	color = coverart_get_background_display_color();
 	gtk_color_button_set_color (GTK_COLOR_BUTTON(coverart_bgcolorselect_button), color);

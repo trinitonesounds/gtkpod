@@ -869,14 +869,14 @@ static void tm_rating_edited (RBCellRendererRating *renderer,
 	{
 		track->rating = (int) rating * ITDB_RATING_STEP;		
 		track->time_modified = time (NULL);
-        pm_track_changed (track);
-        data_changed (track->itdb);
+		pm_track_changed (track);
+		data_changed (track->itdb);
 
-        if (prefs_get_int("id3_write"))
-        {
+		if (prefs_get_int("id3_write"))
+		{
 			write_tags_to_file (track);
 			gp_duplicate_remove (NULL, NULL);
-        }
+		}
 	}
 }
 
@@ -2256,36 +2256,43 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
 	gtk_tree_view_insert_column (track_treeview, col, pos);
 	tm_columns[tm_item] = col;
 	
-	switch (tm_item)
+	if (prefs_get_int ("horizontal_scrollbar"))
 	{
-	case TM_COLUMN_TITLE:
-	case TM_COLUMN_ARTIST:
-	case TM_COLUMN_ALBUM:
-	case TM_COLUMN_GENRE:
-	case TM_COLUMN_COMPOSER:
-	case TM_COLUMN_COMMENT:
-	case TM_COLUMN_CATEGORY:
-	case TM_COLUMN_DESCRIPTION:
-	case TM_COLUMN_PODCASTURL:
-	case TM_COLUMN_PODCASTRSS:
-	case TM_COLUMN_SUBTITLE:
-	case TM_COLUMN_PC_PATH:
-	case TM_COLUMN_IPOD_PATH:
-	case TM_COLUMN_THUMB_PATH:
-	case TM_COLUMN_TV_SHOW:
-	case TM_COLUMN_TV_EPISODE:
-	case TM_COLUMN_TV_NETWORK:
-	case TM_COLUMN_ALBUMARTIST:
-		gtk_tree_view_column_set_min_width (col, 0);
-		gtk_tree_view_column_set_expand (col, TRUE);
-		break;
-	default:
-		gtk_tree_view_column_set_min_width (col, 80);
-		gtk_tree_view_column_set_fixed_width (col,
-											  prefs_get_int_index("tm_col_width", tm_item));
-		
-		gtk_tree_view_column_set_expand (col, FALSE);
-		break;
+		gtk_tree_view_column_set_fixed_width (col,  prefs_get_int_index("tm_col_width", tm_item));
+	}
+	else
+	{
+		switch (tm_item)
+		{
+		case TM_COLUMN_TITLE:
+		case TM_COLUMN_ARTIST:
+		case TM_COLUMN_ALBUM:
+		case TM_COLUMN_GENRE:
+		case TM_COLUMN_COMPOSER:
+		case TM_COLUMN_COMMENT:
+		case TM_COLUMN_CATEGORY:
+		case TM_COLUMN_DESCRIPTION:
+		case TM_COLUMN_PODCASTURL:
+		case TM_COLUMN_PODCASTRSS:
+		case TM_COLUMN_SUBTITLE:
+		case TM_COLUMN_PC_PATH:
+		case TM_COLUMN_IPOD_PATH:
+		case TM_COLUMN_THUMB_PATH:
+		case TM_COLUMN_TV_SHOW:
+		case TM_COLUMN_TV_EPISODE:
+		case TM_COLUMN_TV_NETWORK:
+		case TM_COLUMN_ALBUMARTIST:
+			gtk_tree_view_column_set_min_width (col, 0);
+			gtk_tree_view_column_set_expand (col, TRUE);
+			break;
+		default:
+			gtk_tree_view_column_set_min_width (col, 80);
+			gtk_tree_view_column_set_fixed_width (col,
+												  prefs_get_int_index("tm_col_width", tm_item));
+			
+			gtk_tree_view_column_set_expand (col, FALSE);
+			break;
+		}
 	}
 
 	if (pos != -1)
@@ -2421,6 +2428,18 @@ void tm_create_treeview (void)
 		    NULL);
   tm_add_columns ();
 
+	if (prefs_get_int ("horizontal_scrollbar"))
+	{
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (track_window),
+										GTK_POLICY_AUTOMATIC,
+										GTK_POLICY_AUTOMATIC);
+	}
+	else
+	{
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (track_window),
+										GTK_POLICY_NEVER,
+										GTK_POLICY_AUTOMATIC);
+	}
 /*   gtk_drag_source_set (GTK_WIDGET (track_treeview), GDK_BUTTON1_MASK, */
 /* 		       tm_drag_types, TGNR (tm_drag_types), */
 /* 		       GDK_ACTION_COPY|GDK_ACTION_MOVE); */

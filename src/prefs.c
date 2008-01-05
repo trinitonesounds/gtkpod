@@ -243,7 +243,10 @@ static void set_default_preferences()
     prefs_set_int_index("col_visible", TM_COLUMN_TRACKLEN, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_RATING, TRUE);
 
-    /* Set pane positions--Let gtk worry about position */
+    prefs_set_int("horizontal_scrollbar", FALSE);
+    prefs_set_int("filter_tabs_top", FALSE);
+
+	/* Set pane positions--Let gtk worry about position */
     for (i = 0; i < PANED_NUM; i++)
 	prefs_set_int_index("paned_pos_", i, -1);
 	
