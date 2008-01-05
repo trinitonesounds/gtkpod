@@ -2308,100 +2308,100 @@ static void pm_add_columns (void)
 /* Create playlist listview */
 void pm_create_treeview (void)
 {
-  GtkTreeStore *model;
-  GtkTreeSelection *selection;
-  GtkWidget *playlist_window;
-  GtkWidget *tree;
+	GtkTreeStore *model;
+	GtkTreeSelection *selection;
+	GtkWidget *playlist_window;
+	GtkWidget *tree;
 
-  playlist_window = gtkpod_xml_get_widget (main_window_xml, "playlist_window");
-  g_return_if_fail (playlist_window);
+	playlist_window = gtkpod_xml_get_widget (main_window_xml, "playlist_window");
+	g_return_if_fail (playlist_window);
 
-  /* destroy old treeview */
-  if (playlist_treeview)
-  {
-      model = GTK_TREE_STORE (gtk_tree_view_get_model(playlist_treeview));
-      g_return_if_fail (model);
-      g_object_unref (model);
-      gtk_widget_destroy (GTK_WIDGET (playlist_treeview));
-      playlist_treeview = NULL;
-  }
-  /* create new one */
-  tree = gtk_tree_view_new ();
-  gtk_widget_set_events (tree, GDK_KEY_RELEASE_MASK);
-  gtk_widget_show (tree);
-  playlist_treeview = GTK_TREE_VIEW (tree);
-  gtk_container_add (GTK_CONTAINER (playlist_window), tree);
+	/* destroy old treeview */
+	if (playlist_treeview)
+	{
+	  model = GTK_TREE_STORE (gtk_tree_view_get_model(playlist_treeview));
+	  g_return_if_fail (model);
+	  g_object_unref (model);
+	  gtk_widget_destroy (GTK_WIDGET (playlist_treeview));
+	  playlist_treeview = NULL;
+	}
+	/* create new one */
+	tree = gtk_tree_view_new ();
+	gtk_widget_set_events (tree, GDK_KEY_RELEASE_MASK);
+	gtk_widget_show (tree);
+	playlist_treeview = GTK_TREE_VIEW (tree);
+	gtk_container_add (GTK_CONTAINER (playlist_window), tree);
 
-  /* create model */
-  model =   gtk_tree_store_new (PM_NUM_COLUMNS, G_TYPE_POINTER, G_TYPE_POINTER);
+	/* create model */
+	model =   gtk_tree_store_new (PM_NUM_COLUMNS, G_TYPE_POINTER, G_TYPE_POINTER);
 
-  /* set tree model */
-  gtk_tree_view_set_model (playlist_treeview, GTK_TREE_MODEL (model));
- /* gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (playlist_treeview), TRUE); */
-  gtk_tree_selection_set_mode (gtk_tree_view_get_selection (playlist_treeview),
-			       GTK_SELECTION_SINGLE);
-  selection = gtk_tree_view_get_selection (playlist_treeview);
-  g_signal_connect (G_OBJECT (selection), "changed",
-		    G_CALLBACK (pm_selection_changed), NULL);
-  pm_add_columns ();
+	/* set tree model */
+	gtk_tree_view_set_model (playlist_treeview, GTK_TREE_MODEL (model));
+	/* gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (playlist_treeview), TRUE); */
+	gtk_tree_selection_set_mode (gtk_tree_view_get_selection (playlist_treeview),
+				   GTK_SELECTION_SINGLE);
+	selection = gtk_tree_view_get_selection (playlist_treeview);
+	g_signal_connect (G_OBJECT (selection), "changed",
+			G_CALLBACK (pm_selection_changed), NULL);
+	pm_add_columns ();
 
-  gtk_drag_source_set (GTK_WIDGET (playlist_treeview),
-		       GDK_BUTTON1_MASK,
-		       pm_drag_types, TGNR (pm_drag_types),
-		       GDK_ACTION_COPY|GDK_ACTION_MOVE);
-  gtk_drag_dest_set (GTK_WIDGET (playlist_treeview),
-		     GTK_DEST_DEFAULT_HIGHLIGHT,
-		     pm_drop_types, TGNR (pm_drop_types),
-		     GDK_ACTION_COPY|GDK_ACTION_MOVE);
+	gtk_drag_source_set (GTK_WIDGET (playlist_treeview),
+			   GDK_BUTTON1_MASK,
+			   pm_drag_types, TGNR (pm_drag_types),
+			   GDK_ACTION_COPY|GDK_ACTION_MOVE);
+	gtk_drag_dest_set (GTK_WIDGET (playlist_treeview),
+			 GTK_DEST_DEFAULT_HIGHLIGHT,
+			 pm_drop_types, TGNR (pm_drop_types),
+			 GDK_ACTION_COPY|GDK_ACTION_MOVE);
 
 
-/*   gtk_tree_view_enable_model_drag_dest (playlist_treeview, */
-/* 					pm_drop_types, TGNR (pm_drop_types), */
-/* 					GDK_ACTION_COPY); */
-  /* need the gtk_drag_dest_set() with no actions ("0") so that the
-     data_received callback gets the correct info value. This is most
-     likely a bug... */
-/*   gtk_drag_dest_set_target_list (GTK_WIDGET (playlist_treeview), */
-/* 				 gtk_target_list_new (pm_drop_types, */
-/* 						      TGNR (pm_drop_types))); */
+	/*   gtk_tree_view_enable_model_drag_dest (playlist_treeview, */
+	/* 					pm_drop_types, TGNR (pm_drop_types), */
+	/* 					GDK_ACTION_COPY); */
+	/* need the gtk_drag_dest_set() with no actions ("0") so that the
+	 data_received callback gets the correct info value. This is most
+	 likely a bug... */
+	/*   gtk_drag_dest_set_target_list (GTK_WIDGET (playlist_treeview), */
+	/* 				 gtk_target_list_new (pm_drop_types, */
+	/* 						      TGNR (pm_drop_types))); */
 
-  g_signal_connect ((gpointer) playlist_treeview, "drag-begin",
-		    G_CALLBACK (pm_drag_begin),
-		    NULL);
+	g_signal_connect ((gpointer) playlist_treeview, "drag-begin",
+			G_CALLBACK (pm_drag_begin),
+			NULL);
 
-  g_signal_connect ((gpointer) playlist_treeview, "drag-data-delete",
-		    G_CALLBACK (pm_drag_data_delete),
-		    NULL);
+	g_signal_connect ((gpointer) playlist_treeview, "drag-data-delete",
+			G_CALLBACK (pm_drag_data_delete),
+			NULL);
 
-  g_signal_connect ((gpointer) playlist_treeview, "drag-data-get",
-		    G_CALLBACK (pm_drag_data_get),
-		    NULL);
+	g_signal_connect ((gpointer) playlist_treeview, "drag-data-get",
+			G_CALLBACK (pm_drag_data_get),
+			NULL);
 
-  g_signal_connect ((gpointer) playlist_treeview, "drag-data-received",
-		    G_CALLBACK (pm_drag_data_received),
-		    NULL);
+	g_signal_connect ((gpointer) playlist_treeview, "drag-data-received",
+			G_CALLBACK (pm_drag_data_received),
+			NULL);
 
-  g_signal_connect ((gpointer) playlist_treeview, "drag-drop",
-		    G_CALLBACK (pm_drag_drop),
-		    NULL);
+	g_signal_connect ((gpointer) playlist_treeview, "drag-drop",
+			G_CALLBACK (pm_drag_drop),
+			NULL);
 
-  g_signal_connect ((gpointer) playlist_treeview, "drag-end",
-		    G_CALLBACK (pm_drag_end),
-		    NULL);
+	g_signal_connect ((gpointer) playlist_treeview, "drag-end",
+			G_CALLBACK (pm_drag_end),
+			NULL);
 
-  g_signal_connect ((gpointer) playlist_treeview, "drag-leave",
-		    G_CALLBACK (pm_drag_leave),
-		    NULL);
+	g_signal_connect ((gpointer) playlist_treeview, "drag-leave",
+			G_CALLBACK (pm_drag_leave),
+			NULL);
 
-  g_signal_connect ((gpointer) playlist_treeview, "drag-motion",
-		    G_CALLBACK (pm_drag_motion),
-		    NULL);
+	g_signal_connect ((gpointer) playlist_treeview, "drag-motion",
+			G_CALLBACK (pm_drag_motion),
+			NULL);
 
-  g_signal_connect_after ((gpointer) playlist_treeview, "key_release_event",
+	g_signal_connect_after ((gpointer) playlist_treeview, "key_release_event",
 			  G_CALLBACK (on_playlist_treeview_key_release_event),
 			  NULL);
-  g_signal_connect (G_OBJECT (playlist_treeview), "button-press-event",
-		    G_CALLBACK (pm_button_press), model);
+	g_signal_connect (G_OBJECT (playlist_treeview), "button-press-event",
+			G_CALLBACK (pm_button_press), model);
 }
 
 
@@ -2439,4 +2439,9 @@ void
 pm_set_selected_playlist (Playlist *pl)
 {
     current_playlist = pl;
+}
+
+void pm_show_all_playlists ()
+{
+	gtk_tree_view_expand_all (playlist_treeview);
 }

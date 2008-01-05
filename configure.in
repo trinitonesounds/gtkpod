@@ -251,6 +251,7 @@ data/icons/64x64/Makefile
 data/icons/hicolor/Makefile
 data/icons/hicolor/16x16/Makefile
 data/icons/hicolor/16x16/places/Makefile
+data/icons/hicolor/16x16/status/Makefile
 data/icons/hicolor/22x22/Makefile
 data/icons/hicolor/22x22/places/Makefile
 data/icons/hicolor/24x24/Makefile

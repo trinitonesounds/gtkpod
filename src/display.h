@@ -314,6 +314,7 @@ void pm_set_renderer_pix (GtkCellRenderer *renderer,
 			  Playlist *playlist);
 void pm_set_renderer_text (GtkCellRenderer *renderer,
 			   Playlist *playlist);
+void pm_show_all_playlists();
 
 void st_stop_editing (gint inst, gboolean cancel);
 gboolean st_set_selection (Itdb_Track *track);

@@ -49,6 +49,7 @@
 #include "misc_track.h"
 #include "file.h"
 #include "context_menus.h"
+#include "rb_cell_renderer_rating.h"
 
 /* pointer to the treeview for the track display */
 static GtkTreeView *track_treeview = NULL;
@@ -848,6 +849,37 @@ GList *gtk_tree_selection_get_selected_rows (GtkTreeSelection *selection,
 #endif
 
 
+static void tm_rating_edited (RBCellRendererRating *renderer,
+							  const gchar *path_string,
+							  double rating)
+{
+	GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
+	GtkTreeIter iter;
+    Track *track;
+	GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
+		
+	g_return_if_fail (model);
+	g_return_if_fail (path);
+	g_return_if_fail (gtk_tree_model_get_iter (model, &iter, path));
+	
+	gtk_tree_path_free (path);
+	gtk_tree_model_get(model, &iter, READOUT_COL, &track, -1);
+	
+	if ((int) rating != track->rating)
+	{
+		track->rating = (int) rating;		
+		track->time_modified = time (NULL);
+        pm_track_changed (track);
+        data_changed (track->itdb);
+
+        if (prefs_get_int("id3_write"))
+        {
+			write_tags_to_file (track);
+			gp_duplicate_remove (NULL, NULL);
+        }
+	}
+}
+
 /* Called when editable cell is being edited. Stores new data to the
    track list. ID3 tags in the corresponding files are updated as
    well, if activated in the pref settings */
@@ -887,7 +919,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
   {
      Track *track;
      ExtraTrackData *etr;
-     gboolean changed;
+     gboolean changed = FALSE;
      GtkTreeIter iter;
      gchar *str;
 
@@ -1027,112 +1059,116 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 			       GtkTreeIter       *iter,
 			       gpointer           data)
 {
-  Track *track;
-  ExtraTrackData *etr;
-  iTunesDB *itdb;
-  TM_item column;
-  gchar *text;
+	Track *track;
+	ExtraTrackData *etr;
+	iTunesDB *itdb;
+	TM_item column;
+	gchar *text;
 
-  column = (TM_item)g_object_get_data (G_OBJECT (renderer), "column");
+	column = (TM_item)g_object_get_data (G_OBJECT (renderer), "column");
 
-  g_return_if_fail ((column >= 0) && (column < TM_NUM_COLUMNS));
+	g_return_if_fail ((column >= 0) && (column < TM_NUM_COLUMNS));
 
-  gtk_tree_model_get (model, iter, READOUT_COL, &track, -1);
-  g_return_if_fail (track);
-  etr = track->userdata;
-  g_return_if_fail (etr);
-  itdb = track->itdb;
-  g_return_if_fail (itdb);
+	gtk_tree_model_get (model, iter, READOUT_COL, &track, -1);
+	g_return_if_fail (track);
+	etr = track->userdata;
+	g_return_if_fail (etr);
+	itdb = track->itdb;
+	g_return_if_fail (itdb);
 
-  text = track_get_text (track, TM_to_T (column));
+	text = track_get_text (track, TM_to_T (column));
 
-  switch (column)
-  {
-  case TM_COLUMN_TITLE:
-  case TM_COLUMN_ARTIST:
-  case TM_COLUMN_ALBUM:
-  case TM_COLUMN_GENRE:
-  case TM_COLUMN_COMPOSER:
-  case TM_COLUMN_COMMENT:
-  case TM_COLUMN_FILETYPE:
-  case TM_COLUMN_GROUPING:
-  case TM_COLUMN_CATEGORY:
-  case TM_COLUMN_DESCRIPTION:
-  case TM_COLUMN_PODCASTURL:
-  case TM_COLUMN_PODCASTRSS:
-  case TM_COLUMN_SUBTITLE:
-  case TM_COLUMN_TIME_PLAYED:
-  case TM_COLUMN_TIME_MODIFIED:
-  case TM_COLUMN_TIME_ADDED:
-  case TM_COLUMN_TIME_RELEASED:
-  case TM_COLUMN_TV_SHOW:
-  case TM_COLUMN_TV_EPISODE:
-  case TM_COLUMN_TV_NETWORK:
-  case TM_COLUMN_ALBUMARTIST:
-  case TM_COLUMN_SORT_ARTIST:
-  case TM_COLUMN_SORT_TITLE:
-  case TM_COLUMN_SORT_ALBUM:
-  case TM_COLUMN_SORT_ALBUMARTIST:
-  case TM_COLUMN_SORT_COMPOSER:
-  case TM_COLUMN_SORT_TVSHOW:
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "editable", TRUE,
-		    "xalign", 0.0, NULL);
-      break;
-  case TM_COLUMN_MEDIA_TYPE:
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "editable", FALSE,
-		    "xalign", 0.0, NULL);
-      break;
-  case TM_COLUMN_TRACK_NR:
-  case TM_COLUMN_CD_NR:
-  case TM_COLUMN_BITRATE:
-  case TM_COLUMN_SAMPLERATE:
-  case TM_COLUMN_BPM:
-  case TM_COLUMN_PLAYCOUNT:
-  case TM_COLUMN_YEAR:
-  case TM_COLUMN_RATING:
-  case TM_COLUMN_VOLUME:
-  case TM_COLUMN_SOUNDCHECK:
-  case TM_COLUMN_TRACKLEN:
-  case TM_COLUMN_SEASON_NR:
-  case TM_COLUMN_EPISODE_NR:
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "editable", TRUE,
-		    "xalign", 1.0, NULL);
-      break;
-  case TM_COLUMN_IPOD_ID:
-  case TM_COLUMN_SIZE:
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "editable", FALSE,
-		    "xalign", 1.0, NULL);
-      break;
-  case TM_COLUMN_PC_PATH:
-  case TM_COLUMN_IPOD_PATH:
-  case TM_COLUMN_THUMB_PATH:
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "editable", FALSE,
-		    "xalign", 0.0, NULL);
-      break;
-  case TM_COLUMN_TRANSFERRED:
-      g_object_set (G_OBJECT (renderer),
-		    "active", track->transferred,
-		    "activatable", FALSE, NULL);
-      break;
-  case TM_COLUMN_COMPILATION:
-      g_object_set (G_OBJECT (renderer),
-		    "active", track->compilation,
-		    "activatable", TRUE, NULL);
-      break;
-  case TM_NUM_COLUMNS:
-      break;
-  }
-  g_free (text);
+	switch (column)
+	{
+	case TM_COLUMN_RATING:
+		g_object_set (G_OBJECT (renderer),
+					  "rating", (double)track->rating,
+					  NULL);
+		break;
+	case TM_COLUMN_TITLE:
+	case TM_COLUMN_ARTIST:
+	case TM_COLUMN_ALBUM:
+	case TM_COLUMN_GENRE:
+	case TM_COLUMN_COMPOSER:
+	case TM_COLUMN_COMMENT:
+	case TM_COLUMN_FILETYPE:
+	case TM_COLUMN_GROUPING:
+	case TM_COLUMN_CATEGORY:
+	case TM_COLUMN_DESCRIPTION:
+	case TM_COLUMN_PODCASTURL:
+	case TM_COLUMN_PODCASTRSS:
+	case TM_COLUMN_SUBTITLE:
+	case TM_COLUMN_TIME_PLAYED:
+	case TM_COLUMN_TIME_MODIFIED:
+	case TM_COLUMN_TIME_ADDED:
+	case TM_COLUMN_TIME_RELEASED:
+	case TM_COLUMN_TV_SHOW:
+	case TM_COLUMN_TV_EPISODE:
+	case TM_COLUMN_TV_NETWORK:
+	case TM_COLUMN_ALBUMARTIST:
+	case TM_COLUMN_SORT_ARTIST:
+	case TM_COLUMN_SORT_TITLE:
+	case TM_COLUMN_SORT_ALBUM:
+	case TM_COLUMN_SORT_ALBUMARTIST:
+	case TM_COLUMN_SORT_COMPOSER:
+	case TM_COLUMN_SORT_TVSHOW:
+	  g_object_set (G_OBJECT (renderer),
+			"text", text,
+			"editable", TRUE,
+			"xalign", 0.0, NULL);
+	  break;
+	case TM_COLUMN_MEDIA_TYPE:
+	  g_object_set (G_OBJECT (renderer),
+			"text", text,
+			"editable", FALSE,
+			"xalign", 0.0, NULL);
+	  break;
+	case TM_COLUMN_TRACK_NR:
+	case TM_COLUMN_CD_NR:
+	case TM_COLUMN_BITRATE:
+	case TM_COLUMN_SAMPLERATE:
+	case TM_COLUMN_BPM:
+	case TM_COLUMN_PLAYCOUNT:
+	case TM_COLUMN_YEAR:
+	case TM_COLUMN_VOLUME:
+	case TM_COLUMN_SOUNDCHECK:
+	case TM_COLUMN_TRACKLEN:
+	case TM_COLUMN_SEASON_NR:
+	case TM_COLUMN_EPISODE_NR:
+	  g_object_set (G_OBJECT (renderer),
+			"text", text,
+			"editable", TRUE,
+			"xalign", 1.0, NULL);
+	  break;
+	case TM_COLUMN_IPOD_ID:
+	case TM_COLUMN_SIZE:
+	  g_object_set (G_OBJECT (renderer),
+			"text", text,
+			"editable", FALSE,
+			"xalign", 1.0, NULL);
+	  break;
+	case TM_COLUMN_PC_PATH:
+	case TM_COLUMN_IPOD_PATH:
+	case TM_COLUMN_THUMB_PATH:
+	  g_object_set (G_OBJECT (renderer),
+			"text", text,
+			"editable", FALSE,
+			"xalign", 0.0, NULL);
+	  break;
+	case TM_COLUMN_TRANSFERRED:
+	  g_object_set (G_OBJECT (renderer),
+			"active", track->transferred,
+			"activatable", FALSE, NULL);
+	  break;
+	case TM_COLUMN_COMPILATION:
+	  g_object_set (G_OBJECT (renderer),
+			"active", track->compilation,
+			"activatable", TRUE, NULL);
+	  break;
+	case TM_NUM_COLUMNS:
+	  break;
+	}
+	g_free (text);
 }
 
 
@@ -2186,11 +2222,21 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
 	}
 
 	if (!renderer)
-	{   /* text renderer -- editable/not editable is done in
-	 tm_cell_data_func() */
-	  renderer = gtk_cell_renderer_text_new ();
-	  g_signal_connect (G_OBJECT (renderer), "edited",
-			G_CALLBACK (tm_cell_edited), model);
+	{
+		if (tm_item == TM_COLUMN_RATING)
+		{
+			renderer = rb_cell_renderer_rating_new ();
+			g_signal_connect (G_OBJECT (renderer), "rated",
+							  G_CALLBACK (tm_rating_edited), NULL);
+		}
+		else
+		{
+			/* text renderer -- editable/not editable is done in
+			   tm_cell_data_func() */
+			renderer = gtk_cell_renderer_text_new ();
+			g_signal_connect (G_OBJECT (renderer), "edited",
+							  G_CALLBACK (tm_cell_edited), model);
+		}
 	}
 
 	g_object_set_data (G_OBJECT (renderer), "column",

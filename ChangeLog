@@ -11,6 +11,36 @@
   * src/prefs.c:
   
     Default columns set to title, artist, album, duration and rating.
+	
+  * src/rb_cell_renderer_rating.c:
+  * src/rb_cell_renderer_rating.h:
+  * src/rb_rating_helper.c:
+  * src/rb_rating_helper.h:
+  
+    Rating cell renderer implementation from Rhythmbox.
+
+  * data/icons/hicolor/16x16/status/*:
+  
+    Rating star icons from Rhythmbox.
+	
+  * src/display_tracks.c:
+  
+    Graphical rating column.
+	
+  * data/gtkpod.glade:
+  * src/display_sorttabs.c:
+  
+    Moved filter tabs to the bottom.
+	
+  * src/display_itdb.c:
+  
+    Name the default local repository "Music Library" instead of "Local".
+	
+  * src/display_playlists.c:
+  * src/display.h:
+  * src/display_itdb.c:
+  
+    Expand the playlist tree on startup.
 
 2008-01-04 Matvey Kozhev <sikon at users.sourceforge.net>
 

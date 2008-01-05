@@ -2671,7 +2671,7 @@ static void st_create_paned (void)
 	    g_return_if_fail (parent);
 	    g_return_if_fail (dummy);
 	    gtk_widget_destroy (dummy);
-	    gtk_paned_pack1 (GTK_PANED (parent), paned, TRUE, TRUE);
+	    gtk_paned_pack2 (GTK_PANED (parent), paned, TRUE, TRUE);
 	}
 	else
 	{

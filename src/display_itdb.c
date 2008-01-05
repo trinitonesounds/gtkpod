@@ -855,7 +855,7 @@ void init_data (GtkWidget *window)
 	/* Local database */
 	filename = g_build_filename (cfgdir, "local_0.itdb", NULL);
 	prefs_set_int ("itdb_0_type", GP_ITDB_TYPE_LOCAL);
-	prefs_set_string ("itdb_0_name", _("Local"));
+	prefs_set_string ("itdb_0_name", _("Music Library"));
 	prefs_set_string ("itdb_0_filename", filename);
 	g_free (filename);
 
@@ -906,6 +906,7 @@ void init_data (GtkWidget *window)
     }
 
     g_free (cfgdir);
+	pm_show_all_playlists ();
 }
 
 

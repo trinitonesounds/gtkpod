@@ -56,7 +56,9 @@ gtkpod_SOURCES = \
     help.h \
     prefsdlg.c \
     infodlg.c \
-    infodlg.h
+    infodlg.h \
+	rb_rating_helper.c rb_rating_helper.h \
+	rb_cell_renderer_rating.c rb_cell_renderer_rating.h
 
 gtkpod_LDADD = $(LIBS) $(INTLLIBS) @LIBOBJS@
 
