@@ -12,6 +12,15 @@
   * data/gtkpod.glade:
   
     The "New Playlist" button is now dropdown.
+    
+  * configure.in:
+  * data/icons/16x16:
+  * data/icons/22x22:
+  * data/icons/24x24:
+  * data/icons/32x32:
+  * data/icons/scalable:
+  
+    More manually tweaked icons, plus the SVG original.
 
 2008-01-06 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
