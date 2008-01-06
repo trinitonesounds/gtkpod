@@ -290,6 +290,7 @@ void display_create (void);
 void display_cleanup (void);
 void display_adjust_menus (void);
 void display_show_hide_toolbar (void);
+void display_show_hide_searchbar (void);
 void display_reset (gint inst);
 GList *display_get_selection (guint32 inst);
 GList *display_get_selected_members (gint inst);

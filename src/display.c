@@ -89,6 +89,8 @@ void display_create (void)
     display_show_hide_toolbar ();
     /* Hide/Show tooltips */
     display_show_hide_tooltips ();
+    /* Hide/Show searchbar */
+    display_show_hide_searchbar ();
     /* change standard g_print () handler */
     g_set_print_handler ((GPrintFunc)gtkpod_warning);
 
@@ -363,6 +365,29 @@ void display_show_hide_toolbar (void)
 	gtk_widget_hide (tb);
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), FALSE);
     }
+}
+
+/* make the search bar visible or hide it depending on the value set in
+ * the prefs
+ */
+void display_show_hide_searchbar (void)
+{
+	GtkWidget *upbutton = gtkpod_xml_get_widget (main_window_xml, "searchbar_up_button");
+	GtkWidget *searchbar = gtkpod_xml_get_widget (main_window_xml, "searchbar_hpanel");
+	g_return_if_fail (upbutton);
+	g_return_if_fail (searchbar);
+		
+	if (prefs_get_int ("display_search_entry"))
+	{
+		gtk_widget_show_all (searchbar);
+		gtk_widget_hide (upbutton);
+	}
+	else
+	{		
+		gtk_widget_hide_all (searchbar);
+		gtk_widget_show (upbutton);
+		gtk_widget_set_sensitive (upbutton, TRUE);
+	}
 }
 
 /* Adjust the menu item status according on the value set in the

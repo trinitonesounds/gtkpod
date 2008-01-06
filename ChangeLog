@@ -1,3 +1,15 @@
+2008-01-06 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * data/gtkpod.glade
+    src/display_tracks.c
+    src/display.c
+    src/display.h
+    
+    Added a down arrow to end of search bar to hide if not wanted.
+    On hide, an up arrow is displayed in the bottom right corner
+    of the window.
+    Preference stored to preserve decision between loadings.
+
 2008-01-05  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* doc
