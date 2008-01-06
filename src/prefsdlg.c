@@ -622,7 +622,29 @@ G_MODULE_EXPORT void on_display_tooltips_toggled (GtkToggleButton *sender, gpoin
 	gboolean active = gtk_toggle_button_get_active (sender);
 	
 	prefs_set_int ("display_tooltips", active);
-	display_show_hide_tooltips();
+	display_show_hide_tooltips ();
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_filter_tabs_top_toggled (GtkToggleButton *sender, gpointer e)
+{
+	gboolean active = gtk_toggle_button_get_active (sender);
+	
+	prefs_set_int ("filter_tabs_top", active);
+	st_update_paned_position ();
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_horizontal_scrollbar_toggled (GtkToggleButton *sender, gpointer e)
+{
+	gboolean active = gtk_toggle_button_get_active (sender);
+	
+	prefs_set_int ("horizontal_scrollbar", active);
+	tm_show_preferred_columns ();
 }
 
 /*

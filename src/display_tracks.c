@@ -2281,45 +2281,6 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
 	gtk_tree_view_insert_column (track_treeview, col, pos);
 	tm_columns[tm_item] = col;
 	
-	if (prefs_get_int ("horizontal_scrollbar"))
-	{
-		gtk_tree_view_column_set_fixed_width (col,  prefs_get_int_index("tm_col_width", tm_item));
-	}
-	else
-	{
-		switch (tm_item)
-		{
-		case TM_COLUMN_TITLE:
-		case TM_COLUMN_ARTIST:
-		case TM_COLUMN_ALBUM:
-		case TM_COLUMN_GENRE:
-		case TM_COLUMN_COMPOSER:
-		case TM_COLUMN_COMMENT:
-		case TM_COLUMN_CATEGORY:
-		case TM_COLUMN_DESCRIPTION:
-		case TM_COLUMN_PODCASTURL:
-		case TM_COLUMN_PODCASTRSS:
-		case TM_COLUMN_SUBTITLE:
-		case TM_COLUMN_PC_PATH:
-		case TM_COLUMN_IPOD_PATH:
-		case TM_COLUMN_THUMB_PATH:
-		case TM_COLUMN_TV_SHOW:
-		case TM_COLUMN_TV_EPISODE:
-		case TM_COLUMN_TV_NETWORK:
-		case TM_COLUMN_ALBUMARTIST:
-			gtk_tree_view_column_set_min_width (col, 0);
-			gtk_tree_view_column_set_expand (col, TRUE);
-			break;
-		default:
-			gtk_tree_view_column_set_min_width (col, 80);
-			gtk_tree_view_column_set_fixed_width (col,
-												  prefs_get_int_index("tm_col_width", tm_item));
-			
-			gtk_tree_view_column_set_expand (col, FALSE);
-			break;
-		}
-	}
-
 	if (pos != -1)
 	{
 	  gtk_tree_view_column_set_visible (col,
@@ -2338,11 +2299,12 @@ static void tm_add_columns (void)
 {
     gint i;
 
-    for (i=0; i<TM_NUM_COLUMNS; ++i)
+    for (i = 0 ; i < TM_NUM_COLUMNS; ++i)
     {
-	tm_add_column (prefs_get_int_index("col_order", i), -1);
+        tm_add_column (prefs_get_int_index("col_order", i), -1);
     }
-    tm_show_preferred_columns();
+    
+    tm_show_preferred_columns ();
 }
 
 static void tm_select_current_position (gint x, gint y)
@@ -2419,143 +2381,182 @@ tm_selection_changed_event(GtkTreeSelection *selection, gpointer data)
 /* Create tracks treeview */
 void tm_create_treeview (void)
 {
-  GtkTreeModel *model = NULL;
-  GtkWidget *track_window = gtkpod_xml_get_widget (main_window_xml, "track_window");
-  GtkTreeSelection *select;
-  gint col;
-  GtkWidget *stv = gtk_tree_view_new ();
+    GtkTreeModel *model = NULL;
+    GtkWidget *track_window = gtkpod_xml_get_widget (main_window_xml, "track_window");
+    GtkTreeSelection *select;
+    gint col;
+    GtkWidget *stv = gtk_tree_view_new ();
 
-  /* create tree view */
-  if (track_treeview)
-  {   /* delete old tree view */
+    /* create tree view */
+    if (track_treeview)
+    {   /* delete old tree view */
       model = get_model (track_treeview);
       /* FIXME: how to delete model? */
       gtk_widget_destroy (GTK_WIDGET (track_treeview));
-  }
-  track_treeview = GTK_TREE_VIEW (stv);
-  gtk_widget_show (stv);
-  gtk_container_add (GTK_CONTAINER (track_window), stv);
-  /* create model (we only need one column for the model -- only a
-   * pointer to the track has to be stored) */
-  model = GTK_TREE_MODEL (
+    }
+    track_treeview = GTK_TREE_VIEW (stv);
+    gtk_widget_show (stv);
+    gtk_container_add (GTK_CONTAINER (track_window), stv);
+    /* create model (we only need one column for the model -- only a
+    * pointer to the track has to be stored) */
+    model = GTK_TREE_MODEL (
       gtk_list_store_new (1, G_TYPE_POINTER));
-  gtk_tree_view_set_model (track_treeview, GTK_TREE_MODEL (model));
-  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (track_treeview), TRUE);
-  gtk_tree_view_set_search_equal_func (GTK_TREE_VIEW (track_treeview), 
-				       tm_search_equal_func,
-				       NULL,
-				       NULL);
-  select = gtk_tree_view_get_selection (track_treeview);
-  gtk_tree_selection_set_mode (select,
-			       GTK_SELECTION_MULTIPLE);
-  g_signal_connect (G_OBJECT (select) , "changed",
-		    G_CALLBACK (tm_selection_changed_event),
-		    NULL);
-  tm_add_columns ();
+    gtk_tree_view_set_model (track_treeview, GTK_TREE_MODEL (model));
+    gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (track_treeview), TRUE);
+    gtk_tree_view_set_search_equal_func (GTK_TREE_VIEW (track_treeview), 
+                       tm_search_equal_func,
+                       NULL,
+                       NULL);
+    select = gtk_tree_view_get_selection (track_treeview);
+    gtk_tree_selection_set_mode (select,
+                   GTK_SELECTION_MULTIPLE);
+    g_signal_connect (G_OBJECT (select) , "changed",
+            G_CALLBACK (tm_selection_changed_event),
+            NULL);
 
-	if (prefs_get_int ("horizontal_scrollbar"))
-	{
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (track_window),
-										GTK_POLICY_AUTOMATIC,
-										GTK_POLICY_AUTOMATIC);
-	}
-	else
-	{
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (track_window),
-										GTK_POLICY_NEVER,
-										GTK_POLICY_AUTOMATIC);
-	}
-/*   gtk_drag_source_set (GTK_WIDGET (track_treeview), GDK_BUTTON1_MASK, */
-/* 		       tm_drag_types, TGNR (tm_drag_types), */
-/* 		       GDK_ACTION_COPY|GDK_ACTION_MOVE); */
-/*   gtk_tree_view_enable_model_drag_dest(track_treeview, tm_drop_types, */
-/* 				       TGNR (tm_drop_types), */
-/* 				       GDK_ACTION_COPY|GDK_ACTION_MOVE); */
-/*   /\* need the gtk_drag_dest_set() with no actions ("0") so that the */
-/*      data_received callback gets the correct info value. This is most */
-/*      likely a bug... *\/ */
-/*   gtk_drag_dest_set_target_list (GTK_WIDGET (track_treeview), */
-/* 				 gtk_target_list_new (tm_drop_types, */
-/* 						      TGNR (tm_drop_types))); */
+    tm_add_columns ();
+
+    /*   gtk_drag_source_set (GTK_WIDGET (track_treeview), GDK_BUTTON1_MASK, */
+    /* 		       tm_drag_types, TGNR (tm_drag_types), */
+    /* 		       GDK_ACTION_COPY|GDK_ACTION_MOVE); */
+    /*   gtk_tree_view_enable_model_drag_dest(track_treeview, tm_drop_types, */
+    /* 				       TGNR (tm_drop_types), */
+    /* 				       GDK_ACTION_COPY|GDK_ACTION_MOVE); */
+    /*   /\* need the gtk_drag_dest_set() with no actions ("0") so that the */
+    /*      data_received callback gets the correct info value. This is most */
+    /*      likely a bug... *\/ */
+    /*   gtk_drag_dest_set_target_list (GTK_WIDGET (track_treeview), */
+    /* 				 gtk_target_list_new (tm_drop_types, */
+    /* 						      TGNR (tm_drop_types))); */
 
 
-  gtk_drag_source_set (GTK_WIDGET (track_treeview),
-		       GDK_BUTTON1_MASK,
-		       tm_drag_types, TGNR (tm_drag_types),
-		       GDK_ACTION_COPY|GDK_ACTION_MOVE);
-  gtk_drag_dest_set (GTK_WIDGET (track_treeview),
-		     0,
-		     tm_drop_types, TGNR (tm_drop_types),
-		     GDK_ACTION_COPY|GDK_ACTION_MOVE);
+    gtk_drag_source_set (GTK_WIDGET (track_treeview),
+               GDK_BUTTON1_MASK,
+               tm_drag_types, TGNR (tm_drag_types),
+               GDK_ACTION_COPY|GDK_ACTION_MOVE);
+    gtk_drag_dest_set (GTK_WIDGET (track_treeview),
+             0,
+             tm_drop_types, TGNR (tm_drop_types),
+             GDK_ACTION_COPY|GDK_ACTION_MOVE);
 
 
-  g_signal_connect ((gpointer) track_treeview, "drag-begin",
-		    G_CALLBACK (tm_drag_begin),
-		    NULL);
+    g_signal_connect ((gpointer) track_treeview, "drag-begin",
+            G_CALLBACK (tm_drag_begin),
+            NULL);
 
-  g_signal_connect ((gpointer) track_treeview, "drag-data-delete",
-		    G_CALLBACK (tm_drag_data_delete),
-		    NULL);
+    g_signal_connect ((gpointer) track_treeview, "drag-data-delete",
+            G_CALLBACK (tm_drag_data_delete),
+            NULL);
 
-  g_signal_connect ((gpointer) track_treeview, "drag-data-get",
-		    G_CALLBACK (tm_drag_data_get),
-		    NULL);
+    g_signal_connect ((gpointer) track_treeview, "drag-data-get",
+            G_CALLBACK (tm_drag_data_get),
+            NULL);
 
-  g_signal_connect ((gpointer) track_treeview, "drag-data-received",
-		    G_CALLBACK (tm_drag_data_received),
-		    NULL);
+    g_signal_connect ((gpointer) track_treeview, "drag-data-received",
+            G_CALLBACK (tm_drag_data_received),
+            NULL);
 
-  g_signal_connect ((gpointer) track_treeview, "drag-drop",
-		    G_CALLBACK (tm_drag_drop),
-		    NULL);
+    g_signal_connect ((gpointer) track_treeview, "drag-drop",
+            G_CALLBACK (tm_drag_drop),
+            NULL);
 
-  g_signal_connect ((gpointer) track_treeview, "drag-end",
-		    G_CALLBACK (tm_drag_end),
-		    NULL);
+    g_signal_connect ((gpointer) track_treeview, "drag-end",
+            G_CALLBACK (tm_drag_end),
+            NULL);
 
-  g_signal_connect ((gpointer) track_treeview, "drag-leave",
-		    G_CALLBACK (tm_drag_leave),
-		    NULL);
+    g_signal_connect ((gpointer) track_treeview, "drag-leave",
+            G_CALLBACK (tm_drag_leave),
+            NULL);
 
-  g_signal_connect ((gpointer) track_treeview, "drag-motion",
-		    G_CALLBACK (tm_drag_motion),
-		    NULL);
+    g_signal_connect ((gpointer) track_treeview, "drag-motion",
+            G_CALLBACK (tm_drag_motion),
+            NULL);
 
-  g_signal_connect_after ((gpointer) stv, "key_release_event",
-			  G_CALLBACK (on_track_treeview_key_release_event),
-			  NULL);
-  g_signal_connect ((gpointer) track_treeview, "button-press-event",
-		    G_CALLBACK (tm_button_press_event),
-		    NULL);
-  g_signal_connect (G_OBJECT (model), "sort-column-changed",
-		    G_CALLBACK (tm_sort_column_changed),
-		    (gpointer)0);
+    g_signal_connect_after ((gpointer) stv, "key_release_event",
+              G_CALLBACK (on_track_treeview_key_release_event),
+              NULL);
+    g_signal_connect ((gpointer) track_treeview, "button-press-event",
+            G_CALLBACK (tm_button_press_event),
+            NULL);
+    g_signal_connect (G_OBJECT (model), "sort-column-changed",
+            G_CALLBACK (tm_sort_column_changed),
+            (gpointer)0);
 
-  /* set correct column for typeahead */
-  if (prefs_get_int_value (TM_PREFS_SEARCH_COLUMN, &col))
-  {
+    /* set correct column for typeahead */
+    if (prefs_get_int_value (TM_PREFS_SEARCH_COLUMN, &col))
+    {
       tm_set_search_column (col);
-  }
-  else
-  {   /* reasonable default */
+    }
+    else
+    {   /* reasonable default */
       tm_set_search_column (TM_COLUMN_TITLE);
-  }
+    }
 }
 
 
 void
-tm_show_preferred_columns(void)
+tm_show_preferred_columns (void)
 {
+    gint i;
     GtkTreeViewColumn *tvc = NULL;
     gboolean visible;
-    gint i;
+    gboolean horizontal_scrollbar = prefs_get_int ("horizontal_scrollbar");
+    GtkScrolledWindow *scroller = GTK_SCROLLED_WINDOW (gtkpod_xml_get_widget (main_window_xml,
+                                                                              "track_window"));
+    
+    if (horizontal_scrollbar)
+        gtk_scrolled_window_set_policy (scroller, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    else
+        gtk_scrolled_window_set_policy (scroller, GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
-    for (i=0; i<TM_NUM_COLUMNS; ++i)
+    for (i = 0; i < TM_NUM_COLUMNS; ++i)
     {
-	tvc = gtk_tree_view_get_column (track_treeview, i);
-	visible = prefs_get_int_index("col_visible", 
-      prefs_get_int_index("col_order", i));
-	gtk_tree_view_column_set_visible (tvc, visible);
+        tvc = gtk_tree_view_get_column (track_treeview, i);
+        visible = prefs_get_int_index ("col_visible", prefs_get_int_index("col_order", i));
+        gtk_tree_view_column_set_visible (tvc, visible);
+
+        if (horizontal_scrollbar)
+        {
+            gtk_tree_view_column_set_fixed_width (tvc, prefs_get_int_index("tm_col_width", i));
+            gtk_tree_view_column_set_min_width (tvc, -1);
+            gtk_tree_view_column_set_expand (tvc, FALSE);
+        }
+        else
+        {
+            gtk_tree_view_column_set_fixed_width (tvc, -1);
+            
+            switch (i)
+            {
+            case TM_COLUMN_TITLE:
+            case TM_COLUMN_ARTIST:
+            case TM_COLUMN_ALBUM:
+            case TM_COLUMN_GENRE:
+            case TM_COLUMN_COMPOSER:
+            case TM_COLUMN_COMMENT:
+            case TM_COLUMN_CATEGORY:
+            case TM_COLUMN_DESCRIPTION:
+            case TM_COLUMN_PODCASTURL:
+            case TM_COLUMN_PODCASTRSS:
+            case TM_COLUMN_SUBTITLE:
+            case TM_COLUMN_PC_PATH:
+            case TM_COLUMN_IPOD_PATH:
+            case TM_COLUMN_THUMB_PATH:
+            case TM_COLUMN_TV_SHOW:
+            case TM_COLUMN_TV_EPISODE:
+            case TM_COLUMN_TV_NETWORK:
+            case TM_COLUMN_ALBUMARTIST:
+                gtk_tree_view_column_set_min_width (tvc, 0);
+                gtk_tree_view_column_set_expand (tvc, TRUE);
+                break;
+            default:
+                gtk_tree_view_column_set_min_width (tvc, 80);
+                gtk_tree_view_column_set_fixed_width (tvc,
+                                                      prefs_get_int_index("tm_col_width", i));
+                
+                gtk_tree_view_column_set_expand (tvc, FALSE);
+                break;
+            }
+        }
     }
 }
 

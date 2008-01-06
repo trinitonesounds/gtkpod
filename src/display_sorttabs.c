@@ -2656,42 +2656,35 @@ static void st_create_paned (void)
     /* sanity check */
     g_return_if_fail (st_paned[0] == NULL);
 
-    for (i=0; i<PANED_NUM_ST; ++i)
+    for (i = 0; i < PANED_NUM_ST; ++i)
     {
-	GtkWidget *paned;
+        GtkWidget *paned;
 
-	paned = gtk_hpaned_new ();
-	gtk_widget_show (paned);
- 	if (i==0)
-	{
-	    GtkWidget *parent;
-	    GtkWidget *dummy;
-	    parent = gtkpod_xml_get_widget (main_window_xml, "paned1");
-	    dummy = gtkpod_xml_get_widget (main_window_xml, "paned1_dummy");
-	    g_return_if_fail (parent);
-	    g_return_if_fail (dummy);
-	    gtk_widget_destroy (dummy);
-		
-		if (!prefs_get_int ("filter_tabs_top"))
-		{
-			gtk_paned_pack2 (GTK_PANED (parent), paned, TRUE, TRUE);
-		}
-		else
-		{
-			GtkWidget *top = gtk_paned_get_child1 (GTK_PANED (parent));
-			g_object_ref (top);
-			gtk_container_remove (GTK_CONTAINER (parent), top);
-			gtk_paned_pack1 (GTK_PANED (parent), paned, TRUE, TRUE);
-			gtk_paned_pack2 (GTK_PANED (parent), top, TRUE, TRUE);
-			g_object_unref (top);
-		}
-	}
-	else
-	{
-	    gtk_paned_pack2 (st_paned[i-1], paned, TRUE, TRUE);
-	}
-	st_paned[i] = GTK_PANED (paned);
+        paned = gtk_hpaned_new ();
+        gtk_widget_show (paned);
+        
+        if (!i)
+        {
+            GtkWidget *parent;
+            GtkWidget *dummy;
+            parent = gtkpod_xml_get_widget (main_window_xml, "paned1");
+            dummy = gtkpod_xml_get_widget (main_window_xml, "paned1_dummy");
+            g_return_if_fail (parent);
+            g_return_if_fail (dummy);
+            gtk_widget_destroy (dummy);
+            
+            g_object_set_data (G_OBJECT (paned), "paned_id", "st_0");
+            gtk_paned_pack2 (GTK_PANED (parent), paned, TRUE, TRUE);
+            st_update_paned_position ();
+        }
+        else
+        {
+            gtk_paned_pack2 (st_paned[i-1], paned, TRUE, TRUE);
+        }
+        
+        st_paned[i] = GTK_PANED (paned);
     }
+    
     /* set position of visible paned to decent values if not already
        set */
     if (prefs_get_int_index("paned_pos_", PANED_NUM_GLADE) == -1)
@@ -3244,10 +3237,35 @@ void st_show_hide_tooltips (void)
     }
 }
 
-
-
-
-
+/*
+	Set the correct locations of the filter tabs and track list
+	when filter_tabs_top is changed
+*/
+void st_update_paned_position ()
+{
+	GtkPaned *paned = GTK_PANED (gtkpod_xml_get_widget (main_window_xml, "paned1"));
+	GtkWidget *top = gtk_paned_get_child1 (paned);
+	GtkWidget *bottom = gtk_paned_get_child2 (paned);
+	gboolean top_is_st_paned = g_object_get_data (G_OBJECT (top), "paned_id") != NULL;
+	gboolean st_top = prefs_get_int ("filter_tabs_top");
+	
+	if ((top_is_st_paned && !st_top) || (!top_is_st_paned && st_top))
+	{
+		/* Filter tabs are not at the correct location - swap pane children */
+		/* We use g_object_ref so the widgets are not auto-destroyed */
+		g_object_ref (top);
+		g_object_ref (bottom);
+		
+		gtk_container_remove (GTK_CONTAINER (paned), top);
+		gtk_container_remove (GTK_CONTAINER (paned), bottom);
+		
+		gtk_paned_pack1 (paned, bottom, TRUE, TRUE);
+		gtk_paned_pack2 (paned, top, TRUE, TRUE);
+		
+		g_object_unref (top);
+		g_object_unref (bottom);
+	}
+}
 
 /* ---------------------------------------------------------------- */
 /*                                                                  */

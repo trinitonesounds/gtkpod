@@ -315,7 +315,7 @@ void pm_set_renderer_pix (GtkCellRenderer *renderer,
 			  Playlist *playlist);
 void pm_set_renderer_text (GtkCellRenderer *renderer,
 			   Playlist *playlist);
-void pm_show_all_playlists();
+void pm_show_all_playlists ();
 
 void st_stop_editing (gint inst, gboolean cancel);
 gboolean st_set_selection (Itdb_Track *track);
@@ -327,6 +327,7 @@ void st_show_visible (void);
 void st_arrange_visible_sort_tabs (void);
 void st_adopt_order_in_playlist (void);
 TabEntry *st_get_selected_entry (gint inst);
+void st_update_paned_position ();
 
 void cal_open_calendar (gint inst, T_item item);
 void sp_go (guint32 inst);
