@@ -1,6 +1,7 @@
 2008-01-06 Matvey Kozhev <sikon at users.sourceforge.net>
 
   * data/gtkpod.glade:
+  * src/display.h:
   * src/display_tracks.c:
   * src/display_sorttabs.c:
   * src/prefsdlg.c:
