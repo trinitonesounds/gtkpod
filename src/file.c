@@ -37,6 +37,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <glib.h>
+#include <glib/gstdio.h>
 
 
 #include "charset.h"
@@ -1010,7 +1012,124 @@ gboolean update_mserv_data_from_file (gchar *name, Track *track)
     return success;
 }
 
+/* ensure that a cache directory is available for video thumbnail generation.
+ * largely copied from conversion_setup_cachedir, only slightly simplified
+ * and modified to return the path to the caller for convenience.
+ */
+static gchar* video_thumbnail_setup_cache() 
+{
+	gchar *cachedir = NULL;
+	gchar *cfgdir = prefs_get_cfgdir();
 
+	if (!cfgdir)
+        return NULL;
+    
+    cachedir = g_build_filename (cfgdir, "video_thumbnail_cache", NULL);
+    g_free (cfgdir);
+
+    if (!g_file_test (cachedir, G_FILE_TEST_IS_DIR) && (g_mkdir (cachedir, 0777) == -1))
+    {
+        gtkpod_warning (_("Could not create '%s'"), cachedir);
+    }
+    else
+    {
+        return cachedir;
+    }
+}
+
+/*
+ * automatically generate a thumbnail for video input files using
+ * an external program (the totem thumbnailer by default).
+ * @input is the path of the video file to be thumbnailed.
+ * Returns a path to a temporary file containing the thumbnail.  The
+ * temporary file is stored in a dedicated cache directory.
+ */
+static gchar* create_video_thumbnail (gchar* input)
+{
+	GString *cmd = NULL;
+	GError *err = NULL;
+	int fd, retval, forkstatus;
+	gchar *thumbnailer = NULL, *tmp_fn = NULL, *tmp = NULL, *p = NULL;
+	/* find (and set up if necessary) the thumbnail cache dir */
+    gchar *tdir = video_thumbnail_setup_cache();
+
+	if (!tdir)
+	{
+		return NULL;
+	}
+    
+	/* safely generate a temporary file.  we don't actually need the fd
+	 * so we close it on succesful generation */
+	tmp_fn = g_build_filename (tdir, "thumb.XXXXXX", NULL);
+	g_free(tdir);
+    
+	if ((fd = g_mkstemp(tmp_fn)) == -1 || close(fd))
+	{
+		gtkpod_warning (_("Error creating thumbnail file"));
+		return NULL;
+	}
+    
+	/* get the string containing the (template) command for thumbnailing */
+	thumbnailer = prefs_get_string("video_thumbnailer_prog");
+	/* copy it into cmd, expanding any format characters */
+	cmd = g_string_new("");
+	p = thumbnailer;
+    
+	while (*p)
+    {
+		if (*p == '%') 
+		{
+			++p;
+            
+			switch (*p)
+            {
+			/* %f: input file */
+			case 'f':
+				tmp = g_shell_quote(input);
+				break;
+			/* %o: temporary output file */
+			case 'o':
+				tmp = g_shell_quote(tmp_fn);
+				break;
+			case '%':
+				cmd = g_string_append_c (cmd, '%');
+				break;
+			default:
+				gtkpod_warning (_("Unknown token '%%%c' in template '%s'"),
+			                    *p, thumbnailer);
+				break;
+			}
+            
+			if (tmp)
+			{
+				cmd = g_string_append (cmd, tmp);
+				g_free (tmp);
+				tmp = NULL;
+			}
+		}
+		else
+		{
+			cmd = g_string_append_c (cmd, *p);
+		}
+        
+		++p;
+	}
+	/* run the thumbnailing program */
+	forkstatus = g_spawn_command_line_sync(cmd->str, NULL, NULL, &retval, &err);
+    
+	if(!forkstatus)
+	{
+		gtkpod_warning (_("Unable to start video thumbnail generator\n(command line was: '%s'"), cmd->str);
+	} 
+	else if(retval)
+	{
+		gtkpod_warning (_("Thumbnail generator returned status %d"), retval);
+	}
+    
+	g_string_free(cmd, TRUE);
+	/* thumbnail is in tmp_fn */
+	return tmp_fn;
+}
 
 /* look for a picture specified by coverart_template  */
 static void add_coverart (Track *tr)
@@ -1020,14 +1139,18 @@ static void add_coverart (Track *tr)
     gchar **templates, **tplp;
     gchar *dirname;
     gchar *filename_local = NULL;
+    FileType type;
+    gint vid_thumbnailer;
 
     g_return_if_fail (tr);
     etr = tr->userdata;
     g_return_if_fail (etr);
 
     dirname = g_path_get_dirname (etr->pc_path_utf8);
+    type = determine_file_type(etr->pc_path_utf8);
 
     full_template = prefs_get_string("coverart_template");
+    vid_thumbnailer = prefs_get_int("video_thumbnailer");
 
     templates = g_strsplit (full_template, ";", 0);
     tplp = templates;
@@ -1091,6 +1214,23 @@ static void add_coverart (Track *tr)
     if (filename_local)
     {
 	gp_track_set_thumbnails (tr, filename_local);
+    }
+    else if(vid_thumbnailer)
+    {
+        /* if a template match was not made, and we're dealing with a video 
+         * file, generate an arbitrary thumbnail if appropriate */
+        switch(type)
+        {
+            case FILE_TYPE_M4V:
+            case FILE_TYPE_MP4:
+            case FILE_TYPE_MOV:
+            case FILE_TYPE_MPG:
+                filename_local = create_video_thumbnail (etr->pc_path_utf8);
+                gp_track_set_thumbnails (tr, filename_local);
+                break;
+            default:
+                break;
+        }
     }
 
     g_strfreev (templates);

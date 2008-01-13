@@ -284,6 +284,7 @@ static void set_default_preferences()
     prefs_set_int("coverart_apic", TRUE);
     prefs_set_int("coverart_file", TRUE);
     prefs_set_string("coverart_template", "%A;folder.jpg");
+    prefs_set_string("video_thumbnailer_prog", "totem-video-thumbnailer %f %o");
     prefs_set_int("mserv_use", FALSE);
     prefs_set_string("mserv_username", "");
     prefs_set_int("startup_messages", TRUE);

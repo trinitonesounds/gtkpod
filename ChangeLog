@@ -1,3 +1,13 @@
+2008-01-13 Matvey Kozhev <sikon at users.sourceforge.net>
+
+  * data/gtkpod.glade:
+  * src/prefs.c:
+  * src/prefsdlg.c:
+  * src/file.c:
+  
+    Support for video thumbnail generation via totem-video-thumbnailer
+    (patch by M. Sean Finney <seanius@seanius.net>).
+
 2008-01-06 Matvey Kozhev <sikon at users.sourceforge.net>
 
   * data/gtkpod.glade:

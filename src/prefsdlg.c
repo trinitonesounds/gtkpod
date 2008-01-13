@@ -88,6 +88,7 @@ const gchar *checkbox_map[][3] = {
 	{ "mass_modify_tags", "multi_edit", NULL },
 	{ "read_coverart", "coverart_apic", NULL },
 	{ "template_coverart", "coverart_file", "customize_coverart" },
+	{ "generate_video_thumbnails", "video_thumbnailer", "customize_video_thumbnailer" },
 	/* Feedback tab */
 	{ "confirm_del_tracks", NULL, "confirm_from_ipod,confirm_from_hdd,confirm_from_db" },
 	{ "confirm_from_ipod", "delete_ipod", NULL },
@@ -870,9 +871,43 @@ G_MODULE_EXPORT void on_customize_coverart_clicked (GtkButton *sender, gpointer 
 /*
 	glade callback
 */
+G_MODULE_EXPORT void on_customize_video_thumbnailer_clicked (GtkButton *sender, gpointer e)
+{
+	GladeXML *xml = gtkpod_xml_new (xml_file, "prefs_video_thumbnailer_dialog");
+	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_video_thumbnailer_dialog");
+	gchar *temp = prefs_get_string("video_thumbnailer_prog");
+	
+	gtk_window_set_transient_for (GTK_WINDOW (dlg), GTK_WINDOW (prefs_dialog));
+
+	if(temp)
+	{
+		gtk_entry_set_text (GTK_ENTRY (gtkpod_xml_get_widget (xml, "video_thumbnailer")),
+							temp);
+		
+		g_free (temp);
+	}
+	
+	glade_xml_signal_autoconnect (xml);
+	gtk_dialog_run (GTK_DIALOG (dlg));
+	gtk_widget_destroy (dlg);
+	g_object_unref (xml);
+}
+
+
+/*
+	glade callback
+*/
 G_MODULE_EXPORT void on_coverart_pattern_changed (GtkEditable *sender, gpointer e)
 {
 	prefs_set_string ("coverart_template", gtk_entry_get_text (GTK_ENTRY (sender)));
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_video_thumbnailer_changed (GtkEditable *sender, gpointer e)
+{
+	prefs_set_string ("video_thumbnailer_prog", gtk_entry_get_text (GTK_ENTRY (sender)));
 }
 
 /*
