@@ -283,6 +283,53 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 	{
 	    trackId = MP4FindTrackId(mp4File, track_cur, NULL, 0);
 	    trackType = MP4GetTrackType(mp4File, trackId);
+	    if (trackType && (strcmp(trackType, "text") == 0))
+	    {
+		u_int32_t m_max_frame_size;
+		m_max_frame_size = MP4GetTrackMaxSampleSize(mp4File, trackId) + 4;
+		MP4SampleId samples = MP4GetTrackNumberOfSamples(mp4File, trackId);
+		MP4SampleId i;
+		Itdb_Chapterdata *chapterdata = itdb_chapterdata_new();
+		for (i=1; i<=samples; i++)
+		{
+		    u_int8_t *m_buffer;
+		    m_buffer = (u_int8_t *) malloc(m_max_frame_size * sizeof(u_int8_t));
+		    u_int32_t m_this_frame_size = m_max_frame_size;
+		    u_int8_t *buffer;
+		    buffer = m_buffer;
+		    gchar *title;
+		    if (!MP4ReadSample(mp4File, trackId, i, &buffer, &m_this_frame_size, NULL, NULL, NULL, NULL))
+		    {
+			/* chapter title couldn't be read; probably using
+			 * an older version of libmp4v2.  We'll just make
+			 * our own titles, since the ipod doesn't display
+			 * them anyway
+			 */
+			free (m_buffer);
+			m_buffer = (u_int8_t *) malloc(12 * sizeof(u_int8_t));
+			sprintf(m_buffer, "Chapter %03i", i);
+			m_buffer[11] = '\0';
+			title = g_strdup(m_buffer);
+		    }
+		    else
+		    {
+			int titlelength = (buffer[0] << 8) + buffer[1];
+			gchar *newtitle = (gchar *) malloc((titlelength+1) * sizeof(gchar));
+			newtitle = g_strndup (&buffer[2], titlelength);
+			newtitle[titlelength] = '\0';
+			title = g_strdup (newtitle);
+			free (newtitle);
+		    }
+
+		    MP4Timestamp sampletime = MP4GetSampleTime(mp4File, trackId, i);
+		    u_int64_t convertedsampletime = MP4ConvertFromTrackTimestamp(mp4File,
+			    trackId, sampletime, MP4_MILLISECONDS_TIME_SCALE);
+		    itdb_chapterdata_add_chapter(chapterdata, convertedsampletime, title);
+		}
+		track->chapterdata = itdb_chapterdata_duplicate (chapterdata);
+
+		itdb_chapterdata_free(chapterdata);
+	    }
 	    if (trackType &&
 		(audio_or_video_found == FALSE) &&
 		((strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0) ||

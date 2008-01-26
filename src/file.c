@@ -873,6 +873,13 @@ static gboolean copy_new_info (Track *from, Track *to)
 	changed = TRUE;
     }
 
+    if (from->chapterdata)
+    {
+	itdb_chapterdata_free (to->chapterdata);
+	to->chapterdata = itdb_chapterdata_duplicate (from->chapterdata);
+	changed = TRUE; /* FIXME: probably should actually compare chapters for changes */
+    }
+
     itdb_artwork_free (to->artwork);
     to->artwork = itdb_artwork_duplicate (from->artwork);
     if ((to->artwork_size != from->artwork_size) ||

@@ -1,3 +1,8 @@
+2007-12-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/mp4file.c
+	* src/file.c: applied chapterdata patch by Michael Tiffany
+
 2008-01-13 Matvey Kozhev <sikon at users.sourceforge.net>
 
   * data/gtkpod.glade:
