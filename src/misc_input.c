@@ -119,8 +119,9 @@ gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
     if (response == GTK_RESPONSE_OK)
     {
 		result = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
-		/* get state of checkbox */
-		if (checkb)
+		
+		/* get state of checkbox only if opt_msg was non NULL */
+		if (opt_msg && checkb)
 		{
 			*opt_state = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkb));
 		}

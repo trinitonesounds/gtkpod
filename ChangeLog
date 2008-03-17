@@ -1,3 +1,10 @@
+2008-03-17 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * src/display_photo.c
+  * src/misc_input.c
+  
+    Fix for segfault in get_user_string function.
+
 2007-12-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/mp4file.c

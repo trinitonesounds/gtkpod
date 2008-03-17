@@ -1209,7 +1209,7 @@ void on_photodb_add_album_menuItem_activate(GtkMenuItem *menuItem, gpointer user
 	gchar *album_name = get_user_string (
 										 _("New Photo Album"),
 										 _("Please enter a name for the new photo album"), 
-										 NULL, 
+										 FALSE, 
 										 NULL, 
 										 NULL,
 										 GTK_STOCK_ADD);
