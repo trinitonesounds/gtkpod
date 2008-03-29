@@ -1,5 +1,7 @@
 2008-03-29  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
+	* configure.in: Remove unused references to libgnomecanvas
+
 	* configure.in: Handle the case where LEX is a path, from
 	  NetBSD via Klaus Heinz (fixes SF tracker #1920207)
 
