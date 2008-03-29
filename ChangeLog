@@ -1,3 +1,8 @@
+2008-03-29  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* configure.in: Handle the case where LEX is a path, from
+	  NetBSD via Klaus Heinz (fixes SF tracker #1920207)
+
 2008-03-17 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * src/display_photo.c
