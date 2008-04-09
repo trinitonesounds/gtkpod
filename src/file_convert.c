@@ -3028,8 +3028,6 @@ static FileTransferStatus transfer_transfer_track (TransferItdb *tri,
 	return result;
     }
 
-    g_mutex_unlock (conv->mutex);
-
     copy_success = itdb_cp (source_file, dest_file, &error);
 
     g_mutex_lock (conv->mutex);
