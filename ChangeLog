@@ -1,5 +1,11 @@
 2008-04-09 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* scripts/sync-tomboy.sh
+	  (Olivier Crete <tester at tester dot ca>):
+	  Strip all tomboy tags with the power of sed
+
+2008-04-09 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/file_convert.c (transfer_transfer_track): removed
           unnecessary g_mutex_unlock(). Thanks to Klaus Heinz.
 

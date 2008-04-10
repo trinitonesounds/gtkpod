@@ -77,6 +77,9 @@ ENCODING=ISO-8859-15                      # encoding used by ipod
 # Corrections By Oliver Sherouse <oliver.sherouse AT gmail DOT com>
 # (replaced some arithmetic expressions, improved conversion, correctly
 # indicate "-d" in 'usage' instead of "-p")
+#
+# 2008/04/06 (Olivier Crete <tester at tester dot ca>):
+# Strip all tomboy tags with the power of sed
 
 # overwrite default settings with optional command line arguments
 while getopts i:d:e: option; do
@@ -137,22 +140,13 @@ ls *.note |
 	START=`echo $LIMITS | cut -d " " -f 1`
 	END=`echo $LIMITS | cut -d " " -f 2`
 
-	DATA=`cat "$FILE"`
-
-	# Strip the tomboy stuff :(
-	for i in "<\/note-content>" "<\/text>" "<link:broken>" "<\/link:broken>" "<link:internal>" "<\/link:internal>" "<link:external>" "<\/link:external>" "<\/list>" "<list>" "<\/list-item>" "<list-item dir=\"ltr\">"; do
-		DATA=`printf "$DATA" | sed "s/$i//g"`
-	done
-
 	# Get the notes titles, we can use this as the filename
-	TITLE=`echo "$DATA" | cut -d "
-" -f $START | cut -d ">" -f 3 | tr : -`
+	TITLE=`cat "$FILE" | grep '<title>.*</title>' | sed -e 's:.*<title>\(.*\)</title>.*:\1:' | sed -e 's/<[^>]*>//g' -e 's/:/-/g'`
 
-	# Get the Lines with the useful data
-	DATA=`echo "$DATA" | cut -d "
-" -f $(( $START + 2 ))-$END`
-
-	printf "$DATA" | $RECODE > "$IPOD_MOUNT/Notes/$TITLE"
+	cat "$FILE" | tail -n +2 | sed -e '/<\/note-content>/ Q' \
+		-e '/^[[:space:]]*<title>.*<\/title>[[:space:]]*$/ d' \
+		-e '/^[[:space:]]*<[^>]*>[[:space:]]*$/ d' \
+		-e 's/<[^>]*>//g'  | $RECODE > "$IPOD_MOUNT/Notes/$TITLE"
 
 	read FILE
   done
