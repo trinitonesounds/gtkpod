@@ -150,8 +150,7 @@ void gphoto_load_photodb(iTunesDB *itdb)
 	const gchar *mp;
 	GError *error= NULL;
 
-	if (itdb == NULL)
-		return;
+	g_return_if_fail (itdb);
 
 	eitdb = itdb->userdata;
 	mp = itdb_get_mountpoint (itdb);
@@ -189,6 +188,8 @@ void gphoto_load_photodb(iTunesDB *itdb)
  */
 gboolean gphoto_ipod_supports_photos(iTunesDB *itdb)
 {
+        g_return_val_if_fail (itdb, FALSE);
+
 	gboolean status = itdb_device_supports_photo (itdb->device);
 	
 	return status;
@@ -207,7 +208,9 @@ gboolean gphoto_ipod_supports_photos(iTunesDB *itdb)
  */
 gboolean gphoto_is_photo_playlist(Playlist *pl)
 {
-	return pl->type == GP_PL_TYPE_PHOTO;
+    g_return_val_if_fail (pl, FALSE);
+
+    return pl->type == GP_PL_TYPE_PHOTO;
 }
 
 /**
@@ -222,6 +225,8 @@ gboolean gphoto_is_photo_playlist(Playlist *pl)
 void gphoto_display_photo_window(iTunesDB *itdb)
 {
 	ExtraiTunesDBData *eitdb;
+
+	g_return_if_fail (itdb);
 
 	ipod_itdb = itdb;
 #if DEBUG
@@ -805,6 +810,8 @@ static void gphoto_add_image_to_database(gchar *photo_filename)
 	GError *error= NULL;
 	Artwork *image= NULL;
 
+	g_return_if_fail (photo_filename);
+
 	/* Add the photo to the photo database and the 
 	 * default photo library album
 	 */
@@ -862,6 +869,8 @@ static void gphoto_add_image_to_iconview(Artwork *photo, gint index)
 		gint icon_width = 42, icon_height = 30;
 		gfloat pixbuf_width, pixbuf_height;
 		gfloat ratio;
+
+		g_return_if_fail (photo);
 
 		model = GTK_LIST_STORE (gtk_icon_view_get_model (thumbnail_view));
 		for (i = 0; i < PHOTO_TYPES_SIZE && thumb == NULL; ++i)
@@ -1667,6 +1676,8 @@ static void debug_list_photos(iTunesDB *itdb)
 	ExtraiTunesDBData *eitdb;
 	PhotoDB *db;
 	GList *gl_album;
+
+	g_return_if_fail (itdb);
 
 	eitdb = itdb->userdata;
 	db = eitdb->photodb;

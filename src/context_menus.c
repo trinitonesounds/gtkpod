@@ -1213,12 +1213,14 @@ pm_context_menu_init(void)
     entry_inst = -1;
     selected_playlist = pm_get_selected_playlist();
     
-    /* Dont allow context menu to display if the playlist is the photo one */
-    if (gphoto_is_photo_playlist (selected_playlist)) return;
-        
     active_itdb = gp_get_selected_itdb ();
+
     if(selected_playlist)
     {
+	/* Dont allow context menu to display if the playlist is the
+	 * photo one */
+	if (gphoto_is_photo_playlist (selected_playlist)) return;
+        
 	selected_tracks = g_list_copy (selected_playlist->members);
 	create_context_menu (CM_PL);
     }

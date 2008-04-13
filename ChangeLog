@@ -1,3 +1,18 @@
+2008-04-13 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_photo.c (gphoto_is_photo_playlist,
+          gphoto_ipod_supports_photos, gphoto_display_photo_window,
+          debug_list_photos): prevent segfault if called with NULL
+          argument.
+
+	  (gphoto_add_image_to_database,
+	  gphoto_add_image_to_iconview): sanity checks
+
+	* context_menus.c (pm_context_menu_init): check for selected
+          playlist before making further checks. Thanks to Alex
+          Pounds.
+
+
 2008-04-09 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* scripts/sync-tomboy.sh
