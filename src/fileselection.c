@@ -1,5 +1,4 @@
-/* Time-stamp: <2007-06-25 00:56:37 jcs>
-|
+/*
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 |
@@ -601,74 +600,41 @@ gchar *fileselection_select_script (const gchar *opath,
 
 
 
-
-
-/*
-|  Changed by Jorg Schuler <jcsjcs at users.sourceforge.net> to compile
-|  "standalone" with the gtkpod project 2002/11/24
-|  (http://gtkpod.sourceforge.net)
-|  Modified for UTF8 string handling under GKT2 (Jan 2003).
-|
-|  last version before moving over to fileselection.c:
-|  dirbrowser.c,v 1.30 2005/04/29 04:01:17 jcsjcs Exp
-*/
-
-/*  XMMS - Cross-platform multimedia player
- *  Copyright (C) 1998-2002  Peter Alm, Mikael Alm, Olle Hallnas,
- *                           Thomas Nilsson and 4Front Technologies
- *  Copyright (C) 1999-2002  Haavard Kvaalen
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
-#define NODE_SPACING 4
-
-struct dirnode
+/* Callback after directories to add have been selected */
+static void add_selected_dirs (GSList *names, Playlist *db_active_pl)
 {
-    unsigned int scanned : 1;
-    char *path;
-    char *dir;
-};
+    gboolean result=TRUE;
 
-
-/* ------------------------------------------------------------ *
- * functions added for gtkpod                                   *
- * ------------------------------------------------------------ */
-
-/* Callback after one directory has been added */
-static void add_dir_selected (gchar *dir, Playlist *db_active_pl)
-{
-	g_return_if_fail (dir);
+    g_return_if_fail (names);
     g_return_if_fail (db_active_pl);
 
-    if (dir)
+    if (names)
     {
-	add_directory_by_name (db_active_pl->itdb, dir, db_active_pl,
-			       prefs_get_int ("add_recursively"),
-			       NULL, NULL);
-	prefs_set_string ("last_dir_browsed", dir);
-	gtkpod_tracks_statusbar_update ();
-    }
-    else
-    {
+        GSList* currentnode;
+        for (currentnode=names; currentnode; currentnode=currentnode->next)
+        {
+            result &= add_directory_by_name (db_active_pl->itdb,
+					     currentnode->data,
+					     db_active_pl,
+					     prefs_get_int ("add_recursively"),
+					     NULL, NULL);
+            g_free (currentnode->data);
+            gtkpod_tracks_statusbar_update ();
+        }
+        g_slist_free (names);
+        names = NULL;
+
 	/* clear log of non-updated tracks */
 	display_non_updated ((void *)-1, NULL);
 	/* display log of updated tracks */
 	display_updated (NULL, NULL);
 	/* display log of detected duplicates */
 	gp_duplicate_remove (NULL, NULL);
+
+	if (result == TRUE) 
+	    gtkpod_statusbar_message (_("Successfully added files"));
+	else 
+	    gtkpod_statusbar_message (_("Some files were not added successfully"));
     }
 }
 
@@ -678,27 +644,45 @@ static void add_dir_selected (gchar *dir, Playlist *db_active_pl)
    separate callback for gtkpod.glade */
 G_MODULE_EXPORT void dirbrowser_create_callback (void)
 {
+    GSList* names=NULL;  /* List of selected items */
     Playlist *pl = pm_get_selected_playlist ();
-	gchar *dir = NULL;
+    GtkWidget *dialog;
 	
-	if(!pl)
-		return;
+    if(!pl) 
+    {
+        error_dialog (_("Please select a playlist or repository before adding tracks."));
+	return;
+    }
 
-    GtkWidget *dialog = gtk_file_chooser_dialog_new (_("Add Folder"),
-													 GTK_WINDOW (gtkpod_window),
-													 GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-													 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-													 GTK_STOCK_ADD, GTK_RESPONSE_ACCEPT,
-													 NULL);
+    dialog = gtk_file_chooser_dialog_new (
+	_("Add Folder"),
+	GTK_WINDOW (gtkpod_window),
+	GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+	GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+	GTK_STOCK_ADD, GTK_RESPONSE_ACCEPT,
+	NULL);
 
-	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
-		dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (dialog));
+    /* Allow multiple selection of directories. */
+    gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER(dialog), TRUE);
 
-	gtk_widget_destroy (dialog);
-	
-	if (dir)
-	{
-		add_dir_selected (dir, pl);
-		g_free (dir);
-	}
+    /* Set same directory as the last browsed directory. */
+    gchar *last_dir = prefs_get_string ("last_dir_browsed");
+    if (last_dir)
+    {
+        gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dialog),
+					     last_dir);
+        g_free (last_dir);
+    }
+
+    if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+	names = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
+
+    if (names)
+    {
+	add_selected_dirs (names, pl);
+        prefs_set_string ("last_dir_browsed",
+			  gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (dialog)));
+    }
+
+    gtk_widget_destroy (dialog);
 }

@@ -1,3 +1,9 @@
+2008-04-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/fileselection.c: add multiple directories patch by Alex
+          Pounds. Fixes bug that limited adding of directories to one
+          at a time.
+
 2008-04-13 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/display_photo.c (gphoto_is_photo_playlist,
@@ -14,7 +20,6 @@
 
 	* po/de.po: updated German translation. Thanks to Kai-Ove
           Pietsch.
-
 
 2008-04-09 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
