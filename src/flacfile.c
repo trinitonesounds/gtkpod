@@ -107,8 +107,36 @@ Track *flac_get_file_info (gchar *flacFileName)
                     if (g_ascii_strncasecmp("YEAR=", tag, 5) == 0) {
                         track->year = atoi (tag + 5);
                     }
+                    if (g_ascii_strncasecmp("DATE=", tag, 5) == 0) {
+			/* The date field is supposed to be of the
+			   format YYYY-MM-DD */
+                        track->year = atoi (tag + 5);
+                    }
+                    /* track_nr/tracks tag handling */
                     if (g_ascii_strncasecmp("TRACKNUMBER=", tag, 12) == 0) {
-                        track->track_nr = atoi (tag + 12);
+                        gchar* string;
+                        gchar* string2;
+                        string = tag + 12;
+			string2 = strchr(string,'/');
+			if (string2)
+			{
+			    track->tracks = atoi (string2 + 1);
+			    *string2 = '\0';
+			}
+			track->track_nr = atoi (string);
+                    }
+                    /* cd_nr/cds tag handling */
+                    if (g_ascii_strncasecmp("DISCNUMBER=", tag, 11) == 0) {
+                        gchar* string;
+                        gchar* string2;
+                        string = tag + 11;
+			string2 = strchr(string,'/');
+			if (string2)
+			{
+			    track->cds = atoi (string2 + 1);
+			    *string2 = '\0';
+			}
+			track->cd_nr = atoi (string);
                     }
                     if (g_ascii_strncasecmp("COMPOSER=", tag, 9) == 0) {
                         track->composer = charset_to_utf8 (tag + 9);
@@ -119,7 +147,7 @@ Track *flac_get_file_info (gchar *flacFileName)
                     if (g_ascii_strncasecmp("TRACKS=", tag, 7) == 0) {
                         track->tracks = atoi (tag  + 7);
                     }
-                    if (g_ascii_strncasecmp("CNDR=", tag, 5) == 0) {
+                    if (g_ascii_strncasecmp("CDNR=", tag, 5) == 0) {
                         track->cd_nr = atoi (tag + 5);
                     }
                     if (g_ascii_strncasecmp("CDS=", tag, 4) == 0) {

@@ -10,6 +10,11 @@
           instead of being grouped on the right together with the
           "Close" button).
 
+	* src/flacfile.c (flac_get_file_info): patch by Peter Pletcher
+          supporting the DATE field (alternative source for YEAR),
+          extended track and disc numbers ("n/m" format), as well as
+          correction of an obvious type (CNDR -> CDNR). Thanks!
+
 2008-04-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/fileselection.c: add multiple directories patch by Alex
