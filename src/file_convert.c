@@ -2303,7 +2303,8 @@ static gboolean conversion_convert_track (Conversion *conv, ConvTrack *ctr)
 				  argv,         /* command line   */
 				  NULL,         /* envp           */
 				  G_SPAWN_SEARCH_PATH |
-				  G_SPAWN_DO_NOT_REAP_CHILD,
+				  G_SPAWN_DO_NOT_REAP_CHILD |
+				  G_SPAWN_STDOUT_TO_DEV_NULL,
 				  pgid_setup,   /* setup func     */
 				  NULL,         /* user data      */
 				  &ctr->pid,    /* child's PID    */

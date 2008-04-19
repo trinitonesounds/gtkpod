@@ -1,3 +1,8 @@
+2008-04-19 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/file_convert (conversion_convert_track): redirect stdout
+          of conversion script to /dev/NULL.
+
 2008-04-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/fileselection.c: add multiple directories patch by Alex
