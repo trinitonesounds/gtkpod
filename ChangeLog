@@ -3,6 +3,13 @@
 	* src/file_convert (conversion_convert_track): redirect stdout
           of conversion script to /dev/NULL.
 
+	* data/gtkpod.glade (prefs_dialog): get rid of "Only
+          'activatable' widgets can be packed into the action area of
+          a GtkDialog" warning. Changes layouts of buttons at the
+          bottom of the window slightly ("Revert" is now centered
+          instead of being grouped on the right together with the
+          "Close" button).
+
 2008-04-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/fileselection.c: add multiple directories patch by Alex

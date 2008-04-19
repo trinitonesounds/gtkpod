@@ -11585,23 +11585,13 @@ AAC
             <property name="visible">True</property>
             <property name="layout_style">GTK_BUTTONBOX_EDGE</property>
             <child>
-              <widget class="GtkHBox" id="hbox168">
+              <widget class="GtkButton" id="help_button">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <child>
-                  <widget class="GtkButton" id="help_button">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label">gtk-help</property>
-                    <property name="use_stock">True</property>
-                    <property name="response_id">1</property>
-                    <signal name="clicked" handler="on_prefs_dialog_help"/>
-                  </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                  </packing>
-                </child>
+                <property name="can_focus">True</property>
+                <property name="label">gtk-help</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">1</property>
+                <signal name="clicked" handler="on_prefs_dialog_help"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -11609,51 +11599,43 @@ AAC
               </packing>
             </child>
             <child>
-              <widget class="GtkHBox" id="hbox164">
+              <widget class="GtkButton" id="revert_button">
                 <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="spacing">6</property>
-                <child>
-                  <widget class="GtkButton" id="revert_button">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="label" translatable="yes">gtk-revert-to-saved</property>
-                    <property name="use_stock">True</property>
-                    <property name="response_id">0</property>
-                    <signal name="clicked" handler="on_prefs_dialog_revert"/>
-                  </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkButton" id="close_button">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label">gtk-close</property>
-                    <property name="use_stock">True</property>
-                    <property name="response_id">-7</property>
-                    <signal name="clicked" handler="on_prefs_dialog_close"/>
-                  </widget>
-                  <packing>
-                    <property name="pack_type">GTK_PACK_END</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
+                <property name="label" translatable="yes">gtk-revert-to-saved</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">0</property>
+                <signal name="clicked" handler="on_prefs_dialog_revert"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="pack_type">GTK_PACK_END</property>
                 <property name="position">1</property>
+                <property name="secondary">True</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="close_button">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="label">gtk-close</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">-7</property>
+                <signal name="clicked" handler="on_prefs_dialog_close"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">2</property>
+                <property name="secondary">True</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
+            <property name="fill">False</property>
             <property name="pack_type">GTK_PACK_END</property>
           </packing>
         </child>
