@@ -1,3 +1,9 @@
+2008-05-01  Todd Zullinger <tmzullinger at users.sourceforge.net>
+
+	* INSTALL
+	  configure.in:
+	  Require libgpod >= 0.6.1
+
 2008-04-19 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_convert (conversion_convert_track): redirect stdout

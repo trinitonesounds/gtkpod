@@ -36,7 +36,7 @@ How to compile/install gtkpod:
         glib (at least 2.8.0)
         gtk+ (at least 2.8.0)
         libglade (at least 2.4.0)
-        libgpod (at least 0.6.0)
+        libgpod (at least 0.6.1)
         libid3tag (at least 0.15)
         perl XML::Parser module
         pkgconfig
