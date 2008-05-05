@@ -1,3 +1,8 @@
+2008-05-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* data/gtkpod.glade: added lost handler to "create new
+	playlist". Thanks to Andrea.
+
 2008-05-01  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* INSTALL
@@ -64,10 +69,10 @@
 
 2008-03-17 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * src/display_photo.c
-  * src/misc_input.c
-  
-    Fix for segfault in get_user_string function.
+	* src/display_photo.c
+	* src/misc_input.c
+
+	  Fix for segfault in get_user_string function.
 
 2007-12-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
@@ -76,13 +81,14 @@
 
 2008-01-13 Matvey Kozhev <sikon at users.sourceforge.net>
 
-  * data/gtkpod.glade:
-  * src/prefs.c:
-  * src/prefsdlg.c:
-  * src/file.c:
+	* data/gtkpod.glade:
+        * src/prefs.c:
+        * src/prefsdlg.c:
+        * src/file.c:
   
-    Support for video thumbnail generation via totem-video-thumbnailer
-    (patch by M. Sean Finney <seanius@seanius.net>).
+	  Support for video thumbnail generation via
+	  totem-video-thumbnailer (patch by M. Sean Finney
+	  <seanius@seanius.net>).
 
 2008-01-06 Matvey Kozhev <sikon at users.sourceforge.net>
 

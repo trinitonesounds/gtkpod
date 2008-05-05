@@ -534,6 +534,7 @@
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Empty Playlist</property>
                                 <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_new_playlist1_activate"/>
                                 <child internal-child="image">
                                   <widget class="GtkImage" id="menu-item-image34">
                                     <property name="visible">True</property>
