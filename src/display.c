@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-12-13 01:02:57 jcs>
+/* Time-stamp: <2008-05-05 23:04:02 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -155,7 +155,7 @@ void display_cleanup (void)
 }
 
 
-/* make sure only suitable delete menu items are available */
+/* make sure only suitable menu items are available */
 void display_adjust_menus (void)
 {
     GtkWidget *delete;
@@ -173,6 +173,13 @@ void display_adjust_menus (void)
     edit3 = gtkpod_xml_get_widget (main_window_xml, "create_playlists_menu");
     edit4 = gtkpod_xml_get_widget (main_window_xml, "randomize_current_playlist_menu");
     edit5 = gtkpod_xml_get_widget (main_window_xml, "save_track_order_menu");
+
+#if 0
+    edit6 = gtkpod_xml_get_widget (main_window_xml, "add_files1");
+    edit7 = gtkpod_xml_get_widget (main_window_xml, "add_directory1");
+    edit8 = gtkpod_xml_get_widget (main_window_xml, "add_playlist1");
+#endif
+
     dtfpl = gtkpod_xml_get_widget (main_window_xml,
 				   "delete_selected_tracks_from_playlist");
     dtfip = gtkpod_xml_get_widget (main_window_xml,
@@ -201,6 +208,13 @@ void display_adjust_menus (void)
     dsep2 = gtkpod_xml_get_widget (main_window_xml, "delete_separator2");
     espl = gtkpod_xml_get_widget (main_window_xml,
 				  "edit_smart_playlist");
+
+#if 0
+    tb_edit1 = gtkpod_xml_get_widget (main_window_xml, "add_files_button");
+    tb_edit2 = gtkpod_xml_get_widget (main_window_xml, "add_dirs_button");
+    tb_edit3 = gtkpod_xml_get_widget (main_window_xml, "add_PL_button");
+    tb_edit4 = gtkpod_xml_get_widget (main_window_xml, "new_PL_button");
+#endif
 
     pl = pm_get_selected_playlist ();
 

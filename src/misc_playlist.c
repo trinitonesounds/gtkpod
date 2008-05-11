@@ -57,10 +57,20 @@
 Playlist *add_new_pl_user_name (iTunesDB *itdb,
 				gchar *dflt, gint32 position)
 {
+    ExtraiTunesDBData *eitdb;
     Playlist *result = NULL;
     gchar *name;
 
     g_return_val_if_fail (itdb, NULL);
+
+    eitdb = itdb->userdata;
+    g_return_val_if_fail (eitdb, NULL);
+
+    if (!eitdb->itdb_imported)
+    {
+	gtkpod_warning_simple(_("Please load the iPod before adding playlists."));
+	return NULL;
+    }
 
     name = get_user_string (
 	_("New Playlist"),
@@ -84,10 +94,20 @@ Playlist *add_new_pl_user_name (iTunesDB *itdb,
 void add_new_pl_or_spl_user_name (iTunesDB *itdb,
 				  gchar *dflt, gint32 position)
 {
+    ExtraiTunesDBData *eitdb;
     gboolean is_spl = FALSE;
     gchar *name;
 
     g_return_if_fail (itdb);
+
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+
+    if (!eitdb->itdb_imported)
+    {
+	gtkpod_warning_simple(_("Please load the iPod before adding playlists."));
+	return;
+    }
 
     name = get_user_string (
 	_("New Playlist"),

@@ -54,26 +54,6 @@
 #include "fileselection.h"
 #include "display_coverart.h"
 
-/* 
- * Data global to this module only
- */
-
-static void error_dialog (const gchar *str)
-{
-    GtkWidget *dialog;
-
-    g_return_if_fail (str);
-
-    dialog = gtk_message_dialog_new (GTK_WINDOW (gtkpod_window),
-				     GTK_DIALOG_DESTROY_WITH_PARENT,
-				     GTK_MESSAGE_WARNING,
-				     GTK_BUTTONS_OK,
-				     str);
-    gtk_dialog_run (GTK_DIALOG (dialog));
-    gtk_widget_destroy (dialog);
-}
-
-
 /* OK button */
 static void add_files_ok(GtkFileChooser* filechooser, Playlist *playlist)
 {
@@ -158,7 +138,7 @@ void create_add_files_dialog (Playlist *pl)
 
     if (!pl)
     {
-	error_dialog (_("Please select a playlist or repository before adding tracks."));
+	gtkpod_warning_simple (_("Please select a playlist or repository before adding tracks."));
 	return;
     }
 
@@ -169,7 +149,7 @@ void create_add_files_dialog (Playlist *pl)
 
     if (!eitdb->itdb_imported)
     {
-	error_dialog (_("Please load the iPod before adding tracks."));
+	gtkpod_warning_simple (_("Please load the iPod before adding tracks."));
 	return;
     }
 
@@ -299,7 +279,7 @@ void create_add_playlists_dialog (iTunesDB *itdb)
 
     if (!itdb)
     {
-	error_dialog (_("Please select a playlist or repository before adding tracks."));
+	gtkpod_warning_simple (_("Please select a playlist or repository before adding tracks."));
 	return;
     }
 
@@ -308,7 +288,7 @@ void create_add_playlists_dialog (iTunesDB *itdb)
 
     if (!eitdb->itdb_imported)
     {
-	error_dialog (_("Please load the iPod before adding tracks."));
+	gtkpod_warning_simple (_("Please load the iPod before adding tracks."));
 	return;
     }
 
@@ -650,7 +630,7 @@ G_MODULE_EXPORT void dirbrowser_create_callback (void)
 	
     if(!pl) 
     {
-        error_dialog (_("Please select a playlist or repository before adding tracks."));
+        gtkpod_warning_simple (_("Please select a playlist or repository before adding tracks."));
 	return;
     }
 

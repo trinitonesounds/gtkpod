@@ -1,3 +1,11 @@
+2008-05-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/misc_playlist.c: don't allow adding of playlists if iPod is
+	  not loaded. Thanks to Andrea.
+
+	* src/fileselection.c: use gtkpod_warning_simple() instead of
+	  error_dialog() -- reducing code. Thanks to Andrea.
+
 2008-05-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* data/gtkpod.glade: added lost handler to "create new
