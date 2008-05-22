@@ -1,3 +1,8 @@
+2008-05-22 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/confirmation.c (gtkpod_confirmation): switch wrapping on for
+	  displayed text.
+
 2008-05-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/mp3file.c (mp3_read_gapless):

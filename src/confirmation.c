@@ -1,5 +1,4 @@
-/* Time-stamp: <2007-02-23 00:04:30 jcs>
-|
+/*
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
@@ -396,16 +395,34 @@ GtkResponseType gtkpod_confirmation (gint id,
 
     /* Set text */
     w = gtkpod_xml_get_widget (confirm_xml, "tree");
-	store = gtk_list_store_new (1, G_TYPE_STRING);
-	gtk_tree_view_set_model (GTK_TREE_VIEW (w), GTK_TREE_MODEL (store));
-	g_object_unref (store);
+    store = gtk_list_store_new (1, G_TYPE_STRING);
+    gtk_tree_view_set_model (GTK_TREE_VIEW (w), GTK_TREE_MODEL (store));
+    g_object_unref (store);
 
     column = gtk_tree_view_column_new ();
     renderer = gtk_cell_renderer_text_new ();
 
-	gtk_tree_view_column_pack_start (column, renderer, TRUE);
+/*
+    gint mode, width;
+
+    g_object_get (G_OBJECT (renderer),
+		  "wrap-mode", &mode,
+		  "wrap-width", &width,
+		  NULL);
+
+    printf ("wrap-mode: %d wrap-width:%d\n", mode, width);
+*/
+
+    /* I have no idea why 400, but neither 1000 nor 0 result in the
+       right behavior... */
+    g_object_set (G_OBJECT (renderer),
+		  "wrap-mode", PANGO_WRAP_WORD_CHAR,
+		  "wrap-width", 400,
+		  NULL);
+
+    gtk_tree_view_column_pack_start (column, renderer, TRUE);
     gtk_tree_view_column_set_attributes (column, renderer, "text", 0, NULL);
-	g_object_set_data (G_OBJECT (w), "renderer", renderer);
+    g_object_set_data (G_OBJECT (w), "renderer", renderer);
 
     gtk_tree_view_append_column (GTK_TREE_VIEW (w), column);
 
