@@ -1,3 +1,12 @@
+2008-05-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/mp3file.c (mp3_read_gapless):
+	  - added assertion for track->userdata
+	  - remove gapless data if file does not contain gapless data.
+
+	* src/file_convert.c: read gapless data after conversion to MP3
+	  files.
+	
 2008-05-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/misc_playlist.c: don't allow adding of playlists if iPod is

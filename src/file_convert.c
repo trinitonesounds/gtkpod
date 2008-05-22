@@ -38,6 +38,7 @@
 #include "info.h"
 #include "misc.h"
 #include "misc_track.h"
+#include "mp3file.h"
 #include "prefs.h"
 #include <errno.h>
 #include <glib/gstdio.h>
@@ -160,6 +161,16 @@ static void transfer_activate (Conversion *conv, iTunesDB *itdb, gboolean active
 static void transfer_reset (Conversion *conv, iTunesDB *itdb);
 static void transfer_reschedule (Conversion *conv, iTunesDB *itdb);
 
+struct GaplessData
+{
+    guint32 pregap;       /* number of pregap samples */
+    guint64 samplecount;  /* number of actual music samples */
+    guint32 postgap;      /* number of postgap samples */
+    guint32 gapless_data; /* number of bytes from the first sync frame
+			   * to the 8th to last frame */
+    guint16 gapless_track_flag;
+};
+
 struct _Conversion
 {
     GMutex *mutex;          /* shared lock                              */
@@ -230,6 +241,7 @@ struct _ConvTrack
     gchar *genre;
     gchar *year;
     gchar *comment;
+    struct GaplessData gapless;   /* only used for MP3 */
     /* needed for transfering */
     gchar *dest_filename;
     gchar *mountpoint;
@@ -1493,9 +1505,11 @@ static gboolean conversion_scheduler_unlocked (Conversion *conv)
 
 	    if (ctr->valid)
 	    {
-		GList *trackgl;
+		GList *trackgl, *tracks;
+
 		g_return_val_if_fail (ctr->track, TRUE);
-		GList *tracks = gp_itdb_find_same_tracks_in_itdbs (ctr->track);
+
+		tracks = gp_itdb_find_same_tracks_in_itdbs (ctr->track);
 		for (trackgl=tracks; trackgl; trackgl=trackgl->next)
 		{
 		    ExtraTrackData *etr;
@@ -1522,6 +1536,11 @@ static gboolean conversion_scheduler_unlocked (Conversion *conv)
 			etr->converted_file = g_strdup (ctr->converted_file);
 			etr->conversion_status = FILE_CONVERT_CONVERTED;
 			tr->size = ctr->converted_size;
+			tr->pregap = ctr->gapless.pregap;
+			tr->samplecount = ctr->gapless.samplecount;
+			tr->postgap = ctr->gapless.postgap;
+			tr->gapless_data = ctr->gapless.gapless_data;
+			tr->gapless_track_flag = ctr->gapless.gapless_track_flag;
 			pm_track_changed (tr);
 			data_changed (tr->itdb);
 		    }
@@ -2401,6 +2420,51 @@ static gboolean conversion_convert_track (Conversion *conv, ConvTrack *ctr)
 	    g_free (ctr->converted_file);
 	    ctr->converted_file = NULL;
 	    result = FALSE;
+	}
+    }
+
+    /* Fill in additional info (currently only gapless info for MP3s */
+    if (result == TRUE)
+    {
+	Track *track;
+	gboolean retval;
+
+	switch (determine_file_type (ctr->converted_file))
+	{
+        case FILE_TYPE_UNKNOWN:
+        case FILE_TYPE_M4P:
+        case FILE_TYPE_M4B:
+        case FILE_TYPE_M4V:
+        case FILE_TYPE_MP4:
+        case FILE_TYPE_MOV:
+        case FILE_TYPE_MPG:
+        case FILE_TYPE_M3U:
+        case FILE_TYPE_PLS:
+        case FILE_TYPE_IMAGE:
+        case FILE_TYPE_DIRECTORY:
+        case FILE_TYPE_M4A:
+        case FILE_TYPE_WAV:
+        case FILE_TYPE_OGG:
+        case FILE_TYPE_FLAC:
+            break;
+        case FILE_TYPE_MP3:
+	    g_mutex_unlock (conv->mutex);
+
+	    track = gp_track_new ();
+	    retval = mp3_read_gapless (ctr->converted_file, track);
+
+	    g_mutex_lock (conv->mutex);
+
+	    if (ctr->valid && (retval == TRUE))
+	    {
+		ctr->gapless.pregap = track->pregap;
+		ctr->gapless.samplecount = track->samplecount;
+		ctr->gapless.postgap = track->postgap;
+		ctr->gapless.gapless_data = track->gapless_data;
+		ctr->gapless.gapless_track_flag = track->gapless_track_flag;
+	    }
+	    itdb_track_free (track);
+            break;
 	}
     }
 

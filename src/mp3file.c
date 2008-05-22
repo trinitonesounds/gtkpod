@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-12-11 21:31:57 jcs>
+/* Time-stamp: <2008-05-17 12:00:49 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2462,6 +2462,8 @@ gboolean mp3_read_gapless (gchar *path, Track *track) {
 
     etr = track->userdata;
 
+    g_return_val_if_fail (etr, FALSE);
+
     memset (&gd, 0, sizeof (GaplessData));
 
 
@@ -2493,20 +2495,34 @@ gboolean mp3_read_gapless (gchar *path, Track *track) {
 
 	if ((gd.pregap) && (gd.samplecount) && (gd.postgap) && (gd.gapless_data))
 	{
-	    if ((track->pregap != lt.delay) ||
+	    if ((track->pregap != gd.pregap) ||
 		(track->samplecount != gd.samplecount) ||
-		(track->postgap != lt.padding) ||
+		(track->postgap != gd.postgap) ||
 		(track->gapless_data != gd.gapless_data) ||
 		(track->gapless_track_flag == FALSE))
 	    {
 		etr->tchanged = TRUE;
-		track->pregap = lt.delay;
+		track->pregap = gd.pregap;
 		track->samplecount = gd.samplecount;
-		track->postgap = lt.padding;
+		track->postgap = gd.postgap;
 		track->gapless_data = gd.gapless_data;
 		track->gapless_track_flag = TRUE;
 	    }
 	}
+	else
+	{   /* remove gapless data which doesn't seem to be valid any
+	     * more */
+	    if (track->gapless_track_flag == TRUE)
+	    {
+		etr->tchanged = TRUE;
+	    }
+	    track->pregap = 0;
+	    track->samplecount = 0;
+	    track->postgap = 0;
+	    track->gapless_data = 0;
+	    track->gapless_track_flag = FALSE;
+	}
+	    
 	fclose(file);
 	return TRUE;
     }
