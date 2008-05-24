@@ -1037,11 +1037,11 @@ static gchar* video_thumbnail_setup_cache()
     if (!g_file_test (cachedir, G_FILE_TEST_IS_DIR) && (g_mkdir (cachedir, 0777) == -1))
     {
         gtkpod_warning (_("Could not create '%s'"), cachedir);
+	g_free (cachedir);
+	cachedir = NULL;
     }
-    else
-    {
-        return cachedir;
-    }
+
+    return cachedir;
 }
 
 /*
@@ -1069,10 +1069,12 @@ static gchar* create_video_thumbnail (gchar* input)
 	 * so we close it on succesful generation */
 	tmp_fn = g_build_filename (tdir, "thumb.XXXXXX", NULL);
 	g_free(tdir);
-    
+	tdir = NULL;
+
 	if ((fd = g_mkstemp(tmp_fn)) == -1 || close(fd))
 	{
 		gtkpod_warning (_("Error creating thumbnail file"));
+		g_free (tmp_fn);
 		return NULL;
 	}
     

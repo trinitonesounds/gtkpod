@@ -1,3 +1,10 @@
+2008-05-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/file.c (video_thumbnail_setup_cache): fixed compiler warning
+	  and possible memory leak.
+
+	* src/file.c (create_video_thumbnail): fixed possible memory leak.
+
 2008-05-22 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/confirmation.c (gtkpod_confirmation): switch wrapping on for
