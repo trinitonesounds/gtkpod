@@ -725,6 +725,7 @@ static void gphoto_display_photo_preview(Artwork *artwork)
 
 	gtk_image_set_from_pixbuf (photo_preview_image, scaled);
 	gtk_misc_set_padding (GTK_MISC(photo_preview_image), 20, 20);
+	gdk_pixbuf_unref (scaled);
 }
 
 /**
@@ -904,12 +905,12 @@ static void gphoto_add_image_to_iconview(Artwork *photo, gint index)
 		gdk_pixbuf_unref (pixbuf);
 		
 		gchar *index_str= NULL;
-		index_str = (gchar *) g_malloc (sizeof(gint));
-		g_sprintf (index_str, "%d", index);
+		index_str = g_strdup_printf ("%d", index);
 		
 		/* Add a new row to the model */
 		gtk_list_store_append (model, &iter);
 		gtk_list_store_set (model, &iter, COL_THUMB_NAIL, scaled, COL_THUMB_FILENAME, index_str, COL_THUMB_ARTWORK, photo, -1);
+		gdk_pixbuf_unref (scaled);
 		g_free (index_str);
 }
 
@@ -1469,6 +1470,7 @@ void on_photodb_view_full_size_menuItem_activate (GtkMenuItem *menuItem, gpointe
 	g_return_if_fail (pixbuf);
 	
 	display_image_dialog (pixbuf);
+	gdk_pixbuf_unref (pixbuf);
 
 }
 

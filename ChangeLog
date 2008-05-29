@@ -1,3 +1,9 @@
+2008-05-29 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * src/display_photo.c
+
+    Fix for pixbufs not being unreference in display_photo.c
+    
 2008-05-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file.c (video_thumbnail_setup_cache): fixed compiler warning
