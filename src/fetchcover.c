@@ -396,11 +396,11 @@ static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover);
 				{		
 					g_free (newfilename);
 					gchar *intext= NULL;
-					index_str = g_strdup_printf ("%d.jpg", i);
+					intext = g_strdup_printf ("%d.jpg", i);
 					newfilename = g_strconcat (basename, intext, NULL);
 					
 					g_free (filepath);
-					g_free (inext);
+					g_free (intext);
 					
 					filepath = g_build_filename(fetch_cover->dir, newfilename, NULL);
 				}
