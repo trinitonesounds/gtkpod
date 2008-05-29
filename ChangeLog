@@ -1,5 +1,11 @@
 2008-05-29 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
+  * src/fetchcover.c
+
+    Fix for incorrect creation of jpg filenames
+    
+2008-05-29 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
   * src/display_photo.c
 
     Fix for pixbufs not being unreference in display_photo.c
