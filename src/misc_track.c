@@ -1345,7 +1345,7 @@ gchar *track_get_text (Track *track, T_item item)
 	{   /* no path set */
 	    g_free (text);
 	    text = NULL;
-	    if (track->artwork && track->artwork->thumbnails)
+	    if (itdb_track_has_thumbnails (track))
 	    {   /* artwork is set */
 		text = g_strdup (_("Embedded or filename was lost"));
 	    }

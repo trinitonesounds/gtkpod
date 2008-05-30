@@ -1449,7 +1449,6 @@ GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint def
 {
 	GdkPixbuf *pixbuf = NULL;
 	GdkPixbuf *image = NULL;	
-	Thumb *thumb;
 	ExtraTrackData *etd;
 	gint w, h;
 	float ratio;
@@ -1457,11 +1456,9 @@ GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint def
 	etd = track->userdata;
 	g_return_val_if_fail (etd, NULL);
 
-	thumb = itdb_artwork_get_thumb_by_type (track->artwork,
-						ITDB_THUMB_COVER_LARGE);
-	if (thumb)
-	{
-		image = itdb_thumb_get_gdk_pixbuf (device, thumb);
+        image = itdb_track_get_thumbnail (track, 200, 200);
+        if (image)
+        {
 	  w = gdk_pixbuf_get_width (image);
 	  h = gdk_pixbuf_get_height (image);
 	  

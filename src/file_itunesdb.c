@@ -605,7 +605,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	{   /* if has_artwork is not set (0x00), or it has been
 	       (potentially wrongly) set to 0x02 by gtkpod V0.99 or
 	       smaller, determine the correct(?) value */
-	    if (track->artwork->thumbnails)
+	    if (itdb_track_has_thumbnails (track))
 		track->has_artwork = 0x01;
 	    else
 		track->has_artwork = 0x02;
@@ -615,7 +615,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	if (track->mediatype == 0)
 	    track->mediatype = 0x00000001;
 	/* restore deleted thumbnails */
-	if ((track->artwork->thumbnails == NULL) &&
+	if ((!itdb_track_has_thumbnails (track)) &&
 	    (strlen (etr->thumb_path_locale) != 0))
 	{
 	    /* !! gp_track_set_thumbnails() writes on

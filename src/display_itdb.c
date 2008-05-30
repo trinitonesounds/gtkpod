@@ -416,7 +416,7 @@ gboolean gp_track_remove_thumbnails (Track *track)
     etr = track->userdata;
     g_return_val_if_fail (etr, FALSE);
 
-    if (track->artwork->thumbnails)
+    if (itdb_track_has_thumbnails (track))
 	changed = TRUE;
 
     itdb_track_remove_thumbnails (track);

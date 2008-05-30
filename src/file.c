@@ -1398,7 +1398,7 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	if (prefs_get_int("coverart_file"))
 	{
 	    /* APIC data takes precedence */
-	    if (!nti->artwork || !nti->artwork->thumbnails)
+	    if (itdb_track_has_thumbnails (nti))
 		add_coverart (nti);
 	}
 

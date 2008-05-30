@@ -571,7 +571,7 @@ static gboolean details_copy_artwork (Track *frtrack, Track *totrack)
 	}
     /* make sure artwork gets removed, even if both thumb_paths were
        unset ("") */
-    if (!frtrack->artwork->thumbnails)
+    if (!itdb_track_has_thumbnails (frtrack))
     {
 	changed |= gp_track_remove_thumbnails (totrack);
     }
@@ -1286,12 +1286,12 @@ void details_update_buttons (Detail *detail)
 	    {
 		Track *tr = gl->data;
 		g_return_if_fail (tr);
-		remove_artwork |= (tr->artwork->thumbnails != NULL);
+		remove_artwork |= itdb_track_has_thumbnails (tr);
 	    }
 	}
 	else
 	{
-	    remove_artwork = (detail->track->artwork->thumbnails != NULL);
+	    remove_artwork = (itdb_track_has_thumbnails (detail->track));
 	}
 	i = g_list_index (detail->tracks, detail->track);
 	g_return_if_fail (i != -1);
@@ -1354,7 +1354,6 @@ void details_update_buttons (Detail *detail)
 /* Update the displayed thumbnail */
 void details_update_thumbnail (Detail *detail)
 {
-    Thumb *thumb;
     GtkImage *img;
 
     g_return_if_fail (detail);
@@ -1368,25 +1367,18 @@ void details_update_thumbnail (Detail *detail)
     {
 	detail->artwork_ok = TRUE;
 	/* Get large cover */
-	thumb = itdb_artwork_get_thumb_by_type (detail->track->artwork,
-						ITDB_THUMB_COVER_LARGE);
-	if (thumb)
-	{
-	    GdkPixbuf *pixbuf;
-	    pixbuf = itdb_thumb_get_gdk_pixbuf (detail->itdb->device,
-						thumb);
-	    if (pixbuf)
-	    {
-		gtk_image_set_from_pixbuf (img, pixbuf);
-		gdk_pixbuf_unref (pixbuf);
-	    }
-	    else
-	    {
-		gtk_image_set_from_stock (img, GTK_STOCK_DIALOG_WARNING,
-					  GTK_ICON_SIZE_DIALOG);
-		detail->artwork_ok = FALSE;
-	    }
-	}
+        GdkPixbuf *pixbuf = itdb_track_get_thumbnail (detail->track, 200, 200);
+        if (pixbuf)
+        {
+            gtk_image_set_from_pixbuf (img, pixbuf);
+            gdk_pixbuf_unref (pixbuf);
+        }
+        else
+        {
+            gtk_image_set_from_stock (img, GTK_STOCK_DIALOG_WARNING,
+                    GTK_ICON_SIZE_DIALOG);
+            detail->artwork_ok = FALSE;
+        }
 	details_set_item (detail,  detail->track, T_THUMB_PATH);
     }
 
