@@ -683,7 +683,7 @@ static void gphoto_display_photo_preview(Artwork *artwork)
 
 	gtk_image_set_from_pixbuf (photo_preview_image, pixbuf);
 	gtk_misc_set_padding (GTK_MISC(photo_preview_image), 20, 20);
-	gdk_pixbuf_unref (scaled);
+	gdk_pixbuf_unref (pixbuf);
 }
 
 /**
@@ -836,7 +836,7 @@ static void gphoto_add_image_to_iconview(Artwork *photo, gint index)
 		/* Add a new row to the model */
 		gtk_list_store_append (model, &iter);
 		gtk_list_store_set (model, &iter, COL_THUMB_NAIL, pixbuf, COL_THUMB_FILENAME, index_str, COL_THUMB_ARTWORK, photo, -1);
-		gdk_pixbuf_unref (scaled);
+		gdk_pixbuf_unref (pixbuf);
 		g_free (index_str);
 }
 
