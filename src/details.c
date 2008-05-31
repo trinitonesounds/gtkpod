@@ -1367,7 +1367,9 @@ void details_update_thumbnail (Detail *detail)
     {
 	detail->artwork_ok = TRUE;
 	/* Get large cover */
-        GdkPixbuf *pixbuf = itdb_track_get_thumbnail (detail->track, 200, 200);
+        GdkPixbuf *pixbuf = itdb_artwork_get_pixbuf (detail->itdb->device,
+						     detail->track->artwork,
+						     200, 200);
         if (pixbuf)
         {
             gtk_image_set_from_pixbuf (img, pixbuf);

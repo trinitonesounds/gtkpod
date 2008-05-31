@@ -1,3 +1,9 @@
+2008-05-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/details.c (details_update_thumbnail): fix bug that prevented
+	  displaying thumbnails in the edit details window that were saved
+	  on the iPod.
+
 2008-05-31 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
   * context_menus.c
