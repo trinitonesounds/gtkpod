@@ -2,6 +2,16 @@
 
 	* po/POTFILES.in: update file list to keep distcheck happy
 
+	* data/icons/hicolor/16x16/places/Makefile.am
+	  data/icons/hicolor/16x16/status/Makefile.am
+	  data/icons/hicolor/22x22/places/Makefile.am
+	  data/icons/hicolor/24x24/places/Makefile.am
+	  data/icons/hicolor/32x32/places/Makefile.am
+	  data/icons/hicolor/48x48/places/Makefile.am
+	  data/icons/hicolor/scalable/places/Makefile.am
+	  data/man/Makefile.am
+	  doc/Makefile.am: minor distcheck fixes
+
 2008-05-31 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/details.c (details_update_thumbnail): fix bug that prevented
