@@ -80,19 +80,127 @@ typedef struct {
 
 extern const gchar *DISPLAY_COVER_SHOW;
 
-
-GList *coverart_get_displayed_tracks (void);
-GdkPixbuf *coverart_get_default_track_thumb (gint default_img_size);
+/**
+ * coverart_init:
+ *
+ * Initialises the image file used if an album has no cover. This
+ * needs to be loaded early as it uses the path of the binary
+ * to determine where to load the file from, in the same way as
+ * main() determines where to load the glade file from. 
+ * 
+ * Currently called from gtkpod_init. Should not need to be called
+ * subsequent to this.
+ *
+ * @progpath: path of the gtkpod binary being loaded.
+ *  
+ */
 void coverart_init (gchar *progpath);
-void coverart_display_big_artwork ();
-void coverart_select_cover (Itdb_Track *track);
-void coverart_display_update (gboolean clear_track_list);
-void coverart_track_changed (Track *track, gint signal);
-void coverart_clear_images ();
-void coverart_block_change (gboolean val);
+
+/**
+ * coverart_init_display:
+ *
+ * Initialise the boxes and canvases of the coverart_display.
+ * Called during the creation of the listviews and toolbars etc...
+ *  
+ */
 void coverart_init_display ();
-GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint default_img_size);
+
+/**
+ * coverart_display_update:
+ *
+ * Refreshes the coverart display depending on the playlist selection. Using the
+ * clear_track_list, the refresh can be quicker is set to FALSE. However, the track
+ * list is not updated in this case. Using TRUE, the display is completely cleared and
+ * redrawn.
+ *
+ * @clear_track_list: flag indicating whether to clear the displaytracks list or not
+ *  
+ */
+void coverart_display_update (gboolean clear_track_list);
+
+/**
+ * 
+ * Function to cause a refresh on the given track.
+ * The signal will be one of:
+ * 
+ *    COVERART_REMOVE_SIGNAL - track deleted
+ *    COVERART_CREATE_SIGNAL - track created
+ *    COVERART_CHANGE_SIGNAL - track modified
+ * 
+ * If the track was in the current display of artwork then the
+ * artwork will be updated. If it was not then a refresh is unnecessary
+ * and the function will return accordingly.
+ * 
+ * @track: affected track
+ * @signal: flag indicating the type of track change that has occurred.
+ */
+void coverart_track_changed (Track *track, gint signal);
+
+/**
+ * coverart_block_change:
+ *
+ * Select covers events can be switched off when automatic
+ * selections of tracks are taking place.
+ *
+ * @val: indicating whether to block or unblock select cover events
+ *  
+ */
+void coverart_block_change (gboolean val);
+
+/**
+ * coverart_set_cover_from_file:
+ *
+ * Add a cover to the displayed track by setting it from a
+ * picture file.
+ *
+ */
 void coverart_set_cover_from_file ();
+
+/**
+ * coverart_get_displayed_tracks:
+ *
+ * Get all tracks suggested by the displayed album cover.
+ * 
+ * Returns:
+ * GList containing references to all the displayed covered tracks
+ */
+GList *coverart_get_displayed_tracks (void);
+
+/**
+ * coverart_display_big_artwork:
+ * 
+ * Display a big version of the artwork in a dialog
+ * 
+ */
+void coverart_display_big_artwork ();
+
+/**
+ * coverart_select_cover
+ * 
+ * When a track / album is selected, the artwork cover
+ * is selected in the display
+ * 
+ * @track: chosen track
+ * 
+ */
+void coverart_select_cover (Itdb_Track *track);
+
+/**
+ * coverart_get_background_display_color:
+ *
+ * Used by coverart draw functions to determine the background color
+ * of the coverart display, which is selected from the preferences.
+ * 
+ */
 GdkColor *coverart_get_background_display_color ();
+
+/**
+ * coverart_get_foreground_display_color:
+ *
+ * Used by coverart draw functions to determine the foreground color
+ * of the coverart display, which is selected from the preferences. The
+ * foreground color refers to the color used by the artist and album text.
+ * 
+ */
 GdkColor *coverart_get_foreground_display_color ();
 #endif

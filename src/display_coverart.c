@@ -54,6 +54,8 @@ static void set_display_window_dimensions ();
 static void set_highlight (Cover_Item *cover, gint index, cairo_t *cr);
 static void set_shadow_reflection (Cover_Item *cover, cairo_t *cr);
 static void remove_track_from_album (Album_Item *album, Track *track, gchar *key, gint index, GList *keylistitem);
+static GdkPixbuf *coverart_get_default_track_thumb (gint default_img_size);
+static GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint default_img_size);
 
 /* callback declarations */
 static gboolean on_gtkpod_window_configure (GtkWidget *widget, GdkEventConfigure *event, gpointer data);
@@ -147,7 +149,10 @@ static void debug_albums ()
  * Initialises the image file used if an album has no cover. This
  * needs to be loaded early as it uses the path of the binary
  * to determine where to load the file from, in the same way as
- * main() determines where to load the glade file from.
+ * main() determines where to load the glade file from. 
+ * 
+ * Currently called from gtkpod_init. Should not need to be called
+ * subsequent to this.
  *
  * @progpath: path of the gtkpod binary being loaded.
  *  
@@ -378,6 +383,17 @@ void coverart_block_change (gboolean val)
       cdwidget->block_display_change = val;
 }
 
+/**
+ * redraw:
+ *
+ * Draw the artist and album text strings.
+ * 
+ * @cairo_context: the context of the artwork display
+ * @text: the text to be added to the artwork display
+ * @x: the x coordinate of its location
+ * @y: the y coordinate of its location
+ * 
+ */
 static void draw_string (cairo_t *cairo_context,
 						 const gchar *text,
 						 gdouble x,
@@ -410,6 +426,44 @@ static void draw_string (cairo_t *cairo_context,
 	g_object_unref (layout);
 }
 
+/**
+ * redraw:
+ *
+ * Utility function for set all the x, y, width and height
+ * dimensions applicable to a single cover widget
+ * 
+ * @force_pixbuf_update: flag indicating whether to force an update of the pixbuf covers
+ */
+static void redraw (gboolean force_pixbuf_update)
+{
+  force_pixbuf_covers = force_pixbuf_update;
+  GdkRegion *region = gdk_drawable_get_clip_region (cdwidget->draw_area->window);
+  /* redraw the cairo canvas completely by exposing it */
+  gdk_window_invalidate_region (cdwidget->draw_area->window, region, TRUE);
+  gdk_window_process_updates (cdwidget->draw_area->window, TRUE);
+  gdk_region_destroy (region);
+  
+  if (g_list_length (album_key_list) <= 1)
+  {
+    gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), FALSE); 
+    gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), FALSE); 
+    gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), FALSE);
+  }
+  else
+  {
+    gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), TRUE); 
+    gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), TRUE); 
+    gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), TRUE);
+  }
+}
+
+/**
+ * draw:
+ *
+ * Paint the coverart display using cairo.
+ * 
+ * @cairo_context: the coverart display context
+ */
 static void draw (cairo_t *cairo_context)
 {
 	gint cover_index[] = {0, 8, 1, 7, 2, 6, 3, 5, 4};
@@ -566,7 +620,10 @@ static void draw (cairo_t *cairo_context)
 /**
  * coverart_display_update:
  *
- * Takes a list of tracks and sets the 9 image cover display.
+ * Refreshes the coverart display depending on the playlist selection. Using the
+ * clear_track_list, the refresh can be quicker is set to FALSE. However, the track
+ * list is not updated in this case. Using TRUE, the display is completely cleared and
+ * redrawn.
  *
  * @clear_track_list: flag indicating whether to clear the displaytracks list or not
  *  
@@ -594,20 +651,18 @@ void coverart_display_update (gboolean clear_track_list)
 	
 	if (clear_track_list)
 	{
-		/* Find the selected playlist */
-		playlist = pm_get_selected_playlist ();
-		if (playlist == NULL)
-			return;
-		
-		tracks = playlist->members;
 		/* Free up the hash table and the key list */
 		g_hash_table_foreach_remove(album_hash, (GHRFunc) gtk_true, NULL);
-				
 		g_list_free (album_key_list);
+    album_key_list = NULL;
     
-    album_key_list = NULL;;
+    /* Find the selected playlist */
+    playlist = pm_get_selected_playlist ();
+        
+    if (playlist)
+      tracks = playlist->members;
     
-		if (tracks == NULL)
+		if (! playlist || ! tracks)
 		{
 			redraw (FALSE);
 			return;
@@ -677,29 +732,6 @@ void coverart_display_update (gboolean clear_track_list)
 	debug_albums ();
 	printf("######### END OF ORIGINAL LINE UP #######\n");
 	*/
-}
-
-static void redraw (gboolean force_pixbuf_update)
-{
-	force_pixbuf_covers = force_pixbuf_update;
-	GdkRegion *region = gdk_drawable_get_clip_region (cdwidget->draw_area->window);
-	/* redraw the cairo canvas completely by exposing it */
-	gdk_window_invalidate_region (cdwidget->draw_area->window, region, TRUE);
-	gdk_window_process_updates (cdwidget->draw_area->window, TRUE);
-	gdk_region_destroy (region);
-	
-	if (g_list_length (album_key_list) <= 1)
-	{
-		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), FALSE); 
-		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), FALSE); 
-		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), FALSE);
-	}
-	else
-	{
-		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->cdslider), TRUE); 
-		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->leftbutton), TRUE); 
-		gtk_widget_set_sensitive (GTK_WIDGET(cdwidget->rightbutton), TRUE);
-	}
 }
 
 /**
@@ -882,12 +914,19 @@ static void set_shadow_reflection (Cover_Item *cover, cairo_t *cr)
 
 /**
  * 
- * Convenience function that will only allow set images to be
- * called if the track that was affected was in the list of displaytracks
- * used by the coverart display. So if a whole album is deleted then this
- * will only reset the display if the first track in the album is deleted.
+ * Function to cause a refresh on the given track.
+ * The signal will be one of:
+ * 
+ *    COVERART_REMOVE_SIGNAL - track deleted
+ *    COVERART_CREATE_SIGNAL - track created
+ *    COVERART_CHANGE_SIGNAL - track modified
+ * 
+ * If the track was in the current display of artwork then the
+ * artwork will be updated. If it was not then a refresh is unnecessary
+ * and the function will return accordingly.
  * 
  * @track: affected track
+ * @signal: flag indicating the type of track change that has occurred.
  */
 void coverart_track_changed (Track *track, gint signal)
 {
@@ -1445,7 +1484,7 @@ static gint on_main_cover_image_clicked (GtkWidget *widget, GdkEvent *event, gpo
  * pixbuf referenced by the provided track or the pixbuf of the
  * default file if track has no cover art.
  */
-GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint default_size)
+static GdkPixbuf *coverart_get_track_thumb (Track *track, Itdb_Device *device, gint default_size)
 {
 	GdkPixbuf *pixbuf = NULL;
 	GdkPixbuf *image = NULL;	
@@ -1532,7 +1571,7 @@ GList *coverart_get_displayed_tracks (void)
  * Returns:
  * pixbuf of the default file for tracks with no cover art.
  */
-GdkPixbuf *coverart_get_default_track_thumb (gint default_img_size)
+static GdkPixbuf *coverart_get_default_track_thumb (gint default_img_size)
 {
 	GdkPixbuf *pixbuf = NULL;
 	GdkPixbuf *scaled = NULL;
@@ -1835,6 +1874,13 @@ void coverart_set_cover_from_file ()
   redraw (FALSE);
 }
 
+/**
+ * coverart_get_background_display_color:
+ *
+ * Used by coverart draw functions to determine the background color
+ * of the coverart display, which is selected from the preferences.
+ * 
+ */
 GdkColor *coverart_get_background_display_color ()
 {
 	gchar *hex_string;
@@ -1851,6 +1897,14 @@ GdkColor *coverart_get_background_display_color ()
 	return color;
 }
 
+/**
+ * coverart_get_foreground_display_color:
+ *
+ * Used by coverart draw functions to determine the foreground color
+ * of the coverart display, which is selected from the preferences. The
+ * foreground color refers to the color used by the artist and album text.
+ * 
+ */
 GdkColor *coverart_get_foreground_display_color ()
 {
 	gchar *hex_string;
@@ -1945,6 +1999,14 @@ static void free_album (Album_Item *album)
 	cdwidget = NULL;
 }
  
+ /**
+  * dnd_coverart_drag_drop:
+  *
+  * Used by the drag and drop of a jpg. When a drop is
+  * made, this determines whether the drop is valid
+  * then requests the data from the source widget.
+  * 
+  */
 static gboolean dnd_coverart_drag_drop(GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, guint time, gpointer user_data)
 {
 	GdkAtom target;
@@ -1955,20 +2017,18 @@ static gboolean dnd_coverart_drag_drop(GtkWidget *widget, GdkDragContext *drag_c
 		gtk_drag_get_data (widget, drag_context, target, time);
 		return TRUE;	
 	}
-	/*
-	printf ("drop item\n");
-	gint i = 0;
-	for (i = 0; i < g_list_length(drag_context->targets); ++i)
-	{
-		target = g_list_nth_data (drag_context->targets, i);
-		printf ("Atom: %s\n", gdk_atom_name(target));
-		gtk_drag_get_data (widget, drag_context, target, time);
-		return TRUE;
-	}
-	*/
+	
 	return FALSE;
 }
 
+/**
+ * dnd_coverart_drag_motion:
+ *
+ * Used by the drag and drop of a jpg. While the jpg is being
+ * dragged, this reports to the source widget whether it is an 
+ * acceptable location to allow a drop.
+ * 
+ */
 static gboolean dnd_coverart_drag_motion (GtkWidget *widget,
 				GdkDragContext *dc,
 				gint x,
@@ -2010,6 +2070,14 @@ static gboolean dnd_coverart_drag_motion (GtkWidget *widget,
   return TRUE;
 }
 
+/**
+ * dnd_coverart_drag_data_received:
+ *
+ * Used by the drag and drop of a jpg. When the drop is performed, this
+ * acts on the receipt of the data from the source widget and applies 
+ * the jpg to the track.
+ * 
+ */
 static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x, gint y, GtkSelectionData *data, guint info,
 		guint time, gpointer user_data)
 {

@@ -1,3 +1,16 @@
+2008-05-31 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+  * context_menus.c
+  
+    Added coverart update call to eject ipod action.
+    
+  * display_coverart.c
+  * display_covarart.h
+  
+    Tidied up function doc comments.
+    Ensured when no playlist is selected, coverart_display_update 
+    clears the artwork display.
+
 2008-05-30  Christophe Fergeau  <teuf at gnome.org>
 
 	* src/details.c:

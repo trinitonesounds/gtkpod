@@ -319,6 +319,8 @@ static void eject_ipod (GtkMenuItem *mi, gpointer data)
     g_return_if_fail (eitdb->itdb_imported == TRUE);
 
     gp_eject_ipod (itdb);
+    /* Set the coverart display based on the selected playlist */
+    coverart_display_update(TRUE);
 }
 
 
@@ -1158,15 +1160,7 @@ cad_context_menu_init(void)
     
      if (selected_tracks) g_list_free (selected_tracks);
     	selected_tracks = g_list_copy (coverart_get_displayed_tracks());
-    /*
-    int i;
-    for (i = 0; i < g_list_length(selected_tracks); ++i)
-    {
-    	Track *track;
-    	track = g_list_nth_data (selected_tracks, i);
-    	printf ("context_menu_init - Artist:%s  Album:%s  Title:%s\n", track->artist, track->album, track->title);
-    }
-    */
+    	
     if(selected_tracks)
 			create_context_menu (CM_CAD);
 }
