@@ -27,7 +27,9 @@ src/fileselection.c
 src/flacfile.c
 src/getopt1.c
 src/getopt.c
+src/help.c
 src/info.c
+src/infodlg.c
 src/ipod_init.c
 src/main.c
 src/misc.c
@@ -40,9 +42,10 @@ src/mp3file.c
 src/mp4file.c
 src/oggfile.c
 src/prefs.c
-src/prefs_window.c
+src/prefsdlg.c
 src/repository.c
 src/sha1.c
+src/sort_window.c
 src/syncdir.c
 src/tools.c
 src/wavfile.c

@@ -1,4 +1,8 @@
-2008-05-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
+2008-05-31  Todd Zullinger <tmzullinger at users.sourceforge.net>
+
+	* po/POTFILES.in: update file list to keep distcheck happy
+
+2008-05-31 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/details.c (details_update_thumbnail): fix bug that prevented
 	  displaying thumbnails in the edit details window that were saved
