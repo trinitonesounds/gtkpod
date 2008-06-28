@@ -2048,7 +2048,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
    */
   if (success &&  
 		  (itdb->usertype & GP_ITDB_TYPE_IPOD) &&
-		  gphoto_ipod_supports_photos (itdb) &&
+		  itdb_device_supports_photo (itdb->device) &&
 		  eitdb->photodb != NULL &&
 		  eitdb->photo_data_changed == TRUE)
   {

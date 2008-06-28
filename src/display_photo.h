@@ -54,7 +54,6 @@
 #define GPHOTO_PREVIEW 2
 
 void gphoto_load_photodb (iTunesDB *itdb);
-gboolean gphoto_ipod_supports_photos (iTunesDB *itdb);
 gboolean gphoto_is_photo_playlist (Playlist *pl);
 void gphoto_display_photo_window (iTunesDB *itdb);
 void gphoto_change_to_photo_window (gboolean showflag);

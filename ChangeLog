@@ -1,3 +1,10 @@
+2008-06-28 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/file_itunesdb.c
+	  src/display_photo.c
+	  src/display_photo.h: don't display error message about
+	  non-available photodb if iPod does not support photos.
+
 2008-05-31  Todd Zullinger <tmzullinger at users.sourceforge.net>
 
 	* po/POTFILES.in: update file list to keep distcheck happy

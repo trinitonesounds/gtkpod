@@ -148,6 +148,8 @@ void gphoto_load_photodb(iTunesDB *itdb)
 	db = itdb_photodb_parse (mp, &error);
 	if (db == NULL)
 	{
+	    if (itdb_device_supports_photo (itdb->device))
+	    {
 		if (error)
 		{
 			gtkpod_warning (_("Error reading iPod photo database (%s).\n"), error->message);
@@ -158,7 +160,8 @@ void gphoto_load_photodb(iTunesDB *itdb)
 			gtkpod_warning (_("Error reading iPod photo database.\n"));
 		}
 		eitdb->photodb = NULL;
-		return;
+	    }
+	    return;
 	}
 
 	/* Set the reference to the photo database */
@@ -166,24 +169,6 @@ void gphoto_load_photodb(iTunesDB *itdb)
 	/*printf ("Reference to photo db successfully set\n");*/
 	
 	/* A photo database is */
-}
-
-/**
- * gphoto_ipod_supports_photos
- *
- * Convenience function that passes onto libgpod and requests
- * whether the ipod has photo support
- * 
- * Returns:
- * true/false whether the ipod has photo support
- */
-gboolean gphoto_ipod_supports_photos(iTunesDB *itdb)
-{
-        g_return_val_if_fail (itdb, FALSE);
-
-	gboolean status = itdb_device_supports_photo (itdb->device);
-	
-	return status;
 }
 
 /**
