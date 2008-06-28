@@ -1542,7 +1542,7 @@ void pm_add_itdb (iTunesDB *itdb, gint pos)
     /* Add the photo playlist onto IPOD itdb if the
 	 * IPOD supports photos
 	 */
-	if (gphoto_ipod_supports_photos (itdb))
+	if (itdb_device_supports_photo (itdb->device))
 	{   /* add photo playlist */
 /*		printf ("Photos supported. Adding node.\n"); */
 		GtkTreeIter itdb_iter;
