@@ -1373,7 +1373,7 @@ void details_update_thumbnail (Detail *detail)
         if (pixbuf)
         {
             gtk_image_set_from_pixbuf (img, pixbuf);
-            gdk_pixbuf_unref (pixbuf);
+            g_object_unref (pixbuf);
         }
         else
         {
@@ -1846,7 +1846,7 @@ static void dnd_details_art_drag_data_received(GtkWidget *widget, GdkDragContext
 					image_error = g_strdup(fcover->err_msg);
 								
 				free_fetchcover (fcover);
-				gdk_pixbuf_unref (pixbuf);
+				g_object_unref (pixbuf);
 				coverart_block_change (FALSE);
 			}
 			else

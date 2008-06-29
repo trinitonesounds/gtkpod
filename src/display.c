@@ -1,4 +1,4 @@
-/* Time-stamp: <2008-05-05 23:04:02 jcs>
+/* Time-stamp: <2008-06-29 21:57:29 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -602,7 +602,7 @@ void display_image_dialog (GdkPixbuf *image)
 			
 	/* Destroy the dialog as no longer required */
 	
-	gdk_pixbuf_unref (scaled);
+	g_object_unref (scaled);
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 

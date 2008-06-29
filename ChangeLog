@@ -3,6 +3,12 @@
 	* src/display_photo.c: fix possible memory leak. Thanks to Mike
 	  Heffner.
 
+	* src/display.c
+	  src/display_photo.c
+	  src/details.c
+	  src/fetchcover.c: replace deprecated gdk_pixbuf_unref() with
+	  g_object_unref().
+
 2008-06-28 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_itunesdb.c

@@ -435,7 +435,7 @@ void free_fetchcover (Fetch_Cover *fcover)
 		g_string_free (fcover->url, TRUE);
 		
 	if (fcover->image)
-		gdk_pixbuf_unref (fcover->image);
+		g_object_unref (fcover->image);
 			
 	if (fcover->dir)
 		g_free (fcover->dir);
