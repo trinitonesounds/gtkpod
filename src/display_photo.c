@@ -144,6 +144,9 @@ void gphoto_load_photodb(iTunesDB *itdb)
 	g_return_if_fail (itdb);
 
 	eitdb = itdb->userdata;
+	g_return_if_fail (eitdb);
+	g_return_if_fail (eitdb->photodb == NULL);
+
 	mp = itdb_get_mountpoint (itdb);
 	db = itdb_photodb_parse (mp, &error);
 	if (db == NULL)
@@ -153,22 +156,19 @@ void gphoto_load_photodb(iTunesDB *itdb)
 		if (error)
 		{
 			gtkpod_warning (_("Error reading iPod photo database (%s).\n"), error->message);
-			g_error_free (error);
-			error = NULL;
 		} else
 		{
 			gtkpod_warning (_("Error reading iPod photo database.\n"));
 		}
-		eitdb->photodb = NULL;
 	    }
-	    return;
 	}
-
+	if (error)
+	{
+	    g_error_free (error);
+	    error = NULL;
+	}
 	/* Set the reference to the photo database */
 	eitdb->photodb = db;
-	/*printf ("Reference to photo db successfully set\n");*/
-	
-	/* A photo database is */
 }
 
 /**

@@ -1,3 +1,8 @@
+2008-06-29 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_photo.c: fix possible memory leak. Thanks to Mike
+	  Heffner.
+
 2008-06-28 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_itunesdb.c
