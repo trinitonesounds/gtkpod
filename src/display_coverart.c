@@ -263,11 +263,10 @@ void coverart_init_display ()
 	g_return_if_fail (cdwidget->cdslider);
 	g_return_if_fail (cdwidget->draw_area);
 		
-  /* Initialise the album hash backing store */
-  album_hash = g_hash_table_new_full ( g_str_hash,
-  																																			g_str_equal,
-  																																			(GDestroyNotify) g_free,
-  																																			(GDestroyNotify) free_album);
+	/* Initialise the album hash backing store */
+	album_hash = g_hash_table_new_full ( g_str_hash, g_str_equal,
+					     (GDestroyNotify) g_free,
+					     (GDestroyNotify) free_album);
 	album_key_list = NULL;
 	set_display_window_dimensions ();
 

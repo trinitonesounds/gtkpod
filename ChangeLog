@@ -1,7 +1,20 @@
 2008-07-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/misc_conversion.c (ST_to_T)
+	  src/display_sorttabs.c (st_set_string_compare_func):
+
+	  be more restrictive concerning ST_CAT_SPECIAL (assertion)
+
+	  src/display_coverart: white space
+
+	  src/file.c: added comments
+
+
+2008-07-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/file.c: allow absolute paths in coverart
           template. Thanks to J.D. Laub for the patch.
+
 
 2008-07-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
 

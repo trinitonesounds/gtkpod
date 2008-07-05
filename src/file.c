@@ -1171,7 +1171,7 @@ static void add_coverart (Track *tr)
 	{
 	    if (strchr (*tplp, '.') != NULL)
 	    {   /* if template has an extension, try if it is valid */
-		if (fname[0] == '/')
+		if (fname[0] == '/')  /* allow absolute paths in template */
 		    filename_utf8 = g_build_filename ("", fname, NULL);
 		else
 		    filename_utf8 = g_build_filename (dirname, fname, NULL);
@@ -1189,7 +1189,7 @@ static void add_coverart (Track *tr)
 		while (*extp && !filename_local)
 		{
 		    gchar *ffname = g_strconcat (fname, *extp, NULL);
-		    if (ffname[0] == '/')
+		    if (ffname[0] == '/')  /* allow absolute paths in template */
 			filename_utf8 = g_build_filename ("", ffname, NULL);
 		    else
 			filename_utf8 = g_build_filename (dirname, ffname,
@@ -1210,7 +1210,7 @@ static void add_coverart (Track *tr)
 		    gchar *upper_ext = g_ascii_strup (*extp, -1);
 		    gchar *ffname = g_strconcat (fname, upper_ext, NULL);
 		    g_free (upper_ext);
-		    if (ffname[0] == '/')
+		    if (ffname[0] == '/')  /* allow absolute paths in template */
 			filename_utf8 = g_build_filename ("", ffname, NULL);
 		    else
 			filename_utf8 = g_build_filename (dirname, ffname,

@@ -269,12 +269,15 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
 static void st_set_string_compare_func (guint inst, guint page_num)
 {
     gchar *buf;
-    buf = g_strdup_printf ("sort_ign_field_%d", ST_to_T (page_num));
-    if (prefs_get_int (buf))
-	sorttab[inst]->string_compare_func = compare_string_fuzzy;
-    else
-	sorttab[inst]->string_compare_func = compare_string;
-    g_free (buf);
+    if (page_num != ST_CAT_SPECIAL)
+    {
+	buf = g_strdup_printf ("sort_ign_field_%d", ST_to_T (page_num));
+	if (prefs_get_int (buf))
+	    sorttab[inst]->string_compare_func = compare_string_fuzzy;
+	else
+	    sorttab[inst]->string_compare_func = compare_string;
+	g_free (buf);
+    }
 }
 
 
