@@ -47,6 +47,8 @@
 static GtkTreeView *playlist_treeview = NULL;
 /* pointer to the currently selected playlist */
 static Playlist *current_playlist = NULL;
+/* pointer to the currently selected itdb */
+static iTunesDB *current_itdb = NULL;
 /* flag set if selection changes to be ignored temporarily */
 static gboolean pm_selection_blocked = FALSE;
 
@@ -187,8 +189,10 @@ static gboolean pm_drag_motion (GtkWidget *widget,
     GtkTreeViewDropPosition pos;
     GdkAtom target;
     guint info;
+    PM_column_type type;
     Playlist *pl_d;
     iTunesDB *itdb;
+    PhotoDB *photodb;
     ExtraiTunesDBData *eitdb;
 
     g_return_val_if_fail (widget, FALSE);
@@ -214,10 +218,13 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 
     if(gtk_tree_model_get_iter (model, &iter_d, path))
     {
-	gtk_tree_model_get (model, &iter_d, PM_COLUMN_PLAYLIST, &pl_d, -1);
+	gtk_tree_model_get (model, &iter_d,
+			    PM_COLUMN_TYPE, &type,
+			    PM_COLUMN_ITDB, &itdb,
+			    PM_COLUMN_PLAYLIST, &pl_d,
+			    PM_COLUMN_PHOTOS, &photodb,
+			    -1);
     }
-    g_return_val_if_fail (pl_d, FALSE);
-    itdb = pl_d->itdb;
     g_return_val_if_fail (itdb, FALSE);
     eitdb = itdb->userdata;
     g_return_val_if_fail (eitdb, FALSE);
@@ -260,6 +267,9 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 	return FALSE;
     }
 
+    switch (type)
+    {
+    case PM_COLUMN_PLAYLIST:
     switch (info)
     {
     case DND_GTKPOD_PLAYLISTLIST:
@@ -295,6 +305,17 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 	gtk_tree_path_free (path);
 	return FALSE;
     }
+	g_return_val_if_reached (FALSE);
+
+    case PM_COLUMN_PHOTOS:
+	/* We don't handle drops into the photo playlist yet */
+	return FALSE;
+    case PM_NUM_COLUMNS:
+    case PM_COLUMN_ITDB:
+    case PM_COLUMN_TYPE:
+	g_return_val_if_reached (FALSE);
+}
+    g_return_val_if_reached (FALSE);
 }
 
 
@@ -1187,49 +1208,66 @@ void pm_track_changed (Track *track)
 /* If @position = -1: append to end */
 /* If @position >=0: insert at that position (count starts with MPL as
  * 0) */
-void pm_add_playlist (Playlist *playlist, gint pos)
+void pm_add_child (iTunesDB *itdb, PM_column_type type, gpointer item, gint pos)
 {
   GtkTreeIter mpl_iter;
-  GtkTreeIter *mpl = NULL;
+  GtkTreeIter *mpli = NULL;
   GtkTreeIter iter;
   GtkTreeModel *model;
-  GtkTreeSelection *selection;
-  iTunesDB *itdb;
+/*  GtkTreeSelection *selection;*/
 
   g_return_if_fail (playlist_treeview);
-  g_return_if_fail (playlist);
+  g_return_if_fail (item);
+  g_return_if_fail (itdb);
 
   model = GTK_TREE_MODEL (gtk_tree_view_get_model (playlist_treeview));
   g_return_if_fail (model);
 
-  if (itdb_playlist_is_mpl (playlist))
-  {   /* MPLs are always added top-level */
-      mpl = NULL;
-      itdb = playlist->itdb;
+  /* Find the iter with the mpl in it */
+  if (pm_get_iter_for_itdb (itdb, &mpl_iter))
+  {
+      mpli = &mpl_iter;
   }
-  else
-  {   /* We need to find the iter with the mpl in it */
-      if (pm_get_iter_for_itdb (playlist->itdb, &mpl_iter))
+
+  switch (type)
       {
-	  mpl = &mpl_iter;
+  case PM_COLUMN_PLAYLIST:
+      if (itdb_playlist_is_mpl ((Playlist *)item))
+      {   /* MPLs are always added top-level */
+	  mpli = NULL;
       }
       else
       {
-	  g_warning ("Programming error: need to add mpl before adding normal playlists.\n");
-      }
+	  /* MPL must be set before calling this function */
+	  g_return_if_fail (mpli);
       /* reduce position by one because the MPL is not included in the
 	 tree model's count */
+	  if (pos != -1)
       --pos;
-      itdb = NULL;
+  }
+      break;
+  case PM_COLUMN_PHOTOS:
+      /* MPL must be set before calling this function */
+      g_return_if_fail (mpli);
+      /* always add at the end */
+      pos = -1;
+      break;
+  case PM_COLUMN_ITDB:
+  case PM_COLUMN_TYPE:
+  case PM_NUM_COLUMNS:
+      g_return_if_reached ();
   }
 
-  gtk_tree_store_insert (GTK_TREE_STORE (model), &iter, mpl, pos);
+
+  gtk_tree_store_insert (GTK_TREE_STORE (model), &iter, mpli, pos);
 
   gtk_tree_store_set (GTK_TREE_STORE (model), &iter,
 		      PM_COLUMN_ITDB, itdb,
-		      PM_COLUMN_PLAYLIST, playlist,
+		      PM_COLUMN_TYPE, type,
+		      type, item,
 		      -1);
 
+#if 0
   /* If the current_playlist is "playlist", we select it. This can
      happen during a display_reset */
   if (current_playlist == playlist)
@@ -1237,6 +1275,7 @@ void pm_add_playlist (Playlist *playlist, gint pos)
       selection = gtk_tree_view_get_selection (playlist_treeview);
       gtk_tree_selection_select_iter (selection, &iter);
   }
+#endif
 /*  else if (current_playlist == NULL)
   {
       if (itdb_playlist_is_mpl(playlist) && prefs_get_int("mpl_autoselect"))
@@ -1266,12 +1305,12 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
 
   ts = gtk_tree_view_get_selection (playlist_treeview);
 
-  if (itdb_playlist_is_mpl (playlist) && current_playlist &&
-      (playlist->itdb == current_playlist->itdb))
+  if (itdb_playlist_is_mpl (playlist) && (playlist->itdb == current_itdb))
   {   /* We are about to remove the entire itdb (playlist is MPL) and
        * a playlist of this itdb is selected --> clear display
        * (pm_unselect_playlist probably works as well, but the
        * unselect won't be done until later (callback)) */
+      gphoto_change_to_photo_window (FALSE);
       st_init (-1, 0);
       current_playlist = NULL;
   }
@@ -1378,7 +1417,6 @@ static void pm_selection_changed_cb (GtkTreeSelection *selection,
 {
 	GtkTreeModel *model;
 	GtkTreeIter  iter;
-	Playlist *new_playlist = NULL;
 
 #if DEBUG_TIMING
 	GTimeVal time;
@@ -1394,53 +1432,57 @@ static void pm_selection_changed_cb (GtkTreeSelection *selection,
 
 	if (gtk_tree_selection_get_selected (selection, &model, &iter) == FALSE)
 	{  /* no selection -> reset sort tabs */
+		gphoto_change_to_photo_window (FALSE);
 		st_init (-1, 0);
 		current_playlist = NULL;
+		current_itdb = NULL;
 	}
 	else
 	{
+	    Playlist *new_playlist = NULL;
+	    iTunesDB *itdb = NULL;
+	    PhotoDB *photodb = NULL;
+	    PM_column_type type=0;
 		gchar *label_text;
 		
 		/* handle new selection */
 		gtk_tree_model_get (model, &iter, 
+				PM_COLUMN_TYPE, &type,
+				PM_COLUMN_ITDB, &itdb,
 			  PM_COLUMN_PLAYLIST, &new_playlist,
+				PM_COLUMN_PHOTOS, &photodb,
 			  -1);
+
+	    current_playlist = new_playlist;
+	    current_itdb = itdb;
+
+	    switch (type)
+	    {
+	    case PM_COLUMN_PLAYLIST:
+		g_return_if_fail (new_playlist);
+		g_return_if_fail (itdb);
+
+		gphoto_change_to_photo_window (FALSE);
 
 		/* If new playlist is in an iPod itdb, set the mountpoint for
 		* the free space display to this iPod (there may be several
 		* iPods connected */
-		g_return_if_fail (new_playlist);
-		g_return_if_fail (new_playlist->itdb);
-
-		label_text = g_markup_printf_escaped ("<span weight='bold' size='larger'>%s</span>", new_playlist->name);
-		
-		gtk_label_set_markup (GTK_LABEL (gtkpod_xml_get_widget (main_window_xml, "current_playlist_label")),
+		label_text = g_markup_printf_escaped ("<span weight='bold' size='larger'>%s</span>",
+						      new_playlist->name);
+		gtk_label_set_markup (GTK_LABEL (gtkpod_xml_get_widget (
+						     main_window_xml, "current_playlist_label")),
 							  label_text);
-		
 		g_free (label_text);
 
-		if (new_playlist->itdb->usertype & GP_ITDB_TYPE_IPOD)
+		if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 		{
-			space_set_ipod_itdb (new_playlist->itdb);
-		}
-
-		if (gphoto_is_photo_playlist (new_playlist))
-		{
-				/* This is the photo playlist so need to load photo database
-		* rather than get tracks.
-				*/
-				gphoto_display_photo_window (new_playlist->itdb);
-		}
-		else
-		{
-				gphoto_change_to_photo_window (FALSE);
+		    space_set_ipod_itdb (itdb);
 		}
 
 		/* remove all entries from sort tab 0 */
 		/* printf ("removing entries: %x\n", current_playlist);*/
 		st_init (-1, 0);
 
-		current_playlist = new_playlist;
 		if (new_playlist->is_spl && new_playlist->splpref.liveupdate)
 			itdb_spl_update (new_playlist);
 							  
@@ -1460,8 +1502,19 @@ static void pm_selection_changed_cb (GtkTreeSelection *selection,
 			st_enable_disable_view_sort (0, TRUE);
 			st_add_track (NULL, TRUE, TRUE, 0);
 		}
-							  
 		gtkpod_tracks_statusbar_update();
+		break;
+	    case PM_COLUMN_PHOTOS:
+		g_return_if_fail (photodb);
+		g_return_if_fail (itdb);
+		gphoto_display_photo_window (itdb);
+		break;
+	    case PM_COLUMN_ITDB:
+	    case PM_COLUMN_TYPE:
+	    case PM_NUM_COLUMNS:
+		g_warn_if_reached ();
+	}
+
 	}
 
 	/* Reallow the coverart selection update */
@@ -1527,66 +1580,47 @@ static gint pm_sort_counter (gint inc)
 /* Add all playlists of @itdb at position @pos */
 void pm_add_itdb (iTunesDB *itdb, gint pos)
 {
+    GtkTreeIter mpl_iter;
     GList *gl_pl;
+    ExtraiTunesDBData *eitdb;
 
     g_return_if_fail (itdb);
+    eitdb=itdb->userdata;
+    g_return_if_fail (eitdb);
 
     for (gl_pl=itdb->playlists; gl_pl; gl_pl=gl_pl->next)
     {
 			Playlist *pl = gl_pl->data;
 			g_return_if_fail (pl);
-			if (itdb_playlist_is_mpl (pl))     pm_add_playlist (pl, pos);
-			else                               pm_add_playlist (pl, -1);
+	if (itdb_playlist_is_mpl (pl))
+	{
+	    pm_add_child (itdb, PM_COLUMN_PLAYLIST, pl, pos);
     }
-    
-    /* Add the photo playlist onto IPOD itdb if the
-	 * IPOD supports photos
-	 */
-	if (itdb_device_supports_photo (itdb->device))
-	{   /* add photo playlist */
-/*		printf ("Photos supported. Adding node.\n"); */
-		GtkTreeIter itdb_iter;
-		
-		if (pm_get_iter_for_itdb (itdb, &itdb_iter))
+	else
     {
-			gboolean createpl = TRUE;
-   	GtkTreeIter pl_iter;
-   	GtkTreeModel *model;
-			Playlist *pl;
-
-			model = GTK_TREE_MODEL (gtk_tree_view_get_model (playlist_treeview));
-
-			/* go down one hierarchy and try all other iters */
-			if (gtk_tree_model_iter_children (model, &pl_iter, &itdb_iter))
+	    pm_add_child (itdb, PM_COLUMN_PLAYLIST, pl, -1);
+	}
+    }
+    /* eitdb->photodb might be NULL: the itdb is added before the iPod
+     * is parsed */
+    if (itdb_device_supports_photo (itdb->device) && eitdb->photodb)
 			{
-				do
-				{
-	   		gtk_tree_model_get (model, &pl_iter,
-					PM_COLUMN_PLAYLIST, &pl,
-					-1);
-	    		if (pl->type == GP_PL_TYPE_PHOTO)
-	    		{
-	    			/* Photo playlist already found so dont need to readd */
-	    		createpl = FALSE;
-	    			break;
+	pm_add_child (itdb, PM_COLUMN_PHOTOS, eitdb->photodb, -1);
 	    		}
-				} while (gtk_tree_model_iter_next (model, &pl_iter));
-    	}
     	
-    	if (createpl)
+    /* expand the itdb */
+    if (pm_get_iter_for_itdb (itdb, &mpl_iter))
     	{
-    		/* no existing photo playlist found so add one
-    	 * either itdb had no children or none of them
-    	 * were of the photo type.
-    	 */
-				Playlist *pl = itdb_playlist_new (_("Photos"), FALSE);
-				pl->type = GP_PL_TYPE_PHOTO;
-				pl->itdb = itdb;
-				pm_add_playlist (pl, -1);
+	GtkTreeModel *model;
+	GtkTreePath *mpl_path;
+	model = GTK_TREE_MODEL (gtk_tree_view_get_model (playlist_treeview));
+	g_return_if_fail (model);
+	mpl_path = gtk_tree_model_get_path (model, &mpl_iter);
+	g_return_if_fail (mpl_path);
+	gtk_tree_view_expand_row (playlist_treeview, mpl_path, TRUE);
+	gtk_tree_path_free (mpl_path);
 			}
     }
-	}
-}
 
 
 /* Helper function: add all playlists to playlist model */
@@ -1918,13 +1952,12 @@ pm_cell_edited (GtkCellRendererText *renderer,
  * @renderer: renderer to be set
  * @playlist: playlist to consider.
  */
-void pm_set_renderer_text (GtkCellRenderer *renderer,
+void pm_set_playlist_renderer_text (GtkCellRenderer *renderer,
 			   Playlist *playlist)
 {
-    if (playlist)
-    {
 	ExtraiTunesDBData *eitdb;
 
+    g_return_if_fail (playlist);
 	g_return_if_fail (playlist->itdb);
 	eitdb = playlist->itdb->userdata;
 	g_return_if_fail (eitdb);
@@ -1968,36 +2001,62 @@ void pm_set_renderer_text (GtkCellRenderer *renderer,
 	    }
 	}
     }
+
+/**
+ * pm_set_photodb_renderer_text
+ *
+ * Set the PhotoDB name in appropriate style.
+ *
+ * @renderer: renderer to be set
+ * @PhotoDB: photodb to consider.
+ */
+void pm_set_photodb_renderer_text (GtkCellRenderer *renderer,
+				   PhotoDB *photodb)
+{
+    g_return_if_fail (photodb);
+
+    /* bold face */
+    g_object_set (G_OBJECT (renderer),
+		  "text", _("Photos"), 
+		  "weight", PANGO_WEIGHT_BOLD,
+		  NULL);
+/* (example for italic style)
+    if (eitdb->data_changed)
+    {
+	g_object_set (G_OBJECT (renderer),
+		      "style", PANGO_STYLE_ITALIC,
+		      NULL);
+    }
     else
     {
 	g_object_set (G_OBJECT (renderer),
-		      "text", "",
+		      "style", PANGO_STYLE_NORMAL,
 		      NULL);
     }
+*/
 }
 
 
 /**
- * pm_set_renderer_pix
+ * pm_set_playlist_renderer_pix
  *
  * Set the appropriate playlist icon.
  *
  * @renderer: renderer to be set
  * @playlist: playlist to consider.
  */
-void pm_set_renderer_pix (GtkCellRenderer *renderer,
+void pm_set_playlist_renderer_pix (GtkCellRenderer *renderer,
 			  Playlist *playlist)
 {
+    iTunesDB *itdb;
+    ExtraiTunesDBData *eitdb;
+
     const gchar *stock_id=NULL;
 
     g_return_if_fail (renderer);
+    g_return_if_fail (playlist);
+    g_return_if_fail (playlist->itdb);
 
-    if (playlist)
-    {
-		iTunesDB *itdb;
-		ExtraiTunesDBData *eitdb;
-
-		g_return_if_fail (playlist->itdb);
 		itdb = playlist->itdb;
 		g_return_if_fail (itdb->userdata);
 		eitdb = itdb->userdata;
@@ -2008,15 +2067,8 @@ void pm_set_renderer_pix (GtkCellRenderer *renderer,
 		}
 		else if (!itdb_playlist_is_mpl (playlist))
 		{
-			if (gphoto_is_photo_playlist (playlist))
-			{
-				stock_id = GPHOTO_PLAYLIST_ICON_STOCK_ID;
-			}
-			else
-			{
 				stock_id = TUNES_PLAYLIST_ICON_STOCK_ID;
 			}
-		}
 		else
 		{
 			if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
@@ -2035,11 +2087,34 @@ void pm_set_renderer_pix (GtkCellRenderer *renderer,
 				}
 			}
 		}
+    g_object_set (G_OBJECT (renderer), "stock-id", stock_id, NULL);
+    g_object_set (G_OBJECT (renderer), "stock-size", GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
     }
+
+
+
+/**
+ * pm_set_photodb_renderer_pix
+ *
+ * Set the appropriate photodb icon.
+ *
+ * @renderer: renderer to be set
+ * @photodb: photodb to consider.
+ */
+void pm_set_photodb_renderer_pix (GtkCellRenderer *renderer,
+				  PhotoDB *photodb)
+{
+    const gchar *stock_id=NULL;
+
+    g_return_if_fail (renderer);
+    g_return_if_fail (photodb);
+
+    stock_id = GPHOTO_PLAYLIST_ICON_STOCK_ID;
 
   g_object_set (G_OBJECT (renderer), "stock-id", stock_id, NULL);
   g_object_set (G_OBJECT (renderer), "stock-size", GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
 }
+
 
 
 /* The playlist data is stored in a separate list
@@ -2054,15 +2129,31 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
 			       gpointer           data)
 {
   Playlist *playlist = NULL;
+  PhotoDB *photodb = NULL;
+  PM_column_type type;
 
   g_return_if_fail (renderer);
   g_return_if_fail (model);
   g_return_if_fail (iter);
 
-  gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
-  g_return_if_fail (playlist);
-
-  pm_set_renderer_text (renderer, playlist);
+  gtk_tree_model_get (model, iter,
+		      PM_COLUMN_TYPE, &type,
+		      PM_COLUMN_PLAYLIST, &playlist,
+		      PM_COLUMN_PHOTOS, &photodb,
+		      -1);
+  switch (type)
+  {
+  case PM_COLUMN_PLAYLIST:
+      pm_set_playlist_renderer_text (renderer, playlist);
+      break;
+  case PM_COLUMN_PHOTOS:
+      pm_set_photodb_renderer_text (renderer, photodb);
+      break;
+  case PM_COLUMN_ITDB:
+  case PM_COLUMN_TYPE:
+  case PM_NUM_COLUMNS:
+      g_return_if_reached ();
+}
 }
 
 
@@ -2074,15 +2165,31 @@ static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
 				   gpointer           data)
 {
   Playlist *playlist=NULL;
+  PhotoDB *photodb = NULL;
+  PM_column_type type;
 
   g_return_if_fail (renderer);
   g_return_if_fail (model);
   g_return_if_fail (iter);
 
-  gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
-  g_return_if_fail (playlist);
-
-  pm_set_renderer_pix (renderer, playlist);
+  gtk_tree_model_get (model, iter,
+		      PM_COLUMN_TYPE, &type,
+		      PM_COLUMN_PLAYLIST, &playlist,
+		      PM_COLUMN_PHOTOS, &photodb,
+		      -1);
+  switch (type)
+  {
+  case PM_COLUMN_PLAYLIST:
+      pm_set_playlist_renderer_pix (renderer, playlist);
+      break;
+  case PM_COLUMN_PHOTOS:
+      pm_set_photodb_renderer_pix (renderer, photodb);
+      break;
+  case PM_COLUMN_ITDB:
+  case PM_COLUMN_TYPE:
+  case PM_NUM_COLUMNS:
+      g_return_if_reached ();
+}
 }
 
 
@@ -2333,7 +2440,7 @@ void pm_create_treeview (void)
 	gtk_container_add (GTK_CONTAINER (playlist_window), tree);
 
 	/* create model */
-	model =   gtk_tree_store_new (PM_NUM_COLUMNS, G_TYPE_POINTER, G_TYPE_POINTER);
+	model =   gtk_tree_store_new (PM_NUM_COLUMNS, G_TYPE_POINTER, G_TYPE_INT, G_TYPE_POINTER, G_TYPE_POINTER);
 
 	/* set tree model */
 	gtk_tree_view_set_model (playlist_treeview, GTK_TREE_MODEL (model));
@@ -2431,6 +2538,34 @@ pm_get_selected_playlist (void)
     /* playlist was just changed -- wait until current_playlist is
        updated. */
     if (result != current_playlist)  result=NULL;
+    return result;
+}
+
+iTunesDB*
+pm_get_selected_itdb (void)
+{
+/* return(current_playlist);*/
+/* we can't just return the "current_playlist" because the context
+   menus require the selection before "current_playlist" is updated */
+
+    GtkTreeSelection *ts;
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+    iTunesDB *result = NULL;
+
+    g_return_val_if_fail (playlist_treeview, NULL);
+    ts = gtk_tree_view_get_selection (playlist_treeview);
+    g_return_val_if_fail (ts, NULL);
+
+    if (gtk_tree_selection_get_selected (ts, &model, &iter))
+    {
+	gtk_tree_model_get (model, &iter,
+			    PM_COLUMN_ITDB, &result, -1);
+    }
+
+    /* playlist was just changed -- wait until current_playlist is
+       updated. */
+    if (result != current_itdb)  result=NULL;
     return result;
 }
 

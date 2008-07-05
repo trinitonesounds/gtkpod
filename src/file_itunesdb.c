@@ -805,9 +805,13 @@ static iTunesDB *gp_merge_itdb (iTunesDB *old_itdb)
 				   mountpoint,
 				   old_eitdb->offline_filename,
 				   NULL);
+	if (new_itdb)
+	    gphoto_load_photodb (new_itdb);
     }
     else
+    {
 	g_return_val_if_reached (NULL);
+    }
 
     if (new_itdb)
     {
@@ -989,8 +993,6 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
 	}
     }
     
-    /* All successfully loaded so try loading the photo database */
-    gphoto_load_photodb (new_itdb);
     return new_itdb;
 }
 

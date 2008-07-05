@@ -519,7 +519,7 @@ void gp_playlist_add (iTunesDB *itdb, Playlist *pl, gint32 pos)
     g_return_if_fail (pl);
 
     itdb_playlist_add (itdb, pl, pos);
-    pm_add_playlist (pl, pos);
+    pm_add_child (itdb, PM_COLUMN_PLAYLIST, pl, pos);
     data_changed (itdb);
 }
 
@@ -535,7 +535,7 @@ Playlist *gp_playlist_add_new (iTunesDB *itdb, gchar *name,
 
     pl = gp_playlist_new (name, spl);
     itdb_playlist_add (itdb, pl, pos);
-    pm_add_playlist (pl, pos);
+    pm_add_child (itdb, PM_COLUMN_PLAYLIST, pl, pos);
     data_changed (itdb);
     return pl;
 }
@@ -1096,18 +1096,8 @@ gboolean gp_increase_playcount (gchar *sha1, gchar *file, gint num)
  * returned if no itdb is active. */
 iTunesDB *gp_get_selected_itdb (void)
 {
-    Playlist *pl = pm_get_selected_playlist ();
-
-    /* If playlist is selected, use the itdb of the playlist as the
-       active itdb */
-    if (pl)
-    {
-	g_return_val_if_fail (pl->itdb, NULL);
-	return pl->itdb;
+    return pm_get_selected_itdb ();
     }
-
-    return NULL;
-}
 
 
 /* Get the "ipod" itdb. If only one iPod itdb exists, this itdb is

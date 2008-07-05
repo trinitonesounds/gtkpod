@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-01-16 17:55:41 jcs>
+/* Time-stamp: <2008-06-28 18:14:14 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1524,7 +1524,7 @@ static void playlist_cb_cell_data_func_pix (GtkCellLayout *cell_layout,
 
     gtk_tree_model_get (model, iter, 0, &playlist, -1);
 
-    pm_set_renderer_pix (cell, playlist);
+    pm_set_playlist_renderer_pix (cell, playlist);
 }
 
 
@@ -1543,7 +1543,7 @@ static void playlist_cb_cell_data_func_text (GtkCellLayout *cell_layout,
 
     gtk_tree_model_get (model, iter, 0, &playlist, -1);
 
-    pm_set_renderer_text (cell, playlist);
+    pm_set_playlist_renderer_text (cell, playlist);
 }
 
 

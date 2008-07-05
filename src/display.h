@@ -265,11 +265,13 @@ typedef enum {
 #define TM_NUM_TAGS_PREFS (5)
 
 /* "Column numbers" in playlist model */
-enum  {
+typedef enum  {
   PM_COLUMN_ITDB = 0,
+  PM_COLUMN_TYPE,
   PM_COLUMN_PLAYLIST,
+  PM_COLUMN_PHOTOS,
   PM_NUM_COLUMNS
-};
+} PM_column_type;
 
 /* Drag and drop types */
 enum {
@@ -299,9 +301,10 @@ void display_install_autoscroll_row_timeout (GtkWidget *widget);
 void display_image_dialog (GdkPixbuf *image);
 
 Playlist* pm_get_selected_playlist (void);
+iTunesDB* pm_get_selected_itdb (void);
 gint pm_get_position_for_itdb (iTunesDB *itdb);
 void pm_remove_playlist (Playlist *playlist, gboolean select);
-void pm_add_playlist (Playlist *playlist, gint position);
+void pm_add_child (iTunesDB *itdb, PM_column_type type, gpointer item, gint position);
 void pm_add_itdb (iTunesDB *itdb, gint pos);
 void pm_select_playlist (Playlist *playlist);
 void pm_unselect_playlist (Playlist *playlist);
@@ -311,9 +314,9 @@ void pm_itdb_name_changed (iTunesDB *itdb);
 void pm_track_changed (Track *track);
 void pm_sort (GtkSortType order);
 void pm_stop_editing (gboolean cancel);
-void pm_set_renderer_pix (GtkCellRenderer *renderer,
+void pm_set_playlist_renderer_pix (GtkCellRenderer *renderer,
 			  Playlist *playlist);
-void pm_set_renderer_text (GtkCellRenderer *renderer,
+void pm_set_playlist_renderer_text (GtkCellRenderer *renderer,
 			   Playlist *playlist);
 void pm_show_all_playlists ();
 

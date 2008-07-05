@@ -1211,10 +1211,6 @@ pm_context_menu_init(void)
 
     if(selected_playlist)
     {
-	/* Dont allow context menu to display if the playlist is the
-	 * photo one */
-	if (gphoto_is_photo_playlist (selected_playlist)) return;
-        
 	selected_tracks = g_list_copy (selected_playlist->members);
 	create_context_menu (CM_PL);
     }

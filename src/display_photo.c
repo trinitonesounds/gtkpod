@@ -172,24 +172,6 @@ void gphoto_load_photodb(iTunesDB *itdb)
 }
 
 /**
- * gphoto_is_photo_playlist
- *
- * Convenience function that determines whether the
- * playlist is the photo playlist.
- * 
- * @ pl: playlist
- * 
- * Returns:
- * true/false whether the playlist is the photo playlist
- */
-gboolean gphoto_is_photo_playlist(Playlist *pl)
-{
-    g_return_val_if_fail (pl, FALSE);
-
-    return pl->type == GP_PL_TYPE_PHOTO;
-}
-
-/**
  * gphoto_display_photo_window
  *
  * When the photo playlist is clicked on, it hands off to this
@@ -807,7 +789,8 @@ static void gphoto_add_image_to_iconview(Artwork *photo, gint index)
 		GtkListStore *model= NULL;
 		GtkTreeIter iter;
 		/* default sizes taken from smallest photo image type in itdb_device.c */
-		gint icon_width = 42, icon_height = 30;
+		gint icon_width = 42;
+		gint icon_height = 30;
 
 		g_return_if_fail (photo);
 
