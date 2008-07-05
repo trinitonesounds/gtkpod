@@ -1,5 +1,11 @@
 2008-07-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/display_coverart.c:
+
+	  Normalized indentation (original editor was mis-configured).
+
+2008-07-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/misc_conversion.c (ST_to_T)
 	  src/display_sorttabs.c (st_set_string_compare_func):
 
