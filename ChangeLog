@@ -1,5 +1,10 @@
 2008-07-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/file.c: allow absolute paths in coverart
+          template. Thanks to J.D. Laub for the patch.
+
+2008-07-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/display_itdb.c
 	  src/display_playlists.c: some work on white space.
 

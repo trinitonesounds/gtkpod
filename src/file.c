@@ -1171,7 +1171,10 @@ static void add_coverart (Track *tr)
 	{
 	    if (strchr (*tplp, '.') != NULL)
 	    {   /* if template has an extension, try if it is valid */
-		filename_utf8 = g_build_filename (dirname, fname, NULL);
+		if (fname[0] == '/')
+		    filename_utf8 = g_build_filename ("", fname, NULL);
+		else
+		    filename_utf8 = g_build_filename (dirname, fname, NULL);
 		filename_local = charset_from_utf8 (filename_utf8);
 		g_free (filename_utf8);
 		if (!g_file_test (filename_local, G_FILE_TEST_EXISTS))
@@ -1186,7 +1189,11 @@ static void add_coverart (Track *tr)
 		while (*extp && !filename_local)
 		{
 		    gchar *ffname = g_strconcat (fname, *extp, NULL);
-		    filename_utf8 = g_build_filename (dirname, ffname, NULL);
+		    if (ffname[0] == '/')
+			filename_utf8 = g_build_filename ("", ffname, NULL);
+		    else
+			filename_utf8 = g_build_filename (dirname, ffname,
+			    NULL);
 		    g_free (ffname);
 		    filename_local = charset_from_utf8 (filename_utf8);
 		    g_free (filename_utf8);
@@ -1203,7 +1210,11 @@ static void add_coverart (Track *tr)
 		    gchar *upper_ext = g_ascii_strup (*extp, -1);
 		    gchar *ffname = g_strconcat (fname, upper_ext, NULL);
 		    g_free (upper_ext);
-		    filename_utf8 = g_build_filename (dirname, ffname, NULL);
+		    if (ffname[0] == '/')
+			filename_utf8 = g_build_filename ("", ffname, NULL);
+		    else
+			filename_utf8 = g_build_filename (dirname, ffname,
+			    NULL);
 		    g_free (ffname);
 		    filename_local = charset_from_utf8 (filename_utf8);
 		    g_free (filename_utf8);
