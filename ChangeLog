@@ -1,5 +1,11 @@
 2008-07-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/display_itdb.c
+	  src/display_playlists.c: some work on white space.
+
+
+2008-07-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	  src/display.h
 	  src/file_itunesdb.c
 	  src/repository.c
@@ -8,7 +14,8 @@
 	  src/context_menus.c
 	  src/display_photo.c
 	  src/display_photo.h: get rid of Photo "Playlist" and create a
-	  "Photo" object inthe Playlist view.
+	  "Photo" object in the Playlist view. This also solves a problem
+	  with the population of smart playlists.
 
 2008-06-29 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
@@ -50,16 +57,16 @@
 
 2008-05-31 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * context_menus.c
+	* context_menus.c
   
-    Added coverart update call to eject ipod action.
+	  Added coverart update call to eject ipod action.
     
-  * display_coverart.c
-  * display_covarart.h
+	* display_coverart.c
+	* display_covarart.h
   
-    Tidied up function doc comments.
-    Ensured when no playlist is selected, coverart_display_update 
-    clears the artwork display.
+	  Tidied up function doc comments.
+	  Ensured when no playlist is selected, coverart_display_update 
+	  clears the artwork display.
 
 2008-05-30  Christophe Fergeau  <teuf at gnome.org>
 
@@ -75,15 +82,15 @@
 
 2008-05-29 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * src/fetchcover.c
+	* src/fetchcover.c
 
-    Fix for incorrect creation of jpg filenames
+	  Fix for incorrect creation of jpg filenames
     
 2008-05-29 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
-  * src/display_photo.c
+	* src/display_photo.c
 
-    Fix for pixbufs not being unreference in display_photo.c
+	  Fix for pixbufs not being unreference in display_photo.c
     
 2008-05-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
 

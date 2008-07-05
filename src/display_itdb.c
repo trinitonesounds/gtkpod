@@ -1097,7 +1097,7 @@ gboolean gp_increase_playcount (gchar *sha1, gchar *file, gint num)
 iTunesDB *gp_get_selected_itdb (void)
 {
     return pm_get_selected_itdb ();
-    }
+}
 
 
 /* Get the "ipod" itdb. If only one iPod itdb exists, this itdb is
