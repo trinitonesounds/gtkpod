@@ -825,10 +825,10 @@ static gboolean copy_new_info (Track *from, Track *to)
 	case T_SORT_TVSHOW:
 	case T_YEAR:
 	case T_TRACK_NR:
-	case T_SIZE:
 	case T_TRACKLEN:
 	case T_STARTTIME:
 	case T_STOPTIME:
+	case T_SIZE:
 	case T_BITRATE:
 	case T_SAMPLERATE:
 	case T_BPM:
@@ -912,6 +912,12 @@ static gboolean copy_new_info (Track *from, Track *to)
 	to->samplecount = from->samplecount;
 	to->gapless_data = from->gapless_data;
 	to->gapless_track_flag = from->gapless_track_flag;
+    }
+
+    if (eto->mtime != efrom->mtime)
+    {
+	changed = TRUE;
+	eto->mtime = efrom->mtime;
     }
 
     return changed;
@@ -1813,7 +1819,6 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 
     trackpath = get_file_name_from_source (track, SOURCE_PREFER_LOCAL);
 
-    
     if (!(oetr->pc_path_locale && *oetr->pc_path_locale))
     { /* no path available */
 	if (trackpath)

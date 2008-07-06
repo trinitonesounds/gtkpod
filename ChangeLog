@@ -1,8 +1,18 @@
+2008-07-06 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/syncdir.c: hash filenames of tracks to reduce overhead
+          when syncing parts of large repositories. Thanks to Clarke
+          Brunsdon for the initial patch.
+
+	* src/file.c: also update mtime of updated tracks.
+
+
 2008-07-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/display_coverart.c:
 
 	  Normalized indentation (original editor was mis-configured).
+
 
 2008-07-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
 

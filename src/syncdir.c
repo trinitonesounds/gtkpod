@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-06-17 23:01:18 jcs>
+/* Time-stamp: <2008-07-06 10:38:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -48,6 +48,15 @@ struct add_files_data
 {
     Playlist *playlist;
     GList    **tracks_updated;
+    GHashTable *filepath_hash;
+};
+
+/* Used in the callback after adding a new track to 
+ * to add to the filehash */
+struct added_file_data
+{
+    GHashTable *filepath_hash;
+    gchar *filepath;
 };
 
 
@@ -299,13 +308,51 @@ static void show_sync_summary (const gchar *key_sync_show_summary,
  * again if it already exists */
 static void sync_addtrackfunc (Playlist *plitem, Track *track, gpointer data)
 {
+	struct added_file_data *afd = data;
+
     g_return_if_fail (plitem);
     g_return_if_fail (track);
 
-    /* only add if @track isn't already a member of the current
-       playlist */
+    g_return_if_fail (afd->filepath_hash);
+    g_return_if_fail (afd->filepath);
+
+    /* add the new entry to the filepath */
+    g_hash_table_insert (afd->filepath_hash, g_strdup (afd->filepath), track);
+
+    /* only add if @track isn't already a member of the current playlist */
     if (!itdb_playlist_contains_track (plitem, track))
 	gp_playlist_add_track (plitem, track, TRUE);
+}
+
+
+/* Builds a hash of all the tracks in the playlists db,
+ * hashed by the file path */
+static GHashTable *get_itdb_filepath_hash (Playlist *pl)
+{
+    GHashTable* filepath_hash;
+    iTunesDB *itdb = pl->itdb;
+
+    filepath_hash = g_hash_table_new_full (
+	g_str_hash, g_str_equal, g_free, NULL);
+
+    GList *gl;
+    for (gl=itdb->tracks; gl; gl=gl->next)
+    {
+	ExtraTrackData *etr;
+	Track *track = gl->data;
+	g_return_val_if_fail (track, NULL);
+
+	etr = track->userdata;
+	g_return_val_if_fail (etr, NULL);
+
+	/* track has filename info */
+	if (etr->pc_path_locale && *etr->pc_path_locale)
+	{
+	    g_hash_table_insert (filepath_hash, g_strdup (etr->pc_path_locale), track);
+	}
+    }
+	
+    return filepath_hash;
 }
 
 
@@ -319,12 +366,15 @@ static void add_files (gpointer key, gpointer value, gpointer user_data)
 {
     struct add_files_data *afd = user_data;
     Playlist *pl;
-    gchar *dirname = key;
+    gchar *dirname;
 
     g_return_if_fail (key);
     g_return_if_fail (afd);
     g_return_if_fail (afd->playlist);
     g_return_if_fail (afd->tracks_updated);
+    g_return_if_fail (afd->filepath_hash);
+
+    dirname = key;
     pl = afd->playlist;
 
     if (g_file_test (dirname, G_FILE_TEST_IS_DIR))
@@ -360,20 +410,13 @@ static void add_files (gpointer key, gpointer value, gpointer user_data)
 		case FILE_TYPE_MPG:
                 case FILE_TYPE_OGG:
                 case FILE_TYPE_FLAC:
-		    tr = gp_track_by_filename (pl->itdb, filename);
+		    tr = g_hash_table_lookup (afd->filepath_hash, filename);
 		    if (tr)
-		    {   /* track is known -> add to playlist if not
-			 * already present and only update if mtime or
-			 * filesize is different */
-			ExtraTrackData *etr = tr->userdata;
+		    {   /* track is already present in playlist.
+			   Update if date stamp is different. */
 			struct stat filestat;
+			ExtraTrackData *etr = tr->userdata;
 			g_return_if_fail (etr);
-
-			if (!itdb_playlist_contains_track (pl, tr))
-			{
-			    gp_playlist_add_track (pl, tr, TRUE);
-			    updated = TRUE;
-			}
 
 			stat (filename, &filestat);
 /*
@@ -395,10 +438,15 @@ printf ("%ld %ld (%s)\n, %ld %d\n",
 			 * standard function. Duplicate adding is
 			 * avoided by an addtrack function checking
 			 * for duplication */
+			struct added_file_data data;
+			data.filepath = filename;
+			data.filepath_hash = afd->filepath_hash;
+
 			add_track_by_filename (pl->itdb, filename,
 					       pl, FALSE,
-					       sync_addtrackfunc, NULL);
-			tr = gp_track_by_filename (pl->itdb, filename);
+					       sync_addtrackfunc, &data);
+
+			tr = g_hash_table_lookup (afd->filepath_hash, filename);
 			updated = TRUE;
 		    }
 		    break;
@@ -471,7 +519,7 @@ void sync_playlist (Playlist *playlist,
 		    const gchar *key_sync_show_summary,
 		    gboolean sync_show_summary)
 {
-    GHashTable *dirs_hash;
+    GHashTable *dirs_hash, *filepath_hash;
     gboolean delete_tracks, is_mpl;
     time_t current_time;
     GList *tracks_to_delete_from_ipod = NULL;
@@ -559,10 +607,20 @@ void sync_playlist (Playlist *playlist,
        tracks */
     current_time = time (NULL);
 
-    /* Add all files in all directories entered into dirs_hash */
+    /* craete a hash with all files in the current playlist for faster
+     * comparison with files in the directory */
+    filepath_hash = get_itdb_filepath_hash (playlist);
+
     afd.playlist = playlist;
     afd.tracks_updated = &tracks_updated;
+    afd.filepath_hash = filepath_hash;
+    /* Add all files in all directories present in dirs_hash */
     g_hash_table_foreach (dirs_hash, add_files, &afd);
+
+    /* we won't need this hash any more */
+    g_hash_table_destroy (filepath_hash);
+    filepath_hash = NULL;
+
     /* Remove updated and duplicate list so it won't pop up at a later
        time */
     display_updated ((void *)-1, NULL);
