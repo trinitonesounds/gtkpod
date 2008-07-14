@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 # Placed under GPL; to know more, see:
 # 			http://www.gnu.org/licenses/licenses.html

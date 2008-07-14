@@ -1,3 +1,13 @@
+2008-07-14  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* scripts/sync-evolution.sh
+	  scripts/sync-ldif.sh: Use /bin/bash as the interpreter, as
+	  these scripts use bash-specific syntax
+
+	* scripts/sync-thunderbird-nano.sh: Remove a few bashisms
+
+	  Thanks to Frank Lichtenheld (fixes Debian bug #489605)
+
 2008-07-06 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/syncdir.c: hash filenames of tracks to reduce overhead

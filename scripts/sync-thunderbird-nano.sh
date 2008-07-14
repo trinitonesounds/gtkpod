@@ -29,7 +29,7 @@ IPOD_MOUNT=/mnt/ipod         # mountpoint of ipod
 ENCODING=ISO-8859-15         # encoding used by ipod
 NAME=thunderbird             # default file export name
 FILE_FLAG=''		     # flag used to determine end of file
-let COUNT=0;		     # file counter
+COUNT=0			     # file counter
 
 # Unless called with "-e=none" this script requires "recode" available
 # from ftp://ftp.iro.umontreal.ca/pub/recode/recode-3.6.tar.gz
@@ -80,7 +80,7 @@ echo "Breaking apart VCF file into individual contacts"
 for line in $(cat $IPOD_MOUNT/Contacts/${NAME}.vcf | sed "s/\ /[54321]/g")
 do
 	if [ "$FILE_FLAG" = 'END' ]; then
-		let COUNT=$COUNT+1;
+		COUNT=$((COUNT+1));
 	fi
 
 	echo $line | sed "s/\[54321\]/\ /g" >> $IPOD_MOUNT/Contacts/${NAME}$COUNT.vcf

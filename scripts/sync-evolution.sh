@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Script for syncing evolution addressbook data with iPod
 # (c) 2004 Clinton Gormley <clint at traveljury dot com>
 #
