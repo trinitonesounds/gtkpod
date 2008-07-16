@@ -1,3 +1,11 @@
+2008-07-06 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_playlists.c (pm_get_iter_for_playlist): remove
+          assertion (pl!=NULL) that is no longer valid with the
+          introduction of the "Photo" entity. Should take care of the
+          segfaults when removing a playlist listed after the Photo
+          entity.
+
 2008-07-14  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* scripts/sync-evolution.sh

@@ -1092,7 +1092,7 @@ static gboolean pm_get_iter_for_playlist (Playlist *playlist, GtkTreeIter *pl_it
 	gtk_tree_model_get (model, &itdb_iter,
 			    PM_COLUMN_PLAYLIST, &pl,
 			    -1);
-	g_return_val_if_fail (pl, FALSE);
+
 	if (pl == playlist)
 	{
 	    *pl_iter = itdb_iter;
@@ -1111,7 +1111,7 @@ static gboolean pm_get_iter_for_playlist (Playlist *playlist, GtkTreeIter *pl_it
 	    gtk_tree_model_get (model, pl_iter,
 				PM_COLUMN_PLAYLIST, &pl,
 				-1);
-	    g_return_val_if_fail (pl, FALSE);
+
 	    if (pl == playlist)
 	    {
 		return TRUE;
