@@ -1,6 +1,12 @@
 2008-07-18 P.G. Richardson <phantom_sf at users.sourceforge.net>
 
 	* src/file.c (get_track_info_from_file): 
+	Relating to previous change. Rather than comment out, have reversed
+	logic as per Michael Tiffany's patch (15/07/2008)
+
+2008-07-18 P.G. Richardson <phantom_sf at users.sourceforge.net>
+
+	* src/file.c (get_track_info_from_file): 
 	Commented out test itdb_track_has_thumbnails test on line 1418
 	as this stops coverart being added to new tracks as they are being
 	imported from directory.
