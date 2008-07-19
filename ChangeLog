@@ -1,5 +1,10 @@
 2008-07-19 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/file_itunesdb.c (data_changed): don't mark non-imported
+          iPods as changed. Thanks to Andrea.
+
+2008-07-19 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/confirmation.c (gtkpod_confirmation): initialize
           <scrolled> variable. Thanks to Andrea.
 

@@ -2145,9 +2145,19 @@ void data_changed (iTunesDB *itdb)
     eitdb = itdb->userdata;
     g_return_if_fail (eitdb);
 
-    eitdb->data_changed = TRUE;
-    pm_itdb_name_changed (itdb);
-    space_data_update ();
+    if ((itdb->usertype & GP_ITDB_TYPE_IPOD) && !eitdb->itdb_imported)
+    {   /* don't do anything for non-imported iPod
+	   repositories. Marking them as "changed" allows the empty
+	   repository to be saved back to the iPod, overwriting data
+	   there */
+	return;
+    }
+    else
+    {
+	eitdb->data_changed = TRUE;
+	pm_itdb_name_changed (itdb);
+	space_data_update ();
+    }
 }
 
 
