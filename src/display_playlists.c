@@ -1237,13 +1237,36 @@ void pm_add_child (iTunesDB *itdb, PM_column_type type, gpointer item, gint pos)
 	  mpli = NULL;
       }
       else
-      {
+      {   /* Handle normal playlist */
 	  /* MPL must be set before calling this function */
 	  g_return_if_fail (mpli);
-	  /* reduce position by one because the MPL is not included in the
-	     tree model's count */
-	  if (pos != -1)
+	  if (pos == -1)
+	  {   /* just adding at the end will add behind the photo
+	       * item. Find out how many playlists there are and add
+	       * at the end. */
+	      GtkTreeIter pl_iter;
+	      Playlist *pl;
+	      pos = 0;
+	      	/* go down one hierarchy and try all other iters */
+	      if (gtk_tree_model_iter_children (model, &pl_iter, &mpl_iter))
+	      {
+		  do
+		  {
+		      gtk_tree_model_get (model, &pl_iter,
+					  PM_COLUMN_PLAYLIST, &pl,
+					  -1);
+		      if (pl != NULL)
+		      {
+			  ++pos;
+		      }
+		  } while (pl && gtk_tree_model_iter_next (model, &pl_iter));
+	      }
+	  }
+	  else
+	  {   /* reduce position by one because the MPL is not included in the
+		 tree model's count */
 	      --pos;
+	  }
       }
       break;
   case PM_COLUMN_PHOTOS:
