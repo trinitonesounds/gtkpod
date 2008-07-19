@@ -1,5 +1,10 @@
 2008-07-19 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/confirmation.c (gtkpod_confirmation): initialize
+          <scrolled> variable. Thanks to Andrea.
+
+2008-07-19 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/display_playlists.c (pm_add_child): when adding
           playlists to the end, don't add behind the Photo item.
 

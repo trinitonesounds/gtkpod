@@ -372,7 +372,7 @@ GtkResponseType gtkpod_confirmation (gint id,
 	glade_xml_signal_autoconnect (confirm_xml);
 	
     /* insert ID into hash table */
-    cd = g_new (ConfData, 1);
+    cd = g_new0 (ConfData, 1);
     cd->window = window;
     cd->window_xml = confirm_xml;
     cd->option1_key = g_strdup(option1_key);
@@ -426,12 +426,13 @@ GtkResponseType gtkpod_confirmation (gint id,
 
     gtk_tree_view_append_column (GTK_TREE_VIEW (w), column);
 
-	if (text)
+    if (text)
     {
 		confirm_append_text (cd->window_xml, text);
+		cd->scrolled = TRUE;
 		defx = prefs_get_int("size_conf_sw.x");
 		defy = prefs_get_int("size_conf_sw.y");
-	}
+    }
     else
     {
 		/* no text -> hide widget */
