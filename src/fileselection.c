@@ -54,27 +54,68 @@
 #include "fileselection.h"
 #include "display_coverart.h"
 
-/* OK button */
-static void add_files_ok(GtkFileChooser* filechooser, Playlist *playlist)
+
+/* Open a modal file selection dialog with multiple selction enabled */
+GSList* fileselection_get_files(const gchar *title)
 {
-    GSList* names;   /* List of selected names */
+    GtkWidget* fc;  /* The file chooser dialog */
+    gint response;  /* The response of the filechooser */
+    gchar *last_dir, *new_dir;
+    GSList * files = NULL;
+
+    fc = gtk_file_chooser_dialog_new (title,
+				      NULL,
+				      GTK_FILE_CHOOSER_ACTION_OPEN,
+				      GTK_STOCK_CANCEL,
+				      GTK_RESPONSE_CANCEL,
+				      GTK_STOCK_OPEN,
+				      GTK_RESPONSE_ACCEPT,
+				      NULL);
+
+    /* allow multiple selection of files */
+    gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (fc), TRUE);
+
+    /* set same directory as last time */
+    last_dir = prefs_get_string ("last_dir_browsed");
+    if (last_dir)
+    {
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
+					     last_dir);
+	g_free (last_dir);
+    }
+
+    /* Run the dialog */
+    response = gtk_dialog_run (GTK_DIALOG(fc));
+
+    /* Handle the response */
+    switch (response)
+    {
+    case GTK_RESPONSE_ACCEPT:
+	new_dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (fc));
+	prefs_set_string ("last_dir_browsed", new_dir);
+	g_free (new_dir);
+	files = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (fc));
+	break;
+    case GTK_RESPONSE_CANCEL:
+	break;
+    default:	/* Fall through */
+	break;
+    }
+    gtk_widget_destroy (fc);
+
+    return files;
+}
+
+
+
+static void fileselection_add_files (GSList* names, Playlist *playlist)
+{
     GSList* gsl;     /* Current node in list */
     gboolean result = TRUE;  /* Result of file adding */
 	
     /* If we don't have a playlist to add to, don't add anything */
     g_return_if_fail (playlist);
 	
-    block_widgets ();
-
-    names = gtk_file_chooser_get_filenames (filechooser);
-
-    if (names)
-    {
-	gchar *dirname = gtk_file_chooser_get_current_folder (filechooser);
-	prefs_set_string ("last_dir_browsed", dirname);
-	g_free (dirname);
-    }
-
     block_widgets ();
 
     /* Get the filenames and add them */
@@ -85,12 +126,7 @@ static void add_files_ok(GtkFileChooser* filechooser, Playlist *playlist)
 					playlist,
 					prefs_get_int ("add_recursively"),
 					NULL, NULL);
-	g_free (gsl->data);
     }
-    g_slist_free (names);
-    names = NULL;
-
-    release_widgets ();
 
     /* clear log of non-updated tracks */
     display_non_updated ((void *)-1, NULL);
@@ -129,9 +165,8 @@ G_MODULE_EXPORT void create_add_files_callback (void)
 /* Open a modal file selection dialog for adding individual files */
 void create_add_files_dialog (Playlist *pl)
 {
-    GtkWidget* fc;  /* The file chooser dialog */
-    gint response;  /* The response of the filechooser */
-    gchar *last_dir, *str;
+    gchar *str;
+    GSList *names;
     iTunesDB *itdb;
     ExtraiTunesDBData *eitdb;
     Playlist *mpl;
@@ -165,66 +200,29 @@ void create_add_files_dialog (Playlist *pl)
     {
 	str = g_strdup_printf (_("Add files to '%s/%s'"), mpl->name, pl->name);
     }
-    /* Create the file chooser */
-    fc = gtk_file_chooser_dialog_new (str,
-				      NULL,
-				      GTK_FILE_CHOOSER_ACTION_OPEN,
-				      GTK_STOCK_CANCEL,
-				      GTK_RESPONSE_CANCEL,
-				      GTK_STOCK_OPEN,
-				      GTK_RESPONSE_ACCEPT,
-				      NULL);
+
+    names = fileselection_get_files(str);
     g_free (str);
 
-    /* allow multiple selection of files */
-    gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (fc), TRUE);
+    if (!names)
+	return;
 
-    /* set same directory as last time */
-    last_dir = prefs_get_string ("last_dir_browsed");
-    if (last_dir)
-    {
-	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
-					     last_dir);
-	g_free (last_dir);
-    }
+    fileselection_add_files (names, pl);
 
-    /* Run the dialog */
-    response = gtk_dialog_run (GTK_DIALOG(fc));
-
-    /* Handle the response */
-    switch (response)
-    {
-    case GTK_RESPONSE_ACCEPT:
-	add_files_ok (GTK_FILE_CHOOSER (fc), pl);
-	break;
-    case GTK_RESPONSE_CANCEL:
-	break;
-    default:	/* Fall through */
-	break;
-    }
-    gtk_widget_destroy (fc);
+    g_slist_foreach (names, (GFunc)g_free, NULL);
+    g_slist_free (names);
 }
 
 
 /* OK Button */
-static void add_playlists_ok (GtkFileChooser* filechooser, iTunesDB *itdb)
+static void fileselection_add_playlists (GSList* names, iTunesDB *itdb)
 {
-    GSList* names;  /* List of selected names */
     GSList* gsl;
 	
     /* Get the names of the playlist(s) and add them */
 	
     g_return_if_fail (itdb);
 	
-    names = gtk_file_chooser_get_filenames(filechooser);
-
-    if (names)
-    {
-	gchar *dirname = gtk_file_chooser_get_current_folder (filechooser);
-	prefs_set_string ("last_dir_browsed", dirname);
-	g_free (dirname);
-    }
-
     block_widgets ();
 
     for (gsl=names; gsl; gsl=gsl->next)
@@ -232,10 +230,7 @@ static void add_playlists_ok (GtkFileChooser* filechooser, iTunesDB *itdb)
 	add_playlist_by_filename (itdb,
 				  gsl->data, NULL, 
 				  -1, NULL, NULL);
-	g_free (gsl->data);
     }
-    g_slist_free (names);
-    names = NULL;
 
     release_widgets ();
 
@@ -271,9 +266,8 @@ G_MODULE_EXPORT void create_add_playlists_callback (void)
 /* Open a modal file selection dialog for adding playlist files */
 void create_add_playlists_dialog (iTunesDB *itdb)
 {
-    GtkWidget* fc ; /* The file chooser dialog */
-    gint response;  /* The response of the filechooser */
-    gchar *last_dir, *str;
+    gchar *str;
+    GSList *names;
     ExtraiTunesDBData *eitdb;
     Playlist *mpl;
 
@@ -298,47 +292,17 @@ void create_add_playlists_dialog (iTunesDB *itdb)
     /* Create window title */
     str = g_strdup_printf (_("Add playlist files to '%s'"), mpl->name);
 
-    /* Create the file chooser */
-    fc = gtk_file_chooser_dialog_new (str,
-				      NULL, 
-				      GTK_FILE_CHOOSER_ACTION_OPEN,
-				      GTK_STOCK_CANCEL,
-				      GTK_RESPONSE_CANCEL,
-				      GTK_STOCK_OPEN,
-				      GTK_RESPONSE_ACCEPT,
-				      NULL);
+    names = fileselection_get_files(str);
     g_free (str);
-	
-    /* allow multiple selection of files */
-    gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (fc), TRUE);
 
-    /* set same directory as last time */
-    last_dir = prefs_get_string ("last_dir_browsed");
-    if (last_dir)
-    {
-	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
-					     last_dir);
-	g_free (last_dir);
-    }
+    if (!names)
+	return;
 
-    /* Run the dialog */
-    response = gtk_dialog_run (GTK_DIALOG(fc));
-	
-    /* Handle the response */
-    switch (response)
-    {
-    case GTK_RESPONSE_ACCEPT:
-	add_playlists_ok(GTK_FILE_CHOOSER (fc), itdb);
-	break;
-    case GTK_RESPONSE_CANCEL:
-	break;
-    default:	/* Fall through */
-	break;
-    }	
-    gtk_widget_destroy(fc);
+    fileselection_add_playlists (names, itdb);
+    
+    g_slist_foreach (names, (GFunc)g_free, NULL);
+    g_slist_free (names);
 }
-
-
 
 
 /* 
@@ -424,6 +388,7 @@ gchar *fileselection_get_file_or_dir (const gchar *title,
     GtkWidget* fc;  /* The file chooser dialog */
     gint response;  /* The response of the filechooser */
     gchar *new_file = NULL; /* The chosen file */
+    gchar *new_dir; /* The new dir to remember */
 
     g_return_val_if_fail (title, NULL);
 
@@ -463,6 +428,9 @@ gchar *fileselection_get_file_or_dir (const gchar *title,
     switch (response)
     {
     case GTK_RESPONSE_ACCEPT:
+	new_dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (fc));
+	prefs_set_string ("last_dir_browsed", new_dir);
+	g_free (new_dir);
 	new_file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc));
 	break;
     case GTK_RESPONSE_CANCEL:

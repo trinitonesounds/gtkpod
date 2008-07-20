@@ -1,3 +1,8 @@
+2008-07-20 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/fileselection.c
+	  src/fileselection.h: restructure code. Thanks to Andrea.
+
 2008-07-19 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_itunesdb.c (data_changed): don't mark non-imported

@@ -51,6 +51,7 @@ gchar *fileselection_select_script (const gchar *opath,
 				    const gchar *fallback,
 				    const gchar *title,
 				    const gchar *additional_text);
+GSList* fileselection_get_files(const gchar *title);
 
 /* dirbrowser */
 void dirbrowser_create (Playlist *pl);
