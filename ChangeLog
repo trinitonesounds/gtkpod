@@ -1,3 +1,9 @@
+2008-07-20 Paul Richardson <phantom_sf at users.sourceforge.net>
+
+	* src/display_photo.c:
+	Patch to stop photo action signals being added to actions
+	multiple times. Thanks to Andrea.
+
 2008-07-20 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/fileselection.c

@@ -301,26 +301,26 @@ void gphoto_change_to_photo_window(gboolean showflag)
 			gtk_container_remove (GTK_CONTAINER (photowin), photo_viewport);
 			/* we don't need this any more */
 			gtk_widget_destroy (photowin);
+
+			/* Bring the menus to life */
+			g_signal_connect (G_OBJECT(photo_add_album_menuItem), "activate", G_CALLBACK(on_photodb_add_album_menuItem_activate), 
+					  NULL);
+			g_signal_connect (G_OBJECT(photo_add_image_menuItem), "activate", G_CALLBACK(on_photodb_add_image_menuItem_activate), 
+					  NULL);
+			g_signal_connect (G_OBJECT(photo_add_image_dir_menuItem), "activate", G_CALLBACK(on_photodb_add_image_dir_menuItem_activate), 
+					  NULL);
+			g_signal_connect (G_OBJECT(photo_remove_album_menuItem), "activate", G_CALLBACK(on_photodb_remove_album_menuItem_activate), 
+					  NULL);
+			g_signal_connect (G_OBJECT(photo_remove_image_menuItem), "activate", G_CALLBACK(on_photodb_remove_image_menuItem_activate), 
+					  NULL);
+			g_signal_connect (G_OBJECT(photo_view_full_size_menuItem), "activate", G_CALLBACK(on_photodb_view_full_size_menuItem_activate), 
+					  NULL);
+			g_signal_connect (G_OBJECT(photo_rename_album_menuItem), "activate", G_CALLBACK(on_photodb_rename_album_menuItem_activate),
+					  NULL);
 		}
 
 		if (gtk_widget_get_parent (photo_viewport) == NULL)
 			gtk_container_add (GTK_CONTAINER (main_vbox), photo_viewport);
-
-		/* Bring the menus to life */
-		g_signal_connect (G_OBJECT(photo_add_album_menuItem), "activate", G_CALLBACK(on_photodb_add_album_menuItem_activate), 
-		NULL);
-		g_signal_connect (G_OBJECT(photo_add_image_menuItem), "activate", G_CALLBACK(on_photodb_add_image_menuItem_activate), 
-		NULL);
-		g_signal_connect (G_OBJECT(photo_add_image_dir_menuItem), "activate", G_CALLBACK(on_photodb_add_image_dir_menuItem_activate), 
-		NULL);
-		g_signal_connect (G_OBJECT(photo_remove_album_menuItem), "activate", G_CALLBACK(on_photodb_remove_album_menuItem_activate), 
-		NULL);
-		g_signal_connect (G_OBJECT(photo_remove_image_menuItem), "activate", G_CALLBACK(on_photodb_remove_image_menuItem_activate), 
-		NULL);
-		g_signal_connect (G_OBJECT(photo_view_full_size_menuItem), "activate", G_CALLBACK(on_photodb_view_full_size_menuItem_activate), 
-				NULL);
-		g_signal_connect (G_OBJECT(photo_rename_album_menuItem), "activate", G_CALLBACK(on_photodb_rename_album_menuItem_activate),
-				NULL);
 		
 	} else
 	{
