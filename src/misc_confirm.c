@@ -901,7 +901,9 @@ on_gtkpod_delete_event                 (GtkWidget       *widget,
 	if (ok_to_close_gtkpod ())
 	{
 	    gtkpod_shutdown ();
-	    return FALSE;
+	    /* returning FALSE to continue calling other handlers
+	       causes tons of errors. */
+	    return TRUE;
 	}
     }
     return TRUE; /* don't quit -- would cause numerous error messages */

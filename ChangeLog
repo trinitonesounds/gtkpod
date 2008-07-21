@@ -1,3 +1,9 @@
+2008-07-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/misc_confirm (on_gtkpod_delete_event): return TRUE to
+	  prevent other handlers from being called. (Tons of error
+	  messages otherwise.)
+
 2008-07-20 Paul Richardson <phantom_sf at users.sourceforge.net>
 
 	* src/display_photo.c:
