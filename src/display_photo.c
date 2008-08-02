@@ -685,7 +685,8 @@ static void signal_data_changed()
  * @ selection: GtkTreeSelection
  * 
  * Returns:
- * string value representing the album name selected
+ * string value representing the album name selected. Must be
+ * g_free()ed after use.
  */
 static gchar *gphoto_get_selected_album_name(GtkTreeSelection *selection)
 {
