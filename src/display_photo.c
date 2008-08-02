@@ -584,6 +584,10 @@ static void gphoto_album_selection_changed(GtkTreeSelection *selection, gpointer
 		gtk_widget_set_sensitive (GTK_WIDGET(photo_remove_album_menuItem), TRUE);
 		
 		selected_album = itdb_photodb_photoalbum_by_name (photodb, album_name);
+
+		g_free (album_name);
+		album_name = NULL;
+
 		if (selected_album->album_type != 0x01)
 		{
 			/* Only allow renaming of album if not the Photo Library */

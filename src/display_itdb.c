@@ -65,6 +65,8 @@ void gp_itdb_extra_destroy (ExtraiTunesDBData *eitdb)
     {
 	sha1_free_eitdb (eitdb);
 	gp_itdb_pc_path_hash_destroy (eitdb);
+	g_free (eitdb->offline_filename);
+	itdb_photodb_free (eitdb->photodb);
 	g_free (eitdb);
     }
 }

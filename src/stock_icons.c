@@ -40,7 +40,8 @@ static void register_stock_icon (const gchar *name, const gchar *stockid)
 			
 	gtk_icon_source_set_icon_name (source, name);
 	gtk_icon_set_add_source (pl_iconset, source);
-	
+	gtk_icon_source_free (source); /* _add_source() copies source */
+
 	GtkIconFactory *factory = gtk_icon_factory_new ();
 	gtk_icon_factory_add (factory, stockid, pl_iconset);
 	

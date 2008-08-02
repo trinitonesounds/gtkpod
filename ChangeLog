@@ -12,6 +12,15 @@
 	* src/misc.c (load_ipod_index_prefs): fix memory leaks. Thanks to
 	  Andrea.
 
+	* src/display_itdb.c (gp_itdb_extra_destroy): fix memory
+	  leaks. Thanks to Andrea.
+
+	* src/stock_icons.c (register_stock_icon): fix memory leak. Thanks
+	  to Andrea.
+
+	* src/display_photo.c (gphoto_album_selection_changed): fix memory
+	  leak. Thanks to Andrea.
+
 2008-07-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/misc_confirm (on_gtkpod_delete_event): return TRUE to
