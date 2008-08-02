@@ -1,3 +1,17 @@
+2008-0-02 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/file_itunesdb (gp_import_itdb): fix memory leak. Thanks to
+	  Andrea.
+
+	* src/prefs.c (prefs_get_cfgdir): fix possible memory leak. Thanks
+	  to Andrea.
+
+	* src/prefs.c (temp_prefs_load): fix memory leaks. Thanks to
+	  Andrea.
+
+	* src/misc.c (load_ipod_index_prefs): fix memory leaks. Thanks to
+	  Andrea.
+
 2008-07-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/misc_confirm (on_gtkpod_delete_event): return TRUE to

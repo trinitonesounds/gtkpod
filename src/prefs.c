@@ -567,16 +567,17 @@ gchar *prefs_get_cfgdir()
     {
 	if ((g_mkdir(folder, 0777)) == -1)
 	{
-	    printf(_("Couldn't create ~/.gtkpod\n"));
+	    printf(_("Couldn't create '%s'\n"), folder);
+	    g_free (folder);
 	    return NULL;
 	}
     }
-	
     return folder;
 }
 
 
 /* get @key and @value from a string like "key=value" */
+/* you must g_free (*key) and (*value) after use */
 static gboolean read_prefs_get_key_value (const gchar *buf,
 					  gchar **key, gchar **value)
 {
@@ -790,7 +791,7 @@ TempPrefs *temp_prefs_load (const gchar *filename, GError **error)
 
 	do
 	{
-	    gchar *line;
+	    gchar *line = NULL;
 
 	    status = g_io_channel_read_line (gio, &line, NULL, NULL, error);
 	    if (status == G_IO_STATUS_NORMAL)
@@ -799,9 +800,11 @@ TempPrefs *temp_prefs_load (const gchar *filename, GError **error)
 		if (read_prefs_get_key_value (line, &key, &value))
 		{
 		    temp_prefs_set_string (temp_prefs, key, value);
+		    g_free (key);
+		    g_free (value);
 		}
-		g_free (line);
 	    }
+	    g_free (line);
 	} while (status == G_IO_STATUS_NORMAL);
 
 	g_io_channel_unref (gio);

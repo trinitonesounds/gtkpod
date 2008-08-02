@@ -413,7 +413,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 			  const gchar *mp, const gchar *name_off,
 			  const gchar *name_loc)
 {
-    gchar *cfgdir = prefs_get_cfgdir ();
+    gchar *cfgdir;
     GList *gl;
     Playlist *pod_pl;
     ExtraiTunesDBData *eitdb;
@@ -426,6 +426,8 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     g_return_val_if_fail (!(type & GP_ITDB_TYPE_LOCAL) || name_loc, NULL);
     g_return_val_if_fail (!(type & GP_ITDB_TYPE_IPOD) || 
 			  (mp && name_off), NULL);
+
+    cfgdir = prefs_get_cfgdir ();
     g_return_val_if_fail (cfgdir, NULL);
 
     if (old_itdb)
@@ -502,7 +504,6 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	}
 	g_free (name_ext);
 	g_free (name_db);
-	g_free (cfgdir);
     }
     else
     { /* GP_ITDB_TYPE_IPOD _and_ iPod is connected */
@@ -557,6 +558,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	g_free (name_db);
 	g_free (itunes_dir);
     }
+    g_free (cfgdir);
 
     if (!itdb)
     {
@@ -1972,7 +1974,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
 	      }
 	  }
       }
-      if (success && cfgdir)
+      if (success)
       {   /* copy to cfgdir */
 	  GError *error = NULL;
 	  if (!itdb_cp (itdb->filename, eitdb->offline_filename, &error))

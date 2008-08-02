@@ -1690,12 +1690,14 @@ static void load_ipod_index_prefs (gint index, const gchar *mountpoint)
 	GError *error = NULL;
 	gchar *path = g_build_filename (dir, "gtkpod.prefs", NULL);
 	temp_prefs = temp_prefs_load (path, &error);
+	g_free (path);
 	if (temp_prefs)
 	{
 	    gchar *subkey;
 	    subkey = get_itdb_prefs_key (index, "");
 	    /* rename 'itdb_*' to 'itdb_<index>_*' */
 	    temp_prefs_rename_subkey (temp_prefs, "itdb_", subkey);
+	    g_free (subkey);
 	    /* merge with real prefs */
 	    temp_prefs_apply (temp_prefs);
 	    /* destroy temp prefs */
