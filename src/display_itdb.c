@@ -107,7 +107,11 @@ void gp_track_extra_destroy (ExtraTrackData *etrack)
     if (etrack)
     {
 	g_free (etrack->year_str);
+	g_free (etrack->pc_path_locale);
 	g_free (etrack->pc_path_utf8);
+	g_free (etrack->converted_file);
+	g_free (etrack->thumb_path_locale);
+	g_free (etrack->thumb_path_utf8);
 	g_free (etrack->hostname);
 	g_free (etrack->sha1_hash);
 	g_free (etrack->charset);
