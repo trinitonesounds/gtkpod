@@ -1,6 +1,11 @@
+2008-0-03 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_itdb.c (gp_replace_itdb): fix memory leak. Thanks to
+	  Andrea.
+
 2008-0-02 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
-	* src/file_itunesdb (gp_import_itdb): fix memory leak. Thanks to
+	* src/file_itunesdb.c (gp_import_itdb): fix memory leak. Thanks to
 	  Andrea.
 
 	* src/prefs.c (prefs_get_cfgdir): fix possible memory leak. Thanks

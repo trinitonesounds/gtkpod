@@ -515,6 +515,9 @@ void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb)
     /* Set prefs system with name of MPL */
     mpl = itdb_playlist_mpl (new_itdb);
     set_itdb_prefs_string (new_itdb, "name", mpl->name);
+
+    /* Clean up */
+    g_free (old_pl_name);
 }    
 
 

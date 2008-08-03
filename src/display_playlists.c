@@ -2351,6 +2351,7 @@ pm_button_press (GtkWidget *w, GdkEventButton *e, gpointer data)
 		 * an iPod */
 		eitdb = pl->itdb->userdata;
 		g_return_val_if_fail (eitdb, FALSE);
+		block_widgets ();
 		if (!eitdb->itdb_imported)
 		{
 		    gp_load_ipod (pl->itdb);
@@ -2359,6 +2360,7 @@ pm_button_press (GtkWidget *w, GdkEventButton *e, gpointer data)
 		{
 		    gp_eject_ipod (pl->itdb);
 		}
+		release_widgets ();
 		return TRUE;
 	    }
 	    if (pl->itdb->usertype & GP_ITDB_TYPE_LOCAL)
