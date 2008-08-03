@@ -3,6 +3,9 @@
 	* src/display_itdb.c (gp_replace_itdb): fix memory leak. Thanks to
 	  Andrea.
 
+	* src/display_playlists.c (pm_button_press): block widgets during
+	  eject. Thanks to Andrea for spotting this potential crash site.
+
 2008-0-02 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_itunesdb.c (gp_import_itdb): fix memory leak. Thanks to
