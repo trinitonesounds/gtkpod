@@ -157,7 +157,6 @@ void sort_window_create (void)
     }
     else
     {
-		GList *collist = NULL;
 		GList *sort_ign_strings;
 		GList *current;  /* current sort ignore item */
 		GtkWidget *w;
@@ -167,6 +166,7 @@ void sort_window_create (void)
 		GtkTextIter ti;
 		gchar *str;
 		GtkTooltips *tooltips;
+		gint *tm_listed_order, tm_list_pos;
 
 		sort_temp_prefs = temp_prefs_create();
 		sort_temp_lists = temp_lists_create();
@@ -226,8 +226,15 @@ void sort_window_create (void)
 		/* create the list in the order of the columns displayed */
 		tm_store_col_order ();
 
+		/* Here we store the order of TM_Items in the
+		 * GtkComboBox */
+		tm_listed_order = g_new (gint, TM_NUM_COLUMNS);
+		tm_list_pos = 1;
+
 		w = gtkpod_xml_get_widget (sort_window_xml, "sort_combo");
 		gtk_combo_box_remove_text (GTK_COMBO_BOX (w), 0);
+
+		gtk_combo_box_append_text (GTK_COMBO_BOX (w), _("No sorting"));
 
 		for (i = 0; i < TM_NUM_COLUMNS; ++i)
 		{   /* first the visible columns */
@@ -235,22 +242,30 @@ void sort_window_create (void)
 			if (col != -1)
 			{
 				if (prefs_get_int_index("col_visible", col))
+				{
 					gtk_combo_box_append_text (GTK_COMBO_BOX (w), gettext (get_tm_string (col)));
+					tm_listed_order[col] = tm_list_pos;
+					++tm_list_pos;
+				}
 			}
 		}
 
 		for (i=0; i<TM_NUM_COLUMNS; ++i)
-		{   /* first the visible columns */
+		{   /* now the hidden colums */
 			TM_item col = prefs_get_int_index("col_order", i);
 			if (col != -1)
 			{
 				if (!prefs_get_int_index("col_visible", col))
+				{
 					gtk_combo_box_append_text (GTK_COMBO_BOX (w), gettext (get_tm_string (col)));
+					tm_listed_order[col] = tm_list_pos;
+					++tm_list_pos;
+				}
 			}
 		}
 
-		g_list_free (collist);
-		collist = NULL;
+		/* associate tm_listed_order with sort_window */
+		g_object_set_data (G_OBJECT (sort_window), "tm_listed_order", tm_listed_order);
 			
 		tooltips = gtk_tooltips_new ();
 		gtk_tooltips_set_tip (tooltips, w, _("You can also use the table headers, but this allows you to sort according to a column that is not displayed."), NULL);
@@ -272,6 +287,9 @@ void sort_window_update (void)
     {
 	/*	gchar *str; */
 		GtkWidget *w = NULL;
+		gint *tm_listed_order;
+		gint sortorder;
+		TM_item sortcol;
 
 		switch (prefs_get_int("pm_sort"))
 		{
@@ -334,7 +352,18 @@ void sort_window_update (void)
 		w = gtkpod_xml_get_widget (sort_window_xml, "sort_combo");
 		gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), str); */
 		w = gtkpod_xml_get_widget (sort_window_xml, "sort_combo");
-		gtk_combo_box_set_active(GTK_COMBO_BOX(w), prefs_get_int("tm_sortcol"));
+		tm_listed_order = g_object_get_data (G_OBJECT (sort_window), "tm_listed_order");
+		g_return_if_fail (tm_listed_order);
+		sortcol = prefs_get_int ("tm_sortcol");
+		sortorder = prefs_get_int ("tm_sort");
+		if ((sortcol >= 0) && (sortcol < TM_NUM_COLUMNS) && (sortorder != SORT_NONE))
+		{
+		    gtk_combo_box_set_active (GTK_COMBO_BOX(w), tm_listed_order[sortcol]);
+		}
+		else
+		{
+		    gtk_combo_box_set_active (GTK_COMBO_BOX(w), 0);
+		}
     }
 }
 
@@ -384,25 +413,38 @@ void sort_window_show_hide_tooltips (void)
 /* get the sort_column selected in the combo */
 static TM_item sort_window_get_sort_col (void)
 {
-    const gchar *str;
     GtkWidget *w;
-    gint i = -1;
+    TM_item sortcol;
+    gint item;
+    gint *tm_listed_order;
+
+    g_return_val_if_fail (sort_window, -1);
+    tm_listed_order = g_object_get_data (G_OBJECT (sort_window), "tm_listed_order");
 
     w = gtkpod_xml_get_widget (sort_window_xml, "sort_combo");
-    str = gtk_combo_box_get_active_text (GTK_COMBO_BOX (w));
-    /* Check which string is selected in the combo */
-    if (str)
-	for (i=0; get_tm_string (i); ++i)
-	    if (strcmp (gettext (get_tm_string (i)), str) == 0)  break;
-    if ((i<0) || (i>= TM_NUM_COLUMNS))
+    item = gtk_combo_box_get_active (GTK_COMBO_BOX (w));
+
+    if ((item<=0) || (item >TM_NUM_COLUMNS))
+    {   /* either an error or no entry is active or "No sorting" is
+	   selected (0). In all these cases we return -1 ("No
+	   sorting") */
+	sortcol = -1;
+    }
+    else
     {
-	fprintf (stderr,
-		 "Programming error: cal_get_category () -- item not found.\n");
-	/* set to something reasonable at least */
-	i = TM_COLUMN_TITLE;
+	gint i;
+	sortcol = -1;
+	for (i=0; i<TM_NUM_COLUMNS; ++i)
+	{
+	    if (tm_listed_order[i] == item)
+	    {
+		sortcol = i;
+		break;
+	    }
+	}
     }
 
-    return i;
+    return sortcol;
 }
 
 
@@ -415,26 +457,62 @@ static void sort_window_set ()
 
     sortcol_old = prefs_get_int("tm_sortcol");
     sortcol_new = sort_window_get_sort_col();
-    prefs_set_int("tm_sortcol", sortcol_new);
+    if (sortcol_new != -1)
+    {
+	prefs_set_int ("tm_sortcol", sortcol_new);
+	if (prefs_get_int ("tm_sort") == SORT_NONE)
+	{
+	    if (temp_prefs_get_int_value (sort_temp_prefs, "tm_sort", &val))
+	    {
+		prefs_set_int ("tm_sort", val);
+	    }
+	    else
+	    {
+		prefs_set_int ("tm_sort", GTK_SORT_ASCENDING);
+	    }
+	}
+    }
+    else
+    {
+	if (prefs_get_int ("tm_sort") == SORT_NONE)
+	{  /* no change */
+	    sortcol_new = sortcol_old;
+	}
+	else
+	{
+	    prefs_set_int ("tm_sort", SORT_NONE);
+	}
+    }
 
     /* update compare string keys */
     compare_string_fuzzy_generate_keys ();
 
     /* if sort type has changed, initialize display */
     if (temp_prefs_get_int_value(sort_temp_prefs, "pm_sort", &val))
+    {
 	pm_sort (val);
+	temp_prefs_remove_key (sort_temp_prefs, "pm_sort");
+    }
     if (temp_prefs_get_int_value(sort_temp_prefs, "st_sort", &val))
+    {
 	st_sort (val);
+	temp_prefs_remove_key (sort_temp_prefs, "st_sort");
+    }
     if (temp_prefs_get_int_value(sort_temp_prefs, "tm_sort", NULL) ||
 	(sortcol_old != sortcol_new))
     {
 	tm_sort_counter (-1);
 	tm_sort (prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
+	temp_prefs_remove_key (sort_temp_prefs, "tm_sort");
     }
     /* if auto sort was changed to TRUE, store order */
     if (!temp_prefs_get_int(sort_temp_prefs, "tm_autostore"))
+    {
 	tm_rows_reordered ();
+	temp_prefs_remove_key (sort_temp_prefs, "tm_autostore");
+    }
 
+    sort_window_update ();
 }
 
 
@@ -599,7 +677,13 @@ void sort_window_delete(void)
 
     /* close the window */
     if(sort_window)
+    {
+	gint *tm_listed_order;
+	tm_listed_order = g_object_get_data (G_OBJECT (sort_window), "tm_listed_order");
+	g_warn_if_fail (tm_listed_order);
+	g_free (tm_listed_order);
 	gtk_widget_destroy(sort_window);
+    }
     sort_window = NULL;
 }
 

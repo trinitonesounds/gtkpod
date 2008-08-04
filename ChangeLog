@@ -1,4 +1,13 @@
-2008-0-03 Jorg Schuler <jcsjcs at users.sourceforge.net>
+2008-08-04 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/sort_window.c: fix bug that selected sort column (for track
+	  view) was displayed incorrectly. Make handling of "no sorting"
+	  more intuitive.
+
+	* data/gtkpod.glade: small bugfix (radio button group for track
+	  display sort order was not set up correctly)
+
+2008-08-03 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/display_itdb.c (gp_replace_itdb): fix memory leak. Thanks to
 	  Andrea.
@@ -6,7 +15,7 @@
 	* src/display_playlists.c (pm_button_press): block widgets during
 	  eject. Thanks to Andrea for spotting this potential crash site.
 
-2008-0-02 Jorg Schuler <jcsjcs at users.sourceforge.net>
+2008-08-02 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_itunesdb.c (gp_import_itdb): fix memory leak. Thanks to
 	  Andrea.

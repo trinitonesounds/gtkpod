@@ -2696,7 +2696,7 @@ Added
                                         <property name="can_focus">True</property>
                                         <property name="response_id">0</property>
                                         <property name="draw_indicator">True</property>
-                                        <property name="group">st_ascend</property>
+                                        <property name="group">tm_ascend</property>
                                         <signal name="toggled" handler="on_tm_none_toggled"/>
                                         <child>
                                           <widget class="GtkImage" id="image2015">
@@ -2730,7 +2730,7 @@ Added
                                         <property name="can_focus">True</property>
                                         <property name="response_id">0</property>
                                         <property name="draw_indicator">True</property>
-                                        <property name="group">st_ascend</property>
+                                        <property name="group">tm_ascend</property>
                                         <signal name="toggled" handler="on_tm_descend_toggled"/>
                                         <child>
                                           <widget class="GtkImage" id="image2014">
