@@ -1,3 +1,8 @@
+2008-08-16 Paul Richardson <phantom_sf at users.sourceforge.net>
+
+	* src/display.c: memory leak fix in display_image_dialog. Thanks to
+	  Tomas Carnecky for the patch.  
+
 2008-08-04 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/sort_window.c: fix bug that selected sort column (for track
