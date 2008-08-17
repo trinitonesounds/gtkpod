@@ -1,4 +1,4 @@
-/* Time-stamp: <2008-06-28 18:14:14 jcs>
+/* Time-stamp: <2008-08-17 10:53:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -443,6 +443,8 @@ static void sync_playlist_mode_automatic_toggled (GtkToggleButton *togglebutton,
 			    SYNC_PLAYLIST_MODE_AUTOMATIC);
 	update_buttons (repwin);
     }
+
+    g_free (key);
 }
 
 
@@ -1790,6 +1792,8 @@ static void repwin_free (RepWin *repwin)
 	gtk_widget_destroy (repwin->window);
     }
 
+    temp_prefs_destroy (repwin->temp_prefs);
+    temp_prefs_destroy (repwin->extra_prefs);
     g_free (repwin);
 }
 
