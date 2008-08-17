@@ -1260,7 +1260,8 @@ static void add_coverart (Track *tr)
     }
 
     g_strfreev (templates);
-    g_free(full_template);
+    g_free (full_template);
+    g_free (dirname);
 }
 
 

@@ -17,6 +17,8 @@
 
 	* src/mp3file.[ch]: Added "const" qualifier to filename arguments.
 
+	* src/file.c (add_coverart): fixed memory leak. Thanks to Andrea.
+
 2008-08-16 Paul Richardson <phantom_sf at users.sourceforge.net>
 
 	* src/display.c: memory leak fix in display_image_dialog. Thanks to
