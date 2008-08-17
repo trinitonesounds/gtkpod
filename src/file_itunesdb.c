@@ -232,8 +232,15 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
     struct track_extended_info *sei = NULL;
     FILE *fp;
 
+    g_return_val_if_fail (itunes, FALSE);
+
+    if (!name)
+    {   /* name can be NULL if it does not exist on the iPod */
+	return FALSE;
+    }
 
     fp = fopen (name, "r");
+
     if (!fp)
     {
 	gtkpod_warning (_("Could not open \"%s\" for reading extended info.\n"),
