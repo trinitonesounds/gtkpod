@@ -3,6 +3,20 @@
 	* src/file_itunesdb.c (read_extended_info): fixed valgrind
 	  warning. Thanks to Andrea.
 
+	* src/repository.c (sync_playlist_mode_automatic_toggled): fixed
+	  memory leak. Thanks to Andrea.
+
+	  (repwin_free): fixed memory leak. Thanks to Andrea.
+
+	* src/mp3file.c (mp3_read_lame_tag, mp3_get_track_gapless,
+	  mp3_get_track_lame_replaygain, set_uncommon_tag): fixed possible
+	  compiler warnings.
+
+	  (mp3_read_lame_tag, mp3_read_gapless): fixed memory
+	  leaks. Thanks to Andrea.
+
+	* src/mp3file.[ch]: Added "const" qualifier to filename arguments.
+
 2008-08-16 Paul Richardson <phantom_sf at users.sourceforge.net>
 
 	* src/display.c: memory leak fix in display_image_dialog. Thanks to

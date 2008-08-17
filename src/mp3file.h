@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-07-14 15:55:29 jcs>
+/* Time-stamp: <2008-08-17 10:58:51 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -32,10 +32,10 @@
 
 #include "itdb.h"
 
-gboolean mp3_write_file_info (gchar *filename, Track *track);
-Track *mp3_get_file_info (gchar *name);
-gboolean mp3_read_soundcheck (gchar *path, Track *track);
-gboolean mp3_read_gapless (gchar *path, Track *track);
+gboolean mp3_write_file_info (const gchar *filename, Track *track);
+Track *mp3_get_file_info (const gchar *name);
+gboolean mp3_read_soundcheck (const gchar *path, Track *track);
+gboolean mp3_read_gapless (const gchar *path, Track *track);
 
 gboolean id3_read_tags (const gchar *name, Track *track);
 #endif

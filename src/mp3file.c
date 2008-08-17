@@ -1,4 +1,4 @@
-/* Time-stamp: <2008-05-17 12:00:49 jcs>
+/* Time-stamp: <2008-08-17 11:00:07 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -220,7 +220,7 @@ typedef struct {
 } MP3Header;
 
 typedef struct {
-    gchar *filename;
+    const gchar *filename;
     FILE *file;
     off_t datasize;
     gint header_isvalid;
@@ -234,11 +234,11 @@ typedef struct {
 } MP3Info;
 
 /* This is for xmms code */
-static guint get_track_time(gchar *path);
+static guint get_track_time(const gchar *path);
 
 
 /* This is for soundcheck code */
-gboolean mp3_read_lame_tag (gchar *path, LameTag *lt);
+gboolean mp3_read_lame_tag (const gchar *path, LameTag *lt);
 
 /* ------------------------------------------------------------
 
@@ -992,7 +992,7 @@ static guint get_track_time_file(FILE * file)
 	return 0;
 }
 
-static guint get_track_time (gchar *path)
+static guint get_track_time (const gchar *path)
 {
     guint result = 0;
 
@@ -1572,9 +1572,9 @@ void set_uncommon_tag (struct id3_tag *id3tag,
 {
 #if 0
     struct id3_frame *frame;
+    union id3_field *field;
 
     frame = id3_tag_findframe (id3tag, id, 0);
-	union id3_field *field;
 	frame->flags = 0;
 	field = id3_frame_field (frame, 0);
 	    if (field)
@@ -1595,7 +1595,7 @@ void set_uncommon_tag (struct id3_tag *id3tag,
  * Write the ID3 tags to the file.
  * @returns: TRUE on success, else FALSE.
  */
-gboolean mp3_write_file_info (gchar *filename, Track *track)
+gboolean mp3_write_file_info (const gchar *filename, Track *track)
 {
     struct id3_tag* id3tag;
     struct id3_file* id3file;
@@ -1912,14 +1912,16 @@ static inline guint16 parse_lame_uint16(char *buf) {
  * TODO: Check CRC.
  */
 
-gboolean mp3_get_track_lame_replaygain (gchar *path, GainData *gd)
+gboolean mp3_get_track_lame_replaygain (const gchar *path, GainData *gd)
 {
+	unsigned char ubuf[2];
+	int gain_adjust = 0;
+	LameTag lt;
+
 	g_return_val_if_fail (path, FALSE);
 
-	LameTag lt;
 	if (!mp3_read_lame_tag (path, &lt))
 	    goto rg_fail;
-	int gain_adjust = 0;
 
 	g_return_val_if_fail (gd, FALSE);
 
@@ -1963,7 +1965,6 @@ gboolean mp3_get_track_lame_replaygain (gchar *path, GainData *gd)
 				version[0], version[1], version[2], version[3], version[4]); */
 	}
 
-	unsigned char ubuf[2];
 	/* radio gain */
 	memcpy(ubuf,&lt.radio_replay_gain,2);
 	read_lame_replaygain (ubuf, gd, gain_adjust);
@@ -1988,7 +1989,7 @@ rg_fail:
  * The function only modifies the gains if they have not previously been set.
  */
 
-gboolean mp3_get_track_ape_replaygain(gchar *path, GainData *gd)
+gboolean mp3_get_track_ape_replaygain(const gchar *path, GainData *gd)
 {
 	/* The Ape Tag is located a t the end of the file. Or at least that
 	 * seems where it can most likely be found. Either it is at the very end
@@ -2167,7 +2168,7 @@ rg_fail:
  *
  * Returns TRUE if the soundcheck field could be set.
  */
-gboolean mp3_read_soundcheck (gchar *path, Track *track)
+gboolean mp3_read_soundcheck (const gchar *path, Track *track)
 {
     GainData gd;
 
@@ -2226,21 +2227,24 @@ int samplesperframe[2][3] = {
  * @path: location of the file
  * @lt: pointer to structure to be filled
  */
-gboolean mp3_read_lame_tag (gchar *path, LameTag *lt)
+gboolean mp3_read_lame_tag (const gchar *path, LameTag *lt)
 {
+    MP3Info *mp3i = NULL;
+    MP3Header h;
+    int flags;
+    int toskip = 0;
+    FILE *file;
     unsigned char ubuf[LAME_TAG_SIZE];
     int sideinfo;
-
     unsigned char full_info_tag[INFO_TAG_CRC_SIZE];
 
     g_return_val_if_fail (path, FALSE);
 
     /* Attempt to open the file */
-    FILE *file = fopen (path, "r");
+    file = fopen (path, "r");
     if (!file)
 	goto lt_fail;
 
-    MP3Info *mp3i = NULL;
     mp3i = g_malloc0 (sizeof (MP3Info));
     mp3i->filename = path;
     mp3i->file = file;
@@ -2253,7 +2257,6 @@ gboolean mp3_read_lame_tag (gchar *path, LameTag *lt)
 	goto lt_fail;
     fseek(mp3i->file, -INFO_TAG_CRC_SIZE, SEEK_CUR);
 
-    MP3Header h;
     if (!get_header (mp3i->file, &h))
 	goto lt_fail;
 
@@ -2282,9 +2285,7 @@ gboolean mp3_read_lame_tag (gchar *path, LameTag *lt)
 	goto lt_fail;
 
     /* Determine the offset of the LAME tag based on contents of the Xing header */
-    int flags;
     fread (&flags, 4, 1, mp3i->file);
-    int toskip = 0;
     if (flags | 0x1)
     {				/* frames field is set */
 	toskip += 4;
@@ -2346,11 +2347,13 @@ gboolean mp3_read_lame_tag (gchar *path, LameTag *lt)
     lt->calculated_info_tag_crc = crc_compute(full_info_tag, INFO_TAG_CRC_SIZE, 0x0000);
 
     fclose(file);
+    g_free (mp3i);
     return (lt->calculated_info_tag_crc == lt->info_tag_crc);
 
   lt_fail:
     if (file)
 	fclose(file);
+    g_free (mp3i);
     return FALSE;
 
 }
@@ -2368,6 +2371,13 @@ gboolean mp3_read_lame_tag (gchar *path, LameTag *lt)
 gboolean mp3_get_track_gapless (MP3Info *mp3i, GaplessData *gd)
 {
     int i;
+    int xing_header_offset;
+    int mysamplesperframe;
+    int totaldatasize;
+    int lastframes[8];
+    int totalframes;
+    int finaleight;
+    int l;
 
     g_return_val_if_fail (mp3i, FALSE);
     g_return_val_if_fail (gd, FALSE);
@@ -2375,27 +2385,26 @@ gboolean mp3_get_track_gapless (MP3Info *mp3i, GaplessData *gd)
     /* use get_first_header() to seek to the first mp3 header */
     get_first_header (mp3i, 0);
 
-    int xing_header_offset = ftell (mp3i->file);
+    xing_header_offset = ftell (mp3i->file);
 
     get_header(mp3i->file, &(mp3i->header));
 
-    int mysamplesperframe = samplesperframe[mp3i->header.version & 1][3 - mp3i->header.layer];
+    mysamplesperframe = samplesperframe[mp3i->header.version & 1][3 - mp3i->header.layer];
 
     /* jump to the end of the frame with the xing header */
     if (fseek (mp3i->file, xing_header_offset + frame_length (&(mp3i->header)), SEEK_SET))
 	goto gp_fail;
 
     /* counts bytes from the start of the 1st sync frame */
-    int totaldatasize = frame_length (&(mp3i->header));
+    totaldatasize = frame_length (&(mp3i->header));
 
-    /* keeps track of the last 8 frame sizes */
-    int lastframes[8];
+    /* lastframes keeps track of the last 8 frame sizes */
 
     /* counts number of music frames */
-    int totalframes = 0;
+    totalframes = 0;
 
     /* quickly parse the file, reading only frame headers */
-    int l = 0;
+    l = 0;
     while ((l = get_header (mp3i->file, &(mp3i->header))) != 0)
     {
 	lastframes[totalframes%8] = l;
@@ -2406,7 +2415,7 @@ gboolean mp3_get_track_gapless (MP3Info *mp3i, GaplessData *gd)
 	    goto gp_fail;
     }
 
-    int finaleight = 0;
+    finaleight = 0;
     for (i = 0; i < 8; i++)
     {
 	finaleight += lastframes[i];
@@ -2451,7 +2460,7 @@ gboolean mp3_get_track_gapless (MP3Info *mp3i, GaplessData *gd)
  * FALSE otherwise.
  */
 
-gboolean mp3_read_gapless (gchar *path, Track *track) {
+gboolean mp3_read_gapless (const gchar *path, Track *track) {
     MP3Info *mp3i=NULL;
     FILE *file;
 
@@ -2486,6 +2495,7 @@ gboolean mp3_read_gapless (gchar *path, Track *track) {
 	} else {
 	    /* insert non-LAME methods of finding pregap and postgap */
 	    fclose(file);
+	    g_free (mp3i);
 	    return FALSE;
 	}
 	    
@@ -2524,6 +2534,7 @@ gboolean mp3_read_gapless (gchar *path, Track *track) {
 	}
 	    
 	fclose(file);
+	g_free (mp3i);
 	return TRUE;
     }
     return FALSE;
@@ -2724,7 +2735,7 @@ gboolean id3_read_tags (const gchar *name, Track *track)
 
 /* Return a Track structure with all information read from the mp3
    file filled in */
-Track *mp3_get_file_info (gchar *name)
+Track *mp3_get_file_info (const gchar *name)
 {
     Track *track = NULL;
     MP3Info *mp3i=NULL;
