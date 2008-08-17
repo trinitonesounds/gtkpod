@@ -1144,7 +1144,7 @@ G_MODULE_EXPORT void on_commands_clicked (GtkButton *sender, gpointer e)
 		g_free (path);
 	}
 
-	temp = prefs_get_string ("aacgain_path");
+	temp = prefs_get_string ("path_aacgain");
 	
 	if(temp)
 	{
@@ -1199,7 +1199,7 @@ G_MODULE_EXPORT void on_cmd_mp3gain_file_set (GtkFileChooserButton *sender, gpoi
 */
 G_MODULE_EXPORT void on_cmd_aacgain_file_set (GtkFileChooserButton *sender, gpointer e)
 {
-	prefs_set_string ("aacgain_path",
+	prefs_set_string ("path_aacgain",
 					  gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (sender)));
 }
 

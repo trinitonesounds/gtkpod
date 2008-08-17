@@ -27,6 +27,10 @@
 	* src/prefsdlg.c (on_unsetdeps_checkbox_toggled): fixed memory
 	  leak.
 
+	* src/prefsdlg.c (on_commands_clicked, on_cmd_aacgain_file_set):
+	  variable for aacgain was defined as "aacgain_path" instead of
+	  "path_aacgain".
+
 2008-08-16 Paul Richardson <phantom_sf at users.sourceforge.net>
 
 	* src/display.c: memory leak fix in display_image_dialog. Thanks to
