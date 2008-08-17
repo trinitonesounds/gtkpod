@@ -31,6 +31,16 @@
 	  variable for aacgain was defined as "aacgain_path" instead of
 	  "path_aacgain".
 
+	* src/prefsdlg.c
+	  data/gtkpod.glade:
+	  Fix usability problems in prefs dialog (Music->Commands).
+
+	* src/file_convert.c
+	  data/gtkpod.glade:
+	  The widget name "conversion_log" was used twice, but for some
+	  reason this didn't cause problems until glade-3 re-wrote the
+	  file. Fixed by using different name for the menu item.
+
 2008-08-16 Paul Richardson <phantom_sf at users.sourceforge.net>
 
 	* src/display.c: memory leak fix in display_image_dialog. Thanks to

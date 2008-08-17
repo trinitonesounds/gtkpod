@@ -502,7 +502,7 @@ static void conversion_display_hide_log_window (Conversion *conv)
     GtkWidget *mi;
     /* show display log if it was previously hidden and should be
        shown again */
-    mi = gtkpod_xml_get_widget (main_window_xml, "conversion_log");
+    mi = gtkpod_xml_get_widget (main_window_xml, "view_conversion_log");
     if (prefs_get_int (FILE_CONVERT_DISPLAY_LOG))
     {
 	if (conv->log_window_hidden && !conv->log_window_shown)
