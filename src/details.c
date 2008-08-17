@@ -1131,6 +1131,8 @@ static void details_get_item (Detail *detail, T_item item,
 	    text = gtk_text_buffer_get_text (tb, &start, &end, TRUE);
 
 	    changed = track_set_text (track, text, item);
+
+	    g_free (text);
 	}
 	break;
     case T_COMPILATION:
