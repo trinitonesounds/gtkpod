@@ -22,6 +22,8 @@
 	* src/details.c (details_get_item): fixed memory leak. Thanks to
 	  Andrea.
 
+	* src/prefs.c (get_list_from_buffer): fixed memory leaks.
+
 2008-08-16 Paul Richardson <phantom_sf at users.sourceforge.net>
 
 	* src/display.c: memory leak fix in display_image_dialog. Thanks to

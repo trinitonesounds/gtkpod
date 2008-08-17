@@ -2347,6 +2347,9 @@ GList *get_list_from_buffer(GtkTextBuffer *buffer)
 		
 	string_iter++;
     }
+
+    g_free (text_buffer);
+    g_strfreev (string_array);
     
     return list;
 }
