@@ -723,7 +723,7 @@ G_MODULE_EXPORT void on_unsetdeps_checkbox_toggled (GtkToggleButton *sender, gpo
 	if(xml && !gtk_toggle_button_get_active (sender))
 	{
 		int i;
-		gchar *deps = (gchar *) g_object_get_data (G_OBJECT(sender), "deps");
+		const gchar *deps = (gchar *) g_object_get_data (G_OBJECT(sender), "deps");
 		gchar **deparray = g_strsplit (deps, ",", 0);
 		
 		for(i = 0; deparray[i]; i++)
@@ -731,6 +731,7 @@ G_MODULE_EXPORT void on_unsetdeps_checkbox_toggled (GtkToggleButton *sender, gpo
 			GtkWidget *dep = gtkpod_xml_get_widget (xml, deparray[i]);
 			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dep), FALSE);
 		}
+		g_strfreev (deparray);
 	}
 
 	/* and then call the default handler */
