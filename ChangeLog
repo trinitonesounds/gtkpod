@@ -1,3 +1,15 @@
+2008-08-31 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/mp3file.c: Handle Artist and AlbumArtist fields differently:
+	  For Artist: try the Artist tag and fall back to the Album Artist
+	  tag if the former does not exist.
+	  For Album Artist: set to the contents of the Album Artist tag,
+	  but only if the Artist tag does exist.
+	  Thanks to Dudy Kohen for the patch.
+
+	* src/mp4file.c: do the same for mp4 files (the Album Artist tag
+	  was not supported before).
+
 2008-08-04 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_itunesdb.c (read_extended_info): fixed valgrind

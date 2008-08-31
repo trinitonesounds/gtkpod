@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-06-23 02:49:08 jcs>
+/* Time-stamp: <2008-08-31 11:00:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -375,6 +375,22 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 			track->artist = charset_to_utf8 (value);
 			g_free(value);
 		    }
+		    if (!track->artist || !*track->artist)
+		    {
+			g_free (track->artist);
+			track->artist = NULL;
+			if (MP4GetMetadataAlbumArtist(mp4File, &value) && value != NULL)
+			{
+			    track->artist = charset_to_utf8 (value);
+			}
+		    }
+		    else
+		    {
+			if (MP4GetMetadataAlbumArtist(mp4File, &value) && value != NULL)
+			{
+			    track->albumartist = charset_to_utf8 (value);
+			}
+		    }
 		    if (MP4GetMetadataWriter(mp4File, &value) && value != NULL)
 		    {
 			track->composer = charset_to_utf8 (value);
@@ -488,7 +504,7 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 	     * you have to delete all meta data before modifying
 	     * it. Therefore we have to read it first to avoid data
 	     * loss. (Bug present in mpeg4ip-1.0RC1.) */
-/*	    gchar *m_name = NULL, *m_artist = NULL;
+/*	    gchar *m_name = NULL, *m_artist = NULL, *m_albumartist = NULL;
 	    gchar *m_writer = NULL, *m_comment = NULL;
 	    gchar *m_year = NULL;
 	    gchar *m_album = NULL, *m_genre = NULL;*/
@@ -507,6 +523,7 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 								  &m_cpl);
 /*	    MP4GetMetadataName (mp4File, &m_name);
 	    MP4GetMetadataArtist (mp4File, &m_artist);
+	    MP4GetMetadataAlbumArtist (mp4File, &m_albumartist);
 	    MP4GetMetadataWriter (mp4File, &m_writer);
 	    MP4GetMetadataComment (mp4File, &m_comment);
 	    MP4GetMetadataYear (mp4File, &m_year);
@@ -522,6 +539,10 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 
 	    value = charset_from_utf8 (track->artist);
 	    MP4SetMetadataArtist (mp4File, value);
+	    g_free (value);
+
+	    value = charset_from_utf8 (track->albumartist);
+	    MP4SetMetadataAlbumArtist (mp4File, value);
 	    g_free (value);
 
 	    value = charset_from_utf8 (track->composer);
@@ -561,6 +582,7 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 	    if (m_covert)   MP4SetMetadataCoverArt (mp4File, m_covert, m_size);
 /*	    g_free (m_name);
 	    g_free (m_artist);
+	    g_free (m_albumartist);
 	    g_free (m_writer);
 	    g_free (m_comment);
 	    g_free (m_year);

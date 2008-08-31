@@ -88,6 +88,7 @@ struct _File_Tag
     gchar *lyrics;        /* does not appear to be the full lyrics --
 			     only used to set the flag 'lyrics_flag'
 			     of the Track structure */
+    gchar *albumartist;         /* Album artist  */
 };
 
 
@@ -1459,11 +1460,13 @@ gboolean id3_tag_read (const gchar *filename, File_Tag *tag)
     if ((id3tag = id3_file_tag(id3file)))
     {
 	tag->title = id3_get_string (id3tag, ID3_FRAME_TITLE);
-	tag->artist = id3_get_string (id3tag, ID3_FRAME_GROUP);
+	tag->artist = id3_get_string (id3tag, ID3_FRAME_ARTIST);
 	if (!tag->artist || !*tag->artist)
 	{
 	    g_free (tag->artist);
-	    tag->artist = id3_get_string (id3tag, ID3_FRAME_ARTIST);
+	    tag->artist = id3_get_string (id3tag, ID3_FRAME_GROUP);
+	} else {
+	    tag->albumartist = id3_get_string (id3tag, ID3_FRAME_GROUP);
 	}
 	tag->album = id3_get_string (id3tag, ID3_FRAME_ALBUM);
 	tag->year = id3_get_string (id3tag, ID3_FRAME_YEAR);
@@ -2563,6 +2566,11 @@ gboolean id3_read_tags (const gchar *name, Track *track)
 	if (filetag.artist)
 	{
 	    track->artist = filetag.artist;
+	}
+
+	if (filetag.albumartist)
+	{
+	    track->albumartist = filetag.albumartist;
 	}
 
 	if (filetag.title)
