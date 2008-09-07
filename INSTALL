@@ -17,15 +17,19 @@ How to compile/install gtkpod:
    be found at http://www.gtkpod.org/libgpod.html
 
    The libmp4v2 package is ONLY NEEDED if you need AAC support.  You
-   don't need libmp4v2 if you don't use AAC files.
+   don't need libmp4v2 if you don't use AAC files. Download's
+   available at
+
+        http://downloads.sourceforge.net/mpeg4ip/
+        (http://downloads.sourceforge.net/mpeg4ip/mpeg4ip-1.6.tar.gz)
 
    libid3tag was successfully compiled and installed with
 
-   ./configure ; make ; make install
+       ./configure ; make ; make install
 
    libmp4v2 was successfully compiled and install with
 
-   ./bootstrap --disable-server ; make ; make install
+       ./bootstrap --disable-server ; make ; make install
 
 
    The following packages are required for building gtkpod:

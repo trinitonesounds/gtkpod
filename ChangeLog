@@ -5,6 +5,8 @@
 	  available (fixes compilation error with older versions of
 	  libmp4v2).
 
+	* README: added download link for V1.6 of libmp4v2
+
 2008-08-31 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/mp3file.c: Handle Artist and AlbumArtist fields differently:
