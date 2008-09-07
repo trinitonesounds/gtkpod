@@ -1,4 +1,4 @@
-/* Time-stamp: <2008-08-17 11:00:07 jcs>
+/* Time-stamp: <2008-09-07 11:32:16 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1640,6 +1640,7 @@ gboolean mp3_write_file_info (const gchar *filename, Track *track)
 
 	id3_set_string (id3tag, ID3_FRAME_TITLE, track->title, encoding);
 	id3_set_string (id3tag, ID3_FRAME_ARTIST, track->artist, encoding);
+	id3_set_string (id3tag, ID3_FRAME_GROUP, track->albumartist, encoding);
 	id3_set_string (id3tag, ID3_FRAME_ALBUM, track->album, encoding);
 	id3_set_string (id3tag, ID3_FRAME_GENRE, track->genre, encoding);
 	id3_set_string (id3tag, ID3_FRAME_COMMENT, track->comment, encoding);
