@@ -125,7 +125,7 @@ else
     have_gnome_vfs="*no -- will build without iPod autodetection support"
 fi
 
-#dnl Check for HAL
+dnl Check for HAL
 AC_ARG_WITH(hal, AC_HELP_STRING([--without-hal],[Disable HAL support]))
 if test "x$with_hal" != "xno"; then
     PKG_CHECK_MODULES(HAL, hal >= 0.5 hal < 0.6, have_hal=yes, have_hal=no)
@@ -154,27 +154,40 @@ if test "x$with_mp4v2" != "xno"; then
         have_mp4v2="no"
         AC_MSG_WARN([mp4.h cannot be found or is unusable. Check your mp4v2 installation.])
     else 
-    AC_TRY_COMPILE( [#include <mp4.h> ],
-        [bool TestMP4GetMetadataFreeForm(MP4FileHandle hFile, const char *name,
-            u_int8_t** pValue, u_int32_t* valueSize, const char *owner)
-            {
-                MP4GetMetadataFreeForm(hFile, name,pValue, valueSize, owner);
-            } ], freeform_accepts_extra_arg=yes)
-    AC_TRY_COMPILE( [#include <mp4.h>],
-        [bool TestMP4GetMetadataCoverArt(MP4FileHandle hFile,
-            u_int8_t **coverArt, u_int32_t* size, uint32_t index)
-            {
-                MP4GetMetadataCoverArt(hFile, coverArt, size, index);
-            }], coverart_accepts_extra_arg=yes)
+dnl Check if MP4GetMetadataFreeForm() requires an extra argument
+	 AC_TRY_COMPILE( [#include <mp4.h> ],
+	     [bool TestMP4GetMetadataFreeForm(MP4FileHandle hFile, const char *name,
+                u_int8_t** pValue, u_int32_t* valueSize, const char *owner)
+                {
+                    MP4GetMetadataFreeForm(hFile, name,pValue, valueSize, owner);
+                } ], freeform_accepts_extra_arg=yes)
+        if test "x$freeform_accepts_extra_arg" = "xyes"; then
+            AC_DEFINE(FREEFORM_ACCEPTS_EXTRA_ARG, 1,[libmp4v2 probably version 1.6 or higher: 
+                      MP4GetMetadataFreeForm accepts extra argument])
+        fi
+dnl Check if MP4GetMetadataCoverArt() requires an extra argument
+        AC_TRY_COMPILE( [#include <mp4.h>],
+            [bool TestMP4GetMetadataCoverArt(MP4FileHandle hFile,
+                u_int8_t **coverArt, u_int32_t* size, uint32_t index)
+                {
+                    MP4GetMetadataCoverArt(hFile, coverArt, size, index);
+                }], coverart_accepts_extra_arg=yes)
 
-    if test "x$freeform_accepts_extra_arg" = "xyes"; then
-        AC_DEFINE(FREEFORM_ACCEPTS_EXTRA_ARG, 1,[libmp4v2 probably version 1.6 or higher: 
-                  MP4GetMetadataFreeForm accepts extra argument])
-    fi
-    if test "x$coverart_accepts_extra_arg" = "xyes"; then
-        AC_DEFINE(COVERART_ACCEPTS_EXTRA_ARG, 1,[libmp4v2 probably version 1.6 or higher: 
-                  MP4GetMetadataCoverArt accepts an extra argument] )
-    fi
+        if test "x$coverart_accepts_extra_arg" = "xyes"; then
+            AC_DEFINE(COVERART_ACCEPTS_EXTRA_ARG, 1,[libmp4v2 probably version 1.6 or higher: 
+                      MP4GetMetadataCoverArt accepts an extra argument] )
+        fi
+dnl Check if MP4SetMetadataAlbumArtist() exists
+        AC_TRY_COMPILE( [#include <mp4.h>],
+            [bool TestMP4SetMetadataAlbumArtist(MP4FileHandle hFile,
+                                                const char* value)
+                {
+                    MP4SetMetadataAlbumArtist(hFile, value);
+                }], mp4_albumartist_exists=yes)
+        if test "x$mp4_albumartist_exists" = "xyes"; then
+            AC_DEFINE(MP4_ALBUMARTIST_EXISTS, 1,[libmp4v2 probably version 1.6 or higher: 
+                      MP4SetMetadataAlbumArtist exists] )
+        fi
     fi
     if test "x$with_mp4v2" = "xyes" -a "x$have_mp4v2" = "xno"; then
         AC_MSG_ERROR([MP4/AAC support explicitly requested but libmp4v2 couldn't be found])

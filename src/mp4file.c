@@ -1,4 +1,4 @@
-/* Time-stamp: <2008-08-31 11:00:33 jcs>
+/* Time-stamp: <2008-09-07 11:16:18 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -375,6 +375,7 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 			track->artist = charset_to_utf8 (value);
 			g_free(value);
 		    }
+#if MP4_ALBUMARTIST_EXISTS
 		    if (!track->artist || !*track->artist)
 		    {
 			g_free (track->artist);
@@ -391,6 +392,9 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 			    track->albumartist = charset_to_utf8 (value);
 			}
 		    }
+#else
+#warning "Album Artist field not supported with this version of libmp4v2. Album Artist support requires at least V1.6.0"
+#endif
 		    if (MP4GetMetadataWriter(mp4File, &value) && value != NULL)
 		    {
 			track->composer = charset_to_utf8 (value);
@@ -541,10 +545,11 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 	    MP4SetMetadataArtist (mp4File, value);
 	    g_free (value);
 
+#if MP4_ALBUMARTIST_EXISTS
 	    value = charset_from_utf8 (track->albumartist);
 	    MP4SetMetadataAlbumArtist (mp4File, value);
 	    g_free (value);
-
+#endif
 	    value = charset_from_utf8 (track->composer);
 	    MP4SetMetadataWriter (mp4File, value);
 	    g_free (value);
