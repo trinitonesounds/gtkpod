@@ -178,12 +178,8 @@ dnl Check if MP4GetMetadataCoverArt() requires an extra argument
                       MP4GetMetadataCoverArt accepts an extra argument] )
         fi
 dnl Check if MP4SetMetadataAlbumArtist() exists
-        AC_TRY_COMPILE( [#include <mp4.h>],
-            [bool TestMP4SetMetadataAlbumArtist(MP4FileHandle hFile,
-                                                const char* value)
-                {
-                    MP4SetMetadataAlbumArtist(hFile, value);
-                }], mp4_albumartist_exists=yes)
+        AC_SEARCH_LIBS([MP4SetMetadataAlbumArtist], [-lmp4v2],
+        mp4_albumartist_exists=yes, mp4_albumartist_exists=no)
         if test "x$mp4_albumartist_exists" = "xyes"; then
             AC_DEFINE(MP4_ALBUMARTIST_EXISTS, 1,[libmp4v2 probably version 1.6 or higher: 
                       MP4SetMetadataAlbumArtist exists] )

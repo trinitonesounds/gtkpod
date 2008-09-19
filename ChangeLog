@@ -1,3 +1,8 @@
+2008-09-18  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* configure.in: Use AC_SEARCH_LIBS to check for
+	  MP4SetMetadataAlbumArtist in libmp4v2.
+
 2008-09-07 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* configure.in
