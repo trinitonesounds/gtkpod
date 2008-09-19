@@ -3,6 +3,7 @@
 	* configure.in: Use AC_SEARCH_LIBS to check for
 	  MP4SetMetadataAlbumArtist in libmp4v2.
 	  Reword several libmp4v2 macro definition descriptions.
+	  Minor whitespace cleanups.
 
 2008-09-07 Jorg Schuler <jcsjcs at users.sourceforge.net>
 

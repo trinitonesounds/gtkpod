@@ -73,8 +73,8 @@ AM_GLIB_GNU_GETTEXT
 dnl Check if we have to supply getopt_long
 dnl If getopt_long_only is not available, getopt.c and getopt1.c
 dnl (providing getopt_long*) will be included into the binary.
-AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt)]) 
-AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt1)]) 
+AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt)])
+AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt1)])
 
 dnl Check if flock() is available (seems to be missing on some solaris versions)
 AC_CHECK_FUNCS(flock)
@@ -153,10 +153,10 @@ if test "x$with_mp4v2" != "xno"; then
     if test "x$have_mp4v2_header" = "xno"; then
         have_mp4v2="no"
         AC_MSG_WARN([mp4.h cannot be found or is unusable. Check your mp4v2 installation.])
-    else 
+    else
 dnl Check if MP4GetMetadataFreeForm() requires an extra argument
-	 AC_TRY_COMPILE( [#include <mp4.h> ],
-	     [bool TestMP4GetMetadataFreeForm(MP4FileHandle hFile, const char *name,
+        AC_TRY_COMPILE( [#include <mp4.h> ],
+            [bool TestMP4GetMetadataFreeForm(MP4FileHandle hFile, const char *name,
                 u_int8_t** pValue, u_int32_t* valueSize, const char *owner)
                 {
                     MP4GetMetadataFreeForm(hFile, name,pValue, valueSize, owner);
