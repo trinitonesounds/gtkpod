@@ -162,8 +162,8 @@ dnl Check if MP4GetMetadataFreeForm() requires an extra argument
                     MP4GetMetadataFreeForm(hFile, name,pValue, valueSize, owner);
                 } ], freeform_accepts_extra_arg=yes)
         if test "x$freeform_accepts_extra_arg" = "xyes"; then
-            AC_DEFINE(FREEFORM_ACCEPTS_EXTRA_ARG, 1,[libmp4v2 probably version 1.6 or higher: 
-                      MP4GetMetadataFreeForm accepts extra argument])
+            AC_DEFINE(FREEFORM_ACCEPTS_EXTRA_ARG, 1, [MP4GetMetadataFreeForm
+                      accepts an extra argument in libmp4v2 >= 1.6])
         fi
 dnl Check if MP4GetMetadataCoverArt() requires an extra argument
         AC_TRY_COMPILE( [#include <mp4.h>],
@@ -174,15 +174,15 @@ dnl Check if MP4GetMetadataCoverArt() requires an extra argument
                 }], coverart_accepts_extra_arg=yes)
 
         if test "x$coverart_accepts_extra_arg" = "xyes"; then
-            AC_DEFINE(COVERART_ACCEPTS_EXTRA_ARG, 1,[libmp4v2 probably version 1.6 or higher: 
-                      MP4GetMetadataCoverArt accepts an extra argument] )
+            AC_DEFINE(COVERART_ACCEPTS_EXTRA_ARG, 1, [MP4GetMetadataCoverArt
+                      accepts an extra argument in libmp4v2 >= 1.6])
         fi
 dnl Check if MP4SetMetadataAlbumArtist() exists
         AC_SEARCH_LIBS([MP4SetMetadataAlbumArtist], [-lmp4v2],
         mp4_albumartist_exists=yes, mp4_albumartist_exists=no)
         if test "x$mp4_albumartist_exists" = "xyes"; then
-            AC_DEFINE(MP4_ALBUMARTIST_EXISTS, 1,[libmp4v2 probably version 1.6 or higher: 
-                      MP4SetMetadataAlbumArtist exists] )
+            AC_DEFINE(MP4_ALBUMARTIST_EXISTS, 1, [MP4GetMetadataAlbumArtist
+                      requires libmp4v2 >= 1.6])
         fi
     fi
     if test "x$with_mp4v2" = "xyes" -a "x$have_mp4v2" = "xno"; then
