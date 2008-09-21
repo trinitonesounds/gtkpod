@@ -1,4 +1,4 @@
-/* Time-stamp: <2008-09-07 11:32:16 jcs>
+/* Time-stamp: <2008-09-21 19:11:23 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1430,6 +1430,97 @@ static gboolean id3_apic_read (const gchar *filename,
     return TRUE;
 }
 
+
+/* Do some checks on the genre string -- ideally this should
+ * be done within the id3tag library, I think */
+static void handle_genre_variations (gchar **genrep)
+{
+/* http://www.id3.org/id3v2.3.0#head-42b02d20fb8bf48e38ec5415e34909945dd849dc */
+
+/* The 'Content type', which previously was stored as a one byte
+ * numeric value only, is now a numeric string. You may use one or
+ * several of the types as ID3v1.1 did or, since the category list
+ * would be impossible to maintain with accurate and up to date
+ * categories, define your own.
+
+ * References to the ID3v1 genres can be made by, as first byte, enter
+ * "(" followed by a number from the genres list (appendix A) and
+ * ended with a ")" character. This is optionally followed by a
+ * refinement, e.g. "(21)" or "(4)Eurodisco". Several references can
+ * be made in the same frame, e.g. "(51)(39)". If the refinement
+ * should begin with a "(" character it should be replaced with "((",
+ * e.g. "((I can figure out any genre)" or "(55)((I think...)". The
+ * following new content types is defined in ID3v2 and is implemented
+ * in the same way as the numeric content types, e.g. "(RX)".
+ */
+
+    /* If a "refinement" exists, we will forget about the ID's. */
+    /* If only an ID is given, we will translate that ID into a string */
+    gchar *genre, *oldgenre, *utf8_genre=NULL;
+    const gchar *newgenre = NULL;
+    g_return_if_fail (genrep);
+
+    genre = *genrep;
+    oldgenre = *genrep;
+    if (genre == NULL) return;
+
+    while (*genre)
+    {
+	if (genre[0] == '(')
+	{
+	    if (genre[1] == '(')
+	    {
+		/* starting with "((" */
+		newgenre = &genre[1];
+		break;
+	    }
+	    if (isdigit (genre[1]))
+	    {   /* possibly a genre ID */
+		int num, genreid;
+		num = sscanf (genre, "(%d)", &genreid);
+		if (num != 1)
+		{   /* invalid ID -> give up */
+		    newgenre = &genre[0];
+		    break;
+		}
+		genre = strchr (&genre[1], ')');
+		g_return_if_fail (genre);
+		++genre;
+		if (!newgenre)
+		{   /* retrieve genre string from ID -- we only
+		     * convert the first ID */
+		    id3_ucs4_t const *ucs4_genre = id3_genre_index (genreid);
+		    if (ucs4_genre == NULL)
+		    {
+			break;
+		    }
+		    utf8_genre = id3_ucs4_utf8duplicate (ucs4_genre);
+		    newgenre = utf8_genre;
+		}
+	    }
+	    else
+	    {
+		newgenre = &genre[0];
+		break;
+	    }
+	}
+	else
+	{
+	    newgenre = &genre[0];
+	    break;
+	}
+    }
+    if (newgenre && (newgenre != oldgenre))
+    {
+	*genrep = g_strdup (newgenre);
+	g_free (oldgenre);
+    }
+    g_free (utf8_genre);
+}
+
+
+
+
 /***
  * Reads id3v1.x / id3v2 tag and load data into the Id3tag structure.
  * If a tag entry exists (ex: title), we allocate memory, else value
@@ -1520,6 +1611,10 @@ gboolean id3_tag_read (const gchar *filename, File_Tag *tag)
 	    tag->cdnostring = g_strdup_printf ("%.2d", atoi (string));
 	    g_free(string);
 	}
+
+	/* Do some checks on the genre string -- ideally this should
+	 * be done within the id3tag library, I think */
+	handle_genre_variations (&tag->genre);
     }
 
     id3_file_close (id3file);
