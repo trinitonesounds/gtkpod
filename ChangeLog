@@ -1,5 +1,10 @@
 2008-09-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/mp3file.c (id3_set_string): don't write genre IDs instead of
+	  genre string. The use of ID numbers seems antiquated.
+
+2008-09-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/mp3file.c (id3_tag_read): (partially) implement genre IDs in
 	  parenthesis according to
 	  http://www.id3.org/id3v2.3.0#head-42b02d20fb8bf48e38ec5415e34909945dd849dc

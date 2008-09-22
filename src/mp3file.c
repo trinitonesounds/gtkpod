@@ -1,4 +1,4 @@
-/* Time-stamp: <2008-09-21 19:11:23 jcs>
+/* Time-stamp: <2008-09-22 11:28:27 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1276,6 +1276,9 @@ static void id3_set_string (struct id3_tag *tag,
     /* maybe could be optimized see
        http://www.mars.org/mailman/public/mad-dev/2002-October/000739.html
     */
+/* don't handle the genre frame differently any more */
+#define USE_GENRE_IDS 0
+#if USE_GENRE_IDS
     if (strcmp (frame_name, ID3_FRAME_GENRE) == 0)
     {
 	id3_ucs4_t *tmp_ucs4 = id3_utf8_ucs4duplicate ((id3_utf8_t *)data);
@@ -1283,7 +1286,7 @@ static void id3_set_string (struct id3_tag *tag,
 	if (index != -1)
 	{
 	    /* valid genre -- simply store the genre number */
-	    gchar *tmp = g_strdup_printf("%d", index);
+	    gchar *tmp = g_strdup_printf("(%d)", index);
 	    ucs4 = id3_latin1_ucs4duplicate (tmp);
 	    g_free (tmp);
 	}
@@ -1310,6 +1313,7 @@ static void id3_set_string (struct id3_tag *tag,
     }
     else
     {
+#endif
 	if (encoding == ID3_FIELD_TEXTENCODING_ISO_8859_1)
 	{
 	    /* we read 'ISO_8859_1' to stand for 'any locale charset'
@@ -1324,7 +1328,9 @@ static void id3_set_string (struct id3_tag *tag,
 	       worry about charsets */
 	    ucs4 = id3_utf8_ucs4duplicate ((id3_utf8_t *)data);
 	}
+#if USE_GENRE_IDS
     }
+#endif
 
     if (strcmp (frame_name, ID3_FRAME_COMMENT) == 0)
 	res = id3_field_setfullstring (field, ucs4);
