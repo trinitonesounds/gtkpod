@@ -1,5 +1,6 @@
 How to compile/install gtkpod:
 
+(For ubuntu/debian please refer to the end of this file for a quick round-up)
 
 1. First, make sure you have compiled and installed the dependencies.
    Most Linux distros will include them, except maybe for libid3tag
@@ -99,6 +100,7 @@ How to compile/install gtkpod:
 
 
 ----------------------------------------------------------------------
+
 ** Note that you do not need to accept the default (usually
    /usr/local) install path when you compile and install the software.
    You may choose to install the software in a different location.
@@ -114,3 +116,36 @@ How to compile/install gtkpod:
    install gtkpod into $HOME/Applications/gtkpod.  Do this instead:
 
     CFLAGS="-I$HOME/Applications/mpeg4ip/include -L$HOME/Applications/mpeg4ip/lib -I$HOME/Applications/libid3tag/include -L$HOME/Applications/libid3tag/lib" ./configure --prefix=$HOME/Applications/gtkpod ; make ; make install 
+
+------------------------------------------------------------------------
+
+Quick guide for Ubuntu/Debian
+
+The following steps were necessary to install libgpod and gtkpod on a fairly virgin Ubuntu Hardy (LTS 8.04) installation.
+
+# required packages
+sudo apt-get install git-svn autoconf flex gettext libglib2.0-dev libgtk2.0-dev libglade2-dev libid3tag0-dev libxml-parser-perl pkg-config automake gcc subversion gtk-doc-tools
+
+# recommended packages
+sudo apt-get install libcurl4-dev libflac-dev libgnomevfs2-dev libhal-dev libvorbis-dev libmp4v2-dev
+
+# checkout of libgpod and gtkpod
+svn co https://gtkpod.svn.sourceforge.net/svnroot/gtkpod/libgpod/trunk libgpod
+svn co https://gtkpod.svn.sourceforge.net/svnroot/gtkpod/gtkpod/trunk gtkpod
+
+# compile libgpod
+cd libgpod/
+./autogen.sh
+make
+sudo make install
+
+# compile gtkpod
+cd ../gtkpod/
+cd libgpod/
+./autogen.sh
+make
+sudo make install
+
+#start gtkpod
+gtkpod &
+

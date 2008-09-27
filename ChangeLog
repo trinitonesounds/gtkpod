@@ -1,3 +1,8 @@
+2008-09-27 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* INSTALL: added instructions on how to compile libgopd and gtkpod on a
+          fairly virgin Ubuntu Hardy (8.04) installation. 
+
 2008-09-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/mp3file.c (id3_set_string): don't write genre IDs instead of
