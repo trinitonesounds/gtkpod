@@ -12,6 +12,8 @@ gtkpod V0.99.13SVN
        IMPROVEMENT: Better support for Windows compilation in Cygwin,
 	   thanks to Éric Lassauge.
 
+       IMPROVEMENT: Set track->lyrics_flag for mp4 files
+
 gtkpod V0.99.12
 
        NEW FEATURE: Import and management of photographs on ipods

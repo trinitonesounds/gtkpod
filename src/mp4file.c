@@ -439,6 +439,10 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 		    {
 			track->BPM = numvalue;
 		    }
+		    if (MP4HaveAtom (mp4File, "moov.udta.meta.ilst.\251lyr"))
+		    {
+			track->lyrics_flag = 0x01;
+		    }
 		}
 		mp4_scan_soundcheck (mp4File, track);
 		audio_or_video_found = TRUE;

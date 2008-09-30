@@ -1,3 +1,8 @@
+2008-09-30  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* src/mp4file.c (mp4_get_file_info): Set track->lyrics_flag
+	  for mp4 files
+
 2008-09-29 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/ipod_init.c
