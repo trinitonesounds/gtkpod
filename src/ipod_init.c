@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-06-19 22:52:52 jcs>
+/* Time-stamp: <2008-09-30 23:36:02 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -48,9 +48,11 @@ typedef struct _IpodInit IpodInit;
 const gchar *SELECT_OR_ENTER_YOUR_MODEL=N_("Select or enter your model");
 
 /* string constants for window widgets used more than once */
-static const gchar *MOUNTPOINT_ENTRY="mountpoint_entry";
-static const gchar *MOUNTPOINT_BUTTON="mountpoint_button";
-static const gchar *MODEL_COMBO="model_combo";
+static const gchar *IID_MOUNTPOINT_ENTRY="iid_mountpoint_entry";
+static const gchar *IID_MOUNTPOINT_BUTTON="iid_mountpoint_button";
+static const gchar *IID_MODEL_COMBO="iid_model_combo";
+static const gchar *SIMD_MODEL_COMBO="simd_model_combo";
+static const gchar *SIMD_LABEL="simd_label";
 
 /* Columns for the model_combo tree model */
 enum
@@ -73,7 +75,7 @@ static void mountpoint_button_clicked (GtkButton *button, IpodInit *ii)
     g_return_if_fail (ii);
 
     old_dir = gtk_entry_get_text (
-	GTK_ENTRY (GET_WIDGET (MOUNTPOINT_ENTRY)));
+	GTK_ENTRY (GET_WIDGET (IID_MOUNTPOINT_ENTRY)));
 
     new_dir = fileselection_get_file_or_dir (
 	_("Select mountpoint"),
@@ -82,7 +84,7 @@ static void mountpoint_button_clicked (GtkButton *button, IpodInit *ii)
 
     if (new_dir)
     {
-	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (MOUNTPOINT_ENTRY)),
+	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (IID_MOUNTPOINT_ENTRY)),
 			    new_dir);
 	g_free (new_dir);
     }
@@ -263,17 +265,17 @@ gboolean gp_ipod_init (iTunesDB *itdb)
     mountpoint = get_itdb_prefs_string (itdb, KEY_MOUNTPOINT);
     if (mountpoint)
     {
-	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (MOUNTPOINT_ENTRY)),
+	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (IID_MOUNTPOINT_ENTRY)),
 			    mountpoint);
     }
 
     /* Signal handlers */
-    g_signal_connect (GET_WIDGET (MOUNTPOINT_BUTTON), "clicked",
+    g_signal_connect (GET_WIDGET (IID_MOUNTPOINT_BUTTON), "clicked",
 		      G_CALLBACK (mountpoint_button_clicked), ii);
 
 
     /* Setup model number combo */
-    cb = GTK_COMBO_BOX (GET_WIDGET (MODEL_COMBO));
+    cb = GTK_COMBO_BOX (GET_WIDGET (IID_MODEL_COMBO));
     gp_init_model_number_combo (cb);
 
     /* If available set current model number, otherwise indicate that
@@ -308,7 +310,7 @@ gboolean gp_ipod_init (iTunesDB *itdb)
     case GTK_RESPONSE_OK:
 	new_mount = g_strdup (
 	    gtk_entry_get_text (
-		GTK_ENTRY (GET_WIDGET (MOUNTPOINT_ENTRY))));
+		GTK_ENTRY (GET_WIDGET (IID_MOUNTPOINT_ENTRY))));
 	/* remove trailing '/' in case it's present. */
 	if (mountpoint && (strlen (mountpoint) > 0))
 	{
@@ -340,7 +342,7 @@ gboolean gp_ipod_init (iTunesDB *itdb)
 	    new_mount = NULL;
 	}
 	model = gtk_combo_box_get_active_text (
-	    GTK_COMBO_BOX (GET_WIDGET (MODEL_COMBO)));
+	    GTK_COMBO_BOX (GET_WIDGET (IID_MODEL_COMBO)));
 	if ((strcmp (model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0) ||
 	    (strlen (model) == 0))
 	{   /* User didn't choose a model */
@@ -421,11 +423,11 @@ void gp_ipod_init_set_model (iTunesDB *itdb, const gchar *old_model)
     mountpoint = get_itdb_prefs_string (itdb, KEY_MOUNTPOINT);
     g_return_if_fail (mountpoint);
     g_snprintf (buf, PATH_MAX, _("<b>Please select your iPod model at </b><i>%s</i>"), mountpoint);
-    gtk_label_set_markup (GTK_LABEL (GET_WIDGET ("label")), buf);
+    gtk_label_set_markup (GTK_LABEL (GET_WIDGET (SIMD_LABEL)), buf);
     g_free (mountpoint);
 
     /* Setup model number combo */
-    cb = GTK_COMBO_BOX (GET_WIDGET (MODEL_COMBO));
+    cb = GTK_COMBO_BOX (GET_WIDGET (SIMD_MODEL_COMBO));
     gp_init_model_number_combo (cb);
 
     /* If available set current model number, otherwise indicate that
@@ -458,7 +460,7 @@ void gp_ipod_init_set_model (iTunesDB *itdb, const gchar *old_model)
     {
     case GTK_RESPONSE_OK:
 	model = gtk_combo_box_get_active_text (
-	    GTK_COMBO_BOX (GET_WIDGET (MODEL_COMBO)));
+	    GTK_COMBO_BOX (GET_WIDGET (SIMD_MODEL_COMBO)));
 	if (!model)
 	{
 	    gtkpod_warning (_("Could not determine the model you selected -- this could be a bug or incompatibilty in the GTK+ or glade library.\n\n"));

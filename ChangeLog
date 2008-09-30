@@ -1,3 +1,14 @@
+2008-09-29 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/ipod_init.c
+	  data/gtkpod.glade: glade3 must have decided to rename a number
+	  of widget names. More of these patches to come. Initializing a
+	  new iPod should work fine again.
+
+2008-09-28 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* INSTALL: removed git-svn from the list of required packages
+
 2008-09-27 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* INSTALL: added instructions on how to compile libgopd and gtkpod on a

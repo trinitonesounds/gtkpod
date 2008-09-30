@@ -124,7 +124,7 @@ Quick guide for Ubuntu/Debian
 The following steps were necessary to install libgpod and gtkpod on a fairly virgin Ubuntu Hardy (LTS 8.04) installation.
 
 # required packages
-sudo apt-get install git-svn autoconf flex gettext libglib2.0-dev libgtk2.0-dev libglade2-dev libid3tag0-dev libxml-parser-perl pkg-config automake gcc subversion gtk-doc-tools
+sudo apt-get install autoconf flex gettext libglib2.0-dev libgtk2.0-dev libglade2-dev libid3tag0-dev libxml-parser-perl pkg-config automake gcc subversion gtk-doc-tools
 
 # recommended packages
 sudo apt-get install libcurl4-dev libflac-dev libgnomevfs2-dev libhal-dev libvorbis-dev libmp4v2-dev
