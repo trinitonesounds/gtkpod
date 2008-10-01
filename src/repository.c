@@ -1,4 +1,4 @@
-/* Time-stamp: <2008-08-17 10:53:11 jcs>
+/* Time-stamp: <2008-10-01 23:36:57 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -72,6 +72,7 @@ typedef enum
 
 
 /* string constants for window widgets used more than once */
+static const gchar *SYNC_FRAME="sync_frame";
 static const gchar *PLAYLIST_COMBO="playlist_combo";
 static const gchar *REPOSITORY_COMBO="repository_combo";
 static const gchar *MOUNTPOINT_LABEL="mountpoint_label";
@@ -84,7 +85,6 @@ static const gchar *IPOD_MODEL_LABEL="ipod_model_label";
 static const gchar *IPOD_MODEL_COMBO="ipod_model_combo";
 static const gchar *IPOD_MODEL_ENTRY="ipod_model_entry--not-a-glade-name";
 static const gchar *LOCAL_PATH_LABEL="local_path_label";
-static const gchar *LOCAL_PATH_BUTTON="local_path_button";
 static const gchar *LOCAL_PATH_ENTRY="local_path_entry";
 static const gchar *STANDARD_PLAYLIST_VBOX="standard_playlist_vbox";
 static const gchar *SPL_VBOX="spl_vbox";
@@ -96,14 +96,10 @@ static const gchar *MANUAL_SYNCDIR_ENTRY="manual_syncdir_entry";
 static const gchar *MANUAL_SYNCDIR_BUTTON="manual_syncdir_button";
 static const gchar *DELETE_REPOSITORY_BUTTON="delete_repository_button";
 static const gchar *REPOSITORY_VBOX="repository_vbox";
-static const gchar *IPOD_SYNC_LABEL="ipod_sync_label";
-static const gchar *IPOD_SYNC_CONTACTS_LABEL="ipod_sync_contacts_label";
 static const gchar *IPOD_SYNC_CONTACTS_ENTRY="ipod_sync_contacts_entry";
 static const gchar *IPOD_SYNC_CONTACTS_BUTTON="ipod_sync_contacts_button";
-static const gchar *IPOD_SYNC_CALENDAR_LABEL="ipod_sync_calendar_label";
 static const gchar *IPOD_SYNC_CALENDAR_ENTRY="ipod_sync_calendar_entry";
 static const gchar *IPOD_SYNC_CALENDAR_BUTTON="ipod_sync_calendar_button";
-static const gchar *IPOD_SYNC_NOTES_LABEL="ipod_sync_notes_label";
 static const gchar *IPOD_SYNC_NOTES_ENTRY="ipod_sync_notes_entry";
 static const gchar *IPOD_SYNC_NOTES_BUTTON="ipod_sync_notes_button";
 static const gchar *IPOD_CONCAL_AUTOSYNC_TOGGLE="ipod_concal_autosync_toggle";
@@ -137,6 +133,27 @@ const gchar *KEY_PATH_SYNC_CALENDAR="path_sync_calendar";
 const gchar *KEY_PATH_SYNC_NOTES="path_sync_notes";
 const gchar *KEY_SYNCMODE="syncmode";
 const gchar *KEY_MANUAL_SYNCDIR="manual_syncdir";
+
+
+/* widget names for the "Create New Repository" window */
+static const gchar *CRW_BACKUP_BUTTON="crw_backup_button";
+static const gchar *CRW_BACKUP_ENTRY="crw_backup_entry";
+static const gchar *CRW_BACKUP_LABEL="crw_backup_label";
+static const gchar *CRW_CANCEL_BUTTON="crw_cancel_button";
+static const gchar *CRW_INSERT_BEFORE_AFTER_COMBO="crw_insert_before_after_combo";
+static const gchar *CRW_IPOD_MODEL_COMBO="crw_ipod_model_combo";
+static const gchar *CRW_IPOD_MODEL_ENTRY="crw_ipod_model_entry";
+static const gchar *CRW_IPOD_MODEL_LABEL="crw_ipod_model_label";
+static const gchar *CRW_LOCAL_PATH_BUTTON="crw_local_path_button";
+static const gchar *CRW_LOCAL_PATH_ENTRY="crw_local_path_entry";
+static const gchar *CRW_LOCAL_PATH_LABEL="crw_local_path_label";
+static const gchar *CRW_MOUNTPOINT_BUTTON="crw_mountpoint_button";
+static const gchar *CRW_MOUNTPOINT_ENTRY="crw_mountpoint_entry";
+static const gchar *CRW_MOUNTPOINT_LABEL="crw_mountpoint_label";
+static const gchar *CRW_OK_BUTTON="crw_ok_button";
+static const gchar *CRW_REPOSITORY_COMBO="crw_repository_combo";
+static const gchar *CRW_REPOSITORY_NAME_ENTRY="crw_repository_name_entry";
+static const gchar *CRW_REPOSITORY_TYPE_COMBO="crw_repository_type_combo";
 
 
 
@@ -1211,7 +1228,8 @@ static void display_repository_info (RepWin *repwin)
 	    IPOD_MODEL_LABEL,
 	    IPOD_MODEL_COMBO,
 	    LOCAL_PATH_ENTRY,
-	    IPOD_SYNC_LABEL,
+	    SYNC_FRAME,
+/*	    IPOD_SYNC_LABEL,
 	    IPOD_SYNC_CONTACTS_LABEL,
 	    IPOD_SYNC_CONTACTS_ENTRY,
 	    IPOD_SYNC_CONTACTS_BUTTON,
@@ -1221,7 +1239,7 @@ static void display_repository_info (RepWin *repwin)
 	    IPOD_SYNC_NOTES_LABEL,
 	    IPOD_SYNC_NOTES_ENTRY,
 	    IPOD_SYNC_NOTES_BUTTON,
-	    IPOD_CONCAL_AUTOSYNC_TOGGLE,
+	    IPOD_CONCAL_AUTOSYNC_TOGGLE,*/
 	    NULL};
 	const gchar *widgets_hide[] = {
 	    LOCAL_PATH_LABEL,
@@ -1274,7 +1292,8 @@ static void display_repository_info (RepWin *repwin)
 	    BACKUP_BUTTON,
 	    IPOD_MODEL_LABEL,
 	    IPOD_MODEL_COMBO,
-	    IPOD_SYNC_LABEL,
+	    SYNC_FRAME,
+/*	    IPOD_SYNC_LABEL,
 	    IPOD_SYNC_CONTACTS_LABEL,
 	    IPOD_SYNC_CONTACTS_ENTRY,
 	    IPOD_SYNC_CONTACTS_BUTTON,
@@ -1284,7 +1303,7 @@ static void display_repository_info (RepWin *repwin)
 	    IPOD_SYNC_NOTES_LABEL,
 	    IPOD_SYNC_NOTES_ENTRY,
 	    IPOD_SYNC_NOTES_BUTTON,
-	    IPOD_CONCAL_AUTOSYNC_TOGGLE,
+	    IPOD_CONCAL_AUTOSYNC_TOGGLE,*/
 	    NULL};
 	const gchar **widget;
 
@@ -1563,6 +1582,7 @@ static void set_repository_combo (GtkComboBox *cb)
 
     if (g_object_get_data (G_OBJECT (cb), "combo_set") == NULL)
     {   /* the combo has not yet been initialized */
+
 	/* Cell for graphic indicator */
 	cell = gtk_cell_renderer_pixbuf_new ();
 	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (cb), cell, FALSE);
@@ -1582,8 +1602,6 @@ static void set_repository_combo (GtkComboBox *cb)
     }
 
     store = gtk_list_store_new (1, G_TYPE_POINTER);
-    gtk_combo_box_set_model (cb, GTK_TREE_MODEL (store));
-    g_object_unref (store);
 
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)
     {
@@ -1598,6 +1616,9 @@ static void set_repository_combo (GtkComboBox *cb)
 	gtk_list_store_append (store, &iter);
 	gtk_list_store_set (store, &iter, 0, mpl, -1);
     }
+
+    gtk_combo_box_set_model (cb, GTK_TREE_MODEL (store));
+    g_object_unref (store);
 }
 
 
@@ -1670,8 +1691,6 @@ static void init_playlist_combo (RepWin *repwin)
     }
 
     store = gtk_list_store_new (1, G_TYPE_POINTER);
-    gtk_combo_box_set_model (cb, GTK_TREE_MODEL (store));
-    g_object_unref (store);
 
     if (repwin->itdb)
     {
@@ -1686,11 +1705,15 @@ static void init_playlist_combo (RepWin *repwin)
 	}
     }
 
+    gtk_combo_box_set_model (cb, GTK_TREE_MODEL (store));
+    g_object_unref (store);
+
     if (repwin->itdb)
     {
 	select_playlist (repwin, repwin->next_playlist);
 	repwin->next_playlist = NULL;
     }
+
 }
 
 
@@ -1731,7 +1754,7 @@ static void update_buttons (RepWin *repwin)
 	g_free (key);
 
 	gtk_widget_set_sensitive (GET_WIDGET ("general_frame"), !deleted);
-	gtk_widget_set_sensitive (GET_WIDGET ("sync_frame"), !deleted);
+	gtk_widget_set_sensitive (GET_WIDGET (SYNC_FRAME), !deleted);
 	gtk_widget_set_sensitive (GET_WIDGET ("update_all_playlists_button"), !deleted);
 	gtk_widget_set_sensitive (GET_WIDGET ("playlist_tab_label"), !deleted);
 	gtk_widget_set_sensitive (GET_WIDGET ("playlist_tab_contents"), !deleted);
@@ -2119,13 +2142,6 @@ enum
 };
 
 
-/* somes widget names used several times */
-static const gchar *REPOSITORY_TYPE_COMBO="repository_type_combo";
-static const gchar *INSERT_BEFORE_AFTER_COMBO="insert_before_after_combo";
-static const gchar *REPOSITORY_NAME_ENTRY="repository_name_entry";
-
-
-
 
 /* shortcut to reference widgets when repwin->xml is already set */
 #undef GET_WIDGET
@@ -2182,32 +2198,32 @@ static void create_ok_clicked (GtkButton *button, CreateRep *cr)
 
     /* retrieve current settings */
     type = gtk_combo_box_get_active (
-	GTK_COMBO_BOX (GET_WIDGET (REPOSITORY_TYPE_COMBO)));
+	GTK_COMBO_BOX (GET_WIDGET (CRW_REPOSITORY_TYPE_COMBO)));
 
     bef_after = gtk_combo_box_get_active (
-	GTK_COMBO_BOX (GET_WIDGET (INSERT_BEFORE_AFTER_COMBO)));
+	GTK_COMBO_BOX (GET_WIDGET (CRW_INSERT_BEFORE_AFTER_COMBO)));
 
     itdb_index = gtk_combo_box_get_active (
-	GTK_COMBO_BOX (GET_WIDGET (REPOSITORY_COMBO)));
+	GTK_COMBO_BOX (GET_WIDGET (CRW_REPOSITORY_COMBO)));
 
     name = gtk_entry_get_text (
-	GTK_ENTRY (GET_WIDGET (REPOSITORY_NAME_ENTRY)));
+	GTK_ENTRY (GET_WIDGET (CRW_REPOSITORY_NAME_ENTRY)));
 
     mountpoint = gtk_entry_get_text (
-	GTK_ENTRY (GET_WIDGET (MOUNTPOINT_ENTRY)));
+	GTK_ENTRY (GET_WIDGET (CRW_MOUNTPOINT_ENTRY)));
 
     backup = gtk_entry_get_text (
-	GTK_ENTRY (GET_WIDGET (BACKUP_ENTRY)));
+	GTK_ENTRY (GET_WIDGET (CRW_BACKUP_ENTRY)));
 
     ipod_model = gtk_entry_get_text (
-	GTK_ENTRY (GET_WIDGET (IPOD_MODEL_ENTRY)));
+	GTK_ENTRY (GET_WIDGET (CRW_IPOD_MODEL_ENTRY)));
     if (strcmp (ipod_model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0)
     {   /* User didn't choose a model */
 	ipod_model = "";
     }
 
     local_path = gtk_entry_get_text (
-	GTK_ENTRY (GET_WIDGET (LOCAL_PATH_ENTRY)));
+	GTK_ENTRY (GET_WIDGET (CRW_LOCAL_PATH_ENTRY)));
 
     /* adjust position where new itdb is to be inserted */
     if (bef_after == INSERT_AFTER)
@@ -2285,29 +2301,28 @@ static void create_delete_event (GtkWidget *widget,
  *
  * ------------------------------------------------------------ */
 
-static void repository_type_changed (GtkComboBox *cb,
-				     CreateRep *cr)
+static void cr_repository_type_changed (GtkComboBox *cb,
+					CreateRep *cr)
 {
     gint index, i;
     const gchar **show=NULL;
     /* widgets to show for iPod repositories */
     const gchar *show_ipod[] = {
-	MOUNTPOINT_LABEL, MOUNTPOINT_ENTRY, MOUNTPOINT_BUTTON,
-	BACKUP_LABEL, BACKUP_ENTRY, BACKUP_BUTTON,
-	IPOD_MODEL_LABEL, IPOD_MODEL_COMBO,
+	CRW_MOUNTPOINT_LABEL, CRW_MOUNTPOINT_ENTRY, CRW_MOUNTPOINT_BUTTON,
+	CRW_BACKUP_LABEL, CRW_BACKUP_ENTRY, CRW_BACKUP_BUTTON,
+	CRW_IPOD_MODEL_LABEL, CRW_IPOD_MODEL_COMBO,
 	NULL };
     /* widgets to show for local repositories */
     const gchar *show_local[] = {
-	LOCAL_PATH_LABEL, LOCAL_PATH_ENTRY, LOCAL_PATH_BUTTON,
+	CRW_LOCAL_PATH_LABEL, CRW_LOCAL_PATH_ENTRY, CRW_LOCAL_PATH_BUTTON,
 	NULL };
     /* list of all widgets that get hidden */
     const gchar *hide_all[] = {
-	MOUNTPOINT_LABEL, MOUNTPOINT_ENTRY, MOUNTPOINT_BUTTON,
-	BACKUP_LABEL, BACKUP_ENTRY, BACKUP_BUTTON,
-	IPOD_MODEL_LABEL, IPOD_MODEL_COMBO,
-	LOCAL_PATH_LABEL, LOCAL_PATH_ENTRY, LOCAL_PATH_BUTTON,
+	CRW_MOUNTPOINT_LABEL, CRW_MOUNTPOINT_ENTRY, CRW_MOUNTPOINT_BUTTON,
+	CRW_BACKUP_LABEL, CRW_BACKUP_ENTRY, CRW_BACKUP_BUTTON,
+	CRW_IPOD_MODEL_LABEL, CRW_IPOD_MODEL_COMBO,
+	CRW_LOCAL_PATH_LABEL, CRW_LOCAL_PATH_ENTRY, CRW_LOCAL_PATH_BUTTON,
 	NULL };
-
 
     index = gtk_combo_box_get_active (cb);
 
@@ -2460,10 +2475,10 @@ static void create_repository (RepWin *repwin1)
     g_return_if_fail (cr->window);
 
     /* Window control */
-    g_signal_connect (GET_WIDGET ("cancel_button"), "clicked",
+    g_signal_connect (GET_WIDGET (CRW_CANCEL_BUTTON), "clicked",
 		      G_CALLBACK (create_cancel_clicked), cr);
 
-    g_signal_connect (GET_WIDGET ("ok_button"), "clicked",
+    g_signal_connect (GET_WIDGET (CRW_OK_BUTTON), "clicked",
 		      G_CALLBACK (create_ok_clicked), cr);
 
     g_signal_connect (createrep->window, "delete_event",
@@ -2471,48 +2486,48 @@ static void create_repository (RepWin *repwin1)
 
 
     /* Combo callback */
-    g_signal_connect (GET_WIDGET (REPOSITORY_TYPE_COMBO), "changed",
-		      G_CALLBACK (repository_type_changed), cr);
+    g_signal_connect (GET_WIDGET (CRW_REPOSITORY_TYPE_COMBO), "changed",
+		      G_CALLBACK (cr_repository_type_changed), cr);
 
     /* Button callbacks */
-    g_signal_connect (GET_WIDGET (MOUNTPOINT_BUTTON), "clicked",
+    g_signal_connect (GET_WIDGET (CRW_MOUNTPOINT_BUTTON), "clicked",
 		      G_CALLBACK (cr_mountpoint_button_clicked), cr);
 
-    g_signal_connect (GET_WIDGET (BACKUP_BUTTON), "clicked",
+    g_signal_connect (GET_WIDGET (CRW_BACKUP_BUTTON), "clicked",
 		      G_CALLBACK (cr_backup_button_clicked), cr);
 
-    g_signal_connect (GET_WIDGET (LOCAL_PATH_BUTTON), "clicked",
+    g_signal_connect (GET_WIDGET (CRW_LOCAL_PATH_BUTTON), "clicked",
 		      G_CALLBACK (cr_local_path_button_clicked), cr);
 
     /* Setup model number combo */
-    cb = GTK_COMBO_BOX (GET_WIDGET (IPOD_MODEL_COMBO));
+    cb = GTK_COMBO_BOX (GET_WIDGET (CRW_IPOD_MODEL_COMBO));
     gp_init_model_number_combo (cb);
-    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (IPOD_MODEL_ENTRY)),
+    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (CRW_IPOD_MODEL_ENTRY)),
 			gettext (SELECT_OR_ENTER_YOUR_MODEL));
 
     /* Set initial repository type */
     gtk_combo_box_set_active (
-	GTK_COMBO_BOX (GET_WIDGET (REPOSITORY_TYPE_COMBO)),
+	GTK_COMBO_BOX (GET_WIDGET (CRW_REPOSITORY_TYPE_COMBO)),
 	REPOSITORY_TYPE_IPOD);
 
     /* Set before/after combo */
     gtk_combo_box_set_active (
-	GTK_COMBO_BOX (GET_WIDGET (INSERT_BEFORE_AFTER_COMBO)),
+	GTK_COMBO_BOX (GET_WIDGET (CRW_INSERT_BEFORE_AFTER_COMBO)),
 	INSERT_AFTER);
 
     /* Set up repository combo */
-    set_repository_combo (GTK_COMBO_BOX (GET_WIDGET (REPOSITORY_COMBO)));
+    set_repository_combo (GTK_COMBO_BOX (GET_WIDGET (CRW_REPOSITORY_COMBO)));
     gtk_combo_box_set_active (
-	GTK_COMBO_BOX (GET_WIDGET (REPOSITORY_COMBO)),
+	GTK_COMBO_BOX (GET_WIDGET (CRW_REPOSITORY_COMBO)),
 	0);
 
     /* Set default repository name */
-    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (REPOSITORY_NAME_ENTRY)),
+    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (CRW_REPOSITORY_NAME_ENTRY)),
 			_("New Repository"));
 
     /* Set initial mountpoint */
     str = prefs_get_string ("initial_mountpoint");
-    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (MOUNTPOINT_ENTRY)),
+    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (CRW_MOUNTPOINT_ENTRY)),
 			str);
     g_free (str);
 
@@ -2522,7 +2537,7 @@ static void create_repository (RepWin *repwin1)
     buf2 = g_strdup_printf ("backupDB_%d",
 			    g_list_length (itdbs_head->itdbs));
     str = g_build_filename (buf1, buf2, NULL);
-    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (BACKUP_ENTRY)), str);
+    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (CRW_BACKUP_ENTRY)), str);
     g_free (str);
     g_free (buf2);
 
@@ -2530,7 +2545,7 @@ static void create_repository (RepWin *repwin1)
     buf2 = g_strdup_printf ("local_%d.itdb",
 			    g_list_length (itdbs_head->itdbs));
     str = g_build_filename (buf1, buf2, NULL);
-    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (LOCAL_PATH_ENTRY)), str);
+    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (CRW_LOCAL_PATH_ENTRY)), str);
     g_free (str);
     g_free (buf2);
     g_free (buf1);

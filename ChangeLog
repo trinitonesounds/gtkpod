@@ -1,3 +1,10 @@
+2008-10-01 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/repository.c
+	  data/gtkpod.glade: glade3 must have decided to rename a number
+	  of widget names. This patch fixes this issue for the
+	  Repositories Prefs and Create New Repository windows.
+
 2008-09-30  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* src/mp4file.c (mp4_get_file_info): Set track->lyrics_flag
