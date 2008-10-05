@@ -84,7 +84,7 @@ const gchar *checkbox_map[][3] = {
 	{ "read_tags", "readtags", NULL },
 	{ "parse_filename_tags", "parsetags", "customize_tags" },
 	{ "last_resort_tags", NULL, "tag_title,tag_artist,tag_album,tag_composer,tag_genre" },
-	{ "write_tags", "id3_write", "tag_encoding,write_tags_legacy,mass_modify_tags" },
+	{ "write_tags", "id3_write", "tag_encoding,write_tags_legacy" },
 	{ "write_tags_legacy", "!id3_write_id3v24", NULL },
 	{ "mass_modify_tags", "multi_edit", NULL },
 	{ "read_coverart", "coverart_apic", NULL },

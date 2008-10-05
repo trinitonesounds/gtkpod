@@ -1,3 +1,9 @@
+2008-10-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/prefsdlg.c
+	  data/gtkpod.glade: option for mass-editing of tags was only
+	  available if "writing tags to disk" was selected.
+
 2008-10-01 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/repository.c
