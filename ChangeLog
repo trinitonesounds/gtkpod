@@ -1,3 +1,12 @@
+2008-10-29 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/prefs.c
+	  src/prefsdlg.c
+	  src/file_convert.c
+	  data/gtkpod.glade: straighten out bug that allowed to unselect
+	  conversion and as a side effect switched off copying of the
+	  music files to the iPod.
+
 2008-10-05 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/prefsdlg.c

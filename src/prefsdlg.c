@@ -79,7 +79,6 @@ const gchar *checkbox_map[][3] = {
 	{ "delete_missing", "sync_delete_tracks", NULL },
 	{ "update_existing_track", "update_existing", NULL },
 	{ "include_neverplayed", "not_played_track", NULL },
-	{ "enable_conversion", "conversion_enable", "target_format,conversion_settings" },
 	/* Metadata tab */
 	{ "read_tags", "readtags", NULL },
 	{ "parse_filename_tags", "parsetags", "customize_tags" },
@@ -107,7 +106,6 @@ const gchar *checkbox_map[][3] = {
 const gchar *conv_checkbox_map[][3] = {
 	{ "convert_ogg", "convert_ogg", NULL },
 	{ "convert_flac", "convert_flac", NULL },
-	{ "convert_compatible", NULL, "convert_mp3,convert_aac,convert_wav" },
 	{ "convert_mp3", "convert_mp3", NULL },
 	{ "convert_aac", "convert_m4a", NULL },
 	{ "convert_wav", "convert_wav", NULL },

@@ -1049,15 +1049,21 @@ static gboolean conversion_add_track (Conversion *conv, Track *track)
     gboolean convert = FALSE, must_convert = FALSE;
     gboolean result = TRUE;
 
+    debug ("entering conversion_add_track\n");
+
     g_return_val_if_fail (conv, FALSE);
     g_return_val_if_fail (track, FALSE);
     g_return_val_if_fail (track->itdb, FALSE);
     etr = track->userdata;
     g_return_val_if_fail (etr, FALSE);
 
-    if ((track->itdb->usertype & GP_ITDB_TYPE_LOCAL) || (track->transferred) ||
-		!prefs_get_int ("conversion_enable"))
-    {  
+    debug ("considering '%s' to conversion/transfer list\n", etr->pc_path_locale);
+
+    if ((track->itdb->usertype & GP_ITDB_TYPE_LOCAL) || (track->transferred))
+    {
+      debug ("adding aborted: lcl:%d, trsfrd:%d\n",
+	     track->itdb->usertype & GP_ITDB_TYPE_LOCAL,
+	     track->transferred);
 		/* no conversion or transfer needed */
 		return TRUE;
     }

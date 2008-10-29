@@ -324,7 +324,6 @@ static void set_default_preferences()
     prefs_set_int("tm_sort", SORT_NONE);
 	
 	/* New conversion preferences */
-	prefs_set_int("conversion_enable", TRUE);
 	prefs_set_int("conversion_target_format", TARGET_FORMAT_MP3);
 }
 
@@ -1052,6 +1051,7 @@ static void cleanup_keys()
     prefs_set_string("size_file_dialog_details.y", NULL);
     prefs_set_string("autoimport", NULL);
     prefs_set_string("auto_import", NULL);
+    prefs_set_string("conversion_enable", NULL);
 
     /* sp_created_cond renamed to sp_added_cond */
     for (i = 0; i < SORT_TAB_MAX; i++)

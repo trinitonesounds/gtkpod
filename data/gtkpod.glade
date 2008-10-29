@@ -10561,25 +10561,18 @@ Local Repository (Podcasts)
                                 <property name="visible">True</property>
                                 <property name="spacing">12</property>
                                 <child>
-                                  <widget class="GtkCheckButton" id="enable_conversion">
+                                  <widget class="GtkLabel" id="label3">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="label" translatable="yes">Convert incompatible music formats to: </property>
-                                    <property name="use_underline">True</property>
-                                    <property name="response_id">0</property>
-                                    <property name="active">True</property>
-                                    <property name="draw_indicator">True</property>
-                                    <signal name="toggled" handler="on_simple_checkbox_toggled"/>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Convert incompatible music formats to:</property>
                                   </widget>
                                   <packing>
                                     <property name="expand">False</property>
-                                    <property name="fill">False</property>
                                   </packing>
                                 </child>
                                 <child>
                                   <widget class="GtkComboBox" id="target_format">
                                     <property name="visible">True</property>
-                                    <property name="sensitive">False</property>
                                     <property name="items" translatable="yes">MP3
 AAC
 </property>
@@ -10638,8 +10631,6 @@ AAC
                                 </child>
                               </widget>
                               <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -13085,20 +13076,11 @@ Examples:
                         <property name="visible">True</property>
                         <property name="spacing">6</property>
                         <child>
-                          <widget class="GtkCheckButton" id="convert_compatible">
+                          <widget class="GtkLabel" id="label45">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="xalign">0</property>
                             <property name="label" translatable="yes">Convert compatible formats to a single format</property>
-                            <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
-                            <property name="active">True</property>
-                            <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="on_unsetdeps_checkbox_toggled"/>
                           </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                          </packing>
                         </child>
                         <child>
                           <widget class="GtkAlignment" id="alignment42">
