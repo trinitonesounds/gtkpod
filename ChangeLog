@@ -1,5 +1,10 @@
-2008-10-29 Jorg Schuler <jcsjcs at users.sourceforge.net>
+2008-10-30 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/file_export.c
+	  data/gtkpod.glade: fix bug that prevented "export to file
+	  system" mode from working. (glade-3 renamed yet another widget)
+
+2008-10-29 Jorg Schuler <jcsjcs at users.sourceforge.net>
 	* src/prefs.c
 	  src/prefsdlg.c
 	  src/file_convert.c

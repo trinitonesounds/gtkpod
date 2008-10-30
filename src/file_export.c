@@ -593,8 +593,8 @@ void export_files_init (GList *tracks, GList **filenames,
 
     export_files_xml = gtkpod_xml_new (xml_file, "export_files_options");
     win = gtkpod_xml_get_widget (export_files_xml, "export_files_options");
-    options = gtkpod_xml_get_widget (export_files_xml, "options_frame");
-    message_box = gtkpod_xml_get_widget (export_files_xml, "message_box");
+    options = gtkpod_xml_get_widget (export_files_xml, "ef_options_frame");
+    message_box = gtkpod_xml_get_widget (export_files_xml, "ef_message_box");
 
     /* Information needed to clean up later */
     fcd = g_malloc0 (sizeof (struct fcd));
@@ -619,9 +619,9 @@ void export_files_init (GList *tracks, GList **filenames,
     {
 	GList *gl;
 	GtkWidget *label = gtkpod_xml_get_widget (export_files_xml,
-						 "message");
+						 "ef_message");
 	GtkWidget *tv = gtkpod_xml_get_widget (export_files_xml,
-					      "textview");
+					      "ef_textview");
 	GtkTextBuffer *tb = gtk_text_view_get_buffer (GTK_TEXT_VIEW(tv));
 	if (message)  gtk_label_set_text (GTK_LABEL (label), message);
 	else          gtk_widget_hide (label);
@@ -1094,7 +1094,7 @@ void export_playlist_file_init (GList *tracks)
     export_playlist_xml = gtkpod_xml_new (xml_file, "export_playlist_file_options");
     win = gtkpod_xml_get_widget (export_playlist_xml, "export_playlist_file_options");
 
-    options = gtkpod_xml_get_widget (export_playlist_xml, "options_frame");
+    options = gtkpod_xml_get_widget (export_playlist_xml, "ep_options_frame");
 
     fcd->win_xml = export_playlist_xml;
 

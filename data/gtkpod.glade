@@ -3870,7 +3870,7 @@ Added
   <widget class="GtkWindow" id="export_playlist_file_options">
     <property name="title" translatable="yes">window1</property>
     <child>
-      <widget class="GtkFrame" id="options_frame">
+      <widget class="GtkFrame" id="ep_options_frame">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <property name="shadow_type">GTK_SHADOW_NONE</property>
@@ -4098,7 +4098,7 @@ Added
   <widget class="GtkWindow" id="export_files_options">
     <property name="title" translatable="yes">window1</property>
     <child>
-      <widget class="GtkFrame" id="options_frame1">
+      <widget class="GtkFrame" id="ef_options_frame">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
         <property name="shadow_type">GTK_SHADOW_NONE</property>
@@ -4179,13 +4179,13 @@ for this filename.</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkVBox" id="message_box">
+                  <widget class="GtkVBox" id="ef_message_box">
                     <property name="visible">True</property>
                     <child>
                       <placeholder/>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="message">
+                      <widget class="GtkLabel" id="ef_message">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="yalign">0</property>
@@ -4206,7 +4206,7 @@ for this filename.</property>
                         <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                         <property name="shadow_type">GTK_SHADOW_IN</property>
                         <child>
-                          <widget class="GtkTextView" id="textview">
+                          <widget class="GtkTextView" id="ef_textview">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="wrap_mode">GTK_WRAP_WORD</property>
