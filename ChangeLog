@@ -1,3 +1,7 @@
+2008-11-08 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* data/gtkpod.glade: write-out with glade V3.4.5
+
 2008-10-30 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_export.c
