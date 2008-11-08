@@ -1013,7 +1013,7 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
 	}
 	else if ((changed) && (item == T_LYRICS))
 	{
-	    write_lyrics_to_file (totrack,etotr->lyrics);
+	    write_lyrics_to_file (totrack);
 	}
 	/* handle items that have two entries */
 	if (item == T_PC_PATH)
@@ -1427,7 +1427,7 @@ gchar *track_get_text (Track *track, T_item item)
     case T_GAPLESS_TRACK_FLAG:
 	break;
     case T_LYRICS:
-	read_lyrics_from_file (track,&text);
+	read_lyrics_from_file (track, &text);
 	break;
     }
     return text;

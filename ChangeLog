@@ -1,5 +1,32 @@
 2008-11-08 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/display_tracks.c
+	  src/misc_track.c: use a toggle box to show the state of the
+	  lyrics flag instead of 0/1.
+
+	* src/display_tracks.c
+	  src/misc_track.c
+	  src/file.c
+	  src/file.h
+	  src/details.c
+	  src/details.h: clicking on the lyrics toggle box brings up the
+	  edit lyrics dialog.
+
+	  !!! There are two possible sources for segfaults in
+	  details.c/details_button_apply_clicked:
+
+	  - track_copy_artwork() writes the lyrics tag to the file and
+	    checks for duplicates. This might destroy the list we are just
+	    iterating over.
+
+	  - write_tags_to_file() writes tags to the file and checks for
+	    duplicates. This might destroy the list we are just iterating
+	    over.
+
+	  I don't have a simple solution right now.
+
+2008-11-08 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
         * src/display.h
 	  src/file_itunesdb.c
 	  src/misc_conversion.c

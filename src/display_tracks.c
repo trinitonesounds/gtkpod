@@ -41,6 +41,7 @@
 #include <unistd.h>
 
 #include "prefs.h"
+#include "details.h"
 #include "display_private.h"
 #include "display_itdb.h"
 #include "itdb.h"
@@ -1139,14 +1140,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 	itdb = track->itdb;
 	g_return_if_fail (itdb);
 
-	if (column!= TM_COLUMN_LYRICS)
-	{
-		text = track_get_text (track, TM_to_T (column));
-	}
-	else
-	{
-		text = g_strdup_printf ("%d", track->lyrics_flag);
-	}
+	text = track_get_text (track, TM_to_T (column));
 
 	switch (column)
 	{
@@ -1188,7 +1182,6 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 			"xalign", 0.0, NULL);
 	  break;
 	case TM_COLUMN_MEDIA_TYPE:
-	case TM_COLUMN_LYRICS:
 	  g_object_set (G_OBJECT (renderer),
 			"text", text,
 			"editable", FALSE,
@@ -1225,6 +1218,11 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 			"text", text,
 			"editable", FALSE,
 			"xalign", 0.0, NULL);
+	  break;
+	case TM_COLUMN_LYRICS:
+	  g_object_set (G_OBJECT (renderer),
+			"active", track->lyrics_flag,
+			"activatable", TRUE, NULL);
 	  break;
 	case TM_COLUMN_TRANSFERRED:
 	  g_object_set (G_OBJECT (renderer),
@@ -1291,6 +1289,7 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
   gint sel_rows_num;
   GList *row_list, *row_node, *first;
   gboolean active;
+  GList *selected_tracks = NULL;
 
   column = (TM_item) g_object_get_data(G_OBJECT(renderer), "column");
   multi_edit = prefs_get_int("multi_edit");
@@ -1337,6 +1336,10 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
 	 if (!active) track->compilation = 1;
 	 else        track->compilation = 0;
         break;
+     case TM_COLUMN_LYRICS:
+	 /* collect all selected tracks -- then call "edit details" */
+	 selected_tracks = g_list_append (selected_tracks, track);
+	 break;
      case TM_COLUMN_ARTIST:
      case TM_COLUMN_ALBUM:
      case TM_COLUMN_GENRE:
@@ -1383,9 +1386,8 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
      case TM_COLUMN_SORT_ALBUMARTIST:
      case TM_COLUMN_SORT_COMPOSER:
      case TM_COLUMN_SORT_TVSHOW:
-     case TM_COLUMN_LYRICS:
      case TM_NUM_COLUMNS:
-	 /* these are not toggle buttons */
+	 /* these are not toggle buttons or are non-editable */
 	 break;
      }
 /*      printf ("  changed: %d\n", changed); */
@@ -1404,6 +1406,14 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
         
      }
      while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+  }
+
+  if ((column == TM_COLUMN_LYRICS) && (selected_tracks != NULL))
+  {
+      /* set displayed page to the lyrics page */
+      prefs_set_int (DETAILS_WINDOW_NOTEBOOK_PAGE, 3);
+      details_edit (selected_tracks);
+      g_list_free (selected_tracks);
   }
 
   if (multi_edit && (sel_rows_num > 1)) release_widgets ();
@@ -2242,7 +2252,6 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
 	case TM_COLUMN_SORT_ALBUMARTIST:
 	case TM_COLUMN_SORT_COMPOSER:
 	case TM_COLUMN_SORT_TVSHOW:
-	case TM_COLUMN_LYRICS:
 	  break;
 	/* for some column names we want to use shorter alternatives to
 	 get_tm_string() */
@@ -2261,6 +2270,11 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
 	case TM_COLUMN_TRANSFERRED:
 	  text = _("Trnsfrd");
 	  renderer = gtk_cell_renderer_toggle_new ();
+	  break;
+	case TM_COLUMN_LYRICS:
+	  renderer = gtk_cell_renderer_toggle_new ();
+	  g_signal_connect (G_OBJECT (renderer), "toggled",
+			G_CALLBACK (tm_cell_toggled), model);
 	  break;
 	case TM_COLUMN_COMPILATION:
 	  text = _("Cmpl");

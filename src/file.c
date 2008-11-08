@@ -2642,7 +2642,7 @@ gboolean read_lyrics_from_file (Track *track, gchar **lyrics)
 }
 
 /* Write lyrics to file */
-gboolean write_lyrics_to_file (Track *track,const gchar *lyrics)
+gboolean write_lyrics_to_file (Track *track)
 {
     gchar *path=NULL;
     gchar *buf;
@@ -2679,7 +2679,7 @@ gboolean write_lyrics_to_file (Track *track,const gchar *lyrics)
         switch (determine_file_type (path))
         {
         case FILE_TYPE_MP3:
-            result = id3_lyrics_save (path, lyrics);
+            result = id3_lyrics_save (path, etr->lyrics);
             break;
         case FILE_TYPE_M4A:
         case FILE_TYPE_M4P:
@@ -2709,17 +2709,25 @@ gboolean write_lyrics_to_file (Track *track,const gchar *lyrics)
 	if (!warned) {
 	    buf = get_track_info (track, FALSE);
 	    gtkpod_warning (
-		_("Lyrics not found, file name not available (%s).\n\n"),
+		_("Lyrics not written, file name not available (%s).\n\n"),
 		buf);
 	    g_free (buf);
 	}
     }
-    if ((lyrics == NULL) || (strlen(lyrics)==0))
+
+    if (!result || !etr->lyrics || (strlen(etr->lyrics)==0))
     {
-	if (lyrics == NULL) lyrics = g_strdup("");
-	etr->lyrics=g_strdup(lyrics);
 	track->lyrics_flag=0x00;
     }
+    else
+    {
+	track->lyrics_flag=0x01;
+    }
+    if (!etr->lyrics)
+    {
+	etr->lyrics = g_strdup ("");
+    }
+
     if (result)
     {
 	/* remove track from sha1 hash and reinsert it (hash value has changed!) */
@@ -2727,7 +2735,7 @@ gboolean write_lyrics_to_file (Track *track,const gchar *lyrics)
 	C_FREE (etr->sha1_hash);  /* need to remove the old value manually! */
 	oldtrack = sha1_track_exists_insert (itdb, track);
 	if (oldtrack)
-	{ /* track exists, remove and register the new version */
+	{ /* track exists, remove the old track and register the new version */
 	    sha1_track_remove (oldtrack);
 	    gp_duplicate_remove (track, oldtrack);
 	    sha1_track_exists_insert (itdb, track);

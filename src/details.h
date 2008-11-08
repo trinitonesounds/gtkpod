@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-10 00:46:23 jcs>
+/* Time-stamp: <2008-11-08 17:35:16 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -52,6 +52,8 @@ struct _Detail
 };
 
 typedef struct _Detail Detail;
+
+extern const gchar *DETAILS_WINDOW_NOTEBOOK_PAGE;
 
 /* details window */
 void details_edit (GList *selected_tracks);

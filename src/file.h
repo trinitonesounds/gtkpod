@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-05-06 20:20:31 jcs>
+/* Time-stamp: <2008-11-08 18:11:02 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -125,7 +125,7 @@ GList *export_trackglist_when_necessary (iTunesDB *itdb_s,
 					 iTunesDB *itdb_d,
 					 GList *tracks);
 gboolean read_lyrics_from_file (Track *track, gchar **lyrics);
-gboolean write_lyrics_to_file (Track *track, const gchar *lyrics);
+gboolean write_lyrics_to_file (Track *track);
 /* needed to adapt the prefs structure */
 extern const gchar *EXPORT_FILES_SPECIAL_CHARSET;
 extern const gchar *EXPORT_FILES_CHECK_EXISTING;

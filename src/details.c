@@ -54,7 +54,7 @@ static GList *details = NULL;
 /* string constants for preferences */
 static const gchar *DETAILS_WINDOW_DEFX="details_window_defx";
 static const gchar *DETAILS_WINDOW_DEFY="details_window_defy";
-static const gchar *DETAILS_WINDOW_NOTEBOOK_PAGE="details_window_notebook_page";
+const gchar *DETAILS_WINDOW_NOTEBOOK_PAGE="details_window_notebook_page";
 
 /* enum types */
 typedef enum
@@ -436,8 +436,8 @@ static void details_button_apply_clicked (GtkButton *button,
 	    {
 		Track *tr = gl->data;
 		write_tags_to_file (tr);
-		/* display possible duplicates that have been removed */
 	    }
+	    /* display possible duplicates that have been removed */
 	    gp_duplicate_remove (NULL, NULL);
 	}
     }
