@@ -842,6 +842,7 @@ static gboolean copy_new_info (Track *from, Track *to)
 	case T_SEASON_NR:
 	case T_EPISODE_NR:
 	case T_GROUPING:
+	case T_LYRICS:
 	    changed |= track_copy_item (from, to, item);
 	    break;
 	case T_CATEGORY:
@@ -1400,6 +1401,7 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	/* set path file information */
 	enti->pc_path_utf8 = charset_to_utf8 (name);
 	enti->pc_path_locale = g_strdup (name);
+	enti->lyrics=NULL;
 	/* set length of file */
 	stat (name, &filestat);
 	nti->size = filestat.st_size; /* get the filesize in bytes */
@@ -2576,3 +2578,160 @@ gboolean read_soundcheck (Track *track)
     return result;
 }
 
+/* Get lyrics from file */
+gboolean read_lyrics_from_file (Track *track, gchar **lyrics)
+{
+    gchar *path;
+    gchar *buf;
+    gboolean result = FALSE;
+    ExtraTrackData *etr;
+
+    g_return_val_if_fail (track, FALSE);
+    etr = track->userdata;
+    g_return_val_if_fail (etr,FALSE);
+    path = get_file_name_from_source (track, SOURCE_PREFER_IPOD);
+    if (path)
+    {
+        switch (determine_file_type (path))
+        {
+        case FILE_TYPE_MP3:
+            result = id3_lyrics_read (path, lyrics);
+            break;
+        case FILE_TYPE_M4A:
+        case FILE_TYPE_M4P:
+        case FILE_TYPE_M4B:
+        case FILE_TYPE_M4V:
+        case FILE_TYPE_MP4:
+            result = TRUE;
+            *lyrics=g_strdup(
+                "File format unsupported now.");
+            break;
+        case FILE_TYPE_MOV:
+        case FILE_TYPE_MPG:
+        case FILE_TYPE_WAV: /* FIXME */
+        case FILE_TYPE_OGG: /* FIXME */
+        case FILE_TYPE_FLAC: /* FIXME */
+        case FILE_TYPE_UNKNOWN:
+            result = TRUE;
+            *lyrics=g_strdup(
+                "Lyrics not supported for this file format.");
+            break;
+        case FILE_TYPE_M3U:
+        case FILE_TYPE_PLS:
+        case FILE_TYPE_IMAGE:
+        case FILE_TYPE_DIRECTORY:
+            break;
+        }
+        g_free (path);
+    }
+    else
+    {
+        buf = get_track_info (track, FALSE);
+        gtkpod_warning (
+            _("Lyrics not found, file not available (%s).\n\n"),
+            buf);
+        g_free (buf);
+    }
+    if (result)
+    {
+	if (!*lyrics) *lyrics=g_strdup("");
+	if (etr->lyrics) g_free(etr->lyrics);
+	etr->lyrics=g_strdup(*lyrics);
+    }
+    return result;
+}
+
+/* Write lyrics to file */
+gboolean write_lyrics_to_file (Track *track,const gchar *lyrics)
+{
+    gchar *path=NULL;
+    gchar *buf;
+    Track *oldtrack;
+    gboolean result = FALSE;
+    gboolean warned = FALSE;
+    ExtraTrackData *etr;
+    iTunesDB *itdb;
+
+    g_return_val_if_fail (track, FALSE);
+    etr = track->userdata;
+    g_return_val_if_fail (etr,FALSE);
+    itdb = track->itdb;
+    g_return_val_if_fail (itdb, FALSE);
+    path = get_file_name_from_source (track, SOURCE_IPOD);
+    if (!path)
+    {
+	if (prefs_get_int("id3_write"))
+	{
+	    path = get_file_name_from_source (track, SOURCE_LOCAL);
+	}
+	else
+	{
+	    buf = get_track_info (track, FALSE);
+	    gtkpod_warning (
+			_("iPod File not available and ID3 saving disabled in options, cannot save lyrics to: %s.\n\n"),
+			buf);
+	    g_free (buf);
+	    warned=TRUE;
+	}
+    }
+    if (path!=NULL)
+    {
+        switch (determine_file_type (path))
+        {
+        case FILE_TYPE_MP3:
+            result = id3_lyrics_save (path, lyrics);
+            break;
+        case FILE_TYPE_M4A:
+        case FILE_TYPE_M4P:
+        case FILE_TYPE_M4B:
+        case FILE_TYPE_M4V:
+        case FILE_TYPE_MP4:
+            result = TRUE;
+            break;
+        case FILE_TYPE_MOV:
+        case FILE_TYPE_MPG:
+        case FILE_TYPE_WAV: /* FIXME */
+        case FILE_TYPE_OGG: /* FIXME */
+        case FILE_TYPE_FLAC: /* FIXME */
+        case FILE_TYPE_UNKNOWN:
+            result = TRUE;
+            break;
+        case FILE_TYPE_M3U:
+        case FILE_TYPE_PLS:
+        case FILE_TYPE_IMAGE:
+        case FILE_TYPE_DIRECTORY:
+            break;
+        }
+        g_free (path);
+    }
+    else
+    {
+	if (!warned) {
+	    buf = get_track_info (track, FALSE);
+	    gtkpod_warning (
+		_("Lyrics not found, file name not available (%s).\n\n"),
+		buf);
+	    g_free (buf);
+	}
+    }
+    if ((lyrics == NULL) || (strlen(lyrics)==0))
+    {
+	if (lyrics == NULL) lyrics = g_strdup("");
+	etr->lyrics=g_strdup(lyrics);
+	track->lyrics_flag=0x00;
+    }
+    if (result)
+    {
+	/* remove track from sha1 hash and reinsert it (hash value has changed!) */
+	sha1_track_remove (track);
+	C_FREE (etr->sha1_hash);  /* need to remove the old value manually! */
+	oldtrack = sha1_track_exists_insert (itdb, track);
+	if (oldtrack)
+	{ /* track exists, remove and register the new version */
+	    sha1_track_remove (oldtrack);
+	    gp_duplicate_remove (track, oldtrack);
+	    sha1_track_exists_insert (itdb, track);
+	}
+    }
+    return result;
+}

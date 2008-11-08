@@ -191,6 +191,7 @@ typedef enum  {
   TM_COLUMN_SORT_ALBUMARTIST, /* 45 */
   TM_COLUMN_SORT_COMPOSER,
   TM_COLUMN_SORT_TVSHOW,
+  TM_COLUMN_LYRICS,
   TM_NUM_COLUMNS
 } TM_item;
 
@@ -257,6 +258,7 @@ typedef enum {
     T_SORT_COMPOSER,
     T_SORT_TVSHOW,
     T_GAPLESS_TRACK_FLAG,
+    T_LYRICS,
     T_ITEM_NUM,
 } T_item;
 

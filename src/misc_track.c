@@ -882,6 +882,9 @@ gchar **track_get_item_pointer (Track *track, T_item t_item)
     case T_SORT_TVSHOW:
 	result = &track->sort_tvshow;
 	break;
+    case T_LYRICS:
+	result = &etr->lyrics;
+	break;
     case T_ALL:
     case T_IPOD_ID:
     case T_TRACK_NR:
@@ -989,6 +992,7 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
     case T_SORT_ALBUMARTIST:
     case T_SORT_COMPOSER:
     case T_SORT_TVSHOW:
+    case T_LYRICS:
 	fritem = track_get_item (frtrack, item);
 	toitem_ptr = track_get_item_pointer (totrack, item);
 	g_return_val_if_fail (fritem, FALSE);
@@ -1006,6 +1010,10 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
 		totrack->year = frtrack->year;
 		changed = TRUE;
 	    }
+	}
+	else if ((changed) && (item == T_LYRICS))
+	{
+	    write_lyrics_to_file (totrack,etotr->lyrics);
 	}
 	/* handle items that have two entries */
 	if (item == T_PC_PATH)
@@ -1418,6 +1426,9 @@ gchar *track_get_text (Track *track, T_item item)
     case T_ITEM_NUM:
     case T_GAPLESS_TRACK_FLAG:
 	break;
+    case T_LYRICS:
+	read_lyrics_from_file (track,&text);
+	break;
     }
     return text;
 }
@@ -1500,6 +1511,15 @@ gboolean track_set_text (Track *track, const gchar *new_text, T_item item)
 	    *itemp_utf8 = g_strdup (new_text);
 	    changed = TRUE;
         }
+        break;
+    case T_LYRICS:
+        if ((etr->lyrics == NULL) ||
+	    (strcmp(etr->lyrics,new_text) != 0))
+	{
+	    g_free(etr->lyrics);
+	    etr->lyrics=g_strdup(new_text);
+	    changed = TRUE;
+	}
         break;
     case T_TRACK_NR:
         nr = atoi (new_text);

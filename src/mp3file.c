@@ -1,4 +1,4 @@
-/* Time-stamp: <2008-09-22 11:28:27 jcs>
+/* Time-stamp: <2008-11-08 16:22:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1260,8 +1260,9 @@ static void id3_set_string (struct id3_tag *tag,
     /* Use the specified text encoding */
     field = id3_frame_field (frame, 0);
     id3_field_settextencoding(field, encoding);
-   
-    if (strcmp (frame_name, ID3_FRAME_COMMENT) == 0)
+
+    if ((strcmp (frame_name, ID3_FRAME_COMMENT) == 0) ||
+        (strcmp (frame_name, "USLT") == 0))
     {
 	field = id3_frame_field (frame, 3);
 	field->type = ID3_FIELD_TYPE_STRINGFULL;
@@ -1332,7 +1333,7 @@ static void id3_set_string (struct id3_tag *tag,
     }
 #endif
 
-    if (strcmp (frame_name, ID3_FRAME_COMMENT) == 0)
+    if ((strcmp (frame_name, ID3_FRAME_COMMENT) == 0) || (strcmp (frame_name, "USLT") == 0))
 	res = id3_field_setfullstring (field, ucs4);
     else
 	res = id3_field_setstrings (field, 1, &ucs4);
@@ -1718,7 +1719,6 @@ gboolean mp3_write_file_info (const gchar *filename, Track *track)
     if ((id3tag = id3_file_tag(id3file)))
     {
 	char *string1;
-
 	enum id3_field_textencoding encoding;
 
 	/* use the same coding as before... */
@@ -2910,4 +2910,93 @@ Track *mp3_get_file_info (const gchar *name)
 	track = NULL;
     }
     return track;
+}
+/*
+ *
+ * @returns: TRUE on success, else FALSE.
+ */
+gboolean id3_lyrics_read (const gchar *filename,gchar **lyrics)
+{
+    struct id3_file *id3file;
+    struct id3_tag *id3tag;
+
+    g_return_val_if_fail (filename, FALSE);
+    g_return_val_if_fail (lyrics, FALSE);
+
+    if (!(id3file = id3_file_open (filename, ID3_FILE_MODE_READONLY)))
+    {
+	gchar *fbuf = charset_to_utf8 (filename);
+	g_print(_("ERROR while opening file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return FALSE;
+    }
+
+    if ((id3tag = id3_file_tag(id3file)))
+    {
+	*lyrics = id3_get_string (id3tag, "USLT");
+    }
+
+    id3_file_close (id3file);
+    return TRUE;
+}
+
+gboolean id3_lyrics_save (const gchar *filename,const gchar *lyrics)
+{
+    struct id3_file *id3file;
+    struct id3_tag *id3tag;
+
+    g_return_val_if_fail (filename, FALSE);
+
+
+    id3file = id3_file_open (filename, ID3_FILE_MODE_READWRITE);
+    if (!id3file)
+    {
+	gchar *fbuf = charset_to_utf8 (filename);
+	g_print(_("ERROR while opening file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return FALSE;
+    }
+
+    if ((id3tag = id3_file_tag(id3file)))
+    {
+	enum id3_field_textencoding encoding;
+
+	/* actually the iPod only understands UTF8 lyrics, but for
+	   consistency's sake we'll do the same as for the other tags
+	*/
+	/* use the same coding as before... */
+	encoding = get_encoding (id3tag);
+	/* ...unless it's ISO_8859_1 and prefs say we should use
+	   unicode (i.e. ID3v2.4) */
+	if (prefs_get_int("id3_write_id3v24") &&
+	    (encoding == ID3_FIELD_TEXTENCODING_ISO_8859_1))
+	    encoding = ID3_FIELD_TEXTENCODING_UTF_8;
+
+	/* always render id3v1 to prevent dj studio from crashing */
+	id3_tag_options(id3tag, ID3_TAG_OPTION_ID3V1, ~0);
+
+        /* turn off frame compression and crc information to let
+	   itunes read tags see
+	   http://www.mars.org/mailman/public/mad-dev/2002-October/000742.html
+	*/
+	id3_tag_options(id3tag, ID3_TAG_OPTION_COMPRESSION, 0);
+	id3_tag_options(id3tag, ID3_TAG_OPTION_CRC, 0);
+
+	id3_set_string (id3tag, "USLT", lyrics, encoding);
+    }
+
+    if (id3_file_update(id3file) != 0)
+    {
+	gchar *fbuf = charset_to_utf8 (filename);
+	g_print(_("ERROR while writing tag to file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return FALSE;
+    }
+
+    id3_file_close (id3file);
+
+    return TRUE;
 }

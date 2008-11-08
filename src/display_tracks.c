@@ -1077,6 +1077,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
      case TM_COLUMN_IPOD_PATH:
      case TM_COLUMN_COMPILATION:
      case TM_COLUMN_THUMB_PATH:
+     case TM_COLUMN_LYRICS:
      case TM_NUM_COLUMNS:
 	 /* These are not editable text fields */
 	 break;
@@ -1138,7 +1139,14 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 	itdb = track->itdb;
 	g_return_if_fail (itdb);
 
-	text = track_get_text (track, TM_to_T (column));
+	if (column!= TM_COLUMN_LYRICS)
+	{
+		text = track_get_text (track, TM_to_T (column));
+	}
+	else
+	{
+		text = g_strdup_printf ("%d", track->lyrics_flag);
+	}
 
 	switch (column)
 	{
@@ -1180,6 +1188,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 			"xalign", 0.0, NULL);
 	  break;
 	case TM_COLUMN_MEDIA_TYPE:
+	case TM_COLUMN_LYRICS:
 	  g_object_set (G_OBJECT (renderer),
 			"text", text,
 			"editable", FALSE,
@@ -1374,6 +1383,7 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
      case TM_COLUMN_SORT_ALBUMARTIST:
      case TM_COLUMN_SORT_COMPOSER:
      case TM_COLUMN_SORT_TVSHOW:
+     case TM_COLUMN_LYRICS:
      case TM_NUM_COLUMNS:
 	 /* these are not toggle buttons */
 	 break;
@@ -1798,6 +1808,9 @@ static gint tm_data_compare (Track *track1, Track *track2,
   case TM_COLUMN_MEDIA_TYPE:
       cmp = track1->mediatype - track2->mediatype;
       break;
+  case  TM_COLUMN_LYRICS:
+      cmp = track1->lyrics_flag - track2->lyrics_flag;
+      break;
   case TM_NUM_COLUMNS:
       break;
   }
@@ -1879,6 +1892,7 @@ gboolean tm_search_equal_func (GtkTreeModel *model,
   case TM_COLUMN_MEDIA_TYPE:
   case TM_COLUMN_SEASON_NR:
   case TM_COLUMN_EPISODE_NR:
+  case TM_COLUMN_LYRICS:
   case TM_NUM_COLUMNS:
       break;
   }
@@ -2038,6 +2052,7 @@ static void tm_set_search_column (TM_item newcol)
     case TM_COLUMN_MEDIA_TYPE:
     case TM_COLUMN_SEASON_NR:
     case TM_COLUMN_EPISODE_NR:
+    case TM_COLUMN_LYRICS:
     case TM_NUM_COLUMNS:
 	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (track_treeview), FALSE);
 	break;
@@ -2227,6 +2242,7 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
 	case TM_COLUMN_SORT_ALBUMARTIST:
 	case TM_COLUMN_SORT_COMPOSER:
 	case TM_COLUMN_SORT_TVSHOW:
+	case TM_COLUMN_LYRICS:
 	  break;
 	/* for some column names we want to use shorter alternatives to
 	 get_tm_string() */

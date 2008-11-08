@@ -1,5 +1,27 @@
 2008-11-08 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+        * src/display.h
+	  src/file_itunesdb.c
+	  src/misc_conversion.c
+	  src/display_itdb.c
+	  src/display_tracks.c
+	  src/display_itdb.h
+	  src/misc_track.c
+	  src/mp3file.c
+	  src/mp3file.h
+	  src/file.c
+	  src/file.h
+	  src/details.c
+	  data/gtkpod.glade:
+
+	  Implemented Dudy Kohen's patch to read/write/edit lyrics data
+	  of MP3 files. Added a separate lyrics tab in the "Edit Details"
+	  window.
+
+	  MP4 lyrics not yet supported -- patches welcome.
+
+2008-11-08 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* data/gtkpod.glade: write-out with glade V3.4.5
 
 2008-10-30 Jorg Schuler <jcsjcs at users.sourceforge.net>

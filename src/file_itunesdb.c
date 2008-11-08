@@ -81,6 +81,7 @@ struct track_extended_info
     guint64 local_itdb_id;
     guint64 local_track_dbid;
     gboolean transferred;
+    gchar *lyrics;
 };
 
 typedef struct {
@@ -147,6 +148,8 @@ void fill_in_extended_info (Track *track, gint32 total, gint32 num)
   }
   if (sei) /* found info for this id! */
   {
+      etr->lyrics=NULL;
+      sei->lyrics=NULL;
       if (sei->pc_path_locale && !etr->pc_path_locale)
       {
 	  etr->pc_path_locale = g_strdup (sei->pc_path_locale);
@@ -307,6 +310,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 	    {
 		if (sei->ipod_id != 0)
 		{ /* normal extended information */
+		    sei->lyrics=NULL;
 		    if (hash_matched)
 		    {
 			if (!extendedinfohash)
@@ -347,6 +351,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 	    {
 		sei = g_malloc0 (sizeof (struct track_extended_info));
 		sei->ipod_id = atoi (arg);
+		sei->lyrics=NULL;
 	    }
 	}
 	else if (g_ascii_strcasecmp (line, "version") == 0)
@@ -1618,6 +1623,7 @@ static void transfer_tracks_show_failed (iTunesDB *itdb, TransferData *td)
 	g_return_if_fail (tr && tr->userdata);
 
 	etr = tr->userdata;
+	etr->lyrics=NULL;
 
 	buf = get_track_info (tr, FALSE);
 

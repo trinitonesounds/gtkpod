@@ -87,6 +87,8 @@ typedef struct
 			       original itdb                               */
   guint64 local_track_dbid; /* when using DND from local to iPod:
 			       original track                              */
+  gchar   *lyrics;          /* Lyrics information as read from file or as
+			       updated in the program                      */
 } ExtraTrackData;
 
 /* types for iTunesDB */

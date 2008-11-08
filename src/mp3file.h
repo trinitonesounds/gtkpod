@@ -38,4 +38,6 @@ gboolean mp3_read_soundcheck (const gchar *path, Track *track);
 gboolean mp3_read_gapless (const gchar *path, Track *track);
 
 gboolean id3_read_tags (const gchar *name, Track *track);
+gboolean id3_lyrics_read (const gchar *filename,gchar **lyrics);
+gboolean id3_lyrics_save (const gchar *filename,const gchar *lyrics);
 #endif

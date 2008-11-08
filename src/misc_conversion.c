@@ -111,6 +111,7 @@ static const gchar *t_strings[] = {
     N_("Sort Composer"),
     N_("Sort TV Show"),
     N_("Gapless Track Flag"),
+    N_("Lyrics"),
     NULL };
 
 /* Tooltips for prefs window */
@@ -171,6 +172,7 @@ static const gchar *t_tooltips[] = {
     N_("Used for sorting on the iPod"),
     N_("Used for sorting on the iPod"),
     N_("Used for sorting on the iPod"),
+    NULL,
     NULL
  };
 
@@ -230,6 +232,7 @@ T_item TM_to_T (TM_item tm)
     case TM_COLUMN_SORT_ALBUMARTIST: return T_SORT_ALBUMARTIST;
     case TM_COLUMN_SORT_COMPOSER: return T_SORT_COMPOSER;
     case TM_COLUMN_SORT_TVSHOW:   return T_SORT_TVSHOW;
+    case TM_COLUMN_LYRICS:        return T_LYRICS;
     case TM_NUM_COLUMNS:          g_return_val_if_reached (-1);
     }
     return -1;

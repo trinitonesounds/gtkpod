@@ -124,6 +124,8 @@ GList *export_tracklist_when_necessary (iTunesDB *itdb_s,
 GList *export_trackglist_when_necessary (iTunesDB *itdb_s,
 					 iTunesDB *itdb_d,
 					 GList *tracks);
+gboolean read_lyrics_from_file (Track *track, gchar **lyrics);
+gboolean write_lyrics_to_file (Track *track, const gchar *lyrics);
 /* needed to adapt the prefs structure */
 extern const gchar *EXPORT_FILES_SPECIAL_CHARSET;
 extern const gchar *EXPORT_FILES_CHECK_EXISTING;

@@ -779,6 +779,7 @@ static void details_setup_widget (Detail *detail, T_item item)
 	break;
     case T_DESCRIPTION:
     case T_SUBTITLE:
+    case T_LYRICS:
     case T_COMMENT:
 	buf = g_strdup_printf ("details_textview_%d", item);
 	w = gtkpod_xml_get_widget (detail->xml, buf);
@@ -896,6 +897,7 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
 	break;
     case T_COMMENT:
     case T_DESCRIPTION:
+    case T_LYRICS:
     case T_SUBTITLE:
 	w = gtkpod_xml_get_widget (detail->xml, textview);
 	tb= gtk_text_view_get_buffer (GTK_TEXT_VIEW (w));
@@ -1119,6 +1121,7 @@ static void details_get_item (Detail *detail, T_item item,
     case T_COMMENT:
     case T_DESCRIPTION:
     case T_SUBTITLE:
+    case T_LYRICS:
 	if ((w = gtkpod_xml_get_widget (detail->xml, textview)))
 	{
 	    gchar *text;
@@ -1566,7 +1569,7 @@ void details_edit (GList *selected_tracks)
 {
     Detail *detail;
     GtkWidget *w;
-    gint defx, defy, page;
+    gint defx, defy, page, num_pages;
     T_item i;
 
     g_return_if_fail (selected_tracks);
@@ -1682,7 +1685,8 @@ void details_edit (GList *selected_tracks)
     /* set notebook page */
     w = gtkpod_xml_get_widget (detail->xml, "details_notebook");
     page = prefs_get_int (DETAILS_WINDOW_NOTEBOOK_PAGE);
-    if ((page >= 0) && (page <= 4))
+    num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK (w));
+    if ((page >= 0) && (page < num_pages))
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (w), page);
 
     /* set default size */

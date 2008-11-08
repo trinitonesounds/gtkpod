@@ -115,6 +115,7 @@ void gp_track_extra_destroy (ExtraTrackData *etrack)
 	g_free (etrack->hostname);
 	g_free (etrack->sha1_hash);
 	g_free (etrack->charset);
+	g_free (etrack->lyrics);
 	g_free (etrack);
     }
 }
@@ -137,6 +138,7 @@ ExtraTrackData *gp_track_extra_duplicate (ExtraTrackData *etr)
 	etr_dup->hostname = g_strdup (etr->hostname);
 	etr_dup->sha1_hash = g_strdup (etr->sha1_hash);
 	etr_dup->charset = g_strdup (etr->charset);
+	etr_dup->lyrics = g_strdup (etr->lyrics);
 	/* clear the pc_path_hashed flag */
 	etr_dup->pc_path_hashed = FALSE;
     }
@@ -261,6 +263,7 @@ void gp_track_add_extra (Track *track)
     {
 	ExtraTrackData *etr = g_new0 (ExtraTrackData, 1);
 	track->userdata = etr;
+	etr->lyrics=NULL;
 	track->userdata_destroy =
 	    (ItdbUserDataDestroyFunc)gp_track_extra_destroy;
 	track->userdata_duplicate =
@@ -823,6 +826,7 @@ void gp_track_validate_entries (Track *track)
     if (!etr->pc_path_locale)    etr->pc_path_locale = g_strdup ("");
     if (!etr->thumb_path_utf8)   etr->thumb_path_utf8 = g_strdup ("");
     if (!etr->thumb_path_locale) etr->thumb_path_locale = g_strdup ("");
+    if (!etr->lyrics)            etr->lyrics = g_strdup ("");
     /* Make sure year_str is identical to year */
     g_free (etr->year_str);
     etr->year_str = g_strdup_printf ("%d", track->year);
