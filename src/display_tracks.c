@@ -93,9 +93,12 @@ static gboolean filter_tracks (GtkTreeModel *model, GtkTreeIter *iter, gpointer 
 	int i;
 
 	gtk_tree_model_get(model, iter, READOUT_COL, &tr, -1);
-	
-    for (i = 0; i < TM_NUM_COLUMNS; i++)
-    {
+
+	if (tr)
+	{
+	    if (text[0] == 0x0)   return TRUE;
+	    for (i = 0; i < TM_NUM_COLUMNS; i++)
+	    {
 		gint visible = prefs_get_int_index("col_visible", i);
 		gchar *data;
 		
@@ -112,6 +115,7 @@ static gboolean filter_tracks (GtkTreeModel *model, GtkTreeIter *iter, gpointer 
 		}
 
 		g_free (data);
+	    }
 	}
 
 	return result;
@@ -133,11 +137,11 @@ static void convert_iter (GtkTreeModel *model, GtkTreeIter *from, GtkTreeIter *t
         gtk_tree_model_filter_convert_iter_to_child_iter (GTK_TREE_MODEL_FILTER (model), to, from);
 }
 
-static void update_model_view (GtkTreeModel *model)
+/*static void update_model_view (GtkTreeModel *model)
 {
     if (GTK_IS_TREE_MODEL_FILTER (model))
         gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (model));
-}
+}*/
 
 static GtkTreeModelFilter *get_filter (GtkTreeView *tree)
 {
@@ -265,7 +269,7 @@ static gboolean tm_move_pathlist (gchar *data,
 	g_free (link->data);
     g_list_free (iterlist);
 
-    update_model_view (model);
+/*    update_model_view (model); -- not needed */
     tm_rows_reordered ();
     return TRUE;
 }
@@ -746,10 +750,12 @@ void tm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter)
         convert_iter (model, into_iter, &iter);
     }
     else
+    {
         gtk_list_store_append (get_model_as_store (model), &iter);
+    }
     
     gtk_list_store_set (get_model_as_store (model), &iter, READOUT_COL, track, -1);
-    update_model_view (model);
+/*    update_model_view (model); -- not needed */
 }
 
 
@@ -778,7 +784,7 @@ static gboolean tm_delete_track (GtkTreeModel *model,
 
         convert_iter (model, iter, &temp);
         gtk_list_store_remove (get_model_as_store (model), &temp);
-        update_model_view (model);
+/*        update_model_view (model); -- not needed */
         return TRUE;
     }
     return FALSE;
@@ -793,7 +799,7 @@ void tm_remove_track (Track *track)
     if (model)
     {
         gtk_tree_model_foreach (model, tm_delete_track, track);
-        update_model_view (model);
+/*        update_model_view (model); -- not needed */
     }
 }
 
@@ -802,17 +808,29 @@ void tm_remove_track (Track *track)
 void tm_remove_all_tracks ()
 {
     GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
+    GtkTreeModel *realmodel;
     GtkTreeIter iter;
+    GtkWidget *search_entry = gtkpod_xml_get_widget (main_window_xml, "search_entry");
 
-    while (gtk_tree_model_get_iter_first (model, &iter))
+    /* remove all tracks, including tracks filtered out */
+    if (GTK_IS_TREE_MODEL_FILTER (model))
     {
-        GtkTreeIter temp;
-
-        convert_iter (model, &iter, &temp);
-        gtk_list_store_remove (get_model_as_store (model), &temp);
+	realmodel = gtk_tree_model_filter_get_model (GTK_TREE_MODEL_FILTER(model));
+    }
+    else
+    {
+	realmodel = model;
     }
 
-    update_model_view (model);
+    while (gtk_tree_model_get_iter_first (realmodel, &iter))
+    {
+        gtk_list_store_remove (get_model_as_store (realmodel), &iter);
+    }
+
+    /* reset filter text -- if many tracks are added with the filter
+     * activated, a lot of time is needed */
+    gtk_entry_set_text (GTK_ENTRY (search_entry), "");
+
     tm_store_col_order ();
     tm_update_default_sizes ();
 }
@@ -1981,6 +1999,11 @@ static void tm_unsort (void)
     {
 	GtkTreeModel *model= gtk_tree_view_get_model (track_treeview);
 
+	if (GTK_IS_TREE_MODEL_FILTER (model))
+	{
+	    model = gtk_tree_model_filter_get_model (GTK_TREE_MODEL_FILTER(model));
+	}
+
 	prefs_set_int("tm_sort", SORT_NONE);
 	if (!BROKEN_GTK_TREE_SORT)
 	{
@@ -2157,6 +2180,12 @@ void tm_sort (TM_item col, GtkSortType order)
     if (track_treeview)
     {
 	GtkTreeModel *model= gtk_tree_view_get_model (track_treeview);
+
+	if (GTK_IS_TREE_MODEL_FILTER (model))
+	{
+	    model = gtk_tree_model_filter_get_model (GTK_TREE_MODEL_FILTER(model));
+	}
+
 	if (order != SORT_NONE)
 	{
 	    gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (model),
@@ -2698,6 +2727,12 @@ void tm_enable_disable_view_sort (gboolean enable)
 	    {
 		/* Re-enable sorting */
 		GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
+
+		if (GTK_IS_TREE_MODEL_FILTER (model))
+		{
+		    model = gtk_tree_model_filter_get_model (GTK_TREE_MODEL_FILTER(model));
+		}
+
 		if (BROKEN_GTK_TREE_SORT)
 		{
 		    gtk_tree_sortable_set_sort_func (
@@ -2723,6 +2758,12 @@ void tm_enable_disable_view_sort (gboolean enable)
 	    {
 		/* Disable sorting */
 		GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
+
+		if (GTK_IS_TREE_MODEL_FILTER (model))
+		{
+		    model = gtk_tree_model_filter_get_model (GTK_TREE_MODEL_FILTER(model));
+		}
+
 		if (BROKEN_GTK_TREE_SORT)
 		{
 		    gtk_tree_sortable_set_sort_func (
@@ -2853,7 +2894,7 @@ gboolean tm_add_filelist (gchar *data,
 				    NULL, NULL);
     }
     
-    update_model_view (model);
+/*    update_model_view (model); -- not needed */
     tm_rows_reordered ();
     C_FREE (buf);
     return TRUE;

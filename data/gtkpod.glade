@@ -793,11 +793,24 @@
                       </widget>
                     </child>
                     <child>
+                      <widget class="GtkCheckMenuItem" id="filterbar_menu">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Filter Bar</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_filterbar_menu_activate"/>
+                      </widget>
+                    </child>
+                    <child>
                       <widget class="GtkCheckMenuItem" id="tooltips_menu">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">_Tooltips</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_tooltips_menu_activate"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkSeparatorMenuItem" id="menuitem4">
+                        <property name="visible">True</property>
                       </widget>
                     </child>
                     <child>
@@ -1464,7 +1477,7 @@
                               <widget class="GtkLabel" id="label22">
                                 <property name="visible">True</property>
                                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                                <property name="label" translatable="yes">Search:</property>
+                                <property name="label" translatable="yes">Filter:</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>

@@ -1,4 +1,4 @@
-/* Time-stamp: <2008-06-29 21:57:29 jcs>
+/* Time-stamp: <2008-12-07 19:10:37 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -388,19 +388,24 @@ void display_show_hide_searchbar (void)
 {
 	GtkWidget *upbutton = gtkpod_xml_get_widget (main_window_xml, "searchbar_up_button");
 	GtkWidget *searchbar = gtkpod_xml_get_widget (main_window_xml, "searchbar_hpanel");
+	GtkCheckMenuItem *mi = GTK_CHECK_MENU_ITEM (gtkpod_xml_get_widget (main_window_xml, "filterbar_menu"));
+
 	g_return_if_fail (upbutton);
 	g_return_if_fail (searchbar);
+	g_return_if_fail (mi);
 		
 	if (prefs_get_int ("display_search_entry"))
 	{
 		gtk_widget_show_all (searchbar);
 		gtk_widget_hide (upbutton);
+		gtk_check_menu_item_set_active (mi, TRUE);
 	}
 	else
 	{		
 		gtk_widget_hide_all (searchbar);
 		gtk_widget_show (upbutton);
 		gtk_widget_set_sensitive (upbutton, TRUE);
+		gtk_check_menu_item_set_active (mi, FALSE);
 	}
 }
 
@@ -1252,6 +1257,16 @@ on_toolbar_menu_activate               (GtkMenuItem     *menuitem,
     prefs_set_int("display_toolbar",
 	gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)));
     display_show_hide_toolbar();
+}
+
+
+G_MODULE_EXPORT void
+on_filterbar_menu_activate               (GtkMenuItem     *menuitem,
+					  gpointer         user_data)
+{
+    prefs_set_int("display_search_entry",
+	gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)));
+    display_show_hide_searchbar ();
 }
 
 

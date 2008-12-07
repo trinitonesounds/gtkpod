@@ -1,3 +1,16 @@
+2008-12-07 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* data/gtkpod.glade
+	  src/display.c: Add an item to the View menu to show/hide the
+	  filter bar (AKA: search bar)
+
+	* src/display_tracks:
+	  Fix a number of bugs relating to the filter bar. Thanks to
+	  Andrea for the pointer.
+
+	  Remove filter text when switching from one playlist to another:
+	  leaving the filter in place immensely increases the time for display.
+
 2008-11-08 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/display_tracks.c
