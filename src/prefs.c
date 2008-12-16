@@ -368,8 +368,6 @@ static void usage(FILE *fp)
   locale_fprintf(fp, _("  --hash <file>:print gtkpod hash for file\n"));
   locale_fprintf(fp, _("  -m path:      define the mountpoint of your iPod\n"));
   locale_fprintf(fp, _("  --mountpoint: same as '-m'.\n"));
-  locale_fprintf(fp, _("  -a:           import database automatically after start.\n"));
-  locale_fprintf(fp, _("  --auto:       same as '-a'.\n"));
 }
 
 /* Parse commandline based options */

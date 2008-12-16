@@ -1,3 +1,10 @@
+2008-12-15  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* data/man/gtkpod.1
+	  src/prefs.c: Remove -a/--auto from usage output and manpage
+	  These options were removed long ago in svn rev 1070.  Thanks
+	  to Frank Lichtenheld (in Debian bug #466127).
+
 2008-12-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* po/he.po: Hebrew translation updated -- thanks to Assaf Gillat
