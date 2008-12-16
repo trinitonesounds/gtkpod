@@ -866,7 +866,7 @@ static gboolean ok_to_close_gtkpod (void)
 
     if (!files_are_saved ())
     {
-		const gchar *str = _("Data has been changed and not been saved. If you quit gtkpod, all unsaved changes will be lost.\n\nADo you want to save your changes first?");
+		const gchar *str = _("Data has been changed and not been saved. If you quit gtkpod, all unsaved changes will be lost.\n\nDo you want to save your changes first?");
 		
 		result = gtkpod_confirmation_hig(GTK_WINDOW (gtkpod_window),
 											GTK_MESSAGE_WARNING,
