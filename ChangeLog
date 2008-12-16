@@ -1,3 +1,7 @@
+2008-12-17  Daniele Forsi <dforsi at users.sourceforge.net>
+
+        * po/it.po: Italian translation updated
+
 2008-12-16  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* src/misc_confirm.c: Fix typo in ok_to_close_gtkpod dialog
