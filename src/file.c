@@ -1135,7 +1135,7 @@ static gchar* create_video_thumbnail (gchar* input)
     
 	if(!forkstatus)
 	{
-		gtkpod_warning (_("Unable to start video thumbnail generator\n(command line was: '%s'"), cmd->str);
+		gtkpod_warning (_("Unable to start video thumbnail generator\n(command line was: '%s')"), cmd->str);
 	} 
 	else if(retval)
 	{

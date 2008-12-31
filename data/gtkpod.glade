@@ -10272,7 +10272,7 @@ Insert after</property>
                             <child>
                               <widget class="GtkComboBox" id="toolbar_style">
                                 <property name="visible">True</property>
-                                <property name="items" translatable="yes">Dummy
+                                <property name="items">Dummy
 </property>
                                 <signal name="changed" handler="on_toolbar_style_changed"/>
                               </widget>
@@ -11674,7 +11674,7 @@ AAC
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="label" translatable="yes">gtk-revert-to-saved</property>
+                <property name="label">gtk-revert-to-saved</property>
                 <property name="use_stock">True</property>
                 <property name="response_id">0</property>
                 <signal name="clicked" handler="on_prefs_dialog_revert"/>
@@ -12101,7 +12101,7 @@ Examples:
 - &lt;i&gt;folder.jpg&lt;/i&gt;: Use &lt;i&gt;folder.jpg&lt;/i&gt; as cover art.
 - &lt;i&gt;folder&lt;/i&gt;: Use &lt;i&gt;folder.jpg&lt;/i&gt;, &lt;i&gt;folder.png&lt;/i&gt;...
 - &lt;i&gt;../%A.jpg&lt;/i&gt;: Use &lt;i&gt;&amp;lt;Album&amp;gt;.jpg&lt;/i&gt; in the parent directory
-- &lt;i&gt;%a&lt;/i&gt;: Use &lt;i&gt;&amp;lt;Album&amp;gt;.jpg&lt;/i&gt;, &lt;i&gt;&amp;lt;Album&amp;gt;.png&lt;/i&gt;...
+- &lt;i&gt;%A&lt;/i&gt;: Use &lt;i&gt;&amp;lt;Album&amp;gt;.jpg&lt;/i&gt;, &lt;i&gt;&amp;lt;Album&amp;gt;.png&lt;/i&gt;...
 - &lt;i&gt;folder.jpg;%a.jpg&lt;/i&gt;: First try &lt;i&gt;folder.jpg&lt;/i&gt;, then &lt;i&gt;&amp;lt;artist&amp;gt;.jpg&lt;/i&gt;
 
 - artist: %a
@@ -13574,7 +13574,7 @@ Examples:
                     <property name="visible">True</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">&lt;span weight='bold' size='larger'&gt;Message&lt;/span&gt;
+                    <property name="label">&lt;span weight='bold' size='larger'&gt;Message&lt;/span&gt;
 
 The quick brown fox jumps over the lazy dog.</property>
                     <property name="use_markup">True</property>
@@ -13610,7 +13610,7 @@ The quick brown fox jumps over the lazy dog.</property>
                           <widget class="GtkCheckButton" id="input_box_checkbox">
                             <property name="can_focus">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <property name="label" translatable="yes">checkbutton</property>
+                            <property name="label">checkbutton</property>
                             <property name="use_underline">True</property>
                             <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>

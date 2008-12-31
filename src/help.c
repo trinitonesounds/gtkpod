@@ -134,7 +134,7 @@ G_MODULE_EXPORT void open_about_window ()
 		"Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n02111-1307, USA."
 	);
 
-	gchar *copyright = _("© 2002-2007\nJorg Schuler <jcsjcs@users.sourceforge.net>\nCorey Donohoe <atmos@atmos.org>");
+	gchar *copyright = _("© 2002-2007\nJorg Schuler <jcsjcs at users.sourceforge.net>\nCorey Donohoe <atmos at atmos.org>");
 	gchar *translator_credits = g_strjoinv("\n", translators);
 	GdkPixbuf *icon = gdk_pixbuf_new_from_file(PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "data" G_DIR_SEPARATOR_S "gtkpod-logo.png", NULL);
 	

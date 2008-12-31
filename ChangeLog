@@ -1,3 +1,9 @@
+2008-12-31 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/file.c
+	  src/help.c
+	  data/gtkpod.glade: string corrections -- thanks to Daniele Forsi.
+
 2008-12-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* po/es.po: Spanish translation updated -- thanks to Alejandro
