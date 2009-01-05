@@ -1,5 +1,8 @@
 2009-01-04  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
+	* configure.in,	data/man/gtkpod.1 -> data/man/gtkpod.1.in:
+	Update man page and generate it to set the version properly.
+
 	* po/zh_CN.po: Add simple Chinese translation (Tan Zhixin)
 
 2008-12-31 Jorg Schuler <jcsjcs at users.sourceforge.net>

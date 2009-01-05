@@ -278,6 +278,7 @@ data/icons/hicolor/48x48/places/Makefile
 data/icons/hicolor/scalable/Makefile
 data/icons/hicolor/scalable/places/Makefile
 data/man/Makefile
+data/man/gtkpod.1
 doc/Makefile
 doc/figures/Makefile
 ])
