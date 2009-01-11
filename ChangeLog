@@ -1,3 +1,9 @@
+2008-01-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/mp3file.c: correct programming error when determining offset
+	  of the LAME tag. Thanks to <Anonymous> for submitting tracker
+	  #2490479.
+
 2009-01-04  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* configure.in,	data/man/gtkpod.1 -> data/man/gtkpod.1.in:

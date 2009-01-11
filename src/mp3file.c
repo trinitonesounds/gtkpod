@@ -1,4 +1,4 @@
-/* Time-stamp: <2008-11-08 16:22:13 jcs>
+/* Time-stamp: <2009-01-11 17:52:48 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2391,19 +2391,19 @@ gboolean mp3_read_lame_tag (const gchar *path, LameTag *lt)
 
     /* Determine the offset of the LAME tag based on contents of the Xing header */
     fread (&flags, 4, 1, mp3i->file);
-    if (flags | 0x1)
+    if (flags & FRAMES_FLAG)
     {				/* frames field is set */
 	toskip += 4;
     }
-    if (flags | 0x2)
+    if (flags & BYTES_FLAG)
     {				/* bytes field is set */
 	toskip += 4;
     }
-    if (flags | 0x4)
+    if (flags & TOC_FLAG)
     {				/* TOC field is set */
 	toskip += 100;
     }
-    if (flags | 0x8)
+    if (flags & VBR_SCALE_FLAG)
     {				/* quality field is set */
 	toskip += 4;
     }
