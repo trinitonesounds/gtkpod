@@ -144,35 +144,59 @@ else
     have_hal="*no -- will build without HAL support"
 fi
 
-dnl Check for libmp4v2 (and mp4.h)
+dnl Check for libmp4v2 (and mp4.h or mp4v2/mp4v2.h)
 AC_ARG_WITH(mp4v2, AC_HELP_STRING([--without-mp4v2], [Disable MP4/AAC support]))
 if test "x$with_mp4v2" != "xno"; then
+    have_mp4v2_2_header=no
     AC_SEARCH_LIBS(MP4GetMetadataGrouping,
         ["mp4v2" "mp4v2 -lstdc++" "mp4v2 -lz" "mp4v2 -lz -lstdc++"],
         [AC_CHECK_HEADER(mp4.h, have_mp4v2=yes, have_mp4v2_header=no)], have_mp4v2=no)
     if test "x$have_mp4v2_header" = "xno"; then
+        AC_CHECK_HEADER(mp4v2/mp4v2.h, [have_mp4v2_2_header=yes; have_mp4v2_header=yes; have_mp4v2=yes], have_mp4v2_header=no)
+        if test "x$have_mp4v2_2_header" = "xyes"; then
+            AC_DEFINE(HAVE_LIBMP4V2_2, 1, [Define if you have the mp4v2 library version 2.0 or greater])
+        fi
+    fi
+    if test "x$have_mp4v2_header" = "xno"; then
         have_mp4v2="no"
-        AC_MSG_WARN([mp4.h cannot be found or is unusable. Check your mp4v2 installation.])
+        AC_MSG_WARN([mp4.h and mp4v2/mp4v2.h cannot be found or is unusable. Check your mp4v2 installation.])
     else
 dnl Check if MP4GetMetadataFreeForm() requires an extra argument
-        AC_TRY_COMPILE( [#include <mp4.h> ],
-            [bool TestMP4GetMetadataFreeForm(MP4FileHandle hFile, const char *name,
-                u_int8_t** pValue, u_int32_t* valueSize, const char *owner)
-                {
-                    MP4GetMetadataFreeForm(hFile, name,pValue, valueSize, owner);
-                } ], freeform_accepts_extra_arg=yes)
+        if test "x$have_mp4v2_2_header" = "xyes"; then
+            AC_TRY_COMPILE( [#include <mp4v2/mp4v2.h>],
+                [bool TestMP4GetMetadataFreeForm(MP4FileHandle hFile, const char *name,
+                    uint8_t** pValue, uint32_t* valueSize, const char *owner)
+                    {
+                        MP4GetMetadataFreeForm(hFile, name,pValue, valueSize, owner);
+                    } ], freeform_accepts_extra_arg=yes)
+        else
+            AC_TRY_COMPILE( [#include <mp4.h>],
+                [bool TestMP4GetMetadataFreeForm(MP4FileHandle hFile, const char *name,
+                    u_int8_t** pValue, u_int32_t* valueSize, const char *owner)
+                    {
+                        MP4GetMetadataFreeForm(hFile, name,pValue, valueSize, owner);
+                    } ], freeform_accepts_extra_arg=yes)
+        fi
         if test "x$freeform_accepts_extra_arg" = "xyes"; then
             AC_DEFINE(FREEFORM_ACCEPTS_EXTRA_ARG, 1, [MP4GetMetadataFreeForm
                       accepts an extra argument in libmp4v2 >= 1.6])
         fi
 dnl Check if MP4GetMetadataCoverArt() requires an extra argument
-        AC_TRY_COMPILE( [#include <mp4.h>],
-            [bool TestMP4GetMetadataCoverArt(MP4FileHandle hFile,
-                u_int8_t **coverArt, u_int32_t* size, uint32_t index)
-                {
-                    MP4GetMetadataCoverArt(hFile, coverArt, size, index);
-                }], coverart_accepts_extra_arg=yes)
-
+        if test "x$have_mp4v2_2_header" = "xyes"; then
+            AC_TRY_COMPILE( [#include <mp4v2/mp4v2.h>],
+                [bool TestMP4GetMetadataCoverArt(MP4FileHandle hFile,
+                    uint8_t **coverArt, uint32_t* size, uint32_t index)
+                    {
+                        MP4GetMetadataCoverArt(hFile, coverArt, size, index);
+                    }], coverart_accepts_extra_arg=yes)
+        else
+            AC_TRY_COMPILE( [#include <mp4.h>],
+                [bool TestMP4GetMetadataCoverArt(MP4FileHandle hFile,
+                    u_int8_t **coverArt, u_int32_t* size, uint32_t index)
+                    {
+                        MP4GetMetadataCoverArt(hFile, coverArt, size, index);
+                    }], coverart_accepts_extra_arg=yes)
+        fi
         if test "x$coverart_accepts_extra_arg" = "xyes"; then
             AC_DEFINE(COVERART_ACCEPTS_EXTRA_ARG, 1, [MP4GetMetadataCoverArt
                       accepts an extra argument in libmp4v2 >= 1.6])

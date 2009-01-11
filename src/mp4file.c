@@ -137,7 +137,11 @@
 #include <inttypes.h>
 #include <stdlib.h>
 #include <string.h>
-#include "mp4.h"
+#ifdef HAVE_LIBMP4V2_2
+#include <mp4v2/mp4v2.h>
+#else
+#include <mp4.h>
+#endif
 
 #ifndef FREEFORM_ACCEPTS_EXTRA_ARG
 /* Version 1.6 of libmp4v2 introduces an index argument for MP4GetMetadataFreeForm. For C++ sources it defaults
@@ -395,7 +399,11 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 #else
 #warning "Album Artist field not supported with this version of libmp4v2. Album Artist support requires at least V1.6.0"
 #endif
+#if HAVE_LIBMP4V2_2
+		    if (MP4GetMetadataComposer(mp4File, &value) && value != NULL)
+#else
 		    if (MP4GetMetadataWriter(mp4File, &value) && value != NULL)
+#endif
 		    {
 			track->composer = charset_to_utf8 (value);
 			g_free(value);
@@ -405,7 +413,11 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 			track->comment = charset_to_utf8 (value);
 			g_free(value);
 		    }
+#if HAVE_LIBMP4V2_2
+		    if (MP4GetMetadataReleaseDate(mp4File, &value) && value != NULL)
+#else
 		    if (MP4GetMetadataYear(mp4File, &value) && value != NULL)
+#endif
 		    {
 			track->year = atoi (value);
 			g_free(value);
@@ -435,7 +447,11 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 			track->genre = charset_to_utf8 (value);
 			g_free(value);
 		    }
+#if HAVE_LIBMP4V2_2
+		    if (MP4GetMetadataBPM (mp4File, &numvalue))
+#else
 		    if (MP4GetMetadataTempo (mp4File, &numvalue))
+#endif
 		    {
 			track->BPM = numvalue;
 		    }
@@ -525,16 +541,29 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 						      &m_track, &m_tracks);
 	    gboolean has_disk = MP4GetMetadataDisk (mp4File,
 	    &m_disk, &m_disks);*/
+#if HAVE_LIBMP4V2_2
+	    gboolean has_tempo = MP4GetMetadataBPM (mp4File,
+						      &m_tempo);
+#else
 	    gboolean has_tempo = MP4GetMetadataTempo (mp4File,
 						      &m_tempo);
+#endif
 	    gboolean has_compilation = MP4GetMetadataCompilation (mp4File,
 								  &m_cpl);
 /*	    MP4GetMetadataName (mp4File, &m_name);
 	    MP4GetMetadataArtist (mp4File, &m_artist);
 	    MP4GetMetadataAlbumArtist (mp4File, &m_albumartist);
+#if HAVE_LIBMP4V2_2
+	    MP4GetMetadataComposer (mp4File, &m_writer);
+#else
 	    MP4GetMetadataWriter (mp4File, &m_writer);
+#endif
 	    MP4GetMetadataComment (mp4File, &m_comment);
+#if HAVE_LIBMP4V2_2
+	    MP4GetMetadataReleaseDate (mp4File, &m_year);
+#else
 	    MP4GetMetadataYear (mp4File, &m_year);
+#endif
 	    MP4GetMetadataAlbum (mp4File, &m_album);
 	    MP4GetMetadataGenre (mp4File, &m_genre);*/
 	    MP4GetMetadataTool (mp4File, &m_tool);
@@ -555,7 +584,11 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 	    g_free (value);
 #endif
 	    value = charset_from_utf8 (track->composer);
+#if HAVE_LIBMP4V2_2
+	    MP4SetMetadataComposer (mp4File, value);
+#else
 	    MP4SetMetadataWriter (mp4File, value);
+#endif
 	    g_free (value);
 
 	    value = charset_from_utf8 (track->comment);
@@ -563,7 +596,11 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 	    g_free (value);
 
 	    value = g_strdup_printf ("%d", track->year);
+#if HAVE_LIBMP4V2_2
+	    MP4SetMetadataReleaseDate (mp4File, value);
+#else
 	    MP4SetMetadataYear (mp4File, value);
+#endif
 	    g_free (value);
 
 	    value = charset_from_utf8 (track->album);
@@ -574,7 +611,11 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 
 	    MP4SetMetadataDisk (mp4File, track->cd_nr, track->cds);
 
+#if HAVE_LIBMP4V2_2
+	    MP4SetMetadataBPM (mp4File, track->BPM);
+#else
 	    MP4SetMetadataTempo (mp4File, track->BPM);
+#endif
 
 	    value = charset_from_utf8 (track->grouping);
 	    MP4SetMetadataGrouping (mp4File, value);
@@ -585,7 +626,11 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 	    g_free (value);
 
 #if MP4V2_HAS_METADATA_BUG
+#if HAVE_LIBMP4V2_2
+	    if (has_tempo) MP4SetMetadataBPM (mp4File, m_tempo);
+#else
 	    if (has_tempo) MP4SetMetadataTempo (mp4File, m_tempo);
+#endif
 	    if (has_compilation) MP4SetMetadataCompilation (mp4File, m_cpl);
 	    if (m_tool)     MP4SetMetadataTool (mp4File, m_tool);
 	    if (m_covert)   MP4SetMetadataCoverArt (mp4File, m_covert, m_size);

@@ -1,5 +1,12 @@
 2008-01-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* configure.in
+	  src/mp4file.c: Adding support for MP4V2 2.0_20081129 without
+	  losing support for older versions of MP4V2 from the mpeg4ip
+	  line. Thanks to William Hardeman.
+
+2008-01-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/mp3file.c: correct programming error when determining offset
 	  of the LAME tag. Thanks to <Anonymous> for submitting tracker
 	  #2490479.
