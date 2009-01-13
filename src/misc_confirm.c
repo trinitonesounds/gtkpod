@@ -101,15 +101,15 @@ void gtkpod_warning_hig (GtkWindow *parent,
 						 const gchar *secondary_text)
 {
 	GtkWidget *dialog =	gtk_message_dialog_new(parent,
-											   GTK_DIALOG_MODAL,
-											   icon,
-											   GTK_BUTTONS_OK,
-											   "%s",
-											   primary_text);
+						       GTK_DIALOG_MODAL,
+						       icon,
+						       GTK_BUTTONS_OK,
+						       "%s",
+						       primary_text);
 	
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG(dialog),
-												"%s",
-												secondary_text);
+						    "%s",
+						    secondary_text);
 	
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (dialog);

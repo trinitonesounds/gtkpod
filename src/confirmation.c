@@ -319,57 +319,56 @@ GtkResponseType gtkpod_confirmation (gint id,
     ConfData *cd;
     gint defx, defy;
     GladeXML *confirm_xml;
-	GtkListStore *store;
+    GtkListStore *store;
     GtkTreeViewColumn *column;
     GtkCellRenderer *renderer;
-	gchar *full_label;
+    gchar *full_label;
 
     if (id_hash == NULL)
     {  /* initialize hash table to store IDs */
-		id_hash = g_hash_table_new_full (g_direct_hash, g_direct_equal,
+	id_hash = g_hash_table_new_full (g_direct_hash, g_direct_equal,
 							  NULL, g_free);
     }
 	
     if (id >= 0)
     {
-		if ((cd = g_hash_table_lookup (id_hash, GINT_TO_POINTER(id))))
-		{ /* window with same ID already open -- add @text and return
-		   * */
-			if (text && *text && cd->window)
-			{
-				confirm_append_text (cd->window_xml, text);
-			}
-			return GTK_RESPONSE_REJECT;
-		}
+	if ((cd = g_hash_table_lookup (id_hash, GINT_TO_POINTER(id))))
+	{ /* window with same ID already open -- add @text and return */
+	    if (text && *text && cd->window)
+	    {
+		confirm_append_text (cd->window_xml, text);
+	    }
+	    return GTK_RESPONSE_REJECT;
+	}
     }
     else /* find free ID */
     {
-		id = 0;
-		
-		do
-		{
-			--id;
-			cd = g_hash_table_lookup (id_hash, GINT_TO_POINTER(id));
-		} while (cd != NULL);
+	id = 0;
+
+	do
+	{
+	    --id;
+	    cd = g_hash_table_lookup (id_hash, GINT_TO_POINTER(id));
+	} while (cd != NULL);
     }
 
     if (!confirm_again)
     {
-		/* This question was supposed to be asked "never again" ("don't
-		confirm again" -- so we just call the ok_handler */
-		if (ok_handler && !modal)
-			ok_handler (user_data1, user_data2);
-		
-		if (!modal) 
-			return GTK_RESPONSE_ACCEPT;
-		
-		return GTK_RESPONSE_OK;
+	/* This question was supposed to be asked "never again" ("don't
+	   confirm again" -- so we just call the ok_handler */
+	if (ok_handler && !modal)
+	    ok_handler (user_data1, user_data2);
+
+	if (!modal) 
+	    return GTK_RESPONSE_ACCEPT;
+
+	return GTK_RESPONSE_OK;
     }
 
     /* window = create_confirm_dialog (); */
     confirm_xml = gtkpod_xml_new (xml_file, "confirm_dialog");
     window = gtkpod_xml_get_widget (confirm_xml, "confirm_dialog");
-	glade_xml_signal_autoconnect (confirm_xml);
+    glade_xml_signal_autoconnect (confirm_xml);
 	
     /* insert ID into hash table */
     cd = g_new0 (ConfData, 1);
@@ -385,12 +384,12 @@ GtkResponseType gtkpod_confirmation (gint id,
     cd->user_data2 = user_data2;
     g_hash_table_insert (id_hash, GINT_TO_POINTER(id), cd);
 	
-	full_label = g_markup_printf_escaped ("<span weight='bold' size='larger'>%s</span>\n\n%s",
-										  title ? title : _("Confirmation"), label ? label : "");
+    full_label = g_markup_printf_escaped ("<span weight='bold' size='larger'>%s</span>\n\n%s",
+					  title ? title : _("Confirmation"), label ? label : "");
 
     /* Set label */
-	w = gtkpod_xml_get_widget (confirm_xml, "label");
-	gtk_label_set_markup (GTK_LABEL(w), full_label);
+    w = gtkpod_xml_get_widget (confirm_xml, "label");
+    gtk_label_set_markup (GTK_LABEL(w), full_label);
     g_free (full_label);
 
     /* Set text */
@@ -451,63 +450,63 @@ GtkResponseType gtkpod_confirmation (gint id,
 	
     if (w && option1_key && option1_text)
     {
-		gboolean state, invert;
-		GtkWidget *option1_button =
-			gtk_check_button_new_with_mnemonic (option1_text);
+	gboolean state, invert;
+	GtkWidget *option1_button =
+	    gtk_check_button_new_with_mnemonic (option1_text);
 
-		state = ((option1_state==CONF_STATE_INVERT_TRUE) || (option1_state==CONF_STATE_TRUE));
-		invert = ((option1_state==CONF_STATE_INVERT_FALSE) || (option1_state==CONF_STATE_INVERT_TRUE));
-		cd->option1_invert = invert;
+	state = ((option1_state==CONF_STATE_INVERT_TRUE) || (option1_state==CONF_STATE_TRUE));
+	invert = ((option1_state==CONF_STATE_INVERT_FALSE) || (option1_state==CONF_STATE_INVERT_TRUE));
+	cd->option1_invert = invert;
 
-		gtk_widget_show (option1_button);
-		gtk_box_pack_start (GTK_BOX (w), option1_button, FALSE, FALSE, 0);
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(option1_button),
-						 state);
-		g_signal_connect ((gpointer)option1_button,
-				  "toggled",
-				  G_CALLBACK (on_option1_toggled),
-				  GINT_TO_POINTER(id));
+	gtk_widget_show (option1_button);
+	gtk_box_pack_start (GTK_BOX (w), option1_button, FALSE, FALSE, 0);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(option1_button),
+				     state);
+	g_signal_connect ((gpointer)option1_button,
+			  "toggled",
+			  G_CALLBACK (on_option1_toggled),
+			  GINT_TO_POINTER(id));
     }
 
     /* Set "Option 2" checkbox */
     w = gtkpod_xml_get_widget (confirm_xml, "option_vbox");
     if (w && option2_key && option2_text)
     {
-		gboolean state, invert;
-		GtkWidget *option2_button =
-			gtk_check_button_new_with_mnemonic (option2_text);
+	gboolean state, invert;
+	GtkWidget *option2_button =
+	    gtk_check_button_new_with_mnemonic (option2_text);
 
-		state = ((option2_state==CONF_STATE_INVERT_TRUE) || (option2_state==CONF_STATE_TRUE));
-		invert = ((option2_state==CONF_STATE_INVERT_FALSE) || (option2_state==CONF_STATE_INVERT_TRUE));
-		cd->option2_invert = invert;
+	state = ((option2_state==CONF_STATE_INVERT_TRUE) || (option2_state==CONF_STATE_TRUE));
+	invert = ((option2_state==CONF_STATE_INVERT_FALSE) || (option2_state==CONF_STATE_INVERT_TRUE));
+	cd->option2_invert = invert;
 
-		gtk_widget_show (option2_button);
-		gtk_box_pack_start (GTK_BOX (w), option2_button, FALSE, FALSE, 0);
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(option2_button),
-						 state);
-		g_signal_connect ((gpointer)option2_button,
-				  "toggled",
-				  G_CALLBACK (on_option2_toggled),
-				  GINT_TO_POINTER(id));
+	gtk_widget_show (option2_button);
+	gtk_box_pack_start (GTK_BOX (w), option2_button, FALSE, FALSE, 0);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(option2_button),
+				     state);
+	g_signal_connect ((gpointer)option2_button,
+			  "toggled",
+			  G_CALLBACK (on_option2_toggled),
+			  GINT_TO_POINTER(id));
     }
 
     /* Set "Never Again" checkbox */
     w = gtkpod_xml_get_widget (confirm_xml, "never_again");
-	
+
     if (w && confirm_again_key)
     {
-		/* connect signal */
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-						 !confirm_again);
-		g_signal_connect ((gpointer)w,
-				  "toggled",
-				  G_CALLBACK (on_never_again_toggled),
-				  GINT_TO_POINTER(id));
+	/* connect signal */
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				     !confirm_again);
+	g_signal_connect ((gpointer)w,
+			  "toggled",
+			  G_CALLBACK (on_never_again_toggled),
+			  GINT_TO_POINTER(id));
     }
     else if (w)
     {
-		/* hide "never again" button */
-		gtk_widget_hide (w);
+	/* hide "never again" button */
+	gtk_widget_hide (w);
     }
 
     /* Hide and set "default" button that can be activated by pressing
@@ -515,31 +514,31 @@ GtkResponseType gtkpod_confirmation (gint id,
     /* Hide or default CANCEL button */
     if ((w = gtkpod_xml_get_widget (confirm_xml, "cancel")))
     {
-		GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
-		gtk_widget_grab_default (w);
-		
-		if (!cancel_handler)
-			gtk_widget_hide (w);
+	GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
+	gtk_widget_grab_default (w);
+	
+	if (!cancel_handler)
+	    gtk_widget_hide (w);
     }
 
     /* Hide or default APPLY button */
     if ((w = gtkpod_xml_get_widget (confirm_xml, "apply")))
     {
-		GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
-		gtk_widget_grab_default (w);
-		
-		if (!apply_handler)
-			gtk_widget_hide (w);
+	GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
+	gtk_widget_grab_default (w);
+
+	if (!apply_handler)
+	    gtk_widget_hide (w);
     }
 
     /* Hide or default OK button */
     if ((w = gtkpod_xml_get_widget (confirm_xml, "ok")))
     {
-		GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
-		gtk_widget_grab_default (w);
-		
-		if (!ok_handler)
-			gtk_widget_hide (w);
+	GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
+	gtk_widget_grab_default (w);
+
+	if (!ok_handler)
+	    gtk_widget_hide (w);
     }
 
     /* Connect Close window */
@@ -550,91 +549,91 @@ GtkResponseType gtkpod_confirmation (gint id,
 
     if (modal)
     {
-		/* use gtk_dialog_run() to block the application */
-		gint response = gtk_dialog_run (GTK_DIALOG (window));
-		/* cleanup hash, store window size */
-		cleanup (GINT_TO_POINTER(id));
-		
-		switch (response)
-		{
-		case GTK_RESPONSE_OK:
-		case GTK_RESPONSE_APPLY:
-			return response;
-		default:
-			return GTK_RESPONSE_CANCEL;
-		}
+	/* use gtk_dialog_run() to block the application */
+	gint response = gtk_dialog_run (GTK_DIALOG (window));
+	/* cleanup hash, store window size */
+	cleanup (GINT_TO_POINTER(id));
+
+	switch (response)
+	{
+	case GTK_RESPONSE_OK:
+	case GTK_RESPONSE_APPLY:
+	    return response;
+	default:
+	    return GTK_RESPONSE_CANCEL;
+	}
     }
     else
     {
-		/* Make sure we catch the response */
-		g_signal_connect (GTK_OBJECT (window),
-				  "response",
-				  G_CALLBACK (on_response),
-				  GINT_TO_POINTER(id));
-		gtk_widget_show (window);
-		
-		return GTK_RESPONSE_ACCEPT;
+	/* Make sure we catch the response */
+	g_signal_connect (GTK_OBJECT (window),
+			  "response",
+			  G_CALLBACK (on_response),
+			  GINT_TO_POINTER(id));
+	gtk_widget_show (window);
+
+	return GTK_RESPONSE_ACCEPT;
     }
 }
 
 G_MODULE_EXPORT void on_confirm_tree_size_allocate (GtkWidget *sender, GtkAllocation *allocation, gpointer e)
 {
-	GtkCellRenderer *renderer = GTK_CELL_RENDERER (g_object_get_data (G_OBJECT (sender), "renderer"));
-	g_object_set (renderer, "wrap-width", allocation->width, NULL);
+    GtkCellRenderer *renderer = GTK_CELL_RENDERER (g_object_get_data (G_OBJECT (sender), "renderer"));
+    g_object_set (renderer, "wrap-width", allocation->width, NULL);
 }
 
 gint gtkpod_confirmation_simple (GtkWindow *parent,
-								 GtkMessageType icon,
-								 const gchar *primary_text,
-								 const gchar *secondary_text,
-								 const gchar *accept_button_text)
+				 GtkMessageType icon,
+				 const gchar *primary_text,
+				 const gchar *secondary_text,
+				 const gchar *accept_button_text)
 {
-	return gtkpod_confirmation_hig(parent, icon, primary_text, secondary_text,
-								    accept_button_text, NULL, NULL, NULL);
+    return gtkpod_confirmation_hig(parent, icon, primary_text, secondary_text,
+				   accept_button_text, NULL, NULL, NULL);
 }
 
 gint gtkpod_confirmation_hig (GtkWindow *parent,
-							  GtkMessageType icon,
-							  const gchar *primary_text,
-							  const gchar *secondary_text,
-							  const gchar *accept_button_text,
-							  const gchar *cancel_button_text,
-							  const gchar *third_button_text,
-							  const gchar *help_context)
+			      GtkMessageType icon,
+			      const gchar *primary_text,
+			      const gchar *secondary_text,
+			      const gchar *accept_button_text,
+			      const gchar *cancel_button_text,
+			      const gchar *third_button_text,
+			      const gchar *help_context)
 {
-	gint result;
-	
-	GtkWidget *dialog =
-		gtk_message_dialog_new(parent,
-							   GTK_DIALOG_MODAL,
-							   icon,
-							   GTK_BUTTONS_NONE,
-							   "%s",
-							   primary_text);
-	
-	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG(dialog),
-												"%s",
-												secondary_text);
-	
-	if(third_button_text)
-		gtk_dialog_add_button(GTK_DIALOG(dialog), third_button_text, GTK_RESPONSE_APPLY);
-	
-	gtk_dialog_add_buttons(GTK_DIALOG(dialog),
-						   cancel_button_text ? cancel_button_text : GTK_STOCK_CANCEL,
-						   GTK_RESPONSE_CANCEL,
-						   accept_button_text ? accept_button_text : GTK_STOCK_OK,
-						   GTK_RESPONSE_OK,
-						   NULL);
+    gint result;
 
-	result = gtk_dialog_run(GTK_DIALOG(dialog));
-	gtk_widget_destroy(dialog);
-	
-	switch (result)
-	{
-	case GTK_RESPONSE_OK:
-	case GTK_RESPONSE_APPLY:
-	    return result;
-	default:
-	    return GTK_RESPONSE_CANCEL;
-	};
+    GtkWidget *dialog =
+	gtk_message_dialog_new(parent,
+			       GTK_DIALOG_MODAL,
+			       icon,
+			       GTK_BUTTONS_NONE,
+			       "%s",
+			       primary_text);
+
+    gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG(dialog),
+						"%s",
+						secondary_text);
+
+    if(third_button_text)
+	gtk_dialog_add_button(GTK_DIALOG(dialog), third_button_text, GTK_RESPONSE_APPLY);
+
+    gtk_dialog_add_buttons(GTK_DIALOG(dialog),
+			   cancel_button_text ? cancel_button_text : GTK_STOCK_CANCEL,
+			   GTK_RESPONSE_CANCEL,
+			   accept_button_text ? accept_button_text : GTK_STOCK_OK,
+			   GTK_RESPONSE_OK,
+			   NULL);
+
+    result = gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+
+    switch (result)
+    {
+    case GTK_RESPONSE_OK:
+    case GTK_RESPONSE_APPLY:
+	return result;
+    default:
+	return GTK_RESPONSE_CANCEL;
+    };
 }
