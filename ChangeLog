@@ -1,3 +1,10 @@
+2008-01-13 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/file_export.c: add export template for mp4 files.
+
+	  src/prefs.c: remove references to export_template which
+	  wasn't used. Thanks to Todd to point out both.
+
 2008-01-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* data/gtkpod.glade: add property "translatble=yes" to the check

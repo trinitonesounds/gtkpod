@@ -301,7 +301,6 @@ static void set_default_preferences()
     prefs_set_int("display_toolbar", TRUE);
     prefs_set_int("toolbar_style", GTK_TOOLBAR_BOTH);
     prefs_set_int("sha1", TRUE);
-    prefs_set_string("export_template", "%o;%a - %t.mp3;%t.wav");
     prefs_set_int("file_dialog_details_expanded", FALSE);
 
     /* Set last browsed directory */
@@ -847,7 +846,6 @@ static void wipe_list(const gchar *key)
 static void cleanup_keys()
 {
     gchar *buf;
-    gchar *sp = NULL;
     gint int_buf;
     gint i;
     gint x, y, p;  /* Window position */
@@ -1050,6 +1048,8 @@ static void cleanup_keys()
     prefs_set_string("autoimport", NULL);
     prefs_set_string("auto_import", NULL);
     prefs_set_string("conversion_enable", NULL);
+    prefs_set_string("export_template", NULL);
+    prefs_set_string("filename_format", NULL);
 
     /* sp_created_cond renamed to sp_added_cond */
     for (i = 0; i < SORT_TAB_MAX; i++)
@@ -1154,50 +1154,6 @@ static void cleanup_keys()
     {
 	prefs_set_int("tm_sort", int_buf);
 	prefs_set_string("sm_sort_", NULL);
-    }
-
-    /* filename_format renamed to export_template */
-    if (prefs_get_string_value("filename_format", &buf))
-    {
-	prefs_set_string("export_template", buf);
-	g_free(buf);
-	prefs_set_string("filename_format", NULL);
-    }
-
-    /* This string was a wrong autoconvert--just ignore it */
-    buf = prefs_get_string("export_template");
-    
-    if (buf && strcmp(buf, "%a - %a/%T - %T.mp3") == 0)
-	prefs_set_string("export_template", NULL);
-
-    g_free (buf);
-
-    /* We changed the meaning of the %x in export_template */
-    if (version < 0.72)
-    {
-	/* changed the meaning of the %x in export_template */
-	if (sp) while (*sp)
-	{
-	    if (sp[0] == '%')
-	    {
-		switch (sp[1]) {
-		case 'A':
-		    sp[1] = 'a';
-		    break;
-		case 'd':
-		    sp[1] = 'A';
-		    break;
-		case 'n':
-		    sp[1] = 't';
-		    break;
-		case 't':
-		    sp[1] = 'T';
-		    break;
-		default:
-		    break;
-		}
-	    }
-	}
     }
 
     /* For versions < 0.91, remove all itdb keys */

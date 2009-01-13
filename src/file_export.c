@@ -1,5 +1,4 @@
-/* Time-stamp: <2007-02-24 13:22:58 jcs>
-|
+/*
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -73,8 +72,7 @@ const gchar *EXPORT_FILES_CHECK_EXISTING="export_files_check_existing";
 const gchar *EXPORT_FILES_PATH="export_files_path";
 const gchar *EXPORT_FILES_TPL="export_files_template";
 /* Default prefs settings */
-const gchar *EXPORT_FILES_TPL_DFLT="%o;%a - %t.mp3;%t.wav";
-
+const gchar *EXPORT_FILES_TPL_DFLT="%o;%a - %t.m4a;%a - %t.mp3;%t.wav";
 
 /**
  * READ_WRITE_BLOCKSIZE - how many bytes we read per fread/fwrite call
