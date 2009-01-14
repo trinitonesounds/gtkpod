@@ -1,3 +1,8 @@
+2008-01-14 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* po/ro.po: updated Romanian translation. Thanks to Alex
+          Eftimie.
+
 2008-01-13 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_export.c: add export template for mp4 files.
