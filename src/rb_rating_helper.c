@@ -68,9 +68,6 @@ rb_rating_pixbufs_new (void)
 	gint width;
 
 	pixbufs = g_new0 (RBRatingPixbufs, 1);
-	if (pixbufs == NULL) {
-		return NULL;
-	}
 
 	theme = gtk_icon_theme_get_default ();
 	gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, NULL, &width);
@@ -95,10 +92,13 @@ rb_rating_pixbufs_new (void)
 	    pixbufs->pix_blank != NULL) {
 		return pixbufs;
 	}
-
-	rb_rating_pixbufs_free (pixbufs);
-	g_free (pixbufs);
-	return NULL;
+	else
+	{
+	    rb_rating_pixbufs_free (pixbufs);
+	    g_free (pixbufs);
+	    g_warning ("Unable to load at least one of the following icons: " RB_STOCK_SET_STAR ", " RB_STOCK_UNSET_STAR " and " RB_STOCK_NO_STAR ". Displaying of the star rating will not work.\n");
+	    return NULL;
+	}
 }
 
 gboolean
