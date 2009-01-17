@@ -227,31 +227,31 @@ static void set_default_preferences()
     /* Set colum preferences */
     for (i = 0; i < TM_NUM_COLUMNS; i++)
     {
-	prefs_set_int_index("tm_col_width", i, 80);
-	prefs_set_int_index("col_visible", i, FALSE);
 	prefs_set_int_index("col_order", i, i);
     }
-		
-    for (i = 0; i < TM_NUM_TAGS_PREFS; i++)
-	prefs_set_int_index("tag_autoset", i, FALSE);
-		
-    prefs_set_int_index("tag_autoset", TM_COLUMN_TITLE, TRUE);
-    
+
     prefs_set_int_index("col_visible", TM_COLUMN_ARTIST, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_ALBUM, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_TITLE, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_TRACKLEN, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_RATING, TRUE);
 
-    prefs_set_int("horizontal_scrollbar", FALSE);
+    for (i = 0; i < TM_NUM_TAGS_PREFS; i++)
+    {
+	prefs_set_int_index("tag_autoset", i, FALSE);
+    }
+
+    prefs_set_int_index("tag_autoset", TM_COLUMN_TITLE, TRUE);
+    
+    prefs_set_int("horizontal_scrollbar", TRUE);
     prefs_set_int("filter_tabs_top", FALSE);
 
-	/* Set pane positions--Let gtk worry about position */
+    /* Set pane positions--Let gtk worry about position */
     for (i = 0; i < PANED_NUM; i++)
 	prefs_set_int_index("paned_pos_", i, -1);
-	
+
     prefs_set_int("mpl_autoselect", TRUE);
-	
+
     /* Set window sizes */
     prefs_set_int("size_gtkpod.x", 780);
     prefs_set_int("size_gtkpod.y", 580);

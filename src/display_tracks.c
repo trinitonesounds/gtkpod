@@ -2595,8 +2595,6 @@ void
 tm_show_preferred_columns (void)
 {
     gint i;
-    GtkTreeViewColumn *tvc = NULL;
-    gboolean visible;
     gboolean horizontal_scrollbar = prefs_get_int ("horizontal_scrollbar");
     GtkScrolledWindow *scroller = GTK_SCROLLED_WINDOW (gtkpod_xml_get_widget (main_window_xml,
                                                                               "track_window"));
@@ -2608,19 +2606,27 @@ tm_show_preferred_columns (void)
 
     for (i = 0; i < TM_NUM_COLUMNS; ++i)
     {
-        tvc = gtk_tree_view_get_column (track_treeview, i);
-        visible = prefs_get_int_index ("col_visible", prefs_get_int_index("col_order", i));
+	TM_item tm_item = prefs_get_int_index ("col_order", i);
+	GtkTreeViewColumn *tvc = gtk_tree_view_get_column (track_treeview, i);
+	gboolean visible = prefs_get_int_index ("col_visible", tm_item);
+	gint col_width;
+
         gtk_tree_view_column_set_visible (tvc, visible);
+
+	col_width = prefs_get_int_index ("tm_col_width", tm_item);
+
+	if (col_width == 0)
+	    col_width = 80;
 
         if (horizontal_scrollbar)
         {
-            gtk_tree_view_column_set_fixed_width (tvc, prefs_get_int_index("tm_col_width", i));
+	    gtk_tree_view_column_set_fixed_width (tvc, col_width);
             gtk_tree_view_column_set_min_width (tvc, -1);
             gtk_tree_view_column_set_expand (tvc, FALSE);
         }
         else
         {
-            switch (i)
+            switch (tm_item)
             {
             case TM_COLUMN_TITLE:
             case TM_COLUMN_ARTIST:
@@ -2645,9 +2651,7 @@ tm_show_preferred_columns (void)
                 break;
             default:
                 gtk_tree_view_column_set_min_width (tvc, 80);
-                gtk_tree_view_column_set_fixed_width (tvc,
-                                                      prefs_get_int_index("tm_col_width", i));
-                
+                gtk_tree_view_column_set_fixed_width (tvc, col_width);
                 gtk_tree_view_column_set_expand (tvc, FALSE);
                 break;
             }
@@ -2661,23 +2665,23 @@ tm_show_preferred_columns (void)
    column widths of track model */
 void tm_update_default_sizes (void)
 {
-    gint i;
+    TM_item tm_item;
     GtkTreeViewColumn *col;
     gint col_width;
 
     /* column widths */
-    for (i=0; i<TM_NUM_COLUMNS; ++i)
+    for (tm_item=0; tm_item<TM_NUM_COLUMNS; ++tm_item)
     {
-	col = tm_columns [i];
+	col = tm_columns [tm_item];
 	if (col)
 	{
-    col_width = gtk_tree_view_column_get_width (col);
+	    col_width = gtk_tree_view_column_get_width (col);
     
-    if (col_width > 0)
-	    prefs_set_int_index ("tm_col_width", i, col_width);
-    else
-      prefs_set_int_index ("tm_col_width", i, 80);
-   
+	    if (col_width > 0)
+	    {   /* columns not displayed seem to be 0 pixels wide --
+		   only change the visible columns */
+		prefs_set_int_index ("tm_col_width", tm_item, col_width);
+	    }
 	}
     }
 }
