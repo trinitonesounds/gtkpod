@@ -566,19 +566,28 @@ static void conversion_log_set_status (Conversion *conv)
     glthread = conv->threads;
     for (glpage=conv->pages; glpage; glpage=glpage->next)
     {
+	GtkNotebook *notebook = GTK_NOTEBOOK (conv->notebook);
 	GtkWidget *child = glpage->data;
+	const gchar *current_label;
 	g_return_if_fail (child);
+
+	current_label = gtk_notebook_get_tab_label_text (notebook, child);
 
 	/* in the beginning we may have more pages than thread entries */
 	if (glthread && glthread->data)
 	{
-	    gtk_notebook_set_tab_label_text (GTK_NOTEBOOK (conv->notebook),
-					     child, _("active"));
+	    if (!current_label || strcmp (current_label, _("active")) != 0)
+	    {   /* only change the label if it has changed --
+		   otherwise our tooltips will be switched off */
+		gtk_notebook_set_tab_label_text (notebook, child, _("active"));
+	    }
 	}
 	else
 	{
-	    gtk_notebook_set_tab_label_text (GTK_NOTEBOOK (conv->notebook),
-					     child, _("inactive"));
+	    if (!current_label || strcmp (current_label, _("inactive")) != 0)
+	    {
+		gtk_notebook_set_tab_label_text (notebook, child, _("inactive"));
+	    }
 	}
 
 	if (glthread)
