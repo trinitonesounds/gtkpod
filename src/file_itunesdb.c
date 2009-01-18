@@ -246,8 +246,11 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 
     if (!fp)
     {
+	/* Ideally, we'd only warn when we know we've written the extended info
+	 * previously...
 	gtkpod_warning (_("Could not open \"%s\" for reading extended info.\n"),
 			name);
+	*/
 	return FALSE;
     }
     sha1 = sha1_hash_on_filename (itunes, FALSE);
