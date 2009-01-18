@@ -5,8 +5,9 @@ gtkpod V0.99.14
        NEW FEATURE: Video thumbnail generation, thanks to M. Sean Finney
 
        NEW FEATURE: Lyrics may be viewed and edited via the Details window
-       for a track. Only mp3 files are supported currently, and writing
-       tags may still have issues on some iPod's. Thanks to Dudy Kohen.
+       for a track. Only mp3 files are supported currently (patches welcome
+       to remove this limitation). Writing lyric tags may still have
+       compatibility issues on some iPod's. Thanks to Dudy Kohen.
 
        NEW FEATURE: Add a search bar, to quickly filter tracks.
 
