@@ -1,26 +1,67 @@
-gtkpod V0.99.13SVN
+gtkpod V0.99.14
 
-       NEW FEATURE: Help system, still very prelimilary.
+       NEW FEATURE: Help system, still very preliminary.
+
+       NEW FEATURE: Video thumbnail generation, thanks to M. Sean Finney
+
+       NEW FEATURE: Lyrics may be viewed and edited via the Details window
+       for a track. Only mp3 files are supported currently, and writing
+       tags may still have issues on some iPod's. Thanks to Dudy Kohen.
+
+       NEW FEATURE: Add a search bar, to quickly filter tracks.
 
        UPDATE: New application icon.
 
-       UPDATE: Preferences dialog redesigned from the ground up
-	   for GNOME HIG compliance.
+       UPDATE: Preferences dialog redesigned from the ground up for GNOME
+       HIG compliance.
 
-       IMPROVEMENT: Removed dependency on libgnomecanvas.
+       UPDATE: Hebrew translation. Thanks to Assaf Gillat.
+
+       UPDATE: Italian translation. Thanks to Daniele Forsi.
+
+       UPDATE: Romanian translation. Thanks to Alex Eftimie.
+
+       UPDATE: Spanish translation. Thanks to Alejandro Lamas Daviña.
+
+       UPDATE: Swedish translation. Thanks to Stefan Asserhäll.
+
+       NEW FEATURE: Added simple Chinese translation. Thanks to Tan Zhixin.
+
+       IMPROVEMENT: Numerous UI cleanups
+
+       IMPROVEMENT: Support for chapter data, thanks to Michael Tiffany
+
+       IMPROVEMENT: Use cairo for coverart display effects. This allows the
+       dependency on libgnomecanvas to be dropped.
+
+       IMPROVEMENT: Coverart display performance has been improved.
 
        IMPROVEMENT: Better support for Windows compilation in Cygwin,
-	   thanks to Éric Lassauge.
+       thanks to Éric Lassauge.
 
-       IMPROVEMENT: Set track->lyrics_flag for mp4 files
+       IMPROVEMENT: Set track->lyrics_flag for mp4 files in addition to mp3
+       files.
+
+       IMPROVEMENT: Use the Artist tag for the Artist and fall back to the
+       Album Artist tag only when the former does not exist. For Album
+       Artist, use the Album Artist tag, but only if the Artist tag does
+       exist. Thanks to Dudy Kohen.
+
+       BUGFIX: The Photo "playlist" is now a separate object in the
+       Playlist view.
+
+       BUGFIX: Numerous memory leaks fixed, thanks to Andrea, Tomas
+       Carnecky, and others.
+
+       Many other bug fixes and cleanups, see the ChangeLog for more detail.
 
 gtkpod V0.99.12
 
        NEW FEATURE: Import and management of photographs on ipods
        that support them. Update of README to include photo management.
-       
+
        UPDATE: Application requires libgpod version 0.6.0 or higher.
-      
+
        UPDATE: Better icon theme specification compliance.
 
        BUGFIX: Fixes to tomboy script. Thanks to Javier Kohen.
@@ -29,11 +70,11 @@ gtkpod V0.99.12
        in conjunction with libgpod (Jorg).
 
        UPDATE: Cover art preview window either displays an album cover
-       to its full size or to a size consistent with the user's desktop.       
+       to its full size or to a size consistent with the user's desktop.
 
        UPDATE: Download of Album Art from the net feature modified to the
        ability of dragging-and-dropping a .jpg image from a web browser. This
-       has been changed due to licensing concerns over album art. Drag and 
+       has been changed due to licensing concerns over album art. Drag and
        Drop section of README updated accordingly (Paul).
 
        BUGFIX: Issues on detecting changed local / podcast database. Thanks to
@@ -41,7 +82,7 @@ gtkpod V0.99.12
 
        BUGFIX: Issues addressed on Details Window.
 
-       BUGFIX: Crash avoided when auto-detecting an iTunes database that 
+       BUGFIX: Crash avoided when auto-detecting an iTunes database that
        cannot be read.
 
        UPDATE: Display of error output of scripts (Jorg).
@@ -49,7 +90,7 @@ gtkpod V0.99.12
        IMPROVEMENT: Configuring and Compilation support (Todd).
 
        UPDATE: New scripts for flac, ogg, mp3, m4a, wav conversion to mp3 and
-       m4a. Thanks to Peter van de Does.  
+       m4a. Thanks to Peter van de Does.
 
        BUGFIX: Model number identified and written to ipod upon loading to ensure
        libgpod can read the ipod's artwork.
@@ -58,20 +99,20 @@ gtkpod V0.99.12
        Michael Tiffany.
 
        BUGFIX: When Cover Art Display is widened, covers space out rather
-       than stretch.       
+       than stretch.
 
        BUGFIX: Fixed memory leaks in CoverArt Display and Details window.
        Thanks to Daniele Forsi.
 
        UPDATE: French translation. Thanks to Éric Lassauge.
-     
+
        UPDATE: Italian translation. Thanks to Daniele Forsi.
 
        UPDATE: Hebrew translation. Thanks to Assaf Gillat.
 
        UPDATE: Swedish translation. Thanks to Stefan Asserhäll.
 
-       NEW FEATURE: Added Romanian translation support. Thanks to 
+       NEW FEATURE: Added Romanian translation support. Thanks to
        Alex Eftimie.
 
        NEW FEATURE: Added Russian translation support. Thanks to
@@ -522,7 +563,7 @@ gtkpod V0.85.0
 	up as "OTG Playlist 1" etc.
 
 	NEW FEATURE: export of PLS or M3U file including meta data.
-	
+
 	NEW FEATURE: registering playcounts when tracks are played on
 	the local machine is now possible (actually it was already
 	possible in V0.80, but now the README explains how to do it).
@@ -584,7 +625,7 @@ gtkpod V0.80-2
 
 	PATCH: reverted to old-style check of id3tag-lib as id3tag.pc
 	is not included with the id3tag distribution by default
-	
+
 gtkpod V0.80
 	NEW FEATURE: Added support for WAV audio files
 
@@ -891,7 +932,7 @@ gtkpod V0.50
 
 	NEW FEATURE: columns in song view can be dragged into any
 	order. Order will be saved.
-	
+
         Change of copyright: itunesdb.c and itunesdb.h are now under the
 	GNU Lesser General Public License to make it easier to use the
 	code in other programs.
@@ -936,10 +977,10 @@ gtkpod V0.43 27-Feb-2003
 
         BUGFIX: some iTunesDBs produced by ephpod could not be read (hang
 	after reading the songs and before adding the playlists).
-        
+
 	New Feature: update song information from file when adding songs
 	with identical filename (option)
-	
+
         New Feature: update song information from file of selected songs
 	(ctrl-u and menu item)
 
@@ -949,7 +990,7 @@ gtkpod V0.43 27-Feb-2003
 
         BUGFIX: Deleting songs from the iPod only worked if you exported
 	the iTunesDB twice.
-	
+
 	New Feature: Add Playlists (m3u and pls)
 
 gtkpod V0.42 20-Feb-2003
@@ -964,7 +1005,7 @@ gtkpod V0.42 20-Feb-2003
         Improvement: export can be interrupted and be continued at a later
 	time. gtkpod will (hopefully) correctly remember which songs have
 	already been copied/deleted from your iPod.
-	
+
 	Improvement: removal and copy of songs during export is done in a
 	separate thread, so the display doesn't freeze on long file system
 	operations
@@ -972,10 +1013,10 @@ gtkpod V0.42 20-Feb-2003
         Bugfix: Kentaro Fukuchi pointed out that MusicMatch (at least the
 	Japanese version) uses song IDs starting with 2 (and not with
 	53). gtkpod then dropped some of your songs -- fixed.
-        
+
 	Improvement: Delete works on entries in sort tabs now (ctrl-d and
 	new menu item)
-	
+
 	Improvement?: don't close dirbrowser window until after the songs
 	have been read.
 
@@ -1000,7 +1041,7 @@ gtkpod V0.41 01-Feb-2003
 	- confirmation window when quitting gtkpod without saving data
 	- Drag-and-drop for sort tab entries
 	- Japanese langauge catalogue
-	
+
 gtkpod V0.40 26-Jan-2003
 	many new features:
 
@@ -1011,6 +1052,6 @@ gtkpod V0.40 26-Jan-2003
 	- Charset for ID3 tags can be set
 	- Offline modification of iPod contents (and later synchronisation)
 	- Preferences
-	
+
 gtkpod V0.10
 	basic tool to import/export songs to your iPod.
