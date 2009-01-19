@@ -1,5 +1,7 @@
 2009-01-18  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
+	* configure.in: Bump version for 0.99.14 release
+
 	* NEWS: Update for 0.99.14 release
 
 	* src/file_itunesdb.c: Quiet iTunesDB.ext warning
