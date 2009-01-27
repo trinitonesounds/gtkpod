@@ -51,7 +51,7 @@ fi
 # Try to set the genre with id3v2 if needed.  This may fail as older versions of
 # id3v2 did not support genre strings in place of numeric genre id's
 if [ -n "$useid3v2" ]; then
-    $id3v2 -g "$genre" "$mp3file" || :
+    $id3v2 -g "$genre" "$outfile" || :
 fi
 
 # Seems to be ok: display filename for gtkpod

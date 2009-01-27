@@ -1,3 +1,8 @@
+2009-01-27
+
+	* scripts/convert-2mp3.sh: fix bug when setting genre for
+	  non-standard genres.
+
 2009-01-18  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* configure.in: Bump version to 0.99.15SVN for further development
