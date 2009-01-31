@@ -1,3 +1,7 @@
+2009-01-31  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* configure.in: Bump libgpod requirement to >= 0.7.0
+
 2009-01-31 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/mp3file.c (mp3_read_lame_tag): fix endianess problems on
