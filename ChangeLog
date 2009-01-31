@@ -1,4 +1,10 @@
-2009-01-27
+2009-01-31 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/mp3file.c (mp3_read_lame_tag): fix endianess problems on
+	  little endian machines. Fixes "iPod doesn't play gapless"
+	  issue. Thanks for Todd for localizing the problem.
+
+2009-01-27 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* scripts/convert-2mp3.sh: fix bug when setting genre for
 	  non-standard genres.

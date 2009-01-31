@@ -1,4 +1,4 @@
-/* Time-stamp: <2009-01-11 17:52:48 jcs>
+/* Time-stamp: <2009-01-31 18:21:09 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -127,8 +127,8 @@ struct _LameTag
     guint8 vbr_method;
     guint8 lowpass;
     float peak_signal_amplitude;
-    guint16 radio_replay_gain;
-    guint16 audiophile_replay_gain;
+    guchar radio_replay_gain[2];
+    guchar audiophile_replay_gain[2];
     guint8 encoding_flags;
     guint8 ath_type;
     guint8 bitrate;
@@ -2053,8 +2053,8 @@ gboolean mp3_get_track_lame_replaygain (const gchar *path, GainData *gd)
 					gd->peak_signal / 0x800000);*/
 		}
 	} else {
-		float f = *((float *) (void *) (&lt.peak_signal_amplitude)) * 0x800000;
-		gd->peak_signal = (guint32) f;
+		gd->peak_signal = (guint32) (lt.peak_signal_amplitude * 0x800000);
+		gd->peak_signal_set = TRUE;
 		/* I would like to see an example of that. */
 /*		printf("peak_signal (lame floating point): %f. PLEASE report.\n", 
 				(double) gd->peak_signal / 0x800000);*/
@@ -2336,12 +2336,12 @@ gboolean mp3_read_lame_tag (const gchar *path, LameTag *lt)
 {
     MP3Info *mp3i = NULL;
     MP3Header h;
-    int flags;
-    int toskip = 0;
+    guint32 flags, peak_amplitude;
+    gint toskip = 0;
     FILE *file;
-    unsigned char ubuf[LAME_TAG_SIZE];
-    int sideinfo;
-    unsigned char full_info_tag[INFO_TAG_CRC_SIZE];
+    guchar ubuf[LAME_TAG_SIZE];
+    gint sideinfo;
+    guchar full_info_tag[INFO_TAG_CRC_SIZE];
 
     g_return_val_if_fail (path, FALSE);
 
@@ -2390,7 +2390,9 @@ gboolean mp3_read_lame_tag (const gchar *path, LameTag *lt)
 	goto lt_fail;
 
     /* Determine the offset of the LAME tag based on contents of the Xing header */
-    fread (&flags, 4, 1, mp3i->file);
+    fread (ubuf, 4, 1, mp3i->file);
+    flags = (ubuf[0] << 24) | (ubuf[1] << 16) | (ubuf[2] << 8) | ubuf[3];
+
     if (flags & FRAMES_FLAG)
     {				/* frames field is set */
 	toskip += 4;
@@ -2412,7 +2414,9 @@ gboolean mp3_read_lame_tag (const gchar *path, LameTag *lt)
     if (fseek (mp3i->file, toskip, SEEK_CUR) || (fread (ubuf, 1, LAME_TAG_SIZE, mp3i->file) != LAME_TAG_SIZE))
 	goto lt_fail;
     if (strncmp (ubuf, "LAME", 4))
+    {
 	goto lt_fail;
+    }
 
     strncpy(lt->encoder, &ubuf[0x0], 4);
 
@@ -2422,9 +2426,12 @@ gboolean mp3_read_lame_tag (const gchar *path, LameTag *lt)
     lt->vbr_method = (ubuf[0x9] & 0xf);
     lt->lowpass = ubuf[0xa];
 
-    memcpy(&lt->peak_signal_amplitude,&ubuf[0xb],4);
-    memcpy(&lt->radio_replay_gain,&ubuf[0xf],2);
-    memcpy(&lt->audiophile_replay_gain,&ubuf[0x11],2);
+
+    /* convert BE float */
+    peak_amplitude = (ubuf[0xb] << 24) | (ubuf[0xc] << 16) | (ubuf[0xd] << 8) | ubuf[0xe];
+    memcpy(&lt->peak_signal_amplitude, &peak_amplitude, 4);
+    memcpy(&lt->radio_replay_gain, &ubuf[0xf], 2);
+    memcpy(&lt->audiophile_replay_gain, &ubuf[0x11], 2);
 
     lt->encoding_flags = ubuf[0x13] >> 4;
     lt->ath_type = ubuf[0x13] & 0xf;
