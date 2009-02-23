@@ -1571,7 +1571,7 @@ static void st_add_track_normal (Track *track, gboolean final,
 	    st_add_entry (master_entry, inst);
 	    first = TRUE; /* this is the first track */
 	}
-	master_entry->members = g_list_append (master_entry->members, track);
+	master_entry->members = g_list_prepend (master_entry->members, track);
 	/* Check if this track should go in the compilation artist group */
 	group_track = ( prefs_get_int("group_compilations") &&
 	    (track->compilation == TRUE) && 
@@ -1602,7 +1602,7 @@ static void st_add_track_normal (Track *track, gboolean final,
 	    st_add_entry (entry, inst);
 	}
 	/* add track to entry members list */
-	entry->members = g_list_append (entry->members, track);
+	entry->members = g_list_prepend (entry->members, track);
 	/* add track to next tab if "entry" is selected */
 	if (st->current_entry &&
 	    ((st->current_entry->master) || (entry == st->current_entry)))

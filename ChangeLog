@@ -1,5 +1,12 @@
 2009-02-23 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/misc_track.c
+	  src/display_sorttabs.c: use g_list_prepend() instead of
+	  g_list_append() where appropriate. Thanks to Javier Kohen
+	  for the patch.
+
+2009-02-23 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/misc.h
 	  src/details.c
 	  src/misc.c: replace glist_duplicate by g_list_copy. Thanks

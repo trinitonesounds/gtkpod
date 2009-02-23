@@ -2162,8 +2162,9 @@ void gp_do_selected_entry (void (*do_func)(GList *tracks), gint inst)
     { /* make a list with all trackids in this entry */
 	Track *track = gl->data;
 	g_return_if_fail (track);
-	selected_tracks = g_list_append (selected_tracks, track);
+	selected_tracks = g_list_prepend (selected_tracks, track);
     }
+    selected_tracks = g_list_reverse (selected_tracks);
     do_func (selected_tracks);
     g_list_free (selected_tracks);
 }
@@ -2189,8 +2190,9 @@ void gp_do_selected_playlist (void (*do_func)(GList *tracks))
     { /* make a list with all trackids in this entry */
 	Track *track = gl->data;
 	g_return_if_fail (track);
-	selected_tracks = g_list_append (selected_tracks, track);
+	selected_tracks = g_list_prepend (selected_tracks, track);
     }
+    selected_tracks = g_list_reverse (selected_tracks);
     do_func (selected_tracks);
     g_list_free (selected_tracks);
 }
