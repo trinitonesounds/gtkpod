@@ -1,3 +1,10 @@
+2009-02-23 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/misc.h
+	  src/details.c
+	  src/misc.c: replace glist_duplicate by g_list_copy. Thanks
+	  to Javier Kohen for the patch.
+
 2009-01-31  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* configure.in: Bump libgpod requirement to >= 0.7.0

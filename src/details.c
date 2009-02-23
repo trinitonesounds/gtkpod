@@ -1470,7 +1470,7 @@ static void details_set_tracks (Detail *detail, GList *tracks)
 
     detail->itdb = ((Track *)tracks->data)->itdb;
 
-    detail->orig_tracks = glist_duplicate (tracks);
+    detail->orig_tracks = g_list_copy (tracks);
 
     /* Create duplicated list to work on until "Apply" is pressed */
     for (gl=g_list_last (tracks); gl; gl=gl->prev)

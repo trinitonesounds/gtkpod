@@ -198,19 +198,6 @@ parse_artwork_from_string(gchar **s, Artwork **artwork)
     return FALSE;
 }
 
-/* Duplicate a GList (shallow copy) */
-GList *glist_duplicate (GList *list)
-{
-    auto void gl_dup_fe (gpointer data, GList **dup);
-    void gl_dup_fe (gpointer data, GList **dup)
-	{
-	    *dup = g_list_append (*dup, data);
-	}
-    GList *dup = NULL;
-    g_list_foreach (list, (GFunc)gl_dup_fe, &dup);
-    return dup;
-}
-
 
 /***************************************************************************
  * gtkpod.in,out calls

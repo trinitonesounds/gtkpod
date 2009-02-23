@@ -222,8 +222,6 @@ gchar *get_string_from_full_template (Track *track,
 				      const gchar *full_template,
 				      gboolean is_filename);
 
-GList *glist_duplicate (GList *list);
-
 gchar *which (const gchar *exe);
 
 GladeXML *gtkpod_xml_new (const gchar *xml_file, const gchar *name);
