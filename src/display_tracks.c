@@ -808,24 +808,10 @@ void tm_remove_track (Track *track)
 void tm_remove_all_tracks ()
 {
     GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
-    GtkTreeModel *realmodel;
-    GtkTreeIter iter;
     GtkWidget *search_entry = gtkpod_xml_get_widget (main_window_xml, "search_entry");
 
     /* remove all tracks, including tracks filtered out */
-    if (GTK_IS_TREE_MODEL_FILTER (model))
-    {
-	realmodel = gtk_tree_model_filter_get_model (GTK_TREE_MODEL_FILTER(model));
-    }
-    else
-    {
-	realmodel = model;
-    }
-
-    while (gtk_tree_model_get_iter_first (realmodel, &iter))
-    {
-        gtk_list_store_remove (get_model_as_store (realmodel), &iter);
-    }
+    gtk_list_store_clear (get_model_as_store (model));
 
     /* reset filter text -- if many tracks are added with the filter
      * activated, a lot of time is needed */

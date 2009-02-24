@@ -1,3 +1,9 @@
+2009-02-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_tracks.c (tm_remove_all_tracks)
+	  Faster code to remove all tracks. Thanks to Javier Kohen
+	  for the patch.
+
 2009-02-23 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/misc_track.c
