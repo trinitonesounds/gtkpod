@@ -1,12 +1,19 @@
 2009-02-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
-	* src/display_sorttabs.c (st_remove_all_entries_from_model)
+	* src/display_tracks.c (tm_data_compare)
+	  src/misc_track.c (track_get_text):
+	  Use faster but less convenient code in switch()
+	  statements. Thanks to Javier Kohen for the patch.
+
+2009-02-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_sorttabs.c (st_remove_all_entries_from_model):
 	  Faster code to remove all entries in the filter
 	  entries. Thanks to Javier Kohen for the patch.
 
 2009-02-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
-	* src/display_tracks.c (tm_remove_all_tracks)
+	* src/display_tracks.c (tm_remove_all_tracks):
 	  Faster code to remove all tracks. Thanks to Javier Kohen
 	  for the patch.
 

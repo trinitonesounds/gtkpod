@@ -1700,37 +1700,80 @@ static gint tm_data_compare (Track *track1, Track *track2,
 
   g_return_val_if_fail (track1 && track2, 0);
 
+  /* string_compare_func is set to either compare_string_fuzzy or
+     compare_string in tm_sort_column_changed() which is called
+     once before the comparing begins. */
   switch (tm_item)
   {
   case TM_COLUMN_TITLE:
+      cmp = string_compare_func (track1->title, track2->title);
+      break;
   case TM_COLUMN_ALBUM:
+      cmp = string_compare_func (track1->album, track2->album);
+      break;
   case TM_COLUMN_ALBUMARTIST:
+      cmp = string_compare_func (track1->albumartist, track2->albumartist);
+      break;
   case TM_COLUMN_GENRE:
+      cmp = string_compare_func (track1->genre, track2->genre);
+      break;
   case TM_COLUMN_COMPOSER:
+      cmp = string_compare_func (track1->composer, track2->composer);
+      break;
   case TM_COLUMN_COMMENT:
+      cmp = string_compare_func (track1->comment, track2->comment);
+      break;
   case TM_COLUMN_FILETYPE:
+      cmp = string_compare_func (track1->filetype, track2->filetype);
+      break;
   case TM_COLUMN_GROUPING:
+      cmp = string_compare_func (track1->grouping, track2->grouping);
+      break;
   case TM_COLUMN_ARTIST:
+      cmp = string_compare_func (track1->artist, track2->artist);
+      break;
   case TM_COLUMN_CATEGORY:
+      cmp = string_compare_func (track1->category, track2->category);
+      break;
   case TM_COLUMN_DESCRIPTION:
+      cmp = string_compare_func (track1->description, track2->description);
+      break;
   case TM_COLUMN_PODCASTURL:
+      cmp = string_compare_func (track1->podcasturl, track2->podcasturl);
+      break;
   case TM_COLUMN_PODCASTRSS:
+      cmp = string_compare_func (track1->podcastrss, track2->podcastrss);
+      break;
   case TM_COLUMN_SUBTITLE:
+      cmp = string_compare_func (track1->subtitle, track2->subtitle);
+      break;
   case TM_COLUMN_TV_SHOW:
+      cmp = string_compare_func (track1->tvshow, track2->tvshow);
+      break;
   case TM_COLUMN_TV_EPISODE:
+      cmp = string_compare_func (track1->tvepisode, track2->tvepisode);
+      break;
   case TM_COLUMN_TV_NETWORK:
+      cmp = string_compare_func (track1->tvnetwork, track2->tvnetwork);
+      break;
   case TM_COLUMN_SORT_TITLE:
+      cmp = string_compare_func (track1->sort_title, track2->sort_title);
+      break;
   case TM_COLUMN_SORT_ALBUM:
+      cmp = string_compare_func (track1->sort_album, track2->sort_album);
+      break;
   case TM_COLUMN_SORT_ARTIST:
+      cmp = string_compare_func (track1->sort_artist, track2->sort_artist);
+      break;
   case TM_COLUMN_SORT_ALBUMARTIST:
+      cmp = string_compare_func (track1->sort_albumartist,
+				 track2->sort_albumartist);
+      break;
   case TM_COLUMN_SORT_COMPOSER:
+      cmp = string_compare_func (track1->sort_composer, track2->sort_composer);
+      break;
   case TM_COLUMN_SORT_TVSHOW:
-      /* string_compare_func is set to either compare_string_fuzzy or
-	 compare_string in tm_sort_column_changed() which is called
-	 once before the comparing begins. */
-      cmp = string_compare_func (
-	  track_get_item (track1, TM_to_T (tm_item)),
-	  track_get_item (track2, TM_to_T (tm_item)));
+      cmp = string_compare_func (track1->sort_tvshow, track2->sort_tvshow);
       break;
   case TM_COLUMN_TRACK_NR:
       cmp = track1->tracks - track2->tracks;

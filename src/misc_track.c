@@ -1291,29 +1291,73 @@ gchar *track_get_text (Track *track, T_item item)
     switch (item)
     {
     case T_TITLE:
+	text = g_strdup (track->title);
+	break;
     case T_ARTIST:
+	text = g_strdup (track->artist);
+	break;
     case T_ALBUM:
+	text = g_strdup (track->album);
+	break;
     case T_GENRE:
+	text = g_strdup (track->genre);
+	break;
     case T_COMPOSER:
+	text = g_strdup (track->composer);
+	break;
     case T_COMMENT:
+	text = g_strdup (track->comment);
+	break;
     case T_FILETYPE:
+	text = g_strdup (track->filetype);
+	break;
     case T_GROUPING:
+	text = g_strdup (track->grouping);
+	break;
     case T_CATEGORY:
+	text = g_strdup (track->category);
+	break;
     case T_DESCRIPTION:
+	text = g_strdup (track->description);
+	break;
     case T_PODCASTURL:
+	text = g_strdup (track->podcasturl);
+	break;
     case T_PODCASTRSS:
+	text = g_strdup (track->podcastrss);
+	break;
     case T_SUBTITLE:
+	text = g_strdup (track->subtitle);
+	break;
     case T_TV_SHOW:
+	text = g_strdup (track->tvshow);
+	break;
     case T_TV_EPISODE:
+	text = g_strdup (track->tvepisode);
+	break;
     case T_TV_NETWORK:
+	text = g_strdup (track->tvnetwork);
+	break;
     case T_ALBUMARTIST:
+	text = g_strdup (track->albumartist);
+	break;
     case T_SORT_ARTIST:
+	text = g_strdup (track->sort_artist);
+	break;
     case T_SORT_TITLE:
+	text = g_strdup (track->sort_title);
+	break;
     case T_SORT_ALBUM:
+	text = g_strdup (track->sort_album);
+	break;
     case T_SORT_ALBUMARTIST:
+	text = g_strdup (track->sort_albumartist);
+	break;
     case T_SORT_COMPOSER:
+	text = g_strdup (track->sort_composer);
+	break;
     case T_SORT_TVSHOW:
-	text = g_strdup (track_get_item (track, item));
+	text = g_strdup (track->sort_tvshow);
 	break;
     case T_TRACK_NR:
 	if (track->tracks == 0)
