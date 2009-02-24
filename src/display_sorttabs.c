@@ -1144,16 +1144,21 @@ static void st_remove_entry_from_model (TabEntry *entry, guint32 inst)
 	    if (hashed_entry == entry)
 		g_hash_table_remove (st->entry_hash, entry->name);
 	}
-	C_FREE (entry->name);
+	g_free (entry->name);
 	g_free (entry);
     }
+}
+
+static void st_free_entry_cb (gpointer data, gpointer user_data)
+{
+  TabEntry *entry = (TabEntry *)data;
+  g_list_free (entry->members);
 }
 
 /* Remove all entries from the display model and the sorttab */
 /* @clear_sort: reset sorted columns to the non-sorted state */
 void st_remove_all_entries_from_model (guint32 inst)
 {
-  TabEntry *entry;
   SortTab *st = sorttab[inst];
   gint column;
   GtkSortType order;
@@ -1168,11 +1173,13 @@ void st_remove_all_entries_from_model (guint32 inst)
 	  /* We may have to unselect the previous selection */
 	  gtk_tree_selection_unselect_all (selection);
       }
-      while (st->entries != NULL)
+      if (st->model)
       {
-	  entry = (TabEntry *)g_list_nth_data (st->entries, 0);
-	  st_remove_entry_from_model (entry, inst);
+	  gtk_list_store_clear (GTK_LIST_STORE (st->model));
       }
+      g_list_foreach (st->entries, st_free_entry_cb, NULL);
+      g_list_free (st->entries);
+      st->entries = NULL;
       if (st->entry_hash)  g_hash_table_destroy (st->entry_hash);
       st->entry_hash = NULL;
 

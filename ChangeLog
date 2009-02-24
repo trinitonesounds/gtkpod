@@ -1,5 +1,11 @@
 2009-02-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/display_sorttabs.c (st_remove_all_entries_from_model)
+	  Faster code to remove all entries in the filter
+	  entries. Thanks to Javier Kohen for the patch.
+
+2009-02-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/display_tracks.c (tm_remove_all_tracks)
 	  Faster code to remove all tracks. Thanks to Javier Kohen
 	  for the patch.
