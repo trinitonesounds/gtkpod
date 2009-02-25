@@ -1,3 +1,8 @@
+2009-02-25 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_tracks: streamline display functions. Thanks to
+          Javier Kohen for the patch.
+
 2009-02-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/display_tracks.c (tm_data_compare)
