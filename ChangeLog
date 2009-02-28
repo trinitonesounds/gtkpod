@@ -1,3 +1,11 @@
+2009-02-28 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/display_coverart.c
+	  src/display_tracks.c
+	  src/display_sorttabs.c:
+	  Use g_list_prepend instead of g_list_append. Thanks to
+	  Javier Kohen for the patches.
+
 2009-02-25 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/display_tracks: streamline display functions. Thanks to

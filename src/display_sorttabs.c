@@ -1691,8 +1691,6 @@ static void st_add_track_normal (Track *track, gboolean final,
    @display: TRUE: add to track model (i.e. display it) */
 void st_add_track (Track *track, gboolean final, gboolean display, guint32 inst)
 {
-  static gint count = 0;
-
 #if DEBUG_ADD_TRACK
   printf ("st_add_track: inst: %d, final: %d, display: %d, track: %p\n",
 	  inst, final, display, track);
@@ -1701,7 +1699,7 @@ void st_add_track (Track *track, gboolean final, gboolean display, guint32 inst)
   if (inst == prefs_get_int("sort_tab_num"))
   {  /* just add to track model */
       if ((track != NULL) && display)    tm_add_track_to_track_model (track, NULL);
-      if (final || (++count % 20 == 0))
+      if (final)
 	  gtkpod_tracks_statusbar_update();
   }
   else if (inst < prefs_get_int("sort_tab_num"))

@@ -1600,6 +1600,8 @@ tm_get_all_trackids(void)
     return(result);
 }
 
+/* Prepends to list, so the list will be reversed. Make sure to
+   reverse the result if you care about the order of the tracks. */
 static void
 on_tracks_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp,
 			 GtkTreeIter *i, gpointer data)
@@ -1609,7 +1611,7 @@ on_tracks_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp,
     
     gtk_tree_model_get(tm, i, READOUT_COL, &tr, -1);
     g_return_if_fail (tr);
-    l = g_list_append(l, tr);
+    l = g_list_prepend(l, tr);
     *((GList**)data) = l;
 }
 
@@ -1626,6 +1628,7 @@ tm_get_selected_tracks(void)
     {
 	gtk_tree_selection_selected_foreach(ts, on_tracks_list_foreach,
 					    &result);
+	result = g_list_reverse(result);
     }
     return(result);
 }
@@ -1655,6 +1658,7 @@ tm_get_all_tracks(void)
 
     gtk_tree_model_foreach(model, on_all_tracks_list_foreach,
 			   &result);
+    result = g_list_reverse(result);
     return result;
 }
 
@@ -1693,9 +1697,6 @@ static gint tm_data_compare (Track *track1, Track *track2,
 {
   gint cmp = 0;
   ExtraTrackData *etr1, *etr2;
-
-
-  g_return_val_if_fail (track1 && track2, 0);
 
   /* string_compare_func is set to either compare_string_fuzzy or
      compare_string in tm_sort_column_changed() which is called
@@ -1868,16 +1869,6 @@ static gint tm_data_compare (Track *track1, Track *track2,
   case TM_NUM_COLUMNS:
       break;
   }
-
-  /* implement stable sorting: if two items are the same, revert to
-     the last relative positition */
-  if (cmp == 0)
-  {
-      etr1 = track1->userdata;
-      etr2 = track2->userdata;
-      g_return_val_if_fail (etr1 && etr2, 0);
-      cmp = etr1->sortindex - etr2->sortindex;
-  }
   return cmp;
 }
 
@@ -1965,13 +1956,24 @@ gint tm_data_compare_func (GtkTreeModel *model,
   GtkSortType order;
   gint result;
 
-  gtk_tree_model_get (model, a, READOUT_COL, &track1, -1);
-  gtk_tree_model_get (model, b, READOUT_COL, &track2, -1);
   if(gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
 					   &column, &order) == FALSE)
       return 0;
 
+  gtk_tree_model_get (model, a, READOUT_COL, &track1, -1);
+  gtk_tree_model_get (model, b, READOUT_COL, &track2, -1);
+  g_return_val_if_fail (track1 && track2, 0);
+
   result = tm_data_compare (track1, track2, column);
+  /* implement stable sorting: if two items are the same, revert to
+     the last relative positition */
+  if (result == 0)
+  {
+      ExtraTrackData *etr1 = track1->userdata;
+      ExtraTrackData *etr2 = track2->userdata;
+      g_return_val_if_fail (etr1 && etr2, 0);
+      result = etr1->sortindex - etr2->sortindex;
+  }
   return result;
 }
 
