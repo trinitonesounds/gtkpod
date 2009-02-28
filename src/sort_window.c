@@ -487,6 +487,12 @@ static void sort_window_set ()
     /* update compare string keys */
     compare_string_fuzzy_generate_keys ();
 
+    /* if case sensitive has changed, rebuild sortkeys */
+    if (temp_prefs_get_int_value(sort_temp_prefs, "case_sensitive", &val))
+    {
+	st_rebuild_sortkeys ();
+	temp_prefs_remove_key (sort_temp_prefs, "case_sensitive");
+    }
     /* if sort type has changed, initialize display */
     if (temp_prefs_get_int_value(sort_temp_prefs, "pm_sort", &val))
     {

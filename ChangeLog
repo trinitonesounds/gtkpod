@@ -1,5 +1,15 @@
 2009-02-28 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/misc.h
+	  src/display.h
+	  src/sort_window.c
+	  src/display_sorttabs.c
+	  src/misc.c:
+	  Optimation in the sort code -- thanks to javier Kohen for
+	  the patches.
+
+2009-02-28 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/display_coverart.c
 	  src/display_tracks.c
 	  src/display_sorttabs.c:

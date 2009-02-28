@@ -143,9 +143,11 @@ void time_set_time (Track *track, time_t t, T_item t_item);
 
 gchar *get_filesize_as_string (double size);
 
+gchar *make_sortkey (const gchar *name);
 gint compare_string (const gchar *str1, const gchar *str2);
 void compare_string_fuzzy_generate_keys (void);
 gint compare_string_fuzzy (const gchar *str1, const gchar *str2);
+const gchar *fuzzy_skip_prefix (const gchar *sortkey);
 gint compare_string_case_insensitive (const gchar *str1,
 				      const gchar *str2);
 gint compare_string_start_case_insensitive (const gchar *haystack,

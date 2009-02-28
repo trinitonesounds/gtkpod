@@ -90,6 +90,19 @@ enum {
 /* struct for each entry in sort tab */
 typedef struct {
   gchar *name;
+
+  /* The sort key can be compared with other sort keys using strcmp
+   * and it will give the expected result, according to the user
+   * settings. Must be regenerated if the user settings change.
+   */
+  gchar *name_sortkey;
+
+  /* The fuzzy sortkey can be used to compare discarding some
+   * prefixes, such as "the", "el", "la", etc. If NULL, you should use
+   * name_sortkey instead.
+   */
+  gchar *name_fuzzy_sortkey;
+
   gboolean master; /* set if this is the "All" entry */
   gboolean compilation; /* set if this is the "Compilation" entry */
   GList *members;  /* GList with member tracks (pointer to "Track") */
@@ -128,7 +141,7 @@ typedef struct {
   TimeInfo ti_played;                /* TimeInfo "played" (sp)        */
   GtkTooltipsData *sp_tooltips_data; /* ptr to tooltips in special st */
   /* function used for string comparisons, set in on_st_switch_page   */
-  gint (*string_compare_func) (const gchar *str1, const gchar *str2);
+  gint (*entry_compare_func) (const TabEntry *a, const TabEntry *b);
 } SortTab;
 
 /* "Column numbers" in sort tab model */
@@ -333,6 +346,8 @@ void st_arrange_visible_sort_tabs (void);
 void st_adopt_order_in_playlist (void);
 TabEntry *st_get_selected_entry (gint inst);
 void st_update_paned_position ();
+void st_rebuild_sortkeys ();
+
 
 void cal_open_calendar (gint inst, T_item item);
 void sp_go (guint32 inst);

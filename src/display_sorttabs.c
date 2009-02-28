@@ -263,6 +263,49 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
   return FALSE;
 }
 
+static void
+st_build_sortkeys (TabEntry *entry)
+{
+    C_FREE (entry->name_sortkey);
+    C_FREE (entry->name_fuzzy_sortkey);
+    entry->name_sortkey = make_sortkey (entry->name);
+    if (entry->name != fuzzy_skip_prefix (entry->name))
+    {
+	entry->name_fuzzy_sortkey =
+	    make_sortkey (fuzzy_skip_prefix (entry->name));
+    }
+}
+
+void
+st_rebuild_sortkeys ()
+{
+    gint inst;
+    for (inst = 0; inst < prefs_get_int("sort_tab_num"); inst++)
+    {
+        SortTab *st = sorttab[inst];
+	GList *entries;
+
+	for (entries = st->entries; entries; entries = g_list_next (entries))
+        {
+	    TabEntry *entry = (TabEntry *)entries->data;
+	    st_build_sortkeys (entry);
+	}
+    }
+}
+
+gint compare_entry (const TabEntry *a, const TabEntry *b)
+{
+    return strcmp (a->name_sortkey, b->name_sortkey);
+}
+
+gint compare_entry_fuzzy (const TabEntry *a, const TabEntry *b)
+{
+    const gchar *ka, *kb;
+    ka = a->name_fuzzy_sortkey ? a->name_fuzzy_sortkey : a->name_sortkey;
+    kb = b->name_fuzzy_sortkey ? b->name_fuzzy_sortkey : b->name_sortkey;
+    return strcmp (ka, kb);
+}
+
 
 /* set string compare function according to whether the ignore field
    is set or not */
@@ -273,9 +316,9 @@ static void st_set_string_compare_func (guint inst, guint page_num)
     {
 	buf = g_strdup_printf ("sort_ign_field_%d", ST_to_T (page_num));
 	if (prefs_get_int (buf))
-	    sorttab[inst]->string_compare_func = compare_string_fuzzy;
+	    sorttab[inst]->entry_compare_func = compare_entry_fuzzy;
 	else
-	    sorttab[inst]->string_compare_func = compare_string;
+	    sorttab[inst]->entry_compare_func = compare_entry;
 	g_free (buf);
     }
 }
@@ -1087,7 +1130,9 @@ static void st_add_entry (TabEntry *entry, guint32 inst)
     }
     gtk_list_store_set (GTK_LIST_STORE (model), &iter,
 			ST_COLUMN_ENTRY, entry, -1);
-    st->entries = g_list_append (st->entries, entry);
+    /* Prepend entry to the list, but always add after the master. */
+    st->entries = g_list_insert (st->entries, entry, 1);
+
     if (!entry->master && !entry->compilation)
     {
 	if (!st->entry_hash)
@@ -1145,6 +1190,8 @@ static void st_remove_entry_from_model (TabEntry *entry, guint32 inst)
 		g_hash_table_remove (st->entry_hash, entry->name);
 	}
 	g_free (entry->name);
+ 	g_free (entry->name_sortkey);
+ 	g_free (entry->name_fuzzy_sortkey);
 	g_free (entry);
     }
 }
@@ -1573,6 +1620,7 @@ static void st_add_track_normal (Track *track, gboolean final,
 	{ /* doesn't exist yet -- let's create it */
 	    master_entry = g_malloc0 (sizeof (TabEntry));
 	    master_entry->name = g_strdup (_("All"));
+	    st_build_sortkeys (master_entry);
 	    master_entry->master = TRUE;
 	    master_entry->compilation = FALSE;
 	    st_add_entry (master_entry, inst);
@@ -1604,6 +1652,7 @@ static void st_add_track_normal (Track *track, gboolean final,
 	    {
 		entry->name = g_strdup (entryname);
 	    }
+	    st_build_sortkeys (entry);
 	    entry->compilation = group_track;
 	    entry->master = FALSE;
 	    st_add_entry (entry, inst);
@@ -2230,18 +2279,18 @@ st_cell_edited (GtkCellRendererText *renderer,
 	  if (hash_entry == entry)
 	      g_hash_table_remove (st->entry_hash, entry->name);
 	  /* replace entry name */
+	  g_free (entry->name);
 	  if (sorttab[inst]->current_category == ST_CAT_YEAR)
 	  {   /* make sure the entry->name is identical to
 		 atoi(new_text) */
-	      g_free (entry->name);
 	      entry->name = g_strdup_printf ("%d", atoi (new_text));
 	      g_object_set (G_OBJECT (renderer), "text", entry->name, NULL);
 	  }
 	  else
 	  {
-	      g_free (entry->name);
 	      entry->name = g_strdup (new_text);
 	  }
+	  st_build_sortkeys (entry);
 
 	  /* re-insert into hash table if the same name doesn't
 	     already exist */
@@ -2408,7 +2457,7 @@ gint st_data_compare_func (GtkTreeModel *model,
 
   st = sorttab[inst];
 
-  return st->string_compare_func (entry1->name, entry2->name);
+  return st->entry_compare_func (entry1, entry2);
 }
 
 /* Stop editing. If @cancel is TRUE, the edited value will be
