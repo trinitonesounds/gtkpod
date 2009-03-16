@@ -2036,28 +2036,19 @@ gboolean mp3_get_track_lame_replaygain (const gchar *path, GainData *gd)
 	gd->radio_gain_set = FALSE;
 	gd->audiophile_gain_set = FALSE;
 	gd->peak_signal_set = FALSE;
-	
-	if (lame_vcmp(lt.version_string, "3.90") < 0) {
+
+	/* Replay Gain data is only available since Lame version 3.94b */
+	if (lame_vcmp(lt.version_string, "3.94b") < 0) {
 /*		fprintf(stderr, "Old lame version (%c%c%c%c%c). Not used.\n",
 				version[0], version[1], version[2], version[3], version[4]); */
 		goto rg_fail;
 	}
-		
-	/* Don't know when fixed-point PeakSingleAmplitude
-	 * was introduced exactly. 3.94b will be used for now.) */
-	if ((lame_vcmp(lt.version_string, "3.94b") >= 0)) {
-		if ((!gd->peak_signal_set) && lt.peak_signal_amplitude) {
-			gd->peak_signal = lt.peak_signal_amplitude;
-			gd->peak_signal_set = TRUE;
-/*			printf("peak_signal (lame): %f\n", (double)
-					gd->peak_signal / 0x800000);*/
-		}
-	} else {
-		gd->peak_signal = (guint32) (lt.peak_signal_amplitude * 0x800000);
+
+	if ((!gd->peak_signal_set) && lt.peak_signal_amplitude) {
+		gd->peak_signal = lt.peak_signal_amplitude;
 		gd->peak_signal_set = TRUE;
-		/* I would like to see an example of that. */
-/*		printf("peak_signal (lame floating point): %f. PLEASE report.\n", 
-				(double) gd->peak_signal / 0x800000);*/
+/*		printf("peak_signal (lame): %f\n", (double)
+			gd->peak_signal / 0x800000);*/
 	}
 
 	/*

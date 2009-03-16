@@ -1,3 +1,8 @@
+2009-03-16  Todd Zullinger  <tmzullinger at users.sourceforge.net>
+
+	* src/mp3file.c (mp3_get_track_lame_replaygain):
+	  Lame did not store ReplayGain values prior to 3.94b
+
 2009-02-28 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/misc.h
