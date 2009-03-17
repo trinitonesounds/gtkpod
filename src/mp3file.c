@@ -2076,23 +2076,24 @@ rg_fail:
 }
 
 /* 
- * mp3_get_track_ape_replaygain - read the specified file and scan for Ape Tag
- * ReplayGain information.
+ * mp3_get_track_ape_replaygain:
  *
- * @path: localtion of the file
- * @track: structure holding track information
+ * @path: location of the file
+ * @gd: #GainData structure
+ *
+ * Read the specified file and scan for Ape Tag ReplayGain information.
  *
  * The function only modifies the gains if they have not previously been set.
  */
-
 gboolean mp3_get_track_ape_replaygain(const gchar *path, GainData *gd)
 {
-	/* The Ape Tag is located a t the end of the file. Or at least that
-	 * seems where it can most likely be found. Either it is at the very end
-	 * or before a trailing ID3v1 Tag. Sometimes a Lyrics3 Tag is placed
-	 * between the ID3v1 and the Ape Tag.
-	 * If you find files that have the Tags located in different
-	 * positions please let me know. */
+	/* The Ape Tag is located at the end of the file. Or at least that seems
+	 * where it can most likely be found. Either it is at the very end or
+	 * before a trailing ID3v1 Tag. Sometimes a Lyrics3 Tag is placed
+	 * between the ID3v1 and the Ape Tag.  If you find files that have the
+	 * Tags located in different positions please report it to
+	 * gtkpod-devel@sourceforge.net.
+	 */
 
 	FILE *file = NULL;
 	char buf[16];
@@ -2138,7 +2139,7 @@ gboolean mp3_get_track_ape_replaygain(const gchar *path, GainData *gd)
 					SEEK_END) ||
 				fread(&buf, 1, 11, file) != 11)
 			goto rg_fail;
-		if (!strncmp(buf, "LYRICSBEGIN", 11)) 
+		if (!strncmp(buf, "LYRICSBEGIN", 11))
 			offset -= LYRICS_FOOTER_SIZE + data_length;
 	}
 
@@ -2150,7 +2151,7 @@ gboolean mp3_get_track_ape_replaygain(const gchar *path, GainData *gd)
 
 	/* Check the version of the tag. 1000 and 2000 (v1.0 and 2.0) are the
 	 * only ones I know about. Make suer things do not break in the future.
-	 * */
+	 */
 	if (fread(&buf, 1, 4, file) != 4)
 		goto rg_fail;
 	version = parse_ape_uint32(buf);
@@ -2167,7 +2168,7 @@ gboolean mp3_get_track_ape_replaygain(const gchar *path, GainData *gd)
 		goto rg_fail;
 	entries = parse_ape_uint32(buf);
 
-	/* seek to first entry and read the whole buffer*/
+	/* seek to first entry and read the whole buffer */
 	if (fseek(file, -APE_FOOTER_SIZE + offset - data_length, SEEK_END))
 		goto rg_fail;
 	if (!(dbuf = malloc(data_length)))
@@ -2179,15 +2180,15 @@ gboolean mp3_get_track_ape_replaygain(const gchar *path, GainData *gd)
 		if (gd->radio_gain_set && gd->peak_signal_set) break;
 		pos = pos2 + entry_length;
 		if (pos > data_length - 10) break;
-		
+
 		entry_length = parse_ape_uint32(&dbuf[pos]); pos += 4;
 		pos += 4;
-		
+
 		pos2 = pos;
 		while (dbuf[pos2] && pos2 < data_length) pos2++;
 		if (pos2 == data_length) break;
 		pos2++;
-		
+
 		if (entry_length + 1 > sizeof(buf))
 			continue;
 /* 		printf ("%s:%d:%d\n",&dbuf[pos], pos2, pos); */

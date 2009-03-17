@@ -1,6 +1,10 @@
 2009-03-17  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* src/mp3file.c:
+	  Clean up comments in mp3_get_track_ape_replaygain() and
+	  remove some useless whitespace.
+
+	* src/mp3file.c:
 	  Fix id3_get_string typo (LOCALDEGUB -> LOCALDEBUG)
 
 2009-03-16  Todd Zullinger  <tmzullinger at users.sourceforge.net>
