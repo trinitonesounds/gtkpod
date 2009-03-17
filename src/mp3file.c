@@ -1152,7 +1152,7 @@ static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
     enum id3_field_textencoding encoding = ID3_FIELD_TEXTENCODING_ISO_8859_1;
 
     frame = id3_tag_findframe (tag, frame_name, 0);
-#if LOCALDEGUB
+#if LOCALDEBUG
     printf ("frame: %p\n", frame); 
 #endif
 
