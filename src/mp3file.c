@@ -27,7 +27,6 @@
 |  $Id$
 */
 
-
 #define LOCALDEBUG 0
 
 
@@ -1978,14 +1977,17 @@ static void read_lame_replaygain(unsigned char buf[],
 			if (gd->radio_gain_set) return;
 			gd->radio_gain = (gdouble)gain / 10;
 			gd->radio_gain_set = TRUE;
-/*			printf("radio_gain (lame): %i\n", gd->radio_gain); */
+#if LOCALDEBUG
+			printf("radio gain (lame): %f\n", gd->radio_gain);
+#endif
 			break;
 		case 0x40:
 			if (gd->audiophile_gain_set) return;
 			gd->audiophile_gain = (gdouble)gain / 10;
 			gd->audiophile_gain_set = TRUE;
-/*			printf("audiophile_gain (lame): %i\n", 
-					gd->audiophile_gain);*/
+#if LOCALDEBUG
+			printf("album gain (lame): %f\n", gd->audiophile_gain);
+#endif
 			break;
 	}
 }
@@ -2038,16 +2040,19 @@ gboolean mp3_get_track_lame_replaygain (const gchar *path, GainData *gd)
 
 	/* Replay Gain data is only available since Lame version 3.94b */
 	if (lame_vcmp(lt.version_string, "3.94b") < 0) {
-/*		fprintf(stderr, "Old lame version (%c%c%c%c%c). Not used.\n",
-				version[0], version[1], version[2], version[3], version[4]); */
+#if LOCALDEBUG
+		printf("Old lame version (%s). Not used.\n", lt.version_string);
+#endif
 		goto rg_fail;
 	}
 
 	if ((!gd->peak_signal_set) && lt.peak_signal_amplitude) {
 		gd->peak_signal = lt.peak_signal_amplitude;
 		gd->peak_signal_set = TRUE;
-/*		printf("peak_signal (lame): %f\n", (double)
-			gd->peak_signal / 0x800000);*/
+#if LOCALDEBUG
+		printf("peak signal (lame): %f\n",
+			(double)gd->peak_signal / 0x800000);
+#endif
 	}
 
 	/*
@@ -2056,8 +2061,10 @@ gboolean mp3_get_track_lame_replaygain (const gchar *path, GainData *gd)
 	 */
 	if ((lame_vcmp(lt.version_string, "3.95.") < 0)) {
 		gain_adjust = 60;
-/*		fprintf(stderr, "Old lame version (%c%c%c%c%c). Adjusting gain.\n",
-				version[0], version[1], version[2], version[3], version[4]); */
+#if LOCALDEBUG
+		printf("Old lame version (%s). Adjusting gain.\n",
+			lt.version_string);
+#endif
 	}
 
 	/* radio gain */
@@ -2190,34 +2197,37 @@ gboolean mp3_get_track_ape_replaygain(const gchar *path, GainData *gd)
 
 		if (entry_length + 1 > sizeof(buf))
 			continue;
-/* 		printf ("%s:%d:%d\n",&dbuf[pos], pos2, pos); */
 		if (!gd->radio_gain_set && !strcasecmp(&dbuf[pos],
 					"REPLAYGAIN_TRACK_GAIN")) {
 			memcpy(buf, &dbuf[pos2], entry_length);
 			buf[entry_length] = '\0';
-			
+
 			d = g_ascii_strtod(buf, &ep);
-/* 			printf("%f\n", d); */
-			if ((ep == buf + entry_length - 3) 
+			if ((ep == buf + entry_length - 3)
 					&& (!strncasecmp(ep, " dB", 3))) {
 			    gd->radio_gain = d;
 				gd->radio_gain_set = TRUE;
-/*				printf("radio_gain (ape): %i\n", gd->radio_gain);*/
+#if LOCALDEBUG
+				printf("radio gain (ape): %f\n", gd->radio_gain);
+#endif
 			}
-			
+
 			continue;
 		}
 		if (!gd->peak_signal_set && !strcasecmp(&dbuf[pos],
 					"REPLAYGAIN_TRACK_PEAK")) {
 			memcpy(buf, &dbuf[pos2], entry_length);
 			buf[entry_length] = '\0';
-			
+
 			d = g_ascii_strtod(buf, &ep);
 			if (ep == buf + entry_length) {
 				d *= 0x800000;
 				gd->peak_signal = (guint32) floor(d + 0.5);
 				gd->peak_signal_set = TRUE;
-/*				printf("peak_signal (ape): %f\n", (double) gd->peak_signal / 0x800000);*/
+#if LOCALDEBUG
+				printf("radio peak signal (ape): %f\n",
+					(double)gd->peak_signal / 0x800000);
+#endif
 			}
 
 			continue;
@@ -2280,6 +2290,9 @@ gboolean mp3_read_soundcheck (const gchar *path, Track *track)
     if (gd.radio_gain_set)
     {
 	track->soundcheck = replaygain_to_soundcheck (gd.radio_gain);
+#if LOCALDEBUG
+	printf("using lame radio gain\n");
+#endif
 	return TRUE;
     }
 
@@ -2287,6 +2300,9 @@ gboolean mp3_read_soundcheck (const gchar *path, Track *track)
     if (gd.radio_gain_set)
     {
 	track->soundcheck = replaygain_to_soundcheck (gd.radio_gain);
+#if LOCALDEBUG
+	printf("using ape radio gain\n");
+#endif
 	return TRUE;
     }
 

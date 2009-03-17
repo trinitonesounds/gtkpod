@@ -1,6 +1,12 @@
 2009-03-17  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* src/mp3file.c:
+	  Use LOCALDEBUG in mp3_get_track_*_replaygain().
+
+	  This replaces commented out debug code, making it easier to
+	  enable when needed.
+
+	* src/mp3file.c:
 	  Fix docs for mp3_get_track_lame_replaygain()
 
 	* src/mp3file.c:
