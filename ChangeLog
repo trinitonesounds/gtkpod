@@ -1,6 +1,9 @@
 2009-03-17  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* src/mp3file.c:
+	  Fix docs for mp3_get_track_lame_replaygain()
+
+	* src/mp3file.c:
 	  Clean up comments in mp3_get_track_ape_replaygain() and
 	  remove some useless whitespace.
 

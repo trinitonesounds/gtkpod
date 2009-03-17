@@ -2005,18 +2005,17 @@ static inline guint16 parse_lame_uint16(char *buf) {
 	return (buf[0] & 0xff) << 8 | (buf[1] & 0xff);
 }
 
-/* 
- * mp3_get_track_lame_replaygain - read the specified file and scan for LAME Tag
- * ReplayGain information.
+/*
+ * mp3_get_track_lame_replaygain:
  *
- * @path: localtion of the file
- * @track: structure holding track information
+ * @path: location of the file
+ * @gd: #GainData structure
+ *
+ * Parse ReplayGain data for a given path from the LAME Tag.
  *
  * FIXME: Are there other encoders writing a LAME Tag using a different magic
  * string?
- * TODO: Check CRC.
  */
-
 gboolean mp3_get_track_lame_replaygain (const gchar *path, GainData *gd)
 {
 	unsigned char ubuf[2];
