@@ -1,5 +1,7 @@
 2009-04-12  Todd Zullinger  <tmz@pobox.com>
 
+	* src/mp3file.c: Define a convenient debug macro
+
 	* src/repository.c: Fix entry widget names for Create
 	  Repository window.  The names were changed to fix issues
 	  caused during the glade file conversion to glade3, in svn
