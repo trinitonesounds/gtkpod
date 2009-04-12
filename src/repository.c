@@ -2368,7 +2368,7 @@ static void cr_mountpoint_button_clicked (GtkButton *button,
     g_return_if_fail (cr);
 
     old_dir = gtk_entry_get_text (
-	GTK_ENTRY (GET_WIDGET (MOUNTPOINT_ENTRY)));
+	GTK_ENTRY (GET_WIDGET (CRW_MOUNTPOINT_ENTRY)));
 
     new_dir = fileselection_get_file_or_dir (
 	_("Select mountpoint"),
@@ -2377,7 +2377,7 @@ static void cr_mountpoint_button_clicked (GtkButton *button,
 
     if (new_dir)
     {
-	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (MOUNTPOINT_ENTRY)),
+	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (CRW_MOUNTPOINT_ENTRY)),
 			    new_dir);
 	g_free (new_dir);
     }
@@ -2394,7 +2394,7 @@ static void cr_backup_button_clicked (GtkButton *button,
     g_return_if_fail (cr);
 
     old_backup = gtk_entry_get_text (
-	GTK_ENTRY (GET_WIDGET (BACKUP_ENTRY)));
+	GTK_ENTRY (GET_WIDGET (CRW_BACKUP_ENTRY)));
 
     new_backup = fileselection_get_file_or_dir (
 	_("Set backup file"),
@@ -2403,7 +2403,7 @@ static void cr_backup_button_clicked (GtkButton *button,
 
     if (new_backup)
     {
-	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (BACKUP_ENTRY)),
+	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (CRW_BACKUP_ENTRY)),
 			    new_backup);
 	g_free (new_backup);
     }
@@ -2422,7 +2422,7 @@ static void cr_local_path_button_clicked (GtkButton *button,
     g_return_if_fail (cr);
 
     old_path = gtk_entry_get_text (
-	GTK_ENTRY (GET_WIDGET (LOCAL_PATH_ENTRY)));
+	GTK_ENTRY (GET_WIDGET (CRW_LOCAL_PATH_ENTRY)));
 
     new_path = fileselection_get_file_or_dir (
 	_("Set local repository file"),
@@ -2431,7 +2431,7 @@ static void cr_local_path_button_clicked (GtkButton *button,
 
     if (new_path)
     {
-	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (LOCAL_PATH_ENTRY)),
+	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (CRW_LOCAL_PATH_ENTRY)),
 			    new_path);
 	g_free (new_path);
     }

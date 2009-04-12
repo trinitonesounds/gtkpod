@@ -1,3 +1,10 @@
+2009-04-12  Todd Zullinger  <tmz@pobox.com>
+
+	* src/repository.c: Fix entry widget names for Create
+	  Repository window.  The names were changed to fix issues
+	  caused during the glade file conversion to glade3, in svn
+	  revision 2126
+
 2009-03-17  Todd Zullinger  <tmzullinger at users.sourceforge.net>
 
 	* src/mp3file.c:
