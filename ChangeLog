@@ -1,3 +1,7 @@
+2009-04-16  Daniele Forsi <dforsi at users.sourceforge.net>
+
+	* data/gtkpod.glade: Fix Gtk-WARNING on GtkSpinButtons
+
 2009-04-12  Todd Zullinger  <tmz@pobox.com>
 
 	* src/mp3file.c: Define a convenient debug macro
