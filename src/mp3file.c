@@ -24,7 +24,7 @@
 |
 |  This product is not supported/written/published by Apple!
 |
-|  $Id$
+|  $Id: mp3file.c 2309 2009-04-12 22:22:20Z tmzullinger $
 */
 
 #define LOCALDEBUG 0
@@ -1011,9 +1011,11 @@ static guint get_track_time (const gchar *path)
     return result;
 }
 
+#if USE_TAGLIB
+#include <tag_c.h>
+#endif
 
 /* libid3tag stuff */
-
 #include <id3tag.h>
 #include "prefs.h"
 
@@ -1022,6 +1024,7 @@ static guint get_track_time (const gchar *path)
 #endif
 
 
+#if USE_TAGLIB!=1
 
 static const gchar* id3_get_binary (struct id3_tag *tag,
 				    char *frame_name,
@@ -1331,6 +1334,7 @@ static void id3_set_string (struct id3_tag *tag,
 }
 
 
+#endif /* USE_TAGLIB */
 /***
  * Reads id3v1.x / id3v2 apic data
  * @returns: TRUE on success, else FALSE.
@@ -1338,6 +1342,43 @@ static void id3_set_string (struct id3_tag *tag,
 static gboolean id3_apic_read (const gchar *filename,
 			       guchar **image_data, gsize *image_data_len)
 {
+#if USE_TAGLIB
+    TagLib_File *id3file;
+    TagLib_Tag *id3tag;
+
+    g_return_val_if_fail (filename, FALSE);
+    g_return_val_if_fail (image_data, FALSE);
+    g_return_val_if_fail (image_data_len, FALSE);
+
+    *image_data = NULL;
+    *image_data_len = 0;
+
+    if (!(id3file =  taglib_file_new(filename)))
+    {
+	gchar *fbuf = charset_to_utf8 (filename);
+	g_print(_("ERROR while opening file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return FALSE;
+    }
+    
+    if ((id3tag = taglib_file_tag(id3file)))
+    {
+	char *coverart = NULL;
+        unsigned int len = 0;
+        taglib_set_string_management_enabled(1);
+        if (taglib_id3v2_get_APIC(id3file,NULL,3,&len))
+        {
+            coverart=g_malloc(len*sizeof(char));
+            taglib_id3v2_get_APIC(id3file,coverart,3,&len);
+        }
+        else if (taglib_id3v2_get_APIC(id3file,NULL,0,&len))
+        {
+            coverart=g_malloc(len*sizeof(char));
+            taglib_id3v2_get_APIC(id3file,coverart,0,&len);
+        }
+        taglib_file_free(id3file);
+#else
     struct id3_file *id3file;
     struct id3_tag *id3tag;
 
@@ -1384,6 +1425,7 @@ static gboolean id3_apic_read (const gchar *filename,
 	    }
 	}
 
+#endif
 	if (coverart)
 	{   /* I guess iTunes is doing something wrong -- the
 	     * beginning of the coverart data ends up in a different
@@ -1407,6 +1449,9 @@ static gboolean id3_apic_read (const gchar *filename,
 		*image_data = g_malloc (len);
 		memcpy (*image_data, coverart, len);
 		*image_data_len = len;
+#if USE_TAGLIB==2
+                g_free(coverart); 
+#endif
 	    }
 #if LOCALDEBUG
 	    if (*image_data)
@@ -1419,7 +1464,9 @@ static gboolean id3_apic_read (const gchar *filename,
 #endif
 	}    
     }
+#if USE_TAGLIB!=1
     id3_file_close (id3file);
+#endif
     return TRUE;
 }
 
@@ -1522,10 +1569,97 @@ static void handle_genre_variations (gchar **genrep)
  */
 gboolean id3_tag_read (const gchar *filename, File_Tag *tag)
 {
-    struct id3_file *id3file;
-    struct id3_tag *id3tag;
     gchar* string;
     gchar* string2;
+#if USE_TAGLIB
+    TagLib_File *id3file;
+    TagLib_Tag *id3tag;
+
+    g_return_val_if_fail (filename, FALSE);
+    g_return_val_if_fail (tag, FALSE);
+
+    if (!(id3file =  taglib_file_new(filename)))
+    {
+	gchar *fbuf = charset_to_utf8 (filename);
+	g_print(_("ERROR while opening file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return FALSE;
+    }
+    
+    if ((id3tag = taglib_file_tag(id3file)))
+    {
+        taglib_set_string_management_enabled(1);
+	tag->title = g_strdup(taglib_tag_title(id3tag));
+	tag->album = g_strdup(taglib_tag_album(id3tag));
+	tag->comment = g_strdup(taglib_tag_comment(id3tag));
+	tag->genre = g_strdup(taglib_tag_genre(id3tag));
+
+	tag->composer = g_strdup(taglib_id3v2_get_string_frame (id3file, "TCOM"));
+	string = g_strdup(taglib_tag_artist(id3tag));
+	if (!string || !*string)
+	{
+	    g_free (string);
+	    tag->artist = g_strdup(taglib_id3v2_get_string_frame (id3file, ID3_FRAME_GROUP));
+	    tag->albumartist = NULL;
+	} else {
+	    tag->albumartist = g_strdup(taglib_id3v2_get_string_frame (id3file, ID3_FRAME_GROUP));
+            tag->artist = string;
+	}
+	tag->compilation = g_strdup(taglib_id3v2_get_string_frame (id3file, "TCMP"));
+	tag->subtitle = g_strdup(taglib_id3v2_get_string_frame (id3file, "TIT3"));
+	tag->lyrics = g_strdup(taglib_id3v2_get_lyrics(id3file));
+	tag->podcasturl = g_strdup(taglib_id3v2_get_string_frame (id3file, "YTID"));
+	tag->podcastrss = g_strdup(taglib_id3v2_get_string_frame (id3file, "YWFD"));
+	tag->description = g_strdup(taglib_id3v2_get_string_frame (id3file, "YTDS"));
+	tag->time_released = g_strdup(taglib_id3v2_get_string_frame (id3file, "YTDR"));
+	tag->BPM = g_strdup(taglib_id3v2_get_string_frame (id3file, "TBPM"));
+	tag->sort_artist = g_strdup(taglib_id3v2_get_string_frame (id3file, "TSOP"));
+	tag->sort_album = g_strdup(taglib_id3v2_get_string_frame (id3file, "TSOA"));
+	tag->sort_title = g_strdup(taglib_id3v2_get_string_frame (id3file, "TSOT"));
+	tag->sort_albumartist = g_strdup(taglib_id3v2_get_string_frame (id3file, "TSO2"));
+	tag->sort_composer = g_strdup(taglib_id3v2_get_string_frame (id3file, "TSOC"));
+
+        tag->track_total=NULL;
+	tag->trackstring = g_strdup_printf ("%.2d", taglib_tag_track(id3tag));
+	tag->year = g_strdup_printf ("%.2d", taglib_tag_year(id3tag));
+
+	string = g_strdup(taglib_id3v2_get_string_frame (id3file, "TLEN"));
+	if (string)
+	{
+	    tag->songlen = (guint32) strtoul (string, 0, 10);
+	    g_free (string);
+	}
+
+	
+        tag->cdno_total = NULL;
+	tag->cdnostring = NULL;
+	/* CD/disc number tag handling */ 
+	string = g_strdup(taglib_id3v2_get_string_frame (id3file, "TPOS"));
+	if (string)
+	{
+	    string2 = strchr(string,'/');
+	    if (string2)
+	    {
+		tag->cdno_total = g_strdup_printf ("%.2d", atoi (string2+1));
+		*string2 = '\0';
+	    } else {
+		tag->cdno_total = NULL; //todo - maybe we need this elsewhere
+	    } 
+	    tag->cdnostring = g_strdup_printf ("%.2d", atoi (string));
+	    g_free(string);
+	}
+
+	/* Do some checks on the genre string -- ideally this should
+	 * be done within the id3tag library, I think */
+	handle_genre_variations (&tag->genre);
+        taglib_tag_free_strings();
+        taglib_file_free(id3file);
+    }
+
+#else
+    struct id3_file *id3file;
+    struct id3_tag *id3tag;
 
     g_return_val_if_fail (filename, FALSE);
     g_return_val_if_fail (tag, FALSE);
@@ -1611,11 +1745,12 @@ gboolean id3_tag_read (const gchar *filename, File_Tag *tag)
     }
 
     id3_file_close (id3file);
+#endif /*USE_TAGLIB*/
     return TRUE;
 }
 
 
-
+#if USE_TAGLIB <1
 static enum id3_field_textencoding get_encoding_of (struct id3_tag *tag, const char *frame_name)
 {
     struct id3_frame *frame;
@@ -1681,6 +1816,7 @@ void set_uncommon_tag (struct id3_tag *id3tag,
 }
 
 
+#endif /*USE_TAGLIB*/
 
 /**
  * Write the ID3 tags to the file.
@@ -1688,9 +1824,139 @@ void set_uncommon_tag (struct id3_tag *id3tag,
  */
 gboolean mp3_write_file_info (const gchar *filename, Track *track)
 {
+#if USE_TAGLIB
+    TagLib_File *id3file;
+    TagLib_Tag *id3tag;
+
+    g_return_val_if_fail (filename, FALSE);
+    g_return_val_if_fail (track, FALSE);
+
+    if (!(id3file =  taglib_file_new(filename)))
+    {
+	gchar *fbuf = charset_to_utf8 (filename);
+	g_print(_("ERROR while opening file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return FALSE;
+    }
+    
+    if ((id3tag = taglib_file_tag(id3file)))
+    {
+	char *string1;
+
+        taglib_set_string_management_enabled(1);
+	taglib_tag_set_title (id3tag, track->title);
+	taglib_tag_set_artist (id3tag, track->artist);
+	taglib_tag_set_album (id3tag, track->album);
+	taglib_tag_set_comment (id3tag, track->comment);
+	taglib_tag_set_genre (id3tag, track->genre);
+	taglib_tag_set_year (id3tag, track->year);
+	taglib_tag_set_track (id3tag, track->track_nr);
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+
+	taglib_id3v2_set_string_frame (id3file, track->albumartist,ID3_FRAME_GROUP);
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+	taglib_id3v2_set_string_frame (id3file, track->subtitle, "TIT3");
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+	taglib_id3v2_set_string_frame (id3file, track->sort_artist, "TSOP");
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+	taglib_id3v2_set_string_frame (id3file, track->sort_album, "TSOA");
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+	taglib_id3v2_set_string_frame (id3file, track->sort_title, "TSOT");
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+	taglib_id3v2_set_string_frame (id3file, track->sort_albumartist, "TSO2");
+#if LOCALDEBUG
+ fprintf(stderr,"BPM:%d,id3file:%d\n",track->BPM,id3file);
+#endif
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+	taglib_id3v2_set_string_frame (id3file, track->sort_composer, "TSOC");
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+
+	/*set_uncommon_tag (id3file, "YTID" track->podcasturl, encoding );
+	set_uncommon_tag (id3file, "YTDS" track->description, encoding);
+	set_uncommon_tag (id3file, "YWFD" track->podcastrss, encoding);*/
+
+	taglib_id3v2_set_string_frame (id3file, track->composer, "TCOM");
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+
+	string1 = g_strdup_printf("%d", track->BPM);
+#if LOCALDEBUG
+ fprintf(stderr,"string1:%s,BPM:%d,id3file:%d\n",string1,track->BPM,id3file);
+#endif
+	taglib_id3v2_set_string_frame(id3file, string1, "TBPM");
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+	g_free(string1);
+
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+
+	if (track->cds)
+	    string1 = g_strdup_printf ("%d/%d",
+				       track->cd_nr, track->cds);
+	else
+	    string1 = g_strdup_printf ("%d", track->cd_nr);
+	taglib_id3v2_set_string_frame (id3file, string1, "TPOS");
+	g_free(string1);
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+        
+       string1 = g_strdup_printf ("%d", track->compilation);
+       taglib_id3v2_set_string_frame (id3file, string1, "TCMP");
+       g_free(string1);
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+    } 
+
+    if (taglib_file_save(id3file)==0)
+    {
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+	gchar *fbuf = charset_to_utf8 (filename);
+	g_print(_("ERROR while writing tag to file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return FALSE;
+    }
+
+    
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+    taglib_tag_free_strings();
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+    taglib_file_free(id3file);
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
+#else
     struct id3_tag* id3tag;
     struct id3_file* id3file;
-    gint error = 0;
 
     id3file = id3_file_open (filename, ID3_FILE_MODE_READWRITE);
     if (!id3file)
@@ -1783,9 +2049,8 @@ gboolean mp3_write_file_info (const gchar *filename, Track *track)
     }
 
     id3_file_close (id3file);
-
-    if (error) return FALSE;
-    else       return TRUE;
+#endif
+    return TRUE;
 }
 
 
@@ -2647,12 +2912,17 @@ gboolean id3_read_tags (const gchar *name, Track *track)
 	{
 	    track->album = filetag.album;
 	}
-
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.artist)
 	{
 	    track->artist = filetag.artist;
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.albumartist)
 	{
 	    track->albumartist = filetag.albumartist;
@@ -2668,61 +2938,97 @@ gboolean id3_read_tags (const gchar *name, Track *track)
 	    track->genre = filetag.genre;
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.composer)
 	{
 	    track->composer = filetag.composer;
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.comment)
 	{
 	    track->comment = filetag.comment;
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.podcasturl)
 	{
 	    track->podcasturl = filetag.podcasturl;
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.podcastrss)
 	{
 	    track->podcastrss = filetag.podcastrss;
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.subtitle)
 	{
 	    track->subtitle = filetag.subtitle;
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.description)
 	{
 	    track->description = filetag.description;
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.sort_artist)
 	{
 	    track->sort_artist = filetag.sort_artist;
 	}
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 
 	if (filetag.sort_title)
 	{
 	    track->sort_title = filetag.sort_title;
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.sort_album)
 	{
 	    track->sort_album = filetag.sort_album;
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.sort_albumartist)
 	{
 	    track->sort_albumartist = filetag.sort_albumartist;
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.sort_composer)
 	{
 	    track->sort_composer = filetag.sort_composer;
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.year == NULL)
 	{
 	    track->year = 0;
@@ -2733,6 +3039,9 @@ gboolean id3_read_tags (const gchar *name, Track *track)
 	    g_free (filetag.year);
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.trackstring == NULL)
 	{
 	    track->track_nr = 0;
@@ -2743,6 +3052,9 @@ gboolean id3_read_tags (const gchar *name, Track *track)
 	    g_free (filetag.trackstring);
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.track_total == NULL)
 	{
 	    track->tracks = 0;
@@ -2752,6 +3064,9 @@ gboolean id3_read_tags (const gchar *name, Track *track)
 	    track->tracks = atoi(filetag.track_total);
 	    g_free (filetag.track_total);
 	}
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	/* CD/disc number handling */
 	if (filetag.cdnostring == NULL)
 	{
@@ -2763,6 +3078,9 @@ gboolean id3_read_tags (const gchar *name, Track *track)
 	    g_free (filetag.cdnostring);
 	}
 	
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.cdno_total == NULL)
 	{
 	    track->cds = 0;
@@ -2773,6 +3091,9 @@ gboolean id3_read_tags (const gchar *name, Track *track)
 	    g_free (filetag.cdno_total);
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.compilation == NULL)
 	{
 	    track->compilation = 0;
@@ -2783,6 +3104,9 @@ gboolean id3_read_tags (const gchar *name, Track *track)
 	    g_free (filetag.compilation);
 	}
 
+#if LOCALDEBUG
+ fprintf(stderr,"Line num:%d\n",__LINE__);
+#endif
 	if (filetag.BPM == NULL)
 	{
 	    track->BPM = 0;
@@ -2802,7 +3126,6 @@ gboolean id3_read_tags (const gchar *name, Track *track)
 	{
 	    track->lyrics_flag = 0x00;
 	}
-
 	if (prefs_get_int("coverart_apic") &&
 	    (id3_apic_read (name, &image_data, &image_data_len) == TRUE))
 	{
@@ -2894,12 +3217,42 @@ Track *mp3_get_file_info (const gchar *name)
     }
     return track;
 }
+
+
 /*
  *
  * @returns: TRUE on success, else FALSE.
  */
 gboolean id3_lyrics_read (const gchar *filename,gchar **lyrics)
 {
+#if USE_TAGLIB
+    TagLib_File *id3file;
+    char       *temp_str=NULL;
+
+    g_return_val_if_fail (filename, FALSE);
+    g_return_val_if_fail (lyrics, FALSE);
+
+    if (!(id3file =  taglib_file_new(filename)))
+    {
+	gchar *fbuf = charset_to_utf8 (filename);
+	g_print(_("ERROR while opening file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return FALSE;
+    }
+
+    temp_str = taglib_id3v2_get_lyrics (id3file);
+	
+    if (temp_str) { 
+        *lyrics= strdup(temp_str);
+    } else {
+        *lyrics= strdup("");
+    }
+
+    taglib_tag_free_strings();
+    taglib_file_free(id3file);
+    
+#else
     struct id3_file *id3file;
     struct id3_tag *id3tag;
 
@@ -2921,11 +3274,43 @@ gboolean id3_lyrics_read (const gchar *filename,gchar **lyrics)
     }
 
     id3_file_close (id3file);
+#endif
     return TRUE;
 }
 
 gboolean id3_lyrics_save (const gchar *filename,const gchar *lyrics)
 {
+#if USE_TAGLIB
+    TagLib_File *id3file;
+
+    g_return_val_if_fail (filename, FALSE);
+    g_return_val_if_fail (lyrics, FALSE);
+
+    if (!(id3file =  taglib_file_new(filename)))
+    {
+	gchar *fbuf = charset_to_utf8 (filename);
+	g_print(_("ERROR while opening file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return FALSE;
+    }
+
+    if (prefs_get_int("id3_write_id3v24")) taglib_id3v2_set_default_text_encoding(TagLib_ID3v2_UTF8);
+    taglib_id3v2_set_lyrics (id3file,lyrics);
+	
+    if (taglib_file_save(id3file)==0)
+    {
+	gchar *fbuf = charset_to_utf8 (filename);
+	g_print(_("ERROR while writing tag to file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return FALSE;
+    }
+
+    
+    taglib_tag_free_strings();
+    taglib_file_free(id3file);
+#else
     struct id3_file *id3file;
     struct id3_tag *id3tag;
 
@@ -2980,6 +3365,6 @@ gboolean id3_lyrics_save (const gchar *filename,const gchar *lyrics)
     }
 
     id3_file_close (id3file);
-
+#endif
     return TRUE;
 }
