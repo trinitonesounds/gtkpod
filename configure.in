@@ -50,38 +50,6 @@ PKG_CHECK_MODULES(LIBGPOD, libgpod-1.0 >= 0.7.0,, [AC_MSG_FAILURE([*** $LIBGPOD_
 CFLAGS="$CFLAGS $GTK_CFLAGS $GLIB_CFLAGS $GMODULE_CFLAGS $GTHREAD_CFLAGS $LIBGLADE_CFLAGS $LIBGPOD_CFLAGS"
 LIBS="$LIBS $GTK_LIBS $GLIB_LIBS $GMODULE_LIBS $GTHREAD_LIBS $LIBGLADE_LIBS $LIBGPOD_LIBS"
 
-dnl Check for TagLib's C bindings
-AC_ARG_WITH(libtag, AC_HELP_STRING([--without-taglib],[Disable TagLib, use only id3lib (has problems writing tags)]))
-if test "x$with_taglib" != "xno"; then
-    PKG_CHECK_MODULES(TAGLIB_C, taglib_c, have_taglib_pkg=yes, have_taglib_pkg=no)
-    if test "x$with_taglib" = "xyes" -a "x$have_taglib_pkg" = "xno"; then
-        AC_MSG_ERROR([TagLib support explicitly requested but TagLib couldn't be found])
-    fi
-fi
-AM_CONDITIONAL(HAVE_TAGLIB, test "x$have_taglib_pkg" = "xyes")
-if test "x$have_taglib_pkg" = "xyes"; then
-    OLD_CFLAGS="$CFLAGS"
-    OLD_LIBS="$LIBS"
-    CFLAGS="$CFLAGS $TAGLIB_C_CFLAGS"
-    LIBS="$LIBS $TAGLIB_C_LIBS"
-    AC_TRY_COMPILE( [#include <tag_c.h>],
-	[BOOL Test_taglib_binds(TagLib_File *File)
-	    {
-		return taglib_id3v2_has_lyrics(File);
-	    } ], taglib_has_lyrics=yes)
-    if test "x$taglib_has_lyrics" = "xyes"; then
-        have_taglib="yes -- will build with TagLib support"
-        AC_DEFINE(USE_TAGLIB, 1, [Define if you have TagLib support])
-    else
-        have_taglib="*no -- will build without taglib support (problems writing tags, especially lyrics)"
-        AC_MSG_WARN([LibTag was found but is missing C bindings, did you use a patched 1.15 or later version?])
-    	CFLAGS="$OLD_CFLAGS"
-    	LIBS="$OLD_LIBS"
-    fi
-else
-    have_taglib="*no -- will build without taglib support (problems writing tags, especially lyrics)"
-fi
-
 dnl we need 'flex'
 AM_PROG_LEX
 case "$LEX" in
@@ -350,7 +318,6 @@ Configuration for $PACKAGE $VERSION :
  libgpod version ......: $libgpod_version
  gnome-vfs.............: $have_gnome_vfs
  hal...................: $have_hal
- TagLib................: $have_taglib
  libcurl ..............: $have_curl
  mp4v2 ................: $have_mp4v2
  vorbisfile ...........: $have_ogg

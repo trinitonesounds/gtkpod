@@ -1,3 +1,8 @@
+2009-04-17  Paul Richardson <phantom_sf at users.sourceforge.net>
+
+	* Reverted src/mp3file.c and configure.in due to lack of released
+	  taglib support. Branched existing code to branches/taglib-branch
+
 2009-04-16  David Kohen <dudyk at users.sourceforge.net>
 
 	* src/mp3file.c: added taglib support
