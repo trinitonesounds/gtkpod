@@ -1294,3 +1294,46 @@ G_MODULE_EXPORT void on_sorting_button_clicked (GtkButton *sender, gpointer e)
 {
 	sort_window_create ();
 }
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_replaygain_clicked (GtkButton *sender, gpointer e)
+{
+	GladeXML *xml = gtkpod_xml_new (xml_file, "prefs_replaygain_dialog");
+	GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_replaygain_dialog");
+	GtkWidget *mode_album_radio = gtkpod_xml_get_widget (xml, "mode_album");
+	GtkWidget *mode_track_radio = gtkpod_xml_get_widget (xml, "mode_track");
+
+	gtk_window_set_transient_for (GTK_WINDOW (dlg), GTK_WINDOW (prefs_dialog));
+
+	gtk_spin_button_set_value (GTK_SPIN_BUTTON (gtkpod_xml_get_widget (xml, "replaygain_offset")), prefs_get_int("replaygain_offset"));
+
+	if(prefs_get_int("replaygain_mode_album_priority"))
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (mode_album_radio), TRUE);
+	else
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (mode_track_radio), TRUE);
+
+	glade_xml_signal_autoconnect (xml);
+	gtk_dialog_run (GTK_DIALOG (dlg));
+	gtk_widget_destroy (dlg);
+	g_object_unref (xml);
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_replaygain_mode_album_toggled (GtkToggleButton *sender, gpointer e)
+{
+	gboolean active = gtk_toggle_button_get_active (sender);
+
+	prefs_set_int ("replaygain_mode_album_priority", active);
+}
+
+/*
+	glade callback
+*/
+G_MODULE_EXPORT void on_replaygain_offset_value_changed (GtkSpinButton *sender, gpointer e)
+{
+    prefs_set_int ("replaygain_offset", gtk_spin_button_get_value_as_int (sender));
+}

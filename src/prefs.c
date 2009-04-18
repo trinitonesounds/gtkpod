@@ -321,9 +321,13 @@ static void set_default_preferences()
     prefs_set_int("pm_sort", SORT_NONE);
     prefs_set_int("tm_sortcol", TM_COLUMN_TITLE);
     prefs_set_int("tm_sort", SORT_NONE);
-	
-	/* New conversion preferences */
-	prefs_set_int("conversion_target_format", TARGET_FORMAT_MP3);
+
+    /* New conversion preferences */
+    prefs_set_int("conversion_target_format", TARGET_FORMAT_MP3);
+
+    /* ReplayGain prefs */
+    prefs_set_int("replaygain_offset", 0);
+    prefs_set_int("replaygain_mode_album_priority", TRUE);
 }
 
 /* Initialize default variable-length list entries */

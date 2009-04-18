@@ -199,6 +199,7 @@ struct _LameTag
 #include "itdb.h"
 #include "file.h"
 #include "misc.h"
+#include "prefs.h"
 
 
 /* MIN_CONSEC_GOOD_FRAMES defines how many consecutive valid MP3 frames
@@ -2402,6 +2403,11 @@ rg_fail:
 gboolean mp3_read_soundcheck (const gchar *path, Track *track)
 {
     GainData gd;
+    gint replaygain_offset;
+    gint replaygain_mode_album_priority;
+
+    replaygain_offset = prefs_get_int ("replaygain_offset");
+    replaygain_mode_album_priority = prefs_get_int ("replaygain_mode_album_priority");
 
     g_return_val_if_fail (track, FALSE);
 
@@ -2420,16 +2426,16 @@ gboolean mp3_read_soundcheck (const gchar *path, Track *track)
     else
 	return FALSE;
 
-    if (gd.audiophile_gain_set)
+    if (gd.audiophile_gain_set && replaygain_mode_album_priority)
     {
 	DEBUG ("Setting Soundcheck value from album ReplayGain\n");
-	track->soundcheck = replaygain_to_soundcheck (gd.audiophile_gain);
+	track->soundcheck = replaygain_to_soundcheck (gd.audiophile_gain + replaygain_offset);
 	return TRUE;
     }
     if (gd.radio_gain_set)
     {
 	DEBUG ("Setting Soundcheck value from radio ReplayGain\n");
-	track->soundcheck = replaygain_to_soundcheck (gd.radio_gain);
+	track->soundcheck = replaygain_to_soundcheck (gd.radio_gain + replaygain_offset);
 	return TRUE;
     }
 

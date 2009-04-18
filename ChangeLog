@@ -1,5 +1,22 @@
 2009-04-17  Todd Zullinger  <tmz@pobox.com>
 
+	Patch from: Author: Greg Carroll <iskimj@gmail.com>
+
+	* data/gtkpod.glade
+	  src/mp3file.c
+	  src/prefs.c
+	  src/prefsdlg.c:
+	  Add preferences for handling ReplayGain.
+
+	  This adds two preference settings, replaygain_offset and
+	  replaygain_mode_album_priority.  The first is a simple
+	  offset value that is added to the ReplayGain value before
+	  being converted to a Soundcheck value and stored in the
+	  iTunesDB.  The other setting allows a choice between
+	  Audiofile (aka album) gain and Radio (aka track) gain.
+
+2009-04-17  Todd Zullinger  <tmz@pobox.com>
+
 	* src/mp3file.c:
 	  Add support for reading ReplayGain data in common ID3 tags.
 	  The order of preference for ReplayGain data is now ID3, APE,
