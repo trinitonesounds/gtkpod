@@ -32,6 +32,7 @@
 
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
+#include <pango/pango.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1104,6 +1105,35 @@ tm_cell_edited (GtkCellRendererText *renderer,
   g_list_free(row_list);
 }
 
+static void update_text_column_layout (GtkTreeViewColumn *tree_column,
+				       GtkCellRenderer *renderer,
+				       const gchar* text)
+{
+	GtkWidget* tree_widget;
+	PangoLayout* layout;
+	guint xpad;
+	int col_width;
+	int new_width;
+
+	tree_widget = gtk_tree_view_column_get_tree_view (tree_column);
+	if (!tree_widget) return;
+
+	layout = gtk_widget_create_pango_layout (tree_widget, text);
+
+	/* Expand the width, if necessary. This is done manually
+	   because the column is set to fixed width for performance
+	   reasons. */
+	col_width = gtk_tree_view_column_get_fixed_width (tree_column);
+	g_object_get (G_OBJECT (renderer), "xpad", &xpad, NULL);
+	pango_layout_get_pixel_size (layout, &new_width, NULL);
+	new_width += xpad;
+	if (col_width < new_width)
+	{
+		gtk_tree_view_column_set_fixed_width (tree_column, new_width);
+	}
+
+	g_object_unref (G_OBJECT (layout));
+}
 
 /* The track data is stored in a separate list (static GList *tracks)
    and only pointers to the corresponding Track structure are placed
@@ -1136,6 +1166,8 @@ static void tm_cell_data_text_func (GtkTreeViewColumn *tree_column,
 	text = track_get_text (track, TM_to_T (column));
 
 	g_object_set (G_OBJECT (renderer), "text", text, NULL);
+
+	update_text_column_layout (tree_column, renderer, text);
 
 	g_free (text);
 }
