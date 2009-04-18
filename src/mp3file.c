@@ -2058,6 +2058,116 @@ rg_fail:
 	return FALSE;
 }
 
+/*
+ * mp3_get_track_id3_replaygain:
+ *
+ * @path: location of the file
+ * @gd: #GainData structure
+ *
+ * Read the specified file and scan for ReplayGain information in
+ * common ID3v2 tags.
+ *
+ */
+gboolean mp3_get_track_id3_replaygain (const gchar *path, GainData *gd)
+{
+    int i;
+    double d;
+    char *ep, *key, *val;
+    struct id3_file *id3file;
+    struct id3_tag *id3tag;
+    struct id3_frame *frame;
+
+    g_return_val_if_fail (path, FALSE);
+    g_return_val_if_fail (gd, FALSE);
+
+    gd->radio_gain = 0;
+    gd->audiophile_gain = 0;
+    gd->peak_signal = 0;
+    gd->radio_gain_set = FALSE;
+    gd->audiophile_gain_set = FALSE;
+    gd->peak_signal_set = FALSE;
+
+    if (!(id3file = id3_file_open (path, ID3_FILE_MODE_READONLY)))
+    {
+	gchar *fbuf = charset_to_utf8 (path);
+	g_print(_("ERROR while opening file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return FALSE;
+    }
+
+    if (!(id3tag = id3_file_tag (id3file)))
+    {
+	id3_file_close (id3file);
+	return FALSE;
+    }
+
+    for (i = 0; (frame = id3_tag_findframe (id3tag, "TXXX", i)); i++)
+    {
+	if (gd->radio_gain_set && gd->audiophile_gain_set
+	    && gd->peak_signal_set)
+	    break;
+
+	if (frame->nfields < 3)
+	    continue;
+
+	key = (char *)id3_ucs4_utf8duplicate (id3_field_getstring
+					      (&frame->fields[1]));
+
+	val = (char *)id3_ucs4_utf8duplicate (id3_field_getstring
+					      (&frame->fields[2]));
+
+	if (g_ascii_strcasecmp (key, "replaygain_album_gain") == 0)
+	{
+	    d = g_ascii_strtod (val, &ep);
+	    if (!g_ascii_strncasecmp (ep, " dB", 3))
+	    {
+		gd->audiophile_gain = d;
+		gd->audiophile_gain_set = TRUE;
+		DEBUG ("album gain (id3): %f\n", gd->audiophile_gain);
+	    }
+	}
+	else if (g_ascii_strcasecmp (key, "replaygain_album_peak") == 0)
+	{
+	    d = g_ascii_strtod (val, NULL);
+	    d *= 0x800000;
+	    gd->peak_signal = (guint32) floor (d + 0.5);
+	    gd->peak_signal_set = TRUE;
+	    DEBUG ("album peak signal (id3): %f\n",
+		    (double)gd->peak_signal / 0x800000);
+	}
+	else if (g_ascii_strcasecmp (key, "replaygain_track_gain") == 0)
+	{
+	    d = g_ascii_strtod (val, &ep);
+	    if (!g_ascii_strncasecmp (ep, " dB", 3))
+	    {
+		gd->radio_gain = d;
+		gd->radio_gain_set = TRUE;
+		DEBUG ("radio gain (id3): %f\n", gd->radio_gain);
+	    }
+	}
+	else if (g_ascii_strcasecmp (key, "replaygain_track_peak") == 0)
+	{
+	    d = g_ascii_strtod (val, NULL);
+	    d *= 0x800000;
+	    gd->peak_signal = (guint32) floor (d + 0.5);
+	    gd->peak_signal_set = TRUE;
+	    DEBUG ("radio peak signal (id3): %f\n",
+		    (double)gd->peak_signal / 0x800000);
+	}
+
+	g_free (key);
+	g_free (val);
+    }
+
+    id3_file_close (id3file);
+
+    if (!gd->radio_gain_set && !gd->audiophile_gain_set
+	&& !gd->peak_signal_set)
+	return FALSE;
+    return TRUE;
+}
+
 /* 
  * mp3_get_track_ape_replaygain:
  *
@@ -2271,18 +2381,19 @@ rg_fail:
 #include <fcntl.h>
 
 
-
-
-
-
-/** 
+/*
  * mp3_read_soundcheck:
- *
- * try to read the ReplayGain values from the LAME or Ape Tags and set
- * the track's soundcheck field accordingly.
  *
  * @path: localtion of the file
  * @track: structure holding track information
+ *
+ * Try to read ReplayGain values and set the track's soundcheck field
+ * accordingly.  If an ID3 tag is present and contains replaygain
+ * fields (in the format used by Foobar2k and others), the values are
+ * read from that tag.  If no ID3 tag is present, an APE tag is
+ * checked and used if possible.  Lastly, the LAME tag is checked.  In
+ * all cases, audiophile (aka album) gain is preferred over radio (aka
+ * track) gain if both gain types are set.
  *
  * The function always rereads the gain from the file.
  *
@@ -2300,32 +2411,25 @@ gboolean mp3_read_soundcheck (const gchar *path, Track *track)
     gd.audiophile_gain_set = FALSE;
     gd.peak_signal_set = FALSE;
 
-    mp3_get_track_ape_replaygain (path, &gd);
-    if (gd.audiophile_gain_set)
-    {
-	track->soundcheck = replaygain_to_soundcheck (gd.audiophile_gain);
-	DEBUG ("using ape album gain\n");
-	return TRUE;
-    }
-    if (gd.radio_gain_set)
-    {
-	track->soundcheck = replaygain_to_soundcheck (gd.radio_gain);
-	DEBUG ("using ape radio gain\n");
-	return TRUE;
-    }
+    if (mp3_get_track_id3_replaygain (path, &gd))
+	DEBUG ("Using ID3 ReplayGain data\n");
+    else if (mp3_get_track_ape_replaygain (path, &gd))
+	DEBUG ("Using APE ReplayGain data\n");
+    else if (mp3_get_track_lame_replaygain (path, &gd))
+	DEBUG ("Using LAME ReplayGain data\n");
+    else
+	return FALSE;
 
-    mp3_get_track_lame_replaygain (path, &gd);
     if (gd.audiophile_gain_set)
     {
+	DEBUG ("Setting Soundcheck value from album ReplayGain\n");
 	track->soundcheck = replaygain_to_soundcheck (gd.audiophile_gain);
-	/* This is highly unlikely, lame does not write audiofile gain. */
-	DEBUG ("using lame album gain\n");
 	return TRUE;
     }
     if (gd.radio_gain_set)
     {
+	DEBUG ("Setting Soundcheck value from radio ReplayGain\n");
 	track->soundcheck = replaygain_to_soundcheck (gd.radio_gain);
-	DEBUG ("using lame radio gain\n");
 	return TRUE;
     }
 

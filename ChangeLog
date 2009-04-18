@@ -1,5 +1,12 @@
 2009-04-17  Todd Zullinger  <tmz@pobox.com>
 
+	* src/mp3file.c:
+	  Add support for reading ReplayGain data in common ID3 tags.
+	  The order of preference for ReplayGain data is now ID3, APE,
+	  and lastly the LAME tag.
+
+2009-04-17  Todd Zullinger  <tmz@pobox.com>
+
 	Patch from: Tino Keitel
 
 	* src/mp3file.c:
