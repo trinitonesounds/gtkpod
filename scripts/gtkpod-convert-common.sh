@@ -50,12 +50,6 @@ shift $(($OPTIND - 1))
 infile="$1"
 infile_extension=${infile##*.}
 
-# Convert the source parameters to lowercase.
-filetype=`echo ${infile_extension}| tr [:upper:] [:lower:]`
-if [ $filetype != flac ] && [ $filetype != ogg ] && [ $filetype != wav ] && [ $filetype != m4a ]; then
-    exit 4
-fi
-
 if [ "$outfile" = "" ]; then
     # Build output file
     outfile=`basename "$infile"`
@@ -90,11 +84,16 @@ if [ -z "$encoder" ]; then
 fi
 
 # Determine decoder
-case $filetype in
+
+# Convert the source extension to lowercase.
+filetype=`echo ${infile_extension}| tr [:upper:] [:lower:]`
+case "$filetype" in
 	flac)	decoder="flac" ; options="-d -c --"  ;;
-	ogg)	decoder="oggdec" ; options="--output - --" ;;
+	oga|ogg|ogv|ogx)
+		decoder="oggdec" ; options="--output - --" ;;
 	m4a)	decoder="faad" ; options="-o -" ;;
 	wav)	decoder="" ;;
+	*)	exit 4 ;;
 esac
 
 # Check for the existence of decoder

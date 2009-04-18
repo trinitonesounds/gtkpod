@@ -1,4 +1,16 @@
-2009-04-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
+2009-04-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	Patch from: Daniele Forsi
+
+	* src/file.c
+	  scripts/gtkpod-convert-common.sh:
+
+	  Handle files ending with .oga, .ogv and .ogx the same as
+	  files ending on .ogg
+
+	  http://wiki.xiph.org/index.php/MIME-Migration#Players.2C_File_managers_etc
+
+2009-04-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	Patch from: Javier Kohen
 

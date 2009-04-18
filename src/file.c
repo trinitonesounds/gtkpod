@@ -144,7 +144,10 @@ FileType determine_file_type (const gchar *path)
 
 	else if (g_strcasecmp (suf, ".m3u") == 0) type = FILE_TYPE_M3U;
 	else if (g_strcasecmp (suf, ".pls") == 0) type = FILE_TYPE_PLS;
-        else if (g_strcasecmp (suf, ".ogg") == 0) type = FILE_TYPE_OGG;
+	else if (g_strcasecmp (suf, ".oga") == 0) type = FILE_TYPE_OGG;
+	else if (g_strcasecmp (suf, ".ogg") == 0) type = FILE_TYPE_OGG;
+	else if (g_strcasecmp (suf, ".ogv") == 0) type = FILE_TYPE_OGG;
+	else if (g_strcasecmp (suf, ".ogx") == 0) type = FILE_TYPE_OGG;
         else if (g_strcasecmp (suf, ".flac") == 0) type = FILE_TYPE_FLAC;
 
 	else
