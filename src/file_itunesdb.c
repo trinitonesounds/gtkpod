@@ -1391,6 +1391,9 @@ static GtkWidget *create_transfer_information_dialog (TransferData *td)
 			      G_CALLBACK (file_dialog_delete),
 			      td);
 
+    /* Set the dialog parent */
+    gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gtkpod_window));
+
     return dialog;
 }
 

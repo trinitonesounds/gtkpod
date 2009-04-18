@@ -1,5 +1,11 @@
 2009-04-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* file_itunesdb.c (create_transfer_information_dialog): keep
+          on top of all other windows. Thanks to Daniele Forsi for the
+          patch.
+
+2009-04-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* file_itunesdb.c (gp_write_itdb): fix memory leak. Thanks to
           Daniele Forsi for the patch.
 
