@@ -2574,11 +2574,10 @@ tm_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
     return(FALSE);
 }
 
-/* called when the track selection changes */
-static void
-tm_selection_changed_event(GtkTreeSelection *selection, gpointer data)
+static gboolean
+tm_selection_changed_cb (gpointer data)
 {
-    GtkTreeView *treeview = gtk_tree_selection_get_tree_view (selection);
+    GtkTreeView *treeview = GTK_TREE_VIEW (data);
     GtkTreePath *path;
     GtkTreeViewColumn *column;
     TM_item col_id;
@@ -2599,6 +2598,16 @@ tm_selection_changed_event(GtkTreeSelection *selection, gpointer data)
     	if(track != NULL)
     		coverart_select_cover (track);
     }
+
+    return FALSE;
+}
+
+/* called when the track selection changes */
+static void
+tm_selection_changed(GtkTreeSelection *selection, gpointer data)
+{
+    g_idle_add (tm_selection_changed_cb,
+		gtk_tree_selection_get_tree_view (selection));
 }
 
 
@@ -2627,6 +2636,7 @@ void tm_create_treeview (void)
       gtk_list_store_new (1, G_TYPE_POINTER));
     gtk_tree_view_set_model (track_treeview, GTK_TREE_MODEL (model));
     gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (track_treeview), TRUE);
+    gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (track_treeview), TRUE);
     gtk_tree_view_set_search_equal_func (GTK_TREE_VIEW (track_treeview), 
                        tm_search_equal_func,
                        NULL,
@@ -2635,7 +2645,7 @@ void tm_create_treeview (void)
     gtk_tree_selection_set_mode (select,
                    GTK_SELECTION_MULTIPLE);
     g_signal_connect (G_OBJECT (select) , "changed",
-            G_CALLBACK (tm_selection_changed_event),
+            G_CALLBACK (tm_selection_changed),
             NULL);
 
     tm_add_columns ();

@@ -43,6 +43,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+typedef struct {
+    GtkTreeView *tree_view;
+    guint32 inst;
+} StSelectionEvent;
+
 #define ST_AUTOSELECT(i) TRUE
 /* #define ST_AUTOSELECT(i) (prefs_get_int_index("st_autoselect", (i))) */
 
@@ -1897,11 +1902,12 @@ void st_init (ST_CAT_item new_category, guint32 inst)
 }
 
 
-static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
+static gboolean
+st_page_selected_cb (gpointer data)
 {
-  GtkNotebook *notebook = (GtkNotebook *)user_data1;
-  guint page = (guint)GPOINTER_TO_UINT(user_data2);
-  guint32 inst = st_get_instance_from_notebook (notebook);
+  GtkNotebook *notebook = GTK_NOTEBOOK (data);
+  guint page;
+  guint32 inst;
   guint oldpage;
   gboolean is_go;
   GList *copy = NULL;
@@ -1917,7 +1923,11 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 
 /*  printf("ps%d: cat: %d\n", inst, page);*/
 
-  if (inst == -1) return; /* invalid notebook */
+  inst = st_get_instance_from_notebook (notebook);
+  if (inst == -1) return FALSE; /* invalid notebook */
+
+  page = gtk_notebook_get_current_page (notebook);
+
   st = sorttab[inst];
   /* remember old is_go state and current page */
   is_go = st->is_go;
@@ -1952,6 +1962,8 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 	  inst, page,
 	  time.tv_sec % 3600, time.tv_usec);
 #endif
+
+  return FALSE;
 }
 
 
@@ -1968,7 +1980,8 @@ static void st_page_selected (GtkNotebook *notebook, guint page)
   /* inst-1: changing a page in the first sort tab is like selecting a
      new playlist and so on. Therefore we subtract 1 from the
      instance. */
-  st_page_selected_cb (notebook, GUINT_TO_POINTER(page));
+
+  g_idle_add (st_page_selected_cb, notebook);
 }
 
 
@@ -2134,10 +2147,13 @@ gboolean st_set_selection (Itdb_Track *track)
 }
 
 
-static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
+static gboolean
+st_selection_changed_cb (gpointer data)
 {
-  GtkTreeSelection *selection = (GtkTreeSelection *)user_data1;
-  guint32 inst = (guint32)GPOINTER_TO_UINT(user_data2);
+  StSelectionEvent *event = (StSelectionEvent *) data;
+  GtkTreeView *tree_view = event->tree_view;
+  GtkTreeSelection *selection = gtk_tree_view_get_selection (tree_view);
+  guint32 inst = event->inst;
   GtkTreeModel *model;
   GtkTreeIter  iter;
   TabEntry *new_entry;
@@ -2152,7 +2168,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 
 /*   printf("st_s_c_cb %d: entered\n", inst); */
   st = sorttab[inst];
-  if (st == NULL) return;
+  if (st == NULL) return FALSE;
   if (gtk_tree_selection_get_selected (selection, &model, &iter) == FALSE)
   {
       /* no selection -- unselect current selection (unless
@@ -2218,8 +2234,9 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
   printf ("st_selection_changed_cb exit:  %ld.%06ld sec\n",
 	  time.tv_sec % 3600, time.tv_usec);
 #endif
-}
 
+  return FALSE;
+}
 
 /* Callback function called when the selection
    of the sort tab view has changed */
@@ -2232,7 +2249,13 @@ static void st_selection_changed (GtkTreeSelection *selection,
 #if DEBUG_CB_INIT
     printf("st_s_c enter (inst: %d)\n", (gint)user_data);
 #endif
-    st_selection_changed_cb ((gpointer)selection, user_data);
+    StSelectionEvent *event = g_malloc0 (sizeof (StSelectionEvent));
+    event->tree_view = gtk_tree_selection_get_tree_view (selection);
+    event->inst = (guint32)GPOINTER_TO_UINT(user_data);
+    g_idle_add_full (G_PRIORITY_DEFAULT_IDLE,
+		     st_selection_changed_cb,
+		     event,
+		     g_free);
 #if DEBUG_CB_INIT
     printf("st_s_c exit (inst: %d)\n", (gint)user_data);
 #endif
@@ -2798,6 +2821,7 @@ static void st_create_treeview (gint inst, ST_CAT_item st_cat)
 		    G_CALLBACK (st_drag_end),
 		    NULL);
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
+  gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (treeview), TRUE);
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
   gtk_tree_view_set_enable_search (GTK_TREE_VIEW (treeview), TRUE);
   gtk_tree_view_set_search_column (GTK_TREE_VIEW (treeview), 0);
@@ -2825,6 +2849,7 @@ static void st_create_treeview (gint inst, ST_CAT_item st_cat)
 					   st_cell_data_func, NULL, NULL);
   gtk_tree_view_column_set_sort_column_id (column, ST_COLUMN_ENTRY);
   gtk_tree_view_column_set_resizable (column, TRUE);
+  gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
   gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
   gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (st->model),
 				   ST_COLUMN_ENTRY,

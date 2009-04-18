@@ -1,3 +1,15 @@
+2009-04-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	Patch from: Javier Kohen
+
+	* src/display_playlists.c
+	  src/display_tracks.c
+	  src/display_sorttabs.c
+
+	  Make GUI appear more responsive by highlighting the selected
+	  playlist / filter tab entry before updating the track
+	  display.
+
 2009-04-17  Todd Zullinger  <tmz@pobox.com>
 
 	Patch from: Author: Greg Carroll <iskimj@gmail.com>

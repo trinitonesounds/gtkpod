@@ -1433,11 +1433,13 @@ void pm_unselect_playlist (Playlist *playlist)
 }
 
 
-static void pm_selection_changed_cb (GtkTreeSelection *selection,
-				     gpointer user_data2)
+static gboolean
+pm_selection_changed_cb (gpointer data)
 {
 	GtkTreeModel *model;
 	GtkTreeIter  iter;
+	GtkTreeView *tree_view = GTK_TREE_VIEW (data);
+	GtkTreeSelection *selection = gtk_tree_view_get_selection (tree_view);
 
 #if DEBUG_TIMING
 	GTimeVal time;
@@ -1479,8 +1481,8 @@ static void pm_selection_changed_cb (GtkTreeSelection *selection,
 	    switch (type)
 	    {
 	    case PM_COLUMN_PLAYLIST:
-		g_return_if_fail (new_playlist);
-		g_return_if_fail (itdb);
+		g_return_val_if_fail (new_playlist, FALSE);
+		g_return_val_if_fail (itdb, FALSE);
 
 		gphoto_change_to_photo_window (FALSE);
 
@@ -1525,8 +1527,8 @@ static void pm_selection_changed_cb (GtkTreeSelection *selection,
 		gtkpod_tracks_statusbar_update();
 		break;
 	    case PM_COLUMN_PHOTOS:
-		g_return_if_fail (photodb);
-		g_return_if_fail (itdb);
+		g_return_val_if_fail (photodb, FALSE);
+		g_return_val_if_fail (itdb, FALSE);
 		gphoto_display_photo_window (itdb);
 		break;
 	    case PM_COLUMN_ITDB:
@@ -1550,6 +1552,8 @@ static void pm_selection_changed_cb (GtkTreeSelection *selection,
 #endif 
 	/* make only suitable delete menu items available */
 	display_adjust_menus ();
+
+	return FALSE;
 }
 
 /* Callback function called when the selection
@@ -1558,7 +1562,10 @@ static void pm_selection_changed (GtkTreeSelection *selection,
 				  gpointer user_data)
 {
     if (!pm_selection_blocked)
-	pm_selection_changed_cb (selection, user_data);
+    {
+	g_idle_add (pm_selection_changed_cb,
+		    gtk_tree_selection_get_tree_view (selection));
+    }
 }
 
 
