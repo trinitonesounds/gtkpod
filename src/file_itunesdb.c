@@ -1991,7 +1991,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
 		      gtkpod_statusbar_message (_("Extended information file not deleted: '%s\'"), ext);
 		  }
 	      }
-	      g_fre (ext);
+	      g_free (ext);
 	  }
       }
       if (success)
