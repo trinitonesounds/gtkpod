@@ -532,7 +532,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	}
 	if (name_db)
 	{
-	    if (prefs_get_int("write_extended_info"))
+	    if (WRITE_EXTENDED_INFO)
 	    {
 		if (!read_extended_info (name_ext, name_db))
 		{
@@ -1974,7 +1974,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
       }
       if (success)
       {
-	  if (prefs_get_int("write_extended_info"))
+	  if (WRITE_EXTENDED_INFO)
 	  {   /* write extended information */
 	      success = write_extended_info (itdb);
 	  }
@@ -2003,7 +2003,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
 	      g_error_free (error);
 	      error = NULL;
 	  }
-	  if (prefs_get_int("write_extended_info"))
+	  if (WRITE_EXTENDED_INFO)
 	  {
 	      gchar *from, *to;
 	      from = g_strdup_printf ("%s.ext", itdb->filename);
@@ -2037,7 +2037,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
 	  g_error_free (error);
 	  error = NULL;
       }
-      if (success && prefs_get_int("write_extended_info"))
+      if (success && WRITE_EXTENDED_INFO)
       {   /* write extended information */
 	  success = write_extended_info (itdb);
       }

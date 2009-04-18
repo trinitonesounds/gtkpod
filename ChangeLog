@@ -1,5 +1,17 @@
 2009-04-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* file_itunesdb.c:
+
+	  Replace ALL prefs_get_int("write_extended_info") calls with
+	  a pre-defined TRUE macro -- thereby securely ignoring the
+	  prefs settings.
+
+	* prefs.c (cleanup_keys):
+
+	  Remove the "write_extended_info" key.
+
+2009-04-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	Patch from: Daniele Forsi
 
 	* src/file.c
