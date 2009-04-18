@@ -277,7 +277,6 @@ static void set_default_preferences()
     prefs_set_int("size_file_dialog_details.y", 140);
 
     prefs_set_int("readtags", TRUE);
-    prefs_set_int("write_extended_info", TRUE);
     prefs_set_int("parsetags", FALSE);
     prefs_set_int("parsetags_overwrite", FALSE);
     prefs_set_string("parsetags_template", "%a - %A/%T %t.mp3;%t.wav");
@@ -1054,6 +1053,7 @@ static void cleanup_keys()
     prefs_set_string("conversion_enable", NULL);
     prefs_set_string("export_template", NULL);
     prefs_set_string("filename_format", NULL);
+    prefs_set_string("write_extended_info", NULL);
 
     /* sp_created_cond renamed to sp_added_cond */
     for (i = 0; i < SORT_TAB_MAX; i++)
