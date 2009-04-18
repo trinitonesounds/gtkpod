@@ -1,5 +1,4 @@
-/* Time-stamp: <2008-12-07 19:10:37 jcs>
-|
+/*
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 |
@@ -381,6 +380,30 @@ void display_show_hide_toolbar (void)
     }
 }
 
+
+/* call gtkpod_tracks_statusbar_update() in order to redraw the
+ * statusbar, making GTK aware of the changed position for the resize
+ * grip. */
+gboolean display_redraw_statusbar (gpointer data)
+{
+    gtkpod_tracks_statusbar_update ();
+    return FALSE;
+}
+
+
+/* This is called (among others) when the window size changes.  This
+   hack needed to make GTK aware of the changed position for the
+   resize grip of the statusbar  */
+G_MODULE_EXPORT gboolean
+on_gtkpod_configure_event (GtkContainer *container,
+			   gpointer      user_data)
+{
+    g_idle_add (display_redraw_statusbar, NULL);
+    return FALSE;
+}
+
+
+
 /* make the search bar visible or hide it depending on the value set in
  * the prefs
  */
@@ -389,16 +412,22 @@ void display_show_hide_searchbar (void)
 	GtkWidget *upbutton = gtkpod_xml_get_widget (main_window_xml, "searchbar_up_button");
 	GtkWidget *searchbar = gtkpod_xml_get_widget (main_window_xml, "searchbar_hpanel");
 	GtkCheckMenuItem *mi = GTK_CHECK_MENU_ITEM (gtkpod_xml_get_widget (main_window_xml, "filterbar_menu"));
+	GtkStatusbar *sb = GTK_STATUSBAR (gtkpod_xml_get_widget (main_window_xml, "tracks_statusbar"));
 
 	g_return_if_fail (upbutton);
 	g_return_if_fail (searchbar);
 	g_return_if_fail (mi);
+	g_return_if_fail (sb);
 		
 	if (prefs_get_int ("display_search_entry"))
 	{
 		gtk_widget_show_all (searchbar);
 		gtk_widget_hide (upbutton);
 		gtk_check_menu_item_set_active (mi, TRUE);
+		gtk_statusbar_set_has_resize_grip (sb, TRUE);
+		/* hack needed to make GTK aware of the changed
+		   position for the resize grip */
+		g_idle_add (display_redraw_statusbar, NULL);
 	}
 	else
 	{		
@@ -406,6 +435,7 @@ void display_show_hide_searchbar (void)
 		gtk_widget_show (upbutton);
 		gtk_widget_set_sensitive (upbutton, TRUE);
 		gtk_check_menu_item_set_active (mi, FALSE);
+		gtk_statusbar_set_has_resize_grip (sb, FALSE);
 	}
 }
 

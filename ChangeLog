@@ -1,5 +1,23 @@
 2009-04-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* src/display.c
+	  src/display_tracks.c
+	  data/gtkpod.glade:
+
+	  Clean up statusbar display in main window (remove resize
+	  grip when statusbar is not at the rightmost corner).
+
+	  Work around a bug in GTK+ that puts the sensitive area of
+	  the resize grip at the wrong position after a resize of the
+	  window or hiding of the filter tab arrow by manually
+	  updating the contents of the statusbar after a resize and
+	  after hiding the arrow.
+
+	  Changes to gtkpod.glade are small but diff is excessive even
+	  if saving twice (V3.4.5).
+
+2009-04-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* file_itunesdb.c (gp_write_itdb): fix typo.
 
 2009-04-18 Jorg Schuler <jcsjcs at users.sourceforge.net>

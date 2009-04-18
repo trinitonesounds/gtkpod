@@ -169,27 +169,16 @@ G_MODULE_EXPORT void on_search_entry_changed (GtkEditable *editable, gpointer us
 
 G_MODULE_EXPORT void on_searchbar_down_button_clicked (GtkWidget *widget, gpointer data)
 {
-	GtkWidget *upbutton = gtkpod_xml_get_widget (main_window_xml, "searchbar_up_button");
-	GtkWidget *searchbar = gtkpod_xml_get_widget (main_window_xml, "searchbar_hpanel");
-	g_return_if_fail (upbutton);
-	g_return_if_fail (searchbar);
-	
 	prefs_set_int (KEY_DISPLAY_SEARCH_ENTRY, FALSE);
-		
-	gtk_widget_hide_all (searchbar);
-	gtk_widget_show (upbutton);
-	gtk_widget_set_sensitive (upbutton, TRUE);
+
+	display_show_hide_searchbar ();
 }
 
 G_MODULE_EXPORT void on_searchbar_up_button_clicked (GtkWidget *widget, gpointer data)
 {
-	GtkWidget *searchbar = gtkpod_xml_get_widget (main_window_xml, "searchbar_hpanel");
-	g_return_if_fail (searchbar);
-		
 	prefs_set_int (KEY_DISPLAY_SEARCH_ENTRY, TRUE);
-			
-	gtk_widget_show_all (searchbar);
-	gtk_widget_hide (widget);
+
+	display_show_hide_searchbar ();
 }
 
 /* ---------------------------------------------------------------- */
