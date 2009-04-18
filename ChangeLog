@@ -1,3 +1,19 @@
+2009-04-17  Todd Zullinger  <tmz@pobox.com>
+
+	Patch from: Tino Keitel
+
+	* src/mp3file.c:
+	  Prefer Audiophile (Album) over Radio (Track) gain.
+
+	  Adjust the ordering of the tags checked.  We now check the APE
+	  tag first, because if a user has set it they likely would want
+	  to use that value instead of the one added automatically by
+	  Lame at encode time.
+
+	  Also resets GainData struct in mp3_get_track_ape_replaygain(),
+	  so that we don't end up using some mix of data from the LAME
+	  Tag and the APE tag for ReplayGain.
+
 2009-04-17  Paul Richardson <phantom_sf at users.sourceforge.net>
 
 	* Reverted src/mp3file.c and configure.in due to lack of released

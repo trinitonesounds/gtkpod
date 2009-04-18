@@ -2066,7 +2066,6 @@ rg_fail:
  *
  * Read the specified file and scan for Ape Tag ReplayGain information.
  *
- * The function only modifies the gains if they have not previously been set.
  */
 gboolean mp3_get_track_ape_replaygain(const gchar *path, GainData *gd)
 {
@@ -2093,6 +2092,13 @@ gboolean mp3_get_track_ape_replaygain(const gchar *path, GainData *gd)
 
 	g_return_val_if_fail (gd, FALSE);
 	g_return_val_if_fail (path, FALSE);
+
+	gd->radio_gain = 0;
+	gd->audiophile_gain = 0;
+	gd->peak_signal = 0;
+	gd->radio_gain_set = FALSE;
+	gd->audiophile_gain_set = FALSE;
+	gd->peak_signal_set = FALSE;
 
 	file = fopen (path, "r");
 
@@ -2158,9 +2164,9 @@ gboolean mp3_get_track_ape_replaygain(const gchar *path, GainData *gd)
 		goto rg_fail;
 	if (fread(dbuf, 1, data_length, file) != data_length)
 		goto rg_fail;
-	
+
 	for (i = 0; i < entries; i++) {
-		if (gd->radio_gain_set && gd->peak_signal_set) break;
+		if (gd->radio_gain_set && gd->peak_signal_set && gd->audiophile_gain_set) break;
 		pos = pos2 + entry_length;
 		if (pos > data_length - 10) break;
 
@@ -2174,6 +2180,41 @@ gboolean mp3_get_track_ape_replaygain(const gchar *path, GainData *gd)
 
 		if (entry_length + 1 > sizeof(buf))
 			continue;
+
+		/* album gain */
+		if (!gd->audiophile_gain_set && !strcasecmp(&dbuf[pos],
+					"REPLAYGAIN_ALBUM_GAIN")) {
+			memcpy(buf, &dbuf[pos2], entry_length);
+			buf[entry_length] = '\0';
+
+			d = g_ascii_strtod(buf, &ep);
+			if ((ep == buf + entry_length - 3)
+					&& (!strncasecmp(ep, " dB", 3))) {
+			    gd->audiophile_gain = d;
+				gd->audiophile_gain_set = TRUE;
+				DEBUG ("album gain (ape): %f\n", gd->audiophile_gain);
+			}
+
+			continue;
+		}
+		if (!gd->peak_signal_set && !strcasecmp(&dbuf[pos],
+					"REPLAYGAIN_ALBUM_PEAK")) {
+			memcpy(buf, &dbuf[pos2], entry_length);
+			buf[entry_length] = '\0';
+
+			d = g_ascii_strtod(buf, &ep);
+			if (ep == buf + entry_length) {
+				d *= 0x800000;
+				gd->peak_signal = (guint32) floor(d + 0.5);
+				gd->peak_signal_set = TRUE;
+				DEBUG ("album peak signal (ape): %f\n",
+					(double)gd->peak_signal / 0x800000);
+			}
+
+			continue;
+		}
+
+		/* track gain */
 		if (!gd->radio_gain_set && !strcasecmp(&dbuf[pos],
 					"REPLAYGAIN_TRACK_GAIN")) {
 			memcpy(buf, &dbuf[pos2], entry_length);
@@ -2259,19 +2300,32 @@ gboolean mp3_read_soundcheck (const gchar *path, Track *track)
     gd.audiophile_gain_set = FALSE;
     gd.peak_signal_set = FALSE;
 
-    mp3_get_track_lame_replaygain (path, &gd);
-    if (gd.radio_gain_set)
+    mp3_get_track_ape_replaygain (path, &gd);
+    if (gd.audiophile_gain_set)
     {
-	track->soundcheck = replaygain_to_soundcheck (gd.radio_gain);
-	DEBUG ("using lame radio gain\n");
+	track->soundcheck = replaygain_to_soundcheck (gd.audiophile_gain);
+	DEBUG ("using ape album gain\n");
 	return TRUE;
     }
-
-    mp3_get_track_ape_replaygain (path, &gd);
     if (gd.radio_gain_set)
     {
 	track->soundcheck = replaygain_to_soundcheck (gd.radio_gain);
 	DEBUG ("using ape radio gain\n");
+	return TRUE;
+    }
+
+    mp3_get_track_lame_replaygain (path, &gd);
+    if (gd.audiophile_gain_set)
+    {
+	track->soundcheck = replaygain_to_soundcheck (gd.audiophile_gain);
+	/* This is highly unlikely, lame does not write audiofile gain. */
+	DEBUG ("using lame album gain\n");
+	return TRUE;
+    }
+    if (gd.radio_gain_set)
+    {
+	track->soundcheck = replaygain_to_soundcheck (gd.radio_gain);
+	DEBUG ("using lame radio gain\n");
 	return TRUE;
     }
 
