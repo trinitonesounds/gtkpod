@@ -30,9 +30,9 @@
 #define LOCALDEBUG 0
 
 #if LOCALDEBUG
-#  define debug(s) printf s
+#  define DEBUG(args...) printf(args)
 #else
-#  define debug(s)
+#  define DEBUG(args...)
 #endif
 
 
@@ -1037,7 +1037,7 @@ static const gchar* id3_get_binary (struct id3_tag *tag,
     *len = 0;
 
     frame = id3_tag_findframe (tag, frame_name, index);
-    debug (("frame: %p\n", frame));
+    DEBUG ("frame: %p\n", frame);
 
     if (!frame) return NULL;
 
@@ -1108,11 +1108,11 @@ static const gchar* id3_get_binary (struct id3_tag *tag,
     /* The last field contains the data */
     field = id3_frame_field (frame, frame->nfields-1);
 
-    debug ((" field: %p\n", field));
+    DEBUG (" field: %p\n", field);
 
     if (!field) return NULL;
 
-    debug ((" type: %d\n", field->type));
+    DEBUG (" type: %d\n", field->type);
 
     switch (field->type)
     {
@@ -1151,29 +1151,29 @@ static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
     enum id3_field_textencoding encoding = ID3_FIELD_TEXTENCODING_ISO_8859_1;
 
     frame = id3_tag_findframe (tag, frame_name, 0);
-    debug (("frame: %p\n", frame));
+    DEBUG ("frame: %p\n", frame);
 
     if (!frame) return NULL;
 
     /* Find the encoding used for the field */
     field = id3_frame_field (frame, 0);
-    debug (("field: %p\n", field));
-    debug (("type: %d\n", id3_field_type (field)));
+    DEBUG ("field: %p\n", field);
+    DEBUG ("type: %d\n", id3_field_type (field));
 
     if (field && (id3_field_type (field) == ID3_FIELD_TYPE_TEXTENCODING))
     {
 	encoding = field->number.value;
-	debug (("encoding: %d\n", encoding));
+	DEBUG ("encoding: %d\n", encoding);
     }
 
     /* The last field contains the data */
     field = id3_frame_field (frame, frame->nfields-1);
 
-    debug (("field: %p\n", field));
+    DEBUG ("field: %p\n", field);
 
     if (!field) return NULL;
 
-    debug (("type: %d\n", field->type));
+    DEBUG ("type: %d\n", field->type);
 
     switch (field->type)
     {
@@ -1185,7 +1185,7 @@ static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
 	break;
     case ID3_FIELD_TYPE_BINARYDATA:
 	binary = id3_field_getbinarydata(field, &len);
-	debug (("len: %ld\nbinary: %s\n", len, binary+1));
+	DEBUG ("len: %ld\nbinary: %s\n", len, binary+1);
 	if (len > 0)
 	    return charset_to_utf8 (binary+1);
 	break;
@@ -1964,13 +1964,13 @@ static void read_lame_replaygain(unsigned char buf[],
 			if (gd->radio_gain_set) return;
 			gd->radio_gain = (gdouble)gain / 10;
 			gd->radio_gain_set = TRUE;
-			debug (("radio gain (lame): %f\n", gd->radio_gain));
+			DEBUG ("radio gain (lame): %f\n", gd->radio_gain);
 			break;
 		case 0x40:
 			if (gd->audiophile_gain_set) return;
 			gd->audiophile_gain = (gdouble)gain / 10;
 			gd->audiophile_gain_set = TRUE;
-			debug (("album gain (lame): %f\n", gd->audiophile_gain));
+			DEBUG ("album gain (lame): %f\n", gd->audiophile_gain);
 			break;
 	}
 }
@@ -2023,15 +2023,15 @@ gboolean mp3_get_track_lame_replaygain (const gchar *path, GainData *gd)
 
 	/* Replay Gain data is only available since Lame version 3.94b */
 	if (lame_vcmp(lt.version_string, "3.94b") < 0) {
-		debug (("Old lame version (%s). Not used.\n", lt.version_string));
+		DEBUG ("Old lame version (%s). Not used.\n", lt.version_string);
 		goto rg_fail;
 	}
 
 	if ((!gd->peak_signal_set) && lt.peak_signal_amplitude) {
 		gd->peak_signal = lt.peak_signal_amplitude;
 		gd->peak_signal_set = TRUE;
-		debug (("peak signal (lame): %f\n",
-			(double)gd->peak_signal / 0x800000));
+		DEBUG ("peak signal (lame): %f\n",
+			(double)gd->peak_signal / 0x800000);
 	}
 
 	/*
@@ -2040,8 +2040,8 @@ gboolean mp3_get_track_lame_replaygain (const gchar *path, GainData *gd)
 	 */
 	if ((lame_vcmp(lt.version_string, "3.95.") < 0)) {
 		gain_adjust = 60;
-		debug (("Old lame version (%s). Adjusting gain.\n",
-			lt.version_string));
+		DEBUG ("Old lame version (%s). Adjusting gain.\n",
+			lt.version_string);
 	}
 
 	/* radio gain */
@@ -2184,7 +2184,7 @@ gboolean mp3_get_track_ape_replaygain(const gchar *path, GainData *gd)
 					&& (!strncasecmp(ep, " dB", 3))) {
 			    gd->radio_gain = d;
 				gd->radio_gain_set = TRUE;
-				debug (("radio gain (ape): %f\n", gd->radio_gain));
+				DEBUG ("radio gain (ape): %f\n", gd->radio_gain);
 			}
 
 			continue;
@@ -2199,8 +2199,8 @@ gboolean mp3_get_track_ape_replaygain(const gchar *path, GainData *gd)
 				d *= 0x800000;
 				gd->peak_signal = (guint32) floor(d + 0.5);
 				gd->peak_signal_set = TRUE;
-				debug (("radio peak signal (ape): %f\n",
-					(double)gd->peak_signal / 0x800000));
+				DEBUG ("radio peak signal (ape): %f\n",
+					(double)gd->peak_signal / 0x800000);
 			}
 
 			continue;
@@ -2263,7 +2263,7 @@ gboolean mp3_read_soundcheck (const gchar *path, Track *track)
     if (gd.radio_gain_set)
     {
 	track->soundcheck = replaygain_to_soundcheck (gd.radio_gain);
-	debug (("using lame radio gain\n"));
+	DEBUG ("using lame radio gain\n");
 	return TRUE;
     }
 
@@ -2271,7 +2271,7 @@ gboolean mp3_read_soundcheck (const gchar *path, Track *track)
     if (gd.radio_gain_set)
     {
 	track->soundcheck = replaygain_to_soundcheck (gd.radio_gain);
-	debug (("using ape radio gain\n"));
+	DEBUG ("using ape radio gain\n");
 	return TRUE;
     }
 
