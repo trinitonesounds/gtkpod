@@ -27,7 +27,7 @@ ENCODER="lame"
 . ${0%/*}/gtkpod-convert-common.sh
 
 # Check if the genre is one which lame supports
-if [ -n "$genre" ] && `"$encoder" --genre-list | grep -qi "\b$genre\b"`; then
+if [ -n "$genre" ] && `"$encoder" --genre-list 2>&1 | cut -c 5- | grep -qi "^$genre$"`; then
     usegenre=$genre
 else
     usegenre=""
