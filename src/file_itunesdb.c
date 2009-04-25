@@ -1,7 +1,7 @@
 /*
 |  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
@@ -439,7 +439,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 
 
     g_return_val_if_fail (!(type & GP_ITDB_TYPE_LOCAL) || name_loc, NULL);
-    g_return_val_if_fail (!(type & GP_ITDB_TYPE_IPOD) || 
+    g_return_val_if_fail (!(type & GP_ITDB_TYPE_IPOD) ||
 			  (mp && name_off), NULL);
 
     cfgdir = prefs_get_cfgdir ();
@@ -608,7 +608,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     for (gl=itdb->tracks; gl; gl=gl->next)
     {
 	Track *track = gl->data;
-   
+
 	ExtraTrackData *etr;
 	g_return_val_if_fail (track, (release_widgets(), NULL));
 	etr = track->userdata;
@@ -786,7 +786,7 @@ void gp_load_ipods (void)
 }
 
 
-/* 
+/*
  * Merges @old_itdb with a newly imported one, then replaces @old_itdb
  * in the itdbs-list and the display.
  *
@@ -887,13 +887,13 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
     if (!itunesdb)
     {
 		gchar *str = g_strdup_printf (_("Could not find iPod directory structure at '%s'.\n\nIf you are sure that the iPod is properly mounted at '%s', it may not be initialized for use. In this case, gtkpod can initialize it for you.\n\nDo you want to create the directory structure now?"), mountpoint, mountpoint);
-		
+
 		gint result = gtkpod_confirmation_simple (GTK_WINDOW (gtkpod_window),
 												  GTK_MESSAGE_WARNING,
 												  _("iPod directory structure not found"),
 												  str,
 												  _("Create directory structure"));
-			
+
 		g_free (str);
 
 		if (result == GTK_RESPONSE_OK)
@@ -1009,7 +1009,7 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
 	    }
 	}
     }
-    
+
     return new_itdb;
 }
 
@@ -1123,7 +1123,7 @@ gboolean gp_save_itdb (iTunesDB *itdb)
 
 /* Fills in @size with the size in bytes taken on the iPod or the
  * local harddisk with files to be deleted, @num with the number of
- * tracks to be deleted. */ 
+ * tracks to be deleted. */
 void gp_info_deleted_tracks (iTunesDB *itdb,
 			     gdouble *size, guint32 *num)
 {
@@ -1152,7 +1152,7 @@ void gp_info_deleted_tracks (iTunesDB *itdb,
 
 
 /* Adds @track to the list of tracks to be deleted. The following
-   information is required: 
+   information is required:
    - userdata with ExtraTrackData
    - size of track to be deleted
    - either track->ipod_path or etr->pc_path_local */
@@ -1264,7 +1264,7 @@ static gboolean write_extended_info (iTunesDB *itdb)
       {
 	  Track *track = gl->data;
 	  g_return_val_if_fail (track, (fclose (fp), FALSE));
-	  
+
 	  fprintf (fp, "id=000\n");  /* our sign for tracks pending
 					deletion */
 	  fprintf (fp, "filename_ipod=%s\n", track->ipod_path);
@@ -1636,7 +1636,7 @@ static void transfer_tracks_show_failed (iTunesDB *itdb, TransferData *td)
 	switch (etr->conversion_status)
 	{
 	case FILE_CONVERT_INACTIVE:
-	case FILE_CONVERT_CONVERTED:	 
+	case FILE_CONVERT_CONVERTED:
    /* This track was converted successfully (or did not
 	     * neeed conversion) and failed during transfer */
 	    ++failed_transfer;
@@ -1884,9 +1884,9 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
 												 _("Skip storing"),
 												 NULL,
 												 NULL);
-			
+
 		  g_free (str);
-		  
+
 		  if (result == GTK_RESPONSE_CANCEL)
 		  {
 			  g_free (cfgdir);
@@ -1997,6 +1997,20 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
       if (success)
       {   /* copy to cfgdir */
 	  GError *error = NULL;
+	  if (! g_file_test (eitdb->offline_filename, G_FILE_TEST_EXISTS))
+	  {
+	      /* Possible that plugging an ipod into a different pc can lead to an offline filename
+	       * that does not exist. This results in the save process failing as it cannot write a
+	       * backup. Attempt to mitigate this situation with a reserve backup path.
+	       */
+	      gchar *ipod_model = get_itdb_prefs_string (itdb, KEY_IPOD_MODEL);
+	      gchar *backup_name = g_strconcat ("backupDB_", ipod_model, NULL);
+	      g_free (ipod_model);
+	      eitdb->offline_filename = g_build_filename(cfgdir, backup_name, NULL);
+	      g_free (backup_name);
+	      gtkpod_warning ("Backup database could not be found so backing up database to %s\n", eitdb->offline_filename);
+	  }
+
 	  if (!itdb_cp (itdb->filename, eitdb->offline_filename, &error))
 	  {
 	      success = FALSE;
@@ -2066,11 +2080,11 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
 	  success = write_extended_info (itdb);
       }
   }
-  
+
   /* If the ipod supports photos and the photo_data_changed
    * flag has been set to true then wrtie the photo database
    */
-  if (success &&  
+  if (success &&
 		  (itdb->usertype & GP_ITDB_TYPE_IPOD) &&
 		  itdb_device_supports_photo (itdb->device) &&
 		  eitdb->photodb != NULL &&
@@ -2084,7 +2098,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
 			  gtkpod_warning ("%s\n\n", error->message);
 		  else
 			  g_warning ("error->message == NULL!\n");
-	  
+
 		  g_error_free (error);
 		  error = NULL;
 	  }
@@ -2195,7 +2209,7 @@ void data_unchanged (iTunesDB *itdb)
     eitdb->data_changed = FALSE;
     if (eitdb->photo_data_changed == TRUE)
     	eitdb->photo_data_changed = FALSE;
-    
+
     pm_itdb_name_changed (itdb);
     space_data_update ();
 }
