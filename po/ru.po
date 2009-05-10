@@ -1,7 +1,7 @@
 # translation of gtkpod
 # Copyright (C) 2007 gtkpod developers
 # This file is distributed under the same license as the gtkpod package.
-# Matvey Kozhev <sikon@lucidfox.org>, 2007.
+# Maia Kozheva <sikon@ubuntu.com>, 2007.
 # , fuzzy
 # <>, 2007.
 #

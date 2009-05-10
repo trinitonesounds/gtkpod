@@ -1,5 +1,5 @@
 /*
-|  Copyright (C) 2007 Matvey Kozhev <sikon at users sourceforge net>
+|  Copyright (C) 2007 Maia Kozheva <sikon at users sourceforge net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://www.gtkpod.org/
