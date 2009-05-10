@@ -24,14 +24,6 @@
 	  for $genre was also too lenient and matched more than it
 	  should.
 
-2009-04-20  Todd Zullinger  <tmz@pobox.com>
-
-	* scripts/convert-2mp3.sh: Improve lame genre test
-
-	  Lame prints the output of --genre-list to stderr.  The grep
-	  for $genre was also too lenient and matched more than it
-	  should.
-
 2009-04-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/display.c
