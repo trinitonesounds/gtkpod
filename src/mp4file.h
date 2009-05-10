@@ -32,6 +32,9 @@
 
 #include "itdb.h"
 
+void mp4_init();
+void mp4_close();
+
 gboolean mp4_write_file_info (gchar *filename, Track *track);
 Track *mp4_get_file_info (gchar *name);
 gboolean mp4_read_soundcheck (gchar *filename, Track *track);

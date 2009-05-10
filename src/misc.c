@@ -43,6 +43,7 @@
 #include "clientserver.h"
 #include "file_convert.h"
 #include "misc.h"
+#include "mp4file.h"
 #include "prefs.h"
 #include "misc_track.h"
 #include "display_photo.h"
@@ -1792,6 +1793,9 @@ void gtkpod_init (int argc, char *argv[])
 	printf ("Using local gtkpod.glade file since program was started from source directory:\n%s\n", xml_file);
     }
 
+    /* Attempt to load libmp4v2 */
+    mp4_init();
+
     /* Initialisation of libxml */
     LIBXML_TEST_VERSION;
 
@@ -1865,6 +1869,8 @@ void gtkpod_shutdown ()
 
     xmlCleanupParser();
     xmlMemoryDump();
+
+    mp4_close();
 	
     call_script ("gtkpod.out", NULL);
     gtk_main_quit ();

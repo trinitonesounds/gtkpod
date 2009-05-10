@@ -1,3 +1,20 @@
+2009-05-10  Maia Kozheva <sikon@ubuntu.com>
+
+	* configure.in:
+	  src/mp4file.c:
+	  src/mp4file.h:
+	  src/misc.c:
+	  
+      Detect and load libmp4v2 at runtime rather than compile time.
+
+2009-04-20  Todd Zullinger  <tmz@pobox.com>
+
+	* scripts/convert-2mp3.sh: Improve lame genre test
+
+	  Lame prints the output of --genre-list to stderr.  The grep
+	  for $genre was also too lenient and matched more than it
+	  should.
+
 2009-04-20  Todd Zullinger  <tmz@pobox.com>
 
 	* scripts/convert-2mp3.sh: Improve lame genre test

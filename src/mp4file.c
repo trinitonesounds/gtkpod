@@ -121,7 +121,8 @@
 
    ------------------------------------------------------------ */
 
-
+#define HAVE_LIBMP4V2 1
+#define HAVE_LIBMP4V2_2 0
 
 #ifdef HAVE_LIBMP4V2
 /* Use mp4v2 from the mpeg4ip project to handle mp4 (m4a, m4p, m4b) files
@@ -137,25 +138,305 @@
 #include <inttypes.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef HAVE_LIBMP4V2_2
-#include <mp4v2/mp4v2.h>
-#else
-#include <mp4.h>
-#endif
+#include <dlfcn.h>
 
-#ifndef FREEFORM_ACCEPTS_EXTRA_ARG
-/* Version 1.6 of libmp4v2 introduces an index argument for MP4GetMetadataFreeForm. For C++ sources it defaults
-   to 0, but in C we have to specify it on our own. 
-*/
-#define MP4GetMetadataFreeForm(mp4File, name, pValue, pValueSize, owner)  MP4GetMetadataFreeForm(mp4File, name, pValue, pValueSize)
-#endif
+/* mp4v2 dynamic load declarations - library handle and required definitions from mp4.h */
 
-#ifndef COVERART_ACCEPTS_EXTRA_ARG
-/* Version 1.6 of libmp4v2 introduces an index argument for MP4GetMetadataCoverart. For C++ sources it defaults
-   to NULL, but in C we have to specify it on our own. 
-*/
-#define MP4GetMetadataCoverArt(hFile, coverArt, size, index) MP4GetMetadataCoverArt(hFile, coverArt, size)
-#endif
+static void *mp4v2_handle = NULL;
+
+#define DEFAULT(x)
+
+typedef int         bool;
+typedef void*		MP4FileHandle;
+typedef u_int32_t	MP4TrackId;
+typedef u_int32_t	MP4SampleId;
+typedef u_int64_t	MP4Timestamp;
+typedef u_int64_t	MP4Duration;
+
+#define MP4_OD_TRACK_TYPE		"odsm"
+#define MP4_AUDIO_TRACK_TYPE	"soun"
+#define MP4_VIDEO_TRACK_TYPE	"vide"
+#define MP4_INVALID_FILE_HANDLE	((MP4FileHandle)NULL)
+#define MP4_MILLISECONDS_TIME_SCALE 1000
+#define MP4_MSECS_TIME_SCALE	MP4_MILLISECONDS_TIME_SCALE
+
+typedef MP4FileHandle (*MP4Read_t)(
+	const char* fileName, 
+	u_int32_t verbosity DEFAULT(0));
+
+typedef u_int32_t (*MP4GetNumberOfTracks_t)(
+	MP4FileHandle hFile, 
+	const char* type DEFAULT(NULL),
+	u_int8_t subType DEFAULT(0));
+
+typedef MP4TrackId (*MP4FindTrackId_t)(
+	MP4FileHandle hFile, 
+	u_int16_t index, 
+	const char* type DEFAULT(NULL),
+	u_int8_t subType DEFAULT(0));
+
+typedef const char* (*MP4GetTrackType_t)(
+	MP4FileHandle hFile, 
+	MP4TrackId trackId);
+ 
+typedef void (*MP4Close_t)(
+	MP4FileHandle hFile);
+
+typedef bool (*MP4ReadSample_t)(
+	/* input parameters */
+	MP4FileHandle hFile,
+	MP4TrackId trackId, 
+	MP4SampleId sampleId,
+	/* input/output parameters */
+	u_int8_t** ppBytes, 
+	u_int32_t* pNumBytes, 
+	/* output parameters */
+	MP4Timestamp* pStartTime DEFAULT(NULL), 
+	MP4Duration* pDuration DEFAULT(NULL),
+	MP4Duration* pRenderingOffset DEFAULT(NULL), 
+	bool* pIsSyncSample DEFAULT(NULL));
+
+typedef u_int64_t (*MP4ConvertFromTrackTimestamp_t)(
+	MP4FileHandle hFile,
+	MP4TrackId trackId, 
+	MP4Timestamp timeStamp,
+	u_int32_t timeScale);
+
+typedef u_int64_t (*MP4ConvertFromTrackDuration_t)(
+	MP4FileHandle hFile,
+	MP4TrackId trackId, 
+	MP4Duration duration,
+	u_int32_t timeScale);
+
+typedef u_int32_t (*MP4GetTrackBitRate_t)(
+	MP4FileHandle hFile, 
+	MP4TrackId trackId);
+
+typedef u_int32_t (*MP4GetTrackTimeScale_t)(
+	MP4FileHandle hFile, 
+	MP4TrackId trackId);
+
+typedef u_int32_t (*MP4GetTrackMaxSampleSize_t)(
+	MP4FileHandle hFile,
+	MP4TrackId trackId); 
+
+typedef MP4SampleId (*MP4GetTrackNumberOfSamples_t)(
+	MP4FileHandle hFile, 
+	MP4TrackId trackId);
+
+typedef MP4Timestamp (*MP4GetSampleTime_t)(
+	MP4FileHandle hFile,
+	MP4TrackId trackId, 
+	MP4SampleId sampleId);
+
+typedef MP4Duration (*MP4GetTrackDuration_t)(
+	MP4FileHandle hFile, 
+	MP4TrackId trackId);
+
+typedef bool (*MP4GetMetadataName_t)(MP4FileHandle hFile, char** value);
+typedef bool (*MP4GetMetadataArtist_t)(MP4FileHandle hFile, char** value);
+typedef bool (*MP4GetMetadataAlbumArtist_t)(MP4FileHandle hFile,    char** value);
+typedef bool (*MP4GetMetadataWriter_t)(MP4FileHandle hFile, char** value);
+typedef bool (*MP4GetMetadataComment_t)(MP4FileHandle hFile, char** value);
+typedef bool (*MP4GetMetadataYear_t)(MP4FileHandle hFile, char** value);
+typedef bool (*MP4GetMetadataAlbum_t)(MP4FileHandle hFile, char** value);
+typedef bool (*MP4GetMetadataTrack_t)(MP4FileHandle hFile,
+			 u_int16_t* track, u_int16_t* totalTracks);
+typedef bool (*MP4GetMetadataDisk_t)(MP4FileHandle hFile,
+			u_int16_t* disk, u_int16_t* totalDisks);
+typedef bool (*MP4GetMetadataGrouping_t)(MP4FileHandle hFile, char **grouping);
+typedef bool (*MP4GetMetadataGenre_t)(MP4FileHandle hFile, char **genre);
+typedef bool (*MP4GetMetadataTempo_t)(MP4FileHandle hFile, u_int16_t* tempo);
+typedef bool (*MP4GetMetadataCoverArt_t)(MP4FileHandle hFile,
+			    u_int8_t **coverArt, u_int32_t* size,
+			    uint32_t index DEFAULT(0));
+typedef bool (*MP4GetMetadataCompilation_t)(MP4FileHandle hFile, u_int8_t* cpl);
+typedef bool (*MP4GetMetadataTool_t)(MP4FileHandle hFile, char** value);
+typedef bool (*MP4GetMetadataFreeForm_t)(MP4FileHandle hFile, const char *name,
+			    u_int8_t** pValue, u_int32_t* valueSize, const char *owner DEFAULT(NULL));
+
+typedef bool (*MP4HaveAtom_t)(MP4FileHandle hFile, 
+		 const char *atomName);
+
+typedef bool (*MP4SetMetadataName_t)(MP4FileHandle hFile, const char* value);
+typedef bool (*MP4SetMetadataArtist_t)(MP4FileHandle hFile, const char* value);
+typedef bool (*MP4SetMetadataAlbumArtist_t)(MP4FileHandle hFile, const char* value);
+typedef bool (*MP4SetMetadataWriter_t)(MP4FileHandle hFile, const char* value);
+typedef bool (*MP4SetMetadataComment_t)(MP4FileHandle hFile, const char* value);
+typedef bool (*MP4SetMetadataYear_t)(MP4FileHandle hFile, const char* value);
+typedef bool (*MP4SetMetadataAlbum_t)(MP4FileHandle hFile, const char* value);
+typedef bool (*MP4SetMetadataTrack_t)(MP4FileHandle hFile,
+			 u_int16_t track, u_int16_t totalTracks);
+typedef bool (*MP4SetMetadataDisk_t)(MP4FileHandle hFile,
+			u_int16_t disk, u_int16_t totalDisks);
+typedef bool (*MP4SetMetadataTempo_t)(MP4FileHandle hFile, u_int16_t tempo);
+typedef bool (*MP4SetMetadataGrouping_t)(MP4FileHandle hFile, const char *grouping);
+typedef bool (*MP4SetMetadataGenre_t)(MP4FileHandle hFile, const char *genre);
+typedef bool (*MP4SetMetadataCompilation_t)(MP4FileHandle hFile, u_int8_t cpl);
+typedef bool (*MP4SetMetadataTool_t)(MP4FileHandle hFile, const char* value);
+typedef bool (*MP4SetMetadataCoverArt_t)(MP4FileHandle hFile,
+			    u_int8_t *coverArt, u_int32_t size);
+
+typedef MP4FileHandle (*MP4Modify_t)(
+	const char* fileName, 
+	u_int32_t verbosity DEFAULT(0),
+	u_int32_t flags DEFAULT(0));
+
+typedef bool (*MP4MetadataDelete_t)(MP4FileHandle hFile);
+
+static MP4Read_t MP4Read = NULL;
+static MP4GetNumberOfTracks_t MP4GetNumberOfTracks = NULL;
+static MP4FindTrackId_t MP4FindTrackId = NULL;
+static MP4GetTrackType_t MP4GetTrackType = NULL;
+static MP4Close_t MP4Close = NULL;
+static MP4ReadSample_t MP4ReadSample = NULL;
+static MP4ConvertFromTrackTimestamp_t MP4ConvertFromTrackTimestamp = NULL;
+static MP4ConvertFromTrackDuration_t MP4ConvertFromTrackDuration = NULL;
+static MP4GetTrackBitRate_t MP4GetTrackBitRate = NULL;
+static MP4GetTrackTimeScale_t MP4GetTrackTimeScale = NULL;
+static MP4GetTrackMaxSampleSize_t MP4GetTrackMaxSampleSize = NULL;
+static MP4GetTrackNumberOfSamples_t MP4GetTrackNumberOfSamples = NULL;
+static MP4GetSampleTime_t MP4GetSampleTime = NULL;
+static MP4GetTrackDuration_t MP4GetTrackDuration = NULL;
+static MP4GetMetadataName_t MP4GetMetadataName = NULL;
+static MP4GetMetadataArtist_t MP4GetMetadataArtist = NULL;
+static MP4GetMetadataAlbumArtist_t MP4GetMetadataAlbumArtist = NULL;
+static MP4GetMetadataWriter_t MP4GetMetadataWriter = NULL;
+static MP4GetMetadataComment_t MP4GetMetadataComment = NULL;
+static MP4GetMetadataYear_t MP4GetMetadataYear = NULL;
+static MP4GetMetadataAlbum_t MP4GetMetadataAlbum = NULL;
+static MP4GetMetadataTrack_t MP4GetMetadataTrack = NULL;
+static MP4GetMetadataDisk_t MP4GetMetadataDisk = NULL;
+static MP4GetMetadataGrouping_t MP4GetMetadataGrouping = NULL;
+static MP4GetMetadataGenre_t MP4GetMetadataGenre = NULL;
+static MP4GetMetadataTempo_t MP4GetMetadataTempo = NULL;
+static MP4GetMetadataCoverArt_t MP4GetMetadataCoverArt = NULL;
+static MP4GetMetadataCompilation_t MP4GetMetadataCompilation = NULL;
+static MP4GetMetadataTool_t MP4GetMetadataTool = NULL;
+static MP4GetMetadataFreeForm_t MP4GetMetadataFreeForm = NULL;
+static MP4HaveAtom_t MP4HaveAtom = NULL;
+static MP4SetMetadataName_t MP4SetMetadataName = NULL;
+static MP4SetMetadataArtist_t MP4SetMetadataArtist = NULL;
+static MP4SetMetadataAlbumArtist_t MP4SetMetadataAlbumArtist = NULL;
+static MP4SetMetadataWriter_t MP4SetMetadataWriter = NULL;
+static MP4SetMetadataComment_t MP4SetMetadataComment = NULL;
+static MP4SetMetadataYear_t MP4SetMetadataYear = NULL;
+static MP4SetMetadataAlbum_t MP4SetMetadataAlbum = NULL;
+static MP4SetMetadataTrack_t MP4SetMetadataTrack = NULL;
+static MP4SetMetadataDisk_t MP4SetMetadataDisk = NULL;
+static MP4SetMetadataTempo_t MP4SetMetadataTempo = NULL;
+static MP4SetMetadataGrouping_t MP4SetMetadataGrouping = NULL;
+static MP4SetMetadataGenre_t MP4SetMetadataGenre = NULL;
+static MP4SetMetadataCompilation_t MP4SetMetadataCompilation = NULL;
+static MP4SetMetadataTool_t MP4SetMetadataTool = NULL;
+static MP4SetMetadataCoverArt_t MP4SetMetadataCoverArt = NULL;
+static MP4Modify_t MP4Modify = NULL;
+static MP4MetadataDelete_t MP4MetadataDelete = NULL;
+
+/* end mp4v2 dynamic load declarations */
+
+/* mp4v2 initialization code */
+    
+void mp4_init()
+{
+    mp4v2_handle = dlopen("libmp4v2.so.0", RTLD_LAZY);
+
+    if (!mp4v2_handle)
+    {
+        return;
+    }
+
+    MP4Read = (MP4Read_t) dlsym(mp4v2_handle, "MP4Read");
+    MP4GetNumberOfTracks = (MP4GetNumberOfTracks_t) dlsym(mp4v2_handle, "MP4GetNumberOfTracks");
+    MP4FindTrackId = (MP4FindTrackId_t) dlsym(mp4v2_handle, "MP4FindTrackId");
+    MP4GetTrackType = (MP4GetTrackType_t) dlsym(mp4v2_handle, "MP4GetTrackType");
+    MP4Close = (MP4Close_t) dlsym(mp4v2_handle, "MP4Close");
+    MP4ReadSample = (MP4ReadSample_t) dlsym(mp4v2_handle, "MP4ReadSample");
+    MP4ConvertFromTrackTimestamp = (MP4ConvertFromTrackTimestamp_t) dlsym(mp4v2_handle, "MP4ConvertFromTrackTimestamp");
+    MP4ConvertFromTrackDuration = (MP4ConvertFromTrackDuration_t) dlsym(mp4v2_handle, "MP4ConvertFromTrackDuration");
+    MP4GetTrackBitRate = (MP4GetTrackBitRate_t) dlsym(mp4v2_handle, "MP4GetTrackBitRate");
+    MP4GetTrackTimeScale = (MP4GetTrackTimeScale_t) dlsym(mp4v2_handle, "MP4GetTrackTimeScale");
+    MP4GetTrackMaxSampleSize = (MP4GetTrackMaxSampleSize_t) dlsym(mp4v2_handle, "MP4GetTrackMaxSampleSize");
+    MP4GetTrackNumberOfSamples = (MP4GetTrackNumberOfSamples_t) dlsym(mp4v2_handle, "MP4GetTrackNumberOfSamples");
+    MP4GetSampleTime = (MP4GetSampleTime_t) dlsym(mp4v2_handle, "MP4GetSampleTime");
+    MP4GetTrackDuration = (MP4GetTrackDuration_t) dlsym(mp4v2_handle, "MP4GetTrackDuration");
+    MP4GetMetadataName = (MP4GetMetadataName_t) dlsym(mp4v2_handle, "MP4GetMetadataName");
+    MP4GetMetadataArtist = (MP4GetMetadataArtist_t) dlsym(mp4v2_handle, "MP4GetMetadataArtist");
+    MP4GetMetadataAlbumArtist = (MP4GetMetadataAlbumArtist_t) dlsym(mp4v2_handle, "MP4GetMetadataAlbumArtist");
+    MP4GetMetadataWriter = (MP4GetMetadataWriter_t) dlsym(mp4v2_handle, "MP4GetMetadataWriter");
+    MP4GetMetadataComment = (MP4GetMetadataComment_t) dlsym(mp4v2_handle, "MP4GetMetadataComment");
+    MP4GetMetadataYear = (MP4GetMetadataYear_t) dlsym(mp4v2_handle, "MP4GetMetadataYear");
+    MP4GetMetadataAlbum = (MP4GetMetadataAlbum_t) dlsym(mp4v2_handle, "MP4GetMetadataAlbum");
+    MP4GetMetadataTrack = (MP4GetMetadataTrack_t) dlsym(mp4v2_handle, "MP4GetMetadataTrack");
+    MP4GetMetadataDisk = (MP4GetMetadataDisk_t) dlsym(mp4v2_handle, "MP4GetMetadataDisk");
+    MP4GetMetadataGrouping = (MP4GetMetadataGrouping_t) dlsym(mp4v2_handle, "MP4GetMetadataGrouping");
+    MP4GetMetadataGenre = (MP4GetMetadataGenre_t) dlsym(mp4v2_handle, "MP4GetMetadataGenre");
+    MP4GetMetadataTempo = (MP4GetMetadataTempo_t) dlsym(mp4v2_handle, "MP4GetMetadataTempo");
+    MP4GetMetadataCoverArt = (MP4GetMetadataCoverArt_t) dlsym(mp4v2_handle, "MP4GetMetadataCoverArt");
+    MP4GetMetadataCompilation = (MP4GetMetadataCompilation_t) dlsym(mp4v2_handle, "MP4GetMetadataCompilation");
+    MP4GetMetadataTool = (MP4GetMetadataTool_t) dlsym(mp4v2_handle, "MP4GetMetadataTool");
+    MP4GetMetadataFreeForm = (MP4GetMetadataFreeForm_t) dlsym(mp4v2_handle, "MP4GetMetadataFreeForm");
+    MP4HaveAtom = (MP4HaveAtom_t) dlsym(mp4v2_handle, "MP4HaveAtom");
+    MP4SetMetadataName = (MP4SetMetadataName_t) dlsym(mp4v2_handle, "MP4SetMetadataName");
+    MP4SetMetadataArtist = (MP4SetMetadataArtist_t) dlsym(mp4v2_handle, "MP4SetMetadataArtist");
+    MP4SetMetadataAlbumArtist = (MP4SetMetadataAlbumArtist_t) dlsym(mp4v2_handle, "MP4SetMetadataAlbumArtist");
+    MP4SetMetadataWriter = (MP4SetMetadataWriter_t) dlsym(mp4v2_handle, "MP4SetMetadataWriter");
+    MP4SetMetadataComment = (MP4SetMetadataComment_t) dlsym(mp4v2_handle, "MP4SetMetadataComment");
+    MP4SetMetadataYear = (MP4SetMetadataYear_t) dlsym(mp4v2_handle, "MP4SetMetadataYear");
+    MP4SetMetadataAlbum = (MP4SetMetadataAlbum_t) dlsym(mp4v2_handle, "MP4SetMetadataAlbum");
+    MP4SetMetadataTrack = (MP4SetMetadataTrack_t) dlsym(mp4v2_handle, "MP4SetMetadataTrack");
+    MP4SetMetadataDisk = (MP4SetMetadataDisk_t) dlsym(mp4v2_handle, "MP4SetMetadataDisk");
+    MP4SetMetadataTempo = (MP4SetMetadataTempo_t) dlsym(mp4v2_handle, "MP4SetMetadataTempo");
+    MP4SetMetadataGrouping = (MP4SetMetadataGrouping_t) dlsym(mp4v2_handle, "MP4SetMetadataGrouping");
+    MP4SetMetadataGenre = (MP4SetMetadataGenre_t) dlsym(mp4v2_handle, "MP4SetMetadataGenre");
+    MP4SetMetadataCompilation = (MP4SetMetadataCompilation_t) dlsym(mp4v2_handle, "MP4SetMetadataCompilation");
+    MP4SetMetadataTool = (MP4SetMetadataTool_t) dlsym(mp4v2_handle, "MP4SetMetadataTool");
+    MP4SetMetadataCoverArt = (MP4SetMetadataCoverArt_t) dlsym(mp4v2_handle, "MP4SetMetadataCoverArt");
+    MP4Modify = (MP4Modify_t) dlsym(mp4v2_handle, "MP4Modify");
+    MP4MetadataDelete = (MP4MetadataDelete_t) dlsym(mp4v2_handle, "MP4MetadataDelete");
+
+    /* alternate names for HAVE_LIBMP4V2_2 */
+    
+    if(!MP4GetMetadataWriter)
+    {
+        MP4GetMetadataWriter = (MP4GetMetadataWriter_t) dlsym(mp4v2_handle, "MP4GetMetadataComposer");
+    }
+
+    if(!MP4GetMetadataYear)
+    {
+        MP4GetMetadataYear = (MP4GetMetadataYear_t) dlsym(mp4v2_handle, "MP4GetMetadataReleaseDate");
+    }
+
+    if(!MP4GetMetadataTempo)
+    {
+        MP4GetMetadataTempo = (MP4GetMetadataTempo_t) dlsym(mp4v2_handle, "MP4GetMetadataBPM");
+    }
+
+    if(!MP4SetMetadataWriter)
+    {
+        MP4SetMetadataWriter = (MP4SetMetadataWriter_t) dlsym(mp4v2_handle, "MP4SetMetadataComposer");
+    }
+
+    if(!MP4SetMetadataYear)
+    {
+        MP4SetMetadataYear = (MP4SetMetadataYear_t) dlsym(mp4v2_handle, "MP4SetMetadataReleaseDate");
+    }
+
+    if(!MP4SetMetadataTempo)
+    {
+        MP4SetMetadataTempo = (MP4SetMetadataTempo_t) dlsym(mp4v2_handle, "MP4SetMetadataYear");
+    }
+}
+ 
+void mp4_close()
+{
+    if (mp4v2_handle)
+    {
+        dlclose(mp4v2_handle);
+    }
+}
+
+/* end mp4v2 initialization code */
 
 static gboolean mp4_scan_soundcheck (MP4FileHandle mp4File, Track *track)
 {
@@ -208,6 +489,12 @@ static gboolean mp4_scan_soundcheck (MP4FileHandle mp4File, Track *track)
 
 gboolean mp4_read_soundcheck (gchar *mp4FileName, Track *track)
 {
+    if (!mp4v2_handle)
+    {
+        gtkpod_warning (_("m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must install the mp4v2 library.\n"), mp4FileName);
+        return FALSE;
+    }
+    
     gboolean success = FALSE;
     MP4FileHandle mp4File;
 
@@ -266,6 +553,12 @@ gboolean mp4_read_soundcheck (gchar *mp4FileName, Track *track)
 
 Track *mp4_get_file_info (gchar *mp4FileName)
 {
+    if (!mp4v2_handle)
+    {
+        gtkpod_warning (_("Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must install the mp4v2 library.\n"), mp4FileName);
+        return NULL;
+    }
+
     Track *track = NULL;
     MP4FileHandle mp4File;
 
@@ -379,26 +672,27 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 			track->artist = charset_to_utf8 (value);
 			g_free(value);
 		    }
-#if MP4_ALBUMARTIST_EXISTS
-		    if (!track->artist || !*track->artist)
-		    {
-			g_free (track->artist);
-			track->artist = NULL;
-			if (MP4GetMetadataAlbumArtist(mp4File, &value) && value != NULL)
-			{
-			    track->artist = charset_to_utf8 (value);
-			}
-		    }
-		    else
-		    {
-			if (MP4GetMetadataAlbumArtist(mp4File, &value) && value != NULL)
-			{
-			    track->albumartist = charset_to_utf8 (value);
-			}
-		    }
-#else
-#warning "Album Artist field not supported with this version of libmp4v2. Album Artist support requires at least V1.6.0"
-#endif
+
+            if(MP4SetMetadataAlbumArtist)
+            {
+                if (!track->artist || !*track->artist)
+		        {
+			    g_free (track->artist);
+			    track->artist = NULL;
+			    if (MP4GetMetadataAlbumArtist(mp4File, &value) && value != NULL)
+			    {
+			        track->artist = charset_to_utf8 (value);
+			    }
+		        }
+		        else
+		        {
+			    if (MP4GetMetadataAlbumArtist(mp4File, &value) && value != NULL)
+			    {
+			        track->albumartist = charset_to_utf8 (value);
+			    }
+		        }
+            }
+
 #if HAVE_LIBMP4V2_2
 		    if (MP4GetMetadataComposer(mp4File, &value) && value != NULL)
 #else
@@ -509,6 +803,12 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 
 gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 {
+    if (!mp4v2_handle)
+    {
+        gtkpod_warning (_("m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must install the mp4v2 library.\n"), mp4FileName);
+        return FALSE;
+    }
+
     gboolean result = TRUE;
     MP4FileHandle mp4File = MP4Modify(mp4FileName, 0, FALSE);
 
@@ -537,7 +837,7 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 	    guint16 m_tempo;
 	    guint8 *m_covert = NULL, m_cpl;
 	    guint32 m_size;
-/*	    gboolean has_track = MP4GetMetadataTrack (mp4File,
+        /*	    gboolean has_track = MP4GetMetadataTrack (mp4File,
 						      &m_track, &m_tracks);
 	    gboolean has_disk = MP4GetMetadataDisk (mp4File,
 	    &m_disk, &m_disks);*/
@@ -550,22 +850,6 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 #endif
 	    gboolean has_compilation = MP4GetMetadataCompilation (mp4File,
 								  &m_cpl);
-/*	    MP4GetMetadataName (mp4File, &m_name);
-	    MP4GetMetadataArtist (mp4File, &m_artist);
-	    MP4GetMetadataAlbumArtist (mp4File, &m_albumartist);
-#if HAVE_LIBMP4V2_2
-	    MP4GetMetadataComposer (mp4File, &m_writer);
-#else
-	    MP4GetMetadataWriter (mp4File, &m_writer);
-#endif
-	    MP4GetMetadataComment (mp4File, &m_comment);
-#if HAVE_LIBMP4V2_2
-	    MP4GetMetadataReleaseDate (mp4File, &m_year);
-#else
-	    MP4GetMetadataYear (mp4File, &m_year);
-#endif
-	    MP4GetMetadataAlbum (mp4File, &m_album);
-	    MP4GetMetadataGenre (mp4File, &m_genre);*/
 	    MP4GetMetadataTool (mp4File, &m_tool);
 	    MP4GetMetadataCoverArt (mp4File, &m_covert, &m_size, 0);
 	    MP4MetadataDelete (mp4File);
@@ -578,11 +862,13 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 	    MP4SetMetadataArtist (mp4File, value);
 	    g_free (value);
 
-#if MP4_ALBUMARTIST_EXISTS
-	    value = charset_from_utf8 (track->albumartist);
-	    MP4SetMetadataAlbumArtist (mp4File, value);
-	    g_free (value);
-#endif
+        if(MP4SetMetadataAlbumArtist)
+        {
+	        value = charset_from_utf8 (track->albumartist);
+	        MP4SetMetadataAlbumArtist (mp4File, value);
+	        g_free (value);
+        }
+        
 	    value = charset_from_utf8 (track->composer);
 #if HAVE_LIBMP4V2_2
 	    MP4SetMetadataComposer (mp4File, value);
@@ -633,15 +919,8 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 #endif
 	    if (has_compilation) MP4SetMetadataCompilation (mp4File, m_cpl);
 	    if (m_tool)     MP4SetMetadataTool (mp4File, m_tool);
-	    if (m_covert)   MP4SetMetadataCoverArt (mp4File, m_covert, m_size);
-/*	    g_free (m_name);
-	    g_free (m_artist);
-	    g_free (m_albumartist);
-	    g_free (m_writer);
-	    g_free (m_comment);
-	    g_free (m_year);
-	    g_free (m_album);
-	    g_free (m_genre);*/
+        if (m_covert)   MP4SetMetadataCoverArt (mp4File, m_covert, m_size);
+
 	    g_free (m_tool);
 	    g_free (m_covert);
 #endif
