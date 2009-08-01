@@ -2,6 +2,8 @@
 
 	* po/de.po: updated German catalog. Thanks to Kai-Ove Pietsch.
 
+	* po/*.po: ran "make update-po".
+
 2009-05-10  Maia Kozheva <sikon@ubuntu.com>
 
 	* configure.in:

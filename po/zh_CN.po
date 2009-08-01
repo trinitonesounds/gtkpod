@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.99.14\n"
-"Report-Msgid-Bugs-To: gtkpod-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-12-09 19:55+0900\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-08-01 15:55+0900\n"
 "PO-Revision-Date: 2009-01-14 23:25+0800\n"
 "Last-Translator: Tan Zhixin <tanzhxin@gmail.com>\n"
 "Language-Team: n/a\n"
@@ -17,12 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>0;\n"
 
-
 #: ../data/gtkpod.desktop.in.h:1
 msgid "Manage music and video on an Apple iPod"
 msgstr "管理Apple iPod的音乐和视频"
 
-#: ../data/gtkpod.desktop.in.h:2 ../data/gtkpod.glade.h:427
+#: ../data/gtkpod.desktop.in.h:2 ../data/gtkpod.glade.h:429
 msgid "gtkpod iPod Manager"
 msgstr "gtkpod iPod管理器"
 
@@ -169,191 +168,193 @@ msgid "<b>None</b>"
 msgstr "<b>无</b>"
 
 #: ../data/gtkpod.glade.h:35
+msgid "<b>Offset to add to ReplayGain</b>"
+msgstr ""
+
+#: ../data/gtkpod.glade.h:36
 msgid "<b>On-the-fly Conversion</b>"
 msgstr "<b>实时转换</b>"
 
-#: ../data/gtkpod.glade.h:36
+#: ../data/gtkpod.glade.h:37
 msgid "<b>Playback</b>"
 msgstr "<b>回放</b>"
 
-#: ../data/gtkpod.glade.h:37
+#: ../data/gtkpod.glade.h:38
 msgid "<b>Playlist Options</b>"
 msgstr "<b>播放列表选项</b>"
 
-#: ../data/gtkpod.glade.h:38
+#: ../data/gtkpod.glade.h:39
 msgid "<b>Please select mountpoint and your iPod model</b>"
 msgstr "<b>请选择挂载点和你的iPod型号</b>"
 
-#: ../data/gtkpod.glade.h:39
+#: ../data/gtkpod.glade.h:40
+msgid "<b>Preferred gain type</b>"
+msgstr ""
+
+#: ../data/gtkpod.glade.h:41
 msgid "<b>Rules</b>"
 msgstr "<b>规则</b>"
 
-#: ../data/gtkpod.glade.h:40
+#: ../data/gtkpod.glade.h:42
 msgid "<b>Sort Order</b>"
 msgstr "<b>排列顺序</b>"
 
-#: ../data/gtkpod.glade.h:41
+#: ../data/gtkpod.glade.h:43
 msgid "<b>Synchronization</b>"
 msgstr "<b>同步</b>"
 
-#: ../data/gtkpod.glade.h:42
+#: ../data/gtkpod.glade.h:44
 msgid "<b>Tag Editing</b>"
 msgstr "<b>编辑标签</b>"
 
-#: ../data/gtkpod.glade.h:43
+#: ../data/gtkpod.glade.h:45
 msgid "<b>Tags</b>"
 msgstr "<b>标签</b>"
 
-#: ../data/gtkpod.glade.h:44
+#: ../data/gtkpod.glade.h:46
 msgid "<b>Toolbar Style</b>"
 msgstr "<b>工具栏样式</b>"
 
-#: ../data/gtkpod.glade.h:45
+#: ../data/gtkpod.glade.h:47
 msgid "<b>Tooltips</b>"
 msgstr "<b>工具提示</b>"
 
-#: ../data/gtkpod.glade.h:46
+#: ../data/gtkpod.glade.h:48
 msgid "<b>Upper Margin</b>"
 msgstr "<b>上边距</b>"
 
-#: ../data/gtkpod.glade.h:47
+#: ../data/gtkpod.glade.h:49
 msgid "<b>Volume Normalization</b>"
 msgstr "<b>音量均衡器</b>"
 
-#: ../data/gtkpod.glade.h:48
+#: ../data/gtkpod.glade.h:50
 msgid "<b>When Attempting to Add an Existing Track</b>"
 msgstr "<b>试图添加一条已存在的音轨</b>"
 
-#: ../data/gtkpod.glade.h:49
+#: ../data/gtkpod.glade.h:51
 msgid "<b>gtkpod Options</b>"
 msgstr "<b>gtkpod选项</b>"
 
-#: ../data/gtkpod.glade.h:50
+#: ../data/gtkpod.glade.h:52
 msgid "<b>mserv Settings</b>"
 msgstr "<b>mserv选项</b>"
 
-#: ../data/gtkpod.glade.h:51
+#: ../data/gtkpod.glade.h:53
 msgid "<b>mserv</b>"
 msgstr "<b>mserv</b>"
 
-#: ../data/gtkpod.glade.h:52
+#: ../data/gtkpod.glade.h:54
 msgid "<i>aacgain</i> executable:"
 msgstr "<i>aac增益</i>调整："
 
-#: ../data/gtkpod.glade.h:53
+#: ../data/gtkpod.glade.h:55
 msgid "<i>mp3gain</i> executable:"
 msgstr "<i>mp3增益</i>调整："
 
-#: ../data/gtkpod.glade.h:54
+#: ../data/gtkpod.glade.h:56
 msgid ""
 "<span weight=\"bold\" size=\"larger\">Please specify a time interval</span>"
 msgstr "<span weight=\"bold\" size=\"larger\">请指定时间间隔</span>"
 
-#: ../data/gtkpod.glade.h:55
-msgid ""
-"<span weight='bold' size='larger'>Message</span>\n"
-"\n"
-"The quick brown fox jumps over the lazy dog."
-msgstr ""
-"<span weight='bold' size='larger'>消息</span>\n"
-"\n"
-"那只敏捷的棕毛狐狸跃过那只懒狗。"
-
-#: ../data/gtkpod.glade.h:58
+#: ../data/gtkpod.glade.h:57
 msgid "<span weight='bold' size='larger'>No playlist selected</span>"
 msgstr "<span weight='bold' size='larger'>没有选择播放列表</span>"
 
-#: ../data/gtkpod.glade.h:59
+#: ../data/gtkpod.glade.h:58
 msgid ">"
 msgstr ">"
 
-#: ../data/gtkpod.glade.h:60
+#: ../data/gtkpod.glade.h:59
 msgid "About unupdated tracks"
 msgstr "未更新的音轨"
 
-#: ../data/gtkpod.glade.h:61
+#: ../data/gtkpod.glade.h:60
 msgid "About updated tracks"
 msgstr "已更新的音轨"
 
-#: ../data/gtkpod.glade.h:62
+#: ../data/gtkpod.glade.h:61
 msgid "Add Column"
 msgstr "增加栏"
 
-#: ../data/gtkpod.glade.h:63
+#: ../data/gtkpod.glade.h:62
 msgid "Add Directories Recursively"
 msgstr "递归添加目录"
 
-#: ../data/gtkpod.glade.h:64
+#: ../data/gtkpod.glade.h:63
 msgid "Add Files"
 msgstr "添加文件"
 
-#: ../data/gtkpod.glade.h:65
+#: ../data/gtkpod.glade.h:64
 msgid "Add Files or Directories"
 msgstr "添加文件或目录"
 
-#: ../data/gtkpod.glade.h:66
+#: ../data/gtkpod.glade.h:65
 msgid "Add Fol_der"
 msgstr "添加目录"
 
-#: ../data/gtkpod.glade.h:67 ../src/fileselection.c:606
+#: ../data/gtkpod.glade.h:66 ../src/fileselection.c:606
 msgid "Add Folder"
 msgstr "添加目录"
 
-#: ../data/gtkpod.glade.h:68
+#: ../data/gtkpod.glade.h:67
 msgid "Add Image_s"
 msgstr "添加图像"
 
-#: ../data/gtkpod.glade.h:69
+#: ../data/gtkpod.glade.h:68
 msgid "Add Images from a Directory"
 msgstr "从目录添加图像"
 
-#: ../data/gtkpod.glade.h:70
+#: ../data/gtkpod.glade.h:69
 msgid "Add Playlist"
 msgstr "添加播放列表"
 
-#: ../data/gtkpod.glade.h:71
+#: ../data/gtkpod.glade.h:70
 msgid "Add _Files"
 msgstr "添加文件"
 
-#: ../data/gtkpod.glade.h:72
+#: ../data/gtkpod.glade.h:71
 msgid "Add _Playlist"
 msgstr "添加播放列表"
 
-#: ../data/gtkpod.glade.h:73
+#: ../data/gtkpod.glade.h:72
 msgid "Add cover art using file name template"
 msgstr "从文件名模板添加封面"
 
-#: ../data/gtkpod.glade.h:74
+#: ../data/gtkpod.glade.h:73
 msgid ""
 "Add file masks to be excluded from import and synchronization, for example, "
 "<i>*.mp3</i>."
 msgstr "添加导入和同步时排除的文件，例如：<i>*.mp3</i>."
 
-#: ../data/gtkpod.glade.h:75
+#: ../data/gtkpod.glade.h:74
 msgid "Add new repository/iPod..."
 msgstr "添加新的音乐库/iPod"
 
-#: ../data/gtkpod.glade.h:76
+#: ../data/gtkpod.glade.h:75
 msgid "Add playlist from file"
 msgstr "从文件新建播放列表"
 
-#: ../data/gtkpod.glade.h:77
+#: ../data/gtkpod.glade.h:76
 msgid "Add subfolders recursively"
 msgstr "递归添加子目录"
 
-#: ../data/gtkpod.glade.h:78
+#: ../data/gtkpod.glade.h:77
 msgid "Added:"
 msgstr "添加："
 
 #. 0
-#: ../data/gtkpod.glade.h:79 ../src/display_sorttabs.c:2995
+#: ../data/gtkpod.glade.h:78 ../src/display_sorttabs.c:3074
 #: ../src/display_spl.c:84 ../src/misc_conversion.c:60
 msgid "Album"
 msgstr "专辑"
 
-#: ../data/gtkpod.glade.h:80
+#: ../data/gtkpod.glade.h:79
 msgid "Album Art"
 msgstr "专辑封面"
+
+#: ../data/gtkpod.glade.h:80
+msgid "Album gain (formerly \"audiophile gain\")"
+msgstr ""
 
 #: ../data/gtkpod.glade.h:81
 msgid "All (AND)"
@@ -397,7 +398,7 @@ msgstr ""
 "所有规则\n"
 "忽略"
 
-#: ../data/gtkpod.glade.h:92 ../src/display_sorttabs.c:2992
+#: ../data/gtkpod.glade.h:92 ../src/display_sorttabs.c:3071
 #: ../src/display_spl.c:85 ../src/misc_conversion.c:61
 msgid "Artist"
 msgstr "艺术家"
@@ -618,8 +619,8 @@ msgid ""
 msgstr ""
 "选择格式串确定如何显示info, 比如'%a/%A/%T - %t.mp3' 或者 '%o'。你可以用分号分"
 "隔几个模板，gtkpod按照文件扩展信息选取对应的字段，艺术家: %a, 专辑: %A, 作"
-"曲: %c, 歌曲: %t, 风格: %G, track nr: %T, CD nr: %C, 年: %Y, 原始文件名 (需"
-"要文件扩展信息): %o, 字符 '%': %%."
+"曲: %c, 歌曲: %t, 风格: %G, track nr: %T, CD nr: %C, 年: %Y, 原始文件名 (需要"
+"文件扩展信息): %o, 字符 '%': %%."
 
 #: ../data/gtkpod.glade.h:146
 #, no-c-format
@@ -674,75 +675,71 @@ msgstr "显示符合以上要求的音轨"
 msgid "Don't automatically sync on startup"
 msgstr "启动时不要自动同步"
 
-#: ../data/gtkpod.glade.h:156
-msgid "Dummy\n"
-msgstr "Dummy\n"
-
-#: ../data/gtkpod.glade.h:158 ../src/context_menus.c:664
+#: ../data/gtkpod.glade.h:156 ../src/context_menus.c:664
 msgid "Edit Smart Playlist"
 msgstr "编辑智能播放列表"
 
-#: ../data/gtkpod.glade.h:159 ../src/context_menus.c:751
+#: ../data/gtkpod.glade.h:157 ../src/context_menus.c:751
 msgid "Edit Track Details"
 msgstr "编辑音轨信息"
 
-#: ../data/gtkpod.glade.h:160
+#: ../data/gtkpod.glade.h:158
 msgid "Empty Playlist"
 msgstr "空白播放列表"
 
-#: ../data/gtkpod.glade.h:161
+#: ../data/gtkpod.glade.h:159
 msgid "Encoding Preferences"
 msgstr "编码首选项"
 
-#: ../data/gtkpod.glade.h:162
+#: ../data/gtkpod.glade.h:160
 msgid "Encoding..."
 msgstr "编码"
 
-#: ../data/gtkpod.glade.h:163
+#: ../data/gtkpod.glade.h:161
 msgid "Excluded files..."
 msgstr "排除文件"
 
-#: ../data/gtkpod.glade.h:164
+#: ../data/gtkpod.glade.h:162
 msgid "Exclusions List"
 msgstr "排除列表"
 
-#: ../data/gtkpod.glade.h:165
+#: ../data/gtkpod.glade.h:163
 msgid "Expand columns beyond the track list width"
 msgstr "扩展栏位超过音轨列表宽度"
 
-#: ../data/gtkpod.glade.h:166
+#: ../data/gtkpod.glade.h:164
 msgid "Export can be continued at a later time if canceled."
 msgstr "取消后还可以下次继续导出"
 
-#: ../data/gtkpod.glade.h:167
+#: ../data/gtkpod.glade.h:165
 msgid "Feedback"
 msgstr "反馈"
 
-#: ../data/gtkpod.glade.h:168
+#: ../data/gtkpod.glade.h:166
 msgid "Filename Parse Preferences"
 msgstr "文件名检查首选项"
 
-#: ../data/gtkpod.glade.h:169
+#: ../data/gtkpod.glade.h:167
 msgid "Filename format: "
 msgstr "文件名格式："
 
-#: ../data/gtkpod.glade.h:170
+#: ../data/gtkpod.glade.h:168
 msgid "Filename parse pattern:"
 msgstr "文件名检查样式："
 
-#: ../data/gtkpod.glade.h:171
+#: ../data/gtkpod.glade.h:169
 msgid "Filter tab:"
 msgstr "过滤器标签"
 
-#: ../data/gtkpod.glade.h:172
+#: ../data/gtkpod.glade.h:170
 msgid "Filter tabs"
 msgstr "过滤器标签"
 
-#: ../data/gtkpod.glade.h:173
+#: ../data/gtkpod.glade.h:171
 msgid "Filter:"
 msgstr "过滤器："
 
-#: ../data/gtkpod.glade.h:174
+#: ../data/gtkpod.glade.h:172
 msgid ""
 "Find orphan files (files with no track info in DB) and dangling tracks "
 "(tracks with no corresponding files on iPod)"
@@ -750,42 +747,42 @@ msgstr ""
 "找出孤儿文件（数据库中没有音轨信息的文件）和悬空音轨(在iPod中没有对应文件的音"
 "轨)"
 
-#: ../data/gtkpod.glade.h:175
+#: ../data/gtkpod.glade.h:173
 msgid "From the hard disk"
 msgstr "从硬盘"
 
-#: ../data/gtkpod.glade.h:176
+#: ../data/gtkpod.glade.h:174
 msgid "From the iPod"
 msgstr "从iPod"
 
-#: ../data/gtkpod.glade.h:177
+#: ../data/gtkpod.glade.h:175
 msgid "From the local database"
 msgstr "从本地数据库"
 
-#: ../data/gtkpod.glade.h:178 ../src/display_spl.c:182 ../src/info.c:794
+#: ../data/gtkpod.glade.h:176 ../src/display_spl.c:182 ../src/info.c:794
 msgid "GB"
 msgstr "GB"
 
-#: ../data/gtkpod.glade.h:179 ../src/display_sorttabs.c:2998
+#: ../data/gtkpod.glade.h:177 ../src/display_sorttabs.c:3077
 #: ../src/display_spl.c:89 ../src/misc_conversion.c:63
 msgid "Genre"
 msgstr "风格"
 
-#: ../data/gtkpod.glade.h:180
+#: ../data/gtkpod.glade.h:178
 msgid "Get Help _Online"
 msgstr "在线获得帮助"
 
-#: ../data/gtkpod.glade.h:181
+#: ../data/gtkpod.glade.h:179
 msgid "Group artist filter tab by compilation CDs"
 msgstr "CD集的艺术家组过滤器标签"
 
-#: ../data/gtkpod.glade.h:182
+#: ../data/gtkpod.glade.h:180
 msgid ""
 "If available, the local copy of the track is referenced in the playlist. "
 "Otherwise the file on the iPod is used."
 msgstr "如果存在的话，播放列表中的音轨指向本地拷贝，否则使用iPod中的文件"
 
-#: ../data/gtkpod.glade.h:183
+#: ../data/gtkpod.glade.h:181
 msgid ""
 "If checked, sorting will be case sensitive. Please note that case sensitive "
 "sorting will not work well with most charsets."
@@ -793,7 +790,7 @@ msgstr ""
 "如果选择，则排序时区分大小写，但是注意区分大小写排序在大多数字符集上无法正常"
 "工作"
 
-#: ../data/gtkpod.glade.h:184
+#: ../data/gtkpod.glade.h:182
 msgid ""
 "If you check this, information (cover art and meta information) changed for "
 "this track will be copied to all other selected tracks as well. Use with "
@@ -802,11 +799,11 @@ msgstr ""
 "如果选择这里，改变这条音轨的信息（插图和元信息）也将影响其他被选音轨，小心使"
 "用。"
 
-#: ../data/gtkpod.glade.h:185
+#: ../data/gtkpod.glade.h:183
 msgid "Ignore these words when at the beginning of the following fields:"
 msgstr "在下列区域的开头忽略这些字段"
 
-#: ../data/gtkpod.glade.h:186
+#: ../data/gtkpod.glade.h:184
 msgid ""
 "In order to save the displayed track order to the iPod choose 'Save "
 "Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
@@ -814,19 +811,19 @@ msgstr ""
 "为了顺序保存显示音轨到iPod中，选择\"编辑\"--\"顺序保存显示音轨\"或者下面的"
 "\"自动保存\""
 
-#: ../data/gtkpod.glade.h:187
+#: ../data/gtkpod.glade.h:185
 msgid "Include tracks never played in the \"Best Rated\" playlist"
 msgstr "包括\"评分最高的\"播放列表中从未使用的音轨"
 
-#: ../data/gtkpod.glade.h:188
+#: ../data/gtkpod.glade.h:186
 msgid "Info field template:"
 msgstr "Info区模板:"
 
-#: ../data/gtkpod.glade.h:189
+#: ../data/gtkpod.glade.h:187
 msgid "Initialize iPod"
 msgstr "初始化iPod"
 
-#: ../data/gtkpod.glade.h:190
+#: ../data/gtkpod.glade.h:188
 msgid ""
 "Insert before\n"
 "Insert after"
@@ -834,7 +831,7 @@ msgstr ""
 "在之前插入\n"
 "在之后插入"
 
-#: ../data/gtkpod.glade.h:192
+#: ../data/gtkpod.glade.h:190
 msgid ""
 "Last Played\n"
 "Last Modified\n"
@@ -844,19 +841,19 @@ msgstr ""
 "最后修改的\n"
 "新增的\n"
 
-#: ../data/gtkpod.glade.h:196
+#: ../data/gtkpod.glade.h:194
 msgid "Live _updating"
 msgstr "在线更新"
 
-#: ../data/gtkpod.glade.h:197
+#: ../data/gtkpod.glade.h:195
 msgid "Load iPod(s)"
 msgstr "加载iPod"
 
-#: ../data/gtkpod.glade.h:198
+#: ../data/gtkpod.glade.h:196
 msgid "Logic:"
 msgstr "逻辑："
 
-#: ../data/gtkpod.glade.h:199
+#: ../data/gtkpod.glade.h:197
 msgid ""
 "MP3\n"
 "AAC\n"
@@ -864,70 +861,70 @@ msgstr ""
 "MP3\n"
 "AAC\n"
 
-#: ../data/gtkpod.glade.h:202
+#: ../data/gtkpod.glade.h:200
 msgid "Mass-modify tags when multiple tracks are selected"
 msgstr "当选择多条音轨时整体修改标签"
 
-#: ../data/gtkpod.glade.h:203
+#: ../data/gtkpod.glade.h:201
 msgid "Match only _checked tracks"
 msgstr "只匹配选择的音轨"
 
-#: ../data/gtkpod.glade.h:204
+#: ../data/gtkpod.glade.h:202
 msgid "Match:"
 msgstr "匹配："
 
-#: ../data/gtkpod.glade.h:205
+#: ../data/gtkpod.glade.h:203
 msgid "Maximum cache size:"
 msgstr "最大缓存容量："
 
-#: ../data/gtkpod.glade.h:206
+#: ../data/gtkpod.glade.h:204
 msgid "Maximum threads:"
 msgstr "最大线程数："
 
-#: ../data/gtkpod.glade.h:207
+#: ../data/gtkpod.glade.h:205
 msgid "Metadata"
 msgstr "元数据"
 
-#: ../data/gtkpod.glade.h:208
+#: ../data/gtkpod.glade.h:206
 msgid "Model:"
 msgstr "型号："
 
-#: ../data/gtkpod.glade.h:209
+#: ../data/gtkpod.glade.h:207
 msgid "Modified:"
 msgstr "修改："
 
-#: ../data/gtkpod.glade.h:210
+#: ../data/gtkpod.glade.h:208
 msgid "Most Recently Played Tracks"
 msgstr "最近播放的音轨"
 
-#: ../data/gtkpod.glade.h:211
+#: ../data/gtkpod.glade.h:209
 msgid "Music"
 msgstr "音乐"
 
-#: ../data/gtkpod.glade.h:212
+#: ../data/gtkpod.glade.h:210
 msgid "Music root:"
 msgstr "音乐主目录"
 
-#: ../data/gtkpod.glade.h:213
+#: ../data/gtkpod.glade.h:211
 msgid "Never show this dialogue again"
 msgstr "不再显示此对话窗口"
 
-#: ../data/gtkpod.glade.h:214 ../src/display_spl.c:1652
+#: ../data/gtkpod.glade.h:212 ../src/display_spl.c:1652
 #: ../src/misc_playlist.c:76 ../src/misc_playlist.c:78
 #: ../src/misc_playlist.c:113 ../src/misc_playlist.c:115
 #: ../src/misc_playlist.c:448 ../src/misc_playlist.c:450
 msgid "New Playlist"
 msgstr "新建播放列表"
 
-#: ../data/gtkpod.glade.h:215
+#: ../data/gtkpod.glade.h:213
 msgid "No lower margin"
 msgstr "没有下边距"
 
-#: ../data/gtkpod.glade.h:216
+#: ../data/gtkpod.glade.h:214
 msgid "No upper margin"
 msgstr "没有上边距"
 
-#: ../data/gtkpod.glade.h:217
+#: ../data/gtkpod.glade.h:215
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "for the filename. If you set this option you can set a different charset "
@@ -941,7 +938,7 @@ msgstr ""
 "首选项/'写入iTunesDB'），v0.51版本之前导入的音轨没有保存字符集信息，因此只能"
 "使用指定字符集"
 
-#: ../data/gtkpod.glade.h:218
+#: ../data/gtkpod.glade.h:216
 msgid ""
 "Normally, if a track is no longer present in the sync directory, it will be "
 "removed from the playlist, but not from the iPod or local repository.\n"
@@ -959,7 +956,7 @@ msgstr ""
 "注意：如果是和主播放列表同步你必须选择此选项，如果你希望删除音轨的话，因为从"
 "主播放列表中删除也意味着从iPod中删除。"
 
-#: ../data/gtkpod.glade.h:221
+#: ../data/gtkpod.glade.h:219
 msgid ""
 "Normally, the encoding specified above will only be used when importing new "
 "tracks, and for any operations involving existing tracks, the encoding "
@@ -971,107 +968,107 @@ msgstr ""
 "入时的编码。你可以使用这个选项改变上述设置，因为可能最初导入时使用了错误编"
 "码。"
 
-#: ../data/gtkpod.glade.h:222
+#: ../data/gtkpod.glade.h:220
 msgid "Notes sync command:"
 msgstr "备忘录同步命令："
 
-#: ../data/gtkpod.glade.h:223
+#: ../data/gtkpod.glade.h:221
 msgid "Number of filter tabs:"
 msgstr "过滤器标签数："
 
-#: ../data/gtkpod.glade.h:224
+#: ../data/gtkpod.glade.h:222
 msgid "Number of tracks:"
 msgstr "音轨数："
 
-#: ../data/gtkpod.glade.h:225
+#: ../data/gtkpod.glade.h:223
 msgid "On startup automatically sync with playlist directories"
 msgstr "启动时自动与播放列表目录同步"
 
-#: ../data/gtkpod.glade.h:226
+#: ../data/gtkpod.glade.h:224
 msgid "On startup automatically sync with the following directory"
 msgstr "启动时自动与下列目录同步"
 
-#: ../data/gtkpod.glade.h:227
+#: ../data/gtkpod.glade.h:225
 msgid "On startup automatically update (Live Playlist)"
 msgstr "启动时自动更新（在线播放列表）"
 
-#: ../data/gtkpod.glade.h:228
+#: ../data/gtkpod.glade.h:226
 msgid "One for each Album"
 msgstr "每个专辑选择一条"
 
-#: ../data/gtkpod.glade.h:229
+#: ../data/gtkpod.glade.h:227
 msgid "One for each Artist"
 msgstr "每个艺术家选择一条"
 
-#: ../data/gtkpod.glade.h:230
+#: ../data/gtkpod.glade.h:228
 msgid "One for each Composer"
 msgstr "每个作曲选择一条"
 
-#: ../data/gtkpod.glade.h:231
+#: ../data/gtkpod.glade.h:229
 msgid "One for each Genre"
 msgstr "每种类型选择一条"
 
-#: ../data/gtkpod.glade.h:232
+#: ../data/gtkpod.glade.h:230
 msgid "One for each Rating"
 msgstr "每个评分选择一条"
 
-#: ../data/gtkpod.glade.h:233
+#: ../data/gtkpod.glade.h:231
 msgid "One for each Year"
 msgstr "每个年代选择一条"
 
-#: ../data/gtkpod.glade.h:234
+#: ../data/gtkpod.glade.h:232
 msgid "Overwrite existing tags"
 msgstr "覆盖已有标签"
 
-#: ../data/gtkpod.glade.h:235
+#: ../data/gtkpod.glade.h:233
 msgid "Parse file name to set missing tags"
 msgstr "检查文件名的缺失标签"
 
-#: ../data/gtkpod.glade.h:236
+#: ../data/gtkpod.glade.h:234
 msgid "Path:"
 msgstr "路径："
 
-#: ../data/gtkpod.glade.h:237
+#: ../data/gtkpod.glade.h:235
 msgid "Photo Window"
 msgstr "照片窗口"
 
-#: ../data/gtkpod.glade.h:238
+#: ../data/gtkpod.glade.h:236
 msgid "Playcount:"
 msgstr "播放次数："
 
-#: ../data/gtkpod.glade.h:239
+#: ../data/gtkpod.glade.h:237
 msgid "Played:"
 msgstr "已播放："
 
-#: ../data/gtkpod.glade.h:240
+#: ../data/gtkpod.glade.h:238
 msgid "Playlist name:"
 msgstr "播放列表名："
 
-#: ../data/gtkpod.glade.h:241
+#: ../data/gtkpod.glade.h:239
 msgid "Playlist type:"
 msgstr "播放列表类型："
 
-#: ../data/gtkpod.glade.h:242 ../src/display_playlists.c:2397
+#: ../data/gtkpod.glade.h:240 ../src/display_playlists.c:2404
 msgid "Playlists"
 msgstr "播放列表"
 
-#: ../data/gtkpod.glade.h:243
+#: ../data/gtkpod.glade.h:241
 msgid "Please refer to the notice below."
 msgstr "请参考下面的注意事项。"
 
-#: ../data/gtkpod.glade.h:244
+#: ../data/gtkpod.glade.h:242
 msgid "Position:"
 msgstr "位置："
 
-#: ../data/gtkpod.glade.h:245
+#: ../data/gtkpod.glade.h:243
 msgid "Preferences"
 msgstr "首选项"
 
-#: ../data/gtkpod.glade.h:246
+#: ../data/gtkpod.glade.h:244
 msgid "Progress Information"
 msgstr "进度信息"
 
-#: ../data/gtkpod.glade.h:248
+#: ../data/gtkpod.glade.h:246
 #, no-c-format
 msgid ""
 "Provide a shell command to generate a thumbnail image of your video file.  "
@@ -1082,29 +1079,39 @@ msgstr ""
 "指定生成视频文件缩略的shell命令。下面的这些格式串将被展开：- %f: 输入文件\n"
 "- %o: 输出文件（自动生成）\n"
 
-#: ../data/gtkpod.glade.h:252
+#: ../data/gtkpod.glade.h:250
 msgid "R_ename Album"
 msgstr "重命名专辑"
 
-#: ../data/gtkpod.glade.h:253
+#: ../data/gtkpod.glade.h:251
 msgid "Random Playlist from Displayed Tracks"
 msgstr "从显示音轨中生成随机播放列表"
 
-#: ../data/gtkpod.glade.h:254
+#: ../data/gtkpod.glade.h:252
 msgid "Randomize Current Playlist"
 msgstr "随机当前播放列表"
 
-#: ../data/gtkpod.glade.h:255
+#: ../data/gtkpod.glade.h:253
 msgid "Rating:"
 msgstr "评分："
 
-#: ../data/gtkpod.glade.h:256
+#: ../data/gtkpod.glade.h:254
 msgid "Read embedded cover art information"
 msgstr "读取嵌入的插图信息"
 
-#: ../data/gtkpod.glade.h:257
+#: ../data/gtkpod.glade.h:255
 msgid "Read embedded tags from music files"
 msgstr "从音乐文件中读取嵌入的标签"
+
+#: ../data/gtkpod.glade.h:256
+#, fuzzy
+msgid "ReplayGain Preferences"
+msgstr "转换首选项"
+
+#: ../data/gtkpod.glade.h:257
+#, fuzzy
+msgid "ReplayGain..."
+msgstr "复制中"
 
 #: ../data/gtkpod.glade.h:258
 msgid "Report a _Problem"
@@ -1311,15 +1318,21 @@ msgid "The track on the iPod is referenced in the playlist file."
 msgstr "播放列表指向iPod中的音轨"
 
 #: ../data/gtkpod.glade.h:308
+msgid ""
+"These settings will only be applied to newly added or updated tracks. This "
+"could result in tracks that are normalized to different levels until updated."
+msgstr ""
+
+#: ../data/gtkpod.glade.h:309
 msgid "Time:"
 msgstr "时间："
 
-#: ../data/gtkpod.glade.h:309 ../src/display_sorttabs.c:3004
+#: ../data/gtkpod.glade.h:310 ../src/display_sorttabs.c:3083
 #: ../src/display_spl.c:83 ../src/misc_conversion.c:62
 msgid "Title"
 msgstr "歌曲"
 
-#: ../data/gtkpod.glade.h:310
+#: ../data/gtkpod.glade.h:311
 msgid ""
 "To fill additional information, <i>gtkpod</i> can use a database provided by "
 "the <i>mserv</i> music server. If you do not know what <i>mserv</i> is, "
@@ -1328,65 +1341,69 @@ msgstr ""
 "填写更多信息，<i>gtkpod</i>可以保存在<i>mserv</i>音乐数据库，如果你不知道什么"
 "是<i>mserv</i>，请留空。"
 
-#: ../data/gtkpod.glade.h:311
+#: ../data/gtkpod.glade.h:312
 msgid "Top"
 msgstr "最佳"
 
-#: ../data/gtkpod.glade.h:312
+#: ../data/gtkpod.glade.h:313
+msgid "Track gain (formerly \"radio gain\")"
+msgstr ""
+
+#: ../data/gtkpod.glade.h:314
 msgid "Tracks"
 msgstr "音轨"
 
-#: ../data/gtkpod.glade.h:313
+#: ../data/gtkpod.glade.h:315
 msgid "Tracks Most Often Listened To"
 msgstr "最经常听的音轨"
 
-#: ../data/gtkpod.glade.h:314
+#: ../data/gtkpod.glade.h:316
 msgid "Tracks in Selected Tab _Entry"
 msgstr "选定标签的音轨"
 
-#: ../data/gtkpod.glade.h:315
+#: ../data/gtkpod.glade.h:317
 msgid "Tracks in Selected _Playlist"
 msgstr "选定播放列表的音轨"
 
-#: ../data/gtkpod.glade.h:316
+#: ../data/gtkpod.glade.h:318
 msgid "Transfer tracks in background mode"
 msgstr "在后台传输音轨"
 
-#: ../data/gtkpod.glade.h:317
+#: ../data/gtkpod.glade.h:319
 msgid ""
 "Try to load contents of all connected iPods. For each iPod a separate "
 "repository must be set up."
 msgstr "尝试加载所有已连接iPod的内容，每个iPod必须设置一个独立的音乐库。"
 
-#: ../data/gtkpod.glade.h:318
+#: ../data/gtkpod.glade.h:320
 msgid "Undo _Track"
 msgstr "取消音轨"
 
-#: ../data/gtkpod.glade.h:319
+#: ../data/gtkpod.glade.h:321
 msgid "Update _mserv Data from File"
 msgstr "从文件更新mserv数据"
 
-#: ../data/gtkpod.glade.h:320
+#: ../data/gtkpod.glade.h:322
 msgid "Update information about the existing track"
 msgstr "更新现有音轨的信息"
 
-#: ../data/gtkpod.glade.h:321
+#: ../data/gtkpod.glade.h:323
 msgid "Update/Sync All Playlists"
 msgstr "更新/同步所有播放列表"
 
-#: ../data/gtkpod.glade.h:322
+#: ../data/gtkpod.glade.h:324
 msgid "Update/Sync Playlist"
 msgstr "更新/同步播放列表"
 
-#: ../data/gtkpod.glade.h:323
+#: ../data/gtkpod.glade.h:325
 msgid "Use legacy format for MP3 tags"
 msgstr "MP3标签采用老格式"
 
-#: ../data/gtkpod.glade.h:324
+#: ../data/gtkpod.glade.h:326
 msgid "Use mserv database to fill track information"
 msgstr "用mserv数据库填写音轨信息"
 
-#: ../data/gtkpod.glade.h:325
+#: ../data/gtkpod.glade.h:327
 msgid ""
 "Use selected charset (Preferences/'Adding/Updating/ Syncing')\n"
 "for this filename."
@@ -1394,23 +1411,23 @@ msgstr ""
 "文件名字符编码（首选项/'添加/更新/同步'）采用\n"
 " "
 
-#: ../data/gtkpod.glade.h:327
+#: ../data/gtkpod.glade.h:329
 msgid "Username:"
 msgstr "用户名："
 
-#: ../data/gtkpod.glade.h:328
+#: ../data/gtkpod.glade.h:330
 msgid "Video Thumbnail Generation"
 msgstr "生成视频缩略"
 
-#: ../data/gtkpod.glade.h:329
+#: ../data/gtkpod.glade.h:331
 msgid "Video thumbnailing program:"
 msgstr "生成视频缩略的程序："
 
-#: ../data/gtkpod.glade.h:330
+#: ../data/gtkpod.glade.h:332
 msgid "View Full Size"
 msgstr "查看整个文件"
 
-#: ../data/gtkpod.glade.h:331
+#: ../data/gtkpod.glade.h:333
 msgid ""
 "When copying from iPod no check is performed on whether the destination file "
 "exists. Enabling this option will make gtkpod check whether the length of "
@@ -1421,25 +1438,25 @@ msgstr ""
 "标文件的长度是否与iPod中的原始文件一致，如果这样，则忽略文件允许对iPod的内容"
 "快速同步。"
 
-#: ../data/gtkpod.glade.h:332
+#: ../data/gtkpod.glade.h:334
 msgid "When updating tracks, display information:"
 msgstr "当更新音轨时显示："
 
-#: ../data/gtkpod.glade.h:333
+#: ../data/gtkpod.glade.h:335
 msgid ""
 "Will show a list of tracks removed and a list of tracks newly added or "
 "updated."
 msgstr "将显示删除/新增/更新的音轨列表。"
 
-#: ../data/gtkpod.glade.h:334
+#: ../data/gtkpod.glade.h:336
 msgid "Write all changes made to the disk and the iPod(s)."
 msgstr "将所有改动写入到磁盘和iPod。"
 
-#: ../data/gtkpod.glade.h:335
+#: ../data/gtkpod.glade.h:337
 msgid "Write tags to disk when edited"
 msgstr "编辑时将标签写入磁盘"
 
-#: ../data/gtkpod.glade.h:337
+#: ../data/gtkpod.glade.h:339
 #, no-c-format
 msgid ""
 "You can separate several templates by a ';'. The first one matching the "
@@ -1473,8 +1490,8 @@ msgstr ""
 "- skip data: %*\n"
 "- 特殊字符'%': %%."
 
-#: ../data/gtkpod.glade.h:352
-#, no-c-format
+#: ../data/gtkpod.glade.h:354
+#, fuzzy, no-c-format
 msgid ""
 "You can separate several templates by a ';'. The first one matching the "
 "filename will be used.\n"
@@ -1483,7 +1500,7 @@ msgid ""
 "- <i>folder.jpg</i>: Use <i>folder.jpg</i> as cover art.\n"
 "- <i>folder</i>: Use <i>folder.jpg</i>, <i>folder.png</i>...\n"
 "- <i>../%A.jpg</i>: Use <i>&lt;Album&gt;.jpg</i> in the parent directory\n"
-"- <i>%a</i>: Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>...\n"
+"- <i>%A</i>: Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>...\n"
 "- <i>folder.jpg;%a.jpg</i>: First try <i>folder.jpg</i>, then <i>&lt;"
 "artist&gt;.jpg</i>\n"
 "\n"
@@ -1519,233 +1536,234 @@ msgstr ""
 "- skip data: %*\n"
 "- 特殊字符'%': %%."
 
-#: ../data/gtkpod.glade.h:371
+#: ../data/gtkpod.glade.h:373
 msgid "_About gtkpod"
 msgstr "关于gtkpod"
 
-#: ../data/gtkpod.glade.h:372
+#: ../data/gtkpod.glade.h:374
 msgid "_Add Album"
 msgstr "新增专辑"
 
-#: ../data/gtkpod.glade.h:373
+#: ../data/gtkpod.glade.h:375
 msgid "_Add Image"
 msgstr "新增图像"
 
-#: ../data/gtkpod.glade.h:374
+#: ../data/gtkpod.glade.h:376
 msgid "_Album"
 msgstr "专辑"
 
-#: ../data/gtkpod.glade.h:375
+#: ../data/gtkpod.glade.h:377
 msgid "_All Tracks"
 msgstr "所有音轨"
 
-#: ../data/gtkpod.glade.h:376
+#: ../data/gtkpod.glade.h:378
 msgid "_Arrange Filter Tabs"
 msgstr "整理过滤器标签"
 
-#: ../data/gtkpod.glade.h:377
+#: ../data/gtkpod.glade.h:379
 msgid "_Check iPod's Files"
 msgstr "检查iPod文件"
 
-#: ../data/gtkpod.glade.h:378
+#: ../data/gtkpod.glade.h:380
 msgid "_Contents"
 msgstr "内容"
 
-#: ../data/gtkpod.glade.h:379
+#: ../data/gtkpod.glade.h:381
 msgid "_Conversion Log"
 msgstr "转换日志"
 
-#: ../data/gtkpod.glade.h:380
+#: ../data/gtkpod.glade.h:382
 msgid "_Create Playlists"
 msgstr "创建播放列表"
 
-#: ../data/gtkpod.glade.h:381
+#: ../data/gtkpod.glade.h:383
 msgid "_Create iPod's Directories"
 msgstr "创建iPod文件夹"
 
-#: ../data/gtkpod.glade.h:382
+#: ../data/gtkpod.glade.h:384
 msgid "_Delete"
 msgstr "删除"
 
-#: ../data/gtkpod.glade.h:383
+#: ../data/gtkpod.glade.h:385
 msgid "_Display"
 msgstr "显示"
 
-#: ../data/gtkpod.glade.h:384
+#: ../data/gtkpod.glade.h:386
 msgid "_Displayed Tracks"
 msgstr "显示的音轨"
 
-#: ../data/gtkpod.glade.h:385
+#: ../data/gtkpod.glade.h:387
 msgid "_Edit"
 msgstr "编辑"
 
-#: ../data/gtkpod.glade.h:386
+#: ../data/gtkpod.glade.h:388
 msgid "_Enqueue"
 msgstr "队列"
 
-#: ../data/gtkpod.glade.h:387
+#: ../data/gtkpod.glade.h:389
 msgid "_Export Tracks from Database"
 msgstr "从数据库导出音轨"
 
-#: ../data/gtkpod.glade.h:388
+#: ../data/gtkpod.glade.h:390
 msgid "_Fewer Filter Tabs"
 msgstr "更少过滤器标签"
 
-#: ../data/gtkpod.glade.h:389
+#: ../data/gtkpod.glade.h:391
 msgid "_Filter Bar"
 msgstr "过滤器栏"
 
-#: ../data/gtkpod.glade.h:390
+#: ../data/gtkpod.glade.h:392
 msgid "_General"
 msgstr "通用"
 
-#: ../data/gtkpod.glade.h:391
+#: ../data/gtkpod.glade.h:393
 msgid "_Help"
 msgstr "帮助"
 
-#: ../data/gtkpod.glade.h:392
+#: ../data/gtkpod.glade.h:394
 msgid "_Info Window"
 msgstr "Info窗口"
 
-#: ../data/gtkpod.glade.h:393
+#: ../data/gtkpod.glade.h:395
 msgid "_Limit to"
 msgstr "限制"
 
-#: ../data/gtkpod.glade.h:394
+#: ../data/gtkpod.glade.h:396
 msgid "_Load iPod(s)"
 msgstr "加载iPod"
 
-#: ../data/gtkpod.glade.h:395
+#: ../data/gtkpod.glade.h:397
 msgid "_Local"
 msgstr "本地"
 
-#: ../data/gtkpod.glade.h:396
+#: ../data/gtkpod.glade.h:398
 msgid "_Lyrics"
 msgstr "歌词"
 
-#: ../data/gtkpod.glade.h:397
+#: ../data/gtkpod.glade.h:399
 msgid "_M3U"
 msgstr "M3U"
 
-#: ../data/gtkpod.glade.h:398
+#: ../data/gtkpod.glade.h:400
 msgid "_Misc."
 msgstr "杂项"
 
-#: ../data/gtkpod.glade.h:399
+#: ../data/gtkpod.glade.h:401
 msgid "_More Filter Tabs"
 msgstr "更多过滤器标签"
 
-#: ../data/gtkpod.glade.h:400
+#: ../data/gtkpod.glade.h:402
 msgid "_Music"
 msgstr "iPod音乐"
 
-#: ../data/gtkpod.glade.h:401
+#: ../data/gtkpod.glade.h:403
 msgid "_Newly Added Tracks"
 msgstr "新添加的音轨"
 
-#: ../data/gtkpod.glade.h:402
+#: ../data/gtkpod.glade.h:404
 msgid "_Normalize Volume"
 msgstr "均衡音量"
 
-#: ../data/gtkpod.glade.h:403
+#: ../data/gtkpod.glade.h:405
 msgid "_PLS"
 msgstr "PLS"
 
-#: ../data/gtkpod.glade.h:404
+#: ../data/gtkpod.glade.h:406
 msgid "_Photos"
 msgstr "照片"
 
-#: ../data/gtkpod.glade.h:405
+#: ../data/gtkpod.glade.h:407
 msgid "_Play Now"
 msgstr "开始播放"
 
-#: ../data/gtkpod.glade.h:406
+#: ../data/gtkpod.glade.h:408
 msgid "_Podcasts"
 msgstr "Podcast"
 
-#: ../data/gtkpod.glade.h:407
+#: ../data/gtkpod.glade.h:409
 msgid "_Prefer Local"
 msgstr "本地偏好"
 
-#: ../data/gtkpod.glade.h:408
+#: ../data/gtkpod.glade.h:410
 msgid "_Remove Album"
 msgstr "移除专辑"
 
-#: ../data/gtkpod.glade.h:409
+#: ../data/gtkpod.glade.h:411
 #, fuzzy
 msgid "_Remove Cover Art"
 msgstr "移除插图"
 
-#: ../data/gtkpod.glade.h:410
+#: ../data/gtkpod.glade.h:412
 msgid "_Remove Images"
 msgstr "移除图像"
 
-#: ../data/gtkpod.glade.h:411
+#: ../data/gtkpod.glade.h:413
 msgid "_Save Changes"
 msgstr "保存改动"
 
-#: ../data/gtkpod.glade.h:412
+#: ../data/gtkpod.glade.h:414
 msgid "_Save Displayed Track Order"
 msgstr "顺序保存音轨"
 
-#: ../data/gtkpod.glade.h:413
+#: ../data/gtkpod.glade.h:415
 msgid "_Sorting"
 msgstr "排序中"
 
-#: ../data/gtkpod.glade.h:414
+#: ../data/gtkpod.glade.h:416
 msgid "_Synchronize Playlist with Dir(s)"
 msgstr "播放列表与目录同步"
 
-#: ../data/gtkpod.glade.h:415
+#: ../data/gtkpod.glade.h:417
 msgid "_Toolbar"
 msgstr "工具栏"
 
-#: ../data/gtkpod.glade.h:416
+#: ../data/gtkpod.glade.h:418
 msgid "_Tools"
 msgstr "工具"
 
-#: ../data/gtkpod.glade.h:417
+#: ../data/gtkpod.glade.h:419
 msgid "_Tooltips"
 msgstr "工具提示"
 
-#: ../data/gtkpod.glade.h:418
+#: ../data/gtkpod.glade.h:420
 msgid "_Undo All"
 msgstr "取消所有"
 
-#: ../data/gtkpod.glade.h:419
+#: ../data/gtkpod.glade.h:421
 msgid "_Update Tracks from File"
 msgstr "从文件更新音轨"
 
-#: ../data/gtkpod.glade.h:420
+#: ../data/gtkpod.glade.h:422
 msgid "_Video"
 msgstr "视频"
 
-#: ../data/gtkpod.glade.h:421
+#: ../data/gtkpod.glade.h:423
 msgid "_View"
 msgstr "查看"
 
-#: ../data/gtkpod.glade.h:422
+#: ../data/gtkpod.glade.h:424
 msgid "_Zoom"
 msgstr "缩放"
 
-#: ../data/gtkpod.glade.h:423
+#: ../data/gtkpod.glade.h:425
 msgid "_iPod"
 msgstr "iPod"
 
-#: ../data/gtkpod.glade.h:424
-msgid "checkbutton"
-msgstr "检查"
-
-#: ../data/gtkpod.glade.h:425
-msgid "gtk-revert-to-saved"
-msgstr "gtk-revert-to-saved"
-
 #: ../data/gtkpod.glade.h:426
+#, fuzzy
+msgid "dB"
+msgstr "B"
+
+#: ../data/gtkpod.glade.h:427
+msgid "gtk-close"
+msgstr ""
+
+#: ../data/gtkpod.glade.h:428
 msgid "gtkpod Information"
 msgstr "gtkpod信息"
 
 #. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
-#: ../data/gtkpod.glade.h:429
+#: ../data/gtkpod.glade.h:431
 msgid ""
 "iPod\n"
 "Local Repository (Standard)\n"
@@ -1755,27 +1773,27 @@ msgstr ""
 "本地音乐库（标准）\n"
 "本地音乐库（Podcast）\n"
 
-#: ../data/gtkpod.glade.h:433
+#: ../data/gtkpod.glade.h:435
 msgid "iPod mountpoint:"
 msgstr "iPod挂载点："
 
-#: ../data/gtkpod.glade.h:434
+#: ../data/gtkpod.glade.h:436
 msgid "iTunesDB backup:"
 msgstr "iTunesDB备份："
 
-#: ../data/gtkpod.glade.h:435
+#: ../data/gtkpod.glade.h:437
 msgid "mserv Preferences"
 msgstr "mserv首选项"
 
-#: ../data/gtkpod.glade.h:436
+#: ../data/gtkpod.glade.h:438
 msgid "mserv root:"
 msgstr "mserv根目录："
 
-#: ../data/gtkpod.glade.h:437 ../src/details.c:1352
+#: ../data/gtkpod.glade.h:439 ../src/details.c:1352
 msgid "n/a"
 msgstr "n/a"
 
-#: ../data/gtkpod.glade.h:438
+#: ../data/gtkpod.glade.h:440
 msgid "special_sorttab -- Don't translate!"
 msgstr "special_sorttab -- Don't translate!"
 
@@ -2017,7 +2035,7 @@ msgid ""
 "Another instance of gtkpod was detected. Playcount server not started.\n"
 msgstr "探测到另一个gtkpod，播放次数计数服务将不会启动。\n"
 
-#: ../src/confirmation.c:389
+#: ../src/confirmation.c:388
 msgid "Confirmation"
 msgstr "确认"
 
@@ -2057,7 +2075,7 @@ msgstr "队列"
 msgid "Copy Tracks to Filesystem"
 msgstr "复制音轨到文件系统"
 
-#: ../src/context_menus.c:643 ../src/file_export.c:1085
+#: ../src/context_menus.c:643 ../src/file_export.c:1083
 msgid "Create Playlist File"
 msgstr "创建播放列表文件"
 
@@ -2235,48 +2253,48 @@ msgstr "<b>n/a</b>"
 msgid "Error occurred dropping an image onto the details window: %s\n"
 msgstr "把图片拖动到详细窗口时发生错误：%s\n"
 
-#: ../src/details.c:1952 ../src/display_coverart.c:2297
+#: ../src/details.c:1952 ../src/display_coverart.c:2244
 msgid "Successfully set new coverart for selected tracks"
 msgstr "成功为选定音轨设置新的插图"
 
 #. Set the resolution in the label
-#: ../src/display.c:570
+#: ../src/display.c:600
 #, c-format
 msgid "<b>Image Dimensions: %d x %d</b>"
 msgstr "<b>图片尺寸： %d x %d</b>"
 
-#: ../src/display.c:814
+#: ../src/display.c:844
 msgid "Edit selected entry of which sort tab?"
 msgstr "编辑选定那个标签项目?"
 
 #. no entry selected
-#: ../src/display.c:821 ../src/misc_confirm.c:469 ../src/misc_track.c:2158
+#: ../src/display.c:851 ../src/misc_confirm.c:469 ../src/misc_track.c:2202
 msgid "No entry selected."
 msgstr "没有选择项目"
 
-#: ../src/display.c:974 ../src/display.c:1320 ../src/display.c:1376
-#: ../src/display.c:1430 ../src/display.c:1485 ../src/display.c:1746
+#: ../src/display.c:1004 ../src/display.c:1350 ../src/display.c:1406
+#: ../src/display.c:1460 ../src/display.c:1515 ../src/display.c:1776
 #, c-format
 msgid "No entry selected in Sort Tab %d"
 msgstr "没有选择排序标签 %d"
 
-#: ../src/display.c:1015
+#: ../src/display.c:1045
 msgid "Remove entry of which sort tab from database?"
 msgstr "删除数据库中的哪个排序标签？"
 
-#: ../src/display.c:1024
+#: ../src/display.c:1054
 msgid "Remove tracks in selected entry of which filter tab from the iPod?"
 msgstr "删除iPod中的音轨时按照哪个过滤器标签？"
 
-#: ../src/display.c:1049
+#: ../src/display.c:1079
 msgid "Remove tracks in selected entry of which filter tab from the harddisk?"
 msgstr "删除硬盘中的音轨时按照哪个过滤器标签？"
 
-#: ../src/display.c:1082
+#: ../src/display.c:1112
 msgid "Remove tracks in selected entry of which filter tab from playlist?"
 msgstr "删除播放列表中的音轨时按照哪个过滤器标签？"
 
-#: ../src/display.c:1109 ../src/display.c:1147
+#: ../src/display.c:1139 ../src/display.c:1177
 #, c-format
 msgid ""
 "iPod at '%s' is not loaded.\n"
@@ -2285,35 +2303,35 @@ msgstr ""
 "'%s'的iPod没有加载。\n"
 "请先加载。"
 
-#: ../src/display.c:1184 ../src/display.c:1218
+#: ../src/display.c:1214 ../src/display.c:1248
 msgid "Update selected entry of which sort tab?"
 msgstr "按照哪个排序标签更新选定项目？"
 
-#: ../src/display.c:1314
+#: ../src/display.c:1344
 msgid "Export selected entry of which sort tab?"
 msgstr "按照哪个排序标签导出所选项目？"
 
-#: ../src/display.c:1370
+#: ../src/display.c:1400
 msgid "Create playlist file from selected entry of which sort tab?"
 msgstr "按照哪个排序标签创建播放列表？"
 
-#: ../src/display.c:1424
+#: ../src/display.c:1454
 msgid "Play tracks in selected entry of which sort tab?"
 msgstr "按照哪个排序标签来播放音轨？"
 
-#: ../src/display.c:1479
+#: ../src/display.c:1509
 msgid "Enqueue tracks in selected entry of which sort tab?"
 msgstr "选定项目中按照哪个排序标签来对音轨排队？"
 
-#: ../src/display.c:1736
+#: ../src/display.c:1766
 msgid "Normalize tracks in selected entry of which sort tab?"
 msgstr "选定项目按照哪个排序标签对音轨进行均衡化？"
 
-#: ../src/display_coverart.c:1874
+#: ../src/display_coverart.c:1821
 msgid "Failed to remove the album from the album hash store."
 msgstr "将专辑从album hash store删除失败。"
 
-#: ../src/display_coverart.c:2262
+#: ../src/display_coverart.c:2209
 #, c-format
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
 msgstr "把图片作为插图显示时发生错误:%s\n"
@@ -2438,7 +2456,7 @@ msgstr "<无成员>\n"
 msgid "Error: drag from iPod not possible in offline mode."
 msgstr "错误：离线模式下无法对iPod拖拽操作"
 
-#: ../src/display_playlists.c:606 ../src/display_tracks.c:403
+#: ../src/display_playlists.c:606 ../src/display_tracks.c:392
 #, c-format
 msgid "Copied one track"
 msgid_plural "Copied %d tracks"
@@ -2459,40 +2477,40 @@ msgstr ""
 "该DND类型(%d)还未被支持，如果你认为这个特性很有用，请联系作者。\n"
 "\n"
 
-#: ../src/display_playlists.c:2039
+#: ../src/display_playlists.c:2046
 msgid "Photos"
 msgstr "照片"
 
-#: ../src/display_sorttabs.c:479
+#: ../src/display_sorttabs.c:527
 msgid "'Played' condition ignored because of error."
 msgstr "发生错误忽略'已播放'"
 
-#: ../src/display_sorttabs.c:482
+#: ../src/display_sorttabs.c:530
 msgid "'Modified' condition ignored because of error."
 msgstr "发生错误忽略'已修改'"
 
-#: ../src/display_sorttabs.c:485
+#: ../src/display_sorttabs.c:533
 msgid "'Added' condition ignored because of error."
 msgstr "发生错误忽略'已添加'"
 
-#: ../src/display_sorttabs.c:1568 ../src/misc_conversion.c:59
+#: ../src/display_sorttabs.c:1627 ../src/misc_conversion.c:59
 msgid "All"
 msgstr "所有"
 
-#: ../src/display_sorttabs.c:1594
+#: ../src/display_sorttabs.c:1654
 msgid "Compilations"
 msgstr "汇集"
 
-#: ../src/display_sorttabs.c:3001
+#: ../src/display_sorttabs.c:3080
 msgid "Comp."
 msgstr "唱片公司"
 
-#: ../src/display_sorttabs.c:3007 ../src/display_spl.c:88
-#: ../src/display_tracks.c:2333 ../src/misc_conversion.c:84
+#: ../src/display_sorttabs.c:3086 ../src/display_spl.c:88
+#: ../src/display_tracks.c:2446 ../src/misc_conversion.c:84
 msgid "Year"
 msgstr "年代"
 
-#: ../src/display_sorttabs.c:3010
+#: ../src/display_sorttabs.c:3089
 msgid "Special"
 msgstr "特别"
 
@@ -2759,14 +2777,14 @@ msgstr "-"
 msgid "+"
 msgstr "+"
 
-#: ../src/display_tracks.c:398
+#: ../src/display_tracks.c:387
 #, c-format
 msgid "Moved one track"
 msgid_plural "Moved %d tracks"
 msgstr[0] "移动音轨%d"
 msgstr[1] "移动音轨%d"
 
-#: ../src/display_tracks.c:2022
+#: ../src/display_tracks.c:2039
 #, c-format
 msgid ""
 "Cannot unsort track view because of a bug in the GTK lib you are using (%d.%"
@@ -2777,59 +2795,59 @@ msgstr ""
 "由于gtk库(%d.%d.%d<2.5.4)的一个bug不能以未排序方式查看。因为一旦你排序后，就"
 "无法再以原来未排序方式查看\n"
 
-#: ../src/display_tracks.c:2288
+#: ../src/display_tracks.c:2398
 msgid "Rtng"
 msgstr "Rtng"
 
-#: ../src/display_tracks.c:2291
+#: ../src/display_tracks.c:2401
 msgid "#"
 msgstr "#"
 
-#: ../src/display_tracks.c:2294
+#: ../src/display_tracks.c:2404
 msgid "CD"
 msgstr "CD"
 
-#: ../src/display_tracks.c:2297
+#: ../src/display_tracks.c:2407
 msgid "ID"
 msgstr "ID"
 
-#: ../src/display_tracks.c:2300
+#: ../src/display_tracks.c:2410
 msgid "Trnsfrd"
 msgstr "Trnsfrd"
 
-#: ../src/display_tracks.c:2309
+#: ../src/display_tracks.c:2421
 msgid "Cmpl"
 msgstr "Cmpl"
 
-#: ../src/display_tracks.c:2315
+#: ../src/display_tracks.c:2428
 msgid "Time"
 msgstr "时间"
 
-#: ../src/display_tracks.c:2318
+#: ../src/display_tracks.c:2431
 msgid "Plycnt"
 msgstr "Plycnt"
 
-#: ../src/display_tracks.c:2321
+#: ../src/display_tracks.c:2434
 msgid "Played"
 msgstr "已播放"
 
-#: ../src/display_tracks.c:2324
+#: ../src/display_tracks.c:2437
 msgid "Modified"
 msgstr "已修改"
 
-#: ../src/display_tracks.c:2327
+#: ../src/display_tracks.c:2440
 msgid "Added"
 msgstr "已添加"
 
-#: ../src/display_tracks.c:2330
+#: ../src/display_tracks.c:2443
 msgid "Released"
 msgstr "已发布"
 
-#: ../src/display_tracks.c:2336
+#: ../src/display_tracks.c:2449
 msgid "Vol."
 msgstr "Vol."
 
-#: ../src/display_tracks.c:2339
+#: ../src/display_tracks.c:2452
 msgid "Sndchk."
 msgstr "sndchk."
 
@@ -2867,7 +2885,7 @@ msgstr "重命名"
 msgid "Abort"
 msgstr "放弃"
 
-#: ../src/file.c:238
+#: ../src/file.c:241
 #, c-format
 msgid ""
 "'%s' is a directory, not a playlist file.\n"
@@ -2876,7 +2894,7 @@ msgstr ""
 "'%s'是个目录，而不是播放列表文件。\n"
 "\n"
 
-#: ../src/file.c:268
+#: ../src/file.c:271
 #, c-format
 msgid ""
 "'%s' is a not a known playlist file.\n"
@@ -2885,120 +2903,120 @@ msgstr ""
 "'%s'是一个未知播放列表文件。\n"
 "\n"
 
-#: ../src/file.c:285 ../src/file_export.c:217 ../src/oggfile.c:62
+#: ../src/file.c:288 ../src/file_export.c:215 ../src/oggfile.c:62
 #: ../src/wavfile.c:107
 #, c-format
 msgid "Could not open '%s' for reading.\n"
 msgstr "无法读取'%s'。\n"
 
-#: ../src/file.c:371
+#: ../src/file.c:374
 #, c-format
 msgid "Skipping '%s' because it is a directory.\n"
 msgstr "忽略目录文件'%s'\n"
 
-#: ../src/file.c:376
+#: ../src/file.c:379
 #, c-format
 msgid "Skipping '%s' to avoid adding playlist file recursively\n"
 msgstr "忽略'%s'以免递归添加播放列表\n"
 
-#: ../src/file.c:631
+#: ../src/file.c:634
 #, c-format
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr "模板'%2$s'中有未知字符串'%1$s'\n"
 
-#: ../src/file.c:939
+#: ../src/file.c:942
 #, c-format
 msgid "Local filename not valid (%s)"
 msgstr "本地文件名无效(%s)"
 
-#: ../src/file.c:998
+#: ../src/file.c:1001
 #, c-format
 msgid "No information found for user '%s' in '%s'"
 msgstr "'%2$s'中找不到用户'%1$s'的信息"
 
-#: ../src/file.c:1007
+#: ../src/file.c:1010
 #, c-format
 msgid "mserv data file (%s) not available for track (%s)"
 msgstr "mserv数据文件(%s)中没有音轨(%s)的信息"
 
-#: ../src/file.c:1015
+#: ../src/file.c:1018
 #, c-format
 msgid "Track (%s) not in mserv music root directory (%s)"
 msgstr "mserv音乐主目录(%2$s)中没有音轨(%1$s)"
 
-#: ../src/file.c:1046
+#: ../src/file.c:1049
 #, c-format
 msgid "Could not create '%s'"
 msgstr "无法创建'%s'"
 
-#: ../src/file.c:1083
+#: ../src/file.c:1086
 msgid "Error creating thumbnail file"
 msgstr "创建缩略文件时发生错误"
 
-#: ../src/file.c:1114 ../src/misc.c:1018
+#: ../src/file.c:1117 ../src/misc.c:1011
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
 msgstr "模板'%2$s'中有未知字符串'%%%1$c'"
 
-#: ../src/file.c:1138
-#, c-format
+#: ../src/file.c:1141
+#, fuzzy, c-format
 msgid ""
 "Unable to start video thumbnail generator\n"
-"(command line was: '%s'"
+"(command line was: '%s')"
 msgstr ""
 "无法运行视频缩略工具\n"
 "命令为：'%s'"
 
-#: ../src/file.c:1142
+#: ../src/file.c:1145
 #, c-format
 msgid "Thumbnail generator returned status %d"
 msgstr "缩略生成工具返回信息%d"
 
-#: ../src/file.c:1291
+#: ../src/file.c:1294
 #, c-format
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
 msgstr "下列音轨无法完成处理（文件不存在）：'%s'\n"
 
-#: ../src/file.c:1377
+#: ../src/file.c:1380
 #, c-format
 msgid "The following track could not be processed (filetype unknown): '%s'\n"
 msgstr "下列音轨无法完成处理（文件类型未知）：'%s'\n"
 
-#: ../src/file.c:1476
+#: ../src/file.c:1479
 #, c-format
 msgid ""
 "The following track could not be processed (filetype is known but analysis "
 "failed): '%s'\n"
 msgstr "下列音轨无法完成处理（文件类型已知但文件解析失败）：'%s'\n"
 
-#: ../src/file.c:1506 ../src/file.c:1560
+#: ../src/file.c:1509 ../src/file.c:1563
 msgid "Nothing to update"
 msgstr "无需要更新的项目"
 
-#: ../src/file.c:1527
+#: ../src/file.c:1530
 #, c-format
 msgid "Updating %s"
 msgstr "更新%s中"
 
-#: ../src/file.c:1541
+#: ../src/file.c:1544
 msgid "Updated selected tracks with info from file."
 msgstr "从文件更新所选音轨的信息。"
 
-#: ../src/file.c:1575
+#: ../src/file.c:1578
 #, c-format
 msgid "Retrieving mserv data %s"
 msgstr "获取mserv数据%s"
 
-#: ../src/file.c:1580
+#: ../src/file.c:1583
 msgid "no filename available"
 msgstr "没有现成文件名"
 
-#: ../src/file.c:1585
+#: ../src/file.c:1588
 msgid "Updated selected tracks with data from mserv."
 msgstr "以mserv的数据更新选定音轨。"
 
-#: ../src/file.c:1606
+#: ../src/file.c:1609
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -3007,11 +3025,11 @@ msgstr[1] "下列%d条音轨无法更新"
 
 #. gint id,
 #. gboolean modal,
-#: ../src/file.c:1612
+#: ../src/file.c:1615
 msgid "Failed Track Update"
 msgstr "更新音轨失败"
 
-#: ../src/file.c:1670
+#: ../src/file.c:1673
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -3020,11 +3038,11 @@ msgstr[1] "下列%d条音轨完成更新"
 
 #. gint id,
 #. gboolean modal,
-#: ../src/file.c:1676
+#: ../src/file.c:1679
 msgid "Successful Track Update"
 msgstr "成功更新音轨"
 
-#: ../src/file.c:1735
+#: ../src/file.c:1738
 #, c-format
 msgid "No mserv information could be retrieved for the following track"
 msgid_plural ""
@@ -3034,46 +3052,46 @@ msgstr[1] "无法为下列%d条音轨获取mserv信息"
 
 #. gint id,
 #. gboolean modal,
-#: ../src/file.c:1741
+#: ../src/file.c:1744
 msgid "mserv data retrieval problem"
 msgstr "获取mserv数据时发生问题"
 
-#: ../src/file.c:1829
+#: ../src/file.c:1832
 msgid "no local filename available, file on the iPod will be used instead"
 msgstr "本地文件不存在，将使用iPod上的文件代替"
 
-#: ../src/file.c:1835
+#: ../src/file.c:1838
 msgid "no local filename available and copy on iPod cannot be found"
 msgstr "本地文件不存在，iPod中的拷贝也找不到"
 
-#: ../src/file.c:1839 ../src/file.c:1857
+#: ../src/file.c:1842 ../src/file.c:1860
 msgid "no local filename available"
 msgstr "本地文件不存在"
 
-#: ../src/file.c:1847
+#: ../src/file.c:1850
 msgid "local file could not be found, file on the iPod will be used instead"
 msgstr "找不到本地文件，将使用iPod上的文件代替"
 
-#: ../src/file.c:1853
+#: ../src/file.c:1856
 msgid "local file as well as copy on the iPod cannot be found"
 msgstr "本地文件和iPod中的拷贝都找不到"
 
 #. update not successful -- log this track for later display
-#: ../src/file.c:1956
+#: ../src/file.c:1959
 msgid "update failed (format not supported?)"
 msgstr "更新失败（格式不支持?）"
 
-#: ../src/file.c:2041 ../src/misc_playlist.c:936
+#: ../src/file.c:2044 ../src/misc_playlist.c:936
 #, c-format
 msgid "Processing '%s'..."
 msgstr "处理'%s'中..."
 
-#: ../src/file.c:2047
+#: ../src/file.c:2050
 #, c-format
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "忽略'%s'因为它满足排除条件。\n"
 
-#: ../src/file.c:2167 ../src/misc_track.c:1793 ../src/misc_track.c:1898
+#: ../src/file.c:2170 ../src/misc_track.c:1837 ../src/misc_track.c:1942
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
@@ -3082,7 +3100,7 @@ msgstr ""
 "Podcast已存在：'%s'\n"
 "\n"
 
-#: ../src/file.c:2232
+#: ../src/file.c:2235
 #, c-format
 msgid ""
 "Writing to video files not yet supported (%s).\n"
@@ -3091,35 +3109,35 @@ msgstr ""
 "还不支持对视频文件的写入操作(%s)。\n"
 "\n"
 
-#: ../src/file.c:2284 ../src/file.c:2298
+#: ../src/file.c:2287 ../src/file.c:2301
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "无法改变文件的标签：%s\n"
 
-#: ../src/file.c:2400
+#: ../src/file.c:2403
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr "无法打开文件'%s'读写。\n"
 
-#: ../src/file.c:2407
+#: ../src/file.c:2410
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr "无法对文件'%s'加锁。\n"
 
 #. error!
-#: ../src/file.c:2424 ../src/file.c:2433 ../src/file.c:2444 ../src/file.c:2454
+#: ../src/file.c:2427 ../src/file.c:2436 ../src/file.c:2447 ../src/file.c:2457
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr "'%s'中格式有误：%s\n"
 
 #. gint id,
 #. gboolean modal,
-#: ../src/file.c:2483
+#: ../src/file.c:2486
 msgid "Remove offline playcounts?"
 msgstr "清除离线播放计数？"
 
 #. title
-#: ../src/file.c:2484
+#: ../src/file.c:2487
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
@@ -3127,12 +3145,12 @@ msgstr ""
 "iTunesDB中的一些离线播放的音轨找不到。按下'ok'从离线播放计数文件中删除它"
 "们，'Cancel'保持不变。"
 
-#: ../src/file.c:2501
+#: ../src/file.c:2504
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr "写入'%s'时发生错误。\n"
 
-#: ../src/file.c:2558 ../src/tools.c:270
+#: ../src/file.c:2561 ../src/tools.c:270
 #, c-format
 msgid ""
 "Normalization failed: file type not supported (%s).\n"
@@ -3141,7 +3159,7 @@ msgstr ""
 "均衡化失败：文件类型不支持(%s)。\n"
 "\n"
 
-#: ../src/file.c:2574 ../src/tools.c:287
+#: ../src/file.c:2577 ../src/tools.c:287
 #, c-format
 msgid ""
 "Normalization failed: file not available (%s).\n"
@@ -3150,7 +3168,7 @@ msgstr ""
 "均衡化失败：文件不存在(%s)。\n"
 "\n"
 
-#: ../src/file.c:2631
+#: ../src/file.c:2634
 #, c-format
 msgid ""
 "Lyrics not found, file not available (%s).\n"
@@ -3159,7 +3177,7 @@ msgstr ""
 "找不到歌词，文件不存在(%s)。\n"
 "\n"
 
-#: ../src/file.c:2671
+#: ../src/file.c:2674
 #, c-format
 msgid ""
 "iPod File not available and ID3 saving disabled in options, cannot save "
@@ -3169,7 +3187,7 @@ msgstr ""
 "iPod文件不存在并且ID3保存功能被禁用，无法保存歌词到：%s \n"
 "\n"
 
-#: ../src/file.c:2712
+#: ../src/file.c:2715
 #, c-format
 msgid ""
 "Lyrics not written, file name not available (%s).\n"
@@ -3182,38 +3200,40 @@ msgstr ""
 msgid "Summary status of conversion processes"
 msgstr "转换进度摘要"
 
-#: ../src/file_convert.c:576
+#. only change the label if it has changed --
+#. otherwise our tooltips will be switched off
+#: ../src/file_convert.c:579 ../src/file_convert.c:582
 msgid "active"
 msgstr "活跃的"
 
-#: ../src/file_convert.c:581
+#: ../src/file_convert.c:587 ../src/file_convert.c:589
 msgid "inactive"
 msgstr "不活跃的"
 
-#: ../src/file_convert.c:592
+#: ../src/file_convert.c:601
 #, c-format
 msgid "Active threads: %d. Scheduled tracks: %d."
 msgstr "活跃进程：%d    计划播放音轨：%d条"
 
-#: ../src/file_convert.c:1090
+#: ../src/file_convert.c:1099
 #, c-format
 msgid "Original filename not available for '%s.'\n"
 msgstr "'%s'的原始文件不存在。\n"
 
-#: ../src/file_convert.c:1105
+#: ../src/file_convert.c:1114
 #, c-format
 msgid "Filename '%s' is no longer valid for '%s'.\n"
 msgstr "文件名'%s'对'%s'无效。\n"
 
-#: ../src/file_convert.c:1156
+#: ../src/file_convert.c:1165
 msgid "Ogg Vorbis"
 msgstr "Ogg Vorbis"
 
-#: ../src/file_convert.c:1162
+#: ../src/file_convert.c:1171
 msgid "FLAC"
 msgstr "FLAC"
 
-#: ../src/file_convert.c:1217
+#: ../src/file_convert.c:1226
 #, c-format
 msgid ""
 "Files of type '%s' are not supported by the iPod. Please go to the "
@@ -3223,16 +3243,16 @@ msgstr ""
 "iPod不支持'%s'类型的文件，请在首选项中为'%s'设置适当的转换脚本。\n"
 "\n"
 
-#: ../src/file_convert.c:1303
+#: ../src/file_convert.c:1312
 msgid "No information available"
 msgstr "无可用信息"
 
-#: ../src/file_convert.c:1342
+#: ../src/file_convert.c:1351
 #, c-format
 msgid "Could not create '%s'. Filetype conversion will not work.\n"
 msgstr "无法创建'%s'，文件类型转换失败。\n"
 
-#: ../src/file_convert.c:1667 ../src/file_convert.c:3119
+#: ../src/file_convert.c:1676 ../src/file_convert.c:3128
 #, c-format
 msgid ""
 "Transfer of '%s' failed. %s\n"
@@ -3241,7 +3261,7 @@ msgstr ""
 "移动'%s'失败。%s\n"
 "\n"
 
-#: ../src/file_convert.c:2073 ../src/file_convert.c:2352
+#: ../src/file_convert.c:2082 ../src/file_convert.c:2361
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s'.\n"
@@ -3250,7 +3270,7 @@ msgstr ""
 "转换'%s'失败：'%s'。\n"
 "\n"
 
-#: ../src/file_convert.c:2088
+#: ../src/file_convert.c:2097
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s %s' returned exit status %d.\n"
@@ -3259,7 +3279,7 @@ msgstr ""
 "转换'%s'失败：'%s %s'返回退出状态 %d。\n"
 "\n"
 
-#: ../src/file_convert.c:2117
+#: ../src/file_convert.c:2126
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '\"%s\" %s' did not return filename extension as "
@@ -3269,7 +3289,7 @@ msgstr ""
 "转换'%s'失败：'\"%s\" %s'没有返回预期的文件名扩展。\n"
 "\n"
 
-#: ../src/file_convert.c:2193
+#: ../src/file_convert.c:2202
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not access original file '%s' (%s).\n"
@@ -3278,7 +3298,7 @@ msgstr ""
 "转换'%s'失败：无法存取原始文件'%s' (%s)。\n"
 "\n"
 
-#: ../src/file_convert.c:2248
+#: ../src/file_convert.c:2257
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not create directory '%s'.\n"
@@ -3287,7 +3307,7 @@ msgstr ""
 "转换'%s'失败：无法创建目录'%s'。\n"
 "\n"
 
-#: ../src/file_convert.c:2383
+#: ../src/file_convert.c:2392
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s' returned exit status %d.\n"
@@ -3296,7 +3316,7 @@ msgstr ""
 "转换'%s'失败： '%s'返回退出状态%d。\n"
 "\n"
 
-#: ../src/file_convert.c:2422
+#: ../src/file_convert.c:2431
 #, c-format
 msgid ""
 "Conversion of '%s' failed: could not stat the converted file '%s'.\n"
@@ -3305,82 +3325,82 @@ msgstr ""
 "转换'%s'失败：无法设定转换后文件'%s'的stat。\n"
 "\n"
 
-#: ../src/file_export.c:182
+#: ../src/file_export.c:180
 #, c-format
 msgid "Skipping existing file with same length: '%s'\n"
 msgstr "忽略与现有文件相同大小的文件：'%s'\n"
 
-#: ../src/file_export.c:190
+#: ../src/file_export.c:188
 #, c-format
 msgid "Overwriting existing file: '%s'\n"
 msgstr "覆盖现有文件：'%s'\n"
 
-#: ../src/file_export.c:207
+#: ../src/file_export.c:205
 #, c-format
 msgid "Error copying '%s' to '%s': Permission Error (%s)\n"
 msgstr "复制'%s'到'%s'时发生错误：权限错误(%s)\n"
 
-#: ../src/file_export.c:209
+#: ../src/file_export.c:207
 #, c-format
 msgid "Error copying '%s' to '%s' (%s)\n"
 msgstr "复制'%s'到'%s'时发生错误(%s)\n"
 
-#: ../src/file_export.c:327
+#: ../src/file_export.c:325
 #, c-format
 msgid "Could find file for '%s' on the iPod\n"
 msgstr "无法找到iPod中'%s'的文件\n"
 
 #. create the dialog window
-#: ../src/file_export.c:395 ../src/tools.c:360
+#: ../src/file_export.c:393 ../src/tools.c:360
 msgid "Information"
 msgstr "信息"
 
-#: ../src/file_export.c:406 ../src/tools.c:372
+#: ../src/file_export.c:404 ../src/tools.c:372
 msgid "Press button to abort."
 msgstr "放弃？"
 
-#: ../src/file_export.c:419
+#: ../src/file_export.c:417
 msgid "copying..."
 msgstr "复制中"
 
-#: ../src/file_export.c:476
+#: ../src/file_export.c:474
 #, c-format
 msgid "Failed to write '%s-%s'\n"
 msgstr "写入'%s-%s'失败\n"
 
-#: ../src/file_export.c:489
+#: ../src/file_export.c:487
 #, c-format
 msgid "Copied %d of %d track."
 msgid_plural "Copied %d of %d tracks."
 msgstr[0] "复制%2$d条音轨中的第%1$d条"
 msgstr[1] "复制%2$d条音轨中的第%1$d条"
 
-#: ../src/file_export.c:505 ../src/tools.c:518
+#: ../src/file_export.c:503 ../src/tools.c:518
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
 msgstr "%d%% (还需要%d:%02d:%02d)"
 
-#: ../src/file_export.c:514
+#: ../src/file_export.c:512
 msgid "Some tracks were not copied."
 msgstr "部分音轨将不会被复制。"
 
-#: ../src/file_export.c:579
+#: ../src/file_export.c:577
 msgid "Export from iPod database not possible in offline mode."
 msgstr "离线模式下无法从iPod数据库导出。"
 
-#: ../src/file_export.c:587
+#: ../src/file_export.c:585
 msgid "Select Export Destination Directory"
 msgstr "选择导出的目标文件夹"
 
-#: ../src/file_export.c:736
+#: ../src/file_export.c:734
 msgid "Drag from iPod database not possible in offline mode."
 msgstr "离线模式下不能对iPod数据库拖拽。"
 
-#: ../src/file_export.c:770
+#: ../src/file_export.c:768
 msgid "The following tracks have to be copied to your harddisk"
 msgstr "下列音轨将被复制到你的硬盘"
 
-#: ../src/file_export.c:815
+#: ../src/file_export.c:813
 msgid ""
 "Some tracks were not copied to your harddisk. Only the copied tracks will be "
 "included in the current drag and drop operation.\n"
@@ -3389,7 +3409,7 @@ msgstr ""
 "部分音轨将不会被复制到你的硬盘，当前的拖拽操作只包括那些复制的音轨。\n"
 "\n"
 
-#: ../src/file_export.c:1010
+#: ../src/file_export.c:1008
 #, c-format
 msgid ""
 "No valid filename for: %s\n"
@@ -3398,14 +3418,14 @@ msgstr ""
 "无有效文件名：%s\n"
 "\n"
 
-#: ../src/file_export.c:1026
+#: ../src/file_export.c:1024
 #, c-format
 msgid "Created playlist with one track."
 msgid_plural "Created playlist with %d tracks."
 msgstr[0] "为这条音轨创建播放列表"
 msgstr[1] "为这%d条音轨创建播放列表"
 
-#: ../src/file_export.c:1031
+#: ../src/file_export.c:1029
 #, c-format
 msgid ""
 "Could not open '%s' for writing (%s).\n"
@@ -3419,21 +3439,16 @@ msgstr ""
 msgid "Matching SHA1 checksum for file %d/%d"
 msgstr "文件的SHA1验证匹配中 %d/%d"
 
-#: ../src/file_itunesdb.c:249
-#, c-format
-msgid "Could not open \"%s\" for reading extended info.\n"
-msgstr "无法打开\"%s\"以读取扩展信息。\n"
-
-#: ../src/file_itunesdb.c:256
+#: ../src/file_itunesdb.c:259
 msgid "Could not create hash value from itunesdb\n"
 msgstr "无法从iTunesDB创建哈希值\n"
 
-#: ../src/file_itunesdb.c:272
+#: ../src/file_itunesdb.c:275
 #, c-format
 msgid "Error while reading extended info: %s\n"
 msgstr "读取扩展信息时发生错误：%s\n"
 
-#: ../src/file_itunesdb.c:289
+#: ../src/file_itunesdb.c:292
 #, c-format
 msgid ""
 "iTunesDB '%s' does not match checksum in extended information file '%s'\n"
@@ -3445,7 +3460,7 @@ msgstr ""
 "gtkpod将尝试采用SHA1验证信息，将需要很长时间。\n"
 "\n"
 
-#: ../src/file_itunesdb.c:301
+#: ../src/file_itunesdb.c:304
 #, c-format
 msgid ""
 "%s:\n"
@@ -3454,7 +3469,7 @@ msgstr ""
 "%s:\n"
 "期望是\"itunesdb_hash\"，但是得到:\"%s\"\n"
 
-#: ../src/file_itunesdb.c:363
+#: ../src/file_itunesdb.c:366
 #, c-format
 msgid ""
 "%s:\n"
@@ -3463,7 +3478,7 @@ msgstr ""
 "%s:\n"
 "格式错误：%s\n"
 
-#: ../src/file_itunesdb.c:408
+#: ../src/file_itunesdb.c:411
 msgid ""
 "No SHA1 checksums on individual tracks are available.\n"
 "\n"
@@ -3478,21 +3493,21 @@ msgstr ""
 "的其他程序中使用iPod。\n"
 "\n"
 
-#: ../src/file_itunesdb.c:474
+#: ../src/file_itunesdb.c:477
 msgid ""
 "Extended info will not be used. If you have non-transferred tracks,\n"
 "these will be lost.\n"
 msgstr "扩展信息将不会被使用，如果还有未传输的音轨，它们将会丢失。\n"
 
-#: ../src/file_itunesdb.c:482
+#: ../src/file_itunesdb.c:485
 msgid "Offline iPod database successfully imported"
 msgstr "离线iPod数据库成功导入"
 
-#: ../src/file_itunesdb.c:485
+#: ../src/file_itunesdb.c:488
 msgid "Local database successfully imported"
 msgstr "本地数据库成功导入"
 
-#: ../src/file_itunesdb.c:493
+#: ../src/file_itunesdb.c:496
 #, c-format
 msgid ""
 "Offline iPod database import failed: '%s'\n"
@@ -3501,7 +3516,7 @@ msgstr ""
 "离线iPod数据库导入失败：'%s'\n"
 "\n"
 
-#: ../src/file_itunesdb.c:497
+#: ../src/file_itunesdb.c:500
 #, c-format
 msgid ""
 "Local database import failed: '%s'\n"
@@ -3510,7 +3525,7 @@ msgstr ""
 "本地数据库导入失败：'%s'\n"
 "\n"
 
-#: ../src/file_itunesdb.c:504
+#: ../src/file_itunesdb.c:507
 msgid ""
 "Offline iPod database import failed: \n"
 "\n"
@@ -3518,7 +3533,7 @@ msgstr ""
 "离线iPod数据库导入失败：\n"
 "\n"
 
-#: ../src/file_itunesdb.c:507
+#: ../src/file_itunesdb.c:510
 msgid ""
 "Local database import failed: \n"
 "\n"
@@ -3526,7 +3541,7 @@ msgstr ""
 "本地数据库导入失败：\n"
 "\n"
 
-#: ../src/file_itunesdb.c:514
+#: ../src/file_itunesdb.c:517
 #, c-format
 msgid ""
 "'%s' does not exist. Import aborted.\n"
@@ -3535,15 +3550,15 @@ msgstr ""
 "'%s'不存在，放弃导入操作。\n"
 "\n"
 
-#: ../src/file_itunesdb.c:536
+#: ../src/file_itunesdb.c:539
 msgid "Extended info will not be used.\n"
 msgstr "扩展信息将不会被使用。\n"
 
-#: ../src/file_itunesdb.c:543
+#: ../src/file_itunesdb.c:546
 msgid "iPod Database Successfully Imported"
 msgstr "iPod数据库已成功导入"
 
-#: ../src/file_itunesdb.c:550
+#: ../src/file_itunesdb.c:553
 #, c-format
 msgid ""
 "iPod Database Import Failed: '%s'\n"
@@ -3552,7 +3567,7 @@ msgstr ""
 "iPod数据库导入失败：'%s'\n"
 "\n"
 
-#: ../src/file_itunesdb.c:556
+#: ../src/file_itunesdb.c:559
 msgid ""
 "iPod Database Import Failed.\n"
 "\n"
@@ -3560,7 +3575,7 @@ msgstr ""
 "iPod数据库导入失败。\n"
 "\n"
 
-#: ../src/file_itunesdb.c:565
+#: ../src/file_itunesdb.c:568
 #, c-format
 msgid ""
 "'%s' (or similar) does not exist. Import aborted.\n"
@@ -3569,7 +3584,7 @@ msgstr ""
 "'%s'(或类似)不存在，放弃导入。\n"
 "\n"
 
-#: ../src/file_itunesdb.c:886
+#: ../src/file_itunesdb.c:889
 #, c-format
 msgid ""
 "Could not find iPod directory structure at '%s'.\n"
@@ -3586,38 +3601,38 @@ msgstr ""
 "\n"
 "你真的准备现在就创建目录结构吗？"
 
-#: ../src/file_itunesdb.c:890
+#: ../src/file_itunesdb.c:893
 msgid "iPod directory structure not found"
 msgstr "iPod目录结构未找到"
 
-#: ../src/file_itunesdb.c:892
+#: ../src/file_itunesdb.c:895
 msgid "Create directory structure"
 msgstr "创建目录结构"
 
-#: ../src/file_itunesdb.c:1198
+#: ../src/file_itunesdb.c:1201
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr "无法打开\"%s\"写入扩展信息。\n"
 
-#: ../src/file_itunesdb.c:1213
+#: ../src/file_itunesdb.c:1216
 msgid "Aborted writing of extended info.\n"
 msgstr "放弃扩展信息的写入操作。\n"
 
-#: ../src/file_itunesdb.c:1415
+#: ../src/file_itunesdb.c:1421
 #, c-format
 msgid "%d%%"
 msgstr "%d%%"
 
-#: ../src/file_itunesdb.c:1429
+#: ../src/file_itunesdb.c:1435
 #, c-format
 msgid "%d%% (%d/%d  %d:%02d:%02d left)"
 msgstr "%d%% (%d/%d  还有%d:%02d:%02d)"
 
-#: ../src/file_itunesdb.c:1481
+#: ../src/file_itunesdb.c:1487
 msgid "Status: Deleting File"
 msgstr "状态：删除文件中"
 
-#: ../src/file_itunesdb.c:1542
+#: ../src/file_itunesdb.c:1548
 #, c-format
 msgid ""
 "Could not remove the following file: '%s'\n"
@@ -3626,7 +3641,7 @@ msgstr ""
 "无法删除下列文件：'%s'\n"
 "\n"
 
-#: ../src/file_itunesdb.c:1651
+#: ../src/file_itunesdb.c:1657
 msgid ""
 "The following track could not be converted successfully:\n"
 "\n"
@@ -3640,7 +3655,7 @@ msgstr[1] ""
 "下列音轨无法完成转换：\n"
 "\n"
 
-#: ../src/file_itunesdb.c:1661
+#: ../src/file_itunesdb.c:1667
 msgid ""
 "The following track could not be transferred successfully:\n"
 "\n"
@@ -3658,13 +3673,13 @@ msgstr[1] ""
 #. modal,
 #. gint id,
 #. gboolean modal,
-#: ../src/file_itunesdb.c:1670 ../src/misc_confirm.c:70
+#: ../src/file_itunesdb.c:1676 ../src/misc_confirm.c:70
 #: ../src/misc_confirm.c:94
 msgid "Warning"
 msgstr "警告"
 
 #. title
-#: ../src/file_itunesdb.c:1671
+#: ../src/file_itunesdb.c:1677
 msgid ""
 "The iPod could not be ejected. Please fix the problems mentioned below and "
 "then eject the iPod again. Pressing 'OK' will re-schedule the failed tracks "
@@ -3673,22 +3688,22 @@ msgstr ""
 "iPod无法弹出，请按照下面的指示修复并再次尝试弹出。按'ok'将重新安排对操作失败"
 "的音轨进行转换和传输。"
 
-#: ../src/file_itunesdb.c:1734
+#: ../src/file_itunesdb.c:1740
 #, c-format
 msgid "Status: Copying track"
 msgstr "状态：复制音轨中"
 
-#: ../src/file_itunesdb.c:1740
+#: ../src/file_itunesdb.c:1746
 #, c-format
 msgid "Status: Waiting for conversion to complete"
 msgstr "等待完成转换"
 
-#: ../src/file_itunesdb.c:1744
+#: ../src/file_itunesdb.c:1750
 #, c-format
 msgid "Status: Finished transfer"
 msgstr "状态：传输完成"
 
-#: ../src/file_itunesdb.c:1789
+#: ../src/file_itunesdb.c:1795
 #, c-format
 msgid ""
 "One track could not be transferred because your iPod is full. Either delete "
@@ -3705,7 +3720,7 @@ msgstr[1] ""
 "因为你的iPod已经满了，无法再传输%d条音轨。或者删除部分音轨或者在iPod上腾出磁"
 "盘空间"
 
-#: ../src/file_itunesdb.c:1871
+#: ../src/file_itunesdb.c:1877
 #, c-format
 msgid ""
 "You did not import the existing iTunesDB ('%s'). This is most likely "
@@ -3719,44 +3734,44 @@ msgstr ""
 "如果跳过保存，你还可以在下次同步前再次导入现存数据库。\n"
 "\n"
 
-#: ../src/file_itunesdb.c:1875 ../src/misc_playlist.c:1039
+#: ../src/file_itunesdb.c:1881 ../src/misc_playlist.c:1039
 msgid "Existing iTunes database not imported"
 msgstr "现有的iTunes数据库没有被导入"
 
-#: ../src/file_itunesdb.c:1877 ../src/misc_playlist.c:1041
+#: ../src/file_itunesdb.c:1883 ../src/misc_playlist.c:1041
 msgid "Proceed anyway"
 msgstr "不管，继续原来操作"
 
-#: ../src/file_itunesdb.c:1878
+#: ../src/file_itunesdb.c:1884
 msgid "Skip storing"
 msgstr "跳过保存"
 
-#: ../src/file_itunesdb.c:1909
+#: ../src/file_itunesdb.c:1915
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
 msgstr "在开始同步iPod之前，iPod目录结构必须是已经存在。\n"
 
-#: ../src/file_itunesdb.c:1918
+#: ../src/file_itunesdb.c:1924
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr "部分音轨无法从iPod中删除，放弃导出！"
 
-#: ../src/file_itunesdb.c:1936
+#: ../src/file_itunesdb.c:1942
 #, c-format
 msgid "Now writing database '%s'. Please wait..."
 msgstr "现在开始写入数据库'%s'，请等待..."
 
-#: ../src/file_itunesdb.c:1985
+#: ../src/file_itunesdb.c:1991
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "扩展信息文件没有被删除：'%s'"
 
-#: ../src/file_itunesdb.c:2092
+#: ../src/file_itunesdb.c:2113
 #, c-format
 msgid "%s: Database saved"
 msgstr "%s：数据库已保存"
 
-#: ../src/file_itunesdb.c:2096
+#: ../src/file_itunesdb.c:2117
 #, c-format
 msgid "%s: Changes saved"
 msgstr "%s：改动已经保存"
@@ -4190,10 +4205,11 @@ msgstr ""
 "02111-1307, USA."
 
 #: ../src/help.c:137
+#, fuzzy
 msgid ""
 "© 2002-2007\n"
-"Jorg Schuler <jcsjcs@users.sourceforge.net>\n"
-"Corey Donohoe <atmos@atmos.org>"
+"Jorg Schuler <jcsjcs at users.sourceforge.net>\n"
+"Corey Donohoe <atmos at atmos.org>"
 msgstr ""
 "© 2002-2007\n"
 "Jorg Schuler <jcsjcs@users.sourceforge.net>\n"
@@ -4365,22 +4381,22 @@ msgstr ""
 "无法确定你所选的型号--这可能是个bug或者是因为GTK+或glade库不兼容引起的。\n"
 "\n"
 
-#: ../src/misc.c:864
+#: ../src/misc.c:857
 #, c-format
 msgid "Could not process '%s' (no filename available)"
 msgstr "无法处理'%s'(文件名不存在)"
 
-#: ../src/misc.c:1101
+#: ../src/misc.c:1094
 #, c-format
 msgid "Template ('%s') does not match file type '%s'\n"
 msgstr "模板('%s')和文件类型'%s'不匹配\n"
 
-#: ../src/misc.c:1187
+#: ../src/misc.c:1180
 #, c-format
 msgid "Error creating %s: %s\n"
 msgstr "创建%s时发生错误：%s\n"
 
-#: ../src/misc.c:1642
+#: ../src/misc.c:1635
 #, c-format
 msgid ""
 "Writing preferences file '%s' failed (%s).\n"
@@ -4389,11 +4405,11 @@ msgstr ""
 "写入配置文件'%s'失败(%s)。\n"
 "\n"
 
-#: ../src/misc.c:1644
+#: ../src/misc.c:1637
 msgid "unspecified error"
 msgstr "未知错误"
 
-#: ../src/misc.c:1652
+#: ../src/misc.c:1645
 #, c-format
 msgid ""
 "Writing preferences to the iPod (%s) failed: could not get path to Control "
@@ -4625,11 +4641,12 @@ msgstr[1] ""
 "标出。"
 
 #: ../src/misc_confirm.c:869
+#, fuzzy
 msgid ""
 "Data has been changed and not been saved. If you quit gtkpod, all unsaved "
 "changes will be lost.\n"
 "\n"
-"ADo you want to save your changes first?"
+"Do you want to save your changes first?"
 msgstr ""
 "数据已经被改动且还没保存，如果你要退出gtkpod，所有还没有保存的改动都将丢"
 "失。\n"
@@ -5138,72 +5155,100 @@ msgstr[1] "下列%d条重复音轨没有添加到主播放列表。"
 msgid "Duplicate detection"
 msgstr "检查重复文件"
 
-#: ../src/misc_track.c:1347
+#: ../src/misc_track.c:1391
 msgid "Local Database"
 msgstr "本地数据库"
 
 #. artwork is set
-#: ../src/misc_track.c:1358
+#: ../src/misc_track.c:1402
 msgid "Embedded or filename was lost"
 msgstr "嵌入或文件丢失"
 
-#: ../src/misc_track.c:1362
+#: ../src/misc_track.c:1406
 msgid "Artwork not set"
 msgstr "没有设置封面"
 
-#: ../src/misc_track.c:1836
+#: ../src/misc_track.c:1880
 #, c-format
 msgid "Could not find source file for '%s'. Track not copied."
 msgstr "找不到'%s'的源文件，不会复制音轨。"
 
-#: ../src/misc_track.c:2072
+#: ../src/misc_track.c:2116
 #, c-format
 msgid "drag and drop: ignored '%s'\n"
 msgstr "拖拽：忽略'%s'\n"
 
-#: ../src/mp3file.c:1344
+#: ../src/mp3file.c:1331
 #, c-format
 msgid "Error setting ID3 field: %s\n"
 msgstr "设置ID3标签时发生错误：%s\n"
 
-#: ../src/mp3file.c:1368 ../src/mp3file.c:1552 ../src/mp3file.c:1713
-#: ../src/mp3file.c:2870 ../src/mp3file.c:2929 ../src/mp3file.c:2956
+#: ../src/mp3file.c:1355 ../src/mp3file.c:1539 ../src/mp3file.c:1700
+#: ../src/mp3file.c:2094 ../src/mp3file.c:3017 ../src/mp3file.c:3076
+#: ../src/mp3file.c:3103
 #, c-format
 msgid "ERROR while opening file: '%s' (%s).\n"
 msgstr "打开文件时发生错误：'%s' (%s).\n"
 
-#: ../src/mp3file.c:1793 ../src/mp3file.c:2993
+#: ../src/mp3file.c:1780 ../src/mp3file.c:3140
 #, c-format
 msgid "ERROR while writing tag to file: '%s' (%s).\n"
 msgstr "写入文件标签时发生错误： '%s' (%s).\n"
 
 #. Tracks with zero play length are ignored by iPod...
-#: ../src/mp3file.c:2907
+#: ../src/mp3file.c:3054
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr "文件\"%s\"播放时间长度为0，忽略。\n"
 
-#: ../src/mp4file.c:243 ../src/mp4file.c:475
+#: ../src/mp4file.c:494
+#, fuzzy, c-format
+msgid ""
+"m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
+"without the mp4v2 library. You must install the mp4v2 library.\n"
+msgstr ""
+"文件'%s'的m4a/m4p/m4b试音更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译"
+"gtkpod源文件并且加入mp4v2库支持。\n"
+
+#: ../src/mp4file.c:534 ../src/mp4file.c:785
 #, c-format
 msgid "'%s' does not appear to be a mp4 audio or video file.\n"
 msgstr "'%s'似乎不是一个mp4音频(或视频)文件。\n"
 
-#: ../src/mp4file.c:253 ../src/mp4file.c:485
+#: ../src/mp4file.c:544 ../src/mp4file.c:795
 #, c-format
 msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
 msgstr "无法读取文件'%s'，或者这不是个mp4文件。\n"
 
-#: ../src/mp4file.c:607
+#: ../src/mp4file.c:558
+#, fuzzy, c-format
+msgid ""
+"Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
+"You must install the mp4v2 library.\n"
+msgstr ""
+"导入'%s'失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译gtkpod源文件并且加入"
+"mp4v2库支持。\n"
+
+#: ../src/mp4file.c:808
+#, fuzzy, c-format
+msgid ""
+"m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
+"without the mp4v2 library. You must install the mp4v2 library.\n"
+msgstr ""
+"'%s'的m4a/m4p/m4b 元数据更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译"
+"gtkpod源文件并且加入mp4v2库支持。\n"
+
+#: ../src/mp4file.c:931
 #, c-format
 msgid "'%s' does not appear to be a mp4 audio file.\n"
 msgstr "'%s'似乎不是一个mp4音频文件。\n"
 
-#: ../src/mp4file.c:618
+#: ../src/mp4file.c:942
 #, c-format
 msgid "Could not open '%s' for writing, or file is not an mp4 file.\n"
 msgstr "无法写入文件'%s'，或者它不是个mp4文件。\n"
 
-#: ../src/mp4file.c:631
+#: ../src/mp4file.c:955
 #, c-format
 msgid ""
 "Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
@@ -5212,17 +5257,17 @@ msgstr ""
 "导入'%s'失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译gtkpod源文件并且加入"
 "mp4v2库支持。\n"
 
-#: ../src/mp4file.c:637
+#: ../src/mp4file.c:961
 #, c-format
 msgid ""
 "m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
 "without the mp4v2 library. You must compile the gtkpod source together with "
 "the mp4v2 library.\n"
 msgstr ""
-"'%s'的m4a/m4p/m4b 元数据更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译gtkpod"
-"源文件并且加入mp4v2库支持。\n"
+"'%s'的m4a/m4p/m4b 元数据更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译"
+"gtkpod源文件并且加入mp4v2库支持。\n"
 
-#: ../src/mp4file.c:643
+#: ../src/mp4file.c:967
 #, c-format
 msgid ""
 "m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
@@ -5255,28 +5300,28 @@ msgstr ""
 "文件'%s'的元数据更新失败：没有ogg库，不支持ogg格式。你必须编译gtkpod源文件并"
 "且加入ogg库支持。\n"
 
-#: ../src/prefs.c:365
+#: ../src/prefs.c:367
 #, c-format
 msgid "gtkpod version %s usage:\n"
 msgstr "gtkpod版本%s的使用方法：\n"
 
-#: ../src/prefs.c:366
+#: ../src/prefs.c:368
 msgid "  -h, --help:   display this message\n"
 msgstr "  -h, --help:   显示本信息\n"
 
-#: ../src/prefs.c:367
+#: ../src/prefs.c:369
 msgid "  -p <file>:    increment playcount for file by one\n"
 msgstr "  -p <file>:    文件的播放次数+1\n"
 
-#: ../src/prefs.c:368
+#: ../src/prefs.c:370
 msgid "  --hash <file>:print gtkpod hash for file\n"
 msgstr "  --hash <file>:  显示文件的哈希值\n"
 
-#: ../src/prefs.c:369
+#: ../src/prefs.c:371
 msgid "  -m path:      define the mountpoint of your iPod\n"
 msgstr "  -m path:      指定你的iPod挂载点\n"
 
-#: ../src/prefs.c:370
+#: ../src/prefs.c:372
 msgid "  --mountpoint: same as '-m'.\n"
 msgstr "  --mountpoint: 与'-m'相同。\n"
 
@@ -5546,6 +5591,27 @@ msgstr "找不到'%s'的指令'%s'"
 #, c-format
 msgid "%s does not appear to be a supported wav file.\n"
 msgstr "%s 似乎不是一个wav文件。\n"
+
+#~ msgid ""
+#~ "<span weight='bold' size='larger'>Message</span>\n"
+#~ "\n"
+#~ "The quick brown fox jumps over the lazy dog."
+#~ msgstr ""
+#~ "<span weight='bold' size='larger'>消息</span>\n"
+#~ "\n"
+#~ "那只敏捷的棕毛狐狸跃过那只懒狗。"
+
+#~ msgid "Dummy\n"
+#~ msgstr "Dummy\n"
+
+#~ msgid "checkbutton"
+#~ msgstr "检查"
+
+#~ msgid "gtk-revert-to-saved"
+#~ msgstr "gtk-revert-to-saved"
+
+#~ msgid "Could not open \"%s\" for reading extended info.\n"
+#~ msgstr "无法打开\"%s\"以读取扩展信息。\n"
 
 #~ msgid "韩语(EUC-KR)"
 #~ msgstr "韩语(EUC-KR)"
