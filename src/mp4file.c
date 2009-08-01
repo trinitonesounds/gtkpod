@@ -1,4 +1,4 @@
-/* Time-stamp: <2008-09-07 11:16:18 jcs>
+/* Time-stamp: <2009-08-01 17:46:51 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -339,7 +339,7 @@ static MP4MetadataDelete_t MP4MetadataDelete = NULL;
     
 void mp4_init()
 {
-    mp4v2_handle = dlopen("libmp4v2.so.0", RTLD_LAZY);
+    mp4v2_handle = dlopen("libmp4v2.so", RTLD_LAZY);
 
     if (!mp4v2_handle)
     {

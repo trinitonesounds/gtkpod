@@ -4,6 +4,10 @@
 
 	* po/*.po: ran "make update-po".
 
+	* src/mp4file.c: dlopen libmp4v2.so instead of libmp4v2.so.0
+          to support newer library versions. Closes tracker item
+          2820688.
+
 2009-05-10  Maia Kozheva <sikon@ubuntu.com>
 
 	* configure.in:
