@@ -464,6 +464,51 @@ printf ("%ld %ld (%s)\n, %ld %d\n",
 }
 
 
+/**
+ * cache_directory:
+ *
+ * Add the given directory to the given hash table then recurse into the directory
+ * and add all its sub-directories.
+ *
+ * @dir: top-level directory to recurse into and store subdirectories
+ * @dirs_hash: pointer to a hash table that stores all directory paths
+ *
+ * Return value: none, dirs_hash stores all required paths
+ *
+ **/
+static void cache_directory (const gchar *dir, GHashTable *dirs_hash)
+{
+    GDir *dir_handle;
+    const gchar *filename;
+    gchar *path;
+
+    if (! g_file_test (dir, G_FILE_TEST_IS_DIR))
+        return;
+
+    /* dir represents a directory so store it in the hash table */
+    g_hash_table_insert(dirs_hash, g_strdup(dir), NULL);
+
+    dir_handle = g_dir_open (dir, 0, NULL);
+    if (dir_handle == NULL)
+        return;
+
+    /* Loop through the filenames in the directory */
+    while ((filename = g_dir_read_name(dir_handle)))
+    {
+        /* Construct absolute path from dir and filename */
+        path = g_build_filename(dir, filename);
+
+        /* If path is not directory then move on to next */
+        if (! g_file_test (path, G_FILE_TEST_IS_DIR))
+            continue;
+
+        /* recursively walk down into sub directory */
+        cache_directory (path, dirs_hash);
+        g_free (path);
+    }
+
+    g_dir_close(dir_handle);
+}
 
 
 /**
@@ -552,7 +597,7 @@ void sync_playlist (Playlist *playlist,
 		dir[len-1] = 0;
 	    }
 	}
-	g_hash_table_insert (dirs_hash, dir, NULL);
+	cache_directory (dir, dirs_hash);
     }
     else
     {
