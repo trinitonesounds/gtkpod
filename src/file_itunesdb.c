@@ -524,14 +524,11 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     { /* GP_ITDB_TYPE_IPOD _and_ iPod is connected */
 	gchar *name_ext=NULL, *name_db=NULL;
 
-	gchar *itunes_dir = itdb_get_itunes_dir (mp);
-	if (itunes_dir)
-	{
-	    name_ext = itdb_get_path (itunes_dir, "iTunesDB.ext");
-	    name_db  = itdb_get_path (itunes_dir, "iTunesDB");
-	}
+	name_db = itdb_get_itunesdb_path (mp);
 	if (name_db)
 	{
+	    name_ext = g_strdup_printf("%s.ext", name_db);
+
 	    if (WRITE_EXTENDED_INFO)
 	    {
 		if (!read_extended_info (name_ext, name_db))
@@ -571,7 +568,6 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	}
 	g_free (name_ext);
 	g_free (name_db);
-	g_free (itunes_dir);
     }
     g_free (cfgdir);
 
