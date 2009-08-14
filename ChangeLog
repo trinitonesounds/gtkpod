@@ -1,3 +1,11 @@
+2009-08-14  Todd Zullinger  <tmz@pobox.com>
+
+	* src/file_convert.c: Fix missing variable in warning
+
+	  The conv-cachedir variable was missing from a
+	  gtkpod_warning() call, leaving users wondering what "Could
+	  not create '%s'." might mean.
+
 2009-08-07 Paul Richardson <phantom_sf at users.sourceforge.net>
 
 	* src/files_itunes.db

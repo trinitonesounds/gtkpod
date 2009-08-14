@@ -1348,7 +1348,8 @@ static gboolean conversion_setup_cachedir (Conversion *conv)
 	{
 	    if ((g_mkdir (conv->cachedir, 0777)) == -1)
 	    {
-		gtkpod_warning (_("Could not create '%s'. Filetype conversion will not work.\n"));
+		gtkpod_warning (_("Could not create '%s'. Filetype conversion will not work.\n"),
+				  conv->cachedir);
 		g_free (conv->cachedir);
 		conv->cachedir = NULL;
 	    }
