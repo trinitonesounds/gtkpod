@@ -2147,6 +2147,7 @@ void gp_track_set_flags_podcast (Track *track)
     track->remember_playback_position = 0x01;  /* remember playback
 						* position */
     track->flag4 = 0x01;  /* Show Title/Album on the 'Now Playing' page */
+    track->mediatype = ITDB_MEDIATYPE_PODCAST; /* show up under Podcasts */
 }
 
 /* set podcast-specific flags for @track */
