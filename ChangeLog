@@ -1,3 +1,11 @@
+2009-09-03 Paul Richardson <phantom_sf at users.sourceforge.net>
+
+        * src/misc_track.c: Fix podcast addition
+
+	  Patch to make a podcast added to the podcast playlist
+	  recognised as a podcast on the ipod. Thanks to
+	  Adam Sjøgren for the patch.
+
 2009-08-14  Todd Zullinger  <tmz@pobox.com>
 
 	* src/file_convert.c: Fix missing variable in warning
