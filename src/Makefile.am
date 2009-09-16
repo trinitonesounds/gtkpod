@@ -3,7 +3,8 @@
 INCLUDES = -DMOUNT_BIN=\""@MOUNT@\"" \
 	   -DUMOUNT_BIN=\""@UMOUNT@\"" \
 	   -DPACKAGE_DATA_DIR=\""$(datadir)"\" \
-	   -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" 
+	   -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
+	   -DPACKAGE_PLUGIN_DIR=\"$(libdir)/$(PACKAGE)\"
 
 bin_PROGRAMS = gtkpod
 
@@ -13,6 +14,10 @@ LEX_OUTPUT_ROOT = lex.yy
 
 
 gtkpod_SOURCES = \
+    anjuta-about.c anjuta-about.h \
+    anjuta-action-callbacks.c anjuta-action-callbacks.h \
+    anjuta-actions.h \
+    anjuta-app.c anjuta-app.h \
     autodetection.c autodetection.h \
     charset.c charset.h \
     clientserver.c clientserver.h \
