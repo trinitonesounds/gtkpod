@@ -61,7 +61,7 @@ const gchar
         *SCRIPTDIR =
                 PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S;
 
-static void init_data_file(char *argv[], gchar *datafile, gchar *filename);
+static gchar * init_data_file(char *argv[], gchar *filename);
 
 /*------------------------------------------------------------------*\
  *                                                                  *
@@ -1705,10 +1705,12 @@ gboolean get_offline(iTunesDB *itdb)
 void gtkpod_init(int argc, char *argv[])
 {
 
-        gchar *plugin_profile_file;
+        gchar *plugin_profile_file = NULL;
+        gchar *ui_file = NULL;
 
-        init_data_file(argv, xml_file, "gtkpod.glade");
-        init_data_file(argv, plugin_profile_file, "default.profile");
+        xml_file = init_data_file(argv, "gtkpod.glade");
+        plugin_profile_file = init_data_file(argv, "default.profile");
+        ui_file = init_data_file(argv, "gtkpod.ui");
 
         /* Attempt to load libmp4v2 */
         mp4_init();
@@ -1743,6 +1745,7 @@ void gtkpod_init(int argc, char *argv[])
         //
         //    server_setup ();   /* start server to accept playcount updates */
 
+        anjuta_set_ui_file_path (ui_file);
 
         /* FROM ANJUTA */
         AnjutaPluginManager *plugin_manager;
@@ -1782,9 +1785,8 @@ void gtkpod_init(int argc, char *argv[])
 
         /* Prepare profile */
         profile = anjuta_profile_new (USER_PROFILE_NAME, plugin_manager);
-        session_profile = g_file_new_for_uri (plugin_profile_file);
-        anjuta_profile_add_plugins_from_xml (profile, session_profile,
-                TRUE, &error);
+        session_profile = g_file_new_for_path (plugin_profile_file);
+        anjuta_profile_add_plugins_from_xml (profile, session_profile, TRUE, &error);
         if (error)
         {
             anjuta_util_dialog_error (GTK_WINDOW (app), "%s", error->message);
@@ -1893,8 +1895,9 @@ void gtkpod_init(int argc, char *argv[])
         /* END FROM ANJUTA */
     }
 
-static void init_data_file(char *argv[], gchar *datafile, gchar *filename)
+static gchar * init_data_file(char *argv[], gchar *filename)
 {
+    gchar *datafile = NULL;
     gchar *progname;
 
     /* initialize xml_file: if gtkpod is called in the build directory
@@ -1945,6 +1948,8 @@ static void init_data_file(char *argv[], gchar *datafile, gchar *filename)
     {
         printf ("Using local %s file since program was started from source directory:\n%s\n", filename, datafile);
     }
+
+    return datafile;
 }
 
     /**

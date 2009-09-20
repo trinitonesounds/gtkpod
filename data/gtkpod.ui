@@ -1,0 +1,72 @@
+<!--*- xml -*-->
+<ui>
+	<menubar name="MenuMain">
+		<menu name="MenuFile" action="ActionMenuFile">
+			<placeholder name="PlaceholderFileMenus"/>
+			<placeholder name="PlaceholderProjectMenus"/>
+			<placeholder name="PlaceholderPrintMenus"/>
+			<menuitem name="Quit" action="ActionExit" />
+		</menu>
+		<menu name="MenuEdit" action="ActionMenuEdit">
+			<placeholder name="PlaceholderEditMenus"/>
+			<placeholder name="PlaceholderSelectMenus"/>
+			<placeholder name="PlaceholderInsertMenus"/>
+			<placeholder name="PlaceholderSearchMenus"/>
+			<placeholder name="PlaceholderOperationMenus"/>
+			<placeholder name="PlaceholderSettingsMenus">
+				<separator name="separator1" />
+				<menuitem name="Preferences" action="ActionEditPreferences" />
+			</placeholder>
+		</menu>
+		<menu name="MenuView" action="ActionMenuView">
+			<menuitem name="Fullscreen" action="ActionViewFullscreen"/>
+			<menuitem name="LockLayout" action="ActionViewLockLayout"/>
+			<menuitem name="ResetLayout" action="ActionViewResetLayout"/>
+			<separator name="separate1"/>
+			<menuitem name="Toolbar" action="ActionViewToolbar"/>
+		</menu>
+		<placeholder name="PlaceholderGotoMenus"/>
+		<placeholder name="PlaceHolderProjectMenus"/>
+		<placeholder name="PlaceHolderFormatMenus"/>
+		<placeholder name="PlaceHolderBuildMenus"/>
+		<placeholder name="PlaceHolderDesignerMenus"/>
+		<placeholder name="PlaceHolderRunMenus"/>
+		<placeholder name="PlaceHolderDebugMenus"/>
+		<placeholder name="PlaceHolderToolMenus"/>
+		<placeholder name="PlaceHolderVersionControlMenus"/>
+		<placeholder name="PlaceHolderDocumentsMenus"/>
+		<placeholder name="PlaceHolderHelpMenus" >
+			<menu name="MenuHelp" action="ActionMenuHelp" >
+				<placeholder name="PlaceHolderHelpDevel" >
+						<separator name="separator1" />
+						<menuitem name="UserManual" action="ActionHelpUserManual" />
+						<menuitem name="Tutorial" action="ActionHelpTutorial" />
+						<menuitem name="AdvancedTutorial" action="ActionHelpAdvancedTutorial" />
+						<menuitem name="FaqManual" action="ActionHelpFaqManual" />
+				</placeholder>
+				<placeholder name="PlaceHolderHelpWeb" >
+					<separator name="separator1" />
+					<menuitem name="AnjutaHome" action="ActionHelpAnjutaHome" />
+					<menuitem name="BugReport" action="ActionHelpBugReport" />
+					<menuitem name="Faq" action="ActionHelpFaq" />
+				</placeholder>
+				<placeholder name="PlaceHolderHelpAbout" >
+					<separator name="separator2" />
+					<menuitem name="AboutPlugins" action="ActionAboutPlugins" />
+					<menuitem name="AboutAnjuta" action="ActionAboutAnjuta" />
+				</placeholder>
+			</menu>
+		</placeholder>
+		<placeholder name="TestPlaceholder" />
+	</menubar>
+	<toolbar name="ToolbarMain">
+	  <placeholder name="PlaceholderFileToolbar" />
+	  <separator />
+	  <placeholder name="PlaceHolderBuild" />
+	  <separator />
+	  <placeholder name="PlaceHolderExecute" />
+	  <separator />
+	  <placeholder name="PlaceholderDebugToolbar" />
+	  <separator />
+	</toolbar>
+</ui>

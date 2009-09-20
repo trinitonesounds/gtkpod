@@ -43,7 +43,6 @@
 #include "anjuta-actions.h"
 #include "anjuta-about.h"
 
-#define UI_FILE PACKAGE_DATA_DIR"/ui/anjuta.ui"
 #define GLADE_FILE PACKAGE_DATA_DIR"/glade/anjuta.glade"
 #define ICON_FILE "anjuta-preferences-general-48.png"
 
@@ -56,6 +55,12 @@ static void anjuta_app_layout_save (AnjutaApp *app,
 
 static gpointer parent_class = NULL;
 static GtkToolbarStyle style = -1;
+static gchar * uifile = NULL;
+
+void anjuta_set_ui_file_path (gchar * path)
+{
+    uifile = path;
+}
 
 static void
 on_toolbar_style_changed (GConfClient* client, guint id, GConfEntry* entry,
@@ -440,7 +445,7 @@ anjuta_app_instance_init (AnjutaApp *app)
 										GETTEXT_PACKAGE, TRUE, app);
 
 	/* Merge UI */
-	merge_id = anjuta_ui_merge (app->ui, UI_FILE);
+	merge_id = anjuta_ui_merge (app->ui, uifile);
 
 	/* Adding accels group */
 	gtk_window_add_accel_group (GTK_WINDOW (app),

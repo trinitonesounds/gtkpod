@@ -76,6 +76,7 @@ void       anjuta_app_set_geometry (AnjutaApp *app, const gchar *geometry);
 gchar*     anjuta_app_get_geometry (AnjutaApp *app);
 void       anjuta_app_layout_reset (AnjutaApp *app);
 void	   anjuta_app_install_preferences (AnjutaApp *app);
+void anjuta_set_ui_file_path (gchar * path);
 
 G_END_DECLS
 
