@@ -43,7 +43,9 @@
 #include "anjuta-actions.h"
 #include "anjuta-about.h"
 
-#define GLADE_FILE PACKAGE_DATA_DIR"/glade/anjuta.glade"
+#include "misc.h"
+#include "directories.h"
+
 #define ICON_FILE "anjuta-preferences-general-48.png"
 
 static void anjuta_app_layout_load (AnjutaApp *app,
@@ -404,7 +406,7 @@ anjuta_app_instance_init (AnjutaApp *app)
 	g_object_add_weak_pointer (G_OBJECT (app->ui), (gpointer)&app->ui);
 
 	/* Plugin Manager */
-	plugins_dirs = g_list_prepend (plugins_dirs, PACKAGE_PLUGIN_DIR);
+	plugins_dirs = g_list_prepend (plugins_dirs, get_plugin_dir());
 	app->plugin_manager = anjuta_plugin_manager_new (G_OBJECT (app),
 													 app->status,
 													 plugins_dirs);
@@ -644,11 +646,12 @@ anjuta_app_layout_reset (AnjutaApp *app)
 void
 anjuta_app_install_preferences (AnjutaApp *app)
 {
+    gchar *gladefile;
 	GladeXML *gxml;
 	GtkWidget *notebook, *shortcuts, *plugins, *remember_plugins;
 
 	/* Create preferences page */
-	gxml = glade_xml_new (GLADE_FILE, "anjuta_preferences_window", NULL);
+	gxml = gtkpod_xml_new (xml_file, "anjuta_preferences_window");
 	anjuta_preferences_add_page (app->preferences, gxml,
 								 "General", _("General"), ICON_FILE);
 	notebook = 	glade_xml_get_widget (gxml, "General");

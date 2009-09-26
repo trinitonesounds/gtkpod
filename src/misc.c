@@ -49,6 +49,7 @@
 #include "display_photo.h"
 #include "stock_icons.h"
 #include "anjuta-app.h"
+#include "directories.h"
 
 #define DEBUG_MISC 0
 
@@ -61,7 +62,7 @@ const gchar
         *SCRIPTDIR =
                 PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S;
 
-static gchar * init_data_file(char *argv[], gchar *filename);
+
 
 /*------------------------------------------------------------------*\
  *                                                                  *
@@ -1704,13 +1705,14 @@ gboolean get_offline(iTunesDB *itdb)
  */
 void gtkpod_init(int argc, char *argv[])
 {
+        init_directories(argv);
 
         gchar *plugin_profile_file = NULL;
         gchar *ui_file = NULL;
 
-        xml_file = init_data_file(argv, "gtkpod.glade");
-        plugin_profile_file = init_data_file(argv, "default.profile");
-        ui_file = init_data_file(argv, "gtkpod.ui");
+        xml_file = g_build_filename(get_glade_dir(), "gtkpod.glade", NULL);
+        plugin_profile_file = g_build_filename(get_data_dir(), "default.profile", NULL);
+        ui_file = g_build_filename (get_data_dir(), "gtkpod.ui", NULL);
 
         /* Attempt to load libmp4v2 */
         mp4_init();
@@ -1871,14 +1873,14 @@ void gtkpod_init(int argc, char *argv[])
 //            g_free (project_file);
 //            g_object_unref (file);
 //        }
-//        anjuta_profile_manager_thaw (profile_manager, &error);
-//
-//        if (error)
-//        {
-//            anjuta_util_dialog_error (GTK_WINDOW (app), "%s", error->message);
-//            g_error_free (error);
-//            error = NULL;
-//        }
+        anjuta_profile_manager_thaw (profile_manager, &error);
+
+        if (error)
+        {
+            anjuta_util_dialog_error (GTK_WINDOW (app), "%s", error->message);
+            g_error_free (error);
+            error = NULL;
+        }
 //        g_signal_connect (profile_manager, "profile-descoped",
 //                G_CALLBACK (on_profile_descoped), app);
 
@@ -1894,63 +1896,6 @@ void gtkpod_init(int argc, char *argv[])
         gtk_window_maximize (GTK_WINDOW (app));
         /* END FROM ANJUTA */
     }
-
-static gchar * init_data_file(char *argv[], gchar *filename)
-{
-    gchar *datafile = NULL;
-    gchar *progname;
-
-    /* initialize xml_file: if gtkpod is called in the build directory
-    (".../src/gtkpod") use the local gtkpod.glade (in the data
-    directory), otherwise use
-    "PACKAGE_DATA_DIR/PACKAGE/data/gtkpod.glade" */
-
-    progname = g_find_program_in_path(argv[0]);
-    if (progname)
-    {
-        static const gchar *SEPsrcSEPgtkpod =
-                G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S "gtkpod";
-
-        if (!g_path_is_absolute(progname))
-        {
-            gchar *cur_dir = g_get_current_dir();
-            gchar *prog_absolute;
-
-            if (g_str_has_prefix(progname, "." G_DIR_SEPARATOR_S))
-                prog_absolute = g_build_filename(cur_dir, progname + 2, NULL);
-            else
-                prog_absolute = g_build_filename(cur_dir, progname, NULL);
-            g_free(progname);
-            g_free(cur_dir);
-            progname = prog_absolute;
-        }
-
-        if (g_str_has_suffix(progname, SEPsrcSEPgtkpod))
-        {
-            gchar *suffix = g_strrstr(progname, SEPsrcSEPgtkpod);
-            if (suffix)
-            {
-                *suffix = 0;
-                datafile = g_build_filename(progname, "data", filename,
-                        NULL);
-            }
-        }
-        g_free(progname);
-        if (datafile && !g_file_test(datafile, G_FILE_TEST_EXISTS))
-        {
-            g_free(datafile);
-            datafile = NULL;
-        }
-    }
-    if (!datafile)
-        datafile = g_build_filename( PACKAGE_DATA_DIR, PACKAGE, "data",filename, NULL);
-    else
-    {
-        printf ("Using local %s file since program was started from source directory:\n%s\n", filename, datafile);
-    }
-
-    return datafile;
-}
 
     /**
      * gtkpod_shutdown

@@ -1,0 +1,5 @@
+[Anjuta Plugin]
+Location=helloworld:AnjutaFoobarPlugin
+Icon=helloworld.png
+Name=Anjuta Foobar Sample Plugin
+Description=A sample demonstration plugin for Anjuta

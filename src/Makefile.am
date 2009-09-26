@@ -4,7 +4,10 @@ INCLUDES = -DMOUNT_BIN=\""@MOUNT@\"" \
 	   -DUMOUNT_BIN=\""@UMOUNT@\"" \
 	   -DPACKAGE_DATA_DIR=\""$(datadir)"\" \
 	   -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
-	   -DPACKAGE_PLUGIN_DIR=\"$(libdir)/$(PACKAGE)\"
+	   -DPACKAGE_PLUGIN_DIR=\""$(libdir)"\" \
+       -DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
+       $(LIBANJUTA_CFLAGS)
+
 
 bin_PROGRAMS = gtkpod
 
@@ -25,6 +28,7 @@ gtkpod_SOURCES = \
     context_menus.c context_menus.h \
     date_parser.l date_parser2.l date_parser.h \
     details.c details.h \
+    directories.c directories.h \
     display_coverart.c display_coverart.h \
     display.c display_playlists.c display_sorttabs.c \
     display.h display_private.h \
@@ -66,7 +70,7 @@ gtkpod_SOURCES = \
 	rb_cell_renderer_rating.c rb_cell_renderer_rating.h
 
 gtkpod_LDADD = $(LIBS) $(INTLLIBS) @LIBOBJS@
-
+    
 EXTRA_DIST = getopt.h
 
 CLEANFILES = date_parser.c date_parser2.c

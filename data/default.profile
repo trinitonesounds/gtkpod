@@ -2,7 +2,7 @@
 <anjuta>
   <plugin name="File Manager"
 				  url="http://anjuta.org/plugins/"
-		      mandatory="yes">
+		      mandatory="no">
 		<require group="Anjuta Plugin"
 						 attribute="Interfaces"
 						 value="IAnjutaFileManager"/>
