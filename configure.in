@@ -201,6 +201,22 @@ AC_CHECK_HEADERS(linux/cdrom.h scsi/sg.h scsi/scsi.h scsi/scsi_ioctl.h)
 libgpod_version=`$PKG_CONFIG libgpod-1.0 --modversion`
 AC_DEFINE_UNQUOTED(LIBGPOD_VERSION, "${libgpod_version}", [Set this to the libgpod version])
 
+GTKPOD_PLUGIN_LDFLAGS="-module -avoid-version -no-undefined"
+AC_SUBST(GTKPOD_PLUGIN_LDFLAGS)
+
+dnl Setup Plugin directories
+dnl ------------------------
+gtkpod_plugin_dir='$(libdir)/$(PACKAGE)'
+gtkpod_data_dir='$(datadir)/$(PACKAGE)'
+gtkpod_ui_dir='$(gtkpod_data_dir)'
+gtkpod_glade_dir='$(gtkpod_data_dir)'
+gtkpod_image_dir='$(gtkpod_data_dir)'
+AC_SUBST(gtkpod_plugin_dir)
+AC_SUBST(gtkpod_data_dir)
+AC_SUBST(gtkpod_ui_dir)
+AC_SUBST(gtkpod_glade_dir)
+AC_SUBST(gtkpod_image_dir)
+
 AC_OUTPUT([
 Makefile
 src/Makefile

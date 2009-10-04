@@ -40,9 +40,14 @@ plugin_LTLIBRARIES = libhelloworld.la
 # Plugin sources
 libhelloworld_la_SOURCES = plugin.c plugin.h
 
+libhelloworld_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
+
 # Plugin dependencies
 libhelloworld_la_LIBADD = \
-	$(LIBANJUTA_LIBS) 
+    $(GCONF_LIBS) \
+    $(GLADE_LIBS) \
+    $(VTE_LIBS) \
+    $(LIBANJUTA_LIBS)
 
 EXTRA_DIST = \
 	$(plugin_in_files) \

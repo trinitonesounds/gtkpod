@@ -39,9 +39,9 @@ static gchar *plugindir = NULL;
 
 void init_directories(char *argv[])
 {
-    datadir = init_dir (argv, "data", PACKAGE_DATA_DIR);
-    icondir = init_dir (argv, "data/icons", PACKAGE_DATA_DIR);
-    plugindir = init_dir (argv, "plugins", PACKAGE_PLUGIN_DIR);
+    datadir = init_dir (argv, "data", GTKPOD_DATA_DIR);
+    icondir = init_dir (argv, "data/icons", GTKPOD_DATA_DIR);
+    plugindir = init_dir (argv, "plugins", GTKPOD_PLUGIN_DIR);
 
     debug_print_directories();
 }
@@ -101,7 +101,7 @@ static gchar * init_dir(char *argv[], gchar *filename, gchar *installdir)
     }
 
     if (!newdir)
-        newdir = g_build_filename(installdir, PACKAGE, filename, NULL);
+        newdir = g_build_filename(installdir, filename, NULL);
     else
     {
         g_printf(

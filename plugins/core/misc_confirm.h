@@ -1,5 +1,5 @@
 /*
-|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
+|  Copyright (C) 2002-2009 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 |
 |  URL: http://www.gtkpod.org/
@@ -26,44 +26,16 @@
 |  $Id$
 */
 
+#ifndef __MISC_CONFIRM_H__
+#define __MISC_CONFIRM_H__
+
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
-#include <stdlib.h>
-#include <time.h>
 
-#include "gtkpod.h"
+G_MODULE_EXPORT gboolean on_gtkpod_delete_event (GtkWidget *widget, GdkEvent *event, gpointer user_data);
 
-int
-main (int argc, char *argv[])
-{
-#ifdef ENABLE_NLS
-    bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
-    bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-    textdomain (GETTEXT_PACKAGE);
+void on_gtkpod_destroy (GtkWidget * w, gpointer data);
+
 #endif
-
-#ifdef G_THREADS_ENABLED
-    /* this must be called before gtk_init () */
-    g_thread_init (NULL);
-    /* FIXME: this call causes gtkpod to freeze as soon as tracks should be
-       displayed */
-    gdk_threads_init ();
-#endif
-
-    gdk_threads_enter ();
-
-    gtk_init (&argc, &argv);
-
-    srand(time(NULL));
-
-    gtkpod_init (argc, argv);
-
-    gtk_main ();
-
-    gdk_threads_leave ();
-
-    /* all the cleanup is already done in gtkpod_main_shutdown () in misc.c */
-    return 0;
-}

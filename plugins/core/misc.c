@@ -48,14 +48,10 @@
 #include "misc_track.h"
 #include "display_photo.h"
 #include "stock_icons.h"
-#include "anjuta-app.h"
 #include "directories.h"
+#include "misc_confirm.h"
 
 #define DEBUG_MISC 0
-
-/* FROM ANJUTA */
-#define USER_PROFILE_NAME "user"
-/* END FROM ANJUTA */
 
 /* where to find the scripts */
 const gchar
@@ -1705,14 +1701,7 @@ gboolean get_offline(iTunesDB *itdb)
  */
 void gtkpod_init(int argc, char *argv[])
 {
-        init_directories(argv);
-
-        gchar *plugin_profile_file = NULL;
-        gchar *ui_file = NULL;
-
-        xml_file = g_build_filename(get_glade_dir(), "gtkpod.glade", NULL);
-        plugin_profile_file = g_build_filename(get_data_dir(), "default.profile", NULL);
-        ui_file = g_build_filename (get_data_dir(), "gtkpod.ui", NULL);
+//        xml_file = g_build_filename(get_glade_dir(), "gtkpod.glade", NULL);
 
         /* Attempt to load libmp4v2 */
         mp4_init();
@@ -1746,155 +1735,6 @@ void gtkpod_init(int argc, char *argv[])
         //    autodetection_init ();
         //
         //    server_setup ();   /* start server to accept playcount updates */
-
-        anjuta_set_ui_file_path (ui_file);
-
-        /* FROM ANJUTA */
-        AnjutaPluginManager *plugin_manager;
-        AnjutaProfileManager *profile_manager;
-        AnjutaApp *app;
-        AnjutaStatus *status;
-        AnjutaProfile *profile;
-        GFile *session_profile;
-        gchar *profile_name = NULL;
-        GError *error = NULL;
-
-        /* Initialize application */
-        app = ANJUTA_APP (anjuta_app_new ());
-        status = anjuta_shell_get_status (ANJUTA_SHELL (app), NULL);
-        anjuta_status_progress_add_ticks (status, 1);
-
-        anjuta_status_disable_splash (status, TRUE);
-
-        g_object_set_data (G_OBJECT (app), "__proper_shutdown", "1");
-
-        //        g_signal_connect (G_OBJECT (app), "delete_event",
-        //                          G_CALLBACK (on_anjuta_delete_event), NULL);
-        //        g_signal_connect (G_OBJECT (app), "destroy",
-        //                          G_CALLBACK (on_anjuta_destroy), NULL);
-        plugin_manager = anjuta_shell_get_plugin_manager (ANJUTA_SHELL (app),
-                NULL);
-        profile_manager = anjuta_shell_get_profile_manager (ANJUTA_SHELL (app),
-                NULL);
-
-        //        /* Restore remembered plugins */
-        //        remembered_plugins =
-        //            anjuta_preferences_get (app->preferences, ANJUTA_REMEMBERED_PLUGINS);
-        //        if (remembered_plugins)
-        //            anjuta_plugin_manager_set_remembered_plugins (plugin_manager,
-        //                                                          remembered_plugins);
-        //        g_free (remembered_plugins);
-
-        /* Prepare profile */
-        profile = anjuta_profile_new (USER_PROFILE_NAME, plugin_manager);
-        session_profile = g_file_new_for_path (plugin_profile_file);
-        anjuta_profile_add_plugins_from_xml (profile, session_profile, TRUE, &error);
-        if (error)
-        {
-            anjuta_util_dialog_error (GTK_WINDOW (app), "%s", error->message);
-            g_error_free (error);
-            error = NULL;
-        }
-        g_object_unref (session_profile);
-
-        /* Load user session profile */
-        profile_name = g_path_get_basename (plugin_profile_file);
-        session_profile = anjuta_util_get_user_cache_file (profile_name, NULL);
-        if (g_file_query_exists (session_profile, NULL))
-        {
-            anjuta_profile_add_plugins_from_xml (profile, session_profile,
-                    FALSE, &error);
-            if (error)
-            {
-                anjuta_util_dialog_error (GTK_WINDOW (app), "%s", error->message);
-                g_error_free (error);
-                error = NULL;
-            }
-        }
-        anjuta_profile_set_sync_file (profile, session_profile);
-        g_object_unref (session_profile);
-        g_free (profile_name);
-
-        /* Load profile */
-        anjuta_profile_manager_freeze (profile_manager);
-        anjuta_profile_manager_push (profile_manager, profile, &error);
-        if (error)
-        {
-            anjuta_util_dialog_error (GTK_WINDOW (app), "%s", error->message);
-            g_error_free (error);
-            error = NULL;
-        }
-
-//        gchar *session_dir;
-//        AnjutaSession *session;
-//
-//        /* Load user session */
-//        session_dir = USER_SESSION_PATH_NEW;
-//
-//        /* If preferences is set to not load last session, clear it */
-//        if (no_session ||
-//                anjuta_preferences_get_int (app->preferences,
-//                        ANJUTA_SESSION_SKIP_LAST))
-//        {
-//            /* Reset default session */
-//            session = anjuta_session_new (session_dir);
-//            anjuta_session_clear (session);
-//            g_object_unref (session);
-//        }
-//        /* If preferences is set to not load last project, clear it */
-//        else if (no_files ||
-//                anjuta_preferences_get_int (app->preferences,
-//                        ANJUTA_SESSION_SKIP_LAST_FILES))
-//        {
-//            session = anjuta_session_new (session_dir);
-//            anjuta_session_set_string_list (session, "File Loader",
-//                    "Files", NULL);
-//            anjuta_session_sync (session);
-//            g_object_unref (session);
-//        }
-//        /* Otherwise, load session normally */
-//        else
-//        {
-//            project_file = extract_project_from_session (session_dir);
-//        }
-//        g_free (session_dir);
-//
-//        /* Prepare for session save and load on profile change */
-//        g_signal_connect (profile_manager, "profile-scoped",
-//                G_CALLBACK (on_profile_scoped), app);
-//        /* Load project file */
-//        if (project_file)
-//        {
-//            GFile* file = g_file_new_for_commandline_arg (project_file);
-//            IAnjutaFileLoader *loader;
-//            loader = anjuta_shell_get_interface (ANJUTA_SHELL (app),
-//                    IAnjutaFileLoader, NULL);
-//            ianjuta_file_loader_load (loader, file, FALSE, NULL);
-//            g_free (project_file);
-//            g_object_unref (file);
-//        }
-        anjuta_profile_manager_thaw (profile_manager, &error);
-
-        if (error)
-        {
-            anjuta_util_dialog_error (GTK_WINDOW (app), "%s", error->message);
-            g_error_free (error);
-            error = NULL;
-        }
-//        g_signal_connect (profile_manager, "profile-descoped",
-//                G_CALLBACK (on_profile_descoped), app);
-
-        anjuta_status_progress_tick (status, NULL, _("Loaded Session..."));
-        anjuta_status_disable_splash (status, TRUE);
-
-        g_set_application_name (_("GtkPod"));
-        gtk_window_set_default_icon_name ("gtkpod");
-        gtk_window_set_auto_startup_notification(FALSE);
-
-        gtk_window_set_role (GTK_WINDOW (app), "gtkpod-app");
-        gtk_widget_show (GTK_WIDGET (app));
-        gtk_window_maximize (GTK_WINDOW (app));
-        /* END FROM ANJUTA */
     }
 
     /**
@@ -1904,42 +1744,42 @@ void gtkpod_init(int argc, char *argv[])
      */
 void gtkpod_shutdown()
 {
-    /* stop accepting requests for playcount updates */
-    server_shutdown();
-
-    /* Change the windows back to track view to ensure the
-     * sorttab state is saved correctly/
-     */
-    gphoto_change_to_photo_window(FALSE);
-
-    /* Sort column order needs to be stored */
-    tm_store_col_order();
-
-    /* Update default sizes */
-    display_update_default_sizes();
-
-    /* shut down conversion infrastructure */
-    file_convert_shutdown();
-
-    /* Save prefs */
-    prefs_save();
-
-    /* FIXME: release memory in a clean way */
-#if 0
-    remove_all_playlists (); /* first remove playlists, then tracks!
-     * (otherwise non-existing *tracks may
-     * be accessed) */
-    remove_all_tracks ();
-#endif
-    display_cleanup();
-
-    prefs_shutdown();
-
-    xmlCleanupParser();
-    xmlMemoryDump();
-
-    mp4_close();
-
-    call_script("gtkpod.out", NULL);
-    gtk_main_quit();
+//    /* stop accepting requests for playcount updates */
+//    server_shutdown();
+//
+//    /* Change the windows back to track view to ensure the
+//     * sorttab state is saved correctly/
+//     */
+//    gphoto_change_to_photo_window(FALSE);
+//
+//    /* Sort column order needs to be stored */
+//    tm_store_col_order();
+//
+//    /* Update default sizes */
+//    display_update_default_sizes();
+//
+//    /* shut down conversion infrastructure */
+//    file_convert_shutdown();
+//
+//    /* Save prefs */
+//    prefs_save();
+//
+//    /* FIXME: release memory in a clean way */
+//#if 0
+//    remove_all_playlists (); /* first remove playlists, then tracks!
+//     * (otherwise non-existing *tracks may
+//     * be accessed) */
+//    remove_all_tracks ();
+//#endif
+//    display_cleanup();
+//
+//    prefs_shutdown();
+//
+//    xmlCleanupParser();
+//    xmlMemoryDump();
+//
+//    mp4_close();
+//
+//    call_script("gtkpod.out", NULL);
+//    gtk_main_quit();
 }

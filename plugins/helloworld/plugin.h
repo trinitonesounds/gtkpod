@@ -22,17 +22,17 @@
 
 #include <libanjuta/anjuta-plugin.h>
 
-typedef struct _AnjutaFoobarPlugin AnjutaFoobarPlugin;
-typedef struct _AnjutaFoobarPluginClass AnjutaFoobarPluginClass;
+typedef struct _HelloWorldPlugin HelloWorldPlugin;
+typedef struct _HelloWorldPluginClass HelloWorldPluginClass;
 
-struct _AnjutaFoobarPlugin{
+struct _HelloWorldPlugin{
 	AnjutaPlugin parent;
 	GtkWidget *widget;
 	gint uiid;
 	GtkActionGroup *action_group;
 };
 
-struct _AnjutaFoobarPluginClass{
+struct _HelloWorldPluginClass{
 	AnjutaPluginClass parent_class;
 };
 

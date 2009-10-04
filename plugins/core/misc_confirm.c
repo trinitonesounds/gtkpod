@@ -1,7 +1,7 @@
 /*
 |  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
@@ -38,6 +38,7 @@
 #include "prefs.h"
 #include "info.h"
 #include "display_coverart.h"
+#include "anjuta-app.h"
 
 #ifdef HAVE_STATVFS
 #include <sys/types.h>
@@ -45,6 +46,8 @@
 #endif
 
 #define DEBUG_MISC 0
+
+static gboolean on_anjuta_delete_event (AnjutaApp *app, GdkEvent *event, gpointer data);
 
 /*------------------------------------------------------------------*\
  *                                                                  *
@@ -90,7 +93,7 @@ void gtkpod_warning_simple (const gchar *format, ...)
     va_start (arg, format);
     text = g_strdup_vprintf (format, arg);
     va_end (arg);
-	
+
 	gtkpod_warning_hig (GTK_WINDOW (gtkpod_window), GTK_MESSAGE_WARNING, _("Warning"), text);
 	g_free (text);
 }
@@ -106,11 +109,11 @@ void gtkpod_warning_hig (GtkWindow *parent,
 						       GTK_BUTTONS_OK,
 						       "%s",
 						       primary_text);
-	
+
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG(dialog),
 						    "%s",
 						    secondary_text);
-	
+
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (dialog);
 
@@ -283,7 +286,7 @@ void delete_track_ok (struct DeleteData *dd)
 
 		/* Deafen the coverart display while deletion is occurring */
 		coverart_block_change (TRUE);
-		
+
     /* nr of tracks to be deleted */
     n = g_list_length (dd->tracks);
     if (dd->itdb->usertype & GP_ITDB_TYPE_IPOD)
@@ -733,7 +736,7 @@ void delete_playlist_head (DeleteAction deleteaction)
 		dd->tracks = g_list_copy (pl->members);
 		label = g_strdup_printf (_("Are you sure you want to remove all podcasts from your iPod?"));
 	    }
-	    else 
+	    else
 	    {   /* normal playlist */
 		/* we set selected_tracks to get a list printed by
 		 * delete_populate_settings() further down */
@@ -785,7 +788,7 @@ void delete_playlist_head (DeleteAction deleteaction)
 	    if (itdb_playlist_is_mpl (pl))
 	    {
 		label = g_strdup_printf (_("Are you sure you want to remove all tracks from the database?"));
-		
+
 	    }
 	    else
 	    {
@@ -867,7 +870,7 @@ static gboolean ok_to_close_gtkpod (void)
     if (!files_are_saved ())
     {
 		const gchar *str = _("Data has been changed and not been saved. If you quit gtkpod, all unsaved changes will be lost.\n\nDo you want to save your changes first?");
-		
+
 		result = gtkpod_confirmation_hig(GTK_WINDOW (gtkpod_window),
 											GTK_MESSAGE_WARNING,
 											_("Save changes before quiting?"),
@@ -881,34 +884,13 @@ static gboolean ok_to_close_gtkpod (void)
 	/* User pressed Cancel */
     if (result == GTK_RESPONSE_CANCEL)
 		return FALSE;
-	
+
 	/* User pressed Save */
 	if (result == GTK_RESPONSE_OK)
 		handle_export ();
-	
+
 	return TRUE;
 }
-
-
-/* callback for gtkpod window's close button */
-G_MODULE_EXPORT gboolean
-on_gtkpod_delete_event                 (GtkWidget       *widget,
-					GdkEvent        *event,
-					gpointer         user_data)
-{
-    if (!widgets_blocked)
-    {
-	if (ok_to_close_gtkpod ())
-	{
-	    gtkpod_shutdown ();
-	    /* returning FALSE to continue calling other handlers
-	       causes tons of errors. */
-	    return TRUE;
-	}
-    }
-    return TRUE; /* don't quit -- would cause numerous error messages */
-}
-
 
 /* callback for quit menu entry */
 G_MODULE_EXPORT void

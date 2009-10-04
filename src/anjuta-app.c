@@ -43,7 +43,7 @@
 #include "anjuta-actions.h"
 #include "anjuta-about.h"
 
-#include "misc.h"
+#include "gtkpod.h"
 #include "directories.h"
 
 #define ICON_FILE "anjuta-preferences-general-48.png"
@@ -528,7 +528,7 @@ anjuta_app_new (void)
 	AnjutaApp *app;
 
 	app = ANJUTA_APP (g_object_new (ANJUTA_TYPE_APP,
-									"title", "Anjuta",
+									"title", "GtkPod",
 									NULL));
 	return GTK_WIDGET (app);
 }
@@ -646,29 +646,24 @@ anjuta_app_layout_reset (AnjutaApp *app)
 void
 anjuta_app_install_preferences (AnjutaApp *app)
 {
-    gchar *gladefile;
 	GladeXML *gxml;
-	GtkWidget *notebook, *shortcuts, *plugins, *remember_plugins;
+	GtkWidget *notebook, *plugins;
 
 	/* Create preferences page */
-	gxml = gtkpod_xml_new (xml_file, "anjuta_preferences_window");
+#ifdef ENABLE_NLS
+    gxml = glade_xml_new(GTKPOD_GLADE_XML_FILE,  "gtkpod_preferences_window", GETTEXT_PACKAGE);
+#else
+    gxml = glade_xml_new (GTKPOD_GLADE_XML_FILE,  "gtkpod_preferences_window", NULL);
+#endif
+
 	anjuta_preferences_add_page (app->preferences, gxml,
 								 "General", _("General"), ICON_FILE);
 	notebook = 	glade_xml_get_widget (gxml, "General");
-	shortcuts = anjuta_ui_get_accel_editor (ANJUTA_UI (app->ui));
 	plugins = anjuta_plugin_manager_get_plugins_page (app->plugin_manager);
-	remember_plugins = anjuta_plugin_manager_get_remembered_plugins_page (app->plugin_manager);
-
-	gtk_widget_show (shortcuts);
 	gtk_widget_show (plugins);
-	gtk_widget_show (remember_plugins);
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), plugins,
 							  gtk_label_new (_("Installed plugins")));
-	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), remember_plugins,
-							  gtk_label_new (_("Preferred plugins")));
-	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), shortcuts,
-							  gtk_label_new (_("Shortcuts")));
 
 	g_object_unref (gxml);
 }

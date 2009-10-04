@@ -102,6 +102,7 @@ on_set_preferences1_activate (GtkAction * action, AnjutaApp *app)
 		return;
 	}
 	preferences_dialog = anjuta_preferences_get_dialog (app->preferences);
+	gtk_window_set_title (GTK_WINDOW (preferences_dialog), _("GtkPod Preferences"));
 
 	/* Install main application preferences */
 	anjuta_app_install_preferences (app);

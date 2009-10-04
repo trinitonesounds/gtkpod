@@ -10,6 +10,8 @@
 
 #include <glib.h>
 
+void init_directories(char *argv[]);
+
 gchar * get_data_dir();
 
 gchar * get_glade_dir();

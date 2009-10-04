@@ -1,5 +1,5 @@
 [Anjuta Plugin]
-Location=helloworld:AnjutaFoobarPlugin
+Location=helloworld:HelloWorldPlugin
 Icon=helloworld.png
-Name=Anjuta Foobar Sample Plugin
-Description=A sample demonstration plugin for Anjuta
+Name=HelloWorld Plugin
+Description=A HelloWorld plugin for gtkpod
