@@ -1,4 +1,4 @@
-SUBDIRS = icons man
+SUBDIRS = icons man ui
 
 desktopdir = $(datadir)/applications
 desktop_in_files = gtkpod.desktop.in

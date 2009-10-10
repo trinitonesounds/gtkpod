@@ -1,20 +1,23 @@
 # Sample Makefile for a anjuta plugin.
 
+plugin_name = helloworld
+plugin_lib = lib$(plugin_name).so
+plugin_file = $(plugin_name).plugin
+
 # Plugin UI file
 helloworld_uidir = $(gtkpod_ui_dir)
-helloworld_ui_DATA =  helloworld.ui
-
+helloworld_ui_DATA =  $(plugin_name).ui
 
 # Plugin Glade file
 helloworld_gladedir = $(gtkpod_glade_dir)
-helloworld_glade_DATA =  helloworld.glade
+helloworld_glade_DATA =  $(plugin_name).glade
 
 # Plugin Icon file
 helloworld_pixmapsdir = $(gtkpod_image_dir)
-helloworld_pixmaps_DATA = helloworld.png
+helloworld_pixmaps_DATA = $(plugin_name).png
 
 # Plugin description file
-plugin_in_files = helloworld.plugin
+plugin_in_files = $(plugin_file)
 
 helloworld_plugindir = $(gtkpod_plugin_dir)
 helloworld_plugin_DATA = $(plugin_in_files:.plugin.in=.plugin)
@@ -55,3 +58,16 @@ EXTRA_DIST = \
 	$(helloworld_ui_DATA) \
 	$(helloworld_glade_DATA) \
 	$(helloworld_pixmaps_DATA)
+
+all-local:
+	echo "Creating symbolic links in plugin root directory"
+	if test ! -e ../$(plugin_lib); then \
+	  ln -s `pwd`/.libs/$(plugin_lib) ../$(plugin_lib); \
+	fi; \
+	if test ! -e ../$(plugin_file); then \
+	  ln -s `pwd`/$(plugin_file) ../$(plugin_file); \
+	fi;
+
+clean-local:
+	rm -f ../$(plugin_lib) ../$(plugin_file)
+

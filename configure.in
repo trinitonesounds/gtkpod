@@ -207,10 +207,10 @@ AC_SUBST(GTKPOD_PLUGIN_LDFLAGS)
 dnl Setup Plugin directories
 dnl ------------------------
 gtkpod_plugin_dir='$(libdir)/$(PACKAGE)'
-gtkpod_data_dir='$(datadir)/$(PACKAGE)'
-gtkpod_ui_dir='$(gtkpod_data_dir)'
-gtkpod_glade_dir='$(gtkpod_data_dir)'
-gtkpod_image_dir='$(gtkpod_data_dir)'
+gtkpod_data_dir='$(datadir)/$(PACKAGE)/data'
+gtkpod_ui_dir='$(gtkpod_data_dir)/ui'
+gtkpod_glade_dir='$(gtkpod_data_dir)/glade'
+gtkpod_image_dir='$(gtkpod_data_dir)/icons'
 AC_SUBST(gtkpod_plugin_dir)
 AC_SUBST(gtkpod_data_dir)
 AC_SUBST(gtkpod_ui_dir)
@@ -247,10 +247,12 @@ data/icons/hicolor/scalable/Makefile
 data/icons/hicolor/scalable/places/Makefile
 data/man/Makefile
 data/man/gtkpod.1
+data/ui/Makefile
 doc/Makefile
 doc/figures/Makefile
 plugins/Makefile
 plugins/helloworld/Makefile
+plugins/advhelloworld/Makefile
 ])
 
 echo "

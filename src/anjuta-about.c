@@ -186,7 +186,7 @@ about_box_new ()
 		g_error_free (error);
 	}
 
-	pix = gdk_pixbuf_new_from_file(PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "data" G_DIR_SEPARATOR_S "gtkpod-logo.png", NULL);
+	pix = gdk_pixbuf_new_from_file(GTKPOD_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "data" G_DIR_SEPARATOR_S "gtkpod-logo.png", NULL);
 	dialog = gtk_about_dialog_new();
 	gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog), "Anjuta");
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), VERSION);

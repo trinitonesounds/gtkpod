@@ -1,6 +1,7 @@
 
 ## The '.' is to make sure install-data-hook rule is executed first
 SUBDIRS = . \
-	helloworld
+	helloworld \
+	advhelloworld
 
 # indent

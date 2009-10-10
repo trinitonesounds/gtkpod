@@ -30,17 +30,21 @@
 #include "config.h"
 #include "directories.h"
 
+static int USING_LOCAL = 0;
+
 static gchar * init_dir(char *argv[], gchar *filename, gchar *installdir);
 static void debug_print_directories();
 
 static gchar *datadir = NULL;
 static gchar *icondir = NULL;
 static gchar *plugindir = NULL;
+static gchar *uidir = NULL;
 
 void init_directories(char *argv[])
 {
     datadir = init_dir (argv, "data", GTKPOD_DATA_DIR);
     icondir = init_dir (argv, "data/icons", GTKPOD_DATA_DIR);
+    uidir = init_dir (argv, "data/ui", GTKPOD_UI_DIR);
     plugindir = init_dir (argv, "plugins", GTKPOD_PLUGIN_DIR);
 
     debug_print_directories();
@@ -49,10 +53,10 @@ void init_directories(char *argv[])
 static void debug_print_directories()
 {
     g_printf("data directory: %s\n", get_data_dir());
+    g_printf("ui directory: %s\n", get_ui_dir());
     g_printf("glade directory: %s\n", get_glade_dir());
     g_printf("icon directory: %s\n", get_icon_dir());
-    g_printf("image directory: %s\n", get_image_dir());
-    g_printf("ui directory: %s\n", get_ui_dir());
+
     g_printf("plugin directory: %s\n", get_plugin_dir());
 }
 
@@ -104,11 +108,11 @@ static gchar * init_dir(char *argv[], gchar *filename, gchar *installdir)
         newdir = g_build_filename(installdir, filename, NULL);
     else
     {
+        USING_LOCAL = 1;
         g_printf(
                 "Using local %s file since program was started from source directory:\n%s\n", filename, newdir);
     }
 
-    g_printf("Returning for %s the path %s\n", filename, newdir);
     return newdir;
 }
 
@@ -129,12 +133,12 @@ gchar * get_icon_dir()
 
 gchar * get_image_dir()
 {
-    return datadir;
+    return icondir;
 }
 
 gchar * get_ui_dir()
 {
-    return datadir;
+    return uidir;
 }
 
 gchar * get_plugin_dir()

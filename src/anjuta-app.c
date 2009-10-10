@@ -406,6 +406,7 @@ anjuta_app_instance_init (AnjutaApp *app)
 	g_object_add_weak_pointer (G_OBJECT (app->ui), (gpointer)&app->ui);
 
 	/* Plugin Manager */
+	g_printf("Prepending %s to plugin directories\n", get_plugin_dir());
 	plugins_dirs = g_list_prepend (plugins_dirs, get_plugin_dir());
 	app->plugin_manager = anjuta_plugin_manager_new (G_OBJECT (app),
 													 app->status,

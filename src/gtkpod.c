@@ -50,7 +50,7 @@ void gtkpod_init(int argc, char *argv[]) {
 
     GTKPOD_GLADE_XML_FILE = g_build_filename(get_glade_dir(), "gtkpod.glade", NULL);
     plugin_profile_file = g_build_filename(get_data_dir(), "default.profile", NULL);
-    ui_file = g_build_filename(get_data_dir(), "gtkpod.ui", NULL);
+    ui_file = g_build_filename(get_ui_dir(), "gtkpod.ui", NULL);
 
     anjuta_set_ui_file_path(ui_file);
 
@@ -190,7 +190,9 @@ void gtkpod_init(int argc, char *argv[]) {
     gtk_window_maximize(GTK_WINDOW(app));
 
     GList *plugins = anjuta_plugin_manager_get_active_plugins(plugin_manager);
-    g_printf("Number of installed plugins: %d\n", g_list_length(plugins));
+    g_printf("Number of active plugins: %d\n", g_list_length(plugins));
+
+
 }
 
 /* callback for gtkpod window's close button */
