@@ -61,8 +61,8 @@ EXTRA_DIST = \
 
 all-local: create-plugin-links create-ui-link
 
+# Creating symbolic links in plugin root directory
 create-plugin-links:
-	echo "Creating symbolic links in plugin root directory"
 	if test ! -e ../$(plugin_lib); then \
 	  ln -s `pwd`/.libs/$(plugin_lib) ../$(plugin_lib); \
 	fi; \
@@ -72,8 +72,10 @@ create-plugin-links:
 	
 create-ui-link: create-ui-dir
 	if test -e $(gtkpod_ui_dir)/$(advhelloworld_ui_DATA); then \
+	  # File already exists. Replacing ..." \
 	  sudo rm -f $(gtkpod_ui_dir)/$(advhelloworld_ui_DATA); \
 	fi; \
+	# Creating link for $(advhelloworld_ui_DATA)" \
 	sudo ln -s `pwd`/$(advhelloworld_ui_DATA) $(gtkpod_ui_dir)/$(advhelloworld_ui_DATA);
 
 create-ui-dir: create-data-dir
@@ -92,6 +94,12 @@ create-base-data-dir:
 	fi;
 
 
-clean-local:
+clean-local: clean-ui-dir
 	rm -f ../$(plugin_lib) ../$(plugin_file)
+
+clean-ui-dir:
+	if test -h $(gtkpod_ui_dir)/$(advhelloworld_ui_DATA); then \
+	  # Symbolic link exists. Removing ..." \
+	  sudo rm -f $(gtkpod_ui_dir)/$(advhelloworld_ui_DATA); \
+	fi;
 
