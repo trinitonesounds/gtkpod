@@ -1,8 +1,8 @@
 <!--*- xml -*-->
 <ui>
 	<menubar name="MenuMain">
-		<menu name="MenuFile" action="ActionMenuFile">
-			<placeholder name="PlaceholderFileMenus">
+		<menu name="MenuFile" action="ActionMenuMusic">
+			<placeholder name="PlaceholderMusicMenus">
 				<menuitem name="HelloWorldAction" action="ActionFileHelloWorld" />
 			</placeholder>
 		</menu>

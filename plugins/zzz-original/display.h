@@ -1,26 +1,26 @@
 /*
 |  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -151,8 +151,8 @@ typedef enum  {
 } ST_item;
 
 /* Column numbers in track model */
-/* Note: add corresponding entries to T_item and TM_to_T() as well 
- * (below and in misc_conversion.c). 
+/* Note: add corresponding entries to T_item and TM_to_T() as well
+ * (below and in misc_conversion.c).
  * IMPORTANT: Do not change the order -- always add new entries at the
  * end */
 typedef enum  {
@@ -279,15 +279,6 @@ typedef enum {
 /* number of entries with "autoset empty tag to filename " feature */
 #define TM_NUM_TAGS_PREFS (5)
 
-/* "Column numbers" in playlist model */
-typedef enum  {
-  PM_COLUMN_ITDB = 0,
-  PM_COLUMN_TYPE,
-  PM_COLUMN_PLAYLIST,
-  PM_COLUMN_PHOTOS,
-  PM_NUM_COLUMNS
-} PM_column_type;
-
 /* Drag and drop types */
 enum {
     DND_GTKPOD_TRACKLIST = 1000,
@@ -377,4 +368,4 @@ void display_set_info_window_menu (void);
 
 void spl_edit (Playlist *spl);
 void spl_edit_new (iTunesDB *itdb, gchar *name, gint32 pos);
-#endif 
+#endif

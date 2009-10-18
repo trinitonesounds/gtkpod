@@ -1,26 +1,24 @@
-# Sample Makefile for a anjuta plugin.
-
-plugin_name = advhelloworld
+plugin_name = playlist_display
 plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
-advhelloworld_uidir = $(gtkpod_ui_dir)
-advhelloworld_ui_DATA =  $(plugin_name).ui
+playlist_display_uidir = $(gtkpod_ui_dir)
+playlist_display_ui_DATA =  $(plugin_name).ui
 
 # Plugin Glade file
-advhelloworld_gladedir = $(gtkpod_glade_dir)
-advhelloworld_glade_DATA =  $(plugin_name).glade
+playlist_display_gladedir = $(gtkpod_glade_dir)
+playlist_display_glade_DATA =  $(plugin_name).glade
 
 # Plugin Icon file
-advhelloworld_pixmapsdir = $(gtkpod_image_dir)
-advhelloworld_pixmaps_DATA = $(plugin_name).png
+playlist_display_pixmapsdir = $(gtkpod_image_dir)
+playlist_display_pixmaps_DATA = $(plugin_name).png
 
 # Plugin description file
 plugin_in_files = $(plugin_file)
 
-advhelloworld_plugindir = $(gtkpod_plugin_dir)
-advhelloworld_plugin_DATA = $(plugin_file)
+playlist_display_plugindir = $(gtkpod_plugin_dir)
+playlist_display_plugin_DATA = $(plugin_file)
 
 # Include paths
 AM_CPPFLAGS = \
@@ -38,15 +36,16 @@ AM_CPPFLAGS = \
 plugindir = $(gtkpod_plugin_dir)
 
 # The plugin
-plugin_LTLIBRARIES = libadvhelloworld.la
+plugin_LTLIBRARIES = libplaylist_display.la
 
 # Plugin sources
-libadvhelloworld_la_SOURCES = plugin.c plugin.h
+libplaylist_display_la_SOURCES = plugin.c plugin.h \
+								 display_playlists.c display_playlists.h
 
-libadvhelloworld_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
+libplaylist_display_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
 # Plugin dependencies
-libadvhelloworld_la_LIBADD = \
+libplaylist_display_la_LIBADD = \
     $(GCONF_LIBS) \
     $(GLADE_LIBS) \
     $(VTE_LIBS) \
@@ -54,15 +53,16 @@ libadvhelloworld_la_LIBADD = \
 
 EXTRA_DIST = \
 	$(plugin_in_files) \
-	$(advhelloworld_plugin_DATA) \
-	$(advhelloworld_ui_DATA) \
-	$(advhelloworld_glade_DATA) \
-	$(advhelloworld_pixmaps_DATA)
+	$(playlist_display_plugin_DATA) \
+	$(playlist_display_ui_DATA) \
+	$(playlist_display_glade_DATA) \
+	$(playlist_display_pixmaps_DATA)
 
 all-local: create-plugin-links create-ui-link
 
 # Creating symbolic links in plugin root directory
 create-plugin-links:
+	echo "Creating plugin links"
 	if test ! -e ../$(plugin_lib); then \
 	  ln -s `pwd`/.libs/$(plugin_lib) ../$(plugin_lib); \
 	fi; \
@@ -71,12 +71,12 @@ create-plugin-links:
 	fi;
 	
 create-ui-link: create-ui-dir
-	if test -e $(gtkpod_ui_dir)/$(advhelloworld_ui_DATA); then \
+	if test -e $(gtkpod_ui_dir)/$(playlist_display_ui_DATA); then \
 	  # File already exists. Replacing ..." \
-	  sudo rm -f $(gtkpod_ui_dir)/$(advhelloworld_ui_DATA); \
+	  sudo rm -f $(gtkpod_ui_dir)/$(playlist_display_ui_DATA); \
 	fi; \
-	# Creating link for $(advhelloworld_ui_DATA)" \
-	sudo ln -s `pwd`/$(advhelloworld_ui_DATA) $(gtkpod_ui_dir)/$(advhelloworld_ui_DATA);
+	# Creating link for $(playlist_display_ui_DATA)" \
+	sudo ln -s `pwd`/$(playlist_display_ui_DATA) $(gtkpod_ui_dir)/$(playlist_display_ui_DATA);
 
 create-ui-dir: create-data-dir
 	if test ! -d $(gtkpod_ui_dir); then \
@@ -98,8 +98,8 @@ clean-local: clean-ui-dir
 	rm -f ../$(plugin_lib) ../$(plugin_file)
 
 clean-ui-dir:
-	if test -h $(gtkpod_ui_dir)/$(advhelloworld_ui_DATA); then \
+	if test -h $(gtkpod_ui_dir)/$(playlist_display_ui_DATA); then \
 	  # Symbolic link exists. Removing ..." \
-	  sudo rm -f $(gtkpod_ui_dir)/$(advhelloworld_ui_DATA); \
+	  sudo rm -f $(gtkpod_ui_dir)/$(playlist_display_ui_DATA); \
 	fi;
 

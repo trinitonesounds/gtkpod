@@ -1,0 +1,20 @@
+<!--*- xml -*-->
+<ui>
+	<menubar name="MenuMain">
+		<menu name="MenuFile" action="ActionMenuMusic">
+			<placeholder name="PlaceholderMusicMenus">
+				<menuitem name="Load iPod(s)" action="ActionLoadiPod" />
+				<menuitem name="Save Changes" action="ActionSaveChanges" />
+				<menuitem name="Add Files" action="ActionAddFiles" />
+				<menuitem name="Add Directory" action="ActionAddDirectory" />
+				<menuitem name="Add Playlist" action="ActionAddPlaylist" />
+				<separator/>
+				<menu name="Update Tracks from File" action="ActionUpdateMenu">
+					<menuitem name="Selected Playlist" action="ActionUpdatePlaylist" />
+					<menuitem name="Selected Tab Entry" action="ActionUpdateTabEntry" />
+					<menuitem name="Selected Tracks" action="ActionUpdateTracks" />
+                </menu>
+            </placeholder>
+   		</menu>
+	</menubar>
+</ui>

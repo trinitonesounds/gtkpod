@@ -425,9 +425,9 @@ anjuta_app_instance_init (AnjutaApp *app)
 	on_gdl_style_changed (NULL, 0, NULL, app);
 
 	/* Register actions */
-	anjuta_ui_add_action_group_entries (app->ui, "ActionGroupFile", _("File"),
-										menu_entries_file,
-										G_N_ELEMENTS (menu_entries_file),
+	anjuta_ui_add_action_group_entries (app->ui, "ActionGroupMusic", _("Music"),
+										menu_entries_music,
+										G_N_ELEMENTS (menu_entries_music),
 										GETTEXT_PACKAGE, TRUE, app);
 	anjuta_ui_add_action_group_entries (app->ui, "ActionGroupEdit", _("Edit"),
 										menu_entries_edit,

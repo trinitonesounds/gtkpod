@@ -1,10 +1,9 @@
 <!--*- xml -*-->
 <ui>
 	<menubar name="MenuMain">
-		<menu name="MenuFile" action="ActionMenuFile">
+		<menu name="MenuMusic" action="ActionMenuMusic">
+			<placeholder name="PlaceholderMusicMenus"/>
 			<placeholder name="PlaceholderFileMenus"/>
-			<placeholder name="PlaceholderProjectMenus"/>
-			<placeholder name="PlaceholderPrintMenus"/>
 			<menuitem name="Quit" action="ActionExit" />
 		</menu>
 		<menu name="MenuEdit" action="ActionMenuEdit">
