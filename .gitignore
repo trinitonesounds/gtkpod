@@ -1,15 +1,12 @@
-*Makefile
-*Makefile.in
-*Makefile.in.in
-*.lo
-*.anjuta_sym_db.db
+# Global ignores
+*.bak
 *.o
-*.deps
-*.libs
-*.la
-*.so
-*POTFILES
-
+*.sw[a-z]
+*~
+.deps
+Makefile
+Makefile.in
+cscope.out
 
 # /
 /.cdtproject
@@ -27,8 +24,6 @@
 /depcomp
 /install-sh
 /intltool-*
-/libtool
-/ltmain.sh
 /missing
 /mkinstalldirs
 /stamp-h.in
@@ -37,22 +32,21 @@
 /.cproject
 
 # /data/
-/data/*.gmo
 /data/*.desktop
 /data/nocover_found.png
 
+# /data/man/
 /data/man/gtkpod.1
 
 # /po/
+/po/Makefile.in.in
+/po/POTFILES
 /po/*.gmo
 /po/.intltool-merge-cache
 /po/stamp-it
 
-/src/cscope.out
+# /src/
 /src/date_parser.c
 /src/date_parser2.c
 /src/gtkpod
 /src/itdb
-
-# plugins soft links
-/plugins/*.plugin
