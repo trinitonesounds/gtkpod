@@ -4,8 +4,36 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.55)
 
 AC_INIT(configure.in)
-AM_INIT_AUTOMAKE(gtkpod, 0.99.15GIT)
 AM_CONFIG_HEADER(config.h)
+
+# Making releases:
+#   LIBGTKPOD_MICRO_VERSION += 1;
+#   LIBGTKPOD_SO_VERSION - see comments
+#
+LIBGTKPOD_MAJOR_VERSION=0
+LIBGTKPOD_MINOR_VERSION=99
+LIBGTKPOD_MICRO_VERSION=15
+# If you need a modifier for the version number. 
+# Normally empty, but can be used to make "fixup" releases.
+LIBGTKPOD_EXTRAVERSION=SVN
+
+LIBGTKPOD_VERSION=$LIBGTKPOD_MAJOR_VERSION.$LIBGTKPOD_MINOR_VERSION.$LIBGTKPOD_MICRO_VERSION$LIBGTKPOD_EXTRAVERSION
+
+dnl libtool versioning
+# +1 : 0 : +1  == adds new functions to the interface
+# +1 : 0 : 0   == changes or removes functions (changes include both
+#                 changes to the signature and the semantic)
+#  ? :+1 : ?   == just internal changes
+# CURRENT : REVISION : AGE
+LIBGTKPOD_SO_VERSION=0:1:0
+
+AC_SUBST(LIBGTKPOD_SO_VERSION)
+AC_SUBST(LIBGTKPOD_MAJOR_VERSION)
+AC_SUBST(LIBGTKPOD_MINOR_VERSION)
+AC_SUBST(LIBGTKPOD_MICRO_VERSION)
+AC_SUBST(LIBGTKPOD_VERSION)
+
+AM_INIT_AUTOMAKE(gtkpod, $LIBGTKPOD_VERSION)
 AM_MAINTAINER_MODE
 AC_CANONICAL_HOST
 AC_PROG_LIBTOOL
@@ -50,12 +78,25 @@ PKG_CHECK_MODULES(LIBGPOD, libgpod-1.0 >= 0.7.0,, [AC_MSG_FAILURE([*** $LIBGPOD_
 PKG_CHECK_MODULES(LIBANJUTA, libanjuta-1.0 >= 2.26.2.2,, [AC_MSG_FAILURE([*** $LIBANJUTA_PKG_ERRORS])])
 PKG_CHECK_MODULES(LIBGDL, gdl-1.0 >= 2.26.0,, [AC_MSG_FAILURE([*** $LIBGDL_PKG_ERRORS])])
 
-CFLAGS="$CFLAGS $GTK_CFLAGS $GLIB_CFLAGS $GMODULE_CFLAGS $GTHREAD_CFLAGS $LIBGLADE_CFLAGS $LIBGPOD_CFLAGS $LIBANJUTA_CFLAGS $LIBGDL_CFLAGS"
-LIBS="$LIBS $GTK_LIBS $GLIB_LIBS $GMODULE_LIBS $GTHREAD_LIBS $LIBGLADE_LIBS $LIBGPOD_LIBS $LIBANJUTA_LIBS $LIBGDL_LIBS"
-GTKPOD_CFLAGS=$CFLAGS
-GTKPOD_LIBS=$LIBS
+CFLAGS="$CFLAGS $GTK_CFLAGS $GLIB_CFLAGS $GMODULE_CFLAGS $GTHREAD_CFLAGS $LIBGLADE_CFLAGS $LIBANJUTA_CFLAGS $LIBGDL_CFLAGS"
+LIBS="$LIBS $GTK_LIBS $GLIB_LIBS $GMODULE_LIBS $GTHREAD_LIBS $LIBGLADE_LIBS $LIBANJUTA_LIBS $LIBGDL_LIBS"
+
+dnl Setup Gtkpod Library flags for building plugins
+dnl --------------------------
+LIBGTKPOD_CFLAGS=$CFLAGS
+LIBGTKPOD_LIBS='$(top_builddir)/libgtkpod/libgtkpod.la'
+AC_SUBST(LIBGTKPOD_CFLAGS)
+AC_SUBST(LIBGTKPOD_LIBS)
+
+dnl Setup Gtkpod flags for building library and platform
+dnl --------------------------
+GTKPOD_CFLAGS="$CFLAGS $LIBGPOD_CFLAGS"
+GTKPOD_LIBS="$LIBS $LIBGPOD_LIBS"
 AC_SUBST(GTKPOD_CFLAGS)
 AC_SUBST(GTKPOD_LIBS)
+
+GTKPOD_PLUGIN_LDFLAGS="-module -avoid-version -no-undefined"
+AC_SUBST(GTKPOD_PLUGIN_LDFLAGS)
 
 dnl we need 'flex'
 AM_PROG_LEX
@@ -203,9 +244,6 @@ AC_CHECK_HEADERS(linux/cdrom.h scsi/sg.h scsi/scsi.h scsi/scsi_ioctl.h)
 libgpod_version=`$PKG_CONFIG libgpod-1.0 --modversion`
 AC_DEFINE_UNQUOTED(LIBGPOD_VERSION, "${libgpod_version}", [Set this to the libgpod version])
 
-GTKPOD_PLUGIN_LDFLAGS="-module -avoid-version -no-undefined"
-AC_SUBST(GTKPOD_PLUGIN_LDFLAGS)
-
 dnl Setup Plugin directories
 dnl ------------------------
 gtkpod_plugin_dir='$(libdir)/$(PACKAGE)'
@@ -235,27 +273,32 @@ data/icons/64x64/Makefile
 data/icons/scalable/Makefile
 data/icons/hicolor/Makefile
 data/icons/hicolor/16x16/Makefile
-data/icons/hicolor/16x16/places/Makefile
 data/icons/hicolor/16x16/status/Makefile
-data/icons/hicolor/22x22/Makefile
-data/icons/hicolor/22x22/places/Makefile
-data/icons/hicolor/24x24/Makefile
-data/icons/hicolor/24x24/places/Makefile
-data/icons/hicolor/32x32/Makefile
-data/icons/hicolor/32x32/places/Makefile
-data/icons/hicolor/48x48/Makefile
-data/icons/hicolor/48x48/places/Makefile
-data/icons/hicolor/scalable/Makefile
-data/icons/hicolor/scalable/places/Makefile
+data/icons/hicolor/64x64/Makefile
 data/man/Makefile
 data/man/gtkpod.1
 data/ui/Makefile
 doc/Makefile
 doc/figures/Makefile
+libgtkpod/Makefile
 plugins/Makefile
 plugins/helloworld/Makefile
 plugins/advhelloworld/Makefile
 plugins/playlist-display/Makefile
+plugins/playlist-display/icons/Makefile
+plugins/playlist-display/icons/hicolor/Makefile
+plugins/playlist-display/icons/hicolor/16x16/Makefile
+plugins/playlist-display/icons/hicolor/16x16/places/Makefile
+plugins/playlist-display/icons/hicolor/22x22/Makefile
+plugins/playlist-display/icons/hicolor/22x22/places/Makefile
+plugins/playlist-display/icons/hicolor/24x24/Makefile
+plugins/playlist-display/icons/hicolor/24x24/places/Makefile
+plugins/playlist-display/icons/hicolor/32x32/Makefile
+plugins/playlist-display/icons/hicolor/32x32/places/Makefile
+plugins/playlist-display/icons/hicolor/48x48/Makefile
+plugins/playlist-display/icons/hicolor/48x48/places/Makefile
+plugins/playlist-display/icons/hicolor/scalable/Makefile
+plugins/playlist-display/icons/hicolor/scalable/places/Makefile
 ])
 
 echo "

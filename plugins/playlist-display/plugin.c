@@ -30,6 +30,7 @@
 /* Project configuration file */
 #include <config.h>
 #include "display_playlists.h"
+#include "stock_icons.h"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -45,6 +46,10 @@ activate_plugin (AnjutaPlugin *plugin)
     AnjutaUI *ui;
     PlaylistDisplayPlugin *playlist_display_plugin;
     GtkActionGroup* action_group;
+
+    /* Prepare the icons for the playlist */
+    register_stock_icon ("playlist-photo", GPHOTO_PLAYLIST_ICON_STOCK_ID);
+    register_stock_icon ("playlist", TUNES_PLAYLIST_ICON_STOCK_ID);
 
     playlist_display_plugin = (PlaylistDisplayPlugin*) plugin;
     ui = anjuta_shell_get_ui (plugin->shell, NULL);

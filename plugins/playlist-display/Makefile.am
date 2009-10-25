@@ -20,6 +20,8 @@ plugin_in_files = $(plugin_file)
 playlist_display_plugindir = $(gtkpod_plugin_dir)
 playlist_display_plugin_DATA = $(plugin_file)
 
+SUBDIRS = icons
+
 # Include paths
 AM_CPPFLAGS = \
     -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
@@ -40,15 +42,14 @@ plugin_LTLIBRARIES = libplaylist_display.la
 
 # Plugin sources
 libplaylist_display_la_SOURCES = plugin.c plugin.h \
-								 display_playlists.c display_playlists.h
+								 display_playlists.c display_playlists.h \
+								 stock_icons.c stock_icons.h
 
 libplaylist_display_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
 # Plugin dependencies
 libplaylist_display_la_LIBADD = \
-    $(GCONF_LIBS) \
-    $(GLADE_LIBS) \
-    $(VTE_LIBS) \
+    $(LIBGTKPOD_LIBS) \
     $(LIBANJUTA_LIBS)
 
 EXTRA_DIST = \
@@ -58,7 +59,7 @@ EXTRA_DIST = \
 	$(playlist_display_glade_DATA) \
 	$(playlist_display_pixmaps_DATA)
 
-all-local: create-plugin-links create-ui-link
+all-local: create-plugin-links create-ui-link copy-icons-dir
 
 # Creating symbolic links in plugin root directory
 create-plugin-links:
@@ -70,6 +71,7 @@ create-plugin-links:
 	  ln -s `pwd`/$(plugin_file) ../$(plugin_file); \
 	fi;
 	
+# Creating symbolic link to ui file in installed ui directory
 create-ui-link: create-ui-dir
 	if test -e $(gtkpod_ui_dir)/$(playlist_display_ui_DATA); then \
 	  # File already exists. Replacing ..." \
@@ -83,6 +85,16 @@ create-ui-dir: create-data-dir
 	  sudo mkdir $(gtkpod_ui_dir); \
 	fi;
 
+# Copy icons
+copy-icons-dir: create-icons-dir
+	sudo cp -rf `pwd`/icons/* $(gtkpod_image_dir)/; \
+	sudo find $(gtkpod_image_dir) -name 'Makefile*' -delete;
+
+create-icons-dir: create-data-dir
+	if test ! -d $(gtkpod_image_dir); then \
+	  sudo mkdir $(gtkpod_image_dir); \
+	fi;
+
 create-data-dir: create-base-data-dir
 	if test ! -d $(gtkpod_data_dir); then \
 	  sudo mkdir $(gtkpod_data_dir); \
@@ -93,8 +105,10 @@ create-base-data-dir:
 	  sudo mkdir $(datadir)/$(PACKAGE); \
 	fi;
 
+# Clean up the links and files created purely for dev testing
+clean-local: clean-plugin-files clean-ui-dir clean-image-dir
 
-clean-local: clean-ui-dir
+clean-plugin-files:
 	rm -f ../$(plugin_lib) ../$(plugin_file)
 
 clean-ui-dir:
@@ -103,3 +117,7 @@ clean-ui-dir:
 	  sudo rm -f $(gtkpod_ui_dir)/$(playlist_display_ui_DATA); \
 	fi;
 
+clean-image-dir:
+	if test -d $(gtkpod_image_dir); then \
+	  sudo find $(gtkpod_image_dir) -name 'playlist*' -delete; \
+	fi;

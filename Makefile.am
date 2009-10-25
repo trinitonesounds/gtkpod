@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = src po scripts data doc plugins
+SUBDIRS = src po scripts data doc plugins libgtkpod
 
 EXTRA_DIST =			\
 	autogen.sh		\

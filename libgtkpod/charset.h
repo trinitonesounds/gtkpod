@@ -1,4 +1,4 @@
-/* Time-stamp: <2007-03-19 23:11:13 jcs>
+/* Time-stamp: <2005-06-17 22:25:31 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -27,38 +27,29 @@
 |  $Id$
 */
 
-#ifndef __DISPLAY_PLAYLIST_H__
-#define __DISPLAY_PLAYLIST_H__
+#ifndef __CHARSET_H__
+#define __CHARSET_H__
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
-#include <libgtkpod/itdb.h>
+#include <gtk/gtk.h>
+#include <stdio.h>
+#include "itdb.h"
 
-/* "Column numbers" in playlist model */
-typedef enum  {
-  PM_COLUMN_ITDB = 0,
-  PM_COLUMN_TYPE,
-  PM_COLUMN_PLAYLIST,
-  PM_COLUMN_PHOTOS,
-  PM_NUM_COLUMNS
-} PM_column_type;
+#define GTKPOD_JAPAN_AUTOMATIC "gtkpod-japan-automatic"
 
-/* Drag and drop types */
-enum {
-    DND_GTKPOD_TRACKLIST = 1000,
-    DND_GTKPOD_TM_PATHLIST,
-    DND_GTKPOD_PLAYLISTLIST,
-    DND_TEXT_URI_LIST,
-    DND_TEXT_PLAIN,
-    DND_IMAGE_JPEG
-};
-
-GtkTreeView* pm_create_treeview (void);
-void pm_set_selected_playlist(Itdb_Playlist *pl);
-void pm_remove_all_playlists (gboolean clear_sort);
-void pm_add_all_itdbs (void);
-
-
-#endif /* __DISPLAY_PLAYLIST_H__ */
+void charset_init_combo (GtkCombo *combo);
+void charset_init_combo_box (GtkComboBox *combo);
+gchar *charset_from_description (gchar *descr);
+gchar *charset_to_description (gchar *charset);
+gchar *charset_to_utf8 (const gchar *str);
+gchar *charset_from_utf8 (const gchar *str);
+gchar *charset_track_charset_from_utf8 (Track *s, const gchar *str);
+gchar *charset_to_charset (const gchar *from_charset,
+			   const gchar *to_charset,
+			   const gchar *str);
+gchar *charset_get_auto (void);
+void charset_reset_auto (void);
+#endif

@@ -1,6 +1,5 @@
-/* Time-stamp: <2007-03-19 23:11:13 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2007 P.G. Richardson <phantom_sf at users.sourceforge.net>
 |  Part of the gtkpod project.
 |
 |  URL: http://www.gtkpod.org/
@@ -24,41 +23,21 @@
 |
 |  This product is not supported/written/published by Apple!
 |
-|  $Id$
 */
 
-#ifndef __DISPLAY_PLAYLIST_H__
-#define __DISPLAY_PLAYLIST_H__
+#ifndef STOCK_ICONS_H_
+#define STOCK_ICONS_H_
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+	#include <config.h>
 #endif
 
-#include <libgtkpod/itdb.h>
+#include <gtk/gtk.h>
 
-/* "Column numbers" in playlist model */
-typedef enum  {
-  PM_COLUMN_ITDB = 0,
-  PM_COLUMN_TYPE,
-  PM_COLUMN_PLAYLIST,
-  PM_COLUMN_PHOTOS,
-  PM_NUM_COLUMNS
-} PM_column_type;
+/* Stock IDs */
+#define GPHOTO_PLAYLIST_ICON_STOCK_ID "gtkpod-gphoto-playlist-icon"
+#define TUNES_PLAYLIST_ICON_STOCK_ID "gtkpod-tunes-playlist-icon"
 
-/* Drag and drop types */
-enum {
-    DND_GTKPOD_TRACKLIST = 1000,
-    DND_GTKPOD_TM_PATHLIST,
-    DND_GTKPOD_PLAYLISTLIST,
-    DND_TEXT_URI_LIST,
-    DND_TEXT_PLAIN,
-    DND_IMAGE_JPEG
-};
+void register_stock_icon (const gchar *name, const gchar *stockid);
 
-GtkTreeView* pm_create_treeview (void);
-void pm_set_selected_playlist(Itdb_Playlist *pl);
-void pm_remove_all_playlists (gboolean clear_sort);
-void pm_add_all_itdbs (void);
-
-
-#endif /* __DISPLAY_PLAYLIST_H__ */
+#endif /*STOCK_ICONS_H_*/

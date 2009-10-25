@@ -1,8 +1,8 @@
-/* Time-stamp: <2007-03-19 23:11:13 jcs>
+/* Time-stamp: <2005-06-17 22:25:30 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-|
+| 
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
@@ -27,38 +27,30 @@
 |  $Id$
 */
 
-#ifndef __DISPLAY_PLAYLIST_H__
-#define __DISPLAY_PLAYLIST_H__
+#ifndef CLIENTSERVERH_INCLUDED
+#define CLIENTSERVERH_INCLUDED 1
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
-#include <libgtkpod/itdb.h>
+#include <glib.h>
+#include <sys/file.h>
 
-/* "Column numbers" in playlist model */
-typedef enum  {
-  PM_COLUMN_ITDB = 0,
-  PM_COLUMN_TYPE,
-  PM_COLUMN_PLAYLIST,
-  PM_COLUMN_PHOTOS,
-  PM_NUM_COLUMNS
-} PM_column_type;
+extern const gchar *SOCKET_TEST;
+extern const gchar *SOCKET_PLYC;
 
-/* Drag and drop types */
-enum {
-    DND_GTKPOD_TRACKLIST = 1000,
-    DND_GTKPOD_TM_PATHLIST,
-    DND_GTKPOD_PLAYLISTLIST,
-    DND_TEXT_URI_LIST,
-    DND_TEXT_PLAIN,
-    DND_IMAGE_JPEG
-};
-
-GtkTreeView* pm_create_treeview (void);
-void pm_set_selected_playlist(Itdb_Playlist *pl);
-void pm_remove_all_playlists (gboolean clear_sort);
-void pm_add_all_itdbs (void);
-
-
-#endif /* __DISPLAY_PLAYLIST_H__ */
+void server_setup (void);
+void server_shutdown (void);
+gboolean client_playcount (gchar *file);
+gboolean print_sha1_hash (gchar *file);
+#ifndef HAVE_FLOCK
+#include <unistd.h>
+#include <fcntl.h>
+/* emulate flock on systems that do not have it */
+int flock(int fd, int operation);
+#ifndef LOCK_EX
+#define LOCK_EX 2
+#endif
+#endif
+#endif

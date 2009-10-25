@@ -27,6 +27,7 @@
  |  $Id$
  */
 #include <glib/gprintf.h>
+#include <gtk/gtk.h>
 #include "config.h"
 #include "directories.h"
 
@@ -43,9 +44,12 @@ static gchar *uidir = NULL;
 void init_directories(char *argv[])
 {
     datadir = init_dir (argv, "data", GTKPOD_DATA_DIR);
-    icondir = init_dir (argv, "data/icons", GTKPOD_DATA_DIR);
+    icondir = init_dir (argv, "data/icons", GTKPOD_IMAGE_DIR);
     uidir = init_dir (argv, "data/ui", GTKPOD_UI_DIR);
     plugindir = init_dir (argv, "plugins", GTKPOD_PLUGIN_DIR);
+
+    gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (), icondir);
+    gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (), GTKPOD_IMAGE_DIR);
 
     debug_print_directories();
 }
