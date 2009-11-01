@@ -331,7 +331,6 @@ static gboolean finish_editable_storage (RepWin *repwin,
    prefs system. If values differ, store @val for @key in
    @repwin->temp_prefs, otherwise remove a possibly existing entry
    @key in @repwin->temp_prefs. */
-/* Attention: g_frees() @key for you */
 static void finish_int_storage (RepWin *repwin,
 				gchar *key, gint val)
 {
@@ -358,7 +357,6 @@ static void finish_int_storage (RepWin *repwin,
 	temp_prefs_remove_key (repwin->temp_prefs, key);
     }
     update_buttons (repwin);
-    g_free (key);
 }
 
 
@@ -420,6 +418,8 @@ static void sync_playlist_mode_none_toggled (GtkToggleButton *togglebutton,
 			    SYNC_PLAYLIST_MODE_NONE);
 	update_buttons (repwin);
     }
+
+    g_free (key);
 }
 
 
@@ -440,6 +440,8 @@ static void sync_playlist_mode_manual_toggled (GtkToggleButton *togglebutton,
 			    SYNC_PLAYLIST_MODE_MANUAL);
 	update_buttons (repwin);
     }
+
+    g_free (key);
 }
 
 
@@ -478,6 +480,8 @@ static void standard_itdb_checkbutton_toggled (GtkToggleButton *togglebutton,
     key = get_itdb_prefs_key (repwin->itdb_index, keybase);
     finish_int_storage (repwin, key,
 			gtk_toggle_button_get_active (togglebutton));
+
+    g_free (key);
 }
 
 
@@ -507,10 +511,12 @@ static void standard_playlist_checkbutton_toggled (GtkToggleButton *togglebutton
 	    temp_prefs_set_int (repwin->extra_prefs, key, active);
 
 	update_buttons (repwin);
+	g_free (key);
 	return;
     }
 	
     finish_int_storage (repwin, key, active);
+    g_free (key);
 }
 
 /* delete_repository_button was clicked */
