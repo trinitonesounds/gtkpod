@@ -35,7 +35,7 @@
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
 
-#define UI_FILE GTKPOD_UI_DIR"/playlist-display.ui"
+#define UI_FILE GTKPOD_UI_DIR"/playlist_display.ui"
 
 static GtkActionEntry actions[] = {/* Empty at moment add for playlist display */};
 

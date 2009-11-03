@@ -2,10 +2,10 @@
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
@@ -126,6 +126,9 @@ GList *export_trackglist_when_necessary (iTunesDB *itdb_s,
 					 GList *tracks);
 gboolean read_lyrics_from_file (Track *track, gchar **lyrics);
 gboolean write_lyrics_to_file (Track *track);
+
+gchar *fileselection_get_file_or_dir(const gchar *title, const gchar *cur_file, GtkFileChooserAction action);
+
 /* needed to adapt the prefs structure */
 extern const gchar *EXPORT_FILES_SPECIAL_CHARSET;
 extern const gchar *EXPORT_FILES_CHECK_EXISTING;

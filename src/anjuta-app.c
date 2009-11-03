@@ -44,7 +44,7 @@
 #include "anjuta-about.h"
 
 #include "gtkpod.h"
-#include "directories.h"
+#include "libgtkpod/directories.h"
 
 #define ICON_FILE "anjuta-preferences-general-48.png"
 

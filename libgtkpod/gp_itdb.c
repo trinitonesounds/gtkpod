@@ -52,9 +52,7 @@ static struct itdbs_head *itdbs_head = NULL;
 /* for convenience */
 struct itdbs_head *gp_get_itdbs_head ()
 {
-    return NULL;
-//    return g_object_get_data (G_OBJECT (gtkpod_win),
-//			      "itdbs_head");
+    return g_object_get_data (G_OBJECT (gtkpod_window), "itdbs_head");
 }
 
 void gp_itdb_extra_destroy (ExtraiTunesDBData *eitdb)
@@ -830,6 +828,8 @@ void init_data (GtkWidget *window)
 
     g_return_if_fail (window);
     g_return_if_fail (itdbs_head == NULL);
+
+    gtkpod_window = window;
 
     cfgdir = prefs_get_cfgdir ();
 

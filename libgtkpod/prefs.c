@@ -84,8 +84,24 @@
 
 #include "prefs.h"
 #include "misc.h"
-#include "types.h"
+#include "misc_conversion.h"
 #include "clientserver.h"
+
+/* some public key names used several times */
+const gchar *KEY_CONCAL_AUTOSYNC="concal_autosync";
+const gchar *KEY_SYNC_DELETE_TRACKS="sync_delete_tracks";
+const gchar *KEY_SYNC_CONFIRM_DELETE="sync_confirm_delete";
+const gchar *KEY_SYNC_CONFIRM_DIRS="sync_confirm_dirs";
+const gchar *KEY_SYNC_SHOW_SUMMARY="sync_show_summary";
+const gchar *KEY_MOUNTPOINT="mountpoint";
+const gchar *KEY_BACKUP="filename";
+const gchar *KEY_IPOD_MODEL="ipod_model";
+const gchar *KEY_FILENAME="filename";
+const gchar *KEY_PATH_SYNC_CONTACTS="path_sync_contacts";
+const gchar *KEY_PATH_SYNC_CALENDAR="path_sync_calendar";
+const gchar *KEY_PATH_SYNC_NOTES="path_sync_notes";
+const gchar *KEY_SYNCMODE="syncmode";
+const gchar *KEY_MANUAL_SYNCDIR="manual_syncdir";
 
 /*
  * Data global to this module only

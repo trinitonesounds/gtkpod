@@ -34,7 +34,7 @@
 #endif
 
 #include "file.h"
-#include "types.h"
+#include "misc_conversion.h"
 
 void gp_duplicate_remove (Track *oldtrack, Track *track);
 void gp_sha1_hash_tracks_itdb (iTunesDB *itdb);

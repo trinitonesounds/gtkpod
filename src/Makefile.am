@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
-INCLUDES = -DMOUNT_BIN=\""@MOUNT@\"" \
+AM_CFLAGS = \
+       -DMOUNT_BIN=\""@MOUNT@\"" \
 	   -DUMOUNT_BIN=\""@UMOUNT@\"" \
 	   -DPACKAGE_DATA_DIR=\""$(datadir)"\" \
 	   -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
@@ -11,7 +12,7 @@ INCLUDES = -DMOUNT_BIN=\""@MOUNT@\"" \
        -DGTKPOD_UI_DIR=\""$(gtkpod_ui_dir)"\" \
        -DGTKPOD_GLADE_DIR=\""$(gtkpod_glade_dir)"\" \
        -DGTKPOD_IMAGE_DIR=\""$(gtkpod_image_dir)"\" \
-       $(LIBANJUTA_CFLAGS)
+       $(GTKPOD_CFLAGS)
 
 
 bin_PROGRAMS = gtkpod
@@ -26,11 +27,10 @@ gtkpod_SOURCES = \
     anjuta-action-callbacks.c anjuta-action-callbacks.h \
     anjuta-actions.h \
     anjuta-app.c anjuta-app.h \
-    directories.c directories.h \
     gtkpod.c gtkpod.h \
     main.c
 
-gtkpod_LDADD = $(LIBS) $(INTLLIBS) @LIBOBJS@
+gtkpod_LDADD = $(GTKPOD_LIBS) $(INTLLIBS) @LIBOBJS@
     
 EXTRA_DIST = getopt.h
 

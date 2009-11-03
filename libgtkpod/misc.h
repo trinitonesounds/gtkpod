@@ -105,13 +105,6 @@ gchar **build_argv_from_strings (const gchar *first_arg, ...);
 
 void delete_track_ok (struct DeleteData *dd);
 
-void gtkpod_warning (const gchar *format, ...);
-void gtkpod_warning_simple (const gchar *format, ...);
-void gtkpod_warning_hig (GtkWindow *parent,
-						 GtkMessageType icon,
-						 const gchar *primary_text,
-						 const gchar *secondary_text);
-
 gchar *time_time_to_string (time_t t);
 gchar *time_fromtime_to_string (time_t t);
 gchar *time_totime_to_string (time_t t);

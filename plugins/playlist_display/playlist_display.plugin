@@ -1,5 +1,5 @@
 [Anjuta Plugin]
-Location=playlist-display:PlaylistDisplayPlugin
+Location=playlist_display:PlaylistDisplayPlugin
 Icon=playlist_display.png
 Name=Playlist Display Plugin
 Description=Playlist View

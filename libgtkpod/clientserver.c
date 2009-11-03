@@ -32,6 +32,7 @@
 #include "misc.h"
 #include "gp_itdb.h"
 #include "prefs.h"
+#include "confirmation.h"
 
 #include <errno.h>
 #include <fcntl.h>

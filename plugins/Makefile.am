@@ -3,6 +3,6 @@
 SUBDIRS = . \
 	helloworld \
 	advhelloworld \
-	playlist-display
+	playlist_display
 
 # indent

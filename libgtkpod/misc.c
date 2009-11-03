@@ -43,6 +43,7 @@
 #include "misc.h"
 #include "prefs.h"
 #include "misc_track.h"
+#include "confirmation.h"
 
 #define DEBUG_MISC 0
 
@@ -51,13 +52,165 @@ const gchar
         *SCRIPTDIR =
                 PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S;
 
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *             Functions for blocking widgets (block input)         *
+ *                                                                  *
+\*------------------------------------------------------------------*/
 
+/* --------------------------------------------------------------*/
+/* are widgets blocked at the moment? */
+gboolean widgets_blocked = FALSE;
+struct blocked_widget { /* struct to be kept in blocked_widgets */
+    GtkWidget *widget;   /* widget that has been turned insensitive */
+    gboolean  sensitive; /* state of the widget before */
+};
+/* --------------------------------------------------------------*/
+
+
+enum {
+    BR_BLOCK,
+    BR_RELEASE,
+    BR_UPDATE
+};
+
+/* function to add one widget to the blocked_widgets list */
+static GList *add_blocked_widget (GList *blocked_widgets, gchar *name)
+{
+    g_warning("TODO misc:add_blocked_widget - commented out\n");
+//    GtkWidget *w;
+//    struct blocked_widget *bw;
+//    if((w = gtkpod_xml_get_widget (main_window_xml,  name)))
+//    {
+//    bw = g_malloc0 (sizeof (struct blocked_widget));
+//    bw->widget = w;
+//    /* we don't have to set the sensitive flag right now. It's
+//     * done in "block_widgets ()" */
+//    blocked_widgets = g_list_append (blocked_widgets, bw);
+//    }
+    return blocked_widgets;
+}
+
+/* called by block_widgets() and release_widgets() */
+/* "block": TRUE = block, FALSE = release */
+static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
+{
+    /* list with the widgets that are turned insensitive during
+       import/export...*/
+    static GList *bws = NULL;
+    static gint count = 0; /* how many times are the widgets blocked? */
+    GList *l;
+    struct blocked_widget *bw;
+
+    /* Create a list of widgets that are to be turned insensitive when
+     * importing/exporting, adding tracks or directories etc. */
+    if (bws == NULL)
+    {
+    bws = add_blocked_widget (bws, "menubar");
+    bws = add_blocked_widget (bws, "load_ipods_button");
+    bws = add_blocked_widget (bws, "save_changes_button");
+    bws = add_blocked_widget (bws, "add_files_button");
+    bws = add_blocked_widget (bws, "add_dirs_button");
+    bws = add_blocked_widget (bws, "add_PL_button");
+    bws = add_blocked_widget (bws, "new_PL_button");
+    widgets_blocked = FALSE;
+    }
+
+    switch (action)
+    {
+    case BR_BLOCK:
+    /* we must block the widgets */
+    ++count;  /* increase number of locks */
+    if (!widgets_blocked)
+    { /* only block widgets, if they are not already blocked */
+        for (l = bws; l; l = l->next)
+        {
+            bw = (struct blocked_widget *)l->data;
+            /* remember the state the widget was in before */
+            bw->sensitive = GTK_WIDGET_SENSITIVE (bw->widget);
+            gtk_widget_set_sensitive (bw->widget, FALSE);
+        }
+        g_warning("TODO misc:block_release_widgets sort_window_block commented out\n");
+//        sort_window_block ();
+        widgets_blocked = TRUE;
+    }
+    break;
+    case BR_RELEASE:
+    /* release the widgets if --count == 0 */
+    if (widgets_blocked)
+    { /* only release widgets, if they are blocked */
+        --count;
+        if (count == 0)
+        {
+            for (l = bws; l; l = l->next)
+            {
+                bw = (struct blocked_widget *)l->data;
+                gtk_widget_set_sensitive (bw->widget, bw->sensitive);
+            }
+
+            g_warning("TODO misc:block_release_widgets sort_window_release commented out\n");
+//            sort_window_release ();
+            widgets_blocked = FALSE;
+        }
+    }
+    break;
+    case BR_UPDATE:
+    if (widgets_blocked)
+    { /* only update widgets, if they are blocked */
+        for (l = bws; l; l = l->next)
+        { /* find the required widget */
+        bw = (struct blocked_widget *)l->data;
+        if (bw->widget == w)
+        { /* found -> set to new desired state */
+            bw->sensitive = sens;
+            break;
+        }
+        }
+    }
+    break;
+    }
+}
+
+
+/* Block widgets (turn insensitive) listed in "bws" */
+void block_widgets (void)
+{
+    block_release_widgets (BR_BLOCK, NULL, FALSE);
+}
+
+/* Release widgets (i.e. return them to their state before
+   "block_widgets() was called */
+void release_widgets (void)
+{
+    block_release_widgets (BR_RELEASE, NULL, FALSE);
+}
+
+void update_blocked_widget (GtkWidget *w, gboolean sens)
+{
+    block_release_widgets (BR_UPDATE, w, sens);
+}
 
 /*------------------------------------------------------------------*\
  *                                                                  *
  *             Miscellaneous                                        *
  *                                                                  *
  \*------------------------------------------------------------------*/
+
+/* Concats @base_dir and @rel_dir if and only if @rel_dir is not
+ * absolute (does not start with '~' or '/'). Otherwise simply return
+ * a copy of @rel_dir. Must free return value after use */
+gchar *concat_dir_if_relative (G_CONST_RETURN gchar *base_dir,
+                   G_CONST_RETURN gchar *rel_dir)
+{
+    /* sanity */
+    if (!rel_dir || !*rel_dir)
+    return g_build_filename (base_dir, rel_dir, NULL);
+                 /* this constellation is nonsense... */
+    if ((*rel_dir == '/') || (*rel_dir == '~'))
+    return g_strdup (rel_dir);             /* rel_dir is absolute */
+                           /* make absolute path */
+    return g_build_filename (base_dir, rel_dir, NULL);
+}
 
 /* Copied g_utf8_strcasestr from GtkSourceView */
 gchar *utf8_strcasestr(const gchar *haystack, const gchar *needle)

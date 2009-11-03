@@ -44,6 +44,7 @@
 #include "prefs.h"
 #include "misc_track.h"
 #include "file.h"
+#include "confirmation.h"
 
 typedef guint32 chunk;
 union _block
@@ -93,9 +94,7 @@ void setup_sha1()
     struct itdbs_head *itdbs_head;
 
     g_warning("TODO find other way of getting itdbs_head\n");
-//    g_return_if_fail (gtkpod_window);
-//    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
-//				    "itdbs_head");
+    itdbs_head = gp_get_itdbs_head();
 
     /* gets called before itdbs are set up -> fail silently */
     if (itdbs_head)
@@ -180,8 +179,7 @@ sha1_hash_on_file(FILE * fp)
        }
        else
        {
-           g_warning("TODO some way of setting a status string that is returned to the gui\n");
-//	  gtkpod_warning(_("Hashed file is 0 bytes long\n"));
+           gtkpod_warning(_("Hashed file is 0 bytes long\n"));
        }
    }
    return (result);
@@ -233,10 +231,9 @@ gchar *sha1_hash_on_filename (gchar *name, gboolean silent)
 	    if (!silent)
 	    {
 		gchar *name_utf8=charset_to_utf8 (name);
-		g_warning("TODO sha1.c return some status");
-//		gtkpod_warning (
-//		    _("Could not open '%s' to calculate SHA1 checksum: %s\n"),
-//		    name_utf8, strerror(errno));
+		gtkpod_warning (
+		    _("Could not open '%s' to calculate SHA1 checksum: %s\n"),
+		    name_utf8, strerror(errno));
 		g_free (name_utf8);
 	    }
 	}

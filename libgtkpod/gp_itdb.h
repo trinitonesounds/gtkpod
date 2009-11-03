@@ -38,6 +38,9 @@
 #include "itdb.h"
 #include "file_convert_info.h"
 
+
+GtkWidget *gtkpod_window;
+
 struct itdbs_head
 {
     GList *itdbs;

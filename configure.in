@@ -81,17 +81,17 @@ PKG_CHECK_MODULES(LIBGDL, gdl-1.0 >= 2.26.0,, [AC_MSG_FAILURE([*** $LIBGDL_PKG_E
 CFLAGS="$CFLAGS $GTK_CFLAGS $GLIB_CFLAGS $GMODULE_CFLAGS $GTHREAD_CFLAGS $LIBGLADE_CFLAGS $LIBANJUTA_CFLAGS $LIBGDL_CFLAGS"
 LIBS="$LIBS $GTK_LIBS $GLIB_LIBS $GMODULE_LIBS $GTHREAD_LIBS $LIBGLADE_LIBS $LIBANJUTA_LIBS $LIBGDL_LIBS"
 
-dnl Setup Gtkpod Library flags for building plugins
+dnl Setup Gtkpod flags for building library
 dnl --------------------------
-LIBGTKPOD_CFLAGS=$CFLAGS
-LIBGTKPOD_LIBS='$(top_builddir)/libgtkpod/libgtkpod.la'
+LIBGTKPOD_CFLAGS="$CFLAGS $LIBGPOD_CFLAGS"
+LIBGTKPOD_LIBS="$LIBS $LIBGPOD_LIBS"
 AC_SUBST(LIBGTKPOD_CFLAGS)
 AC_SUBST(LIBGTKPOD_LIBS)
 
-dnl Setup Gtkpod flags for building library and platform
+dnl Setup Gtkpod flags for building platform
 dnl --------------------------
-GTKPOD_CFLAGS="$CFLAGS $LIBGPOD_CFLAGS"
-GTKPOD_LIBS="$LIBS $LIBGPOD_LIBS"
+GTKPOD_LIBS='$(top_builddir)/libgtkpod/libgtkpod.la'
+GTKPOD_CFLAGS=$CFLAGS
 AC_SUBST(GTKPOD_CFLAGS)
 AC_SUBST(GTKPOD_LIBS)
 
@@ -284,21 +284,21 @@ libgtkpod/Makefile
 plugins/Makefile
 plugins/helloworld/Makefile
 plugins/advhelloworld/Makefile
-plugins/playlist-display/Makefile
-plugins/playlist-display/icons/Makefile
-plugins/playlist-display/icons/hicolor/Makefile
-plugins/playlist-display/icons/hicolor/16x16/Makefile
-plugins/playlist-display/icons/hicolor/16x16/places/Makefile
-plugins/playlist-display/icons/hicolor/22x22/Makefile
-plugins/playlist-display/icons/hicolor/22x22/places/Makefile
-plugins/playlist-display/icons/hicolor/24x24/Makefile
-plugins/playlist-display/icons/hicolor/24x24/places/Makefile
-plugins/playlist-display/icons/hicolor/32x32/Makefile
-plugins/playlist-display/icons/hicolor/32x32/places/Makefile
-plugins/playlist-display/icons/hicolor/48x48/Makefile
-plugins/playlist-display/icons/hicolor/48x48/places/Makefile
-plugins/playlist-display/icons/hicolor/scalable/Makefile
-plugins/playlist-display/icons/hicolor/scalable/places/Makefile
+plugins/playlist_display/Makefile
+plugins/playlist_display/icons/Makefile
+plugins/playlist_display/icons/hicolor/Makefile
+plugins/playlist_display/icons/hicolor/16x16/Makefile
+plugins/playlist_display/icons/hicolor/16x16/places/Makefile
+plugins/playlist_display/icons/hicolor/22x22/Makefile
+plugins/playlist_display/icons/hicolor/22x22/places/Makefile
+plugins/playlist_display/icons/hicolor/24x24/Makefile
+plugins/playlist_display/icons/hicolor/24x24/places/Makefile
+plugins/playlist_display/icons/hicolor/32x32/Makefile
+plugins/playlist_display/icons/hicolor/32x32/places/Makefile
+plugins/playlist_display/icons/hicolor/48x48/Makefile
+plugins/playlist_display/icons/hicolor/48x48/places/Makefile
+plugins/playlist_display/icons/hicolor/scalable/Makefile
+plugins/playlist_display/icons/hicolor/scalable/places/Makefile
 ])
 
 echo "

@@ -35,16 +35,9 @@
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include <glib/gi18n-lib.h>
-
+#include "libgtkpod/gp_itdb.h"
 #include "display_playlists.h"
 #include "stock_icons.h"
-
-//#include "prefs.h"
-//#include "misc.h"
-//#include "misc_track.h"
-//#include "info.h"
-//#include "context_menus.h"
-//#include "stock_icons.h"
 
 /* pointer to the treeview for the playlist display */
 static GtkTreeView *playlist_treeview = NULL;
@@ -1981,7 +1974,7 @@ pm_cell_edited (GtkCellRendererText *renderer,
 void pm_set_playlist_renderer_text (GtkCellRenderer *renderer,
 				    Playlist *playlist)
 {
-    ExtraItdb_iTunesDBData *eitdb;
+    ExtraiTunesDBData *eitdb;
 
     g_return_if_fail (playlist);
     g_return_if_fail (playlist->itdb);
