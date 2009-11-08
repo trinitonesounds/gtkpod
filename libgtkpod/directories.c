@@ -40,43 +40,36 @@ static gchar *icondir = NULL;
 static gchar *plugindir = NULL;
 static gchar *uidir = NULL;
 
-void init_directories(char *argv[])
-{
-    datadir = init_dir (argv, "data", GTKPOD_DATA_DIR);
-    icondir = init_dir (argv, "data/icons", GTKPOD_IMAGE_DIR);
-    uidir = init_dir (argv, "data/ui", GTKPOD_UI_DIR);
-    plugindir = init_dir (argv, "plugins", GTKPOD_PLUGIN_DIR);
+void init_directories(char *argv[]) {
+    g_printf("argv[0] = %s\n", argv[0]);
+    datadir = init_dir(argv, "data", GTKPOD_DATA_DIR);
+    icondir = init_dir(argv, "data/icons", GTKPOD_IMAGE_DIR);
+    uidir = init_dir(argv, "data/ui", GTKPOD_UI_DIR);
+    plugindir = init_dir(argv, "plugins", GTKPOD_PLUGIN_DIR);
 
-    gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (), icondir);
-    gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (), GTKPOD_IMAGE_DIR);
+    gtk_icon_theme_append_search_path(gtk_icon_theme_get_default(), icondir);
+    gtk_icon_theme_append_search_path(gtk_icon_theme_get_default(), GTKPOD_IMAGE_DIR);
 
     debug_print_directories();
 }
 
-static void debug_print_directories()
-{
+static void debug_print_directories() {
     g_printf("data directory: %s\n", get_data_dir());
     g_printf("ui directory: %s\n", get_ui_dir());
     g_printf("glade directory: %s\n", get_glade_dir());
     g_printf("icon directory: %s\n", get_icon_dir());
-
     g_printf("plugin directory: %s\n", get_plugin_dir());
 }
 
-static gchar * init_dir(char *argv[], gchar *filename, gchar *installdir)
-{
-    gchar *newdir = NULL;
-
+static gchar * init_dir(char *argv[], gchar *localdir, gchar *fullinstalldir) {
     gchar *progname;
+    gchar *newdir;
 
     progname = g_find_program_in_path(argv[0]);
-    if (progname)
-    {
-        static const gchar *SEPsrcSEPgtkpod =
-        G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S "gtkpod";
+    if (progname) {
+        static const gchar *gtkpodSEPsrcSEP = "gtkpod" G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S;
 
-        if (!g_path_is_absolute(progname))
-        {
+        if (!g_path_is_absolute(progname)) {
             gchar *cur_dir = g_get_current_dir();
             gchar *prog_absolute;
 
@@ -89,62 +82,50 @@ static gchar * init_dir(char *argv[], gchar *filename, gchar *installdir)
             progname = prog_absolute;
         }
 
-        if (g_str_has_suffix(progname, SEPsrcSEPgtkpod))
-        {
-            gchar *suffix = g_strrstr(progname, SEPsrcSEPgtkpod);
-            if (suffix)
-            {
-                *suffix = 0;
-                newdir = g_build_filename(progname, filename, NULL);
-            }
+        gchar *substr = g_strrstr(progname, gtkpodSEPsrcSEP);
+        if (substr) {
+            gchar** tokens = g_strsplit(progname, substr, -1);
+            newdir = g_build_filename(tokens[0], "gtkpod", localdir, NULL);
+            g_strfreev(tokens);
         }
         g_free(progname);
 
-        if (newdir && !g_file_test(newdir, G_FILE_TEST_EXISTS))
-        {
+        if (newdir && !g_file_test(newdir, G_FILE_TEST_EXISTS)) {
             g_free(newdir);
             newdir = NULL;
         }
     }
 
     if (!newdir)
-        newdir = g_build_filename(installdir, filename, NULL);
-    else
-    {
+        newdir = fullinstalldir;
+    else {
         USING_LOCAL = 1;
-        g_printf(
-                "Using local %s file since program was started from source directory:\n%s\n", filename, newdir);
+        g_printf("Using local %s file since program was started from source directory:\n%s\n", localdir, newdir);
     }
 
     return newdir;
 }
 
-gchar * get_data_dir()
-{
+gchar * get_data_dir() {
     return datadir;
 }
 
-gchar * get_glade_dir()
-{
+gchar * get_glade_dir() {
     return datadir;
 }
 
-gchar * get_icon_dir()
-{
+gchar * get_icon_dir() {
     return icondir;
 }
 
-gchar * get_image_dir()
-{
+gchar * get_image_dir() {
     return icondir;
 }
 
-gchar * get_ui_dir()
-{
+gchar * get_ui_dir() {
     return uidir;
 }
 
-gchar * get_plugin_dir()
-{
+gchar * get_plugin_dir() {
     return plugindir;
 }

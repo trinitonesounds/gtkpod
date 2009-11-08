@@ -37,7 +37,8 @@ typedef struct _PlaylistDisplayPluginClass PlaylistDisplayPluginClass;
 
 struct _PlaylistDisplayPlugin {
     AnjutaPlugin parent;
-    GtkWidget *widget;
+    GtkTreeView *playlist_view;
+    GtkWidget *pl_window;
     gint uiid;
     GtkActionGroup *action_group;
 };

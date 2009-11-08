@@ -1,6 +1,5 @@
-/* Time-stamp: <2007-03-19 23:11:13 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 |
 |  URL: http://www.gtkpod.org/
@@ -27,38 +26,15 @@
 |  $Id$
 */
 
-#ifndef __DISPLAY_PLAYLIST_H__
-#define __DISPLAY_PLAYLIST_H__
+#ifndef GP_H_
+#define GP_H_
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <gtk/gtk.h>
 
-#include <libgtkpod/itdb.h>
+/* full path to 'gtkpod.glade' */
+gchar *gtkpod_xml_file;
+GtkWindow *gtkpod_window;
 
-/* "Column numbers" in playlist model */
-typedef enum  {
-  PM_COLUMN_ITDB = 0,
-  PM_COLUMN_TYPE,
-  PM_COLUMN_PLAYLIST,
-  PM_COLUMN_PHOTOS,
-  PM_NUM_COLUMNS
-} PM_column_type;
+void gp_init (GtkWindow *window);
 
-/* Drag and drop types */
-enum {
-    DND_GTKPOD_TRACKLIST = 1000,
-    DND_GTKPOD_TM_PATHLIST,
-    DND_GTKPOD_PLAYLISTLIST,
-    DND_TEXT_URI_LIST,
-    DND_TEXT_PLAIN,
-    DND_IMAGE_JPEG
-};
-
-GtkTreeView* pm_create_treeview (void);
-void pm_set_selected_playlist(Playlist *pl);
-void pm_remove_all_playlists (gboolean clear_sort);
-void pm_add_all_itdbs (void);
-
-
-#endif /* __DISPLAY_PLAYLIST_H__ */
+#endif /* GP_H_ */

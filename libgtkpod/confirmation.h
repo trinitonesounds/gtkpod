@@ -64,14 +64,13 @@ GtkResponseType gtkpod_confirmation (gint id,
 				     gpointer user_data1,
 				     gpointer user_data2);
 
-gint gtkpod_confirmation_simple (GtkWindow *parent,
-								 GtkMessageType icon,
+gint gtkpod_confirmation_simple (GtkMessageType icon,
 								 const gchar *primary_text,
 								 const gchar *secondary_text,
 								 const gchar *accept_button_text);
 
 gint gtkpod_confirmation_hig (GtkWindow *parent,
-							  GtkMessageType icon,
+                              GtkMessageType icon,
 							  const gchar *primary_text,
 							  const gchar *secondary_text,
 							  const gchar *accept_button_text,
@@ -92,9 +91,8 @@ enum {
 void CONF_NULL_HANDLER (gpointer d1, gpointer d2);
 
 void gtkpod_warning (const gchar *format, ...);
-void gtkpod_warning_simple (GtkWindow *parent, const gchar *format, ...);
-void gtkpod_warning_hig (GtkWindow *parent,
-                         GtkMessageType icon,
+void gtkpod_warning_simple (const gchar *format, ...);
+void gtkpod_warning_hig (GtkMessageType icon,
                          const gchar *primary_text,
                          const gchar *secondary_text);
 #endif

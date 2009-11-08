@@ -44,6 +44,8 @@
 #include "gp_itdb.h"
 #include "ipod_init.h"
 #include "confirmation.h"
+#include "file_convert.h"
+#include "tools.h"
 
 #define _TO_STR(x) #x
 #define TO_STR(x) _TO_STR(x)
@@ -702,8 +704,9 @@ static iTunesDB *gp_merge_itdb(iTunesDB *old_itdb) {
         g_return_val_if_fail (old_eitdb->offline_filename, NULL);
 
         new_itdb = gp_import_itdb(old_itdb, old_itdb->usertype, mountpoint, old_eitdb->offline_filename, NULL);
-        if (new_itdb)
-            gphoto_load_photodb(new_itdb);
+        g_warning("TODO load photodb handle\n");
+//        if (new_itdb)
+//            gphoto_load_photodb(new_itdb);
     }
     else {
         g_return_val_if_reached (NULL);
@@ -765,8 +768,7 @@ iTunesDB *gp_load_ipod(iTunesDB *itdb) {
                 *str =
                         g_strdup_printf(_("Could not find iPod directory structure at '%s'.\n\nIf you are sure that the iPod is properly mounted at '%s', it may not be initialized for use. In this case, gtkpod can initialize it for you.\n\nDo you want to create the directory structure now?"), mountpoint, mountpoint);
 
-        gint result = gtkpod_confirmation_simple(GTK_WINDOW (gtkpod_window),
-        GTK_MESSAGE_WARNING, _("iPod directory structure not found"), str, _("Create directory structure"));
+        gint result = gtkpod_confirmation_simple(GTK_MESSAGE_WARNING, _("iPod directory structure not found"), str, _("Create directory structure"));
 
         g_free(str);
 
@@ -1182,7 +1184,7 @@ static GtkWidget *create_transfer_information_dialog(TransferData *td) {
     GladeXML *dialog_xml;
     GtkWidget *dialog, *widget;
 
-    dialog_xml = gtkpod_xml_new(xml_file, "file_transfer_information_dialog");
+    dialog_xml = gtkpod_xml_new(gtkpod_xml_file, "file_transfer_information_dialog");
     glade_xml_signal_autoconnect(dialog_xml);
 
     dialog = gtkpod_xml_get_widget(dialog_xml, "file_transfer_information_dialog");

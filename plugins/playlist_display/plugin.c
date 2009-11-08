@@ -42,7 +42,6 @@ static GtkActionEntry actions[] = {/* Empty at moment add for playlist display *
 static gboolean
 activate_plugin (AnjutaPlugin *plugin)
 {
-    GtkWidget *wid;
     AnjutaUI *ui;
     PlaylistDisplayPlugin *playlist_display_plugin;
     GtkActionGroup* action_group;
@@ -54,10 +53,6 @@ activate_plugin (AnjutaPlugin *plugin)
     playlist_display_plugin = (PlaylistDisplayPlugin*) plugin;
     ui = anjuta_shell_get_ui (plugin->shell, NULL);
 
-//    /* Create hello plugin widget */
-//    wid = gtk_label_new ("Hello World Plugin!!");
-//    hello_plugin->widget = wid;
-//
     /* Add our actions */
     action_group = anjuta_ui_add_action_group_entries (ui,
                                                         "ActionGroupPlaylistDisplay",
@@ -69,17 +64,29 @@ activate_plugin (AnjutaPlugin *plugin)
     playlist_display_plugin->action_group = action_group;
 
     /* Merge UI */
-    playlist_display_plugin->uiid = anjuta_ui_merge (ui, UI_FILE);
+    playlist_display_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
 
     /* Add widget in Shell. Any number of widgets can be added */
-    pm_create_treeview ();
+    g_printf("Creating tree view\n");
+    playlist_display_plugin->pl_window = gtk_scrolled_window_new(NULL, NULL);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (playlist_display_plugin->pl_window),
+            GTK_POLICY_AUTOMATIC,
+            GTK_POLICY_AUTOMATIC);
+    gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (playlist_display_plugin->pl_window),
+            GTK_SHADOW_IN);
 
-    anjuta_shell_add_widget (plugin->shell, wid,
-                             "PlaylistDisplayPlugin",
-                             _("PlaylistDisplayPlugin"),
-                             GTK_STOCK_ABOUT,
-                             ANJUTA_SHELL_PLACEMENT_LEFT,
-                             NULL);
+    playlist_display_plugin->playlist_view = pm_create_treeview();
+
+    gtk_container_add (GTK_CONTAINER (playlist_display_plugin->pl_window), GTK_WIDGET (playlist_display_plugin->playlist_view));
+
+    gtk_widget_show_all (playlist_display_plugin->pl_window);
+
+    anjuta_shell_add_widget (plugin->shell, playlist_display_plugin->pl_window,
+            "PlaylistDisplayPlugin",
+            _("PlaylistDisplayPlugin"),
+            GTK_STOCK_ABOUT,
+            ANJUTA_SHELL_PLACEMENT_LEFT,
+            NULL);
 
     return TRUE; /* FALSE if activation failed */
 }
@@ -95,7 +102,7 @@ deactivate_plugin (AnjutaPlugin *plugin)
 
     /* Remove widgets from Shell */
     anjuta_shell_remove_widget (plugin->shell,
-                                playlist_display_plugin->widget,
+                                playlist_display_plugin->pl_window,
                                 NULL);
     /* Unmerge UI */
     anjuta_ui_unmerge (ui, playlist_display_plugin->uiid);
@@ -112,7 +119,8 @@ playlist_display_plugin_instance_init (GObject *obj)
 {
     PlaylistDisplayPlugin *plugin = (PlaylistDisplayPlugin*) obj;
     plugin->uiid = 0;
-    plugin->widget = NULL;
+    plugin->pl_window = NULL;
+    plugin->playlist_view = NULL;
     plugin->action_group = NULL;
 }
 

@@ -68,8 +68,6 @@ enum { RESPONSE_APPLY = 5 };
 
 /* indicates whether widgets are currently blocked */
 extern gboolean widgets_blocked;
-/* full path to 'gtkpod.glade', defined in main.c */
-extern gchar *xml_file;
 
 /* Some symbols not necessarily defined */
 
@@ -196,7 +194,7 @@ gchar *get_string_from_full_template (Track *track,
 
 gchar *which (const gchar *exe);
 
-GladeXML *gtkpod_xml_new (const gchar *xml_file, const gchar *name);
+GladeXML *gtkpod_xml_new (const gchar *gtkpod_xml_file, const gchar *name);
 GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, const gchar *name);
 
 gchar *get_itdb_prefs_key (gint index, const gchar *subkey);

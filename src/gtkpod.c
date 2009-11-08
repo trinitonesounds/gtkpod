@@ -28,6 +28,7 @@
 
 #include "gtkpod.h"
 #include "libgtkpod/directories.h"
+#include "libgtkpod/gp.h"
 #include "anjuta-app.h"
 
 static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);
@@ -58,7 +59,7 @@ void gtkpod_init(int argc, char *argv[]) {
     app = ANJUTA_APP(anjuta_app_new());
 
     /* initialise gtkpod library pieces */
-    init_data(app);
+    gp_init(app);
 
     status = anjuta_shell_get_status(ANJUTA_SHELL(app), NULL);
     anjuta_status_progress_add_ticks(status, 1);

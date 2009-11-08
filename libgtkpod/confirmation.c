@@ -366,7 +366,7 @@ GtkResponseType gtkpod_confirmation (gint id,
     }
 
     /* window = create_confirm_dialog (); */
-    confirm_xml = gtkpod_xml_new (xml_file, "confirm_dialog");
+    confirm_xml = gtkpod_xml_new (gtkpod_xml_file, "confirm_dialog");
     window = gtkpod_xml_get_widget (confirm_xml, "confirm_dialog");
     glade_xml_signal_autoconnect (confirm_xml);
 
@@ -582,18 +582,17 @@ G_MODULE_EXPORT void on_confirm_tree_size_allocate (GtkWidget *sender, GtkAlloca
     g_object_set (renderer, "wrap-width", allocation->width, NULL);
 }
 
-gint gtkpod_confirmation_simple (GtkWindow *parent,
-				 GtkMessageType icon,
+gint gtkpod_confirmation_simple (GtkMessageType icon,
 				 const gchar *primary_text,
 				 const gchar *secondary_text,
 				 const gchar *accept_button_text)
 {
-    return gtkpod_confirmation_hig(parent, icon, primary_text, secondary_text,
+    return gtkpod_confirmation_hig(gtkpod_window, icon, primary_text, secondary_text,
 				   accept_button_text, NULL, NULL, NULL);
 }
 
 gint gtkpod_confirmation_hig (GtkWindow *parent,
-			      GtkMessageType icon,
+                  GtkMessageType icon,
 			      const gchar *primary_text,
 			      const gchar *secondary_text,
 			      const gchar *accept_button_text,
@@ -675,7 +674,7 @@ void gtkpod_warning (const gchar *format, ...)
     g_free (text);
 }
 
-void gtkpod_warning_simple (GtkWindow *parent, const gchar *format, ...)
+void gtkpod_warning_simple (const gchar *format, ...)
 {
     va_list arg;
     gchar *text;
@@ -684,16 +683,15 @@ void gtkpod_warning_simple (GtkWindow *parent, const gchar *format, ...)
     text = g_strdup_vprintf (format, arg);
     va_end (arg);
 
-    gtkpod_warning_hig (parent, GTK_MESSAGE_WARNING, _("Warning"), text);
+    gtkpod_warning_hig (GTK_MESSAGE_WARNING, _("Warning"), text);
     g_free (text);
 }
 
-void gtkpod_warning_hig (GtkWindow *parent,
-                         GtkMessageType icon,
+void gtkpod_warning_hig (GtkMessageType icon,
                          const gchar *primary_text,
                          const gchar *secondary_text)
 {
-    GtkWidget *dialog = gtk_message_dialog_new(parent,
+    GtkWidget *dialog = gtk_message_dialog_new(gtkpod_window,
                                GTK_DIALOG_MODAL,
                                icon,
                                GTK_BUTTONS_OK,

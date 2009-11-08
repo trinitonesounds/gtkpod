@@ -821,13 +821,12 @@ void gp_track_validate_entries (Track *track)
  * of one local database and one ipod database.
  *
  */
-void init_data (GtkWidget *window)
+void gp_init (GtkWindow *window)
 {
     gchar *cfgdir;
     gint i;
 
     g_return_if_fail (window);
-    g_return_if_fail (itdbs_head == NULL);
 
     gtkpod_window = window;
 

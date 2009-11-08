@@ -34,12 +34,9 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <gpod/itdb.h>
+#include "gp.h"
 #include "itdb.h"
 #include "file_convert_info.h"
-
-
-GtkWidget *gtkpod_window;
 
 struct itdbs_head
 {
@@ -125,7 +122,6 @@ struct DeleteData
     DeleteAction deleteaction;
 };
 
-void init_data (GtkWidget *window);
 iTunesDB *setup_itdb_n (gint i);
 
 struct itdbs_head *gp_get_itdbs_head ();

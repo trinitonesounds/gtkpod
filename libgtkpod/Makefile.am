@@ -1,6 +1,7 @@
 lib_LTLIBRARIES = libgtkpod.la
 
-libgtkpod_la_SOURCES =  itdb.h file_convert_info.h \
+libgtkpod_la_SOURCES =  gp.h \
+                        itdb.h file_convert_info.h \
 						gp_itdb.h gp_itdb.c \
 						charset.h charset.c \
 						sha1.h sha1.c \
@@ -15,7 +16,9 @@ libgtkpod_la_SOURCES =  itdb.h file_convert_info.h \
 						misc_conversion.h misc_conversion.c \
 						clientserver.h clientserver.c \
 						confirmation.h confirmation.c \
-						directories.h directories.c
+						directories.h directories.c \
+						tools.c tools.h \
+						misc_playlist.c
 
 # Include paths
 AM_CFLAGS = \

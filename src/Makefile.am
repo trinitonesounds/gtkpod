@@ -1,6 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 
 AM_CFLAGS = \
+        $(GTKPOD_CFLAGS) \
+       -I$(top_srcdir)\
+       -I.. -I. \
        -DMOUNT_BIN=\""@MOUNT@\"" \
 	   -DUMOUNT_BIN=\""@UMOUNT@\"" \
 	   -DPACKAGE_DATA_DIR=\""$(datadir)"\" \
@@ -11,8 +14,8 @@ AM_CFLAGS = \
        -DGTKPOD_DATA_DIR=\""$(gtkpod_data_dir)"\" \
        -DGTKPOD_UI_DIR=\""$(gtkpod_ui_dir)"\" \
        -DGTKPOD_GLADE_DIR=\""$(gtkpod_glade_dir)"\" \
-       -DGTKPOD_IMAGE_DIR=\""$(gtkpod_image_dir)"\" \
-       $(GTKPOD_CFLAGS)
+       -DGTKPOD_IMAGE_DIR=\""$(gtkpod_image_dir)"\"
+       
 
 
 bin_PROGRAMS = gtkpod

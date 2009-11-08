@@ -256,7 +256,7 @@ gboolean gp_ipod_init (iTunesDB *itdb)
     /* Create window */
     ii = g_new0 (IpodInit, 1);
     ii->itdb = itdb;
-    ii->xml = gtkpod_xml_new (xml_file, "ipod_init_dialog");
+    ii->xml = gtkpod_xml_new (gtkpod_xml_file, "ipod_init_dialog");
 
     ii->window = gtkpod_xml_get_widget (ii->xml,
 					"ipod_init_dialog");
@@ -416,7 +416,7 @@ void gp_ipod_init_set_model (iTunesDB *itdb, const gchar *old_model)
     g_return_if_fail (itdb);
 
     /* Create window */
-    xml = gtkpod_xml_new (xml_file, "set_ipod_model_dialog");
+    xml = gtkpod_xml_new (gtkpod_xml_file, "set_ipod_model_dialog");
     window = GET_WIDGET ("set_ipod_model_dialog");
     g_return_if_fail (window);
 

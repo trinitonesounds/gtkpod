@@ -1400,14 +1400,14 @@ gint64 get_size_of_directory(const gchar *dir)
  * Wrapper for glade_xml_new() for cygwin compatibility issues
  *
  **/
-GladeXML *gtkpod_xml_new(const gchar *xml_file, const gchar *name)
+GladeXML *gtkpod_xml_new(const gchar *gtkpod_xml_file, const gchar *name)
 {
     GladeXML *xml;
 
 #ifdef ENABLE_NLS
-    xml = glade_xml_new(xml_file, name, GETTEXT_PACKAGE);
+    xml = glade_xml_new(gtkpod_xml_file, name, GETTEXT_PACKAGE);
 #else
-    xml = glade_xml_new (xml_file, name, NULL);
+    xml = glade_xml_new (gtkpod_xml_file, name, NULL);
 #endif
 
     if (!xml)
@@ -1833,4 +1833,69 @@ gboolean get_offline(iTunesDB *itdb)
     g_return_val_if_fail (eitdb, FALSE);
 
     return eitdb->offline;
+}
+
+/* Retrieves a string (and option) from the user using a dialog.
+   @title: title of the dialogue (may be NULL)
+   @message: text (question) to be displayed (may be NULL)
+   @dflt: default string to be returned (may be NULL)
+   @opt_msg: message for the option checkbox (or NULL)
+   @opt_state: original state of the checkbox. Will be updated
+   return value: the string entered by the user or NULL if the dialog
+   was cancelled. */
+gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
+            gchar *opt_msg, gboolean *opt_state, const gchar *accept_button)
+{
+    GladeXML *xml = gtkpod_xml_new (gtkpod_xml_file, "input_box");
+    GtkWidget *dialog = gtkpod_xml_get_widget (xml, "input_box");
+    GtkWidget *label = gtkpod_xml_get_widget (xml, "input_box_label");
+    GtkWidget *entry = gtkpod_xml_get_widget (xml, "input_box_entry");
+    GtkWidget *checkb = gtkpod_xml_get_widget (xml, "input_box_checkbox");
+    gint response;
+    gchar *result = NULL;
+    gchar *temp;
+
+    gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+                                GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                accept_button ? accept_button : GTK_STOCK_OK, GTK_RESPONSE_OK,
+                                NULL);
+
+    temp = g_markup_printf_escaped ("<span weight='bold' size='larger'>%s</span>\n\n%s", title, message);
+    gtk_label_set_markup (GTK_LABEL (label), temp);
+    g_free (temp);
+
+    if (dflt)
+    {
+        gtk_entry_set_text (GTK_ENTRY (entry), dflt);
+        gtk_editable_select_region (GTK_EDITABLE (entry), 0, -1);
+    }
+
+    /* Pressing enter should activate the default response (default
+       response set above */
+    gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
+
+    /* create option checkbox */
+    if (opt_msg && opt_state)
+    {
+        gtk_widget_show (checkb);
+        gtk_button_set_label (GTK_BUTTON (checkb), opt_msg);
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkb), *opt_state);
+    }
+
+    response = gtk_dialog_run (GTK_DIALOG (dialog));
+
+    if (response == GTK_RESPONSE_OK)
+    {
+        result = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+
+        /* get state of checkbox only if opt_msg was non NULL */
+        if (opt_msg && checkb)
+        {
+            *opt_state = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkb));
+        }
+    }
+
+    gtk_widget_destroy (dialog);
+    g_object_unref (xml);
+    return result;
 }
