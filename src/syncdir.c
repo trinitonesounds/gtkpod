@@ -496,7 +496,7 @@ static void cache_directory (const gchar *dir, GHashTable *dirs_hash)
     while ((filename = g_dir_read_name(dir_handle)))
     {
         /* Construct absolute path from dir and filename */
-        path = g_build_filename(dir, filename);
+        path = g_build_filename(dir, filename, NULL);
 
         /* If path is not directory then move on to next */
         if (! g_file_test (path, G_FILE_TEST_IS_DIR))

@@ -199,6 +199,24 @@ static void details_checkbutton_toggled (GtkCheckButton *button,
     details_get_item (detail, item, FALSE);
 }
 
+static gboolean details_scale_changed (GtkRange     *scale,
+				       GtkScrollType scroll,
+				       gdouble       value,
+				       Detail       *detail)
+{
+    T_item item;
+
+    g_return_val_if_fail (scale, FALSE);
+
+    item = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (scale),
+					       "details_item"));
+    
+    g_return_val_if_fail ((item > 0) && (item < T_ITEM_NUM), FALSE);
+
+    details_get_item (detail, item, FALSE);
+
+    return FALSE;
+}
 
 static void details_combobox_changed (GtkComboBox *combobox,
 					 Detail *detail)
@@ -735,7 +753,6 @@ static void details_setup_widget (Detail *detail, T_item item)
     case T_PLAYCOUNT:
     case T_BPM:
     case T_RATING:
-    case T_VOLUME:
     case T_SOUNDCHECK:
     case T_CD_NR:
     case T_TRACK_NR:
@@ -764,6 +781,13 @@ static void details_setup_widget (Detail *detail, T_item item)
 	g_signal_connect (w, "changed",
 			  G_CALLBACK (details_text_changed),
 			  detail);
+	break;
+    case T_VOLUME:
+        buf = g_strdup_printf ("details_scale_%d", item);
+        w = gtkpod_xml_get_widget (detail->xml, buf);
+        g_signal_connect (w, "change-value",
+        		  G_CALLBACK (details_scale_changed),
+        		  detail);
 	break;
     case T_COMPILATION:
     case T_TRANSFERRED:
@@ -817,7 +841,7 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
     GtkTextBuffer *tb;
     GtkWidget *w = NULL;
     gchar *text;
-    gchar *entry, *checkbutton, *textview, *combobox;
+    gchar *entry, *checkbutton, *textview, *combobox, *scale;
 
     g_return_if_fail (detail);
     g_return_if_fail ((item > 0) && (item < T_ITEM_NUM));
@@ -826,6 +850,7 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
     checkbutton = g_strdup_printf ("details_checkbutton_%d", item);
     textview = g_strdup_printf ("details_textview_%d", item);
     combobox = g_strdup_printf ("details_combobox_%d", item);
+    scale = g_strdup_printf ("details_scale_%d", item);
 
     if (track != NULL)
     {
@@ -869,7 +894,6 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
     case T_PLAYCOUNT:
     case T_BPM:
     case T_RATING:
-    case T_VOLUME:
     case T_SOUNDCHECK:
     case T_CD_NR:
     case T_TRACK_NR:
@@ -895,6 +919,17 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
 	gtk_entry_set_text (GTK_ENTRY (w), text);
 	g_signal_handlers_unblock_by_func(w, details_text_changed,detail);
 	break;
+    case T_VOLUME:
+        w = gtkpod_xml_get_widget (detail->xml, scale);
+        if (track)
+	{
+	    gtk_range_set_value (GTK_RANGE (w), track->volume);
+        }
+        else
+	{
+            gtk_range_set_value (GTK_RANGE (w), 0.0);
+        }
+        break;
     case T_COMMENT:
     case T_DESCRIPTION:
     case T_LYRICS:
@@ -1001,6 +1036,7 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
     g_free (textview);
     g_free (combobox);
     g_free (text);
+    g_free (scale);
 }
 
 
@@ -1013,7 +1049,7 @@ static void details_get_item (Detail *detail, T_item item,
 			      gboolean assumechanged)
 {
     GtkWidget *w = NULL;
-    gchar *entry, *checkbutton, *textview, *combobox;
+    gchar *entry, *checkbutton, *textview, *combobox, *scale;
     gboolean changed = FALSE;
     ExtraTrackData *etr;
     Track *track;
@@ -1030,6 +1066,7 @@ static void details_get_item (Detail *detail, T_item item,
     checkbutton = g_strdup_printf ("details_checkbutton_%d", item);
     textview = g_strdup_printf ("details_textview_%d", item);
     combobox = g_strdup_printf ("details_combobox_%d", item);
+    scale = g_strdup_printf ("details_scale_%d", item);
 
     switch (item)
     {
@@ -1049,7 +1086,6 @@ static void details_get_item (Detail *detail, T_item item,
     case T_PLAYCOUNT:
     case T_BPM:
     case T_RATING:
-    case T_VOLUME:
     case T_CD_NR:
     case T_TRACK_NR:
     case T_YEAR:
@@ -1115,6 +1151,18 @@ static void details_get_item (Detail *detail, T_item item,
 		break;
 	    default:
 		break;
+	    }
+	}
+	break;
+    case T_VOLUME:
+	if ((w = gtkpod_xml_get_widget (detail->xml, scale)))
+	{
+	    gdouble value = gtk_range_get_value (GTK_RANGE (w));
+	    gint32 new_volume = (gint32)value;
+	    if (track->volume != new_volume)
+	    {
+		track->volume = new_volume;
+		changed = TRUE;
 	    }
 	}
 	break;
@@ -1254,6 +1302,7 @@ static void details_get_item (Detail *detail, T_item item,
     g_free (checkbutton);
     g_free (textview);
     g_free (combobox);
+    g_free (scale);
 
     details_update_buttons (detail);
 }
