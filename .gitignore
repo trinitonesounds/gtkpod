@@ -1,9 +1,12 @@
 # Global ignores
 *.bak
 *.o
+*.l[oa]
+*.so
 *.sw[a-z]
 *~
 .deps
+.libs
 Makefile
 Makefile.in
 cscope.out
@@ -30,6 +33,8 @@ cscope.out
 /stamp-h1
 /ylwrap
 /.cproject
+/libtool
+/ltmain.sh
 
 # /data/
 /data/*.desktop
@@ -50,3 +55,6 @@ cscope.out
 /src/date_parser2.c
 /src/gtkpod
 /src/itdb
+
+# /plugins/
+/plugins/*.plugin
