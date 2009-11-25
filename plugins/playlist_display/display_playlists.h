@@ -56,6 +56,7 @@ enum {
 };
 
 GtkTreeView* pm_create_treeview (void);
+void destroy_treeview(void);
 void pm_set_selected_playlist(Playlist *pl);
 void pm_remove_all_playlists (gboolean clear_sort);
 void pm_add_all_itdbs (void);

@@ -59,7 +59,7 @@ void gtkpod_init(int argc, char *argv[]) {
     app = ANJUTA_APP(anjuta_app_new());
 
     /* initialise gtkpod library pieces */
-    gp_init(app);
+    gp_init(app, argc, argv);
 
     status = anjuta_shell_get_status(ANJUTA_SHELL(app), NULL);
     anjuta_status_progress_add_ticks(status, 1);

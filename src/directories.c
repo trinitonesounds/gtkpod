@@ -41,7 +41,7 @@ static gchar *plugindir = NULL;
 static gchar *uidir = NULL;
 
 void init_directories(char *argv[]) {
-    g_printf("argv[0] = %s\n", argv[0]);
+//    g_printf("argv[0] = %s\n", argv[0]);
     datadir = init_dir(argv, "data", GTKPOD_DATA_DIR);
     icondir = init_dir(argv, "data/icons", GTKPOD_IMAGE_DIR);
     uidir = init_dir(argv, "data/ui", GTKPOD_UI_DIR);
@@ -50,7 +50,7 @@ void init_directories(char *argv[]) {
     gtk_icon_theme_append_search_path(gtk_icon_theme_get_default(), icondir);
     gtk_icon_theme_append_search_path(gtk_icon_theme_get_default(), GTKPOD_IMAGE_DIR);
 
-    debug_print_directories();
+//    debug_print_directories();
 }
 
 static void debug_print_directories() {

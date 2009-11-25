@@ -78,10 +78,10 @@ activate_plugin (AnjutaPlugin *plugin)
     playlist_display_plugin->playlist_view = pm_create_treeview();
 
     gtk_container_add (GTK_CONTAINER (playlist_display_plugin->pl_window), GTK_WIDGET (playlist_display_plugin->playlist_view));
-
     gtk_widget_show_all (playlist_display_plugin->pl_window);
-
-    anjuta_shell_add_widget (plugin->shell, playlist_display_plugin->pl_window,
+    anjuta_shell_add_widget (
+            plugin->shell,
+            playlist_display_plugin->pl_window,
             "PlaylistDisplayPlugin",
             _("PlaylistDisplayPlugin"),
             GTK_STOCK_ABOUT,
@@ -104,6 +104,11 @@ deactivate_plugin (AnjutaPlugin *plugin)
     anjuta_shell_remove_widget (plugin->shell,
                                 playlist_display_plugin->pl_window,
                                 NULL);
+
+    /* Destroy the treeview */
+    playlist_display_plugin->playlist_view = NULL;
+    destroy_treeview();
+
     /* Unmerge UI */
     anjuta_ui_unmerge (ui, playlist_display_plugin->uiid);
 

@@ -35,6 +35,6 @@
 gchar *gtkpod_xml_file;
 GtkWindow *gtkpod_window;
 
-void gp_init (GtkWindow *window);
+void gp_init (GtkWindow *window, int argc, char *argv[]);
 
 #endif /* GP_H_ */
