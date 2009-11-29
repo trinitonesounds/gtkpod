@@ -148,7 +148,7 @@ G_MODULE_EXPORT void open_about_window ()
 	gchar *description = _("Cross-platform multilingual interface to Apple's iPod™");
 #endif
 
-	gtk_show_about_dialog(GTK_WINDOW(gtkpod_window),
+	gtk_show_about_dialog(GTK_WINDOW(gtkpod_app),
 		"name", "gtkpod",
 		"version", VERSION,
 		"logo", icon,

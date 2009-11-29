@@ -110,8 +110,8 @@ void gp_sha1_hash_tracks (void)
 
     itdbs_head = NULL;
     g_warning("TODO gp_sha1_hash_tracks - get itdbs_head from somewhere else");
-//    g_return_if_fail (gtkpod_window);
-//    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+//    g_return_if_fail (gtkpod_app);
+//    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_app),
 //				    "itdbs_head");
 //    g_return_if_fail (itdbs_head);
 //
@@ -143,8 +143,8 @@ void gp_sha1_free_hash (void)
 
     itdbs_head = NULL;
     g_warning("TODO gp_sha1_free_hash - get itdbs_head from somewhere else");
-//    g_return_if_fail (gtkpod_window);
-//    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+//    g_return_if_fail (gtkpod_app);
+//    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_app),
 //				    "itdbs_head");
     g_return_if_fail (itdbs_head);
 

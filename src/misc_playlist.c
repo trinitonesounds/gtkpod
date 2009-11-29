@@ -1059,7 +1059,7 @@ void check_db (iTunesDB *itdb)
 		{
 			const gchar *str = _("You did not import the existing iTunesDB. This is most likely incorrect and will result in the loss of the existing database.\n\nIf you abort the operation, you can import the existing database before calling this function again.\n");
 
-			gint result = gtkpod_confirmation_hig (GTK_WINDOW (gtkpod_window),
+			gint result = gtkpod_confirmation_hig (GTK_WINDOW (gtkpod_app),
 												   GTK_MESSAGE_WARNING,
 												   _("Existing iTunes database not imported"),
 												   str,

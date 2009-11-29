@@ -356,7 +356,7 @@ void nm_tracks_list (GList *list)
 
   /* create the dialog window */
   dialog = gtk_dialog_new_with_buttons (_("Information"),
-					 GTK_WINDOW (gtkpod_window),
+					 GTK_WINDOW (gtkpod_app),
 					 GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_STOCK_CANCEL,
 					 GTK_RESPONSE_NONE,

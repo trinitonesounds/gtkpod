@@ -146,7 +146,7 @@ static gboolean pm_drag_drop (GtkWidget *widget,
 
 /*     puts ("drag_data_drop"); */
 
-    display_remove_autoscroll_row_timeout (widget);
+    gp_remove_autoscroll_row_timeout (widget);
 
     target = gtk_drag_dest_find_target (widget, drag_context, NULL);
 
@@ -163,7 +163,7 @@ static void pm_drag_end (GtkWidget *widget,
 			 gpointer user_data)
 {
 /*     puts ("drag_end"); */
-    display_remove_autoscroll_row_timeout (widget);
+    gp_remove_autoscroll_row_timeout (widget);
     gtkpod_tracks_statusbar_update ();
 }
 
@@ -173,7 +173,7 @@ static void pm_drag_leave (GtkWidget *widget,
 			   gpointer user_data)
 {
 /*     puts ("drag_leave"); */
-    display_remove_autoscroll_row_timeout (widget);
+    gp_remove_autoscroll_row_timeout (widget);
 }
 
 static gboolean pm_drag_motion (GtkWidget *widget,
@@ -198,7 +198,7 @@ static gboolean pm_drag_motion (GtkWidget *widget,
     g_return_val_if_fail (widget, FALSE);
     g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
 
-    display_install_autoscroll_row_timeout (widget);
+    gp_install_autoscroll_row_timeout (widget);
 
     /* no drop possible if position is not valid */
     if (!gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW (widget),
@@ -701,7 +701,7 @@ static void pm_drag_data_received (GtkWidget       *widget,
 /*     printf ("treeview received drag data/length/format: %p/%d/%d\n", data, data?data->length:0, data?data->format:0); */
 /*     printf ("treeview received drag context/actions/suggested action: %p/%d/%d\n", context, context?context->actions:0, context?context->suggested_action:0); */
 
-    display_remove_autoscroll_row_timeout (widget);
+    gp_remove_autoscroll_row_timeout (widget);
 
     path_ok = gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW(widget),
 						 x, y, &path_d, &pos);

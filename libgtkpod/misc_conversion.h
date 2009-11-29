@@ -40,16 +40,6 @@
 #include <glib/gi18n-lib.h>
 #include "itdb.h"
 
-/* Drag and drop types */
-enum {
-    DND_GTKPOD_TRACKLIST = 1000,
-    DND_GTKPOD_TM_PATHLIST,
-    DND_GTKPOD_PLAYLISTLIST,
-    DND_TEXT_URI_LIST,
-    DND_TEXT_PLAIN,
-    DND_IMAGE_JPEG
-};
-
 /* max. number of stars */
 #define RATING_MAX 5
 

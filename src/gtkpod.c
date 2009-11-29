@@ -28,7 +28,7 @@
 
 #include "gtkpod.h"
 #include "libgtkpod/directories.h"
-#include "libgtkpod/gp.h"
+#include "libgtkpod/gtkpod_app_iface.h"
 #include "anjuta-app.h"
 
 static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);

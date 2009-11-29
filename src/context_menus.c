@@ -563,8 +563,8 @@ static GtkWidget *add_copy_selected_to_target_itdb (GtkWidget *menu,
     Playlist *pl;
 
   
-    g_return_val_if_fail (gtkpod_window, NULL);
-    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+    g_return_val_if_fail (gtkpod_app, NULL);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_app),
                                     "itdbs_head");
 
     mi = hookup_mi (menu, title,

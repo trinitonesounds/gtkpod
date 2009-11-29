@@ -150,7 +150,7 @@ gint get_sort_tab_number (gchar *text)
     gchar buf[20], *bufp;
 
     mdialog = gtk_message_dialog_new (
-	GTK_WINDOW (gtkpod_window),
+	GTK_WINDOW (gtkpod_app),
 	GTK_DIALOG_DESTROY_WITH_PARENT,
 	GTK_MESSAGE_QUESTION,
 	GTK_BUTTONS_OK_CANCEL,

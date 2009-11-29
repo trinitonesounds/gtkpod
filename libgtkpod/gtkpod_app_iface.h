@@ -1,5 +1,5 @@
 /*
-|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
+|  Copyright (C) 2002-2009 Paul Richardson <phantom_sf at users sourceforge net>
 |  Part of the gtkpod project.
 |
 |  URL: http://www.gtkpod.org/
@@ -31,10 +31,30 @@
 
 #include <gtk/gtk.h>
 
+#define GTKPOD_APP_TYPE                (gtkpod_app_get_type ())
+#define GTKPOD_APP(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTKPOD_APP_TYPE, GtkPodApp))
+#define GTKPOD_IS_APP(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTKPOD_APP_TYPE))
+#define GTKPOD_APP_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), GTKPOD_APP_TYPE, GtkPodAppInterface))
+
+typedef struct _GtkPodApp GtkPodApp; /* dummy object */
+typedef struct _GtkPodAppInterface GtkPodAppInterface;
+
+struct _GtkPodAppInterface {
+  GTypeInterface g_iface;
+
+  void (*statusbar_message) (GtkPodApp *obj, gchar* message, ...);
+};
+
+GType gtkpod_app_get_type (void);
+
+void gtkpod_app_statusbar_message (GtkPodApp *obj, gchar* message, ...);
+
+
 /* full path to 'gtkpod.glade' */
 gchar *gtkpod_xml_file;
-GtkWindow *gtkpod_window;
+GtkPodApp *gtkpod_app;
 
-void gp_init (GtkWindow *window, int argc, char *argv[]);
+/* Functions relating to the instance of gtkpod_app */
+void gp_init (GtkPodApp *window, int argc, char *argv[]);
 
 #endif /* GP_H_ */

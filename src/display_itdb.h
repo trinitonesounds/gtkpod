@@ -34,9 +34,9 @@
 #endif
 
 #include <gtk/gtk.h>
-#include "gp.h"
 #include "itdb.h"
 #include "file_convert_info.h"
+#include "gtkpod_app_iface.h"
 
 struct itdbs_head
 {

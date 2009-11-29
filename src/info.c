@@ -292,8 +292,8 @@ iTunesDB *get_itdb_local (void)
     struct itdbs_head *itdbs_head;
     GList *gl;
 
-    g_return_val_if_fail (gtkpod_window, NULL);
-    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+    g_return_val_if_fail (gtkpod_app, NULL);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_app),
 				    "itdbs_head");
     if (!itdbs_head) return NULL;
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)
@@ -315,8 +315,8 @@ iTunesDB *get_itdb_ipod (void)
     struct itdbs_head *itdbs_head;
     GList *gl;
 
-    g_return_val_if_fail (gtkpod_window, NULL);
-    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+    g_return_val_if_fail (gtkpod_app, NULL);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_app),
 				    "itdbs_head");
     if (!itdbs_head) return NULL;
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)

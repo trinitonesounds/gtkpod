@@ -402,7 +402,7 @@ static void tm_drag_end (GtkWidget *widget,
 			 gpointer user_data)
 {
 /*     puts ("tm_drag_end"); */
-    display_remove_autoscroll_row_timeout (widget);
+    gp_remove_autoscroll_row_timeout (widget);
     gtkpod_tracks_statusbar_update ();
 }
 
@@ -418,7 +418,7 @@ static gboolean tm_drag_drop (GtkWidget *widget,
 
 /*     puts ("tm_drag_data_drop"); */
 
-    display_remove_autoscroll_row_timeout (widget);
+    gp_remove_autoscroll_row_timeout (widget);
 
     target = gtk_drag_dest_find_target (widget, dc, NULL);
 
@@ -436,7 +436,7 @@ static void tm_drag_leave (GtkWidget *widget,
 			   gpointer user_data)
 {
 /*     puts ("tm_drag_leave"); */
-    display_remove_autoscroll_row_timeout (widget);
+    gp_remove_autoscroll_row_timeout (widget);
 }
 
 
@@ -464,7 +464,7 @@ static gboolean tm_drag_motion (GtkWidget *widget,
 
     treeview = GTK_TREE_VIEW (widget);
 
-    display_install_autoscroll_row_timeout (widget);
+    gp_install_autoscroll_row_timeout (widget);
 
     itdb = gp_get_selected_itdb ();
     /* no drop is possible if no playlist/repository is selected */
@@ -611,7 +611,7 @@ static void tm_drag_data_received (GtkWidget       *widget,
     /* yet another check, i think it's an 8 bit per byte check */
     if(data->format != 8) return;
 
-    display_remove_autoscroll_row_timeout (widget);
+    gp_remove_autoscroll_row_timeout (widget);
 
     model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
     g_return_if_fail (model);

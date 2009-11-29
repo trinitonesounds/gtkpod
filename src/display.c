@@ -708,7 +708,7 @@ static void _remove_scroll_row_timeout (GtkWidget *widget)
 		       "scroll_row_times", NULL);
 }
 
-void display_remove_autoscroll_row_timeout (GtkWidget *widget)
+void gp_remove_autoscroll_row_timeout (GtkWidget *widget)
 {
     guint timeout;
 
@@ -790,7 +790,7 @@ static gint display_autoscroll_row_timeout (gpointer data)
     return resp;
 }
 
-void display_install_autoscroll_row_timeout (GtkWidget *widget)
+void gp_install_autoscroll_row_timeout (GtkWidget *widget)
 {
     if (!g_object_get_data (G_OBJECT (widget), "scroll_row_timeout"))
     {   /* install timeout function for autoscroll */

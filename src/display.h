@@ -302,8 +302,8 @@ void display_show_hide_searchbar (void);
 void display_reset (gint inst);
 GList *display_get_selection (guint32 inst);
 GList *display_get_selected_members (gint inst);
-void display_remove_autoscroll_row_timeout (GtkWidget *widget);
-void display_install_autoscroll_row_timeout (GtkWidget *widget);
+void gp_remove_autoscroll_row_timeout (GtkWidget *widget);
+void gp_install_autoscroll_row_timeout (GtkWidget *widget);
 void display_image_dialog (GdkPixbuf *image);
 
 Playlist* pm_get_selected_playlist (void);

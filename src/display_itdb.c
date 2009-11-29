@@ -45,12 +45,12 @@
 #include "syncdir.h"
 
 /* A struct containing a list with available iTunesDBs. A pointer to
- this struct is stored in gtkpod_window as itdbs_head */
+ this struct is stored in gtkpod_app as itdbs_head */
 static struct itdbs_head *itdbs_head = NULL;
 
 /* for convenience */
 struct itdbs_head *gp_get_itdbs_head() {
-    return g_object_get_data(G_OBJECT (gtkpod_window), "itdbs_head");
+    return g_object_get_data(G_OBJECT (gtkpod_app), "itdbs_head");
 }
 
 void gp_itdb_extra_destroy(ExtraiTunesDBData *eitdb) {
@@ -747,20 +747,20 @@ void gp_track_validate_entries(Track *track) {
  * of one local database and one ipod database.
  *
  */
-void gp_init(GtkWindow *window, int argc, char *argv[]) {
+void gp_init(GtkPodApp *single_app, int argc, char *argv[]) {
     gchar *cfgdir;
     gint i;
 
-    g_return_if_fail (window);
+    g_return_if_fail (single_app);
 
-    gtkpod_window = window;
+    gtkpod_app = single_app;
 
     prefs_init(argc, argv);
     cfgdir = prefs_get_cfgdir();
 
     itdbs_head = g_new0 (struct itdbs_head, 1);
 
-    g_object_set_data(G_OBJECT (window), "itdbs_head", itdbs_head);
+    g_object_set_data(G_OBJECT (gtkpod_app), "itdbs_head", itdbs_head);
 
     if (!prefs_get_int_value("itdb_0_type", NULL)) {
         /* databases have not been set up previously -- take care of
@@ -1010,8 +1010,8 @@ iTunesDB *gp_get_ipod_itdb(void) {
     //
     //    itdb = NULL;
     //
-    //    g_return_val_if_fail (gtkpod_window, NULL);
-    //    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+    //    g_return_val_if_fail (gtkpod_app, NULL);
+    //    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_app),
     //				    "itdbs_head");
     //
     //    if (itdbs_head == NULL) return NULL;

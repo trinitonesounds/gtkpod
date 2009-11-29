@@ -94,7 +94,7 @@ void gtkpod_warning_simple (const gchar *format, ...)
     text = g_strdup_vprintf (format, arg);
     va_end (arg);
 
-	gtkpod_warning_hig (GTK_WINDOW (gtkpod_window), GTK_MESSAGE_WARNING, _("Warning"), text);
+	gtkpod_warning_hig (GTK_WINDOW (gtkpod_app), GTK_MESSAGE_WARNING, _("Warning"), text);
 	g_free (text);
 }
 
@@ -871,7 +871,7 @@ static gboolean ok_to_close_gtkpod (void)
     {
 		const gchar *str = _("Data has been changed and not been saved. If you quit gtkpod, all unsaved changes will be lost.\n\nDo you want to save your changes first?");
 
-		result = gtkpod_confirmation_hig(GTK_WINDOW (gtkpod_window),
+		result = gtkpod_confirmation_hig(GTK_WINDOW (gtkpod_app),
 											GTK_MESSAGE_WARNING,
 											_("Save changes before quiting?"),
 											str,

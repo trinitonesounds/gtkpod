@@ -1212,7 +1212,7 @@ static GtkWidget *create_transfer_information_dialog(TransferData *td) {
             td);
 
     /* Set the dialog parent */
-    gtk_window_set_transient_for(GTK_WINDOW (dialog), GTK_WINDOW (gtkpod_window));
+    gtk_window_set_transient_for(GTK_WINDOW (dialog), GTK_WINDOW (gtkpod_app));
 
     return dialog;
 }
@@ -1383,7 +1383,7 @@ static gboolean delete_files(iTunesDB *itdb, TransferData *td) {
      * solution would be to integrate the error display into the
      * file_convert.c framework */
 static void transfer_reschedule(gpointer user_data1, gpointer user_data2) {
-    struct itdbs_head *ihead = gp_get_itdbs_head(gtkpod_window);
+    struct itdbs_head *ihead = gp_get_itdbs_head(gtkpod_app);
     iTunesDB *itdb = user_data1;
     GList *gl;
 
@@ -1581,7 +1581,7 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
                 to_transfer_num);
 
         dialog = gtk_message_dialog_new (
-                GTK_WINDOW (gtkpod_window),
+                GTK_WINDOW (gtkpod_app),
                 GTK_DIALOG_DESTROY_WITH_PARENT,
                 GTK_MESSAGE_WARNING,
                 GTK_BUTTONS_OK,
@@ -1652,7 +1652,7 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
                     *str =
                             g_strdup_printf(_("You did not import the existing iTunesDB ('%s'). This is most likely incorrect and will result in the loss of the existing database.\n\nIf you skip storing, you can import the existing database before calling this function again.\n"), tunes);
 
-            gint result = gtkpod_confirmation_hig(GTK_WINDOW (gtkpod_window),
+            gint result = gtkpod_confirmation_hig(GTK_WINDOW (gtkpod_app),
             GTK_MESSAGE_WARNING, _("Existing iTunes database not imported"), str, _("Proceed anyway"), _("Skip storing"), NULL, NULL);
 
             g_free(str);
@@ -1871,9 +1871,9 @@ void handle_export(void) {
     gboolean success = TRUE;
     struct itdbs_head *itdbs_head;
 
-    g_return_if_fail (gtkpod_window);
+    g_return_if_fail (gtkpod_app);
 
-    itdbs_head = g_object_get_data(G_OBJECT (gtkpod_window),
+    itdbs_head = g_object_get_data(G_OBJECT (gtkpod_app),
     "itdbs_head");
     g_return_if_fail (itdbs_head);
 
@@ -1945,8 +1945,8 @@ gboolean files_are_saved(void) {
     gboolean changed = FALSE;
     GList *gl;
 
-    g_return_val_if_fail (gtkpod_window, TRUE);
-    itdbs_head = g_object_get_data(G_OBJECT (gtkpod_window),
+    g_return_val_if_fail (gtkpod_app, TRUE);
+    itdbs_head = g_object_get_data(G_OBJECT (gtkpod_app),
     "itdbs_head");
     g_return_val_if_fail (itdbs_head, TRUE);
     for (gl = itdbs_head->itdbs; gl; gl = gl->next) {

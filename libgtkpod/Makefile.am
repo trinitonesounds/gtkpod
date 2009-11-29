@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libgtkpod.la
 
-libgtkpod_la_SOURCES =  gp.h \
+libgtkpod_la_SOURCES =  gtkpod_app_iface.h gtkpod_app_iface.c \
                         itdb.h file_convert_info.h \
 						gp_itdb.h gp_itdb.c \
 						charset.h charset.c \

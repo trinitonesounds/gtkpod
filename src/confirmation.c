@@ -587,7 +587,7 @@ gint gtkpod_confirmation_simple (GtkMessageType icon,
 				 const gchar *secondary_text,
 				 const gchar *accept_button_text)
 {
-    return gtkpod_confirmation_hig(gtkpod_window, icon, primary_text, secondary_text,
+    return gtkpod_confirmation_hig(gtkpod_app, icon, primary_text, secondary_text,
 				   accept_button_text, NULL, NULL, NULL);
 }
 
@@ -691,7 +691,7 @@ void gtkpod_warning_hig (GtkMessageType icon,
                          const gchar *primary_text,
                          const gchar *secondary_text)
 {
-    GtkWidget *dialog = gtk_message_dialog_new(gtkpod_window,
+    GtkWidget *dialog = gtk_message_dialog_new(gtkpod_app,
                                GTK_DIALOG_MODAL,
                                icon,
                                GTK_BUTTONS_OK,

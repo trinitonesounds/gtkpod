@@ -45,21 +45,13 @@ typedef enum  {
   PM_NUM_COLUMNS
 } PM_column_type;
 
-/* Drag and drop types */
-enum {
-    DND_GTKPOD_TRACKLIST = 1000,
-    DND_GTKPOD_TM_PATHLIST,
-    DND_GTKPOD_PLAYLISTLIST,
-    DND_TEXT_URI_LIST,
-    DND_TEXT_PLAIN,
-    DND_IMAGE_JPEG
-};
-
 GtkTreeView* pm_create_treeview (void);
 void destroy_treeview(void);
 void pm_set_selected_playlist(Playlist *pl);
 void pm_remove_all_playlists (gboolean clear_sort);
 void pm_add_all_itdbs (void);
+Playlist* pm_get_selected_playlist(void);
 
+void message_sb_no_itdb_selected ();
 
 #endif /* __DISPLAY_PLAYLIST_H__ */
