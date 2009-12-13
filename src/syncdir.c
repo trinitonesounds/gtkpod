@@ -41,6 +41,7 @@
 #include "misc_track.h"
 #include "prefs.h"
 #include "syncdir.h"
+#include <glib/gi18n-lib.h>
 
 
 struct add_files_data

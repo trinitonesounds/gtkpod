@@ -35,11 +35,12 @@
 
 #include <glib.h>
 #include <glib/gprintf.h>
+#include <glade/glade-xml.h>
 
 #define USER_PROFILE_NAME "user"
 
+GladeXML *gtkpod_xml_new(const gchar *name);
+GtkWidget *gtkpod_xml_get_widget(GladeXML *xml, const gchar *name);
 void gtkpod_init(int argc, char *argv[]);
-
-gchar *GTKPOD_GLADE_XML_FILE;
 
 #endif /* GTKPOD_H_ */

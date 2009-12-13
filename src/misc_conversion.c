@@ -43,6 +43,7 @@
 #include "misc_conversion.h"
 #include "prefs.h"
 #include <time.h>
+#include <glib/gi18n-lib.h>
 
 
 #define DEBUG_MISC 0

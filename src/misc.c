@@ -43,7 +43,8 @@
 #include "misc.h"
 #include "prefs.h"
 #include "misc_track.h"
-#include "confirmation.h"
+#include <glib/gi18n-lib.h>
+
 
 #define DEBUG_MISC 0
 

@@ -28,7 +28,7 @@ AM_CPPFLAGS = \
     -DGTKPOD_DATA_DIR=\"$(gtkpod_data_dir)\" \
     -DGTKPDO_PLUGIN_DIR=\"$(gtkpod_plugin_dir)\" \
     -DGTKPDO_IMAGE_DIR=\"$(gtkpod_image_dir)\" \
-    -DGTKPDO_GLADE_DIR=\"$(gtkpod_glade_dir)\" \
+    -DGTKPOD_GLADE_DIR=\"$(gtkpod_glade_dir)\" \
     -DGTKPOD_UI_DIR=\"$(gtkpod_ui_dir)\" \
     -DPACKAGE_DATA_DIR=\"$(datadir)\" \
     -DPACKAGE_SRC_DIR=\"$(srcdir)\" \
@@ -43,7 +43,8 @@ plugin_LTLIBRARIES = libplaylist_display.la
 # Plugin sources
 libplaylist_display_la_SOURCES = plugin.c plugin.h \
 								 display_playlists.c display_playlists.h \
-								 stock_icons.c stock_icons.h
+								 stock_icons.c stock_icons.h \
+								 file_export.c file_export.h
 
 libplaylist_display_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 

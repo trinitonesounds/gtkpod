@@ -28,3 +28,33 @@ EXTRA_DIST = 				\
 CLEANFILES =				\
 	$(desktop_DATA)			\
 	gtkpod.gladep
+
+all-local: create-profile-link
+
+create-profile-link: create-data-dir
+	if test -e $(gtkpod_data_dir)/default.profile; then \
+      # File already exists. Replacing ..." \
+      sudo rm -rf $(gtkpod_data_dir)/default.profile; \
+	fi; \
+	# Creating link for default.profile" \
+	sudo ln -s `pwd`/default.profile $(gtkpod_data_dir)/default.profile;
+	
+
+create-data-dir: create-base-data-dir
+	if test ! -d $(gtkpod_data_dir); then \
+      sudo mkdir $(gtkpod_data_dir); \
+	fi;
+
+create-base-data-dir:
+	if test ! -d $(datadir)/$(PACKAGE); then \
+      sudo mkdir $(datadir)/$(PACKAGE); \
+	fi;
+
+# Clean up the links and files created purely for dev testing
+clean-local: clean-profile-link
+
+clean-profile-link:
+	if test -h $(gtkpod_data_dir)/default.profile; then \
+      # Symbolic link exists. Removing ..." \
+      sudo rm -f $(gtkpod_data_dir)/default.profile; \
+	fi;

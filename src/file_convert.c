@@ -38,7 +38,6 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
-#include "confirmation.h"
 #include <errno.h>
 #include <glib/gstdio.h>
 #include <signal.h>
@@ -47,6 +46,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <glib/gi18n-lib.h>
 
 #undef DEBUG_CONV
 #ifdef DEBUG_CONV

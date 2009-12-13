@@ -36,10 +36,11 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "charset.h"
-#include "confirmation.h"
+
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib/gi18n-lib.h>
 
 
 /* ------------------------------------------------------------ *\

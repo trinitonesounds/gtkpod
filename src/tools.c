@@ -32,7 +32,6 @@
 
 #include "misc.h"
 #include "misc_track.h"
-#include "confirmation.h"
 #include "prefs.h"
 #include "tools.h"
 #include <errno.h>
@@ -43,6 +42,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <glib/gi18n-lib.h>
 
 
 /*pipe's definition*/

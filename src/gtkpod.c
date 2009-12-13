@@ -31,8 +31,43 @@
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "anjuta-app.h"
 
+static gchar *GTKPOD_GLADE_XML_FILE;
+
 static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 static void on_gtkpod_destroy(GtkWidget * w, gpointer data);
+
+/**
+ * Wrapper for glade_xml_new() for cygwin compatibility issues
+ *
+ **/
+GladeXML *gtkpod_xml_new(const gchar *name) {
+    GladeXML *xml;
+
+#ifdef ENABLE_NLS
+    xml = glade_xml_new(GTKPOD_GLADE_XML_FILE, name, GETTEXT_PACKAGE);
+#else
+    xml = glade_xml_new (GTKPOD_GLADE_XML_FILE, name, NULL);
+#endif
+
+    if (!xml)
+        fprintf(stderr, "*** Programming error: Cannot create glade XML: '%s'\n", name);
+
+    return xml;
+}
+
+/**
+ * Wrapper for gtkpod_xml_get_widget() giving out a warning if widget
+ * could not be found.
+ *
+ **/
+GtkWidget *gtkpod_xml_get_widget(GladeXML *xml, const gchar *name) {
+    GtkWidget *w = glade_xml_get_widget(xml, name);
+
+    if (!w)
+        fprintf(stderr, "*** Programming error: Widget not found: '%s'\n", name);
+
+    return w;
+}
 
 void gtkpod_init(int argc, char *argv[]) {
     AnjutaPluginManager *plugin_manager;
@@ -59,7 +94,7 @@ void gtkpod_init(int argc, char *argv[]) {
     app = ANJUTA_APP(anjuta_app_new());
 
     /* initialise gtkpod library pieces */
-    gp_init(app, argc, argv);
+    gp_init(GTKPOD_APP(app), argc, argv);
 
     status = anjuta_shell_get_status(ANJUTA_SHELL(app), NULL);
     anjuta_status_progress_add_ticks(status, 1);
@@ -88,8 +123,7 @@ void gtkpod_init(int argc, char *argv[]) {
     profile = anjuta_profile_new(USER_PROFILE_NAME, plugin_manager);
     session_profile = g_file_new_for_path(plugin_profile_file);
     anjuta_profile_add_plugins_from_xml(profile, session_profile, TRUE, &error);
-    if (error)
-    {
+    if (error) {
         anjuta_util_dialog_error(GTK_WINDOW(app), "%s", error->message);
         g_error_free(error);
         error = NULL;
@@ -99,12 +133,9 @@ void gtkpod_init(int argc, char *argv[]) {
     /* Load user session profile */
     profile_name = g_path_get_basename(plugin_profile_file);
     session_profile = anjuta_util_get_user_cache_file(profile_name, NULL);
-    if (g_file_query_exists(session_profile, NULL))
-    {
-        anjuta_profile_add_plugins_from_xml(profile, session_profile, FALSE,
-                &error);
-        if (error)
-        {
+    if (g_file_query_exists(session_profile, NULL)) {
+        anjuta_profile_add_plugins_from_xml(profile, session_profile, FALSE, &error);
+        if (error) {
             anjuta_util_dialog_error(GTK_WINDOW(app), "%s", error->message);
             g_error_free(error);
             error = NULL;
@@ -117,8 +148,7 @@ void gtkpod_init(int argc, char *argv[]) {
     /* Load profile */
     anjuta_profile_manager_freeze(profile_manager);
     anjuta_profile_manager_push(profile_manager, profile, &error);
-    if (error)
-    {
+    if (error) {
         anjuta_util_dialog_error(GTK_WINDOW(app), "%s", error->message);
         g_error_free(error);
         error = NULL;
@@ -174,8 +204,7 @@ void gtkpod_init(int argc, char *argv[]) {
     //        }
     anjuta_profile_manager_thaw(profile_manager, &error);
 
-    if (error)
-    {
+    if (error) {
         anjuta_util_dialog_error(GTK_WINDOW(app), "%s", error->message);
         g_error_free(error);
         error = NULL;
@@ -197,18 +226,17 @@ void gtkpod_init(int argc, char *argv[]) {
     GList *plugins = anjuta_plugin_manager_get_active_plugins(plugin_manager);
     g_printf("Number of active plugins: %d\n", g_list_length(plugins));
 
-
 }
 
 /* callback for gtkpod window's close button */
 static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-//    if (!widgets_blocked) {
-//        if (ok_to_close_gtkpod()) {
-//            gtkpod_shutdown();
-//            /* returning FALSE to continue calling other handlers
-//             causes tons of errors. */
-//        }
-//    }
+    //    if (!widgets_blocked) {
+    //        if (ok_to_close_gtkpod()) {
+    //            gtkpod_shutdown();
+    //            /* returning FALSE to continue calling other handlers
+    //             causes tons of errors. */
+    //        }
+    //    }
 
     AnjutaPluginManager *plugin_manager;
     AnjutaProfileManager *profile_manager;
@@ -219,7 +247,7 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
 
     app = ANJUTA_APP(widget);
     plugin_manager = anjuta_shell_get_plugin_manager(ANJUTA_SHELL (app), NULL);
-    profile_manager = anjuta_shell_get_profile_manager (ANJUTA_SHELL (app), NULL);
+    profile_manager = anjuta_shell_get_profile_manager(ANJUTA_SHELL (app), NULL);
 
     //    /* Save remembered plugins */
     //    remembered_plugins =
@@ -269,16 +297,14 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
     //        g_free (session_dir);
     //    }
 
-    anjuta_shell_notify_exit (ANJUTA_SHELL (app), NULL);
+    anjuta_shell_notify_exit(ANJUTA_SHELL (app), NULL);
 
     //    gtk_widget_destroy (GTK_WIDGET (save_prompt));
 
     /* Shutdown */
-    if (g_object_get_data (G_OBJECT (app), "__proper_shutdown"))
-    {
-        gtk_widget_hide (GTK_WIDGET (app));
-        anjuta_plugin_manager_unload_all_plugins
-        (anjuta_shell_get_plugin_manager (ANJUTA_SHELL (app), NULL));
+    if (g_object_get_data(G_OBJECT (app), "__proper_shutdown")) {
+        gtk_widget_hide(GTK_WIDGET (app));
+        anjuta_plugin_manager_unload_all_plugins(anjuta_shell_get_plugin_manager(ANJUTA_SHELL (app), NULL));
     }
     return FALSE;
 }

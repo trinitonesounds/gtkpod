@@ -76,6 +76,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <glib/gstdio.h>
+#include <glib/gi18n-lib.h>
 #ifdef HAVE_GETOPT_LONG_ONLY
 #  include <getopt.h>
 #else

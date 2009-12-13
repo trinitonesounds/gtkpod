@@ -39,6 +39,7 @@
 #include <unistd.h>
 #include <glib.h>
 #include <glib/gstdio.h>
+#include <glib/gi18n-lib.h>
 
 #include "charset.h"
 #include "clientserver.h"
@@ -49,7 +50,6 @@
 #include "misc_track.h"
 #include "prefs.h"
 #include "misc_conversion.h"
-#include "confirmation.h"
 
 /* The uppercase version of these extensions is tried as well. */
 static const gchar *imageext[] = { ".jpg", ".jpeg", ".png", ".pbm", ".pgm", ".ppm", ".tif", ".tiff", ".gif", NULL};

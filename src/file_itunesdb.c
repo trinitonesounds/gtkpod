@@ -43,9 +43,10 @@
 #include "syncdir.h"
 #include "gp_itdb.h"
 #include "ipod_init.h"
-#include "confirmation.h"
 #include "file_convert.h"
 #include "tools.h"
+#include "gtkpod_app_iface.h"
+#include <glib/gi18n-lib.h>
 
 #define _TO_STR(x) #x
 #define TO_STR(x) _TO_STR(x)
@@ -288,13 +289,13 @@ static gboolean read_extended_info(gchar *name, gchar *itunes) {
                     sei->lyrics = NULL;
                     if (hash_matched) {
                         if (!extendedinfohash) {
-                            extendedinfohash = g_hash_table_new_full(g_int_hash, g_int_equal, NULL,hash_delete);
+                            extendedinfohash = g_hash_table_new_full(g_int_hash, g_int_equal, NULL, hash_delete);
                         }
                         g_hash_table_insert(extendedinfohash, &sei->ipod_id, sei);
                     }
                     else if (sei->sha1_hash) {
                         if (!extendedinfohash_sha1) {
-                            extendedinfohash_sha1 = g_hash_table_new_full(g_str_hash, g_str_equal, NULL,hash_delete);
+                            extendedinfohash_sha1 = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, hash_delete);
                         }
                         g_hash_table_insert(extendedinfohash_sha1, sei->sha1_hash, sei);
                     }
@@ -416,8 +417,7 @@ iTunesDB *gp_import_itdb(iTunesDB *old_itdb, const gint type, const gchar *mp, c
         }
 
         if (g_file_test(name_db, G_FILE_TEST_EXISTS)) {
-            if (WRITE_EXTENDED_INFO)
-            {
+            if (WRITE_EXTENDED_INFO) {
                 if (!read_extended_info(name_ext, name_db)) {
                     gtkpod_warning(_("Extended info will not be used. If you have non-transferred tracks,\nthese will be lost.\n"));
                 }
@@ -461,8 +461,7 @@ iTunesDB *gp_import_itdb(iTunesDB *old_itdb, const gint type, const gchar *mp, c
         if (name_db) {
             name_ext = g_strdup_printf("%s.ext", name_db);
 
-            if (WRITE_EXTENDED_INFO)
-            {
+            if (WRITE_EXTENDED_INFO) {
                 if (!read_extended_info(name_ext, name_db)) {
                     gtkpod_warning(_("Extended info will not be used.\n"));
                 }
@@ -484,8 +483,7 @@ iTunesDB *gp_import_itdb(iTunesDB *old_itdb, const gint type, const gchar *mp, c
         }
         else {
             gchar *name = g_build_filename(mp, "iPod_Control", "iTunes", "iTunesDB", NULL);
-            gtkpod_warning(_("'%s' (or similar) does not exist. Import aborted.\n\n"),
-            name);
+            gtkpod_warning(_("'%s' (or similar) does not exist. Import aborted.\n\n"), name);
             g_free(name);
         }
         g_free(name_ext);
@@ -705,8 +703,8 @@ static iTunesDB *gp_merge_itdb(iTunesDB *old_itdb) {
 
         new_itdb = gp_import_itdb(old_itdb, old_itdb->usertype, mountpoint, old_eitdb->offline_filename, NULL);
         g_warning("TODO load photodb handle\n");
-//        if (new_itdb)
-//            gphoto_load_photodb(new_itdb);
+        //        if (new_itdb)
+        //            gphoto_load_photodb(new_itdb);
     }
     else {
         g_return_val_if_reached (NULL);
@@ -722,7 +720,7 @@ static iTunesDB *gp_merge_itdb(iTunesDB *old_itdb) {
     }
 
     g_warning("TODO - gp_merge_itdb status\n");
-//    gtkpod_tracks_statusbar_update();
+    //    gtkpod_tracks_statusbar_update();
 
     return new_itdb;
 }
@@ -768,7 +766,9 @@ iTunesDB *gp_load_ipod(iTunesDB *itdb) {
                 *str =
                         g_strdup_printf(_("Could not find iPod directory structure at '%s'.\n\nIf you are sure that the iPod is properly mounted at '%s', it may not be initialized for use. In this case, gtkpod can initialize it for you.\n\nDo you want to create the directory structure now?"), mountpoint, mountpoint);
 
-        gint result = gtkpod_confirmation_simple(GTK_MESSAGE_WARNING, _("iPod directory structure not found"), str, _("Create directory structure"));
+        gint
+                result =
+                        gtkpod_confirmation_simple(GTK_MESSAGE_WARNING, _("iPod directory structure not found"), str, _("Create directory structure"));
 
         g_free(str);
 
@@ -807,8 +807,10 @@ iTunesDB *gp_load_ipod(iTunesDB *itdb) {
             const gchar *prefs_ptr = prefs_model;
             const gchar *ipod_ptr = ipod_model;
             /* Normalize model number */
-            if (isalpha (prefs_model[0])) ++prefs_ptr;
-            if (isalpha (ipod_model[0])) ++ipod_ptr;
+            if (isalpha (prefs_model[0]))
+                ++prefs_ptr;
+            if (isalpha (ipod_model[0]))
+                ++ipod_ptr;
             if (strcmp(prefs_ptr, ipod_ptr) != 0) { /* Model number is different -- confirm */
                 gp_ipod_init_set_model(itdb, ipod_model);
                 /* write out new SysInfo file -- otherwise libpod won't
@@ -940,10 +942,10 @@ gboolean gp_save_itdb(iTunesDB *itdb) {
     /* update smart playlists before writing */
     itdb_spl_update_live(itdb);
     g_warning("TODO - update smart playlists before writing\n");
-//    pl = pm_get_selected_playlist();
-//    if (pl && (pl->itdb == itdb) && pl->is_spl && pl->splpref.liveupdate) { /* Update display if necessary */
-//        st_redisplay(0);
-//    }
+    //    pl = pm_get_selected_playlist();
+    //    if (pl && (pl->itdb == itdb) && pl->is_spl && pl->splpref.liveupdate) { /* Update display if necessary */
+    //        st_redisplay(0);
+    //    }
 
     success = gp_write_itdb(itdb);
 
@@ -1028,13 +1030,12 @@ static gboolean write_extended_info(iTunesDB *itdb) {
     g_return_val_if_fail (eitdb, FALSE);
 
     g_warning("TODO - method to update space upon write\n");
-//    space_data_update();
+    //    space_data_update();
 
     name = g_strdup_printf("%s.ext", itdb->filename);
     fp = fopen(name, "w");
     if (!fp) {
-        gtkpod_warning(_("Could not open \"%s\" for writing extended info.\n"),
-        name);
+        gtkpod_warning(_("Could not open \"%s\" for writing extended info.\n"), name);
         g_free(name);
         return FALSE;
     }
@@ -1292,30 +1293,26 @@ static gboolean delete_files(iTunesDB *itdb, TransferData *td) {
 
     gtk_label_set_text(GTK_LABEL (td->textlabel), _("Status: Deleting File"));
 
-    n = g_list_length (eitdb->pending_deletion);
+    n = g_list_length(eitdb->pending_deletion);
     count = 0; /* number of tracks removed */
-    start = time (NULL); /* start time for progress bar */
+    start = time(NULL); /* start time for progress bar */
 
     /* lets clean up those pending deletions */
-    while (!td->abort && eitdb->pending_deletion)
-    {
+    while (!td->abort && eitdb->pending_deletion) {
         gchar *filename = NULL;
         Track *track = eitdb->pending_deletion->data;
         g_return_val_if_fail (track, FALSE);
 
         track->itdb = itdb;
-        if (itdb->usertype & GP_ITDB_TYPE_IPOD)
-        {
-            filename = get_file_name_from_source (track, SOURCE_IPOD);
+        if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
+            filename = get_file_name_from_source(track, SOURCE_IPOD);
         }
-        if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
-        {
-            filename = get_file_name_from_source (track, SOURCE_LOCAL);
+        if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
+            filename = get_file_name_from_source(track, SOURCE_LOCAL);
         }
         track->itdb = NULL;
 
-        if(filename)
-        {
+        if (filename) {
             gint rmres;
 
             td->finished = FALSE;
@@ -1325,63 +1322,61 @@ static gboolean delete_files(iTunesDB *itdb, TransferData *td) {
 
             thread = g_thread_create (th_remove, td, TRUE, NULL);
 
-            do
-            {
+            do {
                 GTimeVal gtime;
 
-                set_progressbar (td->progressbar, start, n, count, 0);
+                set_progressbar(td->progressbar, start, n, count, 0);
 
                 g_mutex_unlock (td->mutex);
 
-                while (widgets_blocked && gtk_events_pending ())
-                gtk_main_iteration ();
+                while (widgets_blocked && gtk_events_pending())
+                    gtk_main_iteration();
 
                 g_mutex_lock (td->mutex);
 
                 /* wait a maximum of 20 ms or until cond is signaled */
-                g_get_current_time (&gtime);
-                g_time_val_add (&gtime, 20000);
+                g_get_current_time(&gtime);
+                g_time_val_add(&gtime, 20000);
                 g_cond_timed_wait (td->finished_cond,
                         td->mutex, &gtime);
-            }while(!td->finished);
+            }
+            while (!td->finished);
 
             g_mutex_unlock (td->mutex);
 
             rmres = GPOINTER_TO_INT(g_thread_join (thread));
 
-            if (rmres == -1)
-            {
-                gtkpod_warning (_("Could not remove the following file: '%s'\n\n"),
-                        filename);
+            if (rmres == -1) {
+                gtkpod_warning(_("Could not remove the following file: '%s'\n\n"), filename);
 
-                while (widgets_blocked && gtk_events_pending ())
-                gtk_main_iteration ();
+                while (widgets_blocked && gtk_events_pending())
+                    gtk_main_iteration();
             }
 
-            g_free (filename);
+            g_free(filename);
         }
         ++count;
-        itdb_track_free (track);
-        eitdb->pending_deletion = g_list_delete_link (
-                eitdb->pending_deletion, eitdb->pending_deletion);
+        itdb_track_free(track);
+        eitdb->pending_deletion = g_list_delete_link(eitdb->pending_deletion, eitdb->pending_deletion);
     }
 
-    set_progressbar (td->progressbar, start, n, count, 0);
+    set_progressbar(td->progressbar, start, n, count, 0);
 
-    while (widgets_blocked && gtk_events_pending ())
-    gtk_main_iteration ();
+    while (widgets_blocked && gtk_events_pending())
+        gtk_main_iteration();
 
-    if (td->abort) result = FALSE;
+    if (td->abort)
+        result = FALSE;
 
-    file_transfer_reset (itdb);
+    file_transfer_reset(itdb);
 
     return result;
 }
 
-    /* Reschedule tracks that failed during transfer. This is a hack as
-     * the @itdb could have been removed in the meanwhile. The clean
-     * solution would be to integrate the error display into the
-     * file_convert.c framework */
+/* Reschedule tracks that failed during transfer. This is a hack as
+ * the @itdb could have been removed in the meanwhile. The clean
+ * solution would be to integrate the error display into the
+ * file_convert.c framework */
 static void transfer_reschedule(gpointer user_data1, gpointer user_data2) {
     struct itdbs_head *ihead = gp_get_itdbs_head(gtkpod_app);
     iTunesDB *itdb = user_data1;
@@ -1474,12 +1469,12 @@ static void transfer_tracks_show_failed(iTunesDB *itdb, TransferData *td) {
     itdb, /* gpointer user_data1,*/
     NULL); /* gpointer user_data2,*/
 
-    g_string_free (string_transfer, TRUE);
-    g_string_free (string_convert, TRUE);
-    g_string_free (string, TRUE);
+    g_string_free(string_transfer, TRUE);
+    g_string_free(string_convert, TRUE);
+    g_string_free(string, TRUE);
 }
 
-    /* Initiates and waits for transfer of tracks to the iPod */
+/* Initiates and waits for transfer of tracks to the iPod */
 static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
     gint to_convert_num, converting_num, to_transfer_num;
     gint transferred_num, failed_num, transferred_init;
@@ -1502,36 +1497,27 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
     file_transfer_get_status(itdb, NULL, NULL, NULL, &transferred_num, &failed_num);
     transferred_init = transferred_num + failed_num;
 
-    start = time (NULL);
+    start = time(NULL);
 
-    do
-    {
+    do {
         gchar *buf;
         const gchar *buf_old;
 
-        status = file_transfer_get_status (itdb,
-                &to_convert_num, &converting_num,
-                &to_transfer_num, &transferred_num,
-                &failed_num);
+        status
+                = file_transfer_get_status(itdb, &to_convert_num, &converting_num, &to_transfer_num, &transferred_num, &failed_num);
 
-        set_progressbar (td->progressbar, start,
-                to_convert_num+to_transfer_num+failed_num+transferred_num,
-                transferred_num+failed_num,
-                transferred_init);
+        set_progressbar(td->progressbar, start, to_convert_num + to_transfer_num + failed_num + transferred_num, transferred_num
+                + failed_num, transferred_init);
 
-        if (to_transfer_num> 0)
-        {
-            buf = g_strdup_printf (_("Status: Copying track"));
+        if (to_transfer_num > 0) {
+            buf = g_strdup_printf(_("Status: Copying track"));
         }
-        else
-        {
-            if ((to_convert_num + converting_num)> 0)
-            {
-                buf = g_strdup_printf (_("Status: Waiting for conversion to complete"));
+        else {
+            if ((to_convert_num + converting_num) > 0) {
+                buf = g_strdup_printf(_("Status: Waiting for conversion to complete"));
             }
-            else
-            {
-                buf = g_strdup_printf (_("Status: Finished transfer"));
+            else {
+                buf = g_strdup_printf(_("Status: Finished transfer"));
             }
         }
 
@@ -1539,69 +1525,59 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
          "Transferred: %d. Failed: %d"),
          status, to_convert_num, to_transfer_num,
          transferred_num, failed_num);*/
-        buf_old = gtk_label_get_text (GTK_LABEL(td->textlabel));
-        if (!buf_old || (strcmp (buf_old, buf) != 0))
-        { /* only set label if it has changed */
-            gtk_label_set_text (GTK_LABEL(td->textlabel), buf);
+        buf_old = gtk_label_get_text(GTK_LABEL(td->textlabel));
+        if (!buf_old || (strcmp(buf_old, buf) != 0)) { /* only set label if it has changed */
+            gtk_label_set_text(GTK_LABEL(td->textlabel), buf);
         }
-        g_free (buf);
+        g_free(buf);
 
-        if ((to_convert_num != 0) && (converting_num == 0))
-        { /* Force the conversion to continue. Not sure if this scenario
+        if ((to_convert_num != 0) && (converting_num == 0)) { /* Force the conversion to continue. Not sure if this scenario
          * is likely to happen, but better be safe then sorry */
-            file_convert_continue ();
+            file_convert_continue();
         }
 
-        while (widgets_blocked && gtk_events_pending ())
-        gtk_main_iteration ();
+        while (widgets_blocked && gtk_events_pending())
+            gtk_main_iteration();
 
         /* sleep 20 ms */
-        g_usleep (20*1000);
-    }while (!td->abort &&
-            (status != FILE_TRANSFER_DISK_FULL) &&
-            (to_convert_num + to_transfer_num)> 0);
+        g_usleep(20 * 1000);
+    }
+    while (!td->abort && (status != FILE_TRANSFER_DISK_FULL) && (to_convert_num + to_transfer_num) > 0);
 
     /* reset background transfer to value in prefs */
-    file_transfer_reset (itdb);
+    file_transfer_reset(itdb);
 
-    if (td->abort)
-    {
+    if (td->abort) {
         result = FALSE;
     }
-    else if (status == FILE_TRANSFER_DISK_FULL)
-    {
+    else if (status == FILE_TRANSFER_DISK_FULL) {
         gchar *buf;
         GtkWidget *dialog;
 
-        gtk_widget_hide (td->dialog);
+        gtk_widget_hide(td->dialog);
 
-        buf = g_strdup_printf (ngettext (
+        buf
+                = g_strdup_printf(ngettext (
                         "One track could not be transferred because your iPod is full. Either delete some tracks or otherwise create space on the iPod before ejecting the iPod again.",
-                        "%d tracks could not be transferred because your iPod is full. Either delete some tracks or otherwise create space on the iPod before ejecting the iPod again.", to_transfer_num),
-                to_transfer_num);
+                        "%d tracks could not be transferred because your iPod is full. Either delete some tracks or otherwise create space on the iPod before ejecting the iPod again.", to_transfer_num), to_transfer_num);
 
-        dialog = gtk_message_dialog_new (
-                GTK_WINDOW (gtkpod_app),
-                GTK_DIALOG_DESTROY_WITH_PARENT,
-                GTK_MESSAGE_WARNING,
-                GTK_BUTTONS_OK,
-                buf);
-        gtk_dialog_run (GTK_DIALOG (dialog));
-        gtk_widget_destroy (dialog);
-        g_free (buf);
+        dialog
+                = gtk_message_dialog_new(GTK_WINDOW (gtkpod_app), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK, buf);
+        gtk_dialog_run(GTK_DIALOG (dialog));
+        gtk_widget_destroy(dialog);
+        g_free(buf);
         result = FALSE;
     }
     else if (failed_num != 0) /* one error message is enough -> else{... */
     {
-        transfer_tracks_show_failed (itdb, td);
+        transfer_tracks_show_failed(itdb, td);
         result = FALSE;
     }
 
-    if (result == TRUE)
-    {
+    if (result == TRUE) {
         /* remove transferred tracks from list so they won't be removed
          when deleting the itdb */
-        file_transfer_ack_itdb (itdb);
+        file_transfer_ack_itdb(itdb);
     }
 
     return result;
@@ -1652,8 +1628,9 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
                     *str =
                             g_strdup_printf(_("You did not import the existing iTunesDB ('%s'). This is most likely incorrect and will result in the loss of the existing database.\n\nIf you skip storing, you can import the existing database before calling this function again.\n"), tunes);
 
-            gint result = gtkpod_confirmation_hig(GTK_WINDOW (gtkpod_app),
-            GTK_MESSAGE_WARNING, _("Existing iTunes database not imported"), str, _("Proceed anyway"), _("Skip storing"), NULL, NULL);
+            gint
+                    result =
+                            gtkpod_confirmation_hig(GTK_MESSAGE_WARNING, _("Existing iTunes database not imported"), str, _("Proceed anyway"), _("Skip storing"), NULL, NULL);
 
             g_free(str);
 
@@ -1732,8 +1709,7 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
             }
         }
         if (success) {
-            if (WRITE_EXTENDED_INFO)
-            { /* write extended information */
+            if (WRITE_EXTENDED_INFO) { /* write extended information */
                 success = write_extended_info(itdb);
             }
             else { /* delete extended information if present */
@@ -1741,7 +1717,7 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
                 if (g_file_test(ext, G_FILE_TEST_EXISTS)) {
                     if (remove(ext) != 0) {
                         g_warning("TODO gp_write_itdb statusbar message\n");
-//                        gtkpod_statusbar_message(_("Extended information file not deleted: '%s\'"), ext);
+                        //                        gtkpod_statusbar_message(_("Extended information file not deleted: '%s\'"), ext);
                     }
                 }
                 g_free(ext);
@@ -1771,8 +1747,7 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
                 g_error_free(error);
                 error = NULL;
             }
-            if (WRITE_EXTENDED_INFO)
-            {
+            if (WRITE_EXTENDED_INFO) {
                 gchar *from, *to;
                 from = g_strdup_printf("%s.ext", itdb->filename);
                 to = g_strdup_printf("%s.ext", eitdb->offline_filename);
@@ -1842,15 +1817,15 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
 
     /* indicate that files and/or database is saved */
     g_warning("TODO indicate that database has been saved\n");
-//    if (success) {
-//        data_unchanged(itdb);
-//        if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
-//            gtkpod_statusbar_message(_("%s: Database saved"), mpl->name);
-//        }
-//        else {
-//            gtkpod_statusbar_message(_("%s: Changes saved"), mpl->name);
-//        }
-//    }
+    //    if (success) {
+    //        data_unchanged(itdb);
+    //        if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
+    //            gtkpod_statusbar_message(_("%s: Database saved"), mpl->name);
+    //        }
+    //        else {
+    //            gtkpod_statusbar_message(_("%s: Changes saved"), mpl->name);
+    //        }
+    //    }
 
     g_free(cfgdir);
 
@@ -1873,8 +1848,7 @@ void handle_export(void) {
 
     g_return_if_fail (gtkpod_app);
 
-    itdbs_head = g_object_get_data(G_OBJECT (gtkpod_app),
-    "itdbs_head");
+    itdbs_head = g_object_get_data(G_OBJECT (gtkpod_app), "itdbs_head");
     g_return_if_fail (itdbs_head);
 
     block_widgets(); /* block user input */
@@ -1908,16 +1882,16 @@ void data_changed(iTunesDB *itdb) {
 
     if ((itdb->usertype & GP_ITDB_TYPE_IPOD) && !eitdb->itdb_imported) {
         /* don't do anything for non-imported iPod
-     repositories. Marking them as "changed" allows the empty
-     repository to be saved back to the iPod, overwriting data
-     there */
+         repositories. Marking them as "changed" allows the empty
+         repository to be saved back to the iPod, overwriting data
+         there */
         return;
     }
     else {
         eitdb->data_changed = TRUE;
         g_warning("TODO data_changed needs work to notify interested parties\n");
-//        pm_itdb_name_changed(itdb);
-//        space_data_update();
+        //        pm_itdb_name_changed(itdb);
+        //        space_data_update();
     }
 }
 
@@ -1934,8 +1908,8 @@ void data_unchanged(iTunesDB *itdb) {
         eitdb->photo_data_changed = FALSE;
 
     g_warning("TODO data_unchanged notify\n");
-//    pm_itdb_name_changed(itdb);
-//    space_data_update();
+    //    pm_itdb_name_changed(itdb);
+    //    space_data_update();
 }
 
 /* Check if all files are saved (i.e. none of the itdbs has the
@@ -1946,8 +1920,7 @@ gboolean files_are_saved(void) {
     GList *gl;
 
     g_return_val_if_fail (gtkpod_app, TRUE);
-    itdbs_head = g_object_get_data(G_OBJECT (gtkpod_app),
-    "itdbs_head");
+    itdbs_head = g_object_get_data(G_OBJECT (gtkpod_app), "itdbs_head");
     g_return_val_if_fail (itdbs_head, TRUE);
     for (gl = itdbs_head->itdbs; gl; gl = gl->next) {
         iTunesDB *itdb = gl->data;

@@ -31,11 +31,10 @@
 #include <config.h>
 #include "display_playlists.h"
 #include "stock_icons.h"
+#include <glib.h>
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
-
-#define UI_FILE GTKPOD_UI_DIR"/playlist_display.ui"
 
 static GtkActionEntry actions[] = {/* Empty at moment add for playlist display */};
 
@@ -67,7 +66,7 @@ activate_plugin (AnjutaPlugin *plugin)
     playlist_display_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
 
     /* Add widget in Shell. Any number of widgets can be added */
-    g_printf("Creating tree view\n");
+    g_warning("Creating tree view\n");
     playlist_display_plugin->pl_window = gtk_scrolled_window_new(NULL, NULL);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (playlist_display_plugin->pl_window),
             GTK_POLICY_AUTOMATIC,

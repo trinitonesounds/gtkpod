@@ -32,6 +32,9 @@
 
 #include <libanjuta/anjuta-plugin.h>
 
+#define UI_FILE GTKPOD_UI_DIR"/playlist_display.ui"
+#define GLADE_FILE GTKPOD_GLADE_DIR"/playlist_display.glade"
+
 typedef struct _PlaylistDisplayPlugin PlaylistDisplayPlugin;
 typedef struct _PlaylistDisplayPluginClass PlaylistDisplayPluginClass;
 
@@ -46,7 +49,5 @@ struct _PlaylistDisplayPlugin {
 struct _PlaylistDisplayPluginClass {
     AnjutaPluginClass parent_class;
 };
-
-gchar * UI_FILE;
 
 #endif /* PLUGIN_H_ */

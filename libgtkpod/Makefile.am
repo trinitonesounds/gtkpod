@@ -15,7 +15,6 @@ libgtkpod_la_SOURCES =  gtkpod_app_iface.h gtkpod_app_iface.c \
 						misc.h misc.c \
 						misc_conversion.h misc_conversion.c \
 						clientserver.h clientserver.c \
-						confirmation.h confirmation.c \
 						directories.h directories.c \
 						tools.c tools.h \
 						misc_playlist.c
@@ -39,7 +38,7 @@ libgtkpod_la_LIBADD = \
 	
 libgtkpodincludebase = $(includedir)/gtkpod-1.0
 libgtkpodincludedir = $(libgtkpodincludebase)/gtkpod
-libgtkpodinclude_HEADERS = gp_itdb.h
+libgtkpodinclude_HEADERS = gp_itdb.h gtkpod_app_iface.h
 
 INCLUDES=$(LIBGTKPOD_CFLAGS)
 LIBS=$(LIBGTKPOD_LIBS) -lm

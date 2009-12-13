@@ -32,8 +32,9 @@
 #include "ipod_init.h"
 #include "prefs.h"
 #include "misc.h"
-#include "confirmation.h"
+
 #include <string.h>
+#include <glib/gi18n-lib.h>
 #include "file.h"
 
 struct _IpodInit

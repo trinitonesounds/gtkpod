@@ -38,6 +38,7 @@
 #include "libgtkpod/gp_itdb.h"
 #include "display_playlists.h"
 #include "stock_icons.h"
+#include "file_export.h"
 #include "libgtkpod/gp_private.h"
 #include "libgtkpod/file.h"
 #include "libgtkpod/misc.h"
@@ -131,7 +132,7 @@ static void pm_drag_end(GtkWidget *widget, GdkDragContext *drag_context, gpointe
     /*     puts ("drag_end"); */
     gp_remove_autoscroll_row_timeout(widget);
     g_warning("pm_drag_end - status\n");
-//    gtkpod_tracks_statusbar_update();
+    //    gtkpod_tracks_statusbar_update();
 }
 
 static void pm_drag_leave(GtkWidget *widget, GdkDragContext *drag_context, guint time, gpointer user_data) {
@@ -422,7 +423,7 @@ static GdkDragAction pm_pm_get_action(Playlist *src, Playlist *dest, GtkWidget *
         /* Do not allow drags from the iPod in offline mode */
         if (get_offline(src->itdb) && (src->itdb->usertype & GP_ITDB_TYPE_IPOD)) { /* give a notice on the statusbar -- otherwise the user
          * will never know why the drag is not possible */
-            gtkpod_app_statusbar_message(gtkpod_app, _("Error: drag from iPod not possible in offline mode."));
+            gtkpod_statusbar_message(_("Error: drag from iPod not possible in offline mode."));
             return 0;
         }
         /* default is copying, shift means moving */
@@ -453,7 +454,7 @@ static GdkDragAction pm_tm_get_action(Track *src, Playlist *dest, GtkTreeViewDro
         /* Do not allow drags from the iPod in offline mode */
         if (get_offline(src->itdb) && (src->itdb->usertype & GP_ITDB_TYPE_IPOD)) { /* give a notice on the statusbar -- otherwise the user
          * will never know why the drag is not possible */
-            gtkpod_app_statusbar_message(gtkpod_app, _("Error: drag from iPod not possible in offline mode."));
+            gtkpod_statusbar_message(_("Error: drag from iPod not possible in offline mode."));
             return 0;
         }
     }
@@ -475,7 +476,7 @@ static void pm_tm_tracks_moved_or_copied(gchar *tracks, gboolean moved) {
             ++ptr;
         }
         /* display message in statusbar */
-        gtkpod_app_statusbar_message(gtkpod_app, ngettext ("Copied one track",
+        gtkpod_statusbar_message(ngettext ("Copied one track",
                 "Copied %d tracks", n), n);
     }
 }
@@ -703,7 +704,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
                 switch (pos) {
                 case GTK_TREE_VIEW_DROP_BEFORE:
                     if (prefs_get_int("pm_sort") != SORT_NONE) {
-                        gtkpod_app_statusbar_message(gtkpod_app, _("Can't reorder sorted treeview."));
+                        gtkpod_statusbar_message(_("Can't reorder sorted treeview."));
                         gtk_drag_finish(dc, FALSE, FALSE, time);
                         return;
                     }
@@ -713,7 +714,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
                     break;
                 case GTK_TREE_VIEW_DROP_AFTER:
                     if (prefs_get_int("pm_sort") != SORT_NONE) {
-                        gtkpod_app_statusbar_message(gtkpod_app, _("Can't reorder sorted treeview."));
+                        gtkpod_statusbar_message(_("Can't reorder sorted treeview."));
                         gtk_drag_finish(dc, FALSE, FALSE, time);
                         return;
                     }
@@ -915,10 +916,10 @@ void pm_remove_track(Playlist *playlist, Track *track) {
     if (current_playlist) { /* only remove if selected playlist is in same itdb as track */
         if (track->itdb == current_playlist->itdb) {
             if ((playlist == current_playlist) || itdb_playlist_is_mpl(current_playlist)) {
-//                if (prefs_get_int(KEY_DISPLAY_COVERART)) {
-//                    coverart_track_changed(track, COVERART_REMOVE_SIGNAL);
-//                }
-//                st_remove_track(track, 0);
+                //                if (prefs_get_int(KEY_DISPLAY_COVERART)) {
+                //                    coverart_track_changed(track, COVERART_REMOVE_SIGNAL);
+                //                }
+                //                st_remove_track(track, 0);
             }
         }
     }
@@ -927,14 +928,14 @@ void pm_remove_track(Playlist *playlist, Track *track) {
 /* Add track to the display if it's in the currently displayed playlist.
  * @display: TRUE: add to track model (i.e. display it) */
 void pm_add_track(Playlist *playlist, Track *track, gboolean display) {
-//    if (playlist == current_playlist) {
-//        st_add_track(track, TRUE, display, 0); /* Add to first sort tab */
-//
-//        /* As with add_track above, only add to the playlist if it is the current one */
-//        if (prefs_get_int(KEY_DISPLAY_COVERART)) {
-//            coverart_track_changed(track, COVERART_CREATE_SIGNAL);
-//        }
-//    }
+    //    if (playlist == current_playlist) {
+    //        st_add_track(track, TRUE, display, 0); /* Add to first sort tab */
+    //
+    //        /* As with add_track above, only add to the playlist if it is the current one */
+    //        if (prefs_get_int(KEY_DISPLAY_COVERART)) {
+    //            coverart_track_changed(track, COVERART_CREATE_SIGNAL);
+    //        }
+    //    }
 }
 
 /* One of the playlist names has changed (this happens when the
@@ -961,11 +962,11 @@ void pm_track_changed(Track *track) {
     if (!current_playlist)
         return;
 
-//    coverart_track_changed(track, COVERART_CHANGE_SIGNAL);
-//
-//    /* Check if track is member of current playlist */
-//    if (g_list_find(current_playlist->members, track))
-//        st_track_changed(track, FALSE, 0);
+    //    coverart_track_changed(track, COVERART_CHANGE_SIGNAL);
+    //
+    //    /* Check if track is member of current playlist */
+    //    if (g_list_find(current_playlist->members, track))
+    //        st_track_changed(track, FALSE, 0);
 }
 
 /* Add playlist to the playlist model */
@@ -1076,8 +1077,8 @@ void pm_remove_playlist(Playlist *playlist, gboolean select) {
      * a playlist of this itdb is selected --> clear display
      * (pm_unselect_playlist probably works as well, but the
      * unselect won't be done until later (callback)) */
-//        gphoto_change_to_photo_window(FALSE);
-//        st_init(-1, 0);
+        //        gphoto_change_to_photo_window(FALSE);
+        //        st_init(-1, 0);
         current_playlist = NULL;
     }
 
@@ -1948,17 +1949,16 @@ static gboolean pm_button_press(GtkWidget *w, GdkEventButton *e, gpointer data) 
 /**
  * pm_context_menu_init - initialize the right click menu for playlists
  */
-static void pm_context_menu_init(void)
-{
-//    if (widgets_blocked) return;
-//
-//    pm_stop_editing (TRUE);
-//
-//    if(current_playlist)
-//    {
-//        selected_tracks = g_list_copy (_playlist->members);
-//        create_context_menu (CM_PL);
-//    }
+static void pm_context_menu_init(void) {
+    //    if (widgets_blocked) return;
+    //
+    //    pm_stop_editing (TRUE);
+    //
+    //    if(current_playlist)
+    //    {
+    //        selected_tracks = g_list_copy (_playlist->members);
+    //        create_context_menu (CM_PL);
+    //    }
 }
 
 /* Adds the columns to our playlist_treeview */
@@ -2165,9 +2165,8 @@ void pm_show_all_playlists() {
  *                                                                  *
  *              Frequently used error messages                      *
  *                                                                  *
-\*------------------------------------------------------------------*/
+ \*------------------------------------------------------------------*/
 
-void message_sb_no_itdb_selected ()
-{
-    gtkpod_app_statusbar_message (gtkpod_app, _("No database or playlist selected"));
+void message_sb_no_itdb_selected() {
+    gtkpod_statusbar_message(_("No database or playlist selected"));
 }

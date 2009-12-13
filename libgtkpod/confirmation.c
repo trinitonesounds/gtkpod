@@ -1,1 +1,0 @@
-/home/phantomjinx/programming/cpp/gtkpod/src/confirmation.c

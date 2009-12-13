@@ -114,24 +114,8 @@ void parse_offline_playcount (void);
 
 gboolean read_soundcheck (Track *track);
 
-/* file_export.c */
-void export_files_init (GList *tracks, GList **filenames,
-			gboolean display, gchar *message);
-void export_playlist_file_init (GList *tracks);
-GList *export_tracklist_when_necessary (iTunesDB *itdb_s,
-					iTunesDB *itdb_d,
-					gchar *data);
-GList *export_trackglist_when_necessary (iTunesDB *itdb_s,
-					 iTunesDB *itdb_d,
-					 GList *tracks);
 gboolean read_lyrics_from_file (Track *track, gchar **lyrics);
 gboolean write_lyrics_to_file (Track *track);
 
 gchar *fileselection_get_file_or_dir(const gchar *title, const gchar *cur_file, GtkFileChooserAction action);
-
-/* needed to adapt the prefs structure */
-extern const gchar *EXPORT_FILES_SPECIAL_CHARSET;
-extern const gchar *EXPORT_FILES_CHECK_EXISTING;
-extern const gchar *EXPORT_FILES_PATH;
-extern const gchar *EXPORT_FILES_TPL;
 #endif

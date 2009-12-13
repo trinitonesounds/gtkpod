@@ -30,7 +30,11 @@
 |
 |  $Id$
 */
-
+#include "charset.h"
+#include "sha1.h"
+#include "prefs.h"
+#include "misc_track.h"
+#include "file.h"
 #include <errno.h>
 #include <limits.h>
 #include <stdio.h>
@@ -39,12 +43,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <glib.h>
-#include "charset.h"
-#include "sha1.h"
-#include "prefs.h"
-#include "misc_track.h"
-#include "file.h"
-#include "confirmation.h"
+#include <glib/gi18n-lib.h>
+
 
 typedef guint32 chunk;
 union _block

@@ -2,26 +2,26 @@
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -33,6 +33,7 @@
 
 #include <string.h>
 #include <gtk/gtk.h>
+#include <glib/gi18n-lib.h>
 #include "prefs.h"
 #include "charset.h"
 #include "misc.h"
@@ -49,7 +50,7 @@ typedef struct {
 } CharsetInfo;
 
 
-static const CharsetInfo charset_info[] = { 
+static const CharsetInfo charset_info[] = {
     {N_("Arabic (IBM-864)"),                  "IBM864"        },
     {N_("Arabic (ISO-8859-6)"),               "ISO-8859-6"    },
     {N_("Arabic (Windows-1256)"),             "windows-1256"  },
@@ -156,7 +157,7 @@ void charset_init_combo (GtkCombo *combo)
     const CharsetInfo *ci;
     static GList *charsets = NULL; /* list with choices -- takes a while to
 				     * initialize, so we only do it once */
-    
+
     current_charset = prefs_get_string("charset");
     if ((current_charset == NULL) || (strlen (current_charset) == 0))
     {
@@ -205,7 +206,7 @@ void charset_init_combo (GtkCombo *combo)
 	}
     }
     /* set pull down items */
-    gtk_combo_set_popdown_strings (GTK_COMBO (combo), charsets); 
+    gtk_combo_set_popdown_strings (GTK_COMBO (combo), charsets);
     /* set standard entry */
     gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), description);
     g_free (description);
@@ -224,9 +225,9 @@ void charset_init_combo_box (GtkComboBox *combo)
 	GtkTreeIter use_iter;
     static GtkListStore *charsets = NULL; /* list with choices -- takes a while to
 				     * initialize, so we only do it once */
-    
+
     current_charset = prefs_get_string("charset");
-	
+
     if ((current_charset == NULL) || (strlen (current_charset) == 0))
     {
 		description = g_strdup (_("System Charset"));
@@ -235,7 +236,7 @@ void charset_init_combo_box (GtkComboBox *combo)
     {
 		description = charset_to_description (current_charset);
     }
-	
+
     if (charsets == NULL)
     { /* set up list with charsets */
 		FILE *fp;
@@ -243,7 +244,7 @@ void charset_init_combo_box (GtkComboBox *combo)
 
 		charsets = gtk_list_store_new (1, G_TYPE_STRING);
 		/* now add all the charset descriptions in the list above */
-		
+
 		gtk_list_store_append (charsets, &iter);
 		gtk_list_store_set (charsets, &iter, 0, _("System Charset"), -1);
 
@@ -252,32 +253,32 @@ void charset_init_combo_box (GtkComboBox *combo)
 			gtk_list_store_append (charsets, &iter);
 			gtk_list_store_set (charsets, &iter, 0, _(ci->descr), -1);
 		}
-		
+
 		/* let's add all available charsets returned by "iconv -l" */
 		/* The code assumes that "iconv -l" returns a list with the
 		   name of one charset in each line, each valid line being
 		   terminated by "//".  */
 		fp = popen ("iconv -l", "r");
-		
+
 		if (fp)
 		{
 			gchar buf[PATH_MAX];
-			
+
 			/* read one line of output at a time */
 			while (fgets (buf, PATH_MAX, fp))
 			{
 				/* only consider lines ending on "//" */
 				gchar *bufp = g_strrstr (buf, "//\n");
-				
+
 				if (bufp)
 				{
 					/* add everything before "//" to our charset list */
 					gchar *bufpp = buf;
 					*bufp = 0;  /* shorten string */
-					
+
 					while ((*bufpp == ' ') || (*bufpp == 0x09))
 						bufpp++; /* skip whitespace */
-					
+
 					if (*bufpp)
 					{
 						gtk_list_store_append (charsets, &iter);
@@ -286,31 +287,31 @@ void charset_init_combo_box (GtkComboBox *combo)
 					}
 				}
 			}
-			
+
 			pclose (fp);
 		}
     }
     /* set pull down items */
 	renderer = gtk_cell_renderer_text_new ();
-	
+
     gtk_combo_box_set_model (GTK_COMBO_BOX (combo), GTK_TREE_MODEL (charsets));
 	gtk_cell_layout_clear (GTK_CELL_LAYOUT (combo));
 	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, FALSE);
 	gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (combo), renderer, "text", 0);
-	
+
 	for (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (charsets), &use_iter);
 		 gtk_list_store_iter_is_valid (charsets, &use_iter);
 		 gtk_tree_model_iter_next (GTK_TREE_MODEL (charsets), &use_iter))
 	{
 		gchar *cur_desc;
 		gtk_tree_model_get (GTK_TREE_MODEL (charsets), &use_iter, 0, &cur_desc, -1);
-		
+
 		if(!g_utf8_collate(description, cur_desc))
 		{
 			g_free (cur_desc);
 			break;
 		}
-		
+
 		g_free (cur_desc);
 	}
 
@@ -388,7 +389,7 @@ static const gchar *charset_check_k_code (const gchar *p2)
     gssize len;
 
     if (p2 == NULL) return NULL;
- 
+
     len = strlen ((gchar*)p2);
     for (i=0; charsets[i]; i++) {
       ret = g_convert ((gchar*)p2,            /* string to convert */
@@ -476,7 +477,7 @@ gchar *charset_to_utf8 (const gchar *str)
 	    charset = g_strdup(locale_charset);
 	}
     }
-    
+
     result = charset_to_charset (charset, "UTF-8", str);
     g_free(charset);
     return result;
@@ -496,7 +497,7 @@ gchar *charset_from_utf8 (const gchar *str)
     if (str == NULL) return NULL;  /* sanity */
     charset = prefs_get_string("charset");
     if (!charset || !strlen (charset))
-    {   
+    {
        /* use standard locale charset */
 	g_free(charset);
 	g_get_charset (&locale_charset);
@@ -528,9 +529,9 @@ gchar *charset_track_charset_from_utf8 (Track *s, const gchar *str)
 
     if (etd->charset && strlen (etd->charset))
 	   charset = g_strdup(etd->charset);
-    else   
+    else
 	charset = prefs_get_string("charset");
-   
+
     if (!charset || !strlen (charset))
     {    /* use standard locale charset */
 	g_free(charset);

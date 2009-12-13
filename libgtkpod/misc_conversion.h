@@ -37,7 +37,6 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <glib/gi18n-lib.h>
 #include "itdb.h"
 
 /* max. number of stars */
