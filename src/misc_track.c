@@ -121,20 +121,21 @@ void gp_sha1_hash_tracks (void)
 }
 
 
+static void rm_sha1 (gpointer track, gpointer user_data)
+{
+    ExtraTrackData *etr;
+    g_return_if_fail (track);
+    etr = ((Track *)track)->userdata;
+    g_return_if_fail (etr);
+    C_FREE (etr->sha1_hash);
+}
+
 /**
  * Call sha1_free() for each itdb and delete sha1 checksums in all tracks.
  *
  */
 void gp_sha1_free_hash (void)
 {
-    void rm_sha1 (gpointer track, gpointer user_data)
-	{
-	    ExtraTrackData *etr;
-	    g_return_if_fail (track);
-	    etr = ((Track *)track)->userdata;
-	    g_return_if_fail (etr);
-	    C_FREE (etr->sha1_hash);
-	}
     GList *gl;
     struct itdbs_head *itdbs_head;
 
@@ -1790,6 +1791,152 @@ void gp_info_nontransferred_tracks (iTunesDB *itdb,
 
 
 
+static void intern_add_track (Playlist *pl, Track *track)
+{
+    iTunesDB *from_itdb, *to_itdb;
+    Playlist *to_mpl;
+    from_itdb = track->itdb;
+    g_return_if_fail (from_itdb);
+    to_itdb = pl->itdb;
+    to_mpl = itdb_playlist_mpl (to_itdb);
+
+/* 	    printf ("add tr %p to pl: %p\n", track, pl); */
+    if (from_itdb == to_itdb)
+    {   /* DND within the same itdb */
+
+	/* set flags to 'podcast' if adding to podcast list */
+	if (itdb_playlist_is_podcasts (pl))
+	    gp_track_set_flags_podcast (track);
+#if 0 /* initially iTunes didn't add podcasts to the MPL */
+	if (!itdb_playlist_contains_track (to_mpl, track))
+	{   /* add to MPL if not already present (will happen
+	     * if dragged from the podcasts playlist */
+	    gp_playlist_add_track (to_mpl, track, TRUE);
+	}
+#endif
+	if (!itdb_playlist_is_mpl (pl))
+	{
+	    /* add to designated playlist -- unless adding
+	     * to podcasts list and track already exists there */
+	    if (itdb_playlist_is_podcasts (pl) &&
+		g_list_find (pl->members, track))
+	    {
+		gchar *buf = get_track_info (track, FALSE);
+		gtkpod_warning (_("Podcast already present: '%s'\n\n"), buf);
+		g_free (buf);
+	    }
+	    else
+	    {
+		gp_playlist_add_track (pl, track, TRUE);
+	    }
+	}
+    }
+    else
+    {   /* DND between different itdbs -- need to duplicate the
+	   track before inserting */
+	Track *duptr, *addtr;
+	ExtraTrackData *eduptr;
+	/* duplicate track */
+	duptr = itdb_track_duplicate (track);
+	eduptr = duptr->userdata;
+	g_return_if_fail (eduptr);
+
+	duptr->transferred = FALSE;
+
+	/* check if adding to iPod and track is on different iPod */
+	if ((from_itdb->usertype & GP_ITDB_TYPE_IPOD) &&
+	    (to_itdb->usertype & GP_ITDB_TYPE_IPOD))
+	{
+	    /* Check if track exists locally */
+	    if (!(eduptr->pc_path_locale &&
+		  g_file_test (eduptr->pc_path_locale, G_FILE_TEST_EXISTS)))
+	    {   /* No. Use iPod path as source */
+		g_free (eduptr->pc_path_locale);
+		g_free (eduptr->pc_path_utf8);
+		eduptr->pc_path_locale = itdb_filename_on_ipod (track);
+		eduptr->pc_path_utf8 = charset_to_utf8 (eduptr->pc_path_locale);
+	    }
+	    /* Remove old reference to iPod path */
+	    g_free (duptr->ipod_path);
+	    duptr->ipod_path = g_strdup ("");
+	}
+
+	if (!eduptr->pc_path_locale)
+	{
+	    gchar *buf;
+	    buf = get_track_info (track, FALSE);
+	    gtkpod_warning (_("Could not find source file for '%s'. Track not copied."));
+	    g_free (buf);
+	    itdb_track_free (duptr);
+	    return;
+	}
+
+	if ((from_itdb->usertype & GP_ITDB_TYPE_LOCAL) &&
+	    (to_itdb->usertype & GP_ITDB_TYPE_IPOD))
+	{   /* make sure the DND origin data is set correctly */
+	    eduptr->local_itdb_id = from_itdb->id;
+	    eduptr->local_track_dbid = track->dbid;
+	}
+
+	/* add to database -- if duplicate detection is on and the
+	   same track already exists in the database, the already
+	   existing track is returned and @duptr is freed */
+	addtr = gp_track_add (to_itdb, duptr);
+
+	/* set flags to 'podcast' if adding to podcast list */
+	if (itdb_playlist_is_podcasts (pl))
+	    gp_track_set_flags_podcast (addtr);
+
+	if (addtr == duptr)
+	{   /* no duplicate */
+#if 0 /* initially iTunes didn't add podcasts to the MPL */
+	    /* we need to add to the MPL if the track is no
+	       duplicate and will not be added to the podcasts
+	       playlist */
+	    if (!itdb_playlist_is_podcasts (pl))
+	    {   /* don't add to mpl if we add to the podcasts
+		   playlist */
+		gp_playlist_add_track (to_mpl, addtr, TRUE);
+	    }
+#else
+	    /* we need to add to the MPL if the track is no
+	       duplicate */
+	    gp_playlist_add_track (to_mpl, addtr, TRUE);
+#endif
+	}
+#if 0 /* initially iTunes didn't add podcasts to the MPL */
+	else
+	{   /* duplicate */
+	    /* we also need to add to the MPL if the track is a
+	       duplicate, does not yet exist in the MPL and will
+	       not be added to a podcast list (this happens if
+	       it's already in the podcast list) */
+	    if ((!itdb_playlist_contains_track (to_mpl, addtr)) &&
+		(!itdb_playlist_is_podcasts (pl)))
+	    {
+		gp_playlist_add_track (to_mpl, addtr, TRUE);
+	    }
+	}
+#endif
+	/* add to designated playlist (if not mpl) -- unless
+	 * adding to podcasts list and track already * exists
+	 * there */
+	if (!itdb_playlist_is_mpl (pl))
+	{
+	    if (itdb_playlist_is_podcasts (pl) &&
+		g_list_find (pl->members, addtr))
+	    {
+		gchar *buf = get_track_info (addtr, FALSE);
+		gtkpod_warning (_("Podcast already present: '%s'\n\n"), buf);
+		g_free (buf);
+	    }
+	    else
+	    {
+		gp_playlist_add_track (pl, addtr, TRUE);
+	    }
+	}
+    }
+}
 
 
 /*------------------------------------------------------------------*\
@@ -1803,152 +1950,6 @@ void gp_info_nontransferred_tracks (iTunesDB *itdb,
 static void add_tracks_to_playlist (Playlist *pl,
 				    gchar *string, GList *tracks)
 {
-    void intern_add_track (Playlist *pl, Track *track)
-	{
-	    iTunesDB *from_itdb, *to_itdb;
-	    Playlist *to_mpl;
-	    from_itdb = track->itdb;
-	    g_return_if_fail (from_itdb);
-	    to_itdb = pl->itdb;
-	    to_mpl = itdb_playlist_mpl (to_itdb);
-
-/* 	    printf ("add tr %p to pl: %p\n", track, pl); */
-	    if (from_itdb == to_itdb)
-	    {   /* DND within the same itdb */
-
-		/* set flags to 'podcast' if adding to podcast list */
-		if (itdb_playlist_is_podcasts (pl))
-		    gp_track_set_flags_podcast (track);
-#if 0 /* initially iTunes didn't add podcasts to the MPL */
-		if (!itdb_playlist_contains_track (to_mpl, track))
-		{   /* add to MPL if not already present (will happen
-		     * if dragged from the podcasts playlist */
-		    gp_playlist_add_track (to_mpl, track, TRUE);
-		}
-#endif
-		if (!itdb_playlist_is_mpl (pl))
-		{
-		    /* add to designated playlist -- unless adding
-		     * to podcasts list and track already exists there */
-		    if (itdb_playlist_is_podcasts (pl) &&
-			g_list_find (pl->members, track))
-		    {
-			gchar *buf = get_track_info (track, FALSE);
-			gtkpod_warning (_("Podcast already present: '%s'\n\n"), buf);
-			g_free (buf);
-		    }
-		    else
-		    {
-			gp_playlist_add_track (pl, track, TRUE);
-		    }
-		}
-	    }
-	    else
-	    {   /* DND between different itdbs -- need to duplicate the
-		   track before inserting */
-		Track *duptr, *addtr;
-		ExtraTrackData *eduptr;
-		/* duplicate track */
-		duptr = itdb_track_duplicate (track);
-		eduptr = duptr->userdata;
-		g_return_if_fail (eduptr);
-
-		duptr->transferred = FALSE;
-
-		/* check if adding to iPod and track is on different iPod */
-		if ((from_itdb->usertype & GP_ITDB_TYPE_IPOD) &&
-		    (to_itdb->usertype & GP_ITDB_TYPE_IPOD))
-		{
-		    /* Check if track exists locally */
-		    if (!(eduptr->pc_path_locale &&
-			  g_file_test (eduptr->pc_path_locale, G_FILE_TEST_EXISTS)))
-		    {   /* No. Use iPod path as source */
-			g_free (eduptr->pc_path_locale);
-			g_free (eduptr->pc_path_utf8);
-			eduptr->pc_path_locale = itdb_filename_on_ipod (track);
-			eduptr->pc_path_utf8 = charset_to_utf8 (eduptr->pc_path_locale);
-		    }
-		    /* Remove old reference to iPod path */
-		    g_free (duptr->ipod_path);
-		    duptr->ipod_path = g_strdup ("");
-		}
-
-		if (!eduptr->pc_path_locale)
-		{
-		    gchar *buf;
-		    buf = get_track_info (track, FALSE);
-		    gtkpod_warning (_("Could not find source file for '%s'. Track not copied."));
-		    g_free (buf);
-		    itdb_track_free (duptr);
-		    return;
-		}
-
-		if ((from_itdb->usertype & GP_ITDB_TYPE_LOCAL) &&
-		    (to_itdb->usertype & GP_ITDB_TYPE_IPOD))
-		{   /* make sure the DND origin data is set correctly */
-		    eduptr->local_itdb_id = from_itdb->id;
-		    eduptr->local_track_dbid = track->dbid;
-		}
-
-		/* add to database -- if duplicate detection is on and the
-		   same track already exists in the database, the already
-		   existing track is returned and @duptr is freed */
-		addtr = gp_track_add (to_itdb, duptr);
-
-		/* set flags to 'podcast' if adding to podcast list */
-		if (itdb_playlist_is_podcasts (pl))
-		    gp_track_set_flags_podcast (addtr);
-
-		if (addtr == duptr)
-		{   /* no duplicate */
-#if 0 /* initially iTunes didn't add podcasts to the MPL */
-		    /* we need to add to the MPL if the track is no
-		       duplicate and will not be added to the podcasts
-		       playlist */
-		    if (!itdb_playlist_is_podcasts (pl))
-		    {   /* don't add to mpl if we add to the podcasts
-			   playlist */
-			gp_playlist_add_track (to_mpl, addtr, TRUE);
-		    }
-#else
-		    /* we need to add to the MPL if the track is no
-		       duplicate */
-		    gp_playlist_add_track (to_mpl, addtr, TRUE);
-#endif
-		}
-#if 0 /* initially iTunes didn't add podcasts to the MPL */
-		else
-		{   /* duplicate */
-		    /* we also need to add to the MPL if the track is a
-		       duplicate, does not yet exist in the MPL and will
-		       not be added to a podcast list (this happens if
-		       it's already in the podcast list) */
-		    if ((!itdb_playlist_contains_track (to_mpl, addtr)) &&
-			(!itdb_playlist_is_podcasts (pl)))
-		    {
-			gp_playlist_add_track (to_mpl, addtr, TRUE);
-		    }
-		}
-#endif
-		/* add to designated playlist (if not mpl) -- unless
-		 * adding to podcasts list and track already * exists
-		 * there */
-		if (!itdb_playlist_is_mpl (pl))
-		{
-		    if (itdb_playlist_is_podcasts (pl) &&
-			g_list_find (pl->members, addtr))
-		    {
-			gchar *buf = get_track_info (addtr, FALSE);
-			gtkpod_warning (_("Podcast already present: '%s'\n\n"), buf);
-			g_free (buf);
-		    }
-		    else
-		    {
-			gp_playlist_add_track (pl, addtr, TRUE);
-		    }
-		}
-	    }
-	}
 
 
     g_return_if_fail (!(string && tracks));

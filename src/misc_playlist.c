@@ -970,12 +970,7 @@ check_db_danglingok1 (gpointer user_data1, gpointer user_data2)
 
 
 
-/* checks iTunesDB for presence of dangling links and checks IPODs
- * Music directory on subject of orphaned files */
-void check_db (iTunesDB *itdb)
-{
-
-    void glist_list_tracks (GList * tlist, GString * str)
+static void glist_list_tracks (GList * tlist, GString * str)
 	{
 	    if (str==NULL)
 	    {
@@ -997,6 +992,12 @@ void check_db (iTunesDB *itdb)
 		     track->id, track->artist,  track->title,  etr->pc_path_utf8);
 	    }
 	} /* end of glist_list_tracks */
+
+/* checks iTunesDB for presence of dangling links and checks IPODs
+ * Music directory on subject of orphaned files */
+void check_db (iTunesDB *itdb)
+{
+
 
     GTree *files_known = NULL;
     GDir  *dir_des = NULL;

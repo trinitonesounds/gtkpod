@@ -105,23 +105,23 @@ static void pm_drag_begin (GtkWidget *widget,
 }
 
 
+static void pm_drag_data_delete_remove_playlist(
+GtkTreeModel *tm, GtkTreePath *tp,
+GtkTreeIter *iter, gpointer data)
+{
+    Playlist *pl;
+    g_return_if_fail (tm);
+    g_return_if_fail (iter);
+    gtk_tree_model_get (tm, iter, PM_COLUMN_PLAYLIST, &pl, -1);
+    g_return_if_fail (pl);
+    gp_playlist_remove (pl);
+}
+
 /* remove dragged playlist after successful MOVE */
 static void pm_drag_data_delete (GtkWidget *widget,
 			   GdkDragContext *drag_context,
 			   gpointer user_data)
 {
-    void pm_drag_data_delete_remove_playlist(
-	GtkTreeModel *tm, GtkTreePath *tp,
-	GtkTreeIter *iter, gpointer data)
-	{
-	    Playlist *pl;
-	    g_return_if_fail (tm);
-	    g_return_if_fail (iter);
-	    gtk_tree_model_get (tm, iter, PM_COLUMN_PLAYLIST, &pl, -1);
-	    g_return_if_fail (pl);
-	    gp_playlist_remove (pl);
-	}
-
     g_return_if_fail (widget);
     g_return_if_fail (drag_context);
 
