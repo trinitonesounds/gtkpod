@@ -339,11 +339,16 @@ static MP4MetadataDelete_t MP4MetadataDelete = NULL;
     
 void mp4_init()
 {
-    mp4v2_handle = dlopen("libmp4v2.so", RTLD_LAZY);
+    mp4v2_handle = dlopen("libmp4v2.so.0", RTLD_LAZY);
 
     if (!mp4v2_handle)
     {
-        return;
+        mp4v2_handle = dlopen("libmp4v2.so.1", RTLD_LAZY);
+        
+        if (!mp4v2_handle)
+        {
+            return;
+        }
     }
 
     MP4Read = (MP4Read_t) dlsym(mp4v2_handle, "MP4Read");
