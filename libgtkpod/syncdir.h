@@ -1,1 +1,1 @@
-/home/phantomjinx/programming/cpp/gtkpod/src/syncdir.h
+../src/syncdir.h

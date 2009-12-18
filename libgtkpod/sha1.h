@@ -1,1 +1,1 @@
-/home/phantomjinx/programming/cpp/gtkpod/src/sha1.h
+../src/sha1.h

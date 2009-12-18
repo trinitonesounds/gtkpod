@@ -1,1 +1,1 @@
-/home/phantomjinx/programming/cpp/gtkpod/src/clientserver.c
+../src/clientserver.c

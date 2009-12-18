@@ -1,1 +1,1 @@
-/home/phantomjinx/programming/cpp/gtkpod/src/ipod_init.c
+../src/ipod_init.c

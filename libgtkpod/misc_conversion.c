@@ -1,1 +1,1 @@
-/home/phantomjinx/programming/cpp/gtkpod/src/misc_conversion.c
+../src/misc_conversion.c

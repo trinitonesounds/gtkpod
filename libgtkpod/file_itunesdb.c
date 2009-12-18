@@ -1,1 +1,1 @@
-/home/phantomjinx/programming/cpp/gtkpod/src/file_itunesdb.c
+../src/file_itunesdb.c

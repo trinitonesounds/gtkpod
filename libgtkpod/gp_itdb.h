@@ -1,1 +1,1 @@
-/home/phantomjinx/programming/cpp/gtkpod/src/display_itdb.h
+../src/display_itdb.h

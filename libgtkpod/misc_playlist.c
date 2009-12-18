@@ -1,1 +1,1 @@
-/home/phantomjinx/programming/cpp/gtkpod/src/misc_playlist.c
+../src/misc_playlist.c

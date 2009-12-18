@@ -1,1 +1,1 @@
-/home/phantomjinx/programming/cpp/gtkpod/src/tools.h
+../src/tools.h

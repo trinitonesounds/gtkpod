@@ -1,1 +1,1 @@
-/home/phantomjinx/programming/cpp/gtkpod/src/directories.h
+../src/directories.h

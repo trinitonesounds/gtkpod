@@ -35,6 +35,7 @@
 
 #include <gtk/gtk.h>
 #include <glade/glade-xml.h>
+#include "itdb.h"
 
 #define GTKPOD_APP_TYPE                (gtkpod_app_get_type ())
 #define GTKPOD_APP(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTKPOD_APP_TYPE, GtkPodApp))
@@ -69,6 +70,8 @@ typedef struct _GtkPodAppInterface GtkPodAppInterface;
 
 struct _GtkPodAppInterface {
     GTypeInterface g_iface;
+    /* The current itdb database, probably selected */
+    iTunesDB *current_itdb;
 
     void (*statusbar_message)(GtkPodApp *obj, gchar* message, ...);
     void (*gtkpod_warning)(GtkPodApp *obj, gchar *message, ...);

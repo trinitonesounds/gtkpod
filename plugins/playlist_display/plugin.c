@@ -1,6 +1,6 @@
 /*
 |  Copyright (C) 2002-2009 Jorg Schuler <jcsjcs at users sourceforge net>
-|                          Paul Richardson <phantom_sf at users sourceforge net>
+|                                          Paul Richardson <phantom_sf at users sourceforge net>
 |  Part of the gtkpod project.
 |
 |  URL: http://www.gtkpod.org/
@@ -82,8 +82,8 @@ activate_plugin (AnjutaPlugin *plugin)
             plugin->shell,
             playlist_display_plugin->pl_window,
             "PlaylistDisplayPlugin",
-            _("PlaylistDisplayPlugin"),
-            GTK_STOCK_ABOUT,
+            "",
+            NULL,
             ANJUTA_SHELL_PLACEMENT_LEFT,
             NULL);
 

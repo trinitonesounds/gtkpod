@@ -1,1 +1,1 @@
-/home/phantomjinx/programming/cpp/gtkpod/src/file_convert_info.h
+../src/file_convert_info.h

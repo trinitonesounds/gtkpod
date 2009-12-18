@@ -1,1 +1,1 @@
-/home/phantomjinx/programming/cpp/gtkpod/src/prefs.c
+../src/prefs.c
