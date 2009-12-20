@@ -34,10 +34,6 @@
 
 #include <gtk/gtk.h>
 
-/* Stock IDs */
-#define GPHOTO_PLAYLIST_ICON_STOCK_ID "gtkpod-gphoto-playlist-icon"
-#define TUNES_PLAYLIST_ICON_STOCK_ID "gtkpod-tunes-playlist-icon"
-
 void register_stock_icon (const gchar *name, const gchar *stockid);
 
 #endif /*STOCK_ICONS_H_*/

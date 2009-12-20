@@ -9,15 +9,10 @@ appdatadir = $(pkgdatadir)/data
 appdata_DATA =				\
 	gtkpod.glade			\
 	default-cover.png		\
-	gtkpod-add-dirs.png		\
-	gtkpod-add-files.png		\
-	gtkpod-add-playlists.png	\
-	gtkpod-icon-32-2.png		\
+	gtkpod-icon-32-2.png	\
 	gtkpod-icon-32.png		\
 	gtkpod-icon-48.png		\
 	gtkpod-logo.png			\
-	gtkpod-read.png			\
-	gtkpod-read-16.png		\
 	photo-toolbar-album.png \
 	photo-toolbar-photos.png
 

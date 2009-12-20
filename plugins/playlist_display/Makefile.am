@@ -43,8 +43,8 @@ plugin_LTLIBRARIES = libplaylist_display.la
 # Plugin sources
 libplaylist_display_la_SOURCES = plugin.c plugin.h \
 								 display_playlists.c display_playlists.h \
-								 stock_icons.c stock_icons.h \
-								 file_export.c file_export.h
+								 file_export.c file_export.h \
+								 playlist_display_actions.c playlist_display_actions.h
 
 libplaylist_display_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 

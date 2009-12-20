@@ -17,7 +17,9 @@ libgtkpod_la_SOURCES =  gtkpod_app_iface.h gtkpod_app_iface.c \
 						clientserver.h clientserver.c \
 						directories.h directories.c \
 						tools.c tools.h \
-						misc_playlist.c
+						misc_playlist.c \
+						stock_icons.c stock_icons.h \
+						gtkpod_app-marshallers.c gtkpod_app-marshallers.h
 
 # Include paths
 AM_CFLAGS = \
@@ -42,3 +44,12 @@ libgtkpodinclude_HEADERS = gp_itdb.h gtkpod_app_iface.h
 
 INCLUDES=$(LIBGTKPOD_CFLAGS)
 LIBS=$(LIBGTKPOD_LIBS) -lm
+
+all-local: gtkpod_app-marshallers.h gtkpod_app-marshallers.c
+
+gtkpod_app-marshallers.c: gtkpod_app-marshallers.list
+	glib-genmarshal --prefix _gtkpod_app_marshal --body $< > $@
+
+gtkpod_app-marshallers.h: gtkpod_app-marshallers.list
+	glib-genmarshal --prefix _gtkpod_app_marshal --header $< > $@
+

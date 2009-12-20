@@ -26,33 +26,16 @@
 |
 |  $Id$
 */
+#ifndef __PLAYLIST_DISPLAY_H__
+#define __PLAYLIST_DISPLAY_H__
 
-#ifndef PLUGIN_H_
-#define PLUGIN_H_
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
-#include <libanjuta/anjuta-plugin.h>
+#include <gtk/gtk.h>
+#include "plugin.h"
 
-/* Stock IDs */
-#define PLAYLIST_DISPLAY_PHOTO_ICON_STOCK_ID "playlist-display-photo-icon"
-#define PLAYLIST_DISPLAY_PLAYLIST_ICON_STOCK_ID "playlist-display-playlist-icon"
-#define PLAYLIST_DISPLAY_GTKPOD_READ_ICON_STOCK_ID "playlist-display-gtkpod-read-icon"
+void on_load_ipods_mi(GtkAction* action, PlaylistDisplayPlugin* plugin);
 
-#define UI_FILE GTKPOD_UI_DIR"/playlist_display.ui"
-#define GLADE_FILE GTKPOD_GLADE_DIR"/playlist_display.glade"
-
-typedef struct _PlaylistDisplayPlugin PlaylistDisplayPlugin;
-typedef struct _PlaylistDisplayPluginClass PlaylistDisplayPluginClass;
-
-struct _PlaylistDisplayPlugin {
-    AnjutaPlugin parent;
-    GtkTreeView *playlist_view;
-    GtkWidget *pl_window;
-    gint uiid;
-    GtkActionGroup *action_group;
-};
-
-struct _PlaylistDisplayPluginClass {
-    AnjutaPluginClass parent_class;
-};
-
-#endif /* PLUGIN_H_ */
+#endif

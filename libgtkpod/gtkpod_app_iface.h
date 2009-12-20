@@ -26,8 +26,8 @@
  |  $Id$
  */
 
-#ifndef GP_H_
-#define GP_H_
+#ifndef GTKPOD_APP_IFACE_H_
+#define GTKPOD_APP_IFACE_H_
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -64,15 +64,24 @@ enum {
 
 void CONF_NULL_HANDLER (gpointer d1, gpointer d2);
 
+enum
+{
+   PLAYLIST_SELECTED,
+   ITDB_UPDATED,
+   LAST_SIGNAL
+};
 
 typedef struct _GtkPodApp GtkPodApp; /* dummy object */
 typedef struct _GtkPodAppInterface GtkPodAppInterface;
 
 struct _GtkPodAppInterface {
     GTypeInterface g_iface;
-    /* The current itdb database, probably selected */
+    /* The current itdb database */
     iTunesDB *current_itdb;
+    /* pointer to the currently selected playlist */
+    Playlist *current_playlist;
 
+    void (*itdb_updated)(GtkPodApp *obj, iTunesDB *oldItdb, iTunesDB *newItbd);
     void (*statusbar_message)(GtkPodApp *obj, gchar* message, ...);
     void (*gtkpod_warning)(GtkPodApp *obj, gchar *message, ...);
     void (*gtkpod_warning_hig)(GtkPodApp *obj, GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text);
@@ -95,9 +104,14 @@ gint
         gtkpod_confirmation_simple(GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text, const gchar *accept_button_text);
 gint
         gtkpod_confirmation_hig(GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text, const gchar *accept_button_text, const gchar *cancel_button_text, const gchar *third_button_text, const gchar *help_context);
+iTunesDB* gtkpod_get_current_itdb();
+void gtkpod_set_current_itdb(iTunesDB* itdb);
+Playlist* gtkpod_get_current_playlist();
+void gtkpod_set_current_playlist(Playlist* playlist);
 
 /* full path to 'gtkpod.glade' */
 gchar *gtkpod_xml_file;
 GtkPodApp *gtkpod_app;
+guint gtkpod_app_signals[LAST_SIGNAL];
 
-#endif /* GP_H_ */
+#endif /* GTKPOD_APP_IFACE_H_ */

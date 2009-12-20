@@ -62,7 +62,7 @@ static GHashTable *id_hash = NULL;
 typedef struct {
     GtkWidget *window;
     GladeXML *window_xml;
-    gboolean  scrolled;
+    gboolean scrolled;
     gchar *option1_key;
     gboolean option1_invert;
     gchar *option2_key;
@@ -320,7 +320,8 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
     GtkWidget *dockbar;
     GtkAction* action;
     GList *plugins_dirs = NULL;
-    GdkGeometry size_hints = { 100, 100, 0, 0, 100, 100, 1, 1, 0.0, 0.0, GDK_GRAVITY_NORTH_WEST };
+    GdkGeometry size_hints =
+        { 100, 100, 0, 0, 100, 100, 1, 1, 0.0, 0.0, GDK_GRAVITY_NORTH_WEST };
 
     DEBUG_PRINT ("%s", "Initializing Anjuta...");
 
@@ -944,147 +945,129 @@ static gint anjuta_gtkpod_app_confirmation_hig(GtkPodApp *gtkpod_app, GtkMessage
     };
 }
 
-static void on_never_again_toggled (GtkToggleButton *t, gpointer id)
-{
+static void on_never_again_toggled(GtkToggleButton *t, gpointer id) {
     ConfData *cd;
 
-    cd = g_hash_table_lookup (id_hash, id);
-    if (cd)
-    {
-    if (cd->confirm_again_key)
-        prefs_set_int(cd->confirm_again_key, !gtk_toggle_button_get_active(t));
+    cd = g_hash_table_lookup(id_hash, id);
+    if (cd) {
+        if (cd->confirm_again_key)
+            prefs_set_int(cd->confirm_again_key, !gtk_toggle_button_get_active(t));
     }
 }
 
-static void on_option1_toggled (GtkToggleButton *t, gpointer id)
-{
+static void on_option1_toggled(GtkToggleButton *t, gpointer id) {
     ConfData *cd;
 
-    cd = g_hash_table_lookup (id_hash, id);
-    if (cd)
-    {
-    if (cd->option1_key)
-    {
-        gboolean state = gtk_toggle_button_get_active(t);
-        if (cd->option1_invert)  prefs_set_int (cd->option1_key, !state);
-        else                     prefs_set_int (cd->option1_key, state);
-    }
+    cd = g_hash_table_lookup(id_hash, id);
+    if (cd) {
+        if (cd->option1_key) {
+            gboolean state = gtk_toggle_button_get_active(t);
+            if (cd->option1_invert)
+                prefs_set_int(cd->option1_key, !state);
+            else
+                prefs_set_int(cd->option1_key, state);
+        }
     }
 }
 
-static void on_option2_toggled (GtkToggleButton *t, gpointer id)
-{
+static void on_option2_toggled(GtkToggleButton *t, gpointer id) {
     ConfData *cd;
 
-    cd = g_hash_table_lookup (id_hash, id);
-    if (cd)
-    {
-    if (cd->option2_key)
-    {
-        gboolean state = gtk_toggle_button_get_active(t);
-        if (cd->option2_invert)  prefs_set_int (cd->option2_key, !state);
-        else                     prefs_set_int (cd->option2_key, state);
-    }
+    cd = g_hash_table_lookup(id_hash, id);
+    if (cd) {
+        if (cd->option2_key) {
+            gboolean state = gtk_toggle_button_get_active(t);
+            if (cd->option2_invert)
+                prefs_set_int(cd->option2_key, !state);
+            else
+                prefs_set_int(cd->option2_key, state);
+        }
     }
 }
 
-static void cleanup (gpointer id)
-{
+static void cleanup(gpointer id) {
     ConfData *cd;
 
-    cd = g_hash_table_lookup (id_hash, id);
-    if (cd)
-    {
-    gint defx, defy;
-    gtk_window_get_size (GTK_WINDOW (cd->window), &defx, &defy);
-    if (cd->scrolled)
-    {
-        prefs_set_int("size_conf_sw.x", defx);
-        prefs_set_int("size_conf_sw.y", defy);
-    }
-    else
-    {
-        prefs_set_int("size_conf.x", defx);
-        prefs_set_int("size_conf.y", defy);
-    }
+    cd = g_hash_table_lookup(id_hash, id);
+    if (cd) {
+        gint defx, defy;
+        gtk_window_get_size(GTK_WINDOW (cd->window), &defx, &defy);
+        if (cd->scrolled) {
+            prefs_set_int("size_conf_sw.x", defx);
+            prefs_set_int("size_conf_sw.y", defy);
+        }
+        else {
+            prefs_set_int("size_conf.x", defx);
+            prefs_set_int("size_conf.y", defy);
+        }
 
-    gtk_widget_destroy (cd->window);
-    g_free (cd->option1_key);
-    g_free (cd->option2_key);
-    g_free (cd->confirm_again_key);
+        gtk_widget_destroy(cd->window);
+        g_free(cd->option1_key);
+        g_free(cd->option2_key);
+        g_free(cd->confirm_again_key);
 
-    g_hash_table_remove (id_hash, id);
+        g_hash_table_remove(id_hash, id);
     }
 }
 
-static void on_apply_clicked (GtkWidget *w, gpointer id)
-{
+static void on_apply_clicked(GtkWidget *w, gpointer id) {
     ConfData *cd;
 
-    cd = g_hash_table_lookup (id_hash, id);
-    if (cd)
-    {
-    gtk_widget_set_sensitive (cd->window, FALSE);
-    if (cd->apply_handler)
-        cd->apply_handler (cd->user_data1, cd->user_data2);
-    gtk_widget_set_sensitive (cd->window, TRUE);
+    cd = g_hash_table_lookup(id_hash, id);
+    if (cd) {
+        gtk_widget_set_sensitive(cd->window, FALSE);
+        if (cd->apply_handler)
+            cd->apply_handler(cd->user_data1, cd->user_data2);
+        gtk_widget_set_sensitive(cd->window, TRUE);
     }
 }
 
-
-static void on_ok_clicked (GtkWidget *w, gpointer id)
-{
+static void on_ok_clicked(GtkWidget *w, gpointer id) {
     ConfData *cd;
 
-    cd = g_hash_table_lookup (id_hash, id);
-    if (cd)
-    {
-    gtk_widget_set_sensitive (cd->window, FALSE);
-    if (cd->ok_handler)
-        cd->ok_handler (cd->user_data1, cd->user_data2);
-    cleanup (id);
+    cd = g_hash_table_lookup(id_hash, id);
+    if (cd) {
+        gtk_widget_set_sensitive(cd->window, FALSE);
+        if (cd->ok_handler)
+            cd->ok_handler(cd->user_data1, cd->user_data2);
+        cleanup(id);
     }
 }
 
-static void on_cancel_clicked (GtkWidget *w, gpointer id)
-{
+static void on_cancel_clicked(GtkWidget *w, gpointer id) {
     ConfData *cd;
 
-    cd = g_hash_table_lookup (id_hash, id);
-    if (cd)
-    {
-    gtk_widget_set_sensitive (cd->window, FALSE);
-    if (cd->cancel_handler)
-        cd->cancel_handler (cd->user_data1, cd->user_data2);
-    cleanup (id);
+    cd = g_hash_table_lookup(id_hash, id);
+    if (cd) {
+        gtk_widget_set_sensitive(cd->window, FALSE);
+        if (cd->cancel_handler)
+            cd->cancel_handler(cd->user_data1, cd->user_data2);
+        cleanup(id);
     }
 }
 
-static void on_response (GtkWidget *w, gint response, gpointer id)
-{
+static void on_response(GtkWidget *w, gint response, gpointer id) {
     ConfData *cd;
-/*     printf ("r: %d, i: %d\n", response, id); */
-    cd = g_hash_table_lookup (id_hash, id);
-    if (cd)
-    {
-    switch (response)
-    {
-    case GTK_RESPONSE_OK:
-        on_ok_clicked (w, id);
-        break;
-    case GTK_RESPONSE_NONE:
-    case GTK_RESPONSE_CANCEL:
-    case GTK_RESPONSE_DELETE_EVENT:
-        on_cancel_clicked (w, id);
-        break;
-    case GTK_RESPONSE_APPLY:
-        on_apply_clicked (w, id);
-        break;
-    default:
-        g_warning ("Programming error: resonse '%d' received in on_response()\n", response);
-        on_cancel_clicked (w, id);
-        break;
-    }
+    /*     printf ("r: %d, i: %d\n", response, id); */
+    cd = g_hash_table_lookup(id_hash, id);
+    if (cd) {
+        switch (response) {
+        case GTK_RESPONSE_OK:
+            on_ok_clicked(w, id);
+            break;
+        case GTK_RESPONSE_NONE:
+        case GTK_RESPONSE_CANCEL:
+        case GTK_RESPONSE_DELETE_EVENT:
+            on_cancel_clicked(w, id);
+            break;
+        case GTK_RESPONSE_APPLY:
+            on_apply_clicked(w, id);
+            break;
+        default:
+            g_warning ("Programming error: resonse '%d' received in on_response()\n", response);
+            on_cancel_clicked(w, id);
+            break;
+        }
     }
 }
 
@@ -1356,6 +1339,6 @@ static void gtkpod_app_iface_init(GtkPodAppInterface *iface) {
 }
 
 ANJUTA_TYPE_BEGIN(AnjutaApp, anjuta_app, GTK_TYPE_WINDOW);
-            ANJUTA_TYPE_ADD_INTERFACE(anjuta_shell, ANJUTA_TYPE_SHELL);
-            ANJUTA_TYPE_ADD_INTERFACE(gtkpod_app, GTKPOD_APP_TYPE);ANJUTA_TYPE_END
-;
+ANJUTA_TYPE_ADD_INTERFACE(anjuta_shell, ANJUTA_TYPE_SHELL);
+ANJUTA_TYPE_ADD_INTERFACE(gtkpod_app, GTKPOD_APP_TYPE);
+ANJUTA_TYPE_END;

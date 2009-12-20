@@ -1,4 +1,4 @@
 placesdir = $(pkgdatadir)/icons/hicolor/32x32/places
-places_DATA = playlist.png playlist-photo.png
+places_DATA = playlist_display-gtkpod-read.png playlist_display-playlist.png playlist_display-photo.png
 
 EXTRA_DIST = $(places_DATA)

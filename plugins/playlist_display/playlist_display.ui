@@ -1,9 +1,10 @@
 <!--*- xml -*-->
 <ui>
 	<menubar name="MenuMain">
-		<menu name="MenuFile" action="ActionMenuMusic">
+		<menu name="MenuMusic" action="ActionMenuMusic">
 			<placeholder name="PlaceholderMusicMenus">
 				<menuitem name="Load iPod(s)" action="ActionLoadiPod" />
+				<!--
 				<menuitem name="Save Changes" action="ActionSaveChanges" />
 				<menuitem name="Add Files" action="ActionAddFiles" />
 				<menuitem name="Add Directory" action="ActionAddDirectory" />
@@ -14,7 +15,13 @@
 					<menuitem name="Selected Tab Entry" action="ActionUpdateTabEntry" />
 					<menuitem name="Selected Tracks" action="ActionUpdateTracks" />
                 </menu>
+                -->
             </placeholder>
    		</menu>
 	</menubar>
+	<toolbar name="ToolbarMain">
+		<placeholder name="PlaceholderMusicToolbar">
+			<toolitem name="Load iPod(s)" action="ActionLoadiPod" />
+		</placeholder>
+	</toolbar>
 </ui>

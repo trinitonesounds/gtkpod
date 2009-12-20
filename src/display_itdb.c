@@ -384,61 +384,50 @@ void gp_itdb_remove(iTunesDB *itdb) {
 /* Also replaces @old_itdb in the itdbs GList and take care that the
  * displayed itdb gets replaced as well */
 void gp_replace_itdb(iTunesDB *old_itdb, iTunesDB *new_itdb) {
-    g_warning("gp_itdbc : gp_replace_itdb currently commented out\n");
-    //    ExtraiTunesDBData *new_eitdb;
-    //    Playlist *old_pl, *mpl;
-    //    GList *old_link;
-    //    gchar *old_pl_name = NULL;
-    //    gint pos = -1; /* default: add to the end */
-    //
-    //    g_return_if_fail (old_itdb);
-    //    g_return_if_fail (new_itdb);
-    //    g_return_if_fail (itdbs_head);
-    //
-    //    new_eitdb = new_itdb->userdata;
-    //    g_return_if_fail (new_eitdb);
-    //
-    //    old_link = g_list_find (itdbs_head->itdbs, old_itdb);
-    //    g_return_if_fail (old_link);
-    //
-    //    /* remember old selection */
-    //    old_pl = pm_get_selected_playlist ();
-    //    if (old_pl)
-    //    {   /* remember name of formerly selected playlist if it's in the
-    //	   same itdb */
-    //	if (old_pl->itdb == old_itdb)
-    //	    old_pl_name = g_strdup (old_pl->name);
-    //    }
-    //
-    //    /* get position of @old_itdb */
-    //    pos = pm_get_position_for_itdb (old_itdb);
-    //
-    //    /* remove @old_itdb (all playlists are removed if the MPL is
-    //       removed and add @new_itdb at its place */
-    //    pm_remove_playlist (itdb_playlist_mpl (old_itdb), FALSE);
-    //
-    //    /* replace old_itdb with new_itdb */
-    //    new_eitdb->itdbs_head = itdbs_head;
-    //    old_link->data = new_itdb;
-    //    /* free old_itdb */
-    //    gp_itdb_free (old_itdb);
-    //
-    //    /* display replacement */
-    //    pm_add_itdb (new_itdb, pos);
-    //
-    //    /* reselect old playlist if still available */
-    //    if (old_pl_name)
-    //    {
-    //	Playlist *pl = itdb_playlist_by_name (new_itdb, old_pl_name);
-    //	if (pl) pm_select_playlist (pl);
-    //    }
-    //
-    //    /* Set prefs system with name of MPL */
-    //    mpl = itdb_playlist_mpl (new_itdb);
-    //    set_itdb_prefs_string (new_itdb, "name", mpl->name);
-    //
-    //    /* Clean up */
-    //    g_free (old_pl_name);
+    ExtraiTunesDBData *new_eitdb;
+    Playlist *old_pl, *mpl;
+    GList *old_link;
+    gchar *old_pl_name = NULL;
+
+    g_return_if_fail (old_itdb);
+    g_return_if_fail (new_itdb);
+    g_return_if_fail (itdbs_head);
+
+    new_eitdb = new_itdb->userdata;
+    g_return_if_fail (new_eitdb);
+
+    old_link = g_list_find(itdbs_head->itdbs, old_itdb);
+    g_return_if_fail (old_link);
+
+    /* remember old selection */
+    old_pl = gtkpod_get_current_playlist();
+    if (old_pl) { /* remember name of formerly selected playlist if it's in the same itdb */
+        if (old_pl->itdb == old_itdb)
+            old_pl_name = g_strdup(old_pl->name);
+    }
+
+    /* replace old_itdb with new_itdb */
+    new_eitdb->itdbs_head = itdbs_head;
+    old_link->data = new_itdb;
+
+    /* Set prefs system with name of MPL */
+    mpl = itdb_playlist_mpl(new_itdb);
+    set_itdb_prefs_string(new_itdb, "name", mpl->name);
+
+    /* update ui */
+    g_signal_emit (gtkpod_app, gtkpod_app_signals[ITDB_UPDATED], 0, old_itdb, new_itdb);
+
+    /* reselect old playlist if still available */
+    if (old_pl_name) {
+        Playlist *pl = itdb_playlist_by_name(new_itdb, old_pl_name);
+        if (pl)
+            gtkpod_set_current_playlist(pl);
+    }
+
+    /* Clean up */
+    /* free old_itdb */
+    gp_itdb_free(old_itdb);
+    g_free(old_pl_name);
 }
 
 /* add playlist to itdb and to display */

@@ -59,13 +59,6 @@
 		<placeholder name="TestPlaceholder" />
 	</menubar>
 	<toolbar name="ToolbarMain">
-	  <placeholder name="PlaceholderFileToolbar" />
-	  <separator />
-	  <placeholder name="PlaceHolderBuild" />
-	  <separator />
-	  <placeholder name="PlaceHolderExecute" />
-	  <separator />
-	  <placeholder name="PlaceholderDebugToolbar" />
-	  <separator />
+	  <placeholder name="PlaceholderMusicToolbar" />
 	</toolbar>
 </ui>

@@ -47,11 +47,14 @@ typedef enum  {
 
 GtkTreeView* pm_create_treeview (void);
 void destroy_treeview(void);
+void pm_select_playlist(Playlist *playlist);
 void pm_set_selected_playlist(Playlist *pl);
 void pm_remove_all_playlists (gboolean clear_sort);
 void pm_add_all_itdbs (void);
 Playlist* pm_get_selected_playlist(void);
 
 void message_sb_no_itdb_selected ();
+void playlist_display_update_itdb_cb (GtkPodApp *app, gpointer olditdb, gpointer newitdb, gpointer data);
+void playlist_display_select_playlist_cb (GtkPodApp *app, gpointer pl, gpointer data);
 
 #endif /* __DISPLAY_PLAYLIST_H__ */

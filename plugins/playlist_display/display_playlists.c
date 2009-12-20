@@ -1,5 +1,6 @@
 /*
- |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+ |  Copyright (C) 2002-2010 Jorg Schuler <jcsjcs at users sourceforge net>
+ |                                          Paul Richardson <phantom_sf at users.sourceforge.net>
  |  Part of the gtkpod project.
  |
  |  URL: http://www.gtkpod.org/
@@ -36,8 +37,8 @@
 #include <gtk/gtk.h>
 #include <glib/gi18n-lib.h>
 #include "libgtkpod/gp_itdb.h"
+#include "plugin.h"
 #include "display_playlists.h"
-#include "stock_icons.h"
 #include "file_export.h"
 #include "libgtkpod/gp_private.h"
 #include "libgtkpod/file.h"
@@ -48,10 +49,6 @@
 
 /* pointer to the treeview for the playlist display */
 static GtkTreeView *playlist_treeview = NULL;
-/* pointer to the currently selected playlist */
-static Playlist *current_playlist = NULL;
-/* pointer to the currently selected itdb */
-static Itdb_iTunesDB *current_itdb = NULL;
 /* flag set if selection changes to be ignored temporarily */
 static gboolean pm_selection_blocked = FALSE;
 
@@ -912,6 +909,7 @@ void pm_remove_track(Playlist *playlist, Track *track) {
     g_return_if_fail (playlist);
     g_return_if_fail (track);
 
+    Playlist *current_playlist = gtkpod_get_current_playlist();
     /* notify sort tab if currently selected playlist is affected */
     if (current_playlist) { /* only remove if selected playlist is in same itdb as track */
         if (track->itdb == current_playlist->itdb) {
@@ -959,7 +957,7 @@ void pm_itdb_name_changed(Itdb_iTunesDB *itdb) {
  if it's in the currently displayed playlist, and if yes, we notify the
  first sort tab of a change */
 void pm_track_changed(Track *track) {
-    if (!current_playlist)
+    if (!gtkpod_get_current_playlist())
         return;
 
     //    coverart_track_changed(track, COVERART_CHANGE_SIGNAL);
@@ -1073,16 +1071,16 @@ void pm_remove_playlist(Playlist *playlist, gboolean select) {
 
     ts = gtk_tree_view_get_selection(playlist_treeview);
 
-    if (itdb_playlist_is_mpl(playlist) && (playlist->itdb == current_itdb)) { /* We are about to remove the entire itdb (playlist is MPL) and
+    if (itdb_playlist_is_mpl(playlist) && (playlist->itdb == gtkpod_get_current_itdb())) { /* We are about to remove the entire itdb (playlist is MPL) and
      * a playlist of this itdb is selected --> clear display
      * (pm_unselect_playlist probably works as well, but the
      * unselect won't be done until later (callback)) */
         //        gphoto_change_to_photo_window(FALSE);
         //        st_init(-1, 0);
-        current_playlist = NULL;
+        gtkpod_set_current_playlist(NULL);
     }
 
-    if (select && (current_playlist == playlist)) { /* We are about to delete the currently selected
+    if (select && (gtkpod_get_current_playlist() == playlist)) { /* We are about to delete the currently selected
      playlist. Try to select the next. */
         if (gtk_tree_selection_get_selected(ts, NULL, &select_iter)) {
             GtkTreePath *path = gtk_tree_model_get_path(model, &select_iter);
@@ -1135,14 +1133,21 @@ void pm_remove_all_playlists(gboolean clear_sort) {
 /* Select specified playlist */
 void pm_select_playlist(Playlist *playlist) {
     GtkTreeIter iter;
+    GtkTreeSelection *ts;
 
     g_return_if_fail (playlist_treeview);
-    g_return_if_fail (playlist);
 
-    if (pm_get_iter_for_playlist(playlist, &iter)) {
-        GtkTreeSelection *ts;
+    if (! playlist) {
+        ts = gtk_tree_view_get_selection(playlist_treeview);
+        gtk_tree_selection_unselect_all (ts);
+    }
+    else if (pm_get_iter_for_playlist(playlist, &iter)) {
         ts = gtk_tree_view_get_selection(playlist_treeview);
         gtk_tree_selection_select_iter(ts, &iter);
+    }
+
+    if (gtkpod_get_current_playlist() != playlist) {
+        gtkpod_set_current_playlist(playlist);
     }
 }
 
@@ -1181,8 +1186,8 @@ static gboolean pm_selection_changed_cb(gpointer data) {
     if (gtk_tree_selection_get_selected(selection, &model, &iter) == FALSE) { /* no selection -> reset sort tabs */
         //		gphoto_change_to_photo_window (FALSE);
         //		st_init (-1, 0);
-        current_playlist = NULL;
-        current_itdb = NULL;
+        gtkpod_set_current_playlist(NULL);
+        gtkpod_set_current_itdb(NULL);
     }
     else {
         Playlist *new_playlist = NULL;
@@ -1193,8 +1198,8 @@ static gboolean pm_selection_changed_cb(gpointer data) {
         /* handle new selection */
         gtk_tree_model_get(model, &iter, PM_COLUMN_TYPE, &type, PM_COLUMN_ITDB, &itdb, PM_COLUMN_PLAYLIST, &new_playlist, PM_COLUMN_PHOTOS, &photodb, -1);
 
-        current_playlist = new_playlist;
-        current_itdb = itdb;
+        gtkpod_set_current_playlist(new_playlist);
+        gtkpod_set_current_itdb(itdb);
 
         switch (type) {
         case PM_COLUMN_PLAYLIST:
@@ -1715,7 +1720,7 @@ void pm_set_playlist_renderer_pix(GtkCellRenderer *renderer, Playlist *playlist)
         stock_id = GTK_STOCK_PROPERTIES;
     }
     else if (!itdb_playlist_is_mpl(playlist)) {
-        stock_id = TUNES_PLAYLIST_ICON_STOCK_ID;
+        stock_id = PLAYLIST_DISPLAY_PLAYLIST_ICON_STOCK_ID;
     }
     else {
         if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
@@ -1743,14 +1748,10 @@ void pm_set_playlist_renderer_pix(GtkCellRenderer *renderer, Playlist *playlist)
  * @photodb: photodb to consider.
  */
 void pm_set_photodb_renderer_pix(GtkCellRenderer *renderer, Itdb_PhotoDB *photodb) {
-    const gchar *stock_id = NULL;
-
     g_return_if_fail (renderer);
     g_return_if_fail (photodb);
 
-    stock_id = GPHOTO_PLAYLIST_ICON_STOCK_ID;
-
-    g_object_set(G_OBJECT (renderer), "stock-id", stock_id, NULL);
+    g_object_set(G_OBJECT (renderer), "stock-id", PLAYLIST_DISPLAY_PHOTO_ICON_STOCK_ID, NULL);
     g_object_set(G_OBJECT (renderer), "stock-size", GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
 }
 
@@ -2121,7 +2122,7 @@ pm_get_selected_playlist(void) {
 
     /* playlist was just changed -- wait until current_playlist is
      updated. */
-    if (result != current_playlist)
+    if (result != gtkpod_get_current_playlist())
         result = NULL;
     return result;
 }
@@ -2147,14 +2148,14 @@ pm_get_selected_itdb(void) {
 
     /* playlist was just changed -- wait until current_playlist is
      updated. */
-    if (result != current_itdb)
+    if (result != gtkpod_get_current_itdb())
         result = NULL;
     return result;
 }
 
 /* use with care!! */
 void pm_set_selected_playlist(Playlist *pl) {
-    current_playlist = pl;
+    gtkpod_set_current_playlist(pl);
 }
 
 void pm_show_all_playlists() {
@@ -2169,4 +2170,40 @@ void pm_show_all_playlists() {
 
 void message_sb_no_itdb_selected() {
     gtkpod_statusbar_message(_("No database or playlist selected"));
+}
+
+/**
+ * playlist_display_update_itdb_cb:
+ *
+ * Callback for the itdb_updated signal emitted when an itdb is replaced in the gtkpod library.
+ * Designed to remove the old itdb and add the new itdb in its place.
+ *
+ * @app: instance of the gtkpod app currently loaded.
+ * @olditdb: pointer to the old itdb that should be removed from the display.
+ * @newitdb: pointer to the new itdb that should be added in place of the old itdb.
+ *
+ */
+void playlist_display_update_itdb_cb (GtkPodApp *app, gpointer olditdb, gpointer newitdb, gpointer data) {
+    gint pos = -1; /* default: add to the end */
+
+    g_return_if_fail (olditdb);
+    g_return_if_fail (newitdb);
+
+    iTunesDB *old_itdb = olditdb;
+    iTunesDB *new_itdb = newitdb;
+
+    /* get position of @old_itdb */
+    pos = pm_get_position_for_itdb(old_itdb);
+
+    /* remove @old_itdb (all playlists are removed if the MPL is
+     removed and add @new_itdb at its place */
+    pm_remove_playlist(itdb_playlist_mpl(old_itdb), FALSE);
+
+    /* display replacement */
+    pm_add_itdb(new_itdb, pos);
+}
+
+void playlist_display_select_playlist_cb (GtkPodApp *app, gpointer pl, gpointer data) {
+    Playlist *playlist = pl;
+    pm_select_playlist (playlist);
 }

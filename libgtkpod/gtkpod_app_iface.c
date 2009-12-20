@@ -26,13 +26,47 @@
  |  $Id$
  */
 
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
+
 #include "gtkpod_app_iface.h"
+#include "gtkpod_app-marshallers.h"
 #include <glib/gi18n-lib.h>
 
 static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
     static gboolean initialized = FALSE;
 
     if (!initialized) {
+        klass->current_itdb = NULL;
+        klass->current_playlist = NULL;
+
+        gtkpod_app_signals[PLAYLIST_SELECTED] = g_signal_new (
+                "playlist_selected",
+                G_OBJECT_CLASS_TYPE (klass),
+                G_SIGNAL_RUN_LAST,
+                0,
+                NULL, NULL,
+                g_cclosure_marshal_VOID__POINTER,
+                G_TYPE_NONE,
+                1,
+                G_TYPE_POINTER
+        );
+
+        gtkpod_app_signals[ITDB_UPDATED] = g_signal_new (
+                "itdb_updated",
+                G_OBJECT_CLASS_TYPE (klass),
+                G_SIGNAL_RUN_LAST,
+//            G_STRUCT_OFFSET (GtkPodAppInterface, itdb_updated),
+                0,
+                NULL, NULL,
+                _gtkpod_app_marshal_VOID__POINTER_POINTER,
+                G_TYPE_NONE,
+                2,
+                G_TYPE_POINTER,
+                G_TYPE_POINTER
+        );
+
         initialized = TRUE;
     }
 }
@@ -49,9 +83,8 @@ GType gtkpod_app_get_type(void) {
 }
 
 /* Handler to be used when the button should be displayed, but no
-   action is required */
-void CONF_NULL_HANDLER (gpointer d1, gpointer d2)
-{
+ action is required */
+void CONF_NULL_HANDLER(gpointer d1, gpointer d2) {
     return;
 }
 
@@ -73,33 +106,65 @@ void gtkpod_warning(gchar* message, ...) {
     va_end (args);
 }
 
-void gtkpod_warning_simple (const gchar *format, ...)
-{
+void gtkpod_warning_simple(const gchar *format, ...) {
     va_list arg;
     gchar *text;
 
     va_start (arg, format);
-    text = g_strdup_vprintf (format, arg);
+    text = g_strdup_vprintf(format, arg);
     va_end (arg);
 
-    gtkpod_warning_hig (GTK_MESSAGE_WARNING, _("Warning"), text);
-    g_free (text);
+    gtkpod_warning_hig(GTK_MESSAGE_WARNING, _("Warning"), text);
+    g_free(text);
 }
 
-void gtkpod_warning_hig(GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text)
-{
+void gtkpod_warning_hig(GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
     GTKPOD_APP_GET_INTERFACE (gtkpod_app)->gtkpod_warning_hig(gtkpod_app, icon, primary_text, secondary_text);
 }
 
 GtkResponseType gtkpod_confirmation(gint id, gboolean modal, const gchar *title, const gchar *label, const gchar *text, const gchar *option1_text, CONF_STATE option1_state, const gchar *option1_key, const gchar *option2_text, CONF_STATE option2_state, const gchar *option2_key, gboolean confirm_again, const gchar *confirm_again_key, ConfHandler ok_handler, ConfHandler apply_handler, ConfHandler cancel_handler, gpointer user_data1, gpointer user_data2) {
+    g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), -1);
     return GTKPOD_APP_GET_INTERFACE (gtkpod_app)->gtkpod_confirmation(gtkpod_app, id, modal, title, label, text, option1_text, option1_state, option1_key, option2_text, option2_state, option2_key, confirm_again, confirm_again_key, ok_handler, apply_handler, cancel_handler, user_data1, user_data2);
 }
 
 gint gtkpod_confirmation_simple(GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text, const gchar *accept_button_text) {
+    g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), -1);
     return gtkpod_confirmation_hig(icon, primary_text, secondary_text, accept_button_text, NULL, NULL, NULL);
 }
 
 gint gtkpod_confirmation_hig(GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text, const gchar *accept_button_text, const gchar *cancel_button_text, const gchar *third_button_text, const gchar *help_context) {
+    g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), -1);
     return GTKPOD_APP_GET_INTERFACE (gtkpod_app)->gtkpod_confirmation_hig(gtkpod_app, icon, primary_text, secondary_text, accept_button_text, cancel_button_text, third_button_text, help_context);
+}
+
+iTunesDB* gtkpod_get_current_itdb() {
+    g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), NULL);
+    return GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_itdb;
+}
+
+void gtkpod_set_current_itdb(iTunesDB* itdb) {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_itdb = itdb;
+
+    if (! itdb) // If setting itdb to null then set playlist to null too
+        gtkpod_set_current_playlist(NULL);
+
+    if (itdb && g_list_index(itdb->playlists, gtkpod_get_current_playlist()) == -1)
+        // if playlist is not in itdb then set it to null
+        gtkpod_set_current_playlist(NULL);
+}
+
+Playlist* gtkpod_get_current_playlist() {
+    g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), NULL);
+    return GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_playlist;
+}
+
+void gtkpod_set_current_playlist(Playlist* playlist) {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_playlist = playlist;
+    if (playlist) // if playlist not null then set its itdb as current
+        gtkpod_set_current_itdb(playlist->itdb);
+
+    g_signal_emit (gtkpod_app, gtkpod_app_signals[PLAYLIST_SELECTED], 0, playlist);
 }
