@@ -1,7 +1,7 @@
 /* config.h.in.  Generated from configure.in by autoheader.  */
 
 /* always defined to indicate that i18n is enabled */
-#cmakedefine ENABLE_NLS
+#define ENABLE_NLS
 
 /* "Gettext package name" */
 #cmakedefine GETTEXT_PACKAGE "@GETTEXT_PACKAGE@"
@@ -45,24 +45,6 @@
 /* Name of package */
 #cmakedefine PACKAGE "@PACKAGE@"
 
-/* Define to the address where bug reports for this package should be sent. */
-#cmakedefine PACKAGE_BUGREPORT "@PACKAGE_BUGREPORT@"
-
-/* Define to the full name of this package. */
-#cmakedefine PACKAGE_NAME "@PACKAGE_NAME@"
-
-/* Define to the full name and version of this package. */
-#cmakedefine PACKAGE_STRING "@PACKAGE_STRING@"
-
-/* Define to the one symbol short name of this package. */
-#cmakedefine PACKAGE_TARNAME "@PACKAGE_TARNAME@"
-
-/* Define to the home page for this package. */
-#cmakedefine PACKAGE_URL "@PACKAGE_URL@"
-
-/* Define to the version of this package. */
-#cmakedefine PACKAGE_VERSION "@PACKAGE_VERSION@"
-
 /* Define to the package data directory. */
 #cmakedefine PACKAGE_DATA_DIR "@PACKAGE_DATA_DIR@"
 
@@ -74,8 +56,3 @@
 
 /* Version number of package */
 #cmakedefine VERSION "@VERSION@"
-
-/* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
-   `char[]'. */
-#cmakedefine YYTEXT_POINTER
-
