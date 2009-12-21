@@ -14,7 +14,7 @@ set(PACKAGE ${CMAKE_PROJECT_NAME})
 set(VERSION 0.99.14)
 set(GETTEXT_PACKAGE ${CMAKE_PROJECT_NAME})
 set(PACKAGE_DATA_DIR ${CMAKE_INSTALL_PREFIX}/share)
-set(PACKAGE_LOCALE_DIR ${PACKAGE_DATA_DIR}/${PACKAGE}/locale)
+set(PACKAGE_LOCALE_DIR ${PACKAGE_DATA_DIR}/locale)
 
 option(USE_CLANG "Use clang instead of gcc to compile" OFF)
 option(USE_LOCAL_DATA_FILES
@@ -127,9 +127,17 @@ add_definitions(
 )
 
 configure_file(${CMAKE_SOURCE_DIR}/cmake/config.h.in
-    ${CMAKE_BINARY_DIR}/config.h)
+    ${CMAKE_BINARY_DIR}/config.h @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/data/man/gtkpod.1.in
+    ${CMAKE_BINARY_DIR}/gtkpod.1 @ONLY)
 
-include(cmake/sources.cmake)
+set(INTLTOOL_MERGE_EXECUTABLE ${CMAKE_SOURCE_DIR}/cmake/intltool-merge)
+
+ADD_CUSTOM_TARGET(desktopfile ALL ${INTLTOOL_MERGE_EXECUTABLE} -d
+    ${CMAKE_SOURCE_DIR}/po ${CMAKE_SOURCE_DIR}/data/gtkpod.desktop.in
+    ${CMAKE_BINARY_DIR}/gtkpod.desktop)
+
+include(sources)
 add_executable(gtkpod ${GTKPOD_SOURCES})
 
 target_link_libraries(gtkpod
@@ -140,3 +148,7 @@ target_link_libraries(gtkpod
     ${ID3TAG_LDFLAGS}
     ${OPT_LIBS}
 )
+
+include(Po)
+compile_po_files(po GTKPOD_LOCALES)
+include(install)
