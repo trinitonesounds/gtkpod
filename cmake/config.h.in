@@ -1,0 +1,68 @@
+/* config.h.in.  Generated from configure.in by autoheader.  */
+
+/* always defined to indicate that i18n is enabled */
+#cmakedefine ENABLE_NLS
+
+/* "Gettext package name" */
+#cmakedefine GETTEXT_PACKAGE @GETTEXT_PACKAGE@
+
+/* Define if you have curl support */
+#cmakedefine HAVE_CURL
+
+/* Define if you have the flac library */
+#cmakedefine HAVE_FLAC
+
+/* Define to 1 if you have the `getopt_long_only' function. */
+#cmakedefine HAVE_GETOPT_LONG_ONLY
+
+/* Define if you have gnome-vfs support */
+#cmakedefine HAVE_GNOME_VFS
+
+/* Define if you have HAL support */
+#cmakedefine HAVE_HAL
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#cmakedefine HAVE_INTTYPES_H
+
+/* Define if you have the ogg/vorbis library */
+#cmakedefine HAVE_LIBVORBISFILE
+
+/* Define to 1 if you have the `statvfs' function. */
+#cmakedefine HAVE_STATVFS
+
+/* Define to 1 if you have the <string.h> header file. */
+#define HAVE_STRING_H 1
+
+/* Set this to the libgpod version */
+#cmakedefine LIBGPOD_VERSION @LIBGPOD_VERSION@
+
+/* Name of package */
+#cmakedefine PACKAGE @CMAKE_PROJECT_NAME@
+
+/* Define to the address where bug reports for this package should be sent. */
+#cmakedefine PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#cmakedefine PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#cmakedefine PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#cmakedefine PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#cmakedefine PACKAGE_URL
+
+/* Define to the version of this package. */
+#cmakedefine PACKAGE_VERSION
+
+/* Define to 1 if you have the ANSI C header files. */
+#define STDC_HEADERS 1
+
+/* Version number of package */
+#cmakedefine VERSION
+
+/* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
+   `char[]'. */
+#cmakedefine YYTEXT_POINTER
