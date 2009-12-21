@@ -1,0 +1,557 @@
+<?xml version="1.0"?>
+<!--*- mode: xml -*-->
+<interface>
+  <object class="GtkListStore" id="model1">
+    <columns>
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">Insert before</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Insert after</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="model2">
+    <columns>
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col comments="These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!" id="0" translatable="yes">iPod</col>
+      </row>
+      <row>
+        <col comments="These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!" id="0" translatable="yes">Local Repository (Standard)</col>
+      </row>
+      <row>
+        <col comments="These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!" id="0" translatable="yes">Local Repository (Podcasts)</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkWindow" id="create_repository_window">
+    <property name="visible">True</property>
+    <property name="title" translatable="yes">Create Repository</property>
+    <property name="modal">True</property>
+    <property name="skip_taskbar_hint">True</property>
+    <child>
+      <object class="GtkVBox" id="vbox170">
+        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+        <property name="visible">True</property>
+        <property name="border_width">6</property>
+        <property name="spacing">2</property>
+        <child>
+          <object class="GtkVBox" id="vbox39">
+            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkTable" id="table46">
+                <property name="visible">True</property>
+                <property name="border_width">6</property>
+                <property name="n_rows">7</property>
+                <property name="n_columns">3</property>
+                <property name="column_spacing">12</property>
+                <property name="row_spacing">6</property>
+                <child>
+                  <object class="GtkHBox" id="hbox165">
+                    <property name="visible">True</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">6</property>
+                    <property name="bottom_attach">7</property>
+                    <property name="x_options"/>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox163">
+                    <property name="visible">True</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
+                    <property name="x_options"/>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox162">
+                    <property name="visible">True</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="x_options"/>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox161">
+                    <property name="visible">True</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="x_options"/>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox160">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkButton" id="crw_mountpoint_button">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <child>
+                          <object class="GtkHBox" id="hbox133">
+                            <property name="visible">True</property>
+                            <property name="spacing">2</property>
+                            <child>
+                              <object class="GtkImage" id="image5">
+                                <property name="visible">True</property>
+                                <property name="stock">gtk-directory</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label69">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Browse...</property>
+                              </object>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
+                    <property name="x_options"/>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox159">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkComboBox" id="crw_repository_combo">
+                        <property name="visible">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">6</property>
+                    <property name="bottom_attach">7</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox157">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkComboBox" id="crw_insert_before_after_combo">
+                        <property name="visible">True</property>
+                        <property name="model">model1</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="renderer1"/>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="top_attach">6</property>
+                    <property name="bottom_attach">7</property>
+                    <property name="x_options">GTK_EXPAND</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox156">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkLabel" id="crw_local_path_label">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Path:</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox155">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkLabel" id="crw_ipod_model_label">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Model:</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox154">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkLabel" id="crw_backup_label">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">iTunesDB backup:</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox153">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkLabel" id="crw_mountpoint_label">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">iPod mountpoint:</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox152">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkLabel" id="crw_repository_name_label">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Repository name:</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox151">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkLabel" id="crw_repository_type_label">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Repository type:</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox150">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkComboBox" id="crw_repository_type_combo">
+                        <property name="visible">True</property>
+                        <property name="model">model2</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="renderer2"/>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBoxEntry" id="crw_ipod_model_combo">
+                    <property name="visible">True</property>
+                    <child internal-child="entry">
+                      <object class="GtkEntry" id="crw_ipod_model_entry">
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="crw_repository_name_entry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="tooltip-text" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
+                    <property name="invisible_char">*</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="crw_local_path_button">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <child>
+                      <object class="GtkHBox" id="hbox167">
+                        <property name="visible">True</property>
+                        <property name="spacing">2</property>
+                        <child>
+                          <object class="GtkImage" id="image8">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-directory</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label74">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Browse...</property>
+                          </object>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                    <property name="x_options"/>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="crw_backup_button">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <child>
+                      <object class="GtkHBox" id="hbox166">
+                        <property name="visible">True</property>
+                        <property name="spacing">2</property>
+                        <child>
+                          <object class="GtkImage" id="image7">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-directory</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label73">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Browse...</property>
+                          </object>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="right_attach">3</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                    <property name="x_options"/>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="crw_mountpoint_entry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">*</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="crw_backup_entry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="editable">False</property>
+                    <property name="invisible_char">*</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="crw_local_path_entry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="editable">False</property>
+                    <property name="invisible_char">*</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkHButtonBox" id="hbuttonbox16">
+            <property name="visible">True</property>
+            <property name="spacing">6</property>
+            <property name="layout_style">GTK_BUTTONBOX_END</property>
+            <child>
+              <object class="GtkButton" id="crw_cancel_button">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="label">gtk-cancel</property>
+                <property name="use_stock">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="crw_ok_button">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="label">gtk-add</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

@@ -1,0 +1,1522 @@
+<?xml version="1.0"?>
+<interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy toplevel-contextual -->
+  <object class="GtkWindow" id="gtkpod">
+    <property name="title" translatable="yes">gtkpod iPod Manager</property>
+    <property name="default_width">600</property>
+    <property name="default_height">500</property>
+    <property name="icon">gtkpod-icon-48.png</property>
+    <signal name="configure_event" handler="on_gtkpod_configure_event"/>
+    <signal name="delete_event" handler="on_gtkpod_delete_event"/>
+    <child>
+      <object class="GtkVBox" id="vbox1">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkMenuBar" id="menubar">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkMenuItem" id="menuitem10">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Music</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="menuitem10_menu">
+                    <child>
+                      <object class="GtkImageMenuItem" id="load_ipods_mi">
+                        <property name="label">_Load iPod(s)</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="on_load_ipods_mi"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="save_changes_mi">
+                        <property name="label">_Save Changes</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <accelerator key="s" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                        <signal name="activate" handler="on_save_changes_mi"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="add_files1">
+                        <property name="label">Add _Files</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="create_add_files_callback"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="add_directory1">
+                        <property name="label">Add Fol_der</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="dirbrowser_create_callback"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="add_playlist1">
+                        <property name="label">Add _Playlist</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="create_add_playlists_callback"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separator3">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="update_menu">
+                        <property name="label">_Update Tracks from File</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu" id="update_menu_menu">
+                            <child>
+                              <object class="GtkMenuItem" id="update_playlist_menu">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Playlist</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_update_playlist_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="update_tab_entry_menu">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Tab _Entry</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_update_tab_entry_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="update_tracks_menu">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_update_tracks_activate"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mserv_from_file_menu">
+                        <property name="label">Update _mserv Data from File</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu" id="mserv_from_file_menu_menu">
+                            <child>
+                              <object class="GtkMenuItem" id="mserv_from_file_playlist_menu">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Playlist</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_mserv_from_file_playlist_menu_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="mserv_from_file_entry_menu">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Tab _Entry</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_mserv_from_file_entry_menu_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="mserv_from_file_tracks_menu">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_mserv_from_file_tracks_menu_activate"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="sync_menu">
+                        <property name="label">_Synchronize Playlist with Dir(s)</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="on_sync_playlist_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separator6">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="export_menu">
+                        <property name="label">_Export Tracks from Database</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu" id="export_menu_menu">
+                            <child>
+                              <object class="GtkMenuItem" id="export_playlist">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Playlist</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_export_playlist_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="export_tab_entry_menu">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Tab _Entry</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_export_tab_entry_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="export_tracks">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_export_tracks_activate"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="create_playlist_file_menu">
+                        <property name="label">Create _Playlist File</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu" id="create_playlist_file_menu_menu">
+                            <child>
+                              <object class="GtkMenuItem" id="playlist_file_playlist">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Playlist</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_playlist_file_playlist_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="playlist_file_tab_entry">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Tab _Entry</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_playlist_file_tab_entry_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="playlist_file_tracks">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_playlist_file_tracks_activate"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="trennlinie6">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="ipod_directories">
+                        <property name="label">_Create iPod's Directories</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="on_ipod_directories_menu"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="check_ipod_files_mi">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Check iPod's Files</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_check_ipod_files_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="trennlinie3">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="quit1">
+                        <property name="label">gtk-quit</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="on_quit1_activate"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="edit_menu">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Edit</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="edit_menu_menu">
+                    <child>
+                      <object class="GtkImageMenuItem" id="edit_details_menu">
+                        <property name="label">Edit Track Details</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu" id="edit_details_menu_menu">
+                            <child>
+                              <object class="GtkMenuItem" id="edit_details_selected_playlist">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Tracks in Selected _Playlist</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_edit_details_selected_playlist"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="edit_details_selected_tab_entry">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Tracks in Selected Tab _Entry</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_edit_details_selected_tab_entry"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="edit_details_selected_tracks">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_edit_details_selected_tracks"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="edit_smart_playlist">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Edit Smart Playlist</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_edit_smart_playlist"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="delete_menu">
+                        <property name="label">_Delete</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu" id="delete_menu_menu">
+                            <child>
+                              <object class="GtkMenuItem" id="delete_selected_playlist">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected playlist</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_delete_selected_playlist"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="delete_selected_playlist_including_tracks_from_ipod">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Playlist Including Tracks from iPod</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_delete_selected_playlist_including_tracks_from_ipod"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="delete_selected_playlist_including_tracks_from_database">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Playlist Including Tracks from Database</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_delete_selected_playlist_including_tracks_from_database"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="delete_selected_playlist_including_tracks_from_harddisk">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Playlist Including Tracks from Hard Disk</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_delete_selected_playlist_including_tracks_from_harddisk"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSeparatorMenuItem" id="delete_separator1">
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="delete_selected_entry_from_playlist">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Filter Tab Entry from Playlist</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_delete_selected_entry_from_playlist"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="delete_selected_entry_from_ipod">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Filter Tab Entry from iPod</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_delete_selected_entry_from_ipod"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="delete_selected_entry_from_database">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Filter Tab Entry from Database</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_delete_selected_entry_from_database"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="delete_selected_entry_from_harddisk">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Filter Tab Entry from Hard Disk</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_delete_selected_entry_from_harddisk"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSeparatorMenuItem" id="delete_separator2">
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="delete_selected_tracks_from_playlist">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Tracks from Playlist</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_delete_selected_tracks_from_playlist"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="delete_selected_tracks_from_ipod">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Tracks from iPod</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_delete_selected_tracks_from_ipod"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="delete_selected_tracks_from_database">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Tracks from Database</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_delete_selected_tracks_from_database"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="delete_selected_tracks_from_harddisk">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Tracks from Hard Disk</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_delete_selected_tracks_from_harddisk"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separator7">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="create_playlists_menu">
+                        <property name="label">_Create Playlists</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu" id="create_playlists_menu_menu">
+                            <child>
+                              <object class="GtkImageMenuItem" id="new_playlist1">
+                                <property name="label">Empty Playlist</property>
+                                <property name="visible">True</property>
+                                <property name="use_underline">True</property>
+                                <property name="use_stock">True</property>
+                                <signal name="activate" handler="on_new_playlist1_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="smart_playlist">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Smart Playlist</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_smart_playlist_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSeparatorMenuItem" id="separator8">
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="random_playlist">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Random Playlist from Displayed Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_random_playlist_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="pl_containing_displayed_tracks">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Containing Displayed Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_pl_containing_displayed_tracks_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="pl_containing_selected_tracks">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Containing Selected Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_pl_containing_selected_tracks_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSeparatorMenuItem" id="menuitem2">
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="most_rated_tracks">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Best Rated Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_most_rated_tracks_playlist_s1_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="most_listened_tracks">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Tracks Most Often Listened To</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_most_listened_tracks1_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="most_recent_played_tracks">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Most Recently Played Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_most_recent_played_tracks_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="played_since_last_time1">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">All Tracks Played Since Last Time</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_played_since_last_time1_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="all_tracks_never_listened_to1">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">All Tracks Never Listened To</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_all_tracks_never_listened_to1_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="all_tracks_not_listed_in_any_playlist1">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">All Tracks not Listed in any Playlist</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_all_tracks_not_listed_in_any_playlist1_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSeparatorMenuItem" id="menuitem3">
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="pl_for_each_artist">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">One for each Artist</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_pl_for_each_artist_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="pl_for_each_album">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">One for each Album</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_pl_for_each_album_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="pl_for_each_genre">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">One for each Genre</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_pl_for_each_genre_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="pl_for_each_composer">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">One for each Composer</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_pl_for_each_composer_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="pl_for_each_year">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">One for each Year</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_pl_for_each_year_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="pl_for_each_rating">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">One for each Rating</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_pl_for_each_rating_activate"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separator1">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="sorting1">
+                        <property name="label">_Sorting</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="on_sorting_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="randomize_current_playlist_menu">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Randomize Current Playlist</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_randomize_current_playlist_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="save_track_order_menu">
+                        <property name="label">_Save Displayed Track Order</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <accelerator key="s" signal="activate" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
+                        <signal name="activate" handler="on_save_track_order1_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separator2">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="edit_repository_options">
+                        <property name="label">Repository/iPod Options</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="on_edit_repository_options_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="preferences_exp">
+                        <property name="label">gtk-preferences</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <accelerator key="p" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                        <signal name="activate" handler="open_prefs_dlg"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="item1">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_View</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="item1_menu">
+                    <child>
+                      <object class="GtkCheckMenuItem" id="toolbar_menu">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Toolbar</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_toolbar_menu_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkCheckMenuItem" id="filterbar_menu">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Filter Bar</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_filterbar_menu_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkCheckMenuItem" id="tooltips_menu">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Tooltips</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_tooltips_menu_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="menuitem4">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkCheckMenuItem" id="info_window_menu">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Info Window</property>
+                        <property name="use_underline">True</property>
+                        <accelerator key="i" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                        <signal name="activate" handler="on_info_window1_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkCheckMenuItem" id="view_conversion_log">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Conversion Log</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_conversion_log1_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="menuitem1">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="more_sort_tabs">
+                        <property name="label">_More Filter Tabs</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="on_more_sort_tabs_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="less_sort_tabs">
+                        <property name="label">_Fewer Filter Tabs</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="on_less_sort_tabs_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="arrange_sort_tabs">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Arrange Filter Tabs</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_arrange_sort_tabs_activate"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="tools1">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Tools</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="tools1_menu">
+                    <child>
+                      <object class="GtkImageMenuItem" id="play_menu">
+                        <property name="label">_Play Now</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu" id="play_menu_menu">
+                            <child>
+                              <object class="GtkMenuItem" id="play_playlist_menu">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Playlist</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_play_playlist_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="play_tab_entry_menu">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Tab _Entry</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_play_tab_entry_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="play_tracks_menu">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_play_tracks_activate"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="enqueue_menu">
+                        <property name="label">_Enqueue</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu" id="enqueue_menu_menu">
+                            <child>
+                              <object class="GtkMenuItem" id="enqueue_playlist_menu">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Playlist</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_enqueue_playlist_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="enqueue_tab_entry_menu">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Tab _Entry</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_enqueue_tab_entry_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="enqueue_tracks_menu">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_enqueue_tracks_activate"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="trennlinie4">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="normalize_tracks1">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Normalize Volume</property>
+                        <property name="use_underline">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu" id="normalize_tracks1_menu">
+                            <child>
+                              <object class="GtkMenuItem" id="normalize_selected_playlist">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Playlist</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_normalize_selected_playlist_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="normalize_selected_tab_entry">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected Tab _Entry</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_normalize_selected_tab_entry_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="normalize_selected_tracks">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Selected _Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_normalize_selected_tracks_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="normalize_displayed_tracks">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">_Displayed Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_normalize_displayed_tracks_activate"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="normalize_all_tracks">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">_All Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_normalize_all_tracks"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="normalize_newly_added_tracks">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">_Newly Added Tracks</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_normalize_newly_added_tracks"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="trennlinie5">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="sync_all">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Synchronize All</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_sync_all_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="sync_contacts">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Synchronize Contacts</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_sync_contacts_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="sync_calendar">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Synchronize Calendar</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_sync_calendar_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="sync_notes">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Synchronize Notes</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_sync_notes_activate"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="menuitem13">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Help</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="menuitem13_menu">
+                    <child>
+                      <object class="GtkImageMenuItem" id="help_contents">
+                        <property name="label">_Contents</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <accelerator key="F1" signal="activate"/>
+                        <signal name="activate" handler="open_help_contents"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem1">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="help_online">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Get Help _Online</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="open_help_online"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="help_reportbug">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Report a _Problem</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="open_help_reportbug"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem2">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="about1">
+                        <property name="label">_About gtkpod</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="open_about_window"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolbar" id="toolbar">
+            <property name="visible">True</property>
+            <property name="toolbar_style">both</property>
+            <child>
+              <object class="GtkToolButton" id="load_ipods_button">
+                <property name="visible">True</property>
+                <property name="is_important">True</property>
+                <property name="label" translatable="yes">Load iPod(s)</property>
+                <property name="use_underline">True</property>
+                <signal name="clicked" handler="on_load_ipods_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="save_changes_button">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Save Changes</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-save</property>
+                <signal name="clicked" handler="on_save_changes_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparatorToolItem" id="separatortoolitem1">
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="add_files_button">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Add Files</property>
+                <property name="use_underline">True</property>
+                <signal name="clicked" handler="create_add_files_callback"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="add_dirs_button">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Add Folder</property>
+                <property name="use_underline">True</property>
+                <signal name="clicked" handler="dirbrowser_create_callback"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="add_PL_button">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Add Playlist</property>
+                <property name="use_underline">True</property>
+                <signal name="clicked" handler="create_add_playlists_callback"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparatorToolItem" id="separatortoolitem2">
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkMenuToolButton" id="new_PL_button">
+                <property name="visible">True</property>
+                <property name="is_important">True</property>
+                <property name="label" translatable="yes">New Playlist</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-new</property>
+                <property name="menu">create_playlists_menu_menu</property>
+                <signal name="clicked" handler="on_new_playlist_button"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHPaned" id="paned0">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="position">235</property>
+            <signal name="button_release_event" handler="on_paned0_button_release_event"/>
+            <child>
+              <object class="GtkVBox" id="vbox2">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkScrolledWindow" id="playlist_window">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hscrollbar_policy">automatic</property>
+                    <property name="vscrollbar_policy">automatic</property>
+                    <property name="shadow_type">in</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="cover_visible_control_box">
+                    <property name="height_request">23</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkLabel" id="lbl_albumart">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Album Art</property>
+                        <property name="justify">center</property>
+                      </object>
+                      <packing>
+                        <property name="padding">2</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="cover_down_button">
+                        <property name="width_request">25</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="relief">none</property>
+                        <signal name="clicked" handler="on_cover_down_button_clicked"/>
+                        <child>
+                          <object class="GtkArrow" id="arrow1">
+                            <property name="width_request">22</property>
+                            <property name="visible">True</property>
+                            <property name="arrow_type">down</property>
+                            <property name="shadow_type">none</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="pack_type">end</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="cover_up_button">
+                        <property name="width_request">25</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="relief">none</property>
+                        <signal name="clicked" handler="on_cover_up_button_clicked"/>
+                        <child>
+                          <object class="GtkArrow" id="arrow2">
+                            <property name="visible">True</property>
+                            <property name="arrow_type">up</property>
+                            <property name="shadow_type">none</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="pack_type">end</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkVBox" id="cover_display_window">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkHBox" id="cover_display_canvasbox">
+                        <property name="visible">True</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkHBox" id="cover_display_controlbox">
+                        <property name="visible">True</property>
+                        <property name="spacing">2</property>
+                        <child>
+                          <object class="GtkButton" id="cover_display_leftbutton">
+                            <property name="label" translatable="yes">&lt;</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="relief">none</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkHScale" id="cover_display_scaler">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="digits">0</property>
+                            <property name="draw_value">False</property>
+                          </object>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="cover_display_rightbutton">
+                            <property name="label" translatable="yes">&gt;</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="relief">none</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">False</property>
+                <property name="shrink">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkVBox" id="main_vbox">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkVPaned" id="paned1">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="position">320</property>
+                    <child>
+                      <object class="GtkVBox" id="vbox29">
+                        <property name="visible">True</property>
+                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkHBox" id="searchbar_hpanel">
+                            <property name="visible">True</property>
+                            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                            <property name="border_width">6</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkLabel" id="current_playlist_label">
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">&lt;span weight='bold' size='larger'&gt;No playlist selected&lt;/span&gt;</property>
+                                <property name="use_markup">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="search_entry">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                                <property name="width_chars">20</property>
+                                <signal name="changed" handler="on_search_entry_changed"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="pack_type">end</property>
+                                <property name="position">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label22">
+                                <property name="visible">True</property>
+                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                                <property name="label" translatable="yes">Filter:</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="pack_type">end</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="searchbar_down_button">
+                                <property name="width_request">25</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="relief">none</property>
+                                <signal name="clicked" handler="on_searchbar_down_button_clicked"/>
+                                <child>
+                                  <object class="GtkArrow" id="arrow4">
+                                    <property name="width_request">22</property>
+                                    <property name="visible">True</property>
+                                    <property name="arrow_type">down</property>
+                                    <property name="shadow_type">none</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="pack_type">end</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="track_window">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="hscrollbar_policy">never</property>
+                            <property name="vscrollbar_policy">automatic</property>
+                            <property name="shadow_type">in</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="resize">True</property>
+                        <property name="shrink">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkScrolledWindow" id="paned1_dummy">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hscrollbar_policy">automatic</property>
+                        <property name="vscrollbar_policy">automatic</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="resize">True</property>
+                        <property name="shrink">True</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">True</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHBox" id="hbox77">
+            <property name="visible">True</property>
+            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+            <child>
+              <object class="GtkHPaned" id="paned2">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <child>
+                  <object class="GtkStatusbar" id="gtkpod_status">
+                    <property name="width_request">300</property>
+                    <property name="visible">True</property>
+                    <property name="border_width">1</property>
+                    <property name="has_resize_grip">False</property>
+                  </object>
+                  <packing>
+                    <property name="resize">True</property>
+                    <property name="shrink">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHPaned" id="paned3">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="position">130</property>
+                    <child>
+                      <object class="GtkStatusbar" id="space_statusbar">
+                        <property name="width_request">150</property>
+                        <property name="visible">True</property>
+                        <property name="border_width">1</property>
+                        <property name="has_resize_grip">False</property>
+                      </object>
+                      <packing>
+                        <property name="resize">True</property>
+                        <property name="shrink">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkStatusbar" id="tracks_statusbar">
+                        <property name="width_request">175</property>
+                        <property name="visible">True</property>
+                        <property name="border_width">1</property>
+                        <property name="has_resize_grip">False</property>
+                      </object>
+                      <packing>
+                        <property name="resize">True</property>
+                        <property name="shrink">True</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="resize">True</property>
+                    <property name="shrink">True</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="searchbar_up_button">
+                <property name="width_request">25</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="relief">none</property>
+                <signal name="clicked" handler="on_searchbar_up_button_clicked"/>
+                <child>
+                  <object class="GtkArrow" id="arrow6">
+                    <property name="visible">True</property>
+                    <property name="arrow_type">up</property>
+                    <property name="shadow_type">none</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="pack_type">end</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

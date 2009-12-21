@@ -51,3 +51,5 @@ set(GTKPOD_SOURCES
     src/tools.c
     src/wavfile.c
 )
+
+add_flex_files(GTKPOD_SOURCES src/date_parser.l src/date_parser2.l)

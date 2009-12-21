@@ -1756,31 +1756,51 @@ void gtkpod_init (int argc, char *argv[])
     {
 	static const gchar *SEPsrcSEPgtkpod = G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S "gtkpod";
 
-	if (!g_path_is_absolute (progname))
-	{
-	    gchar *cur_dir = g_get_current_dir ();
-	    gchar *prog_absolute;
+    if (!g_path_is_absolute (progname))
+    {
+        gchar *cur_dir = g_get_current_dir ();
+        gchar *prog_absolute;
 
-	    if (g_str_has_prefix (progname, "." G_DIR_SEPARATOR_S))
-		prog_absolute = g_build_filename (cur_dir,progname+2,NULL);
-	    else
-		prog_absolute = g_build_filename (cur_dir,progname,NULL);
-	    g_free (progname);
-	    g_free (cur_dir);
-	    progname = prog_absolute;
-	}
+        if (g_str_has_prefix (progname, "." G_DIR_SEPARATOR_S))
+            prog_absolute = g_build_filename (cur_dir,progname+2,NULL);
+        else
+            prog_absolute = g_build_filename (cur_dir,progname,NULL);
 
-	if (g_str_has_suffix (progname, SEPsrcSEPgtkpod))
-	{
-	    gchar *suffix = g_strrstr (progname, SEPsrcSEPgtkpod);
-	    if (suffix)
-	    {
-		*suffix = 0;
-		xml_file = g_build_filename (progname, "data", "gtkpod.glade", NULL);
-	    }
-	}
+        g_free (progname);
+        g_free (cur_dir);
+        progname = prog_absolute;
+    }
+
+    if (g_str_has_suffix (progname, SEPsrcSEPgtkpod))
+    {
+        gchar *suffix = g_strrstr (progname, SEPsrcSEPgtkpod);
+
+        if (suffix)
+        {
+            *suffix = 0;
+            xml_file = g_build_filename (progname, "data", "gtkpod.glade", NULL);
+        }
+    }
+
+    if (!xml_file)
+    {
+        gchar *prog_path = g_path_get_dirname (progname);
+        gchar *cmake_file = g_build_filename (prog_path, "CMakeCache.txt", NULL);
+
+        if (g_file_test (cmake_file, G_FILE_TEST_EXISTS))
+        {
+            gchar *source_root = g_path_get_dirname (prog_path);
+            xml_file = g_build_filename(source_root, "data", "gtkpod.glade", NULL);
+            g_free (source_root);
+        }
+
+        g_free (cmake_file);
+        g_free (prog_path);
+    }
+
 	g_free (progname);
-	if (xml_file && !g_file_test (xml_file, G_FILE_TEST_EXISTS))
+
+    if (xml_file && !g_file_test (xml_file, G_FILE_TEST_EXISTS))
 	{
 	    g_free (xml_file);
 	    xml_file = NULL;
