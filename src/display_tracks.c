@@ -1598,18 +1598,19 @@ tm_get_selected_trackids(void)
     return(result);
 }
 
+static    gboolean
+on_all_trackids_list_foreach (GtkTreeModel *tm, GtkTreePath *tp,
+			      GtkTreeIter *i, gpointer data)
+{
+    on_trackids_list_foreach (tm, tp, i, data);
+    return FALSE;
+}
+
 /* return a list containing the track IDs of all tracks currently being
    displayed */
 GList *
 tm_get_all_trackids(void)
 {
-    gboolean
-	on_all_trackids_list_foreach (GtkTreeModel *tm, GtkTreePath *tp,
-				      GtkTreeIter *i, gpointer data)
-	{
-	    on_trackids_list_foreach (tm, tp, i, data);
-	    return FALSE;
-	}
     GList *result = NULL;
     GtkTreeModel *model;
 
@@ -1656,15 +1657,15 @@ tm_get_selected_tracks(void)
 
 
 
-    /* used by tm_get_all_tracks */
-    static gboolean on_all_tracks_list_foreach (GtkTreeModel *tm,
-						GtkTreePath *tp,
-						GtkTreeIter *i,
-						gpointer data)
-    {
-	on_tracks_list_foreach (tm, tp, i, data);
-	return FALSE;
-    }
+/* used by tm_get_all_tracks */
+static gboolean on_all_tracks_list_foreach (GtkTreeModel *tm,
+					GtkTreePath *tp,
+					GtkTreeIter *i,
+					gpointer data)
+{
+on_tracks_list_foreach (tm, tp, i, data);
+return FALSE;
+}
 
 
 /* return a list containing pointers to all tracks currently being

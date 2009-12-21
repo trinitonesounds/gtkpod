@@ -868,25 +868,34 @@ static void check_db_danglingok1(gpointer user_data1, gpointer user_data2) {
     release_widgets();
 }
 
+static void glist_list_tracks (GList * tlist, GString * str)
+{
+	    if (str==NULL)
+	    {
+		fprintf(stderr, "Report the bug please: shouldn't be NULL at %s:%d\n",__FILE__,__LINE__);
+		return;
+	    }
+	    /* traverse the list and append to the str */
+	    for (tlist = g_list_first(tlist);
+		 tlist != NULL;
+		 tlist = g_list_next(tlist))
+	    {
+		ExtraTrackData *etr;
+		Track *track = tlist->data;
+		g_return_if_fail (track);
+		etr = track->userdata;
+		g_return_if_fail (etr);
+		g_string_append_printf
+		    (str,"%s(%d) %s-%s -> %s\n",_("Track"),
+		     track->id, track->artist,  track->title,  etr->pc_path_utf8);
+	    }
+} /* end of glist_list_tracks */
+
 /* checks iTunesDB for presence of dangling links and checks IPODs
  * Music directory on subject of orphaned files */
-void check_db(iTunesDB *itdb) {
+void check_db (iTunesDB *itdb)
+{
 
-    void glist_list_tracks(GList * tlist, GString * str) {
-        if (str == NULL) {
-            fprintf(stderr, "Report the bug please: shouldn't be NULL at %s:%d\n", __FILE__, __LINE__);
-            return;
-        }
-        /* traverse the list and append to the str */
-        for (tlist = g_list_first(tlist); tlist != NULL; tlist = g_list_next(tlist)) {
-            ExtraTrackData *etr;
-            Track *track = tlist->data;
-            g_return_if_fail (track);
-            etr = track->userdata;
-            g_return_if_fail (etr);
-            g_string_append_printf(str, "%s(%d) %s-%s -> %s\n", _("Track"), track->id, track->artist, track->title, etr->pc_path_utf8);
-        }
-    } /* end of glist_list_tracks */
 
     GTree *files_known = NULL;
     GDir *dir_des = NULL;
