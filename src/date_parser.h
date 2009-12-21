@@ -35,7 +35,7 @@
 
 #include <gtk/gtk.h>
 #include <time.h>
-#include <display.h>
+#include "display.h"
 
 /* Set to "1" if debugging output is desired */
 #define DP_DEBUG 0

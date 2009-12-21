@@ -1797,7 +1797,7 @@ static gboolean transfer_tracks (iTunesDB *itdb, TransferData *td)
 	    GTK_DIALOG_DESTROY_WITH_PARENT,
 	    GTK_MESSAGE_WARNING,
 	    GTK_BUTTONS_OK,
-	    buf);
+	    "%s", buf);
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (dialog);
 	g_free (buf);

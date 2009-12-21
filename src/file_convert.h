@@ -36,7 +36,7 @@
 #   include <config.h>
 #endif
 
-#include <itdb.h>
+#include "itdb.h"
 
 extern const gchar *FILE_CONVERT_CACHEDIR;
 extern const gchar *FILE_CONVERT_MAXDIRSIZE;

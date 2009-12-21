@@ -1142,7 +1142,7 @@ on_ipod_directories_menu               (GtkMenuItem     *menuitem,
 		GTK_DIALOG_DESTROY_WITH_PARENT,
 		GTK_MESSAGE_WARNING,
 		GTK_BUTTONS_OK,
-		str);
+		"%s", str);
 	    gtk_dialog_run (GTK_DIALOG (dialog));
 	    gtk_widget_destroy (dialog);
 	    g_free (str);
@@ -1180,7 +1180,7 @@ on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
 		GTK_DIALOG_DESTROY_WITH_PARENT,
 		GTK_MESSAGE_WARNING,
 		GTK_BUTTONS_OK,
-		str);
+		"%s", str);
 	    gtk_dialog_run (GTK_DIALOG (dialog));
 	    gtk_widget_destroy (dialog);
 	    g_free (str);

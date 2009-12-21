@@ -4,7 +4,7 @@
 #cmakedefine ENABLE_NLS
 
 /* "Gettext package name" */
-#cmakedefine GETTEXT_PACKAGE @GETTEXT_PACKAGE@
+#cmakedefine GETTEXT_PACKAGE "@GETTEXT_PACKAGE@"
 
 /* Define if you have curl support */
 #cmakedefine HAVE_CURL
@@ -22,7 +22,13 @@
 #cmakedefine HAVE_HAL
 
 /* Define to 1 if you have the <inttypes.h> header file. */
-#cmakedefine HAVE_INTTYPES_H
+#cmakedefine HAVE_INTTYPES_H 1
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#cmakedefine HAVE_STDINT_H 1
+
+/* Define to 1 if you have the <string.h> header file. */
+#define HAVE_STRING_H 1
 
 /* Define if you have the ogg/vorbis library */
 #cmakedefine HAVE_LIBVORBISFILE
@@ -34,35 +40,42 @@
 #define HAVE_STRING_H 1
 
 /* Set this to the libgpod version */
-#cmakedefine LIBGPOD_VERSION @LIBGPOD_VERSION@
+#cmakedefine LIBGPOD_VERSION "@LIBGPOD_VERSION@"
 
 /* Name of package */
-#cmakedefine PACKAGE @CMAKE_PROJECT_NAME@
+#cmakedefine PACKAGE "@PACKAGE@"
 
 /* Define to the address where bug reports for this package should be sent. */
-#cmakedefine PACKAGE_BUGREPORT
+#cmakedefine PACKAGE_BUGREPORT "@PACKAGE_BUGREPORT@"
 
 /* Define to the full name of this package. */
-#cmakedefine PACKAGE_NAME
+#cmakedefine PACKAGE_NAME "@PACKAGE_NAME@"
 
 /* Define to the full name and version of this package. */
-#cmakedefine PACKAGE_STRING
+#cmakedefine PACKAGE_STRING "@PACKAGE_STRING@"
 
 /* Define to the one symbol short name of this package. */
-#cmakedefine PACKAGE_TARNAME
+#cmakedefine PACKAGE_TARNAME "@PACKAGE_TARNAME@"
 
 /* Define to the home page for this package. */
-#cmakedefine PACKAGE_URL
+#cmakedefine PACKAGE_URL "@PACKAGE_URL@"
 
 /* Define to the version of this package. */
-#cmakedefine PACKAGE_VERSION
+#cmakedefine PACKAGE_VERSION "@PACKAGE_VERSION@"
+
+/* Define to the package data directory. */
+#cmakedefine PACKAGE_DATA_DIR "@PACKAGE_DATA_DIR@"
+
+/* Define to the package locale directory. */
+#cmakedefine PACKAGE_LOCALE_DIR "@PACKAGE_LOCALE_DIR@"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#cmakedefine VERSION
+#cmakedefine VERSION "@VERSION@"
 
 /* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
    `char[]'. */
 #cmakedefine YYTEXT_POINTER
+

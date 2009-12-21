@@ -154,7 +154,7 @@ gint get_sort_tab_number (gchar *text)
 	GTK_DIALOG_DESTROY_WITH_PARENT,
 	GTK_MESSAGE_QUESTION,
 	GTK_BUTTONS_OK_CANCEL,
-	text);
+	"%s", text);
 
     dialog = GTK_DIALOG (mdialog);
 

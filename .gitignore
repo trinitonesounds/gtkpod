@@ -12,8 +12,10 @@ cscope.out
 /.cdtproject
 /.project
 /.settings
+/CMakeLists.txt.user
 /aclocal.m4
 /autom4te.cache
+/cmake-build
 /config.guess
 /config.h
 /config.h.in
