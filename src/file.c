@@ -1513,8 +1513,7 @@ void display_non_updated(Track *track, gchar *txt) {
             g_string_free(str, TRUE);
         str = NULL;
         track_nr = 0;
-        g_warning("TODO file:display_non_updated - status\n");
-        //       gtkpod_tracks_statusbar_update();
+        gtkpod_tracks_statusbar_update();
     }
     else if (prefs_get_int("show_non_updated") && track) {
         /* add info about it to str */
@@ -1573,8 +1572,7 @@ void display_updated(Track *track, gchar *txt) {
             g_string_free(str, TRUE);
         str = NULL;
         track_nr = 0;
-        g_warning("TODO file:display_updated - status needed\n");
-        //       gtkpod_tracks_statusbar_update();
+        gtkpod_tracks_statusbar_update();
     }
     else if (prefs_get_int("show_updated") && track) {
         /* add info about it to str */
@@ -1633,8 +1631,7 @@ void display_mserv_problems(Track *track, gchar *txt) {
             g_string_free(str, TRUE);
         str = NULL;
         track_nr = 0;
-        g_warning("TODO file:display_mserv_problems - status\n");
-        //       gtkpod_tracks_statusbar_update();
+        gtkpod_tracks_statusbar_update();
     }
     else if (prefs_get_int("mserv_use") && prefs_get_int("mserv_report_probs") && track) {
         /* add info about it to str */
@@ -2013,8 +2010,7 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
             ++count;
             if (count >= 10) /* update every ten tracks added */
             {
-                g_warning("TODO file:add_track_by_filename - status needed\n");
-                //	      gtkpod_tracks_statusbar_update();
+                gtkpod_tracks_statusbar_update();
                 count = 0;
             }
         }

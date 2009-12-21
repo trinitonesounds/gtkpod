@@ -203,8 +203,7 @@ void generate_category_playlists(iTunesDB *itdb, T_item cat) {
             g_free(category);
         }
     }
-    g_warning("TODO generate_category_playlists - status\n");
-    //    gtkpod_tracks_statusbar_update();
+    gtkpod_tracks_statusbar_update();
 }
 
 /* Generate a new playlist containing all the tracks currently
@@ -391,11 +390,9 @@ Playlist *generate_playlist_with_name(iTunesDB *itdb, GList *tracks, gchar *pl_n
         }
     }
     else { /* n==0 */
-        g_warning("TODO generate_playlist_with_name - status\n");
-        //	gtkpod_statusbar_message (_("No tracks available, playlist not created"));
+        gtkpod_statusbar_message(_("No tracks available, playlist not created"));
     }
-    g_warning("TODO generate_playlist_with_name - status update\n");
-    //    gtkpod_tracks_statusbar_update();
+    gtkpod_tracks_statusbar_update();
     return new_pl;
 }
 
@@ -868,34 +865,25 @@ static void check_db_danglingok1(gpointer user_data1, gpointer user_data2) {
     release_widgets();
 }
 
-static void glist_list_tracks (GList * tlist, GString * str)
-{
-	    if (str==NULL)
-	    {
-		fprintf(stderr, "Report the bug please: shouldn't be NULL at %s:%d\n",__FILE__,__LINE__);
-		return;
-	    }
-	    /* traverse the list and append to the str */
-	    for (tlist = g_list_first(tlist);
-		 tlist != NULL;
-		 tlist = g_list_next(tlist))
-	    {
-		ExtraTrackData *etr;
-		Track *track = tlist->data;
-		g_return_if_fail (track);
-		etr = track->userdata;
-		g_return_if_fail (etr);
-		g_string_append_printf
-		    (str,"%s(%d) %s-%s -> %s\n",_("Track"),
-		     track->id, track->artist,  track->title,  etr->pc_path_utf8);
-	    }
+static void glist_list_tracks(GList * tlist, GString * str) {
+    if (str == NULL) {
+        fprintf(stderr, "Report the bug please: shouldn't be NULL at %s:%d\n", __FILE__, __LINE__);
+        return;
+    }
+    /* traverse the list and append to the str */
+    for (tlist = g_list_first(tlist); tlist != NULL; tlist = g_list_next(tlist)) {
+        ExtraTrackData *etr;
+        Track *track = tlist->data;
+        g_return_if_fail (track);
+        etr = track->userdata;
+        g_return_if_fail (etr);
+        g_string_append_printf(str, "%s(%d) %s-%s -> %s\n", _("Track"), track->id, track->artist, track->title, etr->pc_path_utf8);
+    }
 } /* end of glist_list_tracks */
 
 /* checks iTunesDB for presence of dangling links and checks IPODs
  * Music directory on subject of orphaned files */
-void check_db (iTunesDB *itdb)
-{
-
+void check_db(iTunesDB *itdb) {
 
     GTree *files_known = NULL;
     GDir *dir_des = NULL;
@@ -904,7 +892,8 @@ void check_db (iTunesDB *itdb)
     gchar *ipod_filename = NULL;
 #   define localdebug  0      /* may be later becomes more general verbose param */
     Playlist* pl_orphaned = NULL;
-    GList * l_dangling[2] = { NULL, NULL }; /* 2 kinds of dangling tracks: with approp
+    GList * l_dangling[2] =
+        { NULL, NULL }; /* 2 kinds of dangling tracks: with approp
      * files and without */
     /* 1 - Original file is present on PC and has the same sha1*/
     /* 0 - Doesn't exist */
@@ -947,10 +936,8 @@ void check_db (iTunesDB *itdb)
     //    gtkpod_statusbar_timeout (30*STATUSBAR_TIMEOUT);
     block_widgets();
 
-    g_warning("TODO check_db - status\n");
-    //    gtkpod_statusbar_message(_("Creating a tree of known files"));
-    g_warning("TODO check_db - status update\n");
-    //    gtkpod_tracks_statusbar_update();
+    gtkpod_statusbar_message(_("Creating a tree of known files"));
+    gtkpod_tracks_statusbar_update();
 
     /* put all files in the hash table */
     files_known = g_tree_new_full(str_cmp, NULL, treeKeyDestroy, treeValueDestroy);
@@ -989,9 +976,8 @@ void check_db (iTunesDB *itdb)
         g_strfreev(tokens);
     }
 
-    g_warning("TODO check_db - status update\n");
-    //    gtkpod_statusbar_message(_("Checking iPOD files against known files in DB"));
-    //    gtkpod_tracks_statusbar_update();
+    gtkpod_statusbar_message(_("Checking iPOD files against known files in DB"));
+    gtkpod_tracks_statusbar_update();
     process_gtk_events_blocked();
 
     music_dir = itdb_get_music_dir(mountpoint);
@@ -1023,7 +1009,8 @@ void check_db (iTunesDB *itdb)
                     gchar *num_str = g_strdup_printf("F%02d", h);
                     Track *dupl_track;
 
-                    const gchar *p_dcomps[] = { num_str, ipod_filename, NULL };
+                    const gchar *p_dcomps[] =
+                        { num_str, ipod_filename, NULL };
 
                     fn_orphaned = itdb_resolve_path(music_dir, p_dcomps);
 
@@ -1076,12 +1063,8 @@ void check_db (iTunesDB *itdb)
     }
 
     ndangling = g_tree_nnodes(files_known);
-    g_warning("TODO check_db - status\n");
-    //    gtkpod_statusbar_message (_("Found %d orphaned and %d dangling files. Processing..."),
-    //			      norphaned, ndangling);
-
-    g_warning("TODO check_db - status update\n");
-    //    gtkpod_tracks_statusbar_update();
+    gtkpod_statusbar_message(_("Found %d orphaned and %d dangling files. Processing..."), norphaned, ndangling);
+    gtkpod_tracks_statusbar_update();
 
     g_free(music_dir);
     music_dir = NULL;

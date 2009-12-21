@@ -35,7 +35,6 @@
 #include <stdlib.h>
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
-#include <glib/gi18n-lib.h>
 #include "libgtkpod/gp_itdb.h"
 #include "plugin.h"
 #include "display_playlists.h"
@@ -53,10 +52,19 @@ static GtkTreeView *playlist_treeview = NULL;
 static gboolean pm_selection_blocked = FALSE;
 
 /* Drag and drop definitions */
-static GtkTargetEntry
-        pm_drag_types[] = { { DND_GTKPOD_PLAYLISTLIST_TYPE, 0, DND_GTKPOD_PLAYLISTLIST }, { "text/uri-list", 0, DND_TEXT_URI_LIST }, { "text/plain", 0, DND_TEXT_PLAIN }, { "STRING", 0, DND_TEXT_PLAIN } };
-static GtkTargetEntry
-        pm_drop_types[] = { { DND_GTKPOD_PLAYLISTLIST_TYPE, 0, DND_GTKPOD_PLAYLISTLIST }, { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST }, { "text/uri-list", 0, DND_TEXT_URI_LIST }, { "text/plain", 0, DND_TEXT_PLAIN }, { "STRING", 0, DND_TEXT_PLAIN } };
+static GtkTargetEntry pm_drag_types[] =
+    {
+        { DND_GTKPOD_PLAYLISTLIST_TYPE, 0, DND_GTKPOD_PLAYLISTLIST },
+        { "text/uri-list", 0, DND_TEXT_URI_LIST },
+        { "text/plain", 0, DND_TEXT_PLAIN },
+        { "STRING", 0, DND_TEXT_PLAIN } };
+static GtkTargetEntry pm_drop_types[] =
+    {
+        { DND_GTKPOD_PLAYLISTLIST_TYPE, 0, DND_GTKPOD_PLAYLISTLIST },
+        { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },
+        { "text/uri-list", 0, DND_TEXT_URI_LIST },
+        { "text/plain", 0, DND_TEXT_PLAIN },
+        { "STRING", 0, DND_TEXT_PLAIN } };
 
 static void pm_rows_reordered(void);
 static GtkTreePath *pm_get_path_for_itdb(Itdb_iTunesDB *itdb);
@@ -128,8 +136,7 @@ static gboolean pm_drag_drop(GtkWidget *widget, GdkDragContext *drag_context, gi
 static void pm_drag_end(GtkWidget *widget, GdkDragContext *drag_context, gpointer user_data) {
     /*     puts ("drag_end"); */
     gp_remove_autoscroll_row_timeout(widget);
-    g_warning("pm_drag_end - status\n");
-    //    gtkpod_tracks_statusbar_update();
+    gtkpod_tracks_statusbar_update();
 }
 
 static void pm_drag_leave(GtkWidget *widget, GdkDragContext *drag_context, guint time, gpointer user_data) {
@@ -1137,9 +1144,9 @@ void pm_select_playlist(Playlist *playlist) {
 
     g_return_if_fail (playlist_treeview);
 
-    if (! playlist) {
+    if (!playlist) {
         ts = gtk_tree_view_get_selection(playlist_treeview);
-        gtk_tree_selection_unselect_all (ts);
+        gtk_tree_selection_unselect_all(ts);
     }
     else if (pm_get_iter_for_playlist(playlist, &iter)) {
         ts = gtk_tree_view_get_selection(playlist_treeview);
@@ -1246,7 +1253,7 @@ static gboolean pm_selection_changed_cb(gpointer data) {
             //		    st_enable_disable_view_sort (0, TRUE);
             //		    st_add_track (NULL, TRUE, TRUE, 0);
             //		}
-            //		gtkpod_tracks_statusbar_update();
+            gtkpod_tracks_statusbar_update();
             break;
         case PM_COLUMN_PHOTOS:
             g_return_val_if_fail (photodb, FALSE);
@@ -2183,7 +2190,7 @@ void message_sb_no_itdb_selected() {
  * @newitdb: pointer to the new itdb that should be added in place of the old itdb.
  *
  */
-void playlist_display_update_itdb_cb (GtkPodApp *app, gpointer olditdb, gpointer newitdb, gpointer data) {
+void playlist_display_update_itdb_cb(GtkPodApp *app, gpointer olditdb, gpointer newitdb, gpointer data) {
     gint pos = -1; /* default: add to the end */
 
     g_return_if_fail (olditdb);
@@ -2203,7 +2210,7 @@ void playlist_display_update_itdb_cb (GtkPodApp *app, gpointer olditdb, gpointer
     pm_add_itdb(new_itdb, pos);
 }
 
-void playlist_display_select_playlist_cb (GtkPodApp *app, gpointer pl, gpointer data) {
+void playlist_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data) {
     Playlist *playlist = pl;
-    pm_select_playlist (playlist);
+    pm_select_playlist(playlist);
 }

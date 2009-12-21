@@ -95,6 +95,7 @@ GType gtkpod_app_get_type(void);
 
 void gp_init(GtkPodApp *window, int argc, char *argv[]);
 void gtkpod_statusbar_message(gchar* message, ...);
+void gtkpod_tracks_statusbar_update(void);
 void gtkpod_warning(gchar* message, ...);
 void gtkpod_warning_simple (const gchar *format, ...);
 void gtkpod_warning_hig(GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text);

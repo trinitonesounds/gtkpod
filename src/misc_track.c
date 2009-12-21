@@ -240,8 +240,7 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
        str = NULL;
        removed = FALSE;
        deltrack_nr = 0;
-       g_warning("TODO misc_track:gp_duplicate_remove - status\n");
-//       gtkpod_tracks_statusbar_update();
+       gtkpod_tracks_statusbar_update();
    }
 
    if (oldtrack && track)

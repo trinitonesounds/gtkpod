@@ -719,8 +719,7 @@ static iTunesDB *gp_merge_itdb(iTunesDB *old_itdb) {
         itdb_spl_update_live(new_itdb);
     }
 
-    g_warning("TODO - gp_merge_itdb status\n");
-    //    gtkpod_tracks_statusbar_update();
+    gtkpod_tracks_statusbar_update();
 
     return new_itdb;
 }

@@ -41,31 +41,12 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
         klass->current_itdb = NULL;
         klass->current_playlist = NULL;
 
-        gtkpod_app_signals[PLAYLIST_SELECTED] = g_signal_new (
-                "playlist_selected",
-                G_OBJECT_CLASS_TYPE (klass),
-                G_SIGNAL_RUN_LAST,
-                0,
-                NULL, NULL,
-                g_cclosure_marshal_VOID__POINTER,
-                G_TYPE_NONE,
-                1,
-                G_TYPE_POINTER
-        );
+        gtkpod_app_signals[PLAYLIST_SELECTED]
+                = g_signal_new("playlist_selected", G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
-        gtkpod_app_signals[ITDB_UPDATED] = g_signal_new (
-                "itdb_updated",
-                G_OBJECT_CLASS_TYPE (klass),
-                G_SIGNAL_RUN_LAST,
-//            G_STRUCT_OFFSET (GtkPodAppInterface, itdb_updated),
-                0,
-                NULL, NULL,
-                _gtkpod_app_marshal_VOID__POINTER_POINTER,
-                G_TYPE_NONE,
-                2,
-                G_TYPE_POINTER,
-                G_TYPE_POINTER
-        );
+        gtkpod_app_signals[ITDB_UPDATED] = g_signal_new("itdb_updated", G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST,
+        //            G_STRUCT_OFFSET (GtkPodAppInterface, itdb_updated),
+        0, NULL, NULL, _gtkpod_app_marshal_VOID__POINTER_POINTER, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
 
         initialized = TRUE;
     }
@@ -74,8 +55,8 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
 GType gtkpod_app_get_type(void) {
     static GType type = 0;
     if (!type) {
-        static const GTypeInfo
-                info = { sizeof(GtkPodAppInterface), (GBaseInitFunc) gtkpod_app_base_init, NULL, NULL, NULL, NULL, 0, 0, NULL };
+        static const GTypeInfo info =
+            { sizeof(GtkPodAppInterface), (GBaseInitFunc) gtkpod_app_base_init, NULL, NULL, NULL, NULL, 0, 0, NULL };
         type = g_type_register_static(G_TYPE_INTERFACE, "GtkPodAppInterface", &info, 0);
         g_type_interface_add_prerequisite(type, G_TYPE_OBJECT);
     }
@@ -95,6 +76,25 @@ void gtkpod_statusbar_message(gchar* message, ...) {
 
     GTKPOD_APP_GET_INTERFACE (gtkpod_app)->statusbar_message(gtkpod_app, message, args);
     va_end (args);
+}
+
+void gtkpod_tracks_statusbar_update(void) {
+    gchar *buf;
+    Playlist *pl;
+    pl = gtkpod_get_current_playlist();
+    /* select of which iTunesDB data should be displayed */
+    if (pl) {
+        iTunesDB *itdb = pl->itdb;
+        gint trknr = g_list_length(pl->members);
+        g_return_if_fail (itdb);
+
+        buf = g_strdup_printf(_(" P:%d T:%d/%d"), itdb_playlists_number(itdb) - 1, trknr, itdb_tracks_number(itdb));
+    }
+    else {
+        buf = g_strdup("");
+    }
+    gtkpod_statusbar_message(buf);
+    g_free(buf);
 }
 
 void gtkpod_warning(gchar* message, ...) {
@@ -147,7 +147,7 @@ void gtkpod_set_current_itdb(iTunesDB* itdb) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
     GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_itdb = itdb;
 
-    if (! itdb) // If setting itdb to null then set playlist to null too
+    if (!itdb) // If setting itdb to null then set playlist to null too
         gtkpod_set_current_playlist(NULL);
 
     if (itdb && g_list_index(itdb->playlists, gtkpod_get_current_playlist()) == -1)
@@ -166,5 +166,5 @@ void gtkpod_set_current_playlist(Playlist* playlist) {
     if (playlist) // if playlist not null then set its itdb as current
         gtkpod_set_current_itdb(playlist->itdb);
 
-    g_signal_emit (gtkpod_app, gtkpod_app_signals[PLAYLIST_SELECTED], 0, playlist);
+    g_signal_emit(gtkpod_app, gtkpod_app_signals[PLAYLIST_SELECTED], 0, playlist);
 }

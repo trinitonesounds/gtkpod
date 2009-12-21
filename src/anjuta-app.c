@@ -897,13 +897,13 @@ static void anjuta_shell_iface_init(AnjutaShellIface *iface) {
  * -------------------------------------------------------------------------
  */
 static void anjuta_gtkpod_app_statusbar_message(GtkPodApp *gtkpod_app, gchar* message, ...) {
-    g_return_if_fail(! ANJUTA_IS_APP(gtkpod_app));
+    g_return_if_fail(ANJUTA_IS_APP(gtkpod_app));
     AnjutaStatus *status = anjuta_shell_get_status(ANJUTA_SHELL(gtkpod_app), NULL);
     anjuta_status_push(status, "%s", message);
 }
 
 static void anjuta_gtkpod_app_warning(GtkPodApp *gtkpod_app, gchar *message, ...) {
-    g_return_if_fail(! GTK_IS_WINDOW(gtkpod_app));
+    g_return_if_fail(GTK_IS_WINDOW(gtkpod_app));
     anjuta_util_dialog_warning(GTK_WINDOW(gtkpod_app), message);
 }
 
@@ -918,7 +918,7 @@ static void anjuta_gtkpod_app_warning_hig(GtkPodApp *gtkpod_app, GtkMessageType 
 }
 
 static gint anjuta_gtkpod_app_confirmation_hig(GtkPodApp *gtkpod_app, GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text, const gchar *accept_button_text, const gchar *cancel_button_text, const gchar *third_button_text, const gchar *help_context) {
-    g_return_val_if_fail(! GTK_IS_WINDOW(gtkpod_app), GTK_RESPONSE_CANCEL);
+    g_return_val_if_fail(GTK_IS_WINDOW(gtkpod_app), GTK_RESPONSE_CANCEL);
 
     gint result;
 
