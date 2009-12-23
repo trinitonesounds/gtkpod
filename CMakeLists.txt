@@ -133,7 +133,7 @@ configure_file(${CMAKE_SOURCE_DIR}/data/man/gtkpod.1.in
 
 set(INTLTOOL_MERGE_EXECUTABLE ${CMAKE_SOURCE_DIR}/cmake/intltool-merge)
 
-ADD_CUSTOM_TARGET(desktopfile ALL ${INTLTOOL_MERGE_EXECUTABLE} -d
+add_custom_target(desktopfile ALL ${INTLTOOL_MERGE_EXECUTABLE} -d
     ${CMAKE_SOURCE_DIR}/po ${CMAKE_SOURCE_DIR}/data/gtkpod.desktop.in
     ${CMAKE_BINARY_DIR}/gtkpod.desktop)
 
