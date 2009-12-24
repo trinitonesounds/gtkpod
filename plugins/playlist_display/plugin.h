@@ -33,9 +33,13 @@
 #include <libanjuta/anjuta-plugin.h>
 
 /* Stock IDs */
-#define PLAYLIST_DISPLAY_PHOTO_ICON_STOCK_ID "playlist-display-photo-icon"
-#define PLAYLIST_DISPLAY_PLAYLIST_ICON_STOCK_ID "playlist-display-playlist-icon"
-#define PLAYLIST_DISPLAY_GTKPOD_READ_ICON_STOCK_ID "playlist-display-gtkpod-read-icon"
+#define PLAYLIST_DISPLAY_PHOTO_ICON_STOCK_ID "playlist_display-photo-icon"
+#define PLAYLIST_DISPLAY_PLAYLIST_ICON_STOCK_ID "playlist_display-playlist-icon"
+#define PLAYLIST_DISPLAY_READ_ICON_STOCK_ID "playlist_display-read-icon"
+#define PLAYLIST_DISPLAY_ADD_DIRS_ICON_STOCK_ID "playlist_display-add-dirs-icon"
+#define PLAYLIST_DISPLAY_ADD_FILES_ICON_STOCK_ID "playlist_display-add-files-icon"
+#define PLAYLIST_DISPLAY_ADD_PLAYLISTS_ICON_STOCK_ID "playlist_display-add-playlists-icon"
+#define PLAYLIST_DISPLAY_SYNC_ICON_STOCK_ID "playlist_display-sync-icon"
 
 #define UI_FILE GTKPOD_UI_DIR"/playlist_display.ui"
 #define GLADE_FILE GTKPOD_GLADE_DIR"/playlist_display.glade"

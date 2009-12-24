@@ -37,5 +37,9 @@
 #include "plugin.h"
 
 void on_load_ipods_mi(GtkAction* action, PlaylistDisplayPlugin* plugin);
+void on_save_changes(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_create_add_files(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_create_add_directory (GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_create_add_playlists (GtkAction *action, PlaylistDisplayPlugin* plugin);
 
 #endif

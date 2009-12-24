@@ -120,5 +120,5 @@ clean-ui-dir:
 
 clean-image-dir:
 	if test -d $(gtkpod_image_dir); then \
-	  sudo find $(gtkpod_image_dir) -name 'playlist*' -delete; \
+	  sudo find $(gtkpod_image_dir) -name 'playlist_display*' -delete; \
 	fi;

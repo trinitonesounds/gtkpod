@@ -976,9 +976,7 @@ gboolean gp_increase_playcount(gchar *sha1, gchar *file, gint num) {
 /* get the currently selected itdb. NULL is
  * returned if no itdb is active. */
 iTunesDB *gp_get_selected_itdb(void) {
-    g_warning("gp_itdb : gp_get_selected_itdb commented out");
-    //    return pm_get_selected_itdb ();
-    return NULL;
+    return gtkpod_get_current_itdb ();
 }
 
 /* Get the "ipod" itdb. If only one iPod itdb exists, this itdb is

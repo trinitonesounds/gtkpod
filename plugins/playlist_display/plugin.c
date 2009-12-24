@@ -33,7 +33,6 @@
 #include <glib.h>
 #include "libgtkpod/stock_icons.h"
 #include "libgtkpod/gtkpod_app_iface.h"
-//#include "libgtkpod/gtkpod_selection_listener.h"
 #include "plugin.h"
 #include "display_playlists.h"
 #include "playlist_display_actions.h"
@@ -45,12 +44,44 @@ static gpointer parent_class;
 static GtkActionEntry playlist_actions[] =
     {
         {
-            "ActionLoadiPod",         /* Action name */
-            PLAYLIST_DISPLAY_GTKPOD_READ_ICON_STOCK_ID, /* Stock icon */
-            N_("_Load iPod(s)"),      /* Display label */
-            NULL,                           /* short-cut */
-            NULL,                           /* Tooltip */
-            G_CALLBACK (on_load_ipods_mi)         /* callback */
+            "ActionLoadiPod", /* Action name */
+            PLAYLIST_DISPLAY_READ_ICON_STOCK_ID, /* Stock icon */
+            N_("_Load iPod(s)"), /* Display label */
+            NULL, /* short-cut */
+            NULL, /* Tooltip */
+            G_CALLBACK (on_load_ipods_mi) /* callback */
+        },
+        {
+            "ActionSaveChanges", /* Action name */
+            PLAYLIST_DISPLAY_SYNC_ICON_STOCK_ID, /* Stock icon */
+            N_("_Save Changes"), /* Display label */
+            NULL, /* short-cut */
+            NULL, /* Tooltip */
+            G_CALLBACK (on_save_changes) /* callback */
+        },
+        {
+            "ActionAddFiles", /* Action name */
+            PLAYLIST_DISPLAY_ADD_FILES_ICON_STOCK_ID, /* Stock icon */
+            N_("Add _Files"), /* Display label */
+            NULL, /* short-cut */
+            NULL, /* Tooltip */
+            G_CALLBACK (on_create_add_files) /* callback */
+        },
+        {
+            "ActionAddDirectory", /* Action name */
+            PLAYLIST_DISPLAY_ADD_DIRS_ICON_STOCK_ID, /* Stock icon */
+            N_("Add Fol_der"), /* Display label */
+            NULL, /* short-cut */
+            NULL, /* Tooltip */
+            G_CALLBACK (on_create_add_directory) /* callback */
+        },
+        {
+            "ActionAddPlaylist", /* Action name */
+            PLAYLIST_DISPLAY_ADD_PLAYLISTS_ICON_STOCK_ID, /* Stock icon */
+            N_("Add _Playlist"), /* Display label */
+            NULL, /* short-cut */
+            NULL, /* Tooltip */
+            G_CALLBACK (on_create_add_playlists) /* callback */
         }
     };
 
@@ -62,7 +93,11 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     /* Prepare the icons for the playlist */
     register_stock_icon("playlist_display-photo", PLAYLIST_DISPLAY_PHOTO_ICON_STOCK_ID);
     register_stock_icon("playlist_display-playlist", PLAYLIST_DISPLAY_PLAYLIST_ICON_STOCK_ID);
-    register_stock_icon("playlist_display-gtkpod-read", PLAYLIST_DISPLAY_GTKPOD_READ_ICON_STOCK_ID);
+    register_stock_icon("playlist_display-read", PLAYLIST_DISPLAY_READ_ICON_STOCK_ID);
+    register_stock_icon("playlist_display-add-dirs", PLAYLIST_DISPLAY_ADD_DIRS_ICON_STOCK_ID);
+    register_stock_icon("playlist_display-add-files", PLAYLIST_DISPLAY_ADD_FILES_ICON_STOCK_ID);
+    register_stock_icon("playlist_display-add-playlists", PLAYLIST_DISPLAY_ADD_PLAYLISTS_ICON_STOCK_ID);
+    register_stock_icon("playlist_display-sync", PLAYLIST_DISPLAY_SYNC_ICON_STOCK_ID);
 
     playlist_display_plugin = (PlaylistDisplayPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
@@ -76,7 +111,6 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     playlist_display_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
 
     /* Add widget in Shell. Any number of widgets can be added */
-    g_warning("Creating tree view\n");
     playlist_display_plugin->pl_window = gtk_scrolled_window_new(NULL, NULL);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (playlist_display_plugin->pl_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (playlist_display_plugin->pl_window), GTK_SHADOW_IN);
