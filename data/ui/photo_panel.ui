@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<!--*- mode: xml -*-->
+<interface>
+  <object class="GtkUIManager" id="uimanager1">
+    <child>
+      <object class="GtkActionGroup" id="actiongroup1">
+        <child>
+          <object class="GtkAction" id="photo_album_menuItem">
+            <property name="name">photo_album_menuItem</property>
+            <property name="label" translatable="yes">_Album</property>
+            <signal handler="on_photo_album_menuItem_activate" name="activate"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="photo_add_album_menuItem">
+            <property name="stock_id">gtk-justify-fill</property>
+            <property name="name">photo_add_album_menuItem</property>
+            <property name="label" translatable="yes">_Add Album</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="photo_remove_album_menuItem">
+            <property name="stock_id">gtk-remove</property>
+            <property name="name">photo_remove_album_menuItem</property>
+            <property name="label" translatable="yes">_Remove Album</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="photo_rename_album_menuItem">
+            <property name="name">photo_rename_album_menuItem</property>
+            <property name="label" translatable="yes">R_ename Album</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="menuitem14">
+            <property name="name">menuitem14</property>
+            <property name="label" translatable="yes">_Photos</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="photo_add_image_menuItem">
+            <property name="stock_id">gtk-add</property>
+            <property name="name">photo_add_image_menuItem</property>
+            <property name="label" translatable="yes">_Add Image</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="photo_add_image_dir_menuItem">
+            <property name="stock_id">gtk-directory</property>
+            <property name="name">photo_add_image_dir_menuItem</property>
+            <property name="tooltip" translatable="yes">Add Images from a Directory</property>
+            <property name="label" translatable="yes">Add Image_s</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="photo_remove_image_menuItem">
+            <property name="stock_id">gtk-remove</property>
+            <property name="name">photo_remove_image_menuItem</property>
+            <property name="label" translatable="yes">_Remove Images</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="menuitem15">
+            <property name="name">menuitem15</property>
+            <property name="label" translatable="yes">_Zoom</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkAction" id="photo_view_full_size_menuItem">
+            <property name="stock_id">gtk-zoom-fit</property>
+            <property name="name">photo_view_full_size_menuItem</property>
+            <property name="label" translatable="yes">View Full Size</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <ui>
+      <menubar name="menubar1">
+        <menu action="photo_album_menuItem">
+          <menuitem action="photo_add_album_menuItem"/>
+          <menuitem action="photo_remove_album_menuItem"/>
+          <menuitem action="photo_rename_album_menuItem"/>
+        </menu>
+        <menu action="menuitem14">
+          <menuitem action="photo_add_image_menuItem"/>
+          <menuitem action="photo_add_image_dir_menuItem"/>
+          <menuitem action="photo_remove_image_menuItem"/>
+        </menu>
+        <menu action="menuitem15">
+          <menuitem action="photo_view_full_size_menuItem"/>
+        </menu>
+      </menubar>
+    </ui>
+  </object>
+  <object class="GtkWindow" id="photo_panel">
+    <property name="visible">True</property>
+    <property name="title" translatable="yes">Photo Window</property>
+    <child>
+      <object class="GtkViewport" id="photo_viewport">
+        <property name="visible">True</property>
+        <property name="border_width">5</property>
+        <property name="shadow_type">GTK_SHADOW_ETCHED_OUT</property>
+        <child>
+          <object class="GtkHPaned" id="hpaned1">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <child>
+              <object class="GtkVBox" id="vbox185">
+                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkMenuBar" constructor="uimanager1" id="menubar1">
+                    <property name="visible">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow" id="photo_album_window">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                    <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                    <property name="shadow_type">GTK_SHADOW_IN</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="padding">1</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="photo_preview_image">
+                    <property name="width_request">250</property>
+                    <property name="height_request">176</property>
+                    <property name="visible">True</property>
+                    <property name="stock">gtk-missing-image</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">False</property>
+                <property name="shrink">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="photo_thumbnail_window">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">True</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

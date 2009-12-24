@@ -1,0 +1,58 @@
+/* config.h.in.  Generated from configure.in by autoheader.  */
+
+/* always defined to indicate that i18n is enabled */
+#define ENABLE_NLS
+
+/* "Gettext package name" */
+#cmakedefine GETTEXT_PACKAGE "@GETTEXT_PACKAGE@"
+
+/* Define if you have curl support */
+#cmakedefine HAVE_CURL
+
+/* Define if you have the flac library */
+#cmakedefine HAVE_FLAC
+
+/* Define to 1 if you have the `getopt_long_only' function. */
+#cmakedefine HAVE_GETOPT_LONG_ONLY
+
+/* Define if you have gnome-vfs support */
+#cmakedefine HAVE_GNOME_VFS
+
+/* Define if you have HAL support */
+#cmakedefine HAVE_HAL
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#cmakedefine HAVE_INTTYPES_H 1
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#cmakedefine HAVE_STDINT_H 1
+
+/* Define to 1 if you have the <string.h> header file. */
+#define HAVE_STRING_H 1
+
+/* Define if you have the ogg/vorbis library */
+#cmakedefine HAVE_LIBVORBISFILE
+
+/* Define to 1 if you have the `statvfs' function. */
+#cmakedefine HAVE_STATVFS
+
+/* Define to 1 if you have the <string.h> header file. */
+#define HAVE_STRING_H 1
+
+/* Set this to the libgpod version */
+#cmakedefine LIBGPOD_VERSION "@LIBGPOD_VERSION@"
+
+/* Name of package */
+#cmakedefine PACKAGE "@PACKAGE@"
+
+/* Define to the package data directory. */
+#cmakedefine PACKAGE_DATA_DIR "@PACKAGE_DATA_DIR@"
+
+/* Define to the package locale directory. */
+#cmakedefine PACKAGE_LOCALE_DIR "@PACKAGE_LOCALE_DIR@"
+
+/* Define to 1 if you have the ANSI C header files. */
+#define STDC_HEADERS 1
+
+/* Version number of package */
+#cmakedefine VERSION "@VERSION@"

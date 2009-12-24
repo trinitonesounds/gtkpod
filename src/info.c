@@ -710,15 +710,9 @@ static void th_space_update (void)
     gchar *mp=NULL, *line=NULL;
     gchar **tokens = NULL;
 
-    /* don't read info when in offline mode */
-    if (!prefs_get_offline ())
-    {
 	g_mutex_lock (space_mutex);
 	mp = g_strdup (space_mp);
 	g_mutex_unlock (space_mutex);
-
-	line = get_drive_stats_from_df (mp);
-    }
 
     g_mutex_lock (space_mutex);
 

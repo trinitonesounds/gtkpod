@@ -1549,25 +1549,30 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
     if (td->abort) {
         result = FALSE;
     }
-    else if (status == FILE_TRANSFER_DISK_FULL) {
-        gchar *buf;
-        GtkWidget *dialog;
+    else if (status == FILE_TRANSFER_DISK_FULL)
+    {
+	gchar *buf;
+	GtkWidget *dialog;
 
-        gtk_widget_hide(td->dialog);
+	gtk_widget_hide (td->dialog);
 
-        buf
-                = g_strdup_printf(ngettext (
-                        "One track could not be transferred because your iPod is full. Either delete some tracks or otherwise create space on the iPod before ejecting the iPod again.",
-                        "%d tracks could not be transferred because your iPod is full. Either delete some tracks or otherwise create space on the iPod before ejecting the iPod again.", to_transfer_num), to_transfer_num);
+	buf = g_strdup_printf (ngettext (
+				   "One track could not be transferred because your iPod is full. Either delete some tracks or otherwise create space on the iPod before ejecting the iPod again.",
+				   "%d tracks could not be transferred because your iPod is full. Either delete some tracks or otherwise create space on the iPod before ejecting the iPod again.", to_transfer_num),
+			       to_transfer_num);
 
-        dialog
-                = gtk_message_dialog_new(GTK_WINDOW (gtkpod_app), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK, buf);
-        gtk_dialog_run(GTK_DIALOG (dialog));
-        gtk_widget_destroy(dialog);
-        g_free(buf);
-        result = FALSE;
+	dialog = gtk_message_dialog_new (
+	    GTK_WINDOW (gtkpod_window),
+	    GTK_DIALOG_DESTROY_WITH_PARENT,
+	    GTK_MESSAGE_WARNING,
+	    GTK_BUTTONS_OK,
+	    "%s", buf);
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
+	g_free (buf);
+	result = FALSE;
     }
-    else if (failed_num != 0) /* one error message is enough -> else{... */
+    else if (failed_num != 0)    /* one error message is enough -> else{... */
     {
         transfer_tracks_show_failed(itdb, td);
         result = FALSE;

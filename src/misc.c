@@ -1861,11 +1861,64 @@ gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
                                 accept_button ? accept_button : GTK_STOCK_OK, GTK_RESPONSE_OK,
                                 NULL);
 
-    temp = g_markup_printf_escaped ("<span weight='bold' size='larger'>%s</span>\n\n%s", title, message);
-    gtk_label_set_markup (GTK_LABEL (label), temp);
-    g_free (temp);
+    progname = g_find_program_in_path (argv[0]);
+    if (progname)
+    {
+	static const gchar *SEPsrcSEPgtkpod = G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S "gtkpod";
 
-    if (dflt)
+    if (!g_path_is_absolute (progname))
+    {
+        gchar *cur_dir = g_get_current_dir ();
+        gchar *prog_absolute;
+
+        if (g_str_has_prefix (progname, "." G_DIR_SEPARATOR_S))
+            prog_absolute = g_build_filename (cur_dir,progname+2,NULL);
+        else
+            prog_absolute = g_build_filename (cur_dir,progname,NULL);
+
+        g_free (progname);
+        g_free (cur_dir);
+        progname = prog_absolute;
+    }
+
+    if (g_str_has_suffix (progname, SEPsrcSEPgtkpod))
+    {
+        gchar *suffix = g_strrstr (progname, SEPsrcSEPgtkpod);
+
+        if (suffix)
+        {
+            *suffix = 0;
+            xml_file = g_build_filename (progname, "data", "gtkpod.glade", NULL);
+        }
+    }
+
+    if (!xml_file)
+    {
+        gchar *prog_path = g_path_get_dirname (progname);
+        gchar *cmake_file = g_build_filename (prog_path, "CMakeCache.txt", NULL);
+
+        if (g_file_test (cmake_file, G_FILE_TEST_EXISTS))
+        {
+            gchar *source_root = g_path_get_dirname (prog_path);
+            xml_file = g_build_filename(source_root, "data", "gtkpod.glade", NULL);
+            g_free (source_root);
+        }
+
+        g_free (cmake_file);
+        g_free (prog_path);
+    }
+
+	g_free (progname);
+
+    if (xml_file && !g_file_test (xml_file, G_FILE_TEST_EXISTS))
+	{
+	    g_free (xml_file);
+	    xml_file = NULL;
+	}
+    }
+    if (!xml_file)
+	xml_file = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "data", "gtkpod.glade", NULL);
+    else
     {
         gtk_entry_set_text (GTK_ENTRY (entry), dflt);
         gtk_editable_select_region (GTK_EDITABLE (entry), 0, -1);
