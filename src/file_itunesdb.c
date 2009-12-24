@@ -930,7 +930,7 @@ gboolean gp_eject_ipod(iTunesDB *itdb) {
  * return value: TRUE on succes, FALSE when an error occurred.
  */
 gboolean gp_save_itdb(iTunesDB *itdb) {
-    Playlist *pl;
+//    Playlist *pl;
     gboolean success;
     g_return_val_if_fail (itdb, FALSE);
 
@@ -1562,7 +1562,7 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
 			       to_transfer_num);
 
 	dialog = gtk_message_dialog_new (
-	    GTK_WINDOW (gtkpod_window),
+	    GTK_WINDOW (gtkpod_app),
 	    GTK_DIALOG_DESTROY_WITH_PARENT,
 	    GTK_MESSAGE_WARNING,
 	    GTK_BUTTONS_OK,

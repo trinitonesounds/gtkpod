@@ -33,7 +33,9 @@
 static int USING_LOCAL = 0;
 
 static gchar * init_dir(char *argv[], gchar *filename, gchar *installdir);
+#if LOCALDEBUG
 static void debug_print_directories();
+#endif
 
 static gchar *datadir = NULL;
 static gchar *icondir = NULL;
@@ -53,6 +55,7 @@ void init_directories(char *argv[]) {
 //    debug_print_directories();
 }
 
+#if LOCALDEBUG
 static void debug_print_directories() {
     g_printf("data directory: %s\n", get_data_dir());
     g_printf("ui directory: %s\n", get_ui_dir());
@@ -60,10 +63,11 @@ static void debug_print_directories() {
     g_printf("icon directory: %s\n", get_icon_dir());
     g_printf("plugin directory: %s\n", get_plugin_dir());
 }
+#endif
 
 static gchar * init_dir(char *argv[], gchar *localdir, gchar *fullinstalldir) {
     gchar *progname;
-    gchar *newdir;
+    gchar *newdir = NULL;
 
     progname = g_find_program_in_path(argv[0]);
     if (progname) {
