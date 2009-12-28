@@ -34,6 +34,10 @@
 #  include <config.h>
 #endif
 
+/* tree sort cannot be unsorted by choosing the default sort
+ * column. Set to 1 if it's broken, 0 if it's not broken */
+#define BROKEN_GTK_TREE_SORT (!RUNTIME_GTK_CHECK_VERSION(2,5,4))
+
 /* Drag and drop definitions */
 #define TGNR(a) (guint)(sizeof(a)/sizeof(GtkTargetEntry))
 #define DND_GTKPOD_TRACKLIST_TYPE "application/gtkpod-tracklist"

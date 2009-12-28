@@ -34,52 +34,13 @@
 #include "libgtkpod/stock_icons.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "plugin.h"
+#include "display_sorttabs.h"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
 
 static GtkActionEntry sorttab_actions[] =
     {
-        {
-            "ActionLoadiPod", /* Action name */
-            PLAYLIST_DISPLAY_READ_ICON_STOCK_ID, /* Stock icon */
-            N_("_Load iPod(s)"), /* Display label */
-            NULL, /* short-cut */
-            NULL, /* Tooltip */
-            G_CALLBACK (on_load_ipods_mi) /* callback */
-        },
-        {
-            "ActionSaveChanges", /* Action name */
-            PLAYLIST_DISPLAY_SYNC_ICON_STOCK_ID, /* Stock icon */
-            N_("_Save Changes"), /* Display label */
-            NULL, /* short-cut */
-            NULL, /* Tooltip */
-            G_CALLBACK (on_save_changes) /* callback */
-        },
-        {
-            "ActionAddFiles", /* Action name */
-            PLAYLIST_DISPLAY_ADD_FILES_ICON_STOCK_ID, /* Stock icon */
-            N_("Add _Files"), /* Display label */
-            NULL, /* short-cut */
-            NULL, /* Tooltip */
-            G_CALLBACK (on_create_add_files) /* callback */
-        },
-        {
-            "ActionAddDirectory", /* Action name */
-            PLAYLIST_DISPLAY_ADD_DIRS_ICON_STOCK_ID, /* Stock icon */
-            N_("Add Fol_der"), /* Display label */
-            NULL, /* short-cut */
-            NULL, /* Tooltip */
-            G_CALLBACK (on_create_add_directory) /* callback */
-        },
-        {
-            "ActionAddSorttab", /* Action name */
-            PLAYLIST_DISPLAY_ADD_PLAYLISTS_ICON_STOCK_ID, /* Stock icon */
-            N_("Add _Sorttab"), /* Display label */
-            NULL, /* short-cut */
-            NULL, /* Tooltip */
-            G_CALLBACK (on_create_add_sorttabs) /* callback */
-        }
     };
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {
@@ -102,18 +63,14 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     /* Add widget in Shell. Any number of widgets can be added */
 
-    sorttab_display_plugin->pl_window = gtk_scrolled_window_new(NULL, NULL);
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (sorttab_display_plugin->pl_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-    gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (sorttab_display_plugin->pl_window), GTK_SHADOW_IN);
+    sorttab_display_plugin->st_paned = gtk_hpaned_new();
+    st_create_tabs(sorttab_display_plugin->st_paned);
 
-    sorttab_display_plugin->sorttab_view = pm_create_treeview();
+//    g_signal_connect (gtkpod_app, "sorttab_selected", G_CALLBACK (sorttab_display_select_sorttab_cb), NULL);
+//    g_signal_connect (gtkpod_app, "itdb_updated", G_CALLBACK (sorttab_display_update_itdb_cb), NULL);
 
-    g_signal_connect (gtkpod_app, "sorttab_selected", G_CALLBACK (sorttab_display_select_sorttab_cb), NULL);
-    g_signal_connect (gtkpod_app, "itdb_updated", G_CALLBACK (sorttab_display_update_itdb_cb), NULL);
-
-    gtk_container_add(GTK_CONTAINER (sorttab_display_plugin->pl_window), GTK_WIDGET (sorttab_display_plugin->sorttab_view));
-    gtk_widget_show_all(sorttab_display_plugin->pl_window);
-    anjuta_shell_add_widget(plugin->shell, sorttab_display_plugin->pl_window, "SorttabDisplayPlugin", "", NULL, ANJUTA_SHELL_PLACEMENT_LEFT, NULL);
+    gtk_widget_show_all(sorttab_display_plugin->st_paned);
+    anjuta_shell_add_widget(plugin->shell, sorttab_display_plugin->st_paned, "SorttabDisplayPlugin", "", NULL, ANJUTA_SHELL_PLACEMENT_BOTTOM, NULL);
 
     return TRUE; /* FALSE if activation failed */
 }
@@ -126,11 +83,10 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
 
     /* Remove widgets from Shell */
-    anjuta_shell_remove_widget(plugin->shell, sorttab_display_plugin->pl_window, NULL);
+    anjuta_shell_remove_widget(plugin->shell, sorttab_display_plugin->st_paned, NULL);
 
     /* Destroy the treeview */
-    sorttab_display_plugin->sorttab_view = NULL;
-    destroy_treeview();
+    sorttab_display_plugin->st_paned = NULL;
 
     /* Unmerge UI */
     anjuta_ui_unmerge(ui, sorttab_display_plugin->uiid);
@@ -145,8 +101,7 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
 static void sorttab_display_plugin_instance_init(GObject *obj) {
     SorttabDisplayPlugin *plugin = (SorttabDisplayPlugin*) obj;
     plugin->uiid = 0;
-    plugin->pl_window = NULL;
-    plugin->sorttab_view = NULL;
+    plugin->st_paned = NULL;
     plugin->action_group = NULL;
 }
 

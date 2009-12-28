@@ -1,5 +1,6 @@
 /*
  |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+                                   2010 Paul Richardson  <phantom_sf at users sourceforge net>
  |  Part of the gtkpod project.
  |
  |  URL: http://www.gtkpod.org/
@@ -31,17 +32,16 @@
 #endif
 
 #include <gdk/gdkkeysyms.h>
-
-#include "display_private.h"
-#include "info.h"
-#include "prefs.h"
-#include "misc.h"
-#include "misc_track.h"
-#include "context_menus.h"
-#include "date_parser.h"
-#include "itdb.h"
 #include <string.h>
 #include <stdlib.h>
+#include "libgtkpod/prefs.h"
+#include "libgtkpod/misc.h"
+#include "libgtkpod/misc_track.h"
+#include "libgtkpod/itdb.h"
+#include "libgtkpod/gp_private.h"
+#include "libgtkpod/gtkpod_app_iface.h"
+#include "display_sorttabs.h"
+#include "plugin.h"
 
 typedef struct {
     GtkTreeView *tree_view;
@@ -63,8 +63,12 @@ static void st_create_notebook(gint inst);
 static TimeInfo *sp_update_date_interval_from_string(guint32 inst, T_item item, gboolean force_update);
 
 /* Drag and drop definitions */
-static GtkTargetEntry
-        st_drag_types[] = { { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST }, { "text/uri-list", 0, DND_TEXT_URI_LIST }, { "text/plain", 0, DND_TEXT_PLAIN }, { "STRING", 0, DND_TEXT_PLAIN } };
+static GtkTargetEntry st_drag_types[] =
+    {
+        { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },
+        { "text/uri-list", 0, DND_TEXT_URI_LIST },
+        { "text/plain", 0, DND_TEXT_PLAIN },
+        { "STRING", 0, DND_TEXT_PLAIN } };
 
 typedef enum {
     IS_INSIDE, /* track's timestamp is inside the specified interval  */
@@ -160,12 +164,11 @@ static void on_st_dnd_get_uri_foreach(GtkTreeModel *tm, GtkTreePath *tp, GtkTree
         name = get_file_name_from_source(tr, SOURCE_PREFER_LOCAL);
         if (name) {
             gchar *uri = g_filename_to_uri(name, NULL, NULL);
-            if (uri)
-            {
-                g_string_append_printf (filelist, "file:%s\n", name);
-                g_free (uri);
+            if (uri) {
+                g_string_append_printf(filelist, "file:%s\n", name);
+                g_free(uri);
             }
-            g_free (name);
+            g_free(name);
         }
     }
 }
@@ -274,7 +277,8 @@ static void on_st_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guin
     if (page_num != ST_CAT_SPECIAL) {
         st_set_string_compare_func(inst, page_num);
     }
-    space_data_update();
+    g_warning("on_st_switch_page: space_data_update commented out");
+    //    space_data_update();
     st_page_selected(notebook, page_num);
 }
 
@@ -581,7 +585,8 @@ static void sp_go_cb(gpointer user_data1, gpointer user_data2) {
             time.tv_sec % 3600, time.tv_usec);
 #endif
 
-    space_data_update();
+    g_warning ("sp_go_cb: space_data_update todo");
+    //    space_data_update();
 
     /* Sanity */
     if (st == NULL)
@@ -605,21 +610,21 @@ static void sp_go_cb(gpointer user_data1, gpointer user_data2) {
             Track *track = (Track *) gl->data;
             if (sp_check_track(track, inst)) {
                 st->sp_selected = g_list_append(st->sp_selected, track);
-                st_add_track(track, FALSE, TRUE, inst+1);
+                st_add_track(track, FALSE, TRUE, inst + 1);
             }
         }
-        st_enable_disable_view_sort (inst+1, TRUE);
-        st_add_track (NULL, TRUE, st->final, inst+1);
+        st_enable_disable_view_sort(inst + 1, TRUE);
+        st_add_track(NULL, TRUE, st->final, inst + 1);
     }
     gtkpod_tracks_statusbar_update();
 #if DEBUG_TIMING
-                        g_get_current_time (&time);
-                        printf ("st_selection_changed_cb exit:  %ld.%06ld sec\n",
-                                time.tv_sec % 3600, time.tv_usec);
+    g_get_current_time (&time);
+    printf ("st_selection_changed_cb exit:  %ld.%06ld sec\n",
+            time.tv_sec % 3600, time.tv_usec);
 #endif
-                    }
+}
 
-                /* save the contents of the entry to prefs */
+/* save the contents of the entry to prefs */
 static void sp_store_sp_entries(gint inst) {
     SortTab *st;
 
@@ -664,7 +669,7 @@ void sp_go(guint32 inst) {
     sp_go_cb(GUINT_TO_POINTER(inst), NULL);
 }
 
-    /* called by st_remove_track() */
+/* called by st_remove_track() */
 static void st_remove_track_special(Track *track, guint32 inst) {
     SortTab *st;
     GList *link;
@@ -727,15 +732,15 @@ static void st_track_changed_special(Track *track, gboolean removed, guint32 ins
             else { /* track is not being passed on to next sort tab */
                 if (sp_check_track(track, inst)) { /* add to next sort tab */
                     st->sp_selected = g_list_append(st->sp_selected, track);
-                    st_add_track(track, TRUE, TRUE, inst+1);
+                    st_add_track(track, TRUE, TRUE, inst + 1);
                 }
             }
         }
     }
 }
 
-                    /* Called when the user changed the sort conditions in the special
-                     * sort tab */
+/* Called when the user changed the sort conditions in the special
+ * sort tab */
 void sp_conditions_changed(guint32 inst) {
     SortTab *st;
 
@@ -762,81 +767,72 @@ void sp_conditions_changed(guint32 inst) {
 /* ---------------------------------------------------------------- */
 
 void on_sp_or_button_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
-    guint32 inst = (guint32) (GPOINTER_TO_UINT(user_data)& SP_MASK);
+    guint32 inst = (guint32) (GPOINTER_TO_UINT(user_data) & SP_MASK);
 
-    prefs_set_int_index("sp_or", inst,
-            gtk_toggle_button_get_active (togglebutton));
+    prefs_set_int_index("sp_or", inst, gtk_toggle_button_get_active(togglebutton));
 
-    sp_conditions_changed (inst);
+    sp_conditions_changed(inst);
 }
 
 void on_sp_cond_button_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
-    guint32 inst = (guint32) (GPOINTER_TO_UINT(user_data)& SP_MASK);
-    T_item cond = (guint32)GPOINTER_TO_UINT(user_data) >> SP_SHIFT;
+    guint32 inst = (guint32) (GPOINTER_TO_UINT(user_data) & SP_MASK);
+    T_item cond = (guint32) GPOINTER_TO_UINT(user_data) >> SP_SHIFT;
 
-    switch (cond)
-    {
-        case T_RATING:
-        prefs_set_int_index("sp_rating_cond", inst,
-                gtk_toggle_button_get_active(togglebutton));
+    switch (cond) {
+    case T_RATING:
+        prefs_set_int_index("sp_rating_cond", inst, gtk_toggle_button_get_active(togglebutton));
         break;
-        case T_PLAYCOUNT:
-        prefs_set_int_index("sp_playcount_cond", inst,
-                gtk_toggle_button_get_active(togglebutton));
+    case T_PLAYCOUNT:
+        prefs_set_int_index("sp_playcount_cond", inst, gtk_toggle_button_get_active(togglebutton));
         break;
-        case T_TIME_PLAYED:
-        prefs_set_int_index("sp_played_cond", inst,
-                gtk_toggle_button_get_active(togglebutton));
+    case T_TIME_PLAYED:
+        prefs_set_int_index("sp_played_cond", inst, gtk_toggle_button_get_active(togglebutton));
         break;
-        case T_TIME_MODIFIED:
-        prefs_set_int_index("sp_modified_cond", inst,
-                gtk_toggle_button_get_active(togglebutton));
+    case T_TIME_MODIFIED:
+        prefs_set_int_index("sp_modified_cond", inst, gtk_toggle_button_get_active(togglebutton));
         break;
-        case T_TIME_ADDED:
-        prefs_set_int_index("sp_added_cond", inst,
-                gtk_toggle_button_get_active(togglebutton));
+    case T_TIME_ADDED:
+        prefs_set_int_index("sp_added_cond", inst, gtk_toggle_button_get_active(togglebutton));
         break;
-        default:
+    default:
         break;
     }
-    sp_conditions_changed (inst);
+    sp_conditions_changed(inst);
 }
 
 void on_sp_rating_n_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
-    guint32 inst = (guint32) (GPOINTER_TO_UINT(user_data)& SP_MASK);
-    guint32 n = (guint32)GPOINTER_TO_UINT(user_data) >> SP_SHIFT;
+    guint32 inst = (guint32) (GPOINTER_TO_UINT(user_data) & SP_MASK);
+    guint32 n = (guint32) GPOINTER_TO_UINT(user_data) >> SP_SHIFT;
 
-    set_sp_rating_n (inst, n,
-            gtk_toggle_button_get_active (togglebutton));
+    set_sp_rating_n(inst, n, gtk_toggle_button_get_active(togglebutton));
     if (prefs_get_int_index("sp_rating_cond", inst))
-    sp_conditions_changed (inst);
+        sp_conditions_changed(inst);
 }
 
 void on_sp_entry_activate(GtkEditable *editable, gpointer user_data) {
-    guint32 inst = (guint32) (GPOINTER_TO_UINT(user_data)& SP_MASK);
-    T_item item = (guint32)GPOINTER_TO_UINT(user_data) >> SP_SHIFT;
-    gchar *buf = gtk_editable_get_chars(editable,0, -1);
+    guint32 inst = (guint32) (GPOINTER_TO_UINT(user_data) & SP_MASK);
+    T_item item = (guint32) GPOINTER_TO_UINT(user_data) >> SP_SHIFT;
+    gchar *buf = gtk_editable_get_chars(editable, 0, -1);
 
     /*    printf ("sp_entry_activate inst: %d, item: %d\n", inst, item);*/
 
-    switch (item)
-    {
-        case T_TIME_PLAYED:
+    switch (item) {
+    case T_TIME_PLAYED:
         prefs_set_string_index("sp_played_state", inst, buf);
         break;
-        case T_TIME_MODIFIED:
+    case T_TIME_MODIFIED:
         prefs_set_string_index("sp_modified_state", inst, buf);
         break;
-        case T_TIME_ADDED:
+    case T_TIME_ADDED:
         prefs_set_string_index("sp_added_state", inst, buf);
         break;
-        default:
+    default:
         break;
     }
 
-    g_free (buf);
-    sp_update_date_interval_from_string (inst, item, TRUE);
-    sp_go (inst);
+    g_free(buf);
+    sp_update_date_interval_from_string(inst, item, TRUE);
+    sp_go(inst);
 }
 
 void on_sp_cal_button_clicked(GtkButton *button, gpointer user_data) {
@@ -877,12 +873,24 @@ void on_sp_playcount_high_value_changed(GtkSpinButton *spinbutton, gpointer user
         sp_conditions_changed(inst);
 }
 
+static GList *st_get_selected_tracks(gint inst) {
+    GList *tracks = NULL;
+    if (inst == -1) {
+        Playlist *pl = gtkpod_get_current_playlist();
+        if (pl)
+            tracks = pl->members;
+    }
+    else {
+        tracks = st_get_selected_members(inst);
+    }
+    return tracks;
+}
+
 /* ---------------------------------------------------------------- */
 /*                                                                  */
 /* Section for sort tab display (normal and general)                */
 /*                                                                  */
 /* ---------------------------------------------------------------- */
-
 /* return a pointer to the list of members selected in the sort tab
  @inst. For a normal sort tab this is
  sorttab[inst]->current_entry->members, for a special sort tab this
@@ -1066,8 +1074,8 @@ void st_remove_all_entries_from_model(guint32 inst) {
             g_hash_table_destroy(st->entry_hash);
         st->entry_hash = NULL;
 
-        if ((prefs_get_int("st_sort") == SORT_NONE) && gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE (st->model),
-        &column, &order)) { /* recreate track treeview to unset sorted column */
+        if ((prefs_get_int("st_sort") == SORT_NONE)
+                && gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE (st->model), &column, &order)) { /* recreate track treeview to unset sorted column */
             if (column >= 0) {
                 st_create_notebook(inst);
             }
@@ -1296,40 +1304,41 @@ static void st_track_changed_normal(Track *track, gboolean removed, guint32 inst
         else { /* "track" is not in an entry currently selected */
             if (st_recategorize_track(track, inst)) { /* track was moved to a different entry */
                 if (st_get_entry_by_track(track, inst) == st->current_entry) { /* this entry is selected! */
-                    st_add_track(track, TRUE, TRUE, inst+1);
+                    st_add_track(track, TRUE, TRUE, inst + 1);
                 }
             }
         }
     }
 }
 
-                    /* Some tags of a track currently stored in a sort tab have been changed.
-                     - if not "removed"
-                     - if the track is in the entry currently selected:
-                     - remove entry and put into correct category
-                     - if current entry != "All":
-                     - if sort category changed:
-                     - notify next sort tab ("removed")
-                     - if sort category did not change:
-                     - notify next sort tab ("not removed")
-                     - if current entry == "All":
-                     - notify next sort tab ("not removed")
-                     - if the track is not in the entry currently selected (I don't know
-                     how that could happen, though):
-                     - if sort category changed: remove entry and put into correct category
-                     - if this "correct" category is selected, call st_add_track for next
-                     instance.
-                     - if "removed"
-                     - remove the track from the sort tab
-                     - if track was in the entry currently selected, notify next instance
-                     ("removed")
-                     "removed": track has been removed from sort tab. This is different
-                     from st_remove_track, because we will not notify the track model if a
-                     track has been removed: it might confuse the user if the track, whose
-                     tabs he/she just edited, disappeared from the display */
+/* Some tags of a track currently stored in a sort tab have been changed.
+ - if not "removed"
+ - if the track is in the entry currently selected:
+ - remove entry and put into correct category
+ - if current entry != "All":
+ - if sort category changed:
+ - notify next sort tab ("removed")
+ - if sort category did not change:
+ - notify next sort tab ("not removed")
+ - if current entry == "All":
+ - notify next sort tab ("not removed")
+ - if the track is not in the entry currently selected (I don't know
+ how that could happen, though):
+ - if sort category changed: remove entry and put into correct category
+ - if this "correct" category is selected, call st_add_track for next
+ instance.
+ - if "removed"
+ - remove the track from the sort tab
+ - if track was in the entry currently selected, notify next instance
+ ("removed")
+ "removed": track has been removed from sort tab. This is different
+ from st_remove_track, because we will not notify the track model if a
+ track has been removed: it might confuse the user if the track, whose
+ tabs he/she just edited, disappeared from the display */
 void st_track_changed(Track *track, gboolean removed, guint32 inst) {
     if (inst == prefs_get_int("sort_tab_num")) {
-        tm_track_changed(track);
+        g_warning("st_track_changed: signal that a track has been changed");
+//        tm_track_changed(track);
         return;
     }
     else if (inst < prefs_get_int("sort_tab_num")) {
@@ -1362,7 +1371,7 @@ void st_track_changed(Track *track, gboolean removed, guint32 inst) {
  * approx. 1.3 seconds (850 MHz AMD Duron) */
 void st_adopt_order_in_playlist(void) {
     gint inst;
-    Playlist *current_playlist = pm_get_selected_playlist();
+    Playlist *current_playlist = gtkpod_get_current_playlist();
 
 #if DEBUG_TIMING
     GTimeVal time;
@@ -1391,13 +1400,13 @@ void st_adopt_order_in_playlist(void) {
         }
     }
 #if DEBUG_TIMING
-                    g_get_current_time (&time);
-                    printf ("st_adopt_order_in_playlist enter: %ld.%06ld sec\n",
-                            time.tv_sec % 3600, time.tv_usec);
+    g_get_current_time (&time);
+    printf ("st_adopt_order_in_playlist enter: %ld.%06ld sec\n",
+            time.tv_sec % 3600, time.tv_usec);
 #endif
-                }
+}
 
-            /* called by st_add_track() */
+/* called by st_add_track() */
 static void st_add_track_normal(Track *track, gboolean final, gboolean display, guint32 inst) {
     SortTab *st;
     TabEntry *entry, *master_entry, *iter_entry;
@@ -1522,8 +1531,10 @@ void st_add_track(Track *track, gboolean final, gboolean display, guint32 inst) 
 #endif
 
     if (inst == prefs_get_int("sort_tab_num")) { /* just add to track model */
-        if ((track != NULL) && display)
-            tm_add_track_to_track_model(track, NULL);
+        if ((track != NULL) && display) {
+            g_warning ("st_add_track: signal that a track should be added to the track display");
+//            tm_add_track_to_track_model(track, NULL);
+        }
         if (final)
             gtkpod_tracks_statusbar_update();
     }
@@ -1573,7 +1584,8 @@ static void st_remove_track_normal(Track *track, guint32 inst) {
  * tab: it might have been recategorized, but still be displayed. JCS */
 void st_remove_track(Track *track, guint32 inst) {
     if (inst == prefs_get_int("sort_tab_num")) {
-        tm_remove_track(track);
+        g_warning("st_remove_track: signal a track should be removed");
+//        tm_remove_track(track);
     }
     else if (inst < prefs_get_int("sort_tab_num")) {
         switch (sorttab[inst]->current_category) {
@@ -1601,7 +1613,8 @@ void st_remove_track(Track *track, guint32 inst) {
  select "All" in accordance to the prefs settings. */
 void st_init(ST_CAT_item new_category, guint32 inst) {
     if (inst == prefs_get_int("sort_tab_num")) {
-        tm_remove_all_tracks();
+        g_warning("st_init: signal that all tracks in track display should be removed");
+//        tm_remove_all_tracks();
         gtkpod_tracks_statusbar_update();
         return;
     }
@@ -1691,7 +1704,7 @@ static gboolean st_page_selected_cb(gpointer data) {
     if (page == oldpage)
         st->is_go = is_go;
     /* Get list of tracks to re-insert */
-    copy = display_get_selected_members(inst - 1);
+    copy = st_get_selected_tracks(inst - 1);
     if (copy) {
         GList *gl;
         gboolean final;
@@ -1701,24 +1714,25 @@ static gboolean st_page_selected_cb(gpointer data) {
             Track *track = gl->data;
             st_add_track(track, FALSE, TRUE, inst);
         }
-        st_enable_disable_view_sort (inst, TRUE);
+        st_enable_disable_view_sort(inst, TRUE);
         final = TRUE; /* playlist is always complete */
         /* if playlist is not source, get final flag from
          * corresponding sorttab */
-        if ((inst> 0) && (sorttab[inst-1])) final = sorttab[inst-1]->final;
-        st_add_track (NULL, final, TRUE, inst);
+        if ((inst > 0) && (sorttab[inst - 1]))
+            final = sorttab[inst - 1]->final;
+        st_add_track(NULL, final, TRUE, inst);
     }
 #if DEBUG_TIMING
-                    g_get_current_time (&time);
-                    printf ("st_page_selected_cb exit (inst: %d, page: %d):  %ld.%06ld sec\n",
-                            inst, page,
-                            time.tv_sec % 3600, time.tv_usec);
+    g_get_current_time (&time);
+    printf ("st_page_selected_cb exit (inst: %d, page: %d):  %ld.%06ld sec\n",
+            inst, page,
+            time.tv_sec % 3600, time.tv_usec);
 #endif
 
-                    return FALSE;
-                }
+    return FALSE;
+}
 
-            /* Called when page in sort tab is selected */
+/* Called when page in sort tab is selected */
 static void st_page_selected(GtkNotebook *notebook, guint page) {
     guint32 inst;
 
@@ -1787,7 +1801,8 @@ void st_sort(GtkSortType order) {
      * displaytracks list in coverart recreated.
      * ie. easy to sort ascending and descending but difficult to return to unsorted state
      */
-    coverart_display_update(order == SORT_NONE);
+    g_warning("st_sort - signal coverart display to update itself");
+//    coverart_display_update(order == SORT_NONE);
 }
 
 gint st_get_sorttab_page_number(int inst) {
@@ -1921,39 +1936,40 @@ static gboolean st_selection_changed_cb(gpointer data) {
 
             for (gl = new_entry->members; gl; gl = gl->next) { /* add all member tracks to next instance */
                 Track *track = gl->data;
-                st_add_track(track, FALSE, TRUE, inst+1);
+                st_add_track(track, FALSE, TRUE, inst + 1);
             }
-            st_enable_disable_view_sort (inst+1, TRUE);
-            st_add_track (NULL, TRUE, st->final, inst+1);
+            st_enable_disable_view_sort(inst + 1, TRUE);
+            st_add_track(NULL, TRUE, st->final, inst + 1);
         }
         gtkpod_tracks_statusbar_update();
 
         /* Select the cover in the coverart_display */
-        GList *gl = g_list_first(new_entry->members);
-        if (gl != NULL)
-        {
-            Track *track = gl->data;
-            if (track != NULL)
-            coverart_select_cover (track);
-        }
+        g_warning("st_selection_changed_cb: signal that track selection has changed");
+//        GList *gl = g_list_first(new_entry->members);
+//        if (gl != NULL) {
+//            Track *track = gl->data;
+//            if (track != NULL)
+//                coverart_select_cover(track);
+//        }
     }
 
-    space_data_update ();
+    g_warning("st_selection_changed_cb: space_data_update");
+//    space_data_update();
 
 #if DEBUG_TIMING
-                        g_get_current_time (&time);
-                        printf ("st_selection_changed_cb exit:  %ld.%06ld sec\n",
-                                time.tv_sec % 3600, time.tv_usec);
+    g_get_current_time (&time);
+    printf ("st_selection_changed_cb exit:  %ld.%06ld sec\n",
+            time.tv_sec % 3600, time.tv_usec);
 #endif
 
-                        return FALSE;
-                    }
+    return FALSE;
+}
 
-                /* Callback function called when the selection
-                 of the sort tab view has changed */
-                /* Instead of handling the selection directly, we add a
-                 "callback". Currently running display updates will be stopped
-                 before the st_selection_changed_cb is actually called */
+/* Callback function called when the selection
+ of the sort tab view has changed */
+/* Instead of handling the selection directly, we add a
+ "callback". Currently running display updates will be stopped
+ before the st_selection_changed_cb is actually called */
 static void st_selection_changed(GtkTreeSelection *selection, gpointer user_data) {
 #if DEBUG_CB_INIT
     printf("st_s_c enter (inst: %d)\n", (gint)user_data);
@@ -1961,8 +1977,7 @@ static void st_selection_changed(GtkTreeSelection *selection, gpointer user_data
     StSelectionEvent *event = g_malloc0(sizeof(StSelectionEvent));
     event->tree_view = gtk_tree_selection_get_tree_view(selection);
     event->inst = (guint32) GPOINTER_TO_UINT(user_data);
-    g_idle_add_full(G_PRIORITY_DEFAULT_IDLE,
-    st_selection_changed_cb, event, g_free);
+    g_idle_add_full(G_PRIORITY_DEFAULT_IDLE, st_selection_changed_cb, event, g_free);
 #if DEBUG_CB_INIT
     printf("st_s_c exit (inst: %d)\n", (gint)user_data);
 #endif
@@ -2052,7 +2067,8 @@ static void st_cell_edited(GtkCellRendererText *renderer, const gchar *path_stri
                     *itemp_utf8 = g_strdup(new_text);
                 }
                 track->time_modified = time(NULL);
-                pm_track_changed(track);
+                g_warning("st_cell_edited: signal that a track has changed");
+//                pm_track_changed(track);
                 /* If prefs say to write changes to file, do so */
                 if (prefs_get_int("id3_write")) {
                     /* T_item tag_id;*/
@@ -2072,20 +2088,21 @@ static void st_cell_edited(GtkCellRendererText *renderer, const gchar *path_stri
             /* display possible duplicates that have been removed */
             gp_duplicate_remove(NULL, NULL);
             /* indicate that data has changed */
-            if (itdb) data_changed (itdb);
+            if (itdb)
+                data_changed(itdb);
         }
         break;
-        default:
+    default:
         break;
     }
-    gtk_tree_path_free (path);
+    gtk_tree_path_free(path);
 }
 
-            /* The sort tab entries are stored in a separate list (sorttab->entries)
-             and only pointers to the corresponding TabEntry structure are placed
-             into the model.
-             This function reads the data for the given cell from the list and
-             passes it to the renderer. */
+/* The sort tab entries are stored in a separate list (sorttab->entries)
+ and only pointers to the corresponding TabEntry structure are placed
+ into the model.
+ This function reads the data for the given cell from the list and
+ passes it to the renderer. */
 static void st_cell_data_func(GtkTreeViewColumn *tree_column, GtkCellRenderer *renderer, GtkTreeModel *model, GtkTreeIter *iter, gpointer data) {
     TabEntry *entry;
     gint column;
@@ -2096,14 +2113,10 @@ static void st_cell_data_func(GtkTreeViewColumn *tree_column, GtkCellRenderer *r
     switch (column) { /* We only have one column, so this code is overkill... */
     case ST_COLUMN_ENTRY:
         if (entry->master || entry->compilation) { /* mark the "All" entry */
-            g_object_set(G_OBJECT (renderer),
-            "text", entry->name, "editable", FALSE,
-            "weight", PANGO_WEIGHT_BOLD, NULL);
+            g_object_set(G_OBJECT (renderer), "text", entry->name, "editable", FALSE, "weight", PANGO_WEIGHT_BOLD, NULL);
         }
         else {
-            g_object_set(G_OBJECT (renderer),
-            "text", entry->name, "editable", TRUE,
-            "weight", PANGO_WEIGHT_NORMAL, NULL);
+            g_object_set(G_OBJECT (renderer), "text", entry->name, "editable", TRUE, "weight", PANGO_WEIGHT_NORMAL, NULL);
         }
         break;
     }
@@ -2133,8 +2146,7 @@ gint st_data_compare_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, g
 
     gtk_tree_model_get(model, a, ST_COLUMN_ENTRY, &entry1, -1);
     gtk_tree_model_get(model, b, ST_COLUMN_ENTRY, &entry2, -1);
-    if (gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE (model),
-    &colid, &order) == FALSE)
+    if (gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE (model), &colid, &order) == FALSE)
         return 0;
 
     /* We make sure that the "all" entry always stays on top, closely followed
@@ -2192,7 +2204,8 @@ void st_enable_disable_view_sort(gint inst, gboolean enable) {
     static gint disable_count[SORT_TAB_MAX];
 
     if (inst >= prefs_get_int("sort_tab_num")) {
-        tm_enable_disable_view_sort(enable);
+        g_warning("st_enable_disable_view_sort: signal that track view should be enabled/disabled");
+//        tm_enable_disable_view_sort(enable);
         return;
     }
 
@@ -2205,51 +2218,32 @@ void st_enable_disable_view_sort(gint inst, gboolean enable) {
             if (prefs_get_int("st_sort") != SORT_NONE) {
                 SortTab *st = sorttab[inst];
                 if (st && (st->current_category != ST_CAT_SPECIAL) && st->model) {
-                    if (BROKEN_GTK_TREE_SORT)
-                    {
+                    if (BROKEN_GTK_TREE_SORT) {
                         gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE (st->model), ST_COLUMN_ENTRY, st_data_compare_func, GINT_TO_POINTER(inst), NULL);
                     }
-                    else
-                    {
-                        gtk_tree_sortable_set_sort_column_id (
-                                GTK_TREE_SORTABLE (st->model),
-                                ST_COLUMN_ENTRY,
-                                prefs_get_int("st_sort"));
+                    else {
+                        gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (st->model), ST_COLUMN_ENTRY, prefs_get_int("st_sort"));
                     }
                 }
             }
-            st_enable_disable_view_sort (inst+1, enable);
+            st_enable_disable_view_sort(inst + 1, enable);
         }
     }
-    else
-    {
-        if (disable_count[inst] == 0)
-        {
+    else {
+        if (disable_count[inst] == 0) {
             /* Disable sorting */
-            if (prefs_get_int("st_sort") != SORT_NONE)
-            {
+            if (prefs_get_int("st_sort") != SORT_NONE) {
                 SortTab *st = sorttab[inst];
-                if (st &&
-                        (st->current_category != ST_CAT_SPECIAL) &&
-                        st->model)
-                {
-                    if (BROKEN_GTK_TREE_SORT)
-                    {
-                        gtk_tree_sortable_set_sort_func (
-                                GTK_TREE_SORTABLE (st->model),
-                                ST_COLUMN_ENTRY,
-                                st_nosort_comp, NULL, NULL);
+                if (st && (st->current_category != ST_CAT_SPECIAL) && st->model) {
+                    if (BROKEN_GTK_TREE_SORT) {
+                        gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE (st->model), ST_COLUMN_ENTRY, st_nosort_comp, NULL, NULL);
                     }
-                    else
-                    {
-                        gtk_tree_sortable_set_sort_column_id (
-                                GTK_TREE_SORTABLE (st->model),
-                                GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
-                                prefs_get_int("st_sort"));
+                    else {
+                        gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (st->model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, prefs_get_int("st_sort"));
                     }
                 }
             }
-            st_enable_disable_view_sort (inst+1, enable);
+            st_enable_disable_view_sort(inst + 1, enable);
         }
         disable_count[inst]++;
     }
@@ -2263,22 +2257,21 @@ void st_select_current_position(gint inst, gint x, gint y) {
             GtkTreeView *tv = st->treeview[st->current_category];
 
             gtk_tree_view_get_path_at_pos(tv, x, y, &path, NULL, NULL, NULL);
-            if (path)
-            {
-                GtkTreeSelection *ts = gtk_tree_view_get_selection (tv);
-                gtk_tree_selection_select_path (ts, path);
-                gtk_tree_path_free (path);
+            if (path) {
+                GtkTreeSelection *ts = gtk_tree_view_get_selection(tv);
+                gtk_tree_selection_select_path(ts, path);
+                gtk_tree_path_free(path);
             }
         }
     }
 }
 
-            /* Make the appropriate number of sort tab instances visible */
-            /* Also: make the menu items "more/less sort tabs" active/inactive as
-             * needed. */
+/* Make the appropriate number of sort tab instances visible */
+/* Also: make the menu items "more/less sort tabs" active/inactive as
+ * needed. */
 static void st_adjust_visible(void) {
     gint i, n;
-    GtkWidget *w;
+//    GtkWidget *w;
 
     if (!st_paned[0])
         return;
@@ -2302,19 +2295,20 @@ static void st_adjust_visible(void) {
             gtk_widget_hide(GTK_WIDGET (st_paned[i]));
     }
 
-    /* activate / deactiveate "less sort tabs" menu item */
-    w = gtkpod_xml_get_widget(main_window_xml, "less_sort_tabs");
-    if (n == 0)
-        gtk_widget_set_sensitive(w, FALSE);
-    else
-        gtk_widget_set_sensitive(w, TRUE);
-
-    /* activate / deactiveate "more sort tabs" menu item */
-    w = gtkpod_xml_get_widget(main_window_xml, "more_sort_tabs");
-    if (n == SORT_TAB_MAX)
-        gtk_widget_set_sensitive(w, FALSE);
-    else
-        gtk_widget_set_sensitive(w, TRUE);
+    g_warning("Need to work out how to disable more and less sort tab actions");
+//    /* activate / deactiveate "less sort tabs" menu item */
+//    w = gtkpod_xml_get_widget(main_window_xml, "less_sort_tabs");
+//    if (n == 0)
+//        gtk_widget_set_sensitive(w, FALSE);
+//    else
+//        gtk_widget_set_sensitive(w, TRUE);
+//
+//    /* activate / deactiveate "more sort tabs" menu item */
+//    w = gtkpod_xml_get_widget(main_window_xml, "more_sort_tabs");
+//    if (n == SORT_TAB_MAX)
+//        gtk_widget_set_sensitive(w, FALSE);
+//    else
+//        gtk_widget_set_sensitive(w, TRUE);
 }
 
 /* Make the appropriate number of sort tab instances visible */
@@ -2332,24 +2326,25 @@ void st_show_visible(void) {
  * structure. This function is called when first creating the paned
  * elements and from within st_arrange_visible_sort_tabs() */
 static void st_set_visible_sort_tab_paned(void) {
-    gint i, x, y, p0, num, width;
+//    gint i, x, y, p0, num, width;
 
-    num = prefs_get_int("sort_tab_num");
-    if (num > 0) {
-        gchar *buf;
-        GtkWidget *w;
-
-        gtk_window_get_size(GTK_WINDOW (gtkpod_window), &x, &y);
-        buf = g_strdup_printf("paned%d", PANED_PLAYLIST);
-        if ((w = gtkpod_xml_get_widget(main_window_xml, buf))) {
-            p0 = gtk_paned_get_position(GTK_PANED (w));
-            width = (x - p0) / num;
-            for (i = 0; i < num; ++i) {
-                prefs_set_int_index("paned_pos_", PANED_NUM_GLADE + i, width);
-            }
-        }
-        g_free(buf);
-    }
+    g_warning("Determine whether to need to store the paned sizes and positions anymore?");
+//    num = prefs_get_int("sort_tab_num");
+//    if (num > 0) {
+//        gchar *buf;
+//        GtkWidget *w;
+//
+//        gtk_window_get_size(GTK_WINDOW (gtkpod_window), &x, &y);
+//        buf = g_strdup_printf("paned%d", PANED_PLAYLIST);
+//        if ((w = gtkpod_xml_get_widget(main_window_xml, buf))) {
+//            p0 = gtk_paned_get_position(GTK_PANED (w));
+//            width = (x - p0) / num;
+//            for (i = 0; i < num; ++i) {
+//                prefs_set_int_index("paned_pos_", PANED_NUM_GLADE + i, width);
+//            }
+//        }
+//        g_free(buf);
+//    }
 }
 
 /* Regularly arrange the visible sort tabs */
@@ -2369,7 +2364,7 @@ void st_arrange_visible_sort_tabs(void) {
 }
 
 /* Created paned elements for sorttabs */
-static void st_create_paned(void) {
+static void st_create_paned() {
     gint i;
 
     /* sanity check */
@@ -2382,21 +2377,14 @@ static void st_create_paned(void) {
         gtk_widget_show(paned);
 
         if (!i) {
-            GtkWidget *parent;
-            GtkWidget *dummy;
-            parent = gtkpod_xml_get_widget(main_window_xml, "paned1");
-            dummy = gtkpod_xml_get_widget(main_window_xml, "paned1_dummy");
-            g_return_if_fail (parent);
-            g_return_if_fail (dummy);
-            gtk_widget_destroy(dummy);
+            g_return_if_fail (sorttab_parent);
 
             g_object_set_data(G_OBJECT (paned), "paned_id", "st_0");
-            gtk_paned_pack2(GTK_PANED (parent), paned, TRUE, TRUE);
-            st_update_paned_position ();
+            gtk_paned_pack2(sorttab_parent, paned, TRUE, TRUE);
+            st_update_paned_position();
         }
-        else
-        {
-            gtk_paned_pack2 (st_paned[i-1], paned, TRUE, TRUE);
+        else {
+            gtk_paned_pack2(st_paned[i - 1], paned, TRUE, TRUE);
         }
 
         st_paned[i] = GTK_PANED (paned);
@@ -2405,7 +2393,7 @@ static void st_create_paned(void) {
     /* set position of visible paned to decent values if not already
      set */
     if (prefs_get_int_index("paned_pos_", PANED_NUM_GLADE) == -1)
-    st_set_visible_sort_tab_paned ();
+        st_set_visible_sort_tab_paned();
 }
 
 static gboolean st_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data) {
@@ -2413,7 +2401,8 @@ static gboolean st_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer 
         switch (e->button) {
         case 3:
             st_select_current_position(GPOINTER_TO_INT(data), e->x, e->y);
-            st_context_menu_init(GPOINTER_TO_INT(data));
+            g_warning("TODO: context menu for sorttabs display");
+//            st_context_menu_init(GPOINTER_TO_INT(data));
             return TRUE;
         default:
             break;
@@ -2435,15 +2424,13 @@ static void st_create_treeview(gint inst, ST_CAT_item st_cat) {
     treeview = GTK_TREE_VIEW (gtk_tree_view_new ());
     gtk_widget_show(GTK_WIDGET (treeview));
     st->treeview[st_cat] = treeview;
-    gtk_container_add(GTK_CONTAINER (st->window[st_cat]),
-    GTK_WIDGET (treeview));
-    gtk_tree_view_set_model (treeview, st->model);
+    gtk_container_add(GTK_CONTAINER (st->window[st_cat]), GTK_WIDGET (treeview));
+    gtk_tree_view_set_model(treeview, st->model);
     g_signal_connect_after ((gpointer) treeview, "key_release_event",
             G_CALLBACK (on_st_treeview_key_release_event),
             NULL);
-    gtk_drag_source_set (GTK_WIDGET (treeview), GDK_BUTTON1_MASK,
-            st_drag_types, TGNR (st_drag_types),
-            GDK_ACTION_COPY|GDK_ACTION_MOVE);
+    gtk_drag_source_set(GTK_WIDGET (treeview), GDK_BUTTON1_MASK, st_drag_types, TGNR (st_drag_types), GDK_ACTION_COPY
+            | GDK_ACTION_MOVE);
     g_signal_connect (G_OBJECT (treeview), "button-press-event",
             G_CALLBACK (st_button_press_event), GINT_TO_POINTER(inst));
     g_signal_connect ((gpointer) treeview, "drag_data_get",
@@ -2452,46 +2439,38 @@ static void st_create_treeview(gint inst, ST_CAT_item st_cat) {
     g_signal_connect ((gpointer) treeview, "drag-end",
             G_CALLBACK (st_drag_end),
             NULL);
-    gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
-    gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (treeview), TRUE);
-    gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
-    gtk_tree_view_set_enable_search (GTK_TREE_VIEW (treeview), TRUE);
-    gtk_tree_view_set_search_column (GTK_TREE_VIEW (treeview), 0);
-    gtk_tree_view_set_search_equal_func (GTK_TREE_VIEW (treeview),
-            st_search_equal_func,
-            NULL,
-            NULL);
+    gtk_tree_view_set_rules_hint(GTK_TREE_VIEW (treeview), TRUE);
+    gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW (treeview), TRUE);
+    gtk_tree_view_set_headers_visible(GTK_TREE_VIEW (treeview), FALSE);
+    gtk_tree_view_set_enable_search(GTK_TREE_VIEW (treeview), TRUE);
+    gtk_tree_view_set_search_column(GTK_TREE_VIEW (treeview), 0);
+    gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW (treeview), st_search_equal_func, NULL, NULL);
 
-    selection = gtk_tree_view_get_selection (treeview);
-    gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
+    selection = gtk_tree_view_get_selection(treeview);
+    gtk_tree_selection_set_mode(selection, GTK_SELECTION_SINGLE);
     g_signal_connect (G_OBJECT (selection), "changed",
             G_CALLBACK (st_selection_changed),
             GINT_TO_POINTER(inst));
     /* Add column */
-    renderer = gtk_cell_renderer_text_new ();
+    renderer = gtk_cell_renderer_text_new();
     g_signal_connect (G_OBJECT (renderer), "edited",
             G_CALLBACK (st_cell_edited),
             GINT_TO_POINTER(inst));
-    g_object_set_data (G_OBJECT (renderer), "column",
-            (gint *)ST_COLUMN_ENTRY);
-    column = gtk_tree_view_column_new ();
-    gtk_tree_view_column_pack_start (column, renderer, TRUE);
-    column = gtk_tree_view_column_new_with_attributes ("", renderer, NULL);
-    gtk_tree_view_column_set_cell_data_func (column, renderer,
-            st_cell_data_func, NULL, NULL);
-    gtk_tree_view_column_set_sort_column_id (column, ST_COLUMN_ENTRY);
-    gtk_tree_view_column_set_resizable (column, TRUE);
-    gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
-    gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
-    gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (st->model),
-            ST_COLUMN_ENTRY,
-            st_data_compare_func,
-            GINT_TO_POINTER(inst), NULL);
-    gtk_tree_view_append_column (treeview, column);
+    g_object_set_data(G_OBJECT (renderer), "column", (gint *) ST_COLUMN_ENTRY);
+    column = gtk_tree_view_column_new();
+    gtk_tree_view_column_pack_start(column, renderer, TRUE);
+    column = gtk_tree_view_column_new_with_attributes("", renderer, NULL);
+    gtk_tree_view_column_set_cell_data_func(column, renderer, st_cell_data_func, NULL, NULL);
+    gtk_tree_view_column_set_sort_column_id(column, ST_COLUMN_ENTRY);
+    gtk_tree_view_column_set_resizable(column, TRUE);
+    gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
+    gtk_tree_view_column_set_sort_order(column, GTK_SORT_ASCENDING);
+    gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE (st->model), ST_COLUMN_ENTRY, st_data_compare_func, GINT_TO_POINTER(inst), NULL);
+    gtk_tree_view_append_column(treeview, column);
 }
 
-    /* Create the "special" page in the notebook and connect all the
-     signals */
+/* Create the "special" page in the notebook and connect all the
+ signals */
 static void st_create_special(gint inst, GtkWidget *window) {
     GtkWidget *special;
     GtkWidget *viewport;
@@ -2501,7 +2480,7 @@ static void st_create_special(gint inst, GtkWidget *window) {
     GladeXML *special_xml;
     gchar *buf;
 
-    special_xml = gtkpod_xml_new(xml_file, "special_sorttab");
+    special_xml = gtkpod_xml_new(GLADE_FILE, "special_sorttab");
     special = gtkpod_xml_get_widget(special_xml, "special_sorttab");
 
     viewport = gtkpod_xml_get_widget(special_xml, "special_viewport");
@@ -2521,147 +2500,134 @@ static void st_create_special(gint inst, GtkWidget *window) {
             GINT_TO_POINTER(inst));
     if (prefs_get_int_index("sp_or", inst))
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
-        else
-        {
-            w = gtkpod_xml_get_widget (special_xml, "sp_and_button");
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
-        }
-
-        /* RATING */
-        w = gtkpod_xml_get_widget (special_xml, "sp_rating_button");
-        g_signal_connect ((gpointer)w,
-                "toggled", G_CALLBACK (on_sp_cond_button_toggled),
-                GUINT_TO_POINTER((T_RATING<<SP_SHIFT) + inst));
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                prefs_get_int_index("sp_rating_cond", inst));
-        for (i=0; i<=RATING_MAX; ++i)
-        {
-            gchar *buf = g_strdup_printf ("sp_rating%d", i);
-            w = gtkpod_xml_get_widget (special_xml, buf);
-            g_signal_connect ((gpointer)w,
-                    "toggled", G_CALLBACK (on_sp_rating_n_toggled),
-                    GUINT_TO_POINTER((i<<SP_SHIFT) + inst));
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                    get_sp_rating_n (inst, i));
-            g_free (buf);
-        }
-
-        /* PLAYCOUNT */
-        w = gtkpod_xml_get_widget (special_xml, "sp_playcount_button");
-        g_signal_connect ((gpointer)w,
-                "toggled", G_CALLBACK (on_sp_cond_button_toggled),
-                GUINT_TO_POINTER((T_PLAYCOUNT<<SP_SHIFT) + inst));
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                prefs_get_int_index("sp_playcound_cond", inst));
-        w = gtkpod_xml_get_widget (special_xml, "sp_playcount_low");
-        g_signal_connect ((gpointer)w,
-                "value_changed",
-                G_CALLBACK (on_sp_playcount_low_value_changed),
-                GINT_TO_POINTER(inst));
-        gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
-                prefs_get_int_index("sp_playcount_low", inst));
-        w = gtkpod_xml_get_widget (special_xml, "sp_playcount_high");
-        g_signal_connect ((gpointer)w,
-                "value_changed",
-                G_CALLBACK (on_sp_playcount_high_value_changed),
-                GINT_TO_POINTER(inst));
-        gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
-                prefs_get_int_index("sp_playcount_high", inst));
-
-        /* PLAYED */
-        buf = prefs_get_string_index("sp_played_state", inst);
-
-        w = gtkpod_xml_get_widget (special_xml, "sp_played_button");
-        st->ti_played.active = w;
-        g_signal_connect ((gpointer)w,
-                "toggled", G_CALLBACK (on_sp_cond_button_toggled),
-                GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                prefs_get_int_index("sp_played_cond", inst));
-        w = gtkpod_xml_get_widget (special_xml, "sp_played_entry");
-        st->ti_played.entry = w;
-        gtk_entry_set_text (GTK_ENTRY (w),
-                buf);
-        g_signal_connect ((gpointer)w,
-                "activate", G_CALLBACK (on_sp_entry_activate),
-                GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
-        g_signal_connect ((gpointer)gtkpod_xml_get_widget (special_xml,
-                        "sp_played_cal_button"),
-                "clicked",
-                G_CALLBACK (on_sp_cal_button_clicked),
-                GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
-        g_free(buf);
-
-        /* MODIFIED */
-        buf = prefs_get_string_index("sp_modified_state", inst);
-
-        w = gtkpod_xml_get_widget (special_xml, "sp_modified_button");
-        st->ti_modified.active = w;
-        g_signal_connect ((gpointer)w,
-                "toggled", G_CALLBACK (on_sp_cond_button_toggled),
-                GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                prefs_get_int_index("sp_modified_cond", inst));
-        w = gtkpod_xml_get_widget (special_xml, "sp_modified_entry");
-        st->ti_modified.entry = w;
-        gtk_entry_set_text (GTK_ENTRY (w),
-                buf);
-        g_signal_connect ((gpointer)w,
-                "activate", G_CALLBACK (on_sp_entry_activate),
-                GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
-        g_signal_connect ((gpointer)gtkpod_xml_get_widget (special_xml,
-                        "sp_modified_cal_button"),
-                "clicked",
-                G_CALLBACK (on_sp_cal_button_clicked),
-                GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
-        g_free(buf);
-
-        /* ADDED */
-        buf = prefs_get_string_index("sp_added_state", inst);
-
-        w = gtkpod_xml_get_widget (special_xml, "sp_added_button");
-        st->ti_added.active = w;
-        g_signal_connect ((gpointer)w,
-                "toggled", G_CALLBACK (on_sp_cond_button_toggled),
-                GUINT_TO_POINTER((T_TIME_ADDED<<SP_SHIFT) + inst));
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                prefs_get_int_index("sp_added_cond", inst));
-        w = gtkpod_xml_get_widget (special_xml, "sp_added_entry");
-        st->ti_added.entry = w;
-        gtk_entry_set_text (GTK_ENTRY (w),
-                buf);
-        g_signal_connect ((gpointer)w,
-                "activate", G_CALLBACK (on_sp_entry_activate),
-                GUINT_TO_POINTER((T_TIME_ADDED<<SP_SHIFT) + inst));
-        g_signal_connect ((gpointer)gtkpod_xml_get_widget (special_xml,
-                        "sp_added_cal_button"),
-                "clicked",
-                G_CALLBACK (on_sp_cal_button_clicked),
-                GUINT_TO_POINTER((T_TIME_ADDED<<SP_SHIFT) + inst));
-
-        g_signal_connect ((gpointer)gtkpod_xml_get_widget (special_xml, "sp_go"),
-                "clicked", G_CALLBACK (on_sp_go_clicked),
-                GINT_TO_POINTER(inst));
-        w = gtkpod_xml_get_widget (special_xml, "sp_go_always");
-        g_signal_connect ((gpointer)w,
-                "toggled", G_CALLBACK (on_sp_go_always_toggled),
-                GINT_TO_POINTER(inst));
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                prefs_get_int_index("sp_autodisplay", inst));
-        g_free (buf);
-
-        /* Safe pointer to tooltips */
-        st->sp_tooltips_data = gtk_tooltips_data_get(gtkpod_xml_get_widget (special_xml, "sp_modified_entry"));
-        /* Show / don't show tooltips */
-        g_return_if_fail (st->sp_tooltips_data);
-        if (prefs_get_int("display_tooltips_main"))
-        gtk_tooltips_enable (st->sp_tooltips_data->tooltips);
-        else gtk_tooltips_disable (st->sp_tooltips_data->tooltips);
-        /* we don't need this any more */
-        gtk_widget_destroy (special);
+    else {
+        w = gtkpod_xml_get_widget(special_xml, "sp_and_button");
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
     }
 
-        /* create the treeview for category @st_cat of instance @inst */
+    /* RATING */
+    w = gtkpod_xml_get_widget(special_xml, "sp_rating_button");
+    g_signal_connect ((gpointer)w,
+            "toggled", G_CALLBACK (on_sp_cond_button_toggled),
+            GUINT_TO_POINTER((T_RATING<<SP_SHIFT) + inst));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int_index("sp_rating_cond", inst));
+    for (i = 0; i <= RATING_MAX; ++i) {
+        gchar *buf = g_strdup_printf("sp_rating%d", i);
+        w = gtkpod_xml_get_widget(special_xml, buf);
+        g_signal_connect ((gpointer)w,
+                "toggled", G_CALLBACK (on_sp_rating_n_toggled),
+                GUINT_TO_POINTER((i<<SP_SHIFT) + inst));
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), get_sp_rating_n(inst, i));
+        g_free(buf);
+    }
+
+    /* PLAYCOUNT */
+    w = gtkpod_xml_get_widget(special_xml, "sp_playcount_button");
+    g_signal_connect ((gpointer)w,
+            "toggled", G_CALLBACK (on_sp_cond_button_toggled),
+            GUINT_TO_POINTER((T_PLAYCOUNT<<SP_SHIFT) + inst));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int_index("sp_playcound_cond", inst));
+    w = gtkpod_xml_get_widget(special_xml, "sp_playcount_low");
+    g_signal_connect ((gpointer)w,
+            "value_changed",
+            G_CALLBACK (on_sp_playcount_low_value_changed),
+            GINT_TO_POINTER(inst));
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON (w), prefs_get_int_index("sp_playcount_low", inst));
+    w = gtkpod_xml_get_widget(special_xml, "sp_playcount_high");
+    g_signal_connect ((gpointer)w,
+            "value_changed",
+            G_CALLBACK (on_sp_playcount_high_value_changed),
+            GINT_TO_POINTER(inst));
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON (w), prefs_get_int_index("sp_playcount_high", inst));
+
+    /* PLAYED */
+    buf = prefs_get_string_index("sp_played_state", inst);
+
+    w = gtkpod_xml_get_widget(special_xml, "sp_played_button");
+    st->ti_played.active = w;
+    g_signal_connect ((gpointer)w,
+            "toggled", G_CALLBACK (on_sp_cond_button_toggled),
+            GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int_index("sp_played_cond", inst));
+    w = gtkpod_xml_get_widget(special_xml, "sp_played_entry");
+    st->ti_played.entry = w;
+    gtk_entry_set_text(GTK_ENTRY (w), buf);
+    g_signal_connect ((gpointer)w,
+            "activate", G_CALLBACK (on_sp_entry_activate),
+            GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
+    g_signal_connect ((gpointer)gtkpod_xml_get_widget (special_xml,
+                    "sp_played_cal_button"),
+            "clicked",
+            G_CALLBACK (on_sp_cal_button_clicked),
+            GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
+    g_free(buf);
+
+    /* MODIFIED */
+    buf = prefs_get_string_index("sp_modified_state", inst);
+
+    w = gtkpod_xml_get_widget(special_xml, "sp_modified_button");
+    st->ti_modified.active = w;
+    g_signal_connect ((gpointer)w,
+            "toggled", G_CALLBACK (on_sp_cond_button_toggled),
+            GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int_index("sp_modified_cond", inst));
+    w = gtkpod_xml_get_widget(special_xml, "sp_modified_entry");
+    st->ti_modified.entry = w;
+    gtk_entry_set_text(GTK_ENTRY (w), buf);
+    g_signal_connect ((gpointer)w,
+            "activate", G_CALLBACK (on_sp_entry_activate),
+            GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
+    g_signal_connect ((gpointer)gtkpod_xml_get_widget (special_xml,
+                    "sp_modified_cal_button"),
+            "clicked",
+            G_CALLBACK (on_sp_cal_button_clicked),
+            GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
+    g_free(buf);
+
+    /* ADDED */
+    buf = prefs_get_string_index("sp_added_state", inst);
+
+    w = gtkpod_xml_get_widget(special_xml, "sp_added_button");
+    st->ti_added.active = w;
+    g_signal_connect ((gpointer)w,
+            "toggled", G_CALLBACK (on_sp_cond_button_toggled),
+            GUINT_TO_POINTER((T_TIME_ADDED<<SP_SHIFT) + inst));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int_index("sp_added_cond", inst));
+    w = gtkpod_xml_get_widget(special_xml, "sp_added_entry");
+    st->ti_added.entry = w;
+    gtk_entry_set_text(GTK_ENTRY (w), buf);
+    g_signal_connect ((gpointer)w,
+            "activate", G_CALLBACK (on_sp_entry_activate),
+            GUINT_TO_POINTER((T_TIME_ADDED<<SP_SHIFT) + inst));
+    g_signal_connect ((gpointer)gtkpod_xml_get_widget (special_xml,
+                    "sp_added_cal_button"),
+            "clicked",
+            G_CALLBACK (on_sp_cal_button_clicked),
+            GUINT_TO_POINTER((T_TIME_ADDED<<SP_SHIFT) + inst));
+
+    g_signal_connect ((gpointer)gtkpod_xml_get_widget (special_xml, "sp_go"),
+            "clicked", G_CALLBACK (on_sp_go_clicked),
+            GINT_TO_POINTER(inst));
+    w = gtkpod_xml_get_widget(special_xml, "sp_go_always");
+    g_signal_connect ((gpointer)w,
+            "toggled", G_CALLBACK (on_sp_go_always_toggled),
+            GINT_TO_POINTER(inst));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int_index("sp_autodisplay", inst));
+    g_free(buf);
+
+    /* Safe pointer to tooltips */
+    st->sp_tooltips_data = gtk_tooltips_data_get(gtkpod_xml_get_widget(special_xml, "sp_modified_entry"));
+    /* Show / don't show tooltips */
+    g_return_if_fail (st->sp_tooltips_data);
+    if (prefs_get_int("display_tooltips_main"))
+        gtk_tooltips_enable(st->sp_tooltips_data->tooltips);
+    else
+        gtk_tooltips_disable(st->sp_tooltips_data->tooltips);
+    /* we don't need this any more */
+    gtk_widget_destroy(special);
+}
+
+/* create the treeview for category @st_cat of instance @inst */
 static void st_create_page(gint inst, ST_CAT_item st_cat) {
     GtkWidget *st0_notebook;
     GtkWidget *st0_window0;
@@ -2681,54 +2647,51 @@ static void st_create_page(gint inst, ST_CAT_item st_cat) {
     }
     else { /* create window if not already present */
         st0_window0 = gtk_scrolled_window_new(NULL, NULL);
-        gtk_widget_show (st0_window0);
-        gtk_container_add (GTK_CONTAINER (st0_notebook), st0_window0);
-        gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (st0_window0), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+        gtk_widget_show(st0_window0);
+        gtk_container_add(GTK_CONTAINER (st0_notebook), st0_window0);
+        gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (st0_window0), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
         st->window[st_cat] = st0_window0;
     }
 
-    switch (st_cat)
-    {
-        case ST_CAT_ARTIST:
-        st0_label0 = gtk_label_new (_("Artist"));
+    switch (st_cat) {
+    case ST_CAT_ARTIST:
+        st0_label0 = gtk_label_new(_("Artist"));
         break;
-        case ST_CAT_ALBUM:
-        st0_label0 = gtk_label_new (_("Album"));
+    case ST_CAT_ALBUM:
+        st0_label0 = gtk_label_new(_("Album"));
         break;
-        case ST_CAT_GENRE:
-        st0_label0 = gtk_label_new (_("Genre"));
+    case ST_CAT_GENRE:
+        st0_label0 = gtk_label_new(_("Genre"));
         break;
-        case ST_CAT_COMPOSER:
-        st0_label0 = gtk_label_new (_("Comp."));
+    case ST_CAT_COMPOSER:
+        st0_label0 = gtk_label_new(_("Comp."));
         break;
-        case ST_CAT_TITLE:
-        st0_label0 = gtk_label_new (_("Title"));
+    case ST_CAT_TITLE:
+        st0_label0 = gtk_label_new(_("Title"));
         break;
-        case ST_CAT_YEAR:
-        st0_label0 = gtk_label_new (_("Year"));
+    case ST_CAT_YEAR:
+        st0_label0 = gtk_label_new(_("Year"));
         break;
-        case ST_CAT_SPECIAL:
-        st0_label0 = gtk_label_new (_("Special"));
+    case ST_CAT_SPECIAL:
+        st0_label0 = gtk_label_new(_("Special"));
         break;
-        default: /* should not happen... */
+    default: /* should not happen... */
         g_return_if_reached ();
     }
-    gtk_widget_show (st0_label0);
-    gtk_notebook_set_tab_label (GTK_NOTEBOOK (st0_notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (st0_notebook), st_cat), st0_label0);
-    gtk_label_set_justify (GTK_LABEL (st0_label0), GTK_JUSTIFY_LEFT);
+    gtk_widget_show(st0_label0);
+    gtk_notebook_set_tab_label(GTK_NOTEBOOK (st0_notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK (st0_notebook), st_cat), st0_label0);
+    gtk_label_set_justify(GTK_LABEL (st0_label0), GTK_JUSTIFY_LEFT);
 
-    if (st_cat != ST_CAT_SPECIAL)
-    {
-        st_create_treeview (inst, st_cat);
+    if (st_cat != ST_CAT_SPECIAL) {
+        st_create_treeview(inst, st_cat);
     }
-    else
-    {
-        st_create_special (inst, st0_window0);
+    else {
+        st_create_special(inst, st0_window0);
     }
 }
 
-        /* create all ST_CAT_NUM treeviews and the special page in sort tab of
-         * instance @inst, then set the model */
+/* create all ST_CAT_NUM treeviews and the special page in sort tab of
+ * instance @inst, then set the model */
 static void st_create_pages(gint inst) {
     GtkTreeModel *model;
     GtkListStore *liststore;
@@ -2787,33 +2750,40 @@ static void st_create_notebook(gint inst) {
     /* how to pack? */
     if (inst == SORT_TAB_MAX - 1)
         gtk_paned_pack2(paned, st0_notebook, TRUE, TRUE);
-        else
-        gtk_paned_pack1 (paned, st0_notebook, FALSE, TRUE);
-        gtk_notebook_set_scrollable (GTK_NOTEBOOK (st0_notebook), TRUE);
+    else
+        gtk_paned_pack1(paned, st0_notebook, FALSE, TRUE);
+    gtk_notebook_set_scrollable(GTK_NOTEBOOK (st0_notebook), TRUE);
 
-        st->notebook = GTK_NOTEBOOK (st0_notebook);
-        st_create_pages (inst);
-        page = prefs_get_int_index("st_category", inst);
-        st->current_category = page;
-        gtk_notebook_set_current_page (st->notebook, page);
-        st_set_string_compare_func (inst, page);
+    st->notebook = GTK_NOTEBOOK (st0_notebook);
+    st_create_pages(inst);
+    page = prefs_get_int_index("st_category", inst);
+    st->current_category = page;
+    gtk_notebook_set_current_page(st->notebook, page);
+    st_set_string_compare_func(inst, page);
 
-        if (prefs_get_int("st_sort") != SORT_NONE)
-        st_sort_inst (inst, prefs_get_int("st_sort"));
+    if (prefs_get_int("st_sort") != SORT_NONE)
+        st_sort_inst(inst, prefs_get_int("st_sort"));
 
-        g_signal_connect ((gpointer) st0_notebook, "switch_page",
-                G_CALLBACK (on_st_switch_page),
-                GINT_TO_POINTER(inst));
-    }
+    g_signal_connect ((gpointer) st0_notebook, "switch_page",
+            G_CALLBACK (on_st_switch_page),
+            GINT_TO_POINTER(inst));
+}
 
-        /* Create sort tabs */
-void st_create_tabs(void) {
+/* Create sort tabs */
+void st_create_tabs(GtkPaned *parent) {
+    g_return_if_fail(parent);
+
     gint inst;
+
+    /* Assign the parent widget of the created paneds */
+    if (sorttab_parent != parent)
+        sorttab_parent = parent;
+
     /*   gchar *name; */
 
     /* we count downward here because the smaller sort tabs might try to
      initialize the higher one's -> create the higher ones first */
-    for (inst = SORT_TAB_MAX-1; inst >= 0; --inst) {
+    for (inst = SORT_TAB_MAX - 1; inst >= 0; --inst) {
         sorttab[inst] = g_malloc0(sizeof(SortTab));
         st_create_notebook(inst);
     }
@@ -2844,28 +2814,28 @@ void st_cleanup(void) {
  colums is set when setting up the colums in the listview. Called by
  display_set_default_sizes() */
 void st_set_default_sizes(void) {
-    gint i;
+//    gint i;
 
     /* GtkPaned elements */
-    g_return_if_fail (gtkpod_window);
-    /* Elements defined with glade */
-    for (i = 0; i < PANED_NUM_GLADE; ++i) {
-        gchar *buf = g_strdup_printf("paned%d", i);
-        GtkWidget *w = gtkpod_xml_get_widget(main_window_xml, buf);
-        g_free(buf);
-        g_return_if_fail (w);
-        if (prefs_get_int_index("paned_pos_", i) != -1) {
-            gtk_paned_set_position(GTK_PANED (w),
-            prefs_get_int_index("paned_pos_", i));
-        }
-    }
-    /* Elements defined with display.c (sort tab hpaned) */
-    for (i = 0; i < PANED_NUM_ST; ++i) {
-        g_return_if_fail (st_paned[i]);
-        if (prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i) != -1) {
-            gtk_paned_set_position(st_paned[i], prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i));
-        }
-    }
+    g_return_if_fail (gtkpod_app);
+    g_warning("Not sure whether to set positions of paneds based on prefs");
+//    /* Elements defined with glade */
+//    for (i = 0; i < PANED_NUM_GLADE; ++i) {
+//        gchar *buf = g_strdup_printf("paned%d", i);
+//        GtkWidget *w = gtkpod_xml_get_widget(main_window_xml, buf);
+//        g_free(buf);
+//        g_return_if_fail (w);
+//        if (prefs_get_int_index("paned_pos_", i) != -1) {
+//            gtk_paned_set_position(GTK_PANED (w), prefs_get_int_index("paned_pos_", i));
+//        }
+//    }
+//    /* Elements defined with display.c (sort tab hpaned) */
+//    for (i = 0; i < PANED_NUM_ST; ++i) {
+//        g_return_if_fail (st_paned[i]);
+//        if (prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i) != -1) {
+//            gtk_paned_set_position(st_paned[i], prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i));
+//        }
+//    }
 }
 
 /* update the cfg structure (preferences) with the current sizes /
@@ -2873,24 +2843,25 @@ void st_set_default_sizes(void) {
  position of GtkPaned elements */
 void st_update_default_sizes(void) {
     /* GtkPaned elements */
-    if (gtkpod_window) {
-        gint i;
-        /* Elements defined with glade */
-        for (i = 0; i < PANED_NUM_GLADE; ++i) {
-            gchar *buf;
-            GtkWidget *w;
-            buf = g_strdup_printf("paned%d", i);
-            if ((w = gtkpod_xml_get_widget(main_window_xml, buf))) {
-                prefs_set_int_index("paned_pos_", i, gtk_paned_get_position(GTK_PANED (w)));
-            }
-            g_free(buf);
-        }
-        /* Elements defined with display.c (sort tab hpaned) */
-        for (i = 0; i < PANED_NUM_ST; ++i) {
-            if (st_paned[i])
-                prefs_set_int_index("paned_pos_", i + PANED_NUM_GLADE, gtk_paned_get_position(st_paned[i]));
-        }
-    }
+    g_warning("Not sure whether need to update default size of sorttabs");
+//    if (gtkpod_window) {
+//        gint i;
+//        /* Elements defined with glade */
+//        for (i = 0; i < PANED_NUM_GLADE; ++i) {
+//            gchar *buf;
+//            GtkWidget *w;
+//            buf = g_strdup_printf("paned%d", i);
+//            if ((w = gtkpod_xml_get_widget(main_window_xml, buf))) {
+//                prefs_set_int_index("paned_pos_", i, gtk_paned_get_position(GTK_PANED (w)));
+//            }
+//            g_free(buf);
+//        }
+//        /* Elements defined with display.c (sort tab hpaned) */
+//        for (i = 0; i < PANED_NUM_ST; ++i) {
+//            if (st_paned[i])
+//                prefs_set_int_index("paned_pos_", i + PANED_NUM_GLADE, gtk_paned_get_position(st_paned[i]));
+//        }
+//    }
 }
 
 /* make the tooltips visible or hide it depending on the value set in
@@ -2920,9 +2891,10 @@ void st_show_hide_tooltips(void) {
  when filter_tabs_top is changed
  */
 void st_update_paned_position() {
-    GtkPaned *paned = GTK_PANED (gtkpod_xml_get_widget (main_window_xml, "paned1"));
-    GtkWidget *top = gtk_paned_get_child1(paned);
-    GtkWidget *bottom = gtk_paned_get_child2(paned);
+    g_return_if_fail (sorttab_parent);
+
+    GtkWidget *top = gtk_paned_get_child1(sorttab_parent);
+    GtkWidget *bottom = gtk_paned_get_child2(sorttab_parent);
     gboolean top_is_st_paned = g_object_get_data(G_OBJECT (top), "paned_id") != NULL;
     gboolean st_top = prefs_get_int("filter_tabs_top");
 
@@ -2932,26 +2904,26 @@ void st_update_paned_position() {
         g_object_ref(top);
         g_object_ref(bottom);
 
-        gtk_container_remove(GTK_CONTAINER (paned), top);
-        gtk_container_remove(GTK_CONTAINER (paned), bottom);
+        gtk_container_remove(GTK_CONTAINER (sorttab_parent), top);
+        gtk_container_remove(GTK_CONTAINER (sorttab_parent), bottom);
 
-        gtk_paned_pack1(paned, bottom, TRUE, TRUE);
-        gtk_paned_pack2 (paned, top, TRUE, TRUE);
+        gtk_paned_pack1(sorttab_parent, bottom, TRUE, TRUE);
+        gtk_paned_pack2(sorttab_parent, top, TRUE, TRUE);
 
-        g_object_unref (top);
-        g_object_unref (bottom);
+        g_object_unref(top);
+        g_object_unref(bottom);
     }
 }
 
-        /* ---------------------------------------------------------------- */
-        /*                                                                  */
-        /*                Section for calendar display                      */
-        /*                                                                  */
-        /* ---------------------------------------------------------------- */
+/* ---------------------------------------------------------------- */
+/*                                                                  */
+/*                Section for calendar display                      */
+/*                                                                  */
+/* ---------------------------------------------------------------- */
 
-        /* Strings for 'Category-Combo' */
+/* Strings for 'Category-Combo' */
 
-        /* enum to access cat_strings */
+/* enum to access cat_strings */
 enum {
     CAT_STRING_PLAYED = 0, CAT_STRING_MODIFIED = 1, CAT_STRING_ADDED = 2
 };
@@ -3271,7 +3243,7 @@ void cal_open_calendar(gint inst, T_item item) {
     if (!st)
         return;
 
-    cal_xml = gtkpod_xml_new(xml_file, "calendar_window");
+    cal_xml = gtkpod_xml_new(GLADE_FILE, "calendar_window");
 
     glade_xml_signal_autoconnect(cal_xml);
 
@@ -3284,8 +3256,7 @@ void cal_open_calendar(gint inst, T_item item) {
 
     /* Set sorttab number */
     w = gtkpod_xml_get_widget(cal_xml, "sorttab_num_spin");
-    gtk_spin_button_set_range(GTK_SPIN_BUTTON (w),
-    1, SORT_TAB_MAX);
+    gtk_spin_button_set_range(GTK_SPIN_BUTTON (w), 1, SORT_TAB_MAX);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON (w), inst + 1);
 
     /* Set Category-Combo */
@@ -3333,21 +3304,21 @@ void cal_open_calendar(gint inst, T_item item) {
                 G_CALLBACK (cal_time_toggled),
                 cal);
 
-        cal_set_time (cal, LOWER_MARGIN, ti->lower);
+        cal_set_time(cal, LOWER_MARGIN, ti->lower);
 
         /* Upper Margin */
-        w = gtkpod_xml_get_widget (cal_xml, "no_upper_margin");
+        w = gtkpod_xml_get_widget(cal_xml, "no_upper_margin");
         g_signal_connect (w,
                 "toggled",
                 G_CALLBACK (cal_no_margin_toggled),
                 cal);
-        w = gtkpod_xml_get_widget (cal_xml, "upper_time");
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
+        w = gtkpod_xml_get_widget(cal_xml, "upper_time");
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), TRUE);
         g_signal_connect (w,
                 "toggled",
                 G_CALLBACK (cal_time_toggled),
                 cal);
-        cal_set_time (cal, UPPER_MARGIN, ti->upper);
+        cal_set_time(cal, UPPER_MARGIN, ti->upper);
     }
 
     /* Connect delete-event */
@@ -3363,5 +3334,5 @@ void cal_open_calendar(gint inst, T_item item) {
     g_signal_connect (gtkpod_xml_get_widget (cal_xml, "cal_ok"), "clicked",
             G_CALLBACK (cal_ok), cal);
 
-    gtk_widget_show (cal);
+    gtk_widget_show(cal);
 }

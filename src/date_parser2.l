@@ -28,8 +28,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "date_parser.h"
-#include "misc.h"
-#include "itdb.h"
+#include "libgtkpod/misc.h"
+#include "libgtkpod/itdb.h"
 /* Will be set to TRUE if error occurred */
     static gboolean dp_error;
 /* Will be set to TRUE if construct (< date, = date...) was not

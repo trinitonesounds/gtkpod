@@ -12,15 +12,19 @@ sorttab_display_glade_DATA =  $(plugin_name).glade
 
 # Plugin Icon file
 sorttab_display_pixmapsdir = $(gtkpod_image_dir)
-sorttab_display_pixmaps_DATA = $(plugin_name).png
+sorttab_display_pixmaps_DATA =
 
 # Plugin description file
 plugin_in_files = $(plugin_file)
 
+## I'm using %option outfile="lex.yy.c" in the parser files,
+## so this should be portable
+LEX_OUTPUT_ROOT = lex.yy
+
 sorttab_display_plugindir = $(gtkpod_plugin_dir)
 sorttab_display_plugin_DATA = $(plugin_file)
 
-SUBDIRS = icons
+SUBDIRS =
 
 # Include paths
 AM_CPPFLAGS = \
@@ -42,9 +46,9 @@ plugin_LTLIBRARIES = libsorttab_display.la
 
 # Plugin sources
 libsorttab_display_la_SOURCES = plugin.c plugin.h \
-								 display_sorttabs.c display_sorttabs.h \
-								 file_export.c file_export.h \
-								 sorttab_display_actions.c sorttab_display_actions.h
+								sorttab_conversion.c sorttab_conversion.h \
+								display_sorttabs.c display_sorttabs.h \
+								date_parser2.l date_parser.l date_parser.h
 
 libsorttab_display_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
@@ -59,6 +63,8 @@ EXTRA_DIST = \
 	$(sorttab_display_ui_DATA) \
 	$(sorttab_display_glade_DATA) \
 	$(sorttab_display_pixmaps_DATA)
+	
+CLEANFILES = date_parser.c date_parser2.c
 
 all-local: create-plugin-links create-ui-link copy-icons-dir
 

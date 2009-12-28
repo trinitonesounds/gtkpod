@@ -32,7 +32,8 @@
 %{
 #include <stdlib.h>
 #include "date_parser.h"
-#include "misc.h"
+#include <glib/gi18n-lib.h>
+#include "libgtkpod/misc.h"
     static gchar *dp_strp = NULL;
     /* time stamp (result!) */
     static time_t tstamp;

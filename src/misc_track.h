@@ -67,4 +67,7 @@ void gp_track_set_flags_default (Track *track);
 gchar *get_track_info (Track *track, gboolean prefer_filename);
 gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item);
 const gchar *track_get_item (Track *track, T_item t_item);
+time_t track_get_timestamp (Track *track, T_item t_item);
+gchar **track_get_item_pointer (Track *track, T_item t_item);
+
 #endif

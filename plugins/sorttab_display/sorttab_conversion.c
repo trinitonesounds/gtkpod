@@ -1,6 +1,5 @@
 /*
-|  Copyright (C) 2002-2010 Jorg Schuler <jcsjcs at users sourceforge net>
-|                                          Paul Richardson <phantom_sf at users.sourceforge.net>
+|  Copyright (C) 2002-2007 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 |
 |  URL: http://www.gtkpod.org/
@@ -27,28 +26,22 @@
 |  $Id$
 */
 
-#ifndef PLUGIN_H_
-#define PLUGIN_H_
+#include "sorttab_conversion.h"
 
-#include <libanjuta/anjuta-plugin.h>
-
-/* Stock IDs */
-
-#define UI_FILE GTKPOD_UI_DIR"/sorttab_display.ui"
-#define GLADE_FILE GTKPOD_GLADE_DIR"/sorttab_display.glade"
-
-typedef struct _SorttabDisplayPlugin SorttabDisplayPlugin;
-typedef struct _SorttabDisplayPluginClass SorttabDisplayPluginClass;
-
-struct _SorttabDisplayPlugin {
-    AnjutaPlugin parent;
-    GtkWidget *st_paned;
-    gint uiid;
-    GtkActionGroup *action_group;
-};
-
-struct _SorttabDisplayPluginClass {
-    AnjutaPluginClass parent_class;
-};
-
-#endif /* PLUGIN_H_ */
+/* translates a ST_CAT_... (defined in display.h) into a
+ * T_... (defined in display.h). Returns -1 in case a translation is not
+ * possible */
+T_item ST_to_T (ST_CAT_item st)
+{
+    switch (st)
+    {
+    case ST_CAT_ARTIST:      return T_ARTIST;
+    case ST_CAT_ALBUM:       return T_ALBUM;
+    case ST_CAT_GENRE:       return T_GENRE;
+    case ST_CAT_COMPOSER:    return T_COMPOSER;
+    case ST_CAT_TITLE:       return T_TITLE;
+    case ST_CAT_YEAR:        return T_YEAR;
+    case ST_CAT_SPECIAL:     g_return_val_if_reached (-1);
+    default:                 g_return_val_if_reached (-1);
+    }
+}

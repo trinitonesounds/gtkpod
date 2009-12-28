@@ -1,6 +1,6 @@
-/*
-|  Copyright (C) 2002-2010 Jorg Schuler <jcsjcs at users sourceforge net>
-|                                          Paul Richardson <phantom_sf at users.sourceforge.net>
+/* Time-stamp: <2007-03-19 23:11:13 jcs>
+|
+|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 |
 |  URL: http://www.gtkpod.org/
@@ -27,28 +27,27 @@
 |  $Id$
 */
 
-#ifndef PLUGIN_H_
-#define PLUGIN_H_
+#ifndef __SORTTAB_CONVERSION_H__
+#define __SORTTAB_CONVERSION_H__
 
-#include <libanjuta/anjuta-plugin.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
-/* Stock IDs */
+#include "libgtkpod/misc_conversion.h"
 
-#define UI_FILE GTKPOD_UI_DIR"/sorttab_display.ui"
-#define GLADE_FILE GTKPOD_GLADE_DIR"/sorttab_display.glade"
+/* Categories in each sort tab (page numbers) */
+typedef enum {
+  ST_CAT_ARTIST = 0,
+  ST_CAT_ALBUM,
+  ST_CAT_GENRE,
+  ST_CAT_COMPOSER,
+  ST_CAT_TITLE,
+  ST_CAT_YEAR,
+  ST_CAT_SPECIAL,
+  ST_CAT_NUM
+} ST_CAT_item;
 
-typedef struct _SorttabDisplayPlugin SorttabDisplayPlugin;
-typedef struct _SorttabDisplayPluginClass SorttabDisplayPluginClass;
+T_item ST_to_T (ST_CAT_item st);
 
-struct _SorttabDisplayPlugin {
-    AnjutaPlugin parent;
-    GtkWidget *st_paned;
-    gint uiid;
-    GtkActionGroup *action_group;
-};
-
-struct _SorttabDisplayPluginClass {
-    AnjutaPluginClass parent_class;
-};
-
-#endif /* PLUGIN_H_ */
+#endif /* __SORTTAB_CONVERSION_H__ */

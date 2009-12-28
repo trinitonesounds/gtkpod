@@ -1,8 +1,10 @@
 <!--*- xml -*-->
 <ui>
 	<menubar name="MenuMain">
-		<menu name="MenuMusic" action="ActionMenuMusic">
-   		</menu>
+		<menu name="MenuView" action="ActionMenuView">
+			<menuitem name="More Filter Tabs" action="ActionViewMoreFilterTabs"/>
+			<menuitem name="Less Filter Tabs" action="ActionViewLessFilterTabs"/>
+		</menu>
 	</menubar>
 	<toolbar name="ToolbarMain">
 	</toolbar>
