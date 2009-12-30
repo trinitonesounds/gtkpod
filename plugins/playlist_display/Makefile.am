@@ -4,7 +4,7 @@ plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
 playlist_display_uidir = $(gtkpod_ui_dir)
-playlist_display_ui_DATA =  $(plugin_name).ui
+playlist_display_ui_DATA = $(plugin_name).ui
 
 # Plugin Glade file
 playlist_display_gladedir = $(gtkpod_glade_dir)
@@ -12,7 +12,7 @@ playlist_display_glade_DATA =  $(plugin_name).glade
 
 # Plugin Icon file
 playlist_display_pixmapsdir = $(gtkpod_image_dir)
-playlist_display_pixmaps_DATA = $(plugin_name).png
+playlist_display_pixmaps_DATA =
 
 # Plugin description file
 plugin_in_files = $(plugin_file)
@@ -60,7 +60,9 @@ EXTRA_DIST = \
 	$(playlist_display_glade_DATA) \
 	$(playlist_display_pixmaps_DATA)
 
-all-local: create-plugin-links create-ui-link copy-icons-dir
+include ../../data/directories.mk
+
+all-local: create-plugin-links create-ui-link create-glade-link copy-icons-dir
 
 # Creating symbolic links in plugin root directory
 create-plugin-links:
@@ -81,33 +83,22 @@ create-ui-link: create-ui-dir
 	# Creating link for $(playlist_display_ui_DATA)" \
 	sudo ln -s `pwd`/$(playlist_display_ui_DATA) $(gtkpod_ui_dir)/$(playlist_display_ui_DATA);
 
-create-ui-dir: create-data-dir
-	if test ! -d $(gtkpod_ui_dir); then \
-	  sudo mkdir $(gtkpod_ui_dir); \
-	fi;
+create-glade-link: create-glade-dir
+	if test -e $(gtkpod_glade_dir)/$(playlist_display_glade_DATA); then \
+	  # File already exists. Replacing ..." \
+	  sudo rm -f $(gtkpod_glade_dir)/$(playlist_display_glade_DATA); \
+	fi; \
+	# Creating link for $(playlist_display_glade_DATA)" \
+	sudo ln -s `pwd`/$(playlist_display_glade_DATA) $(gtkpod_glade_dir)/$(playlist_display_glade_DATA);
 
 # Copy icons
 copy-icons-dir: create-icons-dir
 	sudo cp -rf `pwd`/icons/* $(gtkpod_image_dir)/; \
+	sudo chmod -R 755 $(gtkpod_image_dir)/*; \
 	sudo find $(gtkpod_image_dir) -name 'Makefile*' -delete;
 
-create-icons-dir: create-data-dir
-	if test ! -d $(gtkpod_image_dir); then \
-	  sudo mkdir $(gtkpod_image_dir); \
-	fi;
-
-create-data-dir: create-base-data-dir
-	if test ! -d $(gtkpod_data_dir); then \
-	  sudo mkdir $(gtkpod_data_dir); \
-	fi;
-
-create-base-data-dir:
-	if test ! -d $(datadir)/$(PACKAGE); then \
-	  sudo mkdir $(datadir)/$(PACKAGE); \
-	fi;
-
 # Clean up the links and files created purely for dev testing
-clean-local: clean-plugin-files clean-ui-dir clean-image-dir
+clean-local: clean-plugin-files clean-ui-dir clean-glade-dir clean-image-dir
 
 clean-plugin-files:
 	rm -f ../$(plugin_lib) ../$(plugin_file)
@@ -116,6 +107,12 @@ clean-ui-dir:
 	if test -h $(gtkpod_ui_dir)/$(playlist_display_ui_DATA); then \
 	  # Symbolic link exists. Removing ..." \
 	  sudo rm -f $(gtkpod_ui_dir)/$(playlist_display_ui_DATA); \
+	fi;
+
+clean-glade-dir:
+	if test -h $(gtkpod_glade_dir)/$(playlist_display_glade_DATA); then \
+	  # Symbolic link exists. Removing ..." \
+	  sudo rm -f $(gtkpod_glade_dir)/$(playlist_display_glade_DATA); \
 	fi;
 
 clean-image-dir:

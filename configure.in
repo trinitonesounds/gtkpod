@@ -278,6 +278,7 @@ data/icons/hicolor/16x16/status/Makefile
 data/icons/hicolor/64x64/Makefile
 data/man/Makefile
 data/man/gtkpod.1
+data/glade/Makefile
 data/ui/Makefile
 doc/Makefile
 doc/figures/Makefile

@@ -64,7 +64,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     /* Add widget in Shell. Any number of widgets can be added */
 
     sorttab_display_plugin->st_paned = gtk_hpaned_new();
-    st_create_tabs(sorttab_display_plugin->st_paned);
+    st_create_tabs(GTK_PANED(sorttab_display_plugin->st_paned));
 
 //    g_signal_connect (gtkpod_app, "sorttab_selected", G_CALLBACK (sorttab_display_select_sorttab_cb), NULL);
 //    g_signal_connect (gtkpod_app, "itdb_updated", G_CALLBACK (sorttab_display_update_itdb_cb), NULL);

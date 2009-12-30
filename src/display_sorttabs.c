@@ -2482,7 +2482,6 @@ static void st_create_special(gint inst, GtkWidget *window) {
 
     special_xml = gtkpod_xml_new(GLADE_FILE, "special_sorttab");
     special = gtkpod_xml_get_widget(special_xml, "special_sorttab");
-
     viewport = gtkpod_xml_get_widget(special_xml, "special_viewport");
 
     /* according to GTK FAQ: move a widget to a new parent */

@@ -1,4 +1,4 @@
-SUBDIRS = icons man ui
+SUBDIRS = icons man ui glade
 
 desktopdir = $(datadir)/applications
 desktop_in_files = gtkpod.desktop.in
@@ -7,7 +7,6 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 appdatadir = $(pkgdatadir)/data
 appdata_DATA =				\
-	gtkpod.glade			\
 	default-cover.png		\
 	gtkpod-icon-32-2.png	\
 	gtkpod-icon-32.png		\
@@ -24,6 +23,8 @@ CLEANFILES =				\
 	$(desktop_DATA)			\
 	gtkpod.gladep
 
+include directories.mk
+
 all-local: create-profile-link
 
 create-profile-link: create-data-dir
@@ -33,17 +34,6 @@ create-profile-link: create-data-dir
 	fi; \
 	# Creating link for default.profile" \
 	sudo ln -s `pwd`/default.profile $(gtkpod_data_dir)/default.profile;
-	
-
-create-data-dir: create-base-data-dir
-	if test ! -d $(gtkpod_data_dir); then \
-      sudo mkdir $(gtkpod_data_dir); \
-	fi;
-
-create-base-data-dir:
-	if test ! -d $(datadir)/$(PACKAGE); then \
-      sudo mkdir $(datadir)/$(PACKAGE); \
-	fi;
 
 # Clean up the links and files created purely for dev testing
 clean-local: clean-profile-link

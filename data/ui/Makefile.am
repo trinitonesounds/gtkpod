@@ -1,10 +1,11 @@
-appdatadir = $(pkgdatadir)/data
+appdatadir = $(pkgdatadir)/data/ui
 appdata_DATA =				\
 	gtkpod.ui
 
 EXTRA_DIST = 				\
 	$(appdata_DATA)
 
+include ../directories.mk
 	
 all-local: create-ui-link
 
@@ -17,21 +18,12 @@ create-ui-link: create-ui-dir
     # Creating link for $(appdata_DATA)" \
 	sudo ln -s `pwd`/$(appdata_DATA) $(gtkpod_ui_dir)/$(appdata_DATA);
 
-create-ui-dir: create-data-dir
+create-ui-dir:
 	if test ! -d $(gtkpod_ui_dir); then \
-      sudo mkdir $(gtkpod_ui_dir); \
+      sudo mkdir -v -p $(gtkpod_ui_dir); \
+      sudo chmod 755 $(gtkpod_ui_dir); \
 	fi;
-
-create-data-dir: create-base-data-dir
-	if test ! -d $(gtkpod_data_dir); then \
-      sudo mkdir $(gtkpod_data_dir); \
-	fi;
-
-create-base-data-dir:
-	if test ! -d $(datadir)/$(PACKAGE); then \
-      sudo mkdir $(datadir)/$(PACKAGE); \
-	fi;
-
+	
 # Clean up the links and files created purely for dev testing
 clean-local: clean-ui-dir
 

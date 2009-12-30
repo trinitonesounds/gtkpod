@@ -425,13 +425,9 @@ iTunesDB *gp_import_itdb(iTunesDB *old_itdb, const gint type, const gchar *mp, c
             itdb = itdb_parse_file(name_db, &error);
             if (itdb && !error) {
                 if (type & GP_ITDB_TYPE_IPOD)
-                    g_warning("TODO gp_import_itdb - status\n");
-                //		    gtkpod_statusbar_message(
-                //			_("Offline iPod database successfully imported"));
+                    gtkpod_statusbar_message(_("Offline iPod database successfully imported"));
                 else
-                    g_warning("TODO gp_import_itdb - status\n");
-                //		    gtkpod_statusbar_message(
-                //			_("Local database successfully imported"));
+                    gtkpod_statusbar_message(_("Local database successfully imported"));
             }
             else {
                 if (error) {
@@ -468,9 +464,7 @@ iTunesDB *gp_import_itdb(iTunesDB *old_itdb, const gint type, const gchar *mp, c
             }
             itdb = itdb_parse(mp, &error);
             if (itdb && !error) {
-                g_warning("TODO gp_import_itdb - status\n");
-                //		gtkpod_statusbar_message (
-                //		    _("iPod Database Successfully Imported"));
+                gtkpod_statusbar_message (_("iPod Database Successfully Imported"));
             }
             else {
                 if (error) {

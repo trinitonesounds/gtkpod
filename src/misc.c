@@ -1404,7 +1404,6 @@ gint64 get_size_of_directory(const gchar *dir)
 GladeXML *gtkpod_xml_new(const gchar *gtkpod_xml_file, const gchar *name)
 {
     GladeXML *xml;
-
 #ifdef ENABLE_NLS
     xml = glade_xml_new(gtkpod_xml_file, name, GETTEXT_PACKAGE);
 #else

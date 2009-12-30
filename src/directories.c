@@ -41,12 +41,14 @@ static gchar *datadir = NULL;
 static gchar *icondir = NULL;
 static gchar *plugindir = NULL;
 static gchar *uidir = NULL;
+static gchar *gladedir = NULL;
 
 void init_directories(char *argv[]) {
 //    g_printf("argv[0] = %s\n", argv[0]);
     datadir = init_dir(argv, "data", GTKPOD_DATA_DIR);
     icondir = init_dir(argv, "data/icons", GTKPOD_IMAGE_DIR);
     uidir = init_dir(argv, "data/ui", GTKPOD_UI_DIR);
+    gladedir = init_dir(argv, "data/glade", GTKPOD_GLADE_DIR);
     plugindir = init_dir(argv, "plugins", GTKPOD_PLUGIN_DIR);
 
     gtk_icon_theme_append_search_path(gtk_icon_theme_get_default(), icondir);
@@ -115,7 +117,7 @@ gchar * get_data_dir() {
 }
 
 gchar * get_glade_dir() {
-    return datadir;
+    return gladedir;
 }
 
 gchar * get_icon_dir() {

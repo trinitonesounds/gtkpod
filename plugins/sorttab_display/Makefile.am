@@ -66,7 +66,10 @@ EXTRA_DIST = \
 	
 CLEANFILES = date_parser.c date_parser2.c
 
-all-local: create-plugin-links create-ui-link copy-icons-dir
+
+include ../../data/directories.mk
+
+all-local: create-plugin-links create-ui-link create-glade-link
 
 # Creating symbolic links in plugin root directory
 create-plugin-links:
@@ -87,33 +90,16 @@ create-ui-link: create-ui-dir
 	# Creating link for $(sorttab_display_ui_DATA)" \
 	sudo ln -s `pwd`/$(sorttab_display_ui_DATA) $(gtkpod_ui_dir)/$(sorttab_display_ui_DATA);
 
-create-ui-dir: create-data-dir
-	if test ! -d $(gtkpod_ui_dir); then \
-	  sudo mkdir $(gtkpod_ui_dir); \
-	fi;
-
-# Copy icons
-copy-icons-dir: create-icons-dir
-	sudo cp -rf `pwd`/icons/* $(gtkpod_image_dir)/; \
-	sudo find $(gtkpod_image_dir) -name 'Makefile*' -delete;
-
-create-icons-dir: create-data-dir
-	if test ! -d $(gtkpod_image_dir); then \
-	  sudo mkdir $(gtkpod_image_dir); \
-	fi;
-
-create-data-dir: create-base-data-dir
-	if test ! -d $(gtkpod_data_dir); then \
-	  sudo mkdir $(gtkpod_data_dir); \
-	fi;
-
-create-base-data-dir:
-	if test ! -d $(datadir)/$(PACKAGE); then \
-	  sudo mkdir $(datadir)/$(PACKAGE); \
-	fi;
+create-glade-link: create-glade-dir
+	if test -e $(gtkpod_glade_dir)/$(sorttab_display_glade_DATA); then \
+	  # File already exists. Replacing ..." \
+	  sudo rm -f $(gtkpod_glade_dir)/$(sorttab_display_glade_DATA); \
+	fi; \
+	# Creating link for $(sorttab_display_glade_DATA)" \
+	sudo ln -s `pwd`/$(sorttab_display_glade_DATA) $(gtkpod_glade_dir)/$(sorttab_display_glade_DATA);
 
 # Clean up the links and files created purely for dev testing
-clean-local: clean-plugin-files clean-ui-dir clean-image-dir
+clean-local: clean-plugin-files clean-ui-dir clean-glade-dir
 
 clean-plugin-files:
 	rm -f ../$(plugin_lib) ../$(plugin_file)
@@ -124,7 +110,9 @@ clean-ui-dir:
 	  sudo rm -f $(gtkpod_ui_dir)/$(sorttab_display_ui_DATA); \
 	fi;
 
-clean-image-dir:
-	if test -d $(gtkpod_image_dir); then \
-	  sudo find $(gtkpod_image_dir) -name 'sorttab_display*' -delete; \
+clean-glade-dir:
+	if test -h $(gtkpod_glade_dir)/$(sorttab_display_glade_DATA); then \
+	  # Symbolic link exists. Removing ..." \
+	  sudo rm -f $(gtkpod_glade_dir)/$(sorttab_display_glade_DATA); \
 	fi;
+	

@@ -59,6 +59,8 @@ EXTRA_DIST = \
 	$(advhelloworld_glade_DATA) \
 	$(advhelloworld_pixmaps_DATA)
 
+
+include ../../data/directories.mk
 all-local: create-plugin-links create-ui-link
 
 # Creating symbolic links in plugin root directory
@@ -77,22 +79,6 @@ create-ui-link: create-ui-dir
 	fi; \
 	# Creating link for $(advhelloworld_ui_DATA)" \
 	sudo ln -s `pwd`/$(advhelloworld_ui_DATA) $(gtkpod_ui_dir)/$(advhelloworld_ui_DATA);
-
-create-ui-dir: create-data-dir
-	if test ! -d $(gtkpod_ui_dir); then \
-	  sudo mkdir $(gtkpod_ui_dir); \
-	fi;
-
-create-data-dir: create-base-data-dir
-	if test ! -d $(gtkpod_data_dir); then \
-	  sudo mkdir $(gtkpod_data_dir); \
-	fi;
-
-create-base-data-dir:
-	if test ! -d $(datadir)/$(PACKAGE); then \
-	  sudo mkdir $(datadir)/$(PACKAGE); \
-	fi;
-
 
 clean-local: clean-ui-dir
 	rm -f ../$(plugin_lib) ../$(plugin_file)

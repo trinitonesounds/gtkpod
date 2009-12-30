@@ -29,6 +29,7 @@
 #include "gtkpod.h"
 #include "libgtkpod/directories.h"
 #include "libgtkpod/gtkpod_app_iface.h"
+#include "libgtkpod/misc.h"
 #include "anjuta-app.h"
 
 static gchar *GTKPOD_GLADE_XML_FILE;
@@ -36,37 +37,8 @@ static gchar *GTKPOD_GLADE_XML_FILE;
 static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 static void on_gtkpod_destroy(GtkWidget * w, gpointer data);
 
-/**
- * Wrapper for glade_xml_new() for cygwin compatibility issues
- *
- **/
-GladeXML *gtkpod_xml_new(const gchar *name) {
-    GladeXML *xml;
-
-#ifdef ENABLE_NLS
-    xml = glade_xml_new(GTKPOD_GLADE_XML_FILE, name, GETTEXT_PACKAGE);
-#else
-    xml = glade_xml_new (GTKPOD_GLADE_XML_FILE, name, NULL);
-#endif
-
-    if (!xml)
-        fprintf(stderr, "*** Programming error: Cannot create glade XML: '%s'\n", name);
-
-    return xml;
-}
-
-/**
- * Wrapper for gtkpod_xml_get_widget() giving out a warning if widget
- * could not be found.
- *
- **/
-GtkWidget *gtkpod_xml_get_widget(GladeXML *xml, const gchar *name) {
-    GtkWidget *w = glade_xml_get_widget(xml, name);
-
-    if (!w)
-        fprintf(stderr, "*** Programming error: Widget not found: '%s'\n", name);
-
-    return w;
+GladeXML *gtkpod_core_xml_new(const gchar *name) {
+    return gtkpod_xml_new(GTKPOD_GLADE_XML_FILE, name);
 }
 
 void gtkpod_init(int argc, char *argv[]) {

@@ -39,8 +39,7 @@
 
 #define USER_PROFILE_NAME "user"
 
-GladeXML *gtkpod_xml_new(const gchar *name);
-GtkWidget *gtkpod_xml_get_widget(GladeXML *xml, const gchar *name);
+GladeXML *gtkpod_core_xml_new(const gchar *name);
 void gtkpod_init(int argc, char *argv[]);
 
 #endif /* GTKPOD_H_ */

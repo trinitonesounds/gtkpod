@@ -47,6 +47,7 @@
 #include "libgtkpod/directories.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/prefs.h"
+#include "libgtkpod/misc.h"
 
 #define ICON_FILE "anjuta-preferences-general-48.png"
 
@@ -554,7 +555,7 @@ void anjuta_app_install_preferences(AnjutaApp *app) {
     GtkWidget *notebook, *plugins;
 
     /* Create preferences page */
-    gxml = gtkpod_xml_new("gtkpod_preferences_window");
+    gxml = gtkpod_core_xml_new("gtkpod_preferences_window");
     anjuta_preferences_add_page(app->preferences, gxml, "General", _("General"), ICON_FILE);
     notebook = glade_xml_get_widget(gxml, "General");
     plugins = anjuta_plugin_manager_get_plugins_page(app->plugin_manager);
@@ -1140,7 +1141,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
     }
 
     /* window = create_confirm_dialog (); */
-    confirm_xml = gtkpod_xml_new("confirm_dialog");
+    confirm_xml = gtkpod_core_xml_new("confirm_dialog");
     window = gtkpod_xml_get_widget(confirm_xml, "confirm_dialog");
     glade_xml_signal_autoconnect(confirm_xml);
 
