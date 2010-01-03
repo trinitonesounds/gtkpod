@@ -2894,6 +2894,9 @@ void st_update_paned_position() {
 
     GtkWidget *top = gtk_paned_get_child1(sorttab_parent);
     GtkWidget *bottom = gtk_paned_get_child2(sorttab_parent);
+    if (! top || ! bottom)
+        return; // sorttab_parent currently lacks either top or bottom panes
+
     gboolean top_is_st_paned = g_object_get_data(G_OBJECT (top), "paned_id") != NULL;
     gboolean st_top = prefs_get_int("filter_tabs_top");
 

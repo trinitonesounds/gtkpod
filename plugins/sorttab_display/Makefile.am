@@ -47,6 +47,7 @@ plugin_LTLIBRARIES = libsorttab_display.la
 # Plugin sources
 libsorttab_display_la_SOURCES = plugin.c plugin.h \
 								sorttab_conversion.c sorttab_conversion.h \
+								sorttab_display_actions.c sorttab_display_actions.h \
 								display_sorttabs.c display_sorttabs.h \
 								date_parser2.l date_parser.l date_parser.h
 

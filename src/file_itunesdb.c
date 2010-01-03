@@ -1846,7 +1846,7 @@ void handle_export(void) {
 
     g_return_if_fail (gtkpod_app);
 
-    itdbs_head = g_object_get_data(G_OBJECT (gtkpod_app), "itdbs_head");
+    itdbs_head = gp_get_itdbs_head();
     g_return_if_fail (itdbs_head);
 
     block_widgets(); /* block user input */
@@ -1918,7 +1918,7 @@ gboolean files_are_saved(void) {
     GList *gl;
 
     g_return_val_if_fail (gtkpod_app, TRUE);
-    itdbs_head = g_object_get_data(G_OBJECT (gtkpod_app), "itdbs_head");
+    itdbs_head = gp_get_itdbs_head();
     g_return_val_if_fail (itdbs_head, TRUE);
     for (gl = itdbs_head->itdbs; gl; gl = gl->next) {
         iTunesDB *itdb = gl->data;

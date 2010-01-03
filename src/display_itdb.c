@@ -50,6 +50,7 @@ static struct itdbs_head *itdbs_head = NULL;
 
 /* for convenience */
 struct itdbs_head *gp_get_itdbs_head() {
+    g_return_val_if_fail(gtkpod_app, NULL);
     return g_object_get_data(G_OBJECT (gtkpod_app), "itdbs_head");
 }
 
@@ -275,10 +276,10 @@ void gp_track_remove(Track *track) {
 void gp_track_unlink(Track *track) {
     g_warning("TODO need to remove track from playlists and details window if necessary");
     /* the details window may be accessing the tracks */
-//    details_remove_track(track);
+    //    details_remove_track(track);
     g_warning("TODO signal that any file conversions on track be cancelled");
     /* cancel pending conversions */
-//    file_convert_cancel_track(track);
+    //    file_convert_cancel_track(track);
     /* remove from SHA1 hash */
     sha1_track_remove(track);
     /* remove from pc_path_hash */
@@ -415,7 +416,7 @@ void gp_replace_itdb(iTunesDB *old_itdb, iTunesDB *new_itdb) {
     set_itdb_prefs_string(new_itdb, "name", mpl->name);
 
     /* update ui */
-    g_signal_emit (gtkpod_app, gtkpod_app_signals[ITDB_UPDATED], 0, old_itdb, new_itdb);
+    g_signal_emit(gtkpod_app, gtkpod_app_signals[ITDB_UPDATED], 0, old_itdb, new_itdb);
 
     /* reselect old playlist if still available */
     if (old_pl_name) {
@@ -976,7 +977,7 @@ gboolean gp_increase_playcount(gchar *sha1, gchar *file, gint num) {
 /* get the currently selected itdb. NULL is
  * returned if no itdb is active. */
 iTunesDB *gp_get_selected_itdb(void) {
-    return gtkpod_get_current_itdb ();
+    return gtkpod_get_current_itdb();
 }
 
 /* Get the "ipod" itdb. If only one iPod itdb exists, this itdb is
@@ -984,39 +985,36 @@ iTunesDB *gp_get_selected_itdb(void) {
  * itdb is returned if it's an iPod itdb, otherwise NULL is returned.
  */
 iTunesDB *gp_get_ipod_itdb(void) {
-    g_warning("gp_itdb : gp_get_ipod_itdb commented out\n");
-    //    struct itdbs_head *itdbs_head;
-    //    iTunesDB *itdb;
-    //    GList *gl;
-    //    gint i;
-    //
-    //    /* if an iPod itdb is selected, return this */
-    //    itdb = gp_get_selected_itdb ();
-    //    if (itdb && (itdb->usertype & GP_ITDB_TYPE_IPOD))
-    //	return itdb;
-    //
-    //    itdb = NULL;
-    //
-    //    g_return_val_if_fail (gtkpod_app, NULL);
-    //    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_app),
-    //				    "itdbs_head");
-    //
-    //    if (itdbs_head == NULL) return NULL;
-    //
-    //    i=0;
-    //    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
-    //    {
-    //	iTunesDB *itdbgl = gl->data;
-    //	g_return_val_if_fail (itdbgl, NULL);
-    //	if (itdbgl->usertype & GP_ITDB_TYPE_IPOD)
-    //	{
-    //	    itdb = itdbgl;
-    //	    ++i;
-    //	}
-    //    }
-    //    /* return iPod itdb if only one was found */
-    //    if (i == 1)
-    //	return itdb;
+    struct itdbs_head *itdbs_head;
+    iTunesDB *itdb;
+    GList *gl;
+    gint i;
+
+    /* if an iPod itdb is selected, return this */
+    itdb = gp_get_selected_itdb();
+    if (itdb && (itdb->usertype & GP_ITDB_TYPE_IPOD))
+        return itdb;
+
+    itdb = NULL;
+
+    g_return_val_if_fail (gtkpod_app, NULL);
+    itdbs_head = gp_get_itdbs_head();
+
+    if (itdbs_head == NULL)
+        return NULL;
+
+    i = 0;
+    for (gl = itdbs_head->itdbs; gl; gl = gl->next) {
+        iTunesDB *itdbgl = gl->data;
+        g_return_val_if_fail (itdbgl, NULL);
+        if (itdbgl->usertype & GP_ITDB_TYPE_IPOD) {
+            itdb = itdbgl;
+            ++i;
+        }
+    }
+    /* return iPod itdb if only one was found */
+    if (i == 1)
+        return itdb;
 
     return NULL;
 }

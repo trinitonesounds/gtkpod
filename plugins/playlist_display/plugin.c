@@ -114,6 +114,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     playlist_display_plugin->pl_window = gtk_scrolled_window_new(NULL, NULL);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (playlist_display_plugin->pl_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (playlist_display_plugin->pl_window), GTK_SHADOW_IN);
+    gtk_widget_set_size_request(playlist_display_plugin->pl_window, 250, -1);
 
     playlist_display_plugin->playlist_view = pm_create_treeview();
 
@@ -122,7 +123,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     gtk_container_add(GTK_CONTAINER (playlist_display_plugin->pl_window), GTK_WIDGET (playlist_display_plugin->playlist_view));
     gtk_widget_show_all(playlist_display_plugin->pl_window);
-    anjuta_shell_add_widget(plugin->shell, playlist_display_plugin->pl_window, "PlaylistDisplayPlugin", "", NULL, ANJUTA_SHELL_PLACEMENT_LEFT, NULL);
+    anjuta_shell_add_widget(plugin->shell, playlist_display_plugin->pl_window, "PlaylistDisplayPlugin", "iPod Repositories", NULL, ANJUTA_SHELL_PLACEMENT_LEFT, NULL);
 
     return TRUE; /* FALSE if activation failed */
 }

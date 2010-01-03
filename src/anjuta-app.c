@@ -307,8 +307,8 @@ static void anjuta_app_finalize(GObject *widget) {
 
     app = ANJUTA_APP (widget);
 
-    gtk_widget_destroy(GTK_WIDGET (app->ui));
-    gtk_widget_destroy(GTK_WIDGET (app->preferences));
+    g_object_unref(G_OBJECT(app->ui));
+    g_object_unref(G_OBJECT (app->preferences));
 
     G_OBJECT_CLASS (parent_class)->finalize(widget);
 }
@@ -756,7 +756,7 @@ static void anjuta_app_add_widget_full(AnjutaShell *shell, GtkWidget *widget, co
     if (locked)
         gdl_dock_item_set_default_position(GDL_DOCK_ITEM(item), GDL_DOCK_OBJECT(app->dock));
 
-    gtk_widget_show_all(item);
+    gtk_widget_show(item);
 
     /* Add toggle button for the widget */
     menuitem = GTK_CHECK_MENU_ITEM (gtk_check_menu_item_new_with_label (title));

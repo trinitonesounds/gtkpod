@@ -99,22 +99,19 @@ void gp_sha1_hash_tracks_itdb(iTunesDB *itdb) {
  *
  */
 void gp_sha1_hash_tracks(void) {
-    //    GList *gl;
+    GList *gl;
     struct itdbs_head *itdbs_head;
 
-    itdbs_head = NULL;
-    g_warning("TODO gp_sha1_hash_tracks - get itdbs_head from somewhere else");
-    //    g_return_if_fail (gtkpod_app);
-    //    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_app),
-    //				    "itdbs_head");
-    //    g_return_if_fail (itdbs_head);
-    //
-    //    block_widgets ();
-    //    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
-    //    {
-    //	gp_sha1_hash_tracks_itdb (gl->data);
-    //    }
-    //    release_widgets ();
+    itdbs_head = gp_get_itdbs_head();
+    g_return_if_fail (itdbs_head);
+
+    g_warning("TODO block widgets in gp_sha1_hash_tracks");
+    //    block_widgets();
+    for (gl = itdbs_head->itdbs; gl; gl = gl->next) {
+        gp_sha1_hash_tracks_itdb(gl->data);
+    }
+    g_warning("TODO release widgets in gp_sha1_hash_tracks");
+    //    release_widgets();
 }
 
 static void rm_sha1(gpointer track, gpointer user_data) {
@@ -134,10 +131,8 @@ void gp_sha1_free_hash(void) {
     struct itdbs_head *itdbs_head;
 
     itdbs_head = NULL;
-    g_warning("TODO gp_sha1_free_hash - get itdbs_head from somewhere else");
-    //    g_return_if_fail (gtkpod_app);
-    //    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_app),
-    //				    "itdbs_head");
+    g_return_if_fail (gtkpod_app);
+    itdbs_head = gp_get_itdbs_head();
     g_return_if_fail (itdbs_head);
 
     for (gl = itdbs_head->itdbs; gl; gl = gl->next) {

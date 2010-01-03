@@ -35,12 +35,21 @@
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "plugin.h"
 #include "display_sorttabs.h"
+#include "sorttab_display_actions.h"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
 
 static GtkActionEntry sorttab_actions[] =
     {
+        {
+            "ActionViewMoreFilterTabs", /* Action name */
+            NULL, /* Stock icon */
+            N_("_More Filter Tabs"), /* Display label */
+            NULL, /* short-cut */
+            NULL, /* Tooltip */
+            G_CALLBACK (on_more_sort_tabs_activate) /* callback */
+        }
     };
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {
@@ -69,8 +78,8 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 //    g_signal_connect (gtkpod_app, "sorttab_selected", G_CALLBACK (sorttab_display_select_sorttab_cb), NULL);
 //    g_signal_connect (gtkpod_app, "itdb_updated", G_CALLBACK (sorttab_display_update_itdb_cb), NULL);
 
-    gtk_widget_show_all(sorttab_display_plugin->st_paned);
-    anjuta_shell_add_widget(plugin->shell, sorttab_display_plugin->st_paned, "SorttabDisplayPlugin", "", NULL, ANJUTA_SHELL_PLACEMENT_BOTTOM, NULL);
+    gtk_widget_show(sorttab_display_plugin->st_paned);
+    anjuta_shell_add_widget(plugin->shell, sorttab_display_plugin->st_paned, "SorttabDisplayPlugin", "Track Filter", NULL, ANJUTA_SHELL_PLACEMENT_BOTTOM, NULL);
 
     return TRUE; /* FALSE if activation failed */
 }
