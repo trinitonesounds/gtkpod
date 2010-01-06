@@ -2,8 +2,10 @@
 <ui>
 	<menubar name="MenuMain">
 		<menu name="MenuView" action="ActionMenuView">
-			<menuitem name="More Filter Tabs" action="ActionViewMoreFilterTabs"/>
-			<menuitem name="Less Filter Tabs" action="ActionViewLessFilterTabs"/>
+			<placeholder name="PlaceholderSorttabDisplayActionMenuView">
+				<menuitem name="More Filter Tabs" action="ActionViewMoreFilterTabs"/>
+				<menuitem name="Less Filter Tabs" action="ActionViewFewerFilterTabs"/>
+			</placeholder>
 		</menu>
 	</menubar>
 	<toolbar name="ToolbarMain">

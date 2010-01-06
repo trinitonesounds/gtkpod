@@ -1,6 +1,6 @@
 /*
- |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
-                                   2010 Paul Richardson  <phantom_sf at users sourceforge net>
+ |  Copyright (C) 2002-2010 Jorg Schuler <jcsjcs at users sourceforge net>
+ |                                          Paul Richardson  <phantom_sf at users sourceforge net>
  |  Part of the gtkpod project.
  |
  |  URL: http://www.gtkpod.org/
@@ -1338,7 +1338,7 @@ static void st_track_changed_normal(Track *track, gboolean removed, guint32 inst
 void st_track_changed(Track *track, gboolean removed, guint32 inst) {
     if (inst == prefs_get_int("sort_tab_num")) {
         g_warning("st_track_changed: signal that a track has been changed");
-//        tm_track_changed(track);
+        //        tm_track_changed(track);
         return;
     }
     else if (inst < prefs_get_int("sort_tab_num")) {
@@ -1533,7 +1533,7 @@ void st_add_track(Track *track, gboolean final, gboolean display, guint32 inst) 
     if (inst == prefs_get_int("sort_tab_num")) { /* just add to track model */
         if ((track != NULL) && display) {
             g_warning ("st_add_track: signal that a track should be added to the track display");
-//            tm_add_track_to_track_model(track, NULL);
+            //            tm_add_track_to_track_model(track, NULL);
         }
         if (final)
             gtkpod_tracks_statusbar_update();
@@ -1585,7 +1585,7 @@ static void st_remove_track_normal(Track *track, guint32 inst) {
 void st_remove_track(Track *track, guint32 inst) {
     if (inst == prefs_get_int("sort_tab_num")) {
         g_warning("st_remove_track: signal a track should be removed");
-//        tm_remove_track(track);
+        //        tm_remove_track(track);
     }
     else if (inst < prefs_get_int("sort_tab_num")) {
         switch (sorttab[inst]->current_category) {
@@ -1614,7 +1614,7 @@ void st_remove_track(Track *track, guint32 inst) {
 void st_init(ST_CAT_item new_category, guint32 inst) {
     if (inst == prefs_get_int("sort_tab_num")) {
         g_warning("st_init: signal that all tracks in track display should be removed");
-//        tm_remove_all_tracks();
+        //        tm_remove_all_tracks();
         gtkpod_tracks_statusbar_update();
         return;
     }
@@ -1802,7 +1802,7 @@ void st_sort(GtkSortType order) {
      * ie. easy to sort ascending and descending but difficult to return to unsorted state
      */
     g_warning("st_sort - signal coverart display to update itself");
-//    coverart_display_update(order == SORT_NONE);
+    //    coverart_display_update(order == SORT_NONE);
 }
 
 gint st_get_sorttab_page_number(int inst) {
@@ -1945,16 +1945,16 @@ static gboolean st_selection_changed_cb(gpointer data) {
 
         /* Select the cover in the coverart_display */
         g_warning("st_selection_changed_cb: signal that track selection has changed");
-//        GList *gl = g_list_first(new_entry->members);
-//        if (gl != NULL) {
-//            Track *track = gl->data;
-//            if (track != NULL)
-//                coverart_select_cover(track);
-//        }
+        //        GList *gl = g_list_first(new_entry->members);
+        //        if (gl != NULL) {
+        //            Track *track = gl->data;
+        //            if (track != NULL)
+        //                coverart_select_cover(track);
+        //        }
     }
 
     g_warning("st_selection_changed_cb: space_data_update");
-//    space_data_update();
+    //    space_data_update();
 
 #if DEBUG_TIMING
     g_get_current_time (&time);
@@ -2068,7 +2068,7 @@ static void st_cell_edited(GtkCellRendererText *renderer, const gchar *path_stri
                 }
                 track->time_modified = time(NULL);
                 g_warning("st_cell_edited: signal that a track has changed");
-//                pm_track_changed(track);
+                //                pm_track_changed(track);
                 /* If prefs say to write changes to file, do so */
                 if (prefs_get_int("id3_write")) {
                     /* T_item tag_id;*/
@@ -2205,7 +2205,7 @@ void st_enable_disable_view_sort(gint inst, gboolean enable) {
 
     if (inst >= prefs_get_int("sort_tab_num")) {
         g_warning("st_enable_disable_view_sort: signal that track view should be enabled/disabled");
-//        tm_enable_disable_view_sort(enable);
+        //        tm_enable_disable_view_sort(enable);
         return;
     }
 
@@ -2271,7 +2271,7 @@ void st_select_current_position(gint inst, gint x, gint y) {
  * needed. */
 static void st_adjust_visible(void) {
     gint i, n;
-//    GtkWidget *w;
+    //    GtkWidget *w;
 
     if (!st_paned[0])
         return;
@@ -2296,19 +2296,19 @@ static void st_adjust_visible(void) {
     }
 
     g_warning("Need to work out how to disable more and less sort tab actions");
-//    /* activate / deactiveate "less sort tabs" menu item */
-//    w = gtkpod_xml_get_widget(main_window_xml, "less_sort_tabs");
-//    if (n == 0)
-//        gtk_widget_set_sensitive(w, FALSE);
-//    else
-//        gtk_widget_set_sensitive(w, TRUE);
-//
-//    /* activate / deactiveate "more sort tabs" menu item */
-//    w = gtkpod_xml_get_widget(main_window_xml, "more_sort_tabs");
-//    if (n == SORT_TAB_MAX)
-//        gtk_widget_set_sensitive(w, FALSE);
-//    else
-//        gtk_widget_set_sensitive(w, TRUE);
+    //    /* activate / deactiveate "less sort tabs" menu item */
+    //    w = gtkpod_xml_get_widget(main_window_xml, "less_sort_tabs");
+    //    if (n == 0)
+    //        gtk_widget_set_sensitive(w, FALSE);
+    //    else
+    //        gtk_widget_set_sensitive(w, TRUE);
+    //
+    //    /* activate / deactiveate "more sort tabs" menu item */
+    //    w = gtkpod_xml_get_widget(main_window_xml, "more_sort_tabs");
+    //    if (n == SORT_TAB_MAX)
+    //        gtk_widget_set_sensitive(w, FALSE);
+    //    else
+    //        gtk_widget_set_sensitive(w, TRUE);
 }
 
 /* Make the appropriate number of sort tab instances visible */
@@ -2326,25 +2326,25 @@ void st_show_visible(void) {
  * structure. This function is called when first creating the paned
  * elements and from within st_arrange_visible_sort_tabs() */
 static void st_set_visible_sort_tab_paned(void) {
-//    gint i, x, y, p0, num, width;
+    //    gint i, x, y, p0, num, width;
 
     g_warning("Determine whether to need to store the paned sizes and positions anymore?");
-//    num = prefs_get_int("sort_tab_num");
-//    if (num > 0) {
-//        gchar *buf;
-//        GtkWidget *w;
-//
-//        gtk_window_get_size(GTK_WINDOW (gtkpod_window), &x, &y);
-//        buf = g_strdup_printf("paned%d", PANED_PLAYLIST);
-//        if ((w = gtkpod_xml_get_widget(main_window_xml, buf))) {
-//            p0 = gtk_paned_get_position(GTK_PANED (w));
-//            width = (x - p0) / num;
-//            for (i = 0; i < num; ++i) {
-//                prefs_set_int_index("paned_pos_", PANED_NUM_GLADE + i, width);
-//            }
-//        }
-//        g_free(buf);
-//    }
+    //    num = prefs_get_int("sort_tab_num");
+    //    if (num > 0) {
+    //        gchar *buf;
+    //        GtkWidget *w;
+    //
+    //        gtk_window_get_size(GTK_WINDOW (gtkpod_window), &x, &y);
+    //        buf = g_strdup_printf("paned%d", PANED_PLAYLIST);
+    //        if ((w = gtkpod_xml_get_widget(main_window_xml, buf))) {
+    //            p0 = gtk_paned_get_position(GTK_PANED (w));
+    //            width = (x - p0) / num;
+    //            for (i = 0; i < num; ++i) {
+    //                prefs_set_int_index("paned_pos_", PANED_NUM_GLADE + i, width);
+    //            }
+    //        }
+    //        g_free(buf);
+    //    }
 }
 
 /* Regularly arrange the visible sort tabs */
@@ -2402,7 +2402,7 @@ static gboolean st_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer 
         case 3:
             st_select_current_position(GPOINTER_TO_INT(data), e->x, e->y);
             g_warning("TODO: context menu for sorttabs display");
-//            st_context_menu_init(GPOINTER_TO_INT(data));
+            //            st_context_menu_init(GPOINTER_TO_INT(data));
             return TRUE;
         default:
             break;
@@ -2813,28 +2813,28 @@ void st_cleanup(void) {
  colums is set when setting up the colums in the listview. Called by
  display_set_default_sizes() */
 void st_set_default_sizes(void) {
-//    gint i;
+    //    gint i;
 
     /* GtkPaned elements */
     g_return_if_fail (gtkpod_app);
     g_warning("Not sure whether to set positions of paneds based on prefs");
-//    /* Elements defined with glade */
-//    for (i = 0; i < PANED_NUM_GLADE; ++i) {
-//        gchar *buf = g_strdup_printf("paned%d", i);
-//        GtkWidget *w = gtkpod_xml_get_widget(main_window_xml, buf);
-//        g_free(buf);
-//        g_return_if_fail (w);
-//        if (prefs_get_int_index("paned_pos_", i) != -1) {
-//            gtk_paned_set_position(GTK_PANED (w), prefs_get_int_index("paned_pos_", i));
-//        }
-//    }
-//    /* Elements defined with display.c (sort tab hpaned) */
-//    for (i = 0; i < PANED_NUM_ST; ++i) {
-//        g_return_if_fail (st_paned[i]);
-//        if (prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i) != -1) {
-//            gtk_paned_set_position(st_paned[i], prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i));
-//        }
-//    }
+    //    /* Elements defined with glade */
+    //    for (i = 0; i < PANED_NUM_GLADE; ++i) {
+    //        gchar *buf = g_strdup_printf("paned%d", i);
+    //        GtkWidget *w = gtkpod_xml_get_widget(main_window_xml, buf);
+    //        g_free(buf);
+    //        g_return_if_fail (w);
+    //        if (prefs_get_int_index("paned_pos_", i) != -1) {
+    //            gtk_paned_set_position(GTK_PANED (w), prefs_get_int_index("paned_pos_", i));
+    //        }
+    //    }
+    //    /* Elements defined with display.c (sort tab hpaned) */
+    //    for (i = 0; i < PANED_NUM_ST; ++i) {
+    //        g_return_if_fail (st_paned[i]);
+    //        if (prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i) != -1) {
+    //            gtk_paned_set_position(st_paned[i], prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i));
+    //        }
+    //    }
 }
 
 /* update the cfg structure (preferences) with the current sizes /
@@ -2843,24 +2843,24 @@ void st_set_default_sizes(void) {
 void st_update_default_sizes(void) {
     /* GtkPaned elements */
     g_warning("Not sure whether need to update default size of sorttabs");
-//    if (gtkpod_window) {
-//        gint i;
-//        /* Elements defined with glade */
-//        for (i = 0; i < PANED_NUM_GLADE; ++i) {
-//            gchar *buf;
-//            GtkWidget *w;
-//            buf = g_strdup_printf("paned%d", i);
-//            if ((w = gtkpod_xml_get_widget(main_window_xml, buf))) {
-//                prefs_set_int_index("paned_pos_", i, gtk_paned_get_position(GTK_PANED (w)));
-//            }
-//            g_free(buf);
-//        }
-//        /* Elements defined with display.c (sort tab hpaned) */
-//        for (i = 0; i < PANED_NUM_ST; ++i) {
-//            if (st_paned[i])
-//                prefs_set_int_index("paned_pos_", i + PANED_NUM_GLADE, gtk_paned_get_position(st_paned[i]));
-//        }
-//    }
+    //    if (gtkpod_window) {
+    //        gint i;
+    //        /* Elements defined with glade */
+    //        for (i = 0; i < PANED_NUM_GLADE; ++i) {
+    //            gchar *buf;
+    //            GtkWidget *w;
+    //            buf = g_strdup_printf("paned%d", i);
+    //            if ((w = gtkpod_xml_get_widget(main_window_xml, buf))) {
+    //                prefs_set_int_index("paned_pos_", i, gtk_paned_get_position(GTK_PANED (w)));
+    //            }
+    //            g_free(buf);
+    //        }
+    //        /* Elements defined with display.c (sort tab hpaned) */
+    //        for (i = 0; i < PANED_NUM_ST; ++i) {
+    //            if (st_paned[i])
+    //                prefs_set_int_index("paned_pos_", i + PANED_NUM_GLADE, gtk_paned_get_position(st_paned[i]));
+    //        }
+    //    }
 }
 
 /* make the tooltips visible or hide it depending on the value set in
@@ -2894,7 +2894,7 @@ void st_update_paned_position() {
 
     GtkWidget *top = gtk_paned_get_child1(sorttab_parent);
     GtkWidget *bottom = gtk_paned_get_child2(sorttab_parent);
-    if (! top || ! bottom)
+    if (!top || !bottom)
         return; // sorttab_parent currently lacks either top or bottom panes
 
     gboolean top_is_st_paned = g_object_get_data(G_OBJECT (top), "paned_id") != NULL;
@@ -3337,4 +3337,26 @@ void cal_open_calendar(gint inst, T_item item) {
             G_CALLBACK (cal_ok), cal);
 
     gtk_widget_show(cal);
+}
+
+void sorttab_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data) {
+    /* Remove all data from tab */
+    st_init(-1, 0);
+
+    Playlist *new_playlist = pl;
+    /* Add the tracks from the selected playlist to the sorttabs */
+    if (new_playlist && new_playlist->members) {
+        GList *gl;
+
+        st_enable_disable_view_sort(0, FALSE);
+
+        for (gl = new_playlist->members; gl; gl = gl->next) {
+            /* add all tracks to sort tab 0 */
+            Track *track = gl->data;
+            st_add_track(track, FALSE, TRUE, 0);
+        }
+
+        st_enable_disable_view_sort(0, TRUE);
+        st_add_track(NULL, TRUE, TRUE, 0);
+    }
 }

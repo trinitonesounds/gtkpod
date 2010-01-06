@@ -35,6 +35,11 @@
 #include "display_sorttabs.h"
 
 void on_more_sort_tabs_activate (GtkAction *action, SorttabDisplayPlugin* plugin) {
-//    prefs_set_int("sort_tab_num", prefs_get_int("sort_tab_num") + 1);
-//    st_show_visible();
+    prefs_set_int("sort_tab_num", prefs_get_int("sort_tab_num") + 1);
+    st_show_visible();
+}
+
+void on_fewer_sort_tabs_activate (GtkAction *action, SorttabDisplayPlugin* plugin) {
+    prefs_set_int("sort_tab_num", prefs_get_int("sort_tab_num") - 1);
+    st_show_visible();
 }

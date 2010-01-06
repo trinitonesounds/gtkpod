@@ -49,7 +49,15 @@ static GtkActionEntry sorttab_actions[] =
             NULL, /* short-cut */
             NULL, /* Tooltip */
             G_CALLBACK (on_more_sort_tabs_activate) /* callback */
-        }
+        },
+        {
+            "ActionViewFewerFilterTabs", /* Action name */
+            NULL, /* Stock icon */
+            N_("_Fewer Filter Tabs"), /* Display label */
+            NULL, /* short-cut */
+            NULL, /* Tooltip */
+            G_CALLBACK (on_fewer_sort_tabs_activate) /* callback */
+        },
     };
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {
@@ -75,8 +83,10 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     sorttab_display_plugin->st_paned = gtk_hpaned_new();
     st_create_tabs(GTK_PANED(sorttab_display_plugin->st_paned));
 
-//    g_signal_connect (gtkpod_app, "sorttab_selected", G_CALLBACK (sorttab_display_select_sorttab_cb), NULL);
-//    g_signal_connect (gtkpod_app, "itdb_updated", G_CALLBACK (sorttab_display_update_itdb_cb), NULL);
+    g_signal_connect (gtkpod_app, "playlist_selected", G_CALLBACK (sorttab_display_select_playlist_cb), NULL);
+
+    //    g_signal_connect (gtkpod_app, "sorttab_selected", G_CALLBACK (sorttab_display_select_sorttab_cb), NULL);
+    //    g_signal_connect (gtkpod_app, "itdb_updated", G_CALLBACK (sorttab_display_update_itdb_cb), NULL);
 
     gtk_widget_show(sorttab_display_plugin->st_paned);
     anjuta_shell_add_widget(plugin->shell, sorttab_display_plugin->st_paned, "SorttabDisplayPlugin", "Track Filter", NULL, ANJUTA_SHELL_PLACEMENT_BOTTOM, NULL);
@@ -126,5 +136,4 @@ static void sorttab_display_plugin_class_init(GObjectClass *klass) {
 ANJUTA_PLUGIN_BEGIN (SorttabDisplayPlugin, sorttab_display_plugin);
 ANJUTA_PLUGIN_END;
 
-ANJUTA_SIMPLE_PLUGIN (SorttabDisplayPlugin, sorttab_display_plugin)
-;
+ANJUTA_SIMPLE_PLUGIN (SorttabDisplayPlugin, sorttab_display_plugin);

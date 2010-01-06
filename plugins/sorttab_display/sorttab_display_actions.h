@@ -38,4 +38,6 @@
 
 void on_more_sort_tabs_activate (GtkAction *action, SorttabDisplayPlugin* plugin);
 
+void on_fewer_sort_tabs_activate (GtkAction *action, SorttabDisplayPlugin* plugin);
+
 #endif

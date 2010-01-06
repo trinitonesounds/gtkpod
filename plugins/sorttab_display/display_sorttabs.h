@@ -37,6 +37,7 @@
 #include <gtk/gtk.h>
 #include "date_parser.h"
 #include "sorttab_conversion.h"
+#include "libgtkpod/gtkpod_app_iface.h"
 
 /* Number of search tabs to be supported. */
 #define SORT_TAB_MAX (ST_CAT_NUM-1)
@@ -131,5 +132,7 @@ GList *st_get_selected_members(guint32 inst);
 void st_update_paned_position();
 
 void cal_open_calendar(gint inst, T_item item);
+
+void sorttab_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data);
 
 #endif /* __DISPLAY_SORTTAB_H__ */
