@@ -32,11 +32,13 @@
 #endif
 
 #include "playlist_display_actions.h"
+#include "display_playlists.h"
 #include "libgtkpod/file.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/gp_itdb.h"
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/misc_track.h"
+#include "libgtkpod/misc_playlist.h"
 
 /* Callback after directories to add have been selected */
 static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
@@ -79,14 +81,14 @@ static void fileselection_add_playlists(GSList* names, iTunesDB *itdb) {
     g_return_if_fail (itdb);
 
     g_warning("fileselection_add_playlists - block widgets commented out");
-//    block_widgets();
+    //    block_widgets();
 
     for (gsl = names; gsl; gsl = gsl->next) {
         add_playlist_by_filename(itdb, gsl->data, NULL, -1, NULL, NULL);
     }
 
     g_warning("fileselection_add_playlists - release widgets commented out");
-//    release_widgets();
+    //    release_widgets();
 
     /* clear log of non-updated tracks */
     display_non_updated((void *) -1, NULL);
@@ -187,7 +189,7 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
     g_return_if_fail (playlist);
 
     g_warning("fileselection_add_files - block widgets commented out");
-//    block_widgets();
+    //    block_widgets();
 
     /* Get the filenames and add them */
     for (gsl = names; gsl; gsl = gsl->next) {
@@ -211,7 +213,7 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
         gtkpod_statusbar_message(_("Some files were not added successfully"));
 
     g_warning("fileselection_add_playlists - release widgets commented out");
-//    release_widgets();
+    //    release_widgets();
 }
 
 /* Open a modal file selection dialog for adding individual files */
@@ -312,4 +314,30 @@ void on_create_add_playlists(GtkAction *action, PlaylistDisplayPlugin* plugin) {
     iTunesDB *itdb;
     itdb = gp_get_selected_itdb();
     create_add_playlists_dialog(itdb);
+}
+
+void create_new_playlist_action_menu (GtkAction *new_playlist_action) {
+    GtkWidget *action_menu_item = gtk_action_create_tool_item(new_playlist_action);
+    GtkWidget *test_item = gtk_menu_item_new_with_label ("Test");
+
+    GtkWidget *sub_menu = gtk_menu_new ();
+    gtk_menu_shell_append (GTK_MENU_SHELL (sub_menu), test_item);
+
+    gtk_widget_show(test_item);
+    gtk_widget_show(sub_menu);
+
+    gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON(action_menu_item), sub_menu);
+
+}
+
+/* callback for "add new playlist" button */
+void on_new_playlist_button(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        add_new_pl_or_spl_user_name(itdb, NULL, -1);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
 }

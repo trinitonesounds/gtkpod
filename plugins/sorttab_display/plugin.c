@@ -60,7 +60,7 @@ static GtkActionEntry sorttab_actions[] =
         },
     };
 
-static gboolean activate_plugin(AnjutaPlugin *plugin) {
+static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
     SorttabDisplayPlugin *sorttab_display_plugin;
     GtkActionGroup* action_group;
@@ -79,22 +79,17 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     sorttab_display_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
 
     /* Add widget in Shell. Any number of widgets can be added */
-
     sorttab_display_plugin->st_paned = gtk_hpaned_new();
     st_create_tabs(GTK_PANED(sorttab_display_plugin->st_paned));
+    gtk_widget_show(sorttab_display_plugin->st_paned);
 
     g_signal_connect (gtkpod_app, "playlist_selected", G_CALLBACK (sorttab_display_select_playlist_cb), NULL);
 
-    //    g_signal_connect (gtkpod_app, "sorttab_selected", G_CALLBACK (sorttab_display_select_sorttab_cb), NULL);
-    //    g_signal_connect (gtkpod_app, "itdb_updated", G_CALLBACK (sorttab_display_update_itdb_cb), NULL);
-
-    gtk_widget_show(sorttab_display_plugin->st_paned);
-    anjuta_shell_add_widget(plugin->shell, sorttab_display_plugin->st_paned, "SorttabDisplayPlugin", "Track Filter", NULL, ANJUTA_SHELL_PLACEMENT_BOTTOM, NULL);
-
+    anjuta_shell_add_widget(plugin->shell, sorttab_display_plugin->st_paned, "SorttabDisplayPlugin", "Track Filter", NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
     return TRUE; /* FALSE if activation failed */
 }
 
-static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
+static gboolean deactivate_sorttab_display_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
     SorttabDisplayPlugin *sorttab_display_plugin;
 
@@ -104,7 +99,7 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     /* Remove widgets from Shell */
     anjuta_shell_remove_widget(plugin->shell, sorttab_display_plugin->st_paned, NULL);
 
-    /* Destroy the treeview */
+    /* Destroy the paned */
     sorttab_display_plugin->st_paned = NULL;
 
     /* Unmerge UI */
@@ -124,13 +119,14 @@ static void sorttab_display_plugin_instance_init(GObject *obj) {
     plugin->action_group = NULL;
 }
 
+
 static void sorttab_display_plugin_class_init(GObjectClass *klass) {
     AnjutaPluginClass *plugin_class = ANJUTA_PLUGIN_CLASS (klass);
 
     parent_class = g_type_class_peek_parent(klass);
 
-    plugin_class->activate = activate_plugin;
-    plugin_class->deactivate = deactivate_plugin;
+    plugin_class->activate = activate_sorttab_display_plugin;
+    plugin_class->deactivate = deactivate_sorttab_display_plugin;
 }
 
 ANJUTA_PLUGIN_BEGIN (SorttabDisplayPlugin, sorttab_display_plugin);

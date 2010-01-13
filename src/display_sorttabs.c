@@ -1531,10 +1531,6 @@ void st_add_track(Track *track, gboolean final, gboolean display, guint32 inst) 
 #endif
 
     if (inst == prefs_get_int("sort_tab_num")) { /* just add to track model */
-        if ((track != NULL) && display) {
-            g_warning ("st_add_track: signal that a track should be added to the track display");
-            //            tm_add_track_to_track_model(track, NULL);
-        }
         if (final)
             gtkpod_tracks_statusbar_update();
     }
@@ -1613,8 +1609,7 @@ void st_remove_track(Track *track, guint32 inst) {
  select "All" in accordance to the prefs settings. */
 void st_init(ST_CAT_item new_category, guint32 inst) {
     if (inst == prefs_get_int("sort_tab_num")) {
-        g_warning("st_init: signal that all tracks in track display should be removed");
-        //        tm_remove_all_tracks();
+        gtkpod_set_current_tracks(NULL);
         gtkpod_tracks_statusbar_update();
         return;
     }
@@ -1938,13 +1933,15 @@ static gboolean st_selection_changed_cb(gpointer data) {
                 Track *track = gl->data;
                 st_add_track(track, FALSE, TRUE, inst + 1);
             }
+            /* Advertise that a new set of tracks has been selected */
+            gtkpod_set_current_tracks(new_entry->members);
+
             st_enable_disable_view_sort(inst + 1, TRUE);
             st_add_track(NULL, TRUE, st->final, inst + 1);
         }
         gtkpod_tracks_statusbar_update();
 
         /* Select the cover in the coverart_display */
-        g_warning("st_selection_changed_cb: signal that track selection has changed");
         //        GList *gl = g_list_first(new_entry->members);
         //        if (gl != NULL) {
         //            Track *track = gl->data;
@@ -2204,8 +2201,7 @@ void st_enable_disable_view_sort(gint inst, gboolean enable) {
     static gint disable_count[SORT_TAB_MAX];
 
     if (inst >= prefs_get_int("sort_tab_num")) {
-        g_warning("st_enable_disable_view_sort: signal that track view should be enabled/disabled");
-        //        tm_enable_disable_view_sort(enable);
+        gtkpod_set_sort_enablement(enable);
         return;
     }
 

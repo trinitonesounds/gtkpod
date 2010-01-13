@@ -34,7 +34,8 @@
 #  include <config.h>
 #endif
 
-#include <libgtkpod/itdb.h>
+#include "libgtkpod/gtkpod_app_iface.h"
+#include "libgtkpod/itdb.h"
 
 /* "Column numbers" in playlist model */
 typedef enum  {
@@ -46,7 +47,7 @@ typedef enum  {
 } PM_column_type;
 
 GtkTreeView* pm_create_treeview (void);
-void destroy_treeview(void);
+void pm_destroy_treeview(void);
 void pm_select_playlist(Playlist *playlist);
 void pm_set_selected_playlist(Playlist *pl);
 void pm_remove_all_playlists (gboolean clear_sort);

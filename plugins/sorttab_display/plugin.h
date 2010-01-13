@@ -30,6 +30,10 @@
 #ifndef PLUGIN_H_
 #define PLUGIN_H_
 
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
+
 #include <libanjuta/anjuta-plugin.h>
 
 /* Stock IDs */

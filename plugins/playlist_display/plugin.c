@@ -33,10 +33,10 @@
 #include <glib.h>
 #include "libgtkpod/stock_icons.h"
 #include "libgtkpod/gtkpod_app_iface.h"
+#include "libgtkpod/tool_menu_action.h"
 #include "plugin.h"
 #include "display_playlists.h"
 #include "playlist_display_actions.h"
-
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -82,6 +82,164 @@ static GtkActionEntry playlist_actions[] =
             NULL, /* short-cut */
             NULL, /* Tooltip */
             G_CALLBACK (on_create_add_playlists) /* callback */
+        },
+        {
+            "testMenu",
+            NULL,
+            N_("_Test")
+        },
+        {
+            "ActionNewEmptyPlaylist",
+            NULL,
+            N_("Empty Playlist"),
+            NULL,
+            NULL,
+            NULL
+            /* on_new_playlist1_activate" */
+        },
+        {
+            "ActionNewSmartPlaylist",
+            NULL,
+            N_("Smart Playlist"),
+            NULL,
+            NULL,
+            NULL
+            /* on_smart_playlist_activate" */
+        },
+        {
+            "ActionNewRandomPlaylist",
+            NULL,
+            N_("Random Playlist from Displayed Tracks"),
+            NULL,
+            NULL,
+            NULL
+            /* on_random_playlist_activate */
+        },
+        {
+            "ActionNewContainingDisplayedPlaylist",
+            NULL,
+            N_("Containing Displayed Tracks"),
+            NULL,
+            NULL,
+            NULL
+            /* on_pl_containing_displayed_tracks_activate */
+        },
+        {
+            "ActionNewContainingSelectedPlaylist",
+            NULL,
+            N_("Containing Selected Tracks"),
+            NULL,
+            NULL,
+            NULL
+            /* on_pl_containing_selected_tracks_activate */
+        },
+        {
+            "ActionNewBestRatedPlaylist",
+            NULL,
+            N_("Best Rated Tracks"),
+            NULL,
+            NULL,
+            NULL
+            /* on_most_rated_tracks_playlist_s1_activate */
+        },
+        {
+            "ActionNewTracksMostOftenPlaylist",
+            NULL,
+            N_("Tracks Most Often Listened To"),
+            NULL,
+            NULL,
+            NULL
+            /* on_most_listened_tracks1_activate */
+        },
+        {
+            "ActionNewMostRecentPlayledPlaylist",
+            NULL,
+            N_("Most Recently Played Tracks"),
+            NULL,
+            NULL,
+            NULL
+            /* on_most_recent_played_tracks_activate */
+        },
+        {
+            "ActionNewAllPlayedSinceLastTimePlaylist",
+            NULL,
+            N_("All Tracks Played Since Last Time"),
+            NULL,
+            NULL,
+            NULL
+            /* on_played_since_last_time1_activate */
+        },
+        {
+            "ActionNewAllNeverListenedPlaylist",
+            NULL,
+            N_("All Tracks Never Listened To"),
+            NULL,
+            NULL,
+            NULL
+            /* on_all_tracks_never_listened_to1_activate */
+        },
+        {
+            "ActionAllNeverListedPlaylist",
+            NULL,
+            N_("All Tracks not Listed in any Playlist"),
+            NULL,
+            NULL,
+            NULL
+            /* on_all_tracks_not_listed_in_any_playlist1_activate */
+        },
+        {
+            "ActionNewOnePerArtistPlaylist",
+            NULL,
+            N_("One for each Artist"),
+            NULL,
+            NULL,
+            NULL
+            /* on_pl_for_each_artist_activate */
+        },
+        {
+            "ActionNewOnePerAlbumPlaylist",
+            NULL,
+            N_("One for each Album"),
+            NULL,
+            NULL,
+            NULL
+            /* on_pl_for_each_album_activate */
+        },
+        {
+            "ActionNewOnePerGenrePlaylist",
+            NULL,
+            N_("One for each Genre"),
+            NULL,
+            NULL,
+            NULL
+            /* on_pl_for_each_genre_activate */
+        },
+        {
+            "ActionNewOnePreComposerPlaylist",
+            NULL,
+            N_("One for each Composer"),
+            NULL,
+            NULL,
+            NULL
+            /* on_pl_for_each_composer_activate */
+        },
+        {
+            "ActionNewOnePerYearPlaylist",
+            NULL,
+            N_("One for each Year"),
+            NULL,
+            NULL,
+            NULL
+            /* on_pl_for_each_year_activate */
+        },
+        {
+            "ActionNewOnePerRatingPlaylist",
+            NULL,
+            N_("One for each Rating"),
+            NULL,
+            NULL,
+            NULL
+            /* on_pl_for_each_rating_activate */
         }
     };
 
@@ -89,6 +247,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
     PlaylistDisplayPlugin *playlist_display_plugin;
     GtkActionGroup* action_group;
+    GtkAction *new_playlist_action;
 
     /* Prepare the icons for the playlist */
     register_stock_icon("playlist_display-photo", PLAYLIST_DISPLAY_PHOTO_ICON_STOCK_ID);
@@ -106,6 +265,10 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     action_group
             = anjuta_ui_add_action_group_entries(ui, "ActionGroupPlaylistDisplay", _("Playlist Display"), playlist_actions, G_N_ELEMENTS (playlist_actions), GETTEXT_PACKAGE, TRUE, plugin);
     playlist_display_plugin->action_group = action_group;
+
+    new_playlist_action = tool_menu_action_new ("ActionNewPlaylist", _("New Playlist"), NULL, GTK_STOCK_NEW);
+    create_new_playlist_action_menu(new_playlist_action);
+    gtk_action_group_add_action (playlist_display_plugin->action_group, GTK_ACTION (new_playlist_action));
 
     /* Merge UI */
     playlist_display_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
@@ -140,7 +303,7 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
 
     /* Destroy the treeview */
     playlist_display_plugin->playlist_view = NULL;
-    destroy_treeview();
+    pm_destroy_treeview();
 
     /* Unmerge UI */
     anjuta_ui_unmerge(ui, playlist_display_plugin->uiid);
@@ -169,8 +332,8 @@ static void playlist_display_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_plugin;
 }
 
-ANJUTA_PLUGIN_BEGIN (PlaylistDisplayPlugin, playlist_display_plugin);
-ANJUTA_PLUGIN_END;
+ANJUTA_PLUGIN_BEGIN (PlaylistDisplayPlugin, playlist_display_plugin);ANJUTA_PLUGIN_END
+;
 
 ANJUTA_SIMPLE_PLUGIN (PlaylistDisplayPlugin, playlist_display_plugin)
 ;

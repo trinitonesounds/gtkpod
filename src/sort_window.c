@@ -29,18 +29,13 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "charset.h"
-#include "display_itdb.h"
-#include "info.h"
-#include "fileselection.h"
-#include "sha1.h"
-/*#include "md5.h"*/
-#include "misc.h"
-#include "misc_track.h"
-#include "prefs.h"
+#include <glade/glade-xml.h>
+#include "libgtkpod/misc_conversion.h"
+#include "libgtkpod/misc.h"
+#include "libgtkpod/gp_private.h"
+#include "plugin.h"
+#include "display_tracks.h"
 #include "sort_window.h"
-#include "repository.h"
-#include "display_coverart.h"
 
 GladeXML *prefs_window_xml;
 GladeXML *sort_window_xml;
@@ -114,7 +109,7 @@ static void sort_window_read_sort_ign ()
 		GTK_TOGGLE_BUTTON (w)));
 	g_free (buf);
     }
-    
+
     /* Read sort ignore strings */
     tv = GTK_TEXT_VIEW (gtkpod_xml_get_widget (sort_window_xml,
 					      "sort_ign_strings"));
@@ -124,12 +119,12 @@ static void sort_window_read_sort_ign ()
 
     sort_ign_strings = get_list_from_buffer(tb);
     current = sort_ign_strings;
-    
+
     /* Add a trailing whitespace to strings */
     while (current)
     {
 	g_strstrip(current->data);
-	
+
         if (strlen(current->data) != 0)
 	{
 	    buf = g_strdup_printf("%s ",(gchar *) current->data);
@@ -139,7 +134,7 @@ static void sort_window_read_sort_ign ()
 
 	current = g_list_next(current);
     }
-	
+
     temp_list_add(sort_temp_lists, "sort_ign_string_", sort_ign_strings);
 }
 
@@ -171,7 +166,7 @@ void sort_window_create (void)
 		sort_temp_prefs = temp_prefs_create();
 		sort_temp_lists = temp_lists_create();
 
-		sort_window_xml = gtkpod_xml_new (xml_file, "sort_window");
+		sort_window_xml = gtkpod_xml_new (GLADE_FILE, "sort_window");
 		glade_xml_signal_autoconnect (sort_window_xml);
 
 		sort_window = gtkpod_xml_get_widget (sort_window_xml, "sort_window");
@@ -202,7 +197,7 @@ void sort_window_create (void)
 			gtk_text_view_set_editable(tv, FALSE);
 			gtk_text_view_set_cursor_visible(tv, FALSE);
 		}
-		
+
 		sort_ign_strings = prefs_get_list("sort_ign_string_");
 		current = sort_ign_strings;
 		while (current)
@@ -217,7 +212,7 @@ void sort_window_create (void)
 			gtk_text_buffer_get_end_iter (tb, &ti);
 			gtk_text_buffer_insert (tb, &ti, "\n", -1);
 		}
-		
+
 		prefs_free_list(sort_ign_strings);
 
 		sort_window_read_sort_ign ();
@@ -266,7 +261,7 @@ void sort_window_create (void)
 
 		/* associate tm_listed_order with sort_window */
 		g_object_set_data (G_OBJECT (sort_window), "tm_listed_order", tm_listed_order);
-			
+
 		tooltips = gtk_tooltips_new ();
 		gtk_tooltips_set_tip (tooltips, w, _("You can also use the table headers, but this allows you to sort according to a column that is not displayed."), NULL);
 
@@ -391,15 +386,15 @@ void sort_window_show_hide_tooltips (void)
     {
 		GtkTooltips *tt;
 		GtkTooltipsData *tooltips_data;
-		
+
 		tooltips_data = gtk_tooltips_data_get (gtkpod_xml_get_widget (sort_window_xml, "sort_combo"));
 		tt = tooltips_data->tooltips;
 
 		if (tt)
 		{
-			if (prefs_get_int("display_tooltips_prefs")) 
+			if (prefs_get_int("display_tooltips_prefs"))
 			gtk_tooltips_enable (tt);
-			else                                     
+			else
 			gtk_tooltips_disable (tt);
 		}
 		else
@@ -488,35 +483,36 @@ static void sort_window_set ()
     compare_string_fuzzy_generate_keys ();
 
     /* if case sensitive has changed, rebuild sortkeys */
-    if (temp_prefs_get_int_value(sort_temp_prefs, "case_sensitive", &val))
-    {
-	st_rebuild_sortkeys ();
-	temp_prefs_remove_key (sort_temp_prefs, "case_sensitive");
-    }
-    /* if sort type has changed, initialize display */
-    if (temp_prefs_get_int_value(sort_temp_prefs, "pm_sort", &val))
-    {
-	pm_sort (val);
-	temp_prefs_remove_key (sort_temp_prefs, "pm_sort");
-    }
-    if (temp_prefs_get_int_value(sort_temp_prefs, "st_sort", &val))
-    {
-	st_sort (val);
-	temp_prefs_remove_key (sort_temp_prefs, "st_sort");
-    }
-    if (temp_prefs_get_int_value(sort_temp_prefs, "tm_sort", NULL) ||
-	(sortcol_old != sortcol_new))
-    {
-	tm_sort_counter (-1);
-	tm_sort (prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
-	temp_prefs_remove_key (sort_temp_prefs, "tm_sort");
-    }
-    /* if auto sort was changed to TRUE, store order */
-    if (!temp_prefs_get_int(sort_temp_prefs, "tm_autostore"))
-    {
-	tm_rows_reordered ();
-	temp_prefs_remove_key (sort_temp_prefs, "tm_autostore");
-    }
+    g_warning("TODO - send signal to initiate sort on apply of sort window");
+//    if (temp_prefs_get_int_value(sort_temp_prefs, "case_sensitive", &val))
+//    {
+//	st_rebuild_sortkeys ();
+//	temp_prefs_remove_key (sort_temp_prefs, "case_sensitive");
+//    }
+//    /* if sort type has changed, initialize display */
+//    if (temp_prefs_get_int_value(sort_temp_prefs, "pm_sort", &val))
+//    {
+//	pm_sort (val);
+//	temp_prefs_remove_key (sort_temp_prefs, "pm_sort");
+//    }
+//    if (temp_prefs_get_int_value(sort_temp_prefs, "st_sort", &val))
+//    {
+//	st_sort (val);
+//	temp_prefs_remove_key (sort_temp_prefs, "st_sort");
+//    }
+//    if (temp_prefs_get_int_value(sort_temp_prefs, "tm_sort", NULL) ||
+//	(sortcol_old != sortcol_new))
+//    {
+//	tm_sort_counter (-1);
+//	tm_sort (prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
+//	temp_prefs_remove_key (sort_temp_prefs, "tm_sort");
+//    }
+//    /* if auto sort was changed to TRUE, store order */
+//    if (!temp_prefs_get_int(sort_temp_prefs, "tm_autostore"))
+//    {
+//	tm_rows_reordered ();
+//	temp_prefs_remove_key (sort_temp_prefs, "tm_autostore");
+//    }
 
     sort_window_update ();
 }
@@ -704,7 +700,7 @@ void sort_window_ok (void)
 
     /* save current settings */
     sort_window_set ();
-  
+
     /* close the window */
     if(sort_window)
 	gtk_widget_destroy(sort_window);

@@ -1201,7 +1201,6 @@ static gboolean pm_selection_changed_cb(gpointer data) {
         Itdb_iTunesDB *itdb = NULL;
         Itdb_PhotoDB *photodb = NULL;
         PM_column_type type = 0;
-        //	    gchar *label_text;
         /* handle new selection */
         gtk_tree_model_get(model, &iter, PM_COLUMN_TYPE, &type, PM_COLUMN_ITDB, &itdb, PM_COLUMN_PLAYLIST, &new_playlist, PM_COLUMN_PHOTOS, &photodb, -1);
 
@@ -1218,12 +1217,6 @@ static gboolean pm_selection_changed_cb(gpointer data) {
             /* If new playlist is in an iPod itdb, set the mountpoint for
              * the free space display to this iPod (there may be several
              * iPods connected */
-            //		label_text = g_markup_printf_escaped ("<span weight='bold' size='larger'>%s</span>",
-            //						      new_playlist->name);
-            //		gtk_label_set_markup (GTK_LABEL (gtkpod_xml_get_widget (
-            //						     main_window_xml, "current_playlist_label")),
-            //				      label_text);
-            //		g_free (label_text);
             //
             //		if (itdb->usertype & GP_ITDB_TYPE_IPOD)
             //		{
@@ -1237,22 +1230,6 @@ static gboolean pm_selection_changed_cb(gpointer data) {
             if (new_playlist->is_spl && new_playlist->splpref.liveupdate)
                 itdb_spl_update(new_playlist);
 
-            //		if (new_playlist->members)
-            //		{
-            //		    GList *gl;
-            //
-            //		    st_enable_disable_view_sort (?0, FALSE);
-            //
-            //		    for (gl=new_playlist->members; gl; gl=gl->next)
-            //		    {
-            //			/* add all tracks to sort tab 0 */
-            //			Track *track = gl->data;
-            //			st_add_track (track, FALSE, TRUE, 0);
-            //		    }
-            //
-            //		    st_enable_disable_view_sort (0, TRUE);
-            //		    st_add_track (NULL, TRUE, TRUE, 0);
-            //		}
             gtkpod_tracks_statusbar_update();
             break;
         case PM_COLUMN_PHOTOS:
@@ -2011,7 +1988,7 @@ static void pm_add_columns(void) {
 }
 
 /* Free the playlist listview */
-void destroy_treeview(void) {
+void pm_destroy_treeview(void) {
     if (GTK_IS_WIDGET(playlist_treeview))
         gtk_widget_destroy(GTK_WIDGET(playlist_treeview));
 

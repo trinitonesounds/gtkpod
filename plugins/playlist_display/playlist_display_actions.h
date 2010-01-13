@@ -41,5 +41,8 @@ void on_save_changes(GtkAction *action, PlaylistDisplayPlugin* plugin);
 void on_create_add_files(GtkAction *action, PlaylistDisplayPlugin* plugin);
 void on_create_add_directory (GtkAction *action, PlaylistDisplayPlugin* plugin);
 void on_create_add_playlists (GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_new_playlist_button(GtkAction *action, PlaylistDisplayPlugin* plugin);
+
+void create_new_playlist_action_menu (GtkAction *new_playlist_action);
 
 #endif

@@ -35,6 +35,7 @@
 
 #include "file.h"
 #include "misc_conversion.h"
+#include "gp_itdb.h"
 
 void gp_duplicate_remove (Track *oldtrack, Track *track);
 void gp_sha1_hash_tracks_itdb (iTunesDB *itdb);
@@ -69,5 +70,7 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item);
 const gchar *track_get_item (Track *track, T_item t_item);
 time_t track_get_timestamp (Track *track, T_item t_item);
 gchar **track_get_item_pointer (Track *track, T_item t_item);
+gchar *track_get_text(Track *track, T_item item);
+gboolean track_set_text(Track *track, const gchar *new_text, T_item item);
 
 #endif

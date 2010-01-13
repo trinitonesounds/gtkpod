@@ -3,7 +3,7 @@
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
@@ -31,7 +31,7 @@
 #define _GTKPOD_PREFS_WINDOW_H
 
 #include <gtk/gtk.h>
-#include "prefs.h"
+#include "libgtkpod/prefs.h"
 
 extern const gchar *path_entry_names[];
 

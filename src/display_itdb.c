@@ -740,6 +740,7 @@ void gp_track_validate_entries(Track *track) {
 void gp_init(GtkPodApp *single_app, int argc, char *argv[]) {
     gchar *cfgdir;
     gint i;
+    GtkTooltips *main_tooltips;
 
     g_return_if_fail (single_app);
 
@@ -808,6 +809,12 @@ void gp_init(GtkPodApp *single_app, int argc, char *argv[]) {
             itdb_spl_update_live(itdb);
         }
     }
+
+    /* Create tooltips */
+    main_tooltips = gtk_tooltips_new();
+    g_object_set_data(G_OBJECT (gtkpod_app), "main_tooltips", main_tooltips);
+    /* indicate that main_tooltips was set up */
+    g_object_set_data(G_OBJECT (gtkpod_app), "main_tooltips_initialised", "set");
 
     g_free(cfgdir);
 }

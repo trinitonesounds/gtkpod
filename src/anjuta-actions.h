@@ -20,11 +20,19 @@
 #include "anjuta-action-callbacks.h"
 
 static GtkActionEntry menu_entries_music[] = {
-  { "ActionMenuMusic", NULL, N_("_Music")},
-  { "ActionExit", GTK_STOCK_QUIT, N_("_Quit"), "<control>q",
-	N_("Quit GtkPod"),
-    G_CALLBACK (on_exit1_activate)}
-};
+  {
+      "ActionMenuMusic",
+      NULL,
+      N_("_Music")
+  },
+  {
+      "ActionExit",
+      GTK_STOCK_QUIT,
+      N_("_Quit"),
+      "<control>q",
+      N_("Quit GtkPod"),
+      G_CALLBACK (on_exit1_activate)}
+  };
 
 static GtkActionEntry menu_entries_edit[] = {
   { "ActionMenuEdit", NULL, N_("_Edit")},

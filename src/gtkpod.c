@@ -137,43 +137,7 @@ void gtkpod_init(int argc, char *argv[]) {
     //    anjuta_preferences_get_int (app->preferences,
     //ANJUTA_SESSION_SKIP_LAST))
     //        {
-    ///* Reset default session */
-    //session = anjuta_session_new (session_dir);
-    //anjuta_session_clear (session);
-    //g_object_unref (session);
-    //        }
-    //        /* If preferences is set to not load last project, clear it */
-    //        else if (no_files ||
-    //    anjuta_preferences_get_int (app->preferences,
-    //ANJUTA_SESSION_SKIP_LAST_FILES))
-    //        {
-    //session = anjuta_session_new (session_dir);
-    //anjuta_session_set_string_list (session, "File Loader",
-    //        "Files", NULL);
-    //anjuta_session_sync (session);
-    //g_object_unref (session);
-    //        }
-    //        /* Otherwise, load session normally */
-    //        else
-    //        {
-    //project_file = extract_project_from_session (session_dir);
-    //        }
-    //        g_free (session_dir);
-    //
-    //        /* Prepare for session save and load on profile change */
-    //        g_signal_connect (profile_manager, "profile-scoped",
-    //    G_CALLBACK (on_profile_scoped), app);
-    //        /* Load project file */
-    //        if (project_file)
-    //        {
-    //GFile* file = g_file_new_for_commandline_arg (project_file);
-    //IAnjutaFileLoader *loader;
-    //loader = anjuta_shell_get_interface (ANJUTA_SHELL (app),
-    //        IAnjutaFileLoader, NULL);
-    //ianjuta_file_loader_load (loader, file, FALSE, NULL);
-    //g_free (project_file);
-    //g_object_unref (file);
-    //        }
+
     anjuta_profile_manager_thaw(profile_manager, &error);
 
     if (error) {
@@ -193,11 +157,14 @@ void gtkpod_init(int argc, char *argv[]) {
 
     gtk_window_set_role(GTK_WINDOW(app), "gtkpod-app");
     gtk_widget_show(GTK_WIDGET(app));
-    gtk_window_maximize(GTK_WINDOW(app));
+
 
     GList *plugins = anjuta_plugin_manager_get_active_plugins(plugin_manager);
     g_printf("Number of active plugins: %d\n", g_list_length(plugins));
 
+    /* Reset default layout. At some point change it to save layout to user's preference */
+    anjuta_shell_session_load (ANJUTA_SHELL (app), get_data_dir(), NULL);
+    gtk_window_maximize(GTK_WINDOW(app));
 }
 
 /* callback for gtkpod window's close button */
@@ -268,6 +235,9 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
     //        anjuta_shell_session_save (ANJUTA_SHELL (app), session_dir, NULL);
     //        g_free (session_dir);
     //    }
+
+//    gchar *session_dir = "/home/phantomjinx/gtkpod_session";
+//    anjuta_shell_session_save(ANJUTA_SHELL (app), session_dir, NULL);
 
     anjuta_shell_notify_exit(ANJUTA_SHELL (app), NULL);
 
