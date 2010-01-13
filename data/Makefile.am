@@ -33,7 +33,19 @@ create-profile-link: create-data-dir
       sudo rm -rf $(gtkpod_data_dir)/default.profile; \
 	fi; \
 	# Creating link for default.profile" \
-	sudo ln -s `pwd`/default.profile $(gtkpod_data_dir)/default.profile;
+	sudo ln -s `pwd`/default.profile $(gtkpod_data_dir)/default.profile; \
+	if test -e $(gtkpod_data_dir)/anjuta.session; then \
+      # File already exists. Replacing ..." \
+      sudo rm -rf $(gtkpod_data_dir)/anjuta.session; \
+	fi; \
+	# Creating link for anjuta.session" \
+	sudo ln -s `pwd`/anjuta.session $(gtkpod_data_dir)/anjuta.session; \
+	if test -e $(gtkpod_data_dir)/dock-layout.xml; then \
+      # File already exists. Replacing ..." \
+      sudo rm -rf $(gtkpod_data_dir)/dock-layout.xml; \
+	fi; \
+	# Creating link for dock-layout.xml" \
+	sudo ln -s `pwd`/dock-layout.xml $(gtkpod_data_dir)/dock-layout.xml;
 
 # Clean up the links and files created purely for dev testing
 clean-local: clean-profile-link

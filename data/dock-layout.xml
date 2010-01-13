@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<dock-layout>
+				<layout name="__default__">
+								<dock name="__dock_1" floating="no" width="-1" height="-1" floatx="0" floaty="0">
+												<paned orientation="horizontal" locked="no" position="250">
+																<item name="PlaylistDisplayPlugin" orientation="vertical" locked="no"/>
+																<paned orientation="vertical" locked="no" position="377">
+																				<item name="TrackDisplayPlugin" orientation="vertical" locked="no"/>
+																				<item name="SorttabDisplayPlugin" orientation="vertical" locked="no"/>																</paned>
+												</paned>
+								</dock>
+				</layout>
+</dock-layout>
