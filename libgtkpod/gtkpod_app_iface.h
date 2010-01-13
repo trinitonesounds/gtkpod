@@ -66,9 +66,11 @@ void CONF_NULL_HANDLER (gpointer d1, gpointer d2);
 
 enum
 {
-   PLAYLIST_SELECTED,
-   ITDB_UPDATED,
-   LAST_SIGNAL
+    TRACKS_SELECTED,
+    PLAYLIST_SELECTED,
+    ITDB_UPDATED,
+    SORT_ENABLEMENT,
+    LAST_SIGNAL
 };
 
 typedef struct _GtkPodApp GtkPodApp; /* dummy object */
@@ -80,6 +82,10 @@ struct _GtkPodAppInterface {
     iTunesDB *current_itdb;
     /* pointer to the currently selected playlist */
     Playlist *current_playlist;
+    /* pointer to the currently displayed set of tracks */
+    GList *current_tracks;
+    /* flag indicating whether sorting is enabled/disabled */
+    gboolean sort_enablement;
 
     void (*itdb_updated)(GtkPodApp *obj, iTunesDB *oldItdb, iTunesDB *newItbd);
     void (*statusbar_message)(GtkPodApp *obj, gchar* message, ...);
@@ -109,6 +115,10 @@ iTunesDB* gtkpod_get_current_itdb();
 void gtkpod_set_current_itdb(iTunesDB* itdb);
 Playlist* gtkpod_get_current_playlist();
 void gtkpod_set_current_playlist(Playlist* playlist);
+GList *gtkpod_get_current_tracks();
+void gtkpod_set_current_tracks(GList *tracks);
+void gtkpod_set_sort_enablement(gboolean enable);
+gboolean gtkpod_get_sort_enablement();
 
 /* full path to 'gtkpod.glade' */
 gchar *gtkpod_xml_file;
