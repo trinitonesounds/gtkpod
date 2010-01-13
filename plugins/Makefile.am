@@ -4,6 +4,7 @@ SUBDIRS = . \
 	helloworld \
 	advhelloworld \
 	playlist_display \
-	sorttab_display
+	sorttab_display \
+	track_display
 
 # indent

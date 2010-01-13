@@ -1,0 +1,4 @@
+[Anjuta Plugin]
+Location=track_display:TrackDisplayPlugin
+Name=Track Display Plugin
+Description=Track View
