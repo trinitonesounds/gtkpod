@@ -41,8 +41,23 @@ void on_save_changes(GtkAction *action, PlaylistDisplayPlugin* plugin);
 void on_create_add_files(GtkAction *action, PlaylistDisplayPlugin* plugin);
 void on_create_add_directory (GtkAction *action, PlaylistDisplayPlugin* plugin);
 void on_create_add_playlists (GtkAction *action, PlaylistDisplayPlugin* plugin);
-void on_new_playlist_button(GtkAction *action, PlaylistDisplayPlugin* plugin);
 
-void create_new_playlist_action_menu (GtkAction *new_playlist_action);
+void on_new_playlist_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_smart_playlist_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_random_playlist_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_pl_containing_displayed_tracks_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_pl_containing_selected_tracks_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_most_rated_tracks_playlist_s1_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_most_listened_tracks1_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_most_recent_played_tracks_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_played_since_last_time1_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_all_tracks_never_listened_to1_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_all_tracks_not_listed_in_any_playlist1_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_pl_for_each_artist_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_pl_for_each_album_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_pl_for_each_genre_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_pl_for_each_composer_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_pl_for_each_year_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_pl_for_each_rating_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
 
 #endif

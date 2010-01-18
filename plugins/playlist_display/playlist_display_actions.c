@@ -39,6 +39,7 @@
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/misc_track.h"
 #include "libgtkpod/misc_playlist.h"
+#include "libgtkpod/gp_spl.h"
 
 /* Callback after directories to add have been selected */
 static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
@@ -312,30 +313,179 @@ void on_create_add_directory(GtkAction *action, PlaylistDisplayPlugin* plugin) {
 
 void on_create_add_playlists(GtkAction *action, PlaylistDisplayPlugin* plugin) {
     iTunesDB *itdb;
-    itdb = gp_get_selected_itdb();
+    itdb = gtkpod_get_current_itdb();
     create_add_playlists_dialog(itdb);
 }
 
-void create_new_playlist_action_menu (GtkAction *new_playlist_action) {
-    GtkWidget *action_menu_item = gtk_action_create_tool_item(new_playlist_action);
-    GtkWidget *test_item = gtk_menu_item_new_with_label ("Test");
-
-    GtkWidget *sub_menu = gtk_menu_new ();
-    gtk_menu_shell_append (GTK_MENU_SHELL (sub_menu), test_item);
-
-    gtk_widget_show(test_item);
-    gtk_widget_show(sub_menu);
-
-    gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON(action_menu_item), sub_menu);
-
-}
-
 /* callback for "add new playlist" button */
-void on_new_playlist_button(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+void on_new_playlist_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
     iTunesDB *itdb = gtkpod_get_current_itdb();
 
     if (itdb) {
         add_new_pl_or_spl_user_name(itdb, NULL, -1);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
+}
+
+/* callback */
+void on_smart_playlist_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        spl_edit_new(itdb, NULL, -1);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
+}
+
+void on_random_playlist_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        generate_random_playlist(itdb);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
+}
+
+void on_pl_containing_displayed_tracks_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    generate_displayed_playlist();
+}
+
+void on_pl_containing_selected_tracks_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    generate_selected_playlist();
+}
+
+void on_most_rated_tracks_playlist_s1_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        most_rated_pl(itdb);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
+}
+
+void on_most_listened_tracks1_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        most_listened_pl(itdb);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
+}
+
+void on_most_recent_played_tracks_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        last_listened_pl(itdb);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
+}
+
+void on_played_since_last_time1_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        since_last_pl(itdb);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
+}
+
+void on_all_tracks_never_listened_to1_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        never_listened_pl(itdb);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
+}
+
+void on_all_tracks_not_listed_in_any_playlist1_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        generate_not_listed_playlist(itdb);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
+}
+
+void on_pl_for_each_artist_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        generate_category_playlists(itdb, T_ARTIST);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
+}
+
+void on_pl_for_each_album_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        generate_category_playlists(itdb, T_ALBUM);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
+}
+
+void on_pl_for_each_genre_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        generate_category_playlists(itdb, T_GENRE);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
+}
+
+void on_pl_for_each_composer_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        generate_category_playlists(itdb, T_COMPOSER);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
+}
+
+void on_pl_for_each_year_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        generate_category_playlists(itdb, T_YEAR);
+    }
+    else {
+        message_sb_no_itdb_selected();
+    }
+}
+
+void on_pl_for_each_rating_activate(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+
+    if (itdb) {
+        each_rating_pl(itdb);
     }
     else {
         message_sb_no_itdb_selected();

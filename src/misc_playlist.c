@@ -115,20 +115,6 @@ void add_new_pl_or_spl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position) {
     }
 }
 
-/* callback */
-G_MODULE_EXPORT void on_smart_playlist_activate(GtkMenuItem *menuitem, gpointer user_data) {
-    iTunesDB *itdb = gp_get_selected_itdb();
-
-    if (itdb) {
-        g_warning("TODO tell some plugin to edit a new smart playlist action\n");
-        //	spl_edit_new (itdb, NULL, -1);
-    }
-    else {
-        g_warning("TODO look into frequently used error messages\n");
-        //	message_sb_no_itdb_selected ();
-    }
-}
-
 /*------------------------------------------------------------------*\
  *                                                                  *
  *                     Special Playlist Stuff                       *
@@ -209,17 +195,14 @@ void generate_category_playlists(iTunesDB *itdb, T_item cat) {
 /* Generate a new playlist containing all the tracks currently
  displayed */
 Playlist *generate_displayed_playlist(void) {
-    //    GList *tracks = tm_get_all_tracks ();
+    GList *tracks = gtkpod_get_current_tracks();
     Playlist *result = NULL;
 
-    g_warning("TODO generate_displayed_playlist - find alternative way of getting all displayed tracks\n");
+    if (tracks) {
+        result = generate_new_playlist(gtkpod_get_current_itdb(), tracks);
+        g_list_free(tracks);
+    }
     return result;
-    //    if (tracks)
-    //    {
-    //	result= generate_new_playlist (gp_get_selected_itdb (), tracks);
-    //	g_list_free (tracks);
-    //    }
-    //    return result;
 }
 
 /* Generate a new playlist containing all the tracks currently
@@ -245,9 +228,7 @@ Playlist *generate_random_playlist(iTunesDB *itdb) {
     Playlist *new_pl = NULL;
     gchar *pl_name, *pl_name1;
     GList *rtracks = NULL;
-    g_warning("TODO generate_random_playlist need to get all tracks in different way\n");
-    GList *tracks = NULL;
-    //tm_get_all_tracks ();
+    GList *tracks = gtkpod_get_current_tracks();
     gint tracks_max = prefs_get_int("misc_track_nr");
     gint tracks_nr = 0;
 

@@ -1846,7 +1846,7 @@ gboolean get_offline(iTunesDB *itdb)
 gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
             gchar *opt_msg, gboolean *opt_state, const gchar *accept_button)
 {
-    GladeXML *xml = gtkpod_xml_new (gtkpod_xml_file, "input_box");
+    GladeXML *xml = gtkpod_xml_new (gtkpod_get_glade_xml(), "input_box");
     GtkWidget *dialog = gtkpod_xml_get_widget (xml, "input_box");
     GtkWidget *label = gtkpod_xml_get_widget (xml, "input_box_label");
     GtkWidget *entry = gtkpod_xml_get_widget (xml, "input_box_entry");

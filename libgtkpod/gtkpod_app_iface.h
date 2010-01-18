@@ -86,6 +86,8 @@ struct _GtkPodAppInterface {
     GList *current_tracks;
     /* flag indicating whether sorting is enabled/disabled */
     gboolean sort_enablement;
+    /* xml filename */
+    gchar *xml_file;
 
     void (*itdb_updated)(GtkPodApp *obj, iTunesDB *oldItdb, iTunesDB *newItbd);
     void (*statusbar_message)(GtkPodApp *obj, gchar* message, ...);
@@ -100,6 +102,10 @@ struct _GtkPodAppInterface {
 GType gtkpod_app_get_type(void);
 
 void gp_init(GtkPodApp *window, int argc, char *argv[]);
+
+void gtkpod_app_set_glade_xml(gchar *xml_file);
+gchar* gtkpod_get_glade_xml();
+
 void gtkpod_statusbar_message(gchar* message, ...);
 void gtkpod_tracks_statusbar_update(void);
 void gtkpod_warning(gchar* message, ...);
@@ -120,8 +126,6 @@ void gtkpod_set_current_tracks(GList *tracks);
 void gtkpod_set_sort_enablement(gboolean enable);
 gboolean gtkpod_get_sort_enablement();
 
-/* full path to 'gtkpod.glade' */
-gchar *gtkpod_xml_file;
 GtkPodApp *gtkpod_app;
 guint gtkpod_app_signals[LAST_SIGNAL];
 

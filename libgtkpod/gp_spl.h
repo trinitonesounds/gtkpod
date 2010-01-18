@@ -26,29 +26,15 @@
  |
  */
 
-#ifndef MISC_PLAYLIST_H_
-#define MISC_PLAYLIST_H_
+#ifndef GP_SPL_H_
+#define GP_SPL_H_
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
-#include <gtk/gtk.h>
-#include "itdb.h"
+#include "libgtkpod/itdb.h"
 
-Playlist *add_new_pl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position);
-void add_new_pl_or_spl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position);
-Playlist *generate_random_playlist(iTunesDB *itdb);
-Playlist *generate_selected_playlist(void);
-Playlist *generate_displayed_playlist(void);
-void generate_category_playlists(iTunesDB *itdb, T_item cat);
-void each_rating_pl(iTunesDB *itdb);
-void most_rated_pl(iTunesDB *itdb);
-void most_listened_pl(iTunesDB *itdb);
-void last_listened_pl(iTunesDB *itdb);
-void since_last_pl(iTunesDB *itdb);
-void never_listened_pl(iTunesDB *itdb);
-Playlist *generate_not_listed_playlist(iTunesDB *itdb);
+void spl_edit_new (iTunesDB *itdb, gchar *name, gint32 pos);
 
-
-#endif /* MISC_PLAYLIST_H_ */
+#endif /* GP_SPL_H_ */

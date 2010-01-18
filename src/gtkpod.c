@@ -68,6 +68,9 @@ void gtkpod_init(int argc, char *argv[]) {
     /* initialise gtkpod library pieces */
     gp_init(GTKPOD_APP(app), argc, argv);
 
+    /* Set the glade xml file of the app */
+    gtkpod_app_set_glade_xml(GTKPOD_GLADE_XML_FILE);
+
     status = anjuta_shell_get_status(ANJUTA_SHELL(app), NULL);
     anjuta_status_progress_add_ticks(status, 1);
 

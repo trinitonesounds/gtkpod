@@ -1178,7 +1178,7 @@ static GtkWidget *create_transfer_information_dialog(TransferData *td) {
     GladeXML *dialog_xml;
     GtkWidget *dialog, *widget;
 
-    dialog_xml = gtkpod_xml_new(gtkpod_xml_file, "file_transfer_information_dialog");
+    dialog_xml = gtkpod_xml_new(gtkpod_get_glade_xml(), "file_transfer_information_dialog");
     glade_xml_signal_autoconnect(dialog_xml);
 
     dialog = gtkpod_xml_get_widget(dialog_xml, "file_transfer_information_dialog");

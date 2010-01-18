@@ -2687,9 +2687,10 @@ void display_show_hide_searchbar(void) {
     }
 }
 
-void track_display_set_tracks_cb(GtkPodApp *app, gpointer pl, gpointer data) {
+void track_display_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data) {
+    GList *tracks = tks;
 
-    GList *tracks = pl;
+    g_warning("track_display_set_tracks_cb");
 
     tm_remove_all_tracks();
 
@@ -2704,6 +2705,8 @@ void track_display_set_tracks_cb(GtkPodApp *app, gpointer pl, gpointer data) {
 void track_display_set_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data) {
     Playlist *playlist = pl;
     gchar *label_text;
+
+    g_warning("track_display_set_playlist_cb");
 
     if (!current_playlist_label)
         return;

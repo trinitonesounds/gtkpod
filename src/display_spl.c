@@ -30,13 +30,13 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <glib/gi18n-lib.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "itdb.h"
 #include "misc.h"
-#include "display.h"
 #include "prefs.h"
 
 static const gchar *SPL_WINDOW_DEFX="spl_window_defx";
@@ -351,7 +351,7 @@ static void spl_matchcheckedonly_toggled (GtkToggleButton *togglebutton,
     g_return_if_fail (spl_window);
     spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
     g_return_if_fail (spl);
-    spl->splpref.matchcheckedonly = 
+    spl->splpref.matchcheckedonly =
 	gtk_toggle_button_get_active (togglebutton);
 }
 
@@ -363,7 +363,7 @@ static void spl_liveupdate_toggled (GtkToggleButton *togglebutton,
     g_return_if_fail (spl_window);
     spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
     g_return_if_fail (spl);
-    spl->splpref.liveupdate = 
+    spl->splpref.liveupdate =
 	gtk_toggle_button_get_active (togglebutton);
 }
 
@@ -562,7 +562,7 @@ static void splr_entry_redisplay (GtkEditable *editable, GtkWidget *spl_window)
     strp = entry_get_string (str, splr, type);
     if (strp)  gtk_entry_set_text (GTK_ENTRY (editable), strp);
 }
-    
+
 
 
 /* The content of a rule entry (fromvalue, fromdate, tovalue, todate,
@@ -848,10 +848,10 @@ static void spl_ok (GtkButton *button, GtkWidget *spl_window)
 
     itdb_spl_update (spl_orig);
 
-    if (pm_get_selected_playlist () == spl_orig)
+    if (gtkpod_get_current_playlist() == spl_orig)
     {   /* redisplay */
-	pm_unselect_playlist (spl_orig);
-	pm_select_playlist (spl_orig);
+        g_warning("spl_ok");
+        gtkpod_set_current_playlist(spl_orig);
     }
 
     data_changed (itdb);
@@ -896,7 +896,7 @@ static void spl_display_checklimits (GtkWidget *spl_window)
 
     if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_limittype_combobox")))
     {
-	spl_set_combobox (GTK_COMBO_BOX (w), 
+	spl_set_combobox (GTK_COMBO_BOX (w),
 			  limittype_comboentries,
 			  spl->splpref.limittype,
 			  G_CALLBACK (spl_limittype_changed),
@@ -911,7 +911,7 @@ static void spl_display_checklimits (GtkWidget *spl_window)
 
     if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_limitsort_combobox")))
     {
-	spl_set_combobox (GTK_COMBO_BOX (w), 
+	spl_set_combobox (GTK_COMBO_BOX (w),
 			  limitsort_comboentries,
 			  spl->splpref.limitsort,
 			  G_CALLBACK (spl_limitsort_changed),
@@ -1193,7 +1193,7 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, Itdb_SPLRule *splr)
 	combobox = gtk_combo_box_new_text ();
 	gtk_widget_show (combobox);
 	gtk_box_pack_start (GTK_BOX (hbox), combobox, TRUE, TRUE, 0);
-	pl_ids = g_array_sized_new (TRUE, TRUE, sizeof (guint64), 
+	pl_ids = g_array_sized_new (TRUE, TRUE, sizeof (guint64),
 				    itdb_playlists_number (itdb));
 	gl=itdb->playlists;
 	while (gl && gl->next)
@@ -1559,9 +1559,9 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
     g_return_if_fail (spl->is_spl);
     g_return_if_fail (itdb != NULL);
 
-    spl_window_xml = gtkpod_xml_new (xml_file, "spl_window");
+    spl_window_xml = gtkpod_xml_new (gtkpod_get_glade_xml(), "spl_window");
     spl_window = gtkpod_xml_get_widget (spl_window_xml, "spl_window");
-    
+
     g_return_if_fail (spl_window != NULL);
 
     /* Duplicate playlist to work on */
@@ -1577,7 +1577,7 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
     if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_name_entry")))
     {
 		if (spl_dup->name)
-			gtk_entry_set_text (GTK_ENTRY (w), spl_dup->name);	
+			gtk_entry_set_text (GTK_ENTRY (w), spl_dup->name);
     }
 
     if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_matchcheckedonly_button")))
@@ -1610,12 +1610,12 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
 		g_signal_connect (w, "clicked",
 				  G_CALLBACK (spl_ok), spl_window);
     }
-	
+
 	if ((w = gtkpod_xml_get_widget (spl_window_xml, "spl_match_rules")))
     {
 		gtk_combo_box_set_active (GTK_COMBO_BOX (w), spl_MATCH_ALL);
     }
-	
+
     g_signal_connect (spl_window, "delete_event",
 		      G_CALLBACK (spl_delete_event), spl_window);
 
@@ -1667,7 +1667,7 @@ G_MODULE_EXPORT void spl_match_rules_changed (GtkComboBox *sender, gpointer e)
 	g_return_if_fail (frame);
     spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
     g_return_if_fail (spl);
-	
+
 	switch (gtk_combo_box_get_active (sender))
 	{
 	case spl_MATCH_ANY:

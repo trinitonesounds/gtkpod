@@ -1084,6 +1084,7 @@ void pm_remove_playlist(Playlist *playlist, gboolean select) {
      * unselect won't be done until later (callback)) */
         //        gphoto_change_to_photo_window(FALSE);
         //        st_init(-1, 0);
+        g_warning("pm_remove_playlist - 1");
         gtkpod_set_current_playlist(NULL);
     }
 
@@ -1154,6 +1155,7 @@ void pm_select_playlist(Playlist *playlist) {
     }
 
     if (gtkpod_get_current_playlist() != playlist) {
+        g_warning("pm_select_playlist");
         gtkpod_set_current_playlist(playlist);
     }
 }
@@ -1170,6 +1172,9 @@ void pm_unselect_playlist(Playlist *playlist) {
         ts = gtk_tree_view_get_selection(playlist_treeview);
         gtk_tree_selection_unselect_iter(ts, &iter);
     }
+
+    g_warning("pm_unselect_playlist");
+    gtkpod_set_current_playlist(NULL);
 }
 
 static gboolean pm_selection_changed_cb(gpointer data) {
@@ -1193,6 +1198,7 @@ static gboolean pm_selection_changed_cb(gpointer data) {
     if (gtk_tree_selection_get_selected(selection, &model, &iter) == FALSE) { /* no selection -> reset sort tabs */
         //		gphoto_change_to_photo_window (FALSE);
         //		st_init (-1, 0);
+        g_warning("pm_selection_changed_cb - 1");
         gtkpod_set_current_playlist(NULL);
         gtkpod_set_current_itdb(NULL);
     }
@@ -1204,6 +1210,7 @@ static gboolean pm_selection_changed_cb(gpointer data) {
         /* handle new selection */
         gtk_tree_model_get(model, &iter, PM_COLUMN_TYPE, &type, PM_COLUMN_ITDB, &itdb, PM_COLUMN_PLAYLIST, &new_playlist, PM_COLUMN_PHOTOS, &photodb, -1);
 
+        g_warning("pm_selection_changed_cb - 2");
         gtkpod_set_current_playlist(new_playlist);
         gtkpod_set_current_itdb(itdb);
 
@@ -2139,6 +2146,7 @@ pm_get_selected_itdb(void) {
 
 /* use with care!! */
 void pm_set_selected_playlist(Playlist *pl) {
+    g_warning("pm_set_selected_playlist");
     gtkpod_set_current_playlist(pl);
 }
 
@@ -2188,6 +2196,15 @@ void playlist_display_update_itdb_cb(GtkPodApp *app, gpointer olditdb, gpointer 
 }
 
 void playlist_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data) {
-    Playlist *playlist = pl;
-    pm_select_playlist(playlist);
+    Playlist *new_playlist = pl;
+    Playlist *old_playlist = pm_get_selected_playlist();
+
+    if (old_playlist == new_playlist)
+        return;
+
+    if (old_playlist)
+        pm_unselect_playlist (old_playlist);
+
+    g_warning("playlist_display_select_playlist_cb");
+    pm_select_playlist(new_playlist);
 }

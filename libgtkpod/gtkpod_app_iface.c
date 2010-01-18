@@ -75,6 +75,16 @@ void CONF_NULL_HANDLER(gpointer d1, gpointer d2) {
     return;
 }
 
+void gtkpod_app_set_glade_xml(gchar *xml_file) {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->xml_file = xml_file;
+}
+
+gchar* gtkpod_get_glade_xml() {
+    g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), NULL);
+    return GTKPOD_APP_GET_INTERFACE (gtkpod_app)->xml_file;
+}
+
 void gtkpod_statusbar_message(gchar* message, ...) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
     va_list args;
@@ -167,7 +177,9 @@ Playlist* gtkpod_get_current_playlist() {
 }
 
 void gtkpod_set_current_playlist(Playlist* playlist) {
+    g_warning("gtkpod_set_current_playlist");
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+
     GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_playlist = playlist;
     if (playlist) {// if playlist not null then set its itdb as current
         gtkpod_set_current_itdb(playlist->itdb);
@@ -194,6 +206,12 @@ GList *gtkpod_get_current_tracks() {
 }
 
 void gtkpod_set_current_tracks(GList *tracks) {
+    if (tracks == NULL) {
+        g_warning("gtkpod_set_current_tracks (NULL)");
+    }
+    else {
+        g_warning("gtkpod_set_current_tracks (Some Tracks)");
+    }
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
     GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_tracks = tracks;
 

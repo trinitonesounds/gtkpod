@@ -25,7 +25,7 @@
 			<toolitem name="Add Directory" action="ActionAddDirectory" />
 			<toolitem name="Add Playlist" action="ActionAddPlaylist" />
 			<toolitem name="New Playlist" action="ActionNewPlaylist">
-				<menu name="test" action="testMenu">
+				<menu name="test" action="NewPlaylistMenu">
 					<menuitem name="Empty Playlist" action="ActionNewEmptyPlaylist"/> <!-- on_new_playlist1_activate" --> <!-- playlist -->
                     <menuitem name="Smart Playlist" action="ActionNewSmartPlaylist"/> <!-- on_smart_playlist_activate" -->
                     <menuitem name="Random Playlist from Displayed Tracks" action="ActionNewRandomPlaylist"/> <!-- on_random_playlist_activate -->

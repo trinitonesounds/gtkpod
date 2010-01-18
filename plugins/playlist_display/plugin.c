@@ -84,9 +84,9 @@ static GtkActionEntry playlist_actions[] =
             G_CALLBACK (on_create_add_playlists) /* callback */
         },
         {
-            "testMenu",
+            "NewPlaylistMenu",
             NULL,
-            N_("_Test")
+            N_("_New Playlist Menu")
         },
         {
             "ActionNewEmptyPlaylist",
@@ -94,8 +94,7 @@ static GtkActionEntry playlist_actions[] =
             N_("Empty Playlist"),
             NULL,
             NULL,
-            NULL
-            /* on_new_playlist1_activate" */
+            G_CALLBACK (on_new_playlist_activate)
         },
         {
             "ActionNewSmartPlaylist",
@@ -103,8 +102,7 @@ static GtkActionEntry playlist_actions[] =
             N_("Smart Playlist"),
             NULL,
             NULL,
-            NULL
-            /* on_smart_playlist_activate" */
+            G_CALLBACK (on_smart_playlist_activate)
         },
         {
             "ActionNewRandomPlaylist",
@@ -112,8 +110,7 @@ static GtkActionEntry playlist_actions[] =
             N_("Random Playlist from Displayed Tracks"),
             NULL,
             NULL,
-            NULL
-            /* on_random_playlist_activate */
+            G_CALLBACK (on_random_playlist_activate)
         },
         {
             "ActionNewContainingDisplayedPlaylist",
@@ -121,8 +118,7 @@ static GtkActionEntry playlist_actions[] =
             N_("Containing Displayed Tracks"),
             NULL,
             NULL,
-            NULL
-            /* on_pl_containing_displayed_tracks_activate */
+            G_CALLBACK (on_pl_containing_displayed_tracks_activate)
         },
         {
             "ActionNewContainingSelectedPlaylist",
@@ -130,8 +126,7 @@ static GtkActionEntry playlist_actions[] =
             N_("Containing Selected Tracks"),
             NULL,
             NULL,
-            NULL
-            /* on_pl_containing_selected_tracks_activate */
+            G_CALLBACK (on_pl_containing_selected_tracks_activate)
         },
         {
             "ActionNewBestRatedPlaylist",
@@ -139,8 +134,7 @@ static GtkActionEntry playlist_actions[] =
             N_("Best Rated Tracks"),
             NULL,
             NULL,
-            NULL
-            /* on_most_rated_tracks_playlist_s1_activate */
+            G_CALLBACK (on_most_rated_tracks_playlist_s1_activate)
         },
         {
             "ActionNewTracksMostOftenPlaylist",
@@ -148,8 +142,7 @@ static GtkActionEntry playlist_actions[] =
             N_("Tracks Most Often Listened To"),
             NULL,
             NULL,
-            NULL
-            /* on_most_listened_tracks1_activate */
+            G_CALLBACK (on_most_listened_tracks1_activate)
         },
         {
             "ActionNewMostRecentPlayledPlaylist",
@@ -157,8 +150,7 @@ static GtkActionEntry playlist_actions[] =
             N_("Most Recently Played Tracks"),
             NULL,
             NULL,
-            NULL
-            /* on_most_recent_played_tracks_activate */
+            G_CALLBACK (on_most_recent_played_tracks_activate)
         },
         {
             "ActionNewAllPlayedSinceLastTimePlaylist",
@@ -166,8 +158,7 @@ static GtkActionEntry playlist_actions[] =
             N_("All Tracks Played Since Last Time"),
             NULL,
             NULL,
-            NULL
-            /* on_played_since_last_time1_activate */
+            G_CALLBACK (on_played_since_last_time1_activate)
         },
         {
             "ActionNewAllNeverListenedPlaylist",
@@ -175,8 +166,7 @@ static GtkActionEntry playlist_actions[] =
             N_("All Tracks Never Listened To"),
             NULL,
             NULL,
-            NULL
-            /* on_all_tracks_never_listened_to1_activate */
+            G_CALLBACK (on_all_tracks_never_listened_to1_activate)
         },
         {
             "ActionAllNeverListedPlaylist",
@@ -184,8 +174,7 @@ static GtkActionEntry playlist_actions[] =
             N_("All Tracks not Listed in any Playlist"),
             NULL,
             NULL,
-            NULL
-            /* on_all_tracks_not_listed_in_any_playlist1_activate */
+            G_CALLBACK (on_all_tracks_not_listed_in_any_playlist1_activate)
         },
         {
             "ActionNewOnePerArtistPlaylist",
@@ -193,8 +182,7 @@ static GtkActionEntry playlist_actions[] =
             N_("One for each Artist"),
             NULL,
             NULL,
-            NULL
-            /* on_pl_for_each_artist_activate */
+            G_CALLBACK (on_pl_for_each_artist_activate)
         },
         {
             "ActionNewOnePerAlbumPlaylist",
@@ -202,8 +190,7 @@ static GtkActionEntry playlist_actions[] =
             N_("One for each Album"),
             NULL,
             NULL,
-            NULL
-            /* on_pl_for_each_album_activate */
+            G_CALLBACK (on_pl_for_each_album_activate)
         },
         {
             "ActionNewOnePerGenrePlaylist",
@@ -211,8 +198,7 @@ static GtkActionEntry playlist_actions[] =
             N_("One for each Genre"),
             NULL,
             NULL,
-            NULL
-            /* on_pl_for_each_genre_activate */
+            G_CALLBACK (on_pl_for_each_genre_activate)
         },
         {
             "ActionNewOnePreComposerPlaylist",
@@ -220,8 +206,7 @@ static GtkActionEntry playlist_actions[] =
             N_("One for each Composer"),
             NULL,
             NULL,
-            NULL
-            /* on_pl_for_each_composer_activate */
+            G_CALLBACK (on_pl_for_each_composer_activate)
         },
         {
             "ActionNewOnePerYearPlaylist",
@@ -229,8 +214,7 @@ static GtkActionEntry playlist_actions[] =
             N_("One for each Year"),
             NULL,
             NULL,
-            NULL
-            /* on_pl_for_each_year_activate */
+            G_CALLBACK (on_pl_for_each_year_activate)
         },
         {
             "ActionNewOnePerRatingPlaylist",
@@ -238,8 +222,7 @@ static GtkActionEntry playlist_actions[] =
             N_("One for each Rating"),
             NULL,
             NULL,
-            NULL
-            /* on_pl_for_each_rating_activate */
+            G_CALLBACK (on_pl_for_each_rating_activate)
         }
     };
 
@@ -267,7 +250,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     playlist_display_plugin->action_group = action_group;
 
     new_playlist_action = tool_menu_action_new ("ActionNewPlaylist", _("New Playlist"), NULL, GTK_STOCK_NEW);
-    create_new_playlist_action_menu(new_playlist_action);
+    g_signal_connect(new_playlist_action, "activate", G_CALLBACK(on_new_playlist_activate), NULL);
     gtk_action_group_add_action (playlist_display_plugin->action_group, GTK_ACTION (new_playlist_action));
 
     /* Merge UI */
