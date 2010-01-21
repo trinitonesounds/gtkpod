@@ -450,6 +450,7 @@ Playlist *gp_playlist_add_new(iTunesDB *itdb, gchar *name, gboolean spl, gint32 
 
     pl = gp_playlist_new(name, spl);
     itdb_playlist_add(itdb, pl, pos);
+    gtkpod_playlist_added(itdb, pl, pos);
     data_changed(itdb);
     return pl;
 }

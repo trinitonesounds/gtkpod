@@ -109,8 +109,7 @@ void add_new_pl_or_spl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position) {
             //	    gtkpod_tracks_statusbar_update ();
         }
         else { /* add smart playlist */
-            g_warning("TODO tell some plugin to edit a new smart playlist\n");
-            //	    spl_edit_new (itdb, name, position);
+            spl_edit_new (itdb, name, position);
         }
     }
 }

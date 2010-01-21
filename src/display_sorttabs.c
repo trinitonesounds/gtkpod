@@ -1054,7 +1054,6 @@ static void st_free_entry_cb(gpointer data, gpointer user_data) {
 /* Remove all entries from the display model and the sorttab */
 /* @clear_sort: reset sorted columns to the non-sorted state */
 void st_remove_all_entries_from_model(guint32 inst) {
-    g_warning("st_remove_all_entries_from_model");
     SortTab *st = sorttab[inst];
     gint column;
     GtkSortType order;
@@ -1610,9 +1609,7 @@ void st_remove_track(Track *track, guint32 inst) {
 /* Normally we do not specifically remember the "All" entry and will
  select "All" in accordance to the prefs settings. */
 void st_init(ST_CAT_item new_category, guint32 inst) {
-    g_warning("st_init");
     if (inst == prefs_get_int("sort_tab_num")) {
-        g_warning("st_init - inst == prefs_get_int(sort_tab_num)");
         gtkpod_set_current_tracks(NULL);
         gtkpod_tracks_statusbar_update();
         return;
@@ -1882,7 +1879,6 @@ gboolean st_set_selection(Itdb_Track *track) {
 }
 
 static gboolean st_selection_changed_cb(gpointer data) {
-    g_warning("st_selection_changed_cb");
     StSelectionEvent *event = (StSelectionEvent *) data;
     GtkTreeView *tree_view = event->tree_view;
     GtkTreeSelection *selection = gtk_tree_view_get_selection(tree_view);
@@ -1973,7 +1969,6 @@ static gboolean st_selection_changed_cb(gpointer data) {
  "callback". Currently running display updates will be stopped
  before the st_selection_changed_cb is actually called */
 static void st_selection_changed(GtkTreeSelection *selection, gpointer user_data) {
-    g_warning("st_selection_changed");
 #if DEBUG_CB_INIT
     printf("st_s_c enter (inst: %d)\n", (gint)user_data);
 #endif
@@ -3342,16 +3337,13 @@ void cal_open_calendar(gint inst, T_item item) {
 }
 
 void sorttab_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data) {
-    g_warning("sortab_display_selected_playlist_cb");
     Playlist *new_playlist = pl;
 
     /* Remove all data from tab */
-    g_warning("st_init from sorttab_display_select_playlist_cb");
     st_init(-1, 0);
 
     /* Add the tracks from the selected playlist to the sorttabs */
     if (new_playlist && new_playlist->members) {
-        g_warning("new_playlist members from sorttab_display_select_playlist_cb");
         GList *gl;
 
         st_enable_disable_view_sort(0, FALSE);

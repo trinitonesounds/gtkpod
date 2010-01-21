@@ -54,6 +54,9 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
         gtkpod_app_signals[SORT_ENABLEMENT]
                         = g_signal_new("sort_enablement", G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__BOOLEAN, G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
 
+        gtkpod_app_signals[PLAYLIST_ADDED]
+                        = g_signal_new("playlist_added", G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, _gtkpod_app_marshal_VOID__POINTER_INT, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_INT);
+
         initialized = TRUE;
     }
 }
@@ -177,7 +180,6 @@ Playlist* gtkpod_get_current_playlist() {
 }
 
 void gtkpod_set_current_playlist(Playlist* playlist) {
-    g_warning("gtkpod_set_current_playlist");
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
 
     GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_playlist = playlist;
@@ -206,12 +208,6 @@ GList *gtkpod_get_current_tracks() {
 }
 
 void gtkpod_set_current_tracks(GList *tracks) {
-    if (tracks == NULL) {
-        g_warning("gtkpod_set_current_tracks (NULL)");
-    }
-    else {
-        g_warning("gtkpod_set_current_tracks (Some Tracks)");
-    }
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
     GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_tracks = tracks;
 
@@ -228,4 +224,12 @@ void gtkpod_set_sort_enablement(gboolean enable) {
 gboolean gtkpod_get_sort_enablement() {
     g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), TRUE);
     return GTKPOD_APP_GET_INTERFACE (gtkpod_app)->sort_enablement;
+}
+
+void gtkpod_playlist_added(iTunesDB *itdb, Playlist *playlist, gint32 pos) {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    g_return_if_fail (playlist);
+    g_return_if_fail (playlist->itdb == itdb);
+
+    g_signal_emit(gtkpod_app, gtkpod_app_signals[PLAYLIST_ADDED], 0, playlist, pos);
 }

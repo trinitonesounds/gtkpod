@@ -68,6 +68,7 @@ enum
 {
     TRACKS_SELECTED,
     PLAYLIST_SELECTED,
+    PLAYLIST_ADDED,
     ITDB_UPDATED,
     SORT_ENABLEMENT,
     LAST_SIGNAL
@@ -125,6 +126,7 @@ GList *gtkpod_get_current_tracks();
 void gtkpod_set_current_tracks(GList *tracks);
 void gtkpod_set_sort_enablement(gboolean enable);
 gboolean gtkpod_get_sort_enablement();
+void gtkpod_playlist_added(iTunesDB *itdb, Playlist *playlist, gint32 pos);
 
 GtkPodApp *gtkpod_app;
 guint gtkpod_app_signals[LAST_SIGNAL];

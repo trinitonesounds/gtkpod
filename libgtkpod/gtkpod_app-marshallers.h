@@ -14,6 +14,14 @@ extern void _gtkpod_app_marshal_VOID__POINTER_POINTER (GClosure     *closure,
                                                        gpointer      invocation_hint,
                                                        gpointer      marshal_data);
 
+/* VOID:POINTER,INT (gtkpod_app-marshallers.list:3) */
+extern void _gtkpod_app_marshal_VOID__POINTER_INT (GClosure     *closure,
+                                                   GValue       *return_value,
+                                                   guint         n_param_values,
+                                                   const GValue *param_values,
+                                                   gpointer      invocation_hint,
+                                                   gpointer      marshal_data);
+
 G_END_DECLS
 
 #endif /* ___gtkpod_app_marshal_MARSHAL_H__ */

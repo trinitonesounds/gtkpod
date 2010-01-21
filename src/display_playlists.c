@@ -1155,7 +1155,6 @@ void pm_select_playlist(Playlist *playlist) {
     }
 
     if (gtkpod_get_current_playlist() != playlist) {
-        g_warning("pm_select_playlist");
         gtkpod_set_current_playlist(playlist);
     }
 }
@@ -1173,7 +1172,6 @@ void pm_unselect_playlist(Playlist *playlist) {
         gtk_tree_selection_unselect_iter(ts, &iter);
     }
 
-    g_warning("pm_unselect_playlist");
     gtkpod_set_current_playlist(NULL);
 }
 
@@ -1198,7 +1196,6 @@ static gboolean pm_selection_changed_cb(gpointer data) {
     if (gtk_tree_selection_get_selected(selection, &model, &iter) == FALSE) { /* no selection -> reset sort tabs */
         //		gphoto_change_to_photo_window (FALSE);
         //		st_init (-1, 0);
-        g_warning("pm_selection_changed_cb - 1");
         gtkpod_set_current_playlist(NULL);
         gtkpod_set_current_itdb(NULL);
     }
@@ -1210,7 +1207,6 @@ static gboolean pm_selection_changed_cb(gpointer data) {
         /* handle new selection */
         gtk_tree_model_get(model, &iter, PM_COLUMN_TYPE, &type, PM_COLUMN_ITDB, &itdb, PM_COLUMN_PLAYLIST, &new_playlist, PM_COLUMN_PHOTOS, &photodb, -1);
 
-        g_warning("pm_selection_changed_cb - 2");
         gtkpod_set_current_playlist(new_playlist);
         gtkpod_set_current_itdb(itdb);
 
@@ -2146,7 +2142,6 @@ pm_get_selected_itdb(void) {
 
 /* use with care!! */
 void pm_set_selected_playlist(Playlist *pl) {
-    g_warning("pm_set_selected_playlist");
     gtkpod_set_current_playlist(pl);
 }
 
@@ -2205,6 +2200,11 @@ void playlist_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer d
     if (old_playlist)
         pm_unselect_playlist (old_playlist);
 
-    g_warning("playlist_display_select_playlist_cb");
     pm_select_playlist(new_playlist);
+}
+
+void playlist_display_playlist_added_cb(GtkPodApp *app, gpointer pl, gint32 pos, gpointer data) {
+    Playlist *new_playlist = pl;
+
+    pm_add_child(new_playlist->itdb, PM_COLUMN_PLAYLIST, new_playlist, pos);
 }
