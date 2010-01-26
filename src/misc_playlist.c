@@ -109,7 +109,7 @@ void add_new_pl_or_spl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position) {
             //	    gtkpod_tracks_statusbar_update ();
         }
         else { /* add smart playlist */
-            spl_edit_new (itdb, name, position);
+            spl_edit_new(itdb, name, position);
         }
     }
 }
@@ -330,6 +330,7 @@ Playlist *generate_playlist_with_name(iTunesDB *itdb, GList *tracks, gchar *pl_n
     Playlist *new_pl = NULL;
     gint n = g_list_length(tracks);
 
+    g_warning("generate_playlist_with_name\n");
     g_return_val_if_fail (itdb, new_pl);
 
     if (n > 0) {
@@ -337,9 +338,7 @@ Playlist *generate_playlist_with_name(iTunesDB *itdb, GList *tracks, gchar *pl_n
         GList *l;
         if (del_old) {
             /* currently selected playlist */
-            Playlist *sel_pl = NULL;
-            g_warning("TODO generate_playlist_with_name find new way to get currently selected playlist\n");
-            //	        pm_get_selected_playlist ();
+            Playlist *sel_pl = gtkpod_get_current_playlist();
             if (sel_pl->itdb != itdb) { /* different itdb */
                 sel_pl = NULL;
             }
@@ -355,18 +354,16 @@ Playlist *generate_playlist_with_name(iTunesDB *itdb, GList *tracks, gchar *pl_n
         g_return_val_if_fail (new_pl, new_pl);
         for (l = tracks; l; l = l->next) {
             Track *track = l->data;
+            g_warning("generate_playlist_with_name: Track is %p", track);
             g_return_val_if_fail (track, new_pl);
             gp_playlist_add_track(new_pl, track, TRUE);
         }
-        g_warning("TODO generate_playlist_with_name - status\n");
-        //	gtkpod_statusbar_message (
-        //	    ngettext ("Created playlist '%s' with %d track.",
-        //		      "Created playlist '%s' with %d tracks.",
-        //		      n), pl_name, n);
+        gtkpod_statusbar_message(ngettext ("Created playlist '%s' with %d track.",
+                "Created playlist '%s' with %d tracks.",
+                n), pl_name, n);
         if (new_pl && select) { /* need to select newly created playlist because the old
          * selection was deleted */
-            g_warning("TODO generate_playlist_with_name new way to select the new playlist\n");
-            //	    pm_select_playlist (new_pl);
+            gtkpod_set_current_playlist(new_pl);
         }
     }
     else { /* n==0 */

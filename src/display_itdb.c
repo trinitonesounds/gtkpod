@@ -437,6 +437,7 @@ void gp_playlist_add(iTunesDB *itdb, Playlist *pl, gint32 pos) {
     g_return_if_fail (pl);
 
     itdb_playlist_add(itdb, pl, pos);
+    gtkpod_playlist_added(itdb, pl, pos);
     data_changed(itdb);
 }
 
@@ -449,9 +450,7 @@ Playlist *gp_playlist_add_new(iTunesDB *itdb, gchar *name, gboolean spl, gint32 
     g_return_val_if_fail (name, NULL);
 
     pl = gp_playlist_new(name, spl);
-    itdb_playlist_add(itdb, pl, pos);
-    gtkpod_playlist_added(itdb, pl, pos);
-    data_changed(itdb);
+    gp_playlist_add (itdb, pl, pos);
     return pl;
 }
 

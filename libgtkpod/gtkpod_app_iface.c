@@ -195,13 +195,13 @@ GList *gtkpod_get_current_tracks() {
     g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), NULL);
     GList *current_tracks = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_tracks;
     if (current_tracks && g_list_length(current_tracks) > 0) {
-        return current_tracks;
+        return g_list_copy(current_tracks);
     }
 
     /* current_tracks is null or empty */
     Playlist *playlist = gtkpod_get_current_playlist();
     if (playlist) {
-        return playlist->members;
+        return g_list_copy(playlist->members);
     }
 
     return NULL;

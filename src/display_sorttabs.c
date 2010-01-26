@@ -1048,6 +1048,9 @@ static void st_remove_entry_from_model(TabEntry *entry, guint32 inst) {
 
 static void st_free_entry_cb(gpointer data, gpointer user_data) {
     TabEntry *entry = (TabEntry *) data;
+    if (!entry) {
+        return;
+    }
     g_list_free(entry->members);
 }
 
@@ -1194,6 +1197,7 @@ static TabEntry *st_get_entry_by_name(const gchar *name, guint32 inst) {
     if (name == NULL)
         return NULL;
     /* check if we need to return the master entry */
+    g_warning("entry name: %p       %s", name, name);
     if ((strlen(name) == 1) && (*name == -1)) {
         entry = (TabEntry *) g_list_nth_data(entries, 0);
     }
