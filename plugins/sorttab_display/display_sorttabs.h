@@ -130,6 +130,7 @@ void st_track_changed(Track *track, gboolean removed, guint32 inst);
 void st_redisplay(guint32 inst);
 GList *st_get_selected_members(guint32 inst);
 void st_update_paned_position();
+void st_show_visible(void);
 
 void cal_open_calendar(gint inst, T_item item);
 

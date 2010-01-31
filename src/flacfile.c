@@ -35,6 +35,7 @@
 #include "misc.h"
 #include "flacfile.h"
 #include "mp3file.h"
+#include "gtkpod_app_iface.h"
 
 /* Info on how to implement new file formats: see mp3file.c for more info */
 
@@ -69,9 +70,9 @@ Track *flac_get_file_info (gchar *flacFileName)
 
         track = gp_track_new ();
 
-        if (prefs_get_int("readtags")) 
+        if (prefs_get_int("readtags"))
         {
-            if (!FLAC__metadata_get_tags (flacFileName, &tags)) 
+            if (!FLAC__metadata_get_tags (flacFileName, &tags))
             {
                 gchar *filename = NULL;
                 filename = charset_to_utf8 (flacFileName);
@@ -88,7 +89,7 @@ Track *flac_get_file_info (gchar *flacFileName)
 		    flac_metadata_ok = TRUE;
 		}
 
-                for (i = 0 ; i < tags->data.vorbis_comment.num_comments ; i++) 
+                for (i = 0 ; i < tags->data.vorbis_comment.num_comments ; i++)
                 {
                     gchar *tag = (gchar*)tags->data.vorbis_comment.comments[i].entry;
 
@@ -153,7 +154,7 @@ Track *flac_get_file_info (gchar *flacFileName)
                     if (g_ascii_strncasecmp("CDS=", tag, 4) == 0) {
                         track->cds = atoi (tag  + 4);
 		    }
-		    /* I'm not sure if "BPM=" is correct */ 
+		    /* I'm not sure if "BPM=" is correct */
                     if (g_ascii_strncasecmp("BPM=", tag, 4) == 0) {
                         track->BPM = atoi (tag  + 4);
                     }

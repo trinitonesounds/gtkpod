@@ -2,7 +2,7 @@
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
@@ -31,6 +31,7 @@
 #define MP3FILEH_INCLUDED 1
 
 #include "itdb.h"
+#include <glib/gi18n-lib.h>
 
 gboolean mp3_write_file_info (const gchar *filename, Track *track);
 Track *mp3_get_file_info (const gchar *name);

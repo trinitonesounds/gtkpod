@@ -613,7 +613,7 @@ static void sp_go_cb(gpointer user_data1, gpointer user_data2) {
                 st_add_track(track, FALSE, TRUE, inst + 1);
             }
         }
-        gtkpod_set_current_tracks(st->sp_members);
+        gtkpod_set_displayed_tracks(st->sp_members);
         st_enable_disable_view_sort(inst + 1, TRUE);
         st_add_track(NULL, TRUE, st->final, inst + 1);
     }
@@ -1197,7 +1197,6 @@ static TabEntry *st_get_entry_by_name(const gchar *name, guint32 inst) {
     if (name == NULL)
         return NULL;
     /* check if we need to return the master entry */
-    g_warning("entry name: %p       %s", name, name);
     if ((strlen(name) == 1) && (*name == -1)) {
         entry = (TabEntry *) g_list_nth_data(entries, 0);
     }
@@ -1614,7 +1613,7 @@ void st_remove_track(Track *track, guint32 inst) {
  select "All" in accordance to the prefs settings. */
 void st_init(ST_CAT_item new_category, guint32 inst) {
     if (inst == prefs_get_int("sort_tab_num")) {
-        gtkpod_set_current_tracks(NULL);
+        gtkpod_set_displayed_tracks(NULL);
         gtkpod_tracks_statusbar_update();
         return;
     }
@@ -1939,7 +1938,7 @@ static gboolean st_selection_changed_cb(gpointer data) {
                 st_add_track(track, FALSE, TRUE, inst + 1);
             }
             /* Advertise that a new set of tracks has been selected */
-            gtkpod_set_current_tracks(new_entry->members);
+            gtkpod_set_displayed_tracks(new_entry->members);
 
             st_enable_disable_view_sort(inst + 1, TRUE);
             st_add_track(NULL, TRUE, st->final, inst + 1);

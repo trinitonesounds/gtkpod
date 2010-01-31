@@ -42,6 +42,13 @@
 #define GTKPOD_IS_APP(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTKPOD_APP_TYPE))
 #define GTKPOD_APP_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), GTKPOD_APP_TYPE, GtkPodAppInterface))
 
+#define SIGNAL_TRACKS_DISPLAYED "signal_tracks_displayed"
+#define SIGNAL_TRACKS_SELECTED "signal_tracks_selected"
+#define SIGNAL_PLAYLIST_SELECTED "signal_playlist_selected"
+#define SIGNAL_PLAYLIST_ADDED "signal_playlist_added"
+#define SIGNAL_ITDB_UPDATED "signal_itdb_updated"
+#define SIGNAL_SORT_ENABLEMENT "signal_sort_enablement"
+
 typedef void (*ConfHandler)(gpointer user_data1, gpointer user_data2);
 
 /* states for gtkpod_confirmation options */
@@ -66,6 +73,7 @@ void CONF_NULL_HANDLER (gpointer d1, gpointer d2);
 
 enum
 {
+    TRACKS_DISPLAYED,
     TRACKS_SELECTED,
     PLAYLIST_SELECTED,
     PLAYLIST_ADDED,
@@ -84,7 +92,9 @@ struct _GtkPodAppInterface {
     /* pointer to the currently selected playlist */
     Playlist *current_playlist;
     /* pointer to the currently displayed set of tracks */
-    GList *current_tracks;
+    GList *displayed_tracks;
+    /* pointer to the currently selected set of tracks */
+        GList *selected_tracks;
     /* flag indicating whether sorting is enabled/disabled */
     gboolean sort_enablement;
     /* xml filename */
@@ -122,8 +132,10 @@ iTunesDB* gtkpod_get_current_itdb();
 void gtkpod_set_current_itdb(iTunesDB* itdb);
 Playlist* gtkpod_get_current_playlist();
 void gtkpod_set_current_playlist(Playlist* playlist);
-GList *gtkpod_get_current_tracks();
-void gtkpod_set_current_tracks(GList *tracks);
+GList *gtkpod_get_displayed_tracks();
+void gtkpod_set_displayed_tracks(GList *tracks);
+GList *gtkpod_get_selected_tracks();
+void gtkpod_set_selected_tracks(GList *tracks);
 void gtkpod_set_sort_enablement(gboolean enable);
 gboolean gtkpod_get_sort_enablement();
 void gtkpod_playlist_added(iTunesDB *itdb, Playlist *playlist, gint32 pos);

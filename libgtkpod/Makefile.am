@@ -22,7 +22,12 @@ libgtkpod_la_SOURCES =  gtkpod_app_iface.h gtkpod_app_iface.c \
 						stock_icons.c stock_icons.h \
 						gtkpod_app-marshallers.c gtkpod_app-marshallers.h \
 						tool_menu_action.c tool_menu_action.h \
-						gp_spl.c gp_spl.h
+						gp_spl.c gp_spl.h \
+						flacfile.c flacfile.h \
+						mp3file.c mp3file.h \
+						mp4file.c mp4file.h \
+						oggfile.c oggfile.h \
+						wavfile.c wavfile.h
 
 # Include paths
 AM_CFLAGS = \

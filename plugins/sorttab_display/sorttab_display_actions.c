@@ -31,6 +31,7 @@
 #  include <config.h>
 #endif
 
+#include "libgtkpod/prefs.h"
 #include "sorttab_display_actions.h"
 #include "display_sorttabs.h"
 

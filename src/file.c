@@ -50,6 +50,11 @@
 #include "misc_track.h"
 #include "prefs.h"
 #include "misc_conversion.h"
+#include "flacfile.h"
+#include "mp3file.h"
+#include "mp4file.h"
+#include "oggfile.h"
+#include "wavfile.h"
 
 /* The uppercase version of these extensions is tried as well. */
 static const gchar *imageext[] = { ".jpg", ".jpeg", ".png", ".pbm", ".pgm", ".ppm", ".tif", ".tiff", ".gif", NULL};
@@ -1166,215 +1171,199 @@ static void add_coverart(Track *tr) {
          * exists. time_added is not modified if already set. */
         /* Returns NULL on error, a pointer to the Track otherwise */
 static Track *get_track_info_from_file(gchar *name, Track *orig_track) {
-    g_warning("TODO Should query a plugin for the type of track and info");
     Track *track = NULL;
-    //    Track *nti = NULL;
-    //    FileType filetype;
-    //    gint len;
-    //    gchar *name_utf8 = NULL;
-    //
-    //    g_return_val_if_fail (name, NULL);
-    //
-    //    if (g_file_test (name, G_FILE_TEST_IS_DIR)) return NULL;
-    //
-    //    name_utf8 = charset_to_utf8 (name);
-    //
-    //    if (!g_file_test (name, G_FILE_TEST_EXISTS))
-    //    {
-    //	gtkpod_warning (_("The following track could not be processed (file does not exist): '%s'\n"), name_utf8);
-    //	g_free (name_utf8);
-    //	return NULL;
-    //    }
-    //
-    //    /* reset the auto detection charset (see explanation in charset.c) */
-    //    charset_reset_auto ();
-    //
-    //    /* check for filetype */
-    //    len = strlen (name);
-    //    if (len < 4) return NULL;
-    //
-    //    filetype = determine_file_type(name);
-    //    switch (filetype)
-    //    {
-    //    case FILE_TYPE_MP3:
-    //	nti = mp3_get_file_info (name);
-    //	/* Set mediatype to audio */
-    //	if (nti) nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-    //	break;
-    //    case FILE_TYPE_M4A:
-    //    case FILE_TYPE_M4P:
-    //	nti = mp4_get_file_info (name);
-    //	/* Set mediatype to audio */
-    //	if (nti)
-    //	{
-    //	    nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-    //	}
-    //	break;
-    //    case FILE_TYPE_M4B:
-    //	nti = mp4_get_file_info (name);
-    //	/* Set mediatype to audiobook */
-    //	if (nti)
-    //	{
-    //	    nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
-    //	}
-    //	break;
-    //    case FILE_TYPE_WAV:
-    //	nti = wav_get_file_info (name);
-    //	/* Set mediatype to audio */
-    //	if (nti)
-    //	{
-    //	    nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-    //	}
-    //	break;
-    //    case FILE_TYPE_OGG:
-    //        nti = ogg_get_file_info (name);
-    //        /* Set mediatype to audio */
-    //        if (nti)
-    //        {
-    //            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-    //        }
-    //        break;
-    //    case FILE_TYPE_FLAC:
-    //        nti = flac_get_file_info (name);
-    //        /* Set mediatype to audio */
-    //        if (nti)
-    //        {
-    //            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-    //        }
-    //        break;
-    //    case FILE_TYPE_M4V:
-    //    case FILE_TYPE_MP4:
-    //	/* I don't know if .m4v and .mp4 can simply be handled like
-    //	   this. Let's see if someone complains. */
-    //	nti = mp4_get_file_info (name);
-    //	if (!nti) video_get_file_info (name);
-    //	/* Set mediatype to video */
-    //	if (nti)
-    //	{
-    //	    nti->mediatype = ITDB_MEDIATYPE_MOVIE;
-    //	    nti->movie_flag = 0x01;
-    //	}
-    //	break;
-    //    case FILE_TYPE_MOV:
-    //    case FILE_TYPE_MPG:
-    //	/* for now treat all the same */
-    //	nti = video_get_file_info (name);
-    //	/* Set mediatype to video */
-    //	if (nti)
-    //	{
-    //	    nti->mediatype = ITDB_MEDIATYPE_MOVIE;
-    //	    nti->movie_flag = 0x01;
-    //	}
-    //	break;
-    //    case FILE_TYPE_UNKNOWN:
-    //	gtkpod_warning (_("The following track could not be processed (filetype unknown): '%s'\n"), name_utf8);
-    //	g_free (name_utf8);
-    //	return NULL;
-    //    case FILE_TYPE_IMAGE:
-    //    case FILE_TYPE_DIRECTORY:
-    //    case FILE_TYPE_M3U:
-    //    case FILE_TYPE_PLS:
-    //	break;
-    //    }
-    //
-    //    if (nti)
-    //    {
-    //	ExtraTrackData *enti=nti->userdata;
-    //	struct stat filestat;
-    //
-    //	g_return_val_if_fail (enti, NULL);
-    //
-    //	if (enti->charset == NULL)
-    //	{   /* Fill in currently used charset. Try if auto_charset is
-    //	     * set first. If not, use the currently set charset. */
-    //	    enti->charset = charset_get_auto ();
-    //	    if (enti->charset == NULL)
-    //		update_charset_info (nti);
-    //	}
-    //	/* set path file information */
-    //	enti->pc_path_utf8 = charset_to_utf8 (name);
-    //	enti->pc_path_locale = g_strdup (name);
-    //	enti->lyrics=NULL;
-    //	/* set length of file */
-    //	stat (name, &filestat);
-    //	nti->size = filestat.st_size; /* get the filesize in bytes */
-    //	enti->mtime = filestat.st_mtime; /* get the modification date */
-    //	if (nti->bitrate == 0)
-    //	{  /* estimate bitrate */
-    //	    if (nti->tracklen)
-    //		nti->bitrate = nti->size * 8 / nti->tracklen;
-    //	}
-    //	/* Set unset strings (album...) from filename */
-    //	set_unset_entries_from_filename (nti);
-    //
-    //	/* Set coverart */
-    //	if (prefs_get_int("coverart_file"))
-    //	{
-    //	    /* APIC data takes precedence */
-    //	    if (! itdb_track_has_thumbnails (nti))
-    //		add_coverart (nti);
-    //	}
-    //
-    //	/* Set modification date to the files modified date */
-    //	nti->time_modified = enti->mtime;
-    //	/* Set added date to *now* (unless orig_track is present) */
-    //	if (orig_track)
-    //	{
-    //	    nti->time_added = orig_track->time_added;
-    //	}
-    //	else
-    //	{
-    //	    nti->time_added = time (NULL);
-    //	}
-    //
-    //	/* Make sure all strings are initialized -- that way we don't
-    //	   have to worry about it when we are handling the
-    //	   strings. Also, validate_entries() will fill in the utf16
-    //	   strings if that hasn't already been done. */
-    //	/* exception: sha1_hash, charset and hostname: these may be
-    //	 * NULL. */
-    //
-    //	gp_track_validate_entries (nti);
-    //
-    //	if (orig_track)
-    //	{ /* we need to copy all information over to the original
-    //	   * track */
-    //	    ExtraTrackData *eorigtr=orig_track->userdata;
-    //
-    //	    g_return_val_if_fail (eorigtr, NULL);
-    //
-    //	    eorigtr->tchanged = copy_new_info (nti, orig_track);
-    //
-    //	    track = orig_track;
-    //	    itdb_track_free (nti);
-    //	    nti = NULL;
-    //	}
-    //	else
-    //	{ /* just use nti */
-    //	    track = nti;
-    //	    nti = NULL;
-    //	}
-    //
-    //	update_mserv_data_from_file (name, track);
-    //    }
-    //    else
-    //    {
-    //	switch (filetype)
-    //	{
-    //	case FILE_TYPE_IMAGE:
-    //	case FILE_TYPE_M3U:
-    //	case FILE_TYPE_PLS:
-    //	    break;
-    //	default:
-    //	    gtkpod_warning (_("The following track could not be processed (filetype is known but analysis failed): '%s'\n"), name_utf8);
-    //	    break;
-    //	}
-    //    }
-    //
-    //    while (widgets_blocked && gtk_events_pending ())
-    //	gtk_main_iteration ();
-    //
-    //    g_free (name_utf8);
+    Track *nti = NULL;
+    FileType filetype;
+    gint len;
+    gchar *name_utf8 = NULL;
+
+    g_return_val_if_fail (name, NULL);
+
+    if (g_file_test(name, G_FILE_TEST_IS_DIR))
+        return NULL;
+
+    name_utf8 = charset_to_utf8(name);
+
+    if (!g_file_test(name, G_FILE_TEST_EXISTS)) {
+        gtkpod_warning(_("The following track could not be processed (file does not exist): '%s'\n"), name_utf8);
+        g_free(name_utf8);
+        return NULL;
+    }
+
+    /* reset the auto detection charset (see explanation in charset.c) */
+    charset_reset_auto();
+
+    /* check for filetype */
+    len = strlen(name);
+    if (len < 4)
+        return NULL;
+
+    filetype = determine_file_type(name);
+    switch (filetype) {
+    case FILE_TYPE_MP3:
+        nti = mp3_get_file_info(name);
+        /* Set mediatype to audio */
+        if (nti)
+            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+        break;
+    case FILE_TYPE_M4A:
+    case FILE_TYPE_M4P:
+        nti = mp4_get_file_info(name);
+        /* Set mediatype to audio */
+        if (nti) {
+            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+        }
+        break;
+    case FILE_TYPE_M4B:
+        nti = mp4_get_file_info(name);
+        /* Set mediatype to audiobook */
+        if (nti) {
+            nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
+        }
+        break;
+    case FILE_TYPE_WAV:
+        nti = wav_get_file_info(name);
+        /* Set mediatype to audio */
+        if (nti) {
+            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+        }
+        break;
+    case FILE_TYPE_OGG:
+        nti = ogg_get_file_info(name);
+        /* Set mediatype to audio */
+        if (nti) {
+            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+        }
+        break;
+    case FILE_TYPE_FLAC:
+        nti = flac_get_file_info(name);
+        /* Set mediatype to audio */
+        if (nti) {
+            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+        }
+        break;
+    case FILE_TYPE_M4V:
+    case FILE_TYPE_MP4:
+        /* I don't know if .m4v and .mp4 can simply be handled like
+         this. Let's see if someone complains. */
+        nti = mp4_get_file_info(name);
+        if (!nti)
+            video_get_file_info(name);
+        /* Set mediatype to video */
+        if (nti) {
+            nti->mediatype = ITDB_MEDIATYPE_MOVIE;
+            nti->movie_flag = 0x01;
+        }
+        break;
+    case FILE_TYPE_MOV:
+    case FILE_TYPE_MPG:
+        /* for now treat all the same */
+        nti = video_get_file_info(name);
+        /* Set mediatype to video */
+        if (nti) {
+            nti->mediatype = ITDB_MEDIATYPE_MOVIE;
+            nti->movie_flag = 0x01;
+        }
+        break;
+    case FILE_TYPE_UNKNOWN:
+        gtkpod_warning(_("The following track could not be processed (filetype unknown): '%s'\n"), name_utf8);
+        g_free(name_utf8);
+        return NULL;
+    case FILE_TYPE_IMAGE:
+    case FILE_TYPE_DIRECTORY:
+    case FILE_TYPE_M3U:
+    case FILE_TYPE_PLS:
+        break;
+    }
+
+    if (nti) {
+        ExtraTrackData *enti = nti->userdata;
+        struct stat filestat;
+
+        g_return_val_if_fail (enti, NULL);
+
+        if (enti->charset == NULL) { /* Fill in currently used charset. Try if auto_charset is
+         * set first. If not, use the currently set charset. */
+            enti->charset = charset_get_auto();
+            if (enti->charset == NULL)
+                update_charset_info(nti);
+        }
+        /* set path file information */
+        enti->pc_path_utf8 = charset_to_utf8(name);
+        enti->pc_path_locale = g_strdup(name);
+        enti->lyrics = NULL;
+        /* set length of file */
+        stat(name, &filestat);
+        nti->size = filestat.st_size; /* get the filesize in bytes */
+        enti->mtime = filestat.st_mtime; /* get the modification date */
+        if (nti->bitrate == 0) { /* estimate bitrate */
+            if (nti->tracklen)
+                nti->bitrate = nti->size * 8 / nti->tracklen;
+        }
+        /* Set unset strings (album...) from filename */
+        set_unset_entries_from_filename(nti);
+
+        /* Set coverart */
+        if (prefs_get_int("coverart_file")) {
+            /* APIC data takes precedence */
+            if (!itdb_track_has_thumbnails(nti))
+                add_coverart(nti);
+        }
+
+        /* Set modification date to the files modified date */
+        nti->time_modified = enti->mtime;
+        /* Set added date to *now* (unless orig_track is present) */
+        if (orig_track) {
+            nti->time_added = orig_track->time_added;
+        }
+        else {
+            nti->time_added = time(NULL);
+        }
+
+        /* Make sure all strings are initialized -- that way we don't
+         have to worry about it when we are handling the
+         strings. Also, validate_entries() will fill in the utf16
+         strings if that hasn't already been done. */
+        /* exception: sha1_hash, charset and hostname: these may be
+         * NULL. */
+
+        gp_track_validate_entries(nti);
+
+        if (orig_track) { /* we need to copy all information over to the original
+         * track */
+            ExtraTrackData *eorigtr = orig_track->userdata;
+
+            g_return_val_if_fail (eorigtr, NULL);
+
+            eorigtr->tchanged = copy_new_info(nti, orig_track);
+
+            track = orig_track;
+            itdb_track_free(nti);
+            nti = NULL;
+        }
+        else { /* just use nti */
+            track = nti;
+            nti = NULL;
+        }
+
+        update_mserv_data_from_file(name, track);
+    }
+    else {
+        switch (filetype) {
+        case FILE_TYPE_IMAGE:
+        case FILE_TYPE_M3U:
+        case FILE_TYPE_PLS:
+            break;
+        default:
+            gtkpod_warning(_("The following track could not be processed (filetype is known but analysis failed): '%s'\n"), name_utf8);
+            break;
+        }
+    }
+
+    while (widgets_blocked && gtk_events_pending())
+        gtk_main_iteration();
+
+    g_free(name_utf8);
 
     return track;
 }
@@ -1884,8 +1873,7 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
     basename = g_path_get_basename(fname);
     if (basename) {
         gchar *bn_utf8 = charset_to_utf8(basename);
-        g_warning("TODO file:add_track_from_file - status needed\n");
-        //      gtkpod_statusbar_message (_("Processing '%s'..."), bn_utf8);
+        gtkpod_statusbar_message (_("Processing '%s'..."), bn_utf8);
         while (widgets_blocked && gtk_events_pending())
             gtk_main_iteration();
         g_free(bn_utf8);

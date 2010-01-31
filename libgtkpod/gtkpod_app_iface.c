@@ -43,19 +43,22 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
         klass->sort_enablement = TRUE;
 
         gtkpod_app_signals[ITDB_UPDATED]
-                = g_signal_new("itdb_updated", G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, _gtkpod_app_marshal_VOID__POINTER_POINTER, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
+                = g_signal_new(SIGNAL_ITDB_UPDATED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, _gtkpod_app_marshal_VOID__POINTER_POINTER, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
 
         gtkpod_app_signals[PLAYLIST_SELECTED]
-                = g_signal_new("playlist_selected", G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
+                = g_signal_new(SIGNAL_PLAYLIST_SELECTED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
+
+        gtkpod_app_signals[TRACKS_DISPLAYED]
+                = g_signal_new(SIGNAL_TRACKS_DISPLAYED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
         gtkpod_app_signals[TRACKS_SELECTED]
-                = g_signal_new("tracks_selected", G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
+                = g_signal_new(SIGNAL_TRACKS_SELECTED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
         gtkpod_app_signals[SORT_ENABLEMENT]
-                        = g_signal_new("sort_enablement", G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__BOOLEAN, G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
+                = g_signal_new(SIGNAL_SORT_ENABLEMENT, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__BOOLEAN, G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
 
         gtkpod_app_signals[PLAYLIST_ADDED]
-                        = g_signal_new("playlist_added", G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, _gtkpod_app_marshal_VOID__POINTER_INT, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_INT);
+                = g_signal_new(SIGNAL_PLAYLIST_ADDED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, _gtkpod_app_marshal_VOID__POINTER_INT, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_INT);
 
         initialized = TRUE;
     }
@@ -185,15 +188,15 @@ void gtkpod_set_current_playlist(Playlist* playlist) {
     GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_playlist = playlist;
     if (playlist) {// if playlist not null then set its itdb as current
         gtkpod_set_current_itdb(playlist->itdb);
-        gtkpod_set_current_tracks(playlist->members);
+        gtkpod_set_displayed_tracks(playlist->members);
     }
 
     g_signal_emit(gtkpod_app, gtkpod_app_signals[PLAYLIST_SELECTED], 0, playlist);
 }
 
-GList *gtkpod_get_current_tracks() {
+GList *gtkpod_get_displayed_tracks() {
     g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), NULL);
-    GList *current_tracks = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_tracks;
+    GList *current_tracks = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->displayed_tracks;
     if (current_tracks && g_list_length(current_tracks) > 0) {
         return g_list_copy(current_tracks);
     }
@@ -207,9 +210,26 @@ GList *gtkpod_get_current_tracks() {
     return NULL;
 }
 
-void gtkpod_set_current_tracks(GList *tracks) {
+void gtkpod_set_displayed_tracks(GList *tracks) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
-    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_tracks = tracks;
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->displayed_tracks = tracks;
+
+    g_signal_emit(gtkpod_app, gtkpod_app_signals[TRACKS_DISPLAYED], 0, tracks);
+}
+
+GList *gtkpod_get_selected_tracks() {
+    g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), NULL);
+    GList *selected_tracks = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->selected_tracks;
+    if (selected_tracks && g_list_length(selected_tracks) > 0) {
+        return g_list_copy(selected_tracks);
+    }
+
+    return gtkpod_get_displayed_tracks();
+}
+
+void gtkpod_set_selected_tracks(GList *tracks) {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->selected_tracks = tracks;
 
     g_signal_emit(gtkpod_app, gtkpod_app_signals[TRACKS_SELECTED], 0, tracks);
 }

@@ -2,7 +2,7 @@
 |
 |  Copyright (C) 2007 Marc d[r]eadlock <m.dreadlock at gmail com>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
@@ -35,6 +35,7 @@
 #include "itdb.h"
 #include "misc.h"
 #include "oggfile.h"
+#include <glib/gi18n-lib.h>
 
 /* Info on how to implement new file formats: see mp3file.c for more info */
 
@@ -54,7 +55,7 @@ Track *ogg_get_file_info (gchar *oggFileName)
     FILE *file= NULL;
 
     file=fopen(oggFileName, "rb");
-    
+
     if (file == NULL)
     {
 	gchar *filename = charset_to_utf8 (oggFileName);
@@ -122,26 +123,26 @@ Track *ogg_get_file_info (gchar *oggFileName)
                     if ((str=vorbis_comment_query(vc,"cds",0))!=NULL){
 		        track->cds = atoi(str);
                     }
-		    /* I'm not sure if "bpm" is correct */ 
+		    /* I'm not sure if "bpm" is correct */
                     if ((str=vorbis_comment_query(vc,"bpm",0))!=NULL){
 		        track->BPM = atoi(str);
                     }
                 }
-                    
+
             }
             ov_clear(&oggFile); /* performs the fclose(file); */
             /* TODO: immediate conversion if thread ? */
 	}
     }
-    
+
     return track;
 }
 
 gboolean ogg_write_file_info (gchar *oggFileName, Track *track)
 {
     gboolean result=FALSE;
-    /*FIXME: seems to be not easy with common API. all other projects 
-     * are using vcedit.ch from vorbis-tools (vorbiscomment). Maybe 
+    /*FIXME: seems to be not easy with common API. all other projects
+     * are using vcedit.ch from vorbis-tools (vorbiscomment). Maybe
      * using a library could help. LibTag looks good... */
     printf("Not supported yet\n");
     return result;

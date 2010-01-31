@@ -2,7 +2,7 @@
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
@@ -31,6 +31,7 @@
 #  include <config.h>
 #endif
 
+#include <glib/gi18n-lib.h>
 #include "charset.h"
 #include "itdb.h"
 #include "misc.h"
@@ -111,7 +112,7 @@
 
 
    Finally, you may want to provide a function that can
-   read and set the soundcheck field: 
+   read and set the soundcheck field:
 
    gboolean xxx_read_soundcheck (gchar *filename, Track *track)
 
@@ -161,76 +162,76 @@ typedef u_int64_t	MP4Duration;
 #define MP4_MSECS_TIME_SCALE	MP4_MILLISECONDS_TIME_SCALE
 
 typedef MP4FileHandle (*MP4Read_t)(
-	const char* fileName, 
+	const char* fileName,
 	u_int32_t verbosity DEFAULT(0));
 
 typedef u_int32_t (*MP4GetNumberOfTracks_t)(
-	MP4FileHandle hFile, 
+	MP4FileHandle hFile,
 	const char* type DEFAULT(NULL),
 	u_int8_t subType DEFAULT(0));
 
 typedef MP4TrackId (*MP4FindTrackId_t)(
-	MP4FileHandle hFile, 
-	u_int16_t index, 
+	MP4FileHandle hFile,
+	u_int16_t index,
 	const char* type DEFAULT(NULL),
 	u_int8_t subType DEFAULT(0));
 
 typedef const char* (*MP4GetTrackType_t)(
-	MP4FileHandle hFile, 
+	MP4FileHandle hFile,
 	MP4TrackId trackId);
- 
+
 typedef void (*MP4Close_t)(
 	MP4FileHandle hFile);
 
 typedef bool (*MP4ReadSample_t)(
 	/* input parameters */
 	MP4FileHandle hFile,
-	MP4TrackId trackId, 
+	MP4TrackId trackId,
 	MP4SampleId sampleId,
 	/* input/output parameters */
-	u_int8_t** ppBytes, 
-	u_int32_t* pNumBytes, 
+	u_int8_t** ppBytes,
+	u_int32_t* pNumBytes,
 	/* output parameters */
-	MP4Timestamp* pStartTime DEFAULT(NULL), 
+	MP4Timestamp* pStartTime DEFAULT(NULL),
 	MP4Duration* pDuration DEFAULT(NULL),
-	MP4Duration* pRenderingOffset DEFAULT(NULL), 
+	MP4Duration* pRenderingOffset DEFAULT(NULL),
 	bool* pIsSyncSample DEFAULT(NULL));
 
 typedef u_int64_t (*MP4ConvertFromTrackTimestamp_t)(
 	MP4FileHandle hFile,
-	MP4TrackId trackId, 
+	MP4TrackId trackId,
 	MP4Timestamp timeStamp,
 	u_int32_t timeScale);
 
 typedef u_int64_t (*MP4ConvertFromTrackDuration_t)(
 	MP4FileHandle hFile,
-	MP4TrackId trackId, 
+	MP4TrackId trackId,
 	MP4Duration duration,
 	u_int32_t timeScale);
 
 typedef u_int32_t (*MP4GetTrackBitRate_t)(
-	MP4FileHandle hFile, 
+	MP4FileHandle hFile,
 	MP4TrackId trackId);
 
 typedef u_int32_t (*MP4GetTrackTimeScale_t)(
-	MP4FileHandle hFile, 
+	MP4FileHandle hFile,
 	MP4TrackId trackId);
 
 typedef u_int32_t (*MP4GetTrackMaxSampleSize_t)(
 	MP4FileHandle hFile,
-	MP4TrackId trackId); 
+	MP4TrackId trackId);
 
 typedef MP4SampleId (*MP4GetTrackNumberOfSamples_t)(
-	MP4FileHandle hFile, 
+	MP4FileHandle hFile,
 	MP4TrackId trackId);
 
 typedef MP4Timestamp (*MP4GetSampleTime_t)(
 	MP4FileHandle hFile,
-	MP4TrackId trackId, 
+	MP4TrackId trackId,
 	MP4SampleId sampleId);
 
 typedef MP4Duration (*MP4GetTrackDuration_t)(
-	MP4FileHandle hFile, 
+	MP4FileHandle hFile,
 	MP4TrackId trackId);
 
 typedef bool (*MP4GetMetadataName_t)(MP4FileHandle hFile, char** value);
@@ -255,7 +256,7 @@ typedef bool (*MP4GetMetadataTool_t)(MP4FileHandle hFile, char** value);
 typedef bool (*MP4GetMetadataFreeForm_t)(MP4FileHandle hFile, const char *name,
 			    u_int8_t** pValue, u_int32_t* valueSize, const char *owner DEFAULT(NULL));
 
-typedef bool (*MP4HaveAtom_t)(MP4FileHandle hFile, 
+typedef bool (*MP4HaveAtom_t)(MP4FileHandle hFile,
 		 const char *atomName);
 
 typedef bool (*MP4SetMetadataName_t)(MP4FileHandle hFile, const char* value);
@@ -278,7 +279,7 @@ typedef bool (*MP4SetMetadataCoverArt_t)(MP4FileHandle hFile,
 			    u_int8_t *coverArt, u_int32_t size);
 
 typedef MP4FileHandle (*MP4Modify_t)(
-	const char* fileName, 
+	const char* fileName,
 	u_int32_t verbosity DEFAULT(0),
 	u_int32_t flags DEFAULT(0));
 
@@ -336,7 +337,7 @@ static MP4MetadataDelete_t MP4MetadataDelete = NULL;
 /* end mp4v2 dynamic load declarations */
 
 /* mp4v2 initialization code */
-    
+
 void mp4_init()
 {
     mp4v2_handle = dlopen("libmp4v2.so.0", RTLD_LAZY);
@@ -344,7 +345,7 @@ void mp4_init()
     if (!mp4v2_handle)
     {
         mp4v2_handle = dlopen("libmp4v2.so.1", RTLD_LAZY);
-        
+
         if (!mp4v2_handle)
         {
             return;
@@ -401,7 +402,7 @@ void mp4_init()
     MP4MetadataDelete = (MP4MetadataDelete_t) dlsym(mp4v2_handle, "MP4MetadataDelete");
 
     /* alternate names for HAVE_LIBMP4V2_2 */
-    
+
     if(!MP4GetMetadataWriter)
     {
         MP4GetMetadataWriter = (MP4GetMetadataWriter_t) dlsym(mp4v2_handle, "MP4GetMetadataComposer");
@@ -432,7 +433,7 @@ void mp4_init()
         MP4SetMetadataTempo = (MP4SetMetadataTempo_t) dlsym(mp4v2_handle, "MP4SetMetadataYear");
     }
 }
- 
+
 void mp4_close()
 {
     if (mp4v2_handle)
@@ -499,7 +500,7 @@ gboolean mp4_read_soundcheck (gchar *mp4FileName, Track *track)
         gtkpod_warning (_("m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must install the mp4v2 library.\n"), mp4FileName);
         return FALSE;
     }
-    
+
     gboolean success = FALSE;
     MP4FileHandle mp4File;
 
@@ -641,15 +642,15 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 		gchar *value;
 		guint16 numvalue, numvalue2;
 		MP4Duration trackDuration = MP4GetTrackDuration(mp4File, trackId);
-		double msDuration = 
+		double msDuration =
 		    (double)MP4ConvertFromTrackDuration(mp4File, trackId,
 							trackDuration,
 							MP4_MSECS_TIME_SCALE);
 		guint32 avgBitRate = MP4GetTrackBitRate(mp4File, trackId);
 		guint32 samplerate = MP4GetTrackTimeScale(mp4File, trackId);
-		
+
 		track = gp_track_new ();
-		
+
 		track->tracklen = msDuration;
 		track->bitrate = avgBitRate/1000;
 		track->samplerate = samplerate;
@@ -873,7 +874,7 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 	        MP4SetMetadataAlbumArtist (mp4File, value);
 	        g_free (value);
         }
-        
+
 	    value = charset_from_utf8 (track->composer);
 #if HAVE_LIBMP4V2_2
 	    MP4SetMetadataComposer (mp4File, value);

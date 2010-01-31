@@ -1758,7 +1758,7 @@ void tm_adopt_order_in_sorttab(void) {
          the last sort tab or from the selected playlist if no sort
          tabs are being used */
         tm_remove_all_tracks();
-        tracks = gtkpod_get_current_tracks();
+        tracks = gtkpod_get_displayed_tracks();
         for (gl = tracks; gl; gl = gl->next)
             tm_add_track_to_track_model((Track *) gl->data, NULL);
     }
@@ -2267,6 +2267,8 @@ static gboolean tm_selection_changed_cb(gpointer data) {
     //        if (track != NULL)
     //            coverart_select_cover(track);
     //    }
+
+    gtkpod_set_selected_tracks(tm_get_selected_tracks());
 
     return FALSE;
 }

@@ -40,6 +40,7 @@
 #include "prefs.h"
 #include "file_convert.h"
 #include "gtkpod_app_iface.h"
+#include "gp_spl.h"
 
 #define DEBUG_MISC 0
 
@@ -194,7 +195,7 @@ void generate_category_playlists(iTunesDB *itdb, T_item cat) {
 /* Generate a new playlist containing all the tracks currently
  displayed */
 Playlist *generate_displayed_playlist(void) {
-    GList *tracks = gtkpod_get_current_tracks();
+    GList *tracks = gtkpod_get_displayed_tracks();
     Playlist *result = NULL;
 
     if (tracks) {
@@ -207,9 +208,7 @@ Playlist *generate_displayed_playlist(void) {
 /* Generate a new playlist containing all the tracks currently
  selected */
 Playlist *generate_selected_playlist(void) {
-    GList *tracks = NULL;
-    g_warning("TODO generate_selected_playlist - need to get selected tracks\n");
-    //    tm_get_selected_tracks ();
+    GList *tracks = gtkpod_get_selected_tracks();
     Playlist *result = NULL;
 
     if (tracks) {
@@ -227,7 +226,7 @@ Playlist *generate_random_playlist(iTunesDB *itdb) {
     Playlist *new_pl = NULL;
     gchar *pl_name, *pl_name1;
     GList *rtracks = NULL;
-    GList *tracks = gtkpod_get_current_tracks();
+    GList *tracks = gtkpod_get_displayed_tracks();
     gint tracks_max = prefs_get_int("misc_track_nr");
     gint tracks_nr = 0;
 

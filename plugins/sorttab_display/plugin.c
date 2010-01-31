@@ -83,7 +83,7 @@ static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
     st_create_tabs(GTK_PANED(sorttab_display_plugin->st_paned));
     gtk_widget_show(sorttab_display_plugin->st_paned);
 
-    g_signal_connect (gtkpod_app, "playlist_selected", G_CALLBACK (sorttab_display_select_playlist_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (sorttab_display_select_playlist_cb), NULL);
 
     anjuta_shell_add_widget(plugin->shell, sorttab_display_plugin->st_paned, "SorttabDisplayPlugin", "Track Filter", NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
     return TRUE; /* FALSE if activation failed */
