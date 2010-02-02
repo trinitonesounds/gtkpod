@@ -653,6 +653,9 @@ void gp_playlist_add_track(Playlist *pl, Track *track, gboolean display) {
         track->mark_unplayed = 0x02;
     }
 
+    if (display)
+        gtkpod_playlist_updated(pl);
+
     data_changed(itdb);
 }
 

@@ -40,6 +40,9 @@
 #include "libgtkpod/misc_track.h"
 #include "libgtkpod/misc_playlist.h"
 #include "libgtkpod/gp_spl.h"
+#include <gdk/gdk.h>
+
+
 
 /* Callback after directories to add have been selected */
 static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
@@ -53,11 +56,7 @@ static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
         for (currentnode = names; currentnode; currentnode = currentnode->next) {
             result
                     &= add_directory_by_name(db_active_pl->itdb, currentnode->data, db_active_pl, prefs_get_int("add_recursively"), NULL, NULL);
-            g_free(currentnode->data);
-            gtkpod_tracks_statusbar_update();
         }
-        g_slist_free(names);
-        names = NULL;
 
         /* clear log of non-updated tracks */
         display_non_updated((void *) -1, NULL);
@@ -70,6 +69,50 @@ static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
             gtkpod_statusbar_message(_("Successfully added files"));
         else
             gtkpod_statusbar_message(_("Some files were not added successfully"));
+    }
+}
+
+static gboolean add_selected_dirs_cb(gpointer data) {
+    GSList *names = data;
+    Playlist *pl = gtkpod_get_current_playlist();
+    add_selected_dirs(names, pl);
+
+    g_slist_foreach(names, (GFunc) g_free, NULL);
+    g_slist_free(names);
+    g_warning("add_selected_dir_cb: Finished!!");
+    return FALSE;
+}
+
+static void create_add_directories_dialog(Playlist *pl) {
+    GSList* names = NULL; /* List of selected items */
+    GtkWidget *dialog;
+
+    if (!pl) {
+        gtkpod_warning_simple(_("Please select a playlist or repository before adding tracks."));
+        return;
+    }
+
+    dialog
+            = gtk_file_chooser_dialog_new(_("Add Folder"), GTK_WINDOW (gtkpod_app), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_ADD, GTK_RESPONSE_ACCEPT, NULL);
+
+    /* Allow multiple selection of directories. */
+    gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), TRUE);
+
+    /* Set same directory as the last browsed directory. */
+    gchar *last_dir = prefs_get_string("last_dir_browsed");
+    if (last_dir) {
+        gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER (dialog), last_dir);
+        g_free(last_dir);
+    }
+
+    if (gtk_dialog_run(GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+        names = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER (dialog));
+
+    gtk_widget_destroy(dialog);
+
+    if (names) {
+        prefs_set_string("last_dir_browsed", gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER (dialog)));
+        gdk_threads_add_idle((GSourceFunc) add_selected_dirs_cb, names);
     }
 }
 
@@ -217,6 +260,16 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
     //    release_widgets();
 }
 
+static gboolean fileselection_add_files_cb(gpointer data) {
+    GSList *names = data;
+    Playlist *pl = gtkpod_get_current_playlist();
+    fileselection_add_files(names, pl);
+
+    g_slist_foreach(names, (GFunc) g_free, NULL);
+    g_slist_free(names);
+    return FALSE;
+}
+
 /* Open a modal file selection dialog for adding individual files */
 static void create_add_files_dialog(Playlist *pl) {
     gchar *str;
@@ -255,12 +308,10 @@ static void create_add_files_dialog(Playlist *pl) {
     g_free(str);
 
     if (!names)
-        return;
+    return;
 
-    fileselection_add_files(names, pl);
-
-    g_slist_foreach(names, (GFunc) g_free, NULL);
-    g_slist_free(names);
+    // Let the dialog close first and add the tracks in the background
+    gdk_threads_add_idle((GSourceFunc) fileselection_add_files_cb, names);
 }
 
 void on_load_ipods_mi(GtkAction* action, PlaylistDisplayPlugin* plugin) {
@@ -278,37 +329,8 @@ void on_create_add_files(GtkAction *action, PlaylistDisplayPlugin* plugin) {
 }
 
 void on_create_add_directory(GtkAction *action, PlaylistDisplayPlugin* plugin) {
-    GSList* names = NULL; /* List of selected items */
     Playlist *pl = gtkpod_get_current_playlist();
-    GtkWidget *dialog;
-
-    if (!pl) {
-        gtkpod_warning_simple(_("Please select a playlist or repository before adding tracks."));
-        return;
-    }
-
-    dialog
-            = gtk_file_chooser_dialog_new(_("Add Folder"), GTK_WINDOW (gtkpod_app), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_ADD, GTK_RESPONSE_ACCEPT, NULL);
-
-    /* Allow multiple selection of directories. */
-    gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), TRUE);
-
-    /* Set same directory as the last browsed directory. */
-    gchar *last_dir = prefs_get_string("last_dir_browsed");
-    if (last_dir) {
-        gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER (dialog), last_dir);
-        g_free(last_dir);
-    }
-
-    if (gtk_dialog_run(GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
-        names = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER (dialog));
-
-    if (names) {
-        add_selected_dirs(names, pl);
-        prefs_set_string("last_dir_browsed", gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER (dialog)));
-    }
-
-    gtk_widget_destroy(dialog);
+    create_add_directories_dialog(pl);
 }
 
 void on_create_add_playlists(GtkAction *action, PlaylistDisplayPlugin* plugin) {

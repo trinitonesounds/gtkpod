@@ -101,8 +101,8 @@ struct _GtkPodAppInterface {
     gchar *xml_file;
 
     void (*itdb_updated)(GtkPodApp *obj, iTunesDB *oldItdb, iTunesDB *newItbd);
-    void (*statusbar_message)(GtkPodApp *obj, gchar* message, ...);
-    void (*gtkpod_warning)(GtkPodApp *obj, gchar *message, ...);
+    void (*statusbar_message)(GtkPodApp *obj, gchar* message);
+    void (*gtkpod_warning)(GtkPodApp *obj, gchar *message);
     void (*gtkpod_warning_hig)(GtkPodApp *obj, GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text);
     gint
             (*gtkpod_confirmation_hig)(GtkPodApp *obj, GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text, const gchar *accept_button_text, const gchar *cancel_button_text, const gchar *third_button_text, const gchar *help_context);
@@ -132,6 +132,7 @@ iTunesDB* gtkpod_get_current_itdb();
 void gtkpod_set_current_itdb(iTunesDB* itdb);
 Playlist* gtkpod_get_current_playlist();
 void gtkpod_set_current_playlist(Playlist* playlist);
+void gtkpod_playlist_updated(Playlist *playlist);
 GList *gtkpod_get_displayed_tracks();
 void gtkpod_set_displayed_tracks(GList *tracks);
 GList *gtkpod_get_selected_tracks();

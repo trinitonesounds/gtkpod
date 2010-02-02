@@ -93,11 +93,14 @@ gchar* gtkpod_get_glade_xml() {
 
 void gtkpod_statusbar_message(gchar* message, ...) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    gchar* msg;
     va_list args;
     va_start (args, message);
-
-    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->statusbar_message(gtkpod_app, message, args);
+    msg = g_strdup_vprintf(message, args);
     va_end (args);
+
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->statusbar_message(gtkpod_app, msg);
+    g_free(msg);
 }
 
 void gtkpod_tracks_statusbar_update(void) {
@@ -121,11 +124,14 @@ void gtkpod_tracks_statusbar_update(void) {
 
 void gtkpod_warning(gchar* message, ...) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    gchar* msg;
     va_list args;
     va_start (args, message);
-
-    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->gtkpod_warning(gtkpod_app, message, args);
+    msg = g_strdup_vprintf(message, args);
     va_end (args);
+
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->gtkpod_warning(gtkpod_app, msg);
+    g_free(msg);
 }
 
 void gtkpod_warning_simple(const gchar *format, ...) {
@@ -192,6 +198,16 @@ void gtkpod_set_current_playlist(Playlist* playlist) {
     }
 
     g_signal_emit(gtkpod_app, gtkpod_app_signals[PLAYLIST_SELECTED], 0, playlist);
+}
+
+void gtkpod_playlist_updated(Playlist *playlist) {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    g_return_if_fail (playlist);
+
+    if (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_playlist == playlist) {
+        g_signal_emit(gtkpod_app, gtkpod_app_signals[PLAYLIST_SELECTED], 0, playlist);
+        gtkpod_set_displayed_tracks(playlist->members);
+    }
 }
 
 GList *gtkpod_get_displayed_tracks() {

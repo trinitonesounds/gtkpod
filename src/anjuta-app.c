@@ -897,13 +897,13 @@ static void anjuta_shell_iface_init(AnjutaShellIface *iface) {
  * --       GtkPodAppInterface implementations                  --
  * -------------------------------------------------------------------------
  */
-static void anjuta_gtkpod_app_statusbar_message(GtkPodApp *gtkpod_app, gchar* message, ...) {
+static void anjuta_gtkpod_app_statusbar_message(GtkPodApp *gtkpod_app, gchar* message) {
     g_return_if_fail(ANJUTA_IS_APP(gtkpod_app));
     AnjutaStatus *status = anjuta_shell_get_status(ANJUTA_SHELL(gtkpod_app), NULL);
-    anjuta_status_push(status, "%s", message);
+    anjuta_status_push(status, message);
 }
 
-static void anjuta_gtkpod_app_warning(GtkPodApp *gtkpod_app, gchar *message, ...) {
+static void anjuta_gtkpod_app_warning(GtkPodApp *gtkpod_app, gchar *message) {
     g_return_if_fail(GTK_IS_WINDOW(gtkpod_app));
     anjuta_util_dialog_warning(GTK_WINDOW(gtkpod_app), message);
 }
