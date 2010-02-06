@@ -108,6 +108,8 @@ struct _GtkPodAppInterface {
             (*gtkpod_confirmation_hig)(GtkPodApp *obj, GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text, const gchar *accept_button_text, const gchar *cancel_button_text, const gchar *third_button_text, const gchar *help_context);
     GtkResponseType
             (*gtkpod_confirmation)(GtkPodApp *obj, gint id, gboolean modal, const gchar *title, const gchar *label, const gchar *text, const gchar *option1_text, CONF_STATE option1_state, const gchar *option1_key, const gchar *option2_text, CONF_STATE option2_state, const gchar *option2_key, gboolean confirm_again, const gchar *confirm_again_key, ConfHandler ok_handler, ConfHandler apply_handler, ConfHandler cancel_handler, gpointer user_data1, gpointer user_data2);
+    void (*statusbar_busy_push)(GtkPodApp *obj);
+    void (*statusbar_busy_pop)(GtkPodApp *obj);
 };
 
 GType gtkpod_app_get_type(void);
@@ -118,6 +120,8 @@ void gtkpod_app_set_glade_xml(gchar *xml_file);
 gchar* gtkpod_get_glade_xml();
 
 void gtkpod_statusbar_message(gchar* message, ...);
+void gtkpod_statusbar_busy_push();
+void gtkpod_statusbar_busy_pop();
 void gtkpod_tracks_statusbar_update(void);
 void gtkpod_warning(gchar* message, ...);
 void gtkpod_warning_simple (const gchar *format, ...);

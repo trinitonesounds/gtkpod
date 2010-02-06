@@ -464,7 +464,7 @@ iTunesDB *gp_import_itdb(iTunesDB *old_itdb, const gint type, const gchar *mp, c
             }
             itdb = itdb_parse(mp, &error);
             if (itdb && !error) {
-                gtkpod_statusbar_message (_("iPod Database Successfully Imported"));
+                gtkpod_statusbar_message(_("iPod Database Successfully Imported"));
             }
             else {
                 if (error) {
@@ -924,7 +924,7 @@ gboolean gp_eject_ipod(iTunesDB *itdb) {
  * return value: TRUE on succes, FALSE when an error occurred.
  */
 gboolean gp_save_itdb(iTunesDB *itdb) {
-//    Playlist *pl;
+    //    Playlist *pl;
     gboolean success;
     g_return_val_if_fail (itdb, FALSE);
 
@@ -1543,30 +1543,25 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
     if (td->abort) {
         result = FALSE;
     }
-    else if (status == FILE_TRANSFER_DISK_FULL)
-    {
-	gchar *buf;
-	GtkWidget *dialog;
+    else if (status == FILE_TRANSFER_DISK_FULL) {
+        gchar *buf;
+        GtkWidget *dialog;
 
-	gtk_widget_hide (td->dialog);
+        gtk_widget_hide(td->dialog);
 
-	buf = g_strdup_printf (ngettext (
-				   "One track could not be transferred because your iPod is full. Either delete some tracks or otherwise create space on the iPod before ejecting the iPod again.",
-				   "%d tracks could not be transferred because your iPod is full. Either delete some tracks or otherwise create space on the iPod before ejecting the iPod again.", to_transfer_num),
-			       to_transfer_num);
+        buf
+                = g_strdup_printf(ngettext (
+                        "One track could not be transferred because your iPod is full. Either delete some tracks or otherwise create space on the iPod before ejecting the iPod again.",
+                        "%d tracks could not be transferred because your iPod is full. Either delete some tracks or otherwise create space on the iPod before ejecting the iPod again.", to_transfer_num), to_transfer_num);
 
-	dialog = gtk_message_dialog_new (
-	    GTK_WINDOW (gtkpod_app),
-	    GTK_DIALOG_DESTROY_WITH_PARENT,
-	    GTK_MESSAGE_WARNING,
-	    GTK_BUTTONS_OK,
-	    "%s", buf);
-	gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (dialog);
-	g_free (buf);
-	result = FALSE;
+        dialog
+                = gtk_message_dialog_new(GTK_WINDOW (gtkpod_app), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK, "%s", buf);
+        gtk_dialog_run(GTK_DIALOG (dialog));
+        gtk_widget_destroy(dialog);
+        g_free(buf);
+        result = FALSE;
     }
-    else if (failed_num != 0)    /* one error message is enough -> else{... */
+    else if (failed_num != 0) /* one error message is enough -> else{... */
     {
         transfer_tracks_show_failed(itdb, td);
         result = FALSE;
@@ -1815,15 +1810,15 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
 
     /* indicate that files and/or database is saved */
     g_warning("TODO indicate that database has been saved\n");
-    //    if (success) {
-    //        data_unchanged(itdb);
-    //        if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
-    //            gtkpod_statusbar_message(_("%s: Database saved"), mpl->name);
-    //        }
-    //        else {
-    //            gtkpod_statusbar_message(_("%s: Changes saved"), mpl->name);
-    //        }
-    //    }
+    if (success) {
+        data_unchanged(itdb);
+        if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
+            gtkpod_statusbar_message(_("%s: Database saved"), mpl->name);
+        }
+        else {
+            gtkpod_statusbar_message(_("%s: Changes saved"), mpl->name);
+        }
+    }
 
     g_free(cfgdir);
 

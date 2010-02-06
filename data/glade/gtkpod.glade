@@ -854,4 +854,73 @@ The quick brown fox jumps over the lazy dog.</property>
       </widget>
     </child>
   </widget>
+  <widget class="GtkWindow" id="file_transfer_information_dialog">
+    <property name="border_width">2</property>
+    <property name="title" translatable="yes">Progress Information</property>
+    <property name="skip_taskbar_hint">True</property>
+    <child>
+      <widget class="GtkVBox" id="vbox180"><property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+        <property name="visible">True</property>
+        <property name="border_width">5</property>
+        <property name="spacing">5</property>
+        <child>
+          <widget class="GtkLabel" id="textlabel">
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <property name="label">Some placeholder text to assure reasonable size.</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkProgressBar" id="progressbar">
+            <property name="visible">True</property>
+            <property name="pulse_step">0.10000000149</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <widget class="GtkHSeparator" id="hseparator59">
+            <property name="visible">True</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkHButtonBox" id="hbuttonbox17">
+            <property name="visible">True</property>
+            <child>
+              <widget class="GtkButton" id="abortbutton">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="tooltip" translatable="yes">Export can be continued at a later time if canceled.</property>
+                <property name="border_width">2</property>
+                <property name="label">gtk-cancel</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">0</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
 </glade-interface>

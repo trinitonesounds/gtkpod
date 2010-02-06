@@ -900,7 +900,20 @@ static void anjuta_shell_iface_init(AnjutaShellIface *iface) {
 static void anjuta_gtkpod_app_statusbar_message(GtkPodApp *gtkpod_app, gchar* message) {
     g_return_if_fail(ANJUTA_IS_APP(gtkpod_app));
     AnjutaStatus *status = anjuta_shell_get_status(ANJUTA_SHELL(gtkpod_app), NULL);
-    anjuta_status_push(status, message);
+    anjuta_status_set(status, message);
+}
+
+static void anjuta_gtkpod_app_statusbar_busy_push(GtkPodApp *gtkpod_app) {
+    g_return_if_fail(ANJUTA_IS_APP(gtkpod_app));
+    AnjutaStatus *status = anjuta_shell_get_status(ANJUTA_SHELL(gtkpod_app), NULL);
+    g_warning("busy push XXX");
+    anjuta_status_busy_push(status);
+}
+
+static void anjuta_gtkpod_app_statusbar_busy_pop(GtkPodApp *gtkpod_app) {
+    g_return_if_fail(ANJUTA_IS_APP(gtkpod_app));
+    AnjutaStatus *status = anjuta_shell_get_status(ANJUTA_SHELL(gtkpod_app), NULL);
+    anjuta_status_busy_pop(status);
 }
 
 static void anjuta_gtkpod_app_warning(GtkPodApp *gtkpod_app, gchar *message) {
@@ -1333,6 +1346,8 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
 
 static void gtkpod_app_iface_init(GtkPodAppInterface *iface) {
     iface->statusbar_message = anjuta_gtkpod_app_statusbar_message;
+    iface->statusbar_busy_push = anjuta_gtkpod_app_statusbar_busy_push;
+    iface->statusbar_busy_pop = anjuta_gtkpod_app_statusbar_busy_pop;
     iface->gtkpod_warning = anjuta_gtkpod_app_warning;
     iface->gtkpod_warning_hig = anjuta_gtkpod_app_warning_hig;
     iface->gtkpod_confirmation_hig = anjuta_gtkpod_app_confirmation_hig;
@@ -1340,6 +1355,6 @@ static void gtkpod_app_iface_init(GtkPodAppInterface *iface) {
 }
 
 ANJUTA_TYPE_BEGIN(AnjutaApp, anjuta_app, GTK_TYPE_WINDOW);
-ANJUTA_TYPE_ADD_INTERFACE(anjuta_shell, ANJUTA_TYPE_SHELL);
-ANJUTA_TYPE_ADD_INTERFACE(gtkpod_app, GTKPOD_APP_TYPE);
-ANJUTA_TYPE_END;
+            ANJUTA_TYPE_ADD_INTERFACE(anjuta_shell, ANJUTA_TYPE_SHELL);
+            ANJUTA_TYPE_ADD_INTERFACE(gtkpod_app, GTKPOD_APP_TYPE);ANJUTA_TYPE_END
+;

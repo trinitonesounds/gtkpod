@@ -52,6 +52,7 @@ static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
     g_return_if_fail (db_active_pl);
 
     if (names) {
+        gtkpod_statusbar_busy_push();
         GSList* currentnode;
         for (currentnode = names; currentnode; currentnode = currentnode->next) {
             result
@@ -69,6 +70,7 @@ static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
             gtkpod_statusbar_message(_("Successfully added files"));
         else
             gtkpod_statusbar_message(_("Some files were not added successfully"));
+        gtkpod_statusbar_busy_pop();
     }
 }
 
@@ -79,7 +81,6 @@ static gboolean add_selected_dirs_cb(gpointer data) {
 
     g_slist_foreach(names, (GFunc) g_free, NULL);
     g_slist_free(names);
-    g_warning("add_selected_dir_cb: Finished!!");
     return FALSE;
 }
 
@@ -127,6 +128,7 @@ static void fileselection_add_playlists(GSList* names, iTunesDB *itdb) {
     g_warning("fileselection_add_playlists - block widgets commented out");
     //    block_widgets();
 
+    gtkpod_statusbar_busy_push();
     for (gsl = names; gsl; gsl = gsl->next) {
         add_playlist_by_filename(itdb, gsl->data, NULL, -1, NULL, NULL);
     }
@@ -142,7 +144,7 @@ static void fileselection_add_playlists(GSList* names, iTunesDB *itdb) {
 
     /* display log of detected duplicates */
     gp_duplicate_remove(NULL, NULL);
-
+    gtkpod_statusbar_busy_pop();
     gtkpod_tracks_statusbar_update();
 }
 
@@ -235,6 +237,7 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
     g_warning("fileselection_add_files - block widgets commented out");
     //    block_widgets();
 
+    gtkpod_statusbar_busy_push();
     /* Get the filenames and add them */
     for (gsl = names; gsl; gsl = gsl->next) {
         result
@@ -256,6 +259,7 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
     else
         gtkpod_statusbar_message(_("Some files were not added successfully"));
 
+    gtkpod_statusbar_busy_pop();
     g_warning("fileselection_add_playlists - release widgets commented out");
     //    release_widgets();
 }

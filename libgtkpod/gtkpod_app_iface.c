@@ -103,6 +103,16 @@ void gtkpod_statusbar_message(gchar* message, ...) {
     g_free(msg);
 }
 
+void gtkpod_statusbar_busy_push() {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->statusbar_busy_push(gtkpod_app);
+}
+
+void gtkpod_statusbar_busy_pop() {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->statusbar_busy_pop(gtkpod_app);
+}
+
 void gtkpod_tracks_statusbar_update(void) {
     gchar *buf;
     Playlist *pl;

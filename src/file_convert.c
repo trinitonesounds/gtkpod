@@ -268,7 +268,7 @@ enum
     CONV_DIRSIZE_INVALID = -1,      /* dirsize not valid */
 };
 
-static Conversion *conversion;
+static Conversion *conversion = NULL;
 
 
 /* Set up conversion infrastructure. Must only be called once. */
@@ -277,7 +277,8 @@ void file_convert_init ()
     GladeXML *log_xml;
     GtkWidget *vbox;
 
-    g_return_if_fail (conversion==NULL);
+    if (conversion != NULL)
+        return;
 
     conversion = g_new0 (Conversion, 1);
     conversion->mutex = g_mutex_new ();
@@ -351,6 +352,7 @@ void file_convert_shutdown ()
 /* This is called just before gtkpod closes down */
 void file_convert_update_default_sizes ()
 {
+    file_convert_init();
     conversion_update_default_sizes (conversion);
 }
 
@@ -358,6 +360,7 @@ void file_convert_update_default_sizes ()
 /* Call this function each time the preferences have been updated */
 void file_convert_prefs_changed ()
 {
+    file_convert_init();
     conversion_prefs_changed (conversion);
 }
 
@@ -369,6 +372,7 @@ void file_convert_prefs_changed ()
  */
 gboolean file_convert_add_track (Track *track)
 {
+    file_convert_init();
     return conversion_add_track (conversion, track);
 }
 
@@ -376,6 +380,7 @@ gboolean file_convert_add_track (Track *track)
 /* Reorder the scheduled list so that tracks in @itdb are converted first */
 void file_convert_itdb_first (iTunesDB *itdb)
 {
+    file_convert_init();
     conversion_itdb_first (conversion, itdb);
 }
 
@@ -383,6 +388,7 @@ void file_convert_itdb_first (iTunesDB *itdb)
 /* Cancel conversion for all tracks of @itdb */
 void file_convert_cancel_itdb (iTunesDB *itdb)
 {
+    file_convert_init();
     conversion_cancel_itdb (conversion, itdb);
 }
 
@@ -390,11 +396,13 @@ void file_convert_cancel_itdb (iTunesDB *itdb)
 /* Cancel conversion for @tracks */
 void file_convert_cancel_track (Track *track)
 {
+    file_convert_init();
     conversion_cancel_track (conversion, track);
 }
 
 void file_convert_continue ()
 {
+    file_convert_init();
     conversion_continue (conversion);
 }
 
@@ -424,6 +432,7 @@ FileTransferStatus file_transfer_get_status (iTunesDB *itdb,
    removed again when calling file_convert_cancel_itdb */
 void file_transfer_ack_itdb (iTunesDB *itdb)
 {
+    file_convert_init();
     transfer_ack_itdb (conversion, itdb);
 }
 
@@ -432,6 +441,7 @@ void file_transfer_ack_itdb (iTunesDB *itdb)
  * additional space is available. */
 void file_transfer_continue (iTunesDB *itdb)
 {
+    file_convert_init();
     transfer_continue (conversion, itdb);
 }
 
@@ -440,6 +450,7 @@ void file_transfer_continue (iTunesDB *itdb)
    from the settings in the preferences */
 void file_transfer_activate (iTunesDB *itdb, gboolean active)
 {
+    file_convert_init();
     transfer_activate (conversion, itdb, active);
 }
 
@@ -447,6 +458,7 @@ void file_transfer_activate (iTunesDB *itdb, gboolean active)
  * the preferences */
 void file_transfer_reset (iTunesDB *itdb)
 {
+    file_convert_init();
     transfer_reset (conversion, itdb);
 }
 
@@ -455,6 +467,7 @@ void file_transfer_reset (iTunesDB *itdb)
    conversion */
 GList *file_transfer_get_failed_tracks (iTunesDB *itdb)
 {
+    file_convert_init();
     return transfer_get_failed_tracks (conversion, itdb);
 }
 
@@ -463,6 +476,7 @@ GList *file_transfer_get_failed_tracks (iTunesDB *itdb)
    failed conversion/transfer */
 void file_transfer_reschedule (iTunesDB *itdb)
 {
+    file_convert_init();
     transfer_reschedule (conversion, itdb);
 }
 
@@ -2920,7 +2934,10 @@ static void transfer_activate (Conversion *conv, iTunesDB *itdb, gboolean active
 {
     TransferItdb *tri;
 
-    g_return_if_fail (conv && itdb);
+    g_return_if_fail (itdb);
+
+    // Initialise Conversion infrastructure is not already initialised.
+    file_convert_init();
 
     g_mutex_lock (conv->mutex);
 
