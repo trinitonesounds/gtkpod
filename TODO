@@ -9,3 +9,61 @@ Prospective Plugins:
 	synchronizer
 	download coverart plugin
 	photo panel
+
+
+Music Menu
+- Load iPod
+- Save Changes
+- Add Files
+- Add Folder
+- Add Playlists
+- Update Tracks from file
+- Update mserv date from file
+- Sync Playlists with Dir
+- Export Tracks
+- Create Playlist
+- Init ipod Directories
+- Check ipod files
+
+Edit Menu
+- Edit Track Details
+- Edit Smart Playlist
+- Delete
+- Create Playlists
+- Sorting
+- Randomize current playlist
+- Save Displayed track order
+- Repo iPod Options
+- Preferences
+
+View Menu
+- Info Window
+- More / Fewer filter tabs
+- Arrange Filter Tabs
+
+Tools Menu
+- Play Now
+- Enqueue
+- Normalize Volume
+- Synchronize All, Contacts, Calendar, Notes
+
+Help Menu
+- Help Contents
+- About box
+
+Playlists Plugin
+- popup menu
+
+Tracks Plugin
+- popup menu
+
+Sorttab Menu
+- popup menu
+
+- CoverArt Plugin
+- Filter Plugin
+- Preference windows for each plugin - Should they add items to standard windows or contribute their own
+- Progress bar for saving and lengthy operations
+
+
+
