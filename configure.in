@@ -125,7 +125,7 @@ else
     have_gio="*no -- will build without iPod autodetection support"
 fi
 
-dnl Check for libvorbisfile
+dnl Check for libvorbisfile and libvorbis
 AC_ARG_WITH(ogg, AC_HELP_STRING([--without-ogg], [Disable Ogg/Vorbis support]))
 if test "x$with_ogg" != "xno"; then
     AC_SEARCH_LIBS(ov_open, ["vorbisfile"],
@@ -133,6 +133,14 @@ if test "x$with_ogg" != "xno"; then
     if test "x$have_ogg_header" = "xno"; then
         have_ogg="no"
         AC_MSG_WARN([vorbis/vorbisfile.h cannot be found or is unusable. Check your ogg/vorbis installation.])
+    fi
+    if test "x$have_ogg" = "xyes"; then
+        AC_SEARCH_LIBS(vorbis_comment_query, ["vorbis"],
+            [AC_CHECK_HEADER(vorbis/codec.h, have_ogg=yes, have_ogg_header=no)], have_ogg=no)
+        if test "x$have_ogg_header" = "xno"; then
+            have_ogg="no"
+            AC_MSG_WARN([vorbis/codec.h cannot be found or is unusable. Check your ogg/vorbis installation.])
+        fi
     fi
     if test "x$with_ogg" = "xyes" -a "x$have_ogg" = "xno"; then
         AC_MSG_ERROR([Ogg/Vorbis support explicitly requested but ogg/vorbis libs couldn't be found])
