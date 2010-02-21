@@ -7,7 +7,9 @@
 			<menuitem name="Quit" action="ActionExit" />
 		</menu>
 		<menu name="MenuEdit" action="ActionMenuEdit">
-			<placeholder name="PlaceholderEditMenus"/>
+			<placeholder name="PlaceholderEditMenus">
+				<menu name="Delete" action="ActionEditDeleteMenu" />
+			</placeholder>
 			<placeholder name="PlaceholderSelectMenus"/>
 			<placeholder name="PlaceholderInsertMenus"/>
 			<placeholder name="PlaceholderSearchMenus"/>

@@ -12,11 +12,11 @@ Prospective Plugins:
 
 
 Music Menu
-- Load iPod
-- Save Changes
-- Add Files
-- Add Folder
-- Add Playlists
+#- Load iPod
+# Save Changes
+# Add Files
+# Add Folder
+# Add Playlists
 - Update Tracks from file
 - Update mserv date from file
 - Sync Playlists with Dir

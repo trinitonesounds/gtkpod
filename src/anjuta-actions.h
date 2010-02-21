@@ -35,11 +35,26 @@ static GtkActionEntry menu_entries_music[] = {
   };
 
 static GtkActionEntry menu_entries_edit[] = {
-  { "ActionMenuEdit", NULL, N_("_Edit")},
-  { "ActionEditPreferences", GTK_STOCK_PROPERTIES,
-	N_("_Preferences"), NULL,
-	N_("Do you prefer coffee to tea? Check it out."),
-    G_CALLBACK (on_set_preferences1_activate)},
+    {
+        "ActionMenuEdit",
+        NULL,
+        N_("_Edit")
+    },
+    {
+        "ActionEditDeleteMenu",
+        GTK_STOCK_DELETE,
+        N_("_Delete"),
+        NULL,
+        NULL,
+        NULL
+    },
+    {
+        "ActionEditPreferences",
+        GTK_STOCK_PROPERTIES,
+        N_("_Preferences"), NULL,
+        N_("Do you prefer coffee to tea? Check it out."),
+        G_CALLBACK (on_set_preferences1_activate)
+    },
 };
 
 static GtkActionEntry menu_entries_view[] = {

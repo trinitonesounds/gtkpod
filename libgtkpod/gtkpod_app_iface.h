@@ -46,6 +46,7 @@
 #define SIGNAL_TRACKS_SELECTED "signal_tracks_selected"
 #define SIGNAL_PLAYLIST_SELECTED "signal_playlist_selected"
 #define SIGNAL_PLAYLIST_ADDED "signal_playlist_added"
+#define SIGNAL_PLAYLIST_REMOVED "signal_playlist_removed"
 #define SIGNAL_ITDB_UPDATED "signal_itdb_updated"
 #define SIGNAL_SORT_ENABLEMENT "signal_sort_enablement"
 
@@ -77,6 +78,7 @@ enum
     TRACKS_SELECTED,
     PLAYLIST_SELECTED,
     PLAYLIST_ADDED,
+    PLAYLIST_REMOVED,
     ITDB_UPDATED,
     SORT_ENABLEMENT,
     LAST_SIGNAL

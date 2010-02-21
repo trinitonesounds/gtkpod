@@ -54,9 +54,9 @@ void pm_remove_all_playlists (gboolean clear_sort);
 void pm_add_all_itdbs (void);
 Playlist* pm_get_selected_playlist(void);
 
-void message_sb_no_itdb_selected ();
 void playlist_display_update_itdb_cb (GtkPodApp *app, gpointer olditdb, gpointer newitdb, gpointer data);
 void playlist_display_select_playlist_cb (GtkPodApp *app, gpointer pl, gpointer data);
 void playlist_display_playlist_added_cb(GtkPodApp *app, gpointer pl, gint32 pos, gpointer data);
+void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gint32 pos, gpointer data);
 
 #endif /* __DISPLAY_PLAYLIST_H__ */

@@ -2149,16 +2149,6 @@ void pm_show_all_playlists() {
     gtk_tree_view_expand_all(playlist_treeview);
 }
 
-/*------------------------------------------------------------------*\
- *                                                                  *
- *              Frequently used error messages                      *
- *                                                                  *
- \*------------------------------------------------------------------*/
-
-void message_sb_no_itdb_selected() {
-    gtkpod_statusbar_message(_("No database or playlist selected"));
-}
-
 /**
  * playlist_display_update_itdb_cb:
  *
@@ -2198,7 +2188,7 @@ void playlist_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer d
         return;
 
     if (old_playlist)
-        pm_unselect_playlist (old_playlist);
+        pm_unselect_playlist(old_playlist);
 
     pm_select_playlist(new_playlist);
 }
@@ -2208,3 +2198,10 @@ void playlist_display_playlist_added_cb(GtkPodApp *app, gpointer pl, gint32 pos,
 
     pm_add_child(new_playlist->itdb, PM_COLUMN_PLAYLIST, new_playlist, pos);
 }
+
+void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gint32 pos, gpointer data) {
+    Playlist *old_playlist = pl;
+
+    pm_remove_playlist(old_playlist, TRUE);
+}
+

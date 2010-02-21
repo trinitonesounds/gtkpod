@@ -60,6 +60,9 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
         gtkpod_app_signals[PLAYLIST_ADDED]
                 = g_signal_new(SIGNAL_PLAYLIST_ADDED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, _gtkpod_app_marshal_VOID__POINTER_INT, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_INT);
 
+        gtkpod_app_signals[PLAYLIST_REMOVED]
+                = g_signal_new(SIGNAL_PLAYLIST_REMOVED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
+
         initialized = TRUE;
     }
 }

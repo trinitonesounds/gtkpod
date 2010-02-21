@@ -35,6 +35,7 @@
 
 #include <gtk/gtk.h>
 #include "itdb.h"
+#include "gp_itdb.h"
 
 Playlist *add_new_pl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position);
 void add_new_pl_or_spl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position);
@@ -49,6 +50,7 @@ void last_listened_pl(iTunesDB *itdb);
 void since_last_pl(iTunesDB *itdb);
 void never_listened_pl(iTunesDB *itdb);
 Playlist *generate_not_listed_playlist(iTunesDB *itdb);
+void delete_playlist_head (DeleteAction deleteaction);
 
 
 #endif /* MISC_PLAYLIST_H_ */

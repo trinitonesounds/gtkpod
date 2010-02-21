@@ -1086,7 +1086,8 @@ static void on_response(GtkWidget *w, gint response, gpointer id) {
 }
 
 static void confirm_append_text(GladeXML *xml, const gchar *text) {
-    g_return_if_fail(!xml);
+    g_return_if_fail(xml);
+
     int i;
     gchar **strings = g_strsplit(text, "\n", 0);
     GtkTreeIter iter;
@@ -1211,7 +1212,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
     gtk_tree_view_append_column(GTK_TREE_VIEW (w), column);
 
     if (text) {
-        confirm_append_text(cd->window_xml, text);
+        confirm_append_text(confirm_xml, text);
         cd->scrolled = TRUE;
         defx = prefs_get_int("size_conf_sw.x");
         defy = prefs_get_int("size_conf_sw.y");
@@ -1352,6 +1353,12 @@ static void gtkpod_app_iface_init(GtkPodAppInterface *iface) {
     iface->gtkpod_warning_hig = anjuta_gtkpod_app_warning_hig;
     iface->gtkpod_confirmation_hig = anjuta_gtkpod_app_confirmation_hig;
     iface->gtkpod_confirmation = anjuta_gtkpod_app_confirmation;
+}
+
+G_MODULE_EXPORT void on_confirm_tree_size_allocate (GtkWidget *sender, GtkAllocation *allocation, gpointer e)
+{
+    GtkCellRenderer *renderer = GTK_CELL_RENDERER (g_object_get_data (G_OBJECT (sender), "renderer"));
+    g_object_set (renderer, "wrap-width", allocation->width, NULL);
 }
 
 ANJUTA_TYPE_BEGIN(AnjutaApp, anjuta_app, GTK_TYPE_WINDOW);

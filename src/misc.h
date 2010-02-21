@@ -100,8 +100,6 @@ void call_script (gchar *script, ...);
 
 gchar **build_argv_from_strings (const gchar *first_arg, ...);
 
-void delete_track_ok (struct DeleteData *dd);
-
 gchar *time_time_to_string (time_t t);
 gchar *time_fromtime_to_string (time_t t);
 gchar *time_totime_to_string (time_t t);
@@ -219,4 +217,11 @@ void load_ipod_prefs (iTunesDB *itdb, const gchar *mountpoint);
 gboolean save_ipod_prefs (iTunesDB *itdb, const gchar *mountpoint);
 
 gboolean get_offline (iTunesDB *itdb);
+
+void delete_populate_settings(struct DeleteData *dd, gchar **label, gchar **title, gboolean *confirm_again, gchar **confirm_again_key, GString **str);
+
+void message_sb_no_itdb_selected ();
+void message_sb_no_playlist_selected ();
+void message_sb_no_tracks_selected ();
+
 #endif

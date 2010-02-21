@@ -60,4 +60,10 @@ void on_pl_for_each_composer_activate(GtkAction *action, PlaylistDisplayPlugin* 
 void on_pl_for_each_year_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
 void on_pl_for_each_rating_activate(GtkAction *action, PlaylistDisplayPlugin* plugin);
 
+void on_delete_selected_playlist (GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_delete_selected_playlist_including_tracks_from_harddisk (GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_delete_selected_playlist_including_tracks_from_ipod (GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_delete_selected_playlist_including_tracks_from_database (GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_delete_selected_playlist_including_tracks_from_device(GtkAction *action, PlaylistDisplayPlugin* plugin);
+
 #endif

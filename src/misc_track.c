@@ -1926,3 +1926,172 @@ gchar *get_track_info(Track *track, gboolean prefer_filename) {
 
     return g_strdup_printf("iPod ID: %d", track->id);
 }
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *             Delete Track                                      *
+ *                                                                  *
+ \*------------------------------------------------------------------*/
+
+/* cancel handler for delete track */
+/* @user_data1 the selected playlist, @user_data2 are the selected tracks */
+static void delete_track_cancel(struct DeleteData *dd) {
+    g_return_if_fail (dd);
+
+    g_list_free(dd->tracks);
+    g_free(dd);
+}
+
+/* ok handler for delete track */
+/* @user_data1 the selected playlist, @user_data2 are the selected tracks */
+static void delete_track_ok(struct DeleteData *dd) {
+    gint n;
+    GList *l;
+
+    g_return_if_fail (dd);
+    g_return_if_fail (dd->pl);
+    g_return_if_fail (dd->itdb);
+
+    /* should never happen */
+    if (!dd->tracks)
+        delete_track_cancel(dd);
+
+    g_warning("TODO: determine whether still need to block changes while deleting");
+//    /* Deafen the coverart display while deletion is occurring */
+//    coverart_block_change(TRUE);
+
+    /* nr of tracks to be deleted */
+    n = g_list_length(dd->tracks);
+    if (dd->itdb->usertype & GP_ITDB_TYPE_IPOD) {
+        switch (dd->deleteaction) {
+        case DELETE_ACTION_IPOD:
+            gtkpod_statusbar_message(ngettext ("Deleted one track completely from iPod",
+                    "Deleted %d tracks completely from iPod",
+                    n), n);
+            break;
+        case DELETE_ACTION_PLAYLIST:
+            gtkpod_statusbar_message(ngettext ("Deleted %d track from playlist '%s'",
+                    "Deleted %d tracks from playlist '%s'",
+                    n), n, dd->pl->name);
+            break;
+        case DELETE_ACTION_LOCAL:
+        case DELETE_ACTION_DATABASE:
+        default:
+            /* not allowed -- programming error */
+            g_return_if_reached ();
+            break;
+        }
+    }
+    if (dd->itdb->usertype & GP_ITDB_TYPE_LOCAL) {
+        switch (dd->deleteaction) {
+        case DELETE_ACTION_LOCAL:
+            gtkpod_statusbar_message(ngettext ("Deleted one track from harddisk",
+                    "Deleted %d tracks from harddisk",
+                    n), n);
+            break;
+        case DELETE_ACTION_PLAYLIST:
+            gtkpod_statusbar_message(ngettext ("Deleted %d track from playlist '%s'",
+                    "Deleted %d tracks from playlist '%s'",
+                    n), n, dd->pl->name);
+            break;
+        case DELETE_ACTION_DATABASE:
+            gtkpod_statusbar_message(ngettext ("Deleted track from local database",
+                    "Deleted %d tracks from local database",
+                    n), n);
+            break;
+        case DELETE_ACTION_IPOD:
+        default:
+            /* not allowed -- programming error */
+            g_return_if_reached ();
+            break;
+        }
+    }
+    for (l = dd->tracks; l; l = l->next) {
+        gp_playlist_remove_track(dd->pl, l->data, dd->deleteaction);
+    }
+
+    /* Awaken coverart selection */
+    g_warning("TODO: determine whether still need to block changes while deleting");
+//    coverart_block_change(FALSE);
+    g_list_free(dd->tracks);
+    g_free(dd);
+
+    gtkpod_tracks_statusbar_update();
+}
+
+/* Deletes selected tracks from current playlist.
+ @deleteaction: on of the DeleteActions defined in misc.h */
+void delete_track_head(DeleteAction deleteaction) {
+    Playlist *pl;
+    GList *selected_tracks;
+    GString *str;
+    gchar *label, *title;
+    gboolean confirm_again;
+    struct DeleteData *dd;
+    iTunesDB *itdb;
+    GtkResponseType response;
+    gchar *confirm_again_key;
+
+    pl = gtkpod_get_current_playlist();
+    if (pl == NULL) { /* no playlist??? Cannot happen, but... */
+        message_sb_no_playlist_selected();
+        return;
+    }
+    itdb = pl->itdb;
+    g_return_if_fail (itdb);
+
+    selected_tracks = gtkpod_get_displayed_tracks();
+    if (selected_tracks == NULL) { /* no tracks selected */
+        message_sb_no_tracks_selected();
+        return;
+    }
+
+    dd = g_malloc0(sizeof(struct DeleteData));
+    dd->deleteaction = deleteaction;
+    dd->tracks = selected_tracks;
+    dd->pl = pl;
+    dd->itdb = itdb;
+
+    delete_populate_settings(dd, &label, &title, &confirm_again, &confirm_again_key, &str);
+    /* open window */
+    response = gtkpod_confirmation(-1, /* gint id, */
+    TRUE, /* gboolean modal, */
+    title, /* title */
+    label, /* label */
+    str->str, /* scrolled text */
+    NULL, 0, NULL, /* option 1 */
+    NULL, 0, NULL, /* option 2 */
+    confirm_again, /* gboolean confirm_again, */
+    confirm_again_key,/* ConfHandlerOpt confirm_again_key,*/
+    CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
+    NULL, /* don't show "Apply" button */
+    CONF_NULL_HANDLER, /* cancel_handler,*/
+    NULL, /* gpointer user_data1,*/
+    NULL); /* gpointer user_data2,*/
+
+    switch (response) {
+    case GTK_RESPONSE_OK:
+        /* Delete the tracks */
+        delete_track_ok(dd);
+        break;
+    default:
+        delete_track_cancel(dd);
+        break;
+    }
+
+    g_free(label);
+    g_free(title);
+    g_free(confirm_again_key);
+    g_string_free(str, TRUE);
+}
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *              Frequently used error messages *
+ *                                                                  *
+ \*------------------------------------------------------------------*/
+
+void message_sb_no_tracks_selected ()
+{
+    gtkpod_statusbar_message (_("No tracks selected"));
+}

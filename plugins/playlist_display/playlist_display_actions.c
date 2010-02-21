@@ -37,12 +37,11 @@
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/gp_itdb.h"
 #include "libgtkpod/prefs.h"
+#include "libgtkpod/misc.h"
 #include "libgtkpod/misc_track.h"
 #include "libgtkpod/misc_playlist.h"
 #include "libgtkpod/gp_spl.h"
 #include <gdk/gdk.h>
-
-
 
 /* Callback after directories to add have been selected */
 static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
@@ -312,7 +311,7 @@ static void create_add_files_dialog(Playlist *pl) {
     g_free(str);
 
     if (!names)
-    return;
+        return;
 
     // Let the dialog close first and add the tracks in the background
     gdk_threads_add_idle((GSourceFunc) fileselection_add_files_cb, names);
@@ -515,5 +514,49 @@ void on_pl_for_each_rating_activate(GtkAction *action, PlaylistDisplayPlugin* pl
     }
     else {
         message_sb_no_itdb_selected();
+    }
+}
+
+static void delete_selected_playlist(DeleteAction deleteaction) {
+    Playlist *pl = pm_get_selected_playlist();
+
+    if (pl) {
+        delete_playlist_head(deleteaction);
+    }
+    else {
+        message_sb_no_playlist_selected();
+    }
+}
+
+void on_delete_selected_playlist (GtkAction *action, PlaylistDisplayPlugin* plugin)
+{
+    delete_selected_playlist (DELETE_ACTION_PLAYLIST);
+}
+
+void on_delete_selected_playlist_including_tracks_from_harddisk (GtkAction *action, PlaylistDisplayPlugin* plugin)
+{
+    delete_selected_playlist (DELETE_ACTION_LOCAL);
+}
+
+void on_delete_selected_playlist_including_tracks_from_ipod (GtkAction *action, PlaylistDisplayPlugin* plugin)
+{
+    delete_selected_playlist (DELETE_ACTION_IPOD);
+}
+
+void on_delete_selected_playlist_including_tracks_from_database (GtkAction *action, PlaylistDisplayPlugin* plugin)
+{
+    delete_selected_playlist (DELETE_ACTION_DATABASE);
+}
+
+void on_delete_selected_playlist_including_tracks_from_device(GtkAction *action, PlaylistDisplayPlugin* plugin)
+{
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+    if (!itdb)
+        return;
+
+    if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
+        on_delete_selected_playlist_including_tracks_from_ipod(action, plugin);
+    } else if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
+        on_delete_selected_playlist_including_tracks_from_harddisk(action, plugin);
     }
 }

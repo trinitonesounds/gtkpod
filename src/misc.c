@@ -45,59 +45,51 @@
 #include "misc_track.h"
 #include <glib/gi18n-lib.h>
 
-
 #define DEBUG_MISC 0
 
 /* where to find the scripts */
-const gchar
-        *SCRIPTDIR =
-                PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S;
+const gchar *SCRIPTDIR = PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S;
 
 /*------------------------------------------------------------------*\
  *                                                                  *
  *             Functions for blocking widgets (block input)         *
  *                                                                  *
-\*------------------------------------------------------------------*/
+ \*------------------------------------------------------------------*/
 
 /* --------------------------------------------------------------*/
 /* are widgets blocked at the moment? */
 gboolean widgets_blocked = FALSE;
 struct blocked_widget { /* struct to be kept in blocked_widgets */
-    GtkWidget *widget;   /* widget that has been turned insensitive */
-    gboolean  sensitive; /* state of the widget before */
+    GtkWidget *widget; /* widget that has been turned insensitive */
+    gboolean sensitive; /* state of the widget before */
 };
 /* --------------------------------------------------------------*/
 
-
 enum {
-    BR_BLOCK,
-    BR_RELEASE,
-    BR_UPDATE
+    BR_BLOCK, BR_RELEASE, BR_UPDATE
 };
 
 /* function to add one widget to the blocked_widgets list */
-static GList *add_blocked_widget (GList *blocked_widgets, gchar *name)
-{
+static GList *add_blocked_widget(GList *blocked_widgets, gchar *name) {
     g_warning("TODO misc:add_blocked_widget - commented out\n");
-//    GtkWidget *w;
-//    struct blocked_widget *bw;
-//    if((w = gtkpod_xml_get_widget (main_window_xml,  name)))
-//    {
-//    bw = g_malloc0 (sizeof (struct blocked_widget));
-//    bw->widget = w;
-//    /* we don't have to set the sensitive flag right now. It's
-//     * done in "block_widgets ()" */
-//    blocked_widgets = g_list_append (blocked_widgets, bw);
-//    }
+    //    GtkWidget *w;
+    //    struct blocked_widget *bw;
+    //    if((w = gtkpod_xml_get_widget (main_window_xml,  name)))
+    //    {
+    //    bw = g_malloc0 (sizeof (struct blocked_widget));
+    //    bw->widget = w;
+    //    /* we don't have to set the sensitive flag right now. It's
+    //     * done in "block_widgets ()" */
+    //    blocked_widgets = g_list_append (blocked_widgets, bw);
+    //    }
     return blocked_widgets;
 }
 
 /* called by block_widgets() and release_widgets() */
 /* "block": TRUE = block, FALSE = release */
-static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
-{
+static void block_release_widgets(gint action, GtkWidget *w, gboolean sens) {
     /* list with the widgets that are turned insensitive during
-       import/export...*/
+     import/export...*/
     static GList *bws = NULL;
     static gint count = 0; /* how many times are the widgets blocked? */
     GList *l;
@@ -105,90 +97,76 @@ static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
 
     /* Create a list of widgets that are to be turned insensitive when
      * importing/exporting, adding tracks or directories etc. */
-    if (bws == NULL)
-    {
-    bws = add_blocked_widget (bws, "menubar");
-    bws = add_blocked_widget (bws, "load_ipods_button");
-    bws = add_blocked_widget (bws, "save_changes_button");
-    bws = add_blocked_widget (bws, "add_files_button");
-    bws = add_blocked_widget (bws, "add_dirs_button");
-    bws = add_blocked_widget (bws, "add_PL_button");
-    bws = add_blocked_widget (bws, "new_PL_button");
-    widgets_blocked = FALSE;
+    if (bws == NULL) {
+        bws = add_blocked_widget(bws, "menubar");
+        bws = add_blocked_widget(bws, "load_ipods_button");
+        bws = add_blocked_widget(bws, "save_changes_button");
+        bws = add_blocked_widget(bws, "add_files_button");
+        bws = add_blocked_widget(bws, "add_dirs_button");
+        bws = add_blocked_widget(bws, "add_PL_button");
+        bws = add_blocked_widget(bws, "new_PL_button");
+        widgets_blocked = FALSE;
     }
 
-    switch (action)
-    {
+    switch (action) {
     case BR_BLOCK:
-    /* we must block the widgets */
-    ++count;  /* increase number of locks */
-    if (!widgets_blocked)
-    { /* only block widgets, if they are not already blocked */
-        for (l = bws; l; l = l->next)
-        {
-            bw = (struct blocked_widget *)l->data;
-            /* remember the state the widget was in before */
-            bw->sensitive = GTK_WIDGET_SENSITIVE (bw->widget);
-            gtk_widget_set_sensitive (bw->widget, FALSE);
-        }
-        g_warning("TODO misc:block_release_widgets sort_window_block commented out\n");
-//        sort_window_block ();
-        widgets_blocked = TRUE;
-    }
-    break;
-    case BR_RELEASE:
-    /* release the widgets if --count == 0 */
-    if (widgets_blocked)
-    { /* only release widgets, if they are blocked */
-        --count;
-        if (count == 0)
-        {
-            for (l = bws; l; l = l->next)
-            {
-                bw = (struct blocked_widget *)l->data;
-                gtk_widget_set_sensitive (bw->widget, bw->sensitive);
+        /* we must block the widgets */
+        ++count; /* increase number of locks */
+        if (!widgets_blocked) { /* only block widgets, if they are not already blocked */
+            for (l = bws; l; l = l->next) {
+                bw = (struct blocked_widget *) l->data;
+                /* remember the state the widget was in before */
+                bw->sensitive = GTK_WIDGET_SENSITIVE (bw->widget);
+                gtk_widget_set_sensitive(bw->widget, FALSE);
             }
+            g_warning("TODO misc:block_release_widgets sort_window_block commented out\n");
+            //        sort_window_block ();
+            widgets_blocked = TRUE;
+        }
+        break;
+    case BR_RELEASE:
+        /* release the widgets if --count == 0 */
+        if (widgets_blocked) { /* only release widgets, if they are blocked */
+            --count;
+            if (count == 0) {
+                for (l = bws; l; l = l->next) {
+                    bw = (struct blocked_widget *) l->data;
+                    gtk_widget_set_sensitive(bw->widget, bw->sensitive);
+                }
 
-            g_warning("TODO misc:block_release_widgets sort_window_release commented out\n");
-//            sort_window_release ();
-            widgets_blocked = FALSE;
+                g_warning("TODO misc:block_release_widgets sort_window_release commented out\n");
+                //            sort_window_release ();
+                widgets_blocked = FALSE;
+            }
         }
-    }
-    break;
+        break;
     case BR_UPDATE:
-    if (widgets_blocked)
-    { /* only update widgets, if they are blocked */
-        for (l = bws; l; l = l->next)
-        { /* find the required widget */
-        bw = (struct blocked_widget *)l->data;
-        if (bw->widget == w)
-        { /* found -> set to new desired state */
-            bw->sensitive = sens;
-            break;
+        if (widgets_blocked) { /* only update widgets, if they are blocked */
+            for (l = bws; l; l = l->next) { /* find the required widget */
+                bw = (struct blocked_widget *) l->data;
+                if (bw->widget == w) { /* found -> set to new desired state */
+                    bw->sensitive = sens;
+                    break;
+                }
+            }
         }
-        }
-    }
-    break;
+        break;
     }
 }
 
-
 /* Block widgets (turn insensitive) listed in "bws" */
-void block_widgets (void)
-{
-    block_release_widgets (BR_BLOCK, NULL, FALSE);
+void block_widgets(void) {
+    block_release_widgets(BR_BLOCK, NULL, FALSE);
 }
 
 /* Release widgets (i.e. return them to their state before
-   "block_widgets() was called */
-void release_widgets (void)
-{
-    block_release_widgets (BR_RELEASE, NULL, FALSE);
+ "block_widgets() was called */
+void release_widgets(void) {
+    block_release_widgets(BR_RELEASE, NULL, FALSE);
 }
 
-void update_blocked_widget (GtkWidget *w, gboolean sens)
-{
-    block_release_widgets (BR_UPDATE, w, sens);
+void update_blocked_widget(GtkWidget *w, gboolean sens) {
+    block_release_widgets(BR_UPDATE, w, sens);
 }
 
 /*------------------------------------------------------------------*\
@@ -200,22 +178,19 @@ void update_blocked_widget (GtkWidget *w, gboolean sens)
 /* Concats @base_dir and @rel_dir if and only if @rel_dir is not
  * absolute (does not start with '~' or '/'). Otherwise simply return
  * a copy of @rel_dir. Must free return value after use */
-gchar *concat_dir_if_relative (G_CONST_RETURN gchar *base_dir,
-                   G_CONST_RETURN gchar *rel_dir)
-{
+gchar *concat_dir_if_relative(G_CONST_RETURN gchar *base_dir, G_CONST_RETURN gchar *rel_dir) {
     /* sanity */
     if (!rel_dir || !*rel_dir)
-    return g_build_filename (base_dir, rel_dir, NULL);
-                 /* this constellation is nonsense... */
+        return g_build_filename(base_dir, rel_dir, NULL);
+    /* this constellation is nonsense... */
     if ((*rel_dir == '/') || (*rel_dir == '~'))
-    return g_strdup (rel_dir);             /* rel_dir is absolute */
-                           /* make absolute path */
-    return g_build_filename (base_dir, rel_dir, NULL);
+        return g_strdup(rel_dir); /* rel_dir is absolute */
+    /* make absolute path */
+    return g_build_filename(base_dir, rel_dir, NULL);
 }
 
 /* Copied g_utf8_strcasestr from GtkSourceView */
-gchar *utf8_strcasestr(const gchar *haystack, const gchar *needle)
-{
+gchar *utf8_strcasestr(const gchar *haystack, const gchar *needle) {
     gsize needle_len;
     gsize haystack_len;
     gchar *ret = NULL;
@@ -234,14 +209,12 @@ gchar *utf8_strcasestr(const gchar *haystack, const gchar *needle)
     needle_len = g_utf8_strlen(needle, -1);
     haystack_len = g_utf8_strlen(caseless_haystack, -1);
 
-    if (needle_len == 0)
-    {
+    if (needle_len == 0) {
         ret = (gchar *) haystack;
         goto finally_1;
     }
 
-    if (haystack_len < needle_len)
-    {
+    if (haystack_len < needle_len) {
         ret = NULL;
         goto finally_1;
     }
@@ -250,10 +223,8 @@ gchar *utf8_strcasestr(const gchar *haystack, const gchar *needle)
     needle_len = strlen(needle);
     i = 0;
 
-    while (*p)
-    {
-        if ((strncmp(p, needle, needle_len) == 0))
-        {
+    while (*p) {
+        if ((strncmp(p, needle, needle_len) == 0)) {
             ret = g_utf8_offset_to_pointer(haystack, i);
             goto finally_1;
         }
@@ -269,16 +240,13 @@ gchar *utf8_strcasestr(const gchar *haystack, const gchar *needle)
 
 /* Calculate the time in ms passed since @old_time. @old_time is
  updated with the current time if @update is TRUE*/
-float get_ms_since(GTimeVal *old_time, gboolean update)
-{
+float get_ms_since(GTimeVal *old_time, gboolean update) {
     GTimeVal new_time;
     float result;
 
     g_get_current_time(&new_time);
-    result = (new_time.tv_sec - old_time->tv_sec) * 1000
-            + (float) (new_time.tv_usec - old_time->tv_usec) / 1000;
-    if (update)
-    {
+    result = (new_time.tv_sec - old_time->tv_sec) * 1000 + (float) (new_time.tv_usec - old_time->tv_usec) / 1000;
+    if (update) {
         old_time->tv_sec = new_time.tv_sec;
         old_time->tv_usec = new_time.tv_usec;
     }
@@ -291,20 +259,17 @@ float get_ms_since(GTimeVal *old_time, gboolean update)
  * Returns FALSE when the string is empty, TRUE when the string can still be
  *	parsed
  */
-gboolean parse_tracks_from_string(gchar **s, Track **track)
-{
+gboolean parse_tracks_from_string(gchar **s, Track **track) {
     g_return_val_if_fail (track, FALSE);
     *track = NULL;
     g_return_val_if_fail (s, FALSE);
 
-    if (*s)
-    {
+    if (*s) {
         gchar *str = *s;
         gchar *strp = strchr(str, '\n');
         int tokens;
 
-        if (strp == NULL)
-        {
+        if (strp == NULL) {
             *track = NULL;
             *s = NULL;
             return FALSE;
@@ -323,20 +288,17 @@ gboolean parse_tracks_from_string(gchar **s, Track **track)
     return FALSE;
 }
 
-gboolean parse_artwork_from_string(gchar **s, Artwork **artwork)
-{
+gboolean parse_artwork_from_string(gchar **s, Artwork **artwork) {
     g_return_val_if_fail (artwork, FALSE);
     *artwork = NULL;
     g_return_val_if_fail (s, FALSE);
 
-    if (*s)
-    {
+    if (*s) {
         gchar *str = *s;
         gchar *strp = strchr(str, '\n');
         int tokens;
 
-        if (strp == NULL)
-        {
+        if (strp == NULL) {
             *artwork = NULL;
             *s = NULL;
             return FALSE;
@@ -361,8 +323,7 @@ gboolean parse_artwork_from_string(gchar **s, Artwork **artwork)
  **************************************************************************/
 
 /* tries to call "/bin/sh @script" with command line options */
-static void do_script(const gchar *script, va_list args)
-{
+static void do_script(const gchar *script, va_list args) {
     char *str;
     char **argv;
     GPtrArray *ptra = g_ptr_array_sized_new(10);
@@ -371,21 +332,18 @@ static void do_script(const gchar *script, va_list args)
     g_ptr_array_add(ptra, "sh");
     g_ptr_array_add(ptra, (gpointer) script);
     /* add remaining args */
-    while ((str = va_arg (args, char *)))
-    {
+    while ((str = va_arg (args, char *))) {
         g_ptr_array_add(ptra, str);
     }
     g_ptr_array_add(ptra, NULL);
     argv = (char **) g_ptr_array_free(ptra, FALSE);
 
-    if (script)
-    {
+    if (script) {
         pid_t pid, tpid;
         int status;
 
         pid = fork();
-        switch (pid)
-        {
+        switch (pid) {
         case 0: /* child */
             execv("/bin/sh", argv);
             exit(0);
@@ -405,8 +363,7 @@ static void do_script(const gchar *script, va_list args)
  * "/bin/sh /etc/gtkpod/@script" if the former does not exist. This
  * function accepts command line arguments that must be terminated by
  * NULL. */
-void call_script(gchar *script, ...)
-{
+void call_script(gchar *script, ...) {
     gchar *cfgdir;
     va_list args;
     gchar *file;
@@ -418,16 +375,13 @@ void call_script(gchar *script, ...)
     file = g_build_filename(cfgdir, script, NULL);
 
     va_start (args, script);
-    if (g_file_test(file, G_FILE_TEST_EXISTS))
-    {
+    if (g_file_test(file, G_FILE_TEST_EXISTS)) {
         do_script(file, args);
     }
-    else
-    {
+    else {
         C_FREE (file);
         file = g_build_filename("/etc/gtkpod/", script, NULL);
-        if (g_file_test(file, G_FILE_TEST_EXISTS))
-        {
+        if (g_file_test(file, G_FILE_TEST_EXISTS)) {
             do_script(file, args);
         }
     }
@@ -445,21 +399,17 @@ void call_script(gchar *script, ...)
  settings>". Set the first argument to NULL if you don't want this.
 
  You must free the returned array with g_strfreev() after use. */
-gchar **build_argv_from_strings(const gchar *first_arg, ...)
-{
+gchar **build_argv_from_strings(const gchar *first_arg, ...) {
     gchar **argv;
     va_list args;
     const gchar *str;
     GPtrArray *ptra = g_ptr_array_sized_new(20);
 
-    if (first_arg)
-    {
+    if (first_arg) {
         gchar **strings = g_strsplit(first_arg, " ", 0);
         gchar **strp = strings;
-        while (*strp)
-        {
-            if (**strp)
-            { /* ignore empty strings */
+        while (*strp) {
+            if (**strp) { /* ignore empty strings */
                 g_ptr_array_add(ptra, g_strdup(*strp));
             }
             ++strp;
@@ -468,8 +418,7 @@ gchar **build_argv_from_strings(const gchar *first_arg, ...)
     }
 
     va_start (args, first_arg);
-    do
-    {
+    do {
         str = va_arg (args, const gchar *);
         g_ptr_array_add(ptra, g_strdup(str));
     }
@@ -484,8 +433,7 @@ gchar **build_argv_from_strings(const gchar *first_arg, ...)
 
 /* compare @str1 and @str2 case-sensitively or case-insensitively
  * depending on prefs settings */
-gint compare_string(const gchar *str1, const gchar *str2)
-{
+gint compare_string(const gchar *str1, const gchar *str2) {
     gint result;
     gchar *sortkey1 = make_sortkey(str1);
     gchar *sortkey2 = make_sortkey(str2);
@@ -497,8 +445,7 @@ gint compare_string(const gchar *str1, const gchar *str2)
     return result;
 }
 
-struct csfk
-{
+struct csfk {
     gint length;
     gchar *key;
 };
@@ -514,14 +461,11 @@ static GList *csfk_list = NULL;
  * The caller is responsible of freeing the returned key with g_free.
  */
 gchar *
-make_sortkey(const gchar *name)
-{
-    if (prefs_get_int("case_sensitive"))
-    {
+make_sortkey(const gchar *name) {
+    if (prefs_get_int("case_sensitive")) {
         return g_utf8_collate_key(name, -1);
     }
-    else
-    {
+    else {
         gchar *casefolded = g_utf8_casefold(name, -1);
         gchar *key = g_utf8_collate_key(casefolded, -1);
         g_free(casefolded);
@@ -531,15 +475,13 @@ make_sortkey(const gchar *name)
 
 /* needs to be called everytime the sort_ign_strings in the prefs were
  changed */
-void compare_string_fuzzy_generate_keys(void)
-{
+void compare_string_fuzzy_generate_keys(void) {
     GList *gl;
     GList *sort_ign_strings;
     GList *current;
 
     /* remove old keys */
-    for (gl = csfk_list; gl; gl = gl->next)
-    {
+    for (gl = csfk_list; gl; gl = gl->next) {
         struct csfk *csfk = gl->data;
         g_return_if_fail (csfk);
         g_free(csfk->key);
@@ -551,8 +493,7 @@ void compare_string_fuzzy_generate_keys(void)
     /* create new keys */
     sort_ign_strings = prefs_get_list("sort_ign_string_");
     current = sort_ign_strings;
-    while (current)
-    {
+    while (current) {
         gchar *str = current->data;
         struct csfk *csfk;
         gchar *tempStr;
@@ -574,8 +515,7 @@ void compare_string_fuzzy_generate_keys(void)
  * the list generated by compare_string_fuzzy_generate_keys.
  */
 const gchar *
-fuzzy_skip_prefix(const gchar *name)
-{
+fuzzy_skip_prefix(const gchar *name) {
     const gchar *result = name;
     const GList *gl;
     gchar *cleanStr;
@@ -588,16 +528,14 @@ fuzzy_skip_prefix(const gchar *name)
 
     cleanStr = g_utf8_casefold(name, -1);
 
-    for (gl = csfk_list; gl; gl = g_list_next(gl))
-    {
+    for (gl = csfk_list; gl; gl = g_list_next(gl)) {
         struct csfk *csfk = gl->data;
         gchar *tempStr;
 
         g_return_val_if_fail (csfk, 0);
 
         tempStr = g_utf8_collate_key(cleanStr, csfk->length);
-        if (strcmp(tempStr, csfk->key) == 0)
-        {
+        if (strcmp(tempStr, csfk->key) == 0) {
             /* Found article, bump pointers ahead appropriate distance
              */
             result += csfk->length;
@@ -615,14 +553,12 @@ fuzzy_skip_prefix(const gchar *name)
 /* compare @str1 and @str2 case-sensitively or case-insensitively
  * depending on prefs settings, and ignoring certain initial articles
  * ("the", "le"/"la", etc) */
-gint compare_string_fuzzy(const gchar *str1, const gchar *str2)
-{
+gint compare_string_fuzzy(const gchar *str1, const gchar *str2) {
     return compare_string(fuzzy_skip_prefix(str1), fuzzy_skip_prefix(str2));
 }
 
 /* compare @str1 and @str2 case-insensitively */
-gint compare_string_case_insensitive(const gchar *str1, const gchar *str2)
-{
+gint compare_string_case_insensitive(const gchar *str1, const gchar *str2) {
     gchar *string1 = g_utf8_casefold(str1, -1);
     gchar *string2 = g_utf8_casefold(str2, -1);
     gint result = g_utf8_collate(string1, string2);
@@ -632,9 +568,7 @@ gint compare_string_case_insensitive(const gchar *str1, const gchar *str2)
 }
 
 /* todo: optionally ignore 'the', 'a,' etc. */
-gboolean compare_string_start_case_insensitive(const gchar *haystack,
-        const gchar *needle)
-{
+gboolean compare_string_start_case_insensitive(const gchar *haystack, const gchar *needle) {
     gint cmp = 0;
     gchar *nhaystack = g_utf8_normalize(haystack, -1, G_NORMALIZE_ALL);
     gchar *lhaystack = g_utf8_casefold(nhaystack, -1);
@@ -665,8 +599,7 @@ gboolean compare_string_start_case_insensitive(const gchar *haystack,
  ------------------------------------------------------------ */
 
 /* Get length of utf16 string in number of characters (words) */
-guint32 utf16_strlen(gunichar2 *utf16)
-{
+guint32 utf16_strlen(gunichar2 *utf16) {
     guint32 i = 0;
     if (utf16)
         while (utf16[i] != 0)
@@ -675,13 +608,11 @@ guint32 utf16_strlen(gunichar2 *utf16)
 }
 
 /* duplicate a utf16 string */
-gunichar2 *utf16_strdup(gunichar2 *utf16)
-{
+gunichar2 *utf16_strdup(gunichar2 *utf16) {
     guint32 len;
     gunichar2 *new = NULL;
 
-    if (utf16)
-    {
+    if (utf16) {
         len = utf16_strlen(utf16);
         new = g_malloc(sizeof(gunichar2) * (len + 1));
         if (new)
@@ -700,9 +631,7 @@ gunichar2 *utf16_strdup(gunichar2 *utf16)
  (integer value). If no parameter is set in the prefs, use
  @dflt. The corresponding widget names are stored in an array
  @widgets and are member of @win */
-void option_set_radio_button(GladeXML *win_xml, const gchar *prefs_string,
-        const gchar **widgets, gint dflt)
-{
+void option_set_radio_button(GladeXML *win_xml, const gchar *prefs_string, const gchar **widgets, gint dflt) {
     gint wnum, num = 0;
     GtkWidget *w;
 
@@ -716,10 +645,8 @@ void option_set_radio_button(GladeXML *win_xml, const gchar *prefs_string,
     if (!prefs_get_int_value(prefs_string, &wnum))
         wnum = dflt;
 
-    if ((wnum >= num) || (wnum < 0))
-    {
-        fprintf(stderr, "Programming error: wnum > num (%d,%d,%s)\n", wnum,
-                num, prefs_string);
+    if ((wnum >= num) || (wnum < 0)) {
+        fprintf(stderr, "Programming error: wnum > num (%d,%d,%s)\n", wnum, num, prefs_string);
         /* set to reasonable default value */
         prefs_set_int(prefs_string, 0);
         wnum = 0;
@@ -727,30 +654,24 @@ void option_set_radio_button(GladeXML *win_xml, const gchar *prefs_string,
     w = gtkpod_xml_get_widget(win_xml, widgets[wnum]);
     if (w)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), TRUE);
-    }
+}
 
-        /* Retrieve which toggle button was activated and store the state in
-         * the prefs */
-gint option_get_radio_button(GladeXML *win_xml, const gchar *prefs_string,
-        const gchar **widgets)
-{
+/* Retrieve which toggle button was activated and store the state in
+ * the prefs */
+gint option_get_radio_button(GladeXML *win_xml, const gchar *prefs_string, const gchar **widgets) {
     gint i;
 
     g_return_val_if_fail (win_xml && prefs_string && widgets, 0);
 
-    for (i = 0; widgets[i]; ++i)
-    {
+    for (i = 0; widgets[i]; ++i) {
         GtkWidget *w = gtkpod_xml_get_widget(win_xml, widgets[i]);
-        if (w)
-        {
+        if (w) {
             if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (w)))
                 break;
         }
     }
-    if (!widgets[i])
-    {
-        fprintf(stderr, "Programming error: no active toggle button (%s)",
-                prefs_string);
+    if (!widgets[i]) {
+        fprintf(stderr, "Programming error: no active toggle button (%s)", prefs_string);
         /* set reasonable default */
         i = 0;
     }
@@ -759,8 +680,7 @@ gint option_get_radio_button(GladeXML *win_xml, const gchar *prefs_string,
 }
 
 /* Set the current folder to what is stored in the prefs */
-void option_set_folder(GtkFileChooser *fc, const gchar *prefs_string)
-{
+void option_set_folder(GtkFileChooser *fc, const gchar *prefs_string) {
     gchar *folder;
 
     g_return_if_fail (fc && prefs_string);
@@ -775,9 +695,7 @@ void option_set_folder(GtkFileChooser *fc, const gchar *prefs_string)
 /* Retrieve the current folder and write it to the prefs */
 /* If @value is != NULL, a copy of the folder is placed into
  @value. It has to be g_free()d after use */
-void option_get_folder(GtkFileChooser *fc, const gchar *prefs_string,
-        gchar **value)
-{
+void option_get_folder(GtkFileChooser *fc, const gchar *prefs_string, gchar **value) {
     gchar *folder;
 
     g_return_if_fail (fc && prefs_string);
@@ -792,8 +710,7 @@ void option_get_folder(GtkFileChooser *fc, const gchar *prefs_string,
 }
 
 /* Set the current filename to what is stored in the prefs */
-void option_set_filename(GtkFileChooser *fc, const gchar *prefs_string)
-{
+void option_set_filename(GtkFileChooser *fc, const gchar *prefs_string) {
     gchar *filename;
 
     g_return_if_fail (fc && prefs_string);
@@ -808,9 +725,7 @@ void option_set_filename(GtkFileChooser *fc, const gchar *prefs_string)
 /* Retrieve the current filename and write it to the prefs */
 /* If @value is != NULL, a copy of the filename is placed into
  @value. It has to be g_free()d after use */
-void option_get_filename(GtkFileChooser *fc, const gchar *prefs_string,
-        gchar **value)
-{
+void option_get_filename(GtkFileChooser *fc, const gchar *prefs_string, gchar **value) {
     gchar *filename;
 
     g_return_if_fail (fc && prefs_string);
@@ -826,8 +741,7 @@ void option_get_filename(GtkFileChooser *fc, const gchar *prefs_string,
 
 /* Set the string entry @name to the prefs value stored in @name or
  to @default if @name is not yet defined. */
-void option_set_string(GladeXML *win_xml, const gchar *name, const gchar *dflt)
-{
+void option_set_string(GladeXML *win_xml, const gchar *name, const gchar *dflt) {
     gchar *string;
     GtkWidget *entry;
 
@@ -850,16 +764,14 @@ void option_set_string(GladeXML *win_xml, const gchar *name, const gchar *dflt)
  * to the prefs (@name) */
 /* If @value is != NULL, a copy of the string is placed into
  @value. It has to be g_free()d after use */
-void option_get_string(GladeXML *win_xml, const gchar *name, gchar **value)
-{
+void option_get_string(GladeXML *win_xml, const gchar *name, gchar **value) {
     GtkWidget *entry;
 
     g_return_if_fail (win_xml && name);
 
     entry = gtkpod_xml_get_widget(win_xml, name);
 
-    if (entry)
-    {
+    if (entry) {
         const gchar *str = gtk_entry_get_text(GTK_ENTRY (entry));
         prefs_set_string(name, str);
         if (value)
@@ -869,9 +781,7 @@ void option_get_string(GladeXML *win_xml, const gchar *name, gchar **value)
 
 /* Set the state of toggle button @name to the prefs value stored in
  @name or to @default if @name is not yet defined. */
-void option_set_toggle_button(GladeXML *win_xml, const gchar *name,
-        gboolean dflt)
-{
+void option_set_toggle_button(GladeXML *win_xml, const gchar *name, gboolean dflt) {
     gboolean active;
     GtkWidget *button;
 
@@ -883,15 +793,13 @@ void option_set_toggle_button(GladeXML *win_xml, const gchar *name,
     button = gtkpod_xml_get_widget(win_xml, name);
 
     if (button)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button),
-        active);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), active);
 }
 
 /* Retrieve the current state of the toggle button @name and write it
  * to the prefs (@name) */
 /* Return value: the current state */
-gboolean option_get_toggle_button(GladeXML *win_xml, const gchar *name)
-{
+gboolean option_get_toggle_button(GladeXML *win_xml, const gchar *name) {
     gboolean active = FALSE;
     GtkWidget *button;
 
@@ -899,8 +807,7 @@ gboolean option_get_toggle_button(GladeXML *win_xml, const gchar *name)
 
     button = gtkpod_xml_get_widget(win_xml, name);
 
-    if (button)
-    {
+    if (button) {
         active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
         prefs_set_int(name, active);
     }
@@ -922,13 +829,12 @@ gboolean option_get_toggle_button(GladeXML *win_xml, const gchar *name)
 /**
  * Check if supported char and return substitute.
  */
-static gchar check_char(gchar c)
-{
+static gchar check_char(gchar c) {
     gint i;
     static const gchar invalid[] =
-    { '"', '*', ':', '<', '>', '?', '\\', '|', '/', 0 };
+        { '"', '*', ':', '<', '>', '?', '\\', '|', '/', 0 };
     static const gchar replace[] =
-    { '_', '_', '-', '_', '_', '_', '-', '-', '-', 0 };
+        { '_', '_', '-', '_', '_', '_', '-', '-', '-', 0 };
     for (i = 0; invalid[i] != 0; i++)
         if (c == invalid[i])
             return replace[i];
@@ -940,13 +846,10 @@ static gchar check_char(gchar c)
  * The changes are made within the original string. A pointer to the
  * original string is returned.
  */
-static gchar *fix_path(gchar *orig)
-{
-    if (orig)
-    {
+static gchar *fix_path(gchar *orig) {
+    if (orig) {
         gchar *op = orig;
-        while (*op)
-        {
+        while (*op) {
             *op = check_char(*op);
             ++op;
         }
@@ -963,8 +866,7 @@ static gchar *fix_path(gchar *orig)
 
  String be freed after use.
  */
-static gchar *select_template(Track *track, const gchar *p)
-{
+static gchar *select_template(Track *track, const gchar *p) {
     gchar **templates, **tplp;
     gchar *ext = NULL;
     const gchar *tname;
@@ -978,38 +880,31 @@ static gchar *select_template(Track *track, const gchar *p)
         tname = etr->pc_path_locale;
     else
         tname = track->ipod_path;
-    if (!tname)
-    { /* this should not happen... */
+    if (!tname) { /* this should not happen... */
         gchar *buf = get_track_info(track, TRUE);
-        gtkpod_warning(_("Could not process '%s' (no filename available)"),
-        buf);
+        gtkpod_warning(_("Could not process '%s' (no filename available)"), buf);
         g_free(buf);
     }
     ext = strrchr(tname, '.'); /* pointer to filename extension */
 
     templates = g_strsplit(p, ";", 0);
     tplp = templates;
-    while (*tplp)
-    {
-        if (strcmp(*tplp, "%o") == 0)
-        { /* this is only a valid extension if the original filename
+    while (*tplp) {
+        if (strcmp(*tplp, "%o") == 0) { /* this is only a valid extension if the original filename
          is present */
             if (etr->pc_path_locale && strlen(etr->pc_path_locale))
                 break;
         }
-        else if (strrchr(*tplp, '.') == NULL)
-        { /* this template does not have an extension and therefore
+        else if (strrchr(*tplp, '.') == NULL) { /* this template does not have an extension and therefore
          * matches */
-            if (ext)
-            { /* if we have an extension, add it */
+            if (ext) { /* if we have an extension, add it */
                 gchar *str = g_strdup_printf("%s%s", *tplp, ext);
                 g_free(*tplp);
                 *tplp = str;
             }
             break;
         }
-        else if (ext && (strlen(*tplp) >= strlen(ext)))
-        { /* this template is valid if the extensions match */
+        else if (ext && (strlen(*tplp) >= strlen(ext))) { /* this template is valid if the extensions match */
             if (strcasecmp(&((*tplp)[strlen(*tplp) - strlen(ext)]), ext) == 0)
                 break;
         }
@@ -1026,9 +921,7 @@ static gchar *select_template(Track *track, const gchar *p)
  @silent: don't print error messages (no gtk_*() calls -- thread
  safe)
  */
-gchar *get_string_from_template(Track *track, const gchar *template,
-        gboolean is_filename, gboolean silent)
-{
+gchar *get_string_from_template(Track *track, const gchar *template, gboolean is_filename, gboolean silent) {
     GString *result;
     gchar *res_utf8;
     const gchar *p;
@@ -1047,8 +940,7 @@ gchar *get_string_from_template(Track *track, const gchar *template,
     if (etr->pc_path_utf8)
         basename = g_path_get_basename(etr->pc_path_utf8);
     /* get original filename without extension */
-    if (basename)
-    {
+    if (basename) {
         gchar *ptr;
         basename_noext = g_strdup(basename);
         ptr = strrchr(basename_noext, '.');
@@ -1057,33 +949,28 @@ gchar *get_string_from_template(Track *track, const gchar *template,
     }
 
     p = template;
-    while (*p != '\0')
-    {
-        if (*p == '%')
-        {
+    while (*p != '\0') {
+        if (*p == '%') {
             const gchar* tmp = NULL;
             gchar dummy[100];
-//            Playlist *pl;
+            Playlist *pl;
             p++;
-            switch (*p)
-            {
+            switch (*p) {
             case 'o':
-                if (basename)
-                {
+                if (basename) {
                     tmp = basename;
                 }
                 break;
             case 'O':
-                if (basename_noext)
-                {
+                if (basename_noext) {
                     tmp = basename_noext;
                 }
                 break;
             case 'p':
-                g_warning("TODO misc:get_string_from_template - get selected playlist\n");
-//                pl = pm_get_selected_playlist();
-//                if (pl)
-//                    tmp = pl->name;
+
+                pl = gtkpod_get_current_playlist();
+                if (pl)
+                    tmp = pl->name;
                 break;
             case 'a':
                 tmp = track_get_item(track, T_ARTIST);
@@ -1135,18 +1022,14 @@ gchar *get_string_from_template(Track *track, const gchar *template,
                 tmp = "%";
                 break;
             default:
-                if (!silent)
-                {
-                    gtkpod_warning(_("Unknown token '%%%c' in template '%s'"),
-                    *p, template);
+                if (!silent) {
+                    gtkpod_warning(_("Unknown token '%%%c' in template '%s'"), *p, template);
                 }
                 break;
             }
-            if (tmp)
-            {
+            if (tmp) {
                 gchar *tmpcp = g_strdup(tmp);
-                if (is_filename)
-                {
+                if (is_filename) {
                     /* remove potentially illegal/harmful characters */
                     fix_path(tmpcp);
                     /* strip spaces to avoid problems with vfat */
@@ -1165,19 +1048,16 @@ gchar *get_string_from_template(Track *track, const gchar *template,
     /* get the utf8 version of the filename */
     res_utf8 = g_string_free(result, FALSE);
 
-    if (is_filename)
-    { /* remove white space before the filename extension
+    if (is_filename) { /* remove white space before the filename extension
      (last '.') */
         gchar *ext = strrchr(res_utf8, '.');
         gchar *extst = NULL;
-        if (ext)
-        {
+        if (ext) {
             extst = g_strdup(ext);
             *ext = '\0';
         }
         g_strstrip (res_utf8);
-        if (extst)
-        {
+        if (extst) {
             /* The following strcat() is safe because g_strstrip()
              does not increase the original string size. Therefore
              the result of the strcat() call will not be longer than
@@ -1203,9 +1083,7 @@ gchar *get_string_from_template(Track *track, const gchar *template,
 
  If @is_filename is FALSE, the extension (e.g. '.mp3' will be
  removed). */
-gchar *get_string_from_full_template(Track *track, const gchar *full_template,
-        gboolean is_filename)
-{
+gchar *get_string_from_full_template(Track *track, const gchar *full_template, gboolean is_filename) {
     gchar *res_utf8;
     gchar *template;
 
@@ -1214,22 +1092,17 @@ gchar *get_string_from_full_template(Track *track, const gchar *full_template,
 
     template = select_template(track, full_template);
 
-    if (!template)
-    {
+    if (!template) {
         gchar *fn = get_file_name_from_source(track, SOURCE_PREFER_LOCAL);
-        gtkpod_warning(
-                _("Template ('%s') does not match file type '%s'\n"), full_template,
-                fn ? fn : "");
+        gtkpod_warning(_("Template ('%s') does not match file type '%s'\n"), full_template, fn ? fn : "");
         g_free(fn);
         return NULL;
     }
 
-    if (!is_filename)
-    { /* remove an extension, if present ('.???' or '.????'  at the
+    if (!is_filename) { /* remove an extension, if present ('.???' or '.????'  at the
      end) */
         gchar *pnt = strrchr(template, '.');
-        if (pnt)
-        {
+        if (pnt) {
             if (pnt == template + strlen(template) - 3)
                 *pnt = 0;
             if (pnt == template + strlen(template) - 4)
@@ -1250,8 +1123,7 @@ gchar *get_string_from_full_template(Track *track, const gchar *full_template,
  * @name - the executable we're trying to find the path for
  * Returns the path to the executable, NULL on not found
  */
-gchar *which(const gchar *exe)
-{
+gchar *which(const gchar *exe) {
     FILE *fp = NULL;
     gchar *result = NULL;
     gchar buf[PATH_MAX];
@@ -1261,8 +1133,7 @@ gchar *which(const gchar *exe)
 
     memset(&buf[0], 0, PATH_MAX);
     which_exec = g_strdup_printf("which %s", exe);
-    if ((fp = popen(which_exec, "r")))
-    {
+    if ((fp = popen(which_exec, "r"))) {
         int read_bytes = 0;
         if ((read_bytes = fread(buf, sizeof(gchar), PATH_MAX, fp)) > 0)
             result = g_strndup(buf, read_bytes - 1);
@@ -1279,8 +1150,7 @@ gchar *which(const gchar *exe)
  *
  * @return FALSE is this is not possible.
  */
-gboolean mkdirhier(const gchar *dirname, gboolean silent)
-{
+gboolean mkdirhier(const gchar *dirname, gboolean silent) {
     gchar *dn, *p;
 
     g_return_val_if_fail (dirname && *dirname, FALSE);
@@ -1292,22 +1162,17 @@ gboolean mkdirhier(const gchar *dirname, gboolean silent)
 
     p = dn;
 
-    do
-    {
+    do {
         ++p;
         p = index(p, G_DIR_SEPARATOR);
 
         if (p)
             *p = '\0';
 
-        if (!g_file_test(dn, G_FILE_TEST_EXISTS))
-        {
-            if (g_mkdir(dn, 0777) == -1)
-            {
-                if (!silent)
-                {
-                    gtkpod_warning(_("Error creating %s: %s\n"),
-                    dn, g_strerror(errno));
+        if (!g_file_test(dn, G_FILE_TEST_EXISTS)) {
+            if (g_mkdir(dn, 0777) == -1) {
+                if (!silent) {
+                    gtkpod_warning(_("Error creating %s: %s\n"), dn, g_strerror(errno));
                 }
                 g_free(dn);
                 return FALSE;
@@ -1326,8 +1191,7 @@ gboolean mkdirhier(const gchar *dirname, gboolean silent)
  * Recursively make directories in the given filename.
  * @return FALSE is this is not possible.
  */
-gboolean mkdirhierfile(const gchar *filename)
-{
+gboolean mkdirhierfile(const gchar *filename) {
     gboolean result;
     gchar *dirname = g_path_get_dirname(filename);
     result = mkdirhier(dirname, FALSE);
@@ -1340,10 +1204,8 @@ gboolean mkdirhierfile(const gchar *filename)
  *
  * g_free() return value when no longer needed.
  */
-gchar *convert_filename(const gchar *filename)
-{
-    if (filename)
-    {
+gchar *convert_filename(const gchar *filename) {
+    if (filename) {
         if (strncmp("~/", filename, 2) == 0)
             return g_build_filename(g_get_home_dir(), filename + 2, NULL);
         else
@@ -1360,8 +1222,7 @@ gchar *convert_filename(const gchar *filename)
  * subdirectories. This function ignores errors in the sense that if a
  * directory or file cannot be accessed, a size of 0 is assumed.
  */
-gint64 get_size_of_directory(const gchar *dir)
-{
+gint64 get_size_of_directory(const gchar *dir) {
     GDir *gdir;
     const gchar *fname;
     gint64 tsize = 0;
@@ -1374,18 +1235,14 @@ gint64 get_size_of_directory(const gchar *dir)
     if (!gdir)
         return 0;
 
-    while ((fname = g_dir_read_name(gdir)))
-    {
+    while ((fname = g_dir_read_name(gdir))) {
         gchar *fullname = g_build_filename(dir, fname, NULL);
-        if (g_file_test(fullname, G_FILE_TEST_IS_DIR))
-        {
+        if (g_file_test(fullname, G_FILE_TEST_IS_DIR)) {
             tsize += get_size_of_directory(fullname);
         }
-        else if (g_file_test(fullname, G_FILE_TEST_IS_REGULAR))
-        {
+        else if (g_file_test(fullname, G_FILE_TEST_IS_REGULAR)) {
             struct stat statbuf;
-            if (g_stat (fullname, &statbuf) == 0)
-            { /* OK, add size */
+            if (g_stat(fullname, &statbuf) == 0) { /* OK, add size */
                 tsize += statbuf.st_size;
             }
         }
@@ -1401,8 +1258,7 @@ gint64 get_size_of_directory(const gchar *dir)
  * Wrapper for glade_xml_new() for cygwin compatibility issues
  *
  **/
-GladeXML *gtkpod_xml_new(const gchar *gtkpod_xml_file, const gchar *name)
-{
+GladeXML *gtkpod_xml_new(const gchar *gtkpod_xml_file, const gchar *name) {
     GladeXML *xml;
 #ifdef ENABLE_NLS
     xml = glade_xml_new(gtkpod_xml_file, name, GETTEXT_PACKAGE);
@@ -1411,9 +1267,7 @@ GladeXML *gtkpod_xml_new(const gchar *gtkpod_xml_file, const gchar *name)
 #endif
 
     if (!xml)
-        fprintf(
-                stderr, "*** Programming error: Cannot create glade XML: '%s'\n",
-                name);
+        fprintf(stderr, "*** Programming error: Cannot create glade XML: '%s'\n", name);
 
     return xml;
 }
@@ -1423,8 +1277,7 @@ GladeXML *gtkpod_xml_new(const gchar *gtkpod_xml_file, const gchar *name)
  * could not be found.
  *
  **/
-GtkWidget *gtkpod_xml_get_widget(GladeXML *xml, const gchar *name)
-{
+GtkWidget *gtkpod_xml_get_widget(GladeXML *xml, const gchar *name) {
     GtkWidget *w = glade_xml_get_widget(xml, name);
 
     if (!w)
@@ -1445,8 +1298,7 @@ GtkWidget *gtkpod_xml_get_widget(GladeXML *xml, const gchar *name)
  * gfree() after use
  *
  **/
-gchar *get_itdb_prefs_key(gint index, const gchar *subkey)
-{
+gchar *get_itdb_prefs_key(gint index, const gchar *subkey) {
     g_return_val_if_fail (subkey, NULL);
 
     return g_strdup_printf("itdb_%d_%s", index, subkey);
@@ -1458,21 +1310,18 @@ gchar *get_itdb_prefs_key(gint index, const gchar *subkey)
  *
  * gfree() after use
  **/
-gchar *get_playlist_prefs_key(gint index, Playlist *pl, const gchar *subkey)
-{
+gchar *get_playlist_prefs_key(gint index, Playlist *pl, const gchar *subkey) {
     g_return_val_if_fail (pl, NULL);
     g_return_val_if_fail (subkey, NULL);
 
-    return g_strdup_printf("itdb_%d_playlist_%llu_%s", index,
-            (unsigned long long) pl->id, subkey);
+    return g_strdup_printf("itdb_%d_playlist_%llu_%s", index, (unsigned long long) pl->id, subkey);
 }
 
 /**
  * Helper function to retrieve the index number of @itdb needed to
  * construct any keys (see above)
  **/
-gint get_itdb_index(iTunesDB *itdb)
-{
+gint get_itdb_index(iTunesDB *itdb) {
     struct itdbs_head *itdbs_head;
 
     itdbs_head = gp_get_itdbs_head();
@@ -1486,8 +1335,7 @@ gint get_itdb_index(iTunesDB *itdb)
  *
  * gfree() after use
  **/
-gchar *get_itdb_prefs_string(iTunesDB *itdb, const gchar *subkey)
-{
+gchar *get_itdb_prefs_string(iTunesDB *itdb, const gchar *subkey) {
     gchar *key, *value;
 
     g_return_val_if_fail (itdb, NULL);
@@ -1504,15 +1352,13 @@ gchar *get_itdb_prefs_string(iTunesDB *itdb, const gchar *subkey)
  * Helper function to retrieve a string prefs entry for @playlist.
  *
  **/
-gchar *get_playlist_prefs_string(Playlist *playlist, const gchar *subkey)
-{
+gchar *get_playlist_prefs_string(Playlist *playlist, const gchar *subkey) {
     gchar *key, *value;
 
     g_return_val_if_fail (playlist, 0);
     g_return_val_if_fail (subkey, 0);
 
-    key = get_playlist_prefs_key(get_itdb_index(playlist->itdb), playlist,
-            subkey);
+    key = get_playlist_prefs_key(get_itdb_index(playlist->itdb), playlist, subkey);
     value = prefs_get_string(key);
     g_free(key);
 
@@ -1523,8 +1369,7 @@ gchar *get_playlist_prefs_string(Playlist *playlist, const gchar *subkey)
  * Helper function to retrieve an int prefs entry for @itdb.
  *
  **/
-gint get_itdb_prefs_int(iTunesDB *itdb, const gchar *subkey)
-{
+gint get_itdb_prefs_int(iTunesDB *itdb, const gchar *subkey) {
     gchar *key;
     gint value;
 
@@ -1542,16 +1387,14 @@ gint get_itdb_prefs_int(iTunesDB *itdb, const gchar *subkey)
  * Helper function to retrieve an int prefs entry for @playlist.
  *
  **/
-gint get_playlist_prefs_int(Playlist *playlist, const gchar *subkey)
-{
+gint get_playlist_prefs_int(Playlist *playlist, const gchar *subkey) {
     gchar *key;
     gint value;
 
     g_return_val_if_fail (playlist, 0);
     g_return_val_if_fail (subkey, 0);
 
-    key = get_playlist_prefs_key(get_itdb_index(playlist->itdb), playlist,
-            subkey);
+    key = get_playlist_prefs_key(get_itdb_index(playlist->itdb), playlist, subkey);
     value = prefs_get_int(key);
     g_free(key);
 
@@ -1565,9 +1408,7 @@ gint get_playlist_prefs_int(Playlist *playlist, const gchar *subkey)
  *
  * gfree() after use
  **/
-gboolean get_itdb_prefs_string_value(iTunesDB *itdb, const gchar *subkey,
-        gchar **value)
-{
+gboolean get_itdb_prefs_string_value(iTunesDB *itdb, const gchar *subkey, gchar **value) {
     gchar *key;
     gboolean result;
 
@@ -1585,9 +1426,7 @@ gboolean get_itdb_prefs_string_value(iTunesDB *itdb, const gchar *subkey,
  * Helper function to retrieve an in prefs entry for @itdb.
  *
  **/
-gboolean get_itdb_prefs_int_value(iTunesDB *itdb, const gchar *subkey,
-        gint *value)
-{
+gboolean get_itdb_prefs_int_value(iTunesDB *itdb, const gchar *subkey, gint *value) {
     gchar *key;
     gboolean result;
 
@@ -1606,9 +1445,7 @@ gboolean get_itdb_prefs_int_value(iTunesDB *itdb, const gchar *subkey,
  *
  * gfree() after use
  **/
-void set_itdb_prefs_string(iTunesDB *itdb, const gchar *subkey,
-        const gchar *value)
-{
+void set_itdb_prefs_string(iTunesDB *itdb, const gchar *subkey, const gchar *value) {
     gchar *key;
 
     g_return_if_fail (itdb);
@@ -1624,9 +1461,7 @@ void set_itdb_prefs_string(iTunesDB *itdb, const gchar *subkey,
  *
  * gfree() after use
  **/
-void set_itdb_index_prefs_string(gint index, const gchar *subkey,
-        const gchar *value)
-{
+void set_itdb_index_prefs_string(gint index, const gchar *subkey, const gchar *value) {
     gchar *key;
 
     g_return_if_fail (subkey);
@@ -1640,8 +1475,7 @@ void set_itdb_index_prefs_string(gint index, const gchar *subkey,
  * Helper function to set an in prefs entry for @itdb.
  *
  **/
-void set_itdb_prefs_int(iTunesDB *itdb, const gchar *subkey, gint value)
-{
+void set_itdb_prefs_int(iTunesDB *itdb, const gchar *subkey, gint value) {
     gchar *key;
 
     g_return_if_fail (itdb);
@@ -1656,8 +1490,7 @@ void set_itdb_prefs_int(iTunesDB *itdb, const gchar *subkey, gint value)
  * Helper function to set an in prefs entry for @itdb.
  *
  **/
-void set_itdb_index_prefs_int(gint index, const gchar *subkey, gint value)
-{
+void set_itdb_index_prefs_int(gint index, const gchar *subkey, gint value) {
     gchar *key;
 
     g_return_if_fail (subkey);
@@ -1673,8 +1506,7 @@ void set_itdb_index_prefs_int(gint index, const gchar *subkey, gint value)
  * after your have removed the itdb from itdbs_head.
  *
  **/
-static void remove_itdb_index_prefs(gint index)
-{
+static void remove_itdb_index_prefs(gint index) {
     struct itdbs_head *itdbs_head;
     gchar *subkey;
     gint i, n;
@@ -1687,8 +1519,7 @@ static void remove_itdb_index_prefs(gint index)
     prefs_flush_subkey(subkey);
     g_free(subkey);
 
-    for (i = index; i <= n; ++i)
-    {
+    for (i = index; i <= n; ++i) {
         gchar *from_key = get_itdb_prefs_key(i + 1, "");
         gchar *to_key = get_itdb_prefs_key(i, "");
         prefs_rename_subkey(from_key, to_key);
@@ -1703,8 +1534,7 @@ static void remove_itdb_index_prefs(gint index)
  * from itdbs_head.
  *
  **/
-void remove_itdb_prefs(iTunesDB *itdb)
-{
+void remove_itdb_prefs(iTunesDB *itdb) {
     g_return_if_fail (itdb);
 
     remove_itdb_index_prefs(get_itdb_index(itdb));
@@ -1715,8 +1545,7 @@ void remove_itdb_prefs(iTunesDB *itdb)
  *
  * Return value: TRUE on succes, FALSE on error
  */
-gboolean save_ipod_index_prefs(gint index, const gchar *mountpoint)
-{
+gboolean save_ipod_index_prefs(gint index, const gchar *mountpoint) {
     TempPrefs *temp_prefs;
     gboolean result = FALSE;
     gchar *subkey, *dir;
@@ -1737,25 +1566,19 @@ gboolean save_ipod_index_prefs(gint index, const gchar *mountpoint)
 
     /* build filename path */
     dir = itdb_get_itunes_dir(mountpoint);
-    if (dir)
-    {
+    if (dir) {
         GError *error = NULL;
         gchar *path = g_build_filename(dir, "gtkpod.prefs", NULL);
         result = temp_prefs_save(temp_prefs, path, &error);
-        if (result == FALSE)
-        {
-            gtkpod_warning(_("Writing preferences file '%s' failed (%s).\n\n"),
-            path, error ? error->message : _("unspecified error"));
+        if (result == FALSE) {
+            gtkpod_warning(_("Writing preferences file '%s' failed (%s).\n\n"), path, error ? error->message : _("unspecified error"));
             g_error_free(error);
         }
         g_free(path);
         g_free(dir);
     }
-    else
-    {
-        gtkpod_warning(
-                _("Writing preferences to the iPod (%s) failed: could not get path to Control Directory.\n\n"),
-                mountpoint);
+    else {
+        gtkpod_warning(_("Writing preferences to the iPod (%s) failed: could not get path to Control Directory.\n\n"), mountpoint);
     }
 
     temp_prefs_destroy(temp_prefs);
@@ -1769,8 +1592,7 @@ gboolean save_ipod_index_prefs(gint index, const gchar *mountpoint)
  *
  * Return value: TRUE on succes, FALSE on error
  */
-gboolean save_ipod_prefs(iTunesDB *itdb, const gchar *mountpoint)
-{
+gboolean save_ipod_prefs(iTunesDB *itdb, const gchar *mountpoint) {
     g_return_val_if_fail (itdb && mountpoint, FALSE);
     return save_ipod_index_prefs(get_itdb_index(itdb), mountpoint);
 }
@@ -1778,23 +1600,20 @@ gboolean save_ipod_prefs(iTunesDB *itdb, const gchar *mountpoint)
 /* Load preferences file from the iPod and merge them into the general
  * prefs system.
  */
-static void load_ipod_index_prefs(gint index, const gchar *mountpoint)
-{
+static void load_ipod_index_prefs(gint index, const gchar *mountpoint) {
     gchar *dir;
 
     g_return_if_fail (mountpoint);
 
     /* build filename path */
     dir = itdb_get_itunes_dir(mountpoint);
-    if (dir)
-    {
+    if (dir) {
         TempPrefs *temp_prefs;
         GError *error = NULL;
         gchar *path = g_build_filename(dir, "gtkpod.prefs", NULL);
         temp_prefs = temp_prefs_load(path, &error);
         g_free(path);
-        if (temp_prefs)
-        {
+        if (temp_prefs) {
             gchar *subkey;
             subkey = get_itdb_prefs_key(index, "");
             /* rename 'itdb_*' to 'itdb_<index>_*' */
@@ -1805,8 +1624,7 @@ static void load_ipod_index_prefs(gint index, const gchar *mountpoint)
             /* destroy temp prefs */
             temp_prefs_destroy(temp_prefs);
         }
-        else
-        {
+        else {
             /* we ignore errors -- no need to be concerned about them */
             g_error_free(error);
         }
@@ -1817,15 +1635,13 @@ static void load_ipod_index_prefs(gint index, const gchar *mountpoint)
 /* Load preferences file from the iPod and merge them into the general
  * prefs system.
  */
-void load_ipod_prefs(iTunesDB *itdb, const gchar *mountpoint)
-{
+void load_ipod_prefs(iTunesDB *itdb, const gchar *mountpoint) {
     g_return_if_fail (mountpoint);
     load_ipod_index_prefs(get_itdb_index(itdb), mountpoint);
 }
 
 /* retrieve offline mode from itdb (convenience function) */
-gboolean get_offline(iTunesDB *itdb)
-{
+gboolean get_offline(iTunesDB *itdb) {
     ExtraiTunesDBData *eitdb;
 
     g_return_val_if_fail (itdb, FALSE);
@@ -1836,66 +1652,171 @@ gboolean get_offline(iTunesDB *itdb)
 }
 
 /* Retrieves a string (and option) from the user using a dialog.
-   @title: title of the dialogue (may be NULL)
-   @message: text (question) to be displayed (may be NULL)
-   @dflt: default string to be returned (may be NULL)
-   @opt_msg: message for the option checkbox (or NULL)
-   @opt_state: original state of the checkbox. Will be updated
-   return value: the string entered by the user or NULL if the dialog
-   was cancelled. */
-gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
-            gchar *opt_msg, gboolean *opt_state, const gchar *accept_button)
-{
-    GladeXML *xml = gtkpod_xml_new (gtkpod_get_glade_xml(), "input_box");
-    GtkWidget *dialog = gtkpod_xml_get_widget (xml, "input_box");
-    GtkWidget *label = gtkpod_xml_get_widget (xml, "input_box_label");
-    GtkWidget *entry = gtkpod_xml_get_widget (xml, "input_box_entry");
-    GtkWidget *checkb = gtkpod_xml_get_widget (xml, "input_box_checkbox");
+ @title: title of the dialogue (may be NULL)
+ @message: text (question) to be displayed (may be NULL)
+ @dflt: default string to be returned (may be NULL)
+ @opt_msg: message for the option checkbox (or NULL)
+ @opt_state: original state of the checkbox. Will be updated
+ return value: the string entered by the user or NULL if the dialog
+ was cancelled. */
+gchar *get_user_string(gchar *title, gchar *message, gchar *dflt, gchar *opt_msg, gboolean *opt_state, const gchar *accept_button) {
+    GladeXML *xml = gtkpod_xml_new(gtkpod_get_glade_xml(), "input_box");
+    GtkWidget *dialog = gtkpod_xml_get_widget(xml, "input_box");
+    GtkWidget *label = gtkpod_xml_get_widget(xml, "input_box_label");
+    GtkWidget *entry = gtkpod_xml_get_widget(xml, "input_box_entry");
+    GtkWidget *checkb = gtkpod_xml_get_widget(xml, "input_box_checkbox");
     gint response;
     gchar *result = NULL;
     gchar *temp;
 
-    gtk_dialog_add_buttons (GTK_DIALOG (dialog),
-                                GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                accept_button ? accept_button : GTK_STOCK_OK, GTK_RESPONSE_OK,
-                                NULL);
+    gtk_dialog_add_buttons(GTK_DIALOG (dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, accept_button ? accept_button : GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
 
-    temp = g_markup_printf_escaped ("<span weight='bold' size='larger'>%s</span>\n\n%s", title, message);
-    gtk_label_set_markup (GTK_LABEL (label), temp);
-    g_free (temp);
+    temp = g_markup_printf_escaped("<span weight='bold' size='larger'>%s</span>\n\n%s", title, message);
+    gtk_label_set_markup(GTK_LABEL (label), temp);
+    g_free(temp);
 
-    if (dflt)
-    {
-        gtk_entry_set_text (GTK_ENTRY (entry), dflt);
-        gtk_editable_select_region (GTK_EDITABLE (entry), 0, -1);
+    if (dflt) {
+        gtk_entry_set_text(GTK_ENTRY (entry), dflt);
+        gtk_editable_select_region(GTK_EDITABLE (entry), 0, -1);
     }
 
     /* Pressing enter should activate the default response (default
-       response set above */
-    gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
+     response set above */
+    gtk_entry_set_activates_default(GTK_ENTRY (entry), TRUE);
 
     /* create option checkbox */
-    if (opt_msg && opt_state)
-    {
-        gtk_widget_show (checkb);
-        gtk_button_set_label (GTK_BUTTON (checkb), opt_msg);
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkb), *opt_state);
+    if (opt_msg && opt_state) {
+        gtk_widget_show(checkb);
+        gtk_button_set_label(GTK_BUTTON (checkb), opt_msg);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (checkb), *opt_state);
     }
 
-    response = gtk_dialog_run (GTK_DIALOG (dialog));
+    response = gtk_dialog_run(GTK_DIALOG (dialog));
 
-    if (response == GTK_RESPONSE_OK)
-    {
-        result = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+    if (response == GTK_RESPONSE_OK) {
+        result = gtk_editable_get_chars(GTK_EDITABLE (entry), 0, -1);
 
         /* get state of checkbox only if opt_msg was non NULL */
-        if (opt_msg && checkb)
-        {
-            *opt_state = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkb));
+        if (opt_msg && checkb) {
+            *opt_state = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (checkb));
         }
     }
 
-    gtk_widget_destroy (dialog);
-    g_object_unref (xml);
+    gtk_widget_destroy(dialog);
+    g_object_unref(xml);
     return result;
 }
+
+/* This is the same for delete_track_head() and delete_st_head(), so I
+ * moved it here to make changes easier */
+void delete_populate_settings(struct DeleteData *dd, gchar **label, gchar **title, gboolean *confirm_again, gchar **confirm_again_key, GString **str) {
+    Track *s;
+    GList *l;
+    guint n;
+
+    g_return_if_fail (dd);
+    g_return_if_fail (dd->itdb);
+
+    /* write title and label */
+    n = g_list_length(dd->tracks);
+
+    if (dd->itdb->usertype & GP_ITDB_TYPE_IPOD) {
+        switch (dd->deleteaction) {
+        case DELETE_ACTION_LOCAL:
+        case DELETE_ACTION_DATABASE:
+            /* not allowed -- programming error */
+            g_return_if_reached ();
+            break;
+        case DELETE_ACTION_IPOD:
+            if (label)
+                *label
+                        = g_strdup(ngettext ("Are you sure you want to delete the following track completely from your iPod? The number of playlists this track is a member of is indicated in parentheses.",
+                                "Are you sure you want to delete the following tracks completely from your iPod? The number of playlists the tracks are member of is indicated in parentheses.", n));
+            if (title)
+                *title = g_strdup(ngettext ("Delete Track Completely from iPod?",
+                        "Delete Tracks Completely from iPod?", n));
+            if (confirm_again)
+                *confirm_again = prefs_get_int("delete_ipod");
+            if (confirm_again_key)
+                *confirm_again_key = g_strdup("delete_ipod");
+            break;
+        case DELETE_ACTION_PLAYLIST:
+            g_return_if_fail (dd->pl);
+            if (label)
+                *label
+                        = g_strdup_printf(ngettext ("Are you sure you want to remove the following track from the playlist \"%s\"?",
+                                "Are you sure you want to remove the following tracks from the playlist \"%s\"?", n), dd->pl->name);
+            if (title)
+                *title = g_strdup(ngettext ("Remove Track From Playlist?",
+                        "Remove Tracks From Playlist?", n));
+            if (confirm_again)
+                *confirm_again = prefs_get_int("delete_track");
+            if (confirm_again_key)
+                *confirm_again_key = g_strdup("delete_track");
+            break;
+        default:
+            g_return_if_reached ();
+        }
+    }
+    if (dd->itdb->usertype & GP_ITDB_TYPE_LOCAL) {
+        switch (dd->deleteaction) {
+        case DELETE_ACTION_IPOD:
+            /* not allowed -- programming error */
+            g_return_if_reached ();
+            break;
+        case DELETE_ACTION_LOCAL:
+            if (label)
+                *label
+                        = g_strdup(ngettext ("Are you sure you want to delete the following track completely from your harddisk? The number of playlists this track is a member of is indicated in parentheses.",
+                                "Are you sure you want to delete the following tracks completely from your harddisk? The number of playlists the tracks are member of is indicated in parentheses.", n));
+            if (title)
+                *title = g_strdup(ngettext ("Delete Track from Harddisk?",
+                        "Delete Tracks from Harddisk?", n));
+            if (confirm_again)
+                *confirm_again = prefs_get_int("delete_local_file");
+            if (confirm_again_key)
+                *confirm_again_key = g_strdup("delete_local_file");
+            break;
+        case DELETE_ACTION_PLAYLIST:
+            g_return_if_fail (dd->pl);
+            if (label)
+                *label
+                        = g_strdup_printf(ngettext ("Are you sure you want to remove the following track from the playlist \"%s\"?",
+                                "Are you sure you want to remove the following tracks from the playlist \"%s\"?", n), dd->pl->name);
+            if (title)
+                *title = g_strdup(ngettext ("Remove Track From Playlist?",
+                        "Remove Tracks From Playlist?", n));
+            if (confirm_again)
+                *confirm_again = prefs_get_int("delete_file");
+            if (confirm_again_key)
+                *confirm_again_key = g_strdup("delete_file");
+            break;
+        case DELETE_ACTION_DATABASE:
+            if (label)
+                *label
+                        = g_strdup(ngettext ("Are you sure you want to remove the following track completely from your local database? The number of playlists this track is a member of is indicated in parentheses.",
+                                "Are you sure you want to remove the following tracks completely from your local database? The number of playlists the tracks are member of is indicated in parentheses.", n));
+            if (title)
+                *title = g_strdup(ngettext ("Remove Track from Local Database?",
+                        "Remove Tracks from Local Database?", n));
+            if (confirm_again)
+                *confirm_again = prefs_get_int("delete_database");
+            if (confirm_again_key)
+                *confirm_again_key = g_strdup("delete_database");
+            break;
+        default:
+            g_return_if_reached ();
+        }
+    }
+
+    /* Write names of tracks */
+    if (str) {
+        *str = g_string_sized_new(2000);
+        for (l = dd->tracks; l; l = l->next) {
+            s = l->data;
+            g_return_if_fail (s);
+            g_string_append_printf(*str, "%s-%s (%d)\n", s->artist, s->title, itdb_playlist_contain_track_number(s));
+        }
+    }
+}
+

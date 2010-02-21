@@ -178,7 +178,7 @@ Text only</property>
   <widget class="GtkDialog" id="confirm_dialog">
     <property name="border_width">6</property>
     <property name="title" translatable="yes"> </property>
-    <property name="icon">gtkpod-icon-48.png</property>
+    <property name="icon">../icons/48x48/gtkpod.png</property>
     <property name="type_hint">dialog</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">

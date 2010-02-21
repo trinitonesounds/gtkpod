@@ -73,4 +73,6 @@ gchar **track_get_item_pointer (Track *track, T_item t_item);
 gchar *track_get_text(Track *track, T_item item);
 gboolean track_set_text(Track *track, const gchar *new_text, T_item item);
 
+void delete_track_head (DeleteAction deleteaction);
+
 #endif

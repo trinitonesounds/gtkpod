@@ -477,8 +477,12 @@ Playlist *gp_playlist_by_name_or_add(iTunesDB *itdb, gchar *pl_name, gboolean sp
 void gp_playlist_remove(Playlist *pl) {
     g_return_if_fail (pl);
     g_return_if_fail (pl->itdb);
+    g_signal_emit(gtkpod_app, gtkpod_app_signals[PLAYLIST_REMOVED], 0, pl);
     data_changed(pl->itdb);
     itdb_playlist_remove(pl);
+    // In case interested parties do not properly reset current playlist, ensure it happens here
+    if (pl && pl == gtkpod_get_current_playlist())
+        gtkpod_set_current_playlist(NULL);
 }
 
 /* FIXME: this is a bit dangerous. . . we delete all

@@ -16,6 +16,15 @@
                 </menu>
             </placeholder>
    		</menu>
+   		<menu name="MenuEdit" action="ActionMenuEdit">
+			<placeholder name="PlaceholderEditMenus">
+				<menu name="Delete" action="ActionEditDeleteMenu">
+					<menuitem name="Selected Playlist" action="ActionDeleteSelectedPlaylist" />
+					<menuitem name="Selected Playlist including Tracks from Database" action="ActionDeleteSelectedPlaylistIncDb" />
+					<menuitem name="Selected Playlist including Tracks from Device" action="ActionDeleteSelectedPlaylistIncDev" />
+				</menu>
+            </placeholder>
+   		</menu>
 	</menubar>
 	<toolbar name="ToolbarMain">
 		<placeholder name="PlaceholderMusicToolbar">
