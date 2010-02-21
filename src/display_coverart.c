@@ -2117,6 +2117,12 @@ static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *d
 
   /* Find the display cover item in the cover display */
   cover = g_ptr_array_index(cdwidget->cdcovers, IMG_MAIN);
+  if (!cover) {
+      /* looks like there are no covers yet something got dragged into it */
+      gtk_drag_finish (dc, FALSE, FALSE, time);
+      return;
+  }
+
   tracks = cover->album->tracks;
 
   switch (info)
