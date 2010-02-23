@@ -1,6 +1,15 @@
 <!--*- xml -*-->
 <ui>
 	<menubar name="MenuMain">
+		<menu name="MenuEdit" action="ActionMenuEdit">
+			<placeholder name="PlaceholderEditMenus">
+				<menu name="Delete" action="ActionEditDeleteMenu">
+					<menuitem name="Selected Tracks from Playlist" action="ActionDeleteSelectedTracksFromPlaylist" />
+					<menuitem name="Selected Tracks from Database" action="ActionDeleteSelectedTracksFromDatabase" />
+					<menuitem name="Selected Tracks from Device" action="ActionDeleteSelectedTracksFromDevice" />
+				</menu>
+            </placeholder>
+   		</menu>
 	</menubar>
 	<toolbar name="ToolbarMain">
 	</toolbar>

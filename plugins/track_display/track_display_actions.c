@@ -33,3 +33,47 @@
 
 #include "track_display_actions.h"
 #include "display_tracks.h"
+#include "libgtkpod/misc.h"
+#include "libgtkpod/misc_track.h"
+
+static void delete_selected_tracks(DeleteAction deleteaction) {
+    GList *tracks = gtkpod_get_selected_tracks();
+
+    if (tracks) {
+        delete_track_head(deleteaction);
+        g_list_free(tracks);
+    }
+    else {
+        message_sb_no_tracks_selected();
+    }
+}
+
+void on_delete_selected_tracks_from_playlist(GtkAction *action, TrackDisplayPlugin* plugin) {
+    delete_selected_tracks(DELETE_ACTION_PLAYLIST);
+}
+
+void on_delete_selected_tracks_from_database(GtkAction *action, TrackDisplayPlugin* plugin) {
+    delete_selected_tracks(DELETE_ACTION_DATABASE);
+}
+
+void on_delete_selected_tracks_from_harddisk(GtkAction *action, TrackDisplayPlugin* plugin) {
+    delete_selected_tracks(DELETE_ACTION_LOCAL);
+}
+
+void on_delete_selected_tracks_from_ipod(GtkAction *action, TrackDisplayPlugin* plugin) {
+    delete_selected_tracks(DELETE_ACTION_IPOD);
+}
+
+void on_delete_selected_tracks_from_device(GtkAction *action, TrackDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+    if (!itdb)
+        return;
+
+    if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
+        on_delete_selected_tracks_from_ipod(action, plugin);
+    }
+    else if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
+        on_delete_selected_tracks_from_harddisk(action, plugin);
+    }
+}
+

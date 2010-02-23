@@ -44,6 +44,7 @@
 
 #define SIGNAL_TRACKS_DISPLAYED "signal_tracks_displayed"
 #define SIGNAL_TRACKS_SELECTED "signal_tracks_selected"
+#define SIGNAL_TRACK_REMOVED "signal_track_removed"
 #define SIGNAL_PLAYLIST_SELECTED "signal_playlist_selected"
 #define SIGNAL_PLAYLIST_ADDED "signal_playlist_added"
 #define SIGNAL_PLAYLIST_REMOVED "signal_playlist_removed"
@@ -76,6 +77,7 @@ enum
 {
     TRACKS_DISPLAYED,
     TRACKS_SELECTED,
+    TRACK_REMOVED,
     PLAYLIST_SELECTED,
     PLAYLIST_ADDED,
     PLAYLIST_REMOVED,

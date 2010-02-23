@@ -2723,3 +2723,9 @@ void track_display_set_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data) {
 void track_display_set_sort_enablement(GtkPodApp *app, gboolean flag, gpointer data) {
     tm_enable_disable_view_sort(flag);
 }
+
+void track_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data) {
+    Track *old_track = tk;
+
+    tm_remove_track(old_track);
+}

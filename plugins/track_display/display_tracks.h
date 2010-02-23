@@ -46,5 +46,6 @@ void display_show_hide_searchbar(void);
 void track_display_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data);
 void track_display_set_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data);
 void track_display_set_sort_enablement(GtkPodApp *app, gboolean flag, gpointer data);
+void track_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data);
 
 #endif /* DISPLAY_TRACKS_H_ */

@@ -36,4 +36,10 @@
 #include <gtk/gtk.h>
 #include "plugin.h"
 
+void on_delete_selected_tracks_from_playlist(GtkAction *action, TrackDisplayPlugin* plugin);
+void on_delete_selected_tracks_from_database(GtkAction *action, TrackDisplayPlugin* plugin);
+void on_delete_selected_tracks_from_harddisk(GtkAction *action, TrackDisplayPlugin* plugin);
+void on_delete_selected_tracks_from_ipod(GtkAction *action, TrackDisplayPlugin* plugin);
+void on_delete_selected_tracks_from_device(GtkAction *action, TrackDisplayPlugin* plugin);
+
 #endif

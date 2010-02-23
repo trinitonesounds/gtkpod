@@ -548,6 +548,8 @@ void gp_playlist_remove_track(Playlist *plitem, Track *track, DeleteAction delet
 
     g_return_if_fail (plitem);
 
+    g_signal_emit(gtkpod_app, gtkpod_app_signals[TRACK_REMOVED], 0, track);
+
     /* remove track from playlist */
     itdb_playlist_remove_track(plitem, track);
 
