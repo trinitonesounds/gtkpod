@@ -7,6 +7,7 @@
 					<menuitem name="Selected Tracks from Playlist" action="ActionDeleteSelectedTracksFromPlaylist" />
 					<menuitem name="Selected Tracks from Database" action="ActionDeleteSelectedTracksFromDatabase" />
 					<menuitem name="Selected Tracks from Device" action="ActionDeleteSelectedTracksFromDevice" />
+					<separator name="separator2" />
 				</menu>
             </placeholder>
    		</menu>

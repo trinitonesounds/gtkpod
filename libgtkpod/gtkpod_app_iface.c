@@ -261,7 +261,7 @@ GList *gtkpod_get_selected_tracks() {
 
 void gtkpod_set_selected_tracks(GList *tracks) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
-    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->selected_tracks = tracks;
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->selected_tracks = g_list_copy(tracks);
 
     g_signal_emit(gtkpod_app, gtkpod_app_signals[TRACKS_SELECTED], 0, tracks);
 }

@@ -1583,11 +1583,7 @@ static void st_remove_track_normal(Track *track, guint32 inst) {
 /* 02. Feb 2003: bugfix: track is always passed on to the next sort
  * tab: it might have been recategorized, but still be displayed. JCS */
 void st_remove_track(Track *track, guint32 inst) {
-    if (inst == prefs_get_int("sort_tab_num")) {
-        g_warning("st_remove_track: signal a track should be removed");
-        //        tm_remove_track(track);
-    }
-    else if (inst < prefs_get_int("sort_tab_num")) {
+    if (inst < prefs_get_int("sort_tab_num")) {
         switch (sorttab[inst]->current_category) {
         case ST_CAT_ARTIST:
         case ST_CAT_ALBUM:
@@ -3339,6 +3335,150 @@ void cal_open_calendar(gint inst, T_item item) {
     gtk_widget_show(cal);
 }
 
+/* Let the user select a sort tab number */
+/* @text: text to be displayed */
+/* return value: -1: user selected cancel
+ 0...prefs_get_sort_tab_number()-1: selected tab */
+gint st_get_sort_tab_number(gchar *text) {
+    static gint last_nr = 1;
+    GtkWidget *mdialog;
+    GtkDialog *dialog;
+    GtkWidget *combo;
+    gint result;
+    gint i, nr, stn;
+    GList *list = NULL, *lnk;
+    gchar buf[20], *bufp;
+
+    mdialog
+            = gtk_message_dialog_new(GTK_WINDOW (gtkpod_app), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, "%s", text);
+
+    dialog = GTK_DIALOG (mdialog);
+
+    combo = gtk_combo_new();
+    gtk_widget_show(combo);
+    gtk_container_add(GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), combo);
+
+    stn = prefs_get_int("sort_tab_num");
+    /* Create list */
+    for (i = 1; i <= stn; ++i) {
+        bufp = g_strdup_printf("%d", i);
+        list = g_list_append(list, bufp);
+    }
+
+    /* set pull down items */
+    gtk_combo_set_popdown_strings(GTK_COMBO (combo), list);
+    /* set standard entry */
+    if (last_nr > stn)
+        last_nr = 1; /* maybe the stn has become
+         smaller... */
+    snprintf(buf, 20, "%d", last_nr);
+    gtk_entry_set_text(GTK_ENTRY (GTK_COMBO (combo)->entry), buf);
+
+    result = gtk_dialog_run(GTK_DIALOG (mdialog));
+
+    /* free the list */
+    for (lnk = list; lnk; lnk = lnk->next) {
+        C_FREE (lnk->data);
+    }
+    g_list_free(list);
+    list = NULL;
+
+    if (result == GTK_RESPONSE_CANCEL) {
+        nr = -1; /* no selection */
+    }
+    else {
+        bufp = gtk_editable_get_chars(GTK_EDITABLE (GTK_COMBO (combo)->entry), 0, -1);
+        nr = atoi(bufp) - 1;
+        last_nr = nr + 1;
+        C_FREE (bufp);
+    }
+
+    gtk_widget_destroy(mdialog);
+
+    return nr;
+}
+
+void st_delete_entry_head(gint inst, DeleteAction deleteaction) {
+    struct DeleteData *dd;
+    Playlist *pl;
+    GList *selected_tracks = NULL;
+    GString *str;
+    gchar *label = NULL, *title = NULL;
+    gboolean confirm_again;
+    gchar *confirm_again_key;
+    TabEntry *entry;
+    GtkResponseType response;
+    iTunesDB *itdb;
+
+    g_return_if_fail (inst >= 0);
+    g_return_if_fail (inst <= prefs_get_int("sort_tab_num"));
+
+    pl = gtkpod_get_current_playlist();
+    if (pl == NULL) { /* no playlist??? Cannot happen, but... */
+        message_sb_no_playlist_selected();
+        return;
+    }
+    itdb = pl->itdb;
+    g_return_if_fail (itdb);
+
+    entry = st_get_selected_entry(inst);
+    if (entry == NULL) { /* no entry selected */
+        gtkpod_statusbar_message(_("No entry selected."));
+        return;
+    }
+
+    if (entry->members == NULL) { /* no tracks in entry -> just remove entry */
+        if (!entry->master)
+            st_remove_entry(entry, inst);
+        else
+            gtkpod_statusbar_message(_("Cannot remove entry 'All'"));
+        return;
+    }
+
+    selected_tracks = g_list_copy(entry->members);
+
+    dd = g_malloc0(sizeof(struct DeleteData));
+    dd->deleteaction = deleteaction;
+    dd->tracks = selected_tracks;
+    dd->pl = pl;
+    dd->itdb = itdb;
+
+    delete_populate_settings(dd, &label, &title, &confirm_again, &confirm_again_key, &str);
+
+    /* open window */
+    response = gtkpod_confirmation(-1, /* gint id, */
+    TRUE, /* gboolean modal, */
+    title, /* title */
+    label, /* label */
+    str->str, /* scrolled text */
+    NULL, 0, NULL, /* option 1 */
+    NULL, 0, NULL, /* option 2 */
+    confirm_again, /* gboolean confirm_again, */
+    confirm_again_key,/* ConfHandlerOpt confirm_again_key,*/
+    CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
+    NULL, /* don't show "Apply" button */
+    CONF_NULL_HANDLER, /* cancel_handler,*/
+    NULL, /* gpointer user_data1,*/
+    NULL); /* gpointer user_data2,*/
+
+    switch (response) {
+    case GTK_RESPONSE_OK:
+        /* Delete the tracks */
+        delete_track_ok(dd);
+        /* Delete the entry */
+        st_remove_entry(entry, inst);
+        break;
+    default:
+        delete_track_cancel(dd);
+        break;
+    }
+
+    g_free(label);
+    g_free(title);
+    g_free(confirm_again_key);
+    g_string_free(str, TRUE);
+}
+
 void sorttab_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data) {
     Playlist *new_playlist = pl;
 
@@ -3357,9 +3497,12 @@ void sorttab_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer da
             st_add_track(track, FALSE, TRUE, 0);
         }
 
-//        gtkpod_set_current_tracks(new_playlist->members);
-
         st_enable_disable_view_sort(0, TRUE);
         st_add_track(NULL, TRUE, TRUE, 0);
     }
+}
+
+void sorttab_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data) {
+    Track *old_track = tk;
+    st_remove_track(old_track, 0);
 }

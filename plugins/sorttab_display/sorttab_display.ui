@@ -1,6 +1,16 @@
 <!--*- xml -*-->
 <ui>
 	<menubar name="MenuMain">
+		<menu name="MenuEdit" action="ActionMenuEdit">
+			<placeholder name="PlaceholderEditMenus">
+				<menu name="Delete" action="ActionEditDeleteMenu">
+					<menuitem name="Selected Entry from Playlist" action="ActionDeleteSelectedEntry" />
+					<menuitem name="Selected Entry from Database" action="ActionDeleteSelectedEntryFromDb" />
+					<menuitem name="Selected Entry from Device" action="ActionDeleteSelectedEntryFromDev" />
+					<separator name="separator1" />
+				</menu>
+            </placeholder>
+   		</menu>
 		<menu name="MenuView" action="ActionMenuView">
 			<placeholder name="PlaceholderSorttabDisplayActionMenuView">
 				<menuitem name="More Filter Tabs" action="ActionViewMoreFilterTabs"/>

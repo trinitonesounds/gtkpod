@@ -2,7 +2,7 @@
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
@@ -95,7 +95,7 @@ gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
     temp = g_markup_printf_escaped ("<span weight='bold' size='larger'>%s</span>\n\n%s", title, message);
 	gtk_label_set_markup (GTK_LABEL (label), temp);
 	g_free (temp);
-	
+
     if (dflt)
     {
 		gtk_entry_set_text (GTK_ENTRY (entry), dflt);
@@ -119,7 +119,7 @@ gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
     if (response == GTK_RESPONSE_OK)
     {
 		result = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
-		
+
 		/* get state of checkbox only if opt_msg was non NULL */
 		if (opt_msg && checkb)
 		{
@@ -131,82 +131,6 @@ gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
 	g_object_unref (xml);
     return result;
 }
-
-
-
-/* Let the user select a sort tab number */
-/* @text: text to be displayed */
-/* return value: -1: user selected cancel
-   0...prefs_get_sort_tab_number()-1: selected tab */
-gint get_sort_tab_number (gchar *text)
-{
-    static gint last_nr = 1;
-    GtkWidget *mdialog;
-    GtkDialog *dialog;
-    GtkWidget *combo;
-    gint result;
-    gint i, nr, stn;
-    GList *list=NULL, *lnk;
-    gchar buf[20], *bufp;
-
-    mdialog = gtk_message_dialog_new (
-	GTK_WINDOW (gtkpod_app),
-	GTK_DIALOG_DESTROY_WITH_PARENT,
-	GTK_MESSAGE_QUESTION,
-	GTK_BUTTONS_OK_CANCEL,
-	"%s", text);
-
-    dialog = GTK_DIALOG (mdialog);
-
-    combo = gtk_combo_new ();
-    gtk_widget_show (combo);
-    gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), combo);
-
-    stn = prefs_get_int("sort_tab_num");
-    /* Create list */
-    for (i=1; i<=stn; ++i)
-    {
-	bufp = g_strdup_printf ("%d", i);
-	list = g_list_append (list, bufp);
-    }
-
-    /* set pull down items */
-    gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
-    /* set standard entry */
-    if (last_nr > stn) last_nr = 1;  /* maybe the stn has become
-					smaller... */
-    snprintf (buf, 20, "%d", last_nr);
-    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), buf);
-
-    result = gtk_dialog_run (GTK_DIALOG (mdialog));
-
-    /* free the list */
-    for (lnk = list; lnk; lnk = lnk->next)
-    {
-	C_FREE (lnk->data);
-    }
-    g_list_free (list);
-    list = NULL;
-
-    if (result == GTK_RESPONSE_CANCEL)
-    {
-	nr = -1;  /* no selection */
-    }
-    else
-    {
-	bufp = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO (combo)->entry),
-				      0, -1);
-	nr = atoi (bufp)-1;
-	last_nr = nr+1;
-	C_FREE (bufp);
-    }
-
-    gtk_widget_destroy (mdialog);
-
-    return nr;
-}
-
-
 
 
 /*------------------------------------------------------------------*\
@@ -303,7 +227,7 @@ static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
 				bw = (struct blocked_widget *)l->data;
 				gtk_widget_set_sensitive (bw->widget, bw->sensitive);
 			}
-			
+
 			sort_window_release ();
 			widgets_blocked = FALSE;
 	    }

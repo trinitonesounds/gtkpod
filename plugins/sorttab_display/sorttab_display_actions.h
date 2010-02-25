@@ -40,4 +40,14 @@ void on_more_sort_tabs_activate (GtkAction *action, SorttabDisplayPlugin* plugin
 
 void on_fewer_sort_tabs_activate (GtkAction *action, SorttabDisplayPlugin* plugin);
 
+void on_delete_selected_entry_from_database(GtkAction *action, SorttabDisplayPlugin* plugin);
+
+void on_delete_selected_entry_from_ipod(GtkAction *action, SorttabDisplayPlugin* plugin);
+
+void on_delete_selected_entry_from_harddisk(GtkAction *action, SorttabDisplayPlugin* plugin);
+
+void on_delete_selected_entry_from_playlist(GtkAction *action, SorttabDisplayPlugin* plugin);
+
+void on_delete_selected_entry_from_device(GtkAction *action, SorttabDisplayPlugin* plugin);
+
 #endif

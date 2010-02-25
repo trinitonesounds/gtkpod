@@ -2205,3 +2205,10 @@ void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gint32 po
     pm_remove_playlist(old_playlist, TRUE);
 }
 
+void playlist_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data) {
+    Track *old_track = tk;
+    Playlist *current_playlist = gtkpod_get_current_playlist();
+
+    pm_remove_track(current_playlist, old_track);
+}
+

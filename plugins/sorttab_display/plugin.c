@@ -58,6 +58,30 @@ static GtkActionEntry sorttab_actions[] =
             NULL, /* Tooltip */
             G_CALLBACK (on_fewer_sort_tabs_activate) /* callback */
         },
+        {
+            "ActionDeleteSelectedEntry",
+            GTK_STOCK_DELETE,
+            N_("Selected Filter Tab Entry from Playlist"),
+            NULL,
+            NULL,
+            G_CALLBACK (on_delete_selected_entry_from_playlist)
+        },
+        {
+            "ActionDeleteSelectedEntryFromDb",
+            GTK_STOCK_DELETE,
+            N_("Selected Filter Tab Entry from Database"),
+            NULL,
+            NULL,
+            G_CALLBACK (on_delete_selected_entry_from_database)
+        },
+        {
+            "ActionDeleteSelectedEntryFromDev",
+            GTK_STOCK_DELETE,
+            N_("Selected Filter Tab Entry from Device"),
+            NULL,
+            NULL,
+            G_CALLBACK (on_delete_selected_entry_from_device)
+        }
     };
 
 static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
@@ -84,6 +108,7 @@ static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
     gtk_widget_show(sorttab_display_plugin->st_paned);
 
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (sorttab_display_select_playlist_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (sorttab_display_track_removed_cb), NULL);
 
     anjuta_shell_add_widget(plugin->shell, sorttab_display_plugin->st_paned, "SorttabDisplayPlugin", "Track Filter", NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
     return TRUE; /* FALSE if activation failed */

@@ -292,6 +292,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     g_signal_connect (gtkpod_app, SIGNAL_ITDB_UPDATED, G_CALLBACK (playlist_display_update_itdb_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_ADDED, G_CALLBACK (playlist_display_playlist_added_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_REMOVED, G_CALLBACK (playlist_display_playlist_removed_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (playlist_display_track_removed_cb), NULL);
 
     gtk_container_add(GTK_CONTAINER (playlist_display_plugin->pl_window), GTK_WIDGET (playlist_display_plugin->playlist_view));
     gtk_widget_show_all(playlist_display_plugin->pl_window);

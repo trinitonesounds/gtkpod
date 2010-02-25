@@ -34,13 +34,59 @@
 #include "libgtkpod/prefs.h"
 #include "sorttab_display_actions.h"
 #include "display_sorttabs.h"
+#include "libgtkpod/gp_itdb.h"
 
-void on_more_sort_tabs_activate (GtkAction *action, SorttabDisplayPlugin* plugin) {
+void on_more_sort_tabs_activate(GtkAction *action, SorttabDisplayPlugin* plugin) {
     prefs_set_int("sort_tab_num", prefs_get_int("sort_tab_num") + 1);
     st_show_visible();
 }
 
-void on_fewer_sort_tabs_activate (GtkAction *action, SorttabDisplayPlugin* plugin) {
+void on_fewer_sort_tabs_activate(GtkAction *action, SorttabDisplayPlugin* plugin) {
     prefs_set_int("sort_tab_num", prefs_get_int("sort_tab_num") - 1);
     st_show_visible();
+}
+
+static void delete_selected_entry(DeleteAction deleteaction, gchar *text) {
+    TabEntry *entry;
+    gint inst;
+
+    inst = st_get_sort_tab_number(text);
+    if (inst == -1)
+        return;
+
+    entry = st_get_selected_entry(inst);
+    if (!entry) {
+        gtkpod_statusbar_message(_("No entry selected in Sort Tab %d"), inst + 1);
+        return;
+    }
+    st_delete_entry_head(inst, deleteaction);
+}
+
+void on_delete_selected_entry_from_database(GtkAction *action, SorttabDisplayPlugin* plugin) {
+    delete_selected_entry(DELETE_ACTION_DATABASE, _("Remove entry of which sort tab from database?"));
+}
+
+void on_delete_selected_entry_from_ipod(GtkAction *action, SorttabDisplayPlugin* plugin) {
+    delete_selected_entry(DELETE_ACTION_IPOD, _("Remove tracks in selected entry of which filter tab from the iPod?"));
+}
+
+void on_delete_selected_entry_from_harddisk(GtkAction *action, SorttabDisplayPlugin* plugin) {
+    delete_selected_entry(DELETE_ACTION_LOCAL, _("Remove tracks in selected entry of which filter tab from the harddisk?"));
+}
+
+void on_delete_selected_entry_from_playlist(GtkAction *action, SorttabDisplayPlugin* plugin) {
+    delete_selected_entry(DELETE_ACTION_PLAYLIST, _("Remove tracks in selected entry of which filter tab from playlist?"));
+}
+
+void on_delete_selected_entry_from_device(GtkAction *action, SorttabDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+    if (!itdb)
+        return;
+
+    if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
+        on_delete_selected_entry_from_ipod(action, plugin);
+    }
+    else if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
+        on_delete_selected_entry_from_harddisk(action, plugin);
+    }
 }

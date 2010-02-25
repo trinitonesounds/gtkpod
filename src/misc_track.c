@@ -1935,7 +1935,7 @@ gchar *get_track_info(Track *track, gboolean prefer_filename) {
 
 /* cancel handler for delete track */
 /* @user_data1 the selected playlist, @user_data2 are the selected tracks */
-static void delete_track_cancel(struct DeleteData *dd) {
+void delete_track_cancel(struct DeleteData *dd) {
     g_return_if_fail (dd);
 
     g_list_free(dd->tracks);
@@ -1944,7 +1944,7 @@ static void delete_track_cancel(struct DeleteData *dd) {
 
 /* ok handler for delete track */
 /* @user_data1 the selected playlist, @user_data2 are the selected tracks */
-static void delete_track_ok(struct DeleteData *dd) {
+void delete_track_ok(struct DeleteData *dd) {
     gint n;
     GList *l;
 
@@ -2040,7 +2040,7 @@ void delete_track_head(DeleteAction deleteaction) {
     itdb = pl->itdb;
     g_return_if_fail (itdb);
 
-    selected_tracks = gtkpod_get_displayed_tracks();
+    selected_tracks = gtkpod_get_selected_tracks();
     if (selected_tracks == NULL) { /* no tracks selected */
         message_sb_no_tracks_selected();
         return;

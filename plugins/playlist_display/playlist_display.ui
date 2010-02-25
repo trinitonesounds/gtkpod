@@ -13,6 +13,7 @@
 					<menuitem name="Selected Playlist" action="ActionUpdatePlaylist" />
 					<menuitem name="Selected Tab Entry" action="ActionUpdateTabEntry" />
 					<menuitem name="Selected Tracks" action="ActionUpdateTracks" />
+					<separator name="separator3" />
                 </menu>
             </placeholder>
    		</menu>
