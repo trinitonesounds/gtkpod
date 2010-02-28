@@ -860,7 +860,7 @@ void init_data (GtkWidget *window)
     {
 	/* databases have not been set up previously -- take care of
 	   this */
-#ifndef HAVE_GNOME_VFS
+#ifndef HAVE_GIO
 	gchar *mountpoint;
 #endif
 	gchar *filename;
@@ -880,7 +880,7 @@ void init_data (GtkWidget *window)
 	prefs_set_string ("itdb_1_filename", filename);
 	g_free (filename);
 
-#ifndef HAVE_GNOME_VFS
+#ifndef HAVE_GIO
 	/* iPod database -- only set up if autodetection is not active */
 	mountpoint = prefs_get_string ("initial_mountpoint");
 	filename = g_build_filename (cfgdir, "iTunesDB", NULL);
