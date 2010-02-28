@@ -388,6 +388,7 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
     anjuta_ui_add_action_group_entries(app->ui, "ActionGroupEdit", _("Edit"), menu_entries_edit, G_N_ELEMENTS (menu_entries_edit), GETTEXT_PACKAGE, TRUE, app);
     anjuta_ui_add_action_group_entries(app->ui, "ActionGroupView", _("View"), menu_entries_view, G_N_ELEMENTS (menu_entries_view), GETTEXT_PACKAGE, TRUE, app);
     anjuta_ui_add_toggle_action_group_entries(app->ui, "ActionGroupToggleView", _("View"), menu_entries_toggle_view, G_N_ELEMENTS (menu_entries_toggle_view), GETTEXT_PACKAGE, TRUE, app);
+    anjuta_ui_add_action_group_entries(app->ui, "ActionGroupTools", _("Tools"), menu_entries_tools, G_N_ELEMENTS (menu_entries_tools), GETTEXT_PACKAGE, TRUE, app);
     anjuta_ui_add_action_group_entries(app->ui, "ActionGroupHelp", _("Help"), menu_entries_help, G_N_ELEMENTS (menu_entries_help), GETTEXT_PACKAGE, TRUE, app);
 
     /* Merge UI */
@@ -1353,6 +1354,8 @@ static void gtkpod_app_iface_init(GtkPodAppInterface *iface) {
     iface->gtkpod_warning_hig = anjuta_gtkpod_app_warning_hig;
     iface->gtkpod_confirmation_hig = anjuta_gtkpod_app_confirmation_hig;
     iface->gtkpod_confirmation = anjuta_gtkpod_app_confirmation;
+    iface->export_tracks_as_gchar = NULL;
+    iface->export_tracks_as_glist = NULL;
 }
 
 G_MODULE_EXPORT void on_confirm_tree_size_allocate (GtkWidget *sender, GtkAllocation *allocation, gpointer e)

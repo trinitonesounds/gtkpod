@@ -38,7 +38,8 @@
 #include "libgtkpod/gp_itdb.h"
 #include "plugin.h"
 #include "display_playlists.h"
-#include "file_export.h"
+#include "playlist_display_actions.h"
+#include "playlist_display_context_menu.h"
 #include "libgtkpod/gp_private.h"
 #include "libgtkpod/file.h"
 #include "libgtkpod/misc.h"
@@ -72,7 +73,6 @@ static GtkTreePath *pm_get_path_for_playlist(Playlist *pl);
 static gint pm_get_position_for_playlist(Playlist *pl);
 static gboolean pm_get_iter_for_itdb(Itdb_iTunesDB *itdb, GtkTreeIter *iter);
 static gboolean pm_get_iter_for_playlist(Playlist *pl, GtkTreeIter *iter);
-static void pm_context_menu_init(void);
 
 /* ---------------------------------------------------------------- */
 /* Section for playlist display                                     */
@@ -601,7 +601,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
 
         if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) || (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER)) { /* drop into existing playlist */
             /* copy files from iPod if necessary */
-            GList *trackglist = export_tracklist_when_necessary(tr_s->itdb, pl->itdb, data->data);
+            GList *trackglist = gtkpod_export_tracks_as_gchar(tr_s->itdb, pl->itdb, data->data);
             if (trackglist) {
                 add_trackglist_to_playlist(pl, trackglist);
                 g_list_free(trackglist);
@@ -623,7 +623,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
 
             if (plitem) {
                 /* copy files from iPod if necessary */
-                GList *trackglist = export_tracklist_when_necessary(tr_s->itdb, pl->itdb, data->data);
+                GList *trackglist = gtkpod_export_tracks_as_gchar(tr_s->itdb, pl->itdb, data->data);
                 if (trackglist) {
                     add_trackglist_to_playlist(plitem, trackglist);
                     g_list_free(trackglist);
@@ -752,7 +752,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
             g_return_if_fail (pl_d);
 
             /* copy files from iPod if necessary */
-            trackglist = export_trackglist_when_necessary(pl_s->itdb, pl_d->itdb, pl_s->members);
+            trackglist = gtkpod_export_tracks_as_glist(pl_s->itdb, pl_d->itdb, pl_s->members);
 
             /* check if copying went fine (trackglist is empty if
              pl_s->members is empty, so this must not be counted as
@@ -1932,21 +1932,6 @@ static gboolean pm_button_press(GtkWidget *w, GdkEventButton *e, gpointer data) 
         break;
     }
     return FALSE;
-}
-
-/**
- * pm_context_menu_init - initialize the right click menu for playlists
- */
-static void pm_context_menu_init(void) {
-    //    if (widgets_blocked) return;
-    //
-    //    pm_stop_editing (TRUE);
-    //
-    //    if(current_playlist)
-    //    {
-    //        selected_tracks = g_list_copy (_playlist->members);
-    //        create_context_menu (CM_PL);
-    //    }
 }
 
 /* Adds the columns to our playlist_treeview */

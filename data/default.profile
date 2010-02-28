@@ -21,4 +21,11 @@
 		   attribute="Location"
 		   value="playlist_display:PlaylistDisplayPlugin"/>
   </plugin>
+  <plugin name="Exporter Plugin"
+	      url="http://www.gtkpod.org/plugins/"
+		  mandatory="yes">
+		  <require group="Anjuta Plugin"
+		   attribute="Location"
+		   value="exporter:ExporterPlugin"/>
+  </plugin>
 </anjuta>

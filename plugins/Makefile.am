@@ -3,6 +3,7 @@
 SUBDIRS = . \
 	helloworld \
 	advhelloworld \
+	exporter \
 	playlist_display \
 	sorttab_display \
 	track_display

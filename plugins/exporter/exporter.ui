@@ -1,0 +1,15 @@
+<!--*- xml -*-->
+<ui>
+	<menubar name="MenuMain">
+		<menu name="MenuTools" action="ActionMenuTools">
+			<placeholder name="PlaceholderToolsMenus">
+				<menu name="Export" action="ActionToolsExportMenu">
+					<menuitem name="Export Tracks To Playlist File" action="ActionExportToPlaylistFile"/>
+					<menuitem name="Export Tracks To Filesystem" action="ActionExportToFilesystem"/>
+				</menu>
+			</placeholder>
+		</menu>
+	</menubar>
+	<toolbar name="ToolbarMain">
+	</toolbar>
+</ui>

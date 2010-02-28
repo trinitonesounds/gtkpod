@@ -57,7 +57,8 @@
 #include "wavfile.h"
 
 /* The uppercase version of these extensions is tried as well. */
-static const gchar *imageext[] = { ".jpg", ".jpeg", ".png", ".pbm", ".pgm", ".ppm", ".tif", ".tiff", ".gif", NULL};
+static const gchar *imageext[] =
+    { ".jpg", ".jpeg", ".png", ".pbm", ".pgm", ".ppm", ".tif", ".tiff", ".gif", NULL };
 
 /*------------------------------------------------------------------*\
  *                                                                  *
@@ -232,8 +233,7 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
     g_return_val_if_fail (itdb, FALSE);
 
     if (g_file_test(plfile, G_FILE_TEST_IS_DIR)) {
-        gtkpod_warning(_("'%s' is a directory, not a playlist file.\n\n"),
-        plfile);
+        gtkpod_warning(_("'%s' is a directory, not a playlist file.\n\n"), plfile);
         return FALSE; /* definitely not! */
     }
 
@@ -260,8 +260,7 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
         case FILE_TYPE_FLAC:
         case FILE_TYPE_IMAGE:
         case FILE_TYPE_DIRECTORY:
-            gtkpod_warning(_("'%s' is a not a known playlist file.\n\n"),
-            plfile);
+            gtkpod_warning(_("'%s' is a not a known playlist file.\n\n"), plfile);
             g_free(plname);
             return FALSE;
         case FILE_TYPE_M3U:
@@ -307,7 +306,8 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
             bufp[len - 1] = 0;
         if (type == -2) {
             /* skip whitespace */
-            while (isspace (*bufp)) ++bufp;
+            while (isspace (*bufp))
+                ++bufp;
             /* assume comments start with ';' or '#' */
             if ((*bufp == ';') || (*bufp == '#'))
                 break;
@@ -581,8 +581,7 @@ static gboolean parse_filename_with_template(Track *track, gchar *filename, cons
                     break;
                 default:
                     g_free(itm);
-                    gtkpod_warning(_("Unknown token '%s' in template '%s'\n"),
-                    token, template);
+                    gtkpod_warning(_("Unknown token '%s' in template '%s'\n"), token, template);
                     parse_error = TRUE;
                     break;
                 }
@@ -909,8 +908,7 @@ gboolean update_mserv_data_from_file(gchar *name, Track *track) {
                 g_free(username);
                 if (!success) {
                     gchar *username = prefs_get_string("mserv_username");
-                    gchar *buf = g_strdup_printf(_("No information found for user '%s' in '%s'"),
-                    username, infoname);
+                    gchar *buf = g_strdup_printf(_("No information found for user '%s' in '%s'"), username, infoname);
                     display_mserv_problems(track, buf);
                     g_free(buf);
                     g_free(username);
@@ -952,7 +950,7 @@ static gchar* video_thumbnail_setup_cache() {
     cachedir = g_build_filename(cfgdir, "video_thumbnail_cache", NULL);
     g_free(cfgdir);
 
-    if (!g_file_test(cachedir, G_FILE_TEST_IS_DIR) && (g_mkdir (cachedir, 0777) == -1)) {
+    if (!g_file_test(cachedir, G_FILE_TEST_IS_DIR) && (g_mkdir(cachedir, 0777) == -1)) {
         gtkpod_warning(_("Could not create '%s'"), cachedir);
         g_free(cachedir);
         cachedir = NULL;
@@ -1015,8 +1013,7 @@ static gchar* create_video_thumbnail(gchar* input) {
                 cmd = g_string_append_c (cmd, '%');
                 break;
             default:
-                gtkpod_warning(_("Unknown token '%%%c' in template '%s'"),
-                *p, thumbnailer);
+                gtkpod_warning(_("Unknown token '%%%c' in template '%s'"), *p, thumbnailer);
                 break;
             }
 
@@ -1035,13 +1032,11 @@ static gchar* create_video_thumbnail(gchar* input) {
     /* run the thumbnailing program */
     forkstatus = g_spawn_command_line_sync(cmd->str, NULL, NULL, &retval, &err);
 
-    if(!forkstatus)
-    {
-        gtkpod_warning (_("Unable to start video thumbnail generator\n(command line was: '%s')"), cmd->str);
+    if (!forkstatus) {
+        gtkpod_warning(_("Unable to start video thumbnail generator\n(command line was: '%s')"), cmd->str);
     }
-    else if(retval)
-    {
-        gtkpod_warning (_("Thumbnail generator returned status %d"), retval);
+    else if (retval) {
+        gtkpod_warning(_("Thumbnail generator returned status %d"), retval);
     }
 
     g_string_free(cmd, TRUE);
@@ -1049,7 +1044,7 @@ static gchar* create_video_thumbnail(gchar* input) {
     return tmp_fn;
 }
 
-    /* look for a picture specified by coverart_template  */
+/* look for a picture specified by coverart_template  */
 static void add_coverart(Track *tr) {
     ExtraTrackData *etr;
     gchar *full_template;
@@ -1074,102 +1069,89 @@ static void add_coverart(Track *tr) {
     while (*tplp && !filename_local) {
         gchar *filename_utf8;
         gchar *fname = get_string_from_template(tr, *tplp, FALSE, FALSE);
-        if (fname)
-        {
-            if (strchr (*tplp, '.') != NULL)
-            { /* if template has an extension, try if it is valid */
+        if (fname) {
+            if (strchr(*tplp, '.') != NULL) { /* if template has an extension, try if it is valid */
                 if (fname[0] == '/') /* allow absolute paths in template */
-                filename_utf8 = g_build_filename ("", fname, NULL);
+                    filename_utf8 = g_build_filename("", fname, NULL);
                 else
-                filename_utf8 = g_build_filename (dirname, fname, NULL);
-                filename_local = charset_from_utf8 (filename_utf8);
-                g_free (filename_utf8);
-                if (!g_file_test (filename_local, G_FILE_TEST_EXISTS))
-                {
-                    g_free (filename_local);
+                    filename_utf8 = g_build_filename(dirname, fname, NULL);
+                filename_local = charset_from_utf8(filename_utf8);
+                g_free(filename_utf8);
+                if (!g_file_test(filename_local, G_FILE_TEST_EXISTS)) {
+                    g_free(filename_local);
                     filename_local = NULL;
                 }
             }
-            if (!filename_local)
-            { /* if no filename is found try out different extensions */
+            if (!filename_local) { /* if no filename is found try out different extensions */
                 const gchar **extp = imageext;
-                while (*extp && !filename_local)
-                {
-                    gchar *ffname = g_strconcat (fname, *extp, NULL);
+                while (*extp && !filename_local) {
+                    gchar *ffname = g_strconcat(fname, *extp, NULL);
                     if (ffname[0] == '/') /* allow absolute paths in template */
-                    filename_utf8 = g_build_filename ("", ffname, NULL);
+                        filename_utf8 = g_build_filename("", ffname, NULL);
                     else
-                    filename_utf8 = g_build_filename (dirname, ffname,
-                            NULL);
-                    g_free (ffname);
-                    filename_local = charset_from_utf8 (filename_utf8);
-                    g_free (filename_utf8);
-                    if (!g_file_test (filename_local, G_FILE_TEST_EXISTS))
-                    {
-                        g_free (filename_local);
+                        filename_utf8 = g_build_filename(dirname, ffname, NULL);
+                    g_free(ffname);
+                    filename_local = charset_from_utf8(filename_utf8);
+                    g_free(filename_utf8);
+                    if (!g_file_test(filename_local, G_FILE_TEST_EXISTS)) {
+                        g_free(filename_local);
                         filename_local = NULL;
                     }
                     ++extp;
                 }
                 extp = imageext;
-                while (*extp && !filename_local)
-                { /* try uppercase version of extension */
-                    gchar *upper_ext = g_ascii_strup (*extp, -1);
-                    gchar *ffname = g_strconcat (fname, upper_ext, NULL);
-                    g_free (upper_ext);
+                while (*extp && !filename_local) { /* try uppercase version of extension */
+                    gchar *upper_ext = g_ascii_strup(*extp, -1);
+                    gchar *ffname = g_strconcat(fname, upper_ext, NULL);
+                    g_free(upper_ext);
                     if (ffname[0] == '/') /* allow absolute paths in template */
-                    filename_utf8 = g_build_filename ("", ffname, NULL);
+                        filename_utf8 = g_build_filename("", ffname, NULL);
                     else
-                    filename_utf8 = g_build_filename (dirname, ffname,
-                            NULL);
-                    g_free (ffname);
-                    filename_local = charset_from_utf8 (filename_utf8);
-                    g_free (filename_utf8);
-                    if (!g_file_test (filename_local, G_FILE_TEST_EXISTS))
-                    {
-                        g_free (filename_local);
+                        filename_utf8 = g_build_filename(dirname, ffname, NULL);
+                    g_free(ffname);
+                    filename_local = charset_from_utf8(filename_utf8);
+                    g_free(filename_utf8);
+                    if (!g_file_test(filename_local, G_FILE_TEST_EXISTS)) {
+                        g_free(filename_local);
                         filename_local = NULL;
                     }
                     ++extp;
                 }
             }
         }
-        g_free (fname);
+        g_free(fname);
         ++tplp;
     }
 
-    if (filename_local)
-    {
-        gp_track_set_thumbnails (tr, filename_local);
+    if (filename_local) {
+        gp_track_set_thumbnails(tr, filename_local);
     }
-    else if(vid_thumbnailer)
-    {
+    else if (vid_thumbnailer) {
         /* if a template match was not made, and we're dealing with a video
          * file, generate an arbitrary thumbnail if appropriate */
-        switch(type)
-        {
-            case FILE_TYPE_M4V:
-            case FILE_TYPE_MP4:
-            case FILE_TYPE_MOV:
-            case FILE_TYPE_MPG:
-            filename_local = create_video_thumbnail (etr->pc_path_utf8);
-            gp_track_set_thumbnails (tr, filename_local);
+        switch (type) {
+        case FILE_TYPE_M4V:
+        case FILE_TYPE_MP4:
+        case FILE_TYPE_MOV:
+        case FILE_TYPE_MPG:
+            filename_local = create_video_thumbnail(etr->pc_path_utf8);
+            gp_track_set_thumbnails(tr, filename_local);
             break;
-            default:
+        default:
             break;
         }
     }
 
-    g_strfreev (templates);
-    g_free (full_template);
-    g_free (dirname);
+    g_strfreev(templates);
+    g_free(full_template);
+    g_free(dirname);
 }
 
-        /* Fills the supplied @orig_track with data from the file @name. If
-         * @orig_track is NULL, a new track struct is created. The entries
-         * pc_path_utf8 and pc_path_locale are not changed if an entry already
-         * exists. time_added is not modified if already set. */
-        /* Returns NULL on error, a pointer to the Track otherwise */
+/* Fills the supplied @orig_track with data from the file @name. If
+ * @orig_track is NULL, a new track struct is created. The entries
+ * pc_path_utf8 and pc_path_locale are not changed if an entry already
+ * exists. time_added is not modified if already set. */
+/* Returns NULL on error, a pointer to the Track otherwise */
 static Track *get_track_info_from_file(gchar *name, Track *orig_track) {
     Track *track = NULL;
     Track *nti = NULL;
@@ -1381,8 +1363,7 @@ void update_tracks(GList *selected_tracks) {
     iTunesDB *itdb = NULL;
 
     if (selected_tracks == NULL) {
-        g_warning("TODO file:update_tracks - status\n");
-        //	gtkpod_statusbar_message(_("Nothing to update"));
+        gtkpod_statusbar_message(_("Nothing to update"));
         return;
     }
 
@@ -1401,8 +1382,7 @@ void update_tracks(GList *selected_tracks) {
         g_return_if_fail (itdb);
         if (g_list_find(itdb->tracks, track)) {
             gchar *buf = get_track_info(track, TRUE);
-            g_warning("TODO file:update_tracks - status\n");
-            //	    gtkpod_statusbar_message (_("Updating %s"), buf);
+            gtkpod_statusbar_message(_("Updating %s"), buf);
             g_free(buf);
             update_track_from_file(track->itdb, track);
         }
@@ -1411,23 +1391,22 @@ void update_tracks(GList *selected_tracks) {
     /* display log of non-updated tracks */
     display_non_updated(NULL, NULL);
     /* display log of updated tracks */
-    display_updated (NULL, NULL);
+    display_updated(NULL, NULL);
     /* display log of problems with mserv data */
-    display_mserv_problems (NULL, NULL);
+    display_mserv_problems(NULL, NULL);
     /* display log of detected duplicates */
-    gp_duplicate_remove (NULL, NULL);
-    g_warning("TODO file:update_tracks - status\n");
-    //    gtkpod_statusbar_message(_("Updated selected tracks with info from file."));
+    gp_duplicate_remove(NULL, NULL);
+    gtkpod_statusbar_message(_("Updated selected tracks with info from file."));
 }
 
-    /*------------------------------------------------------------------*\
+/*------------------------------------------------------------------*\
  *                                                                  *
-     *      Update mserv Data from File                                 *
-     *                                                                  *
-     \*------------------------------------------------------------------*/
+ *      Update mserv Data from File                                 *
+ *                                                                  *
+ \*------------------------------------------------------------------*/
 
-    /* reads info from file and updates the ID3 tags of
-     @selected_tracks. */
+/* reads info from file and updates the ID3 tags of
+ @selected_tracks. */
 void mserv_from_file_tracks(GList *selected_tracks) {
     GList *gl;
 
@@ -1462,11 +1441,11 @@ void mserv_from_file_tracks(GList *selected_tracks) {
     //    gtkpod_statusbar_message(_("Updated selected tracks with data from mserv."));
 }
 
-    /* Logs tracks (@track) that could not be updated from file for some
-     reason. Pop up a window with the log by calling with @track = NULL,
-     or remove the log by calling with @track = -1.
-     @txt (if available)w is added as an explanation as to why it was
-     impossible to update the track */
+/* Logs tracks (@track) that could not be updated from file for some
+ reason. Pop up a window with the log by calling with @track = NULL,
+ or remove the log by calling with @track = -1.
+ @txt (if available)w is added as an explanation as to why it was
+ impossible to update the track */
 void display_non_updated(Track *track, gchar *txt) {
     gchar *buf;
     static gint track_nr = 0;
@@ -1873,7 +1852,7 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
     basename = g_path_get_basename(fname);
     if (basename) {
         gchar *bn_utf8 = charset_to_utf8(basename);
-        gtkpod_statusbar_message (_("Processing '%s'..."), bn_utf8);
+        gtkpod_statusbar_message(_("Processing '%s'..."), bn_utf8);
         while (widgets_blocked && gtk_events_pending())
             gtk_main_iteration();
         g_free(bn_utf8);
@@ -1941,8 +1920,8 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
                 }
             }
 
-            if (gethostname(str, PATH_MAX-2) == 0) {
-                str[PATH_MAX-1] = 0;
+            if (gethostname(str, PATH_MAX - 2) == 0) {
+                str[PATH_MAX - 1] = 0;
                 etr->hostname = g_strdup(str);
             }
             /* add_track may return pointer to a different track if an
@@ -2091,16 +2070,14 @@ gboolean write_tags_to_file(Track *track) {
 
     if (etr->pc_path_locale && (strlen(etr->pc_path_locale) > 0)) {
         if (file_write_info(etr->pc_path_locale, track) == FALSE) {
-            gtkpod_warning(_("Couldn't change tags of file: %s\n"),
-            etr->pc_path_locale);
+            gtkpod_warning(_("Couldn't change tags of file: %s\n"), etr->pc_path_locale);
         }
     }
     if (!get_offline(itdb) && track->transferred && track->ipod_path && (g_utf8_strlen(track->ipod_path, -1) > 0)) {
         /* need to get ipod filename */
         ipod_fullpath = get_file_name_from_source(track, SOURCE_IPOD);
         if (file_write_info(ipod_fullpath, track) == FALSE) {
-            gtkpod_warning(_("Couldn't change tags of file: %s\n"),
-            ipod_fullpath);
+            gtkpod_warning(_("Couldn't change tags of file: %s\n"), ipod_fullpath);
         }
         g_free(ipod_fullpath);
     }
@@ -2183,8 +2160,7 @@ void parse_offline_playcount(void) {
         gchar *buf;
         GString *gstr, *gstr_filenames;
         if (!file) {
-            gtkpod_warning(_("Could not open '%s' for reading and writing.\n"),
-            offlplyc);
+            gtkpod_warning(_("Could not open '%s' for reading and writing.\n"), offlplyc);
             g_free(offlplyc);
             return;
         }
@@ -2212,8 +2188,7 @@ void parse_offline_playcount(void) {
             /* end of SHA1 string */
             ptr2 = strchr(ptr1, ' ');
             if (ptr2 == NULL) { /* error! */
-                gtkpod_warning(_("Malformed line in '%s': %s\n"),
-                offlplyc, buf_utf8);
+                gtkpod_warning(_("Malformed line in '%s': %s\n"), offlplyc, buf_utf8);
                 goto cont;
             }
             if (ptr1 != ptr2)
@@ -2223,16 +2198,14 @@ void parse_offline_playcount(void) {
             /* end of filename string */
             ptr2 = strchr(ptr1, '\n');
             if (ptr2 == NULL) { /* error! */
-                gtkpod_warning(_("Malformed line in '%s': %s\n"),
-                offlplyc, buf_utf8);
+                gtkpod_warning(_("Malformed line in '%s': %s\n"), offlplyc, buf_utf8);
                 goto cont;
             }
             if (ptr1 != ptr2) {
                 filename = g_strndup(ptr1, ptr2 - ptr1);
             }
             else { /* error! */
-                gtkpod_warning(_("Malformed line in '%s': %s\n"),
-                offlplyc, buf_utf8);
+                gtkpod_warning(_("Malformed line in '%s': %s\n"), offlplyc, buf_utf8);
                 goto cont;
             }
             if (gp_increase_playcount(sha1, filename, 1) == FALSE) { /* didn't find the track -> store */
@@ -2561,39 +2534,33 @@ gchar *fileselection_get_file_or_dir(const gchar *title, const gchar *cur_file, 
 
     gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER (fc), FALSE);
 
-    if (cur_file)
-    {
+    if (cur_file) {
         /* Sanity checks: must exist and be absolute */
-        if (g_path_is_absolute (cur_file))
-        gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (fc),
-                cur_file);
+        if (g_path_is_absolute(cur_file))
+            gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (fc), cur_file);
         else
-        cur_file = NULL;
+            cur_file = NULL;
     }
-    if (cur_file == NULL)
-    {
-        gchar *filename = prefs_get_string ("last_dir_browsed");
-        if (filename)
-        {
-            gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
-                    filename);
-            g_free (filename);
+    if (cur_file == NULL) {
+        gchar *filename = prefs_get_string("last_dir_browsed");
+        if (filename) {
+            gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER (fc), filename);
+            g_free(filename);
         }
     }
 
     response = gtk_dialog_run(GTK_DIALOG(fc));
 
-    switch (response)
-    {
-        case GTK_RESPONSE_ACCEPT:
-        new_dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (fc));
-        prefs_set_string ("last_dir_browsed", new_dir);
-        g_free (new_dir);
-        new_file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc));
+    switch (response) {
+    case GTK_RESPONSE_ACCEPT:
+        new_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER (fc));
+        prefs_set_string("last_dir_browsed", new_dir);
+        g_free(new_dir);
+        new_file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER (fc));
         break;
-        case GTK_RESPONSE_CANCEL:
+    case GTK_RESPONSE_CANCEL:
         break;
-        default: /* Fall through */
+    default: /* Fall through */
         break;
     }
     gtk_widget_destroy(fc);

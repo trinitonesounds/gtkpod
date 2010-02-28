@@ -26,16 +26,10 @@
 			<separator name="separate1"/>
 			<menuitem name="Toolbar" action="ActionViewToolbar"/>
 		</menu>
-		<placeholder name="PlaceholderGotoMenus"/>
-		<placeholder name="PlaceHolderProjectMenus"/>
-		<placeholder name="PlaceHolderFormatMenus"/>
-		<placeholder name="PlaceHolderBuildMenus"/>
-		<placeholder name="PlaceHolderDesignerMenus"/>
-		<placeholder name="PlaceHolderRunMenus"/>
-		<placeholder name="PlaceHolderDebugMenus"/>
-		<placeholder name="PlaceHolderToolMenus"/>
-		<placeholder name="PlaceHolderVersionControlMenus"/>
-		<placeholder name="PlaceHolderDocumentsMenus"/>
+		<menu name="MenuTools" action="ActionMenuTools">
+			<placeholder name="PlaceholderToolsMenus">
+			</placeholder>
+		</menu>
 		<placeholder name="PlaceHolderHelpMenus" >
 			<menu name="MenuHelp" action="ActionMenuHelp" >
 				<placeholder name="PlaceHolderHelpDevel" >
@@ -58,7 +52,6 @@
 				</placeholder>
 			</menu>
 		</placeholder>
-		<placeholder name="TestPlaceholder" />
 	</menubar>
 	<toolbar name="ToolbarMain">
 	  <placeholder name="PlaceholderMusicToolbar" />

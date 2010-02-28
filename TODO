@@ -9,7 +9,11 @@ Prospective Plugins:
 	synchronizer
 	download coverart plugin
 	photo panel
-
+    export plugin
+      - provides window and export functions
+      - other plugins simply emit a signal that tells the plugin to export the
+          given tracks
+      - means that the other plugins lack items on context menus of other views 
 
 Music Menu
 #- Load iPod

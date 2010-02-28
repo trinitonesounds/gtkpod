@@ -114,6 +114,8 @@ struct _GtkPodAppInterface {
             (*gtkpod_confirmation)(GtkPodApp *obj, gint id, gboolean modal, const gchar *title, const gchar *label, const gchar *text, const gchar *option1_text, CONF_STATE option1_state, const gchar *option1_key, const gchar *option2_text, CONF_STATE option2_state, const gchar *option2_key, gboolean confirm_again, const gchar *confirm_again_key, ConfHandler ok_handler, ConfHandler apply_handler, ConfHandler cancel_handler, gpointer user_data1, gpointer user_data2);
     void (*statusbar_busy_push)(GtkPodApp *obj);
     void (*statusbar_busy_pop)(GtkPodApp *obj);
+    GList * (*export_tracks_as_gchar)(iTunesDB *source_db, iTunesDB *dest_db, gchar *tracks);
+    GList * (*export_tracks_as_glist)(iTunesDB *source_db, iTunesDB *dest_db, GList *tracks);
 };
 
 GType gtkpod_app_get_type(void);
@@ -148,6 +150,12 @@ void gtkpod_set_selected_tracks(GList *tracks);
 void gtkpod_set_sort_enablement(gboolean enable);
 gboolean gtkpod_get_sort_enablement();
 void gtkpod_playlist_added(iTunesDB *itdb, Playlist *playlist, gint32 pos);
+
+void gtkpod_register_exporter(GList *(*export_tks_as_gchar_func)(iTunesDB *source_db, iTunesDB *dest_db, gchar *tracks), GList *(*export_tks_as_glist_func)(iTunesDB *source_db, iTunesDB *dest_db, GList *tracks));
+void gtkpod_unregister_exporter();
+GList *gtkpod_export_tracks_as_gchar(iTunesDB *source_db, iTunesDB *dest_db, gchar *tracks);
+GList *gtkpod_export_tracks_as_glist(iTunesDB *source_db, iTunesDB *dest_d, GList *tracks);
+
 
 GtkPodApp *gtkpod_app;
 guint gtkpod_app_signals[LAST_SIGNAL];

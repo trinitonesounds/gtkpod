@@ -22,6 +22,7 @@ libgtkpod_la_SOURCES =  gtkpod_app_iface.h gtkpod_app_iface.c \
 						stock_icons.c stock_icons.h \
 						gtkpod_app-marshallers.c gtkpod_app-marshallers.h \
 						tool_menu_action.c tool_menu_action.h \
+						context_menus.c context_menus.h \
 						gp_spl.c gp_spl.h \
 						flacfile.c flacfile.h \
 						mp3file.c mp3file.h \

@@ -80,6 +80,14 @@ static GtkToggleActionEntry menu_entries_toggle_view[] = {
     G_CALLBACK (on_toolbar_view_toggled)}
 };
 
+static GtkActionEntry menu_entries_tools[] = {
+  {
+      "ActionMenuTools",
+      NULL,
+      N_("_Tools")
+  }
+};
+
 static GtkActionEntry menu_entries_help[] = {
   { "ActionMenuHelp", NULL, N_("_Help")},
   { "ActionHelpUserManual", GTK_STOCK_HELP,

@@ -52,6 +52,13 @@
  ******************************************************************/
 void export_files_init(GList *tracks, GList **filenames, gboolean display, gchar *message);
 
+/******************************************************************
+ export_playlist_file_init - Create a playlist file to a location
+ specified by the file selection dialog.
+ @tracks: GList with tracks to be in playlist file.
+ ******************************************************************/
+void export_playlist_file_init(GList *tracks);
+
 /*------------------------------------------------------------------
 
  Code for DND: export when dragging from the iPod to the local
@@ -59,21 +66,25 @@ void export_files_init(GList *tracks, GList **filenames, gboolean display, gchar
 
  ------------------------------------------------------------------*/
 
-/* If tracks are dragged from the iPod to the local database, the
- tracks need to be copied from the iPod to the harddisk. This
- function will ask where to copy them to, and add the tracks to the
- MPL of @itdb_d.
- A list of tracks that needs to be processed by the drag is
- returned.
-
- If tracks are not dragged from the iPod to the local database, a
- copy of @tracks is returned.
-
- The returned GList must be g_list_free()'ed after it is no longer
- used. */
+/**
+ * If tracks are dragged from the iPod to the local database, the
+ * tracks need to be copied from the iPod to the harddisk. This
+ * function will ask where to copy them to, and add the tracks to the
+ * MPL of @itdb_d.
+ * A list of tracks that needs to be processed by the drag is
+ * returned.
+ *
+ * If tracks are not dragged from the iPod to the local database, a
+ * copy of @tracks is returned.
+ *
+ * The returned GList must be g_list_free()'ed after it is no longer
+ * used.
+ */
 GList *export_trackglist_when_necessary(iTunesDB *itdb_s, iTunesDB *itdb_d, GList *tracks);
 
-/* same as export_trackglist_when_necessary() but the tracks are
- represented as pointers in ASCII format. This function parses the
- tracks in @data and calls export_trackglist_when_necessary() */
+/**
+ * same as export_trackglist_when_necessary() but the tracks are
+ * represented as pointers in ASCII format. This function parses the
+ * tracks in @data and calls export_trackglist_when_necessary()
+ */
 GList *export_tracklist_when_necessary(iTunesDB *itdb_s, iTunesDB *itdb_d, gchar *data);

@@ -38,6 +38,7 @@
 #include "libgtkpod/gp_itdb.h"
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/misc.h"
+#include "libgtkpod/misc_track.h"
 #include "libgtkpod/misc_playlist.h"
 #include "libgtkpod/gp_spl.h"
 #include <gdk/gdk.h>

@@ -55,7 +55,7 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
                 = g_signal_new(SIGNAL_TRACKS_SELECTED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
         gtkpod_app_signals[TRACK_REMOVED]
-                        = g_signal_new(SIGNAL_TRACK_REMOVED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
+                = g_signal_new(SIGNAL_TRACK_REMOVED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
         gtkpod_app_signals[SORT_ENABLEMENT]
                 = g_signal_new(SIGNAL_SORT_ENABLEMENT, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__BOOLEAN, G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
@@ -284,4 +284,28 @@ void gtkpod_playlist_added(iTunesDB *itdb, Playlist *playlist, gint32 pos) {
     g_return_if_fail (playlist->itdb == itdb);
 
     g_signal_emit(gtkpod_app, gtkpod_app_signals[PLAYLIST_ADDED], 0, playlist, pos);
+}
+
+void gtkpod_register_exporter(GList *(*export_tks_as_gchar_func)(iTunesDB *source_db, iTunesDB *dest_db, gchar *tracks), GList *(*export_tks_as_glist_func)(iTunesDB *source_db, iTunesDB *dest_db, GList *tracks)) {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->export_tracks_as_gchar = export_tks_as_gchar_func;
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->export_tracks_as_glist = export_tks_as_glist_func;
+}
+
+void gtkpod_unregister_exporter() {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->export_tracks_as_gchar = NULL;
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->export_tracks_as_glist = NULL;
+}
+
+GList *gtkpod_export_tracks_as_gchar(iTunesDB *source_db, iTunesDB *dest_db, gchar *tracks) {
+    g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), NULL);
+    g_return_val_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->export_tracks_as_gchar, NULL);
+    return GTKPOD_APP_GET_INTERFACE (gtkpod_app)->export_tracks_as_gchar(source_db, dest_db, tracks);
+}
+
+GList *gtkpod_export_tracks_as_glist(iTunesDB *source_db, iTunesDB *dest_db, GList *tracks) {
+    g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), NULL);
+    g_return_val_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->export_tracks_as_glist, NULL);
+    return GTKPOD_APP_GET_INTERFACE (gtkpod_app)->export_tracks_as_glist(source_db, dest_db, tracks);
 }
