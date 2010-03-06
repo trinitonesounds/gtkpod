@@ -1,3 +1,25 @@
+gtkpod V0.99.16
+
+       NEW FEATURE: Volumn control added to detail window for setting
+       the volume of a track. Thanks to Andrea Odetti.
+
+       IMPROVEMENT: Migration from hal, which is now deprecated, to gio.
+       Thanks to Nikias Bassen.       
+
+       IMPROVEMENT: Translation support.
+
+       IMPROVEMENT: Support for using CMake as well as autotools
+
+       IMPROVEMENT: Code compatibility for compiling using Clang. Thanks
+       to Maia Kozheva.
+
+       BUGFIX: Crash when a cover art image is dragged and dropped.
+
+       BUGFIX: Freeze when changing from the photo window back to the
+       playlist window.
+
+       BUGFIX: Numerous double frees and memory leaks.
+
 gtkpod V0.99.14
 
        NEW FEATURE: Help system, still very preliminary.

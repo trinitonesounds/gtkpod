@@ -1,3 +1,127 @@
+Author: Todd Zullinger <tmz@pobox.com>
+Date:   Sun Feb 14 17:46:06 2010 -0500
+
+    Explicitly check for and link libvorbis
+    
+    Changes in the default DSO linking behavior on Fedora exposed the fact
+    that gtkpod used symbols from libvorbis but had relied on other
+    libraries it linked against to pull it in.
+
+Author: Todd Zullinger <tmz@pobox.com>
+Date:   Sun Feb 14 17:41:05 2010 -0500
+
+    Explicitly link against libm
+    
+    Changes in the default DSO linking behavior on Fedora exposed the fact
+    that gtkpod used symbols from libm but had relied on libgpod or other
+    libraries it linked against to pull it in.
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Feb 28 16:12:05 2010 +0000
+
+    Patch moving auto detection from hal to gio
+    
+    - Support for both autotools and cmake
+    - Thanks to Nikias Bassen for the patch at tracker id: 2960423
+    - Reviewed and tested successfully with following:
+      -- ipod nano (1st gen)
+      -- ipod (5.5 gen)
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Feb 14 22:29:00 2010 +0000
+
+    Avoid segfault during drag n drop of cover art
+    
+    - display_coverart.c
+      Check avoids possible sigsev if cover cannot be found in the cover art
+    	array. Possible to occur if coverart collection is empty.
+
+Author: Alain Portal <alain.portal@free.fr>
+Date:   Sun Feb 14 18:16:01 2010 +0100
+
+    Update and improve translation.
+
+Author: Alain Portal <alain.portal@free.fr>
+Date:   Mon Jan 25 21:42:46 2010 +0100
+
+    Some updated strings.
+
+Author: Alain Portal <alain@portable.localdomain>
+Date:   Fri Jan 22 13:32:18 2010 +0100
+
+    Updated to 0.99.14
+
+Author: Maia Kozheva <sikon@ubuntu.com>
+Date:   Wed Dec 23 14:45:43 2009 +0600
+
+    Brought add_custom_target to lowercase
+
+Author: Maia Kozheva <sikon@ubuntu.com>
+Date:   Mon Dec 21 19:51:59 2009 +0600
+
+    Locale support in CMake
+
+Author: Maia Kozheva <sikon@ubuntu.com>
+Date:   Mon Dec 21 18:36:06 2009 +0600
+
+    Optional dependency support for cmake
+
+Author: Maia Kozheva <sikon@ubuntu.com>
+Date:   Mon Dec 21 16:39:56 2009 +0600
+
+    Split glade file into GtkBuilder files; updated CMake build system
+
+Author: Maia Kozheva <sikon@ubuntu.com>
+Date:   Mon Dec 21 12:10:20 2009 +0600
+
+    Updates for CMake build
+
+Author: Maia Kozheva <sikon@ubuntu.com>
+Date:   Mon Dec 21 11:04:52 2009 +0600
+
+    Added CMake build files
+
+Author: Maia Kozheva <sikon@ubuntu.com>
+Date:   Wed Dec 16 14:50:42 2009 +0600
+
+    Remove nested functions for clang compatibility
+
+Author: Maia Kozheva <sikon@ubuntu.com>
+Date:   Wed Dec 16 14:18:23 2009 +0600
+
+    Use soname after all; libmp4v2.so is not guaranteed to exist
+
+Author: Andrea Odetti <mariofutire@gmail.com>
+Date:   Sun Nov 1 14:21:46 2009 +0000
+
+    Bug fix, memory leak and double free.
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Nov 8 19:34:36 2009 +0000
+
+    Add volume control to details window
+    
+    Patches submitted to list Andrea Odetti <mariofutire@googlemail.com>.
+    Adds a volume control slider to details window for setting the volume
+    of the track. Also, fix for null-terminated list in syncdir.c
+    
+    Thanks to Andrea.
+
+Author: Javier Kohen <jkohen@users.sourceforge.net>
+Date:   Sat Apr 18 15:02:06 2009 +0200
+
+    Expand column width manually.
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Fri Oct 30 23:47:54 2009 +0000
+
+    Fix for hang when changing back from photo window to playlist view.
+    
+    The hang occurred due to the use of "while (gtk_events_pending)
+    gtk_main_iteration" in the st_set_sorttab_page function. This has
+    been removed as well as further calls to this pragma in other parts
+    of the file. File has also been reformatted to correct all whitespace.
+
 2009-09-03 Paul Richardson <phantom_sf at users.sourceforge.net>
 
         * src/misc_track.c: Fix podcast addition
