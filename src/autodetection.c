@@ -156,7 +156,6 @@ static void ad_volume_mounted_cb (GVolumeMonitor *volumemonitor,
 {
     g_return_if_fail (mount && ad);
 
-    printf("%s entered\n", __func__);
     if (G_IS_MOUNT(mount) && ad_mount_is_ipod (mount))
     {
 	GFile *root;
