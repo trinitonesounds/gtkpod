@@ -1,6 +1,6 @@
-/* Time-stamp: <2006-05-15 21:59:36 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2010 Jorg Schuler <jcsjcs at users sourceforge net>
+|                                          Paul Richardson <phantom_sf at users.sourceforge.net>
 |  Part of the gtkpod project.
 |
 |  URL: http://www.gtkpod.org/
@@ -27,16 +27,33 @@
 |  $Id$
 */
 
-#ifndef __REPOSITORY_H__
-#define __REPOSITORY_H__
+#ifndef PLUGIN_H_
+#define PLUGIN_H_
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
-#include <gtk/gtk.h>
-#include "libgtkpod/itdb.h"
+#include <libanjuta/anjuta-plugin.h>
 
-void repository_edit (iTunesDB *itdb, Playlist *playlist);
-void destroy_repository_editor();
-#endif
+#define UI_FILE GTKPOD_UI_DIR"/repository_editor.ui"
+#define GLADE_FILE GTKPOD_GLADE_DIR"/repository_editor.glade"
+
+typedef struct _RepositoryEditorPlugin RepositoryEditorPlugin;
+typedef struct _RepositoryEditorPluginClass RepositoryEditorPluginClass;
+
+struct _RepositoryEditorPlugin {
+    AnjutaPlugin parent;
+    gint uiid;
+    GtkWidget *repo_window;
+    GtkWidget *repo_view;
+    GtkActionGroup *action_group;
+};
+
+struct _RepositoryEditorPluginClass {
+    AnjutaPluginClass parent_class;
+};
+
+RepositoryEditorPlugin *repository_editor_plugin;
+
+#endif /* PLUGIN_H_ */

@@ -5,6 +5,7 @@ SUBDIRS = . \
 	advhelloworld \
 	exporter \
 	playlist_display \
+	repository_editor \
 	sorttab_display \
 	track_display
 

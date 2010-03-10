@@ -28,4 +28,11 @@
 		   attribute="Location"
 		   value="exporter:ExporterPlugin"/>
   </plugin>
+  <plugin name="Repository Editor Plugin"
+	      url="http://www.gtkpod.org/plugins/"
+		  mandatory="yes">
+		  <require group="Anjuta Plugin"
+		   attribute="Location"
+		   value="repository_editor:RepositoryEditorPlugin"/>
+  </plugin>
 </anjuta>

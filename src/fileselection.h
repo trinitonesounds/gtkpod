@@ -2,7 +2,7 @@
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
@@ -35,11 +35,9 @@
  *  Copyright  2005  James Liggett
  *  Email jrliggett@cox.net
  ****************************************************************************/
- 
+
 #ifndef _FILESELECTION_H
 #define _FILESELECTION_H
-
-#include "prefs.h"
 
 void create_add_files_dialog (Playlist *pl);
 void create_add_playlists_dialog (iTunesDB *itdb);
