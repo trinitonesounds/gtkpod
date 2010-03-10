@@ -38,6 +38,8 @@
 #include "gp_itdb.h"
 #include "misc_conversion.h"
 
+#define PLAYLIST_DISPLAY_PLAYLIST_ICON_STOCK_ID "playlist_display-playlist-icon"
+
 Playlist *add_new_pl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position);
 void add_new_pl_or_spl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position);
 Playlist *generate_random_playlist(iTunesDB *itdb);
@@ -52,6 +54,9 @@ void since_last_pl(iTunesDB *itdb);
 void never_listened_pl(iTunesDB *itdb);
 Playlist *generate_not_listed_playlist(iTunesDB *itdb);
 void delete_playlist_head (DeleteAction deleteaction);
+void copy_playlist_to_target_playlist(Playlist *pl, Playlist *t_pl);
+void copy_playlist_to_target_itdb(Playlist *pl, iTunesDB *t_itdb);
 
+const gchar* return_playlist_stock_image(Playlist *playlist);
 
 #endif /* MISC_PLAYLIST_H_ */

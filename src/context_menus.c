@@ -93,15 +93,6 @@ void context_menu_delete_track_head(GtkMenuItem *mi, gpointer data) {
     delete_track_head(deleteaction);
 }
 
-void context_menu_delete_playlist_head(GtkMenuItem *mi, gpointer data) {
-    DeleteAction deleteaction = GPOINTER_TO_INT (data);
-    delete_playlist_head(deleteaction);
-}
-
-GtkWidget *add_delete_playlist_but_keep_tracks(GtkWidget *menu) {
-    return hookup_menu_item(menu, _("Delete But Keep Tracks"), GTK_STOCK_DELETE, G_CALLBACK (context_menu_delete_playlist_head), GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
-}
-
 /*
  * play_entries_now - play the entries currently selected in xmms
  * @mi - the menu item selected
@@ -141,4 +132,94 @@ GtkWidget *add_update_tracks_from_file(GtkWidget *menu) {
     return hookup_menu_item(menu, _("Update Tracks from File"), GTK_STOCK_REFRESH, G_CALLBACK (update_tracks_from_file), NULL);
 }
 
+/*
+ * sync_dirs_ entries - sync the directories of the selected playlist
+ *
+ * @mi - the menu item selected
+ * @data - Ignored, should be NULL
+ */
+static void sync_dirs(GtkMenuItem *mi, gpointer data) {
+    if (gtkpod_get_current_playlist()) {
+        sync_playlist(gtkpod_get_current_playlist(), NULL, KEY_SYNC_CONFIRM_DIRS, 0, KEY_SYNC_DELETE_TRACKS, 0, KEY_SYNC_CONFIRM_DELETE, 0, KEY_SYNC_SHOW_SUMMARY, 0);
+    }
+    else {
+        g_return_if_reached ();
+    }
+}
+
+GtkWidget *add_sync_playlist_with_dirs(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Sync Playlist with Dir(s)"), GTK_STOCK_REFRESH, G_CALLBACK (sync_dirs), NULL);
+}
+
+static void copy_selected_tracks_to_target_itdb (GtkMenuItem *mi, gpointer *userdata)
+{
+    iTunesDB *t_itdb = *userdata;
+    g_return_if_fail (t_itdb);
+
+    if (gtkpod_get_selected_tracks())
+        copy_tracks_to_target_itdb (gtkpod_get_selected_tracks(), t_itdb);
+}
+
+
+static void copy_selected_tracks_to_target_playlist (GtkMenuItem *mi, gpointer *userdata)
+{
+    Playlist *t_pl = *userdata;
+    g_return_if_fail (t_pl);
+
+    if (gtkpod_get_selected_tracks())
+        copy_tracks_to_target_playlist (gtkpod_get_selected_tracks(), t_pl);
+}
+
+GtkWidget *add_copy_selected_tracks_to_target_itdb(GtkWidget *menu, const gchar *title) {
+    GtkWidget *mi;
+    GtkWidget *sub;
+    GtkWidget *pl_mi;
+    GtkWidget *pl_sub;
+    GList *itdbs;
+    GList *db;
+    struct itdbs_head *itdbs_head;
+    iTunesDB *itdb;
+    const gchar *stock_id = NULL;
+    Playlist *pl;
+
+    itdbs_head = gp_get_itdbs_head();
+
+    mi = hookup_menu_item(menu, title, GTK_STOCK_COPY, NULL, NULL);
+    sub = gtk_menu_new();
+    gtk_widget_show(sub);
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM (mi), sub);
+
+    for (itdbs = itdbs_head->itdbs; itdbs; itdbs = itdbs->next) {
+        itdb = itdbs->data;
+        ExtraiTunesDBData *eitdb = itdb->userdata;
+        if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
+            stock_id = GTK_STOCK_HARDDISK;
+        }
+        else {
+            if (eitdb->itdb_imported) {
+                stock_id = GTK_STOCK_CONNECT;
+            }
+            else {
+                stock_id = GTK_STOCK_DISCONNECT;
+            }
+        }
+        pl_mi = hookup_menu_item(sub, _(itdb_playlist_mpl(itdb)->name), stock_id, NULL, NULL);
+        pl_sub = gtk_menu_new();
+        gtk_widget_show(pl_sub);
+        gtk_menu_item_set_submenu(GTK_MENU_ITEM (pl_mi), pl_sub);
+        hookup_menu_item(pl_sub, _(itdb_playlist_mpl(itdb)->name), stock_id, G_CALLBACK(copy_selected_tracks_to_target_itdb), &itdbs->data);
+        add_separator(pl_sub);
+        for (db = itdb->playlists; db; db = db->next) {
+            pl = db->data;
+            if (!itdb_playlist_is_mpl(pl)) {
+                if (pl->is_spl)
+                    stock_id = GTK_STOCK_PROPERTIES;
+                else
+                    stock_id = GTK_STOCK_JUSTIFY_LEFT;
+                hookup_menu_item(pl_sub, _(pl->name), stock_id, G_CALLBACK(copy_selected_tracks_to_target_playlist), &db->data);
+            }
+        }
+    }
+    return mi;
+}
 

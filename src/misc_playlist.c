@@ -36,6 +36,7 @@
 #include "itdb.h"
 #include "sha1.h"
 #include "misc.h"
+#include "misc_playlist.h"
 #include "misc_track.h"
 #include "prefs.h"
 #include "file_convert.h"
@@ -751,7 +752,7 @@ static void check_db_danglingcancel0(gpointer user_data1, gpointer user_data2) {
  @user_data1 */
 static void check_db_danglingcancel1(gpointer user_data1, gpointer user_data2) {
     g_list_free((GList *) user_data1);
-        gtkpod_statusbar_message (_("Handling of dangling tracks with files on PC was canceled."));
+    gtkpod_statusbar_message(_("Handling of dangling tracks with files on PC was canceled."));
 }
 
 /* "dangling": tracks that are in database but not on disk */
@@ -774,7 +775,7 @@ static void check_db_danglingok0(gpointer user_data1, gpointer user_data2) {
     }
     g_list_free(l_dangling);
     data_changed(itdb);
-        gtkpod_statusbar_message (_("Dangling tracks with no files on PC were removed."));
+    gtkpod_statusbar_message(_("Dangling tracks with no files on PC were removed."));
 }
 
 /* To be called for ok to remove dangling Tracks with with no files linked.
@@ -829,7 +830,7 @@ static void check_db_danglingok1(gpointer user_data1, gpointer user_data2) {
     }
     g_list_free(l_dangling);
     data_changed(itdb);
-        gtkpod_statusbar_message (_("Dangling tracks with files on PC were handled."));
+    gtkpod_statusbar_message(_("Dangling tracks with files on PC were handled."));
     /* I don't think it's too interesting to pop up the list of
      duplicates -- but we should reset the list. */
     gp_duplicate_remove(NULL, (void *) -1);
@@ -1090,7 +1091,7 @@ void check_db(iTunesDB *itdb) {
         data_changed(itdb);
     g_tree_destroy(files_known);
     gtkpod_statusbar_message(_("Found %d orphaned and %d dangling files. Done."), norphaned, ndangling);
-//    gtkpod_statusbar_timeout(0);
+    //    gtkpod_statusbar_timeout(0);
     release_widgets();
 }
 
@@ -1128,13 +1129,13 @@ static void delete_playlist_ok(struct DeleteData *dd) {
             if (itdb_playlist_is_mpl(dd->pl)) {
                 msg = g_strdup_printf(_("Removed all %d tracks from the iPod"), n);
                 g_warning("TODO: reset display");
-//                display_reset(0);
+                //                display_reset(0);
             }
             else if (itdb_playlist_is_podcasts(dd->pl)) {
                 msg = g_strdup_printf(_("Removed all podcasts from the iPod"));
                 if (gtkpod_get_current_playlist() == dd->pl)
                     g_warning("TODO: reset only sorttabs");
-//                    st_redisplay(0);
+                //                    st_redisplay(0);
             }
             else {
                 /* first use playlist name */
@@ -1191,7 +1192,7 @@ static void delete_playlist_ok(struct DeleteData *dd) {
             if (itdb_playlist_is_mpl(dd->pl)) {
                 msg = g_strdup_printf(_("Removed all %d tracks from the database"), n);
                 g_warning("TODO: reset display");
-//                display_reset(0);
+                //                display_reset(0);
             }
             else {
                 /* first use playlist name */
@@ -1359,6 +1360,86 @@ void delete_playlist_head(DeleteAction deleteaction) {
         delete_playlist_cleanup(dd);
         break;
     }
+}
+
+void copy_playlist_to_target_playlist(Playlist *pl, Playlist *t_pl) {
+    GList *addtracks = NULL;
+    Playlist *t_mpl;
+
+    g_return_if_fail (pl);
+    g_return_if_fail (t_pl);
+
+    t_mpl = itdb_playlist_mpl(t_pl->itdb);
+    g_return_if_fail(t_mpl);
+
+    addtracks = gtkpod_export_tracks_as_glist(pl->itdb, t_pl->itdb, pl->members);
+    if (addtracks || !pl->members) {
+        add_trackglist_to_playlist(t_pl, addtracks);
+        gtkpod_statusbar_message(_("Copied '%s' playlist to '%s' in '%s'"), pl->name, t_pl->name, t_mpl->name);
+        g_list_free(addtracks);
+        addtracks = NULL;
+    }
+}
+
+/*
+ * Copy the selected playlist to a specified itdb.
+ */
+void copy_playlist_to_target_itdb(Playlist *pl, iTunesDB *t_itdb) {
+    Playlist *pl_n;
+    GList *addtracks = NULL;
+    g_return_if_fail (pl);
+    g_return_if_fail (t_itdb);
+    if (pl->itdb != t_itdb) {
+        addtracks = gtkpod_export_tracks_as_glist(pl->itdb, t_itdb, pl->members);
+        if (addtracks || !pl->members) {
+            pl_n = gp_playlist_add_new(t_itdb, pl->name, FALSE, -1);
+            add_trackglist_to_playlist(pl_n, addtracks);
+            gtkpod_statusbar_message(_("Copied \"%s\" playlist to %s"), pl->name, (itdb_playlist_mpl(t_itdb))->name);
+        }
+        g_list_free(addtracks);
+        addtracks = NULL;
+    }
+    else {
+        pl_n = itdb_playlist_duplicate(pl);
+        g_return_if_fail (pl_n);
+        gp_playlist_add(t_itdb, pl_n, -1);
+    }
+}
+
+const gchar* return_playlist_stock_image(Playlist *playlist) {
+    Itdb_iTunesDB *itdb;
+    ExtraiTunesDBData *eitdb;
+
+    const gchar *stock_id = NULL;
+
+    g_return_val_if_fail (playlist, NULL);
+    g_return_val_if_fail (playlist->itdb, NULL);
+
+    itdb = playlist->itdb;
+    g_return_val_if_fail (itdb->userdata, NULL);
+    eitdb = itdb->userdata;
+
+    if (playlist->is_spl) {
+        stock_id = GTK_STOCK_PROPERTIES;
+    }
+    else if (!itdb_playlist_is_mpl(playlist)) {
+        stock_id = PLAYLIST_DISPLAY_PLAYLIST_ICON_STOCK_ID;
+    }
+    else {
+        if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
+            stock_id = GTK_STOCK_HARDDISK;
+        }
+        else {
+            if (eitdb->itdb_imported) {
+                stock_id = GTK_STOCK_CONNECT;
+            }
+            else {
+                stock_id = GTK_STOCK_DISCONNECT;
+            }
+        }
+    }
+
+    return stock_id;
 }
 
 /*------------------------------------------------------------------*\

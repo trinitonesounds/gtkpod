@@ -38,7 +38,6 @@
 
 /* Stock IDs */
 #define PLAYLIST_DISPLAY_PHOTO_ICON_STOCK_ID "playlist_display-photo-icon"
-#define PLAYLIST_DISPLAY_PLAYLIST_ICON_STOCK_ID "playlist_display-playlist-icon"
 #define PLAYLIST_DISPLAY_READ_ICON_STOCK_ID "playlist_display-read-icon"
 #define PLAYLIST_DISPLAY_ADD_DIRS_ICON_STOCK_ID "playlist_display-add-dirs-icon"
 #define PLAYLIST_DISPLAY_ADD_FILES_ICON_STOCK_ID "playlist_display-add-files-icon"

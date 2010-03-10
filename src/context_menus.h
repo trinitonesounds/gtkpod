@@ -46,15 +46,12 @@ GtkWidget *hookup_menu_item(GtkWidget *m, const gchar *str, const gchar *stock, 
 GtkWidget *add_separator(GtkWidget *menu);
 
 void context_menu_delete_track_head(GtkMenuItem *mi, gpointer data);
-void context_menu_delete_playlist_head(GtkMenuItem *mi, gpointer data);
 
-GtkWidget *add_delete_all_tracks_from_ipod (GtkWidget *menu);
-GtkWidget *add_delete_all_podcasts_from_ipod (GtkWidget *menu);
-GtkWidget *add_delete_playlist_but_keep_tracks (GtkWidget *menu);
 GtkWidget *add_play_now (GtkWidget *menu);
 GtkWidget *add_enqueue (GtkWidget *menu);
 GtkWidget *add_copy_track_to_filesystem (GtkWidget *menu);
 GtkWidget *add_create_playlist_file (GtkWidget *menu);
 GtkWidget *add_update_tracks_from_file (GtkWidget *menu);
+GtkWidget *add_sync_playlist_with_dirs (GtkWidget *menu);
 
 #endif

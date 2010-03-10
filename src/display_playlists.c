@@ -1625,7 +1625,7 @@ static void pm_cell_edited(GtkCellRendererText *renderer, const gchar *path_stri
  * @renderer: renderer to be set
  * @playlist: playlist to consider.
  */
-void pm_set_playlist_renderer_text(GtkCellRenderer *renderer, Playlist *playlist) {
+static void pm_set_playlist_renderer_text(GtkCellRenderer *renderer, Playlist *playlist) {
     ExtraiTunesDBData *eitdb;
 
     g_return_if_fail (playlist);
@@ -1689,39 +1689,15 @@ void pm_set_photodb_renderer_text(GtkCellRenderer *renderer, PhotoDB *photodb) {
  * @renderer: renderer to be set
  * @playlist: playlist to consider.
  */
-void pm_set_playlist_renderer_pix(GtkCellRenderer *renderer, Playlist *playlist) {
-    Itdb_iTunesDB *itdb;
-    ExtraiTunesDBData *eitdb;
-
+static void pm_set_playlist_renderer_pix(GtkCellRenderer *renderer, Playlist *playlist) {
     const gchar *stock_id = NULL;
 
     g_return_if_fail (renderer);
-    g_return_if_fail (playlist);
-    g_return_if_fail (playlist->itdb);
 
-    itdb = playlist->itdb;
-    g_return_if_fail (itdb->userdata);
-    eitdb = itdb->userdata;
+    stock_id = return_playlist_stock_image(playlist);
+    if (! stock_id)
+        return;
 
-    if (playlist->is_spl) {
-        stock_id = GTK_STOCK_PROPERTIES;
-    }
-    else if (!itdb_playlist_is_mpl(playlist)) {
-        stock_id = PLAYLIST_DISPLAY_PLAYLIST_ICON_STOCK_ID;
-    }
-    else {
-        if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
-            stock_id = GTK_STOCK_HARDDISK;
-        }
-        else {
-            if (eitdb->itdb_imported) {
-                stock_id = GTK_STOCK_CONNECT;
-            }
-            else {
-                stock_id = GTK_STOCK_DISCONNECT;
-            }
-        }
-    }
     g_object_set(G_OBJECT (renderer), "stock-id", stock_id, NULL);
     g_object_set(G_OBJECT (renderer), "stock-size", GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
 }

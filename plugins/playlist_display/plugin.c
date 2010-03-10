@@ -32,6 +32,7 @@
 
 #include <glib.h>
 #include "libgtkpod/stock_icons.h"
+#include "libgtkpod/misc_playlist.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/tool_menu_action.h"
 #include "plugin.h"

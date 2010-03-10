@@ -30,6 +30,5 @@
 #define PLAYLIST_DISPLAY_CONTEXT_MENU_H_
 
 void pm_context_menu_init(void);
-GtkWidget *add_delete_playlist_including_tracks_ipod (GtkWidget *menu);
 
 #endif /* PLAYLIST_DISPLAY_CONTEXT_MENU_H_ */

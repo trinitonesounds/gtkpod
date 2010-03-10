@@ -116,6 +116,7 @@ struct _GtkPodAppInterface {
     void (*statusbar_busy_pop)(GtkPodApp *obj);
     GList * (*export_tracks_as_gchar)(iTunesDB *source_db, iTunesDB *dest_db, gchar *tracks);
     GList * (*export_tracks_as_glist)(iTunesDB *source_db, iTunesDB *dest_db, GList *tracks);
+    void (*edit_repository)(iTunesDB *itdb, Playlist *playlist);
 };
 
 GType gtkpod_app_get_type(void);
@@ -156,6 +157,9 @@ void gtkpod_unregister_exporter();
 GList *gtkpod_export_tracks_as_gchar(iTunesDB *source_db, iTunesDB *dest_db, gchar *tracks);
 GList *gtkpod_export_tracks_as_glist(iTunesDB *source_db, iTunesDB *dest_d, GList *tracks);
 
+void gtkpod_register_repository_editor(void (*edit_repository_func)(iTunesDB *itdb, Playlist *playlist));
+void gtkpod_unregister_repository_editor();
+void gtkpod_edit_repository(iTunesDB *itdb, Playlist *playlist);
 
 GtkPodApp *gtkpod_app;
 guint gtkpod_app_signals[LAST_SIGNAL];

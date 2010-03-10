@@ -77,4 +77,7 @@ void delete_track_head (DeleteAction deleteaction);
 void delete_track_ok(struct DeleteData *dd);
 void delete_track_cancel(struct DeleteData *dd);
 
+void copy_tracks_to_target_playlist(GList *tracks, Playlist *t_pl);
+void copy_tracks_to_target_itdb(GList *tracks, iTunesDB *t_itdb);
+
 #endif

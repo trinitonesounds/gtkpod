@@ -1957,8 +1957,8 @@ void delete_track_ok(struct DeleteData *dd) {
         delete_track_cancel(dd);
 
     g_warning("TODO: determine whether still need to block changes while deleting");
-//    /* Deafen the coverart display while deletion is occurring */
-//    coverart_block_change(TRUE);
+    //    /* Deafen the coverart display while deletion is occurring */
+    //    coverart_block_change(TRUE);
 
     /* nr of tracks to be deleted */
     n = g_list_length(dd->tracks);
@@ -2012,7 +2012,7 @@ void delete_track_ok(struct DeleteData *dd) {
 
     /* Awaken coverart selection */
     g_warning("TODO: determine whether still need to block changes while deleting");
-//    coverart_block_change(FALSE);
+    //    coverart_block_change(FALSE);
     g_list_free(dd->tracks);
     g_free(dd);
 
@@ -2085,13 +2085,65 @@ void delete_track_head(DeleteAction deleteaction) {
     g_string_free(str, TRUE);
 }
 
+void copy_tracks_to_target_playlist(GList *tracks, Playlist *t_pl) {
+    GList *addtracks = NULL;
+    Track *first;
+    Playlist *mpl;
+    gint n;
+
+    g_return_if_fail (tracks);
+    g_return_if_fail (t_pl);
+    g_return_if_fail (t_pl->itdb);
+
+    mpl = itdb_playlist_mpl(t_pl->itdb);
+    g_return_if_fail(mpl);
+
+    if (tracks) {
+        first = tracks->data;
+        g_return_if_fail (first);
+        addtracks = gtkpod_export_tracks_as_glist(first->itdb, t_pl->itdb, tracks);
+        add_trackglist_to_playlist(t_pl, addtracks);
+    }
+    n = g_list_length(addtracks);
+    gtkpod_statusbar_message(ngettext ("Copied %d track to '%s' in '%s'",
+            "Copied %d tracks to %s in '%s'", n), n, t_pl->name, mpl->name);
+    g_list_free(addtracks);
+    addtracks = NULL;
+}
+
+/*
+ * Copy selected tracks to a specified itdb.
+ */
+void copy_tracks_to_target_itdb(GList *tracks, iTunesDB *t_itdb) {
+    GList *addtracks = NULL;
+    Track *first = tracks->data;
+    Playlist *mpl;
+    gint n;
+
+    g_return_if_fail(tracks);
+    g_return_if_fail(t_itdb);
+
+    mpl = itdb_playlist_mpl(t_itdb);
+    g_return_if_fail(mpl);
+
+    addtracks = gtkpod_export_tracks_as_glist(first->itdb, t_itdb, tracks);
+
+    if (addtracks) {
+        add_trackglist_to_playlist(mpl, addtracks);
+        n = g_list_length(addtracks);
+        gtkpod_statusbar_message(ngettext ("Copied %d track to '%s'",
+                "Copied %d tracks to '%s'", n), n, mpl->name);
+        g_list_free(addtracks);
+        addtracks = NULL;
+    }
+}
+
 /*------------------------------------------------------------------*\
  *                                                                  *
  *              Frequently used error messages *
  *                                                                  *
  \*------------------------------------------------------------------*/
 
-void message_sb_no_tracks_selected ()
-{
-    gtkpod_statusbar_message (_("No tracks selected"));
+void message_sb_no_tracks_selected() {
+    gtkpod_statusbar_message(_("No tracks selected"));
 }
