@@ -345,3 +345,9 @@ void gtkpod_edit_repository(iTunesDB *itdb, Playlist *playlist) {
   g_return_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->edit_repository);
   GTKPOD_APP_GET_INTERFACE (gtkpod_app)->edit_repository(itdb, playlist);
 }
+
+void gtkpod_display_widget(GtkWidget *widget) {
+    g_return_if_fail(widget);
+    g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
+    GTKPOD_APP_GET_INTERFACE(gtkpod_app)->display_widget(widget);
+}

@@ -135,11 +135,28 @@ static void on_gdl_style_changed(GConfClient* client, guint id, GConfEntry* entr
     g_object_set(G_OBJECT(app->layout_manager->master), "switcher-style", style, NULL);
 }
 
+static void anjuta_gtkpod_app_display_widget (GtkWidget *widget) {
+    g_return_if_fail(widget);
+
+    GtkWidget *w;
+    if (GDL_IS_DOCK_ITEM(widget))
+        w = widget;
+    else {
+        w = g_object_get_data (G_OBJECT (widget), "dockitem");
+    }
+
+    if (w && !gtk_widget_get_visible(w)) {
+        // Only show docked widget if really sure it is no longer
+        // in the dock layout, ie. widget is not visible
+        gdl_dock_item_show_item(GDL_DOCK_ITEM (w));
+    }
+}
+
 static void on_toggle_widget_view(GtkCheckMenuItem *menuitem, GtkWidget *dockitem) {
     gboolean state;
     state = gtk_check_menu_item_get_active(menuitem);
     if (state)
-        gdl_dock_item_show_item(GDL_DOCK_ITEM (dockitem));
+        anjuta_gtkpod_app_display_widget(dockitem);
     else
         gdl_dock_item_hide_item(GDL_DOCK_ITEM (dockitem));
 }
@@ -1354,8 +1371,10 @@ static void gtkpod_app_iface_init(GtkPodAppInterface *iface) {
     iface->gtkpod_warning_hig = anjuta_gtkpod_app_warning_hig;
     iface->gtkpod_confirmation_hig = anjuta_gtkpod_app_confirmation_hig;
     iface->gtkpod_confirmation = anjuta_gtkpod_app_confirmation;
+    iface->display_widget = anjuta_gtkpod_app_display_widget;
     iface->export_tracks_as_gchar = NULL;
     iface->export_tracks_as_glist = NULL;
+    iface->edit_repository = NULL;
 }
 
 G_MODULE_EXPORT void on_confirm_tree_size_allocate (GtkWidget *sender, GtkAllocation *allocation, gpointer e)

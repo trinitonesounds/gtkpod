@@ -44,6 +44,7 @@
 #include "libgtkpod/file.h"
 #include "libgtkpod/misc.h"
 #include "libgtkpod/misc_track.h"
+#include "libgtkpod/misc_playlist.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/prefs.h"
 
@@ -1078,18 +1079,17 @@ void pm_remove_playlist(Playlist *playlist, gboolean select) {
 
     ts = gtk_tree_view_get_selection(playlist_treeview);
 
-    if (itdb_playlist_is_mpl(playlist) && (playlist->itdb == gtkpod_get_current_itdb())) { /* We are about to remove the entire itdb (playlist is MPL) and
-     * a playlist of this itdb is selected --> clear display
-     * (pm_unselect_playlist probably works as well, but the
-     * unselect won't be done until later (callback)) */
-        //        gphoto_change_to_photo_window(FALSE);
-        //        st_init(-1, 0);
-        g_warning("pm_remove_playlist - 1");
+    if (itdb_playlist_is_mpl(playlist) && (playlist->itdb == gtkpod_get_current_itdb())) {
+        /* We are about to remove the entire itdb (playlist is MPL) and
+         * a playlist of this itdb is selected --> clear display
+         * (pm_unselect_playlist probably works as well, but the
+         * unselect won't be done until later (callback)) */
         gtkpod_set_current_playlist(NULL);
     }
 
-    if (select && (gtkpod_get_current_playlist() == playlist)) { /* We are about to delete the currently selected
-     playlist. Try to select the next. */
+    if (select && (gtkpod_get_current_playlist() == playlist)) {
+        /* We are about to delete the currently selected
+         * playlist. Try to select the next. */
         if (gtk_tree_selection_get_selected(ts, NULL, &select_iter)) {
             GtkTreePath *path = gtk_tree_model_get_path(model, &select_iter);
             if (gtk_tree_model_iter_next(model, &select_iter)) {
@@ -2135,6 +2135,7 @@ void playlist_display_update_itdb_cb(GtkPodApp *app, gpointer olditdb, gpointer 
 
     /* remove @old_itdb (all playlists are removed if the MPL is
      removed and add @new_itdb at its place */
+
     pm_remove_playlist(itdb_playlist_mpl(old_itdb), FALSE);
 
     /* display replacement */
@@ -2145,8 +2146,9 @@ void playlist_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer d
     Playlist *new_playlist = pl;
     Playlist *old_playlist = pm_get_selected_playlist();
 
-    if (old_playlist == new_playlist)
+    if (old_playlist == new_playlist) {
         return;
+    }
 
     if (old_playlist)
         pm_unselect_playlist(old_playlist);

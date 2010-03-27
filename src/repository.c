@@ -81,7 +81,6 @@ static const gchar *IPOD_MODEL_ENTRY = "ipod_model_entry--not-a-glade-name";
 static const gchar *LOCAL_PATH_LABEL = "local_path_label";
 static const gchar *LOCAL_PATH_ENTRY = "local_path_entry";
 static const gchar *STANDARD_PLAYLIST_VBOX = "standard_playlist_vbox";
-static const gchar *SPL_VBOX = "spl_vbox";
 static const gchar *SPL_LIVE_UPDATE_TOGGLE = "spl_live_update_toggle";
 static const gchar *SYNC_PLAYLIST_MODE_NONE_RADIO = "sync_playlist_mode_none_radio";
 static const gchar *SYNC_PLAYLIST_MODE_AUTOMATIC_RADIO = "sync_playlist_mode_automatic_radio";
@@ -149,6 +148,7 @@ static void update_buttons(RepWin *repwin);
 static void repwin_free(RepWin *repwin);
 static void init_repository_combo(RepWin *repwin);
 static void init_playlist_combo(RepWin *repwin);
+static void repository_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointer data);
 static void select_repository(RepWin *repwin, iTunesDB *itdb, Playlist *playlist);
 static void create_repository(RepWin *repwin);
 
@@ -786,7 +786,7 @@ static void edit_apply_clicked(GtkButton *button, RepWin *repwin) {
             g_free(key);
             if (str) { /* have to set mountpoint */
                 itdb_set_mountpoint(itdb, str);
-                g_warning("TODO: edit_apply_clicked - space_set_ipod_itdb");
+                //g_warning("TODO: edit_apply_clicked - space_set_ipod_itdb");
                 //                space_set_ipod_itdb(itdb);
                 g_free(str);
             }
@@ -832,19 +832,6 @@ static void edit_apply_clicked(GtkButton *button, RepWin *repwin) {
 #   endif
 
     update_buttons(repwin);
-}
-
-static void edit_cancel_clicked(GtkButton *button, RepWin *repwin) {
-    g_return_if_fail (repwin);
-
-    repwin_free(repwin);
-}
-
-static void edit_ok_clicked(GtkButton *button, RepWin *repwin) {
-    g_return_if_fail (repwin);
-
-    edit_apply_clicked(NULL, repwin);
-    edit_cancel_clicked(NULL, repwin);
 }
 
 /* Used by select_playlist() to find the new playlist. If found,
@@ -897,21 +884,35 @@ static void select_playlist(RepWin *repwin, Playlist *playlist) {
 static void select_repository(RepWin *repwin, iTunesDB *itdb, Playlist *playlist) {
     g_return_if_fail (repwin);
 
-    if (itdb) {
+    if (repwin->itdb != itdb) {
         gint index;
-
         repwin->next_playlist = playlist;
-
         index = get_itdb_index(itdb);
-
         gtk_combo_box_set_active(GTK_COMBO_BOX (gtkpod_xml_get_widget (repwin->xml,
                         REPOSITORY_COMBO)), index);
-        /* The combo callback will set the playlist */
     }
     else {
         if (repwin->itdb)
             select_playlist(repwin, playlist);
     }
+}
+
+static void repository_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointer data) {
+    Playlist *playlist = pl;
+    iTunesDB *itdb = NULL;
+
+    if (!playlist) {
+      return;
+    }
+
+    itdb = playlist->itdb;
+
+    /* Important to re-initialise combo in case it is pointing to a defunct
+     * repository mpl playlist. */
+    init_repository_combo(repository_window);
+
+    /* Select the repository of the playlist */
+    select_repository(repository_window, itdb, playlist);
 }
 
 /* set @entry with value of @key */
@@ -1084,7 +1085,6 @@ static void display_playlist_info(RepWin *repwin) {
     if (playlist->is_spl) {
         gint liveupdate;
 
-        gtk_widget_show(GET_WIDGET (SPL_VBOX));
         gtk_widget_show(GET_WIDGET (PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE));
         gtk_widget_hide(GET_WIDGET (STANDARD_PLAYLIST_VBOX));
 
@@ -1099,7 +1099,6 @@ static void display_playlist_info(RepWin *repwin) {
         gint syncmode;
         gchar *dir;
         gtk_widget_show(GET_WIDGET (STANDARD_PLAYLIST_VBOX));
-        gtk_widget_hide(GET_WIDGET (SPL_VBOX));
 
         key = get_playlist_prefs_key(index, playlist, KEY_SYNCMODE);
         syncmode = get_current_prefs_int(repwin, key);
@@ -1215,6 +1214,7 @@ static void set_playlist_renderer_pix(GtkCellRenderer *renderer, Playlist *playl
     const gchar *stock_id = NULL;
 
     g_return_if_fail (renderer);
+    g_return_if_fail (playlist);
 
     stock_id = return_playlist_stock_image(playlist);
     if (!stock_id)
@@ -1286,7 +1286,7 @@ static void playlist_cb_cell_data_func_text(GtkCellLayout *cell_layout, GtkCellR
 }
 
 /****** common between init_repository_combo() and create_repository() */
-static void set_repository_combo(GtkComboBox *cb) {
+static void populate_repository_combo(GtkComboBox *cb) {
     struct itdbs_head *itdbs_head;
     GtkCellRenderer *cell;
     GtkListStore *store;
@@ -1336,7 +1336,7 @@ static void init_repository_combo(RepWin *repwin) {
 
     cb = GTK_COMBO_BOX (GET_WIDGET (REPOSITORY_COMBO));
 
-    set_repository_combo(cb);
+    populate_repository_combo(cb);
 
     if (g_object_get_data(G_OBJECT (cb), "combo_set") == NULL) { /* the combo has not yet been initialized */
         g_signal_connect (cb, "changed",
@@ -1423,7 +1423,6 @@ static void update_buttons(RepWin *repwin) {
     }
 
     gtk_widget_set_sensitive(GET_WIDGET ("apply_button"), apply);
-    gtk_widget_set_sensitive(GET_WIDGET ("ok_button"), ok);
 
     if (repwin->itdb) {
         gtk_widget_set_sensitive(GET_WIDGET (REPOSITORY_VBOX), TRUE);
@@ -1496,7 +1495,7 @@ static void repository_edit_itdb_added(iTunesDB *itdb, gboolean select) {
 //    gint index, num;
 //    GList *gl;
 
-    g_warning("TODO: repository_edit_itdb_added");
+    //g_warning("TODO: repository_edit_itdb_added");
 //    g_return_if_fail (itdb);
 //    itdbs_head = gp_get_itdbs_head();
 //    g_return_if_fail (itdbs_head);
@@ -1568,7 +1567,9 @@ static void create_repository_edit_view() {
 
     /* Add widget in Shell. Any number of widgets can be added */
     repository_editor_plugin->repo_window = gtk_scrolled_window_new(NULL, NULL);
+    gtk_widget_ref(repository_editor_plugin->repo_window);
     repository_editor_plugin->repo_view = viewport;
+    gtk_widget_ref(repository_editor_plugin->repo_view);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (repository_editor_plugin->repo_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (repository_editor_plugin->repo_window), GTK_SHADOW_IN);
 
@@ -1576,6 +1577,10 @@ static void create_repository_edit_view() {
     anjuta_shell_add_widget(ANJUTA_PLUGIN(repository_editor_plugin)->shell, repository_editor_plugin->repo_window, "RepositoryEditorPlugin", "Edit iPod Repositories", NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
 
     repository_window->window = repository_editor_plugin->repo_window;
+
+    /* we don't need these any more */
+    gtk_widget_unref(viewport);
+    gtk_widget_destroy(repo_window);
 
     /* widget names and corresponding keys for 'standard' toggle
      options */
@@ -1602,16 +1607,6 @@ static void create_repository_edit_view() {
     /* Setup model number combo */
     cb = GTK_COMBO_BOX (GET_WIDGET (IPOD_MODEL_COMBO));
     gp_init_model_number_combo(cb);
-
-    /* Window control */
-    g_signal_connect (GET_WIDGET ("apply_button"), "clicked",
-            G_CALLBACK (edit_apply_clicked), repository_window);
-
-    g_signal_connect (GET_WIDGET ("cancel_button"), "clicked",
-            G_CALLBACK (edit_cancel_clicked), repository_window);
-
-    g_signal_connect (GET_WIDGET ("ok_button"), "clicked",
-            G_CALLBACK (edit_ok_clicked), repository_window);
 
     /* Entry callbacks */
     g_signal_connect (GET_WIDGET (MANUAL_SYNCDIR_ENTRY), "changed",
@@ -1696,6 +1691,8 @@ static void create_repository_edit_view() {
     /* Set up temp_prefs struct */
     repository_window->temp_prefs = temp_prefs_create();
     repository_window->extra_prefs = temp_prefs_create();
+
+    g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (repository_playlist_selected_cb), NULL);
 }
 
 /**
@@ -1707,8 +1704,10 @@ static void create_repository_edit_view() {
  * NULL, display @playlist and assume repository is playlist->itdb.
  */
 void repository_edit(iTunesDB *itdb, Playlist *playlist) {
-    if (! repository_editor_plugin->repo_window)
+    if (!repository_window || !repository_window->window)
         create_repository_edit_view();
+    else
+        gtkpod_display_widget(repository_window->window);
 
     if (!itdb && playlist)
         itdb = playlist->itdb;
@@ -2036,7 +2035,7 @@ static void create_repository(RepWin *repwin1) {
     gtk_combo_box_set_active(GTK_COMBO_BOX (GET_WIDGET (CRW_INSERT_BEFORE_AFTER_COMBO)), INSERT_AFTER);
 
     /* Set up repository combo */
-    set_repository_combo(GTK_COMBO_BOX (GET_WIDGET (CRW_REPOSITORY_COMBO)));
+    populate_repository_combo(GTK_COMBO_BOX (GET_WIDGET (CRW_REPOSITORY_COMBO)));
     gtk_combo_box_set_active(GTK_COMBO_BOX (GET_WIDGET (CRW_REPOSITORY_COMBO)), 0);
 
     /* Set default repository name */
