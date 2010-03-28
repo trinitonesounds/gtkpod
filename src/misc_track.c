@@ -105,13 +105,11 @@ void gp_sha1_hash_tracks(void) {
     itdbs_head = gp_get_itdbs_head();
     g_return_if_fail (itdbs_head);
 
-    g_warning("TODO block widgets in gp_sha1_hash_tracks");
-    //    block_widgets();
+    block_widgets();
     for (gl = itdbs_head->itdbs; gl; gl = gl->next) {
         gp_sha1_hash_tracks_itdb(gl->data);
     }
-    g_warning("TODO release widgets in gp_sha1_hash_tracks");
-    //    release_widgets();
+    release_widgets();
 }
 
 static void rm_sha1(gpointer track, gpointer user_data) {

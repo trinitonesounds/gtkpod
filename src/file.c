@@ -1411,8 +1411,7 @@ void mserv_from_file_tracks(GList *selected_tracks) {
     GList *gl;
 
     if (selected_tracks == NULL) {
-        g_warning("TODO file:mserv_from_file_tracks - status needed\n");
-        //	gtkpod_statusbar_message(_("Nothing to update"));
+        gtkpod_statusbar_message(_("Nothing to update"));
         return;
     }
 
@@ -1437,8 +1436,7 @@ void mserv_from_file_tracks(GList *selected_tracks) {
     release_widgets();
     /* display log of problems with mserv data */
     display_mserv_problems(NULL, NULL);
-    g_warning("TODO file:mserv_from_file_tracks - status needed\n");
-    //    gtkpod_statusbar_message(_("Updated selected tracks with data from mserv."));
+    gtkpod_statusbar_message(_("Updated selected tracks with data from mserv."));
 }
 
 /* Logs tracks (@track) that could not be updated from file for some

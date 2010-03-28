@@ -1709,8 +1709,7 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
                 gchar *ext = g_strdup_printf("%s.ext", itdb->filename);
                 if (g_file_test(ext, G_FILE_TEST_EXISTS)) {
                     if (remove(ext) != 0) {
-                        g_warning("TODO gp_write_itdb statusbar message\n");
-                        //                        gtkpod_statusbar_message(_("Extended information file not deleted: '%s\'"), ext);
+                        gtkpod_statusbar_message(_("Extended information file not deleted: '%s\'"), ext);
                     }
                 }
                 g_free(ext);

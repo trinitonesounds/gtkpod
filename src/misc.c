@@ -119,8 +119,6 @@ static void block_release_widgets(gint action, GtkWidget *w, gboolean sens) {
                 bw->sensitive = GTK_WIDGET_SENSITIVE (bw->widget);
                 gtk_widget_set_sensitive(bw->widget, FALSE);
             }
-            g_warning("TODO misc:block_release_widgets sort_window_block commented out\n");
-            //        sort_window_block ();
             widgets_blocked = TRUE;
         }
         break;
@@ -133,9 +131,6 @@ static void block_release_widgets(gint action, GtkWidget *w, gboolean sens) {
                     bw = (struct blocked_widget *) l->data;
                     gtk_widget_set_sensitive(bw->widget, bw->sensitive);
                 }
-
-                g_warning("TODO misc:block_release_widgets sort_window_release commented out\n");
-                //            sort_window_release ();
                 widgets_blocked = FALSE;
             }
         }

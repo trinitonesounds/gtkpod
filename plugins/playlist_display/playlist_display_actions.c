@@ -124,16 +124,14 @@ static void fileselection_add_playlists(GSList* names, iTunesDB *itdb) {
 
     g_return_if_fail (itdb);
 
-    g_warning("fileselection_add_playlists - block widgets commented out");
-    //    block_widgets();
+    block_widgets();
 
     gtkpod_statusbar_busy_push();
     for (gsl = names; gsl; gsl = gsl->next) {
         add_playlist_by_filename(itdb, gsl->data, NULL, -1, NULL, NULL);
     }
 
-    g_warning("fileselection_add_playlists - release widgets commented out");
-    //    release_widgets();
+    release_widgets();
 
     /* clear log of non-updated tracks */
     display_non_updated((void *) -1, NULL);
@@ -259,8 +257,7 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
         gtkpod_statusbar_message(_("Some files were not added successfully"));
 
     gtkpod_statusbar_busy_pop();
-    g_warning("fileselection_add_playlists - release widgets commented out");
-    //    release_widgets();
+    release_widgets();
 }
 
 static gboolean fileselection_add_files_cb(gpointer data) {

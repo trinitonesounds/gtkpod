@@ -50,6 +50,8 @@
 struct _RepWin {
     GladeXML *xml;           /* XML info                             */
     GtkWidget *window; /* pointer to repository window         */
+    GtkComboBox *repository_combo_box; /* pointer to repository combo */
+    GtkComboBox *playlist_combo_box; /* pointer to playlist combo */
     iTunesDB *itdb; /* currently displayed repository       */
     gint itdb_index; /* index number of itdb                 */
     Playlist *playlist; /* currently displayed playlist         */
@@ -144,13 +146,15 @@ static const gchar *CRW_REPOSITORY_NAME_ENTRY = "crw_repository_name_entry";
 static const gchar *CRW_REPOSITORY_TYPE_COMBO = "crw_repository_type_combo";
 
 /* Declarations */
-static void update_buttons(RepWin *repwin);
-static void repwin_free(RepWin *repwin);
-static void init_repository_combo(RepWin *repwin);
-static void init_playlist_combo(RepWin *repwin);
+static void update_buttons();
+static void init_repository_combo();
+static void init_playlist_combo();
 static void repository_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointer data);
-static void select_repository(RepWin *repwin, iTunesDB *itdb, Playlist *playlist);
-static void create_repository(RepWin *repwin);
+static void select_repository(iTunesDB *itdb, Playlist *playlist);
+static void create_repository();
+static void repository_update_itdb_cb(GtkPodApp *app, gpointer olditdb, gpointer newitdb, gpointer data);
+static void repository_playlist_changed_cb(GtkPodApp *app, gpointer pl, gint32 pos, gpointer data);
+static void repository_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointer data);
 
 RepWin *repository_window = NULL;
 
@@ -159,8 +163,8 @@ RepWin *repository_window = NULL;
  *        Helper functions to retrieve widgets.
  *
  * ------------------------------------------------------------ */
-/* shortcut to reference widgets when repwin->xml is already set */
-#define GET_WIDGET(a) repository_xml_get_widget (repository_window->xml,a)
+/* shortcut to reference widgets when repository_window->xml is already set */
+#define GET_WIDGET(a) repository_xml_get_widget (repository_window->xml, a)
 
 /* This is quite dirty: MODEL_ENTRY is not a real widget
  name. Instead it's the entry of a ComboBoxEntry -- hide this from
@@ -181,15 +185,15 @@ GtkWidget *repository_xml_get_widget(GladeXML *xml, const gchar *name) {
  *
  * ------------------------------------------------------------ */
 
-/* Get prefs string -- either from repwin->temp_prefs or from the main
+/* Get prefs string -- either from repository_window->temp_prefs or from the main
  prefs system. Return an empty string if no value was set. */
 /* Free string after use */
-static gchar *get_current_prefs_string(RepWin *repwin, const gchar *key) {
+static gchar *get_current_prefs_string(const gchar *key) {
     gchar *value;
 
-    g_return_val_if_fail (repwin && key, NULL);
+    g_return_val_if_fail (repository_window && key, NULL);
 
-    value = temp_prefs_get_string(repwin->temp_prefs, key);
+    value = temp_prefs_get_string(repository_window->temp_prefs, key);
     if (value == NULL) {
         value = prefs_get_string(key);
     }
@@ -199,15 +203,15 @@ static gchar *get_current_prefs_string(RepWin *repwin, const gchar *key) {
     return value;
 }
 
-/* Get integer prefs value -- either from repwin->temp_prefs or from
+/* Get integer prefs value -- either from repository_window->temp_prefs or from
  the main prefs system. Return 0 if no value was set. */
 /* Free string after use */
-static gint get_current_prefs_int(RepWin *repwin, const gchar *key) {
+static gint get_current_prefs_int(const gchar *key) {
     gint value;
 
-    g_return_val_if_fail (repwin && key, 0);
+    g_return_val_if_fail (repository_window && key, 0);
 
-    if (!temp_prefs_get_int_value(repwin->temp_prefs, key, &value)) {
+    if (!temp_prefs_get_int_value(repository_window->temp_prefs, key, &value)) {
         value = prefs_get_int(key);
     }
     return value;
@@ -222,19 +226,19 @@ static gint get_current_prefs_int(RepWin *repwin, const gchar *key) {
 /* Compare the value of @str with the value stored for @key in the
  prefs system. If values differ, store @str for @key in
 
- @repwin->temp_prefs, otherwise remove a possibly existing entry
- @key in @repwin->temp_prefs.
+ @repository_window->temp_prefs, otherwise remove a possibly existing entry
+ @key in @repository_window->temp_prefs.
 
  Return value: TRUE if a new string was set, FALSE if no new string
  was set, or the new string was identical to the one stored in the
  prefs system. */
 
 /* Attention: g_frees() @key and @str for you */
-static gboolean finish_string_storage(RepWin *repwin, gchar *key, gchar *str) {
+static gboolean finish_string_storage(gchar *key, gchar *str) {
     gchar *prefs_str;
     gboolean result;
 
-    g_return_val_if_fail (repwin && key && str, FALSE);
+    g_return_val_if_fail (repository_window && key && str, FALSE);
 
     prefs_str = prefs_get_string(key);
 
@@ -243,7 +247,7 @@ static gboolean finish_string_storage(RepWin *repwin, gchar *key, gchar *str) {
 #       if LOCAL_DEBUG
         printf ("setting '%s' to '%s'\n", key, str);
 #       endif
-        temp_prefs_set_string(repwin->temp_prefs, key, str);
+        temp_prefs_set_string(repository_window->temp_prefs, key, str);
         result = TRUE;
     }
     else { /* value has not changed -- remove key from temp prefs (in
@@ -251,10 +255,10 @@ static gboolean finish_string_storage(RepWin *repwin, gchar *key, gchar *str) {
 #       if LOCAL_DEBUG
         printf ("removing '%s'.\n", key);
 #       endif
-        temp_prefs_remove_key(repwin->temp_prefs, key);
+        temp_prefs_remove_key(repository_window->temp_prefs, key);
         result = FALSE;
     }
-    update_buttons(repwin);
+    update_buttons(repository_window);
     g_free(key);
     g_free(str);
     g_free(prefs_str);
@@ -265,23 +269,23 @@ static gboolean finish_string_storage(RepWin *repwin, gchar *key, gchar *str) {
  finish_string_storage()
 
  Return value: see finish_string_storage() */
-static gboolean finish_editable_storage(RepWin *repwin, gchar *key, GtkEditable *editable) {
+static gboolean finish_editable_storage(gchar *key, GtkEditable *editable) {
     gchar *str;
 
-    g_return_val_if_fail (repwin && key && editable, FALSE);
+    g_return_val_if_fail (repository_window && key && editable, FALSE);
 
     str = gtk_editable_get_chars(editable, 0, -1);
-    return finish_string_storage(repwin, key, str);
+    return finish_string_storage(key, str);
 }
 
 /* Compare the value of @val with the value stored for @key in the
  prefs system. If values differ, store @val for @key in
- @repwin->temp_prefs, otherwise remove a possibly existing entry
- @key in @repwin->temp_prefs. */
-static void finish_int_storage(RepWin *repwin, gchar *key, gint val) {
+ @repository_window->temp_prefs, otherwise remove a possibly existing entry
+ @key in @repository_window->temp_prefs. */
+static void finish_int_storage(gchar *key, gint val) {
     gint prefs_val;
 
-    g_return_if_fail (repwin && key);
+    g_return_if_fail (repository_window && key);
 
     /* defaults to '0' if not set */
     prefs_val = prefs_get_int(key);
@@ -290,43 +294,43 @@ static void finish_int_storage(RepWin *repwin, gchar *key, gint val) {
 #       if LOCAL_DEBUG
         printf ("setting '%s' to '%d'\n", key, val);
 #       endif
-        temp_prefs_set_int(repwin->temp_prefs, key, val);
+        temp_prefs_set_int(repository_window->temp_prefs, key, val);
     }
     else { /* value has not changed -- remove key from temp prefs (in
      case it exists */
 #       if LOCAL_DEBUG
         printf ("removing '%s'.\n", key);
 #       endif
-        temp_prefs_remove_key(repwin->temp_prefs, key);
+        temp_prefs_remove_key(repository_window->temp_prefs, key);
     }
-    update_buttons(repwin);
+    update_buttons();
 }
 
 /* text in standard text entry has changed */
-static void standard_itdb_entry_changed(GtkEditable *editable, RepWin *repwin) {
+static void standard_itdb_entry_changed(GtkEditable *editable) {
     const gchar *keybase;
     gchar *key;
 
-    g_return_if_fail (repwin);
+    g_return_if_fail (repository_window);
 
     keybase = g_object_get_data(G_OBJECT (editable), "key");
     g_return_if_fail (keybase);
 
-    key = get_itdb_prefs_key(repwin->itdb_index, keybase);
+    key = get_itdb_prefs_key(repository_window->itdb_index, keybase);
 
-    finish_editable_storage(repwin, key, editable);
+    finish_editable_storage(key, editable);
 }
 
 /* text for manual_syncdir has changed */
-static void manual_syncdir_changed(GtkEditable *editable, RepWin *repwin) {
+static void manual_syncdir_changed(GtkEditable *editable) {
     gchar *key;
     gchar changed;
 
-    g_return_if_fail (repwin);
+    g_return_if_fail (repository_window);
 
-    key = get_playlist_prefs_key(repwin->itdb_index, repwin->playlist, KEY_MANUAL_SYNCDIR);
+    key = get_playlist_prefs_key(repository_window->itdb_index, repository_window->playlist, KEY_MANUAL_SYNCDIR);
 
-    changed = finish_editable_storage(repwin, key, editable);
+    changed = finish_editable_storage(key, editable);
 
     if (changed) {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (SYNC_PLAYLIST_MODE_MANUAL_RADIO)), TRUE);
@@ -334,106 +338,106 @@ static void manual_syncdir_changed(GtkEditable *editable, RepWin *repwin) {
 }
 
 /* sync_playlist_mode_none was toggled */
-static void sync_playlist_mode_none_toggled(GtkToggleButton *togglebutton, RepWin *repwin) {
+static void sync_playlist_mode_none_toggled(GtkToggleButton *togglebutton) {
     gchar *key;
 
-    g_return_if_fail (repwin);
+    g_return_if_fail (repository_window);
 
-    key = get_playlist_prefs_key(repwin->itdb_index, repwin->playlist, KEY_SYNCMODE);
+    key = get_playlist_prefs_key(repository_window->itdb_index, repository_window->playlist, KEY_SYNCMODE);
 
     if (gtk_toggle_button_get_active(togglebutton)) {
-        finish_int_storage(repwin, key, SYNC_PLAYLIST_MODE_NONE);
-        update_buttons(repwin);
+        finish_int_storage(key, SYNC_PLAYLIST_MODE_NONE);
+        update_buttons();
     }
 
     g_free(key);
 }
 
 /* sync_playlist_mode_none was toggled */
-static void sync_playlist_mode_manual_toggled(GtkToggleButton *togglebutton, RepWin *repwin) {
+static void sync_playlist_mode_manual_toggled(GtkToggleButton *togglebutton) {
     gchar *key;
 
-    g_return_if_fail (repwin);
+    g_return_if_fail (repository_window);
 
-    key = get_playlist_prefs_key(repwin->itdb_index, repwin->playlist, KEY_SYNCMODE);
+    key = get_playlist_prefs_key(repository_window->itdb_index, repository_window->playlist, KEY_SYNCMODE);
 
     if (gtk_toggle_button_get_active(togglebutton)) {
-        finish_int_storage(repwin, key, SYNC_PLAYLIST_MODE_MANUAL);
-        update_buttons(repwin);
+        finish_int_storage(key, SYNC_PLAYLIST_MODE_MANUAL);
+        update_buttons(repository_window);
     }
 
     g_free(key);
 }
 
 /* sync_playlist_mode_none was toggled */
-static void sync_playlist_mode_automatic_toggled(GtkToggleButton *togglebutton, RepWin *repwin) {
+static void sync_playlist_mode_automatic_toggled(GtkToggleButton *togglebutton) {
     gchar *key;
 
-    g_return_if_fail (repwin);
+    g_return_if_fail (repository_window);
 
-    key = get_playlist_prefs_key(repwin->itdb_index, repwin->playlist, KEY_SYNCMODE);
+    key = get_playlist_prefs_key(repository_window->itdb_index, repository_window->playlist, KEY_SYNCMODE);
 
     if (gtk_toggle_button_get_active(togglebutton)) {
-        finish_int_storage(repwin, key, SYNC_PLAYLIST_MODE_AUTOMATIC);
-        update_buttons(repwin);
+        finish_int_storage(key, SYNC_PLAYLIST_MODE_AUTOMATIC);
+        update_buttons(repository_window);
     }
 
     g_free(key);
 }
 
-static void standard_itdb_checkbutton_toggled(GtkToggleButton *togglebutton, RepWin *repwin) {
+static void standard_itdb_checkbutton_toggled(GtkToggleButton *togglebutton) {
     const gchar *keybase;
     gchar *key;
 
-    g_return_if_fail (repwin);
+    g_return_if_fail (repository_window);
 
     keybase = g_object_get_data(G_OBJECT (togglebutton), "key");
     g_return_if_fail (keybase);
-    key = get_itdb_prefs_key(repwin->itdb_index, keybase);
-    finish_int_storage(repwin, key, gtk_toggle_button_get_active(togglebutton));
+    key = get_itdb_prefs_key(repository_window->itdb_index, keybase);
+    finish_int_storage(key, gtk_toggle_button_get_active(togglebutton));
 
     g_free(key);
 }
 
-static void standard_playlist_checkbutton_toggled(GtkToggleButton *togglebutton, RepWin *repwin) {
+static void standard_playlist_checkbutton_toggled(GtkToggleButton *togglebutton) {
     const gchar *keybase;
     gboolean active;
     gchar *key;
 
-    g_return_if_fail (repwin);
-    g_return_if_fail (repwin->playlist);
+    g_return_if_fail (repository_window);
+    g_return_if_fail (repository_window->playlist);
 
     keybase = g_object_get_data(G_OBJECT (togglebutton), "key");
     g_return_if_fail (keybase);
-    key = get_playlist_prefs_key(repwin->itdb_index, repwin->playlist, keybase);
+    key = get_playlist_prefs_key(repository_window->itdb_index, repository_window->playlist, keybase);
     active = gtk_toggle_button_get_active(togglebutton);
 
     /* Check if this is the liveupdate toggle which needs special
      * treatment. */
     if (keybase == KEY_LIVEUPDATE) {
-        if (active == repwin->playlist->splpref.liveupdate)
-            temp_prefs_remove_key(repwin->extra_prefs, key);
+        if (active == repository_window->playlist->splpref.liveupdate)
+            temp_prefs_remove_key(repository_window->extra_prefs, key);
         else
-            temp_prefs_set_int(repwin->extra_prefs, key, active);
+            temp_prefs_set_int(repository_window->extra_prefs, key, active);
 
-        update_buttons(repwin);
+        update_buttons(repository_window);
         g_free(key);
         return;
     }
 
-    finish_int_storage(repwin, key, active);
+    finish_int_storage(key, active);
     g_free(key);
 }
 
 /* delete_repository_button was clicked */
-static void delete_repository_button_clicked(GtkButton *button, RepWin *repwin) {
+static void delete_repository_button_clicked(GtkButton *button) {
     Playlist *mpl;
     gchar *message;
     gchar *key;
     gint response;
 
-    g_return_if_fail (repwin);
-    mpl = itdb_playlist_mpl(repwin->itdb);
+    g_return_if_fail (repository_window);
+    mpl = itdb_playlist_mpl(repository_window->itdb);
     message
             = g_strdup_printf(_("Are you sure you want to delete repository \"%s\"? This action cannot be undone!"), mpl->name);
 
@@ -444,21 +448,21 @@ static void delete_repository_button_clicked(GtkButton *button, RepWin *repwin) 
     if (response == GTK_RESPONSE_CANCEL)
         return;
 
-    key = get_itdb_prefs_key(repwin->itdb_index, "deleted");
+    key = get_itdb_prefs_key(repository_window->itdb_index, "deleted");
 
-    temp_prefs_set_int(repwin->extra_prefs, key, TRUE);
+    temp_prefs_set_int(repository_window->extra_prefs, key, TRUE);
     g_free(key);
-    update_buttons(repwin);
+    update_buttons(repository_window);
 }
 
 /* mountpoint browse button was clicked */
-static void mountpoint_button_clicked(GtkButton *button, RepWin *repwin) {
+static void mountpoint_button_clicked(GtkButton *button) {
     gchar *key, *old_dir, *new_dir;
 
-    g_return_if_fail (repwin);
+    g_return_if_fail (repository_window);
 
-    key = get_itdb_prefs_key(repwin->itdb_index, KEY_MOUNTPOINT);
-    old_dir = get_current_prefs_string(repwin, key);
+    key = get_itdb_prefs_key(repository_window->itdb_index, KEY_MOUNTPOINT);
+    old_dir = get_current_prefs_string(key);
     g_free(key);
 
     new_dir = fileselection_get_file_or_dir(_("Select mountpoint"), old_dir, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
@@ -472,13 +476,13 @@ static void mountpoint_button_clicked(GtkButton *button, RepWin *repwin) {
 }
 
 /* mountpoint browse button was clicked */
-static void backup_button_clicked(GtkButton *button, RepWin *repwin) {
+static void backup_button_clicked(GtkButton *button) {
     gchar *key, *old_backup, *new_backup;
 
-    g_return_if_fail (repwin);
+    g_return_if_fail (repository_window);
 
-    key = get_itdb_prefs_key(repwin->itdb_index, KEY_FILENAME);
-    old_backup = get_current_prefs_string(repwin, key);
+    key = get_itdb_prefs_key(repository_window->itdb_index, KEY_FILENAME);
+    old_backup = get_current_prefs_string(key);
     g_free(key);
 
     new_backup = fileselection_get_file_or_dir(_("Set backup file"), old_backup, GTK_FILE_CHOOSER_ACTION_SAVE);
@@ -492,21 +496,21 @@ static void backup_button_clicked(GtkButton *button, RepWin *repwin) {
 }
 
 /* mountpoint browse button was clicked */
-static void new_repository_button_clicked(GtkButton *button, RepWin *repwin) {
-    g_return_if_fail (repwin);
+static void new_repository_button_clicked(GtkButton *button) {
+    g_return_if_fail (repository_window);
 
-    create_repository(repwin);
+    create_repository(repository_window);
 }
 
 /* mountpoint browse button was clicked */
-static void manual_syncdir_button_clicked(GtkButton *button, RepWin *repwin) {
+static void manual_syncdir_button_clicked(GtkButton *button) {
     gchar *key, *old_dir, *new_dir;
 
-    g_return_if_fail (repwin);
+    g_return_if_fail (repository_window);
 
-    key = get_playlist_prefs_key(repwin->itdb_index, repwin->playlist, KEY_MANUAL_SYNCDIR);
+    key = get_playlist_prefs_key(repository_window->itdb_index, repository_window->playlist, KEY_MANUAL_SYNCDIR);
 
-    old_dir = get_current_prefs_string(repwin, key);
+    old_dir = get_current_prefs_string(key);
 
     new_dir
             = fileselection_get_file_or_dir(_("Select directory for synchronization"), old_dir, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
@@ -518,28 +522,28 @@ static void manual_syncdir_button_clicked(GtkButton *button, RepWin *repwin) {
     g_free(key);
 }
 
-static void ipod_sync_button_clicked(RepWin *repwin, iPodSyncType type) {
+static void ipod_sync_button_clicked(iPodSyncType type) {
     const gchar *title;
     const gchar *entry;
     gchar *text, *key, *oldpath, *newpath;
 
-    g_return_if_fail (repwin);
+    g_return_if_fail (repository_window);
 
     switch (type) {
     case IPOD_SYNC_CONTACTS:
         title = _("Please select command to sync contacts");
         entry = IPOD_SYNC_CONTACTS_ENTRY;
-        key = get_itdb_prefs_key(repwin->itdb_index, KEY_PATH_SYNC_CONTACTS);
+        key = get_itdb_prefs_key(repository_window->itdb_index, KEY_PATH_SYNC_CONTACTS);
         break;
     case IPOD_SYNC_CALENDAR:
         title = _("Please select command to sync calendar");
         entry = IPOD_SYNC_CALENDAR_ENTRY;
-        key = get_itdb_prefs_key(repwin->itdb_index, KEY_PATH_SYNC_CALENDAR);
+        key = get_itdb_prefs_key(repository_window->itdb_index, KEY_PATH_SYNC_CALENDAR);
         break;
     case IPOD_SYNC_NOTES:
         title = _("Please select command to sync notes");
         entry = IPOD_SYNC_NOTES_ENTRY;
-        key = get_itdb_prefs_key(repwin->itdb_index, KEY_PATH_SYNC_NOTES);
+        key = get_itdb_prefs_key(repository_window->itdb_index, KEY_PATH_SYNC_NOTES);
         break;
     default:
         g_return_if_reached ();
@@ -562,19 +566,19 @@ static void ipod_sync_button_clicked(RepWin *repwin, iPodSyncType type) {
 }
 
 /* Callback */
-static void ipod_sync_contacts_button_clicked(GtkButton *button, RepWin *repwin) {
-    ipod_sync_button_clicked(repwin, IPOD_SYNC_CONTACTS);
+static void ipod_sync_contacts_button_clicked(GtkButton *button) {
+    ipod_sync_button_clicked(IPOD_SYNC_CONTACTS);
 }
 
 /* Callback */
-static void ipod_sync_calendar_button_clicked(GtkButton *button, RepWin *repwin) {
-    ipod_sync_button_clicked(repwin, IPOD_SYNC_CALENDAR);
+static void ipod_sync_calendar_button_clicked(GtkButton *button) {
+    ipod_sync_button_clicked(IPOD_SYNC_CALENDAR);
 
 }
 
 /* Callback */
-static void ipod_sync_notes_button_clicked(GtkButton *button, RepWin *repwin) {
-    ipod_sync_button_clicked(repwin, IPOD_SYNC_NOTES);
+static void ipod_sync_notes_button_clicked(GtkButton *button) {
+    ipod_sync_button_clicked(IPOD_SYNC_NOTES);
 
 }
 
@@ -584,9 +588,11 @@ static void ipod_sync_notes_button_clicked(GtkButton *button, RepWin *repwin) {
  * Sync (normal playlist) or update (spl) @playlist (in repository
  * @itdb_index) using the currently displayed options.
  */
-static void sync_or_update_playlist(RepWin *repwin, gint itdb_index, Playlist *playlist) {
-    g_return_if_fail (repwin);
+static void sync_or_update_playlist(Playlist *playlist) {
+    g_return_if_fail (repository_window);
     g_return_if_fail (playlist);
+
+    gint itdb_index = repository_window->itdb_index;
 
     if (playlist->is_spl) {
         itdb_spl_update(playlist);
@@ -620,9 +626,9 @@ static void sync_or_update_playlist(RepWin *repwin, gint itdb_index, Playlist *p
         sync_show_summary_orig = prefs_get_string(key_sync_show_summary);
 
         /* retrieve current settings for prefs_strings */
-        sync_delete_tracks_current = get_current_prefs_int(repwin, key_sync_delete_tracks);
-        sync_confirm_delete_current = get_current_prefs_int(repwin, key_sync_confirm_delete);
-        sync_show_summary_current = get_current_prefs_int(repwin, key_sync_show_summary);
+        sync_delete_tracks_current = get_current_prefs_int(key_sync_delete_tracks);
+        sync_confirm_delete_current = get_current_prefs_int(key_sync_confirm_delete);
+        sync_show_summary_current = get_current_prefs_int(key_sync_show_summary);
 
         /* temporarily apply current settings */
         prefs_set_int(key_sync_delete_tracks, sync_delete_tracks_current);
@@ -630,11 +636,11 @@ static void sync_or_update_playlist(RepWin *repwin, gint itdb_index, Playlist *p
         prefs_set_int(key_sync_show_summary, sync_show_summary_current);
 
         /* sync directory or directories */
-        switch (get_current_prefs_int(repwin, key_syncmode)) {
+        switch (get_current_prefs_int(key_syncmode)) {
         case SYNC_PLAYLIST_MODE_NONE:
             break; /* should never happen */
         case SYNC_PLAYLIST_MODE_MANUAL:
-            manual_sync_dir = get_current_prefs_string(repwin, key_manual_sync_dir);
+            manual_sync_dir = get_current_prefs_string(key_manual_sync_dir);
             /* no break;! we continue calling sync_playlist() */
         case SYNC_PLAYLIST_MODE_AUTOMATIC:
             sync_playlist(playlist, manual_sync_dir, NULL, FALSE, key_sync_delete_tracks, 0, key_sync_confirm_delete, 0, NULL, sync_show_summary_current);
@@ -646,11 +652,11 @@ static void sync_or_update_playlist(RepWin *repwin, gint itdb_index, Playlist *p
          * by sync_playlist()) */
         value_new = prefs_get_int(key_sync_confirm_delete);
         if (value_new != sync_confirm_delete_current) {
-            if (playlist == repwin->playlist) { /* currently displayed --> adjust toggle button */
+            if (playlist == repository_window->playlist) { /* currently displayed --> adjust toggle button */
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE)), value_new);
             }
             else { /* not currently displayed --> copy to temp_prefs */
-                temp_prefs_set_int(repwin->temp_prefs, key_sync_confirm_delete, value_new);
+                temp_prefs_set_int(repository_window->temp_prefs, key_sync_confirm_delete, value_new);
             }
         }
 
@@ -672,23 +678,23 @@ static void sync_or_update_playlist(RepWin *repwin, gint itdb_index, Playlist *p
 }
 
 /* Callback */
-static void update_all_playlists_button_clicked(GtkButton *button, RepWin *repwin) {
+static void update_all_playlists_button_clicked(GtkButton *button) {
     GList *gl;
 
-    g_return_if_fail (repwin);
-    g_return_if_fail (repwin->itdb);
+    g_return_if_fail (repository_window);
+    g_return_if_fail (repository_window->itdb);
 
-    for (gl = repwin->itdb->playlists; gl; gl = gl->next) {
+    for (gl = repository_window->itdb->playlists; gl; gl = gl->next) {
         Playlist *pl = gl->data;
         g_return_if_fail (pl);
-        sync_or_update_playlist(repwin, repwin->itdb_index, pl);
+        sync_or_update_playlist(pl);
     }
 }
 
 /* Callback */
-static void update_playlist_button_clicked(GtkButton *button, RepWin *repwin) {
-    g_return_if_fail (repwin);
-    sync_or_update_playlist(repwin, repwin->itdb_index, repwin->playlist);
+static void update_playlist_button_clicked(GtkButton *button) {
+    g_return_if_fail (repository_window);
+    sync_or_update_playlist(repository_window->playlist);
 }
 
 /* ------------------------------------------------------------
@@ -697,17 +703,17 @@ static void update_playlist_button_clicked(GtkButton *button, RepWin *repwin) {
  *
  * ------------------------------------------------------------ */
 
-static void edit_apply_clicked(GtkButton *button, RepWin *repwin) {
+static void edit_apply_clicked(GtkButton *button) {
     gint i, itdb_num, del_num;
     struct itdbs_head *itdbs_head;
 
-    g_return_if_fail (repwin);
+    g_return_if_fail (repository_window);
 
     itdbs_head = gp_get_itdbs_head();
     g_return_if_fail (itdbs_head);
     itdb_num = g_list_length(itdbs_head->itdbs);
 
-    temp_prefs_apply(repwin->temp_prefs);
+    temp_prefs_apply(repository_window->temp_prefs);
 
     del_num = 0;
     for (i = 0; i < itdb_num; ++i) {
@@ -719,12 +725,12 @@ static void edit_apply_clicked(GtkButton *button, RepWin *repwin) {
 
         subkey = get_itdb_prefs_key(i, "");
 
-        if (temp_prefs_subkey_exists(repwin->extra_prefs, subkey)) {
+        if (temp_prefs_subkey_exists(repository_window->extra_prefs, subkey)) {
             gboolean deleted;
             GList *gl;
 
             key = get_itdb_prefs_key(i, "deleted");
-            deleted = temp_prefs_get_int(repwin->extra_prefs, key);
+            deleted = temp_prefs_get_int(repository_window->extra_prefs, key);
             g_free(key);
             if (deleted) {
                 /* FIXME: ask if serious, then delete */
@@ -751,8 +757,8 @@ static void edit_apply_clicked(GtkButton *button, RepWin *repwin) {
 
                     /* keep itdb_index of currently displayed repository
                      updated in case we need to select a new one */
-                    if (repwin->itdb_index > i - del_num) {
-                        --repwin->itdb_index;
+                    if (repository_window->itdb_index > i - del_num) {
+                        --repository_window->itdb_index;
                     }
                     ++del_num;
                 }
@@ -769,7 +775,7 @@ static void edit_apply_clicked(GtkButton *button, RepWin *repwin) {
                     gint val;
                     g_return_if_fail (pl);
                     key = get_playlist_prefs_key(i, pl, KEY_LIVEUPDATE);
-                    if (temp_prefs_get_int_value(repwin->extra_prefs, key, &val)) {
+                    if (temp_prefs_get_int_value(repository_window->extra_prefs, key, &val)) {
                         pl->splpref.liveupdate = val;
                         data_changed(itdb);
                     }
@@ -778,11 +784,11 @@ static void edit_apply_clicked(GtkButton *button, RepWin *repwin) {
             }
         }
 
-        if (!deleted && temp_prefs_subkey_exists(repwin->temp_prefs, subkey)) {
+        if (!deleted && temp_prefs_subkey_exists(repository_window->temp_prefs, subkey)) {
             gchar *str;
             /* check if mountpoint has changed */
             key = get_itdb_prefs_key(i, KEY_MOUNTPOINT);
-            str = temp_prefs_get_string(repwin->temp_prefs, key);
+            str = temp_prefs_get_string(repository_window->temp_prefs, key);
             g_free(key);
             if (str) { /* have to set mountpoint */
                 itdb_set_mountpoint(itdb, str);
@@ -793,7 +799,7 @@ static void edit_apply_clicked(GtkButton *button, RepWin *repwin) {
 
             /* check if model_number has changed */
             key = get_itdb_prefs_key(i, KEY_IPOD_MODEL);
-            str = temp_prefs_get_string(repwin->temp_prefs, key);
+            str = temp_prefs_get_string(repository_window->temp_prefs, key);
             g_free(key);
             if (str) { /* set model */
                 if (itdb->usertype && GP_ITDB_TYPE_IPOD) {
@@ -808,42 +814,41 @@ static void edit_apply_clicked(GtkButton *button, RepWin *repwin) {
         g_free(subkey);
     }
 
-    temp_prefs_destroy(repwin->temp_prefs);
-    temp_prefs_destroy(repwin->extra_prefs);
+    temp_prefs_destroy(repository_window->temp_prefs);
+    temp_prefs_destroy(repository_window->extra_prefs);
 
-    repwin->temp_prefs = temp_prefs_create();
-    repwin->extra_prefs = temp_prefs_create();
+    repository_window->temp_prefs = temp_prefs_create();
+    repository_window->extra_prefs = temp_prefs_create();
 
     if (g_list_length(itdbs_head->itdbs) < itdb_num) { /* at least one repository has been removed */
-        iTunesDB *new_itdb = g_list_nth_data(itdbs_head->itdbs, repwin->itdb_index);
-        iTunesDB *old_itdb = repwin->itdb;
-        Playlist *old_playlist = repwin->playlist;
+        iTunesDB *new_itdb = g_list_nth_data(itdbs_head->itdbs, repository_window->itdb_index);
+        iTunesDB *old_itdb = repository_window->itdb;
+        Playlist *old_playlist = repository_window->playlist;
 
-        init_repository_combo(repwin);
+        init_repository_combo(repository_window);
         if (new_itdb == old_itdb) {
-            select_repository(repwin, new_itdb, old_playlist);
+            select_repository(new_itdb, old_playlist);
         }
         else {
-            select_repository(repwin, new_itdb, NULL);
+            select_repository(new_itdb, NULL);
         }
     }
 #   if LOCAL_DEBUG
-    printf ("index: %d\n", repwin->itdb_index);
+    printf ("index: %d\n", repository_window->itdb_index);
 #   endif
 
-    update_buttons(repwin);
+    update_buttons(repository_window);
 }
 
 /* Used by select_playlist() to find the new playlist. If found,
  select it */
 static gboolean select_playlist_find(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data) {
     Playlist *playlist;
-    RepWin *repwin = data;
-    g_return_val_if_fail (repwin, TRUE);
+    g_return_val_if_fail (repository_window, TRUE);
 
     gtk_tree_model_get(model, iter, 0, &playlist, -1);
-    if (playlist == repwin->next_playlist) {
-        gtk_combo_box_set_active_iter(GTK_COMBO_BOX (gtkpod_xml_get_widget (repwin->xml,
+    if (playlist == repository_window->next_playlist) {
+        gtk_combo_box_set_active_iter(GTK_COMBO_BOX (gtkpod_xml_get_widget (repository_window->xml,
                         PLAYLIST_COMBO)), iter);
         return TRUE;
     }
@@ -854,25 +859,25 @@ static gboolean select_playlist_find(GtkTreeModel *model, GtkTreePath *path, Gtk
 
  If @playlist == NULL, select first playlist (MPL);
  */
-static void select_playlist(RepWin *repwin, Playlist *playlist) {
+static void select_playlist(Playlist *playlist) {
     GtkTreeModel *model;
 
-    g_return_if_fail (repwin);
-    g_return_if_fail (repwin->itdb);
+    g_return_if_fail (repository_window);
+    g_return_if_fail (repository_window->itdb);
 
     if (!playlist)
-        playlist = itdb_playlist_mpl(repwin->itdb);
+        playlist = itdb_playlist_mpl(repository_window->itdb);
     g_return_if_fail (playlist);
 
-    g_return_if_fail (playlist->itdb == repwin->itdb);
+    g_return_if_fail (playlist->itdb == repository_window->itdb);
 
-    model = gtk_combo_box_get_model(GTK_COMBO_BOX (gtkpod_xml_get_widget (repwin->xml,
+    model = gtk_combo_box_get_model(GTK_COMBO_BOX (gtkpod_xml_get_widget (repository_window->xml,
                     PLAYLIST_COMBO)));
     g_return_if_fail (model);
 
-    repwin->next_playlist = playlist;
-    gtk_tree_model_foreach(model, select_playlist_find, repwin);
-    repwin->next_playlist = NULL;
+    repository_window->next_playlist = playlist;
+    gtk_tree_model_foreach(model, select_playlist_find, repository_window);
+    repository_window->next_playlist = NULL;
 }
 
 /* Select @itdb and playlist @playlist
@@ -881,50 +886,32 @@ static void select_playlist(RepWin *repwin, Playlist *playlist) {
 
  If @playlist == NULL, select first playlist.
  */
-static void select_repository(RepWin *repwin, iTunesDB *itdb, Playlist *playlist) {
-    g_return_if_fail (repwin);
+static void select_repository(iTunesDB *itdb, Playlist *playlist) {
+    g_return_if_fail (repository_window);
 
-    if (repwin->itdb != itdb) {
+    if (repository_window->itdb != itdb) {
         gint index;
-        repwin->next_playlist = playlist;
+        repository_window->next_playlist = playlist;
         index = get_itdb_index(itdb);
-        gtk_combo_box_set_active(GTK_COMBO_BOX (gtkpod_xml_get_widget (repwin->xml,
+        gtk_combo_box_set_active(GTK_COMBO_BOX (gtkpod_xml_get_widget (repository_window->xml,
                         REPOSITORY_COMBO)), index);
     }
     else {
-        if (repwin->itdb)
-            select_playlist(repwin, playlist);
+        if (repository_window->itdb)
+            select_playlist(playlist);
     }
-}
-
-static void repository_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointer data) {
-    Playlist *playlist = pl;
-    iTunesDB *itdb = NULL;
-
-    if (!playlist) {
-      return;
-    }
-
-    itdb = playlist->itdb;
-
-    /* Important to re-initialise combo in case it is pointing to a defunct
-     * repository mpl playlist. */
-    init_repository_combo(repository_window);
-
-    /* Select the repository of the playlist */
-    select_repository(repository_window, itdb, playlist);
 }
 
 /* set @entry with value of @key */
-static void set_entry_index(RepWin *repwin, gint itdb_index, const gchar *subkey, const gchar *entry) {
+static void set_entry_index(gint itdb_index, const gchar *subkey, const gchar *entry) {
     gchar *buf;
     gchar *key;
 
-    g_return_if_fail (repwin && subkey && entry);
+    g_return_if_fail (repository_window && subkey && entry);
 
     key = get_itdb_prefs_key(itdb_index, subkey);
 
-    buf = get_current_prefs_string(repwin, key);
+    buf = get_current_prefs_string(key);
     if (buf) {
         gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (entry)), buf);
     }
@@ -936,16 +923,16 @@ static void set_entry_index(RepWin *repwin, gint itdb_index, const gchar *subkey
 }
 
 /****** Fill in info about selected repository *****/
-static void display_repository_info(RepWin *repwin) {
+static void display_repository_info() {
     iTunesDB *itdb;
     gint index;
     gchar *buf, *key;
 
-    g_return_if_fail (repwin);
-    g_return_if_fail (repwin->itdb);
+    g_return_if_fail (repository_window);
+    g_return_if_fail (repository_window->itdb);
 
-    itdb = repwin->itdb;
-    index = repwin->itdb_index;
+    itdb = repository_window->itdb;
+    index = repository_window->itdb_index;
 
     /* Repository type */
     if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
@@ -992,20 +979,20 @@ static void display_repository_info(RepWin *repwin) {
             gtk_widget_hide(GET_WIDGET (*widget));
         }
 
-        set_entry_index(repwin, index, KEY_MOUNTPOINT, MOUNTPOINT_ENTRY);
+        set_entry_index(index, KEY_MOUNTPOINT, MOUNTPOINT_ENTRY);
 
-        set_entry_index(repwin, index, KEY_FILENAME, BACKUP_ENTRY);
+        set_entry_index(index, KEY_FILENAME, BACKUP_ENTRY);
 
-        set_entry_index(repwin, index, KEY_PATH_SYNC_CONTACTS, IPOD_SYNC_CONTACTS_ENTRY);
+        set_entry_index(index, KEY_PATH_SYNC_CONTACTS, IPOD_SYNC_CONTACTS_ENTRY);
 
-        set_entry_index(repwin, index, KEY_PATH_SYNC_CALENDAR, IPOD_SYNC_CALENDAR_ENTRY);
+        set_entry_index(index, KEY_PATH_SYNC_CALENDAR, IPOD_SYNC_CALENDAR_ENTRY);
 
-        set_entry_index(repwin, index, KEY_PATH_SYNC_NOTES, IPOD_SYNC_NOTES_ENTRY);
+        set_entry_index(index, KEY_PATH_SYNC_NOTES, IPOD_SYNC_NOTES_ENTRY);
 
-        set_entry_index(repwin, index, KEY_IPOD_MODEL, IPOD_MODEL_ENTRY);
+        set_entry_index(index, KEY_IPOD_MODEL, IPOD_MODEL_ENTRY);
 
         key = get_itdb_prefs_key(index, KEY_CONCAL_AUTOSYNC);
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (IPOD_CONCAL_AUTOSYNC_TOGGLE)), get_current_prefs_int(repwin, key));
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (IPOD_CONCAL_AUTOSYNC_TOGGLE)), get_current_prefs_int(key));
         g_free(key);
     }
     else if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
@@ -1036,7 +1023,7 @@ static void display_repository_info(RepWin *repwin) {
             gtk_widget_hide(GET_WIDGET (*widget));
         }
 
-        set_entry_index(repwin, index, KEY_FILENAME, LOCAL_PATH_ENTRY);
+        set_entry_index(index, KEY_FILENAME, LOCAL_PATH_ENTRY);
     }
     else {
         g_return_if_reached ();
@@ -1044,7 +1031,7 @@ static void display_repository_info(RepWin *repwin) {
 }
 
 /****** Fill in info about selected playlist *****/
-static void display_playlist_info(RepWin *repwin) {
+static void display_playlist_info() {
     gchar *buf, *key;
     Playlist *playlist;
     iTunesDB *itdb;
@@ -1056,14 +1043,14 @@ static void display_playlist_info(RepWin *repwin) {
     const gchar *key_names[] =
         { KEY_SYNC_DELETE_TRACKS, KEY_SYNC_CONFIRM_DELETE, KEY_SYNC_SHOW_SUMMARY, NULL };
 
-    g_return_if_fail (repwin);
-    g_return_if_fail (repwin->itdb);
-    g_return_if_fail (repwin->playlist);
+    g_return_if_fail (repository_window);
+    g_return_if_fail (repository_window->itdb);
+    g_return_if_fail (repository_window->playlist);
 
     /* for convenience */
-    itdb = repwin->itdb;
-    index = repwin->itdb_index;
-    playlist = repwin->playlist;
+    itdb = repository_window->itdb;
+    index = repository_window->itdb_index;
+    playlist = repository_window->playlist;
 
     /* Playlist type */
     if (itdb_playlist_is_mpl(playlist)) {
@@ -1089,7 +1076,7 @@ static void display_playlist_info(RepWin *repwin) {
         gtk_widget_hide(GET_WIDGET (STANDARD_PLAYLIST_VBOX));
 
         key = get_playlist_prefs_key(index, playlist, KEY_LIVEUPDATE);
-        if (!temp_prefs_get_int_value(repwin->extra_prefs, key, &liveupdate))
+        if (!temp_prefs_get_int_value(repository_window->extra_prefs, key, &liveupdate))
             liveupdate = playlist->splpref.liveupdate;
         g_free(key);
 
@@ -1101,7 +1088,7 @@ static void display_playlist_info(RepWin *repwin) {
         gtk_widget_show(GET_WIDGET (STANDARD_PLAYLIST_VBOX));
 
         key = get_playlist_prefs_key(index, playlist, KEY_SYNCMODE);
-        syncmode = get_current_prefs_int(repwin, key);
+        syncmode = get_current_prefs_int(key);
         g_free(key);
 
         /* Need to set manual_syncdir_entry here as it may set the
@@ -1109,7 +1096,7 @@ static void display_playlist_info(RepWin *repwin) {
          the radio button with the original syncmode setting further
          down. */
         key = get_playlist_prefs_key(index, playlist, KEY_MANUAL_SYNCDIR);
-        dir = get_current_prefs_string(repwin, key);
+        dir = get_current_prefs_string(key);
         g_free(key);
         gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (MANUAL_SYNCDIR_ENTRY)), dir);
         g_free(dir);
@@ -1135,9 +1122,9 @@ static void display_playlist_info(RepWin *repwin) {
         /* set standard toggle buttons */
         for (i = 0; widget_names[i]; ++i) {
             key = get_playlist_prefs_key(index, playlist, key_names[i]);
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (widget_names[i])), get_current_prefs_int(repwin, key));
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (widget_names[i])), get_current_prefs_int(key));
             if (key_names[i] == KEY_SYNC_DELETE_TRACKS) {
-                gtk_widget_set_sensitive(GET_WIDGET (PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE), get_current_prefs_int(repwin, key));
+                gtk_widget_set_sensitive(GET_WIDGET (PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE), get_current_prefs_int(key));
             }
             g_free(key);
         }
@@ -1145,7 +1132,7 @@ static void display_playlist_info(RepWin *repwin) {
 }
 
 /****** New repository was selected */
-static void repository_changed(GtkComboBox *cb, RepWin *repwin) {
+static void repository_combo_changed_cb(GtkComboBox *cb) {
     struct itdbs_head *itdbs_head;
     iTunesDB *itdb;
     gint index;
@@ -1154,7 +1141,7 @@ static void repository_changed(GtkComboBox *cb, RepWin *repwin) {
     printf ("Repository changed (%p)\n", repwin);
 #   endif
 
-    g_return_if_fail (repwin);
+    g_return_if_fail (repository_window);
 
     index = gtk_combo_box_get_active(cb);
 
@@ -1163,17 +1150,17 @@ static void repository_changed(GtkComboBox *cb, RepWin *repwin) {
 
     itdb = g_list_nth_data(itdbs_head->itdbs, index);
 
-    if (repwin->itdb != itdb) {
-        repwin->itdb = itdb;
-        repwin->itdb_index = index;
-        display_repository_info(repwin);
-        init_playlist_combo(repwin);
-        update_buttons(repwin);
+    if (repository_window->itdb != itdb) {
+        repository_window->itdb = itdb;
+        repository_window->itdb_index = index;
+        display_repository_info();
+        init_playlist_combo();
+        update_buttons();
     }
 }
 
 /****** New playlist was selected */
-static void playlist_changed(GtkComboBox *cb, RepWin *repwin) {
+static void playlist_combo_changed_cb(GtkComboBox *cb) {
     GtkTreeModel *model;
     Playlist *playlist;
     GtkTreeIter iter;
@@ -1183,7 +1170,7 @@ static void playlist_changed(GtkComboBox *cb, RepWin *repwin) {
     printf ("Playlist changed (%p)\n", repwin);
 #   endif
 
-    g_return_if_fail (repwin);
+    g_return_if_fail (repository_window);
 
     index = gtk_combo_box_get_active(cb);
     /* We can't just use the index to find the right playlist in
@@ -1195,10 +1182,10 @@ static void playlist_changed(GtkComboBox *cb, RepWin *repwin) {
                     NULL, index));
     gtk_tree_model_get(model, &iter, 0, &playlist, -1);
 
-    if (repwin->playlist != playlist) {
-        g_return_if_fail (playlist->itdb == repwin->itdb);
-        repwin->playlist = playlist;
-        display_playlist_info(repwin);
+    if (repository_window->playlist != playlist) {
+        g_return_if_fail (playlist->itdb == repository_window->itdb);
+        repository_window->playlist = playlist;
+        display_playlist_info();
     }
 }
 
@@ -1286,7 +1273,7 @@ static void playlist_cb_cell_data_func_text(GtkCellLayout *cell_layout, GtkCellR
 }
 
 /****** common between init_repository_combo() and create_repository() */
-static void populate_repository_combo(GtkComboBox *cb) {
+static void repository_combo_populate() {
     struct itdbs_head *itdbs_head;
     GtkCellRenderer *cell;
     GtkListStore *store;
@@ -1295,16 +1282,16 @@ static void populate_repository_combo(GtkComboBox *cb) {
     itdbs_head = gp_get_itdbs_head();
     g_return_if_fail (itdbs_head);
 
-    if (g_object_get_data(G_OBJECT (cb), "combo_set") == NULL) { /* the combo has not yet been initialized */
+    if (g_object_get_data(G_OBJECT (repository_window->repository_combo_box), "combo_set") == NULL) { /* the combo has not yet been initialized */
 
         /* Cell for graphic indicator */
         cell = gtk_cell_renderer_pixbuf_new();
-        gtk_cell_layout_pack_start(GTK_CELL_LAYOUT (cb), cell, FALSE);
-        gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT (cb), cell, playlist_cb_cell_data_func_pix, NULL, NULL);
+        gtk_cell_layout_pack_start(GTK_CELL_LAYOUT (repository_window->repository_combo_box), cell, FALSE);
+        gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT (repository_window->repository_combo_box), cell, playlist_cb_cell_data_func_pix, NULL, NULL);
         /* Cell for playlist name */
         cell = gtk_cell_renderer_text_new();
-        gtk_cell_layout_pack_start(GTK_CELL_LAYOUT (cb), cell, FALSE);
-        gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT (cb), cell, playlist_cb_cell_data_func_text, NULL, NULL);
+        gtk_cell_layout_pack_start(GTK_CELL_LAYOUT (repository_window->repository_combo_box), cell, FALSE);
+        gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT (repository_window->repository_combo_box), cell, playlist_cb_cell_data_func_text, NULL, NULL);
 
         g_object_set(G_OBJECT (cell), "editable", FALSE, NULL);
     }
@@ -1324,66 +1311,65 @@ static void populate_repository_combo(GtkComboBox *cb) {
         gtk_list_store_set(store, &iter, 0, mpl, -1);
     }
 
-    gtk_combo_box_set_model(cb, GTK_TREE_MODEL (store));
+    gtk_combo_box_set_model(repository_window->repository_combo_box, GTK_TREE_MODEL (store));
     g_object_unref(store);
 }
 
 /****** Initialize the repository combo *****/
-static void init_repository_combo(RepWin *repwin) {
-    GtkComboBox *cb;
+static void init_repository_combo() {
 
-    g_return_if_fail (repwin);
+    g_return_if_fail (repository_window);
 
-    cb = GTK_COMBO_BOX (GET_WIDGET (REPOSITORY_COMBO));
-
-    populate_repository_combo(cb);
-
-    if (g_object_get_data(G_OBJECT (cb), "combo_set") == NULL) { /* the combo has not yet been initialized */
-        g_signal_connect (cb, "changed",
-                G_CALLBACK (repository_changed), repwin);
-
-        g_object_set_data(G_OBJECT (cb), "combo_set", "set");
+    if (! repository_window->repository_combo_box) {
+        repository_window->repository_combo_box = GTK_COMBO_BOX (GET_WIDGET (REPOSITORY_COMBO));
     }
 
-    repwin->itdb = NULL;
-    repwin->playlist = NULL;
+    repository_combo_populate();
+
+    if (g_object_get_data(G_OBJECT (repository_window->repository_combo_box), "combo_set") == NULL) { /* the combo has not yet been initialized */
+        g_signal_connect (repository_window->repository_combo_box, "changed", G_CALLBACK (repository_combo_changed_cb), NULL);
+        g_object_set_data(G_OBJECT (repository_window->repository_combo_box), "combo_set", "set");
+    }
+
+    repository_window->itdb = NULL;
+    repository_window->playlist = NULL;
 }
 
 /****** Initialize the playlist combo *****/
-static void init_playlist_combo(RepWin *repwin) {
+static void init_playlist_combo() {
     GtkCellRenderer *cell;
     GtkListStore *store;
-    GtkComboBox *cb;
     GList *gl;
 
-    g_return_if_fail (repwin);
-    g_return_if_fail (repwin->itdb);
+    g_return_if_fail (repository_window);
+    g_return_if_fail (repository_window->itdb);
 
-    cb = GTK_COMBO_BOX (gtkpod_xml_get_widget (repwin->xml,
+    if (! repository_window->playlist_combo_box) {
+        repository_window->playlist_combo_box = GTK_COMBO_BOX (gtkpod_xml_get_widget (repository_window->xml,
                     PLAYLIST_COMBO));
+    }
 
-    if (g_object_get_data(G_OBJECT (cb), "combo_set") == NULL) {
+    if (g_object_get_data(G_OBJECT (repository_window->playlist_combo_box), "combo_set") == NULL) {
         /* Cell for graphic indicator */
         cell = gtk_cell_renderer_pixbuf_new();
-        gtk_cell_layout_pack_start(GTK_CELL_LAYOUT (cb), cell, FALSE);
-        gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT (cb), cell, playlist_cb_cell_data_func_pix, NULL, NULL);
+        gtk_cell_layout_pack_start(GTK_CELL_LAYOUT (repository_window->playlist_combo_box), cell, FALSE);
+        gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT (repository_window->playlist_combo_box), cell, playlist_cb_cell_data_func_pix, NULL, NULL);
         /* Cell for playlist name */
         cell = gtk_cell_renderer_text_new();
-        gtk_cell_layout_pack_start(GTK_CELL_LAYOUT (cb), cell, FALSE);
-        gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT (cb), cell, playlist_cb_cell_data_func_text, NULL, NULL);
+        gtk_cell_layout_pack_start(GTK_CELL_LAYOUT (repository_window->playlist_combo_box), cell, FALSE);
+        gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT (repository_window->playlist_combo_box), cell, playlist_cb_cell_data_func_text, NULL, NULL);
 
         g_object_set(G_OBJECT (cell), "editable", FALSE, NULL);
 
-        g_signal_connect (cb, "changed",
-                G_CALLBACK (playlist_changed), repwin);
+        g_signal_connect (repository_window->playlist_combo_box, "changed", G_CALLBACK (playlist_combo_changed_cb), NULL);
 
-        g_object_set_data(G_OBJECT (cb), "combo_set", "set");
+        g_object_set_data(G_OBJECT (repository_window->playlist_combo_box), "combo_set", "set");
     }
 
     store = gtk_list_store_new(1, G_TYPE_POINTER);
 
-    if (repwin->itdb) {
-        for (gl = repwin->itdb->playlists; gl; gl = gl->next) {
+    if (repository_window->itdb) {
+        for (gl = repository_window->itdb->playlists; gl; gl = gl->next) {
             GtkTreeIter iter;
             Playlist *pl = gl->data;
             g_return_if_fail (pl);
@@ -1393,27 +1379,27 @@ static void init_playlist_combo(RepWin *repwin) {
         }
     }
 
-    gtk_combo_box_set_model(cb, GTK_TREE_MODEL (store));
+    gtk_combo_box_set_model(repository_window->playlist_combo_box, GTK_TREE_MODEL (store));
     g_object_unref(store);
 
-    if (repwin->itdb) {
-        select_playlist(repwin, repwin->next_playlist);
-        repwin->next_playlist = NULL;
+    if (repository_window->itdb) {
+        select_playlist(repository_window->next_playlist);
+        repository_window->next_playlist = NULL;
     }
 
 }
 
 /* Render apply insensitive when no changes were made.
  When an itdb is marked for deletion, make entries insensitive */
-static void update_buttons(RepWin *repwin) {
+static void update_buttons() {
     gboolean apply, ok, deleted;
     gchar *key;
 
-    g_return_if_fail (repwin);
-    g_return_if_fail (repwin->temp_prefs);
-    g_return_if_fail (repwin->extra_prefs);
+    g_return_if_fail (repository_window);
+    g_return_if_fail (repository_window->temp_prefs);
+    g_return_if_fail (repository_window->extra_prefs);
 
-    if ((temp_prefs_size(repwin->temp_prefs) > 0) || (temp_prefs_size(repwin->extra_prefs) > 0)) {
+    if ((temp_prefs_size(repository_window->temp_prefs) > 0) || (temp_prefs_size(repository_window->extra_prefs) > 0)) {
         apply = TRUE;
         ok = TRUE;
     }
@@ -1424,12 +1410,12 @@ static void update_buttons(RepWin *repwin) {
 
     gtk_widget_set_sensitive(GET_WIDGET ("apply_button"), apply);
 
-    if (repwin->itdb) {
+    if (repository_window->itdb) {
         gtk_widget_set_sensitive(GET_WIDGET (REPOSITORY_VBOX), TRUE);
 
         /* Check if this itdb is marked for deletion */
-        key = get_itdb_prefs_key(repwin->itdb_index, "deleted");
-        deleted = temp_prefs_get_int(repwin->extra_prefs, key);
+        key = get_itdb_prefs_key(repository_window->itdb_index, "deleted");
+        deleted = temp_prefs_get_int(repository_window->extra_prefs, key);
         g_free(key);
 
         gtk_widget_set_sensitive(GET_WIDGET ("general_frame"), !deleted);
@@ -1439,23 +1425,23 @@ static void update_buttons(RepWin *repwin) {
         gtk_widget_set_sensitive(GET_WIDGET ("playlist_tab_contents"), !deleted);
         gtk_widget_set_sensitive(GET_WIDGET ("delete_repository_button"), !deleted);
 
-        if (repwin->playlist) {
+        if (repository_window->playlist) {
             gboolean sens = FALSE;
-            if (repwin->playlist->is_spl) {
+            if (repository_window->playlist->is_spl) {
                 sens = TRUE;
             }
             else {
                 gint val;
-                key = get_playlist_prefs_key(repwin->itdb_index, repwin->playlist, KEY_SYNCMODE);
-                val = get_current_prefs_int(repwin, key);
+                key = get_playlist_prefs_key(repository_window->itdb_index, repository_window->playlist, KEY_SYNCMODE);
+                val = get_current_prefs_int(key);
                 g_free(key);
                 if (val != SYNC_PLAYLIST_MODE_NONE) {
                     sens = TRUE;
                 }
                 gtk_widget_set_sensitive(GET_WIDGET (SYNC_OPTIONS_HBOX), sens);
 
-                key = get_playlist_prefs_key(repwin->itdb_index, repwin->playlist, KEY_SYNC_DELETE_TRACKS);
-                val = get_current_prefs_int(repwin, key);
+                key = get_playlist_prefs_key(repository_window->itdb_index, repository_window->playlist, KEY_SYNC_DELETE_TRACKS);
+                val = get_current_prefs_int(key);
                 g_free(key);
                 gtk_widget_set_sensitive(GET_WIDGET (PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE), val);
             }
@@ -1465,21 +1451,6 @@ static void update_buttons(RepWin *repwin) {
     else { /* no itdb loaded */
         gtk_widget_set_sensitive(GET_WIDGET (REPOSITORY_VBOX), FALSE);
     }
-}
-
-/* Free memory taken by @repwin */
-static void repwin_free(RepWin *repwin) {
-    g_return_if_fail (repwin);
-
-    g_object_unref(repwin->xml);
-
-    if (repwin->window) {
-        gtk_widget_destroy(repwin->window);
-    }
-
-    temp_prefs_destroy(repwin->temp_prefs);
-    temp_prefs_destroy(repwin->extra_prefs);
-    g_free(repwin);
 }
 
 /**
@@ -1509,8 +1480,8 @@ static void repository_edit_itdb_added(iTunesDB *itdb, gboolean select) {
 //        gint i;
 //        iTunesDB *old_itdb;
 //        Playlist *old_playlist;
-//        RepWin *repwin = gl->data;
-//        g_return_if_fail (repwin);
+//         = gl->data;
+//        g_return_if_fail (repository_window);
 //
 //        /* rename keys */
 //        for (i = num - 2; i >= index; --i) {
@@ -1519,21 +1490,21 @@ static void repository_edit_itdb_added(iTunesDB *itdb, gboolean select) {
 //#           if LOCAL_DEBUG
 //            printf ("TP renaming %d to %d\n", i, i+1);
 //#           endif
-//            temp_prefs_rename_subkey(repwin->temp_prefs, from_key, to_key);
+//            temp_prefs_rename_subkey(repository_window->temp_prefs, from_key, to_key);
 //            g_free(from_key);
 //            g_free(to_key);
 //        }
 //
-//        old_itdb = repwin->itdb;
-//        old_playlist = repwin->playlist;
+//        old_itdb = repository_window->itdb;
+//        old_playlist = repository_window->playlist;
 //
-//        init_repository_combo(repwin);
+//        init_repository_combo();
 //
 //        if (select) {
-//            select_repository(repwin, itdb, NULL);
+//            select_repository(itdb, NULL);
 //        }
 //        else {
-//            select_repository(repwin, old_itdb, old_playlist);
+//            select_repository(old_itdb, old_playlist);
 //        }
 //    }
 }
@@ -1542,17 +1513,25 @@ void destroy_repository_editor() {
     if (! repository_window)
         return;
 
-    repository_window->window = NULL;
-    g_free(repository_window);
-
     /* Remove widgets from Shell */
     anjuta_shell_remove_widget(ANJUTA_PLUGIN(repository_editor_plugin)->shell, repository_editor_plugin->repo_window, NULL);
+
+    g_object_unref(repository_window->xml);
+
+    if (repository_window->window) {
+        gtk_widget_destroy(repository_window->window);
+        repository_window->window = NULL;
+    }
+
+    temp_prefs_destroy(repository_window->temp_prefs);
+    temp_prefs_destroy(repository_window->extra_prefs);
+    g_free(repository_window);
 }
 
 static void create_repository_edit_view() {
     GtkWidget *repo_window;
     GtkWidget *viewport;
-    GtkComboBox *cb;
+    GtkComboBox *model_number_combo;
     gint i;
 
     repository_window = g_malloc0(sizeof(RepWin));
@@ -1605,8 +1584,8 @@ static void create_repository_edit_view() {
             KEY_PATH_SYNC_NOTES, NULL };
 
     /* Setup model number combo */
-    cb = GTK_COMBO_BOX (GET_WIDGET (IPOD_MODEL_COMBO));
-    gp_init_model_number_combo(cb);
+    model_number_combo = GTK_COMBO_BOX (GET_WIDGET (IPOD_MODEL_COMBO));
+    gp_init_model_number_combo(model_number_combo);
 
     /* Entry callbacks */
     g_signal_connect (GET_WIDGET (MANUAL_SYNCDIR_ENTRY), "changed",
@@ -1686,13 +1665,17 @@ static void create_repository_edit_view() {
     g_signal_connect (GET_WIDGET (NEW_REPOSITORY_BUTTON), "clicked",
             G_CALLBACK (new_repository_button_clicked), repository_window);
 
-    init_repository_combo(repository_window);
+    init_repository_combo();
 
     /* Set up temp_prefs struct */
     repository_window->temp_prefs = temp_prefs_create();
     repository_window->extra_prefs = temp_prefs_create();
 
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (repository_playlist_selected_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_ITDB_UPDATED, G_CALLBACK (repository_update_itdb_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_ADDED, G_CALLBACK (repository_playlist_changed_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_REMOVED, G_CALLBACK (repository_playlist_changed_cb), NULL);
+
 }
 
 /**
@@ -1717,9 +1700,9 @@ void repository_edit(iTunesDB *itdb, Playlist *playlist) {
     }
     g_return_if_fail (itdb);
 
-    select_repository(repository_window, itdb, playlist);
+    select_repository(itdb, playlist);
 
-    update_buttons(repository_window);
+    update_buttons();
 
     gtk_widget_show_all(repository_window->window);
 }
@@ -1750,7 +1733,7 @@ enum {
     INSERT_BEFORE = 0, INSERT_AFTER = 1,
 };
 
-/* shortcut to reference widgets when repwin->xml is already set */
+/* shortcut to reference widgets when repository_window->xml is already set */
 #undef GET_WIDGET
 #define GET_WIDGET(a) repository_xml_get_widget (cr->xml,a)
 
@@ -1983,9 +1966,9 @@ static void cr_local_path_button_clicked(GtkButton *button, CreateRep *cr) {
  * Note: this is a modal dialog.
  */
 
-static void create_repository(RepWin *repwin1) {
+static void create_repository() {
     CreateRep *cr;
-    GtkComboBox *cb;
+    GtkComboBox *model_number_combo;
     gchar *str, *buf1, *buf2;
     struct itdbs_head *itdbs_head = gp_get_itdbs_head();
 
@@ -2024,8 +2007,8 @@ static void create_repository(RepWin *repwin1) {
             G_CALLBACK (cr_local_path_button_clicked), cr);
 
     /* Setup model number combo */
-    cb = GTK_COMBO_BOX (GET_WIDGET (CRW_IPOD_MODEL_COMBO));
-    gp_init_model_number_combo(cb);
+    model_number_combo = GTK_COMBO_BOX (GET_WIDGET (CRW_IPOD_MODEL_COMBO));
+    gp_init_model_number_combo(model_number_combo);
     gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (CRW_IPOD_MODEL_ENTRY)), gettext (SELECT_OR_ENTER_YOUR_MODEL));
 
     /* Set initial repository type */
@@ -2035,7 +2018,7 @@ static void create_repository(RepWin *repwin1) {
     gtk_combo_box_set_active(GTK_COMBO_BOX (GET_WIDGET (CRW_INSERT_BEFORE_AFTER_COMBO)), INSERT_AFTER);
 
     /* Set up repository combo */
-    populate_repository_combo(GTK_COMBO_BOX (GET_WIDGET (CRW_REPOSITORY_COMBO)));
+    repository_combo_populate(GTK_COMBO_BOX (GET_WIDGET (CRW_REPOSITORY_COMBO)));
     gtk_combo_box_set_active(GTK_COMBO_BOX (GET_WIDGET (CRW_REPOSITORY_COMBO)), 0);
 
     /* Set default repository name */
@@ -2062,4 +2045,60 @@ static void create_repository(RepWin *repwin1) {
     g_free(str);
     g_free(buf2);
     g_free(buf1);
+}
+
+/* callbacks */
+
+/**
+ * Called when an itdb is updated / replaced. Whatever the reason for calling it,
+ * both combo boxes should be reinitialised since they would otherwise point to
+ * defunct playlists and itdbs.
+ */
+static void repository_update_itdb_cb(GtkPodApp *app, gpointer olditdb, gpointer newitdb, gpointer data) {
+    if (repository_window->itdb == newitdb) {
+        // repository changed will not be called if the current
+        // repository is selected so need to init the playlist combo
+        // manually. Need to do this before init repository combo
+        // since the latter set the repository_window-> itdb to NULL
+        init_playlist_combo();
+    }
+    init_repository_combo();
+}
+
+/**
+ * Called when a playlist is added or removed. Whatever the reason for calling it,
+ * both combo boxes should be reinitialised since they would otherwise point to
+ * defunct playlists and itdbs.
+ */
+static void repository_playlist_changed_cb(GtkPodApp *app, gpointer pl, gint32 pos, gpointer data) {
+    if (repository_window->itdb == gp_get_selected_itdb()) {
+        // repository changed will not be called if the current
+        // repository is selected so need to init the playlist combo
+        // manually. Need to do this before init repository combo
+        // since the latter set the repository_window-> itdb to NULL
+        init_playlist_combo();
+    }
+    init_repository_combo();
+}
+
+/**
+ * Called when a playlist is selected elsewhere in the UI. This should respond
+ * and update the combo boxes with the new playlist selected.
+ */
+static void repository_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointer data) {
+    Playlist *playlist = pl;
+    iTunesDB *itdb = NULL;
+
+    if (!playlist) {
+      return;
+    }
+
+    itdb = playlist->itdb;
+
+    /* Important to re-initialise combo in case it is pointing to a defunct
+     * repository mpl playlist. */
+//    init_repository_combo();
+
+    /* Select the repository of the playlist */
+    select_repository(itdb, playlist);
 }

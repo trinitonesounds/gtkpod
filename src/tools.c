@@ -462,8 +462,7 @@ void nm_tracks_list (GList *list)
 		 gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
 					   progtext);
 		 g_free (progtext);
-		 g_warning("TODO tools:nm_tracks_list - statusbar\n");
-//		 gtkpod_statusbar_message(_("Will abort after current mp3gain process ends."));
+		 gtkpod_statusbar_message(_("Will abort after current mp3gain process ends."));
 		 while (widgets_blocked && gtk_events_pending ())
 		     gtk_main_iteration ();
 	     }

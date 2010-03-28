@@ -32,7 +32,7 @@
 
 #include <stdlib.h>
 #include <time.h>
-
+#include <libintl.h>
 #include "gtkpod.h"
 
 int
