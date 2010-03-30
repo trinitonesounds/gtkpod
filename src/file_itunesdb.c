@@ -2002,6 +2002,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
 	      gchar *ipod_model = get_itdb_prefs_string (itdb, KEY_IPOD_MODEL);
 	      gchar *backup_name = g_strconcat ("backupDB_", ipod_model, NULL);
 	      g_free (ipod_model);
+	      g_free (eitdb->offline_filename);
 	      eitdb->offline_filename = g_build_filename(cfgdir, backup_name, NULL);
 	      g_free (backup_name);
 	      gtkpod_warning ("Backup database could not be found so backing up database to %s\n", eitdb->offline_filename);
