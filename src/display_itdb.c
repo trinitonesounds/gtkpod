@@ -371,6 +371,7 @@ void gp_itdb_add(iTunesDB *itdb, gint pos) {
 
     eitdb->itdbs_head = itdbs_head;
     itdbs_head->itdbs = g_list_insert(itdbs_head->itdbs, itdb, pos);
+    g_signal_emit(gtkpod_app, gtkpod_app_signals[ITDB_ADDED], 0, itdb, pos);
 }
 
 /* Remove itdb to itdbs (and remove from display). Call
@@ -379,6 +380,7 @@ void gp_itdb_remove(iTunesDB *itdb) {
     g_return_if_fail (itdbs_head);
     g_return_if_fail (itdb);
 
+    g_signal_emit(gtkpod_app, gtkpod_app_signals[ITDB_REMOVED], 0, itdb);
     itdbs_head->itdbs = g_list_remove(itdbs_head->itdbs, itdb);
 }
 

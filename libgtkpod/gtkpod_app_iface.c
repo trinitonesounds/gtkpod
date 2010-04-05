@@ -66,6 +66,13 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
         gtkpod_app_signals[PLAYLIST_REMOVED]
                 = g_signal_new(SIGNAL_PLAYLIST_REMOVED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
+        gtkpod_app_signals[ITDB_ADDED]
+                = g_signal_new(SIGNAL_ITDB_ADDED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, _gtkpod_app_marshal_VOID__POINTER_INT, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_INT);
+
+        gtkpod_app_signals[ITDB_REMOVED]
+                = g_signal_new(SIGNAL_ITDB_REMOVED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
+
+
         initialized = TRUE;
     }
 }
@@ -330,24 +337,46 @@ GList *gtkpod_export_tracks_as_glist(iTunesDB *source_db, iTunesDB *dest_db, GLi
     return GTKPOD_APP_GET_INTERFACE (gtkpod_app)->export_tracks_as_glist(source_db, dest_db, tracks);
 }
 
-void gtkpod_register_repository_editor(void (*edit_repository_func)(iTunesDB *itdb, Playlist *playlist)) {
-    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
-    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->edit_repository = edit_repository_func;
-}
-
-void gtkpod_unregister_repository_editor() {
-    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
-    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->edit_repository = NULL;
-}
-
-void gtkpod_edit_repository(iTunesDB *itdb, Playlist *playlist) {
-  g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
-  g_return_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->edit_repository);
-  GTKPOD_APP_GET_INTERFACE (gtkpod_app)->edit_repository(itdb, playlist);
-}
-
 void gtkpod_display_widget(GtkWidget *widget) {
     g_return_if_fail(widget);
     g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
     GTKPOD_APP_GET_INTERFACE(gtkpod_app)->display_widget(widget);
+}
+
+void gtkpod_register_repository_editor(RepositoryEditorInterface *editor) {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    g_return_if_fail (REPOSITORY_EDITOR_IS_EDITOR(editor));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->repository_editor = editor;
+}
+
+void gtkpod_unregister_repository_editor() {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->repository_editor = NULL;
+}
+
+void gtkpod_edit_repository(iTunesDB *itdb, Playlist *playlist) {
+    g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
+    g_return_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->repository_editor);
+
+    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
+    RepositoryEditorInterface *editor_iface = REPOSITORY_EDITOR_GET_INTERFACE(gp_iface->repository_editor);
+    editor_iface->edit_repository(itdb, playlist);
+}
+
+gboolean gtkpod_init_repository(iTunesDB *itdb) {
+    g_return_val_if_fail(GTKPOD_IS_APP(gtkpod_app), FALSE);
+    g_return_val_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->repository_editor, FALSE);
+
+    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
+    RepositoryEditorInterface *editor_iface = REPOSITORY_EDITOR_GET_INTERFACE(gp_iface->repository_editor);
+    return editor_iface->init_repository(itdb);
+}
+
+void gtkpod_populate_repository_model(iTunesDB *itdb, const gchar *old_model) {
+    g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
+    g_return_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->repository_editor);
+
+    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
+    RepositoryEditorInterface *editor_iface = REPOSITORY_EDITOR_GET_INTERFACE(gp_iface->repository_editor);
+    editor_iface->set_repository_model(itdb, old_model);
 }

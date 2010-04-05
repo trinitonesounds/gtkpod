@@ -1,6 +1,7 @@
 lib_LTLIBRARIES = libgtkpod.la
 
 libgtkpod_la_SOURCES =  gtkpod_app_iface.h gtkpod_app_iface.c \
+						repository_configurator.h repository_configurator.c \
                         itdb.h file_convert_info.h \
                         gp_private.h gp_private.c \
 						gp_itdb.h gp_itdb.c \
@@ -9,7 +10,6 @@ libgtkpod_la_SOURCES =  gtkpod_app_iface.h gtkpod_app_iface.c \
 						file.h file.c \
 						file_itunesdb.c \
 						file_convert.c file_convert.h \
-						ipod_init.c ipod_init.h \
 						misc_track.h misc_track.c \
 						prefs.h prefs.c \
 						syncdir.h syncdir.c \

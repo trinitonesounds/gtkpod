@@ -42,7 +42,6 @@
 #include "prefs.h"
 #include "syncdir.h"
 #include "gp_itdb.h"
-#include "ipod_init.h"
 #include "file_convert.h"
 #include "tools.h"
 #include "gtkpod_app_iface.h"
@@ -766,7 +765,7 @@ iTunesDB *gp_load_ipod(iTunesDB *itdb) {
         g_free(str);
 
         if (result == GTK_RESPONSE_OK) {
-            ok_to_load = gp_ipod_init(itdb);
+            ok_to_load = gtkpod_init_repository(itdb);
         }
         else {
             ok_to_load = FALSE;
@@ -784,14 +783,14 @@ iTunesDB *gp_load_ipod(iTunesDB *itdb) {
         else if (prefs_model && !ipod_model) { /* verify with the user if the model is correct --
          * incorrect mdoel information can result in loss of
          * Artwork */
-            gp_ipod_init_set_model(itdb, prefs_model);
+            gtkpod_populate_repository_model(itdb, prefs_model);
             /* write out new SysInfo file -- otherwise libpod won't
              use it. Ignore error for now. */
             itdb_device_write_sysinfo(itdb->device, NULL);
         }
         else if (!prefs_model && !ipod_model) {
             /* ask the user to set the model information */
-            gp_ipod_init_set_model(itdb, NULL);
+            gtkpod_populate_repository_model(itdb, NULL);
             /* write out new SysInfo file -- otherwise libpod won't
              use it. Ignore error for now. */
             itdb_device_write_sysinfo(itdb->device, NULL);
@@ -805,7 +804,7 @@ iTunesDB *gp_load_ipod(iTunesDB *itdb) {
             if (isalpha (ipod_model[0]))
                 ++ipod_ptr;
             if (strcmp(prefs_ptr, ipod_ptr) != 0) { /* Model number is different -- confirm */
-                gp_ipod_init_set_model(itdb, ipod_model);
+                gtkpod_populate_repository_model(itdb, ipod_model);
                 /* write out new SysInfo file -- otherwise libpod won't
                  use it. Ignore error for now. */
                 itdb_device_write_sysinfo(itdb->device, NULL);
@@ -827,7 +826,7 @@ iTunesDB *gp_load_ipod(iTunesDB *itdb) {
                     itdb_device_set_sysinfo(new_itdb->device, "ModelNumStr", prefs_model);
                 }
                 else { /* ask again... */
-                    gp_ipod_init_set_model(new_itdb, NULL);
+                    gtkpod_populate_repository_model(new_itdb, NULL);
                 }
                 g_free(prefs_model);
             }
@@ -1645,7 +1644,7 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
         g_return_val_if_fail (mountpoint, FALSE);
         /* check if iPod directories are present */
         if (!ipod_dirs_present(mountpoint)) { /* no -- create them */
-            gp_ipod_init(itdb);
+            gtkpod_init_repository(itdb);
             /* if still not present abort */
             if (!ipod_dirs_present(mountpoint)) {
                 gtkpod_warning(_("iPod directory structure must be present before synching to the iPod can be performed.\n"));

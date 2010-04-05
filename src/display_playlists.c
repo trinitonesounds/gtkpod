@@ -2142,6 +2142,24 @@ void playlist_display_update_itdb_cb(GtkPodApp *app, gpointer olditdb, gpointer 
     pm_add_itdb(new_itdb, pos);
 }
 
+void playlist_display_itdb_added_cb(GtkPodApp *app, gpointer itdb, gint32 pos, gpointer data) {
+    iTunesDB *new_itdb = itdb;
+    if (new_itdb == NULL) {
+        return;
+    }
+
+    pm_add_itdb (new_itdb, pos);
+}
+
+void playlist_display_itdb_removed_cb(GtkPodApp *app, gpointer itdb, gpointer data) {
+    iTunesDB *old_itdb = itdb;
+    if (old_itdb == NULL) {
+        return;
+    }
+
+    pm_remove_playlist (itdb_playlist_mpl (old_itdb), FALSE);
+}
+
 void playlist_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data) {
     Playlist *new_playlist = pl;
     Playlist *old_playlist = pm_get_selected_playlist();
@@ -2162,7 +2180,7 @@ void playlist_display_playlist_added_cb(GtkPodApp *app, gpointer pl, gint32 pos,
     pm_add_child(new_playlist->itdb, PM_COLUMN_PLAYLIST, new_playlist, pos);
 }
 
-void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gint32 pos, gpointer data) {
+void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer data) {
     Playlist *old_playlist = pl;
 
     pm_remove_playlist(old_playlist, TRUE);

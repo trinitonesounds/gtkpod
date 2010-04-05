@@ -58,7 +58,9 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     /* Merge UI */
     repository_editor_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
 
-    gtkpod_register_repository_editor(repository_edit);
+    g_return_val_if_fail(REPOSITORY_EDITOR_IS_EDITOR(repository_editor_plugin), TRUE);
+
+    gtkpod_register_repository_editor (repository_editor_plugin);
 
     return TRUE; /* FALSE if activation failed */
 }
@@ -99,8 +101,15 @@ static void repository_editor_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_plugin;
 }
 
-ANJUTA_PLUGIN_BEGIN (RepositoryEditorPlugin, repository_editor_plugin);ANJUTA_PLUGIN_END
-;
+static void repository_editor_iface_init(RepositoryEditorInterface *iface) {
+    iface->edit_repository = open_repository_editor;
+    iface->init_repository = repository_ipod_init;
+    iface->set_repository_model = repository_ipod_init_set_model;
+}
+
+ANJUTA_PLUGIN_BEGIN (RepositoryEditorPlugin, repository_editor_plugin);
+ANJUTA_PLUGIN_ADD_INTERFACE(repository_editor, REPOSITORY_EDITOR_TYPE);
+ANJUTA_PLUGIN_END;
 
 ANJUTA_SIMPLE_PLUGIN (RepositoryEditorPlugin, repository_editor_plugin)
 ;

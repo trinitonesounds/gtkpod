@@ -1374,7 +1374,7 @@ static void gtkpod_app_iface_init(GtkPodAppInterface *iface) {
     iface->display_widget = anjuta_gtkpod_app_display_widget;
     iface->export_tracks_as_gchar = NULL;
     iface->export_tracks_as_glist = NULL;
-    iface->edit_repository = NULL;
+    iface->repository_editor = NULL;
 }
 
 G_MODULE_EXPORT void on_confirm_tree_size_allocate (GtkWidget *sender, GtkAllocation *allocation, gpointer e)
@@ -1384,6 +1384,6 @@ G_MODULE_EXPORT void on_confirm_tree_size_allocate (GtkWidget *sender, GtkAlloca
 }
 
 ANJUTA_TYPE_BEGIN(AnjutaApp, anjuta_app, GTK_TYPE_WINDOW);
-            ANJUTA_TYPE_ADD_INTERFACE(anjuta_shell, ANJUTA_TYPE_SHELL);
-            ANJUTA_TYPE_ADD_INTERFACE(gtkpod_app, GTKPOD_APP_TYPE);ANJUTA_TYPE_END
-;
+ANJUTA_TYPE_ADD_INTERFACE(anjuta_shell, ANJUTA_TYPE_SHELL);
+ANJUTA_TYPE_ADD_INTERFACE(gtkpod_app, GTKPOD_APP_TYPE);
+ANJUTA_TYPE_END;

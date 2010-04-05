@@ -30,12 +30,13 @@
 #define GTKPOD_APP_IFACE_H_
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+    #include <config.h>
 #endif
 
 #include <gtk/gtk.h>
 #include <glade/glade-xml.h>
 #include "itdb.h"
+#include "repository_configurator.h"
 
 #define GTKPOD_APP_TYPE                (gtkpod_app_get_type ())
 #define GTKPOD_APP(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTKPOD_APP_TYPE, GtkPodApp))
@@ -49,6 +50,8 @@
 #define SIGNAL_PLAYLIST_ADDED "signal_playlist_added"
 #define SIGNAL_PLAYLIST_REMOVED "signal_playlist_removed"
 #define SIGNAL_ITDB_UPDATED "signal_itdb_updated"
+#define SIGNAL_ITDB_ADDED "signal_itdb_added"
+#define SIGNAL_ITDB_REMOVED "signal_itdb_removed"
 #define SIGNAL_SORT_ENABLEMENT "signal_sort_enablement"
 
 typedef void (*ConfHandler)(gpointer user_data1, gpointer user_data2);
@@ -82,11 +85,13 @@ enum
     PLAYLIST_ADDED,
     PLAYLIST_REMOVED,
     ITDB_UPDATED,
+    ITDB_ADDED,
+    ITDB_REMOVED,
     SORT_ENABLEMENT,
     LAST_SIGNAL
 };
 
-typedef struct _GtkPodApp GtkPodApp; /* dummy object */
+typedef struct _GtkPodApp GtkPodApp;
 typedef struct _GtkPodAppInterface GtkPodAppInterface;
 
 struct _GtkPodAppInterface {
@@ -103,6 +108,8 @@ struct _GtkPodAppInterface {
     gboolean sort_enablement;
     /* xml filename */
     gchar *xml_file;
+    /* Repository Editor */
+    RepositoryEditorInterface *repository_editor;
 
     void (*itdb_updated)(GtkPodApp *obj, iTunesDB *oldItdb, iTunesDB *newItbd);
     void (*statusbar_message)(GtkPodApp *obj, gchar* message);
@@ -116,7 +123,6 @@ struct _GtkPodAppInterface {
     void (*statusbar_busy_pop)(GtkPodApp *obj);
     GList * (*export_tracks_as_gchar)(iTunesDB *source_db, iTunesDB *dest_db, gchar *tracks);
     GList * (*export_tracks_as_glist)(iTunesDB *source_db, iTunesDB *dest_db, GList *tracks);
-    void (*edit_repository)(iTunesDB *itdb, Playlist *playlist);
     void (*display_widget)(GtkWidget *widget);
 };
 
@@ -157,11 +163,13 @@ void gtkpod_register_exporter(GList *(*export_tks_as_gchar_func)(iTunesDB *sourc
 void gtkpod_unregister_exporter();
 GList *gtkpod_export_tracks_as_gchar(iTunesDB *source_db, iTunesDB *dest_db, gchar *tracks);
 GList *gtkpod_export_tracks_as_glist(iTunesDB *source_db, iTunesDB *dest_d, GList *tracks);
+void gtkpod_display_widget(GtkWidget *widget);
 
-void gtkpod_register_repository_editor(void (*edit_repository_func)(iTunesDB *itdb, Playlist *playlist));
+void gtkpod_register_repository_editor(RepositoryEditorInterface *editor);
 void gtkpod_unregister_repository_editor();
 void gtkpod_edit_repository(iTunesDB *itdb, Playlist *playlist);
-void gtkpod_display_widget(GtkWidget *widget);
+gboolean gtkpod_init_repository(iTunesDB *itdb);
+void gtkpod_populate_repository_model(iTunesDB *itdb, const gchar *old_model);
 
 GtkPodApp *gtkpod_app;
 guint gtkpod_app_signals[LAST_SIGNAL];

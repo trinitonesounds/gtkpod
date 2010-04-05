@@ -55,10 +55,12 @@ void pm_add_all_itdbs (void);
 Playlist* pm_get_selected_playlist(void);
 void pm_stop_editing(gboolean cancel);
 
+void playlist_display_itdb_added_cb(GtkPodApp *app, gpointer itdb, gint32 pos, gpointer data);
+void playlist_display_itdb_removed_cb(GtkPodApp *app, gpointer itdb, gpointer data);
 void playlist_display_update_itdb_cb (GtkPodApp *app, gpointer olditdb, gpointer newitdb, gpointer data);
 void playlist_display_select_playlist_cb (GtkPodApp *app, gpointer pl, gpointer data);
 void playlist_display_playlist_added_cb(GtkPodApp *app, gpointer pl, gint32 pos, gpointer data);
-void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gint32 pos, gpointer data);
+void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer data);
 void playlist_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data);
 
 #endif /* __DISPLAY_PLAYLIST_H__ */
