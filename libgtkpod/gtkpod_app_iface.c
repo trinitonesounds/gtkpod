@@ -343,7 +343,7 @@ void gtkpod_display_widget(GtkWidget *widget) {
     GTKPOD_APP_GET_INTERFACE(gtkpod_app)->display_widget(widget);
 }
 
-void gtkpod_register_repository_editor(RepositoryEditorInterface *editor) {
+void gtkpod_register_repository_editor(RepositoryEditor *editor) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
     g_return_if_fail (REPOSITORY_EDITOR_IS_EDITOR(editor));
     GTKPOD_APP_GET_INTERFACE (gtkpod_app)->repository_editor = editor;

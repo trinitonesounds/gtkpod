@@ -60,7 +60,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     g_return_val_if_fail(REPOSITORY_EDITOR_IS_EDITOR(repository_editor_plugin), TRUE);
 
-    gtkpod_register_repository_editor (repository_editor_plugin);
+    gtkpod_register_repository_editor (REPOSITORY_EDITOR(repository_editor_plugin));
 
     return TRUE; /* FALSE if activation failed */
 }

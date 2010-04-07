@@ -109,6 +109,7 @@ static void select_repository(iTunesDB *itdb, Playlist *playlist);
 static void display_repository_info();
 static void display_playlist_info();
 static void update_buttons();
+static void repository_combo_changed_cb(GtkComboBox *cb);
 
 /* callbacks */
 /**
@@ -117,14 +118,15 @@ static void update_buttons();
  * defunct playlists and itdbs.
  */
 static void repository_update_itdb_cb(GtkPodApp *app, gpointer olditdb, gpointer newitdb, gpointer data) {
-    if (repository_view->itdb == newitdb) {
-        // repository changed will not be called if the current
-        // repository is selected so need to init the playlist combo
-        // manually. Need to do this before init repository combo
-        // since the latter set the repository_view-> itdb to NULL
-        init_playlist_combo();
-    }
+    gint index;
+
+    index = gtk_combo_box_get_active(repository_view->repository_combo_box);
+
     init_repository_combo();
+
+    if (index >= 0) {
+        gtk_combo_box_set_active(repository_view->repository_combo_box, index);
+    }
 }
 
 /**
@@ -1454,9 +1456,11 @@ static void create_repository_editor_view() {
     repository_view->extra_prefs = temp_prefs_create();
 
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (repository_playlist_selected_cb), NULL);
-    g_signal_connect (gtkpod_app, SIGNAL_ITDB_UPDATED, G_CALLBACK (repository_update_itdb_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_ADDED, G_CALLBACK (repository_playlist_changed_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_REMOVED, G_CALLBACK (repository_playlist_changed_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_ITDB_UPDATED, G_CALLBACK (repository_update_itdb_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_ITDB_ADDED, G_CALLBACK (repository_update_itdb_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_ITDB_REMOVED, G_CALLBACK (repository_update_itdb_cb), NULL);
 
 }
 
@@ -1504,9 +1508,9 @@ void open_repository_editor(iTunesDB *itdb, Playlist *playlist) {
     }
     g_return_if_fail (itdb);
 
-    select_repository(itdb, playlist);
-
-    update_buttons();
-
     gtk_widget_show_all(repository_view->window);
+
+    select_repository(itdb, playlist);
+    display_repository_info();
+    update_buttons();
 }

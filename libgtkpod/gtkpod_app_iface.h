@@ -109,7 +109,7 @@ struct _GtkPodAppInterface {
     /* xml filename */
     gchar *xml_file;
     /* Repository Editor */
-    RepositoryEditorInterface *repository_editor;
+    RepositoryEditor *repository_editor;
 
     void (*itdb_updated)(GtkPodApp *obj, iTunesDB *oldItdb, iTunesDB *newItbd);
     void (*statusbar_message)(GtkPodApp *obj, gchar* message);
@@ -165,7 +165,7 @@ GList *gtkpod_export_tracks_as_gchar(iTunesDB *source_db, iTunesDB *dest_db, gch
 GList *gtkpod_export_tracks_as_glist(iTunesDB *source_db, iTunesDB *dest_d, GList *tracks);
 void gtkpod_display_widget(GtkWidget *widget);
 
-void gtkpod_register_repository_editor(RepositoryEditorInterface *editor);
+void gtkpod_register_repository_editor(RepositoryEditor *editor);
 void gtkpod_unregister_repository_editor();
 void gtkpod_edit_repository(iTunesDB *itdb, Playlist *playlist);
 gboolean gtkpod_init_repository(iTunesDB *itdb);
