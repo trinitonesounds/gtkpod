@@ -43,6 +43,7 @@
 #include "misc_track.h"
 #include "prefs.h"
 #include "syncdir.h"
+#include "autodetection.h"
 
 /* A struct containing a list with available iTunesDBs. A pointer to
  this struct is stored in gtkpod_app as itdbs_head */
@@ -137,7 +138,7 @@ iTunesDB *gp_itdb_new(void) {
 
 /* Free itdb and take care of dependencies */
 void gp_itdb_free(iTunesDB *itdb) {
-    g_warning("TODO signal all things such as conversions to cancel");
+    g_message("TODO signal all things such as conversions to cancel");
     //    /* cancel all pending conversions */
     //    file_convert_cancel_itdb (itdb);
 
@@ -247,7 +248,7 @@ Track *gp_track_add(iTunesDB *itdb, Track *track) {
         itdb_track_add(itdb, track, -1);
         /* add to filename hash */
         gp_itdb_pc_path_hash_add_track(track);
-        g_warning("TODO should there be a conversion interface to initiate a conversion");
+        g_message("TODO should there be a conversion interface to initiate a conversion");
         //	/* add to background conversion if necessary */
         //	file_convert_add_track (track);
         result = track;
@@ -274,10 +275,10 @@ void gp_track_remove(Track *track) {
  before when you make sure @track is no longer referenced in any
  playlist -- see gp_playlist_remove_track for details */
 void gp_track_unlink(Track *track) {
-    g_warning("TODO need to remove track from playlists and details window if necessary");
+    g_message("TODO need to remove track from playlists and details window if necessary");
     /* the details window may be accessing the tracks */
     //    details_remove_track(track);
-    g_warning("TODO signal that any file conversions on track be cancelled");
+    g_message("TODO signal that any file conversions on track be cancelled");
     /* cancel pending conversions */
     //    file_convert_cancel_track(track);
     /* remove from SHA1 hash */
@@ -821,6 +822,9 @@ void gp_init(GtkPodApp *single_app, int argc, char *argv[]) {
         }
     }
 
+    /* Initiate autodetection */
+    autodetection_init();
+
     /* Create tooltips */
     main_tooltips = gtk_tooltips_new();
     g_object_set_data(G_OBJECT (gtkpod_app), "main_tooltips", main_tooltips);
@@ -981,7 +985,7 @@ gboolean gp_increase_playcount(gchar *sha1, gchar *file, gint num) {
             track->playcount += num;
             data_changed(itdb);
             buf1 = get_track_info(track, TRUE);
-            g_warning("TODO gp_itdb:gp_increase_playcount - status\n");
+            g_message("TODO gp_itdb:gp_increase_playcount - status\n");
             //	    gtkpod_statusbar_message (_("Increased playcount for '%s'"),
             //				      buf1);
             g_free(buf1);

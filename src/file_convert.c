@@ -515,7 +515,7 @@ static void conversion_display_hide_log_window (Conversion *conv)
 //    GtkWidget *mi;
     /* show display log if it was previously hidden and should be
        shown again */
-    g_warning("TODO coversion_display_hide_log_window - commented out\n");
+    g_message("TODO coversion_display_hide_log_window - commented out\n");
 //    mi = gtkpod_xml_get_widget (main_window_xml, "view_conversion_log");
 //    if (prefs_get_int (FILE_CONVERT_DISPLAY_LOG))
 //    {
@@ -1677,7 +1677,7 @@ static gboolean conversion_scheduler_unlocked (Conversion *conv)
 			   is never read and free space keeps
 			   increasing while we copy more and more
 			   files to the iPod */
-			g_warning("TODO space_data_update");
+			g_message("TODO space_data_update");
 //			space_data_update ();
 			debug ("transfer finalized: %s (%d)\n",
 			       conversion_get_track_info (NULL, ctr),
@@ -2479,7 +2479,7 @@ static gboolean conversion_convert_track (Conversion *conv, ConvTrack *ctr)
 	    g_mutex_unlock (conv->mutex);
 
 	    track = gp_track_new ();
-	    g_warning("TODO read gapless for filetype without knowing its mp3\n");
+	    g_message("TODO read gapless for filetype without knowing its mp3\n");
 //	    retval = mp3_read_gapless (ctr->converted_file, track);
 	    retval = FALSE;
 

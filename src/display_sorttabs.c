@@ -277,7 +277,7 @@ static void on_st_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guin
     if (page_num != ST_CAT_SPECIAL) {
         st_set_string_compare_func(inst, page_num);
     }
-    g_warning("on_st_switch_page: space_data_update commented out");
+    g_message("TODO: on_st_switch_page: space_data_update commented out");
     //    space_data_update();
     st_page_selected(notebook, page_num);
 }
@@ -585,7 +585,7 @@ static void sp_go_cb(gpointer user_data1, gpointer user_data2) {
             time.tv_sec % 3600, time.tv_usec);
 #endif
 
-    g_warning ("sp_go_cb: space_data_update todo");
+    g_message("TODO: sp_go_cb: space_data_update todo");
     //    space_data_update();
 
     /* Sanity */
@@ -1341,8 +1341,6 @@ static void st_track_changed_normal(Track *track, gboolean removed, guint32 inst
  tabs he/she just edited, disappeared from the display */
 void st_track_changed(Track *track, gboolean removed, guint32 inst) {
     if (inst == prefs_get_int("sort_tab_num")) {
-        g_warning("st_track_changed: signal that a track has been changed");
-        //        tm_track_changed(track);
         return;
     }
     else if (inst < prefs_get_int("sort_tab_num")) {
@@ -1796,7 +1794,7 @@ void st_sort(GtkSortType order) {
      * displaytracks list in coverart recreated.
      * ie. easy to sort ascending and descending but difficult to return to unsorted state
      */
-    g_warning("st_sort - signal coverart display to update itself");
+    g_message("TODO: st_sort - signal coverart display to update itself");
     //    coverart_display_update(order == SORT_NONE);
 }
 
@@ -1950,7 +1948,7 @@ static gboolean st_selection_changed_cb(gpointer data) {
         //        }
     }
 
-    g_warning("st_selection_changed_cb: space_data_update");
+    g_message("TODO: st_selection_changed_cb: space_data_update");
     //    space_data_update();
 
 #if DEBUG_TIMING
@@ -2064,7 +2062,7 @@ static void st_cell_edited(GtkCellRendererText *renderer, const gchar *path_stri
                     *itemp_utf8 = g_strdup(new_text);
                 }
                 track->time_modified = time(NULL);
-                g_warning("st_cell_edited: signal that a track has changed");
+                g_message("TODO: st_cell_edited: signal that a track has changed");
                 //                pm_track_changed(track);
                 /* If prefs say to write changes to file, do so */
                 if (prefs_get_int("id3_write")) {
@@ -2291,7 +2289,7 @@ static void st_adjust_visible(void) {
             gtk_widget_hide(GTK_WIDGET (st_paned[i]));
     }
 
-    g_warning("Need to work out how to disable more and less sort tab actions");
+    g_message("TODO: Need to work out how to disable more and less sort tab actions");
     //    /* activate / deactiveate "less sort tabs" menu item */
     //    w = gtkpod_xml_get_widget(main_window_xml, "less_sort_tabs");
     //    if (n == 0)
@@ -2324,7 +2322,7 @@ void st_show_visible(void) {
 static void st_set_visible_sort_tab_paned(void) {
     //    gint i, x, y, p0, num, width;
 
-    g_warning("Determine whether to need to store the paned sizes and positions anymore?");
+    g_message("TODO: Determine whether to need to store the paned sizes and positions anymore?");
     //    num = prefs_get_int("sort_tab_num");
     //    if (num > 0) {
     //        gchar *buf;
@@ -2397,7 +2395,7 @@ static gboolean st_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer 
         switch (e->button) {
         case 3:
             st_select_current_position(GPOINTER_TO_INT(data), e->x, e->y);
-            g_warning("TODO: context menu for sorttabs display");
+            g_message("TODO: context menu for sorttabs display");
             //            st_context_menu_init(GPOINTER_TO_INT(data));
             return TRUE;
         default:
@@ -2813,7 +2811,7 @@ void st_set_default_sizes(void) {
 
     /* GtkPaned elements */
     g_return_if_fail (gtkpod_app);
-    g_warning("Not sure whether to set positions of paneds based on prefs");
+    g_message("TODO: Not sure whether to set positions of paneds based on prefs");
     //    /* Elements defined with glade */
     //    for (i = 0; i < PANED_NUM_GLADE; ++i) {
     //        gchar *buf = g_strdup_printf("paned%d", i);
@@ -2838,7 +2836,7 @@ void st_set_default_sizes(void) {
  position of GtkPaned elements */
 void st_update_default_sizes(void) {
     /* GtkPaned elements */
-    g_warning("Not sure whether need to update default size of sorttabs");
+    g_message("TODO: Not sure whether need to update default size of sorttabs");
     //    if (gtkpod_window) {
     //        gint i;
     //        /* Elements defined with glade */

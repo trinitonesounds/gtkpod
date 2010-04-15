@@ -483,7 +483,7 @@ static void sort_window_set ()
     compare_string_fuzzy_generate_keys ();
 
     /* if case sensitive has changed, rebuild sortkeys */
-    g_warning("TODO - send signal to initiate sort on apply of sort window");
+    g_message("TODO - send signal to initiate sort on apply of sort window");
 //    if (temp_prefs_get_int_value(sort_temp_prefs, "case_sensitive", &val))
 //    {
 //	st_rebuild_sortkeys ();

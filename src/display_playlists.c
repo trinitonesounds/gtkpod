@@ -91,30 +91,34 @@ static gboolean pm_get_iter_for_playlist(Playlist *pl, GtkTreeIter *iter);
  *    pressed)
  *
  * ---------------------------------------------------------------- */
+static void pm_drag_begin (GtkWidget *widget, GdkDragContext *drag_context, gpointer user_data) {
+/*     puts ("drag_begin"); */
+}
 
-static void pm_drag_begin(GtkWidget *widget, GdkDragContext *drag_context, gpointer user_data) {
-    /*     puts ("drag_begin"); */
+static void pm_drag_data_delete_remove_playlist(GtkTreeModel *tm, GtkTreePath *tp, GtkTreeIter *iter, gpointer data) {
+    Playlist *pl;
+    g_return_if_fail (tm);
+    g_return_if_fail (iter);
+    gtk_tree_model_get (tm, iter, PM_COLUMN_PLAYLIST, &pl, -1);
+    g_return_if_fail (pl);
+    gp_playlist_remove (pl);
 }
 
 /* remove dragged playlist after successful MOVE */
-static void pm_drag_data_delete(GtkWidget *widget, GdkDragContext *drag_context, gpointer user_data) {
-    void pm_drag_data_delete_remove_playlist(GtkTreeModel *tm, GtkTreePath *tp, GtkTreeIter *iter, gpointer data) {
-        Playlist *pl;
-        g_return_if_fail (tm);
-        g_return_if_fail (iter);
-        gtk_tree_model_get(tm, iter, PM_COLUMN_PLAYLIST, &pl, -1);
-        g_return_if_fail (pl);
-        gp_playlist_remove(pl);
-    }
-
+static void pm_drag_data_delete (GtkWidget *widget,
+               GdkDragContext *drag_context,
+               gpointer user_data)
+{
     g_return_if_fail (widget);
     g_return_if_fail (drag_context);
 
-    /*     printf ("drag_data_delete: %d\n", drag_context->action); */
+/*     printf ("drag_data_delete: %d\n", drag_context->action); */
 
-    if (drag_context->action == GDK_ACTION_MOVE) {
-        GtkTreeSelection *ts = gtk_tree_view_get_selection(GTK_TREE_VIEW (widget));
-        gtk_tree_selection_selected_foreach(ts, pm_drag_data_delete_remove_playlist, NULL);
+    if (drag_context->action == GDK_ACTION_MOVE)
+    {
+    GtkTreeSelection *ts = gtk_tree_view_get_selection(
+        GTK_TREE_VIEW (widget));
+    gtk_tree_selection_selected_foreach (ts, pm_drag_data_delete_remove_playlist, NULL);
     }
 }
 
@@ -802,7 +806,6 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
 
 static gboolean on_playlist_treeview_key_release_event(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
     guint mods;
-
     mods = event->state;
 
     if (!widgets_blocked && (mods & GDK_CONTROL_MASK)) {
@@ -2049,12 +2052,7 @@ GtkTreeView* pm_create_treeview(void) {
     return playlist_treeview;
 }
 
-Playlist*
-pm_get_selected_playlist(void) {
-    /* return(current_playlist);*/
-    /* we can't just return the "current_playlist" because the context
-     menus require the selection before "current_playlist" is updated */
-
+Playlist* pm_get_selected_playlist(void) {
     GtkTreeSelection *ts;
     GtkTreeIter iter;
     GtkTreeModel *model;
@@ -2075,12 +2073,7 @@ pm_get_selected_playlist(void) {
     return result;
 }
 
-Itdb_iTunesDB*
-pm_get_selected_itdb(void) {
-    /* return(current_playlist);*/
-    /* we can't just return the "current_playlist" because the context
-     menus require the selection before "current_playlist" is updated */
-
+Itdb_iTunesDB* pm_get_selected_itdb(void) {
     GtkTreeSelection *ts;
     GtkTreeIter iter;
     GtkTreeModel *model;
@@ -2192,4 +2185,3 @@ void playlist_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, 
 
     pm_remove_track(current_playlist, old_track);
 }
-

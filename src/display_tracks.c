@@ -783,7 +783,7 @@ static void tm_rating_edited(RBCellRendererRating *renderer, const gchar *path_s
     if ((int) rating * ITDB_RATING_STEP != track->rating) {
         track->rating = (int) rating * ITDB_RATING_STEP;
         track->time_modified = time(NULL);
-        g_warning("TODO - signal that a track has been changed");
+        g_message("TODO - signal that a track has been changed");
         //		pm_track_changed (track);
         data_changed(track->itdb);
 
@@ -923,7 +923,7 @@ static void tm_cell_edited(GtkCellRendererText *renderer, const gchar *path_stri
         /*      printf ("  changed: %d\n", changed); */
         if (changed) {
             track->time_modified = time(NULL);
-            g_warning("TODO - signal that a track has been changed");
+            g_message("TODO - signal that a track has been changed");
             //        pm_track_changed (track);    /* notify playlist model... */
             data_changed(track->itdb); /* indicate that data has changed */
 
@@ -1229,7 +1229,7 @@ static void tm_cell_toggled(GtkCellRendererToggle *renderer, gchar *arg1, gpoint
 
     if ((column == TM_COLUMN_LYRICS) && (selected_tracks != NULL)) {
         /* set displayed page to the lyrics page */
-        g_warning("TODO - display_tracks: set displayed page to the lyrics page in details window");
+        g_message("TODO - display_tracks: set displayed page to the lyrics page in details window");
         //      prefs_set_int (DETAILS_WINDOW_NOTEBOOK_PAGE, 3);
         //      details_edit (selected_tracks);
         g_list_free(selected_tracks);
@@ -1343,7 +1343,7 @@ void tm_rows_reordered(void) {
          sort tabs */
         if (changed) {
             data_changed(itdb);
-            g_warning("TODO - do we need to st_adopt_order_in_playlist");
+            g_message("TODO - do we need to st_adopt_order_in_playlist");
             //            st_adopt_order_in_playlist();
         }
     }
@@ -2234,7 +2234,7 @@ static gboolean tm_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer 
             break;
         case 3:
             tm_select_current_position(e->x, e->y);
-            g_warning("TODO - context menu of track display");
+            g_message("TODO - context menu of track display");
             //            tm_context_menu_init();
             return TRUE;
         default:
@@ -2256,10 +2256,10 @@ static gboolean tm_selection_changed_cb(gpointer data) {
         if (col_id != -1)
             tm_set_search_column(col_id);
     }
-    g_warning("TODO - update info track view");
+    g_message("TODO - update info track view");
     //    info_update_track_view();
 
-    g_warning("TODO - update coverart view");
+    g_message("TODO - update coverart view");
     /* update the coverart display */
     //    GList *selected = display_get_selection(prefs_get_int("sort_tab_num"));
     //    if (selected != NULL) {

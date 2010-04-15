@@ -25,15 +25,18 @@
 |
 |  $Id$
 */
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
-
-#include "autodetection.h"
-#include "config.h"
-#include "misc.h"
-#include "prefs.h"
 #include <stdio.h>
 #include <string.h>
-
+#include <glib/gi18n-lib.h>
+#include "autodetection.h"
+#include "gp_itdb.h"
+#include "gtkpod_app_iface.h"
+#include "misc.h"
+#include "prefs.h"
 
 
 #ifdef HAVE_GNOME_VFS
@@ -67,7 +70,7 @@ static iTunesDB *ad_find_repository_with_mountpoint (const gchar *mountpoint)
 
     g_return_val_if_fail (mountpoint, NULL);
 
-    itdbs = gp_get_itdbs_head (gtkpod_window);
+    itdbs = gp_get_itdbs_head ();
     g_return_val_if_fail (itdbs, NULL);
 
     /* eliminate trailing dir separators ('/') */
@@ -129,7 +132,7 @@ struct _AutoDetect
     GMutex *mutex;              /* shared lock */
     GList *new_ipod_uris;       /* list of new mounts */
     guint timeout_id;
-};    
+};
 
 static AutoDetect *autodetect;
 
@@ -372,7 +375,7 @@ static gboolean ad_timeout_cb (gpointer data)
 
 	    itdb = ad_find_repository_with_mountpoint (mountpoint);
 
-	    itdbs = gp_get_itdbs_head (gtkpod_window);
+	    itdbs = gp_get_itdbs_head ();
 	    g_return_val_if_fail (itdbs, (gdk_threads_leave(), release_widgets(), TRUE));
 
 	    block_widgets ();

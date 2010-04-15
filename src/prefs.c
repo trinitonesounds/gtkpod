@@ -201,11 +201,11 @@ static void set_default_preferences()
     prefs_set_string ("path_play_now", "xmms %s");
     prefs_set_string ("path_play_enqueue", "xmms -e %s");
     prefs_set_string ("path_mserv_trackinfo_root", "/var/lib/mserv/trackinfo/");
-    g_warning("TODO preferences should have no knowledge of cover art\n");
+    g_message("TODO preferences should have no knowledge of cover art\n");
 //    prefs_set_string ("coverart_display_bg_color", "#000000");
 //    prefs_set_string ("coverart_display_fg_color", "#FFFFFF");
 
-    g_warning("TODO preferences should have no knowledge of music types\n");
+    g_message("TODO preferences should have no knowledge of music types\n");
 //    str = g_build_filename (SCRIPTDIR, "convert-ogg2mp3.sh", NULL);
 //    prefs_set_string ("path_conv_ogg", str);
 //    g_free (str);
@@ -221,7 +221,7 @@ static void set_default_preferences()
 //    g_free (str);
 //    prefs_set_int ("convert_wav", FALSE);
 
-    g_warning("TODO preferences should have no knowledge of the sort tabs\n");
+    g_message("TODO preferences should have no knowledge of the sort tabs\n");
 //    /* Set sorting tab defaults */
 //    for (i = 0; i < SORT_TAB_MAX; i++)
 //    {
@@ -266,7 +266,7 @@ static void set_default_preferences()
     prefs_set_int("horizontal_scrollbar", TRUE);
     prefs_set_int("filter_tabs_top", FALSE);
 
-    g_warning ("TODO preferences should have no knowledge of paned positions\n");
+    g_message("TODO preferences should have no knowledge of paned positions\n");
 //    /* Set pane positions--Let gtk worry about position */
 //    for (i = 0; i < PANED_NUM; i++)
 //	prefs_set_int_index("paned_pos_", i, -1);
@@ -334,7 +334,7 @@ static void set_default_preferences()
     else
 	prefs_set_string("last_dir_browsed", g_get_home_dir());
 
-    g_warning("TODO each pane will worry about its own sorting\n");
+    g_message("TODO each pane will worry about its own sorting\n");
 //    /* Set sorting prefs */
 //    prefs_set_int("case_sensitive", FALSE);
 //    prefs_set_int("tm_autostore", FALSE);
@@ -1077,7 +1077,7 @@ static void cleanup_keys()
     prefs_set_string("filename_format", NULL);
     prefs_set_string("write_extended_info", NULL);
 
-    g_warning("TODO prefs have no knowledge of sort tabs\n");
+    g_message("TODO prefs have no knowledge of sort tabs\n");
 //    /* sp_created_cond renamed to sp_added_cond */
 //    for (i = 0; i < SORT_TAB_MAX; i++)
 //    {
@@ -1108,7 +1108,7 @@ static void cleanup_keys()
 	}
     }
 
-    g_warning("TODO prefs have no knowledge of panes\n");
+    g_message("TODO prefs have no knowledge of panes\n");
 //    /* handle version changes in prefs */
 //    if (version == 0.0)
 //    {

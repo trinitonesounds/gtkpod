@@ -71,7 +71,7 @@ enum {
 
 /* function to add one widget to the blocked_widgets list */
 static GList *add_blocked_widget(GList *blocked_widgets, gchar *name) {
-    g_warning("TODO misc:add_blocked_widget - commented out\n");
+    g_message("TODO misc:add_blocked_widget - commented out\n");
     //    GtkWidget *w;
     //    struct blocked_widget *bw;
     //    if((w = gtkpod_xml_get_widget (main_window_xml,  name)))

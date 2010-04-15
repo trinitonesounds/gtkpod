@@ -188,7 +188,7 @@ void gp_duplicate_remove(Track *oldtrack, Track *track) {
                                 "The following %d duplicate tracks have not been added to the master play list.",
                                 deltrack_nr), deltrack_nr);
             }
-            g_warning("TODO misc_track:gp_duplicate_remove - return status\n");
+            g_message("TODO misc_track:gp_duplicate_remove - return status\n");
             //	   gtkpod_confirmation
             //	       (-1,                      /* gint id, */
             //		FALSE,                   /* gboolean modal, */
@@ -1954,7 +1954,7 @@ void delete_track_ok(struct DeleteData *dd) {
     if (!dd->tracks)
         delete_track_cancel(dd);
 
-    g_warning("TODO: determine whether still need to block changes while deleting");
+    g_message("TODO: determine whether still need to block changes while deleting");
     //    /* Deafen the coverart display while deletion is occurring */
     //    coverart_block_change(TRUE);
 
@@ -2009,7 +2009,7 @@ void delete_track_ok(struct DeleteData *dd) {
     }
 
     /* Awaken coverart selection */
-    g_warning("TODO: determine whether still need to block changes while deleting");
+    g_message("TODO: determine whether still need to block changes while deleting");
     //    coverart_block_change(FALSE);
     g_list_free(dd->tracks);
     g_free(dd);

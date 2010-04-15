@@ -1425,7 +1425,7 @@ void mserv_from_file_tracks(GList *selected_tracks) {
         g_return_if_fail (etr);
 
         buf = get_track_info(track, TRUE);
-        g_warning("TODO file:mserv_from_file_tracks - status needed\n");
+        g_message("TODO file:mserv_from_file_tracks - status needed\n");
         //	gtkpod_statusbar_message (_("Retrieving mserv data %s"), buf);
         g_free(buf);
         if (etr->pc_path_locale && *etr->pc_path_locale)
@@ -1453,7 +1453,7 @@ void display_non_updated(Track *track, gchar *txt) {
         if (prefs_get_int("show_non_updated") && str->len) { /* Some tracks have not been updated. Print a notice */
             buf
                     = g_strdup_printf(ngettext("The following track could not be updated", "The following %d tracks could not be updated", track_nr), track_nr);
-            g_warning("TODO file:display_non_updated - status needed\n");
+            g_message("TODO file:display_non_updated - status needed\n");
             //	   gtkpod_confirmation
             //	       (-1,                 /* gint id, */
             //		FALSE,              /* gboolean modal, */
@@ -1512,22 +1512,21 @@ void display_updated(Track *track, gchar *txt) {
         if (str->len) { /* Some tracks have been updated. Print a notice */
             buf
                     = g_strdup_printf(ngettext("The following track has been updated", "The following %d tracks have been updated", track_nr), track_nr);
-            g_warning("file:display_updated - status needed\n");
-            //	   gtkpod_confirmation
-            //	       (-1,                 /* gint id, */
-            //		FALSE,              /* gboolean modal, */
-            //		_("Successful Track Update"),   /* title */
-            //		buf,                /* label */
-            //		str->str,           /* scrolled text */
-            //		NULL, 0, NULL,          /* option 1 */
-            //		NULL, 0, NULL,          /* option 2 */
-            //		TRUE,               /* gboolean confirm_again, */
-            //		"show_updated",/* confirm_again_key,*/
-            //		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
-            //		NULL,               /* don't show "Apply" button */
-            //		NULL,               /* cancel_handler,*/
-            //		NULL,               /* gpointer user_data1,*/
-            //		NULL);              /* gpointer user_data2,*/
+            	   gtkpod_confirmation
+            	       (-1,                 /* gint id, */
+            		FALSE,              /* gboolean modal, */
+            		_("Successful Track Update"),   /* title */
+            		buf,                /* label */
+            		str->str,           /* scrolled text */
+            		NULL, 0, NULL,          /* option 1 */
+            		NULL, 0, NULL,          /* option 2 */
+            		TRUE,               /* gboolean confirm_again, */
+            		"show_updated",/* confirm_again_key,*/
+            		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
+            		NULL,               /* don't show "Apply" button */
+            		NULL,               /* cancel_handler,*/
+            		NULL,               /* gpointer user_data1,*/
+            		NULL);              /* gpointer user_data2,*/
             g_free(buf);
         }
         display_updated((void *) -1, NULL);
@@ -1571,22 +1570,21 @@ void display_mserv_problems(Track *track, gchar *txt) {
         if (prefs_get_int("mserv_use") && prefs_get_int("mserv_report_probs") && str->len) { /* Some tracks have had problems. Print a notice */
             buf
                     = g_strdup_printf(ngettext("No mserv information could be retrieved for the following track", "No mserv information could be retrieved for the following %d tracks", track_nr), track_nr);
-            g_warning("file:display_mserv_problems - status needed\n");
-            //	   gtkpod_confirmation
-            //	       (-1,                 /* gint id, */
-            //		FALSE,              /* gboolean modal, */
-            //		_("mserv data retrieval problem"),   /* title */
-            //		buf,                /* label */
-            //		str->str,           /* scrolled text */
-            //		NULL, 0, NULL,          /* option 1 */
-            //		NULL, 0, NULL,          /* option 2 */
-            //		TRUE,               /* gboolean confirm_again, */
-            //		"mserv_report_probs",/* confirm_again_key,*/
-            //		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
-            //		NULL,               /* don't show "Apply" button */
-            //		NULL,               /* cancel_handler,*/
-            //		NULL,               /* gpointer user_data1,*/
-            //		NULL);              /* gpointer user_data2,*/
+            	   gtkpod_confirmation
+            	       (-1,                 /* gint id, */
+            		FALSE,              /* gboolean modal, */
+            		_("mserv data retrieval problem"),   /* title */
+            		buf,                /* label */
+            		str->str,           /* scrolled text */
+            		NULL, 0, NULL,          /* option 1 */
+            		NULL, 0, NULL,          /* option 2 */
+            		TRUE,               /* gboolean confirm_again, */
+            		"mserv_report_probs",/* confirm_again_key,*/
+            		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
+            		NULL,               /* don't show "Apply" button */
+            		NULL,               /* cancel_handler,*/
+            		NULL,               /* gpointer user_data1,*/
+            		NULL);              /* gpointer user_data2,*/
             g_free(buf);
         }
         display_mserv_problems((void *) -1, NULL);
@@ -1736,12 +1734,12 @@ void update_track_from_file(iTunesDB *itdb, Track *track) {
                 track->ipod_path = g_strdup("");
                 track->transferred = FALSE;
 
-                g_warning("TODO file:track_updated - cancel convert track\n");
+                g_message("TODO file:track_updated - cancel convert track\n");
                 //		/* cancel conversion/transfer of track */
                 //		file_convert_cancel_track (track);
                 /* mark the track for deletion on the ipod */
                 mark_track_for_deletion(itdb, new_track);
-                g_warning("TODO file:track updated - reschedule track conversion\n");
+                g_message("TODO file:track updated - reschedule track conversion\n");
                 //		/* reschedule conversion/transfer of track */
                 //		file_convert_add_track (track);
 
@@ -1759,7 +1757,7 @@ void update_track_from_file(iTunesDB *itdb, Track *track) {
             data_changed(itdb);
             netr->tchanged = FALSE;
         }
-        g_warning("TODO coverart may have changed only");
+        g_message("TODO coverart may have changed only");
         //	else
         //	{
         //		/* Rather than depend on the track data being changed, only the artwork may have changed
@@ -1996,7 +1994,7 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
 
 /* Call the correct tag writing function for the filename @name */
 static gboolean file_write_info(gchar *name, Track *track) {
-    g_warning("TODO file:write_file_info - defer to installed plugins");
+    g_message("TODO file:write_file_info - defer to installed plugins");
     //    gchar *buf;
     //
     //    g_return_val_if_fail (name, FALSE);
@@ -2226,7 +2224,7 @@ void parse_offline_playcount(void) {
         rewind(file);
         if (gstr->len != 0) {
             gint result = 0;
-            g_warning("TODO file:parse_offline_playcount - status\n");
+            g_message("TODO file:parse_offline_playcount - status\n");
             //	    gint result = gtkpod_confirmation
             //	    (-1,                    /* gint id, */
             //	     TRUE,                  /* gboolean modal, */
@@ -2271,7 +2269,7 @@ void parse_offline_playcount(void) {
  * Return value: TRUE, if gain could be read
  */
 gboolean read_soundcheck(Track *track) {
-    g_warning("TODO file:read_soundcheck - need to defer to plugin");
+    g_message("TODO file:read_soundcheck - need to defer to plugin");
     //    gchar *path;
     //    gchar *buf;
     //    gboolean result = FALSE;
@@ -2328,7 +2326,7 @@ gboolean read_soundcheck(Track *track) {
 
 /* Get lyrics from file */
 gboolean read_lyrics_from_file(Track *track, gchar **lyrics) {
-    g_warning("TODO file:read_lyrics_from_file - need to defer to plugins");
+    g_message("TODO file:read_lyrics_from_file - need to defer to plugins");
     //    gchar *path;
     //    gchar *buf;
     //    gboolean result = FALSE;
@@ -2392,7 +2390,7 @@ gboolean read_lyrics_from_file(Track *track, gchar **lyrics) {
 
 /* Write lyrics to file */
 gboolean write_lyrics_to_file(Track *track) {
-    g_warning("TODO file:write_lyrics_to_file - need to defer to plugins\n");
+    g_message("TODO file:write_lyrics_to_file - need to defer to plugins\n");
     //    gchar *path=NULL;
     //    gchar *buf;
     //    Track *oldtrack;

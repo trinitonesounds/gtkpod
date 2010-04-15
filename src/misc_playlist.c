@@ -75,7 +75,7 @@ Playlist *add_new_pl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position) {
             = get_user_string(_("New Playlist"), _("Please enter a name for the new playlist"), dflt ? dflt : _("New Playlist"), NULL, NULL, GTK_STOCK_ADD);
     if (name) {
         result = gp_playlist_add_new(itdb, name, FALSE, position);
-        g_warning("TODO add_new_playlist_user_name - status\n");
+        g_message("TODO add_new_playlist_user_name - status\n");
         //	gtkpod_tracks_statusbar_update ();
     }
     return result;
@@ -107,7 +107,7 @@ void add_new_pl_or_spl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position) {
     if (name) {
         if (!is_spl) { /* add standard playlist */
             gp_playlist_add_new(itdb, name, FALSE, position);
-            g_warning("TODO add_new_pl_or_spl_username - status\n");
+            g_message("TODO add_new_pl_or_spl_username - status\n");
             //	    gtkpod_tracks_statusbar_update ();
         }
         else { /* add smart playlist */
@@ -251,7 +251,7 @@ Playlist *generate_random_playlist(iTunesDB *itdb) {
 }
 
 void randomize_current_playlist(void) {
-    g_warning("TODO randomize_current_playlist commented out\n");
+    g_message("TODO randomize_current_playlist commented out\n");
     //    Playlist *pl= pm_get_selected_playlist ();
     //
     //    if (!pl)
@@ -329,8 +329,6 @@ Playlist *generate_not_listed_playlist(iTunesDB *itdb) {
 Playlist *generate_playlist_with_name(iTunesDB *itdb, GList *tracks, gchar *pl_name, gboolean del_old) {
     Playlist *new_pl = NULL;
     gint n = g_list_length(tracks);
-
-    g_warning("generate_playlist_with_name\n");
     g_return_val_if_fail (itdb, new_pl);
 
     if (n > 0) {
@@ -354,7 +352,6 @@ Playlist *generate_playlist_with_name(iTunesDB *itdb, GList *tracks, gchar *pl_n
         g_return_val_if_fail (new_pl, new_pl);
         for (l = tracks; l; l = l->next) {
             Track *track = l->data;
-            g_warning("generate_playlist_with_name: Track is %p", track);
             g_return_val_if_fail (track, new_pl);
             gp_playlist_add_track(new_pl, track, TRUE);
         }
@@ -802,7 +799,7 @@ static void check_db_danglingok1(gpointer user_data1, gpointer user_data2) {
         /* printf("Handling track %d\n", track->ipod_id); */
 
         buf = get_track_info(track, TRUE);
-        g_warning("TODO check_db_danglingok1- status\n");
+        g_message("TODO check_db_danglingok1- status\n");
         //	gtkpod_statusbar_message (_("Processing '%s'..."), buf);
         g_free(buf);
 
@@ -905,7 +902,7 @@ void check_db(iTunesDB *itdb) {
         }
     }
 
-    g_warning("TODO check_db - status\n");
+    g_message("TODO check_db - status\n");
     //    gtkpod_statusbar_timeout (30*STATUSBAR_TIMEOUT);
     block_widgets();
 
@@ -1128,13 +1125,13 @@ static void delete_playlist_ok(struct DeleteData *dd) {
             }
             if (itdb_playlist_is_mpl(dd->pl)) {
                 msg = g_strdup_printf(_("Removed all %d tracks from the iPod"), n);
-                g_warning("TODO: reset display");
+                g_message("TODO: reset display");
                 //                display_reset(0);
             }
             else if (itdb_playlist_is_podcasts(dd->pl)) {
                 msg = g_strdup_printf(_("Removed all podcasts from the iPod"));
                 if (gtkpod_get_current_playlist() == dd->pl)
-                    g_warning("TODO: reset only sorttabs");
+                    g_message("TODO: reset only sorttabs");
                 //                    st_redisplay(0);
             }
             else {
@@ -1191,7 +1188,7 @@ static void delete_playlist_ok(struct DeleteData *dd) {
             }
             if (itdb_playlist_is_mpl(dd->pl)) {
                 msg = g_strdup_printf(_("Removed all %d tracks from the database"), n);
-                g_warning("TODO: reset display");
+                g_message("TODO: reset display");
                 //                display_reset(0);
             }
             else {

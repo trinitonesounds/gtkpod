@@ -421,7 +421,7 @@ void nm_tracks_list (GList *list)
   else
   {
       /* we need ***much*** longer timeout */
-      g_warning("TODO tools:nm_tracks_list - statusbar\n");
+      g_message("TODO tools:nm_tracks_list - statusbar\n");
 //      gtkpod_statusbar_timeout (30*STATUSBAR_TIMEOUT);
   }
   while (!abort &&  (list!=NULL))
@@ -431,7 +431,7 @@ void nm_tracks_list (GList *list)
 
      gtk_label_set_text (GTK_LABEL (track_label), label_buf);
 
-     g_warning("TODO tools:nm_tracks_list - statusbar\n");
+     g_message("TODO tools:nm_tracks_list - statusbar\n");
 //     gtkpod_statusbar_message (_("%s - %s"),
 //			       track->artist, track->title);
      C_FREE (label_buf);
@@ -524,7 +524,7 @@ void nm_tracks_list (GList *list)
      list=g_list_next(list);
   } /*end while*/
 
-  g_warning("TODO tools:nm_tracks_list - statusbar\n");
+  g_message("TODO tools:nm_tracks_list - statusbar\n");
 //  gtkpod_statusbar_timeout (0);
 
 //  gtkpod_statusbar_message (ngettext ("Normalized %d of %d tracks.",
@@ -751,7 +751,7 @@ do_command_on_entries (const gchar *command, const gchar *what,
 
     if ((!command) || (strlen (command) == 0))
     {
-        g_warning("TODO tools:do_command_on_entries - statusbar\n");
+        g_message("TODO tools:do_command_on_entries - statusbar\n");
 //	gtkpod_statusbar_message  (_("No command set for '%s'"), what);
 	return;
     }
@@ -772,7 +772,7 @@ do_command_on_entries (const gchar *command, const gchar *what,
     commandc = g_find_program_in_path (str);
     if (!commandc)
     {
-        g_warning("TODO tools:do_command_on_entries - statusbar\n");
+        g_message("TODO tools:do_command_on_entries - statusbar\n");
 //	gtkpod_statusbar_message  (_("Could not find command '%s' specified for '%s'"),
 //				   str, what);
 	g_free (str);
@@ -884,7 +884,7 @@ on_gtkpod_info_delete_event            (GtkWidget       *widget,
 					GdkEvent        *event,
 					gpointer         user_data)
 {
-    g_warning("TODO tools:on_gtkpod_info_delete_event - close_info_dialog\n");
+    g_message("TODO tools:on_gtkpod_info_delete_event - close_info_dialog\n");
 //    close_info_dialog ();
     return TRUE; /* don't close again -- info_close_window() already does it */
 }
@@ -894,6 +894,6 @@ G_MODULE_EXPORT void
 on_info_close_clicked                  (GtkButton       *button,
 					gpointer         user_data)
 {
-    g_warning("TODO tools:on_info_close_clicked - close_info_dialog\n");
+    g_message("TODO tools:on_info_close_clicked - close_info_dialog\n");
 //    close_info_dialog ();
 }

@@ -28,7 +28,8 @@ libgtkpod_la_SOURCES =  gtkpod_app_iface.h gtkpod_app_iface.c \
 						mp3file.c mp3file.h \
 						mp4file.c mp4file.h \
 						oggfile.c oggfile.h \
-						wavfile.c wavfile.h
+						wavfile.c wavfile.h \
+						autodetection.c autodetection.h
 
 # Include paths
 AM_CFLAGS = \

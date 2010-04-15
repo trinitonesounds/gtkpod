@@ -121,7 +121,7 @@ void fill_in_extended_info(Track *track, gint32 total, gint32 num) {
         sei = g_hash_table_lookup(extendedinfohash, &ipod_id);
     }
     if (!sei && extendedinfohash_sha1) {
-        g_warning("TODO - file_itunesdb:fill_in_extended_info. status\n");
+        g_message("TODO - file_itunesdb:fill_in_extended_info. status\n");
         //      gtkpod_statusbar_message (
         //	  _("Matching SHA1 checksum for file %d/%d"),
         //	  num, total);
@@ -695,7 +695,7 @@ static iTunesDB *gp_merge_itdb(iTunesDB *old_itdb) {
         g_return_val_if_fail (old_eitdb->offline_filename, NULL);
 
         new_itdb = gp_import_itdb(old_itdb, old_itdb->usertype, mountpoint, old_eitdb->offline_filename, NULL);
-        g_warning("TODO load photodb handle\n");
+        g_message("TODO load photodb handle\n");
         //        if (new_itdb)
         //            gphoto_load_photodb(new_itdb);
     }
@@ -933,7 +933,7 @@ gboolean gp_save_itdb(iTunesDB *itdb) {
 
     /* update smart playlists before writing */
     itdb_spl_update_live(itdb);
-    g_warning("TODO - update smart playlists before writing\n");
+    g_message("TODO - update smart playlists before writing\n");
     //    pl = pm_get_selected_playlist();
     //    if (pl && (pl->itdb == itdb) && pl->is_spl && pl->splpref.liveupdate) { /* Update display if necessary */
     //        st_redisplay(0);
@@ -1021,7 +1021,7 @@ static gboolean write_extended_info(iTunesDB *itdb) {
     eitdb = itdb->userdata;
     g_return_val_if_fail (eitdb, FALSE);
 
-    g_warning("TODO - method to update space upon write\n");
+    g_message("TODO - method to update space upon write\n");
     //    space_data_update();
 
     name = g_strdup_printf("%s.ext", itdb->filename);
@@ -1807,7 +1807,7 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
     }
 
     /* indicate that files and/or database is saved */
-    g_warning("TODO indicate that database has been saved\n");
+    g_message("TODO indicate that database has been saved\n");
     if (success) {
         data_unchanged(itdb);
         if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
@@ -1880,7 +1880,7 @@ void data_changed(iTunesDB *itdb) {
     }
     else {
         eitdb->data_changed = TRUE;
-        g_warning("TODO data_changed needs work to notify interested parties\n");
+        g_message("TODO data_changed needs work to notify interested parties\n");
         //        pm_itdb_name_changed(itdb);
         //        space_data_update();
     }
@@ -1898,7 +1898,7 @@ void data_unchanged(iTunesDB *itdb) {
     if (eitdb->photo_data_changed == TRUE)
         eitdb->photo_data_changed = FALSE;
 
-    g_warning("TODO data_unchanged notify\n");
+    g_message("TODO data_unchanged notify\n");
     //    pm_itdb_name_changed(itdb);
     //    space_data_update();
 }
