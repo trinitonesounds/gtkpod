@@ -3,6 +3,7 @@
 	<menubar name="MenuMain">
 		<menu name="MenuMusic" action="ActionMenuMusic">
 			<placeholder name="PlaceholderMusicMenus"/>
+			<menu name="Update Tracks from File" action="ActionUpdateMenu"/>
 			<placeholder name="PlaceholderFileMenus"/>
 			<menuitem name="Quit" action="ActionExit" />
 		</menu>

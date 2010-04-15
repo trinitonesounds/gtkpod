@@ -35,6 +35,7 @@
 #include "sorttab_display_actions.h"
 #include "display_sorttabs.h"
 #include "libgtkpod/gp_itdb.h"
+#include "libgtkpod/file.h"
 
 void on_more_sort_tabs_activate(GtkAction *action, SorttabDisplayPlugin* plugin) {
     prefs_set_int("sort_tab_num", prefs_get_int("sort_tab_num") + 1);
@@ -89,4 +90,21 @@ void on_delete_selected_entry_from_device(GtkAction *action, SorttabDisplayPlugi
     else if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
         on_delete_selected_entry_from_harddisk(action, plugin);
     }
+}
+
+void on_update_selected_tab_entry (GtkAction *action, SorttabDisplayPlugin* plugin) {
+    TabEntry *entry;
+    gint inst;
+
+    inst = st_get_sort_tab_number(_("Update selected entry of which sort tab?"));
+    if (inst == -1)
+        return;
+
+    entry = st_get_selected_entry(inst);
+    if (!entry) {
+        gtkpod_statusbar_message(_("No entry selected in Sort Tab %d"), inst + 1);
+        return;
+    }
+
+    update_tracks(entry->members);
 }

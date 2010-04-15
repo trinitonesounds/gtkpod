@@ -41,5 +41,6 @@ void on_delete_selected_tracks_from_database(GtkAction *action, TrackDisplayPlug
 void on_delete_selected_tracks_from_harddisk(GtkAction *action, TrackDisplayPlugin* plugin);
 void on_delete_selected_tracks_from_ipod(GtkAction *action, TrackDisplayPlugin* plugin);
 void on_delete_selected_tracks_from_device(GtkAction *action, TrackDisplayPlugin* plugin);
+void on_update_selected_tracks (GtkAction *action, TrackDisplayPlugin* plugin);
 
 #endif

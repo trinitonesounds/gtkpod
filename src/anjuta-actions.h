@@ -26,6 +26,14 @@ static GtkActionEntry menu_entries_music[] = {
       N_("_Music")
   },
   {
+      "ActionUpdateMenu",
+      GTK_STOCK_REFRESH,
+      N_("_Update Tracks from File"),
+      NULL,
+      NULL,
+      NULL
+  },
+  {
       "ActionExit",
       GTK_STOCK_QUIT,
       N_("_Quit"),

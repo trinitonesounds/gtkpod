@@ -40,108 +40,77 @@
 #include "libgtkpod/gp_spl.h"
 #include "libgtkpod/context_menus.h"
 #include "libgtkpod/misc_playlist.h"
+#include "libgtkpod/misc.h"
 
 static void context_menu_delete_playlist_head(GtkMenuItem *mi, gpointer data) {
     DeleteAction deleteaction = GPOINTER_TO_INT (data);
     delete_playlist_head(deleteaction);
 }
 
-static GtkWidget *add_delete_all_tracks_from_ipod (GtkWidget *menu)
-{
+static GtkWidget *add_delete_all_tracks_from_ipod(GtkWidget *menu) {
     GtkWidget *mi;
     GtkWidget *sub;
 
-    mi = hookup_menu_item(menu, _("Remove All Tracks from iPod"),
-            GTK_STOCK_DELETE,
-            NULL, NULL);
-    sub = gtk_menu_new ();
-    gtk_widget_show (sub);
-    gtk_menu_item_set_submenu (GTK_MENU_ITEM (mi), sub);
-    hookup_menu_item (sub, _("I'm sure"),
-           NULL,
-           G_CALLBACK (context_menu_delete_track_head),
-           GINT_TO_POINTER (DELETE_ACTION_IPOD));
+    mi = hookup_menu_item(menu, _("Remove All Tracks from iPod"), GTK_STOCK_DELETE, NULL, NULL);
+    sub = gtk_menu_new();
+    gtk_widget_show(sub);
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM (mi), sub);
+    hookup_menu_item(sub, _("I'm sure"), NULL, G_CALLBACK (context_menu_delete_track_head), GINT_TO_POINTER (DELETE_ACTION_IPOD));
     return mi;
 }
 
-static GtkWidget *add_delete_all_tracks_from_database (GtkWidget *menu)
-{
+static GtkWidget *add_delete_all_tracks_from_database(GtkWidget *menu) {
     GtkWidget *mi;
     GtkWidget *sub;
 
-    mi = hookup_menu_item (menu, _("Remove All Tracks from Database"),
-            GTK_STOCK_DELETE,
-            NULL, NULL);
-    sub = gtk_menu_new ();
-    gtk_widget_show (sub);
-    gtk_menu_item_set_submenu (GTK_MENU_ITEM (mi), sub);
-    hookup_menu_item (sub, _("I'm sure"),
-           NULL,
-           G_CALLBACK (context_menu_delete_track_head),
-           GINT_TO_POINTER (DELETE_ACTION_DATABASE));
+    mi = hookup_menu_item(menu, _("Remove All Tracks from Database"), GTK_STOCK_DELETE, NULL, NULL);
+    sub = gtk_menu_new();
+    gtk_widget_show(sub);
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM (mi), sub);
+    hookup_menu_item(sub, _("I'm sure"), NULL, G_CALLBACK (context_menu_delete_track_head), GINT_TO_POINTER (DELETE_ACTION_DATABASE));
     return mi;
 }
 
-static GtkWidget *add_delete_all_podcasts_from_ipod (GtkWidget *menu)
-{
+static GtkWidget *add_delete_all_podcasts_from_ipod(GtkWidget *menu) {
     GtkWidget *mi;
     GtkWidget *sub;
 
-    mi = hookup_menu_item(menu, _("Remove All Podcasts from iPod"),
-            GTK_STOCK_DELETE,
-            NULL, NULL);
-    sub = gtk_menu_new ();
-    gtk_widget_show (sub);
-    gtk_menu_item_set_submenu (GTK_MENU_ITEM (mi), sub);
-    hookup_menu_item (sub, _("I'm sure"),
-           NULL,
-           G_CALLBACK (context_menu_delete_track_head),
-           GINT_TO_POINTER (DELETE_ACTION_IPOD));
+    mi = hookup_menu_item(menu, _("Remove All Podcasts from iPod"), GTK_STOCK_DELETE, NULL, NULL);
+    sub = gtk_menu_new();
+    gtk_widget_show(sub);
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM (mi), sub);
+    hookup_menu_item(sub, _("I'm sure"), NULL, G_CALLBACK (context_menu_delete_track_head), GINT_TO_POINTER (DELETE_ACTION_IPOD));
     return mi;
 }
 
-static GtkWidget *add_delete_playlist_including_tracks_ipod (GtkWidget *menu)
-{
-    return hookup_menu_item(menu,  _("Delete Including Tracks"),
-              GTK_STOCK_DELETE,
-              G_CALLBACK (context_menu_delete_playlist_head),
-              GINT_TO_POINTER (DELETE_ACTION_IPOD));
+static GtkWidget *add_delete_playlist_including_tracks_ipod(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Delete Including Tracks"), GTK_STOCK_DELETE, G_CALLBACK (context_menu_delete_playlist_head), GINT_TO_POINTER (DELETE_ACTION_IPOD));
 }
 
-static GtkWidget *add_delete_playlist_including_tracks_database (GtkWidget *menu)
-{
-    return hookup_menu_item (menu,  _("Delete Including Tracks (Database)"),
-              GTK_STOCK_DELETE,
-              G_CALLBACK (context_menu_delete_playlist_head),
-              GINT_TO_POINTER (DELETE_ACTION_DATABASE));
+static GtkWidget *add_delete_playlist_including_tracks_database(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Delete Including Tracks (Database)"), GTK_STOCK_DELETE, G_CALLBACK (context_menu_delete_playlist_head), GINT_TO_POINTER (DELETE_ACTION_DATABASE));
 }
 
-static GtkWidget *add_delete_playlist_including_tracks_harddisk (GtkWidget *menu)
-{
-    return hookup_menu_item (menu,  _("Delete Including Tracks (Harddisk)"),
-              GTK_STOCK_DELETE,
-              G_CALLBACK (context_menu_delete_playlist_head),
-              GINT_TO_POINTER (DELETE_ACTION_LOCAL));
+static GtkWidget *add_delete_playlist_including_tracks_harddisk(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Delete Including Tracks (Harddisk)"), GTK_STOCK_DELETE, G_CALLBACK (context_menu_delete_playlist_head), GINT_TO_POINTER (DELETE_ACTION_LOCAL));
 }
 
 static GtkWidget *add_delete_playlist_but_keep_tracks(GtkWidget *menu) {
     return hookup_menu_item(menu, _("Delete But Keep Tracks"), GTK_STOCK_DELETE, G_CALLBACK (context_menu_delete_playlist_head), GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
 }
 
-static void copy_selected_playlist_to_target_itdb (GtkMenuItem *mi, gpointer *userdata)
-{
+static void copy_selected_playlist_to_target_itdb(GtkMenuItem *mi, gpointer *userdata) {
     iTunesDB *t_itdb = *userdata;
     g_return_if_fail (t_itdb);
     if (gtkpod_get_current_playlist())
-        copy_playlist_to_target_itdb (gtkpod_get_current_playlist(), t_itdb);
+        copy_playlist_to_target_itdb(gtkpod_get_current_playlist(), t_itdb);
 }
 
-static void copy_selected_playlist_to_target_playlist (GtkMenuItem *mi, gpointer *userdata)
-{
+static void copy_selected_playlist_to_target_playlist(GtkMenuItem *mi, gpointer *userdata) {
     Playlist *t_pl = *userdata;
     g_return_if_fail (t_pl);
     if (gtkpod_get_current_playlist())
-        copy_playlist_to_target_playlist (gtkpod_get_current_playlist(), t_pl);
+        copy_playlist_to_target_playlist(gtkpod_get_current_playlist(), t_pl);
 }
 
 static GtkWidget *add_copy_selected_playlist_to_target_itdb(GtkWidget *menu, const gchar *title) {
@@ -198,57 +167,83 @@ static GtkWidget *add_copy_selected_playlist_to_target_itdb(GtkWidget *menu, con
 }
 
 /* Edit selected smart playlist */
-static void edit_spl (GtkMenuItem *mi, gpointer data)
-{
+static void edit_spl(GtkMenuItem *mi, gpointer data) {
     Playlist *pl = gtkpod_get_current_playlist();
 
     if (pl)
-        spl_edit (pl);
+        spl_edit(pl);
 }
 
-static GtkWidget *add_edit_smart_playlist (GtkWidget *menu)
-{
-    return hookup_menu_item (menu, _("Edit Smart Playlist"),
-              GTK_STOCK_PROPERTIES,
-              G_CALLBACK (edit_spl), NULL);
+static GtkWidget *add_edit_smart_playlist(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Edit Smart Playlist"), GTK_STOCK_PROPERTIES, G_CALLBACK (edit_spl), NULL);
 }
 
 /* Display repository options */
-static void edit_properties (GtkMenuItem *mi, gpointer data)
-{
+static void edit_properties(GtkMenuItem *mi, gpointer data) {
     g_return_if_fail (gtkpod_get_current_playlist());
 
-    gtkpod_edit_repository (gtkpod_get_current_playlist()->itdb, gtkpod_get_current_playlist());
+    gtkpod_edit_repository(gtkpod_get_current_playlist()->itdb, gtkpod_get_current_playlist());
 }
 
-static GtkWidget *add_edit_ipod_properties (GtkWidget *menu)
-{
-    return hookup_menu_item (menu,  _("Edit iPod Properties"),
-              GTK_STOCK_PREFERENCES,
-              G_CALLBACK (edit_properties), NULL);
+/* Save Changes */
+static void save_changes(GtkMenuItem *mi, gpointer data) {
+    g_return_if_fail (gtkpod_get_current_playlist());
+    gp_save_itdb(gtkpod_get_current_playlist()->itdb);
 }
 
-static GtkWidget *add_edit_repository_properties (GtkWidget *menu)
-{
-    return hookup_menu_item (menu,  _("Edit Repository Properties"),
-              GTK_STOCK_PREFERENCES,
-              G_CALLBACK (edit_properties), NULL);
+/* Load an itdb */
+static void load_ipod(GtkMenuItem *mi, gpointer data) {
+    g_return_if_fail (gtkpod_get_current_playlist());
+    gp_load_ipod(gtkpod_get_current_playlist()->itdb);
 }
 
-static GtkWidget *add_edit_playlist_properties (GtkWidget *menu)
-{
-    return hookup_menu_item (menu,  _("Edit Playlist Properties"),
-              GTK_STOCK_PREFERENCES,
-              G_CALLBACK (edit_properties), NULL);
+static void eject_ipod(GtkMenuItem *mi, gpointer data) {
+    iTunesDB *itdb;
+    ExtraiTunesDBData *eitdb;
+
+    /* all of the checks below indicate a programming error -> give a
+     warning through the g_..._fail macros */
+    g_return_if_fail (gtkpod_get_current_playlist());
+    itdb = gtkpod_get_current_playlist()->itdb;
+    g_return_if_fail (itdb);
+    g_return_if_fail (itdb->usertype & GP_ITDB_TYPE_IPOD);
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+    g_return_if_fail (eitdb->itdb_imported == TRUE);
+
+    gp_eject_ipod(itdb);
+}
+
+static GtkWidget *add_edit_ipod_properties(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Edit iPod Properties"), GTK_STOCK_PREFERENCES, G_CALLBACK (edit_properties), NULL);
+}
+
+static GtkWidget *add_edit_repository_properties(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Edit Repository Properties"), GTK_STOCK_PREFERENCES, G_CALLBACK (edit_properties), NULL);
+}
+
+static GtkWidget *add_edit_playlist_properties(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Edit Playlist Properties"), GTK_STOCK_PREFERENCES, G_CALLBACK (edit_properties), NULL);
+}
+
+static GtkWidget *add_load_ipod(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Load iPod"), GTK_STOCK_CONNECT, G_CALLBACK (load_ipod), NULL);
+}
+
+static GtkWidget *add_save_changes(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Save Changes"), GTK_STOCK_SAVE, G_CALLBACK (save_changes), NULL);
+}
+
+static GtkWidget *add_eject_ipod(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Eject iPod"), GTK_STOCK_DISCONNECT, G_CALLBACK (eject_ipod), NULL);
 }
 
 void pm_context_menu_init(void) {
     GtkWidget *menu = NULL;
     Playlist *pl;
 
-    g_warning("TODO widgets blocked on pm_context_menu_init");
-//    if (widgets_blocked)
-//        return;
+    if (widgets_blocked)
+        return;
 
     pm_stop_editing(TRUE);
 
@@ -296,7 +291,7 @@ void pm_context_menu_init(void) {
             }
             add_copy_selected_playlist_to_target_itdb(menu, _("Copy selected playlist to..."));
             add_separator(menu);
-//            add_edit_track_details(menu);
+            //            add_edit_track_details(menu);
             if (pl->is_spl) {
                 add_edit_smart_playlist(menu);
             }
@@ -306,14 +301,12 @@ void pm_context_menu_init(void) {
             else {
                 add_edit_playlist_properties(menu);
             }
-//            add_check_ipod_files(menu);
-//            add_eject_ipod(menu);
+            add_eject_ipod(menu);
         }
         else { /* not imported */
             add_edit_ipod_properties(menu);
-//            add_check_ipod_files(menu);
             add_separator(menu);
-//            add_load_ipod(menu);
+            add_load_ipod(menu);
         }
     }
     if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
@@ -334,7 +327,7 @@ void pm_context_menu_init(void) {
         }
         add_copy_selected_playlist_to_target_itdb(menu, _("Copy selected playlist to..."));
         add_separator(menu);
-//        add_edit_track_details(menu);
+        //        add_edit_track_details(menu);
         if (pl->is_spl) {
             add_edit_smart_playlist(menu);
         }
@@ -344,7 +337,10 @@ void pm_context_menu_init(void) {
         else {
             add_edit_playlist_properties(menu);
         }
-//        add_save_changes(menu);
+    }
+
+    if (eitdb->data_changed) {
+        add_save_changes(menu);
     }
 
     /*

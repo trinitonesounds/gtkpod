@@ -231,8 +231,7 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
     /* If we don't have a playlist to add to, don't add anything */
     g_return_if_fail (playlist);
 
-    g_warning("fileselection_add_files - block widgets commented out");
-    //    block_widgets();
+    block_widgets();
 
     gtkpod_statusbar_busy_push();
     /* Get the filenames and add them */
@@ -555,5 +554,12 @@ void on_delete_selected_playlist_including_tracks_from_device(GtkAction *action,
         on_delete_selected_playlist_including_tracks_from_ipod(action, plugin);
     } else if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
         on_delete_selected_playlist_including_tracks_from_harddisk(action, plugin);
+    }
+}
+
+void on_update_selected_playlist (GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    Playlist *pl = pm_get_selected_playlist();
+    if (pl) {
+        update_tracks(pm_get_selected_playlist()->members);
     }
 }

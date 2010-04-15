@@ -248,6 +248,14 @@ static GtkActionEntry playlist_actions[] =
             NULL,
             NULL,
             G_CALLBACK (on_delete_selected_playlist_including_tracks_from_device)
+        },
+        {
+            "ActionUpdatePlaylist",
+            GTK_STOCK_REFRESH,
+            N_("Selected Playlist"),
+            NULL,
+            NULL,
+            G_CALLBACK (on_update_selected_playlist)
         }
     };
 
@@ -345,8 +353,7 @@ static void playlist_display_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_plugin;
 }
 
-ANJUTA_PLUGIN_BEGIN (PlaylistDisplayPlugin, playlist_display_plugin);ANJUTA_PLUGIN_END
-;
+ANJUTA_PLUGIN_BEGIN (PlaylistDisplayPlugin, playlist_display_plugin);
+ANJUTA_PLUGIN_END;
 
-ANJUTA_SIMPLE_PLUGIN (PlaylistDisplayPlugin, playlist_display_plugin)
-;
+ANJUTA_SIMPLE_PLUGIN (PlaylistDisplayPlugin, playlist_display_plugin);

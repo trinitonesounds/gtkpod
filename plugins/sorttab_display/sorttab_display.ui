@@ -1,6 +1,13 @@
 <!--*- xml -*-->
 <ui>
 	<menubar name="MenuMain">
+		<menu name="MenuMusic" action="ActionMenuMusic">
+			<placeholder name="PlaceholderMusicMenus">
+				<menu name="Update Tracks from File" action="ActionUpdateMenu">
+					<menuitem name="Selected Tab Entry" action="ActionUpdateTabEntry"/>
+                </menu>
+            </placeholder>
+   		</menu>
 		<menu name="MenuEdit" action="ActionMenuEdit">
 			<placeholder name="PlaceholderEditMenus">
 				<menu name="Delete" action="ActionEditDeleteMenu">

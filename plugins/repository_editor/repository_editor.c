@@ -703,7 +703,7 @@ static void edit_apply_clicked(GtkButton *button) {
             g_free(key);
             if (str) { /* have to set mountpoint */
                 itdb_set_mountpoint(itdb, str);
-                g_warning("TODO: edit_apply_clicked - space_set_ipod_itdb");
+                g_message("TODO: edit_apply_clicked - space_set_ipod_itdb");
                 //                space_set_ipod_itdb(itdb);
                 g_free(str);
             }

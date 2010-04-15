@@ -35,6 +35,7 @@
 #include "display_tracks.h"
 #include "libgtkpod/misc.h"
 #include "libgtkpod/misc_track.h"
+#include "libgtkpod/file.h"
 
 static void delete_selected_tracks(DeleteAction deleteaction) {
     GList *tracks = gtkpod_get_selected_tracks();
@@ -74,6 +75,14 @@ void on_delete_selected_tracks_from_device(GtkAction *action, TrackDisplayPlugin
     }
     else if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
         on_delete_selected_tracks_from_harddisk(action, plugin);
+    }
+}
+
+void on_update_selected_tracks (GtkAction *action, TrackDisplayPlugin* plugin) {
+    GList *tracks = gtkpod_get_selected_tracks();
+
+    if (tracks) {
+      update_tracks(tracks);
     }
 }
 
