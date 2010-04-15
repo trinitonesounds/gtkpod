@@ -1,22 +1,31 @@
 appdatadir = $(pkgdatadir)/data/ui
-appdata_DATA =				\
-	gtkpod.ui
+appdata_gtkpod = gtkpod.ui
+appdata_preferences = preferences.ui
 
 EXTRA_DIST = 				\
-	$(appdata_DATA)
+	$(appdata_gtkpod) \
+	$(appdata_preferences)
 
 include ../directories.mk
 	
-all-local: create-ui-link
+all-local: create-gtkpod-ui-link create-preferences-ui-link
 
 # Creating symbolic link to ui file in installed ui directory
-create-ui-link: create-ui-dir
-	if test -e $(gtkpod_ui_dir)/$(appdata_DATA); then \
+create-gtkpod-ui-link: create-ui-dir
+	if test -e $(gtkpod_ui_dir)/$(appdata_gtkpod); then \
       # File already exists. Replacing ..." \
-      sudo rm -f $(gtkpod_ui_dir)/$(appdata_DATA); \
+      sudo rm -f $(gtkpod_ui_dir)/$(appdata_gtkpod); \
 	fi; \
-    # Creating link for $(appdata_DATA)" \
-	sudo ln -s `pwd`/$(appdata_DATA) $(gtkpod_ui_dir)/$(appdata_DATA);
+    # Creating link for $(appdata_gtkpod)" \
+	sudo ln -s `pwd`/$(appdata_gtkpod) $(gtkpod_ui_dir)/$(appdata_gtkpod);
+
+create-preferences-ui-link: create-ui-dir
+	if test -e $(gtkpod_ui_dir)/$(appdata_preferences); then \
+      # File already exists. Replacing ..." \
+      sudo rm -f $(gtkpod_ui_dir)/$(appdata_preferences); \
+	fi; \
+    # Creating link for $(appdata_preferences)" \
+	sudo ln -s `pwd`/$(appdata_preferences) $(gtkpod_ui_dir)/$(appdata_preferences);
 
 create-ui-dir:
 	if test ! -d $(gtkpod_ui_dir); then \
