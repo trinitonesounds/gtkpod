@@ -1309,13 +1309,18 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
     case FILE_TYPE_MP3:
 	nti = mp3_get_file_info (name);
 	/* Set mediatype to audio */
-	if (nti) nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+	if (nti)
+	{
+	    if (g_strcasecmp (nti->genre, "audiobook") == 0) nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
+	    else if (g_strcasecmp (nti->genre, "podcast") == 0) nti->mediatype = ITDB_MEDIATYPE_PODCAST;
+	    else nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+	}
 	break;
     case FILE_TYPE_M4A:
     case FILE_TYPE_M4P:
 	nti = mp4_get_file_info (name);
 	/* Set mediatype to audio */
-	if (nti)
+	if (nti && !nti->mediatype)
 	{
 	    nti->mediatype = ITDB_MEDIATYPE_AUDIO;
 	}
@@ -1361,7 +1366,8 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	/* Set mediatype to video */
 	if (nti)
 	{
-	    nti->mediatype = ITDB_MEDIATYPE_MOVIE;
+	    if (!nti->mediatype)
+            nti->mediatype = ITDB_MEDIATYPE_MOVIE;
 	    nti->movie_flag = 0x01;
 	}	
 	break;
@@ -1385,6 +1391,21 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
     case FILE_TYPE_M3U:
     case FILE_TYPE_PLS:
 	break;
+    }
+
+    if (nti)
+    {
+	switch (nti->mediatype)
+	{
+	    case ITDB_MEDIATYPE_AUDIOBOOK:
+	    case ITDB_MEDIATYPE_PODCAST:
+	    case ITDB_MEDIATYPE_PODCAST|ITDB_MEDIATYPE_MOVIE: /* Video podcast */
+		/* For audiobooks and podcasts, default to remember playback position
+		 * and skip when shuffling. */
+		nti->skip_when_shuffling = 1;
+		nti->remember_playback_position = 1;
+		break;
+	}
     }
 
     if (nti)

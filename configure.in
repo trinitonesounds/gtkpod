@@ -185,6 +185,16 @@ AC_CHECK_HEADERS(linux/cdrom.h scsi/sg.h scsi/scsi.h scsi/scsi_ioctl.h)
 libgpod_version=`$PKG_CONFIG libgpod-1.0 --modversion`
 AC_DEFINE_UNQUOTED(LIBGPOD_VERSION, "${libgpod_version}", [Set this to the libgpod version])
 
+AC_CHECK_HEADERS([mp4v2/platform.h])
+AC_CHECK_HEADERS([mp4v2/itmf_tags.h], [], [],
+		 [#ifdef HAVE_MP4V2_PLATFORM_H
+		  # include <mp4v2/platform.h>
+		  #endif
+		  typedef void* MP4FileHandle;
+		 ])
+
+AC_CHECK_HEADERS([endian.h])
+
 AC_OUTPUT([
 Makefile
 src/Makefile
