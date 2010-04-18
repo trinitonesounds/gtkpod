@@ -1183,19 +1183,24 @@ static Track *get_track_info_from_file(gchar *name, Track *orig_track) {
     filetype = determine_file_type(name);
     switch (filetype) {
     case FILE_TYPE_MP3:
-        nti = mp3_get_file_info(name);
-        /* Set mediatype to audio */
-        if (nti)
-            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-        break;
+	nti = mp3_get_file_info (name);
+	/* Set mediatype to audio */
+	if (nti)
+	{
+	    if (g_strcasecmp (nti->genre, "audiobook") == 0) nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
+	    else if (g_strcasecmp (nti->genre, "podcast") == 0) nti->mediatype = ITDB_MEDIATYPE_PODCAST;
+	    else nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+	}
+	break;
     case FILE_TYPE_M4A:
     case FILE_TYPE_M4P:
-        nti = mp4_get_file_info(name);
-        /* Set mediatype to audio */
-        if (nti) {
-            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-        }
-        break;
+	nti = mp4_get_file_info (name);
+	/* Set mediatype to audio */
+	if (nti && !nti->mediatype)
+	{
+	    nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+	}
+	break;
     case FILE_TYPE_M4B:
         nti = mp4_get_file_info(name);
         /* Set mediatype to audiobook */
@@ -1226,17 +1231,18 @@ static Track *get_track_info_from_file(gchar *name, Track *orig_track) {
         break;
     case FILE_TYPE_M4V:
     case FILE_TYPE_MP4:
-        /* I don't know if .m4v and .mp4 can simply be handled like
-         this. Let's see if someone complains. */
-        nti = mp4_get_file_info(name);
-        if (!nti)
-            video_get_file_info(name);
-        /* Set mediatype to video */
-        if (nti) {
+	/* I don't know if .m4v and .mp4 can simply be handled like
+	   this. Let's see if someone complains. */
+	nti = mp4_get_file_info (name);
+	if (!nti) video_get_file_info (name);
+	/* Set mediatype to video */
+	if (nti)
+	{
+	    if (!nti->mediatype)
             nti->mediatype = ITDB_MEDIATYPE_MOVIE;
-            nti->movie_flag = 0x01;
-        }
-        break;
+	    nti->movie_flag = 0x01;
+	}	
+	break;
     case FILE_TYPE_MOV:
     case FILE_TYPE_MPG:
         /* for now treat all the same */
@@ -1255,97 +1261,122 @@ static Track *get_track_info_from_file(gchar *name, Track *orig_track) {
     case FILE_TYPE_DIRECTORY:
     case FILE_TYPE_M3U:
     case FILE_TYPE_PLS:
-        break;
+	break;
     }
 
-    if (nti) {
-        ExtraTrackData *enti = nti->userdata;
-        struct stat filestat;
-
-        g_return_val_if_fail (enti, NULL);
-
-        if (enti->charset == NULL) { /* Fill in currently used charset. Try if auto_charset is
-         * set first. If not, use the currently set charset. */
-            enti->charset = charset_get_auto();
-            if (enti->charset == NULL)
-                update_charset_info(nti);
-        }
-        /* set path file information */
-        enti->pc_path_utf8 = charset_to_utf8(name);
-        enti->pc_path_locale = g_strdup(name);
-        enti->lyrics = NULL;
-        /* set length of file */
-        stat(name, &filestat);
-        nti->size = filestat.st_size; /* get the filesize in bytes */
-        enti->mtime = filestat.st_mtime; /* get the modification date */
-        if (nti->bitrate == 0) { /* estimate bitrate */
-            if (nti->tracklen)
-                nti->bitrate = nti->size * 8 / nti->tracklen;
-        }
-        /* Set unset strings (album...) from filename */
-        set_unset_entries_from_filename(nti);
-
-        /* Set coverart */
-        if (prefs_get_int("coverart_file")) {
-            /* APIC data takes precedence */
-            if (!itdb_track_has_thumbnails(nti))
-                add_coverart(nti);
-        }
-
-        /* Set modification date to the files modified date */
-        nti->time_modified = enti->mtime;
-        /* Set added date to *now* (unless orig_track is present) */
-        if (orig_track) {
-            nti->time_added = orig_track->time_added;
-        }
-        else {
-            nti->time_added = time(NULL);
-        }
-
-        /* Make sure all strings are initialized -- that way we don't
-         have to worry about it when we are handling the
-         strings. Also, validate_entries() will fill in the utf16
-         strings if that hasn't already been done. */
-        /* exception: sha1_hash, charset and hostname: these may be
-         * NULL. */
-
-        gp_track_validate_entries(nti);
-
-        if (orig_track) { /* we need to copy all information over to the original
-         * track */
-            ExtraTrackData *eorigtr = orig_track->userdata;
-
-            g_return_val_if_fail (eorigtr, NULL);
-
-            eorigtr->tchanged = copy_new_info(nti, orig_track);
-
-            track = orig_track;
-            itdb_track_free(nti);
-            nti = NULL;
-        }
-        else { /* just use nti */
-            track = nti;
-            nti = NULL;
-        }
-
-        update_mserv_data_from_file(name, track);
-    }
-    else {
-        switch (filetype) {
-        case FILE_TYPE_IMAGE:
-        case FILE_TYPE_M3U:
-        case FILE_TYPE_PLS:
-            break;
-        default:
-            gtkpod_warning(_("The following track could not be processed (filetype is known but analysis failed): '%s'\n"), name_utf8);
-            break;
-        }
+    if (nti)
+    {
+	switch (nti->mediatype)
+	{
+	    case ITDB_MEDIATYPE_AUDIOBOOK:
+	    case ITDB_MEDIATYPE_PODCAST:
+	    case ITDB_MEDIATYPE_PODCAST|ITDB_MEDIATYPE_MOVIE: /* Video podcast */
+		/* For audiobooks and podcasts, default to remember playback position
+		 * and skip when shuffling. */
+		nti->skip_when_shuffling = 1;
+		nti->remember_playback_position = 1;
+		break;
+	}
     }
 
-    while (widgets_blocked && gtk_events_pending())
-        gtk_main_iteration();
+    if (nti)
+    {
+	ExtraTrackData *enti=nti->userdata;
+	struct stat filestat;
 
-    g_free(name_utf8);
+	g_return_val_if_fail (enti, NULL);
+
+	if (enti->charset == NULL)
+	{   /* Fill in currently used charset. Try if auto_charset is
+	     * set first. If not, use the currently set charset. */
+	    enti->charset = charset_get_auto ();
+	    if (enti->charset == NULL)
+		update_charset_info (nti);
+	}
+	/* set path file information */
+	enti->pc_path_utf8 = charset_to_utf8 (name);
+	enti->pc_path_locale = g_strdup (name);
+	enti->lyrics=NULL;
+	/* set length of file */
+	stat (name, &filestat);
+	nti->size = filestat.st_size; /* get the filesize in bytes */
+	enti->mtime = filestat.st_mtime; /* get the modification date */
+	if (nti->bitrate == 0)
+	{  /* estimate bitrate */
+	    if (nti->tracklen)
+		nti->bitrate = nti->size * 8 / nti->tracklen;
+	}
+	/* Set unset strings (album...) from filename */
+	set_unset_entries_from_filename (nti);
+
+	/* Set coverart */
+	if (prefs_get_int("coverart_file"))
+	{
+	    /* APIC data takes precedence */
+	    if (! itdb_track_has_thumbnails (nti))
+		add_coverart (nti);
+	}
+
+	/* Set modification date to the files modified date */
+	nti->time_modified = enti->mtime;
+	/* Set added date to *now* (unless orig_track is present) */
+	if (orig_track)
+	{
+	    nti->time_added = orig_track->time_added;
+	}
+	else
+	{
+	    nti->time_added = time (NULL);
+	}
+
+	/* Make sure all strings are initialized -- that way we don't
+	   have to worry about it when we are handling the
+	   strings. Also, validate_entries() will fill in the utf16
+	   strings if that hasn't already been done. */
+	/* exception: sha1_hash, charset and hostname: these may be
+	 * NULL. */
+
+	gp_track_validate_entries (nti);
+
+	if (orig_track)
+	{ /* we need to copy all information over to the original
+	   * track */
+	    ExtraTrackData *eorigtr=orig_track->userdata;
+
+	    g_return_val_if_fail (eorigtr, NULL);
+
+	    eorigtr->tchanged = copy_new_info (nti, orig_track);
+
+	    track = orig_track;
+	    itdb_track_free (nti);
+	    nti = NULL;
+	}
+	else
+	{ /* just use nti */
+	    track = nti;
+	    nti = NULL;
+	}
+
+	update_mserv_data_from_file (name, track);
+    }
+    else
+    {
+	switch (filetype)
+	{
+	case FILE_TYPE_IMAGE:
+	case FILE_TYPE_M3U:
+	case FILE_TYPE_PLS:
+	    break;
+	default:
+	    gtkpod_warning (_("The following track could not be processed (filetype is known but analysis failed): '%s'\n"), name_utf8);
+	    break;
+	}
+    }
+
+    while (widgets_blocked && gtk_events_pending ())
+	gtk_main_iteration ();
+
+    g_free (name_utf8);
 
     return track;
 }

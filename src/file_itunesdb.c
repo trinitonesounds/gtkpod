@@ -1807,7 +1807,6 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
     }
 
     /* indicate that files and/or database is saved */
-    g_message("TODO indicate that database has been saved\n");
     if (success) {
         data_unchanged(itdb);
         if (itdb->usertype & GP_ITDB_TYPE_IPOD) {

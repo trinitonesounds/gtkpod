@@ -39,12 +39,8 @@
 #include "prefs.h"
 
 
-#ifdef HAVE_GNOME_VFS
-#include <libgnomevfs/gnome-vfs.h>
-#endif
-#ifdef HAVE_HAL
-#include <libhal.h>
-#include <dbus/dbus.h>
+#ifdef HAVE_GIO
+#include <gio/gio.h>
 #endif
 
 #undef DEBUG_AUTO
@@ -120,8 +116,7 @@ static iTunesDB *ad_find_repository_with_mountpoint (const gchar *mountpoint)
 
 
 
-
-#ifdef HAVE_GNOME_VFS
+#ifdef HAVE_GIO
 typedef struct _AutoDetect AutoDetect;
 
 static gboolean ad_timeout_cb (gpointer data);
@@ -136,202 +131,83 @@ struct _AutoDetect
 
 static AutoDetect *autodetect;
 
-
-#ifdef HAVE_HAL
-/* from rb-ipod-source.c (rhythmbox ipod plugin) */
-static gboolean
-hal_udi_is_ipod (const char *udi)
+/* adapted from rb-ipod-plugin.c (rhythmbox ipod plugin) */
+static gboolean ad_mount_is_ipod (GMount *mount)
 {
-	LibHalContext *ctx;
-	DBusConnection *conn;
-	char *parent_udi;
-	char *parent_name;
-	gboolean result;
-	DBusError error;
-	gboolean inited = FALSE;
-
-	result = FALSE;
-	dbus_error_init (&error);
-
-	conn = NULL;
-	parent_udi = NULL;
-	parent_name = NULL;
-
-	ctx = libhal_ctx_new ();
-	if (ctx == NULL) {
-		/* FIXME: should we return an error somehow so that we can
-		 * fall back to a check for iTunesDB presence instead ?
-		 */
-		debug ("cannot connect to HAL");
-		goto end;
-	}
-	conn = dbus_bus_get (DBUS_BUS_SYSTEM, &error);
-	if (conn == NULL || dbus_error_is_set (&error))
-		goto end;
-
-	libhal_ctx_set_dbus_connection (ctx, conn);
-	if (!libhal_ctx_init (ctx, &error) || dbus_error_is_set (&error))
-		goto end;
-
-	inited = TRUE;
-	parent_udi = libhal_device_get_property_string (ctx, udi,
-			"info.parent", &error);
-	if (parent_udi == NULL || dbus_error_is_set (&error))
-		goto end;
-
-	parent_name = libhal_device_get_property_string (ctx, parent_udi,
-			"storage.model", &error);
-	if (parent_name == NULL || dbus_error_is_set (&error))
-		goto end;
-
-	if (strcmp (parent_name, "iPod") == 0)
-		result = TRUE;
-
-end:
-	g_free (parent_udi);
-	g_free (parent_name);
-
-	if (dbus_error_is_set (&error)) {
-		debug ("Error: %s\n", error.message);
-		dbus_error_free (&error);
-		dbus_error_init (&error);
-	}
-
-	if (ctx) {
-		if (inited)
-			libhal_ctx_shutdown (ctx, &error);
-		libhal_ctx_free(ctx);
-	}
-
-	dbus_error_free (&error);
-
-	return result;
-}
-#endif
-
-
-/* adapted from rb-ipod-source.c (rhythmbox ipod plugin) */
-static gchar *ad_get_itunes_dir (GnomeVFSVolume *volume)
-{
-    gchar *mount_point_uri;
-    gchar *result = NULL;
-
-    mount_point_uri = gnome_vfs_volume_get_activation_uri (volume);
-    if (mount_point_uri)
-    {
+    gboolean result = FALSE;
+    GFile *root = g_mount_get_root (mount);
+    if (root != NULL) {
 	gchar *mount_point;
-	mount_point = g_filename_from_uri (mount_point_uri, NULL, NULL);
-	if (mount_point)
-	{
-	    result = itdb_get_itunes_dir (mount_point);
+	mount_point = g_file_get_path(root);
+	if (mount_point != NULL) {
+	    gchar *itunes_dir;
+	    itunes_dir = itdb_get_itunes_dir(mount_point);
+	    if (itunes_dir != NULL) {
+		result = g_file_test (itunes_dir, G_FILE_TEST_IS_DIR);
+		g_free (itunes_dir);
+	    }
 	    g_free (mount_point);
 	}
-	g_free (mount_point_uri);
+	g_object_unref (root);
     }
     return result;
 }
 
 
-/* adapted from rb-ipod-source.c (rhythmbox ipod plugin) */
-static gboolean ad_volume_has_ipod_dir (GnomeVFSVolume *volume)
-{
-    gchar *itunes_dir;
-    gboolean result = FALSE;
 
-    itunes_dir = ad_get_itunes_dir (volume);
-
-    if (itunes_dir)
-    {
-	result = g_file_test (itunes_dir, G_FILE_TEST_EXISTS);
-    }
-
-    g_free (itunes_dir);
-
-    return result;
-}
-
-/* adapted from rb-ipod-source.c (rhythmbox ipod plugin) */
-static gboolean ad_volume_is_ipod (GnomeVFSVolume *volume)
-{
-#ifdef HAVE_HAL
-    gchar *udi;
-#endif
-    if (gnome_vfs_volume_get_volume_type (volume) != GNOME_VFS_VOLUME_TYPE_MOUNTPOINT)
-    {
-	return FALSE;
-    }
-
-#ifdef HAVE_HAL
-    udi = gnome_vfs_volume_get_hal_udi (volume);
-    if (udi != NULL)
-    {
-	gboolean result;
-
-	result = hal_udi_is_ipod (udi);
-	g_free (udi);
-	if (result == FALSE)
-	{
-	    return FALSE;
-	}
-    }
-#endif
-
-    return ad_volume_has_ipod_dir (volume);
-}
-
-
-
-static void ad_volume_mounted_cb (GnomeVFSVolumeMonitor *vfsvolumemonitor,
-				  GnomeVFSVolume *volume,
+static void ad_volume_mounted_cb (GVolumeMonitor *volumemonitor,
+				  GMount *mount,
 				  AutoDetect *ad)
 {
-    g_return_if_fail (volume && ad);
+    g_return_if_fail (mount && ad);
 
-    if (ad_volume_is_ipod (volume))
+    if (G_IS_MOUNT(mount) && ad_mount_is_ipod (mount))
     {
-	gchar *uri;
+	GFile *root;
+	root = g_mount_get_root (mount);
+	if (root) {
+	    gchar *uri;
+	    uri = g_file_get_path(root);
+	    if (uri) {
+		debug ("mounted iPod: '%s'\n", uri);
 
-	uri = gnome_vfs_volume_get_activation_uri (volume);
-
-	debug ("mounted iPod: '%s'\n", uri);
-
-	g_mutex_lock (ad->mutex);
-	ad->new_ipod_uris = g_list_prepend (ad->new_ipod_uris, uri);
-	g_mutex_unlock (ad->mutex);
+		g_mutex_lock (ad->mutex);
+		ad->new_ipod_uris = g_list_prepend (ad->new_ipod_uris, uri);
+	    	g_mutex_unlock (ad->mutex);
+	    } else {
+		fprintf(stderr, "ERROR: could not get activation root!\n");
+	    }
+	    g_object_unref (root);
+	}
     }
 }
-
 
 void autodetection_init ()
 {
     if (autodetect == NULL)
     {
-	GList *volumes, *gl;
+	GList *mounts, *gl;
 
-	if (!gnome_vfs_init ())
-	{
-	    gtkpod_warning (_("Could not initialize GnomeVFS\n"));
-	    g_return_if_reached ();
-	}
+	static GOnce g_type_init_once = G_ONCE_INIT;
+	g_once (&g_type_init_once, (GThreadFunc)g_type_init, NULL); 
 
 	autodetect = g_new0 (AutoDetect, 1);
 	autodetect->mutex = g_mutex_new ();
 
 	/* Check if an iPod is already mounted and add it to the list */
-	volumes = gnome_vfs_volume_monitor_get_mounted_volumes (
-	    gnome_vfs_get_volume_monitor ());
+	mounts = g_volume_monitor_get_mounts ( g_volume_monitor_get() );
 
-	for (gl=volumes; gl; gl=gl->next)
+	for (gl=mounts; gl; gl=gl->next)
 	{
-	    GnomeVFSVolume *volume = gl->data;
-	    g_return_if_fail (volume);
-	    ad_volume_mounted_cb (NULL, volume, autodetect);
-	    gnome_vfs_volume_unref (volume);
+	    GMount *mount = gl->data;
+	    g_return_if_fail (mount);
+	    ad_volume_mounted_cb (NULL, mount, autodetect);
+	    g_object_unref (mount);
 	}
-	g_list_free (volumes);
+	g_list_free (mounts);
 
-	g_signal_connect (G_OBJECT (gnome_vfs_get_volume_monitor ()),
-			  "volume-mounted",
+	g_signal_connect (G_OBJECT (g_volume_monitor_get()),
+			  "mount_added",
 			  G_CALLBACK (ad_volume_mounted_cb),
 			  autodetect);
 
@@ -357,7 +233,7 @@ static gboolean ad_timeout_cb (gpointer data)
 
 	while (ad->new_ipod_uris)
 	{
-	    iTunesDB *itdb, *loaded_itdb = NULL;
+	    iTunesDB *itdb = NULL, *loaded_itdb = NULL;
 	    gchar *mountpoint;
 	    struct itdbs_head *itdbs;
 	    GList *gl = ad->new_ipod_uris;
@@ -369,11 +245,15 @@ static gboolean ad_timeout_cb (gpointer data)
 
 	    g_return_val_if_fail (mount_uri, (gdk_threads_leave(), release_widgets(), TRUE));
 
-	    mountpoint = g_filename_from_uri (mount_uri, NULL, NULL);
+	    GFile *muri = g_file_parse_name (mount_uri);
+	    mountpoint = g_file_get_path (muri);
+	    g_object_unref (muri);
 	    g_free (mount_uri);
-	    debug ("Mounted iPod at '%s'\n", mountpoint);
 
-	    itdb = ad_find_repository_with_mountpoint (mountpoint);
+	    if (mountpoint) {
+    		debug ("Mounted iPod at '%s'\n", mountpoint);
+		itdb = ad_find_repository_with_mountpoint (mountpoint);
+	    }
 
 	    itdbs = gp_get_itdbs_head ();
 	    g_return_val_if_fail (itdbs, (gdk_threads_leave(), release_widgets(), TRUE));
@@ -450,7 +330,7 @@ static gboolean ad_timeout_cb (gpointer data)
 }
 
 #else
-/* No GNOME_VFS support */
+/* No GIO support */
 
 void autodetection_init ()
 {

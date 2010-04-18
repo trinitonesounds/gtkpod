@@ -765,11 +765,12 @@ void gp_init(GtkPodApp *single_app, int argc, char *argv[]) {
 
     g_object_set_data(G_OBJECT (gtkpod_app), "itdbs_head", itdbs_head);
 
-    if (!prefs_get_int_value("itdb_0_type", NULL)) {
-        /* databases have not been set up previously -- take care of
-         this */
-#ifndef HAVE_GNOME_VFS
-        gchar *mountpoint;
+    if (!prefs_get_int_value ("itdb_0_type", NULL))
+    {
+	/* databases have not been set up previously -- take care of
+	   this */
+#ifndef HAVE_GIO
+	gchar *mountpoint;
 #endif
         gchar *filename;
 
@@ -787,16 +788,16 @@ void gp_init(GtkPodApp *single_app, int argc, char *argv[]) {
         prefs_set_string("itdb_1_filename", filename);
         g_free(filename);
 
-#ifndef HAVE_GNOME_VFS
-        /* iPod database -- only set up if autodetection is not active */
-        mountpoint = prefs_get_string ("initial_mountpoint");
-        filename = g_build_filename (cfgdir, "iTunesDB", NULL);
-        prefs_set_int ("itdb_2_type", GP_ITDB_TYPE_IPOD);
-        prefs_set_string ("itdb_2_name", _("iPod"));
-        prefs_set_string ("itdb_2_filename", filename);
-        prefs_set_string ("itdb_2_mountpoint", mountpoint);
-        g_free (mountpoint);
-        g_free (filename);
+#ifndef HAVE_GIO
+	/* iPod database -- only set up if autodetection is not active */
+	mountpoint = prefs_get_string ("initial_mountpoint");
+	filename = g_build_filename (cfgdir, "iTunesDB", NULL);
+	prefs_set_int ("itdb_2_type", GP_ITDB_TYPE_IPOD);
+	prefs_set_string ("itdb_2_name", _("iPod"));
+	prefs_set_string ("itdb_2_filename", filename);
+	prefs_set_string ("itdb_2_mountpoint", mountpoint);
+	g_free (mountpoint);
+	g_free (filename);
 #endif
     }
 

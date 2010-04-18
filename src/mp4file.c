@@ -32,6 +32,9 @@
 #endif
 
 #include <glib/gi18n-lib.h>
+#ifdef HAVE_ENDIAN_H
+#  include <endian.h> /* for be32toh () */
+#endif
 #include "charset.h"
 #include "itdb.h"
 #include "misc.h"
@@ -154,6 +157,14 @@ typedef u_int32_t	MP4SampleId;
 typedef u_int64_t	MP4Timestamp;
 typedef u_int64_t	MP4Duration;
 
+/* Don't use any symbols from itmf_tags.h since we're not linking against them, only getting the
+ * format for the structs.  Included at this spot because MP4FileHandle must be defined.
+ */
+#define MP4V2_EXPORT
+#if HAVE_MP4V2_ITMF_TAGS_H
+# include <mp4v2/itmf_tags.h> /* For MP4Tags */
+#endif
+
 #define MP4_OD_TRACK_TYPE		"odsm"
 #define MP4_AUDIO_TRACK_TYPE	"soun"
 #define MP4_VIDEO_TRACK_TYPE	"vide"
@@ -259,6 +270,15 @@ typedef bool (*MP4GetMetadataFreeForm_t)(MP4FileHandle hFile, const char *name,
 typedef bool (*MP4HaveAtom_t)(MP4FileHandle hFile,
 		 const char *atomName);
 
+typedef bool (*MP4GetIntegerProperty_t)(MP4FileHandle hFile,
+		 const char* propName, u_int64_t *retval);
+typedef bool (*MP4GetStringProperty_t)(MP4FileHandle hFile,
+		 const char* propName, const char **retvalue);
+typedef bool (*MP4GetBytesProperty_t)(MP4FileHandle hFile,
+		 const char* propName, u_int8_t** ppValue, u_int32_t* pValueSize);
+typedef bool (*MP4SetVerbosity_t)(MP4FileHandle hFile,
+		 u_int32_t verbosity);
+
 typedef bool (*MP4SetMetadataName_t)(MP4FileHandle hFile, const char* value);
 typedef bool (*MP4SetMetadataArtist_t)(MP4FileHandle hFile, const char* value);
 typedef bool (*MP4SetMetadataAlbumArtist_t)(MP4FileHandle hFile, const char* value);
@@ -282,6 +302,10 @@ typedef MP4FileHandle (*MP4Modify_t)(
 	const char* fileName,
 	u_int32_t verbosity DEFAULT(0),
 	u_int32_t flags DEFAULT(0));
+
+typedef const MP4Tags* (*MP4TagsAlloc_t)();
+typedef void (*MP4TagsFetch_t)( const MP4Tags* tags, MP4FileHandle hFile );
+typedef void (*MP4TagsFree_t)( const MP4Tags* tags );
 
 typedef bool (*MP4MetadataDelete_t)(MP4FileHandle hFile);
 
@@ -316,6 +340,10 @@ static MP4GetMetadataCompilation_t MP4GetMetadataCompilation = NULL;
 static MP4GetMetadataTool_t MP4GetMetadataTool = NULL;
 static MP4GetMetadataFreeForm_t MP4GetMetadataFreeForm = NULL;
 static MP4HaveAtom_t MP4HaveAtom = NULL;
+static MP4GetIntegerProperty_t MP4GetIntegerProperty = NULL;
+static MP4GetStringProperty_t MP4GetStringProperty = NULL;
+static MP4GetBytesProperty_t MP4GetBytesProperty = NULL;
+static MP4SetVerbosity_t MP4SetVerbosity = NULL;
 static MP4SetMetadataName_t MP4SetMetadataName = NULL;
 static MP4SetMetadataArtist_t MP4SetMetadataArtist = NULL;
 static MP4SetMetadataAlbumArtist_t MP4SetMetadataAlbumArtist = NULL;
@@ -333,6 +361,9 @@ static MP4SetMetadataTool_t MP4SetMetadataTool = NULL;
 static MP4SetMetadataCoverArt_t MP4SetMetadataCoverArt = NULL;
 static MP4Modify_t MP4Modify = NULL;
 static MP4MetadataDelete_t MP4MetadataDelete = NULL;
+static MP4TagsAlloc_t MP4TagsAllocFunc = NULL;
+static MP4TagsFetch_t MP4TagsFetchFunc = NULL;
+static MP4TagsFree_t MP4TagsFreeFunc = NULL;
 
 /* end mp4v2 dynamic load declarations */
 
@@ -340,12 +371,12 @@ static MP4MetadataDelete_t MP4MetadataDelete = NULL;
 
 void mp4_init()
 {
-    mp4v2_handle = dlopen("libmp4v2.so.0", RTLD_LAZY);
+    mp4v2_handle = dlopen("libmp4v2.so.1", RTLD_LAZY);
 
     if (!mp4v2_handle)
     {
-        mp4v2_handle = dlopen("libmp4v2.so.1", RTLD_LAZY);
-
+        mp4v2_handle = dlopen("libmp4v2.so.0", RTLD_LAZY);
+        
         if (!mp4v2_handle)
         {
             return;
@@ -383,6 +414,10 @@ void mp4_init()
     MP4GetMetadataTool = (MP4GetMetadataTool_t) dlsym(mp4v2_handle, "MP4GetMetadataTool");
     MP4GetMetadataFreeForm = (MP4GetMetadataFreeForm_t) dlsym(mp4v2_handle, "MP4GetMetadataFreeForm");
     MP4HaveAtom = (MP4HaveAtom_t) dlsym(mp4v2_handle, "MP4HaveAtom");
+    MP4GetIntegerProperty = (MP4GetIntegerProperty_t) dlsym(mp4v2_handle, "MP4GetIntegerProperty");
+    MP4GetStringProperty = (MP4GetStringProperty_t) dlsym(mp4v2_handle, "MP4GetStringProperty");
+    MP4GetBytesProperty = (MP4GetBytesProperty_t) dlsym(mp4v2_handle, "MP4GetBytesProperty");
+    MP4SetVerbosity = (MP4SetVerbosity_t) dlsym(mp4v2_handle, "MP4SetVerbosity");
     MP4SetMetadataName = (MP4SetMetadataName_t) dlsym(mp4v2_handle, "MP4SetMetadataName");
     MP4SetMetadataArtist = (MP4SetMetadataArtist_t) dlsym(mp4v2_handle, "MP4SetMetadataArtist");
     MP4SetMetadataAlbumArtist = (MP4SetMetadataAlbumArtist_t) dlsym(mp4v2_handle, "MP4SetMetadataAlbumArtist");
@@ -400,6 +435,9 @@ void mp4_init()
     MP4SetMetadataCoverArt = (MP4SetMetadataCoverArt_t) dlsym(mp4v2_handle, "MP4SetMetadataCoverArt");
     MP4Modify = (MP4Modify_t) dlsym(mp4v2_handle, "MP4Modify");
     MP4MetadataDelete = (MP4MetadataDelete_t) dlsym(mp4v2_handle, "MP4MetadataDelete");
+    MP4TagsAllocFunc = (MP4TagsAlloc_t) dlsym(mp4v2_handle, "MP4TagsAlloc");
+    MP4TagsFetchFunc = (MP4TagsFetch_t) dlsym(mp4v2_handle, "MP4TagsFetch");
+    MP4TagsFreeFunc = (MP4TagsFree_t) dlsym(mp4v2_handle, "MP4TagsFree");
 
     /* alternate names for HAVE_LIBMP4V2_2 */
 
@@ -443,6 +481,98 @@ void mp4_close()
 }
 
 /* end mp4v2 initialization code */
+
+static guint32 mediaTypeTagToMediaType(guint8 media_type)
+{
+   switch (media_type)
+   {
+      case 0: /* Movie */
+         return ITDB_MEDIATYPE_MOVIE;
+      case 1: /* Normal */
+         break;
+      case 2: /* Audiobook */
+         return ITDB_MEDIATYPE_AUDIOBOOK;
+      case 5: /* Whacked Bookmark */
+         break;
+      case 6: /* Music Video */
+         return ITDB_MEDIATYPE_MUSICVIDEO;
+      case 9: /* Short Film */
+         break;
+      case 10: /* TV Show */
+         return ITDB_MEDIATYPE_TVSHOW;
+      case 11: /* Booklet */
+         break;
+   }
+   return 0;
+}
+
+/* According to http://atomicparsley.sourceforge.net/mpeg-4files.html, the format is different
+ * for different atoms.  Sheesh, Apple!  Fortunately, the ones we care about (tvsn, stik, tves)
+ * are all the same either 17 or 20 byte format.
+ */
+static gboolean mp4_get_apple_uint8_property (MP4FileHandle hFile, const char* propName, u_int8_t* ppValue)
+{
+   u_int8_t *pos;
+   u_int8_t *value;
+   guint32 valuelen;
+   guint32 class_flag;
+   guint8 atom_version;
+   gboolean success = FALSE;
+
+   success = MP4GetBytesProperty (hFile, propName, &value, &valuelen);
+   if (success == TRUE && valuelen > 16)
+   {
+      success = FALSE;
+      pos = value;
+      pos += 8; /* Skip over the length and the atom name */
+
+      /* pos now points to a 1-byte atom version followed by a 3-byte class/flag field */
+      atom_version = *pos;
+      class_flag = be32toh(*(guint32*)pos) & 0x00ffffff;
+      if (class_flag == 21 || class_flag == 0)
+      {
+         pos += 4; /* Skip over the atom version and class/flag */
+         pos += 4; /* Skip over the null space */
+         if (valuelen == 17)
+            success = TRUE, *ppValue = pos[0];
+         else if (valuelen == 20)
+            success = TRUE, *ppValue = pos[3];
+      }
+   }
+   g_free (value);
+   return success;
+}
+
+static gboolean mp4_get_apple_text_property (MP4FileHandle hFile, const char* propName, gchar** ppValue)
+{
+   u_int8_t *pos;
+   u_int8_t *value;
+   guint32 valuelen;
+   guint32 class_flag;
+   guint8 atom_version;
+   gboolean success = FALSE;
+
+   success = MP4GetBytesProperty (hFile, propName, &value, &valuelen);
+   if (success == TRUE && valuelen >= 16)
+   {
+      success = FALSE;
+      pos = value;
+      pos += 8; /* Skip over the length and the atom name */
+      /* pos now points to a 1-byte atom version followed by a 3-byte class/flag field */
+      atom_version = *pos;
+      class_flag = be32toh(*(guint32*)pos) & 0x00ffffff;
+      if (class_flag == 1)
+      {
+         pos += 4; /* Skip over the atom version and class/flag */
+         pos += 4; /* Skip over the null space */
+         /* The string is already in UTF-8 format */
+         *ppValue = g_strndup (pos, valuelen - (pos - value));
+         success = TRUE;
+      }
+   }
+   g_free (value);
+   return success;
+}
 
 static gboolean mp4_scan_soundcheck (MP4FileHandle mp4File, Track *track)
 {
@@ -617,11 +747,22 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 		    else
 		    {
 			int titlelength = (buffer[0] << 8) + buffer[1];
-			gchar *newtitle = (gchar *) malloc((titlelength+1) * sizeof(gchar));
-			newtitle = g_strndup (&buffer[2], titlelength);
-			newtitle[titlelength] = '\0';
-			title = g_strdup (newtitle);
-			free (newtitle);
+			/* If a title begins with 0xFFFE, it's a UTF-16 title */
+			if (titlelength>2 && buffer[2]==0xff && buffer[3]==0xfe)
+			{
+			        titlelength -= 2;
+			        gchar *newtitle = g_utf16_to_utf8((const gunichar2 *)&buffer[4], titlelength, NULL, NULL, NULL);
+			        title = g_strdup (newtitle);
+			        g_free(newtitle);
+			}
+			else
+			{
+			        gchar *newtitle = (gchar *) malloc((titlelength+1) * sizeof(gchar));
+			        newtitle = g_strndup (&buffer[2], titlelength);
+			        newtitle[titlelength] = '\0';
+			        title = g_strdup (newtitle);
+			        free (newtitle);
+			}
 		    }
 
 		    MP4Timestamp sampletime = MP4GetSampleTime(mp4File, trackId, i);
@@ -641,6 +782,11 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 	    {
 		gchar *value;
 		guint16 numvalue, numvalue2;
+		u_int8_t numvalue3;
+		gboolean possibly_tv_show = FALSE;
+#if HAVE_MP4V2_ITMF_TAGS_H
+		const MP4Tags* mp4tags = NULL;
+#endif
 		MP4Duration trackDuration = MP4GetTrackDuration(mp4File, trackId);
 		double msDuration =
 		    (double)MP4ConvertFromTrackDuration(mp4File, trackId,
@@ -755,9 +901,52 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 		    {
 			track->BPM = numvalue;
 		    }
+		    /* Apple-specific atoms */
 		    if (MP4HaveAtom (mp4File, "moov.udta.meta.ilst.\251lyr"))
 		    {
 			track->lyrics_flag = 0x01;
+		    }
+#if HAVE_MP4V2_ITMF_TAGS_H
+		    if (MP4TagsAllocFunc != NULL && MP4TagsFetchFunc != NULL && MP4TagsFreeFunc != NULL)
+		    {
+			mp4tags = MP4TagsAllocFunc ();
+			MP4TagsFetchFunc (mp4tags, mp4File);
+			if (mp4tags->tvShow)
+			    track->tvshow = g_strdup (mp4tags->tvShow);
+			if (mp4tags->tvEpisodeID)
+			    track->tvepisode = g_strdup (mp4tags->tvEpisodeID);
+			if (mp4tags->tvNetwork)
+			    track->tvnetwork = g_strdup (mp4tags->tvNetwork);
+			if (mp4tags->tvSeason)
+			    track->season_nr = *mp4tags->tvSeason;
+			if (mp4tags->tvEpisode)
+			    track->episode_nr = *mp4tags->tvEpisode;
+			if (mp4tags->tvEpisode)
+			    track->mediatype = mediaTypeTagToMediaType (*mp4tags->mediaType);
+			MP4TagsFreeFunc (mp4tags);
+		    }
+		    else
+#endif
+		    {
+			/* Since we either weren't compiled with mp4v2/itmf_tags.h, or the MP4Tags* functions
+			 * weren't available when libmp4v2 was dlopen()ed, we'll dig for the atom props manually. */
+			if (mp4_get_apple_text_property (mp4File, "moov.udta.meta.ilst.tvsh.data", &track->tvshow))
+			    possibly_tv_show = TRUE;
+			if (mp4_get_apple_uint8_property (mp4File, "moov.udta.meta.ilst.tvsn.data", &numvalue3))
+			    track->season_nr = numvalue3, possibly_tv_show = TRUE;
+			if (mp4_get_apple_uint8_property (mp4File, "moov.udta.meta.ilst.tves.data", &numvalue3))
+			    track->episode_nr = numvalue3, possibly_tv_show = TRUE;
+			/* For some reason, the stik's data atom doesn't get found, so we make a guess at the
+			 * media type with possibly_tv_show */
+			if (mp4_get_apple_uint8_property (mp4File, "moov.udta.meta.ilst.stik.data", &numvalue3))
+			{
+			    track->mediatype = mediaTypeTagToMediaType (numvalue3);
+			    fprintf (stderr, "Got a stik atom: %d, %d\n", numvalue3, track->mediatype);
+			}
+			else if (possibly_tv_show)
+			{
+			    track->mediatype = ITDB_MEDIATYPE_TVSHOW;
+			}
 		    }
 		}
 		mp4_scan_soundcheck (mp4File, track);

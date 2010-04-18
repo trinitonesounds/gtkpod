@@ -1252,6 +1252,39 @@ static void details_get_item (Detail *detail, T_item item,
 		{
 		    track->mediatype = new_mediatype;
 		    changed = TRUE;
+          /* If audiobook or podcast is selected, update the skip when shuffling
+           * and remember playback position flags */
+          if (new_mediatype == ITDB_MEDIATYPE_AUDIOBOOK ||
+                new_mediatype == ITDB_MEDIATYPE_PODCAST ||
+                new_mediatype == (ITDB_MEDIATYPE_PODCAST|ITDB_MEDIATYPE_MOVIE))
+          {
+             gchar *buf;
+             GtkWidget *w2 = NULL;
+             if (track->remember_playback_position == 0)
+             {
+                buf = g_strdup_printf ("details_checkbutton_%d",
+                      T_REMEMBER_PLAYBACK_POSITION);
+                if ((w2 = gtkpod_xml_get_widget (detail->xml, buf)))
+                {
+                   track->remember_playback_position = 1;
+                   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w2),
+                         track->remember_playback_position);
+                }
+                g_free(buf);
+             }
+             if (track->skip_when_shuffling == 0)
+             {
+                buf = g_strdup_printf ("details_checkbutton_%d",
+                      T_SKIP_WHEN_SHUFFLING);
+                if ((w2 = gtkpod_xml_get_widget (detail->xml, buf)))
+                {
+                   track->remember_playback_position = 1;
+                   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w2),
+                         track->remember_playback_position);
+                }
+                g_free(buf);
+             }
+          }
 		}
 	    }
 	}
