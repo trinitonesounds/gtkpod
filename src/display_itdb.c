@@ -44,6 +44,7 @@
 #include "prefs.h"
 #include "syncdir.h"
 #include "autodetection.h"
+#include "clientserver.h"
 
 /* A struct containing a list with available iTunesDBs. A pointer to
  this struct is stored in gtkpod_app as itdbs_head */
@@ -825,6 +826,9 @@ void gp_init(GtkPodApp *single_app, int argc, char *argv[]) {
 
     /* Initiate autodetection */
     autodetection_init();
+
+    /* initiate client server */
+    server_setup();
 
     /* Create tooltips */
     main_tooltips = gtk_tooltips_new();

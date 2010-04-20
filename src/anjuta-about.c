@@ -23,6 +23,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <stdlib.h>
 #include <libanjuta/anjuta-plugin-manager.h>
 
 #include "anjuta-about.h"
@@ -241,7 +242,7 @@ on_about_plugin_activate (GtkMenuItem *item, AnjutaPluginDescription *desc)
 		authors_v = g_strsplit(authors, ",", -1);
 	}
 	dialog = gtk_about_dialog_new();
-	gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), name);
+	gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog), name);
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), VERSION);
 	if (license)
 		gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog),

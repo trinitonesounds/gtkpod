@@ -26,6 +26,9 @@
  |  $Id$
  */
 
+#include <libanjuta/anjuta-utils.h>
+#include <libanjuta/anjuta-shell.h>
+
 #include "gtkpod.h"
 #include "libgtkpod/directories.h"
 #include "libgtkpod/gtkpod_app_iface.h"
@@ -255,6 +258,7 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
 }
 
 static void on_gtkpod_destroy(GtkWidget * w, gpointer data) {
+    gtkpod_cleanup_quit();
     gtk_widget_hide(w);
     gtk_main_quit();
 }

@@ -224,4 +224,6 @@ void message_sb_no_itdb_selected ();
 void message_sb_no_playlist_selected ();
 void message_sb_no_tracks_selected ();
 
+void gtkpod_shutdown ();
+
 #endif

@@ -56,7 +56,7 @@ static void anjuta_app_layout_save(AnjutaApp *app, const gchar *layout_filename,
 
 static gpointer parent_class = NULL;
 static GtkToolbarStyle style = -1;
-static gchar * uifile = NULL;
+static gchar *uifile = NULL;
 
 static GHashTable *id_hash = NULL;
 
@@ -78,6 +78,38 @@ typedef struct {
 
 void anjuta_set_ui_file_path(gchar * path) {
     uifile = path;
+}
+
+static void menu_item_select_cb(GtkMenuItem *proxy, AnjutaApp *app) {
+    GtkAction *action;
+    char *message;
+
+    action = gtk_activatable_get_related_action(GTK_ACTIVATABLE(proxy));
+    g_return_if_fail(action != NULL);
+
+    g_object_get(G_OBJECT(action), "tooltip", &message, NULL);
+    if (message) {
+        anjuta_status_push(app->status, "%s", message);
+        g_free(message);
+    }
+}
+
+static void menu_item_deselect_cb(GtkMenuItem *proxy, AnjutaApp *app) {
+    anjuta_status_pop(app->status);
+}
+
+static void connect_proxy_cb(GtkUIManager *manager, GtkAction *action, GtkWidget *proxy, AnjutaApp *app) {
+    if (GTK_IS_MENU_ITEM(proxy)) {
+        g_signal_connect(proxy, "select", G_CALLBACK(menu_item_select_cb), app);
+        g_signal_connect(proxy, "deselect", G_CALLBACK(menu_item_deselect_cb), app);
+    }
+}
+
+static void disconnect_proxy_cb(GtkUIManager *manager, GtkAction *action, GtkWidget *proxy, AnjutaApp *app) {
+    if (GTK_IS_MENU_ITEM(proxy)) {
+        g_signal_handlers_disconnect_by_func(proxy, G_CALLBACK(menu_item_select_cb), app);
+        g_signal_handlers_disconnect_by_func(proxy, G_CALLBACK(menu_item_deselect_cb), app);
+    }
 }
 
 static void on_toolbar_style_changed(AnjutaPreferences* prefs, const gchar* key, const gchar* tb_style, gpointer user_data) {
@@ -329,8 +361,8 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
     GtkWidget *main_box;
     GtkWidget *dockbar;
     GtkAction* action;
-    gchar* style;
     GList *plugins_dirs = NULL;
+    gchar * style;
     GdkGeometry size_hints =
         { 100, 100, 0, 0, 100, 100, 1, 1, 0.0, 0.0, GDK_GRAVITY_NORTH_WEST };
 
@@ -376,7 +408,10 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
 
     /* UI engine */
     app->ui = anjuta_ui_new();
-    g_object_add_weak_pointer(G_OBJECT (app->ui), (gpointer) &app->ui);
+    g_object_add_weak_pointer(G_OBJECT(app->ui), (gpointer) & app->ui);
+    /* show tooltips in the statusbar */
+    g_signal_connect(app->ui, "connect_proxy", G_CALLBACK(connect_proxy_cb), app);
+    g_signal_connect(app->ui, "disconnect_proxy", G_CALLBACK(disconnect_proxy_cb), app);
 
     /* Plugin Manager */
     g_printf("Prepending %s to plugin directories\n", get_plugin_dir());
@@ -456,6 +491,37 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
     app->save_count = 0;
 }
 
+/*
+ * GtkWindow catches keybindings for the menu items _before_ passing them to
+ * the focused widget. This is unfortunate and means that pressing ctrl+V
+ * in an entry on a panel ends up pasting text in the TextView.
+ * Here we override GtkWindow's handler to do the same things that it
+ * does, but in the opposite order and then we chain up to the grand
+ * parent handler, skipping gtk_window_key_press_event.
+ */
+static gboolean anjuta_app_key_press_event(GtkWidget *widget, GdkEventKey *event) {
+    static gpointer grand_parent_class = NULL;
+    GtkWindow *window = GTK_WINDOW(widget);
+    gboolean handled = FALSE;
+
+    if (grand_parent_class == NULL)
+        grand_parent_class = g_type_class_peek_parent(parent_class);
+
+    /* handle focus widget key events */
+    if (!handled)
+        handled = gtk_window_propagate_key_event(window, event);
+
+    /* handle mnemonics and accelerators */
+    if (!handled)
+        handled = gtk_window_activate_key(window, event);
+
+    /* Chain up, invokes binding set */
+    if (!handled)
+        handled = GTK_WIDGET_CLASS(grand_parent_class)->key_press_event(widget, event);
+
+    return handled;
+}
+
 static void anjuta_app_class_init(AnjutaAppClass *class) {
     GObjectClass *object_class;
     GtkWidgetClass *widget_class;
@@ -463,8 +529,11 @@ static void anjuta_app_class_init(AnjutaAppClass *class) {
     parent_class = g_type_class_peek_parent(class);
     object_class = (GObjectClass*) class;
     widget_class = (GtkWidgetClass*) class;
+
     object_class->finalize = anjuta_app_finalize;
     object_class->dispose = anjuta_app_dispose;
+
+    widget_class->key_press_event = anjuta_app_key_press_event;
 }
 
 GtkWidget *
@@ -566,19 +635,6 @@ void anjuta_app_layout_reset(AnjutaApp *app) {
 }
 
 void anjuta_app_install_preferences(AnjutaApp *app) {
-//    GladeXML *gxml;
-//    GtkWidget *notebook, *plugins;
-
-    /* Create preferences page */
-    //      gxml = gtkpod_core_xml_new("gtkpod_preferences_window");
-    //    anjuta_preferences_add_page(app->preferences, gxml, "General", _("General"), ICON_FILE);
-    //    notebook = glade_xml_get_widget(gxml, "General");
-    //    plugins = anjuta_plugin_manager_get_plugins_page(app->plugin_manager);
-    //    gtk_widget_show(plugins);
-    //
-    //    gtk_notebook_append_page(GTK_NOTEBOOK (notebook), plugins, gtk_label_new(_("Installed plugins")));
-    //
-    //    g_object_unref(gxml);
     GtkBuilder* builder = gtk_builder_new();
     GError* error = NULL;
     GtkWidget *notebook, *shortcuts, *plugins, *remember_plugins;
@@ -605,6 +661,8 @@ void anjuta_app_install_preferences(AnjutaApp *app) {
 
     gtk_notebook_append_page(GTK_NOTEBOOK (notebook), plugins, gtk_label_new(_("Installed plugins")));
     gtk_notebook_append_page(GTK_NOTEBOOK (notebook), remember_plugins, gtk_label_new(_("Preferred plugins")));
+
+	g_object_unref(builder);
 }
 
 /* AnjutaShell Implementation */
@@ -742,33 +800,17 @@ static void on_widget_removed_from_hash(gpointer widget) {
 
     gtk_widget_destroy(menuitem);
 
-    g_object_set_data(G_OBJECT (widget), "dockitem", NULL);
-    g_object_set_data(G_OBJECT (widget), "menuitem", NULL);
+    g_object_set_data(G_OBJECT(widget), "dockitem", NULL);
+    g_object_set_data(G_OBJECT(widget), "menuitem", NULL);
 
-    g_signal_handlers_disconnect_by_func (G_OBJECT (widget),
-            G_CALLBACK (on_widget_destroy), app);
-    g_signal_handlers_disconnect_by_func (G_OBJECT (dockitem),
-            G_CALLBACK (on_widget_remove), app);
+    g_signal_handlers_disconnect_by_func(G_OBJECT(widget), G_CALLBACK(on_widget_destroy), app);
+    g_signal_handlers_disconnect_by_func(G_OBJECT(dockitem), G_CALLBACK(on_widget_remove), app);
 
-    g_object_unref(G_OBJECT (widget));
+    g_object_unref(G_OBJECT(widget));
 }
 
-static void anjuta_app_add_widget_full(AnjutaShell *shell, GtkWidget *widget, const char *name, const char *title, const char *stock_id, AnjutaShellPlacement placement, gboolean locked, GError **error) {
-    AnjutaApp *app;
-    GtkWidget *item;
+static void anjuta_app_setup_widget(AnjutaApp* app, const gchar* name, GtkWidget *widget, GtkWidget* item, const gchar* title, gboolean locked) {
     GtkCheckMenuItem* menuitem;
-
-    g_return_if_fail (ANJUTA_IS_APP (shell));
-    g_return_if_fail (GTK_IS_WIDGET (widget));
-    g_return_if_fail (name != NULL);
-    g_return_if_fail (title != NULL);
-
-    app = ANJUTA_APP (shell);
-
-    /*
-     anjuta_shell_add (shell, name, G_TYPE_FROM_INSTANCE (widget),
-     widget, NULL);
-     */
 
     /* Add the widget to hash */
     if (app->widgets == NULL) {
@@ -776,6 +818,41 @@ static void anjuta_app_add_widget_full(AnjutaShell *shell, GtkWidget *widget, co
     }
     g_hash_table_insert(app->widgets, g_strdup(name), widget);
     g_object_ref(widget);
+
+    /* Add toggle button for the widget */
+    menuitem = GTK_CHECK_MENU_ITEM(gtk_check_menu_item_new_with_label(title));
+    gtk_widget_show(GTK_WIDGET(menuitem));
+    gtk_check_menu_item_set_active(menuitem, TRUE);
+    gtk_menu_shell_append(GTK_MENU_SHELL(app->view_menu), GTK_WIDGET(menuitem));
+
+    if (locked)
+        g_object_set(G_OBJECT(menuitem), "visible", FALSE, NULL);
+
+    g_object_set_data(G_OBJECT(widget), "app-object", app);
+    g_object_set_data(G_OBJECT(widget), "menuitem", menuitem);
+    g_object_set_data(G_OBJECT(widget), "dockitem", item);
+
+    /* For toggling widget view on/off */
+    g_signal_connect(G_OBJECT(menuitem), "toggled", G_CALLBACK(on_toggle_widget_view), item);
+
+    /*
+     Watch for widget removal/destruction so that it could be
+     removed from widgets hash.
+     */
+    g_signal_connect(G_OBJECT(item), "remove", G_CALLBACK(on_widget_remove), app);
+    g_signal_connect_after(G_OBJECT(widget), "destroy", G_CALLBACK(on_widget_destroy), app);
+}
+
+static void anjuta_app_add_widget_full(AnjutaShell *shell, GtkWidget *widget, const char *name, const char *title, const char *stock_id, AnjutaShellPlacement placement, gboolean locked, GError **error) {
+    AnjutaApp *app;
+    GtkWidget *item;
+
+    g_return_if_fail(ANJUTA_IS_APP (shell));
+    g_return_if_fail(GTK_IS_WIDGET(widget));
+    g_return_if_fail(name != NULL);
+    g_return_if_fail(title != NULL);
+
+    app = ANJUTA_APP (shell);
 
     /* Add the widget to dock */
     if (stock_id == NULL)
@@ -797,33 +874,36 @@ static void anjuta_app_add_widget_full(AnjutaShell *shell, GtkWidget *widget, co
     if (locked)
         gdl_dock_item_set_default_position(GDL_DOCK_ITEM(item), GDL_DOCK_OBJECT(app->dock));
 
-    gtk_widget_show(item);
+    anjuta_app_setup_widget(app, name, widget, item, title, locked);
+}
 
-    /* Add toggle button for the widget */
-    menuitem = GTK_CHECK_MENU_ITEM (gtk_check_menu_item_new_with_label (title));
-    gtk_widget_show(GTK_WIDGET (menuitem));
-    gtk_check_menu_item_set_active(menuitem, TRUE);
-    gtk_menu_append (GTK_MENU (app->view_menu), GTK_WIDGET (menuitem));
+static void anjuta_app_add_widget_custom(AnjutaShell *shell, GtkWidget *widget, const char *name, const char *title, const char *stock_id, GtkWidget *label, AnjutaShellPlacement placement, GError **error) {
+    AnjutaApp *app;
+    GtkWidget *item;
+    GtkWidget *grip;
 
-    if (locked)
-        g_object_set(G_OBJECT(menuitem), "visible", FALSE, NULL);
+    g_return_if_fail(ANJUTA_IS_APP (shell));
+    g_return_if_fail(GTK_IS_WIDGET(widget));
+    g_return_if_fail(name != NULL);
+    g_return_if_fail(title != NULL);
 
-    g_object_set_data(G_OBJECT (widget), "app-object", app);
-    g_object_set_data(G_OBJECT (widget), "menuitem", menuitem);
-    g_object_set_data(G_OBJECT (widget), "dockitem", item);
+    app = ANJUTA_APP (shell);
 
-    /* For toggling widget view on/off */
-    g_signal_connect (G_OBJECT (menuitem), "toggled",
-            G_CALLBACK (on_toggle_widget_view), item);
+    /* Add the widget to dock */
+    /* Add the widget to dock */
+    if (stock_id == NULL)
+        item = gdl_dock_item_new(name, title, GDL_DOCK_ITEM_BEH_NORMAL);
+    else
+        item = gdl_dock_item_new_with_stock(name, title, stock_id, GDL_DOCK_ITEM_BEH_NORMAL);
 
-    /*
-     Watch for widget removal/destruction so that it could be
-     removed from widgets hash.
-     */
-    g_signal_connect (G_OBJECT (item), "remove",
-            G_CALLBACK (on_widget_remove), app);
-    g_signal_connect_after (G_OBJECT (widget), "destroy",
-            G_CALLBACK (on_widget_destroy), app);
+    gtk_container_add(GTK_CONTAINER(item), widget);
+    gdl_dock_add_item(GDL_DOCK(app->dock), GDL_DOCK_ITEM(item), placement);
+
+    grip = gdl_dock_item_get_grip(GDL_DOCK_ITEM(item));
+
+    gdl_dock_item_grip_set_label(GDL_DOCK_ITEM_GRIP(grip), label);
+
+    anjuta_app_setup_widget(app, name, widget, item, title, FALSE);
 }
 
 static void anjuta_app_remove_widget(AnjutaShell *shell, GtkWidget *widget, GError **error) {
@@ -918,6 +998,7 @@ anjuta_app_get_profile_manager(AnjutaShell *shell, GError **error) {
 
 static void anjuta_shell_iface_init(AnjutaShellIface *iface) {
     iface->add_widget_full = anjuta_app_add_widget_full;
+    iface->add_widget_custom = anjuta_app_add_widget_custom;
     iface->remove_widget = anjuta_app_remove_widget;
     iface->present_widget = anjuta_app_present_widget;
     iface->add_value = anjuta_app_add_value;

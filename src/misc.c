@@ -38,12 +38,14 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <glib/gi18n-lib.h>
 #include "charset.h"
 #include "clientserver.h"
 #include "misc.h"
 #include "prefs.h"
 #include "misc_track.h"
-#include <glib/gi18n-lib.h>
+#include "mp4file.h"
+#include "file_convert.h"
 
 #define DEBUG_MISC 0
 
@@ -1813,5 +1815,46 @@ void delete_populate_settings(struct DeleteData *dd, gchar **label, gchar **titl
             g_string_append_printf(*str, "%s-%s (%d)\n", s->artist, s->title, itdb_playlist_contain_track_number(s));
         }
     }
+}
+
+/**
+ * gtkpod_shutdown
+ *
+ * free memory, shutdown services and call gtk_main_quit ()
+ */
+void gtkpod_shutdown ()
+{
+    /* stop accepting requests for playcount updates */
+    server_shutdown ();
+
+    g_message("TODO - cleanup gphoto_window on shutdown");
+    /* Change the windows back to track view to ensure the
+     * sorttab state is saved correctly/
+     */
+    //gphoto_change_to_photo_window (FALSE);
+
+    /* shut down conversion infrastructure */
+    file_convert_shutdown ();
+
+    /* Save prefs */
+    prefs_save ();
+
+/* FIXME: release memory in a clean way */
+#if 0
+    remove_all_playlists ();  /* first remove playlists, then tracks!
+                   * (otherwise non-existing *tracks may
+                   * be accessed) */
+    remove_all_tracks ();
+#endif
+
+    prefs_shutdown ();
+
+    xmlCleanupParser();
+    xmlMemoryDump();
+
+    mp4_close();
+
+    call_script ("gtkpod.out", NULL);
+    gtk_main_quit ();
 }
 

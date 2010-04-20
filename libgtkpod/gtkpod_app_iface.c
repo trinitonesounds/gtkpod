@@ -29,10 +29,11 @@
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
+#include <glib/gi18n-lib.h>
 
 #include "gtkpod_app_iface.h"
 #include "gtkpod_app-marshallers.h"
-#include <glib/gi18n-lib.h>
+#include "misc.h"
 
 static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
     static gboolean initialized = FALSE;
@@ -102,6 +103,13 @@ void gtkpod_app_set_glade_xml(gchar *xml_file) {
 gchar* gtkpod_get_glade_xml() {
     g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), NULL);
     return GTKPOD_APP_GET_INTERFACE (gtkpod_app)->xml_file;
+}
+
+/**
+ * clean up bits n pieces
+ */
+void gtkpod_cleanup_quit() {
+    gtkpod_shutdown();
 }
 
 void gtkpod_statusbar_message(gchar* message, ...) {

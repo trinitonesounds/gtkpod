@@ -28,8 +28,6 @@
 #include <libanjuta/anjuta-preferences.h>
 #include <libanjuta/anjuta-plugin-manager.h>
 #include <libanjuta/anjuta-profile-manager.h>
-#include <libanjuta/anjuta-utils.h>
-#include <libanjuta/anjuta-shell.h>
 #include "libgtkpod/gtkpod_app_iface.h"
 
 G_BEGIN_DECLS

@@ -25,7 +25,7 @@ activate_plugin (AnjutaPlugin *plugin)
 
     /* Create hello plugin widget */
     hello_plugin->widget = gtk_label_new ("Hello World Plugin!!");
-
+    gtk_widget_show_all(hello_plugin->widget);
     /* Add widget in Shell. Any number of widgets can be added */
     anjuta_shell_add_widget (plugin->shell, hello_plugin->widget,
                              "AnjutaHelloWorldPlugin",

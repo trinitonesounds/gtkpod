@@ -307,7 +307,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     gtk_container_add(GTK_CONTAINER (playlist_display_plugin->pl_window), GTK_WIDGET (playlist_display_plugin->playlist_view));
     gtk_widget_show_all(playlist_display_plugin->pl_window);
-    anjuta_shell_add_widget(plugin->shell, playlist_display_plugin->pl_window, "PlaylistDisplayPlugin", "iPod Repositories", NULL, ANJUTA_SHELL_PLACEMENT_LEFT, NULL);
+    anjuta_shell_add_widget(plugin->shell, playlist_display_plugin->pl_window, "PlaylistDisplayPlugin", "iPod Repositories", GTK_STOCK_OPEN, ANJUTA_SHELL_PLACEMENT_LEFT, NULL);
 
     return TRUE; /* FALSE if activation failed */
 }
