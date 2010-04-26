@@ -1479,6 +1479,7 @@ static void gtkpod_app_iface_init(GtkPodAppInterface *iface) {
     iface->export_tracks_as_gchar = NULL;
     iface->export_tracks_as_glist = NULL;
     iface->repository_editor = NULL;
+    iface->details_editor = NULL;
 }
 
 G_MODULE_EXPORT void on_confirm_tree_size_allocate(GtkWidget *sender, GtkAllocation *allocation, gpointer e) {

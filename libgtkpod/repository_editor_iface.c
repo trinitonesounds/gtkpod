@@ -30,7 +30,7 @@
     #include <config.h>
 #endif
 
-#include "repository_configurator.h"
+#include "repository_editor_iface.h"
 
 static void repository_editor_base_init(RepositoryEditorInterface *klass) {
     static gboolean initialized = FALSE;

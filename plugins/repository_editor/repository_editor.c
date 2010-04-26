@@ -31,7 +31,7 @@
 #include <gtk/gtk.h>
 #include "plugin.h"
 #include "repository.h"
-#include "fileselection.h"
+#include "libgtkpod/fileselection.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/gp_itdb.h"
 #include "libgtkpod/misc.h"

@@ -39,6 +39,8 @@
 #ifndef _FILESELECTION_H
 #define _FILESELECTION_H
 
+#include "itdb.h"
+
 void create_add_files_dialog (Playlist *pl);
 void create_add_playlists_dialog (iTunesDB *itdb);
 gchar *fileselection_get_cover_filename(void);

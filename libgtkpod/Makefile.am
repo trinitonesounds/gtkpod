@@ -1,15 +1,17 @@
 lib_LTLIBRARIES = libgtkpod.la
 
 libgtkpod_la_SOURCES =  gtkpod_app_iface.h gtkpod_app_iface.c \
-						repository_configurator.h repository_configurator.c \
-                        itdb.h file_convert_info.h \
-                        gp_private.h gp_private.c \
+						repository_editor_iface.h repository_editor_iface.c \
+						details_editor_iface.h details_editor_iface.c \
+						itdb.h file_convert_info.h \
+						gp_private.h gp_private.c \
 						gp_itdb.h gp_itdb.c \
 						charset.h charset.c \
 						sha1.h sha1.c \
 						file.h file.c \
 						file_itunesdb.c \
 						file_convert.c file_convert.h \
+						fileselection.c fileselection.h \
 						misc_track.h misc_track.c \
 						prefs.h prefs.c \
 						syncdir.h syncdir.c \

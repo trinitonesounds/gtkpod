@@ -44,11 +44,11 @@
 #include <unistd.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
-#include "libgtkpod/charset.h"
-#include "libgtkpod/file.h"
-#include "libgtkpod/prefs.h"
-#include "libgtkpod/misc.h"
-#include "libgtkpod/misc_track.h"
+#include "charset.h"
+#include "file.h"
+#include "prefs.h"
+#include "misc.h"
+#include "misc_track.h"
 #include "fileselection.h"
 
 /* Open a modal file selection dialog with multiple selction enabled */

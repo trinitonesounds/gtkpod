@@ -7,6 +7,7 @@ SUBDIRS = . \
 	playlist_display \
 	repository_editor \
 	sorttab_display \
-	track_display
+	track_display \
+	details_editor
 
 # indent

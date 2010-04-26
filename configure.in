@@ -307,6 +307,7 @@ plugins/playlist_display/icons/hicolor/scalable/places/Makefile
 plugins/repository_editor/Makefile
 plugins/sorttab_display/Makefile
 plugins/track_display/Makefile
+plugins/details_editor/Makefile
 ])
 
 echo "

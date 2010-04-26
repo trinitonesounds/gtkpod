@@ -185,6 +185,13 @@ static void edit_properties(GtkMenuItem *mi, gpointer data) {
     gtkpod_edit_repository(gtkpod_get_current_playlist()->itdb, gtkpod_get_current_playlist());
 }
 
+/* Display track details options */
+static void edit_track_details(GtkMenuItem *mi, gpointer data) {
+    g_return_if_fail (gtkpod_get_selected_tracks());
+
+    gtkpod_edit_details(gtkpod_get_selected_tracks());
+}
+
 /* Save Changes */
 static void save_changes(GtkMenuItem *mi, gpointer data) {
     g_return_if_fail (gtkpod_get_current_playlist());
@@ -215,14 +222,30 @@ static void eject_ipod(GtkMenuItem *mi, gpointer data) {
 }
 
 static GtkWidget *add_edit_ipod_properties(GtkWidget *menu) {
+    if (!gtkpod_has_repository_editor())
+        return menu;
+
     return hookup_menu_item(menu, _("Edit iPod Properties"), GTK_STOCK_PREFERENCES, G_CALLBACK (edit_properties), NULL);
 }
 
 static GtkWidget *add_edit_repository_properties(GtkWidget *menu) {
+    if (!gtkpod_has_repository_editor())
+            return menu;
+
     return hookup_menu_item(menu, _("Edit Repository Properties"), GTK_STOCK_PREFERENCES, G_CALLBACK (edit_properties), NULL);
 }
 
+static GtkWidget *add_edit_track_details (GtkWidget *menu) {
+    if (!gtkpod_has_details_editor())
+                return menu;
+
+    return hookup_menu_item(menu, _("Edit Track Details"), GTK_STOCK_PREFERENCES, G_CALLBACK (edit_track_details), NULL);
+}
+
 static GtkWidget *add_edit_playlist_properties(GtkWidget *menu) {
+    if (!gtkpod_has_repository_editor())
+            return menu;
+
     return hookup_menu_item(menu, _("Edit Playlist Properties"), GTK_STOCK_PREFERENCES, G_CALLBACK (edit_properties), NULL);
 }
 
@@ -291,7 +314,7 @@ void pm_context_menu_init(void) {
             }
             add_copy_selected_playlist_to_target_itdb(menu, _("Copy selected playlist to..."));
             add_separator(menu);
-            //            add_edit_track_details(menu);
+            add_edit_track_details(menu);
             if (pl->is_spl) {
                 add_edit_smart_playlist(menu);
             }
@@ -327,7 +350,7 @@ void pm_context_menu_init(void) {
         }
         add_copy_selected_playlist_to_target_itdb(menu, _("Copy selected playlist to..."));
         add_separator(menu);
-        //        add_edit_track_details(menu);
+        add_edit_track_details(menu);
         if (pl->is_spl) {
             add_edit_smart_playlist(menu);
         }

@@ -729,10 +729,8 @@ static gboolean tm_model_track_changed(GtkTreeModel *model, GtkTreePath *path, G
  iTunesDB is read and some IDs are renumbered */
 void tm_track_changed(Track *track) {
     GtkTreeModel *model = gtk_tree_view_get_model(track_treeview);
-    /*  printf("tm_track_changed enter\n");*/
     if (model != NULL)
         gtk_tree_model_foreach(model, tm_model_track_changed, track);
-    /*  printf("tm_track_changed exit\n");*/
 }
 
 #if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION < 2))
@@ -2728,4 +2726,10 @@ void track_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpo
     Track *old_track = tk;
 
     tm_remove_track(old_track);
+}
+
+void track_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data) {
+    Track *track = tk;
+
+    tm_track_changed(track);
 }

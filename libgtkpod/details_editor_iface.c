@@ -26,27 +26,28 @@
  |
  */
 
-#ifndef DISPLAY_TRACKS_H_
-#define DISPLAY_TRACKS_H_
+#ifdef HAVE_CONFIG_H
+    #include <config.h>
+#endif
 
-#include "plugin.h"
-#include "libgtkpod/gtkpod_app_iface.h"
+#include "details_editor_iface.h"
 
-void tm_create_track_display(GtkWidget *parent);
-void tm_destroy_widgets(void);
-void tm_rows_reordered(void);
-void tm_stop_editing(gboolean cancel);
-gboolean tm_add_filelist(gchar *data, GtkTreePath *path, GtkTreeViewDropPosition pos);
-void tm_update_default_sizes (void);
-void tm_store_col_order (void);
-void tm_show_preferred_columns(void);
+static void details_editor_base_init(DetailsEditorInterface *klass) {
+    static gboolean initialized = FALSE;
 
-void display_show_hide_searchbar(void);
+    if (!initialized) {
+        klass->edit_details = NULL;
+        initialized = TRUE;
+    }
+}
 
-void track_display_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data);
-void track_display_set_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data);
-void track_display_set_sort_enablement(GtkPodApp *app, gboolean flag, gpointer data);
-void track_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data);
-void track_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data);
-
-#endif /* DISPLAY_TRACKS_H_ */
+GType details_editor_get_type(void) {
+    static GType type = 0;
+    if (!type) {
+        static const GTypeInfo info =
+            { sizeof(DetailsEditorInterface), (GBaseInitFunc) details_editor_base_init, NULL, NULL, NULL, NULL, 0, 0, NULL };
+        type = g_type_register_static(G_TYPE_INTERFACE, "DetailsEditorInterface", &info, 0);
+        g_type_interface_add_prerequisite(type, G_TYPE_OBJECT);
+    }
+    return type;
+}

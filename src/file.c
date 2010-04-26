@@ -44,6 +44,7 @@
 #include "charset.h"
 #include "clientserver.h"
 #include "file.h"
+#include "file_convert.h"
 #include "itdb.h"
 #include "sha1.h"
 #include "misc.h"
@@ -1183,24 +1184,25 @@ static Track *get_track_info_from_file(gchar *name, Track *orig_track) {
     filetype = determine_file_type(name);
     switch (filetype) {
     case FILE_TYPE_MP3:
-	nti = mp3_get_file_info (name);
-	/* Set mediatype to audio */
-	if (nti)
-	{
-	    if (g_strcasecmp (nti->genre, "audiobook") == 0) nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
-	    else if (g_strcasecmp (nti->genre, "podcast") == 0) nti->mediatype = ITDB_MEDIATYPE_PODCAST;
-	    else nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-	}
-	break;
+        nti = mp3_get_file_info(name);
+        /* Set mediatype to audio */
+        if (nti) {
+            if (g_strcasecmp(nti->genre, "audiobook") == 0)
+                nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
+            else if (g_strcasecmp(nti->genre, "podcast") == 0)
+                nti->mediatype = ITDB_MEDIATYPE_PODCAST;
+            else
+                nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+        }
+        break;
     case FILE_TYPE_M4A:
     case FILE_TYPE_M4P:
-	nti = mp4_get_file_info (name);
-	/* Set mediatype to audio */
-	if (nti && !nti->mediatype)
-	{
-	    nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-	}
-	break;
+        nti = mp4_get_file_info(name);
+        /* Set mediatype to audio */
+        if (nti && !nti->mediatype) {
+            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+        }
+        break;
     case FILE_TYPE_M4B:
         nti = mp4_get_file_info(name);
         /* Set mediatype to audiobook */
@@ -1231,18 +1233,18 @@ static Track *get_track_info_from_file(gchar *name, Track *orig_track) {
         break;
     case FILE_TYPE_M4V:
     case FILE_TYPE_MP4:
-	/* I don't know if .m4v and .mp4 can simply be handled like
-	   this. Let's see if someone complains. */
-	nti = mp4_get_file_info (name);
-	if (!nti) video_get_file_info (name);
-	/* Set mediatype to video */
-	if (nti)
-	{
-	    if (!nti->mediatype)
-            nti->mediatype = ITDB_MEDIATYPE_MOVIE;
-	    nti->movie_flag = 0x01;
-	}	
-	break;
+        /* I don't know if .m4v and .mp4 can simply be handled like
+         this. Let's see if someone complains. */
+        nti = mp4_get_file_info(name);
+        if (!nti)
+            video_get_file_info(name);
+        /* Set mediatype to video */
+        if (nti) {
+            if (!nti->mediatype)
+                nti->mediatype = ITDB_MEDIATYPE_MOVIE;
+            nti->movie_flag = 0x01;
+        }
+        break;
     case FILE_TYPE_MOV:
     case FILE_TYPE_MPG:
         /* for now treat all the same */
@@ -1261,122 +1263,110 @@ static Track *get_track_info_from_file(gchar *name, Track *orig_track) {
     case FILE_TYPE_DIRECTORY:
     case FILE_TYPE_M3U:
     case FILE_TYPE_PLS:
-	break;
+        break;
     }
 
-    if (nti)
-    {
-	switch (nti->mediatype)
-	{
-	    case ITDB_MEDIATYPE_AUDIOBOOK:
-	    case ITDB_MEDIATYPE_PODCAST:
-	    case ITDB_MEDIATYPE_PODCAST|ITDB_MEDIATYPE_MOVIE: /* Video podcast */
-		/* For audiobooks and podcasts, default to remember playback position
-		 * and skip when shuffling. */
-		nti->skip_when_shuffling = 1;
-		nti->remember_playback_position = 1;
-		break;
-	}
+    if (nti) {
+        switch (nti->mediatype) {
+        case ITDB_MEDIATYPE_AUDIOBOOK:
+        case ITDB_MEDIATYPE_PODCAST:
+        case ITDB_MEDIATYPE_PODCAST | ITDB_MEDIATYPE_MOVIE: /* Video podcast */
+            /* For audiobooks and podcasts, default to remember playback position
+             * and skip when shuffling. */
+            nti->skip_when_shuffling = 1;
+            nti->remember_playback_position = 1;
+            break;
+        }
     }
 
-    if (nti)
-    {
-	ExtraTrackData *enti=nti->userdata;
-	struct stat filestat;
+    if (nti) {
+        ExtraTrackData *enti = nti->userdata;
+        struct stat filestat;
 
-	g_return_val_if_fail (enti, NULL);
+        g_return_val_if_fail (enti, NULL);
 
-	if (enti->charset == NULL)
-	{   /* Fill in currently used charset. Try if auto_charset is
-	     * set first. If not, use the currently set charset. */
-	    enti->charset = charset_get_auto ();
-	    if (enti->charset == NULL)
-		update_charset_info (nti);
-	}
-	/* set path file information */
-	enti->pc_path_utf8 = charset_to_utf8 (name);
-	enti->pc_path_locale = g_strdup (name);
-	enti->lyrics=NULL;
-	/* set length of file */
-	stat (name, &filestat);
-	nti->size = filestat.st_size; /* get the filesize in bytes */
-	enti->mtime = filestat.st_mtime; /* get the modification date */
-	if (nti->bitrate == 0)
-	{  /* estimate bitrate */
-	    if (nti->tracklen)
-		nti->bitrate = nti->size * 8 / nti->tracklen;
-	}
-	/* Set unset strings (album...) from filename */
-	set_unset_entries_from_filename (nti);
+        if (enti->charset == NULL) { /* Fill in currently used charset. Try if auto_charset is
+         * set first. If not, use the currently set charset. */
+            enti->charset = charset_get_auto();
+            if (enti->charset == NULL)
+                update_charset_info(nti);
+        }
+        /* set path file information */
+        enti->pc_path_utf8 = charset_to_utf8(name);
+        enti->pc_path_locale = g_strdup(name);
+        enti->lyrics = NULL;
+        /* set length of file */
+        stat(name, &filestat);
+        nti->size = filestat.st_size; /* get the filesize in bytes */
+        enti->mtime = filestat.st_mtime; /* get the modification date */
+        if (nti->bitrate == 0) { /* estimate bitrate */
+            if (nti->tracklen)
+                nti->bitrate = nti->size * 8 / nti->tracklen;
+        }
+        /* Set unset strings (album...) from filename */
+        set_unset_entries_from_filename(nti);
 
-	/* Set coverart */
-	if (prefs_get_int("coverart_file"))
-	{
-	    /* APIC data takes precedence */
-	    if (! itdb_track_has_thumbnails (nti))
-		add_coverart (nti);
-	}
+        /* Set coverart */
+        if (prefs_get_int("coverart_file")) {
+            /* APIC data takes precedence */
+            if (!itdb_track_has_thumbnails(nti))
+                add_coverart(nti);
+        }
 
-	/* Set modification date to the files modified date */
-	nti->time_modified = enti->mtime;
-	/* Set added date to *now* (unless orig_track is present) */
-	if (orig_track)
-	{
-	    nti->time_added = orig_track->time_added;
-	}
-	else
-	{
-	    nti->time_added = time (NULL);
-	}
+        /* Set modification date to the files modified date */
+        nti->time_modified = enti->mtime;
+        /* Set added date to *now* (unless orig_track is present) */
+        if (orig_track) {
+            nti->time_added = orig_track->time_added;
+        }
+        else {
+            nti->time_added = time(NULL);
+        }
 
-	/* Make sure all strings are initialized -- that way we don't
-	   have to worry about it when we are handling the
-	   strings. Also, validate_entries() will fill in the utf16
-	   strings if that hasn't already been done. */
-	/* exception: sha1_hash, charset and hostname: these may be
-	 * NULL. */
+        /* Make sure all strings are initialized -- that way we don't
+         have to worry about it when we are handling the
+         strings. Also, validate_entries() will fill in the utf16
+         strings if that hasn't already been done. */
+        /* exception: sha1_hash, charset and hostname: these may be
+         * NULL. */
 
-	gp_track_validate_entries (nti);
+        gp_track_validate_entries(nti);
 
-	if (orig_track)
-	{ /* we need to copy all information over to the original
-	   * track */
-	    ExtraTrackData *eorigtr=orig_track->userdata;
+        if (orig_track) { /* we need to copy all information over to the original
+         * track */
+            ExtraTrackData *eorigtr = orig_track->userdata;
 
-	    g_return_val_if_fail (eorigtr, NULL);
+            g_return_val_if_fail (eorigtr, NULL);
 
-	    eorigtr->tchanged = copy_new_info (nti, orig_track);
+            eorigtr->tchanged = copy_new_info(nti, orig_track);
 
-	    track = orig_track;
-	    itdb_track_free (nti);
-	    nti = NULL;
-	}
-	else
-	{ /* just use nti */
-	    track = nti;
-	    nti = NULL;
-	}
+            track = orig_track;
+            itdb_track_free(nti);
+            nti = NULL;
+        }
+        else { /* just use nti */
+            track = nti;
+            nti = NULL;
+        }
 
-	update_mserv_data_from_file (name, track);
+        update_mserv_data_from_file(name, track);
     }
-    else
-    {
-	switch (filetype)
-	{
-	case FILE_TYPE_IMAGE:
-	case FILE_TYPE_M3U:
-	case FILE_TYPE_PLS:
-	    break;
-	default:
-	    gtkpod_warning (_("The following track could not be processed (filetype is known but analysis failed): '%s'\n"), name_utf8);
-	    break;
-	}
+    else {
+        switch (filetype) {
+        case FILE_TYPE_IMAGE:
+        case FILE_TYPE_M3U:
+        case FILE_TYPE_PLS:
+            break;
+        default:
+            gtkpod_warning(_("The following track could not be processed (filetype is known but analysis failed): '%s'\n"), name_utf8);
+            break;
+        }
     }
 
-    while (widgets_blocked && gtk_events_pending ())
-	gtk_main_iteration ();
+    while (widgets_blocked && gtk_events_pending())
+        gtk_main_iteration();
 
-    g_free (name_utf8);
+    g_free(name_utf8);
 
     return track;
 }
@@ -1484,22 +1474,20 @@ void display_non_updated(Track *track, gchar *txt) {
         if (prefs_get_int("show_non_updated") && str->len) { /* Some tracks have not been updated. Print a notice */
             buf
                     = g_strdup_printf(ngettext("The following track could not be updated", "The following %d tracks could not be updated", track_nr), track_nr);
-            g_message("TODO file:display_non_updated - status needed\n");
-            //	   gtkpod_confirmation
-            //	       (-1,                 /* gint id, */
-            //		FALSE,              /* gboolean modal, */
-            //		_("Failed Track Update"),   /* title */
-            //		buf,                /* label */
-            //		str->str,           /* scrolled text */
-            //		NULL, 0, NULL,          /* option 1 */
-            //		NULL, 0, NULL,          /* option 2 */
-            //		TRUE,               /* gboolean confirm_again, */
-            //		"show_non_updated",/* confirm_again_key,*/
-            //		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
-            //		NULL,               /* don't show "Apply" button */
-            //		NULL,               /* cancel_handler,*/
-            //		NULL,               /* gpointer user_data1,*/
-            //		NULL);              /* gpointer user_data2,*/
+            gtkpod_confirmation(-1, /* gint id, */
+            FALSE, /* gboolean modal, */
+            _("Failed Track Update"), /* title */
+            buf, /* label */
+            str->str, /* scrolled text */
+            NULL, 0, NULL, /* option 1 */
+            NULL, 0, NULL, /* option 2 */
+            TRUE, /* gboolean confirm_again, */
+            "show_non_updated",/* confirm_again_key,*/
+            CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
+            NULL, /* don't show "Apply" button */
+            NULL, /* cancel_handler,*/
+            NULL, /* gpointer user_data1,*/
+            NULL); /* gpointer user_data2,*/
             g_free(buf);
         }
         display_non_updated((void *) -1, NULL);
@@ -1543,21 +1531,20 @@ void display_updated(Track *track, gchar *txt) {
         if (str->len) { /* Some tracks have been updated. Print a notice */
             buf
                     = g_strdup_printf(ngettext("The following track has been updated", "The following %d tracks have been updated", track_nr), track_nr);
-            	   gtkpod_confirmation
-            	       (-1,                 /* gint id, */
-            		FALSE,              /* gboolean modal, */
-            		_("Successful Track Update"),   /* title */
-            		buf,                /* label */
-            		str->str,           /* scrolled text */
-            		NULL, 0, NULL,          /* option 1 */
-            		NULL, 0, NULL,          /* option 2 */
-            		TRUE,               /* gboolean confirm_again, */
-            		"show_updated",/* confirm_again_key,*/
-            		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
-            		NULL,               /* don't show "Apply" button */
-            		NULL,               /* cancel_handler,*/
-            		NULL,               /* gpointer user_data1,*/
-            		NULL);              /* gpointer user_data2,*/
+            gtkpod_confirmation(-1, /* gint id, */
+            FALSE, /* gboolean modal, */
+            _("Successful Track Update"), /* title */
+            buf, /* label */
+            str->str, /* scrolled text */
+            NULL, 0, NULL, /* option 1 */
+            NULL, 0, NULL, /* option 2 */
+            TRUE, /* gboolean confirm_again, */
+            "show_updated",/* confirm_again_key,*/
+            CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
+            NULL, /* don't show "Apply" button */
+            NULL, /* cancel_handler,*/
+            NULL, /* gpointer user_data1,*/
+            NULL); /* gpointer user_data2,*/
             g_free(buf);
         }
         display_updated((void *) -1, NULL);
@@ -1601,21 +1588,20 @@ void display_mserv_problems(Track *track, gchar *txt) {
         if (prefs_get_int("mserv_use") && prefs_get_int("mserv_report_probs") && str->len) { /* Some tracks have had problems. Print a notice */
             buf
                     = g_strdup_printf(ngettext("No mserv information could be retrieved for the following track", "No mserv information could be retrieved for the following %d tracks", track_nr), track_nr);
-            	   gtkpod_confirmation
-            	       (-1,                 /* gint id, */
-            		FALSE,              /* gboolean modal, */
-            		_("mserv data retrieval problem"),   /* title */
-            		buf,                /* label */
-            		str->str,           /* scrolled text */
-            		NULL, 0, NULL,          /* option 1 */
-            		NULL, 0, NULL,          /* option 2 */
-            		TRUE,               /* gboolean confirm_again, */
-            		"mserv_report_probs",/* confirm_again_key,*/
-            		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
-            		NULL,               /* don't show "Apply" button */
-            		NULL,               /* cancel_handler,*/
-            		NULL,               /* gpointer user_data1,*/
-            		NULL);              /* gpointer user_data2,*/
+            gtkpod_confirmation(-1, /* gint id, */
+            FALSE, /* gboolean modal, */
+            _("mserv data retrieval problem"), /* title */
+            buf, /* label */
+            str->str, /* scrolled text */
+            NULL, 0, NULL, /* option 1 */
+            NULL, 0, NULL, /* option 2 */
+            TRUE, /* gboolean confirm_again, */
+            "mserv_report_probs",/* confirm_again_key,*/
+            CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
+            NULL, /* don't show "Apply" button */
+            NULL, /* cancel_handler,*/
+            NULL, /* gpointer user_data1,*/
+            NULL); /* gpointer user_data2,*/
             g_free(buf);
         }
         display_mserv_problems((void *) -1, NULL);
@@ -1765,14 +1751,12 @@ void update_track_from_file(iTunesDB *itdb, Track *track) {
                 track->ipod_path = g_strdup("");
                 track->transferred = FALSE;
 
-                g_message("TODO file:track_updated - cancel convert track\n");
-                //		/* cancel conversion/transfer of track */
-                //		file_convert_cancel_track (track);
+                /* cancel conversion/transfer of track */
+                file_convert_cancel_track(track);
                 /* mark the track for deletion on the ipod */
                 mark_track_for_deletion(itdb, new_track);
-                g_message("TODO file:track updated - reschedule track conversion\n");
-                //		/* reschedule conversion/transfer of track */
-                //		file_convert_add_track (track);
+                /* reschedule conversion/transfer of track */
+                file_convert_add_track(track);
 
                 netr->tchanged = TRUE;
             }
@@ -2025,42 +2009,39 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
 
 /* Call the correct tag writing function for the filename @name */
 static gboolean file_write_info(gchar *name, Track *track) {
-    g_message("TODO file:write_file_info - defer to installed plugins");
-    //    gchar *buf;
-    //
-    //    g_return_val_if_fail (name, FALSE);
-    //    g_return_val_if_fail (track, FALSE);
-    //
-    //    switch (determine_file_type(name))
-    //    {
-    //    case FILE_TYPE_MP3:
-    //	return mp3_write_file_info (name, track);
-    //    case FILE_TYPE_M4A:
-    //    case FILE_TYPE_M4P:
-    //    case FILE_TYPE_M4B:
-    //	return mp4_write_file_info (name, track);
-    //    case FILE_TYPE_WAV:
-    //	return wav_write_file_info (name, track);
-    //    case FILE_TYPE_OGG:
-    //        return ogg_write_file_info (name, track);
-    //    case FILE_TYPE_FLAC:
-    //        return flac_write_file_info (name, track);
-    //    case FILE_TYPE_M4V:
-    //    case FILE_TYPE_MP4:
-    //    case FILE_TYPE_MOV:
-    //    case FILE_TYPE_MPG:
-    //	buf = get_track_info (track, FALSE);
-    //	gtkpod_warning (_("Writing to video files not yet supported (%s).\n\n"),
-    //			buf);
-    //	g_free (buf);
-    //	break;
-    //    case FILE_TYPE_M3U:
-    //    case FILE_TYPE_PLS:
-    //    case FILE_TYPE_IMAGE:
-    //    case FILE_TYPE_UNKNOWN:
-    //    case FILE_TYPE_DIRECTORY:
-    //	break;
-    //    }
+    gchar *buf;
+
+    g_return_val_if_fail (name, FALSE);
+    g_return_val_if_fail (track, FALSE);
+
+    switch (determine_file_type(name)) {
+    case FILE_TYPE_MP3:
+        return mp3_write_file_info(name, track);
+    case FILE_TYPE_M4A:
+    case FILE_TYPE_M4P:
+    case FILE_TYPE_M4B:
+        return mp4_write_file_info(name, track);
+    case FILE_TYPE_WAV:
+        return wav_write_file_info(name, track);
+    case FILE_TYPE_OGG:
+        return ogg_write_file_info(name, track);
+    case FILE_TYPE_FLAC:
+        return flac_write_file_info(name, track);
+    case FILE_TYPE_M4V:
+    case FILE_TYPE_MP4:
+    case FILE_TYPE_MOV:
+    case FILE_TYPE_MPG:
+        buf = get_track_info(track, FALSE);
+        gtkpod_warning(_("Writing to video files not yet supported (%s).\n\n"), buf);
+        g_free(buf);
+        break;
+    case FILE_TYPE_M3U:
+    case FILE_TYPE_PLS:
+    case FILE_TYPE_IMAGE:
+    case FILE_TYPE_UNKNOWN:
+    case FILE_TYPE_DIRECTORY:
+        break;
+    }
 
     return FALSE;
 }
@@ -2255,22 +2236,20 @@ void parse_offline_playcount(void) {
         rewind(file);
         if (gstr->len != 0) {
             gint result = 0;
-            g_message("TODO file:parse_offline_playcount - status\n");
-            //	    gint result = gtkpod_confirmation
-            //	    (-1,                    /* gint id, */
-            //	     TRUE,                  /* gboolean modal, */
-            //	     _("Remove offline playcounts?"), /* title */
-            //	     _("Some tracks played offline could not be found in the iTunesDB. Press 'OK' to remove them from the offline playcount file, 'Cancel' to keep them."),   /* label */
-            //	     gstr_filenames->str,   /* scrolled text */
-            //	     NULL, 0, NULL,         /* option 1 */
-            //	     NULL, 0, NULL,         /* option 2 */
-            //	     TRUE,                  /* confirm_again, */
-            //	     NULL,                  /* confirm_again_key,*/
-            //	     CONF_NULL_HANDLER,     /* ConfHandler ok_handler,*/
-            //	     NULL,                  /* don't show "Apply" button */
-            //	     CONF_NULL_HANDLER,     /* cancel_handler,*/
-            //	     NULL,                  /* gpointer user_data1,*/
-            //	     NULL);                 /* gpointer user_data2,*/
+            result = gtkpod_confirmation(-1, /* gint id, */
+                    TRUE, /* gboolean modal, */
+                    _("Remove offline playcounts?"), /* title */
+                    _("Some tracks played offline could not be found in the iTunesDB. Press 'OK' to remove them from the offline playcount file, 'Cancel' to keep them."), /* label */
+                    gstr_filenames->str, /* scrolled text */
+                    NULL, 0, NULL, /* option 1 */
+                    NULL, 0, NULL, /* option 2 */
+                    TRUE, /* confirm_again, */
+                    NULL, /* confirm_again_key,*/
+                    CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
+                    NULL, /* don't show "Apply" button */
+                    CONF_NULL_HANDLER, /* cancel_handler,*/
+                    NULL, /* gpointer user_data1,*/
+                    NULL); /* gpointer user_data2,*/
 
             if (result != GTK_RESPONSE_OK) {
                 len = fwrite(gstr->str, sizeof(gchar), gstr->len, file);
@@ -2300,296 +2279,191 @@ void parse_offline_playcount(void) {
  * Return value: TRUE, if gain could be read
  */
 gboolean read_soundcheck(Track *track) {
-    g_message("TODO file:read_soundcheck - need to defer to plugin");
-    //    gchar *path;
-    //    gchar *buf;
-    //    gboolean result = FALSE;
-    //
-    //    g_return_val_if_fail (track, FALSE);
-    //
-    //    path = get_file_name_from_source (track, SOURCE_PREFER_LOCAL);
-    //
-    //    if (path)
-    //    {
-    //	switch (determine_file_type (path))
-    //	{
-    //	case FILE_TYPE_MP3:
-    //	    result = mp3_read_soundcheck (path, track);
-    //	    break;
-    //	case FILE_TYPE_M4A:
-    //	case FILE_TYPE_M4P:
-    //	case FILE_TYPE_M4B:
-    //	    result = mp4_read_soundcheck (path, track);
-    //	    break;
-    //        case FILE_TYPE_OGG: /* FIXME */
-    //        case FILE_TYPE_FLAC: /* FIXME */
-    //	case FILE_TYPE_WAV: /* FIXME */
-    //	case FILE_TYPE_M4V:
-    //	case FILE_TYPE_MP4:
-    //	case FILE_TYPE_MOV:
-    //	case FILE_TYPE_MPG:
-    //	case FILE_TYPE_UNKNOWN:
-    //	    buf = get_track_info (track, FALSE);
-    //	    gtkpod_warning (
-    //		_("Normalization failed: file type not supported (%s).\n\n"),
-    //		buf);
-    //	    g_free (buf);
-    //	    break;
-    //	case FILE_TYPE_M3U:
-    //	case FILE_TYPE_PLS:
-    //	case FILE_TYPE_IMAGE:
-    //	case FILE_TYPE_DIRECTORY:
-    //	    break;
-    //	}
-    //	g_free (path);
-    //    }
-    //    else
-    //    {
-    //	buf = get_track_info (track, FALSE);
-    //	gtkpod_warning (
-    //	    _("Normalization failed: file not available (%s).\n\n"),
-    //	    buf);
-    //	g_free (buf);
-    //    }
-    //    return result;
-    return FALSE;
+    gchar *path;
+    gchar *buf;
+    gboolean result = FALSE;
+
+    g_return_val_if_fail (track, FALSE);
+
+    path = get_file_name_from_source(track, SOURCE_PREFER_LOCAL);
+
+    if (path) {
+        switch (determine_file_type(path)) {
+        case FILE_TYPE_MP3:
+            result = mp3_read_soundcheck(path, track);
+            break;
+        case FILE_TYPE_M4A:
+        case FILE_TYPE_M4P:
+        case FILE_TYPE_M4B:
+            result = mp4_read_soundcheck(path, track);
+            break;
+        case FILE_TYPE_OGG: /* FIXME */
+        case FILE_TYPE_FLAC: /* FIXME */
+        case FILE_TYPE_WAV: /* FIXME */
+        case FILE_TYPE_M4V:
+        case FILE_TYPE_MP4:
+        case FILE_TYPE_MOV:
+        case FILE_TYPE_MPG:
+        case FILE_TYPE_UNKNOWN:
+            buf = get_track_info(track, FALSE);
+            gtkpod_warning(_("Normalization failed: file type not supported (%s).\n\n"), buf);
+            g_free(buf);
+            break;
+        case FILE_TYPE_M3U:
+        case FILE_TYPE_PLS:
+        case FILE_TYPE_IMAGE:
+        case FILE_TYPE_DIRECTORY:
+            break;
+        }
+        g_free(path);
+    }
+    else {
+        buf = get_track_info(track, FALSE);
+        gtkpod_warning(_("Normalization failed: file not available (%s).\n\n"), buf);
+        g_free(buf);
+    }
+    return result;
 }
 
 /* Get lyrics from file */
 gboolean read_lyrics_from_file(Track *track, gchar **lyrics) {
-    g_message("TODO file:read_lyrics_from_file - need to defer to plugins");
-    //    gchar *path;
-    //    gchar *buf;
-    //    gboolean result = FALSE;
-    //    ExtraTrackData *etr;
-    //
-    //    g_return_val_if_fail (track, FALSE);
-    //    etr = track->userdata;
-    //    g_return_val_if_fail (etr,FALSE);
-    //    path = get_file_name_from_source (track, SOURCE_PREFER_IPOD);
-    //    if (path)
-    //    {
-    //        switch (determine_file_type (path))
-    //        {
-    //        case FILE_TYPE_MP3:
-    //            result = id3_lyrics_read (path, lyrics);
-    //            break;
-    //        case FILE_TYPE_M4A:
-    //        case FILE_TYPE_M4P:
-    //        case FILE_TYPE_M4B:
-    //        case FILE_TYPE_M4V:
-    //        case FILE_TYPE_MP4:
-    //            result = TRUE;
-    //            *lyrics=g_strdup(
-    //                "File format unsupported now.");
-    //            break;
-    //        case FILE_TYPE_MOV:
-    //        case FILE_TYPE_MPG:
-    //        case FILE_TYPE_WAV: /* FIXME */
-    //        case FILE_TYPE_OGG: /* FIXME */
-    //        case FILE_TYPE_FLAC: /* FIXME */
-    //        case FILE_TYPE_UNKNOWN:
-    //            result = TRUE;
-    //            *lyrics=g_strdup(
-    //                "Lyrics not supported for this file format.");
-    //            break;
-    //        case FILE_TYPE_M3U:
-    //        case FILE_TYPE_PLS:
-    //        case FILE_TYPE_IMAGE:
-    //        case FILE_TYPE_DIRECTORY:
-    //            break;
-    //        }
-    //        g_free (path);
-    //    }
-    //    else
-    //    {
-    //        buf = get_track_info (track, FALSE);
-    //        gtkpod_warning (
-    //            _("Lyrics not found, file not available (%s).\n\n"),
-    //            buf);
-    //        g_free (buf);
-    //    }
-    //    if (result)
-    //    {
-    //	if (!*lyrics) *lyrics=g_strdup("");
-    //	if (etr->lyrics) g_free(etr->lyrics);
-    //	etr->lyrics=g_strdup(*lyrics);
-    //    }
-    //    return result;
-    return FALSE;
+    gchar *path;
+    gchar *buf;
+    gboolean result = FALSE;
+    ExtraTrackData *etr;
+
+    g_return_val_if_fail (track, FALSE);
+    etr = track->userdata;
+    g_return_val_if_fail (etr,FALSE);
+    path = get_file_name_from_source(track, SOURCE_PREFER_IPOD);
+    if (path) {
+        switch (determine_file_type(path)) {
+        case FILE_TYPE_MP3:
+            result = id3_lyrics_read(path, lyrics);
+            break;
+        case FILE_TYPE_M4A:
+        case FILE_TYPE_M4P:
+        case FILE_TYPE_M4B:
+        case FILE_TYPE_M4V:
+        case FILE_TYPE_MP4:
+            result = TRUE;
+            *lyrics = g_strdup("File format unsupported now.");
+            break;
+        case FILE_TYPE_MOV:
+        case FILE_TYPE_MPG:
+        case FILE_TYPE_WAV: /* FIXME */
+        case FILE_TYPE_OGG: /* FIXME */
+        case FILE_TYPE_FLAC: /* FIXME */
+        case FILE_TYPE_UNKNOWN:
+            result = TRUE;
+            *lyrics = g_strdup("Lyrics not supported for this file format.");
+            break;
+        case FILE_TYPE_M3U:
+        case FILE_TYPE_PLS:
+        case FILE_TYPE_IMAGE:
+        case FILE_TYPE_DIRECTORY:
+            break;
+        }
+        g_free(path);
+    }
+    else {
+        buf = get_track_info(track, FALSE);
+        gtkpod_warning(_("Lyrics not found, file not available (%s).\n\n"), buf);
+        g_free(buf);
+    }
+    if (result) {
+        if (!*lyrics)
+            *lyrics = g_strdup("");
+        if (etr->lyrics)
+            g_free(etr->lyrics);
+        etr->lyrics = g_strdup(*lyrics);
+    }
+    return result;
 }
 
 /* Write lyrics to file */
 gboolean write_lyrics_to_file(Track *track) {
-    g_message("TODO file:write_lyrics_to_file - need to defer to plugins\n");
-    //    gchar *path=NULL;
-    //    gchar *buf;
-    //    Track *oldtrack;
-    //    gboolean result = FALSE;
-    //    gboolean warned = FALSE;
-    //    ExtraTrackData *etr;
-    //    iTunesDB *itdb;
-    //
-    //    g_return_val_if_fail (track, FALSE);
-    //    etr = track->userdata;
-    //    g_return_val_if_fail (etr,FALSE);
-    //    itdb = track->itdb;
-    //    g_return_val_if_fail (itdb, FALSE);
-    //    path = get_file_name_from_source (track, SOURCE_IPOD);
-    //    if (!path)
-    //    {
-    //	if (prefs_get_int("id3_write"))
-    //	{
-    //	    path = get_file_name_from_source (track, SOURCE_LOCAL);
-    //	}
-    //	else
-    //	{
-    //	    buf = get_track_info (track, FALSE);
-    //	    gtkpod_warning (
-    //			_("iPod File not available and ID3 saving disabled in options, cannot save lyrics to: %s.\n\n"),
-    //			buf);
-    //	    g_free (buf);
-    //	    warned=TRUE;
-    //	}
-    //    }
-    //    if (path!=NULL)
-    //    {
-    //        switch (determine_file_type (path))
-    //        {
-    //        case FILE_TYPE_MP3:
-    //            result = id3_lyrics_save (path, etr->lyrics);
-    //            break;
-    //        case FILE_TYPE_M4A:
-    //        case FILE_TYPE_M4P:
-    //        case FILE_TYPE_M4B:
-    //        case FILE_TYPE_M4V:
-    //        case FILE_TYPE_MP4:
-    //            result = TRUE;
-    //            break;
-    //        case FILE_TYPE_MOV:
-    //        case FILE_TYPE_MPG:
-    //        case FILE_TYPE_WAV: /* FIXME */
-    //        case FILE_TYPE_OGG: /* FIXME */
-    //        case FILE_TYPE_FLAC: /* FIXME */
-    //        case FILE_TYPE_UNKNOWN:
-    //            result = TRUE;
-    //            break;
-    //        case FILE_TYPE_M3U:
-    //        case FILE_TYPE_PLS:
-    //        case FILE_TYPE_IMAGE:
-    //        case FILE_TYPE_DIRECTORY:
-    //            break;
-    //        }
-    //        g_free (path);
-    //    }
-    //    else
-    //    {
-    //	if (!warned) {
-    //	    buf = get_track_info (track, FALSE);
-    //	    gtkpod_warning (
-    //		_("Lyrics not written, file name not available (%s).\n\n"),
-    //		buf);
-    //	    g_free (buf);
-    //	}
-    //    }
-    //
-    //    if (!result || !etr->lyrics || (strlen(etr->lyrics)==0))
-    //    {
-    //	track->lyrics_flag=0x00;
-    //    }
-    //    else
-    //    {
-    //	track->lyrics_flag=0x01;
-    //    }
-    //    if (!etr->lyrics)
-    //    {
-    //	etr->lyrics = g_strdup ("");
-    //    }
-    //
-    //    if (result)
-    //    {
-    //	/* remove track from sha1 hash and reinsert it (hash value has changed!) */
-    //	sha1_track_remove (track);
-    //	C_FREE (etr->sha1_hash);  /* need to remove the old value manually! */
-    //	oldtrack = sha1_track_exists_insert (itdb, track);
-    //	if (oldtrack)
-    //	{ /* track exists, remove the old track and register the new version */
-    //	    sha1_track_remove (oldtrack);
-    //	    gp_duplicate_remove (track, oldtrack);
-    //	    sha1_track_exists_insert (itdb, track);
-    //	}
-    //    }
-    //    return result;
-    return FALSE;
-}
+    gchar *path = NULL;
+    gchar *buf;
+    Track *oldtrack;
+    gboolean result = FALSE;
+    gboolean warned = FALSE;
+    ExtraTrackData *etr;
+    iTunesDB *itdb;
 
-/* Get a file or directory
- *
- * @title:    title for the file selection dialog
- * @cur_file: initial file to be selected. If NULL, then use
- *            last_dir_browse.
- * @action:
- *   GTK_FILE_CHOOSER_ACTION_OPEN   Indicates open mode. The file chooser
- *                                  will only let the user pick an
- *                                  existing file.
- *   GTK_FILE_CHOOSER_ACTION_SAVE   Indicates save mode. The file
- *                                  chooser will let the user pick an
- *                                  existing file, or type in a new
- *                                  filename.
- *   GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
- *                                  Indicates an Open mode for
- *                                  selecting folders. The file
- *                                  chooser will let the user pick an
- *                                  existing folder.
- *   GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER
- *                                  Indicates a mode for creating a
- *                                  new folder. The file chooser will
- *                                  let the user name an existing or
- *                                  new folder.
- */
-gchar *fileselection_get_file_or_dir(const gchar *title, const gchar *cur_file, GtkFileChooserAction action) {
-    GtkWidget* fc; /* The file chooser dialog */
-    gint response; /* The response of the filechooser */
-    gchar *new_file = NULL; /* The chosen file */
-    gchar *new_dir; /* The new dir to remember */
-
-    g_return_val_if_fail (title, NULL);
-
-    /* Create the file chooser, and handle the response */
-    fc
-            = gtk_file_chooser_dialog_new(title, NULL, action, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, NULL);
-
-    gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER (fc), FALSE);
-
-    if (cur_file) {
-        /* Sanity checks: must exist and be absolute */
-        if (g_path_is_absolute(cur_file))
-            gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (fc), cur_file);
-        else
-            cur_file = NULL;
+    g_return_val_if_fail (track, FALSE);
+    etr = track->userdata;
+    g_return_val_if_fail (etr,FALSE);
+    itdb = track->itdb;
+    g_return_val_if_fail (itdb, FALSE);
+    path = get_file_name_from_source(track, SOURCE_IPOD);
+    if (!path) {
+        if (prefs_get_int("id3_write")) {
+            path = get_file_name_from_source(track, SOURCE_LOCAL);
+        }
+        else {
+            buf = get_track_info(track, FALSE);
+            gtkpod_warning(_("iPod File not available and ID3 saving disabled in options, cannot save lyrics to: %s.\n\n"), buf);
+            g_free(buf);
+            warned = TRUE;
+        }
     }
-    if (cur_file == NULL) {
-        gchar *filename = prefs_get_string("last_dir_browsed");
-        if (filename) {
-            gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER (fc), filename);
-            g_free(filename);
+    if (path != NULL) {
+        switch (determine_file_type(path)) {
+        case FILE_TYPE_MP3:
+            result = id3_lyrics_save(path, etr->lyrics);
+            break;
+        case FILE_TYPE_M4A:
+        case FILE_TYPE_M4P:
+        case FILE_TYPE_M4B:
+        case FILE_TYPE_M4V:
+        case FILE_TYPE_MP4:
+            result = TRUE;
+            break;
+        case FILE_TYPE_MOV:
+        case FILE_TYPE_MPG:
+        case FILE_TYPE_WAV: /* FIXME */
+        case FILE_TYPE_OGG: /* FIXME */
+        case FILE_TYPE_FLAC: /* FIXME */
+        case FILE_TYPE_UNKNOWN:
+            result = TRUE;
+            break;
+        case FILE_TYPE_M3U:
+        case FILE_TYPE_PLS:
+        case FILE_TYPE_IMAGE:
+        case FILE_TYPE_DIRECTORY:
+            break;
+        }
+        g_free(path);
+    }
+    else {
+        if (!warned) {
+            buf = get_track_info(track, FALSE);
+            gtkpod_warning(_("Lyrics not written, file name not available (%s).\n\n"), buf);
+            g_free(buf);
         }
     }
 
-    response = gtk_dialog_run(GTK_DIALOG(fc));
-
-    switch (response) {
-    case GTK_RESPONSE_ACCEPT:
-        new_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER (fc));
-        prefs_set_string("last_dir_browsed", new_dir);
-        g_free(new_dir);
-        new_file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER (fc));
-        break;
-    case GTK_RESPONSE_CANCEL:
-        break;
-    default: /* Fall through */
-        break;
+    if (!result || !etr->lyrics || (strlen(etr->lyrics) == 0)) {
+        track->lyrics_flag = 0x00;
     }
-    gtk_widget_destroy(fc);
-    return new_file;
+    else {
+        track->lyrics_flag = 0x01;
+    }
+    if (!etr->lyrics) {
+        etr->lyrics = g_strdup("");
+    }
+
+    if (result) {
+        /* remove track from sha1 hash and reinsert it (hash value has changed!) */
+        sha1_track_remove(track);
+        C_FREE (etr->sha1_hash); /* need to remove the old value manually! */
+        oldtrack = sha1_track_exists_insert(itdb, track);
+        if (oldtrack) { /* track exists, remove the old track and register the new version */
+            sha1_track_remove(oldtrack);
+            gp_duplicate_remove(track, oldtrack);
+            sha1_track_exists_insert(itdb, track);
+        }
+    }
+    return result;
 }

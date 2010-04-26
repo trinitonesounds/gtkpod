@@ -33,34 +33,35 @@
 #include <glib.h>
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "plugin.h"
-#include "repository.h"
+#include "details.h"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
 
-static GtkActionEntry repository_editor_actions[] =
+static GtkActionEntry details_editor_actions[] =
     {
-
     };
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {
-    AnjutaUI *ui;;
+    AnjutaUI *ui;
     GtkActionGroup* action_group;
 
-    repository_editor_plugin = (RepositoryEditorPlugin*) plugin;
+    details_editor_plugin = (DetailsEditorPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
 
     /* Add our playlist_actions */
     action_group
-            = anjuta_ui_add_action_group_entries(ui, "ActionGroupRepositoryEditor", _("RepositoryEditor"), repository_editor_actions, G_N_ELEMENTS (repository_editor_actions), GETTEXT_PACKAGE, TRUE, plugin);
-    repository_editor_plugin->action_group = action_group;
+            = anjuta_ui_add_action_group_entries(ui, "ActionGroupDetailsEditor", _("DetailsEditor"), details_editor_actions, G_N_ELEMENTS (details_editor_actions), GETTEXT_PACKAGE, TRUE, plugin);
+    details_editor_plugin->action_group = action_group;
 
     /* Merge UI */
-    repository_editor_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
+    details_editor_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
 
-    g_return_val_if_fail(REPOSITORY_EDITOR_IS_EDITOR(repository_editor_plugin), TRUE);
+    g_return_val_if_fail(DETAILS_EDITOR_IS_EDITOR(details_editor_plugin), TRUE);
 
-    gtkpod_register_repository_editor (REPOSITORY_EDITOR(repository_editor_plugin));
+    gtkpod_register_details_editor (DETAILS_EDITOR(details_editor_plugin));
+
+//    g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (details_editor_track_removed_cb), NULL);
 
     return TRUE; /* FALSE if activation failed */
 }
@@ -68,29 +69,29 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
 
-    destroy_repository_editor();
+    destroy_details_editor();
 
-    gtkpod_unregister_repository_editor();
+    gtkpod_unregister_details_editor();
 
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
 
     /* Unmerge UI */
-    anjuta_ui_unmerge(ui, repository_editor_plugin->uiid);
+    anjuta_ui_unmerge(ui, details_editor_plugin->uiid);
 
     /* Remove Action groups */
-    anjuta_ui_remove_action_group(ui, repository_editor_plugin->action_group);
+    anjuta_ui_remove_action_group(ui, details_editor_plugin->action_group);
 
     /* FALSE if plugin doesn't want to deactivate */
     return TRUE;
 }
 
-static void repository_editor_plugin_instance_init(GObject *obj) {
-    RepositoryEditorPlugin *plugin = (RepositoryEditorPlugin*) obj;
+static void details_editor_plugin_instance_init(GObject *obj) {
+    DetailsEditorPlugin *plugin = (DetailsEditorPlugin*) obj;
     plugin->uiid = 0;
     plugin->action_group = NULL;
 }
 
-static void repository_editor_plugin_class_init(GObjectClass *klass) {
+static void details_editor_plugin_class_init(GObjectClass *klass) {
     AnjutaPluginClass *plugin_class = ANJUTA_PLUGIN_CLASS (klass);
 
     parent_class = g_type_class_peek_parent(klass);
@@ -99,15 +100,12 @@ static void repository_editor_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_plugin;
 }
 
-static void repository_editor_iface_init(RepositoryEditorInterface *iface) {
-    iface->edit_repository = open_repository_editor;
-    iface->init_repository = repository_ipod_init;
-    iface->set_repository_model = repository_ipod_init_set_model;
+static void details_editor_iface_init(DetailsEditorInterface *iface) {
+    iface->edit_details = details_edit;
 }
 
-ANJUTA_PLUGIN_BEGIN (RepositoryEditorPlugin, repository_editor_plugin);
-ANJUTA_PLUGIN_ADD_INTERFACE(repository_editor, REPOSITORY_EDITOR_TYPE);
+ANJUTA_PLUGIN_BEGIN (DetailsEditorPlugin, details_editor_plugin);
+ANJUTA_PLUGIN_ADD_INTERFACE(details_editor, DETAILS_EDITOR_TYPE);
 ANJUTA_PLUGIN_END;
-
-ANJUTA_SIMPLE_PLUGIN (RepositoryEditorPlugin, repository_editor_plugin)
+ANJUTA_SIMPLE_PLUGIN (DetailsEditorPlugin, details_editor_plugin)
 ;

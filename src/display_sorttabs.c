@@ -3504,3 +3504,8 @@ void sorttab_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, g
     Track *old_track = tk;
     st_remove_track(old_track, 0);
 }
+
+void sorttab_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data) {
+    Track *track = tk;
+    st_track_changed(track, FALSE, 0);
+}
