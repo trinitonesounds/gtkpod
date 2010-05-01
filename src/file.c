@@ -1311,9 +1311,12 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	/* Set mediatype to audio */
 	if (nti)
 	{
-	    if (g_strcasecmp (nti->genre, "audiobook") == 0) nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
-	    else if (g_strcasecmp (nti->genre, "podcast") == 0) nti->mediatype = ITDB_MEDIATYPE_PODCAST;
-	    else nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+	    nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+	    if (nti->genre)
+	    {
+		if (g_strcasecmp (nti->genre, "audiobook") == 0) nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
+		else if (g_strcasecmp (nti->genre, "podcast") == 0) nti->mediatype = ITDB_MEDIATYPE_PODCAST;
+	    }
 	}
 	break;
     case FILE_TYPE_M4A:
