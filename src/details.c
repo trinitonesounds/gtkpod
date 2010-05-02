@@ -1278,8 +1278,27 @@ static void details_set_track(Track *track) {
  * replace. */
 static void details_set_tracks(GList *tracks) {
     GList *gl;
-    g_return_if_fail (details_view);
     g_return_if_fail (tracks);
+
+    if (! details_view) {
+        return;
+    }
+
+    if (details_view->changed) {
+        gdk_threads_enter ();
+        gchar *str = g_strdup_printf(_("Changes have been made to the tracks in the details editor.\nDo you want to lose those changes?"));
+        gint result = gtkpod_confirmation_simple(
+                GTK_MESSAGE_WARNING,
+                _("Tracks in details editor have been modified."),
+                str,
+                GTK_STOCK_YES);
+
+        g_free(str);
+        gdk_threads_leave ();
+        if (result == GTK_RESPONSE_CANCEL) {
+            return;
+        }
+    }
 
     if (details_view->orig_tracks) {
         g_list_free(details_view->orig_tracks);
@@ -1494,11 +1513,14 @@ void details_edit(GList *selected_tracks) {
     GtkWidget *w;
     gint page, num_pages;
 
-    if (!details_view || !details_view->window)
+    if (!details_view || !details_view->window) {
+        g_message("Creating details editor window");
         create_details_editor_view();
-    else
+    }
+    else {
+        g_message("Redisplaying details editor window");
         gtkpod_display_widget(details_view->window);
-
+    }
     details_set_tracks(selected_tracks);
 
     /* set notebook page */
@@ -1709,4 +1731,22 @@ static void dnd_details_art_drag_data_received(GtkWidget *widget, GdkDragContext
     //    gtkpod_statusbar_message(_("Successfully set new coverart for selected tracks"));
     //    gtk_drag_finish(dc, FALSE, FALSE, time);
     return;
+}
+
+void details_editor_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data) {
+    Track *old_track = tk;
+    details_remove_track(old_track);
+}
+
+void details_editor_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data) {
+    GList *tracks = tks;
+    details_set_tracks(tracks);
+}
+
+void details_editor_set_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data) {
+    Playlist *playlist = pl;
+
+    if (playlist && playlist->members) {
+        details_set_tracks(playlist->members);
+    }
 }

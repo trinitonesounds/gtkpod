@@ -35,4 +35,11 @@
 		   attribute="Location"
 		   value="repository_editor:RepositoryEditorPlugin"/>
   </plugin>
+  <plugin name="Details Editor Plugin"
+	      url="http://www.gtkpod.org/plugins/"
+		  mandatory="yes">
+		  <require group="Anjuta Plugin"
+		   attribute="Location"
+		   value="details_editor:DetailsEditorPlugin"/>
+  </plugin>
 </anjuta>
