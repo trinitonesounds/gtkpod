@@ -303,9 +303,11 @@ typedef MP4FileHandle (*MP4Modify_t)(
 	u_int32_t verbosity DEFAULT(0),
 	u_int32_t flags DEFAULT(0));
 
+#if HAVE_MP4V2_ITMF_TAGS_H
 typedef const MP4Tags* (*MP4TagsAlloc_t)();
 typedef void (*MP4TagsFetch_t)( const MP4Tags* tags, MP4FileHandle hFile );
 typedef void (*MP4TagsFree_t)( const MP4Tags* tags );
+#endif
 
 typedef bool (*MP4MetadataDelete_t)(MP4FileHandle hFile);
 
@@ -361,9 +363,11 @@ static MP4SetMetadataTool_t MP4SetMetadataTool = NULL;
 static MP4SetMetadataCoverArt_t MP4SetMetadataCoverArt = NULL;
 static MP4Modify_t MP4Modify = NULL;
 static MP4MetadataDelete_t MP4MetadataDelete = NULL;
+#if HAVE_MP4V2_ITMF_TAGS_H
 static MP4TagsAlloc_t MP4TagsAllocFunc = NULL;
 static MP4TagsFetch_t MP4TagsFetchFunc = NULL;
 static MP4TagsFree_t MP4TagsFreeFunc = NULL;
+#endif
 
 /* end mp4v2 dynamic load declarations */
 
@@ -435,9 +439,11 @@ void mp4_init()
     MP4SetMetadataCoverArt = (MP4SetMetadataCoverArt_t) dlsym(mp4v2_handle, "MP4SetMetadataCoverArt");
     MP4Modify = (MP4Modify_t) dlsym(mp4v2_handle, "MP4Modify");
     MP4MetadataDelete = (MP4MetadataDelete_t) dlsym(mp4v2_handle, "MP4MetadataDelete");
+#if HAVE_MP4V2_ITMF_TAGS_H
     MP4TagsAllocFunc = (MP4TagsAlloc_t) dlsym(mp4v2_handle, "MP4TagsAlloc");
     MP4TagsFetchFunc = (MP4TagsFetch_t) dlsym(mp4v2_handle, "MP4TagsFetch");
     MP4TagsFreeFunc = (MP4TagsFree_t) dlsym(mp4v2_handle, "MP4TagsFree");
+#endif
 
     /* alternate names for HAVE_LIBMP4V2_2 */
 
