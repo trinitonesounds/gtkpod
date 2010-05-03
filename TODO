@@ -1,19 +1,19 @@
 Prospective Plugins:
-  core
+#	core
 	coverart display
 	filter bar
-	track editor
+#  track editor
 	play tracks now
-  info window
+    info window
 	help
 	synchronizer
 	download coverart plugin
 	photo panel
-    export plugin
-      - provides window and export functions
-      - other plugins simply emit a signal that tells the plugin to export the
-          given tracks
-      - means that the other plugins lack items on context menus of other views 
+#    export plugin
+#      - provides window and export functions
+#      - other plugins simply emit a signal that tells the plugin to export the
+#          given tracks
+#      - means that the other plugins lack items on context menus of other views 
 
 Music Menu
 #- Load iPod
@@ -21,18 +21,18 @@ Music Menu
 # Add Files
 # Add Folder
 # Add Playlists
-- Update Tracks from file
+# Update Tracks from file
 - Update mserv date from file
 - Sync Playlists with Dir
-- Export Tracks
-- Create Playlist
+# Export Tracks
+# Create Playlist
 - Init ipod Directories
 - Check ipod files
 
 Edit Menu
 - Edit Track Details
 - Edit Smart Playlist
-- Delete
+# Delete
 - Create Playlists
 - Sorting
 - Randomize current playlist
@@ -56,7 +56,7 @@ Help Menu
 - About box
 
 Playlists Plugin
-- popup menu
+# popup menu
 
 Tracks Plugin
 - popup menu
@@ -66,8 +66,17 @@ Sorttab Menu
 
 - CoverArt Plugin
 - Filter Plugin
-- Preference windows for each plugin - Should they add items to standard windows or contribute their own
 - Progress bar for saving and lengthy operations
 
+- Preference windows for each plugin - Should they add items to standard windows or contribute their own
+  - prefsdlg.c - Refactor preferences dialog to appear as pages anjuta preferences dialog
+
+#plugin remaining
+display_coverart.*
+display_photo.*
+fetchcover.*
+info.*
+infodlg.*
+help.*
 
 

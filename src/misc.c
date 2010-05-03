@@ -1838,15 +1838,6 @@ void gtkpod_shutdown ()
 
     /* Save prefs */
     prefs_save ();
-
-/* FIXME: release memory in a clean way */
-#if 0
-    remove_all_playlists ();  /* first remove playlists, then tracks!
-                   * (otherwise non-existing *tracks may
-                   * be accessed) */
-    remove_all_tracks ();
-#endif
-
     prefs_shutdown ();
 
     xmlCleanupParser();
