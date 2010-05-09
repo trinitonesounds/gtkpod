@@ -141,5 +141,7 @@ void cal_open_calendar(gint inst, T_item item);
 void sorttab_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data);
 void sorttab_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data);
 void sorttab_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data);
+void sorttab_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data);
+void sorttab_display_tracks_reordered_cb(GtkPodApp *app, gpointer data);
 
 #endif /* __DISPLAY_SORTTAB_H__ */

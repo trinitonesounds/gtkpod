@@ -61,6 +61,9 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
         gtkpod_app_signals[TRACK_UPDATED]
                 = g_signal_new(SIGNAL_TRACK_UPDATED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
+        gtkpod_app_signals[TRACKS_REORDERED]
+                        = g_signal_new(SIGNAL_TRACKS_REORDERED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+
         gtkpod_app_signals[SORT_ENABLEMENT]
                 = g_signal_new(SIGNAL_SORT_ENABLEMENT, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__BOOLEAN, G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
 
@@ -76,6 +79,8 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
         gtkpod_app_signals[ITDB_REMOVED]
                 = g_signal_new(SIGNAL_ITDB_REMOVED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
+        gtkpod_app_signals[PREFERENCE_CHANGE]
+                        = g_signal_new(SIGNAL_PREFERENCE_CHANGE, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, _gtkpod_app_marshal_VOID__POINTER_INT, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_INT);
 
         initialized = TRUE;
     }
@@ -309,6 +314,19 @@ void gtkpod_playlist_added(iTunesDB *itdb, Playlist *playlist, gint32 pos) {
     g_return_if_fail (playlist->itdb == itdb);
 
     g_signal_emit(gtkpod_app, gtkpod_app_signals[PLAYLIST_ADDED], 0, playlist, pos);
+}
+
+void gtkpod_broadcast_preference_change(gchar *preference_name, gint value) {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    g_return_if_fail (preference_name);
+
+    g_signal_emit(gtkpod_app, gtkpod_app_signals[PREFERENCE_CHANGE], 0, preference_name, value);
+}
+
+void gtkpod_tracks_reordered() {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+
+    g_signal_emit(gtkpod_app, gtkpod_app_signals[TRACKS_REORDERED], 0);
 }
 
 /**

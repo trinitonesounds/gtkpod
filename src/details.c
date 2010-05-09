@@ -1371,7 +1371,8 @@ void details_remove_track(Track *track) {
 }
 
 void destroy_details_editor() {
-    g_return_if_fail (details_view);
+    if (! details_view)
+        return;
 
     g_object_unref(details_view->xml);
 

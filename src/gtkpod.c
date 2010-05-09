@@ -33,6 +33,7 @@
 #include "libgtkpod/directories.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/misc.h"
+#include "libgtkpod/stock_icons.h"
 #include "anjuta-app.h"
 
 static gchar *GTKPOD_GLADE_XML_FILE;
@@ -62,8 +63,9 @@ void gtkpod_init(int argc, char *argv[]) {
     GTKPOD_GLADE_XML_FILE = g_build_filename(get_glade_dir(), "gtkpod.glade", NULL);
     plugin_profile_file = g_build_filename(get_data_dir(), "default.profile", NULL);
     ui_file = g_build_filename(get_ui_dir(), "gtkpod.ui", NULL);
-
     anjuta_set_ui_file_path(ui_file);
+
+    register_stock_icon("gtkpod", GTKPOD_APP_ICON_STOCK_ID);
 
     /* Initialize application */
     app = ANJUTA_APP(anjuta_app_new());

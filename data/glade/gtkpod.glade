@@ -193,7 +193,6 @@
   </widget>
   <widget class="GtkWindow" id="spl_window">
     <property name="title" translatable="yes">Smart Playlist</property>
-    <property name="icon">gtkpod-icon-48.png</property>
     <child>
       <widget class="GtkVBox" id="vbox28"><property name="orientation">GTK_ORIENTATION_VERTICAL</property>
         <property name="visible">True</property>

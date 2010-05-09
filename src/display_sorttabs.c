@@ -3509,3 +3509,17 @@ void sorttab_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data
     Track *track = tk;
     st_track_changed(track, FALSE, 0);
 }
+
+void sorttab_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data) {
+    gchar *pref_name = pfname;
+    if (g_str_equal(pref_name, "st_sort")) {
+        st_sort(value);
+    } else if (g_str_equal(pref_name, "case_sensitive")) {
+        st_rebuild_sortkeys();
+    }
+}
+
+void sorttab_display_tracks_reordered_cb(GtkPodApp *app, gpointer data) {
+    st_adopt_order_in_playlist();
+}
+

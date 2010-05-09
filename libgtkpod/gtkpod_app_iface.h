@@ -39,6 +39,8 @@
 #include "repository_editor_iface.h"
 #include "details_editor_iface.h"
 
+#define GTKPOD_APP_ICON_STOCK_ID "gtkpod"
+
 #define GTKPOD_APP_TYPE                (gtkpod_app_get_type ())
 #define GTKPOD_APP(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTKPOD_APP_TYPE, GtkPodApp))
 #define GTKPOD_IS_APP(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTKPOD_APP_TYPE))
@@ -55,6 +57,8 @@
 #define SIGNAL_ITDB_ADDED "signal_itdb_added"
 #define SIGNAL_ITDB_REMOVED "signal_itdb_removed"
 #define SIGNAL_SORT_ENABLEMENT "signal_sort_enablement"
+#define SIGNAL_PREFERENCE_CHANGE "signal_preference_change"
+#define SIGNAL_TRACKS_REORDERED "signal_tracks_reordered"
 
 typedef void (*ConfHandler)(gpointer user_data1, gpointer user_data2);
 
@@ -84,6 +88,7 @@ enum
     TRACKS_SELECTED,
     TRACK_REMOVED,
     TRACK_UPDATED,
+    TRACKS_REORDERED,
     PLAYLIST_SELECTED,
     PLAYLIST_ADDED,
     PLAYLIST_REMOVED,
@@ -91,6 +96,7 @@ enum
     ITDB_ADDED,
     ITDB_REMOVED,
     SORT_ENABLEMENT,
+    PREFERENCE_CHANGE,
     LAST_SIGNAL
 };
 
@@ -166,6 +172,9 @@ gboolean gtkpod_get_sort_enablement();
 void gtkpod_playlist_added(iTunesDB *itdb, Playlist *playlist, gint32 pos);
 void gtkpod_playlist_updated(Playlist *playlist);
 void gtkpod_track_updated(Track *track);
+
+void gtkpod_broadcast_preference_change(gchar *preference_name, gint value);
+void gtkpod_tracks_reordered();
 
 void gtkpod_register_exporter(GList *(*export_tks_as_gchar_func)(iTunesDB *source_db, iTunesDB *dest_db, gchar *tracks), GList *(*export_tks_as_glist_func)(iTunesDB *source_db, iTunesDB *dest_db, GList *tracks));
 void gtkpod_unregister_exporter();

@@ -1,7 +1,6 @@
 <?xml version="1.0" ?><!DOCTYPE glade-interface  SYSTEM 'glade-2.0.dtd'><!--*- mode: xml -*--><glade-interface>
   <widget class="GtkWindow" id="details_window">
     <property name="title" translatable="yes">Details</property>
-    <property name="icon">gtkpod-icon-48.png</property>
     <child>
       <widget class="GtkVBox" id="details_container"><property name="orientation">GTK_ORIENTATION_VERTICAL</property>
         <property name="visible">True</property>

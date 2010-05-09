@@ -42,4 +42,11 @@
 		   attribute="Location"
 		   value="details_editor:DetailsEditorPlugin"/>
   </plugin>
+  <plugin name="Preferences Plugin"
+	      url="http://www.gtkpod.org/plugins/"
+		  mandatory="yes">
+		  <require group="Anjuta Plugin"
+		   attribute="Location"
+		   value="core_prefs:CorePrefsPlugin"/>
+  </plugin>
 </anjuta>

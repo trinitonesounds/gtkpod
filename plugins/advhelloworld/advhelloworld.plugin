@@ -1,4 +1,0 @@
-[Anjuta Plugin]
-Location=advhelloworld:AdvHelloWorldPlugin
-Name=AdvHelloWorld Plugin
-Description=An Advanced HelloWorld plugin for gtkpod

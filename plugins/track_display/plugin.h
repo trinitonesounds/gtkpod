@@ -38,6 +38,14 @@
 #define UI_FILE GTKPOD_UI_DIR"/track_display.ui"
 #define GLADE_FILE GTKPOD_GLADE_DIR"/track_display.glade"
 
+extern GType track_display_plugin_get_type (GTypeModule *module);
+#define TRACK_DISPLAY_TYPE_PLUGIN         (track_display_plugin_get_type (NULL))
+#define TRACK_DISPLAY_PLUGIN(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), TRACK_DISPLAY_TYPE_PLUGIN, TrackDisplayPlugin))
+#define TRACK_DISPLAY_PLUGIN_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST ((k), TRACK_DISPLAY_TYPE_PLUGIN, TrackDisplayPluginClass))
+#define TRACK_DISPLAY_IS_PLUGIN(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), TRACK_DISPLAY_TYPE_PLUGIN))
+#define TRACK_DISPLAY_IS_PLUGIN_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), TRACK_DISPLAY_TYPE_PLUGIN))
+#define TRACK_DISPLAY_PLUGIN_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), TRACK_DISPLAY_TYPE_PLUGIN, TrackDisplayPluginClass))
+
 typedef struct _TrackDisplayPlugin TrackDisplayPlugin;
 typedef struct _TrackDisplayPluginClass TrackDisplayPluginClass;
 
@@ -47,6 +55,7 @@ struct _TrackDisplayPlugin {
     GtkWidget *track_window;
     gint uiid;
     GtkActionGroup *action_group;
+    GtkWidget *prefs;
 };
 
 struct _TrackDisplayPluginClass {

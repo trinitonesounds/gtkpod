@@ -12,7 +12,7 @@ AM_CONFIG_HEADER(config.h)
 #
 LIBGTKPOD_MAJOR_VERSION=0
 LIBGTKPOD_MINOR_VERSION=99
-LIBGTKPOD_MICRO_VERSION=15
+LIBGTKPOD_MICRO_VERSION=17
 # If you need a modifier for the version number. 
 # Normally empty, but can be used to make "fixup" releases.
 LIBGTKPOD_EXTRAVERSION=GIT
@@ -286,8 +286,6 @@ doc/Makefile
 doc/figures/Makefile
 libgtkpod/Makefile
 plugins/Makefile
-plugins/helloworld/Makefile
-plugins/advhelloworld/Makefile
 plugins/exporter/Makefile
 plugins/playlist_display/Makefile
 plugins/playlist_display/icons/Makefile
@@ -306,8 +304,45 @@ plugins/playlist_display/icons/hicolor/scalable/Makefile
 plugins/playlist_display/icons/hicolor/scalable/places/Makefile
 plugins/repository_editor/Makefile
 plugins/sorttab_display/Makefile
+plugins/sorttab_display/icons/Makefile
+plugins/sorttab_display/icons/hicolor/Makefile
+plugins/sorttab_display/icons/hicolor/16x16/Makefile
+plugins/sorttab_display/icons/hicolor/16x16/places/Makefile
+plugins/sorttab_display/icons/hicolor/22x22/Makefile
+plugins/sorttab_display/icons/hicolor/22x22/places/Makefile
+plugins/sorttab_display/icons/hicolor/24x24/Makefile
+plugins/sorttab_display/icons/hicolor/24x24/places/Makefile
+plugins/sorttab_display/icons/hicolor/32x32/Makefile
+plugins/sorttab_display/icons/hicolor/32x32/places/Makefile
+plugins/sorttab_display/icons/hicolor/48x48/Makefile
+plugins/sorttab_display/icons/hicolor/48x48/places/Makefile
 plugins/track_display/Makefile
+plugins/track_display/icons/Makefile
+plugins/track_display/icons/hicolor/Makefile
+plugins/track_display/icons/hicolor/16x16/Makefile
+plugins/track_display/icons/hicolor/16x16/places/Makefile
+plugins/track_display/icons/hicolor/22x22/Makefile
+plugins/track_display/icons/hicolor/22x22/places/Makefile
+plugins/track_display/icons/hicolor/24x24/Makefile
+plugins/track_display/icons/hicolor/24x24/places/Makefile
+plugins/track_display/icons/hicolor/32x32/Makefile
+plugins/track_display/icons/hicolor/32x32/places/Makefile
+plugins/track_display/icons/hicolor/48x48/Makefile
+plugins/track_display/icons/hicolor/48x48/places/Makefile
 plugins/details_editor/Makefile
+plugins/core_preferences/Makefile
+plugins/core_preferences/icons/Makefile
+plugins/core_preferences/icons/hicolor/Makefile
+plugins/core_preferences/icons/hicolor/16x16/Makefile
+plugins/core_preferences/icons/hicolor/16x16/places/Makefile
+plugins/core_preferences/icons/hicolor/22x22/Makefile
+plugins/core_preferences/icons/hicolor/22x22/places/Makefile
+plugins/core_preferences/icons/hicolor/24x24/Makefile
+plugins/core_preferences/icons/hicolor/24x24/places/Makefile
+plugins/core_preferences/icons/hicolor/32x32/Makefile
+plugins/core_preferences/icons/hicolor/32x32/places/Makefile
+plugins/core_preferences/icons/hicolor/48x48/Makefile
+plugins/core_preferences/icons/hicolor/48x48/places/Makefile
 ])
 
 echo "

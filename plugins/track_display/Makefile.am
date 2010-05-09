@@ -17,6 +17,8 @@ track_display_pixmaps_DATA =
 track_display_plugindir = $(gtkpod_plugin_dir)
 track_display_plugin_DATA = $(plugin_file)
 
+SUBDIRS = icons
+
 include ../plugins.mk
 
 # The plugin
@@ -25,6 +27,7 @@ plugin_LTLIBRARIES = libtrack_display.la
 # Plugin sources
 libtrack_display_la_SOURCES = 	plugin.c plugin.h \
 								track_display_actions.c track_display_actions.h \
+								track_display_preferences.c track_display_preferences.h \
 								display_tracks.c display_tracks.h \
 								rb_cell_renderer_rating.c rb_cell_renderer_rating.h \
 								rb_rating_helper.c rb_rating_helper.h \

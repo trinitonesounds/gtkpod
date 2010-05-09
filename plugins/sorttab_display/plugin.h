@@ -37,9 +37,16 @@
 #include <libanjuta/anjuta-plugin.h>
 
 /* Stock IDs */
-
 #define UI_FILE GTKPOD_UI_DIR"/sorttab_display.ui"
 #define GLADE_FILE GTKPOD_GLADE_DIR"/sorttab_display.glade"
+
+extern GType sorttab_display_plugin_get_type (GTypeModule *module);
+#define SORTTAB_DISPLAY_TYPE_PLUGIN         (sorttab_display_plugin_get_type (NULL))
+#define SORTTAB_DISPLAY_PLUGIN(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), SORTTAB_DISPLAY_TYPE_PLUGIN, SorttabDisplayPlugin))
+#define SORTTAB_DISPLAY_PLUGIN_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST ((k), SORTTAB_DISPLAY_TYPE_PLUGIN, SorttabDisplayPluginClass))
+#define SORTTAB_DISPLAY_IS_PLUGIN(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), SORTTAB_DISPLAY_TYPE_PLUGIN))
+#define SORTTAB_DISPLAY_IS_PLUGIN_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), SORTTAB_DISPLAY_TYPE_PLUGIN))
+#define SORTTAB_DISPLAY_PLUGIN_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), SORTTAB_DISPLAY_TYPE_PLUGIN, SorttabDisplayPluginClass))
 
 typedef struct _SorttabDisplayPlugin SorttabDisplayPlugin;
 typedef struct _SorttabDisplayPluginClass SorttabDisplayPluginClass;
@@ -49,6 +56,7 @@ struct _SorttabDisplayPlugin {
     GtkWidget *st_paned;
     gint uiid;
     GtkActionGroup *action_group;
+    GtkWidget *prefs;
 };
 
 struct _SorttabDisplayPluginClass {

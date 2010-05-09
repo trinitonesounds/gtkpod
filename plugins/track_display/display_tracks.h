@@ -31,6 +31,7 @@
 
 #include "plugin.h"
 #include "libgtkpod/gtkpod_app_iface.h"
+#include "libgtkpod/misc_conversion.h"
 
 void tm_create_track_display(GtkWidget *parent);
 void tm_destroy_widgets(void);
@@ -48,5 +49,6 @@ void track_display_set_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data);
 void track_display_set_sort_enablement(GtkPodApp *app, gboolean flag, gpointer data);
 void track_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data);
 void track_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data);
+void track_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data);
 
 #endif /* DISPLAY_TRACKS_H_ */

@@ -5,8 +5,8 @@ plugin_in_files = $(plugin_file)
 AM_CPPFLAGS = \
     -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
     -DGTKPOD_DATA_DIR=\"$(gtkpod_data_dir)\" \
-    -DGTKPDO_PLUGIN_DIR=\"$(gtkpod_plugin_dir)\" \
-    -DGTKPDO_IMAGE_DIR=\"$(gtkpod_image_dir)\" \
+    -DGTKPOD_PLUGIN_DIR=\"$(gtkpod_plugin_dir)\" \
+    -DGTKPOD_IMAGE_DIR=\"$(gtkpod_image_dir)\" \
     -DGTKPOD_GLADE_DIR=\"$(gtkpod_glade_dir)\" \
     -DGTKPOD_UI_DIR=\"$(gtkpod_ui_dir)\" \
     -DPACKAGE_DATA_DIR=\"$(datadir)\" \
@@ -42,13 +42,23 @@ create-ui-link: create-ui-dir
 	sudo ln -s `pwd`/$(plugin_name).ui $(gtkpod_ui_dir)/$(plugin_name).ui;
 
 create-glade-link: create-glade-dir
-	if test -e $(gtkpod_glade_dir)/$(plugin_name).glade; then \
-		# File already exists. Replacing ..." \
-		sudo rm -f $(gtkpod_glade_dir)/$(plugin_name).glade; \
+	if test -e `pwd`/$(plugin_name).glade; then \
+		if test -e $(gtkpod_glade_dir)/$(plugin_name).glade; then \
+			# File already exists. Replacing ..." \
+			sudo rm -f $(gtkpod_glade_dir)/$(plugin_name).glade; \
+		fi; \
+		# Creating link for $(plugin_name).glade" \
+		sudo ln -s `pwd`/$(plugin_name).glade $(gtkpod_glade_dir)/$(plugin_name).glade; \
 	fi; \
-	# Creating link for $(plugin_name).glade" \
-	sudo ln -s `pwd`/$(plugin_name).glade $(gtkpod_glade_dir)/$(plugin_name).glade;
-
+	if test -e `pwd`/$(plugin_name).xml; then \
+		if test -e $(gtkpod_glade_dir)/$(plugin_name).xml; then \
+			# File already exists. Replacing ..." \
+			sudo rm -f $(gtkpod_glade_dir)/$(plugin_name).xml; \
+		fi; \
+		# Creating link for $(plugin_name).xml" \
+		sudo ln -s `pwd`/$(plugin_name).xml $(gtkpod_glade_dir)/$(plugin_name).xml; \
+	fi;
+	
 # Copy icons
 copy-icons-dir: create-icons-dir
 	if test -e `pwd`/icons; then \

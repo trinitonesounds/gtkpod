@@ -30,11 +30,16 @@
 #endif
 
 #include <glib.h>
+#include <libanjuta/interfaces/ianjuta-preferences.h>
 #include "libgtkpod/stock_icons.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "plugin.h"
 #include "display_tracks.h"
 #include "track_display_actions.h"
+#include "track_display_preferences.h"
+
+#define ICON_FILE "track_display-track-category.png"
+#define TAB_NAME "Track Display"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -104,6 +109,7 @@ static gboolean activate_track_display_plugin(AnjutaPlugin *plugin) {
     g_signal_connect (gtkpod_app, SIGNAL_SORT_ENABLEMENT, G_CALLBACK (track_display_set_sort_enablement), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (track_display_track_removed_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_TRACK_UPDATED, G_CALLBACK (track_display_track_updated_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_PREFERENCE_CHANGE, G_CALLBACK (track_display_preference_changed_cb), NULL);
 
     gtk_widget_show_all(track_display_plugin->track_window);
     anjuta_shell_add_widget(plugin->shell, track_display_plugin->track_window, "TrackDisplayPlugin", "Playlist Tracks", NULL, ANJUTA_SHELL_PLACEMENT_TOP, NULL);
@@ -153,8 +159,47 @@ static void track_display_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_track_display_plugin;
 }
 
+static void
+ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e)
+{
+    gchar *file;
+    GdkPixbuf *pixbuf;
+
+    TrackDisplayPlugin* plugin = TRACK_DISPLAY_PLUGIN(ipref);
+    plugin->prefs = init_track_display_preferences();
+    if (plugin->prefs == NULL)
+        return;
+
+    file = g_build_filename(GTKPOD_IMAGE_DIR, "hicolor/48x48/places", ICON_FILE, NULL);
+    pixbuf = gdk_pixbuf_new_from_file (file, NULL);
+    anjuta_preferences_dialog_add_page (
+            ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)),
+            "gtkpod-track-display-settings",
+            _(TAB_NAME),
+            pixbuf,
+            plugin->prefs);
+    g_free(file);
+    g_object_unref (pixbuf);
+}
+
+static void
+ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e)
+{
+    anjuta_preferences_remove_page(prefs, _(TAB_NAME));
+    TrackDisplayPlugin* plugin = TRACK_DISPLAY_PLUGIN(ipref);
+    gtk_widget_destroy(plugin->prefs);
+}
+
+
+static void
+ipreferences_iface_init(IAnjutaPreferencesIface* iface)
+{
+    iface->merge = ipreferences_merge;
+    iface->unmerge = ipreferences_unmerge;
+}
+
 ANJUTA_PLUGIN_BEGIN (TrackDisplayPlugin, track_display_plugin);
+ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);
 ANJUTA_PLUGIN_END;
 
 ANJUTA_SIMPLE_PLUGIN (TrackDisplayPlugin, track_display_plugin);
-

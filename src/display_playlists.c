@@ -2185,3 +2185,10 @@ void playlist_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, 
 
     pm_remove_track(current_playlist, old_track);
 }
+
+void playlist_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data) {
+    gchar *pref_name = pfname;
+    if (g_str_equal(pref_name, "pm_sort")) {
+        pm_sort(value);
+    }
+}

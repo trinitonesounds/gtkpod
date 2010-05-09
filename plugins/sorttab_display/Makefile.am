@@ -21,7 +21,7 @@ LEX_OUTPUT_ROOT = lex.yy
 sorttab_display_plugindir = $(gtkpod_plugin_dir)
 sorttab_display_plugin_DATA = $(plugin_file)
 
-SUBDIRS =
+SUBDIRS = icons
 
 include ../plugins.mk
 
@@ -32,6 +32,7 @@ plugin_LTLIBRARIES = libsorttab_display.la
 libsorttab_display_la_SOURCES = plugin.c plugin.h \
 								sorttab_conversion.c sorttab_conversion.h \
 								sorttab_display_actions.c sorttab_display_actions.h \
+								sorttab_display_preferences.c sorttab_display_preferences.h \
 								display_sorttabs.c display_sorttabs.h \
 								date_parser2.l date_parser.l date_parser.h
 

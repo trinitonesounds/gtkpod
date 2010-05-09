@@ -1341,8 +1341,7 @@ void tm_rows_reordered(void) {
          sort tabs */
         if (changed) {
             data_changed(itdb);
-            g_message("TODO - do we need to st_adopt_order_in_playlist");
-            //            st_adopt_order_in_playlist();
+            gtkpod_tracks_reordered();
         }
     }
 }
@@ -2733,3 +2732,12 @@ void track_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data) 
 
     tm_track_changed(track);
 }
+
+void track_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data) {
+    gchar *pref_name = pfname;
+    if (g_str_equal(pref_name, "tm_sort")) {
+        tm_sort_counter(-1);
+        tm_sort(prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
+    }
+}
+

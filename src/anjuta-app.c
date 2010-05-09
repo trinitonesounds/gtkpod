@@ -635,22 +635,19 @@ void anjuta_app_layout_reset(AnjutaApp *app) {
 }
 
 void anjuta_app_install_preferences(AnjutaApp *app) {
-    GtkBuilder* builder = gtk_builder_new();
-    GError* error = NULL;
+    gchar *img_path;
+    GdkPixbuf *pixbuf;
     GtkWidget *notebook, *shortcuts, *plugins, *remember_plugins;
-    gchar* pref_ui_file = NULL;
 
-    /* Create preferences page */
-    pref_ui_file = g_build_filename(get_ui_dir(), "preferences.ui", NULL);
-    gtk_builder_add_from_file(builder, pref_ui_file, &error);
-    if (error) {
-        g_warning("Could not load general preferences: %s",
-                error->message);
-        g_error_free(error);
-        return;
-    }
-    anjuta_preferences_add_from_builder(app->preferences, builder, "General", _("General"), ICON_FILE);
-    notebook = GTK_WIDGET (gtk_builder_get_object (builder, "General"));
+    notebook = gtk_notebook_new();
+    img_path = anjuta_res_get_pixmap_file (ICON_FILE);
+    pixbuf = gdk_pixbuf_new_from_file (img_path, NULL);
+    anjuta_preferences_dialog_add_page (
+                ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (app->preferences)),
+                "plugins",
+                _("Plugins"),
+                pixbuf,
+                notebook);
     shortcuts = anjuta_ui_get_accel_editor(ANJUTA_UI (app->ui));
     plugins = anjuta_plugin_manager_get_plugins_page(app->plugin_manager);
     remember_plugins = anjuta_plugin_manager_get_remembered_plugins_page(app->plugin_manager);
@@ -661,8 +658,11 @@ void anjuta_app_install_preferences(AnjutaApp *app) {
 
     gtk_notebook_append_page(GTK_NOTEBOOK (notebook), plugins, gtk_label_new(_("Installed plugins")));
     gtk_notebook_append_page(GTK_NOTEBOOK (notebook), remember_plugins, gtk_label_new(_("Preferred plugins")));
+    gtk_notebook_append_page(GTK_NOTEBOOK (notebook), shortcuts, gtk_label_new(_("Shortcuts")));
 
-	g_object_unref(builder);
+    g_object_unref (notebook);
+    g_free (img_path);
+    g_object_unref (pixbuf);
 }
 
 /* AnjutaShell Implementation */
