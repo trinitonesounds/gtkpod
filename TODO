@@ -68,15 +68,14 @@ Sorttab Menu
 - Filter Plugin
 - Progress bar for saving and lengthy operations
 
-- Preference windows for each plugin - Should they add items to standard windows or contribute their own
-  - prefsdlg.c - Refactor preferences dialog to appear as pages anjuta preferences dialog
+# Preference windows for each plugin - Should they add items to standard windows or contribute their own
+  # prefsdlg.c - Refactor preferences dialog to appear as pages anjuta preferences dialog
 
-#plugin remaining
+# plugin remaining
 display_coverart.*
 display_photo.*
 fetchcover.*
-info.*
-infodlg.*
+# info.* / infodlg.*
 help.*
 
 

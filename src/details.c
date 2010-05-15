@@ -1278,7 +1278,6 @@ static void details_set_track(Track *track) {
  * replace. */
 static void details_set_tracks(GList *tracks) {
     GList *gl;
-    g_return_if_fail (tracks);
 
     if (! details_view) {
         return;
@@ -1314,29 +1313,32 @@ static void details_set_tracks(GList *tracks) {
         details_view->tracks = NULL;
     }
 
-    details_view->itdb = ((Track *) tracks->data)->itdb;
+    if (tracks) {
+        details_view->itdb = ((Track *) tracks->data)->itdb;
+        details_view->orig_tracks = g_list_copy(tracks);
 
-    details_view->orig_tracks = g_list_copy(tracks);
+        /* Create duplicated list to work on until "Apply" is pressed */
+        for (gl = g_list_last(tracks); gl; gl = gl->prev) {
+            Track *tr_dup;
+            ExtraTrackData *etr_dup;
+            Track *tr = gl->data;
+            g_return_if_fail (tr);
 
-    /* Create duplicated list to work on until "Apply" is pressed */
-    for (gl = g_list_last(tracks); gl; gl = gl->prev) {
-        Track *tr_dup;
-        ExtraTrackData *etr_dup;
-        Track *tr = gl->data;
-        g_return_if_fail (tr);
-
-        tr_dup = itdb_track_duplicate(tr);
-        etr_dup = tr_dup->userdata;
-        g_return_if_fail (etr_dup);
-        etr_dup->tchanged = FALSE;
-        etr_dup->tartwork_changed = FALSE;
-        details_view->tracks = g_list_prepend(details_view->tracks, tr_dup);
+            tr_dup = itdb_track_duplicate(tr);
+            etr_dup = tr_dup->userdata;
+            g_return_if_fail (etr_dup);
+            etr_dup->tchanged = FALSE;
+            etr_dup->tartwork_changed = FALSE;
+            details_view->tracks = g_list_prepend(details_view->tracks, tr_dup);
+        }
     }
 
     details_view->track = NULL;
     details_view->changed = FALSE;
 
-    details_set_track(g_list_nth_data(details_view->tracks, 0));
+    if (details_view->tracks) {
+        details_set_track(g_list_nth_data(details_view->tracks, 0));
+    }
 }
 
 void details_remove_track(Track *track) {

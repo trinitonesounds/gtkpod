@@ -2253,8 +2253,6 @@ static gboolean tm_selection_changed_cb(gpointer data) {
         if (col_id != -1)
             tm_set_search_column(col_id);
     }
-    g_message("TODO - update info track view");
-    //    info_update_track_view();
 
     g_message("TODO - update coverart view");
     /* update the coverart display */

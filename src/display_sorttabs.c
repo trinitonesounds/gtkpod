@@ -1948,9 +1948,6 @@ static gboolean st_selection_changed_cb(gpointer data) {
         //        }
     }
 
-    g_message("TODO: st_selection_changed_cb: space_data_update");
-    //    space_data_update();
-
 #if DEBUG_TIMING
     g_get_current_time (&time);
     printf ("st_selection_changed_cb exit:  %ld.%06ld sec\n",
