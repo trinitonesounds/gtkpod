@@ -1,7 +1,7 @@
 /*
 |  Copyright (C) 2007 Maia Kozheva <sikon at users sourceforge net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
@@ -31,10 +31,11 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include "infodlg.h"
-#include "misc.h"
+#include "plugin.h"
 #include "info.h"
-#include "prefs.h"
-#include "misc_track.h"
+#include "libgtkpod/misc.h"
+#include "libgtkpod/prefs.h"
+#include "libgtkpod/misc_track.h"
 
 enum info_dialog_columns
 {
@@ -94,7 +95,7 @@ static GtkListStore *store = NULL;
 static void info_dialog_set_text (gint row, gint column, const gchar *text)
 {
 	GtkTreeIter iter;
-	
+
 	gtk_tree_model_iter_nth_child (GTK_TREE_MODEL (store), &iter, NULL, row);
 	gtk_list_store_set (store, &iter, column, text, -1);
 }
@@ -139,16 +140,18 @@ static void update_view_generic (gint column, GList *list)
 static void on_info_dialog_update_track_view ()
 {
 	update_view_generic (C_DISPLAYED_TRACKS,
-						 display_get_selected_members (prefs_get_int ("sort_tab_num") - 1));
+						 gtkpod_get_displayed_tracks());
 
 	update_view_generic (C_SELECTED_TRACKS,
-						 display_get_selection (prefs_get_int("sort_tab_num")));
+						 gtkpod_get_selected_tracks());
 }
 
 static void on_info_dialog_update_playlist_view ()
 {
+    Playlist *pl = gtkpod_get_current_playlist();
+    if (!pl) return;
 	update_view_generic (C_SELECTED_PLAYLIST,
-						 display_get_selected_members (-1));
+						 pl->members);
 
 }
 
@@ -158,22 +161,22 @@ static void on_info_dialog_update_totals_view ()
     iTunesDB *itdb;
     gdouble nt_filesize, del_filesize;
     guint32 nt_tracks, del_tracks;
-	
+
 	itdb = get_itdb_ipod ();
-	
+
 	if (itdb)
 	{
 		pl = itdb_playlist_mpl (itdb);
 		g_return_if_fail (pl);
 		update_view_generic (C_TOTAL_IPOD, pl->members);
-		
+
 		info_dialog_set_uint (R_NUMBER_OF_PLAYLISTS,
 							  C_TOTAL_IPOD,
 							  itdb_playlists_number (itdb) - 1);
-		
+
 		gp_info_nontransferred_tracks (itdb, &nt_filesize, &nt_tracks);
 		gp_info_deleted_tracks (itdb, &del_filesize, &del_tracks);
-		
+
 		info_dialog_set_uint (R_NON_TRANSFERRED_TRACKS, C_TOTAL_IPOD, nt_tracks);
 		info_dialog_set_size (R_FILE_SIZE_NON_TRANSFERRED, C_TOTAL_IPOD, nt_filesize);
 		info_dialog_set_uint (R_DELETED_TRACKS, C_TOTAL_IPOD, del_tracks);
@@ -192,15 +195,15 @@ static void on_info_dialog_update_totals_view ()
 		else
 			info_dialog_set_text (R_EFFECTIVE_FREE_SPACE, C_TOTAL_IPOD, _("offline"));
 	}
-	
+
 	itdb = get_itdb_local ();
-	
+
 	if (itdb)
 	{
 		pl = itdb_playlist_mpl (itdb);
 		g_return_if_fail (pl);
 		update_view_generic (C_TOTAL_LOCAL, pl->members);
-		
+
 		info_dialog_set_uint (R_NUMBER_OF_PLAYLISTS,
 							  C_TOTAL_LOCAL,
 							  itdb_playlists_number (itdb) - 1);
@@ -212,7 +215,7 @@ static void setup_info_dialog ()
 	gint i;
 	gint defx = prefs_get_int("size_info.x");
 	gint defy = prefs_get_int("size_info.y");
-	
+
 	gtk_window_set_default_size (GTK_WINDOW (info_dialog), defx, defy);
 
 	tree = GTK_TREE_VIEW (gtkpod_xml_get_widget (info_xml, "info_tree"));
@@ -223,7 +226,7 @@ static void setup_info_dialog ()
 								G_TYPE_STRING,
 								G_TYPE_STRING,
 								G_TYPE_STRING);
-	
+
 	for (i = 0; column_headers[i]; i++)
 	{
 		const gchar *hdr = column_headers[i][0] ? _(column_headers[i]) : column_headers[i];
@@ -235,7 +238,7 @@ static void setup_info_dialog ()
 					  "foreground",
 					  i % 2 ? "#000000" : "#000000",
 					  NULL);
-		
+
 		gtk_tree_view_insert_column_with_attributes (tree,
 													 -1,
 													 hdr,
@@ -244,17 +247,17 @@ static void setup_info_dialog ()
 													 i,
 													 NULL);
 	}
-	
+
 	for (i = 0; row_headers[i]; i++)
 	{
 		GtkTreeIter iter;
 		gchar *text = g_strdup_printf ("<b>%s</b>", _(row_headers[i]));
-		
+
 		gtk_list_store_append (store, &iter);
 		gtk_list_store_set (store, &iter, C_DESCRIPTION, text, -1);
 		g_free (text);
 	}
-	
+
 	gtk_tree_view_set_model (tree, GTK_TREE_MODEL (store));
 	g_object_unref (store);
 
@@ -275,11 +278,11 @@ G_MODULE_EXPORT void open_info_dialog ()
 		return;
 	}
 
-	info_xml = gtkpod_xml_new (xml_file, "info_dialog");
+	info_xml = gtkpod_xml_new (GLADE_FILE, "info_dialog");
 	info_dialog = gtkpod_xml_get_widget (info_xml, "info_dialog");
-	
+
 	setup_info_dialog();
-	
+
 	glade_xml_signal_autoconnect (info_xml);
 	prefs_set_int("info_window", TRUE);
 	gtk_widget_show(info_dialog);
@@ -295,11 +298,9 @@ G_MODULE_EXPORT void close_info_dialog ()
 	unregister_info_update_totals_view (on_info_dialog_update_totals_view);
 	info_dialog_update_default_sizes ();
 
-	prefs_set_int("info_window", FALSE);
-    display_set_info_window_menu ();
 	gtk_widget_destroy(info_dialog);
 	g_object_unref(info_xml);
-	
+
 	info_dialog = NULL;
 	info_xml = NULL;
 }

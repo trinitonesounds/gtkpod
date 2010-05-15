@@ -49,4 +49,11 @@
 		   attribute="Location"
 		   value="core_prefs:CorePrefsPlugin"/>
   </plugin>
+  <plugin name="Info Display Plugin"
+	      url="http://www.gtkpod.org/plugins/"
+		  mandatory="yes">
+		  <require group="Anjuta Plugin"
+		   attribute="Location"
+		   value="info_display:InfoDisplayPlugin"/>
+  </plugin>
 </anjuta>

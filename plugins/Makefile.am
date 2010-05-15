@@ -7,6 +7,7 @@ SUBDIRS = . \
 	sorttab_display \
 	track_display \
 	details_editor \
-	core_preferences
+	core_preferences \
+	info_display
 
 # indent

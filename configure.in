@@ -343,6 +343,7 @@ plugins/core_preferences/icons/hicolor/32x32/Makefile
 plugins/core_preferences/icons/hicolor/32x32/places/Makefile
 plugins/core_preferences/icons/hicolor/48x48/Makefile
 plugins/core_preferences/icons/hicolor/48x48/places/Makefile
+plugins/info_display/Makefile
 ])
 
 echo "

@@ -1,0 +1,14 @@
+<!--*- xml -*-->
+<ui>
+	<menubar name="MenuMain">
+   		<menu name="MenuView" action="ActionMenuView">
+			<placeholder name="PlaceholderViewMenus">
+				<separator/>
+				<menuitem name="Info Window" action="ActionDisplayInfoWindow" />
+				<separator/>
+            </placeholder>
+   		</menu>
+	</menubar>
+	<toolbar name="ToolbarMain">
+	</toolbar>
+</ui>
