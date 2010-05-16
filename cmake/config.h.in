@@ -9,6 +9,9 @@
 /* Define if you have curl support */
 #cmakedefine HAVE_CURL
 
+/* Define to 1 if you have the <endian.h> header file. */
+#cmakedefine HAVE_ENDIAN_H 1
+
 /* Define if you have the flac library */
 #cmakedefine HAVE_FLAC
 
@@ -20,6 +23,12 @@
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #cmakedefine HAVE_INTTYPES_H 1
+
+/* Define to 1 if you have the <mp4v2/itmf_tags.h> header file. */
+#cmakedefine HAVE_MP4V2_ITMF_TAGS_H 1
+
+/* Define to 1 if you have the <mp4v2/platform.h> header file. */
+#cmakedefine HAVE_MP4V2_PLATFORM_H 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #cmakedefine HAVE_STDINT_H 1

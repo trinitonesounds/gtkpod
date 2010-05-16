@@ -35,6 +35,7 @@ endif()
 
 include(flex)
 include(CheckIncludeFile)
+include(CheckIncludeFiles)
 
 find_package(PkgConfig REQUIRED)
 find_package(GTK2 REQUIRED)
@@ -42,6 +43,15 @@ find_package(Glade REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(Libgpod REQUIRED)
 find_package(ID3tag REQUIRED)
+CHECK_INCLUDE_FILES(endian.h HAVE_ENDIAN_H)
+CHECK_INCLUDE_FILES(mp4v2/platform.h HAVE_MP4V2_PLATFORM_H)
+
+# This is hacky... the result is a test file that looks like this:
+# #include <mp4v2/platform.h>
+# typedef void* MP4FileHandle;//>
+# #include <mp4v2/itmf_tags.h>
+# This matches the way it's used in the code, and the autoconf test
+CHECK_INCLUDE_FILES("mp4v2/platform.h>\ntypedef void* MP4FileHandle\;//;mp4v2/itmf_tags.h" HAVE_MP4V2_ITMF_TAGS_H)
 
 set(OPT_INCLUDES "")
 set(OPT_CFLAGS "")
