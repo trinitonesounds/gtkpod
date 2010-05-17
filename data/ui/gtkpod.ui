@@ -36,9 +36,6 @@
 				<placeholder name="PlaceHolderHelpDevel" >
 						<separator name="separator1" />
 						<menuitem name="UserManual" action="ActionHelpUserManual" />
-						<menuitem name="Tutorial" action="ActionHelpTutorial" />
-						<menuitem name="AdvancedTutorial" action="ActionHelpAdvancedTutorial" />
-						<menuitem name="FaqManual" action="ActionHelpFaqManual" />
 				</placeholder>
 				<placeholder name="PlaceHolderHelpWeb" >
 					<separator name="separator1" />

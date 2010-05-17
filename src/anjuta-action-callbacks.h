@@ -31,9 +31,6 @@ void on_set_preferences1_activate (GtkAction * action, AnjutaApp *app);
 
 /* Help actions */
 void on_help_manual_activate (GtkAction *action, gpointer data);
-void on_help_tutorial_activate (GtkAction *action, gpointer data);
-void on_help_advanced_tutorial_activate (GtkAction *action, gpointer data);
-void on_help_faqs_activate (GtkAction *action, gpointer data);
 
 void on_url_home_activate (GtkAction * action, gpointer user_data);
 void on_url_bugs_activate (GtkAction * action, gpointer user_data);

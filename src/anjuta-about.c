@@ -27,6 +27,7 @@
 #include <libanjuta/anjuta-plugin-manager.h>
 
 #include "anjuta-about.h"
+#include "directories.h"
 
 #define LICENSE_FILE "/COPYING"
 
@@ -187,17 +188,19 @@ about_box_new ()
 		g_error_free (error);
 	}
 
-	pix = gdk_pixbuf_new_from_file(GTKPOD_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "data" G_DIR_SEPARATOR_S "gtkpod-logo.png", NULL);
+	gchar *pixpath = g_build_filename(get_icon_dir(), "48x48", "gtkpod.png", NULL);
+	g_message(pixpath);
+	pix = gdk_pixbuf_new_from_file(pixpath, NULL);
 	dialog = gtk_about_dialog_new();
-	gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog), "Anjuta");
+	gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog), "gtkpod");
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), VERSION);
 	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog),
-		_("Copyright (c) Naba Kumar"));
+		_("Copyright (c) Jorg Schuler et al."));
 	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog),
-		_("Integrated Development Environment"));
+		_("iPod Management Platform"));
 	gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog),
 		license);
-	gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), "http://www.anjuta.org");
+	gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), "http://www.gtkpod.org");
 	gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), pix);
 
 	gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(dialog), authors);
@@ -209,6 +212,7 @@ about_box_new ()
 	about_free_credit();
 	g_object_unref (pix);
 	g_free (license);
+	g_free(pixpath);
 	return dialog;
 }
 

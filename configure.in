@@ -249,11 +249,13 @@ dnl Setup Plugin directories
 dnl ------------------------
 gtkpod_plugin_dir='$(libdir)/$(PACKAGE)'
 gtkpod_data_dir='$(datadir)/$(PACKAGE)/data'
+gtkpod_doc_dir='$(datadir)/$(PACKAGE)/doc'
 gtkpod_ui_dir='$(gtkpod_data_dir)/ui'
 gtkpod_glade_dir='$(gtkpod_data_dir)/glade'
 gtkpod_image_dir='$(gtkpod_data_dir)/icons'
 AC_SUBST(gtkpod_plugin_dir)
 AC_SUBST(gtkpod_data_dir)
+AC_SUBST(gtkpod_doc_dir)
 AC_SUBST(gtkpod_ui_dir)
 AC_SUBST(gtkpod_glade_dir)
 AC_SUBST(gtkpod_image_dir)

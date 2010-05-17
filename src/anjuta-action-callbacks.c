@@ -36,6 +36,7 @@
 #include "anjuta-app.h"
 #include "anjuta-about.h"
 #include "anjuta-action-callbacks.h"
+#include "directories.h"
 
 void
 on_exit1_activate (GtkAction * action, AnjutaApp *app)
@@ -118,52 +119,29 @@ on_set_preferences1_activate (GtkAction * action, AnjutaApp *app)
 	gtk_widget_show (preferences_dialog);
 }
 
-static void
-help_activate (GtkWidget *parent, const gchar *doc_id, const gchar *item)
-{
-	anjuta_util_help_display (parent, doc_id, item);
-}
-
 void
-on_help_manual_activate (GtkAction *action, gpointer data)
-{
-	help_activate (data, "anjuta-manual", "anjuta-manual.xml");
-}
-
-void
-on_help_tutorial_activate (GtkAction *action, gpointer data)
-{
-	help_activate (data, "anjuta-tutorial", "anjuta-tutorial.xml");
-}
-
-void
-on_help_advanced_tutorial_activate (GtkAction *action, gpointer data)
-{
-	help_activate (data, "anjuta-advanced-tutorial", "anjuta-advanced-tutorial.xml");
-}
-
-void
-on_help_faqs_activate (GtkAction *action, gpointer data)
-{
-	help_activate (data, "anjuta-faqs", "anjuta-faqs.xml");
+on_help_manual_activate (GtkAction *action, gpointer data) {
+    gchar *helpurl = g_build_filename("file://", get_doc_dir(), "gtkpod.html", NULL);
+    anjuta_res_url_show(helpurl);
+    g_free(helpurl);
 }
 
 void
 on_url_home_activate (GtkAction * action, gpointer user_data)
 {
-	anjuta_res_url_show("http://www.anjuta.org");
+    anjuta_res_url_show("http://www.gtkpod.org");
 }
 
 void
 on_url_bugs_activate (GtkAction * action, gpointer user_data)
 {
-	anjuta_res_url_show("http://bugzilla.gnome.org/simple-bug-guide.cgi");
+    anjuta_res_url_show("http://sourceforge.net/tracker/?group_id=67873&atid=519273");
 }
 
 void
 on_url_faqs_activate (GtkAction * action, gpointer user_data)
 {
-	anjuta_res_url_show("mailto:anjuta-list@lists.sourceforge.net");
+    anjuta_res_url_show("mailto:gtkpod-questions@lists.sourceforge.net");
 }
 
 void

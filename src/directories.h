@@ -15,6 +15,8 @@ void init_directories(char *argv[]);
 
 gchar * get_data_dir();
 
+gchar * get_doc_dir();
+
 gchar * get_glade_dir();
 
 gchar * get_icon_dir();

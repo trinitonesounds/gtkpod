@@ -38,6 +38,7 @@ static void debug_print_directories();
 #endif
 
 static gchar *datadir = NULL;
+static gchar *docdir = NULL;
 static gchar *icondir = NULL;
 static gchar *plugindir = NULL;
 static gchar *uidir = NULL;
@@ -46,6 +47,7 @@ static gchar *gladedir = NULL;
 void init_directories(char *argv[]) {
 //    g_printf("argv[0] = %s\n", argv[0]);
     datadir = init_dir(argv, "data", GTKPOD_DATA_DIR);
+    docdir = init_dir(argv, "doc", GTKPOD_DOC_DIR);
     icondir = init_dir(argv, "data/icons", GTKPOD_IMAGE_DIR);
     uidir = init_dir(argv, "data/ui", GTKPOD_UI_DIR);
     gladedir = init_dir(argv, "data/glade", GTKPOD_GLADE_DIR);
@@ -60,6 +62,7 @@ void init_directories(char *argv[]) {
 #if LOCALDEBUG
 static void debug_print_directories() {
     g_printf("data directory: %s\n", get_data_dir());
+    g_printf("doc directory: %s\n", get_doc_dir());
     g_printf("ui directory: %s\n", get_ui_dir());
     g_printf("glade directory: %s\n", get_glade_dir());
     g_printf("icon directory: %s\n", get_icon_dir());
@@ -114,6 +117,10 @@ static gchar * init_dir(char *argv[], gchar *localdir, gchar *fullinstalldir) {
 
 gchar * get_data_dir() {
     return datadir;
+}
+
+gchar * get_doc_dir() {
+    return docdir;
 }
 
 gchar * get_glade_dir() {

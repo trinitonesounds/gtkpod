@@ -76,6 +76,6 @@ display_coverart.*
 display_photo.*
 fetchcover.*
 # info.* / infodlg.*
-help.*
+# help.*
 
 

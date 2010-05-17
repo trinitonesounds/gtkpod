@@ -12,6 +12,7 @@ AM_CFLAGS = \
        -DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
        -DGTKPOD_PLUGIN_DIR=\""$(gtkpod_plugin_dir)"\" \
        -DGTKPOD_DATA_DIR=\""$(gtkpod_data_dir)"\" \
+       -DGTKPOD_DOC_DIR=\""$(gtkpod_doc_dir)"\" \
        -DGTKPOD_UI_DIR=\""$(gtkpod_ui_dir)"\" \
        -DGTKPOD_GLADE_DIR=\""$(gtkpod_glade_dir)"\" \
        -DGTKPOD_IMAGE_DIR=\""$(gtkpod_image_dir)"\"
