@@ -2285,21 +2285,6 @@ static void st_adjust_visible(void) {
         if (i < PANED_NUM_ST)
             gtk_widget_hide(GTK_WIDGET (st_paned[i]));
     }
-
-    g_message("TODO: Need to work out how to disable more and less sort tab actions");
-    //    /* activate / deactiveate "less sort tabs" menu item */
-    //    w = gtkpod_xml_get_widget(main_window_xml, "less_sort_tabs");
-    //    if (n == 0)
-    //        gtk_widget_set_sensitive(w, FALSE);
-    //    else
-    //        gtk_widget_set_sensitive(w, TRUE);
-    //
-    //    /* activate / deactiveate "more sort tabs" menu item */
-    //    w = gtkpod_xml_get_widget(main_window_xml, "more_sort_tabs");
-    //    if (n == SORT_TAB_MAX)
-    //        gtk_widget_set_sensitive(w, FALSE);
-    //    else
-    //        gtk_widget_set_sensitive(w, TRUE);
 }
 
 /* Make the appropriate number of sort tab instances visible */

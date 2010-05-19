@@ -38,13 +38,21 @@
 #include "libgtkpod/file.h"
 
 void on_more_sort_tabs_activate(GtkAction *action, SorttabDisplayPlugin* plugin) {
-    prefs_set_int("sort_tab_num", prefs_get_int("sort_tab_num") + 1);
+    int sort_tab_num = prefs_get_int("sort_tab_num") + 1;
+    prefs_set_int("sort_tab_num", sort_tab_num);
     st_show_visible();
+
+    gtk_action_set_sensitive(action, sort_tab_num < SORT_TAB_MAX);
+    gtk_action_set_sensitive(plugin->fewer_filtertabs_action, sort_tab_num > 0);
 }
 
 void on_fewer_sort_tabs_activate(GtkAction *action, SorttabDisplayPlugin* plugin) {
-    prefs_set_int("sort_tab_num", prefs_get_int("sort_tab_num") - 1);
+    int sort_tab_num = prefs_get_int("sort_tab_num") - 1;
+    prefs_set_int("sort_tab_num", sort_tab_num);
     st_show_visible();
+
+    gtk_action_set_sensitive(plugin->more_filtertabs_action, sort_tab_num < SORT_TAB_MAX);
+    gtk_action_set_sensitive(action, sort_tab_num > 1);
 }
 
 static void delete_selected_entry(DeleteAction deleteaction, gchar *text) {

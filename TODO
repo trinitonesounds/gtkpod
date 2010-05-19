@@ -4,8 +4,7 @@ Prospective Plugins:
 	filter bar
 #  track editor
 	play tracks now
-    info window
-	help
+#    info window
 	synchronizer
 	download coverart plugin
 	photo panel
@@ -38,12 +37,12 @@ Edit Menu
 - Randomize current playlist
 - Save Displayed track order
 - Repo iPod Options
-- Preferences
+# Preferences
 
 View Menu
-- Info Window
-- More / Fewer filter tabs
-- Arrange Filter Tabs
+# Info Window
+# More / Fewer filter tabs
+# Arrange Filter Tabs (Not creating)
 
 Tools Menu
 - Play Now
@@ -52,8 +51,8 @@ Tools Menu
 - Synchronize All, Contacts, Calendar, Notes
 
 Help Menu
-- Help Contents
-- About box
+# Help Contents
+# About box
 
 Playlists Plugin
 # popup menu

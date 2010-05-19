@@ -20,8 +20,10 @@
    		</menu>
 		<menu name="MenuView" action="ActionMenuView">
 			<placeholder name="PlaceholderSorttabDisplayActionMenuView">
+				<separator/>
 				<menuitem name="More Filter Tabs" action="ActionViewMoreFilterTabs"/>
 				<menuitem name="Less Filter Tabs" action="ActionViewFewerFilterTabs"/>
+				<separator/>
 			</placeholder>
 		</menu>
 	</menubar>

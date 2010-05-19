@@ -57,6 +57,8 @@ struct _SorttabDisplayPlugin {
     gint uiid;
     GtkActionGroup *action_group;
     GtkWidget *prefs;
+    GtkAction *more_filtertabs_action;
+    GtkAction *fewer_filtertabs_action;
 };
 
 struct _SorttabDisplayPluginClass {

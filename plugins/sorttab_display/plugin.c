@@ -48,22 +48,6 @@ static gpointer parent_class;
 static GtkActionEntry sorttab_actions[] =
     {
         {
-            "ActionViewMoreFilterTabs", /* Action name */
-            NULL, /* Stock icon */
-            N_("_More Filter Tabs"), /* Display label */
-            NULL, /* short-cut */
-            NULL, /* Tooltip */
-            G_CALLBACK (on_more_sort_tabs_activate) /* callback */
-        },
-        {
-            "ActionViewFewerFilterTabs", /* Action name */
-            NULL, /* Stock icon */
-            N_("_Fewer Filter Tabs"), /* Display label */
-            NULL, /* short-cut */
-            NULL, /* Tooltip */
-            G_CALLBACK (on_fewer_sort_tabs_activate) /* callback */
-        },
-        {
             "ActionDeleteSelectedEntry",
             GTK_STOCK_DELETE,
             N_("Selected Filter Tab Entry from Playlist"),
@@ -112,6 +96,14 @@ static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
             = anjuta_ui_add_action_group_entries(ui, "ActionGroupSorttabDisplay", _("Sorttab Display"), sorttab_actions, G_N_ELEMENTS (sorttab_actions), GETTEXT_PACKAGE, TRUE, plugin);
     sorttab_display_plugin->action_group = action_group;
 
+    sorttab_display_plugin->more_filtertabs_action = gtk_action_new ("ActionViewMoreFilterTabs", _("More Filter Tabs"), NULL, GTK_STOCK_GO_UP);
+    g_signal_connect(sorttab_display_plugin->more_filtertabs_action, "activate", G_CALLBACK(on_more_sort_tabs_activate), sorttab_display_plugin);
+    gtk_action_group_add_action (sorttab_display_plugin->action_group, sorttab_display_plugin->more_filtertabs_action);
+
+    sorttab_display_plugin->fewer_filtertabs_action = gtk_action_new ("ActionViewFewerFilterTabs", _("Fewer Filter Tabs"), NULL, GTK_STOCK_GO_DOWN);
+    g_signal_connect(sorttab_display_plugin->fewer_filtertabs_action, "activate", G_CALLBACK(on_fewer_sort_tabs_activate), sorttab_display_plugin);
+    gtk_action_group_add_action (sorttab_display_plugin->action_group, sorttab_display_plugin->fewer_filtertabs_action);
+
     /* Merge UI */
     sorttab_display_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
 
@@ -136,6 +128,9 @@ static gboolean deactivate_sorttab_display_plugin(AnjutaPlugin *plugin) {
 
     sorttab_display_plugin = (SorttabDisplayPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
+
+    sorttab_display_plugin->more_filtertabs_action = NULL;
+    sorttab_display_plugin->fewer_filtertabs_action = NULL;
 
     /* Remove widgets from Shell */
     anjuta_shell_remove_widget(plugin->shell, sorttab_display_plugin->st_paned, NULL);
