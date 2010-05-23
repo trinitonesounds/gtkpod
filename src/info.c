@@ -518,6 +518,10 @@ void info_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data) {
     info_update();
 }
 
+void info_display_itdb_changed_cb(GtkPodApp *app, gpointer itdb, gpointer data) {
+    info_update();
+}
+
 void info_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data) {
     info_update();
 }

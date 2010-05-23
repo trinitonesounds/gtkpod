@@ -76,6 +76,8 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (info_display_track_removed_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_TRACKS_DISPLAYED, G_CALLBACK (info_display_tracks_displayed_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_TRACKS_SELECTED, G_CALLBACK (info_display_tracks_selected_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_ITDB_DATA_CHANGED, G_CALLBACK (info_display_itdb_changed_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_ITDB_DATA_SAVED, G_CALLBACK (info_display_itdb_changed_cb), NULL);
 
     return TRUE; /* FALSE if activation failed */
 }

@@ -36,6 +36,7 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "charset.h"
+#include "exporter_iface.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -2088,6 +2089,7 @@ void copy_tracks_to_target_playlist(GList *tracks, Playlist *t_pl) {
     Track *first;
     Playlist *mpl;
     gint n;
+    ExporterInterface *exporter;
 
     g_return_if_fail (tracks);
     g_return_if_fail (t_pl);
@@ -2096,10 +2098,13 @@ void copy_tracks_to_target_playlist(GList *tracks, Playlist *t_pl) {
     mpl = itdb_playlist_mpl(t_pl->itdb);
     g_return_if_fail(mpl);
 
+    exporter = gtkpod_get_exporter();
+    g_return_if_fail(exporter);
+
     if (tracks) {
         first = tracks->data;
         g_return_if_fail (first);
-        addtracks = gtkpod_export_tracks_as_glist(first->itdb, t_pl->itdb, tracks);
+        addtracks = exporter->transfer_track_glist_between_itdbs(first->itdb, t_pl->itdb, tracks);
         add_trackglist_to_playlist(t_pl, addtracks);
     }
     n = g_list_length(addtracks);
@@ -2117,6 +2122,7 @@ void copy_tracks_to_target_itdb(GList *tracks, iTunesDB *t_itdb) {
     Track *first = tracks->data;
     Playlist *mpl;
     gint n;
+    ExporterInterface *exporter;
 
     g_return_if_fail(tracks);
     g_return_if_fail(t_itdb);
@@ -2124,7 +2130,10 @@ void copy_tracks_to_target_itdb(GList *tracks, iTunesDB *t_itdb) {
     mpl = itdb_playlist_mpl(t_itdb);
     g_return_if_fail(mpl);
 
-    addtracks = gtkpod_export_tracks_as_glist(first->itdb, t_itdb, tracks);
+    exporter = gtkpod_get_exporter();
+    g_return_if_fail(exporter);
+
+    addtracks = exporter->transfer_track_glist_between_itdbs(first->itdb, t_itdb, tracks);
 
     if (addtracks) {
         add_trackglist_to_playlist(mpl, addtracks);

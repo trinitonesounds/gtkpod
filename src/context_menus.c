@@ -151,23 +151,20 @@ GtkWidget *add_sync_playlist_with_dirs(GtkWidget *menu) {
     return hookup_menu_item(menu, _("Sync Playlist with Dir(s)"), GTK_STOCK_REFRESH, G_CALLBACK (sync_dirs), NULL);
 }
 
-static void copy_selected_tracks_to_target_itdb (GtkMenuItem *mi, gpointer *userdata)
-{
+static void copy_selected_tracks_to_target_itdb(GtkMenuItem *mi, gpointer *userdata) {
     iTunesDB *t_itdb = *userdata;
     g_return_if_fail (t_itdb);
 
     if (gtkpod_get_selected_tracks())
-        copy_tracks_to_target_itdb (gtkpod_get_selected_tracks(), t_itdb);
+        copy_tracks_to_target_itdb(gtkpod_get_selected_tracks(), t_itdb);
 }
 
-
-static void copy_selected_tracks_to_target_playlist (GtkMenuItem *mi, gpointer *userdata)
-{
+static void copy_selected_tracks_to_target_playlist(GtkMenuItem *mi, gpointer *userdata) {
     Playlist *t_pl = *userdata;
     g_return_if_fail (t_pl);
 
     if (gtkpod_get_selected_tracks())
-        copy_tracks_to_target_playlist (gtkpod_get_selected_tracks(), t_pl);
+        copy_tracks_to_target_playlist(gtkpod_get_selected_tracks(), t_pl);
 }
 
 GtkWidget *add_copy_selected_tracks_to_target_itdb(GtkWidget *menu, const gchar *title) {
@@ -223,3 +220,76 @@ GtkWidget *add_copy_selected_tracks_to_target_itdb(GtkWidget *menu, const gchar 
     return mi;
 }
 
+static void create_playlist_from_entries(GtkMenuItem *mi, gpointer data) {
+    if (gtkpod_get_current_itdb() && gtkpod_get_selected_tracks())
+        generate_new_playlist(gtkpod_get_current_itdb(), gtkpod_get_selected_tracks());
+}
+
+GtkWidget *add_create_new_playlist(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Create new Playlist"), GTK_STOCK_JUSTIFY_LEFT, G_CALLBACK (create_playlist_from_entries), NULL);
+}
+
+/**
+ * create_playlist_file - write a playlist file containing the
+ * currently selected tracks.
+ * @mi - the menu item selected
+ * @data - ignored, should be NULL
+ */
+static void create_playlist_file(GtkWidget *w, gpointer data)
+{
+    if (!gtkpod_has_exporter())
+        return;
+
+    ExporterInterface *exporter = gtkpod_get_exporter();
+
+    if(gtkpod_get_selected_tracks())
+        exporter->export_tracks_to_playlist_file(gtkpod_get_selected_tracks());
+}
+
+GtkWidget *add_create_playlist_file (GtkWidget *menu)
+{
+    if (!gtkpod_has_exporter())
+        return NULL;
+
+    return hookup_menu_item (menu, _("Create Playlist File"),
+              GTK_STOCK_SAVE_AS,
+              G_CALLBACK (create_playlist_file), NULL);
+}
+
+/* Display track details options */
+static void edit_track_details(GtkMenuItem *mi, gpointer data) {
+    g_return_if_fail (gtkpod_get_selected_tracks());
+
+    gtkpod_edit_details(gtkpod_get_selected_tracks());
+}
+
+GtkWidget *add_edit_track_details(GtkWidget *menu) {
+    if (!gtkpod_has_details_editor())
+        return menu;
+
+    return hookup_menu_item(menu, _("Edit Track Details"), GTK_STOCK_PREFERENCES, G_CALLBACK (edit_track_details), NULL);
+}
+
+/**
+ * export_entries - export the currently selected files to disk
+ * @mi - the menu item selected
+ * @data - ignored, should be NULL
+ */
+static void export_entries(GtkWidget *w, gpointer data)
+{
+    ExporterInterface *exporter = gtkpod_get_exporter();
+    g_return_if_fail(exporter);
+
+    if(gtkpod_get_selected_tracks())
+        exporter->export_tracks_as_files (gtkpod_get_selected_tracks(), NULL, FALSE, NULL);
+}
+
+GtkWidget *add_copy_track_to_filesystem (GtkWidget *menu)
+{
+    if (! gtkpod_has_exporter())
+        return NULL;
+
+    return hookup_menu_item (menu, _("Copy Tracks to Filesystem"),
+              GTK_STOCK_SAVE_AS,
+              G_CALLBACK (export_entries), NULL);
+}

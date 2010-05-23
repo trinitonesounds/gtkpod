@@ -488,7 +488,7 @@ static void export_files_store_option_settings(struct fcd *fcd) {
 }
 
 /******************************************************************
- export_files_init - Export files off of your ipod to an arbitrary
+ export_tracks_as_files - Export files off of your ipod to an arbitrary
  directory, specified by the file chooser dialog
 
  @tracks    - GList with data of type (Track*) we want to write
@@ -498,7 +498,8 @@ static void export_files_store_option_settings(struct fcd *fcd) {
  @message   - message to be displayed above the display of tracks
 
  ******************************************************************/
-void export_files_init(GList *tracks, GList **filenames, gboolean display, gchar *message) {
+void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, gchar *message) {
+    g_message("Copying tracks to file");
     gint response;
     GtkWidget *win, *options, *message_box;
     struct fcd *fcd;
@@ -633,7 +634,7 @@ void export_files_init(GList *tracks, GList **filenames, gboolean display, gchar
 
  The returned GList must be g_list_free()'ed after it is no longer
  used. */
-GList *export_trackglist_when_necessary(iTunesDB *itdb_s, iTunesDB *itdb_d, GList *tracks) {
+GList *transfer_track_glist_between_itdbs(iTunesDB *itdb_s, iTunesDB *itdb_d, GList *tracks) {
     GList *gl;
     GList *existing_tracks = NULL;
     GList *new_tracks = NULL;
@@ -682,7 +683,7 @@ GList *export_trackglist_when_necessary(iTunesDB *itdb_s, iTunesDB *itdb_d, GLis
         Playlist *mpl = itdb_playlist_mpl(itdb_d);
         g_return_val_if_fail (mpl, NULL);
 
-        export_files_init(new_tracks, &filenames, TRUE, _("The following tracks have to be copied to your harddisk"));
+        export_tracks_as_files(new_tracks, &filenames, TRUE, _("The following tracks have to be copied to your harddisk"));
         /* add copied tracks to MPL of @itdb_d */
         while (new_tracks && filenames) {
             Track *dtr, *added_track;
@@ -741,10 +742,10 @@ GList *export_trackglist_when_necessary(iTunesDB *itdb_s, iTunesDB *itdb_d, GLis
     return g_list_concat(existing_tracks, added_tracks);
 }
 
-/* same as export_trackglist_when_necessary() but the tracks are
+/* same as transfer_track_glist_between_itdbs() but the tracks are
  represented as pointers in ASCII format. This function parses the
- tracks in @data and calls export_trackglist_when_necessary() */
-GList *export_tracklist_when_necessary(iTunesDB *itdb_s, iTunesDB *itdb_d, gchar *data) {
+ tracks in @data and calls transfer_track_glist_between_itdbs() */
+GList *transfer_track_names_between_itdbs(iTunesDB *itdb_s, iTunesDB *itdb_d, gchar *data) {
     GList *result;
     Track *tr;
     GList *tracks = NULL;
@@ -759,7 +760,7 @@ GList *export_tracklist_when_necessary(iTunesDB *itdb_s, iTunesDB *itdb_d, gchar
         tracks = g_list_append(tracks, tr);
     }
 
-    result = export_trackglist_when_necessary(itdb_s, itdb_d, tracks);
+    result = transfer_track_glist_between_itdbs(itdb_s, itdb_d, tracks);
 
     g_list_free(tracks);
 
@@ -917,11 +918,11 @@ static void export_playlist_file_response(GtkDialog *fc, gint response, struct f
 }
 
 /******************************************************************
- export_playlist_file_init - Create a playlist file to a location
+ export_tracks_to_playlist_file - Create a playlist file to a location
  specified by the file selection dialog.
  @tracks: GList with tracks to be in playlist file.
  ******************************************************************/
-void export_playlist_file_init(GList *tracks) {
+void export_tracks_to_playlist_file(GList *tracks) {
     GtkWidget *win;
     GtkWidget *options;
     struct fcd *fcd = g_malloc0(sizeof(struct fcd));

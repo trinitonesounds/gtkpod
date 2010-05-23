@@ -32,6 +32,7 @@
 
 #include <glib.h>
 #include "libgtkpod/gtkpod_app_iface.h"
+#include "libgtkpod/exporter_iface.h"
 #include "plugin.h"
 #include "file_export.h"
 #include "exporter_actions.h"
@@ -83,7 +84,9 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     /* Merge UI */
     exporter_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
 
-    gtkpod_register_exporter(export_tracklist_when_necessary, export_trackglist_when_necessary);
+    g_return_val_if_fail(EXPORTER_IS_EXPORTER(exporter_plugin), TRUE);
+
+    gtkpod_register_exporter (EXPORTER(exporter_plugin));
 
 //    g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (exporter_track_removed_cb), NULL);
 
@@ -124,8 +127,16 @@ static void exporter_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_plugin;
 }
 
-ANJUTA_PLUGIN_BEGIN (ExporterPlugin, exporter_plugin);ANJUTA_PLUGIN_END
-;
+static void exporter_iface_init(ExporterInterface *iface) {
+    iface->export_tracks_as_files = export_tracks_as_files;
+    iface->export_tracks_to_playlist_file = export_tracks_to_playlist_file;
+    iface->transfer_track_glist_between_itdbs = transfer_track_glist_between_itdbs;
+    iface->transfer_track_names_between_itdbs = transfer_track_names_between_itdbs;
+}
+
+ANJUTA_PLUGIN_BEGIN (ExporterPlugin, exporter_plugin);
+ANJUTA_PLUGIN_ADD_INTERFACE(exporter, EXPORTER_TYPE);
+ANJUTA_PLUGIN_END;
 
 ANJUTA_SIMPLE_PLUGIN (ExporterPlugin, exporter_plugin)
 ;

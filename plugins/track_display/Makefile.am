@@ -27,6 +27,7 @@ plugin_LTLIBRARIES = libtrack_display.la
 # Plugin sources
 libtrack_display_la_SOURCES = 	plugin.c plugin.h \
 								track_display_actions.c track_display_actions.h \
+								track_display_context_menu.c track_display_context_menu.h \
 								track_display_preferences.c track_display_preferences.h \
 								display_tracks.c display_tracks.h \
 								rb_cell_renderer_rating.c rb_cell_renderer_rating.h \

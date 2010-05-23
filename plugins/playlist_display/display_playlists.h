@@ -61,7 +61,8 @@ void playlist_display_update_itdb_cb (GtkPodApp *app, gpointer olditdb, gpointer
 void playlist_display_select_playlist_cb (GtkPodApp *app, gpointer pl, gpointer data);
 void playlist_display_playlist_added_cb(GtkPodApp *app, gpointer pl, gint32 pos, gpointer data);
 void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer data);
-void playlist_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data);
+void playlist_display_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data);
 void playlist_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data);
+void playlist_display_itdb_data_changed_cb(GtkPodApp *app, gpointer itdb, gpointer data);
 
 #endif /* __DISPLAY_PLAYLIST_H__ */

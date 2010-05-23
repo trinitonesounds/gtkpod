@@ -41,6 +41,7 @@
 #include "libgtkpod/gp_private.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "display_sorttabs.h"
+#include "sorttab_display_context_menu.h"
 #include "plugin.h"
 
 typedef struct {
@@ -2377,8 +2378,7 @@ static gboolean st_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer 
         switch (e->button) {
         case 3:
             st_select_current_position(GPOINTER_TO_INT(data), e->x, e->y);
-            g_message("TODO: context menu for sorttabs display");
-            //            st_context_menu_init(GPOINTER_TO_INT(data));
+            st_context_menu_init(GPOINTER_TO_INT(data));
             return TRUE;
         default:
             break;

@@ -502,6 +502,9 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     gboolean path_ok;
     gboolean del_src;
 
+    ExporterInterface *exporter = gtkpod_get_exporter();
+    g_return_if_fail(exporter);
+
     /* printf ("drag_data_received: x y a: %d %d %d\n", x, y, dc->suggested_action); */
 
     g_return_if_fail (widget);
@@ -606,7 +609,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
 
         if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) || (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER)) { /* drop into existing playlist */
             /* copy files from iPod if necessary */
-            GList *trackglist = gtkpod_export_tracks_as_gchar(tr_s->itdb, pl->itdb, data->data);
+            GList *trackglist = exporter->transfer_track_names_between_itdbs(tr_s->itdb, pl->itdb, data->data);
             if (trackglist) {
                 add_trackglist_to_playlist(pl, trackglist);
                 g_list_free(trackglist);
@@ -628,7 +631,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
 
             if (plitem) {
                 /* copy files from iPod if necessary */
-                GList *trackglist = gtkpod_export_tracks_as_gchar(tr_s->itdb, pl->itdb, data->data);
+                GList *trackglist = exporter->transfer_track_names_between_itdbs(tr_s->itdb, pl->itdb, data->data);
                 if (trackglist) {
                     add_trackglist_to_playlist(plitem, trackglist);
                     g_list_free(trackglist);
@@ -757,7 +760,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
             g_return_if_fail (pl_d);
 
             /* copy files from iPod if necessary */
-            trackglist = gtkpod_export_tracks_as_glist(pl_s->itdb, pl_d->itdb, pl_s->members);
+            trackglist = exporter->transfer_track_glist_between_itdbs(pl_s->itdb, pl_d->itdb, pl_s->members);
 
             /* check if copying went fine (trackglist is empty if
              pl_s->members is empty, so this must not be counted as
@@ -2179,7 +2182,7 @@ void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer 
     pm_remove_playlist(old_playlist, TRUE);
 }
 
-void playlist_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data) {
+void playlist_display_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data) {
     Track *old_track = tk;
     Playlist *current_playlist = gtkpod_get_current_playlist();
 
@@ -2191,4 +2194,9 @@ void playlist_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gin
     if (g_str_equal(pref_name, "pm_sort")) {
         pm_sort(value);
     }
+}
+
+void playlist_display_itdb_data_changed_cb(GtkPodApp *app, gpointer itdb, gpointer data) {
+    iTunesDB *changed_itdb = itdb;
+    pm_itdb_name_changed(changed_itdb);
 }

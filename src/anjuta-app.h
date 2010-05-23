@@ -45,6 +45,7 @@ struct _AnjutaApp
 {
 	GtkWindow parent;
 	GtkWidget *toolbar;
+	GtkWidget *menubar;
 	GtkWidget *view_menu;
 	GtkWidget *dock;
  	GdlDockLayout *layout_manager;

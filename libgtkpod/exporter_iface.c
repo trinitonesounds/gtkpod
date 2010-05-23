@@ -24,30 +24,33 @@
  |
  |  This product is not supported/written/published by Apple!
  |
- |  $Id$
  */
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+    #include <config.h>
 #endif
 
-#include "exporter_actions.h"
-#include "file_export.h"
-#include "libgtkpod/gtkpod_app_iface.h"
-#include <gdk/gdk.h>
+#include "exporter_iface.h"
 
-void on_export_tracks_to_playlist_file(GtkAction *action, ExporterPlugin* plugin) {
-    GList *tracks = gtkpod_get_selected_tracks();
-    g_return_if_fail(tracks);
+static void exporter_base_init(ExporterInterface *klass) {
+    static gboolean initialized = FALSE;
 
-    ExporterInterface *exporter = gtkpod_get_exporter();
-    exporter->export_tracks_to_playlist_file(tracks);
+    if (!initialized) {
+        klass->export_tracks_as_files = NULL;
+        klass->export_tracks_to_playlist_file = NULL;
+        klass->transfer_track_glist_between_itdbs = NULL;
+        klass->transfer_track_names_between_itdbs = NULL;
+        initialized = TRUE;
+    }
 }
 
-void on_export_tracks_to_filesystem(GtkAction *action, ExporterPlugin* plugin) {
-    GList *tracks = gtkpod_get_selected_tracks();
-    g_return_if_fail(tracks);
-
-    ExporterInterface *exporter = gtkpod_get_exporter();
-    exporter->export_tracks_as_files(tracks, NULL, FALSE, NULL);
+GType exporter_get_type(void) {
+    static GType type = 0;
+    if (!type) {
+        static const GTypeInfo info =
+            { sizeof(ExporterInterface), (GBaseInitFunc) exporter_base_init, NULL, NULL, NULL, NULL, 0, 0, NULL };
+        type = g_type_register_static(G_TYPE_INTERFACE, "ExporterInterface", &info, 0);
+        g_type_interface_add_prerequisite(type, G_TYPE_OBJECT);
+    }
+    return type;
 }

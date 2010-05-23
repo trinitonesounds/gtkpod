@@ -135,6 +135,9 @@ void st_show_visible(void);
 TabEntry *st_get_selected_entry(gint inst);
 gint st_get_sort_tab_number(gchar *text);
 void st_delete_entry_head(gint inst, DeleteAction deleteaction);
+void st_stop_editing(gint inst, gboolean cancel);
+void st_sort(GtkSortType order);
+void st_remove_entry(TabEntry *entry, guint32 inst);
 
 void cal_open_calendar(gint inst, T_item item);
 

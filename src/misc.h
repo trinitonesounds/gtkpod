@@ -90,6 +90,7 @@ void gtkpod_shutdown (void);
 
 gchar *get_allowed_percent_char (void);
 
+void add_blocked_widget(GtkWidget *w);
 void block_widgets (void);
 void release_widgets (void);
 void update_blocked_widget (GtkWidget *w, gboolean sens);

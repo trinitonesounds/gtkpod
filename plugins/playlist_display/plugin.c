@@ -35,6 +35,7 @@
 #include "libgtkpod/misc_playlist.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/tool_menu_action.h"
+#include "libgtkpod/misc.h"
 #include "plugin.h"
 #include "display_playlists.h"
 #include "playlist_display_actions.h"
@@ -305,6 +306,8 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     g_signal_connect (gtkpod_app, SIGNAL_ITDB_REMOVED, G_CALLBACK (playlist_display_itdb_removed_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_ITDB_UPDATED, G_CALLBACK (playlist_display_update_itdb_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_PREFERENCE_CHANGE, G_CALLBACK (playlist_display_preference_changed_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_ITDB_DATA_CHANGED, G_CALLBACK (playlist_display_itdb_data_changed_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_ITDB_DATA_SAVED, G_CALLBACK (playlist_display_itdb_data_changed_cb), NULL);
 
     gtk_container_add(GTK_CONTAINER (playlist_display_plugin->pl_window), GTK_WIDGET (playlist_display_plugin->playlist_view));
     gtk_widget_show_all(playlist_display_plugin->pl_window);

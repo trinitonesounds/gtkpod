@@ -356,7 +356,7 @@ static void anjuta_app_finalize(GObject *widget) {
 
 static void anjuta_app_instance_init(AnjutaApp *app) {
     gint merge_id;
-    GtkWidget *menubar, *about_menu;
+    GtkWidget *about_menu;
     GtkWidget *view_menu, *hbox;
     GtkWidget *main_box;
     GtkWidget *dockbar;
@@ -445,9 +445,9 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
     gtk_window_add_accel_group(GTK_WINDOW (app), gtk_ui_manager_get_accel_group(GTK_UI_MANAGER (app->ui)));
 
     /* create main menu */
-    menubar = gtk_ui_manager_get_widget(GTK_UI_MANAGER (app->ui), "/MenuMain");
-    gtk_box_pack_start(GTK_BOX (main_box), menubar, FALSE, FALSE, 0);
-    gtk_widget_show(menubar);
+    app->menubar = gtk_ui_manager_get_widget(GTK_UI_MANAGER (app->ui), "/MenuMain");
+    gtk_box_pack_start(GTK_BOX (main_box), app->menubar, FALSE, FALSE, 0);
+    gtk_widget_show(app->menubar);
 
     /* create toolbar */
     app->toolbar = gtk_ui_manager_get_widget(GTK_UI_MANAGER (app->ui), "/ToolbarMain");

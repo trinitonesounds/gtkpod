@@ -76,6 +76,10 @@ void gtkpod_init(int argc, char *argv[]) {
     /* Set the glade xml file of the app */
     gtkpod_app_set_glade_xml(GTKPOD_GLADE_XML_FILE);
 
+    /* Add blocking widgets from the framework */
+    add_blocked_widget(app->toolbar);
+    add_blocked_widget(app->view_menu);
+
     status = anjuta_shell_get_status(ANJUTA_SHELL(app), NULL);
     anjuta_status_progress_add_ticks(status, 1);
 

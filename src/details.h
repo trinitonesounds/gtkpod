@@ -63,6 +63,5 @@ void destroy_details_editor();
 
 void details_editor_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data);
 void details_editor_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data);
-void details_editor_set_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data);
 
 #endif

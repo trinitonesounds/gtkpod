@@ -1879,9 +1879,7 @@ void data_changed(iTunesDB *itdb) {
     }
     else {
         eitdb->data_changed = TRUE;
-        g_message("TODO data_changed needs work to notify interested parties\n");
-        //        pm_itdb_name_changed(itdb);
-        //        space_data_update();
+        gtkpod_notify_data_changed(itdb);
     }
 }
 
@@ -1897,9 +1895,7 @@ void data_unchanged(iTunesDB *itdb) {
     if (eitdb->photo_data_changed == TRUE)
         eitdb->photo_data_changed = FALSE;
 
-    g_message("TODO data_unchanged notify\n");
-    //    pm_itdb_name_changed(itdb);
-    //    space_data_update();
+    gtkpod_notify_data_unchanged(itdb);
 }
 
 /* Check if all files are saved (i.e. none of the itdbs has the

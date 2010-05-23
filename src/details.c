@@ -1745,11 +1745,3 @@ void details_editor_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data) {
     GList *tracks = tks;
     details_set_tracks(tracks);
 }
-
-void details_editor_set_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data) {
-    Playlist *playlist = pl;
-
-    if (playlist && playlist->members) {
-        details_set_tracks(playlist->members);
-    }
-}

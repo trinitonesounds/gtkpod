@@ -75,5 +75,6 @@ void info_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data);
 void info_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data);
 void info_display_tracks_selected_cb(GtkPodApp *app, gpointer tk, gpointer data);
 void info_display_tracks_displayed_cb(GtkPodApp *app, gpointer tk, gpointer data);
+void info_display_itdb_changed_cb(GtkPodApp *app, gpointer itdb, gpointer data);
 
 #endif

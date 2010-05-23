@@ -24,30 +24,11 @@
  |
  |  This product is not supported/written/published by Apple!
  |
- |  $Id$
  */
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#ifndef TRACK_DISPLAY_CONTEXT_MENU_H_
+#define TRACK_DISPLAY_CONTEXT_MENU_H_
 
-#include "exporter_actions.h"
-#include "file_export.h"
-#include "libgtkpod/gtkpod_app_iface.h"
-#include <gdk/gdk.h>
+void tm_context_menu_init();
 
-void on_export_tracks_to_playlist_file(GtkAction *action, ExporterPlugin* plugin) {
-    GList *tracks = gtkpod_get_selected_tracks();
-    g_return_if_fail(tracks);
-
-    ExporterInterface *exporter = gtkpod_get_exporter();
-    exporter->export_tracks_to_playlist_file(tracks);
-}
-
-void on_export_tracks_to_filesystem(GtkAction *action, ExporterPlugin* plugin) {
-    GList *tracks = gtkpod_get_selected_tracks();
-    g_return_if_fail(tracks);
-
-    ExporterInterface *exporter = gtkpod_get_exporter();
-    exporter->export_tracks_as_files(tracks, NULL, FALSE, NULL);
-}
+#endif /* TRACK_DISPLAY_CONTEXT_MENU_H_ */

@@ -185,13 +185,6 @@ static void edit_properties(GtkMenuItem *mi, gpointer data) {
     gtkpod_edit_repository(gtkpod_get_current_playlist()->itdb, gtkpod_get_current_playlist());
 }
 
-/* Display track details options */
-static void edit_track_details(GtkMenuItem *mi, gpointer data) {
-    g_return_if_fail (gtkpod_get_selected_tracks());
-
-    gtkpod_edit_details(gtkpod_get_selected_tracks());
-}
-
 /* Save Changes */
 static void save_changes(GtkMenuItem *mi, gpointer data) {
     g_return_if_fail (gtkpod_get_current_playlist());
@@ -235,13 +228,6 @@ static GtkWidget *add_edit_repository_properties(GtkWidget *menu) {
     return hookup_menu_item(menu, _("Edit Repository Properties"), GTK_STOCK_PREFERENCES, G_CALLBACK (edit_properties), NULL);
 }
 
-static GtkWidget *add_edit_track_details (GtkWidget *menu) {
-    if (!gtkpod_has_details_editor())
-                return menu;
-
-    return hookup_menu_item(menu, _("Edit Track Details"), GTK_STOCK_PREFERENCES, G_CALLBACK (edit_track_details), NULL);
-}
-
 static GtkWidget *add_edit_playlist_properties(GtkWidget *menu) {
     if (!gtkpod_has_repository_editor())
             return menu;
@@ -272,11 +258,6 @@ void pm_context_menu_init(void) {
 
     if (!pm_get_selected_playlist())
         return;
-
-    if (menu) { /* free memory for last menu */
-        gtk_widget_destroy(menu);
-        menu = NULL;
-    }
 
     pl = pm_get_selected_playlist();
     if (!pl)

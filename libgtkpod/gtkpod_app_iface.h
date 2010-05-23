@@ -36,6 +36,7 @@
 #include <gtk/gtk.h>
 #include <glade/glade-xml.h>
 #include "itdb.h"
+#include "exporter_iface.h"
 #include "repository_editor_iface.h"
 #include "details_editor_iface.h"
 
@@ -59,6 +60,8 @@
 #define SIGNAL_SORT_ENABLEMENT "signal_sort_enablement"
 #define SIGNAL_PREFERENCE_CHANGE "signal_preference_change"
 #define SIGNAL_TRACKS_REORDERED "signal_tracks_reordered"
+#define SIGNAL_ITDB_DATA_CHANGED "signal_data_changed"
+#define SIGNAL_ITDB_DATA_SAVED "signal_data_saved"
 
 typedef void (*ConfHandler)(gpointer user_data1, gpointer user_data2);
 
@@ -97,6 +100,8 @@ enum
     ITDB_REMOVED,
     SORT_ENABLEMENT,
     PREFERENCE_CHANGE,
+    ITDB_DATA_CHANGED,
+    ITDB_DATA_SAVED,
     LAST_SIGNAL
 };
 
@@ -117,6 +122,8 @@ struct _GtkPodAppInterface {
     gboolean sort_enablement;
     /* xml filename */
     gchar *xml_file;
+    /* Exporter */
+    Exporter *exporter;
     /* Repository Editor */
     RepositoryEditor *repository_editor;
     /* Details Editor */
@@ -159,6 +166,10 @@ gint
         gtkpod_confirmation_simple(GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text, const gchar *accept_button_text);
 gint
         gtkpod_confirmation_hig(GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text, const gchar *accept_button_text, const gchar *cancel_button_text, const gchar *third_button_text, const gchar *help_context);
+
+void gtkpod_notify_data_changed(iTunesDB *itdb);
+void gtkpod_notify_data_unchanged(iTunesDB *itdb);
+
 iTunesDB* gtkpod_get_current_itdb();
 void gtkpod_set_current_itdb(iTunesDB* itdb);
 Playlist* gtkpod_get_current_playlist();
@@ -176,10 +187,11 @@ void gtkpod_track_updated(Track *track);
 void gtkpod_broadcast_preference_change(gchar *preference_name, gint value);
 void gtkpod_tracks_reordered();
 
-void gtkpod_register_exporter(GList *(*export_tks_as_gchar_func)(iTunesDB *source_db, iTunesDB *dest_db, gchar *tracks), GList *(*export_tks_as_glist_func)(iTunesDB *source_db, iTunesDB *dest_db, GList *tracks));
+void gtkpod_register_exporter(Exporter *exporter);
 void gtkpod_unregister_exporter();
-GList *gtkpod_export_tracks_as_gchar(iTunesDB *source_db, iTunesDB *dest_db, gchar *tracks);
-GList *gtkpod_export_tracks_as_glist(iTunesDB *source_db, iTunesDB *dest_d, GList *tracks);
+gboolean gtkpod_has_exporter();
+ExporterInterface *gtkpod_get_exporter();
+
 void gtkpod_display_widget(GtkWidget *widget);
 
 void gtkpod_register_repository_editor(RepositoryEditor *editor);

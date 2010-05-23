@@ -71,75 +71,63 @@ enum {
     BR_BLOCK, BR_RELEASE, BR_UPDATE
 };
 
+/* list with the widgets that are turned insensitive during
+     import/export...*/
+static GList *blocked_widgets = NULL;
+
 /* function to add one widget to the blocked_widgets list */
-static GList *add_blocked_widget(GList *blocked_widgets, gchar *name) {
-    g_message("TODO misc:add_blocked_widget - commented out\n");
-    //    GtkWidget *w;
-    //    struct blocked_widget *bw;
-    //    if((w = gtkpod_xml_get_widget (main_window_xml,  name)))
-    //    {
-    //    bw = g_malloc0 (sizeof (struct blocked_widget));
-    //    bw->widget = w;
-    //    /* we don't have to set the sensitive flag right now. It's
-    //     * done in "block_widgets ()" */
-    //    blocked_widgets = g_list_append (blocked_widgets, bw);
-    //    }
-    return blocked_widgets;
+void add_blocked_widget(GtkWidget *w) {
+    struct blocked_widget *bw;
+    if (w) {
+        bw = g_malloc0(sizeof(struct blocked_widget));
+        bw->widget = w;
+        /* we don't have to set the sensitive flag right now. It's
+         * done in "block_widgets ()" */
+        blocked_widgets = g_list_append(blocked_widgets, bw);
+    }
 }
 
 /* called by block_widgets() and release_widgets() */
 /* "block": TRUE = block, FALSE = release */
 static void block_release_widgets(gint action, GtkWidget *w, gboolean sens) {
-    /* list with the widgets that are turned insensitive during
-     import/export...*/
-    static GList *bws = NULL;
     static gint count = 0; /* how many times are the widgets blocked? */
     GList *l;
     struct blocked_widget *bw;
 
-    /* Create a list of widgets that are to be turned insensitive when
-     * importing/exporting, adding tracks or directories etc. */
-    if (bws == NULL) {
-        bws = add_blocked_widget(bws, "menubar");
-        bws = add_blocked_widget(bws, "load_ipods_button");
-        bws = add_blocked_widget(bws, "save_changes_button");
-        bws = add_blocked_widget(bws, "add_files_button");
-        bws = add_blocked_widget(bws, "add_dirs_button");
-        bws = add_blocked_widget(bws, "add_PL_button");
-        bws = add_blocked_widget(bws, "new_PL_button");
-        widgets_blocked = FALSE;
-    }
-
     switch (action) {
     case BR_BLOCK:
-        /* we must block the widgets */
         ++count; /* increase number of locks */
-        if (!widgets_blocked) { /* only block widgets, if they are not already blocked */
-            for (l = bws; l; l = l->next) {
-                bw = (struct blocked_widget *) l->data;
-                /* remember the state the widget was in before */
-                bw->sensitive = GTK_WIDGET_SENSITIVE (bw->widget);
-                gtk_widget_set_sensitive(bw->widget, FALSE);
-            }
-            widgets_blocked = TRUE;
+
+        if (widgets_blocked) {
+            break; // nothing to do
         }
+
+        /* we must block the widgets */
+        for (l = blocked_widgets; l; l = l->next) {
+            bw = (struct blocked_widget *) l->data;
+            /* remember the state the widget was in before */
+            bw->sensitive = GTK_WIDGET_SENSITIVE (bw->widget);
+            gtk_widget_set_sensitive(bw->widget, FALSE);
+        }
+        widgets_blocked = TRUE;
         break;
     case BR_RELEASE:
+        if (!widgets_blocked) {
+            break; // nothing to do
+        }
+        --count;
         /* release the widgets if --count == 0 */
-        if (widgets_blocked) { /* only release widgets, if they are blocked */
-            --count;
-            if (count == 0) {
-                for (l = bws; l; l = l->next) {
-                    bw = (struct blocked_widget *) l->data;
-                    gtk_widget_set_sensitive(bw->widget, bw->sensitive);
-                }
-                widgets_blocked = FALSE;
+        if (count == 0) {
+            for (l = blocked_widgets; l; l = l->next) {
+                bw = (struct blocked_widget *) l->data;
+                gtk_widget_set_sensitive(bw->widget, bw->sensitive);
             }
+            widgets_blocked = FALSE;
         }
         break;
     case BR_UPDATE:
         if (widgets_blocked) { /* only update widgets, if they are blocked */
-            for (l = bws; l; l = l->next) { /* find the required widget */
+            for (l = blocked_widgets; l; l = l->next) { /* find the required widget */
                 bw = (struct blocked_widget *) l->data;
                 if (bw->widget == w) { /* found -> set to new desired state */
                     bw->sensitive = sens;
@@ -1822,10 +1810,9 @@ void delete_populate_settings(struct DeleteData *dd, gchar **label, gchar **titl
  *
  * free memory, shutdown services and call gtk_main_quit ()
  */
-void gtkpod_shutdown ()
-{
+void gtkpod_shutdown() {
     /* stop accepting requests for playcount updates */
-    server_shutdown ();
+    server_shutdown();
 
     g_message("TODO - cleanup gphoto_window on shutdown");
     /* Change the windows back to track view to ensure the
@@ -1834,18 +1821,18 @@ void gtkpod_shutdown ()
     //gphoto_change_to_photo_window (FALSE);
 
     /* shut down conversion infrastructure */
-    file_convert_shutdown ();
+    file_convert_shutdown();
 
     /* Save prefs */
-    prefs_save ();
-    prefs_shutdown ();
+    prefs_save();
+    prefs_shutdown();
 
     xmlCleanupParser();
     xmlMemoryDump();
 
     mp4_close();
 
-    call_script ("gtkpod.out", NULL);
-    gtk_main_quit ();
+    call_script("gtkpod.out", NULL);
+    gtk_main_quit();
 }
 

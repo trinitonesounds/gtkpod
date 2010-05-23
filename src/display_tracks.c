@@ -49,6 +49,7 @@
 #include "display_tracks.h"
 #include "rb_cell_renderer_rating.h"
 #include "sort_window.h"
+#include "track_display_context_menu.h"
 
 /* reference to glade xml for use with track plugin */
 static GladeXML *track_glade = NULL;
@@ -2231,8 +2232,7 @@ static gboolean tm_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer 
             break;
         case 3:
             tm_select_current_position(e->x, e->y);
-            g_message("TODO - context menu of track display");
-            //            tm_context_menu_init();
+            tm_context_menu_init();
             return TRUE;
         default:
             break;

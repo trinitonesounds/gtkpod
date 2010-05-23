@@ -40,7 +40,7 @@
  ------------------------------------------------------------------*/
 
 /******************************************************************
- export_files_init - Export files off of your ipod to an arbitrary
+ export_tracks_as_files - Export files off of your ipod to an arbitrary
  directory, specified by the file chooser dialog
 
  @tracks    - GList with data of type (Track*) we want to write
@@ -50,14 +50,14 @@
  @message   - message to be displayed above the display of tracks
 
  ******************************************************************/
-void export_files_init(GList *tracks, GList **filenames, gboolean display, gchar *message);
+void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, gchar *message);
 
 /******************************************************************
  export_playlist_file_init - Create a playlist file to a location
  specified by the file selection dialog.
  @tracks: GList with tracks to be in playlist file.
  ******************************************************************/
-void export_playlist_file_init(GList *tracks);
+void export_tracks_to_playlist_file(GList *tracks);
 
 /*------------------------------------------------------------------
 
@@ -80,11 +80,11 @@ void export_playlist_file_init(GList *tracks);
  * The returned GList must be g_list_free()'ed after it is no longer
  * used.
  */
-GList *export_trackglist_when_necessary(iTunesDB *itdb_s, iTunesDB *itdb_d, GList *tracks);
+GList *transfer_track_glist_between_itdbs(iTunesDB *itdb_s, iTunesDB *itdb_d, GList *tracks);
 
 /**
- * same as export_trackglist_when_necessary() but the tracks are
+ * same as transfer_track_glist_between_itdbs() but the tracks are
  * represented as pointers in ASCII format. This function parses the
- * tracks in @data and calls export_trackglist_when_necessary()
+ * tracks in @data and calls transfer_track_glist_between_itdbs()
  */
-GList *export_tracklist_when_necessary(iTunesDB *itdb_s, iTunesDB *itdb_d, gchar *data);
+GList *transfer_track_names_between_itdbs(iTunesDB *itdb_s, iTunesDB *itdb_d, gchar *data);
