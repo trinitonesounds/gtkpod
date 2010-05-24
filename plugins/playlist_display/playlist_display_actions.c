@@ -41,6 +41,7 @@
 #include "libgtkpod/misc_track.h"
 #include "libgtkpod/misc_playlist.h"
 #include "libgtkpod/gp_spl.h"
+#include "libgtkpod/file.h"
 #include <gdk/gdk.h>
 
 /* Callback after directories to add have been selected */
@@ -561,5 +562,12 @@ void on_update_selected_playlist (GtkAction *action, PlaylistDisplayPlugin* plug
     Playlist *pl = pm_get_selected_playlist();
     if (pl) {
         update_tracks(pm_get_selected_playlist()->members);
+    }
+}
+
+void on_update_mserv_selected_playlist (GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    Playlist *pl = pm_get_selected_playlist();
+    if (pl) {
+        mserv_from_file_tracks(pl->members);
     }
 }

@@ -8,11 +8,14 @@
 				<menuitem name="Add Files" action="ActionAddFiles" />
 				<menuitem name="Add Directory" action="ActionAddDirectory" />
 				<menuitem name="Add Playlist" action="ActionAddPlaylist" />
-				<separator/>
+			</placeholder>
+			<placeholder name="PlaceholderFileMenus">
 				<menu name="Update Tracks from File" action="ActionUpdateMenu">
 					<menuitem name="Selected Playlist" action="ActionUpdatePlaylist" />
                 </menu>
-                <separator/>
+                <menu name="Update mserv Data from File" action="ActionUpdateMservMenu">
+					<menuitem name="Selected Playlist" action="ActionUpdateMservPlaylist" />
+                </menu>
             </placeholder>
    		</menu>
    		<menu name="MenuEdit" action="ActionMenuEdit">

@@ -3,8 +3,12 @@
 	<menubar name="MenuMain">
 		<menu name="MenuMusic" action="ActionMenuMusic">
 			<placeholder name="PlaceholderMusicMenus"/>
-			<menu name="Update Tracks from File" action="ActionUpdateMenu"/>
-			<placeholder name="PlaceholderFileMenus"/>
+			<separator/>
+			<placeholder name="PlaceholderFileMenus">
+				<menu name="Update Tracks from File" action="ActionUpdateMenu"/>
+				<menu name="Update mserv Data from File" action="ActionUpdateMservMenu"/>
+			</placeholder>
+			<separator/>
 			<menuitem name="Quit" action="ActionExit" />
 		</menu>
 		<menu name="MenuEdit" action="ActionMenuEdit">

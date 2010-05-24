@@ -34,6 +34,8 @@
 #include <libanjuta/interfaces/ianjuta-preferences.h>
 #include "libgtkpod/stock_icons.h"
 #include "libgtkpod/gtkpod_app_iface.h"
+#include "libgtkpod/prefs.h"
+#include "libgtkpod/gp_private.h"
 #include "plugin.h"
 #include "display_sorttabs.h"
 #include "sorttab_display_actions.h"
@@ -78,8 +80,90 @@ static GtkActionEntry sorttab_actions[] =
             NULL,
             NULL,
             G_CALLBACK (on_update_selected_tab_entry)
+        },
+        {
+            "ActionUpdateMservTabEntry",
+            GTK_STOCK_REFRESH,
+            N_("Selected Tab Entry"),
+            NULL,
+            NULL,
+            G_CALLBACK (on_update_mserv_selected_tab_entry)
         }
     };
+
+static void set_default_preferences() {
+    gint i;
+    gint int_buf;
+
+    /* Set sorting tab defaults */
+    for (i = 0; i < SORT_TAB_MAX; i++) {
+        /* sp_created_cond renamed to sp_added_cond */
+        if (prefs_get_int_value_index("sp_created_cond", i, &int_buf))
+        {
+            prefs_set_int_index("sp_added_cond", i, int_buf);
+            prefs_set_string("sp_created_cond", NULL);
+        }
+
+        /* sp_created_state renamed to sp_added_state */
+        if (prefs_get_int_value_index("sp_created_state", i, &int_buf))
+        {
+            prefs_set_int_index("sp_added_state", i, int_buf);
+            prefs_set_string("sp_created_state", NULL);
+        }
+
+        if (! prefs_get_int_value_index("st_autoselect", i, NULL))
+            prefs_set_int_index("st_autoselect", i, TRUE);
+
+        if (! prefs_get_int_value_index("st_category", i, NULL))
+            prefs_set_int_index("st_category", i, (i < ST_CAT_NUM ? i : 0));
+
+        if (! prefs_get_int_value_index("sp_or", i, NULL))
+            prefs_set_int_index("sp_or", i, FALSE);
+
+        if (! prefs_get_int_value_index("sp_rating_cond", i, NULL))
+            prefs_set_int_index("sp_rating_cond", i, FALSE);
+
+        if (! prefs_get_int_value_index("sp_playcount_cond", i, NULL))
+            prefs_set_int_index("sp_playcount_cond", i, FALSE);
+
+        if (! prefs_get_int_value_index("sp_played_cond", i, NULL))
+            prefs_set_int_index("sp_played_cond", i, FALSE);
+
+        if (! prefs_get_int_value_index("sp_modified_cond", i, NULL))
+            prefs_set_int_index("sp_modified_cond", i, FALSE);
+
+        if (! prefs_get_int_value_index("sp_added_cond", i, NULL))
+            prefs_set_int_index("sp_added_cond", i, FALSE);
+
+        if (! prefs_get_int_value_index("sp_rating_state", i, NULL))
+            prefs_set_int_index("sp_rating_state", i, 0);
+
+        if (! prefs_get_string_value_index("sp_played_state", i, NULL))
+            prefs_set_string_index("sp_played_state", i, ">4w");
+
+        if (! prefs_get_string_value_index("sp_modified_state", i, NULL))
+            prefs_set_string_index("sp_modified_state", i, "<1d");
+
+        if (! prefs_get_string_value_index("sp_added_state", i, NULL))
+            prefs_set_string_index("sp_added_state", i, "<1d");
+
+        if (! prefs_get_int_value_index("sp_playcount_low", i, NULL))
+            prefs_set_int_index("sp_playcount_low", i, 0);
+
+        if (! prefs_get_int_value_index("sp_playcount_high", i, NULL))
+            prefs_set_int_index("sp_playcount_high", i, -1);
+
+        if (! prefs_get_int_value_index("sp_autodisplay", i, NULL))
+            prefs_set_int_index("sp_autodisplay", i, FALSE);
+    }
+
+    if (prefs_get_int_value("sort_tab_num", NULL))
+        prefs_set_int("sort_tab_num", 2);
+
+    if (prefs_get_int_value("st_sort", NULL))
+        prefs_set_int("st_sort", SORT_NONE);
+
+}
 
 static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
@@ -96,16 +180,21 @@ static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
             = anjuta_ui_add_action_group_entries(ui, "ActionGroupSorttabDisplay", _("Sorttab Display"), sorttab_actions, G_N_ELEMENTS (sorttab_actions), GETTEXT_PACKAGE, TRUE, plugin);
     sorttab_display_plugin->action_group = action_group;
 
-    sorttab_display_plugin->more_filtertabs_action = gtk_action_new ("ActionViewMoreFilterTabs", _("More Filter Tabs"), NULL, GTK_STOCK_GO_UP);
+    sorttab_display_plugin->more_filtertabs_action
+            = gtk_action_new("ActionViewMoreFilterTabs", _("More Filter Tabs"), NULL, GTK_STOCK_GO_UP);
     g_signal_connect(sorttab_display_plugin->more_filtertabs_action, "activate", G_CALLBACK(on_more_sort_tabs_activate), sorttab_display_plugin);
-    gtk_action_group_add_action (sorttab_display_plugin->action_group, sorttab_display_plugin->more_filtertabs_action);
+    gtk_action_group_add_action(sorttab_display_plugin->action_group, sorttab_display_plugin->more_filtertabs_action);
 
-    sorttab_display_plugin->fewer_filtertabs_action = gtk_action_new ("ActionViewFewerFilterTabs", _("Fewer Filter Tabs"), NULL, GTK_STOCK_GO_DOWN);
+    sorttab_display_plugin->fewer_filtertabs_action
+            = gtk_action_new("ActionViewFewerFilterTabs", _("Fewer Filter Tabs"), NULL, GTK_STOCK_GO_DOWN);
     g_signal_connect(sorttab_display_plugin->fewer_filtertabs_action, "activate", G_CALLBACK(on_fewer_sort_tabs_activate), sorttab_display_plugin);
-    gtk_action_group_add_action (sorttab_display_plugin->action_group, sorttab_display_plugin->fewer_filtertabs_action);
+    gtk_action_group_add_action(sorttab_display_plugin->action_group, sorttab_display_plugin->fewer_filtertabs_action);
 
     /* Merge UI */
     sorttab_display_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
+
+    /* Set preferences */
+    set_default_preferences();
 
     /* Add widget in Shell. Any number of widgets can be added */
     sorttab_display_plugin->st_paned = gtk_hpaned_new();
@@ -155,7 +244,6 @@ static void sorttab_display_plugin_instance_init(GObject *obj) {
     plugin->action_group = NULL;
 }
 
-
 static void sorttab_display_plugin_class_init(GObjectClass *klass) {
     AnjutaPluginClass *plugin_class = ANJUTA_PLUGIN_CLASS (klass);
 
@@ -165,9 +253,7 @@ static void sorttab_display_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_sorttab_display_plugin;
 }
 
-static void
-ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e)
-{
+static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
     gchar *file;
     GdkPixbuf *pixbuf;
 
@@ -177,35 +263,26 @@ ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError**
         return;
 
     file = g_build_filename(GTKPOD_IMAGE_DIR, "hicolor/48x48/places", ICON_FILE, NULL);
-    pixbuf = gdk_pixbuf_new_from_file (file, NULL);
-    anjuta_preferences_dialog_add_page (
-            ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)),
-            "gtkpod-sorttab-settings",
-            _(TAB_NAME),
-            pixbuf,
-            plugin->prefs);
+    pixbuf = gdk_pixbuf_new_from_file(file, NULL);
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-sorttab-settings", _(TAB_NAME), pixbuf, plugin->prefs);
     g_free(file);
-    g_object_unref (pixbuf);
+    g_object_unref(pixbuf);
 }
 
-static void
-ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e)
-{
+static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
     anjuta_preferences_remove_page(prefs, _(TAB_NAME));
     SorttabDisplayPlugin* plugin = SORTTAB_DISPLAY_PLUGIN(ipref);
     gtk_widget_destroy(plugin->prefs);
 }
 
-
-static void
-ipreferences_iface_init(IAnjutaPreferencesIface* iface)
-{
+static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
     iface->merge = ipreferences_merge;
     iface->unmerge = ipreferences_unmerge;
 }
 
 ANJUTA_PLUGIN_BEGIN (SorttabDisplayPlugin, sorttab_display_plugin);
-ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);
-ANJUTA_PLUGIN_END;
+        ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);ANJUTA_PLUGIN_END
+;
 
-ANJUTA_SIMPLE_PLUGIN (SorttabDisplayPlugin, sorttab_display_plugin);
+ANJUTA_SIMPLE_PLUGIN (SorttabDisplayPlugin, sorttab_display_plugin)
+;

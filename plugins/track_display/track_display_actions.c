@@ -86,3 +86,10 @@ void on_update_selected_tracks (GtkAction *action, TrackDisplayPlugin* plugin) {
     }
 }
 
+void on_update_mserv_selected_tracks (GtkAction *action, TrackDisplayPlugin* plugin) {
+    GList *tracks = gtkpod_get_selected_tracks();
+
+    if (tracks) {
+      mserv_from_file_tracks(tracks);
+    }
+}

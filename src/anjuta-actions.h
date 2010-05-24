@@ -34,6 +34,14 @@ static GtkActionEntry menu_entries_music[] = {
       NULL
   },
   {
+      "ActionUpdateMservMenu",
+      GTK_STOCK_REFRESH,
+      N_("_Update mserv Data from File"),
+      NULL,
+      NULL,
+      NULL
+    },
+  {
       "ActionExit",
       GTK_STOCK_QUIT,
       N_("_Quit"),

@@ -33,6 +33,8 @@
 #include <libanjuta/interfaces/ianjuta-preferences.h>
 #include "libgtkpod/stock_icons.h"
 #include "libgtkpod/gtkpod_app_iface.h"
+#include "libgtkpod/gp_private.h"
+#include "libgtkpod/prefs.h"
 #include "plugin.h"
 #include "display_tracks.h"
 #include "track_display_actions.h"
@@ -77,15 +79,53 @@ static GtkActionEntry track_actions[] =
             NULL,
             NULL,
             G_CALLBACK (on_update_selected_tracks)
+        },
+        {
+            "ActionUpdateMservTracks",
+            GTK_STOCK_REFRESH,
+            N_("Selected Tracks"),
+            NULL,
+            NULL,
+            G_CALLBACK (on_update_mserv_selected_tracks)
         }
     };
+
+static void set_default_preferences() {
+    gint int_buf;
+
+    /* sm_autostore renamed to tm_autostore */
+    if (prefs_get_int_value("sm_autostore", &int_buf)) {
+        prefs_set_int("tm_autostore", int_buf);
+        prefs_set_string("sm_autostore", NULL);
+    }
+
+    /* sm_sortcol renamed to tm_sortcol */
+    if (prefs_get_int_value("sm_sortcol", &int_buf)) {
+        prefs_set_int("tm_sortcol", int_buf);
+        prefs_set_string("sm_sortcol", NULL);
+    }
+
+    /* sm_sort_ renamed to tm_sort */
+    if (prefs_get_int_value("sm_sort_", &int_buf)) {
+        prefs_set_int("tm_sort", int_buf);
+        prefs_set_string("sm_sort_", NULL);
+    }
+
+    if (prefs_get_int_value("tm_autostore", NULL))
+        prefs_set_int("tm_autostore", FALSE);
+
+    if (prefs_get_int_value("tm_sortcol", NULL))
+        prefs_set_int("tm_sortcol", TM_COLUMN_TITLE);
+
+    if (prefs_get_int_value("tm_sort", NULL))
+        prefs_set_int("tm_sort", SORT_NONE);
+
+}
 
 static gboolean activate_track_display_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
     TrackDisplayPlugin *track_display_plugin;
     GtkActionGroup* action_group;
-
-    /* Prepare the icons for the track */
 
     track_display_plugin = (TrackDisplayPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
@@ -97,6 +137,8 @@ static gboolean activate_track_display_plugin(AnjutaPlugin *plugin) {
 
     /* Merge UI */
     track_display_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
+
+    set_default_preferences();
 
     /* Add widget in Shell. Any number of widgets can be added */
     track_display_plugin->track_window = gtk_scrolled_window_new(NULL, NULL);

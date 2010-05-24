@@ -36,6 +36,8 @@
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/tool_menu_action.h"
 #include "libgtkpod/misc.h"
+#include "libgtkpod/gp_private.h"
+#include "libgtkpod/prefs.h"
 #include "plugin.h"
 #include "display_playlists.h"
 #include "playlist_display_actions.h"
@@ -257,6 +259,14 @@ static GtkActionEntry playlist_actions[] =
             NULL,
             NULL,
             G_CALLBACK (on_update_selected_playlist)
+        },
+        {
+            "ActionUpdateMservPlaylist",
+            GTK_STOCK_REFRESH,
+            N_("Selected Playlist"),
+            NULL,
+            NULL,
+            G_CALLBACK (on_update_mserv_selected_playlist)
         }
     };
 
@@ -265,6 +275,10 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     PlaylistDisplayPlugin *playlist_display_plugin;
     GtkActionGroup* action_group;
     GtkAction *new_playlist_action;
+
+    /* preferences */
+    if (prefs_get_int_value("pm_sort", NULL))
+        prefs_set_int("pm_sort", SORT_NONE);
 
     /* Prepare the icons for the playlist */
     register_stock_icon("playlist_display-photo", PLAYLIST_DISPLAY_PHOTO_ICON_STOCK_ID);
