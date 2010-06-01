@@ -62,7 +62,7 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
                 = g_signal_new(SIGNAL_TRACK_UPDATED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
         gtkpod_app_signals[TRACKS_REORDERED]
-                        = g_signal_new(SIGNAL_TRACKS_REORDERED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+                = g_signal_new(SIGNAL_TRACKS_REORDERED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
         gtkpod_app_signals[SORT_ENABLEMENT]
                 = g_signal_new(SIGNAL_SORT_ENABLEMENT, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__BOOLEAN, G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
@@ -80,13 +80,13 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
                 = g_signal_new(SIGNAL_ITDB_REMOVED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
         gtkpod_app_signals[PREFERENCE_CHANGE]
-                        = g_signal_new(SIGNAL_PREFERENCE_CHANGE, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, _gtkpod_app_marshal_VOID__POINTER_INT, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_INT);
+                = g_signal_new(SIGNAL_PREFERENCE_CHANGE, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, _gtkpod_app_marshal_VOID__POINTER_INT, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_INT);
 
         gtkpod_app_signals[ITDB_DATA_CHANGED]
-                                = g_signal_new(SIGNAL_ITDB_DATA_CHANGED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
+                = g_signal_new(SIGNAL_ITDB_DATA_CHANGED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
         gtkpod_app_signals[ITDB_DATA_SAVED]
-                                = g_signal_new(SIGNAL_ITDB_DATA_SAVED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
+                = g_signal_new(SIGNAL_ITDB_DATA_SAVED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
         initialized = TRUE;
     }
@@ -120,10 +120,44 @@ gchar* gtkpod_get_glade_xml() {
 }
 
 /**
+ * gtkpod_shutdown
+ *
+ * return value: TRUE if it's OK to quit.
+ */
+static gboolean ok_to_close_gtkpod(void) {
+    gint result = GTK_RESPONSE_OK;
+
+    if (!files_are_saved()) {
+        const gchar
+                *str =
+                        _("Data has been changed and not been saved. If you quit gtkpod, all unsaved changes will be lost.\n\nDo you want to save your changes first?");
+
+        result
+                = gtkpod_confirmation_hig(GTK_MESSAGE_WARNING, _("Save changes before quiting?"), str, GTK_STOCK_SAVE, GTK_STOCK_CANCEL, _("Quit without saving"), NULL);
+    }
+
+    /* User pressed Cancel */
+    if (result == GTK_RESPONSE_CANCEL)
+        return FALSE;
+
+    /* User pressed Save */
+    if (result == GTK_RESPONSE_OK)
+        handle_export();
+
+    return TRUE;
+}
+
+/**
  * clean up bits n pieces
  */
-void gtkpod_cleanup_quit() {
-    gtkpod_shutdown();
+gint gtkpod_cleanup_quit() {
+    if (!widgets_blocked) {
+        if (ok_to_close_gtkpod()) {
+            gtkpod_shutdown();
+            return TRUE; // Already to carry on quitting
+        }
+    }
+    return FALSE; // dont quit!
 }
 
 void gtkpod_statusbar_message(gchar* message, ...) {
@@ -280,7 +314,7 @@ GList *gtkpod_get_displayed_tracks() {
 
 void gtkpod_set_displayed_tracks(GList *tracks) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
-    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->displayed_tracks = tracks;
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->displayed_tracks = g_list_copy(tracks);
 
     g_signal_emit(gtkpod_app, gtkpod_app_signals[TRACKS_DISPLAYED], 0, tracks);
 }
@@ -347,6 +381,9 @@ void gtkpod_broadcast_preference_change(gchar *preference_name, gint value) {
 
 void gtkpod_tracks_reordered() {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    g_return_if_fail (gtkpod_get_current_playlist());
+
+    gtkpod_set_displayed_tracks(gtkpod_get_current_playlist()->members);
 
     g_signal_emit(gtkpod_app, gtkpod_app_signals[TRACKS_REORDERED], 0);
 }

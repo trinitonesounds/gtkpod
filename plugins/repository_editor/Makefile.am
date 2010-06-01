@@ -27,6 +27,7 @@ plugin_LTLIBRARIES = librepository_editor.la
 # Plugin sources
 librepository_editor_la_SOURCES = plugin.c plugin.h \
 						 		  repository.c repository.h \
+						 		  repository_actions.c repository_actions.h \
 						 		  repository_init.c \
 						 		  repository_editor.c \
 						 		  repository_creator.c

@@ -27,8 +27,8 @@
 |  $Id$
 */
 
-#ifndef __DISPLAY_SORTTAB_H__
-#define __DISPLAY_SORTTAB_H__
+#ifndef __DISPLAY_SORTTABS_H__
+#define __DISPLAY_SORTTABS_H__
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>

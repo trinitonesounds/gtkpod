@@ -26,8 +26,8 @@
 |
 |  $Id$
 */
-#ifndef __TRACK_DISPLAY_H__
-#define __TRACK_DISPLAY_H__
+#ifndef __TRACK_DISPLAY_ACTIONS_H__
+#define __TRACK_DISPLAY_ACTIONS_H__
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -43,5 +43,6 @@ void on_delete_selected_tracks_from_ipod(GtkAction *action, TrackDisplayPlugin* 
 void on_delete_selected_tracks_from_device(GtkAction *action, TrackDisplayPlugin* plugin);
 void on_update_selected_tracks (GtkAction *action, TrackDisplayPlugin* plugin);
 void on_update_mserv_selected_tracks (GtkAction *action, TrackDisplayPlugin* plugin);
+void on_open_sort_window (GtkAction *action, TrackDisplayPlugin* plugin);
 
 #endif

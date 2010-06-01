@@ -181,13 +181,11 @@ void gtkpod_init(int argc, char *argv[]) {
 
 /* callback for gtkpod window's close button */
 static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    //    if (!widgets_blocked) {
-    //        if (ok_to_close_gtkpod()) {
-    //            gtkpod_shutdown();
-    //            /* returning FALSE to continue calling other handlers
-    //             causes tons of errors. */
-    //        }
-    //    }
+
+    if (! gtkpod_cleanup_quit()) {
+        // Dont want to quit so avoid signalling any destroy event
+        return TRUE;
+    }
 
     AnjutaPluginManager *plugin_manager;
     AnjutaProfileManager *profile_manager;
@@ -264,7 +262,6 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
 }
 
 static void on_gtkpod_destroy(GtkWidget * w, gpointer data) {
-    gtkpod_cleanup_quit();
     gtk_widget_hide(w);
     gtk_main_quit();
 }

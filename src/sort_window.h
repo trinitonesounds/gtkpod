@@ -27,8 +27,8 @@
 |
 |  $Id$
 */
-#ifndef _GTKPOD_PREFS_WINDOW_H
-#define _GTKPOD_PREFS_WINDOW_H
+#ifndef _SORT_WINDOW_H
+#define _SORT_WINDOW_H
 
 #include <gtk/gtk.h>
 #include "libgtkpod/prefs.h"

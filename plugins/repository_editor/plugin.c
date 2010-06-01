@@ -34,13 +34,37 @@
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "plugin.h"
 #include "repository.h"
+#include "repository_actions.h"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
 
 static GtkActionEntry repository_editor_actions[] =
     {
-
+        {
+            "ActionInitRepository",
+            GTK_STOCK_EXECUTE,
+            N_("_Create iPod's Directories"),
+            NULL,
+            NULL,
+            G_CALLBACK (on_create_ipod_directories)
+        },
+        {
+            "ActionCheckiPodFiles",
+            GTK_STOCK_FILE,
+            N_("_Check iPod's Files"),
+            NULL,
+            NULL,
+            G_CALLBACK (on_check_ipod_files)
+        },
+        {
+            "ActionConfigRepositories",
+            GTK_STOCK_PREFERENCES,
+            N_("_Configure Repositories"),
+            NULL,
+            NULL,
+            G_CALLBACK (on_configure_repositories)
+        }
     };
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {

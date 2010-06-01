@@ -1261,6 +1261,24 @@ static gint comp_int(gconstpointer a, gconstpointer b) {
     return (GPOINTER_TO_INT(a) - (GPOINTER_TO_INT(b)));
 }
 
+/* Redisplays the tracks in the track view according to the order
+ * stored in the sort tab view. This only works if the track view is
+ * not sorted --> skip if sorted */
+
+static void tm_adopt_order(void) {
+    if (prefs_get_int("tm_sort") == SORT_NONE) {
+        GList *gl, *tracks = NULL;
+
+        /* retrieve the currently displayed tracks (non ordered) from
+         the last sort tab or from the selected playlist if no sort
+         tabs are being used */
+        tm_remove_all_tracks();
+        tracks = gtkpod_get_displayed_tracks();
+        for (gl = tracks; gl; gl = gl->next)
+            tm_add_track_to_track_model((Track *) gl->data, NULL);
+    }
+}
+
 /**
  * Reorder tracks in playlist to match order of tracks displayed in track
  * view. Only the subset of tracks currently displayed is reordered.
@@ -1342,7 +1360,7 @@ void tm_rows_reordered(void) {
          sort tabs */
         if (changed) {
             data_changed(itdb);
-            gtkpod_tracks_reordered();
+            tm_adopt_order();
         }
     }
 }
@@ -1744,24 +1762,6 @@ gint tm_sort_counter(gint inc) {
     return cnt;
 }
 
-/* Redisplays the tracks in the track view according to the order
- * stored in the sort tab view. This only works if the track view is
- * not sorted --> skip if sorted */
-
-void tm_adopt_order_in_sorttab(void) {
-    if (prefs_get_int("tm_sort") == SORT_NONE) {
-        GList *gl, *tracks = NULL;
-
-        /* retrieve the currently displayed tracks (non ordered) from
-         the last sort tab or from the selected playlist if no sort
-         tabs are being used */
-        tm_remove_all_tracks();
-        tracks = gtkpod_get_displayed_tracks();
-        for (gl = tracks; gl; gl = gl->next)
-            tm_add_track_to_track_model((Track *) gl->data, NULL);
-    }
-}
-
 /* redisplay the contents of the track view in it's unsorted order */
 static void tm_unsort(void) {
     if (track_treeview) {
@@ -1778,7 +1778,7 @@ static void tm_unsort(void) {
             /*	    gtk_tree_view_set_enable_search (GTK_TREE_VIEW
              * (track_treeview), FALSE);*/
             gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
-            tm_adopt_order_in_sorttab();
+            tm_adopt_order();
         }
         else {
             gtkpod_warning(_("Cannot unsort track view because of a bug in the GTK lib you are using (%d.%d.%d < 2.5.4). Once you sort the track view, you cannot go back to the unsorted state.\n\n"), gtk_major_version, gtk_minor_version, gtk_micro_version);
@@ -2737,5 +2737,14 @@ void track_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32
         tm_sort_counter(-1);
         tm_sort(prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
     }
+}
+
+void track_display_tracks_reordered_cb(GtkPodApp *app, gpointer data) {
+    if (prefs_get_int("tm_autostore")) {
+        prefs_set_int("tm_autostore", FALSE);
+        gtkpod_warning(_("Auto Store of track view disabled.\n\n"));
+    }
+
+    tm_adopt_order();
 }
 

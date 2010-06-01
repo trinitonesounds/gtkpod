@@ -34,12 +34,21 @@
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "plugin.h"
 #include "details.h"
+#include "details_editor_actions.h"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
 
 static GtkActionEntry details_editor_actions[] =
     {
+        {
+            "ActionEditTrackDetails", /* Action name */
+            GTK_STOCK_PREFERENCES, /* Stock icon */
+            N_("Edit Track Details"), /* Display label */
+            NULL, /* short-cut */
+            NULL, /* Tooltip */
+            G_CALLBACK (on_edit_details_selected_tracks)
+        },
     };
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {

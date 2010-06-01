@@ -24,33 +24,26 @@
  |
  |  This product is not supported/written/published by Apple!
  |
+ |  $Id$
  */
 
-#ifndef DISPLAY_TRACKS_H_
-#define DISPLAY_TRACKS_H_
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
-#include "plugin.h"
 #include "libgtkpod/gtkpod_app_iface.h"
-#include "libgtkpod/misc_conversion.h"
+#include "libgtkpod/misc.h"
+#include "details.h"
+#include "details_editor_actions.h"
 
-void tm_create_track_display(GtkWidget *parent);
-void tm_destroy_widgets(void);
-void tm_rows_reordered(void);
-void tm_stop_editing(gboolean cancel);
-gboolean tm_add_filelist(gchar *data, GtkTreePath *path, GtkTreeViewDropPosition pos);
-void tm_update_default_sizes (void);
-void tm_store_col_order (void);
-void tm_show_preferred_columns(void);
-GList *tm_get_selected_tracks(void);
+void on_edit_details_selected_tracks(GtkAction *action, DetailsEditorPlugin* plugin) {
+    GList *tracks = gtkpod_get_selected_tracks();
 
-void display_show_hide_searchbar(void);
-
-void track_display_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data);
-void track_display_set_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data);
-void track_display_set_sort_enablement(GtkPodApp *app, gboolean flag, gpointer data);
-void track_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data);
-void track_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data);
-void track_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data);
-void track_display_tracks_reordered_cb(GtkPodApp *app, gpointer data);
-
-#endif /* DISPLAY_TRACKS_H_ */
+    if (tracks) {
+        details_edit(tracks);
+        g_list_free(tracks);
+    }
+    else {
+        message_sb_no_tracks_selected();
+    }
+}

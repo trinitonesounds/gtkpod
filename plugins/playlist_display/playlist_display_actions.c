@@ -42,6 +42,7 @@
 #include "libgtkpod/misc_playlist.h"
 #include "libgtkpod/gp_spl.h"
 #include "libgtkpod/file.h"
+#include "libgtkpod/syncdir.h"
 #include <gdk/gdk.h>
 
 /* Callback after directories to add have been selected */
@@ -570,4 +571,14 @@ void on_update_mserv_selected_playlist (GtkAction *action, PlaylistDisplayPlugin
     if (pl) {
         mserv_from_file_tracks(pl->members);
     }
+}
+
+void on_sync_playlist_with_dirs(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    if (gtkpod_get_current_playlist()) {
+        sync_playlist(gtkpod_get_current_playlist(), NULL, KEY_SYNC_CONFIRM_DIRS, 0, KEY_SYNC_DELETE_TRACKS, 0, KEY_SYNC_CONFIRM_DELETE, 0, KEY_SYNC_SHOW_SUMMARY, 0);
+    }
+}
+
+void on_randomize_current_playlist(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    randomize_current_playlist();
 }

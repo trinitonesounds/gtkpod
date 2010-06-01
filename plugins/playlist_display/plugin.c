@@ -88,6 +88,14 @@ static GtkActionEntry playlist_actions[] =
             G_CALLBACK (on_create_add_playlists) /* callback */
         },
         {
+            "ActionSyncPlaylistWithDir",
+            GTK_STOCK_REFRESH,
+            N_("Sync Playlist with Dir(s)"),
+            NULL,
+            NULL,
+            G_CALLBACK (on_sync_playlist_with_dirs)
+        },
+        {
             "NewPlaylistMenu",
             NULL,
             N_("_New Playlist Menu")
@@ -267,6 +275,14 @@ static GtkActionEntry playlist_actions[] =
             NULL,
             NULL,
             G_CALLBACK (on_update_mserv_selected_playlist)
+        },
+        {
+            "ActionRandomizeCurrentPlaylist",
+            NULL,
+            N_("Randomize Current Playlist"),
+            NULL,
+            NULL,
+            G_CALLBACK (on_randomize_current_playlist)
         }
     };
 

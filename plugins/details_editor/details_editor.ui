@@ -1,9 +1,9 @@
 <!--*- xml -*-->
 <ui>
 	<menubar name="MenuMain">
-		<menu name="MenuTools" action="ActionMenuTools">
-			<placeholder name="PlaceholderToolsMenus">
-				
+		<menu name="MenuEdit" action="ActionMenuEdit">
+			<placeholder name="PlaceholderEditMenus">
+				<menuitem name="Edit Track Details" action="ActionEditTrackDetails"/>
 			</placeholder>
 		</menu>
 	</menubar>

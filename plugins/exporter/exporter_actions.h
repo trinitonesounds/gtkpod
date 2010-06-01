@@ -26,8 +26,8 @@
 |
 |  $Id$
 */
-#ifndef __PLAYLIST_DISPLAY_H__
-#define __PLAYLIST_DISPLAY_H__
+#ifndef __EXPORTER_ACTIONS_H__
+#define __EXPORTED_ACTIONS_H__
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>

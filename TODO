@@ -21,22 +21,22 @@ Music Menu
 # Add Folder
 # Add Playlists
 # Update Tracks from file
-- Update mserv date from file
-- Sync Playlists with Dir
+# Update mserv date from file
+# Sync Playlists with Dir
 # Export Tracks
 # Create Playlist
-- Init ipod Directories
-- Check ipod files
+# Init ipod Directories
+# Check ipod files
 
 Edit Menu
-- Edit Track Details
-- Edit Smart Playlist
+# Edit Track Details
+# Edit Smart Playlist (? Not Including)
 # Delete
-- Create Playlists
-- Sorting
-- Randomize current playlist
+# Create Playlists
+# Sorting
+# Randomize current playlist
 - Save Displayed track order
-- Repo iPod Options
+# Repo iPod Options
 # Preferences
 
 View Menu
@@ -63,6 +63,9 @@ Tracks Plugin
 Sorttab Menu
 # popup menu
 
+# Save on exit
+
+- Tools plugin
 - CoverArt Plugin
 - Filter Plugin
 - Progress bar for saving and lengthy operations

@@ -1,6 +1,6 @@
-/* Time-stamp: <2008-11-08 17:35:16 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2010 Jorg Schuler <jcsjcs at users sourceforge net>
+|                                          Paul Richardson <phantom_sf at users.sourceforge.net>
 |  Part of the gtkpod project.
 |
 |  URL: http://www.gtkpod.org/
@@ -26,16 +26,18 @@
 |
 |  $Id$
 */
-
-#ifndef __CORE_PREFS_H__
-#define __CORE_PREFS_H__
+#ifndef __REPOSITORY_ACTIONS_H__
+#define __REPOSITORY_ACTIONS_H__
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
 #include <gtk/gtk.h>
+#include "plugin.h"
 
-GtkWidget *init_settings_preferences();
+void on_create_ipod_directories(GtkAction* action, RepositoryEditorPlugin* plugin);
+void on_check_ipod_files(GtkAction* action, RepositoryEditorPlugin* plugin);
+void on_configure_repositories(GtkAction* action, RepositoryEditorPlugin* plugin);
 
 #endif

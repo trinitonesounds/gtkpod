@@ -1833,6 +1833,5 @@ void gtkpod_shutdown() {
     mp4_close();
 
     call_script("gtkpod.out", NULL);
-    gtk_main_quit();
 }
 

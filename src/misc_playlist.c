@@ -251,26 +251,18 @@ Playlist *generate_random_playlist(iTunesDB *itdb) {
 }
 
 void randomize_current_playlist(void) {
-    g_message("TODO randomize_current_playlist commented out\n");
-    //    Playlist *pl= pm_get_selected_playlist ();
-    //
-    //    if (!pl)
-    //    {
-    //	message_sb_no_playlist_selected ();
-    //	return;
-    //    }
-    //
-    //    if (prefs_get_int("tm_autostore"))
-    //    {
-    //	prefs_set_int("tm_autostore", FALSE);
-    //	gtkpod_warning (_("Auto Store of track view disabled.\n\n"));
-    ///* 	sort_window_update (); */
-    //    }
-    //
-    //    itdb_playlist_randomize (pl);
-    //
-    //    st_adopt_order_in_playlist ();
-    //    tm_adopt_order_in_sorttab ();
+    Playlist *pl = gtkpod_get_current_playlist();
+
+    if (!pl) {
+        message_sb_no_playlist_selected();
+        return;
+    }
+
+    gtkpod_set_selected_tracks(NULL);
+
+    itdb_playlist_randomize(pl);
+
+    gtkpod_tracks_reordered();
 }
 
 static void not_listed_make_track_list(gpointer key, gpointer track, gpointer tracks) {
@@ -902,8 +894,6 @@ void check_db(iTunesDB *itdb) {
         }
     }
 
-    g_message("TODO check_db - status\n");
-    //    gtkpod_statusbar_timeout (30*STATUSBAR_TIMEOUT);
     block_widgets();
 
     gtkpod_statusbar_message(_("Creating a tree of known files"));
@@ -1461,4 +1451,8 @@ void message_sb_no_itdb_selected() {
 
 void message_sb_no_playlist_selected() {
     gtkpod_statusbar_message(_("No playlist selected"));
+}
+
+void message_sb_no_ipod_itdb_selected() {
+    gtkpod_statusbar_message(_("No iPod or iPod playlist selected"));
 }
