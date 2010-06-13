@@ -353,18 +353,30 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     playlist_display_plugin = (PlaylistDisplayPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
 
-    /* Remove widgets from Shell */
-    anjuta_shell_remove_widget(plugin->shell, playlist_display_plugin->pl_window, NULL);
+    g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_select_playlist_cb), plugin);
+    g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_playlist_added_cb), plugin);
+    g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_playlist_removed_cb), plugin);
+    g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_track_removed_cb), plugin);
+    g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_itdb_added_cb), plugin);
+    g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_itdb_removed_cb), plugin);
+    g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_update_itdb_cb), plugin);
+    g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_preference_changed_cb), plugin);
+    g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_itdb_data_changed_cb), plugin);
+    g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_itdb_data_changed_cb), plugin);
 
     /* Destroy the treeview */
-    playlist_display_plugin->playlist_view = NULL;
     pm_destroy_treeview();
+    playlist_display_plugin->playlist_view = NULL;
 
     /* Unmerge UI */
     anjuta_ui_unmerge(ui, playlist_display_plugin->uiid);
 
     /* Remove Action groups */
     anjuta_ui_remove_action_group(ui, playlist_display_plugin->action_group);
+
+    /* Remove widgets from Shell */
+    anjuta_shell_remove_widget(plugin->shell, playlist_display_plugin->pl_window, NULL);
+    playlist_display_plugin->pl_window = NULL;
 
     /* FALSE if plugin doesn't want to deactivate */
     return TRUE;

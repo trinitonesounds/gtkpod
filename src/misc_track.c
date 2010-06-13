@@ -1955,10 +1955,6 @@ void delete_track_ok(struct DeleteData *dd) {
     if (!dd->tracks)
         delete_track_cancel(dd);
 
-    g_message("TODO: determine whether still need to block changes while deleting");
-    //    /* Deafen the coverart display while deletion is occurring */
-    //    coverart_block_change(TRUE);
-
     /* nr of tracks to be deleted */
     n = g_list_length(dd->tracks);
     if (dd->itdb->usertype & GP_ITDB_TYPE_IPOD) {
@@ -2008,10 +2004,6 @@ void delete_track_ok(struct DeleteData *dd) {
     for (l = dd->tracks; l; l = l->next) {
         gp_playlist_remove_track(dd->pl, l->data, dd->deleteaction);
     }
-
-    /* Awaken coverart selection */
-    g_message("TODO: determine whether still need to block changes while deleting");
-    //    coverart_block_change(FALSE);
     g_list_free(dd->tracks);
     g_free(dd);
 

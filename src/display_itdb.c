@@ -39,12 +39,14 @@
 #include "gp_itdb.h"
 #include "sha1.h"
 #include "file.h"
+#include "file_convert.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
 #include "syncdir.h"
 #include "autodetection.h"
 #include "clientserver.h"
+#include "gtkpod_app_iface.h"
 
 /* A struct containing a list with available iTunesDBs. A pointer to
  this struct is stored in gtkpod_app as itdbs_head */
@@ -249,9 +251,8 @@ Track *gp_track_add(iTunesDB *itdb, Track *track) {
         itdb_track_add(itdb, track, -1);
         /* add to filename hash */
         gp_itdb_pc_path_hash_add_track(track);
-        g_message("TODO should there be a conversion interface to initiate a conversion");
-        //	/* add to background conversion if necessary */
-        //	file_convert_add_track (track);
+        /* add to background conversion if necessary */
+        file_convert_add_track (track);
         result = track;
         data_changed(itdb);
     }
@@ -454,7 +455,7 @@ Playlist *gp_playlist_add_new(iTunesDB *itdb, gchar *name, gboolean spl, gint32 
     g_return_val_if_fail (name, NULL);
 
     pl = gp_playlist_new(name, spl);
-    gp_playlist_add (itdb, pl, pos);
+    gp_playlist_add(itdb, pl, pos);
     return pl;
 }
 
@@ -552,7 +553,7 @@ void gp_playlist_remove_track(Playlist *plitem, Track *track, DeleteAction delet
 
     g_return_if_fail (plitem);
 
-    g_signal_emit(gtkpod_app, gtkpod_app_signals[TRACK_REMOVED], 0, track);
+    gtkpod_track_removed(track);
 
     /* remove track from playlist */
     itdb_playlist_remove_track(plitem, track);
@@ -664,7 +665,7 @@ void gp_playlist_add_track(Playlist *pl, Track *track, gboolean display) {
     }
 
     if (display)
-        gtkpod_playlist_updated(pl);
+        gtkpod_track_added(track);
 
     data_changed(itdb);
 }
@@ -766,12 +767,11 @@ void gp_init(GtkPodApp *single_app, int argc, char *argv[]) {
 
     g_object_set_data(G_OBJECT (gtkpod_app), "itdbs_head", itdbs_head);
 
-    if (!prefs_get_int_value ("itdb_0_type", NULL))
-    {
-	/* databases have not been set up previously -- take care of
-	   this */
+    if (!prefs_get_int_value("itdb_0_type", NULL)) {
+        /* databases have not been set up previously -- take care of
+         this */
 #ifndef HAVE_GIO
-	gchar *mountpoint;
+        gchar *mountpoint;
 #endif
         gchar *filename;
 
@@ -790,15 +790,15 @@ void gp_init(GtkPodApp *single_app, int argc, char *argv[]) {
         g_free(filename);
 
 #ifndef HAVE_GIO
-	/* iPod database -- only set up if autodetection is not active */
-	mountpoint = prefs_get_string ("initial_mountpoint");
-	filename = g_build_filename (cfgdir, "iTunesDB", NULL);
-	prefs_set_int ("itdb_2_type", GP_ITDB_TYPE_IPOD);
-	prefs_set_string ("itdb_2_name", _("iPod"));
-	prefs_set_string ("itdb_2_filename", filename);
-	prefs_set_string ("itdb_2_mountpoint", mountpoint);
-	g_free (mountpoint);
-	g_free (filename);
+        /* iPod database -- only set up if autodetection is not active */
+        mountpoint = prefs_get_string ("initial_mountpoint");
+        filename = g_build_filename (cfgdir, "iTunesDB", NULL);
+        prefs_set_int ("itdb_2_type", GP_ITDB_TYPE_IPOD);
+        prefs_set_string ("itdb_2_name", _("iPod"));
+        prefs_set_string ("itdb_2_filename", filename);
+        prefs_set_string ("itdb_2_mountpoint", mountpoint);
+        g_free (mountpoint);
+        g_free (filename);
 #endif
     }
 
@@ -989,10 +989,9 @@ gboolean gp_increase_playcount(gchar *sha1, gchar *file, gint num) {
             gchar *buf1;
             track->playcount += num;
             data_changed(itdb);
+            gtkpod_track_updated(track);
             buf1 = get_track_info(track, TRUE);
-            g_message("TODO gp_itdb:gp_increase_playcount - status\n");
-            //	    gtkpod_statusbar_message (_("Increased playcount for '%s'"),
-            //				      buf1);
+            gtkpod_statusbar_message(_("Increased playcount for '%s'"), buf1);
             g_free(buf1);
             if (itdb->usertype & GP_ITDB_TYPE_IPOD)
                 result = TRUE;

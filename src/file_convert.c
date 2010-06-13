@@ -1343,6 +1343,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
                     if (tr->itdb->usertype & GP_ITDB_TYPE_LOCAL) {
                         g_free(etr->converted_file);
                         etr->converted_file = g_strdup(ctr->converted_file);
+                        gtkpod_track_updated(tr);
                         data_changed(tr->itdb);
                     }
 
@@ -1358,6 +1359,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
                         tr->postgap = ctr->gapless.postgap;
                         tr->gapless_data = ctr->gapless.gapless_data;
                         tr->gapless_track_flag = ctr->gapless.gapless_track_flag;
+                        gtkpod_track_updated(tr);
                         data_changed(tr->itdb);
                     }
                 }
@@ -1446,8 +1448,6 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
                          is never read and free space keeps
                          increasing while we copy more and more
                          files to the iPod */
-                        g_message("TODO space_data_update");
-                        //			space_data_update ();
                         debug ("transfer finalized: %s (%d)\n",
                                 conversion_get_track_info (NULL, ctr),
                                 ctr->track->transferred);
@@ -1461,6 +1461,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
                             g_error_free(error);
                         }
                     }
+                    gtkpod_track_updated(ctr->track);
                     data_changed(ctr->itdb);
                 }
                 else { /* track is not valid any more */

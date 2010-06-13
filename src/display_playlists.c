@@ -967,20 +967,6 @@ void pm_itdb_name_changed(Itdb_iTunesDB *itdb) {
     }
 }
 
-/* If a track got changed (i.e. it's ID3 entries have changed), we check
- if it's in the currently displayed playlist, and if yes, we notify the
- first sort tab of a change */
-void pm_track_changed(Track *track) {
-    if (!gtkpod_get_current_playlist())
-        return;
-
-    //    coverart_track_changed(track, COVERART_CHANGE_SIGNAL);
-    //
-    //    /* Check if track is member of current playlist */
-    //    if (g_list_find(current_playlist->members, track))
-    //        st_track_changed(track, FALSE, 0);
-}
-
 /* Add playlist to the playlist model */
 /* If @position = -1: append to end */
 /* If @position >=0: insert at that position (count starts with MPL as
@@ -1232,10 +1218,6 @@ static gboolean pm_selection_changed_cb(gpointer data) {
             //		    space_set_ipod_itdb (itdb);
             //		}
 
-            /* remove all entries from sort tab 0 */
-            /* printf ("removing entries: %x\n", current_playlist);*/
-            //		st_init (-1, 0);
-
             if (new_playlist->is_spl && new_playlist->splpref.liveupdate)
                 itdb_spl_update(new_playlist);
 
@@ -1253,20 +1235,11 @@ static gboolean pm_selection_changed_cb(gpointer data) {
         }
     }
 
-    /* Reallow the coverart selection update */
-    //	coverart_block_change (FALSE);
-    /* Set the coverart display based on the selected playlist */
-    //	coverart_display_update(TRUE);
-
-    //	space_data_update ();
-
 #if DEBUG_TIMING
     g_get_current_time (&time);
     printf ("pm_selection_changed_cb exit:  %ld.%06ld sec\n",
             time.tv_sec % 3600, time.tv_usec);
 #endif
-    /* make only suitable delete menu items available */
-    //	display_adjust_menus ();
 
     return FALSE;
 }
@@ -1959,9 +1932,9 @@ static void pm_add_columns(void) {
 
 /* Free the playlist listview */
 void pm_destroy_treeview(void) {
-    if (GTK_IS_WIDGET(playlist_treeview))
+    if (GTK_IS_WIDGET(playlist_treeview)) {
         gtk_widget_destroy(GTK_WIDGET(playlist_treeview));
-
+    }
     playlist_treeview = NULL;
 }
 
@@ -1979,6 +1952,7 @@ GtkTreeView* pm_create_treeview(void) {
         gtk_widget_destroy(GTK_WIDGET (playlist_treeview));
         playlist_treeview = NULL;
     }
+
     /* create new one */
     tree = gtk_tree_view_new();
     gtk_widget_set_events(tree, GDK_KEY_RELEASE_MASK);
@@ -1996,7 +1970,6 @@ GtkTreeView* pm_create_treeview(void) {
     g_signal_connect (G_OBJECT (selection), "changed",
             G_CALLBACK (pm_selection_changed), NULL);
     pm_add_columns();
-
     pm_add_all_itdbs();
 
     gtk_drag_source_set(GTK_WIDGET (playlist_treeview), GDK_BUTTON1_MASK, pm_drag_types, TGNR(pm_drag_types), GDK_ACTION_COPY

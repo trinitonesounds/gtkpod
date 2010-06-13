@@ -51,6 +51,7 @@
 #define SIGNAL_TRACKS_SELECTED "signal_tracks_selected"
 #define SIGNAL_TRACK_REMOVED "signal_track_removed"
 #define SIGNAL_TRACK_UPDATED "signal_track_updated"
+#define SIGNAL_TRACK_ADDED "signal_track_added"
 #define SIGNAL_PLAYLIST_SELECTED "signal_playlist_selected"
 #define SIGNAL_PLAYLIST_ADDED "signal_playlist_added"
 #define SIGNAL_PLAYLIST_REMOVED "signal_playlist_removed"
@@ -89,6 +90,7 @@ enum
 {
     TRACKS_DISPLAYED,
     TRACKS_SELECTED,
+    TRACK_ADDED,
     TRACK_REMOVED,
     TRACK_UPDATED,
     TRACKS_REORDERED,
@@ -172,20 +174,24 @@ void gtkpod_notify_data_unchanged(iTunesDB *itdb);
 
 iTunesDB* gtkpod_get_current_itdb();
 void gtkpod_set_current_itdb(iTunesDB* itdb);
+
 Playlist* gtkpod_get_current_playlist();
 void gtkpod_set_current_playlist(Playlist* playlist);
+void gtkpod_playlist_added(iTunesDB *itdb, Playlist *playlist, gint32 pos);
+
 GList *gtkpod_get_displayed_tracks();
 void gtkpod_set_displayed_tracks(GList *tracks);
 GList *gtkpod_get_selected_tracks();
 void gtkpod_set_selected_tracks(GList *tracks);
+void gtkpod_track_added(Track *track);
+void gtkpod_track_removed(Track *track);
+void gtkpod_track_updated(Track *track);
+void gtkpod_tracks_reordered();
+
 void gtkpod_set_sort_enablement(gboolean enable);
 gboolean gtkpod_get_sort_enablement();
-void gtkpod_playlist_added(iTunesDB *itdb, Playlist *playlist, gint32 pos);
-void gtkpod_playlist_updated(Playlist *playlist);
-void gtkpod_track_updated(Track *track);
 
 void gtkpod_broadcast_preference_change(gchar *preference_name, gint value);
-void gtkpod_tracks_reordered();
 
 void gtkpod_register_exporter(Exporter *exporter);
 void gtkpod_unregister_exporter();

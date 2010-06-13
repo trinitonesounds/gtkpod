@@ -1,5 +1,6 @@
 /*
-|  Copyright (C) 2007 P.G. Richardson <phantom_sf at users.sourceforge.net>
+|  Copyright (C) 2002-2010 Jorg Schuler <jcsjcs at users sourceforge net>
+|                                          Paul Richardson <phantom_sf at users.sourceforge.net>
 |  Part of the gtkpod project.
 |
 |  URL: http://www.gtkpod.org/
@@ -26,31 +27,30 @@
 |  $Id$
 */
 
-#ifndef __FETCHCOVER_H__
-#define __FETCHCOVER_H__
+#ifndef PLUGIN_H_
+#define PLUGIN_H_
 
-#include <string.h>
-#include <gtk/gtk.h>
-#include <libxml/parser.h>
-#include <libxml/tree.h>
-#include "libgtkpod/gp_private.h"
-#include "libgtkpod/itdb.h"
-#include "libgtkpod/prefs.h"
-#include "display_coverart.h"
-
-typedef struct
-{
-	GdkPixbuf *image;
-	GString *url;
-	gchar *dir;
-	gchar *filename;
-	GList *tracks;
-	gchar *err_msg;
-} Fetch_Cover;
-
-Fetch_Cover *fetchcover_new (gchar *url_path, GList *trks);
-gboolean fetchcover_net_retrieve_image (Fetch_Cover *fetch_cover);
-gboolean fetchcover_select_filename (Fetch_Cover *fetch_cover);
-void free_fetchcover (Fetch_Cover *fcover);
-
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
 #endif
+
+#include <libanjuta/anjuta-plugin.h>
+
+#define UI_FILE GTKPOD_UI_DIR"/cover_display.ui"
+#define GLADE_FILE GTKPOD_GLADE_DIR"/cover_display.glade"
+
+typedef struct _CoverDisplayPlugin CoverDisplayPlugin;
+typedef struct _CoverDisplayPluginClass CoverDisplayPluginClass;
+
+struct _CoverDisplayPlugin {
+    AnjutaPlugin parent;
+    GtkWidget *cover_window;
+    gint uiid;
+    GtkActionGroup *action_group;
+};
+
+struct _CoverDisplayPluginClass {
+    AnjutaPluginClass parent_class;
+};
+
+#endif /* PLUGIN_H_ */

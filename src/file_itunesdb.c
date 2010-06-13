@@ -851,6 +851,7 @@ iTunesDB *gp_load_ipod(iTunesDB *itdb) {
                             ltr->app_rating = ltr->rating;
                             ltr->rating = itr->rating;
                         }
+                        gtkpod_track_updated(ltr);
                         data_changed(ltr->itdb);
                     }
                     g_list_free(tracks);
@@ -1020,9 +1021,6 @@ static gboolean write_extended_info(iTunesDB *itdb) {
     g_return_val_if_fail (itdb->filename, FALSE);
     eitdb = itdb->userdata;
     g_return_val_if_fail (eitdb, FALSE);
-
-    g_message("TODO - method to update space upon write\n");
-    //    space_data_update();
 
     name = g_strdup_printf("%s.ext", itdb->filename);
     fp = fopen(name, "w");

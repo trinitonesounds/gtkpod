@@ -835,6 +835,8 @@ static void anjuta_app_setup_widget(AnjutaApp* app, const gchar* name, GtkWidget
      */
     g_signal_connect(G_OBJECT(item), "remove", G_CALLBACK(on_widget_remove), app);
     g_signal_connect_after(G_OBJECT(widget), "destroy", G_CALLBACK(on_widget_destroy), app);
+
+    gtk_widget_show(item);
 }
 
 static void anjuta_app_add_widget_full(AnjutaShell *shell, GtkWidget *widget, const char *name, const char *title, const char *stock_id, AnjutaShellPlacement placement, gboolean locked, GError **error) {

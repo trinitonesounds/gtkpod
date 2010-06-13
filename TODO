@@ -1,7 +1,6 @@
 Prospective Plugins:
 #	core
-	coverart display
-	filter bar
+#	coverart display
 #  track editor
 	play tracks now
 #    info window
@@ -66,17 +65,12 @@ Sorttab Menu
 # Save on exit
 
 - Tools plugin
-- CoverArt Plugin
-- Filter Plugin
-- Progress bar for saving and lengthy operations
 
 # Preference windows for each plugin - Should they add items to standard windows or contribute their own
   # prefsdlg.c - Refactor preferences dialog to appear as pages anjuta preferences dialog
 
 # plugin remaining
-display_coverart.*
 display_photo.*
-fetchcover.*
 # info.* / infodlg.*
 # help.*
 

@@ -7,7 +7,6 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 appdatadir = $(pkgdatadir)/data
 appdata_DATA =				\
-	default-cover.png		\
 	gtkpod-icon-32-2.png	\
 	gtkpod-icon-32.png		\
 	gtkpod-icon-48.png		\

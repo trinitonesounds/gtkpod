@@ -497,6 +497,7 @@ void nm_tracks_list (GList *list)
 	 ++succ_count;
 	 if(old_soundcheck != track->soundcheck)
 	 {
+	     gtkpod_track_updated(track);
 	     data_changed (track->itdb);
 	 }
      }

@@ -1768,18 +1768,11 @@ void update_track_from_file(iTunesDB *itdb, Track *track) {
         netr->tartwork_changed = TRUE;
 
         /* notify display model */
+        gtkpod_track_updated(track);
         if (netr->tchanged) {
             data_changed(itdb);
             netr->tchanged = FALSE;
         }
-        g_message("TODO coverart may have changed only");
-        //	else
-        //	{
-        //		/* Rather than depend on the track data being changed, only the artwork may have changed
-        //		 * hence the reason for the user updating from file
-        //		 */
-        //		coverart_track_changed (track, COVERART_CHANGE_SIGNAL);
-        //	}
 
         display_updated(track, NULL);
         g_free(oldhash);

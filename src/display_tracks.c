@@ -120,7 +120,6 @@ static gboolean filter_tracks(GtkTreeModel *model, GtkTreeIter *iter, gpointer e
                 continue;
 
             data = track_get_text(tr, TM_to_T(i));
-
             if (data && utf8_strcasestr(data, text)) {
                 g_free(data);
                 result = TRUE;
@@ -148,12 +147,6 @@ static void convert_iter(GtkTreeModel *model, GtkTreeIter *from, GtkTreeIter *to
         gtk_tree_model_filter_convert_iter_to_child_iter(GTK_TREE_MODEL_FILTER (model), to, from);
 }
 
-/*static void update_model_view (GtkTreeModel *model)
- {
- if (GTK_IS_TREE_MODEL_FILTER (model))
- gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (model));
- }*/
-
 static GtkTreeModelFilter *get_filter(GtkTreeView *tree) {
     GtkTreeModel *model = gtk_tree_view_get_model(tree);
 
@@ -169,20 +162,8 @@ static GtkTreeModelFilter *get_filter(GtkTreeView *tree) {
     }
 }
 
-G_MODULE_EXPORT void on_search_entry_changed(GtkEditable *editable, gpointer user_data) {
+void on_search_entry_changed(GtkEditable *editable, gpointer user_data) {
     gtk_tree_model_filter_refilter(get_filter(track_treeview));
-}
-
-G_MODULE_EXPORT void on_searchbar_down_button_clicked(GtkWidget *widget, gpointer data) {
-    prefs_set_int(KEY_DISPLAY_SEARCH_ENTRY, FALSE);
-
-    display_show_hide_searchbar();
-}
-
-G_MODULE_EXPORT void on_searchbar_up_button_clicked(GtkWidget *widget, gpointer data) {
-    prefs_set_int(KEY_DISPLAY_SEARCH_ENTRY, TRUE);
-
-    display_show_hide_searchbar();
 }
 
 /* ---------------------------------------------------------------- */
@@ -782,8 +763,7 @@ static void tm_rating_edited(RBCellRendererRating *renderer, const gchar *path_s
     if ((int) rating * ITDB_RATING_STEP != track->rating) {
         track->rating = (int) rating * ITDB_RATING_STEP;
         track->time_modified = time(NULL);
-        g_message("TODO - signal that a track has been changed");
-        //		pm_track_changed (track);
+        gtkpod_track_updated(track);
         data_changed(track->itdb);
 
         if (prefs_get_int("id3_write")) {
@@ -922,8 +902,7 @@ static void tm_cell_edited(GtkCellRendererText *renderer, const gchar *path_stri
         /*      printf ("  changed: %d\n", changed); */
         if (changed) {
             track->time_modified = time(NULL);
-            g_message("TODO - signal that a track has been changed");
-            //        pm_track_changed (track);    /* notify playlist model... */
+            gtkpod_track_updated (track);    /* notify playlist model... */
             data_changed(track->itdb); /* indicate that data has changed */
 
             if (prefs_get_int("id3_write")) {
@@ -1360,7 +1339,7 @@ void tm_rows_reordered(void) {
          sort tabs */
         if (changed) {
             data_changed(itdb);
-            tm_adopt_order();
+            gtkpod_tracks_reordered();
         }
     }
 }
@@ -2254,15 +2233,6 @@ static gboolean tm_selection_changed_cb(gpointer data) {
             tm_set_search_column(col_id);
     }
 
-    g_message("TODO - update coverart view");
-    /* update the coverart display */
-    //    GList *selected = display_get_selection(prefs_get_int("sort_tab_num"));
-    //    if (selected != NULL) {
-    //        Track *track = selected->data;
-    //        if (track != NULL)
-    //            coverart_select_cover(track);
-    //    }
-
     gtkpod_set_selected_tracks(tm_get_selected_tracks());
 
     return FALSE;
@@ -2277,6 +2247,7 @@ static void tm_selection_changed(GtkTreeSelection *selection, gpointer data) {
 static void tm_create_treeview(void) {
     GtkTreeModel *model = NULL;
     GtkWidget *track_window;
+    GtkWidget *track_filter_entry;
     GtkTreeSelection *select;
     gint col;
     GtkWidget *stv = gtk_tree_view_new();
@@ -2375,6 +2346,13 @@ static void tm_create_treeview(void) {
     else { /* reasonable default */
         tm_set_search_column(TM_COLUMN_TITLE);
     }
+
+    track_filter_entry = gtkpod_xml_get_widget(get_track_glade(), "search_entry");
+    g_return_if_fail (track_filter_entry);
+
+    g_signal_connect (G_OBJECT (track_filter_entry), "changed",
+                G_CALLBACK (on_search_entry_changed),
+                (gpointer)0);
 }
 
 void tm_create_track_display(GtkWidget *parent) {

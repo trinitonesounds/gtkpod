@@ -278,8 +278,6 @@ static void on_st_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guin
     if (page_num != ST_CAT_SPECIAL) {
         st_set_string_compare_func(inst, page_num);
     }
-    g_message("TODO: on_st_switch_page: space_data_update commented out");
-    //    space_data_update();
     st_page_selected(notebook, page_num);
 }
 
@@ -585,9 +583,6 @@ static void sp_go_cb(gpointer user_data1, gpointer user_data2) {
     printf ("sp_go_cb enter: %ld.%06ld sec\n",
             time.tv_sec % 3600, time.tv_usec);
 #endif
-
-    g_message("TODO: sp_go_cb: space_data_update todo");
-    //    space_data_update();
 
     /* Sanity */
     if (st == NULL)
@@ -2060,8 +2055,7 @@ static void st_cell_edited(GtkCellRendererText *renderer, const gchar *path_stri
                     *itemp_utf8 = g_strdup(new_text);
                 }
                 track->time_modified = time(NULL);
-                g_message("TODO: st_cell_edited: signal that a track has changed");
-                //                pm_track_changed(track);
+                gtkpod_track_updated(track);
                 /* If prefs say to write changes to file, do so */
                 if (prefs_get_int("id3_write")) {
                     /* T_item tag_id;*/
