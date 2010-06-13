@@ -25,9 +25,10 @@ include ../plugins.mk
 plugin_LTLIBRARIES = libdetails_editor.la
 
 # Plugin sources
-libdetails_editor_la_SOURCES = plugin.c plugin.h \
-							   							 details.c details.h \
-															 details_editor_actions.c details_editor_actions.h
+libdetails_editor_la_SOURCES = 	plugin.c plugin.h \
+								details.c details.h \
+								details_editor_actions.c details_editor_actions.h \
+								fetchcover.c fetchcover.h
 							   
 libdetails_editor_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 

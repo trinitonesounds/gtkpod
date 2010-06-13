@@ -75,14 +75,15 @@ void gtkpod_init(int argc, char *argv[]) {
 
     /* Initialize application class instance*/
     app = ANJUTA_APP(anjuta_app_new());
-
-    /* initialise gtkpod library items depedent on path of executable*/
-    gp_init(GTKPOD_APP(app), argc, argv);
+    gtkpod_app = GTKPOD_APP(app);
 
     /* Set the glade xml file of the app */
     glade_xml_file = g_build_filename(get_glade_dir(), "gtkpod.glade", NULL);
     gtkpod_app_set_glade_xml(glade_xml_file);
     g_free(glade_xml_file);
+
+    /* initialise gtkpod library items depedent on path of executable*/
+    gp_init(argc, argv);
 
     /* Add blocking widgets from the framework */
     add_blocked_widget(app->toolbar);

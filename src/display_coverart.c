@@ -383,7 +383,6 @@ static void draw(cairo_t *cairo_context) {
     cairo_set_operator(cairo_context, CAIRO_OPERATOR_SOURCE);
     cairo_paint(cairo_context);
     cairo_restore(cairo_context);
-    g_free(color);
 
     Album_Item *album;
     gint i, album_index;
@@ -435,12 +434,12 @@ static void draw(cairo_t *cairo_context) {
         cairo_paint(cairo_context);
 
         /* Draw a black line around the cd cover */
+        cairo_save(cairo_context);
         cairo_set_line_width(cairo_context, 1);
         cairo_set_source_rgb(cairo_context, 0, 0, 0);
-
         cairo_rectangle(cairo_context, cover->img_x, cover->img_y, cover->img_width, cover->img_height);
-
         cairo_stroke(cairo_context);
+        cairo_restore(cairo_context);
 
         /* Display the highlight */
         set_highlight(cover, cover_index[i], cairo_context);
@@ -449,8 +448,10 @@ static void draw(cairo_t *cairo_context) {
         GdkPixbuf *reflection;
         reflection = gdk_pixbuf_flip(scaled, FALSE);
 
+        cairo_save(cairo_context);
         gdk_cairo_set_source_pixbuf(cairo_context, reflection, cover->img_x, cover->img_y + cover->img_height + 2);
         cairo_paint(cairo_context);
+        cairo_restore(cairo_context);
 
         g_object_unref(reflection);
         g_object_unref(scaled);
@@ -459,7 +460,6 @@ static void draw(cairo_t *cairo_context) {
         set_shadow_reflection(cover, cairo_context);
 
         cairo_save(cairo_context);
-
         /* Set the text if the index is the central image cover */
         if (cover_index[i] == IMG_MAIN) {
             draw_string(cairo_context, album->artist, cover->img_x + (cover->img_width / 2), cover->img_y + cover->img_height + 15);
@@ -490,6 +490,7 @@ static void draw(cairo_t *cairo_context) {
             album->scaled_art = NULL;
         }
     }
+    g_free(color);
 }
 
 /**
@@ -776,6 +777,7 @@ static void set_shadow_reflection(Cover_Item *cover, cairo_t *cr) {
     gdouble b = ((gdouble) (color->blue >> 8)) / 255;
     g_free(color);
 
+    cairo_save(cr);
     cairo_pattern_t *pat;
     pat = cairo_pattern_create_linear(cover->img_x, cover->img_y + cover->img_height + 2, cover->img_x, cover->img_y
             + cover->img_height + 2 + cover->img_height);
@@ -785,6 +787,7 @@ static void set_shadow_reflection(Cover_Item *cover, cairo_t *cr) {
     cairo_set_source(cr, pat);
     cairo_fill(cr);
     cairo_pattern_destroy(pat);
+    cairo_restore(cr);
 }
 
 /**

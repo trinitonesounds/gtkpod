@@ -28,7 +28,8 @@ plugin_LTLIBRARIES = libcover_display.la
 libcover_display_la_SOURCES = plugin.c plugin.h \
 							  display_coverart.c display_coverart.h \
 							  cover_display_context_menu.c cover_display_context_menu.h \
-							  fetchcover.c fetchcover.h
+							  fetchcover.c fetchcover.h \
+							  cover_display_preferences.c cover_display_preferences.h
 
 libcover_display_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 

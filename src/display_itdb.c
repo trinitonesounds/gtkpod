@@ -751,14 +751,10 @@ void gp_track_validate_entries(Track *track) {
  * of one local database and one ipod database.
  *
  */
-void gp_init(GtkPodApp *single_app, int argc, char *argv[]) {
+void gp_init(int argc, char *argv[]) {
     gchar *cfgdir;
     gint i;
     GtkTooltips *main_tooltips;
-
-    g_return_if_fail (single_app);
-
-    gtkpod_app = single_app;
 
     prefs_init(argc, argv);
     cfgdir = prefs_get_cfgdir();

@@ -312,6 +312,7 @@ void file_convert_init() {
     /* start timeout function for the scheduler */
     conversion->timeout_id = g_timeout_add(100, /* every 100 ms */
     conversion_scheduler, conversion);
+    g_object_unref(G_OBJECT (log_xml));
 }
 
 /* Shut down conversion infrastructure */
@@ -450,41 +451,28 @@ static void conversion_update_default_sizes(Conversion *conv) {
  items. g_mutex_lock(conv->mutex) before calling. Used in
  conversion_log_window_delete() and conversion_prefs_changed(). */
 static void conversion_display_hide_log_window(Conversion *conv) {
-    //    GtkWidget *mi;
     /* show display log if it was previously hidden and should be
      shown again */
-    g_message("TODO coversion_display_hide_log_window - commented out\n");
-    //    mi = gtkpod_xml_get_widget (main_window_xml, "view_conversion_log");
-    //    if (prefs_get_int (FILE_CONVERT_DISPLAY_LOG))
-    //    {
-    //	if (conv->log_window_hidden && !conv->log_window_shown)
-    //	{
-    //	    gtk_widget_show (conv->log_window);
-    //	    if (conv->log_window_posx != G_MININT)
-    //	    {
-    //		gtk_window_move (GTK_WINDOW (conv->log_window),
-    //				 conv->log_window_posx,
-    //				 conv->log_window_posy);
-    //	    }
-    //	}
-    //	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), TRUE);
-    //	conv->log_window_shown = TRUE;
-    //    }
-    //    else
-    //    {
-    //	if (conv->log_window_shown)
-    //	{   /* window has previously been shown */
-    //	    gint posx, posy;
-    //	    gtk_window_get_position (GTK_WINDOW (conv->log_window),
-    //				     &posx, &posy);
-    //	    conv->log_window_posx = posx;
-    //	    conv->log_window_posy = posy;
-    //	}
-    //	conv->log_window_shown = FALSE;
-    //	conv->log_window_hidden = TRUE;
-    //	gtk_widget_hide (conv->log_window);
-    //	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), FALSE);
-    //    }
+    if (prefs_get_int(FILE_CONVERT_DISPLAY_LOG)) {
+        if (conv->log_window_hidden && !conv->log_window_shown) {
+            gtk_widget_show(conv->log_window);
+            if (conv->log_window_posx != G_MININT) {
+                gtk_window_move(GTK_WINDOW (conv->log_window), conv->log_window_posx, conv->log_window_posy);
+            }
+        }
+        conv->log_window_shown = TRUE;
+    }
+    else {
+        if (conv->log_window_shown) { /* window has previously been shown */
+            gint posx, posy;
+            gtk_window_get_position(GTK_WINDOW (conv->log_window), &posx, &posy);
+            conv->log_window_posx = posx;
+            conv->log_window_posy = posy;
+        }
+        conv->log_window_shown = FALSE;
+        conv->log_window_hidden = TRUE;
+        gtk_widget_hide(conv->log_window);
+    }
 }
 
 /* Signal when user tries to close the log window */

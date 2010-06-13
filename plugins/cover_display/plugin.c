@@ -32,9 +32,14 @@
 
 #include <glib.h>
 #include <libanjuta/anjuta-utils.h>
+#include <libanjuta/interfaces/ianjuta-preferences.h>
 #include "libgtkpod/gtkpod_app_iface.h"
+#include "libgtkpod/prefs.h"
 #include "plugin.h"
 #include "display_coverart.h"
+#include "cover_display_preferences.h"
+
+#define TAB_NAME "Coverart Display"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -42,6 +47,14 @@ static gpointer parent_class;
 static GtkActionEntry cover_actions[] =
     {
     };
+
+static void set_default_preferences() {
+    if (! prefs_get_string_value("coverart_display_bg_color", NULL))
+        prefs_set_string ("coverart_display_bg_color", "#000000");
+
+    if (! prefs_get_string_value("coverart_display_fg_color", NULL))
+       prefs_set_string ("coverart_display_fg_color", "#FFFFFF");
+}
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
@@ -58,6 +71,9 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     /* Merge UI */
     cover_display_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
+
+    /* Set preferences */
+    set_default_preferences();
 
     /* Add widget in Shell. Any number of widgets can be added */
     cover_display_plugin->cover_window = gtk_scrolled_window_new(NULL, NULL);
@@ -118,7 +134,40 @@ static void cover_display_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_plugin;
 }
 
+static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
+    gchar *file;
+    GdkPixbuf *pixbuf;
+    GdkPixbuf *scaled;
+
+    CoverDisplayPlugin* plugin = COVER_DISPLAY_PLUGIN(ipref);
+    plugin->prefs = init_cover_preferences();
+    if (plugin->prefs == NULL)
+        return;
+
+    file = g_build_filename(GTKPOD_IMAGE_DIR, "default-cover.png", NULL);
+    pixbuf = gdk_pixbuf_new_from_file(file, NULL);
+    scaled = gdk_pixbuf_scale_simple(pixbuf, 48, 48, GDK_INTERP_BILINEAR);
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-coverart-settings", _(TAB_NAME), scaled, plugin->prefs);
+    g_free(file);
+    g_object_unref(pixbuf);
+    g_object_unref(scaled);
+}
+
+static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
+    anjuta_preferences_remove_page(prefs, _(TAB_NAME));
+    CoverDisplayPlugin* plugin = COVER_DISPLAY_PLUGIN(ipref);
+    gtk_widget_destroy(plugin->prefs);
+}
+
+static void
+ipreferences_iface_init(IAnjutaPreferencesIface* iface)
+{
+    iface->merge = ipreferences_merge;
+    iface->unmerge = ipreferences_unmerge;
+}
+
 ANJUTA_PLUGIN_BEGIN (CoverDisplayPlugin, cover_display_plugin);
+ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);
 ANJUTA_PLUGIN_END;
 
 ANJUTA_SIMPLE_PLUGIN (CoverDisplayPlugin, cover_display_plugin);

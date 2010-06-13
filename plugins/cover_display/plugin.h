@@ -39,6 +39,14 @@
 #define UI_FILE GTKPOD_UI_DIR"/cover_display.ui"
 #define GLADE_FILE GTKPOD_GLADE_DIR"/cover_display.glade"
 
+extern GType cover_display_plugin_get_type (GTypeModule *module);
+#define COVER_DISPLAY_TYPE_PLUGIN         (cover_display_plugin_get_type (NULL))
+#define COVER_DISPLAY_PLUGIN(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), COVER_DISPLAY_TYPE_PLUGIN, CoverDisplayPlugin))
+#define COVER_DISPLAY_PLUGIN_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST ((k), COVER_DISPLAY_TYPE_PLUGIN, CoverDisplayPluginClass))
+#define COVER_DISPLAY_IS_PLUGIN(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), COVER_DISPLAY_TYPE_PLUGIN))
+#define COVER_DISPLAY_IS_PLUGIN_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), COVER_DISPLAY_TYPE_PLUGIN))
+#define COVER_DISPLAY_PLUGIN_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), COVER_DISPLAY_TYPE_PLUGIN, CoverDisplayPluginClass))
+
 typedef struct _CoverDisplayPlugin CoverDisplayPlugin;
 typedef struct _CoverDisplayPluginClass CoverDisplayPluginClass;
 
@@ -47,6 +55,7 @@ struct _CoverDisplayPlugin {
     GtkWidget *cover_window;
     gint uiid;
     GtkActionGroup *action_group;
+    GtkWidget *prefs;
 };
 
 struct _CoverDisplayPluginClass {

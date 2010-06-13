@@ -148,7 +148,7 @@ struct _GtkPodAppInterface {
 
 GType gtkpod_app_get_type(void);
 
-void gp_init(GtkPodApp *window, int argc, char *argv[]);
+void gp_init(int argc, char *argv[]);
 
 void gtkpod_app_set_glade_xml(gchar *xml_file);
 gchar* gtkpod_get_glade_xml();

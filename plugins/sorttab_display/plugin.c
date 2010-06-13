@@ -50,46 +50,20 @@ static gpointer parent_class;
 static GtkActionEntry sorttab_actions[] =
     {
         {
-            "ActionDeleteSelectedEntry",
-            GTK_STOCK_DELETE,
-            N_("Selected Filter Tab Entry from Playlist"),
-            NULL,
-            NULL,
-            G_CALLBACK (on_delete_selected_entry_from_playlist)
-        },
+            "ActionDeleteSelectedEntry", GTK_STOCK_DELETE, N_("Selected Filter Tab Entry from Playlist"), NULL, NULL,
+            G_CALLBACK (on_delete_selected_entry_from_playlist) },
         {
-            "ActionDeleteSelectedEntryFromDb",
-            GTK_STOCK_DELETE,
-            N_("Selected Filter Tab Entry from Database"),
-            NULL,
-            NULL,
-            G_CALLBACK (on_delete_selected_entry_from_database)
-        },
+            "ActionDeleteSelectedEntryFromDb", GTK_STOCK_DELETE, N_("Selected Filter Tab Entry from Database"), NULL,
+            NULL, G_CALLBACK (on_delete_selected_entry_from_database) },
         {
-            "ActionDeleteSelectedEntryFromDev",
-            GTK_STOCK_DELETE,
-            N_("Selected Filter Tab Entry from Device"),
-            NULL,
-            NULL,
-            G_CALLBACK (on_delete_selected_entry_from_device)
-        },
+            "ActionDeleteSelectedEntryFromDev", GTK_STOCK_DELETE, N_("Selected Filter Tab Entry from Device"), NULL,
+            NULL, G_CALLBACK (on_delete_selected_entry_from_device) },
         {
-            "ActionUpdateTabEntry",
-            GTK_STOCK_REFRESH,
-            N_("Selected Tab Entry"),
-            NULL,
-            NULL,
-            G_CALLBACK (on_update_selected_tab_entry)
-        },
+            "ActionUpdateTabEntry", GTK_STOCK_REFRESH, N_("Selected Tab Entry"), NULL, NULL,
+            G_CALLBACK (on_update_selected_tab_entry) },
         {
-            "ActionUpdateMservTabEntry",
-            GTK_STOCK_REFRESH,
-            N_("Selected Tab Entry"),
-            NULL,
-            NULL,
-            G_CALLBACK (on_update_mserv_selected_tab_entry)
-        }
-    };
+            "ActionUpdateMservTabEntry", GTK_STOCK_REFRESH, N_("Selected Tab Entry"), NULL, NULL,
+            G_CALLBACK (on_update_mserv_selected_tab_entry) } };
 
 static void set_default_preferences() {
     gint i;
@@ -98,62 +72,60 @@ static void set_default_preferences() {
     /* Set sorting tab defaults */
     for (i = 0; i < SORT_TAB_MAX; i++) {
         /* sp_created_cond renamed to sp_added_cond */
-        if (prefs_get_int_value_index("sp_created_cond", i, &int_buf))
-        {
+        if (prefs_get_int_value_index("sp_created_cond", i, &int_buf)) {
             prefs_set_int_index("sp_added_cond", i, int_buf);
             prefs_set_string("sp_created_cond", NULL);
         }
 
         /* sp_created_state renamed to sp_added_state */
-        if (prefs_get_int_value_index("sp_created_state", i, &int_buf))
-        {
+        if (prefs_get_int_value_index("sp_created_state", i, &int_buf)) {
             prefs_set_int_index("sp_added_state", i, int_buf);
             prefs_set_string("sp_created_state", NULL);
         }
 
-        if (! prefs_get_int_value_index("st_autoselect", i, NULL))
+        if (!prefs_get_int_value_index("st_autoselect", i, NULL))
             prefs_set_int_index("st_autoselect", i, TRUE);
 
-        if (! prefs_get_int_value_index("st_category", i, NULL))
+        if (!prefs_get_int_value_index("st_category", i, NULL))
             prefs_set_int_index("st_category", i, (i < ST_CAT_NUM ? i : 0));
 
-        if (! prefs_get_int_value_index("sp_or", i, NULL))
+        if (!prefs_get_int_value_index("sp_or", i, NULL))
             prefs_set_int_index("sp_or", i, FALSE);
 
-        if (! prefs_get_int_value_index("sp_rating_cond", i, NULL))
+        if (!prefs_get_int_value_index("sp_rating_cond", i, NULL))
             prefs_set_int_index("sp_rating_cond", i, FALSE);
 
-        if (! prefs_get_int_value_index("sp_playcount_cond", i, NULL))
+        if (!prefs_get_int_value_index("sp_playcount_cond", i, NULL))
             prefs_set_int_index("sp_playcount_cond", i, FALSE);
 
-        if (! prefs_get_int_value_index("sp_played_cond", i, NULL))
+        if (!prefs_get_int_value_index("sp_played_cond", i, NULL))
             prefs_set_int_index("sp_played_cond", i, FALSE);
 
-        if (! prefs_get_int_value_index("sp_modified_cond", i, NULL))
+        if (!prefs_get_int_value_index("sp_modified_cond", i, NULL))
             prefs_set_int_index("sp_modified_cond", i, FALSE);
 
-        if (! prefs_get_int_value_index("sp_added_cond", i, NULL))
+        if (!prefs_get_int_value_index("sp_added_cond", i, NULL))
             prefs_set_int_index("sp_added_cond", i, FALSE);
 
-        if (! prefs_get_int_value_index("sp_rating_state", i, NULL))
+        if (!prefs_get_int_value_index("sp_rating_state", i, NULL))
             prefs_set_int_index("sp_rating_state", i, 0);
 
-        if (! prefs_get_string_value_index("sp_played_state", i, NULL))
+        if (!prefs_get_string_value_index("sp_played_state", i, NULL))
             prefs_set_string_index("sp_played_state", i, ">4w");
 
-        if (! prefs_get_string_value_index("sp_modified_state", i, NULL))
+        if (!prefs_get_string_value_index("sp_modified_state", i, NULL))
             prefs_set_string_index("sp_modified_state", i, "<1d");
 
-        if (! prefs_get_string_value_index("sp_added_state", i, NULL))
+        if (!prefs_get_string_value_index("sp_added_state", i, NULL))
             prefs_set_string_index("sp_added_state", i, "<1d");
 
-        if (! prefs_get_int_value_index("sp_playcount_low", i, NULL))
+        if (!prefs_get_int_value_index("sp_playcount_low", i, NULL))
             prefs_set_int_index("sp_playcount_low", i, 0);
 
-        if (! prefs_get_int_value_index("sp_playcount_high", i, NULL))
+        if (!prefs_get_int_value_index("sp_playcount_high", i, NULL))
             prefs_set_int_index("sp_playcount_high", i, -1);
 
-        if (! prefs_get_int_value_index("sp_autodisplay", i, NULL))
+        if (!prefs_get_int_value_index("sp_autodisplay", i, NULL))
             prefs_set_int_index("sp_autodisplay", i, FALSE);
     }
 
@@ -281,8 +253,8 @@ static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
 }
 
 ANJUTA_PLUGIN_BEGIN (SorttabDisplayPlugin, sorttab_display_plugin);
-        ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);ANJUTA_PLUGIN_END
-;
+ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);
+ANJUTA_PLUGIN_END;
 
 ANJUTA_SIMPLE_PLUGIN (SorttabDisplayPlugin, sorttab_display_plugin)
 ;
