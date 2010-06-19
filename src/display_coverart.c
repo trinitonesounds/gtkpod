@@ -160,9 +160,8 @@ static gboolean coverart_window_valid() {
  *
  * Initialise the boxes and canvases of the coverart_display.
  *
- * return: cover panel for addition to window.
  */
-GtkWidget *coverart_init_display(GtkWidget *parent) {
+void coverart_init_display(GtkWidget *parent) {
     GtkWidget *cover_temp_window;
 
     DEFAULT_FILE = g_build_filename(GTKPOD_IMAGE_DIR, "default-cover.png", NULL);
@@ -182,13 +181,13 @@ GtkWidget *coverart_init_display(GtkWidget *parent) {
     cdwidget->draw_area = gtk_drawing_area_new();
     cdwidget->cdcovers = g_ptr_array_sized_new(IMG_TOTAL);
 
-    g_return_val_if_fail (cdwidget->contentpanel, NULL);
-    g_return_val_if_fail (cdwidget->canvasbox, NULL);
-    g_return_val_if_fail (cdwidget->controlbox, NULL);
-    g_return_val_if_fail (cdwidget->leftbutton, NULL);
-    g_return_val_if_fail (cdwidget->rightbutton, NULL);
-    g_return_val_if_fail (cdwidget->cdslider, NULL);
-    g_return_val_if_fail (cdwidget->draw_area, NULL);
+    g_return_if_fail (cdwidget->contentpanel);
+    g_return_if_fail (cdwidget->canvasbox);
+    g_return_if_fail (cdwidget->controlbox);
+    g_return_if_fail (cdwidget->leftbutton);
+    g_return_if_fail (cdwidget->rightbutton);
+    g_return_if_fail (cdwidget->cdslider);
+    g_return_if_fail (cdwidget->draw_area);
     /* according to GTK FAQ: move a widget to a new parent */
     gtk_widget_ref(cdwidget->contentpanel);
     gtk_container_remove(GTK_CONTAINER (cover_temp_window), cdwidget->contentpanel);
@@ -254,8 +253,6 @@ GtkWidget *coverart_init_display(GtkWidget *parent) {
     gtk_widget_show_all(parent);
 
     coverart_block_change(FALSE);
-
-    return cdwidget->contentpanel;
 }
 
 /**

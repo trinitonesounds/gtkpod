@@ -1656,9 +1656,6 @@ static void dnd_details_art_drag_data_received(GtkWidget *widget, GdkDragContext
         /* assign details window as the parent window so the file exists dialog is
          * properly centred and visible if a file has to be overwritten
          */
-        fcover->parent_window = GTK_WINDOW(details_view->window);
-        coverart_block_change (TRUE);
-
         if (fetchcover_net_retrieve_image (fcover))
         {
 #if DEBUG
@@ -1676,7 +1673,6 @@ static void dnd_details_art_drag_data_received(GtkWidget *widget, GdkDragContext
         image_error = g_strdup(fcover->err_msg);
 
         free_fetchcover (fcover);
-        coverart_block_change (FALSE);
 #else
         image_error = "Item had to be downloaded but gtkpod was not compiled with curl.";
         image_status = FALSE;

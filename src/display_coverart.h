@@ -90,9 +90,8 @@ extern const gchar *DISPLAY_COVER_SHOW;
  *
  * Initialise the boxes and canvases of the coverart_display.
  *
- * return: cover panel for addition to window.
  */
-GtkWidget *coverart_init_display(GtkWidget *parent);
+void coverart_init_display(GtkWidget *parent);
 
 /**
  * coverart_display_update:

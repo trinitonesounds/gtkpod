@@ -105,9 +105,6 @@ const gchar *KEY_MANUAL_SYNCDIR = "manual_syncdir";
  * Data global to this module only
  */
 
-/* End-of-list marker for variable-length lists */
-#define LIST_END_MARKER "----++++----"
-
 struct temp_prefs_save {
     GIOChannel *gio;
     GError **error;

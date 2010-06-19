@@ -36,7 +36,8 @@
 
 #include <gtk/gtk.h>
 
-
+/* End-of-list marker for variable-length lists */
+#define LIST_END_MARKER "----++++----"
 
 /* Not sure where to put these (maybe prefkeys.h?): prefs keys used */
 /* repository.c */
