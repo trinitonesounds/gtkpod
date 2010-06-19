@@ -9,6 +9,7 @@ SUBDIRS = . \
 	details_editor \
 	core_preferences \
 	info_display \
-	cover_display
+	cover_display \
+	coverweb
 
 # indent
