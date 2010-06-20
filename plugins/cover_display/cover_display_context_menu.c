@@ -51,19 +51,7 @@ static void display_track_artwork(GtkMenuItem *mi, gpointer data) {
 }
 
 static GtkWidget *add_display_big_coverart(GtkWidget *menu) {
-    const gchar *icon;
-    /* gets defined in gtk+ V2.8, but we only require V2.6 */
-#ifndef GTK_STOCK_FULLSCREEN
-#define GTK_STOCK_FULLSCREEN "gtk-fullscreen"
-#endif
-    if (gtk_check_version(2, 8, 0) == NULL) {
-        icon = GTK_STOCK_FULLSCREEN;
-    }
-    else {
-        icon = NULL;
-    }
-
-    return hookup_menu_item(menu, _("View Full Size Artwork"), icon, G_CALLBACK (display_track_artwork), NULL);
+    return hookup_menu_item(menu, _("View Full Size Artwork"), GTK_STOCK_FULLSCREEN, G_CALLBACK (display_track_artwork), NULL);
 }
 
 /**

@@ -1518,11 +1518,9 @@ void details_edit(GList *selected_tracks) {
     gint page, num_pages;
 
     if (!details_view || !details_view->window) {
-        g_message("Creating details editor window");
         create_details_editor_view();
     }
     else {
-        g_message("Redisplaying details editor window");
         gtkpod_display_widget(details_view->window);
     }
     details_set_tracks(selected_tracks);

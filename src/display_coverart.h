@@ -63,9 +63,7 @@ typedef struct {
 } Cover_Item;
 
 typedef struct {
-    GladeXML *xml;
-
-  /* Gtk widgets */
+    /* Gtk widgets */
     GtkWidget *parent;
 	GtkWidget *contentpanel;
 	GtkWidget *canvasbox;
