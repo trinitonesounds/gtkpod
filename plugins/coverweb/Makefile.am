@@ -43,7 +43,7 @@ AM_CPPFLAGS = \
     -DPACKAGE_DATA_DIR=\"$(datadir)\" \
     -DPACKAGE_SRC_DIR=\"$(srcdir)\" \
     $(GTKPOD_CFLAGS) \
-	$(PLUGIN_COVERWEB_CFLAGS)
+	  $(WEBKIT_CFLAGS)
 	
 # Plugin sources
 libcoverweb_la_SOURCES = plugin.c plugin.h \
@@ -56,7 +56,7 @@ libcoverweb_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 libcoverweb_la_LIBADD = \
     $(LIBGTKPOD_LIBS) \
     $(LIBANJUTA_LIBS) \
-    $(PLUGIN_COVERWEB_LIBS)
+    $(WEBKIT_LIBS)
     
 all-local: create-plugin-links create-ui-link create-glade-link copy-icons-dir
 

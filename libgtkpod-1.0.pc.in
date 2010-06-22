@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: libgtkpod
+Description: Library containing core gtk functions for the application gtkpod
+Version: @VERSION@
+Requires: gtk+-2.0 >= 2.8.0, glib-2.0 >= 2.15.0, gmodule-2.0, gthread-2.0 >= 0.14.0, libglade-2.0 >= 2.4.0, libgpod-1.0 >= 0.7.0, libanjuta-1.0 >= 2.30.0, gdl-1.0 >= 2.26.0
+Libs: -L${libdir} -lgtkpod
+Cflags: -I${includedir}/gtkpod-1.0

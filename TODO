@@ -92,7 +92,7 @@ Notes on trial build using ubuntu 910
 		- Install libgda-4.0-dev
 
 
-- Investigate the lack of ltmain.sh
-- Change configure.in to signal at the bottom status of webkit
-- pkconfig.pc for libgtkpod
+# Investigate the lack of ltmain.sh
+# Change configure.in to signal at the bottom status of webkit
+#- pkconfig.pc for libgtkpod
 
