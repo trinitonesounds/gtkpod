@@ -323,6 +323,9 @@ GList *gtkpod_get_displayed_tracks() {
 
 void gtkpod_set_displayed_tracks(GList *tracks) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    if (tracks == GTKPOD_APP_GET_INTERFACE (gtkpod_app)->displayed_tracks)
+        return; // Nothing to do
+
     if (tracks)
         GTKPOD_APP_GET_INTERFACE (gtkpod_app)->displayed_tracks = g_list_copy(tracks);
     else {
@@ -345,6 +348,9 @@ GList *gtkpod_get_selected_tracks() {
 
 void gtkpod_set_selected_tracks(GList *tracks) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    if (tracks == GTKPOD_APP_GET_INTERFACE (gtkpod_app)->selected_tracks)
+        return; // Nothing to do
+
     if (tracks)
         GTKPOD_APP_GET_INTERFACE (gtkpod_app)->selected_tracks = g_list_copy(tracks);
     else

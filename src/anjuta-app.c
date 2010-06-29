@@ -169,7 +169,7 @@ static void anjuta_gtkpod_app_display_widget(GtkWidget *widget) {
         w = g_object_get_data(G_OBJECT (widget), "dockitem");
     }
 
-    if (w && !gtk_widget_get_visible(w)) {
+    if (w) {
         // Only show docked widget if really sure it is no longer
         // in the dock layout, ie. widget is not visible
         gdl_dock_item_show_item(GDL_DOCK_ITEM (w));

@@ -1603,7 +1603,6 @@ void st_remove_track(Track *track, guint32 inst) {
  select "All" in accordance to the prefs settings. */
 void st_init(ST_CAT_item new_category, guint32 inst) {
     if (inst == prefs_get_int("sort_tab_num")) {
-        gtkpod_set_displayed_tracks(NULL);
         gtkpod_tracks_statusbar_update();
         return;
     }
@@ -1612,6 +1611,7 @@ void st_init(ST_CAT_item new_category, guint32 inst) {
 
         if (st == NULL)
             return; /* could happen during initialisation */
+
         sp_store_sp_entries(inst); /* store sp entries (if applicable) */
         st->unselected = FALSE; /* nothing was unselected so far */
         st->final = TRUE; /* all tracks are added */
@@ -1888,7 +1888,7 @@ static gboolean st_selection_changed_cb(gpointer data) {
             inst, time.tv_sec % 3600, time.tv_usec);
 #endif
 
-    /*   printf("st_s_c_cb %d: entered\n", inst); */
+    /* printf("st_s_c_cb %d: entered\n", inst); */
     st = sorttab[inst];
     if (st == NULL)
         return FALSE;
@@ -1906,8 +1906,8 @@ static gboolean st_selection_changed_cb(gpointer data) {
     }
     else { /* handle new selection */
         gtk_tree_model_get(model, &iter, ST_COLUMN_ENTRY, &new_entry, -1);
-        /*printf("selected instance %d, entry %x (was: %x)\n", inst,
-         *new_entry, st->current_entry);*/
+        /* printf("selected instance %d, entry %x (was: %x)\n", inst,
+         *new_entry, st->current_entry); */
 
         /* initialize next instance */
         st_init(-1, inst + 1);
@@ -1927,21 +1927,14 @@ static gboolean st_selection_changed_cb(gpointer data) {
                 Track *track = gl->data;
                 st_add_track(track, FALSE, TRUE, inst + 1);
             }
-            /* Advertise that a new set of tracks has been selected */
-            gtkpod_set_displayed_tracks(new_entry->members);
-
             st_enable_disable_view_sort(inst + 1, TRUE);
             st_add_track(NULL, TRUE, st->final, inst + 1);
+            /* Advertise that a new set of tracks has been selected */
+            if ((inst + 1) == prefs_get_int("sort_tab_num")) {
+                gtkpod_set_displayed_tracks(new_entry->members);
+            }
         }
         gtkpod_tracks_statusbar_update();
-
-        /* Select the cover in the coverart_display */
-        //        GList *gl = g_list_first(new_entry->members);
-        //        if (gl != NULL) {
-        //            Track *track = gl->data;
-        //            if (track != NULL)
-        //                coverart_select_cover(track);
-        //        }
     }
 
 #if DEBUG_TIMING
