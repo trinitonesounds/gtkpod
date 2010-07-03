@@ -1,3 +1,15 @@
+gtkpod V1.0.0
+			 Final release of gtkpod before the major UI refactorings with anjuta
+			 are incorporated.
+
+			 BUGFIX: Track filter tends to display no results
+
+			 BUGFIX: Various deficiencies with audiobooks. Thanks to Joel Smith.
+
+			 NEW FEATURE: Catalan translation of application include. Thanks to Nofre Móra.
+
+			 BUGFIX: Memory leaks. Thanks to Andrea Ordetti.
+
 gtkpod V0.99.16
 
        NEW FEATURE: Volumn control added to detail window for setting

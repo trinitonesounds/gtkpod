@@ -1,3 +1,98 @@
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Jun 6 19:45:17 2010 +0100
+
+    Filter seems to not work properly when trying to filter tracks
+
+    * The filter-as-type search bar does not seem to filter against tracks
+      correctly, rendering most of the time a blank view.
+
+    * misc.c
+     * Proposed Changed is to modify utf8_strcasestr search function to defer
+       to g_strrstr instead, which seems built into glib since its first
+       development.
+
+Author: Joel Smith <joel_smith@appsig.com>
+Date:   Sun May 16 09:27:31 2010 -0600
+
+    cmake updates for libmp4v2 detection and endian.h header
+
+Author: Joel Smith <jsf-lists.gtkpod@jk1.net>
+Date:   Sat May 1 13:48:38 2010 -0600
+
+    Fix bug for MP3 files with NULL genre being marked as audiobooks
+
+Author: Maia Kozheva <sikon@ubuntu.com>
+Date:   Sun May 16 16:59:53 2010 +0700
+
+    Bumped version in cmake; fixed cmake build to properly set HAVE_GIO
+
+Author: Paul Richardson aka phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Mon Apr 26 20:34:15 2010 +0100
+
+    Exclude MP4Tags* functions from builds with older libmp4v2 headers
+
+    * src/mp4file.c
+      Thanks to joel (jsf-lists.gtkpod@jk1.net) for the patch.
+
+Author: Paul Richardson aka phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Apr 25 00:19:01 2010 +0100
+
+    Translation file for Catalan
+
+    - Translation po file for Catalan language. Thanks to
+      Nofre Móra (keidon) for the contribution.
+
+    bug:2991770
+
+Author: Paul Richardson aka phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Apr 18 19:32:29 2010 +0100
+
+    Several enhancements to importing audiobooks, podcasts TV shows
+
+    * Patches thanks to Joel Smith <jsf-lists.gtkpod@jk1.net>.
+
+    * Main idea is that gtkpod should get the MP4 tags from MP4 files and
+      populate the track fields with whatever data is present so that
+      less manual setting of track details is required when importing
+      files.
+
+      * When importing MP4/M4V/M4A/M4P files, only set the media type
+        on a track if not already set
+
+      * Try to dlopen newest libmp4v2 first
+
+      * Check MP3 genre flag to see if it's an audiobook or podcast.
+        If the genre tag is set to audiobook or podcast, set the media
+        type appropriately.
+
+      * Support for UTF-16 chapter names in MP4 files
+
+      * Read Apple-specific atoms from mp4 files using mp4v2 for TV
+        Show data and media type
+
+      * Read Apple-specific atoms from MP4 files using mp4v2 without
+        MP4Tag functions for TV Show data and media type
+
+      * When importing audiobooks or podcasts, default to remember
+        playback position and skip when shuffling.
+
+      * Changing media type in file details to audiobook or podcast sets
+        the remember playback position and skip when shuffling flags.
+
+Author: Andrea Odetti <mariofutire@googlemail.com>
+Date:   Tue Mar 30 21:08:32 2010 +0100
+    Fix memory leak reported by valgrind.
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Mar 21 21:43:19 2010 +0000
+
+    Version of configure increased to 0.99.17GIT
+
+Author: Todd Zullinger <tmz@pobox.com>
+Date:   Mon Mar 8 15:29:55 2010 -0500
+
+    Remove leftover debugging in GIO autodetection code
+
 Author: Todd Zullinger <tmz@pobox.com>
 Date:   Sun Feb 14 17:46:06 2010 -0500
 
