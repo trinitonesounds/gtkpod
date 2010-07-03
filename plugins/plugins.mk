@@ -63,6 +63,6 @@ clean-glade-dir:
 	if  [ -h ../../data/glade/$(plugin_name).glade ]; then \
 		rm -f ../../data/glade/$(plugin_name).glade; \
 	fi; \
-		if  [ -h $(gtkpod_glade_dir)/$(plugin_name).xml ]; then \
+		if  [ -h ../../data/glade/$(plugin_name).xml ]; then \
 		rm -f ../../data/glade/$(plugin_name).xml; \
 	fi;
