@@ -36,9 +36,6 @@
 
 #include <libanjuta/anjuta-plugin.h>
 
-#define UI_FILE GTKPOD_UI_DIR"/info_display.ui"
-#define GLADE_FILE GTKPOD_GLADE_DIR"/info_display.glade"
-
 typedef struct _InfoDisplayPlugin InfoDisplayPlugin;
 typedef struct _InfoDisplayPluginClass InfoDisplayPluginClass;
 

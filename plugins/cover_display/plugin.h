@@ -36,8 +36,8 @@
 
 #include <libanjuta/anjuta-plugin.h>
 
-#define UI_FILE GTKPOD_UI_DIR"/cover_display.ui"
-#define GLADE_FILE GTKPOD_GLADE_DIR"/cover_display.glade"
+#define DEFAULT_COVER_ICON "cover_display-default-cover"
+#define DEFAULT_COVER_ICON_STOCK_ID "cover_display-default-cover-icon"
 
 extern GType cover_display_plugin_get_type (GTypeModule *module);
 #define COVER_DISPLAY_TYPE_PLUGIN         (cover_display_plugin_get_type (NULL))
@@ -56,6 +56,7 @@ struct _CoverDisplayPlugin {
     gint uiid;
     GtkActionGroup *action_group;
     GtkWidget *prefs;
+    gchar *gladepath;
 };
 
 struct _CoverDisplayPluginClass {

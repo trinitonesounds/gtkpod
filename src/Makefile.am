@@ -39,15 +39,3 @@ gtkpod_LDADD = $(GTKPOD_LIBS) $(INTLLIBS) @LIBOBJS@
 EXTRA_DIST = getopt.h
 
 CLEANFILES = date_parser.c date_parser2.c
-
-include ../data/directories.mk
-
-all-local: copy-icons-dir
-
-# Copy icons
-copy-icons-dir: create-icons-dir
-	if test -e ../data/icons; then \
-		sudo cp -rf ../data/icons/* $(gtkpod_image_dir)/; \
-		sudo chmod -R 755 $(gtkpod_image_dir)/*; \
-		sudo find $(gtkpod_image_dir) -name 'Makefile*' -delete; \
-	fi;

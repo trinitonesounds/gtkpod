@@ -36,10 +36,6 @@
 
 #include <libanjuta/anjuta-plugin.h>
 
-/* Stock IDs */
-#define UI_FILE GTKPOD_UI_DIR"/sorttab_display.ui"
-#define GLADE_FILE GTKPOD_GLADE_DIR"/sorttab_display.glade"
-
 extern GType sorttab_display_plugin_get_type (GTypeModule *module);
 #define SORTTAB_DISPLAY_TYPE_PLUGIN         (sorttab_display_plugin_get_type (NULL))
 #define SORTTAB_DISPLAY_PLUGIN(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), SORTTAB_DISPLAY_TYPE_PLUGIN, SorttabDisplayPlugin))

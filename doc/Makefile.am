@@ -24,7 +24,8 @@ doc_DATA = \
 	setting-ipod-properties.html \
 	the-sysinfo-file.html \
 	troubleshooting-faq.html \
-	view-and-edit-track-details.html
+	view-and-edit-track-details.html \
+	icon-licence.txt
 
 EXTRA_DIST = $(doc_DATA)
 

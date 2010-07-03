@@ -89,8 +89,6 @@ static GList *album_key_list;
 /* Dimensions used for the canvas */
 static gint MIN_WIDTH;
 static gint MIN_HEIGHT;
-/* Path of the png file used for albums without cd covers */
-static gchar *DEFAULT_FILE;
 /* Flag set to force an update of covers if a modification has been made */
 static gboolean force_pixbuf_covers = FALSE;
 /* signal handler id for the components */
@@ -161,16 +159,15 @@ static gboolean coverart_window_valid() {
  * Initialise the boxes and canvases of the coverart_display.
  *
  */
-void coverart_init_display(GtkWidget *parent) {
+void coverart_init_display(GtkWidget *parent, gchar *glade_path) {
     GtkWidget *cover_temp_window;
     GladeXML *xml;
-
-    DEFAULT_FILE = g_build_filename(GTKPOD_IMAGE_DIR, "default-cover.png", NULL);
 
     cdwidget = g_new0(CD_Widget, 1);
 
     cdwidget->parent = parent;
-    xml = gtkpod_xml_new(GLADE_FILE, "cover_display_window");
+    cdwidget->glade_path = glade_path;
+    xml = gtkpod_xml_new(cdwidget->glade_path, "cover_display_window");
     cover_temp_window = gtkpod_xml_get_widget(xml, "cover_display_window");
     cdwidget->contentpanel = gtkpod_xml_get_widget(xml, "cover_display_panel");
     cdwidget->canvasbox = gtkpod_xml_get_widget(xml, "cover_display_canvasbox");
@@ -1356,8 +1353,7 @@ static GdkPixbuf *coverart_get_default_track_thumb(gint default_img_size) {
     if (default_img_size != 0)
         default_size = (gdouble) default_img_size;
 
-    pixbuf = gdk_pixbuf_new_from_file(DEFAULT_FILE, &error);
-
+    pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), DEFAULT_COVER_ICON, 240, 0, &error);
     if (error != NULL) {
         printf("Error occurred loading the default file - \nCode: %d\nMessage: %s\n", error->code, error->message);
 
@@ -1505,7 +1501,7 @@ static void display_coverart_image_dialog(GdkPixbuf *image) {
     gchar *text;
     GladeXML *xml;
 
-    xml = gtkpod_xml_new(GLADE_FILE, "coverart_preview_dialog");
+    xml = gtkpod_xml_new(cdwidget->glade_path, "coverart_preview_dialog");
     dialog = gtkpod_xml_get_widget(xml, "coverart_preview_dialog");
     drawarea = gtkpod_xml_get_widget(xml, "coverart_preview_dialog_drawarea");
     res_label = gtkpod_xml_get_widget(xml, "coverart_preview_dialog_res_lbl");

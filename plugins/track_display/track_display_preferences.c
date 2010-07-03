@@ -31,6 +31,7 @@
 #include "libgtkpod/misc.h"
 #include "libgtkpod/misc_conversion.h"
 #include "libgtkpod/prefs.h"
+#include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "display_tracks.h"
 #include "sort_window.h"
@@ -153,11 +154,15 @@ G_MODULE_EXPORT void on_column_add_clicked (GtkButton *sender, gpointer e)
     g_return_if_fail(displayed_columns_view);
 
     gint i;
-    GladeXML *xml = gtkpod_xml_new (GLADE_FILE, "prefs_columns_dialog");
-    GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_columns_dialog");
-    GtkTreeView *view = GTK_TREE_VIEW (gtkpod_xml_get_widget (xml, "available_columns"));
     GtkTreeModel *model;
     GtkTreeIter iter;
+
+    gchar *glade_path = g_build_filename(get_glade_dir(), "track_display.glade", NULL);
+    GladeXML *xml = gtkpod_xml_new (glade_path, "prefs_columns_dialog");
+    GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_columns_dialog");
+    GtkTreeView *view = GTK_TREE_VIEW (gtkpod_xml_get_widget (xml, "available_columns"));
+
+    g_free(glade_path);
 
     gtk_window_set_transient_for (GTK_WINDOW (dlg), notebook_get_parent_window());
     setup_column_tree (view, FALSE);
@@ -228,10 +233,12 @@ G_MODULE_EXPORT void on_horizontal_scrollbar_toggled (GtkToggleButton *sender, g
 GtkWidget *init_track_display_preferences() {
     GladeXML *pref_xml;
 
-    pref_xml = gtkpod_xml_new(GLADE_FILE, "track_settings_notebook");
+    gchar *glade_path = g_build_filename(get_glade_dir(), "track_display.glade", NULL);
+    pref_xml = gtkpod_xml_new(glade_path, "track_settings_notebook");
     notebook = gtkpod_xml_get_widget(pref_xml, "track_settings_notebook");
     displayed_columns_view = gtkpod_xml_get_widget(pref_xml, "displayed_columns");
     gtk_widget_ref(notebook);
+    g_free(glade_path);
 
     setup_column_tree (GTK_TREE_VIEW(displayed_columns_view), TRUE);
 

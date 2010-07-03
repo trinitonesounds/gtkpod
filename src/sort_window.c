@@ -34,6 +34,7 @@
 #include "libgtkpod/misc_conversion.h"
 #include "libgtkpod/misc.h"
 #include "libgtkpod/gp_private.h"
+#include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "display_tracks.h"
 #include "sort_window.h"
@@ -142,8 +143,10 @@ void sort_window_create(void) {
         sort_temp_prefs = temp_prefs_create();
         sort_temp_lists = temp_lists_create();
 
-        sort_window_xml = gtkpod_xml_new(GLADE_FILE, "sort_window");
+        gchar *glade_path = g_build_filename(get_glade_dir(), "track_display.glade", NULL);
+        sort_window_xml = gtkpod_xml_new(glade_path, "sort_window");
         glade_xml_signal_autoconnect(sort_window_xml);
+        g_free(glade_path);
 
         sort_window = gtkpod_xml_get_widget(sort_window_xml, "sort_window");
 

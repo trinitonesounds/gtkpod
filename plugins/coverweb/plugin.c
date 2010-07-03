@@ -35,25 +35,27 @@
 #include <libanjuta/interfaces/ianjuta-preferences.h>
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/prefs.h"
+#include "libgtkpod/directories.h"
+#include "libgtkpod/stock_icons.h"
 #include "plugin.h"
 #include "coverweb.h"
 #include "coverweb_preferences.h"
 
+#define PREFERENCE_ICON "cover_web-gtkpod-category"
+#define PREFERENCE_ICON_STOCK_ID "cover_web-preference-icon"
 #define TAB_NAME "Cover Web"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
 
 static GtkActionEntry cover_actions[] =
-    {
-    };
+    { };
 
 static void set_default_preferences() {
-    if (!prefs_get_string_value_index("coverweb_bookmark_", 0, NULL))
-    {
-       prefs_set_string_index("coverweb_bookmark_", 0, "http://images.google.com");
-       prefs_set_string_index("coverweb_bookmark_", 1, "http://www.allcdcovers.com");
-       prefs_set_string_index("coverweb_bookmark_", 2, LIST_END_MARKER);
+    if (!prefs_get_string_value_index("coverweb_bookmark_", 0, NULL)) {
+        prefs_set_string_index("coverweb_bookmark_", 0, "http://images.google.com");
+        prefs_set_string_index("coverweb_bookmark_", 1, "http://www.allcdcovers.com");
+        prefs_set_string_index("coverweb_bookmark_", 2, LIST_END_MARKER);
     }
 }
 
@@ -61,6 +63,9 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
     CoverWebPlugin *cover_web_plugin;
     GtkActionGroup* action_group;
+
+    register_icon_path(get_plugin_dir(), "coverweb");
+    register_stock_icon(PREFERENCE_ICON, PREFERENCE_ICON_STOCK_ID);
 
     cover_web_plugin = (CoverWebPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
@@ -71,7 +76,9 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     cover_web_plugin->action_group = action_group;
 
     /* Merge UI */
-    cover_web_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
+    gchar *uipath = g_build_filename(get_ui_dir(), "coverweb.ui", NULL);
+    cover_web_plugin->uiid = anjuta_ui_merge(ui, uipath);
+    g_free(uipath);
 
     /* Set preferences */
     set_default_preferences();
@@ -117,6 +124,7 @@ static void cover_web_plugin_instance_init(GObject *obj) {
     plugin->uiid = 0;
     plugin->coverweb_window = NULL;
     plugin->action_group = NULL;
+    plugin->glade_path = g_build_filename(get_glade_dir(), "coverweb.glade", NULL);
 }
 
 static void cover_web_plugin_class_init(GObjectClass *klass) {
@@ -129,22 +137,22 @@ static void cover_web_plugin_class_init(GObjectClass *klass) {
 }
 
 static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
-    gchar *file;
     GdkPixbuf *pixbuf;
-    GdkPixbuf *scaled;
+    GError *error = NULL;
 
     CoverWebPlugin* plugin = COVER_WEB_PLUGIN(ipref);
-    plugin->prefs = init_coverweb_preferences();
+    plugin->prefs = init_coverweb_preferences(plugin->glade_path);
     if (plugin->prefs == NULL)
         return;
 
-    file = g_build_filename(GTKPOD_IMAGE_DIR, "internet-icon.png", NULL);
-    pixbuf = gdk_pixbuf_new_from_file(file, NULL);
-    scaled = gdk_pixbuf_scale_simple(pixbuf, 48, 48, GDK_INTERP_BILINEAR);
-    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-coverweb-settings", _(TAB_NAME), scaled, plugin->prefs);
-    g_free(file);
+    pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), PREFERENCE_ICON, 48, 0, &error);
+
+    if (!pixbuf) {
+        g_warning ("Couldn't load icon: %s", error->message);
+        g_error_free(error);
+    }
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-coverweb-settings", _(TAB_NAME), pixbuf, plugin->prefs);
     g_object_unref(pixbuf);
-    g_object_unref(scaled);
 }
 
 static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
@@ -153,15 +161,14 @@ static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* p
     gtk_widget_destroy(plugin->prefs);
 }
 
-static void
-ipreferences_iface_init(IAnjutaPreferencesIface* iface)
-{
+static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
     iface->merge = ipreferences_merge;
     iface->unmerge = ipreferences_unmerge;
 }
 
 ANJUTA_PLUGIN_BEGIN (CoverWebPlugin, cover_web_plugin);
-ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);
-ANJUTA_PLUGIN_END;
+        ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);ANJUTA_PLUGIN_END
+;
 
-ANJUTA_SIMPLE_PLUGIN (CoverWebPlugin, cover_web_plugin);
+ANJUTA_SIMPLE_PLUGIN (CoverWebPlugin, cover_web_plugin)
+;

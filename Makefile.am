@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = libgtkpod src po scripts data doc plugins
+SUBDIRS = libgtkpod src po scripts data icons doc plugins
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgtkpod-1.0.pc
@@ -20,6 +20,9 @@ DISTCLEANFILES =		\
 	intltool-update
 
 uninstall-hook:
+	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)/data/ui
+	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)/data/glade
+	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)/data/icons
 	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)/data
 	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)/scripts
 	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)

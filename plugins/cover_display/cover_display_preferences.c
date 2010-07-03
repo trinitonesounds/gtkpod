@@ -67,14 +67,14 @@ G_MODULE_EXPORT void on_coverart_dialog_fg_color_set (GtkColorButton *widget, gp
     coverart_display_update (FALSE);
 }
 
-GtkWidget *init_cover_preferences() {
+GtkWidget *init_cover_preferences(gchar *glade_path) {
     GtkWidget *notebook;
     GladeXML *pref_xml;
     GtkWidget *coverart_bgcolorselect_button;
     GtkWidget *coverart_fgcolorselect_button;
     GdkColor *color;
 
-    pref_xml = gtkpod_xml_new(GLADE_FILE, "cover_settings_notebook");
+    pref_xml = gtkpod_xml_new(glade_path, "cover_settings_notebook");
     notebook = gtkpod_xml_get_widget(pref_xml, "cover_settings_notebook");
     coverart_bgcolorselect_button = gtkpod_xml_get_widget (pref_xml, "coverart_display_bg_button");
     coverart_fgcolorselect_button = gtkpod_xml_get_widget (pref_xml, "coverart_display_fg_button");

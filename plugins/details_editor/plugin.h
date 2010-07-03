@@ -36,9 +36,6 @@
 
 #include <libanjuta/anjuta-plugin.h>
 
-#define UI_FILE GTKPOD_UI_DIR"/details_editor.ui"
-#define GLADE_FILE GTKPOD_GLADE_DIR"/details_editor.glade"
-
 typedef struct _DetailsEditorPlugin DetailsEditorPlugin;
 typedef struct _DetailsEditorPluginClass DetailsEditorPluginClass;
 

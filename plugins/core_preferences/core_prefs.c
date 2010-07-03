@@ -34,6 +34,7 @@
 #include "core_prefs.h"
 #include "plugin.h"
 
+static gchar *builder_path = NULL;
 static GtkWidget *notebook = NULL;
 /*
     Begin types
@@ -128,7 +129,7 @@ static GtkWindow *notebook_get_parent_window() {
         return NULL;
     }
 
-    return GTK_WINDOW(gtk_widget_get_parent(notebook));
+    return GTK_WINDOW(gtk_widget_get_toplevel(notebook));
 }
 
 /*
@@ -860,7 +861,7 @@ static GtkWidget *create_preference_notebook() {
 
     builder = gtk_builder_new();
 
-    gtk_builder_add_from_file(builder, GTK_BUILDER_FILE, &error);
+    gtk_builder_add_from_file(builder, builder_path, &error);
     if (error) {
         g_warning("Could not load settings preferences: %s", error->message);
         g_error_free(error);
@@ -879,8 +880,9 @@ static GtkWidget *create_preference_notebook() {
     return notebook;
 }
 
-GtkWidget *init_settings_preferences() {
+GtkWidget *init_settings_preferences(gchar *builder_file_path) {
 
+    builder_path = builder_file_path;
     temp_prefs = temp_prefs_create();
     temp_prefs_copy_prefs (temp_prefs);
 

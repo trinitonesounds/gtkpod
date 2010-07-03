@@ -38,16 +38,10 @@
 #include "libgtkpod/misc.h"
 #include "libgtkpod/misc_track.h"
 #include "libgtkpod/prefs.h"
+#include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "details.h"
 #include "fetchcover.h"
-
-/*
- void details_close (void);
- void details_update_default_sizes (void);
- void details_update_track (Track *track);
- void details_remove_track (Track *track);
- */
 
 /* string constants for preferences */
 const gchar *DETAILS_WINDOW_NOTEBOOK_PAGE = "details_window_notebook_page";
@@ -1408,12 +1402,14 @@ static void create_details_editor_view() {
 
     details_view = g_malloc0(sizeof(Detail));
 
-    details_view->xml = gtkpod_xml_new(GLADE_FILE, "details_window");
+    gchar *glade_path = g_build_filename(get_glade_dir(), "details_editor.glade", NULL);
+    details_view->xml = gtkpod_xml_new(glade_path, "details_window");
     details_window = gtkpod_xml_get_widget(details_view->xml, "details_window");
     viewport = gtkpod_xml_get_widget(details_view->xml, "details_container");
     /* according to GTK FAQ: move a widget to a new parent */
     gtk_widget_ref(viewport);
     gtk_container_remove(GTK_CONTAINER (details_window), viewport);
+    g_free(glade_path);
 
     /* Add widget in Shell. Any number of widgets can be added */
     details_editor_plugin->details_window = gtk_scrolled_window_new(NULL, NULL);

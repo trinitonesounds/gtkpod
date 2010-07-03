@@ -52,6 +52,8 @@ typedef struct {
 #define ST_AUTOSELECT(i) TRUE
 /* #define ST_AUTOSELECT(i) (prefs_get_int_index("st_autoselect", (i))) */
 
+static gchar *glade_file_path;
+
 /* array with pointers to the sort tabs */
 static SortTab *sorttab[SORT_TAB_MAX];
 /* pointer to paned elements holding the sort tabs */
@@ -2443,7 +2445,7 @@ static void st_create_special(gint inst, GtkWidget *window) {
     GladeXML *special_xml;
     gchar *buf;
 
-    special_xml = gtkpod_xml_new(GLADE_FILE, "special_sorttab");
+    special_xml = gtkpod_xml_new(glade_file_path, "special_sorttab");
     special = gtkpod_xml_get_widget(special_xml, "special_sorttab");
     viewport = gtkpod_xml_get_widget(special_xml, "special_viewport");
 
@@ -2732,8 +2734,11 @@ static void st_create_notebook(gint inst) {
 }
 
 /* Create sort tabs */
-void st_create_tabs(GtkPaned *parent) {
+void st_create_tabs(GtkPaned *parent, gchar *glade_path) {
     g_return_if_fail(parent);
+    g_return_if_fail(glade_path);
+
+    glade_file_path = glade_path;
 
     gint inst;
 
@@ -2769,6 +2774,8 @@ void st_cleanup(void) {
             sorttab[i] = NULL;
         }
     }
+
+    g_free(glade_file_path);
 }
 
 /* set the default sizes for the gtkpod main window according to prefs:
@@ -3208,7 +3215,7 @@ void cal_open_calendar(gint inst, T_item item) {
     if (!st)
         return;
 
-    cal_xml = gtkpod_xml_new(GLADE_FILE, "calendar_window");
+    cal_xml = gtkpod_xml_new(glade_file_path, "calendar_window");
 
     glade_xml_signal_autoconnect(cal_xml);
 

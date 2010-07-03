@@ -26,6 +26,29 @@
  */
 
 #include "stock_icons.h"
+#include "directories.h"
+
+static gboolean inited = FALSE;
+
+void register_icon_path (const gchar* basedir, const gchar* dirname) {
+    if (using_local()) {
+        gchar *path = g_build_filename(basedir, dirname, "icons", NULL);
+        gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (), path);
+        g_free(path);
+    }
+}
+
+/**
+ * stock_icon_init
+ *
+ * Initialises paths used for gtkpod specific icons.
+ *
+ */
+static void stock_icon_init ()
+{
+    gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (), get_icon_dir());
+    inited = TRUE;
+}
 
 void register_stock_icon (const gchar *name, const gchar *stockid)
 {
@@ -34,6 +57,10 @@ void register_stock_icon (const gchar *name, const gchar *stockid)
 
 	g_return_if_fail (name);
 	g_return_if_fail (stockid);
+
+	if (inited == FALSE) {
+	    stock_icon_init();
+	}
 
 	pl_iconset = gtk_icon_set_new ();
 	source = gtk_icon_source_new ();
@@ -46,66 +73,4 @@ void register_stock_icon (const gchar *name, const gchar *stockid)
 	gtk_icon_factory_add (factory, stockid, pl_iconset);
 
 	gtk_icon_factory_add_default (factory);
-}
-
-/**
- * stock_icon_init
- *
- * Initialises paths used for gtkpod specific icons.
- * This needs to be loaded early as it uses the path
- * of the binary to determine where to load the file from, in the
- * same way as main() determines where to load the glade file
- * from.
- *
- * @progpath: path of the gtkpod binary being loaded.
- *
- */
-void stock_icon_init (gchar *progpath)
-{
-    gchar *progname = g_find_program_in_path (progpath);
-    static const gchar *SEPsrcSEPgtkpod = G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S "gtkpod";
-    gchar *path;
-
-    if (!progname)
-        return;
-
-    if (!g_path_is_absolute (progname))
-    {
-        gchar *cur_dir = g_get_current_dir ();
-        gchar *prog_absolute;
-
-        if (g_str_has_prefix (progname, "." G_DIR_SEPARATOR_S))
-            prog_absolute = g_build_filename (cur_dir, progname+2, NULL);
-        else
-            prog_absolute = g_build_filename (cur_dir, progname, NULL);
-
-        g_free (progname);
-        g_free (cur_dir);
-        progname = prog_absolute;
-    }
-
-    if (g_str_has_suffix (progname, SEPsrcSEPgtkpod))
-    {
-        gchar *suffix = g_strrstr (progname, SEPsrcSEPgtkpod);
-
-        if (suffix)
-        {
-            *suffix = 0;
-        }
-    }
-
-    path = g_build_filename (progname, "data", "icons", NULL);
-    g_free (progname);
-
-    if (path && !g_file_test (path, G_FILE_TEST_EXISTS))
-    {
-        g_free (path);
-        path = NULL;
-    }
-
-    if (!path)
-        path = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "icons", NULL);
-
-    gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (), path);
-    g_free (path);
 }

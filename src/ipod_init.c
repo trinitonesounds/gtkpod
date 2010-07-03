@@ -32,6 +32,7 @@
 #include "plugin.h"
 #include "repository.h"
 #include "libgtkpod/prefs.h"
+#include "libgtkpod/directories.h"
 #include "libgtkpod/misc.h"
 #include "libgtkpod/file.h"
 
@@ -129,7 +130,10 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
     /* Create window */
     ii = g_new0 (IpodInit, 1);
     ii->itdb = itdb;
-    ii->xml = gtkpod_xml_new(GLADE_FILE, "ipod_init_dialog");
+
+    gchar *glade_path = g_build_filename(get_glade_dir(), "repository_editor.glade", NULL);
+    ii->xml = gtkpod_xml_new(glade_path, "ipod_init_dialog");
+    g_free(glade_path);
 
     ii->window = gtkpod_xml_get_widget(ii->xml, "ipod_init_dialog");
     g_return_val_if_fail (ii->window, FALSE);
@@ -257,9 +261,11 @@ void repository_ipod_init_set_model(iTunesDB *itdb, const gchar *old_model) {
     g_return_if_fail (itdb);
 
     /* Create window */
-    xml = gtkpod_xml_new(GLADE_FILE, "set_ipod_model_dialog");
+    gchar *glade_path = g_build_filename(get_glade_dir(), "repository_editor.glade", NULL);
+    xml = gtkpod_xml_new(glade_path, "set_ipod_model_dialog");
     window = GET_WIDGET (xml, "set_ipod_model_dialog");
     g_return_if_fail (window);
+    g_free(glade_path);
 
     /* Set up label */
     mountpoint = get_itdb_prefs_string(itdb, KEY_MOUNTPOINT);

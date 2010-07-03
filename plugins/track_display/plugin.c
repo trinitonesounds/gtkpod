@@ -32,6 +32,7 @@
 #include <glib.h>
 #include <libanjuta/interfaces/ianjuta-preferences.h>
 #include "libgtkpod/stock_icons.h"
+#include "libgtkpod/directories.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/gp_private.h"
 #include "libgtkpod/prefs.h"
@@ -40,7 +41,8 @@
 #include "track_display_actions.h"
 #include "track_display_preferences.h"
 
-#define ICON_FILE "track_display-track-category.png"
+#define PREFERENCE_ICON "track_display-track-category"
+#define PREFERENCE_ICON_STOCK_ID "track_display-preference-icon"
 #define TAB_NAME "Track Display"
 
 /* Parent class. Part of standard class definition */
@@ -49,54 +51,21 @@ static gpointer parent_class;
 static GtkActionEntry track_actions[] =
     {
         {
-            "ActionDeleteSelectedTracksFromPlaylist",
-            GTK_STOCK_DELETE,
-            N_("Selected Tracks from Playlist"),
-            NULL,
-            NULL,
-            G_CALLBACK (on_delete_selected_tracks_from_playlist)
-        },
+            "ActionDeleteSelectedTracksFromPlaylist", GTK_STOCK_DELETE, N_("Selected Tracks from Playlist"), NULL,
+            NULL, G_CALLBACK (on_delete_selected_tracks_from_playlist) },
         {
-            "ActionDeleteSelectedTracksFromDatabase",
-            GTK_STOCK_DELETE,
-            N_("Selected Tracks from Database"),
-            NULL,
-            NULL,
-            G_CALLBACK (on_delete_selected_tracks_from_database)
-        },
+            "ActionDeleteSelectedTracksFromDatabase", GTK_STOCK_DELETE, N_("Selected Tracks from Database"), NULL,
+            NULL, G_CALLBACK (on_delete_selected_tracks_from_database) },
         {
-            "ActionDeleteSelectedTracksFromDevice",
-            GTK_STOCK_DELETE,
-            N_("Selected Tracks from Device"),
-            NULL,
-            NULL,
-            G_CALLBACK (on_delete_selected_tracks_from_device)
-        },
+            "ActionDeleteSelectedTracksFromDevice", GTK_STOCK_DELETE, N_("Selected Tracks from Device"), NULL, NULL,
+            G_CALLBACK (on_delete_selected_tracks_from_device) },
         {
-            "ActionUpdateTracks",
-            GTK_STOCK_REFRESH,
-            N_("Selected Tracks"),
-            NULL,
-            NULL,
-            G_CALLBACK (on_update_selected_tracks)
-        },
+            "ActionUpdateTracks", GTK_STOCK_REFRESH, N_("Selected Tracks"), NULL, NULL,
+            G_CALLBACK (on_update_selected_tracks) },
         {
-            "ActionUpdateMservTracks",
-            GTK_STOCK_REFRESH,
-            N_("Selected Tracks"),
-            NULL,
-            NULL,
-            G_CALLBACK (on_update_mserv_selected_tracks)
-        },
-        {
-            "ActionChangeSortOrder",
-            NULL,
-            N_("Change Sort Order"),
-            NULL,
-            NULL,
-            G_CALLBACK (on_open_sort_window)
-        }
-    };
+            "ActionUpdateMservTracks", GTK_STOCK_REFRESH, N_("Selected Tracks"), NULL, NULL,
+            G_CALLBACK (on_update_mserv_selected_tracks) },
+        { "ActionChangeSortOrder", NULL, N_("Change Sort Order"), NULL, NULL, G_CALLBACK (on_open_sort_window) } };
 
 static void set_default_preferences() {
     gint int_buf;
@@ -135,6 +104,9 @@ static gboolean activate_track_display_plugin(AnjutaPlugin *plugin) {
     TrackDisplayPlugin *track_display_plugin;
     GtkActionGroup* action_group;
 
+    register_icon_path(get_plugin_dir(), "track_display");
+    register_stock_icon(PREFERENCE_ICON, PREFERENCE_ICON_STOCK_ID);
+
     track_display_plugin = (TrackDisplayPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
 
@@ -144,7 +116,9 @@ static gboolean activate_track_display_plugin(AnjutaPlugin *plugin) {
     track_display_plugin->action_group = action_group;
 
     /* Merge UI */
-    track_display_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
+    gchar *uipath = g_build_filename(get_ui_dir(), "track_display.ui", NULL);
+    track_display_plugin->uiid = anjuta_ui_merge(ui, uipath);
+    g_free(uipath);
 
     set_default_preferences();
 
@@ -152,7 +126,7 @@ static gboolean activate_track_display_plugin(AnjutaPlugin *plugin) {
     track_display_plugin->track_window = gtk_scrolled_window_new(NULL, NULL);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (track_display_plugin->track_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (track_display_plugin->track_window), GTK_SHADOW_IN);
-    tm_create_track_display (track_display_plugin->track_window);
+    tm_create_track_display(track_display_plugin->track_window);
 
     g_signal_connect (gtkpod_app, SIGNAL_TRACKS_DISPLAYED, G_CALLBACK (track_display_set_tracks_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (track_display_set_playlist_cb), NULL);
@@ -210,47 +184,40 @@ static void track_display_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_track_display_plugin;
 }
 
-static void
-ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e)
-{
-    gchar *file;
+static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
     GdkPixbuf *pixbuf;
+    GError *error = NULL;
 
     TrackDisplayPlugin* plugin = TRACK_DISPLAY_PLUGIN(ipref);
     plugin->prefs = init_track_display_preferences();
     if (plugin->prefs == NULL)
         return;
 
-    file = g_build_filename(GTKPOD_IMAGE_DIR, "hicolor/48x48/places", ICON_FILE, NULL);
-    pixbuf = gdk_pixbuf_new_from_file (file, NULL);
-    anjuta_preferences_dialog_add_page (
-            ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)),
-            "gtkpod-track-display-settings",
-            _(TAB_NAME),
-            pixbuf,
-            plugin->prefs);
-    g_free(file);
-    g_object_unref (pixbuf);
+    pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), PREFERENCE_ICON, 48, 0, &error);
+
+    if (!pixbuf) {
+        g_warning ("Couldn't load icon: %s", error->message);
+        g_error_free(error);
+    }
+
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-track-display-settings", _(TAB_NAME), pixbuf, plugin->prefs);
+    g_object_unref(pixbuf);
 }
 
-static void
-ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e)
-{
+static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
     anjuta_preferences_remove_page(prefs, _(TAB_NAME));
     TrackDisplayPlugin* plugin = TRACK_DISPLAY_PLUGIN(ipref);
     gtk_widget_destroy(plugin->prefs);
 }
 
-
-static void
-ipreferences_iface_init(IAnjutaPreferencesIface* iface)
-{
+static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
     iface->merge = ipreferences_merge;
     iface->unmerge = ipreferences_unmerge;
 }
 
 ANJUTA_PLUGIN_BEGIN (TrackDisplayPlugin, track_display_plugin);
-ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);
-ANJUTA_PLUGIN_END;
+        ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);ANJUTA_PLUGIN_END
+;
 
-ANJUTA_SIMPLE_PLUGIN (TrackDisplayPlugin, track_display_plugin);
+ANJUTA_SIMPLE_PLUGIN (TrackDisplayPlugin, track_display_plugin)
+;

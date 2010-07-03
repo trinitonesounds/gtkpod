@@ -29,6 +29,6 @@
 #ifndef COVER_WEB_PREFERENCES_H_
 #define COVER_WEB_PREFERENCES_H_
 
-GtkWidget *init_coverweb_preferences();
+GtkWidget *init_coverweb_preferences(gchar *glade_path);
 
 #endif /* COVER_WEB_PREFERENCES_H_ */

@@ -34,10 +34,12 @@
 #include <libanjuta/interfaces/ianjuta-preferences.h>
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/stock_icons.h"
+#include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "core_prefs.h"
 
-#define ICON_FILE "core_prefs-gtkpod-category.png"
+#define PREFERENCE_ICON "core_prefs-gtkpod-category"
+#define PREFERENCE_ICON_STOCK_ID "core_prefs-preference-icon"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -48,10 +50,12 @@ static GtkActionEntry core_prefs_actions[] =
     };
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {
-    AnjutaUI *ui;;
+    AnjutaUI *ui;
+
     GtkActionGroup* action_group;
 
-    register_stock_icon("core_prefs-gtkpod-category", CORE_PREFS_CATEGORY_ICON_STOCK_ID);
+    register_icon_path(get_plugin_dir(), "core_preferences");
+    register_stock_icon(PREFERENCE_ICON, PREFERENCE_ICON_STOCK_ID);
 
     core_prefs_plugin = (CorePrefsPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
@@ -62,13 +66,17 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     core_prefs_plugin->action_group = action_group;
 
     /* Merge UI */
-    core_prefs_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
+    gchar *uipath = g_build_filename(get_ui_dir(), "core_prefs.ui", NULL);
+    core_prefs_plugin->uiid = anjuta_ui_merge(ui, uipath);
+    g_free(uipath);
 
     return TRUE; /* FALSE if activation failed */
 }
 
 static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
+
+    CorePrefsPlugin *core_prefs_plugin = (CorePrefsPlugin*) plugin;
 
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
 
@@ -78,6 +86,8 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     /* Remove Action groups */
     anjuta_ui_remove_action_group(ui, core_prefs_plugin->action_group);
 
+    g_free(core_prefs_plugin->builder_path);
+
     /* FALSE if plugin doesn't want to deactivate */
     return TRUE;
 }
@@ -86,6 +96,7 @@ static void core_prefs_plugin_instance_init(GObject *obj) {
     CorePrefsPlugin *plugin = (CorePrefsPlugin*) obj;
     plugin->uiid = 0;
     plugin->action_group = NULL;
+    plugin->builder_path = g_build_filename(get_glade_dir(), "core_prefs.xml", NULL);
 }
 
 static void core_prefs_plugin_class_init(GObjectClass *klass) {
@@ -97,48 +108,39 @@ static void core_prefs_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_plugin;
 }
 
-static void
-ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e)
-{
-    gchar *file;
+static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
     GdkPixbuf *pixbuf;
+    GError *error = NULL;
 
     CorePrefsPlugin* prefs_plugin = GTKPOD_CORE_PREFS_PLUGIN(ipref);
-    prefs_plugin->prefs = init_settings_preferences();
+    prefs_plugin->prefs = init_settings_preferences(prefs_plugin->builder_path);
     if (prefs_plugin->prefs == NULL)
         return;
 
-    file = g_build_filename(GTKPOD_IMAGE_DIR, "hicolor/48x48/places", ICON_FILE, NULL);
-    pixbuf = gdk_pixbuf_new_from_file (file, NULL);
-    anjuta_preferences_dialog_add_page (
-            ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)),
-            "gtkpod-settings",
-            _("Settings"),
-            pixbuf,
-            prefs_plugin->prefs);
-    g_free(file);
-    g_object_unref (pixbuf);
+    pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), PREFERENCE_ICON, 48, 0, &error);
+
+    if (!pixbuf) {
+        g_warning ("Couldn't load icon: %s", error->message);
+        g_error_free(error);
+    }
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-settings", _("Settings"), pixbuf, prefs_plugin->prefs);
+    g_object_unref(pixbuf);
 }
 
-static void
-ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e)
-{
+static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
     anjuta_preferences_remove_page(prefs, _("Settings"));
     CorePrefsPlugin* prefs_plugin = GTKPOD_CORE_PREFS_PLUGIN(ipref);
     gtk_widget_destroy(prefs_plugin->prefs);
 }
 
-
-static void
-ipreferences_iface_init(IAnjutaPreferencesIface* iface)
-{
+static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
     iface->merge = ipreferences_merge;
     iface->unmerge = ipreferences_unmerge;
 }
 
 ANJUTA_PLUGIN_BEGIN (CorePrefsPlugin, core_prefs_plugin);
-ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);
-ANJUTA_PLUGIN_END;
+        ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);ANJUTA_PLUGIN_END
+;
 
 ANJUTA_SIMPLE_PLUGIN (CorePrefsPlugin, core_prefs_plugin)
 ;

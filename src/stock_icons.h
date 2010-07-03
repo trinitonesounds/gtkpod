@@ -34,7 +34,7 @@
 
 #include <gtk/gtk.h>
 
+void register_icon_path (const gchar* basedir, const gchar* dirname);
 void register_stock_icon (const gchar *name, const gchar *stockid);
-void stock_icon_init (gchar *progpath);
 
 #endif /*STOCK_ICONS_H_*/

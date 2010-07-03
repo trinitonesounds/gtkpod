@@ -38,6 +38,7 @@
 #include "libgtkpod/misc.h"
 #include "libgtkpod/misc_track.h"
 #include "libgtkpod/prefs.h"
+#include "libgtkpod/directories.h"
 #include <errno.h>
 #include <limits.h>
 #include <math.h>
@@ -531,10 +532,12 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
     fc
             = gtk_file_chooser_dialog_new(_("Select Export Destination Directory"), NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
 
-    export_files_xml = glade_xml_new(GLADE_FILE, "export_files_options", NULL);
+    gchar *glade_path = g_build_filename(get_glade_dir(), "exporter.glade", NULL);
+    export_files_xml = glade_xml_new(glade_path, "export_files_options", NULL);
     win = gtkpod_xml_get_widget(export_files_xml, "export_files_options");
     options = gtkpod_xml_get_widget(export_files_xml, "ef_options_frame");
     message_box = gtkpod_xml_get_widget(export_files_xml, "ef_message_box");
+    g_free(glade_path);
 
     /* Information needed to clean up later */
     fcd = g_malloc0(sizeof(struct fcd));
@@ -931,8 +934,10 @@ void export_tracks_to_playlist_file(GList *tracks) {
                     gtk_file_chooser_dialog_new(_("Create Playlist File"), NULL, GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_APPLY, RESPONSE_APPLY, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
     GladeXML *export_playlist_xml;
 
-    export_playlist_xml = glade_xml_new(GLADE_FILE, "export_playlist_file_options", NULL);
+    gchar *glade_path = g_build_filename(get_glade_dir(), "exporter.glade", NULL);
+    export_playlist_xml = glade_xml_new(glade_path, "export_playlist_file_options", NULL);
     win = gtkpod_xml_get_widget(export_playlist_xml, "export_playlist_file_options");
+    g_free(glade_path);
 
     options = gtkpod_xml_get_widget(export_playlist_xml, "ep_options_frame");
 

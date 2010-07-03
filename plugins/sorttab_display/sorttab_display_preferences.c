@@ -30,6 +30,7 @@
 #include <glade/glade.h>
 #include "libgtkpod/misc.h"
 #include "libgtkpod/prefs.h"
+#include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "display_sorttabs.h"
 
@@ -57,9 +58,11 @@ GtkWidget *init_sorttab_preferences() {
     GtkWidget *notebook;
     GladeXML *pref_xml;
 
-    pref_xml = gtkpod_xml_new(GLADE_FILE, "sorttab_settings_notebook");
+    gchar *glade_path = g_build_filename(get_glade_dir(), "sorttab_display.glade", NULL);
+    pref_xml = gtkpod_xml_new(glade_path, "sorttab_settings_notebook");
     notebook = gtkpod_xml_get_widget(pref_xml, "sorttab_settings_notebook");
     gtk_widget_ref(notebook);
+    g_free(glade_path);
 
     glade_xml_signal_autoconnect(pref_xml);
 

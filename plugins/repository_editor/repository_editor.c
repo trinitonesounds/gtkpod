@@ -36,6 +36,7 @@
 #include "libgtkpod/gp_itdb.h"
 #include "libgtkpod/misc.h"
 #include "libgtkpod/syncdir.h"
+#include "libgtkpod/directories.h"
 
 typedef enum {
     IPOD_SYNC_CONTACTS, IPOD_SYNC_CALENDAR, IPOD_SYNC_NOTES
@@ -1317,9 +1318,11 @@ static void create_repository_editor_view() {
 
     repository_view = g_malloc0(sizeof(RepositoryView));
 
-    repository_view->xml = gtkpod_xml_new(GLADE_FILE, "repository_window");
+    gchar *glade_path = g_build_filename(get_glade_dir(), "repository_editor.glade", NULL);
+    repository_view->xml = gtkpod_xml_new(glade_path, "repository_window");
     repo_window = gtkpod_xml_get_widget(repository_view->xml, "repository_window");
     viewport = gtkpod_xml_get_widget(repository_view->xml, "repository_viewport");
+    g_free(glade_path);
 
     /* according to GTK FAQ: move a widget to a new parent */
     gtk_widget_ref(viewport);

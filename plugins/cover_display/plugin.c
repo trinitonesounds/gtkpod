@@ -35,6 +35,8 @@
 #include <libanjuta/interfaces/ianjuta-preferences.h>
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/prefs.h"
+#include "libgtkpod/stock_icons.h"
+#include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "display_coverart.h"
 #include "cover_display_preferences.h"
@@ -45,15 +47,14 @@
 static gpointer parent_class;
 
 static GtkActionEntry cover_actions[] =
-    {
-    };
+    { };
 
 static void set_default_preferences() {
-    if (! prefs_get_string_value("coverart_display_bg_color", NULL))
-        prefs_set_string ("coverart_display_bg_color", "#000000");
+    if (!prefs_get_string_value("coverart_display_bg_color", NULL))
+        prefs_set_string("coverart_display_bg_color", "#000000");
 
-    if (! prefs_get_string_value("coverart_display_fg_color", NULL))
-       prefs_set_string ("coverart_display_fg_color", "#FFFFFF");
+    if (!prefs_get_string_value("coverart_display_fg_color", NULL))
+        prefs_set_string("coverart_display_fg_color", "#FFFFFF");
 }
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {
@@ -62,6 +63,10 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     GtkActionGroup* action_group;
 
     cover_display_plugin = (CoverDisplayPlugin*) plugin;
+
+    register_icon_path(get_plugin_dir(), "cover_display");
+    register_stock_icon(DEFAULT_COVER_ICON, DEFAULT_COVER_ICON_STOCK_ID);
+
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
 
     /* Add our cover_actions */
@@ -70,7 +75,9 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     cover_display_plugin->action_group = action_group;
 
     /* Merge UI */
-    cover_display_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
+    gchar *uipath = g_build_filename(get_ui_dir(), "cover_display.ui", NULL);
+    cover_display_plugin->uiid = anjuta_ui_merge(ui, uipath);
+    g_free(uipath);
 
     /* Set preferences */
     set_default_preferences();
@@ -88,7 +95,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     g_signal_connect (gtkpod_app, SIGNAL_TRACK_UPDATED, G_CALLBACK (coverart_display_track_updated_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_TRACK_ADDED, G_CALLBACK (coverart_display_track_added_cb), NULL);
 
-    coverart_init_display(cover_display_plugin->cover_window);
+    coverart_init_display(cover_display_plugin->cover_window, cover_display_plugin->gladepath);
     anjuta_shell_add_widget(plugin->shell, cover_display_plugin->cover_window, "CoverDisplayPlugin", "Cover Artwork", NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
 
     coverart_block_change(FALSE);
@@ -124,6 +131,8 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     /* Remove Action groups */
     anjuta_ui_remove_action_group(ui, cover_display_plugin->action_group);
 
+    g_free(cover_display_plugin->gladepath);
+
     /* FALSE if plugin doesn't want to deactivate */
     return TRUE;
 }
@@ -133,6 +142,7 @@ static void cover_display_plugin_instance_init(GObject *obj) {
     plugin->uiid = 0;
     plugin->cover_window = NULL;
     plugin->action_group = NULL;
+    plugin->gladepath = g_build_filename(get_glade_dir(), "cover_display.glade", NULL);
 }
 
 static void cover_display_plugin_class_init(GObjectClass *klass) {
@@ -145,22 +155,22 @@ static void cover_display_plugin_class_init(GObjectClass *klass) {
 }
 
 static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
-    gchar *file;
     GdkPixbuf *pixbuf;
-    GdkPixbuf *scaled;
+    GError *error = NULL;
 
     CoverDisplayPlugin* plugin = COVER_DISPLAY_PLUGIN(ipref);
-    plugin->prefs = init_cover_preferences();
+    plugin->prefs = init_cover_preferences(plugin->gladepath);
     if (plugin->prefs == NULL)
         return;
 
-    file = g_build_filename(GTKPOD_IMAGE_DIR, "default-cover.png", NULL);
-    pixbuf = gdk_pixbuf_new_from_file(file, NULL);
-    scaled = gdk_pixbuf_scale_simple(pixbuf, 48, 48, GDK_INTERP_BILINEAR);
-    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-coverart-settings", _(TAB_NAME), scaled, plugin->prefs);
-    g_free(file);
+    pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), DEFAULT_COVER_ICON, 48, 0, &error);
+
+    if (!pixbuf) {
+        g_warning ("Couldn't load icon: %s", error->message);
+        g_error_free(error);
+    }
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-coverart-settings", _(TAB_NAME), pixbuf, plugin->prefs);
     g_object_unref(pixbuf);
-    g_object_unref(scaled);
 }
 
 static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
@@ -169,15 +179,14 @@ static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* p
     gtk_widget_destroy(plugin->prefs);
 }
 
-static void
-ipreferences_iface_init(IAnjutaPreferencesIface* iface)
-{
+static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
     iface->merge = ipreferences_merge;
     iface->unmerge = ipreferences_unmerge;
 }
 
 ANJUTA_PLUGIN_BEGIN (CoverDisplayPlugin, cover_display_plugin);
-ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);
-ANJUTA_PLUGIN_END;
+        ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);ANJUTA_PLUGIN_END
+;
 
-ANJUTA_SIMPLE_PLUGIN (CoverDisplayPlugin, cover_display_plugin);
+ANJUTA_SIMPLE_PLUGIN (CoverDisplayPlugin, cover_display_plugin)
+;

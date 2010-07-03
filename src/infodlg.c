@@ -36,6 +36,9 @@
 #include "libgtkpod/misc.h"
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/misc_track.h"
+#include "libgtkpod/directories.h"
+
+const gchar *glade_file_path;
 
 enum info_dialog_columns
 {
@@ -278,8 +281,10 @@ G_MODULE_EXPORT void open_info_dialog ()
 		return;
 	}
 
-	info_xml = gtkpod_xml_new (GLADE_FILE, "info_dialog");
+	gchar *glade_path = g_build_filename(get_glade_dir(), "details_editor.glade", NULL);
+	info_xml = gtkpod_xml_new (glade_path, "info_dialog");
 	info_dialog = gtkpod_xml_get_widget (info_xml, "info_dialog");
+	g_free(glade_path);
 
 	setup_info_dialog();
 

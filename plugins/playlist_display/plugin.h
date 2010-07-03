@@ -44,9 +44,6 @@
 #define PLAYLIST_DISPLAY_ADD_PLAYLISTS_ICON_STOCK_ID "playlist_display-add-playlists-icon"
 #define PLAYLIST_DISPLAY_SYNC_ICON_STOCK_ID "playlist_display-sync-icon"
 
-#define UI_FILE GTKPOD_UI_DIR"/playlist_display.ui"
-#define GLADE_FILE GTKPOD_GLADE_DIR"/playlist_display.glade"
-
 typedef struct _PlaylistDisplayPlugin PlaylistDisplayPlugin;
 typedef struct _PlaylistDisplayPluginClass PlaylistDisplayPluginClass;
 

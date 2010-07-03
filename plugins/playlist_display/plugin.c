@@ -32,6 +32,7 @@
 
 #include <glib.h>
 #include "libgtkpod/stock_icons.h"
+#include "libgtkpod/directories.h"
 #include "libgtkpod/misc_playlist.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/tool_menu_action.h"
@@ -297,6 +298,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
         prefs_set_int("pm_sort", SORT_NONE);
 
     /* Prepare the icons for the playlist */
+    register_icon_path(get_plugin_dir(), "playlist_display");
     register_stock_icon("playlist_display-photo", PLAYLIST_DISPLAY_PHOTO_ICON_STOCK_ID);
     register_stock_icon("playlist_display-playlist", PLAYLIST_DISPLAY_PLAYLIST_ICON_STOCK_ID);
     register_stock_icon("playlist_display-read", PLAYLIST_DISPLAY_READ_ICON_STOCK_ID);
@@ -318,7 +320,9 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     gtk_action_group_add_action (playlist_display_plugin->action_group, GTK_ACTION (new_playlist_action));
 
     /* Merge UI */
-    playlist_display_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
+    gchar *uipath = g_build_filename(get_ui_dir(), "playlist_display.ui", NULL);
+    playlist_display_plugin->uiid = anjuta_ui_merge(ui, uipath);
+    g_free(uipath);
 
     /* Add widget in Shell. Any number of widgets can be added */
     playlist_display_plugin->pl_window = gtk_scrolled_window_new(NULL, NULL);

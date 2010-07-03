@@ -31,6 +31,7 @@
 #include <gtk/gtk.h>
 #include "libgtkpod/gp_itdb.h"
 #include "libgtkpod/misc.h"
+#include "libgtkpod/directories.h"
 
 /* widget names for the "Create New Repository" window */
 #define CRW_BACKUP_BUTTON "crw_backup_button"
@@ -296,8 +297,10 @@ void display_create_repository_dialog() {
     createrep = g_malloc0(sizeof(CreateRepWindow));
     cr = createrep;
 
-    cr->xml = gtkpod_xml_new(GLADE_FILE, "create_repository_window");
+    gchar *glade_path = g_build_filename(get_glade_dir(), "repository_editor.glade", NULL);
+    cr->xml = gtkpod_xml_new(glade_path, "create_repository_window");
     cr->window = gtkpod_xml_get_widget(cr->xml, "create_repository_window");
+    g_free(glade_path);
     g_return_if_fail (cr->window);
 
     gtk_window_set_transient_for(GTK_WINDOW(cr->window), GTK_WINDOW (gtkpod_app));

@@ -46,6 +46,7 @@
 #include "libgtkpod/misc_track.h"
 #include "libgtkpod/misc.h"
 #include "libgtkpod/prefs.h"
+#include "libgtkpod/directories.h"
 #include "display_tracks.h"
 #include "rb_cell_renderer_rating.h"
 #include "sort_window.h"
@@ -95,7 +96,9 @@ const gchar *KEY_DISPLAY_SEARCH_ENTRY = "display_search_entry";
 
 static GladeXML *get_track_glade() {
     if (!track_glade) {
-        track_glade = gtkpod_xml_new(GLADE_FILE, "track_display_window");
+        gchar *glade_path = g_build_filename(get_glade_dir(), "track_display.glade", NULL);
+        track_glade = gtkpod_xml_new(glade_path, "track_display_window");
+        g_free(glade_path);
     }
     return track_glade;
 }

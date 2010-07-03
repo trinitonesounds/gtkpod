@@ -26,10 +26,6 @@ coverweb_plugin_DATA = $(plugin_file)
 
 SUBDIRS = icons
 
-# Even though this is located in the plugin directory, it will be 
-# included from plugin sub-directories.
-include ../../data/directories.mk
-
 # The plugin
 plugin_LTLIBRARIES = libcoverweb.la
 
@@ -58,76 +54,57 @@ libcoverweb_la_LIBADD = \
     $(LIBANJUTA_LIBS) \
     $(WEBKIT_LIBS)
     
-all-local: create-plugin-links create-ui-link create-glade-link copy-icons-dir
+all-local: create-plugin-links create-ui-link create-glade-link
 
 # Creating symbolic links in plugin root directory
 create-plugin-links:
 	echo "Creating plugin links"
-	if test ! -e ../$(plugin_lib); then \
+	if [ ! -e ../$(plugin_lib) ]; then \
 		ln -s `pwd`/.libs/$(plugin_lib) ../$(plugin_lib); \
 	fi; \
-	if test ! -e ../$(plugin_file); then \
+	if [ ! -e ../$(plugin_file) ]; then \
 		ln -s `pwd`/$(plugin_file) ../$(plugin_file); \
 	fi;
 
 # Creating symbolic link to ui file in installed ui directory
-create-ui-link: create-ui-dir
-	if test -e $(gtkpod_ui_dir)/$(plugin_name).ui; then \
-		# File already exists. Replacing ..." \
-		sudo rm -f $(gtkpod_ui_dir)/$(plugin_name).ui; \
-	fi; \
-	# Creating link for $(plugin_name).ui" \
-	sudo ln -s `pwd`/$(plugin_name).ui $(gtkpod_ui_dir)/$(plugin_name).ui;
-
-create-glade-link: create-glade-dir
-	if test -e `pwd`/$(plugin_name).glade; then \
-		if test -e $(gtkpod_glade_dir)/$(plugin_name).glade; then \
-			# File already exists. Replacing ..." \
-			sudo rm -f $(gtkpod_glade_dir)/$(plugin_name).glade; \
-		fi; \
-		# Creating link for $(plugin_name).glade" \
-		sudo ln -s `pwd`/$(plugin_name).glade $(gtkpod_glade_dir)/$(plugin_name).glade; \
-	fi; \
-	if test -e `pwd`/$(plugin_name).xml; then \
-		if test -e $(gtkpod_glade_dir)/$(plugin_name).xml; then \
-			# File already exists. Replacing ..." \
-			sudo rm -f $(gtkpod_glade_dir)/$(plugin_name).xml; \
-		fi; \
-		# Creating link for $(plugin_name).xml" \
-		sudo ln -s `pwd`/$(plugin_name).xml $(gtkpod_glade_dir)/$(plugin_name).xml; \
-	fi;
-	
-# Copy icons
-copy-icons-dir: create-icons-dir
-	if test -e `pwd`/icons; then \
-		sudo cp -rf `pwd`/icons/* $(gtkpod_image_dir)/; \
-		sudo chmod -R 755 $(gtkpod_image_dir)/*; \
-		sudo find $(gtkpod_image_dir) -name 'Makefile*' -delete; \
+create-ui-link:
+	if [ ! -e ../../data/ui/$(plugin_name).ui ]; then \
+		ln -s `pwd`/$(plugin_name).ui ../../data/ui/$(plugin_name).ui; \
 	fi;
 
-# Clean up the links and files created purely for dev testing
-clean-local: clean-plugin-files clean-ui-dir clean-glade-dir clean-image-dir
+create-glade-link:
+	if  [ -e `pwd`/$(plugin_name).glade ]; then \
+		if  [ ! -e ../../data/glade/$(plugin_name).glade ]; then \
+			ln -s `pwd`/$(plugin_name).glade ../../data/glade/$(plugin_name).glade; \
+		fi; \
+	fi; \
+	if  [ -e `pwd`/$(plugin_name).xml ]; then \
+		if  [ ! -e ../../data/glade/$(plugin_name).xml ]; then \
+			ln -s `pwd`/$(plugin_name).xml ../../data/glade/$(plugin_name).xml; \
+		fi; \
+	fi;
+
+# Clean up the links and files created purely for dev  [ing
+clean-local: clean-plugin-files clean-ui-dir clean-glade-dir
 
 clean-plugin-files:
-	rm -f ../$(plugin_lib) ../$(plugin_file)
+	if [ -h ../$(plugin_file) ]; then \
+		rm -f ../$(plugin_lib) ../$(plugin_file); \
+	fi;
 
 clean-ui-dir:
-	if test -h $(gtkpod_ui_dir)/$(plugin_name).ui; then \
-		# Symbolic link exists. Removing ..." \
-		sudo rm -f $(gtkpod_ui_dir)/$(plugin_name).ui; \
+	if [ -h ../../data/ui/$(plugin_name).ui ]; then \
+		rm -f ../../data/ui/$(plugin_name).ui; \
 	fi;
 
 clean-glade-dir:
-	if test -h $(gtkpod_glade_dir)/$(plugin_name).glade; then \
-		# Symbolic link exists. Removing ..." \
-		sudo rm -f $(gtkpod_glade_dir)/$(plugin_name).glade; \
+	if  [ -h ../../data/glade/$(plugin_name).glade ]; then \
+		rm -f ../../data/glade/$(plugin_name).glade; \
+	fi; \
+		if  [ -h $(gtkpod_glade_dir)/$(plugin_name).xml ]; then \
+		rm -f ../../data/glade/$(plugin_name).xml; \
 	fi;
 	
-clean-image-dir:
-	if test -d $(gtkpod_image_dir); then \
-	  sudo find $(gtkpod_image_dir) -name '$(plugin_name)*' -delete; \
-	fi;
-
 endif
 
 EXTRA_DIST = \

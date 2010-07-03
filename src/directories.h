@@ -13,6 +13,8 @@
 
 void init_directories(char *argv[]);
 
+gboolean using_local();
+
 gchar * get_data_dir();
 
 gchar * get_doc_dir();

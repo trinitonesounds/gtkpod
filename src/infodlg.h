@@ -1,7 +1,7 @@
 /*
 |  Copyright (C) 2007 Maia Kozheva <sikon at users sourceforge net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |

@@ -33,6 +33,7 @@
 #include <glib.h>
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/exporter_iface.h"
+#include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "file_export.h"
 #include "exporter_actions.h"
@@ -82,13 +83,13 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     exporter_plugin->action_group = action_group;
 
     /* Merge UI */
-    exporter_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
+    gchar *uipath = g_build_filename(get_ui_dir(), "exporter.ui", NULL);
+    exporter_plugin->uiid = anjuta_ui_merge(ui, uipath);
+    g_free(uipath);
 
     g_return_val_if_fail(EXPORTER_IS_EXPORTER(exporter_plugin), TRUE);
 
     gtkpod_register_exporter (EXPORTER(exporter_plugin));
-
-//    g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (exporter_track_removed_cb), NULL);
 
     return TRUE; /* FALSE if activation failed */
 }
@@ -97,9 +98,9 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
     ExporterPlugin *exporter_plugin;
 
+    exporter_plugin = (ExporterPlugin*) plugin;
     gtkpod_unregister_exporter();
 
-    exporter_plugin = (ExporterPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
 
     /* Unmerge UI */

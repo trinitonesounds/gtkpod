@@ -79,6 +79,9 @@ typedef struct {
 
 	/* Drawing area related widgets */
 	GtkWidget *draw_area;
+
+	/* glade path */
+	gchar *glade_path;
 } CD_Widget;
 
 extern const gchar *DISPLAY_COVER_SHOW;
@@ -89,7 +92,7 @@ extern const gchar *DISPLAY_COVER_SHOW;
  * Initialise the boxes and canvases of the coverart_display.
  *
  */
-void coverart_init_display(GtkWidget *parent);
+void coverart_init_display(GtkWidget *parent, gchar *glade_path);
 
 /**
  * coverart_display_update:

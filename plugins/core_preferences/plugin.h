@@ -36,9 +36,6 @@
 
 #include <libanjuta/anjuta-plugin.h>
 
-#define UI_FILE GTKPOD_UI_DIR"/core_prefs.ui"
-#define GTK_BUILDER_FILE GTKPOD_GLADE_DIR"/core_prefs.xml"
-
 #define CORE_PREFS_CATEGORY_ICON_STOCK_ID "core_prefs-gtkpod-category-icon"
 
 extern GType core_prefs_plugin_get_type (GTypeModule *module);
@@ -57,6 +54,7 @@ struct _CorePrefsPlugin {
     gint uiid;
     GtkWidget *prefs;
     GtkActionGroup *action_group;
+    gchar *builder_path;
 };
 
 struct _CorePrefsPluginClass {

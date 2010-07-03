@@ -35,9 +35,6 @@
 
 #include <libanjuta/anjuta-plugin.h>
 
-#define UI_FILE GTKPOD_UI_DIR"/track_display.ui"
-#define GLADE_FILE GTKPOD_GLADE_DIR"/track_display.glade"
-
 extern GType track_display_plugin_get_type (GTypeModule *module);
 #define TRACK_DISPLAY_TYPE_PLUGIN         (track_display_plugin_get_type (NULL))
 #define TRACK_DISPLAY_PLUGIN(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), TRACK_DISPLAY_TYPE_PLUGIN, TrackDisplayPlugin))

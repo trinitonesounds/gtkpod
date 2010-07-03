@@ -32,6 +32,7 @@
 
 #include <glib.h>
 #include "libgtkpod/gtkpod_app_iface.h"
+#include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "repository.h"
 #include "repository_actions.h"
@@ -80,7 +81,9 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     repository_editor_plugin->action_group = action_group;
 
     /* Merge UI */
-    repository_editor_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
+    gchar *uipath = g_build_filename(get_ui_dir(), "repository_editor.ui", NULL);
+    repository_editor_plugin->uiid = anjuta_ui_merge(ui, uipath);
+    g_free(uipath);
 
     g_return_val_if_fail(REPOSITORY_EDITOR_IS_EDITOR(repository_editor_plugin), TRUE);
 

@@ -122,7 +122,7 @@ typedef enum  {
 
 GtkPaned *sorttab_parent;
 
-void st_create_tabs(GtkPaned *parent);
+void st_create_tabs(GtkPaned *parent, gchar *glade_path);
 void st_init(ST_CAT_item new_category, guint32 inst);
 void st_add_track(Track *track, gboolean final, gboolean display, guint32 inst);
 void st_remove_track(Track *track, guint32 inst);
@@ -138,6 +138,7 @@ void st_delete_entry_head(gint inst, DeleteAction deleteaction);
 void st_stop_editing(gint inst, gboolean cancel);
 void st_sort(GtkSortType order);
 void st_remove_entry(TabEntry *entry, guint32 inst);
+void st_cleanup(void);
 
 void cal_open_calendar(gint inst, T_item item);
 

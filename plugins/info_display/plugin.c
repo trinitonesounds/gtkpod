@@ -32,6 +32,7 @@
 
 #include <glib.h>
 #include "libgtkpod/gtkpod_app_iface.h"
+#include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "info.h"
 
@@ -64,7 +65,9 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     info_display_plugin->action_group = action_group;
 
     /* Merge UI */
-    info_display_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
+    gchar *uipath = g_build_filename(get_ui_dir(), "details_editor.ui", NULL);
+    info_display_plugin->uiid = anjuta_ui_merge(ui, uipath);
+    g_free(uipath);
 
     info_display_init();
 

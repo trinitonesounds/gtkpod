@@ -36,9 +36,6 @@
 
 #include <libanjuta/anjuta-plugin.h>
 
-#define UI_FILE GTKPOD_UI_DIR"/coverweb.ui"
-#define GLADE_FILE GTKPOD_GLADE_DIR"/coverweb.glade"
-
 extern GType cover_web_plugin_get_type (GTypeModule *module);
 #define COVER_WEB_TYPE_PLUGIN         (cover_web_plugin_get_type (NULL))
 #define COVER_WEB_PLUGIN(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), COVER_WEB_TYPE_PLUGIN, CoverWebPlugin))
@@ -56,6 +53,7 @@ struct _CoverWebPlugin {
     gint uiid;
     GtkActionGroup *action_group;
     GtkWidget *prefs;
+    gchar *glade_path;
 };
 
 struct _CoverWebPluginClass {

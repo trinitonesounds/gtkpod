@@ -33,6 +33,7 @@
 #include <glib.h>
 #include <libanjuta/interfaces/ianjuta-preferences.h>
 #include "libgtkpod/stock_icons.h"
+#include "libgtkpod/directories.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/gp_private.h"
@@ -41,7 +42,8 @@
 #include "sorttab_display_actions.h"
 #include "sorttab_display_preferences.h"
 
-#define ICON_FILE "sorttab_display-sorttab-category.png"
+#define PREFERENCE_ICON "sorttab_display-sorttab-category"
+#define PREFERENCE_ICON_STOCK_ID "sorttab_display-preference-icon"
 #define TAB_NAME "Track Filter"
 
 /* Parent class. Part of standard class definition */
@@ -143,6 +145,8 @@ static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
     GtkActionGroup* action_group;
 
     /* Prepare the icons for the sorttab */
+    register_icon_path(get_plugin_dir(), "sorttab_display");
+    register_stock_icon(PREFERENCE_ICON, PREFERENCE_ICON_STOCK_ID);
 
     sorttab_display_plugin = (SorttabDisplayPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
@@ -163,14 +167,17 @@ static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
     gtk_action_group_add_action(sorttab_display_plugin->action_group, sorttab_display_plugin->fewer_filtertabs_action);
 
     /* Merge UI */
-    sorttab_display_plugin->uiid = anjuta_ui_merge(ui, UI_FILE);
+    gchar *uipath = g_build_filename(get_ui_dir(), "sorttab_display.ui", NULL);
+    sorttab_display_plugin->uiid = anjuta_ui_merge(ui, uipath);
+    g_free(uipath);
 
     /* Set preferences */
     set_default_preferences();
 
     /* Add widget in Shell. Any number of widgets can be added */
     sorttab_display_plugin->st_paned = gtk_hpaned_new();
-    st_create_tabs(GTK_PANED(sorttab_display_plugin->st_paned));
+    gchar *glade_path = g_build_filename(get_glade_dir(), "sorttab_display.glade", NULL);
+    st_create_tabs(GTK_PANED(sorttab_display_plugin->st_paned), glade_path);
     gtk_widget_show(sorttab_display_plugin->st_paned);
 
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (sorttab_display_select_playlist_cb), NULL);
@@ -189,6 +196,8 @@ static gboolean deactivate_sorttab_display_plugin(AnjutaPlugin *plugin) {
 
     sorttab_display_plugin = (SorttabDisplayPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
+
+    st_cleanup();
 
     sorttab_display_plugin->more_filtertabs_action = NULL;
     sorttab_display_plugin->fewer_filtertabs_action = NULL;
@@ -226,18 +235,21 @@ static void sorttab_display_plugin_class_init(GObjectClass *klass) {
 }
 
 static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
-    gchar *file;
     GdkPixbuf *pixbuf;
+    GError *error = NULL;
 
     SorttabDisplayPlugin* plugin = SORTTAB_DISPLAY_PLUGIN(ipref);
     plugin->prefs = init_sorttab_preferences();
     if (plugin->prefs == NULL)
         return;
 
-    file = g_build_filename(GTKPOD_IMAGE_DIR, "hicolor/48x48/places", ICON_FILE, NULL);
-    pixbuf = gdk_pixbuf_new_from_file(file, NULL);
+    pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), PREFERENCE_ICON, 48, 0, &error);
+
+    if (!pixbuf) {
+        g_warning ("Couldn't load icon: %s", error->message);
+        g_error_free(error);
+    }
     anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-sorttab-settings", _(TAB_NAME), pixbuf, plugin->prefs);
-    g_free(file);
     g_object_unref(pixbuf);
 }
 
@@ -253,8 +265,8 @@ static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
 }
 
 ANJUTA_PLUGIN_BEGIN (SorttabDisplayPlugin, sorttab_display_plugin);
-ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);
-ANJUTA_PLUGIN_END;
+        ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);ANJUTA_PLUGIN_END
+;
 
 ANJUTA_SIMPLE_PLUGIN (SorttabDisplayPlugin, sorttab_display_plugin)
 ;

@@ -30,7 +30,7 @@
 #include <gtk/gtk.h>
 #include "directories.h"
 
-static int USING_LOCAL = 0;
+static gboolean USING_LOCAL = FALSE;
 
 static gchar * init_dir(char *argv[], gchar *filename, gchar *installdir);
 #if LOCALDEBUG
@@ -108,11 +108,15 @@ static gchar * init_dir(char *argv[], gchar *localdir, gchar *fullinstalldir) {
     if (!newdir)
         newdir = fullinstalldir;
     else {
-        USING_LOCAL = 1;
+        USING_LOCAL = TRUE;
         g_printf("Using local %s file since program was started from source directory:\n%s\n", localdir, newdir);
     }
 
     return newdir;
+}
+
+gboolean using_local() {
+    return USING_LOCAL;
 }
 
 gchar * get_data_dir() {

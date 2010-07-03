@@ -36,9 +36,6 @@
 
 #include <libanjuta/anjuta-plugin.h>
 
-#define UI_FILE GTKPOD_UI_DIR"/exporter.ui"
-#define GLADE_FILE GTKPOD_GLADE_DIR"/exporter.glade"
-
 typedef struct _ExporterPlugin ExporterPlugin;
 typedef struct _ExporterPluginClass ExporterPluginClass;
 
