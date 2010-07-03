@@ -82,7 +82,7 @@ void gtkpod_init(int argc, char *argv[]) {
     gtkpod_app_set_glade_xml(glade_xml_file);
     g_free(glade_xml_file);
 
-    /* initialise gtkpod library items depedent on path of executable*/
+    /* initialise gtkpod library items dependent on path of executable*/
     gp_init(argc, argv);
 
     /* Add blocking widgets from the framework */
@@ -184,10 +184,8 @@ void gtkpod_init(int argc, char *argv[]) {
 /* callback for gtkpod window's close button */
 static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
 
-    if (!gtkpod_cleanup_quit()) {
-        // Dont want to quit so avoid signalling any destroy event
+    if (! ok_to_close_gtkpod())
         return TRUE;
-    }
 
     AnjutaPluginManager *plugin_manager;
     AnjutaProfileManager *profile_manager;
@@ -228,6 +226,12 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
         gtk_widget_hide(GTK_WIDGET (app));
         anjuta_plugin_manager_unload_all_plugins(plugin_manager);
     }
+
+    if (!gtkpod_cleanup_quit()) {
+        // Dont want to quit so avoid signalling any destroy event
+        return TRUE;
+    }
+
     return FALSE;
 }
 

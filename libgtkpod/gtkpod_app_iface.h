@@ -153,6 +153,7 @@ void gp_init(int argc, char *argv[]);
 void gtkpod_app_set_glade_xml(gchar *xml_file);
 gchar* gtkpod_get_glade_xml();
 
+gboolean ok_to_close_gtkpod();
 gint gtkpod_cleanup_quit();
 
 void gtkpod_statusbar_message(gchar* message, ...);

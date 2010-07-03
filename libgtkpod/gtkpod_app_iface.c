@@ -127,7 +127,7 @@ gchar* gtkpod_get_glade_xml() {
  *
  * return value: TRUE if it's OK to quit.
  */
-static gboolean ok_to_close_gtkpod(void) {
+gboolean ok_to_close_gtkpod(void) {
     gint result = GTK_RESPONSE_OK;
 
     if (!files_are_saved()) {
@@ -155,10 +155,8 @@ static gboolean ok_to_close_gtkpod(void) {
  */
 gint gtkpod_cleanup_quit() {
     if (!widgets_blocked) {
-        if (ok_to_close_gtkpod()) {
-            gtkpod_shutdown();
-            return TRUE; // Already to carry on quitting
-        }
+        gtkpod_shutdown();
+        return TRUE; // Already to carry on quitting
     }
     return FALSE; // dont quit!
 }
