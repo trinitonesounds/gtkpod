@@ -44,7 +44,8 @@ How to compile/install gtkpod:
         libgpod (at least 0.6.1)
         libid3tag (at least 0.15)
         perl XML::Parser module
-        pkgconfig
+				anjuta (at least 2.30)
+				pkgconfig
 
    Optional packages:
 
@@ -88,8 +89,8 @@ How to compile/install gtkpod:
 
 5. Install the gtkpod software (may require root privileges):
 
-   make install
-
+   make install && ldconfig
+	 
 
    Note: You can test gtkpod without installing it. Some features
    (translation catalogues, icons, scripts) may not be available,
@@ -145,6 +146,7 @@ cd libgpod/
 ./autogen.sh
 make
 sudo make install
+sudo ldconfig
 
 #start gtkpod
 gtkpod &

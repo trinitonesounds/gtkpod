@@ -61,3 +61,26 @@ cscope.out
 
 # /plugins/
 /plugins/*.plugin
+
+# links from dev env
+details_editor.glade
+coverweb.glade
+exporter.glade
+info_display.glade
+sorttab_display.glade
+track_display.glade
+repository_editor.glade
+cover_display.glade
+playlist_display.glade
+core_prefs.xml
+
+details_editor.ui
+coverweb.ui
+exporter.ui
+info_display.ui
+sorttab_display.ui
+track_display.ui
+repository_editor.ui
+cover_display.ui
+playlist_display.ui
+core_prefs.ui

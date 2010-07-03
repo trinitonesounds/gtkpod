@@ -20,12 +20,7 @@ DISTCLEANFILES =		\
 	intltool-update
 
 uninstall-hook:
-	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)/data/ui
-	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)/data/glade
-	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)/data/icons
-	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)/data
-	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)/scripts
-	-rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)
+	-rm -rf $(DESTDIR)$(pkgdatadir)
 
 update-docs:
 	cd doc && make update-docs

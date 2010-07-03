@@ -3,5 +3,6 @@ If you install from git, call
 ./autogen.sh
 make
 make install
+ldconfig
 
 See the INSTALL and TROUBLESHOOTING file for more information.
