@@ -49,7 +49,7 @@ G_MODULE_EXPORT void open_about_window ()
 		    "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 		    "Corey Donohoe (atmos at atmos dot org)\n"
 		    ""),
-		_("Codebase includes contribution from the following people and many other helpful individuais\n"),
+		_("Codebase includes contribution from the following people and many other helpful individuals\n"),
 		_("Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"),
 		_("Hiroshi Kawashima: Japanese charset autodetection feature"),
 		_("Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"),
