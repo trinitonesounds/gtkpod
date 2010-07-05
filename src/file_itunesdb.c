@@ -474,7 +474,15 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	    {
 		if (!read_extended_info (name_ext, name_db))
 		{
-		    gtkpod_warning (_("Extended info will not be used. If you have non-transferred tracks,\nthese will be lost.\n"));
+		    gchar *msg = g_strdup_printf(_("The repository %s does not have a readable extended database.\n"), name_db);
+		    msg = g_strconcat(msg,
+		            _("This database identifies the track on disk with the track data in the repository database."),
+		            _("Any tracks already in the database cannot be transferred between repositories without the extended database."),
+		            _("A new extended database will be created upon saving but existing tracks will need to be reimported to be linked to the file on disk."),
+		            NULL);
+
+		    gtkpod_warning (msg);
+		    g_free(msg);
 		}
 	    }
 	    itdb = itdb_parse_file (name_db, &error);
