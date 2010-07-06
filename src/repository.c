@@ -1962,6 +1962,7 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
     repwin->window = gtkpod_xml_get_widget (repwin->xml,
 					    "repository_window");
     g_return_if_fail (repwin->window);
+    gtk_window_set_transient_for (GTK_WINDOW (repwin->window), GTK_WINDOW (gtkpod_window));
 
     repwins = g_list_append (repwins, repwin);
 
@@ -2479,6 +2480,8 @@ static void create_repository (RepWin *repwin1)
 					"create_repository_window");
 
     g_return_if_fail (cr->window);
+    gtk_window_set_transient_for (GTK_WINDOW (cr->window), GTK_WINDOW (repwin1->window));
+
 
     /* Window control */
     g_signal_connect (GET_WIDGET (CRW_CANCEL_BUTTON), "clicked",

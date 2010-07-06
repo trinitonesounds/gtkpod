@@ -266,13 +266,14 @@ void sort_window_create (void)
 
 		/* associate tm_listed_order with sort_window */
 		g_object_set_data (G_OBJECT (sort_window), "tm_listed_order", tm_listed_order);
-			
+
 		tooltips = gtk_tooltips_new ();
 		gtk_tooltips_set_tip (tooltips, w, _("You can also use the table headers, but this allows you to sort according to a column that is not displayed."), NULL);
 
 		sort_window_update ();
 
 		sort_window_show_hide_tooltips ();
+	    gtk_window_set_transient_for (GTK_WINDOW (sort_window), GTK_WINDOW (gtkpod_window));
 		gtk_widget_show (sort_window);
     }
 }
