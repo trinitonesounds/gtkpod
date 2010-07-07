@@ -1,7 +1,7 @@
 /*
 |  Copyright (C) 2007 Maia Kozheva <sikon at users sourceforge net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
@@ -45,11 +45,11 @@
 G_MODULE_EXPORT void open_about_window ()
 {
 	const gchar *authors[] = {
-		_("© 2002 - 2007\n"
+		_("© 2002 - 2010\n"
 		    "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 		    "Corey Donohoe (atmos at atmos dot org)\n"
 		    ""),
-		_("Patches were supplied by the following people (list may be incomplete -- please contact me)\n"),
+		_("Codebase includes contribution from the following people and many other helpful individuals\n"),
 		_("Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"),
 		_("Hiroshi Kawashima: Japanese charset autodetection feature"),
 		_("Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"),
@@ -91,15 +91,15 @@ G_MODULE_EXPORT void open_about_window ()
 		_("Uwe Hermann: help with support for iPod Video"),
 		"",
 		_("Iain Benson: support for compilation tag in mp3 files and separate display of compilations in the sort tab."),
-		_("Nicolas Chariot: icons of buttons\n"
-		    "\n"),
+		_("Nicolas Chariot: icons of buttons\n"),
+		_("Others past and present for their excellent contributions\n\n"),
 		_("This program borrows code from the following projects:"),
 		_("gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  (http://www.gnu.org/software/gnupod/)"),
 		_("iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some code for smart playlists is based on his C++-classes."),
 		_("mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"),
 		_("xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"),
 		"",
-		_("The GUI was created with the help of glade-2 (http://glade.gnome.org/)."),
+		_("The GUI was created with the help of glade (http://glade.gnome.org/)."),
 		NULL };
 
 	gchar  *translators[] = {
@@ -137,12 +137,12 @@ G_MODULE_EXPORT void open_about_window ()
 	gchar *copyright = _("© 2002-2007\nJorg Schuler <jcsjcs at users.sourceforge.net>\nCorey Donohoe <atmos at atmos.org>");
 	gchar *translator_credits = g_strjoinv("\n", translators);
 	GdkPixbuf *icon = gdk_pixbuf_new_from_file(PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "data" G_DIR_SEPARATOR_S "gtkpod-logo.png", NULL);
-	
+
 #ifdef LIBGPOD_VERSION
 	gchar *version = g_strdup_printf (_("(using libgpod %s)"), LIBGPOD_VERSION);
 	gchar *description = g_strdup_printf ("%s\n%s", _("Cross-platform multilingual interface to Apple's iPod™"),
 											version);
-										  
+
 	g_free (version);
 #else
 	gchar *description = _("Cross-platform multilingual interface to Apple's iPod™");
@@ -161,7 +161,7 @@ G_MODULE_EXPORT void open_about_window ()
 		NULL);
 
 	g_free (translator_credits);
-										 
+
 #ifdef LIBGPOD_VERSION
 	g_free (description);
 #endif
@@ -200,19 +200,19 @@ void gtkpod_open_in_browser (const gchar *url)
 	const gchar *xdg_open_argv[]   = { "xdg-open", url, NULL };
 	const gchar *gnome_open_argv[] = { "gnome-open", url, NULL };
 	const gchar *kfmclient_argv[]  = { "kfmclient", "exec", url, NULL };
-	
+
 	if(g_spawn_async(NULL, (gchar **)xdg_open_argv, NULL, G_SPAWN_SEARCH_PATH,
 					 NULL, NULL, NULL, NULL))
 	{
 		return;
 	}
-	
+
 	if(g_spawn_async(NULL, (gchar **)gnome_open_argv, NULL, G_SPAWN_SEARCH_PATH,
 					 NULL, NULL, NULL, NULL))
 	{
 		return;
 	}
-	
+
 	g_spawn_async(NULL, (gchar **)kfmclient_argv, NULL, G_SPAWN_SEARCH_PATH,
 					 NULL, NULL, NULL, NULL);
 }
@@ -221,17 +221,17 @@ void gtkpod_open_help_context (const gchar *context)
 {
 	const gchar *docdir =
 		PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "doc" G_DIR_SEPARATOR_S;
-	
+
 	gchar *filename = g_strdup_printf("%sgtkpod.xml#%s", docdir, context);
 	const gchar *yelp_open_argv[] = { "yelp", filename, NULL };
-	
+
 	if(g_spawn_async(NULL, (gchar **)yelp_open_argv, NULL, G_SPAWN_SEARCH_PATH,
 					 NULL, NULL, NULL, NULL))
 	{
 		g_free(filename);
 		return;
 	}
-	
+
 	g_free(filename);
 	filename = g_strdup_printf("%s%s.html", docdir, context);
 	gtkpod_open_in_browser(filename);

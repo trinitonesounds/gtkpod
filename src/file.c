@@ -1184,17 +1184,18 @@ static Track *get_track_info_from_file(gchar *name, Track *orig_track) {
     filetype = determine_file_type(name);
     switch (filetype) {
     case FILE_TYPE_MP3:
-        nti = mp3_get_file_info(name);
-        /* Set mediatype to audio */
-        if (nti) {
-            if (g_strcasecmp(nti->genre, "audiobook") == 0)
-                nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
-            else if (g_strcasecmp(nti->genre, "podcast") == 0)
-                nti->mediatype = ITDB_MEDIATYPE_PODCAST;
-            else
-                nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-        }
-        break;
+	nti = mp3_get_file_info (name);
+	/* Set mediatype to audio */
+	if (nti)
+	{
+	    nti->mediatype = ITDB_MEDIATYPE_AUDIO;
+	    if (nti->genre)
+	    {
+		if (g_strcasecmp (nti->genre, "audiobook") == 0) nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
+		else if (g_strcasecmp (nti->genre, "podcast") == 0) nti->mediatype = ITDB_MEDIATYPE_PODCAST;
+	    }
+	}
+	break;
     case FILE_TYPE_M4A:
     case FILE_TYPE_M4P:
         nti = mp4_get_file_info(name);
@@ -2340,7 +2341,8 @@ gboolean read_lyrics_from_file(Track *track, gchar **lyrics) {
         case FILE_TYPE_M4V:
         case FILE_TYPE_MP4:
             result = TRUE;
-            *lyrics = g_strdup("File format unsupported now.");
+            *lyrics=g_strdup(
+                _("\Error: File format unsupported now."));
             break;
         case FILE_TYPE_MOV:
         case FILE_TYPE_MPG:
@@ -2349,7 +2351,8 @@ gboolean read_lyrics_from_file(Track *track, gchar **lyrics) {
         case FILE_TYPE_FLAC: /* FIXME */
         case FILE_TYPE_UNKNOWN:
             result = TRUE;
-            *lyrics = g_strdup("Lyrics not supported for this file format.");
+            *lyrics=g_strdup(
+                _("Error: Lyrics not supported for this file format."));
             break;
         case FILE_TYPE_M3U:
         case FILE_TYPE_PLS:
@@ -2359,18 +2362,21 @@ gboolean read_lyrics_from_file(Track *track, gchar **lyrics) {
         }
         g_free(path);
     }
-    else {
-        buf = get_track_info(track, FALSE);
-        gtkpod_warning(_("Lyrics not found, file not available (%s).\n\n"), buf);
-        g_free(buf);
+    else
+    {
+        buf = get_track_info (track, FALSE);
+        *lyrics=g_strdup_printf(
+            _("Error: Lyrics not found, file not available (%s).\n\n"),
+            buf);
+        g_free (buf);
     }
     if (result) {
-        if (!*lyrics)
-            *lyrics = g_strdup("");
-        if (etr->lyrics)
-            g_free(etr->lyrics);
-        etr->lyrics = g_strdup(*lyrics);
-    }
+		if (!*lyrics)
+			*lyrics=g_strdup("");
+		if (etr->lyrics)
+			g_free(etr->lyrics);
+		etr->lyrics=g_strdup(*lyrics);
+	}
     return result;
 }
 
@@ -2387,6 +2393,12 @@ gboolean write_lyrics_to_file(Track *track) {
     g_return_val_if_fail (track, FALSE);
     etr = track->userdata;
     g_return_val_if_fail (etr,FALSE);
+
+    if (g_str_has_prefix(etr->lyrics, _("Error:"))) {
+        /* Not writing lyrics as there are only errors */
+        return FALSE;
+    }
+
     itdb = track->itdb;
     g_return_val_if_fail (itdb, FALSE);
     path = get_file_name_from_source(track, SOURCE_IPOD);

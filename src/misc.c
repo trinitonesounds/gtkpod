@@ -158,7 +158,7 @@ void update_blocked_widget(GtkWidget *w, gboolean sens) {
  *                                                                  *
  *             Miscellaneous                                        *
  *                                                                  *
- \*------------------------------------------------------------------*/
+\*------------------------------------------------------------------*/
 
 /* Concats @base_dir and @rel_dir if and only if @rel_dir is not
  * absolute (does not start with '~' or '/'). Otherwise simply return

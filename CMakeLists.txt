@@ -11,7 +11,7 @@ cmake_minimum_required(VERSION 2.6)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
 
 set(PACKAGE ${CMAKE_PROJECT_NAME})
-set(VERSION 0.99.14)
+set(VERSION 0.99.17GIT)
 set(GETTEXT_PACKAGE ${CMAKE_PROJECT_NAME})
 set(PACKAGE_DATA_DIR ${CMAKE_INSTALL_PREFIX}/share)
 set(PACKAGE_LOCALE_DIR ${PACKAGE_DATA_DIR}/locale)
@@ -35,6 +35,7 @@ endif()
 
 include(flex)
 include(CheckIncludeFile)
+include(CheckIncludeFiles)
 
 find_package(PkgConfig REQUIRED)
 find_package(GTK2 REQUIRED)
@@ -42,6 +43,15 @@ find_package(Glade REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(Libgpod REQUIRED)
 find_package(ID3tag REQUIRED)
+CHECK_INCLUDE_FILES(endian.h HAVE_ENDIAN_H)
+CHECK_INCLUDE_FILES(mp4v2/platform.h HAVE_MP4V2_PLATFORM_H)
+
+# This is hacky... the result is a test file that looks like this:
+# #include <mp4v2/platform.h>
+# typedef void* MP4FileHandle;//>
+# #include <mp4v2/itmf_tags.h>
+# This matches the way it's used in the code, and the autoconf test
+CHECK_INCLUDE_FILES("mp4v2/platform.h>\ntypedef void* MP4FileHandle\;//;mp4v2/itmf_tags.h" HAVE_MP4V2_ITMF_TAGS_H)
 
 set(OPT_INCLUDES "")
 set(OPT_CFLAGS "")

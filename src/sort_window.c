@@ -233,7 +233,9 @@ void sort_window_create(void) {
         sort_window_update();
 
         sort_window_show_hide_tooltips();
+		gtk_window_set_transient_for (GTK_WINDOW (sort_window), GTK_WINDOW (gtkpod_app));
         gtk_widget_show(sort_window);
+
     }
 }
 
