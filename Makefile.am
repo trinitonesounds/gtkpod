@@ -4,6 +4,8 @@ SUBDIRS = src po scripts data  doc
 
 EXTRA_DIST =			\
 	autogen.sh		\
+	CMakeLists.txt \
+	cmake \
 	intltool-extract.in	\
 	intltool-merge.in	\
 	intltool-update.in	\
