@@ -251,18 +251,6 @@ iTunesDB* gtkpod_get_current_itdb() {
     return GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_itdb;
 }
 
-void gtkpod_set_current_itdb(iTunesDB* itdb) {
-    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
-    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_itdb = itdb;
-
-    if (!itdb) // If setting itdb to null then set playlist to null too
-        gtkpod_set_current_playlist(NULL);
-
-    if (itdb && g_list_index(itdb->playlists, gtkpod_get_current_playlist()) == -1)
-        // if playlist is not in itdb then set it to null
-        gtkpod_set_current_playlist(NULL);
-}
-
 Playlist* gtkpod_get_current_playlist() {
     g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), NULL);
     return GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_playlist;
@@ -273,8 +261,11 @@ void gtkpod_set_current_playlist(Playlist* playlist) {
 
     GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_playlist = playlist;
     if (playlist) {// if playlist not null then set its itdb as current
-        gtkpod_set_current_itdb(playlist->itdb);
+        GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_itdb = playlist->itdb;
         gtkpod_set_displayed_tracks(playlist->members);
+    } else {
+        GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_itdb = NULL;
+        gtkpod_set_displayed_tracks(NULL);
     }
 
     g_signal_emit(gtkpod_app, gtkpod_app_signals[PLAYLIST_SELECTED], 0, playlist);

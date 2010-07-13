@@ -96,3 +96,26 @@ Notes on trial build using ubuntu 910
 # Change configure.in to signal at the bottom status of webkit
 #- pkconfig.pc for libgtkpod
 
+1) Deleted Music Library
+2) Created Music Library
+3) Added localmusic
+
+
+** Message: TODO signal all things such as conversions to cancel
+
+(lt-gtkpod:12130): GLib-GObject-WARNING **: invalid unclassed pointer in cast to `GtkFileChooser'
+
+(lt-gtkpod:12130): Gtk-CRITICAL **: gtk_file_chooser_get_current_folder: assertion `GTK_IS_FILE_CHOOSER (chooser)' failed
+
+** (lt-gtkpod:12130): WARNING **: busy push XXX
+** Message: TODO load photodb handle
+
+** Message: TODO signal all things such as conversions to cancel
+
+** (lt-gtkpod:12130): CRITICAL **: coverart_select_cover: assertion `key' failed
+** Message: TODO - update smart playlists before writing
+
+
+(lt-gtkpod:12130): GLib-GObject-CRITICAL **: g_object_ref: assertion `G_IS_OBJECT (object)' failed
+** Message: TODO - cleanup gphoto_window on shutdown
+

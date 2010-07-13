@@ -174,7 +174,6 @@ void gtkpod_notify_data_changed(iTunesDB *itdb);
 void gtkpod_notify_data_unchanged(iTunesDB *itdb);
 
 iTunesDB* gtkpod_get_current_itdb();
-void gtkpod_set_current_itdb(iTunesDB* itdb);
 
 Playlist* gtkpod_get_current_playlist();
 void gtkpod_set_current_playlist(Playlist* playlist);

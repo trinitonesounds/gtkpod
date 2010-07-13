@@ -335,7 +335,6 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (playlist_display_select_playlist_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_ADDED, G_CALLBACK (playlist_display_playlist_added_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_REMOVED, G_CALLBACK (playlist_display_playlist_removed_cb), NULL);
-    g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (playlist_display_track_removed_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_ITDB_ADDED, G_CALLBACK (playlist_display_itdb_added_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_ITDB_REMOVED, G_CALLBACK (playlist_display_itdb_removed_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_ITDB_UPDATED, G_CALLBACK (playlist_display_update_itdb_cb), NULL);
@@ -360,7 +359,6 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_select_playlist_cb), plugin);
     g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_playlist_added_cb), plugin);
     g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_playlist_removed_cb), plugin);
-    g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_track_removed_cb), plugin);
     g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_itdb_added_cb), plugin);
     g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_itdb_removed_cb), plugin);
     g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_update_itdb_cb), plugin);

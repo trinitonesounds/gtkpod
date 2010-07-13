@@ -74,7 +74,6 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (info_display_playlist_selected_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_ADDED, G_CALLBACK (info_display_playlist_added_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_REMOVED, G_CALLBACK (info_display_playlist_removed_cb), NULL);
-
     g_signal_connect (gtkpod_app, SIGNAL_TRACK_UPDATED, G_CALLBACK (info_display_track_updated_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (info_display_track_removed_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_TRACKS_DISPLAYED, G_CALLBACK (info_display_tracks_displayed_cb), NULL);

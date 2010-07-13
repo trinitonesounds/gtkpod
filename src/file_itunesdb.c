@@ -371,6 +371,47 @@ static gboolean read_extended_info(gchar *name, gchar *itunes) {
     return success;
 }
 
+/**
+ * load_photodb:
+ *
+ * Using the info in the provided itunes db, load the photo db
+ * from the ipod if there is one present. Reference it in the
+ * extra itunes db data structure for later use.
+ *
+ * @ itdb: itunes database
+ *
+ */
+static void load_photodb(iTunesDB *itdb) {
+    ExtraiTunesDBData *eitdb;
+    PhotoDB *db;
+    const gchar *mp;
+    GError *error = NULL;
+
+    g_return_if_fail (itdb);
+
+    if (!itdb_device_supports_photo(itdb->device))
+        return;
+
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+    g_return_if_fail (eitdb->photodb == NULL);
+
+    mp = itdb_get_mountpoint(itdb);
+    db = itdb_photodb_parse(mp, &error);
+    if (error) {
+        gtkpod_warning(_("Error reading iPod photo database (%s).\n"), error->message);
+        g_error_free(error);
+        error = NULL;
+    }
+    else if (db == NULL) {
+        gtkpod_warning(_("Error reading iPod photo database. (No error message)\n"));
+    }
+    else {
+        /* Set the reference to the photo database */
+        eitdb->photodb = db;
+    }
+}
+
 /* Import an iTunesDB and return an iTunesDB structure.
  * If @old_itdb is set, it will be merged into the newly imported
  * one. @old_itdb will not be changed.
@@ -422,10 +463,7 @@ iTunesDB *gp_import_itdb(iTunesDB *old_itdb, const gint type, const gchar *mp, c
                             *msg =
                                     g_strdup_printf(_("The repository %s does not have a readable extended database.\n"), name_db);
                     msg
-                            = g_strconcat(msg, _("This database identifies the track on disk with the track data in the repository database."),
-                                    _("Any tracks already in the database cannot be transferred between repositories without the extended database."),
-                                    _("A new extended database will be created upon saving but existing tracks will need to be reimported to be linked to the file on disk."),
-                                    NULL);
+                            = g_strconcat(msg, _("This database identifies the track on disk with the track data in the repository database."), _("Any tracks already in the database cannot be transferred between repositories without the extended database."), _("A new extended database will be created upon saving but existing tracks will need to be reimported to be linked to the file on disk."), NULL);
 
                     gtkpod_warning(msg);
                 }
@@ -650,6 +688,9 @@ iTunesDB *gp_import_itdb(iTunesDB *old_itdb, const gint type, const gchar *mp, c
         }
     }
 
+    /* Add photo database */
+    load_photodb(itdb);
+
     release_widgets();
 
     return itdb;
@@ -704,9 +745,6 @@ static iTunesDB *gp_merge_itdb(iTunesDB *old_itdb) {
         g_return_val_if_fail (old_eitdb->offline_filename, NULL);
 
         new_itdb = gp_import_itdb(old_itdb, old_itdb->usertype, mountpoint, old_eitdb->offline_filename, NULL);
-        g_message("TODO load photodb handle\n");
-        //        if (new_itdb)
-        //            gphoto_load_photodb(new_itdb);
     }
     else {
         g_return_val_if_reached (NULL);

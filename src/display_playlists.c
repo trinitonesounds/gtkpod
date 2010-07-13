@@ -91,34 +91,29 @@ static gboolean pm_get_iter_for_playlist(Playlist *pl, GtkTreeIter *iter);
  *    pressed)
  *
  * ---------------------------------------------------------------- */
-static void pm_drag_begin (GtkWidget *widget, GdkDragContext *drag_context, gpointer user_data) {
-/*     puts ("drag_begin"); */
+static void pm_drag_begin(GtkWidget *widget, GdkDragContext *drag_context, gpointer user_data) {
+    /*     puts ("drag_begin"); */
 }
 
 static void pm_drag_data_delete_remove_playlist(GtkTreeModel *tm, GtkTreePath *tp, GtkTreeIter *iter, gpointer data) {
     Playlist *pl;
     g_return_if_fail (tm);
     g_return_if_fail (iter);
-    gtk_tree_model_get (tm, iter, PM_COLUMN_PLAYLIST, &pl, -1);
+    gtk_tree_model_get(tm, iter, PM_COLUMN_PLAYLIST, &pl, -1);
     g_return_if_fail (pl);
-    gp_playlist_remove (pl);
+    gp_playlist_remove(pl);
 }
 
 /* remove dragged playlist after successful MOVE */
-static void pm_drag_data_delete (GtkWidget *widget,
-               GdkDragContext *drag_context,
-               gpointer user_data)
-{
+static void pm_drag_data_delete(GtkWidget *widget, GdkDragContext *drag_context, gpointer user_data) {
     g_return_if_fail (widget);
     g_return_if_fail (drag_context);
 
-/*     printf ("drag_data_delete: %d\n", drag_context->action); */
+    /*     printf ("drag_data_delete: %d\n", drag_context->action); */
 
-    if (drag_context->action == GDK_ACTION_MOVE)
-    {
-    GtkTreeSelection *ts = gtk_tree_view_get_selection(
-        GTK_TREE_VIEW (widget));
-    gtk_tree_selection_selected_foreach (ts, pm_drag_data_delete_remove_playlist, NULL);
+    if (drag_context->action == GDK_ACTION_MOVE) {
+        GtkTreeSelection *ts = gtk_tree_view_get_selection(GTK_TREE_VIEW (widget));
+        gtk_tree_selection_selected_foreach(ts, pm_drag_data_delete_remove_playlist, NULL);
     }
 }
 
@@ -918,38 +913,6 @@ static gboolean pm_get_iter_for_playlist(Playlist *playlist, GtkTreeIter *pl_ite
 /* Section for playlist display                                     */
 /* ---------------------------------------------------------------- */
 
-/* remove a track from a current playlist (model) */
-void pm_remove_track(Playlist *playlist, Track *track) {
-    g_return_if_fail (playlist);
-    g_return_if_fail (track);
-
-    Playlist *current_playlist = gtkpod_get_current_playlist();
-    /* notify sort tab if currently selected playlist is affected */
-    if (current_playlist) { /* only remove if selected playlist is in same itdb as track */
-        if (track->itdb == current_playlist->itdb) {
-            if ((playlist == current_playlist) || itdb_playlist_is_mpl(current_playlist)) {
-                //                if (prefs_get_int(KEY_DISPLAY_COVERART)) {
-                //                    coverart_track_changed(track, COVERART_REMOVE_SIGNAL);
-                //                }
-                //                st_remove_track(track, 0);
-            }
-        }
-    }
-}
-
-/* Add track to the display if it's in the currently displayed playlist.
- * @display: TRUE: add to track model (i.e. display it) */
-void pm_add_track(Playlist *playlist, Track *track, gboolean display) {
-    //    if (playlist == current_playlist) {
-    //        st_add_track(track, TRUE, display, 0); /* Add to first sort tab */
-    //
-    //        /* As with add_track above, only add to the playlist if it is the current one */
-    //        if (prefs_get_int(KEY_DISPLAY_COVERART)) {
-    //            coverart_track_changed(track, COVERART_CREATE_SIGNAL);
-    //        }
-    //    }
-}
-
 /* One of the playlist names has changed (this happens when the
  Itdb_iTunesDB is read */
 void pm_itdb_name_changed(Itdb_iTunesDB *itdb) {
@@ -1035,24 +998,6 @@ void pm_add_child(Itdb_iTunesDB *itdb, PM_column_type type, gpointer item, gint 
     gtk_tree_store_insert(GTK_TREE_STORE (model), &iter, mpli, pos);
 
     gtk_tree_store_set(GTK_TREE_STORE (model), &iter, PM_COLUMN_ITDB, itdb, PM_COLUMN_TYPE, type, type, item, -1);
-
-#if 0
-    /* If the current_playlist is "playlist", we select it. This can
-     happen during a display_reset */
-    if (current_playlist == playlist)
-    {
-        selection = gtk_tree_view_get_selection (playlist_treeview);
-        gtk_tree_selection_select_iter (selection, &iter);
-    }
-#endif
-    /*  else if (current_playlist == NULL)
-     {
-     if (itdb_playlist_is_mpl(playlist) && prefs_get_int("mpl_autoselect"))
-     {
-     selection = gtk_tree_view_get_selection (playlist_treeview);
-     gtk_tree_selection_select_iter (selection, &iter);
-     }
-     } */
 }
 
 /* Remove "playlist" from the display model.
@@ -1180,16 +1125,9 @@ static gboolean pm_selection_changed_cb(gpointer data) {
             time.tv_sec % 3600, time.tv_usec);
 #endif
 
-    /* Avoid track selection errors on coverart while enacting a change
-     * in playlist
-     */
-    //	 coverart_block_change (TRUE);
-
     if (gtk_tree_selection_get_selected(selection, &model, &iter) == FALSE) { /* no selection -> reset sort tabs */
         //		gphoto_change_to_photo_window (FALSE);
-        //		st_init (-1, 0);
         gtkpod_set_current_playlist(NULL);
-        gtkpod_set_current_itdb(NULL);
     }
     else {
         Playlist *new_playlist = NULL;
@@ -1200,7 +1138,6 @@ static gboolean pm_selection_changed_cb(gpointer data) {
         gtk_tree_model_get(model, &iter, PM_COLUMN_TYPE, &type, PM_COLUMN_ITDB, &itdb, PM_COLUMN_PLAYLIST, &new_playlist, PM_COLUMN_PHOTOS, &photodb, -1);
 
         gtkpod_set_current_playlist(new_playlist);
-        gtkpod_set_current_itdb(itdb);
 
         switch (type) {
         case PM_COLUMN_PLAYLIST:
@@ -1208,15 +1145,6 @@ static gboolean pm_selection_changed_cb(gpointer data) {
             g_return_val_if_fail (itdb, FALSE);
 
             //		gphoto_change_to_photo_window (FALSE);
-
-            /* If new playlist is in an iPod itdb, set the mountpoint for
-             * the free space display to this iPod (there may be several
-             * iPods connected */
-            //
-            //		if (itdb->usertype & GP_ITDB_TYPE_IPOD)
-            //		{
-            //		    space_set_ipod_itdb (itdb);
-            //		}
 
             if (new_playlist->is_spl && new_playlist->splpref.liveupdate)
                 itdb_spl_update(new_playlist);
@@ -1302,11 +1230,6 @@ void pm_add_itdb(Itdb_iTunesDB *itdb, gint pos) {
         else {
             pm_add_child(itdb, PM_COLUMN_PLAYLIST, pl, -1);
         }
-    }
-    /* eitdb->photodb might be NULL: the itdb is added before the iPod
-     * is parsed */
-    if (itdb_device_supports_photo(itdb->device) && eitdb->photodb) {
-        pm_add_child(itdb, PM_COLUMN_PHOTOS, eitdb->photodb, -1);
     }
 
     /* expand the itdb */
@@ -1674,7 +1597,7 @@ static void pm_set_playlist_renderer_pix(GtkCellRenderer *renderer, Playlist *pl
     g_return_if_fail (renderer);
 
     stock_id = return_playlist_stock_image(playlist);
-    if (! stock_id)
+    if (!stock_id)
         return;
 
     g_object_set(G_OBJECT (renderer), "stock-id", stock_id, NULL);
@@ -2117,7 +2040,7 @@ void playlist_display_itdb_added_cb(GtkPodApp *app, gpointer itdb, gint32 pos, g
         return;
     }
 
-    pm_add_itdb (new_itdb, pos);
+    pm_add_itdb(new_itdb, pos);
 }
 
 void playlist_display_itdb_removed_cb(GtkPodApp *app, gpointer itdb, gpointer data) {
@@ -2126,7 +2049,7 @@ void playlist_display_itdb_removed_cb(GtkPodApp *app, gpointer itdb, gpointer da
         return;
     }
 
-    pm_remove_playlist (itdb_playlist_mpl (old_itdb), FALSE);
+    pm_remove_playlist(itdb_playlist_mpl(old_itdb), FALSE);
 }
 
 void playlist_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data) {
@@ -2153,13 +2076,6 @@ void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer 
     Playlist *old_playlist = pl;
 
     pm_remove_playlist(old_playlist, TRUE);
-}
-
-void playlist_display_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data) {
-    Track *old_track = tk;
-    Playlist *current_playlist = gtkpod_get_current_playlist();
-
-    pm_remove_track(current_playlist, old_track);
 }
 
 void playlist_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data) {

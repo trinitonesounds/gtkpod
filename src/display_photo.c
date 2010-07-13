@@ -1,7 +1,7 @@
 /*
  |Copyright (C) 2007 P.G. Richardson <phantom_sf at users.sourceforge.net>
  |Part of the gtkpod project.
- | 
+ |
  |URL: http://www.gtkpod.org/
  |URL: http://gtkpod.sourceforge.net/
  |
@@ -125,59 +125,12 @@ enum
 };
 
 /**
- * gphoto_load_photodb:
- *
- * Using the info in the provided itunes db, load the photo db
- * from the ipod if there is one present. Reference it in the
- * extra itunes db data structure for later use.
- * 
- * @ itdb: itunes database
- * 
- */
-void gphoto_load_photodb(iTunesDB *itdb)
-{
-	ExtraiTunesDBData *eitdb;
-	PhotoDB *db;
-	const gchar *mp;
-	GError *error= NULL;
-
-	g_return_if_fail (itdb);
-
-	eitdb = itdb->userdata;
-	g_return_if_fail (eitdb);
-	g_return_if_fail (eitdb->photodb == NULL);
-
-	mp = itdb_get_mountpoint (itdb);
-	db = itdb_photodb_parse (mp, &error);
-	if (db == NULL)
-	{
-	    if (itdb_device_supports_photo (itdb->device))
-	    {
-		if (error)
-		{
-			gtkpod_warning (_("Error reading iPod photo database (%s).\n"), error->message);
-		} else
-		{
-			gtkpod_warning (_("Error reading iPod photo database.\n"));
-		}
-	    }
-	}
-	if (error)
-	{
-	    g_error_free (error);
-	    error = NULL;
-	}
-	/* Set the reference to the photo database */
-	eitdb->photodb = db;
-}
-
-/**
  * gphoto_display_photo_window
  *
  * When the photo playlist is clicked on, it hands off to this
  * function which changes the entire display to the photo
  * window
- * 
+ *
  * @itdb: itunes db associated with the photo playlist clicked on
  */
 void gphoto_display_photo_window(iTunesDB *itdb)
@@ -217,7 +170,7 @@ void gphoto_display_photo_window(iTunesDB *itdb)
  * When the photo playlist is NOT clicked on;
  * this changes the entire display back to original
  * rather than the photo window.
- * 
+ *
  */
 void gphoto_change_to_photo_window(gboolean showflag)
 {
@@ -292,7 +245,7 @@ void gphoto_change_to_photo_window(gboolean showflag)
 			photo_remove_image_menuItem = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_xml, "photo_remove_image_menuItem"));
 			photo_view_full_size_menuItem = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_xml, "photo_view_full_size_menuItem"));
 			photo_rename_album_menuItem = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_xml, "photo_rename_album_menuItem"));
-			
+
 			photo_viewport = gtkpod_xml_get_widget (photo_xml, "photo_viewport");
 			g_object_ref (photo_album_window);
 			g_object_ref (photo_thumb_window);
@@ -303,17 +256,17 @@ void gphoto_change_to_photo_window(gboolean showflag)
 			gtk_widget_destroy (photowin);
 
 			/* Bring the menus to life */
-			g_signal_connect (G_OBJECT(photo_add_album_menuItem), "activate", G_CALLBACK(on_photodb_add_album_menuItem_activate), 
+			g_signal_connect (G_OBJECT(photo_add_album_menuItem), "activate", G_CALLBACK(on_photodb_add_album_menuItem_activate),
 					  NULL);
-			g_signal_connect (G_OBJECT(photo_add_image_menuItem), "activate", G_CALLBACK(on_photodb_add_image_menuItem_activate), 
+			g_signal_connect (G_OBJECT(photo_add_image_menuItem), "activate", G_CALLBACK(on_photodb_add_image_menuItem_activate),
 					  NULL);
-			g_signal_connect (G_OBJECT(photo_add_image_dir_menuItem), "activate", G_CALLBACK(on_photodb_add_image_dir_menuItem_activate), 
+			g_signal_connect (G_OBJECT(photo_add_image_dir_menuItem), "activate", G_CALLBACK(on_photodb_add_image_dir_menuItem_activate),
 					  NULL);
-			g_signal_connect (G_OBJECT(photo_remove_album_menuItem), "activate", G_CALLBACK(on_photodb_remove_album_menuItem_activate), 
+			g_signal_connect (G_OBJECT(photo_remove_album_menuItem), "activate", G_CALLBACK(on_photodb_remove_album_menuItem_activate),
 					  NULL);
-			g_signal_connect (G_OBJECT(photo_remove_image_menuItem), "activate", G_CALLBACK(on_photodb_remove_image_menuItem_activate), 
+			g_signal_connect (G_OBJECT(photo_remove_image_menuItem), "activate", G_CALLBACK(on_photodb_remove_image_menuItem_activate),
 					  NULL);
-			g_signal_connect (G_OBJECT(photo_view_full_size_menuItem), "activate", G_CALLBACK(on_photodb_view_full_size_menuItem_activate), 
+			g_signal_connect (G_OBJECT(photo_view_full_size_menuItem), "activate", G_CALLBACK(on_photodb_view_full_size_menuItem_activate),
 					  NULL);
 			g_signal_connect (G_OBJECT(photo_rename_album_menuItem), "activate", G_CALLBACK(on_photodb_rename_album_menuItem_activate),
 					  NULL);
@@ -321,7 +274,7 @@ void gphoto_change_to_photo_window(gboolean showflag)
 
 		if (gtk_widget_get_parent (photo_viewport) == NULL)
 			gtk_container_add (GTK_CONTAINER (main_vbox), photo_viewport);
-		
+
 	} else
 	{
 		if (!GTK_WIDGET_VISIBLE (paned1))
@@ -373,7 +326,7 @@ void gphoto_change_to_photo_window(gboolean showflag)
  * Construct the album tree based upon the albums
  * stored on the iPod. If necessary destory and old
  * existing tree object.
- * 
+ *
  */
 static void gphoto_create_albumview()
 {
@@ -401,7 +354,7 @@ static void gphoto_create_albumview()
 		gtk_widget_set_events (GTK_WIDGET(album_view), GDK_KEY_PRESS_MASK);
 
 	renderer = gtk_cell_renderer_text_new ();
-	gtk_tree_view_insert_column_with_attributes (album_view, -1, _("Photo Albums"), renderer, "text", COL_ALBUM_NAME, 
+	gtk_tree_view_insert_column_with_attributes (album_view, -1, _("Photo Albums"), renderer, "text", COL_ALBUM_NAME,
 	NULL);
 
 	/* create model */
@@ -429,7 +382,7 @@ static void gphoto_create_albumview()
 
 	/* function to be enacted when the album is changed */
 	selection = gtk_tree_view_get_selection (album_view);
-	g_signal_connect (G_OBJECT (selection), "changed", G_CALLBACK (gphoto_album_selection_changed), 
+	g_signal_connect (G_OBJECT (selection), "changed", G_CALLBACK (gphoto_album_selection_changed),
 	NULL);
 
 	g_signal_connect (G_OBJECT (album_view), "button-press-event", G_CALLBACK (gphoto_button_press), (gpointer) GPHOTO_ALBUM_VIEW);
@@ -439,18 +392,18 @@ static void gphoto_create_albumview()
 
 	/* Dnd destinaton for album view */
 	gtk_drag_dest_set (
-			GTK_WIDGET (album_view), 
-			GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT, 
-			photo_drop_types, 
-			TGNR (photo_drop_types), 
+			GTK_WIDGET (album_view),
+			GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT,
+			photo_drop_types,
+			TGNR (photo_drop_types),
 			GDK_ACTION_COPY|GDK_ACTION_MOVE);
 
 	g_signal_connect ((gpointer) album_view, "drag-drop",
-			G_CALLBACK (dnd_album_drag_drop), 
+			G_CALLBACK (dnd_album_drag_drop),
 			NULL);
-	
+
 	g_signal_connect ((gpointer) album_view, "drag-data-received",
-			G_CALLBACK (dnd_album_drag_data_received), 
+			G_CALLBACK (dnd_album_drag_data_received),
 			NULL);
 }
 
@@ -460,7 +413,7 @@ static void gphoto_create_albumview()
  * Construct the thumbnail tree based upon the
  * photos stored on the iPod associated with the
  * selected album.
- * 
+ *
  */
 static void gphoto_create_thumbnailview()
 {
@@ -489,12 +442,12 @@ static void gphoto_create_thumbnailview()
 	gtk_drag_source_set (
 			GTK_WIDGET (thumbnail_view),
 			GDK_BUTTON1_MASK,
-			photo_drag_types, 
+			photo_drag_types,
 			TGNR (photo_drag_types),
 			GDK_ACTION_COPY|GDK_ACTION_MOVE);
 
-	g_signal_connect ((gpointer) thumbnail_view, "drag-data-get", 
-			G_CALLBACK (dnd_images_drag_data_get), 
+	g_signal_connect ((gpointer) thumbnail_view, "drag-data-get",
+			G_CALLBACK (dnd_images_drag_data_get),
 			NULL);
 }
 
@@ -503,9 +456,9 @@ static void gphoto_create_thumbnailview()
  *
  * Create the model for the thumbnail view
  * based upon the selected album.
- * 
+ *
  * @ album_name: name of the selected album or null if none selected
- * 
+ *
  */
 static void gphoto_build_thumbnail_model(gchar *album_name)
 {
@@ -547,7 +500,7 @@ static void gphoto_build_thumbnail_model(gchar *album_name)
 	gtk_icon_view_set_item_width(thumbnail_view, -1); // let the model decide how wide
 
 	/* function to be enacted when the thumbnail is changed */
-	g_signal_connect (thumbnail_view, "selection-changed", G_CALLBACK (gphoto_thumb_selection_changed), 
+	g_signal_connect (thumbnail_view, "selection-changed", G_CALLBACK (gphoto_thumb_selection_changed),
 	NULL);
 
 	/* Disable the remove image menu item until an image is selected */
@@ -563,10 +516,10 @@ static void gphoto_build_thumbnail_model(gchar *album_name)
  *
  * When the album selection is changed, rebuild the thumbnail model
  * to display those thumbnails only associated with the album.
- * 
+ *
  * @ selection: album name selection
  * @ user_data: not used.
- * 
+ *
  */
 static void gphoto_album_selection_changed(GtkTreeSelection *selection, gpointer user_data)
 {
@@ -582,7 +535,7 @@ static void gphoto_album_selection_changed(GtkTreeSelection *selection, gpointer
 	{
 		/* Enable the remove album menu item now that one is selected */
 		gtk_widget_set_sensitive (GTK_WIDGET(photo_remove_album_menuItem), TRUE);
-		
+
 		selected_album = itdb_photodb_photoalbum_by_name (photodb, album_name);
 
 		g_free (album_name);
@@ -604,10 +557,10 @@ static void gphoto_album_selection_changed(GtkTreeSelection *selection, gpointer
  *
  * When the thumb view selection is changed, update the
  * preview image to display that which is selected.
- * 
+ *
  * @ iconview: thumbnail view
  * @ user_data: not used
- * 
+ *
  */
 static void gphoto_thumb_selection_changed(GtkIconView *iconview, gpointer user_data)
 {
@@ -637,18 +590,18 @@ static void gphoto_thumb_selection_changed(GtkIconView *iconview, gpointer user_
  * gphoto_display_photo_preview:
  *
  * Display the supplied photo is the preview window.
- * 
+ *
  * @ artwork: photo to be displayed
- * 
+ *
  */
 static void gphoto_display_photo_preview(Artwork *artwork)
 {
 	GdkPixbuf *pixbuf;
-	
+
 	g_return_if_fail (artwork);
 
         pixbuf = itdb_artwork_get_pixbuf (device, artwork,
-                                          PHOTO_FULL_SCREEN_WIDTH, 
+                                          PHOTO_FULL_SCREEN_WIDTH,
                                           PHOTO_FULL_SCREEN_HEIGHT);
 	g_return_if_fail (pixbuf);
 
@@ -658,12 +611,12 @@ static void gphoto_display_photo_preview(Artwork *artwork)
 }
 
 /**
- * 
+ *
  * signal_data_changed:
- * 
+ *
  * Convenience function that sets the flags on the Extra iTunes Database
  * that the photo database has changed and will need saving
- * 
+ *
  */
 static void signal_data_changed()
 {
@@ -672,7 +625,7 @@ static void signal_data_changed()
 	eitdb = ipod_itdb->userdata;
 	eitdb->photo_data_changed = TRUE;
 	eitdb->data_changed = TRUE;
-	
+
 	gtk_image_clear (photo_preview_image);
 }
 
@@ -681,9 +634,9 @@ static void signal_data_changed()
  *
  * Given the selection of the album_treeview,
  * return the album name selected..
- * 
+ *
  * @ selection: GtkTreeSelection
- * 
+ *
  * Returns:
  * string value representing the album name selected. Must be
  * g_free()ed after use.
@@ -710,7 +663,7 @@ static gchar *gphoto_get_selected_album_name(GtkTreeSelection *selection)
  *
  * Function to return the number of photos
  * currently selected in the iconview.
- * 
+ *
  */
 gint gphoto_get_selected_photo_count ()
 {
@@ -720,7 +673,7 @@ gint gphoto_get_selected_photo_count ()
 
 	if (selected_items == NULL)
 		return 0;
-	
+
 	return g_list_length (selected_items);
 }
 
@@ -730,9 +683,9 @@ gint gphoto_get_selected_photo_count ()
  * Add a photo from file name to the photo database and
  * hence to the gui. If an album is selected other than the
  * Photo Library then the photo is added to it.
- * 
+ *
  * @ photo_filename: gchar *
- * 
+ *
  */
 static void gphoto_add_image_to_database(gchar *photo_filename)
 {
@@ -743,7 +696,7 @@ static void gphoto_add_image_to_database(gchar *photo_filename)
 
 	g_return_if_fail (photo_filename);
 
-	/* Add the photo to the photo database and the 
+	/* Add the photo to the photo database and the
 	 * default photo library album
 	 */
 	image = itdb_photodb_add_photo (photodb, photo_filename, -1, GDK_PIXBUF_ROTATE_NONE, &error);
@@ -769,7 +722,7 @@ static void gphoto_add_image_to_database(gchar *photo_filename)
 
 	if (selected_album->album_type != 0x01)
 	{
-		/* Add the photo to the selected album only if it is not 
+		/* Add the photo to the selected album only if it is not
 		 * the Photo Library, as already done that.
 		 */
 		itdb_photodb_photoalbum_add_photo (photodb, selected_album, image, -1);
@@ -784,9 +737,9 @@ static void gphoto_add_image_to_database(gchar *photo_filename)
  * gphoto_add_image_to_iconview
  *
  * Add an Artwork image to the icon_view
- * 
+ *
  * @ photo: Artwork
- * 
+ *
  */
 static void gphoto_add_image_to_iconview(Artwork *photo, gint index)
 {
@@ -805,7 +758,7 @@ static void gphoto_add_image_to_iconview(Artwork *photo, gint index)
 
 		gchar *index_str= NULL;
 		index_str = g_strdup_printf ("%d", index);
-		
+
 		/* Add a new row to the model */
 		gtk_list_store_append (model, &iter);
 		gtk_list_store_set (model, &iter, COL_THUMB_NAIL, pixbuf, COL_THUMB_FILENAME, index_str, COL_THUMB_ARTWORK, photo, -1);
@@ -817,7 +770,7 @@ static void gphoto_add_image_to_iconview(Artwork *photo, gint index)
  * gphoto_remove_album_from_database
  *
  * Remove the selected album from the photo database and the view
- * 
+ *
  */
 void gphoto_remove_album_from_database()
 {
@@ -835,14 +788,14 @@ void gphoto_remove_album_from_database()
 		gtk_tree_model_get (album_model, &iter, COL_ALBUM_NAME, &album_name, -1);
 	else
 		return;
-	
+
 	g_return_if_fail (album_name);
 
 	/* Find the selected album. If no selection then returns the Main Album */
 	selected_album = itdb_photodb_photoalbum_by_name (photodb, album_name);
 	g_return_if_fail (selected_album);
 	g_free (album_name);
-	
+
 	if (selected_album->album_type == 0x01)
 	{
 		gtkpod_warning (_("The Photo Library album cannot be removed"));
@@ -875,7 +828,7 @@ void gphoto_remove_album_from_database()
 				GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 				_("Yes. Do Not Display Again"), PHOTO_YES_DONT_DISPLAY_RESPONSE,
 				NULL);
-	
+
 		result = gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
 
@@ -895,7 +848,7 @@ void gphoto_remove_album_from_database()
 				break;
 		}
 	}
-	
+
 	album_model = gtk_tree_view_get_model (album_view);
 	gtk_list_store_remove (GTK_LIST_STORE(album_model), &iter);
 
@@ -911,7 +864,7 @@ void gphoto_remove_album_from_database()
  * gphoto_remove_image_from_album
  *
  * Remove the selected image from the album
- * 
+ *
  */
 void gphoto_remove_selected_photos_from_album (gboolean show_dialogs)
 {
@@ -935,7 +888,7 @@ void gphoto_remove_selected_photos_from_album (gboolean show_dialogs)
 	GtkWindow *parent = GTK_WINDOW (gtkpod_xml_get_widget (main_window_xml, "gtkpod"));
 	GtkWidget *dialog;
 	gboolean delete_pics = FALSE;
-	
+
 	if (show_dialogs)
 	{
 		if (selected_album != NULL&& selected_album->album_type != 0x01)
@@ -945,7 +898,7 @@ void gphoto_remove_selected_photos_from_album (gboolean show_dialogs)
 					GTK_MESSAGE_QUESTION,
 					GTK_BUTTONS_NONE,
 					_("This will remove the photo selection from the selected album.\n Do you want to delete them from the database as well?"));
-		
+
 			gtk_dialog_add_buttons (
 					GTK_DIALOG (dialog),
 					GTK_STOCK_YES, GTK_RESPONSE_YES,
@@ -960,7 +913,7 @@ void gphoto_remove_selected_photos_from_album (gboolean show_dialogs)
 					GTK_MESSAGE_QUESTION,
 					GTK_BUTTONS_NONE,
 					_("This will delete the photo selection from the Photo Library and all albums. Are you sure?"));
-			
+
 			gtk_dialog_add_buttons (
 					GTK_DIALOG (dialog),
 					GTK_STOCK_YES, GTK_RESPONSE_YES,
@@ -989,7 +942,7 @@ void gphoto_remove_selected_photos_from_album (gboolean show_dialogs)
 	{
 		delete_pics = FALSE;
 	}
-	
+
 	thumbnail_model = gtk_icon_view_get_model (thumbnail_view);
 	for (i = 0; i < g_list_length (selected_images); ++i)
 	{
@@ -1013,7 +966,7 @@ void gphoto_remove_selected_photos_from_album (gboolean show_dialogs)
  * gphoto_rename_selected_album
  *
  * Remove the selected image from the album
- * 
+ *
  */
 void gphoto_rename_selected_album ()
 {
@@ -1026,22 +979,22 @@ void gphoto_rename_selected_album ()
 	/* Find the selected album. If no selection then returns the Main Album */
 	selected_album = itdb_photodb_photoalbum_by_name (photodb, album_name);
 	g_return_if_fail (selected_album);
-	
+
 	if (selected_album->album_type == 0x01)
 	{
 		/* Dont rename the Photo Library */
 		return;
 	}
-	
+
 	gchar *new_album_name = get_user_string (_("New Photo Album Name"),
-											 _("Please enter a new name for the photo album"), 
-											 NULL, 
-											 NULL, 
+											 _("Please enter a new name for the photo album"),
+											 NULL,
+											 NULL,
 											 NULL,
 											 GTK_STOCK_ADD);
 	if (new_album_name == NULL|| strlen (new_album_name) == 0)
 		return;
-	
+
 	/* Check an album with this name doesnt already exist */
 	PhotoAlbum *curr_album;
 	curr_album = itdb_photodb_photoalbum_by_name (photodb, new_album_name);
@@ -1051,35 +1004,35 @@ void gphoto_rename_selected_album ()
 		g_free (new_album_name);
 		return;
 	}
-	
+
 	/* Rename the album in the database */
 	selected_album->name = g_strdup (new_album_name);
-	
+
 	/* Update the row in the album view */
 	GtkTreeModel *album_model;
 	GtkTreeIter iter;
-	
+
 	album_model = gtk_tree_view_get_model (album_view);
 	if (gtk_tree_selection_get_selected (selection, &album_model, &iter) == TRUE)
 	{
 		gtk_list_store_set (GTK_LIST_STORE(album_model), &iter, COL_ALBUM_NAME, new_album_name, -1);;
 	}
-		
+
 	g_free (new_album_name);
-	
+
 	signal_data_changed();
-	
+
 	/* Using the existing selection, reselect the album so it reloads the preview of the first image */
 	gphoto_album_selection_changed (selection, NULL);
 }
 
 /**
- * 
+ *
  * gphoto_button_press:
- * 
+ *
  *  When right mouse button is pressed on one of the widgets,
  * a popup menu is displayed.
- * 
+ *
  * @ w: widget upon which button press has occurred
  * @ e: button event
  * @ data: not used
@@ -1104,10 +1057,10 @@ static gboolean gphoto_button_press(GtkWidget *w, GdkEventButton *e, gpointer da
  * on_photodb_add_album_menuItem_activate:
  *
  * Callback for add album menu item
- * 
+ *
  * @ menuitem: add album menu item
  * @ user_data: not used
- * 
+ *
  */
 void on_photodb_add_album_menuItem_activate(GtkMenuItem *menuItem, gpointer user_data)
 {
@@ -1117,9 +1070,9 @@ void on_photodb_add_album_menuItem_activate(GtkMenuItem *menuItem, gpointer user
 	gchar *album_name;
 
 	album_name = get_user_string (_("New Photo Album"),
-				      _("Please enter a name for the new photo album"), 
-				      FALSE, 
-				      NULL, 
+				      _("Please enter a name for the new photo album"),
+				      FALSE,
+				      NULL,
 				      NULL,
 				      GTK_STOCK_ADD);
 
@@ -1156,14 +1109,14 @@ void on_photodb_add_album_menuItem_activate(GtkMenuItem *menuItem, gpointer user
  * on_photodb_add_image_menuItem_activate:
  *
  * Callback for add image menu item
- * 
+ *
  * @ menuitem: add image menu item
  * @ user_data: not used
- * 
+ *
  */
 void on_photodb_add_image_menuItem_activate(GtkMenuItem *menuItem, gpointer user_data)
 {
-	gchar *image_name = fileselection_get_file_or_dir (_("Add Image to iPod"), 
+	gchar *image_name = fileselection_get_file_or_dir (_("Add Image to iPod"),
 	NULL, GTK_FILE_CHOOSER_ACTION_OPEN);
 
 	if (image_name == NULL)
@@ -1179,10 +1132,10 @@ void on_photodb_add_image_menuItem_activate(GtkMenuItem *menuItem, gpointer user
  *
  * Comparision function for comparing the filenames
  * of newly added images.
- * 
+ *
  * @ a: filename 1
  * @ b: filename 2
- * 
+ *
  */
 static int _strptrcmp(const void* _a, const void* _b)
 {
@@ -1207,10 +1160,10 @@ static int _strptrcmp(const void* _a, const void* _b)
  * on_photodb_add_image_dir_menuItem_activate:
  *
  * Callback for add image directory menu item
- * 
+ *
  * @ menuitem: add album menu item
  * @ user_data: not used
- * 
+ *
  */
 void on_photodb_add_image_dir_menuItem_activate(GtkMenuItem *menuItem, gpointer user_data)
 {
@@ -1218,7 +1171,7 @@ void on_photodb_add_image_dir_menuItem_activate(GtkMenuItem *menuItem, gpointer 
 	GError *error= NULL;
 
 	/* Open a dialog directory chooser window */
-	gchar*dir_name = fileselection_get_file_or_dir (_("Add a Directory of Images to the iPod. Select the Directory."), 
+	gchar*dir_name = fileselection_get_file_or_dir (_("Add a Directory of Images to the iPod. Select the Directory."),
 	NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 
 	if (dir_name == NULL)
@@ -1252,7 +1205,7 @@ void on_photodb_add_image_dir_menuItem_activate(GtkMenuItem *menuItem, gpointer 
 	G_CONST_RETURN gchar *filename;
 	GPtrArray* filename_arr = g_ptr_array_new();
 	unsigned u;
-	
+
 	do
 	{
 		filename = g_dir_read_name(directory);
@@ -1261,7 +1214,7 @@ void on_photodb_add_image_dir_menuItem_activate(GtkMenuItem *menuItem, gpointer 
 			g_ptr_array_add(filename_arr, (void*) filename);
 		}
 	} while (filename != NULL);
-	
+
 	/* Conduct an alphabetical sort on the filenames so
 	 * they are added in order.
 	 */
@@ -1295,10 +1248,10 @@ void on_photodb_add_image_dir_menuItem_activate(GtkMenuItem *menuItem, gpointer 
  * on_photodb_remove_album_menuItem_activate:
  *
  * Callback for remove album menu item
- * 
+ *
  * @ menuitem: remove album menu item
  * @ user_data: not used
- * 
+ *
  */
 void on_photodb_remove_album_menuItem_activate(GtkMenuItem *menuItem, gpointer user_data)
 {
@@ -1309,10 +1262,10 @@ void on_photodb_remove_album_menuItem_activate(GtkMenuItem *menuItem, gpointer u
  * on_photodb_remove_image_menuItem_activate:
  *
  * Callback for remove image menu item
- * 
+ *
  * @ menuitem: remove image menu item
  * @ user_data: not used
- * 
+ *
  */
 void on_photodb_remove_image_menuItem_activate(GtkMenuItem *menuItem, gpointer user_data)
 {
@@ -1322,13 +1275,13 @@ void on_photodb_remove_image_menuItem_activate(GtkMenuItem *menuItem, gpointer u
 /**
  * on_photodb_view_full_size_menuItem_activate
  *
- * Callback used to display a dialog contain a full 
+ * Callback used to display a dialog contain a full
  * size / screen size version of the selected image.
  * Same as that used in coverart display.
- * 
+ *
  * @ menuitem: remove image menu item
  * @ user_data: not used
- * 
+ *
  */
 void on_photodb_view_full_size_menuItem_activate (GtkMenuItem *menuItem, gpointer user_data)
 {
@@ -1338,7 +1291,7 @@ void on_photodb_view_full_size_menuItem_activate (GtkMenuItem *menuItem, gpointe
 	GtkTreeIter iter;
 	Artwork *artwork = NULL;
 	GdkPixbuf * pixbuf;
-	
+
 	/* Find which images are selected */
 	selected_images = gtk_icon_view_get_selected_items (GTK_ICON_VIEW(thumbnail_view));
 	if (selected_images == NULL|| g_list_length (selected_images) == 0)
@@ -1349,14 +1302,14 @@ void on_photodb_view_full_size_menuItem_activate (GtkMenuItem *menuItem, gpointe
 	 * correctly.
 	 */
 	model = gtk_icon_view_get_model (GTK_ICON_VIEW(thumbnail_view));
-				
+
 	treePath = g_list_nth_data (selected_images, 0);
 	gtk_tree_model_get_iter (model, &iter, treePath);
 	gtk_tree_model_get (model, &iter, COL_THUMB_ARTWORK, &artwork, -1);
-	
+
         pixbuf = itdb_artwork_get_pixbuf (device, artwork, -1, -1);
 	g_return_if_fail (pixbuf);
-	
+
 	display_image_dialog (pixbuf);
 	g_object_unref (pixbuf);
 
@@ -1366,10 +1319,10 @@ void on_photodb_view_full_size_menuItem_activate (GtkMenuItem *menuItem, gpointe
  * on_photodb_rename_album_menuItem_activate
  *
  * Callback used to rename an album.
- * 
+ *
  * @ menuitem: remove image menu item
  * @ user_data: not used
- * 
+ *
  */
 void on_photodb_rename_album_menuItem_activate (GtkMenuItem *menuItem, gpointer user_data)
 {
@@ -1387,7 +1340,7 @@ void on_photodb_rename_album_menuItem_activate (GtkMenuItem *menuItem, gpointer 
  * Allow dnd of an image onto an album row in the
  * album tree. Gives ability to add an image to a
  * different album.
- * 
+ *
  */
 static gboolean dnd_album_drag_drop(GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, guint time, gpointer user_data)
 {
@@ -1397,7 +1350,7 @@ static gboolean dnd_album_drag_drop(GtkWidget *widget, GdkDragContext *drag_cont
 	if (target != GDK_NONE)
 	{
 		gboolean rowfound;
-		
+
 		/* determine whether a row has been dropped over in album view */
 		rowfound = gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW(widget), x, y, NULL, NULL);
 		if (rowfound == TRUE)
@@ -1416,7 +1369,7 @@ static gboolean dnd_album_drag_drop(GtkWidget *widget, GdkDragContext *drag_cont
  *
  * Provide the images which are to be dnded
  * onto the new album in the album tree.
- * 
+ *
  */
 static void dnd_images_drag_data_get(GtkWidget *widget, GdkDragContext *dc, GtkSelectionData *data, guint info, guint time,
 		gpointer user_data)
@@ -1424,7 +1377,7 @@ static void dnd_images_drag_data_get(GtkWidget *widget, GdkDragContext *dc, GtkS
 	GtkTreeModel *model;
 	GList *selected_images;
 	gint i;
-	
+
 	if (!data)
 		return;
 
@@ -1434,12 +1387,12 @@ static void dnd_images_drag_data_get(GtkWidget *widget, GdkDragContext *dc, GtkS
 		return;
 
 	model = gtk_icon_view_get_model (GTK_ICON_VIEW(widget));
-	
+
 	GtkTreePath *treePath = NULL;
 	GtkTreeIter iter;
 	Artwork *artwork = NULL;
 	GString *reply = g_string_sized_new (2000);
-				
+
 	for (i = 0; i < g_list_length(selected_images); ++i)
 	{
 		treePath = g_list_nth_data (selected_images, i);
@@ -1447,7 +1400,7 @@ static void dnd_images_drag_data_get(GtkWidget *widget, GdkDragContext *dc, GtkS
 		gtk_tree_model_get (model, &iter, COL_THUMB_ARTWORK, &artwork, -1);
 		g_string_append_printf (reply, "%p\n", artwork);
 	}
-	
+
 	switch (info)
 	{
 		case DND_GTKPOD_PHOTOIMAGELIST:
@@ -1466,7 +1419,7 @@ static void dnd_images_drag_data_get(GtkWidget *widget, GdkDragContext *dc, GtkS
  * The final part of the dnd images onto album dnd
  * operation. This uses the data received and adds
  * the images to the new album.
- * 
+ *
  */
 static void dnd_album_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x, gint y, GtkSelectionData *data, guint info,
 		guint time, gpointer user_data)
@@ -1486,7 +1439,7 @@ static void dnd_album_drag_data_received(GtkWidget *widget, GdkDragContext *dc, 
 	gchar *src_name;
 	PhotoAlbum *tgt_album;
 	PhotoAlbum *src_album;
-	
+
 	/* determine whether a row has been dropped over in album view */
 	rowfound = gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW(widget), x, y, &treepath, NULL);
 	if (! rowfound)
@@ -1494,24 +1447,24 @@ static void dnd_album_drag_data_received(GtkWidget *widget, GdkDragContext *dc, 
 		gtk_drag_finish (dc, FALSE, FALSE, time);
 		return;
 	}
-	
+
 	g_return_if_fail (treepath);
-	
+
 	model = gtk_tree_view_get_model (GTK_TREE_VIEW(widget));
-	
+
 	/* Find the target album to drop the artwork into */
 	if(gtk_tree_model_get_iter (model, &iter, treepath))
 		gtk_tree_model_get (model, &iter, COL_ALBUM_NAME, &tgt_name, -1);
-	
+
 	gtk_tree_path_free (treepath);
 	treepath = NULL;
 	g_return_if_fail (tgt_name);
-	
+
 	tgt_album = itdb_photodb_photoalbum_by_name (photodb, tgt_name);
 	g_return_if_fail (tgt_album);
 	if (tgt_name != NULL)
 		g_free (tgt_name);
-	
+
 	/* Find the selected album, ie. the source, or else the Photo Library if no selection */
 	GtkTreeSelection *selection = NULL;
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(widget));
@@ -1519,28 +1472,28 @@ static void dnd_album_drag_data_received(GtkWidget *widget, GdkDragContext *dc, 
 		src_name = gphoto_get_selected_album_name (selection);
 	else
 		src_name = NULL;
-	
+
 	/* Find the selected album. If no selection then returns the Photo Library */
 	src_album = itdb_photodb_photoalbum_by_name (photodb, src_name);
 	g_return_if_fail (src_album);
 	if (src_name != NULL)
 		g_free (src_name);
-	
+
 	if (src_album == tgt_album)
 	{
 		gtk_drag_finish (dc, FALSE, FALSE, time);
 		return;
 	}
-	
+
 	Artwork *artwork;
 	GList *artwork_list = NULL;
 	gchar *datap = data->data;
 	gint i = 0;
-	
+
 	/* parse artwork and add each one to a GList */
 	while (parse_artwork_from_string (&datap, &artwork))
 		artwork_list = g_list_append (artwork_list, artwork);
-			    
+
 	if (tgt_album->album_type != 0x01)
 	{
 		/* Only if the target is not the Photo Library (which should have the photo
@@ -1552,11 +1505,11 @@ static void dnd_album_drag_data_received(GtkWidget *widget, GdkDragContext *dc, 
 			itdb_photodb_photoalbum_add_photo (photodb, tgt_album, artwork, -1);
 		}
 	}
-	
-	/* Remove the artwork from the selected album if it is not the Photo Library */	
+
+	/* Remove the artwork from the selected album if it is not the Photo Library */
 	if (src_album->album_type != 0x01)
 		gphoto_remove_selected_photos_from_album (FALSE);
-	
+
 	signal_data_changed ();
 }
 
@@ -1603,4 +1556,4 @@ static void debug_list_photos(iTunesDB *itdb)
 	}
 }
 #endif
-	
+
