@@ -1,14 +1,21 @@
 gtkpod V1.0.0
-			 Final release of gtkpod before the major UI refactorings with anjuta
-			 are incorporated.
+	Final release of gtkpod before the major UI refactorings with anjuta
+	are incorporated.
 
-			 BUGFIX: Track filter tends to display no results
+	BUGFIX: Make dialogs transient with gtkpod window
 
-			 BUGFIX: Various deficiencies with audiobooks. Thanks to Joel Smith.
+	IMPROVEMENT: Make the no extended database message clearer
 
-			 NEW FEATURE: Catalan translation of application include. Thanks to Nofre Móra.
+	BUGFIX: Failure to read lyrics file no longer displays a warning dialog for
+	each track. Instead it displays the error in the lyrics tab.
 
-			 BUGFIX: Memory leaks. Thanks to Andrea Ordetti.
+	BUGFIX: Track filter tends to display no results
+
+	BUGFIX: Various deficiencies with audiobooks. Thanks to Joel Smith.
+
+	NEW FEATURE: Catalan translation of application include. Thanks to Nofre Móra.
+
+	BUGFIX: Memory leaks. Thanks to Andrea Ordetti.
 
 gtkpod V0.99.16
 

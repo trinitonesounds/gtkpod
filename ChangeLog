@@ -1,4 +1,54 @@
 Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Tue Jul 6 23:11:39 2010 +0100
+
+    Ensure respository and sort windows are transient
+
+    * Ensure these dialog window are transient with legitimate parents to avoid
+      losing them behind the main window
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Mon Jul 5 22:16:46 2010 +0100
+
+    Rehash of the "No ext database" message
+
+    * Attempt to improve the message to make it more informative. Still
+      think it could be further improved.
+
+Author: Daniele Forsi <daniele@forsi.it>
+Date:   Sun Jul 4 23:45:04 2010 +0200
+
+    Fix typo
+
+    s/individuais/individuals/
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Jul 4 22:14:25 2010 +0100
+
+    Update About box information
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Jul 4 22:14:12 2010 +0100
+
+    Bug fix for erroneous lyric dialog message
+
+    * bug 3021855
+
+    * file.c
+     * Instead of displaying gtkpod_warnings, tack the error onto the lyrics
+       string array just like the other errors. Prepend them with the word
+       Error so that the write_lyrics knows that they are not proper lyrics.
+
+Author: Daniele Forsi <daniele@forsi.it>
+Date:   Sun Jul 4 14:29:25 2010 +0200
+
+    Don't set stock label gtk-close as translatable
+
+Author: Daniele Forsi <daniele@forsi.it>
+Date:   Sun Jul 4 14:20:58 2010 +0200
+
+    Fix typos in docs
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
 Date:   Sun Jun 6 19:45:17 2010 +0100
 
     Filter seems to not work properly when trying to filter tracks
