@@ -60,7 +60,7 @@ gtkpod_SOURCES = \
     rb_rating_helper.c rb_rating_helper.h \
     rb_cell_renderer_rating.c rb_cell_renderer_rating.h
 
-gtkpod_LDADD = $(LIBS) -lm $(INTLLIBS) @LIBOBJS@
+gtkpod_LDADD = $(LIBS) -lm $(INTLLIBS) -ldl @LIBOBJS@
 
 EXTRA_DIST = getopt.h
 
