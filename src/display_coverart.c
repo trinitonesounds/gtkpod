@@ -521,8 +521,13 @@ void coverart_display_update(gboolean clear_track_list) {
         album_key_list = NULL;
 
         /* Find the selected playlist */
-        tracks = gtkpod_get_selected_tracks();
+        Playlist *pl = gtkpod_get_current_playlist();
+        if (!pl) {
+            redraw(FALSE);
+            return;
+        }
 
+        tracks = pl->members;
         if (!tracks) {
             redraw(FALSE);
             return;

@@ -260,15 +260,16 @@ void gtkpod_set_current_playlist(Playlist* playlist) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
 
     GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_playlist = playlist;
+    GList *tracks = NULL;
     if (playlist) {// if playlist not null then set its itdb as current
         GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_itdb = playlist->itdb;
-        gtkpod_set_displayed_tracks(playlist->members);
+        tracks = playlist->members;
     } else {
         GTKPOD_APP_GET_INTERFACE (gtkpod_app)->current_itdb = NULL;
-        gtkpod_set_displayed_tracks(NULL);
     }
 
     g_signal_emit(gtkpod_app, gtkpod_app_signals[PLAYLIST_SELECTED], 0, playlist);
+    gtkpod_set_displayed_tracks(tracks);
 }
 
 void gtkpod_track_added(Track *track) {

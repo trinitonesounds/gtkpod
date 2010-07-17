@@ -59,4 +59,8 @@ void copy_playlist_to_target_itdb(Playlist *pl, iTunesDB *t_itdb);
 
 const gchar* return_playlist_stock_image(Playlist *playlist);
 
+void message_sb_no_itdb_selected();
+void message_sb_no_playlist_selected();
+void message_sb_no_ipod_itdb_selected();
+
 #endif /* MISC_PLAYLIST_H_ */
