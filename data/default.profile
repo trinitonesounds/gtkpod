@@ -56,4 +56,11 @@
 		   attribute="Location"
 		   value="info_display:InfoDisplayPlugin"/>
   </plugin>
+  <plugin name="Photo Editor Plugin"
+	      url="http://www.gtkpod.org/plugins/"
+		  mandatory="yes">
+		  <require group="Anjuta Plugin"
+		   attribute="Location"
+		   value="photo_editor:PhotoEditorPlugin"/>
+  </plugin>
 </anjuta>

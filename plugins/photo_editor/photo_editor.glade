@@ -1,0 +1,328 @@
+<?xml version="1.0"?>
+<glade-interface>
+  <!-- interface-requires gtk+ 2.6 -->
+  <!-- interface-naming-policy toplevel-contextual -->
+  <widget class="GtkWindow" id="photo_window">
+    <property name="visible">True</property>
+    <property name="title" translatable="yes">Photo Window</property>
+    <child>
+      <widget class="GtkViewport" id="photo_viewport">
+        <property name="visible">True</property>
+        <property name="border_width">5</property>
+        <property name="shadow_type">etched-out</property>
+        <child>
+          <widget class="GtkHPaned" id="hpaned1">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <child>
+              <widget class="GtkVBox" id="vbox185">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <widget class="GtkMenuBar" id="menubar1">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="photo_album_menuItem">
+                        <property name="label" translatable="yes">_Album</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="on_photo_album_menuItem_activate"/>
+                        <child>
+                          <widget class="GtkMenu" id="photo_album_menuItem_menu">
+                            <child>
+                              <widget class="GtkImageMenuItem" id="photo_add_album_menuItem">
+                                <property name="label">_Add Album</property>
+                                <property name="visible">True</property>
+                                <property name="use_underline">True</property>
+                                <property name="use_stock">False</property>
+                                <property name="always_show_image">True</property>
+                                <child internal-child="image">
+                                  <widget class="GtkImage" id="image4">
+                                    <property name="visible">True</property>
+                                    <property name="stock">gtk-add</property>
+                                  </widget>
+                                </child>
+                              </widget>
+                            </child>
+                            <child>
+                              <widget class="GtkImageMenuItem" id="photo_remove_album_menuItem">
+                                <property name="label">_Remove Album</property>
+                                <property name="visible">True</property>
+                                <property name="use_underline">True</property>
+                                <property name="use_stock">False</property>
+                                <property name="always_show_image">True</property>
+                                <child internal-child="image">
+                                  <widget class="GtkImage" id="image5">
+                                    <property name="visible">True</property>
+                                    <property name="stock">gtk-remove</property>
+                                  </widget>
+                                </child>
+                              </widget>
+                            </child>
+                            <child>
+                              <widget class="GtkImageMenuItem" id="photo_rename_album_menuItem">
+                                <property name="label" translatable="yes">R_ename Album</property>
+                                <property name="visible">True</property>
+                                <property name="use_underline">True</property>
+                                <property name="use_stock">False</property>
+                                <property name="always_show_image">True</property>
+                                <child internal-child="image">
+                                  <widget class="GtkImage" id="image6">
+                                    <property name="visible">True</property>
+                                    <property name="stock">gtk-edit</property>
+                                  </widget>
+                                </child>
+                              </widget>
+                            </child>
+                          </widget>
+                        </child>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="image1">
+                            <property name="visible">True</property>
+                            <property name="stock">photo-editor-toolbar-album</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="photo_photos_menuitem">
+                        <property name="label">_Photos</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">False</property>
+                        <child>
+                          <widget class="GtkMenu" id="photo_photos_menuitem_menu">
+                            <child>
+                              <widget class="GtkImageMenuItem" id="photo_add_image_menuItem">
+                                <property name="label">_Add Image</property>
+                                <property name="visible">True</property>
+                                <property name="use_underline">True</property>
+                                <property name="use_stock">False</property>
+                                <property name="always_show_image">True</property>
+                                <child internal-child="image">
+                                  <widget class="GtkImage" id="image7">
+                                    <property name="visible">True</property>
+                                    <property name="stock">gtk-add</property>
+                                  </widget>
+                                </child>
+                              </widget>
+                            </child>
+                            <child>
+                              <widget class="GtkImageMenuItem" id="photo_add_image_dir_menuItem">
+                                <property name="label">Add Image_s</property>
+                                <property name="visible">True</property>
+                                <property name="tooltip" translatable="yes">Add Images from a Directory</property>
+                                <property name="use_underline">True</property>
+                                <property name="use_stock">False</property>
+                                <property name="always_show_image">True</property>
+                                <child internal-child="image">
+                                  <widget class="GtkImage" id="image8">
+                                    <property name="visible">True</property>
+                                    <property name="stock">gtk-add</property>
+                                  </widget>
+                                </child>
+                              </widget>
+                            </child>
+                            <child>
+                              <widget class="GtkImageMenuItem" id="photo_remove_image_menuItem">
+                                <property name="label">_Remove Images</property>
+                                <property name="visible">True</property>
+                                <property name="use_underline">True</property>
+                                <property name="use_stock">False</property>
+                                <property name="always_show_image">True</property>
+                                <child internal-child="image">
+                                  <widget class="GtkImage" id="image9">
+                                    <property name="visible">True</property>
+                                    <property name="stock">gtk-remove</property>
+                                  </widget>
+                                </child>
+                              </widget>
+                            </child>
+                          </widget>
+                        </child>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="image2">
+                            <property name="visible">True</property>
+                            <property name="stock">photo-editor-toolbar-photos</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="photo_zoom_menuitem">
+                        <property name="label">_Zoom</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">False</property>
+                        <child>
+                          <widget class="GtkMenu" id="photo_zoom_menuitem_menu">
+                            <child>
+                              <widget class="GtkImageMenuItem" id="photo_view_full_size_menuItem">
+                                <property name="label">_View Full Size</property>
+                                <property name="visible">True</property>
+                                <property name="use_underline">True</property>
+                                <property name="use_stock">False</property>
+                                <property name="always_show_image">True</property>
+                                <child internal-child="image">
+                                  <widget class="GtkImage" id="image10">
+                                    <property name="visible">True</property>
+                                    <property name="stock">gtk-fullscreen</property>
+                                  </widget>
+                                </child>
+                              </widget>
+                            </child>
+                          </widget>
+                        </child>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="image3">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-zoom-in</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkScrolledWindow" id="photo_album_window">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hscrollbar_policy">automatic</property>
+                    <property name="vscrollbar_policy">automatic</property>
+                    <property name="shadow_type">in</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="padding">1</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEventBox" id="photo_preview_image_event_box">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkImage" id="photo_preview_image">
+                        <property name="width_request">250</property>
+                        <property name="height_request">176</property>
+                        <property name="visible">True</property>
+                        <property name="stock">gtk-missing-image</property>
+                      </widget>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="padding">5</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="resize">False</property>
+                <property name="shrink">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkScrolledWindow" id="photo_thumbnail_window">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hscrollbar_policy">automatic</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </widget>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">True</property>
+              </packing>
+            </child>
+          </widget>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkDialog" id="gphoto_preview_dialog">
+    <property name="visible">True</property>
+    <property name="type">popup</property>
+    <property name="title" translatable="yes">Photo Image</property>
+    <property name="modal">True</property>
+    <property name="window_position">center-always</property>
+    <property name="icon_name">gtk-dialog-info</property>
+    <property name="type_hint">dialog</property>
+    <child internal-child="vbox">
+      <widget class="GtkVBox" id="dialog-vbox4">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <widget class="GtkVBox" id="gphoto_preview_dialog_vbox">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <widget class="GtkDrawingArea" id="gphoto_preview_dialog_drawarea">
+                <property name="visible">True</property>
+              </widget>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="gphoto_preview_dialog_res_lbl">
+                <property name="visible">True</property>
+                <property name="ypad">6</property>
+                <property name="label">&lt;b&gt;Placeholder for image information&lt;/b&gt;</property>
+                <property name="use_markup">True</property>
+                <property name="justify">center</property>
+                <property name="wrap">True</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="pack_type">end</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <widget class="GtkHButtonBox" id="dialog-action_area4">
+            <property name="visible">True</property>
+            <property name="layout_style">end</property>
+            <child>
+              <widget class="GtkButton" id="okbutton3">
+                <property name="label">gtk-close</property>
+                <property name="response_id">-5</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_stock">True</property>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+</glade-interface>

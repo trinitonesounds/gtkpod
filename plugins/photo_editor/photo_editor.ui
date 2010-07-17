@@ -1,0 +1,12 @@
+<!--*- xml -*-->
+<ui>
+	<menubar name="MenuMain">
+		<menu name="MenuEdit" action="ActionMenuEdit">
+			<placeholder name="PlaceholderEditMenus">
+				<menuitem name="Edit Track Details" action="ActionEditTrackDetails"/>
+			</placeholder>
+		</menu>
+	</menubar>
+	<toolbar name="ToolbarMain">
+	</toolbar>
+</ui>

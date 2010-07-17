@@ -185,6 +185,13 @@ static void edit_properties(GtkMenuItem *mi, gpointer data) {
     gtkpod_edit_repository(gtkpod_get_current_playlist()->itdb, gtkpod_get_current_playlist());
 }
 
+/* Open photo editor */
+static void open_photo_editor(GtkMenuItem *mi, gpointer data) {
+    g_return_if_fail(gtkpod_get_current_itdb());
+
+    gtkpod_edit_photos(gtkpod_get_current_itdb());
+}
+
 /* Save Changes */
 static void save_changes(GtkMenuItem *mi, gpointer data) {
     g_return_if_fail (gtkpod_get_current_playlist());
@@ -232,6 +239,20 @@ static GtkWidget *add_edit_repository_properties(GtkWidget *menu) {
             return menu;
 
     return hookup_menu_item(menu, _("Edit Repository Properties"), GTK_STOCK_PREFERENCES, G_CALLBACK (edit_properties), NULL);
+}
+
+static GtkWidget *add_open_photo_editor(GtkWidget *menu) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+    if (!itdb)
+        return menu;
+
+    if (! itdb_device_supports_photo(itdb->device))
+        return menu;
+
+    if (!gtkpod_has_photo_editor())
+        return menu;
+
+    return hookup_menu_item(menu, _("Open Photo Editor"), GTK_STOCK_SELECT_COLOR, G_CALLBACK (open_photo_editor), NULL);
 }
 
 static GtkWidget *add_edit_playlist_properties(GtkWidget *menu) {
@@ -316,6 +337,7 @@ void pm_context_menu_init(void) {
             else {
                 add_edit_playlist_properties(menu);
             }
+            add_open_photo_editor(menu);
             add_eject_ipod(menu);
         }
         else { /* not imported */

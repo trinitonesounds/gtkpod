@@ -1,0 +1,1 @@
+../../src/display_photo.c

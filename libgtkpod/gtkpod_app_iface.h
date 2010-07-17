@@ -39,6 +39,7 @@
 #include "exporter_iface.h"
 #include "repository_editor_iface.h"
 #include "details_editor_iface.h"
+#include "photo_editor_iface.h"
 
 #define GTKPOD_APP_ICON_STOCK_ID "gtkpod"
 
@@ -130,6 +131,8 @@ struct _GtkPodAppInterface {
     RepositoryEditor *repository_editor;
     /* Details Editor */
     DetailsEditor *details_editor;
+    /* Photo Editor */
+    PhotoEditor *photo_editor;
 
     void (*itdb_updated)(GtkPodApp *obj, iTunesDB *oldItdb, iTunesDB *newItbd);
     void (*statusbar_message)(GtkPodApp *obj, gchar* message);
@@ -211,6 +214,11 @@ void gtkpod_register_details_editor(DetailsEditor *editor);
 void gtkpod_unregister_details_editor();
 gboolean gtkpod_has_details_editor();
 void gtkpod_edit_details(GList* selected_tracks);
+
+void gtkpod_register_photo_editor(PhotoEditor *editor);
+void gtkpod_unregister_photo_editor();
+gboolean gtkpod_has_photo_editor();
+void gtkpod_edit_photos(iTunesDB *itdb);
 
 GtkPodApp *gtkpod_app;
 guint gtkpod_app_signals[LAST_SIGNAL];

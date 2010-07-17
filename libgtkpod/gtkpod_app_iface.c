@@ -507,3 +507,28 @@ void gtkpod_edit_details(GList *selected_tracks) {
     DetailsEditorInterface *editor_iface = DETAILS_EDITOR_GET_INTERFACE(gp_iface->details_editor);
     editor_iface->edit_details(selected_tracks);
 }
+
+void gtkpod_register_photo_editor(PhotoEditor *editor) {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    g_return_if_fail (PHOTO_EDITOR_IS_EDITOR(editor));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->photo_editor = editor;
+}
+
+void gtkpod_unregister_photo_editor() {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->photo_editor = NULL;
+}
+
+gboolean gtkpod_has_photo_editor() {
+    g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), FALSE);
+    return (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->photo_editor != NULL);
+}
+
+void gtkpod_edit_photos(iTunesDB *itdb) {
+    g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
+    g_return_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->photo_editor);
+
+    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
+    PhotoEditorInterface *editor_iface = PHOTO_EDITOR_GET_INTERFACE(gp_iface->photo_editor);
+    editor_iface->edit_photos(itdb);
+}
