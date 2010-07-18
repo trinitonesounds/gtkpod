@@ -44,6 +44,8 @@ cscope.out
 /po/Makefile.in.in
 /po/POTFILES
 /po/*.gmo
+/po/*.mo
+/po/*.pot
 /po/.intltool-merge-cache
 /po/stamp-it
 
