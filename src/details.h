@@ -38,6 +38,8 @@
 #include <glade/glade.h>
 #include "libgtkpod/itdb.h"
 
+#define DETAILS_LYRICS_NOTEBOOK_PAGE 3
+
 struct _Detail
 {
     GladeXML *xml;      /* XML info                           */
@@ -53,13 +55,13 @@ struct _Detail
 
 typedef struct _Detail Detail;
 
-extern const gchar *DETAILS_WINDOW_NOTEBOOK_PAGE;
-
 /* details window */
 void details_edit (GList *selected_tracks);
 void details_remove_track (Track *track);
 Detail *details_get_selected_detail ();
 void destroy_details_editor();
+
+void lyrics_edit (GList *selected_tracks);
 
 void details_editor_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data);
 void details_editor_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data);

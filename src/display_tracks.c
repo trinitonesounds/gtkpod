@@ -1209,11 +1209,7 @@ static void tm_cell_toggled(GtkCellRendererToggle *renderer, gchar *arg1, gpoint
     }
 
     if ((column == TM_COLUMN_LYRICS) && (selected_tracks != NULL)) {
-        /* set displayed page to the lyrics page */
-        //FIXME
-        g_message("TODO - display_tracks: set displayed page to the lyrics page in details window");
-        //      prefs_set_int (DETAILS_WINDOW_NOTEBOOK_PAGE, 3);
-        //      details_edit (selected_tracks);
+        gtkpod_edit_lyrics(selected_tracks);
         g_list_free(selected_tracks);
     }
 

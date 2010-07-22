@@ -44,6 +44,7 @@ struct _DetailsEditorPlugin {
     gint uiid;
     GtkWidget *details_window;
     GtkWidget *details_view;
+    GtkWidget *details_notebook;
     GtkActionGroup *action_group;
 };
 

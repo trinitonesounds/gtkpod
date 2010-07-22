@@ -508,6 +508,31 @@ void gtkpod_edit_details(GList *selected_tracks) {
     editor_iface->edit_details(selected_tracks);
 }
 
+void gtkpod_register_lyrics_editor(LyricsEditor *editor) {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    g_return_if_fail (LYRICS_EDITOR_IS_EDITOR(editor));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->lyrics_editor = editor;
+}
+
+void gtkpod_unregister_lyrics_editor() {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->lyrics_editor = NULL;
+}
+
+gboolean gtkpod_has_lyrics_editor() {
+    g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), FALSE);
+    return (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->lyrics_editor != NULL);
+}
+
+void gtkpod_edit_lyrics(GList *selected_tracks) {
+    g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
+    g_return_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->lyrics_editor);
+
+    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
+    LyricsEditorInterface *editor_iface = LYRICS_EDITOR_GET_INTERFACE(gp_iface->lyrics_editor);
+    editor_iface->edit_lyrics(selected_tracks);
+}
+
 void gtkpod_register_photo_editor(PhotoEditor *editor) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
     g_return_if_fail (PHOTO_EDITOR_IS_EDITOR(editor));

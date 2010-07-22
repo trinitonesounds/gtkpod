@@ -39,6 +39,7 @@
 #include "exporter_iface.h"
 #include "repository_editor_iface.h"
 #include "details_editor_iface.h"
+#include "lyrics_editor_iface.h"
 #include "photo_editor_iface.h"
 
 #define GTKPOD_APP_ICON_STOCK_ID "gtkpod"
@@ -120,7 +121,7 @@ struct _GtkPodAppInterface {
     /* pointer to the currently displayed set of tracks */
     GList *displayed_tracks;
     /* pointer to the currently selected set of tracks */
-        GList *selected_tracks;
+    GList *selected_tracks;
     /* flag indicating whether sorting is enabled/disabled */
     gboolean sort_enablement;
     /* xml filename */
@@ -131,6 +132,8 @@ struct _GtkPodAppInterface {
     RepositoryEditor *repository_editor;
     /* Details Editor */
     DetailsEditor *details_editor;
+    /* Lyrics Editor */
+    LyricsEditor *lyrics_editor;
     /* Photo Editor */
     PhotoEditor *photo_editor;
 
@@ -214,6 +217,11 @@ void gtkpod_register_details_editor(DetailsEditor *editor);
 void gtkpod_unregister_details_editor();
 gboolean gtkpod_has_details_editor();
 void gtkpod_edit_details(GList* selected_tracks);
+
+void gtkpod_register_lyrics_editor(LyricsEditor *editor);
+void gtkpod_unregister_lyrics_editor();
+gboolean gtkpod_has_lyrics_editor();
+void gtkpod_edit_lyrics(GList* selected_tracks);
 
 void gtkpod_register_photo_editor(PhotoEditor *editor);
 void gtkpod_unregister_photo_editor();

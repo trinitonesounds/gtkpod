@@ -1112,14 +1112,9 @@ static void delete_playlist_ok(struct DeleteData *dd) {
             }
             if (itdb_playlist_is_mpl(dd->pl)) {
                 msg = g_strdup_printf(_("Removed all %d tracks from the iPod"), n);
-                g_message("TODO: reset display");
-                //                display_reset(0);
             }
             else if (itdb_playlist_is_podcasts(dd->pl)) {
                 msg = g_strdup_printf(_("Removed all podcasts from the iPod"));
-                if (gtkpod_get_current_playlist() == dd->pl)
-                    g_message("TODO: reset only sorttabs");
-                //                    st_redisplay(0);
             }
             else {
                 /* first use playlist name */
@@ -1175,8 +1170,6 @@ static void delete_playlist_ok(struct DeleteData *dd) {
             }
             if (itdb_playlist_is_mpl(dd->pl)) {
                 msg = g_strdup_printf(_("Removed all %d tracks from the database"), n);
-                g_message("TODO: reset display");
-                //                display_reset(0);
             }
             else {
                 /* first use playlist name */

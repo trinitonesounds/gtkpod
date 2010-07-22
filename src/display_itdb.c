@@ -141,10 +141,8 @@ iTunesDB *gp_itdb_new(void) {
 
 /* Free itdb and take care of dependencies */
 void gp_itdb_free(iTunesDB *itdb) {
-    g_message("TODO signal all things such as conversions to cancel");
-    //    /* cancel all pending conversions */
-    //    file_convert_cancel_itdb (itdb);
-
+    /* cancel all pending conversions */
+    file_convert_cancel_itdb (itdb);
     itdb_free(itdb);
 }
 

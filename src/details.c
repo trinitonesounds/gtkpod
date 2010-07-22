@@ -1416,6 +1416,8 @@ static void create_details_editor_view() {
     gtk_widget_ref(details_editor_plugin->details_window);
     details_editor_plugin->details_view = viewport;
     gtk_widget_ref(details_editor_plugin->details_view);
+    details_editor_plugin->details_notebook = gtkpod_xml_get_widget(details_view->xml, "details_notebook");
+    gtk_widget_ref(details_editor_plugin->details_notebook);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (details_editor_plugin->details_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (details_editor_plugin->details_window), GTK_SHADOW_IN);
 
@@ -1506,27 +1508,35 @@ static void create_details_editor_view() {
             NULL);
 }
 
+void lyrics_edit(GList *selected_tracks) {
+    gint num_pages;
+    details_edit(selected_tracks);
+
+    num_pages = gtk_notebook_get_n_pages(GTK_NOTEBOOK (details_editor_plugin->details_notebook));
+    if (num_pages > 0 && DETAILS_LYRICS_NOTEBOOK_PAGE < num_pages) {
+        gtk_notebook_set_current_page(GTK_NOTEBOOK (details_editor_plugin->details_notebook), DETAILS_LYRICS_NOTEBOOK_PAGE);
+    }
+}
+
 /* Open the details window and display the selected tracks, starting
  * with the first track
  */
 void details_edit(GList *selected_tracks) {
-    GtkWidget *w;
     gint page, num_pages;
 
     if (!details_view || !details_view->window) {
         create_details_editor_view();
     }
-    else {
+    else if (! GTK_WIDGET_REALIZED(details_view->window)) {
         gtkpod_display_widget(details_view->window);
     }
     details_set_tracks(selected_tracks);
 
     /* set notebook page */
-    w = gtkpod_xml_get_widget(details_view->xml, "details_notebook");
     page = prefs_get_int(DETAILS_WINDOW_NOTEBOOK_PAGE);
-    num_pages = gtk_notebook_get_n_pages(GTK_NOTEBOOK (w));
+    num_pages = gtk_notebook_get_n_pages(GTK_NOTEBOOK (details_editor_plugin->details_notebook));
     if ((page >= 0) && (page < num_pages))
-        gtk_notebook_set_current_page(GTK_NOTEBOOK (w), page);
+        gtk_notebook_set_current_page(GTK_NOTEBOOK (details_editor_plugin->details_notebook), page);
 
     gtk_widget_show_all(details_view->window);
 }

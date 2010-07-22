@@ -72,6 +72,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     g_return_val_if_fail(DETAILS_EDITOR_IS_EDITOR(details_editor_plugin), TRUE);
 
     gtkpod_register_details_editor (DETAILS_EDITOR(details_editor_plugin));
+    gtkpod_register_lyrics_editor(LYRICS_EDITOR(details_editor_plugin));
 
     g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (details_editor_track_removed_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_TRACKS_SELECTED, G_CALLBACK (details_editor_set_tracks_cb), NULL);
@@ -87,6 +88,11 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
 
     destroy_details_editor();
 
+    details_editor_plugin->details_window = NULL;
+    details_editor_plugin->details_view = NULL;
+    details_editor_plugin->details_notebook = NULL;
+
+    gtkpod_unregister_lyrics_editor();
     gtkpod_unregister_details_editor();
 
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
@@ -120,8 +126,13 @@ static void details_editor_iface_init(DetailsEditorInterface *iface) {
     iface->edit_details = details_edit;
 }
 
+static void lyrics_editor_iface_init(LyricsEditorInterface *iface) {
+    iface->edit_lyrics = lyrics_edit;
+}
+
 ANJUTA_PLUGIN_BEGIN (DetailsEditorPlugin, details_editor_plugin);
 ANJUTA_PLUGIN_ADD_INTERFACE(details_editor, DETAILS_EDITOR_TYPE);
+ANJUTA_PLUGIN_ADD_INTERFACE(lyrics_editor, LYRICS_EDITOR_TYPE);
 ANJUTA_PLUGIN_END;
 ANJUTA_SIMPLE_PLUGIN (DetailsEditorPlugin, details_editor_plugin)
 ;
