@@ -93,7 +93,6 @@ void setup_sha1()
 {
     struct itdbs_head *itdbs_head;
 
-    g_message("TODO find other way of getting itdbs_head\n");
     itdbs_head = gp_get_itdbs_head();
 
     /* gets called before itdbs are set up -> fail silently */

@@ -189,7 +189,6 @@ about_box_new ()
 	}
 
 	gchar *pixpath = g_build_filename(get_icon_dir(), "48x48", "gtkpod.png", NULL);
-	g_message(pixpath);
 	pix = gdk_pixbuf_new_from_file(pixpath, NULL);
 	dialog = gtk_about_dialog_new();
 	gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog), "gtkpod");

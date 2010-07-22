@@ -500,7 +500,6 @@ static void export_files_store_option_settings(struct fcd *fcd) {
 
  ******************************************************************/
 void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, gchar *message) {
-    g_message("Copying tracks to file");
     gint response;
     GtkWidget *win, *options, *message_box;
     struct fcd *fcd;

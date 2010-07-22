@@ -207,7 +207,7 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
     anjuta_profile_sync(current_profile, NULL);
 
     /*
-     * Workaround - FIXME
+     * Workaround
      * Seems that when the plugins are unloaded in the last line below, the changed
      * signal is emitted onto the current_profile, which has the effect of wiping the
      * user profile. This line avoids this by setting the profile file to null. Anjuta does

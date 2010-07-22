@@ -1447,8 +1447,7 @@ void mserv_from_file_tracks(GList *selected_tracks) {
         g_return_if_fail (etr);
 
         buf = get_track_info(track, TRUE);
-        g_message("TODO file:mserv_from_file_tracks - status needed\n");
-        //	gtkpod_statusbar_message (_("Retrieving mserv data %s"), buf);
+        gtkpod_statusbar_message (_("Retrieving mserv data %s"), buf);
         g_free(buf);
         if (etr->pc_path_locale && *etr->pc_path_locale)
             update_mserv_data_from_file(etr->pc_path_locale, track);

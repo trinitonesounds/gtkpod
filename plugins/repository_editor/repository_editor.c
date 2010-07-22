@@ -155,7 +155,7 @@ static void repository_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointe
     iTunesDB *itdb = NULL;
 
     if (!playlist) {
-      return;
+        return;
     }
 
     itdb = playlist->itdb;
@@ -311,7 +311,8 @@ static void update_buttons() {
                 }
                 gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, SYNC_OPTIONS_HBOX), sens);
 
-                key = get_playlist_prefs_key(repository_view->itdb_index, repository_view->playlist, KEY_SYNC_DELETE_TRACKS);
+                key
+                        = get_playlist_prefs_key(repository_view->itdb_index, repository_view->playlist, KEY_SYNC_DELETE_TRACKS);
                 val = get_current_prefs_int(key);
                 g_free(key);
                 gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE), val);
@@ -645,38 +646,32 @@ static void edit_apply_clicked(GtkButton *button) {
             deleted = temp_prefs_get_int(repository_view->extra_prefs, key);
             g_free(key);
             if (deleted) {
-                /* FIXME: ask if serious, then delete */
-                if (TRUE) {
-                    iTunesDB *itdb;
-                    gint j;
+                iTunesDB *itdb;
+                gint j;
 
-                    /* flush all keys relating to the deleted itdb */
-                    key = get_itdb_prefs_key(i - del_num, "");
-                    prefs_flush_subkey(key);
-                    g_free(key);
+                /* flush all keys relating to the deleted itdb */
+                key = get_itdb_prefs_key(i - del_num, "");
+                prefs_flush_subkey(key);
+                g_free(key);
 
-                    for (j = i - del_num; j < itdb_num - del_num - 1; ++j) {
-                        gchar *from_key = get_itdb_prefs_key(j + 1, "");
-                        gchar *to_key = get_itdb_prefs_key(j, "");
-                        prefs_rename_subkey(from_key, to_key);
-                        g_free(from_key);
-                        g_free(to_key);
-                    }
-
-                    itdb = g_list_nth_data(itdbs_head->itdbs, i - del_num);
-                    gp_itdb_remove(itdb);
-                    gp_itdb_free(itdb);
-
-                    /* keep itdb_index of currently displayed repository
-                     updated in case we need to select a new one */
-                    if (repository_view->itdb_index > i - del_num) {
-                        --repository_view->itdb_index;
-                    }
-                    ++del_num;
+                for (j = i - del_num; j < itdb_num - del_num - 1; ++j) {
+                    gchar *from_key = get_itdb_prefs_key(j + 1, "");
+                    gchar *to_key = get_itdb_prefs_key(j, "");
+                    prefs_rename_subkey(from_key, to_key);
+                    g_free(from_key);
+                    g_free(to_key);
                 }
-                else {
-                    deleted = FALSE;
+
+                itdb = g_list_nth_data(itdbs_head->itdbs, i - del_num);
+                gp_itdb_remove(itdb);
+                gp_itdb_free(itdb);
+
+                /* keep itdb_index of currently displayed repository
+                 updated in case we need to select a new one */
+                if (repository_view->itdb_index > i - del_num) {
+                    --repository_view->itdb_index;
                 }
+                ++del_num;
             }
 
             if (!deleted) {
@@ -704,8 +699,6 @@ static void edit_apply_clicked(GtkButton *button) {
             g_free(key);
             if (str) { /* have to set mountpoint */
                 itdb_set_mountpoint(itdb, str);
-                g_message("TODO: edit_apply_clicked - space_set_ipod_itdb");
-                //                space_set_ipod_itdb(itdb);
                 g_free(str);
             }
 
@@ -1224,7 +1217,8 @@ static void display_playlist_info() {
             break;
         }
         /* make options available where appropriate */
-        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, SYNC_OPTIONS_HBOX), syncmode != SYNC_PLAYLIST_MODE_NONE);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, SYNC_OPTIONS_HBOX), syncmode
+                != SYNC_PLAYLIST_MODE_NONE);
         /* set standard toggle buttons */
         for (i = 0; widget_names[i]; ++i) {
             key = get_playlist_prefs_key(index, playlist, key_names[i]);
@@ -1242,7 +1236,7 @@ static void init_repository_combo() {
 
     g_return_if_fail (repository_view);
 
-    if (! repository_view->repository_combo_box) {
+    if (!repository_view->repository_combo_box) {
         repository_view->repository_combo_box = GTK_COMBO_BOX (GET_WIDGET (repository_view->xml, REPOSITORY_COMBO));
     }
 
@@ -1266,9 +1260,9 @@ static void init_playlist_combo() {
     g_return_if_fail (repository_view);
     g_return_if_fail (repository_view->itdb);
 
-    if (! repository_view->playlist_combo_box) {
+    if (!repository_view->playlist_combo_box) {
         repository_view->playlist_combo_box = GTK_COMBO_BOX (gtkpod_xml_get_widget (repository_view->xml,
-                    PLAYLIST_COMBO));
+                        PLAYLIST_COMBO));
     }
 
     if (g_object_get_data(G_OBJECT (repository_view->playlist_combo_box), "combo_set") == NULL) {
@@ -1450,7 +1444,7 @@ static void create_repository_editor_view() {
             G_CALLBACK (new_repository_button_clicked), repository_view);
 
     g_signal_connect (GET_WIDGET (repository_view->xml, APPLY_BUTTON), "clicked",
-                G_CALLBACK (edit_apply_clicked), repository_view);
+            G_CALLBACK (edit_apply_clicked), repository_view);
 
     init_repository_combo();
 
@@ -1468,7 +1462,7 @@ static void create_repository_editor_view() {
 }
 
 void destroy_repository_editor() {
-    if (! repository_view)
+    if (!repository_view)
         return;
 
     /* Remove widgets from Shell */

@@ -189,23 +189,22 @@ void gp_duplicate_remove(Track *oldtrack, Track *track) {
                                 "The following %d duplicate tracks have not been added to the master play list.",
                                 deltrack_nr), deltrack_nr);
             }
-            g_message("TODO misc_track:gp_duplicate_remove - return status\n");
-            //	   gtkpod_confirmation
-            //	       (-1,                      /* gint id, */
-            //		FALSE,                   /* gboolean modal, */
-            //		_("Duplicate detection"),/* title */
-            //		buf,                     /* label */
-            //		str->str,                /* scrolled text */
-            //		NULL, 0, NULL,      /* option 1 */
-            //		NULL, 0, NULL,      /* option 2 */
-            //		TRUE,               /* gboolean confirm_again, */
-            //		"show_duplicates",
-            //		                    /* ConfHandlerCA confirm_again_handler,*/
-            //		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
-            //		NULL,               /* don't show "Apply" button */
-            //		NULL,               /* don't show "Cancel" button */
-            //		NULL,               /* gpointer user_data1,*/
-            //		NULL);              /* gpointer user_data2,*/
+            gtkpod_confirmation
+                (-1,                      /* gint id, */
+                FALSE,                   /* gboolean modal, */
+                _("Duplicate detection"),/* title */
+                buf,                     /* label */
+                str->str,                /* scrolled text */
+                NULL, 0, NULL,      /* option 1 */
+                NULL, 0, NULL,      /* option 2 */
+                TRUE,               /* gboolean confirm_again, */
+                "show_duplicates",
+                /* ConfHandlerCA confirm_again_handler,*/
+                CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
+                NULL,               /* don't show "Apply" button */
+                NULL,               /* don't show "Cancel" button */
+                NULL,               /* gpointer user_data1,*/
+                NULL);              /* gpointer user_data2,*/
             g_free(buf);
         }
     }

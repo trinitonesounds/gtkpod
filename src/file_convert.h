@@ -36,7 +36,7 @@
 #   include <config.h>
 #endif
 
-#include <itdb.h>
+#include "itdb.h"
 #include "file_convert_info.h"
 
 extern const gchar *FILE_CONVERT_CACHEDIR;

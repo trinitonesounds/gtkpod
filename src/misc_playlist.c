@@ -75,8 +75,7 @@ Playlist *add_new_pl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position) {
             = get_user_string(_("New Playlist"), _("Please enter a name for the new playlist"), dflt ? dflt : _("New Playlist"), NULL, NULL, GTK_STOCK_ADD);
     if (name) {
         result = gp_playlist_add_new(itdb, name, FALSE, position);
-        g_message("TODO add_new_playlist_user_name - status\n");
-        //	gtkpod_tracks_statusbar_update ();
+        gtkpod_tracks_statusbar_update ();
     }
     return result;
 }
@@ -790,8 +789,7 @@ static void check_db_danglingok1(gpointer user_data1, gpointer user_data2) {
         /* printf("Handling track %d\n", track->ipod_id); */
 
         buf = get_track_info(track, TRUE);
-        g_message("TODO check_db_danglingok1- status\n");
-        //	gtkpod_statusbar_message (_("Processing '%s'..."), buf);
+        gtkpod_statusbar_message (_("Processing '%s'..."), buf);
         g_free(buf);
 
         while (widgets_blocked && gtk_events_pending())

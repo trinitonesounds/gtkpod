@@ -64,6 +64,7 @@ static void sp_store_sp_entries(gint inst);
 static void st_page_selected(GtkNotebook *notebook, guint page);
 static void st_create_notebook(gint inst);
 static TimeInfo *sp_update_date_interval_from_string(guint32 inst, T_item item, gboolean force_update);
+void st_show_hide_tooltips(void);
 
 /* Drag and drop definitions */
 static GtkTargetEntry st_drag_types[] =
@@ -1786,14 +1787,7 @@ void st_sort(GtkSortType order) {
     for (i = 0; i < prefs_get_int("sort_tab_num"); ++i)
         st_sort_inst(i, order);
 
-    /* Reset the cover images. Unfortunately the track order is not maintained when the
-     * display list of tracks is created. Thus, if the desired track order is the original order
-     * then unfortunately the tracks must be collected from the playlist once again and the
-     * displaytracks list in coverart recreated.
-     * ie. easy to sort ascending and descending but difficult to return to unsorted state
-     */
-    g_message("TODO: st_sort - signal coverart display to update itself");
-    //    coverart_display_update(order == SORT_NONE);
+    gtkpod_tracks_reordered();
 }
 
 gint st_get_sorttab_page_number(int inst) {
@@ -2288,47 +2282,6 @@ void st_show_visible(void) {
     st_redisplay(0);
 }
 
-/* set the paned positions for the visible sort tabs in the prefs
- * structure. This function is called when first creating the paned
- * elements and from within st_arrange_visible_sort_tabs() */
-static void st_set_visible_sort_tab_paned(void) {
-    //    gint i, x, y, p0, num, width;
-
-    g_message("TODO: Determine whether to need to store the paned sizes and positions anymore?");
-    //    num = prefs_get_int("sort_tab_num");
-    //    if (num > 0) {
-    //        gchar *buf;
-    //        GtkWidget *w;
-    //
-    //        gtk_window_get_size(GTK_WINDOW (gtkpod_window), &x, &y);
-    //        buf = g_strdup_printf("paned%d", PANED_PLAYLIST);
-    //        if ((w = gtkpod_xml_get_widget(main_window_xml, buf))) {
-    //            p0 = gtk_paned_get_position(GTK_PANED (w));
-    //            width = (x - p0) / num;
-    //            for (i = 0; i < num; ++i) {
-    //                prefs_set_int_index("paned_pos_", PANED_NUM_GLADE + i, width);
-    //            }
-    //        }
-    //        g_free(buf);
-    //    }
-}
-
-/* Regularly arrange the visible sort tabs */
-void st_arrange_visible_sort_tabs(void) {
-    gint i, num;
-
-    num = prefs_get_int("sort_tab_num");
-    if (num > 0) {
-        st_set_visible_sort_tab_paned();
-        for (i = 0; i < num; ++i) {
-            if (prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i) != -1) {
-                if (st_paned[i])
-                    gtk_paned_set_position(st_paned[i], prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i));
-            }
-        }
-    }
-}
-
 /* Created paned elements for sorttabs */
 static void st_create_paned() {
     gint i;
@@ -2355,11 +2308,6 @@ static void st_create_paned() {
 
         st_paned[i] = GTK_PANED (paned);
     }
-
-    /* set position of visible paned to decent values if not already
-     set */
-    if (prefs_get_int_index("paned_pos_", PANED_NUM_GLADE) == -1)
-        st_set_visible_sort_tab_paned();
 }
 
 static gboolean st_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data) {
@@ -2758,6 +2706,8 @@ void st_create_tabs(GtkPaned *parent, gchar *glade_path) {
      because the latter calls st_redisplay(0) which refers to the
      playlist view which hasn't yet set up) */
     st_adjust_visible();
+
+    st_show_hide_tooltips();
 }
 
 /* Clean up the memory used by sort tabs (program quit). */
@@ -2778,61 +2728,6 @@ void st_cleanup(void) {
     g_free(glade_file_path);
 }
 
-/* set the default sizes for the gtkpod main window according to prefs:
- position of the PANED_NUM GtkPaned elements (the width of the
- colums is set when setting up the colums in the listview. Called by
- display_set_default_sizes() */
-void st_set_default_sizes(void) {
-    //    gint i;
-
-    /* GtkPaned elements */
-    g_return_if_fail (gtkpod_app);
-    g_message("TODO: Not sure whether to set positions of paneds based on prefs");
-    //    /* Elements defined with glade */
-    //    for (i = 0; i < PANED_NUM_GLADE; ++i) {
-    //        gchar *buf = g_strdup_printf("paned%d", i);
-    //        GtkWidget *w = gtkpod_xml_get_widget(main_window_xml, buf);
-    //        g_free(buf);
-    //        g_return_if_fail (w);
-    //        if (prefs_get_int_index("paned_pos_", i) != -1) {
-    //            gtk_paned_set_position(GTK_PANED (w), prefs_get_int_index("paned_pos_", i));
-    //        }
-    //    }
-    //    /* Elements defined with display.c (sort tab hpaned) */
-    //    for (i = 0; i < PANED_NUM_ST; ++i) {
-    //        g_return_if_fail (st_paned[i]);
-    //        if (prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i) != -1) {
-    //            gtk_paned_set_position(st_paned[i], prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i));
-    //        }
-    //    }
-}
-
-/* update the cfg structure (preferences) with the current sizes /
- positions (called by display_update_default_sizes():
- position of GtkPaned elements */
-void st_update_default_sizes(void) {
-    /* GtkPaned elements */
-    g_message("TODO: Not sure whether need to update default size of sorttabs");
-    //    if (gtkpod_window) {
-    //        gint i;
-    //        /* Elements defined with glade */
-    //        for (i = 0; i < PANED_NUM_GLADE; ++i) {
-    //            gchar *buf;
-    //            GtkWidget *w;
-    //            buf = g_strdup_printf("paned%d", i);
-    //            if ((w = gtkpod_xml_get_widget(main_window_xml, buf))) {
-    //                prefs_set_int_index("paned_pos_", i, gtk_paned_get_position(GTK_PANED (w)));
-    //            }
-    //            g_free(buf);
-    //        }
-    //        /* Elements defined with display.c (sort tab hpaned) */
-    //        for (i = 0; i < PANED_NUM_ST; ++i) {
-    //            if (st_paned[i])
-    //                prefs_set_int_index("paned_pos_", i + PANED_NUM_GLADE, gtk_paned_get_position(st_paned[i]));
-    //        }
-    //    }
-}
-
 /* make the tooltips visible or hide it depending on the value set in
  * the prefs (tooltips_main) (called by display_show_hide_tooltips() */
 void st_show_hide_tooltips(void) {
@@ -2848,10 +2743,12 @@ void st_show_hide_tooltips(void) {
         tt = ttd->tooltips;
         g_return_if_fail (tt);
 
-        if (prefs_get_int("display_tooltips_main"))
+        if (prefs_get_int("display_tooltips_main")) {
             gtk_tooltips_enable(tt);
-        else
+        }
+        else {
             gtk_tooltips_disable(tt);
+        }
     }
 }
 

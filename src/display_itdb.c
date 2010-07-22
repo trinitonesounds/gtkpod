@@ -277,12 +277,9 @@ void gp_track_remove(Track *track) {
  before when you make sure @track is no longer referenced in any
  playlist -- see gp_playlist_remove_track for details */
 void gp_track_unlink(Track *track) {
-    g_message("TODO need to remove track from playlists and details window if necessary");
-    /* the details window may be accessing the tracks */
-    //    details_remove_track(track);
-    g_message("TODO signal that any file conversions on track be cancelled");
+    gtkpod_track_removed(track);
     /* cancel pending conversions */
-    //    file_convert_cancel_track(track);
+    file_convert_cancel_track(track);
     /* remove from SHA1 hash */
     sha1_track_remove(track);
     /* remove from pc_path_hash */

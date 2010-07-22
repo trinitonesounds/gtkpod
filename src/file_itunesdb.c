@@ -121,10 +121,9 @@ void fill_in_extended_info(Track *track, gint32 total, gint32 num) {
         sei = g_hash_table_lookup(extendedinfohash, &ipod_id);
     }
     if (!sei && extendedinfohash_sha1) {
-        g_message("TODO - file_itunesdb:fill_in_extended_info. status\n");
-        //      gtkpod_statusbar_message (
-        //	  _("Matching SHA1 checksum for file %d/%d"),
-        //	  num, total);
+              gtkpod_statusbar_message (
+        	  _("Matching SHA1 checksum for file %d/%d"),
+        	  num, total);
         while (widgets_blocked && gtk_events_pending())
             gtk_main_iteration();
 
@@ -971,7 +970,7 @@ gboolean gp_eject_ipod(iTunesDB *itdb) {
  * return value: TRUE on succes, FALSE when an error occurred.
  */
 gboolean gp_save_itdb(iTunesDB *itdb) {
-    //    Playlist *pl;
+    Playlist *pl;
     gboolean success;
     g_return_val_if_fail (itdb, FALSE);
 
@@ -981,11 +980,10 @@ gboolean gp_save_itdb(iTunesDB *itdb) {
 
     /* update smart playlists before writing */
     itdb_spl_update_live(itdb);
-    g_message("TODO - update smart playlists before writing\n");
-    //    pl = pm_get_selected_playlist();
-    //    if (pl && (pl->itdb == itdb) && pl->is_spl && pl->splpref.liveupdate) { /* Update display if necessary */
-    //        st_redisplay(0);
-    //    }
+    pl = gtkpod_get_current_playlist();
+    if (pl && (pl->itdb == itdb) && pl->is_spl && pl->splpref.liveupdate) { /* Update display if necessary */
+        gtkpod_set_current_playlist(pl);
+    }
 
     success = gp_write_itdb(itdb);
 

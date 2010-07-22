@@ -1210,6 +1210,7 @@ static void tm_cell_toggled(GtkCellRendererToggle *renderer, gchar *arg1, gpoint
 
     if ((column == TM_COLUMN_LYRICS) && (selected_tracks != NULL)) {
         /* set displayed page to the lyrics page */
+        //FIXME
         g_message("TODO - display_tracks: set displayed page to the lyrics page in details window");
         //      prefs_set_int (DETAILS_WINDOW_NOTEBOOK_PAGE, 3);
         //      details_edit (selected_tracks);
@@ -2261,7 +2262,7 @@ static void tm_create_treeview(void) {
     /* create tree view */
     if (track_treeview) { /* delete old tree view */
         model = gtk_tree_view_get_model(track_treeview);
-        /* FIXME: how to delete model? */
+        g_object_unref(model);
         gtk_widget_destroy(GTK_WIDGET (track_treeview));
     }
     track_treeview = GTK_TREE_VIEW (stv);

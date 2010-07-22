@@ -31,6 +31,7 @@
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/charset.h"
 #include "libgtkpod/misc.h"
+#include "libgtkpod/file_convert.h"
 #include "core_prefs.h"
 #include "plugin.h"
 
@@ -245,18 +246,6 @@ G_MODULE_EXPORT void on_browse_button_clicked (GtkButton *sender, gpointer e)
     g_free (base);
     g_free (path);
     g_free (args);
-}
-
-/*
-    glade callback
-*/
-G_MODULE_EXPORT void on_display_tooltips_toggled (GtkToggleButton *sender, gpointer e)
-{
-    gboolean active = gtk_toggle_button_get_active (sender);
-
-    prefs_set_int ("display_tooltips", active);
-    g_message("TODO - show hide tooltips commented out");
-//    display_show_hide_tooltips ();
 }
 
 /*
@@ -687,8 +676,7 @@ G_MODULE_EXPORT void on_conversion_settings_clicked (GtkButton *sender, gpointer
     gtk_builder_connect_signals(builder, NULL);
     gtk_dialog_run (GTK_DIALOG (dlg));
     gtk_widget_destroy (dlg);
-    g_message("TODO - signal that the convert preferences have changed");
-//    file_convert_prefs_changed ();
+    file_convert_prefs_changed ();
 }
 
 /*
@@ -741,8 +729,7 @@ G_MODULE_EXPORT void on_target_format_changed (GtkComboBox *sender, gpointer e)
 
     prefs_set_int ("conversion_target_format", index);
     g_free (script);
-    g_message("TODO - signal that the convert preferences have changed");
-    //    file_convert_prefs_changed ();
+    file_convert_prefs_changed ();
 }
 
 /*

@@ -1772,12 +1772,6 @@ void gtkpod_shutdown() {
     /* stop accepting requests for playcount updates */
     server_shutdown();
 
-    g_message("TODO - cleanup gphoto_window on shutdown");
-    /* Change the windows back to track view to ensure the
-     * sorttab state is saved correctly/
-     */
-    //gphoto_change_to_photo_window (FALSE);
-
     /* shut down conversion infrastructure */
     file_convert_shutdown();
 
