@@ -34,7 +34,7 @@ gtkpod_SOURCES = \
     gtkpod.c gtkpod.h \
     main.c
 
-gtkpod_LDADD = $(GTKPOD_LIBS) $(INTLLIBS) @LIBOBJS@
+gtkpod_LDADD = $(GTKPOD_LIBS) $(INTLLIBS) -ldl @LIBOBJS@
     
 EXTRA_DIST = getopt.h
 
