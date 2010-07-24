@@ -1411,7 +1411,7 @@ static void create_details_editor_view() {
     gtk_container_remove(GTK_CONTAINER (details_window), viewport);
     g_free(glade_path);
 
-    /* Add widget in Shell. Any number of widgets can be added */
+    /* Add widget in Shell. */
     details_editor_plugin->details_window = gtk_scrolled_window_new(NULL, NULL);
     gtk_widget_ref(details_editor_plugin->details_window);
     details_editor_plugin->details_view = viewport;

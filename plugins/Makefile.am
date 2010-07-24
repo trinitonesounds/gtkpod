@@ -10,6 +10,7 @@ SUBDIRS = . \
 	core_preferences \
 	info_display \
 	cover_display \
-	coverweb
+	coverweb \
+	photo_editor
 
 # indent

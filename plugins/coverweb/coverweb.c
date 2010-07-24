@@ -193,5 +193,6 @@ WebBrowser *init_web_browser(GtkWidget *parent) {
  * destroy the web browser and all associated items.
  */
 void destroy_cover_web() {
-
+    gtk_widget_destroy(browser->window);
+    browser = NULL;
 }
