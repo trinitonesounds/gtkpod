@@ -11,6 +11,7 @@ SUBDIRS = . \
 	info_display \
 	cover_display \
 	coverweb \
-	photo_editor
+	photo_editor \
+	media_player
 
 # indent

@@ -5,8 +5,8 @@ Prospective Plugins:
 	play tracks now
 #    info window
 	synchronizer
-	download coverart plugin
-	photo panel
+#	download coverart plugin
+#	photo panel
 #    export plugin
 #      - provides window and export functions
 #      - other plugins simply emit a signal that tells the plugin to export the
@@ -70,7 +70,7 @@ Help Menu
   # prefsdlg.c - Refactor preferences dialog to appear as pages anjuta preferences dialog
 
 # plugin remaining
-display_photo.*
+# display_photo.*
 # info.* / infodlg.*
 # help.*
 
@@ -101,21 +101,14 @@ Notes on trial build using ubuntu 910
 3) Added localmusic
 
 
-** Message: TODO signal all things such as conversions to cancel
+Gstreamer
+* display.c
+ * media player gui referenced in glade xml
 
-(lt-gtkpod:12130): GLib-GObject-WARNING **: invalid unclassed pointer in cast to `GtkFileChooser'
+* display_playlists / display_sorttabs
+ * context menu trips tools_play_tracks (selected_tracks);
 
-(lt-gtkpod:12130): Gtk-CRITICAL **: gtk_file_chooser_get_current_folder: assertion `GTK_IS_FILE_CHOOSER (chooser)' failed
+* player.c / player.h
+ * thing that does all the work
 
-** (lt-gtkpod:12130): WARNING **: busy push XXX
-** Message: TODO load photodb handle
-
-** Message: TODO signal all things such as conversions to cancel
-
-** (lt-gtkpod:12130): CRITICAL **: coverart_select_cover: assertion `key' failed
-** Message: TODO - update smart playlists before writing
-
-
-(lt-gtkpod:12130): GLib-GObject-CRITICAL **: g_object_ref: assertion `G_IS_OBJECT (object)' failed
-** Message: TODO - cleanup gphoto_window on shutdown
-
+Fix anjuta about icon

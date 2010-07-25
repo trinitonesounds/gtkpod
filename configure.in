@@ -200,6 +200,30 @@ fi
 
 AM_CONDITIONAL(HAVE_PLUGIN_COVERWEB, [test x$coverweb = xyes])
 
+dnl Check for gstreamer
+dnl -------------------------------------------------------------
+
+AC_ARG_ENABLE(plugin-media-player,
+	AC_HELP_STRING([--disable-plugin-media-player],[Disable media player plugin for playing tracks in gtkpod]), 
+	[ if test "$enableval" = "no"; then
+		user_disabled_media_player=1
+	  fi ],
+	[ user_disabled_media_player=0 ])
+AC_MSG_CHECKING(if media player plugin is disabled)
+if test "$user_disabled_media_player" = 1; then
+	AC_MSG_RESULT(yes)
+	media_player="no"
+else
+	AC_MSG_RESULT(no)
+	
+	PKG_CHECK_MODULES(GSTREAMER,
+		[gstreamer-0.10 >= 0.10.25],
+		[media_player="yes"],
+		[media_player="no"])
+fi
+
+AM_CONDITIONAL(HAVE_PLUGIN_MEDIA_PLAYER, [test x$media_player = xyes])
+
 dnl Check for libvorbisfile and libvorbis
 AC_ARG_WITH(ogg, AC_HELP_STRING([--without-ogg], [Disable Ogg/Vorbis support]))
 if test "x$with_ogg" != "xno"; then
@@ -414,6 +438,19 @@ plugins/coverweb/icons/hicolor/48x48/Makefile
 plugins/coverweb/icons/hicolor/48x48/places/Makefile
 plugins/coverweb/icons/hicolor/128x128/Makefile
 plugins/coverweb/icons/hicolor/128x128/places/Makefile
+plugins/media_player/Makefile
+plugins/media_player/icons/Makefile
+plugins/media_player/icons/hicolor/Makefile
+plugins/media_player/icons/hicolor/16x16/Makefile
+plugins/media_player/icons/hicolor/16x16/places/Makefile
+plugins/media_player/icons/hicolor/22x22/Makefile
+plugins/media_player/icons/hicolor/22x22/places/Makefile
+plugins/media_player/icons/hicolor/24x24/Makefile
+plugins/media_player/icons/hicolor/24x24/places/Makefile
+plugins/media_player/icons/hicolor/32x32/Makefile
+plugins/media_player/icons/hicolor/32x32/places/Makefile
+plugins/media_player/icons/hicolor/48x48/Makefile
+plugins/media_player/icons/hicolor/48x48/places/Makefile
 ])
 
 echo "
@@ -441,6 +478,12 @@ if [ $HAVE_PLUGIN_COVERWEB ]; then
     echo " CoverWeb Browser .....: Yes"
 else
     echo " CoverWeb Browser .....: No"
+fi
+
+if [ $HAVE_PLUGIN_COVERWEB ]; then
+    echo " Media Player     .....: Yes"
+else
+    echo " Media Player     .....: No"
 fi
 
 echo "
