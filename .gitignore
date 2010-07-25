@@ -63,24 +63,27 @@ cscope.out
 /plugins/*.plugin
 
 # links from dev env
-details_editor.glade
-coverweb.glade
-exporter.glade
-info_display.glade
-sorttab_display.glade
-track_display.glade
-repository_editor.glade
-cover_display.glade
-playlist_display.glade
-core_prefs.xml
+/data/glade/details_editor.glade
+/data/glade/coverweb.glade
+/data/glade/exporter.glade
+/data/glade/info_display.glade
+/data/glade/sorttab_display.glade
+/data/glade/track_display.glade
+/data/glade/repository_editor.glade
+/data/glade/cover_display.glade
+/data/glade/playlist_display.glade
+/data/glade/core_prefs.xml
+/data/glade/photo_editor.glade
 
-details_editor.ui
-coverweb.ui
-exporter.ui
-info_display.ui
-sorttab_display.ui
-track_display.ui
-repository_editor.ui
-cover_display.ui
-playlist_display.ui
-core_prefs.ui
+/data/ui/details_editor.ui
+/data/ui/coverweb.ui
+/data/ui/exporter.ui
+/data/ui/info_display.ui
+/data/ui/sorttab_display.ui
+/data/ui/track_display.ui
+/data/ui/repository_editor.ui
+/data/ui/cover_display.ui
+/data/ui/playlist_display.ui
+/data/ui/core_prefs.ui
+/data/ui/photo_editor.ui
+
