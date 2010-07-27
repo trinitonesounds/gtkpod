@@ -34,6 +34,7 @@
 #include <gst/interfaces/xoverlay.h>
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
+#include <gdk/gdk.h>
 #include "libgtkpod/itdb.h"
 #include "libgtkpod/file.h"
 #include "libgtkpod/directories.h"
@@ -200,10 +201,10 @@ static void playsong_real() {
         g_return_if_fail(tr);
         str = get_file_name_from_source(tr, SOURCE_PREFER_LOCAL);
         if (str) {
+
             gtk_label_set_text(GTK_LABEL(player->song_label), tr->title); // set label to title
-            g_object_set_data(G_OBJECT (player->song_label), "tr_title", tr->title); // set label to title...again?wtf?
-            g_object_set_data(G_OBJECT (player->song_label), "tr_artist", tr->artist); // set label to title...again?wtf?
-            gtk_widget_set_sensitive(player->volume_scale, TRUE); //set volume scale sensitivity to true
+            g_object_set_data(G_OBJECT (player->song_label), "tr_title", tr->title);
+            g_object_set_data(G_OBJECT (player->song_label), "tr_artist", tr->artist);
 
             /* init GStreamer */
             loop = g_main_loop_new(NULL, FALSE); // make new loop
@@ -419,35 +420,38 @@ void set_selected_tracks(GList *tracks) {
     gchar *str = get_file_name_from_source(tr, SOURCE_PREFER_LOCAL);
     if (str) {
         gtk_label_set_text(GTK_LABEL(player->song_label), tr->title); // set label to title
-        g_object_set_data(G_OBJECT (player->song_label), "tr_title", tr->title); // set label to title...again?wtf?
-        g_object_set_data(G_OBJECT (player->song_label), "tr_artist", tr->artist); // set label to title...again?wtf?
-        gtk_widget_set_sensitive(player->volume_scale, TRUE); //set volume scale sensitivity to true
+        g_object_set_data(G_OBJECT (player->song_label), "tr_title", tr->title);
+        g_object_set_data(G_OBJECT (player->song_label), "tr_artist", tr->artist);
     }
     g_free(str);
 }
 
 void init_media_player(GtkWidget *parent) {
     GtkWidget *window;
+    GladeXML *xml;
     gst_init_check(0, NULL, NULL);
     srand(time(NULL));
 
-    gchar *glade_path = g_build_filename(get_glade_dir(), "media_player.glade", NULL);
     player = g_new0(MediaPlayer, 1);
+    player->glade_path = g_build_filename(get_glade_dir(), "media_player.glade", NULL);
+    xml = glade_xml_new(player->glade_path, "media_window", NULL);
 
-    player->xml = glade_xml_new(glade_path, "media_window", NULL);
+    window = gtkpod_xml_get_widget(xml, "media_window");
+    player->video_widget = gtkpod_xml_get_widget(xml, "video_widget");
+    player->media_panel = gtkpod_xml_get_widget(xml, "media_panel");
+    player->song_label = gtkpod_xml_get_widget(xml, "song_label");
+    player->song_time_label = gtkpod_xml_get_widget(xml, "song_time_label");
+    player->media_toolbar = gtkpod_xml_get_widget(xml, "media_toolbar");
 
-    window = gtkpod_xml_get_widget(player->xml, "media_window");
-    player->video_widget = gtkpod_xml_get_widget(player->xml, "video_widget");
-    player->media_panel = gtkpod_xml_get_widget(player->xml, "media_panel");
-    player->song_label = gtkpod_xml_get_widget(player->xml, "song_label");
-    player->media_toolbar = gtkpod_xml_get_widget(player->xml, "media_toolbar");
+    player->play_button = gtkpod_xml_get_widget(xml, "play_button");
+    player->stop_button = gtkpod_xml_get_widget(xml, "stop_button");
+    player->previous_button = gtkpod_xml_get_widget(xml, "previous_button");
+    player->next_button = gtkpod_xml_get_widget(xml, "next_button");
+    player->song_scale = gtkpod_xml_get_widget(xml, "song_scale");
 
-    player->play_button = gtkpod_xml_get_widget(player->xml, "play_button");
-    player->stop_button = gtkpod_xml_get_widget(player->xml, "stop_button");
-    player->previous_button = gtkpod_xml_get_widget(player->xml, "previous_button");
-    player->next_button = gtkpod_xml_get_widget(player->xml, "next_button");
-    player->song_scale = gtkpod_xml_get_widget(player->xml, "song_scale");
-    player->volume_scale = gtkpod_xml_get_widget(player->xml, "volume_scale");
+    player->volume = 5;
+
+    glade_xml_signal_autoconnect(xml);
 
     g_object_ref(player->media_panel);
     gtk_container_remove(GTK_CONTAINER (window), player->media_panel);
@@ -461,12 +465,59 @@ void init_media_player(GtkWidget *parent) {
     gtk_widget_show(player->song_label);
     gtk_widget_show_all(player->media_toolbar);
 
-    g_free(glade_path);
+    g_object_unref(xml);
 }
 
 void destroy_media_player() {
     gtk_widget_destroy(player->media_panel);
+    g_free(player->glade_path);
     player = NULL;
+}
+
+static void update_volume(gint volume) {
+    player->volume = volume;
+
+}
+
+static gboolean volume_changed_cb(GtkRange *range, GtkScrollType scroll, gdouble value, gpointer user_data) {
+    update_volume(value);
+    return FALSE;
+}
+
+G_MODULE_EXPORT gboolean on_volume_window_focus_out(GtkWidget *widget, GdkEventFocus *event, gpointer data) {
+    GtkWidget *vol_scale = (GtkWidget *) g_object_get_data(G_OBJECT(widget), "scale");
+    update_volume(gtk_range_get_value(GTK_RANGE(vol_scale)));
+    gtk_widget_destroy(widget);
+    return TRUE;
+}
+
+G_MODULE_EXPORT void on_volume_button_clicked_cb(GtkToolButton *toolbutton, gpointer *userdata) {
+    GladeXML *xml;
+    GtkWidget *vol_window;
+    GtkWidget *vol_scale;
+
+    xml = glade_xml_new(player->glade_path, "volume_window", NULL);
+    vol_window = gtkpod_xml_get_widget(xml, "volume_window");
+    vol_scale = gtkpod_xml_get_widget(xml, "volume_scale");
+    g_object_set_data(G_OBJECT(vol_window), "scale", vol_scale);
+
+    gtk_range_set_value(GTK_RANGE(vol_scale), player->volume);
+    g_signal_connect(G_OBJECT (vol_scale),
+            "change-value",
+            G_CALLBACK(volume_changed_cb),
+            NULL);
+
+
+    //    gtk_widget_set_events(vol_window, GDK_FOCUS_CHANGE_MASK);
+    g_signal_connect (G_OBJECT (vol_window),
+            "focus-out-event",
+            G_CALLBACK (on_volume_window_focus_out),
+            NULL);
+
+    gtk_widget_show_all(vol_window);
+    gtk_widget_grab_focus(vol_window);
+
+    g_object_unref(xml);
 }
 
 void media_player_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data) {

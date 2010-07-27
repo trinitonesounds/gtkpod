@@ -36,6 +36,7 @@ typedef struct {
     GtkWidget *media_panel;
     GtkWidget *video_widget;
     GtkWidget *song_label;
+    GtkWidget *song_time_label;
     GtkWidget *media_toolbar;
 
     GtkWidget *previous_button;
@@ -43,10 +44,10 @@ typedef struct {
     GtkWidget *stop_button;
     GtkWidget *next_button;
     GtkWidget *song_scale;
-    GtkWidget *volume_scale;
 
+    gchar *glade_path;
 
-    GladeXML *xml;
+    gint volume;
 
     GList *tracks;
 
