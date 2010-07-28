@@ -58,6 +58,7 @@
                 <property name="homogeneous">True</property>
                 <child>
                   <widget class="GtkToolButton" id="previous_button">
+                    <property name="width_request">35</property>
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Previous</property>
                     <property name="use_underline">True</property>
@@ -70,6 +71,7 @@
                 </child>
                 <child>
                   <widget class="GtkToolButton" id="play_button">
+                    <property name="width_request">35</property>
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Play</property>
                     <property name="use_underline">True</property>
@@ -120,7 +122,7 @@
                 <property name="digits">0</property>
                 <property name="draw_value">False</property>
                 <property name="value_pos">left</property>
-                <signal name="change_value" handler="on_song_scale_change_value"/>
+                <signal name="change_value" handler="on_song_scale_change_value_cb"/>
               </widget>
               <packing>
                 <property name="position">1</property>
@@ -179,7 +181,7 @@
         <property name="is_focus">True</property>
         <property name="events">GDK_EXPOSURE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_MOTION_MASK | GDK_BUTTON1_MOTION_MASK | GDK_BUTTON2_MOTION_MASK | GDK_BUTTON3_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK | GDK_ENTER_NOTIFY_MASK | GDK_LEAVE_NOTIFY_MASK | GDK_FOCUS_CHANGE_MASK | GDK_STRUCTURE_MASK | GDK_PROPERTY_CHANGE_MASK | GDK_VISIBILITY_NOTIFY_MASK | GDK_PROXIMITY_IN_MASK | GDK_PROXIMITY_OUT_MASK | GDK_SUBSTRUCTURE_MASK | GDK_SCROLL_MASK</property>
         <property name="orientation">vertical</property>
-        <property name="adjustment">9 0 11 1 1 0</property>
+        <property name="adjustment">0 -90 10 0.20000000000000001 2 2</property>
         <property name="inverted">True</property>
         <property name="fill_level">10</property>
         <property name="digits">0</property>

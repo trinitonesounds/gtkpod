@@ -30,7 +30,8 @@
 #ifndef __MEDIA_PLAYER_H__
 #define __MEDIA_PLAYER_H__
 
-#include "glade/glade.h"
+#include <gtk/gtk.h>
+#include <gst/gst.h>
 
 typedef struct {
     GtkWidget *media_panel;
@@ -47,9 +48,25 @@ typedef struct {
 
     gchar *glade_path;
 
-    gint volume;
-
     GList *tracks;
+    GThread *thread;
+    GMainLoop *loop;
+
+    gboolean previousButtonPressed;
+    gboolean stopButtonPressed;
+    gboolean shuffle;
+
+    gdouble volume_level;
+    GstElement *volume_element;
+    GstElement *pipeline;
+    GstElement *audio;
+    GstElement *audiomixer;
+    GstElement *volume;
+    GstElement *src;
+    GstElement *dec;
+    GstElement *conv;
+    GstElement *sink;
+    GstPad *audiopad;
 
 } MediaPlayer;
 
