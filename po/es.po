@@ -172,9 +172,9 @@ msgid "No entry selected."
 msgstr "No se ha seleccionado ninguna entrada"
 
 #: ../src/mp4file.c:636
-#, fuzzy, c-format
+#, c-format
 msgid "m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must install the mp4v2 library.\n"
-msgstr "Error al actualizar el control de volumen m4a/m4p/m4b para '%s': m4a/m4p/m4b no están soportados sin la biblioteca mp4v2. gtkpod debe estar compilado junto con la biblioteca mp4v2.\n"
+msgstr "Error al actualizar el control de volumen m4a/m4p/m4b para '%s': m4a/m4p/m4b no están soportados sin la biblioteca mp4v2. Debe instalar la biblioteca mp4v2.\n"
 
 #: ../src/mp4file.c:676
 #: ../src/mp4file.c:986
@@ -189,14 +189,14 @@ msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
 msgstr "No se ha podido abrir '%s' para su lectura o el fichero no es de tipo mp4.\n"
 
 #: ../src/mp4file.c:700
-#, fuzzy, c-format
+#, c-format
 msgid "Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must install the mp4v2 library.\n"
-msgstr "Error en la importación de '%s': m4a/m4p/m4b no están soportados sin la biblioteca mp4v2. gtkpod debe estar compilado junto con la biblioteca mp4v2.\n"
+msgstr "Error en la importación de '%s': m4a/m4p/m4b no están soportados sin la biblioteca mp4v2. Debe instalar la biblioteca mp4v2.\n"
 
 #: ../src/mp4file.c:1009
-#, fuzzy, c-format
+#, c-format
 msgid "m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must install the mp4v2 library.\n"
-msgstr "Error al actualizar los metadatos m4a/m4p/m4b para '%s': m4a/m4p/m4b no están soportados sin la biblioteca mp4v2. gtkpod debe estar compilado junto con la biblioteca mp4v2.\n"
+msgstr "Error al actualizar los metadatos m4a/m4p/m4b para '%s': m4a/m4p/m4b no están soportados sin la biblioteca mp4v2. Debe instalar la biblioteca mp4v2.\n"
 
 #: ../src/mp4file.c:1132
 #, c-format
@@ -609,7 +609,6 @@ msgstr[0] "¿Desea realmente borrar la lista de reproducción '%s' y la siguient
 msgstr[1] "¿Desea realmente borrar la lista de reproducción '%s' y la siguiente pista de la base de datos? El número de listas de reproducción a las que pertenecen estas pistas está indicado entre paréntesis."
 
 #: ../src/misc_confirm.c:869
-#, fuzzy
 msgid ""
 "Data has been changed and not been saved. If you quit gtkpod, all unsaved changes will be lost.\n"
 "\n"
@@ -752,19 +751,18 @@ msgid "New Playlist"
 msgstr "Nueva lista de reproducción"
 
 #: ../src/help.c:48
-#, fuzzy
 msgid ""
 "© 2002 - 2010\n"
 "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 "Corey Donohoe (atmos at atmos dot org)\n"
 msgstr ""
-"(C) 2002 - 2007\n"
+"© 2002 - 2010\n"
 "Jorg Schuler (jcsjcs en users punto sourceforge punto net)\n"
 "Corey Donohoe (atmos en atmos punto org)\n"
 
 #: ../src/help.c:52
 msgid "Codebase includes contribution from the following people and many other helpful individuals\n"
-msgstr ""
+msgstr "El código fuente incluye contribuciones de las siguientes personas y muchos otros individuos que han sido de gran ayuda\n"
 
 #: ../src/help.c:53
 msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
@@ -893,17 +891,16 @@ msgid "Iain Benson: support for compilation tag in mp3 files and separate displa
 msgstr "Iain Benson: soporte para compilar atributos en ficheros mp3 y visualización separada de las compilaciones en las pestañas."
 
 #: ../src/help.c:94
-#, fuzzy
 msgid "Nicolas Chariot: icons of buttons\n"
-msgstr ""
-"Nicolas Chariot: botones de los iconos\n"
-"\n"
+msgstr "Nicolas Chariot: botones de los iconos\n"
 
 #: ../src/help.c:95
 msgid ""
 "Others past and present for their excellent contributions\n"
 "\n"
 msgstr ""
+"Otros pasados y presentes por sus excelentes contribuciones\n"
+"\n"
 
 #: ../src/help.c:96
 msgid "This program borrows code from the following projects:"
@@ -926,9 +923,8 @@ msgid "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
 msgstr "xmms:exploración de directorios, detección de la duración de los mp3 (http://www.xmms.org)"
 
 #: ../src/help.c:102
-#, fuzzy
 msgid "The GUI was created with the help of glade (http://glade.gnome.org/)."
-msgstr "El interfaz gráfico ha sido creado con la ayuda de glade-2 (http://glade.gnome.org/)."
+msgstr "El interfaz gráfico ha sido creado con la ayuda de glade (http://glade.gnome.org/)."
 
 #: ../src/help.c:106
 msgid "French: David Le Brun (david at dyn-ns dot net)"
@@ -1013,15 +1009,14 @@ msgstr ""
 "02111-1307, USA."
 
 #: ../src/help.c:137
-#, fuzzy
 msgid ""
 "© 2002-2007\n"
 "Jorg Schuler <jcsjcs at users.sourceforge.net>\n"
 "Corey Donohoe <atmos at atmos.org>"
 msgstr ""
-"(C) 2002 - 2007\n"
+"© 2002 - 2010\n"
 "Jorg Schuler (jcsjcs en users punto sourceforge punto net)\n"
-"Corey Donohoe (atmos en atmos punto org)\n"
+"Corey Donohoe (atmos en atmos punto org)"
 
 #: ../src/help.c:142
 #, c-format
@@ -1206,9 +1201,9 @@ msgid "Add a Directory of Images to the iPod. Select the Directory."
 msgstr "Añadir un directorio de imágenes al iPod. Seleccionar el directorio."
 
 #: ../src/display_photo.c:1601
-#, fuzzy, c-format
+#, c-format
 msgid "<No members>\n"
-msgstr "<No miembros>\n"
+msgstr "<Sin miembros>\n"
 
 #: date_parser.l:269
 #, c-format
@@ -1237,7 +1232,9 @@ msgstr "No se puede reordenar una vista en árbol ya ordenada"
 msgid ""
 "This DND type (%d) is not (yet) supported. If you feel implementing this would be useful, please contact the author.\n"
 "\n"
-msgstr "Este tipo DND (%d) todavía no está soportado. Si piensa que implementarlo puede ser útil, por favor, contacte con el autor.\n"
+msgstr ""
+"Este tipo DND (%d) todavía no está soportado. Si piensa que implementarlo puede ser útil, por favor, contacte con el autor.\n"
+"\n"
 
 #: ../src/display_playlists.c:2046
 msgid "Photos"
@@ -1446,14 +1443,12 @@ msgid "GE:"
 msgstr "GE:"
 
 #: ../src/misc_playlist.c:183
-#, fuzzy
 msgid "CO:"
-msgstr "Coprocesador"
+msgstr "CO:"
 
 #: ../src/misc_playlist.c:186
-#, fuzzy
 msgid "YE:"
-msgstr "con «ye»"
+msgstr "YE:"
 
 #: ../src/misc_playlist.c:214
 msgid "Unknown"
@@ -1700,7 +1695,9 @@ msgstr "FLAC"
 msgid ""
 "Files of type '%s' are not supported by the iPod. Please go to the Preferences to set up and turn on a suitable conversion script for '%s'.\n"
 "\n"
-msgstr "Los ficheros del tipo '%s' no están soportados por el iPod. Por favor, vaya a preferencias para especificar un guión de conversión adecuado para '%s'.\n"
+msgstr ""
+"Los ficheros del tipo '%s' no están soportados por el iPod. Por favor, vaya a preferencias para especificar un guión de conversión adecuado para '%s'.\n"
+"\n"
 
 #: ../src/file_convert.c:1312
 msgid "No information available"
@@ -1781,7 +1778,9 @@ msgstr ""
 msgid ""
 "Conversion of '%s' failed: could not stat the converted file '%s'.\n"
 "\n"
-msgstr "Ha fallado la conversión de '%s': no se ha podido obtener el estado del fichero convertido '%s'.\n"
+msgstr ""
+"Ha fallado la conversión de '%s': no se ha podido obtener el estado del fichero convertido '%s'.\n"
+"\n"
 
 #: ../src/tools.c:118
 #, c-format
@@ -1997,19 +1996,19 @@ msgstr ""
 #: ../src/file_itunesdb.c:477
 #, c-format
 msgid "The repository %s does not have a readable extended database.\n"
-msgstr ""
+msgstr "El repositorio %s no tiene una base de datos extendida que pueda ser leída.\n"
 
 #: ../src/file_itunesdb.c:479
 msgid "This database identifies the track on disk with the track data in the repository database."
-msgstr ""
+msgstr "Esta base de datos asocia la pista en disco con los datos de pista en el repositorio."
 
 #: ../src/file_itunesdb.c:480
 msgid "Any tracks already in the database cannot be transferred between repositories without the extended database."
-msgstr ""
+msgstr "Pistas en la base de datos no pueden ser transferidas entre repositorios sin el soporte de la base de datos extendida."
 
 #: ../src/file_itunesdb.c:481
 msgid "A new extended database will be created upon saving but existing tracks will need to be reimported to be linked to the file on disk."
-msgstr ""
+msgstr "Una nueva base de datos extendida será creada al guardar, pero pistas existentes deberan ser importadas nuevamente para asociarlas con el fichero en disco."
 
 #: ../src/file_itunesdb.c:493
 msgid "Offline iPod database successfully imported"
@@ -2247,7 +2246,7 @@ msgstr "%s: Cambios guardados"
 
 #: ../src/support.c:90
 #: ../src/support.c:114
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr "No se pudo encontrar archivo pixmap: %s"
 
@@ -2363,13 +2362,13 @@ msgid "Error creating thumbnail file"
 msgstr "Error al crear el fichero de imagen de muestra"
 
 #: ../src/file.c:1141
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to start video thumbnail generator\n"
 "(command line was: '%s')"
 msgstr ""
 "No es posible iniciar el generador de imágenes de muestra de vídeo\n"
-"(la orden fue: '%s'"
+"(la orden fue: '%s')"
 
 #: ../src/file.c:1145
 #, c-format
@@ -2528,24 +2527,23 @@ msgid "Error writing to '%s'.\n"
 msgstr "Error al escribir a '%s'.\n"
 
 #: ../src/file.c:2634
-#, fuzzy
 msgid "\\Error: File format unsupported now."
-msgstr "El archivo de sonido '%s' está en un formato no soportado."
+msgstr "\\Error: Formato de fichero no soportado."
 
 #: ../src/file.c:2644
-#, fuzzy
 msgid "Error: Lyrics not supported for this file format."
-msgstr ".linkonce no se admite en este formato de fichero objeto"
+msgstr "Error: Este formato de fichero no soporta letras."
 
 #: ../src/file.c:2658
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error: Lyrics not found, file not available (%s).\n"
 "\n"
-msgstr "Letra no escrita, nombre de fichero no disponible (%s).\n"
+msgstr ""
+"No se encontraron letras, fichero no disponible (%s).\n"
+"\n"
 
 #: ../src/file.c:2686
-#, fuzzy
 msgid "Error:"
 msgstr "Error:"
 
