@@ -11,9 +11,9 @@ msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-07-30 22:25+0100\n"
-"PO-Revision-Date: 2010-07-30 22:53+0100\n"
-"Last-Translator: phantomjinx <phantom_sf@users.sourceforge.net>\n"
-"Language-Team: French <kde-francophone@kde.org>\n"
+"PO-Revision-Date: 2010-08-01 14:18+0200\n"
+"Last-Translator: Alain Portal <alain.portal@free.fr>\n"
+"Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -757,19 +757,18 @@ msgid "New Playlist"
 msgstr "Nouvelle liste de lecture"
 
 #: ../src/help.c:48
-#, fuzzy
 msgid ""
 "© 2002 - 2010\n"
 "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 "Corey Donohoe (atmos at atmos dot org)\n"
 msgstr ""
-"© 2002 - 2007\n"
+"© 2002 - 2010\n"
 "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 "Corey Donohoe (atmos at atmos dot org)\n"
 
 #: ../src/help.c:52
 msgid "Codebase includes contribution from the following people and many other helpful individuals\n"
-msgstr ""
+msgstr "Le code principal contient des contributions des personnes suivantes ainsi que de nombreuses autres participations\n"
 
 #: ../src/help.c:53
 msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
@@ -898,17 +897,16 @@ msgid "Iain Benson: support for compilation tag in mp3 files and separate displa
 msgstr "Iain Benson : prise en charge des attributs de compilation dans les fichiers MP3 et l'affichage séparé des compilations dans la zone de tri."
 
 #: ../src/help.c:94
-#, fuzzy
 msgid "Nicolas Chariot: icons of buttons\n"
-msgstr ""
-"Nicolas Chariot : icônes des boutons\n"
-"\n"
+msgstr "Nicolas Chariot : icônes des boutons\n"
 
 #: ../src/help.c:95
 msgid ""
 "Others past and present for their excellent contributions\n"
 "\n"
 msgstr ""
+"Autres personnes, passées et présentes, pour leurs excellentes contributions.\n"
+"\n"
 
 #: ../src/help.c:96
 msgid "This program borrows code from the following projects:"
@@ -931,9 +929,8 @@ msgid "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
 msgstr "xmms : explorateur, détection de la durée (http://www.xmms.org)"
 
 #: ../src/help.c:102
-#, fuzzy
 msgid "The GUI was created with the help of glade (http://glade.gnome.org/)."
-msgstr "L'interface utilisateur a été créée à l'aide de glade-2 (http://glade.gnome.org)."
+msgstr "L'interface utilisateur a été créée à l'aide de glade (http://glade.gnome.org)."
 
 #: ../src/help.c:106
 msgid "French: David Le Brun (david at dyn-ns dot net)"
@@ -2003,19 +2000,19 @@ msgstr ""
 #: ../src/file_itunesdb.c:477
 #, c-format
 msgid "The repository %s does not have a readable extended database.\n"
-msgstr ""
+msgstr "Le dépôt « % » ne possède pas de base de données étendue lisible.\n"
 
 #: ../src/file_itunesdb.c:479
 msgid "This database identifies the track on disk with the track data in the repository database."
-msgstr ""
+msgstr "Cette base de données identifie la piste sur le disque avec les données de piste de la base de données du dépôt."
 
 #: ../src/file_itunesdb.c:480
 msgid "Any tracks already in the database cannot be transferred between repositories without the extended database."
-msgstr ""
+msgstr "Aucune piste présente dans la base de données ne peut être transférée entre les dépôts sans la base de données étendue."
 
 #: ../src/file_itunesdb.c:481
 msgid "A new extended database will be created upon saving but existing tracks will need to be reimported to be linked to the file on disk."
-msgstr ""
+msgstr "Une nouvelle base de données sera créée au moment de l'enregistrement, mais les pistes existantes devront être réimportées pour être liées aux fichiers sur le disque."
 
 #: ../src/file_itunesdb.c:493
 msgid "Offline iPod database successfully imported"
@@ -2246,9 +2243,9 @@ msgstr "%s : modifications enregistrées"
 
 #: ../src/support.c:90
 #: ../src/support.c:114
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't find pixmap file: %s"
-msgstr "Impossible de changer les attributs du fichier : « %s »\n"
+msgstr "Impossible de trouver le fichier pixmap « %s »"
 
 #: ../src/fileselection.c:142
 #: ../src/fileselection.c:583
@@ -2529,26 +2526,25 @@ msgid "Error writing to '%s'.\n"
 msgstr "Erreur d'écriture du fichier « %s ».\n"
 
 #: ../src/file.c:2634
-#, fuzzy
 msgid "\\Error: File format unsupported now."
-msgstr "échec de la mise à jour (format non pris en charge ?)"
+msgstr "Erreur : format de fichier actuellement non pris en charge."
 
 #: ../src/file.c:2644
 msgid "Error: Lyrics not supported for this file format."
-msgstr ""
+msgstr "Erreur : les paroles ne sont pas prises en charge dans ce format de fichier."
 
 #: ../src/file.c:2658
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error: Lyrics not found, file not available (%s).\n"
 "\n"
 msgstr ""
-"Paroles non trouvées : fichier non disponible (%s).\n"
+"Erreur : paroles non trouvées, fichier non disponible (%s).\n"
 "\n"
 
 #: ../src/file.c:2686
 msgid "Error:"
-msgstr ""
+msgstr "Erreur :"
 
 #: ../src/file.c:2704
 #, c-format
