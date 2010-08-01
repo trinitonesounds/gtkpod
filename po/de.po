@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-30 22:21+0100\n"
-"PO-Revision-Date: 2010-07-30 23:19+0100\n"
+"POT-Creation-Date: 2010-08-01 15:33+0100\n"
+"PO-Revision-Date: 2010-08-01 15:33+0100\n"
 "Last-Translator: phantomjinx <phantom_sf@users.sourceforge.net>\n"
 "Language-Team: deutsch <de@li.gtkpod.org>\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,9 @@ msgstr ""
 "X-Poedit-Country: GERMANY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-Basepath: .\n"
+"X-Poedit-KeywordsList: _;N_\n"
 "X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: ../data\n"
 
 #: ../src/sort_window.c:237
 msgid "No sorting"
@@ -419,6 +421,42 @@ msgstr "%s: die Option '-W %s' ist mehrdeutig\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: die Option '-W %s' lässt keine Argumente zu\n"
 
+#: ../src/details.c:82
+msgid "Audio/Video"
+msgstr "Audio/Video"
+
+#: ../src/details.c:83
+msgid "Audio"
+msgstr "Audio"
+
+#: ../src/details.c:84
+msgid "Video"
+msgstr "Video"
+
+#: ../src/details.c:85
+msgid "Podcast"
+msgstr "Podcast"
+
+#: ../src/details.c:86
+msgid "Video Podcast"
+msgstr "Video Podcast"
+
+#: ../src/details.c:87
+msgid "Audiobook"
+msgstr "Hörbuch"
+
+#: ../src/details.c:88
+msgid "Music Video"
+msgstr "Musik Video"
+
+#: ../src/details.c:89
+msgid "TV Show"
+msgstr "Fernsehshow"
+
+#: ../src/details.c:90
+msgid "TV Show & Music Video"
+msgstr "Fernsehshow u. Musik Video"
+
 #: ../src/details.c:862
 #, c-format
 msgid "%s (image data corrupted or unreadable)"
@@ -735,6 +773,299 @@ msgstr ""
 msgid "New iPod"
 msgstr "Neuer iPod"
 
+#: ../src/display_spl.c:64
+msgid "days"
+msgstr "Tage"
+
+#: ../src/display_spl.c:65
+msgid "weeks"
+msgstr "Wochen"
+
+#: ../src/display_spl.c:66
+msgid "months"
+msgstr "Monate"
+
+#: ../src/display_spl.c:73
+msgid "kbps"
+msgstr "kbit/s"
+
+#: ../src/display_spl.c:74
+msgid "Hz"
+msgstr "Hz"
+
+#: ../src/display_spl.c:75
+#: ../src/display_spl.c:179
+msgid "MB"
+msgstr "MB"
+
+#: ../src/display_spl.c:76
+msgid "secs"
+msgstr "Sek."
+
+#: ../src/display_spl.c:83
+#: ../src/display_sorttabs.c:2705
+msgid "Title"
+msgstr "Titel"
+
+#: ../src/display_spl.c:84
+#: ../src/display_sorttabs.c:2696
+msgid "Album"
+msgstr "Album"
+
+#: ../src/display_spl.c:85
+#: ../src/display_sorttabs.c:2693
+msgid "Artist"
+msgstr "Interpret"
+
+#: ../src/display_spl.c:86
+msgid "Bitrate"
+msgstr "Bitrate"
+
+#: ../src/display_spl.c:87
+msgid "Samplerate"
+msgstr "Samplerate"
+
+#: ../src/display_spl.c:88
+#: ../src/display_sorttabs.c:2708
+msgid "Year"
+msgstr "Jahr"
+
+#: ../src/display_spl.c:89
+#: ../src/display_sorttabs.c:2699
+msgid "Genre"
+msgstr "Genre"
+
+#: ../src/display_spl.c:90
+msgid "Kind"
+msgstr "Art"
+
+#: ../src/display_spl.c:91
+msgid "Date modified"
+msgstr "Geändert"
+
+#: ../src/display_spl.c:92
+msgid "Track number"
+msgstr "Stücknummer"
+
+#: ../src/display_spl.c:93
+msgid "Size"
+msgstr "Dateigröße"
+
+#: ../src/display_spl.c:94
+#: ../src/infodlg.c:78
+msgid "Play time"
+msgstr "Spielzeit"
+
+#: ../src/display_spl.c:95
+msgid "Comment"
+msgstr "Kommentar"
+
+#: ../src/display_spl.c:96
+msgid "Date added"
+msgstr "Hinzugefügt"
+
+#: ../src/display_spl.c:97
+msgid "Composer"
+msgstr "Komponist"
+
+#: ../src/display_spl.c:98
+msgid "Playcount"
+msgstr "Wiedergabezähler"
+
+#: ../src/display_spl.c:99
+msgid "Last played"
+msgstr "Zuletzt gespielt"
+
+#: ../src/display_spl.c:100
+msgid "Disc number"
+msgstr "CD-Nummer"
+
+#: ../src/display_spl.c:101
+msgid "Rating"
+msgstr "Bewertung"
+
+#: ../src/display_spl.c:102
+msgid "Compilation"
+msgstr "Sampler"
+
+#: ../src/display_spl.c:103
+msgid "BPM"
+msgstr "BPM"
+
+#: ../src/display_spl.c:104
+msgid "Grouping"
+msgstr "Gruppierung"
+
+#: ../src/display_spl.c:105
+msgid "Playlist"
+msgstr "Wiedergabeliste"
+
+#: ../src/display_spl.c:106
+msgid "Video Kind"
+msgstr "Video Art"
+
+#: ../src/display_spl.c:108
+msgid "Season number"
+msgstr "CD-Nummer"
+
+#: ../src/display_spl.c:109
+msgid "Skip count"
+msgstr "Überspringen"
+
+#: ../src/display_spl.c:110
+msgid "Last skipped"
+msgstr "Zuletzt übersprungen"
+
+#: ../src/display_spl.c:111
+msgid "Album artist"
+msgstr "Album Interpreten"
+
+#: ../src/display_spl.c:117
+msgid "contains"
+msgstr "enthält"
+
+#: ../src/display_spl.c:118
+msgid "does not contain"
+msgstr "enthält nicht"
+
+#: ../src/display_spl.c:119
+#: ../src/display_spl.c:128
+#: ../src/display_spl.c:138
+#: ../src/display_spl.c:157
+#: ../src/display_spl.c:164
+msgid "is"
+msgstr "ist"
+
+#: ../src/display_spl.c:120
+#: ../src/display_spl.c:129
+#: ../src/display_spl.c:139
+#: ../src/display_spl.c:158
+#: ../src/display_spl.c:165
+msgid "is not"
+msgstr "ist nicht"
+
+#: ../src/display_spl.c:121
+msgid "starts with"
+msgstr "beginnt mit"
+
+#: ../src/display_spl.c:122
+msgid "ends with"
+msgstr "endet mit"
+
+#: ../src/display_spl.c:130
+msgid "is greater than"
+msgstr "ist größer als"
+
+#: ../src/display_spl.c:131
+msgid "is less than"
+msgstr "ist kleiner als"
+
+#: ../src/display_spl.c:132
+#: ../src/display_spl.c:144
+msgid "is in the range"
+msgstr "ist innerhalb"
+
+#: ../src/display_spl.c:140
+msgid "is after"
+msgstr "ist nach dem"
+
+#: ../src/display_spl.c:141
+msgid "is before"
+msgstr "ist vor dem"
+
+#: ../src/display_spl.c:142
+msgid "in the last"
+msgstr "in den letzten"
+
+#: ../src/display_spl.c:143
+msgid "not in the last"
+msgstr "nicht in den letzten"
+
+#: ../src/display_spl.c:150
+msgid "is set"
+msgstr "ist gesetzt"
+
+#: ../src/display_spl.c:151
+msgid "is not set"
+msgstr "ist nicht gesetzt"
+
+#: ../src/display_spl.c:171
+msgid "Not supported"
+msgstr "Nicht unterstützt"
+
+#: ../src/display_spl.c:178
+msgid "minutes"
+msgstr "Minuten"
+
+#: ../src/display_spl.c:180
+msgid "tracks"
+msgstr "Stücke"
+
+#: ../src/display_spl.c:181
+msgid "hours"
+msgstr "Stunden"
+
+#: ../src/display_spl.c:182
+msgid "GB"
+msgstr "GB"
+
+#: ../src/display_spl.c:189
+msgid "random order"
+msgstr "zufällige Reihenfolge"
+
+#: ../src/display_spl.c:190
+msgid "title"
+msgstr "Titel"
+
+#: ../src/display_spl.c:191
+msgid "album"
+msgstr "Album"
+
+#: ../src/display_spl.c:192
+msgid "artist"
+msgstr "Interpret"
+
+#: ../src/display_spl.c:193
+msgid "genre"
+msgstr "Genre"
+
+#: ../src/display_spl.c:194
+msgid "most recently added"
+msgstr "zuletzt hinzugefügt"
+
+#: ../src/display_spl.c:195
+msgid "least recently added"
+msgstr "zuerst hinzugefügt"
+
+#: ../src/display_spl.c:196
+msgid "most often played"
+msgstr "am häufigsten gespielt"
+
+#: ../src/display_spl.c:197
+msgid "least often played"
+msgstr "am wenigsten gespielt"
+
+#: ../src/display_spl.c:198
+msgid "most recently played"
+msgstr "zuletzt gespielt"
+
+#: ../src/display_spl.c:199
+msgid "least recently played"
+msgstr "am längsten nicht mehr gespielt"
+
+#: ../src/display_spl.c:200
+msgid "highest rating"
+msgstr "höchste Bewertung"
+
+#: ../src/display_spl.c:201
+msgid "lowest rating"
+msgstr "niedrigste Bewertung"
+
+#: ../src/display_spl.c:208
+#: ../src/display_spl.c:217
+msgid "Movie"
+msgstr "Film"
+
 #: ../src/display_spl.c:1143
 #: ../src/display_spl.c:1158
 msgid "to"
@@ -937,46 +1268,51 @@ msgid "French: Éric Lassauge (rpmfarm at free dot fr)"
 msgstr "Französisch: Éric Lassauge (rpmfarm at free dot fr)"
 
 #: ../src/help.c:108
+#, fuzzy
+msgid "French: Alain Portal (alain.portal at free dot fr)"
+msgstr "Französisch: Éric Lassauge (rpmfarm at free dot fr)"
+
+#: ../src/help.c:109
 msgid "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
 msgstr "Deutsch: Jörg Schuler (jcsjcs at users dot sourceforge dot net)"
 
-#: ../src/help.c:109
+#: ../src/help.c:110
 msgid "German: Kai-Ove"
 msgstr "Deutsch: Kai-Ove Pietsch (kaiovepietsch at yahoo dot de)"
 
-#: ../src/help.c:110
+#: ../src/help.c:111
 msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)"
 msgstr "Hebräisch: Assaf Gillat (gillata at gmail dot com)"
 
-#: ../src/help.c:111
+#: ../src/help.c:112
 msgid "Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot net)"
 msgstr "Italienisch: Edward Matteucci (edward_matteucc at users dot sourceforge dot net)"
 
-#: ../src/help.c:112
+#: ../src/help.c:113
 msgid "Italian: Daniele Forsi (dforsi at gmail dot com)"
 msgstr "Italienisch: Daniele Forsi (dforsi at gmail dot com)"
 
-#: ../src/help.c:113
+#: ../src/help.c:114
 msgid "Japanese: Ayako Sano"
 msgstr "Japanisch: Ayako Sano"
 
-#: ../src/help.c:114
+#: ../src/help.c:115
 msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
 msgstr "Japanisch: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
 
-#: ../src/help.c:115
+#: ../src/help.c:116
 msgid "Romanian: Alex Eftimie (alexeftimie at gmail dot com)"
 msgstr "Rumänisch: Alex Eftimie (alexeftimie at gmail dot com)"
 
-#: ../src/help.c:116
+#: ../src/help.c:117
 msgid "Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
 msgstr "Spanisch: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
 
-#: ../src/help.c:117
+#: ../src/help.c:118
 msgid "Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"
 msgstr "Schwedisch: Stefan Asserhall (stefan asserhall at comhem dot se)"
 
-#: ../src/help.c:122
+#: ../src/help.c:123
 msgid ""
 "This program is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License as\n"
@@ -998,7 +1334,7 @@ msgstr ""
 "Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, dass es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License.\n"
 "Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben. Falls nicht, schreiben Sie an die Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA."
 
-#: ../src/help.c:137
+#: ../src/help.c:138
 #, fuzzy
 msgid ""
 "© 2002-2007\n"
@@ -1009,13 +1345,13 @@ msgstr ""
 "Jörg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 "Corey Donohoe (atmos at atmos dot org)\n"
 
-#: ../src/help.c:142
+#: ../src/help.c:143
 #, c-format
 msgid "(using libgpod %s)"
 msgstr "(verwendet libgpod %s)"
 
-#: ../src/help.c:143
-#: ../src/help.c:148
+#: ../src/help.c:144
+#: ../src/help.c:149
 msgid "Cross-platform multilingual interface to Apple's iPod™"
 msgstr "Plattformübergreifendes, mehrsprachiges Programm für Apples iPod(TM)."
 
@@ -1039,29 +1375,9 @@ msgstr "Alle"
 msgid "Compilations"
 msgstr "Sampler"
 
-#: ../src/display_sorttabs.c:2693
-msgid "Artist"
-msgstr "Interpret"
-
-#: ../src/display_sorttabs.c:2696
-msgid "Album"
-msgstr "Album"
-
-#: ../src/display_sorttabs.c:2699
-msgid "Genre"
-msgstr "Genre"
-
 #: ../src/display_sorttabs.c:2702
 msgid "Comp."
 msgstr "Komp."
-
-#: ../src/display_sorttabs.c:2705
-msgid "Title"
-msgstr "Titel"
-
-#: ../src/display_sorttabs.c:2708
-msgid "Year"
-msgstr "Jahr"
 
 #: ../src/display_sorttabs.c:2711
 msgid "Special"
@@ -1101,9 +1417,229 @@ msgstr "Umbenennen"
 msgid "Abort"
 msgstr "Abbrechen"
 
+#: ../src/prefsdlg.c:51
+msgid "Hide"
+msgstr "Verbergen"
+
+#: ../src/prefsdlg.c:52
+msgid "Icons only"
+msgstr "Nur Symbole"
+
+#: ../src/prefsdlg.c:53
+msgid "Text only"
+msgstr "Nur Text"
+
+#: ../src/prefsdlg.c:54
+msgid "Text under icons"
+msgstr "Text unter Symbolen"
+
+#: ../src/prefsdlg.c:55
+msgid "Text beside icons"
+msgstr "Text neben Symbolen"
+
 #: ../src/prefsdlg.c:588
 msgid "Browse"
 msgstr "Durchsuchen"
+
+#: ../src/charset.c:53
+msgid "Arabic (IBM-864)"
+msgstr "Arabisch (IBM-864)"
+
+#: ../src/charset.c:54
+msgid "Arabic (ISO-8859-6)"
+msgstr "Arabisch (ISO-8859-6)"
+
+#: ../src/charset.c:55
+msgid "Arabic (Windows-1256)"
+msgstr "Arabisch (Windows-1256)"
+
+#: ../src/charset.c:56
+msgid "Baltic (ISO-8859-13)"
+msgstr "Baltisch (ISO-8859-13)"
+
+#: ../src/charset.c:57
+msgid "Baltic (ISO-8859-4)"
+msgstr "Baltisch (ISO-8859-4)"
+
+#: ../src/charset.c:58
+msgid "Baltic (Windows-1257)"
+msgstr "Baltisch (Windows-1257)"
+
+#: ../src/charset.c:59
+msgid "Celtic (ISO-8859-14)"
+msgstr "Keltisch (ISO-8859-14)"
+
+#: ../src/charset.c:60
+msgid "Central European (IBM-852)"
+msgstr "Mitteleuropäisch (IBM-852)"
+
+#: ../src/charset.c:61
+msgid "Central European (ISO-8859-2)"
+msgstr "Mitteleuropäisch (ISO-8859-2)"
+
+#: ../src/charset.c:62
+msgid "Central European (Windows-1250)"
+msgstr "Mitteleuropäisch (Windows-1250)"
+
+#: ../src/charset.c:63
+msgid "Chinese Simplified (GB18030)"
+msgstr "Vereinfachtes Chinesisch (GB18030)"
+
+#: ../src/charset.c:64
+msgid "Chinese Simplified (GB2312)"
+msgstr "Vereinfachtes Chinesisch (GB2312)"
+
+#: ../src/charset.c:65
+msgid "Chinese Traditional (Big5)"
+msgstr "Traditionelles Chinesisch (Big5)"
+
+#: ../src/charset.c:66
+msgid "Chinese Traditional (Big5-HKSCS)"
+msgstr "Traditionelles Chinesisch (Big5-HKSCS)"
+
+#: ../src/charset.c:67
+msgid "Cyrillic (IBM-855)"
+msgstr "Kyrillisch (IBM-855)"
+
+#: ../src/charset.c:68
+msgid "Cyrillic (ISO-8859-5)"
+msgstr "Kyrillisch (ISO-8859-5)"
+
+#: ../src/charset.c:69
+msgid "Cyrillic (ISO-IR-111)"
+msgstr "Kyrillisch (ISO-IR-111)"
+
+#: ../src/charset.c:70
+msgid "Cyrillic (KOI8-R)"
+msgstr "Kyrillisch (KOI8-R)"
+
+#: ../src/charset.c:71
+msgid "Cyrillic (Windows-1251)"
+msgstr "Kyrillisch (Windows-1251)"
+
+#: ../src/charset.c:72
+msgid "Cyrillic/Russian (CP-866)"
+msgstr "Kyrillisch/Russisch (CP-866)"
+
+#: ../src/charset.c:73
+msgid "Cyrillic/Ukrainian (KOI8-U)"
+msgstr "Kyrillisch/Ukrainisch (KOI8-U)"
+
+#: ../src/charset.c:74
+msgid "English (US-ASCII)"
+msgstr "Englisch (US-ASCII)"
+
+#: ../src/charset.c:75
+msgid "Greek (ISO-8859-7)"
+msgstr "Griechisch (ISO-8859-7)"
+
+#: ../src/charset.c:76
+msgid "Greek (Windows-1253)"
+msgstr "Griechisch (Windows-1253)"
+
+#: ../src/charset.c:77
+msgid "Hebrew (IBM-862)"
+msgstr "Hebräisch (IBM-862)"
+
+#: ../src/charset.c:78
+msgid "Hebrew (Windows-1255)"
+msgstr "Hebräisch (Windows-1255)"
+
+#: ../src/charset.c:79
+msgid "Japanese (automatic detection)"
+msgstr "Japanisch (automatische Detektion)"
+
+#: ../src/charset.c:80
+msgid "Japanese (EUC-JP)"
+msgstr "Japanisch (EUC-JP)"
+
+#: ../src/charset.c:81
+msgid "Japanese (ISO-2022-JP)"
+msgstr "Japanisch (ISO-2022-JP)"
+
+#: ../src/charset.c:82
+msgid "Japanese (Shift_JIS)"
+msgstr "Japanisch (Shift_JIS)"
+
+#: ../src/charset.c:83
+msgid "Korean (EUC-KR)"
+msgstr "Koreanisch (EUC-KR)"
+
+#: ../src/charset.c:84
+msgid "Nordic (ISO-8859-10)"
+msgstr "Nordisch (ISO-8859-10)"
+
+#: ../src/charset.c:85
+msgid "South European (ISO-8859-3)"
+msgstr "Südeuropäisch (ISO-8859-3)"
+
+#: ../src/charset.c:86
+msgid "Thai (TIS-620)"
+msgstr "Thai (TIS-620)"
+
+#: ../src/charset.c:87
+msgid "Turkish (IBM-857)"
+msgstr "Türkisch (IBM-857)"
+
+#: ../src/charset.c:88
+msgid "Turkish (ISO-8859-9)"
+msgstr "Türkisch (ISO-8859-9)"
+
+#: ../src/charset.c:89
+msgid "Turkish (Windows-1254)"
+msgstr "Türkisch (Windows-1254)"
+
+#: ../src/charset.c:90
+msgid "Unicode (UTF-7)"
+msgstr "Unicode (UTF-7)"
+
+#: ../src/charset.c:91
+msgid "Unicode (UTF-8)"
+msgstr "Unicode (UTF-8)"
+
+#: ../src/charset.c:92
+msgid "Unicode (UTF-16BE)"
+msgstr "Unicode (UTF-16BE)"
+
+#: ../src/charset.c:93
+msgid "Unicode (UTF-16LE)"
+msgstr "Unicode (UTF-16LE)"
+
+#: ../src/charset.c:94
+msgid "Unicode (UTF-32BE)"
+msgstr "Unicode (UTF-32BE)"
+
+#: ../src/charset.c:95
+msgid "Unicode (UTF-32LE)"
+msgstr "Unicode (UTF-32LE)"
+
+#: ../src/charset.c:96
+msgid "Vietnamese (VISCII)"
+msgstr "Vietnamesisch (VISCII)"
+
+#: ../src/charset.c:97
+msgid "Vietnamese (Windows-1258)"
+msgstr "Vietnamesisch (Windows-1258)"
+
+#: ../src/charset.c:98
+msgid "Visual Hebrew (ISO-8859-8)"
+msgstr "Visuelles Hebräisch (ISO-8859-8)"
+
+#: ../src/charset.c:99
+msgid "Western (IBM-850)"
+msgstr "Westlich (IBM-850)"
+
+#: ../src/charset.c:100
+msgid "Western (ISO-8859-1)"
+msgstr "Westlich (ISO-8859-1)"
+
+#: ../src/charset.c:101
+msgid "Western (ISO-8859-15)"
+msgstr "Westlich (ISO-8859-15)"
+
+#: ../src/charset.c:102
+msgid "Western (Windows-1252)"
+msgstr "Westlich (Windows-1252)"
 
 #: ../src/charset.c:163
 #: ../src/charset.c:173
@@ -1237,6 +1773,78 @@ msgstr "Fotos"
 #: ../src/display_playlists.c:2404
 msgid "Playlists"
 msgstr "Wiedergabelisten"
+
+#: ../src/infodlg.c:53
+msgid ""
+"Total\n"
+"(iPod)"
+msgstr ""
+"Insgesamt\n"
+"(iPod)"
+
+#: ../src/infodlg.c:54
+msgid ""
+"Total\n"
+"(local)"
+msgstr ""
+"Insgesamt\n"
+"(lokal)"
+
+#: ../src/infodlg.c:55
+msgid ""
+"Selected\n"
+"Playlist"
+msgstr ""
+"Ausgewählte\n"
+"Wiedergabeliste"
+
+#: ../src/infodlg.c:56
+msgid ""
+"Displayed\n"
+"Tracks"
+msgstr ""
+"Angezeigte\n"
+"Stücke"
+
+#: ../src/infodlg.c:57
+msgid ""
+"Selected\n"
+"Tracks"
+msgstr ""
+"Ausgewählte\n"
+"Stücke"
+
+#: ../src/infodlg.c:77
+msgid "Number of tracks"
+msgstr "Anzahl der Stücke"
+
+#: ../src/infodlg.c:79
+msgid "File size"
+msgstr "Dateigröße"
+
+#: ../src/infodlg.c:80
+msgid "Number of playlists"
+msgstr "Anzahl der Wiedergabelisten"
+
+#: ../src/infodlg.c:81
+msgid "Deleted tracks"
+msgstr "Gelöschte Stücke"
+
+#: ../src/infodlg.c:82
+msgid "File size (deleted)"
+msgstr "Dateigröße (gelöscht)"
+
+#: ../src/infodlg.c:83
+msgid "Non-transferred tracks"
+msgstr "Nicht übertragene Stücke"
+
+#: ../src/infodlg.c:84
+msgid "File size (non-transferred)"
+msgstr "Dateigröße (nicht übertragen)"
+
+#: ../src/infodlg.c:85
+msgid "Effective free space"
+msgstr "Effektiv freier Platz"
 
 #: ../src/infodlg.c:190
 msgid "n/c"
@@ -1624,6 +2232,10 @@ msgstr "Verlorene Stücke"
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Done."
 msgstr "'%d' verwaiste und '%d' verlorene Dateien gefunden. Fertig."
+
+#: ../src/ipod_init.c:48
+msgid "Select or enter your model"
+msgstr "Modell eingeben oder wählen"
 
 #: ../src/ipod_init.c:362
 #, c-format
@@ -2511,7 +3123,7 @@ msgstr "Fehler beim Schreiben in die Datei '%s'.\n"
 
 #: ../src/file.c:2634
 #, fuzzy
-msgid "\\Error: File format unsupported now."
+msgid "Error: File format unsupported now."
 msgstr "Das Zielbildformat „%1“ wird nicht unterstützt."
 
 #: ../src/file.c:2644
@@ -2579,6 +3191,231 @@ msgstr "  --Einhängepunkt: wie '-m'.\n"
 #, c-format
 msgid "Couldn't create '%s'\n"
 msgstr "Konnte '%s' nicht erstellen\n"
+
+#: ../src/misc_conversion.c:66
+msgid "File type"
+msgstr "Dateityp"
+
+#: ../src/misc_conversion.c:67
+msgid "PC File"
+msgstr "PC Datei"
+
+#: ../src/misc_conversion.c:68
+msgid "iPod File"
+msgstr "iPod Datei"
+
+#: ../src/misc_conversion.c:69
+msgid "iPod ID"
+msgstr "iPod ID"
+
+#: ../src/misc_conversion.c:70
+msgid "Track Nr (#)"
+msgstr "Stück Nr."
+
+#: ../src/misc_conversion.c:71
+msgid "Transferred"
+msgstr "Übertragen"
+
+#: ../src/misc_conversion.c:72
+msgid "File Size"
+msgstr "Dateigröße"
+
+#: ../src/misc_conversion.c:73
+msgid "Play Time"
+msgstr "Spielzeit"
+
+#: ../src/misc_conversion.c:80
+msgid "Date played"
+msgstr "Zuletzt gespielt"
+
+#: ../src/misc_conversion.c:82
+msgid "Volume"
+msgstr "Lautstärke"
+
+#: ../src/misc_conversion.c:83
+msgid "Soundcheck"
+msgstr "Soundcheck"
+
+#: ../src/misc_conversion.c:85
+msgid "CD Nr"
+msgstr "CD Nr."
+
+#: ../src/misc_conversion.c:88
+msgid "Category"
+msgstr "Kategorie"
+
+#: ../src/misc_conversion.c:89
+msgid "Description"
+msgstr "Beschreibung"
+
+#: ../src/misc_conversion.c:90
+msgid "Podcast URL"
+msgstr "Podcast-URL"
+
+#: ../src/misc_conversion.c:91
+msgid "Podcast RSS"
+msgstr "Podcast RSS"
+
+#: ../src/misc_conversion.c:92
+msgid "Subtitle"
+msgstr "Untertitel"
+
+#: ../src/misc_conversion.c:93
+msgid "Date released"
+msgstr "Veröffentlichungsdatum"
+
+#: ../src/misc_conversion.c:94
+msgid "Checked"
+msgstr "Ausgewählt"
+
+#: ../src/misc_conversion.c:95
+msgid "Start time"
+msgstr "Start"
+
+#: ../src/misc_conversion.c:96
+msgid "Stop time"
+msgstr "Stopp"
+
+#: ../src/misc_conversion.c:97
+msgid "Remember Playback Position"
+msgstr "Wiedergabeposition merken"
+
+#: ../src/misc_conversion.c:98
+msgid "Skip when Shuffling"
+msgstr "Beim Shuffling überspringen"
+
+#: ../src/misc_conversion.c:99
+msgid "Artwork Path"
+msgstr "Pfad zu Bilddateien"
+
+#: ../src/misc_conversion.c:100
+msgid "Media Type"
+msgstr "Medientyp"
+
+#: ../src/misc_conversion.c:102
+msgid "TV Episode"
+msgstr "TV Episode"
+
+#: ../src/misc_conversion.c:103
+msgid "TV Network"
+msgstr "TV Netzwerk"
+
+#: ../src/misc_conversion.c:104
+msgid "Season Nr"
+msgstr "Staffel Nr."
+
+#: ../src/misc_conversion.c:105
+msgid "Episode Nr"
+msgstr "Folge Nr."
+
+#: ../src/misc_conversion.c:106
+msgid "Album Artist"
+msgstr "Album Interpreten"
+
+#: ../src/misc_conversion.c:107
+msgid "Sort Artist"
+msgstr "Sortiere Interpreten"
+
+#: ../src/misc_conversion.c:108
+msgid "Sort Title"
+msgstr "Sortiere Titel"
+
+#: ../src/misc_conversion.c:109
+msgid "Sort Album"
+msgstr "Sortiere Alben"
+
+#: ../src/misc_conversion.c:110
+msgid "Sort Album Artist"
+msgstr "Sortiere Album Interpreten"
+
+#: ../src/misc_conversion.c:111
+msgid "Sort Composer"
+msgstr "Sortiere Komponisten"
+
+#: ../src/misc_conversion.c:112
+msgid "Sort TV Show"
+msgstr "Sortiere Fernsehshows"
+
+#: ../src/misc_conversion.c:113
+msgid "Gapless Track Flag"
+msgstr "Unterbrechungsfreie Stücke"
+
+#: ../src/misc_conversion.c:114
+msgid "Lyrics"
+msgstr "Texte"
+
+#: ../src/misc_conversion.c:127
+msgid "Name of file on PC, if available"
+msgstr "Dateiname auf dem PC, falls verfügbar"
+
+#: ../src/misc_conversion.c:128
+msgid "Name of file on the iPod"
+msgstr "Name der Datei auf dem iPod"
+
+#: ../src/misc_conversion.c:130
+msgid "Track Nr. and total number of tracks on CD"
+msgstr "Stück-Nr. und Gesamtzahl der Stücke auf der CD"
+
+#: ../src/misc_conversion.c:131
+msgid "Whether the file has already been transferred to the iPod or not"
+msgstr "Ungeachtet, ob die Datei bereits zum iPod übertragen wurde oder nicht."
+
+#: ../src/misc_conversion.c:137
+msgid "Beats per minute"
+msgstr "Beats pro Minute"
+
+#: ../src/misc_conversion.c:138
+msgid "Number of times the track has been played"
+msgstr "Wie oft dieses Stück bereits gespielt wurde"
+
+#: ../src/misc_conversion.c:139
+msgid "Star rating from 0 to 5"
+msgstr "Bewertung mit 0 bis 5 Sternen"
+
+#: ../src/misc_conversion.c:140
+msgid "Date and time track has been added"
+msgstr "Zeitpunkt zu dem das Stück hinzugefügt wurde"
+
+#: ../src/misc_conversion.c:141
+msgid "Date and time track has last been played"
+msgstr "Zeitpunkt des letzten Abspielens des Stücks"
+
+#: ../src/misc_conversion.c:142
+msgid "Date and time track has last been modified"
+msgstr "Zeitpunkt der letzten Modifikation des Stücks"
+
+#: ../src/misc_conversion.c:143
+msgid "Manual volume adjust"
+msgstr "Manuelle Lautstärkeanpassung"
+
+#: ../src/misc_conversion.c:144
+msgid "Volume adjust in dB (replay gain) -- you need to activate 'soundcheck' on the iPod"
+msgstr "Lautstärkeanpassung in dB (replay gain) -- 'Soundcheck' muss auf dem iPod aktiviert sein"
+
+#: ../src/misc_conversion.c:147
+msgid "CD Nr. and total number of CDS in set"
+msgstr "CD-Nummer und Gesamtzahl der CDs im Set"
+
+#: ../src/misc_conversion.c:150
+msgid "The category (e.g. 'Technology' or 'Music') where the podcast was located."
+msgstr "Die Kategorie (z.B. 'Technologie' oder 'Musik') in die das Podcast eingeordnet war."
+
+#: ../src/misc_conversion.c:151
+msgid "Accessible by selecting the center button on the iPod."
+msgstr "Wird angezeigt, wenn der mittlere Knopf auf dem iPod gedrückt wird."
+
+#: ../src/misc_conversion.c:155
+msgid "Release date (for podcasts displayed next to the title on the iPod)"
+msgstr "Veröffentlichungsdatum (wird bei Podcasts auf dem iPod neben dem Titel angezeigt)"
+
+#: ../src/misc_conversion.c:169
+#: ../src/misc_conversion.c:170
+#: ../src/misc_conversion.c:171
+#: ../src/misc_conversion.c:172
+#: ../src/misc_conversion.c:173
+#: ../src/misc_conversion.c:174
+msgid "Used for sorting on the iPod"
+msgstr "Benutzt zum ordnen auf dem iPod"
 
 #: ../src/misc_conversion.c:737
 #, c-format
@@ -2713,14 +3550,6 @@ msgid "kB"
 msgstr "kB"
 
 #: ../src/info.c:788
-msgid "MB"
-msgstr "MB"
-
-#: ../src/info.c:788
-msgid "GB"
-msgstr "GB"
-
-#: ../src/info.c:788
 msgid "TB"
 msgstr "TB"
 
@@ -2853,1253 +3682,1608 @@ msgstr "Fehler beim Schreiben des Tags in Datei: '%s' (%s).\n"
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr "Die Datei '%s' hat Null Spielzeit und wird ignoriert.\n"
 
+#: ../data/gtkpod.glade.h:1
+msgid " "
+msgstr " "
+
+#: ../data/gtkpod.glade.h:2
+msgid "    "
+msgstr "    "
+
+#: ../data/gtkpod.glade.h:3
+msgid " <= cts <= "
+msgstr " <= num <= "
+
+#: ../data/gtkpod.glade.h:4
+msgid "'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when finished."
+msgstr "z.B. 'TT/MM/JJJJ SS:MM < d < TT/MM/JJJJ SS:MM' oder ähnliches. Nach der Eingabe bitte 'Return' drücken."
+
+#: ../data/gtkpod.glade.h:5
+msgid "(Checked)"
+msgstr "(Gewählt)"
+
+#: ../data/gtkpod.glade.h:6
+msgid "0"
+msgstr "0"
+
+#: ../data/gtkpod.glade.h:7
+msgid "1"
+msgstr "1"
+
+#: ../data/gtkpod.glade.h:8
+msgid "2"
+msgstr "2"
+
+#: ../data/gtkpod.glade.h:9
+msgid "3"
+msgstr "3"
+
+#: ../data/gtkpod.glade.h:10
+msgid "4"
+msgstr "4"
+
+#: ../data/gtkpod.glade.h:11
+msgid "5"
+msgstr "5"
+
+#: ../data/gtkpod.glade.h:12
+msgid ":"
+msgstr ":"
+
+#: ../data/gtkpod.glade.h:13
+#, fuzzy
+msgid "<"
+msgstr "<"
+
+#: ../data/gtkpod.glade.h:14
+msgid "<b>Advanced Options</b>"
+msgstr "<b>Weitere Optionen</b>"
+
+#: ../data/gtkpod.glade.h:15
+msgid "<b>Ascending</b>"
+msgstr "<b>Aufsteigend</b>"
+
+#: ../data/gtkpod.glade.h:16
+msgid "<b>Auto Store</b>"
+msgstr "<b>Autom. speichern</b>"
+
+#: ../data/gtkpod.glade.h:17
+msgid "<b>Auto-Generated Playlists</b>"
+msgstr "<b>Automatisch erzeugte Wiedergabelisten</b>"
+
+#: ../data/gtkpod.glade.h:18
+msgid "<b>Available Columns</b>"
+msgstr "<b>Verfügbare Spalten</b>"
+
+#: ../data/gtkpod.glade.h:19
+msgid "<b>Compatible Formats</b>"
+msgstr "<b>Kompatible Formate</b>"
+
+#: ../data/gtkpod.glade.h:20
+msgid "<b>Conversion Settings</b>"
+msgstr "<b>Konvertierungseinstellungen</b>"
+
+#: ../data/gtkpod.glade.h:21
+msgid "<b>Cover Art Display</b>"
+msgstr "<b>Cover-Bild</b>"
+
+#: ../data/gtkpod.glade.h:22
+msgid "<b>Cover Art</b>"
+msgstr "<b>Cover-Bild</b>"
+
+#: ../data/gtkpod.glade.h:23
+msgid "<b>Deletion Confirmation Messages</b>"
+msgstr "<b>Sicherheitsabfrage beim Löschen</b>"
+
+#: ../data/gtkpod.glade.h:24
+msgid "<b>Descending</b>"
+msgstr "<b>Absteigend</b>"
+
+#: ../data/gtkpod.glade.h:25
+msgid "<b>Displayed Columns</b>"
+msgstr "<b>Angezeigte Spalten</b>"
+
+#: ../data/gtkpod.glade.h:26
+msgid "<b>Filter Tabs</b>"
+msgstr "<b>Filtereinträge</b>"
+
+#: ../data/gtkpod.glade.h:27
+msgid "<b>General Options</b>"
+msgstr "<b>Allgemeine Einstellungen</b>"
+
+#: ../data/gtkpod.glade.h:28
+msgid "<b>General</b>"
+msgstr "<b>Allgemein</b>"
+
+#: ../data/gtkpod.glade.h:29
+msgid "<b>Ignore Frequent Words</b>"
+msgstr "<b>Ignoriere oft verwendete Wörter</b>"
+
+#: ../data/gtkpod.glade.h:30
+msgid "<b>Import and Synchronization</b>"
+msgstr "<b>Import und Abgleich</b>"
+
+#: ../data/gtkpod.glade.h:31
+msgid "<b>Incompatible Formats</b>"
+msgstr "<b>Inkompatible Formate</b>"
+
+#: ../data/gtkpod.glade.h:32
+msgid "<b>Information Messages</b>"
+msgstr "<b>Informelle Nachrichten</b>"
+
+#: ../data/gtkpod.glade.h:33
+msgid "<b>Lower Margin</b>"
+msgstr "<b>Untere Grenze</b>"
+
+#: ../data/gtkpod.glade.h:34
+msgid "<b>None</b>"
+msgstr "<b>---</b>"
+
+#: ../data/gtkpod.glade.h:35
+#, fuzzy
+msgid "<b>Offset to add to ReplayGain</b>"
+msgstr "Stadt zur Liste hinzufügen"
+
+#: ../data/gtkpod.glade.h:36
+msgid "<b>On-the-fly Conversion</b>"
+msgstr "<b>Konvertierung ohne Zwischenspeicherung</b>"
+
+#: ../data/gtkpod.glade.h:37
+msgid "<b>Playback</b>"
+msgstr "<b>Wiedergabe</b>"
+
+#: ../data/gtkpod.glade.h:38
+msgid "<b>Playlist Options</b>"
+msgstr "<b>Optionen Wiedergabeliste(n)</b>"
+
+#: ../data/gtkpod.glade.h:39
+msgid "<b>Please select mountpoint and your iPod model</b>"
+msgstr "<b>Bitte Einhängepunkt und iPod Modell wählen</b>"
+
+#: ../data/gtkpod.glade.h:40
+#, fuzzy
+msgid "<b>Preferred gain type</b>"
+msgstr "nach Typ filtern:"
+
+#: ../data/gtkpod.glade.h:41
+msgid "<b>Rules</b>"
+msgstr "<b>Regeln</b>"
+
+#: ../data/gtkpod.glade.h:42
+msgid "<b>Sort Order</b>"
+msgstr "<b>Sortier-Reihenfolge</b>"
+
+#: ../data/gtkpod.glade.h:43
+msgid "<b>Synchronization</b>"
+msgstr "<b>Abgleich</b>"
+
+#: ../data/gtkpod.glade.h:44
+msgid "<b>Tag Editing</b>"
+msgstr "<b>Tags (Zusatzinformationen) bearbeiten</b>"
+
+#: ../data/gtkpod.glade.h:45
+msgid "<b>Tags</b>"
+msgstr "<b>Tags (Zusatzinformationen)</b>"
+
+#: ../data/gtkpod.glade.h:46
+msgid "<b>Toolbar Style</b>"
+msgstr "<b>Stil Werkzeugleiste</b>"
+
+#: ../data/gtkpod.glade.h:47
+msgid "<b>Tooltips</b>"
+msgstr "<b>Werkzeugtipps</b>"
+
+#: ../data/gtkpod.glade.h:48
+msgid "<b>Upper Margin</b>"
+msgstr "<b>Obere Grenze</b>"
+
+#: ../data/gtkpod.glade.h:49
+msgid "<b>Volume Normalization</b>"
+msgstr "<b>Lautstärkenormalisierung</b>"
+
+#: ../data/gtkpod.glade.h:50
+msgid "<b>When Attempting to Add an Existing Track</b>"
+msgstr "<b>Falls versucht wird, ein existierendes Stück hinzuzufügen</b>"
+
+#: ../data/gtkpod.glade.h:51
+msgid "<b>gtkpod Options</b>"
+msgstr "<b>gtkpod Optionen</b>"
+
+#: ../data/gtkpod.glade.h:52
+msgid "<b>mserv Settings</b>"
+msgstr "<b>mserv Einstellungen</b>"
+
+#: ../data/gtkpod.glade.h:53
+msgid "<b>mserv</b>"
+msgstr "<b>mserv</b>"
+
+#: ../data/gtkpod.glade.h:54
+msgid "<i>aacgain</i> executable:"
+msgstr "<i>aacgain</i> Programm:"
+
+#: ../data/gtkpod.glade.h:55
+msgid "<i>mp3gain</i> executable:"
+msgstr "<i>mp3gain</i> Programm:"
+
+#: ../data/gtkpod.glade.h:56
+msgid "<span weight=\"bold\" size=\"larger\">Please specify a time interval</span>"
+msgstr "<span weight=\"bold\" size=\"larger\">Bitte Zeitintervall angeben</span>"
+
+#: ../data/gtkpod.glade.h:57
+msgid "<span weight='bold' size='larger'>No playlist selected</span>"
+msgstr "<span weight='bold' size='larger'>Keine Wiedergabeliste gewählt</span>"
+
+#: ../data/gtkpod.glade.h:58
+msgid ">"
+msgstr ">"
+
+#: ../data/gtkpod.glade.h:59
+msgid "About unupdated tracks"
+msgstr "Informationen über nicht aktualisierte Stücke"
+
+#: ../data/gtkpod.glade.h:60
+msgid "About updated tracks"
+msgstr "Informationen über aktualisierte Stücke"
+
+#: ../data/gtkpod.glade.h:61
+msgid "Add Column"
+msgstr "Spalte hinzufügen"
+
+#: ../data/gtkpod.glade.h:62
+msgid "Add Directories Recursively"
+msgstr "Verzeichnisse rekursiv hinzufügen"
+
+#: ../data/gtkpod.glade.h:63
+msgid "Add Files"
+msgstr "Dateien hinzufügen"
+
+#: ../data/gtkpod.glade.h:64
+msgid "Add Files or Directories"
+msgstr "Dateien oder Verzeichnisse hinzufügen."
+
+#: ../data/gtkpod.glade.h:65
+msgid "Add Fol_der"
+msgstr "Or_dner hinzufügen"
+
+#: ../data/gtkpod.glade.h:67
+msgid "Add Image_s"
+msgstr "Bilder hinzufügen"
+
+#: ../data/gtkpod.glade.h:68
+msgid "Add Images from a Directory"
+msgstr "Bilder aus einem Verzeichnis hinzufügen."
+
+#: ../data/gtkpod.glade.h:69
+msgid "Add Playlist"
+msgstr "Wiedergabeliste hinzufügen"
+
+#: ../data/gtkpod.glade.h:70
+msgid "Add _Files"
+msgstr "Dateien hinzu_fügen"
+
+#: ../data/gtkpod.glade.h:71
+msgid "Add _Playlist"
+msgstr "_Wiedergabeliste hinzufügen"
+
+#: ../data/gtkpod.glade.h:72
+msgid "Add cover art using file name template"
+msgstr "Cover-Bild nach Vorlage aus Dateinamen hinzufügen"
+
+#: ../data/gtkpod.glade.h:73
+msgid "Add file masks to be excluded from import and synchronization, for example, <i>*.mp3</i>."
+msgstr "Dateimasken angeben, die vom Import u. Abgleich ausgeschlossen werden sollen, z.B. <i>*.mp3</i>."
+
+#: ../data/gtkpod.glade.h:74
+msgid "Add new repository/iPod..."
+msgstr "Verzeichnis oder iPod hinzufügen"
+
+#: ../data/gtkpod.glade.h:75
+msgid "Add playlist from file"
+msgstr "Wiedergabeliste aus Datei hinzufügen"
+
+#: ../data/gtkpod.glade.h:76
+msgid "Add subfolders recursively"
+msgstr "Unterverzeichnisse rekursiv hinzufügen"
+
+#: ../data/gtkpod.glade.h:77
+msgid "Added:"
+msgstr "Hinzugefügt:"
+
+#: ../data/gtkpod.glade.h:79
+msgid "Album Art"
+msgstr "Albumbild"
+
+#: ../data/gtkpod.glade.h:80
+msgid "Album gain (formerly \"audiophile gain\")"
+msgstr ""
+
+#: ../data/gtkpod.glade.h:81
+msgid "All (AND)"
+msgstr "Alle (UND)"
+
+#: ../data/gtkpod.glade.h:82
+msgid "All Tracks Never Listened To"
+msgstr "Alle nie gehörten Stücke"
+
+#: ../data/gtkpod.glade.h:83
+msgid "All Tracks Played Since Last Time"
+msgstr "Seit dem letzten Mal gespielte Stücke"
+
+#: ../data/gtkpod.glade.h:84
+msgid "All Tracks not Listed in any Playlist"
+msgstr "In keiner Wiedergabeliste aufgeführte Stücke"
+
+#: ../data/gtkpod.glade.h:85
+msgid "Allow duplicate files"
+msgstr "Duplikate erlauben"
+
+#: ../data/gtkpod.glade.h:86
+msgid "Also use this encoding when updating or synchronizing tracks"
+msgstr "Diese Kodierung auch beim Abgleich oder Aktualisierung von Stücken anwenden"
+
+#: ../data/gtkpod.glade.h:87
+msgid "Also use this encoding when writing tracks"
+msgstr "Diese Kodierung auch beim Speichern von Stücken anwenden"
+
+#: ../data/gtkpod.glade.h:88
+msgid "Any (OR)"
+msgstr "Eines (ODER)"
+
+#: ../data/gtkpod.glade.h:89
+msgid ""
+"Any rules\n"
+"All rules\n"
+"Ignore rules"
+msgstr ""
+"Jede Regel\n"
+"Alle Regeln\n"
+"Regeln ignorieren"
+
+#: ../data/gtkpod.glade.h:93
+msgid "Artwork Preview"
+msgstr "Bildvorschau"
+
+#: ../data/gtkpod.glade.h:94
+msgid "Automatically generate video thumbnails"
+msgstr "Videovorschaubilder automatisch erzeugen"
+
+#: ../data/gtkpod.glade.h:95
+msgid "Automatically start displaying tracks that match the criteria entered above. If not selected, you must press 'Display' to start displaying."
+msgstr "Die Anzeige der Stücke, welche die oben genannten Kriterien erfüllen, automatisch starten. Wenn diese Option nicht aktiviert ist, müssen Sie 'Anzeige' drücken."
+
+#: ../data/gtkpod.glade.h:96
+msgid "Background color"
+msgstr "Hintergrundfarbe"
+
+#: ../data/gtkpod.glade.h:97
+msgid "Best Rated Tracks"
+msgstr "Am besten bewertete Stücke"
+
+#: ../data/gtkpod.glade.h:98
+msgid "Bottom"
+msgstr "Unten"
+
+#: ../data/gtkpod.glade.h:100
+msgid "Browse..."
+msgstr "Durchsuche..."
+
+#: ../data/gtkpod.glade.h:101
+msgid "Cache folder:"
+msgstr "Verzeichnis für Zwischenspeicherung:"
+
+#: ../data/gtkpod.glade.h:102
+msgid "Calendar"
+msgstr "Kalender"
+
+#: ../data/gtkpod.glade.h:103
+msgid "Calendar sync command:"
+msgstr "Befehl zum Abgleich des Kalenders:"
+
+#: ../data/gtkpod.glade.h:104
+msgid "Call automatically when synchronizing iTunesDB"
+msgstr "Automatisch aufrufen, wenn die iTunesDB abgeglichen wird"
+
+#: ../data/gtkpod.glade.h:105
+msgid "Case sensitive sorting"
+msgstr "Groß-/Kleinschreibung beim sortieren beachten "
+
+#: ../data/gtkpod.glade.h:106
+msgid "Category:"
+msgstr "Kategorie:"
+
+#: ../data/gtkpod.glade.h:107
+msgid ""
+"Change all tracks\n"
+"simultaneously"
+msgstr ""
+"Alle Stücke simultan \n"
+"modifizieren"
+
+#: ../data/gtkpod.glade.h:109
+msgid "Check for existing files when copying from iPod."
+msgstr "Bei Kopieren vom iPod Überprüfen, ob Datei bereits existiert."
+
+#: ../data/gtkpod.glade.h:110
+msgid "Choose a Different Colour for the CoverArt Display Background"
+msgstr "Andere Farbe für den Bildhintergrund wählen"
+
+#: ../data/gtkpod.glade.h:111
+msgid "Command for \"Enqueue\":"
+msgstr "Befehl für 'Zum Abspielen vormerken':"
+
+#: ../data/gtkpod.glade.h:112
+msgid "Command for \"Play now\":"
+msgstr "Befehl für 'Jetzt abspielen':"
+
+#: ../data/gtkpod.glade.h:113
+msgid "Commands..."
+msgstr "Befehle..."
+
+#: ../data/gtkpod.glade.h:115
+msgid "Confirm before removing tracks from the iPod or repository"
+msgstr "Bestätigung vor dem vollständigen Löschen vom iPod oder aus dem Verzeichnis"
+
+#: ../data/gtkpod.glade.h:116
+msgid "Confirm deletion of playlists or tracks from a playlist"
+msgstr "Löschen von Wiedergabelisten oder Stücken aus einer Wiedergabeliste bestätigen"
+
+#: ../data/gtkpod.glade.h:117
+msgid "Confirm deletion of tracks during synchronization"
+msgstr "Löschen von Stücken während des Abgleichs bestätigen"
+
+#: ../data/gtkpod.glade.h:118
+msgid "Confirm deletion of tracks:"
+msgstr "Löschen von Stücken bestätigen"
+
+#: ../data/gtkpod.glade.h:119
+msgid "Contacts sync command:"
+msgstr "Befehl zum Abgleich der Kontakte:"
+
+#: ../data/gtkpod.glade.h:120
+msgid "Containing Displayed Tracks"
+msgstr "Nur aus den angezeigten Stücken"
+
+#: ../data/gtkpod.glade.h:121
+msgid "Containing Selected Tracks"
+msgstr "Nur aus den ausgewählten Stücken"
+
+#: ../data/gtkpod.glade.h:122
+msgid "Conversion Preferences"
+msgstr "Voreinstellungen Konvertierung"
+
+#: ../data/gtkpod.glade.h:123
+msgid "Conversion Progress Display"
+msgstr "Anzeige Konvertierungsfortschritt"
+
+#: ../data/gtkpod.glade.h:124
+msgid "Conversion Settings..."
+msgstr "Konvertierungseinstellungen"
+
+#: ../data/gtkpod.glade.h:125
+msgid "Convert AAC (M4A)"
+msgstr "Konvertiere AAC (M4A)"
+
+#: ../data/gtkpod.glade.h:126
+msgid "Convert FLAC"
+msgstr "Konvertiere FLAC"
+
+#: ../data/gtkpod.glade.h:127
+msgid "Convert MP3"
+msgstr "Konvertiere MP3"
+
+#: ../data/gtkpod.glade.h:128
+msgid "Convert Ogg Vorbis"
+msgstr "Konvertiere Ogg Vorbis"
+
+#: ../data/gtkpod.glade.h:129
+msgid "Convert WAV"
+msgstr "Konvertiere WAV"
+
+#: ../data/gtkpod.glade.h:130
+msgid "Convert compatible formats to a single format"
+msgstr "Konvertiere kompatible Formate in ein einzelnes Format"
+
+#: ../data/gtkpod.glade.h:131
+msgid "Convert incompatible music formats to:"
+msgstr "Konvertiere inkompatible Formate in:"
+
+#: ../data/gtkpod.glade.h:132
+msgid "Cover"
+msgstr "Cover"
+
+#: ../data/gtkpod.glade.h:133
+msgid "Cover Art Search Preferences"
+msgstr "Voreinstellungen Cover-Bild Suche"
+
+#: ../data/gtkpod.glade.h:134
+msgid "Cover art file pattern:"
+msgstr "Cover-Bild Dateimuster:"
+
+#: ../data/gtkpod.glade.h:135
+msgid "Create New Playlist"
+msgstr "Neue Wiedergabeliste erstellen"
+
+#: ../data/gtkpod.glade.h:136
+msgid "Create Repository"
+msgstr "Erstelle Verzeichnis"
+
+#: ../data/gtkpod.glade.h:137
+msgid "Create _Playlist File"
+msgstr "_Erstelle Datei der Wiedergabeliste"
+
+#: ../data/gtkpod.glade.h:138
+msgid "Customize..."
+msgstr "Anpassen..."
+
+#: ../data/gtkpod.glade.h:139
+msgid "Delete Repository"
+msgstr "Verzeichnis löschen"
+
+#: ../data/gtkpod.glade.h:140
+msgid "Delete missing tracks from the iPod or repository"
+msgstr "Löschen fehlende Stücke vom iPod oder aus dem Verzeichnis"
+
+#: ../data/gtkpod.glade.h:141
+msgid "Delete missing tracks when synchronizing playlists"
+msgstr "Lösche fehlende Stücke beim Abgleich der Wiedergabelisten"
+
+#: ../data/gtkpod.glade.h:142
+msgid "Details"
+msgstr "Details"
+
+#: ../data/gtkpod.glade.h:144
+#, no-c-format
+msgid "Determines how the string for the info field should be constructed, e.g '%a/%A/%T - %t.mp3' or '%o'.  You can separate several templates by semicolons -- gtkpod will determine which one to use by the filename extension given. Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, year: %Y, original filename (requires extended information file): %o, the character '%': %%."
+msgstr "Bestimmt, wie der Text des Info-Feldes erstellt werden soll, z.B. '%a/%A/%T - %t.mp3' oder '%o'. Mehrere Schablonen können durch Semikolons getrennt werden -- gtkpod ermittelt die passende Schablone anhand des Dateinamensuffix. Interpret: %a, Album: %A, Komponist: %c, Titel: %t, Musikrichtung: %G, Stück-Nr.: %T, CD-Nr.: %C, Jahr: %Y,  ursprünglicher Dateiname (benötigt 'Erweiterte Informationen'): %o, das Zeichen '%': %%."
+
+#: ../data/gtkpod.glade.h:146
+#, no-c-format
+msgid "Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t.mp3' or '%o'.  You can separate several patterns by semicolons -- gtkpod will determine which one to use by the filename extension given. Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, year: %Y, original filename (requires extended information file): %o, current playlist: %p, the character '%': %%."
+msgstr "Bestimmt, wie der Dateiname von Stücken gewählt wird, die vom iPod kopiert werden. Bsp.: '%a/%A/%T - %t.mp3' oder '%o'. Mehrere Schablonen können durch Semikolons getrennt werden -- gtkpod ermittelt die passende Schablone anhand des Dateinamensuffix. Interpret: %a, Album: %A, Komponist: %c, Titel: %t, Musikrichtung: %G, Stück-Nr.: %T, CD-Nr.: %C, Jahr: %Y,  ursprünglicher Dateiname (benötigt 'Erweiterte Informationen'): %o, die aktuelle Wiedergabeliste: %p, das Zeichen '%': %%."
+
+#: ../data/gtkpod.glade.h:147
+msgid "Directories to sync with are determined from the filenames of the tracks in the playlist."
+msgstr "Abzugleichende Verzeichnisse werden aus den Dateinamen der Wiedergabeliste ermittelt."
+
+#: ../data/gtkpod.glade.h:148
+msgid "Display"
+msgstr "Anzeige"
+
+#: ../data/gtkpod.glade.h:149
+msgid "Display conversion log"
+msgstr "Zeige Konvertierungsprotokoll"
+
+#: ../data/gtkpod.glade.h:150
+msgid "Display information about detected duplicate files"
+msgstr "Information über erkannte Duplikate anzeigen"
+
+#: ../data/gtkpod.glade.h:151
+msgid "Display messages and warnings at startup"
+msgstr "Nachrichten und Warnungen beim Start des Programms anzeigen"
+
+#: ../data/gtkpod.glade.h:152
+msgid "Display synchronization results"
+msgstr "Protokoll des Dateiabgleichs anzeigen"
+
+#: ../data/gtkpod.glade.h:153
+msgid "Display tooltips in main window"
+msgstr "Werkzeugtipps im Hauptfenster anzeigen"
+
+#: ../data/gtkpod.glade.h:154
+msgid "Display tracks that match the criteria entered above."
+msgstr "Stücke anzeigen, welche die oben genannten Kriterien erfüllen."
+
+#: ../data/gtkpod.glade.h:155
+msgid "Don't automatically sync on startup"
+msgstr "Beim Start nicht automatisch abgleichen"
+
+#: ../data/gtkpod.glade.h:158
+msgid "Empty Playlist"
+msgstr "Wiedergabeliste leeren"
+
+#: ../data/gtkpod.glade.h:159
+msgid "Encoding Preferences"
+msgstr "Kodierungsvoreinstellugen"
+
+#: ../data/gtkpod.glade.h:160
+msgid "Encoding..."
+msgstr "Kodiere..."
+
+#: ../data/gtkpod.glade.h:161
+msgid "Excluded files..."
+msgstr "Ausgeschlossene Dateien..."
+
+#: ../data/gtkpod.glade.h:162
+msgid "Exclusions List"
+msgstr "Ausgeschlossene Stücke"
+
+#: ../data/gtkpod.glade.h:163
+msgid "Expand columns beyond the track list width"
+msgstr "Spalten über Stücklistenbreite hinaus erweitern"
+
+#: ../data/gtkpod.glade.h:164
+msgid "Export can be continued at a later time if canceled."
+msgstr "Der Export kann später fortgesetzt werden, falls er abgebrochen wird."
+
+#: ../data/gtkpod.glade.h:165
+msgid "Feedback"
+msgstr "Rückmeldungen"
+
+#: ../data/gtkpod.glade.h:166
+msgid "Filename Parse Preferences"
+msgstr "Voreinstellungen für Dateinamen"
+
+#: ../data/gtkpod.glade.h:167
+msgid "Filename format: "
+msgstr "Format für Dateinamen: "
+
+#: ../data/gtkpod.glade.h:168
+msgid "Filename parse pattern:"
+msgstr "Muster für Dateinamen: "
+
+#: ../data/gtkpod.glade.h:169
+msgid "Filter tab:"
+msgstr "Filtereintrag:"
+
+#: ../data/gtkpod.glade.h:170
+msgid "Filter tabs"
+msgstr "Filtereinträge"
+
+#: ../data/gtkpod.glade.h:171
+msgid "Filter:"
+msgstr "Filter:"
+
+#: ../data/gtkpod.glade.h:172
+msgid "Find orphan files (files with no track info in DB) and dangling tracks (tracks with no corresponding files on iPod)"
+msgstr "Verwaiste Stücke (ohne Eintrag in der iTunesDB) und verlorene Stücke (ohne Datei auf dem iPod) finden"
+
+#: ../data/gtkpod.glade.h:173
+msgid "From the hard disk"
+msgstr "Von der Festplatte"
+
+#: ../data/gtkpod.glade.h:174
+msgid "From the iPod"
+msgstr "Vom iPod"
+
+#: ../data/gtkpod.glade.h:175
+msgid "From the local database"
+msgstr "Aus der lokalen Datenbank"
+
+#: ../data/gtkpod.glade.h:178
+msgid "Get Help _Online"
+msgstr "_Online Hilfe"
+
+#: ../data/gtkpod.glade.h:179
+msgid "Group artist filter tab by compilation CDs"
+msgstr "Filtereintrag \"Interpret\" nach Sampler-CDs gruppieren"
+
+#: ../data/gtkpod.glade.h:180
+msgid "If available, the local copy of the track is referenced in the playlist. Otherwise the file on the iPod is used."
+msgstr "Falls verfügbar, wird die lokale Kopie des Stückes in die Wiedergabeliste eingetragen. Andernfalls wird die Datei auf dem iPod verwendet."
+
+#: ../data/gtkpod.glade.h:181
+msgid "If checked, sorting will be case sensitive. Please note that case sensitive sorting will not work well with most charsets."
+msgstr "Wenn diese Option aktiviert ist, wird beim Sortieren die Groß-/Kleinschreibung beachtet. Mit den meisten Zeichensätzen funktioniert dies jedoch nicht wie gewünscht."
+
+#: ../data/gtkpod.glade.h:182
+msgid "If you check this, information (cover art and meta information) changed for this track will be copied to all other selected tracks as well. Use with care."
+msgstr "Falls diese Option gewählt wird, werden alle Änderungen für dieses Stück (Cover und sonstige Angaben) automatisch in alle ausgewählten Stücke kopiert. Bitte mit Vorsicht verwenden."
+
+#: ../data/gtkpod.glade.h:183
+msgid "Ignore these words when at the beginning of the following fields:"
+msgstr "Ignoriere folgende Wörter, wenn Sie am Anfang von Feldern stehen:"
+
+#: ../data/gtkpod.glade.h:184
+msgid "In order to save the displayed track order to the iPod choose 'Save Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
+msgstr "Um die angezeigte Reihenfolge der Stücke zu speichern, benutzen Sie 'Dargestellte Reihenfolge speichern' im Menü \"Bearbeiten\" oder wählen die Option \"Autom. speichern\" unten aus."
+
+#: ../data/gtkpod.glade.h:185
+msgid "Include tracks never played in the \"Best Rated\" playlist"
+msgstr "Auch nie gespielte Stücke in die \"Am besten bewertete\" Wiedergabeliste aufnehmen"
+
+#: ../data/gtkpod.glade.h:186
+msgid "Info field template:"
+msgstr "Eingabemaske Informationsfeld"
+
+#: ../data/gtkpod.glade.h:187
+msgid "Initialize iPod"
+msgstr "Initialisiere iPod"
+
+#: ../data/gtkpod.glade.h:188
+msgid ""
+"Insert before\n"
+"Insert after"
+msgstr ""
+"Davor einfügen\n"
+"Danach einfügen"
+
+#: ../data/gtkpod.glade.h:190
+msgid ""
+"Last Played\n"
+"Last Modified\n"
+"Added\n"
+msgstr ""
+"Zuletzt gespielt\n"
+"Zuletzt geändert\n"
+"Hinzugefügt\n"
+
+#: ../data/gtkpod.glade.h:194
+msgid "Live _updating"
+msgstr "Live Akt_ualisierung"
+
+#: ../data/gtkpod.glade.h:195
+msgid "Load iPod(s)"
+msgstr "iPod(s) einlesen"
+
+#: ../data/gtkpod.glade.h:196
+msgid "Logic:"
+msgstr "Logik:"
+
+#: ../data/gtkpod.glade.h:197
+#, fuzzy
+msgid ""
+"MP3\n"
+"AAC\n"
+msgstr "Externe MP3"
+
+#: ../data/gtkpod.glade.h:200
+msgid "Mass-modify tags when multiple tracks are selected"
+msgstr "Alle Tags ändern, falls mehrere Stücke ausgewählt wurden."
+
+#: ../data/gtkpod.glade.h:201
+msgid "Match only _checked tracks"
+msgstr "Nur ausgewählte Stü_cke einbeziehen"
+
+#: ../data/gtkpod.glade.h:202
+msgid "Match:"
+msgstr ":"
+
+#: ../data/gtkpod.glade.h:203
+msgid "Maximum cache size:"
+msgstr "Max. Größe Zwischenspeicher"
+
+#: ../data/gtkpod.glade.h:204
+msgid "Maximum threads:"
+msgstr "Maximale Zahl der Hintergrunddienste:"
+
+#: ../data/gtkpod.glade.h:205
+msgid "Metadata"
+msgstr "Metadaten"
+
+#: ../data/gtkpod.glade.h:206
+msgid "Model:"
+msgstr "Modell:"
+
+#: ../data/gtkpod.glade.h:207
+msgid "Modified:"
+msgstr "Modifiziert:"
+
+#: ../data/gtkpod.glade.h:208
+msgid "Most Recently Played Tracks"
+msgstr "Zuletzt gespielte Stücke"
+
+#: ../data/gtkpod.glade.h:209
+msgid "Music"
+msgstr "Musik"
+
+#: ../data/gtkpod.glade.h:210
+msgid "Music root:"
+msgstr "Stammverzeichnis für Musik:"
+
+#: ../data/gtkpod.glade.h:211
+msgid "Never show this dialogue again"
+msgstr "Diesen Dialog nie wieder zeigen"
+
+#: ../data/gtkpod.glade.h:213
+msgid "No lower margin"
+msgstr "Keine untere Grenze"
+
+#: ../data/gtkpod.glade.h:214
+msgid "No upper margin"
+msgstr "Keine obere Grenze"
+
+#: ../data/gtkpod.glade.h:215
+msgid "Normally the charset specified when first importing the track will be used for the filename. If you set this option you can set a different charset with the charset selector (Preferences/'Adding/Updating/Syncing'). Note: the charset info is stored in the extended information file (see Preferences/'Writing of the iTunesDB'). Tracks imported before V0.51 will have no charset stored. Instead the charset specified will be used."
+msgstr "Normalerweise wird der Zeichensatz, der beim ersten Einlesen spezifiziert wurde, auch für den Dateinamen verwendet. Wenn Sie diese Option aktivieren, können Sie unter 'Bearbeiten>Einstellungen>Musik>Kodiere...' einen anderen Zeichensatz auswählen. Bitte beachten Sie: Die Information über den verwendeten Zeichensatz wird mit den erweiterten Informationen gespeichert . Stücke, die vor der gtkpod-Version 0.51 eingelesen wurden, haben keine Informationen über den Zeichensatz gespeichert und der oben spezifizierte Zeichensatz wird verwendet."
+
+#: ../data/gtkpod.glade.h:216
+msgid ""
+"Normally, if a track is no longer present in the sync directory, it will be removed from the playlist, but not from the iPod or local repository.\n"
+"If this option is checked, tracks will be completely removed from the iPod or local repository, unless the track is a member of other playlists as well.\n"
+"NOTE: if you sync with the master playlist, you must check this option if you want tracks to be removed, because removing from the master playlist means removing from the iPod."
+msgstr "Normalerweise wird ein Stück, das nicht im Synchronisationsverzeichnis existiert, aus der Wiedergabeliste gelöscht, nicht aber auf dem iPod oder dem lokalen Verzeichnis. Wird diese Option gewählt, werden die Stücke vollständig gelöscht, falls ein Stück nicht in einer anderen Wiedergabeliste erscheint. Hinweis: Bei Synchronisierung mit der 'Hauptwiedergabeliste' muss diese Option gewählt sein, wenn Stücke gelöscht werden sollen, da Löschen aus der Wiedergabeliste auch Löschen auf dem iPod bedeutet."
+
+#: ../data/gtkpod.glade.h:219
+msgid "Normally, the encoding specified above will only be used when importing new tracks, and for any operations involving existing tracks, the encoding specified when the file was first imported will be used. You can use the options below to override this behavior, in case you specified the encoding incorrectly for the first import."
+msgstr "Normalerweise wird die o.a. Kodierung nur beim Import neuer Stücke verwendet. Bei vorhandenen Stücken wird die beim ersten Import angegebene Kodierung angewendet. Sie können aber die u.a. Optionen anwenden, falls Sie die Kodierung beim Import falsch angegeben haben."
+
+#: ../data/gtkpod.glade.h:220
+msgid "Notes sync command:"
+msgstr "Befehl zum Abgleich der Notizen:"
+
+#: ../data/gtkpod.glade.h:221
+msgid "Number of filter tabs:"
+msgstr "Anzahl der Filtereinträge:"
+
+#: ../data/gtkpod.glade.h:222
+msgid "Number of tracks:"
+msgstr "Anzahl der Stücke:"
+
+#: ../data/gtkpod.glade.h:223
+msgid "On startup automatically sync with playlist directories"
+msgstr "Beim Start automatisch mit den Wiedergabelisten abgleichen"
+
+#: ../data/gtkpod.glade.h:224
+msgid "On startup automatically sync with the following directory"
+msgstr "Beim Start automatisch mit folgendem Verzeichnis abgleichen"
+
+#: ../data/gtkpod.glade.h:225
+msgid "On startup automatically update (Live Playlist)"
+msgstr "Automatische Aktualisierung beim Start"
+
+#: ../data/gtkpod.glade.h:226
+msgid "One for each Album"
+msgstr "Eine für jedes Album"
+
+#: ../data/gtkpod.glade.h:227
+msgid "One for each Artist"
+msgstr "Eine für jeden Interpreten"
+
+#: ../data/gtkpod.glade.h:228
+msgid "One for each Composer"
+msgstr "Eine für jeden Komponisten"
+
+#: ../data/gtkpod.glade.h:229
+msgid "One for each Genre"
+msgstr "Eine für jedes Genre"
+
+#: ../data/gtkpod.glade.h:230
+msgid "One for each Rating"
+msgstr "Eine für jede Bewertung"
+
+#: ../data/gtkpod.glade.h:231
+msgid "One for each Year"
+msgstr "Eine für jedes Jahr"
+
+#: ../data/gtkpod.glade.h:232
+msgid "Overwrite existing tags"
+msgstr "Überschreibe vorhandene Tags"
+
+#: ../data/gtkpod.glade.h:233
+msgid "Parse file name to set missing tags"
+msgstr "Analysiere Dateinamen, um fehlende Tags zu ergänzen "
+
+#: ../data/gtkpod.glade.h:234
+msgid "Path:"
+msgstr "Pfad:"
+
+#: ../data/gtkpod.glade.h:235
+msgid "Photo Window"
+msgstr "Foto Fenster"
+
+#: ../data/gtkpod.glade.h:236
+msgid "Playcount:"
+msgstr "Wiedergabezähler:"
+
+#: ../data/gtkpod.glade.h:237
+msgid "Played:"
+msgstr "Gespielt:"
+
+#: ../data/gtkpod.glade.h:238
+msgid "Playlist name:"
+msgstr "Name der Wiedergabeliste:"
+
+#: ../data/gtkpod.glade.h:239
+msgid "Playlist type:"
+msgstr "Art der Wiedergabeliste:"
+
+#: ../data/gtkpod.glade.h:241
+msgid "Please refer to the notice below."
+msgstr "Bitte beachten Sie den Hinweis weiter unten."
+
+#: ../data/gtkpod.glade.h:242
+msgid "Position:"
+msgstr "Position:"
+
+#: ../data/gtkpod.glade.h:243
+msgid "Preferences"
+msgstr "Einstellungen"
+
+#: ../data/gtkpod.glade.h:244
+msgid "Progress Information"
+msgstr "Fortschritt"
+
+#: ../data/gtkpod.glade.h:246
+#, no-c-format
+msgid ""
+"Provide a shell command to generate a thumbnail image of your video file.  The following format strings will be expanded:\n"
+"- %f: the input file\n"
+"- %o: the output file (which is automatically generated)\n"
+msgstr ""
+"Stellt einen 'Shell' Befehl bereit, um ein Vorschaubild Ihres Videos zu erzeugen.  Die folgenden Formatbefehle werden erweitert:\n"
+"- %f: die Eingabedatei\n"
+"- %o: die Ausgabedatei (wird automatisch erzeugt)\n"
+
+#: ../data/gtkpod.glade.h:250
+msgid "R_ename Album"
+msgstr "Album umb_enennen"
+
+#: ../data/gtkpod.glade.h:251
+msgid "Random Playlist from Displayed Tracks"
+msgstr "Zufällig aus den angezeigten Stücken"
+
+#: ../data/gtkpod.glade.h:252
+msgid "Randomize Current Playlist"
+msgstr "Aktuelle Wiedergabeliste zufällig sortieren"
+
+#: ../data/gtkpod.glade.h:253
+msgid "Rating:"
+msgstr "Bewertung:"
+
+#: ../data/gtkpod.glade.h:254
+msgid "Read embedded cover art information"
+msgstr "Eingebettete Cover-Information auslesen"
+
+#: ../data/gtkpod.glade.h:255
+msgid "Read embedded tags from music files"
+msgstr "Eingebettete Tags auslesen"
+
+#: ../data/gtkpod.glade.h:256
+#, fuzzy
+msgid "ReplayGain Preferences"
+msgstr "Sitzungseinstellungen"
+
+#: ../data/gtkpod.glade.h:257
+#, fuzzy
+msgid "ReplayGain..."
+msgstr "kopiere..."
+
+#: ../data/gtkpod.glade.h:258
+msgid "Report a _Problem"
+msgstr "Ein _Problem berichten"
+
+#: ../data/gtkpod.glade.h:259
+msgid "Report problems when accessing mserv"
+msgstr "Probleme während des Zugriffs auf die mserv Datenbank mitteilen"
+
+#: ../data/gtkpod.glade.h:260
+msgid "Repository"
+msgstr "Verzeichnis"
+
+#: ../data/gtkpod.glade.h:261
+msgid "Repository Options"
+msgstr "Verzeichnis Optionen"
+
+#: ../data/gtkpod.glade.h:262
+msgid "Repository name:"
+msgstr "Verzeichnisname:"
+
+#: ../data/gtkpod.glade.h:263
+msgid "Repository type:"
+msgstr "Verzeichnistyp:"
+
+#: ../data/gtkpod.glade.h:264
+msgid "Repository/iPod Options"
+msgstr "Verzeichnis / iPod Optionen"
+
+#: ../data/gtkpod.glade.h:266
+msgid "Select '-1' for no upper limit."
+msgstr "'-1' wählen für 'keine obere Schranke'."
+
+#: ../data/gtkpod.glade.h:267
+msgid "Select '0' for no lower limit."
+msgstr "'0' wählen für 'keine untere Schranke'."
+
+#: ../data/gtkpod.glade.h:268
+msgid "Selected Filter Tab Entry from Database"
+msgstr "Gewählter Filtereintrag der Datenbank"
+
+#: ../data/gtkpod.glade.h:269
+msgid "Selected Filter Tab Entry from Hard Disk"
+msgstr "Gewählter Filtereintrag der Festplatte"
+
+#: ../data/gtkpod.glade.h:270
+msgid "Selected Filter Tab Entry from Playlist"
+msgstr "Gewählter Filtereintrag der Wiedergabeliste "
+
+#: ../data/gtkpod.glade.h:271
+msgid "Selected Filter Tab Entry from iPod"
+msgstr "Gewählter Filtereintrag des iPod "
+
+#: ../data/gtkpod.glade.h:272
+msgid "Selected Playlist Including Tracks from Database"
+msgstr "Ausgewählte Wiedergabeliste einschließlich der Stücke aus der Datenbank"
+
+#: ../data/gtkpod.glade.h:273
+msgid "Selected Playlist Including Tracks from Hard Disk"
+msgstr "Ausgewählte Wiedergabeliste einschließlich der Stücke von der Festplatte"
+
+#: ../data/gtkpod.glade.h:274
+msgid "Selected Playlist Including Tracks from iPod"
+msgstr "Ausgewählte Wiedergabeliste einschließlich der Stücke vom iPod"
+
+#: ../data/gtkpod.glade.h:275
+msgid "Selected Tab _Entry"
+msgstr "Ausgewählter _Eintrag"
+
+#: ../data/gtkpod.glade.h:276
+msgid "Selected Tracks from Database"
+msgstr "Ausgewählte Stücke aus der Datenbank"
+
+#: ../data/gtkpod.glade.h:277
+msgid "Selected Tracks from Hard Disk"
+msgstr "Ausgewählte Stücke von der Festplatte"
+
+#: ../data/gtkpod.glade.h:278
+msgid "Selected Tracks from Playlist"
+msgstr "Ausgewählte Stücke aus der Wiedergabeliste"
+
+#: ../data/gtkpod.glade.h:279
+msgid "Selected Tracks from iPod"
+msgstr "Ausgewählte Stücke vom iPod"
+
+#: ../data/gtkpod.glade.h:280
+msgid "Selected _Playlist"
+msgstr "Ausgewählte _Wiedergabeliste"
+
+#: ../data/gtkpod.glade.h:281
+msgid "Selected _Tracks"
+msgstr "Ausgewählte S_tücke"
+
+#: ../data/gtkpod.glade.h:282
+msgid "Selected playlist"
+msgstr "Ausgewählte Wiedergabeliste"
+
+#: ../data/gtkpod.glade.h:283
+msgid "Set Cover Art from _File"
+msgstr "Nehme Cover-Bild aus _Datei"
+
+#: ../data/gtkpod.glade.h:284
+msgid "Set still missing tags to file name"
+msgstr "Schreibe fehlende Tags in Dateinamen"
+
+#: ../data/gtkpod.glade.h:285
+msgid "Settings..."
+msgstr "Einstellungen..."
+
+#: ../data/gtkpod.glade.h:286
+msgid "Show summary of sync result"
+msgstr "Zeige Zusammenfassung nach Abgleich."
+
+#: ../data/gtkpod.glade.h:287
+msgid "Skip the track"
+msgstr "Stück überspringen"
+
+#: ../data/gtkpod.glade.h:289
+msgid "Sort by:"
+msgstr "Sortiere nach:"
+
+#: ../data/gtkpod.glade.h:290
+msgid "Sort tracks according to: "
+msgstr "Sortiere Stücke nach: "
+
+#: ../data/gtkpod.glade.h:291
+msgid "Sorting Options"
+msgstr "Sortieroptionen"
+
+#: ../data/gtkpod.glade.h:292
+msgid "Sorting..."
+msgstr "Sortiere..."
+
+#: ../data/gtkpod.glade.h:293
+msgid "Source:"
+msgstr "Quelle:"
+
+#: ../data/gtkpod.glade.h:295
+#, no-c-format
+msgid "Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod."
+msgstr "Geben sie den genauen Pfad einschließlich Kommandozeilenoptionen an. '%i' wird durch den Einhängepunkt des iPods ersetzt."
+
+#: ../data/gtkpod.glade.h:296
+msgid "Specify interval"
+msgstr "Intervall angeben"
+
+#: ../data/gtkpod.glade.h:297
+msgid "Start display automatically"
+msgstr "Anzeige automatisch starten"
+
+#: ../data/gtkpod.glade.h:298
+msgid "Synchronise Contacts, Calendar and Notes"
+msgstr "Kontakte, Kalender und Notizen abgleichen"
+
+#: ../data/gtkpod.glade.h:299
+msgid "Synchronize All"
+msgstr "Alles abgleichen"
+
+#: ../data/gtkpod.glade.h:300
+msgid "Synchronize Calendar"
+msgstr "Kalender abgleichen"
+
+#: ../data/gtkpod.glade.h:301
+msgid "Synchronize Contacts"
+msgstr "Kontakte abgleichen"
+
+#: ../data/gtkpod.glade.h:302
+msgid "Synchronize Notes"
+msgstr "Notizen abgleichen"
+
+#: ../data/gtkpod.glade.h:303
+msgid "Tag and filename encoding:"
+msgstr "Tag und Dateiname kodieren:"
+
+#: ../data/gtkpod.glade.h:304
+msgid "Text color"
+msgstr "Textfarbe"
+
+#: ../data/gtkpod.glade.h:305
+msgid "The local copy of the track is referenced in the playlist. If the track is not available locally, an error message is displayed."
+msgstr ""
+"Die lokale Kopie des Stückes wird in der Wiedergabeliste angezeigt.\n"
+"Falls das Stück lokal nicht verfügbar ist, wird eine Fehlermeldung ausgegeben."
+
+#: ../data/gtkpod.glade.h:306
+msgid "The output of the background conversion scripts is copied below. Each page of the notebook corresponds to one background thread."
+msgstr "Die Ausgabe der Konvertierungsskripte wird unten angezeigt. Jede Seite entspricht einem Hintergrunddienst."
+
+#: ../data/gtkpod.glade.h:307
+msgid "The track on the iPod is referenced in the playlist file."
+msgstr "Die Datei auf dem iPod wird in der Wiedergabeliste angezeigt."
+
+#: ../data/gtkpod.glade.h:308
+msgid "These settings will only be applied to newly added or updated tracks. This could result in tracks that are normalized to different levels until updated."
+msgstr ""
+
+#: ../data/gtkpod.glade.h:309
+msgid "Time:"
+msgstr "Zeit:"
+
+#: ../data/gtkpod.glade.h:311
+msgid "To fill additional information, <i>gtkpod</i> can use a database provided by the <i>mserv</i> music server. If you do not know what <i>mserv</i> is, leave this alone."
+msgstr "Um zusätzliche Informationen hinzuzufügen kann <i>gtkpod</i> eine Datenbank benutzen, die vom <i>mserv</i> Musikserver bereitgestellt wird. Falls Sie nicht wissen, was <i>mserv</i> ist, lassen Sie dieses Feld frei."
+
+#: ../data/gtkpod.glade.h:312
+msgid "Top"
+msgstr "Oben"
+
+#: ../data/gtkpod.glade.h:313
+msgid "Track gain (formerly \"radio gain\")"
+msgstr ""
+
+#: ../data/gtkpod.glade.h:314
+msgid "Tracks"
+msgstr "Stücke"
+
+#: ../data/gtkpod.glade.h:315
+msgid "Tracks Most Often Listened To"
+msgstr "Am häufigsten gehörte Stücke"
+
+#: ../data/gtkpod.glade.h:316
+msgid "Tracks in Selected Tab _Entry"
+msgstr "Stücke im ausgewählten _Sortierungseintrag"
+
+#: ../data/gtkpod.glade.h:317
+msgid "Tracks in Selected _Playlist"
+msgstr "Stücke in ausgewählter _Wiedergabeliste"
+
+#: ../data/gtkpod.glade.h:318
+msgid "Transfer tracks in background mode"
+msgstr "Übertrage Stücke im Hintergrund"
+
+#: ../data/gtkpod.glade.h:319
+msgid "Try to load contents of all connected iPods. For each iPod a separate repository must be set up."
+msgstr "Versuche den Inhalt aller angeschlossenen iPods zu laden. Für jeden iPod muss ein separates Verzeichnis existieren."
+
+#: ../data/gtkpod.glade.h:320
+msgid "Undo _Track"
+msgstr "S_tück rückgängig"
+
+#: ../data/gtkpod.glade.h:321
+msgid "Update _mserv Data from File"
+msgstr "_mserv-Daten aktualisieren"
+
+#: ../data/gtkpod.glade.h:322
+msgid "Update information about the existing track"
+msgstr "Aktualisiere Informationen über das Stück"
+
+#: ../data/gtkpod.glade.h:323
+msgid "Update/Sync All Playlists"
+msgstr "Aktualisierung/Abgleich aller Wiedergabelisten"
+
+#: ../data/gtkpod.glade.h:324
+msgid "Update/Sync Playlist"
+msgstr "Aktualisierung/Abgleich der Wiedergabeliste"
+
+#: ../data/gtkpod.glade.h:325
+msgid "Use legacy format for MP3 tags"
+msgstr "Verwende das Legacy-Format für MP3 Tags"
+
+#: ../data/gtkpod.glade.h:326
+msgid "Use mserv database to fill track information"
+msgstr "Verwende die mserv Datenbank, um Informationen zu ergänzen"
+
+#: ../data/gtkpod.glade.h:327
+msgid ""
+"Use selected charset (Preferences/'Adding/Updating/ Syncing')\n"
+"for this filename."
+msgstr ""
+"Gewählten Zeichensatz für diesen Dateinamen verwenden.\n"
+"(Einstellung unter: Bearbeiten > Einstellungen > Musik > Kodiere...)"
+
+#: ../data/gtkpod.glade.h:329
+msgid "Username:"
+msgstr "Benutzername:"
+
+#: ../data/gtkpod.glade.h:330
+msgid "Video Thumbnail Generation"
+msgstr "Videovorschaubilder erzeugen"
+
+#: ../data/gtkpod.glade.h:331
+msgid "Video thumbnailing program:"
+msgstr "Programm für Videovorschaubilder:"
+
+#: ../data/gtkpod.glade.h:332
+msgid "View Full Size"
+msgstr "Originalgöße anzeigen"
+
+#: ../data/gtkpod.glade.h:333
+msgid "When copying from iPod no check is performed on whether the destination file exists. Enabling this option will make gtkpod check whether the length of the destination file is the same as the file in the iPod. If so the file is skipped, allowing a quick sync of the iPod's contents."
+msgstr "Wird ein Stück vom iPod kopiert, wird normalerweise nicht überprüft, ob die Datei im Zielverzeichnis bereits vorhanden ist. Wenn Sie diese Option aktivieren, wird gtkpod anhand der Dateigröße überprüfen, ob die Datei bereits existiert. Falls ja, wird das Kopieren übersprungen. Dies erlaubt es, einen schnellen Abgleich der Daten auf Ihrer Festplatte mit denen des iPods vorzunehmen."
+
+#: ../data/gtkpod.glade.h:334
+msgid "When updating tracks, display information:"
+msgstr "Zeige beim Aktualisieren der Stücke folgende Informationen:"
+
+#: ../data/gtkpod.glade.h:335
+msgid "Will show a list of tracks removed and a list of tracks newly added or updated."
+msgstr "Zeigt eine Liste von gelöschten, neu hinzugefügten oder aktualisierten Stücken."
+
+#: ../data/gtkpod.glade.h:336
+msgid "Write all changes made to the disk and the iPod(s)."
+msgstr "Alle Änderungen auf Festplatte und iPod(s) sichern."
+
+#: ../data/gtkpod.glade.h:337
+msgid "Write tags to disk when edited"
+msgstr "Tags nach Änderung auf Festplatte schreiben"
+
+#: ../data/gtkpod.glade.h:339
+#, no-c-format
+msgid ""
+"You can separate several templates by a ';'. The first one matching the filename will be used.\n"
+"\n"
+"Example: <i>%a - %A/%T %t.mp3;%t.wav</i>.\n"
+"\n"
+"- artist: %a\n"
+"- album: %A\n"
+"- composer: %c\n"
+"- title: %t\n"
+"- genre: %G\n"
+"- track nr: %T\n"
+"- CD nr: %C\n"
+"- year: %Y\n"
+"- skip data: %*\n"
+"- the character '%': %%."
+msgstr ""
+"Sie können verschiedene Vorlagen durch ein ';'. separieren. Die erste, die einem Dateinamen entspricht, wird benutzt.\n"
+"\n"
+"Beispiel: <i>%a - %A/%T %t.mp3;%t.wav</i>.\n"
+"\n"
+"- Interpret: %a\n"
+"- Album: %A\n"
+"- Komponist: %c\n"
+"- Titel: %t\n"
+"- Genre: %G\n"
+"- Stück-Nr: %T\n"
+"- CD Nr: %C\n"
+"- Jahr: %Y\n"
+"- Überspringe Eintrag: %*\n"
+"- Buchstabe '%': %%."
+
+#: ../data/gtkpod.glade.h:354
+#, fuzzy, no-c-format
+msgid ""
+"You can separate several templates by a ';'. The first one matching the filename will be used.\n"
+"\n"
+"Examples:\n"
+"- <i>folder.jpg</i>: Use <i>folder.jpg</i> as cover art.\n"
+"- <i>folder</i>: Use <i>folder.jpg</i>, <i>folder.png</i>...\n"
+"- <i>../%A.jpg</i>: Use <i>&lt;Album&gt;.jpg</i> in the parent directory\n"
+"- <i>%A</i>: Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>...\n"
+"- <i>folder.jpg;%a.jpg</i>: First try <i>folder.jpg</i>, then <i>&lt;artist&gt;.jpg</i>\n"
+"\n"
+"- artist: %a\n"
+"- album: %A\n"
+"- composer: %c\n"
+"- title: %t\n"
+"- genre: %G\n"
+"- track nr: %T\n"
+"- CD nr: %C\n"
+"- year: %Y\n"
+"- skip data: %*\n"
+"- the character '%': %%."
+msgstr ""
+"Sie können verschiedene Vorlagen durch ein ';'. separieren. Die erste, die einem Dateinamen entspricht, wird benutzt.\n"
+"\n"
+"Beispiele:\n"
+"- <i>folder.jpg</i>: Verwende <i>folder.jpg</i> als Cover-Bild.\n"
+"- <i>folder</i>: Verwende <i>folder.jpg</i>, <i>folder.png</i>...\n"
+"- <i>../%A.jpg</i>: Verwende <i>&lt;Album&gt;.jpg</i> im Stammverzeichnis\n"
+"- <i>%a</i>: Verwende <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>...\n"
+"- <i>folder.jpg;%a.jpg</i>: Versuchen Sie zunächst <i>folder.jpg</i>, dann <i>&lt; Interpret&gt;.jpg</i>\n"
+"\n"
+"- Interpret: %a\n"
+"- Album: %A\n"
+"- Komponist: %c\n"
+"- Titel: %t\n"
+"- Genre: %G\n"
+"- Stück-Nr: %T\n"
+"- CD Nr: %C\n"
+"- Jahr: %Y\n"
+"- Überspringe Eintrag: %*\n"
+"- Buchstabe '%': %%."
+
+#: ../data/gtkpod.glade.h:373
+msgid "_About gtkpod"
+msgstr "_Über gtkpod"
+
+#: ../data/gtkpod.glade.h:374
+msgid "_Add Album"
+msgstr "_Album hinzufügen"
+
+#: ../data/gtkpod.glade.h:375
+msgid "_Add Image"
+msgstr "_Bild hinzufügen"
+
+#: ../data/gtkpod.glade.h:376
+msgid "_Album"
+msgstr "_Album"
+
+#: ../data/gtkpod.glade.h:377
+msgid "_All Tracks"
+msgstr "_Alle Stücke"
+
+#: ../data/gtkpod.glade.h:378
+msgid "_Arrange Filter Tabs"
+msgstr "_Sortiere Filtereinträge"
+
+#: ../data/gtkpod.glade.h:379
+msgid "_Check iPod's Files"
+msgstr "_Überprüfe iPod Dateien"
+
+#: ../data/gtkpod.glade.h:380
+msgid "_Contents"
+msgstr "_Inhalte"
+
+#: ../data/gtkpod.glade.h:381
+msgid "_Conversion Log"
+msgstr "_Konvertierungsprotokoll"
+
+#: ../data/gtkpod.glade.h:382
+msgid "_Create Playlists"
+msgstr "_Erstelle Wiedergabelisten"
+
+#: ../data/gtkpod.glade.h:383
+msgid "_Create iPod's Directories"
+msgstr "_iPod-Verzeichnis(se) erstellen"
+
+#: ../data/gtkpod.glade.h:384
+msgid "_Delete"
+msgstr "_Löschen"
+
+#: ../data/gtkpod.glade.h:385
+msgid "_Display"
+msgstr "_Anzeige"
+
+#: ../data/gtkpod.glade.h:386
+msgid "_Displayed Tracks"
+msgstr "_Angezeigte Stücke"
+
+#: ../data/gtkpod.glade.h:387
+msgid "_Edit"
+msgstr "_Bearbeiten"
+
+#: ../data/gtkpod.glade.h:388
+msgid "_Enqueue"
+msgstr "_Vormerken zum Abspielen"
+
+#: ../data/gtkpod.glade.h:389
+msgid "_Export Tracks from Database"
+msgstr "_Export aus der Datenbank"
+
+#: ../data/gtkpod.glade.h:390
+msgid "_Fewer Filter Tabs"
+msgstr "Weniger _Filtereinträge"
+
+#: ../data/gtkpod.glade.h:391
+msgid "_Filter Bar"
+msgstr "_Filterleiste"
+
+#: ../data/gtkpod.glade.h:392
+msgid "_General"
+msgstr "All_gemein"
+
+#: ../data/gtkpod.glade.h:393
+msgid "_Help"
+msgstr "_Hilfe"
+
+#: ../data/gtkpod.glade.h:394
+msgid "_Info Window"
+msgstr "_Info Fenster"
+
+#: ../data/gtkpod.glade.h:395
+msgid "_Limit to"
+msgstr "_Begrenzen auf"
+
+#: ../data/gtkpod.glade.h:396
+msgid "_Load iPod(s)"
+msgstr "iPod(s) ein_lesen"
+
+#: ../data/gtkpod.glade.h:397
+msgid "_Local"
+msgstr "_Lokal"
+
+#: ../data/gtkpod.glade.h:398
+msgid "_Lyrics"
+msgstr "_Texte"
+
+#: ../data/gtkpod.glade.h:399
+msgid "_M3U"
+msgstr "_M3U"
+
+#: ../data/gtkpod.glade.h:400
+msgid "_Misc."
+msgstr "_Verschiedenes"
+
+#: ../data/gtkpod.glade.h:401
+msgid "_More Filter Tabs"
+msgstr "_Mehr Filtereinträge"
+
+#: ../data/gtkpod.glade.h:402
+msgid "_Music"
+msgstr "_Musik"
+
+#: ../data/gtkpod.glade.h:403
+msgid "_Newly Added Tracks"
+msgstr "_Neu hinzugefügte Stücke"
+
+#: ../data/gtkpod.glade.h:404
+msgid "_Normalize Volume"
+msgstr "Lautstärke _normalisieren"
+
+#: ../data/gtkpod.glade.h:405
+msgid "_PLS"
+msgstr "_PLS"
+
+#: ../data/gtkpod.glade.h:406
+msgid "_Photos"
+msgstr "_Fotos"
+
+#: ../data/gtkpod.glade.h:407
+msgid "_Play Now"
+msgstr "_Jetzt abspielen"
+
+#: ../data/gtkpod.glade.h:408
+msgid "_Podcasts"
+msgstr "_Podcasts"
+
+#: ../data/gtkpod.glade.h:409
+msgid "_Prefer Local"
+msgstr "_Bevorzuge Lokal"
+
+#: ../data/gtkpod.glade.h:410
+msgid "_Remove Album"
+msgstr "Entfe_rne Album"
+
+#: ../data/gtkpod.glade.h:411
+msgid "_Remove Cover Art"
+msgstr "Entfe_rne Cover-Bild"
+
+#: ../data/gtkpod.glade.h:412
+msgid "_Remove Images"
+msgstr "Entfe_rne Bilder"
+
+#: ../data/gtkpod.glade.h:413
+msgid "_Save Changes"
+msgstr "Änderungen _sichern"
+
+#: ../data/gtkpod.glade.h:414
+msgid "_Save Displayed Track Order"
+msgstr "_Dargestellte Reihenfolge speichern"
+
+#: ../data/gtkpod.glade.h:415
+msgid "_Sorting"
+msgstr "_Sortierung"
+
+#: ../data/gtkpod.glade.h:416
+msgid "_Synchronize Playlist with Dir(s)"
+msgstr "Wiedergabeli_ste mit Verzeichnis(sen) abgleichen"
+
+#: ../data/gtkpod.glade.h:417
+msgid "_Toolbar"
+msgstr "Werkzeugleis_te"
+
+#: ../data/gtkpod.glade.h:418
+msgid "_Tools"
+msgstr "_Werkzeuge"
+
+#: ../data/gtkpod.glade.h:419
+msgid "_Tooltips"
+msgstr "Werkzeug_tipps"
+
+#: ../data/gtkpod.glade.h:420
+msgid "_Undo All"
+msgstr "_Alles rückgängig"
+
+#: ../data/gtkpod.glade.h:421
+msgid "_Update Tracks from File"
+msgstr "Akt_ualisiere Stücke aus Datei"
+
+#: ../data/gtkpod.glade.h:422
+msgid "_Video"
+msgstr "_Video"
+
+#: ../data/gtkpod.glade.h:423
+msgid "_View"
+msgstr "_Vorschau"
+
+#: ../data/gtkpod.glade.h:424
+msgid "_Zoom"
+msgstr "_Vergrößern"
+
+#: ../data/gtkpod.glade.h:425
+msgid "_iPod"
+msgstr "_iPod"
+
+#: ../data/gtkpod.glade.h:426
+#, fuzzy
+msgid "dB"
+msgstr "(Datenbank-Dateien)"
+
+#: ../data/gtkpod.glade.h:427
+msgid "gtkpod Information"
+msgstr "gtkpod Informationen"
+
+#: ../data/gtkpod.glade.h:428
+msgid "gtkpod iPod Manager"
+msgstr "gtkpod iPod Manager"
+
+#: ../data/gtkpod.glade.h:429
+msgid ""
+"iPod\n"
+"Local Repository (Standard)\n"
+"Local Repository (Podcasts)\n"
+msgstr ""
+"iPod\n"
+"Lokales Verzeichnis (Standard)\n"
+"Lokales Verzeichnis (Podcasts)\n"
+
+#: ../data/gtkpod.glade.h:433
+msgid "iPod mountpoint:"
+msgstr "iPod Einhängepunkt:"
+
+#: ../data/gtkpod.glade.h:434
+msgid "iTunesDB backup:"
+msgstr "Sicherung iTunesDB:"
+
+#: ../data/gtkpod.glade.h:435
+msgid "mserv Preferences"
+msgstr "mserv-Voreinstellungen"
+
+#: ../data/gtkpod.glade.h:436
+msgid "mserv root:"
+msgstr "mserv Stammverzeichnis:"
+
+#: ../data/gtkpod.glade.h:438
+msgid "special_sorttab -- Don't translate!"
+msgstr "special_sorttab -- Don't translate!\""
+
 #~ msgid "Manage music and video on an Apple iPod"
 #~ msgstr "Verwaltet Musik & Videos auf dem iPod"
-#~ msgid "gtkpod iPod Manager"
+
+#, fuzzy
+#~ msgid "iPod Manager"
 #~ msgstr "gtkpod iPod Manager"
-#~ msgid " "
-#~ msgstr " "
-#~ msgid "    "
-#~ msgstr "    "
-#~ msgid " <= cts <= "
-#~ msgstr " <= num <= "
-#~ msgid ""
-#~ "'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when "
-#~ "finished."
-#~ msgstr ""
-#~ "z.B. 'TT/MM/JJJJ SS:MM < d < TT/MM/JJJJ SS:MM' oder ähnliches. Nach der "
-#~ "Eingabe bitte 'Return' drücken."
-#~ msgid "(Checked)"
-#~ msgstr "(Gewählt)"
-#~ msgid "0"
-#~ msgstr "0"
-#~ msgid "1"
-#~ msgstr "1"
-#~ msgid "2"
-#~ msgstr "2"
-#~ msgid "3"
-#~ msgstr "3"
-#~ msgid "4"
-#~ msgstr "4"
-#~ msgid "5"
-#~ msgstr "5"
-#~ msgid ":"
-#~ msgstr ":"
-#~ msgid "<b>Advanced Options</b>"
-#~ msgstr "<b>Weitere Optionen</b>"
-#~ msgid "<b>Ascending</b>"
-#~ msgstr "<b>Aufsteigend</b>"
-#~ msgid "<b>Auto Store</b>"
-#~ msgstr "<b>Autom. speichern</b>"
-#~ msgid "<b>Auto-Generated Playlists</b>"
-#~ msgstr "<b>Automatisch erzeugte Wiedergabelisten</b>"
-#~ msgid "<b>Available Columns</b>"
-#~ msgstr "<b>Verfügbare Spalten</b>"
-#~ msgid "<b>Compatible Formats</b>"
-#~ msgstr "<b>Kompatible Formate</b>"
-#~ msgid "<b>Conversion Settings</b>"
-#~ msgstr "<b>Konvertierungseinstellungen</b>"
-#~ msgid "<b>Cover Art Display</b>"
-#~ msgstr "<b>Cover-Bild</b>"
-#~ msgid "<b>Cover Art</b>"
-#~ msgstr "<b>Cover-Bild</b>"
-#~ msgid "<b>Deletion Confirmation Messages</b>"
-#~ msgstr "<b>Sicherheitsabfrage beim Löschen</b>"
-#~ msgid "<b>Descending</b>"
-#~ msgstr "<b>Absteigend</b>"
-#~ msgid "<b>Displayed Columns</b>"
-#~ msgstr "<b>Angezeigte Spalten</b>"
-#~ msgid "<b>Filter Tabs</b>"
-#~ msgstr "<b>Filtereinträge</b>"
-#~ msgid "<b>General Options</b>"
-#~ msgstr "<b>Allgemeine Einstellungen</b>"
-#~ msgid "<b>General</b>"
-#~ msgstr "<b>Allgemein</b>"
-#~ msgid "<b>Ignore Frequent Words</b>"
-#~ msgstr "<b>Ignoriere oft verwendete Wörter</b>"
-#~ msgid "<b>Import and Synchronization</b>"
-#~ msgstr "<b>Import und Abgleich</b>"
-#~ msgid "<b>Incompatible Formats</b>"
-#~ msgstr "<b>Inkompatible Formate</b>"
-#~ msgid "<b>Information Messages</b>"
-#~ msgstr "<b>Informelle Nachrichten</b>"
-#~ msgid "<b>Lower Margin</b>"
-#~ msgstr "<b>Untere Grenze</b>"
-#~ msgid "<b>None</b>"
-#~ msgstr "<b>---</b>"
-#~ msgid "<b>On-the-fly Conversion</b>"
-#~ msgstr "<b>Konvertierung ohne Zwischenspeicherung</b>"
-#~ msgid "<b>Playback</b>"
-#~ msgstr "<b>Wiedergabe</b>"
-#~ msgid "<b>Playlist Options</b>"
-#~ msgstr "<b>Optionen Wiedergabeliste(n)</b>"
-#~ msgid "<b>Please select mountpoint and your iPod model</b>"
-#~ msgstr "<b>Bitte Einhängepunkt und iPod Modell wählen</b>"
-#~ msgid "<b>Rules</b>"
-#~ msgstr "<b>Regeln</b>"
-#~ msgid "<b>Sort Order</b>"
-#~ msgstr "<b>Sortier-Reihenfolge</b>"
-#~ msgid "<b>Synchronization</b>"
-#~ msgstr "<b>Abgleich</b>"
-#~ msgid "<b>Tag Editing</b>"
-#~ msgstr "<b>Tags (Zusatzinformationen) bearbeiten</b>"
-#~ msgid "<b>Tags</b>"
-#~ msgstr "<b>Tags (Zusatzinformationen)</b>"
-#~ msgid "<b>Toolbar Style</b>"
-#~ msgstr "<b>Stil Werkzeugleiste</b>"
-#~ msgid "<b>Tooltips</b>"
-#~ msgstr "<b>Werkzeugtipps</b>"
-#~ msgid "<b>Upper Margin</b>"
-#~ msgstr "<b>Obere Grenze</b>"
-#~ msgid "<b>Volume Normalization</b>"
-#~ msgstr "<b>Lautstärkenormalisierung</b>"
-#~ msgid "<b>When Attempting to Add an Existing Track</b>"
-#~ msgstr "<b>Falls versucht wird, ein existierendes Stück hinzuzufügen</b>"
-#~ msgid "<b>gtkpod Options</b>"
-#~ msgstr "<b>gtkpod Optionen</b>"
-#~ msgid "<b>mserv Settings</b>"
-#~ msgstr "<b>mserv Einstellungen</b>"
-#~ msgid "<b>mserv</b>"
-#~ msgstr "<b>mserv</b>"
-#~ msgid "<i>aacgain</i> executable:"
-#~ msgstr "<i>aacgain</i> Programm:"
-#~ msgid "<i>mp3gain</i> executable:"
-#~ msgstr "<i>mp3gain</i> Programm:"
-#~ msgid ""
-#~ "<span weight=\"bold\" size=\"larger\">Please specify a time interval</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span weight=\"bold\" size=\"larger\">Bitte Zeitintervall angeben</span>"
-#~ msgid "<span weight='bold' size='larger'>No playlist selected</span>"
-#~ msgstr ""
-#~ "<span weight='bold' size='larger'>Keine Wiedergabeliste gewählt</span>"
-#~ msgid ">"
-#~ msgstr ">"
-#~ msgid "About unupdated tracks"
-#~ msgstr "Informationen über nicht aktualisierte Stücke"
-#~ msgid "About updated tracks"
-#~ msgstr "Informationen über aktualisierte Stücke"
-#~ msgid "Add Column"
-#~ msgstr "Spalte hinzufügen"
-#~ msgid "Add Directories Recursively"
-#~ msgstr "Verzeichnisse rekursiv hinzufügen"
-#~ msgid "Add Files"
-#~ msgstr "Dateien hinzufügen"
-#~ msgid "Add Files or Directories"
-#~ msgstr "Dateien oder Verzeichnisse hinzufügen."
-#~ msgid "Add Fol_der"
-#~ msgstr "Or_dner hinzufügen"
-#~ msgid "Add Image_s"
-#~ msgstr "Bilder hinzufügen"
-#~ msgid "Add Images from a Directory"
-#~ msgstr "Bilder aus einem Verzeichnis hinzufügen."
-#~ msgid "Add Playlist"
-#~ msgstr "Wiedergabeliste hinzufügen"
-#~ msgid "Add _Files"
-#~ msgstr "Dateien hinzu_fügen"
-#~ msgid "Add _Playlist"
-#~ msgstr "_Wiedergabeliste hinzufügen"
-#~ msgid "Add cover art using file name template"
-#~ msgstr "Cover-Bild nach Vorlage aus Dateinamen hinzufügen"
-#~ msgid ""
-#~ "Add file masks to be excluded from import and synchronization, for "
-#~ "example, <i>*.mp3</i>."
-#~ msgstr ""
-#~ "Dateimasken angeben, die vom Import u. Abgleich ausgeschlossen werden "
-#~ "sollen, z.B. <i>*.mp3</i>."
-#~ msgid "Add new repository/iPod..."
-#~ msgstr "Verzeichnis oder iPod hinzufügen"
-#~ msgid "Add playlist from file"
-#~ msgstr "Wiedergabeliste aus Datei hinzufügen"
-#~ msgid "Add subfolders recursively"
-#~ msgstr "Unterverzeichnisse rekursiv hinzufügen"
-#~ msgid "Added:"
-#~ msgstr "Hinzugefügt:"
-#~ msgid "Album Art"
-#~ msgstr "Albumbild"
-#~ msgid "All (AND)"
-#~ msgstr "Alle (UND)"
-#~ msgid "All Tracks Never Listened To"
-#~ msgstr "Alle nie gehörten Stücke"
-#~ msgid "All Tracks Played Since Last Time"
-#~ msgstr "Seit dem letzten Mal gespielte Stücke"
-#~ msgid "All Tracks not Listed in any Playlist"
-#~ msgstr "In keiner Wiedergabeliste aufgeführte Stücke"
-#~ msgid "Allow duplicate files"
-#~ msgstr "Duplikate erlauben"
-#~ msgid "Also use this encoding when updating or synchronizing tracks"
-#~ msgstr ""
-#~ "Diese Kodierung auch beim Abgleich oder Aktualisierung von Stücken "
-#~ "anwenden"
-#~ msgid "Also use this encoding when writing tracks"
-#~ msgstr "Diese Kodierung auch beim Speichern von Stücken anwenden"
-#~ msgid "Any (OR)"
-#~ msgstr "Eines (ODER)"
-#~ msgid ""
-#~ "Any rules\n"
-#~ "All rules\n"
-#~ "Ignore rules"
-#~ msgstr ""
-#~ "Jede Regel\n"
-#~ "Alle Regeln\n"
-#~ "Regeln ignorieren"
-#~ msgid "Artwork Preview"
-#~ msgstr "Bildvorschau"
-#~ msgid "Automatically generate video thumbnails"
-#~ msgstr "Videovorschaubilder automatisch erzeugen"
-#~ msgid ""
-#~ "Automatically start displaying tracks that match the criteria entered "
-#~ "above. If not selected, you must press 'Display' to start displaying."
-#~ msgstr ""
-#~ "Die Anzeige der Stücke, welche die oben genannten Kriterien erfüllen, "
-#~ "automatisch starten. Wenn diese Option nicht aktiviert ist, müssen Sie "
-#~ "'Anzeige' drücken."
-#~ msgid "Background color"
-#~ msgstr "Hintergrundfarbe"
-#~ msgid "Best Rated Tracks"
-#~ msgstr "Am besten bewertete Stücke"
-#~ msgid "Bottom"
-#~ msgstr "Unten"
-#~ msgid "Browse..."
-#~ msgstr "Durchsuche..."
-#~ msgid "Cache folder:"
-#~ msgstr "Verzeichnis für Zwischenspeicherung:"
-#~ msgid "Calendar"
-#~ msgstr "Kalender"
-#~ msgid "Calendar sync command:"
-#~ msgstr "Befehl zum Abgleich des Kalenders:"
-#~ msgid "Call automatically when synchronizing iTunesDB"
-#~ msgstr "Automatisch aufrufen, wenn die iTunesDB abgeglichen wird"
-#~ msgid "Case sensitive sorting"
-#~ msgstr "Groß-/Kleinschreibung beim sortieren beachten "
-#~ msgid "Category:"
-#~ msgstr "Kategorie:"
-#~ msgid ""
-#~ "Change all tracks\n"
-#~ "simultaneously"
-#~ msgstr ""
-#~ "Alle Stücke simultan \n"
-#~ "modifizieren"
-#~ msgid "Check for existing files when copying from iPod."
-#~ msgstr "Bei Kopieren vom iPod Überprüfen, ob Datei bereits existiert."
-#~ msgid "Choose a Different Colour for the CoverArt Display Background"
-#~ msgstr "Andere Farbe für den Bildhintergrund wählen"
-#~ msgid "Command for \"Enqueue\":"
-#~ msgstr "Befehl für 'Zum Abspielen vormerken':"
-#~ msgid "Command for \"Play now\":"
-#~ msgstr "Befehl für 'Jetzt abspielen':"
-#~ msgid "Commands..."
-#~ msgstr "Befehle..."
-#~ msgid "Composer"
-#~ msgstr "Komponist"
-#~ msgid "Confirm before removing tracks from the iPod or repository"
-#~ msgstr ""
-#~ "Bestätigung vor dem vollständigen Löschen vom iPod oder aus dem "
-#~ "Verzeichnis"
-#~ msgid "Confirm deletion of playlists or tracks from a playlist"
-#~ msgstr ""
-#~ "Löschen von Wiedergabelisten oder Stücken aus einer Wiedergabeliste "
-#~ "bestätigen"
-#~ msgid "Confirm deletion of tracks during synchronization"
-#~ msgstr "Löschen von Stücken während des Abgleichs bestätigen"
-#~ msgid "Confirm deletion of tracks:"
-#~ msgstr "Löschen von Stücken bestätigen"
-#~ msgid "Contacts sync command:"
-#~ msgstr "Befehl zum Abgleich der Kontakte:"
-#~ msgid "Containing Displayed Tracks"
-#~ msgstr "Nur aus den angezeigten Stücken"
-#~ msgid "Containing Selected Tracks"
-#~ msgstr "Nur aus den ausgewählten Stücken"
-#~ msgid "Conversion Preferences"
-#~ msgstr "Voreinstellungen Konvertierung"
-#~ msgid "Conversion Progress Display"
-#~ msgstr "Anzeige Konvertierungsfortschritt"
-#~ msgid "Conversion Settings..."
-#~ msgstr "Konvertierungseinstellungen"
-#~ msgid "Convert AAC (M4A)"
-#~ msgstr "Konvertiere AAC (M4A)"
-#~ msgid "Convert FLAC"
-#~ msgstr "Konvertiere FLAC"
-#~ msgid "Convert MP3"
-#~ msgstr "Konvertiere MP3"
-#~ msgid "Convert Ogg Vorbis"
-#~ msgstr "Konvertiere Ogg Vorbis"
-#~ msgid "Convert WAV"
-#~ msgstr "Konvertiere WAV"
-#~ msgid "Convert compatible formats to a single format"
-#~ msgstr "Konvertiere kompatible Formate in ein einzelnes Format"
-#~ msgid "Convert incompatible music formats to:"
-#~ msgstr "Konvertiere inkompatible Formate in:"
-#~ msgid "Cover"
-#~ msgstr "Cover"
-#~ msgid "Cover Art Search Preferences"
-#~ msgstr "Voreinstellungen Cover-Bild Suche"
-#~ msgid "Cover art file pattern:"
-#~ msgstr "Cover-Bild Dateimuster:"
-#~ msgid "Create New Playlist"
-#~ msgstr "Neue Wiedergabeliste erstellen"
-#~ msgid "Create Repository"
-#~ msgstr "Erstelle Verzeichnis"
-#~ msgid "Create _Playlist File"
-#~ msgstr "_Erstelle Datei der Wiedergabeliste"
-#~ msgid "Customize..."
-#~ msgstr "Anpassen..."
-#~ msgid "Delete Repository"
-#~ msgstr "Verzeichnis löschen"
-#~ msgid "Delete missing tracks from the iPod or repository"
-#~ msgstr "Löschen fehlende Stücke vom iPod oder aus dem Verzeichnis"
-#~ msgid "Delete missing tracks when synchronizing playlists"
-#~ msgstr "Lösche fehlende Stücke beim Abgleich der Wiedergabelisten"
-#~ msgid "Details"
-#~ msgstr "Details"
-#~ msgid ""
-#~ "Determines how the string for the info field should be constructed, e.g '%"
-#~ "a/%A/%T - %t.mp3' or '%o'.  You can separate several templates by "
-#~ "semicolons -- gtkpod will determine which one to use by the filename "
-#~ "extension given. Artist: %a, album: %A, composer: %c, title: %t, genre: %"
-#~ "G, track nr: %T, CD nr: %C, year: %Y, original filename (requires "
-#~ "extended information file): %o, the character '%': %%."
-#~ msgstr ""
-#~ "Bestimmt, wie der Text des Info-Feldes erstellt werden soll, z.B. '%a/%A/%"
-#~ "T - %t.mp3' oder '%o'. Mehrere Schablonen können durch Semikolons "
-#~ "getrennt werden -- gtkpod ermittelt die passende Schablone anhand des "
-#~ "Dateinamensuffix. Interpret: %a, Album: %A, Komponist: %c, Titel: %t, "
-#~ "Musikrichtung: %G, Stück-Nr.: %T, CD-Nr.: %C, Jahr: %Y,  ursprünglicher "
-#~ "Dateiname (benötigt 'Erweiterte Informationen'): %o, das Zeichen '%': %%."
-#~ msgid ""
-#~ "Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - "
-#~ "%t.mp3' or '%o'.  You can separate several patterns by semicolons -- "
-#~ "gtkpod will determine which one to use by the filename extension given. "
-#~ "Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, "
-#~ "CD nr: %C, year: %Y, original filename (requires extended information "
-#~ "file): %o, current playlist: %p, the character '%': %%."
-#~ msgstr ""
-#~ "Bestimmt, wie der Dateiname von Stücken gewählt wird, die vom iPod "
-#~ "kopiert werden. Bsp.: '%a/%A/%T - %t.mp3' oder '%o'. Mehrere Schablonen "
-#~ "können durch Semikolons getrennt werden -- gtkpod ermittelt die passende "
-#~ "Schablone anhand des Dateinamensuffix. Interpret: %a, Album: %A, "
-#~ "Komponist: %c, Titel: %t, Musikrichtung: %G, Stück-Nr.: %T, CD-Nr.: %C, "
-#~ "Jahr: %Y,  ursprünglicher Dateiname (benötigt 'Erweiterte "
-#~ "Informationen'): %o, die aktuelle Wiedergabeliste: %p, das Zeichen '%': %"
-#~ "%."
-#~ msgid ""
-#~ "Directories to sync with are determined from the filenames of the tracks "
-#~ "in the playlist."
-#~ msgstr ""
-#~ "Abzugleichende Verzeichnisse werden aus den Dateinamen der "
-#~ "Wiedergabeliste ermittelt."
-#~ msgid "Display"
-#~ msgstr "Anzeige"
-#~ msgid "Display conversion log"
-#~ msgstr "Zeige Konvertierungsprotokoll"
-#~ msgid "Display information about detected duplicate files"
-#~ msgstr "Information über erkannte Duplikate anzeigen"
-#~ msgid "Display messages and warnings at startup"
-#~ msgstr "Nachrichten und Warnungen beim Start des Programms anzeigen"
-#~ msgid "Display synchronization results"
-#~ msgstr "Protokoll des Dateiabgleichs anzeigen"
-#~ msgid "Display tooltips in main window"
-#~ msgstr "Werkzeugtipps im Hauptfenster anzeigen"
-#~ msgid "Display tracks that match the criteria entered above."
-#~ msgstr "Stücke anzeigen, welche die oben genannten Kriterien erfüllen."
-#~ msgid "Don't automatically sync on startup"
-#~ msgstr "Beim Start nicht automatisch abgleichen"
-#~ msgid "Empty Playlist"
-#~ msgstr "Wiedergabeliste leeren"
-#~ msgid "Encoding Preferences"
-#~ msgstr "Kodierungsvoreinstellugen"
-#~ msgid "Encoding..."
-#~ msgstr "Kodiere..."
-#~ msgid "Excluded files..."
-#~ msgstr "Ausgeschlossene Dateien..."
-#~ msgid "Exclusions List"
-#~ msgstr "Ausgeschlossene Stücke"
-#~ msgid "Expand columns beyond the track list width"
-#~ msgstr "Spalten über Stücklistenbreite hinaus erweitern"
-#~ msgid "Export can be continued at a later time if canceled."
-#~ msgstr ""
-#~ "Der Export kann später fortgesetzt werden, falls er abgebrochen wird."
-#~ msgid "Feedback"
-#~ msgstr "Rückmeldungen"
-#~ msgid "Filename Parse Preferences"
-#~ msgstr "Voreinstellungen für Dateinamen"
-#~ msgid "Filename format: "
-#~ msgstr "Format für Dateinamen: "
-#~ msgid "Filename parse pattern:"
-#~ msgstr "Muster für Dateinamen: "
-#~ msgid "Filter tab:"
-#~ msgstr "Filtereintrag:"
-#~ msgid "Filter tabs"
-#~ msgstr "Filtereinträge"
-#~ msgid "Filter:"
-#~ msgstr "Filter:"
-#~ msgid ""
-#~ "Find orphan files (files with no track info in DB) and dangling tracks "
-#~ "(tracks with no corresponding files on iPod)"
-#~ msgstr ""
-#~ "Verwaiste Stücke (ohne Eintrag in der iTunesDB) und verlorene Stücke "
-#~ "(ohne Datei auf dem iPod) finden"
-#~ msgid "From the hard disk"
-#~ msgstr "Von der Festplatte"
-#~ msgid "From the iPod"
-#~ msgstr "Vom iPod"
-#~ msgid "From the local database"
-#~ msgstr "Aus der lokalen Datenbank"
-#~ msgid "Get Help _Online"
-#~ msgstr "_Online Hilfe"
-#~ msgid "Group artist filter tab by compilation CDs"
-#~ msgstr "Filtereintrag \"Interpret\" nach Sampler-CDs gruppieren"
-#~ msgid ""
-#~ "If available, the local copy of the track is referenced in the playlist. "
-#~ "Otherwise the file on the iPod is used."
-#~ msgstr ""
-#~ "Falls verfügbar, wird die lokale Kopie des Stückes in die Wiedergabeliste "
-#~ "eingetragen. Andernfalls wird die Datei auf dem iPod verwendet."
-#~ msgid ""
-#~ "If checked, sorting will be case sensitive. Please note that case "
-#~ "sensitive sorting will not work well with most charsets."
-#~ msgstr ""
-#~ "Wenn diese Option aktiviert ist, wird beim Sortieren die Groß-/"
-#~ "Kleinschreibung beachtet. Mit den meisten Zeichensätzen funktioniert dies "
-#~ "jedoch nicht wie gewünscht."
-#~ msgid ""
-#~ "If you check this, information (cover art and meta information) changed "
-#~ "for this track will be copied to all other selected tracks as well. Use "
-#~ "with care."
-#~ msgstr ""
-#~ "Falls diese Option gewählt wird, werden alle Änderungen für dieses Stück "
-#~ "(Cover und sonstige Angaben) automatisch in alle ausgewählten Stücke "
-#~ "kopiert. Bitte mit Vorsicht verwenden."
-#~ msgid "Ignore these words when at the beginning of the following fields:"
-#~ msgstr "Ignoriere folgende Wörter, wenn Sie am Anfang von Feldern stehen:"
-#~ msgid ""
-#~ "In order to save the displayed track order to the iPod choose 'Save "
-#~ "Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
-#~ msgstr ""
-#~ "Um die angezeigte Reihenfolge der Stücke zu speichern, benutzen Sie "
-#~ "'Dargestellte Reihenfolge speichern' im Menü \"Bearbeiten\" oder wählen "
-#~ "die Option \"Autom. speichern\" unten aus."
-#~ msgid "Include tracks never played in the \"Best Rated\" playlist"
-#~ msgstr ""
-#~ "Auch nie gespielte Stücke in die \"Am besten bewertete\" Wiedergabeliste "
-#~ "aufnehmen"
-#~ msgid "Info field template:"
-#~ msgstr "Eingabemaske Informationsfeld"
-#~ msgid "Initialize iPod"
-#~ msgstr "Initialisiere iPod"
-#~ msgid ""
-#~ "Insert before\n"
-#~ "Insert after"
-#~ msgstr ""
-#~ "Davor einfügen\n"
-#~ "Danach einfügen"
-#~ msgid ""
-#~ "Last Played\n"
-#~ "Last Modified\n"
-#~ "Added\n"
-#~ msgstr ""
-#~ "Zuletzt gespielt\n"
-#~ "Zuletzt geändert\n"
-#~ "Hinzugefügt\n"
-#~ msgid "Live _updating"
-#~ msgstr "Live Akt_ualisierung"
-#~ msgid "Load iPod(s)"
-#~ msgstr "iPod(s) einlesen"
-#~ msgid "Logic:"
-#~ msgstr "Logik:"
-#~ msgid "Mass-modify tags when multiple tracks are selected"
-#~ msgstr "Alle Tags ändern, falls mehrere Stücke ausgewählt wurden."
-#~ msgid "Match only _checked tracks"
-#~ msgstr "Nur ausgewählte Stü_cke einbeziehen"
-#~ msgid "Match:"
-#~ msgstr ":"
-#~ msgid "Maximum cache size:"
-#~ msgstr "Max. Größe Zwischenspeicher"
-#~ msgid "Maximum threads:"
-#~ msgstr "Maximale Zahl der Hintergrunddienste:"
-#~ msgid "Metadata"
-#~ msgstr "Metadaten"
-#~ msgid "Model:"
-#~ msgstr "Modell:"
-#~ msgid "Modified:"
-#~ msgstr "Modifiziert:"
-#~ msgid "Most Recently Played Tracks"
-#~ msgstr "Zuletzt gespielte Stücke"
-#~ msgid "Music"
-#~ msgstr "Musik"
-#~ msgid "Music root:"
-#~ msgstr "Stammverzeichnis für Musik:"
-#~ msgid "Never show this dialogue again"
-#~ msgstr "Diesen Dialog nie wieder zeigen"
-#~ msgid "No lower margin"
-#~ msgstr "Keine untere Grenze"
-#~ msgid "No upper margin"
-#~ msgstr "Keine obere Grenze"
-#~ msgid ""
-#~ "Normally the charset specified when first importing the track will be "
-#~ "used for the filename. If you set this option you can set a different "
-#~ "charset with the charset selector (Preferences/'Adding/Updating/"
-#~ "Syncing'). Note: the charset info is stored in the extended information "
-#~ "file (see Preferences/'Writing of the iTunesDB'). Tracks imported before "
-#~ "V0.51 will have no charset stored. Instead the charset specified will be "
-#~ "used."
-#~ msgstr ""
-#~ "Normalerweise wird der Zeichensatz, der beim ersten Einlesen spezifiziert "
-#~ "wurde, auch für den Dateinamen verwendet. Wenn Sie diese Option "
-#~ "aktivieren, können Sie unter 'Bearbeiten>Einstellungen>Musik>Kodiere...' "
-#~ "einen anderen Zeichensatz auswählen. Bitte beachten Sie: Die Information "
-#~ "über den verwendeten Zeichensatz wird mit den erweiterten Informationen "
-#~ "gespeichert . Stücke, die vor der gtkpod-Version 0.51 eingelesen wurden, "
-#~ "haben keine Informationen über den Zeichensatz gespeichert und der oben "
-#~ "spezifizierte Zeichensatz wird verwendet."
-#~ msgid ""
-#~ "Normally, if a track is no longer present in the sync directory, it will "
-#~ "be removed from the playlist, but not from the iPod or local repository.\n"
-#~ "If this option is checked, tracks will be completely removed from the "
-#~ "iPod or local repository, unless the track is a member of other playlists "
-#~ "as well.\n"
-#~ "NOTE: if you sync with the master playlist, you must check this option if "
-#~ "you want tracks to be removed, because removing from the master playlist "
-#~ "means removing from the iPod."
-#~ msgstr ""
-#~ "Normalerweise wird ein Stück, das nicht im Synchronisationsverzeichnis "
-#~ "existiert, aus der Wiedergabeliste gelöscht, nicht aber auf dem iPod oder "
-#~ "dem lokalen Verzeichnis. Wird diese Option gewählt, werden die Stücke "
-#~ "vollständig gelöscht, falls ein Stück nicht in einer anderen "
-#~ "Wiedergabeliste erscheint. Hinweis: Bei Synchronisierung mit der "
-#~ "'Hauptwiedergabeliste' muss diese Option gewählt sein, wenn Stücke "
-#~ "gelöscht werden sollen, da Löschen aus der Wiedergabeliste auch Löschen "
-#~ "auf dem iPod bedeutet."
-#~ msgid ""
-#~ "Normally, the encoding specified above will only be used when importing "
-#~ "new tracks, and for any operations involving existing tracks, the "
-#~ "encoding specified when the file was first imported will be used. You can "
-#~ "use the options below to override this behavior, in case you specified "
-#~ "the encoding incorrectly for the first import."
-#~ msgstr ""
-#~ "Normalerweise wird die o.a. Kodierung nur beim Import neuer Stücke "
-#~ "verwendet. Bei vorhandenen Stücken wird die beim ersten Import angegebene "
-#~ "Kodierung angewendet. Sie können aber die u.a. Optionen anwenden, falls "
-#~ "Sie die Kodierung beim Import falsch angegeben haben."
-#~ msgid "Notes sync command:"
-#~ msgstr "Befehl zum Abgleich der Notizen:"
-#~ msgid "Number of filter tabs:"
-#~ msgstr "Anzahl der Filtereinträge:"
-#~ msgid "Number of tracks:"
-#~ msgstr "Anzahl der Stücke:"
-#~ msgid "On startup automatically sync with playlist directories"
-#~ msgstr "Beim Start automatisch mit den Wiedergabelisten abgleichen"
-#~ msgid "On startup automatically sync with the following directory"
-#~ msgstr "Beim Start automatisch mit folgendem Verzeichnis abgleichen"
-#~ msgid "On startup automatically update (Live Playlist)"
-#~ msgstr "Automatische Aktualisierung beim Start"
-#~ msgid "One for each Album"
-#~ msgstr "Eine für jedes Album"
-#~ msgid "One for each Artist"
-#~ msgstr "Eine für jeden Interpreten"
-#~ msgid "One for each Composer"
-#~ msgstr "Eine für jeden Komponisten"
-#~ msgid "One for each Genre"
-#~ msgstr "Eine für jedes Genre"
-#~ msgid "One for each Rating"
-#~ msgstr "Eine für jede Bewertung"
-#~ msgid "One for each Year"
-#~ msgstr "Eine für jedes Jahr"
-#~ msgid "Overwrite existing tags"
-#~ msgstr "Überschreibe vorhandene Tags"
-#~ msgid "Parse file name to set missing tags"
-#~ msgstr "Analysiere Dateinamen, um fehlende Tags zu ergänzen "
-#~ msgid "Path:"
-#~ msgstr "Pfad:"
-#~ msgid "Photo Window"
-#~ msgstr "Foto Fenster"
-#~ msgid "Playcount:"
-#~ msgstr "Wiedergabezähler:"
-#~ msgid "Played:"
-#~ msgstr "Gespielt:"
-#~ msgid "Playlist name:"
-#~ msgstr "Name der Wiedergabeliste:"
-#~ msgid "Playlist type:"
-#~ msgstr "Art der Wiedergabeliste:"
-#~ msgid "Please refer to the notice below."
-#~ msgstr "Bitte beachten Sie den Hinweis weiter unten."
-#~ msgid "Position:"
-#~ msgstr "Position:"
-#~ msgid "Preferences"
-#~ msgstr "Einstellungen"
-#~ msgid "Progress Information"
-#~ msgstr "Fortschritt"
-#~ msgid ""
-#~ "Provide a shell command to generate a thumbnail image of your video "
-#~ "file.  The following format strings will be expanded:\n"
-#~ "- %f: the input file\n"
-#~ "- %o: the output file (which is automatically generated)\n"
-#~ msgstr ""
-#~ "Stellt einen 'Shell' Befehl bereit, um ein Vorschaubild Ihres Videos zu "
-#~ "erzeugen.  Die folgenden Formatbefehle werden erweitert:\n"
-#~ "- %f: die Eingabedatei\n"
-#~ "- %o: die Ausgabedatei (wird automatisch erzeugt)\n"
-#~ msgid "R_ename Album"
-#~ msgstr "Album umb_enennen"
-#~ msgid "Random Playlist from Displayed Tracks"
-#~ msgstr "Zufällig aus den angezeigten Stücken"
-#~ msgid "Randomize Current Playlist"
-#~ msgstr "Aktuelle Wiedergabeliste zufällig sortieren"
-#~ msgid "Rating:"
-#~ msgstr "Bewertung:"
-#~ msgid "Read embedded cover art information"
-#~ msgstr "Eingebettete Cover-Information auslesen"
-#~ msgid "Read embedded tags from music files"
-#~ msgstr "Eingebettete Tags auslesen"
-
-#, fuzzy
-#~ msgid "ReplayGain Preferences"
-#~ msgstr "Voreinstellungen Konvertierung"
-
-#, fuzzy
-#~ msgid "ReplayGain..."
-#~ msgstr "kopiere..."
-#~ msgid "Report a _Problem"
-#~ msgstr "Ein _Problem berichten"
-#~ msgid "Report problems when accessing mserv"
-#~ msgstr "Probleme während des Zugriffs auf die mserv Datenbank mitteilen"
-#~ msgid "Repository"
-#~ msgstr "Verzeichnis"
-#~ msgid "Repository Options"
-#~ msgstr "Verzeichnis Optionen"
-#~ msgid "Repository name:"
-#~ msgstr "Verzeichnisname:"
-#~ msgid "Repository type:"
-#~ msgstr "Verzeichnistyp:"
-#~ msgid "Repository/iPod Options"
-#~ msgstr "Verzeichnis / iPod Optionen"
-#~ msgid "Select '-1' for no upper limit."
-#~ msgstr "'-1' wählen für 'keine obere Schranke'."
-#~ msgid "Select '0' for no lower limit."
-#~ msgstr "'0' wählen für 'keine untere Schranke'."
-#~ msgid "Selected Filter Tab Entry from Database"
-#~ msgstr "Gewählter Filtereintrag der Datenbank"
-#~ msgid "Selected Filter Tab Entry from Hard Disk"
-#~ msgstr "Gewählter Filtereintrag der Festplatte"
-#~ msgid "Selected Filter Tab Entry from Playlist"
-#~ msgstr "Gewählter Filtereintrag der Wiedergabeliste "
-#~ msgid "Selected Filter Tab Entry from iPod"
-#~ msgstr "Gewählter Filtereintrag des iPod "
-#~ msgid "Selected Playlist Including Tracks from Database"
-#~ msgstr ""
-#~ "Ausgewählte Wiedergabeliste einschließlich der Stücke aus der Datenbank"
-#~ msgid "Selected Playlist Including Tracks from Hard Disk"
-#~ msgstr ""
-#~ "Ausgewählte Wiedergabeliste einschließlich der Stücke von der Festplatte"
-#~ msgid "Selected Playlist Including Tracks from iPod"
-#~ msgstr "Ausgewählte Wiedergabeliste einschließlich der Stücke vom iPod"
-#~ msgid "Selected Tab _Entry"
-#~ msgstr "Ausgewählter _Eintrag"
-#~ msgid "Selected Tracks from Database"
-#~ msgstr "Ausgewählte Stücke aus der Datenbank"
-#~ msgid "Selected Tracks from Hard Disk"
-#~ msgstr "Ausgewählte Stücke von der Festplatte"
-#~ msgid "Selected Tracks from Playlist"
-#~ msgstr "Ausgewählte Stücke aus der Wiedergabeliste"
-#~ msgid "Selected Tracks from iPod"
-#~ msgstr "Ausgewählte Stücke vom iPod"
-#~ msgid "Selected _Playlist"
-#~ msgstr "Ausgewählte _Wiedergabeliste"
-#~ msgid "Selected _Tracks"
-#~ msgstr "Ausgewählte S_tücke"
-#~ msgid "Selected playlist"
-#~ msgstr "Ausgewählte Wiedergabeliste"
-#~ msgid "Set Cover Art from _File"
-#~ msgstr "Nehme Cover-Bild aus _Datei"
-#~ msgid "Set still missing tags to file name"
-#~ msgstr "Schreibe fehlende Tags in Dateinamen"
-#~ msgid "Settings..."
-#~ msgstr "Einstellungen..."
-#~ msgid "Show summary of sync result"
-#~ msgstr "Zeige Zusammenfassung nach Abgleich."
-#~ msgid "Skip the track"
-#~ msgstr "Stück überspringen"
-#~ msgid "Sort by:"
-#~ msgstr "Sortiere nach:"
-#~ msgid "Sort tracks according to: "
-#~ msgstr "Sortiere Stücke nach: "
-#~ msgid "Sorting Options"
-#~ msgstr "Sortieroptionen"
-#~ msgid "Sorting..."
-#~ msgstr "Sortiere..."
-#~ msgid "Source:"
-#~ msgstr "Quelle:"
-#~ msgid ""
-#~ "Specify exact path including command line options. '%i' will be replaced "
-#~ "with the mount point of the iPod."
-#~ msgstr ""
-#~ "Geben sie den genauen Pfad einschließlich Kommandozeilenoptionen an. '%i' "
-#~ "wird durch den Einhängepunkt des iPods ersetzt."
-#~ msgid "Specify interval"
-#~ msgstr "Intervall angeben"
-#~ msgid "Start display automatically"
-#~ msgstr "Anzeige automatisch starten"
-#~ msgid "Synchronise Contacts, Calendar and Notes"
-#~ msgstr "Kontakte, Kalender und Notizen abgleichen"
-#~ msgid "Synchronize All"
-#~ msgstr "Alles abgleichen"
-#~ msgid "Synchronize Calendar"
-#~ msgstr "Kalender abgleichen"
-#~ msgid "Synchronize Contacts"
-#~ msgstr "Kontakte abgleichen"
-#~ msgid "Synchronize Notes"
-#~ msgstr "Notizen abgleichen"
-#~ msgid "Tag and filename encoding:"
-#~ msgstr "Tag und Dateiname kodieren:"
-#~ msgid "Text color"
-#~ msgstr "Textfarbe"
-#~ msgid ""
-#~ "The local copy of the track is referenced in the playlist. If the track "
-#~ "is not available locally, an error message is displayed."
-#~ msgstr ""
-#~ "Die lokale Kopie des Stückes wird in der Wiedergabeliste angezeigt.\n"
-#~ "Falls das Stück lokal nicht verfügbar ist, wird eine Fehlermeldung "
-#~ "ausgegeben."
-#~ msgid ""
-#~ "The output of the background conversion scripts is copied below. Each "
-#~ "page of the notebook corresponds to one background thread."
-#~ msgstr ""
-#~ "Die Ausgabe der Konvertierungsskripte wird unten angezeigt. Jede Seite "
-#~ "entspricht einem Hintergrunddienst."
-#~ msgid "The track on the iPod is referenced in the playlist file."
-#~ msgstr "Die Datei auf dem iPod wird in der Wiedergabeliste angezeigt."
-#~ msgid "Time:"
-#~ msgstr "Zeit:"
-#~ msgid ""
-#~ "To fill additional information, <i>gtkpod</i> can use a database provided "
-#~ "by the <i>mserv</i> music server. If you do not know what <i>mserv</i> "
-#~ "is, leave this alone."
-#~ msgstr ""
-#~ "Um zusätzliche Informationen hinzuzufügen kann <i>gtkpod</i> eine "
-#~ "Datenbank benutzen, die vom <i>mserv</i> Musikserver bereitgestellt wird. "
-#~ "Falls Sie nicht wissen, was <i>mserv</i> ist, lassen Sie dieses Feld frei."
-#~ msgid "Top"
-#~ msgstr "Oben"
-#~ msgid "Tracks"
-#~ msgstr "Stücke"
-#~ msgid "Tracks Most Often Listened To"
-#~ msgstr "Am häufigsten gehörte Stücke"
-#~ msgid "Tracks in Selected Tab _Entry"
-#~ msgstr "Stücke im ausgewählten _Sortierungseintrag"
-#~ msgid "Tracks in Selected _Playlist"
-#~ msgstr "Stücke in ausgewählter _Wiedergabeliste"
-#~ msgid "Transfer tracks in background mode"
-#~ msgstr "Übertrage Stücke im Hintergrund"
-#~ msgid ""
-#~ "Try to load contents of all connected iPods. For each iPod a separate "
-#~ "repository must be set up."
-#~ msgstr ""
-#~ "Versuche den Inhalt aller angeschlossenen iPods zu laden. Für jeden iPod "
-#~ "muss ein separates Verzeichnis existieren."
-#~ msgid "Undo _Track"
-#~ msgstr "S_tück rückgängig"
-#~ msgid "Update _mserv Data from File"
-#~ msgstr "_mserv-Daten aktualisieren"
-#~ msgid "Update information about the existing track"
-#~ msgstr "Aktualisiere Informationen über das Stück"
-#~ msgid "Update/Sync All Playlists"
-#~ msgstr "Aktualisierung/Abgleich aller Wiedergabelisten"
-#~ msgid "Update/Sync Playlist"
-#~ msgstr "Aktualisierung/Abgleich der Wiedergabeliste"
-#~ msgid "Use legacy format for MP3 tags"
-#~ msgstr "Verwende das Legacy-Format für MP3 Tags"
-#~ msgid "Use mserv database to fill track information"
-#~ msgstr "Verwende die mserv Datenbank, um Informationen zu ergänzen"
-#~ msgid ""
-#~ "Use selected charset (Preferences/'Adding/Updating/ Syncing')\n"
-#~ "for this filename."
-#~ msgstr ""
-#~ "Gewählten Zeichensatz für diesen Dateinamen verwenden.\n"
-#~ "(Einstellung unter: Bearbeiten > Einstellungen > Musik > Kodiere...)"
-#~ msgid "Username:"
-#~ msgstr "Benutzername:"
-#~ msgid "Video Thumbnail Generation"
-#~ msgstr "Videovorschaubilder erzeugen"
-#~ msgid "Video thumbnailing program:"
-#~ msgstr "Programm für Videovorschaubilder:"
-#~ msgid "View Full Size"
-#~ msgstr "Originalgöße anzeigen"
-#~ msgid ""
-#~ "When copying from iPod no check is performed on whether the destination "
-#~ "file exists. Enabling this option will make gtkpod check whether the "
-#~ "length of the destination file is the same as the file in the iPod. If so "
-#~ "the file is skipped, allowing a quick sync of the iPod's contents."
-#~ msgstr ""
-#~ "Wird ein Stück vom iPod kopiert, wird normalerweise nicht überprüft, ob "
-#~ "die Datei im Zielverzeichnis bereits vorhanden ist. Wenn Sie diese Option "
-#~ "aktivieren, wird gtkpod anhand der Dateigröße überprüfen, ob die Datei "
-#~ "bereits existiert. Falls ja, wird das Kopieren übersprungen. Dies erlaubt "
-#~ "es, einen schnellen Abgleich der Daten auf Ihrer Festplatte mit denen des "
-#~ "iPods vorzunehmen."
-#~ msgid "When updating tracks, display information:"
-#~ msgstr "Zeige beim Aktualisieren der Stücke folgende Informationen:"
-#~ msgid ""
-#~ "Will show a list of tracks removed and a list of tracks newly added or "
-#~ "updated."
-#~ msgstr ""
-#~ "Zeigt eine Liste von gelöschten, neu hinzugefügten oder aktualisierten "
-#~ "Stücken."
-#~ msgid "Write all changes made to the disk and the iPod(s)."
-#~ msgstr "Alle Änderungen auf Festplatte und iPod(s) sichern."
-#~ msgid "Write tags to disk when edited"
-#~ msgstr "Tags nach Änderung auf Festplatte schreiben"
-#~ msgid ""
-#~ "You can separate several templates by a ';'. The first one matching the "
-#~ "filename will be used.\n"
-#~ "\n"
-#~ "Example: <i>%a - %A/%T %t.mp3;%t.wav</i>.\n"
-#~ "\n"
-#~ "- artist: %a\n"
-#~ "- album: %A\n"
-#~ "- composer: %c\n"
-#~ "- title: %t\n"
-#~ "- genre: %G\n"
-#~ "- track nr: %T\n"
-#~ "- CD nr: %C\n"
-#~ "- year: %Y\n"
-#~ "- skip data: %*\n"
-#~ "- the character '%': %%."
-#~ msgstr ""
-#~ "Sie können verschiedene Vorlagen durch ein ';'. separieren. Die erste, "
-#~ "die einem Dateinamen entspricht, wird benutzt.\n"
-#~ "\n"
-#~ "Beispiel: <i>%a - %A/%T %t.mp3;%t.wav</i>.\n"
-#~ "\n"
-#~ "- Interpret: %a\n"
-#~ "- Album: %A\n"
-#~ "- Komponist: %c\n"
-#~ "- Titel: %t\n"
-#~ "- Genre: %G\n"
-#~ "- Stück-Nr: %T\n"
-#~ "- CD Nr: %C\n"
-#~ "- Jahr: %Y\n"
-#~ "- Überspringe Eintrag: %*\n"
-#~ "- Buchstabe '%': %%."
-
-#, fuzzy
-#~ msgid ""
-#~ "You can separate several templates by a ';'. The first one matching the "
-#~ "filename will be used.\n"
-#~ "\n"
-#~ "Examples:\n"
-#~ "- <i>folder.jpg</i>: Use <i>folder.jpg</i> as cover art.\n"
-#~ "- <i>folder</i>: Use <i>folder.jpg</i>, <i>folder.png</i>...\n"
-#~ "- <i>../%A.jpg</i>: Use <i>&lt;Album&gt;.jpg</i> in the parent directory\n"
-#~ "- <i>%A</i>: Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>...\n"
-#~ "- <i>folder.jpg;%a.jpg</i>: First try <i>folder.jpg</i>, then <i>&lt;"
-#~ "artist&gt;.jpg</i>\n"
-#~ "\n"
-#~ "- artist: %a\n"
-#~ "- album: %A\n"
-#~ "- composer: %c\n"
-#~ "- title: %t\n"
-#~ "- genre: %G\n"
-#~ "- track nr: %T\n"
-#~ "- CD nr: %C\n"
-#~ "- year: %Y\n"
-#~ "- skip data: %*\n"
-#~ "- the character '%': %%."
-#~ msgstr ""
-#~ "Sie können verschiedene Vorlagen durch ein ';'. separieren. Die erste, "
-#~ "die einem Dateinamen entspricht, wird benutzt.\n"
-#~ "\n"
-#~ "Beispiele:\n"
-#~ "- <i>folder.jpg</i>: Verwende <i>folder.jpg</i> als Cover-Bild.\n"
-#~ "- <i>folder</i>: Verwende <i>folder.jpg</i>, <i>folder.png</i>...\n"
-#~ "- <i>../%A.jpg</i>: Verwende <i>&lt;Album&gt;.jpg</i> im "
-#~ "Stammverzeichnis\n"
-#~ "- <i>%a</i>: Verwende <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</"
-#~ "i>...\n"
-#~ "- <i>folder.jpg;%a.jpg</i>: Versuchen Sie zunächst <i>folder.jpg</i>, "
-#~ "dann <i>&lt; Interpret&gt;.jpg</i>\n"
-#~ "\n"
-#~ "- Interpret: %a\n"
-#~ "- Album: %A\n"
-#~ "- Komponist: %c\n"
-#~ "- Titel: %t\n"
-#~ "- Genre: %G\n"
-#~ "- Stück-Nr: %T\n"
-#~ "- CD Nr: %C\n"
-#~ "- Jahr: %Y\n"
-#~ "- Überspringe Eintrag: %*\n"
-#~ "- Buchstabe '%': %%."
-#~ msgid "_About gtkpod"
-#~ msgstr "_Über gtkpod"
-#~ msgid "_Add Album"
-#~ msgstr "_Album hinzufügen"
-#~ msgid "_Add Image"
-#~ msgstr "_Bild hinzufügen"
-#~ msgid "_Album"
-#~ msgstr "_Album"
-#~ msgid "_All Tracks"
-#~ msgstr "_Alle Stücke"
-#~ msgid "_Arrange Filter Tabs"
-#~ msgstr "_Sortiere Filtereinträge"
-#~ msgid "_Check iPod's Files"
-#~ msgstr "_Überprüfe iPod Dateien"
-#~ msgid "_Contents"
-#~ msgstr "_Inhalte"
-#~ msgid "_Conversion Log"
-#~ msgstr "_Konvertierungsprotokoll"
-#~ msgid "_Create Playlists"
-#~ msgstr "_Erstelle Wiedergabelisten"
-#~ msgid "_Create iPod's Directories"
-#~ msgstr "_iPod-Verzeichnis(se) erstellen"
-#~ msgid "_Delete"
-#~ msgstr "_Löschen"
-#~ msgid "_Display"
-#~ msgstr "_Anzeige"
-#~ msgid "_Displayed Tracks"
-#~ msgstr "_Angezeigte Stücke"
-#~ msgid "_Edit"
-#~ msgstr "_Bearbeiten"
-#~ msgid "_Enqueue"
-#~ msgstr "_Vormerken zum Abspielen"
-#~ msgid "_Export Tracks from Database"
-#~ msgstr "_Export aus der Datenbank"
-#~ msgid "_Fewer Filter Tabs"
-#~ msgstr "Weniger _Filtereinträge"
-#~ msgid "_Filter Bar"
-#~ msgstr "_Filterleiste"
-#~ msgid "_General"
-#~ msgstr "All_gemein"
-#~ msgid "_Help"
-#~ msgstr "_Hilfe"
-#~ msgid "_Info Window"
-#~ msgstr "_Info Fenster"
-#~ msgid "_Limit to"
-#~ msgstr "_Begrenzen auf"
-#~ msgid "_Load iPod(s)"
-#~ msgstr "iPod(s) ein_lesen"
-#~ msgid "_Local"
-#~ msgstr "_Lokal"
-#~ msgid "_Lyrics"
-#~ msgstr "_Texte"
-#~ msgid "_M3U"
-#~ msgstr "_M3U"
-#~ msgid "_Misc."
-#~ msgstr "_Verschiedenes"
-#~ msgid "_More Filter Tabs"
-#~ msgstr "_Mehr Filtereinträge"
-#~ msgid "_Music"
-#~ msgstr "_Musik"
-#~ msgid "_Newly Added Tracks"
-#~ msgstr "_Neu hinzugefügte Stücke"
-#~ msgid "_Normalize Volume"
-#~ msgstr "Lautstärke _normalisieren"
-#~ msgid "_PLS"
-#~ msgstr "_PLS"
-#~ msgid "_Photos"
-#~ msgstr "_Fotos"
-#~ msgid "_Play Now"
-#~ msgstr "_Jetzt abspielen"
-#~ msgid "_Podcasts"
-#~ msgstr "_Podcasts"
-#~ msgid "_Prefer Local"
-#~ msgstr "_Bevorzuge Lokal"
-#~ msgid "_Remove Album"
-#~ msgstr "Entfe_rne Album"
-#~ msgid "_Remove Cover Art"
-#~ msgstr "Entfe_rne Cover-Bild"
-#~ msgid "_Remove Images"
-#~ msgstr "Entfe_rne Bilder"
-#~ msgid "_Save Changes"
-#~ msgstr "Änderungen _sichern"
-#~ msgid "_Save Displayed Track Order"
-#~ msgstr "_Dargestellte Reihenfolge speichern"
-#~ msgid "_Sorting"
-#~ msgstr "_Sortierung"
-#~ msgid "_Synchronize Playlist with Dir(s)"
-#~ msgstr "Wiedergabeli_ste mit Verzeichnis(sen) abgleichen"
-#~ msgid "_Toolbar"
-#~ msgstr "Werkzeugleis_te"
-#~ msgid "_Tools"
-#~ msgstr "_Werkzeuge"
-#~ msgid "_Tooltips"
-#~ msgstr "Werkzeug_tipps"
-#~ msgid "_Undo All"
-#~ msgstr "_Alles rückgängig"
-#~ msgid "_Update Tracks from File"
-#~ msgstr "Akt_ualisiere Stücke aus Datei"
-#~ msgid "_Video"
-#~ msgstr "_Video"
-#~ msgid "_View"
-#~ msgstr "_Vorschau"
-#~ msgid "_Zoom"
-#~ msgstr "_Vergrößern"
-#~ msgid "_iPod"
-#~ msgstr "_iPod"
-
-#, fuzzy
-#~ msgid "dB"
-#~ msgstr "B"
-#~ msgid "gtkpod Information"
-#~ msgstr "gtkpod Informationen"
-#~ msgid ""
-#~ "iPod\n"
-#~ "Local Repository (Standard)\n"
-#~ "Local Repository (Podcasts)\n"
-#~ msgstr ""
-#~ "iPod\n"
-#~ "Lokales Verzeichnis (Standard)\n"
-#~ "Lokales Verzeichnis (Podcasts)\n"
-#~ msgid "iPod mountpoint:"
-#~ msgstr "iPod Einhängepunkt:"
-#~ msgid "iTunesDB backup:"
-#~ msgstr "Sicherung iTunesDB:"
-#~ msgid "mserv Preferences"
-#~ msgstr "mserv-Voreinstellungen"
-#~ msgid "mserv root:"
-#~ msgstr "mserv Stammverzeichnis:"
-#~ msgid "special_sorttab -- Don't translate!"
-#~ msgstr "special_sorttab -- Don't translate!\""
 #~ msgid "Could not initialize GnomeVFS\n"
 #~ msgstr "Konnte GnomeVFS nicht initialisieren\n"
-#~ msgid "Arabic (IBM-864)"
-#~ msgstr "Arabisch (IBM-864)"
-#~ msgid "Arabic (ISO-8859-6)"
-#~ msgstr "Arabisch (ISO-8859-6)"
-#~ msgid "Arabic (Windows-1256)"
-#~ msgstr "Arabisch (Windows-1256)"
-#~ msgid "Baltic (ISO-8859-13)"
-#~ msgstr "Baltisch (ISO-8859-13)"
-#~ msgid "Baltic (ISO-8859-4)"
-#~ msgstr "Baltisch (ISO-8859-4)"
-#~ msgid "Baltic (Windows-1257)"
-#~ msgstr "Baltisch (Windows-1257)"
-#~ msgid "Celtic (ISO-8859-14)"
-#~ msgstr "Keltisch (ISO-8859-14)"
-#~ msgid "Central European (IBM-852)"
-#~ msgstr "Mitteleuropäisch (IBM-852)"
-#~ msgid "Central European (ISO-8859-2)"
-#~ msgstr "Mitteleuropäisch (ISO-8859-2)"
-#~ msgid "Central European (Windows-1250)"
-#~ msgstr "Mitteleuropäisch (Windows-1250)"
-#~ msgid "Chinese Simplified (GB18030)"
-#~ msgstr "Vereinfachtes Chinesisch (GB18030)"
-#~ msgid "Chinese Simplified (GB2312)"
-#~ msgstr "Vereinfachtes Chinesisch (GB2312)"
-#~ msgid "Chinese Traditional (Big5)"
-#~ msgstr "Traditionelles Chinesisch (Big5)"
-#~ msgid "Chinese Traditional (Big5-HKSCS)"
-#~ msgstr "Traditionelles Chinesisch (Big5-HKSCS)"
-#~ msgid "Cyrillic (IBM-855)"
-#~ msgstr "Kyrillisch (IBM-855)"
-#~ msgid "Cyrillic (ISO-8859-5)"
-#~ msgstr "Kyrillisch (ISO-8859-5)"
-#~ msgid "Cyrillic (ISO-IR-111)"
-#~ msgstr "Kyrillisch (ISO-IR-111)"
-#~ msgid "Cyrillic (KOI8-R)"
-#~ msgstr "Kyrillisch (KOI8-R)"
-#~ msgid "Cyrillic (Windows-1251)"
-#~ msgstr "Kyrillisch (Windows-1251)"
-#~ msgid "Cyrillic/Russian (CP-866)"
-#~ msgstr "Kyrillisch/Russisch (CP-866)"
-#~ msgid "Cyrillic/Ukrainian (KOI8-U)"
-#~ msgstr "Kyrillisch/Ukrainisch (KOI8-U)"
-#~ msgid "English (US-ASCII)"
-#~ msgstr "Englisch (US-ASCII)"
-#~ msgid "Greek (ISO-8859-7)"
-#~ msgstr "Griechisch (ISO-8859-7)"
-#~ msgid "Greek (Windows-1253)"
-#~ msgstr "Griechisch (Windows-1253)"
-#~ msgid "Hebrew (IBM-862)"
-#~ msgstr "Hebräisch (IBM-862)"
-#~ msgid "Hebrew (Windows-1255)"
-#~ msgstr "Hebräisch (Windows-1255)"
-#~ msgid "Japanese (automatic detection)"
-#~ msgstr "Japanisch (automatische Detektion)"
-#~ msgid "Japanese (EUC-JP)"
-#~ msgstr "Japanisch (EUC-JP)"
-#~ msgid "Japanese (ISO-2022-JP)"
-#~ msgstr "Japanisch (ISO-2022-JP)"
-#~ msgid "Japanese (Shift_JIS)"
-#~ msgstr "Japanisch (Shift_JIS)"
-#~ msgid "Korean (EUC-KR)"
-#~ msgstr "Koreanisch (EUC-KR)"
-#~ msgid "Nordic (ISO-8859-10)"
-#~ msgstr "Nordisch (ISO-8859-10)"
-#~ msgid "South European (ISO-8859-3)"
-#~ msgstr "Südeuropäisch (ISO-8859-3)"
-#~ msgid "Thai (TIS-620)"
-#~ msgstr "Thai (TIS-620)"
-#~ msgid "Turkish (IBM-857)"
-#~ msgstr "Türkisch (IBM-857)"
-#~ msgid "Turkish (ISO-8859-9)"
-#~ msgstr "Türkisch (ISO-8859-9)"
-#~ msgid "Turkish (Windows-1254)"
-#~ msgstr "Türkisch (Windows-1254)"
-#~ msgid "Unicode (UTF-7)"
-#~ msgstr "Unicode (UTF-7)"
-#~ msgid "Unicode (UTF-8)"
-#~ msgstr "Unicode (UTF-8)"
-#~ msgid "Unicode (UTF-16BE)"
-#~ msgstr "Unicode (UTF-16BE)"
-#~ msgid "Unicode (UTF-16LE)"
-#~ msgstr "Unicode (UTF-16LE)"
-#~ msgid "Unicode (UTF-32BE)"
-#~ msgstr "Unicode (UTF-32BE)"
-#~ msgid "Unicode (UTF-32LE)"
-#~ msgstr "Unicode (UTF-32LE)"
-#~ msgid "Vietnamese (VISCII)"
-#~ msgstr "Vietnamesisch (VISCII)"
-#~ msgid "Vietnamese (Windows-1258)"
-#~ msgstr "Vietnamesisch (Windows-1258)"
-#~ msgid "Visual Hebrew (ISO-8859-8)"
-#~ msgstr "Visuelles Hebräisch (ISO-8859-8)"
-#~ msgid "Western (IBM-850)"
-#~ msgstr "Westlich (IBM-850)"
-#~ msgid "Western (ISO-8859-1)"
-#~ msgstr "Westlich (ISO-8859-1)"
-#~ msgid "Western (ISO-8859-15)"
-#~ msgstr "Westlich (ISO-8859-15)"
-#~ msgid "Western (Windows-1252)"
-#~ msgstr "Westlich (Windows-1252)"
-#~ msgid "Audio/Video"
-#~ msgstr "Audio/Video"
-#~ msgid "Audio"
-#~ msgstr "Audio"
-#~ msgid "Video"
-#~ msgstr "Video"
-#~ msgid "Podcast"
-#~ msgstr "Podcast"
-#~ msgid "Video Podcast"
-#~ msgstr "Video Podcast"
-#~ msgid "Audiobook"
-#~ msgstr "Hörbuch"
-#~ msgid "Music Video"
-#~ msgstr "Musik Video"
-#~ msgid "TV Show"
-#~ msgstr "Fernsehshow"
-#~ msgid "TV Show & Music Video"
-#~ msgstr "Fernsehshow u. Musik Video"
-#~ msgid "days"
-#~ msgstr "Tage"
-#~ msgid "weeks"
-#~ msgstr "Wochen"
-#~ msgid "months"
-#~ msgstr "Monate"
-#~ msgid "kbps"
-#~ msgstr "kbit/s"
-#~ msgid "Hz"
-#~ msgstr "Hz"
-#~ msgid "secs"
-#~ msgstr "Sek."
-#~ msgid "Bitrate"
-#~ msgstr "Bitrate"
-#~ msgid "Samplerate"
-#~ msgstr "Samplerate"
-#~ msgid "Kind"
-#~ msgstr "Art"
-#~ msgid "Date modified"
-#~ msgstr "Geändert"
-#~ msgid "Track number"
-#~ msgstr "Stücknummer"
-#~ msgid "Size"
-#~ msgstr "Dateigröße"
-#~ msgid "Play time"
-#~ msgstr "Spielzeit"
-#~ msgid "Comment"
-#~ msgstr "Kommentar"
-#~ msgid "Date added"
-#~ msgstr "Hinzugefügt"
-#~ msgid "Playcount"
-#~ msgstr "Wiedergabezähler"
-#~ msgid "Last played"
-#~ msgstr "Zuletzt gespielt"
-#~ msgid "Disc number"
-#~ msgstr "CD-Nummer"
-#~ msgid "Rating"
-#~ msgstr "Bewertung"
-#~ msgid "Compilation"
-#~ msgstr "Sampler"
-#~ msgid "BPM"
-#~ msgstr "BPM"
-#~ msgid "Grouping"
-#~ msgstr "Gruppierung"
-#~ msgid "Playlist"
-#~ msgstr "Wiedergabeliste"
-#~ msgid "Video Kind"
-#~ msgstr "Video Art"
-#~ msgid "Season number"
-#~ msgstr "CD-Nummer"
-#~ msgid "Skip count"
-#~ msgstr "Überspringen"
-#~ msgid "Last skipped"
-#~ msgstr "Zuletzt übersprungen"
-#~ msgid "Album artist"
-#~ msgstr "Album Interpreten"
-#~ msgid "contains"
-#~ msgstr "enthält"
-#~ msgid "does not contain"
-#~ msgstr "enthält nicht"
-#~ msgid "is"
-#~ msgstr "ist"
-#~ msgid "is not"
-#~ msgstr "ist nicht"
-#~ msgid "starts with"
-#~ msgstr "beginnt mit"
-#~ msgid "ends with"
-#~ msgstr "endet mit"
-#~ msgid "is greater than"
-#~ msgstr "ist größer als"
-#~ msgid "is less than"
-#~ msgstr "ist kleiner als"
-#~ msgid "is in the range"
-#~ msgstr "ist innerhalb"
-#~ msgid "is after"
-#~ msgstr "ist nach dem"
-#~ msgid "is before"
-#~ msgstr "ist vor dem"
-#~ msgid "in the last"
-#~ msgstr "in den letzten"
-#~ msgid "not in the last"
-#~ msgstr "nicht in den letzten"
-#~ msgid "is set"
-#~ msgstr "ist gesetzt"
-#~ msgid "is not set"
-#~ msgstr "ist nicht gesetzt"
-#~ msgid "Not supported"
-#~ msgstr "Nicht unterstützt"
-#~ msgid "minutes"
-#~ msgstr "Minuten"
-#~ msgid "tracks"
-#~ msgstr "Stücke"
-#~ msgid "hours"
-#~ msgstr "Stunden"
-#~ msgid "random order"
-#~ msgstr "zufällige Reihenfolge"
-#~ msgid "title"
-#~ msgstr "Titel"
-#~ msgid "album"
-#~ msgstr "Album"
-#~ msgid "artist"
-#~ msgstr "Interpret"
-#~ msgid "genre"
-#~ msgstr "Genre"
-#~ msgid "most recently added"
-#~ msgstr "zuletzt hinzugefügt"
-#~ msgid "least recently added"
-#~ msgstr "zuerst hinzugefügt"
-#~ msgid "most often played"
-#~ msgstr "am häufigsten gespielt"
-#~ msgid "least often played"
-#~ msgstr "am wenigsten gespielt"
-#~ msgid "most recently played"
-#~ msgstr "zuletzt gespielt"
-#~ msgid "least recently played"
-#~ msgstr "am längsten nicht mehr gespielt"
-#~ msgid "highest rating"
-#~ msgstr "höchste Bewertung"
-#~ msgid "lowest rating"
-#~ msgstr "niedrigste Bewertung"
-#~ msgid "Movie"
-#~ msgstr "Film"
 #~ msgid ""
 #~ "Extended info will not be used. If you have non-transferred tracks,\n"
 #~ "these will be lost.\n"
@@ -4113,184 +5297,6 @@ msgstr "Die Datei '%s' hat Null Spielzeit und wird ignoriert.\n"
 #~ "Berichtigungen und Ergänzungen wurden von folgenden Personen zur "
 #~ "Verfügung gestellt (falls die Liste unvollständig ist, schreiben Sie mir "
 #~ "bitte)\n"
-#~ msgid ""
-#~ "Total\n"
-#~ "(iPod)"
-#~ msgstr ""
-#~ "Insgesamt\n"
-#~ "(iPod)"
-#~ msgid ""
-#~ "Total\n"
-#~ "(local)"
-#~ msgstr ""
-#~ "Insgesamt\n"
-#~ "(lokal)"
-#~ msgid ""
-#~ "Selected\n"
-#~ "Playlist"
-#~ msgstr ""
-#~ "Ausgewählte\n"
-#~ "Wiedergabeliste"
-#~ msgid ""
-#~ "Displayed\n"
-#~ "Tracks"
-#~ msgstr ""
-#~ "Angezeigte\n"
-#~ "Stücke"
-#~ msgid ""
-#~ "Selected\n"
-#~ "Tracks"
-#~ msgstr ""
-#~ "Ausgewählte\n"
-#~ "Stücke"
-#~ msgid "Number of tracks"
-#~ msgstr "Anzahl der Stücke"
-#~ msgid "File size"
-#~ msgstr "Dateigröße"
-#~ msgid "Number of playlists"
-#~ msgstr "Anzahl der Wiedergabelisten"
-#~ msgid "Deleted tracks"
-#~ msgstr "Gelöschte Stücke"
-#~ msgid "File size (deleted)"
-#~ msgstr "Dateigröße (gelöscht)"
-#~ msgid "Non-transferred tracks"
-#~ msgstr "Nicht übertragene Stücke"
-#~ msgid "File size (non-transferred)"
-#~ msgstr "Dateigröße (nicht übertragen)"
-#~ msgid "Effective free space"
-#~ msgstr "Effektiv freier Platz"
-#~ msgid "Select or enter your model"
-#~ msgstr "Modell eingeben oder wählen"
-#~ msgid "File type"
-#~ msgstr "Dateityp"
-#~ msgid "PC File"
-#~ msgstr "PC Datei"
-#~ msgid "iPod File"
-#~ msgstr "iPod Datei"
-#~ msgid "iPod ID"
-#~ msgstr "iPod ID"
-#~ msgid "Track Nr (#)"
-#~ msgstr "Stück Nr."
-#~ msgid "Transferred"
-#~ msgstr "Übertragen"
-#~ msgid "File Size"
-#~ msgstr "Dateigröße"
-#~ msgid "Play Time"
-#~ msgstr "Spielzeit"
-#~ msgid "Date played"
-#~ msgstr "Zuletzt gespielt"
-#~ msgid "Volume"
-#~ msgstr "Lautstärke"
-#~ msgid "Soundcheck"
-#~ msgstr "Soundcheck"
-#~ msgid "CD Nr"
-#~ msgstr "CD Nr."
-#~ msgid "Category"
-#~ msgstr "Kategorie"
-#~ msgid "Description"
-#~ msgstr "Beschreibung"
-#~ msgid "Podcast URL"
-#~ msgstr "Podcast-URL"
-#~ msgid "Podcast RSS"
-#~ msgstr "Podcast RSS"
-#~ msgid "Subtitle"
-#~ msgstr "Untertitel"
-#~ msgid "Date released"
-#~ msgstr "Veröffentlichungsdatum"
-#~ msgid "Checked"
-#~ msgstr "Ausgewählt"
-#~ msgid "Start time"
-#~ msgstr "Start"
-#~ msgid "Stop time"
-#~ msgstr "Stopp"
-#~ msgid "Remember Playback Position"
-#~ msgstr "Wiedergabeposition merken"
-#~ msgid "Skip when Shuffling"
-#~ msgstr "Beim Shuffling überspringen"
-#~ msgid "Artwork Path"
-#~ msgstr "Pfad zu Bilddateien"
-#~ msgid "Media Type"
-#~ msgstr "Medientyp"
-#~ msgid "TV Episode"
-#~ msgstr "TV Episode"
-#~ msgid "TV Network"
-#~ msgstr "TV Netzwerk"
-#~ msgid "Season Nr"
-#~ msgstr "Staffel Nr."
-#~ msgid "Episode Nr"
-#~ msgstr "Folge Nr."
-#~ msgid "Album Artist"
-#~ msgstr "Album Interpreten"
-#~ msgid "Sort Artist"
-#~ msgstr "Sortiere Interpreten"
-#~ msgid "Sort Title"
-#~ msgstr "Sortiere Titel"
-#~ msgid "Sort Album"
-#~ msgstr "Sortiere Alben"
-#~ msgid "Sort Album Artist"
-#~ msgstr "Sortiere Album Interpreten"
-#~ msgid "Sort Composer"
-#~ msgstr "Sortiere Komponisten"
-#~ msgid "Sort TV Show"
-#~ msgstr "Sortiere Fernsehshows"
-#~ msgid "Gapless Track Flag"
-#~ msgstr "Unterbrechungsfreie Stücke"
-#~ msgid "Lyrics"
-#~ msgstr "Texte"
-#~ msgid "Name of file on PC, if available"
-#~ msgstr "Dateiname auf dem PC, falls verfügbar"
-#~ msgid "Name of file on the iPod"
-#~ msgstr "Name der Datei auf dem iPod"
-#~ msgid "Track Nr. and total number of tracks on CD"
-#~ msgstr "Stück-Nr. und Gesamtzahl der Stücke auf der CD"
-#~ msgid "Whether the file has already been transferred to the iPod or not"
-#~ msgstr ""
-#~ "Ungeachtet, ob die Datei bereits zum iPod übertragen wurde oder nicht."
-#~ msgid "Beats per minute"
-#~ msgstr "Beats pro Minute"
-#~ msgid "Number of times the track has been played"
-#~ msgstr "Wie oft dieses Stück bereits gespielt wurde"
-#~ msgid "Star rating from 0 to 5"
-#~ msgstr "Bewertung mit 0 bis 5 Sternen"
-#~ msgid "Date and time track has been added"
-#~ msgstr "Zeitpunkt zu dem das Stück hinzugefügt wurde"
-#~ msgid "Date and time track has last been played"
-#~ msgstr "Zeitpunkt des letzten Abspielens des Stücks"
-#~ msgid "Date and time track has last been modified"
-#~ msgstr "Zeitpunkt der letzten Modifikation des Stücks"
-#~ msgid "Manual volume adjust"
-#~ msgstr "Manuelle Lautstärkeanpassung"
-#~ msgid ""
-#~ "Volume adjust in dB (replay gain) -- you need to activate 'soundcheck' on "
-#~ "the iPod"
-#~ msgstr ""
-#~ "Lautstärkeanpassung in dB (replay gain) -- 'Soundcheck' muss auf dem iPod "
-#~ "aktiviert sein"
-#~ msgid "CD Nr. and total number of CDS in set"
-#~ msgstr "CD-Nummer und Gesamtzahl der CDs im Set"
-#~ msgid ""
-#~ "The category (e.g. 'Technology' or 'Music') where the podcast was located."
-#~ msgstr ""
-#~ "Die Kategorie (z.B. 'Technologie' oder 'Musik') in die das Podcast "
-#~ "eingeordnet war."
-#~ msgid "Accessible by selecting the center button on the iPod."
-#~ msgstr "Wird angezeigt, wenn der mittlere Knopf auf dem iPod gedrückt wird."
-#~ msgid "Release date (for podcasts displayed next to the title on the iPod)"
-#~ msgstr ""
-#~ "Veröffentlichungsdatum (wird bei Podcasts auf dem iPod neben dem Titel "
-#~ "angezeigt)"
-#~ msgid "Used for sorting on the iPod"
-#~ msgstr "Benutzt zum ordnen auf dem iPod"
-#~ msgid "Hide"
-#~ msgstr "Verbergen"
-#~ msgid "Icons only"
-#~ msgstr "Nur Symbole"
-#~ msgid "Text only"
-#~ msgstr "Nur Text"
-#~ msgid "Text under icons"
-#~ msgstr "Text unter Symbolen"
-#~ msgid "Text beside icons"
-#~ msgstr "Text neben Symbolen"
 #~ msgid ""
 #~ "<span weight='bold' size='larger'>Message</span>\n"
 #~ "\n"

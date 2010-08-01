@@ -2631,7 +2631,7 @@ gboolean read_lyrics_from_file (Track *track, gchar **lyrics)
         case FILE_TYPE_MP4:
             result = TRUE;
             *lyrics=g_strdup(
-                _("\Error: File format unsupported now."));
+                _("Error: File format unsupported now."));
             break;
         case FILE_TYPE_MOV:
         case FILE_TYPE_MPG:
