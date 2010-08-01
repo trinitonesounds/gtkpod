@@ -105,6 +105,7 @@ G_MODULE_EXPORT void open_about_window ()
 	gchar  *translators[] = {
 		_("French: David Le Brun (david at dyn-ns dot net)"),
 		_("French: Éric Lassauge (rpmfarm at free dot fr)"),
+		_("French: Alain Portal (alain.portal at free dot fr)"),
 		_("German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"),
 		_("German: Kai-Ove"),
 		_("Hebrew: Assaf Gillat (gillata at gmail dot com)"),
