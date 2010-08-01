@@ -21,6 +21,10 @@ appdata_DATA =				\
 	photo-toolbar-album.png \
 	photo-toolbar-photos.png
 
+all-local:
+	$(INTLTOOL_EXTRACT) -type=gettext/glade gtkpod.glade
+
+
 EXTRA_DIST = 				\
 	$(desktop_in_files)		\
 	$(appdata_DATA)

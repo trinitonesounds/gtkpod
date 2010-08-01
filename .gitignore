@@ -36,6 +36,7 @@ cscope.out
 # /data/
 /data/*.desktop
 /data/nocover_found.png
+/data/gtkpod.glade.h
 
 # /data/man/
 /data/man/gtkpod.1
