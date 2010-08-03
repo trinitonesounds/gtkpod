@@ -5,10 +5,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: <gtkpod-devel@lists.sourceforge.net>\n"
 "POT-Creation-Date: 2010-08-01 21:58+0100\n"
-"PO-Revision-Date: 2010-08-01 15:32+0100\n"
-"Last-Translator: phantomjinx <phantom_sf@users.sourceforge.net>\n"
+"PO-Revision-Date: 2010-08-03 21:13+0200\n"
+"Last-Translator: Javier Kohen <jkohen@users.sourceforge.net>\n"
 "Language-Team: spanish <es@li.gtkpod.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -176,9 +176,8 @@ msgid "<b>None</b>"
 msgstr "<b>ninguno</b>"
 
 #: ../data/gtkpod.glade.h:35
-#, fuzzy
 msgid "<b>Offset to add to ReplayGain</b>"
-msgstr "Añadir ciudad a la lista"
+msgstr "<b>Desplazamiento a agregar a ReplayGain</b>"
 
 #: ../data/gtkpod.glade.h:36
 msgid "<b>On-the-fly Conversion</b>"
@@ -197,9 +196,8 @@ msgid "<b>Please select mountpoint and your iPod model</b>"
 msgstr "<b>Por favor, seleccionar el punto de montaje y el modelo de iPod</b>"
 
 #: ../data/gtkpod.glade.h:40
-#, fuzzy
 msgid "<b>Preferred gain type</b>"
-msgstr "Filtrar por tipo:"
+msgstr "<b>Tipo de ganancia preferido</b>"
 
 #: ../data/gtkpod.glade.h:41
 msgid "<b>Rules</b>"
@@ -370,7 +368,7 @@ msgstr "Carátula de álbum"
 
 #: ../data/gtkpod.glade.h:80
 msgid "Album gain (formerly \"audiophile gain\")"
-msgstr ""
+msgstr "Ganancia de álbum (anteriormente \"ganancia audiophile\")"
 
 #: ../data/gtkpod.glade.h:81
 msgid "All (AND)"
@@ -1156,14 +1154,12 @@ msgid "Read embedded tags from music files"
 msgstr "Leer atributos empotrados de los ficheros de música"
 
 #: ../data/gtkpod.glade.h:256
-#, fuzzy
 msgid "ReplayGain Preferences"
-msgstr "Preferencias de sesión"
+msgstr "Preferencias de ReplayGain"
 
 #: ../data/gtkpod.glade.h:257
-#, fuzzy
 msgid "ReplayGain..."
-msgstr "copiando..."
+msgstr "ReplayGain..."
 
 #: ../data/gtkpod.glade.h:258
 msgid "Report a _Problem"
@@ -1382,7 +1378,7 @@ msgstr "La pista del iPod será usada en la lista de reproducción."
 msgid ""
 "These settings will only be applied to newly added or updated tracks. This "
 "could result in tracks that are normalized to different levels until updated."
-msgstr ""
+msgstr "Estas opciones sólo se pueden agregar a pistas nuevas o actualizadas. Esto puede ocasionar que ciertas pistas estén normalizadas a diferentes niveles hasta que se actualicen."
 
 #: ../data/gtkpod.glade.h:309
 msgid "Time:"
@@ -1409,7 +1405,7 @@ msgstr "Top"
 
 #: ../data/gtkpod.glade.h:313
 msgid "Track gain (formerly \"radio gain\")"
-msgstr ""
+msgstr "Ganancia de pista (anteriormente \"ganancia de radio\")"
 
 #: ../data/gtkpod.glade.h:314
 msgid "Tracks"
@@ -1560,7 +1556,7 @@ msgstr ""
 "- el carácter '%': %%"
 
 #: ../data/gtkpod.glade.h:354
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "You can separate several templates by a ';'. The first one matching the "
 "filename will be used.\n"
@@ -1584,27 +1580,25 @@ msgid ""
 "- skip data: %*\n"
 "- the character '%': %%."
 msgstr ""
-"Se pueden separar diferentes plantillas con un ';'. Se usará la primera que "
-"coincida con el nombre de fichero.\n"
+"Se pueden separar diferentes plantillas con un ';'. Se usará la primera que coincida con el nombre de fichero.\n"
 "\n"
 "Ejemplos:\n"
 "- <i>imagen.jpg</i>: Usar <i>imagen.jpg</i> como portada.\n"
 "- <i>imagen</i>: Usar <i>imagen.jpg</i>, <i>imagen.png</i>...\n"
-"-<i>../%A.jpg</i>: Usar <i>&lt;Album&gt;.jpg</i> en el directorio superior\n"
-"-<i>%a</i>: Usar <i>&lt;Album&gt;.jgp</i>, <i>&lt;Album&gt;.png</i>...\n"
-"- <i>imagen.jpg;%a.jpg</i>: Intentar primero <i>imagen.jpg</i>, luego <i>&lt;"
-"artista&gt;.jpg</i>\n"
+"- <i>../%A.jpg</i>: Usar <i>&lt;Album&gt;.jpg</i> en el directorio superior\n"
+"- <i>%A</i>: Usar <i>&lt;Album&gt;.jgp</i>, <i>&lt;Album&gt;.png</i>...\n"
+"- <i>imagen.jpg;%a.jpg</i>: Intentar primero <i>imagen.jpg</i>, luego <i>&lt;artista&gt;.jpg</i>\n"
 "\n"
 "- artista: %a\n"
 "- álbum: %A\n"
 "- compositor: %c\n"
 "- título: %t\n"
 "- género: %G\n"
-"- pista nº:%T\n"
+"- pista nº: %T\n"
 "- CD nº: %C\n"
 "- año: %Y\n"
 "- saltar datos: %*\n"
-"-el carácter '%': %%"
+"- el carácter '%': %%"
 
 #: ../data/gtkpod.glade.h:373
 msgid "_About gtkpod"
@@ -1819,9 +1813,8 @@ msgid "_iPod"
 msgstr "_iPod"
 
 #: ../data/gtkpod.glade.h:426
-#, fuzzy
 msgid "dB"
-msgstr "(archivos db)"
+msgstr "dB"
 
 #: ../data/gtkpod.glade.h:427
 msgid "gtkpod Information"
@@ -2683,9 +2676,8 @@ msgid "Playlist"
 msgstr "Lista de reproducción"
 
 #: ../src/display_spl.c:106
-#, fuzzy
 msgid "Video Kind"
-msgstr "Tip&o de grupo"
+msgstr "Tipo de video"
 
 #: ../src/display_spl.c:108
 msgid "Season number"
@@ -3255,9 +3247,8 @@ msgstr ""
 "\n"
 
 #: ../src/file.c:2634
-#, fuzzy
 msgid "Error: File format unsupported now."
-msgstr "\\Error: Formato de fichero no soportado."
+msgstr "Error: Formato de fichero no soportado."
 
 #: ../src/file.c:2644
 msgid "Error: Lyrics not supported for this file format."
@@ -4301,9 +4292,8 @@ msgid "French: Éric Lassauge (rpmfarm at free dot fr)"
 msgstr "Francés: Éric Lassauge (rpmfarm at free dot fr)"
 
 #: ../src/help.c:108
-#, fuzzy
 msgid "French: Alain Portal (alain.portal at free dot fr)"
-msgstr "Francés: Éric Lassauge (rpmfarm at free dot fr)"
+msgstr "French: Alain Portal (alain.portal at free dot fr)"
 
 #: ../src/help.c:109
 msgid "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
@@ -4975,9 +4965,8 @@ msgid "TV Episode"
 msgstr "Episodio de TV"
 
 #: ../src/misc_conversion.c:103
-#, fuzzy
 msgid "TV Network"
-msgstr "Puerto de red"
+msgstr "Cadena de TV"
 
 #: ../src/misc_conversion.c:104
 msgid "Season Nr"
