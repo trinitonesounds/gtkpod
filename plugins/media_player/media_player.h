@@ -35,7 +35,6 @@
 
 typedef struct {
     GtkWidget *media_panel;
-    GtkWidget *video_widget;
     GtkWidget *song_label;
     GtkWidget *song_time_label;
     GtkWidget *media_toolbar;
@@ -57,16 +56,7 @@ typedef struct {
     gboolean shuffle;
 
     gdouble volume_level;
-    GstElement *volume_element;
-    GstElement *pipeline;
-    GstElement *audio;
-    GstElement *audiomixer;
-    GstElement *volume;
-    GstElement *src;
-    GstElement *dec;
-    GstElement *conv;
-    GstElement *sink;
-    GstPad *audiopad;
+    GstElement *play_element;
 
 } MediaPlayer;
 

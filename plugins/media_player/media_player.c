@@ -31,7 +31,6 @@
 
 #include <math.h>
 #include <gst/interfaces/xoverlay.h>
-//#include <gdk/gdkx.h>
 #include "libgtkpod/itdb.h"
 #include "libgtkpod/file.h"
 #include "libgtkpod/directories.h"
@@ -39,39 +38,13 @@
 #include "plugin.h"
 #include "media_player.h"
 
+#ifndef M_LN10
+#define M_LN10 (log(10.0))
+#endif
+
 static MediaPlayer *player;
 
-//GstElement *video, *videosink, *videoconv;
-//GstPad *videopad;
-
-GstBus *bus;
-
-static int my_bus_callback(GstBus *bus, GstMessage *msg, gpointer data) {
-    switch (GST_MESSAGE_TYPE (msg)) {
-    case GST_MESSAGE_EOS:
-        gtk_range_set_range(GTK_RANGE(player->song_scale), 0, 1);
-        gtk_range_set_value(GTK_RANGE(player->song_scale), 0);
-        g_main_loop_quit(data);
-        break;
-    case GST_MESSAGE_ERROR: {
-        gchar *debug;
-        GError *err;
-
-        gst_message_parse_error(msg, &err, &debug);
-        g_free(debug);
-
-        g_print("Error: %s\n", err->message);
-        g_error_free(err);
-
-        g_main_loop_quit(data);
-        break;
-    }
-    default:
-        break;
-    }
-
-    return TRUE;
-}
+static int pipeline_bus_watch_cb(GstBus *bus, GstMessage *msg, gpointer data);
 
 static gboolean set_scale_range(GstElement *pipeline) {
     GstFormat fmt = GST_FORMAT_TIME;
@@ -96,6 +69,7 @@ static gboolean set_scale_range(GstElement *pipeline) {
 
     return TRUE;
 }
+
 static gboolean set_scale_position(GstElement *pipeline) {
     GstFormat fmt = GST_FORMAT_TIME;
     gint64 pos;
@@ -127,16 +101,13 @@ static gboolean set_scale_position(GstElement *pipeline) {
 
     return FALSE;
 }
-#ifndef M_LN10
-#define M_LN10 (log(10.0))
-#endif
 
 static void update_volume(gboolean value) {
     if (!player)
         return;
 
     player->volume_level = exp(value / 20.0 * M_LN10);
-    g_object_set(player->volume_element, "volume", player->volume_level, NULL);
+    //    g_object_set(player->volume_element, "volume", player->volume_level, NULL);
 }
 
 static gboolean volume_changed_cb(GtkRange *range, GtkScrollType scroll, gdouble value, gpointer user_data) {
@@ -144,50 +115,50 @@ static gboolean volume_changed_cb(GtkRange *range, GtkScrollType scroll, gdouble
     return FALSE;
 }
 
-static void new_decoded_pad_cb(GstElement *decodebin, GstPad *pad, gboolean last, gpointer data) {
-    GstCaps *caps;
-    GstStructure *str;
-    GstPad *audiopad2;
-    //    , *videopad2;
-
-    if (!player)
-        return;
-
-    /* check media type */
-    caps = gst_pad_get_caps(pad);
-    str = gst_caps_get_structure(caps, 0);
-    const gchar *name = gst_structure_get_name(str);
-    if (g_strrstr(name, "audio")) {
-        /* only link once */
-        audiopad2 = gst_element_get_pad(player->audio, "sink");
-        if (GST_PAD_IS_LINKED (audiopad2)) {
-            g_object_unref(audiopad2);
-            return;
-        }
-
-        /* link'n'play */
-        gst_pad_link(pad, audiopad2); // Link audiopad to pad or other way around, dunno
-        //gst_element_link (volume, dec); //Doesn't seem to work...
-        //volume_changed_callback (vol_scale, volume); //Change volume to default
-    }
-
-    if (g_strrstr(name, "video")) {
-        // only link once
-
-        //        videopad2 = gst_element_get_pad(videoconv, "sink");
-        //        if (GST_PAD_IS_LINKED (videopad2)) {
-        //            printf("video pad is linked!unreffing\n");
-        //            g_object_unref(videopad2);
-        //            return;
-        //        }
-        // link'n'play
-        //        gst_pad_link(pad, videopad2);
-        //set_video_mode (TRUE);//Not needed since We can't actually SEE the video
-    }
-
-    gst_caps_unref(caps);
-
-}
+//static void new_decoded_pad_cb(GstElement *decodebin, GstPad *pad, gboolean last, gpointer data) {
+//    GstCaps *caps;
+//    GstStructure *str;
+//    GstPad *audiopad2;
+//    //    , *videopad2;
+//
+//    if (!player)
+//        return;
+//
+//    /* check media type */
+//    caps = gst_pad_get_caps(pad);
+//    str = gst_caps_get_structure(caps, 0);
+//    const gchar *name = gst_structure_get_name(str);
+//    if (g_strrstr(name, "audio")) {
+//        /* only link once */
+//        audiopad2 = gst_element_get_pad(player->audio, "sink");
+//        if (GST_PAD_IS_LINKED (audiopad2)) {
+//            g_object_unref(audiopad2);
+//            return;
+//        }
+//
+//        /* link'n'play */
+//        gst_pad_link(pad, audiopad2); // Link audiopad to pad or other way around, dunno
+//        //gst_element_link (volume, dec); //Doesn't seem to work...
+//        //volume_changed_callback (vol_scale, volume); //Change volume to default
+//    }
+//
+//    if (g_strrstr(name, "video")) {
+//        // only link once
+//
+//        //        videopad2 = gst_element_get_pad(videoconv, "sink");
+//        //        if (GST_PAD_IS_LINKED (videopad2)) {
+//        //            printf("video pad is linked!unreffing\n");
+//        //            g_object_unref(videopad2);
+//        //            return;
+//        //        }
+//        // link'n'play
+//        //        gst_pad_link(pad, videopad2);
+//        //set_video_mode (TRUE);//Not needed since We can't actually SEE the video
+//    }
+//
+//    gst_caps_unref(caps);
+//
+//}
 
 static void set_song_label(Track *track) {
     if (!track)
@@ -196,11 +167,17 @@ static void set_song_label(Track *track) {
     gchar *label;
 
     // title by artist from album
-    if (!track->title)
+    if (track->title)
+        label = g_strdup(track->title);
+    else
         label = _("No Track Title");
-    else {
-        label = g_strdup_printf("%s by %s from %s", track->title, track->artist, track->album);
-    }
+
+    if (track->artist && strlen(track->artist) > 0 )
+        label = g_strconcat(label, " by ", track->artist, NULL);
+
+    if (track->album && strlen(track->album) > 0)
+        label = g_strconcat(label, " from ", track->album, NULL);
+
     gtk_label_set_text(GTK_LABEL(player->song_label), label);
     g_object_set_data(G_OBJECT (player->song_label), "tr_title", track->title);
     g_object_set_data(G_OBJECT (player->song_label), "tr_artist", track->artist);
@@ -210,7 +187,9 @@ static void set_song_label(Track *track) {
 static void thread_play_song() {
     GstStateChangeReturn sret;
     GstState state;
-    gchar *str;
+    gchar *track_name;
+    gchar *uri;
+    GstBus *bus;
 
     if (!player || !player->tracks)
         return;
@@ -218,80 +197,43 @@ static void thread_play_song() {
     while (player->tracks) {
         Track *tr = player->tracks->data;
         g_return_if_fail(tr);
-        str = get_file_name_from_source(tr, SOURCE_PREFER_LOCAL);
-        if (str) {
-            set_song_label(tr);
+        track_name = get_file_name_from_source(tr, SOURCE_PREFER_LOCAL);
+        if (!track_name)
+            continue;
 
-            /* init GStreamer */
-            player->loop = g_main_loop_new(NULL, FALSE); // make new loop
-            /* setup */
-            player->pipeline = gst_pipeline_new("pipeline"); //Create our pipeline
+        set_song_label(tr);
 
-            bus = gst_pipeline_get_bus(GST_PIPELINE (player->pipeline)); // get pipeline's bus
-            gst_bus_add_watch(bus, my_bus_callback, player->loop); //Add a watch to the bus
-            gst_object_unref(bus); //unref the bus
+        /* init GStreamer */
+        player->loop = g_main_loop_new(NULL, FALSE); // make new loop
 
-            player->src = gst_element_factory_make("filesrc", "source"); //create the file source
-            g_object_set(G_OBJECT (player->src), "location", str, NULL); //set location to the file location
+        uri = g_strconcat("file://", track_name, NULL);
+        player->play_element = gst_element_factory_make("playbin2", "play");
+        g_object_set(G_OBJECT (player->play_element), "uri", uri, NULL);
 
-            player->dec = gst_element_factory_make("decodebin", "decoder"); //create our decodebin
-            g_signal_connect (player->dec, "new-decoded-pad", G_CALLBACK (new_decoded_pad_cb), NULL); //signal to the new-decoded-pad(same as new-pad)
+        bus = gst_pipeline_get_bus(GST_PIPELINE (player->play_element));
+        gst_bus_add_watch(bus, pipeline_bus_watch_cb, player->loop); //Add a watch to the bus
+        gst_object_unref(bus); //unref the bus
 
-            gst_bin_add_many(GST_BIN (player->pipeline), player->src, player->dec, NULL); //add src and dec to pipeline
-            gst_element_link(player->src, player->dec); //link src and dec together
+        /* run */
+        gst_element_set_state(player->play_element, GST_STATE_PLAYING);// set state
+        g_timeout_add(250, (GSourceFunc) set_scale_range, GST_PIPELINE (player->play_element));
+        g_timeout_add(1000, (GSourceFunc) set_scale_position, GST_PIPELINE (player->play_element));
+        g_main_loop_run(player->loop);
 
-            /* create audio output */
-            player->audio = gst_bin_new("audiobin"); //create our audio bin
-            player->conv = gst_element_factory_make("audioconvert", "aconv"); //Create audioconvert element
-            player->audiopad = gst_element_get_pad(player->conv, "sink"); //get the audioconvert pad
-            player->sink = gst_element_factory_make("alsasink", "sink"); //create our alsasink
-
-            gst_bin_add_many(GST_BIN (player->audio), player->conv, player->sink, player->volume, NULL); //add volume, conv, and sink to audio
-            gst_element_link(player->conv, player->sink); // link sink and conv
-            gst_element_add_pad(player->audio, gst_ghost_pad_new("sink", player->audiopad)); // add pad to audio...?
-            gst_object_unref(player->audiopad); //unref audiopad
-            gst_bin_add(GST_BIN (player->pipeline), player->audio); //add audio to pipeline
-
-            /*create video output*/
-
-            //            video = gst_bin_new("videobin"); //create videobin
-            //            videoconv = gst_element_factory_make("ffmpegcolorspace", "vconv"); //make ffmpegcolorspace
-            //videopad = gst_element_get_pad (videoconv, "sink"); //get videoconv pad, why the hell am I getting
-            //videosink = gst_element_factory_make ("ximagesink", "sink"); //create video sink
-            //g_object_set (G_OBJECT (videosink), "force-aspect-ratio", TRUE, NULL); //force aspect ratio
-            // gst_x_overlay_set_xwindow_id (GST_X_OVERLAY (videosink), gdk_x11_drawable_get_xid (drawing_area->window)); //set the overlay to our drawing area
-            //gst_element_link (videoconv, videosink); //link videoconv and videosink
-            //gst_bin_add_many (GST_BIN (video),videoconv, videosink, NULL); //add videoconv and videosink to video
-            //            gst_bin_add(GST_BIN (video), videoconv);
-            //gst_object_unref (videopad); //unref videopad
-            //            gst_bin_add(GST_BIN (pipeline), video);
-            //[NOTE] If file doesn't contain video, it crashes the program, so commented out
-
-            /* Volume Control */
-
-            //volume_changed_callback (vol_scale, volume);
-            //g_signal_connect (vol_scale, "value-changed", G_CALLBACK (volume_changed_callback), volume); //connect volume-changed signal
-
-            /* run */
-            gst_element_set_state(player->pipeline, GST_STATE_PLAYING);// set state
-            g_timeout_add(250, (GSourceFunc) set_scale_range, GST_PIPELINE (player->pipeline));
-            g_timeout_add(1000, (GSourceFunc) set_scale_position, GST_PIPELINE (player->pipeline));
-            //g_timeout_add (500, (GSourceFunc) checkinfo, gst_pipeline_get_bus (GST_PIPELINE (pipeline)));
-            g_main_loop_run(player->loop);
-
-            /* cleanup */
-            sret = gst_element_set_state(player->pipeline, GST_STATE_NULL);
+        /* cleanup */
+        sret = gst_element_set_state(player->play_element, GST_STATE_NULL);
 #ifndef NEW_PIPE_PER_FILE
-            if (GST_STATE_CHANGE_ASYNC == sret) {
-                if (gst_element_get_state(GST_ELEMENT (player->pipeline), &state, NULL, GST_CLOCK_TIME_NONE)
-                        == GST_STATE_CHANGE_FAILURE) {
-                    break;
-                }
+        if (GST_STATE_CHANGE_ASYNC == sret) {
+            if (gst_element_get_state(GST_ELEMENT (player->play_element), &state, NULL, GST_CLOCK_TIME_NONE)
+                    == GST_STATE_CHANGE_FAILURE) {
+                break;
             }
-#endif
-            gst_element_set_state(player->pipeline, GST_STATE_NULL);
-            g_free(str);//Free it since it is no longer needed.
         }
+#endif
+        gst_element_set_state(player->play_element, GST_STATE_NULL);
+        g_free(uri);
+        g_free(track_name);//Free it since it is no longer needed.
+
 
         if (player->stopButtonPressed)
             break;
@@ -315,15 +257,15 @@ static void waitforpipeline(int state) {
         return;
 
     GstState istate, ipending;
-    gst_element_get_state(player->pipeline, &istate, &ipending, GST_CLOCK_TIME_NONE);
+    gst_element_get_state(player->play_element, &istate, &ipending, GST_CLOCK_TIME_NONE);
 
     if (istate == GST_STATE_VOID_PENDING) {
         return;
     }
-    gst_element_set_state(player->pipeline, state);
+    gst_element_set_state(player->play_element, state);
 
     do {
-        gst_element_get_state(player->pipeline, &istate, &ipending, GST_CLOCK_TIME_NONE);
+        gst_element_get_state(player->play_element, &istate, &ipending, GST_CLOCK_TIME_NONE);
 
         if (istate == GST_STATE_VOID_PENDING) {
             return;
@@ -392,21 +334,21 @@ static void pause_or_play_song() {
     if (!player)
         return;
 
-    if (!player->loop || !player->pipeline || !player->thread || !g_main_loop_is_running(player->loop)) {
+    if (!player->loop || !player->play_element || !player->thread || !g_main_loop_is_running(player->loop)) {
         play_song();
         return;
     }
 
     GstState state, pending;
-    gst_element_get_state(player->pipeline, &state, &pending, GST_CLOCK_TIME_NONE);
+    gst_element_get_state(player->play_element, &state, &pending, GST_CLOCK_TIME_NONE);
 
     if (state == GST_STATE_PLAYING) {
-        gst_element_set_state(player->pipeline, GST_STATE_PAUSED);
         gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(player->play_button), GTK_STOCK_MEDIA_PLAY);
+        gst_element_set_state(player->play_element, GST_STATE_PAUSED);
     }
     else if (state == GST_STATE_PAUSED) {
-        gst_element_set_state(player->pipeline, GST_STATE_PLAYING);
         gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(player->play_button), GTK_STOCK_MEDIA_PAUSE);
+        gst_element_set_state(player->play_element, GST_STATE_PLAYING);
     }
 }
 
@@ -414,15 +356,31 @@ void seek_to_time(gint64 time_seconds) {
     if (!player)
         return;
 
-    if (!player->loop || !player->pipeline || !player->thread)
+    if (!player->loop || !player->play_element || !player->thread)
         return;
 
     if (!g_main_loop_is_running(player->loop))
         return;
 
-    if (!gst_element_seek(player->pipeline, 1.0, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, GST_SEEK_TYPE_SET, time_seconds
+    if (!gst_element_seek(player->play_element, 1.0, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, GST_SEEK_TYPE_SET, time_seconds
             * 1000000000, GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE))
         g_print("Seek failed!\n");
+}
+
+static int pipeline_bus_watch_cb(GstBus *bus, GstMessage *msg, gpointer data) {
+    switch (GST_MESSAGE_TYPE (msg)) {
+    case GST_MESSAGE_EOS:
+        stop_song(FALSE);
+        break;
+    case GST_MESSAGE_ERROR: {
+        stop_song(TRUE);
+        break;
+    }
+    default:
+        break;
+    }
+
+    return TRUE;
 }
 
 void set_selected_tracks(GList *tracks) {
@@ -467,7 +425,6 @@ void init_media_player(GtkWidget *parent) {
     xml = glade_xml_new(player->glade_path, "media_window", NULL);
 
     window = gtkpod_xml_get_widget(xml, "media_window");
-    player->video_widget = gtkpod_xml_get_widget(xml, "video_widget");
     player->media_panel = gtkpod_xml_get_widget(xml, "media_panel");
     player->song_label = gtkpod_xml_get_widget(xml, "song_label");
     player->song_time_label = gtkpod_xml_get_widget(xml, "song_time_label");
@@ -495,20 +452,11 @@ void init_media_player(GtkWidget *parent) {
     player->previousButtonPressed = FALSE;
     player->stopButtonPressed = FALSE;
     player->shuffle = FALSE;
-    player->volume_element = gst_element_factory_make("volume", "volume"); // Create volume element
-    player->volume_level = 50;
-    player->pipeline = NULL;
-    player->audio = NULL;
-    player->audiomixer = NULL;
-    player->volume = NULL;
-    player->src = NULL;
-    player->dec = NULL;
-    player->conv = NULL;
-    player->sink = NULL;
-    player->audiopad = NULL;
+    player->play_element = NULL;
 
-    gtk_widget_show(player->song_label);
-    gtk_widget_show_all(player->media_toolbar);
+    //    gtk_widget_show(player->song_label);
+    gtk_widget_show_all(player->media_panel);
+//    gtk_widget_realize(player->video_widget);
 
     g_object_unref(xml);
 }
