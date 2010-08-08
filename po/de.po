@@ -5,14 +5,15 @@
 #
 # Kai-Ove, 2007.
 # Kai-Ove Pietsch <kaiovepietsch@yahoo.de>, 2008, 2009.
+#  <>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-08-01 21:58+0100\n"
-"PO-Revision-Date: 2010-08-01 15:33+0100\n"
 "Last-Translator: vkrebs <vkrebs@users.sourceforge.net>\n"
 "Language-Team: deutsch <de@li.gtkpod.org>\n"
+"PO-Revision-Date: 2010-08-08 21:14+0100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -371,8 +372,9 @@ msgid "Album Art"
 msgstr "Albumbild"
 
 #: ../data/gtkpod.glade.h:80
+#, fuzzy
 msgid "Album gain (formerly \"audiophile gain\")"
-msgstr ""
+msgstr "Album zu gewinnen (ehemals \"audiophile gain\")"
 
 #: ../data/gtkpod.glade.h:81
 msgid "All (AND)"
@@ -1373,10 +1375,14 @@ msgid "The track on the iPod is referenced in the playlist file."
 msgstr "Die Datei auf dem iPod wird in der Wiedergabeliste angezeigt."
 
 #: ../data/gtkpod.glade.h:308
+#, fuzzy
 msgid ""
 "These settings will only be applied to newly added or updated tracks. This "
 "could result in tracks that are normalized to different levels until updated."
 msgstr ""
+"Diese Einstellungen werden nur angewendet werden neu hinzugefügten oder "
+"aktualisierten Titel. Dies könnte in Tracks, die auf verschiedenen Ebenen, "
+"bis sie aktualisiert werden normalisiert führen."
 
 #: ../data/gtkpod.glade.h:309
 msgid "Time:"
@@ -1402,8 +1408,9 @@ msgid "Top"
 msgstr "Oben"
 
 #: ../data/gtkpod.glade.h:313
+#, fuzzy
 msgid "Track gain (formerly \"radio gain\")"
-msgstr ""
+msgstr "Track Gain (ehemals \"Radio gain\")"
 
 #: ../data/gtkpod.glade.h:314
 msgid "Tracks"
