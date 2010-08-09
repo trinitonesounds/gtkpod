@@ -2527,11 +2527,11 @@ msgid "Error: drag from iPod not possible in offline mode."
 msgstr "Ошибка: перетаскивание с iPod невозможно в автономном режиме."
 
 #: ../src/display_playlists.c:606 ../src/display_tracks.c:393
-#, fuzzy, c-format
+#, c-format
 msgid "Copied one track"
 msgid_plural "Copied %d tracks"
 msgstr[0] "Одна дорожка скопирована"
-msgstr[1] "Скопировано %d дорожек"
+msgstr[1] "Скопировано %d дорожки"
 msgstr[2] "Скопировано %d дорожек"
 
 #: ../src/display_playlists.c:886 ../src/display_playlists.c:898
@@ -2850,11 +2850,11 @@ msgid "+"
 msgstr "+"
 
 #: ../src/display_tracks.c:388
-#, fuzzy, c-format
+#, c-format
 msgid "Moved one track"
 msgid_plural "Moved %d tracks"
 msgstr[0] "Одна дорожка перемещена"
-msgstr[1] "Перемещено %d дорожек"
+msgstr[1] "Перемещено %d дорожки"
 msgstr[2] "Перемещено %d дорожек"
 
 #: ../src/display_tracks.c:2072
@@ -3100,11 +3100,11 @@ msgid "Updated selected tracks with data from mserv."
 msgstr "Выбранные дорожки обновлены с использованием сведений из mserv."
 
 #: ../src/file.c:1633
-#, fuzzy, c-format
+#, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
 msgstr[0] "Следующая дорожка не может быть обновлена"
-msgstr[1] "Следующие %d дорожек не могут быть обновлены"
+msgstr[1] "Следующие %d дорожки не могут быть обновлены"
 msgstr[2] "Следующие %d дорожек не могут быть обновлены"
 
 #. gint id,
@@ -3114,11 +3114,11 @@ msgid "Failed Track Update"
 msgstr "Ошибка при обновлении дорожки"
 
 #: ../src/file.c:1697
-#, fuzzy, c-format
+#, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
 msgstr[0] "Следующая дорожка была обновлена"
-msgstr[1] "Следующие %d дорожек были обновлены"
+msgstr[1] "Следующие %d дорожки были обновлены"
 msgstr[2] "Следующие %d дорожек были обновлены"
 
 #. gint id,
@@ -3128,7 +3128,7 @@ msgid "Successful Track Update"
 msgstr "Успешное обновление дорожки"
 
 #: ../src/file.c:1762
-#, fuzzy, c-format
+#, c-format
 msgid "No mserv information could be retrieved for the following track"
 msgid_plural ""
 "No mserv information could be retrieved for the following %d tracks"
@@ -3527,7 +3527,7 @@ msgstr ""
 "\n"
 
 #: ../src/file_export.c:1024
-#, fuzzy, c-format
+#, c-format
 msgid "Created playlist with one track."
 msgid_plural "Created playlist with %d tracks."
 msgstr[0] "Создан список воспроизведения с одной дорожкой."
@@ -3847,7 +3847,7 @@ msgid "Status: Finished transfer"
 msgstr "Состояние: Передача завершена"
 
 #: ../src/file_itunesdb.c:1799
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "One track could not be transferred because your iPod is full. Either delete "
 "some tracks or otherwise create space on the iPod before ejecting the iPod "
@@ -3861,7 +3861,7 @@ msgstr[0] ""
 "некоторые дорожки, либо освободите место на iPod иным образом перед "
 "повторным извлечением."
 msgstr[1] ""
-"%d дорожек не могли быть переданы, поскольку iPod заполнен. Либо "
+"%d дорожки не могли быть переданы, поскольку iPod заполнен. Либо "
 "удалитенекоторые дорожки, либо освободите место на iPod иным образом "
 "передповторным извлечением."
 msgstr[2] ""
@@ -4705,11 +4705,11 @@ msgstr[1] "Удалить дорожки из локальной базы дан
 msgstr[2] "Удалить дорожки из локальной базы данных?"
 
 #: ../src/misc_confirm.c:295
-#, fuzzy, c-format
+#, c-format
 msgid "Deleted one track completely from iPod"
 msgid_plural "Deleted %d tracks completely from iPod"
 msgstr[0] "Одна дорожка полностью удалена с iPod"
-msgstr[1] "%d дорожек полностью удалено с iPod"
+msgstr[1] "%d дорожки полностью удалено с iPod"
 msgstr[2] "%d дорожек полностью удалено с iPod"
 
 #: ../src/misc_confirm.c:301 ../src/misc_confirm.c:325
@@ -4717,24 +4717,24 @@ msgstr[2] "%d дорожек полностью удалено с iPod"
 msgid "Deleted %d track from playlist '%s'"
 msgid_plural "Deleted %d tracks from playlist '%s'"
 msgstr[0] "Дорожка %d удалена из списка воспроизведения \"%s\""
-msgstr[1] "%d дорожек удалено из списка воспроизведения \"%s\""
+msgstr[1] "%d дорожки удалено из списка воспроизведения \"%s\""
 msgstr[2] "%d дорожек удалено из списка воспроизведения \"%s\""
 
 #: ../src/misc_confirm.c:319
-#, fuzzy, c-format
+#, c-format
 msgid "Deleted one track from harddisk"
 msgid_plural "Deleted %d tracks from harddisk"
 msgstr[0] "Одна дорожка удалена с жёсткого диска"
-msgstr[1] "%d дорожек удалено с жёсткого диска"
+msgstr[1] "%d дорожки удалены с жёсткого диска"
 msgstr[2] "%d дорожек удалено с жёсткого диска"
 
 #: ../src/misc_confirm.c:331
-#, fuzzy, c-format
+#, c-format
 msgid "Deleted track from local database"
 msgid_plural "Deleted %d tracks from local database"
 msgstr[0] "Дорожка удалена из локальной базы данных"
-msgstr[1] "%d дорожек удалена из локальной базы данных"
-msgstr[2] "%d дорожек удалена из локальной базы данных"
+msgstr[1] "%d дорожки удалены из локальной базы данных"
+msgstr[2] "%d дорожек удалено из локальной базы данных"
 
 #: ../src/misc_confirm.c:476
 msgid "Cannot remove entry 'All'"
@@ -5319,7 +5319,7 @@ msgid "Found %d orphaned and %d dangling files. Processing..."
 msgstr "Найдено %d осиротевших и %d повисших файлов. Идёт обработка..."
 
 #: ../src/misc_playlist.c:1223
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The following dangling track has a file on PC.\n"
 "Press OK to have them transfered from the file on next Sync, CANCEL to leave "
@@ -5333,7 +5333,7 @@ msgstr[0] ""
 "Нажмите \"OK\", чтобы передать её из файла при следующей синхронизации,или "
 "\"Отмена\", чтобы оставить её как есть."
 msgstr[1] ""
-"Следующие %d повисших дорожек имеют файлы на ПК.\n"
+"Следующие %d повисших дорожки имеют файлы на ПК.\n"
 "Нажмите \"OK\", чтобы передать их из файлов при следующей синхронизации,или "
 "\"Отмена\", чтобы оставить их как есть."
 msgstr[2] ""
@@ -5342,7 +5342,7 @@ msgstr[2] ""
 "\"Отмена\", чтобы оставить их как есть."
 
 #: ../src/misc_playlist.c:1228
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The following dangling track doesn't have file on PC. \n"
 "Press OK to remove it, CANCEL to leave it as is."
@@ -5354,7 +5354,7 @@ msgstr[0] ""
 "Нажмите \"OK\", чтобы удалить её, или \"Отмена\", чтобы оставить её без "
 "изменений."
 msgstr[1] ""
-"Следующие %d повисших дорожек не имеют файла на ПК.\n"
+"Следующие %d повисших дорожки не имеют файла на ПК.\n"
 "Нажмите \"OK\", чтобы удалить их, или \"Отмена\", чтобы оставить их без "
 "изменений."
 msgstr[2] ""
@@ -5383,15 +5383,15 @@ msgstr[1] "Хэшировано %d из %d дорожек."
 msgstr[2] "Хэшировано %d из %d дорожек."
 
 #: ../src/misc_track.c:199
-#, fuzzy, c-format
+#, c-format
 msgid "The following duplicate track has been removed."
 msgid_plural "The following %d duplicate tracks have been removed."
 msgstr[0] "Следующая дорожка-дубликат была удалена."
-msgstr[1] "Следующие %d дорожек-дубликатов были удалены."
+msgstr[1] "Следующие %d дорожки-дубликаты были удалены."
 msgstr[2] "Следующие %d дорожек-дубликатов были удалены."
 
 #: ../src/misc_track.c:206
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The following duplicate track has not been added to the master play list."
 msgid_plural ""
@@ -5401,7 +5401,7 @@ msgstr[0] ""
 "Следующая дорожка-дубликат не была добавлена в главный список "
 "воспроизведения."
 msgstr[1] ""
-"Следующие %d дорожек-дубликатов не были добавлены в главный список "
+"Следующие %d дорожки-дубликаты не были добавлены в главный список "
 "воспроизведения."
 msgstr[2] ""
 "Следующие %d дорожек-дубликатов не были добавлены в главный список "
@@ -5889,9 +5889,9 @@ msgstr "%s не похож на поддерживаемый wav-файл.\n"
 #~ "Patches were supplied by the following people (list may be incomplete -- "
 #~ "please contact me)\n"
 
-#, fuzzy
+#, 
 #~ msgid "Could not open \"%s\" for reading extended info.\n"
-#~ msgstr "Не удалось открыть \"%s\" для записи расширенных сведений.\n"
+#~ msgstr "Не удалось открыть \"%s\" для чтения дополнительной информации.\n"
 
 #~ msgid "  -a:           import database automatically after start.\n"
 #~ msgstr ""
