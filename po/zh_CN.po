@@ -1,15 +1,15 @@
 # Simple Chinese Translation Catalogue
 # Copyright (C) 2003-2009  Jörg Schuler
 # This file is distributed under the same license as the gtkpod package.
-# Tan Zhixin <tanzhxin@gmail.com>, 2009
 #
+# Tan Zhixin <tanzhxin@gmail.com>, 2009, 2010.
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-08-01 21:58+0100\n"
-"PO-Revision-Date: 2010-08-01 15:39+0100\n"
+"PO-Revision-Date: 2010-08-09 19:36+0100\n"
 "Language-Team: Zhuang <zh_CN@li.gtkpod.org>\n"
 "Last-Translator: Tan Zhixin <tanzhxin@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -176,7 +176,7 @@ msgstr "<b>无</b>"
 
 #: ../data/gtkpod.glade.h:35
 msgid "<b>Offset to add to ReplayGain</b>"
-msgstr ""
+msgstr "添加到播放增益的偏移"
 
 #: ../data/gtkpod.glade.h:36
 msgid "<b>On-the-fly Conversion</b>"
@@ -196,7 +196,7 @@ msgstr "<b>请选择挂载点和你的iPod型号</b>"
 
 #: ../data/gtkpod.glade.h:40
 msgid "<b>Preferred gain type</b>"
-msgstr ""
+msgstr "首选获取类型"
 
 #: ../data/gtkpod.glade.h:41
 msgid "<b>Rules</b>"
@@ -361,7 +361,7 @@ msgstr "专辑封面"
 
 #: ../data/gtkpod.glade.h:80
 msgid "Album gain (formerly \"audiophile gain\")"
-msgstr ""
+msgstr "专辑增益"
 
 #: ../data/gtkpod.glade.h:81
 msgid "All (AND)"
@@ -751,7 +751,7 @@ msgid ""
 "Find orphan files (files with no track info in DB) and dangling tracks "
 "(tracks with no corresponding files on iPod)"
 msgstr ""
-"找出孤儿文件（数据库中没有音轨信息的文件）和悬空音轨(在iPod中没有对应文件的音"
+"找出遗弃文件（数据库中没有音轨信息的文件）和悬空音轨(在iPod中没有对应文件的音"
 "轨)"
 
 #: ../data/gtkpod.glade.h:173
@@ -1113,12 +1113,12 @@ msgstr "从音乐文件中读取嵌入的标签"
 #: ../data/gtkpod.glade.h:256
 #, fuzzy
 msgid "ReplayGain Preferences"
-msgstr "转换首选项"
+msgstr "播放增益首选项"
 
 #: ../data/gtkpod.glade.h:257
 #, fuzzy
 msgid "ReplayGain..."
-msgstr "复制中"
+msgstr "播放增益中"
 
 #: ../data/gtkpod.glade.h:258
 msgid "Report a _Problem"
@@ -1329,6 +1329,8 @@ msgid ""
 "These settings will only be applied to newly added or updated tracks. This "
 "could result in tracks that are normalized to different levels until updated."
 msgstr ""
+"这些设置只会被应用到新添加或新更改的音轨。这会导致音轨被均衡到不同的水平上直"
+"到更新为止。"
 
 #: ../data/gtkpod.glade.h:309
 msgid "Time:"
@@ -1354,7 +1356,7 @@ msgstr "最佳"
 
 #: ../data/gtkpod.glade.h:313
 msgid "Track gain (formerly \"radio gain\")"
-msgstr ""
+msgstr "音轨增益"
 
 #: ../data/gtkpod.glade.h:314
 msgid "Tracks"
@@ -1605,7 +1607,7 @@ msgstr "编辑"
 
 #: ../data/gtkpod.glade.h:388
 msgid "_Enqueue"
-msgstr "队列"
+msgstr "加入队列"
 
 #: ../data/gtkpod.glade.h:389
 msgid "_Export Tracks from Database"
@@ -1833,31 +1835,31 @@ msgstr "阿拉伯语(Windows-1256)"
 
 #: ../src/charset.c:56
 msgid "Baltic (ISO-8859-13)"
-msgstr "Baltic (ISO-8859-13)"
+msgstr "波罗的语(ISO-8859-13)"
 
 #: ../src/charset.c:57
 msgid "Baltic (ISO-8859-4)"
-msgstr "Baltic (ISO-8859-4)"
+msgstr "波罗的语(ISO-8859-4)"
 
 #: ../src/charset.c:58
 msgid "Baltic (Windows-1257)"
-msgstr "Baltic (Windows-1257)"
+msgstr "波罗的语(Windows-1257)"
 
 #: ../src/charset.c:59
 msgid "Celtic (ISO-8859-14)"
-msgstr "Celtic (ISO-8859-14)"
+msgstr "凯尔特语(ISO-8859-14)"
 
 #: ../src/charset.c:60
 msgid "Central European (IBM-852)"
-msgstr "Central European (IBM-852)"
+msgstr "中欧(IBM-852)"
 
 #: ../src/charset.c:61
 msgid "Central European (ISO-8859-2)"
-msgstr "Central European (ISO-8859-2)"
+msgstr "中欧(ISO-8859-2)"
 
 #: ../src/charset.c:62
 msgid "Central European (Windows-1250)"
-msgstr "Central European (Windows-1250)"
+msgstr "中欧(Windows-1250)"
 
 #: ../src/charset.c:63
 msgid "Chinese Simplified (GB18030)"
@@ -1941,15 +1943,15 @@ msgstr "日语(Shift_JIS)"
 
 #: ../src/charset.c:83
 msgid "Korean (EUC-KR)"
-msgstr "Korean (EUC-KR)"
+msgstr "韩语(EUC-KR)"
 
 #: ../src/charset.c:84
 msgid "Nordic (ISO-8859-10)"
-msgstr "Nordic (ISO-8859-10)"
+msgstr "斯堪的纳维亚语(ISO-8859-10)"
 
 #: ../src/charset.c:85
 msgid "South European (ISO-8859-3)"
-msgstr "South European (ISO-8859-3)"
+msgstr "南欧(ISO-8859-3)"
 
 #: ../src/charset.c:86
 msgid "Thai (TIS-620)"
@@ -2001,23 +2003,23 @@ msgstr "越南语(Windows-1258)"
 
 #: ../src/charset.c:98
 msgid "Visual Hebrew (ISO-8859-8)"
-msgstr "Visual Hebrew (ISO-8859-8)"
+msgstr "希伯来语(ISO-8859-8)"
 
 #: ../src/charset.c:99
 msgid "Western (IBM-850)"
-msgstr "Western (IBM-850)"
+msgstr "西方(IBM-850)"
 
 #: ../src/charset.c:100
 msgid "Western (ISO-8859-1)"
-msgstr "Western (ISO-8859-1)"
+msgstr "西方(ISO-8859-1)"
 
 #: ../src/charset.c:101
 msgid "Western (ISO-8859-15)"
-msgstr "Western (ISO-8859-15)"
+msgstr "西方(ISO-8859-15)"
 
 #: ../src/charset.c:102
 msgid "Western (Windows-1252)"
-msgstr "Western (Windows-1252)"
+msgstr "西方(Windows-1252)"
 
 #. sanity!
 #. check for "System Charset" and return NULL
@@ -2217,7 +2219,7 @@ msgstr "视频Podcast"
 
 #: ../src/details.c:87
 msgid "Audiobook"
-msgstr "Audiobook"
+msgstr "有声书"
 
 #: ../src/details.c:88 ../src/display_spl.c:209 ../src/display_spl.c:218
 msgid "Music Video"
@@ -2226,11 +2228,11 @@ msgstr "音乐视频"
 #: ../src/details.c:89 ../src/display_spl.c:107 ../src/display_spl.c:210
 #: ../src/display_spl.c:219 ../src/misc_conversion.c:101
 msgid "TV Show"
-msgstr "TV Show"
+msgstr "电视秀"
 
 #: ../src/details.c:90
 msgid "TV Show & Music Video"
-msgstr "TV Show和音乐视频"
+msgstr "电视秀和音乐视频"
 
 #: ../src/details.c:862
 #, c-format
@@ -3169,11 +3171,11 @@ msgstr ""
 #: ../src/file.c:2634
 #, fuzzy
 msgid "Error: File format unsupported now."
-msgstr "更新失败（格式不支持?）"
+msgstr "错误：更新失败（格式不支持?）"
 
 #: ../src/file.c:2644
 msgid "Error: Lyrics not supported for this file format."
-msgstr ""
+msgstr "错误：本文件格式不支持歌词。"
 
 #: ../src/file.c:2658
 #, fuzzy, c-format
@@ -3181,12 +3183,12 @@ msgid ""
 "Error: Lyrics not found, file not available (%s).\n"
 "\n"
 msgstr ""
-"找不到歌词，文件不存在(%s)。\n"
+"错误：找不到歌词，文件不存在(%s)。\n"
 "\n"
 
 #: ../src/file.c:2686
 msgid "Error:"
-msgstr ""
+msgstr "错误："
 
 #: ../src/file.c:2704
 #, c-format
@@ -3507,25 +3509,27 @@ msgstr ""
 #: ../src/file_itunesdb.c:477
 #, c-format
 msgid "The repository %s does not have a readable extended database.\n"
-msgstr ""
+msgstr "音乐库%s没有可读的扩展数据库。"
 
 #: ../src/file_itunesdb.c:479
 msgid ""
 "This database identifies the track on disk with the track data in the "
 "repository database."
-msgstr ""
+msgstr "该数据库用音乐库中的音轨数据库来识别磁盘上的音轨。"
 
 #: ../src/file_itunesdb.c:480
 msgid ""
 "Any tracks already in the database cannot be transferred between "
 "repositories without the extended database."
-msgstr ""
+msgstr "如果没有扩展数据库，数据库中已有的音轨不能在音乐库之间进行转移。"
 
 #: ../src/file_itunesdb.c:481
 msgid ""
 "A new extended database will be created upon saving but existing tracks will "
 "need to be reimported to be linked to the file on disk."
 msgstr ""
+"新的扩展数据库会在保存时创建，但已有的音轨仍需要被重新导入来和磁盘上的文件进"
+"行链接。"
 
 #: ../src/file_itunesdb.c:493
 msgid "Offline iPod database successfully imported"
@@ -3944,7 +3948,7 @@ msgstr ""
 msgid ""
 "Codebase includes contribution from the following people and many other "
 "helpful individuals\n"
-msgstr ""
+msgstr "代码库包括来自下面的人们以及其他很多个人的贡献"
 
 #: ../src/help.c:53
 msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
@@ -4117,10 +4121,11 @@ msgstr ""
 "\n"
 
 #: ../src/help.c:95
+#, fuzzy
 msgid ""
 "Others past and present for their excellent contributions\n"
 "\n"
-msgstr ""
+msgstr "别人的过去和现在的出色贡献\n"
 
 #: ../src/help.c:96
 msgid "This program borrows code from the following projects:"
@@ -4251,7 +4256,7 @@ msgid ""
 "Jorg Schuler <jcsjcs at users.sourceforge.net>\n"
 "Corey Donohoe <atmos at atmos.org>"
 msgstr ""
-"© 2002-2007\n"
+"版权所有 © 2002-2007\n"
 "Jorg Schuler <jcsjcs@users.sourceforge.net>\n"
 "Corey Donohoe <atmos@atmos.org>"
 
@@ -5102,7 +5107,7 @@ msgstr "对照数据库中的记录检查iPod的文件"
 
 #: ../src/misc_playlist.c:1144
 msgid "Orphaned"
-msgstr "孤儿的"
+msgstr "遗弃的"
 
 #: ../src/misc_playlist.c:1171
 #, c-format
@@ -5112,14 +5117,14 @@ msgid ""
 "%s\n"
 "\n"
 msgstr ""
-"下列孤儿文件已经添加再次添加到iPod中，它将在下次同步时被移除：\n"
+"下列遗弃文件已经添加再次添加到iPod中，它将在下次同步时被移除：\n"
 "%s\n"
 "\n"
 
 #: ../src/misc_playlist.c:1199
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Processing..."
-msgstr "找到%d个孤儿文件和%d条悬空音轨，处理中..."
+msgstr "找到%d个遗弃文件和%d条悬空音轨，处理中..."
 
 #: ../src/misc_playlist.c:1223
 #, c-format
@@ -5162,7 +5167,7 @@ msgstr "悬空音轨"
 #: ../src/misc_playlist.c:1258
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Done."
-msgstr "找到%d个孤儿文件和%d条悬空音轨，完毕"
+msgstr "找到%d个遗弃文件和%d条悬空音轨，完毕"
 
 #. update for count == 1, 21, 41 ... and for count == n
 #: ../src/misc_track.c:89
