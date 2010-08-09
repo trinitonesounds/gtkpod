@@ -1,16 +1,95 @@
-Jorg Schuler <jcsjcs at users.sourceforge.net>
-Corey Donohoe <atmos at atmos.org>
-Adrian Ulrich <pab at blinkenlights.ch>
+© 2002 - 2010
+Developers:
+-------------------------------------------------------------------------------
+Jorg Schuler <jcsjcs at users dot sourceforge dot net>
+Corey Donohoe <atmos at atmos dot org>
+Paul Richardson <phantom_sf at users dot sourceforge dot net>
 
-The gtkpod icon is based on the gnome-icon-theme-extras project and licensed
-under the GPL v2. Originally created by Ryan Collier, modified by
-Rodney Dawes  <dobey.pwns@gmail.com>. ("multimedia-player-apple-ipod-video-white")
+Contributors:
+-------------------------------------------------------------------------------
+Ramesh Dharan
+Hiroshi Kawashima
+Adrian Ulrich
+Walter Bell
+Sam Clegg
+Chris Cutler
+Graeme Wilford
+Edward Matteucci
+Jens Lautenbach
+Alex Tribble
+Yaroslav Halchenko
+Andrew Huntwork
+Ero Carrera
+Jens Taprogge
+Armando Atienza
+D.L. Sharp
+Jim Hall
+Juergen Helmers, Markus Gaugusch
+Flavio Stanchina
+Chris Micacchi
+Steve Jay
+Christoph Kunz
+James Liggett
+Daniel Kercher
+Clinton Gormley
+Sebastien Beridot
+Sebastian Scherer
+Nick Piper
+Uwe Hermann
+Iain Benson
+Nicolas Chariot
 
-This project uses icons from the Rhythmbox (http://rhythmbox.org) project,
-licensed under the GPL v2 or later:
-* data/tunes_playlist_icon-48.png
+Others past and present for their excellent contributions
 
-This project uses icons from the F-Spot (http://f-spot.org) project,
-licensed under the GPL v2 or later:
-* data/photo-toolbar-album.png
-* data/photo-toolbar-photos.png
+Translators:
+-------------------------------------------------------------------------------
+ca				Nofre Mora <nodiek at gmail.com>
+
+fr				David Le Brun <david at dyn-ns dot net>
+		  		Éric Lassauge <rpmfarm at free dot fr>
+
+de				Jorg Schuler <jcsjcs at users dot sourceforge dot net>
+		  		Kai-Ove
+
+he				Assaf Gillat <gillata at gmail dot com>
+		  		Dudy Kohen <kohen.d@gmail.com>
+
+it				Edward Matteucci <edward_matteucc at users dot sourceforge dot net>
+		  		Daniele Forsi <dforsi at gmail dot com>
+
+jp				Ayako Sano
+		  		Kentaro Fukuchi <fukuchi at users dot sourceforge dot net>
+
+ro				Alex Eftimie <alexeftimie at gmail dot com>
+		  		Matvey Kozhev <sikon at lucidfox.org>
+		  		Igor b <igor.shaitan@gmail.com>
+
+es				Javier Kohen <jkohen at users.sourceforge.net>
+		  		Alejandro Lamas Daviña <alejandro.lamas at ific dot uv dot es>
+
+sv				Stefan Asserhall <stefan.asserhall at comhem dot se>
+
+zh_CN			Tan Zhixin <tanzhxin@gmail.com>
+		  		Américo Wang <xiyou.wangcong at gmail.com>
+
+Website:
+-------------------------------------------------------------------------------
+Jorg Schuler <jcsjcs at users dot sourceforge dot net>
+Matvey Kozhev <sikon at lucidfox.org>
+Paul Richardson <phantom_sf at users dot sourceforge dot net>
+
+Note:
+-------------------------------------------------------------------------------
+This program borrows code from the following projects
+	gnutools		- mktunes.pl, ported to C, reading and writing 
+							 		of iTunesDB  <http://www.gnu.org/software/gnupod/>
+		
+	iPod.cpp/h	- by Samuel Wood <sam dot wood at gmail dot com> 
+									some code for smart playlists is based on his C++-classes.
+		
+	mp3info		- mp3 playlength detection <http://ibiblio.org/mp3info/>
+		
+	xmms		- dirbrowser, mp3 playlength detection <http://www.xmms.org>
+
+The GUI was created with the help of glade <http://glade.gnome.org/> and anjuta <http://projects.gnome.org/anjuta>.
+

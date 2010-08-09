@@ -1024,7 +1024,6 @@ static void anjuta_gtkpod_app_statusbar_message(GtkPodApp *gtkpod_app, gchar* me
 static void anjuta_gtkpod_app_statusbar_busy_push(GtkPodApp *gtkpod_app) {
     g_return_if_fail(ANJUTA_IS_APP(gtkpod_app));
     AnjutaStatus *status = anjuta_shell_get_status(ANJUTA_SHELL(gtkpod_app), NULL);
-    g_warning("busy push XXX");
     anjuta_status_busy_push(status);
 }
 

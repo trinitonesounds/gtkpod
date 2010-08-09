@@ -63,6 +63,8 @@ cscope.out
 /plugins/*.plugin
 
 # links from dev env
+/data/AUTHORS
+/data/LICENCE
 /data/glade/details_editor.glade
 /data/glade/coverweb.glade
 /data/glade/exporter.glade

@@ -5,6 +5,10 @@ SUBDIRS = libgtkpod src po scripts data icons doc plugins
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgtkpod-1.0.pc
 
+aboutdir = $(pkgdatadir)/data
+about_DATA = COPYING \
+			 AUTHORS
+
 EXTRA_DIST =			\
 	autogen.sh		\
 	intltool-extract.in	\
@@ -24,3 +28,18 @@ uninstall-hook:
 
 update-docs:
 	cd doc && make update-docs
+	
+all-local: copy-licence copy-authors
+
+# Creating symbolic links in plugin root directory
+copy-licence:
+	echo "Copying licence file"
+	if [ ! -e data/LICENCE ]; then \
+		ln -s `pwd`/COPYING data/LICENCE; \
+	fi;
+
+copy-authors:
+	echo "Copying authors file"
+	if [ ! -e data/AUTHORS ]; then \
+		ln -s `pwd`/AUTHORS data/AUTHORS; \
+	fi;

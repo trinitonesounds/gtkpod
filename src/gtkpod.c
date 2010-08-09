@@ -66,6 +66,8 @@ void gtkpod_init(int argc, char *argv[]) {
     /* Initialise important directories */
     init_directories(argv);
 
+    register_stock_icon(GTKPOD_ICON, GTKPOD_ICON_STOCK_ID);
+
     /* Initialise the ui file */
     ui_file = g_build_filename(get_ui_dir(), "gtkpod.ui", NULL);
     anjuta_set_ui_file_path(ui_file);

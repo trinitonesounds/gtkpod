@@ -48,7 +48,7 @@ void init_directories(char *argv[]) {
 //    g_printf("argv[0] = %s\n", argv[0]);
     datadir = init_dir(argv, "data", GTKPOD_DATA_DIR);
     docdir = init_dir(argv, "doc", GTKPOD_DOC_DIR);
-    icondir = init_dir(argv, "data/icons", GTKPOD_IMAGE_DIR);
+    icondir = init_dir(argv, "icons", GTKPOD_IMAGE_DIR);
     uidir = init_dir(argv, "data/ui", GTKPOD_UI_DIR);
     gladedir = init_dir(argv, "data/glade", GTKPOD_GLADE_DIR);
     plugindir = init_dir(argv, "plugins", GTKPOD_PLUGIN_DIR);

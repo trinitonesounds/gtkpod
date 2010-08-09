@@ -39,6 +39,9 @@
 
 #define USER_PROFILE_NAME "user"
 
+#define GTKPOD_ICON_STOCK_ID "gtkpod-icon"
+#define GTKPOD_ICON "gtkpod"
+
 GladeXML *gtkpod_core_xml_new(const gchar *name);
 void gtkpod_init(int argc, char *argv[]);
 
