@@ -107,13 +107,14 @@ static void create_add_directories_dialog(Playlist *pl) {
         g_free(last_dir);
     }
 
-    if (gtk_dialog_run(GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+    if (gtk_dialog_run(GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT) {
         names = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER (dialog));
+        prefs_set_string("last_dir_browsed", gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER (dialog)));
+    }
 
     gtk_widget_destroy(dialog);
 
     if (names) {
-        prefs_set_string("last_dir_browsed", gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER (dialog)));
         gdk_threads_add_idle((GSourceFunc) add_selected_dirs_cb, names);
     }
 }
@@ -173,6 +174,7 @@ static GSList* fileselection_get_files(const gchar *title) {
     /* Handle the response */
     switch (response) {
     case GTK_RESPONSE_ACCEPT:
+        g_warning("NNN");
         new_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER (fc));
         prefs_set_string("last_dir_browsed", new_dir);
         g_free(new_dir);
