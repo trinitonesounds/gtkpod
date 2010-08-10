@@ -1,3 +1,130 @@
+Author: David Kohen <kohen.d@gmail.com>
+Date:   Tue Aug 10 07:40:58 2010 +0300
+
+    Updated Hebrew translation
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Mon Aug 9 19:38:43 2010 +0100
+
+    Remaining Chinese untranslated string translated.
+
+    * Many thanks to Américo Wang <xiyou.wangcong at gmail.com> for the
+      translation.
+
+Author: tuoni <tuoni@tuonela.(none)>
+Date:   Sun Aug 8 20:16:17 2010 -0400
+
+    Corrected questionable plural case russian translations
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Aug 8 21:32:08 2010 +0100
+
+    Update Catalan and German translations with google's attempts
+
+Author: Maia Kozheva <sikon@ubuntu.com>
+Date:   Sun Aug 8 21:17:12 2010 +0700
+
+    Finalize Russian translation for 1.0
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Aug 8 13:02:31 2010 +0100
+
+    Translation files reverted to remove auto translation attempt
+
+    * Translation files that have not have human edits were updated originally
+      by poedit's translation engine. This cannot be trusted since it seems to
+      add some strings that just look plain wrong. These translated strings
+      have been removed so at least the messages will be returned in English.
+
+Author: Daniele Forsi <daniele@forsi.it>
+Date:   Fri Aug 6 17:13:04 2010 +0200
+
+    Update Italian translation
+
+Author: Javier Kohen <jkohen@users.sourceforge.net>
+Date:   Tue Aug 3 21:13:33 2010 +0200
+
+    Updated Spanish translation.
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Aug 1 22:13:25 2010 +0100
+
+    Realisation that limitations of poedit preclude its use
+
+     * Use of poedit to update from source files fails to detect the
+       gtkpod.desktop.in file hence its values are obsoleted wrongly.
+
+     * Seemingly random order of poedit's update means lack of consistency
+       for order of strings in .po files
+
+     * Only use 'make update-po' to rescan all files in codebase
+
+Author: Alain Portal <alain.portal@free.fr>
+Date:   Sun Aug 1 17:13:19 2010 +0200
+
+    Fix header.
+
+Author: Alain Portal <alain.portal@free.fr>
+Date:   Sun Aug 1 17:11:18 2010 +0200
+
+    Update french translation.
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Aug 1 15:58:58 2010 +0100
+
+    Update to German translation
+
+    * Update to translation strings.
+      Thanks to Volker (vkrebs@users.sourceforge.net)
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Aug 1 15:40:16 2010 +0100
+
+    More translation corrections
+
+    * file.c
+     * Correction of incorrect slash in warning message
+
+    * Update of all translation files to reflect change in file.c
+
+    * Obsolete a couple of message translations from gtkpod.desktop. These
+      do not seem to need translation since the desktop file receives
+        translation keys anyway
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Aug 1 14:42:14 2010 +0100
+
+    Add Alain to list of French translators
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Sun Aug 1 14:36:09 2010 +0100
+
+    Adds hook for extract glade strings for translation
+
+    * Makefile.am
+    * uses intltool-extract to create a .h file from the glade file
+
+Author: Alain Portal <alain.portal@free.fr>
+Date:   Sun Aug 1 14:20:44 2010 +0200
+
+    Update french translation.
+
+Author: Javier Kohen <jkohen@users.sourceforge.net>
+Date:   Sat Jul 31 07:49:06 2010 +0200
+
+    Updated Spanish translation for gtkpod 1.0.
+
+Author: phantomjinx <p.g.richardson@phantomjinx.co.uk>
+Date:   Fri Jul 30 22:58:15 2010 +0100
+
+    Updated po files against src
+
+    * Used poedit to synchronise each translation catalogue against
+      the src.
+
+    * Some strings auto-translated while others left blank requiring
+      translator intervention.
+
 Author: Daniele Forsi <daniele@forsi.it>
 Date:   Sun Jul 18 17:45:04 2010 +0200
 

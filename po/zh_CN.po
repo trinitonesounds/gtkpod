@@ -3509,7 +3509,7 @@ msgstr ""
 #: ../src/file_itunesdb.c:477
 #, c-format
 msgid "The repository %s does not have a readable extended database.\n"
-msgstr "音乐库%s没有可读的扩展数据库。"
+msgstr "音乐库%s没有可读的扩展数据库。\n"
 
 #: ../src/file_itunesdb.c:479
 msgid ""
@@ -3948,7 +3948,7 @@ msgstr ""
 msgid ""
 "Codebase includes contribution from the following people and many other "
 "helpful individuals\n"
-msgstr "代码库包括来自下面的人们以及其他很多个人的贡献"
+msgstr "代码库包括来自下面的人们以及其他很多个人的贡献\n"
 
 #: ../src/help.c:53
 msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
