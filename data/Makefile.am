@@ -11,8 +11,6 @@ appdata_DATA =				\
 	gtkpod-icon-32.png		\
 	gtkpod-icon-48.png		\
 	gtkpod-logo.png			\
-	photo-toolbar-album.png \
-	photo-toolbar-photos.png \
 	anjuta.session \
 	default.profile \
 	dock-layout.xml

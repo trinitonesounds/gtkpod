@@ -36,7 +36,7 @@
 #include "anjuta-app.h"
 #include "anjuta-about.h"
 #include "anjuta-action-callbacks.h"
-#include "directories.h"
+#include "../libgtkpod/directories.h"
 
 void
 on_exit1_activate (GtkAction * action, AnjutaApp *app)

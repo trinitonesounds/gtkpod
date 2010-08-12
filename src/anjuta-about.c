@@ -28,7 +28,7 @@
 #include <libanjuta/anjuta-plugin-manager.h>
 
 #include "anjuta-about.h"
-#include "directories.h"
+#include "../libgtkpod/directories.h"
 #include "gtkpod.h"
 
 #define LICENSE_FILE "/LICENCE"
