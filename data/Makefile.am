@@ -17,10 +17,6 @@ appdata_DATA =				\
 	default.profile \
 	dock-layout.xml
 
-all-local:
-	$(INTLTOOL_EXTRACT) -type=gettext/glade gtkpod.glade
-
-
 EXTRA_DIST = 				\
 	$(desktop_in_files)		\
 	$(appdata_DATA)
