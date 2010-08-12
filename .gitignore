@@ -42,6 +42,7 @@ cscope.out
 # /data/
 /data/*.desktop
 /data/nocover_found.png
+/data/gtkpod.glade.h
 
 # /data/man/
 /data/man/gtkpod.1
@@ -50,6 +51,8 @@ cscope.out
 /po/Makefile.in.in
 /po/POTFILES
 /po/*.gmo
+/po/*.mo
+/po/*.pot
 /po/.intltool-merge-cache
 /po/stamp-it
 
