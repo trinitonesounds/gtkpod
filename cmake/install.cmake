@@ -12,17 +12,18 @@ install(FILES
     data/gtkpod-logo.png
     data/gtkpod-read-16.png
     data/gtkpod-read.png
-    data/gtkpod-sync.png
     data/photo-toolbar-album.png
     data/photo-toolbar-photos.png
     data/gtkpod.glade
     DESTINATION ${DATA_INSTALL_DEST}/data)
 
-install(DIRECTORY data/ui DESTINATION ${DATA_INSTALL_DEST}/data)
-install(DIRECTORY doc scripts DESTINATION ${DATA_INSTALL_DEST})
+install(DIRECTORY doc DESTINATION ${DATA_INSTALL_DEST} PATTERN "Makefile.*" EXCLUDE)
+install(DIRECTORY scripts DESTINATION ${DATA_INSTALL_DEST}
+    FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+    PATTERN "Makefile.*" EXCLUDE)
 install(FILES ${CMAKE_BINARY_DIR}/gtkpod.1 DESTINATION ${PACKAGE_DATA_DIR}/man/man1)
 install(FILES ${CMAKE_BINARY_DIR}/gtkpod.desktop DESTINATION ${PACKAGE_DATA_DIR}/applications)
-install(DIRECTORY data/icons/hicolor DESTINATION ${DATA_INSTALL_DEST}/icons)
+install(DIRECTORY data/icons/hicolor DESTINATION ${DATA_INSTALL_DEST}/icons PATTERN "Makefile.*" EXCLUDE)
 
 install(FILES data/icons/16x16/gtkpod.png DESTINATION ${PACKAGE_DATA_DIR}/icons/hicolor/16x16/apps)
 install(FILES data/icons/22x22/gtkpod.png DESTINATION ${PACKAGE_DATA_DIR}/icons/hicolor/22x22/apps)

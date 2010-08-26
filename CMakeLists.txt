@@ -11,7 +11,7 @@ cmake_minimum_required(VERSION 2.6)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
 
 set(PACKAGE ${CMAKE_PROJECT_NAME})
-set(VERSION 0.99.17GIT)
+set(VERSION 1.0.0)
 set(GETTEXT_PACKAGE ${CMAKE_PROJECT_NAME})
 set(PACKAGE_DATA_DIR ${CMAKE_INSTALL_PREFIX}/share)
 set(PACKAGE_LOCALE_DIR ${PACKAGE_DATA_DIR}/locale)
@@ -98,7 +98,7 @@ if(WANT_FLAC)
 endif()
 
 if(LINK_AS_NEEDED)
-    set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} -Wl,--as-needed)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--as-needed")
 endif()
 
 check_include_file(inttypes.h HAVE_INTTYPES_H)
@@ -137,6 +137,8 @@ add_custom_target(desktopfile ALL ${INTLTOOL_MERGE_EXECUTABLE} -d
     ${CMAKE_BINARY_DIR}/gtkpod.desktop)
 
 include(sources)
+include(Po)
+compile_po_files(po GTKPOD_SOURCES)
 add_executable(gtkpod ${GTKPOD_SOURCES})
 
 target_link_libraries(gtkpod
@@ -148,6 +150,4 @@ target_link_libraries(gtkpod
     ${OPT_LIBS}
 )
 
-include(Po)
-compile_po_files(po GTKPOD_LOCALES)
 include(install)

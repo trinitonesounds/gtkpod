@@ -27,7 +27,6 @@ set(GTKPOD_SOURCES
     src/infodlg.c
     src/ipod_init.c
     src/main.c
-    src/md5.c
     src/misc.c
     src/misc_confirm.c
     src/misc_conversion.c
@@ -46,7 +45,6 @@ set(GTKPOD_SOURCES
     src/sha1.c
     src/sort_window.c
     src/stock_icons.c
-    src/support.c
     src/syncdir.c
     src/tools.c
     src/wavfile.c
