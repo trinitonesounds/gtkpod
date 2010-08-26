@@ -16,7 +16,6 @@ libgtkpod_la_SOURCES =  gtkpod_app_iface.h gtkpod_app_iface.c \
 						file_convert.c file_convert.h \
 						fileselection.c fileselection.h \
 						misc_track.h misc_track.c \
-						getopt1.c getopt.c getopt.h \
 						prefs.h prefs.c \
 						syncdir.h syncdir.c \
 						misc.h misc.c \

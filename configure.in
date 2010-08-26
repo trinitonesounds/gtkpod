@@ -121,12 +121,6 @@ dnl Add the languages which your application supports here.
 ALL_LINGUAS="ca de es fr he it ja ru ro sv zh_CN"
 AM_GLIB_GNU_GETTEXT
 
-dnl Check if we have to supply getopt_long
-dnl If getopt_long_only is not available, getopt.c and getopt1.c
-dnl providing getopt_long* will be included into the binary.
-AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt)])
-AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt1)])
-
 dnl Check if flock() is available (seems to be missing on some solaris versions)
 AC_CHECK_FUNCS(flock)
 
