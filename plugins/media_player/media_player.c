@@ -167,18 +167,20 @@ static void set_song_label(Track *track) {
     gchar *label;
 
     // title by artist from album
-    if (track->title)
-        label = g_strdup(track->title);
+    const gchar *track_title = track->title ? track->title : _("No Track Title");
+    gboolean have_track_artist = track->artist && strlen(track->artist) > 0;
+    gboolean have_track_album = track->album && strlen(track->album) > 0;
+    
+    if (have_track_artist && have_track_album)
+        label = g_markup_printf_escaped(_("<b>%s</b> by %s from %s"), track_title, track->artist, track->album);
+    else if (have_track_artist)
+        label = g_markup_printf_escaped(_("<b>%s</b> by %s"), track_title, track->artist);
+    else if (have_track_album)
+        label = g_markup_printf_escaped(_("<b>%s</b> from %s"), track_title, track->album);
     else
-        label = _("No Track Title");
+        label = g_markup_printf_escaped("<b>%s</b>", track_title);
 
-    if (track->artist && strlen(track->artist) > 0 )
-        label = g_strconcat(label, " by ", track->artist, NULL);
-
-    if (track->album && strlen(track->album) > 0)
-        label = g_strconcat(label, " from ", track->album, NULL);
-
-    gtk_label_set_text(GTK_LABEL(player->song_label), label);
+    gtk_label_set_markup(GTK_LABEL(player->song_label), label);
     g_object_set_data(G_OBJECT (player->song_label), "tr_title", track->title);
     g_object_set_data(G_OBJECT (player->song_label), "tr_artist", track->artist);
     g_free(label);
