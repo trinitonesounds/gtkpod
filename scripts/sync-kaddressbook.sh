@@ -9,7 +9,7 @@
 #
 # with the following defaults: 
 
-IPOD_MOUNT=/mnt/ipod                          # mountpoint of ipod
+IPOD_MOUNT=/media/ipod                          # mountpoint of ipod
 DATAFILE=~/.kde/share/apps/kabc/std.vcf       # vcard file
 ENCODING=ISO-8859-15                          # encoding used by ipod
 

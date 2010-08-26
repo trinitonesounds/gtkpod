@@ -10,7 +10,7 @@
 #
 # with the following defaults: 
 
-IPOD_MOUNT=/mnt/ipod                          # mountpoint of ipod
+IPOD_MOUNT=/media/ipod                          # mountpoint of ipod
 
 #the path to a script that will be passed the ical information from STDIN and filter, if needed
 #FILTER_SCRIPT=

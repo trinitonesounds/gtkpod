@@ -15,7 +15,7 @@
 # differently...This is still Chinese for me!! :)
 
 export LDIFAMILYNAME=contactIPOD	# Filenames will look like $LDIFAMILYNAMEXX.vcf, X=[0-9]
-export IPOD_MOUNT=/mnt/ipod		# Mount point of the ipod
+export IPOD_MOUNT=/media/ipod		# Mount point of the ipod
 declare LDIFILE=addressbook.ldif	# default filename 'addressbook.ldif'
 declare ENCODING=ISO-8859-15            # To try others encodings : 'iconv --list'
 declare DELETE="NO"			# To delete old .vcf files by default? 'NO'!!

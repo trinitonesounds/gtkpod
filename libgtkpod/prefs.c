@@ -171,7 +171,7 @@ static void set_default_preferences() {
     prefs_set_int("delete_file", TRUE);
     prefs_set_int("delete_local_file", TRUE);
     prefs_set_int("delete_database", TRUE);
-    prefs_set_string("initial_mountpoint", "/mnt/ipod");
+    prefs_set_string("initial_mountpoint", "/media/ipod");
     prefs_set_string("path_play_now", "xmms %s");
     prefs_set_string("path_play_enqueue", "xmms -e %s");
     prefs_set_string("path_mserv_trackinfo_root", "/var/lib/mserv/trackinfo/");

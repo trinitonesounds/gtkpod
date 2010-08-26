@@ -9,7 +9,7 @@
 # with the following defaults:
 
 # mount point of ipod
-IPOD_MOUNT='/mnt/ipod'
+IPOD_MOUNT='/media/ipod'
 # uri for webcalendar (example)
 DATAFILE='https://somewhere.local/calendar.ics'
 # calendar name

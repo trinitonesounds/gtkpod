@@ -9,7 +9,7 @@
 #
 # with the following defaults: 
 
-IPOD_MOUNT='/mnt/ipod'				# mount point of ipod
+IPOD_MOUNT='/media/ipod'				# mount point of ipod
 DATAFILE='~/.abook/addressbook'	                # the abook db
 ENCODING_FROM=UTF-8                             # encoding used by abook
 ENCODING=ISO-8859-15                            # encoding used by ipod

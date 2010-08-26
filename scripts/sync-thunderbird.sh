@@ -18,7 +18,7 @@
 
 # with the following defaults: 
 
-IPOD_MOUNT=/mnt/ipod         # mountpoint of ipod
+IPOD_MOUNT=/media/ipod         # mountpoint of ipod
 ENCODING=ISO-8859-15         # encoding used by ipod
 NAME=thunderbird             # default file export name
 
