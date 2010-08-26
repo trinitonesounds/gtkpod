@@ -42,6 +42,7 @@
 #include "file_convert.h"
 #include "misc.h"
 #include "misc_track.h"
+#include "mp4file.h"
 #include "prefs.h"
 #include "syncdir.h"
 #include "autodetection.h"
@@ -820,6 +821,9 @@ void gp_init(int argc, char *argv[]) {
 
     /* initiate client server */
     server_setup();
+
+    /* Load libmp4v2 */
+    mp4_init();
 
     /* Create tooltips */
     main_tooltips = gtk_tooltips_new();
