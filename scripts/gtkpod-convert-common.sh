@@ -86,7 +86,7 @@ fi
 # Determine decoder
 
 # Convert the source extension to lowercase.
-filetype=`echo ${infile_extension}| tr [:upper:] [:lower:]`
+filetype=`echo ${infile_extension}| tr '[:upper:]' '[:lower:]'`
 case "$filetype" in
 	flac)	decoder="flac" ; options="-d -c --"  ;;
 	oga|ogg|ogv|ogx)
