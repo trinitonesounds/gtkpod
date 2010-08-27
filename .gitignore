@@ -12,6 +12,7 @@ Makefile.in
 cscope.out
 
 # /
+/.anjuta*
 /.cdtproject
 /.project
 /.settings
@@ -38,6 +39,8 @@ cscope.out
 /libgtkpod-1.0.pc
 /libtool
 /ltmain.sh
+/*.anjuta
+/*.tasks
 
 # /data/
 /data/*.desktop

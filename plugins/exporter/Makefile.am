@@ -8,7 +8,7 @@ exporter_ui_DATA = $(plugin_name).ui
 
 # Plugin Glade file
 exporter_gladedir = $(gtkpod_glade_dir)
-exporter_glade_DATA =  $(plugin_name).glade
+exporter_glade_DATA =  $(plugin_name).xml
 
 # Plugin Icon file
 exporter_pixmapsdir = $(gtkpod_image_dir)

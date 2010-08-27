@@ -531,7 +531,7 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
     fc
             = gtk_file_chooser_dialog_new(_("Select Export Destination Directory"), NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
 
-    gchar *glade_path = g_build_filename(get_glade_dir(), "exporter.glade", NULL);
+    gchar *glade_path = g_build_filename(get_glade_dir(), "exporter.xml", NULL);
     export_files_xml = gtk_builder_new();
     gtk_builder_add_from_file(export_files_xml, glade_path, NULL);
     win = GTK_WIDGET(gtk_builder_get_object(export_files_xml, "export_files_options"));
