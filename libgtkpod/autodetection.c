@@ -32,16 +32,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
+#include <gio/gio.h>
 #include "autodetection.h"
 #include "gp_itdb.h"
 #include "gtkpod_app_iface.h"
 #include "misc.h"
 #include "prefs.h"
-
-
-#ifdef HAVE_GIO
-#include <gio/gio.h>
-#endif
 
 #undef DEBUG_AUTO
 #ifdef DEBUG_AUTO
@@ -116,7 +112,6 @@ static iTunesDB *ad_find_repository_with_mountpoint (const gchar *mountpoint)
 
 
 
-#ifdef HAVE_GIO
 typedef struct _AutoDetect AutoDetect;
 
 static gboolean ad_timeout_cb (gpointer data);
@@ -328,11 +323,3 @@ static gboolean ad_timeout_cb (gpointer data)
 
     return TRUE;
 }
-
-#else
-/* No GIO support */
-
-void autodetection_init ()
-{
-}
-#endif

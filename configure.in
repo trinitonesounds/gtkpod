@@ -79,6 +79,7 @@ PKG_CHECK_MODULES(LIBGLADE, libglade-2.0 >= 2.4.0,, [AC_MSG_FAILURE([*** $LIBGLA
 PKG_CHECK_MODULES(LIBGPOD, libgpod-1.0 >= 0.7.0,, [AC_MSG_FAILURE([*** $LIBGPOD_PKG_ERRORS])])
 PKG_CHECK_MODULES(LIBANJUTA, libanjuta-1.0 >= 2.30.0,, [AC_MSG_FAILURE([*** $LIBANJUTA_PKG_ERRORS])])
 PKG_CHECK_MODULES(LIBGDL, gdl-1.0 >= 2.26.0,, [AC_MSG_FAILURE([*** $LIBGDL_PKG_ERRORS])])
+PKG_CHECK_MODULES(GIO, gio-2.0 >= 2.15.0,, [AC_MSG_FAILURE([*** $GIO_PKG_ERRORS])])
 
 CFLAGS="$CFLAGS $GTK_CFLAGS $GLIB_CFLAGS $GMODULE_CFLAGS $GTHREAD_CFLAGS $LIBGLADE_CFLAGS $LIBGPOD_CFLAGS $LIBANJUTA_CFLAGS $LIBGDL_CFLAGS"
 LIBS="$LIBS $GTK_LIBS $GLIB_LIBS $GMODULE_LIBS $GTHREAD_LIBS $LIBGLADE_LIBS $LIBGPOD_LIBS $LIBANJUTA_LIBS $LIBGDL_LIBS"
@@ -149,25 +150,6 @@ if test "x$have_curl" = "xyes"; then
     LIBS="$LIBS $CURL_LIBS"
 else
     have_curl="*no -- will build without coverart download support"
-fi
-
-dnl Check for gio
-AC_ARG_WITH(gio, AC_HELP_STRING([--without-gio],[Disable autodetection support]))
-if test "x$with_gio" != "xno"; then
-    PKG_CHECK_MODULES(GIO, [gio-2.0 >= 2.15.0], have_gio=yes, have_gio=no)
-    if test "x$with_gio" = "xyes" -a "x$have_gio" = "xno"; then
-        AC_MSG_ERROR([gio support explicitly requested but gio could not be found])
-    fi
-fi
-AM_CONDITIONAL(HAVE_GIO, test "x$have_gio" = "xyes")
-if test "x$have_gio" = "xyes"; then
-    have_gio="yes -- will build with automount support"
-    AC_DEFINE(HAVE_GIO, 1, [Define if you have gio support])
-    CPPFLAGS="$CPPFLAGS $GIO_CFLAGS"
-    CFLAGS="$CFLAGS $GIO_CFLAGS"
-    LIBS="$LIBS $GIO_LIBS"
-else
-    have_gio="*no -- will build without iPod autodetection support"
 fi
 
 dnl Check for webkit
@@ -455,7 +437,6 @@ Core Configuration for $PACKAGE $VERSION :
  Install path .........: $prefix
  GTK2 version .........: `$PKG_CONFIG gtk+-2.0 --modversion`
  GLib2/GThread version : `$PKG_CONFIG gthread-2.0 --modversion`
- gio ..................: $have_gio
  libgpod version ......: $libgpod_version
  libcurl ..............: $have_curl
  vorbisfile ...........: $have_ogg

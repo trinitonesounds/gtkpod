@@ -762,9 +762,6 @@ void gp_init(int argc, char *argv[]) {
     if (!prefs_get_int_value("itdb_0_type", NULL)) {
         /* databases have not been set up previously -- take care of
          this */
-#ifndef HAVE_GIO
-        gchar *mountpoint;
-#endif
         gchar *filename;
 
         /* Local database */
@@ -780,18 +777,6 @@ void gp_init(int argc, char *argv[]) {
         prefs_set_string("itdb_1_name", _("Podcasts"));
         prefs_set_string("itdb_1_filename", filename);
         g_free(filename);
-
-#ifndef HAVE_GIO
-        /* iPod database -- only set up if autodetection is not active */
-        mountpoint = prefs_get_string ("initial_mountpoint");
-        filename = g_build_filename (cfgdir, "iTunesDB", NULL);
-        prefs_set_int ("itdb_2_type", GP_ITDB_TYPE_IPOD);
-        prefs_set_string ("itdb_2_name", _("iPod"));
-        prefs_set_string ("itdb_2_filename", filename);
-        prefs_set_string ("itdb_2_mountpoint", mountpoint);
-        g_free (mountpoint);
-        g_free (filename);
-#endif
     }
 
     for (i = 0;; ++i) {
