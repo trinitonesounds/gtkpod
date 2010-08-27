@@ -53,7 +53,7 @@ struct fcd {
     GList *tracks; /* tracks to be written */
     GtkWidget *fc; /* file chooser */
     GList **filenames; /* pointer to GList to append the filenames used */
-    GladeXML *win_xml; /* Glade xml reference */
+    GtkBuilder *win_xml; /* Glade xml reference */
     Track *track; /* current track to export */
 };
 
@@ -482,9 +482,9 @@ static void export_files_write(struct fcd *fcd) {
 static void export_files_store_option_settings(struct fcd *fcd) {
     g_return_if_fail (fcd && fcd->win_xml && fcd->fc);
 
-    option_get_toggle_button(fcd->win_xml, EXPORT_FILES_SPECIAL_CHARSET);
-    option_get_toggle_button(fcd->win_xml, EXPORT_FILES_CHECK_EXISTING);
-    option_get_string(fcd->win_xml, EXPORT_FILES_TPL, NULL);
+    option_get_toggle_button_gb(fcd->win_xml, EXPORT_FILES_SPECIAL_CHARSET);
+    option_get_toggle_button_gb(fcd->win_xml, EXPORT_FILES_CHECK_EXISTING);
+    option_get_string_gb(fcd->win_xml, EXPORT_FILES_TPL, NULL);
     option_get_filename(GTK_FILE_CHOOSER (fcd->fc), EXPORT_FILES_PATH, NULL);
 }
 
@@ -504,7 +504,7 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
     GtkWidget *win, *options, *message_box;
     struct fcd *fcd;
     GtkWidget *fc;
-    GladeXML *export_files_xml;
+    GtkBuilder *export_files_xml;
     iTunesDB *itdb = NULL;
 
     if (tracks) {
@@ -532,10 +532,11 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
             = gtk_file_chooser_dialog_new(_("Select Export Destination Directory"), NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
 
     gchar *glade_path = g_build_filename(get_glade_dir(), "exporter.glade", NULL);
-    export_files_xml = glade_xml_new(glade_path, "export_files_options", NULL);
-    win = gtkpod_xml_get_widget(export_files_xml, "export_files_options");
-    options = gtkpod_xml_get_widget(export_files_xml, "ef_options_frame");
-    message_box = gtkpod_xml_get_widget(export_files_xml, "ef_message_box");
+    export_files_xml = gtk_builder_new();
+    gtk_builder_add_from_file(export_files_xml, glade_path, NULL);
+    win = GTK_WIDGET(gtk_builder_get_object(export_files_xml, "export_files_options"));
+    options = GTK_WIDGET(gtk_builder_get_object(export_files_xml, "ef_options_frame"));
+    message_box = GTK_WIDGET(gtk_builder_get_object(export_files_xml, "ef_message_box"));
     g_free(glade_path);
 
     /* Information needed to clean up later */
@@ -557,8 +558,8 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
     /* set message text */
     if (display) {
         GList *gl;
-        GtkWidget *label = gtkpod_xml_get_widget(export_files_xml, "ef_message");
-        GtkWidget *tv = gtkpod_xml_get_widget(export_files_xml, "ef_textview");
+        GtkWidget *label = GTK_WIDGET(gtk_builder_get_object(export_files_xml, "ef_message"));
+        GtkWidget *tv = GTK_WIDGET(gtk_builder_get_object(export_files_xml, "ef_textview"));
         GtkTextBuffer *tb = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tv));
         if (message)
             gtk_label_set_text(GTK_LABEL (label), message);
@@ -592,12 +593,12 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
     /* set last folder */
     option_set_folder(GTK_FILE_CHOOSER (fc), EXPORT_FILES_PATH);
     /* set toggle button "charset" */
-    option_set_toggle_button(export_files_xml, EXPORT_FILES_SPECIAL_CHARSET, FALSE);
+    option_set_toggle_button_gb(export_files_xml, EXPORT_FILES_SPECIAL_CHARSET, FALSE);
     /* set toggle button "check for existing files" */
-    option_set_toggle_button(export_files_xml, EXPORT_FILES_CHECK_EXISTING, TRUE);
+    option_set_toggle_button_gb(export_files_xml, EXPORT_FILES_CHECK_EXISTING, TRUE);
 
     /* set last template */
-    option_set_string(export_files_xml, EXPORT_FILES_TPL, EXPORT_FILES_TPL_DFLT);
+    option_set_string_gb(export_files_xml, EXPORT_FILES_TPL, EXPORT_FILES_TPL_DFLT);
 
     response = gtk_dialog_run(GTK_DIALOG (fc));
 
@@ -793,9 +794,9 @@ static void export_playlist_file_cleanup(struct fcd *fcd) {
 static void export_playlist_file_retrieve_options(struct fcd *fcd) {
     g_return_if_fail (fcd && fcd->fc);
 
-    option_get_radio_button(fcd->win_xml, EXPORT_PLAYLIST_FILE_TYPE, ExportPlaylistFileTypeW);
-    option_get_radio_button(fcd->win_xml, EXPORT_PLAYLIST_FILE_SOURCE, ExportPlaylistFileSourceW);
-    option_get_string(fcd->win_xml, EXPORT_PLAYLIST_FILE_TPL, NULL);
+    option_get_radio_button_gb(fcd->win_xml, EXPORT_PLAYLIST_FILE_TYPE, ExportPlaylistFileTypeW);
+    option_get_radio_button_gb(fcd->win_xml, EXPORT_PLAYLIST_FILE_SOURCE, ExportPlaylistFileSourceW);
+    option_get_string_gb(fcd->win_xml, EXPORT_PLAYLIST_FILE_TPL, NULL);
     option_get_folder(GTK_FILE_CHOOSER (fcd->fc), EXPORT_PLAYLIST_FILE_PATH, NULL);
 }
 
@@ -931,14 +932,15 @@ void export_tracks_to_playlist_file(GList *tracks) {
     GtkWidget
             *fc =
                     gtk_file_chooser_dialog_new(_("Create Playlist File"), NULL, GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_APPLY, RESPONSE_APPLY, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
-    GladeXML *export_playlist_xml;
+    GtkBuilder *export_playlist_xml;
 
     gchar *glade_path = g_build_filename(get_glade_dir(), "exporter.glade", NULL);
-    export_playlist_xml = glade_xml_new(glade_path, "export_playlist_file_options", NULL);
-    win = gtkpod_xml_get_widget(export_playlist_xml, "export_playlist_file_options");
+    export_playlist_xml = gtk_builder_new();
+    gtk_builder_add_from_file(export_playlist_xml, glade_path, NULL);
+    win = GTK_WIDGET(gtk_builder_get_object(export_playlist_xml, "export_playlist_file_options"));
     g_free(glade_path);
 
-    options = gtkpod_xml_get_widget(export_playlist_xml, "ep_options_frame");
+    options = GTK_WIDGET(gtk_builder_get_object(export_playlist_xml, "ep_options_frame"));
 
     fcd->win_xml = export_playlist_xml;
 
@@ -958,11 +960,11 @@ void export_tracks_to_playlist_file(GList *tracks) {
     /* set last folder */
     option_set_folder(GTK_FILE_CHOOSER (fc), EXPORT_PLAYLIST_FILE_PATH);
     /* set last type */
-    option_set_radio_button(export_playlist_xml, EXPORT_PLAYLIST_FILE_TYPE, ExportPlaylistFileTypeW, 0);
+    option_set_radio_button_gb(export_playlist_xml, EXPORT_PLAYLIST_FILE_TYPE, ExportPlaylistFileTypeW, 0);
     /* set last source */
-    option_set_radio_button(export_playlist_xml, EXPORT_PLAYLIST_FILE_SOURCE, ExportPlaylistFileSourceW, 0);
+    option_set_radio_button_gb(export_playlist_xml, EXPORT_PLAYLIST_FILE_SOURCE, ExportPlaylistFileSourceW, 0);
     /* set last template */
-    option_set_string(export_playlist_xml, EXPORT_PLAYLIST_FILE_TPL, EXPORT_PLAYLIST_FILE_TPL_DFLT);
+    option_set_string_gb(export_playlist_xml, EXPORT_PLAYLIST_FILE_TPL, EXPORT_PLAYLIST_FILE_TPL_DFLT);
 
     /* catch response codes */
     g_signal_connect (fc, "response",
