@@ -396,6 +396,9 @@ void set_selected_tracks(GList *tracks) {
         player->tracks = NULL;
     }
 
+    if (! tracks)
+        return;
+
     GList *l = g_list_copy(tracks);
     //Does the same thing as generate_random_playlist()
     if (player->shuffle) {
