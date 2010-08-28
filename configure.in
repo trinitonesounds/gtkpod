@@ -71,7 +71,7 @@ else
 fi
 
 dnl check for required libs that are managed with pkg-config
-PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.8.0,, [AC_MSG_FAILURE([*** $GTK_PKG_ERRORS])])
+PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.12.0,, [AC_MSG_FAILURE([*** $GTK_PKG_ERRORS])])
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.15.0,, [AC_MSG_FAILURE([*** $GLIB_PKG_ERRORS])])
 PKG_CHECK_MODULES(GMODULE, gmodule-2.0,, [AC_MSG_FAILURE([*** $GMODULE_PKG_ERRORS])])
 PKG_CHECK_MODULES(GTHREAD, gthread-2.0 >= 0.14.0,, [AC_MSG_FAILURE([*** $GTHREAD_PKG_ERRORS])])
