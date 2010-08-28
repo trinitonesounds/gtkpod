@@ -2026,6 +2026,7 @@ static GtkTreeViewColumn *tm_add_column(TM_item tm_item, gint pos) {
     g_return_val_if_fail (text, NULL);
 
     col = gtk_tree_view_column_new();
+    gtk_tree_view_column_set_resizable(col, TRUE);
 
     switch (tm_item) {
     case TM_COLUMN_TITLE:
@@ -2074,6 +2075,8 @@ static GtkTreeViewColumn *tm_add_column(TM_item tm_item, gint pos) {
         /* for some column names we want to use shorter alternatives to
          get_tm_string() */
     case TM_COLUMN_RATING:
+        gtk_tree_view_column_set_fixed_width(col, 85);
+        gtk_tree_view_column_set_resizable(col, FALSE);
         text = _("Rating");
         break;
     case TM_COLUMN_TRACK_NR:
@@ -2159,7 +2162,6 @@ static GtkTreeViewColumn *tm_add_column(TM_item tm_item, gint pos) {
     gtk_tree_view_column_pack_start(col, renderer, FALSE);
     gtk_tree_view_column_set_cell_data_func(col, renderer, cell_data_func, NULL, NULL);
     gtk_tree_view_column_set_sort_column_id(col, tm_item);
-    gtk_tree_view_column_set_resizable(col, TRUE);
     gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_FIXED);
     gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE (model), tm_item, tm_data_compare_func, NULL, NULL);
     gtk_tree_view_column_set_reorderable(col, TRUE);
