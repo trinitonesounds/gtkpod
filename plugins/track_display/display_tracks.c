@@ -2074,7 +2074,7 @@ static GtkTreeViewColumn *tm_add_column(TM_item tm_item, gint pos) {
         /* for some column names we want to use shorter alternatives to
          get_tm_string() */
     case TM_COLUMN_RATING:
-        text = _("Rtng");
+        text = _("Rating");
         break;
     case TM_COLUMN_TRACK_NR:
         text = _("#");
