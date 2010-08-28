@@ -273,7 +273,7 @@ static void st_set_string_compare_func(guint inst, guint page_num) {
 }
 
 /* callback */
-static void on_st_switch_page(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, gpointer user_data) {
+static void on_st_switch_page(GtkNotebook *notebook, GtkWidget *page, guint page_num, gpointer user_data) {
     guint inst = GPOINTER_TO_UINT( user_data );
 
     /*     printf ("switch_page: inst/page: %d/%d\n", inst, page_num); */
@@ -2404,10 +2404,10 @@ static void st_create_special(gint inst, GtkWidget *window) {
     viewport = gtkpod_xml_get_widget(special_xml, "special_viewport");
 
     /* according to GTK FAQ: move a widget to a new parent */
-    gtk_widget_ref(viewport);
+    g_object_ref(viewport);
     gtk_container_remove(GTK_CONTAINER (special), viewport);
     gtk_container_add(GTK_CONTAINER (window), viewport);
-    gtk_widget_unref(viewport);
+    g_object_unref(viewport);
 
     /* Connect the signal handlers and set default value. User data
      is @inst+(additional data << SP_SHIFT) */
@@ -2533,14 +2533,14 @@ static void st_create_special(gint inst, GtkWidget *window) {
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int_index("sp_autodisplay", inst));
     g_free(buf);
 
-    /* Safe pointer to tooltips */
+    /*
     st->sp_tooltips_data = gtk_tooltips_data_get(gtkpod_xml_get_widget(special_xml, "sp_modified_entry"));
-    /* Show / don't show tooltips */
     g_return_if_fail (st->sp_tooltips_data);
     if (prefs_get_int("display_tooltips_main"))
         gtk_tooltips_enable(st->sp_tooltips_data->tooltips);
     else
         gtk_tooltips_disable(st->sp_tooltips_data->tooltips);
+    */
     /* we don't need this any more */
     gtk_widget_destroy(special);
 }
@@ -2740,6 +2740,7 @@ void st_show_hide_tooltips(void) {
     gint i;
 
     for (i = 0; i < SORT_TAB_MAX; ++i) {
+        /*
         GtkTooltips *tt;
         GtkTooltipsData *ttd;
 
@@ -2755,6 +2756,8 @@ void st_show_hide_tooltips(void) {
         else {
             gtk_tooltips_disable(tt);
         }
+
+        */
     }
 }
 
@@ -3223,51 +3226,34 @@ gint st_get_sort_tab_number(gchar *text) {
     GtkWidget *combo;
     gint result;
     gint i, nr, stn;
-    GList *list = NULL, *lnk;
     gchar buf[20], *bufp;
 
-    mdialog
-            = gtk_message_dialog_new(GTK_WINDOW (gtkpod_app), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, "%s", text);
+    mdialog = gtk_message_dialog_new(GTK_WINDOW (gtkpod_app), GTK_DIALOG_DESTROY_WITH_PARENT,
+                                     GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, "%s", text);
 
     dialog = GTK_DIALOG (mdialog);
 
-    combo = gtk_combo_new();
+    combo = gtk_combo_box_new_text();
     gtk_widget_show(combo);
     gtk_container_add(GTK_CONTAINER (gtk_dialog_get_content_area(GTK_DIALOG(dialog))), combo);
 
     stn = prefs_get_int("sort_tab_num");
     /* Create list */
     for (i = 1; i <= stn; ++i) {
-        bufp = g_strdup_printf("%d", i);
-        list = g_list_append(list, bufp);
+        sprintf(buf, "%d", i);
+        gtk_combo_box_append_text(GTK_COMBO_BOX (combo), buf);
     }
-
-    /* set pull down items */
-    gtk_combo_set_popdown_strings(GTK_COMBO (combo), list);
-    /* set standard entry */
-    if (last_nr > stn)
-        last_nr = 1; /* maybe the stn has become
-         smaller... */
-    snprintf(buf, 20, "%d", last_nr);
-    gtk_entry_set_text(GTK_ENTRY (GTK_COMBO (combo)->entry), buf);
 
     result = gtk_dialog_run(GTK_DIALOG (mdialog));
 
     /* free the list */
-    for (lnk = list; lnk; lnk = lnk->next) {
-        C_FREE (lnk->data);
-    }
-    g_list_free(list);
-    list = NULL;
-
     if (result == GTK_RESPONSE_CANCEL) {
         nr = -1; /* no selection */
     }
     else {
-        bufp = gtk_editable_get_chars(GTK_EDITABLE (GTK_COMBO (combo)->entry), 0, -1);
+        bufp = gtk_combo_box_get_active_text(GTK_COMBO_BOX (combo));
         nr = atoi(bufp) - 1;
         last_nr = nr + 1;
-        C_FREE (bufp);
     }
 
     gtk_widget_destroy(mdialog);

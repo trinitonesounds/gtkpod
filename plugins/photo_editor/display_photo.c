@@ -155,7 +155,7 @@ static void create_photo_editor() {
 
     /* Add widget in Shell. Any number of widgets can be added */
     photo_editor_plugin->photo_window = gtk_scrolled_window_new(NULL, NULL);
-    gtk_widget_ref(photo_editor_plugin->photo_window);
+    g_object_ref(photo_editor_plugin->photo_window);
     photo_editor->window = photo_editor_plugin->photo_window;
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (photo_editor->window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (photo_editor->window), GTK_SHADOW_IN);

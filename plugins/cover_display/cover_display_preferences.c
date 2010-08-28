@@ -79,7 +79,7 @@ GtkWidget *init_cover_preferences(gchar *glade_path) {
     coverart_bgcolorselect_button = gtkpod_xml_get_widget (pref_xml, "coverart_display_bg_button");
     coverart_fgcolorselect_button = gtkpod_xml_get_widget (pref_xml, "coverart_display_fg_button");
 
-    gtk_widget_ref(notebook);
+    g_object_ref(notebook);
 
     color = coverart_get_background_display_color();
     gtk_color_button_set_color (GTK_COLOR_BUTTON(coverart_bgcolorselect_button), color);

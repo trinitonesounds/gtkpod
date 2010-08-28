@@ -137,7 +137,6 @@ void sort_window_create(void) {
         gint i;
         GtkTextIter ti;
         gchar *str;
-        GtkTooltips *tooltips;
         gint *tm_listed_order, tm_list_pos;
 
         sort_temp_prefs = temp_prefs_create();
@@ -227,9 +226,7 @@ void sort_window_create(void) {
         /* associate tm_listed_order with sort_window */
         g_object_set_data(G_OBJECT (sort_window), "tm_listed_order", tm_listed_order);
 
-        tooltips = gtk_tooltips_new();
-        gtk_tooltips_set_tip(tooltips, w, _("You can also use the table headers, but this allows you to sort according to a column that is not displayed."), NULL);
-
+        gtk_widget_set_tooltip_text (w, _("You can also use the table headers, but this allows you to sort according to a column that is not displayed."));
         sort_window_update();
 
         sort_window_show_hide_tooltips();
@@ -332,6 +329,7 @@ void sort_window_release(void) {
 /* make the tooltips visible or hide it depending on the value set in
  * the prefs (tooltips_prefs) */
 void sort_window_show_hide_tooltips(void) {
+/*
     if (sort_window) {
         GtkTooltips *tt;
         GtkTooltipsData *tooltips_data;
@@ -349,6 +347,7 @@ void sort_window_show_hide_tooltips(void) {
             g_warning ("***tt is NULL***");
         }
     }
+*/
 }
 
 /* get the sort_column selected in the combo */

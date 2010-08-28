@@ -1413,17 +1413,17 @@ static void create_details_editor_view() {
     details_window = gtkpod_xml_get_widget(details_view->xml, "details_window");
     viewport = gtkpod_xml_get_widget(details_view->xml, "details_container");
     /* according to GTK FAQ: move a widget to a new parent */
-    gtk_widget_ref(viewport);
+    g_object_ref(viewport);
     gtk_container_remove(GTK_CONTAINER (details_window), viewport);
     g_free(glade_path);
 
     /* Add widget in Shell. */
     details_editor_plugin->details_window = gtk_scrolled_window_new(NULL, NULL);
-    gtk_widget_ref(details_editor_plugin->details_window);
+    g_object_ref(details_editor_plugin->details_window);
     details_editor_plugin->details_view = viewport;
-    gtk_widget_ref(details_editor_plugin->details_view);
+    g_object_ref(details_editor_plugin->details_view);
     details_editor_plugin->details_notebook = gtkpod_xml_get_widget(details_view->xml, "details_notebook");
-    gtk_widget_ref(details_editor_plugin->details_notebook);
+    g_object_ref(details_editor_plugin->details_notebook);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (details_editor_plugin->details_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (details_editor_plugin->details_window), GTK_SHADOW_IN);
 
@@ -1433,7 +1433,7 @@ static void create_details_editor_view() {
     details_view->window = details_editor_plugin->details_window;
 
     /* we don't need these any more */
-    gtk_widget_unref(viewport);
+    g_object_unref(viewport);
     gtk_widget_destroy(details_window);
 
     for (i = 1; i < T_ITEM_NUM; ++i) {

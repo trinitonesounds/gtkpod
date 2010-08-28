@@ -547,11 +547,11 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
     fcd->fc = fc;
 
     /* according to GTK FAQ: move a widget to a new parent */
-    gtk_widget_ref(options);
+    g_object_ref(options);
     gtk_container_remove(GTK_CONTAINER (win), options);
     /* set extra options */
     gtk_file_chooser_set_extra_widget(GTK_FILE_CHOOSER (fc), options);
-    gtk_widget_unref(options);
+    g_object_unref(options);
 
     gtk_widget_destroy(win);
 
@@ -949,11 +949,11 @@ void export_tracks_to_playlist_file(GList *tracks) {
     fcd->fc = fc;
 
     /* according to GTK FAQ: move a widget to a new parent */
-    gtk_widget_ref(options);
+    g_object_ref(options);
     gtk_container_remove(GTK_CONTAINER (win), options);
     /* set extra options */
     gtk_file_chooser_set_extra_widget(GTK_FILE_CHOOSER (fc), options);
-    gtk_widget_unref(options);
+    g_object_unref(options);
 
     gtk_widget_destroy(win);
 

@@ -856,7 +856,7 @@ static GtkWidget *create_preference_notebook() {
     }
     notebook = GTK_WIDGET (gtk_builder_get_object (builder, "settings_notebook"));
     GtkWidget *parent = gtk_widget_get_parent(notebook);
-    gtk_widget_ref(notebook);
+    g_object_ref(notebook);
     gtk_container_remove(GTK_CONTAINER(parent), notebook);
     gtk_widget_destroy(parent);
 

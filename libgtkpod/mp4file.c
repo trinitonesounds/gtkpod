@@ -806,13 +806,13 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 		value = strrchr (mp4FileName, '.');
 		if (value)
 		{
-		    if (g_strcasecmp (value, ".m4a") == 0)
+		    if (g_ascii_strcasecmp (value, ".m4a") == 0)
 			track->filetype = g_strdup ("AAC audio file");
-		    if (g_strcasecmp (value, ".m4p") == 0)
+		    if (g_ascii_strcasecmp (value, ".m4p") == 0)
 			track->filetype = g_strdup ("Protected AAC audio file");
-		    if (g_strcasecmp (value, ".m4b") == 0)
+		    if (g_ascii_strcasecmp (value, ".m4b") == 0)
 			track->filetype = g_strdup ("AAC audio book file");
-		    if (g_strcasecmp (value, ".mp4") == 0)
+		    if (g_ascii_strcasecmp (value, ".mp4") == 0)
 			track->filetype = g_strdup ("MP4 video file");
 		}
 		if (prefs_get_int("readtags"))

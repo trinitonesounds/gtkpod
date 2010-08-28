@@ -48,7 +48,10 @@
 #include <sys/un.h>
 #include <unistd.h>
 
+/* TODO: Toss this whole thing out in favor of libunique/GApplication */
+
 static gint ssock = -1;
+static GIOChannel *channel = NULL;
 static struct sockaddr_un *saddr = NULL;
 static guint inp_handler;
 
@@ -92,6 +95,7 @@ static gboolean socket_used() {
     set_path(server);
     if (g_file_test(server->sun_path, G_FILE_TEST_EXISTS)) {
         gint csock = socket(AF_UNIX, SOCK_STREAM, 0);
+        
         if (csock != -1) {
             server->sun_family = AF_UNIX;
             if (connect(csock, (struct sockaddr *) server, sizeof(struct sockaddr_un)) != -1) {
@@ -102,6 +106,7 @@ static gboolean socket_used() {
             close(csock);
         }
     }
+    
     g_free(server);
     return result;
 }
@@ -141,7 +146,8 @@ static gboolean register_playcount(gchar *file) {
     return TRUE;
 }
 
-void received_message(gpointer data, gint source, GdkInputCondition condition) {
+gboolean received_message(GIOChannel *channel, GIOCondition condition, gpointer data) {
+    gint source = g_io_channel_unix_get_fd(channel);
     gint csock, rval;
     gchar *buf;
     /*    printf("received message\n");*/
@@ -174,6 +180,8 @@ void received_message(gpointer data, gint source, GdkInputCondition condition) {
         close(csock);
     }
     g_free(buf);
+
+    return TRUE;
 }
 
 void server_setup(void) {
@@ -197,7 +205,8 @@ void server_setup(void) {
             /* socket must be non-blocking -- otherwise
              received_message() will block */
             fcntl(ssock, F_SETFL, O_NONBLOCK);
-            inp_handler = gtk_input_add_full(ssock, GDK_INPUT_READ, received_message, NULL, NULL, NULL);
+            channel = g_io_channel_unix_new(ssock);
+            inp_handler = g_io_add_watch(channel, G_IO_IN, received_message, NULL);
         }
         else {
             fprintf(stderr, "server: bind error: %s", strerror(errno));
@@ -212,7 +221,9 @@ void server_setup(void) {
 
 void server_shutdown(void) {
     if (ssock != -1) {
-        gtk_input_remove(inp_handler);
+        if (channel != NULL)
+            g_io_channel_unref(channel);
+        
         close(ssock);
         ssock = -1;
     }

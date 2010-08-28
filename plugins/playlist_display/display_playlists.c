@@ -1719,7 +1719,7 @@ gint tree_view_get_cell_from_pos(GtkTreeView *view, guint x, guint y, GtkCellRen
     if (col == NULL)
         return -1; /* not found */
 
-    cells = gtk_tree_view_column_get_cell_renderers(col);
+    cells = gtk_cell_layout_get_cells(GTK_CELL_LAYOUT(col));
 
     gtk_tree_view_get_cell_area(view, path, col, &rect);
     gtk_tree_path_free(path);

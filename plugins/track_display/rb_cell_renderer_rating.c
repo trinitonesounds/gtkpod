@@ -141,7 +141,7 @@ rb_cell_renderer_rating_init (RBCellRendererRating *cellrating)
 	cellrating->priv = RB_CELL_RENDERER_RATING_GET_PRIVATE (cellrating);
 
 	/* set the renderer able to be activated */
-	g_object_set_(cellrating, "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE, NULL);
+	g_object_set(cellrating, "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE, NULL);
 
 	/* create the needed icons */
 }
@@ -240,7 +240,7 @@ rb_cell_renderer_rating_set_property (GObject *object,
 GtkCellRenderer *
 rb_cell_renderer_rating_new ()
 {
-	return GTK_CELL_RENDERER (gtk_type_new (rb_cell_renderer_rating_get_type ()));
+	return GTK_CELL_RENDERER (g_object_new (rb_cell_renderer_rating_get_type (), NULL));
 }
 
 static void
@@ -333,7 +333,7 @@ rb_cell_renderer_rating_activate (GtkCellRenderer *cell,
 	g_return_val_if_fail (RB_IS_CELL_RENDERER_RATING (cellrating), FALSE);
 
 	gtk_widget_get_pointer (widget, &mouse_x, &mouse_y);
-	gtk_tree_view_widget_to_tree_coords (GTK_TREE_VIEW (widget),
+	gtk_tree_view_convert_bin_window_to_tree_coords (GTK_TREE_VIEW (widget),
 					     mouse_x,
 					     mouse_y,
 					     &mouse_x,

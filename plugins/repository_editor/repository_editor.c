@@ -1319,14 +1319,14 @@ static void create_repository_editor_view() {
     g_free(glade_path);
 
     /* according to GTK FAQ: move a widget to a new parent */
-    gtk_widget_ref(viewport);
+    g_object_ref(viewport);
     gtk_container_remove(GTK_CONTAINER (repo_window), viewport);
 
     /* Add widget in Shell. Any number of widgets can be added */
     repository_editor_plugin->repo_window = gtk_scrolled_window_new(NULL, NULL);
-    gtk_widget_ref(repository_editor_plugin->repo_window);
+    g_object_ref(repository_editor_plugin->repo_window);
     repository_editor_plugin->repo_view = viewport;
-    gtk_widget_ref(repository_editor_plugin->repo_view);
+    g_object_ref(repository_editor_plugin->repo_view);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (repository_editor_plugin->repo_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (repository_editor_plugin->repo_window), GTK_SHADOW_IN);
 
@@ -1336,7 +1336,7 @@ static void create_repository_editor_view() {
     repository_view->window = repository_editor_plugin->repo_window;
 
     /* we don't need these any more */
-    gtk_widget_unref(viewport);
+    g_object_unref(viewport);
     gtk_widget_destroy(repo_window);
 
     /* widget names and corresponding keys for 'standard' toggle

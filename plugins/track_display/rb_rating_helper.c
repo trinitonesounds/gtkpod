@@ -114,6 +114,7 @@ rb_rating_render_stars (GtkWidget *widget,
 {
 	int i, icon_width;
 	gboolean rtl;
+	cairo_t *cr = gdk_cairo_create (window);
 
 	g_return_val_if_fail (widget != NULL, FALSE);
 	g_return_val_if_fail (window != NULL, FALSE);
@@ -150,6 +151,7 @@ rb_rating_render_stars (GtkWidget *widget,
 			buf = pixbufs->pix_blank;
 
 		if (buf == NULL) {
+			cairo_destroy(cr);
 			return FALSE;
 		}
 
@@ -158,6 +160,7 @@ rb_rating_render_stars (GtkWidget *widget,
 						   (widget->style->text[state].green + offset) >> 8,
 						   (widget->style->text[state].blue + offset) >> 8); */
 		if (buf == NULL) {
+			cairo_destroy(cr);
 			return FALSE;
 		}
 
@@ -167,16 +170,13 @@ rb_rating_render_stars (GtkWidget *widget,
 			star_offset = i * icon_width;
 		}
 
-		gdk_draw_pixbuf (window,
-				 NULL,
-				 buf,
-				 x, y,
-				 x_offset + star_offset, y_offset,
-				 icon_width, icon_width,
-				 GDK_RGB_DITHER_NORMAL, 0, 0);
-/*		g_object_unref (G_OBJECT (buf)); */
+		cairo_save (cr);
+		gdk_cairo_set_source_pixbuf (cr, buf, x_offset + star_offset, y_offset);
+		cairo_paint (cr);
+		cairo_restore (cr);
 	}
 
+	cairo_destroy(cr);
 	return TRUE;
 }
 

@@ -61,7 +61,7 @@ GtkWidget *init_sorttab_preferences() {
     gchar *glade_path = g_build_filename(get_glade_dir(), "sorttab_display.glade", NULL);
     pref_xml = gtkpod_xml_new(glade_path, "sorttab_settings_notebook");
     notebook = gtkpod_xml_get_widget(pref_xml, "sorttab_settings_notebook");
-    gtk_widget_ref(notebook);
+    g_object_ref(notebook);
     g_free(glade_path);
 
     glade_xml_signal_autoconnect(pref_xml);

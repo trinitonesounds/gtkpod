@@ -109,7 +109,7 @@ void update_bookmark_menu() {
     for (i = 0; i < g_list_length(bookmarks); ++i) {
         gchar *bookmark = g_list_nth_data(bookmarks, i);
         GtkWidget *bookitem = gtk_menu_item_new_with_label(bookmark);
-        gtk_menu_append(GTK_MENU(browser->bookmark_menu), bookitem);
+        gtk_menu_shell_append(GTK_MENU_SHELL (browser->bookmark_menu), bookitem);
         g_signal_connect (G_OBJECT (bookitem), "activate", G_CALLBACK(bookmark_menu_item_cb), (gpointer) browser);
         gtk_widget_show(bookitem);
     }
@@ -127,7 +127,11 @@ static void create_menubar() {
 
 static void create_toolbar() {
     browser->toolbar = gtk_toolbar_new();
+#ifndef GTK_ORIENTABLE
     gtk_toolbar_set_orientation(GTK_TOOLBAR (browser->toolbar), GTK_ORIENTATION_HORIZONTAL);
+#else
+    gtk_orientable_set_orientation(GTK_ORIENTABLE (browser->toolbar), GTK_ORIENTATION_HORIZONTAL);
+#endif
     gtk_toolbar_set_style(GTK_TOOLBAR (browser->toolbar), GTK_TOOLBAR_BOTH_HORIZ);
 
     GtkToolItem* item;

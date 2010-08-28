@@ -173,7 +173,7 @@ GtkWidget *init_coverweb_preferences(gchar *glade_path) {
     notebook = gtkpod_xml_get_widget(pref_xml, "coverweb_settings_notebook");
     bookmarks_view = gtkpod_xml_get_widget(pref_xml, "bookmarks_view");
 
-    gtk_widget_ref(notebook);
+    g_object_ref(notebook);
 
     setup_bookmarks_tree (GTK_TREE_VIEW(bookmarks_view), TRUE);
 

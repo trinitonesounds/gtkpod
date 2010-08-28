@@ -2024,12 +2024,9 @@ static GtkTreeViewColumn *tm_add_column(TM_item tm_item, gint pos) {
     GtkTreeViewColumn *col = NULL;
     const gchar *text;
     GtkCellRenderer *renderer = NULL; /* default */
-    GtkTooltips *tt;
     GtkTreeCellDataFunc cell_data_func = tm_cell_data_text_func;
 
     g_return_val_if_fail (gtkpod_app, NULL);
-    tt = g_object_get_data(G_OBJECT (gtkpod_app), "main_tooltips");
-    g_return_val_if_fail (tt, NULL);
 
     g_return_val_if_fail (tm_item >= 0, NULL);
     g_return_val_if_fail (tm_item < TM_NUM_COLUMNS, NULL);
@@ -2185,11 +2182,12 @@ static GtkTreeViewColumn *tm_add_column(TM_item tm_item, gint pos) {
     if (pos != -1) {
         gtk_tree_view_column_set_visible(col, prefs_get_int_index("col_visible", tm_item));
     }
-    
+
     if (get_tm_tooltip(tm_item)) {
         GtkWidget *label = GTK_WIDGET (gtk_label_new(text));
+        gtk_widget_show(label);
+        gtk_widget_set_tooltip_text(label, gettext (get_tm_tooltip(tm_item)));
         gtk_tree_view_column_set_widget(col, label);
-        gtk_tooltips_set_tip(tt, label, gettext (get_tm_tooltip (tm_item)), NULL);
     }
     
     return col;
@@ -2382,7 +2380,7 @@ void tm_create_track_display(GtkWidget *parent) {
     current_playlist_label = gtkpod_xml_get_widget(get_track_glade(), "current_playlist_label");
     tm_create_treeview();
 
-    gtk_widget_ref(track_container);
+    g_object_ref(track_container);
     gtk_container_remove(GTK_CONTAINER(track_display_window), GTK_WIDGET(track_container));
     if (GTK_IS_SCROLLED_WINDOW(parent)) {
         gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(parent), GTK_WIDGET(track_container));
@@ -2391,7 +2389,7 @@ void tm_create_track_display(GtkWidget *parent) {
         gtk_container_add(GTK_CONTAINER (parent), GTK_WIDGET (track_container));
     }
 
-    gtk_widget_unref(track_container);
+    g_object_unref(track_container);
     gtk_widget_destroy(track_display_window);
 }
 

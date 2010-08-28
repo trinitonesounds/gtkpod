@@ -104,7 +104,6 @@ typedef struct {
   TimeInfo ti_added;                 /* TimeInfo "added" (sp)         */
   TimeInfo ti_modified;              /* TimeInfo "modified" (sp)      */
   TimeInfo ti_played;                /* TimeInfo "played" (sp)        */
-  GtkTooltipsData *sp_tooltips_data; /* ptr to tooltips in special st */
   /* function used for string comparisons, set in on_st_switch_page   */
   gint (*entry_compare_func) (const TabEntry *a, const TabEntry *b);
 } SortTab;

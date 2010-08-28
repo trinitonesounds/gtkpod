@@ -40,7 +40,6 @@
 
 #define GTKPOD_JAPAN_AUTOMATIC "gtkpod-japan-automatic"
 
-void charset_init_combo (GtkCombo *combo);
 void charset_init_combo_box (GtkComboBox *combo);
 gchar *charset_from_description (gchar *descr);
 gchar *charset_to_description (gchar *charset);

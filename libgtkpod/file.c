@@ -122,47 +122,47 @@ FileType determine_file_type(const gchar *path) {
     path_utf8 = charset_to_utf8(path);
     suf = strrchr(path_utf8, '.');
     if (suf) {
-        if (g_strcasecmp(suf, ".mp3") == 0)
+        if (g_ascii_strcasecmp(suf, ".mp3") == 0)
             type = FILE_TYPE_MP3;
-        else if (g_strcasecmp(suf, ".m4a") == 0)
+        else if (g_ascii_strcasecmp(suf, ".m4a") == 0)
             type = FILE_TYPE_M4A;
-        else if (g_strcasecmp(suf, ".m4p") == 0)
+        else if (g_ascii_strcasecmp(suf, ".m4p") == 0)
             type = FILE_TYPE_M4P;
-        else if (g_strcasecmp(suf, ".m4b") == 0)
+        else if (g_ascii_strcasecmp(suf, ".m4b") == 0)
             type = FILE_TYPE_M4B;
-        else if (g_strcasecmp(suf, ".wav") == 0)
+        else if (g_ascii_strcasecmp(suf, ".wav") == 0)
             type = FILE_TYPE_WAV;
 
-        else if (g_strcasecmp(suf, ".m4v") == 0)
+        else if (g_ascii_strcasecmp(suf, ".m4v") == 0)
             type = FILE_TYPE_M4V;
-        else if (g_strcasecmp(suf, ".mp4") == 0)
+        else if (g_ascii_strcasecmp(suf, ".mp4") == 0)
             type = FILE_TYPE_MP4;
-        else if (g_strcasecmp(suf, ".mov") == 0)
+        else if (g_ascii_strcasecmp(suf, ".mov") == 0)
             type = FILE_TYPE_MOV;
-        else if (g_strcasecmp(suf, ".mpg") == 0)
+        else if (g_ascii_strcasecmp(suf, ".mpg") == 0)
             type = FILE_TYPE_MPG;
-        else if (g_strcasecmp(suf, ".mpeg") == 0)
+        else if (g_ascii_strcasecmp(suf, ".mpeg") == 0)
             type = FILE_TYPE_MPG;
 
-        else if (g_strcasecmp(suf, ".m3u") == 0)
+        else if (g_ascii_strcasecmp(suf, ".m3u") == 0)
             type = FILE_TYPE_M3U;
-        else if (g_strcasecmp(suf, ".pls") == 0)
+        else if (g_ascii_strcasecmp(suf, ".pls") == 0)
             type = FILE_TYPE_PLS;
-        else if (g_strcasecmp(suf, ".oga") == 0)
+        else if (g_ascii_strcasecmp(suf, ".oga") == 0)
             type = FILE_TYPE_OGG;
-        else if (g_strcasecmp(suf, ".ogg") == 0)
+        else if (g_ascii_strcasecmp(suf, ".ogg") == 0)
             type = FILE_TYPE_OGG;
-        else if (g_strcasecmp(suf, ".ogv") == 0)
+        else if (g_ascii_strcasecmp(suf, ".ogv") == 0)
             type = FILE_TYPE_OGG;
-        else if (g_strcasecmp(suf, ".ogx") == 0)
+        else if (g_ascii_strcasecmp(suf, ".ogx") == 0)
             type = FILE_TYPE_OGG;
-        else if (g_strcasecmp(suf, ".flac") == 0)
+        else if (g_ascii_strcasecmp(suf, ".flac") == 0)
             type = FILE_TYPE_FLAC;
 
         else {
             const gchar **extp = imageext;
             while (*extp) {
-                if (g_strcasecmp(suf, *extp) == 0) {
+                if (g_ascii_strcasecmp(suf, *extp) == 0) {
                     type = FILE_TYPE_IMAGE;
                     break;
                 }
@@ -1191,8 +1191,8 @@ static Track *get_track_info_from_file(gchar *name, Track *orig_track) {
 	    nti->mediatype = ITDB_MEDIATYPE_AUDIO;
 	    if (nti->genre)
 	    {
-		if (g_strcasecmp (nti->genre, "audiobook") == 0) nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
-		else if (g_strcasecmp (nti->genre, "podcast") == 0) nti->mediatype = ITDB_MEDIATYPE_PODCAST;
+		if (g_ascii_strcasecmp (nti->genre, "audiobook") == 0) nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
+		else if (g_ascii_strcasecmp (nti->genre, "podcast") == 0) nti->mediatype = ITDB_MEDIATYPE_PODCAST;
 	    }
 	}
 	break;
@@ -1910,7 +1910,8 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
                     gchar *music_dir = itdb_get_music_dir(mountpoint);
                     if (music_dir) {
                         gchar *cdir = g_strdup_printf("%s%c", music_dir, G_DIR_SEPARATOR);
-                        if (g_strncasecmp(fname, cdir, strlen(cdir)) == 0) { /* Yes */
+                        /* TODO: Use GIO for file/directory operations */
+                        if (g_ascii_strncasecmp(fname, cdir, strlen(cdir)) == 0) { /* Yes */
                             gchar *fname_i = fname + strlen(mountpoint);
                             if (*fname_i == G_DIR_SEPARATOR)
                                 ++fname_i;

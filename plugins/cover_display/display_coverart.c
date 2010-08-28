@@ -193,7 +193,7 @@ void coverart_init_display(GtkWidget *parent, gchar *glade_path) {
     g_return_if_fail (cdwidget->cdslider);
     g_return_if_fail (cdwidget->draw_area);
     /* according to GTK FAQ: move a widget to a new parent */
-    gtk_widget_ref(cdwidget->contentpanel);
+    g_object_ref(cdwidget->contentpanel);
     gtk_container_remove(GTK_CONTAINER (cover_temp_window), cdwidget->contentpanel);
     gtk_widget_destroy(cover_temp_window);
 
@@ -209,13 +209,13 @@ void coverart_init_display(GtkWidget *parent, gchar *glade_path) {
         g_ptr_array_add(cdwidget->cdcovers, cover);
         cover = NULL;
     }
-    gtk_box_pack_start_defaults(GTK_BOX(cdwidget->canvasbox), GTK_WIDGET(cdwidget->draw_area));
+    gtk_box_pack_start(GTK_BOX(cdwidget->canvasbox), GTK_WIDGET(cdwidget->draw_area), TRUE, TRUE, 0);
 
     /* create the expose event for the drawing area */
     g_signal_connect (G_OBJECT (cdwidget->draw_area), "expose_event", G_CALLBACK (on_drawing_area_exposed), NULL);
     gtk_widget_add_events(cdwidget->draw_area, GDK_BUTTON_PRESS_MASK);
     /* set up some callback events on the main scaled image */
-    g_signal_connect(GTK_OBJECT(cdwidget->draw_area), "button-press-event", GTK_SIGNAL_FUNC(on_main_cover_image_clicked), NULL);
+    g_signal_connect(GTK_OBJECT(cdwidget->draw_area), "button-press-event", G_CALLBACK(on_main_cover_image_clicked), NULL);
 
     /* Dnd destinaton for foreign image files */
     gtk_drag_dest_set(cdwidget->canvasbox, 0, coverart_drop_types, TGNR(coverart_drop_types), GDK_ACTION_COPY

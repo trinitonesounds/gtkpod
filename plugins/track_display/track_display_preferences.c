@@ -237,7 +237,7 @@ GtkWidget *init_track_display_preferences() {
     pref_xml = gtkpod_xml_new(glade_path, "track_settings_notebook");
     notebook = gtkpod_xml_get_widget(pref_xml, "track_settings_notebook");
     displayed_columns_view = gtkpod_xml_get_widget(pref_xml, "displayed_columns");
-    gtk_widget_ref(notebook);
+    g_object_ref(notebook);
     g_free(glade_path);
 
     setup_column_tree (GTK_TREE_VIEW(displayed_columns_view), TRUE);

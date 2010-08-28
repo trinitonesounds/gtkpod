@@ -750,7 +750,6 @@ void gp_track_validate_entries(Track *track) {
 void gp_init(int argc, char *argv[]) {
     gchar *cfgdir;
     gint i;
-    GtkTooltips *main_tooltips;
 
     prefs_init(argc, argv);
     cfgdir = prefs_get_cfgdir();
@@ -809,12 +808,6 @@ void gp_init(int argc, char *argv[]) {
 
     /* Load libmp4v2 */
     mp4_init();
-
-    /* Create tooltips */
-    main_tooltips = gtk_tooltips_new();
-    g_object_set_data(G_OBJECT (gtkpod_app), "main_tooltips", main_tooltips);
-    /* indicate that main_tooltips was set up */
-    g_object_set_data(G_OBJECT (gtkpod_app), "main_tooltips_initialised", "set");
 
     g_free(cfgdir);
 }
