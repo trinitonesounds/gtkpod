@@ -3,7 +3,6 @@
 |
 | tool_menu_action.c
 */
-#include <gtk/gtkmenutoolbutton.h>
 #include "tool_menu_action.h"
 
 static void tool_menu_action_init (ToolMenuAction *tma);

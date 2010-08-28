@@ -6,7 +6,7 @@
 #ifndef __TOOL_MENU_ACTION_H__
 #define __TOOL_MENU_ACTION_H__
 
-#include <gtk/gtkaction.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
