@@ -34,8 +34,4 @@ gtkpod_SOURCES = \
     gtkpod.c gtkpod.h \
     main.c
 
-gtkpod_LDADD = $(GTKPOD_LIBS) $(INTLLIBS) -ldl @LIBOBJS@
-    
-EXTRA_DIST = getopt.h
-
-CLEANFILES = date_parser.c date_parser2.c
+gtkpod_LDADD = $(GTKPOD_LIBS) $(INTLLIBS) -ldl

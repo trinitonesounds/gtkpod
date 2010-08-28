@@ -52,7 +52,8 @@ AM_CFLAGS = \
  
 libgtkpod_la_LDFLAGS = $(LIBGTKPOD_LDFLAGS) -version-info $(LIBGTKPOD_SO_VERSION) -no-undefined
 libgtkpod_la_LIBADD = \
-	$(LIBGTKPOD_LIBS)
+	$(LIBGTKPOD_LIBS) \
+	@LIBOBJS@
 	
 libgtkpodincludebase = $(includedir)/gtkpod-1.0
 libgtkpodincludedir = $(libgtkpodincludebase)/gtkpod
