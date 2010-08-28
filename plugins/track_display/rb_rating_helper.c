@@ -130,13 +130,13 @@ rb_rating_render_stars (GtkWidget *widget,
 
 		if (selected == TRUE) {
 			offset = 0;
-			if (GTK_WIDGET_HAS_FOCUS (widget))
+			if (gtk_widget_has_focus (widget))
 				state = GTK_STATE_SELECTED;
 			else
 				state = GTK_STATE_ACTIVE;
 		} else {
 			offset = 120;
-			if (GTK_WIDGET_STATE (widget) == GTK_STATE_INSENSITIVE)
+			if (!gtk_widget_get_sensitive (widget))
 				state = GTK_STATE_INSENSITIVE;
 			else
 				state = GTK_STATE_NORMAL;

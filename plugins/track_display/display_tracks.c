@@ -52,6 +52,12 @@
 #include "sort_window.h"
 #include "track_display_context_menu.h"
 
+#ifndef HAVE_GSEALED_GDK
+/* Compatibility macros for previous GDK versions */
+#define gdk_drag_context_get_selected_action(x) ((x)->action)
+#define gdk_drag_context_get_suggested_action(x) ((x)->suggested_action)
+#endif
+
 /* reference to glade xml for use with track plugin */
 static GladeXML *track_glade = NULL;
 /* pointer to the container for the track display */
@@ -452,7 +458,7 @@ static gboolean tm_drag_motion(GtkWidget *widget, GdkDragContext *dc, gint x, gi
         }
     }
     else { /* whatever the source suggests */
-        gdk_drag_status(dc, dc->suggested_action, time);
+        gdk_drag_status(dc, gdk_drag_context_get_suggested_action(dc), time);
     }
 
     return TRUE;
@@ -482,7 +488,7 @@ static void tm_drag_data_get(GtkWidget *widget, GdkDragContext *context, GtkSele
             break;
         }
     }
-    gtk_selection_data_set(data, data->target, 8, reply->str, reply->len);
+    gtk_selection_data_set(data, gtk_selection_data_get_target(data), 8, reply->str, reply->len);
     g_string_free(reply, TRUE);
 }
 
@@ -495,10 +501,10 @@ static void tm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     /* printf ("sm drop received info: %d\n", info); */
 
     /* sometimes we get empty dnd data, ignore */
-    if (widgets_blocked || (!dc) || (!data) || (data->length < 0))
+    if (widgets_blocked || (!dc) || (!data) || (gtk_selection_data_get_length(data) < 0))
         return;
     /* yet another check, i think it's an 8 bit per byte check */
-    if (data->format != 8)
+    if (gtk_selection_data_get_format(data) != 8)
         return;
 
     gp_remove_autoscroll_row_timeout(widget);
@@ -546,28 +552,28 @@ static void tm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     switch (info) {
     case DND_GTKPOD_TM_PATHLIST:
         g_return_if_fail (path);
-        result = tm_move_pathlist(data->data, path, pos);
-        dc->action = GDK_ACTION_MOVE;
+        result = tm_move_pathlist(gtk_selection_data_get_data(data), path, pos);
+        gdk_drag_status(dc, GDK_ACTION_MOVE, time);
         gtk_drag_finish(dc, TRUE, FALSE, time);
         break;
     case DND_TEXT_PLAIN:
-        result = tm_add_filelist(data->data, path, pos);
-        dc->action = dc->suggested_action;
-        if (dc->action == GDK_ACTION_MOVE)
+        result = tm_add_filelist(gtk_selection_data_get_data(data), path, pos);
+        gdk_drag_status(dc, gdk_drag_context_get_suggested_action(dc), time);
+        if (gdk_drag_context_get_selected_action(dc) == GDK_ACTION_MOVE)
             gtk_drag_finish(dc, TRUE, TRUE, time);
         else
             gtk_drag_finish(dc, TRUE, FALSE, time);
         break;
     case DND_TEXT_URI_LIST:
-        result = tm_add_filelist(data->data, path, pos);
-        dc->action = dc->suggested_action;
-        if (dc->action == GDK_ACTION_MOVE)
+        result = tm_add_filelist(gtk_selection_data_get_data(data), path, pos);
+        gdk_drag_status(dc, gdk_drag_context_get_suggested_action(dc), time);
+        if (gdk_drag_context_get_selected_action(dc) == GDK_ACTION_MOVE)
             gtk_drag_finish(dc, TRUE, TRUE, time);
         else
             gtk_drag_finish(dc, TRUE, FALSE, time);
         break;
     default:
-        dc->action = 0;
+        gdk_drag_status(dc, 0, time);
         gtk_drag_finish(dc, FALSE, FALSE, time);
         /* 	puts ("tm_drag_data_received(): should not be reached"); */
         break;
@@ -692,7 +698,7 @@ void tm_store_col_order(void) {
     for (i = 0; i < TM_NUM_COLUMNS; ++i) {
         col = gtk_tree_view_get_column(track_treeview, i);
         if (col != NULL) {
-            prefs_set_int_index("col_order", i, col->sort_column_id);
+            prefs_set_int_index("col_order", i, gtk_tree_view_column_get_sort_column_id(col));
         }
     }
 }
@@ -1430,6 +1436,10 @@ tm_get_all_tracks(void) {
     return result;
 }
 
+static void cell_renderer_stop_editing(GtkCellRenderer *renderer, gpointer user_data) {
+    gtk_cell_renderer_stop_editing (renderer, (gboolean) GPOINTER_TO_INT(user_data));
+}
+
 /* Stop editing. If @cancel is TRUE, the edited value will be
  discarded (I have the feeling that the "discarding" part does not
  work quite the way intended). */
@@ -1441,15 +1451,18 @@ void tm_stop_editing(gboolean cancel) {
 
     gtk_tree_view_get_cursor(track_treeview, NULL, &col);
     if (col) {
+        GList *cells;
+        
         /* Before removing the widget we set multi_edit to FALSE. That
          way at most one entry will be changed (this also doesn't
          seem to work the way intended) */
         gboolean me = prefs_get_int("multi_edit");
         prefs_set_int("multi_edit", FALSE);
-        if (!cancel && col->editable_widget)
-            gtk_cell_editable_editing_done(col->editable_widget);
-        if (col->editable_widget)
-            gtk_cell_editable_remove_widget(col->editable_widget);
+
+        cells = gtk_cell_layout_get_cells(GTK_CELL_LAYOUT (col));
+        g_list_foreach(cells, (GFunc) cell_renderer_stop_editing, GINT_TO_POINTER((gint) cancel));
+        g_list_free(cells);
+
         prefs_set_int("multi_edit", me);
     }
 }
@@ -2172,8 +2185,13 @@ static GtkTreeViewColumn *tm_add_column(TM_item tm_item, gint pos) {
     if (pos != -1) {
         gtk_tree_view_column_set_visible(col, prefs_get_int_index("col_visible", tm_item));
     }
-    if (get_tm_tooltip(tm_item))
-        gtk_tooltips_set_tip(tt, col->button, gettext (get_tm_tooltip (tm_item)), NULL);
+    
+    if (get_tm_tooltip(tm_item)) {
+        GtkWidget *label = GTK_WIDGET (gtk_label_new(text));
+        gtk_tree_view_column_set_widget(col, label);
+        gtk_tooltips_set_tip(tt, label, gettext (get_tm_tooltip (tm_item)), NULL);
+    }
+    
     return col;
 }
 

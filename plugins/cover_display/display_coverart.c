@@ -43,6 +43,12 @@
 #include "fetchcover.h"
 #include "cover_display_context_menu.h"
 
+#ifndef HAVE_GSEALED_GDK
+/* Compatibility macros for previous GDK versions */
+#define gdk_drag_context_get_selected_action(x) ((x)->action)
+#define gdk_drag_context_get_suggested_action(x) ((x)->suggested_action)
+#endif
+
 #define DEBUG 0
 
 /* Declarations */
@@ -147,7 +153,7 @@ static gboolean coverart_window_valid() {
     if (!cdwidget->draw_area)
         return FALSE;
 
-    if (!cdwidget->draw_area->window)
+    if (!gtk_widget_get_window(GTK_WIDGET(cdwidget->draw_area)))
         return FALSE;
 
     return TRUE;
@@ -278,14 +284,14 @@ static void set_display_window_dimensions() {
  *
  */
 void coverart_block_change(gboolean val) {
-    if (GTK_WIDGET_REALIZED(gtkpod_app)) {
+    if (gtk_widget_get_realized(GTK_WIDGET(gtkpod_app))) {
         if (val) {
             GdkCursor *cursor = gdk_cursor_new(GDK_WATCH);
-            gdk_window_set_cursor(GTK_WIDGET(gtkpod_app)->window, cursor);
+            gdk_window_set_cursor(gtk_widget_get_window(GTK_WIDGET(gtkpod_app)), cursor);
             gdk_cursor_unref(cursor);
         }
         else
-            gdk_window_set_cursor(GTK_WIDGET(gtkpod_app)->window, NULL);
+            gdk_window_set_cursor(gtk_widget_get_window(GTK_WIDGET(gtkpod_app)), NULL);
     }
 
     if (cdwidget != NULL)
@@ -339,13 +345,13 @@ static void draw_string(cairo_t *cairo_context, const gchar *text, gdouble x, gd
 static void redraw(gboolean force_pixbuf_update) {
     g_return_if_fail(cdwidget);
     g_return_if_fail(cdwidget->draw_area);
-    g_return_if_fail(cdwidget->draw_area->window);
+    g_return_if_fail(gtk_widget_get_window(GTK_WIDGET(cdwidget->draw_area)));
 
     force_pixbuf_covers = force_pixbuf_update;
-    GdkRegion *region = gdk_drawable_get_clip_region(cdwidget->draw_area->window);
+    GdkRegion *region = gdk_drawable_get_clip_region(gtk_widget_get_window(GTK_WIDGET(cdwidget->draw_area)));
     /* redraw the cairo canvas completely by exposing it */
-    gdk_window_invalidate_region(cdwidget->draw_area->window, region, TRUE);
-    gdk_window_process_updates(cdwidget->draw_area->window, TRUE);
+    gdk_window_invalidate_region(gtk_widget_get_window(GTK_WIDGET(cdwidget->draw_area)), region, TRUE);
+    gdk_window_process_updates(gtk_widget_get_window(GTK_WIDGET(cdwidget->draw_area)), TRUE);
     gdk_region_destroy(region);
 
     if (g_list_length(album_key_list) <= 1) {
@@ -622,7 +628,7 @@ static void set_cover_dimensions(Cover_Item *cover, int cover_index, gdouble img
     gint PANEL_WIDTH = 0, PANEL_HEIGHT = 0;
     gint CONTBOX_WIDTH = 0, CONTBOX_HEIGHT = 0;
 
-    gdk_drawable_get_size(GDK_DRAWABLE(cdwidget->canvasbox->window), &PANEL_WIDTH, &PANEL_HEIGHT);
+    gdk_drawable_get_size(GDK_DRAWABLE(gtk_widget_get_window(cdwidget->canvasbox)), &PANEL_WIDTH, &PANEL_HEIGHT);
     gtk_widget_get_size_request(cdwidget->controlbox, &CONTBOX_WIDTH, &CONTBOX_HEIGHT);
 
     // If panel width not been rendered default to minimum
@@ -1013,13 +1019,13 @@ void coverart_track_changed(Track *track, gint signal) {
  * boolean indicating whether other handlers should be run.
  */
 static gboolean on_drawing_area_exposed(GtkWidget *draw_area, GdkEventExpose *event) {
-    if (!draw_area || !draw_area->window)
+    if (!draw_area || !gtk_widget_get_window(draw_area))
         return FALSE;
 
     cairo_t *cairo_draw_context;
 
     /* get a cairo_t */
-    cairo_draw_context = gdk_cairo_create(draw_area->window);
+    cairo_draw_context = gdk_cairo_create(gtk_widget_get_window(draw_area));
 
     /* set a clip region for the expose event */
     cairo_rectangle(cairo_draw_context, event->area.x, event->area.y, event->area.width, event->area.height);
@@ -1475,7 +1481,7 @@ static gboolean on_coverart_preview_dialog_exposed(GtkWidget *drawarea, GdkEvent
     cairo_t *cairo_context;
 
     /* get a cairo_t */
-    cairo_context = gdk_cairo_create(drawarea->window);
+    cairo_context = gdk_cairo_create(gtk_widget_get_window(drawarea));
     /* set a clip region for the expose event */
     cairo_rectangle(cairo_context, event->area.x, event->area.y, event->area.width, event->area.height);
     cairo_clip(cairo_context);
@@ -1914,7 +1920,7 @@ static gboolean dnd_coverart_drag_motion(GtkWidget *widget, GdkDragContext *dc, 
         return FALSE;
     }
 
-    gdk_drag_status(dc, dc->suggested_action, time);
+    gdk_drag_status(dc, gdk_drag_context_get_suggested_action(dc), time);
 
     return TRUE;
 }
@@ -1931,8 +1937,8 @@ static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *d
     g_return_if_fail (widget);
     g_return_if_fail (dc);
     g_return_if_fail (data);
-    g_return_if_fail (data->data);
-    g_return_if_fail (data->length > 0);
+    g_return_if_fail (gtk_selection_data_get_data(data));
+    g_return_if_fail (gtk_selection_data_get_length(data) > 0);
 
     /* mozilla bug 402394 */
 
@@ -2139,7 +2145,7 @@ void coverart_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer dat
 
 void coverart_display_track_added_cb(GtkPodApp *app, gpointer tk, gpointer data) {
     Track *track = tk;
-    if (!cdwidget || !cdwidget->draw_area || !cdwidget->draw_area->window)
+    if (!cdwidget || !cdwidget->draw_area || !gtk_widget_get_window(GTK_WIDGET(cdwidget->draw_area)))
         return;
 
     coverart_track_changed(track, COVERART_CREATE_SIGNAL);

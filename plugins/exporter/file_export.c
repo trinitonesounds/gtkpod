@@ -392,8 +392,8 @@ static void export_files_write(struct fcd *fcd) {
                 &abort);
 
         /* Add the image/label + progress bar to dialog */
-        gtk_box_pack_start(GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX (GTK_DIALOG (dialog)->vbox), progress_bar, FALSE, FALSE, 0);
+        gtk_box_pack_start(GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), hbox, FALSE, FALSE, 0);
+        gtk_box_pack_start(GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), progress_bar, FALSE, FALSE, 0);
         gtk_widget_show_all(dialog);
 
         while (widgets_blocked && gtk_events_pending())

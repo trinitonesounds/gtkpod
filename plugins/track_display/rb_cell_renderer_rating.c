@@ -141,7 +141,7 @@ rb_cell_renderer_rating_init (RBCellRendererRating *cellrating)
 	cellrating->priv = RB_CELL_RENDERER_RATING_GET_PRIVATE (cellrating);
 
 	/* set the renderer able to be activated */
-	GTK_CELL_RENDERER (cellrating)->mode = GTK_CELL_RENDERER_MODE_ACTIVATABLE;
+	g_object_set_(cellrating, "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE, NULL);
 
 	/* create the needed icons */
 }
@@ -254,8 +254,11 @@ rb_cell_renderer_rating_get_size (GtkCellRenderer *cell,
 {
 	int icon_width;
 	RBCellRendererRating *cellrating = (RBCellRendererRating *) cell;
+	int xpad;
+	int ypad;
 
 	gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &icon_width, NULL);
+	gtk_cell_renderer_get_padding (cell, &xpad, &ypad);
 
 	if (x_offset)
 		*x_offset = 0;
@@ -264,10 +267,10 @@ rb_cell_renderer_rating_get_size (GtkCellRenderer *cell,
 		*y_offset = 0;
 
 	if (width)
-		*width = (gint) GTK_CELL_RENDERER (cellrating)->xpad * 2 + icon_width * RB_RATING_MAX_SCORE;
+		*width = (gint) xpad * 2 + icon_width * RB_RATING_MAX_SCORE;
 
 	if (height)
-		*height = (gint) GTK_CELL_RENDERER (cellrating)->ypad * 2 + icon_width;
+		*height = (gint) ypad * 2 + icon_width;
 }
 
 static void
@@ -284,6 +287,8 @@ rb_cell_renderer_rating_render (GtkCellRenderer  *cell,
 	GdkRectangle pix_rect, draw_rect;
 	RBCellRendererRating *cellrating = (RBCellRendererRating *) cell;
 	RBCellRendererRatingClass *cell_class;
+	int xpad;
+	int ypad;
 
 	cellrating = RB_CELL_RENDERER_RATING (cell);
 	cell_class = RB_CELL_RENDERER_RATING_GET_CLASS (cellrating);
@@ -293,10 +298,11 @@ rb_cell_renderer_rating_render (GtkCellRenderer  *cell,
 					  &pix_rect.width,
 					  &pix_rect.height);
 
+	gtk_cell_renderer_get_padding (cell, &xpad, &ypad);
 	pix_rect.x += cell_area->x;
 	pix_rect.y += cell_area->y;
-	pix_rect.width -= cell->xpad * 2;
-	pix_rect.height -= cell->ypad * 2;
+	pix_rect.width -= xpad * 2;
+	pix_rect.height -= ypad * 2;
 
 	if (gdk_rectangle_intersect (cell_area, &pix_rect, &draw_rect) == FALSE)
 		return;

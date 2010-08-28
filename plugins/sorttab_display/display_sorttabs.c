@@ -201,7 +201,7 @@ static void st_drag_data_get(GtkWidget *widget, GdkDragContext *context, GtkSele
             break;
         }
     }
-    gtk_selection_data_set(data, data->target, 8, reply->str, reply->len);
+    gtk_selection_data_set(data, gtk_selection_data_get_target(data), 8, reply->str, reply->len);
     g_string_free(reply, TRUE);
 }
 
@@ -2150,20 +2150,26 @@ gint st_data_compare_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, g
     return st->entry_compare_func(entry1, entry2);
 }
 
+static void cell_renderer_stop_editing(GtkCellRenderer *renderer, gpointer user_data) {
+    gtk_cell_renderer_stop_editing (renderer, (gboolean) GPOINTER_TO_INT(user_data));
+}
+
 /* Stop editing. If @cancel is TRUE, the edited value will be
  discarded (I have the feeling that the "discarding" part does not
  work quite the way intended). */
 void st_stop_editing(gint inst, gboolean cancel) {
     if (inst < prefs_get_int("sort_tab_num")) {
         SortTab *st = sorttab[inst];
+        GList *cells;
+
         if (st) {
             GtkTreeViewColumn *col;
             gtk_tree_view_get_cursor(st->treeview[st->current_category], NULL, &col);
+
             if (col) {
-                if (!cancel && col->editable_widget)
-                    gtk_cell_editable_editing_done(col->editable_widget);
-                if (col->editable_widget)
-                    gtk_cell_editable_remove_widget(col->editable_widget);
+                cells = gtk_cell_layout_get_cells(GTK_CELL_LAYOUT (col));
+                g_list_foreach(cells, (GFunc) cell_renderer_stop_editing, GINT_TO_POINTER((gint) cancel));
+                g_list_free(cells);
             }
         }
     }
@@ -3227,7 +3233,7 @@ gint st_get_sort_tab_number(gchar *text) {
 
     combo = gtk_combo_new();
     gtk_widget_show(combo);
-    gtk_container_add(GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), combo);
+    gtk_container_add(GTK_CONTAINER (gtk_dialog_get_content_area(GTK_DIALOG(dialog))), combo);
 
     stn = prefs_get_int("sort_tab_num");
     /* Create list */

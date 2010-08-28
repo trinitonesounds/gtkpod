@@ -43,6 +43,12 @@
 #include "details.h"
 #include "fetchcover.h"
 
+#ifndef HAVE_GSEALED_GDK
+/* Compatibility macros for previous GDK versions */
+#define gdk_drag_context_get_selected_action(x) ((x)->action)
+#define gdk_drag_context_get_suggested_action(x) ((x)->suggested_action)
+#endif
+
 /* string constants for preferences */
 const gchar *DETAILS_WINDOW_NOTEBOOK_PAGE = "details_window_notebook_page";
 
@@ -1527,7 +1533,7 @@ void details_edit(GList *selected_tracks) {
     if (!details_view || !details_view->window) {
         create_details_editor_view();
     }
-    else if (! GTK_WIDGET_REALIZED(details_view->window)) {
+    else if (! gtk_widget_get_realized(details_view->window)) {
         gtkpod_display_widget(details_view->window);
     }
     details_set_tracks(selected_tracks);
@@ -1580,7 +1586,7 @@ static gboolean dnd_details_art_drag_motion(GtkWidget *widget, GdkDragContext *d
         return FALSE;
     }
 
-    gdk_drag_status(dc, dc->suggested_action, time);
+    gdk_drag_status(dc, gdk_drag_context_get_suggested_action(dc), time);
 
     return TRUE;
 }
@@ -1589,8 +1595,8 @@ static void dnd_details_art_drag_data_received(GtkWidget *widget, GdkDragContext
     g_return_if_fail (widget);
     g_return_if_fail (dc);
     g_return_if_fail (data);
-    g_return_if_fail (data->data);
-    g_return_if_fail (data->length > 0);
+    g_return_if_fail (gtk_selection_data_get_data(data));
+    g_return_if_fail (gtk_selection_data_get_length(data) > 0);
 
     #if DEBUG
     printf ("data length = %d\n", data->length);

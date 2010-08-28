@@ -126,7 +126,7 @@ static void sort_window_read_sort_ign() {
 void sort_window_create(void) {
     if (sort_window) {
         /* sort options already open --> simply raise to the top */
-        gdk_window_raise(sort_window->window);
+        gdk_window_raise(gtk_widget_get_window(sort_window));
     }
     else {
         GList *sort_ign_strings;

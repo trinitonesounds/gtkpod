@@ -48,6 +48,12 @@
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/prefs.h"
 
+#ifndef HAVE_GSEALED_GDK
+/* Compatibility macros for previous GDK versions */
+#define gdk_drag_context_get_selected_action(x) ((x)->action)
+#define gdk_drag_context_get_suggested_action(x) ((x)->suggested_action)
+#endif
+
 /* pointer to the treeview for the playlist display */
 static GtkTreeView *playlist_treeview = NULL;
 /* flag set if selection changes to be ignored temporarily */
@@ -111,7 +117,7 @@ static void pm_drag_data_delete(GtkWidget *widget, GdkDragContext *drag_context,
 
     /*     printf ("drag_data_delete: %d\n", drag_context->action); */
 
-    if (drag_context->action == GDK_ACTION_MOVE) {
+    if (gdk_drag_context_get_selected_action(drag_context) == GDK_ACTION_MOVE) {
         GtkTreeSelection *ts = gtk_tree_view_get_selection(GTK_TREE_VIEW (widget));
         gtk_tree_selection_selected_foreach(ts, pm_drag_data_delete_remove_playlist, NULL);
     }
@@ -241,7 +247,7 @@ static gboolean pm_drag_motion(GtkWidget *widget, GdkDragContext *dc, gint x, gi
             return TRUE;
         case DND_TEXT_PLAIN:
         case DND_TEXT_URI_LIST:
-            gdk_drag_status(dc, dc->suggested_action, time);
+            gdk_drag_status(dc, gdk_drag_context_get_suggested_action(dc), time);
             gtk_tree_path_free(path);
             return TRUE;
         default:
@@ -368,7 +374,7 @@ static void pm_drag_data_get(GtkWidget *widget, GdkDragContext *dc, GtkSelection
             break;
         }
     }
-    gtk_selection_data_set(data, data->target, 8, reply->str, reply->len);
+    gtk_selection_data_set(data, gtk_selection_data_get_target(data), 8, reply->str, reply->len);
     g_string_free(reply, TRUE);
 }
 
@@ -463,7 +469,7 @@ static GdkDragAction pm_tm_get_action(Track *src, Playlist *dest, GtkTreeViewDro
         }
     }
     /* otherwise: do as suggested */
-    return dc->suggested_action;
+    return gdk_drag_context_get_suggested_action(dc);
 }
 
 /* Print a message about the number of tracks copied (the number of
@@ -505,9 +511,9 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     g_return_if_fail (widget);
     g_return_if_fail (dc);
     g_return_if_fail (data);
-    g_return_if_fail (data->length > 0);
-    g_return_if_fail (data->data);
-    g_return_if_fail (data->format == 8);
+    g_return_if_fail (gtk_selection_data_get_length(data) > 0);
+    g_return_if_fail (gtk_selection_data_get_data(data));
+    g_return_if_fail (gtk_selection_data_get_format(data) == 8);
 
     /* puts(gtk_tree_path_to_string (path)); */
 
@@ -533,7 +539,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
         switch (info) {
         case DND_GTKPOD_TRACKLIST:
             /* get first track and check itdb */
-            sscanf(data->data, "%p", &tr_s);
+            sscanf(gtk_selection_data_get_data(data), "%p", &tr_s);
             if (!tr_s) {
                 gdk_drag_status(dc, 0, time);
                 g_return_if_reached ();
@@ -545,7 +551,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
             return;
         case DND_GTKPOD_PLAYLISTLIST:
             /* get first playlist and check itdb */
-            sscanf(data->data, "%p", &pl_s);
+            sscanf(gtk_selection_data_get_data(data), "%p", &pl_s);
             if (!pl_s) {
                 gdk_drag_status(dc, 0, time);
                 g_return_if_reached ();
@@ -588,28 +594,28 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     switch (info) {
     case DND_GTKPOD_TRACKLIST:
         /* get first track */
-        sscanf(data->data, "%p", &tr_s);
+        sscanf(gtk_selection_data_get_data(data), "%p", &tr_s);
         if (!tr_s) {
             gtk_drag_finish(dc, FALSE, FALSE, time);
             g_return_if_reached ();
         }
 
         /* Find out action */
-        dc->action = pm_tm_get_action(tr_s, pl, pos, dc);
+        gdk_drag_status(dc, pm_tm_get_action(tr_s, pl, pos, dc), time);
 
-        if (dc->action & GDK_ACTION_MOVE)
+        if (gdk_drag_context_get_selected_action(dc) & GDK_ACTION_MOVE)
             del_src = TRUE;
         else
             del_src = FALSE;
 
         if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) || (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER)) { /* drop into existing playlist */
             /* copy files from iPod if necessary */
-            GList *trackglist = exporter->transfer_track_names_between_itdbs(tr_s->itdb, pl->itdb, data->data);
+            GList *trackglist = exporter->transfer_track_names_between_itdbs(tr_s->itdb, pl->itdb, gtk_selection_data_get_data(data));
             if (trackglist) {
                 add_trackglist_to_playlist(pl, trackglist);
                 g_list_free(trackglist);
                 trackglist = NULL;
-                pm_tm_tracks_moved_or_copied(data->data, del_src);
+                pm_tm_tracks_moved_or_copied(gtk_selection_data_get_data(data), del_src);
                 gtk_drag_finish(dc, TRUE, del_src, time);
             }
             else {
@@ -626,12 +632,12 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
 
             if (plitem) {
                 /* copy files from iPod if necessary */
-                GList *trackglist = exporter->transfer_track_names_between_itdbs(tr_s->itdb, pl->itdb, data->data);
+                GList *trackglist = exporter->transfer_track_names_between_itdbs(tr_s->itdb, pl->itdb, gtk_selection_data_get_data(data));
                 if (trackglist) {
                     add_trackglist_to_playlist(plitem, trackglist);
                     g_list_free(trackglist);
                     trackglist = NULL;
-                    pm_tm_tracks_moved_or_copied(data->data, del_src);
+                    pm_tm_tracks_moved_or_copied(gtk_selection_data_get_data(data), del_src);
                     gtk_drag_finish(dc, TRUE, del_src, time);
                 }
                 else {
@@ -648,44 +654,44 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     case DND_TEXT_URI_LIST:
     case DND_TEXT_PLAIN:
         if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) || (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER)) { /* drop into existing playlist */
-            add_text_plain_to_playlist(pl->itdb, pl, data->data, 0, NULL, NULL);
-            dc->action = GDK_ACTION_COPY;
+            add_text_plain_to_playlist(pl->itdb, pl, gtk_selection_data_get_data(data), 0, NULL, NULL);
+            gdk_drag_status(dc, GDK_ACTION_COPY, time);
             gtk_drag_finish(dc, TRUE, FALSE, time);
         }
         else { /* drop between playlists */
             Playlist *plitem;
             if (pos == GTK_TREE_VIEW_DROP_AFTER)
-                plitem = add_text_plain_to_playlist(pl->itdb, NULL, data->data, position + 1, NULL, NULL);
+                plitem = add_text_plain_to_playlist(pl->itdb, NULL, gtk_selection_data_get_data(data), position + 1, NULL, NULL);
             else
-                plitem = add_text_plain_to_playlist(pl->itdb, NULL, data->data, position, NULL, NULL);
+                plitem = add_text_plain_to_playlist(pl->itdb, NULL, gtk_selection_data_get_data(data), position, NULL, NULL);
 
             if (plitem) {
-                dc->action = GDK_ACTION_COPY;
+                gdk_drag_status(dc, GDK_ACTION_COPY, time);
                 gtk_drag_finish(dc, TRUE, FALSE, time);
             }
             else {
-                dc->action = 0;
+                gdk_drag_status(dc, 0, time);
                 gtk_drag_finish(dc, FALSE, FALSE, time);
             }
         }
         break;
     case DND_GTKPOD_PLAYLISTLIST:
         /* get first playlist and check action */
-        sscanf(data->data, "%p", &pl_s);
+        sscanf(gtk_selection_data_get_data(data), "%p", &pl_s);
         if (!pl_s) {
             gtk_drag_finish(dc, FALSE, FALSE, time);
             g_return_if_reached ();
         }
 
-        dc->action = pm_pm_get_action(pl_s, pl, widget, pos, dc);
+        gdk_drag_status(dc, pm_pm_get_action(pl_s, pl, widget, pos, dc), time);
 
-        if (dc->action == 0) {
+        if (gdk_drag_context_get_selected_action(dc) == 0) {
             gtk_drag_finish(dc, FALSE, FALSE, time);
             return;
         }
 
         if (pl->itdb == pl_s->itdb) { /* handle DND within the same itdb */
-            switch (dc->action) {
+            switch (gdk_drag_context_get_selected_action(dc)) {
             case GDK_ACTION_COPY:
                 /* if copy-drop is between two playlists, create new
                  * playlist */
@@ -764,7 +770,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
                 add_trackglist_to_playlist(pl_d, trackglist);
                 g_list_free(trackglist);
                 trackglist = NULL;
-                switch (dc->action) {
+                switch (gdk_drag_context_get_selected_action(dc)) {
                 case GDK_ACTION_MOVE:
                     gtk_drag_finish(dc, TRUE, TRUE, time);
                     break;
@@ -1180,20 +1186,25 @@ static void pm_selection_changed(GtkTreeSelection *selection, gpointer user_data
     }
 }
 
+static void cell_renderer_stop_editing(GtkCellRenderer *renderer, gpointer user_data) {
+    gtk_cell_renderer_stop_editing (renderer, (gboolean) GPOINTER_TO_INT(user_data));
+}
+
 /* Stop editing. If @cancel is TRUE, the edited value will be
  discarded (I have the feeling that the "discarding" part does not
  work quite the way intended). */
 void pm_stop_editing(gboolean cancel) {
     GtkTreeViewColumn *col;
+    GList *cells;
 
     g_return_if_fail (playlist_treeview);
 
     gtk_tree_view_get_cursor(playlist_treeview, NULL, &col);
+
     if (col) {
-        if (!cancel && col->editable_widget)
-            gtk_cell_editable_editing_done(col->editable_widget);
-        if (col->editable_widget)
-            gtk_cell_editable_remove_widget(col->editable_widget);
+        cells = gtk_cell_layout_get_cells(GTK_CELL_LAYOUT (col));
+        g_list_foreach(cells, (GFunc) cell_renderer_stop_editing, GINT_TO_POINTER((gint) cancel));
+        g_list_free(cells);
     }
 }
 

@@ -11,7 +11,7 @@
  |  the Free Software Foundation; either version 2 of the License, or
  |  (at your option) any later version.
  |
- |  This program is distributed in the hope that it will be useful,
+ffla |  This program is distributed in the hope that it will be useful,
  |  but WITHOUT ANY WARRANTY; without even the implied warranty of
  |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  |  GNU General Public License for more details.
@@ -106,7 +106,7 @@ static void block_release_widgets(gint action, GtkWidget *w, gboolean sens) {
         for (l = blocked_widgets; l; l = l->next) {
             bw = (struct blocked_widget *) l->data;
             /* remember the state the widget was in before */
-            bw->sensitive = GTK_WIDGET_SENSITIVE (bw->widget);
+            bw->sensitive = gtk_widget_get_sensitive (bw->widget);
             gtk_widget_set_sensitive(bw->widget, FALSE);
         }
         widgets_blocked = TRUE;

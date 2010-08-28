@@ -297,7 +297,7 @@ static void gphoto_create_albumview() {
 
     /* create tree view */
     photo_editor->album_view = GTK_TREE_VIEW (gtk_tree_view_new ());
-    if (!GTK_WIDGET_REALIZED(photo_editor->album_view))
+    if (!gtk_widget_get_realized(GTK_WIDGET(photo_editor->album_view)))
         gtk_widget_set_events(GTK_WIDGET(photo_editor->album_view), GDK_KEY_PRESS_MASK);
 
     renderer = gtk_cell_renderer_text_new();
@@ -357,7 +357,7 @@ static void gphoto_create_thumbnailview() {
     if (photo_editor->thumbnail_view == NULL)
         photo_editor->thumbnail_view = GTK_ICON_VIEW (gtk_icon_view_new ());
 
-    if (!GTK_WIDGET_REALIZED(photo_editor->thumbnail_view))
+    if (!gtk_widget_get_realized(GTK_WIDGET (photo_editor->thumbnail_view)))
         gtk_widget_set_events(GTK_WIDGET(photo_editor->thumbnail_view), GDK_KEY_PRESS_MASK);
 
     gtk_container_add(GTK_CONTAINER (photo_editor->photo_thumb_window), GTK_WIDGET(photo_editor->thumbnail_view));
@@ -900,7 +900,7 @@ static gboolean on_gphoto_preview_dialog_exposed(GtkWidget *drawarea, GdkEventEx
     cairo_t *cairo_context;
 
     /* get a cairo_t */
-    cairo_context = gdk_cairo_create(drawarea->window);
+    cairo_context = gdk_cairo_create(gtk_widget_get_window(drawarea));
     /* set a clip region for the expose event */
     cairo_rectangle(cairo_context, event->area.x, event->area.y, event->area.width, event->area.height);
     cairo_clip(cairo_context);
@@ -1349,7 +1349,7 @@ static void dnd_images_drag_data_get(GtkWidget *widget, GdkDragContext *dc, GtkS
 
     switch (info) {
     case DND_GTKPOD_PHOTOIMAGELIST:
-        gtk_selection_data_set(data, data->target, 8, reply->str, reply->len);
+        gtk_selection_data_set(data, gtk_selection_data_get_target(data), 8, reply->str, reply->len);
         g_string_free(reply, TRUE);
         break;
     default:
@@ -1370,9 +1370,9 @@ static void dnd_album_drag_data_received(GtkWidget *widget, GdkDragContext *dc, 
     g_return_if_fail (widget);
     g_return_if_fail (dc);
     g_return_if_fail (data);
-    g_return_if_fail (data->length > 0);
-    g_return_if_fail (data->data);
-    g_return_if_fail (data->format == 8);
+    g_return_if_fail (gtk_selection_data_get_length(data) > 0);
+    g_return_if_fail (gtk_selection_data_get_data(data));
+    g_return_if_fail (gtk_selection_data_get_format(data) == 8);
 
     gboolean rowfound;
     GtkTreePath *treepath;
@@ -1428,7 +1428,7 @@ static void dnd_album_drag_data_received(GtkWidget *widget, GdkDragContext *dc, 
 
     Artwork *artwork;
     GList *artwork_list = NULL;
-    gchar *datap = data->data;
+    gchar *datap = (gchar *) gtk_selection_data_get_data(data);
     gint i = 0;
 
     /* parse artwork and add each one to a GList */

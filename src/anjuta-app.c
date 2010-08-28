@@ -237,7 +237,7 @@ static void on_session_save(AnjutaShell *shell, AnjutaSessionPhase phase, Anjuta
         return;
 
     /* Save geometry */
-    state = gdk_window_get_state(GTK_WIDGET (app)->window);
+    state = gdk_window_get_state(gtk_widget_get_window(GTK_WIDGET (app)));
     if (state & GDK_WINDOW_STATE_MAXIMIZED) {
         anjuta_session_set_int(session, "Anjuta", "Maximized", 1);
     }
@@ -549,7 +549,7 @@ anjuta_app_get_geometry(AnjutaApp *app) {
 
     geometry = NULL;
     width = height = posx = posy = 0;
-    if (GTK_WIDGET(app)->window) {
+    if (gtk_widget_get_window(GTK_WIDGET (app))) {
         gtk_window_get_size(GTK_WINDOW (app), &width, &height);
         gtk_window_get_position(GTK_WINDOW(app), &posx, &posy);
 
@@ -566,7 +566,7 @@ void anjuta_app_set_geometry(AnjutaApp *app, const gchar *geometry) {
         DEBUG_PRINT ("Setting geometry: %s", geometry);
 
         if (sscanf(geometry, "%dx%d+%d+%d", &width, &height, &posx, &posy) == 4) {
-            if (GTK_WIDGET_REALIZED (app)) {
+            if (gtk_widget_get_realized (GTK_WIDGET (app))) {
                 gtk_window_resize(GTK_WINDOW (app), width, height);
             }
             else {
@@ -586,7 +586,7 @@ void anjuta_app_set_geometry(AnjutaApp *app, const gchar *geometry) {
         height = gdk_screen_height() - 25;
         width = (width < 790) ? width : 790;
         height = (height < 575) ? width : 575;
-        if (GTK_WIDGET_REALIZED (app) == FALSE) {
+        if (gtk_widget_get_realized (GTK_WIDGET (app)) == FALSE) {
             gtk_window_set_default_size(GTK_WINDOW (app), width, height);
             gtk_window_move(GTK_WINDOW (app), posx, posy);
         }
@@ -1221,7 +1221,7 @@ static void confirm_append_text(GladeXML *xml, const gchar *text) {
 
     w = gtkpod_xml_get_widget(xml, "scroller");
     adjustment = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW (w));
-    gtk_adjustment_set_value(adjustment, adjustment->upper - adjustment->page_size);
+    gtk_adjustment_set_value(adjustment, gtk_adjustment_get_upper(adjustment) - gtk_adjustment_get_page_size(adjustment));
 
     g_strfreev(strings);
 }
@@ -1405,7 +1405,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
      ENTER in the window (usually OK)*/
     /* Hide or default CANCEL button */
     if ((w = gtkpod_xml_get_widget(confirm_xml, "cancel"))) {
-        GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
+        gtk_widget_set_can_default (w, TRUE);
         gtk_widget_grab_default(w);
 
         if (!cancel_handler)
@@ -1414,7 +1414,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
 
     /* Hide or default APPLY button */
     if ((w = gtkpod_xml_get_widget(confirm_xml, "apply"))) {
-        GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
+        gtk_widget_set_can_default (w, TRUE);
         gtk_widget_grab_default(w);
 
         if (!apply_handler)
@@ -1423,7 +1423,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
 
     /* Hide or default OK button */
     if ((w = gtkpod_xml_get_widget(confirm_xml, "ok"))) {
-        GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
+        gtk_widget_set_can_default (w, TRUE);
         gtk_widget_grab_default(w);
 
         if (!ok_handler)

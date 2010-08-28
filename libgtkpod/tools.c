@@ -342,6 +342,7 @@ void nm_tracks_list (GList *list)
   static gboolean abort;
   GtkWidget *dialog, *progress_bar, *label, *track_label;
   GtkWidget *image, *hbox;
+  GtkWidget *content_area;
   time_t diff, start, fullsecs, hrs, mins, secs;
   gchar *progtext = NULL;
 
@@ -395,12 +396,10 @@ void nm_tracks_list (GList *list)
 			    &abort);
 
   /* Add the image/label + progress bar to dialog */
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
-		      hbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
-		      track_label, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
-		      progress_bar, FALSE, FALSE, 0);
+  content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+  gtk_box_pack_start (GTK_BOX (content_area), hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (content_area), track_label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (content_area), progress_bar, FALSE, FALSE, 0);
   gtk_widget_show_all (dialog);
 
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
