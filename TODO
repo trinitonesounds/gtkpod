@@ -2,7 +2,7 @@ Prospective Plugins:
 #	core
 #	coverart display
 #  track editor
-	play tracks now
+#	play tracks now
 #    info window
 	synchronizer
 #	download coverart plugin
@@ -44,7 +44,7 @@ View Menu
 # Arrange Filter Tabs (Not creating)
 
 Tools Menu
-- Play Now
+# Play Now
 - Enqueue
 - Normalize Volume
 - Synchronize All, Contacts, Calendar, Notes
@@ -96,19 +96,32 @@ Notes on trial build using ubuntu 910
 # Change configure.in to signal at the bottom status of webkit
 #- pkconfig.pc for libgtkpod
 
-1) Deleted Music Library
-2) Created Music Library
-3) Added localmusic
+#Gstreamer
+#* display.c
+# * media player gui referenced in glade xml
+
+#* display_playlists / display_sorttabs
+# * context menu trips tools_play_tracks (selected_tracks);
+
+#* player.c / player.h
+# * thing that does all the work
+
+#Fix anjuta about icon
+
+Threading export of tracks - performance of tracks
+
+Lucidfox: 
+GtkBuilder files, replace libmp4, move to GIO
+ < LucidFox> ffmpeg libraries are not that well documented, though :/
+ < LucidFox> In fact, I wonder if in 2.0 it would be possible to switch to
+             libavcodec/libavformat for all format conversions, and get rid of the
+						 shell scripts
+
+< teuf> in the plugin-framework branch, did you rework how gtkpod handles ipods?
+			  ie the offline db stuff and things like that and the fact that the modelnumber iS
+				used everywhere?
+				basically, it would be really helpful if gtkpod stopped using the model number
+				everywhere, and if it stopped using itdb_parse_file (and used itdb_parse + 
+				mountpoint instead)
 
 
-Gstreamer
-* display.c
- * media player gui referenced in glade xml
-
-* display_playlists / display_sorttabs
- * context menu trips tools_play_tracks (selected_tracks);
-
-* player.c / player.h
- * thing that does all the work
-
-Fix anjuta about icon
