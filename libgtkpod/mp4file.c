@@ -31,16 +31,13 @@
 #  include <config.h>
 #endif
 
+#include <glib.h>
 #include <glib/gi18n-lib.h>
-#ifdef HAVE_ENDIAN_H
-#  include <endian.h> /* for be32toh () */
-#endif
 #include "charset.h"
 #include "itdb.h"
 #include "misc.h"
 #include "prefs.h"
 #include "mp4file.h"
-
 
 
 /* ------------------------------------------------------------
@@ -534,7 +531,7 @@ static gboolean mp4_get_apple_uint8_property (MP4FileHandle hFile, const char* p
 
       /* pos now points to a 1-byte atom version followed by a 3-byte class/flag field */
       atom_version = *pos;
-      class_flag = be32toh(*(guint32*)pos) & 0x00ffffff;
+      class_flag = GUINT32_FROM_BE(*(guint32*)pos) & 0x00ffffff;
       if (class_flag == 21 || class_flag == 0)
       {
          pos += 4; /* Skip over the atom version and class/flag */
@@ -566,7 +563,7 @@ static gboolean mp4_get_apple_text_property (MP4FileHandle hFile, const char* pr
       pos += 8; /* Skip over the length and the atom name */
       /* pos now points to a 1-byte atom version followed by a 3-byte class/flag field */
       atom_version = *pos;
-      class_flag = be32toh(*(guint32*)pos) & 0x00ffffff;
+      class_flag = GUINT32_FROM_BE(*(guint32*)pos) & 0x00ffffff;
       if (class_flag == 1)
       {
          pos += 4; /* Skip over the atom version and class/flag */

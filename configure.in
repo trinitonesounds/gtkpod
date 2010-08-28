@@ -259,8 +259,6 @@ AC_CHECK_HEADERS([mp4v2/itmf_tags.h], [], [],
 		  typedef void* MP4FileHandle;
 		 ])
 
-AC_CHECK_HEADERS([endian.h])
-
 dnl Additional libs maybe needed when compiling under solaris
 AC_SEARCH_LIBS(bind, ["socket" "nsl" "socket -lnsl"])
 
