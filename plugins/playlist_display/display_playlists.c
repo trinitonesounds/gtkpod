@@ -590,6 +590,8 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
 
     position = pm_get_position_for_playlist(pl);
 
+    gchar *data_copy = g_strdup(gtk_selection_data_get_data(data));
+
     /*  printf("position: %d\n", position); */
     switch (info) {
     case DND_GTKPOD_TRACKLIST:
@@ -597,6 +599,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
         sscanf(gtk_selection_data_get_data(data), "%p", &tr_s);
         if (!tr_s) {
             gtk_drag_finish(dc, FALSE, FALSE, time);
+            g_free(data_copy);
             g_return_if_reached ();
         }
 
@@ -610,12 +613,12 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
 
         if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) || (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER)) { /* drop into existing playlist */
             /* copy files from iPod if necessary */
-            GList *trackglist = exporter->transfer_track_names_between_itdbs(tr_s->itdb, pl->itdb, gtk_selection_data_get_data(data));
+            GList *trackglist = exporter->transfer_track_names_between_itdbs(tr_s->itdb, pl->itdb, data_copy);
             if (trackglist) {
                 add_trackglist_to_playlist(pl, trackglist);
                 g_list_free(trackglist);
                 trackglist = NULL;
-                pm_tm_tracks_moved_or_copied(gtk_selection_data_get_data(data), del_src);
+                pm_tm_tracks_moved_or_copied(data_copy, del_src);
                 gtk_drag_finish(dc, TRUE, del_src, time);
             }
             else {
@@ -632,12 +635,12 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
 
             if (plitem) {
                 /* copy files from iPod if necessary */
-                GList *trackglist = exporter->transfer_track_names_between_itdbs(tr_s->itdb, pl->itdb, gtk_selection_data_get_data(data));
+                GList *trackglist = exporter->transfer_track_names_between_itdbs(tr_s->itdb, pl->itdb, data_copy);
                 if (trackglist) {
                     add_trackglist_to_playlist(plitem, trackglist);
                     g_list_free(trackglist);
                     trackglist = NULL;
-                    pm_tm_tracks_moved_or_copied(gtk_selection_data_get_data(data), del_src);
+                    pm_tm_tracks_moved_or_copied(data_copy, del_src);
                     gtk_drag_finish(dc, TRUE, del_src, time);
                 }
                 else {
@@ -654,16 +657,16 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     case DND_TEXT_URI_LIST:
     case DND_TEXT_PLAIN:
         if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) || (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER)) { /* drop into existing playlist */
-            add_text_plain_to_playlist(pl->itdb, pl, gtk_selection_data_get_data(data), 0, NULL, NULL);
+            add_text_plain_to_playlist(pl->itdb, pl, data_copy, 0, NULL, NULL);
             gdk_drag_status(dc, GDK_ACTION_COPY, time);
             gtk_drag_finish(dc, TRUE, FALSE, time);
         }
         else { /* drop between playlists */
             Playlist *plitem;
             if (pos == GTK_TREE_VIEW_DROP_AFTER)
-                plitem = add_text_plain_to_playlist(pl->itdb, NULL, gtk_selection_data_get_data(data), position + 1, NULL, NULL);
+                plitem = add_text_plain_to_playlist(pl->itdb, NULL, data_copy, position + 1, NULL, NULL);
             else
-                plitem = add_text_plain_to_playlist(pl->itdb, NULL, gtk_selection_data_get_data(data), position, NULL, NULL);
+                plitem = add_text_plain_to_playlist(pl->itdb, NULL, data_copy, position, NULL, NULL);
 
             if (plitem) {
                 gdk_drag_status(dc, GDK_ACTION_COPY, time);
@@ -680,6 +683,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
         sscanf(gtk_selection_data_get_data(data), "%p", &pl_s);
         if (!pl_s) {
             gtk_drag_finish(dc, FALSE, FALSE, time);
+            g_free(data_copy);
             g_return_if_reached ();
         }
 
@@ -687,6 +691,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
 
         if (gdk_drag_context_get_selected_action(dc) == 0) {
             gtk_drag_finish(dc, FALSE, FALSE, time);
+            g_free(data_copy);
             return;
         }
 
@@ -719,6 +724,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
                     if (prefs_get_int("pm_sort") != SORT_NONE) {
                         gtkpod_statusbar_message(_("Can't reorder sorted treeview."));
                         gtk_drag_finish(dc, FALSE, FALSE, time);
+                        g_free(data_copy);
                         return;
                     }
                     gtk_tree_store_move_before(GTK_TREE_STORE (model), &iter_s, &iter_d);
@@ -729,6 +735,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
                     if (prefs_get_int("pm_sort") != SORT_NONE) {
                         gtkpod_statusbar_message(_("Can't reorder sorted treeview."));
                         gtk_drag_finish(dc, FALSE, FALSE, time);
+                        g_free(data_copy);
                         return;
                     }
                     gtk_tree_store_move_after(GTK_TREE_STORE (model), &iter_s, &iter_d);
@@ -745,6 +752,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
                 break;
             default:
                 gtk_drag_finish(dc, FALSE, FALSE, time);
+                g_free(data_copy);
                 g_return_if_reached ();
             }
         }
@@ -758,6 +766,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
                 pl_d = gp_playlist_add_new(pl->itdb, pl_s->name, FALSE, position);
             if (pos == GTK_TREE_VIEW_DROP_AFTER)
                 pl_d = gp_playlist_add_new(pl->itdb, pl_s->name, FALSE, position + 1);
+            g_free(data_copy);
             g_return_if_fail (pl_d);
 
             /* copy files from iPod if necessary */
@@ -798,6 +807,8 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
         gtk_drag_finish(dc, FALSE, FALSE, time);
         break;
     }
+
+    g_free(data_copy);
 
     /* display if any duplicates were skipped */
     gp_duplicate_remove(NULL, NULL);

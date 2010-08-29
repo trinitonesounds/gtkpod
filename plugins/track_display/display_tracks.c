@@ -549,15 +549,16 @@ static void tm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
         }
     }
 
+    gchar *data_copy = g_strdup(gtk_selection_data_get_data(data));
     switch (info) {
     case DND_GTKPOD_TM_PATHLIST:
         g_return_if_fail (path);
-        result = tm_move_pathlist(gtk_selection_data_get_data(data), path, pos);
+        result = tm_move_pathlist(data_copy, path, pos);
         gdk_drag_status(dc, GDK_ACTION_MOVE, time);
         gtk_drag_finish(dc, TRUE, FALSE, time);
         break;
     case DND_TEXT_PLAIN:
-        result = tm_add_filelist(gtk_selection_data_get_data(data), path, pos);
+        result = tm_add_filelist(data_copy, path, pos);
         gdk_drag_status(dc, gdk_drag_context_get_suggested_action(dc), time);
         if (gdk_drag_context_get_selected_action(dc) == GDK_ACTION_MOVE)
             gtk_drag_finish(dc, TRUE, TRUE, time);
@@ -565,7 +566,7 @@ static void tm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
             gtk_drag_finish(dc, TRUE, FALSE, time);
         break;
     case DND_TEXT_URI_LIST:
-        result = tm_add_filelist(gtk_selection_data_get_data(data), path, pos);
+        result = tm_add_filelist(data_copy, path, pos);
         gdk_drag_status(dc, gdk_drag_context_get_suggested_action(dc), time);
         if (gdk_drag_context_get_selected_action(dc) == GDK_ACTION_MOVE)
             gtk_drag_finish(dc, TRUE, TRUE, time);
@@ -578,6 +579,8 @@ static void tm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
         /* 	puts ("tm_drag_data_received(): should not be reached"); */
         break;
     }
+    g_free(data_copy);
+
     if (path)
         gtk_tree_path_free(path);
 }
@@ -1452,7 +1455,7 @@ void tm_stop_editing(gboolean cancel) {
     gtk_tree_view_get_cursor(track_treeview, NULL, &col);
     if (col) {
         GList *cells;
-        
+
         /* Before removing the widget we set multi_edit to FALSE. That
          way at most one entry will be changed (this also doesn't
          seem to work the way intended) */
@@ -2189,7 +2192,7 @@ static GtkTreeViewColumn *tm_add_column(TM_item tm_item, gint pos) {
         gtk_widget_set_tooltip_text(label, gettext (get_tm_tooltip(tm_item)));
         gtk_tree_view_column_set_widget(col, label);
     }
-    
+
     return col;
 }
 
