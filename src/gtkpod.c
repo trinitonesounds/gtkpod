@@ -163,7 +163,7 @@ void gtkpod_init(int argc, char *argv[]) {
     /* Load layout.*/
     session_dir = g_build_filename(g_get_home_dir(), ".gtkpod", "session", NULL);
     if (! g_file_test(session_dir, G_FILE_TEST_IS_DIR))
-        session_dir = get_data_dir();
+        session_dir = g_strdup(get_data_dir());
 
     /* Restore session */
     anjuta_shell_session_load(ANJUTA_SHELL (app), session_dir, NULL);
