@@ -297,9 +297,12 @@ static void gphoto_create_albumview() {
 
     /* create tree view */
     photo_editor->album_view = GTK_TREE_VIEW (gtk_tree_view_new ());
+#if GTK_CHECK_VERSION(2,20,0)
     if (!gtk_widget_get_realized(GTK_WIDGET(photo_editor->album_view)))
+#else
+    if (!GTK_WIDGET_REALIZED(GTK_WIDGET(photo_editor->album_view)))
+#endif
         gtk_widget_set_events(GTK_WIDGET(photo_editor->album_view), GDK_KEY_PRESS_MASK);
-
     renderer = gtk_cell_renderer_text_new();
     gtk_tree_view_insert_column_with_attributes(photo_editor->album_view, -1, _("Photo Albums"), renderer, "text", COL_ALBUM_NAME, NULL);
 
@@ -357,7 +360,11 @@ static void gphoto_create_thumbnailview() {
     if (photo_editor->thumbnail_view == NULL)
         photo_editor->thumbnail_view = GTK_ICON_VIEW (gtk_icon_view_new ());
 
-    if (!gtk_widget_get_realized(GTK_WIDGET (photo_editor->thumbnail_view)))
+#if GTK_CHECK_VERSION(2,20,0)
+    if (!gtk_widget_get_realized(GTK_WIDGET(photo_editor->thumbnail_view)))
+#else
+    if (!GTK_WIDGET_REALIZED(GTK_WIDGET(photo_editor->thumbnail_view)))
+#endif
         gtk_widget_set_events(GTK_WIDGET(photo_editor->thumbnail_view), GDK_KEY_PRESS_MASK);
 
     gtk_container_add(GTK_CONTAINER (photo_editor->photo_thumb_window), GTK_WIDGET(photo_editor->thumbnail_view));
