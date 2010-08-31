@@ -284,11 +284,7 @@ static void set_display_window_dimensions() {
  *
  */
 void coverart_block_change(gboolean val) {
-#if GTK_CHECK_VERSION(2,20,0)
     if (gtk_widget_get_realized(GTK_WIDGET(gtkpod_app))) {
-#else
-    if GTK_WIDGET_REALIZED(gtkpod_app) {
-#endif
         if (val) {
             GdkCursor *cursor = gdk_cursor_new(GDK_WATCH);
             gdk_window_set_cursor(gtk_widget_get_window(GTK_WIDGET(gtkpod_app)), cursor);

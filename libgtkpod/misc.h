@@ -42,6 +42,9 @@
 #include "gp_itdb.h"
 #include "time.h"
 
+#if !GTK_CHECK_VERSION(2, 20, 0)
+    #define gtk_widget_get_realized GTK_WIDGET_REALIZED
+#endif
 
 #define C_FREE(a) {g_free(a); a=NULL;}
 

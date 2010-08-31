@@ -1533,11 +1533,7 @@ void details_edit(GList *selected_tracks) {
     if (!details_view || !details_view->window) {
         create_details_editor_view();
     }
-#if GTK_CHECK_VERSION(2,20,0)
     else if (! gtk_widget_get_realized(details_view->window)) {
-#else
-    else if (! GTK_WIDGET_REALIZED(details_view->window)) {
-#endif
         gtkpod_display_widget(details_view->window);
     }
     details_set_tracks(selected_tracks);
