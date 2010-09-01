@@ -90,7 +90,10 @@ filetype=`echo ${infile_extension}| tr '[:upper:]' '[:lower:]'`
 case "$filetype" in
 	flac)	decoder="flac" ; options="-d -c --"  ;;
 	oga|ogg|ogv|ogx)
-		decoder="oggdec" ; options="--output - --" ;;
+	        # Quiet mode is needed to workaround a bug in oggdec
+	        # 1.4 which prints the version banner to stdout, which
+	        # then corrupts the decoded track.
+		decoder="oggdec" ; options="--quiet --output - --" ;;
 	m4a)	decoder="faad" ; options="-o -" ;;
 	wav)	decoder="" ;;
 	*)	exit 4 ;;
