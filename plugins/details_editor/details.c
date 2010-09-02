@@ -1599,8 +1599,8 @@ static void dnd_details_art_drag_data_received(GtkWidget *widget, GdkDragContext
     g_return_if_fail (gtk_selection_data_get_length(data) > 0);
 
     #if DEBUG
-    printf ("data length = %d\n", data->length);
-    printf ("data->data = %s\n", data->data);
+    printf ("data length = %d\n", gtk_selection_data_get_length(data));
+    printf ("data->data = %s\n", gtk_selection_data_get_data(data));
 #endif
 
     ;
@@ -1660,7 +1660,7 @@ static void dnd_details_art_drag_data_received(GtkWidget *widget, GdkDragContext
 
 #ifdef HAVE_CURL
         /* initialise the url string with the data from the dnd */
-        url = g_strdup ((gchar *) data->data);
+        url = g_strdup ((gchar *) gtk_selection_data_get_data(data));
         /* Initialise a fetchcover object */
         fcover = fetchcover_new (url, tracks);
         /* assign details window as the parent window so the file exists dialog is

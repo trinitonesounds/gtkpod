@@ -1943,8 +1943,8 @@ static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *d
     /* mozilla bug 402394 */
 
 #if DEBUG
-    printf ("data length = %d\n", data->length);
-    printf ("data->data = %s\n", data->data);
+    printf ("data length = %d\n", gtk_selection_data_get_length(data->length));
+    printf ("data->data = %s\n", gtk_selection_data_get_data(data));
 #endif
 
     Cover_Item *cover;
@@ -2019,7 +2019,7 @@ static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *d
 
 #ifdef HAVE_CURL
         /* initialise the url string with the data from the dnd */
-        url = g_strdup ((gchar *) data->data);
+        url = g_strdup ((gchar *) gtk_selection_data_get_data(data));
         /* Initialise a fetchcover object */
         fcover = fetchcover_new (url, tracks);
         coverart_block_change (TRUE);
