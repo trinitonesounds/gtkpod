@@ -836,8 +836,9 @@ void coverart_track_changed(Track *track, gint signal) {
 
     switch (signal) {
     case COVERART_REMOVE_SIGNAL:
-        g_return_if_fail (keypos);
         g_free(trk_key);
+        if (! keypos)
+            return;
 
         /* Reassign trk_key to the key from the list */
         trk_key = keypos->data;
@@ -930,7 +931,7 @@ void coverart_track_changed(Track *track, gint signal) {
     case COVERART_CHANGE_SIGNAL:
         /* A track is declaring itself as changed so what to do? */
         findremove = FALSE;
-        if (keypos == NULL) {
+        if (!keypos) {
             /* The track could not be found according to the key!
              * The ONLY way this could happen is if the user changed the
              * artist or album of the track. Well it should be rare but the only

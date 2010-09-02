@@ -161,8 +161,10 @@ static gboolean volume_changed_cb(GtkRange *range, GtkScrollType scroll, gdouble
 //}
 
 static void set_song_label(Track *track) {
-    if (!track)
+    if (!track) {
+        gtk_label_set_markup(GTK_LABEL(player->song_label), "");
         return;
+    }
 
     gchar *label;
 
@@ -170,7 +172,7 @@ static void set_song_label(Track *track) {
     const gchar *track_title = track->title ? track->title : _("No Track Title");
     gboolean have_track_artist = track->artist && strlen(track->artist) > 0;
     gboolean have_track_album = track->album && strlen(track->album) > 0;
-    
+
     if (have_track_artist && have_track_album)
         label = g_markup_printf_escaped(_("<b>%s</b> by %s from %s"), track_title, track->artist, track->album);
     else if (have_track_artist)
@@ -298,6 +300,9 @@ static void previous_song() {
     if (!player)
         return;
 
+    if (!player->tracks || g_list_length(player->tracks) == 0)
+        return;
+
     player->previousButtonPressed = TRUE;
     player->tracks = g_list_previous (player->tracks);
     stop_song(FALSE);
@@ -311,6 +316,9 @@ static void play_song() {
     GError *err1 = NULL;
 
     if (!player)
+        return;
+
+    if (!player->tracks || g_list_length(player->tracks) == 0)
         return;
 
     if (!g_thread_supported ()) {
@@ -394,6 +402,7 @@ void set_selected_tracks(GList *tracks) {
     if (player->tracks) {
         g_list_free(player->tracks);
         player->tracks = NULL;
+        set_song_label(NULL);
     }
 
     if (! tracks)

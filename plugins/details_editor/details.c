@@ -1346,8 +1346,11 @@ void details_remove_track(Track *track) {
     gint i;
     Track *dis_track;
 
-    g_return_if_fail (details_view);
-    g_return_if_fail (track);
+    if (!track)
+        return;
+
+    if (!details_view)
+        return;
 
     i = g_list_index(details_view->orig_tracks, track);
     if (i == -1)

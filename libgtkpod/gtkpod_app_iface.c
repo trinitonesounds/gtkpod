@@ -283,6 +283,12 @@ void gtkpod_track_removed(Track *track) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
     g_return_if_fail (track);
 
+    GList *selected_tracks = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->selected_tracks;
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->selected_tracks = g_list_remove(selected_tracks, track);
+
+    GList *displayed_tracks = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->displayed_tracks;
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->displayed_tracks = g_list_remove(displayed_tracks, track);
+
     g_signal_emit(gtkpod_app, gtkpod_app_signals[TRACK_REMOVED], 0, track);
 }
 
