@@ -50,6 +50,13 @@
 #include "vorbis/vorbisfile.h"
 #include "prefs.h"
 
+/*
+ * The VorbisComment recommendation is too vague on the meaning and
+ * content of the fields: http://xiph.org/vorbis/doc/v-comment.html
+ *
+ * A widely used suggested usage of the fields can be found here:
+ * http://wiki.xiph.org/index.php/VorbisComment
+ */
 Track *ogg_get_file_info (gchar *oggFileName)
 {
     Track *track = NULL;
@@ -104,6 +111,14 @@ Track *ogg_get_file_info (gchar *oggFileName)
                         track->genre=charset_to_utf8(str);
                     }
                     if ((str=vorbis_comment_query(vc,"year",0))!=NULL){
+                        track->year=atoi(str);
+                    }
+                    if ((str=vorbis_comment_query(vc,"date",0))!=NULL){
+			/* Expected format is YYYY-MM-DDTHH:MM:SS+TS
+			 * The fields are optional from right to
+			 * left. Year must always be present. Atoi()
+			 * will always stop parsing at the first dash
+			 * and return the year. */
                         track->year=atoi(str);
                     }
                     if ((str=vorbis_comment_query(vc,"tracknumber",0))!=NULL){
