@@ -1753,7 +1753,7 @@ GdkColor *coverart_get_background_display_color() {
     gchar *hex_string;
     GdkColor *color;
 
-    if (album_key_list == NULL || g_list_length(album_key_list) == 0)
+    if (album_key_list == NULL)
         hex_string = "#FFFFFF";
     else if (!prefs_get_string_value("coverart_display_bg_color", NULL))
         hex_string = "#000000";
@@ -1776,7 +1776,7 @@ GdkColor *coverart_get_foreground_display_color() {
     gchar *hex_string;
     GdkColor *color;
 
-    if (album_key_list == NULL || g_list_length(album_key_list) == 0)
+    if (album_key_list == NULL)
         hex_string = "#000000";
     else if (!prefs_get_string_value("coverart_display_bg_color", NULL))
         hex_string = "#FFFFFF";

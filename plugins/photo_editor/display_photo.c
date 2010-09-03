@@ -485,7 +485,7 @@ static void gphoto_thumb_selection_changed(GtkIconView *iconview, gpointer user_
 
     selected_items = gtk_icon_view_get_selected_items(iconview);
 
-    if (selected_items == NULL || g_list_length(selected_items) == 0)
+    if (selected_items == NULL)
         return;
 
     model = gtk_icon_view_get_model(iconview);
@@ -1245,7 +1245,7 @@ static void on_photodb_view_full_size_menuItem_activate(GtkMenuItem *menuItem, g
 
     /* Find which images are selected */
     selected_images = gtk_icon_view_get_selected_items(GTK_ICON_VIEW(photo_editor->thumbnail_view));
-    if (selected_images == NULL || g_list_length(selected_images) == 0) {
+    if (selected_images == NULL) {
         gtk_tree_model_get_iter_first(model, &iter);
     }
     else {
@@ -1329,7 +1329,7 @@ static void dnd_images_drag_data_get(GtkWidget *widget, GdkDragContext *dc, GtkS
 
     /* Find which images are selected */
     selected_images = gtk_icon_view_get_selected_items(GTK_ICON_VIEW(widget));
-    if (selected_images == NULL || g_list_length(selected_images) == 0)
+    if (selected_images == NULL)
         return;
 
     model = gtk_icon_view_get_model(GTK_ICON_VIEW(widget));

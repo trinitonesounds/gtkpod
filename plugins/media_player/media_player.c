@@ -300,7 +300,7 @@ static void previous_song() {
     if (!player)
         return;
 
-    if (!player->tracks || g_list_length(player->tracks) == 0)
+    if (!player->tracks)
         return;
 
     player->previousButtonPressed = TRUE;
@@ -318,7 +318,7 @@ static void play_song() {
     if (!player)
         return;
 
-    if (!player->tracks || g_list_length(player->tracks) == 0)
+    if (!player->tracks)
         return;
 
     if (!g_thread_supported ()) {
