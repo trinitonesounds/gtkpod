@@ -35,12 +35,16 @@
 #include "libgtkpod/file.h"
 #include "libgtkpod/directories.h"
 #include "libgtkpod/misc.h"
+#include "libgtkpod/prefs.h"
 #include "plugin.h"
 #include "media_player.h"
 
 #ifndef M_LN10
 #define M_LN10 (log(10.0))
 #endif
+
+#define MEDIA_PLAYER_VOLUME_KEY "media_player_volume_key"
+#define MEDIA_PLAYER_VOLUME_MUTE "media_player_volume_mute"
 
 static MediaPlayer *player;
 
@@ -102,12 +106,15 @@ static gboolean set_scale_position(GstElement *pipeline) {
     return FALSE;
 }
 
-static void update_volume(gboolean value) {
+static void update_volume(gdouble value) {
     if (!player)
         return;
 
-    player->volume_level = exp(value / 20.0 * M_LN10);
-    //    g_object_set(player->volume_element, "volume", player->volume_level, NULL);
+    player->volume_level = value / 10;
+    prefs_set_double(MEDIA_PLAYER_VOLUME_KEY, player->volume_level);
+    prefs_set_double(MEDIA_PLAYER_VOLUME_MUTE, player->volume_level == 0 ? 1 : 0);
+
+    g_object_set(player->play_element, "volume", player->volume_level, NULL);
 }
 
 static gboolean volume_changed_cb(GtkRange *range, GtkScrollType scroll, gdouble value, gpointer user_data) {
@@ -213,6 +220,7 @@ static void thread_play_song() {
         uri = g_strconcat("file://", track_name, NULL);
         player->play_element = gst_element_factory_make("playbin2", "play");
         g_object_set(G_OBJECT (player->play_element), "uri", uri, NULL);
+        g_object_set(player->play_element, "volume", player->volume_level, NULL);
 
         bus = gst_pipeline_get_bus(GST_PIPELINE (player->play_element));
         gst_bus_add_watch(bus, pipeline_bus_watch_cb, player->loop); //Add a watch to the bus
@@ -468,9 +476,26 @@ void init_media_player(GtkWidget *parent) {
     player->shuffle = FALSE;
     player->play_element = NULL;
 
-    //    gtk_widget_show(player->song_label);
+    /* Set the volume based on preference */
+    gint volume_mute = prefs_get_int(MEDIA_PLAYER_VOLUME_MUTE);
+    if (volume_mute == 1) {
+        player->volume_level = 0;
+    }
+    else {
+        gdouble volume = prefs_get_double(MEDIA_PLAYER_VOLUME_KEY);
+        if (volume == 0) {
+            /*
+             * The preference is at its default value so set it to
+             * the default of level 0.5
+             */
+            player->volume_level = 0.5;
+        }
+        else {
+            player->volume_level = volume;
+        }
+    }
+
     gtk_widget_show_all(player->media_panel);
-//    gtk_widget_realize(player->video_widget);
 
     g_object_unref(xml);
 }
@@ -500,7 +525,7 @@ G_MODULE_EXPORT void on_volume_button_clicked_cb(GtkToolButton *toolbutton, gpoi
 
     g_message("Volume level: %f", player->volume_level);
 
-    gtk_range_set_value(GTK_RANGE(vol_scale), player->volume_level);
+    gtk_range_set_value(GTK_RANGE(vol_scale), (player->volume_level * 10));
     g_signal_connect(G_OBJECT (vol_scale),
             "change-value",
             G_CALLBACK(volume_changed_cb),
