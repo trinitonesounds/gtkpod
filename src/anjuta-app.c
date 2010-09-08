@@ -535,7 +535,7 @@ anjuta_app_new(void) {
     AnjutaApp *app;
 
     app = ANJUTA_APP (g_object_new (ANJUTA_TYPE_APP,
-                    "title", "GtkPod",
+                    "title", "gtkpod",
                     NULL));
     return GTK_WIDGET (app);
 }

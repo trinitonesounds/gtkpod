@@ -34,6 +34,7 @@
 #include <time.h>
 #include <libintl.h>
 #include "gtkpod.h"
+#include <glib/gi18n-lib.h>
 
 int
 main (int argc, char *argv[])
@@ -52,18 +53,14 @@ main (int argc, char *argv[])
     gdk_threads_init ();
 #endif
 
-    gdk_threads_enter ();
-
     gtk_init (&argc, &argv);
+    g_set_application_name(_("gtkpod"));
+    gtk_window_set_auto_startup_notification(FALSE);
 
     srand(time(NULL));
 
     gtkpod_init (argc, argv);
-
     gtk_main ();
 
-    gdk_threads_leave ();
-
-    /* all the cleanup is already done in gtkpod_main_shutdown () in misc.c */
     return 0;
 }

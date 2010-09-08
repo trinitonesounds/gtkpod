@@ -62,6 +62,7 @@ void gtkpod_init(int argc, char *argv[]) {
     gchar *ui_file = NULL;
     gchar *remembered_plugins = NULL;
     gchar *session_dir = NULL;
+    gchar *splash = NULL;
 
     /* Initialise important directories */
     init_directories(argv);
@@ -79,21 +80,37 @@ void gtkpod_init(int argc, char *argv[]) {
     app = ANJUTA_APP(anjuta_app_new());
     gtkpod_app = GTKPOD_APP(app);
 
+    /* Show some progress as the app is initialised */
+    status = anjuta_shell_get_status(ANJUTA_SHELL(app), NULL);
+    anjuta_status_progress_add_ticks(status, 1);
+
+    splash = g_build_filename(get_icon_dir(), "gtkpod-splash.png", NULL);
+
+    if (g_file_test(splash, G_FILE_TEST_IS_REGULAR))
+        anjuta_status_set_splash (status, splash, 100);
+    else {
+        g_warning("Cannot find splash file %s", splash);
+        anjuta_status_disable_splash(status, TRUE);
+    }
+
+    g_free(splash);
+
     /* Set the glade xml file of the app */
     glade_xml_file = g_build_filename(get_glade_dir(), "gtkpod.glade", NULL);
     gtkpod_app_set_glade_xml(glade_xml_file);
     g_free(glade_xml_file);
 
-    /* initialise gtkpod library items dependent on path of executable*/
+    /*
+     * initialise gtkpod library items. Needs to be safety threaded due
+     * to splash screen.
+     */
+    gdk_threads_enter();
     gp_init(argc, argv);
+    gdk_threads_leave();
 
     /* Add blocking widgets from the framework */
     add_blocked_widget(app->toolbar);
     add_blocked_widget(app->view_menu);
-
-    /* Show some progress as the app is initialised */
-    status = anjuta_shell_get_status(ANJUTA_SHELL(app), NULL);
-    anjuta_status_progress_add_ticks(status, 1);
 
     /* Set up shutdown signals */
     g_object_set_data(G_OBJECT(app), "__proper_shutdown", "1");
@@ -172,9 +189,8 @@ void gtkpod_init(int argc, char *argv[]) {
     anjuta_status_progress_tick(status, NULL, _("Loaded Session..."));
     anjuta_status_disable_splash(status, TRUE);
 
-    g_set_application_name(_("GtkPod"));
     gtk_window_set_default_icon_name("gtkpod");
-    gtk_window_set_auto_startup_notification(FALSE);
+    gtk_window_set_auto_startup_notification(TRUE);
 
     gtk_window_set_role(GTK_WINDOW(app), "gtkpod-app");
     gtk_widget_show(GTK_WIDGET(app));
