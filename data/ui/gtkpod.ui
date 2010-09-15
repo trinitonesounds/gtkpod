@@ -55,7 +55,4 @@
 			</menu>
 		</placeholder>
 	</menubar>
-	<toolbar name="ToolbarMain">
-	  <placeholder name="PlaceholderMusicToolbar" />
-	</toolbar>
 </ui>
