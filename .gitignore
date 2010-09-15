@@ -80,7 +80,7 @@ cscope.out
 /data/glade/track_display.glade
 /data/glade/repository_editor.glade
 /data/glade/cover_display.glade
-/data/glade/playlist_display.glade
+/data/glade/playlist_display_toolbar.xml
 /data/glade/core_prefs.xml
 /data/glade/photo_editor.glade
 /data/glade/media_player.glade

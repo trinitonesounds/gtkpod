@@ -49,43 +49,43 @@ static gpointer parent_class;
 static GtkActionEntry playlist_actions[] =
     {
         {
-            "ActionLoadiPod", /* Action name */
+            ACTION_LOAD_IPOD, /* Action name */
             PLAYLIST_DISPLAY_READ_ICON_STOCK_ID, /* Stock icon */
             N_("_Load iPod(s)"), /* Display label */
             NULL, /* short-cut */
-            NULL, /* Tooltip */
+            N_("Load all currently listed ipods"), /* Tooltip */
             G_CALLBACK (on_load_ipods_mi) /* callback */
         },
         {
-            "ActionSaveChanges", /* Action name */
+            ACTION_SAVE_CHANGES, /* Action name */
             PLAYLIST_DISPLAY_SYNC_ICON_STOCK_ID, /* Stock icon */
             N_("_Save Changes"), /* Display label */
             NULL, /* short-cut */
-            NULL, /* Tooltip */
+            N_("Save all changes"), /* Tooltip */
             G_CALLBACK (on_save_changes) /* callback */
         },
         {
-            "ActionAddFiles", /* Action name */
+            ACTION_ADD_FILES, /* Action name */
             PLAYLIST_DISPLAY_ADD_FILES_ICON_STOCK_ID, /* Stock icon */
             N_("Add _Files"), /* Display label */
             NULL, /* short-cut */
-            NULL, /* Tooltip */
+            N_("Add files to selected ipod"), /* Tooltip */
             G_CALLBACK (on_create_add_files) /* callback */
         },
         {
-            "ActionAddDirectory", /* Action name */
+            ACTION_ADD_DIRECTORY, /* Action name */
             PLAYLIST_DISPLAY_ADD_DIRS_ICON_STOCK_ID, /* Stock icon */
             N_("Add Fol_der"), /* Display label */
             NULL, /* short-cut */
-            NULL, /* Tooltip */
+            N_("Add folder contents to selected ipod"), /* Tooltip */
             G_CALLBACK (on_create_add_directory) /* callback */
         },
         {
-            "ActionAddPlaylist", /* Action name */
+            ACTION_ADD_PLAYLIST, /* Action name */
             PLAYLIST_DISPLAY_ADD_PLAYLISTS_ICON_STOCK_ID, /* Stock icon */
             N_("Add _Playlist"), /* Display label */
             NULL, /* short-cut */
-            NULL, /* Tooltip */
+            N_("Add playlist to selected ipod"), /* Tooltip */
             G_CALLBACK (on_create_add_playlists) /* callback */
         },
         {
@@ -97,144 +97,144 @@ static GtkActionEntry playlist_actions[] =
             G_CALLBACK (on_sync_playlist_with_dirs)
         },
         {
-            "NewPlaylistMenu",
+            ACTION_NEW_PLAYLIST_MENU,
             NULL,
             N_("_New Playlist Menu")
         },
         {
             "ActionNewEmptyPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("Empty Playlist"),
             NULL,
-            NULL,
+            N_("Create an empty playlist"),
             G_CALLBACK (on_new_playlist_activate)
         },
         {
             "ActionNewSmartPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("Smart Playlist"),
             NULL,
-            NULL,
+            N_("Create a new smart playlist"),
             G_CALLBACK (on_smart_playlist_activate)
         },
         {
             "ActionNewRandomPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("Random Playlist from Displayed Tracks"),
             NULL,
-            NULL,
+            N_("Create a random playlist from the displayed tracks"),
             G_CALLBACK (on_random_playlist_activate)
         },
         {
             "ActionNewContainingDisplayedPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("Containing Displayed Tracks"),
             NULL,
-            NULL,
+            N_("Create a playlist containing the displayed tracks"),
             G_CALLBACK (on_pl_containing_displayed_tracks_activate)
         },
         {
             "ActionNewContainingSelectedPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("Containing Selected Tracks"),
             NULL,
-            NULL,
+            N_("Create a playlist containing the selected tracks"),
             G_CALLBACK (on_pl_containing_selected_tracks_activate)
         },
         {
             "ActionNewBestRatedPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("Best Rated Tracks"),
             NULL,
-            NULL,
+            N_("Create a playlist containing the best rated tracks"),
             G_CALLBACK (on_most_rated_tracks_playlist_s1_activate)
         },
         {
             "ActionNewTracksMostOftenPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("Tracks Most Often Listened To"),
             NULL,
-            NULL,
+            N_("Create a playlist containing the tracks most often listened to"),
             G_CALLBACK (on_most_listened_tracks1_activate)
         },
         {
             "ActionNewMostRecentPlayledPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("Most Recently Played Tracks"),
             NULL,
-            NULL,
+            N_("Create a playlist containing the most recently played tracks"),
             G_CALLBACK (on_most_recent_played_tracks_activate)
         },
         {
             "ActionNewAllPlayedSinceLastTimePlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("All Tracks Played Since Last Time"),
             NULL,
-            NULL,
+            N_("Create a playlist containing all tracks played since last time"),
             G_CALLBACK (on_played_since_last_time1_activate)
         },
         {
             "ActionNewAllNeverListenedPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("All Tracks Never Listened To"),
             NULL,
-            NULL,
+            N_("Create a playlist of all tracks never listened to"),
             G_CALLBACK (on_all_tracks_never_listened_to1_activate)
         },
         {
             "ActionAllNeverListedPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("All Tracks not Listed in any Playlist"),
             NULL,
-            NULL,
+            N_("Create a playlist of tracks not list in any other playlist"),
             G_CALLBACK (on_all_tracks_not_listed_in_any_playlist1_activate)
         },
         {
             "ActionNewOnePerArtistPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("One for each Artist"),
             NULL,
-            NULL,
+            N_("Create a playlist for each artist"),
             G_CALLBACK (on_pl_for_each_artist_activate)
         },
         {
             "ActionNewOnePerAlbumPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("One for each Album"),
             NULL,
-            NULL,
+            N_("Create a playlist for each album"),
             G_CALLBACK (on_pl_for_each_album_activate)
         },
         {
             "ActionNewOnePerGenrePlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("One for each Genre"),
             NULL,
-            NULL,
+            N_("Create a playlist for each genre"),
             G_CALLBACK (on_pl_for_each_genre_activate)
         },
         {
             "ActionNewOnePreComposerPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("One for each Composer"),
             NULL,
-            NULL,
+            N_("Create a playlist for each composer"),
             G_CALLBACK (on_pl_for_each_composer_activate)
         },
         {
             "ActionNewOnePerYearPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("One for each Year"),
             NULL,
-            NULL,
+            N_("Create a playlist for each year"),
             G_CALLBACK (on_pl_for_each_year_activate)
         },
         {
             "ActionNewOnePerRatingPlaylist",
-            NULL,
+            GTK_STOCK_NEW,
             N_("One for each Rating"),
             NULL,
-            NULL,
+            N_("Create a playlist for each rating"),
             G_CALLBACK (on_pl_for_each_rating_activate)
         },
         {
@@ -312,10 +312,10 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     /* Add our playlist_actions */
     action_group
-            = anjuta_ui_add_action_group_entries(ui, "ActionGroupPlaylistDisplay", _("Playlist Display"), playlist_actions, G_N_ELEMENTS (playlist_actions), GETTEXT_PACKAGE, TRUE, plugin);
+        = anjuta_ui_add_action_group_entries(ui, "ActionGroupPlaylistDisplay", _("Playlist Display"), playlist_actions, G_N_ELEMENTS (playlist_actions), GETTEXT_PACKAGE, TRUE, plugin);
     playlist_display_plugin->action_group = action_group;
 
-    new_playlist_action = tool_menu_action_new ("ActionNewPlaylist", _("New Playlist"), NULL, GTK_STOCK_NEW);
+    new_playlist_action = tool_menu_action_new (ACTION_NEW_PLAYLIST, _("New Playlist"), N_("Create a new playlist for the selected ipod"), GTK_STOCK_NEW);
     g_signal_connect(new_playlist_action, "activate", G_CALLBACK(on_new_playlist_activate), NULL);
     gtk_action_group_add_action (playlist_display_plugin->action_group, GTK_ACTION (new_playlist_action));
 
@@ -330,7 +330,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (playlist_display_plugin->pl_window), GTK_SHADOW_IN);
     gtk_widget_set_size_request(playlist_display_plugin->pl_window, 250, -1);
 
-    playlist_display_plugin->playlist_view = pm_create_treeview();
+    playlist_display_plugin->playlist_view = pm_create_playlist_view(action_group);
 
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (playlist_display_select_playlist_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_ADDED, G_CALLBACK (playlist_display_playlist_added_cb), NULL);
@@ -344,7 +344,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     gtk_container_add(GTK_CONTAINER (playlist_display_plugin->pl_window), GTK_WIDGET (playlist_display_plugin->playlist_view));
     gtk_widget_show_all(playlist_display_plugin->pl_window);
-    anjuta_shell_add_widget(plugin->shell, playlist_display_plugin->pl_window, "PlaylistDisplayPlugin", "iPod Repositories", GTK_STOCK_OPEN, ANJUTA_SHELL_PLACEMENT_LEFT, NULL);
+    anjuta_shell_add_widget(plugin->shell, playlist_display_plugin->pl_window, "PlaylistDisplayPlugin", "  iPod Repositories", PLAYLIST_DISPLAY_PLAYLIST_ICON_STOCK_ID, ANJUTA_SHELL_PLACEMENT_LEFT, NULL);
 
     return TRUE; /* FALSE if activation failed */
 }
@@ -367,7 +367,7 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_itdb_data_changed_cb), plugin);
 
     /* Destroy the treeview */
-    pm_destroy_treeview();
+    pm_destroy_playlist_view();
     playlist_display_plugin->playlist_view = NULL;
 
     /* Unmerge UI */

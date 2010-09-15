@@ -41,6 +41,7 @@
 #include "playlist_display_actions.h"
 #include "playlist_display_context_menu.h"
 #include "libgtkpod/gp_private.h"
+#include "libgtkpod/directories.h"
 #include "libgtkpod/file.h"
 #include "libgtkpod/misc.h"
 #include "libgtkpod/misc_track.h"
@@ -54,6 +55,10 @@
 #define gdk_drag_context_get_suggested_action(x) ((x)->suggested_action)
 #endif
 
+/* Container containing both toolbar and view */
+static GtkWidget *playlist_viewport = NULL;
+/* pointer to the playlist display's toolbar */
+static GtkToolbar *playlist_toolbar = NULL;
 /* pointer to the treeview for the playlist display */
 static GtkTreeView *playlist_treeview = NULL;
 /* flag set if selection changes to be ignored temporarily */
@@ -74,6 +79,7 @@ static GtkTargetEntry pm_drop_types[] =
         { "text/plain", 0, DND_TEXT_PLAIN },
         { "STRING", 0, DND_TEXT_PLAIN } };
 
+static void pm_create_treeview(void);
 static void pm_rows_reordered(void);
 static GtkTreePath *pm_get_path_for_itdb(Itdb_iTunesDB *itdb);
 static GtkTreePath *pm_get_path_for_playlist(Playlist *pl);
@@ -1876,15 +1882,17 @@ static void pm_add_columns(void) {
 }
 
 /* Free the playlist listview */
-void pm_destroy_treeview(void) {
-    if (GTK_IS_WIDGET(playlist_treeview)) {
-        gtk_widget_destroy(GTK_WIDGET(playlist_treeview));
+void pm_destroy_playlist_view(void) {
+    if (GTK_IS_WIDGET(playlist_viewport)) {
+        gtk_widget_destroy(GTK_WIDGET(playlist_viewport));
     }
+    playlist_viewport = NULL;
+    playlist_toolbar = NULL;
     playlist_treeview = NULL;
 }
 
 /* Create playlist listview */
-GtkTreeView* pm_create_treeview(void) {
+static void pm_create_treeview(void) {
     GtkTreeStore *model;
     GtkTreeSelection *selection;
     GtkWidget *tree;
@@ -1892,7 +1900,7 @@ GtkTreeView* pm_create_treeview(void) {
     /* destroy old treeview */
     if (playlist_treeview) {
         model = GTK_TREE_STORE (gtk_tree_view_get_model(playlist_treeview));
-        g_return_val_if_fail (model, NULL);
+        g_return_if_fail (model);
         g_object_unref(model);
         gtk_widget_destroy(GTK_WIDGET (playlist_treeview));
         playlist_treeview = NULL;
@@ -1969,8 +1977,39 @@ GtkTreeView* pm_create_treeview(void) {
             NULL);
     g_signal_connect (G_OBJECT (playlist_treeview), "button-press-event",
             G_CALLBACK (pm_button_press), model);
+}
 
-    return playlist_treeview;
+static void pm_create_toolbar(GtkActionGroup *action_group) {
+    GtkUIManager *mgr;
+
+    mgr = gtk_ui_manager_new();
+
+    gtk_ui_manager_insert_action_group(mgr, action_group, 0);
+
+    gchar *toolbar_path = g_build_filename(get_glade_dir(), "playlist_display_toolbar.xml", NULL);
+    gtk_ui_manager_add_ui_from_file(mgr, toolbar_path, NULL);
+
+    playlist_toolbar = GTK_TOOLBAR(gtk_ui_manager_get_widget(mgr, "/PlaylistToolbar"));
+    gtk_toolbar_set_style(playlist_toolbar, GTK_TOOLBAR_ICONS);
+    gtk_toolbar_set_icon_size(playlist_toolbar, GTK_ICON_SIZE_SMALL_TOOLBAR);
+
+}
+
+GtkWidget *pm_create_playlist_view(GtkActionGroup *action_group) {
+    GtkBox *vbox;
+
+    vbox = GTK_BOX(gtk_vbox_new (FALSE, 0));
+
+    pm_create_toolbar(action_group);
+    gtk_box_pack_start(vbox, GTK_WIDGET(playlist_toolbar), FALSE, TRUE, 0);
+
+    pm_create_treeview();
+    gtk_box_pack_start(vbox, GTK_WIDGET(playlist_treeview), TRUE, TRUE, 0);
+
+    playlist_viewport = gtk_viewport_new (0, 0);
+    gtk_container_add (GTK_CONTAINER(playlist_viewport), GTK_WIDGET(vbox));
+
+    return playlist_viewport;
 }
 
 Playlist* pm_get_selected_playlist(void) {

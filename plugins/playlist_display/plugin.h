@@ -44,13 +44,22 @@
 #define PLAYLIST_DISPLAY_ADD_PLAYLISTS_ICON_STOCK_ID "playlist_display-add-playlists-icon"
 #define PLAYLIST_DISPLAY_SYNC_ICON_STOCK_ID "playlist_display-sync-icon"
 
+/* Action IDs */
+#define ACTION_LOAD_IPOD "ActionLoadiPod"
+#define ACTION_SAVE_CHANGES "ActionSaveChanges"
+#define ACTION_ADD_FILES "ActionAddFiles"
+#define ACTION_ADD_DIRECTORY "ActionAddDirectory"
+#define ACTION_ADD_PLAYLIST "ActionAddPlaylist"
+#define ACTION_NEW_PLAYLIST "ActionNewPlaylist"
+#define ACTION_NEW_PLAYLIST_MENU "ActionNewPlaylistMenu"
+
 typedef struct _PlaylistDisplayPlugin PlaylistDisplayPlugin;
 typedef struct _PlaylistDisplayPluginClass PlaylistDisplayPluginClass;
 
 struct _PlaylistDisplayPlugin {
     AnjutaPlugin parent;
-    GtkTreeView *playlist_view;
     GtkWidget *pl_window;
+    GtkWidget *playlist_view;
     gint uiid;
     GtkActionGroup *action_group;
 };

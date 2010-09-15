@@ -46,8 +46,8 @@ typedef enum  {
   PM_NUM_COLUMNS
 } PM_column_type;
 
-GtkTreeView* pm_create_treeview (void);
-void pm_destroy_treeview(void);
+GtkWidget *pm_create_playlist_view(GtkActionGroup *action_group);
+void pm_destroy_playlist_view(void);
 void pm_select_playlist(Playlist *playlist);
 void pm_set_selected_playlist(Playlist *pl);
 void pm_remove_all_playlists (gboolean clear_sort);

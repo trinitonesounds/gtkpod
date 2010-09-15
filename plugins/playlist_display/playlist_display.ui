@@ -27,7 +27,7 @@
 					<menuitem name="Selected Playlist including Tracks from Device" action="ActionDeleteSelectedPlaylistIncDev" />
 				</menu>
 				<separator/>
-				<menu name="Playlist Menu" action="NewPlaylistMenu">
+				<menu name="Playlist Menu" action="ActionNewPlaylistMenu">
 					<menuitem name="Empty Playlist" action="ActionNewEmptyPlaylist"/> <!-- on_new_playlist1_activate" --> <!-- playlist -->
                     <menuitem name="Smart Playlist" action="ActionNewSmartPlaylist"/> <!-- on_smart_playlist_activate" -->
                     <menuitem name="Random Playlist from Displayed Tracks" action="ActionNewRandomPlaylist"/> <!-- on_random_playlist_activate -->
@@ -52,35 +52,4 @@
             </placeholder>
    		</menu>
 	</menubar>
-	<toolbar name="ToolbarMain">
-		<placeholder name="PlaceholderMusicToolbar">
-			<toolitem name="Load iPod(s)" action="ActionLoadiPod" />
-			<toolitem name="Save Changes" action="ActionSaveChanges" />
-			<toolitem name="Add Files" action="ActionAddFiles" />
-			<toolitem name="Add Directory" action="ActionAddDirectory" />
-			<toolitem name="Add Playlist" action="ActionAddPlaylist" />
-			<toolitem name="New Playlist" action="ActionNewPlaylist">
-				<menu name="Playlist Menu" action="NewPlaylistMenu">
-					<menuitem name="Empty Playlist" action="ActionNewEmptyPlaylist"/> <!-- on_new_playlist1_activate" --> <!-- playlist -->
-                    <menuitem name="Smart Playlist" action="ActionNewSmartPlaylist"/> <!-- on_smart_playlist_activate" -->
-                    <menuitem name="Random Playlist from Displayed Tracks" action="ActionNewRandomPlaylist"/> <!-- on_random_playlist_activate -->
-                    <menuitem name="Containing Displayed Tracks" action="ActionNewContainingDisplayedPlaylist"/> <!-- on_pl_containing_displayed_tracks_activate -->          
-                    <menuitem name="Containing Selected Tracks" action="ActionNewContainingSelectedPlaylist"/> <!-- on_pl_containing_selected_tracks_activate -->
-                    <menuitem name="Best Rated Tracks" action="ActionNewBestRatedPlaylist"/> <!-- on_most_rated_tracks_playlist_s1_activate -->        
-                    <menuitem name="Tracks Most Often Listened To" action="ActionNewTracksMostOftenPlaylist"/> <!-- on_most_listened_tracks1_activate -->
-                    <menuitem name="Most Recently Played Tracks" action="ActionNewMostRecentPlayledPlaylist"/> <!-- on_most_recent_played_tracks_activate -->
-                    <menuitem name="All Tracks Played Since Last Time" action="ActionNewAllPlayedSinceLastTimePlaylist"/> <!-- on_played_since_last_time1_activate -->
-                    <menuitem name="All Tracks Never Listened To" action="ActionNewAllNeverListenedPlaylist"/> <!-- on_all_tracks_never_listened_to1_activate -->        
-                    <menuitem name="All Tracks not Listed in any Playlist" action="ActionAllNeverListedPlaylist"/> <!-- on_all_tracks_not_listed_in_any_playlist1_activate -->
-                    <separator/>
-                    <menuitem name="One for each Artist" action="ActionNewOnePerArtistPlaylist"/> <!-- on_pl_for_each_artist_activate -->
-                    <menuitem name="One for each Album" action="ActionNewOnePerAlbumPlaylist"/> <!-- on_pl_for_each_album_activate -->
-                    <menuitem name="One for each Genre" action="ActionNewOnePerGenrePlaylist"/> <!-- on_pl_for_each_genre_activate -->        
-                    <menuitem name="One for each Composer" action="ActionNewOnePreComposerPlaylist"/> <!-- on_pl_for_each_composer_activate -->
-                    <menuitem name="One for each Year" action="ActionNewOnePerYearPlaylist"/> <!-- on_pl_for_each_year_activate -->
-                    <menuitem name="One for each Rating" action="ActionNewOnePerRatingPlaylist"/> <!-- on_pl_for_each_rating_activate -->
-				</menu>
-			</toolitem>
-		</placeholder>
-	</toolbar>
 </ui>
