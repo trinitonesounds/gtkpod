@@ -39,7 +39,9 @@
 #include "media_player.h"
 
 #define PLAYER_VOLUME_ICON "media_player-volume-control"
+#define PLAYER_ICON "media_player-player-icon"
 #define PLAYER_VOLUME_ICON_STOCK_ID "media_player-volume-control-icon"
+#define PLAYER_ICON_STOCK_ID "media_player-player-icon"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -54,6 +56,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     register_icon_path(get_plugin_dir(), "media_player");
     register_stock_icon(PLAYER_VOLUME_ICON, PLAYER_VOLUME_ICON_STOCK_ID);
+    register_stock_icon(PLAYER_ICON, PLAYER_ICON_STOCK_ID);
 
     media_player_plugin = (MediaPlayerPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
@@ -83,7 +86,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     // Do not show all as video widget is initially invisible
     gtk_widget_show(media_player_plugin->media_player_window);
-    anjuta_shell_add_widget(plugin->shell, media_player_plugin->media_player_window, "MediaPlayerPlugin", "Media Player", NULL, ANJUTA_SHELL_PLACEMENT_BOTTOM, NULL);
+    anjuta_shell_add_widget(plugin->shell, media_player_plugin->media_player_window, "MediaPlayerPlugin", "  Media Player", PLAYER_ICON_STOCK_ID, ANJUTA_SHELL_PLACEMENT_BOTTOM, NULL);
 
     return TRUE; /* FALSE if activation failed */
 }
