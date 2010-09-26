@@ -31,7 +31,7 @@
 #include "../libgtkpod/directories.h"
 #include "gtkpod.h"
 
-#define LICENSE_FILE "/LICENCE"
+#define LICENSE_FILE "COPYING"
 
 #define ANJUTA_PIXMAP_LOGO			"anjuta_logo.png"
 #define ABOUT_AUTHORS				"AUTHORS"
@@ -159,6 +159,7 @@ GtkWidget *about_box_new() {
         g_error_free(error);
     }
 
+    error = NULL;
     pix = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), GTKPOD_ICON, 64, 0, &error);
     if (!pix) {
         g_warning ("Couldn't load icon: %s", error->message);
