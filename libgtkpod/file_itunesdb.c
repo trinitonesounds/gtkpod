@@ -1625,6 +1625,7 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
     GtkWidget *dialog;
     Playlist *mpl;
     TransferData *transferdata;
+    GList *it;
 
     g_return_val_if_fail (itdb, FALSE);
     eitdb = itdb->userdata;
@@ -1718,6 +1719,10 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
 
         while (widgets_blocked && gtk_events_pending())
             gtk_main_iteration();
+    }
+
+    for (it = itdb->tracks; it != NULL; it = it->next) {
+        gp_track_cleanup_empty_strings ((Itdb_Track *)it->data);
     }
 
     if (success && !get_offline(itdb) && (itdb->usertype & GP_ITDB_TYPE_IPOD)) { /* write to the iPod */
@@ -1829,6 +1834,10 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
         if (success) { /* write extended information */
             success = write_extended_info(itdb);
         }
+    }
+
+    for (it = itdb->tracks; it != NULL; it = it->next) {
+        gp_track_validate_entries ((Itdb_Track *)it->data);
     }
 
     /* If the ipod supports photos and the photo_data_changed

@@ -739,6 +739,44 @@ void gp_track_validate_entries(Track *track) {
     etr->year_str = g_strdup_printf("%d", track->year);
 }
 
+
+static void maybe_cleanup_string (char **str)
+{
+    if (((*str) != NULL) && ((*str)[0] == '\0')) {
+        g_free (*str);
+        *str = NULL;
+    }
+}
+
+void gp_track_cleanup_empty_strings (Track *track)
+{
+    maybe_cleanup_string (&track->title);
+    maybe_cleanup_string (&track->artist);
+    maybe_cleanup_string (&track->album);
+    maybe_cleanup_string (&track->genre);
+    maybe_cleanup_string (&track->composer);
+    maybe_cleanup_string (&track->comment);
+    maybe_cleanup_string (&track->filetype);
+    maybe_cleanup_string (&track->grouping);
+    maybe_cleanup_string (&track->category);
+    maybe_cleanup_string (&track->description);
+    maybe_cleanup_string (&track->podcasturl);
+    maybe_cleanup_string (&track->podcastrss);
+    maybe_cleanup_string (&track->subtitle);
+    maybe_cleanup_string (&track->ipod_path);
+    maybe_cleanup_string (&track->tvshow);
+    maybe_cleanup_string (&track->tvepisode);
+    maybe_cleanup_string (&track->tvnetwork);
+    maybe_cleanup_string (&track->albumartist);
+    maybe_cleanup_string (&track->sort_artist);
+    maybe_cleanup_string (&track->sort_title);
+    maybe_cleanup_string (&track->sort_album);
+    maybe_cleanup_string (&track->sort_albumartist);
+    maybe_cleanup_string (&track->sort_composer);
+    maybe_cleanup_string (&track->sort_tvshow);
+}
+
+
 /* Initialize the itdb data
  *
  * If itdb_n_type/filename/mountpoint... exist in the prefs, that data
