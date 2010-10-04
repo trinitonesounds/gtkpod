@@ -70,7 +70,7 @@ cscope.out
 
 # links from dev env
 /data/AUTHORS
-/data/LICENCE
+/data/COPYING
 /data/glade/gtkpod.glade.h
 /data/glade/details_editor.glade
 /data/glade/coverweb.glade

@@ -145,7 +145,9 @@ gboolean gp_track_set_thumbnails (Track *track, const gchar *filename);
 gboolean gp_track_set_thumbnails_from_data (Track *track,
 					    const guchar *image_data,
 					    gsize image_data_len);
+
 gboolean gp_track_remove_thumbnails (Track *track);
+void gp_track_cleanup_empty_strings (Track *track);
 
 Playlist *gp_playlist_new (const gchar *title, gboolean spl);
 void gp_playlist_add (iTunesDB *itdb, Playlist *pl, gint32 pos);

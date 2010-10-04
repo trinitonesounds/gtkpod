@@ -468,7 +468,7 @@ else
     echo " CoverWeb Browser .....: No"
 fi
 
-if [ $HAVE_PLUGIN_COVERWEB ]; then
+if [ $HAVE_PLUGIN_MEDIA_PLAYER ]; then
     echo " Media Player     .....: Yes"
 else
     echo " Media Player     .....: No"
