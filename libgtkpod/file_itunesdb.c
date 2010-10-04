@@ -1108,7 +1108,7 @@ static gboolean write_extended_info(iTunesDB *itdb) {
             fprintf(fp, "thumbnail_utf8=%s\n", etr->thumb_path_utf8);
         /* this is just for convenience for people looking for a track
          on the ipod away from gktpod/itunes etc. */
-        if (strlen(track->ipod_path) != 0)
+        if (track->ipod_path && strlen(track->ipod_path) != 0)
             fprintf(fp, "filename_ipod=%s\n", track->ipod_path);
         if (etr->sha1_hash && *etr->sha1_hash)
             fprintf(fp, "sha1_hash=%s\n", etr->sha1_hash);

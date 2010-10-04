@@ -71,7 +71,9 @@ static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
             gtkpod_statusbar_message(_("Successfully added files"));
         else
             gtkpod_statusbar_message(_("Some files were not added successfully"));
+
         gtkpod_statusbar_busy_pop();
+        gtkpod_set_current_playlist(db_active_pl);
     }
 }
 
@@ -146,6 +148,7 @@ static void fileselection_add_playlists(GSList* names, iTunesDB *itdb) {
     gp_duplicate_remove(NULL, NULL);
     gtkpod_statusbar_busy_pop();
     gtkpod_tracks_statusbar_update();
+    gtkpod_set_current_playlist(itdb_playlist_mpl(itdb));
 }
 
 /* Open a modal file selection dialog with multiple selction enabled */
@@ -260,7 +263,9 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
         gtkpod_statusbar_message(_("Some files were not added successfully"));
 
     gtkpod_statusbar_busy_pop();
+
     release_widgets();
+    gtkpod_set_current_playlist(playlist);
 }
 
 static gboolean fileselection_add_files_cb(gpointer data) {
