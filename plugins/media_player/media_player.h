@@ -48,11 +48,11 @@ typedef struct {
     gchar *glade_path;
 
     GList *tracks;
+    int track_index;
+
     GThread *thread;
     GMainLoop *loop;
 
-    gboolean previousButtonPressed;
-    gboolean stopButtonPressed;
     gboolean shuffle;
 
     gdouble volume_level;
@@ -62,6 +62,8 @@ typedef struct {
 
 void init_media_player (GtkWidget *parent);
 void destroy_media_player();
+
+void media_player_play_tracks(GList *tracks);
 
 void media_player_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data);
 void media_player_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data);

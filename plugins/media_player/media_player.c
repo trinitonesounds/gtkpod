@@ -48,6 +48,11 @@
 
 static MediaPlayer *player;
 
+// Declarations
+static void thread_play_song();
+static gint thread_stop_song(void *data);
+static gint thread_next_song(void *data);
+
 static int pipeline_bus_watch_cb(GstBus *bus, GstMessage *msg, gpointer data);
 
 static gboolean set_scale_range(GstElement *pipeline) {
@@ -117,56 +122,6 @@ static void update_volume(gdouble value) {
     g_object_set(player->play_element, "volume", player->volume_level, NULL);
 }
 
-static gboolean volume_changed_cb(GtkRange *range, GtkScrollType scroll, gdouble value, gpointer user_data) {
-    update_volume(value);
-    return FALSE;
-}
-
-//static void new_decoded_pad_cb(GstElement *decodebin, GstPad *pad, gboolean last, gpointer data) {
-//    GstCaps *caps;
-//    GstStructure *str;
-//    GstPad *audiopad2;
-//    //    , *videopad2;
-//
-//    if (!player)
-//        return;
-//
-//    /* check media type */
-//    caps = gst_pad_get_caps(pad);
-//    str = gst_caps_get_structure(caps, 0);
-//    const gchar *name = gst_structure_get_name(str);
-//    if (g_strrstr(name, "audio")) {
-//        /* only link once */
-//        audiopad2 = gst_element_get_pad(player->audio, "sink");
-//        if (GST_PAD_IS_LINKED (audiopad2)) {
-//            g_object_unref(audiopad2);
-//            return;
-//        }
-//
-//        /* link'n'play */
-//        gst_pad_link(pad, audiopad2); // Link audiopad to pad or other way around, dunno
-//        //gst_element_link (volume, dec); //Doesn't seem to work...
-//        //volume_changed_callback (vol_scale, volume); //Change volume to default
-//    }
-//
-//    if (g_strrstr(name, "video")) {
-//        // only link once
-//
-//        //        videopad2 = gst_element_get_pad(videoconv, "sink");
-//        //        if (GST_PAD_IS_LINKED (videopad2)) {
-//        //            printf("video pad is linked!unreffing\n");
-//        //            g_object_unref(videopad2);
-//        //            return;
-//        //        }
-//        // link'n'play
-//        //        gst_pad_link(pad, videopad2);
-//        //set_video_mode (TRUE);//Not needed since We can't actually SEE the video
-//    }
-//
-//    gst_caps_unref(caps);
-//
-//}
-
 static void set_song_label(Track *track) {
     if (!track) {
         gtk_label_set_markup(GTK_LABEL(player->song_label), "");
@@ -195,70 +150,26 @@ static void set_song_label(Track *track) {
     g_free(label);
 }
 
-static void thread_play_song() {
-    GstStateChangeReturn sret;
-    GstState state;
-    gchar *track_name;
-    gchar *uri;
-    GstBus *bus;
+static void set_control_state(GstState state) {
 
-    if (!player || !player->tracks)
-        return;
-
-    while (player->tracks) {
-        Track *tr = player->tracks->data;
-        g_return_if_fail(tr);
-        track_name = get_file_name_from_source(tr, SOURCE_PREFER_LOCAL);
-        if (!track_name)
-            continue;
-
+    Track *tr = g_list_nth_data(player->tracks, player->track_index);
+    if (tr) {
         set_song_label(tr);
-
-        /* init GStreamer */
-        player->loop = g_main_loop_new(NULL, FALSE); // make new loop
-
-        uri = g_strconcat("file://", track_name, NULL);
-        player->play_element = gst_element_factory_make("playbin2", "play");
-        g_object_set(G_OBJECT (player->play_element), "uri", uri, NULL);
-        g_object_set(player->play_element, "volume", player->volume_level, NULL);
-
-        bus = gst_pipeline_get_bus(GST_PIPELINE (player->play_element));
-        gst_bus_add_watch(bus, pipeline_bus_watch_cb, player->loop); //Add a watch to the bus
-        gst_object_unref(bus); //unref the bus
-
-        /* run */
-        gst_element_set_state(player->play_element, GST_STATE_PLAYING);// set state
-        g_timeout_add(250, (GSourceFunc) set_scale_range, GST_PIPELINE (player->play_element));
-        g_timeout_add(1000, (GSourceFunc) set_scale_position, GST_PIPELINE (player->play_element));
-        g_main_loop_run(player->loop);
-
-        /* cleanup */
-        sret = gst_element_set_state(player->play_element, GST_STATE_NULL);
-#ifndef NEW_PIPE_PER_FILE
-        if (GST_STATE_CHANGE_ASYNC == sret) {
-            if (gst_element_get_state(GST_ELEMENT (player->play_element), &state, NULL, GST_CLOCK_TIME_NONE)
-                    == GST_STATE_CHANGE_FAILURE) {
-                break;
-            }
-        }
-#endif
-        gst_element_set_state(player->play_element, GST_STATE_NULL);
-        g_free(uri);
-        g_free(track_name);//Free it since it is no longer needed.
-
-
-        if (player->stopButtonPressed)
-            break;
-
-        if (!player->previousButtonPressed)
-            player->tracks = g_list_next(player->tracks);
-        else
-            player->previousButtonPressed = FALSE;
     }
 
-    player->thread = NULL;
-    player->stopButtonPressed = FALSE;
-    g_thread_exit(0);
+    switch (state) {
+    case GST_STATE_PLAYING:
+        gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(player->play_button), GTK_STOCK_MEDIA_PAUSE);
+        break;
+    case GST_STATE_PAUSED:
+        gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(player->play_button), GTK_STOCK_MEDIA_PLAY);
+        break;
+    default:
+        gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(player->play_button), GTK_STOCK_MEDIA_PLAY);
+        gtk_range_set_range(GTK_RANGE(player->song_scale), 0, 1);
+        gtk_range_set_value(GTK_RANGE(player->song_scale), 0);
+        gtk_label_set_text(GTK_LABEL(player->song_time_label), "");
+    }
 }
 
 static void waitforpipeline(int state) {
@@ -268,12 +179,19 @@ static void waitforpipeline(int state) {
     if (!player->loop || !player->thread)
         return;
 
+    if (!player->play_element)
+        return;
+
     GstState istate, ipending;
     gst_element_get_state(player->play_element, &istate, &ipending, GST_CLOCK_TIME_NONE);
 
     if (istate == GST_STATE_VOID_PENDING) {
         return;
     }
+
+    if (istate == state)
+        return;
+
     gst_element_set_state(player->play_element, state);
 
     do {
@@ -284,114 +202,139 @@ static void waitforpipeline(int state) {
         }
     }
     while (istate != state);
-
-    return;
 }
 
-static void stop_song(gboolean stopButtonPressed) {
-    if (!player)
-        return;
+static gboolean is_playing() {
+    if (!player || !player->loop || !player->play_element || !player->thread || !g_main_loop_is_running(player->loop))
+        return FALSE;
 
-    player->stopButtonPressed = stopButtonPressed;
-    if (player->loop && g_main_loop_is_running(player->loop)) {
-        g_main_loop_quit(player->loop);
-    }
+    GstState state, pending;
+    gst_element_get_state(player->play_element, &state, &pending, GST_CLOCK_TIME_NONE);
 
-    waitforpipeline(1);
-    gtk_range_set_range(GTK_RANGE(player->song_scale), 0, 1);
-    gtk_range_set_value(GTK_RANGE(player->song_scale), 0);
-    gtk_label_set_text(GTK_LABEL(player->song_time_label), "");
-    gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(player->play_button), GTK_STOCK_MEDIA_PLAY);
+    if (state == GST_STATE_PLAYING)
+        return TRUE;
+
+    return FALSE;
 }
 
-static void previous_song() {
-    if (!player)
-        return;
+static gboolean is_paused() {
+    if (!player || !player->loop || !player->play_element || !player->thread || !g_main_loop_is_running(player->loop))
+        return FALSE;
 
-    if (!player->tracks)
-        return;
+    GstState state, pending;
+    gst_element_get_state(player->play_element, &state, &pending, GST_CLOCK_TIME_NONE);
 
-    player->previousButtonPressed = TRUE;
-    player->tracks = g_list_previous (player->tracks);
-    stop_song(FALSE);
+    if (state == GST_STATE_PAUSED)
+        return TRUE;
+
+    return FALSE;
 }
 
-static void next_song() {
-    stop_song(FALSE);
-}
-
-static void play_song() {
-    GError *err1 = NULL;
-
-    if (!player)
-        return;
-
-    if (!player->tracks)
-        return;
-
-    if (!g_thread_supported ()) {
-        g_thread_init(NULL);
-        gdk_threads_init();
-    }
-
-    stop_song(TRUE);
-
-    player->stopButtonPressed = FALSE;
-    gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(player->play_button), GTK_STOCK_MEDIA_PLAY);
-
-    player->thread = g_thread_create ((GThreadFunc)thread_play_song, NULL, TRUE, &err1);
-    if (!player->thread) {
-        gtkpod_statusbar_message("GStreamer thread creation failed: %s\n", err1->message);
-        g_error_free(err1);
-    }
-
-    gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(player->play_button), GTK_STOCK_MEDIA_PAUSE);
-}
-
-static void pause_or_play_song() {
-    if (!player)
-        return;
-
-    if (!player->loop || !player->play_element || !player->thread || !g_main_loop_is_running(player->loop)) {
-        play_song();
-        return;
+static gboolean is_stopped() {
+    if (!player || !player->loop || !player->play_element || !player->thread || !g_main_loop_is_running(player->loop)) {
+        return TRUE;
     }
 
     GstState state, pending;
     gst_element_get_state(player->play_element, &state, &pending, GST_CLOCK_TIME_NONE);
 
-    if (state == GST_STATE_PLAYING) {
-        gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(player->play_button), GTK_STOCK_MEDIA_PLAY);
-        gst_element_set_state(player->play_element, GST_STATE_PAUSED);
-    }
-    else if (state == GST_STATE_PAUSED) {
-        gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(player->play_button), GTK_STOCK_MEDIA_PAUSE);
-        gst_element_set_state(player->play_element, GST_STATE_PLAYING);
-    }
+    if (state == GST_STATE_NULL)
+        return TRUE;
+
+    return FALSE;
 }
 
-void seek_to_time(gint64 time_seconds) {
+static void stop_song() {
     if (!player)
         return;
 
-    if (!player->loop || !player->play_element || !player->thread)
+    if (player->loop && g_main_loop_is_running(player->loop)) {
+        g_main_loop_quit(player->loop);
+    }
+
+    waitforpipeline(GST_STATE_NULL);
+
+    player->thread = NULL;
+}
+
+static void pause_or_play_song() {
+    if (!player || !player->tracks)
         return;
 
-    if (!g_main_loop_is_running(player->loop))
+    if (is_stopped()) {
+        GError *err1 = NULL;
+
+        set_control_state(GST_STATE_PLAYING);
+
+        player->thread = g_thread_create ((GThreadFunc)thread_play_song, NULL, TRUE, &err1);
+        if (!player->thread) {
+            gtkpod_statusbar_message("GStreamer thread creation failed: %s\n", err1->message);
+            g_error_free(err1);
+        }
+    } else if (is_playing()) {
+        waitforpipeline(GST_STATE_PAUSED);
+        set_control_state(GST_STATE_PAUSED);
+    } else if (is_paused()) {
+        waitforpipeline(GST_STATE_PLAYING);
+        set_control_state(GST_STATE_PLAYING);
+    }
+}
+
+static void next_song() {
+    gboolean playing = is_playing() || is_paused();
+
+    if (playing) {
+        stop_song();
+    }
+
+    if (player->track_index < g_list_length(player->tracks) - 1) {
+        player->track_index++;
+    } else {
+        player->track_index = 0;
+    }
+
+    set_song_label(g_list_nth_data(player->tracks, player->track_index));
+
+    if (playing) {
+        pause_or_play_song();
+    }
+}
+
+static void previous_song() {
+    gboolean playing = is_playing() || is_paused();
+
+    if (playing) {
+        stop_song();
+    }
+
+    if (player->track_index > 0) {
+        player->track_index--;
+    } else {
+        player->track_index = g_list_length(player->tracks) - 1;
+    }
+
+    set_song_label(g_list_nth_data(player->tracks, player->track_index));
+
+    if (playing)
+        pause_or_play_song();
+}
+
+void seek_to_time(gint64 time_seconds) {
+    if (is_stopped())
         return;
 
     if (!gst_element_seek(player->play_element, 1.0, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, GST_SEEK_TYPE_SET, time_seconds
             * 1000000000, GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE))
-        g_print("Seek failed!\n");
+        gtkpod_statusbar_message("Seek failed!\n");
 }
 
 static int pipeline_bus_watch_cb(GstBus *bus, GstMessage *msg, gpointer data) {
     switch (GST_MESSAGE_TYPE (msg)) {
     case GST_MESSAGE_EOS:
-        stop_song(FALSE);
+        g_idle_add(thread_next_song, NULL);
         break;
     case GST_MESSAGE_ERROR: {
-        stop_song(TRUE);
+        g_idle_add(thread_stop_song, NULL);
         break;
     }
     default:
@@ -401,20 +344,76 @@ static int pipeline_bus_watch_cb(GstBus *bus, GstMessage *msg, gpointer data) {
     return TRUE;
 }
 
-void set_selected_tracks(GList *tracks) {
-    if (!player)
+static void thread_play_song() {
+    gchar *track_name;
+    gchar *uri;
+    GstBus *bus;
+    GError *error;
+
+    if (!player || !player->tracks)
         return;
 
-    stop_song(TRUE);
+    Track *tr = g_list_nth_data(player->tracks, player->track_index);
+    if (!tr)
+        return;
+
+    error = NULL;
+    track_name = get_file_name_from_source(tr, SOURCE_PREFER_LOCAL);
+    if (!track_name)
+        return;
+
+    /* init GStreamer */
+    player->loop = g_main_loop_new(NULL, FALSE); // make new loop
+    uri = g_filename_to_uri (track_name, NULL, &error);
+    g_free(track_name);
+    if (error) {
+        gtkpod_statusbar_message("Failed to play track: %s", error->message);
+        g_free(uri);
+        return;
+    }
+
+    player->play_element = gst_element_factory_make("playbin2", "play");
+    g_object_set(G_OBJECT (player->play_element), "uri", uri, NULL);
+    g_object_set(player->play_element, "volume", player->volume_level, NULL);
+
+    bus = gst_pipeline_get_bus(GST_PIPELINE (player->play_element));
+    gst_bus_add_watch(bus, pipeline_bus_watch_cb, player->loop); //Add a watch to the bus
+    gst_object_unref(bus); //unref the bus
+
+    /* run */
+    gst_element_set_state(player->play_element, GST_STATE_PLAYING);// set state
+    g_timeout_add(250, (GSourceFunc) set_scale_range, GST_PIPELINE (player->play_element));
+    g_timeout_add(1000, (GSourceFunc) set_scale_position, GST_PIPELINE (player->play_element));
+    g_main_loop_run(player->loop);
+
+    g_free(uri);
+
+    gst_element_set_state(player->play_element, GST_STATE_NULL);
+    g_thread_exit(0);
+}
+
+static gint thread_stop_song(void *data) {
+    stop_song();
+    return FALSE; // call only once
+}
+
+static gint thread_next_song(void *data) {
+    next_song();
+    return FALSE; // call only once
+}
+
+void set_selected_tracks(GList *tracks) {
+    if (! tracks)
+        return;
+
+    if (is_playing() || is_paused())
+        return;
 
     if (player->tracks) {
         g_list_free(player->tracks);
         player->tracks = NULL;
         set_song_label(NULL);
     }
-
-    if (! tracks)
-        return;
 
     GList *l = g_list_copy(tracks);
     //Does the same thing as generate_random_playlist()
@@ -471,10 +470,9 @@ void init_media_player(GtkWidget *parent) {
 
     player->thread = NULL;
     player->loop = NULL;
-    player->previousButtonPressed = FALSE;
-    player->stopButtonPressed = FALSE;
     player->shuffle = FALSE;
     player->play_element = NULL;
+    player->track_index = 0;
 
     /* Set the volume based on preference */
     gint volume_mute = prefs_get_int(MEDIA_PLAYER_VOLUME_MUTE);
@@ -506,6 +504,11 @@ void destroy_media_player() {
     player = NULL;
 }
 
+static gboolean on_volume_changed_cb(GtkRange *range, GtkScrollType scroll, gdouble value, gpointer user_data) {
+    update_volume(value);
+    return FALSE;
+}
+
 G_MODULE_EXPORT gboolean on_volume_window_focus_out(GtkWidget *widget, GdkEventFocus *event, gpointer data) {
     GtkWidget *vol_scale = (GtkWidget *) g_object_get_data(G_OBJECT(widget), "scale");
     update_volume(gtk_range_get_value(GTK_RANGE(vol_scale)));
@@ -528,7 +531,7 @@ G_MODULE_EXPORT void on_volume_button_clicked_cb(GtkToolButton *toolbutton, gpoi
     gtk_range_set_value(GTK_RANGE(vol_scale), (player->volume_level * 10));
     g_signal_connect(G_OBJECT (vol_scale),
             "change-value",
-            G_CALLBACK(volume_changed_cb),
+            G_CALLBACK(on_volume_changed_cb),
             NULL);
 
     g_signal_connect (G_OBJECT (vol_window),
@@ -551,7 +554,7 @@ G_MODULE_EXPORT void on_play_button_clicked_cb(GtkToolButton *toolbutton, gpoint
 }
 
 G_MODULE_EXPORT void on_stop_button_clicked_cb(GtkToolButton *toolbutton, gpointer *userdata) {
-    stop_song(TRUE);
+    stop_song();
 }
 
 G_MODULE_EXPORT void on_next_button_clicked_cb(GtkToolButton *toolbutton, gpointer *userdata) {
@@ -561,6 +564,18 @@ G_MODULE_EXPORT void on_next_button_clicked_cb(GtkToolButton *toolbutton, gpoint
 G_MODULE_EXPORT gboolean on_song_scale_change_value_cb(GtkRange *range, GtkScrollType scroll, gdouble value, gpointer user_data) {
     seek_to_time(value);
     return FALSE;
+}
+
+void media_player_play_tracks(GList *tracks) {
+    if (!player)
+        return;
+
+    if (is_playing())
+        stop_song();
+
+    set_selected_tracks(tracks);
+
+    pause_or_play_song();
 }
 
 void media_player_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data) {
