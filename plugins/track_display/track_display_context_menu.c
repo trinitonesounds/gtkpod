@@ -137,8 +137,6 @@ void tm_context_menu_init(void) {
     if (widgets_blocked)
         return;
 
-    tm_stop_editing(TRUE);
-
     GtkWidget *menu = NULL;
     Playlist *pl;
 

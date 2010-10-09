@@ -563,3 +563,40 @@ void gtkpod_edit_photos(iTunesDB *itdb) {
     PhotoEditorInterface *editor_iface = PHOTO_EDITOR_GET_INTERFACE(gp_iface->photo_editor);
     editor_iface->edit_photos(itdb);
 }
+
+void gtkpod_register_track_command(TrackCommandInterface *command) {
+    g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
+    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
+    gp_iface->track_commands = g_list_append(gp_iface->track_commands, command);
+}
+
+void gtkpod_unregister_track_command(TrackCommandInterface *command) {
+    g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
+    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
+    gp_iface->track_commands = g_list_remove(gp_iface->track_commands, command);
+}
+
+void gtkpod_execute_track_command(GList *tracks) {
+    g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
+    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
+
+    if (!tracks) {
+        return;
+    }
+
+    switch(g_list_length(gp_iface->track_commands)) {
+    case 0:
+        // Do nothing
+        break;
+    case 1:
+        ;
+        TrackCommandInterface *command = g_list_nth_data(gp_iface->track_commands, 0);
+        command->execute(tracks);
+        break;
+    default:
+        // Show menu
+        // TODO
+        // FIXME - seems cannot play the vixen files with the parantheses in
+        g_warning("Display context menu of options");
+    }
+}

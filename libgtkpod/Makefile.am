@@ -1,6 +1,7 @@
 lib_LTLIBRARIES = libgtkpod.la
 
 libgtkpod_la_SOURCES =  gtkpod_app_iface.h gtkpod_app_iface.c \
+						track_command_iface.h track_command_iface.c \
 						exporter_iface.h exporter_iface.c \
 						repository_editor_iface.h repository_editor_iface.c \
 						details_editor_iface.h details_editor_iface.c \

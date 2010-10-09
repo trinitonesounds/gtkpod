@@ -47,6 +47,7 @@
 #include "libgtkpod/misc.h"
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/directories.h"
+#include "libgtkpod/gtkpod_app_iface.h"
 #include "display_tracks.h"
 #include "rb_cell_renderer_rating.h"
 #include "sort_window.h"
@@ -307,10 +308,6 @@ static void on_tm_dnd_get_uri_foreach(GtkTreeModel *tm, GtkTreePath *tp, GtkTree
         }
         g_free(name);
     }
-}
-
-static void tm_drag_begin(GtkWidget *widget, GdkDragContext *dc, gpointer user_data) {
-    tm_stop_editing(TRUE);
 }
 
 /* remove dragged playlist after successful MOVE */
@@ -783,160 +780,6 @@ static void tm_rating_edited(RBCellRendererRating *renderer, const gchar *path_s
             gp_duplicate_remove(NULL, NULL);
         }
     }
-}
-
-/* Called when editable cell is being edited. Stores new data to the
- track list. ID3 tags in the corresponding files are updated as
- well, if activated in the pref settings */
-static void tm_cell_edited(GtkCellRendererText *renderer, const gchar *path_string, const gchar *new_text, gpointer data) {
-    GtkTreeModel *model;
-    GtkTreeSelection *selection;
-    TM_item column;
-    gboolean multi_edit;
-    gint sel_rows_num;
-    GList *row_list, *row_node, *first;
-
-    column = (TM_item) g_object_get_data(G_OBJECT(renderer), "column");
-    multi_edit = prefs_get_int("multi_edit");
-    /*  if (column == TM_COLUMN_TITLE)
-     multi_edit &= prefs_get_int("multi_edit_title"); */
-    selection = gtk_tree_view_get_selection(track_treeview);
-    row_list = gtk_tree_selection_get_selected_rows(selection, &model);
-
-    /*   printf("tm_cell_edited: column: %d\n", column); */
-
-    sel_rows_num = g_list_length(row_list);
-
-    /* block widgets and update display if multi-edit is active */
-    if (multi_edit && (sel_rows_num > 1))
-        block_widgets();
-
-    first = g_list_first(row_list);
-
-    for (row_node = first; row_node && (multi_edit || (row_node == first)); row_node = g_list_next(row_node)) {
-        Track *track;
-        ExtraTrackData *etr;
-        gboolean changed = FALSE;
-        GtkTreeIter iter;
-        gchar *str;
-
-        gtk_tree_model_get_iter(model, &iter, (GtkTreePath *) row_node->data);
-        gtk_tree_model_get(model, &iter, READOUT_COL, &track, -1);
-        g_return_if_fail (track);
-        etr = track->userdata;
-        g_return_if_fail (etr);
-
-        changed = FALSE;
-
-        switch (column) {
-        case TM_COLUMN_TITLE:
-        case TM_COLUMN_ALBUM:
-        case TM_COLUMN_ALBUMARTIST:
-        case TM_COLUMN_ARTIST:
-        case TM_COLUMN_GENRE:
-        case TM_COLUMN_COMPOSER:
-        case TM_COLUMN_COMMENT:
-        case TM_COLUMN_FILETYPE:
-        case TM_COLUMN_GROUPING:
-        case TM_COLUMN_CATEGORY:
-        case TM_COLUMN_DESCRIPTION:
-        case TM_COLUMN_PODCASTURL:
-        case TM_COLUMN_PODCASTRSS:
-        case TM_COLUMN_SUBTITLE:
-        case TM_COLUMN_TRACK_NR:
-        case TM_COLUMN_TRACKLEN:
-        case TM_COLUMN_CD_NR:
-        case TM_COLUMN_YEAR:
-        case TM_COLUMN_PLAYCOUNT:
-        case TM_COLUMN_RATING:
-        case TM_COLUMN_TIME_ADDED:
-        case TM_COLUMN_TIME_PLAYED:
-        case TM_COLUMN_TIME_MODIFIED:
-        case TM_COLUMN_TIME_RELEASED:
-        case TM_COLUMN_VOLUME:
-        case TM_COLUMN_SOUNDCHECK:
-        case TM_COLUMN_BITRATE:
-        case TM_COLUMN_SAMPLERATE:
-        case TM_COLUMN_BPM:
-        case TM_COLUMN_MEDIA_TYPE:
-        case TM_COLUMN_TV_SHOW:
-        case TM_COLUMN_TV_EPISODE:
-        case TM_COLUMN_TV_NETWORK:
-        case TM_COLUMN_SEASON_NR:
-        case TM_COLUMN_EPISODE_NR:
-        case TM_COLUMN_SORT_TITLE:
-        case TM_COLUMN_SORT_ALBUM:
-        case TM_COLUMN_SORT_ALBUMARTIST:
-        case TM_COLUMN_SORT_COMPOSER:
-        case TM_COLUMN_SORT_TVSHOW:
-        case TM_COLUMN_SORT_ARTIST:
-            changed = track_set_text(track, new_text, TM_to_T(column));
-            if (changed && (column == TM_COLUMN_TRACKLEN)) { /* be on the safe side and reset starttime, stoptime and
-             * filesize */
-                gchar *path = get_file_name_from_source(track, SOURCE_PREFER_LOCAL);
-                track->starttime = 0;
-                track->stoptime = 0;
-                if (path) {
-                    struct stat filestat;
-                    stat(path, &filestat);
-                    track->size = filestat.st_size;
-                }
-            }
-            /* redisplay some items to be on the safe side */
-            switch (column) {
-            case TM_COLUMN_TRACK_NR:
-            case TM_COLUMN_CD_NR:
-            case TM_COLUMN_TRACKLEN:
-            case TM_COLUMN_TIME_ADDED:
-            case TM_COLUMN_TIME_PLAYED:
-            case TM_COLUMN_TIME_MODIFIED:
-            case TM_COLUMN_TIME_RELEASED:
-                str = track_get_text(track, TM_to_T(column));
-                g_object_set(G_OBJECT (renderer), "text", str, NULL);
-                g_free(str);
-                break;
-            default:
-                break;
-            }
-            break;
-        case TM_COLUMN_IPOD_ID:
-        case TM_COLUMN_PC_PATH:
-        case TM_COLUMN_TRANSFERRED:
-        case TM_COLUMN_SIZE:
-        case TM_COLUMN_IPOD_PATH:
-        case TM_COLUMN_COMPILATION:
-        case TM_COLUMN_THUMB_PATH:
-        case TM_COLUMN_LYRICS:
-        case TM_NUM_COLUMNS:
-            /* These are not editable text fields */
-            break;
-        }
-        /*      printf ("  changed: %d\n", changed); */
-        if (changed) {
-            track->time_modified = time(NULL);
-            gtkpod_track_updated (track);    /* notify playlist model... */
-            data_changed(track->itdb); /* indicate that data has changed */
-
-            if (prefs_get_int("id3_write")) {
-                /* T_item tag_id;*/
-                /* should we update all ID3 tags or just the one
-                 changed? -- obsoleted in 0.71*/
-                /*           if (prefs_get_id3_writeall ()) tag_id = T_ALL;
-                 else                           tag_id = TM_to_T (column);*/
-                write_tags_to_file(track);
-                /* display possible duplicates that have been removed */
-                gp_duplicate_remove(NULL, NULL);
-            }
-        }
-        while (widgets_blocked && gtk_events_pending())
-            gtk_main_iteration();
-    }
-
-    if (multi_edit && (sel_rows_num > 1))
-        release_widgets();
-
-    g_list_foreach(row_list, (GFunc) gtk_tree_path_free, NULL);
-    g_list_free(row_list);
 }
 
 static void update_text_column_layout(GtkTreeViewColumn *tree_column, GtkCellRenderer *renderer, const gchar* text) {
@@ -1439,37 +1282,6 @@ tm_get_all_tracks(void) {
     return result;
 }
 
-static void cell_renderer_stop_editing(GtkCellRenderer *renderer, gpointer user_data) {
-    gtk_cell_renderer_stop_editing (renderer, (gboolean) GPOINTER_TO_INT(user_data));
-}
-
-/* Stop editing. If @cancel is TRUE, the edited value will be
- discarded (I have the feeling that the "discarding" part does not
- work quite the way intended). */
-void tm_stop_editing(gboolean cancel) {
-    GtkTreeViewColumn *col;
-
-    if (!track_treeview)
-        return;
-
-    gtk_tree_view_get_cursor(track_treeview, NULL, &col);
-    if (col) {
-        GList *cells;
-
-        /* Before removing the widget we set multi_edit to FALSE. That
-         way at most one entry will be changed (this also doesn't
-         seem to work the way intended) */
-        gboolean me = prefs_get_int("multi_edit");
-        prefs_set_int("multi_edit", FALSE);
-
-        cells = gtk_cell_layout_get_cells(GTK_CELL_LAYOUT (col));
-        g_list_foreach(cells, (GFunc) cell_renderer_stop_editing, GINT_TO_POINTER((gint) cancel));
-        g_list_free(cells);
-
-        prefs_set_int("multi_edit", me);
-    }
-}
-
 /* Function to compare @tm_item of @track1 and @track2. Used by
  tm_data_compare_func() */
 static gint tm_data_compare(Track *track1, Track *track2, TM_item tm_item) {
@@ -1943,84 +1755,6 @@ void tm_sort(TM_item col, GtkSortType order) {
     }
 }
 
-static void tm_setup_renderer(GtkCellRenderer *renderer) {
-    TM_item column;
-    column = (TM_item) g_object_get_data(G_OBJECT (renderer), "column");
-
-    g_return_if_fail ((column >= 0) && (column < TM_NUM_COLUMNS));
-
-    switch (column) {
-    case TM_COLUMN_TITLE:
-    case TM_COLUMN_ARTIST:
-    case TM_COLUMN_ALBUM:
-    case TM_COLUMN_GENRE:
-    case TM_COLUMN_COMPOSER:
-    case TM_COLUMN_COMMENT:
-    case TM_COLUMN_FILETYPE:
-    case TM_COLUMN_GROUPING:
-    case TM_COLUMN_CATEGORY:
-    case TM_COLUMN_DESCRIPTION:
-    case TM_COLUMN_PODCASTURL:
-    case TM_COLUMN_PODCASTRSS:
-    case TM_COLUMN_SUBTITLE:
-    case TM_COLUMN_TIME_PLAYED:
-    case TM_COLUMN_TIME_MODIFIED:
-    case TM_COLUMN_TIME_ADDED:
-    case TM_COLUMN_TIME_RELEASED:
-    case TM_COLUMN_TV_SHOW:
-    case TM_COLUMN_TV_EPISODE:
-    case TM_COLUMN_TV_NETWORK:
-    case TM_COLUMN_ALBUMARTIST:
-    case TM_COLUMN_SORT_ARTIST:
-    case TM_COLUMN_SORT_TITLE:
-    case TM_COLUMN_SORT_ALBUM:
-    case TM_COLUMN_SORT_ALBUMARTIST:
-    case TM_COLUMN_SORT_COMPOSER:
-    case TM_COLUMN_SORT_TVSHOW:
-        g_object_set(G_OBJECT (renderer), "editable", TRUE, "xalign", 0.0, NULL);
-        break;
-    case TM_COLUMN_MEDIA_TYPE:
-        g_object_set(G_OBJECT (renderer), "editable", FALSE, "xalign", 0.0, NULL);
-        break;
-    case TM_COLUMN_TRACK_NR:
-    case TM_COLUMN_CD_NR:
-    case TM_COLUMN_BITRATE:
-    case TM_COLUMN_SAMPLERATE:
-    case TM_COLUMN_BPM:
-    case TM_COLUMN_PLAYCOUNT:
-    case TM_COLUMN_YEAR:
-    case TM_COLUMN_VOLUME:
-    case TM_COLUMN_SOUNDCHECK:
-    case TM_COLUMN_TRACKLEN:
-    case TM_COLUMN_SEASON_NR:
-    case TM_COLUMN_EPISODE_NR:
-        g_object_set(G_OBJECT (renderer), "editable", TRUE, "xalign", 1.0, NULL);
-        break;
-    case TM_COLUMN_IPOD_ID:
-    case TM_COLUMN_SIZE:
-        g_object_set(G_OBJECT (renderer), "editable", FALSE, "xalign", 1.0, NULL);
-        break;
-    case TM_COLUMN_PC_PATH:
-    case TM_COLUMN_IPOD_PATH:
-    case TM_COLUMN_THUMB_PATH:
-        g_object_set(G_OBJECT (renderer), "editable", FALSE, "xalign", 0.0, NULL);
-        break;
-    case TM_COLUMN_LYRICS:
-        g_object_set(G_OBJECT (renderer), "activatable", TRUE, NULL);
-        break;
-    case TM_COLUMN_TRANSFERRED:
-        g_object_set(G_OBJECT (renderer), "activatable", FALSE, NULL);
-        break;
-    case TM_COLUMN_COMPILATION:
-        g_object_set(G_OBJECT (renderer), "activatable", TRUE, NULL);
-        break;
-    case TM_COLUMN_RATING:
-        break;
-    case TM_NUM_COLUMNS:
-        g_return_if_reached();
-    }
-}
-
 /* Adds the columns to our track_treeview */
 static GtkTreeViewColumn *tm_add_column(TM_item tm_item, gint pos) {
     GtkTreeModel *model = gtk_tree_view_get_model(track_treeview);
@@ -2102,7 +1836,7 @@ static GtkTreeViewColumn *tm_add_column(TM_item tm_item, gint pos) {
         text = _("ID");
         break;
     case TM_COLUMN_TRANSFERRED:
-        text = _("Trnsfrd");
+        text = _("Transferred");
         renderer = gtk_cell_renderer_toggle_new();
         cell_data_func = tm_cell_data_toggle_func;
         break;
@@ -2159,17 +1893,12 @@ static GtkTreeViewColumn *tm_add_column(TM_item tm_item, gint pos) {
                     G_CALLBACK (tm_rating_edited), NULL);
         }
         else {
-            /* text renderer -- editable/not editable is done in
-             tm_cell_data_func() */
+            /* text renderer */
             renderer = gtk_cell_renderer_text_new();
-            g_signal_connect (G_OBJECT (renderer), "edited",
-                    G_CALLBACK (tm_cell_edited), model);
         }
     }
 
     g_object_set_data(G_OBJECT (renderer), "column", (gint *) tm_item);
-
-    tm_setup_renderer(renderer);
 
     gtk_tree_view_column_set_title(col, text);
     gtk_tree_view_column_pack_start(col, renderer, FALSE);
@@ -2241,6 +1970,11 @@ static gboolean tm_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer 
     return (FALSE);
 }
 
+static void tm_row_activated_event(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data) {
+    GList *tracks = tm_get_selected_tracks();
+    gtkpod_execute_track_command(tracks);
+}
+
 static gboolean tm_selection_changed_cb(gpointer data) {
     GtkTreeView *treeview = GTK_TREE_VIEW (data);
     GtkTreePath *path;
@@ -2300,27 +2034,11 @@ static void tm_create_treeview(void) {
             NULL);
 
     tm_add_columns();
-    /*   gtk_drag_source_set (GTK_WIDGET (track_treeview), GDK_BUTTON1_MASK, */
-    /* 		       tm_drag_types, TGNR (tm_drag_types), */
-    /* 		       GDK_ACTION_COPY|GDK_ACTION_MOVE); */
-    /*   gtk_tree_view_enable_model_drag_dest(track_treeview, tm_drop_types, */
-    /* 				       TGNR (tm_drop_types), */
-    /* 				       GDK_ACTION_COPY|GDK_ACTION_MOVE); */
-    /*   /\* need the gtk_drag_dest_set() with no actions ("0") so that the */
-    /*      data_received callback gets the correct info value. This is most */
-    /*      likely a bug... *\/ */
-    /*   gtk_drag_dest_set_target_list (GTK_WIDGET (track_treeview), */
-    /* 				 gtk_target_list_new (tm_drop_types, */
-    /* 						      TGNR (tm_drop_types))); */
 
     gtk_drag_source_set(GTK_WIDGET (track_treeview), GDK_BUTTON1_MASK, tm_drag_types, TGNR (tm_drag_types), GDK_ACTION_COPY
             | GDK_ACTION_MOVE);
     gtk_drag_dest_set(GTK_WIDGET (track_treeview), 0, tm_drop_types, TGNR (tm_drop_types), GDK_ACTION_COPY
             | GDK_ACTION_MOVE);
-
-    g_signal_connect ((gpointer) track_treeview, "drag-begin",
-            G_CALLBACK (tm_drag_begin),
-            NULL);
 
     g_signal_connect ((gpointer) track_treeview, "drag-data-delete",
             G_CALLBACK (tm_drag_data_delete),
@@ -2356,6 +2074,9 @@ static void tm_create_treeview(void) {
     g_signal_connect ((gpointer) track_treeview, "button-press-event",
             G_CALLBACK (tm_button_press_event),
             NULL);
+    g_signal_connect ((gpointer) track_treeview, "row-activated",
+                G_CALLBACK (tm_row_activated_event),
+                NULL);
     g_signal_connect (G_OBJECT (model), "sort-column-changed",
             G_CALLBACK (tm_sort_column_changed),
             (gpointer)0);

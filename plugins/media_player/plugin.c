@@ -84,6 +84,8 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     init_media_player(media_player_plugin->media_player_window);
 
+    gtkpod_register_track_command(TRACK_COMMAND_GET_INTERFACE(media_player_plugin));
+
     // Do not show all as video widget is initially invisible
     gtk_widget_show(media_player_plugin->media_player_window);
     anjuta_shell_add_widget(plugin->shell, media_player_plugin->media_player_window, "MediaPlayerPlugin", "  Media Player", PLAYER_ICON_STOCK_ID, ANJUTA_SHELL_PLACEMENT_BOTTOM, NULL);
@@ -97,6 +99,8 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
 
     media_player_plugin = (MediaPlayerPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
+
+    gtkpod_unregister_track_command(TRACK_COMMAND_GET_INTERFACE(media_player_plugin));
 
     /* Destroy the browser */
     destroy_media_player();
@@ -160,7 +164,12 @@ static void media_player_plugin_class_init(GObjectClass *klass) {
 //    iface->unmerge = ipreferences_unmerge;
 //}
 
+static void track_command_iface_init(TrackCommandInterface *iface) {
+    iface->execute = media_player_play_tracks;
+}
+
 ANJUTA_PLUGIN_BEGIN (MediaPlayerPlugin, media_player_plugin);
+ANJUTA_PLUGIN_ADD_INTERFACE(track_command, TRACK_COMMAND_TYPE);
 //        ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);
 ANJUTA_PLUGIN_END;
 
