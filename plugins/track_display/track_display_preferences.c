@@ -230,12 +230,58 @@ G_MODULE_EXPORT void on_horizontal_scrollbar_toggled (GtkToggleButton *sender, g
     tm_show_preferred_columns ();
 }
 
+static void trkcmd_combobox_changed(GtkComboBox *combo) {
+    gint activeindex = gtk_combo_box_get_active(combo);
+
+    if (activeindex > -1) {
+        GList *cmds = g_object_get_data(G_OBJECT(combo), "cmds");
+        TrackCommandInterface *cmd = g_list_nth_data(cmds, activeindex);
+        prefs_set_string(DEFAULT_TRACK_COMMAND_PREF_KEY, cmd->id);
+    }
+}
+
+static void populate_track_cmd_combo(GtkComboBox *combo) {
+    GtkListStore *store;
+    GtkCellRenderer *cell;
+    GList *trkcmds = gtkpod_get_registered_track_commands();
+    gint i = 0, activeindex = -1;
+
+    g_object_set_data(G_OBJECT(combo), "cmds", trkcmds);
+
+    store = gtk_list_store_new(1, G_TYPE_STRING);
+    gtk_combo_box_set_model(combo, GTK_TREE_MODEL (store));
+    g_object_unref(store);
+
+    cell = gtk_cell_renderer_text_new();
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT (combo), cell, TRUE);
+    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT (combo), cell, "text", 0, NULL);
+
+    gchar *cmdpref = NULL;
+    prefs_get_string_value(DEFAULT_TRACK_COMMAND_PREF_KEY, &cmdpref);
+
+    for (i = 0; i < g_list_length(trkcmds); ++i) {
+        TrackCommandInterface *cmd = g_list_nth_data(trkcmds, i);
+        gtk_combo_box_append_text(combo, _(cmd->text));
+        if (cmdpref && g_str_equal(cmdpref, cmd->id))
+            activeindex = i;
+    }
+
+    if (activeindex > -1)
+        gtk_combo_box_set_active(combo, activeindex);
+
+    g_signal_connect (combo, "changed",
+                    G_CALLBACK (trkcmd_combobox_changed),
+                    NULL);
+}
+
 GtkWidget *init_track_display_preferences() {
     GladeXML *pref_xml;
+    GtkComboBox *cmd_combo;
 
     gchar *glade_path = g_build_filename(get_glade_dir(), "track_display.glade", NULL);
     pref_xml = gtkpod_xml_new(glade_path, "track_settings_notebook");
     notebook = gtkpod_xml_get_widget(pref_xml, "track_settings_notebook");
+    cmd_combo = GTK_COMBO_BOX(gtkpod_xml_get_widget(pref_xml, "track_exec_cmd_combo"));
     displayed_columns_view = gtkpod_xml_get_widget(pref_xml, "displayed_columns");
     g_object_ref(notebook);
     g_free(glade_path);
@@ -243,6 +289,8 @@ GtkWidget *init_track_display_preferences() {
     setup_column_tree (GTK_TREE_VIEW(displayed_columns_view), TRUE);
 
     glade_xml_signal_autoconnect(pref_xml);
+
+    populate_track_cmd_combo(cmd_combo);
 
     return notebook;
 }

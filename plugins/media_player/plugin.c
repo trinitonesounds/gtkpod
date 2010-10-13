@@ -165,6 +165,8 @@ static void media_player_plugin_class_init(GObjectClass *klass) {
 //}
 
 static void track_command_iface_init(TrackCommandInterface *iface) {
+    iface->id = "media_player_play_track_command";
+    iface->text = _("Play");
     iface->execute = media_player_play_tracks;
 }
 

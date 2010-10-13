@@ -34,6 +34,8 @@
 #include "gtkpod_app_iface.h"
 #include "gtkpod_app-marshallers.h"
 #include "misc.h"
+#include "context_menus.h"
+#include "prefs.h"
 
 static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
     static gboolean initialized = FALSE;
@@ -576,6 +578,44 @@ void gtkpod_unregister_track_command(TrackCommandInterface *command) {
     gp_iface->track_commands = g_list_remove(gp_iface->track_commands, command);
 }
 
+static void execute_track_command(GtkMenuItem *mi, gpointer data) {
+    GPtrArray *pairarr = (GPtrArray *) data;
+
+    TrackCommandInterface *cmd = g_ptr_array_index(pairarr, 0);
+    GList *tracks = g_ptr_array_index(pairarr, 1);
+
+    cmd->execute(tracks);
+    g_ptr_array_free(pairarr, FALSE);
+}
+
+static void gtkpod_display_command_ctx_menu(GList *track_cmds, GList *tracks) {
+    GtkWidget *menu = NULL;
+    GList *cmds;
+
+    if (!track_cmds)
+        return;
+
+    if (!tracks)
+        return;
+
+    if (widgets_blocked)
+        return;
+
+    menu = gtk_menu_new();
+    cmds = track_cmds;
+
+    while(cmds != NULL) {
+        TrackCommandInterface *cmd = cmds->data;
+        GPtrArray *pairarr = g_ptr_array_new ();
+        g_ptr_array_add (pairarr, cmd);
+        g_ptr_array_add (pairarr, tracks);
+        hookup_menu_item(menu, cmd->text, GTK_STOCK_EXECUTE, G_CALLBACK (execute_track_command), pairarr);
+        cmds = cmds->next;
+    }
+
+    gtk_menu_popup(GTK_MENU (menu), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time());
+}
+
 void gtkpod_execute_track_command(GList *tracks) {
     g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
     GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
@@ -590,13 +630,30 @@ void gtkpod_execute_track_command(GList *tracks) {
         break;
     case 1:
         ;
-        TrackCommandInterface *command = g_list_nth_data(gp_iface->track_commands, 0);
-        command->execute(tracks);
+        TrackCommandInterface *cmd = g_list_nth_data(gp_iface->track_commands, 0);
+        cmd->execute(tracks);
         break;
     default:
-        // Show menu
-        // TODO
-        // FIXME - seems cannot play the vixen files with the parantheses in
-        g_warning("Display context menu of options");
+        ;
+        // More than one so see if there is a preference set
+        gchar *cmdpref = NULL;
+        if (prefs_get_string_value(DEFAULT_TRACK_COMMAND_PREF_KEY, &cmdpref)) {
+            for (gint i = 0; i < g_list_length(gp_iface->track_commands); ++i) {
+                TrackCommandInterface *cmd = g_list_nth_data(gp_iface->track_commands, i);
+                if (cmdpref && g_str_equal(cmdpref, cmd->id)) {
+                    cmd->execute(tracks);
+                    return;
+                }
+            }
+        }
+
+        // Otherwise show the menu
+        gtkpod_display_command_ctx_menu(gp_iface->track_commands, tracks);
     }
+}
+
+GList *gtkpod_get_registered_track_commands() {
+    g_return_val_if_fail(GTKPOD_IS_APP(gtkpod_app), NULL);
+    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
+    return g_list_copy(gp_iface->track_commands);
 }

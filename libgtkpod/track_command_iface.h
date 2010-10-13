@@ -36,12 +36,16 @@
 #include <gtk/gtk.h>
 #include "itdb.h"
 
+#define DEFAULT_TRACK_COMMAND_PREF_KEY "default_track_display_track_command"
+
 typedef struct _TrackCommand TrackCommand;
 typedef struct _TrackCommandInterface TrackCommandInterface;
 
 struct _TrackCommandInterface {
     GTypeInterface g_iface;
 
+    gchar *id;
+    gchar *text;
     void (*execute)(GList *tracks);
 };
 

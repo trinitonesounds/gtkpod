@@ -234,6 +234,7 @@ void gtkpod_edit_photos(iTunesDB *itdb);
 void gtkpod_register_track_command(TrackCommandInterface *command);
 void gtkpod_unregister_track_command(TrackCommandInterface *command);
 void gtkpod_execute_track_command(GList *tracks);
+GList *gtkpod_get_registered_track_commands();
 
 GtkPodApp *gtkpod_app;
 guint gtkpod_app_signals[LAST_SIGNAL];
