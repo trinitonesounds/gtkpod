@@ -8,7 +8,7 @@ playlist_display_ui_DATA = $(plugin_name).ui
 
 # Plugin Glade file - No glade/xml file
 playlist_display_gladedir = $(gtkpod_glade_dir)
-playlist_display_glade_DATA =
+playlist_display_glade_DATA = $(plugin_name).glade
 
 # Plugin Toolbar file
 playlist_display_toolbardir = $(gtkpod_glade_dir)
@@ -48,7 +48,8 @@ plugin_LTLIBRARIES = libplaylist_display.la
 libplaylist_display_la_SOURCES = plugin.c plugin.h \
 								 display_playlists.c display_playlists.h \
 								 playlist_display_actions.c playlist_display_actions.h \
-								 playlist_display_context_menu.c playlist_display_context_menu.h
+								 playlist_display_context_menu.c playlist_display_context_menu.h \
+								 playlist_display_preferences.c playlist_display_preferences.h
 
 libplaylist_display_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
@@ -65,7 +66,7 @@ EXTRA_DIST = \
 	$(playlist_display_toolbar_DATA) \
 	$(playlist_display_pixmaps_DATA)
 
-all-local: create-plugin-links create-ui-link create-toolbar-link
+all-local: create-plugin-links create-ui-link create-glade-link
 
 # Creating symbolic links in plugin root directory
 create-plugin-links:
@@ -82,8 +83,18 @@ create-ui-link:
 	if [ ! -e ../../data/ui/$(plugin_name).ui ]; then \
 		ln -s `pwd`/$(plugin_name).ui ../../data/ui/$(plugin_name).ui; \
 	fi;
-
-create-toolbar-link:
+	
+create-glade-link:
+	if  [ -e `pwd`/$(plugin_name).glade ]; then \
+		if  [ ! -e ../../data/glade/$(plugin_name).glade ]; then \
+			ln -s `pwd`/$(plugin_name).glade ../../data/glade/$(plugin_name).glade; \
+		fi; \
+	fi; \
+	if  [ -e `pwd`/$(plugin_name).xml ]; then \
+		if  [ ! -e ../../data/glade/$(plugin_name).xml ]; then \
+			ln -s `pwd`/$(plugin_name).xml ../../data/glade/$(plugin_name).xml; \
+		fi; \
+	fi; \
 	if  [ -e `pwd`/$(plugin_name)_toolbar.xml ]; then \
 		if  [ ! -e ../../data/glade/$(plugin_name)_toolbar.xml ]; then \
 			ln -s `pwd`/$(plugin_name)_toolbar.xml ../../data/glade/$(plugin_name)_toolbar.xml; \
@@ -102,8 +113,14 @@ clean-ui-dir:
 	if [ -h ../../data/ui/$(plugin_name).ui ]; then \
 		rm -f ../../data/ui/$(plugin_name).ui; \
 	fi;
-
+	
 clean-glade-dir:
+	if  [ -h ../../data/glade/$(plugin_name).glade ]; then \
+		rm -f ../../data/glade/$(plugin_name).glade; \
+	fi; \
+		if  [ -h ../../data/glade/$(plugin_name).xml ]; then \
+		rm -f ../../data/glade/$(plugin_name).xml; \
+	fi; \
 	if  [ -h ../../data/glade/$(plugin_name)_toolbar.xml ]; then \
 		rm -f ../../data/glade/$(plugin_name)_toolbar.xml; \
 	fi;

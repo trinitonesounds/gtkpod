@@ -1380,9 +1380,6 @@ static void pm_unsort() {
 
     pm_set_selected_playlist(cur_pl);
 
-    /* add playlists back to model (without selecting) */
-    pm_add_all_itdbs();
-
     pm_selection_blocked = FALSE;
     /* reset sort counter */
     pm_sort_counter(-1);
@@ -1484,8 +1481,6 @@ gint pm_data_compare_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, g
     GtkSortType order;
     gint corr, colid;
 
-    return 0; /* FIXME: see below -- deactivated for now */
-
     g_return_val_if_fail (model, 0);
     g_return_val_if_fail (a, 0);
     g_return_val_if_fail (b, 0);
@@ -1493,14 +1488,11 @@ gint pm_data_compare_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, g
     if (gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE (model), &colid, &order) == FALSE)
         return 0;
 
+    if (order == SORT_NONE)
+        return 0;
+
     gtk_tree_model_get(model, a, colid, &playlist1, -1);
     gtk_tree_model_get(model, b, colid, &playlist2, -1);
-
-    /* FIXME: this function crashes because it is provided illegal
-     * GtkTreeIters. */
-    /* FIXME: after the introduction of a GtkTreeView rather than a
-     * ListView, sorting should be done by a customs sort mechanism
-     * anyway. */
 
     g_return_val_if_fail (playlist1 && playlist2, 0);
 
@@ -1509,8 +1501,13 @@ gint pm_data_compare_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, g
         corr = +1;
     else
         corr = -1;
+
+    if (itdb_playlist_is_mpl(playlist1) && itdb_playlist_is_mpl(playlist2))
+        return 0; // Don't resort mpl playlists - only sub playlists
+
     if (itdb_playlist_is_mpl(playlist1))
         return (-corr);
+
     if (itdb_playlist_is_mpl(playlist2))
         return (corr);
 
@@ -1852,18 +1849,12 @@ static void pm_add_columns(void) {
     /* playlist column */
     column = gtk_tree_view_column_new();
     gtk_tree_view_column_set_title(column, _("Playlists"));
-    /* FIXME: see comments at pm_data_compare_func() */
-    /*
-     gtk_tree_view_column_set_sort_column_id (column, PM_COLUMN_PLAYLIST);
-     gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
-     gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
-     PM_COLUMN_PLAYLIST,
-     pm_data_compare_func, column, NULL);
-     gtk_tree_view_column_set_clickable(column, TRUE);
-     g_signal_connect (G_OBJECT (column), "clicked",
-     G_CALLBACK (pm_track_column_button_clicked),
-     (gpointer)PM_COLUMN_PLAYLIST);
-     */
+
+    gtk_tree_view_column_set_sort_column_id (column, PM_COLUMN_PLAYLIST);
+    gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
+    gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
+            PM_COLUMN_PLAYLIST,
+            pm_data_compare_func, column, NULL);
 
     gtk_tree_view_append_column(playlist_treeview, column);
 
@@ -1895,26 +1886,27 @@ void pm_destroy_playlist_view(void) {
 static void pm_create_treeview(void) {
     GtkTreeStore *model;
     GtkTreeSelection *selection;
-    GtkWidget *tree;
 
     /* destroy old treeview */
-    if (playlist_treeview) {
+    if (! playlist_treeview) {
+        /* create new one */
+        playlist_treeview = GTK_TREE_VIEW (gtk_tree_view_new());
+        gtk_widget_set_events(GTK_WIDGET(playlist_treeview), GDK_KEY_RELEASE_MASK);
+    } else {
         model = GTK_TREE_STORE (gtk_tree_view_get_model(playlist_treeview));
         g_return_if_fail (model);
         g_object_unref(model);
-        gtk_widget_destroy(GTK_WIDGET (playlist_treeview));
-        playlist_treeview = NULL;
+        GList *columns = gtk_tree_view_get_columns(playlist_treeview);
+        while (columns != NULL) {
+            GtkTreeViewColumn *column = columns->data;
+            gtk_tree_view_remove_column(playlist_treeview, column);
+            columns = columns->next;
+        }
+        g_list_free(columns);
     }
-
-    /* create new one */
-    tree = gtk_tree_view_new();
-    gtk_widget_set_events(tree, GDK_KEY_RELEASE_MASK);
-    gtk_widget_show(tree);
-    playlist_treeview = GTK_TREE_VIEW (tree);
 
     /* create model */
     model = gtk_tree_store_new(PM_NUM_COLUMNS, G_TYPE_POINTER, G_TYPE_INT, G_TYPE_POINTER, G_TYPE_POINTER);
-
     /* set tree model */
     gtk_tree_view_set_model(playlist_treeview, GTK_TREE_MODEL (model));
     /* gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (playlist_treeview), TRUE); */
@@ -2004,6 +1996,8 @@ GtkWidget *pm_create_playlist_view(GtkActionGroup *action_group) {
     gtk_box_pack_start(vbox, GTK_WIDGET(playlist_toolbar), FALSE, TRUE, 0);
 
     pm_create_treeview();
+    pm_sort(prefs_get_int("pm_sort"));
+
     gtk_box_pack_start(vbox, GTK_WIDGET(playlist_treeview), TRUE, TRUE, 0);
 
     playlist_viewport = gtk_viewport_new (0, 0);
@@ -2141,7 +2135,7 @@ void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer 
 
 void playlist_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data) {
     gchar *pref_name = pfname;
-    if (g_str_equal(pref_name, "pm_sort")) {
+    if (g_str_equal(pref_name, "pm_sort") || g_str_equal(pref_name, "case_sensitive")) {
         pm_sort(value);
     }
 }

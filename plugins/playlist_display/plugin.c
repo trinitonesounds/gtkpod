@@ -31,6 +31,7 @@
 #endif
 
 #include <glib.h>
+#include <libanjuta/interfaces/ianjuta-preferences.h>
 #include "libgtkpod/stock_icons.h"
 #include "libgtkpod/directories.h"
 #include "libgtkpod/misc_playlist.h"
@@ -42,6 +43,11 @@
 #include "plugin.h"
 #include "display_playlists.h"
 #include "playlist_display_actions.h"
+#include "playlist_display_preferences.h"
+
+#define PREFERENCE_ICON "playlist_display-playlist-category"
+#define PREFERENCE_ICON_STOCK_ID "playlist_display-preference-icon"
+#define TAB_NAME "Playlist Display"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -294,11 +300,13 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     GtkAction *new_playlist_action;
 
     /* preferences */
-    if (prefs_get_int_value("pm_sort", NULL))
+    if (! prefs_get_int_value("pm_sort", NULL))
         prefs_set_int("pm_sort", SORT_NONE);
 
     /* Prepare the icons for the playlist */
     register_icon_path(get_plugin_dir(), "playlist_display");
+    register_stock_icon(PREFERENCE_ICON, PREFERENCE_ICON_STOCK_ID);
+
     register_stock_icon("playlist_display-photo", PLAYLIST_DISPLAY_PHOTO_ICON_STOCK_ID);
     register_stock_icon("playlist_display-playlist", PLAYLIST_DISPLAY_PLAYLIST_ICON_STOCK_ID);
     register_stock_icon("playlist_display-read", PLAYLIST_DISPLAY_READ_ICON_STOCK_ID);
@@ -401,7 +409,39 @@ static void playlist_display_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_plugin;
 }
 
+static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
+    GdkPixbuf *pixbuf;
+    GError *error = NULL;
+
+    PlaylistDisplayPlugin* plugin = PLAYLIST_DISPLAY_PLUGIN(ipref);
+    plugin->prefs = init_playlist_display_preferences();
+    if (plugin->prefs == NULL)
+        return;
+
+    pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), PREFERENCE_ICON, 48, 0, &error);
+
+    if (!pixbuf) {
+        g_warning ("Couldn't load icon: %s", error->message);
+        g_error_free(error);
+    }
+
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-track-display-settings", _(TAB_NAME), pixbuf, plugin->prefs);
+    g_object_unref(pixbuf);
+}
+
+static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
+    anjuta_preferences_remove_page(prefs, _(TAB_NAME));
+    PlaylistDisplayPlugin* plugin = PLAYLIST_DISPLAY_PLUGIN(ipref);
+    gtk_widget_destroy(plugin->prefs);
+}
+
+static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
+    iface->merge = ipreferences_merge;
+    iface->unmerge = ipreferences_unmerge;
+}
+
 ANJUTA_PLUGIN_BEGIN (PlaylistDisplayPlugin, playlist_display_plugin);
+ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);
 ANJUTA_PLUGIN_END;
 
 ANJUTA_SIMPLE_PLUGIN (PlaylistDisplayPlugin, playlist_display_plugin);

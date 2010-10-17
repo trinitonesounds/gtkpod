@@ -1875,30 +1875,31 @@ void prefs_apply_list(gchar *key, GList *list) {
 GList *prefs_get_list(const gchar *key) {
     guint end_marker_hash; /* Hash value of the list end marker */
     guint item_hash; /* Hash value of current list string */
-    gchar *item_string; /* List item string */
-    guint i; /* Counter */
-    GList *list; /* List that contains items */
+    gchar *item_string = NULL; /* List item string */
+    guint i = 0; /* Counter */
+    GList *list = NULL; /* List that contains items */
 
     /* Go through each key in the table until we find the end marker */
     end_marker_hash = g_str_hash(LIST_END_MARKER);
-    list = NULL;
 
-    for (i = 0;; i++) {
+    /*
+     * The moment that a preference index returns NULL then
+     * return as a NULL cannot appear mid-list.
+     *
+     * Also return if a preference value is the end marker. This
+     * should avoid this function getting stuck in an infinite loop.
+     */
+    do {
         item_string = prefs_get_string_index(key, i);
 
         if (item_string) {
             item_hash = g_str_hash(item_string);
-
             if (item_hash != end_marker_hash) {
                 list = g_list_append(list, item_string);
-                continue;
-            }
-            else {
-                g_free(item_string);
-                break;
             }
         }
-    }
+        i++;
+    } while(item_string != NULL && item_hash != end_marker_hash);
 
     return list;
 }

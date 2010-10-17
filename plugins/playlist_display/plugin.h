@@ -53,6 +53,14 @@
 #define ACTION_NEW_PLAYLIST "ActionNewPlaylist"
 #define ACTION_NEW_PLAYLIST_MENU "ActionNewPlaylistMenu"
 
+extern GType playlist_display_plugin_get_type (GTypeModule *module);
+#define PLAYLIST_DISPLAY_TYPE_PLUGIN         (playlist_display_plugin_get_type (NULL))
+#define PLAYLIST_DISPLAY_PLUGIN(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), PLAYLIST_DISPLAY_TYPE_PLUGIN, PlaylistDisplayPlugin))
+#define PLAYLIST_DISPLAY_PLUGIN_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST ((k), PLAYLIST_DISPLAY_TYPE_PLUGIN, PlaylistDisplayPluginClass))
+#define PLAYLIST_DISPLAY_IS_PLUGIN(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), PLAYLIST_DISPLAY_TYPE_PLUGIN))
+#define PLAYLIST_DISPLAY_IS_PLUGIN_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), PLAYLIST_DISPLAY_TYPE_PLUGIN))
+#define PLAYLIST_DISPLAY_PLUGIN_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), PLAYLIST_DISPLAY_TYPE_PLUGIN, PlaylistDisplayPluginClass))
+
 typedef struct _PlaylistDisplayPlugin PlaylistDisplayPlugin;
 typedef struct _PlaylistDisplayPluginClass PlaylistDisplayPluginClass;
 
@@ -62,6 +70,7 @@ struct _PlaylistDisplayPlugin {
     GtkWidget *playlist_view;
     gint uiid;
     GtkActionGroup *action_group;
+    GtkWidget *prefs;
 };
 
 struct _PlaylistDisplayPluginClass {
