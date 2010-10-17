@@ -129,7 +129,6 @@ gchar *filename_from_uri (const char *uri,
 
 Playlist *generate_displayed_playlist (void);
 Playlist *generate_selected_playlist (void);
-void randomize_current_playlist (void);
 Playlist *generate_random_playlist (iTunesDB *itdb);
 Playlist *generate_not_listed_playlist (iTunesDB *itdb);
 Playlist *generate_playlist_with_name (iTunesDB *itdb, GList *tracks,

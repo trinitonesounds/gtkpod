@@ -585,7 +585,3 @@ void on_sync_playlist_with_dirs(GtkAction *action, PlaylistDisplayPlugin* plugin
         sync_playlist(gtkpod_get_current_playlist(), NULL, KEY_SYNC_CONFIRM_DIRS, 0, KEY_SYNC_DELETE_TRACKS, 0, KEY_SYNC_CONFIRM_DELETE, 0, KEY_SYNC_SHOW_SUMMARY, 0);
     }
 }
-
-void on_randomize_current_playlist(GtkAction *action, PlaylistDisplayPlugin* plugin) {
-    randomize_current_playlist();
-}

@@ -282,14 +282,6 @@ static GtkActionEntry playlist_actions[] =
             NULL,
             NULL,
             G_CALLBACK (on_update_mserv_selected_playlist)
-        },
-        {
-            "ActionRandomizeCurrentPlaylist",
-            NULL,
-            N_("Randomize Current Playlist"),
-            NULL,
-            NULL,
-            G_CALLBACK (on_randomize_current_playlist)
         }
     };
 

@@ -45,34 +45,6 @@
 
 static gint entry_inst = -1;
 
-/**
- * alphabetize - alphabetize the currently selected entry
- * sort tab). The sort order is being cycled through.
- * @mi - the menu item selected
- * @data - should be the inst number
- */
-static void alphabetize(GtkMenuItem *mi, gpointer data) {
-    gint inst = GPOINTER_TO_INT(data);
-    if (st_get_selected_entry(inst)) {
-        switch (prefs_get_int("st_sort")) {
-        case SORT_ASCENDING:
-            prefs_set_int("st_sort", SORT_DESCENDING);
-            break;
-        case SORT_DESCENDING:
-            prefs_set_int("st_sort", SORT_NONE);
-            break;
-        case SORT_NONE:
-            prefs_set_int("st_sort", SORT_ASCENDING);
-            break;
-        }
-        st_sort(prefs_get_int("st_sort"));
-    }
-}
-
-static GtkWidget *add_alphabetize(GtkWidget *menu, gint inst) {
-    return hookup_menu_item(menu, _("Alphabetize"), GTK_STOCK_SORT_ASCENDING, G_CALLBACK (alphabetize), GINT_TO_POINTER(inst));
-}
-
 /* deletes the currently selected entry from the current playlist
  @inst: selected entry of which instance?
  @delete_full: if true, member songs are removed from the iPod
@@ -304,7 +276,6 @@ void st_context_menu_init(gint inst) {
     if (!pl->is_spl) {
         add_sync_playlist_with_dirs(menu);
     }
-    add_alphabetize(menu, inst);
     add_separator(menu);
     if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
         add_delete_entry_from_ipod(menu);

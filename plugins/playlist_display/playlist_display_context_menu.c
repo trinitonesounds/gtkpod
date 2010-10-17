@@ -221,12 +221,6 @@ static void eject_ipod(GtkMenuItem *mi, gpointer data) {
     gp_eject_ipod(itdb);
 }
 
-static void randomize_playlist(GtkMenuItem *mi, gpointer data) {
-    g_return_if_fail (gtkpod_get_current_playlist());
-
-    randomize_current_playlist();
-}
-
 static GtkWidget *add_edit_ipod_properties(GtkWidget *menu) {
     if (!gtkpod_has_repository_editor())
         return menu;
@@ -274,10 +268,6 @@ static GtkWidget *add_eject_ipod(GtkWidget *menu) {
     return hookup_menu_item(menu, _("Eject iPod"), GTK_STOCK_DISCONNECT, G_CALLBACK (eject_ipod), NULL);
 }
 
-static GtkWidget *add_randomize_playlist(GtkWidget *menu) {
-    return hookup_menu_item(menu, _("Randomize Tracks"), GTK_STOCK_DISCONNECT, G_CALLBACK (randomize_playlist), NULL);
-}
-
 void pm_context_menu_init(void) {
     GtkWidget *menu = NULL;
     Playlist *pl;
@@ -309,7 +299,6 @@ void pm_context_menu_init(void) {
         if (eitdb->itdb_imported) {
             add_play_now(menu);
             add_enqueue(menu);
-            add_randomize_playlist(menu);
             add_update_tracks_from_file(menu);
             if (!pl->is_spl) {
                 add_sync_playlist_with_dirs(menu);
@@ -349,7 +338,6 @@ void pm_context_menu_init(void) {
     if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
         add_play_now(menu);
         add_enqueue(menu);
-        add_randomize_playlist(menu);
         add_update_tracks_from_file(menu);
         if (!pl->is_spl) {
             add_sync_playlist_with_dirs(menu);

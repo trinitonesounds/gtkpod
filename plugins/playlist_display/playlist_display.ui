@@ -47,7 +47,6 @@
                     <menuitem name="One for each Year" action="ActionNewOnePerYearPlaylist"/> <!-- on_pl_for_each_year_activate -->
                     <menuitem name="One for each Rating" action="ActionNewOnePerRatingPlaylist"/> <!-- on_pl_for_each_rating_activate -->
 				</menu>
-				<menuitem name="Randomize Current Playlist" action="ActionRandomizeCurrentPlaylist"/>
 				<separator/>
             </placeholder>
    		</menu>

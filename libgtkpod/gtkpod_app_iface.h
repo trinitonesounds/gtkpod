@@ -63,7 +63,6 @@
 #define SIGNAL_ITDB_REMOVED "signal_itdb_removed"
 #define SIGNAL_SORT_ENABLEMENT "signal_sort_enablement"
 #define SIGNAL_PREFERENCE_CHANGE "signal_preference_change"
-#define SIGNAL_TRACKS_REORDERED "signal_tracks_reordered"
 #define SIGNAL_ITDB_DATA_CHANGED "signal_data_changed"
 #define SIGNAL_ITDB_DATA_SAVED "signal_data_saved"
 
@@ -96,7 +95,6 @@ enum
     TRACK_ADDED,
     TRACK_REMOVED,
     TRACK_UPDATED,
-    TRACKS_REORDERED,
     PLAYLIST_SELECTED,
     PLAYLIST_ADDED,
     PLAYLIST_REMOVED,
@@ -195,7 +193,6 @@ void gtkpod_set_selected_tracks(GList *tracks);
 void gtkpod_track_added(Track *track);
 void gtkpod_track_removed(Track *track);
 void gtkpod_track_updated(Track *track);
-void gtkpod_tracks_reordered();
 
 void gtkpod_set_sort_enablement(gboolean enable);
 gboolean gtkpod_get_sort_enablement();

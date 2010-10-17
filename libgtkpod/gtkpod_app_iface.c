@@ -66,9 +66,6 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
         gtkpod_app_signals[TRACK_ADDED]
                 = g_signal_new(SIGNAL_TRACK_ADDED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
-        gtkpod_app_signals[TRACKS_REORDERED]
-                = g_signal_new(SIGNAL_TRACKS_REORDERED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
-
         gtkpod_app_signals[SORT_ENABLEMENT]
                 = g_signal_new(SIGNAL_SORT_ENABLEMENT, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__BOOLEAN, G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
 
@@ -398,15 +395,6 @@ void gtkpod_broadcast_preference_change(gchar *preference_name, gint value) {
     g_return_if_fail (preference_name);
 
     g_signal_emit(gtkpod_app, gtkpod_app_signals[PREFERENCE_CHANGE], 0, preference_name, value);
-}
-
-void gtkpod_tracks_reordered() {
-    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
-    g_return_if_fail (gtkpod_get_current_playlist());
-
-    gtkpod_set_displayed_tracks(gtkpod_get_current_playlist()->members);
-
-    g_signal_emit(gtkpod_app, gtkpod_app_signals[TRACKS_REORDERED], 0);
 }
 
 /**

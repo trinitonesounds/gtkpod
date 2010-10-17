@@ -248,21 +248,6 @@ Playlist *generate_random_playlist(iTunesDB *itdb) {
     return new_pl;
 }
 
-void randomize_current_playlist(void) {
-    Playlist *pl = gtkpod_get_current_playlist();
-
-    if (!pl) {
-        message_sb_no_playlist_selected();
-        return;
-    }
-
-    gtkpod_set_selected_tracks(NULL);
-
-    itdb_playlist_randomize(pl);
-
-    gtkpod_tracks_reordered();
-}
-
 static void not_listed_make_track_list(gpointer key, gpointer track, gpointer tracks) {
     *(GList **) tracks = g_list_append(*(GList **) tracks, (Track *) track);
 }

@@ -1787,7 +1787,7 @@ void st_sort(GtkSortType order) {
     for (i = 0; i < prefs_get_int("sort_tab_num"); ++i)
         st_sort_inst(i, order);
 
-    gtkpod_tracks_reordered();
+//    gtkpod_tracks_reordered();
 }
 
 gint st_get_sorttab_page_number(int inst) {

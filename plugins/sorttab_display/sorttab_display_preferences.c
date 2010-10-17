@@ -31,6 +31,7 @@
 #include "libgtkpod/misc.h"
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/directories.h"
+#include "libgtkpod/gp_private.h"
 #include "plugin.h"
 #include "display_sorttabs.h"
 
@@ -54,15 +55,56 @@ G_MODULE_EXPORT void on_group_compilations_toggled (GtkToggleButton *sender, gpo
     st_show_visible();
 }
 
+G_MODULE_EXPORT void on_st_ascend_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+    if (gtk_toggle_button_get_active(togglebutton))
+        st_sort(SORT_ASCENDING);
+}
+
+G_MODULE_EXPORT void on_st_descend_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+    if (gtk_toggle_button_get_active(togglebutton))
+        st_sort(SORT_DESCENDING);
+}
+
+G_MODULE_EXPORT void on_st_none_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+    if (gtk_toggle_button_get_active(togglebutton))
+        st_sort(SORT_NONE);
+}
+
+G_MODULE_EXPORT void on_st_sort_case_sensitive_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+    gboolean val = gtk_toggle_button_get_active(togglebutton);
+    prefs_set_int("case_sensitive", val);
+    gtkpod_broadcast_preference_change("case_sensitive", val);
+}
+
 GtkWidget *init_sorttab_preferences() {
     GtkWidget *notebook;
     GladeXML *pref_xml;
+    GtkWidget *w;
 
     gchar *glade_path = g_build_filename(get_glade_dir(), "sorttab_display.glade", NULL);
     pref_xml = gtkpod_xml_new(glade_path, "sorttab_settings_notebook");
     notebook = gtkpod_xml_get_widget(pref_xml, "sorttab_settings_notebook");
     g_object_ref(notebook);
     g_free(glade_path);
+
+    switch (prefs_get_int("pm_sort")) {
+    case SORT_ASCENDING:
+        w = gtkpod_xml_get_widget(pref_xml, "st_ascend");
+        break;
+    case SORT_DESCENDING:
+        w = gtkpod_xml_get_widget(pref_xml, "st_descend");
+        break;
+    default:
+        w = gtkpod_xml_get_widget(pref_xml, "st_none");
+        break;
+    }
+
+    if (w)
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
+
+    if ((w = gtkpod_xml_get_widget(pref_xml, "st_cfg_case_sensitive"))) {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("case_sensitive"));
+    }
 
     glade_xml_signal_autoconnect(pref_xml);
 
