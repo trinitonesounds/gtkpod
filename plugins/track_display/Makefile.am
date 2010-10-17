@@ -31,8 +31,7 @@ libtrack_display_la_SOURCES = 	plugin.c plugin.h \
 								track_display_preferences.c track_display_preferences.h \
 								display_tracks.c display_tracks.h \
 								rb_cell_renderer_rating.c rb_cell_renderer_rating.h \
-								rb_rating_helper.c rb_rating_helper.h \
-								sort_window.c sort_window.h
+								rb_rating_helper.c rb_rating_helper.h
 
 libtrack_display_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 

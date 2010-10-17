@@ -21,7 +21,6 @@
 					<menuitem name="Selected Tracks from Device" action="ActionDeleteSelectedTracksFromDevice" />
 					<separator name="separator2" />
 				</menu>
-				<menuitem name="Change Sort Orders" action="ActionChangeSortOrder"/>
             </placeholder>
    		</menu>
 	</menubar>

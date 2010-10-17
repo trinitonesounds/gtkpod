@@ -50,7 +50,6 @@
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "display_tracks.h"
 #include "rb_cell_renderer_rating.h"
-#include "sort_window.h"
 #include "track_display_context_menu.h"
 
 #ifndef HAVE_GSEALED_GDK
@@ -1670,8 +1669,6 @@ static void tm_sort_column_changed(GtkTreeSortable *ts, gpointer user_data) {
 
     gtk_tree_sortable_get_sort_column_id(ts, &newcol, &order);
 
-    /*     printf ("scc -- col: %d, order: %d\n", newcol, order);  */
-
     /* set compare function for strings (to speed up sorting) */
     buf = g_strdup_printf("sort_ign_field_%d", TM_to_T(newcol));
     if (prefs_get_int(buf))
@@ -1703,7 +1700,6 @@ static void tm_sort_column_changed(GtkTreeSortable *ts, gpointer user_data) {
 
     if (prefs_get_int("tm_autostore"))
         tm_rows_reordered();
-    sort_window_update();
 
     /* stable sorting: index original order */
     tracks = tm_get_all_tracks();

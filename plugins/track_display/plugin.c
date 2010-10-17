@@ -64,8 +64,9 @@ static GtkActionEntry track_actions[] =
             G_CALLBACK (on_update_selected_tracks) },
         {
             "ActionUpdateMservTracks", GTK_STOCK_REFRESH, N_("Selected Tracks"), NULL, NULL,
-            G_CALLBACK (on_update_mserv_selected_tracks) },
-        { "ActionChangeSortOrder", NULL, N_("Change Sort Order"), NULL, NULL, G_CALLBACK (on_open_sort_window) } };
+            G_CALLBACK (on_update_mserv_selected_tracks)
+        },
+    };
 
 static void set_default_preferences() {
     gint int_buf;

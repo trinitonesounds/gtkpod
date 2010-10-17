@@ -33,7 +33,6 @@
 
 #include "track_display_actions.h"
 #include "display_tracks.h"
-#include "sort_window.h"
 #include "libgtkpod/misc.h"
 #include "libgtkpod/misc_track.h"
 #include "libgtkpod/file.h"
@@ -93,8 +92,4 @@ void on_update_mserv_selected_tracks (GtkAction *action, TrackDisplayPlugin* plu
     if (tracks) {
       mserv_from_file_tracks(tracks);
     }
-}
-
-void on_open_sort_window (GtkAction *action, TrackDisplayPlugin* plugin) {
-    sort_window_create();
 }

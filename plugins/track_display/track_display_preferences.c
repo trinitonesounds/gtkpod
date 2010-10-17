@@ -34,10 +34,15 @@
 #include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "display_tracks.h"
-#include "sort_window.h"
+
+static GladeXML *preference_xml;
 
 static GtkWidget *notebook = NULL;
 static GtkWidget *displayed_columns_view = NULL;
+static GtkWidget *ign_words_view = NULL;
+
+static const gint sort_ign_fields[] =
+    { T_TITLE, T_ARTIST, T_ALBUM, T_COMPOSER, -1 };
 
 static GtkWindow *notebook_get_parent_window() {
     if (! notebook) {
@@ -122,6 +127,49 @@ static void setup_column_tree (GtkTreeView *treeview, gboolean list_visible)
     }
 }
 
+static void setup_ign_word_tree (GtkTreeView *treeview, gboolean list_visible)
+{
+    GtkListStore *store;
+    GtkTreeIter iter;
+    GtkTreeViewColumn *column;
+    GtkCellRenderer *renderer;
+    gint i;
+
+    /* Delete any existing columns first */
+    while (TRUE)
+    {
+        column = gtk_tree_view_get_column (treeview, 0);
+
+        if (!column)
+            break;
+
+        gtk_tree_view_remove_column (treeview, column);
+    }
+
+    store = gtk_list_store_new (1, G_TYPE_STRING);
+    column = gtk_tree_view_column_new ();
+    renderer = gtk_cell_renderer_text_new ();
+
+    gtk_tree_view_column_pack_start (column, renderer, TRUE);
+    gtk_tree_view_column_set_attributes (column, renderer, "text", 0, NULL);
+
+    gtk_tree_view_append_column (treeview, column);
+    gtk_tree_view_set_model (treeview, GTK_TREE_MODEL (store));
+
+    g_object_unref (G_OBJECT (store));
+
+    GList *sort_ign_pref_values = prefs_get_list("sort_ign_string_");
+
+    for (i = 0; i < g_list_length(sort_ign_pref_values); i++) {
+        gchar* sort_ign_value = g_list_nth_data(sort_ign_pref_values, i);
+        if ((!list_visible && sort_ign_value) || (list_visible && !sort_ign_value))
+            continue;
+
+        gtk_list_store_append (store, &iter);
+        gtk_list_store_set(store, &iter, 0, sort_ign_value, -1);
+    }
+}
+
 static gboolean tree_get_current_iter (GtkTreeView *view, GtkTreeIter *iter)
 {
     GtkTreeModel *model = gtk_tree_view_get_model (view);
@@ -138,30 +186,95 @@ static gboolean tree_get_current_iter (GtkTreeView *view, GtkTreeIter *iter)
     return TRUE;
 }
 
-/*
-    glade callback
-*/
-G_MODULE_EXPORT void on_sorting_button_clicked (GtkButton *sender, gpointer e)
-{
-    sort_window_create ();
+static void apply_ign_strings() {
+    gint i;
+    gchar *buf;
+    GtkTreeModel *model;
+    GtkTreeIter iter;
+    GList *values = NULL;
+    gchar *value;
+    gboolean valid;
+
+    /* read sort field states */
+    for (i = 0; sort_ign_fields[i] != -1; ++i) {
+        buf = g_strdup_printf("sort_ign_field_%d", sort_ign_fields[i]);
+        GtkWidget *w = gtkpod_xml_get_widget(preference_xml, buf);
+        g_return_if_fail (w);
+        prefs_set_int(buf, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (w)));
+        g_free(buf);
+    }
+
+    model = gtk_tree_view_get_model (GTK_TREE_VIEW(ign_words_view));
+    valid = gtk_tree_model_get_iter_first (model, &iter);
+    while(valid) {
+        gtk_tree_model_get (model, &iter,
+                                  0, &value,
+                                  -1);
+        values = g_list_append(values, value);
+        valid = gtk_tree_model_iter_next(model, &iter);
+    }
+
+    prefs_apply_list("sort_ign_string_", values);
+
+    compare_string_fuzzy_generate_keys();
+}
+
+void on_ign_field_toggled (GtkToggleButton *togglebutton, gpointer data) {
+    apply_ign_strings();
 }
 
 /*
     glade callback
 */
-G_MODULE_EXPORT void on_column_add_clicked (GtkButton *sender, gpointer e)
+G_MODULE_EXPORT void on_ign_word_add_clicked (GtkButton *sender, gpointer e) {
+    g_return_if_fail(ign_words_view);
+    GtkTreeModel *model;
+    GtkTreeIter iter;
+
+    gchar *word = get_user_string(_("New Word to Ignore"), _("Please enter a word for sorting functions to ignore"), NULL, NULL, NULL, GTK_STOCK_ADD);
+    if (! word)
+        return;
+
+    model = gtk_tree_view_get_model (GTK_TREE_VIEW(ign_words_view));
+    gtk_list_store_append (GTK_LIST_STORE (model), &iter);
+    gtk_list_store_set(GTK_LIST_STORE (model), &iter, 0, word, -1);
+    apply_ign_strings();
+}
+
+/*
+    glade callback
+*/
+G_MODULE_EXPORT void on_ign_word_remove_clicked (GtkButton *sender, gpointer e)
 {
+    g_return_if_fail(ign_words_view);
+
+    GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW (ign_words_view));
+    GtkTreeIter iter;
+    gchar *word;
+
+    if(!tree_get_current_iter (GTK_TREE_VIEW (ign_words_view), &iter) || !gtk_list_store_iter_is_valid (GTK_LIST_STORE (model), &iter))
+        return;
+
+    gtk_tree_model_get (model, &iter, 0, &word, -1);
+    gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
+    apply_ign_strings();
+}
+
+/*
+    glade callback
+*/
+G_MODULE_EXPORT void on_column_add_clicked (GtkButton *sender, gpointer e) {
     g_return_if_fail(displayed_columns_view);
 
     gint i;
     GtkTreeModel *model;
     GtkTreeIter iter;
+    GladeXML *xml;
 
     gchar *glade_path = g_build_filename(get_glade_dir(), "track_display.glade", NULL);
-    GladeXML *xml = gtkpod_xml_new (glade_path, "prefs_columns_dialog");
+    xml = gtkpod_xml_new(glade_path, "prefs_columns_dialog");
     GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_columns_dialog");
     GtkTreeView *view = GTK_TREE_VIEW (gtkpod_xml_get_widget (xml, "available_columns"));
-
     g_free(glade_path);
 
     gtk_window_set_transient_for (GTK_WINDOW (dlg), notebook_get_parent_window());
@@ -275,22 +388,35 @@ static void populate_track_cmd_combo(GtkComboBox *combo) {
 }
 
 GtkWidget *init_track_display_preferences() {
-    GladeXML *pref_xml;
     GtkComboBox *cmd_combo;
+    gint i = 0;
 
     gchar *glade_path = g_build_filename(get_glade_dir(), "track_display.glade", NULL);
-    pref_xml = gtkpod_xml_new(glade_path, "track_settings_notebook");
-    notebook = gtkpod_xml_get_widget(pref_xml, "track_settings_notebook");
-    cmd_combo = GTK_COMBO_BOX(gtkpod_xml_get_widget(pref_xml, "track_exec_cmd_combo"));
-    displayed_columns_view = gtkpod_xml_get_widget(pref_xml, "displayed_columns");
+    preference_xml = gtkpod_xml_new(glade_path, "track_settings_notebook");
+    notebook = gtkpod_xml_get_widget(preference_xml, "track_settings_notebook");
+    cmd_combo = GTK_COMBO_BOX(gtkpod_xml_get_widget(preference_xml, "track_exec_cmd_combo"));
+    displayed_columns_view = gtkpod_xml_get_widget(preference_xml, "displayed_columns");
+    ign_words_view = gtkpod_xml_get_widget(preference_xml, "ign_words_view");
     g_object_ref(notebook);
     g_free(glade_path);
 
     setup_column_tree (GTK_TREE_VIEW(displayed_columns_view), TRUE);
+    setup_ign_word_tree(GTK_TREE_VIEW(ign_words_view), TRUE);
 
-    glade_xml_signal_autoconnect(pref_xml);
+    /* label the ignore-field checkbox-labels */
+    for (i = 0; sort_ign_fields[i] != -1; ++i) {
+        gchar *buf = g_strdup_printf("sort_ign_field_%d", sort_ign_fields[i]);
+        GtkWidget *w = gtkpod_xml_get_widget(preference_xml, buf);
+        g_return_val_if_fail (w, NULL);
+        gtk_button_set_label(GTK_BUTTON (w), gettext (get_t_string (sort_ign_fields[i])));
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), prefs_get_int(buf));
+        g_signal_connect(w, "toggled", G_CALLBACK(on_ign_field_toggled), NULL);
+        g_free(buf);
+    }
 
     populate_track_cmd_combo(cmd_combo);
+
+    glade_xml_signal_autoconnect(preference_xml);
 
     return notebook;
 }
