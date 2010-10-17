@@ -155,31 +155,39 @@ void tm_context_menu_init(void) {
 
     menu = gtk_menu_new();
 
-    add_play_now(menu);
-    add_enqueue(menu);
-    add_copy_track_to_filesystem(menu);
-    add_create_playlist_file(menu);
-    add_create_new_playlist(menu);
-    add_update_tracks_from_file(menu);
-    if (!pl->is_spl) {
-        add_sync_playlist_with_dirs(menu);
-    }
+    add_exec_commands(menu);
     add_separator(menu);
+
+    GtkWidget *create_menu = add_sub_menu(menu, "Create Playlist", GTK_STOCK_NEW);
+    add_create_playlist_file(create_menu);
+    add_create_new_playlist(create_menu);
+    add_separator(menu);
+
+    GtkWidget *copy_menu = add_sub_menu(menu, "Copy", GTK_STOCK_COPY);
+    add_copy_track_to_filesystem(copy_menu);
+    add_copy_selected_tracks_to_target_itdb(copy_menu, _("Copy selected track(s) to..."));
+    add_separator(menu);
+
     if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
-        add_delete_tracks_from_ipod(menu);
         if (!itdb_playlist_is_mpl(pl)) {
-            add_delete_tracks_from_playlist(menu);
+            GtkWidget *delete_menu = add_sub_menu(menu, "Delete", GTK_STOCK_DELETE);
+            add_delete_tracks_from_ipod(delete_menu);
+            add_delete_tracks_from_playlist(delete_menu);
+        } else {
+            add_delete_tracks_from_ipod(menu);
         }
     }
     if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
-        add_delete_tracks_from_harddisk(menu);
-        add_delete_tracks_from_database(menu);
+        GtkWidget *delete_menu = add_sub_menu(menu, "Delete", GTK_STOCK_DELETE);
+        add_delete_tracks_from_harddisk(delete_menu);
+        add_delete_tracks_from_database(delete_menu);
         if (!itdb_playlist_is_mpl(pl)) {
-            add_delete_tracks_from_playlist(menu);
+            add_delete_tracks_from_playlist(delete_menu);
         }
     }
-    add_copy_selected_tracks_to_target_itdb(menu, _("Copy selected track(s) to..."));
+
     add_separator(menu);
+    add_update_tracks_from_file(menu);
     add_edit_track_details(menu);
 
     /*

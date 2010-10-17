@@ -40,6 +40,10 @@
  */
 GtkWidget *hookup_menu_item(GtkWidget *m, const gchar *str, const gchar *stock, GCallback func, gpointer userdata);
 
+GtkWidget *add_sub_menu(GtkWidget *menu, gchar* label, gchar* stockid);
+
+GtkWidget *add_exec_commands(GtkWidget *menu);
+
 /**
  *  Add separator to Menu @m and return pointer to separator widget
  */
@@ -47,8 +51,6 @@ GtkWidget *add_separator(GtkWidget *menu);
 
 void context_menu_delete_track_head(GtkMenuItem *mi, gpointer data);
 
-GtkWidget *add_play_now (GtkWidget *menu);
-GtkWidget *add_enqueue (GtkWidget *menu);
 GtkWidget *add_copy_track_to_filesystem (GtkWidget *menu);
 GtkWidget *add_create_playlist_file (GtkWidget *menu);
 GtkWidget *add_update_tracks_from_file (GtkWidget *menu);

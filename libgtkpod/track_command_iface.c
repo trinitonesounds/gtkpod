@@ -50,3 +50,12 @@ GType track_command_get_type(void) {
     }
     return type;
 }
+
+void on_track_command_menuitem_activate(GtkMenuItem *mi, gpointer data) {
+    GPtrArray *pairarr = (GPtrArray *) data;
+
+    TrackCommandInterface *cmd = g_ptr_array_index(pairarr, 0);
+    GList *tracks = g_ptr_array_index(pairarr, 1);
+    cmd->execute(tracks);
+    g_ptr_array_free(pairarr, FALSE);
+}

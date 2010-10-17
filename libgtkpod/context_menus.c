@@ -40,6 +40,7 @@
 #include "prefs.h"
 #include "tools.h"
 #include "syncdir.h"
+#include "track_command_iface.h"
 
 #define LOCALDEBUG 0
 
@@ -74,6 +75,27 @@ GtkWidget *hookup_menu_item(GtkWidget *m, const gchar *str, const gchar *stock, 
     return mi;
 }
 
+GtkWidget *add_sub_menu(GtkWidget *menu, gchar* label, gchar* stockid) {
+    GtkWidget *item;
+    GtkWidget *submenu;
+    GtkWidget *image;
+
+    item = gtk_image_menu_item_new_with_mnemonic(label);
+    gtk_widget_set_sensitive(item, TRUE);
+    gtk_widget_add_events(item, GDK_BUTTON_RELEASE_MASK);
+
+    image = gtk_image_new_from_stock(stockid, GTK_ICON_SIZE_MENU);
+    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM (item), image);
+
+    submenu = gtk_menu_new();
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
+
+    gtk_menu_append(menu, item);
+    gtk_widget_show_all(item);
+
+    return submenu;
+}
+
 /**
  *  Add separator to Menu @m and return pointer to separator widget
  */
@@ -93,30 +115,32 @@ void context_menu_delete_track_head(GtkMenuItem *mi, gpointer data) {
     delete_track_head(deleteaction);
 }
 
-/*
- * play_entries_now - play the entries currently selected in xmms
- * @mi - the menu item selected
- * @data - Ignored, should be NULL
- */
-static void play_entries_now(GtkMenuItem *mi, gpointer data) {
-    tools_play_tracks(gtkpod_get_selected_tracks());
-}
+GtkWidget *add_exec_commands(GtkWidget *menu) {
+    GList *trkcmds = gtkpod_get_registered_track_commands();
+    GList *cmds = trkcmds;
+    gint trksize = g_list_length(trkcmds);
+    GtkWidget *mm;
 
-GtkWidget *add_play_now(GtkWidget *menu) {
-    return hookup_menu_item(menu, _("Play Now"), GTK_STOCK_CDROM, G_CALLBACK (play_entries_now), NULL);
-}
+    if (trksize == 0)
+        return NULL;
+    else if (trksize == 1) {
+        mm = menu;
+    }
+    else {
+        GtkWidget *submenu = add_sub_menu(menu, "Execute", GTK_STOCK_EXECUTE);
+        mm = submenu;
+    }
 
-/*
- * play_entries_now - play the entries currently selected in xmms
- * @mi - the menu item selected
- * @data - Ignored, should be NULL
- */
-static void play_entries_enqueue(GtkMenuItem *mi, gpointer data) {
-    tools_enqueue_tracks(gtkpod_get_selected_tracks());
-}
+    while(cmds != NULL) {
+        TrackCommandInterface *cmd = cmds->data;
+        GPtrArray *pairarr = g_ptr_array_new ();
+        g_ptr_array_add (pairarr, cmd);
+        g_ptr_array_add (pairarr, gtkpod_get_selected_tracks());
+        hookup_menu_item(mm, cmd->text, GTK_STOCK_EXECUTE, G_CALLBACK (on_track_command_menuitem_activate), pairarr);
+        cmds = cmds->next;
+    }
 
-GtkWidget *add_enqueue(GtkWidget *menu) {
-    return hookup_menu_item(menu, _("Enqueue"), GTK_STOCK_CDROM, G_CALLBACK (play_entries_enqueue), NULL);
+    return mm;
 }
 
 /*

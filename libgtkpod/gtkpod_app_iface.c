@@ -566,16 +566,6 @@ void gtkpod_unregister_track_command(TrackCommandInterface *command) {
     gp_iface->track_commands = g_list_remove(gp_iface->track_commands, command);
 }
 
-static void execute_track_command(GtkMenuItem *mi, gpointer data) {
-    GPtrArray *pairarr = (GPtrArray *) data;
-
-    TrackCommandInterface *cmd = g_ptr_array_index(pairarr, 0);
-    GList *tracks = g_ptr_array_index(pairarr, 1);
-
-    cmd->execute(tracks);
-    g_ptr_array_free(pairarr, FALSE);
-}
-
 static void gtkpod_display_command_ctx_menu(GList *track_cmds, GList *tracks) {
     GtkWidget *menu = NULL;
     GList *cmds;
@@ -597,7 +587,7 @@ static void gtkpod_display_command_ctx_menu(GList *track_cmds, GList *tracks) {
         GPtrArray *pairarr = g_ptr_array_new ();
         g_ptr_array_add (pairarr, cmd);
         g_ptr_array_add (pairarr, tracks);
-        hookup_menu_item(menu, cmd->text, GTK_STOCK_EXECUTE, G_CALLBACK (execute_track_command), pairarr);
+        hookup_menu_item(menu, cmd->text, GTK_STOCK_EXECUTE, G_CALLBACK (on_track_command_menuitem_activate), pairarr);
         cmds = cmds->next;
     }
 

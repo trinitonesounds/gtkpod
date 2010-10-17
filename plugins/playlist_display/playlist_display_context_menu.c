@@ -297,12 +297,8 @@ void pm_context_menu_init(void) {
 
     if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
         if (eitdb->itdb_imported) {
-            add_play_now(menu);
-            add_enqueue(menu);
-            add_update_tracks_from_file(menu);
-            if (!pl->is_spl) {
-                add_sync_playlist_with_dirs(menu);
-            }
+            add_exec_commands(menu);
+
             add_separator(menu);
             if (itdb_playlist_is_mpl(pl)) {
                 add_delete_all_tracks_from_ipod(menu);
@@ -311,10 +307,19 @@ void pm_context_menu_init(void) {
                 add_delete_all_podcasts_from_ipod(menu);
             }
             else {
-                add_delete_playlist_including_tracks_ipod(menu);
-                add_delete_playlist_but_keep_tracks(menu);
+                GtkWidget *delete_menu = add_sub_menu(menu, "Delete", GTK_STOCK_DELETE);
+                add_delete_playlist_including_tracks_ipod(delete_menu);
+                add_delete_playlist_but_keep_tracks(delete_menu);
             }
+            add_separator(menu);
             add_copy_selected_playlist_to_target_itdb(menu, _("Copy selected playlist to..."));
+
+            add_separator(menu);
+            add_update_tracks_from_file(menu);
+            if (!pl->is_spl) {
+                add_sync_playlist_with_dirs(menu);
+            }
+
             add_separator(menu);
             add_edit_track_details(menu);
             if (pl->is_spl) {
@@ -336,22 +341,25 @@ void pm_context_menu_init(void) {
         }
     }
     if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
-        add_play_now(menu);
-        add_enqueue(menu);
-        add_update_tracks_from_file(menu);
-        if (!pl->is_spl) {
-            add_sync_playlist_with_dirs(menu);
-        }
+        add_exec_commands(menu);
         add_separator(menu);
+
         if (itdb_playlist_is_mpl(pl)) {
             add_delete_all_tracks_from_database(menu);
         }
         else {
-            add_delete_playlist_including_tracks_database(menu);
-            add_delete_playlist_including_tracks_harddisk(menu);
-            add_delete_playlist_but_keep_tracks(menu);
+            GtkWidget *delete_menu = add_sub_menu(menu, "Delete", GTK_STOCK_DELETE);
+            add_delete_playlist_including_tracks_database(delete_menu);
+            add_delete_playlist_including_tracks_harddisk(delete_menu);
+            add_delete_playlist_but_keep_tracks(delete_menu);
         }
         add_copy_selected_playlist_to_target_itdb(menu, _("Copy selected playlist to..."));
+        add_separator(menu);
+        add_update_tracks_from_file(menu);
+        if (!pl->is_spl) {
+            add_sync_playlist_with_dirs(menu);
+        }
+
         add_separator(menu);
         add_edit_track_details(menu);
         if (pl->is_spl) {
