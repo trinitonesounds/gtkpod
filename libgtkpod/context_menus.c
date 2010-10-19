@@ -90,7 +90,7 @@ GtkWidget *add_sub_menu(GtkWidget *menu, gchar* label, gchar* stockid) {
     submenu = gtk_menu_new();
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
 
-    gtk_menu_append(menu, item);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     gtk_widget_show_all(item);
 
     return submenu;
