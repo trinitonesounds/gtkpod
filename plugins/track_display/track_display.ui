@@ -8,9 +8,6 @@
 				<menu name="Update Tracks from File" action="ActionUpdateMenu">
 					<menuitem name="Selected Tracks" action="ActionUpdateTracks" />
                 </menu>
-                <menu name="Update mserv Data from File" action="ActionUpdateMservMenu">
-					<menuitem name="Selected Tracks" action="ActionUpdateMservTracks" />
-                </menu>
             </placeholder>
         </menu>
 		<menu name="MenuEdit" action="ActionMenuEdit">

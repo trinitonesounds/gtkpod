@@ -89,10 +89,8 @@ Playlist *add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
 gboolean write_tags_to_file(Track *s);
 void update_track_from_file (iTunesDB *itdb, Track *track);
 void update_tracks (GList *selected_tracks);
-void mserv_from_file_tracks (GList *selected_tracks);
 void display_non_updated (Track *track, gchar *txt);
 void display_updated (Track *track, gchar *txt);
-void display_mserv_problems (Track *track, gchar *txt);
 iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 			  const gchar *mp, const gchar *name_off,
 			  const gchar *name_loc);

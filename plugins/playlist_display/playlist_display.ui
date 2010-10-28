@@ -13,9 +13,6 @@
 				<menu name="Update Tracks from File" action="ActionUpdateMenu">
 					<menuitem name="Selected Playlist" action="ActionUpdatePlaylist" />
                 </menu>
-                <menu name="Update mserv Data from File" action="ActionUpdateMservMenu">
-					<menuitem name="Selected Playlist" action="ActionUpdateMservPlaylist" />
-                </menu>
                 <menuitem name="Sync Playlist with Dir(s)" action="ActionSyncPlaylistWithDir"/>
             </placeholder>
    		</menu>

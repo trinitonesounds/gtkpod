@@ -85,6 +85,7 @@ cscope.out
 /data/glade/photo_editor.glade
 /data/glade/media_player.glade
 /data/glade/playlist_display.glade
+/data/glade/mserv.xml
 
 /data/ui/details_editor.ui
 /data/ui/coverweb.ui
@@ -98,4 +99,4 @@ cscope.out
 /data/ui/core_prefs.ui
 /data/ui/photo_editor.ui
 /data/ui/media_player.ui
-
+/data/ui/mserv.ui

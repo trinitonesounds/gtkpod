@@ -116,20 +116,3 @@ void on_update_selected_tab_entry (GtkAction *action, SorttabDisplayPlugin* plug
 
     update_tracks(entry->members);
 }
-
-void on_update_mserv_selected_tab_entry (GtkAction *action, SorttabDisplayPlugin* plugin) {
-    TabEntry *entry;
-    gint inst;
-
-    inst = st_get_sort_tab_number(_("Update selected entry of which sort tab?"));
-    if (inst == -1)
-        return;
-
-    entry = st_get_selected_entry(inst);
-    if (!entry) {
-        gtkpod_statusbar_message(_("No entry selected in Sort Tab %d"), inst + 1);
-        return;
-    }
-
-    mserv_from_file_tracks(entry->members);
-}

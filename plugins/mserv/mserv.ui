@@ -1,0 +1,15 @@
+<!--*- xml -*-->
+<ui>
+	<menubar name="MenuMain">
+		<menu name="MenuMusic" action="ActionMenuMusic">
+			<placeholder name="PlaceholderFileMenus">
+				<menu name="Update mserv Data from File" action="ActionUpdateMservMenu">
+					<menuitem name="Selected Playlist" action="ActionUpdateMservPlaylist" />
+					<menuitem name="Selected Tracks" action="ActionUpdateMservTracks" />
+                </menu>
+            </placeholder>
+   		</menu>
+	</menubar>
+	<toolbar name="ToolbarMain">
+	</toolbar>
+</ui>

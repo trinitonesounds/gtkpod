@@ -8,9 +8,6 @@
 				<menu name="Update Tracks from File" action="ActionUpdateMenu">
 					<menuitem name="Selected Tab Entry" action="ActionUpdateTabEntry"/>
                 </menu>
-                <menu name="Update mserv Data from File" action="ActionUpdateMservMenu">
-					<menuitem name="Selected Tab Entry" action="ActionUpdateMservTabEntry" />
-                </menu>
             </placeholder>
    		</menu>
 		<menu name="MenuEdit" action="ActionMenuEdit">

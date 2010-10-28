@@ -61,11 +61,7 @@ static GtkActionEntry track_actions[] =
             G_CALLBACK (on_delete_selected_tracks_from_device) },
         {
             "ActionUpdateTracks", GTK_STOCK_REFRESH, N_("Selected Tracks"), NULL, NULL,
-            G_CALLBACK (on_update_selected_tracks) },
-        {
-            "ActionUpdateMservTracks", GTK_STOCK_REFRESH, N_("Selected Tracks"), NULL, NULL,
-            G_CALLBACK (on_update_mserv_selected_tracks)
-        },
+            G_CALLBACK (on_update_selected_tracks) }
     };
 
 static void set_default_preferences() {

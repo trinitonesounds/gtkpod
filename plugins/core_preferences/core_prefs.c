@@ -521,81 +521,6 @@ G_MODULE_EXPORT void on_remove_exclusion_clicked (GtkButton *sender, gpointer e)
     }
 }
 
-/*
-    glade callback
-*/
-G_MODULE_EXPORT void on_mserv_settings_clicked (GtkButton *sender, gpointer e)
-{
-    GtkWidget *dlg = GTK_WIDGET(gtk_builder_get_object(builder, "prefs_mserv_dialog"));
-    gchar *temp = prefs_get_string ("mserv_username");
-
-    gtk_window_set_transient_for (GTK_WINDOW (dlg), notebook_get_parent_window());
-
-    if(temp)
-    {
-        gtk_entry_set_text (GTK_ENTRY (gtk_builder_get_object(builder, "mserv_username")),
-                            temp);
-
-        g_free (temp);
-    }
-
-    temp = prefs_get_string ("path_mserv_music_root");
-
-    if(temp)
-    {
-        gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (gtk_builder_get_object(builder, "music_root")),
-                                             temp);
-
-        g_free (temp);
-    }
-
-    temp = prefs_get_string ("path_mserv_trackinfo_root");
-
-    if(temp)
-    {
-        gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (gtk_builder_get_object(builder, "mserv_root")),
-                                             temp);
-
-        g_free (temp);
-    }
-
-    init_checkbox (GTK_TOGGLE_BUTTON (gtk_builder_get_object(builder, "use_mserv")),
-                   "mserv_use", "mserv_settings_frame");
-
-    init_checkbox (GTK_TOGGLE_BUTTON (gtk_builder_get_object(builder, "report_mserv_problems")),
-                   "mserv_report_probs", NULL);
-
-    gtk_builder_connect_signals(builder, NULL);
-    gtk_dialog_run (GTK_DIALOG (dlg));
-    gtk_widget_destroy (dlg);
-}
-
-/*
-    glade callback
-*/
-G_MODULE_EXPORT void on_mserv_username_changed (GtkEditable *sender, gpointer e)
-{
-    prefs_set_string ("mserv_username", gtk_entry_get_text (GTK_ENTRY (sender)));
-}
-
-/*
-    glade callback
-*/
-G_MODULE_EXPORT void on_music_root_current_folder_changed (GtkFileChooser *sender, gpointer e)
-{
-    prefs_set_string ("path_mserv_music_root",
-                      gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (sender)));
-}
-
-/*
-    glade callback
-*/
-G_MODULE_EXPORT void on_mserv_root_current_folder_changed (GtkFileChooser *sender, gpointer e)
-{
-    prefs_set_string ("path_mserv_trackinfo_root",
-                      gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (sender)));
-}
-
 static void cmd_setup_widget (const gchar *entry_name, const gchar *envname, const gchar *browse_name)
 {
     GtkWidget *entry = GTK_WIDGET(gtk_builder_get_object(builder, entry_name));
@@ -616,14 +541,12 @@ static void cmd_setup_widget (const gchar *entry_name, const gchar *envname, con
 /*
     glade callback
 */
-G_MODULE_EXPORT void on_commands_clicked (GtkButton *sender, gpointer e)
+G_MODULE_EXPORT void on_normalization_clicked (GtkButton *sender, gpointer e)
 {
-    GtkWidget *dlg = GTK_WIDGET(gtk_builder_get_object(builder, "prefs_commands_dialog"));
+    GtkWidget *dlg = GTK_WIDGET(gtk_builder_get_object(builder, "prefs_normalization_dialog"));
 
     gtk_window_set_transient_for (GTK_WINDOW (dlg), notebook_get_parent_window());
 
-    cmd_setup_widget ("cmd_playnow", "path_play_now", "browse_playnow");
-    cmd_setup_widget ("cmd_enqueue", "path_play_enqueue", "browse_enqueue");
     cmd_setup_widget ("cmd_mp3gain", "path_mp3gain", "browse_mp3gain");
     cmd_setup_widget ("cmd_aacgain", "path_aacgain", "browse_aacgain");
 

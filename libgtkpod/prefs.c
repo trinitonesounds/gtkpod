@@ -130,7 +130,7 @@ void discard_prefs(void);
 
 /* Different paths that can be set in the prefs window */
 typedef enum {
-    PATH_PLAY_NOW = 0, PATH_PLAY_ENQUEUE, PATH_MP3GAIN, PATH_SYNC_CONTACTS, PATH_SYNC_CALENDAR, PATH_MSERV_MUSIC_ROOT, PATH_MSERV_TRACKINFO_ROOT, PATH_SYNC_NOTES, PATH_AACGAIN, PATH_NUM
+    PATH_MP3GAIN, PATH_SYNC_CONTACTS, PATH_SYNC_CALENDAR, PATH_SYNC_NOTES, PATH_AACGAIN, PATH_NUM
 } PathType;
 
 /* enum for reading of options */
@@ -166,15 +166,11 @@ static void set_default_preferences() {
     prefs_set_int("show_non_updated", TRUE);
     prefs_set_int("show_updated", TRUE);
     prefs_set_int("photo_library_confirm_delete", TRUE);
-    prefs_set_int("mserv_report_probs", TRUE);
     prefs_set_int("delete_ipod", TRUE);
     prefs_set_int("delete_file", TRUE);
     prefs_set_int("delete_local_file", TRUE);
     prefs_set_int("delete_database", TRUE);
     prefs_set_string("initial_mountpoint", "/media/ipod");
-    prefs_set_string("path_play_now", "xmms %s");
-    prefs_set_string("path_play_enqueue", "xmms -e %s");
-    prefs_set_string("path_mserv_trackinfo_root", "/var/lib/mserv/trackinfo/");
 
     str = g_build_filename(SCRIPTDIR, "convert-ogg2mp3.sh", NULL);
     prefs_set_string("path_conv_ogg", str);
@@ -245,8 +241,6 @@ static void set_default_preferences() {
     prefs_set_int("coverart_file", TRUE);
     prefs_set_string("coverart_template", "%A;folder.jpg");
     prefs_set_string("video_thumbnailer_prog", "totem-video-thumbnailer %f %o");
-    prefs_set_int("mserv_use", FALSE);
-    prefs_set_string("mserv_username", "");
     prefs_set_int("startup_messages", TRUE);
     prefs_set_int("add_recursively", TRUE);
     prefs_set_int("info_window", FALSE);
@@ -768,41 +762,6 @@ static void cleanup_keys() {
         prefs_set_string("md5", NULL);
     }
 
-    /* Convert old path numbered keys to named ones */
-
-    /* Play Now */
-    if (prefs_get_string_value_index("path", PATH_PLAY_NOW, &buf)) {
-        prefs_set_string("path_play_now", buf);
-        prefs_set_string_index("path", PATH_PLAY_NOW, NULL);
-        if (version < 0.87) { /* default changed from "xmms -p %s" to "xmms
-         %s" which avoids xmms from hanging --
-         thanks to Chris Vine */
-            if (strcmp(buf, "xmms -p %s") == 0) {
-                prefs_set_string("path_play_now", "xmms %s");
-            }
-        }
-        g_free(buf);
-    }
-
-    if (prefs_get_string_value_index("toolpath", PATH_PLAY_NOW, &buf)) {
-        prefs_set_string("path_play_now", buf);
-        g_free(buf);
-        prefs_set_string_index("toolpath", PATH_PLAY_NOW, NULL);
-    }
-
-    /* Enqueue */
-    if (prefs_get_string_value_index("path", PATH_PLAY_ENQUEUE, &buf)) {
-        prefs_set_string("path_play_enqueue", buf);
-        g_free(buf);
-        prefs_set_string_index("path", PATH_PLAY_ENQUEUE, NULL);
-    }
-
-    if (prefs_get_string_value_index("toolpath", PATH_PLAY_ENQUEUE, &buf)) {
-        prefs_set_string("path_play_enqueue", buf);
-        g_free(buf);
-        prefs_set_string_index("toolpath", PATH_PLAY_ENQUEUE, NULL);
-    }
-
     /* MP3 Gain */
     if (prefs_get_string_value_index("path", PATH_MP3GAIN, &buf)) {
         prefs_set_string("path_mp3gain", buf);
@@ -853,32 +812,6 @@ static void cleanup_keys() {
         prefs_set_string("itdb_0_path_sync_notes", buf);
         g_free(buf);
         prefs_set_string_index("toolpath", PATH_SYNC_NOTES, NULL);
-    }
-
-    /* MSERV music root */
-    if (prefs_get_string_value_index("path", PATH_MSERV_MUSIC_ROOT, &buf)) {
-        prefs_set_string("path_mserv_music_root", buf);
-        g_free(buf);
-        prefs_set_string_index("path", PATH_MSERV_MUSIC_ROOT, NULL);
-    }
-
-    if (prefs_get_string_value_index("toolpath", PATH_MSERV_MUSIC_ROOT, &buf)) {
-        prefs_set_string("path_mserv_music_root", buf);
-        g_free(buf);
-        prefs_set_string_index("toolpath", PATH_MSERV_MUSIC_ROOT, NULL);
-    }
-
-    /* MSERV track info root */
-    if (prefs_get_string_value_index("path", PATH_MSERV_TRACKINFO_ROOT, &buf)) {
-        prefs_set_string("path_mserv_trackinfo_root", buf);
-        g_free(buf);
-        prefs_set_string_index("path", PATH_MSERV_TRACKINFO_ROOT, NULL);
-    }
-
-    if (prefs_get_string_value_index("toolpath", PATH_MSERV_TRACKINFO_ROOT, &buf)) {
-        prefs_set_string("path_mserv_trackinfo_root", buf);
-        g_free(buf);
-        prefs_set_string_index("toolpath", PATH_MSERV_TRACKINFO_ROOT, NULL);
     }
 
     /* If there's an extra (PATH_NUM) key, delete it */

@@ -52,6 +52,4 @@ void on_delete_selected_entry_from_device(GtkAction *action, SorttabDisplayPlugi
 
 void on_update_selected_tab_entry (GtkAction *action, SorttabDisplayPlugin* plugin);
 
-void on_update_mserv_selected_tab_entry (GtkAction *action, SorttabDisplayPlugin* plugin);
-
 #endif

@@ -6,7 +6,6 @@
 			<separator/>
 			<placeholder name="PlaceholderFileMenus">
 				<menu name="Update Tracks from File" action="ActionUpdateMenu"/>
-				<menu name="Update mserv Data from File" action="ActionUpdateMservMenu"/>
 			</placeholder>
 			<separator/>
 			<menuitem name="Quit" action="ActionExit" />

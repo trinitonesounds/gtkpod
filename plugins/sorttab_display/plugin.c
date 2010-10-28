@@ -62,10 +62,9 @@ static GtkActionEntry sorttab_actions[] =
             NULL, G_CALLBACK (on_delete_selected_entry_from_device) },
         {
             "ActionUpdateTabEntry", GTK_STOCK_REFRESH, N_("Selected Tab Entry"), NULL, NULL,
-            G_CALLBACK (on_update_selected_tab_entry) },
-        {
-            "ActionUpdateMservTabEntry", GTK_STOCK_REFRESH, N_("Selected Tab Entry"), NULL, NULL,
-            G_CALLBACK (on_update_mserv_selected_tab_entry) } };
+            G_CALLBACK (on_update_selected_tab_entry)
+        }
+    };
 
 static void set_default_preferences() {
     gint i;

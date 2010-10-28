@@ -274,14 +274,6 @@ static GtkActionEntry playlist_actions[] =
             NULL,
             NULL,
             G_CALLBACK (on_update_selected_playlist)
-        },
-        {
-            "ActionUpdateMservPlaylist",
-            GTK_STOCK_REFRESH,
-            N_("Selected Playlist"),
-            NULL,
-            NULL,
-            G_CALLBACK (on_update_mserv_selected_playlist)
         }
     };
 

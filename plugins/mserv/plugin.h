@@ -26,20 +26,37 @@
 |
 |  $Id$
 */
-#ifndef __TRACK_DISPLAY_ACTIONS_H__
-#define __TRACK_DISPLAY_ACTIONS_H__
+
+#ifndef PLUGIN_H_
+#define PLUGIN_H_
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
-#include <gtk/gtk.h>
-#include "plugin.h"
+#include <libanjuta/anjuta-plugin.h>
 
-void on_delete_selected_tracks_from_playlist(GtkAction *action, TrackDisplayPlugin* plugin);
-void on_delete_selected_tracks_from_database(GtkAction *action, TrackDisplayPlugin* plugin);
-void on_delete_selected_tracks_from_harddisk(GtkAction *action, TrackDisplayPlugin* plugin);
-void on_delete_selected_tracks_from_ipod(GtkAction *action, TrackDisplayPlugin* plugin);
-void on_delete_selected_tracks_from_device(GtkAction *action, TrackDisplayPlugin* plugin);
-void on_update_selected_tracks (GtkAction *action, TrackDisplayPlugin* plugin);
-#endif
+extern GType mserv_plugin_get_type (GTypeModule *module);
+#define MSERV_TYPE_PLUGIN         (mserv_plugin_get_type (NULL))
+#define MSERV_PLUGIN(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), MSERV_TYPE_PLUGIN, MservPlugin))
+#define MSERV_PLUGIN_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST ((k), MSERV_TYPE_PLUGIN, MservPluginClass))
+#define MSERV_IS_PLUGIN(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), MSERV_TYPE_PLUGIN))
+#define MSERV_IS_PLUGIN_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), MSERV_TYPE_PLUGIN))
+#define MSERV_PLUGIN_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), MSERV_TYPE_PLUGIN, MservPluginClass))
+
+typedef struct _MservPlugin MservPlugin;
+typedef struct _MservPluginClass MservPluginClass;
+
+struct _MservPlugin {
+    AnjutaPlugin parent;
+    gint uiid;
+    GtkActionGroup *action_group;
+    GtkWidget *prefs;
+    gchar *builderpath;
+};
+
+struct _MservPluginClass {
+    AnjutaPluginClass parent_class;
+};
+
+#endif /* PLUGIN_H_ */
