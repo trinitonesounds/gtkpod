@@ -42,6 +42,15 @@
 #include "display_tracks.h"
 #include "track_display_context_menu.h"
 
+/* Select All */
+static void select_all(GtkMenuItem *mi, gpointer data) {
+    tm_select_all_tracks();
+}
+
+static GtkWidget *add_select_all(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Select All"), GTK_STOCK_SELECT_ALL, G_CALLBACK (select_all), NULL);
+}
+
 static void context_menu_delete_tracks_head(GtkMenuItem *mi, gpointer data) {
     DeleteAction deleteaction = GPOINTER_TO_INT (data);
     delete_track_head(deleteaction);
@@ -189,6 +198,8 @@ void tm_context_menu_init(void) {
     add_separator(menu);
     add_update_tracks_from_file(menu);
     add_edit_track_details(menu);
+    add_separator(menu);
+    add_select_all(menu);
 
     /*
      * button should be button 0 as per the docs because we're calling

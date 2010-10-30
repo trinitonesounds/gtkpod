@@ -1260,6 +1260,12 @@ tm_get_selected_tracks(void) {
     return (result);
 }
 
+void tm_select_all_tracks(void) {
+    GtkTreeSelection *ts = NULL;
+    ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(track_treeview));
+    gtk_tree_selection_select_all(ts);
+}
+
 /* used by tm_get_all_tracks */
 static gboolean on_all_tracks_list_foreach(GtkTreeModel *tm, GtkTreePath *tp, GtkTreeIter *i, gpointer data) {
     on_tracks_list_foreach(tm, tp, i, data);

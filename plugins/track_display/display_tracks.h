@@ -42,6 +42,7 @@ void tm_update_default_sizes (void);
 void tm_store_col_order (void);
 void tm_show_preferred_columns(void);
 GList *tm_get_selected_tracks(void);
+void tm_select_all_tracks(void);
 
 void display_show_hide_searchbar(void);
 
