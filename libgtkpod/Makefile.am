@@ -56,12 +56,14 @@ libgtkpod_la_LIBADD = \
 	$(LIBGTKPOD_LIBS) \
 	@LIBOBJS@
 	
-libgtkpodincludebase = $(includedir)/gtkpod-1.0
+libgtkpodincludebase = $(includedir)/gtkpod
 libgtkpodincludedir = $(libgtkpodincludebase)/gtkpod
 libgtkpodinclude_HEADERS = gp_itdb.h gtkpod_app_iface.h
 
 INCLUDES=$(LIBGTKPOD_CFLAGS)
 LIBS=$(LIBGTKPOD_LIBS) -lm
+
+EXTRA_DIST = gtkpod_app-marshallers.list
 
 all-local: gtkpod_app-marshallers.h gtkpod_app-marshallers.c
 

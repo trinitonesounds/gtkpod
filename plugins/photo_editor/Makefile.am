@@ -3,19 +3,19 @@ plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
-details_editor_uidir = $(gtkpod_ui_dir)
-details_editor_ui_DATA = $(plugin_name).ui
+photo_editor_uidir = $(gtkpod_ui_dir)
+photo_editor_ui_DATA = $(plugin_name).ui
 
 # Plugin Glade file
-details_editor_gladedir = $(gtkpod_glade_dir)
-details_editor_glade_DATA =  $(plugin_name).glade
+photo_editor_gladedir = $(gtkpod_glade_dir)
+photo_editor_glade_DATA =  $(plugin_name).glade
 
 # Plugin Icon file
-details_editor_pixmapsdir = $(gtkpod_image_dir)
-details_editor_pixmaps_DATA =
+photo_editor_pixmapsdir = $(gtkpod_image_dir)
+photo_editor_pixmaps_DATA =
 
-details_editor_plugindir = $(gtkpod_plugin_dir)
-details_editor_plugin_DATA = $(plugin_file)
+photo_editor_plugindir = $(gtkpod_plugin_dir)
+photo_editor_plugin_DATA = $(plugin_file)
 
 SUBDIRS = icons
 

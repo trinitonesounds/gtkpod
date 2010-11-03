@@ -7,14 +7,18 @@ AC_PREREQ(2.55)
 #   LIBGTKPOD_MICRO_VERSION += 1;
 #   LIBGTKPOD_SO_VERSION - see comments
 #
-m4_define([LIBGTKPOD_MAJOR_VERSION], [2])
-m4_define([LIBGTKPOD_MINOR_VERSION], [0])
-m4_define([LIBGTKPOD_MICRO_VERSION], [0])
+m4_define([M4_LIBGTKPOD_MAJOR_VERSION], [2])
+m4_define([M4_LIBGTKPOD_MINOR_VERSION], [0])
+m4_define([M4_LIBGTKPOD_MICRO_VERSION], [0])
 # If you need a modifier for the version number. 
 # Normally empty, but can be used to make "fixup" releases.
-m4_define([LIBGTKPOD_EXTRAVERSION], [GIT])
+m4_define([M4_LIBGTKPOD_EXTRAVERSION], [GIT])
 
-m4_define([LIBGTKPOD_VERSION], m4_defn([LIBGTKPOD_MAJOR_VERSION]).m4_defn([LIBGTKPOD_MINOR_VERSION]).m4_defn([LIBGTKPOD_MICRO_VERSION])m4_defn([LIBGTKPOD_EXTRAVERSION]))
+m4_define([M4_LIBGTKPOD_VERSION], m4_defn([M4_LIBGTKPOD_MAJOR_VERSION]).m4_defn([M4_LIBGTKPOD_MINOR_VERSION]).m4_defn([M4_LIBGTKPOD_MICRO_VERSION])m4_defn([M4_LIBGTKPOD_EXTRAVERSION]))
+
+AC_INIT([gtkpod], m4_defn([M4_LIBGTKPOD_VERSION]))
+AM_CONFIG_HEADER(config.h)
+AC_CONFIG_SRCDIR(src/main.c)
 
 dnl libtool versioning
 # +1 : 0 : +1  == adds new functions to the interface
@@ -22,11 +26,12 @@ dnl libtool versioning
 #                 changes to the signature and the semantic)
 #  ? :+1 : ?   == just internal changes
 # CURRENT : REVISION : AGE
-m4_define([LIBGTKPOD_SO_VERSION], [1:0:0])
+LIBGTKPOD_SO_VERSION="1:0:0"
 
-AC_INIT([gtkpod], m4_defn([LIBGTKPOD_VERSION]))
-AM_CONFIG_HEADER(config.h)
-AC_CONFIG_SRCDIR(src/main.c)
+LIBGTKPOD_VERSION=m4_defn([M4_LIBGTKPOD_VERSION])
+
+AC_SUBST(LIBGTKPOD_SO_VERSION)
+AC_SUBST(LIBGTKPOD_VERSION)
 
 AM_INIT_AUTOMAKE([1.9 tar-ustar]) 
 AM_MAINTAINER_MODE
