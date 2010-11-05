@@ -3,20 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 # Require autoconf 2.55 or higher
 AC_PREREQ(2.55)
 
-# Making releases:
-#   LIBGTKPOD_MICRO_VERSION += 1;
-#   LIBGTKPOD_SO_VERSION - see comments
-#
-m4_define([M4_LIBGTKPOD_MAJOR_VERSION], [2])
-m4_define([M4_LIBGTKPOD_MINOR_VERSION], [0])
-m4_define([M4_LIBGTKPOD_MICRO_VERSION], [0])
-# If you need a modifier for the version number. 
-# Normally empty, but can be used to make "fixup" releases.
-m4_define([M4_LIBGTKPOD_EXTRAVERSION], [GIT])
-
-m4_define([M4_LIBGTKPOD_VERSION], m4_defn([M4_LIBGTKPOD_MAJOR_VERSION]).m4_defn([M4_LIBGTKPOD_MINOR_VERSION]).m4_defn([M4_LIBGTKPOD_MICRO_VERSION])m4_defn([M4_LIBGTKPOD_EXTRAVERSION]))
-
-AC_INIT([gtkpod], m4_defn([M4_LIBGTKPOD_VERSION]))
+AC_INIT(gtkpod, m4_esyscmd([./version.sh | tr -d '\n']))
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR(src/main.c)
 
@@ -28,7 +15,7 @@ dnl libtool versioning
 # CURRENT : REVISION : AGE
 LIBGTKPOD_SO_VERSION="1:0:0"
 
-LIBGTKPOD_VERSION=m4_defn([M4_LIBGTKPOD_VERSION])
+LIBGTKPOD_VERSION=`./version.sh`
 
 AC_SUBST(LIBGTKPOD_SO_VERSION)
 AC_SUBST(LIBGTKPOD_VERSION)

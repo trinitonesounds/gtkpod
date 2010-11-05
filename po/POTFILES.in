@@ -12,6 +12,9 @@ data/glade/coverweb.glade
 data/glade/gtkpod.glade
 data/glade/sorttab_display.glade
 data/glade/details_editor.glade
+data/glade/core_prefs.xml
+data/glade/exporter.xml
+data/glade/mserv.xml
 plugins/details_editor/plugin.c
 plugins/details_editor/details.c
 plugins/details_editor/details_editor_actions.c
@@ -70,8 +73,8 @@ plugins/playlist_display/display_playlists.c
 plugins/playlist_display/playlist_display_preferences.c
 src/anjuta-app.c
 src/anjuta-action-callbacks.c
-src/help.c
 src/anjuta-about.c
+src/anjuta-actions.h
 src/gtkpod.c
 src/main.c
 libgtkpod/syncdir.c

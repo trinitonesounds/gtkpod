@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-05 09:26+0000\n"
+"POT-Creation-Date: 2010-11-05 22:04+0000\n"
 "PO-Revision-Date: 2010-08-08 12:50+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@comhem.se>\n"
 "Language-Team: Svenska <sv@li.org>\n"
@@ -2279,353 +2279,6 @@ msgstr "Bekräftelse"
 msgid "GtkPod Preferences"
 msgstr "Inställningar"
 
-#: ../src/help.c:48
-#, fuzzy
-msgid ""
-"© 2002 - 2010\n"
-"Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
-"Corey Donohoe (atmos at atmos dot org)\n"
-msgstr ""
-"© 2002 - 2007\n"
-"Jorg Schuler (jcsjcs snabela users punkt sourceforge punkt net)\n"
-"Corey Donohoe (atmos snabela atmos punkt org)\n"
-
-#: ../src/help.c:52
-msgid ""
-"Codebase includes contribution from the following people and many other "
-"helpful individuals\n"
-msgstr ""
-
-#: ../src/help.c:53
-msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
-msgstr ""
-"Ramesh Dharan: Redigera flera (redigera taggar för flera spår på en gång)"
-
-#: ../src/help.c:54
-msgid "Hiroshi Kawashima: Japanese charset autodetection feature"
-msgstr ""
-"Hiroshi Kawashima: Funktion för automatisk detektering av japansk "
-"teckenkodning"
-
-#: ../src/help.c:55
-msgid "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
-msgstr ""
-"Adrian Ulrich: överföring av spellistans kod från mktunes.pl till itunesdb.c"
-
-#: ../src/help.c:56
-msgid ""
-"Walter Bell: correct handling of DND URIs with escaped characters and/or cr/"
-"newlines at the end"
-msgstr ""
-"Walter Bell: riktig hantering av drag och släpp information med "
-"specialtecken och/eller returtecken/nyrader i slutet"
-
-#: ../src/help.c:57
-msgid "Sam Clegg: user defined filenames when exporting tracks from the iPod"
-msgstr "Sam Clegg: användardefinierade filnamn vid export av spår från iPod"
-
-#: ../src/help.c:58
-msgid "Chris Cutler: automatic creation of various playlist types"
-msgstr "Chris Cutler: skapa olika sorters spellistor automatiskt"
-
-#: ../src/help.c:59
-msgid ""
-"Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
-"dialogue during sync"
-msgstr ""
-"Graeme Wilford: läsning och skrivning av ID3-taggar för 'Kompositör', "
-"förloppsdialog under synkronisering"
-
-#: ../src/help.c:60
-msgid ""
-"Edward Matteucci: debugging, special playlist creation, most of the volume "
-"normalizing code"
-msgstr ""
-"Edward Matteucci: felsökning, skapa speciella spellistor, den största delen "
-"av koden för volymnormalisering"
-
-#: ../src/help.c:61
-msgid "Jens Lautenbach: some optical improvements"
-msgstr "Jens Lautenbach: några visuella förbättringar"
-
-#: ../src/help.c:62
-msgid "Alex Tribble: iPod eject patch"
-msgstr "Alex Tribble: programfix för att mata ut iPod"
-
-#: ../src/help.c:63
-msgid "Yaroslav Halchenko: Orphaned and dangling tracks handling"
-msgstr "Yaroslav Halchenko: hantering av övergivna filer och saknade spår"
-
-#: ../src/help.c:64
-msgid ""
-"Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
-msgstr ""
-"Andrew Huntwork: rättning av skiftlägeskänsliga filnamn och diverse andra "
-"felrättningar"
-
-#: ../src/help.c:65
-msgid ""
-"Ero Carrera: Filename validation and quick sync when copying tracks from the "
-"iPod"
-msgstr ""
-"Ero Carrera: validering av filnamn och snabbsynkronisering när spår kopieras "
-"från iPod"
-
-#: ../src/help.c:66
-msgid "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
-msgstr ""
-"Jens Taprogge: stöd för spelningsnivåtagg från LAME vid normalisering av "
-"volym"
-
-#: ../src/help.c:67
-msgid "Armando Atienza: Support with external playcounts"
-msgstr "Armando Atienza: stöd med externa spelningsantal"
-
-#: ../src/help.c:68
-msgid "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
-msgstr "D.L. Sharp: stöd för m4b-filer (AAC-filer med bokmärken)"
-
-#: ../src/help.c:69
-msgid "Jim Hall: Decent INSTALL file"
-msgstr "Jim Hall: hygglig INSTALL-fil"
-
-#: ../src/help.c:70
-msgid ""
-"Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
-"contacts to the iPod"
-msgstr ""
-"Juergen Helmers, Markus Gaugusch: konverteringsskript för att synkronisera "
-"kalender och kontakter i iPod"
-
-#. J"urgen!
-#: ../src/help.c:71
-msgid "Flavio Stanchina: bugfixes"
-msgstr "Flavio Stanchina: felrättningar"
-
-#: ../src/help.c:72
-msgid ""
-"Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
-"the title"
-msgstr ""
-"Chris Micacchi: ignorera 'the' och liknande i titelns början vid sortering"
-
-#: ../src/help.c:73
-msgid "Steve Jay: use statvfs() instead of df (better portability, faster)"
-msgstr ""
-"Steve Jay: använd statvfs() istället för df (bättre flyttbarhet, snabbare)"
-
-#: ../src/help.c:75
-msgid ""
-"Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 "
-"tags"
-msgstr ""
-"Christoph Kunz: hantering av kompatibilitetsfrågor när MP3-taggar av typ "
-"id3v2.4 skrivs"
-
-#: ../src/help.c:77
-msgid ""
-"James Liggett:\n"
-"replacement of old GTK file selection dialogs with new GTK filechooser "
-"dialogs\n"
-"refactored user preferences system."
-msgstr ""
-"James Ligget:\n"
-"ersättning av gamla GTK dialogrutor för filmarkering med nya GTK\n"
-"dialogrutor för filval, omgjort system för användarinställningar."
-
-#: ../src/help.c:81
-msgid "Daniel Kercher: sync scripts for abook and webcalendar"
-msgstr "Daniel Kercher: synkroniseringsskript för abook och webbkalender"
-
-#: ../src/help.c:83
-msgid "Clinton Gormley: sync scripts for thunderbird"
-msgstr "Clinton Gormley: synkroniseringsskript för thunderbird"
-
-#: ../src/help.c:85
-msgid "Sebastien Beridot: sync script for ldif addressbook format"
-msgstr "Sebastien Beridot: synkroniseringsskript för LDIF-adressboksformat"
-
-#: ../src/help.c:87
-msgid "Sebastian Scherer: sync script for kNotes"
-msgstr "Sebastian Scherer: synkroniseringsskript för Knotes"
-
-#: ../src/help.c:89
-msgid "Nick Piper: sync script for Palm, type-ahead search"
-msgstr "Nick Piper: synkroniseringsskript för Palm, sökning under inskrivning"
-
-#: ../src/help.c:91
-msgid "Uwe Hermann: help with support for iPod Video"
-msgstr "Uwe Hermann: hjälp med stöd för iPod-video"
-
-#: ../src/help.c:93
-msgid ""
-"Iain Benson: support for compilation tag in mp3 files and separate display "
-"of compilations in the sort tab."
-msgstr ""
-"Iain Benson: stöd för samlingstaggen i mp3-filer och separat visning av "
-"samlingar i sorteringsfliken."
-
-#: ../src/help.c:94
-#, fuzzy
-msgid "Nicolas Chariot: icons of buttons\n"
-msgstr ""
-"Nicolas Chariot: ikoner för knappar\n"
-"\n"
-
-#: ../src/help.c:95
-msgid ""
-"Others past and present for their excellent contributions\n"
-"\n"
-msgstr ""
-
-#: ../src/help.c:96
-msgid "This program borrows code from the following projects:"
-msgstr "Detta program lånar kod från följande projekt:"
-
-#: ../src/help.c:97
-msgid ""
-"gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  (http://"
-"www.gnu.org/software/gnupod/)"
-msgstr ""
-"gnutools: (mktunes.pl, överförd till C) läsning och skrivning av iTunes "
-"databas (http://www.gnu.org/software/gnupod/)"
-
-#: ../src/help.c:98
-msgid ""
-"iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some code "
-"for smart playlists is based on his C++-classes."
-msgstr ""
-"iPod.cpp, iPod.h av Samuel Wood (sam punkt wood snabela gmail punkt com): "
-"viss kod för smarta spellistor är baserad på hans C++ klasser."
-
-#: ../src/help.c:99
-msgid "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
-msgstr ""
-"mp3info: detektering av MP3-spelningslängd (http://ibiblio.org/mp3info/)"
-
-#: ../src/help.c:100
-msgid "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
-msgstr ""
-"xmms: katalogbläddring, detektering av MP3-spelningslängd (http://www.xmms."
-"org)"
-
-#: ../src/help.c:102
-#, fuzzy
-msgid "The GUI was created with the help of glade (http://glade.gnome.org/)."
-msgstr ""
-"Det grafiska gränssnittet skapades med hjälp av glade-2 (http://glade.gnome."
-"org/)."
-
-#: ../src/help.c:106
-msgid "French: David Le Brun (david at dyn-ns dot net)"
-msgstr "Franska: David Le Brun (david snabela dyn-ns punkt net)"
-
-#: ../src/help.c:107
-msgid "French: Éric Lassauge (rpmfarm at free dot fr)"
-msgstr "Franska: Éric Lassauge (rpmfarm snabela free punkt fr)"
-
-#: ../src/help.c:108
-#, fuzzy
-msgid "French: Alain Portal (alain.portal at free dot fr)"
-msgstr "Franska: Éric Lassauge (rpmfarm snabela free punkt fr)"
-
-#: ../src/help.c:109
-msgid "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
-msgstr "Tyska: Jorg Schuler (jcsjcs snabela users punkt sourceforge punkt net)"
-
-#: ../src/help.c:110
-msgid "German: Kai-Ove"
-msgstr "Tyska: Kai-Ove"
-
-#: ../src/help.c:111
-msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)"
-msgstr "Hebreiska: Assaf Gillat (gillata snabela gmail punkt com)"
-
-#: ../src/help.c:112
-msgid ""
-"Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot net)"
-msgstr ""
-"Italienska: Edward Matteucci (edward_matteucc snabela users punkt "
-"sourceforge punkt net)"
-
-#: ../src/help.c:113
-msgid "Italian: Daniele Forsi (dforsi at gmail dot com)"
-msgstr "Italienska: Daniele Forsi (dforsi snabela gmail punkt com)"
-
-#: ../src/help.c:114
-msgid "Japanese: Ayako Sano"
-msgstr "Japanska: Ayako Sano"
-
-#: ../src/help.c:115
-msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
-msgstr ""
-"Japanska: Kentaro Fukuchi (fukuchi snabela users punkt sourceforge punkt net)"
-
-#: ../src/help.c:116
-msgid "Romanian: Alex Eftimie (alexeftimie at gmail dot com)"
-msgstr "Rumänska: Alex Eftimie (alexeftimie snabela gmail punkt com)"
-
-#: ../src/help.c:117
-msgid "Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
-msgstr ""
-"Spanska: Alejandro Lamas Daviña (alejandro.lamas snabela ific punkt uv punkt "
-"es)"
-
-#: ../src/help.c:118
-msgid "Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"
-msgstr "Svenska: Stefan Asserhäll (stefan asserhall snabela comhem punkt se)"
-
-#: ../src/help.c:123
-msgid ""
-"This program is free software; you can redistribute it and/or\n"
-"modify it under the terms of the GNU General Public License as\n"
-"published by the Free Software Foundation; either version 2 of the\n"
-"License, or (at your option) any later version.\n"
-"\n"
-"This program is distributed in the hope that it will be useful, but\n"
-"WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
-"the GNU General Public License for more details.\n"
-"\n"
-"You should have received a copy of the GNU General Public\n"
-"License along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
-"02111-1307, USA."
-msgstr ""
-"Detta program är fri programvara. Du kan distribuera det\n"
-"och/eller ändra det under villkoren i GNU General Public License,\n"
-"publicerad av Free Software Foundation, antingen version 2 av\n"
-"licensen, eller (om du så önskar) någon senare version.\n"
-"\n"
-"Detta program distribueras i hopp om att det ska vara användbart,\n"
-"men UTAN NÅGON SOM HELST GARANTI, Även utan underförstådd\n"
-"garanti om SÄLJBARHET eller LÄMPLIGHET FÖR NÅGOT SPECIELLT\n"
-"ÄNDAMÅL. Se GNU General Public License för ytterligare information.\n"
-"\n"
-"Du ska ha fått en kopia av GNU General Public License tillsammans\n"
-"med detta program. Om inte, skriv till Free Software Foundation, Inc.,\n"
-"59 Temple Place, Suite 330, Boston, MA  02111-1307, USA."
-
-#: ../src/help.c:138
-#, fuzzy
-msgid ""
-"© 2002-2007\n"
-"Jorg Schuler <jcsjcs at users.sourceforge.net>\n"
-"Corey Donohoe <atmos at atmos.org>"
-msgstr ""
-"© 2002 - 2007\n"
-"Jorg Schuler <jcsjcs@users.sourceforge.net>\n"
-"Corey Donohoe <atmos@atmos.org>"
-
-#: ../src/help.c:143
-#, c-format
-msgid "(using libgpod %s)"
-msgstr "(använder libgpod %s)"
-
-#: ../src/help.c:144 ../src/help.c:149
-msgid "Cross-platform multilingual interface to Apple's iPod™"
-msgstr "Plattformsoberoende flerspråkigt gränssnitt för Apples iPod™"
-
 #: ../src/anjuta-about.c:172
 msgid "Copyright (c) Jorg Schuler et al."
 msgstr ""
@@ -2634,6 +2287,138 @@ msgstr ""
 #, fuzzy
 msgid "iPod Management Platform"
 msgstr "Hantering av iPod"
+
+#: ../src/anjuta-actions.h:26
+msgid "_Music"
+msgstr "_Musik"
+
+#: ../src/anjuta-actions.h:31
+msgid "_Update Tracks from File"
+msgstr "_Uppdatera spår från fil"
+
+#: ../src/anjuta-actions.h:39
+msgid "_Quit"
+msgstr ""
+
+#: ../src/anjuta-actions.h:41
+msgid "Quit GtkPod"
+msgstr ""
+
+#: ../src/anjuta-actions.h:49
+#, fuzzy
+msgid "_Edit"
+msgstr "_Redigera"
+
+#: ../src/anjuta-actions.h:54
+#, fuzzy
+msgid "_Delete"
+msgstr "_Ta bort"
+
+#: ../src/anjuta-actions.h:62
+#, fuzzy
+msgid "_Preferences"
+msgstr "Inställningar av mserv"
+
+#: ../src/anjuta-actions.h:63
+msgid "Do you prefer coffee to tea? Check it out."
+msgstr ""
+
+#: ../src/anjuta-actions.h:69
+#, fuzzy
+msgid "_View"
+msgstr "_Visa"
+
+#: ../src/anjuta-actions.h:71
+msgid "_Reset Dock Layout"
+msgstr ""
+
+#: ../src/anjuta-actions.h:72
+msgid "Reset the widgets docking layout to default"
+msgstr ""
+
+#: ../src/anjuta-actions.h:78
+msgid "_Full Screen"
+msgstr ""
+
+#: ../src/anjuta-actions.h:79
+msgid "Toggle fullscreen mode"
+msgstr ""
+
+#: ../src/anjuta-actions.h:82
+msgid "_Lock Dock Layout"
+msgstr ""
+
+#: ../src/anjuta-actions.h:83
+msgid "Lock the current dock layout so that widgets cannot be moved"
+msgstr ""
+
+#: ../src/anjuta-actions.h:86
+msgid "_Toolbar"
+msgstr "_Verktygsrad"
+
+#: ../src/anjuta-actions.h:87
+msgid "Show or hide the toolbar"
+msgstr ""
+
+#: ../src/anjuta-actions.h:95
+#, fuzzy
+msgid "_Tools"
+msgstr "Verk_tyg"
+
+#: ../src/anjuta-actions.h:100
+#, fuzzy
+msgid "_Help"
+msgstr "_Hjälp"
+
+#: ../src/anjuta-actions.h:102
+msgid "_User's Manual"
+msgstr ""
+
+#: ../src/anjuta-actions.h:103
+msgid "Anjuta user's manual"
+msgstr ""
+
+#: ../src/anjuta-actions.h:106
+#, fuzzy
+msgid "gtkpod _Home Page"
+msgstr "Gtkpod hantering av iPod"
+
+#: ../src/anjuta-actions.h:107
+msgid "Online documentation and resources"
+msgstr ""
+
+#: ../src/anjuta-actions.h:110
+msgid "Report _Bugs/Patches/Requests"
+msgstr ""
+
+#: ../src/anjuta-actions.h:111
+msgid "Submit a bug report, patch or feature request for Anjuta"
+msgstr ""
+
+#: ../src/anjuta-actions.h:114
+msgid "Ask a _Question"
+msgstr ""
+
+#: ../src/anjuta-actions.h:115
+msgid "Submit a question for FAQs"
+msgstr ""
+
+#: ../src/anjuta-actions.h:118
+#, fuzzy
+msgid "_About"
+msgstr "Avbryt"
+
+#: ../src/anjuta-actions.h:119
+msgid "About Anjuta"
+msgstr ""
+
+#: ../src/anjuta-actions.h:122
+msgid "About External _Plugins"
+msgstr ""
+
+#: ../src/anjuta-actions.h:123
+msgid "About third party Anjuta plugins"
+msgstr ""
 
 #: ../src/gtkpod.c:189
 msgid "Loaded Session..."
@@ -5124,6 +4909,295 @@ msgstr "FEL när tagg skulle skrivas till filen: '%s' (%s).\n"
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr "Filen \"%s\" har spelningslängden noll. Ignoreras.\n"
 
+#, fuzzy
+#~ msgid ""
+#~ "© 2002 - 2010\n"
+#~ "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
+#~ "Corey Donohoe (atmos at atmos dot org)\n"
+#~ msgstr ""
+#~ "© 2002 - 2007\n"
+#~ "Jorg Schuler (jcsjcs snabela users punkt sourceforge punkt net)\n"
+#~ "Corey Donohoe (atmos snabela atmos punkt org)\n"
+
+#~ msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
+#~ msgstr ""
+#~ "Ramesh Dharan: Redigera flera (redigera taggar för flera spår på en gång)"
+
+#~ msgid "Hiroshi Kawashima: Japanese charset autodetection feature"
+#~ msgstr ""
+#~ "Hiroshi Kawashima: Funktion för automatisk detektering av japansk "
+#~ "teckenkodning"
+
+#~ msgid ""
+#~ "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
+#~ msgstr ""
+#~ "Adrian Ulrich: överföring av spellistans kod från mktunes.pl till "
+#~ "itunesdb.c"
+
+#~ msgid ""
+#~ "Walter Bell: correct handling of DND URIs with escaped characters and/or "
+#~ "cr/newlines at the end"
+#~ msgstr ""
+#~ "Walter Bell: riktig hantering av drag och släpp information med "
+#~ "specialtecken och/eller returtecken/nyrader i slutet"
+
+#~ msgid ""
+#~ "Sam Clegg: user defined filenames when exporting tracks from the iPod"
+#~ msgstr "Sam Clegg: användardefinierade filnamn vid export av spår från iPod"
+
+#~ msgid "Chris Cutler: automatic creation of various playlist types"
+#~ msgstr "Chris Cutler: skapa olika sorters spellistor automatiskt"
+
+#~ msgid ""
+#~ "Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
+#~ "dialogue during sync"
+#~ msgstr ""
+#~ "Graeme Wilford: läsning och skrivning av ID3-taggar för 'Kompositör', "
+#~ "förloppsdialog under synkronisering"
+
+#~ msgid ""
+#~ "Edward Matteucci: debugging, special playlist creation, most of the "
+#~ "volume normalizing code"
+#~ msgstr ""
+#~ "Edward Matteucci: felsökning, skapa speciella spellistor, den största "
+#~ "delen av koden för volymnormalisering"
+
+#~ msgid "Jens Lautenbach: some optical improvements"
+#~ msgstr "Jens Lautenbach: några visuella förbättringar"
+
+#~ msgid "Alex Tribble: iPod eject patch"
+#~ msgstr "Alex Tribble: programfix för att mata ut iPod"
+
+#~ msgid "Yaroslav Halchenko: Orphaned and dangling tracks handling"
+#~ msgstr "Yaroslav Halchenko: hantering av övergivna filer och saknade spår"
+
+#~ msgid ""
+#~ "Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
+#~ msgstr ""
+#~ "Andrew Huntwork: rättning av skiftlägeskänsliga filnamn och diverse andra "
+#~ "felrättningar"
+
+#~ msgid ""
+#~ "Ero Carrera: Filename validation and quick sync when copying tracks from "
+#~ "the iPod"
+#~ msgstr ""
+#~ "Ero Carrera: validering av filnamn och snabbsynkronisering när spår "
+#~ "kopieras från iPod"
+
+#~ msgid ""
+#~ "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
+#~ msgstr ""
+#~ "Jens Taprogge: stöd för spelningsnivåtagg från LAME vid normalisering av "
+#~ "volym"
+
+#~ msgid "Armando Atienza: Support with external playcounts"
+#~ msgstr "Armando Atienza: stöd med externa spelningsantal"
+
+#~ msgid "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
+#~ msgstr "D.L. Sharp: stöd för m4b-filer (AAC-filer med bokmärken)"
+
+#~ msgid "Jim Hall: Decent INSTALL file"
+#~ msgstr "Jim Hall: hygglig INSTALL-fil"
+
+#~ msgid ""
+#~ "Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
+#~ "contacts to the iPod"
+#~ msgstr ""
+#~ "Juergen Helmers, Markus Gaugusch: konverteringsskript för att "
+#~ "synkronisera kalender och kontakter i iPod"
+
+#~ msgid "Flavio Stanchina: bugfixes"
+#~ msgstr "Flavio Stanchina: felrättningar"
+
+#~ msgid ""
+#~ "Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
+#~ "the title"
+#~ msgstr ""
+#~ "Chris Micacchi: ignorera 'the' och liknande i titelns början vid sortering"
+
+#~ msgid "Steve Jay: use statvfs() instead of df (better portability, faster)"
+#~ msgstr ""
+#~ "Steve Jay: använd statvfs() istället för df (bättre flyttbarhet, snabbare)"
+
+#~ msgid ""
+#~ "Christoph Kunz: address compatibility issues when writing id3v2.4 type "
+#~ "mp3 tags"
+#~ msgstr ""
+#~ "Christoph Kunz: hantering av kompatibilitetsfrågor när MP3-taggar av typ "
+#~ "id3v2.4 skrivs"
+
+#~ msgid ""
+#~ "James Liggett:\n"
+#~ "replacement of old GTK file selection dialogs with new GTK filechooser "
+#~ "dialogs\n"
+#~ "refactored user preferences system."
+#~ msgstr ""
+#~ "James Ligget:\n"
+#~ "ersättning av gamla GTK dialogrutor för filmarkering med nya GTK\n"
+#~ "dialogrutor för filval, omgjort system för användarinställningar."
+
+#~ msgid "Daniel Kercher: sync scripts for abook and webcalendar"
+#~ msgstr "Daniel Kercher: synkroniseringsskript för abook och webbkalender"
+
+#~ msgid "Clinton Gormley: sync scripts for thunderbird"
+#~ msgstr "Clinton Gormley: synkroniseringsskript för thunderbird"
+
+#~ msgid "Sebastien Beridot: sync script for ldif addressbook format"
+#~ msgstr "Sebastien Beridot: synkroniseringsskript för LDIF-adressboksformat"
+
+#~ msgid "Sebastian Scherer: sync script for kNotes"
+#~ msgstr "Sebastian Scherer: synkroniseringsskript för Knotes"
+
+#~ msgid "Nick Piper: sync script for Palm, type-ahead search"
+#~ msgstr ""
+#~ "Nick Piper: synkroniseringsskript för Palm, sökning under inskrivning"
+
+#~ msgid "Uwe Hermann: help with support for iPod Video"
+#~ msgstr "Uwe Hermann: hjälp med stöd för iPod-video"
+
+#~ msgid ""
+#~ "Iain Benson: support for compilation tag in mp3 files and separate "
+#~ "display of compilations in the sort tab."
+#~ msgstr ""
+#~ "Iain Benson: stöd för samlingstaggen i mp3-filer och separat visning av "
+#~ "samlingar i sorteringsfliken."
+
+#, fuzzy
+#~ msgid "Nicolas Chariot: icons of buttons\n"
+#~ msgstr ""
+#~ "Nicolas Chariot: ikoner för knappar\n"
+#~ "\n"
+
+#~ msgid "This program borrows code from the following projects:"
+#~ msgstr "Detta program lånar kod från följande projekt:"
+
+#~ msgid ""
+#~ "gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  "
+#~ "(http://www.gnu.org/software/gnupod/)"
+#~ msgstr ""
+#~ "gnutools: (mktunes.pl, överförd till C) läsning och skrivning av iTunes "
+#~ "databas (http://www.gnu.org/software/gnupod/)"
+
+#~ msgid ""
+#~ "iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some "
+#~ "code for smart playlists is based on his C++-classes."
+#~ msgstr ""
+#~ "iPod.cpp, iPod.h av Samuel Wood (sam punkt wood snabela gmail punkt com): "
+#~ "viss kod för smarta spellistor är baserad på hans C++ klasser."
+
+#~ msgid "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
+#~ msgstr ""
+#~ "mp3info: detektering av MP3-spelningslängd (http://ibiblio.org/mp3info/)"
+
+#~ msgid "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
+#~ msgstr ""
+#~ "xmms: katalogbläddring, detektering av MP3-spelningslängd (http://www."
+#~ "xmms.org)"
+
+#, fuzzy
+#~ msgid ""
+#~ "The GUI was created with the help of glade (http://glade.gnome.org/)."
+#~ msgstr ""
+#~ "Det grafiska gränssnittet skapades med hjälp av glade-2 (http://glade."
+#~ "gnome.org/)."
+
+#~ msgid "French: David Le Brun (david at dyn-ns dot net)"
+#~ msgstr "Franska: David Le Brun (david snabela dyn-ns punkt net)"
+
+#~ msgid "French: Éric Lassauge (rpmfarm at free dot fr)"
+#~ msgstr "Franska: Éric Lassauge (rpmfarm snabela free punkt fr)"
+
+#, fuzzy
+#~ msgid "French: Alain Portal (alain.portal at free dot fr)"
+#~ msgstr "Franska: Éric Lassauge (rpmfarm snabela free punkt fr)"
+
+#~ msgid "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
+#~ msgstr ""
+#~ "Tyska: Jorg Schuler (jcsjcs snabela users punkt sourceforge punkt net)"
+
+#~ msgid "German: Kai-Ove"
+#~ msgstr "Tyska: Kai-Ove"
+
+#~ msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)"
+#~ msgstr "Hebreiska: Assaf Gillat (gillata snabela gmail punkt com)"
+
+#~ msgid ""
+#~ "Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot "
+#~ "net)"
+#~ msgstr ""
+#~ "Italienska: Edward Matteucci (edward_matteucc snabela users punkt "
+#~ "sourceforge punkt net)"
+
+#~ msgid "Italian: Daniele Forsi (dforsi at gmail dot com)"
+#~ msgstr "Italienska: Daniele Forsi (dforsi snabela gmail punkt com)"
+
+#~ msgid "Japanese: Ayako Sano"
+#~ msgstr "Japanska: Ayako Sano"
+
+#~ msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
+#~ msgstr ""
+#~ "Japanska: Kentaro Fukuchi (fukuchi snabela users punkt sourceforge punkt "
+#~ "net)"
+
+#~ msgid "Romanian: Alex Eftimie (alexeftimie at gmail dot com)"
+#~ msgstr "Rumänska: Alex Eftimie (alexeftimie snabela gmail punkt com)"
+
+#~ msgid ""
+#~ "Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
+#~ msgstr ""
+#~ "Spanska: Alejandro Lamas Daviña (alejandro.lamas snabela ific punkt uv "
+#~ "punkt es)"
+
+#~ msgid "Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"
+#~ msgstr ""
+#~ "Svenska: Stefan Asserhäll (stefan asserhall snabela comhem punkt se)"
+
+#~ msgid ""
+#~ "This program is free software; you can redistribute it and/or\n"
+#~ "modify it under the terms of the GNU General Public License as\n"
+#~ "published by the Free Software Foundation; either version 2 of the\n"
+#~ "License, or (at your option) any later version.\n"
+#~ "\n"
+#~ "This program is distributed in the hope that it will be useful, but\n"
+#~ "WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
+#~ "the GNU General Public License for more details.\n"
+#~ "\n"
+#~ "You should have received a copy of the GNU General Public\n"
+#~ "License along with this program; if not, write to the Free Software\n"
+#~ "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
+#~ "02111-1307, USA."
+#~ msgstr ""
+#~ "Detta program är fri programvara. Du kan distribuera det\n"
+#~ "och/eller ändra det under villkoren i GNU General Public License,\n"
+#~ "publicerad av Free Software Foundation, antingen version 2 av\n"
+#~ "licensen, eller (om du så önskar) någon senare version.\n"
+#~ "\n"
+#~ "Detta program distribueras i hopp om att det ska vara användbart,\n"
+#~ "men UTAN NÅGON SOM HELST GARANTI, Även utan underförstådd\n"
+#~ "garanti om SÄLJBARHET eller LÄMPLIGHET FÖR NÅGOT SPECIELLT\n"
+#~ "ÄNDAMÅL. Se GNU General Public License för ytterligare information.\n"
+#~ "\n"
+#~ "Du ska ha fått en kopia av GNU General Public License tillsammans\n"
+#~ "med detta program. Om inte, skriv till Free Software Foundation, Inc.,\n"
+#~ "59 Temple Place, Suite 330, Boston, MA  02111-1307, USA."
+
+#, fuzzy
+#~ msgid ""
+#~ "© 2002-2007\n"
+#~ "Jorg Schuler <jcsjcs at users.sourceforge.net>\n"
+#~ "Corey Donohoe <atmos at atmos.org>"
+#~ msgstr ""
+#~ "© 2002 - 2007\n"
+#~ "Jorg Schuler <jcsjcs@users.sourceforge.net>\n"
+#~ "Corey Donohoe <atmos@atmos.org>"
+
+#~ msgid "(using libgpod %s)"
+#~ msgstr "(använder libgpod %s)"
+
+#~ msgid "Cross-platform multilingual interface to Apple's iPod™"
+#~ msgstr "Plattformsoberoende flerspråkigt gränssnitt för Apples iPod™"
+
 #~ msgid "<b>Auto-Generated Playlists</b>"
 #~ msgstr "<b>Automatiskt skapade spellistor</b>"
 
@@ -5767,9 +5841,6 @@ msgstr "Filen \"%s\" har spelningslängden noll. Ignoreras.\n"
 #~ msgid "_M3U"
 #~ msgstr "_M3U"
 
-#~ msgid "_Music"
-#~ msgstr "_Musik"
-
 #~ msgid "_Newly Added Tracks"
 #~ msgstr "_Nytillagda spår"
 
@@ -5800,14 +5871,8 @@ msgstr "Filen \"%s\" har spelningslängden noll. Ignoreras.\n"
 #~ msgid "_Synchronize Playlist with Dir(s)"
 #~ msgstr "S_ynkronisera spellista med katalog(er)"
 
-#~ msgid "_Toolbar"
-#~ msgstr "_Verktygsrad"
-
 #~ msgid "_Tooltips"
 #~ msgstr "Verktygs_tips"
-
-#~ msgid "_Update Tracks from File"
-#~ msgstr "_Uppdatera spår från fil"
 
 #~ msgid "_Zoom"
 #~ msgstr "_Zooma"
@@ -5818,9 +5883,6 @@ msgstr "Filen \"%s\" har spelningslängden noll. Ignoreras.\n"
 #, fuzzy
 #~ msgid "dB"
 #~ msgstr "byte"
-
-#~ msgid "mserv Preferences"
-#~ msgstr "Inställningar av mserv"
 
 #~ msgid "mserv root:"
 #~ msgstr "Rot för mserv:"
