@@ -202,7 +202,7 @@ void gtkpod_broadcast_preference_change(gchar *preference_name, gint value);
 void gtkpod_register_exporter(Exporter *exporter);
 void gtkpod_unregister_exporter();
 gboolean gtkpod_has_exporter();
-ExporterInterface *gtkpod_get_exporter();
+Exporter *gtkpod_get_exporter();
 
 void gtkpod_display_widget(GtkWidget *widget);
 
@@ -221,15 +221,15 @@ void gtkpod_edit_details(GList* selected_tracks);
 void gtkpod_register_lyrics_editor(LyricsEditor *editor);
 void gtkpod_unregister_lyrics_editor();
 gboolean gtkpod_has_lyrics_editor();
-void gtkpod_edit_lyrics(GList* selected_tracks);
+void gtkpod_edit_lyrics(GList* tracks);
 
 void gtkpod_register_photo_editor(PhotoEditor *editor);
 void gtkpod_unregister_photo_editor();
 gboolean gtkpod_has_photo_editor();
 void gtkpod_edit_photos(iTunesDB *itdb);
 
-void gtkpod_register_track_command(TrackCommandInterface *command);
-void gtkpod_unregister_track_command(TrackCommandInterface *command);
+void gtkpod_register_track_command(TrackCommand *command);
+void gtkpod_unregister_track_command(TrackCommand *command);
 void gtkpod_execute_track_command(GList *tracks);
 GList *gtkpod_get_registered_track_commands();
 

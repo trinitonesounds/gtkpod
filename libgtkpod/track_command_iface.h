@@ -56,6 +56,9 @@ GType track_command_get_type(void);
 #define TRACK_IS_COMMAND(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRACK_COMMAND_TYPE))
 #define TRACK_COMMAND_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), TRACK_COMMAND_TYPE, TrackCommandInterface))
 
+gchar *track_command_get_id(TrackCommand *command);
+gchar *track_command_get_text(TrackCommand *command);
+void track_command_execute(TrackCommand *command, GList *tracks);
 void on_track_command_menuitem_activate(GtkMenuItem *mi, gpointer data);
 
 #endif /* TRACK_COMMAND_IFACE_H_ */

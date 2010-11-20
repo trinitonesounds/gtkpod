@@ -35,6 +35,11 @@
 #include <gtk/gtk.h>
 #include "itdb.h"
 
+#define EXPORTER_TYPE                (exporter_get_type ())
+#define EXPORTER(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), EXPORTER_TYPE, Exporter))
+#define EXPORTER_IS_EXPORTER(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EXPORTER_TYPE))
+#define EXPORTER_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EXPORTER_TYPE, ExporterInterface))
+
 typedef struct _Exporter Exporter;
 typedef struct _ExporterInterface ExporterInterface;
 
@@ -49,9 +54,9 @@ struct _ExporterInterface {
 
 GType exporter_get_type(void);
 
-#define EXPORTER_TYPE                (exporter_get_type ())
-#define EXPORTER(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), EXPORTER_TYPE, Exporter))
-#define EXPORTER_IS_EXPORTER(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EXPORTER_TYPE))
-#define EXPORTER_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EXPORTER_TYPE, ExporterInterface))
+void exporter_export_tracks_as_files(Exporter *exporter, GList *tracks, GList **filenames, gboolean display, gchar *message);
+void exporter_export_tracks_to_playlist_file (Exporter *exporter, GList *tracks);
+GList *exporter_transfer_track_glist_between_itdbs (Exporter *exporter, iTunesDB *itdb_s, iTunesDB *itdb_d, GList *tracks);
+GList *exporter_transfer_track_names_between_itdbs (Exporter *exporter, iTunesDB *itdb_s, iTunesDB *itdb_d, gchar *data);
 
 #endif /* EXPORTER_IFACE_H_ */

@@ -45,17 +45,42 @@ GType track_command_get_type(void) {
     if (!type) {
         static const GTypeInfo info =
             { sizeof(TrackCommandInterface), (GBaseInitFunc) track_command_base_init, NULL, NULL, NULL, NULL, 0, 0, NULL };
-        type = g_type_register_static(G_TYPE_INTERFACE, "TrackCommandInterface", &info, 0);
+        type = g_type_register_static(G_TYPE_INTERFACE, "TrackCommand", &info, 0);
         g_type_interface_add_prerequisite(type, G_TYPE_OBJECT);
     }
     return type;
 }
 
+gchar *track_command_get_id(TrackCommand *command) {
+    if (!TRACK_IS_COMMAND(command))
+            return NULL;
+
+    return TRACK_COMMAND_GET_INTERFACE(command)->id;
+}
+
+gchar *track_command_get_text(TrackCommand *command) {
+    if (!TRACK_IS_COMMAND(command))
+            return NULL;
+
+    return TRACK_COMMAND_GET_INTERFACE(command)->text;
+}
+
+void track_command_execute(TrackCommand *command, GList *tracks) {
+    if (!tracks) {
+        return;
+    }
+
+    if (!TRACK_IS_COMMAND(command))
+        return;
+
+    return TRACK_COMMAND_GET_INTERFACE(command)->execute(tracks);
+}
+
 void on_track_command_menuitem_activate(GtkMenuItem *mi, gpointer data) {
     GPtrArray *pairarr = (GPtrArray *) data;
 
-    TrackCommandInterface *cmd = g_ptr_array_index(pairarr, 0);
+    TrackCommand *cmd = g_ptr_array_index(pairarr, 0);
     GList *tracks = g_ptr_array_index(pairarr, 1);
-    cmd->execute(tracks);
+    track_command_execute(cmd, tracks);
     g_ptr_array_free(pairarr, FALSE);
 }

@@ -51,3 +51,10 @@ GType photo_editor_get_type(void) {
     }
     return type;
 }
+
+void photo_editor_edit_photos(PhotoEditor *editor, iTunesDB *itdb) {
+    if (!PHOTO_EDITOR_IS_EDITOR(editor))
+        return;
+
+    PHOTO_EDITOR_GET_INTERFACE(editor)->edit_photos(itdb);
+}

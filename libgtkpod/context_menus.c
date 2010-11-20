@@ -132,11 +132,11 @@ GtkWidget *add_exec_commands(GtkWidget *menu) {
     }
 
     while(cmds != NULL) {
-        TrackCommandInterface *cmd = cmds->data;
+        TrackCommand *cmd = cmds->data;
         GPtrArray *pairarr = g_ptr_array_new ();
         g_ptr_array_add (pairarr, cmd);
         g_ptr_array_add (pairarr, gtkpod_get_selected_tracks());
-        hookup_menu_item(mm, cmd->text, GTK_STOCK_EXECUTE, G_CALLBACK (on_track_command_menuitem_activate), pairarr);
+        hookup_menu_item(mm, track_command_get_text(cmd), GTK_STOCK_EXECUTE, G_CALLBACK (on_track_command_menuitem_activate), pairarr);
         cmds = cmds->next;
     }
 
@@ -264,10 +264,10 @@ static void create_playlist_file(GtkWidget *w, gpointer data)
     if (!gtkpod_has_exporter())
         return;
 
-    ExporterInterface *exporter = gtkpod_get_exporter();
+    Exporter *exporter = gtkpod_get_exporter();
 
     if(gtkpod_get_selected_tracks())
-        exporter->export_tracks_to_playlist_file(gtkpod_get_selected_tracks());
+        exporter_export_tracks_to_playlist_file(exporter, gtkpod_get_selected_tracks());
 }
 
 GtkWidget *add_create_playlist_file (GtkWidget *menu)
@@ -301,11 +301,11 @@ GtkWidget *add_edit_track_details(GtkWidget *menu) {
  */
 static void export_entries(GtkWidget *w, gpointer data)
 {
-    ExporterInterface *exporter = gtkpod_get_exporter();
+    Exporter *exporter = gtkpod_get_exporter();
     g_return_if_fail(exporter);
 
     if(gtkpod_get_selected_tracks())
-        exporter->export_tracks_as_files (gtkpod_get_selected_tracks(), NULL, FALSE, NULL);
+        exporter_export_tracks_as_files (exporter, gtkpod_get_selected_tracks(), NULL, FALSE, NULL);
 }
 
 GtkWidget *add_copy_track_to_filesystem (GtkWidget *menu)

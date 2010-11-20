@@ -35,6 +35,11 @@
 #include <gtk/gtk.h>
 #include "itdb.h"
 
+#define DETAILS_EDITOR_TYPE                (details_editor_get_type ())
+#define DETAILS_EDITOR(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), DETAILS_EDITOR_TYPE, DetailsEditor))
+#define DETAILS_EDITOR_IS_EDITOR(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), DETAILS_EDITOR_TYPE))
+#define DETAILS_EDITOR_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), DETAILS_EDITOR_TYPE, DetailsEditorInterface))
+
 typedef struct _DetailsEditor DetailsEditor;
 typedef struct _DetailsEditorInterface DetailsEditorInterface;
 
@@ -46,9 +51,6 @@ struct _DetailsEditorInterface {
 
 GType details_editor_get_type(void);
 
-#define DETAILS_EDITOR_TYPE                (details_editor_get_type ())
-#define DETAILS_EDITOR(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), DETAILS_EDITOR_TYPE, DetailsEditor))
-#define DETAILS_EDITOR_IS_EDITOR(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), DETAILS_EDITOR_TYPE))
-#define DETAILS_EDITOR_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), DETAILS_EDITOR_TYPE, DetailsEditorInterface))
+void details_editor_edit_details(DetailsEditor *editor, GList *tracks);
 
 #endif /* DETAILS_EDITOR_IFACE_H_ */

@@ -40,14 +40,14 @@ void on_export_tracks_to_playlist_file(GtkAction *action, ExporterPlugin* plugin
     GList *tracks = gtkpod_get_selected_tracks();
     g_return_if_fail(tracks);
 
-    ExporterInterface *exporter = gtkpod_get_exporter();
-    exporter->export_tracks_to_playlist_file(tracks);
+    Exporter *exporter = gtkpod_get_exporter();
+    exporter_export_tracks_to_playlist_file(exporter, tracks);
 }
 
 void on_export_tracks_to_filesystem(GtkAction *action, ExporterPlugin* plugin) {
     GList *tracks = gtkpod_get_selected_tracks();
     g_return_if_fail(tracks);
 
-    ExporterInterface *exporter = gtkpod_get_exporter();
-    exporter->export_tracks_as_files(tracks, NULL, FALSE, NULL);
+    Exporter *exporter = gtkpod_get_exporter();
+    exporter_export_tracks_as_files(exporter, tracks, NULL, FALSE, NULL);
 }

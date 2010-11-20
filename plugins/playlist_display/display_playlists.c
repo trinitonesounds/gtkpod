@@ -509,7 +509,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     gboolean path_ok;
     gboolean del_src;
 
-    ExporterInterface *exporter = gtkpod_get_exporter();
+    Exporter *exporter = gtkpod_get_exporter();
     g_return_if_fail(exporter);
 
     /* printf ("drag_data_received: x y a: %d %d %d\n", x, y, dc->suggested_action); */
@@ -619,7 +619,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
 
         if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) || (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER)) { /* drop into existing playlist */
             /* copy files from iPod if necessary */
-            GList *trackglist = exporter->transfer_track_names_between_itdbs(tr_s->itdb, pl->itdb, data_copy);
+            GList *trackglist = exporter_transfer_track_names_between_itdbs(exporter, tr_s->itdb, pl->itdb, data_copy);
             if (trackglist) {
                 add_trackglist_to_playlist(pl, trackglist);
                 g_list_free(trackglist);
@@ -641,7 +641,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
 
             if (plitem) {
                 /* copy files from iPod if necessary */
-                GList *trackglist = exporter->transfer_track_names_between_itdbs(tr_s->itdb, pl->itdb, data_copy);
+                GList *trackglist = exporter_transfer_track_names_between_itdbs(exporter, tr_s->itdb, pl->itdb, data_copy);
                 if (trackglist) {
                     add_trackglist_to_playlist(plitem, trackglist);
                     g_list_free(trackglist);
@@ -776,7 +776,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
             g_return_if_fail (pl_d);
 
             /* copy files from iPod if necessary */
-            trackglist = exporter->transfer_track_glist_between_itdbs(pl_s->itdb, pl_d->itdb, pl_s->members);
+            trackglist = exporter_transfer_track_glist_between_itdbs(exporter, pl_s->itdb, pl_d->itdb, pl_s->members);
 
             /* check if copying went fine (trackglist is empty if
              pl_s->members is empty, so this must not be counted as

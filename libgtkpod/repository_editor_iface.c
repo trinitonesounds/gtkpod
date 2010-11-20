@@ -53,3 +53,24 @@ GType repository_editor_get_type(void) {
     }
     return type;
 }
+
+void repository_editor_edit_repository(RepositoryEditor *editor, iTunesDB *itdb, Playlist *playlist) {
+    if (! REPOSITORY_EDITOR_IS_EDITOR(editor))
+           return;
+
+       REPOSITORY_EDITOR_GET_INTERFACE(editor)->edit_repository(itdb, playlist);
+}
+
+gboolean repository_editor_init_repository(RepositoryEditor *editor, iTunesDB *itdb) {
+    if (! REPOSITORY_EDITOR_IS_EDITOR(editor))
+           return FALSE;
+
+    return REPOSITORY_EDITOR_GET_INTERFACE(editor)->init_repository(itdb);
+}
+
+void repository_edtor_set_repository_model(RepositoryEditor *editor, iTunesDB *itdb, const gchar *old_model) {
+    if (! REPOSITORY_EDITOR_IS_EDITOR(editor))
+           return;
+
+    REPOSITORY_EDITOR_GET_INTERFACE(editor)->set_repository_model(itdb, old_model);
+}

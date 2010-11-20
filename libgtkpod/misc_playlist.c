@@ -1327,7 +1327,7 @@ void delete_playlist_head(DeleteAction deleteaction) {
 void copy_playlist_to_target_playlist(Playlist *pl, Playlist *t_pl) {
     GList *addtracks = NULL;
     Playlist *t_mpl;
-    ExporterInterface *exporter;
+    Exporter *exporter;
 
     g_return_if_fail (pl);
     g_return_if_fail (t_pl);
@@ -1338,7 +1338,7 @@ void copy_playlist_to_target_playlist(Playlist *pl, Playlist *t_pl) {
     exporter = gtkpod_get_exporter();
     g_return_if_fail(exporter);
 
-    addtracks = exporter->transfer_track_glist_between_itdbs(pl->itdb, t_pl->itdb, pl->members);
+    addtracks = exporter_transfer_track_glist_between_itdbs(exporter, pl->itdb, t_pl->itdb, pl->members);
     if (addtracks || !pl->members) {
         add_trackglist_to_playlist(t_pl, addtracks);
         gtkpod_statusbar_message(_("Copied '%s' playlist to '%s' in '%s'"), pl->name, t_pl->name, t_mpl->name);
@@ -1353,7 +1353,7 @@ void copy_playlist_to_target_playlist(Playlist *pl, Playlist *t_pl) {
 void copy_playlist_to_target_itdb(Playlist *pl, iTunesDB *t_itdb) {
     Playlist *pl_n;
     GList *addtracks = NULL;
-    ExporterInterface *exporter;
+    Exporter *exporter;
 
     g_return_if_fail (pl);
     g_return_if_fail (t_itdb);
@@ -1362,7 +1362,7 @@ void copy_playlist_to_target_itdb(Playlist *pl, iTunesDB *t_itdb) {
     g_return_if_fail(exporter);
 
     if (pl->itdb != t_itdb) {
-        addtracks = exporter->transfer_track_glist_between_itdbs(pl->itdb, t_itdb, pl->members);
+        addtracks = exporter_transfer_track_glist_between_itdbs(exporter, pl->itdb, t_itdb, pl->members);
         if (addtracks || !pl->members) {
             pl_n = gp_playlist_add_new(t_itdb, pl->name, FALSE, -1);
             add_trackglist_to_playlist(pl_n, addtracks);

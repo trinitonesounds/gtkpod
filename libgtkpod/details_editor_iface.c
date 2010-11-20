@@ -46,8 +46,15 @@ GType details_editor_get_type(void) {
     if (!type) {
         static const GTypeInfo info =
             { sizeof(DetailsEditorInterface), (GBaseInitFunc) details_editor_base_init, NULL, NULL, NULL, NULL, 0, 0, NULL };
-        type = g_type_register_static(G_TYPE_INTERFACE, "DetailsEditorInterface", &info, 0);
+        type = g_type_register_static(G_TYPE_INTERFACE, "DetailsEditor", &info, 0);
         g_type_interface_add_prerequisite(type, G_TYPE_OBJECT);
     }
     return type;
+}
+
+void details_editor_edit_details(DetailsEditor *editor, GList *tracks) {
+    if (! DETAILS_EDITOR_IS_EDITOR(editor))
+        return;
+
+    DETAILS_EDITOR_GET_INTERFACE(editor)->edit_details(tracks);
 }

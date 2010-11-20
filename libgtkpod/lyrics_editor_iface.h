@@ -35,6 +35,11 @@
 #include <gtk/gtk.h>
 #include "itdb.h"
 
+#define LYRICS_EDITOR_TYPE                (lyrics_editor_get_type ())
+#define LYRICS_EDITOR(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), LYRICS_EDITOR_TYPE, LyricsEditor))
+#define LYRICS_EDITOR_IS_EDITOR(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), LYRICS_EDITOR_TYPE))
+#define LYRICS_EDITOR_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), LYRICS_EDITOR_TYPE, LyricsEditorInterface))
+
 typedef struct _LyricsEditor LyricsEditor;
 typedef struct _LyricsEditorInterface LyricsEditorInterface;
 
@@ -46,9 +51,6 @@ struct _LyricsEditorInterface {
 
 GType lyrics_editor_get_type(void);
 
-#define LYRICS_EDITOR_TYPE                (lyrics_editor_get_type ())
-#define LYRICS_EDITOR(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), LYRICS_EDITOR_TYPE, LyricsEditor))
-#define LYRICS_EDITOR_IS_EDITOR(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), LYRICS_EDITOR_TYPE))
-#define LYRICS_EDITOR_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), LYRICS_EDITOR_TYPE, LyricsEditorInterface))
+void lyrics_editor_edit_lyrics(LyricsEditor *editor, GList *tracks);
 
 #endif /* LYRICS_EDITOR_IFACE_H_ */

@@ -35,6 +35,11 @@
 #include <gtk/gtk.h>
 #include "itdb.h"
 
+#define PHOTO_EDITOR_TYPE                (photo_editor_get_type ())
+#define PHOTO_EDITOR(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), PHOTO_EDITOR_TYPE, PhotoEditor))
+#define PHOTO_EDITOR_IS_EDITOR(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), PHOTO_EDITOR_TYPE))
+#define PHOTO_EDITOR_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), PHOTO_EDITOR_TYPE, PhotoEditorInterface))
+
 typedef struct _PhotoEditor PhotoEditor;
 typedef struct _PhotoEditorInterface PhotoEditorInterface;
 
@@ -46,9 +51,6 @@ struct _PhotoEditorInterface {
 
 GType photo_editor_get_type(void);
 
-#define PHOTO_EDITOR_TYPE                (photo_editor_get_type ())
-#define PHOTO_EDITOR(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), PHOTO_EDITOR_TYPE, PhotoEditor))
-#define PHOTO_EDITOR_IS_EDITOR(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), PHOTO_EDITOR_TYPE))
-#define PHOTO_EDITOR_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), PHOTO_EDITOR_TYPE, PhotoEditorInterface))
+void photo_editor_edit_photos(PhotoEditor *editor, iTunesDB *itdb);
 
 #endif /* PHOTO_EDITOR_IFACE_H_ */

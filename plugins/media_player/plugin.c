@@ -84,7 +84,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     init_media_player(media_player_plugin->media_player_window);
 
-    gtkpod_register_track_command(TRACK_COMMAND_GET_INTERFACE(media_player_plugin));
+    gtkpod_register_track_command(TRACK_COMMAND(media_player_plugin));
 
     // Do not show all as video widget is initially invisible
     gtk_widget_show(media_player_plugin->media_player_window);
@@ -100,7 +100,7 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     media_player_plugin = (MediaPlayerPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
 
-    gtkpod_unregister_track_command(TRACK_COMMAND_GET_INTERFACE(media_player_plugin));
+    gtkpod_unregister_track_command(TRACK_COMMAND(media_player_plugin));
 
     /* Destroy the browser */
     destroy_media_player();

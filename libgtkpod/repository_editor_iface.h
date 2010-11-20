@@ -35,6 +35,11 @@
 #include <gtk/gtk.h>
 #include "itdb.h"
 
+#define REPOSITORY_EDITOR_TYPE                (repository_editor_get_type ())
+#define REPOSITORY_EDITOR(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), REPOSITORY_EDITOR_TYPE, RepositoryEditor))
+#define REPOSITORY_EDITOR_IS_EDITOR(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), REPOSITORY_EDITOR_TYPE))
+#define REPOSITORY_EDITOR_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), REPOSITORY_EDITOR_TYPE, RepositoryEditorInterface))
+
 typedef struct _RepositoryEditor RepositoryEditor;
 typedef struct _RepositoryEditorInterface RepositoryEditorInterface;
 
@@ -48,9 +53,8 @@ struct _RepositoryEditorInterface {
 
 GType repository_editor_get_type(void);
 
-#define REPOSITORY_EDITOR_TYPE                (repository_editor_get_type ())
-#define REPOSITORY_EDITOR(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), REPOSITORY_EDITOR_TYPE, RepositoryEditor))
-#define REPOSITORY_EDITOR_IS_EDITOR(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), REPOSITORY_EDITOR_TYPE))
-#define REPOSITORY_EDITOR_GET_INTERFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), REPOSITORY_EDITOR_TYPE, RepositoryEditorInterface))
+void repository_editor_edit_repository(RepositoryEditor *editor, iTunesDB *itdb, Playlist *playlist);
+gboolean repository_editor_init_repository(RepositoryEditor *editor, iTunesDB *itdb);
+void repository_edtor_set_repository_model(RepositoryEditor *editor, iTunesDB *itdb, const gchar *old_model);
 
 #endif /* REPOSITORY_EDITOR_IFACE_H_ */

@@ -49,8 +49,36 @@ GType exporter_get_type(void) {
     if (!type) {
         static const GTypeInfo info =
             { sizeof(ExporterInterface), (GBaseInitFunc) exporter_base_init, NULL, NULL, NULL, NULL, 0, 0, NULL };
-        type = g_type_register_static(G_TYPE_INTERFACE, "ExporterInterface", &info, 0);
+        type = g_type_register_static(G_TYPE_INTERFACE, "Exporter", &info, 0);
         g_type_interface_add_prerequisite(type, G_TYPE_OBJECT);
     }
     return type;
+}
+
+void exporter_export_tracks_as_files(Exporter *exporter, GList *tracks, GList **filenames, gboolean display, gchar *message) {
+    if (! EXPORTER_IS_EXPORTER(exporter))
+        return;
+
+    EXPORTER_GET_INTERFACE(exporter)->export_tracks_as_files(tracks, filenames, display, message);
+}
+
+void exporter_export_tracks_to_playlist_file (Exporter *exporter, GList *tracks) {
+    if (! EXPORTER_IS_EXPORTER(exporter))
+            return;
+
+    EXPORTER_GET_INTERFACE(exporter)->export_tracks_to_playlist_file(tracks);
+}
+
+GList *exporter_transfer_track_glist_between_itdbs (Exporter *exporter, iTunesDB *itdb_s, iTunesDB *itdb_d, GList *tracks) {
+    if (! EXPORTER_IS_EXPORTER(exporter))
+            return NULL;
+
+    return EXPORTER_GET_INTERFACE(exporter)->transfer_track_glist_between_itdbs(itdb_s, itdb_d, tracks);
+}
+
+GList *exporter_transfer_track_names_between_itdbs (Exporter *exporter, iTunesDB *itdb_s, iTunesDB *itdb_d, gchar *data) {
+    if (! EXPORTER_IS_EXPORTER(exporter))
+            return NULL;
+
+    return EXPORTER_GET_INTERFACE(exporter)->transfer_track_names_between_itdbs (itdb_s, itdb_d, data);
 }

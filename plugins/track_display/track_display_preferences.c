@@ -348,8 +348,8 @@ static void trkcmd_combobox_changed(GtkComboBox *combo) {
 
     if (activeindex > -1) {
         GList *cmds = g_object_get_data(G_OBJECT(combo), "cmds");
-        TrackCommandInterface *cmd = g_list_nth_data(cmds, activeindex);
-        prefs_set_string(DEFAULT_TRACK_COMMAND_PREF_KEY, cmd->id);
+        TrackCommand *cmd = g_list_nth_data(cmds, activeindex);
+        prefs_set_string(DEFAULT_TRACK_COMMAND_PREF_KEY, track_command_get_id(cmd));
     }
 }
 
@@ -373,9 +373,9 @@ static void populate_track_cmd_combo(GtkComboBox *combo) {
     prefs_get_string_value(DEFAULT_TRACK_COMMAND_PREF_KEY, &cmdpref);
 
     for (i = 0; i < g_list_length(trkcmds); ++i) {
-        TrackCommandInterface *cmd = g_list_nth_data(trkcmds, i);
-        gtk_combo_box_append_text(combo, _(cmd->text));
-        if (cmdpref && g_str_equal(cmdpref, cmd->id))
+        TrackCommand *cmd = g_list_nth_data(trkcmds, i);
+        gtk_combo_box_append_text(combo, _(track_command_get_text(cmd)));
+        if (cmdpref && g_str_equal(cmdpref, track_command_get_id(cmd)))
             activeindex = i;
     }
 

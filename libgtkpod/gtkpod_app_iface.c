@@ -43,8 +43,28 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
     if (!initialized) {
         klass->current_itdb = NULL;
         klass->current_playlist = NULL;
+        klass->displayed_tracks = NULL;
+        klass->selected_tracks = NULL;
         klass->sort_enablement = TRUE;
+        klass->xml_file = NULL;
+        klass->exporter = NULL;
+        klass->repository_editor = NULL;
+        klass->details_editor = NULL;
+        klass->lyrics_editor = NULL;
+        klass->photo_editor = NULL;
+        klass->track_commands = NULL;
 
+        klass->itdb_updated = NULL;
+        klass->statusbar_message = NULL;
+        klass->gtkpod_warning = NULL;
+        klass->gtkpod_warning_hig = NULL;
+        klass->gtkpod_confirmation_hig = NULL;
+        klass->gtkpod_confirmation = NULL;
+        klass->statusbar_busy_push = NULL;
+        klass->statusbar_busy_pop = NULL;
+        klass->export_tracks_as_gchar = NULL;
+        klass->export_tracks_as_glist = NULL;
+        klass->display_widget = NULL;
         gtkpod_app_signals[ITDB_UPDATED]
                 = g_signal_new(SIGNAL_ITDB_UPDATED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, _gtkpod_app_marshal_VOID__POINTER_POINTER, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
 
@@ -421,13 +441,13 @@ gboolean gtkpod_has_exporter() {
     return (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->exporter != NULL);
 }
 
-ExporterInterface *gtkpod_get_exporter() {
+Exporter *gtkpod_get_exporter() {
     g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), NULL);
 
     if (!gtkpod_has_exporter())
         return NULL;
 
-    return EXPORTER_GET_INTERFACE(GTKPOD_APP_GET_INTERFACE (gtkpod_app)->exporter);
+    return GTKPOD_APP_GET_INTERFACE (gtkpod_app)->exporter;
 }
 
 void gtkpod_display_widget(GtkWidget *widget) {
@@ -449,34 +469,29 @@ void gtkpod_unregister_repository_editor() {
 
 gboolean gtkpod_has_repository_editor() {
     g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), FALSE);
-    return (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->repository_editor != NULL);
+    RepositoryEditor *editor = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->repository_editor;
+    return REPOSITORY_EDITOR_IS_EDITOR(editor);
 }
 
 void gtkpod_edit_repository(iTunesDB *itdb, Playlist *playlist) {
     g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
-    g_return_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->repository_editor);
 
-    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
-    RepositoryEditorInterface *editor_iface = REPOSITORY_EDITOR_GET_INTERFACE(gp_iface->repository_editor);
-    editor_iface->edit_repository(itdb, playlist);
+    RepositoryEditor *editor = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->repository_editor;
+    repository_editor_edit_repository(editor, itdb, playlist);
 }
 
 gboolean gtkpod_init_repository(iTunesDB *itdb) {
     g_return_val_if_fail(GTKPOD_IS_APP(gtkpod_app), FALSE);
-    g_return_val_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->repository_editor, FALSE);
 
-    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
-    RepositoryEditorInterface *editor_iface = REPOSITORY_EDITOR_GET_INTERFACE(gp_iface->repository_editor);
-    return editor_iface->init_repository(itdb);
+    RepositoryEditor *editor = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->repository_editor;
+    return repository_editor_init_repository(editor, itdb);
 }
 
 void gtkpod_populate_repository_model(iTunesDB *itdb, const gchar *old_model) {
     g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
-    g_return_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->repository_editor);
 
-    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
-    RepositoryEditorInterface *editor_iface = REPOSITORY_EDITOR_GET_INTERFACE(gp_iface->repository_editor);
-    editor_iface->set_repository_model(itdb, old_model);
+    RepositoryEditor *editor = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->repository_editor;
+    repository_edtor_set_repository_model(editor, itdb, old_model);
 }
 
 void gtkpod_register_details_editor(DetailsEditor *editor) {
@@ -492,16 +507,16 @@ void gtkpod_unregister_details_editor() {
 
 gboolean gtkpod_has_details_editor() {
     g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), FALSE);
-    return (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->details_editor != NULL);
+    DetailsEditor *editor = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->details_editor;
+    return DETAILS_EDITOR_IS_EDITOR(editor);
 }
 
 void gtkpod_edit_details(GList *selected_tracks) {
     g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
     g_return_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->details_editor);
 
-    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
-    DetailsEditorInterface *editor_iface = DETAILS_EDITOR_GET_INTERFACE(gp_iface->details_editor);
-    editor_iface->edit_details(selected_tracks);
+    DetailsEditor *editor = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->details_editor;
+    details_editor_edit_details(editor, selected_tracks);
 }
 
 void gtkpod_register_lyrics_editor(LyricsEditor *editor) {
@@ -520,13 +535,11 @@ gboolean gtkpod_has_lyrics_editor() {
     return (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->lyrics_editor != NULL);
 }
 
-void gtkpod_edit_lyrics(GList *selected_tracks) {
+void gtkpod_edit_lyrics(GList *tracks) {
     g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
-    g_return_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->lyrics_editor);
 
-    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
-    LyricsEditorInterface *editor_iface = LYRICS_EDITOR_GET_INTERFACE(gp_iface->lyrics_editor);
-    editor_iface->edit_lyrics(selected_tracks);
+    LyricsEditor *editor = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->lyrics_editor;
+    lyrics_editor_edit_lyrics(editor, tracks);
 }
 
 void gtkpod_register_photo_editor(PhotoEditor *editor) {
@@ -542,25 +555,25 @@ void gtkpod_unregister_photo_editor() {
 
 gboolean gtkpod_has_photo_editor() {
     g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), FALSE);
-    return (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->photo_editor != NULL);
+    PhotoEditor *editor = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->photo_editor;
+    return PHOTO_EDITOR_IS_EDITOR(editor);
 }
 
 void gtkpod_edit_photos(iTunesDB *itdb) {
     g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
     g_return_if_fail (GTKPOD_APP_GET_INTERFACE (gtkpod_app)->photo_editor);
 
-    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
-    PhotoEditorInterface *editor_iface = PHOTO_EDITOR_GET_INTERFACE(gp_iface->photo_editor);
-    editor_iface->edit_photos(itdb);
+    PhotoEditor *editor = GTKPOD_APP_GET_INTERFACE (gtkpod_app)->photo_editor;
+    photo_editor_edit_photos(editor, itdb);
 }
 
-void gtkpod_register_track_command(TrackCommandInterface *command) {
+void gtkpod_register_track_command(TrackCommand *command) {
     g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
     GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
     gp_iface->track_commands = g_list_append(gp_iface->track_commands, command);
 }
 
-void gtkpod_unregister_track_command(TrackCommandInterface *command) {
+void gtkpod_unregister_track_command(TrackCommand *command) {
     g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
     GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
     gp_iface->track_commands = g_list_remove(gp_iface->track_commands, command);
@@ -583,11 +596,11 @@ static void gtkpod_display_command_ctx_menu(GList *track_cmds, GList *tracks) {
     cmds = track_cmds;
 
     while(cmds != NULL) {
-        TrackCommandInterface *cmd = cmds->data;
+        TrackCommand *cmd = cmds->data;
         GPtrArray *pairarr = g_ptr_array_new ();
         g_ptr_array_add (pairarr, cmd);
         g_ptr_array_add (pairarr, tracks);
-        hookup_menu_item(menu, cmd->text, GTK_STOCK_EXECUTE, G_CALLBACK (on_track_command_menuitem_activate), pairarr);
+        hookup_menu_item(menu, track_command_get_text(cmd), GTK_STOCK_EXECUTE, G_CALLBACK (on_track_command_menuitem_activate), pairarr);
         cmds = cmds->next;
     }
 
@@ -608,8 +621,8 @@ void gtkpod_execute_track_command(GList *tracks) {
         break;
     case 1:
         ;
-        TrackCommandInterface *cmd = g_list_nth_data(gp_iface->track_commands, 0);
-        cmd->execute(tracks);
+        TrackCommand *cmd = g_list_nth_data(gp_iface->track_commands, 0);
+        track_command_execute(cmd, tracks);
         break;
     default:
         ;
@@ -617,9 +630,9 @@ void gtkpod_execute_track_command(GList *tracks) {
         gchar *cmdpref = NULL;
         if (prefs_get_string_value(DEFAULT_TRACK_COMMAND_PREF_KEY, &cmdpref)) {
             for (gint i = 0; i < g_list_length(gp_iface->track_commands); ++i) {
-                TrackCommandInterface *cmd = g_list_nth_data(gp_iface->track_commands, i);
-                if (cmdpref && g_str_equal(cmdpref, cmd->id)) {
-                    cmd->execute(tracks);
+                TrackCommand *cmd = g_list_nth_data(gp_iface->track_commands, i);
+                if (cmdpref && g_str_equal(cmdpref, track_command_get_id(cmd))) {
+                    track_command_execute(cmd, tracks);
                     return;
                 }
             }

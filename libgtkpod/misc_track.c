@@ -2080,7 +2080,7 @@ void copy_tracks_to_target_playlist(GList *tracks, Playlist *t_pl) {
     Track *first;
     Playlist *mpl;
     gint n;
-    ExporterInterface *exporter;
+    Exporter *exporter;
 
     g_return_if_fail (tracks);
     g_return_if_fail (t_pl);
@@ -2095,7 +2095,7 @@ void copy_tracks_to_target_playlist(GList *tracks, Playlist *t_pl) {
     if (tracks) {
         first = tracks->data;
         g_return_if_fail (first);
-        addtracks = exporter->transfer_track_glist_between_itdbs(first->itdb, t_pl->itdb, tracks);
+        addtracks = exporter_transfer_track_glist_between_itdbs(exporter, first->itdb, t_pl->itdb, tracks);
         add_trackglist_to_playlist(t_pl, addtracks);
     }
     n = g_list_length(addtracks);
@@ -2113,7 +2113,7 @@ void copy_tracks_to_target_itdb(GList *tracks, iTunesDB *t_itdb) {
     Track *first = tracks->data;
     Playlist *mpl;
     gint n;
-    ExporterInterface *exporter;
+    Exporter *exporter;
 
     g_return_if_fail(tracks);
     g_return_if_fail(t_itdb);
@@ -2124,7 +2124,7 @@ void copy_tracks_to_target_itdb(GList *tracks, iTunesDB *t_itdb) {
     exporter = gtkpod_get_exporter();
     g_return_if_fail(exporter);
 
-    addtracks = exporter->transfer_track_glist_between_itdbs(first->itdb, t_itdb, tracks);
+    addtracks = exporter_transfer_track_glist_between_itdbs(exporter, first->itdb, t_itdb, tracks);
 
     if (addtracks) {
         add_trackglist_to_playlist(mpl, addtracks);

@@ -51,3 +51,11 @@ GType lyrics_editor_get_type(void) {
     }
     return type;
 }
+
+void lyrics_editor_edit_lyrics(LyricsEditor *editor, GList *tracks) {
+    if (! LYRICS_EDITOR_IS_EDITOR(editor))
+        return;
+
+    LYRICS_EDITOR_GET_INTERFACE(editor)->edit_lyrics(tracks);
+}
+
