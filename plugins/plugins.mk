@@ -30,7 +30,7 @@ create-plugin-links:
 
 # Creating symbolic link to ui file in installed ui directory
 create-ui-link:
-	if [ ! -e ../../data/ui/$(plugin_name).ui ]; then \
+	if [ -e `pwd`/$(plugin_name).ui ] && [ ! -e ../../data/ui/$(plugin_name).ui ]; then \
 		ln -s `pwd`/$(plugin_name).ui ../../data/ui/$(plugin_name).ui; \
 	fi;
 
