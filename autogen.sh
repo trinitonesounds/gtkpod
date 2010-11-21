@@ -148,7 +148,10 @@ do
       echo "Running automake --gnu $am_opt ..."
       ${AUTOMAKE:-automake} --add-missing --gnu $am_opt
       echo "Running autoconf ..."
-      ${AUTOCONF:-autoconf}
+			# Needs to have force to recreate the configure script even if
+			# it exists so the correct git version is applied as the version
+			# number.
+      (${AUTOCONF:-autoconf} --force)
     )
   fi
 done
