@@ -29,8 +29,10 @@
 #ifndef OGGFILEH_INCLUDED
 #define OGGFILEH_INCLUDED 1
 
-#include "itdb.h"
+#include "libgtkpod/itdb.h"
 
-gboolean ogg_write_file_info (gchar *filename, Track *track);
-Track *ogg_get_file_info (gchar *name);
+Track *ogg_get_file_info (const gchar *name);
+gboolean ogg_can_convert();
+gchar *ogg_get_conversion_cmd();
+
 #endif

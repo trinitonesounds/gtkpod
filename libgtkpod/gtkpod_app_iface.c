@@ -54,6 +54,9 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
         klass->photo_editor = NULL;
         klass->track_commands = NULL;
 
+        klass->filetypes = g_hash_table_new (g_str_hash, g_str_equal);
+        filetype_init_core_types(klass->filetypes);
+
         klass->itdb_updated = NULL;
         klass->statusbar_message = NULL;
         klass->gtkpod_warning = NULL;
@@ -65,6 +68,7 @@ static void gtkpod_app_base_init(GtkPodAppInterface* klass) {
         klass->export_tracks_as_gchar = NULL;
         klass->export_tracks_as_glist = NULL;
         klass->display_widget = NULL;
+
         gtkpod_app_signals[ITDB_UPDATED]
                 = g_signal_new(SIGNAL_ITDB_UPDATED, G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, _gtkpod_app_marshal_VOID__POINTER_POINTER, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
 
@@ -647,4 +651,43 @@ GList *gtkpod_get_registered_track_commands() {
     g_return_val_if_fail(GTKPOD_IS_APP(gtkpod_app), NULL);
     GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
     return g_list_copy(gp_iface->track_commands);
+}
+
+void gtkpod_register_filetype(FileType *filetype) {
+    g_return_if_fail(FILE_IS_TYPE(filetype));
+    g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
+    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
+
+    GList *suffixes = filetype_get_suffixes(filetype);
+    if (!suffixes)
+        return;
+
+    while(suffixes) {
+        g_hash_table_insert(gp_iface->filetypes, suffixes->data, filetype);
+        suffixes = g_list_next(suffixes);
+    }
+}
+
+void gtkpod_unregister_filetype(FileType *filetype) {
+    g_return_if_fail(FILE_IS_TYPE(filetype));
+
+    g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
+    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
+    g_hash_table_remove(gp_iface->filetypes, filetype_get_name(filetype));
+}
+
+gboolean gtkpod_filetype_is_supported(gchar *name) {
+    return gtkpod_get_filetype(name) != NULL ? TRUE : FALSE;
+}
+
+FileType* gtkpod_get_filetype(gchar *name) {
+    g_return_val_if_fail(GTKPOD_IS_APP(gtkpod_app), FALSE);
+    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
+    return g_hash_table_lookup(gp_iface->filetypes, name);
+}
+
+GList *gtkpod_get_filetypes() {
+    g_return_val_if_fail(GTKPOD_IS_APP(gtkpod_app), FALSE);
+    GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
+    return g_hash_table_get_keys(gp_iface->filetypes);
 }

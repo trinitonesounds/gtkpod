@@ -30,18 +30,23 @@
 /* This file provides functions for syncing a directory or directories
  * with a playlist */
 
+#ifdef HAVE_CONFIG_H
+    #include <config.h>
+#endif
+
 #include <libintl.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <glib/gi18n-lib.h>
 #include "gp_itdb.h"
 #include "file.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
 #include "syncdir.h"
-#include <glib/gi18n-lib.h>
+#include "filetype_iface.h"
 
 struct add_files_data {
     Playlist *playlist;
@@ -317,29 +322,11 @@ static void add_files(gpointer key, gpointer value, gpointer user_data) {
             G_CONST_RETURN gchar *next;
             while ((next = g_dir_read_name(dir))) {
                 gchar *filename = g_build_filename(dirname, next, NULL);
-                FileType filetype = determine_file_type(filename);
+                FileType *filetype = determine_filetype(filename);
                 gboolean updated = FALSE;
                 Track *tr = NULL;
 
-                switch (filetype) {
-                case FILE_TYPE_UNKNOWN:
-                case FILE_TYPE_DIRECTORY:
-                case FILE_TYPE_IMAGE:
-                case FILE_TYPE_M3U:
-                case FILE_TYPE_PLS:
-                    /* ignore non-music/video files */
-                    break;
-                case FILE_TYPE_MP3:
-                case FILE_TYPE_M4A:
-                case FILE_TYPE_M4P:
-                case FILE_TYPE_M4B:
-                case FILE_TYPE_WAV:
-                case FILE_TYPE_M4V:
-                case FILE_TYPE_MP4:
-                case FILE_TYPE_MOV:
-                case FILE_TYPE_MPG:
-                case FILE_TYPE_OGG:
-                case FILE_TYPE_FLAC:
+                if (filetype_is_audio_filetype(filetype) || filetype_is_video_filetype(filetype)) {
                     tr = g_hash_table_lookup(afd->filepath_hash, filename);
                     if (tr) { /* track is already present in playlist.
                      Update if date stamp is different. */
@@ -373,8 +360,8 @@ static void add_files(gpointer key, gpointer value, gpointer user_data) {
                         tr = g_hash_table_lookup(afd->filepath_hash, filename);
                         updated = TRUE;
                     }
-                    break;
                 }
+
                 if (tr && updated) {
                     *afd->tracks_updated = g_list_append(*afd->tracks_updated, tr);
                 }

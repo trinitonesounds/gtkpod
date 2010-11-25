@@ -13,6 +13,12 @@ SUBDIRS = . \
 	coverweb \
 	photo_editor \
 	media_player \
-	mserv
+	mserv \
+	filetype_mp3 \
+	filetype_ogg \
+	filetype_flac \
+	filetype_wav \
+	filetype_video \
+	filetype_mp4
 
 # indent

@@ -312,6 +312,13 @@ doc/Makefile
 doc/figures/Makefile
 libgtkpod/Makefile
 plugins/Makefile
+plugins/filetype_mp3/Makefile
+plugins/filetype_ogg/Makefile
+plugins/filetype_flac/Makefile
+plugins/filetype_wav/Makefile
+plugins/filetype_m4a/Makefile
+plugins/filetype_mp4/Makefile
+plugins/filetype_video/Makefile
 plugins/exporter/Makefile
 plugins/playlist_display/Makefile
 plugins/playlist_display/icons/Makefile

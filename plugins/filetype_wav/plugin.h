@@ -1,8 +1,8 @@
-/* Time-stamp: <2006-06-11 14:39:42 jcs>
-|
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+/*
+|  Copyright (C) 2002-2010 Jorg Schuler <jcsjcs at users sourceforge net>
+|                                          Paul Richardson <phantom_sf at users.sourceforge.net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
@@ -27,15 +27,24 @@
 |  $Id$
 */
 
-#ifndef MP4FILEH_INCLUDED
-#define MP4FILEH_INCLUDED 1
+#ifndef PLUGIN_H_
+#define PLUGIN_H_
 
-#include "itdb.h"
-
-void mp4_init();
-void mp4_close();
-
-gboolean mp4_write_file_info (gchar *filename, Track *track);
-Track *mp4_get_file_info (gchar *name);
-gboolean mp4_read_soundcheck (gchar *filename, Track *track);
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
 #endif
+
+#include <libanjuta/anjuta-plugin.h>
+
+typedef struct _WavFileTypePlugin WavFileTypePlugin;
+typedef struct _WavFileTypePluginClass WavFileTypePluginClass;
+
+struct _WavFileTypePlugin {
+    AnjutaPlugin parent;
+};
+
+struct _WavFileTypePluginClass {
+    AnjutaPluginClass parent_class;
+};
+
+#endif /* PLUGIN_H_ */

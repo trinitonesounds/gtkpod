@@ -177,7 +177,6 @@ static GSList* fileselection_get_files(const gchar *title) {
     /* Handle the response */
     switch (response) {
     case GTK_RESPONSE_ACCEPT:
-        g_warning("NNN");
         new_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER (fc));
         prefs_set_string("last_dir_browsed", new_dir);
         g_free(new_dir);

@@ -42,6 +42,7 @@
 #include "lyrics_editor_iface.h"
 #include "photo_editor_iface.h"
 #include "track_command_iface.h"
+#include "filetype_iface.h"
 
 #define GTKPOD_APP_ICON_STOCK_ID "gtkpod"
 
@@ -137,6 +138,8 @@ struct _GtkPodAppInterface {
     PhotoEditor *photo_editor;
     /* Track Commands */
     GList *track_commands;
+    /* Supported File Types */
+    GHashTable *filetypes;
 
     void (*itdb_updated)(GtkPodApp *obj, iTunesDB *oldItdb, iTunesDB *newItbd);
     void (*statusbar_message)(GtkPodApp *obj, gchar* message);
@@ -232,6 +235,12 @@ void gtkpod_register_track_command(TrackCommand *command);
 void gtkpod_unregister_track_command(TrackCommand *command);
 void gtkpod_execute_track_command(GList *tracks);
 GList *gtkpod_get_registered_track_commands();
+
+void gtkpod_register_filetype(FileType *filetype);
+void gtkpod_unregister_filetype(FileType *filetype);
+gboolean gtkpod_filetype_is_supported(gchar *name);
+FileType* gtkpod_get_filetype(gchar *name);
+GList *gtkpod_get_filetypes();
 
 GtkPodApp *gtkpod_app;
 guint gtkpod_app_signals[LAST_SIGNAL];

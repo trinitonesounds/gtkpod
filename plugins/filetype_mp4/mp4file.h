@@ -1,8 +1,8 @@
-/* Time-stamp: <2005-06-17 22:12:11 jcs>
+/* Time-stamp: <2006-06-11 14:39:42 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
@@ -27,11 +27,15 @@
 |  $Id$
 */
 
-#ifndef WAVFILEH_INCLUDED
-#define WAVFILEH_INCLUDED 1
+#ifndef MP4FILEH_INCLUDED
+#define MP4FILEH_INCLUDED 1
 
-#include "itdb.h"
+#include "libgtkpod/itdb.h"
 
-gboolean wav_write_file_info (gchar *filename, Track *track);
-Track *wav_get_file_info (gchar *name);
+void mp4_init();
+void mp4_close();
+
+gboolean mp4_write_file_info (const gchar *filename, Track *track);
+Track *mp4_get_file_info (const gchar *name);
+gboolean mp4_read_soundcheck (const gchar *filename, Track *track);
 #endif

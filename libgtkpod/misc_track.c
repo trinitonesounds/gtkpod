@@ -37,6 +37,7 @@
 #include "misc_track.h"
 #include "charset.h"
 #include "exporter_iface.h"
+#include "filetype_iface.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -1811,19 +1812,9 @@ Playlist *add_text_plain_to_playlist(iTunesDB *itdb, Playlist *pl, gchar *str, g
                     added = TRUE;
                 }
                 if (g_file_test(decoded_file, G_FILE_TEST_IS_REGULAR)) { /* regular file */
-                    FileType ftype = determine_file_type(decoded_file);
-                    switch (ftype) {
-                    case FILE_TYPE_MP3:
-                    case FILE_TYPE_M4A:
-                    case FILE_TYPE_M4P:
-                    case FILE_TYPE_M4B:
-                    case FILE_TYPE_WAV:
-                    case FILE_TYPE_M4V:
-                    case FILE_TYPE_MP4:
-                    case FILE_TYPE_MOV:
-                    case FILE_TYPE_MPG:
-                    case FILE_TYPE_OGG:
-                    case FILE_TYPE_FLAC:
+                    FileType *filetype = determine_filetype(decoded_file);
+
+                    if (filetype_is_video_filetype(filetype) || filetype_is_audio_filetype(filetype)) {
                         if (!pl) { /* no playlist yet -- create new one */
                             pl = add_new_pl_user_name(itdb, NULL, pl_pos);
                             if (!pl)
@@ -1831,17 +1822,11 @@ Playlist *add_text_plain_to_playlist(iTunesDB *itdb, Playlist *pl, gchar *str, g
                         }
                         add_track_by_filename(itdb, decoded_file, pl, prefs_get_int("add_recursively"), trackaddfunc, data);
                         added = TRUE;
-                        break;
-                    case FILE_TYPE_M3U:
-                    case FILE_TYPE_PLS:
+                    }
+                    else if (filetype_is_playlist_filetype(filetype)) {
                         pl_playlist_created
                                 = add_playlist_by_filename(itdb, decoded_file, pl_playlist, pl_pos, trackaddfunc, data);
                         added = TRUE;
-                        break;
-                    case FILE_TYPE_UNKNOWN:
-                    case FILE_TYPE_DIRECTORY:
-                    case FILE_TYPE_IMAGE:
-                        break;
                     }
                 }
                 g_free(decoded_file);

@@ -223,9 +223,9 @@ static gboolean run_exec_on_track (const gchar *commandline,
 /* reread the soundcheck value from the file */
 static gboolean nm_get_soundcheck (Track *track)
 {
-    gboolean success = FALSE;
     gchar *path;
     gchar *commandline = NULL;
+    FileType *filetype;
 
     g_return_val_if_fail (track, FALSE);
 
@@ -233,63 +233,32 @@ static gboolean nm_get_soundcheck (Track *track)
 	return TRUE;
 
     path = get_file_name_from_source (track, SOURCE_PREFER_LOCAL);
+    filetype = determine_filetype (path);
 
-    if (path)
-    {
-	switch (determine_file_type (path))
-	{
-	case FILE_TYPE_MP3:
-	    commandline = prefs_get_string ("path_mp3gain");
-	    if (!commandline)
-	    {
-		gtkpod_warning (
-		    _("Did not normalize '%s'. Set mp3gain path in the Tools section of the preferences.\n"), path);
+    if (!path || !filetype) {
+        gchar *buf = get_track_info (track, FALSE);
+        gtkpod_warning (
+                _("Normalization failed: file not available (%s).\n\n"),
+                buf);
+        g_free (buf);
+        return FALSE;
+    }
+
+	commandline = filetype_get_gain_cmd(filetype);
+	if (commandline) {
+	    if (run_exec_on_track (commandline, path)) {
+	        g_free(path);
+	        return read_soundcheck (track);
 	    }
-	    break;
-	case FILE_TYPE_M4A:
-	case FILE_TYPE_M4P:
-	case FILE_TYPE_M4B:
-	    commandline = prefs_get_string ("path_aacgain");
-	    if (!commandline)
-	    {
-		gtkpod_warning (
-		    _("Did not normalize '%s'. Set aacgain path in the Tools section of the preferences.\n"), path);
-	    }
-	    break;
-	case FILE_TYPE_WAV: /* FIXME */
-	case FILE_TYPE_OGG: /* FIXME */
-	case FILE_TYPE_FLAC: /* FIXME */
-	case FILE_TYPE_M4V:
-	case FILE_TYPE_MP4:
-	case FILE_TYPE_MOV:
-	case FILE_TYPE_MPG:
-	case FILE_TYPE_UNKNOWN:
-	    gtkpod_warning (
-		_("Normalization failed: file type not supported (%s).\n\n"),
-		path);
-	    break;
-	case FILE_TYPE_M3U:
-	case FILE_TYPE_PLS:
-	case FILE_TYPE_IMAGE:
-	case FILE_TYPE_DIRECTORY:
-	    break;
 	}
-	if (commandline)
-	    success = run_exec_on_track (commandline, path);
-	g_free (path);
-    }
-    else
-    {
-	gchar *buf = get_track_info (track, FALSE);
-	gtkpod_warning (
-	    _("Normalization failed: file not available (%s).\n\n"),
-	    buf);
-	g_free (buf);
-    }
+	else {
+	    gtkpod_warning (
+	            _("Normalization failed for file %s: file type not supported.\n"
+	                    "To normalize mp3 and aac files ensure the following commands paths have been set in the Tools section\n"
+	                    "\tmp3 files: mp3gain\n"
+	                    "\taac files: aacgain"), path);
+	}
 
-    if (success)
-	return read_soundcheck (track);
-    else
 	return FALSE;
 }
 

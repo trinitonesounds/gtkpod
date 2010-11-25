@@ -909,6 +909,7 @@ static gboolean conversion_add_track(Conversion *conv, Track *track) {
     const gchar *typestr = NULL;
     gboolean convert = FALSE, must_convert = FALSE;
     gboolean result = TRUE;
+    FileType *filetype;
 
     debug ("entering conversion_add_track\n");
 
@@ -927,6 +928,8 @@ static gboolean conversion_add_track(Conversion *conv, Track *track) {
         /* no conversion or transfer needed */
         return TRUE;
     }
+
+
 
     /* Create ConvTrack structure */
     ctr = g_new0 (ConvTrack, 1);
@@ -958,7 +961,9 @@ static gboolean conversion_add_track(Conversion *conv, Track *track) {
         return FALSE;
     }
 
-    if (!g_file_test(etr->pc_path_locale, G_FILE_TEST_IS_REGULAR)) {
+    filetype = determine_filetype(etr->pc_path_locale);
+
+    if (!g_file_test(etr->pc_path_locale, G_FILE_TEST_IS_REGULAR) || ! filetype) {
         gchar *buf = get_track_info(track, FALSE);
         gtkpod_warning(_("Filename '%s' is no longer valid for '%s'.\n"), etr->pc_path_utf8, buf);
         g_free(buf);
@@ -973,18 +978,7 @@ static gboolean conversion_add_track(Conversion *conv, Track *track) {
     }
 
     /* Find the correct script for conversion */
-    switch (determine_file_type(etr->pc_path_locale)) {
-    case FILE_TYPE_UNKNOWN:
-    case FILE_TYPE_M4P:
-    case FILE_TYPE_M4B:
-    case FILE_TYPE_M4V:
-    case FILE_TYPE_MP4:
-    case FILE_TYPE_MOV:
-    case FILE_TYPE_MPG:
-    case FILE_TYPE_M3U:
-    case FILE_TYPE_PLS:
-    case FILE_TYPE_IMAGE:
-    case FILE_TYPE_DIRECTORY:
+    if (! filetype_can_convert(filetype)) {
         /* we don't convert these (yet) */
         etr->conversion_status = FILE_CONVERT_INACTIVE;
         /* add to finished */
@@ -993,31 +987,10 @@ static gboolean conversion_add_track(Conversion *conv, Track *track) {
         g_mutex_unlock (conv->mutex);
         debug ("added track to finished %p\n", track);
         return TRUE;
-    case FILE_TYPE_M4A:
-        conversion_cmd = prefs_get_string("path_conv_m4a");
-        convert = conversion_cmd && conversion_cmd[0] && prefs_get_int("convert_m4a");
-        break;
-    case FILE_TYPE_WAV:
-        conversion_cmd = prefs_get_string("path_conv_wav");
-        convert = conversion_cmd && conversion_cmd[0] && prefs_get_int("convert_wav");
-        break;
-    case FILE_TYPE_MP3:
-        conversion_cmd = prefs_get_string("path_conv_mp3");
-        convert = conversion_cmd && conversion_cmd[0] && prefs_get_int("convert_mp3");
-        break;
-    case FILE_TYPE_OGG:
-        conversion_cmd = prefs_get_string("path_conv_ogg");
-        convert = conversion_cmd && conversion_cmd[0] && prefs_get_int("convert_ogg");
-        must_convert = TRUE;
-        typestr = _("Ogg Vorbis");
-        break;
-    case FILE_TYPE_FLAC:
-        conversion_cmd = prefs_get_string("path_conv_flac");
-        convert = conversion_cmd && conversion_cmd[0] && prefs_get_int("convert_flac");
-        must_convert = TRUE;
-        typestr = _("FLAC");
-        break;
     }
+
+    conversion_cmd = filetype_get_conversion_cmd(filetype);
+    convert = conversion_cmd && conversion_cmd[0];
 
     ctr->must_convert = must_convert;
     ctr->conversion_cmd = conversion_cmd;
@@ -1977,6 +1950,7 @@ static void pgid_setup(gpointer user_data) {
  */
 static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
     gboolean result = FALSE;
+    FileType *filetype;
 
     g_return_val_if_fail (conv, FALSE);
     g_return_val_if_fail (ctr, FALSE);
@@ -2039,9 +2013,7 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
 
                 ctr->pid = 0;
 
-                if (
-                WIFEXITED(status) && (
-                WEXITSTATUS(status) != 0)) { /* script exited normally but with an error */
+                if (WIFEXITED(status) && (WEXITSTATUS(status) != 0)) { /* script exited normally but with an error */
                     if (ctr->valid) {
                         gchar *buf = conversion_get_track_info(NULL, ctr);
                         ctr->errormessage
@@ -2089,32 +2061,11 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
         Track *track;
         gboolean retval;
 
-        switch (determine_file_type(ctr->converted_file)) {
-        case FILE_TYPE_UNKNOWN:
-        case FILE_TYPE_M4P:
-        case FILE_TYPE_M4B:
-        case FILE_TYPE_M4V:
-        case FILE_TYPE_MP4:
-        case FILE_TYPE_MOV:
-        case FILE_TYPE_MPG:
-        case FILE_TYPE_M3U:
-        case FILE_TYPE_PLS:
-        case FILE_TYPE_IMAGE:
-        case FILE_TYPE_DIRECTORY:
-        case FILE_TYPE_M4A:
-        case FILE_TYPE_WAV:
-        case FILE_TYPE_OGG:
-        case FILE_TYPE_FLAC:
-            break;
-        case FILE_TYPE_MP3:
-            g_mutex_unlock (conv->mutex);
-
-            track = gp_track_new();
-            g_message("TODO read gapless for filetype without knowing its mp3\n");
-            //	    retval = mp3_read_gapless (ctr->converted_file, track);
-            retval = FALSE;
-
+        filetype = determine_filetype(ctr->converted_file);
+        if (filetype) {
             g_mutex_lock (conv->mutex);
+            track = gp_track_new();
+            retval = filetype_read_gapless(filetype, ctr->converted_file, track);
 
             if (ctr->valid && (retval == TRUE)) {
                 ctr->gapless.pregap = track->pregap;
@@ -2123,12 +2074,11 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
                 ctr->gapless.gapless_data = track->gapless_data;
                 ctr->gapless.gapless_track_flag = track->gapless_track_flag;
             }
+
             itdb_track_free(track);
-            break;
+            g_mutex_unlock (conv->mutex);
         }
     }
-
-    g_mutex_unlock (conv->mutex);
 
     return result;
 }

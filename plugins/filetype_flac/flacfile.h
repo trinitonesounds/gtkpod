@@ -29,8 +29,10 @@
 #ifndef FLACFILEH_INCLUDED
 #define FLACFILEH_INCLUDED 1
 
-#include "itdb.h"
+#include "libgtkpod/itdb.h"
 
-gboolean flac_write_file_info (gchar *filename, Track *track);
-Track *flac_get_file_info (gchar *flacFileName);
+Track *flac_get_file_info (const gchar *flacFileName);
+gboolean flac_can_convert();
+gchar *flac_get_conversion_cmd();
+
 #endif

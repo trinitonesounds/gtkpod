@@ -844,9 +844,6 @@ void gp_init(int argc, char *argv[]) {
     /* initiate client server */
     server_setup();
 
-    /* Load libmp4v2 */
-    mp4_init();
-
     g_free(cfgdir);
 }
 

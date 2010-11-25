@@ -37,29 +37,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include "itdb.h"
-
-
-/* values below -1 may be used in individual functions */
-typedef enum
-{
-    FILE_TYPE_UNKNOWN = 0,
-    FILE_TYPE_MP3,
-    FILE_TYPE_M4A,
-    FILE_TYPE_M4P,
-    FILE_TYPE_M4B,
-    FILE_TYPE_WAV,
-    FILE_TYPE_M4V,
-    FILE_TYPE_MP4,
-    FILE_TYPE_MOV,
-    FILE_TYPE_MPG,
-    FILE_TYPE_M3U,
-    FILE_TYPE_OGG,
-    FILE_TYPE_FLAC,
-    FILE_TYPE_PLS,
-    FILE_TYPE_IMAGE,
-    FILE_TYPE_DIRECTORY
-} FileType;
-
+#include "libgtkpod/filetype_iface.h"
 
 /* Don't change the order of this enum -- when exporting playlists the
    file requester depends on having these in order because the toggle
@@ -75,7 +53,7 @@ typedef enum
 
 typedef void (*AddTrackFunc)(Playlist *plitem, Track *track, gpointer data);
 
-FileType determine_file_type (const gchar *path);
+FileType *determine_filetype (const gchar *path);
 gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
 				Playlist *plitem, gboolean descend,
 				AddTrackFunc addtrackfunc, gpointer data);

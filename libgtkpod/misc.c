@@ -1892,8 +1892,6 @@ void gtkpod_shutdown() {
     xmlCleanupParser();
     xmlMemoryDump();
 
-    mp4_close();
-
     call_script("gtkpod.out", NULL);
 }
 

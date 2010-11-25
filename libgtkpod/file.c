@@ -51,56 +51,12 @@
 #include "misc_track.h"
 #include "prefs.h"
 #include "misc_conversion.h"
-#include "flacfile.h"
-#include "mp3file.h"
-#include "mp4file.h"
-#include "oggfile.h"
-#include "wavfile.h"
+#include "filetype_iface.h"
 
 /* The uppercase version of these extensions is tried as well. */
 static const gchar *imageext[] =
     { ".jpg", ".jpeg", ".png", ".pbm", ".pgm", ".ppm", ".tif", ".tiff", ".gif", NULL };
 
-/*------------------------------------------------------------------*\
- *                                                                  *
- *      Temporary Video stuff -- move to appropriate files when     *
- *      properly supported.                                         *
- *                                                                  *
- \*------------------------------------------------------------------*/
-
-Track *video_get_file_info(gchar *filename) {
-    Track *track;
-    track = gp_track_new();
-    switch (determine_file_type(filename)) {
-    case FILE_TYPE_M4V:
-        track->filetype = g_strdup("M4V video file");
-        break;
-    case FILE_TYPE_MP4:
-        track->filetype = g_strdup("MP4 video file");
-        break;
-    case FILE_TYPE_MOV:
-        track->filetype = g_strdup("MOV video file");
-        break;
-    case FILE_TYPE_MPG:
-        track->filetype = g_strdup("MPG video file");
-        break;
-    case FILE_TYPE_UNKNOWN:
-    case FILE_TYPE_MP3:
-    case FILE_TYPE_M4A:
-    case FILE_TYPE_M4P:
-    case FILE_TYPE_M4B:
-    case FILE_TYPE_WAV:
-    case FILE_TYPE_M3U:
-    case FILE_TYPE_PLS:
-    case FILE_TYPE_IMAGE:
-    case FILE_TYPE_DIRECTORY:
-    case FILE_TYPE_OGG:
-    case FILE_TYPE_FLAC:
-        g_free(track);
-        g_return_val_if_reached (NULL);
-    }
-    return track;
-}
 
 /* Determine the type of a file.
  *
@@ -110,66 +66,18 @@ Track *video_get_file_info(gchar *filename) {
  * -jlt
  */
 
-FileType determine_file_type(const gchar *path) {
+FileType *determine_filetype(const gchar *path) {
     gchar *path_utf8, *suf;
-    FileType type = FILE_TYPE_UNKNOWN;
+    FileType *type = NULL;
 
     g_return_val_if_fail (path, type);
 
     if (g_file_test(path, G_FILE_TEST_IS_DIR))
-        return FILE_TYPE_DIRECTORY;
+        return type;
 
     path_utf8 = charset_to_utf8(path);
-    suf = strrchr(path_utf8, '.');
-    if (suf) {
-        if (g_ascii_strcasecmp(suf, ".mp3") == 0)
-            type = FILE_TYPE_MP3;
-        else if (g_ascii_strcasecmp(suf, ".m4a") == 0)
-            type = FILE_TYPE_M4A;
-        else if (g_ascii_strcasecmp(suf, ".m4p") == 0)
-            type = FILE_TYPE_M4P;
-        else if (g_ascii_strcasecmp(suf, ".m4b") == 0)
-            type = FILE_TYPE_M4B;
-        else if (g_ascii_strcasecmp(suf, ".wav") == 0)
-            type = FILE_TYPE_WAV;
-
-        else if (g_ascii_strcasecmp(suf, ".m4v") == 0)
-            type = FILE_TYPE_M4V;
-        else if (g_ascii_strcasecmp(suf, ".mp4") == 0)
-            type = FILE_TYPE_MP4;
-        else if (g_ascii_strcasecmp(suf, ".mov") == 0)
-            type = FILE_TYPE_MOV;
-        else if (g_ascii_strcasecmp(suf, ".mpg") == 0)
-            type = FILE_TYPE_MPG;
-        else if (g_ascii_strcasecmp(suf, ".mpeg") == 0)
-            type = FILE_TYPE_MPG;
-
-        else if (g_ascii_strcasecmp(suf, ".m3u") == 0)
-            type = FILE_TYPE_M3U;
-        else if (g_ascii_strcasecmp(suf, ".pls") == 0)
-            type = FILE_TYPE_PLS;
-        else if (g_ascii_strcasecmp(suf, ".oga") == 0)
-            type = FILE_TYPE_OGG;
-        else if (g_ascii_strcasecmp(suf, ".ogg") == 0)
-            type = FILE_TYPE_OGG;
-        else if (g_ascii_strcasecmp(suf, ".ogv") == 0)
-            type = FILE_TYPE_OGG;
-        else if (g_ascii_strcasecmp(suf, ".ogx") == 0)
-            type = FILE_TYPE_OGG;
-        else if (g_ascii_strcasecmp(suf, ".flac") == 0)
-            type = FILE_TYPE_FLAC;
-
-        else {
-            const gchar **extp = imageext;
-            while (*extp) {
-                if (g_ascii_strcasecmp(suf, *extp) == 0) {
-                    type = FILE_TYPE_IMAGE;
-                    break;
-                }
-                ++extp;
-            }
-        }
-    }
+    suf = strrchr(path_utf8, '.') + 1;
+    type = gtkpod_get_filetype(suf);
 
     g_free(path_utf8);
     return type;
@@ -225,7 +133,7 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
     gchar *bufp, *plfile_utf8;
     gchar *dirname = NULL, *plname = NULL;
     gchar buf[PATH_MAX];
-    FileType type = FILE_TYPE_UNKNOWN; /* type of playlist file */
+    FileType *type = NULL; /* type of playlist file */
     gint line, tracks;
     FILE *fp;
     gboolean error;
@@ -246,31 +154,11 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
     bufp = g_strrstr(plname, "."); /* find last occurence of '.' */
     if (bufp) {
         *bufp = 0; /* truncate playlist name */
-        type = determine_file_type(plfile);
-        switch (type) {
-        case FILE_TYPE_MP3:
-        case FILE_TYPE_M4A:
-        case FILE_TYPE_M4P:
-        case FILE_TYPE_M4B:
-        case FILE_TYPE_WAV:
-        case FILE_TYPE_M4V:
-        case FILE_TYPE_MP4:
-        case FILE_TYPE_MOV:
-        case FILE_TYPE_MPG:
-        case FILE_TYPE_OGG:
-        case FILE_TYPE_FLAC:
-        case FILE_TYPE_IMAGE:
-        case FILE_TYPE_DIRECTORY:
+        type = determine_filetype(plfile);
+        if (!filetype_is_playlist_filetype(type)) {
             gtkpod_warning(_("'%s' is a not a known playlist file.\n\n"), plfile);
             g_free(plname);
             return FALSE;
-        case FILE_TYPE_M3U:
-        case FILE_TYPE_PLS:
-            break;
-        case FILE_TYPE_UNKNOWN:
-            /* assume MISC (M3U like) style */
-            type = -2;
-            break;
         }
     }
 
@@ -305,27 +193,25 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
             continue; /* skip empty lines */
         if (bufp[len - 1] == 0x0a)
             bufp[len - 1] = 0;
-        if (type == -2) {
+        if (!filetype_is_playlist_filetype(type)) {
             /* skip whitespace */
             while (isspace (*bufp))
                 ++bufp;
             /* assume comments start with ';' or '#' */
             if ((*bufp == ';') || (*bufp == '#'))
-                break;
+                continue;
             /* assume the rest of the line is a filename */
             filename = concat_dir_if_relative(dirname, bufp);
-            break;
         }
-        else
-            switch (type) {
-            case FILE_TYPE_M3U:
+        else {
+            if (filetype_is_m3u_filetype(type)) {
                 /* comments start with '#' */
                 if (*bufp == '#')
-                    break;
+                    continue;
                 /* assume the rest of the line is a filename */
                 filename = concat_dir_if_relative(dirname, bufp);
-                break;
-            case FILE_TYPE_PLS:
+            }
+            else if (filetype_is_pls_filetype(type)) {
                 /* I don't know anything about pls playlist files and just
                  looked at one example produced by xmms -- please
                  correct the code if you know more */
@@ -340,23 +226,9 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
                         filename = concat_dir_if_relative(dirname, bufp);
                     }
                 }
-                break;
-            case FILE_TYPE_UNKNOWN:
-            case FILE_TYPE_DIRECTORY:
-            case FILE_TYPE_MP3:
-            case FILE_TYPE_M4A:
-            case FILE_TYPE_M4P:
-            case FILE_TYPE_M4B:
-            case FILE_TYPE_WAV:
-            case FILE_TYPE_M4V:
-            case FILE_TYPE_MP4:
-            case FILE_TYPE_MOV:
-            case FILE_TYPE_MPG:
-            case FILE_TYPE_OGG:
-            case FILE_TYPE_FLAC:
-            case FILE_TYPE_IMAGE:
-                break;
             }
+        }
+
         if (filename) {
             /* do not allow to add directories! */
             if (g_file_test(filename, G_FILE_TEST_IS_DIR)) {
@@ -962,7 +834,7 @@ static void add_coverart(Track *tr) {
     gchar **templates, **tplp;
     gchar *dirname;
     gchar *filename_local = NULL;
-    FileType type;
+    FileType *filetype;
     gint vid_thumbnailer;
 
     g_return_if_fail (tr);
@@ -970,7 +842,6 @@ static void add_coverart(Track *tr) {
     g_return_if_fail (etr);
 
     dirname = g_path_get_dirname(etr->pc_path_utf8);
-    type = determine_file_type(etr->pc_path_utf8);
 
     full_template = prefs_get_string("coverart_template");
     vid_thumbnailer = prefs_get_int("video_thumbnailer");
@@ -1038,18 +909,12 @@ static void add_coverart(Track *tr) {
         gp_track_set_thumbnails(tr, filename_local);
     }
     else if (vid_thumbnailer) {
+        filetype = determine_filetype(etr->pc_path_utf8);
         /* if a template match was not made, and we're dealing with a video
          * file, generate an arbitrary thumbnail if appropriate */
-        switch (type) {
-        case FILE_TYPE_M4V:
-        case FILE_TYPE_MP4:
-        case FILE_TYPE_MOV:
-        case FILE_TYPE_MPG:
+        if (filetype_is_video_filetype(filetype)) {
             filename_local = create_video_thumbnail(etr->pc_path_utf8);
             gp_track_set_thumbnails(tr, filename_local);
-            break;
-        default:
-            break;
         }
     }
 
@@ -1066,7 +931,7 @@ static void add_coverart(Track *tr) {
 static Track *get_track_info_from_file(gchar *name, Track *orig_track) {
     Track *track = NULL;
     Track *nti = NULL;
-    FileType filetype;
+    FileType *filetype;
     gint len;
     gchar *name_utf8 = NULL;
 
@@ -1091,185 +956,94 @@ static Track *get_track_info_from_file(gchar *name, Track *orig_track) {
     if (len < 4)
         return NULL;
 
-    filetype = determine_file_type(name);
-    switch (filetype) {
-    case FILE_TYPE_MP3:
-	nti = mp3_get_file_info (name);
-	/* Set mediatype to audio */
-	if (nti)
-	{
-	    nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-	    if (nti->genre)
-	    {
-		if (g_ascii_strcasecmp (nti->genre, "audiobook") == 0) nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
-		else if (g_ascii_strcasecmp (nti->genre, "podcast") == 0) nti->mediatype = ITDB_MEDIATYPE_PODCAST;
-	    }
-	}
-	break;
-    case FILE_TYPE_M4A:
-    case FILE_TYPE_M4P:
-        nti = mp4_get_file_info(name);
-        /* Set mediatype to audio */
-        if (nti && !nti->mediatype) {
-            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-        }
-        break;
-    case FILE_TYPE_M4B:
-        nti = mp4_get_file_info(name);
-        /* Set mediatype to audiobook */
-        if (nti) {
-            nti->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
-        }
-        break;
-    case FILE_TYPE_WAV:
-        nti = wav_get_file_info(name);
-        /* Set mediatype to audio */
-        if (nti) {
-            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-        }
-        break;
-    case FILE_TYPE_OGG:
-        nti = ogg_get_file_info(name);
-        /* Set mediatype to audio */
-        if (nti) {
-            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-        }
-        break;
-    case FILE_TYPE_FLAC:
-        nti = flac_get_file_info(name);
-        /* Set mediatype to audio */
-        if (nti) {
-            nti->mediatype = ITDB_MEDIATYPE_AUDIO;
-        }
-        break;
-    case FILE_TYPE_M4V:
-    case FILE_TYPE_MP4:
-        /* I don't know if .m4v and .mp4 can simply be handled like
-         this. Let's see if someone complains. */
-        nti = mp4_get_file_info(name);
-        if (!nti)
-            video_get_file_info(name);
-        /* Set mediatype to video */
-        if (nti) {
-            if (!nti->mediatype)
-                nti->mediatype = ITDB_MEDIATYPE_MOVIE;
-            nti->movie_flag = 0x01;
-        }
-        break;
-    case FILE_TYPE_MOV:
-    case FILE_TYPE_MPG:
-        /* for now treat all the same */
-        nti = video_get_file_info(name);
-        /* Set mediatype to video */
-        if (nti) {
-            nti->mediatype = ITDB_MEDIATYPE_MOVIE;
-            nti->movie_flag = 0x01;
-        }
-        break;
-    case FILE_TYPE_UNKNOWN:
-        gtkpod_warning(_("The following track could not be processed (filetype unknown): '%s'\n"), name_utf8);
-        g_free(name_utf8);
+    filetype = determine_filetype(name);
+    nti = filetype_get_file_info(filetype, name);
+
+    if (!nti) {
+        gtkpod_warning(
+                _("The filetype '%s' is not currently supported.\n\n"
+                        "If you have a plugin that supports this filetype then please enable it."), name_utf8);
         return NULL;
-    case FILE_TYPE_IMAGE:
-    case FILE_TYPE_DIRECTORY:
-    case FILE_TYPE_M3U:
-    case FILE_TYPE_PLS:
+    }
+
+    switch (nti->mediatype) {
+    case ITDB_MEDIATYPE_AUDIOBOOK:
+    case ITDB_MEDIATYPE_PODCAST:
+    case ITDB_MEDIATYPE_PODCAST | ITDB_MEDIATYPE_MOVIE: /* Video podcast */
+        /* For audiobooks and podcasts, default to remember playback position
+         * and skip when shuffling. */
+        nti->skip_when_shuffling = 1;
+        nti->remember_playback_position = 1;
         break;
     }
 
-    if (nti) {
-        switch (nti->mediatype) {
-        case ITDB_MEDIATYPE_AUDIOBOOK:
-        case ITDB_MEDIATYPE_PODCAST:
-        case ITDB_MEDIATYPE_PODCAST | ITDB_MEDIATYPE_MOVIE: /* Video podcast */
-            /* For audiobooks and podcasts, default to remember playback position
-             * and skip when shuffling. */
-            nti->skip_when_shuffling = 1;
-            nti->remember_playback_position = 1;
-            break;
-        }
+    ExtraTrackData *enti = nti->userdata;
+    struct stat filestat;
+
+    g_return_val_if_fail (enti, NULL);
+
+    if (enti->charset == NULL) { /* Fill in currently used charset. Try if auto_charset is
+     * set first. If not, use the currently set charset. */
+        enti->charset = charset_get_auto();
+        if (enti->charset == NULL)
+            update_charset_info(nti);
+    }
+    /* set path file information */
+    enti->pc_path_utf8 = charset_to_utf8(name);
+    enti->pc_path_locale = g_strdup(name);
+    enti->lyrics = NULL;
+    /* set length of file */
+    stat(name, &filestat);
+    nti->size = filestat.st_size; /* get the filesize in bytes */
+    enti->mtime = filestat.st_mtime; /* get the modification date */
+    if (nti->bitrate == 0) { /* estimate bitrate */
+        if (nti->tracklen)
+            nti->bitrate = nti->size * 8 / nti->tracklen;
+    }
+    /* Set unset strings (album...) from filename */
+    set_unset_entries_from_filename(nti);
+
+    /* Set coverart */
+    if (prefs_get_int("coverart_file")) {
+        /* APIC data takes precedence */
+        if (!itdb_track_has_thumbnails(nti))
+            add_coverart(nti);
     }
 
-    if (nti) {
-        ExtraTrackData *enti = nti->userdata;
-        struct stat filestat;
-
-        g_return_val_if_fail (enti, NULL);
-
-        if (enti->charset == NULL) { /* Fill in currently used charset. Try if auto_charset is
-         * set first. If not, use the currently set charset. */
-            enti->charset = charset_get_auto();
-            if (enti->charset == NULL)
-                update_charset_info(nti);
-        }
-        /* set path file information */
-        enti->pc_path_utf8 = charset_to_utf8(name);
-        enti->pc_path_locale = g_strdup(name);
-        enti->lyrics = NULL;
-        /* set length of file */
-        stat(name, &filestat);
-        nti->size = filestat.st_size; /* get the filesize in bytes */
-        enti->mtime = filestat.st_mtime; /* get the modification date */
-        if (nti->bitrate == 0) { /* estimate bitrate */
-            if (nti->tracklen)
-                nti->bitrate = nti->size * 8 / nti->tracklen;
-        }
-        /* Set unset strings (album...) from filename */
-        set_unset_entries_from_filename(nti);
-
-        /* Set coverart */
-        if (prefs_get_int("coverart_file")) {
-            /* APIC data takes precedence */
-            if (!itdb_track_has_thumbnails(nti))
-                add_coverart(nti);
-        }
-
-        /* Set modification date to the files modified date */
-        nti->time_modified = enti->mtime;
-        /* Set added date to *now* (unless orig_track is present) */
-        if (orig_track) {
-            nti->time_added = orig_track->time_added;
-        }
-        else {
-            nti->time_added = time(NULL);
-        }
-
-        /* Make sure all strings are initialized -- that way we don't
-         have to worry about it when we are handling the
-         strings. Also, validate_entries() will fill in the utf16
-         strings if that hasn't already been done. */
-        /* exception: sha1_hash, charset and hostname: these may be
-         * NULL. */
-
-        gp_track_validate_entries(nti);
-
-        if (orig_track) { /* we need to copy all information over to the original
-         * track */
-            ExtraTrackData *eorigtr = orig_track->userdata;
-
-            g_return_val_if_fail (eorigtr, NULL);
-
-            eorigtr->tchanged = copy_new_info(nti, orig_track);
-
-            track = orig_track;
-            itdb_track_free(nti);
-            nti = NULL;
-        }
-        else { /* just use nti */
-            track = nti;
-            nti = NULL;
-        }
+    /* Set modification date to the files modified date */
+    nti->time_modified = enti->mtime;
+    /* Set added date to *now* (unless orig_track is present) */
+    if (orig_track) {
+        nti->time_added = orig_track->time_added;
     }
     else {
-        switch (filetype) {
-        case FILE_TYPE_IMAGE:
-        case FILE_TYPE_M3U:
-        case FILE_TYPE_PLS:
-            break;
-        default:
-            gtkpod_warning(_("The following track could not be processed (filetype is known but analysis failed): '%s'\n"), name_utf8);
-            break;
-        }
+        nti->time_added = time(NULL);
+    }
+
+    /* Make sure all strings are initialized -- that way we don't
+     have to worry about it when we are handling the
+     strings. Also, validate_entries() will fill in the utf16
+     strings if that hasn't already been done. */
+    /* exception: sha1_hash, charset and hostname: these may be
+     * NULL. */
+
+    gp_track_validate_entries(nti);
+
+    if (orig_track) { /* we need to copy all information over to the original
+     * track */
+        ExtraTrackData *eorigtr = orig_track->userdata;
+
+        g_return_val_if_fail (eorigtr, NULL);
+
+        eorigtr->tchanged = copy_new_info(nti, orig_track);
+
+        track = orig_track;
+        itdb_track_free(nti);
+        nti = NULL;
+    }
+    else { /* just use nti */
+        track = nti;
+        nti = NULL;
     }
 
     while (widgets_blocked && gtk_events_pending())
@@ -1626,6 +1400,7 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
     gchar *basename;
     Playlist *mpl;
     gboolean result = TRUE;
+    FileType *filetype;
 
     g_return_val_if_fail (fname, FALSE);
     g_return_val_if_fail (itdb, FALSE);
@@ -1640,27 +1415,15 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
     }
 
     /* check if file is a playlist */
-    switch (determine_file_type(fname)) {
-    case FILE_TYPE_M3U:
-    case FILE_TYPE_PLS:
+    filetype = determine_filetype(fname);
+    if (filetype_is_playlist_filetype(filetype)) {
         if (add_playlist_by_filename(itdb, fname, plitem, -1, addtrackfunc, data))
             return TRUE;
         return FALSE;
-    case FILE_TYPE_MP3:
-    case FILE_TYPE_M4A:
-    case FILE_TYPE_M4P:
-    case FILE_TYPE_M4B:
-    case FILE_TYPE_WAV:
-    case FILE_TYPE_M4V:
-    case FILE_TYPE_MP4:
-    case FILE_TYPE_MOV:
-    case FILE_TYPE_MPG:
-    case FILE_TYPE_OGG:
-    case FILE_TYPE_FLAC:
-    case FILE_TYPE_IMAGE:
-    case FILE_TYPE_UNKNOWN:
-    case FILE_TYPE_DIRECTORY:
-        break;
+    }
+
+    if (!filetype_is_audio_filetype(filetype) && !filetype_is_video_filetype(filetype)) {
+        return FALSE;
     }
 
     /* print a message about which file is being processed */
@@ -1814,41 +1577,13 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
 
 /* Call the correct tag writing function for the filename @name */
 static gboolean file_write_info(gchar *name, Track *track) {
-    gchar *buf;
+    FileType *filetype;
 
     g_return_val_if_fail (name, FALSE);
     g_return_val_if_fail (track, FALSE);
 
-    switch (determine_file_type(name)) {
-    case FILE_TYPE_MP3:
-        return mp3_write_file_info(name, track);
-    case FILE_TYPE_M4A:
-    case FILE_TYPE_M4P:
-    case FILE_TYPE_M4B:
-        return mp4_write_file_info(name, track);
-    case FILE_TYPE_WAV:
-        return wav_write_file_info(name, track);
-    case FILE_TYPE_OGG:
-        return ogg_write_file_info(name, track);
-    case FILE_TYPE_FLAC:
-        return flac_write_file_info(name, track);
-    case FILE_TYPE_M4V:
-    case FILE_TYPE_MP4:
-    case FILE_TYPE_MOV:
-    case FILE_TYPE_MPG:
-        buf = get_track_info(track, FALSE);
-        gtkpod_warning(_("Writing to video files not yet supported (%s).\n\n"), buf);
-        g_free(buf);
-        break;
-    case FILE_TYPE_M3U:
-    case FILE_TYPE_PLS:
-    case FILE_TYPE_IMAGE:
-    case FILE_TYPE_UNKNOWN:
-    case FILE_TYPE_DIRECTORY:
-        break;
-    }
-
-    return FALSE;
+    filetype = determine_filetype(name);
+    return filetype_write_file_info(filetype, name, track);
 }
 
 /* Write tags to file */
@@ -2041,7 +1776,8 @@ void parse_offline_playcount(void) {
         rewind(file);
         if (gstr->len != 0) {
             gint result = 0;
-            result = gtkpod_confirmation(-1, /* gint id, */
+            result
+                    = gtkpod_confirmation(-1, /* gint id, */
                     TRUE, /* gboolean modal, */
                     _("Remove offline playcounts?"), /* title */
                     _("Some tracks played offline could not be found in the iTunesDB. Press 'OK' to remove them from the offline playcount file, 'Cancel' to keep them."), /* label */
@@ -2085,109 +1821,44 @@ void parse_offline_playcount(void) {
  */
 gboolean read_soundcheck(Track *track) {
     gchar *path;
-    gchar *buf;
-    gboolean result = FALSE;
+    FileType *filetype;
 
     g_return_val_if_fail (track, FALSE);
 
     path = get_file_name_from_source(track, SOURCE_PREFER_LOCAL);
-
-    if (path) {
-        switch (determine_file_type(path)) {
-        case FILE_TYPE_MP3:
-            result = mp3_read_soundcheck(path, track);
-            break;
-        case FILE_TYPE_M4A:
-        case FILE_TYPE_M4P:
-        case FILE_TYPE_M4B:
-            result = mp4_read_soundcheck(path, track);
-            break;
-        case FILE_TYPE_OGG: /* FIXME */
-        case FILE_TYPE_FLAC: /* FIXME */
-        case FILE_TYPE_WAV: /* FIXME */
-        case FILE_TYPE_M4V:
-        case FILE_TYPE_MP4:
-        case FILE_TYPE_MOV:
-        case FILE_TYPE_MPG:
-        case FILE_TYPE_UNKNOWN:
-            buf = get_track_info(track, FALSE);
-            gtkpod_warning(_("Normalization failed: file type not supported (%s).\n\n"), buf);
-            g_free(buf);
-            break;
-        case FILE_TYPE_M3U:
-        case FILE_TYPE_PLS:
-        case FILE_TYPE_IMAGE:
-        case FILE_TYPE_DIRECTORY:
-            break;
-        }
-        g_free(path);
-    }
-    else {
-        buf = get_track_info(track, FALSE);
-        gtkpod_warning(_("Normalization failed: file not available (%s).\n\n"), buf);
-        g_free(buf);
-    }
-    return result;
+    filetype = determine_filetype(path);
+    return filetype_read_soundcheck(filetype, path, track);
 }
 
 /* Get lyrics from file */
 gboolean read_lyrics_from_file(Track *track, gchar **lyrics) {
     gchar *path;
-    gchar *buf;
     gboolean result = FALSE;
     ExtraTrackData *etr;
+    FileType *filetype;
 
     g_return_val_if_fail (track, FALSE);
     etr = track->userdata;
     g_return_val_if_fail (etr,FALSE);
     path = get_file_name_from_source(track, SOURCE_PREFER_IPOD);
-    if (path) {
-        switch (determine_file_type(path)) {
-        case FILE_TYPE_MP3:
-            result = id3_lyrics_read(path, lyrics);
-            break;
-        case FILE_TYPE_M4A:
-        case FILE_TYPE_M4P:
-        case FILE_TYPE_M4B:
-        case FILE_TYPE_M4V:
-        case FILE_TYPE_MP4:
-            result = TRUE;
-            *lyrics=g_strdup(
-                _("Error: File format unsupported now."));
-            break;
-        case FILE_TYPE_MOV:
-        case FILE_TYPE_MPG:
-        case FILE_TYPE_WAV: /* FIXME */
-        case FILE_TYPE_OGG: /* FIXME */
-        case FILE_TYPE_FLAC: /* FIXME */
-        case FILE_TYPE_UNKNOWN:
-            result = TRUE;
-            *lyrics=g_strdup(
-                _("Error: Lyrics not supported for this file format."));
-            break;
-        case FILE_TYPE_M3U:
-        case FILE_TYPE_PLS:
-        case FILE_TYPE_IMAGE:
-        case FILE_TYPE_DIRECTORY:
-            break;
-        }
-        g_free(path);
+    filetype = determine_filetype(path);
+
+    if (!filetype) {
+        *lyrics = g_strdup_printf(_("Error: Could not determine filetype for file at path: %s.\n\n"), path);
     }
-    else
-    {
-        buf = get_track_info (track, FALSE);
-        *lyrics=g_strdup_printf(
-            _("Error: Lyrics not found, file not available (%s).\n\n"),
-            buf);
-        g_free (buf);
+    else {
+        result = filetype_read_lyrics(filetype, path, lyrics);
     }
+
+    g_free(path);
+
     if (result) {
-		if (!*lyrics)
-			*lyrics=g_strdup("");
-		if (etr->lyrics)
-			g_free(etr->lyrics);
-		etr->lyrics=g_strdup(*lyrics);
-	}
+        if (!*lyrics)
+            *lyrics = g_strdup("");
+        if (etr->lyrics)
+            g_free(etr->lyrics);
+        etr->lyrics = g_strdup(*lyrics);
+    }
     return result;
 }
 
@@ -2200,6 +1871,7 @@ gboolean write_lyrics_to_file(Track *track) {
     gboolean warned = FALSE;
     ExtraTrackData *etr;
     iTunesDB *itdb;
+    FileType *filetype;
 
     g_return_val_if_fail (track, FALSE);
     etr = track->userdata;
@@ -2224,41 +1896,18 @@ gboolean write_lyrics_to_file(Track *track) {
             warned = TRUE;
         }
     }
-    if (path != NULL) {
-        switch (determine_file_type(path)) {
-        case FILE_TYPE_MP3:
-            result = id3_lyrics_save(path, etr->lyrics);
-            break;
-        case FILE_TYPE_M4A:
-        case FILE_TYPE_M4P:
-        case FILE_TYPE_M4B:
-        case FILE_TYPE_M4V:
-        case FILE_TYPE_MP4:
-            result = TRUE;
-            break;
-        case FILE_TYPE_MOV:
-        case FILE_TYPE_MPG:
-        case FILE_TYPE_WAV: /* FIXME */
-        case FILE_TYPE_OGG: /* FIXME */
-        case FILE_TYPE_FLAC: /* FIXME */
-        case FILE_TYPE_UNKNOWN:
-            result = TRUE;
-            break;
-        case FILE_TYPE_M3U:
-        case FILE_TYPE_PLS:
-        case FILE_TYPE_IMAGE:
-        case FILE_TYPE_DIRECTORY:
-            break;
+
+    filetype = determine_filetype(path);
+    if (!filetype) {
+        if (!warned) {
+            gtkpod_warning(_("Lyrics not written, file type cannot be determined (%s).\n\n"), path);
         }
-        g_free(path);
     }
     else {
-        if (!warned) {
-            buf = get_track_info(track, FALSE);
-            gtkpod_warning(_("Lyrics not written, file name not available (%s).\n\n"), buf);
-            g_free(buf);
-        }
+        result = filetype_write_lyrics(filetype, path, etr->lyrics);
     }
+
+    g_free(path);
 
     if (!result || !etr->lyrics || (strlen(etr->lyrics) == 0)) {
         track->lyrics_flag = 0x00;
