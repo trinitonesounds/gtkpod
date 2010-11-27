@@ -1483,17 +1483,20 @@ static gboolean conversion_scheduler(gpointer data) {
     gboolean result;
     g_return_val_if_fail (data, FALSE);
 
-    /*     debug ("conversion_scheduler enter\n"); */
+    debug ("conversion_scheduler enter\n");
 
     gdk_threads_enter();
-    g_mutex_lock (conv->mutex);
+    if (! g_mutex_trylock(conv->mutex)) {
+        gdk_threads_leave();
+        return FALSE;
+    }
 
     result = conversion_scheduler_unlocked(conv);
 
     g_mutex_unlock (conv->mutex);
     gdk_threads_leave();
 
-    /*    debug ("conversion_scheduler exit\n");*/
+    debug ("conversion_scheduler exit\n");
 
     return result;
 }
@@ -2036,11 +2039,14 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
                     ctr->converted_file = NULL;
                     result = FALSE;
                 }
+
+                g_mutex_unlock (conv->mutex);
             }
         }
     }
 
     if (result == TRUE) { /* determine size of new file */
+        g_mutex_lock (conv->mutex);
         struct stat statbuf;
         if (g_stat(ctr->converted_file, &statbuf) == 0) {
             ctr->converted_size = statbuf.st_size;
@@ -2054,6 +2060,7 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
             ctr->converted_file = NULL;
             result = FALSE;
         }
+        g_mutex_unlock (conv->mutex);
     }
 
     /* Fill in additional info (currently only gapless info for MP3s */

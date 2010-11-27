@@ -44,7 +44,6 @@ ffla |  This program is distributed in the hope that it will be useful,
 #include "misc.h"
 #include "prefs.h"
 #include "misc_track.h"
-#include "mp4file.h"
 #include "file_convert.h"
 
 #define DEBUG_MISC 0

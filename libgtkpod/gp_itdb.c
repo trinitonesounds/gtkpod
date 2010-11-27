@@ -42,7 +42,6 @@
 #include "file_convert.h"
 #include "misc.h"
 #include "misc_track.h"
-#include "mp4file.h"
 #include "prefs.h"
 #include "syncdir.h"
 #include "autodetection.h"

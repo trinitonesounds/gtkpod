@@ -19,6 +19,7 @@ SUBDIRS = . \
 	filetype_flac \
 	filetype_wav \
 	filetype_video \
-	filetype_mp4
+	filetype_mp4 \
+	filetype_m4a
 
 # indent
