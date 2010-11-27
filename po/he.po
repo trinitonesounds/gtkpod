@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-05 22:04+0000\n"
+"POT-Creation-Date: 2010-11-27 17:09+0000\n"
 "PO-Revision-Date: 2010-08-10 07:37+0200\n"
 "Last-Translator: David Kohen <dudyk@users.sourceforge.net>\n"
 "Language-Team: HEBREW <kde-il@yahoogroups.com>\n"
@@ -34,6 +34,86 @@ msgstr "תוכנת gtkpod מנהל ה־iPod"
 #: ../data/gtkpod.desktop.in.h:3
 msgid "iPod Manager"
 msgstr "מנהל ה־iPod"
+
+#: ../data/glade/gtkpod.glade.h:1
+msgid " "
+msgstr " "
+
+#: ../data/glade/gtkpod.glade.h:2
+msgid "<b>Advanced Options</b>"
+msgstr "<b>אפשרויות מתקדמות</b>"
+
+#: ../data/glade/gtkpod.glade.h:3
+msgid "<b>General Options</b>"
+msgstr "<b>אפשרויות כלליות</b>"
+
+#: ../data/glade/gtkpod.glade.h:4
+msgid "<b>Rules</b>"
+msgstr "<b>חוקים</b>"
+
+#: ../data/glade/gtkpod.glade.h:5
+msgid ""
+"Any rules\n"
+"All rules\n"
+"Ignore rules"
+msgstr ""
+"כל אחד מהחוקים\n"
+"כל החוקים\n"
+"התעלם מהחוקים"
+
+#: ../data/glade/gtkpod.glade.h:8
+msgid "Conversion Progress Display"
+msgstr "תצוגת התקדמות עבור המרות"
+
+#: ../data/glade/gtkpod.glade.h:9
+msgid "Export can be continued at a later time if canceled."
+msgstr "אפשר להמשיך את היצוא בזמן מאוחר יותר, אם בוטל."
+
+#: ../data/glade/gtkpod.glade.h:10
+msgid "Live _updating"
+msgstr "עדכון _חי"
+
+#: ../data/glade/gtkpod.glade.h:11
+msgid "Match only _checked tracks"
+msgstr "התאם רק רצועות _מסומנות"
+
+#: ../data/glade/gtkpod.glade.h:12
+msgid "Match:"
+msgstr "התאמה:"
+
+#: ../data/glade/gtkpod.glade.h:13
+msgid "Never show this dialogue again"
+msgstr "אל תראה חלון דו-שיח זה בעתיד"
+
+#: ../data/glade/gtkpod.glade.h:14
+msgid "Playlist name:"
+msgstr "שם רשימת ההשמעה:"
+
+#: ../data/glade/gtkpod.glade.h:15
+msgid "Progress Information"
+msgstr "מידע התקדמות"
+
+#: ../data/glade/gtkpod.glade.h:16
+#: ../plugins/repository_editor/repository_editor.c:1162
+#: ../plugins/playlist_display/plugin.c:121 ../libgtkpod/misc_playlist.c:104
+msgid "Smart Playlist"
+msgstr "רשימת השמעה חכמה"
+
+#: ../data/glade/gtkpod.glade.h:17
+msgid "Sort by:"
+msgstr "מיין על פי:"
+
+#: ../data/glade/gtkpod.glade.h:18
+msgid ""
+"The output of the background conversion scripts is copied below. Each page "
+"of the notebook corresponds to one background thread."
+msgstr ""
+"תוצר הפלט של תסריט ההמרה ברקע יועתק למטה. כל דף של המחברת תואם לתהליך רקע "
+"אחד."
+
+#: ../data/glade/gtkpod.glade.h:19
+msgid "_Limit to"
+msgstr "_הגבל ל"
 
 #: ../data/glade/info_display.glade.h:1
 msgid "gtkpod Information"
@@ -399,86 +479,6 @@ msgstr "<b>תגיות</b>"
 #, fuzzy
 msgid "Cover Browser"
 msgstr "סייר"
-
-#: ../data/glade/gtkpod.glade.h:1
-msgid " "
-msgstr " "
-
-#: ../data/glade/gtkpod.glade.h:2
-msgid "<b>Advanced Options</b>"
-msgstr "<b>אפשרויות מתקדמות</b>"
-
-#: ../data/glade/gtkpod.glade.h:3
-msgid "<b>General Options</b>"
-msgstr "<b>אפשרויות כלליות</b>"
-
-#: ../data/glade/gtkpod.glade.h:4
-msgid "<b>Rules</b>"
-msgstr "<b>חוקים</b>"
-
-#: ../data/glade/gtkpod.glade.h:5
-msgid ""
-"Any rules\n"
-"All rules\n"
-"Ignore rules"
-msgstr ""
-"כל אחד מהחוקים\n"
-"כל החוקים\n"
-"התעלם מהחוקים"
-
-#: ../data/glade/gtkpod.glade.h:8
-msgid "Conversion Progress Display"
-msgstr "תצוגת התקדמות עבור המרות"
-
-#: ../data/glade/gtkpod.glade.h:9
-msgid "Export can be continued at a later time if canceled."
-msgstr "אפשר להמשיך את היצוא בזמן מאוחר יותר, אם בוטל."
-
-#: ../data/glade/gtkpod.glade.h:10
-msgid "Live _updating"
-msgstr "עדכון _חי"
-
-#: ../data/glade/gtkpod.glade.h:11
-msgid "Match only _checked tracks"
-msgstr "התאם רק רצועות _מסומנות"
-
-#: ../data/glade/gtkpod.glade.h:12
-msgid "Match:"
-msgstr "התאמה:"
-
-#: ../data/glade/gtkpod.glade.h:13
-msgid "Never show this dialogue again"
-msgstr "אל תראה חלון דו-שיח זה בעתיד"
-
-#: ../data/glade/gtkpod.glade.h:14
-msgid "Playlist name:"
-msgstr "שם רשימת ההשמעה:"
-
-#: ../data/glade/gtkpod.glade.h:15
-msgid "Progress Information"
-msgstr "מידע התקדמות"
-
-#: ../data/glade/gtkpod.glade.h:16
-#: ../plugins/repository_editor/repository_editor.c:1162
-#: ../plugins/playlist_display/plugin.c:121 ../libgtkpod/misc_playlist.c:104
-msgid "Smart Playlist"
-msgstr "רשימת השמעה חכמה"
-
-#: ../data/glade/gtkpod.glade.h:17
-msgid "Sort by:"
-msgstr "מיין על פי:"
-
-#: ../data/glade/gtkpod.glade.h:18
-msgid ""
-"The output of the background conversion scripts is copied below. Each page "
-"of the notebook corresponds to one background thread."
-msgstr ""
-"תוצר הפלט של תסריט ההמרה ברקע יועתק למטה. כל דף של המחברת תואם לתהליך רקע "
-"אחד."
-
-#: ../data/glade/gtkpod.glade.h:19
-msgid "_Limit to"
-msgstr "_הגבל ל"
 
 #: ../data/glade/sorttab_display.glade.h:1
 msgid "    "
@@ -899,6 +899,61 @@ msgstr "שנה שם"
 msgid "Abort"
 msgstr "בטל"
 
+#: ../plugins/filetype_m4a/mp4file.c:543 ../plugins/filetype_mp4/mp4file.c:543
+#, c-format
+msgid ""
+"m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
+"without the mp4v2 library. You must install the mp4v2 library.\n"
+msgstr ""
+"עדכון מידע קול של m4a/m4p/m4b עבור '%s' נכשל: הסוגים m4a/m4p/m4b לא נתמכים "
+"ללא הספריה mp4v2. אתה חייב להדר את קוד המקור של gtkpod ביחד עם ספריית "
+"mp4v2.\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:577 ../plugins/filetype_m4a/mp4file.c:840
+#: ../plugins/filetype_mp4/mp4file.c:577 ../plugins/filetype_mp4/mp4file.c:840
+#, c-format
+msgid "'%s' does not appear to be a mp4 audio or video file.\n"
+msgstr "הקובץ '%s' הוא כנראה לא קובץ שמע או וידאו מסוד mp4.\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:584 ../plugins/filetype_m4a/mp4file.c:847
+#: ../plugins/filetype_mp4/mp4file.c:584 ../plugins/filetype_mp4/mp4file.c:847
+#, c-format
+msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
+msgstr "אי אפשר לפתוח את '%s' לקריאה, או הקובץ הוא לא קובץ שמע mp4.\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:593 ../plugins/filetype_mp4/mp4file.c:593
+#, c-format
+msgid ""
+"Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
+"You must install the mp4v2 library.\n"
+msgstr ""
+"הייבוא של '%s' נכשל: m4a/m4p/m4b לא נתמך ללא הספריה mp4v2. אתה חייב להדר את "
+"קוד המקור gtkpod ביחד עם הספריה mp4v2.\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:856 ../plugins/filetype_mp4/mp4file.c:856
+#, c-format
+msgid ""
+"m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
+"without the mp4v2 library. You must install the mp4v2 library.\n"
+msgstr ""
+"עדכון מטא-מידע של m4a/m4p/m4b עבור '%s' נכשל: סוגי הקבצים m4a/m4p/m4b לא "
+"נתמכים ללא הספריה mp4v2. אתה חייב להדר את קוד המקור של gtkpod ביחד עם ספריית "
+"mp4v2.\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:978 ../plugins/filetype_mp4/mp4file.c:978
+#, c-format
+msgid "'%s' does not appear to be a mp4 audio file.\n"
+msgstr "הקובץ '%s' הוא כנראה לא קובץ שמע mp4.\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:986 ../plugins/filetype_mp4/mp4file.c:986
+#, c-format
+msgid "Could not open '%s' for writing, or file is not an mp4 file.\n"
+msgstr "אי אפשר לפתוח את '%s' לכתיבה, או הקובץ הוא לא קובץ שמע mp4.\n"
+
+#: ../plugins/filetype_m4a/plugin.c:78
+msgid "M4A audio file type"
+msgstr ""
+
 #: ../plugins/coverweb/plugin.c:75 ../plugins/media_player/plugin.c:66
 #: ../plugins/cover_display/plugin.c:74
 #, fuzzy
@@ -956,8 +1011,8 @@ msgstr "תקלה בהעתקת '%s' ל '%s': תקלת הרשאות (%s)\n"
 msgid "Error copying '%s' to '%s' (%s)\n"
 msgstr "תקלה בהעתקת '%s' ל '%s' (%s)\n"
 
-#: ../plugins/exporter/file_export.c:216 ../libgtkpod/oggfile.c:71
-#: ../libgtkpod/wavfile.c:108 ../libgtkpod/file.c:279
+#: ../plugins/exporter/file_export.c:216 ../plugins/filetype_wav/wavfile.c:98
+#: ../plugins/filetype_ogg/oggfile.c:66 ../libgtkpod/file.c:167
 #, c-format
 msgid "Could not open '%s' for reading.\n"
 msgstr "לא מסוגל לפתוח את '%s' לכתיבה.\n"
@@ -968,11 +1023,11 @@ msgid "Could find file for '%s' on the iPod\n"
 msgstr "אי אפשר למצוא את הקובץ '%s' על ה-iPod\n"
 
 #. create the dialog window
-#: ../plugins/exporter/file_export.c:368 ../libgtkpod/tools.c:359
+#: ../plugins/exporter/file_export.c:368 ../libgtkpod/tools.c:328
 msgid "Information"
 msgstr "מידע"
 
-#: ../plugins/exporter/file_export.c:372 ../libgtkpod/tools.c:371
+#: ../plugins/exporter/file_export.c:372 ../libgtkpod/tools.c:340
 msgid "Press button to abort."
 msgstr "לביטול לחץ על הכפתור."
 
@@ -1001,7 +1056,7 @@ msgid_plural "Copied %d of %d tracks."
 msgstr[0] "הועתק %d מתוך %d רצועה."
 msgstr[1] "הועתקו %d מתוך %d רצועות."
 
-#: ../plugins/exporter/file_export.c:465 ../libgtkpod/tools.c:517
+#: ../plugins/exporter/file_export.c:465 ../libgtkpod/tools.c:486
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
 msgstr "%d%% (%d:%02d:%02d נותרו)"
@@ -1454,6 +1509,15 @@ msgstr "עוצמה"
 msgid "Sndchk."
 msgstr "בדיקת קול"
 
+#: ../plugins/filetype_wav/plugin.c:78
+msgid "Wav audio file type"
+msgstr ""
+
+#: ../plugins/filetype_wav/wavfile.c:175
+#, c-format
+msgid "%s does not appear to be a supported wav file.\n"
+msgstr "הקובץ %s הוא כנראה לא קובץ wav נתמך.\n"
+
 #. Action name
 #. Stock icon
 #: ../plugins/photo_editor/plugin.c:49
@@ -1585,6 +1649,19 @@ msgstr "<b>תגיות</b>"
 msgid "<b>%s</b> from %s"
 msgstr ""
 
+#: ../plugins/filetype_video/plugin.c:78
+msgid "Generic Video file type"
+msgstr ""
+
+#: ../plugins/filetype_ogg/plugin.c:78
+msgid "OGG audio file type"
+msgstr ""
+
+#: ../plugins/filetype_ogg/oggfile.c:74
+#, c-format
+msgid "'%s' does not appear to be an ogg audio file.\n"
+msgstr "הקובץ '%s' הוא כנראה לא קובץ שמע מסוג ogg.\n"
+
 #: ../plugins/repository_editor/plugin.c:48
 msgid "_Create iPod's Directories"
 msgstr "_יצירת תיקיות iPod"
@@ -1678,7 +1755,7 @@ msgid "Smart playlist updated."
 msgstr "רשימת השמעה חכמה עודכנה."
 
 #: ../plugins/repository_editor/repository_editor.c:1038
-#: ../libgtkpod/gp_itdb.c:922
+#: ../libgtkpod/gp_itdb.c:918
 msgid "iPod"
 msgstr "iPod"
 
@@ -1731,6 +1808,53 @@ msgstr ""
 "ב־GTK+ או ספריית glade.\n"
 "\n"
 
+#: ../plugins/filetype_flac/plugin.c:78
+#, fuzzy
+msgid "Flac audio file type"
+msgstr "סוג קובץ"
+
+#: ../plugins/filetype_flac/flacfile.c:57
+#, c-format
+msgid "'%s' does not appear to be an FLAC audio file.\n"
+msgstr "הקובץ '%s' הוא כנראה לא קובץ שמע מסוג FLAC.\n"
+
+#: ../plugins/filetype_flac/flacfile.c:70
+#, c-format
+msgid "Error retrieving tags for '%s'.\n"
+msgstr "תקלה באחזור התגיות עבור '%s'.\n"
+
+#: ../plugins/filetype_mp3/plugin.c:78
+msgid "MP3 audio file type"
+msgstr ""
+
+#: ../plugins/filetype_mp3/mp3file.c:1247
+#, c-format
+msgid "Error setting ID3 field: %s\n"
+msgstr "שגיאה בקביעת שדה ID3: %s\n"
+
+#: ../plugins/filetype_mp3/mp3file.c:1267
+#: ../plugins/filetype_mp3/mp3file.c:1426
+#: ../plugins/filetype_mp3/mp3file.c:1572
+#: ../plugins/filetype_mp3/mp3file.c:1955
+#: ../plugins/filetype_mp3/mp3file.c:2778
+#: ../plugins/filetype_mp3/mp3file.c:2841
+#: ../plugins/filetype_mp3/mp3file.c:2863
+#, c-format
+msgid "ERROR while opening file: '%s' (%s).\n"
+msgstr "שגיאה בזמן פתיחת קובץ: '%s' (%s).\n"
+
+#: ../plugins/filetype_mp3/mp3file.c:1646
+#: ../plugins/filetype_mp3/mp3file.c:2896
+#, c-format
+msgid "ERROR while writing tag to file: '%s' (%s).\n"
+msgstr "שגיאה בזמן כתיבת תג לקובץ: '%s' (%s).\n"
+
+#. Tracks with zero play length are ignored by iPod...
+#: ../plugins/filetype_mp3/mp3file.c:2810
+#, c-format
+msgid "File \"%s\" has zero play length. Ignoring.\n"
+msgstr "הקובץ \"%s\" בעל זמן אפס. מתעלם.\n"
+
 #: ../plugins/cover_display/cover_display_context_menu.c:40
 msgid "Select Cover From File"
 msgstr "בחירת עטיפה מקובץ"
@@ -1757,6 +1881,10 @@ msgstr ""
 #, fuzzy
 msgid "Settings"
 msgstr "אפשרויות..."
+
+#: ../plugins/filetype_mp4/plugin.c:82
+msgid "MP4 video file type"
+msgstr ""
 
 #: ../plugins/mserv/plugin.c:57
 #, fuzzy
@@ -1807,7 +1935,7 @@ msgstr[1] "לא ניתן להשיג מידע mserv מ-%d הרצועות הבאו
 msgid "mserv data retrieval problem"
 msgstr "בעיה בהשגת מידע מ-mserv"
 
-#: ../plugins/mserv/mserv.c:199 ../libgtkpod/file.c:1296
+#: ../plugins/mserv/mserv.c:199 ../libgtkpod/file.c:1070
 msgid "Nothing to update"
 msgstr "אין מה לעדכן"
 
@@ -1825,20 +1953,20 @@ msgid "Updated selected tracks with data from mserv."
 msgstr "עודכנו רצועות נבחרות עם נתונים מ-mserv"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:71
-#: ../plugins/playlist_display/playlist_display_actions.c:261
+#: ../plugins/playlist_display/playlist_display_actions.c:260
 #: ../libgtkpod/fileselection.c:121 ../libgtkpod/fileselection.c:497
 msgid "Successfully added files"
 msgstr "קבצים הוספו בהצלחה"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:73
-#: ../plugins/playlist_display/playlist_display_actions.c:263
+#: ../plugins/playlist_display/playlist_display_actions.c:262
 #: ../libgtkpod/fileselection.c:123 ../libgtkpod/fileselection.c:499
 msgid "Some files were not added successfully"
 msgstr "מספר קבצים לא הוספו בהצלחה"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:95
-#: ../plugins/playlist_display/playlist_display_actions.c:204
-#: ../plugins/playlist_display/playlist_display_actions.c:290
+#: ../plugins/playlist_display/playlist_display_actions.c:203
+#: ../plugins/playlist_display/playlist_display_actions.c:289
 #: ../libgtkpod/fileselection.c:151 ../libgtkpod/fileselection.c:238
 #: ../libgtkpod/fileselection.c:512
 msgid "Please select a playlist or repository before adding tracks."
@@ -1849,26 +1977,26 @@ msgstr "אנא בחר רשימת השמעה או מאגר לפני הוספת ר
 msgid "Add Folder"
 msgstr "הוספת תיקייה"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:212
-#: ../plugins/playlist_display/playlist_display_actions.c:300
+#: ../plugins/playlist_display/playlist_display_actions.c:211
+#: ../plugins/playlist_display/playlist_display_actions.c:299
 #: ../libgtkpod/fileselection.c:161 ../libgtkpod/fileselection.c:246
 msgid "Please load the iPod before adding tracks."
 msgstr "אנא טען את ה־iPod לפני הוספת רצועות."
 
 #. Create window title
-#: ../plugins/playlist_display/playlist_display_actions.c:220
+#: ../plugins/playlist_display/playlist_display_actions.c:219
 #: ../libgtkpod/fileselection.c:254
 #, c-format
 msgid "Add playlist files to '%s'"
 msgstr "הוספת קבצי רשימות ניגון אל '%s'"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:309
+#: ../plugins/playlist_display/playlist_display_actions.c:308
 #: ../libgtkpod/fileselection.c:170
 #, c-format
 msgid "Add files to '%s'"
 msgstr "הוספת קבצים אל '%s'"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:312
+#: ../plugins/playlist_display/playlist_display_actions.c:311
 #: ../libgtkpod/fileselection.c:173
 #, c-format
 msgid "Add files to '%s/%s'"
@@ -2213,248 +2341,41 @@ msgstr ""
 msgid "Photos"
 msgstr "תמונות"
 
-#. Register actions
-#: ../src/anjuta-app.c:434
-msgid "Music"
-msgstr "מוזיקה"
-
-#: ../src/anjuta-app.c:435
-#, fuzzy
-msgid "Edit"
-msgstr "_עריכה"
-
-#: ../src/anjuta-app.c:436 ../src/anjuta-app.c:437
-#, fuzzy
-msgid "View"
-msgstr "_תצוגה"
-
-#: ../src/anjuta-app.c:438
-#, fuzzy
-msgid "Tools"
-msgstr "_כלים"
-
-#: ../src/anjuta-app.c:439
-#, fuzzy
-msgid "Help"
-msgstr "_עזרה"
-
-#: ../src/anjuta-app.c:644
-msgid "Plugins"
-msgstr ""
-
-#: ../src/anjuta-app.c:655
-msgid "Installed plugins"
-msgstr ""
-
-#: ../src/anjuta-app.c:656
-#, fuzzy
-msgid "Preferred plugins"
-msgstr "הגדרות"
-
-#: ../src/anjuta-app.c:657
-#, fuzzy
-msgid "Shortcuts"
-msgstr "מיין לפי אמן"
-
-#: ../src/anjuta-app.c:715
-#, c-format
-msgid "Value doesn't exist"
-msgstr ""
-
-#: ../src/anjuta-app.c:1296
-msgid "Confirmation"
-msgstr "אישור"
-
-#: ../src/anjuta-action-callbacks.c:106
-#, fuzzy
-msgid "GtkPod Preferences"
-msgstr "הגדרות"
-
-#: ../src/anjuta-about.c:172
-msgid "Copyright (c) Jorg Schuler et al."
-msgstr ""
-
-#: ../src/anjuta-about.c:173
-#, fuzzy
-msgid "iPod Management Platform"
-msgstr "מנהל ה־iPod"
-
-#: ../src/anjuta-actions.h:26
-msgid "_Music"
-msgstr "_מוסיקה"
-
-#: ../src/anjuta-actions.h:31
-msgid "_Update Tracks from File"
-msgstr "_סנכרון רצועות מקובץ"
-
-#: ../src/anjuta-actions.h:39
-msgid "_Quit"
-msgstr ""
-
-#: ../src/anjuta-actions.h:41
-msgid "Quit GtkPod"
-msgstr ""
-
-#: ../src/anjuta-actions.h:49
-#, fuzzy
-msgid "_Edit"
-msgstr "_עריכה"
-
-#: ../src/anjuta-actions.h:54
-#, fuzzy
-msgid "_Delete"
-msgstr "_מחק"
-
-#: ../src/anjuta-actions.h:62
-#, fuzzy
-msgid "_Preferences"
-msgstr "הגדרות ,mserv"
-
-#: ../src/anjuta-actions.h:63
-msgid "Do you prefer coffee to tea? Check it out."
-msgstr ""
-
-#: ../src/anjuta-actions.h:69
-#, fuzzy
-msgid "_View"
-msgstr "_תצוגה"
-
-#: ../src/anjuta-actions.h:71
-msgid "_Reset Dock Layout"
-msgstr ""
-
-#: ../src/anjuta-actions.h:72
-msgid "Reset the widgets docking layout to default"
-msgstr ""
-
-#: ../src/anjuta-actions.h:78
-msgid "_Full Screen"
-msgstr ""
-
-#: ../src/anjuta-actions.h:79
-msgid "Toggle fullscreen mode"
-msgstr ""
-
-#: ../src/anjuta-actions.h:82
-msgid "_Lock Dock Layout"
-msgstr ""
-
-#: ../src/anjuta-actions.h:83
-msgid "Lock the current dock layout so that widgets cannot be moved"
-msgstr ""
-
-#: ../src/anjuta-actions.h:86
-msgid "_Toolbar"
-msgstr "_סרגל כלים"
-
-#: ../src/anjuta-actions.h:87
-msgid "Show or hide the toolbar"
-msgstr ""
-
-#: ../src/anjuta-actions.h:95
-#, fuzzy
-msgid "_Tools"
-msgstr "_כלים"
-
-#: ../src/anjuta-actions.h:100
-#, fuzzy
-msgid "_Help"
-msgstr "_עזרה"
-
-#: ../src/anjuta-actions.h:102
-msgid "_User's Manual"
-msgstr ""
-
-#: ../src/anjuta-actions.h:103
-msgid "Anjuta user's manual"
-msgstr ""
-
-#: ../src/anjuta-actions.h:106
-#, fuzzy
-msgid "gtkpod _Home Page"
-msgstr "תוכנת gtkpod מנהל ה־iPod"
-
-#: ../src/anjuta-actions.h:107
-msgid "Online documentation and resources"
-msgstr ""
-
-#: ../src/anjuta-actions.h:110
-msgid "Report _Bugs/Patches/Requests"
-msgstr ""
-
-#: ../src/anjuta-actions.h:111
-msgid "Submit a bug report, patch or feature request for Anjuta"
-msgstr ""
-
-#: ../src/anjuta-actions.h:114
-msgid "Ask a _Question"
-msgstr ""
-
-#: ../src/anjuta-actions.h:115
-msgid "Submit a question for FAQs"
-msgstr ""
-
-#: ../src/anjuta-actions.h:118
-#, fuzzy
-msgid "_About"
-msgstr "בטל"
-
-#: ../src/anjuta-actions.h:119
-msgid "About Anjuta"
-msgstr ""
-
-#: ../src/anjuta-actions.h:122
-msgid "About External _Plugins"
-msgstr ""
-
-#: ../src/anjuta-actions.h:123
-msgid "About third party Anjuta plugins"
-msgstr ""
-
-#: ../src/gtkpod.c:189
-msgid "Loaded Session..."
-msgstr ""
-
-#: ../src/main.c:57
-#, fuzzy
-msgid "gtkpod"
-msgstr "_אודות gtkpod"
-
-#: ../libgtkpod/syncdir.c:216
+#: ../libgtkpod/syncdir.c:221
 #, c-format
 msgid "Sync summary for %s/%s\n"
 msgstr "סיכום סנכרון עבור %s/%s\n"
 
-#: ../libgtkpod/syncdir.c:221
+#: ../libgtkpod/syncdir.c:226
 msgid "The following track has been added or updated:\n"
 msgid_plural "The following tracks have been added or updated:\n"
 msgstr[0] "הרצועה הבאה עודכנה או התווספה:\n"
 msgstr[1] "הרצועות הבאות עודכנו או התווספו:\n"
 
-#: ../libgtkpod/syncdir.c:226
+#: ../libgtkpod/syncdir.c:231
 msgid "The following track has been completely removed from the iPod:\n"
 msgid_plural ""
 "The following tracks have been completely removed from the iPod:\n"
 msgstr[0] "הרצועה הבאה הוסרה לחלוטין מה־iPod:\n"
 msgstr[1] "הרצועות הבאות הוסרו לחלוטין מה־iPod:\n"
 
-#: ../libgtkpod/syncdir.c:231
+#: ../libgtkpod/syncdir.c:236
 msgid "The following track has been removed from the repository:\n"
 msgid_plural "The following tracks have been removed from the repository:\n"
 msgstr[0] "הרצועה הבאה הוסרה מהמאגר:\n"
 msgstr[1] "הרצועות הבאות הוסרו מהמאגר:\n"
 
-#: ../libgtkpod/syncdir.c:236
+#: ../libgtkpod/syncdir.c:241
 msgid "The following track has been removed from the playlist:\n"
 msgid_plural "The following tracks have been removed from the playlist:\n"
 msgstr[0] "הרצועה הבאה הוסרה מרשימת ההשמעה:\n"
 msgstr[1] "הרצועות הבאות הוסרו מרשימת ההשמעה:\n"
 
-#: ../libgtkpod/syncdir.c:241
+#: ../libgtkpod/syncdir.c:246
 msgid "Nothing was changed.\n"
 msgstr "כלום לא השתנה.\n"
 
-#: ../libgtkpod/syncdir.c:244
+#: ../libgtkpod/syncdir.c:249
 msgid "Sync summary"
 msgstr "סיכום הסנכרון"
 
@@ -2716,27 +2637,27 @@ msgstr "-"
 msgid "+"
 msgstr "+"
 
-#: ../libgtkpod/misc.c:938
+#: ../libgtkpod/misc.c:937
 #, c-format
 msgid "Could not process '%s' (no filename available)"
 msgstr "אי אפשר לעבד את '%s' (קובץ לא זמין)"
 
-#: ../libgtkpod/misc.c:1079 ../libgtkpod/file.c:927
+#: ../libgtkpod/misc.c:1078 ../libgtkpod/file.c:799
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
 msgstr "אסימון לא ידוע '%%%c' בתבנית '%s'"
 
-#: ../libgtkpod/misc.c:1150
+#: ../libgtkpod/misc.c:1149
 #, c-format
 msgid "Template ('%s') does not match file type '%s'\n"
 msgstr "התבנית ('%s') לא מתאימה לסוג הקובץ '%s'\n"
 
-#: ../libgtkpod/misc.c:1228
+#: ../libgtkpod/misc.c:1227
 #, c-format
 msgid "Error creating %s: %s\n"
 msgstr "תקלה ביצירת %s: %s\n"
 
-#: ../libgtkpod/misc.c:1627
+#: ../libgtkpod/misc.c:1626
 #, c-format
 msgid ""
 "Writing preferences file '%s' failed (%s).\n"
@@ -2745,11 +2666,11 @@ msgstr ""
 "כתיבת קובץ הגדרות '%s' נכשלה (%s).\n"
 "\n"
 
-#: ../libgtkpod/misc.c:1627
+#: ../libgtkpod/misc.c:1626
 msgid "unspecified error"
 msgstr "תקלה לא מוגדרת"
 
-#: ../libgtkpod/misc.c:1634
+#: ../libgtkpod/misc.c:1633
 #, c-format
 msgid ""
 "Writing preferences to the iPod (%s) failed: could not get path to Control "
@@ -2759,7 +2680,7 @@ msgstr ""
 "כתיבת ההעדפות אל ה־iPod (%s) נכשלו: אי אפשר היה להשיג נתיב אל תיקיית הבקרה.\n"
 "\n"
 
-#: ../libgtkpod/misc.c:1786
+#: ../libgtkpod/misc.c:1785
 msgid ""
 "Are you sure you want to delete the following track completely from your "
 "iPod? The number of playlists this track is a member of is indicated in "
@@ -2775,13 +2696,13 @@ msgstr[1] ""
 "האם אתה בטוח שברצונך למחוק את הרצועות הבאות לגמרי מה-iPod? מספר רשימות "
 "ההשמעה שהרצועות האלו חברות בהן מצוינות בסוגריים."
 
-#: ../libgtkpod/misc.c:1789
+#: ../libgtkpod/misc.c:1788
 msgid "Delete Track Completely from iPod?"
 msgid_plural "Delete Tracks Completely from iPod?"
 msgstr[0] "מחק את הרצועה לגמרי מה-iPod?"
 msgstr[1] "מחק את הרצועות לגמרי מה-iPod?"
 
-#: ../libgtkpod/misc.c:1800 ../libgtkpod/misc.c:1837
+#: ../libgtkpod/misc.c:1799 ../libgtkpod/misc.c:1836
 #, c-format
 msgid ""
 "Are you sure you want to remove the following track from the playlist \"%s\"?"
@@ -2791,13 +2712,13 @@ msgid_plural ""
 msgstr[0] "האם אתה בטוח שברצונך להסיר את הרצועה הבאה מרשימת ההשמעה \"%s\"?"
 msgstr[1] "האם אתה בטוח שברצונך להסיר את הרצועות הבאות מרשימת ההשמעה \"%s\"?"
 
-#: ../libgtkpod/misc.c:1803 ../libgtkpod/misc.c:1840
+#: ../libgtkpod/misc.c:1802 ../libgtkpod/misc.c:1839
 msgid "Remove Track From Playlist?"
 msgid_plural "Remove Tracks From Playlist?"
 msgstr[0] "הסר את הרצועה מרשימת ההשמעה?"
 msgstr[1] "הסר את הרצועות מרשימת ההשמעה?"
 
-#: ../libgtkpod/misc.c:1823
+#: ../libgtkpod/misc.c:1822
 msgid ""
 "Are you sure you want to delete the following track completely from your "
 "harddisk? The number of playlists this track is a member of is indicated in "
@@ -2813,13 +2734,13 @@ msgstr[1] ""
 "האם אתה בטוח שברצונך למחוק את הרצועות הבאות לגמרי מהדיסק הקשיח? מספר רשימות "
 "ההשמעה שהרצועות האלו חברות בהן מצוינות בסוגריים."
 
-#: ../libgtkpod/misc.c:1826
+#: ../libgtkpod/misc.c:1825
 msgid "Delete Track from Harddisk?"
 msgid_plural "Delete Tracks from Harddisk?"
 msgstr[0] "מחק את הרצועה מהדיסק הקשיח?"
 msgstr[1] "מחק את הרצועות מהדיסק הקשיח?"
 
-#: ../libgtkpod/misc.c:1850
+#: ../libgtkpod/misc.c:1849
 msgid ""
 "Are you sure you want to remove the following track completely from your "
 "local database? The number of playlists this track is a member of is "
@@ -2835,13 +2756,13 @@ msgstr[1] ""
 "האם אתה בטוח שברצונך למחוק את הרצועות הבאות לגמרי ממסד הנתונים המקומי? מספר "
 "רשימות ההשמעה שהרצועות האלו חברות בהן מצוינות בסוגריים."
 
-#: ../libgtkpod/misc.c:1853
+#: ../libgtkpod/misc.c:1852
 msgid "Remove Track from Local Database?"
 msgid_plural "Remove Tracks from Local Database?"
 msgstr[0] "הסר את הרצועה ממסד הנתונים המקומי?"
 msgstr[1] "הסר את הרצועות ממסד הנתונים המקומי?"
 
-#: ../libgtkpod/gtkpod_app_iface.c:135
+#: ../libgtkpod/gtkpod_app_iface.c:159
 msgid ""
 "Data has been changed and not been saved. If you quit gtkpod, all unsaved "
 "changes will be lost.\n"
@@ -2852,41 +2773,41 @@ msgstr ""
 "\n"
 "האם תרצה לשמור את השינויים קודם?"
 
-#: ../libgtkpod/gtkpod_app_iface.c:138
+#: ../libgtkpod/gtkpod_app_iface.c:162
 msgid "Save changes before quiting?"
 msgstr "שמירת שינויים לפני היציאה?"
 
-#: ../libgtkpod/gtkpod_app_iface.c:138
+#: ../libgtkpod/gtkpod_app_iface.c:162
 msgid "Quit without saving"
 msgstr "יציאה ללא שמירה"
 
-#: ../libgtkpod/gtkpod_app_iface.c:195
+#: ../libgtkpod/gtkpod_app_iface.c:219
 #, c-format
 msgid " P:%d T:%d/%d"
 msgstr " P:%d T:%d/%d"
 
 #. ID
 #. modal,
-#: ../libgtkpod/gtkpod_app_iface.c:224 ../libgtkpod/file_itunesdb.c:1495
+#: ../libgtkpod/gtkpod_app_iface.c:248 ../libgtkpod/file_itunesdb.c:1495
 msgid "Warning"
 msgstr "אזהרה"
 
 #. update for count == 1, 21, 41 ... and for count == n
-#: ../libgtkpod/misc_track.c:88
+#: ../libgtkpod/misc_track.c:89
 #, c-format
 msgid "Hashed %d of %d track."
 msgid_plural "Hashed %d of %d tracks."
 msgstr[0] "בוצע ערבוב של %d מתוך %d רצועה."
 msgstr[1] "בוצע ערבוב של %d מתוך %d רצועות."
 
-#: ../libgtkpod/misc_track.c:182
+#: ../libgtkpod/misc_track.c:183
 #, c-format
 msgid "The following duplicate track has been removed."
 msgid_plural "The following %d duplicate tracks have been removed."
 msgstr[0] "הוסרה הרצועה הכפולה הבאה."
 msgstr[1] "הוסרו %d מן הרצועות הכפולות הבאות."
 
-#: ../libgtkpod/misc_track.c:188
+#: ../libgtkpod/misc_track.c:189
 #, c-format
 msgid ""
 "The following duplicate track has not been added to the master play list."
@@ -2898,25 +2819,25 @@ msgstr[1] "הרצועות הכפולות (%d) הבאות לא הוספו לרש�
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/misc_track.c:195
+#: ../libgtkpod/misc_track.c:196
 msgid "Duplicate detection"
 msgstr "זיהוי כפילויות"
 
-#: ../libgtkpod/misc_track.c:1216
+#: ../libgtkpod/misc_track.c:1217
 msgid "Local Database"
 msgstr "מסד נתונים מקומי"
 
 #. artwork is set
-#: ../libgtkpod/misc_track.c:1225
+#: ../libgtkpod/misc_track.c:1226
 msgid "Embedded or filename was lost"
 msgstr "מוטבע או ששם הקובץ אבד"
 
-#: ../libgtkpod/misc_track.c:1228
+#: ../libgtkpod/misc_track.c:1229
 msgid "Artwork not set"
 msgstr "לא נקבעו תמונות"
 
-#: ../libgtkpod/misc_track.c:1602 ../libgtkpod/misc_track.c:1694
-#: ../libgtkpod/file.c:1780
+#: ../libgtkpod/misc_track.c:1603 ../libgtkpod/misc_track.c:1695
+#: ../libgtkpod/file.c:1543
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
@@ -2925,183 +2846,84 @@ msgstr ""
 "הפודקסט כבר קיים: '%s'\n"
 "\n"
 
-#: ../libgtkpod/misc_track.c:1638
+#: ../libgtkpod/misc_track.c:1639
 #, c-format
 msgid "Could not find source file for '%s'. Track not copied."
 msgstr "אי אפשר למצוא את הקובץ עבור '%s'. הרצועה לא הועתקה."
 
-#: ../libgtkpod/misc_track.c:1851
+#: ../libgtkpod/misc_track.c:1836
 #, c-format
 msgid "drag and drop: ignored '%s'\n"
 msgstr "גרור ושחרר: התעלמות מ '%s'\n"
 
-#: ../libgtkpod/misc_track.c:1962
+#: ../libgtkpod/misc_track.c:1947
 #, c-format
 msgid "Deleted one track completely from iPod"
 msgid_plural "Deleted %d tracks completely from iPod"
 msgstr[0] "הרצועה נמחקה לגמרי מה-iPod"
 msgstr[1] "הרצועות %d נמחקו לגמרי מה-iPod"
 
-#: ../libgtkpod/misc_track.c:1967 ../libgtkpod/misc_track.c:1987
+#: ../libgtkpod/misc_track.c:1952 ../libgtkpod/misc_track.c:1972
 #, c-format
 msgid "Deleted %d track from playlist '%s'"
 msgid_plural "Deleted %d tracks from playlist '%s'"
 msgstr[0] "נמחקה %d רצועה מרשימת ההשמעה '%s'"
 msgstr[1] "נמחקו %d רצועות מרשימת ההשמעה '%s'"
 
-#: ../libgtkpod/misc_track.c:1982
+#: ../libgtkpod/misc_track.c:1967
 #, c-format
 msgid "Deleted one track from harddisk"
 msgid_plural "Deleted %d tracks from harddisk"
 msgstr[0] "נמחקה רצועה אחת מהדיסק הקשיח"
 msgstr[1] "נמחקו %d רצועות מהדיסק הקשיח"
 
-#: ../libgtkpod/misc_track.c:1992
+#: ../libgtkpod/misc_track.c:1977
 #, c-format
 msgid "Deleted track from local database"
 msgid_plural "Deleted %d tracks from local database"
 msgstr[0] "נמחקה רצועה ממסד הנתונים המקומי"
 msgstr[1] "נמחקו %d רצועות ממסד הנתונים המקומי"
 
-#: ../libgtkpod/misc_track.c:2102
+#: ../libgtkpod/misc_track.c:2087
 #, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
 msgstr[0] "הועתקה %d רצועה אל '%s' בתוך '%s'"
 msgstr[1] "הועתקו %d רצועות אל '%s' בתוך '%s'"
 
-#: ../libgtkpod/misc_track.c:2132
+#: ../libgtkpod/misc_track.c:2117
 #, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
 msgstr[0] "הועתקה %d רצועה אל '%s'."
 msgstr[1] "הועתקו %d רצועות אל '%s'."
 
-#: ../libgtkpod/misc_track.c:2146
+#: ../libgtkpod/misc_track.c:2131
 msgid "No tracks selected"
 msgstr "לא נבחרו רצועות"
 
-#: ../libgtkpod/mp4file.c:633
-#, c-format
-msgid ""
-"m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
-"without the mp4v2 library. You must install the mp4v2 library.\n"
-msgstr ""
-"עדכון מידע קול של m4a/m4p/m4b עבור '%s' נכשל: הסוגים m4a/m4p/m4b לא נתמכים "
-"ללא הספריה mp4v2. אתה חייב להדר את קוד המקור של gtkpod ביחד עם ספריית "
-"mp4v2.\n"
+#: ../libgtkpod/filetype_iface.c:188
+msgid "Error: Lyrics not supported for this file format."
+msgstr "שגיאה: מילות שיר לא נתמכות בפורמט זה."
 
-#: ../libgtkpod/mp4file.c:673 ../libgtkpod/mp4file.c:983
-#, c-format
-msgid "'%s' does not appear to be a mp4 audio or video file.\n"
-msgstr "הקובץ '%s' הוא כנראה לא קובץ שמע או וידאו מסוד mp4.\n"
-
-#: ../libgtkpod/mp4file.c:683 ../libgtkpod/mp4file.c:993
-#, c-format
-msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
-msgstr "אי אפשר לפתוח את '%s' לקריאה, או הקובץ הוא לא קובץ שמע mp4.\n"
-
-#: ../libgtkpod/mp4file.c:697
-#, c-format
-msgid ""
-"Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
-"You must install the mp4v2 library.\n"
-msgstr ""
-"הייבוא של '%s' נכשל: m4a/m4p/m4b לא נתמך ללא הספריה mp4v2. אתה חייב להדר את "
-"קוד המקור gtkpod ביחד עם הספריה mp4v2.\n"
-
-#: ../libgtkpod/mp4file.c:1006
-#, c-format
-msgid ""
-"m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
-"without the mp4v2 library. You must install the mp4v2 library.\n"
-msgstr ""
-"עדכון מטא-מידע של m4a/m4p/m4b עבור '%s' נכשל: סוגי הקבצים m4a/m4p/m4b לא "
-"נתמכים ללא הספריה mp4v2. אתה חייב להדר את קוד המקור של gtkpod ביחד עם ספריית "
-"mp4v2.\n"
-
-#: ../libgtkpod/mp4file.c:1129
-#, c-format
-msgid "'%s' does not appear to be a mp4 audio file.\n"
-msgstr "הקובץ '%s' הוא כנראה לא קובץ שמע mp4.\n"
-
-#: ../libgtkpod/mp4file.c:1140
-#, c-format
-msgid "Could not open '%s' for writing, or file is not an mp4 file.\n"
-msgstr "אי אפשר לפתוח את '%s' לכתיבה, או הקובץ הוא לא קובץ שמע mp4.\n"
-
-#: ../libgtkpod/mp4file.c:1153
-#, c-format
-msgid ""
-"Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
-"You must compile the gtkpod source together with the mp4v2 library.\n"
-msgstr ""
-"הייבוא של '%s' נכשל: m4a/m4p/m4b לא נתמך ללא הספריה mp4v2. אתה חייב להדר את "
-"קוד המקור gtkpod ביחד עם הספריה mp4v2.\n"
-
-#: ../libgtkpod/mp4file.c:1159
-#, c-format
-msgid ""
-"m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
-"without the mp4v2 library. You must compile the gtkpod source together with "
-"the mp4v2 library.\n"
-msgstr ""
-"עדכון מטא-מידע של m4a/m4p/m4b עבור '%s' נכשל: הסוגים m4a/m4p/m4b לא נתמכים "
-"ללא הספריה mp4v2. אתה חייב להדר את קוד המקור של gtkpod ביחד עם ספריית "
-"mp4v2.\n"
-
-#: ../libgtkpod/mp4file.c:1165
-#, c-format
-msgid ""
-"m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
-"without the mp4v2 library. You must compile the gtkpod source together with "
-"the mp4v2 library.\n"
-msgstr ""
-"עדכון מידע קול של m4a/m4p/m4b עבור '%s' נכשל: הסוגים m4a/m4p/m4b לא נתמכים "
-"ללא הספריה mp4v2. אתה חייב להדר את קוד המקור של gtkpod ביחד עם ספריית "
-"mp4v2.\n"
-
-#: ../libgtkpod/gp_itdb.c:807
+#: ../libgtkpod/gp_itdb.c:806
 msgid "Music Library"
 msgstr "ספריית מוסיקה"
 
 #. add podcast playlist
-#: ../libgtkpod/gp_itdb.c:814 ../libgtkpod/gp_itdb.c:918
-#: ../libgtkpod/gp_itdb.c:950
+#: ../libgtkpod/gp_itdb.c:813 ../libgtkpod/gp_itdb.c:914
+#: ../libgtkpod/gp_itdb.c:946
 msgid "Podcasts"
 msgstr "פודקסטים"
 
-#: ../libgtkpod/gp_itdb.c:920
+#: ../libgtkpod/gp_itdb.c:916
 msgid "Local"
 msgstr "מקומי"
 
-#: ../libgtkpod/gp_itdb.c:1005
+#: ../libgtkpod/gp_itdb.c:1001
 #, c-format
 msgid "Increased playcount for '%s'"
 msgstr "הועלתה ספירת השמעות עבור '%s'"
-
-#: ../libgtkpod/oggfile.c:82
-#, c-format
-msgid "'%s' does not appear to be an ogg audio file.\n"
-msgstr "הקובץ '%s' הוא כנראה לא קובץ שמע מסוג ogg.\n"
-
-#: ../libgtkpod/oggfile.c:171
-#, c-format
-msgid ""
-"Import of '%s' failed: ogg not supported without the ogg library. You must "
-"compile the gtkpod source together with the ogg library.\n"
-msgstr ""
-"הייבוא של '%s' נכשל: ogg לא נתמך ללא הספריה של ogg. אתה חייב להדר את קוד "
-"המקור gtkpod ביחד עם הספריה של ogg.\n"
-
-#: ../libgtkpod/oggfile.c:177
-#, c-format
-msgid ""
-"ogg metadata update for '%s' failed: ogg not supported without the ogg "
-"library. You must compile the gtkpod source together with the ogg library.\n"
-msgstr ""
-"עדכון מטא-מידע של ogg עבור '%s' נכשל: הסוג ogg לא נתמך ללא הספריה ogg. אתה "
-"חייב להדר את קוד המקור של gtkpod ביחד עם ספריית ogg.\n"
 
 #. already opened
 #. we are not the first instance of gtkpod -- the socket is
@@ -3460,7 +3282,7 @@ msgstr "טיפול ברצועות מתנדנדות ללא קבצים על ה-PC 
 msgid "Dangling tracks with no files on PC were removed."
 msgstr "רצועות מתנדנדות ללא קבצים על ה-PC הוסרו."
 
-#: ../libgtkpod/misc_playlist.c:777 ../libgtkpod/file.c:1670
+#: ../libgtkpod/misc_playlist.c:777 ../libgtkpod/file.c:1433
 #, c-format
 msgid "Processing '%s'..."
 msgstr "מעבד '%s'..."
@@ -3702,44 +3524,36 @@ msgstr "לא נבחרו מסד נתונים את רשימת השמעה"
 msgid "No iPod or iPod playlist selected"
 msgstr "לא נבחר iPod או לא נבחרה רשימת השמעה של iPod"
 
-#: ../libgtkpod/file_convert.c:306
+#: ../libgtkpod/file_convert.c:308
 msgid "Summary status of conversion processes"
 msgstr "סיכום עבור תהליך ההמרה"
 
 #. only change the label if it has changed --
 #. otherwise our tooltips will be switched off
-#: ../libgtkpod/file_convert.c:513 ../libgtkpod/file_convert.c:515
+#: ../libgtkpod/file_convert.c:515 ../libgtkpod/file_convert.c:517
 msgid "active"
 msgstr "פעיל"
 
-#: ../libgtkpod/file_convert.c:519 ../libgtkpod/file_convert.c:520
+#: ../libgtkpod/file_convert.c:521 ../libgtkpod/file_convert.c:522
 msgid "inactive"
 msgstr "לא פעיל"
 
-#: ../libgtkpod/file_convert.c:532
+#: ../libgtkpod/file_convert.c:534
 #, c-format
 msgid "Active threads: %d. Scheduled tracks: %d."
 msgstr "תהליכים פעילים: %d. רצועות מתוזמנות: %d."
 
-#: ../libgtkpod/file_convert.c:949
+#: ../libgtkpod/file_convert.c:954
 #, c-format
 msgid "Original filename not available for '%s.'\n"
 msgstr "קובץ מקורי לא זמין עבור '%s'.\n"
 
-#: ../libgtkpod/file_convert.c:963
+#: ../libgtkpod/file_convert.c:970
 #, c-format
 msgid "Filename '%s' is no longer valid for '%s'.\n"
 msgstr "הקובץ '%s' כבר לא זמין עבור '%s'.\n"
 
-#: ../libgtkpod/file_convert.c:1012
-msgid "Ogg Vorbis"
-msgstr "Ogg Vorbis"
-
-#: ../libgtkpod/file_convert.c:1018
-msgid "FLAC"
-msgstr "FLAC"
-
-#: ../libgtkpod/file_convert.c:1068
+#: ../libgtkpod/file_convert.c:1043
 #, c-format
 msgid ""
 "Files of type '%s' are not supported by the iPod. Please go to the "
@@ -3750,16 +3564,16 @@ msgstr ""
 "מתאים עבור '%s'.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1144
+#: ../libgtkpod/file_convert.c:1119
 msgid "No information available"
 msgstr "לא קיים מידע"
 
-#: ../libgtkpod/file_convert.c:1176
+#: ../libgtkpod/file_convert.c:1151
 #, c-format
 msgid "Could not create '%s'. Filetype conversion will not work.\n"
 msgstr "אי אפשר ליצור את '%s'. המרת סוג קובץ לא תצליח.\n"
 
-#: ../libgtkpod/file_convert.c:1446 ../libgtkpod/file_convert.c:2687
+#: ../libgtkpod/file_convert.c:1421 ../libgtkpod/file_convert.c:2646
 #, c-format
 msgid ""
 "Transfer of '%s' failed. %s\n"
@@ -3768,7 +3582,7 @@ msgstr ""
 "ההעברה של '%s' נכשלה. %s\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1798 ../libgtkpod/file_convert.c:2021
+#: ../libgtkpod/file_convert.c:1776 ../libgtkpod/file_convert.c:2000
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s'.\n"
@@ -3777,7 +3591,7 @@ msgstr ""
 "ההמרה של '%s' נכשלה: '%s'\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1812
+#: ../libgtkpod/file_convert.c:1790
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s %s' returned exit status %d.\n"
@@ -3786,7 +3600,7 @@ msgstr ""
 "ההמרה של '%s' נכשלה: '%s %s' החזיר ערך יציאה %d.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1837
+#: ../libgtkpod/file_convert.c:1815
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '\"%s\" %s' did not return filename extension as "
@@ -3796,7 +3610,7 @@ msgstr ""
 "ההמרה של '%s' נכשלה: '%s %s' לא החזיר סיומת קובץ כצפוי.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1901
+#: ../libgtkpod/file_convert.c:1879
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not access original file '%s' (%s).\n"
@@ -3805,7 +3619,7 @@ msgstr ""
 "ההמרה של '%s' נכשלה: לא ניתן לגשת אל הקובץ המקורי '%s (%s)'.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1944
+#: ../libgtkpod/file_convert.c:1922
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not create directory '%s'.\n"
@@ -3814,7 +3628,7 @@ msgstr ""
 "ההמרה של '%s' נכשלה: לא ניתן ליצור תיקייה '%s'.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:2048
+#: ../libgtkpod/file_convert.c:2025
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s' returned exit status %d.\n"
@@ -3823,7 +3637,7 @@ msgstr ""
 "ההמרה של '%s' נכשלה: '%s' החזיר ערך יציאה %d.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:2079
+#: ../libgtkpod/file_convert.c:2059
 #, c-format
 msgid ""
 "Conversion of '%s' failed: could not stat the converted file '%s'.\n"
@@ -3854,34 +3668,7 @@ msgstr ""
 "הביצוע של '%s' נכשל.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:246
-#, c-format
-msgid ""
-"Did not normalize '%s'. Set mp3gain path in the Tools section of the "
-"preferences.\n"
-msgstr ""
-"לא בוצע נרמול עבור '%s'.אנא קבע את הנתיב של mp3gain בחלק 'כלים' של חלון דו-"
-"שיח ההעדפות.\n"
-
-#: ../libgtkpod/tools.c:256
-#, c-format
-msgid ""
-"Did not normalize '%s'. Set aacgain path in the Tools section of the "
-"preferences.\n"
-msgstr ""
-"לא בוצע נרמול עבור '%s'.אנא קבע את הנתיב של aacgain בחלק 'כלים' של חלון דו-"
-"שיח ההעדפות.\n"
-
-#: ../libgtkpod/tools.c:268 ../libgtkpod/file.c:2114
-#, c-format
-msgid ""
-"Normalization failed: file type not supported (%s).\n"
-"\n"
-msgstr ""
-"נרמול נכשל: סוג קובץ לא נתמך(%s).\n"
-"\n"
-
-#: ../libgtkpod/tools.c:285 ../libgtkpod/file.c:2127
+#: ../libgtkpod/tools.c:241
 #, c-format
 msgid ""
 "Normalization failed: file not available (%s).\n"
@@ -3890,19 +3677,29 @@ msgstr ""
 "נרמול נכשל: קובץ לא קיים (%s).\n"
 "\n"
 
-#: ../libgtkpod/tools.c:384
+#: ../libgtkpod/tools.c:256
+#, c-format
+msgid ""
+"Normalization failed for file %s: file type not supported.\n"
+"To normalize mp3 and aac files ensure the following commands paths have been "
+"set in the Tools section\n"
+"\tmp3 files: mp3gain\n"
+"\taac files: aacgain"
+msgstr ""
+
+#: ../libgtkpod/tools.c:353
 msgid "Normalizing..."
 msgstr "מנרמל..."
 
-#: ../libgtkpod/tools.c:460
+#: ../libgtkpod/tools.c:429
 msgid "Aborting..."
 msgstr "מבטל..."
 
-#: ../libgtkpod/tools.c:464
+#: ../libgtkpod/tools.c:433
 msgid "Will abort after current mp3gain process ends."
 msgstr "יבוטל אחרי שתהליך mp3gain יסתיים."
 
-#: ../libgtkpod/tools.c:490
+#: ../libgtkpod/tools.c:459
 #, c-format
 msgid ""
 "'%s-%s' (%s) could not be normalized.\n"
@@ -3911,13 +3708,13 @@ msgstr ""
 "אי אפשר לנרמל את '%s-%s' (%s)\n"
 "\n"
 
-#: ../libgtkpod/tools.c:633
+#: ../libgtkpod/tools.c:602
 msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
 msgstr "אנא ציין את הפקודה שיקראו לה בחלק 'כלים' בחלון הדו-שיח העדפות.\n"
 
-#: ../libgtkpod/tools.c:645
+#: ../libgtkpod/tools.c:614
 #, c-format
 msgid ""
 "Could not find the command '%s'.\n"
@@ -3930,7 +3727,7 @@ msgstr ""
 "אנא בדוק את ההגדרות בחלק 'כלים' של חלון דו-שיח ההעדפות.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:687
+#: ../libgtkpod/tools.c:656
 #, c-format
 msgid ""
 "'%s' returned the following output:\n"
@@ -3938,34 +3735,6 @@ msgid ""
 msgstr ""
 "האובייקט '%s' החזיר את הפלט הבא:\n"
 "%s\n"
-
-#: ../libgtkpod/flacfile.c:63
-#, c-format
-msgid "'%s' does not appear to be an FLAC audio file.\n"
-msgstr "הקובץ '%s' הוא כנראה לא קובץ שמע מסוג FLAC.\n"
-
-#: ../libgtkpod/flacfile.c:79
-#, c-format
-msgid "Error retrieving tags for '%s'.\n"
-msgstr "תקלה באחזור התגיות עבור '%s'.\n"
-
-#: ../libgtkpod/flacfile.c:194
-#, c-format
-msgid ""
-"Import of '%s' failed: FLAC not supported without the FLAC library. You must "
-"compile the gtkpod source together with the FLAC library.\n"
-msgstr ""
-"הייבוא של '%s' נכשל: FLAC לא נתמך ללא הספריה של FLAC. אתה חייב להדר את קוד "
-"המקור gtkpod ביחד עם הספריה של FLAC.\n"
-
-#: ../libgtkpod/flacfile.c:200
-#, c-format
-msgid ""
-"FLAC metadata update for '%s' failed: FLAC not supported without the FLAC "
-"library. You must compile the gtkpod source together with the FLAC library.\n"
-msgstr ""
-"עדכון מטא-מידע של FLAC עבור '%s' נכשל: הסוג FLAC לא נתמך ללא הספריה FLAC. "
-"אתה חייב להדר את קוד המקור של gtkpod ביחד עם ספריית FLAC.\n"
 
 #: ../libgtkpod/file_itunesdb.c:125
 #, c-format
@@ -4325,12 +4094,7 @@ msgstr "%s: שינויים נשמרו"
 msgid "Set Cover"
 msgstr "קבע עטיפה"
 
-#: ../libgtkpod/wavfile.c:182
-#, c-format
-msgid "%s does not appear to be a supported wav file.\n"
-msgstr "הקובץ %s הוא כנראה לא קובץ wav נתמך.\n"
-
-#: ../libgtkpod/file.c:237
+#: ../libgtkpod/file.c:145
 #, c-format
 msgid ""
 "'%s' is a directory, not a playlist file.\n"
@@ -4339,7 +4103,7 @@ msgstr ""
 "'%s' הוא תיקייה, לא קובץ רשימת השמעה.\n"
 "\n"
 
-#: ../libgtkpod/file.c:264
+#: ../libgtkpod/file.c:159
 #, c-format
 msgid ""
 "'%s' is a not a known playlist file.\n"
@@ -4348,31 +4112,31 @@ msgstr ""
 "'%s' הוא לא קובץ רשימת השמעה מוכר.\n"
 "\n"
 
-#: ../libgtkpod/file.c:363
+#: ../libgtkpod/file.c:235
 #, c-format
 msgid "Skipping '%s' because it is a directory.\n"
 msgstr "מדלג על '%s' בגלל שהוא תיקייה.\n"
 
-#: ../libgtkpod/file.c:367
+#: ../libgtkpod/file.c:239
 #, c-format
 msgid "Skipping '%s' to avoid adding playlist file recursively\n"
 msgstr "מדלג על '%s' על מנת להתחמק מהוספת קובץ רשימת השמעה רקורסיבי\n"
 
-#: ../libgtkpod/file.c:585
+#: ../libgtkpod/file.c:457
 #, c-format
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr "הסימן '%s' בתבנית '%s' לא ידוע\n"
 
-#: ../libgtkpod/file.c:865
+#: ../libgtkpod/file.c:737
 #, c-format
 msgid "Could not create '%s'"
 msgstr "אי אפשר ליצור את  \"%s\""
 
-#: ../libgtkpod/file.c:899
+#: ../libgtkpod/file.c:771
 msgid "Error creating thumbnail file"
 msgstr "תקלה ביצירת קובץ תמונות ממוזערות"
 
-#: ../libgtkpod/file.c:947
+#: ../libgtkpod/file.c:819
 #, c-format
 msgid ""
 "Unable to start video thumbnail generator\n"
@@ -4381,39 +4145,35 @@ msgstr ""
 "אי אפשר היה להפעיל את יוצר תמונות הווידאו הממוזערות\n"
 "(שורת הפקודה הייתה: '%s')"
 
-#: ../libgtkpod/file.c:950
+#: ../libgtkpod/file.c:822
 #, c-format
 msgid "Thumbnail generator returned status %d"
 msgstr "יוצר התמונות הממוזערות החזיר סטטוס %d"
 
-#: ../libgtkpod/file.c:1081
+#: ../libgtkpod/file.c:946
 #, c-format
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
 msgstr "אי אפשר לעבד את הרצועה הבאה (הקובץ לא קיים): '%s'\n"
 
-#: ../libgtkpod/file.c:1170
-#, c-format
-msgid "The following track could not be processed (filetype unknown): '%s'\n"
-msgstr "אי אפשר לעבד את הרצועה הבאה (סוג קובץ לא ידוע): '%s'\n"
-
-#: ../libgtkpod/file.c:1270
+#: ../libgtkpod/file.c:964
 #, c-format
 msgid ""
-"The following track could not be processed (filetype is known but analysis "
-"failed): '%s'\n"
-msgstr "אי אפשר לעבד את הרצועה הבאה (סוג קובץ ידוע, אך הבדיקה נכשלה): '%s'\n"
+"The filetype '%s' is not currently supported.\n"
+"\n"
+"If you have a plugin that supports this filetype then please enable it."
+msgstr ""
 
-#: ../libgtkpod/file.c:1315
+#: ../libgtkpod/file.c:1089
 #, c-format
 msgid "Updating %s"
 msgstr "מעדכן %s"
 
-#: ../libgtkpod/file.c:1327
+#: ../libgtkpod/file.c:1101
 msgid "Updated selected tracks with info from file."
 msgstr "מעדכן רצועות נבחרות עם מידע מקובץ."
 
-#: ../libgtkpod/file.c:1343
+#: ../libgtkpod/file.c:1117
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -4422,11 +4182,11 @@ msgstr[1] "%d הרצועות הבאות אינן יכולות להתעדכן"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1346
+#: ../libgtkpod/file.c:1120
 msgid "Failed Track Update"
 msgstr "עדכון רצועה נכשל"
 
-#: ../libgtkpod/file.c:1400
+#: ../libgtkpod/file.c:1174
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -4435,79 +4195,70 @@ msgstr[1] "עודכנו %d הרצועות הבאות"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1403
+#: ../libgtkpod/file.c:1177
 msgid "Successful Track Update"
 msgstr "הרצועה עודכנה בהצלחה"
 
-#: ../libgtkpod/file.c:1490
+#: ../libgtkpod/file.c:1264
 msgid "no local filename available, file on the iPod will be used instead"
 msgstr "קובץ מקומי לא זמין, יעשה שימוש בקובץ על ה־iPod"
 
-#: ../libgtkpod/file.c:1494
+#: ../libgtkpod/file.c:1268
 msgid "no local filename available and copy on iPod cannot be found"
 msgstr "קובץ מקומי לא זמין ועותק על ה־iPod גם כן לא זמין"
 
-#: ../libgtkpod/file.c:1497 ../libgtkpod/file.c:1510
+#: ../libgtkpod/file.c:1271 ../libgtkpod/file.c:1284
 msgid "no local filename available"
 msgstr "קובץ מקומי לא זמין"
 
-#: ../libgtkpod/file.c:1503
+#: ../libgtkpod/file.c:1277
 msgid "local file could not be found, file on the iPod will be used instead"
 msgstr "קובץ מקומי לא קיים, יעשה שימוש בקובץ על ה־iPod"
 
-#: ../libgtkpod/file.c:1507
+#: ../libgtkpod/file.c:1281
 msgid "local file as well as copy on the iPod cannot be found"
 msgstr "לא נמצא קובץ מקומי וגם העותק על ה־iPod לא נמצא"
 
 #. update not successful -- log this track for later display
-#: ../libgtkpod/file.c:1592
+#: ../libgtkpod/file.c:1366
 msgid "update failed (format not supported?)"
 msgstr "העדכון נכשל (התבנית לא נתמכת?)"
 
-#: ../libgtkpod/file.c:1676
+#: ../libgtkpod/file.c:1439
 #, c-format
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "מדלג על '%s' בגלל שהוא תואם למסכת אי ההכללה.\n"
 
-#: ../libgtkpod/file.c:1840
-#, c-format
-msgid ""
-"Writing to video files not yet supported (%s).\n"
-"\n"
-msgstr ""
-"כתיבת קבצי וידאו עדיין לא נתמך (%s).\n"
-"\n"
-
-#: ../libgtkpod/file.c:1886 ../libgtkpod/file.c:1893
+#: ../libgtkpod/file.c:1621 ../libgtkpod/file.c:1628
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "לא מסוגל לשנות תג של קובץ: %s\n"
 
-#: ../libgtkpod/file.c:1976
+#: ../libgtkpod/file.c:1711
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr "אי אפשר לפתוח את '%s' לקריאה וכתיבה.\n"
 
-#: ../libgtkpod/file.c:1981
+#: ../libgtkpod/file.c:1716
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr "אי אשפר להשיג נעילה על '%s'.\n"
 
 #. error!
-#: ../libgtkpod/file.c:1996 ../libgtkpod/file.c:2004 ../libgtkpod/file.c:2014
-#: ../libgtkpod/file.c:2021
+#: ../libgtkpod/file.c:1731 ../libgtkpod/file.c:1739 ../libgtkpod/file.c:1749
+#: ../libgtkpod/file.c:1756
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr "שורה לא תקינה ב '%s' : %s\n"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:2046
+#: ../libgtkpod/file.c:1782
 msgid "Remove offline playcounts?"
 msgstr "הסר מספור השמעות לא מקוון?"
 
 #. title
-#: ../libgtkpod/file.c:2047
+#: ../libgtkpod/file.c:1783
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
@@ -4515,33 +4266,23 @@ msgstr ""
 "אי אפשר לאתר מספר רצועות שנוגנו בצורה לא מקוונת ב-iTunesDB. לחץ על 'אישור' "
 "להסיר אותן ממספור ההשמעה הלא מקוון, ועל 'ביטול' להשאיר אותן."
 
-#: ../libgtkpod/file.c:2062
+#: ../libgtkpod/file.c:1798
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr "תקלה בכתיבה ל-'%s'.\n"
 
-#: ../libgtkpod/file.c:2156
-msgid "Error: File format unsupported now."
-msgstr "העדכון נכשל (פורמט הקובץ לא נתמך?)"
-
-#: ../libgtkpod/file.c:2166
-msgid "Error: Lyrics not supported for this file format."
-msgstr "שגיאה: מילות שיר לא נתמכות בפורמט זה."
-
-#: ../libgtkpod/file.c:2180
+#: ../libgtkpod/file.c:1847
 #, c-format
 msgid ""
-"Error: Lyrics not found, file not available (%s).\n"
+"Error: Could not determine filetype for file at path: %s.\n"
 "\n"
 msgstr ""
-"המילים לא נכתבו, הקובץ לא זמין (%s).\n"
-"\n"
 
-#: ../libgtkpod/file.c:2208
+#: ../libgtkpod/file.c:1880
 msgid "Error:"
 msgstr "שגיאה:"
 
-#: ../libgtkpod/file.c:2222
+#: ../libgtkpod/file.c:1894
 #, c-format
 msgid ""
 "iPod File not available and ID3 saving disabled in options, cannot save "
@@ -4552,10 +4293,10 @@ msgstr ""
 "אל: \"%s\".\n"
 "\n"
 
-#: ../libgtkpod/file.c:2258
-#, c-format
+#: ../libgtkpod/file.c:1903
+#, fuzzy, c-format
 msgid ""
-"Lyrics not written, file name not available (%s).\n"
+"Lyrics not written, file type cannot be determined (%s).\n"
 "\n"
 msgstr ""
 "המילים לא נכתבו, שם הקובץ לא זמינים (%s).\n"
@@ -4846,308 +4587,558 @@ msgstr "שם השרת של הנתיב '%s' הוא לא חוקי."
 msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "הנתיב URI '%s' מכיל תווים לא חוקיים"
 
-#: ../libgtkpod/mp3file.c:1331
+#. Register actions
+#: ../src/anjuta-app.c:434
+msgid "Music"
+msgstr "מוזיקה"
+
+#: ../src/anjuta-app.c:435
+#, fuzzy
+msgid "Edit"
+msgstr "_עריכה"
+
+#: ../src/anjuta-app.c:436 ../src/anjuta-app.c:437
+#, fuzzy
+msgid "View"
+msgstr "_תצוגה"
+
+#: ../src/anjuta-app.c:438
+#, fuzzy
+msgid "Tools"
+msgstr "_כלים"
+
+#: ../src/anjuta-app.c:439
+#, fuzzy
+msgid "Help"
+msgstr "_עזרה"
+
+#: ../src/anjuta-app.c:644
+msgid "Plugins"
+msgstr ""
+
+#: ../src/anjuta-app.c:655
+msgid "Installed plugins"
+msgstr ""
+
+#: ../src/anjuta-app.c:656
+#, fuzzy
+msgid "Preferred plugins"
+msgstr "הגדרות"
+
+#: ../src/anjuta-app.c:657
+#, fuzzy
+msgid "Shortcuts"
+msgstr "מיין לפי אמן"
+
+#: ../src/anjuta-app.c:715
 #, c-format
-msgid "Error setting ID3 field: %s\n"
-msgstr "שגיאה בקביעת שדה ID3: %s\n"
+msgid "Value doesn't exist"
+msgstr ""
 
-#: ../libgtkpod/mp3file.c:1355 ../libgtkpod/mp3file.c:1539
-#: ../libgtkpod/mp3file.c:1700 ../libgtkpod/mp3file.c:2094
-#: ../libgtkpod/mp3file.c:3017 ../libgtkpod/mp3file.c:3076
-#: ../libgtkpod/mp3file.c:3103
+#: ../src/anjuta-app.c:1296
+msgid "Confirmation"
+msgstr "אישור"
+
+#: ../src/anjuta-action-callbacks.c:106
+#, fuzzy
+msgid "GtkPod Preferences"
+msgstr "הגדרות"
+
+#: ../src/help.c:48
+msgid ""
+"© 2002 - 2010\n"
+"Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
+"Corey Donohoe (atmos at atmos dot org)\n"
+msgstr ""
+"© 2002 - 2007\n"
+"Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
+"Corey Donohoe (atmos at atmos dot org)\n"
+
+#: ../src/help.c:52
+msgid ""
+"Codebase includes contribution from the following people and many other "
+"helpful individuals\n"
+msgstr "קוד המקור מכיל תרומות של אנשים אלו ועוד הרבה אחרים\n"
+
+#: ../src/help.c:53
+msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
+msgstr "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
+
+#: ../src/help.c:54
+msgid "Hiroshi Kawashima: Japanese charset autodetection feature"
+msgstr "Hiroshi Kawashima: Japanese charset autodetection feature"
+
+#: ../src/help.c:55
+msgid "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
+msgstr "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
+
+#: ../src/help.c:56
+msgid ""
+"Walter Bell: correct handling of DND URIs with escaped characters and/or cr/"
+"newlines at the end"
+msgstr ""
+"Walter Bell: correct handling of DND URIs with escaped characters and/or cr/"
+"newlines at the end"
+
+#: ../src/help.c:57
+msgid "Sam Clegg: user defined filenames when exporting tracks from the iPod"
+msgstr "Sam Clegg: user defined filenames when exporting tracks from the iPod"
+
+#: ../src/help.c:58
+msgid "Chris Cutler: automatic creation of various playlist types"
+msgstr "Chris Cutler: automatic creation of various playlist types"
+
+#: ../src/help.c:59
+msgid ""
+"Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
+"dialogue during sync"
+msgstr ""
+"Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
+"dialogue during sync"
+
+#: ../src/help.c:60
+msgid ""
+"Edward Matteucci: debugging, special playlist creation, most of the volume "
+"normalizing code"
+msgstr ""
+"Edward Matteucci: debugging, special playlist creation, most of the volume "
+"normalizing code"
+
+#: ../src/help.c:61
+msgid "Jens Lautenbach: some optical improvements"
+msgstr "Jens Lautenbach: some optical improvements"
+
+#: ../src/help.c:62
+msgid "Alex Tribble: iPod eject patch"
+msgstr "Alex Tribble: iPod eject patch"
+
+#: ../src/help.c:63
+msgid "Yaroslav Halchenko: Orphaned and dangling tracks handling"
+msgstr "Yaroslav Halchenko: Orphaned and dangling tracks handling"
+
+#: ../src/help.c:64
+msgid ""
+"Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
+msgstr ""
+"Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
+
+#: ../src/help.c:65
+msgid ""
+"Ero Carrera: Filename validation and quick sync when copying tracks from the "
+"iPod"
+msgstr ""
+"Ero Carrera: Filename validation and quick sync when copying tracks from the "
+"iPod"
+
+#: ../src/help.c:66
+msgid "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
+msgstr "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
+
+#: ../src/help.c:67
+msgid "Armando Atienza: Support with external playcounts"
+msgstr "Armando Atienza: Support with external playcounts"
+
+#: ../src/help.c:68
+msgid "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
+msgstr "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
+
+#: ../src/help.c:69
+msgid "Jim Hall: Decent INSTALL file"
+msgstr "Jim Hall: Decent INSTALL file"
+
+#: ../src/help.c:70
+msgid ""
+"Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
+"contacts to the iPod"
+msgstr ""
+"Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
+"contacts to the iPod"
+
+#. J"urgen!
+#: ../src/help.c:71
+msgid "Flavio Stanchina: bugfixes"
+msgstr "Flavio Stanchina: bugfixes"
+
+#: ../src/help.c:72
+msgid ""
+"Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
+"the title"
+msgstr ""
+"Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
+"the title"
+
+#: ../src/help.c:73
+msgid "Steve Jay: use statvfs() instead of df (better portability, faster)"
+msgstr "Steve Jay: use statvfs() instead of df (better portability, faster)"
+
+#: ../src/help.c:75
+msgid ""
+"Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 "
+"tags"
+msgstr ""
+"Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 "
+"tags"
+
+#: ../src/help.c:77
+msgid ""
+"James Liggett:\n"
+"replacement of old GTK file selection dialogs with new GTK filechooser "
+"dialogs\n"
+"refactored user preferences system."
+msgstr ""
+"James Liggett:\n"
+"replacement of old GTK file selection dialogs with new GTK filechooser "
+"dialogs\n"
+"refactored user preferences system."
+
+#: ../src/help.c:81
+msgid "Daniel Kercher: sync scripts for abook and webcalendar"
+msgstr "Daniel Kercher: sync scripts for abook and webcalendar"
+
+#: ../src/help.c:83
+msgid "Clinton Gormley: sync scripts for thunderbird"
+msgstr "Clinton Gormley: sync scripts for thunderbird"
+
+#: ../src/help.c:85
+msgid "Sebastien Beridot: sync script for ldif addressbook format"
+msgstr "Sebastien Beridot: sync script for ldif addressbook format"
+
+#: ../src/help.c:87
+msgid "Sebastian Scherer: sync script for kNotes"
+msgstr "Sebastian Scherer: sync script for kNotes"
+
+#: ../src/help.c:89
+msgid "Nick Piper: sync script for Palm, type-ahead search"
+msgstr "Nick Piper: sync script for Palm, type-ahead search"
+
+#: ../src/help.c:91
+msgid "Uwe Hermann: help with support for iPod Video"
+msgstr "Uwe Hermann: help with support for iPod Video"
+
+#: ../src/help.c:93
+msgid ""
+"Iain Benson: support for compilation tag in mp3 files and separate display "
+"of compilations in the sort tab."
+msgstr ""
+"Iain Benson: support for compilation tag in mp3 files and separate display "
+"of compilations in the sort tab."
+
+#: ../src/help.c:94
+msgid "Nicolas Chariot: icons of buttons\n"
+msgstr "Nicolas Chariot: icons of buttons\n"
+
+#: ../src/help.c:95
+msgid ""
+"Others past and present for their excellent contributions\n"
+"\n"
+msgstr ""
+"ואחרים בעבר ובהווה על תרומתם הנהדרת\n"
+"\n"
+
+#: ../src/help.c:96
+msgid "This program borrows code from the following projects:"
+msgstr "התוכנה שואלת קוד מהפרוייקטים הבאים:"
+
+#: ../src/help.c:97
+msgid ""
+"gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  (http://"
+"www.gnu.org/software/gnupod/)"
+msgstr ""
+"gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  (http://"
+"www.gnu.org/software/gnupod/)"
+
+#: ../src/help.c:98
+msgid ""
+"iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some code "
+"for smart playlists is based on his C++-classes."
+msgstr ""
+"iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some code "
+"for smart playlists is based on his C++-classes."
+
+#: ../src/help.c:99
+msgid "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
+msgstr "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
+
+#: ../src/help.c:100
+msgid "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
+msgstr "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
+
+#: ../src/help.c:102
+msgid "The GUI was created with the help of glade (http://glade.gnome.org/)."
+msgstr "ה־GUI יוצר בעזרת glade-2, ראה: (http://glade.gnome.org)."
+
+#: ../src/help.c:106
+msgid "French: David Le Brun (david at dyn-ns dot net)"
+msgstr "צרפתית: David Le Brun (david at dyn-ns dot net)"
+
+#: ../src/help.c:107
+msgid "French: Éric Lassauge (rpmfarm at free dot fr)"
+msgstr "צרפתית: Éric Lassauge (rpmfarm at free dot fr)"
+
+#: ../src/help.c:108
+msgid "French: Alain Portal (alain.portal at free dot fr)"
+msgstr "צרפתית: Éric Lassauge (rpmfarm at free dot fr)"
+
+#: ../src/help.c:109
+msgid "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
+msgstr "גרמנית: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
+
+#: ../src/help.c:110
+msgid "German: Kai-Ove"
+msgstr "גרמנית: Kai-Ove"
+
+#: ../src/help.c:111
+msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)"
+msgstr "עברית: אסף גילת (gillata at gmail dot com)"
+
+#: ../src/help.c:112
+msgid ""
+"Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot net)"
+msgstr ""
+"איטלקית: Edward Matteucci (edward_matteucc at users dot sourceforge dot net)"
+
+#: ../src/help.c:113
+msgid "Italian: Daniele Forsi (dforsi at gmail dot com)"
+msgstr "איטלקית: Daniele Forsi (dforsi at gmail dot com)"
+
+#: ../src/help.c:114
+msgid "Japanese: Ayako Sano"
+msgstr "יפנית: Ayako Sano"
+
+#: ../src/help.c:115
+msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
+msgstr "יפנית: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
+
+#: ../src/help.c:116
+msgid "Romanian: Alex Eftimie (alexeftimie at gmail dot com)"
+msgstr "רומנית: Alex Eftimie (alexeftimie at gmail dot com)"
+
+#: ../src/help.c:117
+msgid "Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
+msgstr "ספרדית: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
+
+#: ../src/help.c:118
+msgid "Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"
+msgstr "שוודית: Stefan Asserhall (stefan.asserhall at comhem dot se)"
+
+#: ../src/help.c:123
+msgid ""
+"This program is free software; you can redistribute it and/or\n"
+"modify it under the terms of the GNU General Public License as\n"
+"published by the Free Software Foundation; either version 2 of the\n"
+"License, or (at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful, but\n"
+"WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
+"the GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public\n"
+"License along with this program; if not, write to the Free Software\n"
+"Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
+"02111-1307, USA."
+msgstr ""
+"תוכנה זו היא תוכנה חופשית, באפשרותך להפיץ אותה ו/או\n"
+"לשנות אותה לפי התנאים של ההסכם החופשי של גנו\n"
+"אשר מפורסם ע\"י ה-FSF. בגרסה 2 של הרשיון או לבחירתך\n"
+"כל גרסה מאוחרת יותר\n"
+"\n"
+"תוכנה זו מופצת בתקווה שתהיה מועילה אך ללא כל אחריות\n"
+"אף לא אחריות מרומזת של כשירות או פעולה תקינה.\n"
+"\n"
+"לתוכנית זו אמור להיות מצורף עותק של הרשיון הופשי של גנו\n"
+"(באנגלית), אם לא קיבלת אותו כתוב באנגלית ל-\n"
+"FSFFree Software\n"
+"Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
+"02111-1307, USA."
+
+#: ../src/help.c:138
+msgid ""
+"© 2002-2007\n"
+"Jorg Schuler <jcsjcs at users.sourceforge.net>\n"
+"Corey Donohoe <atmos at atmos.org>"
+msgstr ""
+"© 2002 - 2007\n"
+"Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
+"Corey Donohoe (atmos at atmos dot org)"
+
+#: ../src/help.c:143
 #, c-format
-msgid "ERROR while opening file: '%s' (%s).\n"
-msgstr "שגיאה בזמן פתיחת קובץ: '%s' (%s).\n"
+msgid "(using libgpod %s)"
+msgstr "(שימוש ב-libgpod %s)"
 
-#: ../libgtkpod/mp3file.c:1780 ../libgtkpod/mp3file.c:3140
-#, c-format
-msgid "ERROR while writing tag to file: '%s' (%s).\n"
-msgstr "שגיאה בזמן כתיבת תג לקובץ: '%s' (%s).\n"
+#: ../src/help.c:144 ../src/help.c:149
+msgid "Cross-platform multilingual interface to Apple's iPod™"
+msgstr "ממשק חוצה-פלטפורמות רב-שפות עבור iPod™ של אפל."
 
-#. Tracks with zero play length are ignored by iPod...
-#: ../libgtkpod/mp3file.c:3054
-#, c-format
-msgid "File \"%s\" has zero play length. Ignoring.\n"
-msgstr "הקובץ \"%s\" בעל זמן אפס. מתעלם.\n"
+#: ../src/anjuta-about.c:172
+msgid "Copyright (c) Jorg Schuler et al."
+msgstr ""
+
+#: ../src/anjuta-about.c:173
+#, fuzzy
+msgid "iPod Management Platform"
+msgstr "מנהל ה־iPod"
+
+#: ../src/gtkpod.c:189
+msgid "Loaded Session..."
+msgstr ""
+
+#: ../src/main.c:57
+#, fuzzy
+msgid "gtkpod"
+msgstr "_אודות gtkpod"
+
+#~ msgid "_Music"
+#~ msgstr "_מוסיקה"
+
+#~ msgid "_Update Tracks from File"
+#~ msgstr "_סנכרון רצועות מקובץ"
+
+#, fuzzy
+#~ msgid "_Edit"
+#~ msgstr "_עריכה"
+
+#, fuzzy
+#~ msgid "_Delete"
+#~ msgstr "_מחק"
+
+#, fuzzy
+#~ msgid "_Preferences"
+#~ msgstr "הגדרות ,mserv"
+
+#, fuzzy
+#~ msgid "_View"
+#~ msgstr "_תצוגה"
+
+#~ msgid "_Toolbar"
+#~ msgstr "_סרגל כלים"
+
+#, fuzzy
+#~ msgid "_Tools"
+#~ msgstr "_כלים"
+
+#, fuzzy
+#~ msgid "_Help"
+#~ msgstr "_עזרה"
+
+#, fuzzy
+#~ msgid "gtkpod _Home Page"
+#~ msgstr "תוכנת gtkpod מנהל ה־iPod"
+
+#, fuzzy
+#~ msgid "_About"
+#~ msgstr "בטל"
 
 #~ msgid ""
-#~ "© 2002 - 2010\n"
-#~ "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
-#~ "Corey Donohoe (atmos at atmos dot org)\n"
+#~ "Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 "
+#~ "library. You must compile the gtkpod source together with the mp4v2 "
+#~ "library.\n"
 #~ msgstr ""
-#~ "© 2002 - 2007\n"
-#~ "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
-#~ "Corey Donohoe (atmos at atmos dot org)\n"
+#~ "הייבוא של '%s' נכשל: m4a/m4p/m4b לא נתמך ללא הספריה mp4v2. אתה חייב להדר "
+#~ "את קוד המקור gtkpod ביחד עם הספריה mp4v2.\n"
 
 #~ msgid ""
-#~ "Codebase includes contribution from the following people and many other "
-#~ "helpful individuals\n"
-#~ msgstr "קוד המקור מכיל תרומות של אנשים אלו ועוד הרבה אחרים\n"
-
-#~ msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
-#~ msgstr "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
-
-#~ msgid "Hiroshi Kawashima: Japanese charset autodetection feature"
-#~ msgstr "Hiroshi Kawashima: Japanese charset autodetection feature"
-
-#~ msgid ""
-#~ "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
+#~ "m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
+#~ "without the mp4v2 library. You must compile the gtkpod source together "
+#~ "with the mp4v2 library.\n"
 #~ msgstr ""
-#~ "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
+#~ "עדכון מטא-מידע של m4a/m4p/m4b עבור '%s' נכשל: הסוגים m4a/m4p/m4b לא "
+#~ "נתמכים ללא הספריה mp4v2. אתה חייב להדר את קוד המקור של gtkpod ביחד עם "
+#~ "ספריית mp4v2.\n"
 
 #~ msgid ""
-#~ "Walter Bell: correct handling of DND URIs with escaped characters and/or "
-#~ "cr/newlines at the end"
+#~ "m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
+#~ "without the mp4v2 library. You must compile the gtkpod source together "
+#~ "with the mp4v2 library.\n"
 #~ msgstr ""
-#~ "Walter Bell: correct handling of DND URIs with escaped characters and/or "
-#~ "cr/newlines at the end"
+#~ "עדכון מידע קול של m4a/m4p/m4b עבור '%s' נכשל: הסוגים m4a/m4p/m4b לא "
+#~ "נתמכים ללא הספריה mp4v2. אתה חייב להדר את קוד המקור של gtkpod ביחד עם "
+#~ "ספריית mp4v2.\n"
 
 #~ msgid ""
-#~ "Sam Clegg: user defined filenames when exporting tracks from the iPod"
+#~ "Import of '%s' failed: ogg not supported without the ogg library. You "
+#~ "must compile the gtkpod source together with the ogg library.\n"
 #~ msgstr ""
-#~ "Sam Clegg: user defined filenames when exporting tracks from the iPod"
-
-#~ msgid "Chris Cutler: automatic creation of various playlist types"
-#~ msgstr "Chris Cutler: automatic creation of various playlist types"
+#~ "הייבוא של '%s' נכשל: ogg לא נתמך ללא הספריה של ogg. אתה חייב להדר את קוד "
+#~ "המקור gtkpod ביחד עם הספריה של ogg.\n"
 
 #~ msgid ""
-#~ "Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
-#~ "dialogue during sync"
+#~ "ogg metadata update for '%s' failed: ogg not supported without the ogg "
+#~ "library. You must compile the gtkpod source together with the ogg "
+#~ "library.\n"
 #~ msgstr ""
-#~ "Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
-#~ "dialogue during sync"
+#~ "עדכון מטא-מידע של ogg עבור '%s' נכשל: הסוג ogg לא נתמך ללא הספריה ogg. "
+#~ "אתה חייב להדר את קוד המקור של gtkpod ביחד עם ספריית ogg.\n"
+
+#~ msgid "Ogg Vorbis"
+#~ msgstr "Ogg Vorbis"
+
+#~ msgid "FLAC"
+#~ msgstr "FLAC"
 
 #~ msgid ""
-#~ "Edward Matteucci: debugging, special playlist creation, most of the "
-#~ "volume normalizing code"
+#~ "Did not normalize '%s'. Set mp3gain path in the Tools section of the "
+#~ "preferences.\n"
 #~ msgstr ""
-#~ "Edward Matteucci: debugging, special playlist creation, most of the "
-#~ "volume normalizing code"
-
-#~ msgid "Jens Lautenbach: some optical improvements"
-#~ msgstr "Jens Lautenbach: some optical improvements"
-
-#~ msgid "Alex Tribble: iPod eject patch"
-#~ msgstr "Alex Tribble: iPod eject patch"
-
-#~ msgid "Yaroslav Halchenko: Orphaned and dangling tracks handling"
-#~ msgstr "Yaroslav Halchenko: Orphaned and dangling tracks handling"
+#~ "לא בוצע נרמול עבור '%s'.אנא קבע את הנתיב של mp3gain בחלק 'כלים' של חלון "
+#~ "דו-שיח ההעדפות.\n"
 
 #~ msgid ""
-#~ "Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
+#~ "Did not normalize '%s'. Set aacgain path in the Tools section of the "
+#~ "preferences.\n"
 #~ msgstr ""
-#~ "Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
+#~ "לא בוצע נרמול עבור '%s'.אנא קבע את הנתיב של aacgain בחלק 'כלים' של חלון "
+#~ "דו-שיח ההעדפות.\n"
 
 #~ msgid ""
-#~ "Ero Carrera: Filename validation and quick sync when copying tracks from "
-#~ "the iPod"
-#~ msgstr ""
-#~ "Ero Carrera: Filename validation and quick sync when copying tracks from "
-#~ "the iPod"
-
-#~ msgid ""
-#~ "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
-#~ msgstr ""
-#~ "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
-
-#~ msgid "Armando Atienza: Support with external playcounts"
-#~ msgstr "Armando Atienza: Support with external playcounts"
-
-#~ msgid "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
-#~ msgstr "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
-
-#~ msgid "Jim Hall: Decent INSTALL file"
-#~ msgstr "Jim Hall: Decent INSTALL file"
-
-#~ msgid ""
-#~ "Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
-#~ "contacts to the iPod"
-#~ msgstr ""
-#~ "Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
-#~ "contacts to the iPod"
-
-#~ msgid "Flavio Stanchina: bugfixes"
-#~ msgstr "Flavio Stanchina: bugfixes"
-
-#~ msgid ""
-#~ "Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
-#~ "the title"
-#~ msgstr ""
-#~ "Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
-#~ "the title"
-
-#~ msgid "Steve Jay: use statvfs() instead of df (better portability, faster)"
-#~ msgstr "Steve Jay: use statvfs() instead of df (better portability, faster)"
-
-#~ msgid ""
-#~ "Christoph Kunz: address compatibility issues when writing id3v2.4 type "
-#~ "mp3 tags"
-#~ msgstr ""
-#~ "Christoph Kunz: address compatibility issues when writing id3v2.4 type "
-#~ "mp3 tags"
-
-#~ msgid ""
-#~ "James Liggett:\n"
-#~ "replacement of old GTK file selection dialogs with new GTK filechooser "
-#~ "dialogs\n"
-#~ "refactored user preferences system."
-#~ msgstr ""
-#~ "James Liggett:\n"
-#~ "replacement of old GTK file selection dialogs with new GTK filechooser "
-#~ "dialogs\n"
-#~ "refactored user preferences system."
-
-#~ msgid "Daniel Kercher: sync scripts for abook and webcalendar"
-#~ msgstr "Daniel Kercher: sync scripts for abook and webcalendar"
-
-#~ msgid "Clinton Gormley: sync scripts for thunderbird"
-#~ msgstr "Clinton Gormley: sync scripts for thunderbird"
-
-#~ msgid "Sebastien Beridot: sync script for ldif addressbook format"
-#~ msgstr "Sebastien Beridot: sync script for ldif addressbook format"
-
-#~ msgid "Sebastian Scherer: sync script for kNotes"
-#~ msgstr "Sebastian Scherer: sync script for kNotes"
-
-#~ msgid "Nick Piper: sync script for Palm, type-ahead search"
-#~ msgstr "Nick Piper: sync script for Palm, type-ahead search"
-
-#~ msgid "Uwe Hermann: help with support for iPod Video"
-#~ msgstr "Uwe Hermann: help with support for iPod Video"
-
-#~ msgid ""
-#~ "Iain Benson: support for compilation tag in mp3 files and separate "
-#~ "display of compilations in the sort tab."
-#~ msgstr ""
-#~ "Iain Benson: support for compilation tag in mp3 files and separate "
-#~ "display of compilations in the sort tab."
-
-#~ msgid "Nicolas Chariot: icons of buttons\n"
-#~ msgstr "Nicolas Chariot: icons of buttons\n"
-
-#~ msgid ""
-#~ "Others past and present for their excellent contributions\n"
+#~ "Normalization failed: file type not supported (%s).\n"
 #~ "\n"
 #~ msgstr ""
-#~ "ואחרים בעבר ובהווה על תרומתם הנהדרת\n"
+#~ "נרמול נכשל: סוג קובץ לא נתמך(%s).\n"
 #~ "\n"
 
-#~ msgid "This program borrows code from the following projects:"
-#~ msgstr "התוכנה שואלת קוד מהפרוייקטים הבאים:"
-
 #~ msgid ""
-#~ "gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  "
-#~ "(http://www.gnu.org/software/gnupod/)"
+#~ "Import of '%s' failed: FLAC not supported without the FLAC library. You "
+#~ "must compile the gtkpod source together with the FLAC library.\n"
 #~ msgstr ""
-#~ "gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  "
-#~ "(http://www.gnu.org/software/gnupod/)"
+#~ "הייבוא של '%s' נכשל: FLAC לא נתמך ללא הספריה של FLAC. אתה חייב להדר את "
+#~ "קוד המקור gtkpod ביחד עם הספריה של FLAC.\n"
 
 #~ msgid ""
-#~ "iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some "
-#~ "code for smart playlists is based on his C++-classes."
+#~ "FLAC metadata update for '%s' failed: FLAC not supported without the FLAC "
+#~ "library. You must compile the gtkpod source together with the FLAC "
+#~ "library.\n"
 #~ msgstr ""
-#~ "iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some "
-#~ "code for smart playlists is based on his C++-classes."
-
-#~ msgid "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
-#~ msgstr "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
-
-#~ msgid "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
-#~ msgstr "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
+#~ "עדכון מטא-מידע של FLAC עבור '%s' נכשל: הסוג FLAC לא נתמך ללא הספריה FLAC. "
+#~ "אתה חייב להדר את קוד המקור של gtkpod ביחד עם ספריית FLAC.\n"
 
 #~ msgid ""
-#~ "The GUI was created with the help of glade (http://glade.gnome.org/)."
-#~ msgstr "ה־GUI יוצר בעזרת glade-2, ראה: (http://glade.gnome.org)."
-
-#~ msgid "French: David Le Brun (david at dyn-ns dot net)"
-#~ msgstr "צרפתית: David Le Brun (david at dyn-ns dot net)"
-
-#~ msgid "French: Éric Lassauge (rpmfarm at free dot fr)"
-#~ msgstr "צרפתית: Éric Lassauge (rpmfarm at free dot fr)"
-
-#~ msgid "French: Alain Portal (alain.portal at free dot fr)"
-#~ msgstr "צרפתית: Éric Lassauge (rpmfarm at free dot fr)"
-
-#~ msgid "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
-#~ msgstr "גרמנית: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
-
-#~ msgid "German: Kai-Ove"
-#~ msgstr "גרמנית: Kai-Ove"
-
-#~ msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)"
-#~ msgstr "עברית: אסף גילת (gillata at gmail dot com)"
+#~ "The following track could not be processed (filetype unknown): '%s'\n"
+#~ msgstr "אי אפשר לעבד את הרצועה הבאה (סוג קובץ לא ידוע): '%s'\n"
 
 #~ msgid ""
-#~ "Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot "
-#~ "net)"
+#~ "The following track could not be processed (filetype is known but "
+#~ "analysis failed): '%s'\n"
 #~ msgstr ""
-#~ "איטלקית: Edward Matteucci (edward_matteucc at users dot sourceforge dot "
-#~ "net)"
-
-#~ msgid "Italian: Daniele Forsi (dforsi at gmail dot com)"
-#~ msgstr "איטלקית: Daniele Forsi (dforsi at gmail dot com)"
-
-#~ msgid "Japanese: Ayako Sano"
-#~ msgstr "יפנית: Ayako Sano"
-
-#~ msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
-#~ msgstr "יפנית: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
-
-#~ msgid "Romanian: Alex Eftimie (alexeftimie at gmail dot com)"
-#~ msgstr "רומנית: Alex Eftimie (alexeftimie at gmail dot com)"
+#~ "אי אפשר לעבד את הרצועה הבאה (סוג קובץ ידוע, אך הבדיקה נכשלה): '%s'\n"
 
 #~ msgid ""
-#~ "Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
-#~ msgstr ""
-#~ "ספרדית: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
-
-#~ msgid "Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"
-#~ msgstr "שוודית: Stefan Asserhall (stefan.asserhall at comhem dot se)"
-
-#~ msgid ""
-#~ "This program is free software; you can redistribute it and/or\n"
-#~ "modify it under the terms of the GNU General Public License as\n"
-#~ "published by the Free Software Foundation; either version 2 of the\n"
-#~ "License, or (at your option) any later version.\n"
+#~ "Writing to video files not yet supported (%s).\n"
 #~ "\n"
-#~ "This program is distributed in the hope that it will be useful, but\n"
-#~ "WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
-#~ "the GNU General Public License for more details.\n"
-#~ "\n"
-#~ "You should have received a copy of the GNU General Public\n"
-#~ "License along with this program; if not, write to the Free Software\n"
-#~ "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
-#~ "02111-1307, USA."
 #~ msgstr ""
-#~ "תוכנה זו היא תוכנה חופשית, באפשרותך להפיץ אותה ו/או\n"
-#~ "לשנות אותה לפי התנאים של ההסכם החופשי של גנו\n"
-#~ "אשר מפורסם ע\"י ה-FSF. בגרסה 2 של הרשיון או לבחירתך\n"
-#~ "כל גרסה מאוחרת יותר\n"
+#~ "כתיבת קבצי וידאו עדיין לא נתמך (%s).\n"
 #~ "\n"
-#~ "תוכנה זו מופצת בתקווה שתהיה מועילה אך ללא כל אחריות\n"
-#~ "אף לא אחריות מרומזת של כשירות או פעולה תקינה.\n"
-#~ "\n"
-#~ "לתוכנית זו אמור להיות מצורף עותק של הרשיון הופשי של גנו\n"
-#~ "(באנגלית), אם לא קיבלת אותו כתוב באנגלית ל-\n"
-#~ "FSFFree Software\n"
-#~ "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
-#~ "02111-1307, USA."
+
+#~ msgid "Error: File format unsupported now."
+#~ msgstr "העדכון נכשל (פורמט הקובץ לא נתמך?)"
 
 #~ msgid ""
-#~ "© 2002-2007\n"
-#~ "Jorg Schuler <jcsjcs at users.sourceforge.net>\n"
-#~ "Corey Donohoe <atmos at atmos.org>"
+#~ "Error: Lyrics not found, file not available (%s).\n"
+#~ "\n"
 #~ msgstr ""
-#~ "© 2002 - 2007\n"
-#~ "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
-#~ "Corey Donohoe (atmos at atmos dot org)"
-
-#~ msgid "(using libgpod %s)"
-#~ msgstr "(שימוש ב-libgpod %s)"
-
-#~ msgid "Cross-platform multilingual interface to Apple's iPod™"
-#~ msgstr "ממשק חוצה-פלטפורמות רב-שפות עבור iPod™ של אפל."
+#~ "המילים לא נכתבו, הקובץ לא זמין (%s).\n"
+#~ "\n"
 
 #~ msgid "Failed to set cover art: '%s'\n"
 #~ msgstr "כשלון בקביעת עטיפה: '%s'\n"

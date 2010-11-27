@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-05 22:04+0000\n"
+"POT-Creation-Date: 2010-11-27 17:09+0000\n"
 "PO-Revision-Date: 2010-08-09 19:36+0100\n"
 "Last-Translator: Tan Zhixin <tanzhxin@gmail.com>\n"
 "Language-Team: Zhuang <zh_CN@li.gtkpod.org>\n"
@@ -35,6 +35,84 @@ msgstr "gtkpod iPod管理器"
 #: ../data/gtkpod.desktop.in.h:3
 msgid "iPod Manager"
 msgstr "iPod管理器"
+
+#: ../data/glade/gtkpod.glade.h:1
+msgid " "
+msgstr " "
+
+#: ../data/glade/gtkpod.glade.h:2
+msgid "<b>Advanced Options</b>"
+msgstr "<b>高级选项</b>"
+
+#: ../data/glade/gtkpod.glade.h:3
+msgid "<b>General Options</b>"
+msgstr "<b>通用选项</b>"
+
+#: ../data/glade/gtkpod.glade.h:4
+msgid "<b>Rules</b>"
+msgstr "<b>规则</b>"
+
+#: ../data/glade/gtkpod.glade.h:5
+msgid ""
+"Any rules\n"
+"All rules\n"
+"Ignore rules"
+msgstr ""
+"任一规则\n"
+"所有规则\n"
+"忽略"
+
+#: ../data/glade/gtkpod.glade.h:8
+msgid "Conversion Progress Display"
+msgstr "转换进程显示"
+
+#: ../data/glade/gtkpod.glade.h:9
+msgid "Export can be continued at a later time if canceled."
+msgstr "取消后还可以下次继续导出"
+
+#: ../data/glade/gtkpod.glade.h:10
+msgid "Live _updating"
+msgstr "在线更新"
+
+#: ../data/glade/gtkpod.glade.h:11
+msgid "Match only _checked tracks"
+msgstr "只匹配选择的音轨"
+
+#: ../data/glade/gtkpod.glade.h:12
+msgid "Match:"
+msgstr "匹配："
+
+#: ../data/glade/gtkpod.glade.h:13
+msgid "Never show this dialogue again"
+msgstr "不再显示此对话窗口"
+
+#: ../data/glade/gtkpod.glade.h:14
+msgid "Playlist name:"
+msgstr "播放列表名："
+
+#: ../data/glade/gtkpod.glade.h:15
+msgid "Progress Information"
+msgstr "进度信息"
+
+#: ../data/glade/gtkpod.glade.h:16
+#: ../plugins/repository_editor/repository_editor.c:1162
+#: ../plugins/playlist_display/plugin.c:121 ../libgtkpod/misc_playlist.c:104
+msgid "Smart Playlist"
+msgstr "智能播放列表"
+
+#: ../data/glade/gtkpod.glade.h:17
+msgid "Sort by:"
+msgstr "按此排序："
+
+#: ../data/glade/gtkpod.glade.h:18
+msgid ""
+"The output of the background conversion scripts is copied below. Each page "
+"of the notebook corresponds to one background thread."
+msgstr "下面是背景转换脚本的输出，其每一页对应于一个背景。"
+
+#: ../data/glade/gtkpod.glade.h:19
+msgid "_Limit to"
+msgstr "限制"
 
 #: ../data/glade/info_display.glade.h:1
 msgid "gtkpod Information"
@@ -397,84 +475,6 @@ msgstr "<b>标签</b>"
 #, fuzzy
 msgid "Cover Browser"
 msgstr "浏览"
-
-#: ../data/glade/gtkpod.glade.h:1
-msgid " "
-msgstr " "
-
-#: ../data/glade/gtkpod.glade.h:2
-msgid "<b>Advanced Options</b>"
-msgstr "<b>高级选项</b>"
-
-#: ../data/glade/gtkpod.glade.h:3
-msgid "<b>General Options</b>"
-msgstr "<b>通用选项</b>"
-
-#: ../data/glade/gtkpod.glade.h:4
-msgid "<b>Rules</b>"
-msgstr "<b>规则</b>"
-
-#: ../data/glade/gtkpod.glade.h:5
-msgid ""
-"Any rules\n"
-"All rules\n"
-"Ignore rules"
-msgstr ""
-"任一规则\n"
-"所有规则\n"
-"忽略"
-
-#: ../data/glade/gtkpod.glade.h:8
-msgid "Conversion Progress Display"
-msgstr "转换进程显示"
-
-#: ../data/glade/gtkpod.glade.h:9
-msgid "Export can be continued at a later time if canceled."
-msgstr "取消后还可以下次继续导出"
-
-#: ../data/glade/gtkpod.glade.h:10
-msgid "Live _updating"
-msgstr "在线更新"
-
-#: ../data/glade/gtkpod.glade.h:11
-msgid "Match only _checked tracks"
-msgstr "只匹配选择的音轨"
-
-#: ../data/glade/gtkpod.glade.h:12
-msgid "Match:"
-msgstr "匹配："
-
-#: ../data/glade/gtkpod.glade.h:13
-msgid "Never show this dialogue again"
-msgstr "不再显示此对话窗口"
-
-#: ../data/glade/gtkpod.glade.h:14
-msgid "Playlist name:"
-msgstr "播放列表名："
-
-#: ../data/glade/gtkpod.glade.h:15
-msgid "Progress Information"
-msgstr "进度信息"
-
-#: ../data/glade/gtkpod.glade.h:16
-#: ../plugins/repository_editor/repository_editor.c:1162
-#: ../plugins/playlist_display/plugin.c:121 ../libgtkpod/misc_playlist.c:104
-msgid "Smart Playlist"
-msgstr "智能播放列表"
-
-#: ../data/glade/gtkpod.glade.h:17
-msgid "Sort by:"
-msgstr "按此排序："
-
-#: ../data/glade/gtkpod.glade.h:18
-msgid ""
-"The output of the background conversion scripts is copied below. Each page "
-"of the notebook corresponds to one background thread."
-msgstr "下面是背景转换脚本的输出，其每一页对应于一个背景。"
-
-#: ../data/glade/gtkpod.glade.h:19
-msgid "_Limit to"
-msgstr "限制"
 
 #: ../data/glade/sorttab_display.glade.h:1
 msgid "    "
@@ -893,6 +893,59 @@ msgstr "重命名"
 msgid "Abort"
 msgstr "放弃"
 
+#: ../plugins/filetype_m4a/mp4file.c:543 ../plugins/filetype_mp4/mp4file.c:543
+#, fuzzy, c-format
+msgid ""
+"m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
+"without the mp4v2 library. You must install the mp4v2 library.\n"
+msgstr ""
+"文件'%s'的m4a/m4p/m4b试音更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译"
+"gtkpod源文件并且加入mp4v2库支持。\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:577 ../plugins/filetype_m4a/mp4file.c:840
+#: ../plugins/filetype_mp4/mp4file.c:577 ../plugins/filetype_mp4/mp4file.c:840
+#, c-format
+msgid "'%s' does not appear to be a mp4 audio or video file.\n"
+msgstr "'%s'似乎不是一个mp4音频(或视频)文件。\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:584 ../plugins/filetype_m4a/mp4file.c:847
+#: ../plugins/filetype_mp4/mp4file.c:584 ../plugins/filetype_mp4/mp4file.c:847
+#, c-format
+msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
+msgstr "无法读取文件'%s'，或者这不是个mp4文件。\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:593 ../plugins/filetype_mp4/mp4file.c:593
+#, fuzzy, c-format
+msgid ""
+"Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
+"You must install the mp4v2 library.\n"
+msgstr ""
+"导入'%s'失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译gtkpod源文件并且加入"
+"mp4v2库支持。\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:856 ../plugins/filetype_mp4/mp4file.c:856
+#, fuzzy, c-format
+msgid ""
+"m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
+"without the mp4v2 library. You must install the mp4v2 library.\n"
+msgstr ""
+"'%s'的m4a/m4p/m4b 元数据更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译"
+"gtkpod源文件并且加入mp4v2库支持。\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:978 ../plugins/filetype_mp4/mp4file.c:978
+#, c-format
+msgid "'%s' does not appear to be a mp4 audio file.\n"
+msgstr "'%s'似乎不是一个mp4音频文件。\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:986 ../plugins/filetype_mp4/mp4file.c:986
+#, c-format
+msgid "Could not open '%s' for writing, or file is not an mp4 file.\n"
+msgstr "无法写入文件'%s'，或者它不是个mp4文件。\n"
+
+#: ../plugins/filetype_m4a/plugin.c:78
+msgid "M4A audio file type"
+msgstr ""
+
 #: ../plugins/coverweb/plugin.c:75 ../plugins/media_player/plugin.c:66
 #: ../plugins/cover_display/plugin.c:74
 #, fuzzy
@@ -950,8 +1003,8 @@ msgstr "复制'%s'到'%s'时发生错误：权限错误(%s)\n"
 msgid "Error copying '%s' to '%s' (%s)\n"
 msgstr "复制'%s'到'%s'时发生错误(%s)\n"
 
-#: ../plugins/exporter/file_export.c:216 ../libgtkpod/oggfile.c:71
-#: ../libgtkpod/wavfile.c:108 ../libgtkpod/file.c:279
+#: ../plugins/exporter/file_export.c:216 ../plugins/filetype_wav/wavfile.c:98
+#: ../plugins/filetype_ogg/oggfile.c:66 ../libgtkpod/file.c:167
 #, c-format
 msgid "Could not open '%s' for reading.\n"
 msgstr "无法读取'%s'。\n"
@@ -962,11 +1015,11 @@ msgid "Could find file for '%s' on the iPod\n"
 msgstr "无法找到iPod中'%s'的文件\n"
 
 #. create the dialog window
-#: ../plugins/exporter/file_export.c:368 ../libgtkpod/tools.c:359
+#: ../plugins/exporter/file_export.c:368 ../libgtkpod/tools.c:328
 msgid "Information"
 msgstr "信息"
 
-#: ../plugins/exporter/file_export.c:372 ../libgtkpod/tools.c:371
+#: ../plugins/exporter/file_export.c:372 ../libgtkpod/tools.c:340
 msgid "Press button to abort."
 msgstr "放弃？"
 
@@ -995,7 +1048,7 @@ msgid_plural "Copied %d of %d tracks."
 msgstr[0] "复制%2$d条音轨中的第%1$d条"
 msgstr[1] "复制%2$d条音轨中的第%1$d条"
 
-#: ../plugins/exporter/file_export.c:465 ../libgtkpod/tools.c:517
+#: ../plugins/exporter/file_export.c:465 ../libgtkpod/tools.c:486
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
 msgstr "%d%% (还需要%d:%02d:%02d)"
@@ -1444,6 +1497,15 @@ msgstr "Vol."
 msgid "Sndchk."
 msgstr "sndchk."
 
+#: ../plugins/filetype_wav/plugin.c:78
+msgid "Wav audio file type"
+msgstr ""
+
+#: ../plugins/filetype_wav/wavfile.c:175
+#, c-format
+msgid "%s does not appear to be a supported wav file.\n"
+msgstr "%s 似乎不是一个wav文件。\n"
+
 #. Action name
 #. Stock icon
 #: ../plugins/photo_editor/plugin.c:49
@@ -1574,6 +1636,19 @@ msgstr "<b>标签</b>"
 msgid "<b>%s</b> from %s"
 msgstr ""
 
+#: ../plugins/filetype_video/plugin.c:78
+msgid "Generic Video file type"
+msgstr ""
+
+#: ../plugins/filetype_ogg/plugin.c:78
+msgid "OGG audio file type"
+msgstr ""
+
+#: ../plugins/filetype_ogg/oggfile.c:74
+#, c-format
+msgid "'%s' does not appear to be an ogg audio file.\n"
+msgstr "'%s'似乎不是一个ogg音频文件。\n"
+
 #: ../plugins/repository_editor/plugin.c:48
 msgid "_Create iPod's Directories"
 msgstr "创建iPod文件夹"
@@ -1664,7 +1739,7 @@ msgid "Smart playlist updated."
 msgstr "智能播放列表已更新"
 
 #: ../plugins/repository_editor/repository_editor.c:1038
-#: ../libgtkpod/gp_itdb.c:922
+#: ../libgtkpod/gp_itdb.c:918
 msgid "iPod"
 msgstr "iPod"
 
@@ -1716,6 +1791,53 @@ msgstr ""
 "无法确定你所选的型号--这可能是个bug或者是因为GTK+或glade库不兼容引起的。\n"
 "\n"
 
+#: ../plugins/filetype_flac/plugin.c:78
+#, fuzzy
+msgid "Flac audio file type"
+msgstr "文件类型"
+
+#: ../plugins/filetype_flac/flacfile.c:57
+#, c-format
+msgid "'%s' does not appear to be an FLAC audio file.\n"
+msgstr "'%s'似乎不是一个FLAC音频文件。\n"
+
+#: ../plugins/filetype_flac/flacfile.c:70
+#, c-format
+msgid "Error retrieving tags for '%s'.\n"
+msgstr "获取'%s'的标签时发生错误。\n"
+
+#: ../plugins/filetype_mp3/plugin.c:78
+msgid "MP3 audio file type"
+msgstr ""
+
+#: ../plugins/filetype_mp3/mp3file.c:1247
+#, c-format
+msgid "Error setting ID3 field: %s\n"
+msgstr "设置ID3标签时发生错误：%s\n"
+
+#: ../plugins/filetype_mp3/mp3file.c:1267
+#: ../plugins/filetype_mp3/mp3file.c:1426
+#: ../plugins/filetype_mp3/mp3file.c:1572
+#: ../plugins/filetype_mp3/mp3file.c:1955
+#: ../plugins/filetype_mp3/mp3file.c:2778
+#: ../plugins/filetype_mp3/mp3file.c:2841
+#: ../plugins/filetype_mp3/mp3file.c:2863
+#, c-format
+msgid "ERROR while opening file: '%s' (%s).\n"
+msgstr "打开文件时发生错误：'%s' (%s).\n"
+
+#: ../plugins/filetype_mp3/mp3file.c:1646
+#: ../plugins/filetype_mp3/mp3file.c:2896
+#, c-format
+msgid "ERROR while writing tag to file: '%s' (%s).\n"
+msgstr "写入文件标签时发生错误： '%s' (%s).\n"
+
+#. Tracks with zero play length are ignored by iPod...
+#: ../plugins/filetype_mp3/mp3file.c:2810
+#, c-format
+msgid "File \"%s\" has zero play length. Ignoring.\n"
+msgstr "文件\"%s\"播放时间长度为0，忽略。\n"
+
 #: ../plugins/cover_display/cover_display_context_menu.c:40
 msgid "Select Cover From File"
 msgstr "从文件选择插图"
@@ -1742,6 +1864,10 @@ msgstr ""
 #, fuzzy
 msgid "Settings"
 msgstr "设定"
+
+#: ../plugins/filetype_mp4/plugin.c:82
+msgid "MP4 video file type"
+msgstr ""
 
 #: ../plugins/mserv/plugin.c:57
 #, fuzzy
@@ -1792,7 +1918,7 @@ msgstr[1] "无法为下列%d条音轨获取mserv信息"
 msgid "mserv data retrieval problem"
 msgstr "获取mserv数据时发生问题"
 
-#: ../plugins/mserv/mserv.c:199 ../libgtkpod/file.c:1296
+#: ../plugins/mserv/mserv.c:199 ../libgtkpod/file.c:1070
 msgid "Nothing to update"
 msgstr "无需要更新的项目"
 
@@ -1810,20 +1936,20 @@ msgid "Updated selected tracks with data from mserv."
 msgstr "以mserv的数据更新选定音轨。"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:71
-#: ../plugins/playlist_display/playlist_display_actions.c:261
+#: ../plugins/playlist_display/playlist_display_actions.c:260
 #: ../libgtkpod/fileselection.c:121 ../libgtkpod/fileselection.c:497
 msgid "Successfully added files"
 msgstr "成功添加文件"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:73
-#: ../plugins/playlist_display/playlist_display_actions.c:263
+#: ../plugins/playlist_display/playlist_display_actions.c:262
 #: ../libgtkpod/fileselection.c:123 ../libgtkpod/fileselection.c:499
 msgid "Some files were not added successfully"
 msgstr "部分文件没有添加成功"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:95
-#: ../plugins/playlist_display/playlist_display_actions.c:204
-#: ../plugins/playlist_display/playlist_display_actions.c:290
+#: ../plugins/playlist_display/playlist_display_actions.c:203
+#: ../plugins/playlist_display/playlist_display_actions.c:289
 #: ../libgtkpod/fileselection.c:151 ../libgtkpod/fileselection.c:238
 #: ../libgtkpod/fileselection.c:512
 msgid "Please select a playlist or repository before adding tracks."
@@ -1834,26 +1960,26 @@ msgstr "在添加音轨之前请先选择一个播放列表或者音乐库。"
 msgid "Add Folder"
 msgstr "添加目录"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:212
-#: ../plugins/playlist_display/playlist_display_actions.c:300
+#: ../plugins/playlist_display/playlist_display_actions.c:211
+#: ../plugins/playlist_display/playlist_display_actions.c:299
 #: ../libgtkpod/fileselection.c:161 ../libgtkpod/fileselection.c:246
 msgid "Please load the iPod before adding tracks."
 msgstr "在添加音轨之前请先加载iPod"
 
 #. Create window title
-#: ../plugins/playlist_display/playlist_display_actions.c:220
+#: ../plugins/playlist_display/playlist_display_actions.c:219
 #: ../libgtkpod/fileselection.c:254
 #, c-format
 msgid "Add playlist files to '%s'"
 msgstr "添加播放列表到'%s'"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:309
+#: ../plugins/playlist_display/playlist_display_actions.c:308
 #: ../libgtkpod/fileselection.c:170
 #, c-format
 msgid "Add files to '%s'"
 msgstr "添加文件到'%s'"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:312
+#: ../plugins/playlist_display/playlist_display_actions.c:311
 #: ../libgtkpod/fileselection.c:173
 #, c-format
 msgid "Add files to '%s/%s'"
@@ -2197,248 +2323,41 @@ msgstr ""
 msgid "Photos"
 msgstr "照片"
 
-#. Register actions
-#: ../src/anjuta-app.c:434
-msgid "Music"
-msgstr "音乐"
-
-#: ../src/anjuta-app.c:435
-#, fuzzy
-msgid "Edit"
-msgstr "编辑"
-
-#: ../src/anjuta-app.c:436 ../src/anjuta-app.c:437
-#, fuzzy
-msgid "View"
-msgstr "查看"
-
-#: ../src/anjuta-app.c:438
-#, fuzzy
-msgid "Tools"
-msgstr "工具"
-
-#: ../src/anjuta-app.c:439
-#, fuzzy
-msgid "Help"
-msgstr "帮助"
-
-#: ../src/anjuta-app.c:644
-msgid "Plugins"
-msgstr ""
-
-#: ../src/anjuta-app.c:655
-msgid "Installed plugins"
-msgstr ""
-
-#: ../src/anjuta-app.c:656
-#, fuzzy
-msgid "Preferred plugins"
-msgstr "首选项"
-
-#: ../src/anjuta-app.c:657
-#, fuzzy
-msgid "Shortcuts"
-msgstr "按艺术家排序"
-
-#: ../src/anjuta-app.c:715
-#, c-format
-msgid "Value doesn't exist"
-msgstr ""
-
-#: ../src/anjuta-app.c:1296
-msgid "Confirmation"
-msgstr "确认"
-
-#: ../src/anjuta-action-callbacks.c:106
-#, fuzzy
-msgid "GtkPod Preferences"
-msgstr "首选项"
-
-#: ../src/anjuta-about.c:172
-msgid "Copyright (c) Jorg Schuler et al."
-msgstr ""
-
-#: ../src/anjuta-about.c:173
-#, fuzzy
-msgid "iPod Management Platform"
-msgstr "iPod管理器"
-
-#: ../src/anjuta-actions.h:26
-msgid "_Music"
-msgstr "iPod音乐"
-
-#: ../src/anjuta-actions.h:31
-msgid "_Update Tracks from File"
-msgstr "从文件更新音轨"
-
-#: ../src/anjuta-actions.h:39
-msgid "_Quit"
-msgstr ""
-
-#: ../src/anjuta-actions.h:41
-msgid "Quit GtkPod"
-msgstr ""
-
-#: ../src/anjuta-actions.h:49
-#, fuzzy
-msgid "_Edit"
-msgstr "编辑"
-
-#: ../src/anjuta-actions.h:54
-#, fuzzy
-msgid "_Delete"
-msgstr "删除"
-
-#: ../src/anjuta-actions.h:62
-#, fuzzy
-msgid "_Preferences"
-msgstr "mserv首选项"
-
-#: ../src/anjuta-actions.h:63
-msgid "Do you prefer coffee to tea? Check it out."
-msgstr ""
-
-#: ../src/anjuta-actions.h:69
-#, fuzzy
-msgid "_View"
-msgstr "查看"
-
-#: ../src/anjuta-actions.h:71
-msgid "_Reset Dock Layout"
-msgstr ""
-
-#: ../src/anjuta-actions.h:72
-msgid "Reset the widgets docking layout to default"
-msgstr ""
-
-#: ../src/anjuta-actions.h:78
-msgid "_Full Screen"
-msgstr ""
-
-#: ../src/anjuta-actions.h:79
-msgid "Toggle fullscreen mode"
-msgstr ""
-
-#: ../src/anjuta-actions.h:82
-msgid "_Lock Dock Layout"
-msgstr ""
-
-#: ../src/anjuta-actions.h:83
-msgid "Lock the current dock layout so that widgets cannot be moved"
-msgstr ""
-
-#: ../src/anjuta-actions.h:86
-msgid "_Toolbar"
-msgstr "工具栏"
-
-#: ../src/anjuta-actions.h:87
-msgid "Show or hide the toolbar"
-msgstr ""
-
-#: ../src/anjuta-actions.h:95
-#, fuzzy
-msgid "_Tools"
-msgstr "工具"
-
-#: ../src/anjuta-actions.h:100
-#, fuzzy
-msgid "_Help"
-msgstr "帮助"
-
-#: ../src/anjuta-actions.h:102
-msgid "_User's Manual"
-msgstr ""
-
-#: ../src/anjuta-actions.h:103
-msgid "Anjuta user's manual"
-msgstr ""
-
-#: ../src/anjuta-actions.h:106
-#, fuzzy
-msgid "gtkpod _Home Page"
-msgstr "gtkpod iPod管理器"
-
-#: ../src/anjuta-actions.h:107
-msgid "Online documentation and resources"
-msgstr ""
-
-#: ../src/anjuta-actions.h:110
-msgid "Report _Bugs/Patches/Requests"
-msgstr ""
-
-#: ../src/anjuta-actions.h:111
-msgid "Submit a bug report, patch or feature request for Anjuta"
-msgstr ""
-
-#: ../src/anjuta-actions.h:114
-msgid "Ask a _Question"
-msgstr ""
-
-#: ../src/anjuta-actions.h:115
-msgid "Submit a question for FAQs"
-msgstr ""
-
-#: ../src/anjuta-actions.h:118
-#, fuzzy
-msgid "_About"
-msgstr "放弃"
-
-#: ../src/anjuta-actions.h:119
-msgid "About Anjuta"
-msgstr ""
-
-#: ../src/anjuta-actions.h:122
-msgid "About External _Plugins"
-msgstr ""
-
-#: ../src/anjuta-actions.h:123
-msgid "About third party Anjuta plugins"
-msgstr ""
-
-#: ../src/gtkpod.c:189
-msgid "Loaded Session..."
-msgstr ""
-
-#: ../src/main.c:57
-#, fuzzy
-msgid "gtkpod"
-msgstr "关于gtkpod"
-
-#: ../libgtkpod/syncdir.c:216
+#: ../libgtkpod/syncdir.c:221
 #, c-format
 msgid "Sync summary for %s/%s\n"
 msgstr " %s/%s 的同步摘要\n"
 
-#: ../libgtkpod/syncdir.c:221
+#: ../libgtkpod/syncdir.c:226
 msgid "The following track has been added or updated:\n"
 msgid_plural "The following tracks have been added or updated:\n"
 msgstr[0] "下列音轨已添加或更新：\n"
 msgstr[1] "下列音轨已添加或更新：\n"
 
-#: ../libgtkpod/syncdir.c:226
+#: ../libgtkpod/syncdir.c:231
 msgid "The following track has been completely removed from the iPod:\n"
 msgid_plural ""
 "The following tracks have been completely removed from the iPod:\n"
 msgstr[0] "下列音轨已从iPod中完全移除：\n"
 msgstr[1] "下列音轨已从iPod中完全移除：\n"
 
-#: ../libgtkpod/syncdir.c:231
+#: ../libgtkpod/syncdir.c:236
 msgid "The following track has been removed from the repository:\n"
 msgid_plural "The following tracks have been removed from the repository:\n"
 msgstr[0] "下列音轨已从音乐库中完全移除：\n"
 msgstr[1] "下列音轨已从音乐库中完全移除：\n"
 
-#: ../libgtkpod/syncdir.c:236
+#: ../libgtkpod/syncdir.c:241
 msgid "The following track has been removed from the playlist:\n"
 msgid_plural "The following tracks have been removed from the playlist:\n"
 msgstr[0] "下列音轨已从播放列表中完全移除：\n"
 msgstr[1] "下列音轨已从播放列表中完全移除：\n"
 
-#: ../libgtkpod/syncdir.c:241
+#: ../libgtkpod/syncdir.c:246
 msgid "Nothing was changed.\n"
 msgstr "无改动。\n"
 
-#: ../libgtkpod/syncdir.c:244
+#: ../libgtkpod/syncdir.c:249
 msgid "Sync summary"
 msgstr "同步摘要"
 
@@ -2700,27 +2619,27 @@ msgstr "-"
 msgid "+"
 msgstr "+"
 
-#: ../libgtkpod/misc.c:938
+#: ../libgtkpod/misc.c:937
 #, c-format
 msgid "Could not process '%s' (no filename available)"
 msgstr "无法处理'%s'(文件名不存在)"
 
-#: ../libgtkpod/misc.c:1079 ../libgtkpod/file.c:927
+#: ../libgtkpod/misc.c:1078 ../libgtkpod/file.c:799
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
 msgstr "模板'%2$s'中有未知字符串'%%%1$c'"
 
-#: ../libgtkpod/misc.c:1150
+#: ../libgtkpod/misc.c:1149
 #, c-format
 msgid "Template ('%s') does not match file type '%s'\n"
 msgstr "模板('%s')和文件类型'%s'不匹配\n"
 
-#: ../libgtkpod/misc.c:1228
+#: ../libgtkpod/misc.c:1227
 #, c-format
 msgid "Error creating %s: %s\n"
 msgstr "创建%s时发生错误：%s\n"
 
-#: ../libgtkpod/misc.c:1627
+#: ../libgtkpod/misc.c:1626
 #, c-format
 msgid ""
 "Writing preferences file '%s' failed (%s).\n"
@@ -2729,11 +2648,11 @@ msgstr ""
 "写入配置文件'%s'失败(%s)。\n"
 "\n"
 
-#: ../libgtkpod/misc.c:1627
+#: ../libgtkpod/misc.c:1626
 msgid "unspecified error"
 msgstr "未知错误"
 
-#: ../libgtkpod/misc.c:1634
+#: ../libgtkpod/misc.c:1633
 #, c-format
 msgid ""
 "Writing preferences to the iPod (%s) failed: could not get path to Control "
@@ -2743,7 +2662,7 @@ msgstr ""
 "iPod配置文件'%s'写入失败：无法获得配置文件所在的路径。\n"
 "\n"
 
-#: ../libgtkpod/misc.c:1786
+#: ../libgtkpod/misc.c:1785
 msgid ""
 "Are you sure you want to delete the following track completely from your "
 "iPod? The number of playlists this track is a member of is indicated in "
@@ -2757,13 +2676,13 @@ msgstr[0] ""
 msgstr[1] ""
 "你确定你要从iPod中完全删除下列音轨？这条音轨关联的播放列表数在括号中标出。"
 
-#: ../libgtkpod/misc.c:1789
+#: ../libgtkpod/misc.c:1788
 msgid "Delete Track Completely from iPod?"
 msgid_plural "Delete Tracks Completely from iPod?"
 msgstr[0] "从iPod中完全删除音轨？"
 msgstr[1] "从iPod中完全删除音轨？"
 
-#: ../libgtkpod/misc.c:1800 ../libgtkpod/misc.c:1837
+#: ../libgtkpod/misc.c:1799 ../libgtkpod/misc.c:1836
 #, c-format
 msgid ""
 "Are you sure you want to remove the following track from the playlist \"%s\"?"
@@ -2773,13 +2692,13 @@ msgid_plural ""
 msgstr[0] "你确定你要从播放列表中删除下列音轨\"%s\"？"
 msgstr[1] "你确定你要从播放列表中删除下列音轨\"%s\"？"
 
-#: ../libgtkpod/misc.c:1803 ../libgtkpod/misc.c:1840
+#: ../libgtkpod/misc.c:1802 ../libgtkpod/misc.c:1839
 msgid "Remove Track From Playlist?"
 msgid_plural "Remove Tracks From Playlist?"
 msgstr[0] "从播放列表中删除音轨？"
 msgstr[1] "从播放列表中删除音轨？"
 
-#: ../libgtkpod/misc.c:1823
+#: ../libgtkpod/misc.c:1822
 msgid ""
 "Are you sure you want to delete the following track completely from your "
 "harddisk? The number of playlists this track is a member of is indicated in "
@@ -2793,13 +2712,13 @@ msgstr[0] ""
 msgstr[1] ""
 "你确定你要从硬盘中完全删除下列音轨？这条音轨关联的播放列表数在括号中标出。"
 
-#: ../libgtkpod/misc.c:1826
+#: ../libgtkpod/misc.c:1825
 msgid "Delete Track from Harddisk?"
 msgid_plural "Delete Tracks from Harddisk?"
 msgstr[0] "从硬盘中删除音轨"
 msgstr[1] "从硬盘中删除音轨"
 
-#: ../libgtkpod/misc.c:1850
+#: ../libgtkpod/misc.c:1849
 msgid ""
 "Are you sure you want to remove the following track completely from your "
 "local database? The number of playlists this track is a member of is "
@@ -2815,13 +2734,13 @@ msgstr[1] ""
 "你确定你要从本地数据库中完全删除下列音轨？这条音轨关联的播放列表数在括号中标"
 "出。"
 
-#: ../libgtkpod/misc.c:1853
+#: ../libgtkpod/misc.c:1852
 msgid "Remove Track from Local Database?"
 msgid_plural "Remove Tracks from Local Database?"
 msgstr[0] "从本地数据库删除音轨？"
 msgstr[1] "从本地数据库删除音轨？"
 
-#: ../libgtkpod/gtkpod_app_iface.c:135
+#: ../libgtkpod/gtkpod_app_iface.c:159
 #, fuzzy
 msgid ""
 "Data has been changed and not been saved. If you quit gtkpod, all unsaved "
@@ -2834,41 +2753,41 @@ msgstr ""
 "\n"
 "你要先保存改动吗？"
 
-#: ../libgtkpod/gtkpod_app_iface.c:138
+#: ../libgtkpod/gtkpod_app_iface.c:162
 msgid "Save changes before quiting?"
 msgstr "退出前保存改动吗？"
 
-#: ../libgtkpod/gtkpod_app_iface.c:138
+#: ../libgtkpod/gtkpod_app_iface.c:162
 msgid "Quit without saving"
 msgstr "退出并且不保存改动"
 
-#: ../libgtkpod/gtkpod_app_iface.c:195
+#: ../libgtkpod/gtkpod_app_iface.c:219
 #, c-format
 msgid " P:%d T:%d/%d"
 msgstr " P:%d T:%d/%d"
 
 #. ID
 #. modal,
-#: ../libgtkpod/gtkpod_app_iface.c:224 ../libgtkpod/file_itunesdb.c:1495
+#: ../libgtkpod/gtkpod_app_iface.c:248 ../libgtkpod/file_itunesdb.c:1495
 msgid "Warning"
 msgstr "警告"
 
 #. update for count == 1, 21, 41 ... and for count == n
-#: ../libgtkpod/misc_track.c:88
+#: ../libgtkpod/misc_track.c:89
 #, c-format
 msgid "Hashed %d of %d track."
 msgid_plural "Hashed %d of %d tracks."
 msgstr[0] "已验证%2$d条音轨中的%1$d条"
 msgstr[1] "已验证%2$d条音轨中的%1$d条"
 
-#: ../libgtkpod/misc_track.c:182
+#: ../libgtkpod/misc_track.c:183
 #, c-format
 msgid "The following duplicate track has been removed."
 msgid_plural "The following %d duplicate tracks have been removed."
 msgstr[0] "下列重复音轨已被移除。"
 msgstr[1] "下列%d条重复音轨已被移除。"
 
-#: ../libgtkpod/misc_track.c:188
+#: ../libgtkpod/misc_track.c:189
 #, c-format
 msgid ""
 "The following duplicate track has not been added to the master play list."
@@ -2880,25 +2799,25 @@ msgstr[1] "下列%d条重复音轨没有添加到主播放列表。"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/misc_track.c:195
+#: ../libgtkpod/misc_track.c:196
 msgid "Duplicate detection"
 msgstr "检查重复文件"
 
-#: ../libgtkpod/misc_track.c:1216
+#: ../libgtkpod/misc_track.c:1217
 msgid "Local Database"
 msgstr "本地数据库"
 
 #. artwork is set
-#: ../libgtkpod/misc_track.c:1225
+#: ../libgtkpod/misc_track.c:1226
 msgid "Embedded or filename was lost"
 msgstr "嵌入或文件丢失"
 
-#: ../libgtkpod/misc_track.c:1228
+#: ../libgtkpod/misc_track.c:1229
 msgid "Artwork not set"
 msgstr "没有设置封面"
 
-#: ../libgtkpod/misc_track.c:1602 ../libgtkpod/misc_track.c:1694
-#: ../libgtkpod/file.c:1780
+#: ../libgtkpod/misc_track.c:1603 ../libgtkpod/misc_track.c:1695
+#: ../libgtkpod/file.c:1543
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
@@ -2907,179 +2826,84 @@ msgstr ""
 "Podcast已存在：'%s'\n"
 "\n"
 
-#: ../libgtkpod/misc_track.c:1638
+#: ../libgtkpod/misc_track.c:1639
 #, c-format
 msgid "Could not find source file for '%s'. Track not copied."
 msgstr "找不到'%s'的源文件，不会复制音轨。"
 
-#: ../libgtkpod/misc_track.c:1851
+#: ../libgtkpod/misc_track.c:1836
 #, c-format
 msgid "drag and drop: ignored '%s'\n"
 msgstr "拖拽：忽略'%s'\n"
 
-#: ../libgtkpod/misc_track.c:1962
+#: ../libgtkpod/misc_track.c:1947
 #, c-format
 msgid "Deleted one track completely from iPod"
 msgid_plural "Deleted %d tracks completely from iPod"
 msgstr[0] "已从iPod中完全删除一条音轨"
 msgstr[1] "已从iPod中完全删除%d条音轨"
 
-#: ../libgtkpod/misc_track.c:1967 ../libgtkpod/misc_track.c:1987
+#: ../libgtkpod/misc_track.c:1952 ../libgtkpod/misc_track.c:1972
 #, c-format
 msgid "Deleted %d track from playlist '%s'"
 msgid_plural "Deleted %d tracks from playlist '%s'"
 msgstr[0] "从播放列表'%2$s'删除%1$d条音轨"
 msgstr[1] "从播放列表'%2$s'删除%1$d条音轨"
 
-#: ../libgtkpod/misc_track.c:1982
+#: ../libgtkpod/misc_track.c:1967
 #, c-format
 msgid "Deleted one track from harddisk"
 msgid_plural "Deleted %d tracks from harddisk"
 msgstr[0] "已从硬盘删除一条音轨"
 msgstr[1] "已从硬盘删除%d条音轨"
 
-#: ../libgtkpod/misc_track.c:1992
+#: ../libgtkpod/misc_track.c:1977
 #, c-format
 msgid "Deleted track from local database"
 msgid_plural "Deleted %d tracks from local database"
 msgstr[0] "已从本地数据库删除一条音轨"
 msgstr[1] "已从本地数据库删除%d条音轨"
 
-#: ../libgtkpod/misc_track.c:2102
+#: ../libgtkpod/misc_track.c:2087
 #, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
 msgstr[0] "复制%1$d条音轨到'%3$s'中的'%2$s'"
 msgstr[1] "复制%1$d条音轨到'%3$s'中的'%2$s'"
 
-#: ../libgtkpod/misc_track.c:2132
+#: ../libgtkpod/misc_track.c:2117
 #, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
 msgstr[0] "复制%d条音轨到'%s'"
 msgstr[1] "复制%d条音轨到'%s'"
 
-#: ../libgtkpod/misc_track.c:2146
+#: ../libgtkpod/misc_track.c:2131
 msgid "No tracks selected"
 msgstr "没有选择音轨"
 
-#: ../libgtkpod/mp4file.c:633
-#, fuzzy, c-format
-msgid ""
-"m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
-"without the mp4v2 library. You must install the mp4v2 library.\n"
-msgstr ""
-"文件'%s'的m4a/m4p/m4b试音更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译"
-"gtkpod源文件并且加入mp4v2库支持。\n"
+#: ../libgtkpod/filetype_iface.c:188
+msgid "Error: Lyrics not supported for this file format."
+msgstr "错误：本文件格式不支持歌词。"
 
-#: ../libgtkpod/mp4file.c:673 ../libgtkpod/mp4file.c:983
-#, c-format
-msgid "'%s' does not appear to be a mp4 audio or video file.\n"
-msgstr "'%s'似乎不是一个mp4音频(或视频)文件。\n"
-
-#: ../libgtkpod/mp4file.c:683 ../libgtkpod/mp4file.c:993
-#, c-format
-msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
-msgstr "无法读取文件'%s'，或者这不是个mp4文件。\n"
-
-#: ../libgtkpod/mp4file.c:697
-#, fuzzy, c-format
-msgid ""
-"Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
-"You must install the mp4v2 library.\n"
-msgstr ""
-"导入'%s'失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译gtkpod源文件并且加入"
-"mp4v2库支持。\n"
-
-#: ../libgtkpod/mp4file.c:1006
-#, fuzzy, c-format
-msgid ""
-"m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
-"without the mp4v2 library. You must install the mp4v2 library.\n"
-msgstr ""
-"'%s'的m4a/m4p/m4b 元数据更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译"
-"gtkpod源文件并且加入mp4v2库支持。\n"
-
-#: ../libgtkpod/mp4file.c:1129
-#, c-format
-msgid "'%s' does not appear to be a mp4 audio file.\n"
-msgstr "'%s'似乎不是一个mp4音频文件。\n"
-
-#: ../libgtkpod/mp4file.c:1140
-#, c-format
-msgid "Could not open '%s' for writing, or file is not an mp4 file.\n"
-msgstr "无法写入文件'%s'，或者它不是个mp4文件。\n"
-
-#: ../libgtkpod/mp4file.c:1153
-#, c-format
-msgid ""
-"Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
-"You must compile the gtkpod source together with the mp4v2 library.\n"
-msgstr ""
-"导入'%s'失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译gtkpod源文件并且加入"
-"mp4v2库支持。\n"
-
-#: ../libgtkpod/mp4file.c:1159
-#, c-format
-msgid ""
-"m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
-"without the mp4v2 library. You must compile the gtkpod source together with "
-"the mp4v2 library.\n"
-msgstr ""
-"'%s'的m4a/m4p/m4b 元数据更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译"
-"gtkpod源文件并且加入mp4v2库支持。\n"
-
-#: ../libgtkpod/mp4file.c:1165
-#, c-format
-msgid ""
-"m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
-"without the mp4v2 library. You must compile the gtkpod source together with "
-"the mp4v2 library.\n"
-msgstr ""
-"文件'%s'的m4a/m4p/m4b试音更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译"
-"gtkpod源文件并且加入mp4v2库支持。\n"
-
-#: ../libgtkpod/gp_itdb.c:807
+#: ../libgtkpod/gp_itdb.c:806
 msgid "Music Library"
 msgstr "音乐库"
 
 #. add podcast playlist
-#: ../libgtkpod/gp_itdb.c:814 ../libgtkpod/gp_itdb.c:918
-#: ../libgtkpod/gp_itdb.c:950
+#: ../libgtkpod/gp_itdb.c:813 ../libgtkpod/gp_itdb.c:914
+#: ../libgtkpod/gp_itdb.c:946
 msgid "Podcasts"
 msgstr "Podcast"
 
-#: ../libgtkpod/gp_itdb.c:920
+#: ../libgtkpod/gp_itdb.c:916
 msgid "Local"
 msgstr "本地"
 
-#: ../libgtkpod/gp_itdb.c:1005
+#: ../libgtkpod/gp_itdb.c:1001
 #, c-format
 msgid "Increased playcount for '%s'"
 msgstr "'%s'增加播放计数"
-
-#: ../libgtkpod/oggfile.c:82
-#, c-format
-msgid "'%s' does not appear to be an ogg audio file.\n"
-msgstr "'%s'似乎不是一个ogg音频文件。\n"
-
-#: ../libgtkpod/oggfile.c:171
-#, c-format
-msgid ""
-"Import of '%s' failed: ogg not supported without the ogg library. You must "
-"compile the gtkpod source together with the ogg library.\n"
-msgstr ""
-"导入'%s'失败：没有ogg库，不支持ogg格式。你必须编译gtkpod源文件并且加入ogg库支"
-"持。\n"
-
-#: ../libgtkpod/oggfile.c:177
-#, c-format
-msgid ""
-"ogg metadata update for '%s' failed: ogg not supported without the ogg "
-"library. You must compile the gtkpod source together with the ogg library.\n"
-msgstr ""
-"文件'%s'的元数据更新失败：没有ogg库，不支持ogg格式。你必须编译gtkpod源文件并"
-"且加入ogg库支持。\n"
 
 #. already opened
 #. we are not the first instance of gtkpod -- the socket is
@@ -3436,7 +3260,7 @@ msgstr "取消整理在PC上没有对应文件的悬空音轨的操作"
 msgid "Dangling tracks with no files on PC were removed."
 msgstr "在PC上没有对应文件的悬空音轨被移除"
 
-#: ../libgtkpod/misc_playlist.c:777 ../libgtkpod/file.c:1670
+#: ../libgtkpod/misc_playlist.c:777 ../libgtkpod/file.c:1433
 #, c-format
 msgid "Processing '%s'..."
 msgstr "处理'%s'中..."
@@ -3676,44 +3500,36 @@ msgstr "没有选择数据库或者播放列表"
 msgid "No iPod or iPod playlist selected"
 msgstr "没有选择iPod或iPod播放列表"
 
-#: ../libgtkpod/file_convert.c:306
+#: ../libgtkpod/file_convert.c:308
 msgid "Summary status of conversion processes"
 msgstr "转换进度摘要"
 
 #. only change the label if it has changed --
 #. otherwise our tooltips will be switched off
-#: ../libgtkpod/file_convert.c:513 ../libgtkpod/file_convert.c:515
+#: ../libgtkpod/file_convert.c:515 ../libgtkpod/file_convert.c:517
 msgid "active"
 msgstr "活跃的"
 
-#: ../libgtkpod/file_convert.c:519 ../libgtkpod/file_convert.c:520
+#: ../libgtkpod/file_convert.c:521 ../libgtkpod/file_convert.c:522
 msgid "inactive"
 msgstr "不活跃的"
 
-#: ../libgtkpod/file_convert.c:532
+#: ../libgtkpod/file_convert.c:534
 #, c-format
 msgid "Active threads: %d. Scheduled tracks: %d."
 msgstr "活跃进程：%d    计划播放音轨：%d条"
 
-#: ../libgtkpod/file_convert.c:949
+#: ../libgtkpod/file_convert.c:954
 #, c-format
 msgid "Original filename not available for '%s.'\n"
 msgstr "'%s'的原始文件不存在。\n"
 
-#: ../libgtkpod/file_convert.c:963
+#: ../libgtkpod/file_convert.c:970
 #, c-format
 msgid "Filename '%s' is no longer valid for '%s'.\n"
 msgstr "文件名'%s'对'%s'无效。\n"
 
-#: ../libgtkpod/file_convert.c:1012
-msgid "Ogg Vorbis"
-msgstr "Ogg Vorbis"
-
-#: ../libgtkpod/file_convert.c:1018
-msgid "FLAC"
-msgstr "FLAC"
-
-#: ../libgtkpod/file_convert.c:1068
+#: ../libgtkpod/file_convert.c:1043
 #, c-format
 msgid ""
 "Files of type '%s' are not supported by the iPod. Please go to the "
@@ -3723,16 +3539,16 @@ msgstr ""
 "iPod不支持'%s'类型的文件，请在首选项中为'%s'设置适当的转换脚本。\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1144
+#: ../libgtkpod/file_convert.c:1119
 msgid "No information available"
 msgstr "无可用信息"
 
-#: ../libgtkpod/file_convert.c:1176
+#: ../libgtkpod/file_convert.c:1151
 #, c-format
 msgid "Could not create '%s'. Filetype conversion will not work.\n"
 msgstr "无法创建'%s'，文件类型转换失败。\n"
 
-#: ../libgtkpod/file_convert.c:1446 ../libgtkpod/file_convert.c:2687
+#: ../libgtkpod/file_convert.c:1421 ../libgtkpod/file_convert.c:2646
 #, c-format
 msgid ""
 "Transfer of '%s' failed. %s\n"
@@ -3741,7 +3557,7 @@ msgstr ""
 "移动'%s'失败。%s\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1798 ../libgtkpod/file_convert.c:2021
+#: ../libgtkpod/file_convert.c:1776 ../libgtkpod/file_convert.c:2000
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s'.\n"
@@ -3750,7 +3566,7 @@ msgstr ""
 "转换'%s'失败：'%s'。\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1812
+#: ../libgtkpod/file_convert.c:1790
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s %s' returned exit status %d.\n"
@@ -3759,7 +3575,7 @@ msgstr ""
 "转换'%s'失败：'%s %s'返回退出状态 %d。\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1837
+#: ../libgtkpod/file_convert.c:1815
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '\"%s\" %s' did not return filename extension as "
@@ -3769,7 +3585,7 @@ msgstr ""
 "转换'%s'失败：'\"%s\" %s'没有返回预期的文件名扩展。\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1901
+#: ../libgtkpod/file_convert.c:1879
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not access original file '%s' (%s).\n"
@@ -3778,7 +3594,7 @@ msgstr ""
 "转换'%s'失败：无法存取原始文件'%s' (%s)。\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1944
+#: ../libgtkpod/file_convert.c:1922
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not create directory '%s'.\n"
@@ -3787,7 +3603,7 @@ msgstr ""
 "转换'%s'失败：无法创建目录'%s'。\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:2048
+#: ../libgtkpod/file_convert.c:2025
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s' returned exit status %d.\n"
@@ -3796,7 +3612,7 @@ msgstr ""
 "转换'%s'失败： '%s'返回退出状态%d。\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:2079
+#: ../libgtkpod/file_convert.c:2059
 #, c-format
 msgid ""
 "Conversion of '%s' failed: could not stat the converted file '%s'.\n"
@@ -3827,30 +3643,7 @@ msgstr ""
 "执行'%s'失败。\n"
 "\n"
 
-#: ../libgtkpod/tools.c:246
-#, c-format
-msgid ""
-"Did not normalize '%s'. Set mp3gain path in the Tools section of the "
-"preferences.\n"
-msgstr "不要对'%s'均衡化，在首选项中工具栏里设置mp3gain的路径。\n"
-
-#: ../libgtkpod/tools.c:256
-#, c-format
-msgid ""
-"Did not normalize '%s'. Set aacgain path in the Tools section of the "
-"preferences.\n"
-msgstr "不要对'%s'均衡化，在首选项中工具栏里设置aacgain的路径。\n"
-
-#: ../libgtkpod/tools.c:268 ../libgtkpod/file.c:2114
-#, c-format
-msgid ""
-"Normalization failed: file type not supported (%s).\n"
-"\n"
-msgstr ""
-"均衡化失败：文件类型不支持(%s)。\n"
-"\n"
-
-#: ../libgtkpod/tools.c:285 ../libgtkpod/file.c:2127
+#: ../libgtkpod/tools.c:241
 #, c-format
 msgid ""
 "Normalization failed: file not available (%s).\n"
@@ -3859,19 +3652,29 @@ msgstr ""
 "均衡化失败：文件不存在(%s)。\n"
 "\n"
 
-#: ../libgtkpod/tools.c:384
+#: ../libgtkpod/tools.c:256
+#, c-format
+msgid ""
+"Normalization failed for file %s: file type not supported.\n"
+"To normalize mp3 and aac files ensure the following commands paths have been "
+"set in the Tools section\n"
+"\tmp3 files: mp3gain\n"
+"\taac files: aacgain"
+msgstr ""
+
+#: ../libgtkpod/tools.c:353
 msgid "Normalizing..."
 msgstr "均衡化"
 
-#: ../libgtkpod/tools.c:460
+#: ../libgtkpod/tools.c:429
 msgid "Aborting..."
 msgstr "放弃"
 
-#: ../libgtkpod/tools.c:464
+#: ../libgtkpod/tools.c:433
 msgid "Will abort after current mp3gain process ends."
 msgstr "当前mp3gain进程结束后将放弃。"
 
-#: ../libgtkpod/tools.c:490
+#: ../libgtkpod/tools.c:459
 #, c-format
 msgid ""
 "'%s-%s' (%s) could not be normalized.\n"
@@ -3880,13 +3683,13 @@ msgstr ""
 "'%s-%s' (%s)无法设置音量均衡。\n"
 "\n"
 
-#: ../libgtkpod/tools.c:633
+#: ../libgtkpod/tools.c:602
 msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
 msgstr "请在首选项对话框工具栏中指定命令。\n"
 
-#: ../libgtkpod/tools.c:645
+#: ../libgtkpod/tools.c:614
 #, c-format
 msgid ""
 "Could not find the command '%s'.\n"
@@ -3899,7 +3702,7 @@ msgstr ""
 "请检查首选项中'工具'部分的设置。\n"
 "\n"
 
-#: ../libgtkpod/tools.c:687
+#: ../libgtkpod/tools.c:656
 #, c-format
 msgid ""
 "'%s' returned the following output:\n"
@@ -3907,34 +3710,6 @@ msgid ""
 msgstr ""
 "'%s' 返回下列输出：\n"
 "%s\n"
-
-#: ../libgtkpod/flacfile.c:63
-#, c-format
-msgid "'%s' does not appear to be an FLAC audio file.\n"
-msgstr "'%s'似乎不是一个FLAC音频文件。\n"
-
-#: ../libgtkpod/flacfile.c:79
-#, c-format
-msgid "Error retrieving tags for '%s'.\n"
-msgstr "获取'%s'的标签时发生错误。\n"
-
-#: ../libgtkpod/flacfile.c:194
-#, c-format
-msgid ""
-"Import of '%s' failed: FLAC not supported without the FLAC library. You must "
-"compile the gtkpod source together with the FLAC library.\n"
-msgstr ""
-"导入'%s'失败：没有FLAC库，不支持FLAC文件。你必须重新编译gtkpod源程序并加入"
-"FLAC库支持。\n"
-
-#: ../libgtkpod/flacfile.c:200
-#, c-format
-msgid ""
-"FLAC metadata update for '%s' failed: FLAC not supported without the FLAC "
-"library. You must compile the gtkpod source together with the FLAC library.\n"
-msgstr ""
-"'%s'的FLAC元数据更新失败：没有FLAC库，不支持FLAC文件。你必须重新编译gtkpod源"
-"程序并加入FLAC库支持。\n"
 
 #: ../libgtkpod/file_itunesdb.c:125
 #, c-format
@@ -4294,12 +4069,7 @@ msgstr "%s：改动已经保存"
 msgid "Set Cover"
 msgstr "设置插图"
 
-#: ../libgtkpod/wavfile.c:182
-#, c-format
-msgid "%s does not appear to be a supported wav file.\n"
-msgstr "%s 似乎不是一个wav文件。\n"
-
-#: ../libgtkpod/file.c:237
+#: ../libgtkpod/file.c:145
 #, c-format
 msgid ""
 "'%s' is a directory, not a playlist file.\n"
@@ -4308,7 +4078,7 @@ msgstr ""
 "'%s'是个目录，而不是播放列表文件。\n"
 "\n"
 
-#: ../libgtkpod/file.c:264
+#: ../libgtkpod/file.c:159
 #, c-format
 msgid ""
 "'%s' is a not a known playlist file.\n"
@@ -4317,31 +4087,31 @@ msgstr ""
 "'%s'是一个未知播放列表文件。\n"
 "\n"
 
-#: ../libgtkpod/file.c:363
+#: ../libgtkpod/file.c:235
 #, c-format
 msgid "Skipping '%s' because it is a directory.\n"
 msgstr "忽略目录文件'%s'\n"
 
-#: ../libgtkpod/file.c:367
+#: ../libgtkpod/file.c:239
 #, c-format
 msgid "Skipping '%s' to avoid adding playlist file recursively\n"
 msgstr "忽略'%s'以免递归添加播放列表\n"
 
-#: ../libgtkpod/file.c:585
+#: ../libgtkpod/file.c:457
 #, c-format
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr "模板'%2$s'中有未知字符串'%1$s'\n"
 
-#: ../libgtkpod/file.c:865
+#: ../libgtkpod/file.c:737
 #, c-format
 msgid "Could not create '%s'"
 msgstr "无法创建'%s'"
 
-#: ../libgtkpod/file.c:899
+#: ../libgtkpod/file.c:771
 msgid "Error creating thumbnail file"
 msgstr "创建缩略文件时发生错误"
 
-#: ../libgtkpod/file.c:947
+#: ../libgtkpod/file.c:819
 #, fuzzy, c-format
 msgid ""
 "Unable to start video thumbnail generator\n"
@@ -4350,39 +4120,35 @@ msgstr ""
 "无法运行视频缩略工具\n"
 "命令为：'%s'"
 
-#: ../libgtkpod/file.c:950
+#: ../libgtkpod/file.c:822
 #, c-format
 msgid "Thumbnail generator returned status %d"
 msgstr "缩略生成工具返回信息%d"
 
-#: ../libgtkpod/file.c:1081
+#: ../libgtkpod/file.c:946
 #, c-format
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
 msgstr "下列音轨无法完成处理（文件不存在）：'%s'\n"
 
-#: ../libgtkpod/file.c:1170
-#, c-format
-msgid "The following track could not be processed (filetype unknown): '%s'\n"
-msgstr "下列音轨无法完成处理（文件类型未知）：'%s'\n"
-
-#: ../libgtkpod/file.c:1270
+#: ../libgtkpod/file.c:964
 #, c-format
 msgid ""
-"The following track could not be processed (filetype is known but analysis "
-"failed): '%s'\n"
-msgstr "下列音轨无法完成处理（文件类型已知但文件解析失败）：'%s'\n"
+"The filetype '%s' is not currently supported.\n"
+"\n"
+"If you have a plugin that supports this filetype then please enable it."
+msgstr ""
 
-#: ../libgtkpod/file.c:1315
+#: ../libgtkpod/file.c:1089
 #, c-format
 msgid "Updating %s"
 msgstr "更新%s中"
 
-#: ../libgtkpod/file.c:1327
+#: ../libgtkpod/file.c:1101
 msgid "Updated selected tracks with info from file."
 msgstr "从文件更新所选音轨的信息。"
 
-#: ../libgtkpod/file.c:1343
+#: ../libgtkpod/file.c:1117
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -4391,11 +4157,11 @@ msgstr[1] "下列%d条音轨无法更新"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1346
+#: ../libgtkpod/file.c:1120
 msgid "Failed Track Update"
 msgstr "更新音轨失败"
 
-#: ../libgtkpod/file.c:1400
+#: ../libgtkpod/file.c:1174
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -4404,79 +4170,70 @@ msgstr[1] "下列%d条音轨完成更新"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1403
+#: ../libgtkpod/file.c:1177
 msgid "Successful Track Update"
 msgstr "成功更新音轨"
 
-#: ../libgtkpod/file.c:1490
+#: ../libgtkpod/file.c:1264
 msgid "no local filename available, file on the iPod will be used instead"
 msgstr "本地文件不存在，将使用iPod上的文件代替"
 
-#: ../libgtkpod/file.c:1494
+#: ../libgtkpod/file.c:1268
 msgid "no local filename available and copy on iPod cannot be found"
 msgstr "本地文件不存在，iPod中的拷贝也找不到"
 
-#: ../libgtkpod/file.c:1497 ../libgtkpod/file.c:1510
+#: ../libgtkpod/file.c:1271 ../libgtkpod/file.c:1284
 msgid "no local filename available"
 msgstr "本地文件不存在"
 
-#: ../libgtkpod/file.c:1503
+#: ../libgtkpod/file.c:1277
 msgid "local file could not be found, file on the iPod will be used instead"
 msgstr "找不到本地文件，将使用iPod上的文件代替"
 
-#: ../libgtkpod/file.c:1507
+#: ../libgtkpod/file.c:1281
 msgid "local file as well as copy on the iPod cannot be found"
 msgstr "本地文件和iPod中的拷贝都找不到"
 
 #. update not successful -- log this track for later display
-#: ../libgtkpod/file.c:1592
+#: ../libgtkpod/file.c:1366
 msgid "update failed (format not supported?)"
 msgstr "更新失败（格式不支持?）"
 
-#: ../libgtkpod/file.c:1676
+#: ../libgtkpod/file.c:1439
 #, c-format
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "忽略'%s'因为它满足排除条件。\n"
 
-#: ../libgtkpod/file.c:1840
-#, c-format
-msgid ""
-"Writing to video files not yet supported (%s).\n"
-"\n"
-msgstr ""
-"还不支持对视频文件的写入操作(%s)。\n"
-"\n"
-
-#: ../libgtkpod/file.c:1886 ../libgtkpod/file.c:1893
+#: ../libgtkpod/file.c:1621 ../libgtkpod/file.c:1628
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "无法改变文件的标签：%s\n"
 
-#: ../libgtkpod/file.c:1976
+#: ../libgtkpod/file.c:1711
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr "无法打开文件'%s'读写。\n"
 
-#: ../libgtkpod/file.c:1981
+#: ../libgtkpod/file.c:1716
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr "无法对文件'%s'加锁。\n"
 
 #. error!
-#: ../libgtkpod/file.c:1996 ../libgtkpod/file.c:2004 ../libgtkpod/file.c:2014
-#: ../libgtkpod/file.c:2021
+#: ../libgtkpod/file.c:1731 ../libgtkpod/file.c:1739 ../libgtkpod/file.c:1749
+#: ../libgtkpod/file.c:1756
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr "'%s'中格式有误：%s\n"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:2046
+#: ../libgtkpod/file.c:1782
 msgid "Remove offline playcounts?"
 msgstr "清除离线播放计数？"
 
 #. title
-#: ../libgtkpod/file.c:2047
+#: ../libgtkpod/file.c:1783
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
@@ -4484,34 +4241,23 @@ msgstr ""
 "iTunesDB中的一些离线播放的音轨找不到。按下'ok'从离线播放计数文件中删除它"
 "们，'Cancel'保持不变。"
 
-#: ../libgtkpod/file.c:2062
+#: ../libgtkpod/file.c:1798
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr "写入'%s'时发生错误。\n"
 
-#: ../libgtkpod/file.c:2156
-#, fuzzy
-msgid "Error: File format unsupported now."
-msgstr "错误：更新失败（格式不支持?）"
-
-#: ../libgtkpod/file.c:2166
-msgid "Error: Lyrics not supported for this file format."
-msgstr "错误：本文件格式不支持歌词。"
-
-#: ../libgtkpod/file.c:2180
-#, fuzzy, c-format
+#: ../libgtkpod/file.c:1847
+#, c-format
 msgid ""
-"Error: Lyrics not found, file not available (%s).\n"
+"Error: Could not determine filetype for file at path: %s.\n"
 "\n"
 msgstr ""
-"错误：找不到歌词，文件不存在(%s)。\n"
-"\n"
 
-#: ../libgtkpod/file.c:2208
+#: ../libgtkpod/file.c:1880
 msgid "Error:"
 msgstr "错误："
 
-#: ../libgtkpod/file.c:2222
+#: ../libgtkpod/file.c:1894
 #, c-format
 msgid ""
 "iPod File not available and ID3 saving disabled in options, cannot save "
@@ -4521,10 +4267,10 @@ msgstr ""
 "iPod文件不存在并且ID3保存功能被禁用，无法保存歌词到：%s \n"
 "\n"
 
-#: ../libgtkpod/file.c:2258
-#, c-format
+#: ../libgtkpod/file.c:1903
+#, fuzzy, c-format
 msgid ""
-"Lyrics not written, file name not available (%s).\n"
+"Lyrics not written, file type cannot be determined (%s).\n"
 "\n"
 msgstr ""
 "歌词未写入，文件名不存在(%s)。\n"
@@ -4814,317 +4560,562 @@ msgstr "URI'%s'的主机名无效"
 msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "URI'%s'包含无效的特殊字符"
 
-#: ../libgtkpod/mp3file.c:1331
+#. Register actions
+#: ../src/anjuta-app.c:434
+msgid "Music"
+msgstr "音乐"
+
+#: ../src/anjuta-app.c:435
+#, fuzzy
+msgid "Edit"
+msgstr "编辑"
+
+#: ../src/anjuta-app.c:436 ../src/anjuta-app.c:437
+#, fuzzy
+msgid "View"
+msgstr "查看"
+
+#: ../src/anjuta-app.c:438
+#, fuzzy
+msgid "Tools"
+msgstr "工具"
+
+#: ../src/anjuta-app.c:439
+#, fuzzy
+msgid "Help"
+msgstr "帮助"
+
+#: ../src/anjuta-app.c:644
+msgid "Plugins"
+msgstr ""
+
+#: ../src/anjuta-app.c:655
+msgid "Installed plugins"
+msgstr ""
+
+#: ../src/anjuta-app.c:656
+#, fuzzy
+msgid "Preferred plugins"
+msgstr "首选项"
+
+#: ../src/anjuta-app.c:657
+#, fuzzy
+msgid "Shortcuts"
+msgstr "按艺术家排序"
+
+#: ../src/anjuta-app.c:715
 #, c-format
-msgid "Error setting ID3 field: %s\n"
-msgstr "设置ID3标签时发生错误：%s\n"
+msgid "Value doesn't exist"
+msgstr ""
 
-#: ../libgtkpod/mp3file.c:1355 ../libgtkpod/mp3file.c:1539
-#: ../libgtkpod/mp3file.c:1700 ../libgtkpod/mp3file.c:2094
-#: ../libgtkpod/mp3file.c:3017 ../libgtkpod/mp3file.c:3076
-#: ../libgtkpod/mp3file.c:3103
+#: ../src/anjuta-app.c:1296
+msgid "Confirmation"
+msgstr "确认"
+
+#: ../src/anjuta-action-callbacks.c:106
+#, fuzzy
+msgid "GtkPod Preferences"
+msgstr "首选项"
+
+#: ../src/help.c:48
+#, fuzzy
+msgid ""
+"© 2002 - 2010\n"
+"Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
+"Corey Donohoe (atmos at atmos dot org)\n"
+msgstr ""
+"© 2002 - 2007\n"
+"Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
+"Corey Donohoe (atmos at atmos dot org)\n"
+
+#: ../src/help.c:52
+msgid ""
+"Codebase includes contribution from the following people and many other "
+"helpful individuals\n"
+msgstr "代码库包括来自下面的人们以及其他很多个人的贡献\n"
+
+#: ../src/help.c:53
+msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
+msgstr "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
+
+#: ../src/help.c:54
+msgid "Hiroshi Kawashima: Japanese charset autodetection feature"
+msgstr "Hiroshi Kawashima: Japanese charset autodetection feature"
+
+#: ../src/help.c:55
+msgid "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
+msgstr "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
+
+#: ../src/help.c:56
+msgid ""
+"Walter Bell: correct handling of DND URIs with escaped characters and/or cr/"
+"newlines at the end"
+msgstr ""
+"Walter Bell: correct handling of DND URIs with escaped characters and/or cr/"
+"newlines at the end"
+
+#: ../src/help.c:57
+msgid "Sam Clegg: user defined filenames when exporting tracks from the iPod"
+msgstr "Sam Clegg: user defined filenames when exporting tracks from the iPod"
+
+#: ../src/help.c:58
+msgid "Chris Cutler: automatic creation of various playlist types"
+msgstr "Chris Cutler: automatic creation of various playlist types"
+
+#: ../src/help.c:59
+msgid ""
+"Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
+"dialogue during sync"
+msgstr ""
+"Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
+"dialogue during sync"
+
+#: ../src/help.c:60
+msgid ""
+"Edward Matteucci: debugging, special playlist creation, most of the volume "
+"normalizing code"
+msgstr ""
+"Edward Matteucci: debugging, special playlist creation, most of the volume "
+"normalizing code"
+
+#: ../src/help.c:61
+msgid "Jens Lautenbach: some optical improvements"
+msgstr "Jens Lautenbach: some optical improvements"
+
+#: ../src/help.c:62
+msgid "Alex Tribble: iPod eject patch"
+msgstr "Alex Tribble: iPod eject patch"
+
+#: ../src/help.c:63
+msgid "Yaroslav Halchenko: Orphaned and dangling tracks handling"
+msgstr "Yaroslav Halchenko: Orphaned and dangling tracks handling"
+
+#: ../src/help.c:64
+msgid ""
+"Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
+msgstr ""
+"Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
+
+#: ../src/help.c:65
+msgid ""
+"Ero Carrera: Filename validation and quick sync when copying tracks from the "
+"iPod"
+msgstr ""
+"Ero Carrera: Filename validation and quick sync when copying tracks from the "
+"iPod"
+
+#: ../src/help.c:66
+msgid "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
+msgstr "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
+
+#: ../src/help.c:67
+msgid "Armando Atienza: Support with external playcounts"
+msgstr "Armando Atienza: Support with external playcounts"
+
+#: ../src/help.c:68
+msgid "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
+msgstr "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
+
+#: ../src/help.c:69
+msgid "Jim Hall: Decent INSTALL file"
+msgstr "Jim Hall: Decent INSTALL file"
+
+#: ../src/help.c:70
+msgid ""
+"Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
+"contacts to the iPod"
+msgstr ""
+"Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
+"contacts to the iPod"
+
+#. J"urgen!
+#: ../src/help.c:71
+msgid "Flavio Stanchina: bugfixes"
+msgstr "Flavio Stanchina: bugfixes"
+
+#: ../src/help.c:72
+msgid ""
+"Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
+"the title"
+msgstr ""
+"Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
+"the title"
+
+#: ../src/help.c:73
+msgid "Steve Jay: use statvfs() instead of df (better portability, faster)"
+msgstr "Steve Jay: use statvfs() instead of df (better portability, faster)"
+
+#: ../src/help.c:75
+msgid ""
+"Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 "
+"tags"
+msgstr ""
+"Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 "
+"tags"
+
+#: ../src/help.c:77
+msgid ""
+"James Liggett:\n"
+"replacement of old GTK file selection dialogs with new GTK filechooser "
+"dialogs\n"
+"refactored user preferences system."
+msgstr ""
+"James Liggett:\n"
+"replacement of old GTK file selection dialogs with new GTK filechooser "
+"dialogs\n"
+"refactored user preferences system."
+
+#: ../src/help.c:81
+msgid "Daniel Kercher: sync scripts for abook and webcalendar"
+msgstr "Daniel Kercher: sync scripts for abook and webcalendar"
+
+#: ../src/help.c:83
+msgid "Clinton Gormley: sync scripts for thunderbird"
+msgstr "Clinton Gormley: sync scripts for thunderbird"
+
+#: ../src/help.c:85
+msgid "Sebastien Beridot: sync script for ldif addressbook format"
+msgstr "Sebastien Beridot: sync script for ldif addressbook format"
+
+#: ../src/help.c:87
+msgid "Sebastian Scherer: sync script for kNotes"
+msgstr "Sebastian Scherer: sync script for kNotes"
+
+#: ../src/help.c:89
+msgid "Nick Piper: sync script for Palm, type-ahead search"
+msgstr "Nick Piper: sync script for Palm, type-ahead search"
+
+#: ../src/help.c:91
+msgid "Uwe Hermann: help with support for iPod Video"
+msgstr "Uwe Hermann: help with support for iPod Video"
+
+#: ../src/help.c:93
+msgid ""
+"Iain Benson: support for compilation tag in mp3 files and separate display "
+"of compilations in the sort tab."
+msgstr ""
+"Iain Benson: support for compilation tag in mp3 files and separate display "
+"of compilations in the sort tab."
+
+#: ../src/help.c:94
+#, fuzzy
+msgid "Nicolas Chariot: icons of buttons\n"
+msgstr ""
+"Nicolas Chariot: icons of buttons\n"
+"\n"
+
+#: ../src/help.c:95
+#, fuzzy
+msgid ""
+"Others past and present for their excellent contributions\n"
+"\n"
+msgstr "别人的过去和现在的出色贡献\n"
+
+#: ../src/help.c:96
+msgid "This program borrows code from the following projects:"
+msgstr "本程序的代码参考了下列项目的工作："
+
+#: ../src/help.c:97
+msgid ""
+"gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  (http://"
+"www.gnu.org/software/gnupod/)"
+msgstr ""
+"gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  (http://"
+"www.gnu.org/software/gnupod/)"
+
+#: ../src/help.c:98
+msgid ""
+"iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some code "
+"for smart playlists is based on his C++-classes."
+msgstr ""
+"iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some code "
+"for smart playlists is based on his C++-classes."
+
+#: ../src/help.c:99
+msgid "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
+msgstr "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
+
+#: ../src/help.c:100
+msgid "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
+msgstr "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
+
+#: ../src/help.c:102
+#, fuzzy
+msgid "The GUI was created with the help of glade (http://glade.gnome.org/)."
+msgstr ""
+"The GUI was created with the help of glade-2 (http://glade.gnome.org/)."
+
+#: ../src/help.c:106
+msgid "French: David Le Brun (david at dyn-ns dot net)"
+msgstr "French: David Le Brun (david at dyn-ns dot net)"
+
+#: ../src/help.c:107
+msgid "French: Éric Lassauge (rpmfarm at free dot fr)"
+msgstr "French: Éric Lassauge (rpmfarm at free dot fr)"
+
+#: ../src/help.c:108
+#, fuzzy
+msgid "French: Alain Portal (alain.portal at free dot fr)"
+msgstr "French: Éric Lassauge (rpmfarm at free dot fr)"
+
+#: ../src/help.c:109
+msgid "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
+msgstr "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
+
+#: ../src/help.c:110
+msgid "German: Kai-Ove"
+msgstr "German: Kai-Ove"
+
+#: ../src/help.c:111
+msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)"
+msgstr "Hebrew: Assaf Gillat (gillata at gmail dot com)"
+
+#: ../src/help.c:112
+msgid ""
+"Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot net)"
+msgstr ""
+"Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot net)"
+
+#: ../src/help.c:113
+msgid "Italian: Daniele Forsi (dforsi at gmail dot com)"
+msgstr "Italian: Daniele Forsi (dforsi at gmail dot com)"
+
+#: ../src/help.c:114
+msgid "Japanese: Ayako Sano"
+msgstr "Japanese: Ayako Sano"
+
+#: ../src/help.c:115
+msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
+msgstr "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
+
+#: ../src/help.c:116
+msgid "Romanian: Alex Eftimie (alexeftimie at gmail dot com)"
+msgstr "Romanian: Alex Eftimie (alexeftimie at gmail dot com)"
+
+#: ../src/help.c:117
+msgid "Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
+msgstr ""
+"Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
+
+#: ../src/help.c:118
+msgid "Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"
+msgstr "Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"
+
+#: ../src/help.c:123
+msgid ""
+"This program is free software; you can redistribute it and/or\n"
+"modify it under the terms of the GNU General Public License as\n"
+"published by the Free Software Foundation; either version 2 of the\n"
+"License, or (at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful, but\n"
+"WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
+"the GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public\n"
+"License along with this program; if not, write to the Free Software\n"
+"Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
+"02111-1307, USA."
+msgstr ""
+"This program is free software; you can redistribute it and/or\n"
+"modify it under the terms of the GNU General Public License as\n"
+"published by the Free Software Foundation; either version 2 of the\n"
+"License, or (at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful, but\n"
+"WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
+"the GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public\n"
+"License along with this program; if not, write to the Free Software\n"
+"Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
+"02111-1307, USA."
+
+#: ../src/help.c:138
+#, fuzzy
+msgid ""
+"© 2002-2007\n"
+"Jorg Schuler <jcsjcs at users.sourceforge.net>\n"
+"Corey Donohoe <atmos at atmos.org>"
+msgstr ""
+"版权所有 © 2002-2007\n"
+"Jorg Schuler <jcsjcs@users.sourceforge.net>\n"
+"Corey Donohoe <atmos@atmos.org>"
+
+#: ../src/help.c:143
 #, c-format
-msgid "ERROR while opening file: '%s' (%s).\n"
-msgstr "打开文件时发生错误：'%s' (%s).\n"
+msgid "(using libgpod %s)"
+msgstr "(using libgpod %s)"
 
-#: ../libgtkpod/mp3file.c:1780 ../libgtkpod/mp3file.c:3140
-#, c-format
-msgid "ERROR while writing tag to file: '%s' (%s).\n"
-msgstr "写入文件标签时发生错误： '%s' (%s).\n"
+#: ../src/help.c:144 ../src/help.c:149
+msgid "Cross-platform multilingual interface to Apple's iPod™"
+msgstr "Cross-platform multilingual interface to Apple's iPod™"
 
-#. Tracks with zero play length are ignored by iPod...
-#: ../libgtkpod/mp3file.c:3054
-#, c-format
-msgid "File \"%s\" has zero play length. Ignoring.\n"
-msgstr "文件\"%s\"播放时间长度为0，忽略。\n"
+#: ../src/anjuta-about.c:172
+msgid "Copyright (c) Jorg Schuler et al."
+msgstr ""
+
+#: ../src/anjuta-about.c:173
+#, fuzzy
+msgid "iPod Management Platform"
+msgstr "iPod管理器"
+
+#: ../src/gtkpod.c:189
+msgid "Loaded Session..."
+msgstr ""
+
+#: ../src/main.c:57
+#, fuzzy
+msgid "gtkpod"
+msgstr "关于gtkpod"
+
+#~ msgid "_Music"
+#~ msgstr "iPod音乐"
+
+#~ msgid "_Update Tracks from File"
+#~ msgstr "从文件更新音轨"
 
 #, fuzzy
-#~ msgid ""
-#~ "© 2002 - 2010\n"
-#~ "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
-#~ "Corey Donohoe (atmos at atmos dot org)\n"
-#~ msgstr ""
-#~ "© 2002 - 2007\n"
-#~ "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
-#~ "Corey Donohoe (atmos at atmos dot org)\n"
-
-#~ msgid ""
-#~ "Codebase includes contribution from the following people and many other "
-#~ "helpful individuals\n"
-#~ msgstr "代码库包括来自下面的人们以及其他很多个人的贡献\n"
-
-#~ msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
-#~ msgstr "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
-
-#~ msgid "Hiroshi Kawashima: Japanese charset autodetection feature"
-#~ msgstr "Hiroshi Kawashima: Japanese charset autodetection feature"
-
-#~ msgid ""
-#~ "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
-#~ msgstr ""
-#~ "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
-
-#~ msgid ""
-#~ "Walter Bell: correct handling of DND URIs with escaped characters and/or "
-#~ "cr/newlines at the end"
-#~ msgstr ""
-#~ "Walter Bell: correct handling of DND URIs with escaped characters and/or "
-#~ "cr/newlines at the end"
-
-#~ msgid ""
-#~ "Sam Clegg: user defined filenames when exporting tracks from the iPod"
-#~ msgstr ""
-#~ "Sam Clegg: user defined filenames when exporting tracks from the iPod"
-
-#~ msgid "Chris Cutler: automatic creation of various playlist types"
-#~ msgstr "Chris Cutler: automatic creation of various playlist types"
-
-#~ msgid ""
-#~ "Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
-#~ "dialogue during sync"
-#~ msgstr ""
-#~ "Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
-#~ "dialogue during sync"
-
-#~ msgid ""
-#~ "Edward Matteucci: debugging, special playlist creation, most of the "
-#~ "volume normalizing code"
-#~ msgstr ""
-#~ "Edward Matteucci: debugging, special playlist creation, most of the "
-#~ "volume normalizing code"
-
-#~ msgid "Jens Lautenbach: some optical improvements"
-#~ msgstr "Jens Lautenbach: some optical improvements"
-
-#~ msgid "Alex Tribble: iPod eject patch"
-#~ msgstr "Alex Tribble: iPod eject patch"
-
-#~ msgid "Yaroslav Halchenko: Orphaned and dangling tracks handling"
-#~ msgstr "Yaroslav Halchenko: Orphaned and dangling tracks handling"
-
-#~ msgid ""
-#~ "Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
-#~ msgstr ""
-#~ "Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
-
-#~ msgid ""
-#~ "Ero Carrera: Filename validation and quick sync when copying tracks from "
-#~ "the iPod"
-#~ msgstr ""
-#~ "Ero Carrera: Filename validation and quick sync when copying tracks from "
-#~ "the iPod"
-
-#~ msgid ""
-#~ "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
-#~ msgstr ""
-#~ "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
-
-#~ msgid "Armando Atienza: Support with external playcounts"
-#~ msgstr "Armando Atienza: Support with external playcounts"
-
-#~ msgid "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
-#~ msgstr "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
-
-#~ msgid "Jim Hall: Decent INSTALL file"
-#~ msgstr "Jim Hall: Decent INSTALL file"
-
-#~ msgid ""
-#~ "Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
-#~ "contacts to the iPod"
-#~ msgstr ""
-#~ "Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
-#~ "contacts to the iPod"
-
-#~ msgid "Flavio Stanchina: bugfixes"
-#~ msgstr "Flavio Stanchina: bugfixes"
-
-#~ msgid ""
-#~ "Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
-#~ "the title"
-#~ msgstr ""
-#~ "Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
-#~ "the title"
-
-#~ msgid "Steve Jay: use statvfs() instead of df (better portability, faster)"
-#~ msgstr "Steve Jay: use statvfs() instead of df (better portability, faster)"
-
-#~ msgid ""
-#~ "Christoph Kunz: address compatibility issues when writing id3v2.4 type "
-#~ "mp3 tags"
-#~ msgstr ""
-#~ "Christoph Kunz: address compatibility issues when writing id3v2.4 type "
-#~ "mp3 tags"
-
-#~ msgid ""
-#~ "James Liggett:\n"
-#~ "replacement of old GTK file selection dialogs with new GTK filechooser "
-#~ "dialogs\n"
-#~ "refactored user preferences system."
-#~ msgstr ""
-#~ "James Liggett:\n"
-#~ "replacement of old GTK file selection dialogs with new GTK filechooser "
-#~ "dialogs\n"
-#~ "refactored user preferences system."
-
-#~ msgid "Daniel Kercher: sync scripts for abook and webcalendar"
-#~ msgstr "Daniel Kercher: sync scripts for abook and webcalendar"
-
-#~ msgid "Clinton Gormley: sync scripts for thunderbird"
-#~ msgstr "Clinton Gormley: sync scripts for thunderbird"
-
-#~ msgid "Sebastien Beridot: sync script for ldif addressbook format"
-#~ msgstr "Sebastien Beridot: sync script for ldif addressbook format"
-
-#~ msgid "Sebastian Scherer: sync script for kNotes"
-#~ msgstr "Sebastian Scherer: sync script for kNotes"
-
-#~ msgid "Nick Piper: sync script for Palm, type-ahead search"
-#~ msgstr "Nick Piper: sync script for Palm, type-ahead search"
-
-#~ msgid "Uwe Hermann: help with support for iPod Video"
-#~ msgstr "Uwe Hermann: help with support for iPod Video"
-
-#~ msgid ""
-#~ "Iain Benson: support for compilation tag in mp3 files and separate "
-#~ "display of compilations in the sort tab."
-#~ msgstr ""
-#~ "Iain Benson: support for compilation tag in mp3 files and separate "
-#~ "display of compilations in the sort tab."
+#~ msgid "_Edit"
+#~ msgstr "编辑"
 
 #, fuzzy
-#~ msgid "Nicolas Chariot: icons of buttons\n"
+#~ msgid "_Delete"
+#~ msgstr "删除"
+
+#, fuzzy
+#~ msgid "_Preferences"
+#~ msgstr "mserv首选项"
+
+#, fuzzy
+#~ msgid "_View"
+#~ msgstr "查看"
+
+#~ msgid "_Toolbar"
+#~ msgstr "工具栏"
+
+#, fuzzy
+#~ msgid "_Tools"
+#~ msgstr "工具"
+
+#, fuzzy
+#~ msgid "_Help"
+#~ msgstr "帮助"
+
+#, fuzzy
+#~ msgid "gtkpod _Home Page"
+#~ msgstr "gtkpod iPod管理器"
+
+#, fuzzy
+#~ msgid "_About"
+#~ msgstr "放弃"
+
+#~ msgid ""
+#~ "Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 "
+#~ "library. You must compile the gtkpod source together with the mp4v2 "
+#~ "library.\n"
 #~ msgstr ""
-#~ "Nicolas Chariot: icons of buttons\n"
+#~ "导入'%s'失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译gtkpod源文件并且加"
+#~ "入mp4v2库支持。\n"
+
+#~ msgid ""
+#~ "m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
+#~ "without the mp4v2 library. You must compile the gtkpod source together "
+#~ "with the mp4v2 library.\n"
+#~ msgstr ""
+#~ "'%s'的m4a/m4p/m4b 元数据更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编"
+#~ "译gtkpod源文件并且加入mp4v2库支持。\n"
+
+#~ msgid ""
+#~ "m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
+#~ "without the mp4v2 library. You must compile the gtkpod source together "
+#~ "with the mp4v2 library.\n"
+#~ msgstr ""
+#~ "文件'%s'的m4a/m4p/m4b试音更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须"
+#~ "编译gtkpod源文件并且加入mp4v2库支持。\n"
+
+#~ msgid ""
+#~ "Import of '%s' failed: ogg not supported without the ogg library. You "
+#~ "must compile the gtkpod source together with the ogg library.\n"
+#~ msgstr ""
+#~ "导入'%s'失败：没有ogg库，不支持ogg格式。你必须编译gtkpod源文件并且加入ogg"
+#~ "库支持。\n"
+
+#~ msgid ""
+#~ "ogg metadata update for '%s' failed: ogg not supported without the ogg "
+#~ "library. You must compile the gtkpod source together with the ogg "
+#~ "library.\n"
+#~ msgstr ""
+#~ "文件'%s'的元数据更新失败：没有ogg库，不支持ogg格式。你必须编译gtkpod源文件"
+#~ "并且加入ogg库支持。\n"
+
+#~ msgid "Ogg Vorbis"
+#~ msgstr "Ogg Vorbis"
+
+#~ msgid "FLAC"
+#~ msgstr "FLAC"
+
+#~ msgid ""
+#~ "Did not normalize '%s'. Set mp3gain path in the Tools section of the "
+#~ "preferences.\n"
+#~ msgstr "不要对'%s'均衡化，在首选项中工具栏里设置mp3gain的路径。\n"
+
+#~ msgid ""
+#~ "Did not normalize '%s'. Set aacgain path in the Tools section of the "
+#~ "preferences.\n"
+#~ msgstr "不要对'%s'均衡化，在首选项中工具栏里设置aacgain的路径。\n"
+
+#~ msgid ""
+#~ "Normalization failed: file type not supported (%s).\n"
+#~ "\n"
+#~ msgstr ""
+#~ "均衡化失败：文件类型不支持(%s)。\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "Import of '%s' failed: FLAC not supported without the FLAC library. You "
+#~ "must compile the gtkpod source together with the FLAC library.\n"
+#~ msgstr ""
+#~ "导入'%s'失败：没有FLAC库，不支持FLAC文件。你必须重新编译gtkpod源程序并加入"
+#~ "FLAC库支持。\n"
+
+#~ msgid ""
+#~ "FLAC metadata update for '%s' failed: FLAC not supported without the FLAC "
+#~ "library. You must compile the gtkpod source together with the FLAC "
+#~ "library.\n"
+#~ msgstr ""
+#~ "'%s'的FLAC元数据更新失败：没有FLAC库，不支持FLAC文件。你必须重新编译gtkpod"
+#~ "源程序并加入FLAC库支持。\n"
+
+#~ msgid ""
+#~ "The following track could not be processed (filetype unknown): '%s'\n"
+#~ msgstr "下列音轨无法完成处理（文件类型未知）：'%s'\n"
+
+#~ msgid ""
+#~ "The following track could not be processed (filetype is known but "
+#~ "analysis failed): '%s'\n"
+#~ msgstr "下列音轨无法完成处理（文件类型已知但文件解析失败）：'%s'\n"
+
+#~ msgid ""
+#~ "Writing to video files not yet supported (%s).\n"
+#~ "\n"
+#~ msgstr ""
+#~ "还不支持对视频文件的写入操作(%s)。\n"
 #~ "\n"
 
 #, fuzzy
-#~ msgid ""
-#~ "Others past and present for their excellent contributions\n"
-#~ "\n"
-#~ msgstr "别人的过去和现在的出色贡献\n"
-
-#~ msgid "This program borrows code from the following projects:"
-#~ msgstr "本程序的代码参考了下列项目的工作："
-
-#~ msgid ""
-#~ "gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  "
-#~ "(http://www.gnu.org/software/gnupod/)"
-#~ msgstr ""
-#~ "gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  "
-#~ "(http://www.gnu.org/software/gnupod/)"
-
-#~ msgid ""
-#~ "iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some "
-#~ "code for smart playlists is based on his C++-classes."
-#~ msgstr ""
-#~ "iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some "
-#~ "code for smart playlists is based on his C++-classes."
-
-#~ msgid "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
-#~ msgstr "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
-
-#~ msgid "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
-#~ msgstr "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
+#~ msgid "Error: File format unsupported now."
+#~ msgstr "错误：更新失败（格式不支持?）"
 
 #, fuzzy
 #~ msgid ""
-#~ "The GUI was created with the help of glade (http://glade.gnome.org/)."
-#~ msgstr ""
-#~ "The GUI was created with the help of glade-2 (http://glade.gnome.org/)."
-
-#~ msgid "French: David Le Brun (david at dyn-ns dot net)"
-#~ msgstr "French: David Le Brun (david at dyn-ns dot net)"
-
-#~ msgid "French: Éric Lassauge (rpmfarm at free dot fr)"
-#~ msgstr "French: Éric Lassauge (rpmfarm at free dot fr)"
-
-#, fuzzy
-#~ msgid "French: Alain Portal (alain.portal at free dot fr)"
-#~ msgstr "French: Éric Lassauge (rpmfarm at free dot fr)"
-
-#~ msgid "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
-#~ msgstr "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
-
-#~ msgid "German: Kai-Ove"
-#~ msgstr "German: Kai-Ove"
-
-#~ msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)"
-#~ msgstr "Hebrew: Assaf Gillat (gillata at gmail dot com)"
-
-#~ msgid ""
-#~ "Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot "
-#~ "net)"
-#~ msgstr ""
-#~ "Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot "
-#~ "net)"
-
-#~ msgid "Italian: Daniele Forsi (dforsi at gmail dot com)"
-#~ msgstr "Italian: Daniele Forsi (dforsi at gmail dot com)"
-
-#~ msgid "Japanese: Ayako Sano"
-#~ msgstr "Japanese: Ayako Sano"
-
-#~ msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
-#~ msgstr ""
-#~ "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
-
-#~ msgid "Romanian: Alex Eftimie (alexeftimie at gmail dot com)"
-#~ msgstr "Romanian: Alex Eftimie (alexeftimie at gmail dot com)"
-
-#~ msgid ""
-#~ "Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
-#~ msgstr ""
-#~ "Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
-
-#~ msgid "Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"
-#~ msgstr "Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"
-
-#~ msgid ""
-#~ "This program is free software; you can redistribute it and/or\n"
-#~ "modify it under the terms of the GNU General Public License as\n"
-#~ "published by the Free Software Foundation; either version 2 of the\n"
-#~ "License, or (at your option) any later version.\n"
+#~ "Error: Lyrics not found, file not available (%s).\n"
 #~ "\n"
-#~ "This program is distributed in the hope that it will be useful, but\n"
-#~ "WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
-#~ "the GNU General Public License for more details.\n"
-#~ "\n"
-#~ "You should have received a copy of the GNU General Public\n"
-#~ "License along with this program; if not, write to the Free Software\n"
-#~ "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
-#~ "02111-1307, USA."
 #~ msgstr ""
-#~ "This program is free software; you can redistribute it and/or\n"
-#~ "modify it under the terms of the GNU General Public License as\n"
-#~ "published by the Free Software Foundation; either version 2 of the\n"
-#~ "License, or (at your option) any later version.\n"
+#~ "错误：找不到歌词，文件不存在(%s)。\n"
 #~ "\n"
-#~ "This program is distributed in the hope that it will be useful, but\n"
-#~ "WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
-#~ "the GNU General Public License for more details.\n"
-#~ "\n"
-#~ "You should have received a copy of the GNU General Public\n"
-#~ "License along with this program; if not, write to the Free Software\n"
-#~ "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
-#~ "02111-1307, USA."
-
-#, fuzzy
-#~ msgid ""
-#~ "© 2002-2007\n"
-#~ "Jorg Schuler <jcsjcs at users.sourceforge.net>\n"
-#~ "Corey Donohoe <atmos at atmos.org>"
-#~ msgstr ""
-#~ "版权所有 © 2002-2007\n"
-#~ "Jorg Schuler <jcsjcs@users.sourceforge.net>\n"
-#~ "Corey Donohoe <atmos@atmos.org>"
-
-#~ msgid "(using libgpod %s)"
-#~ msgstr "(using libgpod %s)"
-
-#~ msgid "Cross-platform multilingual interface to Apple's iPod™"
-#~ msgstr "Cross-platform multilingual interface to Apple's iPod™"
 
 #~ msgid "<b>Auto-Generated Playlists</b>"
 #~ msgstr "<b>自动生成播放列表</b>"
