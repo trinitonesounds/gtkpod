@@ -5,6 +5,8 @@
 *.so
 *.sw[a-z]
 *~
+*.glade.h
+*.xml.h
 .deps
 .libs
 Makefile

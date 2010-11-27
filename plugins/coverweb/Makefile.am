@@ -54,7 +54,7 @@ libcoverweb_la_LIBADD = \
     $(LIBANJUTA_LIBS) \
     $(WEBKIT_LIBS)
     
-all-local: create-plugin-links create-ui-link create-glade-link
+all-local: create-plugin-links create-ui-link create-glade-link compile-glade-header
 
 # Creating symbolic links in plugin root directory
 create-plugin-links:
@@ -84,6 +84,14 @@ create-glade-link:
 		fi; \
 	fi;
 
+compile-glade-header:
+	if  [ -e `pwd`/$(plugin_name).glade ]; then \
+		$(INTLTOOL_EXTRACT) -type=gettext/glade $(plugin_name).glade; \
+	fi; \
+	if  [ -e `pwd`/$(plugin_name).xml ]; then \
+		$(INTLTOOL_EXTRACT) -type=gettext/glade $(plugin_name).xml; \
+	fi;
+	
 # Clean up the links and files created purely for dev  [ing
 clean-local: clean-plugin-files clean-ui-dir clean-glade-dir
 
@@ -103,7 +111,10 @@ clean-glade-dir:
 	fi; \
 		if  [ -h $(gtkpod_glade_dir)/$(plugin_name).xml ]; then \
 		rm -f ../../data/glade/$(plugin_name).xml; \
-	fi;
+	fi; \
+	if [ -f $(plugin_name).glade.h ]; then \
+		rm -f $(plugin_name).glade.h; \
+	fi; 
 	
 endif
 

@@ -66,7 +66,7 @@ EXTRA_DIST = \
 	$(playlist_display_toolbar_DATA) \
 	$(playlist_display_pixmaps_DATA)
 
-all-local: create-plugin-links create-ui-link create-glade-link
+all-local: create-plugin-links create-ui-link create-glade-link compile-glade-header
 
 # Creating symbolic links in plugin root directory
 create-plugin-links:
@@ -100,6 +100,14 @@ create-glade-link:
 			ln -s `pwd`/$(plugin_name)_toolbar.xml ../../data/glade/$(plugin_name)_toolbar.xml; \
 		fi; \
 	fi;
+	
+compile-glade-header:
+	if  [ -e `pwd`/$(plugin_name).glade ]; then \
+		$(INTLTOOL_EXTRACT) -type=gettext/glade $(plugin_name).glade; \
+	fi; \
+	if  [ -e `pwd`/$(plugin_name).xml ]; then \
+		$(INTLTOOL_EXTRACT) -type=gettext/glade $(plugin_name).xml; \
+	fi;
 
 # Clean up the links and files created purely for dev  [ing
 clean-local: clean-plugin-files clean-ui-dir clean-glade-dir
@@ -123,4 +131,7 @@ clean-glade-dir:
 	fi; \
 	if  [ -h ../../data/glade/$(plugin_name)_toolbar.xml ]; then \
 		rm -f ../../data/glade/$(plugin_name)_toolbar.xml; \
+	fi; \
+	if [ -f $(plugin_name).glade.h ]; then \
+		rm -f $(plugin_name).glade.h; \
 	fi;
