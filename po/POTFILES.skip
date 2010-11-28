@@ -18,3 +18,17 @@ plugins/repository_editor/repository_editor.glade
 plugins/sorttab_display/sorttab_display.glade
 plugins/track_display/track_display.glade
 
+data/glade/core_prefs.xml
+data/glade/cover_display.glade
+data/glade/coverweb.glade
+data/glade/details_editor.glade
+data/glade/exporter.xml
+data/glade/info_display.glade
+data/glade/media_player.glade
+data/glade/mserv.xml
+data/glade/photo_editor.glade
+data/glade/playlist_display.glade
+data/glade/repository_editor.glade
+data/glade/sorttab_display.glade
+data/glade/track_display.glade
+
