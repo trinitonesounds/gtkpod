@@ -96,7 +96,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     g_signal_connect (gtkpod_app, SIGNAL_TRACK_ADDED, G_CALLBACK (coverart_display_track_added_cb), NULL);
 
     coverart_init_display(cover_display_plugin->cover_window, cover_display_plugin->gladepath);
-    anjuta_shell_add_widget(plugin->shell, cover_display_plugin->cover_window, "CoverDisplayPlugin", "Cover Artwork", NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
+    anjuta_shell_add_widget(plugin->shell, cover_display_plugin->cover_window, "CoverDisplayPlugin", _("  Cover Artwork"), NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
 
     coverart_block_change(FALSE);
     coverart_display_update(TRUE);

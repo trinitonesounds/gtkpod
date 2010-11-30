@@ -1331,7 +1331,7 @@ static void create_repository_editor_view() {
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (repository_editor_plugin->repo_window), GTK_SHADOW_IN);
 
     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(repository_editor_plugin->repo_window), GTK_WIDGET (repository_editor_plugin->repo_view));
-    anjuta_shell_add_widget(ANJUTA_PLUGIN(repository_editor_plugin)->shell, repository_editor_plugin->repo_window, "RepositoryEditorPlugin", "Edit iPod Repositories", NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
+    anjuta_shell_add_widget(ANJUTA_PLUGIN(repository_editor_plugin)->shell, repository_editor_plugin->repo_window, "RepositoryEditorPlugin", _("  Edit iPod Repositories"), NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
 
     repository_view->window = repository_editor_plugin->repo_window;
 

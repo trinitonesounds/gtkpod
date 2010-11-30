@@ -1431,7 +1431,7 @@ static void create_details_editor_view() {
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (details_editor_plugin->details_window), GTK_SHADOW_IN);
 
     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(details_editor_plugin->details_window), GTK_WIDGET (details_editor_plugin->details_view));
-    anjuta_shell_add_widget(ANJUTA_PLUGIN(details_editor_plugin)->shell, details_editor_plugin->details_window, "DetailsEditorPlugin", "Edit Track Details", NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
+    anjuta_shell_add_widget(ANJUTA_PLUGIN(details_editor_plugin)->shell, details_editor_plugin->details_window, "DetailsEditorPlugin", _("  Edit Track Details"), NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
 
     details_view->window = details_editor_plugin->details_window;
 

@@ -91,7 +91,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     init_web_browser(cover_web_plugin->coverweb_window);
     gtk_widget_show_all(cover_web_plugin->coverweb_window);
-    anjuta_shell_add_widget(plugin->shell, cover_web_plugin->coverweb_window, "CoverWebPlugin", "Cover Browser", NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
+    anjuta_shell_add_widget(plugin->shell, cover_web_plugin->coverweb_window, "CoverWebPlugin", _("  Cover Browser"), NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
 
     return TRUE; /* FALSE if activation failed */
 }

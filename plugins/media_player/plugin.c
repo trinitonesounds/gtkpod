@@ -46,7 +46,7 @@
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
 
-static GtkActionEntry cover_actions[] =
+static GtkActionEntry media_player_actions[] =
     { };
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {
@@ -63,7 +63,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     /* Add our cover_actions */
     action_group
-            = anjuta_ui_add_action_group_entries(ui, "ActionGroupMediaPlayer", _("Cover Display"), cover_actions, G_N_ELEMENTS (cover_actions), GETTEXT_PACKAGE, TRUE, plugin);
+            = anjuta_ui_add_action_group_entries(ui, "ActionGroupMediaPlayer", _("Media Player"), media_player_actions, G_N_ELEMENTS (media_player_actions), GETTEXT_PACKAGE, TRUE, plugin);
     media_player_plugin->action_group = action_group;
 
     /* Merge UI */
@@ -88,7 +88,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     // Do not show all as video widget is initially invisible
     gtk_widget_show(media_player_plugin->media_player_window);
-    anjuta_shell_add_widget(plugin->shell, media_player_plugin->media_player_window, "MediaPlayerPlugin", "  Media Player", PLAYER_ICON_STOCK_ID, ANJUTA_SHELL_PLACEMENT_BOTTOM, NULL);
+    anjuta_shell_add_widget(plugin->shell, media_player_plugin->media_player_window, "MediaPlayerPlugin", _("  Media Player"), PLAYER_ICON_STOCK_ID, ANJUTA_SHELL_PLACEMENT_BOTTOM, NULL);
 
     return TRUE; /* FALSE if activation failed */
 }

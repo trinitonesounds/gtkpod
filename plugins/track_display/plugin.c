@@ -133,7 +133,7 @@ static gboolean activate_track_display_plugin(AnjutaPlugin *plugin) {
     g_signal_connect (gtkpod_app, SIGNAL_PREFERENCE_CHANGE, G_CALLBACK (track_display_preference_changed_cb), NULL);
 
     gtk_widget_show_all(track_display_plugin->track_window);
-    anjuta_shell_add_widget(plugin->shell, track_display_plugin->track_window, "TrackDisplayPlugin", "Playlist Tracks", NULL, ANJUTA_SHELL_PLACEMENT_TOP, NULL);
+    anjuta_shell_add_widget(plugin->shell, track_display_plugin->track_window, "TrackDisplayPlugin", _("  Playlist Tracks"), NULL, ANJUTA_SHELL_PLACEMENT_TOP, NULL);
 
     return TRUE; /* FALSE if activation failed */
 }

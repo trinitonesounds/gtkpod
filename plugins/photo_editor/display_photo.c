@@ -160,7 +160,7 @@ static void create_photo_editor() {
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (photo_editor->window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (photo_editor->window), GTK_SHADOW_IN);
     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(photo_editor->window), GTK_WIDGET (photo_editor->photo_viewport));
-    anjuta_shell_add_widget(ANJUTA_PLUGIN(photo_editor_plugin)->shell, photo_editor->window, "PhotoEditorPlugin", "IPod Photo Editor", NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
+    anjuta_shell_add_widget(ANJUTA_PLUGIN(photo_editor_plugin)->shell, photo_editor->window, "PhotoEditorPlugin", _("  iPod Photo Editor"), NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
 
     gtk_widget_show_all(photo_editor->window);
 }
