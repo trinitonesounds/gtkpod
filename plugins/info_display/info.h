@@ -66,7 +66,7 @@ void info_update_totals_view (void);
 
 gboolean ipod_connected (void);
 
-void on_info_window_open (GtkAction *action, InfoDisplayPlugin* plugin);
+void on_info_view_open (GtkAction *action, InfoDisplayPlugin* plugin);
 
 void info_display_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointer data);
 void info_display_playlist_added_cb(GtkPodApp *app, gpointer pl, gint32 pos, gpointer data);

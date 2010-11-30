@@ -27,8 +27,16 @@
 #ifndef __INFODLG_H__
 #define __INFODLG_H__
 
-void open_info_dialog ();
-void close_info_dialog ();
-void info_dialog_update_default_sizes ();
+struct _InfoView
+{
+    GtkWidget *window;  /* pointer to info window          */
+    GtkTreeView *tree;
+    GtkListStore *store;
+};
+
+typedef struct _InfoView InfoView;
+
+void open_info_view ();
+void destroy_info_view ();
 
 #endif

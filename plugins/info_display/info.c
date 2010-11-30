@@ -37,7 +37,7 @@
 #include <glade/glade.h>
 #include "plugin.h"
 #include "info.h"
-#include "infodlg.h"
+#include "infoview.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/misc.h"
 #include "libgtkpod/misc_track.h"
@@ -47,8 +47,6 @@
 
 /* pointer to info window */
 static GtkWidget *info_window = NULL;
-
-GladeXML *info_xml;
 
 /* lock for size related variables (used by child and parent) */
 static GMutex *space_mutex = NULL;
@@ -159,56 +157,6 @@ void fill_in_info(GList *tl, guint32 *tracks, guint32 *playtime, gdouble *filesi
     }
 }
 
-static void fill_label_uint(gchar *w_name, guint32 nr) {
-    GtkWidget *w;
-
-    g_return_if_fail (info_window);
-    g_return_if_fail (w_name);
-    w = gtkpod_xml_get_widget(info_xml, w_name);
-    if (w) {
-        gchar *str = g_strdup_printf("%u", nr);
-        gtk_label_set_text(GTK_LABEL (w), str);
-        g_free(str);
-    }
-}
-
-static void fill_label_time(gchar *w_name, guint32 secs) {
-    GtkWidget *w;
-
-    g_return_if_fail (info_window);
-    g_return_if_fail (w_name);
-    w = gtkpod_xml_get_widget(info_xml, w_name);
-    if (w) {
-        gchar *str = g_strdup_printf("%u:%02u:%02u", secs / 3600, (secs % 3600) / 60, secs % 60);
-        gtk_label_set_text(GTK_LABEL (w), str);
-        g_free(str);
-    }
-}
-
-static void fill_label_size(gchar *w_name, gdouble size) {
-    GtkWidget *w;
-
-    g_return_if_fail (info_window);
-    g_return_if_fail (w_name);
-    w = gtkpod_xml_get_widget(info_xml, w_name);
-    if (w) {
-        gchar *str = get_filesize_as_string(size);
-        gtk_label_set_text(GTK_LABEL (w), str);
-        g_free(str);
-    }
-}
-
-static void fill_label_string(gchar *w_name, const char *str) {
-    GtkWidget *w;
-
-    g_return_if_fail (info_window);
-    g_return_if_fail (w_name);
-    w = gtkpod_xml_get_widget(info_xml, w_name);
-    if (w) {
-        gtk_label_set_text(GTK_LABEL (w), str);
-    }
-}
-
 /* update all sections of info window */
 void info_update(void) {
     callback_call_all(callbacks_info_update);
@@ -227,9 +175,6 @@ static void info_update_track_view_displayed(void) {
         return; /* not open */
     displayed = gtkpod_get_displayed_tracks();
     fill_in_info(displayed, &tracks, &playtime, &filesize);
-    fill_label_uint("tracks_displayed", tracks);
-    fill_label_time("playtime_displayed", playtime);
-    fill_label_size("filesize_displayed", filesize);
 }
 
 static void info_update_track_view_selected(void) {
@@ -242,9 +187,6 @@ static void info_update_track_view_selected(void) {
     selected = gtkpod_get_selected_tracks();
     fill_in_info(selected, &tracks, &playtime, &filesize);
     g_list_free(selected);
-    fill_label_uint("tracks_selected", tracks);
-    fill_label_time("playtime_selected", playtime);
-    fill_label_size("filesize_selected", filesize);
 }
 
 /* update track view section */
@@ -272,9 +214,6 @@ void info_update_playlist_view(void) {
         return;
     tl = pl->members;
     fill_in_info(tl, &tracks, &playtime, &filesize);
-    fill_label_uint("playlist_tracks", tracks);
-    fill_label_time("playlist_playtime", playtime);
-    fill_label_size("playlist_filesize", filesize);
 }
 
 /* Get the local itdb */
@@ -326,23 +265,7 @@ static void info_update_totals_view_space(void) {
     itdb = get_itdb_ipod();
     if (itdb) {
         gp_info_nontransferred_tracks(itdb, &nt_filesize, &nt_tracks);
-        fill_label_uint("non_transferred_tracks", nt_tracks);
-        fill_label_size("non_transferred_filesize", nt_filesize);
         gp_info_deleted_tracks(itdb, &del_filesize, &del_tracks);
-        fill_label_uint("deleted_tracks", del_tracks);
-        fill_label_size("deleted_filesize", del_filesize);
-        if (!get_offline(itdb)) {
-            if (ipod_connected()) {
-                gdouble free_space = get_ipod_free_space() + del_filesize - nt_filesize;
-                fill_label_size("free_space", free_space);
-            }
-            else {
-                fill_label_string("free_space", _("n/c"));
-            }
-        }
-        else {
-            fill_label_string("free_space", _("offline"));
-        }
     }
 }
 
@@ -363,20 +286,12 @@ void info_update_totals_view(void) {
         pl = itdb_playlist_mpl(itdb);
         g_return_if_fail (pl);
         fill_in_info(pl->members, &tracks, &playtime, &filesize);
-        fill_label_uint("total_playlists_ipod", itdb_playlists_number(itdb) - 1);
-        fill_label_uint("total_tracks_ipod", tracks);
-        fill_label_time("total_playtime_ipod", playtime);
-        fill_label_size("total_filesize_ipod", filesize);
     }
     itdb = get_itdb_local();
     if (itdb) {
         pl = itdb_playlist_mpl(itdb);
         g_return_if_fail (pl);
         fill_in_info(pl->members, &tracks, &playtime, &filesize);
-        fill_label_uint("total_playlists_local", itdb_playlists_number(itdb) - 1);
-        fill_label_uint("total_tracks_local", tracks);
-        fill_label_time("total_playtime_local", playtime);
-        fill_label_size("total_filesize_local", filesize);
     }
     info_update_totals_view_space();
 }
@@ -475,8 +390,8 @@ get_filesize_as_string(gdouble size) {
 }
 
 /* Action Callbacks */
-void on_info_window_open(GtkAction *action, InfoDisplayPlugin* plugin) {
-    open_info_dialog();
+void on_info_view_open(GtkAction *action, InfoDisplayPlugin* plugin) {
+    open_info_view();
 }
 
 /* Selection Callbacks */

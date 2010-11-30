@@ -8,7 +8,7 @@ info_display_ui_DATA = $(plugin_name).ui
 
 # Plugin Glade file
 info_display_gladedir = $(gtkpod_glade_dir)
-info_display_glade_DATA =  $(plugin_name).glade
+info_display_glade_DATA =
 
 # Plugin Icon file
 info_display_pixmapsdir = $(gtkpod_image_dir)
@@ -27,7 +27,7 @@ plugin_LTLIBRARIES = libinfo_display.la
 # Plugin sources
 libinfo_display_la_SOURCES = plugin.c plugin.h \
 							 info.c info.h \
-							 infodlg.c infodlg.h
+							 infoview.c infoview.h
 							 
 
 libinfo_display_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)

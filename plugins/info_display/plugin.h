@@ -43,10 +43,13 @@ struct _InfoDisplayPlugin {
     AnjutaPlugin parent;
     gint uiid;
     GtkActionGroup *action_group;
+    GtkWidget *info_window;
 };
 
 struct _InfoDisplayPluginClass {
     AnjutaPluginClass parent_class;
 };
+
+InfoDisplayPlugin *info_display_plugin;
 
 #endif /* PLUGIN_H_ */

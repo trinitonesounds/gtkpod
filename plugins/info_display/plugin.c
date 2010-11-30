@@ -35,6 +35,7 @@
 #include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "info.h"
+#include "infoview.h"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -42,18 +43,17 @@ static gpointer parent_class;
 static GtkActionEntry info_actions[] =
     {
         {
-            "ActionDisplayInfoWindow", /* Action name */
+            "ActionDisplayInfoView", /* Action name */
             GTK_STOCK_DIALOG_INFO, /* Stock icon */
-            N_("_Info Window"), /* Display label */
+            N_("_Info View"), /* Display label */
             NULL, /* short-cut */
             NULL, /* Tooltip */
-            G_CALLBACK (on_info_window_open) /* callback */
+            G_CALLBACK (on_info_view_open) /* callback */
         },
     };
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
-    InfoDisplayPlugin *info_display_plugin;
     GtkActionGroup* action_group;
 
     info_display_plugin = (InfoDisplayPlugin*) plugin;
@@ -65,7 +65,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     info_display_plugin->action_group = action_group;
 
     /* Merge UI */
-    gchar *uipath = g_build_filename(get_ui_dir(), "details_editor.ui", NULL);
+    gchar *uipath = g_build_filename(get_ui_dir(), "info_display.ui", NULL);
     info_display_plugin->uiid = anjuta_ui_merge(ui, uipath);
     g_free(uipath);
 
@@ -86,7 +86,8 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
 static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
-    InfoDisplayPlugin *info_display_plugin;
+
+    destroy_info_view ();
 
     info_display_plugin = (InfoDisplayPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);

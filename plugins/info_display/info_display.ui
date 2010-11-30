@@ -4,7 +4,7 @@
    		<menu name="MenuView" action="ActionMenuView">
 			<placeholder name="PlaceholderViewMenus">
 				<separator/>
-				<menuitem name="Info Window" action="ActionDisplayInfoWindow" />
+				<menuitem name="Info Window" action="ActionDisplayInfoView" />
 				<separator/>
             </placeholder>
    		</menu>
