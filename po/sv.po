@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-27 23:22+0000\n"
+"POT-Creation-Date: 2010-12-02 20:13+0000\n"
 "PO-Revision-Date: 2010-08-08 12:50+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@comhem.se>\n"
 "Language-Team: Svenska <sv@li.org>\n"
@@ -115,819 +115,6 @@ msgstr ""
 msgid "_Limit to"
 msgstr "_Begränsa till"
 
-#: ../data/glade/info_display.glade.h:1
-#: ../plugins/info_display/info_display.glade.h:1
-msgid "gtkpod Information"
-msgstr "Information om gtkpod"
-
-#: ../data/glade/photo_editor.glade.h:1
-#: ../plugins/photo_editor/photo_editor.glade.h:1
-msgid "Add Images from a Directory"
-msgstr "Lägg till bilder från en katalog"
-
-#: ../data/glade/photo_editor.glade.h:2
-#: ../plugins/photo_editor/photo_editor.glade.h:2
-#, fuzzy
-msgid "Photo Image"
-msgstr "Fotoalbum"
-
-#: ../data/glade/photo_editor.glade.h:3
-#: ../plugins/photo_editor/photo_editor.glade.h:3
-msgid "Photo Window"
-msgstr "Fotofönster"
-
-#: ../data/glade/photo_editor.glade.h:4
-#: ../plugins/photo_editor/photo_editor.glade.h:4
-msgid "R_ename Album"
-msgstr "B_yt namn på album"
-
-#: ../data/glade/photo_editor.glade.h:5
-#: ../plugins/photo_editor/photo_editor.glade.h:5
-msgid "_Album"
-msgstr "_Album"
-
-#: ../data/glade/repository_editor.glade.h:1
-#: ../plugins/repository_editor/repository_editor.glade.h:1
-msgid "<b>General</b>"
-msgstr "<b>Allmänt</b>"
-
-#: ../data/glade/repository_editor.glade.h:2
-#: ../plugins/repository_editor/repository_editor.glade.h:2
-msgid "<b>Playlist Options</b>"
-msgstr "<b>Spellistealternativ</b>"
-
-#: ../data/glade/repository_editor.glade.h:3
-#: ../plugins/repository_editor/repository_editor.glade.h:3
-msgid "<b>Please select mountpoint and your iPod model</b>"
-msgstr "<b>Välj monteringsplats och iPod-modell</b>"
-
-#: ../data/glade/repository_editor.glade.h:4
-#: ../plugins/repository_editor/repository_editor.glade.h:4
-msgid "<b>Synchronization</b>"
-msgstr "<b>Synkronisering</b>"
-
-#: ../data/glade/repository_editor.glade.h:5
-#: ../plugins/repository_editor/repository_editor.glade.h:5
-msgid "Add New ..."
-msgstr ""
-
-#: ../data/glade/repository_editor.glade.h:6
-#: ../plugins/repository_editor/repository_editor.glade.h:6
-#: ../plugins/core_preferences/core_prefs.c:186
-msgid "Browse"
-msgstr "Bläddra"
-
-#: ../data/glade/repository_editor.glade.h:7
-#: ../plugins/repository_editor/repository_editor.glade.h:7
-#: ../plugins/core_preferences/core_prefs.xml.h:31
-msgid "Browse..."
-msgstr "Bläddra..."
-
-#: ../data/glade/repository_editor.glade.h:8
-#: ../plugins/repository_editor/repository_editor.glade.h:8
-msgid "Calendar sync command:"
-msgstr "Synkroniseringskommando för kalender:"
-
-#: ../data/glade/repository_editor.glade.h:9
-#: ../plugins/repository_editor/repository_editor.glade.h:9
-msgid "Call automatically when synchronizing iTunesDB"
-msgstr "Anropa automatiskt vid synkronisering av iTunes databas"
-
-#: ../data/glade/repository_editor.glade.h:10
-#: ../plugins/repository_editor/repository_editor.glade.h:10
-msgid "Confirm before removing tracks from the iPod or repository"
-msgstr "Bekräfta innan spår tas bort från iPod eller arkiv"
-
-#: ../data/glade/repository_editor.glade.h:11
-#: ../plugins/repository_editor/repository_editor.glade.h:11
-msgid "Contacts sync command:"
-msgstr "Synkroniseringskommando för kontakter:"
-
-#: ../data/glade/repository_editor.glade.h:12
-#: ../plugins/repository_editor/repository_editor.glade.h:12
-msgid "Create Repository"
-msgstr "Skapa arkiv"
-
-#: ../data/glade/repository_editor.glade.h:13
-#: ../plugins/repository_editor/repository_editor.glade.h:13
-#, fuzzy
-msgid "Delete"
-msgstr "_Ta bort"
-
-#: ../data/glade/repository_editor.glade.h:14
-#: ../plugins/repository_editor/repository_editor.glade.h:14
-msgid "Delete missing tracks from the iPod or repository"
-msgstr "Ta bort saknade spår från iPod eller arkiv"
-
-#: ../data/glade/repository_editor.glade.h:15
-#: ../plugins/repository_editor/repository_editor.glade.h:15
-msgid ""
-"Directories to sync with are determined from the filenames of the tracks in "
-"the playlist."
-msgstr ""
-"Kataloger att synkronisera avgörs från filnamnen hos spåren i spellistan."
-
-#: ../data/glade/repository_editor.glade.h:16
-#: ../plugins/repository_editor/repository_editor.glade.h:16
-msgid "Don't automatically sync on startup"
-msgstr "Synkronisera inte automatiskt vid start"
-
-#: ../data/glade/repository_editor.glade.h:17
-#: ../plugins/repository_editor/repository_editor.glade.h:17
-msgid "Initialize iPod"
-msgstr "Initiera iPod"
-
-#: ../data/glade/repository_editor.glade.h:18
-#: ../plugins/repository_editor/repository_editor.glade.h:18
-msgid ""
-"Insert before\n"
-"Insert after"
-msgstr ""
-"Infoga innan\n"
-"Infoga efter"
-
-#: ../data/glade/repository_editor.glade.h:20
-#: ../plugins/repository_editor/repository_editor.glade.h:20
-msgid "Model:"
-msgstr "Modell:"
-
-#: ../data/glade/repository_editor.glade.h:21
-#: ../plugins/repository_editor/repository_editor.glade.h:21
-msgid ""
-"Normally, if a track is no longer present in the sync directory, it will be "
-"removed from the playlist, but not from the iPod or local repository.\n"
-"If this option is checked, tracks will be completely removed from the iPod "
-"or local repository, unless the track is a member of other playlists as "
-"well.\n"
-"NOTE: if you sync with the master playlist, you must check this option if "
-"you want tracks to be removed, because removing from the master playlist "
-"means removing from the iPod."
-msgstr ""
-"Om ett spår inte längre finns i synkroniseringskatalogen, tas det normalt "
-"bort från spellistan, men inte från iPod eller det lokala arkivet.\n"
-"Om alternativet markeras, tas spår fullständigt bort från iPod eller det "
-"lokala arkivet, om inte spåret också ingår i andra spellistor.\n"
-"Observera: Om du synkroniserar med huvudspellistan måste du markera "
-"alternativet om du vill att spår ska tas bort, eftersom att ta bort från "
-"huvudspellistan innebär att ta bort från iPod."
-
-#: ../data/glade/repository_editor.glade.h:24
-#: ../plugins/repository_editor/repository_editor.glade.h:24
-msgid "Notes sync command:"
-msgstr "Synkroniseringskommando för anteckningar:"
-
-#: ../data/glade/repository_editor.glade.h:25
-#: ../plugins/repository_editor/repository_editor.glade.h:25
-msgid "On startup automatically sync with playlist directories"
-msgstr "Synkronisera automatiskt med spellistekataloger vid start"
-
-#: ../data/glade/repository_editor.glade.h:26
-#: ../plugins/repository_editor/repository_editor.glade.h:26
-msgid "On startup automatically sync with the following directory"
-msgstr "Synkronisera automatiskt med följande katalog vid start"
-
-#: ../data/glade/repository_editor.glade.h:27
-#: ../plugins/repository_editor/repository_editor.glade.h:27
-msgid "On startup automatically update (Live Playlist)"
-msgstr "Uppdatera automatiskt vid start (levande spellista)"
-
-#: ../data/glade/repository_editor.glade.h:28
-#: ../plugins/repository_editor/repository_editor.glade.h:28
-msgid "Path:"
-msgstr "Sökväg:"
-
-#: ../data/glade/repository_editor.glade.h:29
-#: ../data/glade/sorttab_display.glade.h:48
-#: ../plugins/sorttab_display/sorttab_display.glade.h:48
-#: ../plugins/repository_editor/repository_editor.glade.h:29
-#: ../plugins/playlist_display/display_playlists.c:1851
-msgid "Playlists"
-msgstr "Spellistor"
-
-#: ../data/glade/repository_editor.glade.h:30
-#: ../plugins/repository_editor/repository_editor.glade.h:30
-msgid "Repository"
-msgstr "Arkiv"
-
-#: ../data/glade/repository_editor.glade.h:31
-#: ../plugins/repository_editor/repository_editor.glade.h:31
-msgid "Repository Options"
-msgstr "Arkivalternativ"
-
-#: ../data/glade/repository_editor.glade.h:32
-#: ../plugins/repository_editor/repository_editor.glade.h:32
-msgid "Repository name:"
-msgstr "Arkivnamn:"
-
-#: ../data/glade/repository_editor.glade.h:33
-#: ../plugins/repository_editor/repository_editor.glade.h:33
-msgid "Repository type:"
-msgstr "Arkivtyp:"
-
-#: ../data/glade/repository_editor.glade.h:34
-#: ../plugins/repository_editor/repository_editor.glade.h:34
-msgid "Show summary of sync result"
-msgstr "Visa sammanfattning av synkroniseringsresultat"
-
-#: ../data/glade/repository_editor.glade.h:36
-#: ../plugins/repository_editor/repository_editor.glade.h:36
-#, no-c-format
-msgid ""
-"Specify exact path including command line options. '%i' will be replaced "
-"with the mount point of the iPod."
-msgstr ""
-"Ange fullständig sökväg inklusive kommandoradsväljare. '%i' ersätts med "
-"monteringspunkten för iPod."
-
-#: ../data/glade/repository_editor.glade.h:37
-#: ../plugins/repository_editor/repository_editor.glade.h:37
-msgid "Update/Sync All Playlists"
-msgstr "Uppdatera och synkronisera alla spellistor"
-
-#: ../data/glade/repository_editor.glade.h:38
-#: ../plugins/repository_editor/repository_editor.glade.h:38
-msgid "Update/Sync Playlist"
-msgstr "Uppdatera och synkronisera spellista"
-
-#: ../data/glade/repository_editor.glade.h:39
-#: ../plugins/repository_editor/repository_editor.glade.h:39
-msgid ""
-"Will show a list of tracks removed and a list of tracks newly added or "
-"updated."
-msgstr ""
-"Visar en lista med borttagna spår och en lista med spår som är nytillagda "
-"eller uppdaterade."
-
-#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
-#: ../data/glade/repository_editor.glade.h:41
-#: ../plugins/repository_editor/repository_editor.glade.h:41
-msgid ""
-"iPod\n"
-"Local Repository (Standard)\n"
-"Local Repository (Podcasts)\n"
-msgstr ""
-"iPod\n"
-"Lokalt arkiv (standard)\n"
-"Lokalt arkiv (podradiosändningar)\n"
-
-#: ../data/glade/repository_editor.glade.h:45
-#: ../plugins/repository_editor/repository_editor.glade.h:45
-msgid "iPod mountpoint:"
-msgstr "iPod monteringspunkt:"
-
-#: ../data/glade/repository_editor.glade.h:46
-#: ../plugins/repository_editor/repository_editor.glade.h:46
-msgid "iTunesDB backup:"
-msgstr "Säkerhetskopia av iTunes databas:"
-
-#: ../data/glade/cover_display.glade.h:1
-#: ../plugins/cover_display/cover_display.glade.h:1
-msgid "<"
-msgstr "<"
-
-#: ../data/glade/cover_display.glade.h:2
-#: ../plugins/cover_display/cover_display.glade.h:2
-msgid "<b>Cover Art Display</b>"
-msgstr "<b>Visning av omslag</b>"
-
-#: ../data/glade/cover_display.glade.h:3
-#: ../plugins/cover_display/cover_display.glade.h:3
-msgid ">"
-msgstr ">"
-
-#: ../data/glade/cover_display.glade.h:4
-#: ../plugins/cover_display/cover_display.glade.h:4
-msgid "Artwork Preview"
-msgstr "Förhandsgranskning av omslagsbilder"
-
-#: ../data/glade/cover_display.glade.h:5
-#: ../plugins/cover_display/cover_display.glade.h:5
-msgid "Background color"
-msgstr "Bakgrundsfärg"
-
-#: ../data/glade/cover_display.glade.h:6
-#: ../plugins/cover_display/cover_display.glade.h:6
-msgid "Choose a Different Colour for the CoverArt Display Background"
-msgstr "Välj en annan färg för bakgrunden vid visning av omslag"
-
-#: ../data/glade/cover_display.glade.h:7
-#: ../plugins/cover_display/cover_display.glade.h:7
-#, fuzzy
-msgid "Cover Art Display"
-msgstr "<b>Visning av omslag</b>"
-
-#: ../data/glade/cover_display.glade.h:8
-#: ../plugins/cover_display/cover_display.glade.h:8
-msgid "Text color"
-msgstr "Textfärg"
-
-#: ../data/glade/media_player.glade.h:1
-#: ../plugins/media_player/media_player.glade.h:1
-msgid "00:00:00"
-msgstr ""
-
-#: ../data/glade/media_player.glade.h:2
-#: ../plugins/media_player/media_player.glade.h:2
-msgid "Next"
-msgstr ""
-
-#: ../data/glade/media_player.glade.h:3 ../plugins/media_player/plugin.c:169
-#: ../plugins/media_player/media_player.glade.h:3
-#, fuzzy
-msgid "Play"
-msgstr "Spelad"
-
-#: ../data/glade/media_player.glade.h:4
-#: ../plugins/media_player/media_player.glade.h:4
-msgid "Previous"
-msgstr ""
-
-#: ../data/glade/media_player.glade.h:5
-#: ../plugins/media_player/media_player.glade.h:5
-#, fuzzy
-msgid "Stop"
-msgstr "till"
-
-#: ../data/glade/media_player.glade.h:6
-#: ../plugins/media_player/media_player.glade.h:6
-#: ../libgtkpod/misc_conversion.c:83
-msgid "Volume"
-msgstr "Volym"
-
-#: ../data/glade/playlist_display.glade.h:1
-#: ../data/glade/sorttab_display.glade.h:11
-#: ../plugins/sorttab_display/sorttab_display.glade.h:11
-#: ../plugins/playlist_display/playlist_display.glade.h:1
-msgid "<b>Ascending</b>"
-msgstr "<b>Stigande</b>"
-
-#: ../data/glade/playlist_display.glade.h:2
-#: ../data/glade/sorttab_display.glade.h:13
-#: ../plugins/sorttab_display/sorttab_display.glade.h:13
-#: ../plugins/playlist_display/playlist_display.glade.h:2
-msgid "<b>Descending</b>"
-msgstr "<b>Fallande</b>"
-
-#: ../data/glade/playlist_display.glade.h:3
-#: ../data/glade/sorttab_display.glade.h:18
-#: ../plugins/sorttab_display/sorttab_display.glade.h:18
-#: ../plugins/playlist_display/playlist_display.glade.h:3
-msgid "<b>None</b>"
-msgstr "<b>Ingen</b>"
-
-#: ../data/glade/playlist_display.glade.h:4
-#: ../plugins/playlist_display/playlist_display.glade.h:4
-#, fuzzy
-msgid "<b>Playlist Sort Order</b>"
-msgstr "<b>Sorteringsordning</b>"
-
-#: ../data/glade/playlist_display.glade.h:5
-#: ../data/glade/sorttab_display.glade.h:28
-#: ../plugins/sorttab_display/sorttab_display.glade.h:28
-#: ../plugins/playlist_display/playlist_display.glade.h:5
-msgid "Case sensitive sorting (setting affects all sorting)"
-msgstr ""
-
-#: ../data/glade/playlist_display.glade.h:6
-#: ../data/glade/sorttab_display.glade.h:34
-#: ../plugins/sorttab_display/sorttab_display.glade.h:34
-#: ../plugins/playlist_display/playlist_display.glade.h:6
-msgid ""
-"If checked, sorting will be case sensitive. Please note that case sensitive "
-"sorting will not work well with most charsets."
-msgstr ""
-"Om markerat är sorteringen skiftlägeskänslig. Observera att "
-"skiftlägeskänslig sortering inte fungerar bra med de flesta teckenkodningar."
-
-#: ../data/glade/playlist_display.glade.h:7
-#: ../plugins/playlist_display/plugin.c:307
-#: ../plugins/playlist_display/playlist_display.glade.h:7
-#, fuzzy
-msgid "Playlist Display"
-msgstr "Spellistor"
-
-#: ../data/glade/track_display.glade.h:1
-#: ../plugins/track_display/track_display.glade.h:1
-msgid "<b>Available Columns</b>"
-msgstr "<b>Tillgängliga kolumner</b>"
-
-#: ../data/glade/track_display.glade.h:2
-#: ../plugins/track_display/track_display.glade.h:2
-msgid "<b>Displayed Columns</b>"
-msgstr "<b>Visade kolumner</b>"
-
-#: ../data/glade/track_display.glade.h:3
-#: ../data/glade/sorttab_display.glade.h:16
-#: ../plugins/sorttab_display/sorttab_display.glade.h:16
-#: ../plugins/track_display/track_display.glade.h:3
-msgid "<b>Ignore Frequent Words</b>"
-msgstr "<b>Ignorera vanliga ord</b>"
-
-#: ../data/glade/track_display.glade.h:4
-#: ../plugins/track_display/track_display.glade.h:4
-msgid "<b>Preferred Track Execution Command</b>"
-msgstr ""
-
-#: ../data/glade/track_display.glade.h:5
-#: ../plugins/track_display/track_display.glade.h:5
-msgid "<span weight='bold' size='larger'>No playlist selected</span>"
-msgstr "<span weight='bold' size='larger'>Ingen spellista markerad</span>"
-
-#: ../data/glade/track_display.glade.h:6
-#: ../plugins/track_display/track_display.glade.h:6
-msgid "Add Column"
-msgstr "Lägg till kolumn"
-
-#: ../data/glade/track_display.glade.h:7
-#: ../plugins/track_display/track_display.glade.h:7
-msgid "Expand columns beyond the track list width"
-msgstr "Expandera kolumner bortom spårlistans bredd"
-
-#: ../data/glade/track_display.glade.h:8
-#: ../data/glade/sorttab_display.glade.h:35
-#: ../plugins/sorttab_display/sorttab_display.glade.h:35
-#: ../plugins/track_display/track_display.glade.h:8
-msgid "Ignore these words when at the beginning of the following fields:"
-msgstr "Ignorera dessa ord i början av följande fält:"
-
-#: ../data/glade/track_display.glade.h:9 ../plugins/track_display/plugin.c:112
-#: ../plugins/track_display/track_display.glade.h:9
-#, fuzzy
-msgid "Track Display"
-msgstr "Visa"
-
-#: ../data/glade/coverweb.glade.h:1 ../plugins/coverweb/coverweb.glade.h:1
-#, fuzzy
-msgid "<b>Bookmarks</b>"
-msgstr "<b>Taggar</b>"
-
-#: ../data/glade/coverweb.glade.h:2 ../plugins/coverweb/coverweb.glade.h:2
-#, fuzzy
-msgid "Cover Browser"
-msgstr "Bläddra"
-
-#: ../data/glade/sorttab_display.glade.h:1
-#: ../plugins/sorttab_display/sorttab_display.glade.h:1
-msgid "    "
-msgstr "    "
-
-#: ../data/glade/sorttab_display.glade.h:2
-#: ../plugins/sorttab_display/sorttab_display.glade.h:2
-msgid " <= cts <= "
-msgstr " <= antal <= "
-
-#: ../data/glade/sorttab_display.glade.h:3
-#: ../plugins/sorttab_display/sorttab_display.glade.h:3
-msgid ""
-"'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when "
-"finished."
-msgstr ""
-"'ÅÅÅÅ-MM-DD TT:MM < d < ÅÅÅÅ-MM-DD TT:MM' eller liknande. Tryck på "
-"returtangenten när du är klar."
-
-#: ../data/glade/sorttab_display.glade.h:4
-#: ../plugins/sorttab_display/sorttab_display.glade.h:4
-msgid "0"
-msgstr "0"
-
-#: ../data/glade/sorttab_display.glade.h:5
-#: ../plugins/sorttab_display/sorttab_display.glade.h:5
-msgid "1"
-msgstr "1"
-
-#: ../data/glade/sorttab_display.glade.h:6
-#: ../plugins/sorttab_display/sorttab_display.glade.h:6
-msgid "2"
-msgstr "2"
-
-#: ../data/glade/sorttab_display.glade.h:7
-#: ../plugins/sorttab_display/sorttab_display.glade.h:7
-msgid "3"
-msgstr "3"
-
-#: ../data/glade/sorttab_display.glade.h:8
-#: ../plugins/sorttab_display/sorttab_display.glade.h:8
-msgid "4"
-msgstr "4"
-
-#: ../data/glade/sorttab_display.glade.h:9
-#: ../plugins/sorttab_display/sorttab_display.glade.h:9
-msgid "5"
-msgstr "5"
-
-#: ../data/glade/sorttab_display.glade.h:10
-#: ../plugins/sorttab_display/sorttab_display.glade.h:10
-msgid ":"
-msgstr ":"
-
-#: ../data/glade/sorttab_display.glade.h:12
-#: ../plugins/sorttab_display/sorttab_display.glade.h:12
-msgid "<b>Auto Store</b>"
-msgstr "<b>Lagra automatiskt</b>"
-
-#: ../data/glade/sorttab_display.glade.h:14
-#: ../plugins/sorttab_display/sorttab_display.glade.h:14
-#, fuzzy
-msgid "<b>Filter Sort Order</b>"
-msgstr "<b>Sorteringsordning</b>"
-
-#: ../data/glade/sorttab_display.glade.h:15
-#: ../plugins/sorttab_display/sorttab_display.glade.h:15
-msgid "<b>Filter Tabs</b>"
-msgstr "<b>Filtreringsflikar</b>"
-
-#: ../data/glade/sorttab_display.glade.h:17
-#: ../plugins/sorttab_display/sorttab_display.glade.h:17
-msgid "<b>Lower Margin</b>"
-msgstr "<b>Under gräns</b>"
-
-#: ../data/glade/sorttab_display.glade.h:19
-#: ../plugins/sorttab_display/sorttab_display.glade.h:19
-msgid "<b>Sort Order</b>"
-msgstr "<b>Sorteringsordning</b>"
-
-#: ../data/glade/sorttab_display.glade.h:20
-#: ../plugins/sorttab_display/sorttab_display.glade.h:20
-msgid "<b>Upper Margin</b>"
-msgstr "<b>Övre gräns</b>"
-
-#: ../data/glade/sorttab_display.glade.h:21
-#: ../plugins/sorttab_display/sorttab_display.glade.h:21
-msgid ""
-"<span weight=\"bold\" size=\"larger\">Please specify a time interval</span>"
-msgstr "<span weight=\"bold\" size=\"larger\">Ange ett tidsintervall</span>"
-
-#: ../data/glade/sorttab_display.glade.h:22
-#: ../plugins/sorttab_display/sorttab_display.glade.h:22
-msgid "Added:"
-msgstr "Tillagd:"
-
-#: ../data/glade/sorttab_display.glade.h:23
-#: ../plugins/sorttab_display/sorttab_display.glade.h:23
-msgid "All (AND)"
-msgstr "Alla (och)"
-
-#: ../data/glade/sorttab_display.glade.h:24
-#: ../plugins/sorttab_display/sorttab_display.glade.h:24
-msgid "Any (OR)"
-msgstr "Någon (eller)"
-
-#: ../data/glade/sorttab_display.glade.h:25
-#: ../plugins/sorttab_display/sorttab_display.glade.h:25
-msgid ""
-"Automatically start displaying tracks that match the criteria entered above. "
-"If not selected, you must press 'Display' to start displaying."
-msgstr ""
-"Börja automatiskt visa spår som motsvarar villkoren som skrivs in ovan. Om "
-"inte markerad, måste du klicka på 'Visa' för att börja visningen."
-
-#: ../data/glade/sorttab_display.glade.h:26
-#: ../plugins/sorttab_display/sorttab_display.glade.h:26
-msgid "Calendar"
-msgstr "Kalender"
-
-#: ../data/glade/sorttab_display.glade.h:27
-#: ../plugins/sorttab_display/sorttab_display.glade.h:27
-msgid "Case sensitive sorting"
-msgstr "Skiftlägeskänslig sortering"
-
-#: ../data/glade/sorttab_display.glade.h:29
-#: ../plugins/sorttab_display/sorttab_display.glade.h:29
-msgid "Category:"
-msgstr "Kategori:"
-
-#: ../data/glade/sorttab_display.glade.h:30
-#: ../plugins/sorttab_display/sorttab_display.glade.h:30
-msgid "Display tracks that match the criteria entered above."
-msgstr "Visa spår som uppfyller ovan inskrivna villkor."
-
-#: ../data/glade/sorttab_display.glade.h:31
-#: ../plugins/sorttab_display/sorttab_display.glade.h:31
-msgid "Filter tab:"
-msgstr "Filtreringsflik:"
-
-#: ../data/glade/sorttab_display.glade.h:32
-#: ../plugins/sorttab_display/sorttab_display.glade.h:32
-msgid "Filter tabs"
-msgstr "Filtreringsflikar"
-
-#: ../data/glade/sorttab_display.glade.h:33
-#: ../plugins/sorttab_display/sorttab_display.glade.h:33
-msgid "Group artist filter tab by compilation CDs"
-msgstr "Gruppera artister i filtreringsflik enligt samlingsskivor"
-
-#: ../data/glade/sorttab_display.glade.h:36
-#: ../plugins/sorttab_display/sorttab_display.glade.h:36
-msgid ""
-"In order to save the displayed track order to the iPod choose 'Save "
-"Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
-msgstr ""
-"För att lagra visad spårordning i iPod måste du välja 'Spara visad "
-"spårordning' i menyn 'Redigera' eller välja 'Lagra automatiskt' nedan."
-
-#: ../data/glade/sorttab_display.glade.h:37
-#: ../plugins/sorttab_display/sorttab_display.glade.h:37
-msgid ""
-"Last Played\n"
-"Last Modified\n"
-"Added\n"
-msgstr ""
-"Senast spelat\n"
-"Senast ändrad\n"
-"Tillagd\n"
-
-#: ../data/glade/sorttab_display.glade.h:41
-#: ../plugins/sorttab_display/sorttab_display.glade.h:41
-msgid "Logic:"
-msgstr "Logiskt:"
-
-#: ../data/glade/sorttab_display.glade.h:42
-#: ../plugins/sorttab_display/sorttab_display.glade.h:42
-msgid "Modified:"
-msgstr "Ändrad:"
-
-#: ../data/glade/sorttab_display.glade.h:43
-#: ../plugins/sorttab_display/sorttab_display.glade.h:43
-msgid "No lower margin"
-msgstr "Ingen undre gräns"
-
-#: ../data/glade/sorttab_display.glade.h:44
-#: ../plugins/sorttab_display/sorttab_display.glade.h:44
-msgid "No upper margin"
-msgstr "Ingen övre gräns"
-
-#: ../data/glade/sorttab_display.glade.h:45
-#: ../plugins/sorttab_display/sorttab_display.glade.h:45
-msgid "Number of filter tabs:"
-msgstr "Antal filtreringsflikar:"
-
-#: ../data/glade/sorttab_display.glade.h:46
-#: ../plugins/sorttab_display/sorttab_display.glade.h:46
-msgid "Playcount:"
-msgstr "Spelningsantal:"
-
-#: ../data/glade/sorttab_display.glade.h:47
-#: ../plugins/sorttab_display/sorttab_display.glade.h:47
-msgid "Played:"
-msgstr "Spelad:"
-
-#: ../data/glade/sorttab_display.glade.h:49
-#: ../plugins/sorttab_display/sorttab_display.glade.h:49
-msgid "Please refer to the notice below."
-msgstr "Se anmärkningen nedan."
-
-#: ../data/glade/sorttab_display.glade.h:50
-#: ../plugins/sorttab_display/sorttab_display.glade.h:50
-msgid "Rating:"
-msgstr "Betyg:"
-
-#: ../data/glade/sorttab_display.glade.h:51
-#: ../plugins/sorttab_display/sorttab_display.glade.h:51
-msgid "Select '-1' for no upper limit."
-msgstr "Välj '-1' för ingen övre gräns."
-
-#: ../data/glade/sorttab_display.glade.h:52
-#: ../plugins/sorttab_display/sorttab_display.glade.h:52
-msgid "Select '0' for no lower limit."
-msgstr "Välj '0' för ingen undre gräns."
-
-#: ../data/glade/sorttab_display.glade.h:53
-#: ../plugins/sorttab_display/sorttab_display.glade.h:53
-msgid "Sort tracks according to: "
-msgstr "Sortera spår enligt: "
-
-#: ../data/glade/sorttab_display.glade.h:54
-#: ../plugins/sorttab_display/sorttab_display.glade.h:54
-msgid "Sorting Options"
-msgstr "Sorteringsalternativ"
-
-#: ../data/glade/sorttab_display.glade.h:55
-#: ../plugins/sorttab_display/sorttab_display.glade.h:55
-msgid "Specify interval"
-msgstr "Ange intervall"
-
-#: ../data/glade/sorttab_display.glade.h:56
-#: ../plugins/sorttab_display/sorttab_display.glade.h:56
-msgid "Start display automatically"
-msgstr "Börja visa automatiskt"
-
-#: ../data/glade/sorttab_display.glade.h:57
-#: ../plugins/sorttab_display/sorttab_display.glade.h:57
-msgid "Time:"
-msgstr "Tid:"
-
-#: ../data/glade/sorttab_display.glade.h:58
-#: ../plugins/sorttab_display/sorttab_display.glade.h:58
-#, fuzzy
-msgid "Track Filter"
-msgstr "Spårnummer"
-
-#: ../data/glade/sorttab_display.glade.h:59
-#: ../plugins/sorttab_display/sorttab_display.glade.h:59
-msgid "Tracks"
-msgstr "Spår"
-
-#: ../data/glade/sorttab_display.glade.h:60
-#: ../plugins/sorttab_display/sorttab_display.glade.h:60
-msgid "_Display"
-msgstr "_Visa"
-
-#: ../data/glade/sorttab_display.glade.h:61
-#: ../plugins/details_editor/details.c:1201
-#: ../plugins/sorttab_display/sorttab_display.glade.h:61
-msgid "n/a"
-msgstr "ej tillgänglig"
-
-#: ../data/glade/sorttab_display.glade.h:62
-#: ../plugins/sorttab_display/sorttab_display.glade.h:62
-msgid "special_sorttab -- Don't translate!"
-msgstr "special_sorttab -- Don't translate!"
-
-#: ../data/glade/details_editor.glade.h:1
-#: ../plugins/details_editor/details_editor.glade.h:1
-msgid "(Checked)"
-msgstr "(Kontrollerad)"
-
-#: ../data/glade/details_editor.glade.h:2
-#: ../plugins/details_editor/details_editor.glade.h:2
-msgid ""
-"Change all tracks\n"
-"simultaneously"
-msgstr ""
-"Ändra alla spår\n"
-"samtidigt"
-
-#: ../data/glade/details_editor.glade.h:4
-#: ../plugins/details_editor/details_editor.glade.h:4
-msgid "Cover"
-msgstr "Omslag"
-
-#: ../data/glade/details_editor.glade.h:5
-#: ../plugins/details_editor/details_editor.glade.h:5
-msgid "Details"
-msgstr "Detaljinformation"
-
-#: ../data/glade/details_editor.glade.h:6
-#: ../plugins/details_editor/details_editor.glade.h:6
-msgid ""
-"If you check this, information (cover art and meta information) changed for "
-"this track will be copied to all other selected tracks as well. Use with "
-"care."
-msgstr ""
-"Om du markerar detta, kopieras information (omslagsbild och metainformation) "
-"som ändrats för spåret också till alla andra markerade spår. Använd med "
-"försiktighet."
-
-#: ../data/glade/details_editor.glade.h:7
-#: ../plugins/details_editor/details_editor.glade.h:7
-msgid "Set Cover Art from _File"
-msgstr "Ange omslagsbild från _fil"
-
-#: ../data/glade/details_editor.glade.h:8
-#: ../plugins/details_editor/details_editor.glade.h:8
-msgid "Undo _Track"
-msgstr "Å_ngra spår"
-
-#: ../data/glade/details_editor.glade.h:9
-#: ../plugins/details_editor/details_editor.glade.h:9
-msgid "_General"
-msgstr "_Allmänt"
-
-#: ../data/glade/details_editor.glade.h:10
-#: ../plugins/details_editor/details_editor.glade.h:10
-msgid "_Lyrics"
-msgstr "_Sångtexter"
-
-#: ../data/glade/details_editor.glade.h:11
-#: ../plugins/details_editor/details_editor.glade.h:11
-msgid "_Misc."
-msgstr "_Diverse"
-
-#: ../data/glade/details_editor.glade.h:12
-#: ../plugins/details_editor/details_editor.glade.h:12
-msgid "_Podcasts"
-msgstr "_Podradiosändningar"
-
-#: ../data/glade/details_editor.glade.h:13
-#: ../plugins/details_editor/details_editor.glade.h:13
-msgid "_Remove Cover Art"
-msgstr "_Ta bort omslagsbild"
-
-#: ../data/glade/details_editor.glade.h:14
-#: ../plugins/details_editor/details_editor.glade.h:14
-msgid "_Sorting"
-msgstr "S_ortera"
-
-#: ../data/glade/details_editor.glade.h:15
-#: ../plugins/details_editor/details_editor.glade.h:15
-msgid "_Undo All"
-msgstr "Å_ngra alla"
-
-#: ../data/glade/details_editor.glade.h:16
-#: ../plugins/details_editor/details_editor.glade.h:16
-msgid "_Video"
-msgstr "_Video"
-
 #. Action name
 #. Stock icon
 #: ../plugins/details_editor/plugin.c:48 ../libgtkpod/context_menus.c:294
@@ -988,6 +175,11 @@ msgstr "%s (bilddata förstörd eller oläsbar)"
 msgid "Please report unknown mediatype %x\n"
 msgstr "Rapportera gärna okänd mediatyp %x\n"
 
+#: ../plugins/details_editor/details.c:1201
+#: ../plugins/sorttab_display/sorttab_display.glade.h:61
+msgid "n/a"
+msgstr "ej tillgänglig"
+
 #: ../plugins/details_editor/details.c:1252
 msgid "<b>n/a</b>"
 msgstr "<b>ej tillgänglig</b>"
@@ -1003,6 +195,11 @@ msgstr ""
 #, fuzzy
 msgid "Tracks in details editor have been modified."
 msgstr "Datum och tid då spåret senast ändrades"
+
+#: ../plugins/details_editor/details.c:1434
+#, fuzzy
+msgid "  Edit Track Details"
+msgstr "Redigera detaljinformation om spår"
 
 #: ../plugins/details_editor/details.c:1696
 #, c-format
@@ -1054,6 +251,76 @@ msgstr "Byt namn"
 #: ../plugins/cover_display/fetchcover.c:370
 msgid "Abort"
 msgstr "Avbryt"
+
+#: ../plugins/details_editor/details_editor.glade.h:1
+msgid "(Checked)"
+msgstr "(Kontrollerad)"
+
+#: ../plugins/details_editor/details_editor.glade.h:2
+msgid ""
+"Change all tracks\n"
+"simultaneously"
+msgstr ""
+"Ändra alla spår\n"
+"samtidigt"
+
+#: ../plugins/details_editor/details_editor.glade.h:4
+msgid "Cover"
+msgstr "Omslag"
+
+#: ../plugins/details_editor/details_editor.glade.h:5
+msgid "Details"
+msgstr "Detaljinformation"
+
+#: ../plugins/details_editor/details_editor.glade.h:6
+msgid ""
+"If you check this, information (cover art and meta information) changed for "
+"this track will be copied to all other selected tracks as well. Use with "
+"care."
+msgstr ""
+"Om du markerar detta, kopieras information (omslagsbild och metainformation) "
+"som ändrats för spåret också till alla andra markerade spår. Använd med "
+"försiktighet."
+
+#: ../plugins/details_editor/details_editor.glade.h:7
+msgid "Set Cover Art from _File"
+msgstr "Ange omslagsbild från _fil"
+
+#: ../plugins/details_editor/details_editor.glade.h:8
+msgid "Undo _Track"
+msgstr "Å_ngra spår"
+
+#: ../plugins/details_editor/details_editor.glade.h:9
+msgid "_General"
+msgstr "_Allmänt"
+
+#: ../plugins/details_editor/details_editor.glade.h:10
+msgid "_Lyrics"
+msgstr "_Sångtexter"
+
+#: ../plugins/details_editor/details_editor.glade.h:11
+msgid "_Misc."
+msgstr "_Diverse"
+
+#: ../plugins/details_editor/details_editor.glade.h:12
+msgid "_Podcasts"
+msgstr "_Podradiosändningar"
+
+#: ../plugins/details_editor/details_editor.glade.h:13
+msgid "_Remove Cover Art"
+msgstr "_Ta bort omslagsbild"
+
+#: ../plugins/details_editor/details_editor.glade.h:14
+msgid "_Sorting"
+msgstr "S_ortera"
+
+#: ../plugins/details_editor/details_editor.glade.h:15
+msgid "_Undo All"
+msgstr "Å_ngra alla"
+
+#: ../plugins/details_editor/details_editor.glade.h:16
+msgid "_Video"
+msgstr "_Video"
 
 #: ../plugins/filetype_m4a/mp4file.c:543 ../plugins/filetype_mp4/mp4file.c:543
 #, fuzzy, c-format
@@ -1110,11 +377,15 @@ msgstr "Kunde inte öppna '%s' för skrivning, eller är filen inte en mp4-fil.\
 msgid "M4A audio file type"
 msgstr ""
 
-#: ../plugins/coverweb/plugin.c:75 ../plugins/media_player/plugin.c:66
-#: ../plugins/cover_display/plugin.c:74
+#: ../plugins/coverweb/plugin.c:75 ../plugins/cover_display/plugin.c:74
 #, fuzzy
 msgid "Cover Display"
 msgstr "<b>Visning av omslag</b>"
+
+#: ../plugins/coverweb/plugin.c:94
+#, fuzzy
+msgid "  Cover Browser"
+msgstr "Bläddra"
 
 #: ../plugins/coverweb/coverweb_preferences.c:134
 msgid "Bookmark Url"
@@ -1123,6 +394,16 @@ msgstr ""
 #: ../plugins/coverweb/coverweb_preferences.c:134
 msgid "Please enter the full url of the bookmark"
 msgstr ""
+
+#: ../plugins/coverweb/coverweb.glade.h:1
+#, fuzzy
+msgid "<b>Bookmarks</b>"
+msgstr "<b>Taggar</b>"
+
+#: ../plugins/coverweb/coverweb.glade.h:2
+#, fuzzy
+msgid "Cover Browser"
+msgstr "Bläddra"
 
 #: ../plugins/exporter/plugin.c:49
 #, fuzzy
@@ -1278,8 +559,9 @@ msgstr "Skapa spellistefil"
 
 #. Action name
 #. Stock icon
-#: ../plugins/info_display/plugin.c:47
-msgid "_Info Window"
+#: ../plugins/info_display/plugin.c:48
+#, fuzzy
+msgid "_Info View"
 msgstr "_Informationsfönster"
 
 #: ../plugins/info_display/plugin.c:64
@@ -1287,7 +569,7 @@ msgstr "_Informationsfönster"
 msgid "Info Display"
 msgstr "Visa"
 
-#: ../plugins/info_display/infodlg.c:57
+#: ../plugins/info_display/infoview.c:49
 msgid ""
 "Total\n"
 "(iPod)"
@@ -1295,7 +577,7 @@ msgstr ""
 "Totalt\n"
 "(iPod)"
 
-#: ../plugins/info_display/infodlg.c:58
+#: ../plugins/info_display/infoview.c:49
 msgid ""
 "Total\n"
 "(local)"
@@ -1303,7 +585,7 @@ msgstr ""
 "Totalt\n"
 "(lokalt)"
 
-#: ../plugins/info_display/infodlg.c:59
+#: ../plugins/info_display/infoview.c:49
 msgid ""
 "Selected\n"
 "Playlist"
@@ -1311,7 +593,7 @@ msgstr ""
 "Markerad\n"
 "spellista"
 
-#: ../plugins/info_display/infodlg.c:60
+#: ../plugins/info_display/infoview.c:49
 msgid ""
 "Displayed\n"
 "Tracks"
@@ -1319,7 +601,7 @@ msgstr ""
 "Visade\n"
 "spår"
 
-#: ../plugins/info_display/infodlg.c:61
+#: ../plugins/info_display/infoview.c:50
 msgid ""
 "Selected\n"
 "Tracks"
@@ -1327,69 +609,73 @@ msgstr ""
 "Markerade\n"
 "spår"
 
-#: ../plugins/info_display/infodlg.c:81
+#: ../plugins/info_display/infoview.c:58
 msgid "Number of tracks"
 msgstr "Antal spår"
 
-#: ../plugins/info_display/infodlg.c:82 ../libgtkpod/gp_spl.c:89
+#: ../plugins/info_display/infoview.c:58 ../libgtkpod/gp_spl.c:89
 msgid "Play time"
 msgstr "Speltid"
 
-#: ../plugins/info_display/infodlg.c:83
+#: ../plugins/info_display/infoview.c:58
 msgid "File size"
 msgstr "Filstorlek"
 
-#: ../plugins/info_display/infodlg.c:84
+#: ../plugins/info_display/infoview.c:58
 msgid "Number of playlists"
 msgstr "Antal spellistor"
 
-#: ../plugins/info_display/infodlg.c:85
+#: ../plugins/info_display/infoview.c:58
 msgid "Deleted tracks"
 msgstr "Borttagna spår"
 
-#: ../plugins/info_display/infodlg.c:86
+#: ../plugins/info_display/infoview.c:59
 msgid "File size (deleted)"
 msgstr "Filstorlek (borttagna)"
 
-#: ../plugins/info_display/infodlg.c:87
+#: ../plugins/info_display/infoview.c:59
 msgid "Non-transferred tracks"
 msgstr "Spår som inte överförts"
 
-#: ../plugins/info_display/infodlg.c:88
+#: ../plugins/info_display/infoview.c:59
 msgid "File size (non-transferred)"
 msgstr "Filstorlek (inte överförda)"
 
-#: ../plugins/info_display/infodlg.c:89
+#: ../plugins/info_display/infoview.c:60
 msgid "Effective free space"
 msgstr "Verkligt ledigt utrymme"
 
-#: ../plugins/info_display/infodlg.c:196 ../plugins/info_display/info.c:340
+#: ../plugins/info_display/infoview.c:144
 msgid "n/c"
 msgstr "okänt"
 
-#: ../plugins/info_display/infodlg.c:199 ../plugins/info_display/info.c:344
+#: ../plugins/info_display/infoview.c:147
 msgid "offline"
 msgstr "nerkopplad"
 
-#: ../plugins/info_display/info.c:457
+#: ../plugins/info_display/infoview.c:206
+#, fuzzy
+msgid "  Repository Information"
+msgstr "Arkivalternativ"
+
+#: ../plugins/info_display/info.c:372
 msgid "B"
 msgstr "byte"
 
-#: ../plugins/info_display/info.c:457
+#: ../plugins/info_display/info.c:372
 msgid "kB"
 msgstr "Kibyte"
 
-#: ../plugins/info_display/info.c:457 ../libgtkpod/gp_spl.c:72
+#: ../plugins/info_display/info.c:372 ../libgtkpod/gp_spl.c:72
 #: ../libgtkpod/gp_spl.c:166
 msgid "MB"
 msgstr "Mibyte"
 
-#: ../plugins/info_display/info.c:457
-#: ../plugins/core_preferences/core_prefs.xml.h:64 ../libgtkpod/gp_spl.c:169
+#: ../plugins/info_display/info.c:372 ../libgtkpod/gp_spl.c:169
 msgid "GB"
 msgstr "Gibyte"
 
-#: ../plugins/info_display/info.c:457
+#: ../plugins/info_display/info.c:372
 msgid "TB"
 msgstr "Tibyte"
 
@@ -1425,6 +711,11 @@ msgstr "_Fler filtreringsflikar"
 #, fuzzy
 msgid "Fewer Filter Tabs"
 msgstr "_Färre filtreringsflikar"
+
+#: ../plugins/sorttab_display/plugin.c:187
+#, fuzzy
+msgid "  Track Filter"
+msgstr "Spårnummer"
 
 #: ../plugins/sorttab_display/sorttab_display_actions.c:68
 #: ../plugins/sorttab_display/sorttab_display_actions.c:113
@@ -1476,21 +767,18 @@ msgstr "Alla"
 msgid "Compilations"
 msgstr "Samlingar"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2576
-#: ../plugins/core_preferences/core_prefs.xml.h:29 ../libgtkpod/gp_spl.c:80
+#: ../plugins/sorttab_display/display_sorttabs.c:2576 ../libgtkpod/gp_spl.c:80
 #: ../libgtkpod/misc_conversion.c:62
 msgid "Artist"
 msgstr "Artist"
 
 #. 0
-#: ../plugins/sorttab_display/display_sorttabs.c:2579
-#: ../plugins/core_preferences/core_prefs.xml.h:24 ../libgtkpod/gp_spl.c:79
+#: ../plugins/sorttab_display/display_sorttabs.c:2579 ../libgtkpod/gp_spl.c:79
 #: ../libgtkpod/misc_conversion.c:61
 msgid "Album"
 msgstr "Album"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2582
-#: ../plugins/core_preferences/core_prefs.xml.h:65 ../libgtkpod/gp_spl.c:84
+#: ../plugins/sorttab_display/display_sorttabs.c:2582 ../libgtkpod/gp_spl.c:84
 #: ../libgtkpod/misc_conversion.c:64
 msgid "Genre"
 msgstr "Genre"
@@ -1499,8 +787,7 @@ msgstr "Genre"
 msgid "Comp."
 msgstr "Komp."
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2588
-#: ../plugins/core_preferences/core_prefs.xml.h:90 ../libgtkpod/gp_spl.c:78
+#: ../plugins/sorttab_display/display_sorttabs.c:2588 ../libgtkpod/gp_spl.c:78
 #: ../libgtkpod/misc_conversion.c:63
 msgid "Title"
 msgstr "Titel"
@@ -1556,6 +843,272 @@ msgstr "Kopiera markerade spår till..."
 msgid "Date format error: unrecognized character: '%s'\n"
 msgstr "Fel i datumformat: tecknet känns inte igen: '%s'\n"
 
+#: ../plugins/sorttab_display/sorttab_display.glade.h:1
+msgid "    "
+msgstr "    "
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:2
+msgid " <= cts <= "
+msgstr " <= antal <= "
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:3
+msgid ""
+"'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when "
+"finished."
+msgstr ""
+"'ÅÅÅÅ-MM-DD TT:MM < d < ÅÅÅÅ-MM-DD TT:MM' eller liknande. Tryck på "
+"returtangenten när du är klar."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:4
+msgid "0"
+msgstr "0"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:5
+msgid "1"
+msgstr "1"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:6
+msgid "2"
+msgstr "2"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:7
+msgid "3"
+msgstr "3"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:8
+msgid "4"
+msgstr "4"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:9
+msgid "5"
+msgstr "5"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:10
+msgid ":"
+msgstr ":"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:11
+#: ../plugins/playlist_display/playlist_display.glade.h:1
+msgid "<b>Ascending</b>"
+msgstr "<b>Stigande</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:12
+msgid "<b>Auto Store</b>"
+msgstr "<b>Lagra automatiskt</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:13
+#: ../plugins/playlist_display/playlist_display.glade.h:2
+msgid "<b>Descending</b>"
+msgstr "<b>Fallande</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:14
+#, fuzzy
+msgid "<b>Filter Sort Order</b>"
+msgstr "<b>Sorteringsordning</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:15
+msgid "<b>Filter Tabs</b>"
+msgstr "<b>Filtreringsflikar</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:16
+#: ../plugins/track_display/track_display.glade.h:3
+msgid "<b>Ignore Frequent Words</b>"
+msgstr "<b>Ignorera vanliga ord</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:17
+msgid "<b>Lower Margin</b>"
+msgstr "<b>Under gräns</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:18
+#: ../plugins/playlist_display/playlist_display.glade.h:3
+msgid "<b>None</b>"
+msgstr "<b>Ingen</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:19
+msgid "<b>Sort Order</b>"
+msgstr "<b>Sorteringsordning</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:20
+msgid "<b>Upper Margin</b>"
+msgstr "<b>Övre gräns</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:21
+msgid ""
+"<span weight=\"bold\" size=\"larger\">Please specify a time interval</span>"
+msgstr "<span weight=\"bold\" size=\"larger\">Ange ett tidsintervall</span>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:22
+msgid "Added:"
+msgstr "Tillagd:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:23
+msgid "All (AND)"
+msgstr "Alla (och)"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:24
+msgid "Any (OR)"
+msgstr "Någon (eller)"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:25
+msgid ""
+"Automatically start displaying tracks that match the criteria entered above. "
+"If not selected, you must press 'Display' to start displaying."
+msgstr ""
+"Börja automatiskt visa spår som motsvarar villkoren som skrivs in ovan. Om "
+"inte markerad, måste du klicka på 'Visa' för att börja visningen."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:26
+msgid "Calendar"
+msgstr "Kalender"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:27
+msgid "Case sensitive sorting"
+msgstr "Skiftlägeskänslig sortering"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:28
+#: ../plugins/playlist_display/playlist_display.glade.h:5
+msgid "Case sensitive sorting (setting affects all sorting)"
+msgstr ""
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:29
+msgid "Category:"
+msgstr "Kategori:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:30
+msgid "Display tracks that match the criteria entered above."
+msgstr "Visa spår som uppfyller ovan inskrivna villkor."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:31
+msgid "Filter tab:"
+msgstr "Filtreringsflik:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:32
+msgid "Filter tabs"
+msgstr "Filtreringsflikar"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:33
+msgid "Group artist filter tab by compilation CDs"
+msgstr "Gruppera artister i filtreringsflik enligt samlingsskivor"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:34
+#: ../plugins/playlist_display/playlist_display.glade.h:6
+msgid ""
+"If checked, sorting will be case sensitive. Please note that case sensitive "
+"sorting will not work well with most charsets."
+msgstr ""
+"Om markerat är sorteringen skiftlägeskänslig. Observera att "
+"skiftlägeskänslig sortering inte fungerar bra med de flesta teckenkodningar."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:35
+#: ../plugins/track_display/track_display.glade.h:8
+msgid "Ignore these words when at the beginning of the following fields:"
+msgstr "Ignorera dessa ord i början av följande fält:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:36
+msgid ""
+"In order to save the displayed track order to the iPod choose 'Save "
+"Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
+msgstr ""
+"För att lagra visad spårordning i iPod måste du välja 'Spara visad "
+"spårordning' i menyn 'Redigera' eller välja 'Lagra automatiskt' nedan."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:37
+msgid ""
+"Last Played\n"
+"Last Modified\n"
+"Added\n"
+msgstr ""
+"Senast spelat\n"
+"Senast ändrad\n"
+"Tillagd\n"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:41
+msgid "Logic:"
+msgstr "Logiskt:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:42
+msgid "Modified:"
+msgstr "Ändrad:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:43
+msgid "No lower margin"
+msgstr "Ingen undre gräns"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:44
+msgid "No upper margin"
+msgstr "Ingen övre gräns"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:45
+msgid "Number of filter tabs:"
+msgstr "Antal filtreringsflikar:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:46
+msgid "Playcount:"
+msgstr "Spelningsantal:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:47
+msgid "Played:"
+msgstr "Spelad:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:48
+#: ../plugins/repository_editor/repository_editor.glade.h:29
+#: ../plugins/playlist_display/display_playlists.c:1851
+msgid "Playlists"
+msgstr "Spellistor"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:49
+msgid "Please refer to the notice below."
+msgstr "Se anmärkningen nedan."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:50
+msgid "Rating:"
+msgstr "Betyg:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:51
+msgid "Select '-1' for no upper limit."
+msgstr "Välj '-1' för ingen övre gräns."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:52
+msgid "Select '0' for no lower limit."
+msgstr "Välj '0' för ingen undre gräns."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:53
+msgid "Sort tracks according to: "
+msgstr "Sortera spår enligt: "
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:54
+msgid "Sorting Options"
+msgstr "Sorteringsalternativ"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:55
+msgid "Specify interval"
+msgstr "Ange intervall"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:56
+msgid "Start display automatically"
+msgstr "Börja visa automatiskt"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:57
+msgid "Time:"
+msgstr "Tid:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:58
+#, fuzzy
+msgid "Track Filter"
+msgstr "Spårnummer"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:59
+msgid "Tracks"
+msgstr "Spår"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:60
+msgid "_Display"
+msgstr "_Visa"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:62
+msgid "special_sorttab -- Don't translate!"
+msgstr "special_sorttab -- Don't translate!"
+
 #: ../plugins/track_display/track_display_preferences.c:234
 msgid "New Word to Ignore"
 msgstr ""
@@ -1581,6 +1134,17 @@ msgstr "Markerade spår från iPod"
 #, fuzzy
 msgid "Selected Tracks"
 msgstr "Markerade s_pår"
+
+#: ../plugins/track_display/plugin.c:112
+#: ../plugins/track_display/track_display.glade.h:9
+#, fuzzy
+msgid "Track Display"
+msgstr "Visa"
+
+#: ../plugins/track_display/plugin.c:136
+#, fuzzy
+msgid "  Playlist Tracks"
+msgstr "Spellistor"
 
 #: ../plugins/track_display/track_display_context_menu.c:51
 #, fuzzy
@@ -1674,6 +1238,30 @@ msgstr "Vol."
 msgid "Sndchk."
 msgstr "Ljudkontr."
 
+#: ../plugins/track_display/track_display.glade.h:1
+msgid "<b>Available Columns</b>"
+msgstr "<b>Tillgängliga kolumner</b>"
+
+#: ../plugins/track_display/track_display.glade.h:2
+msgid "<b>Displayed Columns</b>"
+msgstr "<b>Visade kolumner</b>"
+
+#: ../plugins/track_display/track_display.glade.h:4
+msgid "<b>Preferred Track Execution Command</b>"
+msgstr ""
+
+#: ../plugins/track_display/track_display.glade.h:5
+msgid "<span weight='bold' size='larger'>No playlist selected</span>"
+msgstr "<span weight='bold' size='larger'>Ingen spellista markerad</span>"
+
+#: ../plugins/track_display/track_display.glade.h:6
+msgid "Add Column"
+msgstr "Lägg till kolumn"
+
+#: ../plugins/track_display/track_display.glade.h:7
+msgid "Expand columns beyond the track list width"
+msgstr "Expandera kolumner bortom spårlistans bredd"
+
 #: ../plugins/filetype_wav/plugin.c:78
 msgid "Wav audio file type"
 msgstr ""
@@ -1706,6 +1294,11 @@ msgstr "Ta bort foto"
 #: ../plugins/photo_editor/photo_editor_context_menu.c:78
 msgid "Rename Album"
 msgstr "Byt namn på album"
+
+#: ../plugins/photo_editor/display_photo.c:163
+#, fuzzy
+msgid "  iPod Photo Editor"
+msgstr "Fotofönster"
 
 #: ../plugins/photo_editor/display_photo.c:225
 #: ../plugins/photo_editor/display_photo.c:1483
@@ -1789,6 +1382,43 @@ msgstr "Lägg till en katalog med bilder på iPod. Markera katalogen."
 msgid "<No members>\n"
 msgstr "<Inga medlemmar>\n"
 
+#: ../plugins/photo_editor/photo_editor.glade.h:1
+msgid "Add Images from a Directory"
+msgstr "Lägg till bilder från en katalog"
+
+#: ../plugins/photo_editor/photo_editor.glade.h:2
+#, fuzzy
+msgid "Photo Image"
+msgstr "Fotoalbum"
+
+#: ../plugins/photo_editor/photo_editor.glade.h:3
+msgid "Photo Window"
+msgstr "Fotofönster"
+
+#: ../plugins/photo_editor/photo_editor.glade.h:4
+msgid "R_ename Album"
+msgstr "B_yt namn på album"
+
+#: ../plugins/photo_editor/photo_editor.glade.h:5
+msgid "_Album"
+msgstr "_Album"
+
+#: ../plugins/media_player/plugin.c:66
+#, fuzzy
+msgid "Media Player"
+msgstr "Mediatyp"
+
+#: ../plugins/media_player/plugin.c:91
+#, fuzzy
+msgid "  Media Player"
+msgstr "Mediatyp"
+
+#: ../plugins/media_player/plugin.c:169
+#: ../plugins/media_player/media_player.glade.h:3
+#, fuzzy
+msgid "Play"
+msgstr "Spelad"
+
 #: ../plugins/media_player/media_player.c:104
 #, c-format
 msgid "%d:%02d of %d:%02d"
@@ -1814,6 +1444,28 @@ msgstr "<b>Taggar</b>"
 #, c-format
 msgid "<b>%s</b> from %s"
 msgstr ""
+
+#: ../plugins/media_player/media_player.glade.h:1
+msgid "00:00:00"
+msgstr ""
+
+#: ../plugins/media_player/media_player.glade.h:2
+msgid "Next"
+msgstr ""
+
+#: ../plugins/media_player/media_player.glade.h:4
+msgid "Previous"
+msgstr ""
+
+#: ../plugins/media_player/media_player.glade.h:5
+#, fuzzy
+msgid "Stop"
+msgstr "till"
+
+#: ../plugins/media_player/media_player.glade.h:6
+#: ../libgtkpod/misc_conversion.c:83
+msgid "Volume"
+msgstr "Volym"
 
 #: ../plugins/filetype_video/plugin.c:78
 msgid "Generic Video file type"
@@ -1944,6 +1596,11 @@ msgstr "Podsändningsspellista"
 msgid "Regular Playlist"
 msgstr "Vanlig spellista"
 
+#: ../plugins/repository_editor/repository_editor.c:1334
+#, fuzzy
+msgid "  Edit iPod Repositories"
+msgstr "Redigera iPod-egenskaper"
+
 #. Strings used several times
 #: ../plugins/repository_editor/repository_init.c:48
 msgid "Select or enter your model"
@@ -1971,6 +1628,194 @@ msgid ""
 msgstr ""
 "Kunde inte avgöra vald modell: Detta kan vara ett fel eller en "
 "inkompatibilitet i biblioteken GTK+ eller glade.\n"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:1
+msgid "<b>General</b>"
+msgstr "<b>Allmänt</b>"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:2
+msgid "<b>Playlist Options</b>"
+msgstr "<b>Spellistealternativ</b>"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:3
+msgid "<b>Please select mountpoint and your iPod model</b>"
+msgstr "<b>Välj monteringsplats och iPod-modell</b>"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:4
+msgid "<b>Synchronization</b>"
+msgstr "<b>Synkronisering</b>"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:5
+msgid "Add New ..."
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.glade.h:6
+#: ../plugins/core_preferences/core_prefs.c:186
+msgid "Browse"
+msgstr "Bläddra"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:7
+msgid "Browse..."
+msgstr "Bläddra..."
+
+#: ../plugins/repository_editor/repository_editor.glade.h:8
+msgid "Calendar sync command:"
+msgstr "Synkroniseringskommando för kalender:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:9
+msgid "Call automatically when synchronizing iTunesDB"
+msgstr "Anropa automatiskt vid synkronisering av iTunes databas"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:10
+msgid "Confirm before removing tracks from the iPod or repository"
+msgstr "Bekräfta innan spår tas bort från iPod eller arkiv"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:11
+msgid "Contacts sync command:"
+msgstr "Synkroniseringskommando för kontakter:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:12
+msgid "Create Repository"
+msgstr "Skapa arkiv"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:13
+#, fuzzy
+msgid "Delete"
+msgstr "_Ta bort"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:14
+msgid "Delete missing tracks from the iPod or repository"
+msgstr "Ta bort saknade spår från iPod eller arkiv"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:15
+msgid ""
+"Directories to sync with are determined from the filenames of the tracks in "
+"the playlist."
+msgstr ""
+"Kataloger att synkronisera avgörs från filnamnen hos spåren i spellistan."
+
+#: ../plugins/repository_editor/repository_editor.glade.h:16
+msgid "Don't automatically sync on startup"
+msgstr "Synkronisera inte automatiskt vid start"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:17
+msgid "Initialize iPod"
+msgstr "Initiera iPod"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:18
+msgid ""
+"Insert before\n"
+"Insert after"
+msgstr ""
+"Infoga innan\n"
+"Infoga efter"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:20
+msgid "Model:"
+msgstr "Modell:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:21
+msgid ""
+"Normally, if a track is no longer present in the sync directory, it will be "
+"removed from the playlist, but not from the iPod or local repository.\n"
+"If this option is checked, tracks will be completely removed from the iPod "
+"or local repository, unless the track is a member of other playlists as "
+"well.\n"
+"NOTE: if you sync with the master playlist, you must check this option if "
+"you want tracks to be removed, because removing from the master playlist "
+"means removing from the iPod."
+msgstr ""
+"Om ett spår inte längre finns i synkroniseringskatalogen, tas det normalt "
+"bort från spellistan, men inte från iPod eller det lokala arkivet.\n"
+"Om alternativet markeras, tas spår fullständigt bort från iPod eller det "
+"lokala arkivet, om inte spåret också ingår i andra spellistor.\n"
+"Observera: Om du synkroniserar med huvudspellistan måste du markera "
+"alternativet om du vill att spår ska tas bort, eftersom att ta bort från "
+"huvudspellistan innebär att ta bort från iPod."
+
+#: ../plugins/repository_editor/repository_editor.glade.h:24
+msgid "Notes sync command:"
+msgstr "Synkroniseringskommando för anteckningar:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:25
+msgid "On startup automatically sync with playlist directories"
+msgstr "Synkronisera automatiskt med spellistekataloger vid start"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:26
+msgid "On startup automatically sync with the following directory"
+msgstr "Synkronisera automatiskt med följande katalog vid start"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:27
+msgid "On startup automatically update (Live Playlist)"
+msgstr "Uppdatera automatiskt vid start (levande spellista)"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:28
+msgid "Path:"
+msgstr "Sökväg:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:30
+msgid "Repository"
+msgstr "Arkiv"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:31
+msgid "Repository Options"
+msgstr "Arkivalternativ"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:32
+msgid "Repository name:"
+msgstr "Arkivnamn:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:33
+msgid "Repository type:"
+msgstr "Arkivtyp:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:34
+msgid "Show summary of sync result"
+msgstr "Visa sammanfattning av synkroniseringsresultat"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:36
+#, no-c-format
+msgid ""
+"Specify exact path including command line options. '%i' will be replaced "
+"with the mount point of the iPod."
+msgstr ""
+"Ange fullständig sökväg inklusive kommandoradsväljare. '%i' ersätts med "
+"monteringspunkten för iPod."
+
+#: ../plugins/repository_editor/repository_editor.glade.h:37
+msgid "Update/Sync All Playlists"
+msgstr "Uppdatera och synkronisera alla spellistor"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:38
+msgid "Update/Sync Playlist"
+msgstr "Uppdatera och synkronisera spellista"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:39
+msgid ""
+"Will show a list of tracks removed and a list of tracks newly added or "
+"updated."
+msgstr ""
+"Visar en lista med borttagna spår och en lista med spår som är nytillagda "
+"eller uppdaterade."
+
+#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
+#: ../plugins/repository_editor/repository_editor.glade.h:41
+msgid ""
+"iPod\n"
+"Local Repository (Standard)\n"
+"Local Repository (Podcasts)\n"
+msgstr ""
+"iPod\n"
+"Lokalt arkiv (standard)\n"
+"Lokalt arkiv (podradiosändningar)\n"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:45
+msgid "iPod mountpoint:"
+msgstr "iPod monteringspunkt:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:46
+msgid "iTunesDB backup:"
+msgstr "Säkerhetskopia av iTunes databas:"
 
 #: ../plugins/filetype_flac/plugin.c:78
 #, fuzzy
@@ -2027,6 +1872,11 @@ msgstr "Välj omslag från fil"
 msgid "View Full Size Artwork"
 msgstr "Visa omslagsbilder med full storlek"
 
+#: ../plugins/cover_display/plugin.c:99
+#, fuzzy
+msgid "  Cover Artwork"
+msgstr "Bläddra"
+
 #: ../plugins/cover_display/display_coverart.c:1682
 msgid "Failed to remove the album from the album hash store."
 msgstr "Misslyckades ta bort albumet från den checksummerade albumlagringen."
@@ -2035,6 +1885,39 @@ msgstr "Misslyckades ta bort albumet från den checksummerade albumlagringen."
 #, c-format
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
 msgstr "Fel uppstod när en bild släpptes på visningen av omslag: %s\n"
+
+#: ../plugins/cover_display/cover_display.glade.h:1
+msgid "<"
+msgstr "<"
+
+#: ../plugins/cover_display/cover_display.glade.h:2
+msgid "<b>Cover Art Display</b>"
+msgstr "<b>Visning av omslag</b>"
+
+#: ../plugins/cover_display/cover_display.glade.h:3
+msgid ">"
+msgstr ">"
+
+#: ../plugins/cover_display/cover_display.glade.h:4
+msgid "Artwork Preview"
+msgstr "Förhandsgranskning av omslagsbilder"
+
+#: ../plugins/cover_display/cover_display.glade.h:5
+msgid "Background color"
+msgstr "Bakgrundsfärg"
+
+#: ../plugins/cover_display/cover_display.glade.h:6
+msgid "Choose a Different Colour for the CoverArt Display Background"
+msgstr "Välj en annan färg för bakgrunden vid visning av omslag"
+
+#: ../plugins/cover_display/cover_display.glade.h:7
+#, fuzzy
+msgid "Cover Art Display"
+msgstr "<b>Visning av omslag</b>"
+
+#: ../plugins/cover_display/cover_display.glade.h:8
+msgid "Text color"
+msgstr "Textfärg"
 
 #: ../plugins/core_preferences/plugin.c:65
 msgid "CorePrefs"
@@ -2045,472 +1928,6 @@ msgstr ""
 #, fuzzy
 msgid "Settings"
 msgstr "Inställningar..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:1
-msgid "<b>Auto-Generated Playlists</b>"
-msgstr "<b>Automatiskt skapade spellistor</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:2
-msgid "<b>Compatible Formats</b>"
-msgstr "<b>Kompatibla format</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:3
-msgid "<b>Conversion Settings</b>"
-msgstr "<b>Inställningar av konvertering</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:4
-msgid "<b>Cover Art</b>"
-msgstr "<b>Omslag</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:5
-msgid "<b>Deletion Confirmation Messages</b>"
-msgstr "<b>Meddelanden om att bekräfta borttagning</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:6
-msgid "<b>Import and Synchronization</b>"
-msgstr "<b>Import och synkronisering</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:7
-msgid "<b>Incompatible Formats</b>"
-msgstr "<b>Inkompatibla format</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:8
-msgid "<b>Information Messages</b>"
-msgstr "<b>Informationsmeddelanden</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:9
-msgid "<b>Offset to add to ReplayGain</b>"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:10
-msgid "<b>On-the-fly Conversion</b>"
-msgstr "<b>Konvertering i farten</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:11
-#, fuzzy
-msgid "<b>Preferred gain type</b>"
-msgstr "Inställningar"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:12
-msgid "<b>Tag Editing</b>"
-msgstr "<b>Taggredigering</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:13
-#, fuzzy
-msgid "<b>Tags</b>"
-msgstr "<b>ej tillgänglig</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:14
-msgid "<b>Volume Normalization</b>"
-msgstr "<b>Normalisering av volym</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:15
-msgid "<b>When Attempting to Add an Existing Track</b>"
-msgstr "<b>Vid försök att lägga till ett befintligt spår</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:16
-msgid "<i>aacgain</i> executable:"
-msgstr "Körbart program <i>aacgain</i>:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:17
-msgid "<i>mp3gain</i> executable:"
-msgstr "Körbart program <i>mp3gain</i>:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:18
-msgid "AAC"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:19
-msgid "About unupdated tracks"
-msgstr "Om icke uppdaterade spår"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:20
-msgid "About updated tracks"
-msgstr "Om uppdaterade spår"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:21
-msgid "Add cover art using file name template"
-msgstr "Lägg till omslag från filnamnsmall"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:22
-msgid ""
-"Add file masks to be excluded from import and synchronization, for example, "
-"<i>*.mp3</i>."
-msgstr ""
-"Lägg till filmasker att undanta från import och synkronisering, till exempel "
-"<i>*.mp3</i>."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:23
-msgid "Add subfolders recursively"
-msgstr "Lägg till underkataloger rekursivt"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:25
-msgid "Album gain (formerly \"audiophile gain\")"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:26
-msgid "Allow duplicate files"
-msgstr "Tillåt duplicerade filer"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:27
-msgid "Also use this encoding when updating or synchronizing tracks"
-msgstr "Använd också kodningen vid uppdatering eller synkronisering av spår"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:28
-msgid "Also use this encoding when writing tracks"
-msgstr "Använd också kodningen vid skrivning av spår"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:30
-msgid "Automatically generate video thumbnails"
-msgstr "Skapa automatiskt miniatyrbilder för videor"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:32
-msgid "Cache folder:"
-msgstr "Cachekatalog:"
-
-#. 5
-#: ../plugins/core_preferences/core_prefs.xml.h:33 ../libgtkpod/gp_spl.c:92
-#: ../libgtkpod/misc_conversion.c:66
-msgid "Composer"
-msgstr "Kompositör"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:34
-msgid "Confirm deletion of playlists or tracks from a playlist"
-msgstr "Bekräfta borttagning av spellistor eller spår från en spellista"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:35
-msgid "Confirm deletion of tracks during synchronization"
-msgstr "Bekräfta borttagning av spår vid synkronisering"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:36
-msgid "Confirm deletion of tracks:"
-msgstr "Bekräfta borttagning av spår:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:37
-msgid "Conversion Preferences"
-msgstr "Inställningar av konvertering"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:38
-msgid "Conversion Settings..."
-msgstr "Inställningar av konvertering..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:39
-msgid "Convert AAC (M4A)"
-msgstr "Konvertera AAC (M4A)"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:40
-msgid "Convert FLAC"
-msgstr "Konvertera FLAC"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:41
-msgid "Convert MP3"
-msgstr "Konvertera MP3"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:42
-msgid "Convert Ogg Vorbis"
-msgstr "Konvertera Ogg Vorbis"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:43
-msgid "Convert WAV"
-msgstr "Konvertera WAV"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:44
-msgid "Convert compatible formats to a single format"
-msgstr "Konvertera kompatibla format till ett enda format"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:45
-msgid "Convert incompatible music formats to:"
-msgstr "Konvertera icke kompatibla musikformat till:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:46
-msgid "Cover Art Search Preferences"
-msgstr "Inställningar för omslagssökning"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:47
-msgid "Cover art file pattern:"
-msgstr "Filmönster för omslag:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:48
-msgid "Customize..."
-msgstr "Anpassa..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:49
-msgid "Delete missing tracks when synchronizing playlists"
-msgstr "Ta bort saknade spår vid synkronisering av spellistor"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:50
-msgid "Display conversion log"
-msgstr "Visa konverteringslogg"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:51
-msgid "Display information about detected duplicate files"
-msgstr "Visa information om detekterade duplicerade filer"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:52
-msgid "Display messages and warnings at startup"
-msgstr "Visa meddelanden och varningar vid start"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:53
-msgid "Display synchronization results"
-msgstr "Visa synkroniseringsresultat"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:54
-msgid "Encoding Preferences"
-msgstr "Inställningar av kodning"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:55
-msgid "Encoding..."
-msgstr "Kodning..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:56
-msgid "Excluded files..."
-msgstr "Undantagna filer..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:57
-msgid "Exclusions List"
-msgstr "Undantagslista"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:58
-msgid "Feedback"
-msgstr "Gensvar"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:59
-msgid "Filename Parse Preferences"
-msgstr "Inställningar av filnamnstolkning"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:60
-msgid "Filename parse pattern:"
-msgstr "Tolkningsmönster för filnamn:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:61
-msgid "From the hard disk"
-msgstr "Från hårddisken"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:62
-msgid "From the iPod"
-msgstr "Från iPod"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:63
-msgid "From the local database"
-msgstr "Från lokal databas"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:66
-msgid "Include tracks never played in the \"Best Rated\" playlist"
-msgstr "Inkludera spår som aldrig spelats i spellistan \"med bäst betyg\""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:67
-msgid "MP3"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:68
-msgid "Mass-modify tags when multiple tracks are selected"
-msgstr "Modifera samtliga taggar när flera spår är markerade"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:69
-msgid "Maximum cache size:"
-msgstr "Maximal cachestorlek:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:70
-msgid "Maximum threads:"
-msgstr "Maximalt antal trådar:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:71
-msgid "Metadata"
-msgstr "Metadata"
-
-#. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:72 ../src/anjuta-app.c:434
-msgid "Music"
-msgstr "Musik"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:73
-#, fuzzy
-msgid "Normalization..."
-msgstr "Normaliserar..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:74
-msgid "Number of tracks:"
-msgstr "Antal spår:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:75
-msgid "Overwrite existing tags"
-msgstr "Skriv över befintliga taggar"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:76
-msgid "Parse file name to set missing tags"
-msgstr "Tolka filnamn för att ange saknade taggar"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:78
-#, no-c-format
-msgid ""
-"Provide a shell command to generate a thumbnail image of your video file.  "
-"The following format strings will be expanded:\n"
-"- %f: the input file\n"
-"- %o: the output file (which is automatically generated)\n"
-msgstr ""
-"Tillhandahåll ett skalkommando för att skapa en miniatyrbild av videofilen.  "
-"Följande formatsträngar expanderas:\n"
-"- %f: infil\n"
-"- %o: utfil (som automatiskt skapas)\n"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:82
-msgid "Read embedded cover art information"
-msgstr "Läs inbäddad omslagsinformation"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:83
-msgid "Read embedded tags from music files"
-msgstr "Läs inbäddade taggar från musikfiler"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:84
-#, fuzzy
-msgid "ReplayGain Preferences"
-msgstr "Inställningar av konvertering"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:85
-#, fuzzy
-msgid "ReplayGain..."
-msgstr "kopierar..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:86
-msgid "Set still missing tags to file name"
-msgstr "Ställ in taggar som fortfarande saknas till filnamn"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:87
-msgid "Skip the track"
-msgstr "Hoppa över spåret"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:88
-msgid "Tag and filename encoding:"
-msgstr "Kodning av taggar och filnamn:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:89
-msgid ""
-"These settings will only be applied to newly added or updated tracks. This "
-"could result in tracks that are normalized to different levels until updated."
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:91
-msgid "Track gain (formerly \"radio gain\")"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:92
-msgid "Transfer tracks in background mode"
-msgstr "Överför spår i bakgrunden"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:93
-msgid "Update information about the existing track"
-msgstr "Uppdatera information om befintligt spår"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:94
-msgid "Use legacy format for MP3 tags"
-msgstr "Använd gammalt format för MP3-taggar"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:95
-msgid "Video Thumbnail Generation"
-msgstr "Skapa miniatyrbilder för video"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:96
-msgid "Video thumbnailing program:"
-msgstr "Program för videominiatyrbilder:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:97
-msgid "When updating tracks, display information:"
-msgstr "Vid uppdatering av spår, visa information:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:98
-msgid "Write tags to disk when edited"
-msgstr "Skriv taggar till disk när de har redigerats"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:100
-#, no-c-format
-msgid ""
-"You can separate several templates by a ';'. The first one matching the "
-"filename will be used.\n"
-"\n"
-"Example: <i>%a - %A/%T %t.mp3;%t.wav</i>.\n"
-"\n"
-"- artist: %a\n"
-"- album: %A\n"
-"- composer: %c\n"
-"- title: %t\n"
-"- genre: %G\n"
-"- track nr: %T\n"
-"- CD nr: %C\n"
-"- year: %Y\n"
-"- skip data: %*\n"
-"- the character '%': %%."
-msgstr ""
-"Du kan skilja flera mallar åt med ';'. Den första som motsvarar filnamnet "
-"kommer att användas.\n"
-"\n"
-"Exempel: <i>%a - %A/%T %t.mp3;%t.wav</i>.\n"
-"\n"
-"- artist: %a\n"
-"- album: %A\n"
-"- kompositör: %c\n"
-"- titel: %t\n"
-"- genre: %G\n"
-"- spårnummer: %T\n"
-"- skivnummer: %C\n"
-"- år: %Y\n"
-"- hoppa över data: %*\n"
-"- tecknet '%': %%."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:115
-#, fuzzy, no-c-format
-msgid ""
-"You can separate several templates by a ';'. The first one matching the "
-"filename will be used.\n"
-"\n"
-"Examples:\n"
-"- <i>folder.jpg</i>: Use <i>folder.jpg</i> as cover art.\n"
-"- <i>folder</i>: Use <i>folder.jpg</i>, <i>folder.png</i>...\n"
-"- <i>../%A.jpg</i>: Use <i>&lt;Album&gt;.jpg</i> in the parent directory\n"
-"- <i>%A</i>: Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>...\n"
-"- <i>folder.jpg;%a.jpg</i>: First try <i>folder.jpg</i>, then <i>&lt;"
-"artist&gt;.jpg</i>\n"
-"\n"
-"- artist: %a\n"
-"- album: %A\n"
-"- composer: %c\n"
-"- title: %t\n"
-"- genre: %G\n"
-"- track nr: %T\n"
-"- CD nr: %C\n"
-"- year: %Y\n"
-"- skip data: %*\n"
-"- the character '%': %%."
-msgstr ""
-"Du kan skilja flera mallar åt med ';'. Den första som motsvarar filnamnet "
-"kommer att användas.\n"
-"\n"
-"Exempel:\n"
-"- <i>katalog.jpg</i>: Använd <i>katalog.jpg</i> som omslag.\n"
-"- <i>katalog</i>: Använd <i>katalog.jpg</i>, <i>katalog.png</i>...\n"
-"- <i>../%A.jpg</i>: Använd <i>&lt;Album&gt;.jpg</i> i överliggande katalog\n"
-"- <i>%a</i>: Använd <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>...\n"
-"- <i>katalog.jpg;%a.jpg</i>: Prova först <i>katalog.jpg</i>, därefter <i>&lt;"
-"artist&gt;.jpg</i>\n"
-"\n"
-"- artist: %a\n"
-"- album: %A\n"
-"- kompositör: %c\n"
-"- titel: %t\n"
-"- genre: %G\n"
-"- spårnummer: %T\n"
-"- skivnummer: %C\n"
-"- år: %Y\n"
-"- hoppa över data: %*\n"
-"- tecknet '%': %%."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:134
-#, fuzzy
-msgid "dB"
-msgstr "byte"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:135
-msgid "n"
-msgstr ""
 
 #: ../plugins/filetype_mp4/plugin.c:82
 msgid "MP4 video file type"
@@ -2860,6 +2277,12 @@ msgstr "Markerade spellista inklusive spår från databas"
 msgid "Selected Playlist including Tracks from Device"
 msgstr "Markerade spellista inklusive spår från iPod"
 
+#: ../plugins/playlist_display/plugin.c:307
+#: ../plugins/playlist_display/playlist_display.glade.h:7
+#, fuzzy
+msgid "Playlist Display"
+msgstr "Spellistor"
+
 #: ../plugins/playlist_display/plugin.c:310 ../libgtkpod/gp_spl.c:1407
 #: ../libgtkpod/misc_playlist.c:75 ../libgtkpod/misc_playlist.c:104
 #: ../libgtkpod/misc_playlist.c:353
@@ -2869,6 +2292,11 @@ msgstr "Ny spellista"
 #: ../plugins/playlist_display/plugin.c:310
 msgid "Create a new playlist for the selected ipod"
 msgstr ""
+
+#: ../plugins/playlist_display/plugin.c:339
+#, fuzzy
+msgid "  iPod Repositories"
+msgstr "Podsändningsarkiv"
 
 #: ../plugins/playlist_display/playlist_display_context_menu.c:54
 msgid "Remove All Tracks from iPod"
@@ -2971,6 +2399,11 @@ msgstr ""
 msgid "Photos"
 msgstr "Foton"
 
+#: ../plugins/playlist_display/playlist_display.glade.h:4
+#, fuzzy
+msgid "<b>Playlist Sort Order</b>"
+msgstr "<b>Sorteringsordning</b>"
+
 #: ../libgtkpod/syncdir.c:221
 #, c-format
 msgid "Sync summary for %s/%s\n"
@@ -3065,6 +2498,11 @@ msgstr "Kommentar"
 #: ../libgtkpod/gp_spl.c:91 ../libgtkpod/misc_conversion.c:80
 msgid "Date added"
 msgstr "Tillagd datum"
+
+#. 5
+#: ../libgtkpod/gp_spl.c:92 ../libgtkpod/misc_conversion.c:66
+msgid "Composer"
+msgstr "Kompositör"
 
 #: ../libgtkpod/gp_spl.c:93 ../libgtkpod/misc_conversion.c:78
 msgid "Playcount"
@@ -5237,6 +4675,144 @@ msgstr "Värddator för webbadressen '%s' är ogiltig"
 msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "Webbadressen '%s' innehåller felaktiga specialtecken"
 
+#: ../src/anjuta-actions.h:26
+msgid "_Music"
+msgstr "_Musik"
+
+#: ../src/anjuta-actions.h:31
+msgid "_Update Tracks from File"
+msgstr "_Uppdatera spår från fil"
+
+#: ../src/anjuta-actions.h:39
+#, fuzzy
+msgid "_Quit"
+msgstr "_Redigera"
+
+#: ../src/anjuta-actions.h:41
+msgid "Quit GtkPod"
+msgstr ""
+
+#: ../src/anjuta-actions.h:49
+#, fuzzy
+msgid "_Edit"
+msgstr "_Redigera"
+
+#: ../src/anjuta-actions.h:54
+#, fuzzy
+msgid "_Delete"
+msgstr "_Ta bort"
+
+#: ../src/anjuta-actions.h:62
+#, fuzzy
+msgid "_Preferences"
+msgstr "Inställningar av mserv"
+
+#: ../src/anjuta-actions.h:63
+msgid "Do you prefer coffee to tea? Check it out."
+msgstr ""
+
+#: ../src/anjuta-actions.h:69
+#, fuzzy
+msgid "_View"
+msgstr "_Visa"
+
+#: ../src/anjuta-actions.h:71
+msgid "_Reset Dock Layout"
+msgstr ""
+
+#: ../src/anjuta-actions.h:72
+msgid "Reset the widgets docking layout to default"
+msgstr ""
+
+#: ../src/anjuta-actions.h:78
+msgid "_Full Screen"
+msgstr ""
+
+#: ../src/anjuta-actions.h:79
+msgid "Toggle fullscreen mode"
+msgstr ""
+
+#: ../src/anjuta-actions.h:82
+msgid "_Lock Dock Layout"
+msgstr ""
+
+#: ../src/anjuta-actions.h:83
+msgid "Lock the current dock layout so that widgets cannot be moved"
+msgstr ""
+
+#: ../src/anjuta-actions.h:86
+msgid "_Toolbar"
+msgstr "_Verktygsrad"
+
+#: ../src/anjuta-actions.h:87
+msgid "Show or hide the toolbar"
+msgstr ""
+
+#: ../src/anjuta-actions.h:95
+#, fuzzy
+msgid "_Tools"
+msgstr "Verk_tyg"
+
+#: ../src/anjuta-actions.h:100
+#, fuzzy
+msgid "_Help"
+msgstr "_Hjälp"
+
+#: ../src/anjuta-actions.h:102
+msgid "_User's Manual"
+msgstr ""
+
+#: ../src/anjuta-actions.h:103
+msgid "Anjuta user's manual"
+msgstr ""
+
+#: ../src/anjuta-actions.h:106
+#, fuzzy
+msgid "gtkpod _Home Page"
+msgstr "Gtkpod hantering av iPod"
+
+#: ../src/anjuta-actions.h:107
+msgid "Online documentation and resources"
+msgstr ""
+
+#: ../src/anjuta-actions.h:110
+msgid "Report _Bugs/Patches/Requests"
+msgstr ""
+
+#: ../src/anjuta-actions.h:111
+msgid "Submit a bug report, patch or feature request for Anjuta"
+msgstr ""
+
+#: ../src/anjuta-actions.h:114
+msgid "Ask a _Question"
+msgstr ""
+
+#: ../src/anjuta-actions.h:115
+msgid "Submit a question for FAQs"
+msgstr ""
+
+#: ../src/anjuta-actions.h:118
+#, fuzzy
+msgid "_About"
+msgstr "Avbryt"
+
+#: ../src/anjuta-actions.h:119
+msgid "About Anjuta"
+msgstr ""
+
+#: ../src/anjuta-actions.h:122
+msgid "About External _Plugins"
+msgstr ""
+
+#: ../src/anjuta-actions.h:123
+msgid "About third party Anjuta plugins"
+msgstr ""
+
+#. Register actions
+#: ../src/anjuta-app.c:434
+msgid "Music"
+msgstr "Musik"
+
 #: ../src/anjuta-app.c:435
 #, fuzzy
 msgid "Edit"
@@ -5306,6 +4882,351 @@ msgstr ""
 #, fuzzy
 msgid "gtkpod"
 msgstr "_Om gtkpod"
+
+#~ msgid "gtkpod Information"
+#~ msgstr "Information om gtkpod"
+
+#~ msgid "<b>Auto-Generated Playlists</b>"
+#~ msgstr "<b>Automatiskt skapade spellistor</b>"
+
+#~ msgid "<b>Compatible Formats</b>"
+#~ msgstr "<b>Kompatibla format</b>"
+
+#~ msgid "<b>Conversion Settings</b>"
+#~ msgstr "<b>Inställningar av konvertering</b>"
+
+#~ msgid "<b>Cover Art</b>"
+#~ msgstr "<b>Omslag</b>"
+
+#~ msgid "<b>Deletion Confirmation Messages</b>"
+#~ msgstr "<b>Meddelanden om att bekräfta borttagning</b>"
+
+#~ msgid "<b>Import and Synchronization</b>"
+#~ msgstr "<b>Import och synkronisering</b>"
+
+#~ msgid "<b>Incompatible Formats</b>"
+#~ msgstr "<b>Inkompatibla format</b>"
+
+#~ msgid "<b>Information Messages</b>"
+#~ msgstr "<b>Informationsmeddelanden</b>"
+
+#~ msgid "<b>On-the-fly Conversion</b>"
+#~ msgstr "<b>Konvertering i farten</b>"
+
+#, fuzzy
+#~ msgid "<b>Preferred gain type</b>"
+#~ msgstr "Inställningar"
+
+#~ msgid "<b>Tag Editing</b>"
+#~ msgstr "<b>Taggredigering</b>"
+
+#, fuzzy
+#~ msgid "<b>Tags</b>"
+#~ msgstr "<b>ej tillgänglig</b>"
+
+#~ msgid "<b>Volume Normalization</b>"
+#~ msgstr "<b>Normalisering av volym</b>"
+
+#~ msgid "<b>When Attempting to Add an Existing Track</b>"
+#~ msgstr "<b>Vid försök att lägga till ett befintligt spår</b>"
+
+#~ msgid "<i>aacgain</i> executable:"
+#~ msgstr "Körbart program <i>aacgain</i>:"
+
+#~ msgid "<i>mp3gain</i> executable:"
+#~ msgstr "Körbart program <i>mp3gain</i>:"
+
+#~ msgid "About unupdated tracks"
+#~ msgstr "Om icke uppdaterade spår"
+
+#~ msgid "About updated tracks"
+#~ msgstr "Om uppdaterade spår"
+
+#~ msgid "Add cover art using file name template"
+#~ msgstr "Lägg till omslag från filnamnsmall"
+
+#~ msgid ""
+#~ "Add file masks to be excluded from import and synchronization, for "
+#~ "example, <i>*.mp3</i>."
+#~ msgstr ""
+#~ "Lägg till filmasker att undanta från import och synkronisering, till "
+#~ "exempel <i>*.mp3</i>."
+
+#~ msgid "Add subfolders recursively"
+#~ msgstr "Lägg till underkataloger rekursivt"
+
+#~ msgid "Allow duplicate files"
+#~ msgstr "Tillåt duplicerade filer"
+
+#~ msgid "Also use this encoding when updating or synchronizing tracks"
+#~ msgstr "Använd också kodningen vid uppdatering eller synkronisering av spår"
+
+#~ msgid "Also use this encoding when writing tracks"
+#~ msgstr "Använd också kodningen vid skrivning av spår"
+
+#~ msgid "Automatically generate video thumbnails"
+#~ msgstr "Skapa automatiskt miniatyrbilder för videor"
+
+#~ msgid "Cache folder:"
+#~ msgstr "Cachekatalog:"
+
+#~ msgid "Confirm deletion of playlists or tracks from a playlist"
+#~ msgstr "Bekräfta borttagning av spellistor eller spår från en spellista"
+
+#~ msgid "Confirm deletion of tracks during synchronization"
+#~ msgstr "Bekräfta borttagning av spår vid synkronisering"
+
+#~ msgid "Confirm deletion of tracks:"
+#~ msgstr "Bekräfta borttagning av spår:"
+
+#~ msgid "Conversion Preferences"
+#~ msgstr "Inställningar av konvertering"
+
+#~ msgid "Conversion Settings..."
+#~ msgstr "Inställningar av konvertering..."
+
+#~ msgid "Convert AAC (M4A)"
+#~ msgstr "Konvertera AAC (M4A)"
+
+#~ msgid "Convert FLAC"
+#~ msgstr "Konvertera FLAC"
+
+#~ msgid "Convert MP3"
+#~ msgstr "Konvertera MP3"
+
+#~ msgid "Convert Ogg Vorbis"
+#~ msgstr "Konvertera Ogg Vorbis"
+
+#~ msgid "Convert WAV"
+#~ msgstr "Konvertera WAV"
+
+#~ msgid "Convert compatible formats to a single format"
+#~ msgstr "Konvertera kompatibla format till ett enda format"
+
+#~ msgid "Convert incompatible music formats to:"
+#~ msgstr "Konvertera icke kompatibla musikformat till:"
+
+#~ msgid "Cover Art Search Preferences"
+#~ msgstr "Inställningar för omslagssökning"
+
+#~ msgid "Cover art file pattern:"
+#~ msgstr "Filmönster för omslag:"
+
+#~ msgid "Customize..."
+#~ msgstr "Anpassa..."
+
+#~ msgid "Delete missing tracks when synchronizing playlists"
+#~ msgstr "Ta bort saknade spår vid synkronisering av spellistor"
+
+#~ msgid "Display conversion log"
+#~ msgstr "Visa konverteringslogg"
+
+#~ msgid "Display information about detected duplicate files"
+#~ msgstr "Visa information om detekterade duplicerade filer"
+
+#~ msgid "Display messages and warnings at startup"
+#~ msgstr "Visa meddelanden och varningar vid start"
+
+#~ msgid "Display synchronization results"
+#~ msgstr "Visa synkroniseringsresultat"
+
+#~ msgid "Encoding Preferences"
+#~ msgstr "Inställningar av kodning"
+
+#~ msgid "Encoding..."
+#~ msgstr "Kodning..."
+
+#~ msgid "Excluded files..."
+#~ msgstr "Undantagna filer..."
+
+#~ msgid "Exclusions List"
+#~ msgstr "Undantagslista"
+
+#~ msgid "Feedback"
+#~ msgstr "Gensvar"
+
+#~ msgid "Filename Parse Preferences"
+#~ msgstr "Inställningar av filnamnstolkning"
+
+#~ msgid "Filename parse pattern:"
+#~ msgstr "Tolkningsmönster för filnamn:"
+
+#~ msgid "From the hard disk"
+#~ msgstr "Från hårddisken"
+
+#~ msgid "From the iPod"
+#~ msgstr "Från iPod"
+
+#~ msgid "From the local database"
+#~ msgstr "Från lokal databas"
+
+#~ msgid "Include tracks never played in the \"Best Rated\" playlist"
+#~ msgstr "Inkludera spår som aldrig spelats i spellistan \"med bäst betyg\""
+
+#~ msgid "Mass-modify tags when multiple tracks are selected"
+#~ msgstr "Modifera samtliga taggar när flera spår är markerade"
+
+#~ msgid "Maximum cache size:"
+#~ msgstr "Maximal cachestorlek:"
+
+#~ msgid "Maximum threads:"
+#~ msgstr "Maximalt antal trådar:"
+
+#~ msgid "Metadata"
+#~ msgstr "Metadata"
+
+#, fuzzy
+#~ msgid "Normalization..."
+#~ msgstr "Normaliserar..."
+
+#~ msgid "Number of tracks:"
+#~ msgstr "Antal spår:"
+
+#~ msgid "Overwrite existing tags"
+#~ msgstr "Skriv över befintliga taggar"
+
+#~ msgid "Parse file name to set missing tags"
+#~ msgstr "Tolka filnamn för att ange saknade taggar"
+
+#~ msgid ""
+#~ "Provide a shell command to generate a thumbnail image of your video "
+#~ "file.  The following format strings will be expanded:\n"
+#~ "- %f: the input file\n"
+#~ "- %o: the output file (which is automatically generated)\n"
+#~ msgstr ""
+#~ "Tillhandahåll ett skalkommando för att skapa en miniatyrbild av "
+#~ "videofilen.  Följande formatsträngar expanderas:\n"
+#~ "- %f: infil\n"
+#~ "- %o: utfil (som automatiskt skapas)\n"
+
+#~ msgid "Read embedded cover art information"
+#~ msgstr "Läs inbäddad omslagsinformation"
+
+#~ msgid "Read embedded tags from music files"
+#~ msgstr "Läs inbäddade taggar från musikfiler"
+
+#, fuzzy
+#~ msgid "ReplayGain Preferences"
+#~ msgstr "Inställningar av konvertering"
+
+#, fuzzy
+#~ msgid "ReplayGain..."
+#~ msgstr "kopierar..."
+
+#~ msgid "Set still missing tags to file name"
+#~ msgstr "Ställ in taggar som fortfarande saknas till filnamn"
+
+#~ msgid "Skip the track"
+#~ msgstr "Hoppa över spåret"
+
+#~ msgid "Tag and filename encoding:"
+#~ msgstr "Kodning av taggar och filnamn:"
+
+#~ msgid "Transfer tracks in background mode"
+#~ msgstr "Överför spår i bakgrunden"
+
+#~ msgid "Update information about the existing track"
+#~ msgstr "Uppdatera information om befintligt spår"
+
+#~ msgid "Use legacy format for MP3 tags"
+#~ msgstr "Använd gammalt format för MP3-taggar"
+
+#~ msgid "Video Thumbnail Generation"
+#~ msgstr "Skapa miniatyrbilder för video"
+
+#~ msgid "Video thumbnailing program:"
+#~ msgstr "Program för videominiatyrbilder:"
+
+#~ msgid "When updating tracks, display information:"
+#~ msgstr "Vid uppdatering av spår, visa information:"
+
+#~ msgid "Write tags to disk when edited"
+#~ msgstr "Skriv taggar till disk när de har redigerats"
+
+#~ msgid ""
+#~ "You can separate several templates by a ';'. The first one matching the "
+#~ "filename will be used.\n"
+#~ "\n"
+#~ "Example: <i>%a - %A/%T %t.mp3;%t.wav</i>.\n"
+#~ "\n"
+#~ "- artist: %a\n"
+#~ "- album: %A\n"
+#~ "- composer: %c\n"
+#~ "- title: %t\n"
+#~ "- genre: %G\n"
+#~ "- track nr: %T\n"
+#~ "- CD nr: %C\n"
+#~ "- year: %Y\n"
+#~ "- skip data: %*\n"
+#~ "- the character '%': %%."
+#~ msgstr ""
+#~ "Du kan skilja flera mallar åt med ';'. Den första som motsvarar filnamnet "
+#~ "kommer att användas.\n"
+#~ "\n"
+#~ "Exempel: <i>%a - %A/%T %t.mp3;%t.wav</i>.\n"
+#~ "\n"
+#~ "- artist: %a\n"
+#~ "- album: %A\n"
+#~ "- kompositör: %c\n"
+#~ "- titel: %t\n"
+#~ "- genre: %G\n"
+#~ "- spårnummer: %T\n"
+#~ "- skivnummer: %C\n"
+#~ "- år: %Y\n"
+#~ "- hoppa över data: %*\n"
+#~ "- tecknet '%': %%."
+
+#, fuzzy
+#~ msgid ""
+#~ "You can separate several templates by a ';'. The first one matching the "
+#~ "filename will be used.\n"
+#~ "\n"
+#~ "Examples:\n"
+#~ "- <i>folder.jpg</i>: Use <i>folder.jpg</i> as cover art.\n"
+#~ "- <i>folder</i>: Use <i>folder.jpg</i>, <i>folder.png</i>...\n"
+#~ "- <i>../%A.jpg</i>: Use <i>&lt;Album&gt;.jpg</i> in the parent directory\n"
+#~ "- <i>%A</i>: Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>...\n"
+#~ "- <i>folder.jpg;%a.jpg</i>: First try <i>folder.jpg</i>, then <i>&lt;"
+#~ "artist&gt;.jpg</i>\n"
+#~ "\n"
+#~ "- artist: %a\n"
+#~ "- album: %A\n"
+#~ "- composer: %c\n"
+#~ "- title: %t\n"
+#~ "- genre: %G\n"
+#~ "- track nr: %T\n"
+#~ "- CD nr: %C\n"
+#~ "- year: %Y\n"
+#~ "- skip data: %*\n"
+#~ "- the character '%': %%."
+#~ msgstr ""
+#~ "Du kan skilja flera mallar åt med ';'. Den första som motsvarar filnamnet "
+#~ "kommer att användas.\n"
+#~ "\n"
+#~ "Exempel:\n"
+#~ "- <i>katalog.jpg</i>: Använd <i>katalog.jpg</i> som omslag.\n"
+#~ "- <i>katalog</i>: Använd <i>katalog.jpg</i>, <i>katalog.png</i>...\n"
+#~ "- <i>../%A.jpg</i>: Använd <i>&lt;Album&gt;.jpg</i> i överliggande "
+#~ "katalog\n"
+#~ "- <i>%a</i>: Använd <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</"
+#~ "i>...\n"
+#~ "- <i>katalog.jpg;%a.jpg</i>: Prova först <i>katalog.jpg</i>, därefter "
+#~ "<i>&lt;artist&gt;.jpg</i>\n"
+#~ "\n"
+#~ "- artist: %a\n"
+#~ "- album: %A\n"
+#~ "- kompositör: %c\n"
+#~ "- titel: %t\n"
+#~ "- genre: %G\n"
+#~ "- spårnummer: %T\n"
+#~ "- skivnummer: %C\n"
+#~ "- år: %Y\n"
+#~ "- hoppa över data: %*\n"
+#~ "- tecknet '%': %%."
+
+#, fuzzy
+#~ msgid "dB"
+#~ msgstr "byte"
 
 #, fuzzy
 #~ msgid ""
@@ -5595,47 +5516,6 @@ msgstr "_Om gtkpod"
 
 #~ msgid "Cross-platform multilingual interface to Apple's iPod™"
 #~ msgstr "Plattformsoberoende flerspråkigt gränssnitt för Apples iPod™"
-
-#~ msgid "_Music"
-#~ msgstr "_Musik"
-
-#~ msgid "_Update Tracks from File"
-#~ msgstr "_Uppdatera spår från fil"
-
-#, fuzzy
-#~ msgid "_Edit"
-#~ msgstr "_Redigera"
-
-#, fuzzy
-#~ msgid "_Delete"
-#~ msgstr "_Ta bort"
-
-#, fuzzy
-#~ msgid "_Preferences"
-#~ msgstr "Inställningar av mserv"
-
-#, fuzzy
-#~ msgid "_View"
-#~ msgstr "_Visa"
-
-#~ msgid "_Toolbar"
-#~ msgstr "_Verktygsrad"
-
-#, fuzzy
-#~ msgid "_Tools"
-#~ msgstr "Verk_tyg"
-
-#, fuzzy
-#~ msgid "_Help"
-#~ msgstr "_Hjälp"
-
-#, fuzzy
-#~ msgid "gtkpod _Home Page"
-#~ msgstr "Gtkpod hantering av iPod"
-
-#, fuzzy
-#~ msgid "_About"
-#~ msgstr "Avbryt"
 
 #~ msgid ""
 #~ "Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 "

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-27 23:22+0000\n"
+"POT-Creation-Date: 2010-12-02 20:13+0000\n"
 "PO-Revision-Date: 2010-08-08 21:16+0700\n"
 "Last-Translator: Matvey Kozhev <sikon@lucidfox.org>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -119,832 +119,6 @@ msgstr ""
 msgid "_Limit to"
 msgstr "_Ограничить"
 
-#: ../data/glade/info_display.glade.h:1
-#: ../plugins/info_display/info_display.glade.h:1
-msgid "gtkpod Information"
-msgstr "Сведения gtkpod"
-
-#: ../data/glade/photo_editor.glade.h:1
-#: ../plugins/photo_editor/photo_editor.glade.h:1
-msgid "Add Images from a Directory"
-msgstr "Добавить изображения из папки"
-
-#: ../data/glade/photo_editor.glade.h:2
-#: ../plugins/photo_editor/photo_editor.glade.h:2
-#, fuzzy
-msgid "Photo Image"
-msgstr "Фотоальбомы"
-
-#: ../data/glade/photo_editor.glade.h:3
-#: ../plugins/photo_editor/photo_editor.glade.h:3
-msgid "Photo Window"
-msgstr "Окно снимков"
-
-#: ../data/glade/photo_editor.glade.h:4
-#: ../plugins/photo_editor/photo_editor.glade.h:4
-msgid "R_ename Album"
-msgstr "Пере&именовать альбом"
-
-#: ../data/glade/photo_editor.glade.h:5
-#: ../plugins/photo_editor/photo_editor.glade.h:5
-msgid "_Album"
-msgstr "_Альбом"
-
-#: ../data/glade/repository_editor.glade.h:1
-#: ../plugins/repository_editor/repository_editor.glade.h:1
-msgid "<b>General</b>"
-msgstr "<b>Общие</b>"
-
-#: ../data/glade/repository_editor.glade.h:2
-#: ../plugins/repository_editor/repository_editor.glade.h:2
-msgid "<b>Playlist Options</b>"
-msgstr "<b>Параметры списка воспроизведения</b>"
-
-#: ../data/glade/repository_editor.glade.h:3
-#: ../plugins/repository_editor/repository_editor.glade.h:3
-msgid "<b>Please select mountpoint and your iPod model</b>"
-msgstr "<b>Пожалуйста, выберите точку монтирования и модель iPod</b>"
-
-#: ../data/glade/repository_editor.glade.h:4
-#: ../plugins/repository_editor/repository_editor.glade.h:4
-msgid "<b>Synchronization</b>"
-msgstr "<b>Синхронизация</b>"
-
-#: ../data/glade/repository_editor.glade.h:5
-#: ../plugins/repository_editor/repository_editor.glade.h:5
-msgid "Add New ..."
-msgstr ""
-
-#: ../data/glade/repository_editor.glade.h:6
-#: ../plugins/repository_editor/repository_editor.glade.h:6
-#: ../plugins/core_preferences/core_prefs.c:186
-msgid "Browse"
-msgstr "Обзор"
-
-#: ../data/glade/repository_editor.glade.h:7
-#: ../plugins/repository_editor/repository_editor.glade.h:7
-#: ../plugins/core_preferences/core_prefs.xml.h:31
-msgid "Browse..."
-msgstr "Обзор..."
-
-#: ../data/glade/repository_editor.glade.h:8
-#: ../plugins/repository_editor/repository_editor.glade.h:8
-msgid "Calendar sync command:"
-msgstr "Команда синхронизации календаря:"
-
-#: ../data/glade/repository_editor.glade.h:9
-#: ../plugins/repository_editor/repository_editor.glade.h:9
-msgid "Call automatically when synchronizing iTunesDB"
-msgstr "Вызывать автоматически при синхронизации iTunesDB"
-
-#: ../data/glade/repository_editor.glade.h:10
-#: ../plugins/repository_editor/repository_editor.glade.h:10
-msgid "Confirm before removing tracks from the iPod or repository"
-msgstr ""
-"Выводить подтверждение перед удалением дорожек с iPod или из репозитория"
-
-#: ../data/glade/repository_editor.glade.h:11
-#: ../plugins/repository_editor/repository_editor.glade.h:11
-msgid "Contacts sync command:"
-msgstr "Команда синхронизации контактов:"
-
-#: ../data/glade/repository_editor.glade.h:12
-#: ../plugins/repository_editor/repository_editor.glade.h:12
-msgid "Create Repository"
-msgstr "Создать репозитория"
-
-#: ../data/glade/repository_editor.glade.h:13
-#: ../plugins/repository_editor/repository_editor.glade.h:13
-#, fuzzy
-msgid "Delete"
-msgstr "_Удалить"
-
-#: ../data/glade/repository_editor.glade.h:14
-#: ../plugins/repository_editor/repository_editor.glade.h:14
-msgid "Delete missing tracks from the iPod or repository"
-msgstr "Удалять отсутствующие дорожки с iPod или из репозитория"
-
-#: ../data/glade/repository_editor.glade.h:15
-#: ../plugins/repository_editor/repository_editor.glade.h:15
-msgid ""
-"Directories to sync with are determined from the filenames of the tracks in "
-"the playlist."
-msgstr ""
-"Папки, подлежащие синхронизации, определяются по именам файлов дорожек в "
-"списке воспроизведения."
-
-#: ../data/glade/repository_editor.glade.h:16
-#: ../plugins/repository_editor/repository_editor.glade.h:16
-msgid "Don't automatically sync on startup"
-msgstr "Не синхронизироваться автоматически при запуске"
-
-#: ../data/glade/repository_editor.glade.h:17
-#: ../plugins/repository_editor/repository_editor.glade.h:17
-msgid "Initialize iPod"
-msgstr "Инициализировать iPod"
-
-#: ../data/glade/repository_editor.glade.h:18
-#: ../plugins/repository_editor/repository_editor.glade.h:18
-msgid ""
-"Insert before\n"
-"Insert after"
-msgstr ""
-"Вставить перед\n"
-"Вставить после"
-
-#: ../data/glade/repository_editor.glade.h:20
-#: ../plugins/repository_editor/repository_editor.glade.h:20
-msgid "Model:"
-msgstr "Модель:"
-
-#: ../data/glade/repository_editor.glade.h:21
-#: ../plugins/repository_editor/repository_editor.glade.h:21
-msgid ""
-"Normally, if a track is no longer present in the sync directory, it will be "
-"removed from the playlist, but not from the iPod or local repository.\n"
-"If this option is checked, tracks will be completely removed from the iPod "
-"or local repository, unless the track is a member of other playlists as "
-"well.\n"
-"NOTE: if you sync with the master playlist, you must check this option if "
-"you want tracks to be removed, because removing from the master playlist "
-"means removing from the iPod."
-msgstr ""
-"Как правило, если дорожка больше не существует в папке для синхронизации,она "
-"будет удалена из списка воспроизведения, но не с iPod (из репозитория).\n"
-"Если эта опция включена, дорожки будут полностью удалены с iPod или "
-"излокального репозитория, кроме случаев, когда дорожка также содержитсяв "
-"других списках воспроизведения.\n"
-"ЗАМЕЧАНИЕ: если вы синхронизируетесь с главным списком воспроизведения,вы "
-"должны включить эту опцию, если вы хотите удалять дорожки, посколькуудаление "
-"из главного списка означает удаление с iPod."
-
-#: ../data/glade/repository_editor.glade.h:24
-#: ../plugins/repository_editor/repository_editor.glade.h:24
-msgid "Notes sync command:"
-msgstr "Команда синхронизации заметок:"
-
-#: ../data/glade/repository_editor.glade.h:25
-#: ../plugins/repository_editor/repository_editor.glade.h:25
-msgid "On startup automatically sync with playlist directories"
-msgstr ""
-"Автоматически синхронизироваться с папками списков воспроизведения при "
-"запуске"
-
-#: ../data/glade/repository_editor.glade.h:26
-#: ../plugins/repository_editor/repository_editor.glade.h:26
-msgid "On startup automatically sync with the following directory"
-msgstr "Автоматически синхронизироваться со следующей директорией при запуске"
-
-#: ../data/glade/repository_editor.glade.h:27
-#: ../plugins/repository_editor/repository_editor.glade.h:27
-msgid "On startup automatically update (Live Playlist)"
-msgstr ""
-"Автоматически обновлять при запуске (список воспроизведения реального "
-"времени)"
-
-#: ../data/glade/repository_editor.glade.h:28
-#: ../plugins/repository_editor/repository_editor.glade.h:28
-msgid "Path:"
-msgstr "Путь:"
-
-#: ../data/glade/repository_editor.glade.h:29
-#: ../data/glade/sorttab_display.glade.h:48
-#: ../plugins/sorttab_display/sorttab_display.glade.h:48
-#: ../plugins/repository_editor/repository_editor.glade.h:29
-#: ../plugins/playlist_display/display_playlists.c:1851
-msgid "Playlists"
-msgstr "Списки воспроизведения"
-
-#: ../data/glade/repository_editor.glade.h:30
-#: ../plugins/repository_editor/repository_editor.glade.h:30
-msgid "Repository"
-msgstr "Репозиторий"
-
-#: ../data/glade/repository_editor.glade.h:31
-#: ../plugins/repository_editor/repository_editor.glade.h:31
-msgid "Repository Options"
-msgstr "Настройки репозитория"
-
-#: ../data/glade/repository_editor.glade.h:32
-#: ../plugins/repository_editor/repository_editor.glade.h:32
-msgid "Repository name:"
-msgstr "Название репозитория:"
-
-#: ../data/glade/repository_editor.glade.h:33
-#: ../plugins/repository_editor/repository_editor.glade.h:33
-msgid "Repository type:"
-msgstr "Тип репозитория:"
-
-#: ../data/glade/repository_editor.glade.h:34
-#: ../plugins/repository_editor/repository_editor.glade.h:34
-msgid "Show summary of sync result"
-msgstr "Показать сводную информацию о результате синхронизации"
-
-#: ../data/glade/repository_editor.glade.h:36
-#: ../plugins/repository_editor/repository_editor.glade.h:36
-#, no-c-format
-msgid ""
-"Specify exact path including command line options. '%i' will be replaced "
-"with the mount point of the iPod."
-msgstr ""
-"Задайте точный путь, включая параметры командной строки. \"%i\" "
-"будетзаменено на точку монтирования iPod."
-
-#: ../data/glade/repository_editor.glade.h:37
-#: ../plugins/repository_editor/repository_editor.glade.h:37
-msgid "Update/Sync All Playlists"
-msgstr "Обновить/синхронизировать все списки воспроизведения"
-
-#: ../data/glade/repository_editor.glade.h:38
-#: ../plugins/repository_editor/repository_editor.glade.h:38
-msgid "Update/Sync Playlist"
-msgstr "Обновить/синхронизировать список воспроизведения"
-
-#: ../data/glade/repository_editor.glade.h:39
-#: ../plugins/repository_editor/repository_editor.glade.h:39
-msgid ""
-"Will show a list of tracks removed and a list of tracks newly added or "
-"updated."
-msgstr ""
-"Показывает список удалённых дорожек, а также список новых иобновлённых "
-"дорожек."
-
-#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
-#: ../data/glade/repository_editor.glade.h:41
-#: ../plugins/repository_editor/repository_editor.glade.h:41
-msgid ""
-"iPod\n"
-"Local Repository (Standard)\n"
-"Local Repository (Podcasts)\n"
-msgstr ""
-"iPod\n"
-"Локальный репозиторий (стандартный)\n"
-"Локальный репозитория (подкасты)\n"
-
-#: ../data/glade/repository_editor.glade.h:45
-#: ../plugins/repository_editor/repository_editor.glade.h:45
-msgid "iPod mountpoint:"
-msgstr "Точка монтирования iPod:"
-
-#: ../data/glade/repository_editor.glade.h:46
-#: ../plugins/repository_editor/repository_editor.glade.h:46
-msgid "iTunesDB backup:"
-msgstr "Резервная копия iTunesDB:"
-
-#: ../data/glade/cover_display.glade.h:1
-#: ../plugins/cover_display/cover_display.glade.h:1
-msgid "<"
-msgstr "<"
-
-#: ../data/glade/cover_display.glade.h:2
-#: ../plugins/cover_display/cover_display.glade.h:2
-msgid "<b>Cover Art Display</b>"
-msgstr "<b>Отображение обложки</b>"
-
-#: ../data/glade/cover_display.glade.h:3
-#: ../plugins/cover_display/cover_display.glade.h:3
-msgid ">"
-msgstr ">"
-
-#: ../data/glade/cover_display.glade.h:4
-#: ../plugins/cover_display/cover_display.glade.h:4
-msgid "Artwork Preview"
-msgstr "Предпросмотр изображения"
-
-#: ../data/glade/cover_display.glade.h:5
-#: ../plugins/cover_display/cover_display.glade.h:5
-msgid "Background color"
-msgstr "Цвет фона"
-
-#: ../data/glade/cover_display.glade.h:6
-#: ../plugins/cover_display/cover_display.glade.h:6
-msgid "Choose a Different Colour for the CoverArt Display Background"
-msgstr "Выберите другой цвет для фона обложки"
-
-#: ../data/glade/cover_display.glade.h:7
-#: ../plugins/cover_display/cover_display.glade.h:7
-#, fuzzy
-msgid "Cover Art Display"
-msgstr "<b>Отображение обложки</b>"
-
-#: ../data/glade/cover_display.glade.h:8
-#: ../plugins/cover_display/cover_display.glade.h:8
-msgid "Text color"
-msgstr "Цвет текста"
-
-#: ../data/glade/media_player.glade.h:1
-#: ../plugins/media_player/media_player.glade.h:1
-msgid "00:00:00"
-msgstr ""
-
-#: ../data/glade/media_player.glade.h:2
-#: ../plugins/media_player/media_player.glade.h:2
-msgid "Next"
-msgstr ""
-
-#: ../data/glade/media_player.glade.h:3 ../plugins/media_player/plugin.c:169
-#: ../plugins/media_player/media_player.glade.h:3
-#, fuzzy
-msgid "Play"
-msgstr "Воспроизведено"
-
-#: ../data/glade/media_player.glade.h:4
-#: ../plugins/media_player/media_player.glade.h:4
-msgid "Previous"
-msgstr ""
-
-#: ../data/glade/media_player.glade.h:5
-#: ../plugins/media_player/media_player.glade.h:5
-#, fuzzy
-msgid "Stop"
-msgstr "до"
-
-#: ../data/glade/media_player.glade.h:6
-#: ../plugins/media_player/media_player.glade.h:6
-#: ../libgtkpod/misc_conversion.c:83
-msgid "Volume"
-msgstr "Том"
-
-#: ../data/glade/playlist_display.glade.h:1
-#: ../data/glade/sorttab_display.glade.h:11
-#: ../plugins/sorttab_display/sorttab_display.glade.h:11
-#: ../plugins/playlist_display/playlist_display.glade.h:1
-msgid "<b>Ascending</b>"
-msgstr "<b>По возрастанию</b>"
-
-#: ../data/glade/playlist_display.glade.h:2
-#: ../data/glade/sorttab_display.glade.h:13
-#: ../plugins/sorttab_display/sorttab_display.glade.h:13
-#: ../plugins/playlist_display/playlist_display.glade.h:2
-msgid "<b>Descending</b>"
-msgstr "<b>По убыванию</b>"
-
-#: ../data/glade/playlist_display.glade.h:3
-#: ../data/glade/sorttab_display.glade.h:18
-#: ../plugins/sorttab_display/sorttab_display.glade.h:18
-#: ../plugins/playlist_display/playlist_display.glade.h:3
-msgid "<b>None</b>"
-msgstr "<b>Нет</b>"
-
-#: ../data/glade/playlist_display.glade.h:4
-#: ../plugins/playlist_display/playlist_display.glade.h:4
-#, fuzzy
-msgid "<b>Playlist Sort Order</b>"
-msgstr "<b>Порядок сортировки</b>"
-
-#: ../data/glade/playlist_display.glade.h:5
-#: ../data/glade/sorttab_display.glade.h:28
-#: ../plugins/sorttab_display/sorttab_display.glade.h:28
-#: ../plugins/playlist_display/playlist_display.glade.h:5
-msgid "Case sensitive sorting (setting affects all sorting)"
-msgstr ""
-
-#: ../data/glade/playlist_display.glade.h:6
-#: ../data/glade/sorttab_display.glade.h:34
-#: ../plugins/sorttab_display/sorttab_display.glade.h:34
-#: ../plugins/playlist_display/playlist_display.glade.h:6
-msgid ""
-"If checked, sorting will be case sensitive. Please note that case sensitive "
-"sorting will not work well with most charsets."
-msgstr ""
-"Если опция включена, сортировка будет учитывать регистр. Имейте в виду, что "
-"сортировка с учётнм регистра не работает корректно с большинством кодировок."
-
-#: ../data/glade/playlist_display.glade.h:7
-#: ../plugins/playlist_display/plugin.c:307
-#: ../plugins/playlist_display/playlist_display.glade.h:7
-#, fuzzy
-msgid "Playlist Display"
-msgstr "Списки воспроизведения"
-
-#: ../data/glade/track_display.glade.h:1
-#: ../plugins/track_display/track_display.glade.h:1
-msgid "<b>Available Columns</b>"
-msgstr "<b>Доступные столбцы</b>"
-
-#: ../data/glade/track_display.glade.h:2
-#: ../plugins/track_display/track_display.glade.h:2
-msgid "<b>Displayed Columns</b>"
-msgstr "<b>Отображаемые столбцы</b>"
-
-#: ../data/glade/track_display.glade.h:3
-#: ../data/glade/sorttab_display.glade.h:16
-#: ../plugins/sorttab_display/sorttab_display.glade.h:16
-#: ../plugins/track_display/track_display.glade.h:3
-msgid "<b>Ignore Frequent Words</b>"
-msgstr "<b>Игнорировать часто встречающиеся слова</b>"
-
-#: ../data/glade/track_display.glade.h:4
-#: ../plugins/track_display/track_display.glade.h:4
-#, fuzzy
-msgid "<b>Preferred Track Execution Command</b>"
-msgstr "<b>Предпочитаемый тип ReplayGain</b>"
-
-#: ../data/glade/track_display.glade.h:5
-#: ../plugins/track_display/track_display.glade.h:5
-msgid "<span weight='bold' size='larger'>No playlist selected</span>"
-msgstr ""
-"<span weight='bold' size='larger'>Не выбран список воспроизведения</span>"
-
-#: ../data/glade/track_display.glade.h:6
-#: ../plugins/track_display/track_display.glade.h:6
-msgid "Add Column"
-msgstr "Добавить столбец"
-
-#: ../data/glade/track_display.glade.h:7
-#: ../plugins/track_display/track_display.glade.h:7
-msgid "Expand columns beyond the track list width"
-msgstr "Расширять столбцы за пределы ширины списка дорожек"
-
-#: ../data/glade/track_display.glade.h:8
-#: ../data/glade/sorttab_display.glade.h:35
-#: ../plugins/sorttab_display/sorttab_display.glade.h:35
-#: ../plugins/track_display/track_display.glade.h:8
-msgid "Ignore these words when at the beginning of the following fields:"
-msgstr "Игнорировать эти слова в начале следующих полей:"
-
-#: ../data/glade/track_display.glade.h:9 ../plugins/track_display/plugin.c:112
-#: ../plugins/track_display/track_display.glade.h:9
-#, fuzzy
-msgid "Track Display"
-msgstr "Отображение"
-
-#: ../data/glade/coverweb.glade.h:1 ../plugins/coverweb/coverweb.glade.h:1
-#, fuzzy
-msgid "<b>Bookmarks</b>"
-msgstr "<b>Метки</b>"
-
-#: ../data/glade/coverweb.glade.h:2 ../plugins/coverweb/coverweb.glade.h:2
-#, fuzzy
-msgid "Cover Browser"
-msgstr "Обзор"
-
-#: ../data/glade/sorttab_display.glade.h:1
-#: ../plugins/sorttab_display/sorttab_display.glade.h:1
-msgid "    "
-msgstr "    "
-
-#: ../data/glade/sorttab_display.glade.h:2
-#: ../plugins/sorttab_display/sorttab_display.glade.h:2
-msgid " <= cts <= "
-msgstr " <= cts <= "
-
-#: ../data/glade/sorttab_display.glade.h:3
-#: ../plugins/sorttab_display/sorttab_display.glade.h:3
-msgid ""
-"'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when "
-"finished."
-msgstr ""
-"\"ДД/ММ/ГГГГ ЧЧ/ММ < d < ДД/ММ/ГГГГ ЧЧ/ММ' или похожий. Нажмите Enter после "
-"завершения."
-
-#: ../data/glade/sorttab_display.glade.h:4
-#: ../plugins/sorttab_display/sorttab_display.glade.h:4
-msgid "0"
-msgstr "0"
-
-#: ../data/glade/sorttab_display.glade.h:5
-#: ../plugins/sorttab_display/sorttab_display.glade.h:5
-msgid "1"
-msgstr "1"
-
-#: ../data/glade/sorttab_display.glade.h:6
-#: ../plugins/sorttab_display/sorttab_display.glade.h:6
-msgid "2"
-msgstr "2"
-
-#: ../data/glade/sorttab_display.glade.h:7
-#: ../plugins/sorttab_display/sorttab_display.glade.h:7
-msgid "3"
-msgstr "3"
-
-#: ../data/glade/sorttab_display.glade.h:8
-#: ../plugins/sorttab_display/sorttab_display.glade.h:8
-msgid "4"
-msgstr "4"
-
-#: ../data/glade/sorttab_display.glade.h:9
-#: ../plugins/sorttab_display/sorttab_display.glade.h:9
-msgid "5"
-msgstr "5"
-
-#: ../data/glade/sorttab_display.glade.h:10
-#: ../plugins/sorttab_display/sorttab_display.glade.h:10
-msgid ":"
-msgstr ":"
-
-#: ../data/glade/sorttab_display.glade.h:12
-#: ../plugins/sorttab_display/sorttab_display.glade.h:12
-msgid "<b>Auto Store</b>"
-msgstr "<b>Автосохранение</b>"
-
-#: ../data/glade/sorttab_display.glade.h:14
-#: ../plugins/sorttab_display/sorttab_display.glade.h:14
-#, fuzzy
-msgid "<b>Filter Sort Order</b>"
-msgstr "<b>Порядок сортировки</b>"
-
-#: ../data/glade/sorttab_display.glade.h:15
-#: ../plugins/sorttab_display/sorttab_display.glade.h:15
-msgid "<b>Filter Tabs</b>"
-msgstr "<b>Вкладки фильтрации</b>"
-
-#: ../data/glade/sorttab_display.glade.h:17
-#: ../plugins/sorttab_display/sorttab_display.glade.h:17
-msgid "<b>Lower Margin</b>"
-msgstr "<b>Нижняя граница</b>"
-
-#: ../data/glade/sorttab_display.glade.h:19
-#: ../plugins/sorttab_display/sorttab_display.glade.h:19
-msgid "<b>Sort Order</b>"
-msgstr "<b>Порядок сортировки</b>"
-
-#: ../data/glade/sorttab_display.glade.h:20
-#: ../plugins/sorttab_display/sorttab_display.glade.h:20
-msgid "<b>Upper Margin</b>"
-msgstr "<b>Верхняя граница</b>"
-
-#: ../data/glade/sorttab_display.glade.h:21
-#: ../plugins/sorttab_display/sorttab_display.glade.h:21
-msgid ""
-"<span weight=\"bold\" size=\"larger\">Please specify a time interval</span>"
-msgstr ""
-"<span weight=\"bold\" size=\"larger\">Пожалуйста, задайте интервал времени</"
-"span>"
-
-#: ../data/glade/sorttab_display.glade.h:22
-#: ../plugins/sorttab_display/sorttab_display.glade.h:22
-msgid "Added:"
-msgstr "Добавлено:"
-
-#: ../data/glade/sorttab_display.glade.h:23
-#: ../plugins/sorttab_display/sorttab_display.glade.h:23
-msgid "All (AND)"
-msgstr "Все (И)"
-
-#: ../data/glade/sorttab_display.glade.h:24
-#: ../plugins/sorttab_display/sorttab_display.glade.h:24
-msgid "Any (OR)"
-msgstr "Любые (ИЛИ)"
-
-#: ../data/glade/sorttab_display.glade.h:25
-#: ../plugins/sorttab_display/sorttab_display.glade.h:25
-msgid ""
-"Automatically start displaying tracks that match the criteria entered above. "
-"If not selected, you must press 'Display' to start displaying."
-msgstr ""
-"Автоматически начать отображение дорожек, отвечающих выбранным выше "
-"критериям.Если не выбрано, вы должны нажать \"Отобразить\" для начала "
-"отображения."
-
-#: ../data/glade/sorttab_display.glade.h:26
-#: ../plugins/sorttab_display/sorttab_display.glade.h:26
-msgid "Calendar"
-msgstr "Календарь"
-
-#: ../data/glade/sorttab_display.glade.h:27
-#: ../plugins/sorttab_display/sorttab_display.glade.h:27
-msgid "Case sensitive sorting"
-msgstr "Сортировка с учётом регистра"
-
-#: ../data/glade/sorttab_display.glade.h:29
-#: ../plugins/sorttab_display/sorttab_display.glade.h:29
-msgid "Category:"
-msgstr "Категория: "
-
-#: ../data/glade/sorttab_display.glade.h:30
-#: ../plugins/sorttab_display/sorttab_display.glade.h:30
-msgid "Display tracks that match the criteria entered above."
-msgstr "Отобразить дорожки, удовлетворяющие введённым выше критериям."
-
-#: ../data/glade/sorttab_display.glade.h:31
-#: ../plugins/sorttab_display/sorttab_display.glade.h:31
-msgid "Filter tab:"
-msgstr "Вкладка фильтрации:"
-
-#: ../data/glade/sorttab_display.glade.h:32
-#: ../plugins/sorttab_display/sorttab_display.glade.h:32
-msgid "Filter tabs"
-msgstr "Размер файлаВкладки фильтрации"
-
-#: ../data/glade/sorttab_display.glade.h:33
-#: ../plugins/sorttab_display/sorttab_display.glade.h:33
-msgid "Group artist filter tab by compilation CDs"
-msgstr "Группировать по исполнителям на CD сборников"
-
-#: ../data/glade/sorttab_display.glade.h:36
-#: ../plugins/sorttab_display/sorttab_display.glade.h:36
-msgid ""
-"In order to save the displayed track order to the iPod choose 'Save "
-"Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
-msgstr ""
-"Чтобы сохранить отображаемый порядок дорожек на iPod, выберите пункт"
-"\"Сохранить отображаемый порядок дорожек\" в меню \"Правка\" или опцию"
-"\"Автосохранение\" ниже."
-
-#: ../data/glade/sorttab_display.glade.h:37
-#: ../plugins/sorttab_display/sorttab_display.glade.h:37
-msgid ""
-"Last Played\n"
-"Last Modified\n"
-"Added\n"
-msgstr ""
-"Воспроизведено\n"
-"Изменено\n"
-"Добавлено\n"
-
-#: ../data/glade/sorttab_display.glade.h:41
-#: ../plugins/sorttab_display/sorttab_display.glade.h:41
-msgid "Logic:"
-msgstr " Логика: "
-
-#: ../data/glade/sorttab_display.glade.h:42
-#: ../plugins/sorttab_display/sorttab_display.glade.h:42
-msgid "Modified:"
-msgstr "Изменено:"
-
-#: ../data/glade/sorttab_display.glade.h:43
-#: ../plugins/sorttab_display/sorttab_display.glade.h:43
-msgid "No lower margin"
-msgstr "Без нижней границы"
-
-#: ../data/glade/sorttab_display.glade.h:44
-#: ../plugins/sorttab_display/sorttab_display.glade.h:44
-msgid "No upper margin"
-msgstr "Без верхней границы"
-
-#: ../data/glade/sorttab_display.glade.h:45
-#: ../plugins/sorttab_display/sorttab_display.glade.h:45
-msgid "Number of filter tabs:"
-msgstr "Число вкладок сортировки:"
-
-#: ../data/glade/sorttab_display.glade.h:46
-#: ../plugins/sorttab_display/sorttab_display.glade.h:46
-msgid "Playcount:"
-msgstr "Число воспроизведений:"
-
-#: ../data/glade/sorttab_display.glade.h:47
-#: ../plugins/sorttab_display/sorttab_display.glade.h:47
-msgid "Played:"
-msgstr "Воспроизведено:"
-
-#: ../data/glade/sorttab_display.glade.h:49
-#: ../plugins/sorttab_display/sorttab_display.glade.h:49
-msgid "Please refer to the notice below."
-msgstr "Пожалуйста, обратитесь к замечанию ниже."
-
-#: ../data/glade/sorttab_display.glade.h:50
-#: ../plugins/sorttab_display/sorttab_display.glade.h:50
-msgid "Rating:"
-msgstr "Рейтинг:"
-
-#: ../data/glade/sorttab_display.glade.h:51
-#: ../plugins/sorttab_display/sorttab_display.glade.h:51
-msgid "Select '-1' for no upper limit."
-msgstr "Выберите \"-1\" для отключения верхней границы."
-
-#: ../data/glade/sorttab_display.glade.h:52
-#: ../plugins/sorttab_display/sorttab_display.glade.h:52
-msgid "Select '0' for no lower limit."
-msgstr "Выберите \"0\" для отключения нижней границы."
-
-#: ../data/glade/sorttab_display.glade.h:53
-#: ../plugins/sorttab_display/sorttab_display.glade.h:53
-msgid "Sort tracks according to: "
-msgstr "Сортировать дорожки по:"
-
-#: ../data/glade/sorttab_display.glade.h:54
-#: ../plugins/sorttab_display/sorttab_display.glade.h:54
-msgid "Sorting Options"
-msgstr "Параметры сортировки"
-
-#: ../data/glade/sorttab_display.glade.h:55
-#: ../plugins/sorttab_display/sorttab_display.glade.h:55
-msgid "Specify interval"
-msgstr "Задайте интервал"
-
-#: ../data/glade/sorttab_display.glade.h:56
-#: ../plugins/sorttab_display/sorttab_display.glade.h:56
-msgid "Start display automatically"
-msgstr "Начать отображение автоматически"
-
-#: ../data/glade/sorttab_display.glade.h:57
-#: ../plugins/sorttab_display/sorttab_display.glade.h:57
-msgid "Time:"
-msgstr "Время:"
-
-#: ../data/glade/sorttab_display.glade.h:58
-#: ../plugins/sorttab_display/sorttab_display.glade.h:58
-#, fuzzy
-msgid "Track Filter"
-msgstr "Номер дорожки"
-
-#: ../data/glade/sorttab_display.glade.h:59
-#: ../plugins/sorttab_display/sorttab_display.glade.h:59
-msgid "Tracks"
-msgstr "Дорожки"
-
-#: ../data/glade/sorttab_display.glade.h:60
-#: ../plugins/sorttab_display/sorttab_display.glade.h:60
-msgid "_Display"
-msgstr "_Отображение"
-
-#: ../data/glade/sorttab_display.glade.h:61
-#: ../plugins/details_editor/details.c:1201
-#: ../plugins/sorttab_display/sorttab_display.glade.h:61
-msgid "n/a"
-msgstr "н/д"
-
-#: ../data/glade/sorttab_display.glade.h:62
-#: ../plugins/sorttab_display/sorttab_display.glade.h:62
-msgid "special_sorttab -- Don't translate!"
-msgstr "special_sorryab -- Не переводить!"
-
-#: ../data/glade/details_editor.glade.h:1
-#: ../plugins/details_editor/details_editor.glade.h:1
-msgid "(Checked)"
-msgstr "(Отмечено)"
-
-#: ../data/glade/details_editor.glade.h:2
-#: ../plugins/details_editor/details_editor.glade.h:2
-msgid ""
-"Change all tracks\n"
-"simultaneously"
-msgstr ""
-"Изменить все дорожки\n"
-"одновременно"
-
-#: ../data/glade/details_editor.glade.h:4
-#: ../plugins/details_editor/details_editor.glade.h:4
-msgid "Cover"
-msgstr "Обложка"
-
-#: ../data/glade/details_editor.glade.h:5
-#: ../plugins/details_editor/details_editor.glade.h:5
-msgid "Details"
-msgstr "Подробности"
-
-#: ../data/glade/details_editor.glade.h:6
-#: ../plugins/details_editor/details_editor.glade.h:6
-msgid ""
-"If you check this, information (cover art and meta information) changed for "
-"this track will be copied to all other selected tracks as well. Use with "
-"care."
-msgstr ""
-"При выборе этой опции сведения (обложка и метаданные), изменившиесяу данной "
-"дорожки, будут также скопированы во все остальные дорожки.Используйте с "
-"осторожностью."
-
-#: ../data/glade/details_editor.glade.h:7
-#: ../plugins/details_editor/details_editor.glade.h:7
-msgid "Set Cover Art from _File"
-msgstr "Выбрать обложку из _файла"
-
-#: ../data/glade/details_editor.glade.h:8
-#: ../plugins/details_editor/details_editor.glade.h:8
-msgid "Undo _Track"
-msgstr "Отменить _дорожку"
-
-#: ../data/glade/details_editor.glade.h:9
-#: ../plugins/details_editor/details_editor.glade.h:9
-msgid "_General"
-msgstr "_Общие"
-
-#: ../data/glade/details_editor.glade.h:10
-#: ../plugins/details_editor/details_editor.glade.h:10
-msgid "_Lyrics"
-msgstr "_Текст песни"
-
-#: ../data/glade/details_editor.glade.h:11
-#: ../plugins/details_editor/details_editor.glade.h:11
-msgid "_Misc."
-msgstr "_Разное"
-
-#: ../data/glade/details_editor.glade.h:12
-#: ../plugins/details_editor/details_editor.glade.h:12
-msgid "_Podcasts"
-msgstr "_Подкасты"
-
-#: ../data/glade/details_editor.glade.h:13
-#: ../plugins/details_editor/details_editor.glade.h:13
-msgid "_Remove Cover Art"
-msgstr "_Удалить обложку"
-
-#: ../data/glade/details_editor.glade.h:14
-#: ../plugins/details_editor/details_editor.glade.h:14
-msgid "_Sorting"
-msgstr "_Сортировка"
-
-#: ../data/glade/details_editor.glade.h:15
-#: ../plugins/details_editor/details_editor.glade.h:15
-msgid "_Undo All"
-msgstr "_Отменить все"
-
-#: ../data/glade/details_editor.glade.h:16
-#: ../plugins/details_editor/details_editor.glade.h:16
-msgid "_Video"
-msgstr "_Видео"
-
 #. Action name
 #. Stock icon
 #: ../plugins/details_editor/plugin.c:48 ../libgtkpod/context_menus.c:294
@@ -1005,6 +179,11 @@ msgstr "%s (данные изображения повреждены или не
 msgid "Please report unknown mediatype %x\n"
 msgstr "Пожалуйста, сообщите о неизвестном типе данных %x\n"
 
+#: ../plugins/details_editor/details.c:1201
+#: ../plugins/sorttab_display/sorttab_display.glade.h:61
+msgid "n/a"
+msgstr "н/д"
+
 #: ../plugins/details_editor/details.c:1252
 msgid "<b>n/a</b>"
 msgstr "<b>н/д</b>"
@@ -1020,6 +199,11 @@ msgstr ""
 #, fuzzy
 msgid "Tracks in details editor have been modified."
 msgstr "Дата и время последнего изменения дорожки"
+
+#: ../plugins/details_editor/details.c:1434
+#, fuzzy
+msgid "  Edit Track Details"
+msgstr "Изменить сведения о дорожке"
 
 #: ../plugins/details_editor/details.c:1696
 #, c-format
@@ -1071,6 +255,76 @@ msgstr "Переименовать"
 #: ../plugins/cover_display/fetchcover.c:370
 msgid "Abort"
 msgstr "Отменить"
+
+#: ../plugins/details_editor/details_editor.glade.h:1
+msgid "(Checked)"
+msgstr "(Отмечено)"
+
+#: ../plugins/details_editor/details_editor.glade.h:2
+msgid ""
+"Change all tracks\n"
+"simultaneously"
+msgstr ""
+"Изменить все дорожки\n"
+"одновременно"
+
+#: ../plugins/details_editor/details_editor.glade.h:4
+msgid "Cover"
+msgstr "Обложка"
+
+#: ../plugins/details_editor/details_editor.glade.h:5
+msgid "Details"
+msgstr "Подробности"
+
+#: ../plugins/details_editor/details_editor.glade.h:6
+msgid ""
+"If you check this, information (cover art and meta information) changed for "
+"this track will be copied to all other selected tracks as well. Use with "
+"care."
+msgstr ""
+"При выборе этой опции сведения (обложка и метаданные), изменившиесяу данной "
+"дорожки, будут также скопированы во все остальные дорожки.Используйте с "
+"осторожностью."
+
+#: ../plugins/details_editor/details_editor.glade.h:7
+msgid "Set Cover Art from _File"
+msgstr "Выбрать обложку из _файла"
+
+#: ../plugins/details_editor/details_editor.glade.h:8
+msgid "Undo _Track"
+msgstr "Отменить _дорожку"
+
+#: ../plugins/details_editor/details_editor.glade.h:9
+msgid "_General"
+msgstr "_Общие"
+
+#: ../plugins/details_editor/details_editor.glade.h:10
+msgid "_Lyrics"
+msgstr "_Текст песни"
+
+#: ../plugins/details_editor/details_editor.glade.h:11
+msgid "_Misc."
+msgstr "_Разное"
+
+#: ../plugins/details_editor/details_editor.glade.h:12
+msgid "_Podcasts"
+msgstr "_Подкасты"
+
+#: ../plugins/details_editor/details_editor.glade.h:13
+msgid "_Remove Cover Art"
+msgstr "_Удалить обложку"
+
+#: ../plugins/details_editor/details_editor.glade.h:14
+msgid "_Sorting"
+msgstr "_Сортировка"
+
+#: ../plugins/details_editor/details_editor.glade.h:15
+msgid "_Undo All"
+msgstr "_Отменить все"
+
+#: ../plugins/details_editor/details_editor.glade.h:16
+msgid "_Video"
+msgstr "_Видео"
 
 #: ../plugins/filetype_m4a/mp4file.c:543 ../plugins/filetype_mp4/mp4file.c:543
 #, c-format
@@ -1129,11 +383,15 @@ msgstr ""
 msgid "M4A audio file type"
 msgstr ""
 
-#: ../plugins/coverweb/plugin.c:75 ../plugins/media_player/plugin.c:66
-#: ../plugins/cover_display/plugin.c:74
+#: ../plugins/coverweb/plugin.c:75 ../plugins/cover_display/plugin.c:74
 #, fuzzy
 msgid "Cover Display"
 msgstr "<b>Отображение обложки</b>"
+
+#: ../plugins/coverweb/plugin.c:94
+#, fuzzy
+msgid "  Cover Browser"
+msgstr "Обзор"
 
 #: ../plugins/coverweb/coverweb_preferences.c:134
 msgid "Bookmark Url"
@@ -1142,6 +400,16 @@ msgstr ""
 #: ../plugins/coverweb/coverweb_preferences.c:134
 msgid "Please enter the full url of the bookmark"
 msgstr ""
+
+#: ../plugins/coverweb/coverweb.glade.h:1
+#, fuzzy
+msgid "<b>Bookmarks</b>"
+msgstr "<b>Метки</b>"
+
+#: ../plugins/coverweb/coverweb.glade.h:2
+#, fuzzy
+msgid "Cover Browser"
+msgstr "Обзор"
 
 #: ../plugins/exporter/plugin.c:49
 #, fuzzy
@@ -1299,8 +567,9 @@ msgstr "Создать файл списка воспроизведения"
 
 #. Action name
 #. Stock icon
-#: ../plugins/info_display/plugin.c:47
-msgid "_Info Window"
+#: ../plugins/info_display/plugin.c:48
+#, fuzzy
+msgid "_Info View"
 msgstr "Окно _сведений"
 
 #: ../plugins/info_display/plugin.c:64
@@ -1308,7 +577,7 @@ msgstr "Окно _сведений"
 msgid "Info Display"
 msgstr "Отображение"
 
-#: ../plugins/info_display/infodlg.c:57
+#: ../plugins/info_display/infoview.c:49
 msgid ""
 "Total\n"
 "(iPod)"
@@ -1316,7 +585,7 @@ msgstr ""
 "Всего\n"
 "(iPod)"
 
-#: ../plugins/info_display/infodlg.c:58
+#: ../plugins/info_display/infoview.c:49
 msgid ""
 "Total\n"
 "(local)"
@@ -1324,7 +593,7 @@ msgstr ""
 "Всего\n"
 "(локально)"
 
-#: ../plugins/info_display/infodlg.c:59
+#: ../plugins/info_display/infoview.c:49
 msgid ""
 "Selected\n"
 "Playlist"
@@ -1332,7 +601,7 @@ msgstr ""
 "Выбранный\n"
 "список воспроизведения"
 
-#: ../plugins/info_display/infodlg.c:60
+#: ../plugins/info_display/infoview.c:49
 msgid ""
 "Displayed\n"
 "Tracks"
@@ -1340,7 +609,7 @@ msgstr ""
 "Отображаемые\n"
 "дорожки"
 
-#: ../plugins/info_display/infodlg.c:61
+#: ../plugins/info_display/infoview.c:50
 msgid ""
 "Selected\n"
 "Tracks"
@@ -1348,69 +617,73 @@ msgstr ""
 "Выбранные\n"
 "дорожки"
 
-#: ../plugins/info_display/infodlg.c:81
+#: ../plugins/info_display/infoview.c:58
 msgid "Number of tracks"
 msgstr "Число дорожек"
 
-#: ../plugins/info_display/infodlg.c:82 ../libgtkpod/gp_spl.c:89
+#: ../plugins/info_display/infoview.c:58 ../libgtkpod/gp_spl.c:89
 msgid "Play time"
 msgstr "Длительность"
 
-#: ../plugins/info_display/infodlg.c:83
+#: ../plugins/info_display/infoview.c:58
 msgid "File size"
 msgstr "Размер файла"
 
-#: ../plugins/info_display/infodlg.c:84
+#: ../plugins/info_display/infoview.c:58
 msgid "Number of playlists"
 msgstr "Число списков воспроизведения"
 
-#: ../plugins/info_display/infodlg.c:85
+#: ../plugins/info_display/infoview.c:58
 msgid "Deleted tracks"
 msgstr "Удалённые дорожки"
 
-#: ../plugins/info_display/infodlg.c:86
+#: ../plugins/info_display/infoview.c:59
 msgid "File size (deleted)"
 msgstr "Размер файла (удалённого)"
 
-#: ../plugins/info_display/infodlg.c:87
+#: ../plugins/info_display/infoview.c:59
 msgid "Non-transferred tracks"
 msgstr "Непереданные дорожки"
 
-#: ../plugins/info_display/infodlg.c:88
+#: ../plugins/info_display/infoview.c:59
 msgid "File size (non-transferred)"
 msgstr "Размер файла (непереданного)"
 
-#: ../plugins/info_display/infodlg.c:89
+#: ../plugins/info_display/infoview.c:60
 msgid "Effective free space"
 msgstr "Эффективное свободное пространство"
 
-#: ../plugins/info_display/infodlg.c:196 ../plugins/info_display/info.c:340
+#: ../plugins/info_display/infoview.c:144
 msgid "n/c"
 msgstr "n/c"
 
-#: ../plugins/info_display/infodlg.c:199 ../plugins/info_display/info.c:344
+#: ../plugins/info_display/infoview.c:147
 msgid "offline"
 msgstr "автономный"
 
-#: ../plugins/info_display/info.c:457
+#: ../plugins/info_display/infoview.c:206
+#, fuzzy
+msgid "  Repository Information"
+msgstr "Настройки репозитория"
+
+#: ../plugins/info_display/info.c:372
 msgid "B"
 msgstr "Б"
 
-#: ../plugins/info_display/info.c:457
+#: ../plugins/info_display/info.c:372
 msgid "kB"
 msgstr "КБ"
 
-#: ../plugins/info_display/info.c:457 ../libgtkpod/gp_spl.c:72
+#: ../plugins/info_display/info.c:372 ../libgtkpod/gp_spl.c:72
 #: ../libgtkpod/gp_spl.c:166
 msgid "MB"
 msgstr "МБ"
 
-#: ../plugins/info_display/info.c:457
-#: ../plugins/core_preferences/core_prefs.xml.h:64 ../libgtkpod/gp_spl.c:169
+#: ../plugins/info_display/info.c:372 ../libgtkpod/gp_spl.c:169
 msgid "GB"
 msgstr "ГБ"
 
-#: ../plugins/info_display/info.c:457
+#: ../plugins/info_display/info.c:372
 msgid "TB"
 msgstr "ТБ"
 
@@ -1446,6 +719,11 @@ msgstr "_Добавить вкладку фильтрации"
 #, fuzzy
 msgid "Fewer Filter Tabs"
 msgstr "_Удалить вкладку фильтрации"
+
+#: ../plugins/sorttab_display/plugin.c:187
+#, fuzzy
+msgid "  Track Filter"
+msgstr "Номер дорожки"
 
 #: ../plugins/sorttab_display/sorttab_display_actions.c:68
 #: ../plugins/sorttab_display/sorttab_display_actions.c:113
@@ -1499,21 +777,18 @@ msgstr "Все"
 msgid "Compilations"
 msgstr "Сборники"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2576
-#: ../plugins/core_preferences/core_prefs.xml.h:29 ../libgtkpod/gp_spl.c:80
+#: ../plugins/sorttab_display/display_sorttabs.c:2576 ../libgtkpod/gp_spl.c:80
 #: ../libgtkpod/misc_conversion.c:62
 msgid "Artist"
 msgstr "Исполнитель"
 
 #. 0
-#: ../plugins/sorttab_display/display_sorttabs.c:2579
-#: ../plugins/core_preferences/core_prefs.xml.h:24 ../libgtkpod/gp_spl.c:79
+#: ../plugins/sorttab_display/display_sorttabs.c:2579 ../libgtkpod/gp_spl.c:79
 #: ../libgtkpod/misc_conversion.c:61
 msgid "Album"
 msgstr "Альбом"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2582
-#: ../plugins/core_preferences/core_prefs.xml.h:65 ../libgtkpod/gp_spl.c:84
+#: ../plugins/sorttab_display/display_sorttabs.c:2582 ../libgtkpod/gp_spl.c:84
 #: ../libgtkpod/misc_conversion.c:64
 msgid "Genre"
 msgstr "Жанр"
@@ -1522,8 +797,7 @@ msgstr "Жанр"
 msgid "Comp."
 msgstr "Сбор."
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2588
-#: ../plugins/core_preferences/core_prefs.xml.h:90 ../libgtkpod/gp_spl.c:78
+#: ../plugins/sorttab_display/display_sorttabs.c:2588 ../libgtkpod/gp_spl.c:78
 #: ../libgtkpod/misc_conversion.c:63
 msgid "Title"
 msgstr "Название"
@@ -1579,6 +853,276 @@ msgstr "Копировать выбранные дорожки в..."
 msgid "Date format error: unrecognized character: '%s'\n"
 msgstr "Ошибка формата даты: неопознанный символ: \"%s\"\n"
 
+#: ../plugins/sorttab_display/sorttab_display.glade.h:1
+msgid "    "
+msgstr "    "
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:2
+msgid " <= cts <= "
+msgstr " <= cts <= "
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:3
+msgid ""
+"'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when "
+"finished."
+msgstr ""
+"\"ДД/ММ/ГГГГ ЧЧ/ММ < d < ДД/ММ/ГГГГ ЧЧ/ММ' или похожий. Нажмите Enter после "
+"завершения."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:4
+msgid "0"
+msgstr "0"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:5
+msgid "1"
+msgstr "1"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:6
+msgid "2"
+msgstr "2"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:7
+msgid "3"
+msgstr "3"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:8
+msgid "4"
+msgstr "4"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:9
+msgid "5"
+msgstr "5"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:10
+msgid ":"
+msgstr ":"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:11
+#: ../plugins/playlist_display/playlist_display.glade.h:1
+msgid "<b>Ascending</b>"
+msgstr "<b>По возрастанию</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:12
+msgid "<b>Auto Store</b>"
+msgstr "<b>Автосохранение</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:13
+#: ../plugins/playlist_display/playlist_display.glade.h:2
+msgid "<b>Descending</b>"
+msgstr "<b>По убыванию</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:14
+#, fuzzy
+msgid "<b>Filter Sort Order</b>"
+msgstr "<b>Порядок сортировки</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:15
+msgid "<b>Filter Tabs</b>"
+msgstr "<b>Вкладки фильтрации</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:16
+#: ../plugins/track_display/track_display.glade.h:3
+msgid "<b>Ignore Frequent Words</b>"
+msgstr "<b>Игнорировать часто встречающиеся слова</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:17
+msgid "<b>Lower Margin</b>"
+msgstr "<b>Нижняя граница</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:18
+#: ../plugins/playlist_display/playlist_display.glade.h:3
+msgid "<b>None</b>"
+msgstr "<b>Нет</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:19
+msgid "<b>Sort Order</b>"
+msgstr "<b>Порядок сортировки</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:20
+msgid "<b>Upper Margin</b>"
+msgstr "<b>Верхняя граница</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:21
+msgid ""
+"<span weight=\"bold\" size=\"larger\">Please specify a time interval</span>"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">Пожалуйста, задайте интервал времени</"
+"span>"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:22
+msgid "Added:"
+msgstr "Добавлено:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:23
+msgid "All (AND)"
+msgstr "Все (И)"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:24
+msgid "Any (OR)"
+msgstr "Любые (ИЛИ)"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:25
+msgid ""
+"Automatically start displaying tracks that match the criteria entered above. "
+"If not selected, you must press 'Display' to start displaying."
+msgstr ""
+"Автоматически начать отображение дорожек, отвечающих выбранным выше "
+"критериям.Если не выбрано, вы должны нажать \"Отобразить\" для начала "
+"отображения."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:26
+msgid "Calendar"
+msgstr "Календарь"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:27
+msgid "Case sensitive sorting"
+msgstr "Сортировка с учётом регистра"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:28
+#: ../plugins/playlist_display/playlist_display.glade.h:5
+msgid "Case sensitive sorting (setting affects all sorting)"
+msgstr ""
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:29
+msgid "Category:"
+msgstr "Категория: "
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:30
+msgid "Display tracks that match the criteria entered above."
+msgstr "Отобразить дорожки, удовлетворяющие введённым выше критериям."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:31
+msgid "Filter tab:"
+msgstr "Вкладка фильтрации:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:32
+msgid "Filter tabs"
+msgstr "Размер файлаВкладки фильтрации"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:33
+msgid "Group artist filter tab by compilation CDs"
+msgstr "Группировать по исполнителям на CD сборников"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:34
+#: ../plugins/playlist_display/playlist_display.glade.h:6
+msgid ""
+"If checked, sorting will be case sensitive. Please note that case sensitive "
+"sorting will not work well with most charsets."
+msgstr ""
+"Если опция включена, сортировка будет учитывать регистр. Имейте в виду, что "
+"сортировка с учётнм регистра не работает корректно с большинством кодировок."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:35
+#: ../plugins/track_display/track_display.glade.h:8
+msgid "Ignore these words when at the beginning of the following fields:"
+msgstr "Игнорировать эти слова в начале следующих полей:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:36
+msgid ""
+"In order to save the displayed track order to the iPod choose 'Save "
+"Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
+msgstr ""
+"Чтобы сохранить отображаемый порядок дорожек на iPod, выберите пункт"
+"\"Сохранить отображаемый порядок дорожек\" в меню \"Правка\" или опцию"
+"\"Автосохранение\" ниже."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:37
+msgid ""
+"Last Played\n"
+"Last Modified\n"
+"Added\n"
+msgstr ""
+"Воспроизведено\n"
+"Изменено\n"
+"Добавлено\n"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:41
+msgid "Logic:"
+msgstr " Логика: "
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:42
+msgid "Modified:"
+msgstr "Изменено:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:43
+msgid "No lower margin"
+msgstr "Без нижней границы"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:44
+msgid "No upper margin"
+msgstr "Без верхней границы"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:45
+msgid "Number of filter tabs:"
+msgstr "Число вкладок сортировки:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:46
+msgid "Playcount:"
+msgstr "Число воспроизведений:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:47
+msgid "Played:"
+msgstr "Воспроизведено:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:48
+#: ../plugins/repository_editor/repository_editor.glade.h:29
+#: ../plugins/playlist_display/display_playlists.c:1851
+msgid "Playlists"
+msgstr "Списки воспроизведения"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:49
+msgid "Please refer to the notice below."
+msgstr "Пожалуйста, обратитесь к замечанию ниже."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:50
+msgid "Rating:"
+msgstr "Рейтинг:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:51
+msgid "Select '-1' for no upper limit."
+msgstr "Выберите \"-1\" для отключения верхней границы."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:52
+msgid "Select '0' for no lower limit."
+msgstr "Выберите \"0\" для отключения нижней границы."
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:53
+msgid "Sort tracks according to: "
+msgstr "Сортировать дорожки по:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:54
+msgid "Sorting Options"
+msgstr "Параметры сортировки"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:55
+msgid "Specify interval"
+msgstr "Задайте интервал"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:56
+msgid "Start display automatically"
+msgstr "Начать отображение автоматически"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:57
+msgid "Time:"
+msgstr "Время:"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:58
+#, fuzzy
+msgid "Track Filter"
+msgstr "Номер дорожки"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:59
+msgid "Tracks"
+msgstr "Дорожки"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:60
+msgid "_Display"
+msgstr "_Отображение"
+
+#: ../plugins/sorttab_display/sorttab_display.glade.h:62
+msgid "special_sorttab -- Don't translate!"
+msgstr "special_sorryab -- Не переводить!"
+
 #: ../plugins/track_display/track_display_preferences.c:234
 msgid "New Word to Ignore"
 msgstr ""
@@ -1604,6 +1148,17 @@ msgstr "Выбранные дорожки с iPod"
 #, fuzzy
 msgid "Selected Tracks"
 msgstr "Выбранные _дорожки"
+
+#: ../plugins/track_display/plugin.c:112
+#: ../plugins/track_display/track_display.glade.h:9
+#, fuzzy
+msgid "Track Display"
+msgstr "Отображение"
+
+#: ../plugins/track_display/plugin.c:136
+#, fuzzy
+msgid "  Playlist Tracks"
+msgstr "Списки воспроизведения"
 
 #: ../plugins/track_display/track_display_context_menu.c:51
 #, fuzzy
@@ -1699,6 +1254,32 @@ msgstr "Том"
 msgid "Sndchk."
 msgstr "Sndchk."
 
+#: ../plugins/track_display/track_display.glade.h:1
+msgid "<b>Available Columns</b>"
+msgstr "<b>Доступные столбцы</b>"
+
+#: ../plugins/track_display/track_display.glade.h:2
+msgid "<b>Displayed Columns</b>"
+msgstr "<b>Отображаемые столбцы</b>"
+
+#: ../plugins/track_display/track_display.glade.h:4
+#, fuzzy
+msgid "<b>Preferred Track Execution Command</b>"
+msgstr "<b>Предпочитаемый тип ReplayGain</b>"
+
+#: ../plugins/track_display/track_display.glade.h:5
+msgid "<span weight='bold' size='larger'>No playlist selected</span>"
+msgstr ""
+"<span weight='bold' size='larger'>Не выбран список воспроизведения</span>"
+
+#: ../plugins/track_display/track_display.glade.h:6
+msgid "Add Column"
+msgstr "Добавить столбец"
+
+#: ../plugins/track_display/track_display.glade.h:7
+msgid "Expand columns beyond the track list width"
+msgstr "Расширять столбцы за пределы ширины списка дорожек"
+
 #: ../plugins/filetype_wav/plugin.c:78
 msgid "Wav audio file type"
 msgstr ""
@@ -1731,6 +1312,11 @@ msgstr "Удалить снимок"
 #: ../plugins/photo_editor/photo_editor_context_menu.c:78
 msgid "Rename Album"
 msgstr "Переименовать альбом"
+
+#: ../plugins/photo_editor/display_photo.c:163
+#, fuzzy
+msgid "  iPod Photo Editor"
+msgstr "Окно снимков"
 
 #: ../plugins/photo_editor/display_photo.c:225
 #: ../plugins/photo_editor/display_photo.c:1483
@@ -1812,6 +1398,43 @@ msgstr "Добавить папку с изображениями на iPod. В�
 msgid "<No members>\n"
 msgstr "<Нет членов>\n"
 
+#: ../plugins/photo_editor/photo_editor.glade.h:1
+msgid "Add Images from a Directory"
+msgstr "Добавить изображения из папки"
+
+#: ../plugins/photo_editor/photo_editor.glade.h:2
+#, fuzzy
+msgid "Photo Image"
+msgstr "Фотоальбомы"
+
+#: ../plugins/photo_editor/photo_editor.glade.h:3
+msgid "Photo Window"
+msgstr "Окно снимков"
+
+#: ../plugins/photo_editor/photo_editor.glade.h:4
+msgid "R_ename Album"
+msgstr "Пере&именовать альбом"
+
+#: ../plugins/photo_editor/photo_editor.glade.h:5
+msgid "_Album"
+msgstr "_Альбом"
+
+#: ../plugins/media_player/plugin.c:66
+#, fuzzy
+msgid "Media Player"
+msgstr "Тип содержимого"
+
+#: ../plugins/media_player/plugin.c:91
+#, fuzzy
+msgid "  Media Player"
+msgstr "Тип содержимого"
+
+#: ../plugins/media_player/plugin.c:169
+#: ../plugins/media_player/media_player.glade.h:3
+#, fuzzy
+msgid "Play"
+msgstr "Воспроизведено"
+
 #: ../plugins/media_player/media_player.c:104
 #, c-format
 msgid "%d:%02d of %d:%02d"
@@ -1837,6 +1460,28 @@ msgstr "<b>Метки</b>"
 #, c-format
 msgid "<b>%s</b> from %s"
 msgstr ""
+
+#: ../plugins/media_player/media_player.glade.h:1
+msgid "00:00:00"
+msgstr ""
+
+#: ../plugins/media_player/media_player.glade.h:2
+msgid "Next"
+msgstr ""
+
+#: ../plugins/media_player/media_player.glade.h:4
+msgid "Previous"
+msgstr ""
+
+#: ../plugins/media_player/media_player.glade.h:5
+#, fuzzy
+msgid "Stop"
+msgstr "до"
+
+#: ../plugins/media_player/media_player.glade.h:6
+#: ../libgtkpod/misc_conversion.c:83
+msgid "Volume"
+msgstr "Том"
 
 #: ../plugins/filetype_video/plugin.c:78
 msgid "Generic Video file type"
@@ -1968,6 +1613,11 @@ msgstr "Список воспроизведения подкастов"
 msgid "Regular Playlist"
 msgstr "Обычный список воспроизведения"
 
+#: ../plugins/repository_editor/repository_editor.c:1334
+#, fuzzy
+msgid "  Edit iPod Repositories"
+msgstr "Свойства iPod"
+
 #. Strings used several times
 #: ../plugins/repository_editor/repository_init.c:48
 msgid "Select or enter your model"
@@ -1996,6 +1646,201 @@ msgstr ""
 "Не удалось определить выбранную вами модель iPod -- возможно,это ошибка в "
 "библиотеке GTK+ или glade.\n"
 "\n"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:1
+msgid "<b>General</b>"
+msgstr "<b>Общие</b>"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:2
+msgid "<b>Playlist Options</b>"
+msgstr "<b>Параметры списка воспроизведения</b>"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:3
+msgid "<b>Please select mountpoint and your iPod model</b>"
+msgstr "<b>Пожалуйста, выберите точку монтирования и модель iPod</b>"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:4
+msgid "<b>Synchronization</b>"
+msgstr "<b>Синхронизация</b>"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:5
+msgid "Add New ..."
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.glade.h:6
+#: ../plugins/core_preferences/core_prefs.c:186
+msgid "Browse"
+msgstr "Обзор"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:7
+msgid "Browse..."
+msgstr "Обзор..."
+
+#: ../plugins/repository_editor/repository_editor.glade.h:8
+msgid "Calendar sync command:"
+msgstr "Команда синхронизации календаря:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:9
+msgid "Call automatically when synchronizing iTunesDB"
+msgstr "Вызывать автоматически при синхронизации iTunesDB"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:10
+msgid "Confirm before removing tracks from the iPod or repository"
+msgstr ""
+"Выводить подтверждение перед удалением дорожек с iPod или из репозитория"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:11
+msgid "Contacts sync command:"
+msgstr "Команда синхронизации контактов:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:12
+msgid "Create Repository"
+msgstr "Создать репозитория"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:13
+#, fuzzy
+msgid "Delete"
+msgstr "_Удалить"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:14
+msgid "Delete missing tracks from the iPod or repository"
+msgstr "Удалять отсутствующие дорожки с iPod или из репозитория"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:15
+msgid ""
+"Directories to sync with are determined from the filenames of the tracks in "
+"the playlist."
+msgstr ""
+"Папки, подлежащие синхронизации, определяются по именам файлов дорожек в "
+"списке воспроизведения."
+
+#: ../plugins/repository_editor/repository_editor.glade.h:16
+msgid "Don't automatically sync on startup"
+msgstr "Не синхронизироваться автоматически при запуске"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:17
+msgid "Initialize iPod"
+msgstr "Инициализировать iPod"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:18
+msgid ""
+"Insert before\n"
+"Insert after"
+msgstr ""
+"Вставить перед\n"
+"Вставить после"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:20
+msgid "Model:"
+msgstr "Модель:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:21
+msgid ""
+"Normally, if a track is no longer present in the sync directory, it will be "
+"removed from the playlist, but not from the iPod or local repository.\n"
+"If this option is checked, tracks will be completely removed from the iPod "
+"or local repository, unless the track is a member of other playlists as "
+"well.\n"
+"NOTE: if you sync with the master playlist, you must check this option if "
+"you want tracks to be removed, because removing from the master playlist "
+"means removing from the iPod."
+msgstr ""
+"Как правило, если дорожка больше не существует в папке для синхронизации,она "
+"будет удалена из списка воспроизведения, но не с iPod (из репозитория).\n"
+"Если эта опция включена, дорожки будут полностью удалены с iPod или "
+"излокального репозитория, кроме случаев, когда дорожка также содержитсяв "
+"других списках воспроизведения.\n"
+"ЗАМЕЧАНИЕ: если вы синхронизируетесь с главным списком воспроизведения,вы "
+"должны включить эту опцию, если вы хотите удалять дорожки, посколькуудаление "
+"из главного списка означает удаление с iPod."
+
+#: ../plugins/repository_editor/repository_editor.glade.h:24
+msgid "Notes sync command:"
+msgstr "Команда синхронизации заметок:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:25
+msgid "On startup automatically sync with playlist directories"
+msgstr ""
+"Автоматически синхронизироваться с папками списков воспроизведения при "
+"запуске"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:26
+msgid "On startup automatically sync with the following directory"
+msgstr "Автоматически синхронизироваться со следующей директорией при запуске"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:27
+msgid "On startup automatically update (Live Playlist)"
+msgstr ""
+"Автоматически обновлять при запуске (список воспроизведения реального "
+"времени)"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:28
+msgid "Path:"
+msgstr "Путь:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:30
+msgid "Repository"
+msgstr "Репозиторий"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:31
+msgid "Repository Options"
+msgstr "Настройки репозитория"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:32
+msgid "Repository name:"
+msgstr "Название репозитория:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:33
+msgid "Repository type:"
+msgstr "Тип репозитория:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:34
+msgid "Show summary of sync result"
+msgstr "Показать сводную информацию о результате синхронизации"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:36
+#, no-c-format
+msgid ""
+"Specify exact path including command line options. '%i' will be replaced "
+"with the mount point of the iPod."
+msgstr ""
+"Задайте точный путь, включая параметры командной строки. \"%i\" "
+"будетзаменено на точку монтирования iPod."
+
+#: ../plugins/repository_editor/repository_editor.glade.h:37
+msgid "Update/Sync All Playlists"
+msgstr "Обновить/синхронизировать все списки воспроизведения"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:38
+msgid "Update/Sync Playlist"
+msgstr "Обновить/синхронизировать список воспроизведения"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:39
+msgid ""
+"Will show a list of tracks removed and a list of tracks newly added or "
+"updated."
+msgstr ""
+"Показывает список удалённых дорожек, а также список новых иобновлённых "
+"дорожек."
+
+#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
+#: ../plugins/repository_editor/repository_editor.glade.h:41
+msgid ""
+"iPod\n"
+"Local Repository (Standard)\n"
+"Local Repository (Podcasts)\n"
+msgstr ""
+"iPod\n"
+"Локальный репозиторий (стандартный)\n"
+"Локальный репозитория (подкасты)\n"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:45
+msgid "iPod mountpoint:"
+msgstr "Точка монтирования iPod:"
+
+#: ../plugins/repository_editor/repository_editor.glade.h:46
+msgid "iTunesDB backup:"
+msgstr "Резервная копия iTunesDB:"
 
 #: ../plugins/filetype_flac/plugin.c:78
 #, fuzzy
@@ -2052,6 +1897,11 @@ msgstr "Выбрать обложку из файла"
 msgid "View Full Size Artwork"
 msgstr "Просмотреть изображение в полном размере"
 
+#: ../plugins/cover_display/plugin.c:99
+#, fuzzy
+msgid "  Cover Artwork"
+msgstr "Обзор"
+
 #: ../plugins/cover_display/display_coverart.c:1682
 msgid "Failed to remove the album from the album hash store."
 msgstr "Не удалось удалить альбом из хранилища хэшей альбомов."
@@ -2062,6 +1912,39 @@ msgid "Error occurred dropping an image onto the coverart display: %s\n"
 msgstr ""
 "Произошла ошибка при попытке перетащить изображение на окно обложки: %s\n"
 
+#: ../plugins/cover_display/cover_display.glade.h:1
+msgid "<"
+msgstr "<"
+
+#: ../plugins/cover_display/cover_display.glade.h:2
+msgid "<b>Cover Art Display</b>"
+msgstr "<b>Отображение обложки</b>"
+
+#: ../plugins/cover_display/cover_display.glade.h:3
+msgid ">"
+msgstr ">"
+
+#: ../plugins/cover_display/cover_display.glade.h:4
+msgid "Artwork Preview"
+msgstr "Предпросмотр изображения"
+
+#: ../plugins/cover_display/cover_display.glade.h:5
+msgid "Background color"
+msgstr "Цвет фона"
+
+#: ../plugins/cover_display/cover_display.glade.h:6
+msgid "Choose a Different Colour for the CoverArt Display Background"
+msgstr "Выберите другой цвет для фона обложки"
+
+#: ../plugins/cover_display/cover_display.glade.h:7
+#, fuzzy
+msgid "Cover Art Display"
+msgstr "<b>Отображение обложки</b>"
+
+#: ../plugins/cover_display/cover_display.glade.h:8
+msgid "Text color"
+msgstr "Цвет текста"
+
 #: ../plugins/core_preferences/plugin.c:65
 msgid "CorePrefs"
 msgstr ""
@@ -2071,478 +1954,6 @@ msgstr ""
 #, fuzzy
 msgid "Settings"
 msgstr "Настройки..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:1
-msgid "<b>Auto-Generated Playlists</b>"
-msgstr "<b>Автоматически сгенерированные списки воспроизведения</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:2
-msgid "<b>Compatible Formats</b>"
-msgstr "<b>Совместимые форматы</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:3
-msgid "<b>Conversion Settings</b>"
-msgstr "<b>Параметры конверсии</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:4
-msgid "<b>Cover Art</b>"
-msgstr "<b>Обложка</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:5
-msgid "<b>Deletion Confirmation Messages</b>"
-msgstr "<b>Подтверждение удаления</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:6
-msgid "<b>Import and Synchronization</b>"
-msgstr "<b>Импорт и синхронизация</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:7
-msgid "<b>Incompatible Formats</b>"
-msgstr "<b>Несовместимые форматы</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:8
-msgid "<b>Information Messages</b>"
-msgstr "<b>Информационные сообщения</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:9
-msgid "<b>Offset to add to ReplayGain</b>"
-msgstr "Смещение для добавления к ReplayGain"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:10
-msgid "<b>On-the-fly Conversion</b>"
-msgstr "<b>Преобразование на лету</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:11
-#, fuzzy
-msgid "<b>Preferred gain type</b>"
-msgstr "<b>Предпочитаемый тип ReplayGain</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:12
-msgid "<b>Tag Editing</b>"
-msgstr "<b>Редактирование меток</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:13
-#, fuzzy
-msgid "<b>Tags</b>"
-msgstr "<b>н/д</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:14
-msgid "<b>Volume Normalization</b>"
-msgstr "<b>Нормализация громкости</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:15
-msgid "<b>When Attempting to Add an Existing Track</b>"
-msgstr "<b>При попытке добавления существующей дорожки"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:16
-msgid "<i>aacgain</i> executable:"
-msgstr "Исполняемый файл <i>aacgain</i>:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:17
-msgid "<i>mp3gain</i> executable:"
-msgstr "Исполняемый файл <i>mp3gain</i>:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:18
-msgid "AAC"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:19
-msgid "About unupdated tracks"
-msgstr "О необновлённых дорожках"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:20
-msgid "About updated tracks"
-msgstr "Об обновлённых дорожках"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:21
-msgid "Add cover art using file name template"
-msgstr "Добавить изображение обложки, используя следующий шаблон имени файла"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:22
-msgid ""
-"Add file masks to be excluded from import and synchronization, for example, "
-"<i>*.mp3</i>."
-msgstr ""
-"Добавьте маски файлов, которые нужно исключить из импорта и синхронизации, "
-"например, <i>*.mp3</i>."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:23
-msgid "Add subfolders recursively"
-msgstr "Добавить папки рекурсивно"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:25
-msgid "Album gain (formerly \"audiophile gain\")"
-msgstr "ReplayGain альбома"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:26
-msgid "Allow duplicate files"
-msgstr "Допускать дубликаты файлов"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:27
-msgid "Also use this encoding when updating or synchronizing tracks"
-msgstr ""
-"Использовать выбранную кодировку также при обновлении или синхронизации "
-"дорожек"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:28
-msgid "Also use this encoding when writing tracks"
-msgstr "Использовать выбранную кодировку также при записи дорожек"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:30
-msgid "Automatically generate video thumbnails"
-msgstr "Автоматически генерировать эскизы видео"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:32
-msgid "Cache folder:"
-msgstr "Папка с кэшем:"
-
-#. 5
-#: ../plugins/core_preferences/core_prefs.xml.h:33 ../libgtkpod/gp_spl.c:92
-#: ../libgtkpod/misc_conversion.c:66
-msgid "Composer"
-msgstr "Композитор"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:34
-msgid "Confirm deletion of playlists or tracks from a playlist"
-msgstr "Подтверждать удаление списков воспроизведения или дорожек из списка"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:35
-msgid "Confirm deletion of tracks during synchronization"
-msgstr "Подтверждать удаление дорожек при синхронизации"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:36
-msgid "Confirm deletion of tracks:"
-msgstr "Подтверждать удаление дорожек:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:37
-msgid "Conversion Preferences"
-msgstr "Параметры конверсии"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:38
-msgid "Conversion Settings..."
-msgstr "Параметры конверсии..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:39
-msgid "Convert AAC (M4A)"
-msgstr "Конвертировать AAC (M4A)"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:40
-msgid "Convert FLAC"
-msgstr "Конвертировать FLAC"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:41
-msgid "Convert MP3"
-msgstr "Конвертировать MP3"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:42
-msgid "Convert Ogg Vorbis"
-msgstr "Конвертировать Ogg Vorbis"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:43
-msgid "Convert WAV"
-msgstr "Конвертировать WAV"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:44
-msgid "Convert compatible formats to a single format"
-msgstr "Конвертировать совместимые форматы в единый формат"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:45
-msgid "Convert incompatible music formats to:"
-msgstr "Конвертировать несовместимые форматы музыки в:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:46
-msgid "Cover Art Search Preferences"
-msgstr "Настройки поиска обложек"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:47
-msgid "Cover art file pattern:"
-msgstr "Шаблон файла обложки:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:48
-msgid "Customize..."
-msgstr "Настроить..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:49
-msgid "Delete missing tracks when synchronizing playlists"
-msgstr ""
-"Удалять отсутствующие дорожки при синхронизации списков воспроизведения"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:50
-msgid "Display conversion log"
-msgstr "Отобразить журнал сообщений преобразования"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:51
-msgid "Display information about detected duplicate files"
-msgstr "Отображать сведения об обнаруженных дубликатах"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:52
-msgid "Display messages and warnings at startup"
-msgstr "Отображать сообщения и предупреждения при запуске"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:53
-msgid "Display synchronization results"
-msgstr "Отображать результаты синхронизации"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:54
-msgid "Encoding Preferences"
-msgstr "Параметры кодировки"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:55
-msgid "Encoding..."
-msgstr "Кодировка..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:56
-msgid "Excluded files..."
-msgstr "Исключаемые файлы..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:57
-msgid "Exclusions List"
-msgstr "Список исключений"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:58
-msgid "Feedback"
-msgstr "Сообщения"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:59
-msgid "Filename Parse Preferences"
-msgstr "Параметры разбора имён файлов"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:60
-msgid "Filename parse pattern:"
-msgstr "Шаблон имени файла: "
-
-#: ../plugins/core_preferences/core_prefs.xml.h:61
-msgid "From the hard disk"
-msgstr "С жёсткого диска"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:62
-msgid "From the iPod"
-msgstr "С iPod"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:63
-msgid "From the local database"
-msgstr "Из локальной базы данных"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:66
-msgid "Include tracks never played in the \"Best Rated\" playlist"
-msgstr ""
-"Включать никогда не воспроизведённые дорожки в список \"Наибольший рейтинг\""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:67
-msgid "MP3"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:68
-msgid "Mass-modify tags when multiple tracks are selected"
-msgstr "Изменять метки для всех выделенных дорожке одновременно"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:69
-msgid "Maximum cache size:"
-msgstr "максимальный размер кэша:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:70
-msgid "Maximum threads:"
-msgstr "Максимальное число потоков:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:71
-msgid "Metadata"
-msgstr "Метаданные"
-
-#. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:72 ../src/anjuta-app.c:434
-msgid "Music"
-msgstr "Музыка"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:73
-#, fuzzy
-msgid "Normalization..."
-msgstr "Нормализация..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:74
-msgid "Number of tracks:"
-msgstr "Число дорожек:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:75
-msgid "Overwrite existing tags"
-msgstr "Перезаписывать существующие метки"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:76
-msgid "Parse file name to set missing tags"
-msgstr "Разобрать имя файла для установки отсутствующих меток"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:78
-#, no-c-format
-msgid ""
-"Provide a shell command to generate a thumbnail image of your video file.  "
-"The following format strings will be expanded:\n"
-"- %f: the input file\n"
-"- %o: the output file (which is automatically generated)\n"
-msgstr ""
-"Задайте команду shell для генерации эскиза для вашего видеофайла. Могут "
-"использоваться следующие строки форматирования:\n"
-"- %f: входной файл\n"
-"- %o: выходной файл (автоматически сгенерированный)\n"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:82
-msgid "Read embedded cover art information"
-msgstr "Читать внедрённую информацию об обложках"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:83
-msgid "Read embedded tags from music files"
-msgstr "Читать внедрённые метки из музыкальных файлов"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:84
-msgid "ReplayGain Preferences"
-msgstr "Параметры ReplayGain"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:85
-msgid "ReplayGain..."
-msgstr "ReplayGain..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:86
-msgid "Set still missing tags to file name"
-msgstr "Всё ещё отсутствующие метки установить в имя файла"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:87
-msgid "Skip the track"
-msgstr "Пропустить дорожку"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:88
-msgid "Tag and filename encoding:"
-msgstr "Кодировка меток и имён файлов:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:89
-msgid ""
-"These settings will only be applied to newly added or updated tracks. This "
-"could result in tracks that are normalized to different levels until updated."
-msgstr ""
-"Эти настройки будут применены только к вновь добавленным или обновлённым "
-"дорожкам. Это может привести к появлению дорожек, нормализованных на разные "
-"уровни до обновления."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:91
-msgid "Track gain (formerly \"radio gain\")"
-msgstr "ReplayGain дорожек"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:92
-msgid "Transfer tracks in background mode"
-msgstr "Передавать дорожки на iPod в фоновом режиме"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:93
-msgid "Update information about the existing track"
-msgstr "Обновить информацию о существующей дорожке"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:94
-msgid "Use legacy format for MP3 tags"
-msgstr "Использовать старый формат меток MP3"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:95
-msgid "Video Thumbnail Generation"
-msgstr "Генерация эскизов видео"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:96
-msgid "Video thumbnailing program:"
-msgstr "Программа генерации эскизов видео:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:97
-msgid "When updating tracks, display information:"
-msgstr "При обновлении дорожек показывать информацию:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:98
-msgid "Write tags to disk when edited"
-msgstr "Записывать метки на диск при их изменении в gtkpod"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:100
-#, no-c-format
-msgid ""
-"You can separate several templates by a ';'. The first one matching the "
-"filename will be used.\n"
-"\n"
-"Example: <i>%a - %A/%T %t.mp3;%t.wav</i>.\n"
-"\n"
-"- artist: %a\n"
-"- album: %A\n"
-"- composer: %c\n"
-"- title: %t\n"
-"- genre: %G\n"
-"- track nr: %T\n"
-"- CD nr: %C\n"
-"- year: %Y\n"
-"- skip data: %*\n"
-"- the character '%': %%."
-msgstr ""
-"Вы можете разделить несколько шаблонов символом ';'. Будет использован "
-"первый шаблон, совпадающий с именем файла.\n"
-"\n"
-"Пример: <i>%a - %A/%T %t.mp3;%t.wav</i>.\n"
-"\n"
-"- исполнитель: %a\n"
-"- альбом: %A\n"
-"- композитор: %c\n"
-"- название: %t\n"
-"- жанр: %G\n"
-"- № дорожки: %T\n"
-"- № CD: %C\n"
-"- год: %Y\n"
-"- пропустить данные: %*\n"
-"- символ '%': %%."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:115
-#, no-c-format
-msgid ""
-"You can separate several templates by a ';'. The first one matching the "
-"filename will be used.\n"
-"\n"
-"Examples:\n"
-"- <i>folder.jpg</i>: Use <i>folder.jpg</i> as cover art.\n"
-"- <i>folder</i>: Use <i>folder.jpg</i>, <i>folder.png</i>...\n"
-"- <i>../%A.jpg</i>: Use <i>&lt;Album&gt;.jpg</i> in the parent directory\n"
-"- <i>%A</i>: Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>...\n"
-"- <i>folder.jpg;%a.jpg</i>: First try <i>folder.jpg</i>, then <i>&lt;"
-"artist&gt;.jpg</i>\n"
-"\n"
-"- artist: %a\n"
-"- album: %A\n"
-"- composer: %c\n"
-"- title: %t\n"
-"- genre: %G\n"
-"- track nr: %T\n"
-"- CD nr: %C\n"
-"- year: %Y\n"
-"- skip data: %*\n"
-"- the character '%': %%."
-msgstr ""
-"Вы можете разделить несколько шаблонов символом ';'. Будет использован "
-"первый шаблон, совпадающий с именем файла.\n"
-"\n"
-"Examples:\n"
-"- <i>folder.jpg</i>: Использовать <i>folder.jpg</i> как обложку.\n"
-"- <i>folder</i>: Использовать <i>folder.jpg</i>, <i>folder.png</i>...\n"
-"- <i>../%A.jpg</i>: Использовать <i>&lt;Альбом&gt;.jpg</i> в родительской "
-"папке\n"
-"- <i>%A</i>: Использовать <i>&lt;Альбом&gt;.jpg</i>, <i>&lt;Альбом&gt;.png</"
-"i>...\n"
-"- <i>folder.jpg;%a.jpg</i>: Сначала попробовать <i>folder.jpg</i>, затем "
-"<i>&lt;исполнитель&gt;.jpg</i>\n"
-"\n"
-"- исполнитель: %a\n"
-"- альбом: %A\n"
-"- композитор: %c\n"
-"- название: %t\n"
-"- жанр: %G\n"
-"- № дорожки: %T\n"
-"- № CD: %C\n"
-"- год: %Y\n"
-"- пропустить данные: %*\n"
-"- символ '%': %%."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:134
-msgid "dB"
-msgstr "дБ"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:135
-msgid "n"
-msgstr ""
 
 #: ../plugins/filetype_mp4/plugin.c:82
 msgid "MP4 video file type"
@@ -2895,6 +2306,12 @@ msgstr "Выбранный список воспроизведения, вклю
 msgid "Selected Playlist including Tracks from Device"
 msgstr "Выбранный список воспроизведения, включая дорожки, с iPod"
 
+#: ../plugins/playlist_display/plugin.c:307
+#: ../plugins/playlist_display/playlist_display.glade.h:7
+#, fuzzy
+msgid "Playlist Display"
+msgstr "Списки воспроизведения"
+
 #: ../plugins/playlist_display/plugin.c:310 ../libgtkpod/gp_spl.c:1407
 #: ../libgtkpod/misc_playlist.c:75 ../libgtkpod/misc_playlist.c:104
 #: ../libgtkpod/misc_playlist.c:353
@@ -2904,6 +2321,11 @@ msgstr "Создать список воспроизведения"
 #: ../plugins/playlist_display/plugin.c:310
 msgid "Create a new playlist for the selected ipod"
 msgstr ""
+
+#: ../plugins/playlist_display/plugin.c:339
+#, fuzzy
+msgid "  iPod Repositories"
+msgstr "Репозиторий подкастов"
 
 #: ../plugins/playlist_display/playlist_display_context_menu.c:54
 msgid "Remove All Tracks from iPod"
@@ -3006,6 +2428,11 @@ msgstr ""
 msgid "Photos"
 msgstr "Снимки"
 
+#: ../plugins/playlist_display/playlist_display.glade.h:4
+#, fuzzy
+msgid "<b>Playlist Sort Order</b>"
+msgstr "<b>Порядок сортировки</b>"
+
 #: ../libgtkpod/syncdir.c:221
 #, c-format
 msgid "Sync summary for %s/%s\n"
@@ -3104,6 +2531,11 @@ msgstr "Примечание"
 #: ../libgtkpod/gp_spl.c:91 ../libgtkpod/misc_conversion.c:80
 msgid "Date added"
 msgstr "Дата добавления"
+
+#. 5
+#: ../libgtkpod/gp_spl.c:92 ../libgtkpod/misc_conversion.c:66
+msgid "Composer"
+msgstr "Композитор"
 
 #: ../libgtkpod/gp_spl.c:93 ../libgtkpod/misc_conversion.c:78
 msgid "Playcount"
@@ -5371,6 +4803,145 @@ msgstr "Имя хоста в URI \"%s\" некорректно"
 msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "URI %s содержит неверные escape-последовательности"
 
+#: ../src/anjuta-actions.h:26
+msgid "_Music"
+msgstr "_Музыка"
+
+#: ../src/anjuta-actions.h:31
+msgid "_Update Tracks from File"
+msgstr "_Обновить дорожки из файла"
+
+#: ../src/anjuta-actions.h:39
+#, fuzzy
+msgid "_Quit"
+msgstr "_Правка"
+
+#: ../src/anjuta-actions.h:41
+#, fuzzy
+msgid "Quit GtkPod"
+msgstr "GtkPod"
+
+#: ../src/anjuta-actions.h:49
+#, fuzzy
+msgid "_Edit"
+msgstr "_Правка"
+
+#: ../src/anjuta-actions.h:54
+#, fuzzy
+msgid "_Delete"
+msgstr "_Удалить"
+
+#: ../src/anjuta-actions.h:62
+#, fuzzy
+msgid "_Preferences"
+msgstr "Параметры mserv"
+
+#: ../src/anjuta-actions.h:63
+msgid "Do you prefer coffee to tea? Check it out."
+msgstr ""
+
+#: ../src/anjuta-actions.h:69
+#, fuzzy
+msgid "_View"
+msgstr "_Вид"
+
+#: ../src/anjuta-actions.h:71
+msgid "_Reset Dock Layout"
+msgstr ""
+
+#: ../src/anjuta-actions.h:72
+msgid "Reset the widgets docking layout to default"
+msgstr ""
+
+#: ../src/anjuta-actions.h:78
+msgid "_Full Screen"
+msgstr ""
+
+#: ../src/anjuta-actions.h:79
+msgid "Toggle fullscreen mode"
+msgstr ""
+
+#: ../src/anjuta-actions.h:82
+msgid "_Lock Dock Layout"
+msgstr ""
+
+#: ../src/anjuta-actions.h:83
+msgid "Lock the current dock layout so that widgets cannot be moved"
+msgstr ""
+
+#: ../src/anjuta-actions.h:86
+msgid "_Toolbar"
+msgstr "_Панель инструментов"
+
+#: ../src/anjuta-actions.h:87
+msgid "Show or hide the toolbar"
+msgstr ""
+
+#: ../src/anjuta-actions.h:95
+#, fuzzy
+msgid "_Tools"
+msgstr "_Инструменты"
+
+#: ../src/anjuta-actions.h:100
+#, fuzzy
+msgid "_Help"
+msgstr "_Справка"
+
+#: ../src/anjuta-actions.h:102
+msgid "_User's Manual"
+msgstr ""
+
+#: ../src/anjuta-actions.h:103
+msgid "Anjuta user's manual"
+msgstr ""
+
+#: ../src/anjuta-actions.h:106
+#, fuzzy
+msgid "gtkpod _Home Page"
+msgstr "gtkpod: Менеджер iPod"
+
+#: ../src/anjuta-actions.h:107
+msgid "Online documentation and resources"
+msgstr ""
+
+#: ../src/anjuta-actions.h:110
+msgid "Report _Bugs/Patches/Requests"
+msgstr ""
+
+#: ../src/anjuta-actions.h:111
+msgid "Submit a bug report, patch or feature request for Anjuta"
+msgstr ""
+
+#: ../src/anjuta-actions.h:114
+msgid "Ask a _Question"
+msgstr ""
+
+#: ../src/anjuta-actions.h:115
+msgid "Submit a question for FAQs"
+msgstr ""
+
+#: ../src/anjuta-actions.h:118
+#, fuzzy
+msgid "_About"
+msgstr "Отменить"
+
+#: ../src/anjuta-actions.h:119
+msgid "About Anjuta"
+msgstr ""
+
+#: ../src/anjuta-actions.h:122
+msgid "About External _Plugins"
+msgstr ""
+
+#: ../src/anjuta-actions.h:123
+msgid "About third party Anjuta plugins"
+msgstr ""
+
+#. Register actions
+#: ../src/anjuta-app.c:434
+msgid "Music"
+msgstr "Музыка"
+
 #: ../src/anjuta-app.c:435
 #, fuzzy
 msgid "Edit"
@@ -5439,6 +5010,371 @@ msgstr ""
 #: ../src/main.c:57
 msgid "gtkpod"
 msgstr "gtkpod"
+
+#~ msgid "gtkpod Information"
+#~ msgstr "Сведения gtkpod"
+
+#~ msgid "<b>Auto-Generated Playlists</b>"
+#~ msgstr "<b>Автоматически сгенерированные списки воспроизведения</b>"
+
+#~ msgid "<b>Compatible Formats</b>"
+#~ msgstr "<b>Совместимые форматы</b>"
+
+#~ msgid "<b>Conversion Settings</b>"
+#~ msgstr "<b>Параметры конверсии</b>"
+
+#~ msgid "<b>Cover Art</b>"
+#~ msgstr "<b>Обложка</b>"
+
+#~ msgid "<b>Deletion Confirmation Messages</b>"
+#~ msgstr "<b>Подтверждение удаления</b>"
+
+#~ msgid "<b>Import and Synchronization</b>"
+#~ msgstr "<b>Импорт и синхронизация</b>"
+
+#~ msgid "<b>Incompatible Formats</b>"
+#~ msgstr "<b>Несовместимые форматы</b>"
+
+#~ msgid "<b>Information Messages</b>"
+#~ msgstr "<b>Информационные сообщения</b>"
+
+#~ msgid "<b>Offset to add to ReplayGain</b>"
+#~ msgstr "Смещение для добавления к ReplayGain"
+
+#~ msgid "<b>On-the-fly Conversion</b>"
+#~ msgstr "<b>Преобразование на лету</b>"
+
+#, fuzzy
+#~ msgid "<b>Preferred gain type</b>"
+#~ msgstr "<b>Предпочитаемый тип ReplayGain</b>"
+
+#~ msgid "<b>Tag Editing</b>"
+#~ msgstr "<b>Редактирование меток</b>"
+
+#, fuzzy
+#~ msgid "<b>Tags</b>"
+#~ msgstr "<b>н/д</b>"
+
+#~ msgid "<b>Volume Normalization</b>"
+#~ msgstr "<b>Нормализация громкости</b>"
+
+#~ msgid "<b>When Attempting to Add an Existing Track</b>"
+#~ msgstr "<b>При попытке добавления существующей дорожки"
+
+#~ msgid "<i>aacgain</i> executable:"
+#~ msgstr "Исполняемый файл <i>aacgain</i>:"
+
+#~ msgid "<i>mp3gain</i> executable:"
+#~ msgstr "Исполняемый файл <i>mp3gain</i>:"
+
+#~ msgid "About unupdated tracks"
+#~ msgstr "О необновлённых дорожках"
+
+#~ msgid "About updated tracks"
+#~ msgstr "Об обновлённых дорожках"
+
+#~ msgid "Add cover art using file name template"
+#~ msgstr ""
+#~ "Добавить изображение обложки, используя следующий шаблон имени файла"
+
+#~ msgid ""
+#~ "Add file masks to be excluded from import and synchronization, for "
+#~ "example, <i>*.mp3</i>."
+#~ msgstr ""
+#~ "Добавьте маски файлов, которые нужно исключить из импорта и "
+#~ "синхронизации, например, <i>*.mp3</i>."
+
+#~ msgid "Add subfolders recursively"
+#~ msgstr "Добавить папки рекурсивно"
+
+#~ msgid "Album gain (formerly \"audiophile gain\")"
+#~ msgstr "ReplayGain альбома"
+
+#~ msgid "Allow duplicate files"
+#~ msgstr "Допускать дубликаты файлов"
+
+#~ msgid "Also use this encoding when updating or synchronizing tracks"
+#~ msgstr ""
+#~ "Использовать выбранную кодировку также при обновлении или синхронизации "
+#~ "дорожек"
+
+#~ msgid "Also use this encoding when writing tracks"
+#~ msgstr "Использовать выбранную кодировку также при записи дорожек"
+
+#~ msgid "Automatically generate video thumbnails"
+#~ msgstr "Автоматически генерировать эскизы видео"
+
+#~ msgid "Cache folder:"
+#~ msgstr "Папка с кэшем:"
+
+#~ msgid "Confirm deletion of playlists or tracks from a playlist"
+#~ msgstr "Подтверждать удаление списков воспроизведения или дорожек из списка"
+
+#~ msgid "Confirm deletion of tracks during synchronization"
+#~ msgstr "Подтверждать удаление дорожек при синхронизации"
+
+#~ msgid "Confirm deletion of tracks:"
+#~ msgstr "Подтверждать удаление дорожек:"
+
+#~ msgid "Conversion Preferences"
+#~ msgstr "Параметры конверсии"
+
+#~ msgid "Conversion Settings..."
+#~ msgstr "Параметры конверсии..."
+
+#~ msgid "Convert AAC (M4A)"
+#~ msgstr "Конвертировать AAC (M4A)"
+
+#~ msgid "Convert FLAC"
+#~ msgstr "Конвертировать FLAC"
+
+#~ msgid "Convert MP3"
+#~ msgstr "Конвертировать MP3"
+
+#~ msgid "Convert Ogg Vorbis"
+#~ msgstr "Конвертировать Ogg Vorbis"
+
+#~ msgid "Convert WAV"
+#~ msgstr "Конвертировать WAV"
+
+#~ msgid "Convert compatible formats to a single format"
+#~ msgstr "Конвертировать совместимые форматы в единый формат"
+
+#~ msgid "Convert incompatible music formats to:"
+#~ msgstr "Конвертировать несовместимые форматы музыки в:"
+
+#~ msgid "Cover Art Search Preferences"
+#~ msgstr "Настройки поиска обложек"
+
+#~ msgid "Cover art file pattern:"
+#~ msgstr "Шаблон файла обложки:"
+
+#~ msgid "Customize..."
+#~ msgstr "Настроить..."
+
+#~ msgid "Delete missing tracks when synchronizing playlists"
+#~ msgstr ""
+#~ "Удалять отсутствующие дорожки при синхронизации списков воспроизведения"
+
+#~ msgid "Display conversion log"
+#~ msgstr "Отобразить журнал сообщений преобразования"
+
+#~ msgid "Display information about detected duplicate files"
+#~ msgstr "Отображать сведения об обнаруженных дубликатах"
+
+#~ msgid "Display messages and warnings at startup"
+#~ msgstr "Отображать сообщения и предупреждения при запуске"
+
+#~ msgid "Display synchronization results"
+#~ msgstr "Отображать результаты синхронизации"
+
+#~ msgid "Encoding Preferences"
+#~ msgstr "Параметры кодировки"
+
+#~ msgid "Encoding..."
+#~ msgstr "Кодировка..."
+
+#~ msgid "Excluded files..."
+#~ msgstr "Исключаемые файлы..."
+
+#~ msgid "Exclusions List"
+#~ msgstr "Список исключений"
+
+#~ msgid "Feedback"
+#~ msgstr "Сообщения"
+
+#~ msgid "Filename Parse Preferences"
+#~ msgstr "Параметры разбора имён файлов"
+
+#~ msgid "Filename parse pattern:"
+#~ msgstr "Шаблон имени файла: "
+
+#~ msgid "From the hard disk"
+#~ msgstr "С жёсткого диска"
+
+#~ msgid "From the iPod"
+#~ msgstr "С iPod"
+
+#~ msgid "From the local database"
+#~ msgstr "Из локальной базы данных"
+
+#~ msgid "Include tracks never played in the \"Best Rated\" playlist"
+#~ msgstr ""
+#~ "Включать никогда не воспроизведённые дорожки в список \"Наибольший рейтинг"
+#~ "\""
+
+#~ msgid "Mass-modify tags when multiple tracks are selected"
+#~ msgstr "Изменять метки для всех выделенных дорожке одновременно"
+
+#~ msgid "Maximum cache size:"
+#~ msgstr "максимальный размер кэша:"
+
+#~ msgid "Maximum threads:"
+#~ msgstr "Максимальное число потоков:"
+
+#~ msgid "Metadata"
+#~ msgstr "Метаданные"
+
+#, fuzzy
+#~ msgid "Normalization..."
+#~ msgstr "Нормализация..."
+
+#~ msgid "Number of tracks:"
+#~ msgstr "Число дорожек:"
+
+#~ msgid "Overwrite existing tags"
+#~ msgstr "Перезаписывать существующие метки"
+
+#~ msgid "Parse file name to set missing tags"
+#~ msgstr "Разобрать имя файла для установки отсутствующих меток"
+
+#~ msgid ""
+#~ "Provide a shell command to generate a thumbnail image of your video "
+#~ "file.  The following format strings will be expanded:\n"
+#~ "- %f: the input file\n"
+#~ "- %o: the output file (which is automatically generated)\n"
+#~ msgstr ""
+#~ "Задайте команду shell для генерации эскиза для вашего видеофайла. Могут "
+#~ "использоваться следующие строки форматирования:\n"
+#~ "- %f: входной файл\n"
+#~ "- %o: выходной файл (автоматически сгенерированный)\n"
+
+#~ msgid "Read embedded cover art information"
+#~ msgstr "Читать внедрённую информацию об обложках"
+
+#~ msgid "Read embedded tags from music files"
+#~ msgstr "Читать внедрённые метки из музыкальных файлов"
+
+#~ msgid "ReplayGain Preferences"
+#~ msgstr "Параметры ReplayGain"
+
+#~ msgid "ReplayGain..."
+#~ msgstr "ReplayGain..."
+
+#~ msgid "Set still missing tags to file name"
+#~ msgstr "Всё ещё отсутствующие метки установить в имя файла"
+
+#~ msgid "Skip the track"
+#~ msgstr "Пропустить дорожку"
+
+#~ msgid "Tag and filename encoding:"
+#~ msgstr "Кодировка меток и имён файлов:"
+
+#~ msgid ""
+#~ "These settings will only be applied to newly added or updated tracks. "
+#~ "This could result in tracks that are normalized to different levels until "
+#~ "updated."
+#~ msgstr ""
+#~ "Эти настройки будут применены только к вновь добавленным или обновлённым "
+#~ "дорожкам. Это может привести к появлению дорожек, нормализованных на "
+#~ "разные уровни до обновления."
+
+#~ msgid "Track gain (formerly \"radio gain\")"
+#~ msgstr "ReplayGain дорожек"
+
+#~ msgid "Transfer tracks in background mode"
+#~ msgstr "Передавать дорожки на iPod в фоновом режиме"
+
+#~ msgid "Update information about the existing track"
+#~ msgstr "Обновить информацию о существующей дорожке"
+
+#~ msgid "Use legacy format for MP3 tags"
+#~ msgstr "Использовать старый формат меток MP3"
+
+#~ msgid "Video Thumbnail Generation"
+#~ msgstr "Генерация эскизов видео"
+
+#~ msgid "Video thumbnailing program:"
+#~ msgstr "Программа генерации эскизов видео:"
+
+#~ msgid "When updating tracks, display information:"
+#~ msgstr "При обновлении дорожек показывать информацию:"
+
+#~ msgid "Write tags to disk when edited"
+#~ msgstr "Записывать метки на диск при их изменении в gtkpod"
+
+#~ msgid ""
+#~ "You can separate several templates by a ';'. The first one matching the "
+#~ "filename will be used.\n"
+#~ "\n"
+#~ "Example: <i>%a - %A/%T %t.mp3;%t.wav</i>.\n"
+#~ "\n"
+#~ "- artist: %a\n"
+#~ "- album: %A\n"
+#~ "- composer: %c\n"
+#~ "- title: %t\n"
+#~ "- genre: %G\n"
+#~ "- track nr: %T\n"
+#~ "- CD nr: %C\n"
+#~ "- year: %Y\n"
+#~ "- skip data: %*\n"
+#~ "- the character '%': %%."
+#~ msgstr ""
+#~ "Вы можете разделить несколько шаблонов символом ';'. Будет использован "
+#~ "первый шаблон, совпадающий с именем файла.\n"
+#~ "\n"
+#~ "Пример: <i>%a - %A/%T %t.mp3;%t.wav</i>.\n"
+#~ "\n"
+#~ "- исполнитель: %a\n"
+#~ "- альбом: %A\n"
+#~ "- композитор: %c\n"
+#~ "- название: %t\n"
+#~ "- жанр: %G\n"
+#~ "- № дорожки: %T\n"
+#~ "- № CD: %C\n"
+#~ "- год: %Y\n"
+#~ "- пропустить данные: %*\n"
+#~ "- символ '%': %%."
+
+#~ msgid ""
+#~ "You can separate several templates by a ';'. The first one matching the "
+#~ "filename will be used.\n"
+#~ "\n"
+#~ "Examples:\n"
+#~ "- <i>folder.jpg</i>: Use <i>folder.jpg</i> as cover art.\n"
+#~ "- <i>folder</i>: Use <i>folder.jpg</i>, <i>folder.png</i>...\n"
+#~ "- <i>../%A.jpg</i>: Use <i>&lt;Album&gt;.jpg</i> in the parent directory\n"
+#~ "- <i>%A</i>: Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>...\n"
+#~ "- <i>folder.jpg;%a.jpg</i>: First try <i>folder.jpg</i>, then <i>&lt;"
+#~ "artist&gt;.jpg</i>\n"
+#~ "\n"
+#~ "- artist: %a\n"
+#~ "- album: %A\n"
+#~ "- composer: %c\n"
+#~ "- title: %t\n"
+#~ "- genre: %G\n"
+#~ "- track nr: %T\n"
+#~ "- CD nr: %C\n"
+#~ "- year: %Y\n"
+#~ "- skip data: %*\n"
+#~ "- the character '%': %%."
+#~ msgstr ""
+#~ "Вы можете разделить несколько шаблонов символом ';'. Будет использован "
+#~ "первый шаблон, совпадающий с именем файла.\n"
+#~ "\n"
+#~ "Examples:\n"
+#~ "- <i>folder.jpg</i>: Использовать <i>folder.jpg</i> как обложку.\n"
+#~ "- <i>folder</i>: Использовать <i>folder.jpg</i>, <i>folder.png</i>...\n"
+#~ "- <i>../%A.jpg</i>: Использовать <i>&lt;Альбом&gt;.jpg</i> в родительской "
+#~ "папке\n"
+#~ "- <i>%A</i>: Использовать <i>&lt;Альбом&gt;.jpg</i>, <i>&lt;Альбом&gt;."
+#~ "png</i>...\n"
+#~ "- <i>folder.jpg;%a.jpg</i>: Сначала попробовать <i>folder.jpg</i>, затем "
+#~ "<i>&lt;исполнитель&gt;.jpg</i>\n"
+#~ "\n"
+#~ "- исполнитель: %a\n"
+#~ "- альбом: %A\n"
+#~ "- композитор: %c\n"
+#~ "- название: %t\n"
+#~ "- жанр: %G\n"
+#~ "- № дорожки: %T\n"
+#~ "- № CD: %C\n"
+#~ "- год: %Y\n"
+#~ "- пропустить данные: %*\n"
+#~ "- символ '%': %%."
+
+#~ msgid "dB"
+#~ msgstr "дБ"
 
 #~ msgid ""
 #~ "© 2002 - 2010\n"
@@ -5726,51 +5662,6 @@ msgstr "gtkpod"
 
 #~ msgid "Cross-platform multilingual interface to Apple's iPod™"
 #~ msgstr "Кроссплатформенный многоязыковой интерфейс для Apple iPod™"
-
-#~ msgid "_Music"
-#~ msgstr "_Музыка"
-
-#~ msgid "_Update Tracks from File"
-#~ msgstr "_Обновить дорожки из файла"
-
-#, fuzzy
-#~ msgid "Quit GtkPod"
-#~ msgstr "GtkPod"
-
-#, fuzzy
-#~ msgid "_Edit"
-#~ msgstr "_Правка"
-
-#, fuzzy
-#~ msgid "_Delete"
-#~ msgstr "_Удалить"
-
-#, fuzzy
-#~ msgid "_Preferences"
-#~ msgstr "Параметры mserv"
-
-#, fuzzy
-#~ msgid "_View"
-#~ msgstr "_Вид"
-
-#~ msgid "_Toolbar"
-#~ msgstr "_Панель инструментов"
-
-#, fuzzy
-#~ msgid "_Tools"
-#~ msgstr "_Инструменты"
-
-#, fuzzy
-#~ msgid "_Help"
-#~ msgstr "_Справка"
-
-#, fuzzy
-#~ msgid "gtkpod _Home Page"
-#~ msgstr "gtkpod: Менеджер iPod"
-
-#, fuzzy
-#~ msgid "_About"
-#~ msgstr "Отменить"
 
 #~ msgid ""
 #~ "Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 "

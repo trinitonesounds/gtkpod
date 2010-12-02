@@ -19,9 +19,9 @@ plugins/exporter/exporter_actions.c
 plugins/exporter/exporter.xml
 plugins/exporter/file_export.c
 plugins/info_display/plugin.c
-plugins/info_display/infodlg.c
+plugins/info_display/infoview.c
+plugins/info_display/infoview.h
 plugins/info_display/info.c
-plugins/info_display/info_display.glade
 plugins/sorttab_display/plugin.c
 plugins/sorttab_display/sorttab_display_actions.c
 plugins/sorttab_display/sorttab_conversion.c
