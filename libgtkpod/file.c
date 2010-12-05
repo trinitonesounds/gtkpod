@@ -191,8 +191,20 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
         ++line;
         if (len == 0)
             continue; /* skip empty lines */
-        if (bufp[len - 1] == 0x0a)
+
+        /* remove linux / windows newline characters */
+        if (bufp[len - 1] == 0x0a) {
             bufp[len - 1] = 0;
+            --len;
+        }
+
+        /* remove windows carriage return
+           to support playlist files created on Windows */
+        if (bufp[len -1] == 0x0d) {
+            bufp[len - 1] = 0;
+            --len;
+        }
+
         if (!filetype_is_playlist_filetype(type)) {
             /* skip whitespace */
             while (isspace (*bufp))
