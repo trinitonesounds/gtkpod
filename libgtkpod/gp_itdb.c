@@ -250,7 +250,10 @@ Track *gp_track_add(iTunesDB *itdb, Track *track) {
         /* add to filename hash */
         gp_itdb_pc_path_hash_add_track(track);
         /* add to background conversion if necessary */
-        file_convert_add_track (track);
+        if (! file_convert_add_track (track)) {
+            g_idle_add((GSourceFunc) gp_remove_track_cb, track);
+            return NULL;
+        }
         result = track;
         data_changed(itdb);
     }

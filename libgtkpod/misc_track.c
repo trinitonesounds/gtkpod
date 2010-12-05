@@ -1651,6 +1651,10 @@ static void intern_add_track(Playlist *pl, Track *track) {
          same track already exists in the database, the already
          existing track is returned and @duptr is freed */
         addtr = gp_track_add(to_itdb, duptr);
+        if (!addtr) {
+            /* Track was rendered invalid, possibly by the conversion routine */
+            return;
+        }
 
         /* set flags to 'podcast' if adding to podcast list */
         if (itdb_playlist_is_podcasts(pl))
@@ -1915,6 +1919,17 @@ gchar *get_track_info(Track *track, gboolean prefer_filename) {
  *             Delete Track                                      *
  *                                                                  *
  \*------------------------------------------------------------------*/
+
+/**
+ *
+ * Callback that could be used with g_idle_add method for
+ * removing a track.
+ */
+gboolean gp_remove_track_cb(gpointer data) {
+    Track *track = data;
+    gp_playlist_remove_track(NULL, track, DELETE_ACTION_DATABASE);
+    return FALSE;
+}
 
 /* cancel handler for delete track */
 /* @user_data1 the selected playlist, @user_data2 are the selected tracks */
