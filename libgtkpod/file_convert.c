@@ -1016,6 +1016,7 @@ static gboolean conversion_add_track(Conversion *conv, Track *track) {
         else { /* an error has occured */
             if (ctr->errormessage) {
                 gtkpod_warning(ctr->errormessage);
+                debug("Conversion error: %s\n", ctr->errormessage);
                 g_free(ctr->errormessage);
                 ctr->errormessage = NULL;
             }
@@ -1182,6 +1183,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
     GList *gli, *nextgli;
 
     g_return_val_if_fail (conv, TRUE);
+    debug("Conversion scheduler unlocked\n");
 
     if (!conv->cachedir) {
         /* Cachedir is not available. Not good! Remove the timeout function. */
@@ -1193,6 +1195,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
     }
 
     if (conv->scheduled) {
+        debug("Conversion scheduled. Setting up thread\n");
         if ((conv->threads_num < conv->max_threads_num) && ((conv->dirsize <= conv->max_dirsize)
                 || conv->conversion_force)) {
             GList *gl;
@@ -1221,6 +1224,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
     }
 
     if (conv->processing) {
+        debug("Conversion is processing\n");
         GList *gl;
         for (gl = conv->processing; gl; gl = gl->next) {
             ConvTrack *ctr = gl->data;
@@ -1232,6 +1236,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
     }
 
     if (conv->failed) {
+        debug("Conversion has failed\n");
         GList *gl;
         for (gl = conv->failed; gl; gl = gl->next) {
             ConvTrack *ctr = gl->data;
@@ -1244,6 +1249,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
                 ExtraTrackData *etr;
                 if (ctr->errormessage) {
                     gtkpod_warning(ctr->errormessage);
+                    debug("Conversion error: %s\n", ctr->errormessage);
                     g_free(ctr->errormessage);
                     ctr->errormessage = NULL;
                 }
@@ -1270,6 +1276,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
     }
 
     if (conv->converted) {
+        debug("Conversion has successfully converted\n");
         GList *gl;
         for (gl = conv->converted; gl; gl = gl->next) {
             ConvTrack *ctr = gl->data;
@@ -1329,6 +1336,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
     }
 
     if (conv->finished) {
+        debug("Conversion has finished converting\n");
         GList *gl;
         for (gl = conv->finished; gl; gl = gl->next) {
             ConvTrack *ctr = gl->data;
@@ -1434,6 +1442,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
                 if (tri->valid && ctr->valid) {
                     if (ctr->errormessage) {
                         gtkpod_warning(ctr->errormessage);
+                        debug("Conversion error: %s\n", ctr->errormessage);
                         g_free(ctr->errormessage);
                         ctr->errormessage = NULL;
                     }
@@ -1475,7 +1484,7 @@ static gboolean conversion_scheduler(gpointer data) {
     gboolean result;
     g_return_val_if_fail (data, FALSE);
 
-    debug ("conversion_scheduler enter\n");
+//    debug ("conversion_scheduler enter\n");
 
     gdk_threads_enter();
     if (!g_mutex_trylock(conv->mutex)) {
@@ -1488,7 +1497,7 @@ static gboolean conversion_scheduler(gpointer data) {
     g_mutex_unlock (conv->mutex);
     gdk_threads_leave();
 
-    debug ("conversion_scheduler exit\n");
+//    debug ("conversion_scheduler exit\n");
 
     return result;
 }
@@ -1764,6 +1773,7 @@ static gchar *conversion_get_fname_extension(Conversion *conv, ConvTrack *ctr) {
         if (ctr->valid) {
             gchar *buf = conversion_get_track_info(ctr);
             ctr->errormessage = g_strdup_printf(_("Conversion of '%s' failed: '%s'.\n\n"), buf, error->message);
+            debug("Conversion error: %s\n", ctr->errormessage);
             g_free(buf);
         }
         if (conv)
@@ -1779,6 +1789,7 @@ static gchar *conversion_get_fname_extension(Conversion *conv, ConvTrack *ctr) {
             ctr->errormessage
                     = g_strdup_printf(_("Conversion of '%s' failed: '%s %s' returned exit status %d.\n\n"), buf, argv[0], argv[1],
                     WEXITSTATUS (exit_status));
+            debug("Conversion error: %s\n", ctr->errormessage);
             g_free(buf);
         }
         if (conv)
@@ -1803,6 +1814,7 @@ static gchar *conversion_get_fname_extension(Conversion *conv, ConvTrack *ctr) {
             gchar *buf = conversion_get_track_info(ctr);
             ctr->errormessage
                     = g_strdup_printf(_("Conversion of '%s' failed: '\"%s\" %s' did not return filename extension as expected.\n\n"), buf, argv[0], argv[1]);
+            debug("Conversion error: %s\n", ctr->errormessage);
             g_free(buf);
         }
         if (conv)
@@ -1867,6 +1879,7 @@ static gboolean conversion_set_valid_filename(Conversion *conv, ConvTrack *ctr) 
                             char *buf = conversion_get_track_info(ctr);
                             ctr->errormessage
                                     = g_strdup_printf(_("Conversion of '%s' failed: Could not access original file '%s' (%s).\n\n"), buf, ctr->orig_file, strerror(errno));
+                            debug("Conversion error: %s\n", ctr->errormessage);
                             g_free(buf);
                             g_mutex_unlock (conv->mutex);
                             return FALSE;
@@ -1910,6 +1923,7 @@ static gboolean conversion_set_valid_filename(Conversion *conv, ConvTrack *ctr) 
                 gchar *buf = conversion_get_track_info(ctr);
                 ctr->errormessage
                         = g_strdup_printf(_("Conversion of '%s' failed: Could not create directory '%s'.\n\n"), buf, rootdir);
+                debug("Conversion error: %s\n", ctr->errormessage);
                 g_free(buf);
             }
         }
@@ -1989,6 +2003,7 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
                 if (ctr->valid) {
                     gchar *buf = conversion_get_track_info(ctr);
                     ctr->errormessage = g_strdup_printf(_("Conversion of '%s' failed: '%s'.\n\n"), buf, error->message);
+                    debug("Conversion error: %s\n", ctr->errormessage);
                     g_free(buf);
                 }
                 g_error_free(error);
@@ -2017,6 +2032,7 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
                         ctr->errormessage
                                 = g_strdup_printf(_("Conversion of '%s' failed: '%s' returned exit status %d.\n\n"), buf, ctr->conversion_cmd,
                                 WEXITSTATUS (status));
+                        debug("Conversion error: %s\n", ctr->errormessage);
                         g_free(buf);
                     }
                     if (g_file_test(ctr->converted_file, G_FILE_TEST_EXISTS)) {
@@ -2049,6 +2065,7 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
             gchar *buf = conversion_get_track_info(ctr);
             ctr->errormessage
                     = g_strdup_printf(_("Conversion of '%s' failed: could not stat the converted file '%s'.\n\n"), buf, ctr->converted_file);
+            debug("Conversion error: %s\n", ctr->errormessage);
             g_free(buf);
             g_free(ctr->converted_file);
             ctr->converted_file = NULL;
@@ -2156,6 +2173,8 @@ static gpointer conversion_thread(gpointer data) {
                 }
                 else { /* add to failed */
                     conv->failed = g_list_concat(gl, conv->failed);
+                    /* remove (converted_file) */
+                    g_idle_add((GSourceFunc) gp_remove_track_cb, ctr->track);
                 }
             }
             else { /* track is no longer valid -> remove converted file
@@ -2617,6 +2636,7 @@ static FileTransferStatus transfer_transfer_track(TransferItdb *tri, ConvTrack *
         g_mutex_lock (conv->mutex);
         if (error) {
             ctr->errormessage = g_strdup_printf("%s\n", error->message);
+            debug("Conversion error: %s\n", ctr->errormessage);
             g_error_free(error);
         }
         g_mutex_unlock (conv->mutex);
@@ -2637,6 +2657,7 @@ static FileTransferStatus transfer_transfer_track(TransferItdb *tri, ConvTrack *
                 gchar *buf = conversion_get_track_info(ctr);
                 ctr->errormessage
                         = g_strdup_printf(_("Transfer of '%s' failed. %s\n\n"), buf, error ? error->message : "");
+                debug("Conversion error: %s\n", ctr->errormessage);
                 g_free(buf);
             }
         }
