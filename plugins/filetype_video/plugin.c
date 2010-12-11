@@ -87,8 +87,8 @@ static void video_filetype_iface_init(FileTypeInterface *iface) {
     iface->read_lyrics = filetype_no_read_lyrics; /* FIXME */
     iface->write_lyrics = filetype_no_write_lyrics; /* FIXME */
     iface->read_gapless = filetype_no_read_gapless; /* FIXME ?? */
-    iface->can_convert = filetype_no_convert;
-    iface->get_conversion_cmd = filetype_no_conversion_cmd;
+    iface->can_convert = video_can_convert;
+    iface->get_conversion_cmd = video_get_conversion_cmd;
     iface->get_gain_cmd = filetype_no_gain_cmd;
 }
 

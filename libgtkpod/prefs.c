@@ -188,6 +188,11 @@ static void set_default_preferences() {
     g_free(str);
     prefs_set_int("convert_wav", FALSE);
 
+    str = g_build_filename(get_script_dir(), "convert-2mp4.sh", NULL);
+    prefs_set_string("path_conv_mp4", str);
+    g_free(str);
+    prefs_set_int("convert_mp4", TRUE);
+
     /* Set colum preferences */
     for (i = 0; i < TM_NUM_COLUMNS; i++) {
         prefs_set_int_index("col_order", i, i);
@@ -879,7 +884,7 @@ static void cleanup_keys() {
 
         const gchar **keyp;
         const gchar *keys[] =
-            { "path_conv_m4a", "path_conv_wav", "path_conv_mp3", "path_conv_ogg", "path_conv_flac", NULL };
+            { "path_conv_m4a", "path_conv_wav", "path_conv_mp3", "path_conv_ogg", "path_conv_flac", "path_conv_mp4", NULL };
 
         for (keyp = keys; *keyp; ++keyp) {
             buf = prefs_get_string(*keyp);

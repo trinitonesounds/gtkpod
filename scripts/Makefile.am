@@ -7,6 +7,7 @@ scriptdir = $(pkgdatadir)/scripts
 script_SCRIPTS = \
 	convert-2m4a.sh \
 	convert-2mp3.sh \
+	convert-2mp4.sh \
 	gtkpod-convert-common.sh \
 	ldif2vcf.sh \
 	mab2vcard \

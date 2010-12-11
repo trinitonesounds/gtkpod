@@ -33,5 +33,7 @@
 #include "libgtkpod/itdb.h"
 
 Track *video_get_file_info(const gchar *name);
+gboolean video_can_convert();
+gchar *video_get_conversion_cmd();
 
 #endif

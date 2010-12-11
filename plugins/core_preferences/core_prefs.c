@@ -95,6 +95,7 @@ const gchar *conv_checkbox_map[][3] = {
     { "convert_mp3", "convert_mp3", NULL },
     { "convert_aac", "convert_m4a", NULL },
     { "convert_wav", "convert_wav", NULL },
+    { "convert_mp4", "convert_mp4", NULL },
     { "display_conversion_log", "", NULL },
 };
 
@@ -117,6 +118,7 @@ ind_string conv_paths[] = {
     { TARGET_FORMAT_AAC, "path_conv_m4a" },
     { TARGET_FORMAT_MP3, "path_conv_mp3" },
     { -1, "path_conv_wav" },
+    { -1, "path_conv_mp4" }
 };
 
 static TempPrefs *temp_prefs = NULL;

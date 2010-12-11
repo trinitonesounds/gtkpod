@@ -3,7 +3,7 @@
 #
 # USAGE:
 #
-# Called by convert-2mp3.sh and convert-2m4a.sh.
+# Called by convert-2mp3.sh, convert-2m4a.sh, convert-2mp4.sh.
 #
 # The following command line arguments are being used
 #
@@ -96,7 +96,7 @@ case "$filetype" in
 		decoder="oggdec" ; options="--quiet --output - --" ;;
 	m4a)	decoder="faad" ; options="-o -" ;;
 	wav)	decoder="" ;;
-	*)	exit 4 ;;
+	*)	decoder="ffmpeg" ;;
 esac
 
 # Check for the existence of decoder
