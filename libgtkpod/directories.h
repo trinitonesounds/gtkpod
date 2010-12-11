@@ -29,4 +29,6 @@ gchar * get_ui_dir();
 
 gchar * get_plugin_dir();
 
+gchar * get_script_dir();
+
 #endif /* DIRECTORIES_H_ */

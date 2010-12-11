@@ -84,6 +84,7 @@
 #include "misc.h"
 #include "misc_conversion.h"
 #include "clientserver.h"
+#include "directories.h"
 
 /* some public key names used several times */
 const gchar *KEY_CONCAL_AUTOSYNC = "concal_autosync";
@@ -172,17 +173,17 @@ static void set_default_preferences() {
     prefs_set_int("delete_database", TRUE);
     prefs_set_string("initial_mountpoint", "/media/ipod");
 
-    str = g_build_filename(SCRIPTDIR, "convert-ogg2mp3.sh", NULL);
+    str = g_build_filename(get_script_dir(), "convert-2mp3.sh", NULL);
     prefs_set_string("path_conv_ogg", str);
     g_free(str);
     prefs_set_int("convert_ogg", TRUE);
 
-    str = g_build_filename(SCRIPTDIR, "convert-flac2mp3.sh", NULL);
+    str = g_build_filename(get_script_dir(), "convert-2mp3.sh", NULL);
     prefs_set_string("path_conv_flac", str);
     g_free(str);
     prefs_set_int("convert_flac", TRUE);
 
-    str = g_build_filename(SCRIPTDIR, "convert-wav2mp3.sh", NULL);
+    str = g_build_filename(get_script_dir(), "convert-2mp3.sh", NULL);
     prefs_set_string("path_conv_wav", str);
     g_free(str);
     prefs_set_int("convert_wav", FALSE);

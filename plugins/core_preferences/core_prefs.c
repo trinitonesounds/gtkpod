@@ -32,6 +32,7 @@
 #include "libgtkpod/charset.h"
 #include "libgtkpod/misc.h"
 #include "libgtkpod/file_convert.h"
+#include "libgtkpod/directories.h"
 #include "core_prefs.h"
 #include "plugin.h"
 
@@ -633,7 +634,7 @@ G_MODULE_EXPORT void on_cache_size_value_changed (GtkSpinButton *sender, gpointe
 G_MODULE_EXPORT void on_target_format_changed (GtkComboBox *sender, gpointer e)
 {
     gint index = gtk_combo_box_get_active (sender);
-    gchar *script = g_build_filename (SCRIPTDIR, conv_scripts[index], NULL);
+    gchar *script = g_build_filename (get_script_dir(), conv_scripts[index], NULL);
     gint i;
 
     for (i = 0; i < COUNTOF (conv_paths); i++)

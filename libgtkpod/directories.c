@@ -43,6 +43,7 @@ static gchar *icondir = NULL;
 static gchar *plugindir = NULL;
 static gchar *uidir = NULL;
 static gchar *gladedir = NULL;
+static gchar *scriptdir = NULL;
 
 void init_directories(char *argv[]) {
 //    g_printf("argv[0] = %s\n", argv[0]);
@@ -52,6 +53,7 @@ void init_directories(char *argv[]) {
     uidir = init_dir(argv, "data/ui", GTKPOD_UI_DIR);
     gladedir = init_dir(argv, "data/glade", GTKPOD_GLADE_DIR);
     plugindir = init_dir(argv, "plugins", GTKPOD_PLUGIN_DIR);
+    scriptdir = init_dir(argv, "scripts", GTKPOD_SCRIPT_DIR);
 
     gtk_icon_theme_append_search_path(gtk_icon_theme_get_default(), icondir);
     gtk_icon_theme_append_search_path(gtk_icon_theme_get_default(), GTKPOD_IMAGE_DIR);
@@ -67,6 +69,7 @@ static void debug_print_directories() {
     g_printf("glade directory: %s\n", get_glade_dir());
     g_printf("icon directory: %s\n", get_icon_dir());
     g_printf("plugin directory: %s\n", get_plugin_dir());
+    g_printf("script directory: %s\n", get_script_dir());
 }
 #endif
 
@@ -109,7 +112,7 @@ static gchar * init_dir(char *argv[], gchar *localdir, gchar *fullinstalldir) {
         newdir = fullinstalldir;
     else {
         USING_LOCAL = TRUE;
-        g_printf("Using local %s file since program was started from source directory:\n%s\n", localdir, newdir);
+        g_printf("Using local %s directory since program was started from source directory:\n%s\n", localdir, newdir);
     }
 
     return newdir;
@@ -145,4 +148,8 @@ gchar * get_ui_dir() {
 
 gchar * get_plugin_dir() {
     return plugindir;
+}
+
+gchar * get_script_dir() {
+    return scriptdir;
 }

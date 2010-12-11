@@ -796,9 +796,9 @@ static void ipod_sync_button_clicked(iPodSyncType type) {
     g_free(key);
 
     text
-            = g_markup_printf_escaped(_("<i>Have a look at the scripts provided in '%s'. If you write a new script or improve an existing one, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release.</i>"), SCRIPTDIR);
+            = g_markup_printf_escaped(_("<i>Have a look at the scripts provided in '%s'. If you write a new script or improve an existing one, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release.</i>"), get_script_dir());
 
-    newpath = fileselection_select_script(oldpath, SCRIPTDIR, title, text);
+    newpath = fileselection_select_script(oldpath, get_script_dir(), title, text);
     g_free(oldpath);
     g_free(text);
 

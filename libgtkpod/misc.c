@@ -45,11 +45,9 @@ ffla |  This program is distributed in the hope that it will be useful,
 #include "prefs.h"
 #include "misc_track.h"
 #include "file_convert.h"
+#include "directories.h"
 
 #define DEBUG_MISC 0
-
-/* where to find the scripts */
-const gchar *SCRIPTDIR = PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S;
 
 /*------------------------------------------------------------------*\
  *                                                                  *

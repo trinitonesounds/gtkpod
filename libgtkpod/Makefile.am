@@ -45,6 +45,7 @@ AM_CFLAGS = \
     -DGTKPOD_UI_DIR=\""$(gtkpod_ui_dir)"\" \
     -DGTKPOD_GLADE_DIR=\""$(gtkpod_glade_dir)"\" \
     -DGTKPOD_IMAGE_DIR=\""$(gtkpod_image_dir)"\" \
+    -DGTKPOD_SCRIPT_DIR=\""$(gtkpod_script_dir)"\" \
     $(LIBGTKPOD_CFLAGS)
  
 libgtkpod_la_LDFLAGS = $(LIBGTKPOD_LDFLAGS) -version-info $(LIBGTKPOD_SO_VERSION) -no-undefined

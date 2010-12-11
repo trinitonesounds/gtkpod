@@ -15,7 +15,8 @@ AM_CFLAGS = \
        -DGTKPOD_DOC_DIR=\""$(gtkpod_doc_dir)"\" \
        -DGTKPOD_UI_DIR=\""$(gtkpod_ui_dir)"\" \
        -DGTKPOD_GLADE_DIR=\""$(gtkpod_glade_dir)"\" \
-       -DGTKPOD_IMAGE_DIR=\""$(gtkpod_image_dir)"\"
+       -DGTKPOD_IMAGE_DIR=\""$(gtkpod_image_dir)"\" \
+       -DGTKPOD_SCRIPT_DIR=\""$(gtkpod_script_dir)"\"
        
 
 
