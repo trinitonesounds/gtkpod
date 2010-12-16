@@ -191,6 +191,10 @@ static void details_writethrough_toggled(GtkCheckButton *button) {
     details_update_buttons();
 }
 
+static void details_notebook_page_changed(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, gpointer user_data) {
+    prefs_set_int(DETAILS_WINDOW_NOTEBOOK_PAGE, page_num);
+}
+
 /****** Navigation *****/
 void details_button_first_clicked(GtkCheckButton *button) {
     GList *first;
@@ -1182,7 +1186,7 @@ void details_update_buttons() {
     gtk_widget_set_sensitive(w, undo_all);
     w = gtkpod_xml_get_widget(details_view->xml, "details_button_remove_artwork");
     gtk_widget_set_sensitive(w, remove_artwork);
-    w = gtkpod_xml_get_widget(details_view->xml, "details_viewport");
+    w = gtkpod_xml_get_widget(details_view->xml, "details_details");
     gtk_widget_set_sensitive(w, viewport);
     w = gtkpod_xml_get_widget(details_view->xml, "details_button_first");
     gtk_widget_set_sensitive(w, prev);
@@ -1496,6 +1500,11 @@ static void create_details_editor_view() {
             G_CALLBACK (details_writethrough_toggled),
             details_view);
 
+    w = gtkpod_xml_get_widget(details_view->xml, "details_notebook");
+    g_signal_connect (w, "switch-page",
+            G_CALLBACK (details_notebook_page_changed),
+            details_view);
+
     /* enable drag and drop for coverart window */
     GtkImage *img;
     img = GTK_IMAGE (gtkpod_xml_get_widget (details_view->xml,
@@ -1546,6 +1555,8 @@ void details_edit(GList *selected_tracks) {
     num_pages = gtk_notebook_get_n_pages(GTK_NOTEBOOK (details_editor_plugin->details_notebook));
     if ((page >= 0) && (page < num_pages))
         gtk_notebook_set_current_page(GTK_NOTEBOOK (details_editor_plugin->details_notebook), page);
+    else
+        gtk_notebook_set_current_page(GTK_NOTEBOOK (details_editor_plugin->details_notebook), 0);
 
     gtk_widget_show_all(details_view->window);
 }
