@@ -105,7 +105,7 @@ static GtkActionEntry playlist_actions[] =
         {
             ACTION_NEW_PLAYLIST_MENU,
             NULL,
-            N_("_New Playlist Menu")
+            N_("_New Playlist")
         },
         {
             "ActionNewEmptyPlaylist",

@@ -8,21 +8,6 @@
 				<menuitem name="Add Files" action="ActionAddFiles" />
 				<menuitem name="Add Directory" action="ActionAddDirectory" />
 				<menuitem name="Add Playlist" action="ActionAddPlaylist" />
-			</placeholder>
-			<placeholder name="PlaceholderFileMenus">
-				<menu name="Update Tracks from File" action="ActionUpdateMenu">
-					<menuitem name="Selected Playlist" action="ActionUpdatePlaylist" />
-                </menu>
-                <menuitem name="Sync Playlist with Dir(s)" action="ActionSyncPlaylistWithDir"/>
-            </placeholder>
-   		</menu>
-   		<menu name="MenuEdit" action="ActionMenuEdit">
-			<placeholder name="PlaceholderEditMenus">
-				<menu name="Delete" action="ActionEditDeleteMenu">
-					<menuitem name="Selected Playlist" action="ActionDeleteSelectedPlaylist" />
-					<menuitem name="Selected Playlist including Tracks from Database" action="ActionDeleteSelectedPlaylistIncDb" />
-					<menuitem name="Selected Playlist including Tracks from Device" action="ActionDeleteSelectedPlaylistIncDev" />
-				</menu>
 				<separator/>
 				<menu name="Playlist Menu" action="ActionNewPlaylistMenu">
 					<menuitem name="Empty Playlist" action="ActionNewEmptyPlaylist"/> <!-- on_new_playlist1_activate" --> <!-- playlist -->
@@ -43,6 +28,22 @@
                     <menuitem name="One for each Composer" action="ActionNewOnePreComposerPlaylist"/> <!-- on_pl_for_each_composer_activate -->
                     <menuitem name="One for each Year" action="ActionNewOnePerYearPlaylist"/> <!-- on_pl_for_each_year_activate -->
                     <menuitem name="One for each Rating" action="ActionNewOnePerRatingPlaylist"/> <!-- on_pl_for_each_rating_activate -->
+				</menu>
+				<separator/>
+			</placeholder>
+			<placeholder name="PlaceholderFileMenus">
+				<menu name="Update Tracks from File" action="ActionUpdateMenu">
+					<menuitem name="Selected Playlist" action="ActionUpdatePlaylist" />
+                </menu>
+                <menuitem name="Sync Playlist with Dir(s)" action="ActionSyncPlaylistWithDir"/>
+            </placeholder>
+   		</menu>
+   		<menu name="MenuEdit" action="ActionMenuEdit">
+			<placeholder name="PlaceholderEditMenus">
+				<menu name="Delete" action="ActionEditDeleteMenu">
+					<menuitem name="Selected Playlist" action="ActionDeleteSelectedPlaylist" />
+					<menuitem name="Selected Playlist including Tracks from Database" action="ActionDeleteSelectedPlaylistIncDb" />
+					<menuitem name="Selected Playlist including Tracks from Device" action="ActionDeleteSelectedPlaylistIncDev" />
 				</menu>
 				<separator/>
             </placeholder>
