@@ -155,14 +155,14 @@ GtkWidget *about_box_new() {
 
     gchar *license_path = g_build_filename(get_data_dir(), LICENSE_FILE, NULL);
     if (!g_file_get_contents(license_path, &license, NULL, &error)) {
-        g_warning ("Couldn't read license file %s: %s", LICENSE_FILE, error->message);
+        g_warning (_("Couldn't read license file %s: %s"), LICENSE_FILE, error->message);
         g_error_free(error);
     }
 
     error = NULL;
     pix = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), GTKPOD_ICON, 64, 0, &error);
     if (!pix) {
-        g_warning ("Couldn't load icon: %s", error->message);
+        g_warning (_("Couldn't load icon: %s"), error->message);
         g_error_free(error);
     }
 

@@ -43,7 +43,7 @@
 
 #define PREFERENCE_ICON "track_display-track-category"
 #define PREFERENCE_ICON_STOCK_ID "track_display-preference-icon"
-#define TAB_NAME "Track Display"
+#define TAB_NAME _("Track Display")
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -196,12 +196,12 @@ static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* pre
         g_error_free(error);
     }
 
-    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-track-display-settings", _(TAB_NAME), pixbuf, plugin->prefs);
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-track-display-settings", TAB_NAME, pixbuf, plugin->prefs);
     g_object_unref(pixbuf);
 }
 
 static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
-    anjuta_preferences_remove_page(prefs, _(TAB_NAME));
+    anjuta_preferences_remove_page(prefs, TAB_NAME);
     TrackDisplayPlugin* plugin = TRACK_DISPLAY_PLUGIN(ipref);
     gtk_widget_destroy(plugin->prefs);
 }

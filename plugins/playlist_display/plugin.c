@@ -47,7 +47,7 @@
 
 #define PREFERENCE_ICON "playlist_display-playlist-category"
 #define PREFERENCE_ICON_STOCK_ID "playlist_display-preference-icon"
-#define TAB_NAME "Playlist Display"
+#define TAB_NAME N_("Playlist Display")
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -105,7 +105,10 @@ static GtkActionEntry playlist_actions[] =
         {
             ACTION_NEW_PLAYLIST_MENU,
             NULL,
-            N_("_New Playlist")
+            N_("_New Playlist"),
+            NULL,
+            NULL,
+            NULL
         },
         {
             "ActionNewEmptyPlaylist",
@@ -405,7 +408,7 @@ static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* pre
     pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), PREFERENCE_ICON, 48, 0, &error);
 
     if (!pixbuf) {
-        g_warning ("Couldn't load icon: %s", error->message);
+        g_warning (N_("Couldn't load icon: %s"), error->message);
         g_error_free(error);
     }
 
@@ -414,7 +417,7 @@ static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* pre
 }
 
 static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
-    anjuta_preferences_remove_page(prefs, _(TAB_NAME));
+    anjuta_preferences_remove_page(prefs, TAB_NAME);
     PlaylistDisplayPlugin* plugin = PLAYLIST_DISPLAY_PLUGIN(ipref);
     gtk_widget_destroy(plugin->prefs);
 }

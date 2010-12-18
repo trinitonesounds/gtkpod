@@ -41,7 +41,7 @@
 #include "display_coverart.h"
 #include "cover_display_preferences.h"
 
-#define TAB_NAME "Coverart Display"
+#define TAB_NAME _("Coverart Display")
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -169,12 +169,12 @@ static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* pre
         g_warning ("Couldn't load icon: %s", error->message);
         g_error_free(error);
     }
-    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-coverart-settings", _(TAB_NAME), pixbuf, plugin->prefs);
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-coverart-settings", TAB_NAME, pixbuf, plugin->prefs);
     g_object_unref(pixbuf);
 }
 
 static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
-    anjuta_preferences_remove_page(prefs, _(TAB_NAME));
+    anjuta_preferences_remove_page(prefs, TAB_NAME);
     CoverDisplayPlugin* plugin = COVER_DISPLAY_PLUGIN(ipref);
     gtk_widget_destroy(plugin->prefs);
 }

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-02 20:13+0000\n"
+"POT-Creation-Date: 2010-12-18 21:30+0000\n"
 "PO-Revision-Date: 2010-08-08 21:16+0700\n"
 "Last-Translator: Matvey Kozhev <sikon@lucidfox.org>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -99,7 +99,7 @@ msgstr "Сведения о ходе операции"
 
 #: ../data/glade/gtkpod.glade.h:16
 #: ../plugins/repository_editor/repository_editor.c:1162
-#: ../plugins/playlist_display/plugin.c:121 ../libgtkpod/misc_playlist.c:104
+#: ../plugins/playlist_display/plugin.c:124 ../libgtkpod/misc_playlist.c:104
 msgid "Smart Playlist"
 msgstr "Умный список воспроизведения"
 
@@ -169,48 +169,48 @@ msgstr "Телепередача"
 msgid "TV Show & Music Video"
 msgstr "Телепередача и музыкальный видеоклип"
 
-#: ../plugins/details_editor/details.c:706
+#: ../plugins/details_editor/details.c:710
 #, c-format
 msgid "%s (image data corrupted or unreadable)"
 msgstr "%s (данные изображения повреждены или не читаются)"
 
-#: ../plugins/details_editor/details.c:831
+#: ../plugins/details_editor/details.c:835
 #, c-format
 msgid "Please report unknown mediatype %x\n"
 msgstr "Пожалуйста, сообщите о неизвестном типе данных %x\n"
 
-#: ../plugins/details_editor/details.c:1201
+#: ../plugins/details_editor/details.c:1205
 #: ../plugins/sorttab_display/sorttab_display.glade.h:61
 msgid "n/a"
 msgstr "н/д"
 
-#: ../plugins/details_editor/details.c:1252
+#: ../plugins/details_editor/details.c:1256
 msgid "<b>n/a</b>"
 msgstr "<b>н/д</b>"
 
-#: ../plugins/details_editor/details.c:1289
+#: ../plugins/details_editor/details.c:1293
 #, c-format
 msgid ""
 "Changes have been made to the tracks in the details editor.\n"
 "Do you want to lose those changes?"
 msgstr ""
 
-#: ../plugins/details_editor/details.c:1292
+#: ../plugins/details_editor/details.c:1296
 #, fuzzy
 msgid "Tracks in details editor have been modified."
 msgstr "Дата и время последнего изменения дорожки"
 
-#: ../plugins/details_editor/details.c:1434
+#: ../plugins/details_editor/details.c:1438
 #, fuzzy
 msgid "  Edit Track Details"
 msgstr "Изменить сведения о дорожке"
 
-#: ../plugins/details_editor/details.c:1696
+#: ../plugins/details_editor/details.c:1707
 #, c-format
 msgid "Error occurred dropping an image onto the details window: %s\n"
 msgstr "Произошла ошибка при перетаскивании изображения на окно сведений: %s\n"
 
-#: ../plugins/details_editor/details.c:1738
+#: ../plugins/details_editor/details.c:1749
 #: ../plugins/cover_display/display_coverart.c:2086
 msgid "Successfully set new coverart for selected tracks"
 msgstr "Новая обложка успешно установлена для выбранных дорожек"
@@ -269,14 +269,10 @@ msgstr ""
 "одновременно"
 
 #: ../plugins/details_editor/details_editor.glade.h:4
-msgid "Cover"
-msgstr "Обложка"
-
-#: ../plugins/details_editor/details_editor.glade.h:5
 msgid "Details"
 msgstr "Подробности"
 
-#: ../plugins/details_editor/details_editor.glade.h:6
+#: ../plugins/details_editor/details_editor.glade.h:5
 msgid ""
 "If you check this, information (cover art and meta information) changed for "
 "this track will be copied to all other selected tracks as well. Use with "
@@ -286,43 +282,43 @@ msgstr ""
 "дорожки, будут также скопированы во все остальные дорожки.Используйте с "
 "осторожностью."
 
-#: ../plugins/details_editor/details_editor.glade.h:7
+#: ../plugins/details_editor/details_editor.glade.h:6
 msgid "Set Cover Art from _File"
 msgstr "Выбрать обложку из _файла"
 
-#: ../plugins/details_editor/details_editor.glade.h:8
+#: ../plugins/details_editor/details_editor.glade.h:7
 msgid "Undo _Track"
 msgstr "Отменить _дорожку"
 
-#: ../plugins/details_editor/details_editor.glade.h:9
+#: ../plugins/details_editor/details_editor.glade.h:8
 msgid "_General"
 msgstr "_Общие"
 
-#: ../plugins/details_editor/details_editor.glade.h:10
+#: ../plugins/details_editor/details_editor.glade.h:9
 msgid "_Lyrics"
 msgstr "_Текст песни"
 
-#: ../plugins/details_editor/details_editor.glade.h:11
+#: ../plugins/details_editor/details_editor.glade.h:10
 msgid "_Misc."
 msgstr "_Разное"
 
-#: ../plugins/details_editor/details_editor.glade.h:12
+#: ../plugins/details_editor/details_editor.glade.h:11
 msgid "_Podcasts"
 msgstr "_Подкасты"
 
-#: ../plugins/details_editor/details_editor.glade.h:13
+#: ../plugins/details_editor/details_editor.glade.h:12
 msgid "_Remove Cover Art"
 msgstr "_Удалить обложку"
 
-#: ../plugins/details_editor/details_editor.glade.h:14
+#: ../plugins/details_editor/details_editor.glade.h:13
 msgid "_Sorting"
 msgstr "_Сортировка"
 
-#: ../plugins/details_editor/details_editor.glade.h:15
+#: ../plugins/details_editor/details_editor.glade.h:14
 msgid "_Undo All"
 msgstr "_Отменить все"
 
-#: ../plugins/details_editor/details_editor.glade.h:16
+#: ../plugins/details_editor/details_editor.glade.h:15
 msgid "_Video"
 msgstr "_Видео"
 
@@ -382,6 +378,11 @@ msgstr ""
 #: ../plugins/filetype_m4a/plugin.c:78
 msgid "M4A audio file type"
 msgstr ""
+
+#: ../plugins/coverweb/plugin.c:46
+#, fuzzy
+msgid "Cover Web"
+msgstr "Обложка"
 
 #: ../plugins/coverweb/plugin.c:75 ../plugins/cover_display/plugin.c:74
 #, fuzzy
@@ -686,6 +687,12 @@ msgstr "ГБ"
 #: ../plugins/info_display/info.c:372
 msgid "TB"
 msgstr "ТБ"
+
+#: ../plugins/sorttab_display/plugin.c:47
+#: ../plugins/sorttab_display/sorttab_display.glade.h:58
+#, fuzzy
+msgid "Track Filter"
+msgstr "Номер дорожки"
 
 #: ../plugins/sorttab_display/plugin.c:55
 msgid "Selected Filter Tab Entry from Playlist"
@@ -1106,11 +1113,6 @@ msgstr "Начать отображение автоматически"
 msgid "Time:"
 msgstr "Время:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:58
-#, fuzzy
-msgid "Track Filter"
-msgstr "Номер дорожки"
-
 #: ../plugins/sorttab_display/sorttab_display.glade.h:59
 msgid "Tracks"
 msgstr "Дорожки"
@@ -1131,6 +1133,12 @@ msgstr ""
 msgid "Please enter a word for sorting functions to ignore"
 msgstr ""
 
+#: ../plugins/track_display/plugin.c:46 ../plugins/track_display/plugin.c:112
+#: ../plugins/track_display/track_display.glade.h:9
+#, fuzzy
+msgid "Track Display"
+msgstr "Отображение"
+
 #: ../plugins/track_display/plugin.c:54
 msgid "Selected Tracks from Playlist"
 msgstr "Выбранные дорожки из списка воспроизведения"
@@ -1148,12 +1156,6 @@ msgstr "Выбранные дорожки с iPod"
 #, fuzzy
 msgid "Selected Tracks"
 msgstr "Выбранные _дорожки"
-
-#: ../plugins/track_display/plugin.c:112
-#: ../plugins/track_display/track_display.glade.h:9
-#, fuzzy
-msgid "Track Display"
-msgstr "Отображение"
 
 #: ../plugins/track_display/plugin.c:136
 #, fuzzy
@@ -1589,7 +1591,7 @@ msgid "Smart playlist updated."
 msgstr "Умный список воспроизведения обновлён."
 
 #: ../plugins/repository_editor/repository_editor.c:1038
-#: ../libgtkpod/gp_itdb.c:918
+#: ../libgtkpod/gp_itdb.c:921
 msgid "iPod"
 msgstr "iPod"
 
@@ -1668,7 +1670,7 @@ msgid "Add New ..."
 msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.glade.h:6
-#: ../plugins/core_preferences/core_prefs.c:186
+#: ../plugins/core_preferences/core_prefs.c:189
 msgid "Browse"
 msgstr "Обзор"
 
@@ -1897,6 +1899,11 @@ msgstr "Выбрать обложку из файла"
 msgid "View Full Size Artwork"
 msgstr "Просмотреть изображение в полном размере"
 
+#: ../plugins/cover_display/plugin.c:44
+#, fuzzy
+msgid "Coverart Display"
+msgstr "<b>Отображение обложки</b>"
+
 #: ../plugins/cover_display/plugin.c:99
 #, fuzzy
 msgid "  Cover Artwork"
@@ -1959,20 +1966,20 @@ msgstr "Настройки..."
 msgid "MP4 video file type"
 msgstr ""
 
+#: ../plugins/mserv/plugin.c:47 ../plugins/mserv/plugin.c:96
+msgid "Mserv"
+msgstr ""
+
 #: ../plugins/mserv/plugin.c:57
 #, fuzzy
 msgid "_Update mserv Data from File"
 msgstr "Обновить данные _mserv из файла"
 
-#: ../plugins/mserv/plugin.c:65 ../plugins/playlist_display/plugin.c:249
-#: ../plugins/playlist_display/plugin.c:273
+#: ../plugins/mserv/plugin.c:65 ../plugins/playlist_display/plugin.c:252
+#: ../plugins/playlist_display/plugin.c:276
 #, fuzzy
 msgid "Selected Playlist"
 msgstr "Выбранный _список воспроизведения"
-
-#: ../plugins/mserv/plugin.c:96
-msgid "Mserv"
-msgstr ""
 
 #: ../plugins/mserv/mserv.c:53
 #, c-format
@@ -2009,7 +2016,7 @@ msgstr[2] "Сведения mserv не могли быть получены дл
 msgid "mserv data retrieval problem"
 msgstr "Ошибка загрузки данных mserv"
 
-#: ../plugins/mserv/mserv.c:199 ../libgtkpod/file.c:1070
+#: ../plugins/mserv/mserv.c:199 ../libgtkpod/file.c:1082
 msgid "Nothing to update"
 msgstr "Нечего обновлять"
 
@@ -2077,6 +2084,13 @@ msgstr "Добавить файлы к \"%s\""
 #, c-format
 msgid "Add files to '%s/%s'"
 msgstr "Добавить файлы к \"%s/%s\""
+
+#: ../plugins/playlist_display/plugin.c:50
+#: ../plugins/playlist_display/plugin.c:310
+#: ../plugins/playlist_display/playlist_display.glade.h:7
+#, fuzzy
+msgid "Playlist Display"
+msgstr "Списки воспроизведения"
 
 #. Action name
 #. Stock icon
@@ -2147,185 +2161,184 @@ msgstr "Синхронизировать список воспроизведен
 
 #: ../plugins/playlist_display/plugin.c:108
 #, fuzzy
-msgid "_New Playlist Menu"
+msgid "_New Playlist"
 msgstr "Создать список воспроизведения"
 
-#: ../plugins/playlist_display/plugin.c:113
+#: ../plugins/playlist_display/plugin.c:116
 msgid "Empty Playlist"
 msgstr "Пустой список воспроизведения"
 
-#: ../plugins/playlist_display/plugin.c:115
+#: ../plugins/playlist_display/plugin.c:118
 #, fuzzy
 msgid "Create an empty playlist"
 msgstr "Создать новый список воспроизведения"
 
-#: ../plugins/playlist_display/plugin.c:123
+#: ../plugins/playlist_display/plugin.c:126
 #, fuzzy
 msgid "Create a new smart playlist"
 msgstr "Создать новый список воспроизведения"
 
-#: ../plugins/playlist_display/plugin.c:129
+#: ../plugins/playlist_display/plugin.c:132
 msgid "Random Playlist from Displayed Tracks"
 msgstr "Случайный список воспроизведения из отображаемых дорожек"
 
-#: ../plugins/playlist_display/plugin.c:131
+#: ../plugins/playlist_display/plugin.c:134
 #, fuzzy
 msgid "Create a random playlist from the displayed tracks"
 msgstr "Случайный список воспроизведения из отображаемых дорожек"
 
-#: ../plugins/playlist_display/plugin.c:137
+#: ../plugins/playlist_display/plugin.c:140
 msgid "Containing Displayed Tracks"
 msgstr "Содержащие отображаемые дорожки"
 
-#: ../plugins/playlist_display/plugin.c:139
+#: ../plugins/playlist_display/plugin.c:142
 #, fuzzy
 msgid "Create a playlist containing the displayed tracks"
 msgstr "Создан список воспроизведения с одной дорожкой."
 
-#: ../plugins/playlist_display/plugin.c:145
+#: ../plugins/playlist_display/plugin.c:148
 msgid "Containing Selected Tracks"
 msgstr "Содержащие выбранные дорожки"
 
-#: ../plugins/playlist_display/plugin.c:147
+#: ../plugins/playlist_display/plugin.c:150
 #, fuzzy
 msgid "Create a playlist containing the selected tracks"
 msgstr "Создан список воспроизведения с одной дорожкой."
 
-#: ../plugins/playlist_display/plugin.c:153
+#: ../plugins/playlist_display/plugin.c:156
 msgid "Best Rated Tracks"
 msgstr "Дорожки с наибольшим рейтингом"
 
-#: ../plugins/playlist_display/plugin.c:155
+#: ../plugins/playlist_display/plugin.c:158
 #, fuzzy
 msgid "Create a playlist containing the best rated tracks"
 msgstr "Создан список воспроизведения с одной дорожкой."
 
-#: ../plugins/playlist_display/plugin.c:161
+#: ../plugins/playlist_display/plugin.c:164
 msgid "Tracks Most Often Listened To"
 msgstr "Наиболее часто прослушиваемые дорожки"
 
-#: ../plugins/playlist_display/plugin.c:163
+#: ../plugins/playlist_display/plugin.c:166
 msgid "Create a playlist containing the tracks most often listened to"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:169
+#: ../plugins/playlist_display/plugin.c:172
 msgid "Most Recently Played Tracks"
 msgstr "Недавно воспроизведённые дорожки"
 
-#: ../plugins/playlist_display/plugin.c:171
+#: ../plugins/playlist_display/plugin.c:174
 #, fuzzy
 msgid "Create a playlist containing the most recently played tracks"
 msgstr "Создан список воспроизведения с одной дорожкой."
 
-#: ../plugins/playlist_display/plugin.c:177
+#: ../plugins/playlist_display/plugin.c:180
 msgid "All Tracks Played Since Last Time"
 msgstr "Все дорожки, прослушанные с прошлого раза"
 
-#: ../plugins/playlist_display/plugin.c:179
+#: ../plugins/playlist_display/plugin.c:182
 msgid "Create a playlist containing all tracks played since last time"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:185
+#: ../plugins/playlist_display/plugin.c:188
 msgid "All Tracks Never Listened To"
 msgstr "Все дорожки, не прослушанные ни разу"
 
-#: ../plugins/playlist_display/plugin.c:187
+#: ../plugins/playlist_display/plugin.c:190
 msgid "Create a playlist of all tracks never listened to"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:193
+#: ../plugins/playlist_display/plugin.c:196
 msgid "All Tracks not Listed in any Playlist"
 msgstr "Все дорожки, не включённые ни в один список воспроизведения"
 
-#: ../plugins/playlist_display/plugin.c:195
+#: ../plugins/playlist_display/plugin.c:198
 #, fuzzy
 msgid "Create a playlist of tracks not list in any other playlist"
 msgstr "Все дорожки, не включённые ни в один список воспроизведения"
 
-#: ../plugins/playlist_display/plugin.c:201
+#: ../plugins/playlist_display/plugin.c:204
 msgid "One for each Artist"
 msgstr "По одному для каждого исполнителя"
 
-#: ../plugins/playlist_display/plugin.c:203
+#: ../plugins/playlist_display/plugin.c:206
 #, fuzzy
 msgid "Create a playlist for each artist"
 msgstr "По одному для каждого исполнителя"
 
-#: ../plugins/playlist_display/plugin.c:209
+#: ../plugins/playlist_display/plugin.c:212
 msgid "One for each Album"
 msgstr "По одному для каждого альбома"
 
-#: ../plugins/playlist_display/plugin.c:211
+#: ../plugins/playlist_display/plugin.c:214
 #, fuzzy
 msgid "Create a playlist for each album"
 msgstr "Создан список воспроизведения с одной дорожкой."
 
-#: ../plugins/playlist_display/plugin.c:217
+#: ../plugins/playlist_display/plugin.c:220
 msgid "One for each Genre"
 msgstr "По одному для каждого жанра"
 
-#: ../plugins/playlist_display/plugin.c:219
+#: ../plugins/playlist_display/plugin.c:222
 #, fuzzy
 msgid "Create a playlist for each genre"
 msgstr "Создан список воспроизведения с одной дорожкой."
 
-#: ../plugins/playlist_display/plugin.c:225
+#: ../plugins/playlist_display/plugin.c:228
 msgid "One for each Composer"
 msgstr "По одному для каждого композитора"
 
-#: ../plugins/playlist_display/plugin.c:227
+#: ../plugins/playlist_display/plugin.c:230
 #, fuzzy
 msgid "Create a playlist for each composer"
 msgstr "По одному для каждого композитора"
 
-#: ../plugins/playlist_display/plugin.c:233
+#: ../plugins/playlist_display/plugin.c:236
 msgid "One for each Year"
 msgstr "По одному для каждого года"
 
-#: ../plugins/playlist_display/plugin.c:235
+#: ../plugins/playlist_display/plugin.c:238
 #, fuzzy
 msgid "Create a playlist for each year"
 msgstr "Создан список воспроизведения с одной дорожкой."
 
-#: ../plugins/playlist_display/plugin.c:241
+#: ../plugins/playlist_display/plugin.c:244
 msgid "One for each Rating"
 msgstr "По одному для каждого рейтинга"
 
-#: ../plugins/playlist_display/plugin.c:243
+#: ../plugins/playlist_display/plugin.c:246
 #, fuzzy
 msgid "Create a playlist for each rating"
 msgstr "Создан список воспроизведения с одной дорожкой."
 
-#: ../plugins/playlist_display/plugin.c:257
+#: ../plugins/playlist_display/plugin.c:260
 #, fuzzy
 msgid "Selected Playlist including Tracks from Database"
 msgstr "Выбранный список воспроизведения, включая дорожки, из базы данных"
 
-#: ../plugins/playlist_display/plugin.c:265
+#: ../plugins/playlist_display/plugin.c:268
 #, fuzzy
 msgid "Selected Playlist including Tracks from Device"
 msgstr "Выбранный список воспроизведения, включая дорожки, с iPod"
 
-#: ../plugins/playlist_display/plugin.c:307
-#: ../plugins/playlist_display/playlist_display.glade.h:7
-#, fuzzy
-msgid "Playlist Display"
-msgstr "Списки воспроизведения"
-
-#: ../plugins/playlist_display/plugin.c:310 ../libgtkpod/gp_spl.c:1407
+#: ../plugins/playlist_display/plugin.c:313 ../libgtkpod/gp_spl.c:1407
 #: ../libgtkpod/misc_playlist.c:75 ../libgtkpod/misc_playlist.c:104
 #: ../libgtkpod/misc_playlist.c:353
 msgid "New Playlist"
 msgstr "Создать список воспроизведения"
 
-#: ../plugins/playlist_display/plugin.c:310
+#: ../plugins/playlist_display/plugin.c:313
 msgid "Create a new playlist for the selected ipod"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:339
+#: ../plugins/playlist_display/plugin.c:342
 #, fuzzy
 msgid "  iPod Repositories"
 msgstr "Репозиторий подкастов"
+
+#: ../plugins/playlist_display/plugin.c:411 ../src/anjuta-about.c:165
+#, fuzzy, c-format
+msgid "Couldn't load icon: %s"
+msgstr "Не удалось получить блокировку для \"%s\".\n"
 
 #: ../plugins/playlist_display/playlist_display_context_menu.c:54
 msgid "Remove All Tracks from iPod"
@@ -2733,27 +2746,27 @@ msgstr "-"
 msgid "+"
 msgstr "+"
 
-#: ../libgtkpod/misc.c:937
+#: ../libgtkpod/misc.c:935
 #, c-format
 msgid "Could not process '%s' (no filename available)"
 msgstr "Не удалось обработать \"%s\" (имя файла недоступно)"
 
-#: ../libgtkpod/misc.c:1078 ../libgtkpod/file.c:799
+#: ../libgtkpod/misc.c:1076 ../libgtkpod/file.c:811
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
 msgstr "Неизвестная лексема '%%%c' в шаблоне '%s'"
 
-#: ../libgtkpod/misc.c:1149
+#: ../libgtkpod/misc.c:1147
 #, c-format
 msgid "Template ('%s') does not match file type '%s'\n"
 msgstr "Шаблон (\"%s\") не соответствует типу файла \"%s\"\n"
 
-#: ../libgtkpod/misc.c:1227
+#: ../libgtkpod/misc.c:1225
 #, c-format
 msgid "Error creating %s: %s\n"
 msgstr "Ошибка при создании %s: %s\n"
 
-#: ../libgtkpod/misc.c:1626
+#: ../libgtkpod/misc.c:1624
 #, c-format
 msgid ""
 "Writing preferences file '%s' failed (%s).\n"
@@ -2762,11 +2775,11 @@ msgstr ""
 "Не удалось записать файл настроек \"%s\" (%s).\n"
 "\n"
 
-#: ../libgtkpod/misc.c:1626
+#: ../libgtkpod/misc.c:1624
 msgid "unspecified error"
 msgstr "неспецифицированная ошибка"
 
-#: ../libgtkpod/misc.c:1633
+#: ../libgtkpod/misc.c:1631
 #, c-format
 msgid ""
 "Writing preferences to the iPod (%s) failed: could not get path to Control "
@@ -2777,7 +2790,7 @@ msgstr ""
 "Control.\n"
 "\n"
 
-#: ../libgtkpod/misc.c:1785
+#: ../libgtkpod/misc.c:1783
 msgid ""
 "Are you sure you want to delete the following track completely from your "
 "iPod? The number of playlists this track is a member of is indicated in "
@@ -2796,14 +2809,14 @@ msgstr[2] ""
 "Вы уверены, что хотите полностью удалить следующие дорожки с iPod?Число "
 "списков воспроизведения, в которые входят эти дорожки, указанов скобках."
 
-#: ../libgtkpod/misc.c:1788
+#: ../libgtkpod/misc.c:1786
 msgid "Delete Track Completely from iPod?"
 msgid_plural "Delete Tracks Completely from iPod?"
 msgstr[0] "Удалить дорожку с iPod полностью?"
 msgstr[1] "Удалить дорожки с iPod полностью?"
 msgstr[2] "Удалить дорожки с iPod полностью?"
 
-#: ../libgtkpod/misc.c:1799 ../libgtkpod/misc.c:1836
+#: ../libgtkpod/misc.c:1797 ../libgtkpod/misc.c:1834
 #, c-format
 msgid ""
 "Are you sure you want to remove the following track from the playlist \"%s\"?"
@@ -2820,14 +2833,14 @@ msgstr[2] ""
 "Вы уверены, что хотите удалить следующие дорожки из списка воспроизведения "
 "\"%s\"?"
 
-#: ../libgtkpod/misc.c:1802 ../libgtkpod/misc.c:1839
+#: ../libgtkpod/misc.c:1800 ../libgtkpod/misc.c:1837
 msgid "Remove Track From Playlist?"
 msgid_plural "Remove Tracks From Playlist?"
 msgstr[0] "Удалить дорожку из списка воспроизведения?"
 msgstr[1] "Удалить дорожки из списка воспроизведения?"
 msgstr[2] "Удалить дорожки из списка воспроизведения?"
 
-#: ../libgtkpod/misc.c:1822
+#: ../libgtkpod/misc.c:1820
 msgid ""
 "Are you sure you want to delete the following track completely from your "
 "harddisk? The number of playlists this track is a member of is indicated in "
@@ -2849,14 +2862,14 @@ msgstr[2] ""
 "Число списков воспроизведения, в которые входит эта дорожка, указано в "
 "скобках."
 
-#: ../libgtkpod/misc.c:1825
+#: ../libgtkpod/misc.c:1823
 msgid "Delete Track from Harddisk?"
 msgid_plural "Delete Tracks from Harddisk?"
 msgstr[0] "Удалить дорожку с жёсткого диска?"
 msgstr[1] "Удалить дорожки с жёсткого диска?"
 msgstr[2] "Удалить дорожки с жёсткого диска?"
 
-#: ../libgtkpod/misc.c:1849
+#: ../libgtkpod/misc.c:1847
 msgid ""
 "Are you sure you want to remove the following track completely from your "
 "local database? The number of playlists this track is a member of is "
@@ -2878,12 +2891,19 @@ msgstr[2] ""
 "Число списков воспроизведения, в которые входят эти дорожки, указано в "
 "скобках."
 
-#: ../libgtkpod/misc.c:1852
+#: ../libgtkpod/misc.c:1850
 msgid "Remove Track from Local Database?"
 msgid_plural "Remove Tracks from Local Database?"
 msgstr[0] "Удалить дорожку из локальной базы данных?"
 msgstr[1] "Удалить дорожки из локальной базы данных?"
 msgstr[2] "Удалить дорожки из локальной базы данных?"
+
+#: ../libgtkpod/directories.c:120
+#, c-format
+msgid ""
+"Using local %s directory since program was started from source directory:\n"
+"%s\n"
+msgstr ""
 
 #: ../libgtkpod/gtkpod_app_iface.c:159
 msgid ""
@@ -2969,8 +2989,8 @@ msgstr "Внедрено или имя файла было потеряно"
 msgid "Artwork not set"
 msgstr "Изображение не задано"
 
-#: ../libgtkpod/misc_track.c:1603 ../libgtkpod/misc_track.c:1695
-#: ../libgtkpod/file.c:1543
+#: ../libgtkpod/misc_track.c:1603 ../libgtkpod/misc_track.c:1699
+#: ../libgtkpod/file.c:1555
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
@@ -2984,12 +3004,12 @@ msgstr ""
 msgid "Could not find source file for '%s'. Track not copied."
 msgstr "Не удалось найти исходный файл для \"%s\". Дорожка не скопирована."
 
-#: ../libgtkpod/misc_track.c:1836
+#: ../libgtkpod/misc_track.c:1840
 #, c-format
 msgid "drag and drop: ignored '%s'\n"
 msgstr "перетаскивание: проигнорировано \"%s\"\n"
 
-#: ../libgtkpod/misc_track.c:1947
+#: ../libgtkpod/misc_track.c:1962
 #, c-format
 msgid "Deleted one track completely from iPod"
 msgid_plural "Deleted %d tracks completely from iPod"
@@ -2997,7 +3017,7 @@ msgstr[0] "Одна дорожка полностью удалена с iPod"
 msgstr[1] "%d дорожки полностью удалено с iPod"
 msgstr[2] "%d дорожек полностью удалено с iPod"
 
-#: ../libgtkpod/misc_track.c:1952 ../libgtkpod/misc_track.c:1972
+#: ../libgtkpod/misc_track.c:1967 ../libgtkpod/misc_track.c:1987
 #, c-format
 msgid "Deleted %d track from playlist '%s'"
 msgid_plural "Deleted %d tracks from playlist '%s'"
@@ -3005,7 +3025,7 @@ msgstr[0] "Дорожка %d удалена из списка воспроизв
 msgstr[1] "%d дорожки удалено из списка воспроизведения \"%s\""
 msgstr[2] "%d дорожек удалено из списка воспроизведения \"%s\""
 
-#: ../libgtkpod/misc_track.c:1967
+#: ../libgtkpod/misc_track.c:1982
 #, c-format
 msgid "Deleted one track from harddisk"
 msgid_plural "Deleted %d tracks from harddisk"
@@ -3013,7 +3033,7 @@ msgstr[0] "Одна дорожка удалена с жёсткого диска
 msgstr[1] "%d дорожки удалены с жёсткого диска"
 msgstr[2] "%d дорожек удалено с жёсткого диска"
 
-#: ../libgtkpod/misc_track.c:1977
+#: ../libgtkpod/misc_track.c:1992
 #, c-format
 msgid "Deleted track from local database"
 msgid_plural "Deleted %d tracks from local database"
@@ -3021,7 +3041,7 @@ msgstr[0] "Дорожка удалена из локальной базы дан
 msgstr[1] "%d дорожки удалены из локальной базы данных"
 msgstr[2] "%d дорожек удалено из локальной базы данных"
 
-#: ../libgtkpod/misc_track.c:2087
+#: ../libgtkpod/misc_track.c:2102
 #, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
@@ -3029,7 +3049,7 @@ msgstr[0] "Дорожка %d скопирована в \"%s\" в \"%s\""
 msgstr[1] "Дорожка %d скопирована в \"%s\" в \"%s\""
 msgstr[2] "Дорожка %d скопирована в \"%s\" в \"%s\""
 
-#: ../libgtkpod/misc_track.c:2117
+#: ../libgtkpod/misc_track.c:2132
 #, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
@@ -3037,7 +3057,7 @@ msgstr[0] "%d дорожка скопировано в \"%s\""
 msgstr[1] "%d дорожек скопировано в \"%s\""
 msgstr[2] "%d дорожек скопировано в \"%s\""
 
-#: ../libgtkpod/misc_track.c:2131
+#: ../libgtkpod/misc_track.c:2146
 msgid "No tracks selected"
 msgstr "Дорожки не выбраны"
 
@@ -3045,21 +3065,21 @@ msgstr "Дорожки не выбраны"
 msgid "Error: Lyrics not supported for this file format."
 msgstr "Ошибка: текст песни не поддерживается для этого формата файлов."
 
-#: ../libgtkpod/gp_itdb.c:806
+#: ../libgtkpod/gp_itdb.c:809
 msgid "Music Library"
 msgstr "Фонотека"
 
 #. add podcast playlist
-#: ../libgtkpod/gp_itdb.c:813 ../libgtkpod/gp_itdb.c:914
-#: ../libgtkpod/gp_itdb.c:946
+#: ../libgtkpod/gp_itdb.c:816 ../libgtkpod/gp_itdb.c:917
+#: ../libgtkpod/gp_itdb.c:949
 msgid "Podcasts"
 msgstr "Подкасты"
 
-#: ../libgtkpod/gp_itdb.c:916
+#: ../libgtkpod/gp_itdb.c:919
 msgid "Local"
 msgstr "Локальный"
 
-#: ../libgtkpod/gp_itdb.c:1001
+#: ../libgtkpod/gp_itdb.c:1004
 #, c-format
 msgid "Increased playcount for '%s'"
 msgstr "Увеличено число воспроизведений для \"%s\""
@@ -3083,7 +3103,7 @@ msgstr "Хэшированный файл имеет длину 0 байт\n"
 msgid "Could not open '%s' to calculate SHA1 checksum: %s\n"
 msgstr "Не удалось открыть \"%s\" для вычисления контрольной суммы SHA1: %s\n"
 
-#: ../libgtkpod/autodetection.c:275
+#: ../libgtkpod/autodetection.c:244
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' could not be loaded into gtkpod.\n"
@@ -3092,7 +3112,7 @@ msgstr ""
 "Вновь примонтированный iPod \"%s\" не мог быть загружен в gtkpod.\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:281
+#: ../libgtkpod/autodetection.c:248
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' appears to be already loaded!\n"
@@ -3101,7 +3121,7 @@ msgstr ""
 "Вновь примонтированный iPod \"%s\" выглядит уже загруженным!\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:294
+#: ../libgtkpod/autodetection.c:256
 msgid "New iPod"
 msgstr "Новый iPod"
 
@@ -3424,7 +3444,7 @@ msgstr "Обработка повисших дорожек без файлов �
 msgid "Dangling tracks with no files on PC were removed."
 msgstr "Повисшие дорожки без файлов на ПК были удалены."
 
-#: ../libgtkpod/misc_playlist.c:777 ../libgtkpod/file.c:1433
+#: ../libgtkpod/misc_playlist.c:777 ../libgtkpod/file.c:1445
 #, c-format
 msgid "Processing '%s'..."
 msgstr "Идёт обработка \"%s\"..."
@@ -3721,17 +3741,17 @@ msgstr "неактивно"
 msgid "Active threads: %d. Scheduled tracks: %d."
 msgstr "Активных потоков: %d. Спланированных дорожек: %d."
 
-#: ../libgtkpod/file_convert.c:952
+#: ../libgtkpod/file_convert.c:950
 #, c-format
 msgid "Original filename not available for '%s.'\n"
 msgstr "Оригинальное имя файла недоступно для \"%s\".\n"
 
-#: ../libgtkpod/file_convert.c:968
+#: ../libgtkpod/file_convert.c:966
 #, c-format
 msgid "Filename '%s' is no longer valid for '%s'.\n"
 msgstr "Имя файла \"%s\" больше не допустимо для \"%s\".\n"
 
-#: ../libgtkpod/file_convert.c:1041
+#: ../libgtkpod/file_convert.c:1040
 #, c-format
 msgid ""
 "Files of type '%s' are not supported by the iPod. Please go to the "
@@ -3743,17 +3763,24 @@ msgstr ""
 "для \"%s\".\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1117
+#: ../libgtkpod/file_convert.c:1113
 msgid "No information available"
 msgstr "Сведения недоступны"
 
-#: ../libgtkpod/file_convert.c:1149
+#: ../libgtkpod/file_convert.c:1142
 #, c-format
 msgid "Could not create '%s'. Filetype conversion will not work.\n"
 msgstr ""
 "Не удалось создать \"%s\". Преобразование типа файлов не будет работать.\n"
 
-#: ../libgtkpod/file_convert.c:1419 ../libgtkpod/file_convert.c:2644
+#: ../libgtkpod/file_convert.c:1370
+#, c-format
+msgid ""
+"Programming error, conversion type %d not expected in conversion_scheduler"
+"()\n"
+msgstr ""
+
+#: ../libgtkpod/file_convert.c:1419 ../libgtkpod/file_convert.c:2659
 #, c-format
 msgid ""
 "Transfer of '%s' failed. %s\n"
@@ -3762,7 +3789,7 @@ msgstr ""
 "Передача \"%s\" завершена неуспешно. %s\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1774 ../libgtkpod/file_convert.c:1998
+#: ../libgtkpod/file_convert.c:1775 ../libgtkpod/file_convert.c:2005
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s'.\n"
@@ -3771,7 +3798,7 @@ msgstr ""
 "Преобразование \"%s\" завершено неуспешно. %s\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1788
+#: ../libgtkpod/file_convert.c:1790
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s %s' returned exit status %d.\n"
@@ -3781,7 +3808,7 @@ msgstr ""
 "завершения %d.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1813
+#: ../libgtkpod/file_convert.c:1816
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '\"%s\" %s' did not return filename extension as "
@@ -3792,7 +3819,7 @@ msgstr ""
 "расширениефайла, как ожидалось.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1877
+#: ../libgtkpod/file_convert.c:1881
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not access original file '%s' (%s).\n"
@@ -3802,7 +3829,7 @@ msgstr ""
 "\"%s\" (%s).\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1920
+#: ../libgtkpod/file_convert.c:1925
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not create directory '%s'.\n"
@@ -3811,7 +3838,7 @@ msgstr ""
 "Преобразование \"%s\" завершено неуспешно: Не удалось создать папку \"%s\".\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:2023
+#: ../libgtkpod/file_convert.c:2033
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s' returned exit status %d.\n"
@@ -3821,7 +3848,7 @@ msgstr ""
 "d.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:2057
+#: ../libgtkpod/file_convert.c:2067
 #, c-format
 msgid ""
 "Conversion of '%s' failed: could not stat the converted file '%s'.\n"
@@ -3830,6 +3857,11 @@ msgstr ""
 "Преобразование \"%s\" завершено неуспешно: не удалось получить информацию о "
 "преобразованном файле \"%s\".\n"
 "\n"
+
+#: ../libgtkpod/file_convert.c:2206
+#, c-format
+msgid "***** programming error -- g_thread_self not found in threads list\n"
+msgstr ""
 
 #: ../libgtkpod/tools.c:116
 #, c-format
@@ -4322,33 +4354,33 @@ msgstr ""
 "\"%s\" не является известным файлом списка воспроизведения.\n"
 "\n"
 
-#: ../libgtkpod/file.c:235
+#: ../libgtkpod/file.c:247
 #, c-format
 msgid "Skipping '%s' because it is a directory.\n"
 msgstr "Пропущено \"%s\", поскольку это папка.\n"
 
-#: ../libgtkpod/file.c:239
+#: ../libgtkpod/file.c:251
 #, c-format
 msgid "Skipping '%s' to avoid adding playlist file recursively\n"
 msgstr ""
 "Пропущено \"%s\", чтобы предотвратить рекурсивное добавление файла списка "
 "воспроизведения.\n"
 
-#: ../libgtkpod/file.c:457
+#: ../libgtkpod/file.c:469
 #, c-format
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr "Неизвестная лексема \"%s\" в шаблоне \"%s\"\n"
 
-#: ../libgtkpod/file.c:737
+#: ../libgtkpod/file.c:749
 #, c-format
 msgid "Could not create '%s'"
 msgstr "Не удалось создать \"%s\""
 
-#: ../libgtkpod/file.c:771
+#: ../libgtkpod/file.c:783
 msgid "Error creating thumbnail file"
 msgstr "Ошибка при создании файла эскиза"
 
-#: ../libgtkpod/file.c:819
+#: ../libgtkpod/file.c:831
 #, c-format
 msgid ""
 "Unable to start video thumbnail generator\n"
@@ -4357,19 +4389,19 @@ msgstr ""
 "Не удалось запустить генератор эскизов видео\n"
 "(командная строка: \"%s:\")"
 
-#: ../libgtkpod/file.c:822
+#: ../libgtkpod/file.c:834
 #, c-format
 msgid "Thumbnail generator returned status %d"
 msgstr "Генератор эскизов видео вернул код завершения %d"
 
-#: ../libgtkpod/file.c:946
+#: ../libgtkpod/file.c:958
 #, c-format
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
 msgstr ""
 "Следующая дорожка не могла быть обработана (файл не существует): \"%s\"\n"
 
-#: ../libgtkpod/file.c:964
+#: ../libgtkpod/file.c:976
 #, c-format
 msgid ""
 "The filetype '%s' is not currently supported.\n"
@@ -4377,16 +4409,16 @@ msgid ""
 "If you have a plugin that supports this filetype then please enable it."
 msgstr ""
 
-#: ../libgtkpod/file.c:1089
+#: ../libgtkpod/file.c:1101
 #, c-format
 msgid "Updating %s"
 msgstr "Обновляется %s"
 
-#: ../libgtkpod/file.c:1101
+#: ../libgtkpod/file.c:1113
 msgid "Updated selected tracks with info from file."
 msgstr "Выбранные дорожки обновлены с использованием сведений из файла."
 
-#: ../libgtkpod/file.c:1117
+#: ../libgtkpod/file.c:1129
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -4396,11 +4428,11 @@ msgstr[2] "Следующие %d дорожек не могут быть обн�
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1120
+#: ../libgtkpod/file.c:1132
 msgid "Failed Track Update"
 msgstr "Ошибка при обновлении дорожки"
 
-#: ../libgtkpod/file.c:1174
+#: ../libgtkpod/file.c:1186
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -4410,70 +4442,70 @@ msgstr[2] "Следующие %d дорожек были обновлены"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1177
+#: ../libgtkpod/file.c:1189
 msgid "Successful Track Update"
 msgstr "Успешное обновление дорожки"
 
-#: ../libgtkpod/file.c:1264
+#: ../libgtkpod/file.c:1276
 msgid "no local filename available, file on the iPod will be used instead"
 msgstr "локальное имя файла недоступно, будет использовано имя файла на iPod"
 
-#: ../libgtkpod/file.c:1268
+#: ../libgtkpod/file.c:1280
 msgid "no local filename available and copy on iPod cannot be found"
 msgstr "локальное имя файла недоступно, и не найдена копия на iPod"
 
-#: ../libgtkpod/file.c:1271 ../libgtkpod/file.c:1284
+#: ../libgtkpod/file.c:1283 ../libgtkpod/file.c:1296
 msgid "no local filename available"
 msgstr "локальное имя файла недоступно"
 
-#: ../libgtkpod/file.c:1277
+#: ../libgtkpod/file.c:1289
 msgid "local file could not be found, file on the iPod will be used instead"
 msgstr "локальный файл не найден, будет использован файл на iPod"
 
-#: ../libgtkpod/file.c:1281
+#: ../libgtkpod/file.c:1293
 msgid "local file as well as copy on the iPod cannot be found"
 msgstr "локальный файл и копия на iPod не найдены"
 
 #. update not successful -- log this track for later display
-#: ../libgtkpod/file.c:1366
+#: ../libgtkpod/file.c:1378
 msgid "update failed (format not supported?)"
 msgstr "ошибка при обновлении (формат не поддерживается?)"
 
-#: ../libgtkpod/file.c:1439
+#: ../libgtkpod/file.c:1451
 #, c-format
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "Пропущено \"%s\", поскольку оно соответствует маскам исключения.\n"
 
-#: ../libgtkpod/file.c:1621 ../libgtkpod/file.c:1628
+#: ../libgtkpod/file.c:1633 ../libgtkpod/file.c:1640
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "Не удалось изменить метки файла: %s\n"
 
-#: ../libgtkpod/file.c:1711
+#: ../libgtkpod/file.c:1723
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr "Не удалось открыть \"%s\" для чтения и записи.\n"
 
-#: ../libgtkpod/file.c:1716
+#: ../libgtkpod/file.c:1728
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr "Не удалось получить блокировку для \"%s\".\n"
 
 #. error!
-#: ../libgtkpod/file.c:1731 ../libgtkpod/file.c:1739 ../libgtkpod/file.c:1749
-#: ../libgtkpod/file.c:1756
+#: ../libgtkpod/file.c:1743 ../libgtkpod/file.c:1751 ../libgtkpod/file.c:1761
+#: ../libgtkpod/file.c:1768
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr "Некорректная строка в \"%s\": %s\n"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1782
+#: ../libgtkpod/file.c:1794
 msgid "Remove offline playcounts?"
 msgstr "Удалить счётчики воспроизведения в автономном режиме?"
 
 #. title
-#: ../libgtkpod/file.c:1783
+#: ../libgtkpod/file.c:1795
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
@@ -4482,23 +4514,23 @@ msgstr ""
 "iTunesDB.Нажмите \"OK\", чтобы удалить их из файла счётчика воспроизведений "
 "в автономном режиме.Нажмите \"Cancel\", чтобы сохранить их."
 
-#: ../libgtkpod/file.c:1798
+#: ../libgtkpod/file.c:1810
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr "Ошибка записи в \"%s\".\n"
 
-#: ../libgtkpod/file.c:1847
+#: ../libgtkpod/file.c:1859
 #, c-format
 msgid ""
 "Error: Could not determine filetype for file at path: %s.\n"
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file.c:1880
+#: ../libgtkpod/file.c:1892
 msgid "Error:"
 msgstr "Ошибка:"
 
-#: ../libgtkpod/file.c:1894
+#: ../libgtkpod/file.c:1906
 #, c-format
 msgid ""
 "iPod File not available and ID3 saving disabled in options, cannot save "
@@ -4509,39 +4541,39 @@ msgstr ""
 "сохранить текст песни для: %s.\n"
 "\n"
 
-#: ../libgtkpod/file.c:1903
+#: ../libgtkpod/file.c:1915
 #, fuzzy, c-format
 msgid ""
 "Lyrics not written, file type cannot be determined (%s).\n"
 "\n"
 msgstr "Текст песни не записан, имя файла недоступно (%s).\n"
 
-#: ../libgtkpod/prefs.c:312
+#: ../libgtkpod/prefs.c:318
 #, c-format
 msgid "gtkpod version %s usage:\n"
 msgstr "использование версии gtkpod %s:\n"
 
-#: ../libgtkpod/prefs.c:313
+#: ../libgtkpod/prefs.c:319
 msgid "  -h, --help:   display this message\n"
 msgstr "  -h, --help:   отобразить это сообщение\n"
 
-#: ../libgtkpod/prefs.c:314
+#: ../libgtkpod/prefs.c:320
 msgid "  -p <file>:    increment playcount for file by one\n"
 msgstr "  -p <file>:    увеличить число воспроизведений файла на 1\n"
 
-#: ../libgtkpod/prefs.c:315
+#: ../libgtkpod/prefs.c:321
 msgid "  --hash <file>:print gtkpod hash for file\n"
 msgstr "  --hash <file>:вывести хэш gtkpod для файла\n"
 
-#: ../libgtkpod/prefs.c:316
+#: ../libgtkpod/prefs.c:322
 msgid "  -m path:      define the mountpoint of your iPod\n"
 msgstr "  -m path:      задать точку монтирования iPod\n"
 
-#: ../libgtkpod/prefs.c:317
+#: ../libgtkpod/prefs.c:323
 msgid "  --mountpoint: same as '-m'.\n"
 msgstr "  --mountpoint: то же, что '-m'.\n"
 
-#: ../libgtkpod/prefs.c:485
+#: ../libgtkpod/prefs.c:491
 #, c-format
 msgid "Couldn't create '%s'\n"
 msgstr "Не удалось создать \"%s\"\n"
@@ -4962,30 +4994,30 @@ msgstr "_Инструменты"
 msgid "Help"
 msgstr "_Справка"
 
-#: ../src/anjuta-app.c:644
+#: ../src/anjuta-app.c:642
 msgid "Plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:655
+#: ../src/anjuta-app.c:653
 msgid "Installed plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:656
+#: ../src/anjuta-app.c:654
 #, fuzzy
 msgid "Preferred plugins"
 msgstr "Параметры"
 
-#: ../src/anjuta-app.c:657
+#: ../src/anjuta-app.c:655
 #, fuzzy
 msgid "Shortcuts"
 msgstr "Вкладки сортировки"
 
-#: ../src/anjuta-app.c:715
+#: ../src/anjuta-app.c:713
 #, c-format
 msgid "Value doesn't exist"
 msgstr ""
 
-#: ../src/anjuta-app.c:1296
+#: ../src/anjuta-app.c:1294
 msgid "Confirmation"
 msgstr "Подтверждение"
 
@@ -4993,6 +5025,11 @@ msgstr "Подтверждение"
 #, fuzzy
 msgid "GtkPod Preferences"
 msgstr "Параметры"
+
+#: ../src/anjuta-about.c:158
+#, fuzzy, c-format
+msgid "Couldn't read license file %s: %s"
+msgstr "Не удалось изменить метки файла: %s\n"
 
 #: ../src/anjuta-about.c:172
 msgid "Copyright (c) Jorg Schuler et al."
@@ -5010,6 +5047,10 @@ msgstr ""
 #: ../src/main.c:57
 msgid "gtkpod"
 msgstr "gtkpod"
+
+#, fuzzy
+#~ msgid "_New Playlist Menu"
+#~ msgstr "Создать список воспроизведения"
 
 #~ msgid "gtkpod Information"
 #~ msgstr "Сведения gtkpod"

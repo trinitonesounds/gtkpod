@@ -120,6 +120,7 @@ libgtkpod/misc_conversion.c
 src/anjuta-actions.h
 src/anjuta-app.c
 src/anjuta-action-callbacks.c
+src/anjuta-actions.h
 src/anjuta-about.c
 src/gtkpod.c
 src/main.c

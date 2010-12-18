@@ -43,7 +43,7 @@
 
 #define PREFERENCE_ICON "cover_web-gtkpod-category"
 #define PREFERENCE_ICON_STOCK_ID "cover_web-preference-icon"
-#define TAB_NAME "Cover Web"
+#define TAB_NAME _("Cover Web")
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -151,12 +151,12 @@ static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* pre
         g_warning ("Couldn't load icon: %s", error->message);
         g_error_free(error);
     }
-    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-coverweb-settings", _(TAB_NAME), pixbuf, plugin->prefs);
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-coverweb-settings", TAB_NAME, pixbuf, plugin->prefs);
     g_object_unref(pixbuf);
 }
 
 static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
-    anjuta_preferences_remove_page(prefs, _(TAB_NAME));
+    anjuta_preferences_remove_page(prefs, TAB_NAME);
     CoverWebPlugin* plugin = COVER_WEB_PLUGIN(ipref);
     gtk_widget_destroy(plugin->prefs);
 }

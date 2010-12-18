@@ -26,8 +26,13 @@
  |
  |  $Id$
  */
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
+
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
+#include <glib/gi18n-lib.h>
 #include "directories.h"
 
 static gboolean USING_LOCAL = FALSE;
@@ -112,7 +117,7 @@ static gchar * init_dir(char *argv[], gchar *localdir, gchar *fullinstalldir) {
         newdir = fullinstalldir;
     else {
         USING_LOCAL = TRUE;
-        g_printf("Using local %s directory since program was started from source directory:\n%s\n", localdir, newdir);
+        g_printf(_("Using local %s directory since program was started from source directory:\n%s\n"), localdir, newdir);
     }
 
     return newdir;
