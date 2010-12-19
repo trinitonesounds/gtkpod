@@ -639,7 +639,7 @@ void anjuta_app_install_preferences(AnjutaApp *app) {
     anjuta_preferences_dialog_add_page (
                 ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (app->preferences)),
                 "plugins",
-                _("Plugins"),
+                _(" Plugins"),
                 pixbuf,
                 notebook);
     shortcuts = anjuta_ui_get_accel_editor(ANJUTA_UI (app->ui));

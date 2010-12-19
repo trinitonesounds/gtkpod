@@ -40,31 +40,31 @@
 static gpointer parent_class;
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {
-    FlacFileTypePlugin *flac_filetype_plugin;
+    M4AFileTypePlugin *m4a_filetype_plugin;
 
-    flac_filetype_plugin = (FlacFileTypePlugin*) plugin;
-    g_return_val_if_fail(FILE_IS_TYPE(flac_filetype_plugin), TRUE);
+    m4a_filetype_plugin = (M4AFileTypePlugin*) plugin;
+    g_return_val_if_fail(FILE_IS_TYPE(m4a_filetype_plugin), TRUE);
 
-    gtkpod_register_filetype(FILE_TYPE(flac_filetype_plugin));
+    gtkpod_register_filetype(FILE_TYPE(m4a_filetype_plugin));
 
     return TRUE; /* FALSE if activation failed */
 }
 
 static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
-    FlacFileTypePlugin *flac_filetype_plugin;
+    M4AFileTypePlugin *m4a_filetype_plugin;
 
-    flac_filetype_plugin = (FlacFileTypePlugin*) plugin;
-    gtkpod_unregister_filetype(FILE_TYPE(flac_filetype_plugin));
+    m4a_filetype_plugin = (M4AFileTypePlugin*) plugin;
+    gtkpod_unregister_filetype(FILE_TYPE(m4a_filetype_plugin));
 
     /* FALSE if plugin doesn't want to deactivate */
     return TRUE;
 }
 
-static void flac_filetype_plugin_instance_init(GObject *obj) {
-//    FlacFileTypePlugin *plugin = (FlacFileTypePlugin*) obj;
+static void m4a_filetype_plugin_instance_init(GObject *obj) {
+//    M4AFileTypePlugin *plugin = (M4AFileTypePlugin*) obj;
 }
 
-static void flac_filetype_plugin_class_init(GObjectClass *klass) {
+static void m4a_filetype_plugin_class_init(GObjectClass *klass) {
     AnjutaPluginClass *plugin_class = ANJUTA_PLUGIN_CLASS (klass);
 
     parent_class = g_type_class_peek_parent(klass);
@@ -73,7 +73,7 @@ static void flac_filetype_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_plugin;
 }
 
-static void flac_filetype_iface_init(FileTypeInterface *iface) {
+static void m4a_filetype_iface_init(FileTypeInterface *iface) {
     iface->category = AUDIO;
     iface->description = _("M4A audio file type");
     iface->name = "m4a";
@@ -92,9 +92,9 @@ static void flac_filetype_iface_init(FileTypeInterface *iface) {
     iface->get_gain_cmd = m4a_get_gain_cmd;
 }
 
-ANJUTA_PLUGIN_BEGIN (FlacFileTypePlugin, flac_filetype_plugin);
-ANJUTA_PLUGIN_ADD_INTERFACE(flac_filetype, FILE_TYPE_TYPE);
+ANJUTA_PLUGIN_BEGIN (M4AFileTypePlugin, m4a_filetype_plugin);
+ANJUTA_PLUGIN_ADD_INTERFACE(m4a_filetype, FILE_TYPE_TYPE);
 ANJUTA_PLUGIN_END;
 
-ANJUTA_SIMPLE_PLUGIN (FlacFileTypePlugin, flac_filetype_plugin)
+ANJUTA_SIMPLE_PLUGIN (M4AFileTypePlugin, m4a_filetype_plugin)
 ;

@@ -36,14 +36,14 @@
 
 #include <libanjuta/anjuta-plugin.h>
 
-typedef struct _FlacFileTypePlugin FlacFileTypePlugin;
-typedef struct _FlacFileTypePluginClass FlacFileTypePluginClass;
+typedef struct _M4AFileTypePlugin M4AFileTypePlugin;
+typedef struct _M4AFileTypePluginClass M4AFileTypePluginClass;
 
-struct _FlacFileTypePlugin {
+struct _M4AFileTypePlugin {
     AnjutaPlugin parent;
 };
 
-struct _FlacFileTypePluginClass {
+struct _M4AFileTypePluginClass {
     AnjutaPluginClass parent_class;
 };
 
