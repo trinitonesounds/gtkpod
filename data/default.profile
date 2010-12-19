@@ -7,13 +7,6 @@
 		   attribute="Location"
 		   value="filetype_mp3:MP3FileTypePlugin"/>
   </plugin>
-  <plugin name="OGG File Type Plugin"
-	      url="http://www.gtkpod.org/plugins/"
-		  mandatory="yes">
-		  <require group="Anjuta Plugin"
-		   attribute="Location"
-		   value="filetype_ogg:OGGFileTypePlugin"/>
-  </plugin>
   <plugin name="Sorttab Display Plugin"
 	      url="http://www.gtkpod.org/plugins/"
 		  mandatory="yes">

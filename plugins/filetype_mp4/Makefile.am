@@ -1,4 +1,4 @@
-#ifdef HAVE_LIBMP4V2
+if HAVE_MP4
 
 plugin_name = filetype_mp4
 plugin_lib = lib$(plugin_name).so
@@ -37,11 +37,11 @@ libfiletype_mp4_la_LIBADD = \
     $(LIBGTKPOD_LIBS) \
     $(LIBANJUTA_LIBS)
 
+endif
+
 EXTRA_DIST = \
 	$(plugin_in_files) \
 	$(filetype_mp4_plugin_DATA) \
 	$(filetype_mp4_ui_DATA) \
 	$(filetype_mp4_glade_DATA) \
 	$(filetype_mp4_pixmaps_DATA)
-
-#endif

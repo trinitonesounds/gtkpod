@@ -175,7 +175,7 @@ else
 		[coverweb="no"])
 fi
 
-AM_CONDITIONAL(HAVE_PLUGIN_COVERWEB, [test x$coverweb = xyes])
+AM_CONDITIONAL(HAVE_PLUGIN_COVERWEB, [test "x$coverweb" = "xyes"])
 
 dnl Check for gstreamer
 dnl -------------------------------------------------------------
@@ -197,9 +197,14 @@ else
 		[gstreamer-0.10 >= 0.10.25],
 		[media_player="yes"],
 		[media_player="no"])
+	
+	PKG_CHECK_MODULES(GSTREAMER_INTERFACES,
+		[gstreamer-interfaces-0.10 >= 0.10.25],
+		[media_player="yes"],
+		[media_player="no"])
 fi
 
-AM_CONDITIONAL(HAVE_PLUGIN_MEDIA_PLAYER, [test x$media_player = xyes])
+AM_CONDITIONAL(HAVE_PLUGIN_MEDIA_PLAYER, [test "x$media_player" = "xyes"])
 
 dnl Check for libvorbisfile and libvorbis
 AC_ARG_WITH(ogg, AC_HELP_STRING([--without-ogg], [Disable Ogg/Vorbis support]))
@@ -222,13 +227,11 @@ if test "x$with_ogg" != "xno"; then
         AC_MSG_ERROR([Ogg/Vorbis support explicitly requested but ogg/vorbis libs couldn't be found])
     fi
 fi
-AM_CONDITIONAL(HAVE_LIBVORBISFILE, test "x$have_ogg" = "xyes")
+
 if test "x$have_ogg" = "xyes"; then
-    have_ogg="yes -- will build with ogg support"
     AC_DEFINE(HAVE_LIBVORBISFILE, 1, [Define if you have the ogg/vorbis library])
-else
-    have_ogg="*no -- will build without ogg support"
 fi
+AM_CONDITIONAL(HAVE_LIBVORBISFILE, test "x$have_ogg" = "xyes")
 
 dnl Check for FLAC
 AC_ARG_WITH(flac, AC_HELP_STRING([--without-flac], [Disable FLAC support]))
@@ -243,22 +246,21 @@ if test "x$with_flac" != "xno"; then
         AC_MSG_ERROR([FLAC support explicitly requested but flac libs couldn't be found])
     fi
 fi
-AM_CONDITIONAL(HAVE_FLAC, test "x$have_flac" = "xyes")
+
 if test "x$have_flac" = "xyes"; then
-    have_flac="yes -- will build with FLAC support"
     AC_DEFINE(HAVE_FLAC, 1, [Define if you have the flac library])
-else
-    have_flac="*no -- will build without FLAC support"
 fi
+AM_CONDITIONAL(HAVE_FLAC, test "x$have_flac" = "xyes")
 
 dnl Check for MP4 Headers
-AC_CHECK_HEADERS([mp4v2/platform.h])
+AC_CHECK_HEADERS([mp4v2/platform.h], have_mp4=yes, have_mp4=no)
 AC_CHECK_HEADERS([mp4v2/itmf_tags.h], [], [],
 		 [#ifdef HAVE_MP4V2_PLATFORM_H
 		  # include <mp4v2/platform.h>
 		  #endif
 		  typedef void* MP4FileHandle;
 		 ])
+AM_CONDITIONAL(HAVE_MP4, test "x$have_mp4" = "xyes")
 
 dnl Additional libs maybe needed when compiling under solaris
 AC_SEARCH_LIBS(bind, ["socket" "nsl" "socket -lnsl"])
@@ -459,9 +461,6 @@ Core Configuration for $PACKAGE $VERSION :
  GTK2 version .........: `$PKG_CONFIG gtk+-2.0 --modversion`
  GLib2/GThread version : `$PKG_CONFIG gthread-2.0 --modversion`
  libgpod version ......: $libgpod_version
- libcurl ..............: $have_curl
- vorbisfile ...........: $have_ogg
- FLAC .................: $have_flac
  Preprocessor .........: $CC $CPPFLAGS
  Compiler .............: $CC $CFLAGS
  Linker ...............: $CC $LDFLAGS $LIBS
@@ -470,17 +469,14 @@ Core Configuration for $PACKAGE $VERSION :
 echo "
 Plugin Configuration :
 ---------------------------------"
-if [ $HAVE_PLUGIN_COVERWEB ]; then
-    echo " CoverWeb Browser .....: Yes"
-else
-    echo " CoverWeb Browser .....: No"
-fi
+echo " CoverWeb Browser           .....: $coverweb"
+echo " Media Player               .....: $media_player"
+echo " MP4 File Type              .....: $have_mp4"
+echo " M4A File Type              .....: $have_mp4"
+echo " Flac File Type             .....: $have_flac"
+echo " Ogg File Type              .....: $have_ogg"
 
-if [ $HAVE_PLUGIN_MEDIA_PLAYER ]; then
-    echo " Media Player     .....: Yes"
-else
-    echo " Media Player     .....: No"
-fi
+echo " Support for cover download .....: $have_curl"
 
 echo "
  Now type 'make' to build $PACKAGE $VERSION,

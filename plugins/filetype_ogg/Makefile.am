@@ -1,4 +1,4 @@
-#ifdef HAVE_LIBVORBISFILE
+if HAVE_LIBVORBISFILE
 
 plugin_name = filetype_ogg
 plugin_lib = lib$(plugin_name).so
@@ -37,11 +37,11 @@ libfiletype_ogg_la_LIBADD = \
     $(LIBGTKPOD_LIBS) \
     $(LIBANJUTA_LIBS)
 
+endif
+
 EXTRA_DIST = \
 	$(plugin_in_files) \
 	$(filetype_ogg_plugin_DATA) \
 	$(filetype_ogg_ui_DATA) \
 	$(filetype_ogg_glade_DATA) \
 	$(filetype_ogg_pixmaps_DATA)
-
-#endif

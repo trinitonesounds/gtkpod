@@ -1,4 +1,4 @@
-#ifdef HAVE_FLAC
+if HAVE_FLAC
 
 plugin_name = filetype_flac
 plugin_lib = lib$(plugin_name).so
@@ -37,11 +37,11 @@ libfiletype_flac_la_LIBADD = \
     $(LIBGTKPOD_LIBS) \
     $(LIBANJUTA_LIBS)
 
+endif
+
 EXTRA_DIST = \
 	$(plugin_in_files) \
 	$(filetype_flac_plugin_DATA) \
 	$(filetype_flac_ui_DATA) \
 	$(filetype_flac_glade_DATA) \
 	$(filetype_flac_pixmaps_DATA)
-
-#endif

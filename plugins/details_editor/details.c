@@ -191,7 +191,7 @@ static void details_writethrough_toggled(GtkCheckButton *button) {
     details_update_buttons();
 }
 
-static void details_notebook_page_changed(GtkNotebook *notebook, GtkNotebookPage *page, guint page_num, gpointer user_data) {
+static void details_notebook_page_changed(GtkNotebook *notebook, GtkWidget *page, guint page_num, gpointer user_data) {
     prefs_set_int(DETAILS_WINDOW_NOTEBOOK_PAGE, page_num);
 }
 
