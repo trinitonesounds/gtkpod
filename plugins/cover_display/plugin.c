@@ -55,6 +55,9 @@ static void set_default_preferences() {
 
     if (!prefs_get_string_value("coverart_display_fg_color", NULL))
         prefs_set_string("coverart_display_fg_color", "#FFFFFF");
+
+    if (! prefs_get_int_value("cad_case_sensitive", NULL))
+        prefs_set_int("cad_case_sensitive", FALSE);
 }
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {

@@ -135,7 +135,7 @@ TabEntry *st_get_selected_entry(gint inst);
 gint st_get_sort_tab_number(gchar *text);
 void st_delete_entry_head(gint inst, DeleteAction deleteaction);
 void st_stop_editing(gint inst, gboolean cancel);
-void st_sort(GtkSortType order);
+void st_sort(gint order);
 void st_remove_entry(TabEntry *entry, guint32 inst);
 void st_cleanup(void);
 
@@ -144,7 +144,5 @@ void cal_open_calendar(gint inst, T_item item);
 void sorttab_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data);
 void sorttab_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data);
 void sorttab_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data);
-void sorttab_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data);
-void sorttab_display_tracks_reordered_cb(GtkPodApp *app, gpointer data);
 
 #endif /* __DISPLAY_SORTTAB_H__ */

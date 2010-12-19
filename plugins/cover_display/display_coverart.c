@@ -506,7 +506,7 @@ static void draw(cairo_t *cairo_context) {
  *
  */
 void coverart_display_update(gboolean clear_track_list) {
-    gint i, sort;
+    gint i;
     GList *tracks;
     Track *track;
     Album_Item *album;
@@ -529,13 +529,11 @@ void coverart_display_update(gboolean clear_track_list) {
         /* Find the selected playlist */
         Playlist *pl = gtkpod_get_current_playlist();
         if (!pl) {
-            redraw(FALSE);
             return;
         }
 
         tracks = pl->members;
         if (!tracks) {
-            redraw(FALSE);
             return;
         }
 
@@ -581,14 +579,7 @@ void coverart_display_update(gboolean clear_track_list) {
     album_key_list = g_list_remove_all(album_key_list, NULL);
 
     /* Sort the tracks to the order set in the preference */
-    sort = prefs_get_int("st_sort");
-    if (sort != SORT_NONE) {
-        coverart_sort_images(sort);
-    }
-    else {
-        /* restore original order) */
-        album_key_list = g_list_reverse(album_key_list);
-    }
+    coverart_sort_images(prefs_get_int("cad_sort"));
 
     /* Add 4 null tracks to the end of the track list for padding */
     for (i = 0; i < IMG_MAIN; ++i)
@@ -598,15 +589,21 @@ void coverart_display_update(gboolean clear_track_list) {
     for (i = 0; i < IMG_MAIN; ++i)
         album_key_list = g_list_prepend(album_key_list, NULL);
 
-    redraw(FALSE);
+    if (clear_track_list)
+        set_slider_range(0);
+    else
+        set_slider_range(cdwidget->first_imgindex);
+}
 
-    set_slider_range(cdwidget->first_imgindex);
-
-    /*
-     printf("######### ORIGINAL LINE UP ########\n");
-     debug_albums ();
-     printf("######### END OF ORIGINAL LINE UP #######\n");
-     */
+/**
+ * Sort the coverart display according to the given
+ * sort order.
+ *
+ */
+void coverart_display_sort(gint order) {
+    prefs_set_int("cad_sort", order);
+    coverart_display_update(TRUE);
+    gtkpod_broadcast_preference_change("cad_sort", order);
 }
 
 /**
@@ -849,12 +846,6 @@ void coverart_track_changed(Track *track, gint signal) {
         /* Remove the track from the album item */
         remove_track_from_album(album, track, trk_key, index, keypos);
 
-        /* Check if album is being displayed by checking the index */
-        if (index >= cdwidget->first_imgindex && index <= (cdwidget->first_imgindex + IMG_TOTAL)) {
-            /* reset the covers and should reset to original position but without the index */
-            redraw(FALSE);
-        }
-
         /* Size of key list may have changed so reset the slider
          * to appropriate range and index.
          */
@@ -883,10 +874,10 @@ void coverart_track_changed(Track *track, gint signal) {
             /* Remove all null tracks before any sorting should take place */
             album_key_list = g_list_remove_all(album_key_list, NULL);
 
-            if (prefs_get_int("st_sort") == SORT_ASCENDING) {
+            if (prefs_get_int("cad_sort") == SORT_ASCENDING) {
                 album_key_list = g_list_insert_sorted(album_key_list, trk_key, (GCompareFunc) compare_album_keys);
             }
-            else if (prefs_get_int("st_sort") == SORT_DESCENDING) {
+            else if (prefs_get_int("cad_sort") == SORT_DESCENDING) {
                 /* Already in descending order so reverse into ascending order */
                 album_key_list = g_list_reverse(album_key_list);
                 /* Insert the track */
@@ -992,7 +983,6 @@ void coverart_track_changed(Track *track, gint signal) {
                          * under the new album key
                          */
                         remove_track_from_album(album, track, key, index, klist);
-                        redraw(FALSE);
                         /* Found the album and removed so no need to continue the loop */
                         break;
                     }
@@ -1388,6 +1378,8 @@ static GdkPixbuf *coverart_get_default_track_thumb(gint default_img_size) {
  *
  */
 static void set_slider_range(gint index) {
+    g_signal_handler_block(G_OBJECT(cdwidget->cdslider), slide_signal_id);
+
     gint slider_ubound = g_list_length(album_key_list) - IMG_TOTAL;
     if (slider_ubound < 1) {
         /* If only one album cover is displayed then slider_ubbound returns
@@ -1410,6 +1402,8 @@ static void set_slider_range(gint index) {
         gtk_range_set_value(GTK_RANGE (cdwidget->cdslider), index);
     else
         gtk_range_set_value(GTK_RANGE (cdwidget->cdslider), 0);
+
+    g_signal_handler_unblock(G_OBJECT(cdwidget->cdslider), slide_signal_id);
 }
 
 /**
@@ -1451,8 +1445,6 @@ void coverart_select_cover(Track *track) {
         cdwidget->first_imgindex = 0;
     else if ((cdwidget->first_imgindex + IMG_TOTAL) >= displaytotal)
         cdwidget->first_imgindex = displaytotal - IMG_TOTAL;
-
-    redraw(FALSE);
 
     /* Set the index value of the slider but avoid causing an infinite
      * cover selection by blocking the event
@@ -1628,8 +1620,7 @@ static gint compare_album_keys(gchar *a, gchar *b) {
     if (b == NULL)
         return -1;
 
-    return g_ascii_strcasecmp(a, b);
-
+    return compare_string(a, b, prefs_get_int("cad_case_sensitive"));
 }
 
 /**
@@ -2125,6 +2116,7 @@ void coverart_display_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer dat
         return;
 
     coverart_track_changed(old_track, COVERART_REMOVE_SIGNAL);
+    redraw(FALSE);
 }
 
 void coverart_display_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data) {
@@ -2134,6 +2126,8 @@ void coverart_display_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data)
 
     if (tracks)
         coverart_select_cover(tracks->data);
+
+    redraw(FALSE);
 }
 
 void coverart_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data) {
@@ -2142,6 +2136,7 @@ void coverart_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer dat
         return;
 
     coverart_track_changed(track, COVERART_CHANGE_SIGNAL);
+    redraw(FALSE);
 }
 
 void coverart_display_track_added_cb(GtkPodApp *app, gpointer tk, gpointer data) {
@@ -2150,5 +2145,6 @@ void coverart_display_track_added_cb(GtkPodApp *app, gpointer tk, gpointer data)
         return;
 
     coverart_track_changed(track, COVERART_CREATE_SIGNAL);
+    redraw(FALSE);
 }
 

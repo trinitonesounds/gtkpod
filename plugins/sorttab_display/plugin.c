@@ -130,12 +130,14 @@ static void set_default_preferences() {
             prefs_set_int_index("sp_autodisplay", i, FALSE);
     }
 
-    if (prefs_get_int_value("sort_tab_num", NULL))
+    if (! prefs_get_int_value("sort_tab_num", NULL))
         prefs_set_int("sort_tab_num", 2);
 
-    if (prefs_get_int_value("st_sort", NULL))
+    if (! prefs_get_int_value("st_sort", NULL))
         prefs_set_int("st_sort", SORT_NONE);
 
+    if (! prefs_get_int_value("st_case_sensitive", NULL))
+        prefs_set_int("st_case_sensitive", FALSE);
 }
 
 static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
@@ -182,7 +184,6 @@ static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (sorttab_display_select_playlist_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (sorttab_display_track_removed_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_TRACK_UPDATED, G_CALLBACK (sorttab_display_track_updated_cb), NULL);
-    g_signal_connect (gtkpod_app, SIGNAL_PREFERENCE_CHANGE, G_CALLBACK (sorttab_display_preference_changed_cb), NULL);
 
     anjuta_shell_add_widget(plugin->shell, sorttab_display_plugin->st_paned, "SorttabDisplayPlugin", _("  Track Filter"), NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
     return TRUE; /* FALSE if activation failed */

@@ -228,9 +228,10 @@ static gboolean on_st_treeview_key_release_event(GtkWidget *widget, GdkEventKey 
 static void st_build_sortkeys(TabEntry *entry) {
     C_FREE (entry->name_sortkey);
     C_FREE (entry->name_fuzzy_sortkey);
-    entry->name_sortkey = make_sortkey(entry->name);
+    gint case_sensitive = prefs_get_int("st_case_sensitive");
+    entry->name_sortkey = make_sortkey(entry->name, case_sensitive);
     if (entry->name != fuzzy_skip_prefix(entry->name)) {
-        entry->name_fuzzy_sortkey = make_sortkey(fuzzy_skip_prefix(entry->name));
+        entry->name_fuzzy_sortkey = make_sortkey(fuzzy_skip_prefix(entry->name), case_sensitive);
     }
 }
 
@@ -1782,12 +1783,13 @@ static void st_sort_inst(guint32 inst, GtkSortType order) {
     }
 }
 
-void st_sort(GtkSortType order) {
+void st_sort(gint order) {
     gint i;
     for (i = 0; i < prefs_get_int("sort_tab_num"); ++i)
         st_sort_inst(i, order);
 
-//    gtkpod_tracks_reordered();
+    prefs_set_int("st_sort", order);
+    gtkpod_broadcast_preference_change("st_sort", order);
 }
 
 gint st_get_sorttab_page_number(int inst) {
@@ -3373,18 +3375,5 @@ void sorttab_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, g
 void sorttab_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data) {
     Track *track = tk;
     st_track_changed(track, FALSE, 0);
-}
-
-void sorttab_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data) {
-    gchar *pref_name = pfname;
-    if (g_str_equal(pref_name, "st_sort")) {
-        st_sort(value);
-    } else if (g_str_equal(pref_name, "case_sensitive")) {
-        st_rebuild_sortkeys();
-    }
-}
-
-void sorttab_display_tracks_reordered_cb(GtkPodApp *app, gpointer data) {
-    st_adopt_order_in_playlist();
 }
 

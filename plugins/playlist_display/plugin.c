@@ -280,15 +280,22 @@ static GtkActionEntry playlist_actions[] =
         }
     };
 
+static void set_default_preferences() {
+    if (! prefs_get_int_value("pm_sort", NULL))
+        prefs_set_int("pm_sort", SORT_NONE);
+
+    if (! prefs_get_int_value("pm_case_sensitive", NULL))
+        prefs_set_int("pm_case_sensitive", FALSE);
+}
+
 static gboolean activate_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
     PlaylistDisplayPlugin *playlist_display_plugin;
     GtkActionGroup* action_group;
     GtkAction *new_playlist_action;
 
-    /* preferences */
-    if (! prefs_get_int_value("pm_sort", NULL))
-        prefs_set_int("pm_sort", SORT_NONE);
+    /* Set preferences */
+    set_default_preferences();
 
     /* Prepare the icons for the playlist */
     register_icon_path(get_plugin_dir(), "playlist_display");

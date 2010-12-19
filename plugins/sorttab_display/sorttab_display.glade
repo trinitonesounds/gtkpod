@@ -2398,7 +2398,7 @@ Added
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="st_cfg_case_sensitive">
-                            <property name="label" translatable="yes">Case sensitive sorting (setting affects all sorting)</property>
+                            <property name="label" translatable="yes">Case sensitive sorting</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -2406,6 +2406,7 @@ Added
                             <property name="tooltip" translatable="yes">If checked, sorting will be case sensitive. Please note that case sensitive sorting will not work well with most charsets.</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
+                            <signal name="toggled" handler="on_st_sort_case_sensitive_toggled"/>
                           </widget>
                           <packing>
                             <property name="expand">False</property>

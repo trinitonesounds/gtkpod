@@ -113,10 +113,10 @@ time_t time_string_to_totime (const gchar *str);
 
 gchar *get_filesize_as_string (double size);
 
-gchar *make_sortkey (const gchar *name);
-gint compare_string (const gchar *str1, const gchar *str2);
+gchar *make_sortkey (const gchar *name, const gint case_sensitive);
+gint compare_string (const gchar *str1, const gchar *str2, const gint case_sensitive);
 void compare_string_fuzzy_generate_keys (void);
-gint compare_string_fuzzy (const gchar *str1, const gchar *str2);
+gint compare_string_fuzzy (const gchar *str1, const gchar *str2, const gint case_sensitive);
 const gchar *fuzzy_skip_prefix (const gchar *sortkey);
 gint compare_string_case_insensitive (const gchar *str1,
 				      const gchar *str2);

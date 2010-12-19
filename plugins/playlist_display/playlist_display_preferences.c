@@ -57,10 +57,10 @@ G_MODULE_EXPORT void on_pm_none_toggled(GtkToggleButton *togglebutton, gpointer 
         set_pm_sort(SORT_NONE);
 }
 
-G_MODULE_EXPORT void on_sort_case_sensitive_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+G_MODULE_EXPORT void on_pm_sort_case_sensitive_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     gboolean val = gtk_toggle_button_get_active(togglebutton);
-    prefs_set_int("case_sensitive", val);
-    gtkpod_broadcast_preference_change("case_sensitive", val);
+    prefs_set_int("pm_case_sensitive", val);
+    gtkpod_broadcast_preference_change("pm_case_sensitive", val);
 }
 
 GtkWidget *init_playlist_display_preferences() {
@@ -89,7 +89,7 @@ GtkWidget *init_playlist_display_preferences() {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
     if ((w = gtkpod_xml_get_widget(pref_xml, "pm_cfg_case_sensitive"))) {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("case_sensitive"));
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("pm_case_sensitive"));
     }
 
     glade_xml_signal_autoconnect(pref_xml);

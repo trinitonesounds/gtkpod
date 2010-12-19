@@ -1512,7 +1512,7 @@ gint pm_data_compare_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, g
         return (corr);
 
     /* compare the two entries */
-    return compare_string(playlist1->name, playlist2->name);
+    return compare_string(playlist1->name, playlist2->name, prefs_get_int("pm_case_sensitive"));
 }
 
 /* Called when editable cell is being edited. Stores new data to
@@ -2135,8 +2135,11 @@ void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer 
 
 void playlist_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data) {
     gchar *pref_name = pfname;
-    if (g_str_equal(pref_name, "pm_sort") || g_str_equal(pref_name, "case_sensitive")) {
+    if (g_str_equal(pref_name, "pm_sort"))
         pm_sort(value);
+    else if (g_str_equal(pref_name, "pm_case_sensitive")) {
+        gint val = prefs_get_int("pm_sort");
+        pm_sort((GtkSortType) val);
     }
 }
 

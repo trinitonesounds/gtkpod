@@ -76,7 +76,7 @@ static GtkTreeViewColumn *tm_columns[TM_NUM_COLUMNS];
 static const gint READOUT_COL = 0;
 
 /* compare function to be used for string comparisons */
-static gint (*string_compare_func)(const gchar *str1, const gchar *str2) = compare_string;
+static gint (*string_compare_func)(const gchar *str1, const gchar *str2, const gint case_sensitive) = compare_string;
 
 static GtkTreeViewColumn *tm_add_column(TM_item tm_item, gint position);
 static TM_item tm_lookup_col_id(GtkTreeViewColumn *column);
@@ -1295,75 +1295,76 @@ static gint tm_data_compare(Track *track1, Track *track2, TM_item tm_item) {
     /* string_compare_func is set to either compare_string_fuzzy or
      compare_string in tm_sort_column_changed() which is called
      once before the comparing begins. */
+    gint case_sensitive = prefs_get_int("tm_case_sensitive");
     switch (tm_item) {
     case TM_COLUMN_TITLE:
-        cmp = string_compare_func(track1->title, track2->title);
+        cmp = string_compare_func(track1->title, track2->title, case_sensitive);
         break;
     case TM_COLUMN_ALBUM:
-        cmp = string_compare_func(track1->album, track2->album);
+        cmp = string_compare_func(track1->album, track2->album, case_sensitive);
         break;
     case TM_COLUMN_ALBUMARTIST:
-        cmp = string_compare_func(track1->albumartist, track2->albumartist);
+        cmp = string_compare_func(track1->albumartist, track2->albumartist, case_sensitive);
         break;
     case TM_COLUMN_GENRE:
-        cmp = string_compare_func(track1->genre, track2->genre);
+        cmp = string_compare_func(track1->genre, track2->genre, case_sensitive);
         break;
     case TM_COLUMN_COMPOSER:
-        cmp = string_compare_func(track1->composer, track2->composer);
+        cmp = string_compare_func(track1->composer, track2->composer, case_sensitive);
         break;
     case TM_COLUMN_COMMENT:
-        cmp = string_compare_func(track1->comment, track2->comment);
+        cmp = string_compare_func(track1->comment, track2->comment, case_sensitive);
         break;
     case TM_COLUMN_FILETYPE:
-        cmp = string_compare_func(track1->filetype, track2->filetype);
+        cmp = string_compare_func(track1->filetype, track2->filetype, case_sensitive);
         break;
     case TM_COLUMN_GROUPING:
-        cmp = string_compare_func(track1->grouping, track2->grouping);
+        cmp = string_compare_func(track1->grouping, track2->grouping, case_sensitive);
         break;
     case TM_COLUMN_ARTIST:
-        cmp = string_compare_func(track1->artist, track2->artist);
+        cmp = string_compare_func(track1->artist, track2->artist, case_sensitive);
         break;
     case TM_COLUMN_CATEGORY:
-        cmp = string_compare_func(track1->category, track2->category);
+        cmp = string_compare_func(track1->category, track2->category, case_sensitive);
         break;
     case TM_COLUMN_DESCRIPTION:
-        cmp = string_compare_func(track1->description, track2->description);
+        cmp = string_compare_func(track1->description, track2->description, case_sensitive);
         break;
     case TM_COLUMN_PODCASTURL:
-        cmp = string_compare_func(track1->podcasturl, track2->podcasturl);
+        cmp = string_compare_func(track1->podcasturl, track2->podcasturl, case_sensitive);
         break;
     case TM_COLUMN_PODCASTRSS:
-        cmp = string_compare_func(track1->podcastrss, track2->podcastrss);
+        cmp = string_compare_func(track1->podcastrss, track2->podcastrss, case_sensitive);
         break;
     case TM_COLUMN_SUBTITLE:
-        cmp = string_compare_func(track1->subtitle, track2->subtitle);
+        cmp = string_compare_func(track1->subtitle, track2->subtitle, case_sensitive);
         break;
     case TM_COLUMN_TV_SHOW:
-        cmp = string_compare_func(track1->tvshow, track2->tvshow);
+        cmp = string_compare_func(track1->tvshow, track2->tvshow, case_sensitive);
         break;
     case TM_COLUMN_TV_EPISODE:
-        cmp = string_compare_func(track1->tvepisode, track2->tvepisode);
+        cmp = string_compare_func(track1->tvepisode, track2->tvepisode, case_sensitive);
         break;
     case TM_COLUMN_TV_NETWORK:
-        cmp = string_compare_func(track1->tvnetwork, track2->tvnetwork);
+        cmp = string_compare_func(track1->tvnetwork, track2->tvnetwork, case_sensitive);
         break;
     case TM_COLUMN_SORT_TITLE:
-        cmp = string_compare_func(track1->sort_title, track2->sort_title);
+        cmp = string_compare_func(track1->sort_title, track2->sort_title, case_sensitive);
         break;
     case TM_COLUMN_SORT_ALBUM:
-        cmp = string_compare_func(track1->sort_album, track2->sort_album);
+        cmp = string_compare_func(track1->sort_album, track2->sort_album, case_sensitive);
         break;
     case TM_COLUMN_SORT_ARTIST:
-        cmp = string_compare_func(track1->sort_artist, track2->sort_artist);
+        cmp = string_compare_func(track1->sort_artist, track2->sort_artist, case_sensitive);
         break;
     case TM_COLUMN_SORT_ALBUMARTIST:
-        cmp = string_compare_func(track1->sort_albumartist, track2->sort_albumartist);
+        cmp = string_compare_func(track1->sort_albumartist, track2->sort_albumartist, case_sensitive);
         break;
     case TM_COLUMN_SORT_COMPOSER:
-        cmp = string_compare_func(track1->sort_composer, track2->sort_composer);
+        cmp = string_compare_func(track1->sort_composer, track2->sort_composer, case_sensitive);
         break;
     case TM_COLUMN_SORT_TVSHOW:
-        cmp = string_compare_func(track1->sort_tvshow, track2->sort_tvshow);
+        cmp = string_compare_func(track1->sort_tvshow, track2->sort_tvshow, case_sensitive);
         break;
     case TM_COLUMN_TRACK_NR:
         cmp = track1->tracks - track2->tracks;

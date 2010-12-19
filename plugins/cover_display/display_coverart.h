@@ -202,6 +202,13 @@ GdkColor *coverart_get_foreground_display_color ();
  */
 void destroy_coverart_display();
 
+/**
+ * Sort the coverart display according to the given
+ * sort order.
+ *
+ */
+void coverart_display_sort(gint order);
+
 void coverart_display_update_cb(GtkPodApp *app, gpointer pl, gpointer data);
 void coverart_display_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data);
 void coverart_display_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data);

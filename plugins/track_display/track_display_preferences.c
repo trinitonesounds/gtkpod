@@ -387,9 +387,16 @@ static void populate_track_cmd_combo(GtkComboBox *combo) {
                     NULL);
 }
 
+G_MODULE_EXPORT void on_tm_sort_case_sensitive_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+    gboolean val = gtk_toggle_button_get_active(togglebutton);
+    prefs_set_int("tm_case_sensitive", val);
+    gtkpod_broadcast_preference_change("tm_case_sensitive", val);
+}
+
 GtkWidget *init_track_display_preferences() {
     GtkComboBox *cmd_combo;
     gint i = 0;
+    GtkWidget *w;
 
     gchar *glade_path = g_build_filename(get_glade_dir(), "track_display.glade", NULL);
     preference_xml = gtkpod_xml_new(glade_path, "track_settings_notebook");
@@ -406,7 +413,7 @@ GtkWidget *init_track_display_preferences() {
     /* label the ignore-field checkbox-labels */
     for (i = 0; sort_ign_fields[i] != -1; ++i) {
         gchar *buf = g_strdup_printf("sort_ign_field_%d", sort_ign_fields[i]);
-        GtkWidget *w = gtkpod_xml_get_widget(preference_xml, buf);
+        w = gtkpod_xml_get_widget(preference_xml, buf);
         g_return_val_if_fail (w, NULL);
         gtk_button_set_label(GTK_BUTTON (w), gettext (get_t_string (sort_ign_fields[i])));
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), prefs_get_int(buf));
@@ -415,6 +422,10 @@ GtkWidget *init_track_display_preferences() {
     }
 
     populate_track_cmd_combo(cmd_combo);
+
+    if ((w = gtkpod_xml_get_widget(preference_xml, "tm_cfg_case_sensitive"))) {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("tm_case_sensitive"));
+    }
 
     glade_xml_signal_autoconnect(preference_xml);
 

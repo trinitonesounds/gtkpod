@@ -373,10 +373,10 @@ gchar **build_argv_from_strings(const gchar *first_arg, ...) {
 
 /* compare @str1 and @str2 case-sensitively or case-insensitively
  * depending on prefs settings */
-gint compare_string(const gchar *str1, const gchar *str2) {
+gint compare_string(const gchar *str1, const gchar *str2, const gint case_sensitive) {
     gint result;
-    gchar *sortkey1 = make_sortkey(str1);
-    gchar *sortkey2 = make_sortkey(str2);
+    gchar *sortkey1 = make_sortkey(str1, case_sensitive);
+    gchar *sortkey2 = make_sortkey(str2, case_sensitive);
 
     result = strcmp(sortkey1, sortkey2);
 
@@ -401,8 +401,8 @@ static GList *csfk_list = NULL;
  * The caller is responsible of freeing the returned key with g_free.
  */
 gchar *
-make_sortkey(const gchar *name) {
-    if (prefs_get_int("case_sensitive")) {
+make_sortkey(const gchar *name, const gint case_sensitive) {
+    if (case_sensitive) {
         return g_utf8_collate_key(name, -1);
     }
     else {
@@ -493,8 +493,8 @@ fuzzy_skip_prefix(const gchar *name) {
 /* compare @str1 and @str2 case-sensitively or case-insensitively
  * depending on prefs settings, and ignoring certain initial articles
  * ("the", "le"/"la", etc) */
-gint compare_string_fuzzy(const gchar *str1, const gchar *str2) {
-    return compare_string(fuzzy_skip_prefix(str1), fuzzy_skip_prefix(str2));
+gint compare_string_fuzzy(const gchar *str1, const gchar *str2, const gint case_sensitive) {
+    return compare_string(fuzzy_skip_prefix(str1), fuzzy_skip_prefix(str2), case_sensitive);
 }
 
 /* compare @str1 and @str2 case-insensitively */

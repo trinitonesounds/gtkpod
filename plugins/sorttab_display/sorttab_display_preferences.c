@@ -72,8 +72,8 @@ G_MODULE_EXPORT void on_st_none_toggled(GtkToggleButton *togglebutton, gpointer 
 
 G_MODULE_EXPORT void on_st_sort_case_sensitive_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     gboolean val = gtk_toggle_button_get_active(togglebutton);
-    prefs_set_int("case_sensitive", val);
-    gtkpod_broadcast_preference_change("case_sensitive", val);
+    prefs_set_int("st_case_sensitive", val);
+    gtkpod_broadcast_preference_change("st_case_sensitive", val);
 }
 
 GtkWidget *init_sorttab_preferences() {
@@ -87,7 +87,7 @@ GtkWidget *init_sorttab_preferences() {
     g_object_ref(notebook);
     g_free(glade_path);
 
-    switch (prefs_get_int("pm_sort")) {
+    switch (prefs_get_int("st_sort")) {
     case SORT_ASCENDING:
         w = gtkpod_xml_get_widget(pref_xml, "st_ascend");
         break;
@@ -103,7 +103,7 @@ GtkWidget *init_sorttab_preferences() {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
     if ((w = gtkpod_xml_get_widget(pref_xml, "st_cfg_case_sensitive"))) {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("case_sensitive"));
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("st_case_sensitive"));
     }
 
     glade_xml_signal_autoconnect(pref_xml);

@@ -290,6 +290,24 @@
                             <property name="position">1</property>
                           </packing>
                         </child>
+                        <child>
+                          <widget class="GtkCheckButton" id="tm_cfg_case_sensitive">
+                            <property name="label" translatable="yes">Case sensitive sorting</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip" translatable="yes">If checked, sorting will be case sensitive. Please note that case sensitive sorting will not work well with most charsets.</property>
+                            <property name="use_underline">True</property>
+                            <property name="draw_indicator">True</property>
+                            <signal name="toggled" handler="on_tm_sort_case_sensitive_toggled"/>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
                       </widget>
                     </child>
                   </widget>
