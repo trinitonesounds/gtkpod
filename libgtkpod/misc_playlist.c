@@ -673,7 +673,7 @@ static void treeValueDestroy(gpointer value) {
 }
 
 /* call back function for traversing what is left from the tree -
- * dangling files - files present in DB but not present physically on iPOD.
+ * dangling files - files present in DB but not present physically on iPod.
  * It adds found tracks to the dandling list so user can see what is missing
  * and then decide on what to do with them */
 gboolean remove_dangling(gpointer key, gpointer value, gpointer pl_dangling) {
@@ -918,7 +918,7 @@ void check_db(iTunesDB *itdb) {
         g_strfreev(tokens);
     }
 
-    gtkpod_statusbar_message(_("Checking iPOD files against known files in DB"));
+    gtkpod_statusbar_message(_("Checking iPod files against known files in DB"));
     gtkpod_tracks_statusbar_update();
     process_gtk_events_blocked();
 

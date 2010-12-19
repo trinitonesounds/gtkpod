@@ -2846,8 +2846,8 @@ msgstr "退出并且不保存改动"
 
 #: ../libgtkpod/gtkpod_app_iface.c:219
 #, c-format
-msgid " P:%d T:%d/%d"
-msgstr " P:%d T:%d/%d"
+msgid "P:%d T:%d/%d"
+msgstr "P:%d T:%d/%d"
 
 #. ID
 #. modal,

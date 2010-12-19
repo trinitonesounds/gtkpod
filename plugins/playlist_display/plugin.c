@@ -59,7 +59,7 @@ static GtkActionEntry playlist_actions[] =
             PLAYLIST_DISPLAY_READ_ICON_STOCK_ID, /* Stock icon */
             N_("_Load iPod(s)"), /* Display label */
             NULL, /* short-cut */
-            N_("Load all currently listed ipods"), /* Tooltip */
+            N_("Load all currently listed iPods"), /* Tooltip */
             G_CALLBACK (on_load_ipods_mi) /* callback */
         },
         {
@@ -75,7 +75,7 @@ static GtkActionEntry playlist_actions[] =
             PLAYLIST_DISPLAY_ADD_FILES_ICON_STOCK_ID, /* Stock icon */
             N_("Add _Files"), /* Display label */
             NULL, /* short-cut */
-            N_("Add files to selected ipod"), /* Tooltip */
+            N_("Add files to selected iPod"), /* Tooltip */
             G_CALLBACK (on_create_add_files) /* callback */
         },
         {
@@ -83,7 +83,7 @@ static GtkActionEntry playlist_actions[] =
             PLAYLIST_DISPLAY_ADD_DIRS_ICON_STOCK_ID, /* Stock icon */
             N_("Add Fol_der"), /* Display label */
             NULL, /* short-cut */
-            N_("Add folder contents to selected ipod"), /* Tooltip */
+            N_("Add folder contents to selected iPod"), /* Tooltip */
             G_CALLBACK (on_create_add_directory) /* callback */
         },
         {
@@ -91,7 +91,7 @@ static GtkActionEntry playlist_actions[] =
             PLAYLIST_DISPLAY_ADD_PLAYLISTS_ICON_STOCK_ID, /* Stock icon */
             N_("Add _Playlist"), /* Display label */
             NULL, /* short-cut */
-            N_("Add playlist to selected ipod"), /* Tooltip */
+            N_("Add playlist to selected iPod"), /* Tooltip */
             G_CALLBACK (on_create_add_playlists) /* callback */
         },
         {
@@ -317,7 +317,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
         = anjuta_ui_add_action_group_entries(ui, "ActionGroupPlaylistDisplay", _("Playlist Display"), playlist_actions, G_N_ELEMENTS (playlist_actions), GETTEXT_PACKAGE, TRUE, plugin);
     playlist_display_plugin->action_group = action_group;
 
-    new_playlist_action = tool_menu_action_new (ACTION_NEW_PLAYLIST, _("New Playlist"), N_("Create a new playlist for the selected ipod"), GTK_STOCK_NEW);
+    new_playlist_action = tool_menu_action_new (ACTION_NEW_PLAYLIST, _("New Playlist"), N_("Create a new playlist for the selected iPod"), GTK_STOCK_NEW);
     g_signal_connect(new_playlist_action, "activate", G_CALLBACK(on_new_playlist_activate), NULL);
     gtk_action_group_add_action (playlist_display_plugin->action_group, GTK_ACTION (new_playlist_action));
 

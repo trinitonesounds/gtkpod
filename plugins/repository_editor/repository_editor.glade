@@ -32,7 +32,7 @@
                 <child>
                   <widget class="GtkLabel" id="repository_type_label">
                     <property name="visible">True</property>
-                    <property name="label">&lt;i&gt;Repository type&lt;/i&gt;</property>
+                    <property name="label" translatable="yes">&lt;i&gt;Repository type&lt;/i&gt;</property>
                     <property name="use_markup">True</property>
                   </widget>
                   <packing>
@@ -814,7 +814,7 @@
                         <child>
                           <widget class="GtkLabel" id="playlist_type_label">
                             <property name="visible">True</property>
-                            <property name="label">&lt;i&gt;Playlist type&lt;/i&gt;</property>
+                            <property name="label" translatable="yes">&lt;i&gt;Playlist type&lt;/i&gt;</property>
                             <property name="use_markup">True</property>
                           </widget>
                           <packing>

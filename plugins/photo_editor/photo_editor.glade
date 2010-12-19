@@ -32,7 +32,7 @@
                           <widget class="GtkMenu" id="photo_album_menuItem_menu">
                             <child>
                               <widget class="GtkImageMenuItem" id="photo_add_album_menuItem">
-                                <property name="label">_Add Album</property>
+                                <property name="label" translatable="yes">_Add Album</property>
                                 <property name="visible">True</property>
                                 <property name="use_underline">True</property>
                                 <property name="use_stock">False</property>
@@ -47,7 +47,7 @@
                             </child>
                             <child>
                               <widget class="GtkImageMenuItem" id="photo_remove_album_menuItem">
-                                <property name="label">_Remove Album</property>
+                                <property name="label" translatable="yes">_Remove Album</property>
                                 <property name="visible">True</property>
                                 <property name="use_underline">True</property>
                                 <property name="use_stock">False</property>
@@ -87,7 +87,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="photo_photos_menuitem">
-                        <property name="label">_Photos</property>
+                        <property name="label" translatable="yes">_Photos</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -95,7 +95,7 @@
                           <widget class="GtkMenu" id="photo_photos_menuitem_menu">
                             <child>
                               <widget class="GtkImageMenuItem" id="photo_add_image_menuItem">
-                                <property name="label">_Add Image</property>
+                                <property name="label" translatable="yes">_Add Image</property>
                                 <property name="visible">True</property>
                                 <property name="use_underline">True</property>
                                 <property name="use_stock">False</property>
@@ -110,7 +110,7 @@
                             </child>
                             <child>
                               <widget class="GtkImageMenuItem" id="photo_add_image_dir_menuItem">
-                                <property name="label">Add Image_s</property>
+                                <property name="label" translatable="yes">Add Image_s</property>
                                 <property name="visible">True</property>
                                 <property name="tooltip" translatable="yes">Add Images from a Directory</property>
                                 <property name="use_underline">True</property>
@@ -126,7 +126,7 @@
                             </child>
                             <child>
                               <widget class="GtkImageMenuItem" id="photo_remove_image_menuItem">
-                                <property name="label">_Remove Images</property>
+                                <property name="label" translatable="yes">_Remove Images</property>
                                 <property name="visible">True</property>
                                 <property name="use_underline">True</property>
                                 <property name="use_stock">False</property>
@@ -151,7 +151,7 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="photo_zoom_menuitem">
-                        <property name="label">_Zoom</property>
+                        <property name="label" translatable="yes">_Zoom</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
@@ -159,7 +159,7 @@
                           <widget class="GtkMenu" id="photo_zoom_menuitem_menu">
                             <child>
                               <widget class="GtkImageMenuItem" id="photo_view_full_size_menuItem">
-                                <property name="label">_View Full Size</property>
+                                <property name="label" translatable="yes">_View Full Size</property>
                                 <property name="visible">True</property>
                                 <property name="use_underline">True</property>
                                 <property name="use_stock">False</property>

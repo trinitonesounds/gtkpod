@@ -25,7 +25,7 @@
             <child>
               <widget class="GtkLabel" id="song_time_label">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">00:00:00</property>
+                <property name="label">00:00:00</property>
               </widget>
               <packing>
                 <property name="expand">False</property>

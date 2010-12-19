@@ -2919,8 +2919,8 @@ msgstr "Beende ohne zu speichern"
 
 #: ../libgtkpod/gtkpod_app_iface.c:219
 #, c-format
-msgid " P:%d T:%d/%d"
-msgstr " P:%d S:%d/%d"
+msgid "P:%d T:%d/%d"
+msgstr "P:%d S:%d/%d"
 
 #. ID
 #. modal,

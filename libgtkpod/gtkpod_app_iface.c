@@ -216,7 +216,8 @@ void gtkpod_tracks_statusbar_update(void) {
         gint trknr = g_list_length(pl->members);
         g_return_if_fail (itdb);
 
-        buf = g_strdup_printf(_(" P:%d T:%d/%d"), itdb_playlists_number(itdb) - 1, trknr, itdb_tracks_number(itdb));
+        /* Translators: this is total number of playlists ("P") and number of tracks ("T") in the selected playlist / total number of tracks */
+        buf = g_strdup_printf(_("P:%d T:%d/%d"), itdb_playlists_number(itdb) - 1, trknr, itdb_tracks_number(itdb));
     }
     else {
         buf = g_strdup("");

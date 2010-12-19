@@ -457,7 +457,7 @@ Added
     </child>
   </widget>
   <widget class="GtkWindow" id="special_sorttab">
-    <property name="title" translatable="yes">special_sorttab -- Don't translate!</property>
+    <property name="title">special_sorttab -- Don't translate!</property>
     <child>
       <widget class="GtkViewport" id="special_viewport">
         <property name="visible">True</property>

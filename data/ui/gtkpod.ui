@@ -42,14 +42,14 @@
 				</placeholder>
 				<placeholder name="PlaceHolderHelpWeb" >
 					<separator name="separator1" />
-					<menuitem name="AnjutaHome" action="ActionHelpAnjutaHome" />
+					<menuitem name="GtkpodHome" action="ActionHelpGtkpodHome" />
 					<menuitem name="BugReport" action="ActionHelpBugReport" />
 					<menuitem name="Faq" action="ActionHelpFaq" />
 				</placeholder>
 				<placeholder name="PlaceHolderHelpAbout" >
 					<separator name="separator2" />
 					<menuitem name="AboutPlugins" action="ActionAboutPlugins" />
-					<menuitem name="AboutAnjuta" action="ActionAboutAnjuta" />
+					<menuitem name="AboutGtkpod" action="ActionAboutGtkpod" />
 				</placeholder>
 			</menu>
 		</placeholder>

@@ -2914,8 +2914,8 @@ msgstr "Quitter sans enregistrer"
 
 #: ../libgtkpod/gtkpod_app_iface.c:219
 #, c-format
-msgid " P:%d T:%d/%d"
-msgstr " L : %d M : %d/%d"
+msgid "P:%d T:%d/%d"
+msgstr "L : %d M : %d/%d"
 
 #. ID
 #. modal,
