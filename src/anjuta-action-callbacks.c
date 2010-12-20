@@ -152,5 +152,6 @@ on_about_activate (GtkAction * action, gpointer user_data)
 	g_signal_connect_swapped(about_dlg, "response",
 		G_CALLBACK(gtk_widget_destroy), about_dlg);
 
+	gtk_window_set_transient_for(GTK_WINDOW (about_dlg), GTK_WINDOW (gtkpod_app));
 	gtk_widget_show (about_dlg);
 }

@@ -1290,7 +1290,8 @@ NOTE: if you sync with the master playlist, you must check this option if you wa
     <property name="visible">True</property>
     <property name="title" translatable="yes">Create Repository</property>
     <property name="modal">True</property>
-    <property name="window_position">center</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <property name="destroy_with_parent">True</property>
     <property name="skip_taskbar_hint">True</property>
     <child>
@@ -1834,6 +1835,7 @@ Local Repository (Podcasts)
 <widget class="GtkDialog" id="ipod_init_dialog">
     <property name="visible">True</property>
     <property name="title" translatable="yes">Initialize iPod</property>
+    <property name="window_position">center-on-parent</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox2"><property name="orientation">GTK_ORIENTATION_VERTICAL</property>

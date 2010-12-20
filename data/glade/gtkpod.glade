@@ -192,6 +192,7 @@
   </widget>
   <widget class="GtkWindow" id="spl_window">
     <property name="title" translatable="yes">Smart Playlist</property>
+    <property name="window_position">center-on-parent</property>
     <child>
       <widget class="GtkVBox" id="vbox28">
         <property name="visible">True</property>

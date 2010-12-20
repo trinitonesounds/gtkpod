@@ -1389,6 +1389,7 @@ void spl_edit_all(iTunesDB *itdb, Playlist *spl, gint32 pos) {
         gtk_window_set_default_size(GTK_WINDOW (spl_window), defx, defy);
 
     glade_xml_signal_autoconnect(spl_window_xml);
+    gtk_window_set_transient_for(GTK_WINDOW (spl_window), GTK_WINDOW (gtkpod_app));
     gtk_widget_show(spl_window);
 
     block_widgets();

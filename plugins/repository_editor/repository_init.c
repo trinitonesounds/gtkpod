@@ -173,6 +173,7 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
     entry = GTK_ENTRY (gtk_bin_get_child(GTK_BIN (cb)));
     gtk_entry_set_text(entry, buf);
 
+    gtk_window_set_transient_for(GTK_WINDOW (ii->window), GTK_WINDOW (gtkpod_app));
     response = gtk_dialog_run(GTK_DIALOG (ii->window));
 
     switch (response) {

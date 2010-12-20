@@ -120,7 +120,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewSmartPlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("Smart Playlist"),
             NULL,
             N_("Create a new smart playlist"),
@@ -128,7 +128,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewRandomPlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("Random Playlist from Displayed Tracks"),
             NULL,
             N_("Create a random playlist from the displayed tracks"),
@@ -136,7 +136,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewContainingDisplayedPlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("Containing Displayed Tracks"),
             NULL,
             N_("Create a playlist containing the displayed tracks"),
@@ -144,7 +144,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewContainingSelectedPlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("Containing Selected Tracks"),
             NULL,
             N_("Create a playlist containing the selected tracks"),
@@ -152,7 +152,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewBestRatedPlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("Best Rated Tracks"),
             NULL,
             N_("Create a playlist containing the best rated tracks"),
@@ -160,7 +160,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewTracksMostOftenPlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("Tracks Most Often Listened To"),
             NULL,
             N_("Create a playlist containing the tracks most often listened to"),
@@ -168,7 +168,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewMostRecentPlayledPlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("Most Recently Played Tracks"),
             NULL,
             N_("Create a playlist containing the most recently played tracks"),
@@ -176,7 +176,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewAllPlayedSinceLastTimePlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("All Tracks Played Since Last Time"),
             NULL,
             N_("Create a playlist containing all tracks played since last time"),
@@ -184,7 +184,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewAllNeverListenedPlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("All Tracks Never Listened To"),
             NULL,
             N_("Create a playlist of all tracks never listened to"),
@@ -192,7 +192,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionAllNeverListedPlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("All Tracks not Listed in any Playlist"),
             NULL,
             N_("Create a playlist of tracks not list in any other playlist"),
@@ -200,7 +200,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewOnePerArtistPlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("One for each Artist"),
             NULL,
             N_("Create a playlist for each artist"),
@@ -208,7 +208,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewOnePerAlbumPlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("One for each Album"),
             NULL,
             N_("Create a playlist for each album"),
@@ -216,7 +216,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewOnePerGenrePlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("One for each Genre"),
             NULL,
             N_("Create a playlist for each genre"),
@@ -224,7 +224,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewOnePreComposerPlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("One for each Composer"),
             NULL,
             N_("Create a playlist for each composer"),
@@ -232,7 +232,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewOnePerYearPlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("One for each Year"),
             NULL,
             N_("Create a playlist for each year"),
@@ -240,7 +240,7 @@ static GtkActionEntry playlist_actions[] =
         },
         {
             "ActionNewOnePerRatingPlaylist",
-            GTK_STOCK_NEW,
+            NULL,
             N_("One for each Rating"),
             NULL,
             N_("Create a playlist for each rating"),
