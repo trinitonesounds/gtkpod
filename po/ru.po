@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-18 21:30+0000\n"
+"POT-Creation-Date: 2010-12-20 16:50+0000\n"
 "PO-Revision-Date: 2010-08-08 21:16+0700\n"
 "Last-Translator: Matvey Kozhev <sikon@lucidfox.org>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -127,7 +127,7 @@ msgstr "Изменить сведения о дорожке"
 
 #: ../plugins/details_editor/plugin.c:64
 #, fuzzy
-msgid "DetailsEditor"
+msgid "Details Editor"
 msgstr "Подробности"
 
 #: ../plugins/details_editor/details.c:68
@@ -180,7 +180,7 @@ msgid "Please report unknown mediatype %x\n"
 msgstr "Пожалуйста, сообщите о неизвестном типе данных %x\n"
 
 #: ../plugins/details_editor/details.c:1205
-#: ../plugins/sorttab_display/sorttab_display.glade.h:61
+#: ../plugins/sorttab_display/sorttab_display.glade.h:60
 msgid "n/a"
 msgstr "н/д"
 
@@ -211,7 +211,7 @@ msgid "Error occurred dropping an image onto the details window: %s\n"
 msgstr "Произошла ошибка при перетаскивании изображения на окно сведений: %s\n"
 
 #: ../plugins/details_editor/details.c:1749
-#: ../plugins/cover_display/display_coverart.c:2086
+#: ../plugins/cover_display/display_coverart.c:2077
 msgid "Successfully set new coverart for selected tracks"
 msgstr "Новая обложка успешно установлена для выбранных дорожек"
 
@@ -384,7 +384,7 @@ msgstr ""
 msgid "Cover Web"
 msgstr "Обложка"
 
-#: ../plugins/coverweb/plugin.c:75 ../plugins/cover_display/plugin.c:74
+#: ../plugins/coverweb/plugin.c:75 ../plugins/cover_display/plugin.c:77
 #, fuzzy
 msgid "Cover Display"
 msgstr "<b>Отображение обложки</b>"
@@ -689,7 +689,7 @@ msgid "TB"
 msgstr "ТБ"
 
 #: ../plugins/sorttab_display/plugin.c:47
-#: ../plugins/sorttab_display/sorttab_display.glade.h:58
+#: ../plugins/sorttab_display/sorttab_display.glade.h:57
 #, fuzzy
 msgid "Track Filter"
 msgstr "Номер дорожки"
@@ -712,22 +712,22 @@ msgstr "Выбранную запись вкладки фильтрации с i
 msgid "Selected Tab Entry"
 msgstr "Выбранную _запись вкладки"
 
-#: ../plugins/sorttab_display/plugin.c:155
+#: ../plugins/sorttab_display/plugin.c:157
 #, fuzzy
-msgid "Sorttab Display"
+msgid "Sort Tab Display"
 msgstr "Вкладки сортировки"
 
-#: ../plugins/sorttab_display/plugin.c:159
+#: ../plugins/sorttab_display/plugin.c:161
 #, fuzzy
 msgid "More Filter Tabs"
 msgstr "_Добавить вкладку фильтрации"
 
-#: ../plugins/sorttab_display/plugin.c:164
+#: ../plugins/sorttab_display/plugin.c:166
 #, fuzzy
 msgid "Fewer Filter Tabs"
 msgstr "_Удалить вкладку фильтрации"
 
-#: ../plugins/sorttab_display/plugin.c:187
+#: ../plugins/sorttab_display/plugin.c:188
 #, fuzzy
 msgid "  Track Filter"
 msgstr "Номер дорожки"
@@ -763,69 +763,69 @@ msgstr ""
 msgid "Update selected entry of which sort tab?"
 msgstr "На какой вкладке сортировки обновить выбранную запись?"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:440
+#: ../plugins/sorttab_display/display_sorttabs.c:441
 msgid "'Played' condition ignored because of error."
 msgstr "Условие \"воспроизведено\" проигнорировано из-за ошибки."
 
-#: ../plugins/sorttab_display/display_sorttabs.c:443
+#: ../plugins/sorttab_display/display_sorttabs.c:444
 msgid "'Modified' condition ignored because of error."
 msgstr "Условие \"изменено\" проигнорировано из-за ошибки."
 
-#: ../plugins/sorttab_display/display_sorttabs.c:446
+#: ../plugins/sorttab_display/display_sorttabs.c:447
 msgid "'Added' condition ignored because of error."
 msgstr "Условие \"Добавлено\" проигнорировано из-за ошибки."
 
-#: ../plugins/sorttab_display/display_sorttabs.c:1432
+#: ../plugins/sorttab_display/display_sorttabs.c:1433
 #: ../libgtkpod/misc_conversion.c:60
 msgid "All"
 msgstr "Все"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:1454
+#: ../plugins/sorttab_display/display_sorttabs.c:1455
 msgid "Compilations"
 msgstr "Сборники"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2576 ../libgtkpod/gp_spl.c:80
+#: ../plugins/sorttab_display/display_sorttabs.c:2578 ../libgtkpod/gp_spl.c:80
 #: ../libgtkpod/misc_conversion.c:62
 msgid "Artist"
 msgstr "Исполнитель"
 
 #. 0
-#: ../plugins/sorttab_display/display_sorttabs.c:2579 ../libgtkpod/gp_spl.c:79
+#: ../plugins/sorttab_display/display_sorttabs.c:2581 ../libgtkpod/gp_spl.c:79
 #: ../libgtkpod/misc_conversion.c:61
 msgid "Album"
 msgstr "Альбом"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2582 ../libgtkpod/gp_spl.c:84
+#: ../plugins/sorttab_display/display_sorttabs.c:2584 ../libgtkpod/gp_spl.c:84
 #: ../libgtkpod/misc_conversion.c:64
 msgid "Genre"
 msgstr "Жанр"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2585
+#: ../plugins/sorttab_display/display_sorttabs.c:2587
 msgid "Comp."
 msgstr "Сбор."
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2588 ../libgtkpod/gp_spl.c:78
+#: ../plugins/sorttab_display/display_sorttabs.c:2590 ../libgtkpod/gp_spl.c:78
 #: ../libgtkpod/misc_conversion.c:63
 msgid "Title"
 msgstr "Название"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2591
-#: ../plugins/track_display/display_tracks.c:1876 ../libgtkpod/gp_spl.c:83
+#: ../plugins/sorttab_display/display_sorttabs.c:2593
+#: ../plugins/track_display/display_tracks.c:1877 ../libgtkpod/gp_spl.c:83
 #: ../libgtkpod/misc_conversion.c:85
 msgid "Year"
 msgstr "Год"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2594
+#: ../plugins/sorttab_display/display_sorttabs.c:2596
 msgid "Special"
 msgstr "Особый"
 
 #. no entry selected
-#: ../plugins/sorttab_display/display_sorttabs.c:3289
+#: ../plugins/sorttab_display/display_sorttabs.c:3291
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:77
 msgid "No entry selected."
 msgstr "Запись не выбрана."
 
-#: ../plugins/sorttab_display/display_sorttabs.c:3297
+#: ../plugins/sorttab_display/display_sorttabs.c:3299
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:85
 msgid "Cannot remove entry 'All'"
 msgstr "Невозможно удалить запись \"Все\""
@@ -905,6 +905,7 @@ msgid ":"
 msgstr ":"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:11
+#: ../plugins/cover_display/cover_display.glade.h:3
 #: ../plugins/playlist_display/playlist_display.glade.h:1
 msgid "<b>Ascending</b>"
 msgstr "<b>По возрастанию</b>"
@@ -914,6 +915,7 @@ msgid "<b>Auto Store</b>"
 msgstr "<b>Автосохранение</b>"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:13
+#: ../plugins/cover_display/cover_display.glade.h:5
 #: ../plugins/playlist_display/playlist_display.glade.h:2
 msgid "<b>Descending</b>"
 msgstr "<b>По убыванию</b>"
@@ -937,6 +939,7 @@ msgid "<b>Lower Margin</b>"
 msgstr "<b>Нижняя граница</b>"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:18
+#: ../plugins/cover_display/cover_display.glade.h:6
 #: ../plugins/playlist_display/playlist_display.glade.h:3
 msgid "<b>None</b>"
 msgstr "<b>Нет</b>"
@@ -982,35 +985,35 @@ msgid "Calendar"
 msgstr "Календарь"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:27
+#: ../plugins/track_display/track_display.glade.h:7
+#: ../plugins/cover_display/cover_display.glade.h:10
+#: ../plugins/playlist_display/playlist_display.glade.h:5
 msgid "Case sensitive sorting"
 msgstr "Сортировка с учётом регистра"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:28
-#: ../plugins/playlist_display/playlist_display.glade.h:5
-msgid "Case sensitive sorting (setting affects all sorting)"
-msgstr ""
-
-#: ../plugins/sorttab_display/sorttab_display.glade.h:29
 msgid "Category:"
 msgstr "Категория: "
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:30
+#: ../plugins/sorttab_display/sorttab_display.glade.h:29
 msgid "Display tracks that match the criteria entered above."
 msgstr "Отобразить дорожки, удовлетворяющие введённым выше критериям."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:31
+#: ../plugins/sorttab_display/sorttab_display.glade.h:30
 msgid "Filter tab:"
 msgstr "Вкладка фильтрации:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:32
+#: ../plugins/sorttab_display/sorttab_display.glade.h:31
 msgid "Filter tabs"
 msgstr "Размер файлаВкладки фильтрации"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:33
+#: ../plugins/sorttab_display/sorttab_display.glade.h:32
 msgid "Group artist filter tab by compilation CDs"
 msgstr "Группировать по исполнителям на CD сборников"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:34
+#: ../plugins/sorttab_display/sorttab_display.glade.h:33
+#: ../plugins/track_display/track_display.glade.h:9
+#: ../plugins/cover_display/cover_display.glade.h:13
 #: ../plugins/playlist_display/playlist_display.glade.h:6
 msgid ""
 "If checked, sorting will be case sensitive. Please note that case sensitive "
@@ -1019,12 +1022,12 @@ msgstr ""
 "Если опция включена, сортировка будет учитывать регистр. Имейте в виду, что "
 "сортировка с учётнм регистра не работает корректно с большинством кодировок."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:35
-#: ../plugins/track_display/track_display.glade.h:8
+#: ../plugins/sorttab_display/sorttab_display.glade.h:34
+#: ../plugins/track_display/track_display.glade.h:10
 msgid "Ignore these words when at the beginning of the following fields:"
 msgstr "Игнорировать эти слова в начале следующих полей:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:36
+#: ../plugins/sorttab_display/sorttab_display.glade.h:35
 msgid ""
 "In order to save the displayed track order to the iPod choose 'Save "
 "Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
@@ -1033,7 +1036,7 @@ msgstr ""
 "\"Сохранить отображаемый порядок дорожек\" в меню \"Правка\" или опцию"
 "\"Автосохранение\" ниже."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:37
+#: ../plugins/sorttab_display/sorttab_display.glade.h:36
 msgid ""
 "Last Played\n"
 "Last Modified\n"
@@ -1043,85 +1046,85 @@ msgstr ""
 "Изменено\n"
 "Добавлено\n"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:41
+#: ../plugins/sorttab_display/sorttab_display.glade.h:40
 msgid "Logic:"
 msgstr " Логика: "
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:42
+#: ../plugins/sorttab_display/sorttab_display.glade.h:41
 msgid "Modified:"
 msgstr "Изменено:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:43
+#: ../plugins/sorttab_display/sorttab_display.glade.h:42
 msgid "No lower margin"
 msgstr "Без нижней границы"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:44
+#: ../plugins/sorttab_display/sorttab_display.glade.h:43
 msgid "No upper margin"
 msgstr "Без верхней границы"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:45
+#: ../plugins/sorttab_display/sorttab_display.glade.h:44
 msgid "Number of filter tabs:"
 msgstr "Число вкладок сортировки:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:46
+#: ../plugins/sorttab_display/sorttab_display.glade.h:45
 msgid "Playcount:"
 msgstr "Число воспроизведений:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:47
+#: ../plugins/sorttab_display/sorttab_display.glade.h:46
 msgid "Played:"
 msgstr "Воспроизведено:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:48
+#: ../plugins/sorttab_display/sorttab_display.glade.h:47
 #: ../plugins/repository_editor/repository_editor.glade.h:29
 #: ../plugins/playlist_display/display_playlists.c:1851
 msgid "Playlists"
 msgstr "Списки воспроизведения"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:49
+#: ../plugins/sorttab_display/sorttab_display.glade.h:48
 msgid "Please refer to the notice below."
 msgstr "Пожалуйста, обратитесь к замечанию ниже."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:50
+#: ../plugins/sorttab_display/sorttab_display.glade.h:49
 msgid "Rating:"
 msgstr "Рейтинг:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:51
+#: ../plugins/sorttab_display/sorttab_display.glade.h:50
 msgid "Select '-1' for no upper limit."
 msgstr "Выберите \"-1\" для отключения верхней границы."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:52
+#: ../plugins/sorttab_display/sorttab_display.glade.h:51
 msgid "Select '0' for no lower limit."
 msgstr "Выберите \"0\" для отключения нижней границы."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:53
+#: ../plugins/sorttab_display/sorttab_display.glade.h:52
 msgid "Sort tracks according to: "
 msgstr "Сортировать дорожки по:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:54
+#: ../plugins/sorttab_display/sorttab_display.glade.h:53
 msgid "Sorting Options"
 msgstr "Параметры сортировки"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:55
+#: ../plugins/sorttab_display/sorttab_display.glade.h:54
 msgid "Specify interval"
 msgstr "Задайте интервал"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:56
+#: ../plugins/sorttab_display/sorttab_display.glade.h:55
 msgid "Start display automatically"
 msgstr "Начать отображение автоматически"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:57
+#: ../plugins/sorttab_display/sorttab_display.glade.h:56
 msgid "Time:"
 msgstr "Время:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:59
+#: ../plugins/sorttab_display/sorttab_display.glade.h:58
 msgid "Tracks"
 msgstr "Дорожки"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:60
+#: ../plugins/sorttab_display/sorttab_display.glade.h:59
 msgid "_Display"
 msgstr "_Отображение"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:62
+#: ../plugins/sorttab_display/sorttab_display.glade.h:61
 msgid "special_sorttab -- Don't translate!"
 msgstr "special_sorryab -- Не переводить!"
 
@@ -1134,7 +1137,7 @@ msgid "Please enter a word for sorting functions to ignore"
 msgstr ""
 
 #: ../plugins/track_display/plugin.c:46 ../plugins/track_display/plugin.c:112
-#: ../plugins/track_display/track_display.glade.h:9
+#: ../plugins/track_display/track_display.glade.h:11
 #, fuzzy
 msgid "Track Display"
 msgstr "Отображение"
@@ -1185,7 +1188,7 @@ msgstr[0] "Одна дорожка скопирована"
 msgstr[1] "Скопировано %d дорожки"
 msgstr[2] "Скопировано %d дорожек"
 
-#: ../plugins/track_display/display_tracks.c:1595
+#: ../plugins/track_display/display_tracks.c:1596
 #, c-format
 msgid ""
 "Cannot unsort track view because of a bug in the GTK lib you are using (%d.%"
@@ -1198,61 +1201,61 @@ msgstr ""
 "неотсортированное состояние.\n"
 "\n"
 
-#: ../plugins/track_display/display_tracks.c:1828 ../libgtkpod/gp_spl.c:96
+#: ../plugins/track_display/display_tracks.c:1829 ../libgtkpod/gp_spl.c:96
 #: ../libgtkpod/misc_conversion.c:79
 msgid "Rating"
 msgstr "Рейтинг"
 
-#: ../plugins/track_display/display_tracks.c:1831
+#: ../plugins/track_display/display_tracks.c:1832
 msgid "#"
 msgstr "No"
 
-#: ../plugins/track_display/display_tracks.c:1834
+#: ../plugins/track_display/display_tracks.c:1835
 msgid "CD"
 msgstr "CD"
 
-#: ../plugins/track_display/display_tracks.c:1837
+#: ../plugins/track_display/display_tracks.c:1838
 msgid "ID"
 msgstr "ID"
 
-#: ../plugins/track_display/display_tracks.c:1840
+#: ../plugins/track_display/display_tracks.c:1841
 #: ../libgtkpod/misc_conversion.c:72
 msgid "Transferred"
 msgstr "Передано"
 
-#: ../plugins/track_display/display_tracks.c:1851
+#: ../plugins/track_display/display_tracks.c:1852
 msgid "Cmpl"
 msgstr "Сборник"
 
-#: ../plugins/track_display/display_tracks.c:1858
+#: ../plugins/track_display/display_tracks.c:1859
 msgid "Time"
 msgstr "Время"
 
-#: ../plugins/track_display/display_tracks.c:1861
+#: ../plugins/track_display/display_tracks.c:1862
 msgid "Plycnt"
 msgstr "Воспроизв."
 
-#: ../plugins/track_display/display_tracks.c:1864
+#: ../plugins/track_display/display_tracks.c:1865
 msgid "Played"
 msgstr "Воспроизведено"
 
-#: ../plugins/track_display/display_tracks.c:1867
+#: ../plugins/track_display/display_tracks.c:1868
 msgid "Modified"
 msgstr "Изменено"
 
-#: ../plugins/track_display/display_tracks.c:1870
+#: ../plugins/track_display/display_tracks.c:1871
 msgid "Added"
 msgstr "Добавлено"
 
-#: ../plugins/track_display/display_tracks.c:1873
+#: ../plugins/track_display/display_tracks.c:1874
 msgid "Released"
 msgstr "Выпущено"
 
-#: ../plugins/track_display/display_tracks.c:1879
+#: ../plugins/track_display/display_tracks.c:1880
 msgid "Vol."
 msgstr "Том"
 
-#: ../plugins/track_display/display_tracks.c:1882
+#: ../plugins/track_display/display_tracks.c:1883
 msgid "Sndchk."
 msgstr "Sndchk."
 
@@ -1278,7 +1281,7 @@ msgstr ""
 msgid "Add Column"
 msgstr "Добавить столбец"
 
-#: ../plugins/track_display/track_display.glade.h:7
+#: ../plugins/track_display/track_display.glade.h:8
 msgid "Expand columns beyond the track list width"
 msgstr "Расширять столбцы за пределы ширины списка дорожек"
 
@@ -1300,7 +1303,7 @@ msgstr ""
 
 #: ../plugins/photo_editor/plugin.c:71
 #, fuzzy
-msgid "PhotoEditor"
+msgid "Photo Editor"
 msgstr "Окно снимков"
 
 #: ../plugins/photo_editor/photo_editor_context_menu.c:47
@@ -1370,7 +1373,7 @@ msgstr "Альбом с таким названием уже существуе�
 
 #. Set the resolution in the label
 #: ../plugins/photo_editor/display_photo.c:952
-#: ../plugins/cover_display/display_coverart.c:1531
+#: ../plugins/cover_display/display_coverart.c:1523
 #, c-format
 msgid "<b>Image Dimensions: %d x %d</b>"
 msgstr "<b>Размер изображения: %d x %d</b>"
@@ -1513,7 +1516,7 @@ msgstr "Создать репозитория"
 
 #: ../plugins/repository_editor/plugin.c:80
 #, fuzzy
-msgid "RepositoryEditor"
+msgid "Repository Editor"
 msgstr "Репозиторий"
 
 #: ../plugins/repository_editor/repository_creator.c:241
@@ -1904,16 +1907,16 @@ msgstr "Просмотреть изображение в полном разме
 msgid "Coverart Display"
 msgstr "<b>Отображение обложки</b>"
 
-#: ../plugins/cover_display/plugin.c:99
+#: ../plugins/cover_display/plugin.c:102
 #, fuzzy
 msgid "  Cover Artwork"
 msgstr "Обзор"
 
-#: ../plugins/cover_display/display_coverart.c:1682
+#: ../plugins/cover_display/display_coverart.c:1673
 msgid "Failed to remove the album from the album hash store."
 msgstr "Не удалось удалить альбом из хранилища хэшей альбомов."
 
-#: ../plugins/cover_display/display_coverart.c:2053
+#: ../plugins/cover_display/display_coverart.c:2044
 #, c-format
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
 msgstr ""
@@ -1924,37 +1927,43 @@ msgid "<"
 msgstr "<"
 
 #: ../plugins/cover_display/cover_display.glade.h:2
+#, fuzzy
+msgid "<b>Album Cover Sort Order</b>"
+msgstr "<b>Порядок сортировки</b>"
+
+#: ../plugins/cover_display/cover_display.glade.h:4
 msgid "<b>Cover Art Display</b>"
 msgstr "<b>Отображение обложки</b>"
 
-#: ../plugins/cover_display/cover_display.glade.h:3
+#: ../plugins/cover_display/cover_display.glade.h:7
 msgid ">"
 msgstr ">"
 
-#: ../plugins/cover_display/cover_display.glade.h:4
+#: ../plugins/cover_display/cover_display.glade.h:8
 msgid "Artwork Preview"
 msgstr "Предпросмотр изображения"
 
-#: ../plugins/cover_display/cover_display.glade.h:5
+#: ../plugins/cover_display/cover_display.glade.h:9
 msgid "Background color"
 msgstr "Цвет фона"
 
-#: ../plugins/cover_display/cover_display.glade.h:6
+#: ../plugins/cover_display/cover_display.glade.h:11
 msgid "Choose a Different Colour for the CoverArt Display Background"
 msgstr "Выберите другой цвет для фона обложки"
 
-#: ../plugins/cover_display/cover_display.glade.h:7
+#: ../plugins/cover_display/cover_display.glade.h:12
 #, fuzzy
 msgid "Cover Art Display"
 msgstr "<b>Отображение обложки</b>"
 
-#: ../plugins/cover_display/cover_display.glade.h:8
+#: ../plugins/cover_display/cover_display.glade.h:14
 msgid "Text color"
 msgstr "Цвет текста"
 
 #: ../plugins/core_preferences/plugin.c:65
-msgid "CorePrefs"
-msgstr ""
+#, fuzzy
+msgid "Core Preferences"
+msgstr "Параметры конверсии"
 
 #: ../plugins/core_preferences/plugin.c:126
 #: ../plugins/core_preferences/plugin.c:131
@@ -2086,7 +2095,7 @@ msgid "Add files to '%s/%s'"
 msgstr "Добавить файлы к \"%s/%s\""
 
 #: ../plugins/playlist_display/plugin.c:50
-#: ../plugins/playlist_display/plugin.c:310
+#: ../plugins/playlist_display/plugin.c:317
 #: ../plugins/playlist_display/playlist_display.glade.h:7
 #, fuzzy
 msgid "Playlist Display"
@@ -2320,22 +2329,22 @@ msgstr "Выбранный список воспроизведения, вклю
 msgid "Selected Playlist including Tracks from Device"
 msgstr "Выбранный список воспроизведения, включая дорожки, с iPod"
 
-#: ../plugins/playlist_display/plugin.c:313 ../libgtkpod/gp_spl.c:1407
+#: ../plugins/playlist_display/plugin.c:320 ../libgtkpod/gp_spl.c:1407
 #: ../libgtkpod/misc_playlist.c:75 ../libgtkpod/misc_playlist.c:104
 #: ../libgtkpod/misc_playlist.c:353
 msgid "New Playlist"
 msgstr "Создать список воспроизведения"
 
-#: ../plugins/playlist_display/plugin.c:313
+#: ../plugins/playlist_display/plugin.c:320
 msgid "Create a new playlist for the selected ipod"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:342
+#: ../plugins/playlist_display/plugin.c:349
 #, fuzzy
 msgid "  iPod Repositories"
 msgstr "Репозиторий подкастов"
 
-#: ../plugins/playlist_display/plugin.c:411 ../src/anjuta-about.c:165
+#: ../plugins/playlist_display/plugin.c:418 ../src/anjuta-about.c:165
 #, fuzzy, c-format
 msgid "Couldn't load icon: %s"
 msgstr "Не удалось получить блокировку для \"%s\".\n"
@@ -4994,30 +5003,30 @@ msgstr "_Инструменты"
 msgid "Help"
 msgstr "_Справка"
 
-#: ../src/anjuta-app.c:642
-msgid "Plugins"
+#: ../src/anjuta-app.c:628
+msgid " Plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:653
+#: ../src/anjuta-app.c:639
 msgid "Installed plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:654
+#: ../src/anjuta-app.c:640
 #, fuzzy
 msgid "Preferred plugins"
 msgstr "Параметры"
 
-#: ../src/anjuta-app.c:655
+#: ../src/anjuta-app.c:641
 #, fuzzy
 msgid "Shortcuts"
 msgstr "Вкладки сортировки"
 
-#: ../src/anjuta-app.c:713
+#: ../src/anjuta-app.c:699
 #, c-format
 msgid "Value doesn't exist"
 msgstr ""
 
-#: ../src/anjuta-app.c:1294
+#: ../src/anjuta-app.c:1280
 msgid "Confirmation"
 msgstr "Подтверждение"
 
@@ -5156,9 +5165,6 @@ msgstr "gtkpod"
 
 #~ msgid "Confirm deletion of tracks:"
 #~ msgstr "Подтверждать удаление дорожек:"
-
-#~ msgid "Conversion Preferences"
-#~ msgstr "Параметры конверсии"
 
 #~ msgid "Conversion Settings..."
 #~ msgstr "Параметры конверсии..."

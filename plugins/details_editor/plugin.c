@@ -61,7 +61,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     /* Add our playlist_actions */
     action_group
-            = anjuta_ui_add_action_group_entries(ui, "ActionGroupDetailsEditor", _("DetailsEditor"), details_editor_actions, G_N_ELEMENTS (details_editor_actions), GETTEXT_PACKAGE, TRUE, plugin);
+            = anjuta_ui_add_action_group_entries(ui, "ActionGroupDetailsEditor", _("Details Editor"), details_editor_actions, G_N_ELEMENTS (details_editor_actions), GETTEXT_PACKAGE, TRUE, plugin);
     details_editor_plugin->action_group = action_group;
 
     /* Merge UI */

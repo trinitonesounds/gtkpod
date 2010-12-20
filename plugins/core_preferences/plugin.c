@@ -62,7 +62,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     /* Add our playlist_actions */
     action_group
-            = anjuta_ui_add_action_group_entries(ui, "ActionGroupCorePrefs", _("CorePrefs"), core_prefs_actions, G_N_ELEMENTS (core_prefs_actions), GETTEXT_PACKAGE, TRUE, plugin);
+            = anjuta_ui_add_action_group_entries(ui, "ActionGroupCorePrefs", _("Core Preferences"), core_prefs_actions, G_N_ELEMENTS (core_prefs_actions), GETTEXT_PACKAGE, TRUE, plugin);
     core_prefs_plugin->action_group = action_group;
 
     /* Merge UI */

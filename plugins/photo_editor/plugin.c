@@ -68,7 +68,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     /* Add our playlist_actions */
     action_group
-            = anjuta_ui_add_action_group_entries(ui, "ActionGroupPhotoEditor", _("PhotoEditor"), photo_editor_actions, G_N_ELEMENTS (photo_editor_actions), GETTEXT_PACKAGE, TRUE, plugin);
+            = anjuta_ui_add_action_group_entries(ui, "ActionGroupPhotoEditor", _("Photo Editor"), photo_editor_actions, G_N_ELEMENTS (photo_editor_actions), GETTEXT_PACKAGE, TRUE, plugin);
     photo_editor_plugin->action_group = action_group;
 
     /* Merge UI */

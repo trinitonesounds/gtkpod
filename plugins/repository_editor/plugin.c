@@ -77,7 +77,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     /* Add our playlist_actions */
     action_group
-            = anjuta_ui_add_action_group_entries(ui, "ActionGroupRepositoryEditor", _("RepositoryEditor"), repository_editor_actions, G_N_ELEMENTS (repository_editor_actions), GETTEXT_PACKAGE, TRUE, plugin);
+            = anjuta_ui_add_action_group_entries(ui, "ActionGroupRepositoryEditor", _("Repository Editor"), repository_editor_actions, G_N_ELEMENTS (repository_editor_actions), GETTEXT_PACKAGE, TRUE, plugin);
     repository_editor_plugin->action_group = action_group;
 
     /* Merge UI */

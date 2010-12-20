@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-18 21:30+0000\n"
+"POT-Creation-Date: 2010-12-20 16:50+0000\n"
 "PO-Revision-Date: 2010-08-09 19:36+0100\n"
 "Last-Translator: Tan Zhixin <tanzhxin@gmail.com>\n"
 "Language-Team: Zhuang <zh_CN@li.gtkpod.org>\n"
@@ -122,7 +122,7 @@ msgstr "编辑音轨信息"
 
 #: ../plugins/details_editor/plugin.c:64
 #, fuzzy
-msgid "DetailsEditor"
+msgid "Details Editor"
 msgstr "详细"
 
 #: ../plugins/details_editor/details.c:68
@@ -175,7 +175,7 @@ msgid "Please report unknown mediatype %x\n"
 msgstr "请报告未知媒体类型 %x\n"
 
 #: ../plugins/details_editor/details.c:1205
-#: ../plugins/sorttab_display/sorttab_display.glade.h:61
+#: ../plugins/sorttab_display/sorttab_display.glade.h:60
 msgid "n/a"
 msgstr "n/a"
 
@@ -206,7 +206,7 @@ msgid "Error occurred dropping an image onto the details window: %s\n"
 msgstr "把图片拖动到详细窗口时发生错误：%s\n"
 
 #: ../plugins/details_editor/details.c:1749
-#: ../plugins/cover_display/display_coverart.c:2086
+#: ../plugins/cover_display/display_coverart.c:2077
 msgid "Successfully set new coverart for selected tracks"
 msgstr "成功为选定音轨设置新的插图"
 
@@ -373,7 +373,7 @@ msgstr ""
 msgid "Cover Web"
 msgstr "插图"
 
-#: ../plugins/coverweb/plugin.c:75 ../plugins/cover_display/plugin.c:74
+#: ../plugins/coverweb/plugin.c:75 ../plugins/cover_display/plugin.c:77
 #, fuzzy
 msgid "Cover Display"
 msgstr "<b>显示封面</b>"
@@ -673,7 +673,7 @@ msgid "TB"
 msgstr "TB"
 
 #: ../plugins/sorttab_display/plugin.c:47
-#: ../plugins/sorttab_display/sorttab_display.glade.h:58
+#: ../plugins/sorttab_display/sorttab_display.glade.h:57
 #, fuzzy
 msgid "Track Filter"
 msgstr "音轨号"
@@ -696,22 +696,22 @@ msgstr "iPod中的过滤器标签"
 msgid "Selected Tab Entry"
 msgstr "选定标签项"
 
-#: ../plugins/sorttab_display/plugin.c:155
+#: ../plugins/sorttab_display/plugin.c:157
 #, fuzzy
-msgid "Sorttab Display"
+msgid "Sort Tab Display"
 msgstr "显示"
 
-#: ../plugins/sorttab_display/plugin.c:159
+#: ../plugins/sorttab_display/plugin.c:161
 #, fuzzy
 msgid "More Filter Tabs"
 msgstr "更多过滤器标签"
 
-#: ../plugins/sorttab_display/plugin.c:164
+#: ../plugins/sorttab_display/plugin.c:166
 #, fuzzy
 msgid "Fewer Filter Tabs"
 msgstr "更少过滤器标签"
 
-#: ../plugins/sorttab_display/plugin.c:187
+#: ../plugins/sorttab_display/plugin.c:188
 #, fuzzy
 msgid "  Track Filter"
 msgstr "音轨号"
@@ -742,69 +742,69 @@ msgstr "删除播放列表中的音轨时按照哪个过滤器标签？"
 msgid "Update selected entry of which sort tab?"
 msgstr "按照哪个排序标签更新选定项目？"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:440
+#: ../plugins/sorttab_display/display_sorttabs.c:441
 msgid "'Played' condition ignored because of error."
 msgstr "发生错误忽略'已播放'"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:443
+#: ../plugins/sorttab_display/display_sorttabs.c:444
 msgid "'Modified' condition ignored because of error."
 msgstr "发生错误忽略'已修改'"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:446
+#: ../plugins/sorttab_display/display_sorttabs.c:447
 msgid "'Added' condition ignored because of error."
 msgstr "发生错误忽略'已添加'"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:1432
+#: ../plugins/sorttab_display/display_sorttabs.c:1433
 #: ../libgtkpod/misc_conversion.c:60
 msgid "All"
 msgstr "所有"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:1454
+#: ../plugins/sorttab_display/display_sorttabs.c:1455
 msgid "Compilations"
 msgstr "汇集"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2576 ../libgtkpod/gp_spl.c:80
+#: ../plugins/sorttab_display/display_sorttabs.c:2578 ../libgtkpod/gp_spl.c:80
 #: ../libgtkpod/misc_conversion.c:62
 msgid "Artist"
 msgstr "艺术家"
 
 #. 0
-#: ../plugins/sorttab_display/display_sorttabs.c:2579 ../libgtkpod/gp_spl.c:79
+#: ../plugins/sorttab_display/display_sorttabs.c:2581 ../libgtkpod/gp_spl.c:79
 #: ../libgtkpod/misc_conversion.c:61
 msgid "Album"
 msgstr "专辑"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2582 ../libgtkpod/gp_spl.c:84
+#: ../plugins/sorttab_display/display_sorttabs.c:2584 ../libgtkpod/gp_spl.c:84
 #: ../libgtkpod/misc_conversion.c:64
 msgid "Genre"
 msgstr "风格"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2585
+#: ../plugins/sorttab_display/display_sorttabs.c:2587
 msgid "Comp."
 msgstr "唱片公司"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2588 ../libgtkpod/gp_spl.c:78
+#: ../plugins/sorttab_display/display_sorttabs.c:2590 ../libgtkpod/gp_spl.c:78
 #: ../libgtkpod/misc_conversion.c:63
 msgid "Title"
 msgstr "歌曲"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2591
-#: ../plugins/track_display/display_tracks.c:1876 ../libgtkpod/gp_spl.c:83
+#: ../plugins/sorttab_display/display_sorttabs.c:2593
+#: ../plugins/track_display/display_tracks.c:1877 ../libgtkpod/gp_spl.c:83
 #: ../libgtkpod/misc_conversion.c:85
 msgid "Year"
 msgstr "年代"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2594
+#: ../plugins/sorttab_display/display_sorttabs.c:2596
 msgid "Special"
 msgstr "特别"
 
 #. no entry selected
-#: ../plugins/sorttab_display/display_sorttabs.c:3289
+#: ../plugins/sorttab_display/display_sorttabs.c:3291
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:77
 msgid "No entry selected."
 msgstr "没有选择项目"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:3297
+#: ../plugins/sorttab_display/display_sorttabs.c:3299
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:85
 msgid "Cannot remove entry 'All'"
 msgstr "无法移除项目'所有'"
@@ -882,6 +882,7 @@ msgid ":"
 msgstr ":"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:11
+#: ../plugins/cover_display/cover_display.glade.h:3
 #: ../plugins/playlist_display/playlist_display.glade.h:1
 msgid "<b>Ascending</b>"
 msgstr "<b>升序</b>"
@@ -891,6 +892,7 @@ msgid "<b>Auto Store</b>"
 msgstr "<b>自动保存</b>"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:13
+#: ../plugins/cover_display/cover_display.glade.h:5
 #: ../plugins/playlist_display/playlist_display.glade.h:2
 msgid "<b>Descending</b>"
 msgstr "<b>降序</b>"
@@ -914,6 +916,7 @@ msgid "<b>Lower Margin</b>"
 msgstr "<b>下边距</b>"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:18
+#: ../plugins/cover_display/cover_display.glade.h:6
 #: ../plugins/playlist_display/playlist_display.glade.h:3
 msgid "<b>None</b>"
 msgstr "<b>无</b>"
@@ -954,35 +957,35 @@ msgid "Calendar"
 msgstr "日历"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:27
+#: ../plugins/track_display/track_display.glade.h:7
+#: ../plugins/cover_display/cover_display.glade.h:10
+#: ../plugins/playlist_display/playlist_display.glade.h:5
 msgid "Case sensitive sorting"
 msgstr "区分大小写排序"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:28
-#: ../plugins/playlist_display/playlist_display.glade.h:5
-msgid "Case sensitive sorting (setting affects all sorting)"
-msgstr ""
-
-#: ../plugins/sorttab_display/sorttab_display.glade.h:29
 msgid "Category:"
 msgstr "类别:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:30
+#: ../plugins/sorttab_display/sorttab_display.glade.h:29
 msgid "Display tracks that match the criteria entered above."
 msgstr "显示符合以上要求的音轨"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:31
+#: ../plugins/sorttab_display/sorttab_display.glade.h:30
 msgid "Filter tab:"
 msgstr "过滤器标签"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:32
+#: ../plugins/sorttab_display/sorttab_display.glade.h:31
 msgid "Filter tabs"
 msgstr "过滤器标签"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:33
+#: ../plugins/sorttab_display/sorttab_display.glade.h:32
 msgid "Group artist filter tab by compilation CDs"
 msgstr "CD集的艺术家组过滤器标签"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:34
+#: ../plugins/sorttab_display/sorttab_display.glade.h:33
+#: ../plugins/track_display/track_display.glade.h:9
+#: ../plugins/cover_display/cover_display.glade.h:13
 #: ../plugins/playlist_display/playlist_display.glade.h:6
 msgid ""
 "If checked, sorting will be case sensitive. Please note that case sensitive "
@@ -991,12 +994,12 @@ msgstr ""
 "如果选择，则排序时区分大小写，但是注意区分大小写排序在大多数字符集上无法正常"
 "工作"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:35
-#: ../plugins/track_display/track_display.glade.h:8
+#: ../plugins/sorttab_display/sorttab_display.glade.h:34
+#: ../plugins/track_display/track_display.glade.h:10
 msgid "Ignore these words when at the beginning of the following fields:"
 msgstr "在下列区域的开头忽略这些字段"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:36
+#: ../plugins/sorttab_display/sorttab_display.glade.h:35
 msgid ""
 "In order to save the displayed track order to the iPod choose 'Save "
 "Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
@@ -1004,7 +1007,7 @@ msgstr ""
 "为了顺序保存显示音轨到iPod中，选择\"编辑\"--\"顺序保存显示音轨\"或者下面的"
 "\"自动保存\""
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:37
+#: ../plugins/sorttab_display/sorttab_display.glade.h:36
 msgid ""
 "Last Played\n"
 "Last Modified\n"
@@ -1014,85 +1017,85 @@ msgstr ""
 "最后修改的\n"
 "新增的\n"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:41
+#: ../plugins/sorttab_display/sorttab_display.glade.h:40
 msgid "Logic:"
 msgstr "逻辑："
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:42
+#: ../plugins/sorttab_display/sorttab_display.glade.h:41
 msgid "Modified:"
 msgstr "修改："
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:43
+#: ../plugins/sorttab_display/sorttab_display.glade.h:42
 msgid "No lower margin"
 msgstr "没有下边距"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:44
+#: ../plugins/sorttab_display/sorttab_display.glade.h:43
 msgid "No upper margin"
 msgstr "没有上边距"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:45
+#: ../plugins/sorttab_display/sorttab_display.glade.h:44
 msgid "Number of filter tabs:"
 msgstr "过滤器标签数："
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:46
+#: ../plugins/sorttab_display/sorttab_display.glade.h:45
 msgid "Playcount:"
 msgstr "播放次数："
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:47
+#: ../plugins/sorttab_display/sorttab_display.glade.h:46
 msgid "Played:"
 msgstr "已播放："
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:48
+#: ../plugins/sorttab_display/sorttab_display.glade.h:47
 #: ../plugins/repository_editor/repository_editor.glade.h:29
 #: ../plugins/playlist_display/display_playlists.c:1851
 msgid "Playlists"
 msgstr "播放列表"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:49
+#: ../plugins/sorttab_display/sorttab_display.glade.h:48
 msgid "Please refer to the notice below."
 msgstr "请参考下面的注意事项。"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:50
+#: ../plugins/sorttab_display/sorttab_display.glade.h:49
 msgid "Rating:"
 msgstr "评分："
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:51
+#: ../plugins/sorttab_display/sorttab_display.glade.h:50
 msgid "Select '-1' for no upper limit."
 msgstr "无上限时选择'-1'"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:52
+#: ../plugins/sorttab_display/sorttab_display.glade.h:51
 msgid "Select '0' for no lower limit."
 msgstr "无下限时选择'0'"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:53
+#: ../plugins/sorttab_display/sorttab_display.glade.h:52
 msgid "Sort tracks according to: "
 msgstr "按此对音轨排序："
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:54
+#: ../plugins/sorttab_display/sorttab_display.glade.h:53
 msgid "Sorting Options"
 msgstr "排序选项"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:55
+#: ../plugins/sorttab_display/sorttab_display.glade.h:54
 msgid "Specify interval"
 msgstr "指定间隔"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:56
+#: ../plugins/sorttab_display/sorttab_display.glade.h:55
 msgid "Start display automatically"
 msgstr "自动开始播放"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:57
+#: ../plugins/sorttab_display/sorttab_display.glade.h:56
 msgid "Time:"
 msgstr "时间："
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:59
+#: ../plugins/sorttab_display/sorttab_display.glade.h:58
 msgid "Tracks"
 msgstr "音轨"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:60
+#: ../plugins/sorttab_display/sorttab_display.glade.h:59
 msgid "_Display"
 msgstr "显示"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:62
+#: ../plugins/sorttab_display/sorttab_display.glade.h:61
 msgid "special_sorttab -- Don't translate!"
 msgstr "special_sorttab -- Don't translate!"
 
@@ -1105,7 +1108,7 @@ msgid "Please enter a word for sorting functions to ignore"
 msgstr ""
 
 #: ../plugins/track_display/plugin.c:46 ../plugins/track_display/plugin.c:112
-#: ../plugins/track_display/track_display.glade.h:9
+#: ../plugins/track_display/track_display.glade.h:11
 #, fuzzy
 msgid "Track Display"
 msgstr "显示"
@@ -1154,7 +1157,7 @@ msgid_plural "Copied %d tracks"
 msgstr[0] "复制一条音轨"
 msgstr[1] "复制%d条音轨(s)"
 
-#: ../plugins/track_display/display_tracks.c:1595
+#: ../plugins/track_display/display_tracks.c:1596
 #, c-format
 msgid ""
 "Cannot unsort track view because of a bug in the GTK lib you are using (%d.%"
@@ -1165,61 +1168,61 @@ msgstr ""
 "由于gtk库(%d.%d.%d<2.5.4)的一个bug不能以未排序方式查看。因为一旦你排序后，就"
 "无法再以原来未排序方式查看\n"
 
-#: ../plugins/track_display/display_tracks.c:1828 ../libgtkpod/gp_spl.c:96
+#: ../plugins/track_display/display_tracks.c:1829 ../libgtkpod/gp_spl.c:96
 #: ../libgtkpod/misc_conversion.c:79
 msgid "Rating"
 msgstr "评分"
 
-#: ../plugins/track_display/display_tracks.c:1831
+#: ../plugins/track_display/display_tracks.c:1832
 msgid "#"
 msgstr "#"
 
-#: ../plugins/track_display/display_tracks.c:1834
+#: ../plugins/track_display/display_tracks.c:1835
 msgid "CD"
 msgstr "CD"
 
-#: ../plugins/track_display/display_tracks.c:1837
+#: ../plugins/track_display/display_tracks.c:1838
 msgid "ID"
 msgstr "ID"
 
-#: ../plugins/track_display/display_tracks.c:1840
+#: ../plugins/track_display/display_tracks.c:1841
 #: ../libgtkpod/misc_conversion.c:72
 msgid "Transferred"
 msgstr "已传输"
 
-#: ../plugins/track_display/display_tracks.c:1851
+#: ../plugins/track_display/display_tracks.c:1852
 msgid "Cmpl"
 msgstr "Cmpl"
 
-#: ../plugins/track_display/display_tracks.c:1858
+#: ../plugins/track_display/display_tracks.c:1859
 msgid "Time"
 msgstr "时间"
 
-#: ../plugins/track_display/display_tracks.c:1861
+#: ../plugins/track_display/display_tracks.c:1862
 msgid "Plycnt"
 msgstr "Plycnt"
 
-#: ../plugins/track_display/display_tracks.c:1864
+#: ../plugins/track_display/display_tracks.c:1865
 msgid "Played"
 msgstr "已播放"
 
-#: ../plugins/track_display/display_tracks.c:1867
+#: ../plugins/track_display/display_tracks.c:1868
 msgid "Modified"
 msgstr "已修改"
 
-#: ../plugins/track_display/display_tracks.c:1870
+#: ../plugins/track_display/display_tracks.c:1871
 msgid "Added"
 msgstr "已添加"
 
-#: ../plugins/track_display/display_tracks.c:1873
+#: ../plugins/track_display/display_tracks.c:1874
 msgid "Released"
 msgstr "已发布"
 
-#: ../plugins/track_display/display_tracks.c:1879
+#: ../plugins/track_display/display_tracks.c:1880
 msgid "Vol."
 msgstr "Vol."
 
-#: ../plugins/track_display/display_tracks.c:1882
+#: ../plugins/track_display/display_tracks.c:1883
 msgid "Sndchk."
 msgstr "sndchk."
 
@@ -1244,7 +1247,7 @@ msgstr "<span weight='bold' size='larger'>没有选择播放列表</span>"
 msgid "Add Column"
 msgstr "增加栏"
 
-#: ../plugins/track_display/track_display.glade.h:7
+#: ../plugins/track_display/track_display.glade.h:8
 msgid "Expand columns beyond the track list width"
 msgstr "扩展栏位超过音轨列表宽度"
 
@@ -1266,7 +1269,7 @@ msgstr ""
 
 #: ../plugins/photo_editor/plugin.c:71
 #, fuzzy
-msgid "PhotoEditor"
+msgid "Photo Editor"
 msgstr "照片窗口"
 
 #: ../plugins/photo_editor/photo_editor_context_menu.c:47
@@ -1336,7 +1339,7 @@ msgstr "已经存在一个同名照片簿。"
 
 #. Set the resolution in the label
 #: ../plugins/photo_editor/display_photo.c:952
-#: ../plugins/cover_display/display_coverart.c:1531
+#: ../plugins/cover_display/display_coverart.c:1523
 #, c-format
 msgid "<b>Image Dimensions: %d x %d</b>"
 msgstr "<b>图片尺寸： %d x %d</b>"
@@ -1479,7 +1482,7 @@ msgstr "新建音乐库"
 
 #: ../plugins/repository_editor/plugin.c:80
 #, fuzzy
-msgid "RepositoryEditor"
+msgid "Repository Editor"
 msgstr "音乐库"
 
 #: ../plugins/repository_editor/repository_creator.c:241
@@ -1853,16 +1856,16 @@ msgstr "查看全部插图"
 msgid "Coverart Display"
 msgstr "<b>显示封面</b>"
 
-#: ../plugins/cover_display/plugin.c:99
+#: ../plugins/cover_display/plugin.c:102
 #, fuzzy
 msgid "  Cover Artwork"
 msgstr "浏览"
 
-#: ../plugins/cover_display/display_coverart.c:1682
+#: ../plugins/cover_display/display_coverart.c:1673
 msgid "Failed to remove the album from the album hash store."
 msgstr "将专辑从album hash store删除失败。"
 
-#: ../plugins/cover_display/display_coverart.c:2053
+#: ../plugins/cover_display/display_coverart.c:2044
 #, c-format
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
 msgstr "把图片作为插图显示时发生错误:%s\n"
@@ -1872,37 +1875,43 @@ msgid "<"
 msgstr "<"
 
 #: ../plugins/cover_display/cover_display.glade.h:2
+#, fuzzy
+msgid "<b>Album Cover Sort Order</b>"
+msgstr "<b>排列顺序</b>"
+
+#: ../plugins/cover_display/cover_display.glade.h:4
 msgid "<b>Cover Art Display</b>"
 msgstr "<b>显示封面</b>"
 
-#: ../plugins/cover_display/cover_display.glade.h:3
+#: ../plugins/cover_display/cover_display.glade.h:7
 msgid ">"
 msgstr ">"
 
-#: ../plugins/cover_display/cover_display.glade.h:4
+#: ../plugins/cover_display/cover_display.glade.h:8
 msgid "Artwork Preview"
 msgstr "预览"
 
-#: ../plugins/cover_display/cover_display.glade.h:5
+#: ../plugins/cover_display/cover_display.glade.h:9
 msgid "Background color"
 msgstr "背景颜色"
 
-#: ../plugins/cover_display/cover_display.glade.h:6
+#: ../plugins/cover_display/cover_display.glade.h:11
 msgid "Choose a Different Colour for the CoverArt Display Background"
 msgstr "为插图背景选择颜色"
 
-#: ../plugins/cover_display/cover_display.glade.h:7
+#: ../plugins/cover_display/cover_display.glade.h:12
 #, fuzzy
 msgid "Cover Art Display"
 msgstr "<b>显示封面</b>"
 
-#: ../plugins/cover_display/cover_display.glade.h:8
+#: ../plugins/cover_display/cover_display.glade.h:14
 msgid "Text color"
 msgstr "文字颜色"
 
 #: ../plugins/core_preferences/plugin.c:65
-msgid "CorePrefs"
-msgstr ""
+#, fuzzy
+msgid "Core Preferences"
+msgstr "转换首选项"
 
 #: ../plugins/core_preferences/plugin.c:126
 #: ../plugins/core_preferences/plugin.c:131
@@ -2031,7 +2040,7 @@ msgid "Add files to '%s/%s'"
 msgstr "添加文件到'%s/%s'"
 
 #: ../plugins/playlist_display/plugin.c:50
-#: ../plugins/playlist_display/plugin.c:310
+#: ../plugins/playlist_display/plugin.c:317
 #: ../plugins/playlist_display/playlist_display.glade.h:7
 #, fuzzy
 msgid "Playlist Display"
@@ -2265,22 +2274,22 @@ msgstr "选择播放列表包括数据库的音轨"
 msgid "Selected Playlist including Tracks from Device"
 msgstr "选择播放列表包括iPod中的音轨"
 
-#: ../plugins/playlist_display/plugin.c:313 ../libgtkpod/gp_spl.c:1407
+#: ../plugins/playlist_display/plugin.c:320 ../libgtkpod/gp_spl.c:1407
 #: ../libgtkpod/misc_playlist.c:75 ../libgtkpod/misc_playlist.c:104
 #: ../libgtkpod/misc_playlist.c:353
 msgid "New Playlist"
 msgstr "新建播放列表"
 
-#: ../plugins/playlist_display/plugin.c:313
+#: ../plugins/playlist_display/plugin.c:320
 msgid "Create a new playlist for the selected ipod"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:342
+#: ../plugins/playlist_display/plugin.c:349
 #, fuzzy
 msgid "  iPod Repositories"
 msgstr "Podcast音乐库"
 
-#: ../plugins/playlist_display/plugin.c:411 ../src/anjuta-about.c:165
+#: ../plugins/playlist_display/plugin.c:418 ../src/anjuta-about.c:165
 #, fuzzy, c-format
 msgid "Couldn't load icon: %s"
 msgstr "无法对文件'%s'加锁。\n"
@@ -4804,30 +4813,30 @@ msgstr "工具"
 msgid "Help"
 msgstr "帮助"
 
-#: ../src/anjuta-app.c:642
-msgid "Plugins"
+#: ../src/anjuta-app.c:628
+msgid " Plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:653
+#: ../src/anjuta-app.c:639
 msgid "Installed plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:654
+#: ../src/anjuta-app.c:640
 #, fuzzy
 msgid "Preferred plugins"
 msgstr "首选项"
 
-#: ../src/anjuta-app.c:655
+#: ../src/anjuta-app.c:641
 #, fuzzy
 msgid "Shortcuts"
 msgstr "按艺术家排序"
 
-#: ../src/anjuta-app.c:713
+#: ../src/anjuta-app.c:699
 #, c-format
 msgid "Value doesn't exist"
 msgstr ""
 
-#: ../src/anjuta-app.c:1294
+#: ../src/anjuta-app.c:1280
 msgid "Confirmation"
 msgstr "确认"
 
@@ -4962,9 +4971,6 @@ msgstr "关于gtkpod"
 
 #~ msgid "Confirm deletion of tracks:"
 #~ msgstr "确认删除音轨"
-
-#~ msgid "Conversion Preferences"
-#~ msgstr "转换首选项"
 
 #~ msgid "Conversion Settings..."
 #~ msgstr "转换设置"

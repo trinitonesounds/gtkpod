@@ -154,7 +154,7 @@ static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
 
     /* Add our sorttab_actions */
     action_group
-            = anjuta_ui_add_action_group_entries(ui, "ActionGroupSorttabDisplay", _("Sorttab Display"), sorttab_actions, G_N_ELEMENTS (sorttab_actions), GETTEXT_PACKAGE, TRUE, plugin);
+            = anjuta_ui_add_action_group_entries(ui, "ActionGroupSorttabDisplay", _("Sort Tab Display"), sorttab_actions, G_N_ELEMENTS (sorttab_actions), GETTEXT_PACKAGE, TRUE, plugin);
     sorttab_display_plugin->action_group = action_group;
 
     sorttab_display_plugin->more_filtertabs_action

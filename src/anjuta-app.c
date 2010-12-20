@@ -449,20 +449,6 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
     gtk_box_pack_start(GTK_BOX (main_box), app->menubar, FALSE, FALSE, 0);
     gtk_widget_show(app->menubar);
 
-    /* create toolbar */
-    /* No toolbar to be used in gtkpod */
-    /*app->toolbar = gtk_ui_manager_get_widget(GTK_UI_MANAGER (app->ui), "/ToolbarMain");
-     *  if (!anjuta_preferences_get_bool(app->preferences, "anjuta.toolbar.visible"))
-     *  gtk_widget_hide(app->toolbar);
-     *  gtk_box_pack_start(GTK_BOX (main_box), app->toolbar, FALSE, FALSE, 0);
-     *  action = gtk_ui_manager_get_action(GTK_UI_MANAGER (app->ui), "/MenuMain/MenuView/Toolbar");
-     *  gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(action), anjuta_preferences_get_bool_with_default(app->preferences, "anjuta.toolbar.visible", TRUE));
-     *  anjuta_preferences_notify_add_string(app->preferences, "anjuta.toolbar.style", on_toolbar_style_changed, app, NULL);
-     *  style = anjuta_preferences_get(app->preferences, "anjuta.toolbar.style");
-     *  on_toolbar_style_changed(app->preferences, NULL, style, app);
-     *  g_free(style);
-     */
-
     /* Create widgets menu */
     view_menu = gtk_ui_manager_get_widget(GTK_UI_MANAGER(app->ui), "/MenuMain/MenuView");
     app->view_menu = gtk_menu_item_get_submenu(GTK_MENU_ITEM (view_menu));

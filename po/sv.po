@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-18 21:30+0000\n"
+"POT-Creation-Date: 2010-12-20 16:50+0000\n"
 "PO-Revision-Date: 2010-08-08 12:50+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@comhem.se>\n"
 "Language-Team: Svenska <sv@li.org>\n"
@@ -123,7 +123,7 @@ msgstr "Redigera detaljinformation om spår"
 
 #: ../plugins/details_editor/plugin.c:64
 #, fuzzy
-msgid "DetailsEditor"
+msgid "Details Editor"
 msgstr "Detaljinformation"
 
 #: ../plugins/details_editor/details.c:68
@@ -176,7 +176,7 @@ msgid "Please report unknown mediatype %x\n"
 msgstr "Rapportera gärna okänd mediatyp %x\n"
 
 #: ../plugins/details_editor/details.c:1205
-#: ../plugins/sorttab_display/sorttab_display.glade.h:61
+#: ../plugins/sorttab_display/sorttab_display.glade.h:60
 msgid "n/a"
 msgstr "ej tillgänglig"
 
@@ -209,7 +209,7 @@ msgstr ""
 "Fel uppstod när en bild släpptes på fönstret med detaljinformation: %s\n"
 
 #: ../plugins/details_editor/details.c:1749
-#: ../plugins/cover_display/display_coverart.c:2086
+#: ../plugins/cover_display/display_coverart.c:2077
 msgid "Successfully set new coverart for selected tracks"
 msgstr "Nya omslagsbilder för markerade spår tillagda med lyckat resultat"
 
@@ -378,7 +378,7 @@ msgstr ""
 msgid "Cover Web"
 msgstr "Omslag"
 
-#: ../plugins/coverweb/plugin.c:75 ../plugins/cover_display/plugin.c:74
+#: ../plugins/coverweb/plugin.c:75 ../plugins/cover_display/plugin.c:77
 #, fuzzy
 msgid "Cover Display"
 msgstr "<b>Visning av omslag</b>"
@@ -681,7 +681,7 @@ msgid "TB"
 msgstr "Tibyte"
 
 #: ../plugins/sorttab_display/plugin.c:47
-#: ../plugins/sorttab_display/sorttab_display.glade.h:58
+#: ../plugins/sorttab_display/sorttab_display.glade.h:57
 #, fuzzy
 msgid "Track Filter"
 msgstr "Spårnummer"
@@ -704,22 +704,22 @@ msgstr "Markerad post i filtreringsflik från iPod"
 msgid "Selected Tab Entry"
 msgstr "Markerade _flikrad"
 
-#: ../plugins/sorttab_display/plugin.c:155
+#: ../plugins/sorttab_display/plugin.c:157
 #, fuzzy
-msgid "Sorttab Display"
+msgid "Sort Tab Display"
 msgstr "Visa"
 
-#: ../plugins/sorttab_display/plugin.c:159
+#: ../plugins/sorttab_display/plugin.c:161
 #, fuzzy
 msgid "More Filter Tabs"
 msgstr "_Fler filtreringsflikar"
 
-#: ../plugins/sorttab_display/plugin.c:164
+#: ../plugins/sorttab_display/plugin.c:166
 #, fuzzy
 msgid "Fewer Filter Tabs"
 msgstr "_Färre filtreringsflikar"
 
-#: ../plugins/sorttab_display/plugin.c:187
+#: ../plugins/sorttab_display/plugin.c:188
 #, fuzzy
 msgid "  Track Filter"
 msgstr "Spårnummer"
@@ -753,69 +753,69 @@ msgstr ""
 msgid "Update selected entry of which sort tab?"
 msgstr "Uppdatera markerad rad för vilken sorts flik?"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:440
+#: ../plugins/sorttab_display/display_sorttabs.c:441
 msgid "'Played' condition ignored because of error."
 msgstr "Tillståndet 'Spelad' ignoreras på grund av fel."
 
-#: ../plugins/sorttab_display/display_sorttabs.c:443
+#: ../plugins/sorttab_display/display_sorttabs.c:444
 msgid "'Modified' condition ignored because of error."
 msgstr "Tillståndet 'Ändrad' ignoreras på grund av fel."
 
-#: ../plugins/sorttab_display/display_sorttabs.c:446
+#: ../plugins/sorttab_display/display_sorttabs.c:447
 msgid "'Added' condition ignored because of error."
 msgstr "Tillståndet 'Tillagd' ignoreras på grund av fel."
 
-#: ../plugins/sorttab_display/display_sorttabs.c:1432
+#: ../plugins/sorttab_display/display_sorttabs.c:1433
 #: ../libgtkpod/misc_conversion.c:60
 msgid "All"
 msgstr "Alla"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:1454
+#: ../plugins/sorttab_display/display_sorttabs.c:1455
 msgid "Compilations"
 msgstr "Samlingar"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2576 ../libgtkpod/gp_spl.c:80
+#: ../plugins/sorttab_display/display_sorttabs.c:2578 ../libgtkpod/gp_spl.c:80
 #: ../libgtkpod/misc_conversion.c:62
 msgid "Artist"
 msgstr "Artist"
 
 #. 0
-#: ../plugins/sorttab_display/display_sorttabs.c:2579 ../libgtkpod/gp_spl.c:79
+#: ../plugins/sorttab_display/display_sorttabs.c:2581 ../libgtkpod/gp_spl.c:79
 #: ../libgtkpod/misc_conversion.c:61
 msgid "Album"
 msgstr "Album"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2582 ../libgtkpod/gp_spl.c:84
+#: ../plugins/sorttab_display/display_sorttabs.c:2584 ../libgtkpod/gp_spl.c:84
 #: ../libgtkpod/misc_conversion.c:64
 msgid "Genre"
 msgstr "Genre"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2585
+#: ../plugins/sorttab_display/display_sorttabs.c:2587
 msgid "Comp."
 msgstr "Komp."
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2588 ../libgtkpod/gp_spl.c:78
+#: ../plugins/sorttab_display/display_sorttabs.c:2590 ../libgtkpod/gp_spl.c:78
 #: ../libgtkpod/misc_conversion.c:63
 msgid "Title"
 msgstr "Titel"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2591
-#: ../plugins/track_display/display_tracks.c:1876 ../libgtkpod/gp_spl.c:83
+#: ../plugins/sorttab_display/display_sorttabs.c:2593
+#: ../plugins/track_display/display_tracks.c:1877 ../libgtkpod/gp_spl.c:83
 #: ../libgtkpod/misc_conversion.c:85
 msgid "Year"
 msgstr "År"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2594
+#: ../plugins/sorttab_display/display_sorttabs.c:2596
 msgid "Special"
 msgstr "Special"
 
 #. no entry selected
-#: ../plugins/sorttab_display/display_sorttabs.c:3289
+#: ../plugins/sorttab_display/display_sorttabs.c:3291
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:77
 msgid "No entry selected."
 msgstr "Ingen rad markerad."
 
-#: ../plugins/sorttab_display/display_sorttabs.c:3297
+#: ../plugins/sorttab_display/display_sorttabs.c:3299
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:85
 msgid "Cannot remove entry 'All'"
 msgstr "Kan inte ta bort raden 'Alla'"
@@ -895,6 +895,7 @@ msgid ":"
 msgstr ":"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:11
+#: ../plugins/cover_display/cover_display.glade.h:3
 #: ../plugins/playlist_display/playlist_display.glade.h:1
 msgid "<b>Ascending</b>"
 msgstr "<b>Stigande</b>"
@@ -904,6 +905,7 @@ msgid "<b>Auto Store</b>"
 msgstr "<b>Lagra automatiskt</b>"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:13
+#: ../plugins/cover_display/cover_display.glade.h:5
 #: ../plugins/playlist_display/playlist_display.glade.h:2
 msgid "<b>Descending</b>"
 msgstr "<b>Fallande</b>"
@@ -927,6 +929,7 @@ msgid "<b>Lower Margin</b>"
 msgstr "<b>Under gräns</b>"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:18
+#: ../plugins/cover_display/cover_display.glade.h:6
 #: ../plugins/playlist_display/playlist_display.glade.h:3
 msgid "<b>None</b>"
 msgstr "<b>Ingen</b>"
@@ -969,35 +972,35 @@ msgid "Calendar"
 msgstr "Kalender"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:27
+#: ../plugins/track_display/track_display.glade.h:7
+#: ../plugins/cover_display/cover_display.glade.h:10
+#: ../plugins/playlist_display/playlist_display.glade.h:5
 msgid "Case sensitive sorting"
 msgstr "Skiftlägeskänslig sortering"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:28
-#: ../plugins/playlist_display/playlist_display.glade.h:5
-msgid "Case sensitive sorting (setting affects all sorting)"
-msgstr ""
-
-#: ../plugins/sorttab_display/sorttab_display.glade.h:29
 msgid "Category:"
 msgstr "Kategori:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:30
+#: ../plugins/sorttab_display/sorttab_display.glade.h:29
 msgid "Display tracks that match the criteria entered above."
 msgstr "Visa spår som uppfyller ovan inskrivna villkor."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:31
+#: ../plugins/sorttab_display/sorttab_display.glade.h:30
 msgid "Filter tab:"
 msgstr "Filtreringsflik:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:32
+#: ../plugins/sorttab_display/sorttab_display.glade.h:31
 msgid "Filter tabs"
 msgstr "Filtreringsflikar"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:33
+#: ../plugins/sorttab_display/sorttab_display.glade.h:32
 msgid "Group artist filter tab by compilation CDs"
 msgstr "Gruppera artister i filtreringsflik enligt samlingsskivor"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:34
+#: ../plugins/sorttab_display/sorttab_display.glade.h:33
+#: ../plugins/track_display/track_display.glade.h:9
+#: ../plugins/cover_display/cover_display.glade.h:13
 #: ../plugins/playlist_display/playlist_display.glade.h:6
 msgid ""
 "If checked, sorting will be case sensitive. Please note that case sensitive "
@@ -1006,12 +1009,12 @@ msgstr ""
 "Om markerat är sorteringen skiftlägeskänslig. Observera att "
 "skiftlägeskänslig sortering inte fungerar bra med de flesta teckenkodningar."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:35
-#: ../plugins/track_display/track_display.glade.h:8
+#: ../plugins/sorttab_display/sorttab_display.glade.h:34
+#: ../plugins/track_display/track_display.glade.h:10
 msgid "Ignore these words when at the beginning of the following fields:"
 msgstr "Ignorera dessa ord i början av följande fält:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:36
+#: ../plugins/sorttab_display/sorttab_display.glade.h:35
 msgid ""
 "In order to save the displayed track order to the iPod choose 'Save "
 "Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
@@ -1019,7 +1022,7 @@ msgstr ""
 "För att lagra visad spårordning i iPod måste du välja 'Spara visad "
 "spårordning' i menyn 'Redigera' eller välja 'Lagra automatiskt' nedan."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:37
+#: ../plugins/sorttab_display/sorttab_display.glade.h:36
 msgid ""
 "Last Played\n"
 "Last Modified\n"
@@ -1029,85 +1032,85 @@ msgstr ""
 "Senast ändrad\n"
 "Tillagd\n"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:41
+#: ../plugins/sorttab_display/sorttab_display.glade.h:40
 msgid "Logic:"
 msgstr "Logiskt:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:42
+#: ../plugins/sorttab_display/sorttab_display.glade.h:41
 msgid "Modified:"
 msgstr "Ändrad:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:43
+#: ../plugins/sorttab_display/sorttab_display.glade.h:42
 msgid "No lower margin"
 msgstr "Ingen undre gräns"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:44
+#: ../plugins/sorttab_display/sorttab_display.glade.h:43
 msgid "No upper margin"
 msgstr "Ingen övre gräns"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:45
+#: ../plugins/sorttab_display/sorttab_display.glade.h:44
 msgid "Number of filter tabs:"
 msgstr "Antal filtreringsflikar:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:46
+#: ../plugins/sorttab_display/sorttab_display.glade.h:45
 msgid "Playcount:"
 msgstr "Spelningsantal:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:47
+#: ../plugins/sorttab_display/sorttab_display.glade.h:46
 msgid "Played:"
 msgstr "Spelad:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:48
+#: ../plugins/sorttab_display/sorttab_display.glade.h:47
 #: ../plugins/repository_editor/repository_editor.glade.h:29
 #: ../plugins/playlist_display/display_playlists.c:1851
 msgid "Playlists"
 msgstr "Spellistor"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:49
+#: ../plugins/sorttab_display/sorttab_display.glade.h:48
 msgid "Please refer to the notice below."
 msgstr "Se anmärkningen nedan."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:50
+#: ../plugins/sorttab_display/sorttab_display.glade.h:49
 msgid "Rating:"
 msgstr "Betyg:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:51
+#: ../plugins/sorttab_display/sorttab_display.glade.h:50
 msgid "Select '-1' for no upper limit."
 msgstr "Välj '-1' för ingen övre gräns."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:52
+#: ../plugins/sorttab_display/sorttab_display.glade.h:51
 msgid "Select '0' for no lower limit."
 msgstr "Välj '0' för ingen undre gräns."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:53
+#: ../plugins/sorttab_display/sorttab_display.glade.h:52
 msgid "Sort tracks according to: "
 msgstr "Sortera spår enligt: "
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:54
+#: ../plugins/sorttab_display/sorttab_display.glade.h:53
 msgid "Sorting Options"
 msgstr "Sorteringsalternativ"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:55
+#: ../plugins/sorttab_display/sorttab_display.glade.h:54
 msgid "Specify interval"
 msgstr "Ange intervall"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:56
+#: ../plugins/sorttab_display/sorttab_display.glade.h:55
 msgid "Start display automatically"
 msgstr "Börja visa automatiskt"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:57
+#: ../plugins/sorttab_display/sorttab_display.glade.h:56
 msgid "Time:"
 msgstr "Tid:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:59
+#: ../plugins/sorttab_display/sorttab_display.glade.h:58
 msgid "Tracks"
 msgstr "Spår"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:60
+#: ../plugins/sorttab_display/sorttab_display.glade.h:59
 msgid "_Display"
 msgstr "_Visa"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:62
+#: ../plugins/sorttab_display/sorttab_display.glade.h:61
 msgid "special_sorttab -- Don't translate!"
 msgstr "special_sorttab -- Don't translate!"
 
@@ -1120,7 +1123,7 @@ msgid "Please enter a word for sorting functions to ignore"
 msgstr ""
 
 #: ../plugins/track_display/plugin.c:46 ../plugins/track_display/plugin.c:112
-#: ../plugins/track_display/track_display.glade.h:9
+#: ../plugins/track_display/track_display.glade.h:11
 #, fuzzy
 msgid "Track Display"
 msgstr "Visa"
@@ -1169,7 +1172,7 @@ msgid_plural "Copied %d tracks"
 msgstr[0] "Kopierade ett spår"
 msgstr[1] "Kopierade %d spår"
 
-#: ../plugins/track_display/display_tracks.c:1595
+#: ../plugins/track_display/display_tracks.c:1596
 #, c-format
 msgid ""
 "Cannot unsort track view because of a bug in the GTK lib you are using (%d.%"
@@ -1182,61 +1185,61 @@ msgstr ""
 "tillbaka till det osorterade tillståndet.\n"
 "\n"
 
-#: ../plugins/track_display/display_tracks.c:1828 ../libgtkpod/gp_spl.c:96
+#: ../plugins/track_display/display_tracks.c:1829 ../libgtkpod/gp_spl.c:96
 #: ../libgtkpod/misc_conversion.c:79
 msgid "Rating"
 msgstr "Betyg"
 
-#: ../plugins/track_display/display_tracks.c:1831
+#: ../plugins/track_display/display_tracks.c:1832
 msgid "#"
 msgstr "#"
 
-#: ../plugins/track_display/display_tracks.c:1834
+#: ../plugins/track_display/display_tracks.c:1835
 msgid "CD"
 msgstr "Cd"
 
-#: ../plugins/track_display/display_tracks.c:1837
+#: ../plugins/track_display/display_tracks.c:1838
 msgid "ID"
 msgstr "Id"
 
-#: ../plugins/track_display/display_tracks.c:1840
+#: ../plugins/track_display/display_tracks.c:1841
 #: ../libgtkpod/misc_conversion.c:72
 msgid "Transferred"
 msgstr "Överförd"
 
-#: ../plugins/track_display/display_tracks.c:1851
+#: ../plugins/track_display/display_tracks.c:1852
 msgid "Cmpl"
 msgstr "Komp."
 
-#: ../plugins/track_display/display_tracks.c:1858
+#: ../plugins/track_display/display_tracks.c:1859
 msgid "Time"
 msgstr "Tid"
 
-#: ../plugins/track_display/display_tracks.c:1861
+#: ../plugins/track_display/display_tracks.c:1862
 msgid "Plycnt"
 msgstr "Speln."
 
-#: ../plugins/track_display/display_tracks.c:1864
+#: ../plugins/track_display/display_tracks.c:1865
 msgid "Played"
 msgstr "Spelad"
 
-#: ../plugins/track_display/display_tracks.c:1867
+#: ../plugins/track_display/display_tracks.c:1868
 msgid "Modified"
 msgstr "Ändrad"
 
-#: ../plugins/track_display/display_tracks.c:1870
+#: ../plugins/track_display/display_tracks.c:1871
 msgid "Added"
 msgstr "Tillagd"
 
-#: ../plugins/track_display/display_tracks.c:1873
+#: ../plugins/track_display/display_tracks.c:1874
 msgid "Released"
 msgstr "Utgiven"
 
-#: ../plugins/track_display/display_tracks.c:1879
+#: ../plugins/track_display/display_tracks.c:1880
 msgid "Vol."
 msgstr "Vol."
 
-#: ../plugins/track_display/display_tracks.c:1882
+#: ../plugins/track_display/display_tracks.c:1883
 msgid "Sndchk."
 msgstr "Ljudkontr."
 
@@ -1260,7 +1263,7 @@ msgstr "<span weight='bold' size='larger'>Ingen spellista markerad</span>"
 msgid "Add Column"
 msgstr "Lägg till kolumn"
 
-#: ../plugins/track_display/track_display.glade.h:7
+#: ../plugins/track_display/track_display.glade.h:8
 msgid "Expand columns beyond the track list width"
 msgstr "Expandera kolumner bortom spårlistans bredd"
 
@@ -1282,7 +1285,7 @@ msgstr ""
 
 #: ../plugins/photo_editor/plugin.c:71
 #, fuzzy
-msgid "PhotoEditor"
+msgid "Photo Editor"
 msgstr "Fotofönster"
 
 #: ../plugins/photo_editor/photo_editor_context_menu.c:47
@@ -1354,7 +1357,7 @@ msgstr "Ett album med samma namn finns redan."
 
 #. Set the resolution in the label
 #: ../plugins/photo_editor/display_photo.c:952
-#: ../plugins/cover_display/display_coverart.c:1531
+#: ../plugins/cover_display/display_coverart.c:1523
 #, c-format
 msgid "<b>Image Dimensions: %d x %d</b>"
 msgstr "<b>Bilddimensioner: %d x %d</b>"
@@ -1497,7 +1500,7 @@ msgstr "Skapa arkiv"
 
 #: ../plugins/repository_editor/plugin.c:80
 #, fuzzy
-msgid "RepositoryEditor"
+msgid "Repository Editor"
 msgstr "Arkiv"
 
 #: ../plugins/repository_editor/repository_creator.c:241
@@ -1879,16 +1882,16 @@ msgstr "Visa omslagsbilder med full storlek"
 msgid "Coverart Display"
 msgstr "<b>Visning av omslag</b>"
 
-#: ../plugins/cover_display/plugin.c:99
+#: ../plugins/cover_display/plugin.c:102
 #, fuzzy
 msgid "  Cover Artwork"
 msgstr "Bläddra"
 
-#: ../plugins/cover_display/display_coverart.c:1682
+#: ../plugins/cover_display/display_coverart.c:1673
 msgid "Failed to remove the album from the album hash store."
 msgstr "Misslyckades ta bort albumet från den checksummerade albumlagringen."
 
-#: ../plugins/cover_display/display_coverart.c:2053
+#: ../plugins/cover_display/display_coverart.c:2044
 #, c-format
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
 msgstr "Fel uppstod när en bild släpptes på visningen av omslag: %s\n"
@@ -1898,37 +1901,43 @@ msgid "<"
 msgstr "<"
 
 #: ../plugins/cover_display/cover_display.glade.h:2
+#, fuzzy
+msgid "<b>Album Cover Sort Order</b>"
+msgstr "<b>Sorteringsordning</b>"
+
+#: ../plugins/cover_display/cover_display.glade.h:4
 msgid "<b>Cover Art Display</b>"
 msgstr "<b>Visning av omslag</b>"
 
-#: ../plugins/cover_display/cover_display.glade.h:3
+#: ../plugins/cover_display/cover_display.glade.h:7
 msgid ">"
 msgstr ">"
 
-#: ../plugins/cover_display/cover_display.glade.h:4
+#: ../plugins/cover_display/cover_display.glade.h:8
 msgid "Artwork Preview"
 msgstr "Förhandsgranskning av omslagsbilder"
 
-#: ../plugins/cover_display/cover_display.glade.h:5
+#: ../plugins/cover_display/cover_display.glade.h:9
 msgid "Background color"
 msgstr "Bakgrundsfärg"
 
-#: ../plugins/cover_display/cover_display.glade.h:6
+#: ../plugins/cover_display/cover_display.glade.h:11
 msgid "Choose a Different Colour for the CoverArt Display Background"
 msgstr "Välj en annan färg för bakgrunden vid visning av omslag"
 
-#: ../plugins/cover_display/cover_display.glade.h:7
+#: ../plugins/cover_display/cover_display.glade.h:12
 #, fuzzy
 msgid "Cover Art Display"
 msgstr "<b>Visning av omslag</b>"
 
-#: ../plugins/cover_display/cover_display.glade.h:8
+#: ../plugins/cover_display/cover_display.glade.h:14
 msgid "Text color"
 msgstr "Textfärg"
 
 #: ../plugins/core_preferences/plugin.c:65
-msgid "CorePrefs"
-msgstr ""
+#, fuzzy
+msgid "Core Preferences"
+msgstr "Inställningar av konvertering"
 
 #: ../plugins/core_preferences/plugin.c:126
 #: ../plugins/core_preferences/plugin.c:131
@@ -2057,7 +2066,7 @@ msgid "Add files to '%s/%s'"
 msgstr "Lägg till filer i '%s/%s'"
 
 #: ../plugins/playlist_display/plugin.c:50
-#: ../plugins/playlist_display/plugin.c:310
+#: ../plugins/playlist_display/plugin.c:317
 #: ../plugins/playlist_display/playlist_display.glade.h:7
 #, fuzzy
 msgid "Playlist Display"
@@ -2291,22 +2300,22 @@ msgstr "Markerade spellista inklusive spår från databas"
 msgid "Selected Playlist including Tracks from Device"
 msgstr "Markerade spellista inklusive spår från iPod"
 
-#: ../plugins/playlist_display/plugin.c:313 ../libgtkpod/gp_spl.c:1407
+#: ../plugins/playlist_display/plugin.c:320 ../libgtkpod/gp_spl.c:1407
 #: ../libgtkpod/misc_playlist.c:75 ../libgtkpod/misc_playlist.c:104
 #: ../libgtkpod/misc_playlist.c:353
 msgid "New Playlist"
 msgstr "Ny spellista"
 
-#: ../plugins/playlist_display/plugin.c:313
+#: ../plugins/playlist_display/plugin.c:320
 msgid "Create a new playlist for the selected ipod"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:342
+#: ../plugins/playlist_display/plugin.c:349
 #, fuzzy
 msgid "  iPod Repositories"
 msgstr "Podsändningsarkiv"
 
-#: ../plugins/playlist_display/plugin.c:411 ../src/anjuta-about.c:165
+#: ../plugins/playlist_display/plugin.c:418 ../src/anjuta-about.c:165
 #, fuzzy, c-format
 msgid "Couldn't load icon: %s"
 msgstr "Kunde inte låsa '%s'.\n"
@@ -4865,30 +4874,30 @@ msgstr "Verk_tyg"
 msgid "Help"
 msgstr "_Hjälp"
 
-#: ../src/anjuta-app.c:642
-msgid "Plugins"
+#: ../src/anjuta-app.c:628
+msgid " Plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:653
+#: ../src/anjuta-app.c:639
 msgid "Installed plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:654
+#: ../src/anjuta-app.c:640
 #, fuzzy
 msgid "Preferred plugins"
 msgstr "Inställningar"
 
-#: ../src/anjuta-app.c:655
+#: ../src/anjuta-app.c:641
 #, fuzzy
 msgid "Shortcuts"
 msgstr "Sorterade artister"
 
-#: ../src/anjuta-app.c:713
+#: ../src/anjuta-app.c:699
 #, c-format
 msgid "Value doesn't exist"
 msgstr ""
 
-#: ../src/anjuta-app.c:1294
+#: ../src/anjuta-app.c:1280
 msgid "Confirmation"
 msgstr "Bekräftelse"
 
@@ -5019,9 +5028,6 @@ msgstr "_Om gtkpod"
 
 #~ msgid "Confirm deletion of tracks:"
 #~ msgstr "Bekräfta borttagning av spår:"
-
-#~ msgid "Conversion Preferences"
-#~ msgstr "Inställningar av konvertering"
 
 #~ msgid "Conversion Settings..."
 #~ msgstr "Inställningar av konvertering..."

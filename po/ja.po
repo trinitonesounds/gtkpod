@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-18 21:30+0000\n"
+"POT-Creation-Date: 2010-12-20 16:50+0000\n"
 "PO-Revision-Date: 2010-08-08 12:41+0100\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: jp <jp@li.gtkpod.org>\n"
@@ -127,7 +127,7 @@ msgstr "曲情報を編集"
 
 #: ../plugins/details_editor/plugin.c:64
 #, fuzzy
-msgid "DetailsEditor"
+msgid "Details Editor"
 msgstr "詳細"
 
 #: ../plugins/details_editor/details.c:68
@@ -181,7 +181,7 @@ msgid "Please report unknown mediatype %x\n"
 msgstr ""
 
 #: ../plugins/details_editor/details.c:1205
-#: ../plugins/sorttab_display/sorttab_display.glade.h:61
+#: ../plugins/sorttab_display/sorttab_display.glade.h:60
 msgid "n/a"
 msgstr "不可"
 
@@ -212,7 +212,7 @@ msgid "Error occurred dropping an image onto the details window: %s\n"
 msgstr ""
 
 #: ../plugins/details_editor/details.c:1749
-#: ../plugins/cover_display/display_coverart.c:2086
+#: ../plugins/cover_display/display_coverart.c:2077
 msgid "Successfully set new coverart for selected tracks"
 msgstr ""
 
@@ -377,7 +377,7 @@ msgstr ""
 msgid "Cover Web"
 msgstr "カバー"
 
-#: ../plugins/coverweb/plugin.c:75 ../plugins/cover_display/plugin.c:74
+#: ../plugins/coverweb/plugin.c:75 ../plugins/cover_display/plugin.c:77
 #, fuzzy
 msgid "Cover Display"
 msgstr "<b>インポート</b>"
@@ -675,7 +675,7 @@ msgid "TB"
 msgstr ""
 
 #: ../plugins/sorttab_display/plugin.c:47
-#: ../plugins/sorttab_display/sorttab_display.glade.h:58
+#: ../plugins/sorttab_display/sorttab_display.glade.h:57
 #, fuzzy
 msgid "Track Filter"
 msgstr "曲番号"
@@ -700,22 +700,22 @@ msgstr "選択されたタブで指定した曲を iPod から削除する"
 msgid "Selected Tab Entry"
 msgstr "選択されたソートタブ(_E)"
 
-#: ../plugins/sorttab_display/plugin.c:155
+#: ../plugins/sorttab_display/plugin.c:157
 #, fuzzy
-msgid "Sorttab Display"
+msgid "Sort Tab Display"
 msgstr "ソートタブ"
 
-#: ../plugins/sorttab_display/plugin.c:159
+#: ../plugins/sorttab_display/plugin.c:161
 #, fuzzy
 msgid "More Filter Tabs"
 msgstr "ソートタブの追加(_M)"
 
-#: ../plugins/sorttab_display/plugin.c:164
+#: ../plugins/sorttab_display/plugin.c:166
 #, fuzzy
 msgid "Fewer Filter Tabs"
 msgstr "ソートタブの追加(_M)"
 
-#: ../plugins/sorttab_display/plugin.c:187
+#: ../plugins/sorttab_display/plugin.c:188
 #, fuzzy
 msgid "  Track Filter"
 msgstr "曲番号"
@@ -746,69 +746,69 @@ msgstr "どのソートタブで選択された曲をプレイリストから削
 msgid "Update selected entry of which sort tab?"
 msgstr "どのソートタブで選択されたものを更新しますか？"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:440
+#: ../plugins/sorttab_display/display_sorttabs.c:441
 msgid "'Played' condition ignored because of error."
 msgstr "「演奏日」の条件はエラーのために無視されました。"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:443
+#: ../plugins/sorttab_display/display_sorttabs.c:444
 msgid "'Modified' condition ignored because of error."
 msgstr "「変更日」の条件はエラーのために無視されました。"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:446
+#: ../plugins/sorttab_display/display_sorttabs.c:447
 msgid "'Added' condition ignored because of error."
 msgstr "「登録日」の条件はエラーのために無視されました。"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:1432
+#: ../plugins/sorttab_display/display_sorttabs.c:1433
 #: ../libgtkpod/misc_conversion.c:60
 msgid "All"
 msgstr "すべて"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:1454
+#: ../plugins/sorttab_display/display_sorttabs.c:1455
 msgid "Compilations"
 msgstr "コンピレーション"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2576 ../libgtkpod/gp_spl.c:80
+#: ../plugins/sorttab_display/display_sorttabs.c:2578 ../libgtkpod/gp_spl.c:80
 #: ../libgtkpod/misc_conversion.c:62
 msgid "Artist"
 msgstr "アーティスト"
 
 #. 0
-#: ../plugins/sorttab_display/display_sorttabs.c:2579 ../libgtkpod/gp_spl.c:79
+#: ../plugins/sorttab_display/display_sorttabs.c:2581 ../libgtkpod/gp_spl.c:79
 #: ../libgtkpod/misc_conversion.c:61
 msgid "Album"
 msgstr "アルバム"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2582 ../libgtkpod/gp_spl.c:84
+#: ../plugins/sorttab_display/display_sorttabs.c:2584 ../libgtkpod/gp_spl.c:84
 #: ../libgtkpod/misc_conversion.c:64
 msgid "Genre"
 msgstr "ジャンル"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2585
+#: ../plugins/sorttab_display/display_sorttabs.c:2587
 msgid "Comp."
 msgstr "作曲者"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2588 ../libgtkpod/gp_spl.c:78
+#: ../plugins/sorttab_display/display_sorttabs.c:2590 ../libgtkpod/gp_spl.c:78
 #: ../libgtkpod/misc_conversion.c:63
 msgid "Title"
 msgstr "タイトル"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2591
-#: ../plugins/track_display/display_tracks.c:1876 ../libgtkpod/gp_spl.c:83
+#: ../plugins/sorttab_display/display_sorttabs.c:2593
+#: ../plugins/track_display/display_tracks.c:1877 ../libgtkpod/gp_spl.c:83
 #: ../libgtkpod/misc_conversion.c:85
 msgid "Year"
 msgstr "年"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:2594
+#: ../plugins/sorttab_display/display_sorttabs.c:2596
 msgid "Special"
 msgstr "スペシャル"
 
 #. no entry selected
-#: ../plugins/sorttab_display/display_sorttabs.c:3289
+#: ../plugins/sorttab_display/display_sorttabs.c:3291
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:77
 msgid "No entry selected."
 msgstr "何も選択されていません。"
 
-#: ../plugins/sorttab_display/display_sorttabs.c:3297
+#: ../plugins/sorttab_display/display_sorttabs.c:3299
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:85
 msgid "Cannot remove entry 'All'"
 msgstr "'すべて' の項目を削除することはできません"
@@ -889,6 +889,7 @@ msgid ":"
 msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:11
+#: ../plugins/cover_display/cover_display.glade.h:3
 #: ../plugins/playlist_display/playlist_display.glade.h:1
 #, fuzzy
 msgid "<b>Ascending</b>"
@@ -900,6 +901,7 @@ msgid "<b>Auto Store</b>"
 msgstr "自動保存"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:13
+#: ../plugins/cover_display/cover_display.glade.h:5
 #: ../plugins/playlist_display/playlist_display.glade.h:2
 #, fuzzy
 msgid "<b>Descending</b>"
@@ -926,6 +928,7 @@ msgid "<b>Lower Margin</b>"
 msgstr "下限"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:18
+#: ../plugins/cover_display/cover_display.glade.h:6
 #: ../plugins/playlist_display/playlist_display.glade.h:3
 #, fuzzy
 msgid "<b>None</b>"
@@ -971,38 +974,38 @@ msgid "Calendar"
 msgstr "カレンダー"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:27
+#: ../plugins/track_display/track_display.glade.h:7
+#: ../plugins/cover_display/cover_display.glade.h:10
+#: ../plugins/playlist_display/playlist_display.glade.h:5
 msgid "Case sensitive sorting"
 msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:28
-#: ../plugins/playlist_display/playlist_display.glade.h:5
-msgid "Case sensitive sorting (setting affects all sorting)"
-msgstr ""
-
-#: ../plugins/sorttab_display/sorttab_display.glade.h:29
 #, fuzzy
 msgid "Category:"
 msgstr "カテゴリ: "
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:30
+#: ../plugins/sorttab_display/sorttab_display.glade.h:29
 msgid "Display tracks that match the criteria entered above."
 msgstr "上で指定された条件に合致する曲を表示します."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:31
+#: ../plugins/sorttab_display/sorttab_display.glade.h:30
 #, fuzzy
 msgid "Filter tab:"
 msgstr "ファイル形式"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:32
+#: ../plugins/sorttab_display/sorttab_display.glade.h:31
 #, fuzzy
 msgid "Filter tabs"
 msgstr "ファイル"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:33
+#: ../plugins/sorttab_display/sorttab_display.glade.h:32
 msgid "Group artist filter tab by compilation CDs"
 msgstr ""
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:34
+#: ../plugins/sorttab_display/sorttab_display.glade.h:33
+#: ../plugins/track_display/track_display.glade.h:9
+#: ../plugins/cover_display/cover_display.glade.h:13
 #: ../plugins/playlist_display/playlist_display.glade.h:6
 msgid ""
 "If checked, sorting will be case sensitive. Please note that case sensitive "
@@ -1011,12 +1014,12 @@ msgstr ""
 "並べ換えの際に, アルファベットの大文字と小文字を区別します. この機能はアル"
 "ファベット以外のほとんどの文字には対応していません."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:35
-#: ../plugins/track_display/track_display.glade.h:8
+#: ../plugins/sorttab_display/sorttab_display.glade.h:34
+#: ../plugins/track_display/track_display.glade.h:10
 msgid "Ignore these words when at the beginning of the following fields:"
 msgstr "これらの語が以下の項目の冒頭にあった場合には無視します:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:36
+#: ../plugins/sorttab_display/sorttab_display.glade.h:35
 msgid ""
 "In order to save the displayed track order to the iPod choose 'Save "
 "Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
@@ -1024,98 +1027,98 @@ msgstr ""
 "表示されている曲順を iPod に保存するには,「編集」メニューから「現在の曲順を保"
 "存」を選択するか, この下の「自動保存」を選択してください."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:37
+#: ../plugins/sorttab_display/sorttab_display.glade.h:36
 msgid ""
 "Last Played\n"
 "Last Modified\n"
 "Added\n"
 msgstr ""
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:41
+#: ../plugins/sorttab_display/sorttab_display.glade.h:40
 #, fuzzy
 msgid "Logic:"
 msgstr "条件: "
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:42
+#: ../plugins/sorttab_display/sorttab_display.glade.h:41
 #, fuzzy
 msgid "Modified:"
 msgstr "変更日"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:43
+#: ../plugins/sorttab_display/sorttab_display.glade.h:42
 msgid "No lower margin"
 msgstr "下限を指定しない"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:44
+#: ../plugins/sorttab_display/sorttab_display.glade.h:43
 msgid "No upper margin"
 msgstr "上限を指定しない"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:45
+#: ../plugins/sorttab_display/sorttab_display.glade.h:44
 #, fuzzy
 msgid "Number of filter tabs:"
 msgstr "ソートタブの数(_N):"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:46
+#: ../plugins/sorttab_display/sorttab_display.glade.h:45
 #, fuzzy
 msgid "Playcount:"
 msgstr "再生回数"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:47
+#: ../plugins/sorttab_display/sorttab_display.glade.h:46
 #, fuzzy
 msgid "Played:"
 msgstr "演奏日"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:48
+#: ../plugins/sorttab_display/sorttab_display.glade.h:47
 #: ../plugins/repository_editor/repository_editor.glade.h:29
 #: ../plugins/playlist_display/display_playlists.c:1851
 msgid "Playlists"
 msgstr "プレイリスト"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:49
+#: ../plugins/sorttab_display/sorttab_display.glade.h:48
 msgid "Please refer to the notice below."
 msgstr "下記の注意を参照してください。"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:50
+#: ../plugins/sorttab_display/sorttab_display.glade.h:49
 #, fuzzy
 msgid "Rating:"
 msgstr "評価"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:51
+#: ../plugins/sorttab_display/sorttab_display.glade.h:50
 msgid "Select '-1' for no upper limit."
 msgstr "上限を指定しない場合は '-1' を選んでください。"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:52
+#: ../plugins/sorttab_display/sorttab_display.glade.h:51
 msgid "Select '0' for no lower limit."
 msgstr "下限を指定しない場合は '0' を選んでください."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:53
+#: ../plugins/sorttab_display/sorttab_display.glade.h:52
 msgid "Sort tracks according to: "
 msgstr "曲順を次の順で並べ換える: "
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:54
+#: ../plugins/sorttab_display/sorttab_display.glade.h:53
 msgid "Sorting Options"
 msgstr "ソートの設定"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:55
+#: ../plugins/sorttab_display/sorttab_display.glade.h:54
 msgid "Specify interval"
 msgstr "範囲を指定してください"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:56
+#: ../plugins/sorttab_display/sorttab_display.glade.h:55
 msgid "Start display automatically"
 msgstr "自動的に表示を更新する"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:57
+#: ../plugins/sorttab_display/sorttab_display.glade.h:56
 msgid "Time:"
 msgstr "時刻:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:59
+#: ../plugins/sorttab_display/sorttab_display.glade.h:58
 msgid "Tracks"
 msgstr "曲リスト"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:60
+#: ../plugins/sorttab_display/sorttab_display.glade.h:59
 msgid "_Display"
 msgstr "表示(_D)"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:62
+#: ../plugins/sorttab_display/sorttab_display.glade.h:61
 msgid "special_sorttab -- Don't translate!"
 msgstr "special_sorttab -- Don't translate!"
 
@@ -1128,7 +1131,7 @@ msgid "Please enter a word for sorting functions to ignore"
 msgstr ""
 
 #: ../plugins/track_display/plugin.c:46 ../plugins/track_display/plugin.c:112
-#: ../plugins/track_display/track_display.glade.h:9
+#: ../plugins/track_display/track_display.glade.h:11
 #, fuzzy
 msgid "Track Display"
 msgstr "表示(_D)"
@@ -1177,7 +1180,7 @@ msgid "Copied one track"
 msgid_plural "Copied %d tracks"
 msgstr[0] "%d曲コピーしました"
 
-#: ../plugins/track_display/display_tracks.c:1595
+#: ../plugins/track_display/display_tracks.c:1596
 #, c-format
 msgid ""
 "Cannot unsort track view because of a bug in the GTK lib you are using (%d.%"
@@ -1190,61 +1193,61 @@ msgstr ""
 "はできません。\n"
 "\n"
 
-#: ../plugins/track_display/display_tracks.c:1828 ../libgtkpod/gp_spl.c:96
+#: ../plugins/track_display/display_tracks.c:1829 ../libgtkpod/gp_spl.c:96
 #: ../libgtkpod/misc_conversion.c:79
 msgid "Rating"
 msgstr "評価"
 
-#: ../plugins/track_display/display_tracks.c:1831
+#: ../plugins/track_display/display_tracks.c:1832
 msgid "#"
 msgstr "#"
 
-#: ../plugins/track_display/display_tracks.c:1834
+#: ../plugins/track_display/display_tracks.c:1835
 msgid "CD"
 msgstr ""
 
-#: ../plugins/track_display/display_tracks.c:1837
+#: ../plugins/track_display/display_tracks.c:1838
 msgid "ID"
 msgstr "ID"
 
-#: ../plugins/track_display/display_tracks.c:1840
+#: ../plugins/track_display/display_tracks.c:1841
 #: ../libgtkpod/misc_conversion.c:72
 msgid "Transferred"
 msgstr "転送済み"
 
-#: ../plugins/track_display/display_tracks.c:1851
+#: ../plugins/track_display/display_tracks.c:1852
 msgid "Cmpl"
 msgstr "コンピ"
 
-#: ../plugins/track_display/display_tracks.c:1858
+#: ../plugins/track_display/display_tracks.c:1859
 msgid "Time"
 msgstr "演奏時間"
 
-#: ../plugins/track_display/display_tracks.c:1861
+#: ../plugins/track_display/display_tracks.c:1862
 msgid "Plycnt"
 msgstr "再生回数"
 
-#: ../plugins/track_display/display_tracks.c:1864
+#: ../plugins/track_display/display_tracks.c:1865
 msgid "Played"
 msgstr "演奏日"
 
-#: ../plugins/track_display/display_tracks.c:1867
+#: ../plugins/track_display/display_tracks.c:1868
 msgid "Modified"
 msgstr "変更日"
 
-#: ../plugins/track_display/display_tracks.c:1870
+#: ../plugins/track_display/display_tracks.c:1871
 msgid "Added"
 msgstr "登録日"
 
-#: ../plugins/track_display/display_tracks.c:1873
+#: ../plugins/track_display/display_tracks.c:1874
 msgid "Released"
 msgstr "公開日"
 
-#: ../plugins/track_display/display_tracks.c:1879
+#: ../plugins/track_display/display_tracks.c:1880
 msgid "Vol."
 msgstr "音量"
 
-#: ../plugins/track_display/display_tracks.c:1882
+#: ../plugins/track_display/display_tracks.c:1883
 msgid "Sndchk."
 msgstr "サウンドチェック"
 
@@ -1270,7 +1273,7 @@ msgstr ""
 msgid "Add Column"
 msgstr "アルバム"
 
-#: ../plugins/track_display/track_display.glade.h:7
+#: ../plugins/track_display/track_display.glade.h:8
 msgid "Expand columns beyond the track list width"
 msgstr ""
 
@@ -1292,7 +1295,7 @@ msgstr ""
 
 #: ../plugins/photo_editor/plugin.c:71
 #, fuzzy
-msgid "PhotoEditor"
+msgid "Photo Editor"
 msgstr "情報(_I)"
 
 #: ../plugins/photo_editor/photo_editor_context_menu.c:47
@@ -1365,7 +1368,7 @@ msgstr ""
 
 #. Set the resolution in the label
 #: ../plugins/photo_editor/display_photo.c:952
-#: ../plugins/cover_display/display_coverart.c:1531
+#: ../plugins/cover_display/display_coverart.c:1523
 #, c-format
 msgid "<b>Image Dimensions: %d x %d</b>"
 msgstr ""
@@ -1511,7 +1514,7 @@ msgstr "iPodから削除"
 
 #: ../plugins/repository_editor/plugin.c:80
 #, fuzzy
-msgid "RepositoryEditor"
+msgid "Repository Editor"
 msgstr "iPodから削除"
 
 #: ../plugins/repository_editor/repository_creator.c:241
@@ -1896,16 +1899,16 @@ msgstr ""
 msgid "Coverart Display"
 msgstr "<b>インポート</b>"
 
-#: ../plugins/cover_display/plugin.c:99
+#: ../plugins/cover_display/plugin.c:102
 #, fuzzy
 msgid "  Cover Artwork"
 msgstr "ブラウズ"
 
-#: ../plugins/cover_display/display_coverart.c:1682
+#: ../plugins/cover_display/display_coverart.c:1673
 msgid "Failed to remove the album from the album hash store."
 msgstr ""
 
-#: ../plugins/cover_display/display_coverart.c:2053
+#: ../plugins/cover_display/display_coverart.c:2044
 #, c-format
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
 msgstr ""
@@ -1916,38 +1919,44 @@ msgstr ""
 
 #: ../plugins/cover_display/cover_display.glade.h:2
 #, fuzzy
+msgid "<b>Album Cover Sort Order</b>"
+msgstr "<b>ソート順</b>"
+
+#: ../plugins/cover_display/cover_display.glade.h:4
+#, fuzzy
 msgid "<b>Cover Art Display</b>"
 msgstr "<b>インポート</b>"
 
-#: ../plugins/cover_display/cover_display.glade.h:3
+#: ../plugins/cover_display/cover_display.glade.h:7
 msgid ">"
 msgstr ""
 
-#: ../plugins/cover_display/cover_display.glade.h:4
+#: ../plugins/cover_display/cover_display.glade.h:8
 #, fuzzy
 msgid "Artwork Preview"
 msgstr "が設定されていない"
 
-#: ../plugins/cover_display/cover_display.glade.h:5
+#: ../plugins/cover_display/cover_display.glade.h:9
 msgid "Background color"
 msgstr ""
 
-#: ../plugins/cover_display/cover_display.glade.h:6
+#: ../plugins/cover_display/cover_display.glade.h:11
 msgid "Choose a Different Colour for the CoverArt Display Background"
 msgstr ""
 
-#: ../plugins/cover_display/cover_display.glade.h:7
+#: ../plugins/cover_display/cover_display.glade.h:12
 #, fuzzy
 msgid "Cover Art Display"
 msgstr "<b>インポート</b>"
 
-#: ../plugins/cover_display/cover_display.glade.h:8
+#: ../plugins/cover_display/cover_display.glade.h:14
 msgid "Text color"
 msgstr ""
 
 #: ../plugins/core_preferences/plugin.c:65
-msgid "CorePrefs"
-msgstr ""
+#, fuzzy
+msgid "Core Preferences"
+msgstr "設定(_P)"
 
 #: ../plugins/core_preferences/plugin.c:126
 #: ../plugins/core_preferences/plugin.c:131
@@ -2076,7 +2085,7 @@ msgid "Add files to '%s/%s'"
 msgstr ""
 
 #: ../plugins/playlist_display/plugin.c:50
-#: ../plugins/playlist_display/plugin.c:310
+#: ../plugins/playlist_display/plugin.c:317
 #: ../plugins/playlist_display/playlist_display.glade.h:7
 #, fuzzy
 msgid "Playlist Display"
@@ -2311,22 +2320,22 @@ msgstr "選択されたプレイリストを曲ごとデータベースから削
 msgid "Selected Playlist including Tracks from Device"
 msgstr "選択されたプレイリストを曲ごと iPod から削除する"
 
-#: ../plugins/playlist_display/plugin.c:313 ../libgtkpod/gp_spl.c:1407
+#: ../plugins/playlist_display/plugin.c:320 ../libgtkpod/gp_spl.c:1407
 #: ../libgtkpod/misc_playlist.c:75 ../libgtkpod/misc_playlist.c:104
 #: ../libgtkpod/misc_playlist.c:353
 msgid "New Playlist"
 msgstr "新規プレイリスト"
 
-#: ../plugins/playlist_display/plugin.c:313
+#: ../plugins/playlist_display/plugin.c:320
 msgid "Create a new playlist for the selected ipod"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:342
+#: ../plugins/playlist_display/plugin.c:349
 #, fuzzy
 msgid "  iPod Repositories"
 msgstr "iPodから削除"
 
-#: ../plugins/playlist_display/plugin.c:411 ../src/anjuta-about.c:165
+#: ../plugins/playlist_display/plugin.c:418 ../src/anjuta-about.c:165
 #, fuzzy, c-format
 msgid "Couldn't load icon: %s"
 msgstr "'%s' をロックすることができませんでした。\n"
@@ -4790,30 +4799,30 @@ msgstr "ツール(_T)"
 msgid "Help"
 msgstr "ヘルプ(_H)"
 
-#: ../src/anjuta-app.c:642
-msgid "Plugins"
+#: ../src/anjuta-app.c:628
+msgid " Plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:653
+#: ../src/anjuta-app.c:639
 msgid "Installed plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:654
+#: ../src/anjuta-app.c:640
 #, fuzzy
 msgid "Preferred plugins"
 msgstr "設定"
 
-#: ../src/anjuta-app.c:655
+#: ../src/anjuta-app.c:641
 #, fuzzy
 msgid "Shortcuts"
 msgstr "ソートタブ"
 
-#: ../src/anjuta-app.c:713
+#: ../src/anjuta-app.c:699
 #, c-format
 msgid "Value doesn't exist"
 msgstr ""
 
-#: ../src/anjuta-app.c:1294
+#: ../src/anjuta-app.c:1280
 #, fuzzy
 msgid "Confirmation"
 msgstr "情報"
@@ -4949,10 +4958,6 @@ msgstr "gtkpod"
 #, fuzzy
 #~ msgid "Confirm deletion of tracks:"
 #~ msgstr "ディレクトリのリストを確認する"
-
-#, fuzzy
-#~ msgid "Conversion Preferences"
-#~ msgstr "設定(_P)"
 
 #, fuzzy
 #~ msgid "Conversion Settings..."
