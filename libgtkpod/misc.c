@@ -1741,6 +1741,7 @@ gchar *get_user_string(gchar *title, gchar *message, gchar *dflt, gchar *opt_msg
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (checkb), *opt_state);
     }
 
+    gtk_window_set_transient_for(GTK_WINDOW (dialog), GTK_WINDOW (gtkpod_app));
     response = gtk_dialog_run(GTK_DIALOG (dialog));
 
     if (response == GTK_RESPONSE_OK) {

@@ -529,7 +529,8 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
     }
 
     fc
-            = gtk_file_chooser_dialog_new(_("Select Export Destination Directory"), NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
+            = gtk_file_chooser_dialog_new(_("Select Export Destination Directory"), GTK_WINDOW (gtkpod_app), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
 
     gchar *glade_path = g_build_filename(get_glade_dir(), "exporter.xml", NULL);
     export_files_xml = gtk_builder_new();
@@ -931,7 +932,8 @@ void export_tracks_to_playlist_file(GList *tracks) {
     struct fcd *fcd = g_malloc0(sizeof(struct fcd));
     GtkWidget
             *fc =
-                    gtk_file_chooser_dialog_new(_("Create Playlist File"), NULL, GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_APPLY, RESPONSE_APPLY, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
+                    gtk_file_chooser_dialog_new(_("Create Playlist File"), GTK_WINDOW (gtkpod_app), GTK_FILE_CHOOSER_ACTION_SAVE,
+                                                GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_APPLY, RESPONSE_APPLY, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
     GtkBuilder *export_playlist_xml;
 
     gchar *glade_path = g_build_filename(get_glade_dir(), "exporter.glade", NULL);

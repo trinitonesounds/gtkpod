@@ -1422,6 +1422,9 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
             G_CALLBACK (on_cancel_clicked),
             GINT_TO_POINTER(id));
 
+    /* Stay on top of main window */
+    gtk_window_set_transient_for(GTK_WINDOW (window), GTK_WINDOW (gtkpod_app));
+
     if (modal) {
         /* use gtk_dialog_run() to block the application */
         gint response = gtk_dialog_run(GTK_DIALOG (window));
