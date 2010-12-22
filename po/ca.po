@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-22 12:57+0000\n"
+"POT-Creation-Date: 2010-12-22 13:43+0000\n"
 "PO-Revision-Date: 2010-08-08 21:29+0100\n"
 "Last-Translator: phantomjinx <phantom_sf@users.sourceforge.net>\n"
 "Language-Team: Català <kde-i18n-ca@kde.org>\n"
@@ -1071,7 +1071,7 @@ msgid "Played:"
 msgstr "Reproduït:"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:47
-#: ../plugins/repository_editor/repository_editor.glade.h:30
+#: ../plugins/repository_editor/repository_editor.glade.h:31
 #: ../plugins/playlist_display/display_playlists.c:1851
 msgid "Playlists"
 msgstr "Llistes de reproducció"
@@ -1650,21 +1650,21 @@ msgstr "Editar les propietats de l'iPod"
 msgid "Select or enter your model"
 msgstr "Selecciona o introdueix el model"
 
-#: ../plugins/repository_editor/repository_init.c:218
+#: ../plugins/repository_editor/repository_init.c:216
 #, c-format
 msgid "Error initialising iPod: %s\n"
 msgstr "Error al iniciar l'iPod: %s\n"
 
-#: ../plugins/repository_editor/repository_init.c:223
+#: ../plugins/repository_editor/repository_init.c:221
 msgid "Error initialising iPod, unknown error\n"
 msgstr "Error al iniciar l'iPod, error desconegut\n"
 
-#: ../plugins/repository_editor/repository_init.c:274
+#: ../plugins/repository_editor/repository_init.c:272
 #, c-format
 msgid "<b>Please select your iPod model at </b><i>%s</i>"
 msgstr "<b>Per favor, selecciona el model d'iPod a </b><i>%s</i>"
 
-#: ../plugins/repository_editor/repository_init.c:308
+#: ../plugins/repository_editor/repository_init.c:306
 msgid ""
 "Could not determine the model you selected -- this could be a bug or "
 "incompatibilty in the GTK+ or glade library.\n"
@@ -1691,53 +1691,58 @@ msgid "<b>Synchronization</b>"
 msgstr "<b>Sincronització</b>"
 
 #: ../plugins/repository_editor/repository_editor.glade.h:5
+msgid ""
+"<i>Note: Only directories that do not already exist will be created. </i>"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.glade.h:6
 #, fuzzy
 msgid "<i>Playlist type</i>"
 msgstr "Tipus de llista de reproducció:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:6
+#: ../plugins/repository_editor/repository_editor.glade.h:7
 #, fuzzy
 msgid "<i>Repository type</i>"
 msgstr "Tips de repositori:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:7
+#: ../plugins/repository_editor/repository_editor.glade.h:8
 msgid "Add New ..."
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.glade.h:8
+#: ../plugins/repository_editor/repository_editor.glade.h:9
 msgid "Browse..."
 msgstr "Examinar..."
 
-#: ../plugins/repository_editor/repository_editor.glade.h:9
+#: ../plugins/repository_editor/repository_editor.glade.h:10
 msgid "Calendar sync command:"
 msgstr "Programa de sincronització del calendari:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:10
+#: ../plugins/repository_editor/repository_editor.glade.h:11
 msgid "Call automatically when synchronizing iTunesDB"
 msgstr "Cridar automàticament al sincronitzar la base de dades iTunes"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:11
+#: ../plugins/repository_editor/repository_editor.glade.h:12
 msgid "Confirm before removing tracks from the iPod or repository"
 msgstr "Confirmar abans de borrar pistes de l'iPod o del repositori"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:12
+#: ../plugins/repository_editor/repository_editor.glade.h:13
 msgid "Contacts sync command:"
 msgstr "Programa de sincronització de contactes:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:13
+#: ../plugins/repository_editor/repository_editor.glade.h:14
 msgid "Create Repository"
 msgstr "Crear repositori"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:14
+#: ../plugins/repository_editor/repository_editor.glade.h:15
 #, fuzzy
 msgid "Delete"
 msgstr "_Borrar"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:15
+#: ../plugins/repository_editor/repository_editor.glade.h:16
 msgid "Delete missing tracks from the iPod or repository"
 msgstr "Borrar pistes perdudes de l'iPod o del repositori"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:16
+#: ../plugins/repository_editor/repository_editor.glade.h:17
 msgid ""
 "Directories to sync with are determined from the filenames of the tracks in "
 "the playlist."
@@ -1745,15 +1750,15 @@ msgstr ""
 "Els directoris amb els que sincronitzar són determinats amb elsnoms del "
 "fitxers de les pistes en la llista de reproducció."
 
-#: ../plugins/repository_editor/repository_editor.glade.h:17
+#: ../plugins/repository_editor/repository_editor.glade.h:18
 msgid "Don't automatically sync on startup"
 msgstr "No sincronitzar automàticament al inici"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:18
+#: ../plugins/repository_editor/repository_editor.glade.h:19
 msgid "Initialize iPod"
 msgstr "Inicialitzar l'iPod"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:19
+#: ../plugins/repository_editor/repository_editor.glade.h:20
 msgid ""
 "Insert before\n"
 "Insert after"
@@ -1761,11 +1766,11 @@ msgstr ""
 "Afegir abans\n"
 "Afegir després"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:21
+#: ../plugins/repository_editor/repository_editor.glade.h:22
 msgid "Model:"
 msgstr "Model:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:22
+#: ../plugins/repository_editor/repository_editor.glade.h:23
 msgid ""
 "Normally, if a track is no longer present in the sync directory, it will be "
 "removed from the playlist, but not from the iPod or local repository.\n"
@@ -1786,49 +1791,49 @@ msgstr ""
 "ha d'estar seleccionada, perquè borrar de la llista de reproducció mestra "
 "significa borrar de l'iPod."
 
-#: ../plugins/repository_editor/repository_editor.glade.h:25
+#: ../plugins/repository_editor/repository_editor.glade.h:26
 msgid "Notes sync command:"
 msgstr "Programa de sincronització de notes:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:26
+#: ../plugins/repository_editor/repository_editor.glade.h:27
 msgid "On startup automatically sync with playlist directories"
 msgstr ""
 "Sincronizar automàticament amb els directoris de les llistes de reproducció "
 "al inici."
 
-#: ../plugins/repository_editor/repository_editor.glade.h:27
+#: ../plugins/repository_editor/repository_editor.glade.h:28
 msgid "On startup automatically sync with the following directory"
 msgstr "Sincronitzar automàticament al inici amb el següent directori"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:28
+#: ../plugins/repository_editor/repository_editor.glade.h:29
 msgid "On startup automatically update (Live Playlist)"
 msgstr "Actualitzar automàticament en l'inici (llistes de reproducció vives)"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:29
+#: ../plugins/repository_editor/repository_editor.glade.h:30
 msgid "Path:"
 msgstr "Ruta:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:31
+#: ../plugins/repository_editor/repository_editor.glade.h:32
 msgid "Repository"
 msgstr "Repositori"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:32
+#: ../plugins/repository_editor/repository_editor.glade.h:33
 msgid "Repository Options"
 msgstr "Opcions de repositori"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:33
+#: ../plugins/repository_editor/repository_editor.glade.h:34
 msgid "Repository name:"
 msgstr "Nom del repositori:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:34
+#: ../plugins/repository_editor/repository_editor.glade.h:35
 msgid "Repository type:"
 msgstr "Tips de repositori:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:35
+#: ../plugins/repository_editor/repository_editor.glade.h:36
 msgid "Show summary of sync result"
 msgstr "Mostrar resumn del resultat de la sincronització"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:37
+#: ../plugins/repository_editor/repository_editor.glade.h:38
 #, no-c-format
 msgid ""
 "Specify exact path including command line options. '%i' will be replaced "
@@ -1837,15 +1842,15 @@ msgstr ""
 "Especificar la ruta completa del programa, incluïnt opcions del intèrpret "
 "d'órdres. '%i' serà reemplaçat amb el directori de muntatge de l'iPod."
 
-#: ../plugins/repository_editor/repository_editor.glade.h:38
+#: ../plugins/repository_editor/repository_editor.glade.h:39
 msgid "Update/Sync All Playlists"
 msgstr "Actualitzar/sincronitzar totes les llistes de reproducció"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:39
+#: ../plugins/repository_editor/repository_editor.glade.h:40
 msgid "Update/Sync Playlist"
 msgstr "Actualitzar/sincronitzar la llista de reproducció"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:40
+#: ../plugins/repository_editor/repository_editor.glade.h:41
 msgid ""
 "Will show a list of tracks removed and a list of tracks newly added or "
 "updated."
@@ -1854,7 +1859,7 @@ msgstr ""
 "añadidas o actualizadas."
 
 #. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
-#: ../plugins/repository_editor/repository_editor.glade.h:42
+#: ../plugins/repository_editor/repository_editor.glade.h:43
 msgid ""
 "iPod\n"
 "Local Repository (Standard)\n"
@@ -1864,11 +1869,11 @@ msgstr ""
 "Repositori local (Standard)\n"
 "Repositori local (Podcasts)\n"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:46
+#: ../plugins/repository_editor/repository_editor.glade.h:47
 msgid "iPod mountpoint:"
 msgstr "Punt de muntatge de l'iPod:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:47
+#: ../plugins/repository_editor/repository_editor.glade.h:48
 msgid "iTunesDB backup:"
 msgstr "Copia de seguretat de iTunesDB:"
 

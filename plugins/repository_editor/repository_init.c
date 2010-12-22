@@ -154,8 +154,6 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
 
     /* If available set current model number, otherwise indicate that
      none is available */
-    /* If available set current model number, otherwise indicate that
-     none is available */
     info = itdb_device_get_ipod_info(itdb->device);
     if (info && (info->ipod_generation != ITDB_IPOD_GENERATION_UNKNOWN)) {
         g_snprintf(buf, PATH_MAX, "x%s", info->model_number);

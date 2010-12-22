@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-22 12:57+0000\n"
+"POT-Creation-Date: 2010-12-22 13:43+0000\n"
 "PO-Revision-Date: 2010-08-09 19:36+0100\n"
 "Last-Translator: Tan Zhixin <tanzhxin@gmail.com>\n"
 "Language-Team: Zhuang <zh_CN@li.gtkpod.org>\n"
@@ -1046,7 +1046,7 @@ msgid "Played:"
 msgstr "已播放："
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:47
-#: ../plugins/repository_editor/repository_editor.glade.h:30
+#: ../plugins/repository_editor/repository_editor.glade.h:31
 #: ../plugins/playlist_display/display_playlists.c:1851
 msgid "Playlists"
 msgstr "播放列表"
@@ -1616,21 +1616,21 @@ msgstr "编辑iPod属性"
 msgid "Select or enter your model"
 msgstr "选择或输入你的iPod型号"
 
-#: ../plugins/repository_editor/repository_init.c:218
+#: ../plugins/repository_editor/repository_init.c:216
 #, c-format
 msgid "Error initialising iPod: %s\n"
 msgstr "初始化iPod时发生错误：%s\n"
 
-#: ../plugins/repository_editor/repository_init.c:223
+#: ../plugins/repository_editor/repository_init.c:221
 msgid "Error initialising iPod, unknown error\n"
 msgstr "初始化iPod时发生错误：未知错误\n"
 
-#: ../plugins/repository_editor/repository_init.c:274
+#: ../plugins/repository_editor/repository_init.c:272
 #, c-format
 msgid "<b>Please select your iPod model at </b><i>%s</i>"
 msgstr "<b>请在</b><i>%s</i>中选择你的iPod型号"
 
-#: ../plugins/repository_editor/repository_init.c:308
+#: ../plugins/repository_editor/repository_init.c:306
 msgid ""
 "Could not determine the model you selected -- this could be a bug or "
 "incompatibilty in the GTK+ or glade library.\n"
@@ -1656,67 +1656,72 @@ msgid "<b>Synchronization</b>"
 msgstr "<b>同步</b>"
 
 #: ../plugins/repository_editor/repository_editor.glade.h:5
+msgid ""
+"<i>Note: Only directories that do not already exist will be created. </i>"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.glade.h:6
 #, fuzzy
 msgid "<i>Playlist type</i>"
 msgstr "播放列表类型："
 
-#: ../plugins/repository_editor/repository_editor.glade.h:6
+#: ../plugins/repository_editor/repository_editor.glade.h:7
 #, fuzzy
 msgid "<i>Repository type</i>"
 msgstr "音乐库类型："
 
-#: ../plugins/repository_editor/repository_editor.glade.h:7
+#: ../plugins/repository_editor/repository_editor.glade.h:8
 msgid "Add New ..."
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.glade.h:8
+#: ../plugins/repository_editor/repository_editor.glade.h:9
 msgid "Browse..."
 msgstr "浏览"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:9
+#: ../plugins/repository_editor/repository_editor.glade.h:10
 msgid "Calendar sync command:"
 msgstr "日历同步命令："
 
-#: ../plugins/repository_editor/repository_editor.glade.h:10
+#: ../plugins/repository_editor/repository_editor.glade.h:11
 msgid "Call automatically when synchronizing iTunesDB"
 msgstr "同步iTunesDB时自动开始"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:11
+#: ../plugins/repository_editor/repository_editor.glade.h:12
 msgid "Confirm before removing tracks from the iPod or repository"
 msgstr "从iPod或音乐库移除音轨前确认"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:12
+#: ../plugins/repository_editor/repository_editor.glade.h:13
 msgid "Contacts sync command:"
 msgstr "同步通讯录命令"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:13
+#: ../plugins/repository_editor/repository_editor.glade.h:14
 msgid "Create Repository"
 msgstr "新建音乐库"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:14
+#: ../plugins/repository_editor/repository_editor.glade.h:15
 #, fuzzy
 msgid "Delete"
 msgstr "删除"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:15
+#: ../plugins/repository_editor/repository_editor.glade.h:16
 msgid "Delete missing tracks from the iPod or repository"
 msgstr "从iPod或音乐库删除缺失的音轨"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:16
+#: ../plugins/repository_editor/repository_editor.glade.h:17
 msgid ""
 "Directories to sync with are determined from the filenames of the tracks in "
 "the playlist."
 msgstr "从播放列表中的音轨文件名确定要同步的目录。"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:17
+#: ../plugins/repository_editor/repository_editor.glade.h:18
 msgid "Don't automatically sync on startup"
 msgstr "启动时不要自动同步"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:18
+#: ../plugins/repository_editor/repository_editor.glade.h:19
 msgid "Initialize iPod"
 msgstr "初始化iPod"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:19
+#: ../plugins/repository_editor/repository_editor.glade.h:20
 msgid ""
 "Insert before\n"
 "Insert after"
@@ -1724,11 +1729,11 @@ msgstr ""
 "在之前插入\n"
 "在之后插入"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:21
+#: ../plugins/repository_editor/repository_editor.glade.h:22
 msgid "Model:"
 msgstr "型号："
 
-#: ../plugins/repository_editor/repository_editor.glade.h:22
+#: ../plugins/repository_editor/repository_editor.glade.h:23
 msgid ""
 "Normally, if a track is no longer present in the sync directory, it will be "
 "removed from the playlist, but not from the iPod or local repository.\n"
@@ -1746,69 +1751,69 @@ msgstr ""
 "注意：如果是和主播放列表同步你必须选择此选项，如果你希望删除音轨的话，因为从"
 "主播放列表中删除也意味着从iPod中删除。"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:25
+#: ../plugins/repository_editor/repository_editor.glade.h:26
 msgid "Notes sync command:"
 msgstr "备忘录同步命令："
 
-#: ../plugins/repository_editor/repository_editor.glade.h:26
+#: ../plugins/repository_editor/repository_editor.glade.h:27
 msgid "On startup automatically sync with playlist directories"
 msgstr "启动时自动与播放列表目录同步"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:27
+#: ../plugins/repository_editor/repository_editor.glade.h:28
 msgid "On startup automatically sync with the following directory"
 msgstr "启动时自动与下列目录同步"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:28
+#: ../plugins/repository_editor/repository_editor.glade.h:29
 msgid "On startup automatically update (Live Playlist)"
 msgstr "启动时自动更新（在线播放列表）"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:29
+#: ../plugins/repository_editor/repository_editor.glade.h:30
 msgid "Path:"
 msgstr "路径："
 
-#: ../plugins/repository_editor/repository_editor.glade.h:31
+#: ../plugins/repository_editor/repository_editor.glade.h:32
 msgid "Repository"
 msgstr "音乐库"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:32
+#: ../plugins/repository_editor/repository_editor.glade.h:33
 msgid "Repository Options"
 msgstr "音乐库选项"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:33
+#: ../plugins/repository_editor/repository_editor.glade.h:34
 msgid "Repository name:"
 msgstr "音乐库名："
 
-#: ../plugins/repository_editor/repository_editor.glade.h:34
+#: ../plugins/repository_editor/repository_editor.glade.h:35
 msgid "Repository type:"
 msgstr "音乐库类型："
 
-#: ../plugins/repository_editor/repository_editor.glade.h:35
+#: ../plugins/repository_editor/repository_editor.glade.h:36
 msgid "Show summary of sync result"
 msgstr "显示同步结果摘要"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:37
+#: ../plugins/repository_editor/repository_editor.glade.h:38
 #, no-c-format
 msgid ""
 "Specify exact path including command line options. '%i' will be replaced "
 "with the mount point of the iPod."
 msgstr "指定路径和命令行选项，'%i'将被替换成iPod的挂载点。"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:38
+#: ../plugins/repository_editor/repository_editor.glade.h:39
 msgid "Update/Sync All Playlists"
 msgstr "更新/同步所有播放列表"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:39
+#: ../plugins/repository_editor/repository_editor.glade.h:40
 msgid "Update/Sync Playlist"
 msgstr "更新/同步播放列表"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:40
+#: ../plugins/repository_editor/repository_editor.glade.h:41
 msgid ""
 "Will show a list of tracks removed and a list of tracks newly added or "
 "updated."
 msgstr "将显示删除/新增/更新的音轨列表。"
 
 #. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
-#: ../plugins/repository_editor/repository_editor.glade.h:42
+#: ../plugins/repository_editor/repository_editor.glade.h:43
 msgid ""
 "iPod\n"
 "Local Repository (Standard)\n"
@@ -1818,11 +1823,11 @@ msgstr ""
 "本地音乐库（标准）\n"
 "本地音乐库（Podcast）\n"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:46
+#: ../plugins/repository_editor/repository_editor.glade.h:47
 msgid "iPod mountpoint:"
 msgstr "iPod挂载点："
 
-#: ../plugins/repository_editor/repository_editor.glade.h:47
+#: ../plugins/repository_editor/repository_editor.glade.h:48
 msgid "iTunesDB backup:"
 msgstr "iTunesDB备份："
 

@@ -1,8 +1,8 @@
 <!--*- xml -*-->
 <ui>
 	<menubar name="MenuMain">
-		<menu name="MenuMusic" action="ActionMenuMusic">
-			<placeholder name="PlaceholderFileMenus">
+		<menu name="MenuTools" action="ActionMenuTools">
+			<placeholder name="PlaceholderToolsMenus">
 				<separator/>
 				<menuitem name="Create iPod's Directories" action="ActionInitRepository" />
 				<menuitem name="Check iPod's Files" action="ActionCheckiPodFiles" />

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-22 12:57+0000\n"
+"POT-Creation-Date: 2010-12-22 13:43+0000\n"
 "PO-Revision-Date: 2010-08-10 07:37+0200\n"
 "Last-Translator: David Kohen <dudyk@users.sourceforge.net>\n"
 "Language-Team: HEBREW <kde-il@yahoogroups.com>\n"
@@ -1054,7 +1054,7 @@ msgid "Played:"
 msgstr "הושמע:"
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:47
-#: ../plugins/repository_editor/repository_editor.glade.h:30
+#: ../plugins/repository_editor/repository_editor.glade.h:31
 #: ../plugins/playlist_display/display_playlists.c:1851
 msgid "Playlists"
 msgstr "רשימות השמעה"
@@ -1629,21 +1629,21 @@ msgstr "ערוך מאפייני iPod"
 msgid "Select or enter your model"
 msgstr "בחר או הכנס את הדגם שלך"
 
-#: ../plugins/repository_editor/repository_init.c:218
+#: ../plugins/repository_editor/repository_init.c:216
 #, c-format
 msgid "Error initialising iPod: %s\n"
 msgstr "תקלה באתחול ה־iPod: %s\n"
 
-#: ../plugins/repository_editor/repository_init.c:223
+#: ../plugins/repository_editor/repository_init.c:221
 msgid "Error initialising iPod, unknown error\n"
 msgstr "תקלה באתחול ה־iPod, תקלה בלתי ידועה\n"
 
-#: ../plugins/repository_editor/repository_init.c:274
+#: ../plugins/repository_editor/repository_init.c:272
 #, c-format
 msgid "<b>Please select your iPod model at </b><i>%s</i>"
 msgstr "<b>אנא בחר את המודל של ה־iPod שלך ב־</b><i>%s</i>"
 
-#: ../plugins/repository_editor/repository_init.c:308
+#: ../plugins/repository_editor/repository_init.c:306
 msgid ""
 "Could not determine the model you selected -- this could be a bug or "
 "incompatibilty in the GTK+ or glade library.\n"
@@ -1670,67 +1670,72 @@ msgid "<b>Synchronization</b>"
 msgstr "<b>סנכרון</b>"
 
 #: ../plugins/repository_editor/repository_editor.glade.h:5
+msgid ""
+"<i>Note: Only directories that do not already exist will be created. </i>"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.glade.h:6
 #, fuzzy
 msgid "<i>Playlist type</i>"
 msgstr "סוג רשימת ההשמעה:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:6
+#: ../plugins/repository_editor/repository_editor.glade.h:7
 #, fuzzy
 msgid "<i>Repository type</i>"
 msgstr "סוג מאגר:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:7
+#: ../plugins/repository_editor/repository_editor.glade.h:8
 msgid "Add New ..."
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.glade.h:8
+#: ../plugins/repository_editor/repository_editor.glade.h:9
 msgid "Browse..."
 msgstr "סייר..."
 
-#: ../plugins/repository_editor/repository_editor.glade.h:9
+#: ../plugins/repository_editor/repository_editor.glade.h:10
 msgid "Calendar sync command:"
 msgstr "פקודת סנכרון ליומן:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:10
+#: ../plugins/repository_editor/repository_editor.glade.h:11
 msgid "Call automatically when synchronizing iTunesDB"
 msgstr "קרא אוטומטית בזמן סנכרון iTunesDB"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:11
+#: ../plugins/repository_editor/repository_editor.glade.h:12
 msgid "Confirm before removing tracks from the iPod or repository"
 msgstr "אשר לפני הסרת רצועות מה-iPod או המאגר"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:12
+#: ../plugins/repository_editor/repository_editor.glade.h:13
 msgid "Contacts sync command:"
 msgstr "פקודת סנכרון לאנשי קשר:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:13
+#: ../plugins/repository_editor/repository_editor.glade.h:14
 msgid "Create Repository"
 msgstr "צור מאגר"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:14
+#: ../plugins/repository_editor/repository_editor.glade.h:15
 #, fuzzy
 msgid "Delete"
 msgstr "_מחק"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:15
+#: ../plugins/repository_editor/repository_editor.glade.h:16
 msgid "Delete missing tracks from the iPod or repository"
 msgstr "מחק רצועות חסרות מה-iPod או המאגר"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:16
+#: ../plugins/repository_editor/repository_editor.glade.h:17
 msgid ""
 "Directories to sync with are determined from the filenames of the tracks in "
 "the playlist."
 msgstr "התיקיות לסנכרון נקבעות לפי שמות הקבצים של הרצועות ברשימת ההשמעה."
 
-#: ../plugins/repository_editor/repository_editor.glade.h:17
+#: ../plugins/repository_editor/repository_editor.glade.h:18
 msgid "Don't automatically sync on startup"
 msgstr "אל תסנכרן אוטומטית בתחילת התוכנית"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:18
+#: ../plugins/repository_editor/repository_editor.glade.h:19
 msgid "Initialize iPod"
 msgstr "אתחל iPod"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:19
+#: ../plugins/repository_editor/repository_editor.glade.h:20
 msgid ""
 "Insert before\n"
 "Insert after"
@@ -1738,11 +1743,11 @@ msgstr ""
 "הכנס לפני\n"
 "הכנס אחרי"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:21
+#: ../plugins/repository_editor/repository_editor.glade.h:22
 msgid "Model:"
 msgstr "דגם:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:22
+#: ../plugins/repository_editor/repository_editor.glade.h:23
 msgid ""
 "Normally, if a track is no longer present in the sync directory, it will be "
 "removed from the playlist, but not from the iPod or local repository.\n"
@@ -1760,47 +1765,47 @@ msgstr ""
 "הערה: אם תסנכרן את רשימת ההשמעה הראשית, אתה חייב לסמן את אפשרות זו אם תרצה "
 "שהרצועות יוסרו, בגלל שהסרה מהרשימה הראשית משמעותה הסרה מה־iPod."
 
-#: ../plugins/repository_editor/repository_editor.glade.h:25
+#: ../plugins/repository_editor/repository_editor.glade.h:26
 msgid "Notes sync command:"
 msgstr "פקודת סנכרון לפתקאות (notes):"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:26
+#: ../plugins/repository_editor/repository_editor.glade.h:27
 msgid "On startup automatically sync with playlist directories"
 msgstr "בתחילה התכנית סנכרן אוטומטית עם תיקיות רשימות ההשמעה"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:27
+#: ../plugins/repository_editor/repository_editor.glade.h:28
 msgid "On startup automatically sync with the following directory"
 msgstr "בתחילת התוכנית סנכרן אוטומטית עם התיקייה הבאה"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:28
+#: ../plugins/repository_editor/repository_editor.glade.h:29
 msgid "On startup automatically update (Live Playlist)"
 msgstr "בתחילת התוכנית עדכ אוטומטית (רשימת השמעה חיה)"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:29
+#: ../plugins/repository_editor/repository_editor.glade.h:30
 msgid "Path:"
 msgstr "נתיב:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:31
+#: ../plugins/repository_editor/repository_editor.glade.h:32
 msgid "Repository"
 msgstr "מאגר"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:32
+#: ../plugins/repository_editor/repository_editor.glade.h:33
 msgid "Repository Options"
 msgstr "אפשרויות מאגר"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:33
+#: ../plugins/repository_editor/repository_editor.glade.h:34
 msgid "Repository name:"
 msgstr "שם המאגר:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:34
+#: ../plugins/repository_editor/repository_editor.glade.h:35
 msgid "Repository type:"
 msgstr "סוג מאגר:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:35
+#: ../plugins/repository_editor/repository_editor.glade.h:36
 msgid "Show summary of sync result"
 msgstr "הצג סיכום של תוצאות סינכרון"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:37
+#: ../plugins/repository_editor/repository_editor.glade.h:38
 #, no-c-format
 msgid ""
 "Specify exact path including command line options. '%i' will be replaced "
@@ -1809,15 +1814,15 @@ msgstr ""
 "מציין נתיב מלא כולל אפשרויות שורת פקודה. המחרוזת '%i' תוחלף עם נקודת העגינה "
 "של ה-iPod."
 
-#: ../plugins/repository_editor/repository_editor.glade.h:38
+#: ../plugins/repository_editor/repository_editor.glade.h:39
 msgid "Update/Sync All Playlists"
 msgstr "עדכן/סנכרן את כל רשימות ההשמעה"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:39
+#: ../plugins/repository_editor/repository_editor.glade.h:40
 msgid "Update/Sync Playlist"
 msgstr "עדכן/סנכרן את רשימת ההשמעה"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:40
+#: ../plugins/repository_editor/repository_editor.glade.h:41
 msgid ""
 "Will show a list of tracks removed and a list of tracks newly added or "
 "updated."
@@ -1825,7 +1830,7 @@ msgstr ""
 "יראה רשימה של רצועות שהוסרו ורשימות של רצועות שהוספו או עודכנו לאחרונה."
 
 #. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
-#: ../plugins/repository_editor/repository_editor.glade.h:42
+#: ../plugins/repository_editor/repository_editor.glade.h:43
 msgid ""
 "iPod\n"
 "Local Repository (Standard)\n"
@@ -1835,11 +1840,11 @@ msgstr ""
 "מאגר מקומי (סטנדרטי)\n"
 "מאגר מקומי (פודקסטים)\n"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:46
+#: ../plugins/repository_editor/repository_editor.glade.h:47
 msgid "iPod mountpoint:"
 msgstr "נקודת העגינה של ה-iPod:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:47
+#: ../plugins/repository_editor/repository_editor.glade.h:48
 msgid "iTunesDB backup:"
 msgstr "גיבוי ה־iTunesDB:"
 
