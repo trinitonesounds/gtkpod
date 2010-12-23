@@ -2,3 +2,4 @@
 Location=track_display:TrackDisplayPlugin
 Name=Track Display Plugin
 Description=Track View
+UserActivatable=no
