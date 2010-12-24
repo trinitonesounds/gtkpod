@@ -1701,15 +1701,34 @@ gboolean get_offline(iTunesDB *itdb) {
     return eitdb->offline;
 }
 
-/* Retrieves a string (and option) from the user using a dialog.
- @title: title of the dialogue (may be NULL)
- @message: text (question) to be displayed (may be NULL)
- @dflt: default string to be returned (may be NULL)
- @opt_msg: message for the option checkbox (or NULL)
- @opt_state: original state of the checkbox. Will be updated
- return value: the string entered by the user or NULL if the dialog
- was cancelled. */
+/*
+ * Retrieves a string (and option) from the user using a dialog.
+ *
+ * @title: title of the dialogue (may be NULL)
+ * @message: text (question) to be displayed (may be NULL)
+ * @dflt: default string to be returned (may be NULL)
+ * @opt_msg: message for the option checkbox (or NULL)
+ * @opt_state: original state of the checkbox. Will be updated
+ * return value: the string entered by the user or NULL if the dialog
+ *                      was cancelled.
+ */
 gchar *get_user_string(gchar *title, gchar *message, gchar *dflt, gchar *opt_msg, gboolean *opt_state, const gchar *accept_button) {
+    return get_user_string_with_parent(GTK_WINDOW(gtkpod_app), title, message, dflt, opt_msg, opt_state, accept_button);
+}
+
+/*
+ * Retrieves a string (and option) from the user using a dialog.
+ *
+ * @parent: parent window for the dialog
+ * @title: title of the dialogue (may be NULL)
+ * @message: text (question) to be displayed (may be NULL)
+ * @dflt: default string to be returned (may be NULL)
+ * @opt_msg: message for the option checkbox (or NULL)
+ * @opt_state: original state of the checkbox. Will be updated
+ * return value: the string entered by the user or NULL if the dialog
+ *                      was cancelled.
+ */
+gchar *get_user_string_with_parent(GtkWindow *parent, gchar *title, gchar *message, gchar *dflt, gchar *opt_msg, gboolean *opt_state, const gchar *accept_button) {
     GladeXML *xml = gtkpod_xml_new(gtkpod_get_glade_xml(), "input_box");
     GtkWidget *dialog = gtkpod_xml_get_widget(xml, "input_box");
     GtkWidget *label = gtkpod_xml_get_widget(xml, "input_box_label");
@@ -1741,7 +1760,7 @@ gchar *get_user_string(gchar *title, gchar *message, gchar *dflt, gchar *opt_msg
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (checkb), *opt_state);
     }
 
-    gtk_window_set_transient_for(GTK_WINDOW (dialog), GTK_WINDOW (gtkpod_app));
+    gtk_window_set_transient_for(GTK_WINDOW (dialog), parent);
     response = gtk_dialog_run(GTK_DIALOG (dialog));
 
     if (response == GTK_RESPONSE_OK) {

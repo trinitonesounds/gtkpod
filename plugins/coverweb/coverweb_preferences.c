@@ -118,6 +118,14 @@ static void save_bookmarks_preferences() {
     update_bookmark_menu();
 }
 
+static GtkWindow *bookmarks_view_get_parent_window() {
+    if (! bookmarks_view) {
+        return NULL;
+    }
+
+    return GTK_WINDOW(gtk_widget_get_toplevel(bookmarks_view));
+}
+
 /*
     glade callback
 */
@@ -131,7 +139,7 @@ G_MODULE_EXPORT void on_bookmark_add_clicked (GtkButton *sender, gpointer e)
     GtkTreeIter iter;
 
     bookmark
-                = get_user_string(_("Bookmark Url"), _("Please enter the full url of the bookmark"), NULL, NULL, NULL, GTK_STOCK_ADD);
+                = get_user_string_with_parent(bookmarks_view_get_parent_window(), _("Bookmark Url"), _("Please enter the full url of the bookmark"), NULL, NULL, NULL, GTK_STOCK_ADD);
 
     if (!bookmark)
         return;

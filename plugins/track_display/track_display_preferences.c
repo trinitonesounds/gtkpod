@@ -49,7 +49,7 @@ static GtkWindow *notebook_get_parent_window() {
         return NULL;
     }
 
-    return GTK_WINDOW(gtk_widget_get_parent(notebook));
+    return GTK_WINDOW(gtk_widget_get_toplevel(notebook));
 }
 
 static gint column_tree_sort (GtkTreeModel *model,
@@ -226,16 +226,40 @@ void on_ign_field_toggled (GtkToggleButton *togglebutton, gpointer data) {
 /*
     glade callback
 */
+
 G_MODULE_EXPORT void on_ign_word_add_clicked (GtkButton *sender, gpointer e) {
     g_return_if_fail(ign_words_view);
     GtkTreeModel *model;
     GtkTreeIter iter;
+    gboolean valid_iter;
 
-    gchar *word = get_user_string(_("New Word to Ignore"), _("Please enter a word for sorting functions to ignore"), NULL, NULL, NULL, GTK_STOCK_ADD);
+    gchar *word = get_user_string_with_parent(notebook_get_parent_window(), _("New Word to Ignore"), _("Please enter a word for sorting functions to ignore"), NULL, NULL, NULL, GTK_STOCK_ADD);
     if (! word)
         return;
 
+    if (strlen(word) == 0)
+        return;
+
     model = gtk_tree_view_get_model (GTK_TREE_VIEW(ign_words_view));
+
+    /* Check if the value is already in the list store */
+    valid_iter = gtk_tree_model_get_iter_first (model, &iter);
+    while (valid_iter) {
+        gchar *curr_ign;
+        gint comparison;
+        gtk_tree_model_get (model, &iter, 0, &curr_ign, -1);
+
+        comparison = compare_string_case_insensitive(word, curr_ign);
+        g_free (curr_ign);
+        if (comparison == 0) {
+            gtkpod_statusbar_message("The word %s is already in the \"Ignored Frequent Word\" list", word);
+            return;
+        }
+
+        valid_iter = gtk_tree_model_iter_next (model, &iter);
+    }
+
+
     gtk_list_store_append (GTK_LIST_STORE (model), &iter);
     gtk_list_store_set(GTK_LIST_STORE (model), &iter, 0, word, -1);
     apply_ign_strings();
