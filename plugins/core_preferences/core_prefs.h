@@ -37,5 +37,6 @@
 #include <gtk/gtk.h>
 
 GtkWidget *init_settings_preferences();
+void destroy_settings_preferences();
 
 #endif

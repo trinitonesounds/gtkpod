@@ -66,9 +66,11 @@
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
+    <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="has_separator">False</property>
+    <signal name="delete_event" handler="gtk_widget_hide_on_delete"/>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox7">
         <property name="visible">True</property>
@@ -209,9 +211,11 @@
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
+    <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="has_separator">False</property>
+    <signal name="delete_event" handler="gtk_widget_hide_on_delete"/>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox8">
         <property name="visible">True</property>
@@ -337,9 +341,11 @@ Example: &lt;i&gt;%a - %A/%T %t.mp3;%t.wav&lt;/i&gt;.
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
+    <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="has_separator">False</property>
+    <signal name="delete_event" handler="gtk_widget_hide_on_delete"/>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox10">
         <property name="visible">True</property>
@@ -455,9 +461,11 @@ Examples:
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
+    <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="has_separator">False</property>
+    <signal name="delete_event" handler="gtk_widget_hide_on_delete"/>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox17">
         <property name="visible">True</property>
@@ -558,9 +566,11 @@ Examples:
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
     <property name="default_height">350</property>
+    <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="has_separator">False</property>
+    <signal name="delete_event" handler="gtk_widget_hide_on_delete"/>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox11">
         <property name="visible">True</property>
@@ -710,9 +720,11 @@ Examples:
     <property name="border_width">5</property>
     <property name="resizable">False</property>
     <property name="window_position">center-on-parent</property>
+    <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="has_separator">False</property>
+    <signal name="delete_event" handler="gtk_widget_hide_on_delete"/>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox13">
         <property name="visible">True</property>
@@ -981,9 +993,11 @@ Examples:
     <property name="title" translatable="yes">Conversion Preferences</property>
     <property name="resizable">False</property>
     <property name="window_position">center-on-parent</property>
+    <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="has_separator">False</property>
+    <signal name="delete_event" handler="gtk_widget_hide_on_delete"/>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox14">
         <property name="visible">True</property>
@@ -1418,8 +1432,10 @@ Examples:
     <property name="title" translatable="yes">ReplayGain Preferences</property>
     <property name="resizable">False</property>
     <property name="window_position">center-on-parent</property>
+    <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="has_separator">False</property>
+    <signal name="delete_event" handler="gtk_widget_hide_on_delete"/>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox19">
         <property name="visible">True</property>
