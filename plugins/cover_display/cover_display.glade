@@ -4,10 +4,9 @@
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkDialog" id="coverart_preview_dialog">
     <property name="visible">True</property>
-    <property name="type">popup</property>
     <property name="title" translatable="yes">Artwork Preview</property>
     <property name="modal">True</property>
-    <property name="window_position">center-always</property>
+    <property name="window_position">center-on-parent</property>
     <property name="icon_name">gtk-dialog-info</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
