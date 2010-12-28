@@ -1,10 +1,10 @@
 dnl Process this file with autoconf to produce a configure script.
 
 # Require autoconf 2.55 or higher
-AC_PREREQ(2.55)
+AC_PREREQ(2.65)
 
-AC_INIT(gtkpod, m4_esyscmd([./version.sh | tr -d '\n']))
-AM_CONFIG_HEADER(config.h)
+AC_INIT([gtkpod],[m4_esyscmd(./version.sh | tr -d '\n')])
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR(src/main.c)
 
 dnl libtool versioning
@@ -23,10 +23,17 @@ AC_SUBST(LIBGTKPOD_VERSION)
 AM_INIT_AUTOMAKE([1.9 tar-ustar]) 
 AM_MAINTAINER_MODE
 AC_CANONICAL_HOST
-AC_ISC_POSIX
-AC_PROG_LIBTOOL
+AC_SEARCH_LIBS([strerror],[cposix])
+LT_INIT
 AC_PROG_CC
-AM_PROG_CC_STDC
+AC_PROG_CC
+AC_DIAGNOSE([obsolete],[AM_PROG_CC_STDC:
+	your code should no longer depend upon `am_cv_prog_cc_stdc', but upon
+	`ac_cv_prog_cc_stdc'.  Remove this warning and the assignment when
+	you adjust the code.  You can also remove the above call to
+	AC_PROG_CC if you already called it elsewhere.])
+am_cv_prog_cc_stdc=$ac_cv_prog_cc_stdc
+
 
 IT_PROG_INTLTOOL([0.33])
 
@@ -135,7 +142,7 @@ AC_SEARCH_LIBS([id3_frame_field], ["id3tag" "id3tag -lz"],,
     AC_MSG_ERROR([*** id3tag >= 0.15 lib not found (0.14 will not work!)]))
 
 dnl Check for libcurl
-AC_ARG_WITH(curl, AC_HELP_STRING([--without-curl], [Disable coverart download support]))
+AC_ARG_WITH(curl, AS_HELP_STRING([--without-curl],[Disable coverart download support]))
 if test "x$with_curl" != "xno"; then
     PKG_CHECK_MODULES(CURL, [libcurl >= 7.10.0], have_curl=yes, have_curl=no)
     if test "x$with_curl" = "xyes" -a "x$have_curl" = "xno"; then
@@ -157,7 +164,7 @@ dnl Check for webkit
 dnl -------------------------------------------------------------
 
 AC_ARG_ENABLE(plugin-coverweb,
-	AC_HELP_STRING([--disable-plugin-coverweb],[Disable coverweb plugin for finding coverart in gtkpod]), 
+	AS_HELP_STRING([--disable-plugin-coverweb],[Disable coverweb plugin for finding coverart in gtkpod]), 
 	[ if test "$enableval" = "no"; then
 		user_disabled_coverweb=1
 	  fi ],
@@ -181,7 +188,7 @@ dnl Check for gstreamer
 dnl -------------------------------------------------------------
 
 AC_ARG_ENABLE(plugin-media-player,
-	AC_HELP_STRING([--disable-plugin-media-player],[Disable media player plugin for playing tracks in gtkpod]), 
+	AS_HELP_STRING([--disable-plugin-media-player],[Disable media player plugin for playing tracks in gtkpod]), 
 	[ if test "$enableval" = "no"; then
 		user_disabled_media_player=1
 	  fi ],
@@ -207,7 +214,7 @@ fi
 AM_CONDITIONAL(HAVE_PLUGIN_MEDIA_PLAYER, [test "x$media_player" = "xyes"])
 
 dnl Check for libvorbisfile and libvorbis
-AC_ARG_WITH(ogg, AC_HELP_STRING([--without-ogg], [Disable Ogg/Vorbis support]))
+AC_ARG_WITH(ogg, AS_HELP_STRING([--without-ogg],[Disable Ogg/Vorbis support]))
 if test "x$with_ogg" != "xno"; then
     AC_SEARCH_LIBS(ov_open, ["vorbisfile"],
         [AC_CHECK_HEADER(vorbis/vorbisfile.h, have_ogg=yes, have_ogg_header=no)], have_ogg=no)
@@ -234,7 +241,7 @@ fi
 AM_CONDITIONAL(HAVE_LIBVORBISFILE, test "x$have_ogg" = "xyes")
 
 dnl Check for FLAC
-AC_ARG_WITH(flac, AC_HELP_STRING([--without-flac], [Disable FLAC support]))
+AC_ARG_WITH(flac, AS_HELP_STRING([--without-flac],[Disable FLAC support]))
 if test "x$with_flac" != "xno"; then
     AC_SEARCH_LIBS(FLAC__metadata_get_streaminfo, ["FLAC"],
         [AC_CHECK_HEADER(FLAC/metadata.h, have_flac=yes, have_flac_header=no)], have_flac=no)
@@ -291,7 +298,7 @@ AC_SUBST(gtkpod_script_dir)
 
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 libgtkpod-1.0.pc
 src/Makefile
@@ -451,6 +458,7 @@ plugins/mserv/icons/hicolor/32x32/places/Makefile
 plugins/mserv/icons/hicolor/48x48/Makefile
 plugins/mserv/icons/hicolor/48x48/places/Makefile
 ])
+AC_OUTPUT
 
 echo "
 Core Configuration for $PACKAGE $VERSION :
