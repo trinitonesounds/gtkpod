@@ -216,10 +216,9 @@ static gboolean ad_timeout_cb(gpointer data) {
             GFile *muri = g_file_parse_name(mount_uri);
             mountpoint = g_file_get_path(muri);
             g_object_unref(muri);
-            g_free(mount_uri);
 
             if (mountpoint) {
-                debug ("Mounted iPod at '%s'\n", mountpoint);
+                debug ("Mounted iPod at '%s'\n", mount_uri);
                 itdb = ad_find_repository_with_mountpoint(mountpoint);
             }
 
@@ -241,11 +240,11 @@ static gboolean ad_timeout_cb(gpointer data) {
                         set_itdb_prefs_int(loaded_itdb, "type", loaded_itdb->usertype);
                     }
                     else {
-                        gtkpod_warning(_("Newly mounted iPod at '%s' could not be loaded into gtkpod.\n\n"), mountpoint);
+                        gtkpod_warning(_("Newly mounted iPod at '%s' could not be loaded into gtkpod.\n\n"), mount_uri);
                     }
                 }
                 else {
-                    gtkpod_warning(_("Newly mounted iPod at '%s' appears to be already loaded!\n\n"), mountpoint);
+                    gtkpod_warning(_("Newly mounted iPod at '%s' appears to be already loaded!\n\n"), mount_uri);
                 } debug ("...OK (used)\n");
             }
             else { /* Set up new itdb (which we'll add to the end of the list) */
@@ -272,6 +271,7 @@ static gboolean ad_timeout_cb(gpointer data) {
             release_widgets();
 
             g_free(mountpoint);
+            g_free(mount_uri);
 
             g_mutex_lock (ad->mutex);
         }
