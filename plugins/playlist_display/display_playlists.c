@@ -55,8 +55,6 @@
 #define gdk_drag_context_get_suggested_action(x) ((x)->suggested_action)
 #endif
 
-/* Container containing both toolbar and view */
-static GtkWidget *playlist_viewport = NULL;
 /* pointer to the playlist display's toolbar */
 static GtkToolbar *playlist_toolbar = NULL;
 /* pointer to the treeview for the playlist display */
@@ -1874,10 +1872,12 @@ static void pm_add_columns(void) {
 
 /* Free the playlist listview */
 void pm_destroy_playlist_view(void) {
-    if (GTK_IS_WIDGET(playlist_viewport)) {
-        gtk_widget_destroy(GTK_WIDGET(playlist_viewport));
-    }
-    playlist_viewport = NULL;
+    if (GTK_IS_WIDGET(playlist_toolbar))
+        gtk_widget_destroy(GTK_WIDGET(playlist_toolbar));
+
+    if (GTK_IS_WIDGET(playlist_treeview))
+        gtk_widget_destroy(GTK_WIDGET(playlist_treeview));
+
     playlist_toolbar = NULL;
     playlist_treeview = NULL;
 }
@@ -1892,6 +1892,7 @@ static void pm_create_treeview(void) {
         /* create new one */
         playlist_treeview = GTK_TREE_VIEW (gtk_tree_view_new());
         gtk_widget_set_events(GTK_WIDGET(playlist_treeview), GDK_KEY_RELEASE_MASK);
+        gtk_tree_view_set_headers_visible(playlist_treeview, FALSE);
     } else {
         model = GTK_TREE_STORE (gtk_tree_view_get_model(playlist_treeview));
         g_return_if_fail (model);
@@ -1989,6 +1990,7 @@ static void pm_create_toolbar(GtkActionGroup *action_group) {
 
 GtkWidget *pm_create_playlist_view(GtkActionGroup *action_group) {
     GtkBox *vbox;
+    GtkScrolledWindow *scrolledwin;
 
     vbox = GTK_BOX(gtk_vbox_new (FALSE, 0));
 
@@ -1998,12 +2000,15 @@ GtkWidget *pm_create_playlist_view(GtkActionGroup *action_group) {
     pm_create_treeview();
     pm_sort(prefs_get_int("pm_sort"));
 
-    gtk_box_pack_start(vbox, GTK_WIDGET(playlist_treeview), TRUE, TRUE, 0);
+    // Add only the tree view to a scrolled window so that toolbar is always visible
+    scrolledwin = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(NULL, NULL));
+    gtk_scrolled_window_set_policy(scrolledwin, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    gtk_scrolled_window_set_shadow_type(scrolledwin, GTK_SHADOW_IN);
+    gtk_widget_set_size_request(GTK_WIDGET(scrolledwin), 250, -1);
+    gtk_container_add(GTK_CONTAINER(scrolledwin), GTK_WIDGET(playlist_treeview));
+    gtk_box_pack_start(vbox, GTK_WIDGET(scrolledwin), TRUE, TRUE, 0);
 
-    playlist_viewport = gtk_viewport_new (0, 0);
-    gtk_container_add (GTK_CONTAINER(playlist_viewport), GTK_WIDGET(vbox));
-
-    return playlist_viewport;
+    return GTK_WIDGET(vbox);
 }
 
 Playlist* pm_get_selected_playlist(void) {
