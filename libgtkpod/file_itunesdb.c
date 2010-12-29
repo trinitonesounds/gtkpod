@@ -121,9 +121,7 @@ void fill_in_extended_info(Track *track, gint32 total, gint32 num) {
         sei = g_hash_table_lookup(extendedinfohash, &ipod_id);
     }
     if (!sei && extendedinfohash_sha1) {
-              gtkpod_statusbar_message (
-        	  _("Matching SHA1 checksum for file %d/%d"),
-        	  num, total);
+        gtkpod_statusbar_message(_("Matching SHA1 checksum for file %d/%d"), num, total);
         while (widgets_blocked && gtk_events_pending())
             gtk_main_iteration();
 
@@ -800,15 +798,17 @@ iTunesDB *gp_load_ipod(iTunesDB *itdb) {
 
     itunesdb = itdb_get_itunesdb_path(mountpoint);
     if (!itunesdb) {
+        gchar *displaymp = g_uri_unescape_string(mountpoint, NULL);
         gchar
                 *str =
-                        g_strdup_printf(_("Could not find iPod directory structure at '%s'.\n\nIf you are sure that the iPod is properly mounted at '%s', it may not be initialized for use. In this case, gtkpod can initialize it for you.\n\nDo you want to create the directory structure now?"), mountpoint, mountpoint);
+                        g_strdup_printf(_("Could not find iPod directory structure at '%s'.\n\nIf you are sure that the iPod is properly mounted at '%s', it may not be initialized for use. In this case, gtkpod can initialize it for you.\n\nDo you want to create the directory structure now?"), displaymp, displaymp);
 
         gint
                 result =
                         gtkpod_confirmation_simple(GTK_MESSAGE_WARNING, _("iPod directory structure not found"), str, _("Create directory structure"));
 
         g_free(str);
+        g_free(displaymp);
 
         if (result == GTK_RESPONSE_OK) {
             ok_to_load = gtkpod_init_repository(itdb);
@@ -1722,7 +1722,7 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
     }
 
     for (it = itdb->tracks; it != NULL; it = it->next) {
-        gp_track_cleanup_empty_strings ((Itdb_Track *)it->data);
+        gp_track_cleanup_empty_strings((Itdb_Track *) it->data);
     }
 
     if (success && !get_offline(itdb) && (itdb->usertype & GP_ITDB_TYPE_IPOD)) { /* write to the iPod */
@@ -1837,7 +1837,7 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
     }
 
     for (it = itdb->tracks; it != NULL; it = it->next) {
-        gp_track_validate_entries ((Itdb_Track *)it->data);
+        gp_track_validate_entries((Itdb_Track *) it->data);
     }
 
     /* If the ipod supports photos and the photo_data_changed

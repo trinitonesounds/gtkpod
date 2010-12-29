@@ -203,9 +203,11 @@ static gboolean ad_timeout_cb(gpointer data) {
         while (ad->new_ipod_uris) {
             iTunesDB *itdb = NULL, *loaded_itdb = NULL;
             gchar *mountpoint;
+            gchar *displaymp;
             struct itdbs_head *itdbs;
             GList *gl = ad->new_ipod_uris;
             gchar *mount_uri = gl->data;
+            displaymp = g_uri_unescape_string(mount_uri, NULL);
 
             ad->new_ipod_uris = g_list_delete_link(ad->new_ipod_uris, gl);
 
@@ -218,7 +220,7 @@ static gboolean ad_timeout_cb(gpointer data) {
             g_object_unref(muri);
 
             if (mountpoint) {
-                debug ("Mounted iPod at '%s'\n", mount_uri);
+                debug ("Mounted iPod at '%s'\n", displaymp);
                 itdb = ad_find_repository_with_mountpoint(mountpoint);
             }
 
@@ -240,11 +242,11 @@ static gboolean ad_timeout_cb(gpointer data) {
                         set_itdb_prefs_int(loaded_itdb, "type", loaded_itdb->usertype);
                     }
                     else {
-                        gtkpod_warning(_("Newly mounted iPod at '%s' could not be loaded into gtkpod.\n\n"), mount_uri);
+                        gtkpod_warning(_("Newly mounted iPod at '%s' could not be loaded into gtkpod.\n\n"), displaymp);
                     }
                 }
                 else {
-                    gtkpod_warning(_("Newly mounted iPod at '%s' appears to be already loaded!\n\n"), mount_uri);
+                    gtkpod_warning(_("Newly mounted iPod at '%s' appears to be already loaded!\n\n"), displaymp);
                 } debug ("...OK (used)\n");
             }
             else { /* Set up new itdb (which we'll add to the end of the list) */
@@ -272,6 +274,7 @@ static gboolean ad_timeout_cb(gpointer data) {
 
             g_free(mountpoint);
             g_free(mount_uri);
+            g_free(displaymp);
 
             g_mutex_lock (ad->mutex);
         }

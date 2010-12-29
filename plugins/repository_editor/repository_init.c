@@ -268,10 +268,12 @@ void repository_ipod_init_set_model(iTunesDB *itdb, const gchar *old_model) {
 
     /* Set up label */
     mountpoint = get_itdb_prefs_string(itdb, KEY_MOUNTPOINT);
+    gchar *displaymp = g_uri_unescape_string(mountpoint, NULL);
     g_return_if_fail (mountpoint);
-    g_snprintf(buf, PATH_MAX, _("<b>Please select your iPod model at </b><i>%s</i>"), mountpoint);
+    g_snprintf(buf, PATH_MAX, _("<b>Please select your iPod model at </b><i>%s</i>"), displaymp);
     gtk_label_set_markup(GTK_LABEL (GET_WIDGET (xml, SIMD_LABEL)), buf);
     g_free(mountpoint);
+    g_free(displaymp);
 
     /* Setup model number combo */
     cb = GTK_COMBO_BOX (GET_WIDGET (xml, SIMD_MODEL_COMBO));

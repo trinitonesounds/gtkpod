@@ -53,10 +53,12 @@ void on_create_ipod_directories(GtkAction* action, RepositoryEditorPlugin* plugi
 
     if (!eitdb->itdb_imported) {
         gchar *mountpoint = get_itdb_prefs_string(itdb, KEY_MOUNTPOINT);
-        gchar *str = g_strdup_printf(_("iPod at '%s' is not loaded.\nPlease load it first."), mountpoint);
+        gchar *displaymp = g_uri_unescape_string(mountpoint, NULL);
+        gchar *str = g_strdup_printf(_("iPod at '%s' is not loaded.\nPlease load it first."), displaymp);
         gtkpod_warning(str);
         g_free(str);
         g_free(mountpoint);
+        g_free(displaymp);
     }
     else {
         repository_ipod_init(itdb);
@@ -76,10 +78,12 @@ void on_check_ipod_files(GtkAction* action, RepositoryEditorPlugin* plugin) {
 
     if (!eitdb->itdb_imported) {
         gchar *mountpoint = get_itdb_prefs_string(itdb, KEY_MOUNTPOINT);
-        gchar *str = g_strdup_printf(_("iPod at '%s' is not loaded.\nPlease load it first."), mountpoint);
+        gchar *displaymp = g_uri_unescape_string(mountpoint, NULL);
+        gchar *str = g_strdup_printf(_("iPod at '%s' is not loaded.\nPlease load it first."), displaymp);
         gtkpod_warning(str);
         g_free(str);
         g_free(mountpoint);
+        g_free(displaymp);
     }
     else {
         check_db(itdb);
