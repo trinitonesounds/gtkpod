@@ -4,7 +4,7 @@
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkDialog" id="confirm_dialog">
     <property name="border_width">6</property>
-    <property name="title" translatable="yes"> </property>
+    <property name="title"></property>
     <property name="type_hint">dialog</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">

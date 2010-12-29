@@ -45,7 +45,7 @@ static GtkActionEntry repository_editor_actions[] =
         {
             "ActionInitRepository",
             GTK_STOCK_EXECUTE,
-            N_("_Create iPod's Directories"),
+            N_("Create iPod's _Directories"),
             NULL,
             NULL,
             G_CALLBACK (on_create_ipod_directories)
@@ -53,7 +53,7 @@ static GtkActionEntry repository_editor_actions[] =
         {
             "ActionCheckiPodFiles",
             GTK_STOCK_FILE,
-            N_("_Check iPod's Files"),
+            N_("Check iPod's _Files"),
             NULL,
             NULL,
             G_CALLBACK (on_check_ipod_files)

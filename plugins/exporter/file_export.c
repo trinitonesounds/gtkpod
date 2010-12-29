@@ -300,7 +300,7 @@ static gboolean write_track(struct fcd *fcd) {
         }
         else {
             gchar *buf = get_track_info(fcd->track, FALSE);
-            gtkpod_warning(_("Could find file for '%s' on the iPod\n"), buf);
+            gtkpod_warning(_("Could not find file for '%s' on the iPod\n"), buf);
             g_free(buf);
         }
         g_free(dest_file);
