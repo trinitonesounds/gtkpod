@@ -1060,7 +1060,7 @@ Added
                     <child>
                       <widget class="GtkLabel" id="label284">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">    </property>
+                        <property name="label">    </property>
                       </widget>
                       <packing>
                         <property name="expand">False</property>
@@ -1900,7 +1900,7 @@ Added
                     <child>
                       <widget class="GtkLabel" id="label298">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">    </property>
+                        <property name="label">    </property>
                       </widget>
                       <packing>
                         <property name="expand">False</property>

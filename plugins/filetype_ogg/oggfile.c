@@ -71,7 +71,7 @@ Track *ogg_get_file_info(const gchar *oggFileName) {
         if (ov_open(file, &oggFile, NULL, 0) != 0) {
             gchar *filename = NULL;
             filename = charset_to_utf8(oggFileName);
-            gtkpod_warning(_("'%s' does not appear to be an ogg audio file.\n"), filename);
+            gtkpod_warning(_("'%s' does not appear to be an Ogg audio file.\n"), filename);
             g_free(filename);
             fclose(file);
         }

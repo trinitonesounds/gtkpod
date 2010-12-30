@@ -1367,7 +1367,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
                     break;
                 case FILE_CONVERT_KILLED:
                 case FILE_CONVERT_SCHEDULED:
-                    fprintf(stderr, _("Programming error, conversion type %d not expected in conversion_scheduler()\n"), etr->conversion_status);
+                    fprintf(stderr, "Programming error: conversion type %d not expected in conversion_scheduler()\n", etr->conversion_status);
                     conversion_convtrack_free(ctr);
                     break;
                 }
@@ -2203,7 +2203,7 @@ static gpointer conversion_thread(gpointer data) {
         gl->data = NULL;
     }
     else {
-        fprintf(stderr, _("***** programming error -- g_thread_self not found in threads list\n"));
+        fprintf(stderr, "***** Programming error: g_thread_self not found in threads list\n");
     }
 
     /* reset force flag if we weren't cancelled because of too many

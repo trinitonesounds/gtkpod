@@ -1181,7 +1181,7 @@ static void on_response(GtkWidget *w, gint response, gpointer id) {
             on_apply_clicked(w, id);
             break;
         default:
-            g_warning ("Programming error: resonse '%d' received in on_response()\n", response);
+            g_warning ("Programming error: response '%d' received in on_response()\n", response);
             on_cancel_clicked(w, id);
             break;
         }
