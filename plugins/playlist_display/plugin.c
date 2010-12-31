@@ -317,7 +317,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
         = anjuta_ui_add_action_group_entries(ui, "ActionGroupPlaylistDisplay", _("Playlist Display"), playlist_actions, G_N_ELEMENTS (playlist_actions), GETTEXT_PACKAGE, TRUE, plugin);
     playlist_display_plugin->action_group = action_group;
 
-    new_playlist_action = tool_menu_action_new (ACTION_NEW_PLAYLIST, _("New Playlist"), N_("Create a new playlist for the selected iPod"), GTK_STOCK_NEW);
+    new_playlist_action = tool_menu_action_new (ACTION_NEW_PLAYLIST, _("New Playlist"), _("Create a new playlist for the selected iPod"), GTK_STOCK_NEW);
     g_signal_connect(new_playlist_action, "activate", G_CALLBACK(on_new_playlist_activate), NULL);
     gtk_action_group_add_action (playlist_display_plugin->action_group, GTK_ACTION (new_playlist_action));
 

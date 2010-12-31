@@ -1,29 +1,7 @@
-src/date_parser.c
-src/md5.c
-src/podcast.c
-src/support.c
-src/help.c
-
-plugins/core_preferences/core_prefs.xml
-plugins/cover_display/cover_display.glade
-plugins/coverweb/coverweb.glade
-plugins/details_editor/details_editor.glade
-plugins/exporter/exporter.xml
-plugins/info_display/info_display.glade
-plugins/media_player/media_player.glade
-plugins/mserv/mserv.xml
-plugins/photo_editor/photo_editor.glade
-plugins/playlist_display/playlist_display.glade
-plugins/repository_editor/repository_editor.glade
-plugins/sorttab_display/sorttab_display.glade
-plugins/track_display/track_display.glade
-
 data/glade/core_prefs.xml
 data/glade/cover_display.glade
-data/glade/coverweb.glade
 data/glade/details_editor.glade
 data/glade/exporter.xml
-data/glade/info_display.glade
 data/glade/media_player.glade
 data/glade/mserv.xml
 data/glade/photo_editor.glade
@@ -31,4 +9,7 @@ data/glade/playlist_display.glade
 data/glade/repository_editor.glade
 data/glade/sorttab_display.glade
 data/glade/track_display.glade
+plugins/core_preferences/core_prefs.xml
+plugins/exporter/exporter.xml
+plugins/mserv/mserv.xml
 
