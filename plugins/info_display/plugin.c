@@ -45,7 +45,7 @@ static GtkActionEntry info_actions[] =
         {
             "ActionDisplayInfoView", /* Action name */
             GTK_STOCK_DIALOG_INFO, /* Stock icon */
-            N_("_Info View"), /* Display label */
+            N_("_Open Repository Information View"), /* Display label */
             NULL, /* short-cut */
             NULL, /* Tooltip */
             G_CALLBACK (on_info_view_open) /* callback */

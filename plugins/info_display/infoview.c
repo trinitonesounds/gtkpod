@@ -227,12 +227,11 @@ void destroy_info_view() {
     unregister_info_update_playlist_view(on_info_view_update_playlist_view);
     unregister_info_update_totals_view(on_info_view_update_totals_view);
 
-    g_object_unref(info_view->store);
-    g_object_unref(info_view->tree);
-
-    if (info_view->window) {
+    if (info_view->window && GTK_IS_WIDGET(info_view->window)) {
         gtk_widget_destroy(info_view->window);
     }
 
-    g_free(info_view);
+    info_view->tree = NULL;
+    info_view->store = NULL;
+    info_view = NULL;
 }
