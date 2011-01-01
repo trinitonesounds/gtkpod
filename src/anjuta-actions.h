@@ -38,7 +38,7 @@ static GtkActionEntry menu_entries_music[] = {
       GTK_STOCK_QUIT,
       N_("_Quit"),
       "<control>q",
-      N_("Quit GtkPod"),
+      N_("Quit gtkpod"),
       G_CALLBACK (on_exit1_activate)}
   };
 
@@ -66,26 +66,38 @@ static GtkActionEntry menu_entries_edit[] = {
 };
 
 static GtkActionEntry menu_entries_view[] = {
-  { "ActionMenuView", NULL, N_("_View")},
-  { "ActionViewResetLayout", NULL,
-	N_("_Reset Dock Layout"), NULL,
-	N_("Reset the widgets docking layout to default"),
-    G_CALLBACK (on_reset_layout_activate)}
+  {
+      "ActionMenuView",
+      NULL,
+      N_("_View")
+  },
+  {
+      "ActionViewResetLayout",
+      NULL,
+      N_("_Reset Dock Layout"),
+      NULL,
+      N_("Reset the widgets docking layout to default"),
+      G_CALLBACK (on_reset_layout_activate)
+  }
 };
 
 static GtkToggleActionEntry menu_entries_toggle_view[] = {
-  { "ActionViewFullscreen", GTK_STOCK_FULLSCREEN,
-    N_("_Full Screen"), "F11",
-    N_("Toggle fullscreen mode"),
-	G_CALLBACK (on_fullscreen_toggle)},
-  { "ActionViewLockLayout", NULL,
-    N_("_Lock Dock Layout"), NULL,
-    N_("Lock the current dock layout so that widgets cannot be moved"),
-	G_CALLBACK (on_layout_lock_toggle)},
-  { "ActionViewToolbar", NULL,
-	N_("_Toolbar"), NULL,
-    N_("Show or hide the toolbar"),
-    G_CALLBACK (on_toolbar_view_toggled)}
+  {
+      "ActionViewFullscreen",
+      GTK_STOCK_FULLSCREEN,
+      N_("_Full Screen"),
+      "F11",
+      N_("Toggle fullscreen mode"),
+      G_CALLBACK (on_fullscreen_toggle)
+  },
+  {
+      "ActionViewLockLayout",
+      NULL,
+      N_("_Lock Dock Layout"),
+      NULL,
+      N_("Lock the current dock layout so that widgets cannot be moved"),
+      G_CALLBACK (on_layout_lock_toggle)
+  }
 };
 
 static GtkActionEntry menu_entries_tools[] = {
@@ -97,29 +109,57 @@ static GtkActionEntry menu_entries_tools[] = {
 };
 
 static GtkActionEntry menu_entries_help[] = {
-  { "ActionMenuHelp", NULL, N_("_Help")},
-  { "ActionHelpUserManual", GTK_STOCK_HELP,
-    N_("_User's Manual"), "F1",
-	N_("gtkpod user's manual"),
-    G_CALLBACK (on_help_manual_activate)},
-  { "ActionHelpGtkpodHome", GTK_STOCK_HOME,
-    N_("gtkpod _Home Page"), NULL,
-	N_("Online documentation and resources"),
-    G_CALLBACK (on_url_home_activate)},
-  { "ActionHelpBugReport", NULL,
-    N_("Report _Bugs/Patches/Requests"), NULL,
-	N_("Submit a bug report, patch or feature request for gtkpod"),
-    G_CALLBACK (on_url_bugs_activate)},
-  { "ActionHelpFaq", NULL,
-    N_("Ask a _Question"), NULL,
-	N_("Submit a question for FAQs"),
-    G_CALLBACK (on_url_faqs_activate)},
-  { "ActionAboutGtkpod", GTK_STOCK_ABOUT,
-    N_("_About"), NULL,
-	N_("About gtkpod"),
-    G_CALLBACK (on_about_activate)},
-  { "ActionAboutPlugins", GTK_STOCK_ABOUT,
-    N_("About External _Plugins"), NULL,
-	N_("About third party gtkpod plugins"),
-    NULL}
+  {
+      "ActionMenuHelp",
+      NULL,
+      N_("_Help")
+  },
+  {
+      "ActionHelpUserManual",
+      GTK_STOCK_HELP,
+      N_("_User's Manual"),
+      "F1",
+      N_("gtkpod user's manual"),
+      G_CALLBACK (on_help_manual_activate)
+  },
+  {
+      "ActionHelpGtkpodHome",
+      GTK_STOCK_HOME,
+      N_("gtkpod _Home Page"),
+      NULL,
+      N_("Online documentation and resources"),
+      G_CALLBACK (on_url_home_activate)
+  },
+  {
+      "ActionHelpBugReport",
+      NULL,
+      N_("Report _Bugs/Patches/Requests"),
+      NULL,
+      N_("Submit a bug report, patch or feature request for gtkpod"),
+      G_CALLBACK (on_url_bugs_activate)
+  },
+  {
+      "ActionHelpFaq",
+      NULL,
+      N_("Ask a _Question"),
+      NULL,
+      N_("Submit a question for FAQs"),
+      G_CALLBACK (on_url_faqs_activate)
+  },
+  {
+      "ActionAboutGtkpod",
+      GTK_STOCK_ABOUT,
+      N_("_About"),
+      NULL,
+      N_("About gtkpod"),
+      G_CALLBACK (on_about_activate)
+  },
+  {
+      "ActionAboutPlugins",
+      GTK_STOCK_ABOUT,
+      N_("About External _Plugins"),
+      NULL,
+      N_("About third party gtkpod plugins"),
+      NULL
+  }
 };

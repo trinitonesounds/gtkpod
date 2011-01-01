@@ -28,7 +28,6 @@
 			<menuitem name="LockLayout" action="ActionViewLockLayout"/>
 			<menuitem name="ResetLayout" action="ActionViewResetLayout"/>
 			<separator name="separate1"/>
-			<menuitem name="Toolbar" action="ActionViewToolbar"/>
 		</menu>
 		<menu name="MenuTools" action="ActionMenuTools">
 			<placeholder name="PlaceholderToolsMenus">

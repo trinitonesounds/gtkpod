@@ -55,7 +55,6 @@ static void anjuta_app_layout_load(AnjutaApp *app, const gchar *layout_filename,
 static void anjuta_app_layout_save(AnjutaApp *app, const gchar *layout_filename, const gchar *name);
 
 static gpointer parent_class = NULL;
-static GtkToolbarStyle style = -1;
 static gchar *uifile = NULL;
 
 static GHashTable *id_hash = NULL;
@@ -109,32 +108,6 @@ static void disconnect_proxy_cb(GtkUIManager *manager, GtkAction *action, GtkWid
     if (GTK_IS_MENU_ITEM(proxy)) {
         g_signal_handlers_disconnect_by_func(proxy, G_CALLBACK(menu_item_select_cb), app);
         g_signal_handlers_disconnect_by_func(proxy, G_CALLBACK(menu_item_deselect_cb), app);
-    }
-}
-
-static void on_toolbar_style_changed(AnjutaPreferences* prefs, const gchar* key, const gchar* tb_style, gpointer user_data) {
-    AnjutaApp* app = ANJUTA_APP (user_data);
-
-    if (tb_style) {
-        if (strcasecmp(tb_style, "Default") == 0)
-            style = -1;
-        else if (strcasecmp(tb_style, "Both") == 0)
-            style = GTK_TOOLBAR_BOTH;
-        else if (strcasecmp(tb_style, "Horiz") == 0)
-            style = GTK_TOOLBAR_BOTH_HORIZ;
-        else if (strcasecmp(tb_style, "Icons") == 0)
-            style = GTK_TOOLBAR_ICONS;
-        else if (strcasecmp(tb_style, "Text") == 0)
-            style = GTK_TOOLBAR_TEXT;
-
-        DEBUG_PRINT ("Toolbar style: %s", tb_style);
-    }
-
-    if (style != -1) {
-        gtk_toolbar_set_style(GTK_TOOLBAR (app->toolbar), style);
-    }
-    else {
-        gtk_toolbar_unset_style(GTK_TOOLBAR (app->toolbar));
     }
 }
 
@@ -360,13 +333,12 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
     GtkWidget *view_menu, *hbox;
     GtkWidget *main_box;
     GtkWidget *dockbar;
-    GtkAction* action;
     GList *plugins_dirs = NULL;
     gchar * style;
     GdkGeometry size_hints =
         { 100, 100, 0, 0, 100, 100, 1, 1, 0.0, 0.0, GDK_GRAVITY_NORTH_WEST };
 
-    DEBUG_PRINT ("%s", "Initializing Anjuta...");
+    DEBUG_PRINT ("%s", "Initializing gtkpod...");
 
     gtk_window_set_geometry_hints(GTK_WINDOW (app), GTK_WIDGET (app), &size_hints, GDK_HINT_RESIZE_INC);
     gtk_window_set_resizable(GTK_WINDOW (app), TRUE);
