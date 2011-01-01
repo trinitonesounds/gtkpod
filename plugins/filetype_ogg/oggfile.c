@@ -147,7 +147,7 @@ Track *ogg_get_file_info(const gchar *oggFileName) {
 
 gboolean ogg_can_convert() {
     gchar *cmd = ogg_get_conversion_cmd();
-    return cmd && cmd[0] && prefs_get_int("convert_ogg");
+    return cmd && cmd[0];
 }
 
 gchar *ogg_get_conversion_cmd() {

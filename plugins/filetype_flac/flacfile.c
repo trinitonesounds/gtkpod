@@ -167,7 +167,7 @@ Track *flac_get_file_info(const gchar *flacFileName) {
 
 gboolean flac_can_convert() {
     gchar *cmd = flac_get_conversion_cmd();
-    return cmd && cmd[0] && prefs_get_int("convert_flac");
+    return cmd && cmd[0];
 }
 
 gchar *flac_get_conversion_cmd() {

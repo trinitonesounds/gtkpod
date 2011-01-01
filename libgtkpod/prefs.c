@@ -176,12 +176,10 @@ static void set_default_preferences() {
     str = g_build_filename(get_script_dir(), "convert-2mp3.sh", NULL);
     prefs_set_string("path_conv_ogg", str);
     g_free(str);
-    prefs_set_int("convert_ogg", TRUE);
 
     str = g_build_filename(get_script_dir(), "convert-2mp3.sh", NULL);
     prefs_set_string("path_conv_flac", str);
     g_free(str);
-    prefs_set_int("convert_flac", TRUE);
 
     str = g_build_filename(get_script_dir(), "convert-2mp3.sh", NULL);
     prefs_set_string("path_conv_wav", str);

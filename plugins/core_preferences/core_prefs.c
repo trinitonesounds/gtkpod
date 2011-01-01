@@ -90,8 +90,6 @@ const gchar *checkbox_map[][3] =
 
 const gchar *conv_checkbox_map[][3] =
     {
-        { "convert_ogg", "convert_ogg", NULL },
-        { "convert_flac", "convert_flac", NULL },
         { "convert_mp3", "convert_mp3", NULL },
         { "convert_aac", "convert_m4a", NULL },
         { "convert_wav", "convert_wav", NULL },
