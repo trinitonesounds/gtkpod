@@ -48,21 +48,18 @@ typedef enum {
 #define REPOSITORY_TYPE_LABEL "repository_type_label"
 #define REPOSITORY_COMBO "repository_combo"
 #define MOUNTPOINT_LABEL "mountpoint_label"
-#define MOUNTPOINT_ENTRY "mountpoint_entry"
-#define MOUNTPOINT_BUTTON "mountpoint_button"
+#define MOUNTPOINT_CHOOSER "mountpoint_chooser"
 #define BACKUP_LABEL "backup_label"
-#define BACKUP_ENTRY "backup_entry"
-#define BACKUP_BUTTON "backup_button"
+#define BACKUP_CHOOSER "backup_chooser"
 #define IPOD_MODEL_LABEL "ipod_model_label"
 #define LOCAL_PATH_LABEL "local_path_label"
-#define LOCAL_PATH_ENTRY "local_path_entry"
+#define LOCAL_PATH_CHOOSER "local_path_chooser"
 #define STANDARD_PLAYLIST_VBOX "standard_playlist_vbox"
 #define SPL_LIVE_UPDATE_TOGGLE "spl_live_update_toggle"
 #define SYNC_PLAYLIST_MODE_NONE_RADIO "sync_playlist_mode_none_radio"
 #define SYNC_PLAYLIST_MODE_AUTOMATIC_RADIO "sync_playlist_mode_automatic_radio"
 #define SYNC_PLAYLIST_MODE_MANUAL_RADIO "sync_playlist_mode_manual_radio"
-#define MANUAL_SYNCDIR_ENTRY "manual_syncdir_entry"
-#define MANUAL_SYNCDIR_BUTTON "manual_syncdir_button"
+#define MANUAL_SYNCDIR_CHOOSER "manual_syncdir_chooser"
 #define DELETE_REPOSITORY_BUTTON "delete_repository_button"
 #define APPLY_BUTTON "apply_button"
 #define REPOSITORY_VBOX "repository_vbox"
@@ -429,20 +426,41 @@ static void standard_itdb_entry_changed(GtkEditable *editable) {
     finish_editable_storage(key, editable);
 }
 
-/* text for manual_syncdir has changed */
-static void manual_syncdir_changed(GtkEditable *editable) {
+static void standard_itdb_chooser_button_updated (GtkWidget *chooser, gpointer user_data) {
+    const gchar *keybase;
     gchar *key;
-    gchar changed;
 
     g_return_if_fail (repository_view);
 
+    keybase = g_object_get_data(G_OBJECT (chooser), "key");
+    g_return_if_fail (keybase);
+
+    key = get_itdb_prefs_key(repository_view->itdb_index, keybase);
+
+    gchar *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(chooser));
+    if (! filename)
+        return;
+
+    finish_string_storage(key, filename);
+}
+
+static void standard_playlist_chooser_button_updated (GtkWidget *chooser, gpointer user_data) {
+    const gchar *keybase;
+    gchar *key;
+
+    g_return_if_fail (repository_view);
+
+    keybase = g_object_get_data(G_OBJECT (chooser), "key");
+    g_return_if_fail (keybase);
+
     key = get_playlist_prefs_key(repository_view->itdb_index, repository_view->playlist, KEY_MANUAL_SYNCDIR);
 
-    changed = finish_editable_storage(key, editable);
+    gchar *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(chooser));
+    if (! filename)
+        return;
 
-    if (changed) {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->xml, SYNC_PLAYLIST_MODE_MANUAL_RADIO)), TRUE);
-    }
+    g_warning("file %s", filename);
+    finish_string_storage(key, filename);
 }
 
 /* sync_playlist_mode_none was toggled */
@@ -455,6 +473,7 @@ static void sync_playlist_mode_none_toggled(GtkToggleButton *togglebutton) {
 
     if (gtk_toggle_button_get_active(togglebutton)) {
         finish_int_storage(key, SYNC_PLAYLIST_MODE_NONE);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, MANUAL_SYNCDIR_CHOOSER), FALSE);
         update_buttons();
     }
 
@@ -471,6 +490,7 @@ static void sync_playlist_mode_manual_toggled(GtkToggleButton *togglebutton) {
 
     if (gtk_toggle_button_get_active(togglebutton)) {
         finish_int_storage(key, SYNC_PLAYLIST_MODE_MANUAL);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, MANUAL_SYNCDIR_CHOOSER), TRUE);
         update_buttons(repository_view);
     }
 
@@ -487,6 +507,7 @@ static void sync_playlist_mode_automatic_toggled(GtkToggleButton *togglebutton) 
 
     if (gtk_toggle_button_get_active(togglebutton)) {
         finish_int_storage(key, SYNC_PLAYLIST_MODE_AUTOMATIC);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, MANUAL_SYNCDIR_CHOOSER), FALSE);
         update_buttons(repository_view);
     }
 
@@ -563,47 +584,7 @@ static void delete_repository_button_clicked(GtkButton *button) {
     update_buttons(repository_view);
 }
 
-/* mountpoint browse button was clicked */
-static void mountpoint_button_clicked(GtkButton *button) {
-    gchar *key, *old_dir, *new_dir;
-
-    g_return_if_fail (repository_view);
-
-    key = get_itdb_prefs_key(repository_view->itdb_index, KEY_MOUNTPOINT);
-    old_dir = get_current_prefs_string(key);
-    g_free(key);
-
-    new_dir = fileselection_get_file_or_dir(_("Select mountpoint"), old_dir, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
-
-    g_free(old_dir);
-
-    if (new_dir) {
-        gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (repository_view->xml, MOUNTPOINT_ENTRY)), new_dir);
-        g_free(new_dir);
-    }
-}
-
-/* mountpoint browse button was clicked */
-static void backup_button_clicked(GtkButton *button) {
-    gchar *key, *old_backup, *new_backup;
-
-    g_return_if_fail (repository_view);
-
-    key = get_itdb_prefs_key(repository_view->itdb_index, KEY_FILENAME);
-    old_backup = get_current_prefs_string(key);
-    g_free(key);
-
-    new_backup = fileselection_get_file_or_dir(_("Set backup file"), old_backup, GTK_FILE_CHOOSER_ACTION_SAVE);
-
-    g_free(old_backup);
-
-    if (new_backup) {
-        gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (repository_view->xml, BACKUP_ENTRY)), new_backup);
-        g_free(new_backup);
-    }
-}
-
-/* mountpoint browse button was clicked */
+/* new repository button was clicked */
 static void new_repository_button_clicked(GtkButton *button) {
     g_return_if_fail (repository_view);
 
@@ -743,26 +724,6 @@ static void edit_apply_clicked(GtkButton *button) {
 #   endif
 
     update_buttons(repository_view);
-}
-
-/* mountpoint browse button was clicked */
-static void manual_syncdir_button_clicked(GtkButton *button) {
-    gchar *key, *old_dir, *new_dir;
-
-    g_return_if_fail (repository_view);
-
-    key = get_playlist_prefs_key(repository_view->itdb_index, repository_view->playlist, KEY_MANUAL_SYNCDIR);
-
-    old_dir = get_current_prefs_string(key);
-
-    new_dir
-            = fileselection_get_file_or_dir(_("Select directory for synchronization"), old_dir, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
-
-    if (new_dir) {
-        gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (repository_view->xml, MANUAL_SYNCDIR_ENTRY)), new_dir);
-        g_free(new_dir);
-    }
-    g_free(key);
 }
 
 static void ipod_sync_button_clicked(iPodSyncType type) {
@@ -1001,21 +962,34 @@ static void select_repository(iTunesDB *itdb, Playlist *playlist) {
     }
 }
 
-/* set @entry with value of @key */
-static void set_entry_index(gint itdb_index, const gchar *subkey, const gchar *entry) {
+/* set @widget with value of @key */
+static void set_widget_index(gint itdb_index, const gchar *subkey, const gchar *name) {
     gchar *buf;
     gchar *key;
+    GtkWidget *w;
 
-    g_return_if_fail (repository_view && subkey && entry);
+    g_return_if_fail (repository_view && subkey && name);
 
     key = get_itdb_prefs_key(itdb_index, subkey);
 
     buf = get_current_prefs_string(key);
+    w = GET_WIDGET (repository_view->xml, name);
+
     if (buf) {
-        gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (repository_view->xml, entry)), buf);
+        if (GTK_IS_ENTRY(w))
+            gtk_entry_set_text(GTK_ENTRY(w), buf);
+        else if (GTK_IS_FILE_CHOOSER(w)) {
+            if (g_file_test(buf, G_FILE_TEST_IS_DIR))
+                gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(w), buf);
+            else
+                gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(w), buf);
+        }
     }
     else {
-        gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (repository_view->xml, entry)), "");
+        if (GTK_IS_ENTRY(w))
+            gtk_entry_set_text(GTK_ENTRY(w), "");
+        else if (GTK_IS_FILE_CHOOSER(w))
+            gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(w), "");
     }
     g_free(buf);
     g_free(key);
@@ -1053,22 +1027,21 @@ static void display_repository_info() {
     if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
         const gchar *widgets_show[] =
             {
-                MOUNTPOINT_LABEL, MOUNTPOINT_ENTRY, MOUNTPOINT_BUTTON, BACKUP_LABEL, BACKUP_ENTRY, BACKUP_BUTTON,
-                IPOD_MODEL_LABEL, IPOD_MODEL_COMBO, LOCAL_PATH_ENTRY, SYNC_FRAME,
-                /*      IPOD_SYNC_LABEL,
-                 IPOD_SYNC_CONTACTS_LABEL,
-                 IPOD_SYNC_CONTACTS_ENTRY,
-                 IPOD_SYNC_CONTACTS_BUTTON,
-                 IPOD_SYNC_CALENDAR_LABEL,
-                 IPOD_SYNC_CALENDAR_ENTRY,
-                 IPOD_SYNC_CALENDAR_BUTTON,
-                 IPOD_SYNC_NOTES_LABEL,
-                 IPOD_SYNC_NOTES_ENTRY,
-                 IPOD_SYNC_NOTES_BUTTON,
-                 IPOD_CONCAL_AUTOSYNC_TOGGLE,*/
+                MOUNTPOINT_LABEL,
+                MOUNTPOINT_CHOOSER,
+                BACKUP_LABEL,
+                BACKUP_CHOOSER,
+                IPOD_MODEL_LABEL,
+                IPOD_MODEL_COMBO,
+                LOCAL_PATH_CHOOSER,
+                SYNC_FRAME,
                 NULL };
         const gchar *widgets_hide[] =
-            { LOCAL_PATH_LABEL, LOCAL_PATH_ENTRY, NULL };
+            {
+                LOCAL_PATH_LABEL,
+                LOCAL_PATH_CHOOSER,
+                NULL
+            };
         const gchar **widget;
 
         for (widget = widgets_show; *widget; ++widget) {
@@ -1078,17 +1051,17 @@ static void display_repository_info() {
             gtk_widget_hide(GET_WIDGET (repository_view->xml, *widget));
         }
 
-        set_entry_index(index, KEY_MOUNTPOINT, MOUNTPOINT_ENTRY);
+        set_widget_index(index, KEY_MOUNTPOINT, MOUNTPOINT_CHOOSER);
 
-        set_entry_index(index, KEY_FILENAME, BACKUP_ENTRY);
+        set_widget_index(index, KEY_FILENAME, BACKUP_CHOOSER);
 
-        set_entry_index(index, KEY_PATH_SYNC_CONTACTS, IPOD_SYNC_CONTACTS_ENTRY);
+        set_widget_index(index, KEY_PATH_SYNC_CONTACTS, IPOD_SYNC_CONTACTS_ENTRY);
 
-        set_entry_index(index, KEY_PATH_SYNC_CALENDAR, IPOD_SYNC_CALENDAR_ENTRY);
+        set_widget_index(index, KEY_PATH_SYNC_CALENDAR, IPOD_SYNC_CALENDAR_ENTRY);
 
-        set_entry_index(index, KEY_PATH_SYNC_NOTES, IPOD_SYNC_NOTES_ENTRY);
+        set_widget_index(index, KEY_PATH_SYNC_NOTES, IPOD_SYNC_NOTES_ENTRY);
 
-        set_entry_index(index, KEY_IPOD_MODEL, IPOD_MODEL_ENTRY);
+        set_widget_index(index, KEY_IPOD_MODEL, IPOD_MODEL_ENTRY);
 
         key = get_itdb_prefs_key(index, KEY_CONCAL_AUTOSYNC);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->xml, IPOD_CONCAL_AUTOSYNC_TOGGLE)), get_current_prefs_int(key));
@@ -1096,23 +1069,22 @@ static void display_repository_info() {
     }
     else if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
         const gchar *widgets_show[] =
-            { LOCAL_PATH_LABEL, LOCAL_PATH_ENTRY, NULL };
+            {
+                LOCAL_PATH_LABEL,
+                LOCAL_PATH_CHOOSER,
+                NULL
+            };
         const gchar *widgets_hide[] =
             {
-                MOUNTPOINT_LABEL, MOUNTPOINT_ENTRY, MOUNTPOINT_BUTTON, BACKUP_LABEL, BACKUP_ENTRY, BACKUP_BUTTON,
-                IPOD_MODEL_LABEL, IPOD_MODEL_COMBO, SYNC_FRAME,
-                /*      IPOD_SYNC_LABEL,
-                 IPOD_SYNC_CONTACTS_LABEL,
-                 IPOD_SYNC_CONTACTS_ENTRY,
-                 IPOD_SYNC_CONTACTS_BUTTON,
-                 IPOD_SYNC_CALENDAR_LABEL,
-                 IPOD_SYNC_CALENDAR_ENTRY,
-                 IPOD_SYNC_CALENDAR_BUTTON,
-                 IPOD_SYNC_NOTES_LABEL,
-                 IPOD_SYNC_NOTES_ENTRY,
-                 IPOD_SYNC_NOTES_BUTTON,
-                 IPOD_CONCAL_AUTOSYNC_TOGGLE,*/
-                NULL };
+                MOUNTPOINT_LABEL,
+                MOUNTPOINT_CHOOSER,
+                BACKUP_LABEL,
+                BACKUP_CHOOSER,
+                IPOD_MODEL_LABEL,
+                IPOD_MODEL_COMBO,
+                SYNC_FRAME,
+                NULL
+            };
         const gchar **widget;
 
         for (widget = widgets_show; *widget; ++widget) {
@@ -1122,7 +1094,7 @@ static void display_repository_info() {
             gtk_widget_hide(GET_WIDGET (repository_view->xml, *widget));
         }
 
-        set_entry_index(index, KEY_FILENAME, LOCAL_PATH_ENTRY);
+        set_widget_index(index, KEY_FILENAME, LOCAL_PATH_CHOOSER);
     }
     else {
         g_return_if_reached ();
@@ -1137,10 +1109,18 @@ static void display_playlist_info() {
     gint i, index;
     const gchar *widget_names[] =
         {
-            PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE, PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE, PLAYLIST_SYNC_SHOW_SUMMARY_TOGGLE,
-            NULL };
+            PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE,
+            PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE,
+            PLAYLIST_SYNC_SHOW_SUMMARY_TOGGLE,
+            NULL
+        };
     const gchar *key_names[] =
-        { KEY_SYNC_DELETE_TRACKS, KEY_SYNC_CONFIRM_DELETE, KEY_SYNC_SHOW_SUMMARY, NULL };
+        {
+            KEY_SYNC_DELETE_TRACKS,
+            KEY_SYNC_CONFIRM_DELETE,
+            KEY_SYNC_SHOW_SUMMARY,
+            NULL
+        };
 
     g_return_if_fail (repository_view);
     g_return_if_fail (repository_view->itdb);
@@ -1183,22 +1163,11 @@ static void display_playlist_info() {
     }
     else {
         gint syncmode;
-        gchar *dir;
         gtk_widget_show(GET_WIDGET (repository_view->xml, STANDARD_PLAYLIST_VBOX));
 
         key = get_playlist_prefs_key(index, playlist, KEY_SYNCMODE);
         syncmode = get_current_prefs_int(key);
         g_free(key);
-
-        /* Need to set manual_syncdir_entry here as it may set the
-         syncmode to 'MANUAL' -- this will be corrected by setting
-         the radio button with the original syncmode setting further
-         down. */
-        key = get_playlist_prefs_key(index, playlist, KEY_MANUAL_SYNCDIR);
-        dir = get_current_prefs_string(key);
-        g_free(key);
-        gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (repository_view->xml, MANUAL_SYNCDIR_ENTRY)), dir);
-        g_free(dir);
 
         switch (syncmode) {
         case SYNC_PLAYLIST_MODE_NONE:
@@ -1206,6 +1175,15 @@ static void display_playlist_info() {
             break;
         case SYNC_PLAYLIST_MODE_MANUAL:
             gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->xml, SYNC_PLAYLIST_MODE_MANUAL_RADIO)), TRUE);
+            /* Need to set manual_syncdir_entry here as it may set the
+            syncmode to 'MANUAL' -- this will be corrected by setting
+            the radio button with the original syncmode setting further
+            down. */
+            key = get_playlist_prefs_key(index, playlist, KEY_MANUAL_SYNCDIR);
+            gchar *dir = get_current_prefs_string(key);
+            gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (GET_WIDGET (repository_view->xml, MANUAL_SYNCDIR_CHOOSER)), dir);
+            g_free(key);
+            g_free(dir);
             break;
         case SYNC_PLAYLIST_MODE_AUTOMATIC:
             gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->xml, SYNC_PLAYLIST_MODE_AUTOMATIC_RADIO)), TRUE);
@@ -1343,38 +1321,71 @@ static void create_repository_editor_view() {
      options */
     const gchar *playlist_widget_names_toggle[] =
         {
-            PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE, PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE, PLAYLIST_SYNC_SHOW_SUMMARY_TOGGLE,
-            SPL_LIVE_UPDATE_TOGGLE, NULL };
+            PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE,
+            PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE,
+            PLAYLIST_SYNC_SHOW_SUMMARY_TOGGLE,
+            SPL_LIVE_UPDATE_TOGGLE, NULL
+        };
     const gchar *playlist_key_names_toggle[] =
-        { KEY_SYNC_DELETE_TRACKS, KEY_SYNC_CONFIRM_DELETE, KEY_SYNC_SHOW_SUMMARY, KEY_LIVEUPDATE, NULL };
+        {
+            KEY_SYNC_DELETE_TRACKS,
+            KEY_SYNC_CONFIRM_DELETE,
+            KEY_SYNC_SHOW_SUMMARY,
+            KEY_LIVEUPDATE,
+            NULL
+        };
     const gchar *itdb_widget_names_toggle[] =
-        { IPOD_CONCAL_AUTOSYNC_TOGGLE, NULL };
+        {
+            IPOD_CONCAL_AUTOSYNC_TOGGLE,
+            NULL
+        };
     const gchar *itdb_key_names_toggle[] =
-        { KEY_CONCAL_AUTOSYNC, NULL };
+        {
+            KEY_CONCAL_AUTOSYNC,
+            NULL
+        };
     /* widget names and corresponding keys for 'standard' strings */
     const gchar *itdb_widget_names_entry[] =
         {
-            MOUNTPOINT_ENTRY, BACKUP_ENTRY, IPOD_MODEL_ENTRY, LOCAL_PATH_ENTRY, IPOD_SYNC_CONTACTS_ENTRY,
-            IPOD_SYNC_CALENDAR_ENTRY, IPOD_SYNC_NOTES_ENTRY, NULL };
+            MOUNTPOINT_CHOOSER,
+            BACKUP_CHOOSER,
+            IPOD_MODEL_ENTRY,
+            LOCAL_PATH_CHOOSER,
+            IPOD_SYNC_CONTACTS_ENTRY,
+            IPOD_SYNC_CALENDAR_ENTRY,
+            IPOD_SYNC_NOTES_ENTRY,
+            NULL
+        };
     const gchar *itdb_key_names_entry[] =
         {
-            KEY_MOUNTPOINT, KEY_BACKUP, KEY_IPOD_MODEL, KEY_FILENAME, KEY_PATH_SYNC_CONTACTS, KEY_PATH_SYNC_CALENDAR,
-            KEY_PATH_SYNC_NOTES, NULL };
+            KEY_MOUNTPOINT,
+            KEY_BACKUP,
+            KEY_IPOD_MODEL,
+            KEY_FILENAME,
+            KEY_PATH_SYNC_CONTACTS,
+            KEY_PATH_SYNC_CALENDAR,
+            KEY_PATH_SYNC_NOTES,
+            NULL
+        };
 
     /* Setup model number combo */
     model_number_combo = GTK_COMBO_BOX (GET_WIDGET (repository_view->xml, IPOD_MODEL_COMBO));
     repository_init_model_number_combo(model_number_combo);
 
-    /* Entry callbacks */
-    g_signal_connect (GET_WIDGET (repository_view->xml, MANUAL_SYNCDIR_ENTRY), "changed",
-            G_CALLBACK (manual_syncdir_changed), repository_view);
     /* connect standard text entries */
     for (i = 0; itdb_widget_names_entry[i]; ++i) {
         GtkWidget *w = GET_WIDGET (repository_view->xml, itdb_widget_names_entry[i]);
 
-        g_signal_connect (w, "changed",
+        if (GTK_IS_ENTRY(w)) {
+            g_signal_connect (w, "changed",
                 G_CALLBACK (standard_itdb_entry_changed),
                 repository_view);
+        } else if (GTK_IS_FILE_CHOOSER_BUTTON(w)) {
+            g_signal_connect(w, "selection_changed",
+                    G_CALLBACK (standard_itdb_chooser_button_updated),
+                    repository_view);
+        }
+
         g_object_set_data(G_OBJECT (w), "key", (gpointer) itdb_key_names_entry[i]);
     }
 
@@ -1403,6 +1414,7 @@ static void create_repository_editor_view() {
                 repository_view);
         g_object_set_data(G_OBJECT (w), "key", (gpointer) playlist_key_names_toggle[i]);
     }
+
     for (i = 0; itdb_widget_names_toggle[i]; ++i) {
         GtkWidget *w = GET_WIDGET (repository_view->xml, itdb_widget_names_toggle[i]);
 
@@ -1413,15 +1425,6 @@ static void create_repository_editor_view() {
     }
 
     /* Button callbacks */
-    g_signal_connect (GET_WIDGET (repository_view->xml, MOUNTPOINT_BUTTON), "clicked",
-            G_CALLBACK (mountpoint_button_clicked), repository_view);
-
-    g_signal_connect (GET_WIDGET (repository_view->xml, BACKUP_BUTTON), "clicked",
-            G_CALLBACK (backup_button_clicked), repository_view);
-
-    g_signal_connect (GET_WIDGET (repository_view->xml, MANUAL_SYNCDIR_BUTTON), "clicked",
-            G_CALLBACK (manual_syncdir_button_clicked), repository_view);
-
     g_signal_connect (GET_WIDGET (repository_view->xml, DELETE_REPOSITORY_BUTTON), "clicked",
             G_CALLBACK (delete_repository_button_clicked), repository_view);
 
@@ -1445,6 +1448,9 @@ static void create_repository_editor_view() {
 
     g_signal_connect (GET_WIDGET (repository_view->xml, APPLY_BUTTON), "clicked",
             G_CALLBACK (edit_apply_clicked), repository_view);
+
+    g_signal_connect (GET_WIDGET (repository_view->xml, MANUAL_SYNCDIR_CHOOSER), "selection_changed",
+            G_CALLBACK (standard_playlist_chooser_button_updated), repository_view);
 
     init_repository_combo();
 

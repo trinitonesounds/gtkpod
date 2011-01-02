@@ -34,17 +34,14 @@
 #include "libgtkpod/directories.h"
 
 /* widget names for the "Create New Repository" window */
-#define CRW_BACKUP_BUTTON "crw_backup_button"
-#define CRW_BACKUP_ENTRY "crw_backup_entry"
+#define CRW_BACKUP_CHOOSER "crw_backup_chooser"
 #define CRW_BACKUP_LABEL "crw_backup_label"
 #define CRW_CANCEL_BUTTON "crw_cancel_button"
 #define CRW_INSERT_BEFORE_AFTER_COMBO "crw_insert_before_after_combo"
 #define CRW_IPOD_MODEL_LABEL "crw_ipod_model_label"
-#define CRW_LOCAL_PATH_BUTTON "crw_local_path_button"
-#define CRW_LOCAL_PATH_ENTRY "crw_local_path_entry"
+#define CRW_LOCAL_PATH_CHOOSER "crw_local_path_chooser"
 #define CRW_LOCAL_PATH_LABEL "crw_local_path_label"
-#define CRW_MOUNTPOINT_BUTTON "crw_mountpoint_button"
-#define CRW_MOUNTPOINT_ENTRY "crw_mountpoint_entry"
+#define CRW_MOUNTPOINT_CHOOSER "crw_mountpoint_chooser"
 #define CRW_MOUNTPOINT_LABEL "crw_mountpoint_label"
 #define CRW_OK_BUTTON "crw_ok_button"
 #define CRW_REPOSITORY_COMBO "crw_repository_combo"
@@ -111,16 +108,16 @@ static void create_ok_clicked(GtkButton *button, CreateRepWindow *cr) {
 
     name = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_REPOSITORY_NAME_ENTRY)));
 
-    mountpoint = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_MOUNTPOINT_ENTRY)));
+    mountpoint = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (GET_WIDGET (cr->xml, CRW_MOUNTPOINT_CHOOSER)));
 
-    backup = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_BACKUP_ENTRY)));
+    backup = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (GET_WIDGET (cr->xml, CRW_BACKUP_CHOOSER)));
 
     ipod_model = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->xml, IPOD_MODEL_ENTRY)));
     if (strcmp(ipod_model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0) { /* User didn't choose a model */
         ipod_model = "";
     }
 
-    local_path = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_LOCAL_PATH_ENTRY)));
+    local_path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (GET_WIDGET (cr->xml, CRW_LOCAL_PATH_CHOOSER)));
 
     /* adjust position where new itdb is to be inserted */
     if (bef_after == INSERT_AFTER)
@@ -187,17 +184,34 @@ static void cr_repository_type_changed(GtkComboBox *cb, CreateRepWindow *cr) {
     /* widgets to show for iPod repositories */
     const gchar *show_ipod[] =
         {
-            CRW_MOUNTPOINT_LABEL, CRW_MOUNTPOINT_ENTRY, CRW_MOUNTPOINT_BUTTON, CRW_BACKUP_LABEL, CRW_BACKUP_ENTRY,
-            CRW_BACKUP_BUTTON, CRW_IPOD_MODEL_LABEL, IPOD_MODEL_COMBO, NULL };
+            CRW_MOUNTPOINT_LABEL,
+            CRW_MOUNTPOINT_CHOOSER,
+            CRW_BACKUP_LABEL,
+            CRW_BACKUP_CHOOSER,
+            CRW_IPOD_MODEL_LABEL,
+            IPOD_MODEL_COMBO,
+            NULL
+        };
     /* widgets to show for local repositories */
     const gchar *show_local[] =
-        { CRW_LOCAL_PATH_LABEL, CRW_LOCAL_PATH_ENTRY, CRW_LOCAL_PATH_BUTTON, NULL };
+        {
+            CRW_LOCAL_PATH_LABEL,
+            CRW_LOCAL_PATH_CHOOSER,
+            NULL
+        };
     /* list of all widgets that get hidden */
     const gchar *hide_all[] =
         {
-            CRW_MOUNTPOINT_LABEL, CRW_MOUNTPOINT_ENTRY, CRW_MOUNTPOINT_BUTTON, CRW_BACKUP_LABEL, CRW_BACKUP_ENTRY,
-            CRW_BACKUP_BUTTON, CRW_IPOD_MODEL_LABEL, IPOD_MODEL_COMBO, CRW_LOCAL_PATH_LABEL, CRW_LOCAL_PATH_ENTRY,
-            CRW_LOCAL_PATH_BUTTON, NULL };
+            CRW_MOUNTPOINT_LABEL,
+            CRW_MOUNTPOINT_CHOOSER,
+            CRW_BACKUP_LABEL,
+            CRW_BACKUP_CHOOSER,
+            CRW_IPOD_MODEL_LABEL,
+            IPOD_MODEL_COMBO,
+            CRW_LOCAL_PATH_LABEL,
+            CRW_LOCAL_PATH_CHOOSER,
+            NULL
+        };
 
     index = gtk_combo_box_get_active(cb);
 
@@ -220,63 +234,6 @@ static void cr_repository_type_changed(GtkComboBox *cb, CreateRepWindow *cr) {
     /* Show appropriate widgets */
     for (i = 0; show[i]; ++i) {
         gtk_widget_show(GET_WIDGET (cr->xml, show[i]));
-    }
-}
-
-/* ------------------------------------------------------------
- *
- *        Callback (buttons)
- *
- * ------------------------------------------------------------ */
-
-/* mountpoint browse button was clicked */
-static void cr_mountpoint_button_clicked(GtkButton *button, CreateRepWindow *cr) {
-    const gchar *old_dir;
-    gchar *new_dir;
-
-    g_return_if_fail (cr);
-
-    old_dir = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_MOUNTPOINT_ENTRY)));
-
-    new_dir = fileselection_get_file_or_dir(_("Select mountpoint"), old_dir, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
-
-    if (new_dir) {
-        gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_MOUNTPOINT_ENTRY)), new_dir);
-        g_free(new_dir);
-    }
-}
-
-/* backup browse button was clicked */
-static void cr_backup_button_clicked(GtkButton *button, CreateRepWindow *cr) {
-    const gchar *old_backup;
-    gchar *new_backup;
-
-    g_return_if_fail (cr);
-
-    old_backup = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_BACKUP_ENTRY)));
-
-    new_backup = fileselection_get_file_or_dir(_("Set backup file"), old_backup, GTK_FILE_CHOOSER_ACTION_SAVE);
-
-    if (new_backup) {
-        gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_BACKUP_ENTRY)), new_backup);
-        g_free(new_backup);
-    }
-}
-
-/* local path browse button was clicked */
-static void cr_local_path_button_clicked(GtkButton *button, CreateRepWindow *cr) {
-    const gchar *old_path;
-    gchar *new_path;
-
-    g_return_if_fail (cr);
-
-    old_path = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_LOCAL_PATH_ENTRY)));
-
-    new_path = fileselection_get_file_or_dir(_("Set local repository file"), old_path, GTK_FILE_CHOOSER_ACTION_SAVE);
-
-    if (new_path) {
-        gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_LOCAL_PATH_ENTRY)), new_path);
-        g_free(new_path);
     }
 }
 
@@ -319,16 +276,6 @@ void display_create_repository_dialog() {
     g_signal_connect (GET_WIDGET (cr->xml, CRW_REPOSITORY_TYPE_COMBO), "changed",
             G_CALLBACK (cr_repository_type_changed), cr);
 
-    /* Button callbacks */
-    g_signal_connect (GET_WIDGET (cr->xml, CRW_MOUNTPOINT_BUTTON), "clicked",
-            G_CALLBACK (cr_mountpoint_button_clicked), cr);
-
-    g_signal_connect (GET_WIDGET (cr->xml, CRW_BACKUP_BUTTON), "clicked",
-            G_CALLBACK (cr_backup_button_clicked), cr);
-
-    g_signal_connect (GET_WIDGET (cr->xml, CRW_LOCAL_PATH_BUTTON), "clicked",
-            G_CALLBACK (cr_local_path_button_clicked), cr);
-
     /* Setup model number combo */
     model_number_combo = GTK_COMBO_BOX (GET_WIDGET (cr->xml, IPOD_MODEL_COMBO));
     repository_init_model_number_combo(model_number_combo);
@@ -349,7 +296,7 @@ void display_create_repository_dialog() {
 
     /* Set initial mountpoint */
     str = prefs_get_string("initial_mountpoint");
-    gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_MOUNTPOINT_ENTRY)), str);
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER (GET_WIDGET (cr->xml, CRW_MOUNTPOINT_CHOOSER)), str);
     g_free(str);
 
     buf1 = prefs_get_cfgdir();
@@ -357,14 +304,14 @@ void display_create_repository_dialog() {
     /* Set initial backup path */
     buf2 = g_strdup_printf("backupDB_%d", g_list_length(itdbs_head->itdbs));
     str = g_build_filename(buf1, buf2, NULL);
-    gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_BACKUP_ENTRY)), str);
+    gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (GET_WIDGET (cr->xml, CRW_BACKUP_CHOOSER)), str);
     g_free(str);
     g_free(buf2);
 
     /* Set local repository file */
     buf2 = g_strdup_printf("local_%d.itdb", g_list_length(itdbs_head->itdbs));
     str = g_build_filename(buf1, buf2, NULL);
-    gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_LOCAL_PATH_ENTRY)), str);
+    gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (GET_WIDGET (cr->xml, CRW_LOCAL_PATH_CHOOSER)), str);
     g_free(str);
     g_free(buf2);
     g_free(buf1);

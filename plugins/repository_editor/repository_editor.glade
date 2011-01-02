@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <glade-interface>
-  <!-- interface-requires gtk+ 2.6 -->
+  <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkWindow" id="repository_window">
     <property name="visible">True</property>
@@ -204,126 +204,9 @@
                               <widget class="GtkTable" id="path_table_ipod">
                                 <property name="visible">True</property>
                                 <property name="n_rows">4</property>
-                                <property name="n_columns">3</property>
-                                <property name="column_spacing">12</property>
+                                <property name="n_columns">2</property>
+                                <property name="column_spacing">80</property>
                                 <property name="row_spacing">6</property>
-                                <child>
-                                  <widget class="GtkEntry" id="mountpoint_entry">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="y_options"></property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkEntry" id="backup_entry">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">1</property>
-                                    <property name="bottom_attach">2</property>
-                                    <property name="y_options"></property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkEntry" id="local_path_entry">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
-                                    <property name="editable">False</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="top_attach">3</property>
-                                    <property name="bottom_attach">4</property>
-                                    <property name="y_options"></property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkButton" id="mountpoint_button">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">False</property>
-                                    <child>
-                                      <widget class="GtkHBox" id="hbox185">
-                                        <property name="visible">True</property>
-                                        <property name="spacing">2</property>
-                                        <child>
-                                          <widget class="GtkImage" id="image10">
-                                            <property name="visible">True</property>
-                                            <property name="stock">gtk-directory</property>
-                                          </widget>
-                                          <packing>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <widget class="GtkLabel" id="label79">
-                                            <property name="visible">True</property>
-                                            <property name="label" translatable="yes">Browse...</property>
-                                          </widget>
-                                          <packing>
-                                            <property name="position">1</property>
-                                          </packing>
-                                        </child>
-                                      </widget>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">2</property>
-                                    <property name="right_attach">3</property>
-                                    <property name="x_options"></property>
-                                    <property name="y_options"></property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkButton" id="backup_button">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">False</property>
-                                    <child>
-                                      <widget class="GtkHBox" id="hbox189">
-                                        <property name="visible">True</property>
-                                        <property name="spacing">2</property>
-                                        <child>
-                                          <widget class="GtkImage" id="image11">
-                                            <property name="visible">True</property>
-                                            <property name="stock">gtk-directory</property>
-                                          </widget>
-                                          <packing>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <widget class="GtkLabel" id="label80">
-                                            <property name="visible">True</property>
-                                            <property name="label" translatable="yes">Browse...</property>
-                                          </widget>
-                                          <packing>
-                                            <property name="position">1</property>
-                                          </packing>
-                                        </child>
-                                      </widget>
-                                    </child>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">2</property>
-                                    <property name="right_attach">3</property>
-                                    <property name="top_attach">1</property>
-                                    <property name="bottom_attach">2</property>
-                                    <property name="x_options"></property>
-                                    <property name="y_options"></property>
-                                  </packing>
-                                </child>
                                 <child>
                                   <widget class="GtkComboBoxEntry" id="ipod_model_combo">
                                     <property name="visible">True</property>
@@ -333,34 +216,6 @@
                                     <property name="right_attach">2</property>
                                     <property name="top_attach">2</property>
                                     <property name="bottom_attach">3</property>
-                                    <property name="y_options"></property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkLabel" id="label75">
-                                    <property name="visible">True</property>
-                                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">2</property>
-                                    <property name="right_attach">3</property>
-                                    <property name="top_attach">2</property>
-                                    <property name="bottom_attach">3</property>
-                                    <property name="x_options"></property>
-                                    <property name="y_options"></property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkLabel" id="label76">
-                                    <property name="visible">True</property>
-                                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="left_attach">2</property>
-                                    <property name="right_attach">3</property>
-                                    <property name="top_attach">3</property>
-                                    <property name="bottom_attach">4</property>
-                                    <property name="x_options"></property>
                                     <property name="y_options"></property>
                                   </packing>
                                 </child>
@@ -458,6 +313,49 @@
                                     <property name="y_options"></property>
                                   </packing>
                                 </child>
+                                <child>
+                                  <widget class="GtkFileChooserButton" id="mountpoint_chooser">
+                                    <property name="visible">True</property>
+                                    <property name="action">select-folder</property>
+                                    <property name="create_folders">False</property>
+                                    <property name="preview_widget_active">False</property>
+                                    <property name="use_preview_label">False</property>
+                                    <property name="title" translatable="yes">Select mountpoint</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkFileChooserButton" id="backup_chooser">
+                                    <property name="visible">True</property>
+                                    <property name="create_folders">False</property>
+                                    <property name="preview_widget_active">False</property>
+                                    <property name="use_preview_label">False</property>
+                                    <property name="title" translatable="yes">Select backup file</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkFileChooserButton" id="local_path_chooser">
+                                    <property name="visible">True</property>
+                                    <property name="create_folders">False</property>
+                                    <property name="preview_widget_active">False</property>
+                                    <property name="use_preview_label">False</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">3</property>
+                                    <property name="bottom_attach">4</property>
+                                  </packing>
+                                </child>
                               </widget>
                             </child>
                           </widget>
@@ -503,8 +401,8 @@
                                     <property name="visible">True</property>
                                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                                     <property name="n_rows">3</property>
-                                    <property name="n_columns">3</property>
-                                    <property name="column_spacing">12</property>
+                                    <property name="n_columns">2</property>
+                                    <property name="column_spacing">30</property>
                                     <property name="row_spacing">6</property>
                                     <child>
                                       <widget class="GtkHBox" id="hbox215">
@@ -577,158 +475,106 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <widget class="GtkEntry" id="ipod_sync_notes_entry">
+                                      <widget class="GtkHBox" id="hbox2">
                                         <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
+                                        <child>
+                                          <widget class="GtkEntry" id="ipod_sync_contacts_entry">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
+                                            <property name="invisible_char">&#x25CF;</property>
+                                          </widget>
+                                          <packing>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <widget class="GtkButton" id="ipod_sync_contacts_button">
+                                            <property name="label" translatable="yes">...</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">True</property>
+                                          </widget>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">False</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
                                       </widget>
                                       <packing>
                                         <property name="left_attach">1</property>
                                         <property name="right_attach">2</property>
-                                        <property name="top_attach">2</property>
-                                        <property name="bottom_attach">3</property>
-                                        <property name="y_options"></property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <widget class="GtkEntry" id="ipod_sync_contacts_entry">
+                                      <widget class="GtkHBox" id="hbox4">
                                         <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
-                                      </widget>
-                                      <packing>
-                                        <property name="left_attach">1</property>
-                                        <property name="right_attach">2</property>
-                                        <property name="y_options"></property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkEntry" id="ipod_sync_calendar_entry">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
+                                        <child>
+                                          <widget class="GtkEntry" id="ipod_sync_calendar_entry">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
+                                            <property name="invisible_char">&#x25CF;</property>
+                                          </widget>
+                                          <packing>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <widget class="GtkButton" id="ipod_sync_calendar_button">
+                                            <property name="label" translatable="yes">...</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">True</property>
+                                          </widget>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">False</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
                                       </widget>
                                       <packing>
                                         <property name="left_attach">1</property>
                                         <property name="right_attach">2</property>
                                         <property name="top_attach">1</property>
                                         <property name="bottom_attach">2</property>
-                                        <property name="y_options"></property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <widget class="GtkButton" id="ipod_sync_contacts_button">
+                                      <widget class="GtkHBox" id="hbox5">
                                         <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
                                         <child>
-                                          <widget class="GtkHBox" id="hbox204">
+                                          <widget class="GtkEntry" id="ipod_sync_notes_entry">
                                             <property name="visible">True</property>
-                                            <property name="spacing">2</property>
-                                            <child>
-                                              <widget class="GtkImage" id="image12">
-                                                <property name="visible">True</property>
-                                                <property name="stock">gtk-directory</property>
-                                              </widget>
-                                              <packing>
-                                                <property name="position">0</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <widget class="GtkLabel" id="label81">
-                                                <property name="visible">True</property>
-                                                <property name="label" translatable="yes">Browse...</property>
-                                              </widget>
-                                              <packing>
-                                                <property name="position">1</property>
-                                              </packing>
-                                            </child>
+                                            <property name="can_focus">True</property>
+                                            <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
+                                            <property name="invisible_char">&#x25CF;</property>
                                           </widget>
+                                          <packing>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <widget class="GtkButton" id="ipod_sync_notes_button">
+                                            <property name="label" translatable="yes">...</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">True</property>
+                                          </widget>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">False</property>
+                                            <property name="position">1</property>
+                                          </packing>
                                         </child>
                                       </widget>
                                       <packing>
-                                        <property name="left_attach">2</property>
-                                        <property name="right_attach">3</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkButton" id="ipod_sync_calendar_button">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <child>
-                                          <widget class="GtkHBox" id="hbox206">
-                                            <property name="visible">True</property>
-                                            <property name="spacing">2</property>
-                                            <child>
-                                              <widget class="GtkImage" id="image13">
-                                                <property name="visible">True</property>
-                                                <property name="stock">gtk-directory</property>
-                                              </widget>
-                                              <packing>
-                                                <property name="position">0</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <widget class="GtkLabel" id="label83">
-                                                <property name="visible">True</property>
-                                                <property name="label" translatable="yes">Browse...</property>
-                                              </widget>
-                                              <packing>
-                                                <property name="position">1</property>
-                                              </packing>
-                                            </child>
-                                          </widget>
-                                        </child>
-                                      </widget>
-                                      <packing>
-                                        <property name="left_attach">2</property>
-                                        <property name="right_attach">3</property>
-                                        <property name="top_attach">1</property>
-                                        <property name="bottom_attach">2</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkButton" id="ipod_sync_notes_button">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <child>
-                                          <widget class="GtkHBox" id="hbox207">
-                                            <property name="visible">True</property>
-                                            <property name="spacing">2</property>
-                                            <child>
-                                              <widget class="GtkImage" id="image14">
-                                                <property name="visible">True</property>
-                                                <property name="stock">gtk-directory</property>
-                                              </widget>
-                                              <packing>
-                                                <property name="position">0</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <widget class="GtkLabel" id="label84">
-                                                <property name="visible">True</property>
-                                                <property name="label" translatable="yes">Browse...</property>
-                                              </widget>
-                                              <packing>
-                                                <property name="position">1</property>
-                                              </packing>
-                                            </child>
-                                          </widget>
-                                        </child>
-                                      </widget>
-                                      <packing>
-                                        <property name="left_attach">2</property>
-                                        <property name="right_attach">3</property>
+                                        <property name="left_attach">1</property>
+                                        <property name="right_attach">2</property>
                                         <property name="top_attach">2</property>
                                         <property name="bottom_attach">3</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
                                       </packing>
                                     </child>
                                   </widget>
@@ -1001,28 +847,18 @@
                                           </packing>
                                         </child>
                                         <child>
-                                          <widget class="GtkRadioButton" id="sync_playlist_mode_manual_radio">
-                                            <property name="label" translatable="yes">On startup automatically sync with the following directory</property>
+                                          <widget class="GtkHBox" id="hbox1">
                                             <property name="visible">True</property>
-                                            <property name="can_focus">True</property>
-                                            <property name="receives_default">False</property>
-                                            <property name="use_underline">True</property>
-                                            <property name="draw_indicator">True</property>
-                                            <property name="group">sync_playlist_mode_automatic_radio</property>
-                                          </widget>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">False</property>
-                                            <property name="position">1</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <widget class="GtkHBox" id="hbox201">
-                                            <property name="visible">True</property>
-                                            <property name="spacing">12</property>
+                                            <property name="spacing">40</property>
                                             <child>
-                                              <widget class="GtkLabel" id="label417">
+                                              <widget class="GtkRadioButton" id="sync_playlist_mode_manual_radio">
+                                                <property name="label" translatable="yes">On startup automatically sync with the directory:</property>
                                                 <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="receives_default">False</property>
+                                                <property name="use_underline">True</property>
+                                                <property name="draw_indicator">True</property>
+                                                <property name="group">sync_playlist_mode_automatic_radio</property>
                                               </widget>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -1031,57 +867,23 @@
                                               </packing>
                                             </child>
                                             <child>
-                                              <widget class="GtkEntry" id="manual_syncdir_entry">
+                                              <widget class="GtkFileChooserButton" id="manual_syncdir_chooser">
                                                 <property name="visible">True</property>
-                                                <property name="can_focus">True</property>
-                                                <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
+                                                <property name="sensitive">False</property>
+                                                <property name="action">select-folder</property>
+                                                <property name="create_folders">False</property>
+                                                <property name="preview_widget_active">False</property>
+                                                <property name="title" translatable="yes">Select directory for synchronization</property>
+                                                <signal name="file_set" handler="on_manual_syncdir_chooser_file_set"/>
+                                                <signal name="current_folder_changed" handler="on_manual_syncdir_chooser_file_set"/>
                                               </widget>
                                               <packing>
                                                 <property name="position">1</property>
                                               </packing>
                                             </child>
-                                            <child>
-                                              <widget class="GtkButton" id="manual_syncdir_button">
-                                                <property name="visible">True</property>
-                                                <property name="can_focus">True</property>
-                                                <property name="receives_default">False</property>
-                                                <child>
-                                                  <widget class="GtkHBox" id="hbox220">
-                                                    <property name="visible">True</property>
-                                                    <property name="spacing">2</property>
-                                                    <child>
-                                                      <widget class="GtkImage" id="image20">
-                                                        <property name="visible">True</property>
-                                                        <property name="stock">gtk-directory</property>
-                                                      </widget>
-                                                      <packing>
-                                                        <property name="position">0</property>
-                                                      </packing>
-                                                    </child>
-                                                    <child>
-                                                      <widget class="GtkLabel" id="label108">
-                                                        <property name="visible">True</property>
-                                                        <property name="label" translatable="yes">Browse...</property>
-                                                      </widget>
-                                                      <packing>
-                                                        <property name="position">1</property>
-                                                      </packing>
-                                                    </child>
-                                                  </widget>
-                                                </child>
-                                              </widget>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">False</property>
-                                                <property name="position">2</property>
-                                              </packing>
-                                            </child>
                                           </widget>
                                           <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">False</property>
-                                            <property name="padding">2</property>
-                                            <property name="position">3</property>
+                                            <property name="position">1</property>
                                           </packing>
                                         </child>
                                         <child>
@@ -1202,7 +1004,7 @@ NOTE: if you sync with the master playlist, you must check this option if you wa
                                             </child>
                                           </widget>
                                           <packing>
-                                            <property name="position">4</property>
+                                            <property name="position">2</property>
                                           </packing>
                                         </child>
                                         <child>
@@ -1218,7 +1020,7 @@ NOTE: if you sync with the master playlist, you must check this option if you wa
                                           <packing>
                                             <property name="expand">False</property>
                                             <property name="fill">False</property>
-                                            <property name="position">4</property>
+                                            <property name="position">3</property>
                                           </packing>
                                         </child>
                                       </widget>
@@ -1309,120 +1111,9 @@ NOTE: if you sync with the master playlist, you must check this option if you wa
                 <property name="visible">True</property>
                 <property name="border_width">6</property>
                 <property name="n_rows">7</property>
-                <property name="n_columns">3</property>
+                <property name="n_columns">2</property>
                 <property name="column_spacing">12</property>
                 <property name="row_spacing">6</property>
-                <child>
-                  <widget class="GtkHBox" id="hbox165">
-                    <property name="visible">True</property>
-                    <child>
-                      <placeholder/>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="right_attach">3</property>
-                    <property name="top_attach">6</property>
-                    <property name="bottom_attach">7</property>
-                    <property name="x_options"></property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkHBox" id="hbox163">
-                    <property name="visible">True</property>
-                    <child>
-                      <placeholder/>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="right_attach">3</property>
-                    <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
-                    <property name="x_options"></property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkHBox" id="hbox162">
-                    <property name="visible">True</property>
-                    <child>
-                      <placeholder/>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="right_attach">3</property>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                    <property name="x_options"></property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkHBox" id="hbox161">
-                    <property name="visible">True</property>
-                    <child>
-                      <placeholder/>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="right_attach">3</property>
-                    <property name="x_options"></property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkHBox" id="hbox160">
-                    <property name="visible">True</property>
-                    <child>
-                      <widget class="GtkButton" id="crw_mountpoint_button">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <child>
-                          <widget class="GtkHBox" id="hbox133">
-                            <property name="visible">True</property>
-                            <property name="spacing">2</property>
-                            <child>
-                              <widget class="GtkImage" id="image5">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-directory</property>
-                              </widget>
-                              <packing>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkLabel" id="label69">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">Browse...</property>
-                              </widget>
-                              <packing>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                          </widget>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="right_attach">3</property>
-                    <property name="top_attach">2</property>
-                    <property name="bottom_attach">3</property>
-                    <property name="x_options"></property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
                 <child>
                   <widget class="GtkHBox" id="hbox159">
                     <property name="visible">True</property>
@@ -1657,122 +1348,43 @@ Local Repository (Podcasts)
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="crw_local_path_button">
+                  <widget class="GtkFileChooserButton" id="crw_mountpoint_chooser">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <child>
-                      <widget class="GtkHBox" id="hbox167">
-                        <property name="visible">True</property>
-                        <property name="spacing">2</property>
-                        <child>
-                          <widget class="GtkImage" id="image8">
-                            <property name="visible">True</property>
-                            <property name="stock">gtk-directory</property>
-                          </widget>
-                          <packing>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label74">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Browse...</property>
-                          </widget>
-                          <packing>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                      </widget>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="right_attach">3</property>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
-                    <property name="x_options"></property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkButton" id="crw_backup_button">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <child>
-                      <widget class="GtkHBox" id="hbox166">
-                        <property name="visible">True</property>
-                        <property name="spacing">2</property>
-                        <child>
-                          <widget class="GtkImage" id="image7">
-                            <property name="visible">True</property>
-                            <property name="stock">gtk-directory</property>
-                          </widget>
-                          <packing>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="label73">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Browse...</property>
-                          </widget>
-                          <packing>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                      </widget>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="right_attach">3</property>
-                    <property name="top_attach">3</property>
-                    <property name="bottom_attach">4</property>
-                    <property name="x_options"></property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="crw_mountpoint_entry">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="action">select-folder</property>
+                    <property name="create_folders">False</property>
+                    <property name="title" translatable="yes">Select mountpoint</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
-                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="crw_backup_entry">
+                  <widget class="GtkFileChooserButton" id="crw_backup_chooser">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="editable">False</property>
+                    <property name="create_folders">False</property>
+                    <property name="title" translatable="yes">Set backup file</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
                     <property name="top_attach">3</property>
                     <property name="bottom_attach">4</property>
-                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="crw_local_path_entry">
+                  <widget class="GtkFileChooserButton" id="crw_local_path_chooser">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="editable">False</property>
+                    <property name="create_folders">False</property>
+                    <property name="title" translatable="yes">Set local repository file</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
                     <property name="top_attach">5</property>
                     <property name="bottom_attach">6</property>
-                    <property name="y_options"></property>
                   </packing>
                 </child>
               </widget>
@@ -1872,7 +1484,7 @@ Local Repository (Podcasts)
                       <widget class="GtkTable" id="table48">
                         <property name="visible">True</property>
                         <property name="n_rows">2</property>
-                        <property name="n_columns">3</property>
+                        <property name="n_columns">2</property>
                         <child>
                           <widget class="GtkLabel" id="label428">
                             <property name="visible">True</property>
@@ -1883,58 +1495,6 @@ Local Repository (Podcasts)
                           <packing>
                             <property name="x_options"></property>
                             <property name="y_options"></property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkEntry" id="iid_mountpoint_entry">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                          </widget>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
-                            <property name="y_options"></property>
-                            <property name="x_padding">3</property>
-                            <property name="y_padding">3</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkButton" id="iid_mountpoint_button">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="use_underline">True</property>
-                            <child>
-                              <widget class="GtkHBox" id="hbox185">
-                                <property name="visible">True</property>
-                                <property name="spacing">2</property>
-                                <child>
-                                  <widget class="GtkImage" id="image10">
-                                    <property name="visible">True</property>
-                                    <property name="stock">gtk-directory</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <widget class="GtkLabel" id="label79">
-                                    <property name="visible">True</property>
-                                    <property name="label" translatable="yes">Browse...</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                              </widget>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="left_attach">2</property>
-                            <property name="right_attach">3</property>
-                            <property name="x_options"></property>
-                            <property name="y_options"></property>
-                            <property name="x_padding">3</property>
                           </packing>
                         </child>
                         <child>
@@ -1957,13 +1517,26 @@ Local Repository (Podcasts)
                           </widget>
                           <packing>
                             <property name="left_attach">1</property>
-                            <property name="right_attach">3</property>
+                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
                             <property name="bottom_attach">2</property>
                             <property name="x_options">GTK_FILL</property>
                             <property name="y_options"></property>
                             <property name="x_padding">3</property>
                             <property name="y_padding">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkFileChooserButton" id="iid_mountpoint_chooser">
+                            <property name="visible">True</property>
+                            <property name="action">select-folder</property>
+                            <property name="create_folders">False</property>
+                            <property name="preview_widget_active">False</property>
+                            <property name="title" translatable="yes">Select mountpoint</property>
+                          </widget>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
                           </packing>
                         </child>
                       </widget>

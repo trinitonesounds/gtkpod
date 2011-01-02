@@ -48,29 +48,10 @@ typedef struct _IpodInit IpodInit;
 const gchar *SELECT_OR_ENTER_YOUR_MODEL = N_("Select or enter your model");
 
 /* string constants for window widgets used more than once */
-static const gchar *IID_MOUNTPOINT_ENTRY = "iid_mountpoint_entry";
-static const gchar *IID_MOUNTPOINT_BUTTON = "iid_mountpoint_button";
+static const gchar *IID_MOUNTPOINT_CHOOSER = "iid_mountpoint_chooser";
 static const gchar *IID_MODEL_COMBO = "iid_model_combo";
 static const gchar *SIMD_MODEL_COMBO = "simd_model_combo";
 static const gchar *SIMD_LABEL = "simd_label";
-
-/* mountpoint browse button was clicked -> open a directory browser
- * and copy the result into the mountpoint entry. */
-static void mountpoint_button_clicked(GtkButton *button, IpodInit *ii) {
-    const gchar *old_dir;
-    gchar *new_dir;
-
-    g_return_if_fail (ii);
-
-    old_dir = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (ii->xml, IID_MOUNTPOINT_ENTRY)));
-
-    new_dir = fileselection_get_file_or_dir(_("Select mountpoint"), old_dir, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
-
-    if (new_dir) {
-        gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (ii->xml, IID_MOUNTPOINT_ENTRY)), new_dir);
-        g_free(new_dir);
-    }
-}
 
 void set_cell(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTreeModel *tree_model, GtkTreeIter *iter, gpointer data) {
     gboolean header;
@@ -141,12 +122,8 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
     /* Set mountpoint */
     mountpoint = get_itdb_prefs_string(itdb, KEY_MOUNTPOINT);
     if (mountpoint) {
-        gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (ii->xml, IID_MOUNTPOINT_ENTRY)), mountpoint);
+        gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(GET_WIDGET (ii->xml, IID_MOUNTPOINT_CHOOSER)), mountpoint);
     }
-
-    /* Signal handlers */
-    g_signal_connect (GET_WIDGET (ii->xml, IID_MOUNTPOINT_BUTTON), "clicked",
-            G_CALLBACK (mountpoint_button_clicked), ii);
 
     /* Setup model number combo */
     cb = GTK_COMBO_BOX (GET_WIDGET (ii->xml, IID_MODEL_COMBO));
@@ -176,7 +153,7 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
 
     switch (response) {
     case GTK_RESPONSE_OK:
-        new_mount = g_strdup(gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (ii->xml, IID_MOUNTPOINT_ENTRY))));
+        new_mount = g_strdup(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(GET_WIDGET (ii->xml, IID_MOUNTPOINT_CHOOSER))));
         /* remove trailing '/' in case it's present. */
         if (mountpoint && (strlen(mountpoint) > 0)) {
             if (G_IS_DIR_SEPARATOR(mountpoint[strlen(mountpoint) - 1])) {
