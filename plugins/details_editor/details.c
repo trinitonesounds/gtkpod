@@ -1698,7 +1698,7 @@ static void dnd_details_art_drag_data_received(GtkWidget *widget, GdkDragContext
 
         free_fetchcover (fcover);
 #else
-        image_error = "Item had to be downloaded but gtkpod was not compiled with curl.";
+        image_error = _("Item had to be downloaded but gtkpod was not compiled with curl.");
         image_status = FALSE;
 #endif
     }

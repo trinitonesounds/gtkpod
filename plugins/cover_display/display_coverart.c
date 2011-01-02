@@ -2035,7 +2035,7 @@ static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *d
         free_fetchcover (fcover);
         coverart_block_change (FALSE);
 #else
-        image_error = g_strdup("Item had to be downloaded but gtkpod was not compiled with curl.");
+        image_error = g_strdup(_("Item had to be downloaded but gtkpod was not compiled with curl."));
         image_status = FALSE;
 #endif
     }

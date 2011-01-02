@@ -32,6 +32,7 @@
 
 #include <webkit/webkit.h>
 #include "libgtkpod/prefs.h"
+#include "plugin.h"
 #include "coverweb.h"
 
 static WebBrowser *browser;
@@ -87,7 +88,8 @@ static void create_browser() {
     g_object_set(G_OBJECT(settings), "enable-plugins", FALSE, NULL);
     webkit_web_view_set_settings(WEBKIT_WEB_VIEW(browser->webview), settings);
 
-    webkit_web_view_open(WEBKIT_WEB_VIEW(browser->webview), "http://images.google.com");
+    /* Translators: you may change the web address to get a localized page, if it exists */
+    webkit_web_view_open(WEBKIT_WEB_VIEW(browser->webview), _("http://images.google.com"));
 }
 
 static void create_statusbar() {
@@ -120,7 +122,7 @@ void update_bookmark_menu() {
 static void create_menubar() {
     browser->menubar = gtk_menu_bar_new();
     browser->bookmark_menu_item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CDROM, NULL);
-    gtk_menu_item_set_label(GTK_MENU_ITEM(browser->bookmark_menu_item), "Bookmarks");
+    gtk_menu_item_set_label(GTK_MENU_ITEM(browser->bookmark_menu_item), _("Bookmarks"));
     update_bookmark_menu();
     gtk_menu_shell_append(GTK_MENU_SHELL(browser->menubar), browser->bookmark_menu_item);
 }

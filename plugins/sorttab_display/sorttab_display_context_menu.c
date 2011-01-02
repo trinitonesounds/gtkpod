@@ -270,19 +270,19 @@ void st_context_menu_init(gint inst) {
     add_exec_commands(menu);
     add_separator(menu);
 
-    GtkWidget *create_menu = add_sub_menu(menu, "Create Playlist", GTK_STOCK_NEW);
+    GtkWidget *create_menu = add_sub_menu(menu, _("Create Playlist"), GTK_STOCK_NEW);
     add_create_playlist_file(create_menu);
     add_create_new_playlist(create_menu);
     add_separator(menu);
 
-    GtkWidget *copy_menu = add_sub_menu(menu, "Copy", GTK_STOCK_COPY);
+    GtkWidget *copy_menu = add_sub_menu(menu, _("Copy"), GTK_STOCK_COPY);
     add_copy_track_to_filesystem(copy_menu);
     add_copy_selected_entry_to_target_itdb(copy_menu, _("Copy selected track(s) to..."));
     add_separator(menu);
 
     if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
         if (!itdb_playlist_is_mpl(pl)) {
-            GtkWidget *delete_menu = add_sub_menu(menu, "Delete", GTK_STOCK_DELETE);
+            GtkWidget *delete_menu = add_sub_menu(menu, _("Delete"), GTK_STOCK_DELETE);
             add_delete_entry_from_ipod(delete_menu);
             add_delete_entry_from_playlist(delete_menu);
         } else {
@@ -290,7 +290,7 @@ void st_context_menu_init(gint inst) {
         }
     }
     if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
-        GtkWidget *delete_menu = add_sub_menu(menu, "Delete", GTK_STOCK_DELETE);
+        GtkWidget *delete_menu = add_sub_menu(menu, _("Delete"), GTK_STOCK_DELETE);
         add_delete_entry_from_harddisk(delete_menu);
         add_delete_entry_from_database(delete_menu);
         if (!itdb_playlist_is_mpl(pl)) {
