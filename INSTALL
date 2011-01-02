@@ -44,8 +44,8 @@ How to compile/install gtkpod:
         libgpod (at least 0.6.1)
         libid3tag (at least 0.15)
         perl XML::Parser module
-				anjuta (at least 2.30)
-				pkgconfig
+        anjuta (at least 2.30)
+        pkgconfig
 
    Optional packages:
 
@@ -53,8 +53,9 @@ How to compile/install gtkpod:
         libflac (for FLAC support)
         libgnome-vfs-2.0 >2.6 (for iPod autodetection under GNOME)
         libhal >0.5 <0.6 (in combination with libgnome-vfs: better detection of iPods)
-        libvorbis (for ogg libvorbis support)
         libmp4v2 (for AAC/M4A support)
+        libvorbis (for ogg libvorbis support)
+        libwebkit >=1.1 (for coverart web browse support)
 
 
 2. If you install libraries to /usr/local/lib please don't forget to
@@ -90,11 +91,12 @@ How to compile/install gtkpod:
 5. Install the gtkpod software (may require root privileges):
 
    make install && ldconfig
-	 
+
 
    Note: You can test gtkpod without installing it. Some features
-   (translation catalogues, icons, scripts) may not be available,
-   however:
+   (translation catalogues, icons, scripts) will be searched in the
+   directories set by the configure script which may contain older
+   versions or nothing at all:
 
    src/gtkpod
 
@@ -128,7 +130,7 @@ The following steps were necessary to install libgpod and gtkpod on a fairly vir
 sudo apt-get install autoconf flex gettext libglib2.0-dev libgtk2.0-dev libglade2-dev libid3tag0-dev libxml-parser-perl pkg-config automake gcc git-core gtk-doc-tools
 
 # recommended packages
-sudo apt-get install libcurl4-dev libflac-dev libgnomevfs2-dev libhal-dev libvorbis-dev libmp4v2-dev
+sudo apt-get install libcurl4-dev libflac-dev libgnomevfs2-dev libhal-dev libvorbis-dev libmp4v2-dev libwebkit-dev
 
 # checkout libgpod and gtkpod
 git clone git://gtkpod.git.sourceforge.net/gitroot/gtkpod/libgpod
