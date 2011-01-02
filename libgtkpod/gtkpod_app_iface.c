@@ -683,6 +683,9 @@ gboolean gtkpod_filetype_is_supported(gchar *name) {
 
 FileType* gtkpod_get_filetype(gchar *name) {
     g_return_val_if_fail(GTKPOD_IS_APP(gtkpod_app), FALSE);
+    if (! name)
+        return NULL;
+
     GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
     return g_hash_table_lookup(gp_iface->filetypes, name);
 }

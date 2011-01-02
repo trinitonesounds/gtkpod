@@ -76,7 +76,11 @@ FileType *determine_filetype(const gchar *path) {
         return type;
 
     path_utf8 = charset_to_utf8(path);
-    suf = strrchr(path_utf8, '.') + 1;
+    suf = g_strrstr(path_utf8, ".");
+    if (!suf)
+        return type;
+
+    suf = suf + 1;
     type = gtkpod_get_filetype(suf);
 
     g_free(path_utf8);
