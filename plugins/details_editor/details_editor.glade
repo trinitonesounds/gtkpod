@@ -2682,6 +2682,8 @@ simultaneously</property>
                                   <widget class="GtkEntry" id="details_entry_13">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
+                                    <property name="editable">False</property>
+                                    <property name="has_frame">False</property>
                                     <property name="invisible_char">&#x25CF;</property>
                                   </widget>
                                   <packing>

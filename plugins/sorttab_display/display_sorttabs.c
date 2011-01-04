@@ -3214,6 +3214,7 @@ void cal_open_calendar(gint inst, T_item item) {
     g_signal_connect (gtkpod_xml_get_widget (cal_xml, "cal_ok"), "clicked",
             G_CALLBACK (cal_ok), cal);
 
+    gtk_window_set_transient_for(GTK_WINDOW (cal), GTK_WINDOW (gtkpod_app));
     gtk_widget_show(cal);
 }
 
