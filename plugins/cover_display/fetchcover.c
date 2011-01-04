@@ -37,7 +37,6 @@
 #include "libgtkpod/misc.h"
 #include "plugin.h"
 #include "fetchcover.h"
-#include "display_coverart.h"
 
 #undef FETCHCOVER_DEBUG
 
