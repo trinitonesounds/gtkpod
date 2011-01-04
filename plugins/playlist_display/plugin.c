@@ -73,7 +73,7 @@ static GtkActionEntry playlist_actions[] =
         {
             ACTION_ADD_FILES, /* Action name */
             PLAYLIST_DISPLAY_ADD_FILES_ICON_STOCK_ID, /* Stock icon */
-            N_("Add _Files"), /* Display label */
+            N_("Add _Files..."), /* Display label */
             NULL, /* short-cut */
             N_("Add files to selected iPod"), /* Tooltip */
             G_CALLBACK (on_create_add_files) /* callback */
@@ -81,7 +81,7 @@ static GtkActionEntry playlist_actions[] =
         {
             ACTION_ADD_DIRECTORY, /* Action name */
             PLAYLIST_DISPLAY_ADD_DIRS_ICON_STOCK_ID, /* Stock icon */
-            N_("Add Fol_der"), /* Display label */
+            N_("Add Fol_der..."), /* Display label */
             NULL, /* short-cut */
             N_("Add folder contents to selected iPod"), /* Tooltip */
             G_CALLBACK (on_create_add_directory) /* callback */
@@ -89,7 +89,7 @@ static GtkActionEntry playlist_actions[] =
         {
             ACTION_ADD_PLAYLIST, /* Action name */
             PLAYLIST_DISPLAY_ADD_PLAYLISTS_ICON_STOCK_ID, /* Stock icon */
-            N_("Add _Playlist"), /* Display label */
+            N_("Add _Playlist..."), /* Display label */
             NULL, /* short-cut */
             N_("Add playlist to selected iPod"), /* Tooltip */
             G_CALLBACK (on_create_add_playlists) /* callback */
@@ -113,7 +113,7 @@ static GtkActionEntry playlist_actions[] =
         {
             "ActionNewEmptyPlaylist",
             GTK_STOCK_NEW,
-            N_("Empty Playlist"),
+            N_("Empty Playlist..."),
             NULL,
             N_("Create an empty playlist"),
             G_CALLBACK (on_new_playlist_activate)
@@ -121,7 +121,7 @@ static GtkActionEntry playlist_actions[] =
         {
             "ActionNewSmartPlaylist",
             NULL,
-            N_("Smart Playlist"),
+            N_("Smart Playlist..."),
             NULL,
             N_("Create a new smart playlist"),
             G_CALLBACK (on_smart_playlist_activate)

@@ -275,7 +275,7 @@ GtkWidget *add_create_playlist_file (GtkWidget *menu)
     if (!gtkpod_has_exporter())
         return NULL;
 
-    return hookup_menu_item (menu, _("Create Playlist File"),
+    return hookup_menu_item (menu, _("Create Playlist File..."),
               GTK_STOCK_SAVE_AS,
               G_CALLBACK (create_playlist_file), NULL);
 }
@@ -313,7 +313,7 @@ GtkWidget *add_copy_track_to_filesystem (GtkWidget *menu)
     if (! gtkpod_has_exporter())
         return NULL;
 
-    return hookup_menu_item (menu, _("Copy Tracks to Filesystem"),
+    return hookup_menu_item (menu, _("Copy Tracks to Filesystem..."),
               GTK_STOCK_SAVE_AS,
               G_CALLBACK (export_entries), NULL);
 }

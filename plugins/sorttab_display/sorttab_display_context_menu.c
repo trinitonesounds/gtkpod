@@ -277,7 +277,7 @@ void st_context_menu_init(gint inst) {
 
     GtkWidget *copy_menu = add_sub_menu(menu, _("Copy"), GTK_STOCK_COPY);
     add_copy_track_to_filesystem(copy_menu);
-    add_copy_selected_entry_to_target_itdb(copy_menu, _("Copy selected track(s) to..."));
+    add_copy_selected_entry_to_target_itdb(copy_menu, _("Copy selected track(s) to"));
     add_separator(menu);
 
     if (itdb->usertype & GP_ITDB_TYPE_IPOD) {

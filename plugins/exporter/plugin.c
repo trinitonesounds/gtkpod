@@ -54,7 +54,7 @@ static GtkActionEntry exporter_actions[] =
         {
             "ActionExportToPlaylistFile", /* Action name */
             NULL, /* Stock icon */
-            N_("Export Tracks To Playlist File"), /* Display label */
+            N_("Export Tracks To Playlist File..."), /* Display label */
             NULL, /* short-cut */
             NULL, /* Tooltip */
             G_CALLBACK (on_export_tracks_to_playlist_file) /* callback */
@@ -62,7 +62,7 @@ static GtkActionEntry exporter_actions[] =
         {
             "ActionExportToFilesystem", /* Action name */
             NULL, /* Stock icon */
-            N_("Export Tracks To Filesystem"), /* Display label */
+            N_("Export Tracks To Filesystem..."), /* Display label */
             NULL, /* short-cut */
             NULL, /* Tooltip */
             G_CALLBACK (on_export_tracks_to_filesystem) /* callback */
