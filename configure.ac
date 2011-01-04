@@ -1,9 +1,10 @@
 dnl Process this file with autoconf to produce a configure script.
+m4_include([./version.m4])
 
 # Require autoconf 2.55 or higher
 AC_PREREQ(2.65)
 
-AC_INIT([gtkpod],[m4_esyscmd(./version.sh | tr -d '\n')])
+AC_INIT([gtkpod], m4_defn([VERSION_NUMBER]))
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR(src/main.c)
 
