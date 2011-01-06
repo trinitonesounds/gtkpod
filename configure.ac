@@ -4,7 +4,7 @@ m4_include([./version.m4])
 # Require autoconf 2.55 or higher
 AC_PREREQ(2.65)
 
-AC_INIT([gtkpod], m4_defn([VERSION_NUMBER]))
+AC_INIT([gtkpod], VERSION_NUMBER)
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR(src/main.c)
 
