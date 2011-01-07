@@ -1,5 +1,5 @@
 [Anjuta Plugin]
 Location=track_display:TrackDisplayPlugin
-Name=Track Display Plugin
-Description=Track View
+_Name=Track Display Plugin
+_Description=Track View
 UserActivatable=no

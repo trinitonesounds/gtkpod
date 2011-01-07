@@ -1,0 +1,4 @@
+[Anjuta Plugin]
+Location=exporter:ExporterPlugin
+_Name=Exporter Plugin
+_Description=Export Tracks to File

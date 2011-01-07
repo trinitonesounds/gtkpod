@@ -70,6 +70,7 @@ version
 
 # /plugins/
 /plugins/*.plugin
+/plugins/*/*.plugin
 
 # links from dev env
 /data/AUTHORS

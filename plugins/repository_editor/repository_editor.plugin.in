@@ -1,0 +1,4 @@
+[Anjuta Plugin]
+Location=repository_editor:RepositoryEditorPlugin
+_Name=Repository Editor Plugin
+_Description=Edit iTunesDB Properties

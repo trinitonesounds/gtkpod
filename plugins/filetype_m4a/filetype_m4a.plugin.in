@@ -1,0 +1,4 @@
+[Anjuta Plugin]
+Location=filetype_m4a:M4AFileTypePlugin
+_Name=M4A File Type Plugin
+_Description=Support for the m4a / m4p file type

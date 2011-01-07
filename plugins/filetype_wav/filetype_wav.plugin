@@ -1,4 +1,0 @@
-[Anjuta Plugin]
-Location=filetype_wav:WavFileTypePlugin
-Name=Wav File Type Plugin
-Description=Support for the wav file type

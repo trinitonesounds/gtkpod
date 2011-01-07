@@ -1,0 +1,5 @@
+[Anjuta Plugin]
+Location=core_prefs:CorePrefsPlugin
+_Name=Core Preferences Plugin
+_Description=Modify Core Preferences
+UserActivatable=no

@@ -1,0 +1,4 @@
+[Anjuta Plugin]
+Location=media_player:MediaPlayerPlugin
+_Name=Media Player Plugin
+_Description=Controls for playing tracks and videos

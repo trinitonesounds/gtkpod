@@ -1,0 +1,4 @@
+[Anjuta Plugin]
+Location=info_display:InfoDisplayPlugin
+_Name=Info Display Plugin
+_Description=Information dialog for connected iPods

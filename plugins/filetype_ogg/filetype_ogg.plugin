@@ -1,4 +1,0 @@
-[Anjuta Plugin]
-Location=filetype_ogg:OGGFileTypePlugin
-Name=OGG File Type Plugin
-Description=Support for the Ogg file type

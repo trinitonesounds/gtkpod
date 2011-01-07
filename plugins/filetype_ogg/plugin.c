@@ -75,7 +75,7 @@ static void ogg_filetype_plugin_class_init(GObjectClass *klass) {
 
 static void ogg_filetype_iface_init(FileTypeInterface *iface) {
     iface->category = AUDIO;
-    iface->description = _("OGG audio file type");
+    iface->description = _("Ogg audio file type");
     iface->name = "ogg";
 
     iface->suffixes = g_list_append(iface->suffixes, "oga");

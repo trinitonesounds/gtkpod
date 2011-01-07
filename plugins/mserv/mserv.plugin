@@ -1,4 +1,0 @@
-[Anjuta Plugin]
-Location=mserv:MservPlugin
-Name=Mserv Jukebox Plugin
-Description=Mserv is a jukebox-style music server (see http://www.mserv.org)

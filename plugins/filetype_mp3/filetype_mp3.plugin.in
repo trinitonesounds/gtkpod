@@ -1,0 +1,5 @@
+[Anjuta Plugin]
+Location=filetype_mp3:MP3FileTypePlugin
+_Name=MP3 File Type Plugin
+_Description=Support for the MP3 file type
+UserActivatable=no

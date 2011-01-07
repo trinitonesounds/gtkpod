@@ -24,61 +24,78 @@ libgtkpod/sha1.c
 libgtkpod/syncdir.c
 libgtkpod/tools.c
 plugins/core_preferences/core_prefs.c
-plugins/core_preferences/core_prefs.xml.h
+[type: gettext/ini]plugins/core_preferences/core_prefs.plugin.in
+[type: gettext/glade]plugins/core_preferences/core_prefs.xml
 plugins/core_preferences/plugin.c
 plugins/cover_display/cover_display.glade
 plugins/cover_display/cover_display_context_menu.c
+[type: gettext/ini]plugins/cover_display/cover_display.plugin.in
 plugins/cover_display/display_coverart.c
 plugins/cover_display/fetchcover.c
 plugins/cover_display/plugin.c
 plugins/coverweb/coverweb.c
+plugins/coverweb/coverweb.glade
+[type: gettext/ini]plugins/coverweb/coverweb.plugin.in
 plugins/coverweb/coverweb_preferences.c
 plugins/coverweb/plugin.c
-plugins/coverweb/coverweb.glade
-plugins/coverweb/coverweb.glade.h
 plugins/details_editor/details.c
 plugins/details_editor/details_editor.glade
+[type: gettext/ini]plugins/details_editor/details_editor.plugin.in
 plugins/details_editor/fetchcover.c
 plugins/details_editor/plugin.c
-plugins/exporter/exporter.xml.h
+[type: gettext/ini]plugins/exporter/exporter.plugin.in
+[type: gettext/glade]plugins/exporter/exporter.xml
 plugins/exporter/file_export.c
 plugins/exporter/plugin.c
+[type: gettext/ini]plugins/filetype_flac/filetype_flac.plugin.in
 plugins/filetype_flac/flacfile.c
 plugins/filetype_flac/plugin.c
+[type: gettext/ini]plugins/filetype_m4a/filetype_m4a.plugin.in
 plugins/filetype_m4a/mp4file.c
 plugins/filetype_m4a/plugin.c
+[type: gettext/ini]plugins/filetype_mp3/filetype_mp3.plugin.in
 plugins/filetype_mp3/mp3file.c
 plugins/filetype_mp3/plugin.c
+[type: gettext/ini]plugins/filetype_mp4/filetype_mp4.plugin.in
 plugins/filetype_mp4/mp4file.c
 plugins/filetype_mp4/plugin.c
+[type: gettext/ini]plugins/filetype_ogg/filetype_ogg.plugin.in
 plugins/filetype_ogg/oggfile.c
 plugins/filetype_ogg/plugin.c
+[type: gettext/ini]plugins/filetype_video/filetype_video.plugin.in
 plugins/filetype_video/plugin.c
+[type: gettext/ini]plugins/filetype_wav/filetype_wav.plugin.in
 plugins/filetype_wav/plugin.c
 plugins/filetype_wav/wavfile.c
 plugins/info_display/info.c
+[type: gettext/ini]plugins/info_display/info_display.plugin.in
 plugins/info_display/infoview.c
 plugins/info_display/plugin.c
 plugins/media_player/media_player.c
 plugins/media_player/media_player.glade
+[type: gettext/ini]plugins/media_player/media_player.plugin.in
 plugins/media_player/plugin.c
 plugins/mserv/mserv.c
-plugins/mserv/mserv.xml.h
+[type: gettext/ini]plugins/mserv/mserv.plugin.in
+[type: gettext/glade]plugins/mserv/mserv.xml
 plugins/mserv/plugin.c
 plugins/photo_editor/display_photo.c
 plugins/photo_editor/photo_editor.glade
 plugins/photo_editor/photo_editor_context_menu.c
+[type: gettext/ini]plugins/photo_editor/photo_editor.plugin.in
 plugins/photo_editor/plugin.c
 plugins/playlist_display/display_playlists.c
 plugins/playlist_display/playlist_display.glade
 plugins/playlist_display/playlist_display_actions.c
 plugins/playlist_display/playlist_display_context_menu.c
+[type: gettext/ini]plugins/playlist_display/playlist_display.plugin.in
 plugins/playlist_display/plugin.c
 plugins/repository_editor/plugin.c
 plugins/repository_editor/repository_actions.c
 plugins/repository_editor/repository_creator.c
 plugins/repository_editor/repository_editor.c
 plugins/repository_editor/repository_editor.glade
+[type: gettext/ini]plugins/repository_editor/repository_editor.plugin.in
 plugins/repository_editor/repository_init.c
 plugins/sorttab_display/date_parser.c
 plugins/sorttab_display/display_sorttabs.c
@@ -86,10 +103,12 @@ plugins/sorttab_display/plugin.c
 plugins/sorttab_display/sorttab_display.glade
 plugins/sorttab_display/sorttab_display_actions.c
 plugins/sorttab_display/sorttab_display_context_menu.c
+[type: gettext/ini]plugins/sorttab_display/sorttab_display.plugin.in
 plugins/track_display/display_tracks.c
 plugins/track_display/plugin.c
 plugins/track_display/track_display.glade
 plugins/track_display/track_display_context_menu.c
+[type: gettext/ini]plugins/track_display/track_display.plugin.in
 plugins/track_display/track_display_preferences.c
 src/anjuta-about.c
 src/anjuta-action-callbacks.c

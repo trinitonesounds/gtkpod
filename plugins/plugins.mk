@@ -1,5 +1,5 @@
 # Plugin description file
-plugin_in_files = $(plugin_file)
+plugin_in_files = $(plugin_file).in
 
 # Include paths
 AM_CPPFLAGS = \
@@ -8,6 +8,7 @@ AM_CPPFLAGS = \
     -DGTKPOD_PLUGIN_DIR=\"$(gtkpod_plugin_dir)\" \
     -DGTKPOD_IMAGE_DIR=\"$(gtkpod_image_dir)\" \
     -DGTKPOD_GLADE_DIR=\"$(gtkpod_glade_dir)\" \
+    -DGTKPOD_SCRIPT_DIR=\"$(gtkpod_script_dir)\" \
     -DGTKPOD_UI_DIR=\"$(gtkpod_ui_dir)\" \
     -DPACKAGE_DATA_DIR=\"$(datadir)\" \
     -DPACKAGE_SRC_DIR=\"$(srcdir)\" \
@@ -16,7 +17,7 @@ AM_CPPFLAGS = \
 # Where to install the plugin
 plugindir = $(gtkpod_plugin_dir)
 
-all-local: create-plugin-links create-ui-link create-glade-link compile-glade-header
+all-local: create-plugin-links create-ui-link create-glade-link
 
 # Creating symbolic links in plugin root directory
 create-plugin-links:
@@ -46,14 +47,6 @@ create-glade-link:
 		fi; \
 	fi;
 
-compile-glade-header:
-	if  [ -e `pwd`/$(plugin_name).glade ]; then \
-		$(INTLTOOL_EXTRACT) -type=gettext/glade $(plugin_name).glade; \
-	fi; \
-	if  [ -e `pwd`/$(plugin_name).xml ]; then \
-		$(INTLTOOL_EXTRACT) -type=gettext/glade $(plugin_name).xml; \
-	fi;
-
 # Clean up the links and files created purely for dev  [ing
 clean-local: clean-plugin-files clean-ui-dir clean-glade-dir
 
@@ -71,9 +64,9 @@ clean-glade-dir:
 	if  [ -h ../../data/glade/$(plugin_name).glade ]; then \
 		rm -f ../../data/glade/$(plugin_name).glade; \
 	fi; \
-		if  [ -h ../../data/glade/$(plugin_name).xml ]; then \
+	if  [ -h ../../data/glade/$(plugin_name).xml ]; then \
 		rm -f ../../data/glade/$(plugin_name).xml; \
-	fi; \
-	if [ -f $(plugin_name).glade.h ]; then \
-		rm -f $(plugin_name).glade.h; \
-	fi; 
+	fi;
+
+# Create plugin description file with translations
+%.plugin: %.plugin.in $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*po) ; $(INTLTOOL_MERGE) $(top_srcdir)/po $< $@ -d -u -c $(top_builddir)/po/.intltool-merge-cache

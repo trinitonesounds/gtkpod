@@ -1,0 +1,4 @@
+[Anjuta Plugin]
+Location=filetype_flac:FlacFileTypePlugin
+_Name=Flac File Type Plugin
+_Description=Support for the flac file type

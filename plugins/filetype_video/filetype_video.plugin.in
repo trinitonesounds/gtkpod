@@ -1,0 +1,4 @@
+[Anjuta Plugin]
+Location=filetype_video:VideoFileTypePlugin
+_Name=Video File Type Plugin
+_Description=Generic video file type

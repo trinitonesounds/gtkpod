@@ -10,7 +10,3 @@ data/glade/playlist_display.glade
 data/glade/repository_editor.glade
 data/glade/sorttab_display.glade
 data/glade/track_display.glade
-plugins/core_preferences/core_prefs.xml
-plugins/exporter/exporter.xml
-plugins/mserv/mserv.xml
-

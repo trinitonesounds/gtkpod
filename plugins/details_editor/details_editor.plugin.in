@@ -1,0 +1,4 @@
+[Anjuta Plugin]
+Location=details_editor:DetailsEditorPlugin
+_Name=Details Editor Plugin
+_Description=Edit Track detail of Files
