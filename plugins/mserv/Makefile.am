@@ -1,5 +1,4 @@
 plugin_name = mserv
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -23,6 +22,7 @@ SUBDIRS = icons
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libmserv.la
 
 # Plugin sources
@@ -39,7 +39,7 @@ libmserv_la_LIBADD = \
     $(LIBANJUTA_LIBS)
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(mserv_plugin_DATA) \
 	$(mserv_ui_DATA) \
 	$(mserv_glade_DATA) \

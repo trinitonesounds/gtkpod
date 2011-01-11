@@ -1,5 +1,4 @@
 plugin_name = info_display
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -22,6 +21,7 @@ SUBDIRS =
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libinfo_display.la
 
 # Plugin sources
@@ -38,7 +38,7 @@ libinfo_display_la_LIBADD = \
     $(LIBANJUTA_LIBS)
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(info_display_plugin_DATA) \
 	$(info_display_ui_DATA) \
 	$(info_display_glade_DATA) \

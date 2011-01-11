@@ -1,7 +1,4 @@
-if HAVE_PLUGIN_COVERWEB
-
 plugin_name = coverweb
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -22,9 +19,12 @@ coverweb_plugin_DATA =
 
 SUBDIRS = icons
 
+if HAVE_PLUGIN_COVERWEB
+
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libcoverweb.la
 
 # Plugin sources
@@ -42,7 +42,7 @@ libcoverweb_la_LIBADD = \
 endif
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(coverweb_plugin_DATA) \
 	$(coverweb_ui_DATA) \
 	$(coverweb_glade_DATA) \

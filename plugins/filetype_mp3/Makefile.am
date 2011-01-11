@@ -1,5 +1,4 @@
 plugin_name = filetype_mp3
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -22,6 +21,7 @@ SUBDIRS =
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libfiletype_mp3.la
 
 # Plugin sources
@@ -36,7 +36,7 @@ libfiletype_mp3_la_LIBADD = \
     $(LIBANJUTA_LIBS)
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(filetype_mp3_plugin_DATA) \
 	$(filetype_mp3_ui_DATA) \
 	$(filetype_mp3_glade_DATA) \

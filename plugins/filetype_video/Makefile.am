@@ -1,5 +1,4 @@
 plugin_name = filetype_video
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -22,6 +21,7 @@ SUBDIRS =
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libfiletype_video.la
 
 # Plugin sources
@@ -36,7 +36,7 @@ libfiletype_video_la_LIBADD = \
     $(LIBANJUTA_LIBS)
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(filetype_video_plugin_DATA) \
 	$(filetype_video_ui_DATA) \
 	$(filetype_video_glade_DATA) \

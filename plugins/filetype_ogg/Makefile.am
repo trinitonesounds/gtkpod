@@ -1,7 +1,4 @@
-if HAVE_LIBVORBISFILE
-
 plugin_name = filetype_ogg
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -16,14 +13,18 @@ filetype_ogg_glade_DATA =
 filetype_ogg_pixmapsdir = $(gtkpod_image_dir)
 filetype_ogg_pixmaps_DATA =
 
+# Where to install the plugin
 filetype_ogg_plugindir = $(gtkpod_plugin_dir)
 filetype_ogg_plugin_DATA =
 
 SUBDIRS =
 
+if HAVE_LIBVORBISFILE
+
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libfiletype_ogg.la
 
 # Plugin sources
@@ -40,7 +41,7 @@ libfiletype_ogg_la_LIBADD = \
 endif
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(filetype_ogg_plugin_DATA) \
 	$(filetype_ogg_ui_DATA) \
 	$(filetype_ogg_glade_DATA) \

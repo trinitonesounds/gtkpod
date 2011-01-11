@@ -1,5 +1,4 @@
 plugin_name = track_display
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -22,6 +21,7 @@ SUBDIRS = icons
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libtrack_display.la
 
 # Plugin sources
@@ -41,7 +41,7 @@ libtrack_display_la_LIBADD = \
     $(LIBANJUTA_LIBS)
     
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(track_display_plugin_DATA) \
 	$(track_display_ui_DATA) \
 	$(track_display_glade_DATA) \

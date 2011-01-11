@@ -1,6 +1,3 @@
-# Plugin description file
-plugin_in_files = $(plugin_file).in
-
 # Include paths
 AM_CPPFLAGS = \
     -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \

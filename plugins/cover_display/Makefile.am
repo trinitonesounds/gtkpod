@@ -1,5 +1,4 @@
 plugin_name = cover_display
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -22,6 +21,7 @@ SUBDIRS = icons
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libcover_display.la
 
 # Plugin sources
@@ -39,7 +39,7 @@ libcover_display_la_LIBADD = \
     $(LIBANJUTA_LIBS)
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(cover_display_plugin_DATA) \
 	$(cover_display_ui_DATA) \
 	$(cover_display_glade_DATA) \

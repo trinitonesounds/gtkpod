@@ -1,5 +1,4 @@
 plugin_name = repository_editor
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -22,6 +21,7 @@ SUBDIRS =
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = librepository_editor.la
 
 # Plugin sources
@@ -40,7 +40,7 @@ librepository_editor_la_LIBADD = \
     $(LIBANJUTA_LIBS)
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(repository_editor_plugin_DATA) \
 	$(repository_editor_ui_DATA) \
 	$(repository_editor_glade_DATA) \

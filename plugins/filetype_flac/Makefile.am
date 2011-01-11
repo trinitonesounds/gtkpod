@@ -1,7 +1,4 @@
-if HAVE_FLAC
-
 plugin_name = filetype_flac
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -16,14 +13,18 @@ filetype_flac_glade_DATA =
 filetype_flac_pixmapsdir = $(gtkpod_image_dir)
 filetype_flac_pixmaps_DATA =
 
+# Where to install the plugin
 filetype_flac_plugindir = $(gtkpod_plugin_dir)
 filetype_flac_plugin_DATA =
 
 SUBDIRS =
 
+if HAVE_FLAC
+
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libfiletype_flac.la
 
 # Plugin sources
@@ -40,7 +41,7 @@ libfiletype_flac_la_LIBADD = \
 endif
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(filetype_flac_plugin_DATA) \
 	$(filetype_flac_ui_DATA) \
 	$(filetype_flac_glade_DATA) \

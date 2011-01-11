@@ -1,7 +1,4 @@
-if HAVE_PLUGIN_MEDIA_PLAYER
-
 plugin_name = media_player
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -22,9 +19,12 @@ media_player_plugin_DATA =
 
 SUBDIRS = icons
 
+if HAVE_PLUGIN_MEDIA_PLAYER
+
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libmedia_player.la
 
 # Plugin sources
@@ -41,7 +41,7 @@ libmedia_player_la_LIBADD = \
 endif
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(media_player_plugin_DATA) \
 	$(media_player_ui_DATA) \
 	$(media_player_glade_DATA) \

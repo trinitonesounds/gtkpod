@@ -1,5 +1,4 @@
 plugin_name = exporter
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -22,6 +21,7 @@ SUBDIRS =
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libexporter.la
 
 # Plugin sources
@@ -37,7 +37,7 @@ libexporter_la_LIBADD = \
     $(LIBANJUTA_LIBS)
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(exporter_plugin_DATA) \
 	$(exporter_ui_DATA) \
 	$(exporter_glade_DATA) \

@@ -1,7 +1,4 @@
-if HAVE_MP4
-
 plugin_name = filetype_mp4
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -16,14 +13,18 @@ filetype_mp4_glade_DATA =
 filetype_mp4_pixmapsdir = $(gtkpod_image_dir)
 filetype_mp4_pixmaps_DATA =
 
+# Where to install the plugin
 filetype_mp4_plugindir = $(gtkpod_plugin_dir)
 filetype_mp4_plugin_DATA =
 
 SUBDIRS =
 
+if HAVE_MP4
+
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libfiletype_mp4.la
 
 # Plugin sources
@@ -40,7 +41,7 @@ libfiletype_mp4_la_LIBADD = \
 endif
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(filetype_mp4_plugin_DATA) \
 	$(filetype_mp4_ui_DATA) \
 	$(filetype_mp4_glade_DATA) \

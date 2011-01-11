@@ -1,5 +1,4 @@
 plugin_name = photo_editor
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -22,6 +21,7 @@ SUBDIRS = icons
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libphoto_editor.la
 
 # Plugin sources
@@ -38,7 +38,7 @@ libphoto_editor_la_LIBADD = \
     $(LIBANJUTA_LIBS)
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(photo_editor_plugin_DATA) \
 	$(photo_editor_ui_DATA) \
 	$(photo_editor_glade_DATA) \

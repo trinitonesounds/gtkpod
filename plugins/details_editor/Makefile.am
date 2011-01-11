@@ -1,5 +1,4 @@
 plugin_name = details_editor
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -22,6 +21,7 @@ SUBDIRS =
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libdetails_editor.la
 
 # Plugin sources
@@ -38,7 +38,7 @@ libdetails_editor_la_LIBADD = \
     $(LIBANJUTA_LIBS)
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(details_editor_plugin_DATA) \
 	$(details_editor_ui_DATA) \
 	$(details_editor_glade_DATA) \

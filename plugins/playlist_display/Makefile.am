@@ -1,5 +1,4 @@
 plugin_name = playlist_display
-plugin_lib = lib$(plugin_name).so
 plugin_file = $(plugin_name).plugin
 
 # Plugin UI file
@@ -26,6 +25,7 @@ SUBDIRS = icons
 include ../plugins.mk
 
 # The plugin
+plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libplaylist_display.la
 
 # Plugin sources
@@ -43,7 +43,7 @@ libplaylist_display_la_LIBADD = \
     $(LIBANJUTA_LIBS)
 
 EXTRA_DIST = \
-	$(plugin_in_files) \
+	$(plugin_file).in \
 	$(playlist_display_plugin_DATA) \
 	$(playlist_display_ui_DATA) \
 	$(playlist_display_glade_DATA) \
