@@ -15,7 +15,7 @@ exporter_pixmapsdir = $(gtkpod_image_dir)
 exporter_pixmaps_DATA =
 
 exporter_plugindir = $(gtkpod_plugin_dir)
-exporter_plugin_DATA = $(plugin_file)
+exporter_plugin_DATA =
 
 SUBDIRS =
 

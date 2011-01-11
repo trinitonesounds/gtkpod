@@ -15,7 +15,7 @@ cover_display_pixmapsdir = $(gtkpod_image_dir)
 cover_display_pixmaps_DATA =
 
 cover_display_plugindir = $(gtkpod_plugin_dir)
-cover_display_plugin_DATA = $(plugin_file)
+cover_display_plugin_DATA =
 
 SUBDIRS = icons
 

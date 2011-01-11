@@ -17,7 +17,7 @@ filetype_mp4_pixmapsdir = $(gtkpod_image_dir)
 filetype_mp4_pixmaps_DATA =
 
 filetype_mp4_plugindir = $(gtkpod_plugin_dir)
-filetype_mp4_plugin_DATA = $(plugin_file)
+filetype_mp4_plugin_DATA =
 
 SUBDIRS =
 

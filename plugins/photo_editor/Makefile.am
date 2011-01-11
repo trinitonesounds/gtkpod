@@ -15,7 +15,7 @@ photo_editor_pixmapsdir = $(gtkpod_image_dir)
 photo_editor_pixmaps_DATA =
 
 photo_editor_plugindir = $(gtkpod_plugin_dir)
-photo_editor_plugin_DATA = $(plugin_file)
+photo_editor_plugin_DATA =
 
 SUBDIRS = icons
 

@@ -15,7 +15,7 @@ filetype_mp3_pixmapsdir = $(gtkpod_image_dir)
 filetype_mp3_pixmaps_DATA =
 
 filetype_mp3_plugindir = $(gtkpod_plugin_dir)
-filetype_mp3_plugin_DATA = $(plugin_file)
+filetype_mp3_plugin_DATA =
 
 SUBDIRS =
 

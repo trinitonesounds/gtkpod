@@ -15,7 +15,7 @@ track_display_pixmapsdir = $(gtkpod_image_dir)
 track_display_pixmaps_DATA =
 
 track_display_plugindir = $(gtkpod_plugin_dir)
-track_display_plugin_DATA = $(plugin_file)
+track_display_plugin_DATA =
 
 SUBDIRS = icons
 

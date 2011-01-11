@@ -17,7 +17,7 @@ filetype_flac_pixmapsdir = $(gtkpod_image_dir)
 filetype_flac_pixmaps_DATA =
 
 filetype_flac_plugindir = $(gtkpod_plugin_dir)
-filetype_flac_plugin_DATA = $(plugin_file)
+filetype_flac_plugin_DATA =
 
 SUBDIRS =
 

@@ -19,7 +19,7 @@ sorttab_display_pixmaps_DATA =
 LEX_OUTPUT_ROOT = lex.yy
 
 sorttab_display_plugindir = $(gtkpod_plugin_dir)
-sorttab_display_plugin_DATA = $(plugin_file)
+sorttab_display_plugin_DATA =
 
 SUBDIRS = icons
 

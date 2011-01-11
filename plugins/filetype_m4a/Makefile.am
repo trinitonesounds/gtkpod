@@ -17,7 +17,7 @@ filetype_m4a_pixmapsdir = $(gtkpod_image_dir)
 filetype_m4a_pixmaps_DATA =
 
 filetype_m4a_plugindir = $(gtkpod_plugin_dir)
-filetype_m4a_plugin_DATA = $(plugin_file)
+filetype_m4a_plugin_DATA =
 
 SUBDIRS =
 

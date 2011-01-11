@@ -15,7 +15,7 @@ repository_editor_pixmapsdir = $(gtkpod_image_dir)
 repository_editor_pixmaps_DATA =
 
 repository_editor_plugindir = $(gtkpod_plugin_dir)
-repository_editor_plugin_DATA = $(plugin_file)
+repository_editor_plugin_DATA =
 
 SUBDIRS =
 

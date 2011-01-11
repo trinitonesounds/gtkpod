@@ -19,7 +19,7 @@ playlist_display_pixmapsdir = $(gtkpod_image_dir)
 playlist_display_pixmaps_DATA =
 
 playlist_display_plugindir = $(gtkpod_plugin_dir)
-playlist_display_plugin_DATA = $(plugin_file)
+playlist_display_plugin_DATA =
 
 SUBDIRS = icons
 

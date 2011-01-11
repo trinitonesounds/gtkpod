@@ -17,7 +17,7 @@ filetype_ogg_pixmapsdir = $(gtkpod_image_dir)
 filetype_ogg_pixmaps_DATA =
 
 filetype_ogg_plugindir = $(gtkpod_plugin_dir)
-filetype_ogg_plugin_DATA = $(plugin_file)
+filetype_ogg_plugin_DATA =
 
 SUBDIRS =
 

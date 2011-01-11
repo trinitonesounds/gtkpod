@@ -16,7 +16,7 @@ mserv_pixmaps_DATA =
 
 # Where to install the plugin
 mserv_plugindir = $(gtkpod_plugin_dir)
-mserv_plugin_DATA = $(plugin_file)
+mserv_plugin_DATA =
 
 SUBDIRS = icons
 

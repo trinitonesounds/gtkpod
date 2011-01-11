@@ -18,7 +18,7 @@ media_player_pixmaps_DATA =
 
 # Where to install the plugin
 media_player_plugindir = $(gtkpod_plugin_dir)
-media_player_plugin_DATA = $(plugin_file)
+media_player_plugin_DATA =
 
 SUBDIRS = icons
 

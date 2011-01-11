@@ -18,7 +18,7 @@ coverweb_pixmaps_DATA =
 
 # Where to install the plugin
 coverweb_plugindir = $(gtkpod_plugin_dir)
-coverweb_plugin_DATA = $(plugin_file)
+coverweb_plugin_DATA =
 
 SUBDIRS = icons
 

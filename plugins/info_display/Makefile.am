@@ -15,7 +15,7 @@ info_display_pixmapsdir = $(gtkpod_image_dir)
 info_display_pixmaps_DATA =
 
 info_display_plugindir = $(gtkpod_plugin_dir)
-info_display_plugin_DATA = $(plugin_file)
+info_display_plugin_DATA =
 
 SUBDIRS =
 

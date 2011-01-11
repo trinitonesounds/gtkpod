@@ -15,7 +15,7 @@ core_prefs_pixmapsdir = $(gtkpod_image_dir)
 core_prefs_pixmaps_DATA =
 
 core_prefs_plugindir = $(gtkpod_plugin_dir)
-core_prefs_plugin_DATA = $(plugin_file)
+core_prefs_plugin_DATA =
 
 SUBDIRS = icons
 
