@@ -33,7 +33,7 @@
 #  include <config.h>
 #endif
 
-#include "libgtkpod/itdb.h"
+#include "itdb.h"
 
 void spl_edit_new (iTunesDB *itdb, gchar *name, gint32 pos);
 void spl_edit(Playlist *spl);

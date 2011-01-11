@@ -37,7 +37,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include "itdb.h"
-#include "libgtkpod/filetype_iface.h"
+#include "filetype_iface.h"
 
 /* Don't change the order of this enum -- when exporting playlists the
    file requester depends on having these in order because the toggle
