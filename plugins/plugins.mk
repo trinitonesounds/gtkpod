@@ -24,7 +24,7 @@ create-plugin-links:
 		ln -s `pwd`/.libs/$(plugin_lib) ../$(plugin_lib); \
 	fi; \
 	if [ ! -e ../$(plugin_file) ]; then \
-		ln -s `pwd`/$(plugin_file) ../$(plugin_file); \
+		ln -sf `pwd`/$(plugin_file) ../$(plugin_file); \
 	fi;
 
 # Creating symbolic link to ui file in installed ui directory
