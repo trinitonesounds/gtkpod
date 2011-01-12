@@ -22,3 +22,23 @@ EXTRA_DIST = 				\
 CLEANFILES =				\
 	$(desktop_DATA)			\
 	gtkpod.gladep
+
+# Creating symbolic links in plugin root directory
+COPYING: $(top_srcdir)/COPYING
+	ln -s $(top_srcdir)/COPYING COPYING
+
+AUTHORS: $(top_srcdir)/AUTHORS
+	ln -s $(top_srcdir)/AUTHORS AUTHORS
+
+clean-local: clean-licence clean-authors
+
+# Clean up the links and files created purely for developing
+clean-licence:
+	-rm -f COPYING
+
+clean-authors:
+	-rm -f AUTHORS
+
+dist-hook: clean-licence clean-authors
+
+.PHONY: clean-licence clean-authors

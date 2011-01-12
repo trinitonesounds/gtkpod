@@ -32,18 +32,4 @@ uninstall-hook:
 
 update-docs:
 	cd doc && make update-docs
-	
-all-local: copy-licence copy-authors
 
-# Creating symbolic links in plugin root directory
-copy-licence:
-	echo "Copying licence file"
-	if [ ! -e data/COPYING ]; then \
-		ln -s `pwd`/COPYING data/COPYING; \
-	fi;
-
-copy-authors:
-	echo "Copying authors file"
-	if [ ! -e data/AUTHORS ]; then \
-		ln -s `pwd`/AUTHORS data/AUTHORS; \
-	fi;
