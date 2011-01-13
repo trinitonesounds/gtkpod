@@ -26,6 +26,9 @@ ENCODER="lame"
 
 . ${0%/*}/gtkpod-convert-common.sh
 
+LOG=`dirname "$outfile"`
+LOG=${LOG%.log}
+
 # Check if the genre is one which lame supports
 if [ -n "$genre" ] && `"$encoder" --genre-list 2>&1 | cut -c 5- | grep -qi "^$genre$"`; then
     usegenre=$genre
@@ -39,9 +42,9 @@ else
 fi
 
 if [ $filetype = "wav" ]; then
-    "$encoder" $ENCODER_OPTS --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$track" --tg "$usegenre" "$infile" "$outfile"
+    "$encoder" $ENCODER_OPTS --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$track" --tg "$usegenre" "$infile" "$outfile" >> $LOG 2>&1
 else
-    "$decoder" $options "$infile" | "$encoder" $ENCODER_OPTS --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$track" --tg "$usegenre" - "$outfile"
+    "$decoder" $options "$infile" | "$encoder" $ENCODER_OPTS --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$track" --tg "$usegenre" - "$outfile" >> $LOG 2>&1
 fi
 # Check result
 if [ "x$?" != "x0" ]; then

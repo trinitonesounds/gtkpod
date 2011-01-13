@@ -24,12 +24,12 @@ extension="mp4"
 ENCODER_OPTS="-y -sameq -acodec aac -ab 160k -b 1100k -s 640x480 -aspect 4:3"
 ENCODER="ffmpeg"
 
-echo "Attempting to convert file" >> $LOG
-
 . ${0%/*}/gtkpod-convert-common.sh
 
 LOG=`dirname "$outfile"`
 LOG=${LOG%.log}
+
+echo "Attempting to convert file" >> $LOG
 
 "$encoder" -i "$infile" $ENCODER_OPTS -metadata author="$artist" -metadata title="$title" -metadata album="$album" -metadata year="$year" -metadata track="$track" -metadata genre="$genre" -metadata comment="$comment" "$outfile" >> $LOG 2>&1
 

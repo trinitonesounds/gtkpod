@@ -29,10 +29,15 @@ ENCODER="faac"
 
 . ${0%/*}/gtkpod-convert-common.sh
 
+LOG=`dirname "$outfile"`
+LOG=${LOG%.log}
+
+echo "Attempting to convert file" >> $LOG
+
 if [ $filetype = "wav" ]; then
-    "$encoder" -o "$outfile" $ENCODER_OPTS -w --artist "$artist" --title "$title" --year "$year" --album "$album" --track "$track" --genre "$genre" --comment "$comment" "$infile"
+    "$encoder" -o "$outfile" $ENCODER_OPTS -w --artist "$artist" --title "$title" --year "$year" --album "$album" --track "$track" --genre "$genre" --comment "$comment" "$infile" >> $LOG 2>&1
 else
-    "$decoder" $options "$infile" | "$encoder" -o "$outfile" $ENCODER_OPTS -w --artist "$artist" --title "$title" --year "$year" --album "$album" --track "$track" --genre "$genre" --comment "$comment" -
+    "$decoder" $options "$infile" | "$encoder" -o "$outfile" $ENCODER_OPTS -w --artist "$artist" --title "$title" --year "$year" --album "$album" --track "$track" --genre "$genre" --comment "$comment" - >> $LOG 2>&1
 fi
 # Check result
 if [ "x$?" != "x0" ]; then
