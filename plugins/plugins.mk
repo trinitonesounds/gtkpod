@@ -14,8 +14,10 @@ AM_CPPFLAGS = \
 
 # Where to install the plugin
 plugindir = $(gtkpod_plugin_dir)
+plugin_DATA = $(plugin_file)
 
 all-local: create-plugin-links create-ui-link create-glade-link
+.PHONY: create-plugin-links create-ui-link create-glade-link
 
 # Creating symbolic links in plugin root directory
 create-plugin-links:
@@ -24,7 +26,7 @@ create-plugin-links:
 		ln -s `pwd`/.libs/$(plugin_lib) ../$(plugin_lib); \
 	fi; \
 	if [ ! -e ../$(plugin_file) ]; then \
-		ln -sf `pwd`/$(plugin_file) ../$(plugin_file); \
+		ln -s `pwd`/$(plugin_file) ../$(plugin_file); \
 	fi;
 
 # Creating symbolic link to ui file in installed ui directory
@@ -47,10 +49,12 @@ create-glade-link:
 
 # Clean up the links and files created purely for dev  [ing
 clean-local: clean-plugin-files clean-ui-dir clean-glade-dir
+clean-local-check: clean-plugin-files
+.PHONY: clean-plugin-files clean-ui-dir clean-glade-dir clean-local-check
 
 clean-plugin-files:
 	if [ -h ../$(plugin_file) ]; then \
-		rm -f ../$(plugin_lib) ../$(plugin_file); \
+		rm -f ../$(plugin_lib) ../$(plugin_file) $(plugin_file); \
 	fi;
 
 clean-ui-dir:
