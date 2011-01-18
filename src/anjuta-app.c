@@ -973,10 +973,18 @@ static void anjuta_shell_iface_init(AnjutaShellIface *iface) {
  * --       GtkPodAppInterface implementations                  --
  * -------------------------------------------------------------------------
  */
-static void anjuta_gtkpod_app_statusbar_message(GtkPodApp *gtkpod_app, gchar* message) {
+static void anjuta_gtkpod_app_statusbar_message(GtkPodApp *gtkpod_app, gchar* message, ...) {
     g_return_if_fail(ANJUTA_IS_APP(gtkpod_app));
+
+    gchar* msg;
+    va_list args;
+    va_start (args, message);
+    msg = g_strdup_vprintf(message, args);
+    va_end (args);
+
     AnjutaStatus *status = anjuta_shell_get_status(ANJUTA_SHELL(gtkpod_app), NULL);
-    anjuta_status_set(status, message);
+    anjuta_status_set(status, "%s", msg);
+    g_free(msg);
 }
 
 static void anjuta_gtkpod_app_statusbar_busy_push(GtkPodApp *gtkpod_app) {
@@ -991,9 +999,16 @@ static void anjuta_gtkpod_app_statusbar_busy_pop(GtkPodApp *gtkpod_app) {
     anjuta_status_busy_pop(status);
 }
 
-static void anjuta_gtkpod_app_warning(GtkPodApp *gtkpod_app, gchar *message) {
+static void anjuta_gtkpod_app_warning(GtkPodApp *gtkpod_app, gchar *message, ...) {
     g_return_if_fail(GTK_IS_WINDOW(gtkpod_app));
-    anjuta_util_dialog_warning(GTK_WINDOW(gtkpod_app), message);
+    gchar* msg;
+    va_list args;
+    va_start (args, message);
+    msg = g_strdup_vprintf(message, args);
+    va_end (args);
+
+    anjuta_util_dialog_warning(GTK_WINDOW(gtkpod_app), "%s", msg);
+    g_free(msg);
 }
 
 static void anjuta_gtkpod_app_warning_hig(GtkPodApp *gtkpod_app, GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text) {

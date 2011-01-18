@@ -142,8 +142,8 @@ struct _GtkPodAppInterface {
     GHashTable *filetypes;
 
     void (*itdb_updated)(GtkPodApp *obj, iTunesDB *oldItdb, iTunesDB *newItbd);
-    void (*statusbar_message)(GtkPodApp *obj, gchar* message);
-    void (*gtkpod_warning)(GtkPodApp *obj, gchar *message);
+    void (*statusbar_message)(GtkPodApp *obj, gchar* message, ...);
+    void (*gtkpod_warning)(GtkPodApp *obj, gchar *message, ...);
     void (*gtkpod_warning_hig)(GtkPodApp *obj, GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text);
     gint
             (*gtkpod_confirmation_hig)(GtkPodApp *obj, GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text, const gchar *accept_button_text, const gchar *cancel_button_text, const gchar *third_button_text, const gchar *help_context);

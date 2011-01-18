@@ -192,7 +192,7 @@ void gtkpod_statusbar_message(gchar* message, ...) {
     msg = g_strdup_vprintf(message, args);
     va_end (args);
 
-    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->statusbar_message(gtkpod_app, msg);
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->statusbar_message(gtkpod_app, "%s", msg);
     g_free(msg);
 }
 
@@ -234,7 +234,7 @@ void gtkpod_warning(gchar* message, ...) {
     msg = g_strdup_vprintf(message, args);
     va_end (args);
 
-    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->gtkpod_warning(gtkpod_app, msg);
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->gtkpod_warning(gtkpod_app, "%s", msg);
     g_free(msg);
 }
 
