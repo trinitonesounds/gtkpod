@@ -88,10 +88,7 @@ typedef struct {
     gboolean finished; /* background thread has finished */
     Track *track; /* Current track                  */
     const gchar *filename; /* Filename to copy/remove        */
-    /* Widgets for progress dialog */
-    GtkWidget *dialog;
-    GtkWidget *textlabel;
-    GtkProgressBar *progressbar;
+    gdouble current_progress; /* Record of current progress */
 } TransferData;
 
 /* Used to keep the "extended information" until the iTunesDB is loaded */
@@ -1147,6 +1144,7 @@ TransferData *transfer_data_new(void) {
     transfer_data = g_new0 (TransferData, 1);
     transfer_data->mutex = g_mutex_new ();
     transfer_data->finished_cond = g_cond_new ();
+    transfer_data->current_progress = 0;
     return transfer_data;
 }
 
@@ -1170,24 +1168,6 @@ static gpointer th_remove(gpointer userdata) {
     g_cond_signal (td->finished_cond);
     g_mutex_unlock (td->mutex);
     return GINT_TO_POINTER(result);
-}
-
-/* This function is called when the user presses the abort button
- * during transfer_tracks() or delete_tracks() */
-static void file_dialog_abort(TransferData *transfer_data) {
-    g_return_if_fail (transfer_data);
-
-    g_mutex_lock (transfer_data->mutex);
-
-    transfer_data->abort = TRUE;
-
-    g_mutex_unlock (transfer_data->mutex);
-}
-
-/* This function is called when the user closes the window */
-static gboolean file_dialog_delete(TransferData *transfer_data) {
-    file_dialog_abort(transfer_data);
-    return TRUE; /* don't close the window -- let our own code take care of this */
 }
 
 /* check if iPod directory stucture is present */
@@ -1216,49 +1196,9 @@ static gboolean ipod_dirs_present(const gchar *mountpoint) {
     return result;
 }
 
-static GtkWidget *create_transfer_information_dialog(TransferData *td) {
-    GladeXML *dialog_xml;
-    GtkWidget *dialog, *widget;
-
-    dialog_xml = gtkpod_xml_new(gtkpod_get_glade_xml(), "file_transfer_information_dialog");
-    glade_xml_signal_autoconnect(dialog_xml);
-
-    dialog = gtkpod_xml_get_widget(dialog_xml, "file_transfer_information_dialog");
-    g_return_val_if_fail (dialog, NULL);
-
-    /* the window itself */
-    td->dialog = dialog;
-
-    /* text label */
-    td->textlabel = gtkpod_xml_get_widget(dialog_xml, "textlabel");
-
-    /* progress bar */
-    td->progressbar = GTK_PROGRESS_BAR (
-            gtkpod_xml_get_widget (dialog_xml, "progressbar"));
-
-    /* Indicate that user wants to abort */
-    widget = gtkpod_xml_get_widget(dialog_xml, "abortbutton");
-    g_signal_connect_swapped (GTK_OBJECT (widget), "clicked",
-            G_CALLBACK (file_dialog_abort),
-            td);
-
-    /* User tried to close the window */
-    g_signal_connect_swapped (GTK_OBJECT (dialog), "delete-event",
-            G_CALLBACK (file_dialog_delete),
-            td);
-
-    /* Set the dialog parent */
-    gtk_window_set_transient_for(GTK_WINDOW (dialog), GTK_WINDOW (gtkpod_app));
-
-    return dialog;
-}
-
-static void set_progressbar(GtkProgressBar *progressbar, time_t start, gint n, gint count, gint init_count) {
+static gdouble set_progress(time_t start, gint n, gint count, gint init_count, gdouble old_fraction) {
     gchar *progtext;
-    const gchar *progtext_old;
-    gdouble fraction, fraction_old;
-
-    g_return_if_fail (progressbar);
+    gdouble fraction;
 
     if (n == 0) {
         fraction = 1;
@@ -1278,23 +1218,21 @@ static void set_progressbar(GtkProgressBar *progressbar, time_t start, gint n, g
         hrs = fullsecs / 3600;
         mins = (fullsecs % 3600) / 60;
         secs = ((fullsecs % 60) / 5) * 5;
-        /* don't bounce up too quickly (>10% change only) */
-        /* left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
         progtext
                 = g_strdup_printf(_("%d%% (%d/%d  %d:%02d:%02d left)"), (gint) (fraction * 100), count, n, (gint) hrs, (gint) mins, (gint) secs);
     }
 
-    progtext_old = gtk_progress_bar_get_text(progressbar);
-    if (!progtext_old || (strcmp(progtext_old, progtext) != 0)) { /* only update progressbar text if it has changed */
-        gtk_progress_bar_set_text(progressbar, progtext);
-    }
 
-    fraction_old = gtk_progress_bar_get_fraction(progressbar);
-    if (fraction_old != fraction) { /* only update progressbar fraction if it has changed */
-        gtk_progress_bar_set_fraction(progressbar, fraction);
-    }
+    gdouble ticks = fraction - old_fraction;
+    gtkpod_statusbar_increment_progress_ticks(ticks * 100, progtext);
 
     g_free(progtext);
+
+    if (fraction == 1) {
+        gtkpod_statusbar_reset_progress(100);
+    }
+
+    return fraction;
 }
 
 /* Removes all tracks that were marked for deletion from the iPod or
@@ -1326,7 +1264,7 @@ static gboolean delete_files(iTunesDB *itdb, TransferData *td) {
      interference with slow access harddisks */
     file_transfer_activate(itdb, FALSE);
 
-    gtk_label_set_text(GTK_LABEL (td->textlabel), _("Status: Deleting File"));
+    gtkpod_statusbar_message(_("Status: Deleting File"));
 
     n = g_list_length(eitdb->pending_deletion);
     count = 0; /* number of tracks removed */
@@ -1360,7 +1298,7 @@ static gboolean delete_files(iTunesDB *itdb, TransferData *td) {
             do {
                 GTimeVal gtime;
 
-                set_progressbar(td->progressbar, start, n, count, 0);
+                td->current_progress = set_progress(start, n, count, 0, td->current_progress);
 
                 g_mutex_unlock (td->mutex);
 
@@ -1395,7 +1333,7 @@ static gboolean delete_files(iTunesDB *itdb, TransferData *td) {
         eitdb->pending_deletion = g_list_delete_link(eitdb->pending_deletion, eitdb->pending_deletion);
     }
 
-    set_progressbar(td->progressbar, start, n, count, 0);
+    td->current_progress = set_progress(start, n, count, 0, td->current_progress);
 
     while (widgets_blocked && gtk_events_pending())
         gtk_main_iteration();
@@ -1436,8 +1374,6 @@ static void transfer_tracks_show_failed(iTunesDB *itdb, TransferData *td) {
     GList *tracks, *gl;
 
     g_return_if_fail (itdb && td);
-
-    gtk_widget_hide(td->dialog);
 
     string_transfer = g_string_sized_new(1000);
     string_convert = g_string_sized_new(1000);
@@ -1536,13 +1472,9 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
 
     do {
         gchar *buf;
-        const gchar *buf_old;
 
         status
                 = file_transfer_get_status(itdb, &to_convert_num, &converting_num, &to_transfer_num, &transferred_num, &failed_num);
-
-        set_progressbar(td->progressbar, start, to_convert_num + to_transfer_num + failed_num + transferred_num, transferred_num
-                + failed_num, transferred_init);
 
         if (to_transfer_num > 0) {
             buf = g_strdup_printf(_("Status: Copying track"));
@@ -1556,15 +1488,9 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
             }
         }
 
-        /*	buf = g_strdup_printf (_("Status: %d. To convert: %d. To transfer: %d\n"
-         "Transferred: %d. Failed: %d"),
-         status, to_convert_num, to_transfer_num,
-         transferred_num, failed_num);*/
-        buf_old = gtk_label_get_text(GTK_LABEL(td->textlabel));
-        if (!buf_old || (strcmp(buf_old, buf) != 0)) { /* only set label if it has changed */
-            gtk_label_set_text(GTK_LABEL(td->textlabel), buf);
-        }
-        g_free(buf);
+        gtkpod_statusbar_message(buf);
+        td->current_progress = set_progress(start, to_convert_num + to_transfer_num + failed_num + transferred_num, transferred_num
+                        + failed_num, transferred_init, td->current_progress);
 
         if ((to_convert_num != 0) && (converting_num == 0)) { /* Force the conversion to continue. Not sure if this scenario
          * is likely to happen, but better be safe then sorry */
@@ -1588,8 +1514,6 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
     else if (status == FILE_TRANSFER_DISK_FULL) {
         gchar *buf;
         GtkWidget *dialog;
-
-        gtk_widget_hide(td->dialog);
 
         buf
                 = g_strdup_printf(ngettext (
@@ -1622,7 +1546,6 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
     gchar *cfgdir;
     gboolean success = TRUE;
     ExtraiTunesDBData *eitdb;
-    GtkWidget *dialog;
     Playlist *mpl;
     TransferData *transferdata;
     GList *it;
@@ -1680,8 +1603,7 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
     block_widgets();
 
     transferdata = transfer_data_new();
-    dialog = create_transfer_information_dialog(transferdata);
-    gtk_widget_show(dialog);
+    gtkpod_statusbar_reset_progress(100);
 
     if ((itdb->usertype & GP_ITDB_TYPE_IPOD) && !get_offline(itdb)) {
         const gchar *mountpoint = itdb_get_mountpoint(itdb);
@@ -1712,10 +1634,7 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
     }
 
     if (success) {
-        gchar *buf;
-        buf = g_strdup_printf(_("Now writing database '%s'. Please wait..."), mpl->name);
-        gtk_label_set_text(GTK_LABEL (transferdata->textlabel), buf);
-        g_free(buf);
+        gtkpod_statusbar_message(_("Now writing database '%s'. Please wait..."), mpl->name);
 
         while (widgets_blocked && gtk_events_pending())
             gtk_main_iteration();
@@ -1871,7 +1790,6 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
 
     g_free(cfgdir);
 
-    gtk_widget_destroy(dialog);
     transfer_data_free(transferdata);
 
     release_widgets();

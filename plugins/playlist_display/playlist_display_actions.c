@@ -232,6 +232,7 @@ static void create_add_playlists_dialog(iTunesDB *itdb) {
 }
 
 static void fileselection_add_files(GSList* names, Playlist *playlist) {
+    gint count = 0;
     GSList* gsl; /* Current node in list */
     gboolean result = TRUE; /* Result of file adding */
 
@@ -245,6 +246,12 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
     for (gsl = names; gsl; gsl = gsl->next) {
         result
                 &= add_track_by_filename(playlist->itdb, gsl->data, playlist, prefs_get_int("add_recursively"), NULL, NULL);
+        count++;
+        if (count == 10) { /* update and save every ten tracks added */
+            gp_save_itdb(playlist->itdb);
+            gtkpod_tracks_statusbar_update();
+            count = 0;
+        }
     }
 
     /* clear log of non-updated tracks */

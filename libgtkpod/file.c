@@ -300,6 +300,7 @@ gboolean add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gb
         block_widgets();
         if (dir != NULL) {
             G_CONST_RETURN gchar *next;
+            gint count = 0;
             do {
                 next = g_dir_read_name(dir);
                 if (next != NULL) {
@@ -308,8 +309,16 @@ gboolean add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gb
                         result &= add_directory_by_name(itdb, nextfull, plitem, descend, addtrackfunc, data);
                     g_free(nextfull);
                 }
+                count++;
+                if (count == 10) { /* update and save every ten tracks added */
+                    gp_save_itdb(itdb);
+                    gtkpod_tracks_statusbar_update();
+                    count = 0;
+                }
             }
             while (next != NULL);
+
+            gp_save_itdb(itdb);
             g_dir_close(dir);
         }
         release_widgets();
@@ -1409,8 +1418,6 @@ void update_track_from_file(iTunesDB *itdb, Track *track) {
  "add_track_to_playlist () -- used for dropping tracks at a specific
  position in the track view */
 gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data) {
-    static gint count = 0; /* do a gtkpod_tracks_statusbar_update() every
-     10 tracks */
     Track *oldtrack;
     gchar str[PATH_MAX];
     gchar *basename;
@@ -1569,17 +1576,12 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
 
             /* indicate that non-transferred files exist */
             data_changed(itdb);
-            ++count;
-            if (count >= 10) /* update every ten tracks added */
-            {
-                gtkpod_tracks_statusbar_update();
-                count = 0;
-            }
         }
         else { /* !track */
             result = FALSE;
         }
     }
+
     while (widgets_blocked && gtk_events_pending())
         gtk_main_iteration();
     return result;

@@ -973,6 +973,20 @@ static void anjuta_shell_iface_init(AnjutaShellIface *iface) {
  * --       GtkPodAppInterface implementations                  --
  * -------------------------------------------------------------------------
  */
+
+static void anjuta_gtkpod_statusbar_reset_progress(GtkPodApp *obj, gint total) {
+    g_return_if_fail(ANJUTA_IS_APP(gtkpod_app));
+    AnjutaStatus *status = anjuta_shell_get_status(ANJUTA_SHELL(gtkpod_app), NULL);
+    anjuta_status_progress_reset (status);
+    anjuta_status_progress_add_ticks (status, total);
+}
+
+static void anjuta_gtkpod_statusbar_increment_progress_ticks(GtkPodApp *obj, gint ticks, gchar* text) {
+    g_return_if_fail(ANJUTA_IS_APP(gtkpod_app));
+    AnjutaStatus *status = anjuta_shell_get_status(ANJUTA_SHELL(gtkpod_app), NULL);
+    anjuta_status_progress_increment_ticks(status, ticks, text);
+}
+
 static void anjuta_gtkpod_app_statusbar_message(GtkPodApp *gtkpod_app, gchar* message, ...) {
     g_return_if_fail(ANJUTA_IS_APP(gtkpod_app));
 
@@ -1439,6 +1453,8 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
 }
 
 static void gtkpod_app_iface_init(GtkPodAppInterface *iface) {
+    iface->statusbar_reset_progress = anjuta_gtkpod_statusbar_reset_progress;
+    iface->statusbar_increment_progress_ticks = anjuta_gtkpod_statusbar_increment_progress_ticks;
     iface->statusbar_message = anjuta_gtkpod_app_statusbar_message;
     iface->statusbar_busy_push = anjuta_gtkpod_app_statusbar_busy_push;
     iface->statusbar_busy_pop = anjuta_gtkpod_app_statusbar_busy_pop;

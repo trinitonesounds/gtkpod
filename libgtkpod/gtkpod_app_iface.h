@@ -142,6 +142,8 @@ struct _GtkPodAppInterface {
     GHashTable *filetypes;
 
     void (*itdb_updated)(GtkPodApp *obj, iTunesDB *oldItdb, iTunesDB *newItbd);
+    void (*statusbar_reset_progress)(GtkPodApp *obj, gint total);
+    void (*statusbar_increment_progress_ticks)(GtkPodApp *obj, gint ticks, gchar* text);
     void (*statusbar_message)(GtkPodApp *obj, gchar* message, ...);
     void (*gtkpod_warning)(GtkPodApp *obj, gchar *message, ...);
     void (*gtkpod_warning_hig)(GtkPodApp *obj, GtkMessageType icon, const gchar *primary_text, const gchar *secondary_text);
@@ -166,6 +168,8 @@ gchar* gtkpod_get_glade_xml();
 gboolean ok_to_close_gtkpod();
 gint gtkpod_cleanup_quit();
 
+void gtkpod_statusbar_reset_progress(gint total);
+void gtkpod_statusbar_increment_progress_ticks(gint ticks, gchar* text);
 void gtkpod_statusbar_message(gchar* message, ...);
 void gtkpod_statusbar_busy_push();
 void gtkpod_statusbar_busy_pop();

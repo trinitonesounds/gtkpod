@@ -184,6 +184,16 @@ gint gtkpod_cleanup_quit() {
     return FALSE; // dont quit!
 }
 
+void gtkpod_statusbar_reset_progress(gint total) {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->statusbar_reset_progress(gtkpod_app, total);
+}
+
+void gtkpod_statusbar_increment_progress_ticks(gint ticks, gchar* text) {
+    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
+    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->statusbar_increment_progress_ticks(gtkpod_app, ticks, text);
+}
+
 void gtkpod_statusbar_message(gchar* message, ...) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
     gchar* msg;
