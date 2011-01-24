@@ -1956,16 +1956,19 @@ void delete_track_ok(struct DeleteData *dd) {
 
     /* nr of tracks to be deleted */
     n = g_list_length(dd->tracks);
+
+    gtkpod_statusbar_reset_progress(n);
+
     if (dd->itdb->usertype & GP_ITDB_TYPE_IPOD) {
         switch (dd->deleteaction) {
         case DELETE_ACTION_IPOD:
-            gtkpod_statusbar_message(ngettext ("Deleted one track completely from iPod",
-                    "Deleted %d tracks completely from iPod",
+            gtkpod_statusbar_message(ngettext ("Deleting one track completely from iPod",
+                    "Deleting %d tracks completely from iPod",
                     n), n);
             break;
         case DELETE_ACTION_PLAYLIST:
-            gtkpod_statusbar_message(ngettext ("Deleted %d track from playlist '%s'",
-                    "Deleted %d tracks from playlist '%s'",
+            gtkpod_statusbar_message(ngettext ("Deleting %d track from playlist '%s'",
+                    "Deleting %d tracks from playlist '%s'",
                     n), n, dd->pl->name);
             break;
         case DELETE_ACTION_LOCAL:
@@ -1979,18 +1982,18 @@ void delete_track_ok(struct DeleteData *dd) {
     if (dd->itdb->usertype & GP_ITDB_TYPE_LOCAL) {
         switch (dd->deleteaction) {
         case DELETE_ACTION_LOCAL:
-            gtkpod_statusbar_message(ngettext ("Deleted one track from harddisk",
-                    "Deleted %d tracks from harddisk",
+            gtkpod_statusbar_message(ngettext ("Deleting one track from harddisk",
+                    "Deleting %d tracks from harddisk",
                     n), n);
             break;
         case DELETE_ACTION_PLAYLIST:
-            gtkpod_statusbar_message(ngettext ("Deleted %d track from playlist '%s'",
-                    "Deleted %d tracks from playlist '%s'",
+            gtkpod_statusbar_message(ngettext ("Deleting %d track from playlist '%s'",
+                    "Deleting %d tracks from playlist '%s'",
                     n), n, dd->pl->name);
             break;
         case DELETE_ACTION_DATABASE:
-            gtkpod_statusbar_message(ngettext ("Deleted track from local database",
-                    "Deleted %d tracks from local database",
+            gtkpod_statusbar_message(ngettext ("Deleting track from local database",
+                    "Deleting %d tracks from local database",
                     n), n);
             break;
         case DELETE_ACTION_IPOD:
@@ -2000,12 +2003,21 @@ void delete_track_ok(struct DeleteData *dd) {
             break;
         }
     }
+
+    int i = 1;
     for (l = dd->tracks; l; l = l->next) {
-        gp_playlist_remove_track(dd->pl, l->data, dd->deleteaction);
+        Track *track = l->data;
+        gchar *buf = g_strdup_printf(_("Deleting Track %d/%d ..."), i, n);
+        gtkpod_statusbar_increment_progress_ticks(1, buf);
+        g_free(buf);
+
+        gp_playlist_remove_track(dd->pl, track, dd->deleteaction);
+        i++;
     }
     g_list_free(dd->tracks);
     g_free(dd);
 
+    gtkpod_statusbar_message(_("Completed deletion"));
     gtkpod_tracks_statusbar_update();
 }
 
