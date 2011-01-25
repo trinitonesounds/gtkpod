@@ -35,7 +35,7 @@ AC_DIAGNOSE([obsolete],[AM_PROG_CC_STDC:
 	AC_PROG_CC if you already called it elsewhere.])
 am_cv_prog_cc_stdc=$ac_cv_prog_cc_stdc
 
-
+AM_PROG_LIBTOOL
 IT_PROG_INTLTOOL([0.33])
 
 dnl Only use -Wall if we have gcc
