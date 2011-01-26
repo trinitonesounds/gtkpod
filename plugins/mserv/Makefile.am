@@ -20,6 +20,7 @@ mserv_plugin_DATA =
 SUBDIRS = icons
 
 include ../plugins.mk
+mserv.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

@@ -19,6 +19,7 @@ photo_editor_plugin_DATA =
 SUBDIRS = icons
 
 include ../plugins.mk
+photo_editor.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

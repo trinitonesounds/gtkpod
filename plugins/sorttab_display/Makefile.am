@@ -23,6 +23,7 @@ sorttab_display_plugin_DATA =
 SUBDIRS = icons
 
 include ../plugins.mk
+sorttab_display.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

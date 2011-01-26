@@ -19,6 +19,7 @@ exporter_plugin_DATA =
 SUBDIRS =
 
 include ../plugins.mk
+exporter.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

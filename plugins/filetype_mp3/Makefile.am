@@ -19,6 +19,7 @@ filetype_mp3_plugin_DATA =
 SUBDIRS =
 
 include ../plugins.mk
+filetype_mp3.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

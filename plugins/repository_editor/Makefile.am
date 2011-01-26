@@ -19,6 +19,7 @@ repository_editor_plugin_DATA =
 SUBDIRS =
 
 include ../plugins.mk
+repository_editor.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

@@ -22,6 +22,7 @@ SUBDIRS =
 if HAVE_MP4
 
 include ../plugins.mk
+filetype_m4a.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

@@ -19,6 +19,7 @@ filetype_video_plugin_DATA =
 SUBDIRS =
 
 include ../plugins.mk
+filetype_video.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

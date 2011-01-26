@@ -70,5 +70,21 @@ clean-glade-dir:
 		rm -f ../../data/glade/$(plugin_name).xml; \
 	fi;
 
+# List out the current language po files
+PO_FILES=\
+				 $(top_srcdir)/po/ca.po \
+				 $(top_srcdir)/po/es.po \
+				 $(top_srcdir)/po/he.po \
+				 $(top_srcdir)/po/ja.po \
+				 $(top_srcdir)/po/ru.po \
+				 $(top_srcdir)/po/zh_CN.po \
+				 $(top_srcdir)/po/de.po \
+				 $(top_srcdir)/po/fr.po \
+				 $(top_srcdir)/po/it.po \
+				 $(top_srcdir)/po/ro.po \
+				 $(top_srcdir)/po/sv.po
+
 # Create plugin description file with translations
-%.plugin: %.plugin.in $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*po) ; $(INTLTOOL_MERGE) $(top_srcdir)/po $< $@ -d -u -c $(top_builddir)/po/.intltool-merge-cache
+build-plugin-file: $(INTLTOOL_MERGE) $(PO_FILES)
+	$(INTLTOOL_MERGE) $(top_srcdir)/po $(plugin_name).plugin.in $(plugin_name).plugin -d -u -c $(top_builddir)/po/.intltool-merge-cache
+

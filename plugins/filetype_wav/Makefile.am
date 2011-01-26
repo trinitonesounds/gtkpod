@@ -19,6 +19,7 @@ filetype_wav_plugin_DATA =
 SUBDIRS =
 
 include ../plugins.mk
+filetype_wav.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

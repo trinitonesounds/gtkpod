@@ -22,6 +22,7 @@ SUBDIRS = icons
 if HAVE_PLUGIN_COVERWEB
 
 include ../plugins.mk
+coverweb.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

@@ -3,10 +3,10 @@ m4_include([./version.m4])
 
 # Require autoconf 2.55 or higher
 AC_PREREQ(2.65)
-
 AC_INIT([gtkpod], VERSION_NUMBER)
-AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR(src/main.c)
+
+AM_CONFIG_HEADER([config.h])
 
 dnl libtool versioning
 # +1 : 0 : +1  == adds new functions to the interface
@@ -22,12 +22,18 @@ AC_SUBST(LIBGTKPOD_SO_VERSION)
 AC_SUBST(LIBGTKPOD_VERSION)
 
 AM_INIT_AUTOMAKE([1.9 tar-ustar]) 
+
 AM_MAINTAINER_MODE
+
+AC_PROG_CC
+
+LT_PATH_LD
+AC_HEADER_STDC
+AC_PROG_INSTALL
+LT_INIT
 AC_CANONICAL_HOST
 AC_SEARCH_LIBS([strerror],[cposix])
-LT_INIT
-AC_PROG_CC
-AC_PROG_CC
+
 AC_DIAGNOSE([obsolete],[AM_PROG_CC_STDC:
 	your code should no longer depend upon `am_cv_prog_cc_stdc', but upon
 	`ac_cv_prog_cc_stdc'.  Remove this warning and the assignment when

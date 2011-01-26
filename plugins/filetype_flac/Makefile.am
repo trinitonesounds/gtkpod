@@ -22,6 +22,7 @@ SUBDIRS =
 if HAVE_FLAC
 
 include ../plugins.mk
+filetype_flac.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

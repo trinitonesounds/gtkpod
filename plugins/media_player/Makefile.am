@@ -22,6 +22,7 @@ SUBDIRS = icons
 if HAVE_PLUGIN_MEDIA_PLAYER
 
 include ../plugins.mk
+media_player.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

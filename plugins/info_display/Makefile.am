@@ -19,6 +19,7 @@ info_display_plugin_DATA =
 SUBDIRS =
 
 include ../plugins.mk
+info_display.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

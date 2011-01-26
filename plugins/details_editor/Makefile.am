@@ -19,6 +19,7 @@ details_editor_plugin_DATA =
 SUBDIRS =
 
 include ../plugins.mk
+details_editor.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

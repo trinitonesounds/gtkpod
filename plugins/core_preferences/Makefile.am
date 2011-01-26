@@ -19,6 +19,7 @@ core_prefs_plugin_DATA =
 SUBDIRS = icons
 
 include ../plugins.mk
+core_prefs.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so

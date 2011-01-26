@@ -22,6 +22,7 @@ SUBDIRS =
 if HAVE_LIBVORBISFILE
 
 include ../plugins.mk
+filetype_ogg.plugin: build-plugin-file
 
 # The plugin
 plugin_lib = lib$(plugin_name).so
