@@ -1992,7 +1992,7 @@ void delete_track_ok(struct DeleteData *dd) {
                     n), n, dd->pl->name);
             break;
         case DELETE_ACTION_DATABASE:
-            gtkpod_statusbar_message(ngettext ("Deleting track from local database",
+            gtkpod_statusbar_message(ngettext ("Deleting one track from local database",
                     "Deleting %d tracks from local database",
                     n), n);
             break;
