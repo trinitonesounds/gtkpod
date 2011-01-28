@@ -134,7 +134,7 @@ AC_PATH_PROG(UMOUNT, umount)
 AC_SUBST(UMOUNT)
 
 dnl Add the languages which your application supports here.
-ALL_LINGUAS="ca de es fr he it ja ru ro sv zh_CN"
+ALL_LINGUAS="ca de es fr he it ja ru ro sv zh_CN zh_TW"
 AM_GLIB_GNU_GETTEXT
 
 dnl Check if flock() is available (seems to be missing on some solaris versions)
