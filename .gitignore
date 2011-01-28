@@ -58,6 +58,7 @@ version
 /po/POTFILES
 /po/*.gmo
 /po/*.mo
+/po/*.pot
 /po/.intltool-merge-cache
 /po/stamp-it
 
