@@ -276,6 +276,15 @@ AC_CHECK_HEADERS([mp4v2/itmf_tags.h], [], [],
 		 ])
 AM_CONDITIONAL(HAVE_MP4, test "x$have_mp4" = "xyes")
 
+# Check that we have endian.h
+AC_CHECK_HEADERS(endian.h, have_endian=yes, have_endian=no)
+if test "x$have_endian" = "xno"; then
+	AC_CHECK_HEADERS(sys/endian.h, have_endian=yes, have_endian=no)
+fi
+if test "x$have_endian" = "xyes"; then
+	AC_DEFINE(HAVE_ENDIAN_H, 1, [Define if you have the endian header])
+fi
+
 dnl Additional libs maybe needed when compiling under solaris
 AC_SEARCH_LIBS(bind, ["socket" "nsl" "socket -lnsl"])
 

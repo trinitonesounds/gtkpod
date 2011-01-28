@@ -1,18 +1,19 @@
 # French language translation for gtkpod
-# Copyright (C) 2005-2007 Eric Lassauge
+# Copyright (C) 2005-2011 Eric Lassauge
 # Copyright (C) 2003 David Le Brun
+# Copyright (C) 2010 Alain Portal
 #
 #
-# Eric Lassauge <lassauge@users.sf.net>, 2006.
+# Eric Lassauge <lassauge@users.sf.net>, 2006-2011.
 # David Le Brun <david@dyn-ns.net>, 2003.
 # Alain Portal <alain.portal@free.fr>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-02 10:55+0000\n"
-"PO-Revision-Date: 2010-08-01 22:11+0100\n"
-"Last-Translator: phantomjinx <phantom_sf@users.sourceforge.net>\n"
+"POT-Creation-Date: 2011-01-11 10:12+0100\n"
++"PO-Revision-Date: 2011-01-11 10:39+0100\n"
+"Last-Translator: Éric Lassauge <lassauge {AT} users {dot} sourceforge {dot} net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,7 +110,7 @@ msgstr "Gérer des musiques et des vidéos sur un iPod Apple"
 
 #: ../data/gtkpod.desktop.in.h:2
 msgid "gtkpod iPod Manager"
-msgstr "Gestionnaire d'iPod gtkpod"
+msgstr "Gestionnaire d'iPod « gtkpod »"
 
 #: ../data/gtkpod.desktop.in.h:3
 msgid "iPod Manager"
@@ -537,7 +538,7 @@ msgstr "échec de la mise à jour (format non pris en charge ?)"
 
 #: ../libgtkpod/file.c:1449 ../libgtkpod/misc_playlist.c:790
 #, c-format
-msgid "Processing '%s'..."
+msgid "Processing '%s'…"
 msgstr "Traitement de « %s »…"
 
 #: ../libgtkpod/file.c:1455
@@ -831,7 +832,7 @@ msgstr ""
 #: ../libgtkpod/file_itunesdb.c:461
 #, c-format
 msgid "The repository %s does not have a readable extended database.\n"
-msgstr "Le dépôt « % » ne possède pas de base de données étendue lisible.\n"
+msgstr "Le dépôt « %s » ne possède pas de base de données étendue lisible.\n"
 
 #: ../libgtkpod/file_itunesdb.c:463
 msgid ""
@@ -1114,7 +1115,7 @@ msgstr "Des morceaux ne peuvent pas être supprimés de l'iPod. Export annulé 
 
 #: ../libgtkpod/file_itunesdb.c:1716
 #, c-format
-msgid "Now writing database '%s'. Please wait..."
+msgid "Now writing database '%s'. Please wait…"
 msgstr "Écriture de la base « %s ». Veuillez patienter …"
 
 #: ../libgtkpod/file_itunesdb.c:1759
@@ -1179,7 +1180,7 @@ msgstr "Ajouter les fichiers de liste de lecture à « %s »"
 
 #: ../libgtkpod/fileselection.c:279
 msgid "Set Cover"
-msgstr "Modifier la pochette"
+msgstr "Modifier la jaquette"
 
 #: ../libgtkpod/fileselection.c:519
 #: ../plugins/playlist_display/playlist_display_actions.c:100
@@ -1799,7 +1800,7 @@ msgstr "Sauter en mode aléatoire"
 
 #: ../libgtkpod/misc_conversion.c:100
 msgid "Artwork Path"
-msgstr "Emplacement de la pochette"
+msgstr "Emplacement de la jaquette"
 
 #. 40
 #: ../libgtkpod/misc_conversion.c:101
@@ -2137,7 +2138,7 @@ msgstr ""
 
 #: ../libgtkpod/misc_playlist.c:1021
 #, c-format
-msgid "Found %d orphaned and %d dangling files. Processing..."
+msgid "Found %d orphaned and %d dangling files. Processing…"
 msgstr "%d orphelins et %d morceaux fictifs trouvés. Traitement en cours …"
 
 #: ../libgtkpod/misc_playlist.c:1041
@@ -2326,7 +2327,7 @@ msgstr "Aucune base de donnée ou liste de lecture sélectionnée"
 msgid "No iPod or iPod playlist selected"
 msgstr "Aucun iPod ou liste de lecture sélectionné(e)"
 
-#. update for count == 1, 21, 41 ... and for count == n
+#. update for count == 1, 21, 41 … and for count == n
 #: ../libgtkpod/misc_track.c:89
 #, c-format
 msgid "Hashed %d of %d track."
@@ -2372,7 +2373,7 @@ msgstr "nom de fichier perdu"
 
 #: ../libgtkpod/misc_track.c:1229
 msgid "Artwork not set"
-msgstr "Pochette non renseignée"
+msgstr "Jaquette non renseignée"
 
 #: ../libgtkpod/misc_track.c:1639
 #, c-format
@@ -2558,11 +2559,11 @@ msgid "Press button to abort."
 msgstr "Appuyer sur le bouton pour abandonner"
 
 #: ../libgtkpod/tools.c:353
-msgid "Normalizing..."
+msgid "Normalizing…"
 msgstr "Normalisation …"
 
 #: ../libgtkpod/tools.c:429
-msgid "Aborting..."
+msgid "Aborting…"
 msgstr "Abandon…"
 
 #: ../libgtkpod/tools.c:433
@@ -2631,7 +2632,7 @@ msgstr "<b>Configuration des conversions</b>"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:4
 msgid "<b>Cover Art</b>"
-msgstr "<b>Pochette</b>"
+msgstr "<b>Jacquette</b>"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:5
 msgid "<b>Deletion Confirmation Messages</b>"
@@ -2698,7 +2699,7 @@ msgstr "sur les morceaux mis à jour"
 #: ../plugins/core_preferences/core_prefs.xml.h:20
 msgid "Add cover art using file name template"
 msgstr ""
-"Ajouter la pochette depuis un fichier en utilisant l'expression suivante"
+"Ajouter la jaquette depuis un fichier en utilisant l'expression suivante"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:21
 msgid ""
@@ -2736,8 +2737,8 @@ msgid "Automatically generate video thumbnails"
 msgstr "Générer automatiquement les miniatures vidéos"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:30
-msgid "Browse..."
-msgstr "Parcourir..."
+msgid "Browse…"
+msgstr "Parcourir…"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:31
 msgid "Cache folder:"
@@ -2763,8 +2764,8 @@ msgid "Conversion Preferences"
 msgstr "Préférences de conversion"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:37
-msgid "Conversion Settings..."
-msgstr "Configuration des conversions..."
+msgid "Conversion Settings…"
+msgstr "Configuration des conversions…"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:38
 msgid "Convert AAC (M4A)"
@@ -2789,15 +2790,15 @@ msgstr "Convertir les formats incompatibles en :"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:43
 msgid "Cover Art Search Preferences"
-msgstr "Préférences de recherche des pochettes"
+msgstr "Préférences de recherche des jaquettes"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:44
 msgid "Cover art file pattern:"
-msgstr "Filtre de fichier des pochettes :"
+msgstr "Filtre de fichier des jaquettes :"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:45
-msgid "Customize..."
-msgstr "Personnaliser..."
+msgid "Customize…"
+msgstr "Personnaliser…"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:46
 msgid "Delete missing tracks when synchronizing playlists"
@@ -2826,12 +2827,12 @@ msgid "Encoding Preferences"
 msgstr "Préférences du jeu de caractères"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:52
-msgid "Encoding..."
+msgid "Encoding…"
 msgstr "Jeu de caractères…"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:53
-msgid "Excluded files..."
-msgstr "Fichiers exclus..."
+msgid "Excluded files…"
+msgstr "Fichiers exclus…"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:54
 msgid "Exclusions List"
@@ -2896,7 +2897,7 @@ msgstr "Musique"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:70
 #, fuzzy
-msgid "Normalization..."
+msgid "Normalization…"
 msgstr "Normalisation …"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:71
@@ -2940,7 +2941,7 @@ msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:80
 msgid "Read embedded cover art information"
-msgstr "Lire les informations de pochette intégrées"
+msgstr "Lire les informations de jaquette intégrées"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:81
 msgid "Read embedded tags from music files"
@@ -2951,8 +2952,8 @@ msgid "ReplayGain Preferences"
 msgstr "Préférences de ReplayGain"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:83
-msgid "ReplayGain..."
-msgstr "ReplayGain..."
+msgid "ReplayGain…"
+msgstr "ReplayGain…"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:84
 msgid "Set still missing tags to file name"
@@ -3051,9 +3052,9 @@ msgid ""
 "\n"
 "Examples:\n"
 "- <i>folder.jpg</i>: Use <i>folder.jpg</i> as cover art.\n"
-"- <i>folder</i>: Use <i>folder.jpg</i>, <i>folder.png</i>...\n"
+"- <i>folder</i>: Use <i>folder.jpg</i>, <i>folder.png</i>…\n"
 "- <i>../%A.jpg</i>: Use <i>&lt;Album&gt;.jpg</i> in the parent directory\n"
-"- <i>%A</i>: Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>...\n"
+"- <i>%A</i>: Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>…\n"
 "- <i>folder.jpg;%a.jpg</i>: First try <i>folder.jpg</i>, then <i>&lt;"
 "artist&gt;.jpg</i>\n"
 "\n"
@@ -3072,11 +3073,11 @@ msgstr ""
 "correspondant au nom de fichier sera utilisé.\n"
 "\n"
 "Exemples :\n"
-"- <i>dossier.jpg</i> : utilise <i>dossier.jpg</i> comme pochette.\n"
-"- <i>dossier</i> : utilise <i>dossier.jpg</i>, <i>dossier.png</i>...\n"
+"- <i>dossier.jpg</i> : utilise <i>dossier.jpg</i> comme jaquette.\n"
+"- <i>dossier</i> : utilise <i>dossier.jpg</i>, <i>dossier.png</i>…\n"
 "- <i>../%A.jpg</i> : utilise <i>&lt;Album&gt;.jpg</i> dans le répertoire "
 "parent\n"
-"- <i>%A</i> : utilise <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>...\n"
+"- <i>%A</i> : utilise <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>…\n"
 "- <i>dossier.jpg;%a.jpg</i>: essaie d'abord <i>dossier.jpg</i>, puis <i>&lt;"
 "artiste&gt;.jpg</i>\n"
 "\n"
@@ -3123,7 +3124,7 @@ msgstr "<b>Croissant</b>"
 
 #: ../plugins/cover_display/cover_display.glade.h:4
 msgid "<b>Cover Art Display</b>"
-msgstr "<b>Affichage des pochettes</b>"
+msgstr "<b>Affichage des jaquettes</b>"
 
 #: ../plugins/cover_display/cover_display.glade.h:5
 #: ../plugins/playlist_display/playlist_display.glade.h:2
@@ -3143,7 +3144,7 @@ msgstr ">"
 
 #: ../plugins/cover_display/cover_display.glade.h:8
 msgid "Artwork Preview"
-msgstr "Aperçu de la pochette"
+msgstr "Aperçu de la jaquette"
 
 #: ../plugins/cover_display/cover_display.glade.h:9
 msgid "Background color"
@@ -3160,12 +3161,12 @@ msgstr "Tri sensible à la casse"
 msgid "Choose a Different Colour for the CoverArt Display Background"
 msgstr ""
 "Choisir une couleur différente pour l'arrière plan de l'affichage de la "
-"pochette"
+"jaquette"
 
 #: ../plugins/cover_display/cover_display.glade.h:12
 #, fuzzy
 msgid "Cover Art Display"
-msgstr "<b>Affichage des pochettes</b>"
+msgstr "<b>Affichage des jaquettes</b>"
 
 #: ../plugins/cover_display/cover_display.glade.h:13
 #: ../plugins/playlist_display/playlist_display.glade.h:6
@@ -3184,11 +3185,11 @@ msgstr "Couleur du texte"
 
 #: ../plugins/cover_display/cover_display_context_menu.c:40
 msgid "Select Cover From File"
-msgstr "Choisir la pochette à partir d'un fichier"
+msgstr "Choisir la jaquette à partir d'un fichier"
 
 #: ../plugins/cover_display/cover_display_context_menu.c:54
 msgid "View Full Size Artwork"
-msgstr "Voir les pochettes en taille réelle"
+msgstr "Voir les jaquettes en taille réelle"
 
 #. Set the resolution in the label
 #: ../plugins/cover_display/display_coverart.c:1523
@@ -3206,12 +3207,12 @@ msgstr "Impossible d'enlever l'album de la table de hachage des albums."
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
 msgstr ""
 "Une erreur est survenue lors du dépôt d'une image sur l'affichage des "
-"pochettes : %s\n"
+"jaquettes : %s\n"
 
 #: ../plugins/cover_display/display_coverart.c:2077
 #: ../plugins/details_editor/details.c:1749
 msgid "Successfully set new coverart for selected tracks"
-msgstr "L'affectation de la pochette aux morceaux sélectionnés a réussi"
+msgstr "L'affectation de la jaquette aux morceaux sélectionnés a réussi"
 
 #: ../plugins/cover_display/fetchcover.c:358
 #: ../plugins/details_editor/fetchcover.c:357
@@ -3229,16 +3230,16 @@ msgstr ""
 "Il peut être déjà associé avec d'autres morceaux de musique dans le "
 "dossier.\n"
 "\n"
-"- avec le bouton Oui le fichier sera écrasé, avec la possibilité d'avoir\n"
-"  l'association de ce fichier de pochette avec d'autres morceaux\n"
+"- avec le bouton [Oui] le fichier sera écrasé, avec la possibilité d'avoir\n"
+"  l'association de ce fichier de jaquette avec d'autres morceaux\n"
 "  de musique dans ce même dossier.\n"
-"- avec le bouton Non le fichier sera enregistré sous un nom unique.\n"
-"- avec le bouton Annuler l'opération de gestion de la pochette sera annulée."
+"- avec le bouton [Non] le fichier sera enregistré sous un nom unique.\n"
+"- avec le bouton [Annuler] l'opération de gestion de la jaquette sera annulée."
 
 #: ../plugins/cover_display/fetchcover.c:366
 #: ../plugins/details_editor/fetchcover.c:365
 msgid "Cover art file already exists"
-msgstr "Le fichier pochette existe déjà"
+msgstr "Le fichier pour la jaquette existe déjà"
 
 #: ../plugins/cover_display/fetchcover.c:368
 #: ../plugins/details_editor/fetchcover.c:367
@@ -3258,12 +3259,12 @@ msgstr "Abandonner"
 #: ../plugins/cover_display/plugin.c:44
 #, fuzzy
 msgid "Coverart Display"
-msgstr "<b>Affichage des pochettes</b>"
+msgstr "<b>Affichage des jaquettes</b>"
 
 #: ../plugins/cover_display/plugin.c:77 ../plugins/coverweb/plugin.c:75
 #, fuzzy
 msgid "Cover Display"
-msgstr "<b>Affichage des pochettes</b>"
+msgstr "<b>Affichage des jaquettes</b>"
 
 #: ../plugins/cover_display/plugin.c:102
 #, fuzzy
@@ -3291,7 +3292,7 @@ msgstr ""
 #: ../plugins/coverweb/plugin.c:46
 #, fuzzy
 msgid "Cover Web"
-msgstr "Pochette"
+msgstr "Jaquette"
 
 #: ../plugins/coverweb/plugin.c:94
 #, fuzzy
@@ -3391,13 +3392,13 @@ msgid ""
 "this track will be copied to all other selected tracks as well. Use with "
 "care."
 msgstr ""
-"Si vous cochez ceci, les informations (pochette et méta-informations) "
+"Si vous cochez ceci, les informations (jaquette et méta-informations) "
 "modifiées pour ce morceau seront copiées également pour tous les morceaux "
 "sélectionnés. À utiliser avec précaution."
 
 #: ../plugins/details_editor/details_editor.glade.h:6
 msgid "Set Cover Art from _File"
-msgstr "Pochette à partir du _fichier"
+msgstr "Jaquette à partir du _fichier"
 
 #: ../plugins/details_editor/details_editor.glade.h:7
 msgid "Undo _Track"
@@ -3421,7 +3422,7 @@ msgstr "_Podcasts"
 
 #: ../plugins/details_editor/details_editor.glade.h:12
 msgid "_Remove Cover Art"
-msgstr "_Supprimer la pochette"
+msgstr "_Supprimer la jaquette"
 
 #: ../plugins/details_editor/details_editor.glade.h:13
 msgid "_Sorting"
@@ -3481,7 +3482,7 @@ msgstr ""
 "Détermine le nom de fichier des morceaux que vous copiez de l'iPod, par "
 "exemple « %a/%A/%T - %t » ou « %o ». Vous pouvez séparer les expressions par "
 "des points-virgules -- gtkpod déterminera laquelle utiliser suivant "
-"l'extension du fichier donnée. Artiste : %a, album : %A, compositeur : %c, "
+"l'extension du fichier. Artiste : %a, album : %A, compositeur : %c, "
 "titre : %t, genre : %G, N° de piste : %T, N° de CD : %C, année : %Y, le nom "
 "de fichier original (nécessite le fichier d'infos étendues) : %o, le "
 "caractère « % » : %%."
@@ -3608,7 +3609,7 @@ msgid "Could not find file for '%s' on the iPod\n"
 msgstr "Impossible de trouver le fichier pour « %s » sur l'iPod\n"
 
 #: ../plugins/exporter/file_export.c:385
-msgid "copying..."
+msgid "copying…"
 msgstr "copie…"
 
 #: ../plugins/exporter/file_export.c:438
@@ -3805,7 +3806,7 @@ msgstr "Erreur à l'ouverture du fichier : « %s » (%s).\n"
 msgid "ERROR while writing tag to file: '%s' (%s).\n"
 msgstr "Erreur à l'écriture de l'attribut dans le fichier : « %s » (%s).\n"
 
-#. Tracks with zero play length are ignored by iPod...
+#. Tracks with zero play length are ignored by iPod…
 #: ../plugins/filetype_mp3/mp3file.c:2810
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
@@ -4241,7 +4242,7 @@ msgstr "_Supprimer les images"
 #: ../plugins/photo_editor/photo_editor.glade.h:12
 #, fuzzy
 msgid "_View Full Size"
-msgstr "Voir les pochettes en taille réelle"
+msgstr "Voir les jaquettes en taille réelle"
 
 #: ../plugins/photo_editor/photo_editor.glade.h:13
 msgid "_Zoom"
@@ -4396,7 +4397,7 @@ msgstr "Éjecter l'iPod"
 
 #: ../plugins/playlist_display/playlist_display_context_menu.c:315
 #: ../plugins/playlist_display/playlist_display_context_menu.c:356
-msgid "Copy selected playlist to..."
+msgid "Copy selected playlist to…"
 msgstr "Copier la liste de lecture sélectionnée vers…"
 
 #. Action name
@@ -4743,7 +4744,7 @@ msgid "  Edit iPod Repositories"
 msgstr "Éditer les propriétes de l'iPod"
 
 #: ../plugins/repository_editor/repository_editor.glade.h:1
-msgid "..."
+msgid "…"
 msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.glade.h:2
@@ -4779,7 +4780,7 @@ msgid "<i>Repository type</i>"
 msgstr "Type de dépôt :"
 
 #: ../plugins/repository_editor/repository_editor.glade.h:9
-msgid "Add New ..."
+msgid "Add New …"
 msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.glade.h:10
@@ -5091,8 +5092,8 @@ msgid ""
 "'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when "
 "finished."
 msgstr ""
-"'JJ/MM/AAAA HH:MM < d < JJ/MM/AAAA HH:MM' ou similaire. Appuyer sur "
-"« Entrée » pour valider."
+"« 'JJ/MM/AAAA HH:MM < d < JJ/MM/AAAA HH:MM' » ou similaire. Appuyer sur "
+"[Entrée] pour valider."
 
 #: ../plugins/sorttab_display/sorttab_display.glade.h:3
 msgid "0"
@@ -5348,7 +5349,7 @@ msgstr "Supprimer de la base de données"
 
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:280
 #: ../plugins/track_display/track_display_context_menu.c:177
-msgid "Copy selected track(s) to..."
+msgid "Copy selected track(s) to…"
 msgstr "Copier le(s) morceau(x) sélectionné(s) vers…"
 
 #: ../plugins/track_display/display_tracks.c:341
@@ -5676,7 +5677,7 @@ msgid "Confirmation"
 msgstr "Confirmation"
 
 #: ../src/gtkpod.c:189
-msgid "Loaded Session..."
+msgid "Loaded Session…"
 msgstr ""
 
 #: ../src/main.c:57
@@ -6150,14 +6151,14 @@ msgstr "_À propos de gtkpod"
 #~ msgid "Add Playlist"
 #~ msgstr "Ajouter une liste de lecture"
 
-#~ msgid "Add new repository/iPod..."
-#~ msgstr "Ajouter un nouvel iPod/dépôt..."
+#~ msgid "Add new repository/iPod…"
+#~ msgstr "Ajouter un nouvel iPod/dépôt…"
 
 #~ msgid "Add playlist from file"
 #~ msgstr "Ajouter une liste de lecture depuis un fichier"
 
 #~ msgid "Album Art"
-#~ msgstr "Pochette de l'album"
+#~ msgstr "Jaquette de l'album"
 
 #~ msgid "Bottom"
 #~ msgstr "Bas"
@@ -6168,8 +6169,8 @@ msgstr "_À propos de gtkpod"
 #~ msgid "Command for \"Play now\":"
 #~ msgstr "Ligne de commande pour « Jouer maintenant » :"
 
-#~ msgid "Commands..."
-#~ msgstr "Commandes..."
+#~ msgid "Commands…"
+#~ msgstr "Commandes…"
 
 #~ msgid "Create New Playlist"
 #~ msgstr "Créer une nouvelle liste de lecture."
@@ -6228,7 +6229,7 @@ msgstr "_À propos de gtkpod"
 #~ msgid "Selected Tracks from Hard Disk"
 #~ msgstr "Morceaux sélectionnés du disque dur"
 
-#~ msgid "Sorting..."
+#~ msgid "Sorting…"
 #~ msgstr "Tri…"
 
 #~ msgid "Synchronise Contacts, Calendar and Notes"
@@ -6340,7 +6341,7 @@ msgstr "_À propos de gtkpod"
 #~ "Normaliser les morceaux de l'entrée sélectionnée de quelle zone de tri ?"
 
 #~ msgid "Failed to set cover art: '%s'\n"
-#~ msgstr "Impossible d'écrire la pochette : « %s »\n"
+#~ msgstr "Impossible d'écrire la jaquette : « %s »\n"
 
 #~ msgid "Error reading iPod photo database.\n"
 #~ msgstr ""

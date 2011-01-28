@@ -31,6 +31,13 @@
 #  include <config.h>
 #endif
 
+#if !defined(HAVE_ENDIAN_H) || defined(__CYGWIN__)
+#  include <arpa/inet.h> /* for byteorder.3 functions */
+#  define be32toh(x)   ntohl(x)
+#else
+#  include <endian.h> /* for be32toh () */
+#endif
+
 #include <glib.h>
 #include <glib/gi18n-lib.h>
 #include "libgtkpod/charset.h"
