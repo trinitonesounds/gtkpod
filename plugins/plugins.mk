@@ -16,59 +16,52 @@ AM_CPPFLAGS = \
 plugindir = $(gtkpod_plugin_dir)
 plugin_DATA = $(plugin_file)
 
-all-local: create-plugin-links create-ui-link create-glade-link
-.PHONY: create-plugin-links create-ui-link create-glade-link
+all-local: create-plugin-links create-gui-links
+.PHONY: create-plugin-links create-gui-links
 
 # Creating symbolic links in plugin root directory
 create-plugin-links:
-	echo "Creating plugin links"
 	if [ ! -e ../$(plugin_lib) ]; then \
-		ln -s `pwd`/.libs/$(plugin_lib) ../$(plugin_lib); \
+		$(LN_S) `pwd`/.libs/$(plugin_lib) ../$(plugin_lib); \
 	fi; \
 	if [ ! -e ../$(plugin_file) ]; then \
-		ln -s `pwd`/$(plugin_file) ../$(plugin_file); \
+		$(LN_S) `pwd`/$(plugin_file) ../$(plugin_file); \
 	fi;
 
-# Creating symbolic link to ui file in installed ui directory
-create-ui-link:
-	if [ -e `pwd`/$(plugin_name).ui ] && [ ! -e ../../data/ui/$(plugin_name).ui ]; then \
-		ln -s `pwd`/$(plugin_name).ui ../../data/ui/$(plugin_name).ui; \
-	fi;
-
-create-glade-link:
-	if  [ -e `pwd`/$(plugin_name).glade ]; then \
-		if  [ ! -e ../../data/glade/$(plugin_name).glade ]; then \
-			ln -s `pwd`/$(plugin_name).glade ../../data/glade/$(plugin_name).glade; \
+# Creating symbolic link to glade and ui files in installed directories
+# Note: this will symlink to all xml files, inc. toolbar xml
+#       files not just gtkbuilder files
+create-gui-links:
+	for file in $(plugin_name)*.xml $(plugin_name)*.glade; \
+	do \
+		if [ ! -e "$(top_srcdir)/data/glade/$$file" -a -e `pwd`/"$$file" ]; then \
+			$(LN_S) `pwd`/"$$file" $(top_srcdir)/data/glade/"$$file"; \
 		fi; \
-	fi; \
-	if  [ -e `pwd`/$(plugin_name).xml ]; then \
-		if  [ ! -e ../../data/glade/$(plugin_name).xml ]; then \
-			ln -s `pwd`/$(plugin_name).xml ../../data/glade/$(plugin_name).xml; \
+	done;
+	\
+	for file in $(plugin_name)*.ui; \
+	do \
+		if [ ! -e $(top_srcdir)/data/ui/"$$file" -a -e `pwd`/"$$file" ]; then \
+			$(LN_S) `pwd`/"$$file" $(top_srcdir)/data/ui/"$$file"; \
 		fi; \
-	fi;
+	done;
 
-# Clean up the links and files created purely for dev  [ing
-clean-local: clean-plugin-files clean-ui-dir clean-glade-dir
-clean-local-check: clean-plugin-files
-.PHONY: clean-plugin-files clean-ui-dir clean-glade-dir clean-local-check
+# Clean up the links and files created purely for development
+clean-local: clean-dev-files
+clean-local-check: clean-dev-files
+.PHONY: clean-dev-files clean-local-check
 
-clean-plugin-files:
-	if [ -h ../$(plugin_file) ]; then \
-		rm -f ../$(plugin_lib) ../$(plugin_file) $(plugin_file); \
-	fi;
-
-clean-ui-dir:
-	if [ -h ../../data/ui/$(plugin_name).ui ]; then \
-		rm -f ../../data/ui/$(plugin_name).ui; \
-	fi;
-
-clean-glade-dir:
-	if  [ -h ../../data/glade/$(plugin_name).glade ]; then \
-		rm -f ../../data/glade/$(plugin_name).glade; \
-	fi; \
-	if  [ -h ../../data/glade/$(plugin_name).xml ]; then \
-		rm -f ../../data/glade/$(plugin_name).xml; \
-	fi;
+clean-dev-files:
+	for file in $(top_srcdir)/data/ui/$(plugin_name)*.ui \
+				$(top_srcdir)/data/glade/$(plugin_name)* \
+				$(top_srcdir)/plugins/$(plugin_lib) \
+				$(top_srcdir)/plugins/$(plugin_file) \
+				$(plugin_file); \
+	do \
+		if [ -e "$$file" ]; then \
+			rm -f "$$file"; \
+		fi; \
+	done;
 
 # List out the current language po files
 PO_FILES=\

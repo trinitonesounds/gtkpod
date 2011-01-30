@@ -44,6 +44,9 @@ am_cv_prog_cc_stdc=$ac_cv_prog_cc_stdc
 AM_PROG_LIBTOOL
 IT_PROG_INTLTOOL([0.33])
 
+dnl Check for ln -s
+AC_PROG_LN_S
+
 dnl Only use -Wall if we have gcc
 
 if test "x$GCC" = "xyes"; then
