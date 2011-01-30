@@ -61,7 +61,10 @@ fi
 # Default values
 [ -z "$comment" ] && comment="Encoded for gtkpod with $ENCODER"
 
-# echo "Converting \"$infile\" into \"$outfile\""
+LOG=`dirname "$outfile"`
+LOG="$LOG/conversion.log"
+
+echo "Converting \"$infile\" into \"$outfile\"" >> $LOG
 
 # Checking input file
 if [ "$infile" = "" ]; then
@@ -72,13 +75,13 @@ if [ ! -f "$infile" ]; then
 fi
 
 # Checking output file
-touch "$outfile"
+touch "$outfile" >> $LOG 2>&1
 if [ "x$?" != "x0" ]; then
     exit 2
 fi
 
 # Check for the existence of encoder
-encoder=`which $ENCODER`
+encoder=`which $ENCODER` >> $LOG 2>&1
 if [ -z "$encoder" ]; then
     exit 5
 fi
@@ -101,7 +104,7 @@ esac
 
 # Check for the existence of decoder
 if [ $decoder ]; then
-    decoder=`which "$decoder"`
+    decoder=`which "$decoder"` >> $LOG 2>&1
     if [ -z "$decoder" ]; then
         exit 4
     fi

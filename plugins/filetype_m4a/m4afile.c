@@ -39,7 +39,6 @@
 
 /* Info on how to implement new file formats: see mp3file.c for more info */
 
-
 Track *m4a_get_file_info(const gchar *m4aFileName) {
     gchar *path_utf8;
     gchar *suf;
@@ -57,23 +56,31 @@ Track *m4a_get_file_info(const gchar *m4aFileName) {
     return track;
 }
 
-gboolean m4a_write_file_info (const gchar *filename, Track *track) {
+gboolean m4a_write_file_info(const gchar *filename, Track *track) {
     return mp4_write_file_info(filename, track);
 }
 
-gboolean m4a_read_soundcheck (const gchar *filename, Track *track) {
+gboolean m4a_read_soundcheck(const gchar *filename, Track *track) {
     return mp4_read_soundcheck(filename, track);
 }
 
 gboolean m4a_can_convert() {
     gchar *cmd = m4a_get_conversion_cmd();
-    return cmd && cmd[0] && prefs_get_int("convert_m4a");
+    /*
+     * Return TRUE if
+     * Command exists and fully formed
+     * Target format is NOT set to AAC
+     * convert_m4a preference is set to TRUE
+     */
+    return cmd && cmd[0] && (prefs_get_int("conversion_target_format") != TARGET_FORMAT_AAC)
+            && prefs_get_int("convert_m4a");
 }
 
 gchar *m4a_get_conversion_cmd() {
-    return prefs_get_string("path_conv_m4a");
+    /* Convert an m4a to an mp3 */
+    return prefs_get_string("path_conv_mp3");
 }
 
 gchar *m4a_get_gain_cmd() {
-    return prefs_get_string ("path_aacgain");
+    return prefs_get_string("path_aacgain");
 }

@@ -26,10 +26,7 @@ ENCODER="ffmpeg"
 
 . ${0%/*}/gtkpod-convert-common.sh
 
-LOG=`dirname "$outfile"`
-LOG=${LOG%.log}
-
-echo "Attempting to convert file" >> $LOG
+echo "Attempting to convert file $infile" >> $LOG
 
 "$encoder" -i "$infile" $ENCODER_OPTS -metadata author="$artist" -metadata title="$title" -metadata album="$album" -metadata year="$year" -metadata track="$track" -metadata genre="$genre" -metadata comment="$comment" "$outfile" >> $LOG 2>&1
 

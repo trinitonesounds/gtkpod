@@ -2905,11 +2905,20 @@ gboolean id3_lyrics_save(const gchar *filename, const gchar *lyrics) {
 
 gboolean mp3_can_convert() {
     gchar *cmd = mp3_get_conversion_cmd();
+    /*
+     * Return TRUE if
+     * Command exists and fully formed
+     * Target format is NOT set to MP3
+     * convert_mp3 preference is set to TRUE
+     */
+    return cmd && cmd[0] && (prefs_get_int("conversion_target_format") != TARGET_FORMAT_MP3)
+                && prefs_get_int("convert_mp3");
     return cmd && cmd[0] && prefs_get_int("convert_mp3");
 }
 
 gchar *mp3_get_conversion_cmd() {
-    return prefs_get_string("path_conv_mp3");
+    /* Convert an mp3 to an m4a */
+    return prefs_get_string("path_conv_m4a");
 }
 
 gchar *mp3_get_gain_cmd() {

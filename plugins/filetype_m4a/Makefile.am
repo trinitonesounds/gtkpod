@@ -20,6 +20,7 @@ filetype_m4a_plugin_DATA =
 SUBDIRS =
 
 if HAVE_MP4
+if HAVE_FAAD
 
 include ../plugins.mk
 filetype_m4a.plugin: build-plugin-file
@@ -40,6 +41,7 @@ libfiletype_m4a_la_LIBADD = \
     $(LIBGTKPOD_LIBS) \
     $(LIBANJUTA_LIBS)
 
+endif
 endif
 
 EXTRA_DIST = \

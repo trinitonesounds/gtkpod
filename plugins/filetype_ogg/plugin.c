@@ -33,11 +33,21 @@
 #include <glib.h>
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/filetype_iface.h"
+#include "libgtkpod/prefs.h"
+#include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "oggfile.h"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
+
+static void set_default_preferences() {
+    if (! prefs_get_string_value("path_conv_ogg", NULL)) {
+        gchar *str = g_build_filename(get_script_dir(), CONVERT_TO_MP3_SCRIPT, NULL);
+        prefs_set_string("path_conv_ogg", str);
+        g_free(str);
+    }
+}
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {
     OGGFileTypePlugin *ogg_filetype_plugin;
@@ -46,6 +56,8 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     g_return_val_if_fail(FILE_IS_TYPE(ogg_filetype_plugin), TRUE);
 
     gtkpod_register_filetype(FILE_TYPE(ogg_filetype_plugin));
+
+    set_default_preferences();
 
     return TRUE; /* FALSE if activation failed */
 }

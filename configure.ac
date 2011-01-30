@@ -269,6 +269,26 @@ if test "x$have_flac" = "xyes"; then
 fi
 AM_CONDITIONAL(HAVE_FLAC, test "x$have_flac" = "xyes")
 
+dnl Check for FAAD for use with m4a files
+AC_ARG_WITH(faad, AS_HELP_STRING([--without-faad],[Disable M4A -> MP3 coversion support]))
+if test "x$with_faad" != "xno"; then
+	AC_CHECK_PROG(FAAD, faad, yes, no)
+	if test "x$FAAD" = "xyes"; then
+		have_faad="yes"
+	else
+        have_faad="no"
+        AC_MSG_WARN(["Cannot find faad. Conversion from m4a to mp3 not possible"])
+    fi
+    if test "xwith_faad" = "xyes" -a "x$have_faad" = "xno"; then
+        AC_MSG_ERROR([FAAD support explicitly requested but not available])
+    fi
+fi
+
+if test "x$have_faad" = "xyes"; then
+    AC_DEFINE(HAVE_FAAD, 1, [Define if you have the faad binary])
+fi
+AM_CONDITIONAL(HAVE_FAAD, test "x$have_faad" = "xyes")
+
 dnl Check for MP4 Headers
 AC_CHECK_HEADERS([mp4v2/platform.h], have_mp4=yes, have_mp4=no)
 AC_CHECK_HEADERS([mp4v2/itmf_tags.h], [], [],

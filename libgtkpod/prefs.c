@@ -173,23 +173,17 @@ static void set_default_preferences() {
     prefs_set_int("delete_database", TRUE);
     prefs_set_string("initial_mountpoint", "/media/ipod");
 
-    str = g_build_filename(get_script_dir(), "convert-2mp3.sh", NULL);
-    prefs_set_string("path_conv_ogg", str);
+    str = g_build_filename(get_script_dir(), CONVERT_TO_MP3_SCRIPT, NULL);
+    prefs_set_string("path_conv_mp3", str);
     g_free(str);
 
-    str = g_build_filename(get_script_dir(), "convert-2mp3.sh", NULL);
-    prefs_set_string("path_conv_flac", str);
+    str = g_build_filename(get_script_dir(), CONVERT_TO_M4A_SCRIPT, NULL);
+    prefs_set_string("path_conv_m4a", str);
     g_free(str);
 
-    str = g_build_filename(get_script_dir(), "convert-2mp3.sh", NULL);
-    prefs_set_string("path_conv_wav", str);
-    g_free(str);
-    prefs_set_int("convert_wav", FALSE);
-
-    str = g_build_filename(get_script_dir(), "convert-2mp4.sh", NULL);
+    str = g_build_filename(get_script_dir(), CONVERT_TO_MP4_SCRIPT, NULL);
     prefs_set_string("path_conv_mp4", str);
     g_free(str);
-    prefs_set_int("convert_mp4", TRUE);
 
     /* Set colum preferences */
     for (i = 0; i < TM_NUM_COLUMNS; i++) {
@@ -766,6 +760,20 @@ static void cleanup_keys() {
         prefs_set_string("md5", NULL);
     }
 
+    /* Conversion Paths */
+    gchar *str;
+    str = g_build_filename(get_script_dir(), CONVERT_TO_MP3_SCRIPT, NULL);
+    prefs_set_string("path_conv_mp3", str);
+    g_free(str);
+
+    str = g_build_filename(get_script_dir(), CONVERT_TO_M4A_SCRIPT, NULL);
+    prefs_set_string("path_conv_m4a", str);
+    g_free(str);
+
+    str = g_build_filename(get_script_dir(), CONVERT_TO_MP4_SCRIPT, NULL);
+    prefs_set_string("path_conv_mp4", str);
+    g_free(str);
+
     /* MP3 Gain */
     if (prefs_get_string_value_index("path", PATH_MP3GAIN, &buf)) {
         prefs_set_string("path_mp3gain", buf);
@@ -876,40 +884,6 @@ static void cleanup_keys() {
     /* For versions < 0.91, remove all itdb keys */
     if (version < 0.91)
         prefs_flush_subkey("itdb_");
-
-    /* rename convert scripts */
-    if (version <= 0.99001) {
-
-        const gchar **keyp;
-        const gchar *keys[] =
-            { "path_conv_m4a", "path_conv_wav", "path_conv_mp3", "path_conv_ogg", "path_conv_flac", "path_conv_mp4", NULL };
-
-        for (keyp = keys; *keyp; ++keyp) {
-            buf = prefs_get_string(*keyp);
-            if (buf) {
-                const gchar *needles[] =
-                    {
-                        "convert-flac2mp3.sh", "convert-m4a2mp3.sh", "convert-ogg2mp3.sh", "convert-wav2mp3.sh",
-                        "convert-flac2m4a.sh", "convert-m4a2m4a.sh", "convert-ogg2m4a.sh", "convert-wav2m4a.sh", NULL };
-                const gchar *replacements[] =
-                    {
-                        "convert-2mp3.sh    ", "convert-2mp3.sh   ", "convert-2mp3.sh   ", "convert-2mp3.sh   ",
-                        "convert-2m4a.sh    ", "convert-2m4a.sh   ", "convert-2m4a.sh   ", "convert-2m4a.sh   " };
-                const gchar **needlep;
-                const gchar **replp;
-                replp = replacements;
-                for (needlep = needles; *needlep; ++needlep, ++replp) {
-                    gchar *bufp = strstr(buf, *needlep);
-                    if (bufp) {
-                        g_memmove (bufp, *replp, strlen (*replp));
-                        prefs_set_string(*keyp, buf);
-                        break;
-                    }
-                }
-                g_free(buf);
-            }
-        }
-    }
 
     prefs_set_string("version", VERSION);
 }
@@ -1836,7 +1810,8 @@ GList *prefs_get_list(const gchar *key) {
             }
         }
         i++;
-    } while(item_string != NULL && item_hash != end_marker_hash);
+    }
+    while (item_string != NULL && item_hash != end_marker_hash);
 
     return list;
 }

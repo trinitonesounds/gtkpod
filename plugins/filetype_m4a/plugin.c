@@ -33,6 +33,8 @@
 #include <glib.h>
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/filetype_iface.h"
+#include "libgtkpod/prefs.h"
+#include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "m4afile.h"
 
@@ -61,7 +63,7 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
 }
 
 static void m4a_filetype_plugin_instance_init(GObject *obj) {
-//    M4AFileTypePlugin *plugin = (M4AFileTypePlugin*) obj;
+    //    M4AFileTypePlugin *plugin = (M4AFileTypePlugin*) obj;
 }
 
 static void m4a_filetype_plugin_class_init(GObjectClass *klass) {
@@ -93,8 +95,8 @@ static void m4a_filetype_iface_init(FileTypeInterface *iface) {
 }
 
 ANJUTA_PLUGIN_BEGIN (M4AFileTypePlugin, m4a_filetype_plugin);
-ANJUTA_PLUGIN_ADD_INTERFACE(m4a_filetype, FILE_TYPE_TYPE);
-ANJUTA_PLUGIN_END;
+        ANJUTA_PLUGIN_ADD_INTERFACE(m4a_filetype, FILE_TYPE_TYPE);ANJUTA_PLUGIN_END
+;
 
 ANJUTA_SIMPLE_PLUGIN (M4AFileTypePlugin, m4a_filetype_plugin)
 ;

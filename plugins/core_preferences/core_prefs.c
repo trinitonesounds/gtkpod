@@ -93,7 +93,6 @@ const gchar *conv_checkbox_map[][3] =
         { "convert_mp3", "convert_mp3", NULL },
         { "convert_aac", "convert_m4a", NULL },
         { "convert_wav", "convert_wav", NULL },
-        { "convert_mp4", "convert_mp4", NULL },
         { "display_conversion_log", "", NULL }, };
 
 ind_string tag_checkbox_map[] =
@@ -104,17 +103,15 @@ ind_string tag_checkbox_map[] =
         { 3, "tag_genre" },
         { 4, "tag_composer" }, };
 
-const gchar *conv_scripts[] =
-    { "convert-2mp3.sh", "convert-2m4a.sh", };
+const gchar *conv_audio_scripts[] =
+    { CONVERT_TO_MP3_SCRIPT, CONVERT_TO_M4A_SCRIPT };
 
-ind_string conv_paths[] =
+gchar *modifiable_conv_paths[] =
     {
-        { -1, "path_conv_ogg" },
-        { -1, "path_conv_flac" },
-        { TARGET_FORMAT_AAC, "path_conv_m4a" },
-        { TARGET_FORMAT_MP3, "path_conv_mp3" },
-        { -1, "path_conv_wav" },
-        { -1, "path_conv_mp4" } };
+        "path_conv_ogg",
+        "path_conv_flac",
+        "path_conv_wav"
+    };
 
 static TempPrefs *temp_prefs = NULL;
 static GtkBuilder* builder = NULL;
@@ -528,6 +525,19 @@ G_MODULE_EXPORT void on_conversion_settings_clicked(GtkButton *sender, gpointer 
         init_checkbox(GTK_TOGGLE_BUTTON (gtk_builder_get_object(builder, conv_checkbox_map[i][0])), conv_checkbox_map[i][1], conv_checkbox_map[i][2]);
     }
 
+    GtkWidget *mp3toggle = GTK_WIDGET (gtk_builder_get_object(builder, conv_checkbox_map[0][0]));
+    GtkWidget *m4atoggle = GTK_WIDGET (gtk_builder_get_object(builder, conv_checkbox_map[1][0]));
+
+    if (prefs_get_int("conversion_target_format") == TARGET_FORMAT_MP3) {
+        /* No point converting an mp3 to an mp3! */
+        gtk_widget_set_sensitive(mp3toggle, FALSE);
+        gtk_widget_set_sensitive(m4atoggle, TRUE);
+    } else if (prefs_get_int("conversion_target_format") == TARGET_FORMAT_AAC) {
+        /* No point converting an m4a to an m4a! */
+        gtk_widget_set_sensitive(mp3toggle, TRUE);
+        gtk_widget_set_sensitive(m4atoggle, FALSE);
+    }
+
     gtk_builder_connect_signals(builder, NULL);
     gtk_dialog_run(GTK_DIALOG (dlg));
     gtk_widget_hide(dlg);
@@ -560,19 +570,11 @@ G_MODULE_EXPORT void on_cache_size_value_changed(GtkSpinButton *sender, gpointer
  */
 G_MODULE_EXPORT void on_target_format_changed(GtkComboBox *sender, gpointer e) {
     gint index = gtk_combo_box_get_active(sender);
-    gchar *script = g_build_filename(get_script_dir(), conv_scripts[index], NULL);
+    gchar *script = g_build_filename(get_script_dir(), conv_audio_scripts[index], NULL);
     gint i;
 
-    for (i = 0; i < COUNTOF (conv_paths); i++) {
-        if (conv_paths[i].index == index) {
-            /*
-             The source format is the same as the target format -
-             we set "null conversion" without touching the boolean preference
-             */
-            prefs_set_string(conv_paths[i].string, "");
-        }
-        else
-            prefs_set_string(conv_paths[i].string, script);
+    for (i = 0; i < COUNTOF (modifiable_conv_paths); i++) {
+        prefs_set_string(modifiable_conv_paths[i], script);
     }
 
     prefs_set_int("conversion_target_format", index);

@@ -26,9 +26,6 @@ ENCODER="lame"
 
 . ${0%/*}/gtkpod-convert-common.sh
 
-LOG=`dirname "$outfile"`
-LOG=${LOG%.log}
-
 # Check if the genre is one which lame supports
 if [ -n "$genre" ] && `"$encoder" --genre-list 2>&1 | cut -c 5- | grep -qi "^$genre$"`; then
     usegenre=$genre

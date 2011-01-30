@@ -51,7 +51,7 @@ Track *video_get_file_info(const gchar *filename) {
 
 gboolean video_can_convert() {
     gchar *cmd = video_get_conversion_cmd();
-    return cmd && cmd[0] && prefs_get_int("convert_mp4");
+    return cmd && cmd[0];
 }
 
 gchar *video_get_conversion_cmd() {

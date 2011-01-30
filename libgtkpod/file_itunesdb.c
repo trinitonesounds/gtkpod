@@ -1196,7 +1196,7 @@ static gboolean ipod_dirs_present(const gchar *mountpoint) {
     return result;
 }
 
-static gdouble set_progress(time_t start, gint n, gint count, gint init_count, gdouble old_fraction) {
+static gdouble set_progress(time_t start, gint n, gint count, gint init_count, gdouble old_fraction, gchar *msg) {
     gchar *progtext;
     gdouble fraction;
 
@@ -1208,7 +1208,7 @@ static gdouble set_progress(time_t start, gint n, gint count, gint init_count, g
     }
 
     if (count - init_count == 0) {
-        progtext = g_strdup_printf(_("%d%%"), (gint) (fraction * 100));
+        progtext = g_strdup_printf(_("%d%%  %s"), (gint) (fraction * 100), msg);
     }
     else {
         time_t diff, fullsecs, hrs, mins, secs;
@@ -1219,7 +1219,7 @@ static gdouble set_progress(time_t start, gint n, gint count, gint init_count, g
         mins = (fullsecs % 3600) / 60;
         secs = ((fullsecs % 60) / 5) * 5;
         progtext
-                = g_strdup_printf(_("%d%% (%d/%d  %d:%02d:%02d left)"), (gint) (fraction * 100), count, n, (gint) hrs, (gint) mins, (gint) secs);
+                = g_strdup_printf(_("%d%% (%d/%d  %d:%02d:%02d left)  %s"), (gint) (fraction * 100), count, n, (gint) hrs, (gint) mins, (gint) secs, msg);
     }
 
 
@@ -1298,7 +1298,7 @@ static gboolean delete_files(iTunesDB *itdb, TransferData *td) {
             do {
                 GTimeVal gtime;
 
-                td->current_progress = set_progress(start, n, count, 0, td->current_progress);
+                td->current_progress = set_progress(start, n, count, 0, td->current_progress, "deletion completed");
 
                 g_mutex_unlock (td->mutex);
 
@@ -1333,7 +1333,7 @@ static gboolean delete_files(iTunesDB *itdb, TransferData *td) {
         eitdb->pending_deletion = g_list_delete_link(eitdb->pending_deletion, eitdb->pending_deletion);
     }
 
-    td->current_progress = set_progress(start, n, count, 0, td->current_progress);
+    td->current_progress = set_progress(start, n, count, 0, td->current_progress, "deletion completed");
 
     while (widgets_blocked && gtk_events_pending())
         gtk_main_iteration();
@@ -1477,20 +1477,19 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
                 = file_transfer_get_status(itdb, &to_convert_num, &converting_num, &to_transfer_num, &transferred_num, &failed_num);
 
         if (to_transfer_num > 0) {
-            buf = g_strdup_printf(_("Status: Copying track"));
+            buf = g_strdup_printf(_("Copying track"));
         }
         else {
             if ((to_convert_num + converting_num) > 0) {
-                buf = g_strdup_printf(_("Status: Waiting for conversion to complete"));
+                buf = g_strdup_printf(_("Waiting for conversion to complete"));
             }
             else {
-                buf = g_strdup_printf(_("Status: Finished transfer"));
+                buf = g_strdup_printf(_("Finished transfer"));
             }
         }
 
-        gtkpod_statusbar_message(buf);
         td->current_progress = set_progress(start, to_convert_num + to_transfer_num + failed_num + transferred_num, transferred_num
-                        + failed_num, transferred_init, td->current_progress);
+                        + failed_num, transferred_init, td->current_progress, buf);
 
         if ((to_convert_num != 0) && (converting_num == 0)) { /* Force the conversion to continue. Not sure if this scenario
          * is likely to happen, but better be safe then sorry */
