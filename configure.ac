@@ -270,7 +270,7 @@ fi
 AM_CONDITIONAL(HAVE_FLAC, test "x$have_flac" = "xyes")
 
 dnl Check for FAAD for use with m4a files
-AC_ARG_WITH(faad, AS_HELP_STRING([--without-faad],[Disable M4A -> MP3 coversion support]))
+AC_ARG_WITH(faad, AS_HELP_STRING([--without-faad],[Disable M4A -> MP3 conversion support]))
 if test "x$with_faad" != "xno"; then
 	AC_CHECK_PROG(FAAD, faad, yes, no)
 	if test "x$FAAD" = "xyes"; then
