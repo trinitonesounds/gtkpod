@@ -60,6 +60,8 @@ static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
                     &= add_directory_by_name(db_active_pl->itdb, currentnode->data, db_active_pl, prefs_get_int("add_recursively"), NULL, NULL);
         }
 
+        /* Final save of itdb */
+        gp_save_itdb(db_active_pl->itdb);
         /* clear log of non-updated tracks */
         display_non_updated((void *) -1, NULL);
         /* display log of updated tracks */
@@ -247,13 +249,14 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
         result
                 &= add_track_by_filename(playlist->itdb, gsl->data, playlist, prefs_get_int("add_recursively"), NULL, NULL);
         count++;
-        if (count == 10) { /* update and save every ten tracks added */
+        if (count % 10 == 0) { /* update and save every ten tracks added */
             gp_save_itdb(playlist->itdb);
             gtkpod_tracks_statusbar_update();
-            count = 0;
         }
     }
 
+    /* Final save of remaining added tracks */
+    gp_save_itdb(playlist->itdb);
     /* clear log of non-updated tracks */
     display_non_updated((void *) -1, NULL);
 

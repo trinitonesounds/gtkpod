@@ -4,12 +4,12 @@
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkDialog" id="confirm_dialog">
     <property name="border_width">6</property>
-    <property name="title"></property>
     <property name="type_hint">dialog</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">1</property>
         <child>
           <widget class="GtkHBox" id="hbox169">
@@ -34,6 +34,7 @@
             <child>
               <widget class="GtkVBox" id="vbox6">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <property name="spacing">6</property>
                 <child>
                   <widget class="GtkLabel" id="label">
@@ -80,6 +81,7 @@
                     <child>
                       <widget class="GtkVBox" id="option_vbox">
                         <property name="visible">True</property>
+                        <property name="orientation">vertical</property>
                         <child>
                           <placeholder/>
                         </child>
@@ -583,7 +585,6 @@ Ignore rules</property>
   <widget class="GtkDialog" id="input_box">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
     <property name="border_width">5</property>
-    <property name="title"></property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
@@ -711,82 +712,6 @@ The quick brown fox jumps over the lazy dog.</property>
       </widget>
     </child>
   </widget>
-  <widget class="GtkWindow" id="file_transfer_information_dialog">
-    <property name="border_width">2</property>
-    <property name="title" translatable="yes">Progress Information</property>
-    <property name="skip_taskbar_hint">True</property>
-    <child>
-      <widget class="GtkVBox" id="vbox180">
-        <property name="visible">True</property>
-        <property name="border_width">5</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">5</property>
-        <child>
-          <widget class="GtkLabel" id="textlabel">
-            <property name="visible">True</property>
-            <property name="xalign">0</property>
-            <property name="label">Some placeholder text to assure reasonable size.</property>
-          </widget>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <widget class="GtkProgressBar" id="progressbar">
-            <property name="visible">True</property>
-            <property name="pulse_step">0.10000000149</property>
-          </widget>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <widget class="GtkHSeparator" id="hseparator59">
-            <property name="visible">True</property>
-          </widget>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">3</property>
-          </packing>
-        </child>
-        <child>
-          <widget class="GtkHButtonBox" id="hbuttonbox17">
-            <property name="visible">True</property>
-            <child>
-              <widget class="GtkButton" id="abortbutton">
-                <property name="label">gtk-cancel</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="receives_default">False</property>
-                <property name="tooltip" translatable="yes">Export can be continued at a later time if canceled.</property>
-                <property name="border_width">2</property>
-                <property name="use_stock">True</property>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-          </widget>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">4</property>
-          </packing>
-        </child>
-      </widget>
-    </child>
-  </widget>
   <widget class="GtkWindow" id="conversion_log">
     <property name="border_width">4</property>
     <property name="title" translatable="yes">Conversion Progress Display</property>
@@ -800,6 +725,8 @@ The quick brown fox jumps over the lazy dog.</property>
             <property name="visible">True</property>
             <property name="xalign">0</property>
             <property name="label" translatable="yes">The output of the background conversion scripts is copied below. Each page of the notebook corresponds to one background thread.</property>
+            <property name="use_markup">True</property>
+            <property name="justify">center</property>
             <property name="wrap">True</property>
           </widget>
           <packing>

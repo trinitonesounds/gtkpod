@@ -326,6 +326,16 @@ void file_convert_shutdown() {
     /* in other words: not sure how we can shut this down... */
 }
 
+static void file_convert_lock(Conversion *conv) {
+    debug ("Locking conversion");
+    g_mutex_lock(conv->mutex);
+}
+
+static void file_convert_unlock(Conversion *conv) {
+    debug("Unlocking conversion");
+    g_mutex_unlock(conv->mutex);
+}
+
 /* This is called just before gtkpod closes down */
 void file_convert_update_default_sizes() {
     file_convert_init();
@@ -438,17 +448,17 @@ static void conversion_update_default_sizes(Conversion *conv) {
 
     g_return_if_fail (conv && conv->log_window);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     gtk_window_get_size(GTK_WINDOW (conv->log_window), &defx, &defy);
     prefs_set_int(FILE_CONVERT_LOG_SIZE_X, defx);
     prefs_set_int(FILE_CONVERT_LOG_SIZE_Y, defy);
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 }
 
 /* used to show/hide the log window and adjust the View->menu
- items. g_mutex_lock(conv->mutex) before calling. Used in
+ items. file_convert_lock(conv) before calling. Used in
  conversion_log_window_delete() and conversion_prefs_changed(). */
 static void conversion_display_hide_log_window(Conversion *conv) {
     /* show display log if it was previously hidden and should be
@@ -479,19 +489,19 @@ static void conversion_display_hide_log_window(Conversion *conv) {
 static gboolean conversion_log_window_delete(Conversion *conv) {
     g_return_val_if_fail (conv, TRUE);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     prefs_set_int(FILE_CONVERT_DISPLAY_LOG, FALSE);
     conversion_display_hide_log_window(conv);
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     return TRUE; /* don't close window -- it will be hidden instead by
      * conversion_display_hid_log_window() */
 }
 
 /* set the labels of the notebook of the log window. If required
- * 'g_mutex_lock (conv->mutex)' before calling this function. */
+ * 'file_convert_lock(conv)' before calling this function. */
 static void conversion_log_set_status(Conversion *conv) {
     GList *glpage, *glthread;
     gchar *buf;
@@ -536,7 +546,7 @@ static void conversion_log_set_status(Conversion *conv) {
 }
 
 /* adds pages to the notebook if the number of pages is less than the
- * number of threads. If required 'g_mutex_lock (conv->mutex)' before
+ * number of threads. If required 'file_convert_lock(conv)' before
  * calling this function. */
 static void conversion_log_add_pages(Conversion *conv, gint threads) {
     g_return_if_fail (conv);
@@ -567,7 +577,7 @@ static void conversion_prefs_changed(Conversion *conv) {
 
     g_return_if_fail (conv);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     if (prefs_get_double_value(FILE_CONVERT_MAXDIRSIZE, &maxsize)) {
         conv->max_dirsize = 1024 * 1024 * 1024 * maxsize;
@@ -608,7 +618,7 @@ static void conversion_prefs_changed(Conversion *conv) {
     for (gl = conv->transfer_itdbs; gl; gl = gl->next) {
         TransferItdb *tri = gl->data;
         if (!tri) {
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
             g_return_if_reached ();
         }
         tri->transfer = background_transfer;
@@ -616,7 +626,7 @@ static void conversion_prefs_changed(Conversion *conv) {
 
     conversion_display_hide_log_window(conv);
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 }
 
 /* Reorder the scheduled list so that tracks in @itdb are converted first */
@@ -628,13 +638,13 @@ static void conversion_itdb_first(Conversion *conv, iTunesDB *itdb) {
     g_return_if_fail (conv);
     g_return_if_fail (itdb);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
     /* start from the end to keep the same order overall (we're
      prepending to the list for performance reasons */
     for (gl = g_list_last(conv->scheduled); gl; gl = gl->prev) {
         ConvTrack *ctr = gl->data;
         if (!ctr || !ctr->track) {
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
             g_return_if_reached ();
         }
         g_return_if_fail (ctr);
@@ -648,11 +658,11 @@ static void conversion_itdb_first(Conversion *conv, iTunesDB *itdb) {
     }
     g_list_free(conv->scheduled);
     conv->scheduled = g_list_concat(gl_other, gl_itdb);
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 }
 
 /* adds @text to the textview on page @threadnum of the log window. If
- * required 'g_mutex_lock (conv->mutex)' before calling this
+ * required 'file_convert_lock(conv)' before calling this
  * function. */
 static void conversion_log_append(Conversion *conv, const gchar *text, gint threadnum) {
     GtkWidget *textview;
@@ -806,7 +816,7 @@ static void conversion_cancel_itdb(Conversion *conv, iTunesDB *itdb) {
     g_return_if_fail (conv);
     g_return_if_fail (itdb);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     g_list_foreach(conv->scheduled, conversion_cancel_itdb_fe, itdb);
     g_list_foreach(conv->processing, conversion_cancel_itdb_fe, itdb);
@@ -821,7 +831,7 @@ static void conversion_cancel_itdb(Conversion *conv, iTunesDB *itdb) {
     conversion_cancel_itdb_sub(&itr->failed, TRUE);
     itr->valid = FALSE;
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 }
 
 /* called by conversion_cancel_track to mark nodes invalid that refer
@@ -866,7 +876,7 @@ static void conversion_cancel_track(Conversion *conv, Track *track) {
     g_return_if_fail (conv);
     g_return_if_fail (track);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     conversion_cancel_track_sub(&conv->scheduled, track, FALSE);
     conversion_cancel_track_sub(&conv->processing, track, FALSE);
@@ -881,7 +891,7 @@ static void conversion_cancel_track(Conversion *conv, Track *track) {
         conversion_cancel_track_sub(&itr->finished, track, TRUE);
         conversion_cancel_track_sub(&itr->failed, track, TRUE);
     }
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 }
 
 /* Force the conversion process to continue even if the allocated
@@ -889,12 +899,12 @@ static void conversion_cancel_track(Conversion *conv, Track *track) {
 static void conversion_continue(Conversion *conv) {
     g_return_if_fail (conv);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
     if (conv->threads_num == 0) { /* make sure at least one conversion is started even if
      directory is full */
         conv->conversion_force = TRUE;
     }
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 }
 
 /* Add @track to the list of tracks to be converted if conversion is
@@ -952,9 +962,9 @@ static gboolean conversion_add_track(Conversion *conv, Track *track) {
 
         etr->conversion_status = FILE_CONVERT_FAILED;
         /* add to failed list */
-        g_mutex_lock (conv->mutex);
+        file_convert_lock(conv);
         conv->failed = g_list_prepend(conv->failed, ctr);
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
         debug ("added track to failed %p\n", track);
         return FALSE;
     }
@@ -968,9 +978,9 @@ static gboolean conversion_add_track(Conversion *conv, Track *track) {
 
         etr->conversion_status = FILE_CONVERT_FAILED;
         /* add to failed list */
-        g_mutex_lock (conv->mutex);
+        file_convert_lock(conv);
         conv->failed = g_list_prepend(conv->failed, ctr);
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
         debug ("added track to failed %p\n", track);
         return FALSE;
     }
@@ -980,9 +990,9 @@ static gboolean conversion_add_track(Conversion *conv, Track *track) {
         /* we don't convert these (yet) */
         etr->conversion_status = FILE_CONVERT_INACTIVE;
         /* add to finished */
-        g_mutex_lock (conv->mutex);
+        file_convert_lock(conv);
         conv->finished = g_list_prepend(conv->finished, ctr);
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
         debug ("added track to finished %p\n", track);
         return TRUE;
     }
@@ -997,18 +1007,18 @@ static gboolean conversion_add_track(Conversion *conv, Track *track) {
     if (convert) {
         gchar *template;
 
-        g_mutex_lock (conv->mutex);
+        file_convert_lock(conv);
         template = g_strdup(conv->template);
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
 
         ctr->fname_root = get_string_from_template(track, template, TRUE, TRUE);
         ctr->fname_extension = conversion_get_fname_extension(NULL, ctr);
         if (ctr->fname_extension) {
             etr->conversion_status = FILE_CONVERT_SCHEDULED;
             /* add to scheduled list */
-            g_mutex_lock (conv->mutex);
+            file_convert_lock(conv);
             conv->scheduled = g_list_prepend(conv->scheduled, ctr);
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
 
             result = TRUE;
             debug ("added track %p\n", track);
@@ -1026,9 +1036,9 @@ static gboolean conversion_add_track(Conversion *conv, Track *track) {
             else
                 etr->conversion_status = FILE_CONVERT_FAILED;
             /* add to failed list */
-            g_mutex_lock (conv->mutex);
+            file_convert_lock(conv);
             conv->failed = g_list_prepend(conv->failed, ctr);
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
             result = FALSE;
             debug ("added track to failed %p\n", track);
         }
@@ -1042,9 +1052,9 @@ static gboolean conversion_add_track(Conversion *conv, Track *track) {
 
         etr->conversion_status = FILE_CONVERT_REQUIRED;
         /* add to failed list */
-        g_mutex_lock (conv->mutex);
+        file_convert_lock(conv);
         conv->failed = g_list_prepend(conv->failed, ctr);
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
         result = FALSE;
         debug ("added track to failed %p\n", track);
     }
@@ -1056,9 +1066,9 @@ static gboolean conversion_add_track(Conversion *conv, Track *track) {
         g_free(ctr->converted_file);
         ctr->converted_file = NULL;
         /* add to finished */
-        g_mutex_lock (conv->mutex);
+        file_convert_lock(conv);
         conv->finished = g_list_prepend(conv->finished, ctr);
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
         debug ("added track to finished %p\n", track);
     }
     g_free(conversion_cmd);
@@ -1124,7 +1134,7 @@ static gchar *conversion_get_track_info(ConvTrack *ctr) {
 static gboolean conversion_setup_cachedir(Conversion *conv) {
     g_return_val_if_fail (conv, FALSE);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     g_free(conv->cachedir);
     conv->cachedir = NULL;
@@ -1150,7 +1160,7 @@ static gboolean conversion_setup_cachedir(Conversion *conv) {
         prefs_set_string(FILE_CONVERT_CACHEDIR, conv->cachedir);
     }
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     if (conv->cachedir)
         return TRUE;
@@ -1177,8 +1187,13 @@ static void conversion_free_resources(ConvTrack *ctr) {
     }
 }
 
-/* the scheduler code without the locking mechanism -- has to be
- called with conv->mutex locked */
+/*
+ * The scheduler code without the locking mechanism -- has to be
+ * called with conv->mutex locked.
+ *
+ * Should always return TRUE to avoid killing the timeout function.
+ * If the timeout function dies then saving itdb will produce a deadlock.
+ */
 static gboolean conversion_scheduler_unlocked(Conversion *conv) {
     GList *gli, *nextgli;
 
@@ -1186,8 +1201,8 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
     debug("Conversion scheduler unlocked\n");
 
     if (!conv->cachedir) {
-        /* Cachedir is not available. Not good! Remove the timeout function. */
-        g_return_val_if_reached (FALSE);
+        /* Cachedir is not available. Not good! */
+        g_return_val_if_reached (TRUE);
     }
 
     if (conv->dirsize == CONV_DIRSIZE_INVALID) { /* dirsize has not been set up. Wait until that has been done. */
@@ -1489,15 +1504,16 @@ static gboolean conversion_scheduler(gpointer data) {
     gdk_threads_enter();
     if (!g_mutex_trylock(conv->mutex)) {
         gdk_threads_leave();
-        return FALSE;
+        /* Do not destroy the timeout function by returning FALSE */
+        return TRUE;
     }
 
     result = conversion_scheduler_unlocked(conv);
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
     gdk_threads_leave();
 
-//    debug ("conversion_scheduler exit\n");
+    debug ("conversion_scheduler exit\n");
 
     return result;
 }
@@ -1512,17 +1528,17 @@ static gpointer conversion_update_dirsize(gpointer data) {
 
     debug ("%p update_dirsize enter\n", g_thread_self ());
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
     if (conv->dirsize_in_progress) { /* another thread is already working on the directory
      size. We'll wait until it has finished and just return. */
         g_cond_wait (conv->dirsize_cond, conv->mutex);
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
         debug ("%p update_dirsize concurrent exit\n", g_thread_self ());
         return NULL;
     }
     conv->dirsize_in_progress = TRUE;
     dir = g_strdup(conv->cachedir);
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     if (dir) {
         debug ("%p update_dirsize getting size of dir (%s)\n",
@@ -1533,7 +1549,7 @@ static gpointer conversion_update_dirsize(gpointer data) {
         dir = NULL;
     }
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
     /* Even in case of an error get_size_of_directory() will return
      0. This means setting the dirsize here will not block the
      conversion process even if there is a problem determining the
@@ -1543,7 +1559,7 @@ static gpointer conversion_update_dirsize(gpointer data) {
      broadcast to all threads waiting to wake them up. */
     conv->dirsize_in_progress = FALSE;
     g_cond_broadcast (conv->dirsize_cond);
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     debug ("%p update_dirsize exit\n", g_thread_self ());
     return NULL;
@@ -1638,16 +1654,16 @@ static gpointer conversion_prune_dir(gpointer data) {
 
     debug ("%p prune_dir enter\n", g_thread_self ());
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
     if (conv->prune_in_progress) { /* another thread is already working on the directory
      prune. We'll wait until it has finished and just return. */
         g_cond_wait (conv->prune_cond, conv->mutex);
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
         return NULL;
     }
     conv->prune_in_progress = TRUE;
     dir = g_strdup(conv->cachedir);
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     if (dir) {
         GHashTable *hash_needed_files;
@@ -1663,7 +1679,7 @@ static gpointer conversion_prune_dir(gpointer data) {
 
         /* make a hash of all the files still needed */
         hash_needed_files = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-        g_mutex_lock (conv->mutex);
+        file_convert_lock(conv);
 
         /* add needed files to hash */
         conversion_prune_needed_add(hash_needed_files, conv->scheduled);
@@ -1674,14 +1690,14 @@ static gpointer conversion_prune_dir(gpointer data) {
             TransferItdb *tri = gl->data;
             g_return_val_if_fail (tri, (conv->prune_in_progress = FALSE,
                             g_cond_broadcast (conv->prune_cond),
-                            g_mutex_unlock(conv->mutex),
+                            file_convert_unlock(conv),
                             NULL));
             conversion_prune_needed_add(hash_needed_files, tri->scheduled);
             conversion_prune_needed_add(hash_needed_files, tri->processing);
             conversion_prune_needed_add(hash_needed_files, tri->failed);
         }
 
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
 
         /* sort the list so that the oldest files are first */
         files = g_list_sort(files, conversion_prune_compfunc);
@@ -1689,10 +1705,10 @@ static gpointer conversion_prune_dir(gpointer data) {
         /* get an up-to-date count of the directory size */
         conversion_update_dirsize(conv);
 
-        g_mutex_lock (conv->mutex);
+        file_convert_lock(conv);
         dirsize = conv->dirsize;
         maxsize = conv->max_dirsize;
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
 
         debug ("%p prune_dir removing files (%lld/%lld)\n",
                 g_thread_self (), (long long int)dirsize, (long long int)maxsize);
@@ -1726,10 +1742,10 @@ static gpointer conversion_prune_dir(gpointer data) {
         dir = NULL;
     }
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
     conv->prune_in_progress = FALSE;
     g_cond_broadcast (conv->prune_cond);
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     debug ("%p prune_dir exit\n", g_thread_self ());
 
@@ -1754,10 +1770,10 @@ static gchar *conversion_get_fname_extension(Conversion *conv, ConvTrack *ctr) {
 
     /* get filename extension */
     if (conv)
-        g_mutex_lock (conv->mutex);
+        file_convert_lock(conv);
     argv = build_argv_from_strings(ctr->conversion_cmd, "-x", NULL);
     if (conv)
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
 
     result = g_spawn_sync(NULL, /* working dir */
     argv, /* argv        */
@@ -1769,7 +1785,7 @@ static gchar *conversion_get_fname_extension(Conversion *conv, ConvTrack *ctr) {
 
     if (result == FALSE) {
         if (conv)
-            g_mutex_lock (conv->mutex);
+            file_convert_lock(conv);
         if (ctr->valid) {
             gchar *buf = conversion_get_track_info(ctr);
             ctr->errormessage = g_strdup_printf(_("Conversion of '%s' failed: '%s'.\n\n"), buf, error->message);
@@ -1777,13 +1793,13 @@ static gchar *conversion_get_fname_extension(Conversion *conv, ConvTrack *ctr) {
             g_free(buf);
         }
         if (conv)
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
         g_error_free(error);
     }
     else if (
     WEXITSTATUS (exit_status) != 0) {
         if (conv)
-            g_mutex_lock (conv->mutex);
+            file_convert_lock(conv);
         if (ctr->valid) {
             gchar *buf = conversion_get_track_info(ctr);
             ctr->errormessage
@@ -1793,7 +1809,7 @@ static gchar *conversion_get_fname_extension(Conversion *conv, ConvTrack *ctr) {
             g_free(buf);
         }
         if (conv)
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
         result = FALSE;
     }
 
@@ -1809,7 +1825,7 @@ static gchar *conversion_get_fname_extension(Conversion *conv, ConvTrack *ctr) {
 
     if (!fname_extension || (strlen(fname_extension) == 0)) { /* no a valid filename extension */
         if (conv)
-            g_mutex_lock (conv->mutex);
+            file_convert_lock(conv);
         if (ctr->valid) {
             gchar *buf = conversion_get_track_info(ctr);
             ctr->errormessage
@@ -1818,7 +1834,7 @@ static gchar *conversion_get_fname_extension(Conversion *conv, ConvTrack *ctr) {
             g_free(buf);
         }
         if (conv)
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
         result = FALSE;
     }
 
@@ -1848,7 +1864,7 @@ static gboolean conversion_set_valid_filename(Conversion *conv, ConvTrack *ctr) 
     g_return_val_if_fail (conv, FALSE);
     g_return_val_if_fail (ctr, FALSE);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
     if (ctr->valid) {
         gint i;
         gchar *rootdir;
@@ -1868,7 +1884,7 @@ static gboolean conversion_set_valid_filename(Conversion *conv, ConvTrack *ctr) 
                         if (stat(ctr->orig_file, &orig_stat) == 0) {
                             if (conv_stat.st_mtime > orig_stat.st_mtime) { /* converted file is newer than
                              * original file */
-                                g_mutex_unlock (conv->mutex);
+                                file_convert_unlock(conv);
                                 return TRUE;
                             }
                             else { /* converted file is older than original file */
@@ -1881,7 +1897,7 @@ static gboolean conversion_set_valid_filename(Conversion *conv, ConvTrack *ctr) 
                                     = g_strdup_printf(_("Conversion of '%s' failed: Could not access original file '%s' (%s).\n\n"), buf, ctr->orig_file, strerror(errno));
                             debug("Conversion error: %s\n", ctr->errormessage);
                             g_free(buf);
-                            g_mutex_unlock (conv->mutex);
+                            file_convert_unlock(conv);
                             return FALSE;
                         }
                     }
@@ -1898,13 +1914,13 @@ static gboolean conversion_set_valid_filename(Conversion *conv, ConvTrack *ctr) 
         }
 
         if (!conv->cachedir) {
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
             g_return_val_if_reached (FALSE);
         }
 
         basename = g_build_filename(conv->cachedir, ctr->fname_root, NULL);
 
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
 
         i = 0;
         do {
@@ -1916,7 +1932,7 @@ static gboolean conversion_set_valid_filename(Conversion *conv, ConvTrack *ctr) 
 
         rootdir = g_path_get_dirname(fname);
 
-        g_mutex_lock (conv->mutex);
+        file_convert_lock(conv);
         result = mkdirhier(rootdir, TRUE);
         if (result == FALSE) {
             if (ctr->valid) {
@@ -1934,7 +1950,7 @@ static gboolean conversion_set_valid_filename(Conversion *conv, ConvTrack *ctr) 
         g_free(rootdir);
         g_free(fname);
     }
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     return result;
 }
@@ -1969,11 +1985,11 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
         return FALSE;
     }
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
     if (ctr->converted_file && ctr->valid) {
         if (g_file_test(ctr->converted_file, G_FILE_TEST_EXISTS)) { /* a valid converted file already exists. */
             result = TRUE;
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
         }
         else { /* start conversion */
             gchar **argv;
@@ -2016,11 +2032,11 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
                 g_io_channel_set_flags(ctr->gio_channel, G_IO_FLAG_NONBLOCK, NULL);
                 g_io_channel_set_close_on_unref(ctr->gio_channel, TRUE);
 
-                g_mutex_unlock (conv->mutex);
+                file_convert_unlock(conv);
 
                 waitpid(child_pid, &status, 0);
 
-                g_mutex_lock (conv->mutex);
+                file_convert_lock(conv);
 
                 ctr->pid = 0;
 
@@ -2051,12 +2067,12 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
                     result = FALSE;
                 }
             }
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
         }
     }
 
     if (result == TRUE) { /* determine size of new file */
-        g_mutex_lock (conv->mutex);
+        file_convert_lock(conv);
         struct stat statbuf;
         if (g_stat(ctr->converted_file, &statbuf) == 0) {
             ctr->converted_size = statbuf.st_size;
@@ -2071,7 +2087,7 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
             ctr->converted_file = NULL;
             result = FALSE;
         }
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
     }
 
     /* Fill in additional info (currently only gapless info for MP3s */
@@ -2081,7 +2097,7 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
 
         filetype = determine_filetype(ctr->converted_file);
         if (filetype) {
-            g_mutex_lock (conv->mutex);
+            file_convert_lock(conv);
             track = gp_track_new();
             retval = filetype_read_gapless(filetype, ctr->converted_file, track);
 
@@ -2094,7 +2110,7 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
             }
 
             itdb_track_free(track);
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
         }
     }
 
@@ -2115,7 +2131,7 @@ static gpointer conversion_thread(gpointer data) {
 
     g_return_val_if_fail (conv, NULL);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     debug ("%p thread entered\n", g_thread_self ());
 
@@ -2128,10 +2144,10 @@ static gpointer conversion_thread(gpointer data) {
 
             /* remove first scheduled entry and add it to processing */
             gl = g_list_last(conv->scheduled);
-            g_return_val_if_fail (gl, (g_mutex_unlock(conv->mutex), NULL));
+            g_return_val_if_fail (gl, (file_convert_unlock(conv), NULL));
             ctr = gl->data;
             conv->scheduled = g_list_remove_link(conv->scheduled, gl);
-            g_return_val_if_fail (ctr, (g_mutex_unlock(conv->mutex), NULL));
+            g_return_val_if_fail (ctr, (file_convert_unlock(conv), NULL));
             if (ctr->valid) { /* attach to processing queue */
                 conv->processing = g_list_concat(gl, conv->processing);
                 /* indicate thread number processing this track */
@@ -2148,7 +2164,7 @@ static gpointer conversion_thread(gpointer data) {
 
             conv->conversion_force = FALSE;
 
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
 
             debug ("%p thread converting\n", g_thread_self ());
 
@@ -2160,11 +2176,11 @@ static gpointer conversion_thread(gpointer data) {
                     conversion_ok,
                     ctr->converted_file);
 
-            g_mutex_lock (conv->mutex);
+            file_convert_lock(conv);
 
             /* remove from processing queue */
             gl = g_list_find(conv->processing, ctr);
-            g_return_val_if_fail (gl, (g_mutex_unlock(conv->mutex), NULL));
+            g_return_val_if_fail (gl, (file_convert_unlock(conv), NULL));
             conv->processing = g_list_remove_link(conv->processing, gl);
 
             if (ctr->valid) { /* track is still valid */
@@ -2185,12 +2201,12 @@ static gpointer conversion_thread(gpointer data) {
                 conversion_convtrack_free(ctr);
             }
 
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
 
             /* clean up directory and recalculate dirsize */
             conversion_prune_dir(conv);
 
-            g_mutex_lock (conv->mutex);
+            file_convert_lock(conv);
 
         }
         while (((conv->dirsize <= conv->max_dirsize) || conv->conversion_force) && (conv->threads_num
@@ -2214,7 +2230,7 @@ static gpointer conversion_thread(gpointer data) {
     /* reduce count of running threads */
     --conv->threads_num;
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     debug ("%p thread exit\n", g_thread_self ());
 
@@ -2249,15 +2265,14 @@ static FileTransferStatus transfer_get_status(Conversion *conv, iTunesDB *itdb, 
 
     g_return_val_if_fail (conv && itdb, -1);
 
-    g_mutex_lock (conv->mutex);
 
+    file_convert_lock(conv);
     tri = transfer_get_tri(conv, itdb);
-    g_return_val_if_fail (tri, (g_mutex_unlock (conv->mutex), -1));
+    g_return_val_if_fail (tri, (file_convert_unlock(conv), -1));
     status = tri->status;
 
     if (to_convert_num) {
-        *to_convert_num = transfer_get_status_count(itdb, conv->scheduled)
-                + transfer_get_status_count(itdb, conv->processing);
+        *to_convert_num = transfer_get_status_count(itdb, conv->scheduled);
     }
 
     if (converting_num) {
@@ -2277,7 +2292,7 @@ static FileTransferStatus transfer_get_status(Conversion *conv, iTunesDB *itdb, 
 
         for (gl = tri->finished; gl; gl = gl->next) {
             ConvTrack *ctr = gl->data;
-            g_return_val_if_fail (ctr, (g_mutex_unlock (conv->mutex), -1));
+            g_return_val_if_fail (ctr, (file_convert_unlock(conv), -1));
 
             if (ctr->valid) {
                 if (ctr->track->transferred)
@@ -2297,7 +2312,7 @@ static FileTransferStatus transfer_get_status(Conversion *conv, iTunesDB *itdb, 
         }
     }
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     return status;
 }
@@ -2312,11 +2327,11 @@ static void transfer_ack_itdb(Conversion *conv, iTunesDB *itdb) {
 
     g_return_if_fail (conv && itdb);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     tri = transfer_get_tri(conv, itdb);
     if (!tri) {
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
         g_return_if_reached ();
     }
 
@@ -2327,7 +2342,7 @@ static void transfer_ack_itdb(Conversion *conv, iTunesDB *itdb) {
     for (gl = tri->finished; gl; gl = gl->next) {
         ConvTrack *ctr = gl->data;
         if (!ctr) {
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
             g_return_if_reached ();
         }
         conversion_convtrack_free(ctr);
@@ -2335,7 +2350,7 @@ static void transfer_ack_itdb(Conversion *conv, iTunesDB *itdb) {
     g_list_free(tri->finished);
     tri->finished = NULL;
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 }
 
 /* Get a list of all failed tracks. Examine etr->conversion_status to
@@ -2350,17 +2365,17 @@ static GList *transfer_get_failed_tracks(Conversion *conv, iTunesDB *itdb) {
 
     g_return_val_if_fail (conv && itdb, NULL);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     tri = transfer_get_tri(conv, itdb);
-    g_return_val_if_fail (tri, (g_mutex_unlock (conv->mutex), NULL));
+    g_return_val_if_fail (tri, (file_convert_unlock(conv), NULL));
 
     /* Make sure all failed tracks are forwarded to tri->finished */
     conversion_scheduler_unlocked(conv);
 
     for (gl = tri->finished; gl; gl = gl->next) {
         ConvTrack *ctr = gl->data;
-        g_return_val_if_fail (ctr, (g_mutex_unlock (conv->mutex), NULL));
+        g_return_val_if_fail (ctr, (file_convert_unlock(conv), NULL));
 
         if (ctr->valid) {
             if (!ctr->dest_filename) {
@@ -2369,7 +2384,7 @@ static GList *transfer_get_failed_tracks(Conversion *conv, iTunesDB *itdb) {
         }
     }
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     return tracks;
 }
@@ -2381,11 +2396,11 @@ static void transfer_reschedule(Conversion *conv, iTunesDB *itdb) {
 
     g_return_if_fail (conv && itdb);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     tri = transfer_get_tri(conv, itdb);
     if (!tri) {
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
         g_return_if_reached ();
     }
 
@@ -2398,7 +2413,7 @@ static void transfer_reschedule(Conversion *conv, iTunesDB *itdb) {
         ConvTrack *ctr = gl->data;
         next = gl->next;
         if (!ctr) {
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
             g_return_if_reached ();
         }
 
@@ -2406,7 +2421,7 @@ static void transfer_reschedule(Conversion *conv, iTunesDB *itdb) {
             if (!ctr->dest_filename) {
                 ExtraTrackData *etr;
                 if (!ctr->track || !ctr->track->userdata) {
-                    g_mutex_unlock (conv->mutex);
+                    file_convert_unlock(conv);
                     g_return_if_reached ();
                 }
                 etr = ctr->track->userdata;
@@ -2428,7 +2443,7 @@ static void transfer_reschedule(Conversion *conv, iTunesDB *itdb) {
         }
     }
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     /* reschedule all failed conversion tracks */
     for (gl = tracks; gl; gl = gl->next) {
@@ -2447,11 +2462,11 @@ static void transfer_continue(Conversion *conv, iTunesDB *itdb) {
 
     g_return_if_fail (conv && itdb);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     tri = transfer_get_tri(conv, itdb);
     if (!tri) {
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
         g_return_if_reached ();
     }
 
@@ -2465,7 +2480,7 @@ static void transfer_continue(Conversion *conv, iTunesDB *itdb) {
     if (conv->threads_num == 0)
         conv->conversion_force = TRUE;
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 }
 
 /* set the tri->transfer flag to TRUE */
@@ -2477,18 +2492,18 @@ static void transfer_activate(Conversion *conv, iTunesDB *itdb, gboolean active)
     // Initialise Conversion infrastructure is not already initialised.
     file_convert_init();
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     tri = transfer_get_tri(conv, itdb);
     if (!tri) {
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
         g_return_if_reached ();
     }
 
     /* signal to continue transfer even if disk was full previously */
     tri->transfer = active;
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 }
 
 /* set the tri->transfer flag to whatever the preferences settings are */
@@ -2497,18 +2512,18 @@ static void transfer_reset(Conversion *conv, iTunesDB *itdb) {
 
     g_return_if_fail (conv && itdb);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     tri = transfer_get_tri(conv, itdb);
     if (!tri) {
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
         g_return_if_reached ();
     }
 
     /* signal to continue transfer even if disk was full previously */
     tri->transfer = prefs_get_int(FILE_CONVERT_BACKGROUND_TRANSFER);
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 }
 
 /* You must free the GLists before calling this function. */
@@ -2576,12 +2591,12 @@ static TransferItdb *transfer_get_tri(Conversion *conv, iTunesDB *itdb) {
 static gpointer transfer_force_prune_dir(gpointer data) {
     Conversion *conv = data;
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     if (conv->prune_in_progress) { /* wait until current prune process is finished before calling
      conversion_prune_dir() again */
         if (conv->force_prune_in_progress) { /* we already have another process waiting  */
-            g_mutex_unlock (conv->mutex);
+            file_convert_unlock(conv);
             return NULL;
         }
         conv->force_prune_in_progress = TRUE;
@@ -2589,7 +2604,7 @@ static gpointer transfer_force_prune_dir(gpointer data) {
         conv->force_prune_in_progress = FALSE;
     }
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     return conversion_prune_dir(conv);
 }
@@ -2614,7 +2629,7 @@ static FileTransferStatus transfer_transfer_track(TransferItdb *tri, ConvTrack *
 
     conv = tri->conv;
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     if (ctr->converted_file) {
         source_file = ctr->converted_file;
@@ -2625,7 +2640,7 @@ static FileTransferStatus transfer_transfer_track(TransferItdb *tri, ConvTrack *
 
     mountpoint = g_strdup(ctr->mountpoint);
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     g_return_val_if_fail (source_file && mountpoint, FALSE);
 
@@ -2633,19 +2648,19 @@ static FileTransferStatus transfer_transfer_track(TransferItdb *tri, ConvTrack *
 
     /* an error occurred */
     if (!dest_file) {
-        g_mutex_lock (conv->mutex);
+        file_convert_lock(conv);
         if (error) {
             ctr->errormessage = g_strdup_printf("%s\n", error->message);
             debug("Conversion error: %s\n", ctr->errormessage);
             g_error_free(error);
         }
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
         return result;
     }
 
     copy_success = itdb_cp(source_file, dest_file, &error);
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     if (!copy_success) {
         if (error && (error->code == G_FILE_ERROR_NOSPC)) { /* no space left on device */
@@ -2675,7 +2690,7 @@ static FileTransferStatus transfer_transfer_track(TransferItdb *tri, ConvTrack *
         }
     }
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     if (dest_file) { /* unsuccessful -- remove destination file if exists */
         if (g_file_test(dest_file, G_FILE_TEST_EXISTS)) {
@@ -2696,7 +2711,7 @@ static gpointer transfer_thread(gpointer data) {
     g_return_val_if_fail (tri && tri->conv, NULL);
     conv = tri->conv;
 
-    g_mutex_lock (conv->mutex);
+    file_convert_lock(conv);
 
     debug ("%p transfer thread enter\n", tri->itdb);
 
@@ -2710,11 +2725,11 @@ static gpointer transfer_thread(gpointer data) {
 
         /* remove first scheduled entry and add it to processing */
         gl = g_list_last(tri->scheduled);
-        g_return_val_if_fail (gl, (g_mutex_unlock(conv->mutex), NULL));
+        g_return_val_if_fail (gl, (file_convert_unlock(conv), NULL));
 
         ctr = gl->data;
         tri->scheduled = g_list_remove_link(tri->scheduled, gl);
-        g_return_val_if_fail (ctr, (g_mutex_unlock(conv->mutex), NULL));
+        g_return_val_if_fail (ctr, (file_convert_unlock(conv), NULL));
         if (tri->valid && ctr->valid) { /* attach to processing queue */
             tri->processing = g_list_concat(gl, tri->processing);
             /* indicate thread number processing this track */
@@ -2728,7 +2743,7 @@ static gpointer transfer_thread(gpointer data) {
             continue;
         }
 
-        g_mutex_unlock (conv->mutex);
+        file_convert_unlock(conv);
 
         debug ("%p thread transfer\n", ctr->itdb);
 
@@ -2739,11 +2754,11 @@ static gpointer transfer_thread(gpointer data) {
                 status,
                 ctr->dest_filename);
 
-        g_mutex_lock (conv->mutex);
+        file_convert_lock(conv);
 
         /* remove from processing queue */
         gl = g_list_find(tri->processing, ctr);
-        g_return_val_if_fail (gl, (g_mutex_unlock(conv->mutex), NULL));
+        g_return_val_if_fail (gl, (file_convert_unlock(conv), NULL));
         tri->processing = g_list_remove_link(tri->processing, gl);
 
         if (ctr->valid) { /* track is still valid */
@@ -2782,7 +2797,7 @@ static gpointer transfer_thread(gpointer data) {
     if (tri->status != FILE_TRANSFER_DISK_FULL)
         tri->status = FILE_TRANSFER_IDLE;
 
-    g_mutex_unlock (conv->mutex);
+    file_convert_unlock(conv);
 
     debug ("%p transfer thread exit\n", tri->itdb);
 

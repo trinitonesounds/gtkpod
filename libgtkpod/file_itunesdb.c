@@ -1477,18 +1477,18 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
                 = file_transfer_get_status(itdb, &to_convert_num, &converting_num, &to_transfer_num, &transferred_num, &failed_num);
 
         if (to_transfer_num > 0) {
-            buf = g_strdup_printf(_("Copying track"));
+            buf = g_strdup_printf(_("Saving: waiting for %d tracks to be copied"), to_transfer_num);
         }
         else {
             if ((to_convert_num + converting_num) > 0) {
-                buf = g_strdup_printf(_("Waiting for conversion to complete"));
+                buf = g_strdup_printf(_("Saving: waiting for %d tracks to convert"), (to_convert_num + converting_num));
             }
             else {
-                buf = g_strdup_printf(_("Finished transfer"));
+                buf = g_strdup_printf(_("Saving: finished track transfer"));
             }
         }
 
-        td->current_progress = set_progress(start, to_convert_num + to_transfer_num + failed_num + transferred_num, transferred_num
+        td->current_progress = set_progress(start, to_convert_num + converting_num + to_transfer_num + failed_num + transferred_num, transferred_num
                         + failed_num, transferred_init, td->current_progress, buf);
 
         if ((to_convert_num != 0) && (converting_num == 0)) { /* Force the conversion to continue. Not sure if this scenario

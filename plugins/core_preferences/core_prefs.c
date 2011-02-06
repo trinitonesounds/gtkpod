@@ -93,7 +93,8 @@ const gchar *conv_checkbox_map[][3] =
         { "convert_mp3", "convert_mp3", NULL },
         { "convert_aac", "convert_m4a", NULL },
         { "convert_wav", "convert_wav", NULL },
-        { "display_conversion_log", "", NULL }, };
+        { "display_conversion_log", "file_convert_display_log", NULL }
+    };
 
 ind_string tag_checkbox_map[] =
     {

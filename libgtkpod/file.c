@@ -87,6 +87,14 @@ FileType *determine_filetype(const gchar *path) {
     return type;
 }
 
+static void save_if_needed(gint count, iTunesDB *itdb) {
+    /* save every 10 files but do at least 10 first*/
+    if (count >= 10 && count % 10 == 0) {
+        gp_save_itdb(itdb);
+        gtkpod_tracks_statusbar_update();
+    }
+}
+
 /** check a filename against the "excludes file mask" from the preferences
  *  and return TRUE if it should be excluded based on the mask
  */
@@ -255,7 +263,7 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
                 gtkpod_warning(_("Skipping '%s' to avoid adding playlist file recursively\n"), filename);
             }
             else if (add_track_by_filename(itdb, filename, plitem, prefs_get_int("add_recursively"), addtrackfunc, data)) {
-                ++tracks;
+                save_if_needed(tracks, itdb);
             }
             g_free(filename);
         }
@@ -278,55 +286,64 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
  *                                                                  *
  \*------------------------------------------------------------------*/
 
-/* Add all files in directory and subdirectories.
- If @name is a regular file, just add that.
- If @plitem != NULL, add tracks also to Playlist @plitem
- @descend: TRUE: add recursively
- FALSE: don't enter subdirectories */
-/* Not nice: the return value has not much meaning. TRUE: all files
- * were added successfully. FALSE: some files could not be
- added (e.g: duplicates)  */
-/* @addtrackfunc: if != NULL this will be called instead of
- "add_track_to_playlist () -- used for dropping tracks at a specific
- position in the track view */
-gboolean add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data) {
-    gboolean result = TRUE;
 
-    g_return_val_if_fail (itdb, FALSE);
-    g_return_val_if_fail (name, FALSE);
+static gint add_directory_by_name_internal(iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, gint *filecount, AddTrackFunc addtrackfunc, gpointer data) {
+    gint result = 0;
+
+    g_return_val_if_fail (itdb, 0);
+    g_return_val_if_fail (name, 0);
 
     if (g_file_test(name, G_FILE_TEST_IS_DIR)) {
         GDir *dir = g_dir_open(name, 0, NULL);
         block_widgets();
         if (dir != NULL) {
             G_CONST_RETURN gchar *next;
-            gint count = 0;
             do {
                 next = g_dir_read_name(dir);
                 if (next != NULL) {
                     gchar *nextfull = g_build_filename(name, next, NULL);
-                    if (descend || !g_file_test(nextfull, G_FILE_TEST_IS_DIR))
-                        result &= add_directory_by_name(itdb, nextfull, plitem, descend, addtrackfunc, data);
+                    if (descend || !g_file_test(nextfull, G_FILE_TEST_IS_DIR)) {
+                        result += add_directory_by_name_internal(itdb, nextfull, plitem, descend, filecount, addtrackfunc, data);
+                    }
                     g_free(nextfull);
-                }
-                count++;
-                if (count == 10) { /* update and save every ten tracks added */
-                    gp_save_itdb(itdb);
-                    gtkpod_tracks_statusbar_update();
-                    count = 0;
                 }
             }
             while (next != NULL);
 
-            gp_save_itdb(itdb);
             g_dir_close(dir);
         }
         release_widgets();
     }
     else {
-        result = add_track_by_filename(itdb, name, plitem, descend, addtrackfunc, data);
+        if (add_track_by_filename(itdb, name, plitem, descend, addtrackfunc, data)) {
+            *filecount = *filecount + 1;
+            save_if_needed(*filecount, itdb);
+        }
+        result += *filecount;
     }
     return result;
+}
+
+/*
+ * Add all files in directory and subdirectories.
+ *
+ * If @name is a regular file, just add that.
+ * If @plitem != NULL, add tracks also to Playlist @plitem
+ * @descend:    TRUE: add recursively
+ *                      FALSE: don't enter subdirectories
+ * @addtrackfunc:
+ *                      if != NULL this will be called instead of
+ *                      "add_track_to_playlist () -- used for dropping
+ *                      tracks at a specific position in the track view
+ *
+ * return:
+ *              value indicating number of added tracks.
+ */
+/* */
+gint add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data) {
+    /* Uses internal method so that a count parameter can be added for saving purposes. */
+    gint filecount = 0;
+    return add_directory_by_name_internal(itdb, name, plitem, descend, &filecount, addtrackfunc, data);
 }
 
 /*------------------------------------------------------------------*\
