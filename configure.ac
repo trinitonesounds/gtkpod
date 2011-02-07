@@ -299,6 +299,14 @@ AC_CHECK_HEADERS([mp4v2/itmf_tags.h], [], [],
 		 ])
 AM_CONDITIONAL(HAVE_MP4, test "x$have_mp4" = "xyes")
 
+dnl Set up variables for M4A plugin
+if test "x$have_mp4" = "xyes" -a "x$have_faad" = "xyes"; then
+	have_m4a="yes"
+else
+	have_m4a="no"
+fi
+AM_CONDITIONAL(HAVE_M4A, test "x$have_m4a" = "xyes")
+
 # Check that we have endian.h
 AC_CHECK_HEADERS(endian.h, have_endian=yes, have_endian=no)
 if test "x$have_endian" = "xno"; then
@@ -519,7 +527,7 @@ Plugin Configuration :
 echo " CoverWeb Browser           .....: $coverweb"
 echo " Media Player               .....: $media_player"
 echo " MP4 File Type              .....: $have_mp4"
-echo " M4A File Type              .....: $have_mp4"
+echo " M4A File Type              .....: $have_m4a"
 echo " Flac File Type             .....: $have_flac"
 echo " Ogg File Type              .....: $have_ogg"
 
