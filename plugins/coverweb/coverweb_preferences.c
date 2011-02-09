@@ -174,17 +174,18 @@ G_MODULE_EXPORT void on_bookmark_remove_clicked (GtkButton *sender, gpointer e)
 }
 
 GtkWidget *init_coverweb_preferences(gchar *glade_path) {
-    GtkWidget *notebook;
-    GladeXML *pref_xml;
+    GtkWidget *win, *notebook;
+    GtkBuilder *pref_xml;
 
-    pref_xml = gtkpod_xml_new(glade_path, "coverweb_settings_notebook");
-    notebook = gtkpod_xml_get_widget(pref_xml, "coverweb_settings_notebook");
-    bookmarks_view = gtkpod_xml_get_widget(pref_xml, "bookmarks_view");
-
+    pref_xml = gtkpod_builder_xml_new(glade_path);
+    win = gtkpod_builder_xml_get_widget(pref_xml, "prefs_window");
+    notebook = gtkpod_builder_xml_get_widget(pref_xml, "coverweb_settings_notebook");
+    bookmarks_view = gtkpod_builder_xml_get_widget(pref_xml, "bookmarks_view");
     g_object_ref(notebook);
+    gtk_container_remove(GTK_CONTAINER (win), notebook);
 
     setup_bookmarks_tree (GTK_TREE_VIEW(bookmarks_view), TRUE);
 
-    glade_xml_signal_autoconnect(pref_xml);
+    gtk_builder_connect_signals(pref_xml, NULL);
     return notebook;
 }

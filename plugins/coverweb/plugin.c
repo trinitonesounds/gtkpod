@@ -124,7 +124,7 @@ static void cover_web_plugin_instance_init(GObject *obj) {
     plugin->uiid = 0;
     plugin->coverweb_window = NULL;
     plugin->action_group = NULL;
-    plugin->glade_path = g_build_filename(get_glade_dir(), "coverweb.glade", NULL);
+    plugin->glade_path = g_build_filename(get_glade_dir(), "coverweb.xml", NULL);
 }
 
 static void cover_web_plugin_class_init(GObjectClass *klass) {
