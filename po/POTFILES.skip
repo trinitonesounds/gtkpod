@@ -1,6 +1,6 @@
 data/glade/core_prefs.xml
 data/glade/cover_display.glade
-data/glade/coverweb.glade
+data/glade/coverweb.xml
 data/glade/details_editor.glade
 data/glade/exporter.xml
 data/glade/media_player.glade

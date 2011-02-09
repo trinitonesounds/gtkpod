@@ -34,7 +34,7 @@ plugins/cover_display/display_coverart.c
 plugins/cover_display/fetchcover.c
 plugins/cover_display/plugin.c
 plugins/coverweb/coverweb.c
-plugins/coverweb/coverweb.glade
+[type: gettext/glade]plugins/coverweb/coverweb.xml
 [type: gettext/ini]plugins/coverweb/coverweb.plugin.in
 plugins/coverweb/coverweb_preferences.c
 plugins/coverweb/plugin.c
