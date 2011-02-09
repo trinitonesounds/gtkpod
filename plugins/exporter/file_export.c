@@ -533,11 +533,11 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
 
     gchar *glade_path = g_build_filename(get_glade_dir(), "exporter.xml", NULL);
-    export_files_xml = gtk_builder_new();
-    gtk_builder_add_from_file(export_files_xml, glade_path, NULL);
-    win = GTK_WIDGET(gtk_builder_get_object(export_files_xml, "export_files_options"));
-    options = GTK_WIDGET(gtk_builder_get_object(export_files_xml, "ef_options_frame"));
-    message_box = GTK_WIDGET(gtk_builder_get_object(export_files_xml, "ef_message_box"));
+
+    export_files_xml = gtkpod_builder_xml_new(glade_path);
+    win = gtkpod_builder_xml_get_widget(export_files_xml, "export_files_options");
+    options = gtkpod_builder_xml_get_widget(export_files_xml, "ef_options_frame");
+    message_box = gtkpod_builder_xml_get_widget(export_files_xml, "ef_message_box");
     g_free(glade_path);
 
     /* Information needed to clean up later */
@@ -559,8 +559,8 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
     /* set message text */
     if (display) {
         GList *gl;
-        GtkWidget *label = GTK_WIDGET(gtk_builder_get_object(export_files_xml, "ef_message"));
-        GtkWidget *tv = GTK_WIDGET(gtk_builder_get_object(export_files_xml, "ef_textview"));
+        GtkWidget *label = gtkpod_builder_xml_get_widget(export_files_xml, "ef_message");
+        GtkWidget *tv = gtkpod_builder_xml_get_widget(export_files_xml, "ef_textview");
         GtkTextBuffer *tb = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tv));
         if (message)
             gtk_label_set_text(GTK_LABEL (label), message);
@@ -939,10 +939,10 @@ void export_tracks_to_playlist_file(GList *tracks) {
     gchar *glade_path = g_build_filename(get_glade_dir(), "exporter.glade", NULL);
     export_playlist_xml = gtk_builder_new();
     gtk_builder_add_from_file(export_playlist_xml, glade_path, NULL);
-    win = GTK_WIDGET(gtk_builder_get_object(export_playlist_xml, "export_playlist_file_options"));
+    win = gtkpod_builder_xml_get_widget(export_playlist_xml, "export_playlist_file_options");
     g_free(glade_path);
 
-    options = GTK_WIDGET(gtk_builder_get_object(export_playlist_xml, "ep_options_frame"));
+    options = gtkpod_builder_xml_get_widget(export_playlist_xml, "ep_options_frame");
 
     fcd->win_xml = export_playlist_xml;
 

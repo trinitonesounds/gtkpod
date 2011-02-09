@@ -215,6 +215,9 @@ gchar *which (const gchar *exe);
 GladeXML *gtkpod_xml_new (const gchar *gtkpod_xml_file, const gchar *name);
 GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, const gchar *name);
 
+GtkBuilder *gtkpod_builder_xml_new(const gchar *filepath);
+GtkWidget *gtkpod_builder_xml_get_widget(GtkBuilder *builder, const gchar* name);
+
 gchar *get_itdb_prefs_key (gint index, const gchar *subkey);
 gchar *get_playlist_prefs_key (gint index, Playlist *pl, const gchar *subkey);
 gint get_itdb_index (iTunesDB *itdb);

@@ -1336,6 +1336,34 @@ GtkWidget *gtkpod_xml_get_widget(GladeXML *xml, const gchar *name) {
     return w;
 }
 
+GtkBuilder *gtkpod_builder_xml_new(const gchar *filepath) {
+    GtkBuilder *builder;
+    GError *error = NULL;
+
+    if (!g_file_test(filepath, G_FILE_TEST_IS_REGULAR)) {
+        g_error("Cannot create builder. File %s does not exist", filepath);
+        g_return_val_if_reached(NULL);
+    }
+
+    builder = gtk_builder_new();
+    if (! gtk_builder_add_from_file(builder, filepath, &error)) {
+        g_error("Failed to create builder from file %s: %s", filepath, error->message);
+        g_error_free(error);
+        g_return_val_if_reached(NULL);
+    }
+
+    return builder;
+}
+
+GtkWidget *gtkpod_builder_xml_get_widget(GtkBuilder *builder, const gchar* name) {
+    GObject *obj = gtk_builder_get_object(builder, name);
+    if (! GTK_IS_WIDGET(obj)) {
+        g_error("*** Programming error: Widget not found: '%s'\n", name);
+    }
+
+    return GTK_WIDGET(obj);
+}
+
 /* ------------------------------------------------------------
  *
  *        Helper functions for pref keys
