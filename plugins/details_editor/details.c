@@ -1289,7 +1289,6 @@ static void details_set_tracks(GList *tracks) {
     }
 
     if (details_view->changed) {
-        gdk_threads_enter ();
         gchar *str = g_strdup_printf(_("Changes have been made to the tracks in the details editor.\nDo you want to lose those changes?"));
         gint result = gtkpod_confirmation_simple(
                 GTK_MESSAGE_WARNING,
@@ -1298,7 +1297,6 @@ static void details_set_tracks(GList *tracks) {
                 GTK_STOCK_YES);
 
         g_free(str);
-        gdk_threads_leave ();
         if (result == GTK_RESPONSE_CANCEL) {
             return;
         }

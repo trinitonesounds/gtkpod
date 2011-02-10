@@ -1876,13 +1876,16 @@ gboolean read_lyrics_from_file(Track *track, gchar **lyrics) {
     etr = track->userdata;
     g_return_val_if_fail (etr,FALSE);
     path = get_file_name_from_source(track, SOURCE_PREFER_IPOD);
-    filetype = determine_filetype(path);
-
-    if (!filetype) {
-        *lyrics = g_strdup_printf(_("Error: Could not determine filetype for file at path: %s.\n\n"), path);
-    }
-    else {
-        result = filetype_read_lyrics(filetype, path, lyrics);
+    if (path) {
+        filetype = determine_filetype(path);
+        if (!filetype) {
+            *lyrics = g_strdup_printf(_("Error: Could not determine filetype for file at path: %s.\n\n"), path);
+        }
+        else {
+            result = filetype_read_lyrics(filetype, path, lyrics);
+        }
+    } else {
+        *lyrics = g_strdup_printf(_("Error: Unable to get filename from path"));
     }
 
     g_free(path);
