@@ -83,7 +83,7 @@ version
 /data/glade/sorttab_display.glade
 /data/glade/track_display.glade
 /data/glade/repository_editor.glade
-/data/glade/cover_display.glade
+/data/glade/cover_display.xml
 /data/glade/playlist_display_toolbar.xml
 /data/glade/core_prefs.xml
 /data/glade/photo_editor.glade

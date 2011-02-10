@@ -81,7 +81,7 @@ typedef struct {
 	GtkWidget *draw_area;
 
 	/* glade path */
-	gchar *glade_path;
+	gchar *gladepath;
 } CD_Widget;
 
 extern const gchar *DISPLAY_COVER_SHOW;

@@ -27,7 +27,7 @@ plugins/core_preferences/core_prefs.c
 [type: gettext/ini]plugins/core_preferences/core_prefs.plugin.in
 [type: gettext/glade]plugins/core_preferences/core_prefs.xml
 plugins/core_preferences/plugin.c
-plugins/cover_display/cover_display.glade
+[type: gettext/glade]plugins/cover_display/cover_display.xml
 plugins/cover_display/cover_display_context_menu.c
 [type: gettext/ini]plugins/cover_display/cover_display.plugin.in
 plugins/cover_display/display_coverart.c

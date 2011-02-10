@@ -165,22 +165,22 @@ static gboolean coverart_window_valid() {
  * Initialise the boxes and canvases of the coverart_display.
  *
  */
-void coverart_init_display(GtkWidget *parent, gchar *glade_path) {
+void coverart_init_display(GtkWidget *parent, gchar *gladepath) {
     GtkWidget *cover_temp_window;
-    GladeXML *xml;
+    GtkBuilder *xml;
 
     cdwidget = g_new0(CD_Widget, 1);
 
     cdwidget->parent = parent;
-    cdwidget->glade_path = glade_path;
-    xml = gtkpod_xml_new(cdwidget->glade_path, "cover_display_window");
-    cover_temp_window = gtkpod_xml_get_widget(xml, "cover_display_window");
-    cdwidget->contentpanel = gtkpod_xml_get_widget(xml, "cover_display_panel");
-    cdwidget->canvasbox = gtkpod_xml_get_widget(xml, "cover_display_canvasbox");
-    cdwidget->controlbox = gtkpod_xml_get_widget(xml, "cover_display_controlbox");
-    cdwidget->leftbutton = GTK_BUTTON (gtkpod_xml_get_widget (xml, "cover_display_leftbutton"));
-    cdwidget->rightbutton = GTK_BUTTON (gtkpod_xml_get_widget (xml, "cover_display_rightbutton"));
-    cdwidget->cdslider = GTK_HSCALE (gtkpod_xml_get_widget (xml, "cover_display_scaler"));
+    cdwidget->gladepath = gladepath;
+    xml = gtkpod_builder_xml_new(cdwidget->gladepath);
+    cover_temp_window = gtkpod_builder_xml_get_widget(xml, "cover_display_window");
+    cdwidget->contentpanel = gtkpod_builder_xml_get_widget(xml, "cover_display_panel");
+    cdwidget->canvasbox = gtkpod_builder_xml_get_widget(xml, "cover_display_canvasbox");
+    cdwidget->controlbox = gtkpod_builder_xml_get_widget(xml, "cover_display_controlbox");
+    cdwidget->leftbutton = GTK_BUTTON (gtkpod_builder_xml_get_widget (xml, "cover_display_leftbutton"));
+    cdwidget->rightbutton = GTK_BUTTON (gtkpod_builder_xml_get_widget (xml, "cover_display_rightbutton"));
+    cdwidget->cdslider = GTK_HSCALE (gtkpod_builder_xml_get_widget (xml, "cover_display_scaler"));
     /* create a new drawing area */
     cdwidget->draw_area = gtk_drawing_area_new();
     cdwidget->cdcovers = g_ptr_array_sized_new(IMG_TOTAL);
@@ -244,9 +244,6 @@ void coverart_init_display(GtkWidget *parent, gchar *glade_path) {
 
     slide_signal_id = g_signal_connect (G_OBJECT(cdwidget->cdslider), "value-changed",
             G_CALLBACK(on_cover_display_slider_value_changed), NULL);
-
-    //    window_signal_id = g_signal_connect (gtkpod_window, "configure_event",
-    //            G_CALLBACK (on_gtkpod_window_configure), NULL);
 
     if (GTK_IS_SCROLLED_WINDOW(parent))
         gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(parent), cdwidget->contentpanel);
@@ -1503,12 +1500,12 @@ static void display_coverart_image_dialog(GdkPixbuf *image) {
     GtkWidget *res_label;
     GdkPixbuf *scaled = NULL;
     gchar *text;
-    GladeXML *xml;
+    GtkBuilder *xml;
 
-    xml = gtkpod_xml_new(cdwidget->glade_path, "coverart_preview_dialog");
-    dialog = gtkpod_xml_get_widget(xml, "coverart_preview_dialog");
-    drawarea = gtkpod_xml_get_widget(xml, "coverart_preview_dialog_drawarea");
-    res_label = gtkpod_xml_get_widget(xml, "coverart_preview_dialog_res_lbl");
+    xml = gtkpod_builder_xml_new(cdwidget->gladepath);
+    dialog = gtkpod_builder_xml_get_widget(xml, "coverart_preview_dialog");
+    drawarea = gtkpod_builder_xml_get_widget(xml, "coverart_preview_dialog_drawarea");
+    res_label = gtkpod_builder_xml_get_widget(xml, "coverart_preview_dialog_res_lbl");
     g_return_if_fail (dialog);
     g_return_if_fail (drawarea);
     g_return_if_fail (res_label);

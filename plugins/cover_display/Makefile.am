@@ -7,7 +7,7 @@ cover_display_ui_DATA = $(plugin_name).ui
 
 # Plugin Glade file
 cover_display_gladedir = $(gtkpod_glade_dir)
-cover_display_glade_DATA =  $(plugin_name).glade
+cover_display_glade_DATA =  $(plugin_name).xml
 
 # Plugin Icon file
 cover_display_pixmapsdir = $(gtkpod_image_dir)

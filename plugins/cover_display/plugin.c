@@ -145,7 +145,7 @@ static void cover_display_plugin_instance_init(GObject *obj) {
     plugin->uiid = 0;
     plugin->cover_window = NULL;
     plugin->action_group = NULL;
-    plugin->gladepath = g_build_filename(get_glade_dir(), "cover_display.glade", NULL);
+    plugin->gladepath = g_build_filename(get_glade_dir(), "cover_display.xml", NULL);
 }
 
 static void cover_display_plugin_class_init(GObjectClass *klass) {

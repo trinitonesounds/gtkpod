@@ -26,8 +26,6 @@
  |
  */
 
-#include <gtk/gtk.h>
-#include <glade/glade.h>
 #include "libgtkpod/misc.h"
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/gp_private.h"
@@ -90,20 +88,21 @@ G_MODULE_EXPORT void on_cad_sort_case_sensitive_toggled(GtkToggleButton *toggleb
     gtkpod_broadcast_preference_change("cad_case_sensitive", val);
 }
 
-GtkWidget *init_cover_preferences(gchar *glade_path) {
+GtkWidget *init_cover_preferences(gchar *gladepath) {
     GtkWidget *notebook;
-    GladeXML *pref_xml;
+    GtkBuilder *pref_xml;
     GtkWidget *coverart_bgcolorselect_button;
     GtkWidget *coverart_fgcolorselect_button;
-    GtkWidget *w;
+    GtkWidget *w, *win;
     GdkColor *color;
 
-    pref_xml = gtkpod_xml_new(glade_path, "cover_settings_notebook");
-    notebook = gtkpod_xml_get_widget(pref_xml, "cover_settings_notebook");
-    coverart_bgcolorselect_button = gtkpod_xml_get_widget (pref_xml, "coverart_display_bg_button");
-    coverart_fgcolorselect_button = gtkpod_xml_get_widget (pref_xml, "coverart_display_fg_button");
-
+    pref_xml = gtkpod_builder_xml_new(gladepath);
+    win = gtkpod_builder_xml_get_widget(pref_xml, "preference_window");
+    notebook = gtkpod_builder_xml_get_widget(pref_xml, "cover_settings_notebook");
+    coverart_bgcolorselect_button = gtkpod_builder_xml_get_widget (pref_xml, "coverart_display_bg_button");
+    coverart_fgcolorselect_button = gtkpod_builder_xml_get_widget (pref_xml, "coverart_display_fg_button");
     g_object_ref(notebook);
+    gtk_container_remove(GTK_CONTAINER (win), notebook);
 
     color = coverart_get_background_display_color();
     gtk_color_button_set_color (GTK_COLOR_BUTTON(coverart_bgcolorselect_button), color);
@@ -115,23 +114,23 @@ GtkWidget *init_cover_preferences(gchar *glade_path) {
 
     switch (prefs_get_int("cad_sort")) {
     case SORT_ASCENDING:
-        w = gtkpod_xml_get_widget(pref_xml, "cad_ascend");
+        w = gtkpod_builder_xml_get_widget(pref_xml, "cad_ascend");
         break;
     case SORT_DESCENDING:
-        w = gtkpod_xml_get_widget(pref_xml, "cad_descend");
+        w = gtkpod_builder_xml_get_widget(pref_xml, "cad_descend");
         break;
     default:
-        w = gtkpod_xml_get_widget(pref_xml, "cad_none");
+        w = gtkpod_builder_xml_get_widget(pref_xml, "cad_none");
         break;
     }
 
     if (w)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
-    if ((w = gtkpod_xml_get_widget(pref_xml, "cad_cfg_case_sensitive"))) {
+    if ((w = gtkpod_builder_xml_get_widget(pref_xml, "cad_cfg_case_sensitive"))) {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("cad_case_sensitive"));
     }
 
-    glade_xml_signal_autoconnect(pref_xml);
+    gtk_builder_connect_signals(pref_xml, NULL);
     return notebook;
 }
