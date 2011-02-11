@@ -88,8 +88,9 @@ FileType *determine_filetype(const gchar *path) {
 }
 
 static void save_if_needed(gint count, iTunesDB *itdb) {
-    /* save every 10 files but do at least 10 first*/
-    if (count >= 10 && count % 10 == 0) {
+    /* save every ${file_threshold} files but do at least ${file_theshold} first*/
+    int threshold = prefs_get_int("file_saving_threshold");
+    if (count >= threshold && count % threshold == 0) {
         gp_save_itdb(itdb);
         gtkpod_tracks_statusbar_update();
     }

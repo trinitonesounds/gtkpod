@@ -360,6 +360,13 @@ G_MODULE_EXPORT void on_video_thumbnailer_changed(GtkEditable *sender, gpointer 
 /*
  glade callback
  */
+G_MODULE_EXPORT void on_save_threshold_spin_button_value_changed(GtkSpinButton *spinbutton, gpointer user_data) {
+    prefs_set_int("file_saving_threshold", gtk_spin_button_get_value_as_int (spinbutton));
+}
+
+/*
+ glade callback
+ */
 G_MODULE_EXPORT void on_exclusions_clicked(GtkButton *sender, gpointer e) {
     GtkWidget *dlg = GTK_WIDGET(gtk_builder_get_object (builder, "prefs_exclusions_dialog"));
     GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object (builder, "exclusion_list"));
@@ -660,6 +667,7 @@ static void setup_values() {
     GtkWidget *skip_track_update_radio = GTK_WIDGET(gtk_builder_get_object (builder, "skip_track_update"));
 
     gtk_spin_button_set_value(GTK_SPIN_BUTTON (gtk_builder_get_object (builder, "agp_track_count")), prefs_get_int("misc_track_nr"));
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON (gtk_builder_get_object (builder, "save_threshold_spin_button")), prefs_get_int("file_saving_threshold"));
 
     /* Check boxes */
     for (i = 0; i < COUNTOF(checkbox_map); i++) {

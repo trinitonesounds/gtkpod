@@ -1524,70 +1524,121 @@ Examples:
                         <property name="orientation">vertical</property>
                         <property name="spacing">6</property>
                         <child>
-                          <object class="GtkCheckButton" id="background_transfer">
-                            <property name="label" translatable="yes">Transfer tracks in background mode</property>
+                          <object class="GtkTable" id="import_radio_choices">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="use_underline">True</property>
-                            <property name="active">True</property>
-                            <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="on_simple_checkbox_toggled"/>
+                            <property name="n_rows">2</property>
+                            <property name="n_columns">2</property>
+                            <child>
+                              <object class="GtkCheckButton" id="background_transfer">
+                                <property name="label" translatable="yes">Transfer tracks in background mode</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="use_underline">True</property>
+                                <property name="active">True</property>
+                                <property name="draw_indicator">True</property>
+                                <signal name="toggled" handler="on_simple_checkbox_toggled"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="add_subfolders">
+                                <property name="label" translatable="yes">Add subfolders recursively</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="use_underline">True</property>
+                                <property name="active">True</property>
+                                <property name="draw_indicator">True</property>
+                                <signal name="toggled" handler="on_simple_checkbox_toggled"/>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="allow_duplicates">
+                                <property name="label" translatable="yes">Allow duplicate files</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_indicator">True</property>
+                                <signal name="toggled" handler="on_simple_checkbox_toggled"/>
+                              </object>
+                              <packing>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="delete_missing">
+                                <property name="label" translatable="yes">Delete missing tracks when synchronizing playlists</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="use_underline">True</property>
+                                <property name="active">True</property>
+                                <property name="draw_indicator">True</property>
+                                <signal name="toggled" handler="on_simple_checkbox_toggled"/>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                              </packing>
+                            </child>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkCheckButton" id="add_subfolders">
-                            <property name="label" translatable="yes">Add subfolders recursively</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="use_underline">True</property>
-                            <property name="active">True</property>
-                            <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="on_simple_checkbox_toggled"/>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkCheckButton" id="allow_duplicates">
-                            <property name="label" translatable="yes">Allow duplicate files</property>
+                          <object class="GtkHBox" id="save_threshold_hbox">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="use_underline">True</property>
-                            <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="on_simple_checkbox_toggled"/>
+                            <property name="spacing">12</property>
+                            <child>
+                              <object class="GtkLabel" id="save_threshold_label">
+                                <property name="visible">True</property>
+                                <property name="tooltip_text" translatable="yes">When multiple tracks are added to a repository, should an
+error occur then it is likely, without saving all added tracks
+will be lost since they are not saved. This preference allows for
+a save operation to be conducted after the number of tracks
+specified.
+
+The default is 10 so after 10 tracks have been added a save
+will be imposed on the repository.</property>
+                                <property name="label" translatable="yes">Threshold for import of tracks before a save triggered:</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSpinButton" id="save_threshold_spin_button">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="has_frame">False</property>
+                                <property name="invisible_char">&#x25CF;</property>
+                                <property name="adjustment">adjustment4</property>
+                                <property name="climb_rate">1</property>
+                                <property name="snap_to_ticks">True</property>
+                                <property name="numeric">True</property>
+                                <signal name="value_changed" handler="on_save_threshold_spin_button_value_changed"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkCheckButton" id="delete_missing">
-                            <property name="label" translatable="yes">Delete missing tracks when synchronizing playlists</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="use_underline">True</property>
-                            <property name="active">True</property>
-                            <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="on_simple_checkbox_toggled"/>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">3</property>
+                            <property name="padding">10</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                         <child>
@@ -1658,7 +1709,7 @@ Examples:
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
-                            <property name="position">4</property>
+                            <property name="position">2</property>
                           </packing>
                         </child>
                       </object>

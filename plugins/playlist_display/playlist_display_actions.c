@@ -237,6 +237,7 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
     gint count = 0;
     GSList* gsl; /* Current node in list */
     gboolean result = TRUE; /* Result of file adding */
+    int threshold = prefs_get_int("file_saving_threshold");
 
     /* If we don't have a playlist to add to, don't add anything */
     g_return_if_fail (playlist);
@@ -249,7 +250,7 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
         result
                 &= add_track_by_filename(playlist->itdb, gsl->data, playlist, prefs_get_int("add_recursively"), NULL, NULL);
         count++;
-        if (count % 10 == 0) { /* update and save every ten tracks added */
+        if (count % threshold == 0) { /* update and save every ten tracks added */
             gp_save_itdb(playlist->itdb);
             gtkpod_tracks_statusbar_update();
         }
