@@ -783,6 +783,7 @@ static void details_set_item(Track *track, T_item item) {
         g_signal_handlers_block_by_func (tb,
                 details_text_changed, details_view);
         gtk_text_buffer_set_text(tb, text, -1);
+        gtk_widget_set_sensitive(w, (! g_str_has_prefix(text, "Error")));
         g_signal_handlers_unblock_by_func (tb,
                 details_text_changed, details_view);
         break;

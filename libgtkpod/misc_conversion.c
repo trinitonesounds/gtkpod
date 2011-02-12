@@ -469,8 +469,10 @@ time_t time_get_time (Track *track, T_item t_item)
 {
     guint32 mactime = 0;
 
-    if (track) switch (t_item)
-    {
+    if (!track)
+        return mactime;
+
+    switch (t_item) {
     case T_TIME_ADDED:
 	mactime = track->time_added;
 	break;

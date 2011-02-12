@@ -1329,6 +1329,7 @@ gboolean track_set_text(Track *track, const gchar *new_text, T_item item) {
     gboolean changed = FALSE;
     gchar **itemp_utf8;
     const gchar *str;
+    gchar *tempstr;
     ExtraTrackData *etr;
     gint32 nr;
     time_t t;
@@ -1371,7 +1372,12 @@ gboolean track_set_text(Track *track, const gchar *new_text, T_item item) {
         }
         break;
     case T_LYRICS:
-        if ((etr->lyrics == NULL) || (strcmp(etr->lyrics, new_text) != 0)) {
+        /*
+         * If lyrics string starts with an 'Error' then the track type is unsuitable
+         * or the path could not be understood. Either way, not a reason to flag
+         * the track as changed
+         */
+        if (!g_str_has_prefix(new_text, "Error") && !g_str_equal(etr->lyrics, new_text)) {
             g_free(etr->lyrics);
             etr->lyrics = g_strdup(new_text);
             changed = TRUE;
@@ -1435,10 +1441,17 @@ gboolean track_set_text(Track *track, const gchar *new_text, T_item item) {
     case T_TIME_MODIFIED:
     case T_TIME_RELEASED:
         t = time_string_to_time(new_text);
-        if ((t != -1) && (t != time_get_time(track, item))) {
+        tempstr = time_field_to_string(track, item);
+        /*
+         * Cannot compare time_t values directly since the conversion
+         * to text is only accurate to seconds while time_t has millisecond
+         * accuracy.
+         */
+        if ((t != -1) && (!g_str_equal(new_text, tempstr))) {
             time_set_time(track, t, item);
             changed = TRUE;
         }
+        g_free(tempstr);
         break;
     case T_VOLUME:
         nr = atoi(new_text);
@@ -1484,33 +1497,37 @@ gboolean track_set_text(Track *track, const gchar *new_text, T_item item) {
         }
         break;
     case T_TRACKLEN:
-        nr = track_scan_length(new_text);
-        if (nr != track->tracklen) {
+        tempstr = track_get_length_string(track->tracklen);
+        if (!g_str_equal(new_text, tempstr)) {
+            nr = track_scan_length(new_text);
             track->tracklen = nr;
             changed = TRUE;
         }
+        g_free(tempstr);
         break;
     case T_STARTTIME:
-        nr = track_scan_length(new_text);
-        if (nr != track->starttime) {
+        tempstr = track_get_length_string(track->starttime);
+        if (!g_str_equal(new_text, tempstr)) {
+            nr = track_scan_length(new_text);
             track->starttime = nr;
             changed = TRUE;
             /* Set stoptime to 0 if stoptime is the same as tracklen */
             if (track->stoptime == track->tracklen)
                 track->stoptime = 0;
         }
+        g_free(tempstr);
         break;
     case T_STOPTIME:
-        nr = track_scan_length(new_text);
-        /* if stoptime is identical to tracklen, set stoptime to 0 if
-         * starttime is 0 as well */
-        if ((nr == track->tracklen) && (track->starttime == 0)) {
-            nr = 0;
-        }
-        if (nr != track->stoptime) {
-            track->stoptime = nr;
+        if (track->stoptime == 0)
+            tempstr = track_get_length_string(track->tracklen);
+        else
+            tempstr = track_get_length_string(track->stoptime);
+
+        if (! g_str_equal(new_text, tempstr)) {
+            track->stoptime = track_scan_length(new_text);
             changed = TRUE;
         }
+        g_free(tempstr);
         break;
     case T_SEASON_NR:
         nr = atoi(new_text);
