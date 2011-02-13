@@ -8,5 +8,5 @@ data/glade/mserv.xml
 data/glade/photo_editor.glade
 data/glade/playlist_display.glade
 data/glade/repository_editor.glade
-data/glade/sorttab_display.glade
+data/glade/sorttab_display.xml
 data/glade/track_display.glade

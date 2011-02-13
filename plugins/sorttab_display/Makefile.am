@@ -7,7 +7,7 @@ sorttab_display_ui_DATA =  $(plugin_name).ui
 
 # Plugin Glade file
 sorttab_display_gladedir = $(gtkpod_glade_dir)
-sorttab_display_glade_DATA =  $(plugin_name).glade
+sorttab_display_glade_DATA =  $(plugin_name).xml
 
 # Plugin Icon file
 sorttab_display_pixmapsdir = $(gtkpod_image_dir)

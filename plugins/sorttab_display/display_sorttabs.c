@@ -81,7 +81,7 @@ typedef enum {
 /* error parsing date string (or wrong parameters)    */
 } IntervalState;
 
-GladeXML *cal_xml;
+GtkBuilder *cal_xml;
 
 /* ---------------------------------------------------------------- */
 /*                                                                  */
@@ -2398,12 +2398,12 @@ static void st_create_special(gint inst, GtkWidget *window) {
     GtkWidget *w;
     SortTab *st = sorttab[inst];
     gint i;
-    GladeXML *special_xml;
+    GtkBuilder *special_xml;
     gchar *buf;
 
-    special_xml = gtkpod_xml_new(glade_file_path, "special_sorttab");
-    special = gtkpod_xml_get_widget(special_xml, "special_sorttab");
-    viewport = gtkpod_xml_get_widget(special_xml, "special_viewport");
+    special_xml = gtkpod_builder_xml_new(glade_file_path);
+    special = gtkpod_builder_xml_get_widget(special_xml, "special_sorttab");
+    viewport = gtkpod_builder_xml_get_widget(special_xml, "special_viewport");
 
     /* according to GTK FAQ: move a widget to a new parent */
     g_object_ref(viewport);
@@ -2414,26 +2414,26 @@ static void st_create_special(gint inst, GtkWidget *window) {
     /* Connect the signal handlers and set default value. User data
      is @inst+(additional data << SP_SHIFT) */
     /* AND/OR button */
-    w = gtkpod_xml_get_widget(special_xml, "sp_or_button");
+    w = gtkpod_builder_xml_get_widget(special_xml, "sp_or_button");
     g_signal_connect ((gpointer)w,
             "toggled", G_CALLBACK (on_sp_or_button_toggled),
             GINT_TO_POINTER(inst));
     if (prefs_get_int_index("sp_or", inst))
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
     else {
-        w = gtkpod_xml_get_widget(special_xml, "sp_and_button");
+        w = gtkpod_builder_xml_get_widget(special_xml, "sp_and_button");
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
     }
 
     /* RATING */
-    w = gtkpod_xml_get_widget(special_xml, "sp_rating_button");
+    w = gtkpod_builder_xml_get_widget(special_xml, "sp_rating_button");
     g_signal_connect ((gpointer)w,
             "toggled", G_CALLBACK (on_sp_cond_button_toggled),
             GUINT_TO_POINTER((T_RATING<<SP_SHIFT) + inst));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int_index("sp_rating_cond", inst));
     for (i = 0; i <= RATING_MAX; ++i) {
         gchar *buf = g_strdup_printf("sp_rating%d", i);
-        w = gtkpod_xml_get_widget(special_xml, buf);
+        w = gtkpod_builder_xml_get_widget(special_xml, buf);
         g_signal_connect ((gpointer)w,
                 "toggled", G_CALLBACK (on_sp_rating_n_toggled),
                 GUINT_TO_POINTER((i<<SP_SHIFT) + inst));
@@ -2442,18 +2442,18 @@ static void st_create_special(gint inst, GtkWidget *window) {
     }
 
     /* PLAYCOUNT */
-    w = gtkpod_xml_get_widget(special_xml, "sp_playcount_button");
+    w = gtkpod_builder_xml_get_widget(special_xml, "sp_playcount_button");
     g_signal_connect ((gpointer)w,
             "toggled", G_CALLBACK (on_sp_cond_button_toggled),
             GUINT_TO_POINTER((T_PLAYCOUNT<<SP_SHIFT) + inst));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int_index("sp_playcound_cond", inst));
-    w = gtkpod_xml_get_widget(special_xml, "sp_playcount_low");
+    w = gtkpod_builder_xml_get_widget(special_xml, "sp_playcount_low");
     g_signal_connect ((gpointer)w,
             "value_changed",
             G_CALLBACK (on_sp_playcount_low_value_changed),
             GINT_TO_POINTER(inst));
     gtk_spin_button_set_value(GTK_SPIN_BUTTON (w), prefs_get_int_index("sp_playcount_low", inst));
-    w = gtkpod_xml_get_widget(special_xml, "sp_playcount_high");
+    w = gtkpod_builder_xml_get_widget(special_xml, "sp_playcount_high");
     g_signal_connect ((gpointer)w,
             "value_changed",
             G_CALLBACK (on_sp_playcount_high_value_changed),
@@ -2463,19 +2463,19 @@ static void st_create_special(gint inst, GtkWidget *window) {
     /* PLAYED */
     buf = prefs_get_string_index("sp_played_state", inst);
 
-    w = gtkpod_xml_get_widget(special_xml, "sp_played_button");
+    w = gtkpod_builder_xml_get_widget(special_xml, "sp_played_button");
     st->ti_played.active = w;
     g_signal_connect ((gpointer)w,
             "toggled", G_CALLBACK (on_sp_cond_button_toggled),
             GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int_index("sp_played_cond", inst));
-    w = gtkpod_xml_get_widget(special_xml, "sp_played_entry");
+    w = gtkpod_builder_xml_get_widget(special_xml, "sp_played_entry");
     st->ti_played.entry = w;
     gtk_entry_set_text(GTK_ENTRY (w), buf);
     g_signal_connect ((gpointer)w,
             "activate", G_CALLBACK (on_sp_entry_activate),
             GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
-    g_signal_connect ((gpointer)gtkpod_xml_get_widget (special_xml,
+    g_signal_connect ((gpointer)gtkpod_builder_xml_get_widget (special_xml,
                     "sp_played_cal_button"),
             "clicked",
             G_CALLBACK (on_sp_cal_button_clicked),
@@ -2485,19 +2485,19 @@ static void st_create_special(gint inst, GtkWidget *window) {
     /* MODIFIED */
     buf = prefs_get_string_index("sp_modified_state", inst);
 
-    w = gtkpod_xml_get_widget(special_xml, "sp_modified_button");
+    w = gtkpod_builder_xml_get_widget(special_xml, "sp_modified_button");
     st->ti_modified.active = w;
     g_signal_connect ((gpointer)w,
             "toggled", G_CALLBACK (on_sp_cond_button_toggled),
             GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int_index("sp_modified_cond", inst));
-    w = gtkpod_xml_get_widget(special_xml, "sp_modified_entry");
+    w = gtkpod_builder_xml_get_widget(special_xml, "sp_modified_entry");
     st->ti_modified.entry = w;
     gtk_entry_set_text(GTK_ENTRY (w), buf);
     g_signal_connect ((gpointer)w,
             "activate", G_CALLBACK (on_sp_entry_activate),
             GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
-    g_signal_connect ((gpointer)gtkpod_xml_get_widget (special_xml,
+    g_signal_connect ((gpointer)gtkpod_builder_xml_get_widget (special_xml,
                     "sp_modified_cal_button"),
             "clicked",
             G_CALLBACK (on_sp_cal_button_clicked),
@@ -2507,28 +2507,28 @@ static void st_create_special(gint inst, GtkWidget *window) {
     /* ADDED */
     buf = prefs_get_string_index("sp_added_state", inst);
 
-    w = gtkpod_xml_get_widget(special_xml, "sp_added_button");
+    w = gtkpod_builder_xml_get_widget(special_xml, "sp_added_button");
     st->ti_added.active = w;
     g_signal_connect ((gpointer)w,
             "toggled", G_CALLBACK (on_sp_cond_button_toggled),
             GUINT_TO_POINTER((T_TIME_ADDED<<SP_SHIFT) + inst));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int_index("sp_added_cond", inst));
-    w = gtkpod_xml_get_widget(special_xml, "sp_added_entry");
+    w = gtkpod_builder_xml_get_widget(special_xml, "sp_added_entry");
     st->ti_added.entry = w;
     gtk_entry_set_text(GTK_ENTRY (w), buf);
     g_signal_connect ((gpointer)w,
             "activate", G_CALLBACK (on_sp_entry_activate),
             GUINT_TO_POINTER((T_TIME_ADDED<<SP_SHIFT) + inst));
-    g_signal_connect ((gpointer)gtkpod_xml_get_widget (special_xml,
+    g_signal_connect ((gpointer)gtkpod_builder_xml_get_widget (special_xml,
                     "sp_added_cal_button"),
             "clicked",
             G_CALLBACK (on_sp_cal_button_clicked),
             GUINT_TO_POINTER((T_TIME_ADDED<<SP_SHIFT) + inst));
 
-    g_signal_connect ((gpointer)gtkpod_xml_get_widget (special_xml, "sp_go"),
+    g_signal_connect ((gpointer)gtkpod_builder_xml_get_widget (special_xml, "sp_go"),
             "clicked", G_CALLBACK (on_sp_go_clicked),
             GINT_TO_POINTER(inst));
-    w = gtkpod_xml_get_widget(special_xml, "sp_go_always");
+    w = gtkpod_builder_xml_get_widget(special_xml, "sp_go_always");
     g_signal_connect ((gpointer)w,
             "toggled", G_CALLBACK (on_sp_go_always_toggled),
             GINT_TO_POINTER(inst));
@@ -2536,7 +2536,7 @@ static void st_create_special(gint inst, GtkWidget *window) {
     g_free(buf);
 
     /*
-    st->sp_tooltips_data = gtk_tooltips_data_get(gtkpod_xml_get_widget(special_xml, "sp_modified_entry"));
+    st->sp_tooltips_data = gtk_tooltips_data_get(gtkpod_builder_xml_get_widget(special_xml, "sp_modified_entry"));
     g_return_if_fail (st->sp_tooltips_data);
     if (prefs_get_int("display_tooltips_main"))
         gtk_tooltips_enable(st->sp_tooltips_data->tooltips);
@@ -2851,16 +2851,16 @@ static void cal_set_time(GtkWidget *cal, MarginType type, time_t timet) {
 
     switch (type) {
     case LOWER_MARGIN:
-        calendar = GTK_CALENDAR (gtkpod_xml_get_widget (cal_xml, "lower_cal"));
-        hour = GTK_SPIN_BUTTON (gtkpod_xml_get_widget (cal_xml, "lower_hours"));
-        min = GTK_SPIN_BUTTON (gtkpod_xml_get_widget (cal_xml, "lower_minutes"));
-        no_margin = GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (cal_xml, "no_lower_margin"));
+        calendar = GTK_CALENDAR (gtkpod_builder_xml_get_widget (cal_xml, "lower_cal"));
+        hour = GTK_SPIN_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "lower_hours"));
+        min = GTK_SPIN_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "lower_minutes"));
+        no_margin = GTK_TOGGLE_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "no_lower_margin"));
         break;
     case UPPER_MARGIN:
-        calendar = GTK_CALENDAR (gtkpod_xml_get_widget (cal_xml, "upper_cal"));
-        hour = GTK_SPIN_BUTTON (gtkpod_xml_get_widget (cal_xml, "upper_hours"));
-        min = GTK_SPIN_BUTTON (gtkpod_xml_get_widget (cal_xml, "upper_minutes"));
-        no_margin = GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (cal_xml, "no_upper_margin"));
+        calendar = GTK_CALENDAR (gtkpod_builder_xml_get_widget (cal_xml, "upper_cal"));
+        hour = GTK_SPIN_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "upper_hours"));
+        min = GTK_SPIN_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "upper_minutes"));
+        no_margin = GTK_TOGGLE_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "no_upper_margin"));
         break;
     }
     cal_set_time_widgets(calendar, hour, min, no_margin, timet);
@@ -2887,18 +2887,18 @@ static struct tm *cal_get_time(GtkWidget *cal, MarginType type, struct tm *tm) {
 
     switch (type) {
     case LOWER_MARGIN:
-        calendar = GTK_CALENDAR (gtkpod_xml_get_widget (cal_xml, "lower_cal"));
-        hour = GTK_SPIN_BUTTON (gtkpod_xml_get_widget (cal_xml, "lower_hours"));
-        min = GTK_SPIN_BUTTON (gtkpod_xml_get_widget (cal_xml, "lower_minutes"));
-        no_margin = GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (cal_xml, "no_lower_margin"));
-        no_time = GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (cal_xml, "lower_time"));
+        calendar = GTK_CALENDAR (gtkpod_builder_xml_get_widget (cal_xml, "lower_cal"));
+        hour = GTK_SPIN_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "lower_hours"));
+        min = GTK_SPIN_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "lower_minutes"));
+        no_margin = GTK_TOGGLE_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "no_lower_margin"));
+        no_time = GTK_TOGGLE_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "lower_time"));
         break;
     case UPPER_MARGIN:
-        calendar = GTK_CALENDAR (gtkpod_xml_get_widget (cal_xml, "upper_cal"));
-        hour = GTK_SPIN_BUTTON (gtkpod_xml_get_widget (cal_xml, "upper_hours"));
-        min = GTK_SPIN_BUTTON (gtkpod_xml_get_widget (cal_xml, "upper_minutes"));
-        no_margin = GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (cal_xml, "no_upper_margin"));
-        no_time = GTK_TOGGLE_BUTTON (gtkpod_xml_get_widget (cal_xml, "upper_time"));
+        calendar = GTK_CALENDAR (gtkpod_builder_xml_get_widget (cal_xml, "upper_cal"));
+        hour = GTK_SPIN_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "upper_hours"));
+        min = GTK_SPIN_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "upper_minutes"));
+        no_margin = GTK_TOGGLE_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "no_upper_margin"));
+        no_time = GTK_TOGGLE_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "upper_time"));
         break;
     }
 
@@ -2957,7 +2957,7 @@ static T_item cal_get_category(GtkWidget *cal) {
     T_item item;
     gint i = -1;
 
-    w = gtkpod_xml_get_widget(cal_xml, "cat_combo");
+    w = gtkpod_builder_xml_get_widget(cal_xml, "cat_combo");
     i = gtk_combo_box_get_active(GTK_COMBO_BOX (w));
 
     switch (i) {
@@ -3003,7 +3003,7 @@ static void cal_apply_data(GtkWidget *cal) {
     upper = cal_get_time(cal, UPPER_MARGIN, NULL);
 
     /* Get selected instance */
-    inst = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON (gtkpod_xml_get_widget (cal_xml, "sorttab_num_spin"))) - 1;
+    inst = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON (gtkpod_builder_xml_get_widget (cal_xml, "sorttab_num_spin"))) - 1;
     /* Get selected category (played, modified or added) */
     item = cal_get_category(cal);
     /* Get pointer to corresponding TimeInfo struct */
@@ -3049,11 +3049,11 @@ static void cal_apply_data(GtkWidget *cal) {
 static void cal_time_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     gboolean sens = gtk_toggle_button_get_active(togglebutton);
 
-    if ((GtkWidget *) togglebutton == gtkpod_xml_get_widget(cal_xml, "lower_time")) {
-        gtk_widget_set_sensitive(gtkpod_xml_get_widget(cal_xml, "lower_time_box"), sens);
+    if ((GtkWidget *) togglebutton == gtkpod_builder_xml_get_widget(cal_xml, "lower_time")) {
+        gtk_widget_set_sensitive(gtkpod_builder_xml_get_widget(cal_xml, "lower_time_box"), sens);
     }
-    if ((GtkWidget *) togglebutton == gtkpod_xml_get_widget(cal_xml, "upper_time")) {
-        gtk_widget_set_sensitive(gtkpod_xml_get_widget(cal_xml, "upper_time_box"), sens);
+    if ((GtkWidget *) togglebutton == gtkpod_builder_xml_get_widget(cal_xml, "upper_time")) {
+        gtk_widget_set_sensitive(gtkpod_builder_xml_get_widget(cal_xml, "upper_time_box"), sens);
     }
 }
 
@@ -3061,11 +3061,11 @@ static void cal_time_toggled(GtkToggleButton *togglebutton, gpointer user_data) 
 static void cal_no_margin_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     gboolean sens = !gtk_toggle_button_get_active(togglebutton);
 
-    if ((GtkWidget *) togglebutton == gtkpod_xml_get_widget(cal_xml, "no_lower_margin")) {
-        gtk_widget_set_sensitive(gtkpod_xml_get_widget(cal_xml, "lower_cal_box"), sens);
+    if ((GtkWidget *) togglebutton == gtkpod_builder_xml_get_widget(cal_xml, "no_lower_margin")) {
+        gtk_widget_set_sensitive(gtkpod_builder_xml_get_widget(cal_xml, "lower_cal_box"), sens);
     }
-    if ((GtkWidget *) togglebutton == gtkpod_xml_get_widget(cal_xml, "no_upper_margin")) {
-        gtk_widget_set_sensitive(gtkpod_xml_get_widget(cal_xml, "upper_cal_box"), sens);
+    if ((GtkWidget *) togglebutton == gtkpod_builder_xml_get_widget(cal_xml, "no_upper_margin")) {
+        gtk_widget_set_sensitive(gtkpod_builder_xml_get_widget(cal_xml, "upper_cal_box"), sens);
     }
 }
 
@@ -3123,11 +3123,11 @@ void cal_open_calendar(gint inst, T_item item) {
     if (!st)
         return;
 
-    cal_xml = gtkpod_xml_new(glade_file_path, "calendar_window");
+    cal_xml = gtkpod_builder_xml_new(glade_file_path);
 
-    glade_xml_signal_autoconnect(cal_xml);
+    gtk_builder_connect_signals (cal_xml, NULL);
 
-    cal = gtkpod_xml_get_widget(cal_xml, "calendar_window");
+    cal = gtkpod_builder_xml_get_widget(cal_xml, "calendar_window");
 
     /* Set to saved size */
     defx = prefs_get_int("size_cal.x");
@@ -3135,12 +3135,12 @@ void cal_open_calendar(gint inst, T_item item) {
     gtk_window_set_default_size(GTK_WINDOW (cal), defx, defy);
 
     /* Set sorttab number */
-    w = gtkpod_xml_get_widget(cal_xml, "sorttab_num_spin");
+    w = gtkpod_builder_xml_get_widget(cal_xml, "sorttab_num_spin");
     gtk_spin_button_set_range(GTK_SPIN_BUTTON (w), 1, SORT_TAB_MAX);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON (w), inst + 1);
 
     /* Set Category-Combo */
-    w = gtkpod_xml_get_widget(cal_xml, "cat_combo");
+    w = gtkpod_builder_xml_get_widget(cal_xml, "cat_combo");
 
     switch (item) {
     case T_TIME_PLAYED:
@@ -3172,12 +3172,12 @@ void cal_open_calendar(gint inst, T_item item) {
         }
 
         /* Lower Margin */
-        w = gtkpod_xml_get_widget(cal_xml, "no_lower_margin");
+        w = gtkpod_builder_xml_get_widget(cal_xml, "no_lower_margin");
         g_signal_connect (w,
                 "toggled",
                 G_CALLBACK (cal_no_margin_toggled),
                 cal);
-        w = gtkpod_xml_get_widget(cal_xml, "lower_time");
+        w = gtkpod_builder_xml_get_widget(cal_xml, "lower_time");
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), TRUE);
         g_signal_connect (w,
                 "toggled",
@@ -3187,12 +3187,12 @@ void cal_open_calendar(gint inst, T_item item) {
         cal_set_time(cal, LOWER_MARGIN, ti->lower);
 
         /* Upper Margin */
-        w = gtkpod_xml_get_widget(cal_xml, "no_upper_margin");
+        w = gtkpod_builder_xml_get_widget(cal_xml, "no_upper_margin");
         g_signal_connect (w,
                 "toggled",
                 G_CALLBACK (cal_no_margin_toggled),
                 cal);
-        w = gtkpod_xml_get_widget(cal_xml, "upper_time");
+        w = gtkpod_builder_xml_get_widget(cal_xml, "upper_time");
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), TRUE);
         g_signal_connect (w,
                 "toggled",
@@ -3205,13 +3205,13 @@ void cal_open_calendar(gint inst, T_item item) {
     g_signal_connect (cal, "delete_event",
             G_CALLBACK (cal_delete_event), cal);
     /* Connect cancel-button */
-    g_signal_connect (gtkpod_xml_get_widget (cal_xml, "cal_cancel"), "clicked",
+    g_signal_connect (gtkpod_builder_xml_get_widget (cal_xml, "cal_cancel"), "clicked",
             G_CALLBACK (cal_cancel), cal);
     /* Connect apply-button */
-    g_signal_connect (gtkpod_xml_get_widget (cal_xml, "cal_apply"), "clicked",
+    g_signal_connect (gtkpod_builder_xml_get_widget (cal_xml, "cal_apply"), "clicked",
             G_CALLBACK (cal_apply), cal);
     /* Connect ok-button */
-    g_signal_connect (gtkpod_xml_get_widget (cal_xml, "cal_ok"), "clicked",
+    g_signal_connect (gtkpod_builder_xml_get_widget (cal_xml, "cal_ok"), "clicked",
             G_CALLBACK (cal_ok), cal);
 
     gtk_window_set_transient_for(GTK_WINDOW (cal), GTK_WINDOW (gtkpod_app));

@@ -78,35 +78,41 @@ G_MODULE_EXPORT void on_st_sort_case_sensitive_toggled(GtkToggleButton *togglebu
 
 GtkWidget *init_sorttab_preferences() {
     GtkWidget *notebook;
-    GladeXML *pref_xml;
-    GtkWidget *w;
+    GtkBuilder *pref_xml;
+    GtkWidget *w, *win;
 
-    gchar *glade_path = g_build_filename(get_glade_dir(), "sorttab_display.glade", NULL);
-    pref_xml = gtkpod_xml_new(glade_path, "sorttab_settings_notebook");
-    notebook = gtkpod_xml_get_widget(pref_xml, "sorttab_settings_notebook");
+    gchar *glade_path = g_build_filename(get_glade_dir(), "sorttab_display.xml", NULL);
+    pref_xml = gtkpod_builder_xml_new(glade_path);
+    win = gtkpod_builder_xml_get_widget(pref_xml, "preference_window");
+    notebook = gtkpod_builder_xml_get_widget(pref_xml, "sorttab_settings_notebook");
     g_object_ref(notebook);
+    gtk_container_remove(GTK_CONTAINER (win), notebook);
     g_free(glade_path);
 
     switch (prefs_get_int("st_sort")) {
     case SORT_ASCENDING:
-        w = gtkpod_xml_get_widget(pref_xml, "st_ascend");
+        w = gtkpod_builder_xml_get_widget(pref_xml, "st_ascend");
         break;
     case SORT_DESCENDING:
-        w = gtkpod_xml_get_widget(pref_xml, "st_descend");
+        w = gtkpod_builder_xml_get_widget(pref_xml, "st_descend");
         break;
     default:
-        w = gtkpod_xml_get_widget(pref_xml, "st_none");
+        w = gtkpod_builder_xml_get_widget(pref_xml, "st_none");
         break;
     }
 
     if (w)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
-    if ((w = gtkpod_xml_get_widget(pref_xml, "st_cfg_case_sensitive"))) {
+    if ((w = gtkpod_builder_xml_get_widget(pref_xml, "st_cfg_case_sensitive"))) {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("st_case_sensitive"));
     }
 
-    glade_xml_signal_autoconnect(pref_xml);
+    if ((w = gtkpod_builder_xml_get_widget(pref_xml, "filter_tabs_count"))) {
+        gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), prefs_get_int ("sort_tab_num"));
+    }
+
+    gtk_builder_connect_signals(pref_xml, NULL);
 
     return notebook;
 }

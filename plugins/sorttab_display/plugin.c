@@ -177,7 +177,7 @@ static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
 
     /* Add widget in Shell. Any number of widgets can be added */
     sorttab_display_plugin->st_paned = gtk_hpaned_new();
-    gchar *glade_path = g_build_filename(get_glade_dir(), "sorttab_display.glade", NULL);
+    gchar *glade_path = g_build_filename(get_glade_dir(), "sorttab_display.xml", NULL);
     st_create_tabs(GTK_PANED(sorttab_display_plugin->st_paned), glade_path);
     gtk_widget_show(sorttab_display_plugin->st_paned);
 

@@ -100,7 +100,7 @@ plugins/repository_editor/repository_init.c
 plugins/sorttab_display/date_parser.c
 plugins/sorttab_display/display_sorttabs.c
 plugins/sorttab_display/plugin.c
-plugins/sorttab_display/sorttab_display.glade
+[type: gettext/glade]plugins/sorttab_display/sorttab_display.xml
 plugins/sorttab_display/sorttab_display_actions.c
 plugins/sorttab_display/sorttab_display_context_menu.c
 [type: gettext/ini]plugins/sorttab_display/sorttab_display.plugin.in
