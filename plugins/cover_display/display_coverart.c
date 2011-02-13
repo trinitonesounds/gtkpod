@@ -1354,7 +1354,7 @@ static GdkPixbuf *coverart_get_default_track_thumb(gint default_img_size) {
 
     pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), DEFAULT_COVER_ICON, 240, 0, &error);
     if (error != NULL) {
-        printf("Error occurred loading the default file - \nCode: %d\nMessage: %s\n", error->code, error->message);
+        g_warning("Error occurred loading the default file - \nCode: %d\nMessage: %s\n", error->code, error->message);
 
         g_return_val_if_fail(pixbuf, NULL);
     }

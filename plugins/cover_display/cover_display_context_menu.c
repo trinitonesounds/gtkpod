@@ -46,12 +46,26 @@ static GtkWidget *add_get_cover_from_file(GtkWidget *menu) {
  * @data - Ignored, should be NULL
  */
 static void display_track_artwork(GtkMenuItem *mi, gpointer data) {
-    if (gtkpod_get_selected_tracks())
-        coverart_display_big_artwork(gtkpod_get_selected_tracks());
+    coverart_display_big_artwork();
 }
 
 static GtkWidget *add_display_big_coverart(GtkWidget *menu) {
     return hookup_menu_item(menu, _("View Full Size Artwork"), GTK_STOCK_FULLSCREEN, G_CALLBACK (display_track_artwork), NULL);
+}
+
+static void edit_coverart_track_details(GtkMenuItem *mi, gpointer data) {
+    GList *tracks = coverart_get_displayed_tracks();
+    if (!tracks)
+        return;
+
+    gtkpod_edit_details(tracks);
+}
+
+GtkWidget *add_coverart_edit_track_details(GtkWidget *menu) {
+    if (!gtkpod_has_details_editor())
+        return menu;
+
+    return hookup_menu_item(menu, _("Edit Track Details"), GTK_STOCK_PREFERENCES, G_CALLBACK (edit_coverart_track_details), NULL);
 }
 
 /**
@@ -63,12 +77,12 @@ void cad_context_menu_init(void) {
 
     GtkWidget *menu = NULL;
 
-    if (gtkpod_get_selected_tracks()) {
+    if (coverart_get_displayed_tracks()) {
         menu = gtk_menu_new();
 
         add_get_cover_from_file(menu);
         add_display_big_coverart(menu);
-        add_edit_track_details(menu);
+        add_coverart_edit_track_details(menu);
 
         /*
          * button should be button 0 as per the docs because we're calling
