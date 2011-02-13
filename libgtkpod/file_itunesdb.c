@@ -1502,7 +1502,7 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
         /* sleep 20 ms */
         g_usleep(20 * 1000);
     }
-    while (!td->abort && (status != FILE_TRANSFER_DISK_FULL) && (to_convert_num + to_transfer_num) > 0);
+    while (!td->abort && (status != FILE_TRANSFER_DISK_FULL) && (to_convert_num + converting_num + to_transfer_num) > 0);
 
     /* reset background transfer to value in prefs */
     file_transfer_reset(itdb);
