@@ -42,7 +42,7 @@
 
 struct _Detail
 {
-    GladeXML *xml;      /* XML info                           */
+    GtkBuilder *xml;      /* XML info                           */
     GtkWidget *window;  /* pointer to details window          */
     iTunesDB *itdb;     /* pointer to the original itdb       */
     GList *orig_tracks; /* tracks displayed in details window */

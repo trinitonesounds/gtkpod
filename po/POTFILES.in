@@ -39,7 +39,7 @@ plugins/coverweb/coverweb.c
 plugins/coverweb/coverweb_preferences.c
 plugins/coverweb/plugin.c
 plugins/details_editor/details.c
-plugins/details_editor/details_editor.glade
+[type: gettext/glade]plugins/details_editor/details_editor.xml
 [type: gettext/ini]plugins/details_editor/details_editor.plugin.in
 plugins/details_editor/fetchcover.c
 plugins/details_editor/plugin.c

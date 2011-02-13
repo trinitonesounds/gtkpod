@@ -108,7 +108,7 @@ gboolean details_writethrough() {
 
     g_return_val_if_fail (details_view, FALSE);
 
-    w = gtkpod_xml_get_widget(details_view->xml, "details_checkbutton_writethrough");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_checkbutton_writethrough");
     return gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (w));
 }
 
@@ -569,13 +569,13 @@ static void details_setup_widget(T_item item) {
     case T_REMEMBER_PLAYBACK_POSITION:
     case T_SKIP_WHEN_SHUFFLING:
         buf = g_strdup_printf("details_checkbutton_%d", item);
-        w = gtkpod_xml_get_widget(details_view->xml, buf);
+        w = gtkpod_builder_xml_get_widget(details_view->xml, buf);
         gtk_button_set_label(GTK_BUTTON (w), gettext(get_t_string(item)));
         g_free(buf);
         break;
     default:
         buf = g_strdup_printf("details_label_%d", item);
-        w = gtkpod_xml_get_widget(details_view->xml, buf);
+        w = gtkpod_builder_xml_get_widget(details_view->xml, buf);
         gtk_label_set_text(GTK_LABEL (w), gettext(get_t_string(item)));
         g_free(buf);
     }
@@ -628,7 +628,7 @@ static void details_setup_widget(T_item item) {
     case T_SORT_COMPOSER:
     case T_SORT_TVSHOW:
         buf = g_strdup_printf("details_entry_%d", item);
-        w = gtkpod_xml_get_widget(details_view->xml, buf);
+        w = gtkpod_builder_xml_get_widget(details_view->xml, buf);
         g_signal_connect (w, "activate",
                 G_CALLBACK (details_entry_activate),
                 details_view);
@@ -638,7 +638,7 @@ static void details_setup_widget(T_item item) {
         break;
     case T_VOLUME:
         buf = g_strdup_printf("details_scale_%d", item);
-        w = gtkpod_xml_get_widget(details_view->xml, buf);
+        w = gtkpod_builder_xml_get_widget(details_view->xml, buf);
         g_signal_connect (w, "change-value",
                 G_CALLBACK (details_scale_changed),
                 details_view);
@@ -650,7 +650,7 @@ static void details_setup_widget(T_item item) {
     case T_SKIP_WHEN_SHUFFLING:
     case T_GAPLESS_TRACK_FLAG:
         buf = g_strdup_printf("details_checkbutton_%d", item);
-        w = gtkpod_xml_get_widget(details_view->xml, buf);
+        w = gtkpod_builder_xml_get_widget(details_view->xml, buf);
         g_signal_connect (w, "toggled",
                 G_CALLBACK (details_checkbutton_toggled),
                 details_view);
@@ -660,7 +660,7 @@ static void details_setup_widget(T_item item) {
     case T_LYRICS:
     case T_COMMENT:
         buf = g_strdup_printf("details_textview_%d", item);
-        w = gtkpod_xml_get_widget(details_view->xml, buf);
+        w = gtkpod_builder_xml_get_widget(details_view->xml, buf);
         tb = gtk_text_view_get_buffer(GTK_TEXT_VIEW (w));
         g_signal_connect (tb, "changed",
                 G_CALLBACK (details_text_changed),
@@ -668,7 +668,7 @@ static void details_setup_widget(T_item item) {
         break;
     case T_MEDIA_TYPE:
         buf = g_strdup_printf("details_combobox_%d", item);
-        w = gtkpod_xml_get_widget(details_view->xml, buf);
+        w = gtkpod_builder_xml_get_widget(details_view->xml, buf);
         details_setup_combobox(w, mediatype_comboentries);
         g_signal_connect (w, "changed",
                 G_CALLBACK (details_combobox_changed),
@@ -760,13 +760,13 @@ static void details_set_item(Track *track, T_item item) {
     case T_SORT_ALBUMARTIST:
     case T_SORT_COMPOSER:
     case T_SORT_TVSHOW:
-        w = gtkpod_xml_get_widget(details_view->xml, entry);
+        w = gtkpod_builder_xml_get_widget(details_view->xml, entry);
         g_signal_handlers_block_by_func (w, details_text_changed, details_view);
         gtk_entry_set_text(GTK_ENTRY (w), text);
         g_signal_handlers_unblock_by_func(w, details_text_changed, details_view);
         break;
     case T_VOLUME:
-        w = gtkpod_xml_get_widget(details_view->xml, scale);
+        w = gtkpod_builder_xml_get_widget(details_view->xml, scale);
         if (track) {
             gtk_range_set_value(GTK_RANGE (w), track->volume);
         }
@@ -778,7 +778,7 @@ static void details_set_item(Track *track, T_item item) {
     case T_DESCRIPTION:
     case T_LYRICS:
     case T_SUBTITLE:
-        w = gtkpod_xml_get_widget(details_view->xml, textview);
+        w = gtkpod_builder_xml_get_widget(details_view->xml, textview);
         tb = gtk_text_view_get_buffer(GTK_TEXT_VIEW (w));
         g_signal_handlers_block_by_func (tb,
                 details_text_changed, details_view);
@@ -788,7 +788,7 @@ static void details_set_item(Track *track, T_item item) {
                 details_text_changed, details_view);
         break;
     case T_COMPILATION:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, checkbutton))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, checkbutton))) {
             if (track)
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), track->compilation);
             else
@@ -796,7 +796,7 @@ static void details_set_item(Track *track, T_item item) {
         }
         break;
     case T_TRANSFERRED:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, checkbutton))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, checkbutton))) {
             if (track)
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), track->transferred);
             else
@@ -804,7 +804,7 @@ static void details_set_item(Track *track, T_item item) {
         }
         break;
     case T_REMEMBER_PLAYBACK_POSITION:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, checkbutton))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, checkbutton))) {
             if (track)
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), track->remember_playback_position);
             else
@@ -812,7 +812,7 @@ static void details_set_item(Track *track, T_item item) {
         }
         break;
     case T_SKIP_WHEN_SHUFFLING:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, checkbutton))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, checkbutton))) {
             if (track)
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), track->skip_when_shuffling);
             else
@@ -820,7 +820,7 @@ static void details_set_item(Track *track, T_item item) {
         }
         break;
     case T_CHECKED:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, checkbutton))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, checkbutton))) {
             if (track)
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), !track->checked);
             else
@@ -828,7 +828,7 @@ static void details_set_item(Track *track, T_item item) {
         }
         break;
     case T_MEDIA_TYPE:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, combobox))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, combobox))) {
             gint index = -1;
             if (track) {
                 index = comboentry_index_from_id(mediatype_comboentries, track->mediatype);
@@ -840,7 +840,7 @@ static void details_set_item(Track *track, T_item item) {
         }
         break;
     case T_GAPLESS_TRACK_FLAG:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, checkbutton))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, checkbutton))) {
             if (track)
                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), track->gapless_track_flag);
             else
@@ -926,7 +926,7 @@ static void details_get_item(T_item item, gboolean assumechanged) {
     case T_SORT_ALBUMARTIST:
     case T_SORT_COMPOSER:
     case T_SORT_TVSHOW:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, entry))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, entry))) {
             const gchar *text;
 
             text = gtk_entry_get_text(GTK_ENTRY (w));
@@ -967,7 +967,7 @@ static void details_get_item(T_item item, gboolean assumechanged) {
         }
         break;
     case T_VOLUME:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, scale))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, scale))) {
             gdouble value = gtk_range_get_value(GTK_RANGE (w));
             gint32 new_volume = (gint32) value;
             if (track->volume != new_volume) {
@@ -980,7 +980,7 @@ static void details_get_item(T_item item, gboolean assumechanged) {
     case T_DESCRIPTION:
     case T_SUBTITLE:
     case T_LYRICS:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, textview))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, textview))) {
             gchar *text;
             GtkTextIter start, end;
             GtkTextBuffer *tb = gtk_text_view_get_buffer(GTK_TEXT_VIEW (w));
@@ -995,7 +995,7 @@ static void details_get_item(T_item item, gboolean assumechanged) {
         }
         break;
     case T_COMPILATION:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, checkbutton))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, checkbutton))) {
             gboolean state;
             state = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (w));
 
@@ -1006,7 +1006,7 @@ static void details_get_item(T_item item, gboolean assumechanged) {
         }
         break;
     case T_REMEMBER_PLAYBACK_POSITION:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, checkbutton))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, checkbutton))) {
             gboolean state;
             state = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (w));
 
@@ -1017,7 +1017,7 @@ static void details_get_item(T_item item, gboolean assumechanged) {
         }
         break;
     case T_SKIP_WHEN_SHUFFLING:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, checkbutton))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, checkbutton))) {
             gboolean state;
             state = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (w));
 
@@ -1028,7 +1028,7 @@ static void details_get_item(T_item item, gboolean assumechanged) {
         }
         break;
     case T_CHECKED:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, checkbutton))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, checkbutton))) {
             gboolean state;
             state = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (w));
             if ((state && (track->checked == 1)) || (!state && (track->checked == 0))) {
@@ -1041,7 +1041,7 @@ static void details_get_item(T_item item, gboolean assumechanged) {
         }
         break;
     case T_MEDIA_TYPE:
-        if ((w = gtkpod_xml_get_widget(details_view->xml, combobox))) {
+        if ((w = gtkpod_builder_xml_get_widget(details_view->xml, combobox))) {
             gint active;
             active = gtk_combo_box_get_active(GTK_COMBO_BOX (w));
             if (active != -1) {
@@ -1058,7 +1058,7 @@ static void details_get_item(T_item item, gboolean assumechanged) {
                         GtkWidget *w2 = NULL;
                         if (track->remember_playback_position == 0) {
                             buf = g_strdup_printf("details_checkbutton_%d", T_REMEMBER_PLAYBACK_POSITION);
-                            if ((w2 = gtkpod_xml_get_widget(details_view->xml, buf))) {
+                            if ((w2 = gtkpod_builder_xml_get_widget(details_view->xml, buf))) {
                                 track->remember_playback_position = 1;
                                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w2), track->remember_playback_position);
                             }
@@ -1066,7 +1066,7 @@ static void details_get_item(T_item item, gboolean assumechanged) {
                         }
                         if (track->skip_when_shuffling == 0) {
                             buf = g_strdup_printf("details_checkbutton_%d", T_SKIP_WHEN_SHUFFLING);
-                            if ((w2 = gtkpod_xml_get_widget(details_view->xml, buf))) {
+                            if ((w2 = gtkpod_builder_xml_get_widget(details_view->xml, buf))) {
                                 track->remember_playback_position = 1;
                                 gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w2), track->remember_playback_position);
                             }
@@ -1179,23 +1179,23 @@ void details_update_buttons() {
         next = FALSE;
     }
 
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_apply");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_apply");
     gtk_widget_set_sensitive(w, apply);
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_undo_track");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_undo_track");
     gtk_widget_set_sensitive(w, undo_track);
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_undo_all");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_undo_all");
     gtk_widget_set_sensitive(w, undo_all);
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_remove_artwork");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_remove_artwork");
     gtk_widget_set_sensitive(w, remove_artwork);
-    w = gtkpod_xml_get_widget(details_view->xml, "details_details");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_details");
     gtk_widget_set_sensitive(w, viewport);
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_first");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_first");
     gtk_widget_set_sensitive(w, prev);
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_previous");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_previous");
     gtk_widget_set_sensitive(w, prev);
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_next");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_next");
     gtk_widget_set_sensitive(w, next);
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_last");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_last");
     gtk_widget_set_sensitive(w, next);
 
     if (details_view->track) {
@@ -1205,7 +1205,7 @@ void details_update_buttons() {
     else {
         buf = g_strdup(_("n/a"));
     }
-    w = gtkpod_xml_get_widget(details_view->xml, "details_label_index");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_label_index");
     gtk_label_set_text(GTK_LABEL (w), buf);
     g_free(buf);
 }
@@ -1216,7 +1216,7 @@ static void details_update_thumbnail() {
 
     g_return_if_fail (details_view);
 
-    img = GTK_IMAGE (gtkpod_xml_get_widget (details_view->xml,
+    img = GTK_IMAGE (gtkpod_builder_xml_get_widget (details_view->xml,
                     "details_image_thumbnail"));
 
     gtk_image_set_from_pixbuf(img, NULL);
@@ -1248,7 +1248,7 @@ static void details_update_headline() {
     g_return_if_fail (details_view);
 
     /* Set Artist/Title label */
-    w = gtkpod_xml_get_widget(details_view->xml, "details_label_artist_title");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_label_artist_title");
 
     if (details_view->track) {
         buf = g_markup_printf_escaped("<b>%s / %s</b>", details_view->track->artist, details_view->track->title);
@@ -1414,10 +1414,10 @@ static void create_details_editor_view() {
 
     details_view = g_malloc0(sizeof(Detail));
 
-    gchar *glade_path = g_build_filename(get_glade_dir(), "details_editor.glade", NULL);
-    details_view->xml = gtkpod_xml_new(glade_path, "details_window");
-    details_window = gtkpod_xml_get_widget(details_view->xml, "details_window");
-    viewport = gtkpod_xml_get_widget(details_view->xml, "details_container");
+    gchar *glade_path = g_build_filename(get_glade_dir(), "details_editor.xml", NULL);
+    details_view->xml = gtkpod_builder_xml_new(glade_path);
+    details_window = gtkpod_builder_xml_get_widget(details_view->xml, "details_window");
+    viewport = gtkpod_builder_xml_get_widget(details_view->xml, "details_container");
     /* according to GTK FAQ: move a widget to a new parent */
     g_object_ref(viewport);
     gtk_container_remove(GTK_CONTAINER (details_window), viewport);
@@ -1428,7 +1428,7 @@ static void create_details_editor_view() {
     g_object_ref(details_editor_plugin->details_window);
     details_editor_plugin->details_view = viewport;
     g_object_ref(details_editor_plugin->details_view);
-    details_editor_plugin->details_notebook = gtkpod_xml_get_widget(details_view->xml, "details_notebook");
+    details_editor_plugin->details_notebook = gtkpod_builder_xml_get_widget(details_view->xml, "details_notebook");
     g_object_ref(details_editor_plugin->details_notebook);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (details_editor_plugin->details_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (details_editor_plugin->details_window), GTK_SHADOW_IN);
@@ -1447,66 +1447,66 @@ static void create_details_editor_view() {
     }
 
     /* Navigation */
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_first");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_first");
     g_signal_connect (w, "clicked",
             G_CALLBACK (details_button_first_clicked),
             details_view);
 
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_previous");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_previous");
     g_signal_connect (w, "clicked",
             G_CALLBACK (details_button_previous_clicked),
             details_view);
 
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_next");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_next");
     g_signal_connect (w, "clicked",
             G_CALLBACK (details_button_next_clicked),
             details_view);
 
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_last");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_last");
     g_signal_connect (w, "clicked",
             G_CALLBACK (details_button_last_clicked),
             details_view);
 
     /* Thumbnail control */
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_set_artwork");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_set_artwork");
     g_signal_connect (w, "clicked",
             G_CALLBACK (details_button_set_artwork_clicked),
             details_view);
 
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_remove_artwork");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_remove_artwork");
     g_signal_connect (w, "clicked",
             G_CALLBACK (details_button_remove_artwork_clicked),
             details_view);
 
     /* Window control */
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_apply");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_apply");
     g_signal_connect (w, "clicked",
             G_CALLBACK (details_button_apply_clicked),
             details_view);
 
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_undo_all");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_undo_all");
     g_signal_connect (w, "clicked",
             G_CALLBACK (details_button_undo_all_clicked),
             details_view);
 
-    w = gtkpod_xml_get_widget(details_view->xml, "details_button_undo_track");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_button_undo_track");
     g_signal_connect (w, "clicked",
             G_CALLBACK (details_button_undo_track_clicked),
             details_view);
 
-    w = gtkpod_xml_get_widget(details_view->xml, "details_checkbutton_writethrough");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_checkbutton_writethrough");
     g_signal_connect (w, "toggled",
             G_CALLBACK (details_writethrough_toggled),
             details_view);
 
-    w = gtkpod_xml_get_widget(details_view->xml, "details_notebook");
+    w = gtkpod_builder_xml_get_widget(details_view->xml, "details_notebook");
     g_signal_connect (w, "switch-page",
             G_CALLBACK (details_notebook_page_changed),
             details_view);
 
     /* enable drag and drop for coverart window */
     GtkImage *img;
-    img = GTK_IMAGE (gtkpod_xml_get_widget (details_view->xml,
+    img = GTK_IMAGE (gtkpod_builder_xml_get_widget (details_view->xml,
                     "details_image_thumbnail"));
 
     gtk_drag_dest_set(GTK_WIDGET(img), 0, cover_image_drag_types, TGNR(cover_image_drag_types), GDK_ACTION_COPY

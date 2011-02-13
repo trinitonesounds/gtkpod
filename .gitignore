@@ -76,7 +76,7 @@ version
 /data/AUTHORS
 /data/COPYING
 /data/glade/gtkpod.glade.h
-/data/glade/details_editor.glade
+/data/glade/details_editor.xml
 /data/glade/coverweb.xml
 /data/glade/exporter.xml
 /data/glade/info_display.glade

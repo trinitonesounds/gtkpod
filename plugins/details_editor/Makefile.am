@@ -7,7 +7,7 @@ details_editor_ui_DATA = $(plugin_name).ui
 
 # Plugin Glade file
 details_editor_gladedir = $(gtkpod_glade_dir)
-details_editor_glade_DATA =  $(plugin_name).glade
+details_editor_glade_DATA =  $(plugin_name).xml
 
 # Plugin Icon file
 details_editor_pixmapsdir = $(gtkpod_image_dir)
