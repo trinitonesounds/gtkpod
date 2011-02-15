@@ -660,7 +660,7 @@ Track *mp4_get_file_info(const gchar *mp4FileName) {
                             newtitle = g_strndup(&buffer[2], titlelength);
                             newtitle[titlelength] = '\0';
                             title = g_strdup(newtitle);
-                            free(newtitle);
+                            g_free(newtitle);
                         }
                     }
 
@@ -668,6 +668,7 @@ Track *mp4_get_file_info(const gchar *mp4FileName) {
                     u_int64_t convertedsampletime =
                             MP4ConvertFromTrackTimestamp(mp4File, trackId, sampletime, MP4_MILLISECONDS_TIME_SCALE);
                     itdb_chapterdata_add_chapter(chapterdata, convertedsampletime, title);
+                    g_free(title);
                 }
                 track->chapterdata = itdb_chapterdata_duplicate(chapterdata);
 

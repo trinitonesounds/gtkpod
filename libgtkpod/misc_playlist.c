@@ -1197,7 +1197,8 @@ static void delete_playlist_ok(struct DeleteData *dd) {
     }
     delete_playlist_cleanup(dd);
 
-    gtkpod_tracks_statusbar_update();
+    gtkpod_statusbar_message(msg);
+    g_free(msg);
 }
 
 void delete_playlist_head(DeleteAction deleteaction) {
