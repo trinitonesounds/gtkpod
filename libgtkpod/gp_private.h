@@ -88,4 +88,18 @@ void gp_install_autoscroll_row_timeout(GtkWidget *widget);
 
 void gp_remove_autoscroll_row_timeout(GtkWidget *widget);
 
+/* -------------------------------------------------------------
+
+ Error Handling
+
+ ------------------------------------------------------------- */
+
+#define GTKPOD_GENERAL_ERROR gtkpod_general_error_quark ()
+
+typedef enum {
+    GTKPOD_GENERAL_ERROR_FAILED
+} GtkPodGeneralError;
+
+GQuark gtkpod_general_error_quark (void);
+
 #endif /* GP_DEFINITIONS_H_ */

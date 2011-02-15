@@ -115,3 +115,8 @@ void gp_remove_autoscroll_row_timeout(GtkWidget *widget) {
         _remove_scroll_row_timeout(widget);
     }
 }
+
+GQuark gtkpod_general_error_quark (void)
+{
+  return g_quark_from_static_string ("gtkpod-general-error-quark");
+}

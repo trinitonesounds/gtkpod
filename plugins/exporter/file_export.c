@@ -51,10 +51,11 @@
 /* Structure to keep all necessary information */
 struct fcd {
     GList *tracks; /* tracks to be written */
-    GtkWidget *fc; /* file chooser */
     GList **filenames; /* pointer to GList to append the filenames used */
     GtkBuilder *win_xml; /* Glade xml reference */
     Track *track; /* current track to export */
+    gchar *filename; /* filename for the current track to export */
+    GString *errors; /* Errors generated during the export */
 };
 
 /*------------------------------------------------------------------
@@ -109,6 +110,22 @@ static GMutex *mutex = NULL;
 static GCond *cond = NULL;
 static gboolean mutex_data = FALSE;
 #endif
+
+/******************************************************************
+ export_fcd_cleanup - free memory taken up by the fcd
+ structure.
+ ******************************************************************/
+static void export_fcd_cleanup(struct fcd *fcd) {
+    g_return_if_fail (fcd);
+    g_list_free(fcd->tracks);
+    g_string_free(fcd->errors, TRUE);
+
+    if (fcd->filename)
+        g_free(fcd->filename);
+
+    g_free(fcd);
+    release_widgets();
+}
 
 /**
  * copy_file_fd_sync - given two open file descriptors, read from one
@@ -218,12 +235,6 @@ static gboolean copy_file(gchar *file, gchar *dest) {
     return (result);
 }
 
-/* This function is called when the user presses the abort button
- * during flush_tracks() */
-static void write_tracks_abort(gboolean *abort) {
-    *abort = TRUE;
-}
-
 /**
  * get_preferred_filename - useful for generating the preferred
  * @param Track the track
@@ -232,7 +243,7 @@ static void write_tracks_abort(gboolean *abort) {
  * by the caller.
  */
 static gchar *
-track_get_export_filename(Track *track) {
+track_get_export_filename(Track *track, GError **error) {
     gchar *res_utf8, *res_cs = NULL;
     gchar *template;
     gboolean special_charset;
@@ -240,7 +251,8 @@ track_get_export_filename(Track *track) {
     g_return_val_if_fail (track, NULL);
 
     prefs_get_string_value(EXPORT_FILES_TPL, &template);
-    res_utf8 = get_string_from_full_template(track, template, TRUE);
+
+    res_utf8 = get_string_from_full_template(track, template, TRUE, error);
     C_FREE (template);
 
     prefs_get_int_value(EXPORT_FILES_SPECIAL_CHARSET, &special_charset);
@@ -263,13 +275,13 @@ track_get_export_filename(Track *track) {
  */
 static gboolean write_track(struct fcd *fcd) {
     gboolean result = FALSE;
-    gchar *dest_file = track_get_export_filename(fcd->track);
 
     g_return_val_if_fail (fcd, FALSE);
     g_return_val_if_fail (fcd->track, FALSE);
+    g_return_val_if_fail (fcd->filename, FALSE);
     g_return_val_if_fail (fcd->track->itdb, FALSE);
 
-    if (dest_file) {
+    if (fcd->filename) {
         gchar *from_file = NULL;
         if (fcd->track->itdb->usertype & GP_ITDB_TYPE_IPOD) {
             from_file = get_file_name_from_source(fcd->track, SOURCE_IPOD);
@@ -283,7 +295,7 @@ static gboolean write_track(struct fcd *fcd) {
         if (from_file) {
             gchar *filename, *dest_dir;
             prefs_get_string_value(EXPORT_FILES_PATH, &dest_dir);
-            filename = g_build_filename(dest_dir, dest_file, NULL);
+            filename = g_build_filename(dest_dir, fcd->filename, NULL);
 
             if (mkdirhierfile(filename)) {
                 if (copy_file(from_file, filename)) {
@@ -295,17 +307,34 @@ static gboolean write_track(struct fcd *fcd) {
                 }
             }
             g_free(from_file);
-            g_free(dest_dir);
             g_free(filename);
         }
         else {
             gchar *buf = get_track_info(fcd->track, FALSE);
-            gtkpod_warning(_("Could not find file for '%s' on the iPod\n"), buf);
+            fcd->errors = g_string_append(fcd->errors, g_strdup_printf(_("Could not find file for '%s' on the iPod\n"), buf));
             g_free(buf);
         }
-        g_free(dest_file);
     }
     return (result);
+}
+
+static void export_report_errors(GString *errors) {
+    if (errors && errors->len > 0) {
+        gtkpod_confirmation(-1, /* gint id, */
+                TRUE, /* gboolean modal, */
+                _("Export Errors"), /* title */
+                _("Errors created by export"), /* label */
+                errors->str, /* scrolled text */
+                NULL, 0, NULL, /* option 1 */
+                NULL, 0, NULL, /* option 2 */
+                TRUE, /* gboolean confirm_again, */
+                "show_export_errors",/* confirm_again_key,*/
+                CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
+                NULL, /* don't show "Apply" button */
+                NULL, /* cancel_handler,*/
+                NULL, /* gpointer user_data1,*/
+                NULL); /* gpointer user_data2,*/
+    }
 }
 
 #ifdef G_THREADS_ENABLED
@@ -331,8 +360,8 @@ static gpointer th_write_track(gpointer fcd) {
 static void export_files_write(struct fcd *fcd) {
     GList *l = NULL;
     gint n;
-    static gboolean abort;
     gdouble total = 0;
+
 #ifdef G_THREADS_ENABLED
     GThread *thread = NULL;
     GTimeVal gtime;
@@ -342,118 +371,87 @@ static void export_files_write(struct fcd *fcd) {
         cond = g_cond_new ();
 #endif
 
-    g_return_if_fail (fcd && fcd->fc);
+    g_return_if_fail (fcd);
 
     block_widgets();
 
-    abort = FALSE;
     n = g_list_length(fcd->tracks);
     /* calculate total length to be copied */
-    for (l = fcd->tracks; l && !abort; l = l->next) {
+    for (l = fcd->tracks; l; l = l->next) {
         Track *s = (Track*) l->data;
         total += s->size;
     }
 
     if (n != 0) {
-        /* create the dialog window */
-        GtkWidget *dialog, *progress_bar, *label, *image, *hbox;
-        gchar *progtext = NULL;
         gint count = 0; /* number of tracks copied */
         gdouble copied = 0; /* number of bytes copied */
         gdouble fraction; /* fraction copied (copied/total) */
+        gdouble old_fraction = 0;
         gboolean result = TRUE;
+        gchar *progtext;
         time_t diff, start, fullsecs, hrs, mins, secs;
 
-        dialog
-                = gtk_dialog_new_with_buttons(_("Information"), GTK_WINDOW (gtkpod_app), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_CANCEL, GTK_RESPONSE_NONE, NULL);
-
-        /* emulate gtk_message_dialog_new */
-        image = gtk_image_new_from_stock(GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
-        label = gtk_label_new(_("Press button to abort."));
-
-        gtk_misc_set_alignment(GTK_MISC (image), 0.5, 0.0);
-        gtk_label_set_line_wrap(GTK_LABEL (label), TRUE);
-        gtk_label_set_selectable(GTK_LABEL (label), TRUE);
-
-        /* hbox to put the image+label in */
-        hbox = gtk_hbox_new(FALSE, 6);
-        gtk_box_pack_start(GTK_BOX (hbox), image, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX (hbox), label, FALSE, FALSE, 0);
-
-        /* Create the progress bar */
-        progress_bar = gtk_progress_bar_new();
-        progtext = g_strdup(_("copying..."));
-        gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
-        g_free(progtext);
-
-        /* Indicate that user wants to abort */
-        g_signal_connect_swapped (GTK_OBJECT (dialog), "response",
-                G_CALLBACK (write_tracks_abort),
-                &abort);
-
-        /* Add the image/label + progress bar to dialog */
-        gtk_box_pack_start(GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), hbox, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), progress_bar, FALSE, FALSE, 0);
-        gtk_widget_show_all(dialog);
-
-        while (widgets_blocked && gtk_events_pending())
-            gtk_main_iteration();
+        gtkpod_statusbar_reset_progress(100);
         start = time(NULL);
-        for (l = fcd->tracks; l && !abort; l = l->next) {
+        for (l = fcd->tracks; l; l = l->next) {
             gboolean resultWrite = TRUE;
             Track *tr = (Track*) l->data;
-
             fcd->track = tr;
-            copied += tr->size;
+
+            GError *error = NULL;
+            fcd->filename = track_get_export_filename(fcd->track, &error);
+            if (error != NULL) {
+                fcd->errors = g_string_append(fcd->errors, g_strdup(error->message));
+                resultWrite = FALSE;
+                result &= resultWrite;
+                g_error_free(error);
+            } else {
+                copied += tr->size;
 #ifdef G_THREADS_ENABLED
-            mutex_data = FALSE;
-            thread = g_thread_create (th_write_track, fcd, TRUE, NULL);
-            if (thread) {
-                g_mutex_lock (mutex);
-                do {
-                    while (widgets_blocked && gtk_events_pending())
+                mutex_data = FALSE;
+                thread = g_thread_create (th_write_track, fcd, TRUE, NULL);
+                if (thread) {
+                    g_mutex_lock (mutex);
+                    do {
+                        while (widgets_blocked && gtk_events_pending())
                         gtk_main_iteration();
-                    /* wait a maximum of 20 ms */
-                    g_get_current_time(&gtime);
-                    g_time_val_add(&gtime, 20000);
-                    g_cond_timed_wait (cond, mutex, &gtime);
+                        /* wait a maximum of 20 ms */
+                        g_get_current_time(&gtime);
+                        g_time_val_add(&gtime, 20000);
+                        g_cond_timed_wait (cond, mutex, &gtime);
+                    }
+                    while (!mutex_data);
+                    g_mutex_unlock (mutex);
+                    resultWrite = (gboolean) GPOINTER_TO_INT(g_thread_join (thread));
+                    result &= resultWrite;
                 }
-                while (!mutex_data);
-                g_mutex_unlock (mutex);
-                resultWrite = (gboolean) GPOINTER_TO_INT(g_thread_join (thread));
-                result &= resultWrite;
-            }
-            else {
-                g_warning ("Thread creation failed, falling back to default.\n");
-                resultWrite = write_track(fcd);
-                result &= resultWrite;
-            }
+                else {
+                    g_warning ("Thread creation failed, falling back to default.\n");
+                    resultWrite = write_track(fcd);
+                    result &= resultWrite;
+                }
 #else
-            resultWrite = write_track (fcd);
-            result &= resultWrite;
-            while (widgets_blocked && gtk_events_pending ())
-            gtk_main_iteration ();
+                resultWrite = write_track (fcd);
+                result &= resultWrite;
+                while (widgets_blocked && gtk_events_pending ())
+                    gtk_main_iteration ();
 #endif
+
+                if (fcd->filename) {
+                    g_free(fcd->filename);
+                    fcd->filename = 0;
+                }
+            }
+
             if (!resultWrite) {
-                gtkpod_warning(_("Failed to write '%s-%s'\n"), tr->artist, tr->title);
+                gchar *msg = g_strdup_printf(_("Failed to write '%s-%s'\n\n"), tr->artist, tr->title);
+                fcd->errors = g_string_append(fcd->errors, msg);
+                g_free(msg);
             }
 
             ++count;
-//            if (count == 1) /* we need longer timeout */
-//            {
-//                gtkpod_statusbar_timeout(3 * STATUSBAR_TIMEOUT);
-//            }
-//
-//            if (count == n) /* we need to reset timeout */
-//            {
-//                gtkpod_statusbar_timeout(0);
-//            }
-            gtkpod_statusbar_message(ngettext ("Copied %d of %d track.",
-                    "Copied %d of %d tracks.", n), count, n);
-
             fraction = copied / total;
 
-            gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (progress_bar), fraction);
             diff = time(NULL) - start;
             fullsecs = (diff / fraction) - diff + 5;
             hrs = fullsecs / 3600;
@@ -461,31 +459,49 @@ static void export_files_write(struct fcd *fcd) {
             secs = ((fullsecs % 60) / 5) * 5;
             /* don't bounce up too quickly (>10% change only) */
             /*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
+
             progtext
                     = g_strdup_printf(_("%d%% (%d:%02d:%02d left)"), (int) (100 * fraction), (int) hrs, (int) mins, (int) secs);
-            gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
+            gdouble ticks = fraction - old_fraction;
+            gtkpod_statusbar_increment_progress_ticks(ticks * 100, progtext);
+
+            old_fraction = fraction;
             g_free(progtext);
+
+            if (fraction == 1) {
+                gtkpod_statusbar_reset_progress(100);
+                gtkpod_statusbar_message(ngettext ("Exported %d of %d track.", "Exported %d of %d tracks.", n), count, n);
+            }
+
             while (widgets_blocked && gtk_events_pending())
                 gtk_main_iteration();
         }
-        gtk_widget_destroy(dialog);
-        if (!result || abort)
-            gtkpod_statusbar_message(_("Some tracks were not copied."));
+        if (!result) {
+            export_report_errors(fcd->errors);
+            gtkpod_statusbar_message(_("Some tracks were not exported."));
+        }
     }
     release_widgets();
+}
+
+static gboolean export_files_write_cb(gpointer data) {
+    struct fcd *fcd = data;
+    export_files_write(fcd);
+    export_fcd_cleanup(fcd);
+    return FALSE;
 }
 
 /******************************************************************
  export_files_retrieve_options - retrieve options and store
  them in the prefs.
  ******************************************************************/
-static void export_files_store_option_settings(struct fcd *fcd) {
-    g_return_if_fail (fcd && fcd->win_xml && fcd->fc);
+static void export_files_store_option_settings(struct fcd *fcd, GtkFileChooser *fc) {
+    g_return_if_fail (fcd && fcd->win_xml && fc);
 
     option_get_toggle_button_gb(fcd->win_xml, EXPORT_FILES_SPECIAL_CHARSET);
     option_get_toggle_button_gb(fcd->win_xml, EXPORT_FILES_CHECK_EXISTING);
     option_get_string_gb(fcd->win_xml, EXPORT_FILES_TPL, NULL);
-    option_get_filename(GTK_FILE_CHOOSER (fcd->fc), EXPORT_FILES_PATH, NULL);
+    option_get_filename(fc, EXPORT_FILES_PATH, NULL);
 }
 
 /******************************************************************
@@ -545,7 +561,7 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
     fcd->tracks = g_list_copy(tracks);
     fcd->win_xml = export_files_xml;
     fcd->filenames = filenames;
-    fcd->fc = fc;
+    fcd->errors = g_string_new("");
 
     /* according to GTK FAQ: move a widget to a new parent */
     g_object_ref(options);
@@ -566,12 +582,14 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
             gtk_label_set_text(GTK_LABEL (label), message);
         else
             gtk_widget_hide(label);
+
         if (!tb) { /* set up textbuffer */
             tb = gtk_text_buffer_new(NULL);
             gtk_text_view_set_buffer(GTK_TEXT_VIEW (tv), tb);
             gtk_text_view_set_editable(GTK_TEXT_VIEW (tv), FALSE);
             gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(tv), FALSE);
         }
+
         for (gl = tracks; gl; gl = gl->next) {
             GtkTextIter ti;
             gchar *text;
@@ -605,17 +623,15 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
 
     switch (response) {
     case GTK_RESPONSE_ACCEPT:
-        export_files_store_option_settings(fcd);
-        export_files_write(fcd);
+        export_files_store_option_settings(fcd, GTK_FILE_CHOOSER(fc));
+        /* Let the dialog close before exporting in the background */
+        gdk_threads_add_idle((GSourceFunc) export_files_write_cb, fcd);
         break;
     case GTK_RESPONSE_CANCEL:
         break;
     default:
         break;
     }
-
-    g_list_free(fcd->tracks);
-    g_free(fcd);
     gtk_widget_destroy(GTK_WIDGET (fc));
 }
 
@@ -778,27 +794,16 @@ GList *transfer_track_names_between_itdbs(iTunesDB *itdb_s, iTunesDB *itdb_d, gc
  ------------------------------------------------------------------*/
 
 /******************************************************************
- export_playlist_file_cleanup - free memory taken up by the fcd
- structure.
- ******************************************************************/
-static void export_playlist_file_cleanup(struct fcd *fcd) {
-    g_return_if_fail (fcd);
-    g_list_free(fcd->tracks);
-    g_free(fcd);
-    release_widgets();
-}
-
-/******************************************************************
  export_playlist_file_retrieve_options - retrieve options and store
  them in the prefs.
  ******************************************************************/
-static void export_playlist_file_retrieve_options(struct fcd *fcd) {
-    g_return_if_fail (fcd && fcd->fc);
+static void export_playlist_file_retrieve_options(struct fcd *fcd, GtkFileChooser *fc) {
+    g_return_if_fail (fcd && fc);
 
     option_get_radio_button_gb(fcd->win_xml, EXPORT_PLAYLIST_FILE_TYPE, ExportPlaylistFileTypeW);
     option_get_radio_button_gb(fcd->win_xml, EXPORT_PLAYLIST_FILE_SOURCE, ExportPlaylistFileSourceW);
     option_get_string_gb(fcd->win_xml, EXPORT_PLAYLIST_FILE_TPL, NULL);
-    option_get_folder(GTK_FILE_CHOOSER (fcd->fc), EXPORT_PLAYLIST_FILE_PATH, NULL);
+    option_get_folder(fc, EXPORT_PLAYLIST_FILE_PATH, NULL);
 }
 
 /******************************************************************
@@ -809,22 +814,19 @@ static void export_playlist_file_retrieve_options(struct fcd *fcd) {
 static void export_playlist_file_write(struct fcd *fcd) {
     guint num;
     gint type, source;
-    gchar *template, *fname;
+    gchar *template;
     FILE *file;
 
-    g_return_if_fail (fcd && fcd->fc);
+    g_return_if_fail (fcd);
 
     num = g_list_length(fcd->tracks);
-
     type = prefs_get_int(EXPORT_PLAYLIST_FILE_TYPE);
     source = prefs_get_int(EXPORT_PLAYLIST_FILE_SOURCE);
     template = prefs_get_string(EXPORT_PLAYLIST_FILE_TPL);
     if (!template)
         template = g_strdup(EXPORT_PLAYLIST_FILE_TPL_DFLT);
 
-    fname = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd->fc));
-
-    file = fopen(fname, "w");
+    file = fopen(fcd->filename, "w");
 
     if (file) {
         guint i, n;
@@ -840,7 +842,14 @@ static void export_playlist_file_write(struct fcd *fcd) {
 
         for (n = 0, i = 0; i < num; ++i) {
             Track *track = g_list_nth_data(fcd->tracks, i);
-            gchar *infotext_utf8 = get_string_from_full_template(track, template, FALSE);
+            GError *error = NULL;
+            gchar *infotext_utf8 = get_string_from_full_template(track, template, FALSE, &error);
+            if (error != NULL) {
+                fcd->errors = g_string_append(fcd->errors, g_strdup(error->message));
+                g_error_free(error);
+                continue;
+            }
+
             gchar *filename = get_file_name_from_source(track, source);
             gchar *infotext;
 
@@ -868,7 +877,7 @@ static void export_playlist_file_write(struct fcd *fcd) {
                 }
             }
             else {
-                gtkpod_warning(_("No valid filename for: %s\n\n"), infotext);
+                fcd->errors = g_string_append(fcd->errors, g_strdup_printf(_("No valid filename for: %s\n\n"), infotext));
             }
             g_free(infotext);
             g_free(filename);
@@ -886,10 +895,18 @@ static void export_playlist_file_write(struct fcd *fcd) {
                 "Created playlist with %d tracks.", n), n);
     }
     else {
-        gtkpod_warning(_("Could not open '%s' for writing (%s).\n\n"), fname, g_strerror(errno));
+        fcd->errors = g_string_append(fcd->errors, g_strdup_printf(_("Could not open '%s' for writing (%s).\n\n"), fcd->filename, g_strerror(errno)));
     }
+
+    export_report_errors(fcd->errors);
     g_free(template);
-    g_free(fname);
+}
+
+static gboolean export_playlist_file_write_cb(gpointer data) {
+    struct fcd *fcd = data;
+    export_playlist_file_write(fcd);
+    export_fcd_cleanup(fcd);
+    return FALSE;
 }
 
 /******************************************************************
@@ -900,20 +917,20 @@ static void export_playlist_file_response(GtkDialog *fc, gint response, struct f
     /*     printf ("received response code: %d\n", response); */
     switch (response) {
     case RESPONSE_APPLY:
-        export_playlist_file_retrieve_options(fcd);
+        export_playlist_file_retrieve_options(fcd, GTK_FILE_CHOOSER(fc));
         break;
     case GTK_RESPONSE_ACCEPT:
-        export_playlist_file_retrieve_options(fcd);
-        export_playlist_file_write(fcd);
-        export_playlist_file_cleanup(fcd);
+        export_playlist_file_retrieve_options(fcd, GTK_FILE_CHOOSER(fc));
+        fcd->filename = g_strdup(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fc)));
+        gdk_threads_add_idle((GSourceFunc) export_playlist_file_write_cb, fcd);
         gtk_widget_destroy(GTK_WIDGET (fc));
         break;
     case GTK_RESPONSE_CANCEL:
-        export_playlist_file_cleanup(fcd);
+        export_fcd_cleanup(fcd);
         gtk_widget_destroy(GTK_WIDGET (fc));
         break;
     case GTK_RESPONSE_DELETE_EVENT:
-        export_playlist_file_cleanup(fcd);
+        export_fcd_cleanup(fcd);
         break;
     default:
         fprintf(stderr, "Programming error: export_playlist_file_response(): unknown response '%d'\n", response);
@@ -936,9 +953,8 @@ void export_tracks_to_playlist_file(GList *tracks) {
                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_APPLY, RESPONSE_APPLY, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
     GtkBuilder *export_playlist_xml;
 
-    gchar *glade_path = g_build_filename(get_glade_dir(), "exporter.glade", NULL);
-    export_playlist_xml = gtk_builder_new();
-    gtk_builder_add_from_file(export_playlist_xml, glade_path, NULL);
+    gchar *glade_path = g_build_filename(get_glade_dir(), "exporter.xml", NULL);
+    export_playlist_xml = gtkpod_builder_xml_new(glade_path);
     win = gtkpod_builder_xml_get_widget(export_playlist_xml, "export_playlist_file_options");
     g_free(glade_path);
 
@@ -948,7 +964,7 @@ void export_tracks_to_playlist_file(GList *tracks) {
 
     /* Information needed to clean up later */
     fcd->tracks = g_list_copy(tracks);
-    fcd->fc = fc;
+    fcd->errors = g_string_new("");
 
     /* according to GTK FAQ: move a widget to a new parent */
     g_object_ref(options);

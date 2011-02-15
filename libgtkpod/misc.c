@@ -46,6 +46,7 @@ ffla |  This program is distributed in the hope that it will be useful,
 #include "misc_track.h"
 #include "file_convert.h"
 #include "directories.h"
+#include "gp_private.h"
 
 #define DEBUG_MISC 0
 
@@ -1133,7 +1134,7 @@ gchar *get_string_from_template(Track *track, const gchar *template, gboolean is
 
  If @is_filename is FALSE, the extension (e.g. '.mp3' will be
  removed). */
-gchar *get_string_from_full_template(Track *track, const gchar *full_template, gboolean is_filename) {
+gchar *get_string_from_full_template(Track *track, const gchar *full_template, gboolean is_filename, GError **error) {
     gchar *res_utf8;
     gchar *template;
 
@@ -1144,7 +1145,11 @@ gchar *get_string_from_full_template(Track *track, const gchar *full_template, g
 
     if (!template) {
         gchar *fn = get_file_name_from_source(track, SOURCE_PREFER_LOCAL);
-        gtkpod_warning(_("Template ('%s') does not match file type '%s'\n"), full_template, fn ? fn : "");
+        g_set_error (error,
+                            GTKPOD_GENERAL_ERROR,                       /* error domain */
+                            GTKPOD_GENERAL_ERROR_FAILED,               /* error code */
+                            _("Template ('%s') does not match file type '%s'\n"),
+                            full_template, fn ? fn : "");
         g_free(fn);
         return NULL;
     }

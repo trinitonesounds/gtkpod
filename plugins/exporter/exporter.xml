@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <interface>
-  <!-- interface-requires gtk+ 2.16 -->
+  <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="export_playlist_file_options">
     <property name="title" translatable="yes">window1</property>
@@ -8,7 +8,7 @@
       <object class="GtkFrame" id="ep_options_frame">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
-        <property name="shadow_type">GTK_SHADOW_NONE</property>
+        <property name="shadow_type">none</property>
         <child>
           <object class="GtkAlignment" id="alignment4">
             <property name="visible">True</property>
@@ -25,15 +25,14 @@
                   <object class="GtkEntry" id="export_playlist_file_template">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="tooltip-text" translatable="yes">Determines how the string for the info field should be constructed, e.g '%a/%A/%T - %t.mp3' or '%o'.  You can separate several templates by semicolons -- gtkpod will determine which one to use by the filename extension given. Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, year: %Y, original filename (requires extended information file): %o, the character '%': %%.</property>
-                    <property name="invisible_char">*</property>
+                    <property name="tooltip_text" translatable="yes">Determines how the string for the info field should be constructed, e.g '%a/%A/%T - %t.mp3' or '%o'.  You can separate several templates by semicolons -- gtkpod will determine which one to use by the filename extension given. Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, year: %Y, original filename (requires extended information file): %o, the character '%': %%.</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -42,24 +41,27 @@
                     <property name="spacing">10</property>
                     <child>
                       <object class="GtkRadioButton" id="source_prefer_local">
+                        <property name="label" translatable="yes">_Prefer Local</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="tooltip-text" translatable="yes">If available, the local copy of the track is referenced in the playlist. Otherwise the file on the iPod is used.</property>
-                        <property name="label" translatable="yes">_Prefer Local</property>
+                        <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">If available, the local copy of the track is referenced in the playlist. Otherwise the file on the iPod is used.</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="source_local">
+                        <property name="label" translatable="yes">_Local</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="tooltip-text" translatable="yes">The local copy of the track is referenced in the playlist. If the track is not available locally, an error message is displayed.</property>
-                        <property name="label" translatable="yes">_Local</property>
+                        <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">The local copy of the track is referenced in the playlist. If the track is not available locally, an error message is displayed.</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
                         <property name="group">source_prefer_local</property>
@@ -72,10 +74,11 @@
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="source_ipod">
+                        <property name="label" translatable="yes">_iPod</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="tooltip-text" translatable="yes">The track on the iPod is referenced in the playlist file.</property>
-                        <property name="label" translatable="yes">_iPod</property>
+                        <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">The track on the iPod is referenced in the playlist file.</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
                         <property name="group">source_prefer_local</property>
@@ -95,8 +98,8 @@
                     <property name="right_attach">2</property>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
-                    <property name="x_options"/>
-                    <property name="y_options"/>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -105,22 +108,25 @@
                     <property name="spacing">10</property>
                     <child>
                       <object class="GtkRadioButton" id="type_m3u">
+                        <property name="label" translatable="yes">_M3U</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">_M3U</property>
+                        <property name="receives_default">False</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="type_pls">
+                        <property name="label" translatable="yes">_PLS</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">_PLS</property>
+                        <property name="receives_default">False</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
                         <property name="group">type_m3u</property>
@@ -138,8 +144,8 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="x_options"/>
-                    <property name="y_options"/>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -154,12 +160,13 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
-                    <property name="x_options"/>
-                    <property name="y_options"/>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -174,14 +181,15 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
-                    <property name="x_options"/>
-                    <property name="y_options"/>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -198,14 +206,15 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
-                    <property name="x_options"/>
-                    <property name="y_options"/>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
               </object>
@@ -228,7 +237,7 @@
       <object class="GtkFrame" id="ef_options_frame">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
-        <property name="shadow_type">GTK_SHADOW_NONE</property>
+        <property name="shadow_type">none</property>
         <child>
           <object class="GtkAlignment" id="alignment43">
             <property name="visible">True</property>
@@ -237,6 +246,7 @@
             <child>
               <object class="GtkVBox" id="vbox50">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkHBox" id="hbox51">
                     <property name="visible">True</property>
@@ -252,15 +262,14 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkEntry" id="export_files_template">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="tooltip-text" translatable="yes">Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t.mp3' or '%o'.  You can separate several patterns by semicolons -- gtkpod will determine which one to use by the filename extension given. Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, year: %Y, original filename (requires extended information file): %o, current playlist: %p, the character '%': %%.</property>
-                        <property name="invisible_char">*</property>
-                        <property name="text"></property>
+                        <property name="tooltip_text" translatable="yes">Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t.mp3' or '%o'.  You can separate several patterns by semicolons -- gtkpod will determine which one to use by the filename extension given. Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, year: %Y, original filename (requires extended information file): %o, current playlist: %p, the character '%': %%.</property>
                       </object>
                       <packing>
                         <property name="position">1</property>
@@ -270,14 +279,16 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">False</property>
+                    <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="export_files_special_charset">
+                    <property name="label" translatable="yes">Use selected charset (Preferences/Music/Encoding) for this filename</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="tooltip-text" translatable="yes">Normally the charset specified when first importing the track will be used for the filename. If you set this option you can set a different charset with the charset selector (Preferences/Music/Encoding). Note: the charset info is stored in the extended information file. Tracks imported before V0.51 will have no charset stored. Instead the charset specified will be used.</property>
-                    <property name="label" translatable="yes">Use selected charset (Preferences/Music/Encoding) for this filename</property>
+                    <property name="receives_default">False</property>
+                    <property name="tooltip_text" translatable="yes">Normally the charset specified when first importing the track will be used for the filename. If you set this option you can set a different charset with the charset selector (Preferences/Music/Encoding). Note: the charset info is stored in the extended information file. Tracks imported before V0.51 will have no charset stored. Instead the charset specified will be used.</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
                   </object>
@@ -289,10 +300,11 @@
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="export_files_check_existing">
+                    <property name="label" translatable="yes">Check for existing files when copying from iPod</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="tooltip-text" translatable="yes">When copying from iPod no check is performed on whether the destination file exists. Enabling this option will make gtkpod check whether the length of the destination file is the same as the file in the iPod. If so the file is skipped, allowing a quick sync of the iPod's contents.</property>
-                    <property name="label" translatable="yes">Check for existing files when copying from iPod</property>
+                    <property name="receives_default">False</property>
+                    <property name="tooltip_text" translatable="yes">When copying from iPod no check is performed on whether the destination file exists. Enabling this option will make gtkpod check whether the length of the destination file is the same as the file in the iPod. If so the file is skipped, allowing a quick sync of the iPod's contents.</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
                   </object>
@@ -305,6 +317,7 @@
                 <child>
                   <object class="GtkVBox" id="ef_message_box">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <placeholder/>
                     </child>
@@ -326,14 +339,14 @@
                       <object class="GtkScrolledWindow" id="scrolledwindow13">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                        <property name="shadow_type">GTK_SHADOW_IN</property>
+                        <property name="hscrollbar_policy">automatic</property>
+                        <property name="vscrollbar_policy">automatic</property>
+                        <property name="shadow_type">in</property>
                         <child>
                           <object class="GtkTextView" id="ef_textview">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="wrap_mode">GTK_WRAP_WORD</property>
+                            <property name="wrap_mode">word</property>
                           </object>
                         </child>
                       </object>

@@ -208,7 +208,7 @@ gchar *get_string_from_template (Track *track,
 				 gboolean silent);
 gchar *get_string_from_full_template (Track *track,
 				      const gchar *full_template,
-				      gboolean is_filename);
+				      gboolean is_filename, GError **error);
 
 gchar *which (const gchar *exe);
 
