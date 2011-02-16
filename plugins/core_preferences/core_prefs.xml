@@ -1604,12 +1604,11 @@ Examples:
                                 <property name="tooltip_text" translatable="yes">When multiple tracks are added to a repository, should an
 error occur then it is likely, without saving all added tracks
 will be lost since they are not saved. This preference allows for
-a save operation to be conducted after the number of tracks
-specified.
+a save operation to be conducted periodically.
 
-The default is 10 so after 10 tracks have been added a save
+The default is 60 seconds, so every minute a save
 will be imposed on the repository.</property>
-                                <property name="label" translatable="yes">Threshold for import of tracks before a save triggered:</property>
+                                <property name="label" translatable="yes">Auto-save every seconds:</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>

@@ -174,10 +174,10 @@ static void set_default_preferences() {
     prefs_set_string("initial_mountpoint", "/media/ipod");
 
     /*
-     * When adding files, determines after how many a
+     * When adding files, determines how often a
      * save should be performed.
      */
-    prefs_set_int("file_saving_threshold", 10);
+    prefs_set_int("file_saving_time_threshold", 60);  /* in seconds */
 
     str = g_build_filename(get_script_dir(), CONVERT_TO_MP3_SCRIPT, NULL);
     prefs_set_string("path_conv_mp3", str);

@@ -87,12 +87,30 @@ FileType *determine_filetype(const gchar *path) {
     return type;
 }
 
-static void save_if_needed(gint count, iTunesDB *itdb) {
-    /* save every ${file_threshold} files but do at least ${file_theshold} first*/
-    int threshold = prefs_get_int("file_saving_threshold");
-    if (count >= threshold && count % threshold == 0) {
+/*
+ * Save the database every ${file_saving_time_threshold} seconds. This
+ * is useful for checkpointing when importing large batches of files.
+ *
+ * The caller is responsible for calling gp_save_itdb one last time
+ * when done.
+ *
+ * Args:
+ *   last_save_time: the time of the last save. Initialize to time(NULL) on
+ *     the first call.
+ */
+void gp_save_if_needed(GTime *last_save_time, iTunesDB *itdb) {
+    g_assert(NULL != last_save_time);
+    int threshold = prefs_get_int("file_saving_time_threshold");
+    GTime next_save_time = *last_save_time + threshold;
+    GTime now = (GTime) time(NULL);
+    printf("last_save: %u; next_save: %u; now: %u\n",
+	   *last_save_time, next_save_time, now);
+    if (now >= next_save_time) {
         gp_save_itdb(itdb);
         gtkpod_tracks_statusbar_update();
+	/* Use the finishing time as the last save time, so if saving
+	   is slow, we don't save on every call */
+	*last_save_time = time(NULL);
     }
 }
 
@@ -147,13 +165,14 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
     gchar *dirname = NULL, *plname = NULL;
     gchar buf[PATH_MAX];
     FileType *type = NULL; /* type of playlist file */
-    gint line, tracks;
+    gint line;
     FILE *fp;
     gboolean error;
 
     g_return_val_if_fail (plfile, FALSE);
     g_return_val_if_fail (itdb, FALSE);
 
+    GTime last_save_time = (GTime) time(NULL);
     if (g_file_test(plfile, G_FILE_TEST_IS_DIR)) {
         gtkpod_warning(_("'%s' is a directory, not a playlist file.\n\n"), plfile);
         return FALSE; /* definitely not! */
@@ -194,7 +213,6 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
      all of these are line based -- add different code for different
      playlist files */
     line = -1; /* nr of line being read */
-    tracks = 0; /* nr of tracks added */
     error = FALSE;
     while (!error && fgets(buf, PATH_MAX, fp)) {
         gchar *bufp = buf;
@@ -264,7 +282,7 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
                 gtkpod_warning(_("Skipping '%s' to avoid adding playlist file recursively\n"), filename);
             }
             else if (add_track_by_filename(itdb, filename, plitem, prefs_get_int("add_recursively"), addtrackfunc, data)) {
-                save_if_needed(tracks, itdb);
+                gp_save_if_needed(&last_save_time, itdb);
             }
             g_free(filename);
         }
@@ -288,7 +306,7 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
  \*------------------------------------------------------------------*/
 
 
-static gint add_directory_by_name_internal(iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, gint *filecount, AddTrackFunc addtrackfunc, gpointer data) {
+static gint add_directory_by_name_internal(GTime *last_save_time, iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, gint *filecount, AddTrackFunc addtrackfunc, gpointer data) {
     gint result = 0;
 
     g_return_val_if_fail (itdb, 0);
@@ -304,7 +322,7 @@ static gint add_directory_by_name_internal(iTunesDB *itdb, gchar *name, Playlist
                 if (next != NULL) {
                     gchar *nextfull = g_build_filename(name, next, NULL);
                     if (descend || !g_file_test(nextfull, G_FILE_TEST_IS_DIR)) {
-                        result += add_directory_by_name_internal(itdb, nextfull, plitem, descend, filecount, addtrackfunc, data);
+			result += add_directory_by_name_internal(last_save_time, itdb, nextfull, plitem, descend, filecount, addtrackfunc, data);
                     }
                     g_free(nextfull);
                 }
@@ -318,7 +336,7 @@ static gint add_directory_by_name_internal(iTunesDB *itdb, gchar *name, Playlist
     else {
         if (add_track_by_filename(itdb, name, plitem, descend, addtrackfunc, data)) {
             *filecount = *filecount + 1;
-            save_if_needed(*filecount, itdb);
+            gp_save_if_needed(last_save_time, itdb);
         }
         result += *filecount;
     }
@@ -344,7 +362,8 @@ static gint add_directory_by_name_internal(iTunesDB *itdb, gchar *name, Playlist
 gint add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data) {
     /* Uses internal method so that a count parameter can be added for saving purposes. */
     gint filecount = 0;
-    return add_directory_by_name_internal(itdb, name, plitem, descend, &filecount, addtrackfunc, data);
+    GTime last_save_time = (GTime) time(NULL);
+    return add_directory_by_name_internal(&last_save_time, itdb, name, plitem, descend, &filecount, addtrackfunc, data);
 }
 
 /*------------------------------------------------------------------*\
