@@ -27,7 +27,6 @@
  */
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include "libgtkpod/misc.h"
 #include "libgtkpod/misc_conversion.h"
 #include "libgtkpod/prefs.h"
@@ -35,7 +34,7 @@
 #include "plugin.h"
 #include "display_tracks.h"
 
-static GladeXML *preference_xml;
+static GtkBuilder *prefbuilder;
 
 static GtkWidget *notebook = NULL;
 static GtkWidget *displayed_columns_view = NULL;
@@ -198,7 +197,7 @@ static void apply_ign_strings() {
     /* read sort field states */
     for (i = 0; sort_ign_fields[i] != -1; ++i) {
         buf = g_strdup_printf("sort_ign_field_%d", sort_ign_fields[i]);
-        GtkWidget *w = gtkpod_xml_get_widget(preference_xml, buf);
+        GtkWidget *w = gtkpod_builder_xml_get_widget(prefbuilder, buf);
         g_return_if_fail (w);
         prefs_set_int(buf, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (w)));
         g_free(buf);
@@ -293,12 +292,12 @@ G_MODULE_EXPORT void on_column_add_clicked (GtkButton *sender, gpointer e) {
     gint i;
     GtkTreeModel *model;
     GtkTreeIter iter;
-    GladeXML *xml;
+    GtkBuilder *builder;
 
-    gchar *glade_path = g_build_filename(get_glade_dir(), "track_display.glade", NULL);
-    xml = gtkpod_xml_new(glade_path, "prefs_columns_dialog");
-    GtkWidget *dlg = gtkpod_xml_get_widget (xml, "prefs_columns_dialog");
-    GtkTreeView *view = GTK_TREE_VIEW (gtkpod_xml_get_widget (xml, "available_columns"));
+    gchar *glade_path = g_build_filename(get_glade_dir(), "track_display.xml", NULL);
+    builder = gtkpod_builder_xml_new(glade_path);
+    GtkWidget *dlg = gtkpod_builder_xml_get_widget (builder, "prefs_columns_dialog");
+    GtkTreeView *view = GTK_TREE_VIEW (gtkpod_builder_xml_get_widget (builder, "available_columns"));
     g_free(glade_path);
 
     gtk_window_set_transient_for (GTK_WINDOW (dlg), notebook_get_parent_window());
@@ -308,7 +307,7 @@ G_MODULE_EXPORT void on_column_add_clicked (GtkButton *sender, gpointer e) {
     if(!gtk_dialog_run (GTK_DIALOG (dlg)))
     {
         gtk_widget_destroy (dlg);
-        g_object_unref (xml);
+        g_object_unref (builder);
         return;
     }
 
@@ -318,7 +317,7 @@ G_MODULE_EXPORT void on_column_add_clicked (GtkButton *sender, gpointer e) {
     gtk_tree_model_get (model, &iter, 1, &i, -1);
 
     gtk_widget_destroy (dlg);
-    g_object_unref (xml);
+    g_object_unref (builder);
 
     view = GTK_TREE_VIEW (displayed_columns_view);
     model = gtk_tree_view_get_model (view);
@@ -420,15 +419,19 @@ G_MODULE_EXPORT void on_tm_sort_case_sensitive_toggled(GtkToggleButton *togglebu
 GtkWidget *init_track_display_preferences() {
     GtkComboBox *cmd_combo;
     gint i = 0;
-    GtkWidget *w;
+    GtkWidget *w, *win;
 
-    gchar *glade_path = g_build_filename(get_glade_dir(), "track_display.glade", NULL);
-    preference_xml = gtkpod_xml_new(glade_path, "track_settings_notebook");
-    notebook = gtkpod_xml_get_widget(preference_xml, "track_settings_notebook");
-    cmd_combo = GTK_COMBO_BOX(gtkpod_xml_get_widget(preference_xml, "track_exec_cmd_combo"));
-    displayed_columns_view = gtkpod_xml_get_widget(preference_xml, "displayed_columns");
-    ign_words_view = gtkpod_xml_get_widget(preference_xml, "ign_words_view");
+    gchar *glade_path = g_build_filename(get_glade_dir(), "track_display.xml", NULL);
+    prefbuilder = gtkpod_builder_xml_new(glade_path);
+    win = gtkpod_builder_xml_get_widget(prefbuilder, "prefs_window");
+    notebook = gtkpod_builder_xml_get_widget(prefbuilder, "track_settings_notebook");
+    cmd_combo = GTK_COMBO_BOX(gtkpod_builder_xml_get_widget(prefbuilder, "track_exec_cmd_combo"));
+    displayed_columns_view = gtkpod_builder_xml_get_widget(prefbuilder, "displayed_columns");
+    ign_words_view = gtkpod_builder_xml_get_widget(prefbuilder, "ign_words_view");
     g_object_ref(notebook);
+    gtk_container_remove(GTK_CONTAINER(win), notebook);
+    gtk_widget_destroy(win);
+
     g_free(glade_path);
 
     setup_column_tree (GTK_TREE_VIEW(displayed_columns_view), TRUE);
@@ -437,7 +440,7 @@ GtkWidget *init_track_display_preferences() {
     /* label the ignore-field checkbox-labels */
     for (i = 0; sort_ign_fields[i] != -1; ++i) {
         gchar *buf = g_strdup_printf("sort_ign_field_%d", sort_ign_fields[i]);
-        w = gtkpod_xml_get_widget(preference_xml, buf);
+        w = gtkpod_builder_xml_get_widget(prefbuilder, buf);
         g_return_val_if_fail (w, NULL);
         gtk_button_set_label(GTK_BUTTON (w), gettext (get_t_string (sort_ign_fields[i])));
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), prefs_get_int(buf));
@@ -447,11 +450,11 @@ GtkWidget *init_track_display_preferences() {
 
     populate_track_cmd_combo(cmd_combo);
 
-    if ((w = gtkpod_xml_get_widget(preference_xml, "tm_cfg_case_sensitive"))) {
+    if ((w = gtkpod_builder_xml_get_widget(prefbuilder, "tm_cfg_case_sensitive"))) {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("tm_case_sensitive"));
     }
 
-    glade_xml_signal_autoconnect(preference_xml);
+    gtk_builder_connect_signals(prefbuilder, NULL);
 
     return notebook;
 }

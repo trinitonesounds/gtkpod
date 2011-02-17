@@ -7,7 +7,7 @@ track_display_ui_DATA =  $(plugin_name).ui
 
 # Plugin Glade file
 track_display_gladedir = $(gtkpod_glade_dir)
-track_display_glade_DATA =  $(plugin_name).glade
+track_display_glade_DATA =  $(plugin_name).xml
 
 # Plugin Icon file
 track_display_pixmapsdir = $(gtkpod_image_dir)

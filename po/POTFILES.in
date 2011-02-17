@@ -106,7 +106,7 @@ plugins/sorttab_display/sorttab_display_context_menu.c
 [type: gettext/ini]plugins/sorttab_display/sorttab_display.plugin.in
 plugins/track_display/display_tracks.c
 plugins/track_display/plugin.c
-plugins/track_display/track_display.glade
+[type: gettext/glade]plugins/track_display/track_display.xml
 plugins/track_display/track_display_context_menu.c
 [type: gettext/ini]plugins/track_display/track_display.plugin.in
 plugins/track_display/track_display_preferences.c

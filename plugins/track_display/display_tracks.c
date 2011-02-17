@@ -58,8 +58,8 @@
 #define gdk_drag_context_get_suggested_action(x) ((x)->suggested_action)
 #endif
 
-/* reference to glade xml for use with track plugin */
-static GladeXML *track_glade = NULL;
+/* reference to gtkbuilder for use with track plugin */
+static GtkBuilder *trackbuilder = NULL;
 /* pointer to the container for the track display */
 static GtkWidget *track_container;
 /* pointer to the current playlist label */
@@ -100,13 +100,13 @@ static GtkTargetEntry tm_drop_types[] =
 const gchar *TM_PREFS_SEARCH_COLUMN = "tm_prefs_search_column";
 const gchar *KEY_DISPLAY_SEARCH_ENTRY = "display_search_entry";
 
-static GladeXML *get_track_glade() {
-    if (!track_glade) {
-        gchar *glade_path = g_build_filename(get_glade_dir(), "track_display.glade", NULL);
-        track_glade = gtkpod_xml_new(glade_path, "track_display_window");
+static GtkBuilder *get_track_builder() {
+    if (!trackbuilder) {
+        gchar *glade_path = g_build_filename(get_glade_dir(), "track_display.xml", NULL);
+        trackbuilder = gtkpod_builder_xml_new(glade_path);
         g_free(glade_path);
     }
-    return track_glade;
+    return trackbuilder;
 }
 
 /* Convenience functions */
@@ -2009,7 +2009,7 @@ static void tm_create_treeview(void) {
     gint col;
     GtkWidget *stv = gtk_tree_view_new();
 
-    track_window = gtkpod_xml_get_widget(get_track_glade(), "track_window");
+    track_window = gtkpod_builder_xml_get_widget(get_track_builder(), "track_window");
     g_return_if_fail (track_window);
 
     /* create tree view */
@@ -2091,7 +2091,7 @@ static void tm_create_treeview(void) {
         tm_set_search_column(TM_COLUMN_TITLE);
     }
 
-    track_filter_entry = gtkpod_xml_get_widget(get_track_glade(), "search_entry");
+    track_filter_entry = gtkpod_builder_xml_get_widget(get_track_builder(), "search_entry");
     g_return_if_fail (track_filter_entry);
 
     g_signal_connect (G_OBJECT (track_filter_entry), "changed",
@@ -2100,10 +2100,10 @@ static void tm_create_treeview(void) {
 }
 
 void tm_create_track_display(GtkWidget *parent) {
-    GtkWidget *track_display_window = gtkpod_xml_get_widget(get_track_glade(), "track_display_window");
-    track_container = gtkpod_xml_get_widget(get_track_glade(), "track_display_vbox");
-    search_entry = gtkpod_xml_get_widget(get_track_glade(), "search_entry");
-    current_playlist_label = gtkpod_xml_get_widget(get_track_glade(), "current_playlist_label");
+    GtkWidget *track_display_window = gtkpod_builder_xml_get_widget(get_track_builder(), "track_display_window");
+    track_container = gtkpod_builder_xml_get_widget(get_track_builder(), "track_display_vbox");
+    search_entry = gtkpod_builder_xml_get_widget(get_track_builder(), "search_entry");
+    current_playlist_label = gtkpod_builder_xml_get_widget(get_track_builder(), "current_playlist_label");
     tm_create_treeview();
 
     g_object_ref(track_container);
@@ -2376,10 +2376,10 @@ gboolean tm_add_filelist(gchar *data, GtkTreePath *path, GtkTreeViewDropPosition
  * the prefs
  */
 void display_show_hide_searchbar(void) {
-    GtkWidget *upbutton = gtkpod_xml_get_widget(get_track_glade(), "searchbar_up_button");
-    GtkWidget *searchbar = gtkpod_xml_get_widget(get_track_glade(), "searchbar_hpanel");
-    GtkCheckMenuItem *mi = GTK_CHECK_MENU_ITEM (gtkpod_xml_get_widget (get_track_glade(), "filterbar_menu"));
-    GtkStatusbar *sb = GTK_STATUSBAR (gtkpod_xml_get_widget (get_track_glade(), "tracks_statusbar"));
+    GtkWidget *upbutton = gtkpod_builder_xml_get_widget(get_track_builder(), "searchbar_up_button");
+    GtkWidget *searchbar = gtkpod_builder_xml_get_widget(get_track_builder(), "searchbar_hpanel");
+    GtkCheckMenuItem *mi = GTK_CHECK_MENU_ITEM (gtkpod_builder_xml_get_widget (get_track_builder(), "filterbar_menu"));
+    GtkStatusbar *sb = GTK_STATUSBAR (gtkpod_builder_xml_get_widget (get_track_builder(), "tracks_statusbar"));
 
     g_return_if_fail (upbutton);
     g_return_if_fail (searchbar);
@@ -2390,19 +2390,12 @@ void display_show_hide_searchbar(void) {
         gtk_widget_show_all(searchbar);
         gtk_widget_hide(upbutton);
         gtk_check_menu_item_set_active(mi, TRUE);
-        g_warning("Do we need to resize the status bar grip?");
-        //        gtk_statusbar_set_has_resize_grip(sb, TRUE);
-        //        /* hack needed to make GTK aware of the changed
-        //         position for the resize grip */
-        //        g_idle_add(display_redraw_statusbar, NULL);
     }
     else {
         gtk_widget_hide_all(searchbar);
         gtk_widget_show(upbutton);
         gtk_widget_set_sensitive(upbutton, TRUE);
         gtk_check_menu_item_set_active(mi, FALSE);
-        g_warning("Do we need to resize the status bar grip?");
-        //        gtk_statusbar_set_has_resize_grip(sb, FALSE);
     }
 }
 
