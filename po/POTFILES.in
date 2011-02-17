@@ -85,7 +85,7 @@ plugins/photo_editor/photo_editor_context_menu.c
 [type: gettext/ini]plugins/photo_editor/photo_editor.plugin.in
 plugins/photo_editor/plugin.c
 plugins/playlist_display/display_playlists.c
-plugins/playlist_display/playlist_display.glade
+[type: gettext/glade]plugins/playlist_display/playlist_display.xml
 plugins/playlist_display/playlist_display_actions.c
 plugins/playlist_display/playlist_display_context_menu.c
 [type: gettext/ini]plugins/playlist_display/playlist_display.plugin.in

@@ -27,7 +27,6 @@
  */
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/misc.h"
 #include "libgtkpod/directories.h"
@@ -64,35 +63,39 @@ G_MODULE_EXPORT void on_pm_sort_case_sensitive_toggled(GtkToggleButton *togglebu
 }
 
 GtkWidget *init_playlist_display_preferences() {
-    GladeXML *pref_xml;
+    GtkBuilder *prefbuilder;
     GtkWidget *w = NULL;
 
-    gchar *glade_path = g_build_filename(get_glade_dir(), "playlist_display.glade", NULL);
-    pref_xml = gtkpod_xml_new(glade_path, "playlist_settings_notebook");
-    notebook = gtkpod_xml_get_widget(pref_xml, "playlist_settings_notebook");
+    gchar *glade_path = g_build_filename(get_glade_dir(), "playlist_display.xml", NULL);
+    prefbuilder = gtkpod_builder_xml_new(glade_path);
+    w = gtkpod_builder_xml_get_widget(prefbuilder, "prefs_window");
+    notebook = gtkpod_builder_xml_get_widget(prefbuilder, "playlist_settings_notebook");
     g_object_ref(notebook);
+    gtk_container_remove(GTK_CONTAINER(w), notebook);
+    gtk_widget_destroy(w);
     g_free(glade_path);
 
     switch (prefs_get_int("pm_sort")) {
     case SORT_ASCENDING:
-        w = gtkpod_xml_get_widget(pref_xml, "pm_ascend");
+        w = gtkpod_builder_xml_get_widget(prefbuilder, "pm_ascend");
         break;
     case SORT_DESCENDING:
-        w = gtkpod_xml_get_widget(pref_xml, "pm_descend");
+        w = gtkpod_builder_xml_get_widget(prefbuilder, "pm_descend");
         break;
     case SORT_NONE:
-        w = gtkpod_xml_get_widget(pref_xml, "pm_none");
+        w = gtkpod_builder_xml_get_widget(prefbuilder, "pm_none");
         break;
     }
 
     if (w)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
-    if ((w = gtkpod_xml_get_widget(pref_xml, "pm_cfg_case_sensitive"))) {
+    if ((w = gtkpod_builder_xml_get_widget(prefbuilder, "pm_cfg_case_sensitive"))) {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("pm_case_sensitive"));
     }
 
-    glade_xml_signal_autoconnect(pref_xml);
+    gtk_builder_connect_signals(prefbuilder, NULL);
+    g_object_unref(prefbuilder);
 
     return notebook;
 }

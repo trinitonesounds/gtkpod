@@ -7,7 +7,7 @@ playlist_display_ui_DATA = $(plugin_name).ui
 
 # Plugin Glade file - No glade/xml file
 playlist_display_gladedir = $(gtkpod_glade_dir)
-playlist_display_glade_DATA = $(plugin_name).glade
+playlist_display_glade_DATA = $(plugin_name).xml
 
 # Plugin Toolbar file
 playlist_display_toolbardir = $(gtkpod_glade_dir)

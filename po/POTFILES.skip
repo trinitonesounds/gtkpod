@@ -6,7 +6,7 @@ data/glade/exporter.xml
 data/glade/media_player.glade
 data/glade/mserv.xml
 data/glade/photo_editor.glade
-data/glade/playlist_display.glade
+data/glade/playlist_display.xml
 data/glade/repository_editor.glade
 data/glade/sorttab_display.xml
 data/glade/track_display.xml
