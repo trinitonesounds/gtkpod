@@ -3,7 +3,7 @@ data/glade/cover_display.xml
 data/glade/coverweb.xml
 data/glade/details_editor.xml
 data/glade/exporter.xml
-data/glade/media_player.glade
+data/glade/media_player.xml
 data/glade/mserv.xml
 data/glade/photo_editor.glade
 data/glade/playlist_display.xml

@@ -7,7 +7,7 @@ media_player_ui_DATA = $(plugin_name).ui
 
 # Plugin Glade file
 media_player_gladedir = $(gtkpod_glade_dir)
-media_player_glade_DATA =  $(plugin_name).glade
+media_player_glade_DATA =  $(plugin_name).xml
 
 # Plugin Icon file
 media_player_pixmapsdir = $(gtkpod_image_dir)

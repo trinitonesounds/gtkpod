@@ -134,36 +134,6 @@ static void media_player_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_plugin;
 }
 
-//static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
-//    GdkPixbuf *pixbuf;
-//    GError *error = NULL;
-//
-//    MediaPlayerPlugin* plugin = MEDIA_PLAYER_PLUGIN(ipref);
-//    plugin->prefs = init_media_player_preferences(plugin->glade_path);
-//    if (plugin->prefs == NULL)
-//        return;
-//
-//    pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), PREFERENCE_ICON, 48, 0, &error);
-//
-//    if (!pixbuf) {
-//        g_warning ("Couldn't load icon: %s", error->message);
-//        g_error_free(error);
-//    }
-//    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-media_player-settings", _(TAB_NAME), pixbuf, plugin->prefs);
-//    g_object_unref(pixbuf);
-//}
-//
-//static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
-//    anjuta_preferences_remove_page(prefs, _(TAB_NAME));
-//    MediaPlayerPlugin* plugin = MEDIA_PLAYER_PLUGIN(ipref);
-//    gtk_widget_destroy(plugin->prefs);
-//}
-//
-//static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
-//    iface->merge = ipreferences_merge;
-//    iface->unmerge = ipreferences_unmerge;
-//}
-
 static void track_command_iface_init(TrackCommandInterface *iface) {
     iface->id = "media_player_play_track_command";
     iface->text = _("Play");

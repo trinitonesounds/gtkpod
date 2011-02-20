@@ -72,7 +72,7 @@ plugins/info_display/info.c
 plugins/info_display/infoview.c
 plugins/info_display/plugin.c
 plugins/media_player/media_player.c
-plugins/media_player/media_player.glade
+[type: gettext/glade]plugins/media_player/media_player.xml
 [type: gettext/ini]plugins/media_player/media_player.plugin.in
 plugins/media_player/plugin.c
 plugins/mserv/mserv.c

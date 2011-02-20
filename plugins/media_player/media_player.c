@@ -115,11 +115,17 @@ static void update_volume(gdouble value) {
     if (!player)
         return;
 
+    if (value < 0) {
+        value = 0;
+    }
+
     player->volume_level = value / 10;
     prefs_set_double(MEDIA_PLAYER_VOLUME_KEY, player->volume_level);
     prefs_set_double(MEDIA_PLAYER_VOLUME_MUTE, player->volume_level == 0 ? 1 : 0);
 
-    g_object_set(player->play_element, "volume", player->volume_level, NULL);
+    if (player->play_element) {
+        g_object_set(player->play_element, "volume", player->volume_level, NULL);
+    }
 }
 
 static void set_song_label(Track *track) {
@@ -437,27 +443,25 @@ void set_selected_tracks(GList *tracks) {
 
 void init_media_player(GtkWidget *parent) {
     GtkWidget *window;
-    GladeXML *xml;
+    GtkBuilder *builder;
     gst_init_check(0, NULL, NULL);
     srand(time(NULL));
 
     player = g_new0(MediaPlayer, 1);
-    player->glade_path = g_build_filename(get_glade_dir(), "media_player.glade", NULL);
-    xml = glade_xml_new(player->glade_path, "media_window", NULL);
+    player->glade_path = g_build_filename(get_glade_dir(), "media_player.xml", NULL);
+    builder = gtkpod_builder_xml_new(player->glade_path);
 
-    window = gtkpod_xml_get_widget(xml, "media_window");
-    player->media_panel = gtkpod_xml_get_widget(xml, "media_panel");
-    player->song_label = gtkpod_xml_get_widget(xml, "song_label");
-    player->song_time_label = gtkpod_xml_get_widget(xml, "song_time_label");
-    player->media_toolbar = gtkpod_xml_get_widget(xml, "media_toolbar");
+    window = gtkpod_builder_xml_get_widget(builder, "media_window");
+    player->media_panel = gtkpod_builder_xml_get_widget(builder, "media_panel");
+    player->song_label = gtkpod_builder_xml_get_widget(builder, "song_label");
+    player->song_time_label = gtkpod_builder_xml_get_widget(builder, "song_time_label");
+    player->media_toolbar = gtkpod_builder_xml_get_widget(builder, "media_toolbar");
 
-    player->play_button = gtkpod_xml_get_widget(xml, "play_button");
-    player->stop_button = gtkpod_xml_get_widget(xml, "stop_button");
-    player->previous_button = gtkpod_xml_get_widget(xml, "previous_button");
-    player->next_button = gtkpod_xml_get_widget(xml, "next_button");
-    player->song_scale = gtkpod_xml_get_widget(xml, "song_scale");
-
-    glade_xml_signal_autoconnect(xml);
+    player->play_button = gtkpod_builder_xml_get_widget(builder, "play_button");
+    player->stop_button = gtkpod_builder_xml_get_widget(builder, "stop_button");
+    player->previous_button = gtkpod_builder_xml_get_widget(builder, "previous_button");
+    player->next_button = gtkpod_builder_xml_get_widget(builder, "next_button");
+    player->song_scale = gtkpod_builder_xml_get_widget(builder, "song_scale");
 
     g_object_ref(player->media_panel);
     gtk_container_remove(GTK_CONTAINER (window), player->media_panel);
@@ -467,6 +471,8 @@ void init_media_player(GtkWidget *parent) {
         gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(parent), player->media_panel);
     else
         gtk_container_add(GTK_CONTAINER (parent), player->media_panel);
+
+    gtk_builder_connect_signals(builder, NULL);
 
     player->thread = NULL;
     player->loop = NULL;
@@ -495,7 +501,7 @@ void init_media_player(GtkWidget *parent) {
 
     gtk_widget_show_all(player->media_panel);
 
-    g_object_unref(xml);
+    g_object_unref(builder);
 }
 
 void destroy_media_player() {
@@ -517,16 +523,14 @@ G_MODULE_EXPORT gboolean on_volume_window_focus_out(GtkWidget *widget, GdkEventF
 }
 
 G_MODULE_EXPORT void on_volume_button_clicked_cb(GtkToolButton *toolbutton, gpointer *userdata) {
-    GladeXML *xml;
+    GtkBuilder *builder;
     GtkWidget *vol_window;
     GtkWidget *vol_scale;
 
-    xml = glade_xml_new(player->glade_path, "volume_window", NULL);
-    vol_window = gtkpod_xml_get_widget(xml, "volume_window");
-    vol_scale = gtkpod_xml_get_widget(xml, "volume_scale");
+    builder = gtkpod_builder_xml_new(player->glade_path);
+    vol_window = gtkpod_builder_xml_get_widget(builder, "volume_window");
+    vol_scale = gtkpod_builder_xml_get_widget(builder, "volume_scale");
     g_object_set_data(G_OBJECT(vol_window), "scale", vol_scale);
-
-    g_message("Volume level: %f", player->volume_level);
 
     gtk_range_set_value(GTK_RANGE(vol_scale), (player->volume_level * 10));
     g_signal_connect(G_OBJECT (vol_scale),
@@ -542,7 +546,7 @@ G_MODULE_EXPORT void on_volume_button_clicked_cb(GtkToolButton *toolbutton, gpoi
     gtk_widget_show_all(vol_window);
     gtk_widget_grab_focus(vol_window);
 
-    g_object_unref(xml);
+    g_object_unref(builder);
 }
 
 G_MODULE_EXPORT void on_previous_button_clicked_cb(GtkToolButton *toolbutton, gpointer *userdata) {
