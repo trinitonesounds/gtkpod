@@ -34,7 +34,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include "plugin.h"
 #include "info.h"
 #include "infoview.h"

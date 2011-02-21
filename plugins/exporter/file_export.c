@@ -52,7 +52,7 @@
 struct fcd {
     GList *tracks; /* tracks to be written */
     GList **filenames; /* pointer to GList to append the filenames used */
-    GtkBuilder *win_xml; /* Glade xml reference */
+    GtkBuilder *builder; /* GtkBuilder reference */
     Track *track; /* current track to export */
     gchar *filename; /* filename for the current track to export */
     GString *errors; /* Errors generated during the export */
@@ -496,11 +496,11 @@ static gboolean export_files_write_cb(gpointer data) {
  them in the prefs.
  ******************************************************************/
 static void export_files_store_option_settings(struct fcd *fcd, GtkFileChooser *fc) {
-    g_return_if_fail (fcd && fcd->win_xml && fc);
+    g_return_if_fail (fcd && fcd->builder && fc);
 
-    option_get_toggle_button_gb(fcd->win_xml, EXPORT_FILES_SPECIAL_CHARSET);
-    option_get_toggle_button_gb(fcd->win_xml, EXPORT_FILES_CHECK_EXISTING);
-    option_get_string_gb(fcd->win_xml, EXPORT_FILES_TPL, NULL);
+    option_get_toggle_button(fcd->builder, EXPORT_FILES_SPECIAL_CHARSET);
+    option_get_toggle_button(fcd->builder, EXPORT_FILES_CHECK_EXISTING);
+    option_get_string(fcd->builder, EXPORT_FILES_TPL, NULL);
     option_get_filename(fc, EXPORT_FILES_PATH, NULL);
 }
 
@@ -559,7 +559,7 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
     /* Information needed to clean up later */
     fcd = g_malloc0(sizeof(struct fcd));
     fcd->tracks = g_list_copy(tracks);
-    fcd->win_xml = export_files_xml;
+    fcd->builder = export_files_xml;
     fcd->filenames = filenames;
     fcd->errors = g_string_new("");
 
@@ -612,12 +612,12 @@ void export_tracks_as_files(GList *tracks, GList **filenames, gboolean display, 
     /* set last folder */
     option_set_folder(GTK_FILE_CHOOSER (fc), EXPORT_FILES_PATH);
     /* set toggle button "charset" */
-    option_set_toggle_button_gb(export_files_xml, EXPORT_FILES_SPECIAL_CHARSET, FALSE);
+    option_set_toggle_button(export_files_xml, EXPORT_FILES_SPECIAL_CHARSET, FALSE);
     /* set toggle button "check for existing files" */
-    option_set_toggle_button_gb(export_files_xml, EXPORT_FILES_CHECK_EXISTING, TRUE);
+    option_set_toggle_button(export_files_xml, EXPORT_FILES_CHECK_EXISTING, TRUE);
 
     /* set last template */
-    option_set_string_gb(export_files_xml, EXPORT_FILES_TPL, EXPORT_FILES_TPL_DFLT);
+    option_set_string(export_files_xml, EXPORT_FILES_TPL, EXPORT_FILES_TPL_DFLT);
 
     response = gtk_dialog_run(GTK_DIALOG (fc));
 
@@ -800,9 +800,9 @@ GList *transfer_track_names_between_itdbs(iTunesDB *itdb_s, iTunesDB *itdb_d, gc
 static void export_playlist_file_retrieve_options(struct fcd *fcd, GtkFileChooser *fc) {
     g_return_if_fail (fcd && fc);
 
-    option_get_radio_button_gb(fcd->win_xml, EXPORT_PLAYLIST_FILE_TYPE, ExportPlaylistFileTypeW);
-    option_get_radio_button_gb(fcd->win_xml, EXPORT_PLAYLIST_FILE_SOURCE, ExportPlaylistFileSourceW);
-    option_get_string_gb(fcd->win_xml, EXPORT_PLAYLIST_FILE_TPL, NULL);
+    option_get_radio_button(fcd->builder, EXPORT_PLAYLIST_FILE_TYPE, ExportPlaylistFileTypeW);
+    option_get_radio_button(fcd->builder, EXPORT_PLAYLIST_FILE_SOURCE, ExportPlaylistFileSourceW);
+    option_get_string(fcd->builder, EXPORT_PLAYLIST_FILE_TPL, NULL);
     option_get_folder(fc, EXPORT_PLAYLIST_FILE_PATH, NULL);
 }
 
@@ -960,7 +960,7 @@ void export_tracks_to_playlist_file(GList *tracks) {
 
     options = gtkpod_builder_xml_get_widget(export_playlist_xml, "ep_options_frame");
 
-    fcd->win_xml = export_playlist_xml;
+    fcd->builder = export_playlist_xml;
 
     /* Information needed to clean up later */
     fcd->tracks = g_list_copy(tracks);
@@ -978,11 +978,11 @@ void export_tracks_to_playlist_file(GList *tracks) {
     /* set last folder */
     option_set_folder(GTK_FILE_CHOOSER (fc), EXPORT_PLAYLIST_FILE_PATH);
     /* set last type */
-    option_set_radio_button_gb(export_playlist_xml, EXPORT_PLAYLIST_FILE_TYPE, ExportPlaylistFileTypeW, 0);
+    option_set_radio_button(export_playlist_xml, EXPORT_PLAYLIST_FILE_TYPE, ExportPlaylistFileTypeW, 0);
     /* set last source */
-    option_set_radio_button_gb(export_playlist_xml, EXPORT_PLAYLIST_FILE_SOURCE, ExportPlaylistFileSourceW, 0);
+    option_set_radio_button(export_playlist_xml, EXPORT_PLAYLIST_FILE_SOURCE, ExportPlaylistFileSourceW, 0);
     /* set last template */
-    option_set_string_gb(export_playlist_xml, EXPORT_PLAYLIST_FILE_TPL, EXPORT_PLAYLIST_FILE_TPL_DFLT);
+    option_set_string(export_playlist_xml, EXPORT_PLAYLIST_FILE_TPL, EXPORT_PLAYLIST_FILE_TPL_DFLT);
 
     /* catch response codes */
     g_signal_connect (fc, "response",

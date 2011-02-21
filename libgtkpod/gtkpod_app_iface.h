@@ -44,6 +44,9 @@
 #include "track_command_iface.h"
 #include "filetype_iface.h"
 
+/* The core gtk builder file */
+#define CORE_GTKPOD_XML "core-gtkpod.xml"
+
 #define GTKPOD_APP_ICON_STOCK_ID "gtkpod"
 
 #define GTKPOD_APP_TYPE                (gtkpod_app_get_type ())
@@ -161,9 +164,6 @@ struct _GtkPodAppInterface {
 GType gtkpod_app_get_type(void);
 
 void gp_init(int argc, char *argv[]);
-
-void gtkpod_app_set_glade_xml(gchar *xml_file);
-gchar* gtkpod_get_glade_xml();
 
 gboolean ok_to_close_gtkpod();
 gint gtkpod_cleanup_quit();

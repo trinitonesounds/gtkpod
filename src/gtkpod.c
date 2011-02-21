@@ -42,10 +42,6 @@
 static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 static void on_gtkpod_destroy(GtkWidget * w, gpointer data);
 
-GladeXML *gtkpod_core_xml_new(const gchar *name) {
-    return gtkpod_xml_new(gtkpod_get_glade_xml(), name);
-}
-
 void gtkpod_init(int argc, char *argv[]) {
     AnjutaPluginManager *plugin_manager;
     AnjutaProfileManager *profile_manager;
@@ -55,7 +51,6 @@ void gtkpod_init(int argc, char *argv[]) {
     GFile *session_profile;
     GError *error = NULL;
 
-    gchar *glade_xml_file = NULL;
     gchar *default_profile_file = NULL;
     gchar *user_profile_file = NULL;
 
@@ -94,11 +89,6 @@ void gtkpod_init(int argc, char *argv[]) {
     }
 
     g_free(splash);
-
-    /* Set the glade xml file of the app */
-    glade_xml_file = g_build_filename(get_glade_dir(), "gtkpod.glade", NULL);
-    gtkpod_app_set_glade_xml(glade_xml_file);
-    g_free(glade_xml_file);
 
     /*
      * initialise gtkpod library items. Needs to be safety threaded due

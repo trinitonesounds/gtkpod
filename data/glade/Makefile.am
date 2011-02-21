@@ -1,6 +1,6 @@
 appdatadir = $(pkgdatadir)/data/glade
 appdata_DATA =				\
-	gtkpod.glade
+	core-gtkpod.xml
 
 EXTRA_DIST = 				\
 	$(appdata_DATA)

@@ -1,6 +1,6 @@
 [encoding: UTF-8]
 
-data/glade/gtkpod.glade
+[type: gettext/glade]data/glade/core-gtkpod.xml
 data/gtkpod.desktop.in
 libgtkpod/autodetection.c
 libgtkpod/charset.c

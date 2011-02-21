@@ -155,18 +155,11 @@ guint32 replaygain_to_soundcheck (gdouble gain);
 gdouble soundcheck_to_replaygain (guint32 soundcheck);
 
 
-void option_set_radio_button (GladeXML *win_xml,
+void option_set_radio_button (GtkBuilder *builder,
 			      const gchar *prefs_string,
 			      const gchar **widgets,
 			      gint dflt);
-gint option_get_radio_button (GladeXML *win_xml,
-			      const gchar *prefs_string,
-			      const gchar **widgets);
-void option_set_radio_button_gb (GtkBuilder *win_xml,
-			      const gchar *prefs_string,
-			      const gchar **widgets,
-			      gint dflt);
-gint option_get_radio_button_gb (GtkBuilder *win_xml,
+gint option_get_radio_button (GtkBuilder *builder,
 			      const gchar *prefs_string,
 			      const gchar **widgets);
 void option_set_folder (GtkFileChooser *fc,
@@ -179,27 +172,16 @@ void option_set_filename (GtkFileChooser *fc,
 void option_get_filename (GtkFileChooser *fc,
 			  const gchar *prefs_string,
 			  gchar **value);
-void option_set_string (GladeXML *win_xml,
+void option_set_string (GtkBuilder *builder,
 			const gchar *name,
 			const gchar *dflt);
-void option_get_string (GladeXML *win_xml,
+void option_get_string (GtkBuilder *builder,
 			const gchar *name,
 			gchar **value);
-void option_set_string_gb (GtkBuilder *win_xml,
-			const gchar *name,
-			const gchar *dflt);
-void option_get_string_gb (GtkBuilder *win_xml,
-			const gchar *name,
-			gchar **value);
-void option_set_toggle_button (GladeXML *win_xml,
+void option_set_toggle_button (GtkBuilder *builder,
 			       const gchar *name,
 			       gboolean dflt);
-gboolean option_get_toggle_button (GladeXML *win_xml,
-				   const gchar *name);
-void option_set_toggle_button_gb (GtkBuilder *win_xml,
-			       const gchar *name,
-			       gboolean dflt);
-gboolean option_get_toggle_button_gb (GtkBuilder *win_xml,
+gboolean option_get_toggle_button (GtkBuilder *builder,
 				   const gchar *name);
 
 gchar *get_string_from_template (Track *track,
@@ -211,9 +193,6 @@ gchar *get_string_from_full_template (Track *track,
 				      gboolean is_filename, GError **error);
 
 gchar *which (const gchar *exe);
-
-GladeXML *gtkpod_xml_new (const gchar *gtkpod_xml_file, const gchar *name);
-GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, const gchar *name);
 
 GtkBuilder *gtkpod_builder_xml_new(const gchar *filepath);
 GtkWidget *gtkpod_builder_xml_get_widget(GtkBuilder *builder, const gchar* name);

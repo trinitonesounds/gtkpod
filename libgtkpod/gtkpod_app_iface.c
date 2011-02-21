@@ -135,16 +135,6 @@ void CONF_NULL_HANDLER(gpointer d1, gpointer d2) {
     return;
 }
 
-void gtkpod_app_set_glade_xml(gchar *xml_file) {
-    g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
-    GTKPOD_APP_GET_INTERFACE (gtkpod_app)->xml_file = g_strdup(xml_file);
-}
-
-gchar* gtkpod_get_glade_xml() {
-    g_return_val_if_fail (GTKPOD_IS_APP(gtkpod_app), NULL);
-    return GTKPOD_APP_GET_INTERFACE (gtkpod_app)->xml_file;
-}
-
 /**
  * gtkpod_shutdown
  *

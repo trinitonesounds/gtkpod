@@ -37,6 +37,7 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
+#include "directories.h"
 #include <errno.h>
 #include <glib/gstdio.h>
 #include <signal.h>
@@ -258,7 +259,7 @@ static Conversion *conversion = NULL;
 
 /* Set up conversion infrastructure. Must only be called once. */
 void file_convert_init() {
-    GladeXML *log_xml;
+    GtkBuilder *log_builder;
     GtkWidget *vbox;
 
     if (conversion != NULL)
@@ -287,20 +288,23 @@ void file_convert_init() {
     conversion->dirsize = CONV_DIRSIZE_INVALID;
 
     /* setup log window */
-    log_xml = gtkpod_xml_new(gtkpod_get_glade_xml(), "conversion_log");
-    conversion->log_window = gtkpod_xml_get_widget(log_xml, "conversion_log");
+    gchar *glade_path = g_build_filename(get_glade_dir(), CORE_GTKPOD_XML, NULL);
+    log_builder = gtkpod_builder_xml_new(glade_path);
+    g_free(glade_path);
+
+    conversion->log_window = gtkpod_builder_xml_get_widget(log_builder, "conversion_log");
     gtk_window_set_default_size(GTK_WINDOW (conversion->log_window), prefs_get_int(FILE_CONVERT_LOG_SIZE_X), prefs_get_int(FILE_CONVERT_LOG_SIZE_Y));
     g_signal_connect_swapped (GTK_OBJECT (conversion->log_window), "delete-event",
             G_CALLBACK (conversion_log_window_delete),
             conversion);
-    vbox = gtkpod_xml_get_widget(log_xml, "conversion_vbox");
+    vbox = gtkpod_builder_xml_get_widget(log_builder, "conversion_vbox");
     conversion->notebook = gtk_notebook_new();
     gtk_widget_show(conversion->notebook);
     gtk_box_pack_start(GTK_BOX (vbox), conversion->notebook, TRUE, TRUE, 0);
     conversion->log_window_posx = G_MININT;
     conversion->log_window_posy = G_MININT;
     conversion->log_statusbar = GTK_STATUSBAR (
-            gtkpod_xml_get_widget (log_xml,
+            gtkpod_builder_xml_get_widget (log_builder,
                     "conversion_statusbar"));
     conversion->log_context_id
             = gtk_statusbar_get_context_id(conversion->log_statusbar, _("Summary status of conversion processes"));
@@ -312,7 +316,7 @@ void file_convert_init() {
     /* start timeout function for the scheduler */
     conversion->timeout_id = g_timeout_add(100, /* every 100 ms */
     conversion_scheduler, conversion);
-    g_object_unref(G_OBJECT (log_xml));
+    g_object_unref(G_OBJECT (log_builder));
 }
 
 /* Shut down conversion infrastructure */

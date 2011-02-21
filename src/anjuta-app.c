@@ -27,7 +27,6 @@
 #include <ctype.h>
 #include <sys/wait.h>
 
-#include <glade/glade-xml.h>
 #include <gtk/gtk.h>
 
 #include <gdl/gdl.h>
@@ -61,7 +60,7 @@ static GHashTable *id_hash = NULL;
 
 typedef struct {
     GtkWidget *window;
-    GladeXML *window_xml;
+    GtkBuilder *window_builder;
     gboolean scrolled;
     gchar *option1_key;
     gboolean option1_invert;
@@ -1189,14 +1188,14 @@ static void on_response(GtkWidget *w, gint response, gpointer id) {
     }
 }
 
-static void confirm_append_text(GladeXML *xml, const gchar *text) {
-    g_return_if_fail(xml);
+static void confirm_append_text(GtkBuilder *builder, const gchar *text) {
+    g_return_if_fail(builder);
 
     int i;
     gchar **strings = g_strsplit(text, "\n", 0);
     GtkTreeIter iter;
     GtkAdjustment *adjustment;
-    GtkWidget *w = gtkpod_xml_get_widget(xml, "tree");
+    GtkWidget *w = gtkpod_builder_xml_get_widget(builder, "tree");
     GtkListStore *store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (w)));
 
     for (i = 0; strings[i]; i++) {
@@ -1206,7 +1205,7 @@ static void confirm_append_text(GladeXML *xml, const gchar *text) {
         }
     }
 
-    w = gtkpod_xml_get_widget(xml, "scroller");
+    w = gtkpod_builder_xml_get_widget(builder, "scroller");
     adjustment = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW (w));
     gtk_adjustment_set_value(adjustment, gtk_adjustment_get_upper(adjustment) - gtk_adjustment_get_page_size(adjustment));
 
@@ -1217,7 +1216,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
     GtkWidget *window, *w;
     ConfData *cd;
     gint defx, defy;
-    GladeXML *confirm_xml;
+    GtkBuilder *confirm_builder;
     GtkListStore *store;
     GtkTreeViewColumn *column;
     GtkCellRenderer *renderer;
@@ -1230,7 +1229,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
     if (id >= 0) {
         if ((cd = g_hash_table_lookup(id_hash, GINT_TO_POINTER(id)))) { /* window with same ID already open -- add @text and return */
             if (text && *text && cd->window) {
-                confirm_append_text(cd->window_xml, text);
+                confirm_append_text(cd->window_builder, text);
             }
             return GTK_RESPONSE_REJECT;
         }
@@ -1258,15 +1257,17 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
         return GTK_RESPONSE_OK;
     }
 
-    /* window = create_confirm_dialog (); */
-    confirm_xml = gtkpod_core_xml_new("confirm_dialog");
-    window = gtkpod_xml_get_widget(confirm_xml, "confirm_dialog");
-    glade_xml_signal_autoconnect(confirm_xml);
+    gchar *glade_path = g_build_filename(get_glade_dir(), CORE_GTKPOD_XML, NULL);
+    confirm_builder = gtkpod_builder_xml_new(glade_path);
+    g_free(glade_path);
+
+    window = gtkpod_builder_xml_get_widget(confirm_builder, "confirm_dialog");
+    gtk_builder_connect_signals(confirm_builder, NULL);
 
     /* insert ID into hash table */
     cd = g_new0 (ConfData, 1);
     cd->window = window;
-    cd->window_xml = confirm_xml;
+    cd->window_builder = confirm_builder;
     cd->option1_key = g_strdup(option1_key);
     cd->option2_key = g_strdup(option2_key);
     cd->confirm_again_key = g_strdup(confirm_again_key);
@@ -1281,12 +1282,12 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
             = g_markup_printf_escaped("<span weight='bold' size='larger'>%s</span>\n\n%s", title ? title : _("Confirmation"), label ? label : "");
 
     /* Set label */
-    w = gtkpod_xml_get_widget(confirm_xml, "label");
+    w = gtkpod_builder_xml_get_widget(confirm_builder, "label");
     gtk_label_set_markup(GTK_LABEL(w), full_label);
     g_free(full_label);
 
     /* Set text */
-    w = gtkpod_xml_get_widget(confirm_xml, "tree");
+    w = gtkpod_builder_xml_get_widget(confirm_builder, "tree");
     store = gtk_list_store_new(1, G_TYPE_STRING);
     gtk_tree_view_set_model(GTK_TREE_VIEW (w), GTK_TREE_MODEL (store));
     g_object_unref(store);
@@ -1316,14 +1317,14 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
     gtk_tree_view_append_column(GTK_TREE_VIEW (w), column);
 
     if (text) {
-        confirm_append_text(confirm_xml, text);
+        confirm_append_text(confirm_builder, text);
         cd->scrolled = TRUE;
         defx = prefs_get_int("size_conf_sw.x");
         defy = prefs_get_int("size_conf_sw.y");
     }
     else {
         /* no text -> hide widget */
-        if ((w = gtkpod_xml_get_widget(confirm_xml, "scroller")))
+        if ((w = gtkpod_builder_xml_get_widget(confirm_builder, "scroller")))
             gtk_widget_hide(w);
 
         cd->scrolled = FALSE;
@@ -1334,7 +1335,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
     gtk_widget_set_size_request(GTK_WIDGET (window), defx, defy);
 
     /* Set "Option 1" checkbox */
-    w = gtkpod_xml_get_widget(confirm_xml, "option_vbox");
+    w = gtkpod_builder_xml_get_widget(confirm_builder, "option_vbox");
 
     if (w && option1_key && option1_text) {
         gboolean state, invert;
@@ -1354,7 +1355,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
     }
 
     /* Set "Option 2" checkbox */
-    w = gtkpod_xml_get_widget(confirm_xml, "option_vbox");
+    w = gtkpod_builder_xml_get_widget(confirm_builder, "option_vbox");
     if (w && option2_key && option2_text) {
         gboolean state, invert;
         GtkWidget *option2_button = gtk_check_button_new_with_mnemonic(option2_text);
@@ -1373,7 +1374,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
     }
 
     /* Set "Never Again" checkbox */
-    w = gtkpod_xml_get_widget(confirm_xml, "never_again");
+    w = gtkpod_builder_xml_get_widget(confirm_builder, "never_again");
 
     if (w && confirm_again_key) {
         /* connect signal */
@@ -1391,7 +1392,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
     /* Hide and set "default" button that can be activated by pressing
      ENTER in the window (usually OK)*/
     /* Hide or default CANCEL button */
-    if ((w = gtkpod_xml_get_widget(confirm_xml, "cancel"))) {
+    if ((w = gtkpod_builder_xml_get_widget(confirm_builder, "cancel"))) {
         gtk_widget_set_can_default (w, TRUE);
         gtk_widget_grab_default(w);
 
@@ -1400,7 +1401,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
     }
 
     /* Hide or default APPLY button */
-    if ((w = gtkpod_xml_get_widget(confirm_xml, "apply"))) {
+    if ((w = gtkpod_builder_xml_get_widget(confirm_builder, "apply"))) {
         gtk_widget_set_can_default (w, TRUE);
         gtk_widget_grab_default(w);
 
@@ -1409,7 +1410,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
     }
 
     /* Hide or default OK button */
-    if ((w = gtkpod_xml_get_widget(confirm_xml, "ok"))) {
+    if ((w = gtkpod_builder_xml_get_widget(confirm_builder, "ok"))) {
         gtk_widget_set_can_default (w, TRUE);
         gtk_widget_grab_default(w);
 

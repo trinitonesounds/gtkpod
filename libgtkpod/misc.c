@@ -572,11 +572,11 @@ gunichar2 *utf16_strdup(gunichar2 *utf16) {
  (integer value). If no parameter is set in the prefs, use
  @dflt. The corresponding widget names are stored in an array
  @widgets and are member of @win */
-void option_set_radio_button(GladeXML *win_xml, const gchar *prefs_string, const gchar **widgets, gint dflt) {
+void option_set_radio_button(GtkBuilder *builder, const gchar *prefs_string, const gchar **widgets, gint dflt) {
     gint wnum, num = 0;
     GtkWidget *w;
 
-    g_return_if_fail (win_xml && prefs_string && widgets);
+    g_return_if_fail (builder && prefs_string && widgets);
 
     /* number of available widgets */
     num = 0;
@@ -592,66 +592,20 @@ void option_set_radio_button(GladeXML *win_xml, const gchar *prefs_string, const
         prefs_set_int(prefs_string, 0);
         wnum = 0;
     }
-    w = gtkpod_xml_get_widget(win_xml, widgets[wnum]);
-    if (w)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), TRUE);
-}
-
-void option_set_radio_button_gb(GtkBuilder *win_xml, const gchar *prefs_string, const gchar **widgets, gint dflt) {
-    gint wnum, num = 0;
-    GtkWidget *w;
-
-    g_return_if_fail (win_xml && prefs_string && widgets);
-
-    /* number of available widgets */
-    num = 0;
-    while (widgets[num])
-        ++num;
-
-    if (!prefs_get_int_value(prefs_string, &wnum))
-        wnum = dflt;
-
-    if ((wnum >= num) || (wnum < 0)) {
-        fprintf(stderr, "Programming error: wnum > num (%d,%d,%s)\n", wnum, num, prefs_string);
-        /* set to reasonable default value */
-        prefs_set_int(prefs_string, 0);
-        wnum = 0;
-    }
-    w = GTK_WIDGET(gtk_builder_get_object(win_xml, widgets[wnum]));
+    w = GTK_WIDGET(gtk_builder_get_object(builder, widgets[wnum]));
     if (w)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), TRUE);
 }
 
 /* Retrieve which toggle button was activated and store the state in
  * the prefs */
-gint option_get_radio_button(GladeXML *win_xml, const gchar *prefs_string, const gchar **widgets) {
+gint option_get_radio_button(GtkBuilder *builder, const gchar *prefs_string, const gchar **widgets) {
     gint i;
 
-    g_return_val_if_fail (win_xml && prefs_string && widgets, 0);
+    g_return_val_if_fail (builder && prefs_string && widgets, 0);
 
     for (i = 0; widgets[i]; ++i) {
-        GtkWidget *w = gtkpod_xml_get_widget(win_xml, widgets[i]);
-        if (w) {
-            if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (w)))
-                break;
-        }
-    }
-    if (!widgets[i]) {
-        fprintf(stderr, "Programming error: no active toggle button (%s)", prefs_string);
-        /* set reasonable default */
-        i = 0;
-    }
-    prefs_set_int(prefs_string, i);
-    return i;
-}
-
-gint option_get_radio_button_gb(GtkBuilder *win_xml, const gchar *prefs_string, const gchar **widgets) {
-    gint i;
-
-    g_return_val_if_fail (win_xml && prefs_string && widgets, 0);
-
-    for (i = 0; widgets[i]; ++i) {
-        GtkWidget *w = GTK_WIDGET(gtk_builder_get_object(win_xml, widgets[i]));
+        GtkWidget *w = GTK_WIDGET(gtk_builder_get_object(builder, widgets[i]));
         if (w) {
             if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (w)))
                 break;
@@ -728,37 +682,18 @@ void option_get_filename(GtkFileChooser *fc, const gchar *prefs_string, gchar **
 
 /* Set the string entry @name to the prefs value stored in @name or
  to @default if @name is not yet defined. */
-void option_set_string(GladeXML *win_xml, const gchar *name, const gchar *dflt) {
+void option_set_string(GtkBuilder *builder, const gchar *name, const gchar *dflt) {
     gchar *string;
     GtkWidget *entry;
 
-    g_return_if_fail (win_xml && name && dflt);
+    g_return_if_fail (builder && name && dflt);
 
     prefs_get_string_value(name, &string);
 
     if (!string)
         string = g_strdup(dflt);
 
-    entry = gtkpod_xml_get_widget(win_xml, name);
-
-    if (entry)
-        gtk_entry_set_text(GTK_ENTRY(entry), string);
-
-    g_free(string);
-}
-
-void option_set_string_gb(GtkBuilder *win_xml, const gchar *name, const gchar *dflt) {
-    gchar *string;
-    GtkWidget *entry;
-
-    g_return_if_fail (win_xml && name && dflt);
-
-    prefs_get_string_value(name, &string);
-
-    if (!string)
-        string = g_strdup(dflt);
-
-    entry = GTK_WIDGET(gtk_builder_get_object(win_xml, name));
+    entry = GTK_WIDGET(gtk_builder_get_object(builder, name));
 
     if (entry)
         gtk_entry_set_text(GTK_ENTRY(entry), string);
@@ -770,27 +705,12 @@ void option_set_string_gb(GtkBuilder *win_xml, const gchar *name, const gchar *d
  * to the prefs (@name) */
 /* If @value is != NULL, a copy of the string is placed into
  @value. It has to be g_free()d after use */
-void option_get_string(GladeXML *win_xml, const gchar *name, gchar **value) {
+void option_get_string(GtkBuilder *builder, const gchar *name, gchar **value) {
     GtkWidget *entry;
 
-    g_return_if_fail (win_xml && name);
+    g_return_if_fail (builder && name);
 
-    entry = gtkpod_xml_get_widget(win_xml, name);
-
-    if (entry) {
-        const gchar *str = gtk_entry_get_text(GTK_ENTRY (entry));
-        prefs_set_string(name, str);
-        if (value)
-            *value = g_strdup(str);
-    }
-}
-
-void option_get_string_gb(GtkBuilder *win_xml, const gchar *name, gchar **value) {
-    GtkWidget *entry;
-
-    g_return_if_fail (win_xml && name);
-
-    entry = GTK_WIDGET(gtk_builder_get_object(win_xml, name));
+    entry = GTK_WIDGET(gtk_builder_get_object(builder, name));
 
     if (entry) {
         const gchar *str = gtk_entry_get_text(GTK_ENTRY (entry));
@@ -802,31 +722,16 @@ void option_get_string_gb(GtkBuilder *win_xml, const gchar *name, gchar **value)
 
 /* Set the state of toggle button @name to the prefs value stored in
  @name or to @default if @name is not yet defined. */
-void option_set_toggle_button(GladeXML *win_xml, const gchar *name, gboolean dflt) {
+void option_set_toggle_button(GtkBuilder *builder, const gchar *name, gboolean dflt) {
     gboolean active;
     GtkWidget *button;
 
-    g_return_if_fail (win_xml && name);
+    g_return_if_fail (builder && name);
 
     if (!prefs_get_int_value(name, &active))
         active = dflt;
 
-    button = gtkpod_xml_get_widget(win_xml, name);
-
-    if (button)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), active);
-}
-
-void option_set_toggle_button_gb(GtkBuilder *win_xml, const gchar *name, gboolean dflt) {
-    gboolean active;
-    GtkWidget *button;
-
-    g_return_if_fail (win_xml && name);
-
-    if (!prefs_get_int_value(name, &active))
-        active = dflt;
-
-    button = GTK_WIDGET(gtk_builder_get_object(win_xml, name));
+    button = GTK_WIDGET(gtk_builder_get_object(builder, name));
 
     if (button)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), active);
@@ -835,28 +740,13 @@ void option_set_toggle_button_gb(GtkBuilder *win_xml, const gchar *name, gboolea
 /* Retrieve the current state of the toggle button @name and write it
  * to the prefs (@name) */
 /* Return value: the current state */
-gboolean option_get_toggle_button(GladeXML *win_xml, const gchar *name) {
+gboolean option_get_toggle_button(GtkBuilder *builder, const gchar *name) {
     gboolean active = FALSE;
     GtkWidget *button;
 
-    g_return_val_if_fail (win_xml && name, active);
+    g_return_val_if_fail (builder && name, active);
 
-    button = gtkpod_xml_get_widget(win_xml, name);
-
-    if (button) {
-        active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
-        prefs_set_int(name, active);
-    }
-    return active;
-}
-
-gboolean option_get_toggle_button_gb(GtkBuilder *win_xml, const gchar *name) {
-    gboolean active = FALSE;
-    GtkWidget *button;
-
-    g_return_val_if_fail (win_xml && name, active);
-
-    button = GTK_WIDGET(gtk_builder_get_object(win_xml, name));
+    button = GTK_WIDGET(gtk_builder_get_object(builder, name));
 
     if (button) {
         active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
@@ -1309,38 +1199,6 @@ gint64 get_size_of_directory(const gchar *dir) {
     return tsize;
 }
 
-/**
- * Wrapper for glade_xml_new() for cygwin compatibility issues
- *
- **/
-GladeXML *gtkpod_xml_new(const gchar *gtkpod_xml_file, const gchar *name) {
-    GladeXML *xml;
-#ifdef ENABLE_NLS
-    xml = glade_xml_new(gtkpod_xml_file, name, GETTEXT_PACKAGE);
-#else
-    xml = glade_xml_new (gtkpod_xml_file, name, NULL);
-#endif
-
-    if (!xml)
-        fprintf(stderr, "*** Programming error: Cannot create glade XML: '%s'\n", name);
-
-    return xml;
-}
-
-/**
- * Wrapper for gtkpod_xml_get_widget() giving out a warning if widget
- * could not be found.
- *
- **/
-GtkWidget *gtkpod_xml_get_widget(GladeXML *xml, const gchar *name) {
-    GtkWidget *w = glade_xml_get_widget(xml, name);
-
-    if (!w)
-        fprintf(stderr, "*** Programming error: Widget not found: '%s'\n", name);
-
-    return w;
-}
-
 GtkBuilder *gtkpod_builder_xml_new(const gchar *filepath) {
     GtkBuilder *builder;
     GError *error = NULL;
@@ -1762,11 +1620,15 @@ gchar *get_user_string(gchar *title, gchar *message, gchar *dflt, gchar *opt_msg
  *                      was cancelled.
  */
 gchar *get_user_string_with_parent(GtkWindow *parent, gchar *title, gchar *message, gchar *dflt, gchar *opt_msg, gboolean *opt_state, const gchar *accept_button) {
-    GladeXML *xml = gtkpod_xml_new(gtkpod_get_glade_xml(), "input_box");
-    GtkWidget *dialog = gtkpod_xml_get_widget(xml, "input_box");
-    GtkWidget *label = gtkpod_xml_get_widget(xml, "input_box_label");
-    GtkWidget *entry = gtkpod_xml_get_widget(xml, "input_box_entry");
-    GtkWidget *checkb = gtkpod_xml_get_widget(xml, "input_box_checkbox");
+    GtkBuilder *builder;
+    gchar *glade_path = g_build_filename(get_glade_dir(), CORE_GTKPOD_XML, NULL);
+    builder = gtkpod_builder_xml_new(glade_path);
+    g_free(glade_path);
+
+    GtkWidget *dialog = gtkpod_builder_xml_get_widget(builder, "input_box");
+    GtkWidget *label = gtkpod_builder_xml_get_widget(builder, "input_box_label");
+    GtkWidget *entry = gtkpod_builder_xml_get_widget(builder, "input_box_entry");
+    GtkWidget *checkb = gtkpod_builder_xml_get_widget(builder, "input_box_checkbox");
     gint response;
     gchar *result = NULL;
     gchar *temp;
@@ -1806,7 +1668,7 @@ gchar *get_user_string_with_parent(GtkWindow *parent, gchar *title, gchar *messa
     }
 
     gtk_widget_destroy(dialog);
-    g_object_unref(xml);
+    g_object_unref(builder);
     return result;
 }
 

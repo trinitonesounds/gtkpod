@@ -1764,7 +1764,7 @@ void destroy_coverart_display() {
     g_signal_handler_disconnect(cdwidget->contentpanel, contentpanel_signal_id);
     //    g_signal_handler_disconnect(gtkpod_window, window_signal_id);
 
-    /* Components not freed as they are part of the glade xml file */
+    /* Components not freed as they are part of the gtkbuilder */
     cdwidget->leftbutton = NULL;
     cdwidget->rightbutton = NULL;
     cdwidget->cdslider = NULL;

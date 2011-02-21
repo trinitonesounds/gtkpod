@@ -1797,9 +1797,6 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
 }
 
 /* used to handle export of database */
-/* ATTENTION: directly used as callback in gtkpod.glade -- if you
- change the arguments of this function make sure you define a
- separate callback for gtkpod.glade */
 void handle_export(void) {
     GList *gl;
     gboolean success = TRUE;

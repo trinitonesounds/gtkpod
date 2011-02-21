@@ -27,7 +27,6 @@
  */
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include "libgtkpod/misc.h"
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/gtkpod_app_iface.h"

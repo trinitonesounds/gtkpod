@@ -54,7 +54,7 @@
  * etc.). ign_field is named after T_*. Since the labels to the
  * buttons are set in prefs_window.c when creating the window, you
  * only need to name the buttons in the intended order using
- * glade-2. There is no need to label them. */
+ * glade-3. There is no need to label them. */
 /* Strings associated to the column headers */
 static const gchar *t_strings[] = {
     N_("All"),               /*  0 */
