@@ -97,31 +97,31 @@ static void create_photo_editor() {
 
     photo_editor = g_malloc0(sizeof(GPhoto));
 
-    gchar *glade_path = g_build_filename(get_glade_dir(), "photo_editor.glade", NULL);
-    photo_editor->xml = gtkpod_xml_new(glade_path, "photo_window");
+    gchar *glade_path = g_build_filename(get_glade_dir(), "photo_editor.xml", NULL);
+    photo_editor->builder = gtkpod_builder_xml_new(glade_path);
     g_free(glade_path);
 
-    photo_window = gtkpod_xml_get_widget(photo_editor->xml, "photo_window");
-    photo_editor->photo_album_window = gtkpod_xml_get_widget(photo_editor->xml, "photo_album_window");
-    photo_editor->photo_thumb_window = gtkpod_xml_get_widget(photo_editor->xml, "photo_thumbnail_window");
-    photo_editor->photo_preview_image_event_box = gtkpod_xml_get_widget(photo_editor->xml, "photo_preview_image_event_box");
-    photo_editor->photo_preview_image = GTK_IMAGE (gtkpod_xml_get_widget (photo_editor->xml, "photo_preview_image"));
+    photo_window = gtkpod_builder_xml_get_widget(photo_editor->builder, "photo_window");
+    photo_editor->photo_album_window = gtkpod_builder_xml_get_widget(photo_editor->builder, "photo_album_window");
+    photo_editor->photo_thumb_window = gtkpod_builder_xml_get_widget(photo_editor->builder, "photo_thumbnail_window");
+    photo_editor->photo_preview_image_event_box = gtkpod_builder_xml_get_widget(photo_editor->builder, "photo_preview_image_event_box");
+    photo_editor->photo_preview_image = GTK_IMAGE (gtkpod_builder_xml_get_widget (photo_editor->builder, "photo_preview_image"));
     photo_editor->add_album_menuItem
-            = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_editor->xml, "photo_add_album_menuItem"));
+            = GTK_MENU_ITEM (gtkpod_builder_xml_get_widget (photo_editor->builder, "photo_add_album_menuItem"));
     photo_editor->add_image_menuItem
-            = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_editor->xml, "photo_add_image_menuItem"));
+            = GTK_MENU_ITEM (gtkpod_builder_xml_get_widget (photo_editor->builder, "photo_add_image_menuItem"));
     photo_editor->add_image_dir_menuItem
-            = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_editor->xml, "photo_add_image_dir_menuItem"));
+            = GTK_MENU_ITEM (gtkpod_builder_xml_get_widget (photo_editor->builder, "photo_add_image_dir_menuItem"));
     photo_editor->remove_album_menuItem
-            = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_editor->xml, "photo_remove_album_menuItem"));
+            = GTK_MENU_ITEM (gtkpod_builder_xml_get_widget (photo_editor->builder, "photo_remove_album_menuItem"));
     photo_editor->remove_image_menuItem
-            = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_editor->xml, "photo_remove_image_menuItem"));
+            = GTK_MENU_ITEM (gtkpod_builder_xml_get_widget (photo_editor->builder, "photo_remove_image_menuItem"));
     photo_editor->view_full_size_menuItem
-            = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_editor->xml, "photo_view_full_size_menuItem"));
+            = GTK_MENU_ITEM (gtkpod_builder_xml_get_widget (photo_editor->builder, "photo_view_full_size_menuItem"));
     photo_editor->rename_album_menuItem
-            = GTK_MENU_ITEM (gtkpod_xml_get_widget (photo_editor->xml, "photo_rename_album_menuItem"));
+            = GTK_MENU_ITEM (gtkpod_builder_xml_get_widget (photo_editor->builder, "photo_rename_album_menuItem"));
 
-    photo_editor->photo_viewport = gtkpod_xml_get_widget(photo_editor->xml, "photo_viewport");
+    photo_editor->photo_viewport = gtkpod_builder_xml_get_widget(photo_editor->builder, "photo_viewport");
     g_object_ref(photo_editor->photo_album_window);
     g_object_ref(photo_editor->photo_thumb_window);
     g_object_ref(photo_editor->photo_preview_image);
@@ -927,17 +927,17 @@ static void gphoto_display_image_dialog (GdkPixbuf *image)
     GtkWidget *dialog;
     GtkWidget *drawarea;
     GtkWidget *res_label;
-    GladeXML *xml;
+    GtkBuilder *builder;
     GdkPixbuf *scaled = NULL;
     gchar *text;
 
-    gchar *glade_path = g_build_filename(get_glade_dir(), "photo_editor.glade", NULL);
-    xml = gtkpod_xml_new(glade_path, "gphoto_preview_dialog");
+    gchar *glade_path = g_build_filename(get_glade_dir(), "photo_editor.xml", NULL);
+    builder = gtkpod_builder_xml_new(glade_path);
     g_free(glade_path);
 
-    dialog = gtkpod_xml_get_widget (xml, "gphoto_preview_dialog");
-    drawarea = gtkpod_xml_get_widget (xml, "gphoto_preview_dialog_drawarea");
-    res_label = gtkpod_xml_get_widget (xml, "gphoto_preview_dialog_res_lbl");
+    dialog = gtkpod_builder_xml_get_widget (builder, "gphoto_preview_dialog");
+    drawarea = gtkpod_builder_xml_get_widget (builder, "gphoto_preview_dialog_drawarea");
+    res_label = gtkpod_builder_xml_get_widget (builder, "gphoto_preview_dialog_res_lbl");
     g_return_if_fail (dialog);
     g_return_if_fail (drawarea);
     g_return_if_fail (res_label);
@@ -989,7 +989,7 @@ static void gphoto_display_image_dialog (GdkPixbuf *image)
 
     g_object_unref (scaled);
     gtk_widget_destroy (GTK_WIDGET (dialog));
-    g_object_unref(xml);
+    g_object_unref(builder);
 }
 
 /**

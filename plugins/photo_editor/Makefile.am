@@ -7,7 +7,7 @@ photo_editor_ui_DATA = $(plugin_name).ui
 
 # Plugin Glade file
 photo_editor_gladedir = $(gtkpod_glade_dir)
-photo_editor_glade_DATA =  $(plugin_name).glade
+photo_editor_glade_DATA =  $(plugin_name).xml
 
 # Plugin Icon file
 photo_editor_pixmapsdir = $(gtkpod_image_dir)

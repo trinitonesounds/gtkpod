@@ -80,7 +80,7 @@ plugins/mserv/mserv.c
 [type: gettext/glade]plugins/mserv/mserv.xml
 plugins/mserv/plugin.c
 plugins/photo_editor/display_photo.c
-plugins/photo_editor/photo_editor.glade
+[type: gettext/glade]plugins/photo_editor/photo_editor.xml
 plugins/photo_editor/photo_editor_context_menu.c
 [type: gettext/ini]plugins/photo_editor/photo_editor.plugin.in
 plugins/photo_editor/plugin.c

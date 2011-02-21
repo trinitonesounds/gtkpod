@@ -55,7 +55,7 @@
 
 struct _GPhoto
 {
-    GladeXML *xml;      /* XML info                           */
+    GtkBuilder *builder;      /* XML info                           */
     GtkWidget *window;  /* pointer to gphoto window          */
     iTunesDB *itdb;     /* pointer to the original itdb       */
     PhotoDB *photodb; /* pointer to photo db */
