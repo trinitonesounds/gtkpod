@@ -33,6 +33,7 @@
 
 #include "playlist_display_actions.h"
 #include "display_playlists.h"
+#include "playlist_display_spl.h"
 #include "libgtkpod/file.h"
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/gp_itdb.h"
@@ -40,7 +41,6 @@
 #include "libgtkpod/misc.h"
 #include "libgtkpod/misc_track.h"
 #include "libgtkpod/misc_playlist.h"
-#include "libgtkpod/gp_spl.h"
 #include "libgtkpod/file.h"
 #include "libgtkpod/syncdir.h"
 #include <gdk/gdk.h>

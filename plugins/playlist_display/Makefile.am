@@ -34,7 +34,8 @@ libplaylist_display_la_SOURCES = plugin.c plugin.h \
 								 display_playlists.c display_playlists.h \
 								 playlist_display_actions.c playlist_display_actions.h \
 								 playlist_display_context_menu.c playlist_display_context_menu.h \
-								 playlist_display_preferences.c playlist_display_preferences.h
+								 playlist_display_preferences.c playlist_display_preferences.h \
+								 playlist_display_spl.c playlist_display_spl.h
 
 libplaylist_display_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 

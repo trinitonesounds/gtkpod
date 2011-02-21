@@ -35,9 +35,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "itdb.h"
-#include "misc.h"
-#include "prefs.h"
+#include "playlist_display_spl.h"
+#include "libgtkpod/misc.h"
+#include "libgtkpod/prefs.h"
+#include "libgtkpod/directories.h"
 
 static const gchar *SPL_WINDOW_DEFX = "spl_window_defx";
 static const gchar *SPL_WINDOW_DEFY = "spl_window_defy";
@@ -55,8 +56,6 @@ typedef struct {
     guint32 id;
     const gchar *str;
 } ComboEntry;
-
-GladeXML *spl_window_xml;
 
 static const ComboEntry splat_inthelast_units_comboentries[] =
     {
@@ -213,6 +212,40 @@ enum entrytype {
 enum matchmode {
     spl_MATCH_ANY = 0, spl_MATCH_ALL, spl_MATCH_IGNORE
 };
+
+struct _SPLWizard {
+    GtkBuilder *builder;
+    GtkWidget *window;
+    GtkWidget *rules_frame;
+};
+
+typedef struct _SPLWizard SPLWizard;
+
+static SPLWizard *singleton_spl_wizard;
+
+static SPLWizard *get_spl_wizard() {
+    if (!singleton_spl_wizard) {
+        singleton_spl_wizard =  g_new0 (SPLWizard, 1);
+        gchar *glade_path = g_build_filename(get_glade_dir(), "playlist_display.xml", NULL);
+        singleton_spl_wizard->builder = gtkpod_builder_xml_new(glade_path);
+        singleton_spl_wizard->window = gtkpod_builder_xml_get_widget(singleton_spl_wizard->builder, "spl_window");
+        singleton_spl_wizard->rules_frame = gtkpod_builder_xml_get_widget(singleton_spl_wizard->builder, "spl_rules_frame");
+        g_free(glade_path);
+    }
+
+    return singleton_spl_wizard;
+}
+
+static void destroy_spl_wizard() {
+    if (singleton_spl_wizard) {
+        g_object_unref(singleton_spl_wizard->builder);
+        gtk_widget_destroy(singleton_spl_wizard->window);
+        singleton_spl_wizard->window = NULL;
+        singleton_spl_wizard->rules_frame = NULL;
+        singleton_spl_wizard->builder = NULL;
+        singleton_spl_wizard = NULL;
+    }
+}
 
 static const gchar *entry_get_string(gchar *str, Itdb_SPLRule *splr, enum entrytype et);
 
@@ -682,7 +715,7 @@ static void spl_cancel(GtkButton *button, GtkWidget *spl_window) {
 
     spl_store_window_size(spl_window);
 
-    gtk_widget_destroy(spl_window);
+    destroy_spl_wizard();
 
     release_widgets();
 }
@@ -692,13 +725,15 @@ static void spl_delete_event(GtkWidget *widget, GdkEvent *event, GtkWidget *spl_
 }
 
 static void spl_ok(GtkButton *button, GtkWidget *spl_window) {
+    SPLWizard *spl_wizard;
     GtkWidget *w;
     Playlist *spl_dup;
     Playlist *spl_orig;
     iTunesDB *itdb;
     gint32 pos;
 
-    g_return_if_fail (spl_window_xml != NULL);
+    spl_wizard = get_spl_wizard();
+    g_return_if_fail (spl_wizard != NULL);
 
     spl_dup = g_object_get_data(G_OBJECT (spl_window), "spl_work");
     spl_orig = g_object_get_data(G_OBJECT (spl_window), "spl_orig");
@@ -710,7 +745,7 @@ static void spl_ok(GtkButton *button, GtkWidget *spl_window) {
     g_return_if_fail (itdb != NULL);
 
     /* Read out new playlist name */
-    if ((w = gtkpod_xml_get_widget(spl_window_xml, "spl_name_entry"))) {
+    if ((w = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_name_entry"))) {
         g_free(spl_orig->name);
         spl_orig->name = gtk_editable_get_chars(GTK_EDITABLE (w), 0, -1);
     }
@@ -727,7 +762,6 @@ static void spl_ok(GtkButton *button, GtkWidget *spl_window) {
     itdb_spl_update(spl_orig);
 
     if (gtkpod_get_current_playlist() == spl_orig) { /* redisplay */
-        g_warning("spl_ok");
         gtkpod_set_current_playlist(spl_orig);
     }
 
@@ -735,68 +769,56 @@ static void spl_ok(GtkButton *button, GtkWidget *spl_window) {
 
     spl_store_window_size(spl_window);
 
-    gtk_widget_destroy(spl_window);
+    destroy_spl_wizard();
 
     release_widgets();
 }
 
 /* Display the "checklimits" data correctly */
 static void spl_display_checklimits(GtkWidget *spl_window) {
+    SPLWizard *spl_wizard;
     Playlist *spl;
     GtkWidget *w;
 
-    g_return_if_fail (spl_window);
-    spl = g_object_get_data(G_OBJECT (spl_window), "spl_work");
+    spl_wizard = get_spl_wizard();
+    g_return_if_fail (spl_wizard);
+    spl = g_object_get_data(G_OBJECT (spl_wizard->window), "spl_work");
     g_return_if_fail (spl);
 
-    if ((w = gtkpod_xml_get_widget(spl_window_xml, "spl_checklimits_button"))) {
+    if ((w = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_checklimits_button"))) {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), spl->splpref.checklimits);
         g_signal_connect (w, "toggled",
                 G_CALLBACK (spl_checklimits_toggled),
-                spl_window);
+                spl_wizard->window);
     }
 
-    if ((w = gtkpod_xml_get_widget(spl_window_xml, "spl_limitvalue_entry"))) {
+    if ((w = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_limitvalue_entry"))) {
         gchar str[WNLEN];
         snprintf(str, WNLEN, "%d", spl->splpref.limitvalue);
         gtk_entry_set_text(GTK_ENTRY (w), str);
         gtk_widget_set_sensitive(w, spl->splpref.checklimits);
         g_signal_connect (w, "changed",
                 G_CALLBACK (spl_limitvalue_changed),
-                spl_window);
+                spl_wizard->window);
     }
 
-    if ((w = gtkpod_xml_get_widget(spl_window_xml, "spl_limittype_combobox"))) {
+    if ((w = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_limittype_combobox"))) {
         spl_set_combobox(GTK_COMBO_BOX (w), limittype_comboentries, spl->splpref.limittype, G_CALLBACK (spl_limittype_changed), spl_window);
         gtk_widget_set_sensitive(w, spl->splpref.checklimits);
     }
 
-    if ((w = gtkpod_xml_get_widget(spl_window_xml, "spl_limitsort_label"))) {
+    if ((w = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_limitsort_label"))) {
         gtk_widget_set_sensitive(w, spl->splpref.checklimits);
     }
 
-    if ((w = gtkpod_xml_get_widget(spl_window_xml, "spl_limitsort_combobox"))) {
+    if ((w = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_limitsort_combobox"))) {
         spl_set_combobox(GTK_COMBO_BOX (w), limitsort_comboentries, spl->splpref.limitsort, G_CALLBACK (spl_limitsort_changed), spl_window);
         gtk_widget_set_sensitive(w, spl->splpref.checklimits);
     }
 }
 
-/* from "man strftime 3" ("%x" behaves just like "%c"):
-
- Some buggy versions of gcc complain about the use of %c:
- warning: `%c' yields only last 2 digits of year in some
- locales.  Of course program- mers are encouraged to use %c, it
- gives the preferred date and time representation. One meets all
- kinds of strange obfuscations to circum- vent this gcc
- problem. A relatively clean one is to add an intermediate
- function
- */
-size_t my_strftime(char *s, size_t max, const char *fmt, const struct tm *tm) {
-    return strftime(s, max, fmt, tm);
-}
-
 /* set @str to a timestring corresponding to mac timestamp @value */
-void set_timestring(gchar *str, guint64 value, enum entrytype et) {
+static void set_timestring(gchar *str, guint64 value, enum entrytype et) {
     time_t t;
     gchar *resstr;
 
@@ -817,7 +839,7 @@ void set_timestring(gchar *str, guint64 value, enum entrytype et) {
 /* set the string @str for rule @splr (entrytype: @et) */
 /* @str must be WNLEN chars long. Returns a pointer to the string to
  * be used */
-const gchar *entry_get_string(gchar *str, Itdb_SPLRule *splr, enum entrytype et) {
+static const gchar *entry_get_string(gchar *str, Itdb_SPLRule *splr, enum entrytype et) {
     gchar *strp = str;
 
     g_return_val_if_fail (str, NULL);
@@ -922,14 +944,14 @@ static GtkWidget *hbox_add_entry(GtkWidget *hbox, Itdb_SPLRule *splr, enum entry
 /* Called to destroy the memory used by the array holding the playlist
  IDs. It is called automatically when the associated object
  (combobox) is destroyed */
-void spl_pl_ids_destroy(GArray *array) {
+static void spl_pl_ids_destroy(GArray *array) {
     g_return_if_fail (array);
     g_array_free(array, TRUE);
 }
 
 /* Create the widgets to hold the action data (range, date,
  * string...) */
-GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
+static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
     GtkWidget *hbox = NULL;
     ItdbSPLActionType at;
     GtkWidget *entry, *label, *combobox;
@@ -1241,33 +1263,36 @@ static void spl_update_rule(GtkWidget *spl_window, Itdb_SPLRule *splr) {
 
 /* Display all rules stored in "spl_work" */
 static void spl_display_rules(GtkWidget *spl_window) {
+    SPLWizard *spl_wizard;
     Playlist *spl;
     GtkWidget *align, *table;
     GList *gl;
 
-    g_return_if_fail (spl_window);
-    spl = g_object_get_data(G_OBJECT (spl_window), "spl_work");
+    spl_wizard = get_spl_wizard();
+    g_return_if_fail (spl_wizard);
+
+    spl = g_object_get_data(G_OBJECT (spl_wizard->window), "spl_work");
     g_return_if_fail (spl);
-    align = gtkpod_xml_get_widget(spl_window_xml, "spl_rules_table_align");
+    align = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_rules_table_align");
     g_return_if_fail (align);
     /* Destroy table if it already exists */
-    table = g_object_get_data(G_OBJECT (spl_window), "spl_rules_table");
+    table = g_object_get_data(G_OBJECT (spl_wizard->window), "spl_rules_table");
     if (table)
         gtk_widget_destroy(table);
     table = gtk_table_new(1, 4, FALSE);
     gtk_widget_show(table);
     gtk_container_add(GTK_CONTAINER (align), table);
-    g_object_set_data(G_OBJECT (spl_window), "spl_rules_table", table);
+    g_object_set_data(G_OBJECT (spl_wizard->window), "spl_rules_table", table);
 
     for (gl = spl->splrules.rules; gl; gl = gl->next)
-        spl_update_rule(spl_window, gl->data);
+        spl_update_rule(spl_wizard->window, gl->data);
 
-    spl_check_number_of_rules(spl_window);
+    spl_check_number_of_rules(spl_wizard->window);
 }
 
 /* destroy widget @wname in row @row of table @table (used by
  spl_update_rules_from_row() */
-gboolean splremove(GtkWidget *table, const gchar *wname, gint row) {
+static gboolean splremove(GtkWidget *table, const gchar *wname, gint row) {
     GtkWidget *w;
     gchar name[WNLEN];
     gboolean removed = FALSE;
@@ -1317,8 +1342,9 @@ static void spl_update_rules_from_row(GtkWidget *spl_window, gint row) {
 
 /* Edit a smart playlist. If it is a new smartlist, it will be
  * inserted at position @pos when 'OK' is pressed. */
-void spl_edit_all(iTunesDB *itdb, Playlist *spl, gint32 pos) {
-    GtkWidget *spl_window, *w;
+static void spl_edit_all(iTunesDB *itdb, Playlist *spl, gint32 pos) {
+    SPLWizard *spl_wizard;
+    GtkWidget *w;
     gint defx, defy;
     Playlist *spl_dup;
 
@@ -1326,71 +1352,69 @@ void spl_edit_all(iTunesDB *itdb, Playlist *spl, gint32 pos) {
     g_return_if_fail (spl->is_spl);
     g_return_if_fail (itdb != NULL);
 
-    spl_window_xml = gtkpod_xml_new(gtkpod_get_glade_xml(), "spl_window");
-    spl_window = gtkpod_xml_get_widget(spl_window_xml, "spl_window");
-
-    g_return_if_fail (spl_window != NULL);
+    spl_wizard = get_spl_wizard();
+    g_return_if_fail (spl_wizard);
 
     /* Duplicate playlist to work on */
     spl_dup = itdb_playlist_duplicate(spl);
 
     /* Store pointers to original playlist and duplicate */
-    g_object_set_data(G_OBJECT (spl_window), "spl_orig", spl);
-    g_object_set_data(G_OBJECT (spl_window), "spl_work", spl_dup);
-    g_object_set_data(G_OBJECT (spl_window), "spl_pos", GINT_TO_POINTER(pos));
-    g_object_set_data(G_OBJECT (spl_window), "spl_itdb", itdb);
+    g_object_set_data(G_OBJECT (spl_wizard->window), "spl_orig", spl);
+    g_object_set_data(G_OBJECT (spl_wizard->window), "spl_work", spl_dup);
+    g_object_set_data(G_OBJECT (spl_wizard->window), "spl_pos", GINT_TO_POINTER(pos));
+    g_object_set_data(G_OBJECT (spl_wizard->window), "spl_itdb", itdb);
 
     /* Set checkboxes and connect signal handlers */
-    if ((w = gtkpod_xml_get_widget(spl_window_xml, "spl_name_entry"))) {
+    if ((w = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_name_entry"))) {
         if (spl_dup->name)
             gtk_entry_set_text(GTK_ENTRY (w), spl_dup->name);
     }
 
-    if ((w = gtkpod_xml_get_widget(spl_window_xml, "spl_matchcheckedonly_button"))) {
+    if ((w = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_matchcheckedonly_button"))) {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), spl_dup->splpref.matchcheckedonly);
         g_signal_connect (w, "toggled",
                 G_CALLBACK (spl_matchcheckedonly_toggled),
-                spl_window);
+                spl_wizard->window);
     }
 
-    if ((w = gtkpod_xml_get_widget(spl_window_xml, "spl_liveupdate_button"))) {
+    if ((w = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_liveupdate_button"))) {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (w), spl_dup->splpref.liveupdate);
         g_signal_connect (w, "toggled",
                 G_CALLBACK (spl_liveupdate_toggled),
-                spl_window);
+                spl_wizard->window);
     }
 
     /* Signals for Cancel, OK, Delete */
-    if ((w = gtkpod_xml_get_widget(spl_window_xml, "spl_cancel_button"))) {
+    if ((w = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_cancel_button"))) {
         g_signal_connect (w, "clicked",
-                G_CALLBACK (spl_cancel), spl_window);
+                G_CALLBACK (spl_cancel), spl_wizard->window);
     }
 
-    if ((w = gtkpod_xml_get_widget(spl_window_xml, "spl_ok_button"))) {
+    if ((w = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_ok_button"))) {
         g_signal_connect (w, "clicked",
-                G_CALLBACK (spl_ok), spl_window);
+                G_CALLBACK (spl_ok), spl_wizard->window);
     }
 
-    if ((w = gtkpod_xml_get_widget(spl_window_xml, "spl_match_rules"))) {
+    if ((w = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_match_rules"))) {
         gtk_combo_box_set_active(GTK_COMBO_BOX (w), spl_MATCH_ALL);
     }
 
-    g_signal_connect (spl_window, "delete_event",
-            G_CALLBACK (spl_delete_event), spl_window);
+    g_signal_connect (spl_wizard->window, "delete_event",
+            G_CALLBACK (spl_delete_event), spl_wizard->window);
 
-    spl_display_checklimits(spl_window);
+    spl_display_checklimits(spl_wizard->window);
 
-    spl_display_rules(spl_window);
+    spl_display_rules(spl_wizard->window);
 
     /* set default size */
     defx = prefs_get_int(SPL_WINDOW_DEFX);
     defy = prefs_get_int(SPL_WINDOW_DEFY);
     if ((defx != 0) && (defy != 0))
-        gtk_window_set_default_size(GTK_WINDOW (spl_window), defx, defy);
+        gtk_window_set_default_size(GTK_WINDOW (spl_wizard->window), defx, defy);
 
-    glade_xml_signal_autoconnect(spl_window_xml);
-    gtk_window_set_transient_for(GTK_WINDOW (spl_window), GTK_WINDOW (gtkpod_app));
-    gtk_widget_show(spl_window);
+    gtk_builder_connect_signals(spl_wizard->builder, NULL);
+    gtk_window_set_transient_for(GTK_WINDOW (spl_wizard->window), GTK_WINDOW (gtkpod_app));
+    gtk_widget_show(spl_wizard->window);
 
     block_widgets();
 }
@@ -1406,7 +1430,6 @@ void spl_edit(Playlist *spl) {
  position @pos. Default name is @name */
 void spl_edit_new(iTunesDB *itdb, gchar *name, gint32 pos) {
     Playlist *spl = gp_playlist_new(name ? name : _("New Playlist"), TRUE);
-
     spl_edit_all(itdb, spl, pos);
 }
 
@@ -1414,30 +1437,77 @@ void spl_edit_new(iTunesDB *itdb, gchar *name, gint32 pos) {
  glade callback
  */
 G_MODULE_EXPORT void spl_match_rules_changed(GtkComboBox *sender, gpointer e) {
+    SPLWizard *spl_wizard;
     Playlist *spl;
-    GtkWidget *spl_window = gtkpod_xml_get_widget(spl_window_xml, "spl_window");
-    GtkWidget *frame = gtkpod_xml_get_widget(spl_window_xml, "spl_rules_frame");
 
-    g_return_if_fail (spl_window);
-    g_return_if_fail (frame);
-    spl = g_object_get_data(G_OBJECT (spl_window), "spl_work");
+    spl_wizard = get_spl_wizard();
+    g_return_if_fail (spl_wizard);
+
+    spl = g_object_get_data(G_OBJECT (spl_wizard->window), "spl_work");
     g_return_if_fail (spl);
 
     switch (gtk_combo_box_get_active(sender)) {
     case spl_MATCH_ANY:
-        gtk_widget_set_sensitive(frame, TRUE);
+        gtk_widget_set_sensitive(spl_wizard->rules_frame, TRUE);
         spl->splpref.checkrules = TRUE;
         spl->splrules.match_operator = ITDB_SPLMATCH_OR;
         break;
     case spl_MATCH_ALL:
-        gtk_widget_set_sensitive(frame, TRUE);
+        gtk_widget_set_sensitive(spl_wizard->rules_frame, TRUE);
         spl->splpref.checkrules = TRUE;
         spl->splrules.match_operator = ITDB_SPLMATCH_AND;
         break;
     default:
-        gtk_widget_set_sensitive(frame, FALSE);
+        gtk_widget_set_sensitive(spl_wizard->rules_frame, FALSE);
         spl->splpref.checkrules = FALSE;
         break;
+    }
+}
+
+/* Add a new playlist or smart playlist at position @position. The
+ * name for the new playlist is queried from the user. A default
+ * (@dflt) name can be provided.
+ * Return value: none. In the case of smart playlists, the playlist
+ * will not be created immediately. */
+void add_new_pl_or_spl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position) {
+    ExtraiTunesDBData *eitdb;
+    gboolean is_spl = FALSE;
+    gchar *name;
+
+    g_return_if_fail (itdb);
+
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+
+    if (!eitdb->itdb_imported) {
+        gtkpod_warning_simple(_("Please load the iPod before adding playlists."));
+        return;
+    }
+
+    name
+            = get_user_string(_("New Playlist"), _("Please enter a name for the new playlist"), dflt ? dflt : _("New Playlist"), _("Smart Playlist"), &is_spl, GTK_STOCK_ADD);
+    if (!name)
+        return;
+
+    if (strlen(name) == 0) {
+        gtkpod_warning_simple(_("Playlist name cannot be blank"));
+        return;
+    }
+
+    Playlist *pl = itdb_playlist_by_name(itdb, name);
+    if (pl) {
+        gtkpod_warning_simple(_("A playlist named '%s' already exists"), name);
+        return;
+    }
+
+    if (name) {
+        if (!is_spl) { /* add standard playlist */
+            gp_playlist_add_new(itdb, name, FALSE, position);
+            gtkpod_tracks_statusbar_update ();
+        }
+        else { /* add smart playlist */
+            spl_edit_new(itdb, name, position);
+        }
     }
 }
 

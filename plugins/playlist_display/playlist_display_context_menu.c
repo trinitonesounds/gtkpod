@@ -36,8 +36,8 @@
 #include <glib/gi18n-lib.h>
 #include "display_playlists.h"
 #include "playlist_display_context_menu.h"
+#include "playlist_display_spl.h"
 #include "libgtkpod/gp_itdb.h"
-#include "libgtkpod/gp_spl.h"
 #include "libgtkpod/context_menus.h"
 #include "libgtkpod/misc_playlist.h"
 #include "libgtkpod/misc.h"

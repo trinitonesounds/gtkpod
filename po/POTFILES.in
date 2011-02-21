@@ -13,7 +13,6 @@ libgtkpod/file_itunesdb.c
 libgtkpod/fileselection.c
 libgtkpod/filetype_iface.c
 libgtkpod/gp_itdb.c
-libgtkpod/gp_spl.c
 libgtkpod/gtkpod_app_iface.c
 libgtkpod/misc.c
 libgtkpod/misc_conversion.c
@@ -87,6 +86,7 @@ plugins/photo_editor/plugin.c
 plugins/playlist_display/display_playlists.c
 [type: gettext/glade]plugins/playlist_display/playlist_display.xml
 plugins/playlist_display/playlist_display_actions.c
+plugins/playlist_display/playlist_display_spl.c
 plugins/playlist_display/playlist_display_context_menu.c
 [type: gettext/ini]plugins/playlist_display/playlist_display.plugin.in
 plugins/playlist_display/plugin.c

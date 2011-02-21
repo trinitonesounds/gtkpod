@@ -41,7 +41,6 @@
 #define PLAYLIST_DISPLAY_PLAYLIST_ICON_STOCK_ID "playlist_display-playlist-icon"
 
 Playlist *add_new_pl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position);
-void add_new_pl_or_spl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position);
 Playlist *generate_random_playlist(iTunesDB *itdb);
 Playlist *generate_selected_playlist(void);
 Playlist *generate_displayed_playlist(void);

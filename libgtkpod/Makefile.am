@@ -30,7 +30,6 @@ libgtkpod_la_SOURCES =  gtkpod_app_iface.h gtkpod_app_iface.c \
 						gtkpod_app-marshallers.c gtkpod_app-marshallers.h \
 						tool_menu_action.c tool_menu_action.h \
 						context_menus.c context_menus.h \
-						gp_spl.c gp_spl.h \
 						autodetection.c autodetection.h
 
 # Include paths

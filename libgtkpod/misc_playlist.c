@@ -41,7 +41,6 @@
 #include "prefs.h"
 #include "file_convert.h"
 #include "gtkpod_app_iface.h"
-#include "gp_spl.h"
 
 #define DEBUG_MISC 0
 
@@ -78,53 +77,6 @@ Playlist *add_new_pl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position) {
         gtkpod_tracks_statusbar_update ();
     }
     return result;
-}
-
-/* Add a new playlist or smart playlist at position @position. The
- * name for the new playlist is queried from the user. A default
- * (@dflt) name can be provided.
- * Return value: none. In the case of smart playlists, the playlist
- * will not be created immediately. */
-void add_new_pl_or_spl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position) {
-    ExtraiTunesDBData *eitdb;
-    gboolean is_spl = FALSE;
-    gchar *name;
-
-    g_return_if_fail (itdb);
-
-    eitdb = itdb->userdata;
-    g_return_if_fail (eitdb);
-
-    if (!eitdb->itdb_imported) {
-        gtkpod_warning_simple(_("Please load the iPod before adding playlists."));
-        return;
-    }
-
-    name
-            = get_user_string(_("New Playlist"), _("Please enter a name for the new playlist"), dflt ? dflt : _("New Playlist"), _("Smart Playlist"), &is_spl, GTK_STOCK_ADD);
-    if (!name)
-        return;
-
-    if (strlen(name) == 0) {
-        gtkpod_warning_simple(_("Playlist name cannot be blank"));
-        return;
-    }
-
-    Playlist *pl = itdb_playlist_by_name(itdb, name);
-    if (pl) {
-        gtkpod_warning_simple(_("A playlist named '%s' already exists"), name);
-        return;
-    }
-
-    if (name) {
-        if (!is_spl) { /* add standard playlist */
-            gp_playlist_add_new(itdb, name, FALSE, position);
-            gtkpod_tracks_statusbar_update ();
-        }
-        else { /* add smart playlist */
-            spl_edit_new(itdb, name, position);
-        }
-    }
 }
 
 /*------------------------------------------------------------------*\
