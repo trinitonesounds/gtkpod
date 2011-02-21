@@ -103,8 +103,6 @@ void gp_save_if_needed(GTime *last_save_time, iTunesDB *itdb) {
     int threshold = prefs_get_int("file_saving_time_threshold");
     GTime next_save_time = *last_save_time + threshold;
     GTime now = (GTime) time(NULL);
-    printf("last_save: %u; next_save: %u; now: %u\n",
-	   *last_save_time, next_save_time, now);
     if (now >= next_save_time) {
         gp_save_itdb(itdb);
         gtkpod_tracks_statusbar_update();

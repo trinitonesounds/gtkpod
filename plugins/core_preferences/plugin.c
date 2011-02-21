@@ -129,7 +129,6 @@ static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* pre
 
 static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
     anjuta_preferences_remove_page(prefs, _("Settings"));
-    CorePrefsPlugin* prefs_plugin = GTKPOD_CORE_PREFS_PLUGIN(ipref);
     destroy_settings_preferences();
 }
 

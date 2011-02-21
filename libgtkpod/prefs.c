@@ -27,29 +27,6 @@
  |  $Id$
  */
 
-/* -------------------------------------------------------------------
- *
- * HOWTO add a new_option to the prefs dialog
- *
- * - add the desired option to the prefs window using glade-2
- *
- * - set the default value of new_option in set_default_preferences() in prefs.c
- *
- * - add a callback on_new_option_*() to prefs_windows.c to set the
- *   new value.
- *   The value is applied to the actual prefs when pressing the "OK"
- *   or "Apply" button in the prefs window.
- *
- * - add code to prefs_window_create() in prefs_window.c to set the
- *   correct state of the option in the prefs window.
- *
- * - if you want new_option to be a command line option as well, add
- *   code to usage() and read_commandline().
- *
- * - for environment variables, add code to read_environment().
- *
- * ---------------------------------------------------------------- */
-
 /* ----------------------------------------------------------------
  *
  * The prefs module should be thread safe. The hash table is locked

@@ -1024,61 +1024,6 @@ static gboolean on_drawing_area_exposed(GtkWidget *draw_area, GdkEventExpose *ev
     return FALSE;
 }
 
-///**
-// * gtkpod_window_configure_callback:
-// *
-// * Callback for the gtkpod app window. When the window
-// * is resized the background of the cdwidget is given a size
-// * of the same size. Ensure the background is always black
-// * and no overlapping internal components occur.
-// *
-// * @widget: gtkpod app window
-// * @event: gdk configure event
-// * @data: any user data passed to the function
-// *
-// * Returns:
-// * boolean indicating whether other handlers should be run.
-// */
-//static gboolean on_gtkpod_window_configure(GtkWidget *widget, GdkEventConfigure *event, gpointer data) {
-//    if (cdwidget == NULL)
-//        return FALSE;
-//
-//    redraw(FALSE);
-//
-//    return FALSE;
-//}
-
-///**
-// * on_paned0_button_release_event:
-// *
-// * Callback fired when a button release event occurs on
-// * paned0. Only worthwhile things are carried out when
-// * the position of paned0 has changed, ie. the bar was moved.
-// * Moving the bar will scale the cover images appropriately.
-// * Signal connected via the glade XML file.
-// *
-// * @widget: gtkpod app window
-// * @event: gdk event button
-// * @data: any user data passed to the function
-// *
-// * Returns:
-// * boolean indicating whether other handlers should be run.
-// */
-//G_MODULE_EXPORT gboolean on_paned0_button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer data) {
-//    if (!prefs_get_int(KEY_DISPLAY_COVERART))
-//        return FALSE;
-//
-//    gint width;
-//
-//    width = gtk_paned_get_position(GTK_PANED(widget));
-//    if ((width >= DEFAULT_WIDTH) && (width != WIDTH)) {
-//        WIDTH = width;
-//        redraw(FALSE);
-//    }
-//
-//    return FALSE;
-//}
-
 /**
  * on_contentpanel_scroll_wheel_turned:
  *

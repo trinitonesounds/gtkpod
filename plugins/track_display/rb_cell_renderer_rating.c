@@ -253,7 +253,6 @@ rb_cell_renderer_rating_get_size (GtkCellRenderer *cell,
 				  gint *height)
 {
 	int icon_width;
-	RBCellRendererRating *cellrating = (RBCellRendererRating *) cell;
 	int xpad;
 	int ypad;
 
