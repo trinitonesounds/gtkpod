@@ -7,7 +7,7 @@ repository_editor_ui_DATA = $(plugin_name).ui
 
 # Plugin Glade file
 repository_editor_gladedir = $(gtkpod_glade_dir)
-repository_editor_glade_DATA =  $(plugin_name).glade
+repository_editor_glade_DATA =  $(plugin_name).xml
 
 # Plugin Icon file
 repository_editor_pixmapsdir = $(gtkpod_image_dir)

@@ -94,7 +94,7 @@ plugins/repository_editor/plugin.c
 plugins/repository_editor/repository_actions.c
 plugins/repository_editor/repository_creator.c
 plugins/repository_editor/repository_editor.c
-plugins/repository_editor/repository_editor.glade
+[type: gettext/glade]plugins/repository_editor/repository_editor.xml
 [type: gettext/ini]plugins/repository_editor/repository_editor.plugin.in
 plugins/repository_editor/repository_init.c
 plugins/sorttab_display/date_parser.c

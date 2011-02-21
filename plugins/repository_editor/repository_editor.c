@@ -367,22 +367,22 @@ static void update_buttons() {
         ok = TRUE;
     }
 
-    gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, APPLY_BUTTON), apply);
+    gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, APPLY_BUTTON), apply);
 
     if (repository_view->itdb) {
-        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, REPOSITORY_VBOX), TRUE);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, REPOSITORY_VBOX), TRUE);
 
         /* Check if this itdb is marked for deletion */
         key = get_itdb_prefs_key(repository_view->itdb_index, "deleted");
         deleted = temp_prefs_get_int(repository_view->extra_prefs, key);
         g_free(key);
 
-        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, GENERAL_FRAME), !deleted);
-        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, SYNC_FRAME), !deleted);
-        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, UPDATE_ALL_PLAYLISTS_BUTTON), !deleted);
-        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, PLAYLIST_TAB_LABEL), !deleted);
-        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, PLAYLIST_TAB_CONTENTS), !deleted);
-        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, DELETE_REPOSITORY_BUTTON), !deleted);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, GENERAL_FRAME), !deleted);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, SYNC_FRAME), !deleted);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, UPDATE_ALL_PLAYLISTS_BUTTON), !deleted);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, PLAYLIST_TAB_LABEL), !deleted);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, PLAYLIST_TAB_CONTENTS), !deleted);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, DELETE_REPOSITORY_BUTTON), !deleted);
 
         if (repository_view->playlist) {
             gboolean sens = FALSE;
@@ -397,19 +397,19 @@ static void update_buttons() {
                 if (val != SYNC_PLAYLIST_MODE_NONE) {
                     sens = TRUE;
                 }
-                gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, SYNC_OPTIONS_HBOX), sens);
+                gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, SYNC_OPTIONS_HBOX), sens);
 
                 key
                         = get_playlist_prefs_key(repository_view->itdb_index, repository_view->playlist, KEY_SYNC_DELETE_TRACKS);
                 val = get_current_prefs_int(key);
                 g_free(key);
-                gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE), val);
+                gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE), val);
             }
-            gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, UPDATE_PLAYLIST_BUTTON), sens);
+            gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, UPDATE_PLAYLIST_BUTTON), sens);
         }
     }
     else { /* no itdb loaded */
-        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, REPOSITORY_VBOX), FALSE);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, REPOSITORY_VBOX), FALSE);
     }
 }
 
@@ -564,7 +564,7 @@ static void sync_playlist_mode_none_toggled(GtkToggleButton *togglebutton) {
 
     if (gtk_toggle_button_get_active(togglebutton)) {
         finish_int_storage(key, SYNC_PLAYLIST_MODE_NONE);
-        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, MANUAL_SYNCDIR_CHOOSER), FALSE);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, MANUAL_SYNCDIR_CHOOSER), FALSE);
         update_buttons();
     }
 
@@ -581,7 +581,7 @@ static void sync_playlist_mode_manual_toggled(GtkToggleButton *togglebutton) {
 
     if (gtk_toggle_button_get_active(togglebutton)) {
         finish_int_storage(key, SYNC_PLAYLIST_MODE_MANUAL);
-        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, MANUAL_SYNCDIR_CHOOSER), TRUE);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, MANUAL_SYNCDIR_CHOOSER), TRUE);
         update_buttons(repository_view);
     }
 
@@ -598,7 +598,7 @@ static void sync_playlist_mode_automatic_toggled(GtkToggleButton *togglebutton) 
 
     if (gtk_toggle_button_get_active(togglebutton)) {
         finish_int_storage(key, SYNC_PLAYLIST_MODE_AUTOMATIC);
-        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, MANUAL_SYNCDIR_CHOOSER), FALSE);
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, MANUAL_SYNCDIR_CHOOSER), FALSE);
         update_buttons(repository_view);
     }
 
@@ -867,7 +867,7 @@ static void ipod_sync_button_clicked(iPodSyncType type) {
     g_free(text);
 
     if (newpath) {
-        gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (repository_view->xml, entry)), newpath);
+        gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (repository_view->builder, entry)), newpath);
         g_free(newpath);
     }
 }
@@ -960,7 +960,7 @@ static void sync_or_update_playlist(Playlist *playlist) {
         value_new = prefs_get_int(key_sync_confirm_delete);
         if (value_new != sync_confirm_delete_current) {
             if (playlist == repository_view->playlist) { /* currently displayed --> adjust toggle button */
-                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->xml, PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE)), value_new);
+                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->builder, PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE)), value_new);
             }
             else { /* not currently displayed --> copy to temp_prefs */
                 temp_prefs_set_int(repository_view->temp_prefs, key_sync_confirm_delete, value_new);
@@ -1011,7 +1011,7 @@ static gboolean select_playlist_find(GtkTreeModel *model, GtkTreePath *path, Gtk
 
     gtk_tree_model_get(model, iter, 0, &playlist, -1);
     if (playlist == repository_view->next_playlist) {
-        gtk_combo_box_set_active_iter(GTK_COMBO_BOX (gtkpod_xml_get_widget (repository_view->xml,
+        gtk_combo_box_set_active_iter(GTK_COMBO_BOX (gtkpod_builder_xml_get_widget (repository_view->builder,
                         PLAYLIST_COMBO)), iter);
         return TRUE;
     }
@@ -1034,7 +1034,7 @@ static void select_playlist(Playlist *playlist) {
 
     g_return_if_fail (playlist->itdb == repository_view->itdb);
 
-    model = gtk_combo_box_get_model(GTK_COMBO_BOX (gtkpod_xml_get_widget (repository_view->xml,
+    model = gtk_combo_box_get_model(GTK_COMBO_BOX (gtkpod_builder_xml_get_widget (repository_view->builder,
                     PLAYLIST_COMBO)));
     g_return_if_fail (model);
 
@@ -1056,7 +1056,7 @@ static void select_repository(iTunesDB *itdb, Playlist *playlist) {
         gint index;
         repository_view->next_playlist = playlist;
         index = get_itdb_index(itdb);
-        gtk_combo_box_set_active(GTK_COMBO_BOX (gtkpod_xml_get_widget (repository_view->xml,
+        gtk_combo_box_set_active(GTK_COMBO_BOX (gtkpod_builder_xml_get_widget (repository_view->builder,
                         REPOSITORY_COMBO)), index);
     }
     else {
@@ -1076,7 +1076,7 @@ static void set_widget_index(gint itdb_index, const gchar *subkey, const gchar *
     key = get_itdb_prefs_key(itdb_index, subkey);
 
     buf = get_current_prefs_string(key);
-    w = GET_WIDGET (repository_view->xml, name);
+    w = GET_WIDGET (repository_view->builder, name);
 
     if (buf) {
         if (GTK_IS_ENTRY(w))
@@ -1123,7 +1123,7 @@ static void display_repository_info() {
     else {
         buf = g_markup_printf_escaped("<b>Unknown -- please report bug</b>");
     }
-    gtk_label_set_markup(GTK_LABEL(GET_WIDGET (repository_view->xml, REPOSITORY_TYPE_LABEL)), buf);
+    gtk_label_set_markup(GTK_LABEL(GET_WIDGET (repository_view->builder, REPOSITORY_TYPE_LABEL)), buf);
     g_free(buf);
 
     /* Hide/show corresponding widgets in table */
@@ -1148,10 +1148,10 @@ static void display_repository_info() {
         const gchar **widget;
 
         for (widget = widgets_show; *widget; ++widget) {
-            gtk_widget_show(GET_WIDGET (repository_view->xml, *widget));
+            gtk_widget_show(GET_WIDGET (repository_view->builder, *widget));
         }
         for (widget = widgets_hide; *widget; ++widget) {
-            gtk_widget_hide(GET_WIDGET (repository_view->xml, *widget));
+            gtk_widget_hide(GET_WIDGET (repository_view->builder, *widget));
         }
 
         set_widget_index(index, KEY_MOUNTPOINT, MOUNTPOINT_CHOOSER);
@@ -1167,7 +1167,7 @@ static void display_repository_info() {
         set_widget_index(index, KEY_IPOD_MODEL, IPOD_MODEL_ENTRY);
 
         key = get_itdb_prefs_key(index, KEY_CONCAL_AUTOSYNC);
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->xml, IPOD_CONCAL_AUTOSYNC_TOGGLE)), get_current_prefs_int(key));
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->builder, IPOD_CONCAL_AUTOSYNC_TOGGLE)), get_current_prefs_int(key));
         g_free(key);
     }
     else if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
@@ -1191,10 +1191,10 @@ static void display_repository_info() {
         const gchar **widget;
 
         for (widget = widgets_show; *widget; ++widget) {
-            gtk_widget_show(GET_WIDGET (repository_view->xml, *widget));
+            gtk_widget_show(GET_WIDGET (repository_view->builder, *widget));
         }
         for (widget = widgets_hide; *widget; ++widget) {
-            gtk_widget_hide(GET_WIDGET (repository_view->xml, *widget));
+            gtk_widget_hide(GET_WIDGET (repository_view->builder, *widget));
         }
 
         set_widget_index(index, KEY_FILENAME, LOCAL_PATH_CHOOSER);
@@ -1247,26 +1247,26 @@ static void display_playlist_info() {
     else {
         buf = g_markup_printf_escaped("<i>%s</i>", _("Regular Playlist"));
     }
-    gtk_label_set_markup(GTK_LABEL(GET_WIDGET (repository_view->xml, PLAYLIST_TYPE_LABEL)), buf);
+    gtk_label_set_markup(GTK_LABEL(GET_WIDGET (repository_view->builder, PLAYLIST_TYPE_LABEL)), buf);
     g_free(buf);
 
     /* Hide/show corresponding widgets in table */
     if (playlist->is_spl) {
         gint liveupdate;
 
-        gtk_widget_show(GET_WIDGET (repository_view->xml, PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE));
-        gtk_widget_hide(GET_WIDGET (repository_view->xml, STANDARD_PLAYLIST_VBOX));
+        gtk_widget_show(GET_WIDGET (repository_view->builder, PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE));
+        gtk_widget_hide(GET_WIDGET (repository_view->builder, STANDARD_PLAYLIST_VBOX));
 
         key = get_playlist_prefs_key(index, playlist, KEY_LIVEUPDATE);
         if (!temp_prefs_get_int_value(repository_view->extra_prefs, key, &liveupdate))
             liveupdate = playlist->splpref.liveupdate;
         g_free(key);
 
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->xml, SPL_LIVE_UPDATE_TOGGLE)), liveupdate);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->builder, SPL_LIVE_UPDATE_TOGGLE)), liveupdate);
     }
     else {
         gint syncmode;
-        gtk_widget_show(GET_WIDGET (repository_view->xml, STANDARD_PLAYLIST_VBOX));
+        gtk_widget_show(GET_WIDGET (repository_view->builder, STANDARD_PLAYLIST_VBOX));
 
         key = get_playlist_prefs_key(index, playlist, KEY_SYNCMODE);
         syncmode = get_current_prefs_int(key);
@@ -1274,38 +1274,38 @@ static void display_playlist_info() {
 
         switch (syncmode) {
         case SYNC_PLAYLIST_MODE_NONE:
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->xml, SYNC_PLAYLIST_MODE_NONE_RADIO)), TRUE);
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->builder, SYNC_PLAYLIST_MODE_NONE_RADIO)), TRUE);
             break;
         case SYNC_PLAYLIST_MODE_MANUAL:
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->xml, SYNC_PLAYLIST_MODE_MANUAL_RADIO)), TRUE);
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->builder, SYNC_PLAYLIST_MODE_MANUAL_RADIO)), TRUE);
             /* Need to set manual_syncdir_entry here as it may set the
             syncmode to 'MANUAL' -- this will be corrected by setting
             the radio button with the original syncmode setting further
             down. */
             key = get_playlist_prefs_key(index, playlist, KEY_MANUAL_SYNCDIR);
             gchar *dir = get_current_prefs_string(key);
-            gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (GET_WIDGET (repository_view->xml, MANUAL_SYNCDIR_CHOOSER)), dir);
+            gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (GET_WIDGET (repository_view->builder, MANUAL_SYNCDIR_CHOOSER)), dir);
             g_free(key);
             g_free(dir);
             break;
         case SYNC_PLAYLIST_MODE_AUTOMATIC:
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->xml, SYNC_PLAYLIST_MODE_AUTOMATIC_RADIO)), TRUE);
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->builder, SYNC_PLAYLIST_MODE_AUTOMATIC_RADIO)), TRUE);
             break;
         default:
             /* repair broken prefs */
             prefs_set_int(key, SYNC_PLAYLIST_MODE_NONE);
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->xml, SYNC_PLAYLIST_MODE_NONE_RADIO)), TRUE);
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->builder, SYNC_PLAYLIST_MODE_NONE_RADIO)), TRUE);
             break;
         }
         /* make options available where appropriate */
-        gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, SYNC_OPTIONS_HBOX), syncmode
+        gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, SYNC_OPTIONS_HBOX), syncmode
                 != SYNC_PLAYLIST_MODE_NONE);
         /* set standard toggle buttons */
         for (i = 0; widget_names[i]; ++i) {
             key = get_playlist_prefs_key(index, playlist, key_names[i]);
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->xml, widget_names[i])), get_current_prefs_int(key));
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (GET_WIDGET (repository_view->builder, widget_names[i])), get_current_prefs_int(key));
             if (strcmp(key_names[i], KEY_SYNC_DELETE_TRACKS) == 0) {
-                gtk_widget_set_sensitive(GET_WIDGET (repository_view->xml, PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE), get_current_prefs_int(key));
+                gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE), get_current_prefs_int(key));
             }
             g_free(key);
         }
@@ -1318,7 +1318,7 @@ static void init_repository_combo() {
     g_return_if_fail (repository_view);
 
     if (!repository_view->repository_combo_box) {
-        repository_view->repository_combo_box = GTK_COMBO_BOX (GET_WIDGET (repository_view->xml, REPOSITORY_COMBO));
+        repository_view->repository_combo_box = GTK_COMBO_BOX (GET_WIDGET (repository_view->builder, REPOSITORY_COMBO));
     }
 
     repository_combo_populate(repository_view->repository_combo_box);
@@ -1342,7 +1342,7 @@ static void init_playlist_combo() {
     g_return_if_fail (repository_view->itdb);
 
     if (!repository_view->playlist_combo_box) {
-        repository_view->playlist_combo_box = GTK_COMBO_BOX (gtkpod_xml_get_widget (repository_view->xml,
+        repository_view->playlist_combo_box = GTK_COMBO_BOX (gtkpod_builder_xml_get_widget (repository_view->builder,
                         PLAYLIST_COMBO));
     }
 
@@ -1393,11 +1393,9 @@ static void create_repository_editor_view() {
 
     repository_view = g_malloc0(sizeof(RepositoryView));
 
-    gchar *glade_path = g_build_filename(get_glade_dir(), "repository_editor.glade", NULL);
-    repository_view->xml = gtkpod_xml_new(glade_path, "repository_window");
-    repo_window = gtkpod_xml_get_widget(repository_view->xml, "repository_window");
-    viewport = gtkpod_xml_get_widget(repository_view->xml, "repository_viewport");
-    g_free(glade_path);
+    repository_view->builder = init_repository_builder();
+    repo_window = gtkpod_builder_xml_get_widget(repository_view->builder, "repository_window");
+    viewport = gtkpod_builder_xml_get_widget(repository_view->builder, "repository_viewport");
 
     /* according to GTK FAQ: move a widget to a new parent */
     g_object_ref(viewport);
@@ -1472,12 +1470,12 @@ static void create_repository_editor_view() {
         };
 
     /* Setup model number combo */
-    model_number_combo = GTK_COMBO_BOX (GET_WIDGET (repository_view->xml, IPOD_MODEL_COMBO));
+    model_number_combo = GTK_COMBO_BOX (GET_WIDGET (repository_view->builder, IPOD_MODEL_COMBO));
     repository_init_model_number_combo(model_number_combo);
 
     /* connect standard text entries */
     for (i = 0; itdb_widget_names_entry[i]; ++i) {
-        GtkWidget *w = GET_WIDGET (repository_view->xml, itdb_widget_names_entry[i]);
+        GtkWidget *w = GET_WIDGET (repository_view->builder, itdb_widget_names_entry[i]);
 
         if (GTK_IS_ENTRY(w)) {
             g_signal_connect (w, "changed",
@@ -1493,24 +1491,24 @@ static void create_repository_editor_view() {
     }
 
     /* Togglebutton callbacks */
-    g_signal_connect (GET_WIDGET (repository_view->xml, SYNC_PLAYLIST_MODE_NONE_RADIO),
+    g_signal_connect (GET_WIDGET (repository_view->builder, SYNC_PLAYLIST_MODE_NONE_RADIO),
             "toggled",
             G_CALLBACK (sync_playlist_mode_none_toggled),
             repository_view);
 
-    g_signal_connect (GET_WIDGET (repository_view->xml, SYNC_PLAYLIST_MODE_MANUAL_RADIO),
+    g_signal_connect (GET_WIDGET (repository_view->builder, SYNC_PLAYLIST_MODE_MANUAL_RADIO),
             "toggled",
             G_CALLBACK (sync_playlist_mode_manual_toggled),
             repository_view);
 
-    g_signal_connect (GET_WIDGET (repository_view->xml, SYNC_PLAYLIST_MODE_AUTOMATIC_RADIO),
+    g_signal_connect (GET_WIDGET (repository_view->builder, SYNC_PLAYLIST_MODE_AUTOMATIC_RADIO),
             "toggled",
             G_CALLBACK (sync_playlist_mode_automatic_toggled),
             repository_view);
 
     /* connect standard toggle buttons */
     for (i = 0; playlist_widget_names_toggle[i]; ++i) {
-        GtkWidget *w = GET_WIDGET (repository_view->xml, playlist_widget_names_toggle[i]);
+        GtkWidget *w = GET_WIDGET (repository_view->builder, playlist_widget_names_toggle[i]);
 
         g_signal_connect (w, "toggled",
                 G_CALLBACK (standard_playlist_checkbutton_toggled),
@@ -1519,7 +1517,7 @@ static void create_repository_editor_view() {
     }
 
     for (i = 0; itdb_widget_names_toggle[i]; ++i) {
-        GtkWidget *w = GET_WIDGET (repository_view->xml, itdb_widget_names_toggle[i]);
+        GtkWidget *w = GET_WIDGET (repository_view->builder, itdb_widget_names_toggle[i]);
 
         g_signal_connect (w, "toggled",
                 G_CALLBACK (standard_itdb_checkbutton_toggled),
@@ -1528,31 +1526,31 @@ static void create_repository_editor_view() {
     }
 
     /* Button callbacks */
-    g_signal_connect (GET_WIDGET (repository_view->xml, DELETE_REPOSITORY_BUTTON), "clicked",
+    g_signal_connect (GET_WIDGET (repository_view->builder, DELETE_REPOSITORY_BUTTON), "clicked",
             G_CALLBACK (delete_repository_button_clicked), repository_view);
 
-    g_signal_connect (GET_WIDGET (repository_view->xml, IPOD_SYNC_CONTACTS_BUTTON), "clicked",
+    g_signal_connect (GET_WIDGET (repository_view->builder, IPOD_SYNC_CONTACTS_BUTTON), "clicked",
             G_CALLBACK (ipod_sync_contacts_button_clicked), repository_view);
 
-    g_signal_connect (GET_WIDGET (repository_view->xml, IPOD_SYNC_CALENDAR_BUTTON), "clicked",
+    g_signal_connect (GET_WIDGET (repository_view->builder, IPOD_SYNC_CALENDAR_BUTTON), "clicked",
             G_CALLBACK (ipod_sync_calendar_button_clicked), repository_view);
 
-    g_signal_connect (GET_WIDGET (repository_view->xml, IPOD_SYNC_NOTES_BUTTON), "clicked",
+    g_signal_connect (GET_WIDGET (repository_view->builder, IPOD_SYNC_NOTES_BUTTON), "clicked",
             G_CALLBACK (ipod_sync_notes_button_clicked), repository_view);
 
-    g_signal_connect (GET_WIDGET (repository_view->xml, UPDATE_PLAYLIST_BUTTON), "clicked",
+    g_signal_connect (GET_WIDGET (repository_view->builder, UPDATE_PLAYLIST_BUTTON), "clicked",
             G_CALLBACK (update_playlist_button_clicked), repository_view);
 
-    g_signal_connect (GET_WIDGET (repository_view->xml, UPDATE_ALL_PLAYLISTS_BUTTON), "clicked",
+    g_signal_connect (GET_WIDGET (repository_view->builder, UPDATE_ALL_PLAYLISTS_BUTTON), "clicked",
             G_CALLBACK (update_all_playlists_button_clicked), repository_view);
 
-    g_signal_connect (GET_WIDGET (repository_view->xml, NEW_REPOSITORY_BUTTON), "clicked",
+    g_signal_connect (GET_WIDGET (repository_view->builder, NEW_REPOSITORY_BUTTON), "clicked",
             G_CALLBACK (new_repository_button_clicked), repository_view);
 
-    g_signal_connect (GET_WIDGET (repository_view->xml, APPLY_BUTTON), "clicked",
+    g_signal_connect (GET_WIDGET (repository_view->builder, APPLY_BUTTON), "clicked",
             G_CALLBACK (edit_apply_clicked), repository_view);
 
-    g_signal_connect (GET_WIDGET (repository_view->xml, MANUAL_SYNCDIR_CHOOSER), "selection_changed",
+    g_signal_connect (GET_WIDGET (repository_view->builder, MANUAL_SYNCDIR_CHOOSER), "selection_changed",
             G_CALLBACK (standard_playlist_chooser_button_updated), repository_view);
 
     init_repository_combo();
@@ -1577,7 +1575,7 @@ void destroy_repository_editor() {
     /* Remove widgets from Shell */
     anjuta_shell_remove_widget(ANJUTA_PLUGIN(repository_editor_plugin)->shell, repository_editor_plugin->repo_window, NULL);
 
-    g_object_unref(repository_view->xml);
+    g_object_unref(repository_view->builder);
 
     if (repository_view->window) {
         gtk_widget_destroy(repository_view->window);

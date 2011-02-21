@@ -36,12 +36,11 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include "libgtkpod/itdb.h"
 #include "libgtkpod/prefs.h"
 
 struct _RepositoryView {
-    GladeXML *xml;           /* XML info                             */
+    GtkBuilder *builder;           /* XML info                             */
     GtkWidget *window; /* pointer to repository window         */
     GtkComboBox *repository_combo_box; /* pointer to repository combo */
     GtkComboBox *playlist_combo_box; /* pointer to playlist combo */
@@ -57,18 +56,21 @@ struct _RepositoryView {
 typedef struct _RepositoryView RepositoryView;
 
 struct _CreateRepWindow {
-    GladeXML *xml; /* XML info                             */
+    GtkBuilder *builder; /* XML info                             */
     GtkWidget *window; /* pointer to repository window         */
 };
 
 typedef struct _CreateRepWindow CreateRepWindow;
 
-GtkWidget *repository_xml_get_widget(GladeXML *xml, const gchar *name);
+GtkBuilder *init_repository_builder();
+GtkWidget *repository_builder_xml_get_widget(GtkBuilder *builder, const gchar *name);
 
-#define GET_WIDGET(x, a) repository_xml_get_widget (x, a)
+#define GET_WIDGET(x, a) repository_builder_xml_get_widget (x, a)
 
 #define IPOD_MODEL_COMBO "ipod_model_combo"
 #define IPOD_MODEL_ENTRY "ipod_model_entry--not-a-glade-name"
+#define CRW_IPOD_MODEL_COMBO "crw_ipod_model_combo"
+#define CRW_IPOD_MODEL_ENTRY "crw_ipod_model_entry--not-a-glade-name"
 #define KEY_BACKUP "filename"
 
 /* Columns for the model_combo tree model */

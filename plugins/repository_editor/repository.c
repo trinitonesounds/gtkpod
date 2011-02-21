@@ -36,6 +36,7 @@
 #include <gtk/gtk.h>
 #include "libgtkpod/misc.h"
 #include "libgtkpod/misc_playlist.h"
+#include "libgtkpod/directories.h"
 
 /* print local debug message */
 #define LOCAL_DEBUG 0
@@ -236,16 +237,29 @@ void repository_combo_populate(GtkComboBox *combo_box) {
  *
  * ------------------------------------------------------------ */
 
+GtkBuilder *init_repository_builder() {
+    GtkBuilder *builder;
+
+    gchar *glade_path = g_build_filename(get_glade_dir(), "repository_editor.xml", NULL);
+    builder = gtkpod_builder_xml_new(glade_path);
+    g_free(glade_path);
+
+    return builder;
+}
+
 /* This is quite dirty: MODEL_ENTRY is not a real widget
  name. Instead it's the entry of a ComboBoxEntry -- hide this from
  the application */
-GtkWidget *repository_xml_get_widget(GladeXML *xml, const gchar *name) {
+GtkWidget *repository_builder_xml_get_widget(GtkBuilder *builder, const gchar *name) {
     if (strcmp(name, IPOD_MODEL_ENTRY) == 0) {
-        GtkWidget *cb = gtkpod_xml_get_widget(xml, IPOD_MODEL_COMBO);
+        GtkWidget *cb = gtkpod_builder_xml_get_widget(builder, IPOD_MODEL_COMBO);
+        return gtk_bin_get_child(GTK_BIN (cb));
+    } else if (strcmp(name, CRW_IPOD_MODEL_ENTRY) == 0) {
+        GtkWidget *cb = gtkpod_builder_xml_get_widget(builder, CRW_IPOD_MODEL_COMBO);
         return gtk_bin_get_child(GTK_BIN (cb));
     }
     else {
-        return gtkpod_xml_get_widget(xml, name);
+        return gtkpod_builder_xml_get_widget(builder, name);
     }
 }
 

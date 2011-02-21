@@ -32,12 +32,11 @@
 #include "plugin.h"
 #include "repository.h"
 #include "libgtkpod/prefs.h"
-#include "libgtkpod/directories.h"
 #include "libgtkpod/misc.h"
 #include "libgtkpod/file.h"
 
 struct _IpodInit {
-    GladeXML *xml; /* XML info                             */
+    GtkBuilder *builder; /* XML info                             */
     GtkWidget *window; /* pointer to repository window         */
     iTunesDB *itdb;
 };
@@ -112,21 +111,19 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
     ii = g_new0 (IpodInit, 1);
     ii->itdb = itdb;
 
-    gchar *glade_path = g_build_filename(get_glade_dir(), "repository_editor.glade", NULL);
-    ii->xml = gtkpod_xml_new(glade_path, "ipod_init_dialog");
-    g_free(glade_path);
+    ii->builder = init_repository_builder();
 
-    ii->window = gtkpod_xml_get_widget(ii->xml, "ipod_init_dialog");
+    ii->window = gtkpod_builder_xml_get_widget(ii->builder, "ipod_init_dialog");
     g_return_val_if_fail (ii->window, FALSE);
 
     /* Set mountpoint */
     mountpoint = get_itdb_prefs_string(itdb, KEY_MOUNTPOINT);
     if (mountpoint) {
-        gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(GET_WIDGET (ii->xml, IID_MOUNTPOINT_CHOOSER)), mountpoint);
+        gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(GET_WIDGET (ii->builder, IID_MOUNTPOINT_CHOOSER)), mountpoint);
     }
 
     /* Setup model number combo */
-    cb = GTK_COMBO_BOX (GET_WIDGET (ii->xml, IID_MODEL_COMBO));
+    cb = GTK_COMBO_BOX (GET_WIDGET (ii->builder, IID_MODEL_COMBO));
     repository_init_model_number_combo(cb);
 
     /* If available set current model number, otherwise indicate that
@@ -153,7 +150,7 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
 
     switch (response) {
     case GTK_RESPONSE_OK:
-        new_mount = g_strdup(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(GET_WIDGET (ii->xml, IID_MOUNTPOINT_CHOOSER))));
+        new_mount = g_strdup(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(GET_WIDGET (ii->builder, IID_MOUNTPOINT_CHOOSER))));
         /* remove trailing '/' in case it's present. */
         if (mountpoint && (strlen(mountpoint) > 0)) {
             if (G_IS_DIR_SEPARATOR(mountpoint[strlen(mountpoint) - 1])) {
@@ -177,7 +174,7 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
             g_free(new_mount);
             new_mount = NULL;
         }
-        model = gtk_combo_box_get_active_text(GTK_COMBO_BOX (GET_WIDGET (ii->xml, IID_MODEL_COMBO)));
+        model = gtk_combo_box_get_active_text(GTK_COMBO_BOX (GET_WIDGET (ii->builder, IID_MODEL_COMBO)));
         if ((strcmp(model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0) || (strlen(model) == 0)) { /* User didn't choose a model */
             g_free(model);
             model = NULL;
@@ -225,7 +222,7 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
  * @old_model: the model number string to initially propose.
  */
 void repository_ipod_init_set_model(iTunesDB *itdb, const gchar *old_model) {
-    GladeXML *xml;
+    GtkBuilder *builder;
     GtkWidget *window;
     gint response;
     gchar *model, *mountpoint;
@@ -237,23 +234,21 @@ void repository_ipod_init_set_model(iTunesDB *itdb, const gchar *old_model) {
     g_return_if_fail (itdb);
 
     /* Create window */
-    gchar *glade_path = g_build_filename(get_glade_dir(), "repository_editor.glade", NULL);
-    xml = gtkpod_xml_new(glade_path, "set_ipod_model_dialog");
-    window = GET_WIDGET (xml, "set_ipod_model_dialog");
+    builder = init_repository_builder();
+    window = GET_WIDGET (builder, "set_ipod_model_dialog");
     g_return_if_fail (window);
-    g_free(glade_path);
 
     /* Set up label */
     mountpoint = get_itdb_prefs_string(itdb, KEY_MOUNTPOINT);
     gchar *displaymp = g_uri_unescape_string(mountpoint, NULL);
     g_return_if_fail (mountpoint);
     g_snprintf(buf, PATH_MAX, _("<b>Please select your iPod model at </b><i>%s</i>"), displaymp);
-    gtk_label_set_markup(GTK_LABEL (GET_WIDGET (xml, SIMD_LABEL)), buf);
+    gtk_label_set_markup(GTK_LABEL (GET_WIDGET (builder, SIMD_LABEL)), buf);
     g_free(mountpoint);
     g_free(displaymp);
 
     /* Setup model number combo */
-    cb = GTK_COMBO_BOX (GET_WIDGET (xml, SIMD_MODEL_COMBO));
+    cb = GTK_COMBO_BOX (GET_WIDGET (builder, SIMD_MODEL_COMBO));
     repository_init_model_number_combo(cb);
 
     /* If available set current model number, otherwise indicate that
@@ -280,7 +275,7 @@ void repository_ipod_init_set_model(iTunesDB *itdb, const gchar *old_model) {
 
     switch (response) {
     case GTK_RESPONSE_OK:
-        model = gtk_combo_box_get_active_text(GTK_COMBO_BOX (GET_WIDGET (xml, SIMD_MODEL_COMBO)));
+        model = gtk_combo_box_get_active_text(GTK_COMBO_BOX (GET_WIDGET (builder, SIMD_MODEL_COMBO)));
         if (!model) {
             gtkpod_warning(_("Could not determine the model you selected -- this could be a bug or incompatibilty in the GTK+ or glade library.\n\n"));
         }

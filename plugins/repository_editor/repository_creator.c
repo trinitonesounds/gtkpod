@@ -31,7 +31,6 @@
 #include <gtk/gtk.h>
 #include "libgtkpod/gp_itdb.h"
 #include "libgtkpod/misc.h"
-#include "libgtkpod/directories.h"
 
 /* widget names for the "Create New Repository" window */
 #define CRW_BACKUP_CHOOSER "crw_backup_chooser"
@@ -69,7 +68,7 @@ enum {
 static void createrep_free(CreateRepWindow *cr) {
     g_return_if_fail (cr);
 
-    g_object_unref(cr->xml);
+    g_object_unref(cr->builder);
 
     if (cr->window) {
         gtk_widget_destroy(cr->window);
@@ -100,24 +99,24 @@ static void create_ok_clicked(GtkButton *button, CreateRepWindow *cr) {
     n = g_list_length(itdbs_head->itdbs);
 
     /* retrieve current settings */
-    type = gtk_combo_box_get_active(GTK_COMBO_BOX (GET_WIDGET (cr->xml, CRW_REPOSITORY_TYPE_COMBO)));
+    type = gtk_combo_box_get_active(GTK_COMBO_BOX (GET_WIDGET (cr->builder, CRW_REPOSITORY_TYPE_COMBO)));
 
-    bef_after = gtk_combo_box_get_active(GTK_COMBO_BOX (GET_WIDGET (cr->xml, CRW_INSERT_BEFORE_AFTER_COMBO)));
+    bef_after = gtk_combo_box_get_active(GTK_COMBO_BOX (GET_WIDGET (cr->builder, CRW_INSERT_BEFORE_AFTER_COMBO)));
 
-    itdb_index = gtk_combo_box_get_active(GTK_COMBO_BOX (GET_WIDGET (cr->xml, CRW_REPOSITORY_COMBO)));
+    itdb_index = gtk_combo_box_get_active(GTK_COMBO_BOX (GET_WIDGET (cr->builder, CRW_REPOSITORY_COMBO)));
 
-    name = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_REPOSITORY_NAME_ENTRY)));
+    name = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->builder, CRW_REPOSITORY_NAME_ENTRY)));
 
-    mountpoint = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (GET_WIDGET (cr->xml, CRW_MOUNTPOINT_CHOOSER)));
+    mountpoint = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (GET_WIDGET (cr->builder, CRW_MOUNTPOINT_CHOOSER)));
 
-    backup = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (GET_WIDGET (cr->xml, CRW_BACKUP_CHOOSER)));
+    backup = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (GET_WIDGET (cr->builder, CRW_BACKUP_CHOOSER)));
 
-    ipod_model = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->xml, IPOD_MODEL_ENTRY)));
+    ipod_model = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->builder, CRW_IPOD_MODEL_ENTRY)));
     if (strcmp(ipod_model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0) { /* User didn't choose a model */
         ipod_model = "";
     }
 
-    local_path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (GET_WIDGET (cr->xml, CRW_LOCAL_PATH_CHOOSER)));
+    local_path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (GET_WIDGET (cr->builder, CRW_LOCAL_PATH_CHOOSER)));
 
     /* adjust position where new itdb is to be inserted */
     if (bef_after == INSERT_AFTER)
@@ -189,7 +188,7 @@ static void cr_repository_type_changed(GtkComboBox *cb, CreateRepWindow *cr) {
             CRW_BACKUP_LABEL,
             CRW_BACKUP_CHOOSER,
             CRW_IPOD_MODEL_LABEL,
-            IPOD_MODEL_COMBO,
+            CRW_IPOD_MODEL_COMBO,
             NULL
         };
     /* widgets to show for local repositories */
@@ -207,7 +206,7 @@ static void cr_repository_type_changed(GtkComboBox *cb, CreateRepWindow *cr) {
             CRW_BACKUP_LABEL,
             CRW_BACKUP_CHOOSER,
             CRW_IPOD_MODEL_LABEL,
-            IPOD_MODEL_COMBO,
+            CRW_IPOD_MODEL_COMBO,
             CRW_LOCAL_PATH_LABEL,
             CRW_LOCAL_PATH_CHOOSER,
             NULL
@@ -229,11 +228,11 @@ static void cr_repository_type_changed(GtkComboBox *cb, CreateRepWindow *cr) {
 
     /* Hide all widgets */
     for (i = 0; hide_all[i]; ++i) {
-        gtk_widget_hide(GET_WIDGET (cr->xml, hide_all[i]));
+        gtk_widget_hide(GET_WIDGET (cr->builder, hide_all[i]));
     }
     /* Show appropriate widgets */
     for (i = 0; show[i]; ++i) {
-        gtk_widget_show(GET_WIDGET (cr->xml, show[i]));
+        gtk_widget_show(GET_WIDGET (cr->builder, show[i]));
     }
 }
 
@@ -254,49 +253,47 @@ void display_create_repository_dialog() {
     createrep = g_malloc0(sizeof(CreateRepWindow));
     cr = createrep;
 
-    gchar *glade_path = g_build_filename(get_glade_dir(), "repository_editor.glade", NULL);
-    cr->xml = gtkpod_xml_new(glade_path, "create_repository_window");
-    cr->window = gtkpod_xml_get_widget(cr->xml, "create_repository_window");
-    g_free(glade_path);
+    cr->builder =init_repository_builder();
+    cr->window = gtkpod_builder_xml_get_widget(cr->builder, "create_repository_window");
     g_return_if_fail (cr->window);
 
     gtk_window_set_transient_for(GTK_WINDOW(cr->window), GTK_WINDOW (gtkpod_app));
 
     /* Window control */
-    g_signal_connect (GET_WIDGET (cr->xml, CRW_CANCEL_BUTTON), "clicked",
+    g_signal_connect (GET_WIDGET (cr->builder, CRW_CANCEL_BUTTON), "clicked",
             G_CALLBACK (create_cancel_clicked), cr);
 
-    g_signal_connect (GET_WIDGET (cr->xml, CRW_OK_BUTTON), "clicked",
+    g_signal_connect (GET_WIDGET (cr->builder, CRW_OK_BUTTON), "clicked",
             G_CALLBACK (create_ok_clicked), cr);
 
     g_signal_connect (createrep->window, "delete_event",
             G_CALLBACK (create_delete_event), cr);
 
     /* Combo callback */
-    g_signal_connect (GET_WIDGET (cr->xml, CRW_REPOSITORY_TYPE_COMBO), "changed",
+    g_signal_connect (GET_WIDGET (cr->builder, CRW_REPOSITORY_TYPE_COMBO), "changed",
             G_CALLBACK (cr_repository_type_changed), cr);
 
     /* Setup model number combo */
-    model_number_combo = GTK_COMBO_BOX (GET_WIDGET (cr->xml, IPOD_MODEL_COMBO));
+    model_number_combo = GTK_COMBO_BOX (GET_WIDGET (cr->builder, CRW_IPOD_MODEL_COMBO));
     repository_init_model_number_combo(model_number_combo);
-    gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (cr->xml, IPOD_MODEL_ENTRY)), gettext (SELECT_OR_ENTER_YOUR_MODEL));
+    gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (cr->builder, CRW_IPOD_MODEL_ENTRY)), gettext (SELECT_OR_ENTER_YOUR_MODEL));
 
     /* Set initial repository type */
-    gtk_combo_box_set_active(GTK_COMBO_BOX (GET_WIDGET (cr->xml, CRW_REPOSITORY_TYPE_COMBO)), REPOSITORY_TYPE_IPOD);
+    gtk_combo_box_set_active(GTK_COMBO_BOX (GET_WIDGET (cr->builder, CRW_REPOSITORY_TYPE_COMBO)), REPOSITORY_TYPE_IPOD);
 
     /* Set before/after combo */
-    gtk_combo_box_set_active(GTK_COMBO_BOX (GET_WIDGET (cr->xml, CRW_INSERT_BEFORE_AFTER_COMBO)), INSERT_AFTER);
+    gtk_combo_box_set_active(GTK_COMBO_BOX (GET_WIDGET (cr->builder, CRW_INSERT_BEFORE_AFTER_COMBO)), INSERT_AFTER);
 
     /* Set up repository combo */
-    repository_combo_populate(GTK_COMBO_BOX (GET_WIDGET (cr->xml, CRW_REPOSITORY_COMBO)));
-    gtk_combo_box_set_active(GTK_COMBO_BOX (GET_WIDGET (cr->xml, CRW_REPOSITORY_COMBO)), 0);
+    repository_combo_populate(GTK_COMBO_BOX (GET_WIDGET (cr->builder, CRW_REPOSITORY_COMBO)));
+    gtk_combo_box_set_active(GTK_COMBO_BOX (GET_WIDGET (cr->builder, CRW_REPOSITORY_COMBO)), 0);
 
     /* Set default repository name */
-    gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (cr->xml, CRW_REPOSITORY_NAME_ENTRY)), _("New Repository"));
+    gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (cr->builder, CRW_REPOSITORY_NAME_ENTRY)), _("New Repository"));
 
     /* Set initial mountpoint */
     str = prefs_get_string("initial_mountpoint");
-    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER (GET_WIDGET (cr->xml, CRW_MOUNTPOINT_CHOOSER)), str);
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER (GET_WIDGET (cr->builder, CRW_MOUNTPOINT_CHOOSER)), str);
     g_free(str);
 
     buf1 = prefs_get_cfgdir();
@@ -304,15 +301,17 @@ void display_create_repository_dialog() {
     /* Set initial backup path */
     buf2 = g_strdup_printf("backupDB_%d", g_list_length(itdbs_head->itdbs));
     str = g_build_filename(buf1, buf2, NULL);
-    gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (GET_WIDGET (cr->xml, CRW_BACKUP_CHOOSER)), str);
+    gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (GET_WIDGET (cr->builder, CRW_BACKUP_CHOOSER)), str);
     g_free(str);
     g_free(buf2);
 
     /* Set local repository file */
     buf2 = g_strdup_printf("local_%d.itdb", g_list_length(itdbs_head->itdbs));
     str = g_build_filename(buf1, buf2, NULL);
-    gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (GET_WIDGET (cr->xml, CRW_LOCAL_PATH_CHOOSER)), str);
+    gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (GET_WIDGET (cr->builder, CRW_LOCAL_PATH_CHOOSER)), str);
     g_free(str);
     g_free(buf2);
     g_free(buf1);
+
+    gtk_widget_show_all(cr->window);
 }
