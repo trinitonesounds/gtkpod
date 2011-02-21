@@ -691,6 +691,8 @@ static void new_repository_button_clicked(GtkButton *button) {
 static void edit_apply_clicked(GtkButton *button) {
     gint i, itdb_num, del_num;
     struct itdbs_head *itdbs_head;
+    GList *deaditdbs = NULL;
+    GList *gl = NULL;
 
     g_return_if_fail (repository_view);
 
@@ -736,7 +738,7 @@ static void edit_apply_clicked(GtkButton *button) {
 
                 itdb = g_list_nth_data(itdbs_head->itdbs, i - del_num);
                 gp_itdb_remove(itdb);
-                gp_itdb_free(itdb);
+                deaditdbs = g_list_append(deaditdbs, itdb);
 
                 /* keep itdb_index of currently displayed repository
                  updated in case we need to select a new one */
@@ -815,6 +817,16 @@ static void edit_apply_clicked(GtkButton *button) {
 #   endif
 
     update_buttons(repository_view);
+
+    /*
+     * Free the deleted itdbs. Need to do this at the end
+     * due to the combo boxes having to be re-initialised first.
+     */
+    for (gl = deaditdbs; gl; gl = gl->next) {
+        gp_itdb_free(gl->data);
+    }
+    gl = NULL;
+    g_list_free(deaditdbs);
 }
 
 static void ipod_sync_button_clicked(iPodSyncType type) {
