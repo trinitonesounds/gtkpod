@@ -122,6 +122,7 @@ struct DeleteData
     DeleteAction deleteaction;
 };
 
+void gp_init_itdbs();
 iTunesDB *setup_itdb_n (gint i);
 
 struct itdbs_head *gp_get_itdbs_head ();

@@ -94,6 +94,7 @@ void gtkpod_init(int argc, char *argv[]) {
      * initialise gtkpod library items. Needs to be safety threaded due
      * to splash screen.
      */
+
     gdk_threads_enter();
     gp_init(argc, argv);
     gdk_threads_leave();
@@ -166,6 +167,10 @@ void gtkpod_init(int argc, char *argv[]) {
         g_error_free(error);
         error = NULL;
     }
+
+    gdk_threads_enter();
+    gp_init_itdbs();
+    gdk_threads_leave();
 
     /* Load layout.*/
     session_dir = g_build_filename(g_get_home_dir(), ".gtkpod", "session", NULL);

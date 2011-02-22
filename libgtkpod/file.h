@@ -55,6 +55,13 @@ typedef enum
 typedef void (*AddTrackFunc)(Playlist *plitem, Track *track, gpointer data);
 
 FileType *determine_filetype (const gchar *path);
+
+/*
+ * Used inside file functions but also used in file_itunesdb for importing
+ * itdbs. Embedded artwork can be read using this.
+ */
+Track *get_track_info_from_file(gchar *name, Track *orig_track);
+
 gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
 				Playlist *plitem, gboolean descend,
 				AddTrackFunc addtrackfunc, gpointer data);

@@ -988,7 +988,7 @@ static void add_coverart(Track *tr) {
  * pc_path_utf8 and pc_path_locale are not changed if an entry already
  * exists. time_added is not modified if already set. */
 /* Returns NULL on error, a pointer to the Track otherwise */
-static Track *get_track_info_from_file(gchar *name, Track *orig_track) {
+Track *get_track_info_from_file(gchar *name, Track *orig_track) {
     Track *track = NULL;
     Track *nti = NULL;
     FileType *filetype;

@@ -789,7 +789,6 @@ void gp_track_cleanup_empty_strings (Track *track)
  */
 void gp_init(int argc, char *argv[]) {
     gchar *cfgdir;
-    gint i;
 
     prefs_init(argc, argv);
     cfgdir = prefs_get_cfgdir();
@@ -818,6 +817,21 @@ void gp_init(int argc, char *argv[]) {
         g_free(filename);
     }
 
+    /* Initiate autodetection */
+    autodetection_init();
+
+    /* initiate client server */
+    server_setup();
+
+    g_free(cfgdir);
+}
+
+/**
+ * Initialise all the itunes databases
+ */
+void gp_init_itdbs() {
+    gint i;
+
     for (i = 0;; ++i) {
         ExtraiTunesDBData *eitdb;
         iTunesDB *itdb = setup_itdb_n(i);
@@ -839,14 +853,6 @@ void gp_init(int argc, char *argv[]) {
             itdb_spl_update_live(itdb);
         }
     }
-
-    /* Initiate autodetection */
-    autodetection_init();
-
-    /* initiate client server */
-    server_setup();
-
-    g_free(cfgdir);
 }
 
 /* Create an repository according to the settings in the preferences
