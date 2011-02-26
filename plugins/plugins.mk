@@ -65,18 +65,21 @@ clean-dev-files:
 
 # List out the current language po files
 PO_FILES=\
-				 $(top_srcdir)/po/ca.po \
-				 $(top_srcdir)/po/es.po \
-				 $(top_srcdir)/po/he.po \
-				 $(top_srcdir)/po/ja.po \
-				 $(top_srcdir)/po/ru.po \
-				 $(top_srcdir)/po/zh_CN.po \
-				 $(top_srcdir)/po/de.po \
-				 $(top_srcdir)/po/fr.po \
-				 $(top_srcdir)/po/it.po \
-				 $(top_srcdir)/po/ro.po \
-				 $(top_srcdir)/po/sv.po \
-				 $(top_srcdir)/po/zh_TW.po
+					$(top_srcdir)/po/ca.po \
+					$(top_srcdir)/po/cs_CZ.po \
+					$(top_srcdir)/po/de.po \
+					$(top_srcdir)/po/es.po \
+					$(top_srcdir)/po/fr.po \
+					$(top_srcdir)/po/he.po \
+					$(top_srcdir)/po/it.po \
+					$(top_srcdir)/po/ja.po \
+					$(top_srcdir)/po/nl.po \
+					$(top_srcdir)/po/pt_BR.po \
+					$(top_srcdir)/po/ro.po \
+					$(top_srcdir)/po/ru.po \
+					$(top_srcdir)/po/sv.po \
+					$(top_srcdir)/po/zh_CN.po \
+					$(top_srcdir)/po/zh_TW.po
 
 # Create plugin description file with translations
 build-plugin-file: $(INTLTOOL_MERGE) $(PO_FILES)

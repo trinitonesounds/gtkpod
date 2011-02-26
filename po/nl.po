@@ -1,20 +1,29 @@
-# Taiwan language translation for gtkpod.
+# translation of gtkpod.nl.po to dutch
 # This file is distributed under the same license as the gtkpod package.
-# Copyright (C) Cheng-Chia Tseng (zerng07 at www.transifex.net) 2011
+#
+# rob (transifex.net) 2011
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
-"Report-Msgid-Bugs-To: http://www.gtkpod.org/bugs\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-02-26 21:30+0000\n"
-"PO-Revision-Date: 2011-01-28 22:52+0000\n"
+"PO-Revision-Date: 2011-02-26 21:35+0000\n"
 "Last-Translator: phantomjinx <pgrichardson@linux.com>\n"
-"Language-Team: Chinese (Taiwan) <None>\n"
+"Language-Team: Dutch (Netherlands) <None>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_TW\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Language: nl_NL\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 1.0\n"
+"X-Poedit-Language: Dutch\n"
+"X-Poedit-Country: NETHERLANDS\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-KeywordsList: N_;_\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: ../data\n"
 
 #: ../data/glade/core-gtkpod.xml.h:1
 msgid "Conversion Progress Display"
@@ -32,15 +41,15 @@ msgstr ""
 
 #: ../data/gtkpod.desktop.in.h:1
 msgid "Manage music and video on an Apple iPod"
-msgstr "管理 Apple iPod 音樂"
+msgstr ""
 
 #: ../data/gtkpod.desktop.in.h:2
 msgid "gtkpod iPod Manager"
-msgstr "gtkpod iPod "
+msgstr ""
 
 #: ../data/gtkpod.desktop.in.h:3
 msgid "iPod Manager"
-msgstr "iPod 管理員"
+msgstr ""
 
 #: ../libgtkpod/autodetection.c:245
 #, c-format
@@ -102,55 +111,55 @@ msgstr ""
 
 #: ../libgtkpod/charset.c:64
 msgid "Chinese Simplified (GB18030)"
-msgstr "中文簡體 (GB 18030)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:65
 msgid "Chinese Simplified (GB2312)"
-msgstr "中文簡體 (GB2312)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:66
 msgid "Chinese Traditional (Big5)"
-msgstr "中文正體 (Big5)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:67
 msgid "Chinese Traditional (Big5-HKSCS)"
-msgstr "中文正體 (Big5-HKSCS)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:68
 msgid "Cyrillic (IBM-855)"
-msgstr "西里爾文 (IBM-855)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:69
 msgid "Cyrillic (ISO-8859-5)"
-msgstr "西里爾文 (ISO-8859-5)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:70
 msgid "Cyrillic (ISO-IR-111)"
-msgstr "西里爾文 (ISO-IR-111)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:71
 msgid "Cyrillic (KOI8-R)"
-msgstr "西里爾文 (KOI8-R)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:72
 msgid "Cyrillic (Windows-1251)"
-msgstr "西里爾文 (Windows-1251)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:73
 msgid "Cyrillic/Russian (CP-866)"
-msgstr "西里爾文/俄羅斯 (CP-866)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:74
 msgid "Cyrillic/Ukrainian (KOI8-U)"
-msgstr "西里爾文/烏克蘭 (KOI8-U)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:75
 msgid "English (US-ASCII)"
-msgstr "英文 (US-ASCII)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:76
 msgid "Greek (ISO-8859-7)"
-msgstr "希臘文 (ISO-8859-7)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:77
 msgid "Greek (Windows-1253)"
@@ -166,23 +175,23 @@ msgstr ""
 
 #: ../libgtkpod/charset.c:80
 msgid "Japanese (automatic detection)"
-msgstr "日文 (自動偵測)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:81
 msgid "Japanese (EUC-JP)"
-msgstr "日文 (EUC-JP)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:82
 msgid "Japanese (ISO-2022-JP)"
-msgstr "日文 (ISO-2022-JP)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:83
 msgid "Japanese (Shift_JIS)"
-msgstr "日文 (Shift_JIS)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:84
 msgid "Korean (EUC-KR)"
-msgstr "韓文 (EUC-KR)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:85
 msgid "Nordic (ISO-8859-10)"
@@ -210,35 +219,35 @@ msgstr ""
 
 #: ../libgtkpod/charset.c:91
 msgid "Unicode (UTF-7)"
-msgstr "統一碼 (UTF-7)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:92
 msgid "Unicode (UTF-8)"
-msgstr "統一碼 (UTF-8)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:93
 msgid "Unicode (UTF-16BE)"
-msgstr "統一碼 (UTF-16BE)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:94
 msgid "Unicode (UTF-16LE)"
-msgstr "統一碼 (UTF-16LE)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:95
 msgid "Unicode (UTF-32BE)"
-msgstr "統一碼 (UTF-32BE)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:96
 msgid "Unicode (UTF-32LE)"
-msgstr "統一碼 (UTF-32LE)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:97
 msgid "Vietnamese (VISCII)"
-msgstr "越南文 (VISCII)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:98
 msgid "Vietnamese (Windows-1258)"
-msgstr "越南文 (Windows-1258)"
+msgstr ""
 
 #: ../libgtkpod/charset.c:99
 msgid "Visual Hebrew (ISO-8859-8)"
@@ -265,7 +274,7 @@ msgstr ""
 #: ../libgtkpod/charset.c:162 ../libgtkpod/charset.c:178
 #: ../libgtkpod/charset.c:262
 msgid "System Charset"
-msgstr "系統字集"
+msgstr ""
 
 #. already opened
 #. we are not the first instance of gtkpod -- the socket is
@@ -403,6 +412,7 @@ msgstr ""
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
 msgstr[0] ""
+msgstr[1] ""
 
 #. gint id,
 #. gboolean modal,
@@ -415,6 +425,7 @@ msgstr ""
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
 msgstr[0] ""
+msgstr[1] ""
 
 #. gint id,
 #. gboolean modal,
@@ -844,6 +855,7 @@ msgid_plural ""
 "The following tracks could not be converted successfully:\n"
 "\n"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/file_itunesdb.c:1432
 msgid ""
@@ -853,6 +865,7 @@ msgid_plural ""
 "The following tracks could not be transferred successfully:\n"
 "\n"
 msgstr[0] ""
+msgstr[1] ""
 
 #. ID
 #. modal,
@@ -894,6 +907,7 @@ msgid_plural ""
 "some tracks or otherwise create space on the iPod before ejecting the iPod "
 "again."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/file_itunesdb.c:1595
 #, c-format
@@ -1049,11 +1063,13 @@ msgid_plural ""
 "iPod? The number of playlists the tracks are member of is indicated in "
 "parentheses."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc.c:1701
 msgid "Delete Track Completely from iPod?"
 msgid_plural "Delete Tracks Completely from iPod?"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc.c:1712 ../libgtkpod/misc.c:1749
 #, c-format
@@ -1063,11 +1079,13 @@ msgid_plural ""
 "Are you sure you want to remove the following tracks from the playlist \"%s"
 "\"?"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc.c:1715 ../libgtkpod/misc.c:1752
 msgid "Remove Track From Playlist?"
 msgid_plural "Remove Tracks From Playlist?"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc.c:1735
 msgid ""
@@ -1079,11 +1097,13 @@ msgid_plural ""
 "harddisk? The number of playlists the tracks are member of is indicated in "
 "parentheses."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc.c:1738
 msgid "Delete Track from Harddisk?"
 msgid_plural "Delete Tracks from Harddisk?"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc.c:1762
 msgid ""
@@ -1095,11 +1115,13 @@ msgid_plural ""
 "local database? The number of playlists the tracks are member of is "
 "indicated in parentheses."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc.c:1765
 msgid "Remove Track from Local Database?"
 msgid_plural "Remove Tracks from Local Database?"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc_conversion.c:60
 #: ../plugins/sorttab_display/display_sorttabs.c:1433
@@ -1527,6 +1549,7 @@ msgstr ""
 msgid "Created playlist '%s' with %d track."
 msgid_plural "Created playlist '%s' with %d tracks."
 msgstr[0] ""
+msgstr[1] ""
 
 #. n==0
 #: ../libgtkpod/misc_playlist.c:307
@@ -1636,6 +1659,7 @@ msgid_plural ""
 "Press OK to have them transfered from the files on next Sync, CANCEL to "
 "leave them as is."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc_playlist.c:998
 #, c-format
@@ -1646,6 +1670,7 @@ msgid_plural ""
 "The following %d dangling tracks do not have files on PC. \n"
 "Press OK to remove them, CANCEL to leave them. as is"
 msgstr[0] ""
+msgstr[1] ""
 
 #. we want unique window for each
 #. gboolean modal,
@@ -1674,6 +1699,7 @@ msgstr ""
 msgid "Deleted playlist '%s' including %d member track"
 msgid_plural "Deleted playlist '%s' including %d member tracks"
 msgstr[0] ""
+msgstr[1] ""
 
 #. first use playlist name
 #: ../libgtkpod/misc_playlist.c:1084 ../libgtkpod/misc_playlist.c:1139
@@ -1687,6 +1713,7 @@ msgstr ""
 msgid "Deleted playlist '%s' including %d member track on harddisk"
 msgid_plural "Deleted playlist '%s' including %d member tracks on harddisk"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc_playlist.c:1122
 #, c-format
@@ -1719,6 +1746,7 @@ msgid_plural ""
 "completely from your iPod? The number of playlists the tracks are member of "
 "is indicated in parentheses."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc_playlist.c:1204 ../libgtkpod/misc_playlist.c:1251
 #, c-format
@@ -1736,6 +1764,7 @@ msgid_plural ""
 "tracks from your harddisk? The number of playlists the tracks are member of "
 "is indicated in parentheses."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc_playlist.c:1233
 #, c-format
@@ -1753,6 +1782,7 @@ msgid_plural ""
 "tracks from the database? The number of playlists the tracks are member of "
 "is indicated in parentheses."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc_playlist.c:1310
 #, c-format
@@ -1778,12 +1808,14 @@ msgstr ""
 msgid "Hashed %d of %d track."
 msgid_plural "Hashed %d of %d tracks."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc_track.c:183
 #, c-format
 msgid "The following duplicate track has been removed."
 msgid_plural "The following %d duplicate tracks have been removed."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc_track.c:189
 #, c-format
@@ -1793,6 +1825,7 @@ msgid_plural ""
 "The following %d duplicate tracks have not been added to the master play "
 "list."
 msgstr[0] ""
+msgstr[1] ""
 
 #. gint id,
 #. gboolean modal,
@@ -1828,24 +1861,28 @@ msgstr ""
 msgid "Deleting one track completely from iPod"
 msgid_plural "Deleting %d tracks completely from iPod"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc_track.c:1987 ../libgtkpod/misc_track.c:2007
 #, c-format
 msgid "Deleting %d track from playlist '%s'"
 msgid_plural "Deleting %d tracks from playlist '%s'"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc_track.c:2002
 #, c-format
 msgid "Deleting one track from harddisk"
 msgid_plural "Deleting %d tracks from harddisk"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc_track.c:2012
 #, c-format
 msgid "Deleting one track from local database"
 msgid_plural "Deleting %d tracks from local database"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc_track.c:2027
 #, c-format
@@ -1861,12 +1898,14 @@ msgstr ""
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc_track.c:2161
 #, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/misc_track.c:2175
 msgid "No tracks selected"
@@ -1920,22 +1959,26 @@ msgstr ""
 msgid "The following track has been added or updated:\n"
 msgid_plural "The following tracks have been added or updated:\n"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/syncdir.c:231
 msgid "The following track has been completely removed from the iPod:\n"
 msgid_plural ""
 "The following tracks have been completely removed from the iPod:\n"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/syncdir.c:236
 msgid "The following track has been removed from the repository:\n"
 msgid_plural "The following tracks have been removed from the repository:\n"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/syncdir.c:241
 msgid "The following track has been removed from the playlist:\n"
 msgid_plural "The following tracks have been removed from the playlist:\n"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../libgtkpod/syncdir.c:246
 msgid "Nothing was changed.\n"
@@ -2186,19 +2229,19 @@ msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:38
 msgid "Conversion Settings..."
-msgstr "轉換設定值..."
+msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:39
 msgid "Convert AAC (M4A)"
-msgstr "轉換 AAC (M4A)"
+msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:40
 msgid "Convert MP3"
-msgstr "轉換 MP3"
+msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:41
 msgid "Convert WAV"
-msgstr "轉換 WAV"
+msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:42
 msgid "Convert compatible formats to a single format"
@@ -2218,7 +2261,7 @@ msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:46
 msgid "Customize..."
-msgstr "自訂..."
+msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:47
 msgid "Delete missing tracks when synchronizing playlists"
@@ -2242,23 +2285,23 @@ msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:52
 msgid "Encoding Preferences"
-msgstr "編碼偏好設定"
+msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:53
 msgid "Encoding..."
-msgstr "編碼..."
+msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:54
 msgid "Excluded files..."
-msgstr "排除檔案..."
+msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:55
 msgid "Exclusions List"
-msgstr "排除清單"
+msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:56
 msgid "Feedback"
-msgstr "回應"
+msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:57
 msgid "Filename Parse Preferences"
@@ -2292,7 +2335,7 @@ msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:65
 msgid "MP3"
-msgstr "MP3"
+msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:66
 msgid "Mass-modify tags when multiple tracks are selected"
@@ -2474,20 +2517,20 @@ msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:140
 msgid "dB"
-msgstr "dB"
+msgstr ""
 
 #: ../plugins/core_preferences/plugin.c:65
 msgid "Core Preferences"
-msgstr "核心偏好設定"
+msgstr ""
 
 #: ../plugins/core_preferences/plugin.c:126
 #: ../plugins/core_preferences/plugin.c:131
 msgid "Settings"
-msgstr "設定值"
+msgstr ""
 
 #: ../plugins/cover_display/cover_display.xml.h:1
 msgid "<"
-msgstr "<"
+msgstr ""
 
 #: ../plugins/cover_display/cover_display.xml.h:2
 msgid "<b>Album Cover Sort Order</b>"
@@ -2517,7 +2560,7 @@ msgstr ""
 
 #: ../plugins/cover_display/cover_display.xml.h:7
 msgid ">"
-msgstr ">"
+msgstr ""
 
 #: ../plugins/cover_display/cover_display.xml.h:8
 msgid "Artwork Preview"
@@ -2544,7 +2587,7 @@ msgstr ""
 
 #: ../plugins/cover_display/cover_display.xml.h:13
 msgid "Text color"
-msgstr "文字色彩"
+msgstr ""
 
 #: ../plugins/cover_display/cover_display_context_menu.c:40
 msgid "Select Cover From File"
@@ -2668,35 +2711,35 @@ msgstr ""
 
 #: ../plugins/coverweb/plugin.c:46
 msgid "Cover Web"
-msgstr "封面網路"
+msgstr ""
 
 #: ../plugins/coverweb/plugin.c:94
 msgid "  Cover Browser"
-msgstr "  封面瀏覽器"
+msgstr ""
 
 #: ../plugins/details_editor/details.c:68
 msgid "Audio/Video"
-msgstr "音樂/"
+msgstr ""
 
 #: ../plugins/details_editor/details.c:69
 msgid "Audio"
-msgstr "音訊"
+msgstr ""
 
 #: ../plugins/details_editor/details.c:70
 msgid "Video"
-msgstr "視訊"
+msgstr ""
 
 #: ../plugins/details_editor/details.c:71
 msgid "Podcast"
-msgstr "Podcast"
+msgstr ""
 
 #: ../plugins/details_editor/details.c:72
 msgid "Video Podcast"
-msgstr "視訊 Podcast"
+msgstr ""
 
 #: ../plugins/details_editor/details.c:73
 msgid "Audiobook"
-msgstr "有聲書"
+msgstr ""
 
 #: ../plugins/details_editor/details.c:74
 #: ../plugins/playlist_display/playlist_display_spl.c:193
@@ -2972,6 +3015,7 @@ msgstr ""
 msgid "Exported %d of %d track."
 msgid_plural "Exported %d of %d tracks."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/exporter/file_export.c:481
 msgid "Some tracks were not exported."
@@ -3012,6 +3056,7 @@ msgstr ""
 msgid "Created playlist with one track."
 msgid_plural "Created playlist with %d tracks."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/exporter/file_export.c:898
 #, c-format
@@ -3221,11 +3266,11 @@ msgstr ""
 
 #: ../plugins/info_display/info.c:371
 msgid "B"
-msgstr "B"
+msgstr ""
 
 #: ../plugins/info_display/info.c:371
 msgid "kB"
-msgstr "kB"
+msgstr ""
 
 #: ../plugins/info_display/info.c:371
 #: ../plugins/playlist_display/playlist_display_spl.c:71
@@ -3235,11 +3280,11 @@ msgstr ""
 
 #: ../plugins/info_display/info.c:371
 msgid "TB"
-msgstr "TB"
+msgstr ""
 
 #: ../plugins/info_display/info_display.plugin.in.h:1
 msgid "Info Display Plugin"
-msgstr "資訊顯示插件"
+msgstr ""
 
 #: ../plugins/info_display/info_display.plugin.in.h:2
 msgid "Information dialog for connected iPods"
@@ -3286,7 +3331,7 @@ msgstr ""
 
 #: ../plugins/info_display/infoview.c:58
 msgid "File size"
-msgstr "檔案大小"
+msgstr ""
 
 #: ../plugins/info_display/infoview.c:58
 msgid "Number of playlists"
@@ -3361,20 +3406,20 @@ msgstr ""
 
 #: ../plugins/media_player/media_player.xml.h:1
 msgid "Next"
-msgstr "下一首"
+msgstr ""
 
 #: ../plugins/media_player/media_player.xml.h:2
 #: ../plugins/media_player/plugin.c:139
 msgid "Play"
-msgstr "播放"
+msgstr ""
 
 #: ../plugins/media_player/media_player.xml.h:3
 msgid "Previous"
-msgstr "上一首"
+msgstr ""
 
 #: ../plugins/media_player/media_player.xml.h:4
 msgid "Stop"
-msgstr "停止"
+msgstr ""
 
 #: ../plugins/media_player/media_player.plugin.in.h:1
 msgid "Controls for playing tracks and videos"
@@ -3418,6 +3463,7 @@ msgid "No mserv information could be retrieved for the following track"
 msgid_plural ""
 "No mserv information could be retrieved for the following %d tracks"
 msgstr[0] ""
+msgstr[1] ""
 
 #. gint id,
 #. gboolean modal,
@@ -3670,6 +3716,7 @@ msgstr ""
 msgid "Copied one track"
 msgid_plural "Copied %d tracks"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/playlist_display/display_playlists.c:729
 #: ../plugins/playlist_display/display_playlists.c:740
@@ -3696,11 +3743,11 @@ msgstr ""
 
 #: ../plugins/playlist_display/playlist_display.xml.h:1
 msgid "<b>Advanced Options</b>"
-msgstr "<b>Advanced Options</b>"
+msgstr ""
 
 #: ../plugins/playlist_display/playlist_display.xml.h:4
 msgid "<b>General Options</b>"
-msgstr "<b>選項</b>"
+msgstr ""
 
 #: ../plugins/playlist_display/playlist_display.xml.h:6
 msgid "<b>Playlist Sort Order</b>"
@@ -3708,7 +3755,7 @@ msgstr ""
 
 #: ../plugins/playlist_display/playlist_display.xml.h:7
 msgid "<b>Rules</b>"
-msgstr "<b>條件</b>"
+msgstr ""
 
 #: ../plugins/playlist_display/playlist_display.xml.h:8
 msgid "All rules"
@@ -3732,7 +3779,7 @@ msgstr ""
 
 #: ../plugins/playlist_display/playlist_display.xml.h:13
 msgid "Live _updating"
-msgstr "即時更新(_U)"
+msgstr ""
 
 #: ../plugins/playlist_display/playlist_display.xml.h:14
 msgid "Match only _checked tracks"
@@ -4749,31 +4796,31 @@ msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:3
 msgid "0"
-msgstr "0"
+msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:4
 msgid "1"
-msgstr "1"
+msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:5
 msgid "2"
-msgstr "2"
+msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:6
 msgid "3"
-msgstr "3"
+msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:7
 msgid "4"
-msgstr "4"
+msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:8
 msgid "5"
-msgstr "5"
+msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:9
 msgid ":"
-msgstr ":"
+msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:12
 msgid "<b>Filter Sort Order</b>"
@@ -4799,7 +4846,7 @@ msgstr ""
 #: ../plugins/sorttab_display/sorttab_display.xml.h:18
 #: ../plugins/track_display/display_tracks.c:1871
 msgid "Added"
-msgstr "加入"
+msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:19
 msgid "Added:"
@@ -4850,14 +4897,12 @@ msgid ""
 msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:32
-#, fuzzy
 msgid "Last Modified"
-msgstr "修改"
+msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:33
-#, fuzzy
 msgid "Last Played"
-msgstr "已播放"
+msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:34
 msgid "Logic:"
@@ -4989,6 +5034,7 @@ msgstr ""
 msgid "Moved one track"
 msgid_plural "Moved %d tracks"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/track_display/display_tracks.c:1596
 #, c-format
@@ -5001,39 +5047,39 @@ msgstr ""
 
 #: ../plugins/track_display/display_tracks.c:1832
 msgid "#"
-msgstr "#"
+msgstr ""
 
 #: ../plugins/track_display/display_tracks.c:1835
 msgid "CD"
-msgstr "CD"
+msgstr ""
 
 #: ../plugins/track_display/display_tracks.c:1838
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #: ../plugins/track_display/display_tracks.c:1852
 msgid "Cmpl"
-msgstr "Cmpl"
+msgstr ""
 
 #: ../plugins/track_display/display_tracks.c:1859
 msgid "Time"
-msgstr "時間"
+msgstr ""
 
 #: ../plugins/track_display/display_tracks.c:1862
 msgid "Plycnt"
-msgstr "播放計數"
+msgstr ""
 
 #: ../plugins/track_display/display_tracks.c:1865
 msgid "Played"
-msgstr "已播放"
+msgstr ""
 
 #: ../plugins/track_display/display_tracks.c:1868
 msgid "Modified"
-msgstr "修改"
+msgstr ""
 
 #: ../plugins/track_display/display_tracks.c:1874
 msgid "Released"
-msgstr "發行"
+msgstr ""
 
 #: ../plugins/track_display/display_tracks.c:1880
 msgid "Vol."
@@ -5135,31 +5181,31 @@ msgstr ""
 
 #: ../src/anjuta-actions.h:26
 msgid "_Music"
-msgstr "音樂(_M)"
+msgstr ""
 
 #: ../src/anjuta-actions.h:31
 msgid "_Update Tracks from File"
-msgstr "從檔案更新曲目(_U)"
+msgstr ""
 
 #: ../src/anjuta-actions.h:39
 msgid "_Quit"
-msgstr "退出(_Q)"
+msgstr ""
 
 #: ../src/anjuta-actions.h:41
 msgid "Quit gtkpod"
-msgstr "退出 gtkpod"
+msgstr ""
 
 #: ../src/anjuta-actions.h:49
 msgid "_Edit"
-msgstr "編輯(_E)"
+msgstr ""
 
 #: ../src/anjuta-actions.h:54
 msgid "_Delete"
-msgstr "刪除(_D)"
+msgstr ""
 
 #: ../src/anjuta-actions.h:62
 msgid "_Preferences"
-msgstr "偏好設定(_P)"
+msgstr ""
 
 #: ../src/anjuta-actions.h:63
 msgid "Do you prefer coffee to tea? Check it out."
@@ -5167,7 +5213,7 @@ msgstr ""
 
 #: ../src/anjuta-actions.h:72
 msgid "_View"
-msgstr "檢視(_V)"
+msgstr ""
 
 #: ../src/anjuta-actions.h:77
 msgid "_Reset Dock Layout"
@@ -5179,11 +5225,11 @@ msgstr ""
 
 #: ../src/anjuta-actions.h:88
 msgid "_Full Screen"
-msgstr "全螢幕(_F)"
+msgstr ""
 
 #: ../src/anjuta-actions.h:90
 msgid "Toggle fullscreen mode"
-msgstr "切換全螢幕模式"
+msgstr ""
 
 #: ../src/anjuta-actions.h:96
 msgid "_Lock Dock Layout"
@@ -5195,27 +5241,27 @@ msgstr ""
 
 #: ../src/anjuta-actions.h:107
 msgid "_Tools"
-msgstr "工具(_T)"
+msgstr ""
 
 #: ../src/anjuta-actions.h:115
 msgid "_Help"
-msgstr "幫助(_H)"
+msgstr ""
 
 #: ../src/anjuta-actions.h:120
 msgid "_User's Manual"
-msgstr "使用者手冊(_U)"
+msgstr ""
 
 #: ../src/anjuta-actions.h:122
 msgid "gtkpod user's manual"
-msgstr "gtkpod 使用者手冊"
+msgstr ""
 
 #: ../src/anjuta-actions.h:128
 msgid "gtkpod _Home Page"
-msgstr "gtkpod 首頁(_H)"
+msgstr ""
 
 #: ../src/anjuta-actions.h:130
 msgid "Online documentation and resources"
-msgstr "線上文件與資源"
+msgstr ""
 
 #: ../src/anjuta-actions.h:136
 msgid "Report _Bugs/Patches/Requests"
@@ -5235,65 +5281,65 @@ msgstr ""
 
 #: ../src/anjuta-actions.h:152
 msgid "_About"
-msgstr "關於(_A)"
+msgstr ""
 
 #: ../src/anjuta-actions.h:154
 msgid "About gtkpod"
-msgstr "關於 gtkpod"
+msgstr ""
 
 #: ../src/anjuta-actions.h:160
 msgid "About External _Plugins"
-msgstr "關於外部插件(_P)"
+msgstr ""
 
 #: ../src/anjuta-actions.h:162
 msgid "About third party gtkpod plugins"
-msgstr "關於第三方 gtkpod 插件"
+msgstr ""
 
 #: ../src/anjuta-app.c:406
 msgid "Edit"
-msgstr "編輯"
+msgstr ""
 
 #: ../src/anjuta-app.c:407 ../src/anjuta-app.c:408
 msgid "View"
-msgstr "檢視"
+msgstr ""
 
 #: ../src/anjuta-app.c:409
 msgid "Tools"
-msgstr "工具"
+msgstr ""
 
 #: ../src/anjuta-app.c:410
 msgid "Help"
-msgstr "幫助"
+msgstr ""
 
 #: ../src/anjuta-app.c:599
 msgid " Plugins"
-msgstr "插件"
+msgstr ""
 
 #: ../src/anjuta-app.c:610
 msgid "Installed plugins"
-msgstr "已安裝插件"
+msgstr ""
 
 #: ../src/anjuta-app.c:611
 msgid "Preferred plugins"
-msgstr "偏好的插件"
+msgstr ""
 
 #: ../src/anjuta-app.c:612
 msgid "Shortcuts"
-msgstr "捷徑"
+msgstr ""
 
 #: ../src/anjuta-app.c:670
 #, c-format
 msgid "Value doesn't exist"
-msgstr "值不存在"
+msgstr ""
 
 #: ../src/anjuta-app.c:1282
 msgid "Confirmation"
-msgstr "確認"
+msgstr ""
 
 #: ../src/gtkpod.c:184
 msgid "Loaded Session..."
-msgstr "已載入作業階段..."
+msgstr ""
 
 #: ../src/main.c:57
 msgid "gtkpod"
-msgstr "gtkpod"
+msgstr ""
