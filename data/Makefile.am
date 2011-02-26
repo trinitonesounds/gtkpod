@@ -30,6 +30,7 @@ COPYING: $(top_srcdir)/COPYING
 AUTHORS: $(top_srcdir)/AUTHORS
 	ln -s $(top_srcdir)/AUTHORS AUTHORS
 
+all-local: COPYING AUTHORS
 clean-local: clean-licence clean-authors
 
 # Clean up the links and files created purely for developing
