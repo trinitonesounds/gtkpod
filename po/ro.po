@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: gtkpod 1.0\n"
+"Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-02 10:55+0000\n"
+"POT-Creation-Date: 2011-02-26 21:30+0000\n"
 "PO-Revision-Date: 2010-08-08 12:46+0100\n"
 "Last-Translator: alexef <alex@eftimie.ro>\n"
 "Language-Team: Romanian <tradu@softwareliber.ro>\n"
@@ -20,83 +20,21 @@ msgstr ""
 "X-Poedit-SearchPath-0: ..\n"
 "X-Poedit-SearchPath-1: ../data\n"
 
-#: ../data/glade/gtkpod.glade.h:1
-#, fuzzy
-msgid "<b>Advanced Options</b>"
-msgstr "Opţiuni de sortare avansate"
-
-#: ../data/glade/gtkpod.glade.h:2
-#, fuzzy
-msgid "<b>General Options</b>"
-msgstr "<b>Sincronizare</b>"
-
-#: ../data/glade/gtkpod.glade.h:3
-#, fuzzy
-msgid "<b>Rules</b>"
-msgstr "<b>Exemple</b>"
-
-#: ../data/glade/gtkpod.glade.h:4
-msgid ""
-"Any rules\n"
-"All rules\n"
-"Ignore rules"
-msgstr ""
-
-#: ../data/glade/gtkpod.glade.h:7
+#: ../data/glade/core-gtkpod.xml.h:1
 msgid "Conversion Progress Display"
 msgstr "Afişare progres conversie"
 
-#: ../data/glade/gtkpod.glade.h:8
-msgid "Export can be continued at a later time if canceled."
-msgstr "Exportarea poate continua mai târziu dacă este revocată"
-
-#: ../data/glade/gtkpod.glade.h:9
-msgid "Live _updating"
-msgstr "Act_ualizare imediată"
-
-#: ../data/glade/gtkpod.glade.h:10
-msgid "Match only _checked tracks"
-msgstr "Potriveşte numai piesele bi_fate"
-
-#: ../data/glade/gtkpod.glade.h:11
-#, fuzzy
-msgid "Match:"
-msgstr "Cale:"
-
-#: ../data/glade/gtkpod.glade.h:12
+#: ../data/glade/core-gtkpod.xml.h:2
 msgid "Never show this dialogue again"
 msgstr "Nu afişa acest dialog din nou"
 
-#: ../data/glade/gtkpod.glade.h:13
-msgid "Playlist name:"
-msgstr "Nume listă de redare:"
-
-#: ../data/glade/gtkpod.glade.h:14
-msgid "Progress Information"
-msgstr "Informaţii despre progres"
-
-#: ../data/glade/gtkpod.glade.h:15 ../libgtkpod/misc_playlist.c:104
-#: ../plugins/playlist_display/plugin.c:124
-#: ../plugins/repository_editor/repository_editor.c:1142
-msgid "Smart Playlist"
-msgstr "Listă de redare inteligentă"
-
-#: ../data/glade/gtkpod.glade.h:16
-#, fuzzy
-msgid "Sort by:"
-msgstr "   Sortare după:"
-
-#: ../data/glade/gtkpod.glade.h:17
+#: ../data/glade/core-gtkpod.xml.h:3
 msgid ""
 "The output of the background conversion scripts is copied below. Each page "
 "of the notebook corresponds to one background thread."
 msgstr ""
 "Ieşirea scripturilor de conversie din fundal este copiată mai jos. Fiecare "
 "pagină din carneţel corespunde unui fir de execuţie pe fundal."
-
-#: ../data/glade/gtkpod.glade.h:18
-msgid "_Limit to"
-msgstr "_Limitează la"
 
 #: ../data/gtkpod.desktop.in.h:1
 msgid "Manage music and video on an Apple iPod"
@@ -362,18 +300,22 @@ msgstr "Sincronizează lista de redare cu dosar(e)"
 msgid "Create new Playlist"
 msgstr "Creează listă de redare nouă"
 
-#: ../libgtkpod/context_menus.c:278 ../plugins/exporter/file_export.c:935
-msgid "Create Playlist File"
+#: ../libgtkpod/context_menus.c:278
+#, fuzzy
+msgid "Create Playlist File..."
 msgstr "Creează fişier listă de redare"
 
 #. Action name
 #. Stock icon
-#: ../libgtkpod/context_menus.c:294 ../plugins/details_editor/plugin.c:48
+#: ../libgtkpod/context_menus.c:294
+#: ../plugins/cover_display/cover_display_context_menu.c:68
+#: ../plugins/details_editor/plugin.c:48
 msgid "Edit Track Details"
 msgstr "Editare detalii piesă"
 
 #: ../libgtkpod/context_menus.c:316
-msgid "Copy Tracks to Filesystem"
+#, fuzzy
+msgid "Copy Tracks to Filesystem..."
 msgstr "Copiază piesele către sistemul de fişiere"
 
 #: ../libgtkpod/directories.c:120
@@ -383,7 +325,7 @@ msgid ""
 "%s\n"
 msgstr ""
 
-#: ../libgtkpod/file.c:149
+#: ../libgtkpod/file.c:175
 #, c-format
 msgid ""
 "'%s' is a directory, not a playlist file.\n"
@@ -392,7 +334,7 @@ msgstr ""
 "'%s' este un dosar, nu un fişier listă de redare.\n"
 "\n"
 
-#: ../libgtkpod/file.c:163
+#: ../libgtkpod/file.c:189
 #, c-format
 msgid ""
 "'%s' is a not a known playlist file.\n"
@@ -401,63 +343,63 @@ msgstr ""
 "'%s' nu este un fişier listă de redare cunoscut.\n"
 "\n"
 
-#: ../libgtkpod/file.c:171 ../plugins/exporter/file_export.c:216
+#: ../libgtkpod/file.c:197 ../plugins/exporter/file_export.c:233
 #: ../plugins/filetype_ogg/oggfile.c:66 ../plugins/filetype_wav/wavfile.c:98
 #, c-format
 msgid "Could not open '%s' for reading.\n"
 msgstr "Nu am putut deschide '%s' pentru citire.\n"
 
-#: ../libgtkpod/file.c:251
+#: ../libgtkpod/file.c:276
 #, c-format
 msgid "Skipping '%s' because it is a directory.\n"
 msgstr "Sar peste '%s' pentru că este un dosar.\n"
 
-#: ../libgtkpod/file.c:255
+#: ../libgtkpod/file.c:280
 #, c-format
 msgid "Skipping '%s' to avoid adding playlist file recursively\n"
 msgstr ""
 "Sar peste '%s' pentru a evita adăugarea recursivă a fişierelor listă de "
 "redare\n"
 
-#: ../libgtkpod/file.c:473
+#: ../libgtkpod/file.c:517
 #, c-format
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr "Bucată '%s' necunoscută în şablonul '%s'\n"
 
-#: ../libgtkpod/file.c:753
+#: ../libgtkpod/file.c:797
 #, fuzzy, c-format
 msgid "Could not create '%s'"
 msgstr "Nu am putut crea ~/.gtkpod\n"
 
-#: ../libgtkpod/file.c:787
+#: ../libgtkpod/file.c:831
 #, fuzzy
 msgid "Error creating thumbnail file"
 msgstr "Eroare la crearea %s: %s\n"
 
-#: ../libgtkpod/file.c:815 ../libgtkpod/misc.c:1076
+#: ../libgtkpod/file.c:859 ../libgtkpod/misc.c:967
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
 msgstr "Bucată '%%%c' necunoscută în şablonul '%s'"
 
-#: ../libgtkpod/file.c:835
+#: ../libgtkpod/file.c:879
 #, c-format
 msgid ""
 "Unable to start video thumbnail generator\n"
 "(command line was: '%s')"
 msgstr ""
 
-#: ../libgtkpod/file.c:838
+#: ../libgtkpod/file.c:882
 #, c-format
 msgid "Thumbnail generator returned status %d"
 msgstr ""
 
-#: ../libgtkpod/file.c:962
+#: ../libgtkpod/file.c:1006
 #, c-format
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
 msgstr "Următoarea piesă nu a putut fi procesată (fişierul nu există): '%s'\n"
 
-#: ../libgtkpod/file.c:980
+#: ../libgtkpod/file.c:1024
 #, c-format
 msgid ""
 "The filetype '%s' is not currently supported.\n"
@@ -465,20 +407,20 @@ msgid ""
 "If you have a plugin that supports this filetype then please enable it."
 msgstr ""
 
-#: ../libgtkpod/file.c:1086 ../plugins/mserv/mserv.c:199
+#: ../libgtkpod/file.c:1130 ../plugins/mserv/mserv.c:199
 msgid "Nothing to update"
 msgstr "Nimic de actualizat"
 
-#: ../libgtkpod/file.c:1105
+#: ../libgtkpod/file.c:1149
 #, c-format
 msgid "Updating %s"
 msgstr "Actualizez %s"
 
-#: ../libgtkpod/file.c:1117
+#: ../libgtkpod/file.c:1161
 msgid "Updated selected tracks with info from file."
 msgstr "Am actualizat piesele selectate cu informaţii din fişier."
 
-#: ../libgtkpod/file.c:1133
+#: ../libgtkpod/file.c:1177
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -488,11 +430,11 @@ msgstr[2] "Următoarele %d de piese nu au putut fi actualizate"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1136
+#: ../libgtkpod/file.c:1180
 msgid "Failed Track Update"
 msgstr "Actualizare piesă eşuată"
 
-#: ../libgtkpod/file.c:1190
+#: ../libgtkpod/file.c:1234
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -502,49 +444,49 @@ msgstr[2] "Următoarele %d de piese au fost actualizate"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1193
+#: ../libgtkpod/file.c:1237
 msgid "Successful Track Update"
 msgstr "Actualizare piesă reuşită"
 
-#: ../libgtkpod/file.c:1280
+#: ../libgtkpod/file.c:1324
 msgid "no local filename available, file on the iPod will be used instead"
 msgstr ""
 "nume de fişier local indisponibil, în schimb utilizez fişierul de pe iPod"
 
-#: ../libgtkpod/file.c:1284
+#: ../libgtkpod/file.c:1328
 msgid "no local filename available and copy on iPod cannot be found"
 msgstr ""
 "nume de fişier local indisponibil şi copia de pe iPod nu poate fi găsită"
 
-#: ../libgtkpod/file.c:1287 ../libgtkpod/file.c:1300
+#: ../libgtkpod/file.c:1331 ../libgtkpod/file.c:1344
 msgid "no local filename available"
 msgstr "nume de fişier local indisponibil"
 
-#: ../libgtkpod/file.c:1293
+#: ../libgtkpod/file.c:1337
 msgid "local file could not be found, file on the iPod will be used instead"
 msgstr "fişierul local nu a fost găsit, utilizez în schimb fişierul de pe iPod"
 
-#: ../libgtkpod/file.c:1297
+#: ../libgtkpod/file.c:1341
 msgid "local file as well as copy on the iPod cannot be found"
 msgstr "nici fişierul local nici copia de pe iPod nu au putut fi găsite"
 
 #. update not successful -- log this track for later display
-#: ../libgtkpod/file.c:1382
+#: ../libgtkpod/file.c:1426
 msgid "update failed (format not supported?)"
 msgstr "actualizare eşuată (format nesuportat?)"
 
-#: ../libgtkpod/file.c:1449 ../libgtkpod/misc_playlist.c:790
+#: ../libgtkpod/file.c:1491 ../libgtkpod/misc_playlist.c:742
 #, c-format
 msgid "Processing '%s'..."
 msgstr "Procesare '%s'..."
 
-#: ../libgtkpod/file.c:1455
+#: ../libgtkpod/file.c:1497
 #, c-format
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "Sar peste '%s' pentru că se potriveşte cu măşti de excludere.\n"
 
-#: ../libgtkpod/file.c:1559 ../libgtkpod/misc_track.c:1603
-#: ../libgtkpod/misc_track.c:1699
+#: ../libgtkpod/file.c:1601 ../libgtkpod/misc_track.c:1620
+#: ../libgtkpod/misc_track.c:1716
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
@@ -553,36 +495,36 @@ msgstr ""
 "Podcast deja prezent: '%s'\n"
 "\n"
 
-#: ../libgtkpod/file.c:1637 ../libgtkpod/file.c:1644
+#: ../libgtkpod/file.c:1674 ../libgtkpod/file.c:1681
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "Nu am putut modifica etichetele fişierului: %s\n"
 
-#: ../libgtkpod/file.c:1727
+#: ../libgtkpod/file.c:1764
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr "Nu am putut deschide '%s' pentru citire şi scriere.\n"
 
-#: ../libgtkpod/file.c:1732
+#: ../libgtkpod/file.c:1769
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr "Nu am putut obţine blocare pentru '%s'.\n"
 
 #. error!
-#: ../libgtkpod/file.c:1747 ../libgtkpod/file.c:1755 ../libgtkpod/file.c:1765
-#: ../libgtkpod/file.c:1772
+#: ../libgtkpod/file.c:1784 ../libgtkpod/file.c:1792 ../libgtkpod/file.c:1802
+#: ../libgtkpod/file.c:1809
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr "Linie malformată în '%s': %s\n"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1798
+#: ../libgtkpod/file.c:1835
 msgid "Remove offline playcounts?"
 msgstr "Elimin contoarele de redare în mod deconectat?"
 
 #. title
-#: ../libgtkpod/file.c:1799
+#: ../libgtkpod/file.c:1836
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
@@ -591,23 +533,28 @@ msgstr ""
 "Apăsaţi 'OK' penru a le şterge din fişierul contor redări în mod deconectat, "
 "'Revocare' pentru a le păstra."
 
-#: ../libgtkpod/file.c:1814
+#: ../libgtkpod/file.c:1851
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr "Eroare la scrierea către '%s'.\n"
 
-#: ../libgtkpod/file.c:1863
+#: ../libgtkpod/file.c:1900
 #, c-format
 msgid ""
 "Error: Could not determine filetype for file at path: %s.\n"
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file.c:1896
+#: ../libgtkpod/file.c:1906
+#, c-format
+msgid "Error: Unable to get filename from path"
+msgstr ""
+
+#: ../libgtkpod/file.c:1936
 msgid "Error:"
 msgstr ""
 
-#: ../libgtkpod/file.c:1910
+#: ../libgtkpod/file.c:1950
 #, c-format
 msgid ""
 "iPod File not available and ID3 saving disabled in options, cannot save "
@@ -615,43 +562,43 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file.c:1919
+#: ../libgtkpod/file.c:1959
 #, fuzzy, c-format
 msgid ""
 "Lyrics not written, file type cannot be determined (%s).\n"
 "\n"
 msgstr "Nume de fişier original indisponibil pentru '%s'.\n"
 
-#: ../libgtkpod/file_convert.c:306
+#: ../libgtkpod/file_convert.c:310
 msgid "Summary status of conversion processes"
 msgstr "Rezumat al stării procesului de conversie"
 
 #. only change the label if it has changed --
 #. otherwise our tooltips will be switched off
-#: ../libgtkpod/file_convert.c:513 ../libgtkpod/file_convert.c:515
+#: ../libgtkpod/file_convert.c:527 ../libgtkpod/file_convert.c:529
 msgid "active"
 msgstr "activ"
 
-#: ../libgtkpod/file_convert.c:519 ../libgtkpod/file_convert.c:520
+#: ../libgtkpod/file_convert.c:533 ../libgtkpod/file_convert.c:534
 msgid "inactive"
 msgstr "inactiv"
 
-#: ../libgtkpod/file_convert.c:532
+#: ../libgtkpod/file_convert.c:546
 #, c-format
 msgid "Active threads: %d. Scheduled tracks: %d."
 msgstr "Fire de execuţie active: %d. Piese programate: %d."
 
-#: ../libgtkpod/file_convert.c:950
+#: ../libgtkpod/file_convert.c:964
 #, c-format
 msgid "Original filename not available for '%s.'\n"
 msgstr "Nume de fişier original indisponibil pentru '%s'.\n"
 
-#: ../libgtkpod/file_convert.c:966
+#: ../libgtkpod/file_convert.c:980
 #, c-format
 msgid "Filename '%s' is no longer valid for '%s'.\n"
 msgstr "Numele de fişier '%s' nu mai este valid pentru '%s'.\n"
 
-#: ../libgtkpod/file_convert.c:1040
+#: ../libgtkpod/file_convert.c:1054
 #, c-format
 msgid ""
 "Files of type '%s' are not supported by the iPod. Please go to the "
@@ -663,16 +610,16 @@ msgstr ""
 "s'.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1113
+#: ../libgtkpod/file_convert.c:1127
 msgid "No information available"
 msgstr "Nici o informaţie nu este disponibilă"
 
-#: ../libgtkpod/file_convert.c:1142
+#: ../libgtkpod/file_convert.c:1156
 #, c-format
 msgid "Could not create '%s'. Filetype conversion will not work.\n"
 msgstr "Nu am putut crea '%s'. Conversia tipului de fişier nu va funcţiona.\n"
 
-#: ../libgtkpod/file_convert.c:1419 ../libgtkpod/file_convert.c:2659
+#: ../libgtkpod/file_convert.c:1438 ../libgtkpod/file_convert.c:2678
 #, c-format
 msgid ""
 "Transfer of '%s' failed. %s\n"
@@ -681,7 +628,7 @@ msgstr ""
 "Transferul '%s' a eşuat. %s\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1775 ../libgtkpod/file_convert.c:2005
+#: ../libgtkpod/file_convert.c:1795 ../libgtkpod/file_convert.c:2025
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s'.\n"
@@ -690,7 +637,7 @@ msgstr ""
 "Conversia '%s' a eşuat: '%s'.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1790
+#: ../libgtkpod/file_convert.c:1810
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s %s' returned exit status %d.\n"
@@ -699,7 +646,7 @@ msgstr ""
 "Conversia '%s' a eşuat: '%s %s' e returnat statusul de ieşire %d.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1816
+#: ../libgtkpod/file_convert.c:1836
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '\"%s\" %s' did not return filename extension as "
@@ -710,7 +657,7 @@ msgstr ""
 "aşteptată.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1881
+#: ../libgtkpod/file_convert.c:1901
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not access original file '%s' (%s).\n"
@@ -719,7 +666,7 @@ msgstr ""
 "Conversia '%s' eşuată: nu am putut accesa fişierul original '%s' (%s).\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1925
+#: ../libgtkpod/file_convert.c:1945
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not create directory '%s'.\n"
@@ -728,7 +675,7 @@ msgstr ""
 "Conversia '%s' eşuată: nu am putut crea dosarul '%s'.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:2033
+#: ../libgtkpod/file_convert.c:2053
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s' returned exit status %d.\n"
@@ -737,7 +684,7 @@ msgstr ""
 "Conversia '%s' eşuată: '%s' a returnat statusul de ieşire %d.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:2067
+#: ../libgtkpod/file_convert.c:2087
 #, c-format
 msgid ""
 "Conversion of '%s' failed: could not stat the converted file '%s'.\n"
@@ -747,21 +694,21 @@ msgstr ""
 "convertit '%s'.\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:124
+#: ../libgtkpod/file_itunesdb.c:122
 #, c-format
 msgid "Matching SHA1 checksum for file %d/%d"
 msgstr "Potrivesc suma de control SHA1 pentru fişierul %d/%d"
 
-#: ../libgtkpod/file_itunesdb.c:235
+#: ../libgtkpod/file_itunesdb.c:240
 msgid "Could not create hash value from itunesdb\n"
 msgstr "Nu am putut crea valori hash din itunesdb\n"
 
-#: ../libgtkpod/file_itunesdb.c:250
+#: ../libgtkpod/file_itunesdb.c:255
 #, c-format
 msgid "Error while reading extended info: %s\n"
 msgstr "Eroare la citirea informaţiilor extinse: %s\n"
 
-#: ../libgtkpod/file_itunesdb.c:266
+#: ../libgtkpod/file_itunesdb.c:271
 #, c-format
 msgid ""
 "iTunesDB '%s' does not match checksum in extended information file '%s'\n"
@@ -775,7 +722,7 @@ msgstr ""
 "putea să dureze destul de mult.\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:276
+#: ../libgtkpod/file_itunesdb.c:281
 #, c-format
 msgid ""
 "%s:\n"
@@ -784,7 +731,7 @@ msgstr ""
 "%s:\n"
 "Aşteptat \"itunesdb_hash=\" dar găsit:\"%s\"\n"
 
-#: ../libgtkpod/file_itunesdb.c:321
+#: ../libgtkpod/file_itunesdb.c:326
 #, c-format
 msgid ""
 "%s:\n"
@@ -793,7 +740,7 @@ msgstr ""
 "%s:\n"
 "Eroare format: %s\n"
 
-#: ../libgtkpod/file_itunesdb.c:363
+#: ../libgtkpod/file_itunesdb.c:368
 msgid ""
 "No SHA1 checksums on individual tracks are available.\n"
 "\n"
@@ -809,48 +756,48 @@ msgstr ""
 "programe decât gtkpod.\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:399
+#: ../libgtkpod/file_itunesdb.c:404
 #, c-format
 msgid "Error reading iPod photo database (%s).\n"
 msgstr "Eroare la citirea bazei de date foto a iPod-ului (%s).\n"
 
-#: ../libgtkpod/file_itunesdb.c:404
+#: ../libgtkpod/file_itunesdb.c:409
 #, fuzzy
 msgid "Error reading iPod photo database. (No error message)\n"
 msgstr "Eroare la citirea bazei de date foto a iPod-ului (%s).\n"
 
-#: ../libgtkpod/file_itunesdb.c:461
+#: ../libgtkpod/file_itunesdb.c:466
 #, c-format
 msgid "The repository %s does not have a readable extended database.\n"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:463
+#: ../libgtkpod/file_itunesdb.c:468
 msgid ""
 "This database identifies the track on disk with the track data in the "
 "repository database."
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:463
+#: ../libgtkpod/file_itunesdb.c:468
 msgid ""
 "Any tracks already in the database cannot be transferred between "
 "repositories without the extended database."
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:463
+#: ../libgtkpod/file_itunesdb.c:468
 msgid ""
 "A new extended database will be created upon saving but existing tracks will "
 "need to be reimported to be linked to the file on disk."
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:471
+#: ../libgtkpod/file_itunesdb.c:476
 msgid "Offline iPod database successfully imported"
 msgstr "Baza de date iPod deconectată a fost importată cu succes"
 
-#: ../libgtkpod/file_itunesdb.c:473
+#: ../libgtkpod/file_itunesdb.c:478
 msgid "Local database successfully imported"
 msgstr "Baza de date locală a fost importată cu succes"
 
-#: ../libgtkpod/file_itunesdb.c:478
+#: ../libgtkpod/file_itunesdb.c:483
 #, c-format
 msgid ""
 "Offline iPod database import failed: '%s'\n"
@@ -859,7 +806,7 @@ msgstr ""
 "Importarea bazei de date iPod deconectată eşuată: '%s'\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:480
+#: ../libgtkpod/file_itunesdb.c:485
 #, c-format
 msgid ""
 "Local database import failed: '%s'\n"
@@ -868,7 +815,7 @@ msgstr ""
 "Importarea bazei de date locală eşuată: '%s'\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:484
+#: ../libgtkpod/file_itunesdb.c:489
 msgid ""
 "Offline iPod database import failed: \n"
 "\n"
@@ -876,7 +823,7 @@ msgstr ""
 "Importarea bazei de date iPod în mod deconectat eşuată: \n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:486
+#: ../libgtkpod/file_itunesdb.c:491
 msgid ""
 "Local database import failed: \n"
 "\n"
@@ -884,7 +831,7 @@ msgstr ""
 "Importarea bazei de date locală eşuată: \n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:491
+#: ../libgtkpod/file_itunesdb.c:496
 #, c-format
 msgid ""
 "'%s' does not exist. Import aborted.\n"
@@ -893,15 +840,15 @@ msgstr ""
 "'%s' nu există. Importare abandondată.\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:505
+#: ../libgtkpod/file_itunesdb.c:510
 msgid "Extended info will not be used.\n"
 msgstr "Informaţiile extinse nu vor fi folosite.\n"
 
-#: ../libgtkpod/file_itunesdb.c:510
+#: ../libgtkpod/file_itunesdb.c:515
 msgid "iPod Database Successfully Imported"
 msgstr "Baza de date iPod importată cu succes"
 
-#: ../libgtkpod/file_itunesdb.c:514
+#: ../libgtkpod/file_itunesdb.c:519
 #, c-format
 msgid ""
 "iPod Database Import Failed: '%s'\n"
@@ -910,7 +857,7 @@ msgstr ""
 "Importul bazei de date iPod eşuat: '%s'\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:517
+#: ../libgtkpod/file_itunesdb.c:522
 msgid ""
 "iPod Database Import Failed.\n"
 "\n"
@@ -918,7 +865,7 @@ msgstr ""
 "Importul bazei de date iPod eşuat.\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:523
+#: ../libgtkpod/file_itunesdb.c:528
 #, c-format
 msgid ""
 "'%s' (or similar) does not exist. Import aborted.\n"
@@ -927,7 +874,7 @@ msgstr ""
 "'%s' (sau similar) nu există. Importare abandonată.\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:804
+#: ../libgtkpod/file_itunesdb.c:809
 #, fuzzy, c-format
 msgid ""
 "Could not find iPod directory structure at '%s'.\n"
@@ -943,39 +890,39 @@ msgstr ""
 "\n"
 "Doriţi să creaţi structura de directoare acum?\n"
 
-#: ../libgtkpod/file_itunesdb.c:808
+#: ../libgtkpod/file_itunesdb.c:813
 msgid "iPod directory structure not found"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:808
+#: ../libgtkpod/file_itunesdb.c:813
 #, fuzzy
 msgid "Create directory structure"
 msgstr "Dosar cache"
 
-#: ../libgtkpod/file_itunesdb.c:1073
+#: ../libgtkpod/file_itunesdb.c:1078
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr "Nu am putut deschide \"%s\" pentru scrierea informaţiilor extinse.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1085
+#: ../libgtkpod/file_itunesdb.c:1090
 msgid "Aborted writing of extended info.\n"
 msgstr "Scrierea informaţiilor extinse abandonată.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1271
-#, c-format
-msgid "%d%%"
+#: ../libgtkpod/file_itunesdb.c:1219
+#, fuzzy, c-format
+msgid "%d%%  %s"
 msgstr "%d%%"
 
-#: ../libgtkpod/file_itunesdb.c:1284
-#, c-format
-msgid "%d%% (%d/%d  %d:%02d:%02d left)"
+#: ../libgtkpod/file_itunesdb.c:1230
+#, fuzzy, c-format
+msgid "%d%% (%d/%d  %d:%02d:%02d left)  %s"
 msgstr "%d%% (%d din %d, timp rămas: %d:%02d:%02d)"
 
-#: ../libgtkpod/file_itunesdb.c:1329
+#: ../libgtkpod/file_itunesdb.c:1275
 msgid "Status: Deleting File"
 msgstr "Stare: se şterg fişiere"
 
-#: ../libgtkpod/file_itunesdb.c:1385
+#: ../libgtkpod/file_itunesdb.c:1331
 #, c-format
 msgid ""
 "Could not remove the following file: '%s'\n"
@@ -984,7 +931,7 @@ msgstr ""
 "Nu am putut şterge următorul fişier: '%s'\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:1482
+#: ../libgtkpod/file_itunesdb.c:1426
 msgid ""
 "The following track could not be converted successfully:\n"
 "\n"
@@ -1001,7 +948,7 @@ msgstr[2] ""
 "Următoarele piese nu au putut fi convertite cu succes:\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:1488
+#: ../libgtkpod/file_itunesdb.c:1432
 msgid ""
 "The following track could not be transferred successfully:\n"
 "\n"
@@ -1020,12 +967,12 @@ msgstr[2] ""
 
 #. ID
 #. modal,
-#: ../libgtkpod/file_itunesdb.c:1495 ../libgtkpod/gtkpod_app_iface.c:249
+#: ../libgtkpod/file_itunesdb.c:1439 ../libgtkpod/gtkpod_app_iface.c:249
 msgid "Warning"
 msgstr "Avertizare"
 
 #. title
-#: ../libgtkpod/file_itunesdb.c:1496
+#: ../libgtkpod/file_itunesdb.c:1440
 msgid ""
 "The iPod could not be ejected. Please fix the problems mentioned below and "
 "then eject the iPod again. Pressing 'OK' will re-schedule the failed tracks "
@@ -1035,22 +982,22 @@ msgstr ""
 "mai jos şi apoi deconectaţi iPod din nou. Apăsând 'Ok' va re-programa "
 "piesele eşuate pentru conversie şi transfer."
 
-#: ../libgtkpod/file_itunesdb.c:1548
+#: ../libgtkpod/file_itunesdb.c:1488
 #, c-format
-msgid "Status: Copying track"
-msgstr "Stare: se copiază piese"
+msgid "Saving: waiting for %d tracks to be copied"
+msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1552
-#, c-format
-msgid "Status: Waiting for conversion to complete"
+#: ../libgtkpod/file_itunesdb.c:1492
+#, fuzzy, c-format
+msgid "Saving: waiting for %d tracks to convert"
 msgstr "Stare: se aşteaptă finalizarea conversiei"
 
-#: ../libgtkpod/file_itunesdb.c:1555
-#, c-format
-msgid "Status: Finished transfer"
+#: ../libgtkpod/file_itunesdb.c:1495
+#, fuzzy, c-format
+msgid "Saving: finished track transfer"
 msgstr "Stare: s-a terminat transferul"
 
-#: ../libgtkpod/file_itunesdb.c:1596
+#: ../libgtkpod/file_itunesdb.c:1527
 #, c-format
 msgid ""
 "One track could not be transferred because your iPod is full. Either delete "
@@ -1073,7 +1020,7 @@ msgstr[2] ""
 "de a deconecta iPod-ul, ştergeţi nişte piese sau creaţi spaţiu printr-o altă "
 "metodă."
 
-#: ../libgtkpod/file_itunesdb.c:1665
+#: ../libgtkpod/file_itunesdb.c:1595
 #, fuzzy, c-format
 msgid ""
 "You did not import the existing iTunesDB ('%s'). This is most likely "
@@ -1089,20 +1036,20 @@ msgstr ""
 "peste memorare. Dacă revocaţi, puteţi importa baza de date existentă înainte "
 "de a apela această funcţie din nou.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1669 ../libgtkpod/misc_playlist.c:884
+#: ../libgtkpod/file_itunesdb.c:1599 ../libgtkpod/misc_playlist.c:836
 msgid "Existing iTunes database not imported"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1669 ../libgtkpod/misc_playlist.c:884
+#: ../libgtkpod/file_itunesdb.c:1599 ../libgtkpod/misc_playlist.c:836
 msgid "Proceed anyway"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1669
+#: ../libgtkpod/file_itunesdb.c:1599
 #, fuzzy
 msgid "Skip storing"
 msgstr "Număr săriri peste"
 
-#: ../libgtkpod/file_itunesdb.c:1694
+#: ../libgtkpod/file_itunesdb.c:1623
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
@@ -1110,441 +1057,65 @@ msgstr ""
 "Structura de dosare a iPod trebuie să fie prezentă înainte de a putea "
 "efectua sincronizarea iPod.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1701
+#: ../libgtkpod/file_itunesdb.c:1630
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr "Unele piese nu au putut fi şterse de pe iPod. Exportare abandonată!"
 
-#: ../libgtkpod/file_itunesdb.c:1716
+#: ../libgtkpod/file_itunesdb.c:1644
 #, c-format
 msgid "Now writing database '%s'. Please wait..."
 msgstr "Scriu în baza de date '%s'. Vă rugăm aşteptaţi..."
 
-#: ../libgtkpod/file_itunesdb.c:1759
+#: ../libgtkpod/file_itunesdb.c:1685
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "Fişierul de informaţii extinse nu a fost şters: '%s'"
 
-#: ../libgtkpod/file_itunesdb.c:1865
+#: ../libgtkpod/file_itunesdb.c:1791
 #, c-format
 msgid "%s: Database saved"
 msgstr "%s: bază de date salvată"
 
-#: ../libgtkpod/file_itunesdb.c:1868
+#: ../libgtkpod/file_itunesdb.c:1794
 #, c-format
 msgid "%s: Changes saved"
 msgstr "%s: schimbări salvate"
 
-#: ../libgtkpod/fileselection.c:121 ../libgtkpod/fileselection.c:499
-#: ../plugins/playlist_display/playlist_display_actions.c:71
-#: ../plugins/playlist_display/playlist_display_actions.c:261
-msgid "Successfully added files"
-msgstr "Fişiere adăugate cu succes"
-
-#: ../libgtkpod/fileselection.c:123 ../libgtkpod/fileselection.c:501
-#: ../plugins/playlist_display/playlist_display_actions.c:73
-#: ../plugins/playlist_display/playlist_display_actions.c:263
-msgid "Some files were not added successfully"
-msgstr "Unele fişiere nu au fost adăugate cu succes"
-
-#: ../libgtkpod/fileselection.c:151 ../libgtkpod/fileselection.c:238
-#: ../libgtkpod/fileselection.c:514
-#: ../plugins/playlist_display/playlist_display_actions.c:95
-#: ../plugins/playlist_display/playlist_display_actions.c:204
-#: ../plugins/playlist_display/playlist_display_actions.c:290
-msgid "Please select a playlist or repository before adding tracks."
-msgstr ""
-"Vă rugăm selectaţi o listă de redare sau un depozit înainte de a adăuga "
-"piese."
-
-#: ../libgtkpod/fileselection.c:161 ../libgtkpod/fileselection.c:246
-#: ../plugins/playlist_display/playlist_display_actions.c:212
-#: ../plugins/playlist_display/playlist_display_actions.c:300
-msgid "Please load the iPod before adding tracks."
-msgstr "Vă rugăm încărcaţi iPod-ul înainte de a adăuga piese."
-
-#: ../libgtkpod/fileselection.c:170
-#: ../plugins/playlist_display/playlist_display_actions.c:309
-#, c-format
-msgid "Add files to '%s'"
-msgstr "Adaugă fişiere la '%s'"
-
-#: ../libgtkpod/fileselection.c:173
-#: ../plugins/playlist_display/playlist_display_actions.c:312
-#, c-format
-msgid "Add files to '%s/%s'"
-msgstr "Adaugă fişiere la '%s/%s'"
-
-#. Create window title
-#: ../libgtkpod/fileselection.c:254
-#: ../plugins/playlist_display/playlist_display_actions.c:220
-#, c-format
-msgid "Add playlist files to '%s'"
-msgstr "Adaugă fişiere listă de redare la '%s'"
-
-#: ../libgtkpod/fileselection.c:279
+#: ../libgtkpod/fileselection.c:65
 msgid "Set Cover"
 msgstr "Stabileşte coperta"
-
-#: ../libgtkpod/fileselection.c:519
-#: ../plugins/playlist_display/playlist_display_actions.c:100
-msgid "Add Folder"
-msgstr "Adaugă dosar"
 
 #: ../libgtkpod/filetype_iface.c:188
 msgid "Error: Lyrics not supported for this file format."
 msgstr ""
 
-#: ../libgtkpod/gp_itdb.c:809
+#: ../libgtkpod/gp_itdb.c:808
 msgid "Music Library"
 msgstr ""
 
 #. add podcast playlist
-#: ../libgtkpod/gp_itdb.c:816 ../libgtkpod/gp_itdb.c:917
-#: ../libgtkpod/gp_itdb.c:949
+#: ../libgtkpod/gp_itdb.c:815 ../libgtkpod/gp_itdb.c:923
+#: ../libgtkpod/gp_itdb.c:955
 msgid "Podcasts"
 msgstr "Podcasturi"
 
-#: ../libgtkpod/gp_itdb.c:919
+#: ../libgtkpod/gp_itdb.c:925
 msgid "Local"
 msgstr "Local"
 
-#: ../libgtkpod/gp_itdb.c:921
-#: ../plugins/repository_editor/repository_editor.c:1012
+#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
+#: ../libgtkpod/gp_itdb.c:927
+#: ../plugins/repository_editor/repository_editor.c:1115
+#: ../plugins/repository_editor/repository_editor.xml.h:52
 msgid "iPod"
 msgstr "iPod"
 
-#: ../libgtkpod/gp_itdb.c:1004
+#: ../libgtkpod/gp_itdb.c:1010
 #, c-format
 msgid "Increased playcount for '%s'"
 msgstr "Număr redări incrementat pentru '%s'"
 
-#: ../libgtkpod/gp_spl.c:63
-msgid "days"
-msgstr "zile"
-
-#: ../libgtkpod/gp_spl.c:64
-msgid "weeks"
-msgstr "săptămâni"
-
-#: ../libgtkpod/gp_spl.c:65
-msgid "months"
-msgstr "luni"
-
-#: ../libgtkpod/gp_spl.c:70
-msgid "kbps"
-msgstr "kops"
-
-#: ../libgtkpod/gp_spl.c:71
-msgid "Hz"
-msgstr "Hz"
-
-#: ../libgtkpod/gp_spl.c:72 ../libgtkpod/gp_spl.c:166
-#: ../plugins/info_display/info.c:372
-msgid "MB"
-msgstr "MO"
-
-#: ../libgtkpod/gp_spl.c:73
-msgid "secs"
-msgstr "secunde"
-
-#: ../libgtkpod/gp_spl.c:78 ../libgtkpod/misc_conversion.c:63
-#: ../plugins/core_preferences/core_prefs.xml.h:88
-#: ../plugins/sorttab_display/display_sorttabs.c:2590
-msgid "Title"
-msgstr "Titlu"
-
-#. 0
-#: ../libgtkpod/gp_spl.c:79 ../libgtkpod/misc_conversion.c:61
-#: ../plugins/core_preferences/core_prefs.xml.h:23
-#: ../plugins/sorttab_display/display_sorttabs.c:2581
-msgid "Album"
-msgstr "Album"
-
-#: ../libgtkpod/gp_spl.c:80 ../libgtkpod/misc_conversion.c:62
-#: ../plugins/core_preferences/core_prefs.xml.h:28
-#: ../plugins/sorttab_display/display_sorttabs.c:2578
-msgid "Artist"
-msgstr "Artist"
-
-#: ../libgtkpod/gp_spl.c:81 ../libgtkpod/misc_conversion.c:75
-msgid "Bitrate"
-msgstr "Rată de biţi"
-
-#. 15
-#: ../libgtkpod/gp_spl.c:82 ../libgtkpod/misc_conversion.c:76
-msgid "Samplerate"
-msgstr "Rată de eşantionare"
-
-#: ../libgtkpod/gp_spl.c:83 ../libgtkpod/misc_conversion.c:85
-#: ../plugins/sorttab_display/display_sorttabs.c:2593
-#: ../plugins/track_display/display_tracks.c:1877
-msgid "Year"
-msgstr "An"
-
-#: ../libgtkpod/gp_spl.c:84 ../libgtkpod/misc_conversion.c:64
-#: ../plugins/core_preferences/core_prefs.xml.h:62
-#: ../plugins/sorttab_display/display_sorttabs.c:2584
-msgid "Genre"
-msgstr "Gen"
-
-#: ../libgtkpod/gp_spl.c:85
-msgid "Kind"
-msgstr "Tip"
-
-#: ../libgtkpod/gp_spl.c:86 ../libgtkpod/misc_conversion.c:82
-msgid "Date modified"
-msgstr "Data modificării"
-
-#: ../libgtkpod/gp_spl.c:87
-msgid "Track number"
-msgstr "Număr pistă"
-
-#: ../libgtkpod/gp_spl.c:88
-msgid "Size"
-msgstr "Dimensiune"
-
-#: ../libgtkpod/gp_spl.c:89 ../plugins/info_display/infoview.c:58
-msgid "Play time"
-msgstr "Durată"
-
-#: ../libgtkpod/gp_spl.c:90 ../libgtkpod/misc_conversion.c:65
-msgid "Comment"
-msgstr "Comentariu"
-
-#: ../libgtkpod/gp_spl.c:91 ../libgtkpod/misc_conversion.c:80
-msgid "Date added"
-msgstr "Data adăugării"
-
-#. 5
-#: ../libgtkpod/gp_spl.c:92 ../libgtkpod/misc_conversion.c:66
-#: ../plugins/core_preferences/core_prefs.xml.h:32
-msgid "Composer"
-msgstr "Compozitor"
-
-#: ../libgtkpod/gp_spl.c:93 ../libgtkpod/misc_conversion.c:78
-msgid "Playcount"
-msgstr "Număr redări"
-
-#: ../libgtkpod/gp_spl.c:94
-msgid "Last played"
-msgstr "Ultima redare"
-
-#: ../libgtkpod/gp_spl.c:95
-msgid "Disc number"
-msgstr "Număr disc"
-
-#: ../libgtkpod/gp_spl.c:96 ../libgtkpod/misc_conversion.c:79
-#: ../plugins/track_display/display_tracks.c:1829
-msgid "Rating"
-msgstr "Apreciere"
-
-#: ../libgtkpod/gp_spl.c:97 ../libgtkpod/misc_conversion.c:88
-msgid "Compilation"
-msgstr "Compilaţie"
-
-#: ../libgtkpod/gp_spl.c:98 ../libgtkpod/misc_conversion.c:77
-msgid "BPM"
-msgstr "BPM"
-
-#: ../libgtkpod/gp_spl.c:99 ../libgtkpod/misc_conversion.c:87
-msgid "Grouping"
-msgstr "Grupare"
-
-#: ../libgtkpod/gp_spl.c:100
-msgid "Playlist"
-msgstr "Listă de redare"
-
-#: ../libgtkpod/gp_spl.c:101
-msgid "Video Kind"
-msgstr "Tip video"
-
-#: ../libgtkpod/gp_spl.c:102 ../libgtkpod/gp_spl.c:195
-#: ../libgtkpod/gp_spl.c:203 ../libgtkpod/misc_conversion.c:102
-#: ../plugins/details_editor/details.c:75
-msgid "TV Show"
-msgstr "Emisiune TV"
-
-#: ../libgtkpod/gp_spl.c:103
-msgid "Season number"
-msgstr "Număr sezon"
-
-#: ../libgtkpod/gp_spl.c:104
-msgid "Skip count"
-msgstr "Număr săriri peste"
-
-#: ../libgtkpod/gp_spl.c:105
-msgid "Last skipped"
-msgstr "Ultima sărire peste"
-
-#: ../libgtkpod/gp_spl.c:106
-msgid "Album artist"
-msgstr "Artist album"
-
-#: ../libgtkpod/gp_spl.c:111
-msgid "contains"
-msgstr "conţine"
-
-#: ../libgtkpod/gp_spl.c:112
-msgid "does not contain"
-msgstr "nu conţine"
-
-#: ../libgtkpod/gp_spl.c:113 ../libgtkpod/gp_spl.c:121
-#: ../libgtkpod/gp_spl.c:130 ../libgtkpod/gp_spl.c:147
-#: ../libgtkpod/gp_spl.c:153
-msgid "is"
-msgstr "este"
-
-#: ../libgtkpod/gp_spl.c:114 ../libgtkpod/gp_spl.c:122
-#: ../libgtkpod/gp_spl.c:131 ../libgtkpod/gp_spl.c:148
-#: ../libgtkpod/gp_spl.c:154
-msgid "is not"
-msgstr "nu este"
-
-#: ../libgtkpod/gp_spl.c:115
-msgid "starts with"
-msgstr "începe cu"
-
-#: ../libgtkpod/gp_spl.c:116
-msgid "ends with"
-msgstr "se termină cu"
-
-#: ../libgtkpod/gp_spl.c:123
-msgid "is greater than"
-msgstr "este mai mare decât"
-
-#: ../libgtkpod/gp_spl.c:124
-msgid "is less than"
-msgstr "este mai mic decât"
-
-#: ../libgtkpod/gp_spl.c:125 ../libgtkpod/gp_spl.c:136
-msgid "is in the range"
-msgstr "este în intervalul"
-
-#: ../libgtkpod/gp_spl.c:132
-msgid "is after"
-msgstr "este după"
-
-#: ../libgtkpod/gp_spl.c:133
-msgid "is before"
-msgstr "este înainte"
-
-#: ../libgtkpod/gp_spl.c:134
-msgid "in the last"
-msgstr "este între ultimele"
-
-#: ../libgtkpod/gp_spl.c:135
-msgid "not in the last"
-msgstr "nu este între ultimele"
-
-#: ../libgtkpod/gp_spl.c:141
-msgid "is set"
-msgstr "este stabilit"
-
-#: ../libgtkpod/gp_spl.c:142
-msgid "is not set"
-msgstr "nu este stabilit"
-
-#: ../libgtkpod/gp_spl.c:159
-msgid "Not supported"
-msgstr "Nu este suportat"
-
-#: ../libgtkpod/gp_spl.c:165
-msgid "minutes"
-msgstr "minute"
-
-#: ../libgtkpod/gp_spl.c:167
-msgid "tracks"
-msgstr "piese"
-
-#: ../libgtkpod/gp_spl.c:168
-msgid "hours"
-msgstr "ore"
-
-#: ../libgtkpod/gp_spl.c:169 ../plugins/core_preferences/core_prefs.xml.h:61
-#: ../plugins/info_display/info.c:372
-msgid "GB"
-msgstr "GO"
-
-#: ../libgtkpod/gp_spl.c:175
-msgid "random order"
-msgstr "ordine aleatoare"
-
-#: ../libgtkpod/gp_spl.c:176
-msgid "title"
-msgstr "titlu"
-
-#: ../libgtkpod/gp_spl.c:177
-msgid "album"
-msgstr "album"
-
-#: ../libgtkpod/gp_spl.c:178
-msgid "artist"
-msgstr "artist"
-
-#: ../libgtkpod/gp_spl.c:179
-msgid "genre"
-msgstr "gen"
-
-#: ../libgtkpod/gp_spl.c:180
-msgid "most recently added"
-msgstr "adăugate recent"
-
-#: ../libgtkpod/gp_spl.c:181
-msgid "least recently added"
-msgstr "adăugate mai demult"
-
-#: ../libgtkpod/gp_spl.c:182
-msgid "most often played"
-msgstr "cele mai des redate"
-
-#: ../libgtkpod/gp_spl.c:183
-msgid "least often played"
-msgstr "cele mai rar redate"
-
-#: ../libgtkpod/gp_spl.c:184
-msgid "most recently played"
-msgstr "redate recent"
-
-#: ../libgtkpod/gp_spl.c:185
-msgid "least recently played"
-msgstr "redate mai demult"
-
-#: ../libgtkpod/gp_spl.c:186
-msgid "highest rating"
-msgstr "aprecierea cea mai mare"
-
-#: ../libgtkpod/gp_spl.c:187
-msgid "lowest rating"
-msgstr "aprecierea cea mai mică"
-
-#: ../libgtkpod/gp_spl.c:193 ../libgtkpod/gp_spl.c:201
-msgid "Movie"
-msgstr "Film"
-
-#: ../libgtkpod/gp_spl.c:194 ../libgtkpod/gp_spl.c:202
-#: ../plugins/details_editor/details.c:74
-msgid "Music Video"
-msgstr "Videoclip"
-
-#: ../libgtkpod/gp_spl.c:978 ../libgtkpod/gp_spl.c:992
-msgid "to"
-msgstr "până la"
-
-#: ../libgtkpod/gp_spl.c:1217
-msgid "-"
-msgstr "-"
-
-#: ../libgtkpod/gp_spl.c:1230
-msgid "+"
-msgstr "+"
-
-#: ../libgtkpod/gp_spl.c:1408 ../libgtkpod/misc_playlist.c:75
-#: ../libgtkpod/misc_playlist.c:104 ../libgtkpod/misc_playlist.c:366
-#: ../plugins/playlist_display/plugin.c:320
-msgid "New Playlist"
-msgstr "Listă nouă"
-
-#: ../libgtkpod/gtkpod_app_iface.c:159
+#: ../libgtkpod/gtkpod_app_iface.c:149
 msgid ""
 "Data has been changed and not been saved. If you quit gtkpod, all unsaved "
 "changes will be lost.\n"
@@ -1552,11 +1123,11 @@ msgid ""
 "Do you want to save your changes first?"
 msgstr ""
 
-#: ../libgtkpod/gtkpod_app_iface.c:162
+#: ../libgtkpod/gtkpod_app_iface.c:152
 msgid "Save changes before quiting?"
 msgstr ""
 
-#: ../libgtkpod/gtkpod_app_iface.c:162
+#: ../libgtkpod/gtkpod_app_iface.c:152
 msgid "Quit without saving"
 msgstr ""
 
@@ -1566,22 +1137,24 @@ msgstr ""
 msgid "P:%d T:%d/%d"
 msgstr "L:%d P:%d/%d"
 
-#: ../libgtkpod/misc.c:935
+#: ../libgtkpod/misc.c:826
 #, c-format
 msgid "Could not process '%s' (no filename available)"
 msgstr "Nu am putut procesa '%s' (numele de fişier indisponibil)"
 
-#: ../libgtkpod/misc.c:1147
+#. error domain
+#. error code
+#: ../libgtkpod/misc.c:1041
 #, c-format
 msgid "Template ('%s') does not match file type '%s'\n"
 msgstr "Şablonul ('%s') nu se potriveşte cu tipul de fişier '%s'\n"
 
-#: ../libgtkpod/misc.c:1225
+#: ../libgtkpod/misc.c:1120
 #, c-format
 msgid "Error creating %s: %s\n"
 msgstr "Eroare la crearea %s: %s\n"
 
-#: ../libgtkpod/misc.c:1624
+#: ../libgtkpod/misc.c:1515
 #, c-format
 msgid ""
 "Writing preferences file '%s' failed (%s).\n"
@@ -1590,11 +1163,11 @@ msgstr ""
 "Scrierea fişierului de preferinţe '%s' eşuată (%s).\n"
 "\n"
 
-#: ../libgtkpod/misc.c:1624
+#: ../libgtkpod/misc.c:1515
 msgid "unspecified error"
 msgstr "eroare nespecificată"
 
-#: ../libgtkpod/misc.c:1631
+#: ../libgtkpod/misc.c:1522
 #, c-format
 msgid ""
 "Writing preferences to the iPod (%s) failed: could not get path to Control "
@@ -1605,7 +1178,7 @@ msgstr ""
 "Control Directory.\n"
 "\n"
 
-#: ../libgtkpod/misc.c:1803
+#: ../libgtkpod/misc.c:1698
 msgid ""
 "Are you sure you want to delete the following track completely from your "
 "iPod? The number of playlists this track is a member of is indicated in "
@@ -1627,14 +1200,14 @@ msgstr[2] ""
 "Numărul listelor de redare în care e prezentă o piesă este indicat în "
 "paranteză."
 
-#: ../libgtkpod/misc.c:1806
+#: ../libgtkpod/misc.c:1701
 msgid "Delete Track Completely from iPod?"
 msgid_plural "Delete Tracks Completely from iPod?"
 msgstr[0] "Şterg piesa pentru totdeauna de pe iPod?"
 msgstr[1] "Şterg piesele pentru totdeauna de pe iPod?"
 msgstr[2] "Şterg piesele pentru totdeauna de pe iPod?"
 
-#: ../libgtkpod/misc.c:1817 ../libgtkpod/misc.c:1854
+#: ../libgtkpod/misc.c:1712 ../libgtkpod/misc.c:1749
 #, c-format
 msgid ""
 "Are you sure you want to remove the following track from the playlist \"%s\"?"
@@ -1647,14 +1220,14 @@ msgstr[1] ""
 msgstr[2] ""
 "Sigur doriţi să ştergeţi piesele de mai jos din lista de redare „%s”?"
 
-#: ../libgtkpod/misc.c:1820 ../libgtkpod/misc.c:1857
+#: ../libgtkpod/misc.c:1715 ../libgtkpod/misc.c:1752
 msgid "Remove Track From Playlist?"
 msgid_plural "Remove Tracks From Playlist?"
 msgstr[0] "Şterg piesa din lista de redare?"
 msgstr[1] "Şterg piesele din lista de redare?"
 msgstr[2] "Şterg piesele din lista de redare?"
 
-#: ../libgtkpod/misc.c:1840
+#: ../libgtkpod/misc.c:1735
 msgid ""
 "Are you sure you want to delete the following track completely from your "
 "harddisk? The number of playlists this track is a member of is indicated in "
@@ -1676,14 +1249,14 @@ msgstr[2] ""
 "dur? Numărul listelor de redare în care aceste piese sunt prezente, este "
 "indicat în paranteză."
 
-#: ../libgtkpod/misc.c:1843
+#: ../libgtkpod/misc.c:1738
 msgid "Delete Track from Harddisk?"
 msgid_plural "Delete Tracks from Harddisk?"
 msgstr[0] "Şterg complet piesa de pe discul dur?"
 msgstr[1] "Şterg complet piesele de pe discul dur?"
 msgstr[2] "Şterg complet piesele de pe discul dur?"
 
-#: ../libgtkpod/misc.c:1867
+#: ../libgtkpod/misc.c:1762
 msgid ""
 "Are you sure you want to remove the following track completely from your "
 "local database? The number of playlists this track is a member of is "
@@ -1705,7 +1278,7 @@ msgstr[2] ""
 "date locală? Numărul listelor de redare în care aceste piese sunt prezente, "
 "este indicat în paranteză."
 
-#: ../libgtkpod/misc.c:1870
+#: ../libgtkpod/misc.c:1765
 msgid "Remove Track from Local Database?"
 msgid_plural "Remove Tracks from Local Database?"
 msgstr[0] "Şterg piesa din baza de date locală?"
@@ -1716,6 +1289,47 @@ msgstr[2] "Şterg piesele din baza de date locală?"
 #: ../plugins/sorttab_display/display_sorttabs.c:1433
 msgid "All"
 msgstr "Toate"
+
+#. 0
+#: ../libgtkpod/misc_conversion.c:61
+#: ../plugins/core_preferences/core_prefs.xml.h:24
+#: ../plugins/playlist_display/playlist_display_spl.c:78
+#: ../plugins/sorttab_display/display_sorttabs.c:2581
+msgid "Album"
+msgstr "Album"
+
+#: ../libgtkpod/misc_conversion.c:62
+#: ../plugins/core_preferences/core_prefs.xml.h:29
+#: ../plugins/playlist_display/playlist_display_spl.c:79
+#: ../plugins/sorttab_display/display_sorttabs.c:2578
+msgid "Artist"
+msgstr "Artist"
+
+#: ../libgtkpod/misc_conversion.c:63
+#: ../plugins/core_preferences/core_prefs.xml.h:89
+#: ../plugins/playlist_display/playlist_display_spl.c:77
+#: ../plugins/sorttab_display/display_sorttabs.c:2590
+msgid "Title"
+msgstr "Titlu"
+
+#: ../libgtkpod/misc_conversion.c:64
+#: ../plugins/core_preferences/core_prefs.xml.h:63
+#: ../plugins/playlist_display/playlist_display_spl.c:83
+#: ../plugins/sorttab_display/display_sorttabs.c:2584
+msgid "Genre"
+msgstr "Gen"
+
+#: ../libgtkpod/misc_conversion.c:65
+#: ../plugins/playlist_display/playlist_display_spl.c:89
+msgid "Comment"
+msgstr "Comentariu"
+
+#. 5
+#: ../libgtkpod/misc_conversion.c:66
+#: ../plugins/core_preferences/core_prefs.xml.h:33
+#: ../plugins/playlist_display/playlist_display_spl.c:91
+msgid "Composer"
+msgstr "Compozitor"
 
 #: ../libgtkpod/misc_conversion.c:67
 msgid "File type"
@@ -1751,13 +1365,50 @@ msgstr "Dimensiune"
 msgid "Play Time"
 msgstr "Durată"
 
+#: ../libgtkpod/misc_conversion.c:75
+#: ../plugins/playlist_display/playlist_display_spl.c:80
+msgid "Bitrate"
+msgstr "Rată de biţi"
+
+#. 15
+#: ../libgtkpod/misc_conversion.c:76
+#: ../plugins/playlist_display/playlist_display_spl.c:81
+msgid "Samplerate"
+msgstr "Rată de eşantionare"
+
+#: ../libgtkpod/misc_conversion.c:77
+#: ../plugins/playlist_display/playlist_display_spl.c:97
+msgid "BPM"
+msgstr "BPM"
+
+#: ../libgtkpod/misc_conversion.c:78
+#: ../plugins/playlist_display/playlist_display_spl.c:92
+msgid "Playcount"
+msgstr "Număr redări"
+
+#: ../libgtkpod/misc_conversion.c:79
+#: ../plugins/playlist_display/playlist_display_spl.c:95
+#: ../plugins/track_display/display_tracks.c:1829
+msgid "Rating"
+msgstr "Apreciere"
+
+#: ../libgtkpod/misc_conversion.c:80
+#: ../plugins/playlist_display/playlist_display_spl.c:90
+msgid "Date added"
+msgstr "Data adăugării"
+
 #. 20
 #: ../libgtkpod/misc_conversion.c:81
 msgid "Date played"
 msgstr "Data redării"
 
+#: ../libgtkpod/misc_conversion.c:82
+#: ../plugins/playlist_display/playlist_display_spl.c:85
+msgid "Date modified"
+msgstr "Data modificării"
+
 #: ../libgtkpod/misc_conversion.c:83
-#: ../plugins/media_player/media_player.glade.h:5
+#: ../plugins/media_player/media_player.xml.h:5
 msgid "Volume"
 msgstr "Volum"
 
@@ -1765,10 +1416,27 @@ msgstr "Volum"
 msgid "Soundcheck"
 msgstr "Verificare sunet"
 
+#: ../libgtkpod/misc_conversion.c:85
+#: ../plugins/playlist_display/playlist_display_spl.c:82
+#: ../plugins/sorttab_display/display_sorttabs.c:2593
+#: ../plugins/track_display/display_tracks.c:1877
+msgid "Year"
+msgstr "An"
+
 #. 25
 #: ../libgtkpod/misc_conversion.c:86
 msgid "CD Nr"
 msgstr "Nr CD"
+
+#: ../libgtkpod/misc_conversion.c:87
+#: ../plugins/playlist_display/playlist_display_spl.c:98
+msgid "Grouping"
+msgstr "Grupare"
+
+#: ../libgtkpod/misc_conversion.c:88
+#: ../plugins/playlist_display/playlist_display_spl.c:96
+msgid "Compilation"
+msgstr "Compilaţie"
 
 #: ../libgtkpod/misc_conversion.c:89
 msgid "Category"
@@ -1824,6 +1492,13 @@ msgstr "Cale copertă"
 #: ../libgtkpod/misc_conversion.c:101
 msgid "Media Type"
 msgstr "Tip media"
+
+#: ../libgtkpod/misc_conversion.c:102 ../plugins/details_editor/details.c:75
+#: ../plugins/playlist_display/playlist_display_spl.c:101
+#: ../plugins/playlist_display/playlist_display_spl.c:194
+#: ../plugins/playlist_display/playlist_display_spl.c:202
+msgid "TV Show"
+msgstr "Emisiune TV"
 
 #: ../libgtkpod/misc_conversion.c:103
 msgid "TV Episode"
@@ -1958,85 +1633,83 @@ msgstr "Data lansării (pentru podcasturi afişate imediat după titlu pe iPod)"
 msgid "Used for sorting on the iPod"
 msgstr "Folosite pentru sortarea pe iPod"
 
-#: ../libgtkpod/misc_conversion.c:719
+#: ../libgtkpod/misc_conversion.c:721
 #, c-format
 msgid "The URI '%s' is not an absolute URI using the file scheme"
 msgstr "URI '%s' nu este un URI absolut folosind schema de fişiere"
 
-#: ../libgtkpod/misc_conversion.c:729
+#: ../libgtkpod/misc_conversion.c:731
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
 msgstr "URI-ul fişierului local '%s' nu poate include un '#'"
 
-#: ../libgtkpod/misc_conversion.c:746
+#: ../libgtkpod/misc_conversion.c:748
 #, c-format
 msgid "The URI '%s' is invalid"
 msgstr "URI '%s' este invalid"
 
-#: ../libgtkpod/misc_conversion.c:758
+#: ../libgtkpod/misc_conversion.c:760
 #, c-format
 msgid "The hostname of the URI '%s' is invalid"
 msgstr "Numele de host al URI '%s' este invalid"
 
-#: ../libgtkpod/misc_conversion.c:774
+#: ../libgtkpod/misc_conversion.c:776
 #, c-format
 msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "URI '%s' conţine caractere întârziate invalid"
 
-#: ../libgtkpod/misc_playlist.c:70 ../libgtkpod/misc_playlist.c:99
+#: ../libgtkpod/misc_playlist.c:69
+#: ../plugins/playlist_display/playlist_display_spl.c:1483
 #, fuzzy
 msgid "Please load the iPod before adding playlists."
 msgstr "Vă rugăm încărcaţi iPod-ul înainte de a adăuga piese."
 
-#: ../libgtkpod/misc_playlist.c:75 ../libgtkpod/misc_playlist.c:104
-#: ../libgtkpod/misc_playlist.c:366
+#: ../libgtkpod/misc_playlist.c:74 ../libgtkpod/misc_playlist.c:318
+#: ../plugins/playlist_display/playlist_display_spl.c:1432
+#: ../plugins/playlist_display/playlist_display_spl.c:1488
+#: ../plugins/playlist_display/plugin.c:320
+msgid "New Playlist"
+msgstr "Listă nouă"
+
+#: ../libgtkpod/misc_playlist.c:74 ../libgtkpod/misc_playlist.c:318
+#: ../plugins/playlist_display/playlist_display_spl.c:1488
 msgid "Please enter a name for the new playlist"
 msgstr "Vă rugăm să introduceţi un nume pentru lista de redare nouă"
 
-#: ../libgtkpod/misc_playlist.c:109
-#, fuzzy
-msgid "Playlist name cannot be blank"
-msgstr "Nume listă de redare:"
-
-#: ../libgtkpod/misc_playlist.c:115
-#, fuzzy, c-format
-msgid "A playlist named '%s' already exists"
-msgstr "Un album cu acelaşi nume există deja."
-
-#: ../libgtkpod/misc_playlist.c:152
+#: ../libgtkpod/misc_playlist.c:104
 msgid "AR:"
 msgstr "AR:"
 
-#: ../libgtkpod/misc_playlist.c:155
+#: ../libgtkpod/misc_playlist.c:107
 msgid "AL:"
 msgstr "AL:"
 
-#: ../libgtkpod/misc_playlist.c:158
+#: ../libgtkpod/misc_playlist.c:110
 msgid "GE:"
 msgstr "GE:"
 
-#: ../libgtkpod/misc_playlist.c:161
+#: ../libgtkpod/misc_playlist.c:113
 msgid "CO:"
 msgstr "CO:"
 
-#: ../libgtkpod/misc_playlist.c:164
+#: ../libgtkpod/misc_playlist.c:116
 msgid "YE:"
 msgstr "AN:"
 
-#: ../libgtkpod/misc_playlist.c:188
+#: ../libgtkpod/misc_playlist.c:140
 msgid "Unknown"
 msgstr "Necunoscut"
 
-#: ../libgtkpod/misc_playlist.c:253
+#: ../libgtkpod/misc_playlist.c:205
 #, c-format
 msgid "Random (%d)"
 msgstr "Aleator (%d)"
 
-#: ../libgtkpod/misc_playlist.c:306
+#: ../libgtkpod/misc_playlist.c:258
 msgid "Not Listed"
 msgstr "Nelistat"
 
-#: ../libgtkpod/misc_playlist.c:346
+#: ../libgtkpod/misc_playlist.c:298
 #, c-format
 msgid "Created playlist '%s' with %d track."
 msgid_plural "Created playlist '%s' with %d tracks."
@@ -2045,64 +1718,64 @@ msgstr[1] "Am creat lista de redare '%s' cu %d piese."
 msgstr[2] "Am creat lista de redare '%s' cu %d piese."
 
 #. n==0
-#: ../libgtkpod/misc_playlist.c:355
+#: ../libgtkpod/misc_playlist.c:307
 msgid "No tracks available, playlist not created"
 msgstr "Nicio piesă disponibilă, lista de redare nu a fost creată"
 
-#: ../libgtkpod/misc_playlist.c:462
+#: ../libgtkpod/misc_playlist.c:414
 #, c-format
 msgid "Most Listened (%d)"
 msgstr "Cele mai ascultate (%d)"
 
-#: ../libgtkpod/misc_playlist.c:498
+#: ../libgtkpod/misc_playlist.c:450
 #, c-format
 msgid "Never Listened"
 msgstr "Niciodată ascultate"
 
-#: ../libgtkpod/misc_playlist.c:535
+#: ../libgtkpod/misc_playlist.c:487
 #, c-format
 msgid "Best Rated (%d)"
 msgstr "Cele mai apreciate (%d)"
 
-#: ../libgtkpod/misc_playlist.c:570
+#: ../libgtkpod/misc_playlist.c:522
 msgid "Unrated tracks"
 msgstr "Piese fără apreciere"
 
-#: ../libgtkpod/misc_playlist.c:573
+#: ../libgtkpod/misc_playlist.c:525
 #, c-format
 msgid "Rated %d"
 msgstr "Apreciat %d"
 
-#: ../libgtkpod/misc_playlist.c:612
+#: ../libgtkpod/misc_playlist.c:564
 #, c-format
 msgid "Recent (%d)"
 msgstr "Recente (%d)"
 
-#: ../libgtkpod/misc_playlist.c:650
+#: ../libgtkpod/misc_playlist.c:602
 msgid "Last Time"
 msgstr "Ultima dată"
 
-#: ../libgtkpod/misc_playlist.c:733
+#: ../libgtkpod/misc_playlist.c:685
 msgid "Removal of dangling tracks with no files on PC was canceled."
 msgstr "Ştergerea pieselor agăţate fără fişiere pe PC a fost revocată."
 
-#: ../libgtkpod/misc_playlist.c:740
+#: ../libgtkpod/misc_playlist.c:692
 msgid "Handling of dangling tracks with files on PC was canceled."
 msgstr "Manipularea pieselor agăţate fără fişiere pe PC a fost revocată."
 
-#: ../libgtkpod/misc_playlist.c:763
+#: ../libgtkpod/misc_playlist.c:715
 msgid "Dangling tracks with no files on PC were removed."
 msgstr "Piesele agăţate fără fişiere pe PC au fost şterse."
 
-#: ../libgtkpod/misc_playlist.c:817
+#: ../libgtkpod/misc_playlist.c:769
 msgid "Dangling tracks with files on PC were handled."
 msgstr "Piesele agăţate fără fişiere pe PC au fost manipulate."
 
-#: ../libgtkpod/misc_playlist.c:837
+#: ../libgtkpod/misc_playlist.c:789
 msgid "Track"
 msgstr "Piesă"
 
-#: ../libgtkpod/misc_playlist.c:880
+#: ../libgtkpod/misc_playlist.c:832
 #, fuzzy
 msgid ""
 "You did not import the existing iTunesDB. This is most likely incorrect and "
@@ -2118,25 +1791,25 @@ msgstr ""
 "peste memorare. Dacă revocaţi, puteţi importa baza de date existentă înainte "
 "de a apela această funcţie din nou.\n"
 
-#: ../libgtkpod/misc_playlist.c:884
+#: ../libgtkpod/misc_playlist.c:836
 #, fuzzy
 msgid "Abort operation"
 msgstr "Opţiuni sortare"
 
-#: ../libgtkpod/misc_playlist.c:894
+#: ../libgtkpod/misc_playlist.c:846
 msgid "Creating a tree of known files"
 msgstr "Creez un arbore de fişiere cunoscute"
 
-#: ../libgtkpod/misc_playlist.c:934
+#: ../libgtkpod/misc_playlist.c:886
 #, fuzzy
 msgid "Checking iPod files against known files in DB"
 msgstr "Verific fişierel iPod faţă de fişierele cunoscute în DB"
 
-#: ../libgtkpod/misc_playlist.c:973
+#: ../libgtkpod/misc_playlist.c:925
 msgid "Orphaned"
 msgstr "Făcut orfan"
 
-#: ../libgtkpod/misc_playlist.c:996
+#: ../libgtkpod/misc_playlist.c:948
 #, c-format
 msgid ""
 "The following orphaned file had already been added to the iPod again. It "
@@ -2149,12 +1822,12 @@ msgstr ""
 "%s\n"
 "\n"
 
-#: ../libgtkpod/misc_playlist.c:1021
+#: ../libgtkpod/misc_playlist.c:973
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Processing..."
 msgstr "Am găsit %d fişiere orfane şi %d fişiere agăţate. Procesez..."
 
-#: ../libgtkpod/misc_playlist.c:1041
+#: ../libgtkpod/misc_playlist.c:993
 #, c-format
 msgid ""
 "The following dangling track has a file on PC.\n"
@@ -2177,7 +1850,7 @@ msgstr[2] ""
 "Apăsaţi OK pentru a le transfera din fişier la următoarea sincronizare, sau "
 "Revocare pentru a le lăsa aşa cum sunt."
 
-#: ../libgtkpod/misc_playlist.c:1046
+#: ../libgtkpod/misc_playlist.c:998
 #, c-format
 msgid ""
 "The following dangling track doesn't have file on PC. \n"
@@ -2197,27 +1870,27 @@ msgstr[2] ""
 
 #. we want unique window for each
 #. gboolean modal,
-#: ../libgtkpod/misc_playlist.c:1052
+#: ../libgtkpod/misc_playlist.c:1004
 msgid "Dangling Tracks"
 msgstr "Piese agăţate"
 
-#: ../libgtkpod/misc_playlist.c:1075
+#: ../libgtkpod/misc_playlist.c:1027
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Done."
 msgstr "Am găsit %d fişiere orfane şi %d fişiere agăţate. Terminat."
 
-#: ../libgtkpod/misc_playlist.c:1112
+#: ../libgtkpod/misc_playlist.c:1064
 #, c-format
 msgid "Removed all %d tracks from the iPod"
 msgstr "Am eliminat toate %d piese de pe iPod"
 
-#: ../libgtkpod/misc_playlist.c:1115
+#: ../libgtkpod/misc_playlist.c:1067
 #, c-format
 msgid "Removed all podcasts from the iPod"
 msgstr "Am şters toate podcasturile de pe iPod"
 
 #. first use playlist name
-#: ../libgtkpod/misc_playlist.c:1119 ../libgtkpod/misc_playlist.c:1174
+#: ../libgtkpod/misc_playlist.c:1071 ../libgtkpod/misc_playlist.c:1126
 #, c-format
 msgid "Deleted playlist '%s' including %d member track"
 msgid_plural "Deleted playlist '%s' including %d member tracks"
@@ -2226,13 +1899,13 @@ msgstr[1] "Am şters lista de redare '%s' incluzând %d piese membre."
 msgstr[2] "Am şters lista de redare '%s' incluzând %d piese membre."
 
 #. first use playlist name
-#: ../libgtkpod/misc_playlist.c:1132 ../libgtkpod/misc_playlist.c:1187
+#: ../libgtkpod/misc_playlist.c:1084 ../libgtkpod/misc_playlist.c:1139
 #, c-format
 msgid "Deleted playlist '%s'"
 msgstr "Am şters lista de redare '%s'"
 
 #. first use playlist name
-#: ../libgtkpod/misc_playlist.c:1157
+#: ../libgtkpod/misc_playlist.c:1109
 #, c-format
 msgid "Deleted playlist '%s' including %d member track on harddisk"
 msgid_plural "Deleted playlist '%s' including %d member tracks on harddisk"
@@ -2243,28 +1916,28 @@ msgstr[1] ""
 msgstr[2] ""
 "Am şters lista de redare '%s' incluzând %d piese membre pe discul dur."
 
-#: ../libgtkpod/misc_playlist.c:1170
+#: ../libgtkpod/misc_playlist.c:1122
 #, c-format
 msgid "Removed all %d tracks from the database"
 msgstr "Am şters toate %d piese din baza de date"
 
 #. no playlist selected
-#: ../libgtkpod/misc_playlist.c:1215 ../libgtkpod/misc_playlist.c:1441
+#: ../libgtkpod/misc_playlist.c:1168 ../libgtkpod/misc_playlist.c:1394
 msgid "No playlist selected"
 msgstr "Nici o listă de redare selectată"
 
-#: ../libgtkpod/misc_playlist.c:1231
+#: ../libgtkpod/misc_playlist.c:1184
 #, c-format
 msgid "Are you sure you want to remove all tracks from your iPod?"
 msgstr "Sunteţi sigur că doriţi să ştergeţi toate piesele de pe iPod-ul dvs?"
 
-#: ../libgtkpod/misc_playlist.c:1235
+#: ../libgtkpod/misc_playlist.c:1188
 #, c-format
 msgid "Are you sure you want to remove all podcasts from your iPod?"
 msgstr ""
 "Sunteţi sigur că doriţi să ştergeţi toate podcasturile de pe iPod-ul dvs?"
 
-#: ../libgtkpod/misc_playlist.c:1242
+#: ../libgtkpod/misc_playlist.c:1195
 #, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and the following track "
@@ -2287,12 +1960,12 @@ msgstr[2] ""
 "piese de pe iPod? Numărul listelor de redare în care aceste piese sunt "
 "membre este indicat între paranteze."
 
-#: ../libgtkpod/misc_playlist.c:1251 ../libgtkpod/misc_playlist.c:1298
+#: ../libgtkpod/misc_playlist.c:1204 ../libgtkpod/misc_playlist.c:1251
 #, c-format
 msgid "Are you sure you want to delete the playlist '%s'?"
 msgstr "Sunteţi sigur că doriţi să ştergeţi lista de redare '%s'?"
 
-#: ../libgtkpod/misc_playlist.c:1273
+#: ../libgtkpod/misc_playlist.c:1226
 #, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and remove the following track "
@@ -2315,12 +1988,12 @@ msgstr[2] ""
 "piese de pe discul dur? Numărul listelor de redare în care aceste piese sunt "
 "membre este indicat în paranteze."
 
-#: ../libgtkpod/misc_playlist.c:1280
+#: ../libgtkpod/misc_playlist.c:1233
 #, c-format
 msgid "Are you sure you want to remove all tracks from the database?"
 msgstr "Sunteţi sigur că doriţi să ştergeţi toate piesele din baza de date?"
 
-#: ../libgtkpod/misc_playlist.c:1288
+#: ../libgtkpod/misc_playlist.c:1241
 #, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and remove the following track "
@@ -2343,21 +2016,21 @@ msgstr[2] ""
 "piese din baza de date? Numărul listelor de redare în care aceste piese sunt "
 "membre este indicat în paranteze."
 
-#: ../libgtkpod/misc_playlist.c:1357
+#: ../libgtkpod/misc_playlist.c:1310
 #, c-format
 msgid "Copied '%s' playlist to '%s' in '%s'"
 msgstr "Am copiat lista de redare '%s' la '%s' în '%s'"
 
-#: ../libgtkpod/misc_playlist.c:1382
+#: ../libgtkpod/misc_playlist.c:1335
 #, c-format
 msgid "Copied \"%s\" playlist to %s"
 msgstr "Am copiat lista de redare \"%s\" la %s"
 
-#: ../libgtkpod/misc_playlist.c:1437
+#: ../libgtkpod/misc_playlist.c:1390
 msgid "No database or playlist selected"
 msgstr "Nici o bază de date sau listă de redare selectată"
 
-#: ../libgtkpod/misc_playlist.c:1445
+#: ../libgtkpod/misc_playlist.c:1398
 msgid "No iPod or iPod playlist selected"
 msgstr "Nici un iPod sau listă de redare de pe iPod selectat(ă)"
 
@@ -2413,49 +2086,59 @@ msgstr "Înglobată sau numele de fişier s-a pierdut"
 msgid "Artwork not set"
 msgstr "Coperta nu a fost stabilită"
 
-#: ../libgtkpod/misc_track.c:1639
+#: ../libgtkpod/misc_track.c:1656
 #, c-format
 msgid "Could not find source file for '%s'. Track not copied."
 msgstr "Nu am putut găsi fişierul sursă pentru '%s'. Piesa nu a fost copiată."
 
-#: ../libgtkpod/misc_track.c:1840
+#: ../libgtkpod/misc_track.c:1857
 #, c-format
 msgid "drag and drop: ignored '%s'\n"
 msgstr "trage şi aruncă: ignorat '%s'\n"
 
-#: ../libgtkpod/misc_track.c:1962
-#, c-format
-msgid "Deleted one track completely from iPod"
-msgid_plural "Deleted %d tracks completely from iPod"
+#: ../libgtkpod/misc_track.c:1982
+#, fuzzy, c-format
+msgid "Deleting one track completely from iPod"
+msgid_plural "Deleting %d tracks completely from iPod"
 msgstr[0] "\t\t\t\t"
 msgstr[1] "Am şters complet %d piese de pe iPod"
 msgstr[2] "Am şters complet %d piese de pe iPod"
 
-#: ../libgtkpod/misc_track.c:1967 ../libgtkpod/misc_track.c:1987
-#, c-format
-msgid "Deleted %d track from playlist '%s'"
-msgid_plural "Deleted %d tracks from playlist '%s'"
+#: ../libgtkpod/misc_track.c:1987 ../libgtkpod/misc_track.c:2007
+#, fuzzy, c-format
+msgid "Deleting %d track from playlist '%s'"
+msgid_plural "Deleting %d tracks from playlist '%s'"
 msgstr[0] "Am şters complet %d piesă din lista de redare '%s'"
 msgstr[1] "Am şters complet %d piese din lista de redare '%s'"
 msgstr[2] "Am şters complet %d piese din lista de redare '%s'"
 
-#: ../libgtkpod/misc_track.c:1982
-#, c-format
-msgid "Deleted one track from harddisk"
-msgid_plural "Deleted %d tracks from harddisk"
+#: ../libgtkpod/misc_track.c:2002
+#, fuzzy, c-format
+msgid "Deleting one track from harddisk"
+msgid_plural "Deleting %d tracks from harddisk"
 msgstr[0] "Am şters o piesă de pe discul dur"
 msgstr[1] "Am şters %d piese de pe discul dur"
 msgstr[2] "Am şters %d piese de pe discul dur"
 
-#: ../libgtkpod/misc_track.c:1992
-#, c-format
-msgid "Deleted track from local database"
-msgid_plural "Deleted %d tracks from local database"
+#: ../libgtkpod/misc_track.c:2012
+#, fuzzy, c-format
+msgid "Deleting one track from local database"
+msgid_plural "Deleting %d tracks from local database"
 msgstr[0] "Am şters o piesă din baza de date locală"
 msgstr[1] "Am şters %d piese din baza de date locală"
 msgstr[2] "Am şters %d piese din baza de date locală"
 
-#: ../libgtkpod/misc_track.c:2102
+#: ../libgtkpod/misc_track.c:2027
+#, c-format
+msgid "Deleting Track %d/%d ..."
+msgstr ""
+
+#: ../libgtkpod/misc_track.c:2037
+#, fuzzy
+msgid "Completed deletion"
+msgstr "Detecţie dubluri"
+
+#: ../libgtkpod/misc_track.c:2131
 #, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
@@ -2463,7 +2146,7 @@ msgstr[0] "S-a copiat %d piesă către „%s” în „%s”"
 msgstr[1] "S-au copiat %d piese către %s în „%s”"
 msgstr[2] "S-au copiat %d de piese către %s în „%s”"
 
-#: ../libgtkpod/misc_track.c:2132
+#: ../libgtkpod/misc_track.c:2161
 #, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
@@ -2471,36 +2154,36 @@ msgstr[0] "S-a copiat %d piesă către „%s”"
 msgstr[1] "S-au copiat %d piese către „%s”"
 msgstr[2] "S-au copiat %d de piese către „%s”"
 
-#: ../libgtkpod/misc_track.c:2146
+#: ../libgtkpod/misc_track.c:2175
 msgid "No tracks selected"
 msgstr "Nici o piesă selectată"
 
-#: ../libgtkpod/prefs.c:316
+#: ../libgtkpod/prefs.c:293
 #, c-format
 msgid "gtkpod version %s usage:\n"
 msgstr "gtkpod versiunea %s utilizare:\n"
 
-#: ../libgtkpod/prefs.c:317
+#: ../libgtkpod/prefs.c:294
 msgid "  -h, --help:   display this message\n"
 msgstr " -h, --help:  afişează acest mesaj\n"
 
-#: ../libgtkpod/prefs.c:318
+#: ../libgtkpod/prefs.c:295
 msgid "  -p <file>:    increment playcount for file by one\n"
 msgstr "  -p <fişier>:   incrementează contorul de redări pentru fişier\n"
 
-#: ../libgtkpod/prefs.c:319
+#: ../libgtkpod/prefs.c:296
 msgid "  --hash <file>:print gtkpod hash for file\n"
 msgstr "  -- hash <fişier>: afişează hashul gtkpod pentru fişier\n"
 
-#: ../libgtkpod/prefs.c:320
+#: ../libgtkpod/prefs.c:297
 msgid "  -m path:      define the mountpoint of your iPod\n"
 msgstr "  -m cale:    defineşte punctul de montare al iPod-ului dvs\n"
 
-#: ../libgtkpod/prefs.c:321
+#: ../libgtkpod/prefs.c:298
 msgid "  --mountpoint: same as '-m'.\n"
 msgstr "  --mountpoint: acelaşi lucru ca '-m'.\n"
 
-#: ../libgtkpod/prefs.c:489
+#: ../libgtkpod/prefs.c:466
 #, fuzzy, c-format
 msgid "Couldn't create '%s'\n"
 msgstr "Nu am putut crea ~/.gtkpod\n"
@@ -2598,11 +2281,11 @@ msgid ""
 msgstr ""
 
 #. create the dialog window
-#: ../libgtkpod/tools.c:328 ../plugins/exporter/file_export.c:368
+#: ../libgtkpod/tools.c:328
 msgid "Information"
 msgstr "Informaţie"
 
-#: ../libgtkpod/tools.c:340 ../plugins/exporter/file_export.c:372
+#: ../libgtkpod/tools.c:340
 msgid "Press button to abort."
 msgstr "Apăsaţi butonul pentru a abandona."
 
@@ -2627,7 +2310,7 @@ msgstr ""
 "'%s-%s' (%s) nu a putut fi normalizat.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:486 ../plugins/exporter/file_export.c:465
+#: ../libgtkpod/tools.c:486 ../plugins/exporter/file_export.c:464
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
 msgstr "%d%% (Timp rămas: %d:%02d:%02d)"
@@ -2662,324 +2345,344 @@ msgstr ""
 "'%s' a returnat următoarea ieşire:\n"
 "%s\n"
 
-#: ../plugins/core_preferences/core_prefs.c:180
+#: ../plugins/core_preferences/core_prefs.c:178
 msgid "Browse"
 msgstr "Răsfoieşte"
 
+#: ../plugins/core_preferences/core_prefs.plugin.in.h:1
+#, fuzzy
+msgid "Core Preferences Plugin"
+msgstr "_Preferinţe"
+
+#: ../plugins/core_preferences/core_prefs.plugin.in.h:2
+#, fuzzy
+msgid "Modify Core Preferences"
+msgstr "_Preferinţe"
+
 #: ../plugins/core_preferences/core_prefs.xml.h:1
+#: ../plugins/repository_editor/repository_editor.xml.h:1
+msgid "..."
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:2
 msgid "<b>Auto-Generated Playlists</b>"
 msgstr "<b>Liste de redare generate automat</b>"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:2
+#: ../plugins/core_preferences/core_prefs.xml.h:3
 #, fuzzy
 msgid "<b>Compatible Formats</b>"
 msgstr "<b>Copertă</b>"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:3
+#: ../plugins/core_preferences/core_prefs.xml.h:4
 #, fuzzy
 msgid "<b>Conversion Settings</b>"
 msgstr "<b>Copertă</b>"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:4
+#: ../plugins/core_preferences/core_prefs.xml.h:5
 #, fuzzy
 msgid "<b>Cover Art</b>"
 msgstr "<b>Copertă</b>"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:5
+#: ../plugins/core_preferences/core_prefs.xml.h:6
 #, fuzzy
 msgid "<b>Deletion Confirmation Messages</b>"
 msgstr "<b>Confirmare ştergere</b>"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:6
+#: ../plugins/core_preferences/core_prefs.xml.h:7
 #, fuzzy
 msgid "<b>Import and Synchronization</b>"
 msgstr "<b>Sincronizare</b>"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:7
+#: ../plugins/core_preferences/core_prefs.xml.h:8
 #, fuzzy
 msgid "<b>Information Messages</b>"
 msgstr "<b>Informaţii cont</b>"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:8
+#: ../plugins/core_preferences/core_prefs.xml.h:9
 msgid "<b>Offset to add to ReplayGain</b>"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:9
+#: ../plugins/core_preferences/core_prefs.xml.h:10
 msgid "<b>On-the-fly Conversion</b>"
 msgstr "<b>Conversie \"în zbor\"</b>"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:10
+#: ../plugins/core_preferences/core_prefs.xml.h:11
 #, fuzzy
 msgid "<b>Preferred gain type</b>"
 msgstr "Preferinţe"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:11
+#: ../plugins/core_preferences/core_prefs.xml.h:12
 #, fuzzy
 msgid "<b>Tag Editing</b>"
 msgstr "<b>Editare piesă</b>"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:12
+#: ../plugins/core_preferences/core_prefs.xml.h:13
 #, fuzzy
 msgid "<b>Tags</b>"
 msgstr "<b>n/a</b>"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:13
+#: ../plugins/core_preferences/core_prefs.xml.h:14
 msgid "<b>Volume Normalization</b>"
 msgstr "<b>Normalizare volum</b>"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:14
+#: ../plugins/core_preferences/core_prefs.xml.h:15
 msgid "<b>When Attempting to Add an Existing Track</b>"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:15
+#: ../plugins/core_preferences/core_prefs.xml.h:16
 #, fuzzy
 msgid "<i>aacgain</i> executable:"
 msgstr "executabil 'aacgain':"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:16
+#: ../plugins/core_preferences/core_prefs.xml.h:17
 #, fuzzy
 msgid "<i>mp3gain</i> executable:"
 msgstr "executabil 'mp3gain'"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:17
+#: ../plugins/core_preferences/core_prefs.xml.h:18
 msgid "AAC"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:18
+#: ../plugins/core_preferences/core_prefs.xml.h:19
 #, fuzzy
 msgid "About unupdated tracks"
 msgstr "Afişează informaţii despre piesele actualizate"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:19
+#: ../plugins/core_preferences/core_prefs.xml.h:20
 #, fuzzy
 msgid "About updated tracks"
 msgstr "Afişează informaţii despre piesele actualizate"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:20
+#: ../plugins/core_preferences/core_prefs.xml.h:21
 #, fuzzy
 msgid "Add cover art using file name template"
 msgstr "Adaugă copertă din fişier folosind următorul şablon"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:21
+#: ../plugins/core_preferences/core_prefs.xml.h:22
 msgid ""
 "Add file masks to be excluded from import and synchronization, for example, "
 "<i>*.mp3</i>."
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:22
+#: ../plugins/core_preferences/core_prefs.xml.h:23
 #, fuzzy
 msgid "Add subfolders recursively"
 msgstr "Adaugă dosare recursiv"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:24
+#: ../plugins/core_preferences/core_prefs.xml.h:25
 msgid "Album gain (formerly \"audiophile gain\")"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:25
+#: ../plugins/core_preferences/core_prefs.xml.h:26
 msgid "Allow duplicate files"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:26
+#: ../plugins/core_preferences/core_prefs.xml.h:27
 #, fuzzy
 msgid "Also use this encoding when updating or synchronizing tracks"
 msgstr ""
 "Foloseşte de asemenea tipul de codare selectat la actualizarea sau "
 "sincronizarea pieselor"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:27
+#: ../plugins/core_preferences/core_prefs.xml.h:28
 #, fuzzy
 msgid "Also use this encoding when writing tracks"
 msgstr ""
 "Foloseşte de asemenea tipul de codare selectat la actualizarea sau "
 "sincronizarea pieselor"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:29
+#: ../plugins/core_preferences/core_prefs.xml.h:30
+msgid "Auto-save every seconds:"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:31
 msgid "Automatically generate video thumbnails"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:30
-#, fuzzy
-msgid "Browse..."
-msgstr "Răsfoieşte"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:31
+#: ../plugins/core_preferences/core_prefs.xml.h:32
 #, fuzzy
 msgid "Cache folder:"
 msgstr "Dosar cache"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:33
+#: ../plugins/core_preferences/core_prefs.xml.h:34
 #, fuzzy
 msgid "Confirm deletion of playlists or tracks from a playlist"
 msgstr "Înainte de a şterge liste de redare sau piese dintr-o listă de redare"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:34
+#: ../plugins/core_preferences/core_prefs.xml.h:35
 #, fuzzy
 msgid "Confirm deletion of tracks during synchronization"
 msgstr "Confirmă listele de directoare"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:35
+#: ../plugins/core_preferences/core_prefs.xml.h:36
 #, fuzzy
 msgid "Confirm deletion of tracks:"
 msgstr "Confirmă listele de directoare"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:36
+#: ../plugins/core_preferences/core_prefs.xml.h:37
 #, fuzzy
 msgid "Conversion Preferences"
 msgstr "_Preferinţe"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:37
+#: ../plugins/core_preferences/core_prefs.xml.h:38
 #, fuzzy
 msgid "Conversion Settings..."
 msgstr "_Jurnal conversie"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:38
+#: ../plugins/core_preferences/core_prefs.xml.h:39
 #, fuzzy
 msgid "Convert AAC (M4A)"
 msgstr "Copertă"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:39
+#: ../plugins/core_preferences/core_prefs.xml.h:40
 #, fuzzy
 msgid "Convert MP3"
 msgstr "Copertă"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:40
+#: ../plugins/core_preferences/core_prefs.xml.h:41
 #, fuzzy
 msgid "Convert WAV"
 msgstr "Copertă"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:41
+#: ../plugins/core_preferences/core_prefs.xml.h:42
 msgid "Convert compatible formats to a single format"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:42
+#: ../plugins/core_preferences/core_prefs.xml.h:43
 msgid "Convert incompatible audio formats to:"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:43
+#: ../plugins/core_preferences/core_prefs.xml.h:44
 #, fuzzy
 msgid "Cover Art Search Preferences"
 msgstr "_Preferinţe"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:44
+#: ../plugins/core_preferences/core_prefs.xml.h:45
 #, fuzzy
 msgid "Cover art file pattern:"
 msgstr "Fişierul copertă există deja"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:45
+#: ../plugins/core_preferences/core_prefs.xml.h:46
 msgid "Customize..."
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:46
+#: ../plugins/core_preferences/core_prefs.xml.h:47
 #, fuzzy
 msgid "Delete missing tracks when synchronizing playlists"
 msgstr "Am şters complet %d piesă din lista de redare '%s'"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:47
+#: ../plugins/core_preferences/core_prefs.xml.h:48
 msgid "Display conversion log"
 msgstr "Afişează jurnalul conversiei"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:48
+#: ../plugins/core_preferences/core_prefs.xml.h:49
 #, fuzzy
 msgid "Display information about detected duplicate files"
 msgstr "Afişează informaţii despre dublurile detectate"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:49
+#: ../plugins/core_preferences/core_prefs.xml.h:50
 msgid "Display messages and warnings at startup"
 msgstr "Afişează mesaje şi avertizări la pornire"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:50
+#: ../plugins/core_preferences/core_prefs.xml.h:51
 #, fuzzy
 msgid "Display synchronization results"
 msgstr "Afişează jurnalul conversiei"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:51
+#: ../plugins/core_preferences/core_prefs.xml.h:52
 #, fuzzy
 msgid "Encoding Preferences"
 msgstr "_Preferinţe"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:52
+#: ../plugins/core_preferences/core_prefs.xml.h:53
 #, fuzzy
 msgid "Encoding..."
 msgstr "copiez..."
 
-#: ../plugins/core_preferences/core_prefs.xml.h:53
+#: ../plugins/core_preferences/core_prefs.xml.h:54
 #, fuzzy
 msgid "Excluded files..."
 msgstr "Exclude masca (măştile) de fişier"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:54
+#: ../plugins/core_preferences/core_prefs.xml.h:55
 msgid "Exclusions List"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:55
+#: ../plugins/core_preferences/core_prefs.xml.h:56
 msgid "Feedback"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:56
+#: ../plugins/core_preferences/core_prefs.xml.h:57
 #, fuzzy
 msgid "Filename Parse Preferences"
 msgstr "_Preferinţe"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:57
+#: ../plugins/core_preferences/core_prefs.xml.h:58
 #, fuzzy
 msgid "Filename parse pattern:"
 msgstr "Format nume de fişier:"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:58
+#: ../plugins/core_preferences/core_prefs.xml.h:59
 #, fuzzy
 msgid "From the hard disk"
 msgstr "Şterge de pe discul dur"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:59
+#: ../plugins/core_preferences/core_prefs.xml.h:60
 #, fuzzy
 msgid "From the iPod"
 msgstr "Şterge de pe iPod"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:60
+#: ../plugins/core_preferences/core_prefs.xml.h:61
 #, fuzzy
 msgid "From the local database"
 msgstr "Bază de date locală"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:63
+#: ../plugins/core_preferences/core_prefs.xml.h:62
+#: ../plugins/info_display/info.c:371
+#: ../plugins/playlist_display/playlist_display_spl.c:168
+msgid "GB"
+msgstr "GO"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:64
 #, fuzzy
 msgid "Include tracks never played in the \"Best Rated\" playlist"
 msgstr ""
 "Include şi piesele care nu au fost redate în lista \"Cele mai apreciate\""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:64
+#: ../plugins/core_preferences/core_prefs.xml.h:65
 msgid "MP3"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:65
+#: ../plugins/core_preferences/core_prefs.xml.h:66
 msgid "Mass-modify tags when multiple tracks are selected"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:66
+#: ../plugins/core_preferences/core_prefs.xml.h:67
 #, fuzzy
 msgid "Maximum cache size:"
 msgstr "Numărul maxim de fire de execuţie:"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:67
+#: ../plugins/core_preferences/core_prefs.xml.h:68
 #, fuzzy
 msgid "Maximum threads:"
 msgstr "Numărul maxim de fire de execuţie:"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:68
+#: ../plugins/core_preferences/core_prefs.xml.h:69
 msgid "Metadata"
 msgstr ""
 
 #. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:69 ../src/anjuta-app.c:406
+#: ../plugins/core_preferences/core_prefs.xml.h:70 ../src/anjuta-app.c:405
 #, fuzzy
 msgid "Music"
 msgstr "Dosar de muzică rădăcină:"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:70
+#: ../plugins/core_preferences/core_prefs.xml.h:71
 #, fuzzy
 msgid "Normalization..."
 msgstr "Normalizez..."
 
-#: ../plugins/core_preferences/core_prefs.xml.h:71
+#: ../plugins/core_preferences/core_prefs.xml.h:72
 msgid ""
 "Normally, the encoding specified above will only be used when importing new "
 "tracks, and for any operations involving existing tracks, the encoding "
@@ -2988,21 +2691,21 @@ msgid ""
 "incorrectly for the first import."
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:72
+#: ../plugins/core_preferences/core_prefs.xml.h:73
 #, fuzzy
 msgid "Number of tracks:"
 msgstr "Număr piese"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:73
+#: ../plugins/core_preferences/core_prefs.xml.h:74
 #, fuzzy
 msgid "Overwrite existing tags"
 msgstr "Suprascriu fişierul existent: '%s'\n"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:74
+#: ../plugins/core_preferences/core_prefs.xml.h:75
 msgid "Parse file name to set missing tags"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:76
+#: ../plugins/core_preferences/core_prefs.xml.h:77
 #, no-c-format
 msgid ""
 "Provide a shell command to generate a thumbnail image of your video file.  "
@@ -3011,79 +2714,90 @@ msgid ""
 "- %o: the output file (which is automatically generated)\n"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:80
+#: ../plugins/core_preferences/core_prefs.xml.h:81
 msgid "Read embedded cover art information"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:81
+#: ../plugins/core_preferences/core_prefs.xml.h:82
 msgid "Read embedded tags from music files"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:82
+#: ../plugins/core_preferences/core_prefs.xml.h:83
 #, fuzzy
 msgid "ReplayGain Preferences"
 msgstr "_Preferinţe"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:83
+#: ../plugins/core_preferences/core_prefs.xml.h:84
 #, fuzzy
 msgid "ReplayGain..."
 msgstr "copiez..."
 
-#: ../plugins/core_preferences/core_prefs.xml.h:84
+#: ../plugins/core_preferences/core_prefs.xml.h:85
 msgid "Set still missing tags to file name"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:85
+#: ../plugins/core_preferences/core_prefs.xml.h:86
 #, fuzzy
 msgid "Skip the track"
 msgstr "S-a copiat o piesă"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:86
+#: ../plugins/core_preferences/core_prefs.xml.h:87
 msgid "Tag and filename encoding:"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:87
+#: ../plugins/core_preferences/core_prefs.xml.h:88
 msgid ""
 "These settings will only be applied to newly added or updated tracks. This "
 "could result in tracks that are normalized to different levels until updated."
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:89
+#: ../plugins/core_preferences/core_prefs.xml.h:90
 msgid "Track gain (formerly \"radio gain\")"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:90
+#: ../plugins/core_preferences/core_prefs.xml.h:91
 #, fuzzy
 msgid "Transfer tracks in background mode"
 msgstr "Transferă piesele către iPod pe fundal"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:91
+#: ../plugins/core_preferences/core_prefs.xml.h:92
 #, fuzzy
 msgid "Update information about the existing track"
 msgstr "Afişează informaţii despre problemele la accesarea mserv"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:92
+#: ../plugins/core_preferences/core_prefs.xml.h:93
 msgid "Use legacy format for MP3 tags"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:93
+#: ../plugins/core_preferences/core_prefs.xml.h:94
 msgid "Video Thumbnail Generation"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:94
+#: ../plugins/core_preferences/core_prefs.xml.h:95
 msgid "Video thumbnailing program:"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:95
+#: ../plugins/core_preferences/core_prefs.xml.h:96
+msgid ""
+"When multiple tracks are added to a repository, should an\n"
+"error occur then it is likely, without saving all added tracks\n"
+"will be lost since they are not saved. This preference allows for\n"
+"a save operation to be conducted periodically.\n"
+"\n"
+"The default is 60 seconds, so every minute a save\n"
+"will be imposed on the repository."
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:103
 msgid "When updating tracks, display information:"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:96
+#: ../plugins/core_preferences/core_prefs.xml.h:104
 #, fuzzy
 msgid "Write tags to disk when edited"
 msgstr "Scrie etichetele ID3 pe disc atunci când sunt modificate în gtkpod"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:98
+#: ../plugins/core_preferences/core_prefs.xml.h:106
 #, no-c-format
 msgid ""
 "You can separate several templates by a ';'. The first one matching the "
@@ -3103,7 +2817,7 @@ msgid ""
 "- the character '%': %%."
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:113
+#: ../plugins/core_preferences/core_prefs.xml.h:121
 #, no-c-format
 msgid ""
 "You can separate several templates by a ';'. The first one matching the "
@@ -3129,7 +2843,7 @@ msgid ""
 "- the character '%': %%."
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:132
+#: ../plugins/core_preferences/core_prefs.xml.h:140
 #, fuzzy
 msgid "dB"
 msgstr "O"
@@ -3145,82 +2859,70 @@ msgstr "_Preferinţe"
 msgid "Settings"
 msgstr "Renunţare..."
 
-#: ../plugins/cover_display/cover_display.glade.h:1
+#: ../plugins/cover_display/cover_display.xml.h:1
 msgid "<"
 msgstr "<"
 
-#: ../plugins/cover_display/cover_display.glade.h:2
+#: ../plugins/cover_display/cover_display.xml.h:2
 #, fuzzy
 msgid "<b>Album Cover Sort Order</b>"
 msgstr "<b>Ordine sortare</b>"
 
-#: ../plugins/cover_display/cover_display.glade.h:3
-#: ../plugins/playlist_display/playlist_display.glade.h:1
-#: ../plugins/sorttab_display/sorttab_display.glade.h:10
+#: ../plugins/cover_display/cover_display.xml.h:3
+#: ../plugins/playlist_display/playlist_display.xml.h:2
+#: ../plugins/sorttab_display/sorttab_display.xml.h:10
 #, fuzzy
 msgid "<b>Ascending</b>"
 msgstr "Crescător"
 
-#: ../plugins/cover_display/cover_display.glade.h:4
+#: ../plugins/cover_display/cover_display.xml.h:4
 #, fuzzy
 msgid "<b>Cover Art Display</b>"
 msgstr "<b>Copertă</b>"
 
-#: ../plugins/cover_display/cover_display.glade.h:5
-#: ../plugins/playlist_display/playlist_display.glade.h:2
-#: ../plugins/sorttab_display/sorttab_display.glade.h:12
+#: ../plugins/cover_display/cover_display.xml.h:5
+#: ../plugins/playlist_display/playlist_display.xml.h:3
+#: ../plugins/sorttab_display/sorttab_display.xml.h:11
 #, fuzzy
 msgid "<b>Descending</b>"
 msgstr "Descrescător"
 
-#: ../plugins/cover_display/cover_display.glade.h:6
-#: ../plugins/playlist_display/playlist_display.glade.h:3
-#: ../plugins/sorttab_display/sorttab_display.glade.h:17
+#: ../plugins/cover_display/cover_display.xml.h:6
+#: ../plugins/playlist_display/playlist_display.xml.h:5
+#: ../plugins/sorttab_display/sorttab_display.xml.h:15
 #, fuzzy
 msgid "<b>None</b>"
 msgstr "<b>n/a</b>"
 
-#: ../plugins/cover_display/cover_display.glade.h:7
+#: ../plugins/cover_display/cover_display.xml.h:7
 msgid ">"
 msgstr ">"
 
-#: ../plugins/cover_display/cover_display.glade.h:8
+#: ../plugins/cover_display/cover_display.xml.h:8
 msgid "Artwork Preview"
 msgstr "Previzualizare copertă"
 
-#: ../plugins/cover_display/cover_display.glade.h:9
+#: ../plugins/cover_display/cover_display.xml.h:9
 msgid "Background color"
 msgstr ""
 
-#: ../plugins/cover_display/cover_display.glade.h:10
-#: ../plugins/playlist_display/playlist_display.glade.h:5
-#: ../plugins/sorttab_display/sorttab_display.glade.h:26
-#: ../plugins/track_display/track_display.glade.h:7
+#: ../plugins/cover_display/cover_display.xml.h:10
+#: ../plugins/playlist_display/playlist_display.xml.h:10
+#: ../plugins/sorttab_display/sorttab_display.xml.h:24
+#: ../plugins/track_display/track_display.xml.h:7
 msgid "Case sensitive sorting"
 msgstr ""
 
-#: ../plugins/cover_display/cover_display.glade.h:11
+#: ../plugins/cover_display/cover_display.xml.h:11
 msgid "Choose a Different Colour for the CoverArt Display Background"
 msgstr ""
 
-#: ../plugins/cover_display/cover_display.glade.h:12
+#: ../plugins/cover_display/cover_display.xml.h:12
 #, fuzzy
 msgid "Cover Art Display"
 msgstr "<b>Copertă</b>"
 
-#: ../plugins/cover_display/cover_display.glade.h:13
-#: ../plugins/playlist_display/playlist_display.glade.h:6
-#: ../plugins/sorttab_display/sorttab_display.glade.h:32
-#: ../plugins/track_display/track_display.glade.h:9
-msgid ""
-"If checked, sorting will be case sensitive. Please note that case sensitive "
-"sorting will not work well with most charsets."
-msgstr ""
-"Dacă este bifat, sortarea va fi cu majuscule semnificative. A se reţine că "
-"sortarea cu majuscule semnificative nu va funcţiona corect cu cele mai multe "
-"seturi de caractere."
-
-#: ../plugins/cover_display/cover_display.glade.h:14
+#: ../plugins/cover_display/cover_display.xml.h:13
 msgid "Text color"
 msgstr ""
 
@@ -3228,32 +2930,47 @@ msgstr ""
 msgid "Select Cover From File"
 msgstr "Selectează coperta din fişier"
 
-#: ../plugins/cover_display/cover_display_context_menu.c:54
+#: ../plugins/cover_display/cover_display_context_menu.c:53
 msgid "View Full Size Artwork"
 msgstr "Vizualizeză coperta la dimensiunea reală"
 
+#: ../plugins/cover_display/cover_display.plugin.in.h:1
+#, fuzzy
+msgid "Cover Display Plugin"
+msgstr "<b>Copertă</b>"
+
+#: ../plugins/cover_display/cover_display.plugin.in.h:2
+#, fuzzy
+msgid "Display Cover Artwork of Tracks"
+msgstr "_Piese afişate"
+
 #. Set the resolution in the label
-#: ../plugins/cover_display/display_coverart.c:1523
+#: ../plugins/cover_display/display_coverart.c:1465
 #: ../plugins/photo_editor/display_photo.c:952
 #, fuzzy, c-format
 msgid "<b>Image Dimensions: %d x %d</b>"
 msgstr "<b>Dimensiuni imagine: %s</b>"
 
-#: ../plugins/cover_display/display_coverart.c:1673
+#: ../plugins/cover_display/display_coverart.c:1615
 msgid "Failed to remove the album from the album hash store."
 msgstr "Ştergerea albumului din memoria hash a albumelor eşuată."
 
-#: ../plugins/cover_display/display_coverart.c:2044
+#: ../plugins/cover_display/display_coverart.c:1980
+#: ../plugins/details_editor/details.c:1700
+msgid "Item had to be downloaded but gtkpod was not compiled with curl."
+msgstr ""
+
+#: ../plugins/cover_display/display_coverart.c:1986
 #, c-format
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
 msgstr "Eroare la tragerea unei imagini în căsuţa afişare copertă: %s\n"
 
-#: ../plugins/cover_display/display_coverart.c:2077
-#: ../plugins/details_editor/details.c:1749
+#: ../plugins/cover_display/display_coverart.c:2019
+#: ../plugins/details_editor/details.c:1748
 msgid "Successfully set new coverart for selected tracks"
 msgstr "Copertă nouă stabilită cu succes pentru piesele selectate"
 
-#: ../plugins/cover_display/fetchcover.c:358
+#: ../plugins/cover_display/fetchcover.c:357
 #: ../plugins/details_editor/fetchcover.c:357
 #, fuzzy, c-format
 msgid ""
@@ -3273,24 +2990,24 @@ msgstr ""
 "- Dând click pe Nu se va salva fişierul cu un nume unic.\n"
 "- Dând click pe Revocare se va abandona obţinerea coperţii."
 
-#: ../plugins/cover_display/fetchcover.c:366
+#: ../plugins/cover_display/fetchcover.c:365
 #: ../plugins/details_editor/fetchcover.c:365
 #, fuzzy
 msgid "Cover art file already exists"
 msgstr "Fişierul copertă există deja"
 
-#: ../plugins/cover_display/fetchcover.c:368
+#: ../plugins/cover_display/fetchcover.c:367
 #: ../plugins/details_editor/fetchcover.c:367
 msgid "Overwrite"
 msgstr ""
 
-#: ../plugins/cover_display/fetchcover.c:369
+#: ../plugins/cover_display/fetchcover.c:368
 #: ../plugins/details_editor/fetchcover.c:368
 #, fuzzy
 msgid "Rename"
 msgstr "Nume utilizator:"
 
-#: ../plugins/cover_display/fetchcover.c:370
+#: ../plugins/cover_display/fetchcover.c:369
 #: ../plugins/details_editor/fetchcover.c:369
 #, fuzzy
 msgid "Abort"
@@ -3311,21 +3028,40 @@ msgstr "<b>Copertă</b>"
 msgid "  Cover Artwork"
 msgstr "Răsfoieşte"
 
-#: ../plugins/coverweb/coverweb.glade.h:1
+#. Translators: you may change the web address to get a localized page, if it exists
+#: ../plugins/coverweb/coverweb.c:92
+msgid "http://images.google.com"
+msgstr ""
+
+#: ../plugins/coverweb/coverweb.c:125
+#, fuzzy
+msgid "Bookmarks"
+msgstr "<b>n/a</b>"
+
+#: ../plugins/coverweb/coverweb.xml.h:1
 #, fuzzy
 msgid "<b>Bookmarks</b>"
 msgstr "<b>n/a</b>"
 
-#: ../plugins/coverweb/coverweb.glade.h:2
+#: ../plugins/coverweb/coverweb.xml.h:2
 #, fuzzy
 msgid "Cover Browser"
 msgstr "Răsfoieşte"
 
-#: ../plugins/coverweb/coverweb_preferences.c:142
+#: ../plugins/coverweb/coverweb.plugin.in.h:1
+#, fuzzy
+msgid "Cover Web Plugin"
+msgstr "Copertă"
+
+#: ../plugins/coverweb/coverweb.plugin.in.h:2
+msgid "Web Browser for downloading Cover Artwork"
+msgstr ""
+
+#: ../plugins/coverweb/coverweb_preferences.c:141
 msgid "Bookmark Url"
 msgstr ""
 
-#: ../plugins/coverweb/coverweb_preferences.c:142
+#: ../plugins/coverweb/coverweb_preferences.c:141
 msgid "Please enter the full url of the bookmark"
 msgstr ""
 
@@ -3363,6 +3099,12 @@ msgstr "Podcast video"
 msgid "Audiobook"
 msgstr "Carte audio"
 
+#: ../plugins/details_editor/details.c:74
+#: ../plugins/playlist_display/playlist_display_spl.c:193
+#: ../plugins/playlist_display/playlist_display_spl.c:201
+msgid "Music Video"
+msgstr "Videoclip"
+
 #: ../plugins/details_editor/details.c:76
 msgid "TV Show & Music Video"
 msgstr "Emisiune TV şi videoclip"
@@ -3372,17 +3114,16 @@ msgstr "Emisiune TV şi videoclip"
 msgid "%s (image data corrupted or unreadable)"
 msgstr "%s (date imagine corupte sau imposibil de citit)"
 
-#: ../plugins/details_editor/details.c:835
+#: ../plugins/details_editor/details.c:836
 #, c-format
 msgid "Please report unknown mediatype %x\n"
 msgstr "Vă rugăm raportaţi tip media necunoscut %x\n"
 
-#: ../plugins/details_editor/details.c:1205
-#: ../plugins/sorttab_display/sorttab_display.glade.h:59
+#: ../plugins/details_editor/details.c:1206
 msgid "n/a"
 msgstr "indisponibil"
 
-#: ../plugins/details_editor/details.c:1256
+#: ../plugins/details_editor/details.c:1257
 msgid "<b>n/a</b>"
 msgstr "<b>n/a</b>"
 
@@ -3398,21 +3139,21 @@ msgstr ""
 msgid "Tracks in details editor have been modified."
 msgstr "Data şi ora la care a fost modificat"
 
-#: ../plugins/details_editor/details.c:1438
+#: ../plugins/details_editor/details.c:1437
 #, fuzzy
 msgid "  Edit Track Details"
 msgstr "Editare detalii piesă"
 
-#: ../plugins/details_editor/details.c:1707
+#: ../plugins/details_editor/details.c:1706
 #, c-format
 msgid "Error occurred dropping an image onto the details window: %s\n"
 msgstr "Eroare la tragerea unei imagini în fereastra de detalii: %s\n"
 
-#: ../plugins/details_editor/details_editor.glade.h:1
+#: ../plugins/details_editor/details_editor.xml.h:1
 msgid "(Checked)"
 msgstr "(Verificat)"
 
-#: ../plugins/details_editor/details_editor.glade.h:2
+#: ../plugins/details_editor/details_editor.xml.h:2
 msgid ""
 "Change all tracks\n"
 "simultaneously"
@@ -3420,64 +3161,73 @@ msgstr ""
 "Modifică toate piesele\n"
 "simultan"
 
-#: ../plugins/details_editor/details_editor.glade.h:4
+#: ../plugins/details_editor/details_editor.xml.h:4
 msgid "Details"
 msgstr "Detalii"
 
-#: ../plugins/details_editor/details_editor.glade.h:5
-msgid ""
-"If you check this, information (cover art and meta information) changed for "
-"this track will be copied to all other selected tracks as well. Use with "
-"care."
-msgstr ""
-"Dacă bifaţi această opţiune, informaţiile (coperta şi meta-informaţia) "
-"modificate pentru această piesă vor fi copiate la toate celelalte piese "
-"selectate. Folosiţi-o cu atenţie."
-
-#: ../plugins/details_editor/details_editor.glade.h:6
+#: ../plugins/details_editor/details_editor.xml.h:5
 msgid "Set Cover Art from _File"
 msgstr "Stabileşte coperta din _fişier"
 
-#: ../plugins/details_editor/details_editor.glade.h:7
+#: ../plugins/details_editor/details_editor.xml.h:6
 msgid "Undo _Track"
 msgstr "Refacere _piesă"
 
-#: ../plugins/details_editor/details_editor.glade.h:8
+#: ../plugins/details_editor/details_editor.xml.h:7
 msgid "_General"
 msgstr "_Generale"
 
-#: ../plugins/details_editor/details_editor.glade.h:9
+#: ../plugins/details_editor/details_editor.xml.h:8
 msgid "_Lyrics"
 msgstr ""
 
-#: ../plugins/details_editor/details_editor.glade.h:10
+#: ../plugins/details_editor/details_editor.xml.h:9
 msgid "_Misc."
 msgstr "_Diverse"
 
-#: ../plugins/details_editor/details_editor.glade.h:11
+#: ../plugins/details_editor/details_editor.xml.h:10
 msgid "_Podcasts"
 msgstr "_Podcasturi"
 
-#: ../plugins/details_editor/details_editor.glade.h:12
+#: ../plugins/details_editor/details_editor.xml.h:11
 msgid "_Remove Cover Art"
 msgstr "_Şterge coperta"
 
-#: ../plugins/details_editor/details_editor.glade.h:13
+#: ../plugins/details_editor/details_editor.xml.h:12
 msgid "_Sorting"
 msgstr "_Sortare"
 
-#: ../plugins/details_editor/details_editor.glade.h:14
+#: ../plugins/details_editor/details_editor.xml.h:13
 msgid "_Undo All"
 msgstr "_Refacere toate"
 
-#: ../plugins/details_editor/details_editor.glade.h:15
+#: ../plugins/details_editor/details_editor.xml.h:14
 msgid "_Video"
 msgstr "_Video"
+
+#: ../plugins/details_editor/details_editor.plugin.in.h:1
+#, fuzzy
+msgid "Details Editor Plugin"
+msgstr "Detalii"
+
+#: ../plugins/details_editor/details_editor.plugin.in.h:2
+#, fuzzy
+msgid "Edit Track detail of Files"
+msgstr "Editare detalii piesă"
 
 #: ../plugins/details_editor/plugin.c:64
 #, fuzzy
 msgid "Details Editor"
 msgstr "Detalii"
+
+#: ../plugins/exporter/exporter.plugin.in.h:1
+#, fuzzy
+msgid "Export Tracks to File"
+msgstr "Copiază piesele către sistemul de fişiere"
+
+#: ../plugins/exporter/exporter.plugin.in.h:2
+msgid "Exporter Plugin"
+msgstr ""
 
 #: ../plugins/exporter/exporter.xml.h:1
 #, fuzzy
@@ -3620,78 +3370,80 @@ msgstr "_Preferă local"
 msgid "_iPod"
 msgstr "_iPod"
 
-#: ../plugins/exporter/file_export.c:187
+#: ../plugins/exporter/file_export.c:204
 #, c-format
 msgid "Skipping existing file with same length: '%s'\n"
 msgstr "Sar peste fişier deja existent cu aceeaşi lungime: '%s'\n"
 
-#: ../plugins/exporter/file_export.c:194
+#: ../plugins/exporter/file_export.c:211
 #, c-format
 msgid "Overwriting existing file: '%s'\n"
 msgstr "Suprascriu fişierul existent: '%s'\n"
 
-#: ../plugins/exporter/file_export.c:207
+#: ../plugins/exporter/file_export.c:224
 #, c-format
 msgid "Error copying '%s' to '%s': Permission Error (%s)\n"
 msgstr "Eroare la copierea '%s' către '%s': eroare de permisiune (%s)\n"
 
-#: ../plugins/exporter/file_export.c:209
+#: ../plugins/exporter/file_export.c:226
 #, c-format
 msgid "Error copying '%s' to '%s' (%s)\n"
 msgstr "Eroare la copierea '%s' către '%s' (%s)\n"
 
-#: ../plugins/exporter/file_export.c:303
+#: ../plugins/exporter/file_export.c:314
 #, fuzzy, c-format
 msgid "Could not find file for '%s' on the iPod\n"
 msgstr "Nu am putut găsi fişierul pentru '%s' pe iPod\n"
 
-#: ../plugins/exporter/file_export.c:385
-msgid "copying..."
-msgstr "copiez..."
+#. gint id,
+#. gboolean modal,
+#: ../plugins/exporter/file_export.c:325
+#, fuzzy
+msgid "Export Errors"
+msgstr "_Exportă piesele din baza de date"
 
-#: ../plugins/exporter/file_export.c:438
-#, c-format
-msgid "Failed to write '%s-%s'\n"
+#. title
+#: ../plugins/exporter/file_export.c:326
+msgid "Errors created by export"
+msgstr ""
+
+#: ../plugins/exporter/file_export.c:447
+#, fuzzy, c-format
+msgid ""
+"Failed to write '%s-%s'\n"
+"\n"
 msgstr "Scriere eşuată '%s-%s'\n"
 
-#. if (count == 1) /* we need longer timeout */
-#. {
-#. gtkpod_statusbar_timeout(3 * STATUSBAR_TIMEOUT);
-#. }
-#.
-#. if (count == n) /* we need to reset timeout */
-#. {
-#. gtkpod_statusbar_timeout(0);
-#. }
-#: ../plugins/exporter/file_export.c:451
-#, c-format
-msgid "Copied %d of %d track."
-msgid_plural "Copied %d of %d tracks."
+#: ../plugins/exporter/file_export.c:473
+#, fuzzy, c-format
+msgid "Exported %d of %d track."
+msgid_plural "Exported %d of %d tracks."
 msgstr[0] "S-a copiat %d piesă din %d."
 msgstr[1] "S-au copiat %d piese din %d."
 msgstr[2] "S-au copiat %d de piese din %d."
 
-#: ../plugins/exporter/file_export.c:473
-msgid "Some tracks were not copied."
+#: ../plugins/exporter/file_export.c:481
+#, fuzzy
+msgid "Some tracks were not exported."
 msgstr "Unele piese nu au fost copiate."
 
-#: ../plugins/exporter/file_export.c:524
+#: ../plugins/exporter/file_export.c:540
 msgid "Export from iPod database not possible in offline mode."
 msgstr "Exportarea din baza de date iPod nu este posibilă în mod deconectat."
 
-#: ../plugins/exporter/file_export.c:532
+#: ../plugins/exporter/file_export.c:548
 msgid "Select Export Destination Directory"
 msgstr "Selectaţi dosarul destinaţie pentru exportare"
 
-#: ../plugins/exporter/file_export.c:661
+#: ../plugins/exporter/file_export.c:677
 msgid "Drag from iPod database not possible in offline mode."
 msgstr "Tragerea din baza de date a iPod nu este posibilă în mod deconectat."
 
-#: ../plugins/exporter/file_export.c:690
+#: ../plugins/exporter/file_export.c:706
 msgid "The following tracks have to be copied to your harddisk"
 msgstr "Următoarele piese trebuie copiate pe discul dvs dur."
 
-#: ../plugins/exporter/file_export.c:733
+#: ../plugins/exporter/file_export.c:749
 msgid ""
 "Some tracks were not copied to your harddisk. Only the copied tracks will be "
 "included in the current drag and drop operation.\n"
@@ -3701,7 +3453,7 @@ msgstr ""
 "fi incluse în operaţia curentă trage şi aruncă.\n"
 "\n"
 
-#: ../plugins/exporter/file_export.c:871
+#: ../plugins/exporter/file_export.c:880
 #, c-format
 msgid ""
 "No valid filename for: %s\n"
@@ -3710,7 +3462,7 @@ msgstr ""
 "Nume de fişier invalid: %s\n"
 "\n"
 
-#: ../plugins/exporter/file_export.c:885
+#: ../plugins/exporter/file_export.c:894
 #, c-format
 msgid "Created playlist with one track."
 msgid_plural "Created playlist with %d tracks."
@@ -3718,7 +3470,7 @@ msgstr[0] "S-a creat o listă de redare cu o piesă."
 msgstr[1] "S-a creat o listă de redare cu %d piese."
 msgstr[2] "S-a creat o listă de redare cu %d de piese."
 
-#: ../plugins/exporter/file_export.c:889
+#: ../plugins/exporter/file_export.c:898
 #, c-format
 msgid ""
 "Could not open '%s' for writing (%s).\n"
@@ -3726,6 +3478,10 @@ msgid ""
 msgstr ""
 "Nu am putut deschide '%s' pentru scriere (%s).\n"
 "\n"
+
+#: ../plugins/exporter/file_export.c:952
+msgid "Create Playlist File"
+msgstr "Creează fişier listă de redare"
 
 #: ../plugins/exporter/plugin.c:49
 #, fuzzy
@@ -3736,18 +3492,26 @@ msgstr "_Exportă piesele din baza de date"
 #. Stock icon
 #: ../plugins/exporter/plugin.c:57
 #, fuzzy
-msgid "Export Tracks To Playlist File"
+msgid "Export Tracks To Playlist File..."
 msgstr "_Exportă piesele din baza de date"
 
 #. Action name
 #. Stock icon
 #: ../plugins/exporter/plugin.c:65
 #, fuzzy
-msgid "Export Tracks To Filesystem"
+msgid "Export Tracks To Filesystem..."
 msgstr "Copiază piesele către sistemul de fişiere"
 
 #: ../plugins/exporter/plugin.c:82
 msgid "Exporter"
+msgstr ""
+
+#: ../plugins/filetype_flac/filetype_flac.plugin.in.h:1
+msgid "Flac File Type Plugin"
+msgstr ""
+
+#: ../plugins/filetype_flac/filetype_flac.plugin.in.h:2
+msgid "Support for the flac file type"
 msgstr ""
 
 #: ../plugins/filetype_flac/flacfile.c:57
@@ -3760,12 +3524,20 @@ msgstr "'%s' nu pare să fie un fişier audio FLAC.\n"
 msgid "Error retrieving tags for '%s'.\n"
 msgstr "Eroare la primirea etichetelor pentru '%s'.\n"
 
-#: ../plugins/filetype_flac/plugin.c:78
+#: ../plugins/filetype_flac/plugin.c:91
 #, fuzzy
 msgid "Flac audio file type"
 msgstr "Tip fişier"
 
-#: ../plugins/filetype_m4a/mp4file.c:543 ../plugins/filetype_mp4/mp4file.c:543
+#: ../plugins/filetype_m4a/filetype_m4a.plugin.in.h:1
+msgid "M4A File Type Plugin"
+msgstr ""
+
+#: ../plugins/filetype_m4a/filetype_m4a.plugin.in.h:2
+msgid "Support for the m4a / m4p file type"
+msgstr ""
+
+#: ../plugins/filetype_m4a/mp4file.c:550 ../plugins/filetype_mp4/mp4file.c:550
 #, fuzzy, c-format
 msgid ""
 "m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
@@ -3775,20 +3547,20 @@ msgstr ""
 "suportate fără biblioteca mp4v2. Trebuie să compilaţi sursa gtkpod împreună "
 "cu biblioteca mp4v2.\n"
 
-#: ../plugins/filetype_m4a/mp4file.c:577 ../plugins/filetype_m4a/mp4file.c:840
-#: ../plugins/filetype_mp4/mp4file.c:577 ../plugins/filetype_mp4/mp4file.c:840
+#: ../plugins/filetype_m4a/mp4file.c:584 ../plugins/filetype_m4a/mp4file.c:848
+#: ../plugins/filetype_mp4/mp4file.c:584 ../plugins/filetype_mp4/mp4file.c:848
 #, c-format
 msgid "'%s' does not appear to be a mp4 audio or video file.\n"
 msgstr "'%s' nu pare să fie un fişier mp4 audio sau video.\n"
 
-#: ../plugins/filetype_m4a/mp4file.c:584 ../plugins/filetype_m4a/mp4file.c:847
-#: ../plugins/filetype_mp4/mp4file.c:584 ../plugins/filetype_mp4/mp4file.c:847
+#: ../plugins/filetype_m4a/mp4file.c:591 ../plugins/filetype_m4a/mp4file.c:855
+#: ../plugins/filetype_mp4/mp4file.c:591 ../plugins/filetype_mp4/mp4file.c:855
 #, c-format
 msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
 msgstr ""
 "Nu am putut deschide '%s' pentru citire, sau fişierul nu este de tipul mp4.\n"
 
-#: ../plugins/filetype_m4a/mp4file.c:593 ../plugins/filetype_mp4/mp4file.c:593
+#: ../plugins/filetype_m4a/mp4file.c:600 ../plugins/filetype_mp4/mp4file.c:600
 #, fuzzy, c-format
 msgid ""
 "Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
@@ -3798,7 +3570,7 @@ msgstr ""
 "bibliotecii mp4v2. Trebuie să compilezi sursa gtkpod împreună cu biblioteca "
 "mp4v2.\n"
 
-#: ../plugins/filetype_m4a/mp4file.c:856 ../plugins/filetype_mp4/mp4file.c:856
+#: ../plugins/filetype_m4a/mp4file.c:864 ../plugins/filetype_mp4/mp4file.c:864
 #, fuzzy, c-format
 msgid ""
 "m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
@@ -3808,20 +3580,28 @@ msgstr ""
 "suportate fără biblioteca mp4v2. Trebuie să compilaţi sursa gtkpod împreună "
 "cu biblioteca mp4v2.\n"
 
-#: ../plugins/filetype_m4a/mp4file.c:978 ../plugins/filetype_mp4/mp4file.c:978
+#: ../plugins/filetype_m4a/mp4file.c:986 ../plugins/filetype_mp4/mp4file.c:986
 #, c-format
 msgid "'%s' does not appear to be a mp4 audio file.\n"
 msgstr "'%s' nu pare să fie un fişier mp4 audio.\n"
 
-#: ../plugins/filetype_m4a/mp4file.c:986 ../plugins/filetype_mp4/mp4file.c:986
+#: ../plugins/filetype_m4a/mp4file.c:994 ../plugins/filetype_mp4/mp4file.c:994
 #, c-format
 msgid "Could not open '%s' for writing, or file is not an mp4 file.\n"
 msgstr ""
 "Nu am putut deschide '%s' pentru scriere, sau fişierul nu este de tipul "
 "mp4.\n"
 
-#: ../plugins/filetype_m4a/plugin.c:78
+#: ../plugins/filetype_m4a/plugin.c:80
 msgid "M4A audio file type"
+msgstr ""
+
+#: ../plugins/filetype_mp3/filetype_mp3.plugin.in.h:1
+msgid "MP3 File Type Plugin"
+msgstr ""
+
+#: ../plugins/filetype_mp3/filetype_mp3.plugin.in.h:2
+msgid "Support for the MP3 file type"
 msgstr ""
 
 #: ../plugins/filetype_mp3/mp3file.c:1247
@@ -3856,8 +3636,24 @@ msgstr "Fişierul \"%s\" are timp de redare null. Îl ignor.\n"
 msgid "MP3 audio file type"
 msgstr ""
 
+#: ../plugins/filetype_mp4/filetype_mp4.plugin.in.h:1
+msgid "MP4 File Type Plugin"
+msgstr ""
+
+#: ../plugins/filetype_mp4/filetype_mp4.plugin.in.h:2
+msgid "Support for the MP4 video file type"
+msgstr ""
+
 #: ../plugins/filetype_mp4/plugin.c:82
 msgid "MP4 video file type"
+msgstr ""
+
+#: ../plugins/filetype_ogg/filetype_ogg.plugin.in.h:1
+msgid "Ogg File Type Plugin"
+msgstr ""
+
+#: ../plugins/filetype_ogg/filetype_ogg.plugin.in.h:2
+msgid "Support for the Ogg file type"
 msgstr ""
 
 #: ../plugins/filetype_ogg/oggfile.c:74
@@ -3865,15 +3661,33 @@ msgstr ""
 msgid "'%s' does not appear to be an Ogg audio file.\n"
 msgstr "'%s' nu pare să fie un fişier audio ogg.\n"
 
-#: ../plugins/filetype_ogg/plugin.c:78
-msgid "OGG audio file type"
+#: ../plugins/filetype_ogg/plugin.c:90
+#, fuzzy
+msgid "Ogg audio file type"
+msgstr "Tip fişier"
+
+#: ../plugins/filetype_video/filetype_video.plugin.in.h:1
+#, fuzzy
+msgid "Generic video file type"
+msgstr "Tip fişier"
+
+#: ../plugins/filetype_video/filetype_video.plugin.in.h:2
+msgid "Video File Type Plugin"
 msgstr ""
 
 #: ../plugins/filetype_video/plugin.c:78
 msgid "Generic Video file type"
 msgstr ""
 
-#: ../plugins/filetype_wav/plugin.c:78
+#: ../plugins/filetype_wav/filetype_wav.plugin.in.h:1
+msgid "Support for the wav file type"
+msgstr ""
+
+#: ../plugins/filetype_wav/filetype_wav.plugin.in.h:2
+msgid "Wav File Type Plugin"
+msgstr ""
+
+#: ../plugins/filetype_wav/plugin.c:90
 msgid "Wav audio file type"
 msgstr ""
 
@@ -3882,17 +3696,32 @@ msgstr ""
 msgid "%s does not appear to be a supported wav file.\n"
 msgstr "%s nu pare să fie un fişier wav suportat.\n"
 
-#: ../plugins/info_display/info.c:372
+#: ../plugins/info_display/info.c:371
 msgid "B"
 msgstr "O"
 
-#: ../plugins/info_display/info.c:372
+#: ../plugins/info_display/info.c:371
 msgid "kB"
 msgstr "kO"
 
-#: ../plugins/info_display/info.c:372
+#: ../plugins/info_display/info.c:371
+#: ../plugins/playlist_display/playlist_display_spl.c:71
+#: ../plugins/playlist_display/playlist_display_spl.c:165
+msgid "MB"
+msgstr "MO"
+
+#: ../plugins/info_display/info.c:371
 msgid "TB"
 msgstr "TB"
+
+#: ../plugins/info_display/info_display.plugin.in.h:1
+#, fuzzy
+msgid "Info Display Plugin"
+msgstr "_Afişare"
+
+#: ../plugins/info_display/info_display.plugin.in.h:2
+msgid "Information dialog for connected iPods"
+msgstr ""
 
 #: ../plugins/info_display/infoview.c:49
 msgid ""
@@ -3937,6 +3766,11 @@ msgstr ""
 #: ../plugins/info_display/infoview.c:58
 msgid "Number of tracks"
 msgstr "Număr piese"
+
+#: ../plugins/info_display/infoview.c:58
+#: ../plugins/playlist_display/playlist_display_spl.c:88
+msgid "Play time"
+msgstr "Durată"
 
 #: ../plugins/info_display/infoview.c:58
 msgid "File size"
@@ -3997,44 +3831,53 @@ msgid "%d:%02d of %d:%02d"
 msgstr ""
 
 #. title by artist from album
-#: ../plugins/media_player/media_player.c:134
+#: ../plugins/media_player/media_player.c:140
 #, fuzzy
 msgid "No Track Title"
 msgstr "Titlu sortare"
 
-#: ../plugins/media_player/media_player.c:139
+#: ../plugins/media_player/media_player.c:145
 #, c-format
 msgid "<b>%s</b> by %s from %s"
 msgstr ""
 
-#: ../plugins/media_player/media_player.c:141
+#: ../plugins/media_player/media_player.c:147
 #, fuzzy, c-format
 msgid "<b>%s</b> by %s"
 msgstr "<b>n/a</b>"
 
-#: ../plugins/media_player/media_player.c:143
+#: ../plugins/media_player/media_player.c:149
 #, c-format
 msgid "<b>%s</b> from %s"
 msgstr ""
 
-#: ../plugins/media_player/media_player.glade.h:1
+#: ../plugins/media_player/media_player.xml.h:1
 msgid "Next"
 msgstr ""
 
-#: ../plugins/media_player/media_player.glade.h:2
-#: ../plugins/media_player/plugin.c:169
+#: ../plugins/media_player/media_player.xml.h:2
+#: ../plugins/media_player/plugin.c:139
 #, fuzzy
 msgid "Play"
 msgstr "Redat"
 
-#: ../plugins/media_player/media_player.glade.h:3
+#: ../plugins/media_player/media_player.xml.h:3
 msgid "Previous"
 msgstr ""
 
-#: ../plugins/media_player/media_player.glade.h:4
+#: ../plugins/media_player/media_player.xml.h:4
 #, fuzzy
 msgid "Stop"
 msgstr "până la"
+
+#: ../plugins/media_player/media_player.plugin.in.h:1
+msgid "Controls for playing tracks and videos"
+msgstr ""
+
+#: ../plugins/media_player/media_player.plugin.in.h:2
+#, fuzzy
+msgid "Media Player Plugin"
+msgstr "Tip media"
 
 #: ../plugins/media_player/plugin.c:66
 #, fuzzy
@@ -4094,6 +3937,14 @@ msgstr "nume de fişier indisponibil"
 #: ../plugins/mserv/mserv.c:223
 msgid "Updated selected tracks with data from mserv."
 msgstr "Am actualizat piesele selectate cu date de la mserv."
+
+#: ../plugins/mserv/mserv.plugin.in.h:1
+msgid "Mserv Jukebox Plugin"
+msgstr ""
+
+#: ../plugins/mserv/mserv.plugin.in.h:2
+msgid "Mserv is a jukebox-style music server (see http://www.mserv.org)"
+msgstr ""
 
 #: ../plugins/mserv/mserv.xml.h:1
 #, fuzzy
@@ -4233,58 +4084,54 @@ msgstr "Adaugare dosar cu imagini la iPod. Selectaţi dosarul."
 msgid "<No members>\n"
 msgstr "<Lipsă membri>\n"
 
-#: ../plugins/photo_editor/photo_editor.glade.h:1
+#: ../plugins/photo_editor/photo_editor.xml.h:1
 msgid "Add Image_s"
 msgstr "Adaugă imagi_ni"
 
-#: ../plugins/photo_editor/photo_editor.glade.h:2
-msgid "Add Images from a Directory"
-msgstr "Adaugă imagini dintr-un dosar"
-
-#: ../plugins/photo_editor/photo_editor.glade.h:3
+#: ../plugins/photo_editor/photo_editor.xml.h:2
 #, fuzzy
 msgid "Photo Image"
 msgstr "Albume foto"
 
-#: ../plugins/photo_editor/photo_editor.glade.h:4
+#: ../plugins/photo_editor/photo_editor.xml.h:3
 msgid "Photo Window"
 msgstr "Fereastră foto"
 
-#: ../plugins/photo_editor/photo_editor.glade.h:5
+#: ../plugins/photo_editor/photo_editor.xml.h:4
 msgid "R_ename Album"
 msgstr "R_edenumeşte album"
 
-#: ../plugins/photo_editor/photo_editor.glade.h:6
+#: ../plugins/photo_editor/photo_editor.xml.h:5
 msgid "_Add Album"
 msgstr "_Adaugă album"
 
-#: ../plugins/photo_editor/photo_editor.glade.h:7
+#: ../plugins/photo_editor/photo_editor.xml.h:6
 msgid "_Add Image"
 msgstr "_Adaugă imagine"
 
-#: ../plugins/photo_editor/photo_editor.glade.h:8
+#: ../plugins/photo_editor/photo_editor.xml.h:7
 msgid "_Album"
 msgstr "_Album"
 
-#: ../plugins/photo_editor/photo_editor.glade.h:9
+#: ../plugins/photo_editor/photo_editor.xml.h:8
 #, fuzzy
 msgid "_Photos"
 msgstr "Fotografii"
 
-#: ../plugins/photo_editor/photo_editor.glade.h:10
+#: ../plugins/photo_editor/photo_editor.xml.h:9
 msgid "_Remove Album"
 msgstr "Şte_rge album"
 
-#: ../plugins/photo_editor/photo_editor.glade.h:11
+#: ../plugins/photo_editor/photo_editor.xml.h:10
 msgid "_Remove Images"
 msgstr "Şte_rge imagini"
 
-#: ../plugins/photo_editor/photo_editor.glade.h:12
+#: ../plugins/photo_editor/photo_editor.xml.h:11
 #, fuzzy
 msgid "_View Full Size"
 msgstr "Vizualizeză la dimensiunea reală"
 
-#: ../plugins/photo_editor/photo_editor.glade.h:13
+#: ../plugins/photo_editor/photo_editor.xml.h:12
 msgid "_Zoom"
 msgstr ""
 
@@ -4299,6 +4146,16 @@ msgstr "_Şterge imagine"
 #: ../plugins/photo_editor/photo_editor_context_menu.c:78
 msgid "Rename Album"
 msgstr "Redenumeşte album"
+
+#: ../plugins/photo_editor/photo_editor.plugin.in.h:1
+#, fuzzy
+msgid "Add and Remove Photographs"
+msgstr "_Şterge imagine"
+
+#: ../plugins/photo_editor/photo_editor.plugin.in.h:2
+#, fuzzy
+msgid "Photo Editor Plugin"
+msgstr "Fereastră foto"
 
 #. Action name
 #. Stock icon
@@ -4357,22 +4214,370 @@ msgid "Photos"
 msgstr "Fotografii"
 
 #: ../plugins/playlist_display/display_playlists.c:1849
-#: ../plugins/repository_editor/repository_editor.glade.h:31
-#: ../plugins/sorttab_display/sorttab_display.glade.h:46
+#: ../plugins/repository_editor/repository_editor.xml.h:35
 msgid "Playlists"
 msgstr "Liste de redare"
 
-#: ../plugins/playlist_display/playlist_display.glade.h:4
+#: ../plugins/playlist_display/playlist_display.xml.h:1
+#, fuzzy
+msgid "<b>Advanced Options</b>"
+msgstr "Opţiuni de sortare avansate"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:4
+#, fuzzy
+msgid "<b>General Options</b>"
+msgstr "<b>Sincronizare</b>"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:6
 #, fuzzy
 msgid "<b>Playlist Sort Order</b>"
 msgstr "<b>Ordine sortare</b>"
 
-#: ../plugins/playlist_display/playlist_display.glade.h:7
+#: ../plugins/playlist_display/playlist_display.xml.h:7
+#, fuzzy
+msgid "<b>Rules</b>"
+msgstr "<b>Exemple</b>"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:8
+#, fuzzy
+msgid "All rules"
+msgstr "_Toate"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:9
+#, fuzzy
+msgid "Any rules"
+msgstr "_Ignoră reguli"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:11
+#: ../plugins/sorttab_display/sorttab_display.xml.h:30
+#: ../plugins/track_display/track_display.xml.h:9
+msgid ""
+"If checked, sorting will be case sensitive. Please note that case sensitive "
+"sorting will not work well with most charsets."
+msgstr ""
+"Dacă este bifat, sortarea va fi cu majuscule semnificative. A se reţine că "
+"sortarea cu majuscule semnificative nu va funcţiona corect cu cele mai multe "
+"seturi de caractere."
+
+#: ../plugins/playlist_display/playlist_display.xml.h:12
+#, fuzzy
+msgid "Ignore rules"
+msgstr "_Ignoră reguli"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:13
+msgid "Live _updating"
+msgstr "Act_ualizare imediată"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:14
+msgid "Match only _checked tracks"
+msgstr "Potriveşte numai piesele bi_fate"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:15
+#, fuzzy
+msgid "Match:"
+msgstr "Cale:"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:16
 #: ../plugins/playlist_display/plugin.c:50
 #: ../plugins/playlist_display/plugin.c:317
 #, fuzzy
 msgid "Playlist Display"
 msgstr "Liste de redare"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:17
+msgid "Playlist name:"
+msgstr "Nume listă de redare:"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:18
+#: ../plugins/playlist_display/playlist_display_spl.c:1488
+#: ../plugins/repository_editor/repository_editor.c:1245
+msgid "Smart Playlist"
+msgstr "Listă de redare inteligentă"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:19
+#, fuzzy
+msgid "Sort by:"
+msgstr "   Sortare după:"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:20
+msgid "_Limit to"
+msgstr "_Limitează la"
+
+#: ../plugins/playlist_display/playlist_display_actions.c:73
+#: ../plugins/playlist_display/playlist_display_actions.c:267
+msgid "Successfully added files"
+msgstr "Fişiere adăugate cu succes"
+
+#: ../plugins/playlist_display/playlist_display_actions.c:75
+#: ../plugins/playlist_display/playlist_display_actions.c:269
+msgid "Some files were not added successfully"
+msgstr "Unele fişiere nu au fost adăugate cu succes"
+
+#: ../plugins/playlist_display/playlist_display_actions.c:97
+#: ../plugins/playlist_display/playlist_display_actions.c:206
+#: ../plugins/playlist_display/playlist_display_actions.c:296
+msgid "Please select a playlist or repository before adding tracks."
+msgstr ""
+"Vă rugăm selectaţi o listă de redare sau un depozit înainte de a adăuga "
+"piese."
+
+#: ../plugins/playlist_display/playlist_display_actions.c:102
+msgid "Add Folder"
+msgstr "Adaugă dosar"
+
+#: ../plugins/playlist_display/playlist_display_actions.c:214
+#: ../plugins/playlist_display/playlist_display_actions.c:306
+msgid "Please load the iPod before adding tracks."
+msgstr "Vă rugăm încărcaţi iPod-ul înainte de a adăuga piese."
+
+#. Create window title
+#: ../plugins/playlist_display/playlist_display_actions.c:222
+#, c-format
+msgid "Add playlist files to '%s'"
+msgstr "Adaugă fişiere listă de redare la '%s'"
+
+#: ../plugins/playlist_display/playlist_display_actions.c:315
+#, c-format
+msgid "Add files to '%s'"
+msgstr "Adaugă fişiere la '%s'"
+
+#: ../plugins/playlist_display/playlist_display_actions.c:318
+#, c-format
+msgid "Add files to '%s/%s'"
+msgstr "Adaugă fişiere la '%s/%s'"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:62
+msgid "days"
+msgstr "zile"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:63
+msgid "weeks"
+msgstr "săptămâni"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:64
+msgid "months"
+msgstr "luni"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:69
+msgid "kbps"
+msgstr "kops"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:70
+msgid "Hz"
+msgstr "Hz"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:72
+msgid "secs"
+msgstr "secunde"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:84
+msgid "Kind"
+msgstr "Tip"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:86
+msgid "Track number"
+msgstr "Număr pistă"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:87
+msgid "Size"
+msgstr "Dimensiune"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:93
+msgid "Last played"
+msgstr "Ultima redare"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:94
+msgid "Disc number"
+msgstr "Număr disc"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:99
+msgid "Playlist"
+msgstr "Listă de redare"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:100
+msgid "Video Kind"
+msgstr "Tip video"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:102
+msgid "Season number"
+msgstr "Număr sezon"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:103
+msgid "Skip count"
+msgstr "Număr săriri peste"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:104
+msgid "Last skipped"
+msgstr "Ultima sărire peste"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:105
+msgid "Album artist"
+msgstr "Artist album"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:110
+msgid "contains"
+msgstr "conţine"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:111
+msgid "does not contain"
+msgstr "nu conţine"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:112
+#: ../plugins/playlist_display/playlist_display_spl.c:120
+#: ../plugins/playlist_display/playlist_display_spl.c:129
+#: ../plugins/playlist_display/playlist_display_spl.c:146
+#: ../plugins/playlist_display/playlist_display_spl.c:152
+msgid "is"
+msgstr "este"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:113
+#: ../plugins/playlist_display/playlist_display_spl.c:121
+#: ../plugins/playlist_display/playlist_display_spl.c:130
+#: ../plugins/playlist_display/playlist_display_spl.c:147
+#: ../plugins/playlist_display/playlist_display_spl.c:153
+msgid "is not"
+msgstr "nu este"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:114
+msgid "starts with"
+msgstr "începe cu"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:115
+msgid "ends with"
+msgstr "se termină cu"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:122
+msgid "is greater than"
+msgstr "este mai mare decât"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:123
+msgid "is less than"
+msgstr "este mai mic decât"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:124
+#: ../plugins/playlist_display/playlist_display_spl.c:135
+msgid "is in the range"
+msgstr "este în intervalul"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:131
+msgid "is after"
+msgstr "este după"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:132
+msgid "is before"
+msgstr "este înainte"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:133
+msgid "in the last"
+msgstr "este între ultimele"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:134
+msgid "not in the last"
+msgstr "nu este între ultimele"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:140
+msgid "is set"
+msgstr "este stabilit"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:141
+msgid "is not set"
+msgstr "nu este stabilit"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:158
+msgid "Not supported"
+msgstr "Nu este suportat"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:164
+msgid "minutes"
+msgstr "minute"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:166
+msgid "tracks"
+msgstr "piese"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:167
+msgid "hours"
+msgstr "ore"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:174
+msgid "random order"
+msgstr "ordine aleatoare"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:175
+msgid "title"
+msgstr "titlu"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:176
+msgid "album"
+msgstr "album"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:177
+msgid "artist"
+msgstr "artist"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:178
+msgid "genre"
+msgstr "gen"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:179
+msgid "most recently added"
+msgstr "adăugate recent"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:180
+msgid "least recently added"
+msgstr "adăugate mai demult"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:181
+msgid "most often played"
+msgstr "cele mai des redate"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:182
+msgid "least often played"
+msgstr "cele mai rar redate"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:183
+msgid "most recently played"
+msgstr "redate recent"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:184
+msgid "least recently played"
+msgstr "redate mai demult"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:185
+msgid "highest rating"
+msgstr "aprecierea cea mai mare"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:186
+msgid "lowest rating"
+msgstr "aprecierea cea mai mică"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:192
+#: ../plugins/playlist_display/playlist_display_spl.c:200
+msgid "Movie"
+msgstr "Film"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:1000
+#: ../plugins/playlist_display/playlist_display_spl.c:1014
+msgid "to"
+msgstr "până la"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:1239
+msgid "-"
+msgstr "-"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:1252
+msgid "+"
+msgstr "+"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:1493
+#, fuzzy
+msgid "Playlist name cannot be blank"
+msgstr "Nume listă de redare:"
+
+#: ../plugins/playlist_display/playlist_display_spl.c:1499
+#, fuzzy, c-format
+msgid "A playlist named '%s' already exists"
+msgstr "Un album cu acelaşi nume există deja."
 
 #: ../plugins/playlist_display/playlist_display_context_menu.c:54
 msgid "Remove All Tracks from iPod"
@@ -4441,6 +4646,16 @@ msgstr "Deconectează iPod"
 msgid "Copy selected playlist to..."
 msgstr "Copiază lista de redare selectată către..."
 
+#: ../plugins/playlist_display/playlist_display.plugin.in.h:1
+#, fuzzy
+msgid "Playlist Display Plugin"
+msgstr "Liste de redare"
+
+#: ../plugins/playlist_display/playlist_display.plugin.in.h:2
+#, fuzzy
+msgid "Playlist View"
+msgstr "Listă de redare"
+
 #. Action name
 #. Stock icon
 #: ../plugins/playlist_display/plugin.c:60
@@ -4469,7 +4684,8 @@ msgstr "Salvează"
 #. Action name
 #. Stock icon
 #: ../plugins/playlist_display/plugin.c:76
-msgid "Add _Files"
+#, fuzzy
+msgid "Add _Files..."
 msgstr "Adaugă _fişiere"
 
 #. Display label
@@ -4482,7 +4698,8 @@ msgstr "Adaugă fişiere la '%s'"
 #. Action name
 #. Stock icon
 #: ../plugins/playlist_display/plugin.c:84
-msgid "Add Fol_der"
+#, fuzzy
+msgid "Add Fol_der..."
 msgstr "A_daugă dosar"
 
 #. Display label
@@ -4495,7 +4712,8 @@ msgstr "Adaugă fişiere la '%s'"
 #. Action name
 #. Stock icon
 #: ../plugins/playlist_display/plugin.c:92
-msgid "Add _Playlist"
+#, fuzzy
+msgid "Add _Playlist..."
 msgstr "Adaugă _listă de redare"
 
 #. Display label
@@ -4511,13 +4729,19 @@ msgid "_New Playlist"
 msgstr "Listă nouă"
 
 #: ../plugins/playlist_display/plugin.c:116
-msgid "Empty Playlist"
+#, fuzzy
+msgid "Empty Playlist..."
 msgstr "Listă de redare goală"
 
 #: ../plugins/playlist_display/plugin.c:118
 #, fuzzy
 msgid "Create an empty playlist"
 msgstr "Creează listă de redare nouă"
+
+#: ../plugins/playlist_display/plugin.c:124
+#, fuzzy
+msgid "Smart Playlist..."
+msgstr "Listă de redare inteligentă"
 
 #: ../plugins/playlist_display/plugin.c:126
 #, fuzzy
@@ -4684,7 +4908,7 @@ msgstr "Nu am putut obţine blocare pentru '%s'.\n"
 
 #: ../plugins/repository_editor/plugin.c:48
 #, fuzzy
-msgid "Create iPod's _Directories"
+msgid "Create iPod's _Directories..."
 msgstr "_Creează dosarele iPodului"
 
 #: ../plugins/repository_editor/plugin.c:56
@@ -4713,35 +4937,35 @@ msgstr ""
 "Vă rugăm încărcaţi-l mai întâi."
 
 #. Set default repository name
-#: ../plugins/repository_editor/repository_creator.c:295
+#: ../plugins/repository_editor/repository_creator.c:292
 msgid "New Repository"
 msgstr "Depozit nou"
 
-#: ../plugins/repository_editor/repository_editor.c:571
+#: ../plugins/repository_editor/repository_editor.c:662
 #, fuzzy, c-format
 msgid ""
 "Are you sure you want to delete repository \"%s\"? This action cannot be "
 "undone!"
 msgstr "Sunteţi sigur că doriţi să ştergeţi lista de redare '%s'?"
 
-#: ../plugins/repository_editor/repository_editor.c:573
+#: ../plugins/repository_editor/repository_editor.c:664
 #, fuzzy
 msgid "Delete repository?"
 msgstr "Şterge depozit"
 
-#: ../plugins/repository_editor/repository_editor.c:738
+#: ../plugins/repository_editor/repository_editor.c:841
 msgid "Please select command to sync contacts"
 msgstr "Vă rugăm selectaţi comanda pentru sincronizarea agendei"
 
-#: ../plugins/repository_editor/repository_editor.c:743
+#: ../plugins/repository_editor/repository_editor.c:846
 msgid "Please select command to sync calendar"
 msgstr "Vă rugăm selectaţi comanda pentru sincronizarea calendarului"
 
-#: ../plugins/repository_editor/repository_editor.c:748
+#: ../plugins/repository_editor/repository_editor.c:851
 msgid "Please select command to sync notes"
 msgstr "Vă rugăm selectaţi comanda pentru sincronizarea notiţelor"
 
-#: ../plugins/repository_editor/repository_editor.c:760
+#: ../plugins/repository_editor/repository_editor.c:863
 #, c-format
 msgid ""
 "<i>Have a look at the scripts provided in '%s'. If you write a new script or "
@@ -4752,107 +4976,107 @@ msgstr ""
 "nou, sau îmbunătăţiţi unul existent, vă rugăm trimiteţi-l la jcsjcs at users."
 "sourceforge.net pentru includerea lui în următoarea versiune.</i>"
 
-#: ../plugins/repository_editor/repository_editor.c:808
+#: ../plugins/repository_editor/repository_editor.c:911
 msgid "Smart playlist updated."
 msgstr "Listă de redare inteligentă actualizată."
 
-#: ../plugins/repository_editor/repository_editor.c:1015
+#: ../plugins/repository_editor/repository_editor.c:1118
 msgid "Podcasts Repository"
 msgstr "Depozit podcasturi"
 
-#: ../plugins/repository_editor/repository_editor.c:1018
+#: ../plugins/repository_editor/repository_editor.c:1121
 msgid "Local Repository"
 msgstr "Depozit local"
 
-#: ../plugins/repository_editor/repository_editor.c:1136
+#: ../plugins/repository_editor/repository_editor.c:1239
 msgid "Master Playlist"
 msgstr "Listă de redare principală"
 
-#: ../plugins/repository_editor/repository_editor.c:1139
+#: ../plugins/repository_editor/repository_editor.c:1242
 msgid "Podcasts Playlist"
 msgstr "Listă de redare podcasturi"
 
-#: ../plugins/repository_editor/repository_editor.c:1145
+#: ../plugins/repository_editor/repository_editor.c:1248
 msgid "Regular Playlist"
 msgstr "Listă de redare oarecare"
 
-#: ../plugins/repository_editor/repository_editor.c:1312
+#: ../plugins/repository_editor/repository_editor.c:1413
 #, fuzzy
 msgid "  Edit iPod Repositories"
 msgstr "Editează proprietăţile iPod-ului"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:1
-msgid "..."
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.glade.h:2
+#: ../plugins/repository_editor/repository_editor.xml.h:2
 #, fuzzy
 msgid "<b>General</b>"
 msgstr "<b>n/a</b>"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:3
+#: ../plugins/repository_editor/repository_editor.xml.h:3
 #, fuzzy
 msgid "<b>Playlist Options</b>"
 msgstr "<b>Liste de redare</b>"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:4
+#: ../plugins/repository_editor/repository_editor.xml.h:4
 msgid "<b>Please select mountpoint and your iPod model</b>"
 msgstr "<b>Vă rugăm selectaţi punctul de montare şi modelul de iPod</b>"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:5
+#: ../plugins/repository_editor/repository_editor.xml.h:5
 msgid "<b>Synchronization</b>"
 msgstr "<b>Sincronizare</b>"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:6
+#: ../plugins/repository_editor/repository_editor.xml.h:6
 msgid ""
 "<i>Note: Only directories that do not already exist will be created. </i>"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.glade.h:7
+#: ../plugins/repository_editor/repository_editor.xml.h:7
 #, fuzzy
 msgid "<i>Playlist type</i>"
 msgstr "Tip listă de redare:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:8
+#: ../plugins/repository_editor/repository_editor.xml.h:8
 #, fuzzy
 msgid "<i>Repository type</i>"
 msgstr "Tip depozit:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:9
+#: ../plugins/repository_editor/repository_editor.xml.h:9
 msgid "Add New ..."
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.glade.h:10
+#: ../plugins/repository_editor/repository_editor.xml.h:10
 msgid "Calendar sync command:"
 msgstr "Comandă sincronizare calendar:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:11
+#: ../plugins/repository_editor/repository_editor.xml.h:11
 msgid "Call automatically when synchronizing iTunesDB"
 msgstr "Apelează automat când se sincronizează iTunesDB"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:12
+#: ../plugins/repository_editor/repository_editor.xml.h:12
 msgid "Confirm before removing tracks from the iPod or repository"
 msgstr "Confirmă ştergerea pieselor de pe iPod sau din depozit"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:13
+#: ../plugins/repository_editor/repository_editor.xml.h:13
 msgid "Contacts sync command:"
 msgstr "Comandă sincronizare agendă:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:14
+#: ../plugins/repository_editor/repository_editor.xml.h:14
 msgid "Create Repository"
 msgstr "Creează depozit"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:15
+#: ../plugins/repository_editor/repository_editor.xml.h:15
+#: ../plugins/sorttab_display/sorttab_display_context_menu.c:285
+#: ../plugins/sorttab_display/sorttab_display_context_menu.c:293
+#: ../plugins/track_display/track_display_context_menu.c:182
+#: ../plugins/track_display/track_display_context_menu.c:190
 #, fuzzy
 msgid "Delete"
 msgstr "Ş_terge"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:16
+#: ../plugins/repository_editor/repository_editor.xml.h:16
 #, fuzzy
 msgid "Delete missing tracks from the iPod or repository"
 msgstr "Confirmă ştergerea pieselor de pe iPod sau din depozit"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:17
+#: ../plugins/repository_editor/repository_editor.xml.h:17
 msgid ""
 "Directories to sync with are determined from the filenames of the tracks in "
 "the playlist."
@@ -4860,27 +5084,41 @@ msgstr ""
 "Dosarele cu care sincronizez se obţin din numele de fişiere ale pieselor din "
 "lista de redare."
 
-#: ../plugins/repository_editor/repository_editor.glade.h:18
+#: ../plugins/repository_editor/repository_editor.xml.h:18
 msgid "Don't automatically sync on startup"
 msgstr "Nu sincroniza automat la pornire"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:19
+#: ../plugins/repository_editor/repository_editor.xml.h:19
 msgid "Initialize iPod"
 msgstr "Iniţializează iPod"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:20
-msgid ""
-"Insert before\n"
-"Insert after"
-msgstr ""
-"Inserează înainte\n"
-"inserează după"
+#: ../plugins/repository_editor/repository_editor.xml.h:20
+#, fuzzy
+msgid "Insert after"
+msgstr "este după"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:22
+#: ../plugins/repository_editor/repository_editor.xml.h:21
+#, fuzzy
+msgid "Insert before"
+msgstr "este înainte"
+
+#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
+#: ../plugins/repository_editor/repository_editor.xml.h:23
+#, fuzzy
+msgid "Local Repository (Podcasts)"
+msgstr "Depozit local"
+
+#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
+#: ../plugins/repository_editor/repository_editor.xml.h:25
+#, fuzzy
+msgid "Local Repository (Standard)"
+msgstr "Depozit local"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:26
 msgid "Model:"
 msgstr "Model:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:23
+#: ../plugins/repository_editor/repository_editor.xml.h:27
 msgid ""
 "Normally, if a track is no longer present in the sync directory, it will be "
 "removed from the playlist, but not from the iPod or local repository.\n"
@@ -4901,70 +5139,70 @@ msgstr ""
 "această opţiune dacă doriţi ca piesele să fie şterse, pentru că ştergerea "
 "lor din lista de redare principală înseamnă ştergerea de pe iPod."
 
-#: ../plugins/repository_editor/repository_editor.glade.h:26
+#: ../plugins/repository_editor/repository_editor.xml.h:30
 msgid "Notes sync command:"
 msgstr "Comandă sincronizare notiţe:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:27
+#: ../plugins/repository_editor/repository_editor.xml.h:31
 msgid "On startup automatically sync with playlist directories"
 msgstr "La pornire sincronizează automat cu dosarele listei de redare"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:28
+#: ../plugins/repository_editor/repository_editor.xml.h:32
 #, fuzzy
 msgid "On startup automatically sync with the directory:"
 msgstr "La pornire sincronizează automat cu următorul dosar"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:29
+#: ../plugins/repository_editor/repository_editor.xml.h:33
 msgid "On startup automatically update (Live Playlist)"
 msgstr "La pornire actualizează automat (listă de redare 'live')"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:30
+#: ../plugins/repository_editor/repository_editor.xml.h:34
 msgid "Path:"
 msgstr "Cale:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:32
+#: ../plugins/repository_editor/repository_editor.xml.h:36
 #, fuzzy
 msgid "Repository"
 msgstr "Depozit nou"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:33
+#: ../plugins/repository_editor/repository_editor.xml.h:37
 msgid "Repository Options"
 msgstr "Opţiuni depozit"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:34
+#: ../plugins/repository_editor/repository_editor.xml.h:38
 msgid "Repository name:"
 msgstr "Nume depozit:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:35
+#: ../plugins/repository_editor/repository_editor.xml.h:39
 msgid "Repository type:"
 msgstr "Tip depozit:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:36
+#: ../plugins/repository_editor/repository_editor.xml.h:40
 #, fuzzy
 msgid "Select backup file"
 msgstr "Stabiliţi fişierul copie de siguranţă"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:37
+#: ../plugins/repository_editor/repository_editor.xml.h:41
 msgid "Select directory for synchronization"
 msgstr "Selectaţi dosarul pentru sincronizare"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:38
+#: ../plugins/repository_editor/repository_editor.xml.h:42
 msgid "Select mountpoint"
 msgstr "Selectează punct de montare"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:39
+#: ../plugins/repository_editor/repository_editor.xml.h:43
 msgid "Set backup file"
 msgstr "Stabiliţi fişierul copie de siguranţă"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:40
+#: ../plugins/repository_editor/repository_editor.xml.h:44
 msgid "Set local repository file"
 msgstr "Stabiliţi fişierul depozitului local"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:41
+#: ../plugins/repository_editor/repository_editor.xml.h:45
 msgid "Show summary of sync result"
 msgstr "Afişează rezumatul rezultatului sincronizării"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:43
+#: ../plugins/repository_editor/repository_editor.xml.h:47
 #, no-c-format
 msgid ""
 "Specify exact path including command line options. '%i' will be replaced "
@@ -4973,17 +5211,17 @@ msgstr ""
 "Specifică calea exactă incluzând opţiunile în linie de comandă. '%i' va fi "
 "înlocuit cu punctul de montare al iPod."
 
-#: ../plugins/repository_editor/repository_editor.glade.h:44
+#: ../plugins/repository_editor/repository_editor.xml.h:48
 #, fuzzy
 msgid "Update/Sync All Playlists"
 msgstr "Actualizează/sincronizează toate listele de redare acum"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:45
+#: ../plugins/repository_editor/repository_editor.xml.h:49
 #, fuzzy
 msgid "Update/Sync Playlist"
 msgstr "Actualizează/sincronizează lista de redare acum"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:46
+#: ../plugins/repository_editor/repository_editor.xml.h:50
 msgid ""
 "Will show a list of tracks removed and a list of tracks newly added or "
 "updated."
@@ -4991,45 +5229,44 @@ msgstr ""
 "Va afişa o listă a pieselor şterse şi o listă a pieselor adăugate recent sau "
 "actualizate."
 
-#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
-#: ../plugins/repository_editor/repository_editor.glade.h:48
-msgid ""
-"iPod\n"
-"Local Repository (Standard)\n"
-"Local Repository (Podcasts)\n"
-msgstr ""
-"iPod\n"
-"Depozit local (standard)\n"
-"Depozit local (podcasturi)\n"
-
-#: ../plugins/repository_editor/repository_editor.glade.h:52
+#: ../plugins/repository_editor/repository_editor.xml.h:53
 msgid "iPod mountpoint:"
 msgstr "Punct de montare:"
 
-#: ../plugins/repository_editor/repository_editor.glade.h:53
+#: ../plugins/repository_editor/repository_editor.xml.h:54
 msgid "iTunesDB backup:"
 msgstr "Copie iTunesDB"
 
+#: ../plugins/repository_editor/repository_editor.plugin.in.h:1
+#, fuzzy
+msgid "Edit iTunesDB Properties"
+msgstr "Editează proprietăţile iPod-ului"
+
+#: ../plugins/repository_editor/repository_editor.plugin.in.h:2
+#, fuzzy
+msgid "Repository Editor Plugin"
+msgstr "Depozit nou"
+
 #. Strings used several times
-#: ../plugins/repository_editor/repository_init.c:48
+#: ../plugins/repository_editor/repository_init.c:47
 msgid "Select or enter your model"
 msgstr "Selectaţi sau introduceţi modelul dvs"
 
-#: ../plugins/repository_editor/repository_init.c:193
+#: ../plugins/repository_editor/repository_init.c:190
 #, c-format
 msgid "Error initialising iPod: %s\n"
 msgstr "Eroare la iniţializarea iPod: %s\n"
 
-#: ../plugins/repository_editor/repository_init.c:198
+#: ../plugins/repository_editor/repository_init.c:195
 msgid "Error initialising iPod, unknown error\n"
 msgstr "Eroare la iniţializarea iPod, eroare necunoscută\n"
 
-#: ../plugins/repository_editor/repository_init.c:250
+#: ../plugins/repository_editor/repository_init.c:245
 #, c-format
 msgid "<b>Please select your iPod model at </b><i>%s</i>"
 msgstr "<b>Vă rugăm selectaţi modelul dvs de iPod conectat la </b><i>%s</i>"
 
-#: ../plugins/repository_editor/repository_init.c:285
+#: ../plugins/repository_editor/repository_init.c:280
 msgid ""
 "Could not determine the model you selected -- this could be a bug or "
 "incompatibilty in the GTK+ or glade library.\n"
@@ -5069,18 +5306,18 @@ msgid "Special"
 msgstr "Special"
 
 #. no entry selected
-#: ../plugins/sorttab_display/display_sorttabs.c:3291
+#: ../plugins/sorttab_display/display_sorttabs.c:3292
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:77
 msgid "No entry selected."
 msgstr "Nici o înregistrare selectată."
 
-#: ../plugins/sorttab_display/display_sorttabs.c:3299
+#: ../plugins/sorttab_display/display_sorttabs.c:3300
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:85
 msgid "Cannot remove entry 'All'"
 msgstr "Nu pot şterge înregistrarea 'Toate'"
 
 #: ../plugins/sorttab_display/plugin.c:47
-#: ../plugins/sorttab_display/sorttab_display.glade.h:56
+#: ../plugins/sorttab_display/sorttab_display.xml.h:47
 #, fuzzy
 msgid "Track Filter"
 msgstr "Număr pistă"
@@ -5123,11 +5360,11 @@ msgstr "Mai _multe categorii"
 msgid "  Track Filter"
 msgstr "Număr pistă"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:1
+#: ../plugins/sorttab_display/sorttab_display.xml.h:1
 msgid " <= cts <= "
 msgstr " <= nr. <= "
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:2
+#: ../plugins/sorttab_display/sorttab_display.xml.h:2
 msgid ""
 "'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when "
 "finished."
@@ -5135,87 +5372,78 @@ msgstr ""
 "'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' sau similar. Apasaţi 'enter' când "
 "este gata."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:3
+#: ../plugins/sorttab_display/sorttab_display.xml.h:3
 msgid "0"
 msgstr "0"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:4
+#: ../plugins/sorttab_display/sorttab_display.xml.h:4
 msgid "1"
 msgstr "1"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:5
+#: ../plugins/sorttab_display/sorttab_display.xml.h:5
 msgid "2"
 msgstr "2"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:6
+#: ../plugins/sorttab_display/sorttab_display.xml.h:6
 msgid "3"
 msgstr "3"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:7
+#: ../plugins/sorttab_display/sorttab_display.xml.h:7
 msgid "4"
 msgstr "4"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:8
+#: ../plugins/sorttab_display/sorttab_display.xml.h:8
 msgid "5"
 msgstr "5"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:9
+#: ../plugins/sorttab_display/sorttab_display.xml.h:9
 msgid ":"
 msgstr ":"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:11
-#, fuzzy
-msgid "<b>Auto Store</b>"
-msgstr "Memorare automată"
-
-#: ../plugins/sorttab_display/sorttab_display.glade.h:13
+#: ../plugins/sorttab_display/sorttab_display.xml.h:12
 #, fuzzy
 msgid "<b>Filter Sort Order</b>"
 msgstr "<b>Ordine sortare</b>"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:14
+#: ../plugins/sorttab_display/sorttab_display.xml.h:13
 #, fuzzy
 msgid "<b>Filter Tabs</b>"
 msgstr "<b>Categorii</b>"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:15
-#: ../plugins/track_display/track_display.glade.h:3
-msgid "<b>Ignore Frequent Words</b>"
-msgstr "<b>Ignoră cuvintele frecvente</b>"
-
-#: ../plugins/sorttab_display/sorttab_display.glade.h:16
+#: ../plugins/sorttab_display/sorttab_display.xml.h:14
 #, fuzzy
 msgid "<b>Lower Margin</b>"
 msgstr "Marginea inferioară"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:18
-msgid "<b>Sort Order</b>"
-msgstr "<b>Ordine sortare</b>"
-
-#: ../plugins/sorttab_display/sorttab_display.glade.h:19
+#: ../plugins/sorttab_display/sorttab_display.xml.h:16
 #, fuzzy
 msgid "<b>Upper Margin</b>"
 msgstr "Margine superioară"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:20
+#: ../plugins/sorttab_display/sorttab_display.xml.h:17
 msgid ""
 "<span weight=\"bold\" size=\"larger\">Please specify a time interval</span>"
 msgstr ""
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:21
+#: ../plugins/sorttab_display/sorttab_display.xml.h:18
+#: ../plugins/track_display/display_tracks.c:1871
+msgid "Added"
+msgstr "Adăugat"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:19
 #, fuzzy
 msgid "Added:"
 msgstr "Adăugat"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:22
+#: ../plugins/sorttab_display/sorttab_display.xml.h:20
 msgid "All (AND)"
 msgstr "Toate (AND)"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:23
+#: ../plugins/sorttab_display/sorttab_display.xml.h:21
 msgid "Any (OR)"
 msgstr "Oricare (OR)"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:24
+#: ../plugins/sorttab_display/sorttab_display.xml.h:22
 msgid ""
 "Automatically start displaying tracks that match the criteria entered above. "
 "If not selected, you must press 'Display' to start displaying."
@@ -5223,40 +5451,34 @@ msgstr ""
 "Porneşte automat afişarea pieselor care respectă criteriile introduse mai "
 "jos. Dacă nu este selectat, trebuie să apăsaţi 'Afişează' pentru aceasta."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:25
+#: ../plugins/sorttab_display/sorttab_display.xml.h:23
 msgid "Calendar"
 msgstr "Calendar"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:27
+#: ../plugins/sorttab_display/sorttab_display.xml.h:25
 #, fuzzy
 msgid "Category:"
 msgstr "Categorie:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:28
+#: ../plugins/sorttab_display/sorttab_display.xml.h:26
 msgid "Display tracks that match the criteria entered above."
 msgstr "Afişează piesele care se potrivesc criteriului introdus mai jos."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:29
+#: ../plugins/sorttab_display/sorttab_display.xml.h:27
+msgid "Dummy - do not delete"
+msgstr ""
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:28
 #, fuzzy
 msgid "Filter tab:"
 msgstr "Tip fişier"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:30
-#, fuzzy
-msgid "Filter tabs"
-msgstr "Dimensiune"
-
-#: ../plugins/sorttab_display/sorttab_display.glade.h:31
+#: ../plugins/sorttab_display/sorttab_display.xml.h:29
 #, fuzzy
 msgid "Group artist filter tab by compilation CDs"
 msgstr "Grupează artiştii pe CD-uri de tip compilaţie"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:33
-#: ../plugins/track_display/track_display.glade.h:10
-msgid "Ignore these words when at the beginning of the following fields:"
-msgstr "Ignoră aceste cuvinte la începutul următoarelor câmpuri:"
-
-#: ../plugins/sorttab_display/sorttab_display.glade.h:34
+#: ../plugins/sorttab_display/sorttab_display.xml.h:31
 msgid ""
 "In order to save the displayed track order to the iPod choose 'Save "
 "Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
@@ -5265,88 +5487,73 @@ msgstr ""
 "ordinea afişată a pieselor' din meniul 'Editare' sau selectaţi 'Memorare "
 "automată' de mai jos."
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:35
-msgid ""
-"Last Played\n"
-"Last Modified\n"
-"Added\n"
-msgstr ""
+#: ../plugins/sorttab_display/sorttab_display.xml.h:32
+msgid "Last Modified"
+msgstr "Ultima modificare"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:39
+#: ../plugins/sorttab_display/sorttab_display.xml.h:33
+msgid "Last Played"
+msgstr "Ultima redare"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:34
 #, fuzzy
 msgid "Logic:"
 msgstr " Logică: "
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:40
+#: ../plugins/sorttab_display/sorttab_display.xml.h:35
 #, fuzzy
 msgid "Modified:"
 msgstr "Modificat"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:41
+#: ../plugins/sorttab_display/sorttab_display.xml.h:36
 msgid "No lower margin"
 msgstr "Fără margine inferioară"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:42
+#: ../plugins/sorttab_display/sorttab_display.xml.h:37
 msgid "No upper margin"
 msgstr "Fără margine superioară"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:43
+#: ../plugins/sorttab_display/sorttab_display.xml.h:38
 #, fuzzy
 msgid "Number of filter tabs:"
 msgstr "_Număr categorii"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:44
+#: ../plugins/sorttab_display/sorttab_display.xml.h:39
 #, fuzzy
 msgid "Playcount:"
 msgstr "Număr redări"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:45
+#: ../plugins/sorttab_display/sorttab_display.xml.h:40
 #, fuzzy
 msgid "Played:"
 msgstr "Redat"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:47
-msgid "Please refer to the notice below."
-msgstr "Vă rugăm să vă referiţi la notiţa de mai jos."
-
-#: ../plugins/sorttab_display/sorttab_display.glade.h:48
+#: ../plugins/sorttab_display/sorttab_display.xml.h:41
 #, fuzzy
 msgid "Rating:"
 msgstr "Apreciere"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:49
+#: ../plugins/sorttab_display/sorttab_display.xml.h:42
 msgid "Select '-1' for no upper limit."
 msgstr "Selectaţi '-1' pentru lipsă limită superioară"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:50
+#: ../plugins/sorttab_display/sorttab_display.xml.h:43
 msgid "Select '0' for no lower limit."
 msgstr "Selectaţi '0' pentru lipsă limită inferioară"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:51
-msgid "Sort tracks according to: "
-msgstr "Sortează piesele conform:"
-
-#: ../plugins/sorttab_display/sorttab_display.glade.h:52
-msgid "Sorting Options"
-msgstr "Opţiuni sortare"
-
-#: ../plugins/sorttab_display/sorttab_display.glade.h:53
+#: ../plugins/sorttab_display/sorttab_display.xml.h:44
 msgid "Specify interval"
 msgstr "Specificaţi un interval"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:54
+#: ../plugins/sorttab_display/sorttab_display.xml.h:45
 msgid "Start display automatically"
 msgstr "Porneşte automat afişarea"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:55
+#: ../plugins/sorttab_display/sorttab_display.xml.h:46
 msgid "Time:"
 msgstr "Timp:"
 
-#: ../plugins/sorttab_display/sorttab_display.glade.h:57
-msgid "Tracks"
-msgstr "Piese"
-
-#: ../plugins/sorttab_display/sorttab_display.glade.h:58
+#: ../plugins/sorttab_display/sorttab_display.xml.h:48
 msgid "_Display"
 msgstr "_Afişare"
 
@@ -5396,10 +5603,33 @@ msgstr "Şterge de pe discul dur"
 msgid "Delete From Database"
 msgstr "Şterge din baza de date"
 
+#: ../plugins/sorttab_display/sorttab_display_context_menu.c:273
+#: ../plugins/track_display/track_display_context_menu.c:170
+#, fuzzy
+msgid "Create Playlist"
+msgstr "_Creează listă de redare"
+
+#: ../plugins/sorttab_display/sorttab_display_context_menu.c:278
+#: ../plugins/track_display/track_display_context_menu.c:175
+#, fuzzy
+msgid "Copy"
+msgstr "Comp."
+
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:280
 #: ../plugins/track_display/track_display_context_menu.c:177
-msgid "Copy selected track(s) to..."
+#, fuzzy
+msgid "Copy selected track(s) to"
 msgstr "Copiază piesa(piesele) selectat(e) către..."
+
+#: ../plugins/sorttab_display/sorttab_display.plugin.in.h:1
+#, fuzzy
+msgid "Filter Track View"
+msgstr "Actualizare piesă eşuată"
+
+#: ../plugins/sorttab_display/sorttab_display.plugin.in.h:2
+#, fuzzy
+msgid "Sorttab Display Plugin"
+msgstr "Categorii"
 
 #: ../plugins/track_display/display_tracks.c:341
 #, c-format
@@ -5454,10 +5684,6 @@ msgstr "Redat"
 msgid "Modified"
 msgstr "Modificat"
 
-#: ../plugins/track_display/display_tracks.c:1871
-msgid "Added"
-msgstr "Adăugat"
-
 #: ../plugins/track_display/display_tracks.c:1874
 msgid "Released"
 msgstr "Lansat"
@@ -5471,7 +5697,7 @@ msgid "Sndchk."
 msgstr "Verif."
 
 #: ../plugins/track_display/plugin.c:46 ../plugins/track_display/plugin.c:112
-#: ../plugins/track_display/track_display.glade.h:11
+#: ../plugins/track_display/track_display.xml.h:11
 #, fuzzy
 msgid "Track Display"
 msgstr "_Afişare"
@@ -5494,42 +5720,60 @@ msgstr "Piese selectate de pe iPod "
 msgid "  Playlist Tracks"
 msgstr "Liste de redare"
 
-#: ../plugins/track_display/track_display.glade.h:1
+#: ../plugins/track_display/track_display.xml.h:1
 msgid "<b>Available Columns</b>"
 msgstr ""
 
-#: ../plugins/track_display/track_display.glade.h:2
+#: ../plugins/track_display/track_display.xml.h:2
 #, fuzzy
 msgid "<b>Displayed Columns</b>"
 msgstr "<b>Confirmare ştergere</b>"
 
-#: ../plugins/track_display/track_display.glade.h:4
+#: ../plugins/track_display/track_display.xml.h:3
+msgid "<b>Ignore Frequent Words</b>"
+msgstr "<b>Ignoră cuvintele frecvente</b>"
+
+#: ../plugins/track_display/track_display.xml.h:4
 msgid "<b>Preferred Track Execution Command</b>"
 msgstr ""
 
-#: ../plugins/track_display/track_display.glade.h:5
+#: ../plugins/track_display/track_display.xml.h:5
 msgid "<span weight='bold' size='larger'>No playlist selected</span>"
 msgstr ""
 
-#: ../plugins/track_display/track_display.glade.h:6
+#: ../plugins/track_display/track_display.xml.h:6
 #, fuzzy
 msgid "Add Column"
 msgstr "_Adaugă album"
 
-#: ../plugins/track_display/track_display.glade.h:8
+#: ../plugins/track_display/track_display.xml.h:8
 msgid "Expand columns beyond the track list width"
 msgstr ""
+
+#: ../plugins/track_display/track_display.xml.h:10
+msgid "Ignore these words when at the beginning of the following fields:"
+msgstr "Ignoră aceste cuvinte la începutul următoarelor câmpuri:"
 
 #: ../plugins/track_display/track_display_context_menu.c:51
 #, fuzzy
 msgid "Select All"
 msgstr "Lista de redare selectată"
 
-#: ../plugins/track_display/track_display_preferences.c:236
+#: ../plugins/track_display/track_display.plugin.in.h:1
+#, fuzzy
+msgid "Track Display Plugin"
+msgstr "_Afişare"
+
+#: ../plugins/track_display/track_display.plugin.in.h:2
+#, fuzzy
+msgid "Track View"
+msgstr "Număr pistă"
+
+#: ../plugins/track_display/track_display_preferences.c:235
 msgid "New Word to Ignore"
 msgstr ""
 
-#: ../plugins/track_display/track_display_preferences.c:236
+#: ../plugins/track_display/track_display_preferences.c:235
 msgid "Please enter a word for sorting functions to ignore"
 msgstr ""
 
@@ -5679,61 +5923,128 @@ msgstr ""
 msgid "About third party gtkpod plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:407
+#: ../src/anjuta-app.c:406
 #, fuzzy
 msgid "Edit"
 msgstr "_Editare"
 
-#: ../src/anjuta-app.c:408 ../src/anjuta-app.c:409
+#: ../src/anjuta-app.c:407 ../src/anjuta-app.c:408
 #, fuzzy
 msgid "View"
 msgstr "_Vizualizare"
 
-#: ../src/anjuta-app.c:410
+#: ../src/anjuta-app.c:409
 #, fuzzy
 msgid "Tools"
 msgstr "_Unelte"
 
-#: ../src/anjuta-app.c:411
+#: ../src/anjuta-app.c:410
 #, fuzzy
 msgid "Help"
 msgstr "_Ajutor"
 
-#: ../src/anjuta-app.c:600
+#: ../src/anjuta-app.c:599
 msgid " Plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:611
+#: ../src/anjuta-app.c:610
 msgid "Installed plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:612
+#: ../src/anjuta-app.c:611
 #, fuzzy
 msgid "Preferred plugins"
 msgstr "Preferinţe"
 
-#: ../src/anjuta-app.c:613
+#: ../src/anjuta-app.c:612
 #, fuzzy
 msgid "Shortcuts"
 msgstr "Categorii"
 
-#: ../src/anjuta-app.c:671
+#: ../src/anjuta-app.c:670
 #, c-format
 msgid "Value doesn't exist"
 msgstr ""
 
-#: ../src/anjuta-app.c:1252
+#: ../src/anjuta-app.c:1282
 #, fuzzy
 msgid "Confirmation"
 msgstr "Informaţie"
 
-#: ../src/gtkpod.c:189
+#: ../src/gtkpod.c:184
 msgid "Loaded Session..."
 msgstr ""
 
 #: ../src/main.c:57
 msgid "gtkpod"
 msgstr "gtkpod"
+
+#~ msgid "Export can be continued at a later time if canceled."
+#~ msgstr "Exportarea poate continua mai târziu dacă este revocată"
+
+#~ msgid "Progress Information"
+#~ msgstr "Informaţii despre progres"
+
+#~ msgid "Status: Copying track"
+#~ msgstr "Stare: se copiază piese"
+
+#, fuzzy
+#~ msgid "Browse..."
+#~ msgstr "Răsfoieşte"
+
+#~ msgid ""
+#~ "If you check this, information (cover art and meta information) changed "
+#~ "for this track will be copied to all other selected tracks as well. Use "
+#~ "with care."
+#~ msgstr ""
+#~ "Dacă bifaţi această opţiune, informaţiile (coperta şi meta-informaţia) "
+#~ "modificate pentru această piesă vor fi copiate la toate celelalte piese "
+#~ "selectate. Folosiţi-o cu atenţie."
+
+#~ msgid "copying..."
+#~ msgstr "copiez..."
+
+#~ msgid "Add Images from a Directory"
+#~ msgstr "Adaugă imagini dintr-un dosar"
+
+#~ msgid ""
+#~ "Insert before\n"
+#~ "Insert after"
+#~ msgstr ""
+#~ "Inserează înainte\n"
+#~ "inserează după"
+
+#~ msgid ""
+#~ "iPod\n"
+#~ "Local Repository (Standard)\n"
+#~ "Local Repository (Podcasts)\n"
+#~ msgstr ""
+#~ "iPod\n"
+#~ "Depozit local (standard)\n"
+#~ "Depozit local (podcasturi)\n"
+
+#, fuzzy
+#~ msgid "<b>Auto Store</b>"
+#~ msgstr "Memorare automată"
+
+#~ msgid "<b>Sort Order</b>"
+#~ msgstr "<b>Ordine sortare</b>"
+
+#, fuzzy
+#~ msgid "Filter tabs"
+#~ msgstr "Dimensiune"
+
+#~ msgid "Please refer to the notice below."
+#~ msgstr "Vă rugăm să vă referiţi la notiţa de mai jos."
+
+#~ msgid "Sort tracks according to: "
+#~ msgstr "Sortează piesele conform:"
+
+#~ msgid "Sorting Options"
+#~ msgstr "Opţiuni sortare"
+
+#~ msgid "Tracks"
+#~ msgstr "Piese"
 
 #~ msgid " "
 #~ msgstr " "
@@ -6195,9 +6506,6 @@ msgstr "gtkpod"
 #~ msgid "_About gtkpod"
 #~ msgstr "_Despre gtkpod"
 
-#~ msgid "_All Tracks"
-#~ msgstr "_Toate"
-
 #, fuzzy
 #~ msgid "_Arrange Filter Tabs"
 #~ msgstr "_Aranjează categoriile"
@@ -6208,12 +6516,6 @@ msgstr "gtkpod"
 
 #~ msgid "_Conversion Log"
 #~ msgstr "_Jurnal conversie"
-
-#~ msgid "_Create Playlists"
-#~ msgstr "_Creează listă de redare"
-
-#~ msgid "_Displayed Tracks"
-#~ msgstr "_Piese afişate"
 
 #~ msgid "_Enqueue"
 #~ msgstr "_Adaugă în coadă"
@@ -6893,9 +7195,6 @@ msgstr "gtkpod"
 #~ msgid "_Encoding (ID3, files):"
 #~ msgstr "_Encodare (ID3, fişiere):"
 
-#~ msgid "_Ignore rules"
-#~ msgstr "_Ignoră reguli"
-
 #~ msgid "_Image"
 #~ msgstr "_Imagine"
 
@@ -6946,12 +7245,6 @@ msgstr "gtkpod"
 
 #~ msgid "Confirmation Dialogue"
 #~ msgstr "Dialog confirmare"
-
-#~ msgid "Last Played"
-#~ msgstr "Ultima redare"
-
-#~ msgid "Last Modified"
-#~ msgstr "Ultima modificare"
 
 #~ msgid "Could not open \"%s\" for reading extended info.\n"
 #~ msgstr "Nu am putut deschide \"%s\" pentru citirea informaţiilor extinse.\n"
