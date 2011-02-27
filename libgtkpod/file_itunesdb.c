@@ -107,7 +107,6 @@ void fill_in_extended_info(Track *track, gint32 total, gint32 num) {
     gint ipod_id = 0;
     ExtraTrackData *etr;
     struct track_extended_info *sei = NULL;
-    gchar *trackpath;
 
     g_return_if_fail (track);
     etr = track->userdata;
@@ -160,13 +159,6 @@ void fill_in_extended_info(Track *track, gint32 total, gint32 num) {
         /* don't remove the sha1-hash -- there may be duplicates... */
         if (extendedinfohash)
             g_hash_table_remove(extendedinfohash, &ipod_id);
-    }
-
-    /* Try reading artwork data using the filetype of the track */
-    trackpath = get_file_name_from_source(track, SOURCE_PREFER_LOCAL);
-    if (trackpath) {
-        get_track_info_from_file(trackpath, track);
-        g_free(trackpath);
     }
 }
 

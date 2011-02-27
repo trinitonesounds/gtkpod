@@ -817,9 +817,6 @@ void gp_init(int argc, char *argv[]) {
         g_free(filename);
     }
 
-    /* Initiate autodetection */
-    autodetection_init();
-
     /* initiate client server */
     server_setup();
 
@@ -853,6 +850,9 @@ void gp_init_itdbs() {
             itdb_spl_update_live(itdb);
         }
     }
+
+    /* Itdbs now ready. Initiate autodetection */
+    autodetection_init();
 }
 
 /* Create an repository according to the settings in the preferences
