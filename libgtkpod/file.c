@@ -304,8 +304,8 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
  \*------------------------------------------------------------------*/
 
 
-static gint add_directory_by_name_internal(GTime *last_save_time, iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, gint *filecount, AddTrackFunc addtrackfunc, gpointer data) {
-    gint result = 0;
+static gboolean add_directory_by_name_internal(GTime *last_save_time, iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data) {
+    gboolean result = FALSE;
 
     g_return_val_if_fail (itdb, 0);
     g_return_val_if_fail (name, 0);
@@ -320,7 +320,7 @@ static gint add_directory_by_name_internal(GTime *last_save_time, iTunesDB *itdb
                 if (next != NULL) {
                     gchar *nextfull = g_build_filename(name, next, NULL);
                     if (descend || !g_file_test(nextfull, G_FILE_TEST_IS_DIR)) {
-			result += add_directory_by_name_internal(last_save_time, itdb, nextfull, plitem, descend, filecount, addtrackfunc, data);
+			result |= add_directory_by_name_internal(last_save_time, itdb, nextfull, plitem, descend, addtrackfunc, data);
                     }
                     g_free(nextfull);
                 }
@@ -333,10 +333,9 @@ static gint add_directory_by_name_internal(GTime *last_save_time, iTunesDB *itdb
     }
     else {
         if (add_track_by_filename(itdb, name, plitem, descend, addtrackfunc, data)) {
-            *filecount = *filecount + 1;
             gp_save_if_needed(last_save_time, itdb);
         }
-        result += *filecount;
+        result = TRUE;
     }
     return result;
 }
@@ -358,10 +357,9 @@ static gint add_directory_by_name_internal(GTime *last_save_time, iTunesDB *itdb
  */
 /* */
 gint add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data) {
-    /* Uses internal method so that a count parameter can be added for saving purposes. */
-    gint filecount = 0;
+    /* Uses internal method to pass around the last save time. */
     GTime last_save_time = (GTime) time(NULL);
-    return add_directory_by_name_internal(&last_save_time, itdb, name, plitem, descend, &filecount, addtrackfunc, data);
+    return add_directory_by_name_internal(&last_save_time, itdb, name, plitem, descend, addtrackfunc, data);
 }
 
 /*------------------------------------------------------------------*\
