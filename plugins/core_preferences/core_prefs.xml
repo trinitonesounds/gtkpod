@@ -31,6 +31,11 @@
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
+  <object class="GtkAdjustment" id="adjustment6">
+    <property name="upper">600</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">30</property>
+  </object>
   <object class="GtkListStore" id="model1">
     <columns>
       <!-- column-name gchararray -->
@@ -1622,7 +1627,7 @@ will be imposed on the repository.</property>
                                 <property name="can_focus">True</property>
                                 <property name="has_frame">False</property>
                                 <property name="invisible_char">&#x25CF;</property>
-                                <property name="adjustment">adjustment4</property>
+                                <property name="adjustment">adjustment6</property>
                                 <property name="climb_rate">1</property>
                                 <property name="snap_to_ticks">True</property>
                                 <property name="numeric">True</property>
