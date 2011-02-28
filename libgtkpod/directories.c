@@ -81,11 +81,11 @@ static void debug_print_directories() {
 static gchar * init_dir(char *argv[], gchar *localdir, gchar *fullinstalldir) {
     gchar *progname;
     gchar *newdir = NULL;
+    GRegex *regex;
+    GMatchInfo *match_info;
 
     progname = g_find_program_in_path(argv[0]);
     if (progname) {
-        static const gchar *gtkpodSEPsrcSEP = "gtkpod" G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S;
-
         if (!g_path_is_absolute(progname)) {
             gchar *cur_dir = g_get_current_dir();
             gchar *prog_absolute;
@@ -99,12 +99,22 @@ static gchar * init_dir(char *argv[], gchar *localdir, gchar *fullinstalldir) {
             progname = prog_absolute;
         }
 
-        gchar *substr = g_strrstr(progname, gtkpodSEPsrcSEP);
-        if (substr) {
-            gchar** tokens = g_strsplit(progname, substr, -1);
-            newdir = g_build_filename(tokens[0], "gtkpod", localdir, NULL);
+        static const gchar *gtkpodSEPsrcSEP = "(gtkpod[\x20-\x7E]*)([\\\\/]src[\\\\/])";
+
+        regex = g_regex_new (gtkpodSEPsrcSEP, 0, 0, NULL);
+        if (g_regex_match (regex, progname, 0, &match_info)) {
+            /* Find the gtkpod* parathesis pattern */
+            gchar *gtkpoddir = g_match_info_fetch (match_info, 1);
+
+            /* Get the base directory by splitting the regex on the pattern */
+            gchar **tokens = g_regex_split (regex, progname, 0);
+            newdir = g_build_filename(tokens[0], gtkpoddir, localdir, NULL);
+            g_free(gtkpoddir);
             g_strfreev(tokens);
         }
+
+        g_match_info_free (match_info);
+        g_regex_unref (regex);
         g_free(progname);
 
         if (newdir && !g_file_test(newdir, G_FILE_TEST_EXISTS)) {
