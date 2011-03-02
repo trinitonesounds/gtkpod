@@ -1,3 +1,16 @@
+gtkpod V2.0.0
+	UI completely reworked with anjuta as the windowing system. Provides
+	major features as plugins that can be added and removed depending upon
+	user preference.
+
+	IMPROVEMENT: Replacement of glade with gtkbuilder
+
+	BUGFIXES: Lots ... Thanks to everybody who contributed. See the ChangeLog
+	for details.
+
+	TRANSLATIONS: Thanks to the efforts of all translators, including those
+	on www.transifex.net/projects/p/gtkpod/
+
 gtkpod V1.0.0
 	Final release of gtkpod before the major UI refactorings with anjuta
 	are incorporated.

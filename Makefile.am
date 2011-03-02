@@ -13,6 +13,7 @@ EXTRA_DIST =			\
 	autogen.sh		\
 	CMakeLists.txt \
 	cmake \
+	generate-ChangeLog.sh \
 	intltool-extract.in	\
 	intltool-merge.in	\
 	intltool-update.in	\
@@ -26,6 +27,9 @@ DISTCLEANFILES =		\
 	intltool-extract	\
 	intltool-merge		\
 	intltool-update
+
+dist-hook: configure.ac
+	sh $(top_srcdir)/generate-ChangeLog.sh $(top_srcdir) $(distdir)
 
 uninstall-hook:
 	-rm -rf $(DESTDIR)$(pkgdatadir)
