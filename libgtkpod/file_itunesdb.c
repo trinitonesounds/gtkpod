@@ -375,7 +375,7 @@ static gboolean read_extended_info(gchar *name, gchar *itunes) {
  * @ itdb: itunes database
  *
  */
-static void load_photodb(iTunesDB *itdb) {
+static void load_photodb(iTunesDB *itdb, GString *errors) {
     ExtraiTunesDBData *eitdb;
     PhotoDB *db;
     const gchar *mp;
@@ -393,12 +393,12 @@ static void load_photodb(iTunesDB *itdb) {
     mp = itdb_get_mountpoint(itdb);
     db = itdb_photodb_parse(mp, &error);
     if (error) {
-        gtkpod_warning(_("Error reading iPod photo database (%s).\n"), error->message);
+        g_string_append_printf(errors, _("Error reading iPod photo database (%s).\n"), error->message);
         g_error_free(error);
         error = NULL;
     }
     else if (db == NULL) {
-        gtkpod_warning(_("Error reading iPod photo database. (No error message)\n"));
+        g_string_append(errors, _("Error reading iPod photo database. (No error message)\n"));
     }
     else {
         /* Set the reference to the photo database */
@@ -420,6 +420,7 @@ iTunesDB *gp_import_itdb(iTunesDB *old_itdb, const gint type, const gchar *mp, c
     Playlist *pod_pl;
     ExtraiTunesDBData *eitdb;
     iTunesDB *itdb = NULL;
+    GString *errors = g_string_new(""); /* Errors generated during the import */
     GError *error = NULL;
     gint32 total, num;
     gboolean offline;
@@ -457,9 +458,8 @@ iTunesDB *gp_import_itdb(iTunesDB *old_itdb, const gint type, const gchar *mp, c
                             *msg =
                                     g_strdup_printf(_("The repository %s does not have a readable extended database.\n"), name_db);
                     msg
-                            = g_strconcat(msg, _("This database identifies the track on disk with the track data in the repository database."), _("Any tracks already in the database cannot be transferred between repositories without the extended database."), _("A new extended database will be created upon saving but existing tracks will need to be reimported to be linked to the file on disk."), NULL);
-
-                    gtkpod_warning(msg);
+                            = g_strconcat(msg, _("This database identifies the track on disk with the track data in the repository database. "), _("Any tracks already in the database cannot be transferred between repositories without the extended database. "), _("A new extended database will be created upon saving but existing tracks will need to be reimported to be linked to the file on disk.\n\n"), NULL);
+                    g_string_append(errors, msg);
                 }
             }
             itdb = itdb_parse_file(name_db, &error);
@@ -472,20 +472,22 @@ iTunesDB *gp_import_itdb(iTunesDB *old_itdb, const gint type, const gchar *mp, c
             else {
                 if (error) {
                     if (type & GP_ITDB_TYPE_IPOD)
-                        gtkpod_warning(_("Offline iPod database import failed: '%s'\n\n"), error->message);
+                        g_string_append_printf(errors, _("Offline iPod database import failed: '%s'\n\n"), error->message);
                     else
-                        gtkpod_warning(_("Local database import failed: '%s'\n\n"), error->message);
+                        g_string_append_printf(errors, _("Local database import failed: '%s'\n\n"), error->message);
+
+                    g_error_free(error);
                 }
                 else {
                     if (type & GP_ITDB_TYPE_IPOD)
-                        gtkpod_warning(_("Offline iPod database import failed: \n\n"));
+                        g_string_append(errors, _("Offline iPod database import failed: \n\n"));
                     else
-                        gtkpod_warning(_("Local database import failed: \n\n"));
+                        g_string_append(errors, _("Local database import failed: \n\n"));
                 }
             }
         }
         else {
-            gtkpod_warning(_("'%s' does not exist. Import aborted.\n\n"), name_db);
+            g_string_append_printf(errors, _("'%s' does not exist. Import aborted.\n\n"), name_db);
         }
         g_free(name_ext);
         g_free(name_db);
@@ -499,25 +501,26 @@ iTunesDB *gp_import_itdb(iTunesDB *old_itdb, const gint type, const gchar *mp, c
 
             if (WRITE_EXTENDED_INFO) {
                 if (!read_extended_info(name_ext, name_db)) {
-                    gtkpod_warning(_("Extended info will not be used.\n"));
+                    g_string_append(errors, _("Extended info will not be used.\n\n"));
                 }
             }
             itdb = itdb_parse(mp, &error);
             if (itdb && !error) {
-                gtkpod_statusbar_message(_("iPod Database Successfully Imported"));
+                gtkpod_statusbar_message(_("iPod Database Successfully Imported\n\n"));
             }
             else {
                 if (error) {
-                    gtkpod_warning(_("iPod Database Import Failed: '%s'\n\n"), error->message);
+                    g_string_append_printf(errors, _("iPod Database Import Failed: '%s'\n\n"), error->message);
+                    g_error_free(error);
                 }
                 else {
-                    gtkpod_warning(_("iPod Database Import Failed.\n\n"));
+                    g_string_append(errors, _("iPod Database Import Failed.\n\n"));
                 }
             }
         }
         else {
             gchar *name = g_build_filename(mp, "iPod_Control", "iTunes", "iTunesDB", NULL);
-            gtkpod_warning(_("'%s' (or similar) does not exist. Import aborted.\n\n"), name);
+            g_string_append_printf(errors, _("'%s' (or similar) does not exist. Import aborted.\n\n"), name);
             g_free(name);
         }
         g_free(name_ext);
@@ -683,9 +686,28 @@ iTunesDB *gp_import_itdb(iTunesDB *old_itdb, const gint type, const gchar *mp, c
     }
 
     /* Add photo database */
-    load_photodb(itdb);
+    load_photodb(itdb, errors);
 
     release_widgets();
+
+    if (errors && errors->len > 0) {
+        gtkpod_confirmation(-1, /* gint id, */
+                TRUE, /* gboolean modal, */
+                _("Import Repository Errors"), /* title */
+                _("Errors created during repository import"), /* label */
+                errors->str, /* scrolled text */
+                NULL, 0, NULL, /* option 1 */
+                NULL, 0, NULL, /* option 2 */
+                TRUE, /* gboolean confirm_again, */
+                "show_itdb_import_errors",/* confirm_again_key,*/
+                CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
+                NULL, /* don't show "Apply" button */
+                NULL, /* cancel_handler,*/
+                NULL, /* gpointer user_data1,*/
+                NULL); /* gpointer user_data2,*/
+
+        g_string_free(errors, TRUE);
+    }
 
     return itdb;
 }
