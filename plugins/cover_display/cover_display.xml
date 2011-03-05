@@ -116,6 +116,7 @@
               <object class="GtkHScale" id="cover_display_scaler">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="update_policy">discontinuous</property>
                 <property name="digits">0</property>
                 <property name="draw_value">False</property>
               </object>

@@ -600,6 +600,7 @@ void coverart_display_update(gboolean clear_track_list) {
 void coverart_display_sort(gint order) {
     prefs_set_int("cad_sort", order);
     coverart_display_update(TRUE);
+    redraw(FALSE);
     gtkpod_broadcast_preference_change("cad_sort", order);
 }
 
@@ -1381,7 +1382,12 @@ void coverart_select_cover(Track *track) {
     index = g_list_position(album_key_list, key);
     g_free(trk_key);
 
-    /* Use the index value for the main image index */
+    /*
+     * Use the index value for the main image index.
+     * The index extracted from the album_key_list is
+     * taking into account the 4 nulls at the start of the
+     * list so this removes that inaccuracy.
+     */
     cdwidget->first_imgindex = index - IMG_MAIN;
     if (cdwidget->first_imgindex < 0)
         cdwidget->first_imgindex = 0;
@@ -1392,7 +1398,7 @@ void coverart_select_cover(Track *track) {
      * cover selection by blocking the event
      */
     g_signal_handler_block(cdwidget->cdslider, slide_signal_id);
-    gtk_range_set_value(GTK_RANGE (cdwidget->cdslider), index);
+    gtk_range_set_value(GTK_RANGE (cdwidget->cdslider), cdwidget->first_imgindex);
     g_signal_handler_unblock(cdwidget->cdslider, slide_signal_id);
 }
 
