@@ -46,6 +46,9 @@
 
 /* Action IDs */
 #define ACTION_LOAD_IPOD "ActionLoadiPod"
+#define ACTION_LOAD_IPODS "ActionLoadiPods"
+#define ACTION_DISPLAY_LOAD_IPODS "ActionDisplayLoadiPods"
+#define ACTION_LOAD_IPODS_MENU "ActionLoadiPodsMenu"
 #define ACTION_SAVE_CHANGES "ActionSaveChanges"
 #define ACTION_ADD_FILES "ActionAddFiles"
 #define ACTION_ADD_DIRECTORY "ActionAddDirectory"

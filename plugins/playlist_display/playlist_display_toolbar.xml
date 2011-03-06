@@ -1,6 +1,11 @@
 <ui>
 	<toolbar name="PlaylistToolbar">
-		<toolitem name="Load iPod(s)" action="ActionLoadiPod" />
+		<toolitem name="Load iPod(s)" action="ActionDisplayLoadiPods">
+			<menu name="LoadiPodMenu" action="ActionLoadiPodsMenu">
+				<menuitem name="Load Selected iPod" action="ActionLoadiPod"/>
+				<menuitem name="Load iPod(s)" action="ActionLoadiPods"/>
+			</menu>
+		</toolitem>
 		<toolitem name="Save Changes" action="ActionSaveChanges" />
 		<toolitem name="Add Files" action="ActionAddFiles" />
 		<toolitem name="Add Directory" action="ActionAddDirectory" />

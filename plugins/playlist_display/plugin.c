@@ -57,10 +57,26 @@ static GtkActionEntry playlist_actions[] =
         {
             ACTION_LOAD_IPOD, /* Action name */
             PLAYLIST_DISPLAY_READ_ICON_STOCK_ID, /* Stock icon */
+            N_("_Load Selected iPod"), /* Display label */
+            NULL, /* short-cut */
+            N_("Load the currently selected iPod"), /* Tooltip */
+            G_CALLBACK (on_load_ipod_mi) /* callback */
+        },
+        {
+            ACTION_LOAD_IPODS, /* Action name */
+            PLAYLIST_DISPLAY_READ_ICON_STOCK_ID, /* Stock icon */
             N_("_Load iPod(s)"), /* Display label */
             NULL, /* short-cut */
             N_("Load all currently listed iPods"), /* Tooltip */
             G_CALLBACK (on_load_ipods_mi) /* callback */
+        },
+        {
+            ACTION_LOAD_IPODS_MENU,
+            NULL,
+            N_("_Load iPods"),
+            NULL,
+            NULL,
+            NULL
         },
         {
             ACTION_SAVE_CHANGES, /* Action name */
@@ -293,6 +309,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     PlaylistDisplayPlugin *playlist_display_plugin;
     GtkActionGroup* action_group;
     GtkAction *new_playlist_action;
+    GtkAction *load_ipods_action;
 
     /* Set preferences */
     set_default_preferences();
@@ -320,6 +337,10 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     new_playlist_action = tool_menu_action_new (ACTION_NEW_PLAYLIST, _("New Playlist"), _("Create a new playlist for the selected iPod"), GTK_STOCK_NEW);
     g_signal_connect(new_playlist_action, "activate", G_CALLBACK(on_new_playlist_activate), NULL);
     gtk_action_group_add_action (playlist_display_plugin->action_group, GTK_ACTION (new_playlist_action));
+
+    load_ipods_action = tool_menu_action_new (ACTION_DISPLAY_LOAD_IPODS, _("Load iPods"), _("Load all or selected iPods"), PLAYLIST_DISPLAY_READ_ICON_STOCK_ID);
+    g_signal_connect(load_ipods_action, "activate", G_CALLBACK(on_load_ipods_mi), NULL);
+    gtk_action_group_add_action (playlist_display_plugin->action_group, GTK_ACTION (load_ipods_action));
 
     /* Merge UI */
     gchar *uipath = g_build_filename(get_ui_dir(), "playlist_display.ui", NULL);

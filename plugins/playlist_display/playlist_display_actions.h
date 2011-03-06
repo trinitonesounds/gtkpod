@@ -36,6 +36,7 @@
 #include <gtk/gtk.h>
 #include "plugin.h"
 
+void on_load_ipod_mi(GtkAction* action, PlaylistDisplayPlugin* plugin);
 void on_load_ipods_mi(GtkAction* action, PlaylistDisplayPlugin* plugin);
 void on_save_changes(GtkAction *action, PlaylistDisplayPlugin* plugin);
 void on_create_add_files(GtkAction *action, PlaylistDisplayPlugin* plugin);

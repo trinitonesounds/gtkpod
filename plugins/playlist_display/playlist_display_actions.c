@@ -333,6 +333,13 @@ static void create_add_files_dialog(Playlist *pl) {
     gdk_threads_add_idle((GSourceFunc) fileselection_add_files_cb, names);
 }
 
+void on_load_ipod_mi(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    iTunesDB *itdb = gtkpod_get_current_itdb();
+    if (itdb != NULL) {
+        gp_load_ipod(itdb);
+    }
+}
+
 void on_load_ipods_mi(GtkAction* action, PlaylistDisplayPlugin* plugin) {
     gp_load_ipods();
 }
