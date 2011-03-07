@@ -34,7 +34,6 @@
 #  include <config.h>
 #endif
 
-#include <glib.h>
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include "itdb.h"
@@ -84,7 +83,6 @@ void gp_load_ipods (void);
 iTunesDB *gp_load_ipod (iTunesDB *itdb);
 gboolean gp_eject_ipod(iTunesDB *itdb);
 gboolean gp_save_itdb (iTunesDB *itdb);
-void gp_save_if_needed(GTime* last_save_time, iTunesDB *itdb);
 void handle_export (void);
 void data_changed (iTunesDB *itdb);
 void data_unchanged (iTunesDB *itdb);
