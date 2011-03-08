@@ -32,9 +32,9 @@
     <property name="page_increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment6">
-    <property name="upper">100</property>
+    <property name="upper">200</property>
     <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
+    <property name="page_increment">20</property>
   </object>
   <object class="GtkListStore" id="model1">
     <columns>
