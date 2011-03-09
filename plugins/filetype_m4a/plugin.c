@@ -37,6 +37,7 @@
 #include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "m4afile.h"
+#include "mp4file.h"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -46,6 +47,8 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     m4a_filetype_plugin = (M4AFileTypePlugin*) plugin;
     g_return_val_if_fail(FILE_IS_TYPE(m4a_filetype_plugin), TRUE);
+
+    mp4_init();
 
     gtkpod_register_filetype(FILE_TYPE(m4a_filetype_plugin));
 
@@ -58,12 +61,13 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     m4a_filetype_plugin = (M4AFileTypePlugin*) plugin;
     gtkpod_unregister_filetype(FILE_TYPE(m4a_filetype_plugin));
 
+    mp4_close();
+
     /* FALSE if plugin doesn't want to deactivate */
     return TRUE;
 }
 
 static void m4a_filetype_plugin_instance_init(GObject *obj) {
-    //    M4AFileTypePlugin *plugin = (M4AFileTypePlugin*) obj;
 }
 
 static void m4a_filetype_plugin_class_init(GObjectClass *klass) {
