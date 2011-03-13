@@ -1680,12 +1680,18 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
         if (success) { /* write shuffle data */
             if (!itdb_shuffle_write(itdb, &error)) { /* an error occurred */
                 success = FALSE;
-                if (error && error->message)
-                    gtkpod_warning("%s\n\n", error->message);
-                    else
+                if (error && error->message) {
+                    gchar *msg = g_strdup_printf("%s\n\n", error->message);
+                    gtkpod_warning(msg);
+                    g_free(msg);
+                }
+                else
                     g_warning ("error->message == NULL!\n");
-                g_error_free(error);
-                error = NULL;
+
+                if (error) {
+                    g_error_free(error);
+                    error = NULL;
+                }
             }
         }
         if (success) {
