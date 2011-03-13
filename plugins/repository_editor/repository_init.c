@@ -177,7 +177,7 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
         model = gtk_combo_box_get_active_text(GTK_COMBO_BOX (GET_WIDGET (ii->builder, IID_MODEL_COMBO)));
         if ((strcmp(model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0) || (strlen(model) == 0)) { /* User didn't choose a model */
             g_free(model);
-            model = NULL;
+            model = "Unknown";
         }
 
         /* Set model in the prefs system */

@@ -53,6 +53,8 @@ extern const gchar *KEY_SYNC_SHOW_SUMMARY;
 extern const gchar *KEY_MOUNTPOINT;
 extern const gchar *KEY_IPOD_MODEL;
 extern const gchar *KEY_FILENAME;
+extern const gchar *KEY_TYPE;
+extern const gchar *KEY_NAME;
 extern const gchar *KEY_PATH_SYNC_CONTACTS;
 extern const gchar *KEY_PATH_SYNC_CALENDAR;
 extern const gchar *KEY_PATH_SYNC_NOTES;

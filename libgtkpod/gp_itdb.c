@@ -48,9 +48,128 @@
 #include "clientserver.h"
 #include "gtkpod_app_iface.h"
 
+#define CONVERT_ERR_MESSAGE "Failed to convert local itunes db from file to a directory."
+
 /* A struct containing a list with available iTunesDBs. A pointer to
  this struct is stored in gtkpod_app as itdbs_head */
 static struct itdbs_head *itdbs_head = NULL;
+
+static gchar *gp_convert_itdb_file_to_directory (gint index, gint itdb_type, gchar *filename) {
+
+    g_return_val_if_fail((itdb_type & GP_ITDB_TYPE_PODCASTS) || (itdb_type & GP_ITDB_TYPE_LOCAL), NULL);
+
+    GError *error = NULL;
+    gboolean result;
+
+    if (!filename) {
+        gchar *local = g_strdup_printf("local%d.itdb", index);
+        filename = g_build_filename(prefs_get_cfgdir(), local, NULL);
+        g_free(local);
+    }
+
+    g_message("Filename: %s", filename);
+
+    gchar *db_name_key = get_itdb_prefs_key(index, KEY_NAME);
+    gchar *db_name = prefs_get_string(db_name_key);
+    g_free(db_name_key);
+
+    if (! db_name) {
+        if (itdb_type & GP_ITDB_TYPE_PODCASTS)
+            db_name = g_strdup(_("Podcasts"));
+        else
+            db_name = g_strdup(_("Local"));
+    }
+
+    /* Determine the new mountpoint */
+    gchar *mountpoint = g_build_filename(prefs_get_cfgdir(), g_strdup_printf("%s_%d", g_utf8_strdown(db_name, -1), index), NULL);
+    while (g_file_test(mountpoint, G_FILE_TEST_EXISTS)) {
+        gchar *mp = g_strdup_printf("%s1", mountpoint);
+        g_free(mountpoint);
+        mountpoint = mp;
+    }
+
+    g_message("Chosen mountpoint: %s", mountpoint);
+
+    /* initialise a blank itdb in the mountpoint */
+    const Itdb_IpodInfo *info = itdb_info_get_ipod_info_table();
+    while(info->model_number) {
+        if (info->ipod_generation == ITDB_IPOD_GENERATION_CLASSIC_3) {
+            break;
+        }
+        ++info;
+    }
+
+    result = itdb_init_ipod(mountpoint, info->model_number, db_name, &error);
+    g_free(db_name);
+
+    if (!result) {
+        if (error) {
+            gtkpod_warning(_("%s : %s\n"), CONVERT_ERR_MESSAGE, error->message);
+            g_error_free(error);
+            error = NULL;
+        }
+        else {
+            gtkpod_warning(_("%s, unknown error initialising directory structure\n"), CONVERT_ERR_MESSAGE);
+        }
+        g_free(mountpoint);
+        return NULL;
+    }
+
+    /* Copy in the itdb file to replace the blank itdb */
+    gchar *itunesdb = itdb_get_itunesdb_path(mountpoint);
+    GFile *oldfile = g_file_new_for_path(filename);
+    GFile *newfile = g_file_new_for_path(itunesdb);
+    g_free(itunesdb);
+
+    result = g_file_copy(oldfile, newfile, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
+    g_object_unref(oldfile);
+    g_object_unref(newfile);
+
+    if (!result) {
+        if (error) {
+            gtkpod_warning(_("%s : %s\n"), CONVERT_ERR_MESSAGE, error->message);
+            g_error_free(error);
+            error = NULL;
+        }
+        else {
+            gtkpod_warning(_("%s, unknown error copying in existing itdb.\n"), CONVERT_ERR_MESSAGE);
+        }
+        g_free(mountpoint);
+        return NULL;
+    }
+
+    /* Copy in the itdb ext */
+    gchar *oldextfilename = g_strdup_printf("%s.ext", filename);
+    gchar *newextfilename = g_strdup_printf("%s.ext", itdb_get_itunesdb_path(mountpoint));
+    oldfile = g_file_new_for_path(oldextfilename);
+    newfile = g_file_new_for_path(newextfilename);
+    g_free(oldextfilename);
+    g_free(newextfilename);
+
+    result = g_file_copy(oldfile, newfile, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
+    g_object_unref(oldfile);
+    g_object_unref(newfile);
+
+    if (!result) {
+        if (error) {
+            gtkpod_warning(_("%s : %s\n"), CONVERT_ERR_MESSAGE, error->message);
+            g_error_free(error);
+            error = NULL;
+        }
+        else {
+            gtkpod_warning(_("%s, unknown error copying in existing itdb ext file.\n"), CONVERT_ERR_MESSAGE);
+        }
+        g_free(mountpoint);
+        return NULL;
+    }
+
+    /* Successfully created new itdb */
+
+    /* Update preferences of this itdb */
+    set_itdb_index_prefs_string(index, KEY_MOUNTPOINT, mountpoint);
+
+    return mountpoint;
+}
 
 /* for convenience */
 struct itdbs_head *gp_get_itdbs_head() {
@@ -184,6 +303,10 @@ void gp_itdb_add_extra_full(iTunesDB *itdb) {
         g_return_if_fail (pl);
         gp_playlist_add_extra(pl);
     }
+}
+
+gboolean gp_itdb_has_mountpoint(iTunesDB *itdb) {
+    return itdb_get_mountpoint(itdb) != NULL;
 }
 
 Playlist *gp_playlist_new(const gchar *title, gboolean spl) {
@@ -859,7 +982,7 @@ void gp_init_itdbs() {
  system. */
 iTunesDB *setup_itdb_n(gint i) {
     iTunesDB *itdb = NULL;
-    gchar *property = get_itdb_prefs_key(i, "type");
+    gchar *property = get_itdb_prefs_key(i, KEY_TYPE);
     gint type;
     gboolean valid = prefs_get_int_value(property, &type);
     g_free(property);
@@ -868,33 +991,36 @@ iTunesDB *setup_itdb_n(gint i) {
         Playlist *pl = NULL;
         ExtraiTunesDBData *eitdb;
         gchar *filename = NULL;
-        gchar *mountpoint = NULL;
         gchar *offline_filename = NULL;
+        gchar *mountpoint = NULL;
+
+        /* Read filename from preferences */
+        gchar *filename_key = get_itdb_prefs_key(i, KEY_FILENAME);
+        if (filename_key) {
+            filename = prefs_get_string(filename_key);
+        }
+        g_free(filename_key);
+
+        /* Read mountpoint from preferences */
+        gchar *mountpoint_key = get_itdb_prefs_key(i, KEY_MOUNTPOINT);
+        if (mountpoint_key) {
+            mountpoint = prefs_get_string(mountpoint_key);
+        }
+        g_free(mountpoint_key);
 
         if (type & GP_ITDB_TYPE_LOCAL) {
-            gchar *fn = get_itdb_prefs_key(i, "filename");
-
-            filename = prefs_get_string(fn);
-
-            if (!filename) {
-                gchar *local = g_strdup_printf("local%d.itdb", i);
-                filename = g_build_filename(cfgdir, local, NULL);
-                g_free(local);
+            if (!mountpoint) {
+                /* This is the old style itdb file */
+                g_warning("Deprecated file structure ... Converting local itdb");
+                mountpoint = gp_convert_itdb_file_to_directory(i, type, filename);
             }
-            g_free(fn);
-            if (g_file_test(filename, G_FILE_TEST_EXISTS))
-                itdb = gp_import_itdb(NULL, type, NULL, NULL, filename);
+
+            if (g_file_test(mountpoint, G_FILE_TEST_EXISTS))
+                itdb = gp_import_itdb(NULL, type, mountpoint, filename);
         }
         else if (type & GP_ITDB_TYPE_IPOD) {
-            gchar *key;
-
-            key = get_itdb_prefs_key(i, KEY_MOUNTPOINT);
-            mountpoint = prefs_get_string(key);
-            g_free(key);
-
-            key = get_itdb_prefs_key(i, "filename");
-            offline_filename = prefs_get_string(key);
-            g_free(key);
+            offline_filename = filename;
+            filename = NULL;
 
             if (!offline_filename) {
                 gchar *local = g_strdup_printf("gtkpod_%d.itdb", i);
