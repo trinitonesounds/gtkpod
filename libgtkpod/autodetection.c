@@ -73,23 +73,25 @@ static iTunesDB *ad_find_repository_with_mountpoint(const gchar *mountpoint) {
         iTunesDB *itdb = gl->data;
         g_return_val_if_fail (itdb, NULL);
 
-        gchar *imp = get_itdb_prefs_string(itdb, KEY_MOUNTPOINT);
-        if (imp) {
-            gint comp;
-            gint lenimp = strlen(imp);
+        if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
+            gchar *imp = get_itdb_prefs_string(itdb, KEY_MOUNTPOINT);
+            if (imp) {
+                gint comp;
+                gint lenimp = strlen(imp);
 
-            /* eliminate trailing dir separators ('/') */
-            if ((lenimp > 0) && (imp[lenimp - 1] == G_DIR_SEPARATOR)) {
-                imp[lenmp - 1] = 0;
-            }
+                /* eliminate trailing dir separators ('/') */
+                if ((lenimp > 0) && (imp[lenimp - 1] == G_DIR_SEPARATOR)) {
+                    imp[lenmp - 1] = 0;
+                }
 
-            comp = strcmp(mp, imp);
+                comp = strcmp(mp, imp);
 
-            g_free(imp);
+                g_free(imp);
 
-            if (comp == 0) {
-                result = itdb;
-                break;
+                if (comp == 0) {
+                    result = itdb;
+                    break;
+                }
             }
         }
     }

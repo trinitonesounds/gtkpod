@@ -77,7 +77,8 @@ void update_tracks (GList *selected_tracks);
 void display_non_updated (Track *track, gchar *txt);
 void display_updated (Track *track, gchar *txt);
 iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
-			  const gchar *mp, const gchar *name_off);
+			  const gchar *mp, const gchar *name_off,
+			  const gchar *name_loc);
 void gp_load_ipods (void);
 iTunesDB *gp_load_ipod (iTunesDB *itdb);
 gboolean gp_eject_ipod(iTunesDB *itdb);

@@ -134,7 +134,6 @@ void gp_itdb_free (iTunesDB *itdb);
 void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb);
 void gp_itdb_add_extra (iTunesDB *itdb);
 void gp_itdb_add_extra_full (iTunesDB *itdb);
-gboolean gp_itdb_has_mountpoint(iTunesDB *itdb);
 
 Track *gp_track_new (void);
 #define gp_track_free itdb_track_free
