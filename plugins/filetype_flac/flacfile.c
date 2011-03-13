@@ -45,7 +45,7 @@
 #include <string.h>
 #include <FLAC/metadata.h>
 
-Track *flac_get_file_info(const gchar *flacFileName) {
+Track *flac_get_file_info(const gchar *flacFileName, GError **error) {
     Track *track = NULL;
     FLAC__StreamMetadata stream_data;
     FLAC__StreamMetadata *tags;
@@ -54,7 +54,7 @@ Track *flac_get_file_info(const gchar *flacFileName) {
         gchar *filename = NULL;
         filename = charset_to_utf8(flacFileName);
 
-        gtkpod_warning(_("'%s' does not appear to be an FLAC audio file.\n"), filename);
+        filetype_log_error(error, g_strdup_printf(_("'%s' does not appear to be an FLAC audio file.\n"), filename));
         g_free(filename);
     }
     else {
@@ -67,9 +67,8 @@ Track *flac_get_file_info(const gchar *flacFileName) {
             if (!FLAC__metadata_get_tags(flacFileName, &tags)) {
                 gchar *filename = NULL;
                 filename = charset_to_utf8(flacFileName);
-                gtkpod_warning(_("Error retrieving tags for '%s'.\n"), filename);
+                filetype_log_error(error, g_strdup_printf(_("Error retrieving tags for '%s'.\n"), filename));
                 g_free(filename);
-                /* FIXME: should NULL be returned if no tags? */
             }
             else {
                 gint i;

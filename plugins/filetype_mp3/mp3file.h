@@ -32,15 +32,16 @@
 
 #include "plugin.h"
 #include "libgtkpod/itdb.h"
+#include "libgtkpod/gp_private.h"
 
-gboolean mp3_write_file_info (const gchar *filename, Track *track);
-Track *mp3_get_file_info (const gchar *name);
-gboolean mp3_read_soundcheck (const gchar *path, Track *track);
-gboolean mp3_read_gapless (const gchar *path, Track *track);
+gboolean mp3_write_file_info (const gchar *filename, Track *track, GError **error);
+Track *mp3_get_file_info (const gchar *name, GError **error);
+gboolean mp3_read_soundcheck (const gchar *path, Track *track, GError **error);
+gboolean mp3_read_gapless (const gchar *path, Track *track, GError **error);
 
 gboolean id3_read_tags (const gchar *name, Track *track);
-gboolean id3_lyrics_read (const gchar *filename, gchar **lyrics);
-gboolean id3_lyrics_save (const gchar *filename, const gchar *lyrics);
+gboolean id3_lyrics_read (const gchar *filename, gchar **lyrics, GError **error);
+gboolean id3_lyrics_save (const gchar *filename, const gchar *lyrics, GError **error);
 
 gboolean mp3_can_convert();
 gchar *mp3_get_conversion_cmd();

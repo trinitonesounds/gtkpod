@@ -32,7 +32,7 @@
 
 #include "libgtkpod/itdb.h"
 
-Track *wav_get_file_info(const gchar *name);
+Track *wav_get_file_info(const gchar *name, GError **error);
 gboolean wav_can_convert();
 gchar *wav_get_conversion_cmd();
 

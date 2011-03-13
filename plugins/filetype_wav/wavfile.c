@@ -84,7 +84,7 @@ static gint read_le_short(FILE * file, gshort *ret) {
     return TRUE;
 }
 
-Track *wav_get_file_info(const gchar *filename) {
+Track *wav_get_file_info(const gchar *filename, GError **error) {
     Track *track = NULL;
     gchar *fn;
     gchar magic[4];
@@ -95,7 +95,7 @@ Track *wav_get_file_info(const gchar *filename) {
     memset(wav_file, 0, sizeof(WaveFile));
     if (!(wav_file->file = fopen(filename, "rb"))) {
         gchar *fn = charset_to_utf8(filename);
-        gtkpod_warning(_("Could not open '%s' for reading.\n"), fn);
+        filetype_log_error(error, g_strdup_printf(_("Could not open '%s' for reading.\n"), fn));
         g_free(fn);
         g_free(wav_file);
         wav_file = NULL;
@@ -172,7 +172,7 @@ Track *wav_get_file_info(const gchar *filename) {
     g_free(wav_file);
     wav_file = NULL;
     fn = charset_to_utf8(filename);
-    gtkpod_warning(_("%s does not appear to be a supported wav file.\n"), fn);
+    filetype_log_error(error, g_strdup_printf(_("%s does not appear to be a supported wav file.\n"), fn));
     g_free(fn);
     return NULL;
 }

@@ -39,11 +39,12 @@
 
 /* Info on how to implement new file formats: see mp3file.c for more info */
 
-Track *m4a_get_file_info(const gchar *m4aFileName) {
+Track *m4a_get_file_info(const gchar *m4aFileName, GError **error) {
     gchar *path_utf8;
     gchar *suf;
-    Track *track = mp4_get_file_info(m4aFileName);
-    g_return_val_if_fail(track, NULL);
+    Track *track = mp4_get_file_info(m4aFileName, error);
+    if (!track || error)
+        return track;
 
     path_utf8 = charset_to_utf8(m4aFileName);
     suf = strrchr(path_utf8, '.') + 1;
@@ -56,12 +57,12 @@ Track *m4a_get_file_info(const gchar *m4aFileName) {
     return track;
 }
 
-gboolean m4a_write_file_info(const gchar *filename, Track *track) {
-    return mp4_write_file_info(filename, track);
+gboolean m4a_write_file_info(const gchar *filename, Track *track, GError **error) {
+    return mp4_write_file_info(filename, track, error);
 }
 
-gboolean m4a_read_soundcheck(const gchar *filename, Track *track) {
-    return mp4_read_soundcheck(filename, track);
+gboolean m4a_read_soundcheck(const gchar *filename, Track *track, GError **error) {
+    return mp4_read_soundcheck(filename, track, error);
 }
 
 gboolean m4a_can_convert() {

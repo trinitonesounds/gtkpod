@@ -31,9 +31,9 @@
 
 #include "libgtkpod/itdb.h"
 
-Track *m4a_get_file_info (const gchar *m4aFileName);
-gboolean m4a_write_file_info (const gchar *filename, Track *track);
-gboolean m4a_read_soundcheck (const gchar *filename, Track *track);
+Track *m4a_get_file_info (const gchar *m4aFileName, GError **error);
+gboolean m4a_write_file_info (const gchar *filename, Track *track, GError **error);
+gboolean m4a_read_soundcheck (const gchar *filename, Track *track, GError **error);
 gboolean m4a_can_convert();
 gchar *m4a_get_conversion_cmd();
 gchar *m4a_get_gain_cmd();

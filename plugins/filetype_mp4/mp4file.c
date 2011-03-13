@@ -545,9 +545,10 @@ static gboolean mp4_scan_soundcheck(MP4FileHandle mp4File, Track *track) {
     return success;
 }
 
-gboolean mp4_read_soundcheck(const gchar *mp4FileName, Track *track) {
+gboolean mp4_read_soundcheck(const gchar *mp4FileName, Track *track, GError **error) {
     if (!mp4v2_handle) {
-        gtkpod_warning(_("m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must install the mp4v2 library.\n"), mp4FileName);
+        filetype_log_error(error,
+                g_strdup_printf(_("m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b/mp4 not supported without the mp4v2 library. You must install the mp4v2 library.\n"), mp4FileName));
         return FALSE;
     }
 
@@ -581,23 +582,25 @@ gboolean mp4_read_soundcheck(const gchar *mp4FileName, Track *track) {
         }
         if (!audio_or_video_found) {
             gchar *filename = charset_to_utf8(mp4FileName);
-            gtkpod_warning(_("'%s' does not appear to be a mp4 audio or video file.\n"), filename);
+            filetype_log_error(error,
+                    g_strdup_printf(_("'%s' does not appear to be a m4a/m4b/m4v/mp4 audio or video file.\n"), filename));
             g_free(filename);
         }
         MP4Close(mp4File);
     }
     else {
         gchar *filename = charset_to_utf8(mp4FileName);
-        gtkpod_warning(_("Could not open '%s' for reading, or file is not an mp4 file.\n"), filename);
+        filetype_log_error(error,
+                            g_strdup_printf(_("Could not open '%s' for reading, or file is not an m4a/m4b/m4v/mp4 file.\n"), filename));
         g_free(filename);
     }
 
     return success;
 }
 
-Track *mp4_get_file_info(const gchar *mp4FileName) {
+Track *mp4_get_file_info(const gchar *mp4FileName, GError **error) {
     if (!mp4v2_handle) {
-        gtkpod_warning(_("Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must install the mp4v2 library.\n"), mp4FileName);
+        filetype_log_error(error, g_strdup_printf(_("Import of '%s' failed: file type not supported without the mp4v2 library. You must install the mp4v2 library.\n"), mp4FileName));
         return NULL;
     }
 
@@ -845,23 +848,26 @@ Track *mp4_get_file_info(const gchar *mp4FileName) {
         }
         if (!audio_or_video_found) {
             gchar *filename = charset_to_utf8(mp4FileName);
-            gtkpod_warning(_("'%s' does not appear to be a mp4 audio or video file.\n"), filename);
+            filetype_log_error(error,
+                    g_strdup_printf(_("'%s' does not appear to be a m4a/m4p/m4b/mp4 audio or video file.\n"), filename));
             g_free(filename);
         }
         MP4Close(mp4File);
     }
     else {
         gchar *filename = charset_to_utf8(mp4FileName);
-        gtkpod_warning(_("Could not open '%s' for reading, or file is not an mp4 file.\n"), filename);
+        filetype_log_error(error,
+                            g_strdup_printf(_("Could not open '%s' for reading, or file is not an mp4 file.\n"), filename));
         g_free(filename);
     }
 
     return track;
 }
 
-gboolean mp4_write_file_info(const gchar *mp4FileName, Track *track) {
+gboolean mp4_write_file_info(const gchar *mp4FileName, Track *track, GError **error) {
     if (!mp4v2_handle) {
-        gtkpod_warning(_("m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must install the mp4v2 library.\n"), mp4FileName);
+        filetype_log_error(error,
+                                    g_strdup_printf(_("m4a/m4p/m4b/mp4 metadata update for '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must install the mp4v2 library.\n"), mp4FileName));
         return FALSE;
     }
 
@@ -983,7 +989,8 @@ gboolean mp4_write_file_info(const gchar *mp4FileName, Track *track) {
         }
         else {
             gchar *filename = charset_to_utf8(mp4FileName);
-            gtkpod_warning(_("'%s' does not appear to be a mp4 audio file.\n"), filename);
+            filetype_log_error(error,
+                                        g_strdup_printf(_("'%s' does not appear to be a m4a/m4b/m4v/mp4 audio file.\n"), filename));
             g_free(filename);
             result = FALSE;
         }
@@ -991,7 +998,8 @@ gboolean mp4_write_file_info(const gchar *mp4FileName, Track *track) {
     }
     else {
         gchar *filename = charset_to_utf8(mp4FileName);
-        gtkpod_warning(_("Could not open '%s' for writing, or file is not an mp4 file.\n"), filename);
+        filetype_log_error(error,
+                                    g_strdup_printf(_("Could not open '%s' for writing, or file is not an m4a/m4b/m4v/mp4 file.\n"), filename));
         g_free(filename);
         result = FALSE;
     }

@@ -31,7 +31,7 @@
 
 #include "libgtkpod/itdb.h"
 
-Track *flac_get_file_info (const gchar *flacFileName);
+Track *flac_get_file_info (const gchar *flacFileName, GError **error);
 gboolean flac_can_convert();
 gchar *flac_get_conversion_cmd();
 

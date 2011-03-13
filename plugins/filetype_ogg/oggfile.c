@@ -55,7 +55,7 @@
  * A widely used suggested usage of the fields can be found here:
  * http://wiki.xiph.org/index.php/VorbisComment
  */
-Track *ogg_get_file_info(const gchar *oggFileName) {
+Track *ogg_get_file_info(const gchar *oggFileName, GError **error) {
     Track *track = NULL;
     FILE *file = NULL;
 
@@ -63,7 +63,7 @@ Track *ogg_get_file_info(const gchar *oggFileName) {
 
     if (file == NULL) {
         gchar *filename = charset_to_utf8(oggFileName);
-        gtkpod_warning(_("Could not open '%s' for reading.\n"), filename);
+        filetype_log_error(error, g_strdup_printf(_("Could not open '%s' for reading.\n"), filename));
         g_free(filename);
     }
     else {
@@ -71,7 +71,7 @@ Track *ogg_get_file_info(const gchar *oggFileName) {
         if (ov_open(file, &oggFile, NULL, 0) != 0) {
             gchar *filename = NULL;
             filename = charset_to_utf8(oggFileName);
-            gtkpod_warning(_("'%s' does not appear to be an Ogg audio file.\n"), filename);
+            filetype_log_error(error, g_strdup_printf(_("'%s' does not appear to be an Ogg audio file.\n"), filename));
             g_free(filename);
             fclose(file);
         }

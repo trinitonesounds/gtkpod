@@ -55,6 +55,8 @@
 
 #include <glib.h>
 #include <math.h>
+#include "libgtkpod/filetype_iface.h"
+
 /*
  * Description of each item of the TagList list
  */
@@ -1561,15 +1563,16 @@ void set_uncommon_tag(struct id3_tag *id3tag, const gchar *id, const gchar *text
  * Write the ID3 tags to the file.
  * @returns: TRUE on success, else FALSE.
  */
-gboolean mp3_write_file_info(const gchar *filename, Track *track) {
+gboolean mp3_write_file_info(const gchar *filename, Track *track, GError **error) {
     struct id3_tag* id3tag;
     struct id3_file* id3file;
-    gint error = 0;
+    gint errorno = 0;
 
     id3file = id3_file_open(filename, ID3_FILE_MODE_READWRITE);
     if (!id3file) {
         gchar *fbuf = charset_to_utf8(filename);
-        g_print(_("ERROR while opening file: '%s' (%s).\n"), fbuf, g_strerror(errno));
+        filetype_log_error(error,
+                g_strdup_printf(_("ERROR while opening file: '%s' (%s).\n"), fbuf, g_strerror(errno)));
         g_free(fbuf);
         return FALSE;
     }
@@ -1643,14 +1646,15 @@ gboolean mp3_write_file_info(const gchar *filename, Track *track) {
 
     if (id3_file_update(id3file) != 0) {
         gchar *fbuf = charset_to_utf8(filename);
-        g_print(_("ERROR while writing tag to file: '%s' (%s).\n"), fbuf, g_strerror(errno));
+        filetype_log_error(error,
+                g_strdup_printf(_("ERROR while writing tag to file: '%s' (%s).\n"), fbuf, g_strerror(errno)));
         g_free(fbuf);
         return FALSE;
     }
 
     id3_file_close(id3file);
 
-    if (error)
+    if (errorno)
         return FALSE;
     else
         return TRUE;
@@ -2239,7 +2243,7 @@ gboolean mp3_get_track_ape_replaygain(const gchar *path, GainData *gd) {
  *
  * Returns TRUE if the soundcheck field could be set.
  */
-gboolean mp3_read_soundcheck(const gchar *path, Track *track) {
+gboolean mp3_read_soundcheck(const gchar *path, Track *track, GError **error) {
     GainData gd;
     gint replaygain_offset;
     gint replaygain_mode_album_priority;
@@ -2524,7 +2528,7 @@ gboolean mp3_get_track_gapless(MP3Info *mp3i, GaplessData *gd) {
  * FALSE otherwise.
  */
 
-gboolean mp3_read_gapless(const gchar *path, Track *track) {
+gboolean mp3_read_gapless(const gchar *path, Track *track, GError **error) {
     MP3Info *mp3i = NULL;
     FILE *file;
 
@@ -2756,7 +2760,7 @@ gboolean id3_read_tags(const gchar *name, Track *track) {
 
 /* Return a Track structure with all information read from the mp3
  file filled in */
-Track *mp3_get_file_info(const gchar *name) {
+Track *mp3_get_file_info(const gchar *name, GError **error) {
     Track *track = NULL;
     MP3Info *mp3i = NULL;
     FILE *file;
@@ -2775,7 +2779,8 @@ Track *mp3_get_file_info(const gchar *name) {
     }
     else {
         gchar *fbuf = charset_to_utf8(name);
-        gtkpod_warning(_("ERROR while opening file: '%s' (%s).\n"), fbuf, g_strerror(errno));
+        filetype_log_error(error,
+                g_strdup_printf(_("ERROR while opening file: '%s' (%s).\n"), fbuf, g_strerror(errno)));
         g_free(fbuf);
         return NULL;
     }
@@ -2787,9 +2792,9 @@ Track *mp3_get_file_info(const gchar *name) {
         id3_read_tags(name, track);
     }
 
-    mp3_read_soundcheck(name, track);
+    mp3_read_soundcheck(name, track, error);
 
-    mp3_read_gapless(name, track);
+    mp3_read_gapless(name, track, error);
 
     /* Get additional info (play time and bitrate */
     if (mp3i) {
@@ -2807,7 +2812,8 @@ Track *mp3_get_file_info(const gchar *name) {
 
     if (track->tracklen == 0) {
         /* Tracks with zero play length are ignored by iPod... */
-        gtkpod_warning(_("File \"%s\" has zero play length. Ignoring.\n"), name);
+        filetype_log_error(error,
+                g_strdup_printf(_("File \"%s\" has zero play length. Ignoring.\n"), name));
         gp_track_free(track);
         track = NULL;
     }
@@ -2820,8 +2826,8 @@ Track *mp3_get_file_info(const gchar *name) {
                 track->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
             else if (g_ascii_strcasecmp (track->genre, "podcast") == 0)
                 track->mediatype = ITDB_MEDIATYPE_PODCAST;
-            }
         }
+    }
 
     return track;
 }
@@ -2829,7 +2835,7 @@ Track *mp3_get_file_info(const gchar *name) {
  *
  * @returns: TRUE on success, else FALSE.
  */
-gboolean id3_lyrics_read(const gchar *filename, gchar **lyrics) {
+gboolean id3_lyrics_read(const gchar *filename, gchar **lyrics, GError **error) {
     struct id3_file *id3file;
     struct id3_tag *id3tag;
 
@@ -2838,7 +2844,8 @@ gboolean id3_lyrics_read(const gchar *filename, gchar **lyrics) {
 
     if (!(id3file = id3_file_open(filename, ID3_FILE_MODE_READONLY))) {
         gchar *fbuf = charset_to_utf8(filename);
-        g_print(_("ERROR while opening file: '%s' (%s).\n"), fbuf, g_strerror(errno));
+        filetype_log_error(error,
+                    g_strdup_printf(_("ERROR while opening file: '%s' (%s).\n"), fbuf, g_strerror(errno)));
         g_free(fbuf);
         return FALSE;
     }
@@ -2851,7 +2858,7 @@ gboolean id3_lyrics_read(const gchar *filename, gchar **lyrics) {
     return TRUE;
 }
 
-gboolean id3_lyrics_save(const gchar *filename, const gchar *lyrics) {
+gboolean id3_lyrics_save(const gchar *filename, const gchar *lyrics, GError **error) {
     struct id3_file *id3file;
     struct id3_tag *id3tag;
 

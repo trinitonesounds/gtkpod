@@ -31,7 +31,7 @@
 
 #include "libgtkpod/itdb.h"
 
-Track *ogg_get_file_info (const gchar *name);
+Track *ogg_get_file_info (const gchar *name, GError **error);
 gboolean ogg_can_convert();
 gchar *ogg_get_conversion_cmd();
 

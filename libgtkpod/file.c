@@ -53,6 +53,8 @@
 #include "misc_conversion.h"
 #include "filetype_iface.h"
 
+#define UNKNOWN_ERROR "Unknown error"
+
 /* The uppercase version of these extensions is tried as well. */
 static const gchar *imageext[] =
     { ".jpg", ".jpeg", ".png", ".pbm", ".pgm", ".ppm", ".tif", ".tiff", ".gif", NULL };
@@ -977,6 +979,7 @@ Track *get_track_info_from_file(gchar *name, Track *orig_track) {
     FileType *filetype;
     gint len;
     gchar *name_utf8 = NULL;
+    GError *error = NULL;
 
     g_return_val_if_fail (name, NULL);
 
@@ -1000,12 +1003,23 @@ Track *get_track_info_from_file(gchar *name, Track *orig_track) {
         return NULL;
 
     filetype = determine_filetype(name);
-    nti = filetype_get_file_info(filetype, name);
-
-    if (!nti) {
+    if (!filetype) {
         gtkpod_warning(
                 _("The filetype '%s' is not currently supported.\n\n"
                         "If you have a plugin that supports this filetype then please enable it."), name_utf8);
+        return NULL;
+    }
+
+    nti = filetype_get_file_info(filetype, name, &error);
+    if (error || !nti) {
+        gtkpod_warning(_("No track information could be retrieved from the file %s due to the following error:\n\n%s"), name_utf8, error->message);
+        g_error_free(error);
+        error = NULL;
+        g_free(name_utf8);
+        return NULL;
+    } else if (!nti) {
+        gtkpod_warning(_("No track information could be retrieved from the file %s due to the following error:\n\nAn error was not returned."), name_utf8);
+        g_free(name_utf8);
         return NULL;
     }
 
@@ -1612,14 +1626,14 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
  \*------------------------------------------------------------------*/
 
 /* Call the correct tag writing function for the filename @name */
-static gboolean file_write_info(gchar *name, Track *track) {
+static gboolean file_write_info(gchar *name, Track *track, GError *error) {
     FileType *filetype;
 
     g_return_val_if_fail (name, FALSE);
     g_return_val_if_fail (track, FALSE);
 
     filetype = determine_filetype(name);
-    return filetype_write_file_info(filetype, name, track);
+    return filetype_write_file_info(filetype, name, track, &error);
 }
 
 /* Write tags to file */
@@ -1630,6 +1644,7 @@ gboolean write_tags_to_file(Track *track) {
     gchar *prefs_charset = NULL;
     Track *oldtrack;
     gboolean track_charset_set;
+    GError *error = NULL;
 
     g_return_val_if_fail (track, FALSE);
     etr = track->userdata;
@@ -1653,15 +1668,33 @@ gboolean write_tags_to_file(Track *track) {
     }
 
     if (etr->pc_path_locale && (strlen(etr->pc_path_locale) > 0)) {
-        if (file_write_info(etr->pc_path_locale, track) == FALSE) {
-            gtkpod_warning(_("Couldn't change tags of file: %s\n"), etr->pc_path_locale);
+        if (! file_write_info(etr->pc_path_locale, track, error)) {
+            gchar *msg = g_strdup_printf(_("Couldn't change tags of file: %s"), etr->pc_path_locale);
+            if (error) {
+                gtkpod_warning("%s\n%s", msg, error->message);
+                g_error_free(error);
+                error = NULL;
+            }
+            else {
+                gtkpod_warning("%s\n%s", msg, UNKNOWN_ERROR);
+            }
+            g_free(msg);
         }
     }
     if (!get_offline(itdb) && track->transferred && track->ipod_path && (g_utf8_strlen(track->ipod_path, -1) > 0)) {
         /* need to get ipod filename */
         ipod_fullpath = get_file_name_from_source(track, SOURCE_IPOD);
-        if (file_write_info(ipod_fullpath, track) == FALSE) {
-            gtkpod_warning(_("Couldn't change tags of file: %s\n"), ipod_fullpath);
+        if (!file_write_info(ipod_fullpath, track, error)) {
+            gchar *msg = g_strdup_printf(_("Couldn't change tags of file: %s\n"), ipod_fullpath);
+            if (error) {
+                gtkpod_warning("%s\n%s", msg, error->message);
+                g_error_free(error);
+                error = NULL;
+            }
+            else {
+                gtkpod_warning("%s\n%s", msg, UNKNOWN_ERROR);
+            }
+            g_free(msg);
         }
         g_free(ipod_fullpath);
     }
@@ -1794,10 +1827,6 @@ void parse_offline_playcount(void) {
             }
             if (gp_increase_playcount(sha1, filename, 1) == FALSE) { /* didn't find the track -> store */
                 gchar *filename_utf8 = charset_to_utf8(filename);
-                /* 		if (gstr->len == 0) */
-                /* 		{ */
-                /* 		    gtkpod_warning (_("Couldn't find track for playcount adjustment:\n")); */
-                /* 		} */
                 g_string_append(gstr_filenames, filename_utf8);
                 g_string_append(gstr_filenames, "\n");
                 g_free(filename_utf8);
@@ -1858,12 +1887,33 @@ void parse_offline_playcount(void) {
 gboolean read_soundcheck(Track *track) {
     gchar *path;
     FileType *filetype;
+    gboolean result = FALSE;
+    GError *error = NULL;
+    gchar *msg = g_strdup_printf(_("Failed to read sound check from track because"));
 
     g_return_val_if_fail (track, FALSE);
 
     path = get_file_name_from_source(track, SOURCE_PREFER_LOCAL);
     filetype = determine_filetype(path);
-    return filetype_read_soundcheck(filetype, path, track);
+    if (! filetype) {
+        gtkpod_warning(_("%s\n\nfiletype of %s is not recognised."), msg, path);
+    }
+    else {
+        if (!filetype_read_soundcheck(filetype, path, track, &error)) {
+            if (error) {
+                gtkpod_warning(_("%s\n\n%s"), msg, error->message);
+            } else {
+                gtkpod_warning(_("%s\n\n%s"), msg, UNKNOWN_ERROR);
+            }
+        } else {
+            // track read successfully
+            result = TRUE;
+        }
+    }
+
+    g_free(path);
+    g_free(msg);
+    return result;
 }
 
 /* Get lyrics from file */
@@ -1872,6 +1922,7 @@ gboolean read_lyrics_from_file(Track *track, gchar **lyrics) {
     gboolean result = FALSE;
     ExtraTrackData *etr;
     FileType *filetype;
+    GError *error = NULL;
 
     g_return_val_if_fail (track, FALSE);
     etr = track->userdata;
@@ -1883,7 +1934,16 @@ gboolean read_lyrics_from_file(Track *track, gchar **lyrics) {
             *lyrics = g_strdup_printf(_("Error: Could not determine filetype for file at path: %s.\n\n"), path);
         }
         else {
-            result = filetype_read_lyrics(filetype, path, lyrics);
+            result = filetype_read_lyrics(filetype, path, lyrics, &error);
+            if (!result) {
+                if (error) {
+                    *lyrics = g_strdup_printf(_("Error: Failed to read lyrics because:\n\n%s"), error->message);
+                    g_error_free(error);
+                    error = NULL;
+                }
+                else
+                    *lyrics = g_strdup_printf(_("Error: Failed to read lyrics because:\n\n%s"), UNKNOWN_ERROR);
+            }
         }
     } else {
         *lyrics = g_strdup_printf(_("Error: Unable to get filename from path"));
@@ -1911,6 +1971,7 @@ gboolean write_lyrics_to_file(Track *track) {
     ExtraTrackData *etr;
     iTunesDB *itdb;
     FileType *filetype;
+    GError *error = NULL;
 
     g_return_val_if_fail (track, FALSE);
     etr = track->userdata;
@@ -1943,7 +2004,16 @@ gboolean write_lyrics_to_file(Track *track) {
         }
     }
     else {
-        result = filetype_write_lyrics(filetype, path, etr->lyrics);
+        result = filetype_write_lyrics(filetype, path, etr->lyrics, &error);
+        if (!result) {
+            if (error) {
+                gtkpod_warning(_("Lyrics not written due to the error:\n\n%s"), error->message);
+                g_error_free(error);
+                error = NULL;
+            }
+            else
+                gtkpod_warning(_("Lyrics not written due to the error:\n%s"), UNKNOWN_ERROR);
+        }
     }
 
     g_free(path);

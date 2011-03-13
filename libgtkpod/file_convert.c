@@ -2103,7 +2103,7 @@ static gboolean conversion_convert_track(Conversion *conv, ConvTrack *ctr) {
         if (filetype) {
             file_convert_lock(conv);
             track = gp_track_new();
-            retval = filetype_read_gapless(filetype, ctr->converted_file, track);
+            retval = filetype_read_gapless(filetype, ctr->converted_file, track, NULL);
 
             if (ctr->valid && (retval == TRUE)) {
                 ctr->gapless.pregap = track->pregap;

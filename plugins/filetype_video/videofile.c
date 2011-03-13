@@ -38,7 +38,7 @@
 #include "plugin.h"
 #include "videofile.h"
 
-Track *video_get_file_info(const gchar *filename) {
+Track *video_get_file_info(const gchar *filename, GError **error) {
     Track *track = NULL;
 
     track = gp_track_new();

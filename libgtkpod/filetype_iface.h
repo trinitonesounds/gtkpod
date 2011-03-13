@@ -58,12 +58,12 @@ struct _FileTypeInterface {
     gchar *description;
     GList *suffixes;
     filetype_category category;
-    Track * (* get_file_info) (const gchar *filename);
-    gboolean (* write_file_info) (const gchar *filename, Track *track);
-    gboolean (* read_soundcheck) (const gchar *filename, Track *track);
-    gboolean (* read_lyrics) (const gchar *filename, gchar **lyrics);
-    gboolean (* write_lyrics) (const gchar *filename, const gchar *lyrics);
-    gboolean (* read_gapless) (const gchar *filename, Track *track);
+    Track * (* get_file_info) (const gchar *filename, GError **error);
+    gboolean (* write_file_info) (const gchar *filename, Track *track, GError **error);
+    gboolean (* read_soundcheck) (const gchar *filename, Track *track, GError **error);
+    gboolean (* read_lyrics) (const gchar *filename, gchar **lyrics, GError **error);
+    gboolean (* write_lyrics) (const gchar *filename, const gchar *lyrics, GError **error);
+    gboolean (* read_gapless) (const gchar *filename, Track *track, GError **error);
     gchar * (* get_gain_cmd) (void);
     gboolean (* can_convert) (void);
     gchar * (* get_conversion_cmd) (void);
@@ -118,13 +118,13 @@ void filetype_init_core_types(GHashTable *typetable);
 gchar *filetype_get_name(FileType *filetype);
 gchar *filetype_get_description(FileType *filetype);
 GList *filetype_get_suffixes(FileType *filetype);
-Track *filetype_get_file_info (FileType *filetype, const gchar *filename);
-gboolean filetype_write_file_info (FileType *filetype, const gchar *filename, Track *track);
-gboolean filetype_read_soundcheck (FileType *filetype, const gchar *filename, Track *track);
+Track *filetype_get_file_info (FileType *filetype, const gchar *filename, GError **error);
+gboolean filetype_write_file_info (FileType *filetype, const gchar *filename, Track *track, GError **error);
+gboolean filetype_read_soundcheck (FileType *filetype, const gchar *filename, Track *track, GError **error);
 gchar *filetype_get_gain_cmd(FileType *filetype);
-gboolean filetype_read_lyrics (FileType *filetype, const gchar *filename, gchar **lyrics);
-gboolean filetype_write_lyrics (FileType *filetype, const gchar *filename, const gchar *lyrics);
-gboolean filetype_read_gapless(FileType *filetype, const gchar *filename, Track *track);
+gboolean filetype_read_lyrics (FileType *filetype, const gchar *filename, gchar **lyrics, GError **error);
+gboolean filetype_write_lyrics (FileType *filetype, const gchar *filename, const gchar *lyrics, GError **error);
+gboolean filetype_read_gapless(FileType *filetype, const gchar *filename, Track *track, GError **error);
 
 gboolean filetype_can_convert(FileType *filetype);
 gchar *filetype_get_conversion_cmd(FileType *filetype);
@@ -136,14 +136,16 @@ gboolean filetype_is_audio_filetype(FileType *filetype);
 gboolean filetype_is_m3u_filetype(FileType *filetype);
 gboolean filetype_is_pls_filetype(FileType *filetype);
 
-Track *filetype_no_track_info(const gchar *name);
-gboolean filetype_no_write_file_info (const gchar *filename, Track *track);
-gboolean filetype_no_soundcheck (const gchar *filename, Track *track);
-gboolean filetype_no_read_lyrics (const gchar *filename, gchar **lyrics);
-gboolean filetype_no_write_lyrics (const gchar *filename, const gchar *lyrics);
-gboolean filetype_no_read_gapless (const gchar *filename, Track *track);
+Track *filetype_no_track_info(const gchar *name, GError **error);
+gboolean filetype_no_write_file_info (const gchar *filename, Track *track, GError **error);
+gboolean filetype_no_soundcheck (const gchar *filename, Track *track, GError **error);
+gboolean filetype_no_read_lyrics (const gchar *filename, gchar **lyrics, GError **error);
+gboolean filetype_no_write_lyrics (const gchar *filename, const gchar *lyrics, GError **error);
+gboolean filetype_no_read_gapless (const gchar *filename, Track *track, GError **error);
 gchar *filetype_no_gain_cmd();
 gboolean filetype_no_convert();
 gchar *filetype_no_conversion_cmd();
+
+void filetype_log_error(GError **error, gchar *msg);
 
 #endif /* FILE_TYPE_IFACE_H_ */

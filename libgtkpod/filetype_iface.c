@@ -31,6 +31,7 @@
 
 #include <glib/gi18n-lib.h>
 #include "gp_itdb.h"
+#include "gp_private.h"
 #include "file.h"
 #include "filetype_iface.h"
 
@@ -96,22 +97,22 @@ GList *filetype_get_suffixes(FileType *filetype) {
     return FILE_TYPE_GET_INTERFACE(filetype)->suffixes;
 }
 
-Track *filetype_get_file_info(FileType *filetype, const gchar *filename) {
+Track *filetype_get_file_info(FileType *filetype, const gchar *filename, GError **error) {
     if (!FILE_IS_TYPE(filetype))
         return NULL;
-    return FILE_TYPE_GET_INTERFACE(filetype)->get_file_info(filename);
+    return FILE_TYPE_GET_INTERFACE(filetype)->get_file_info(filename, error);
 }
 
-gboolean filetype_write_file_info(FileType *filetype, const gchar *filename, Track *track) {
+gboolean filetype_write_file_info(FileType *filetype, const gchar *filename, Track *track, GError **error) {
     if (!FILE_IS_TYPE(filetype))
         return FALSE;
-    return FILE_TYPE_GET_INTERFACE(filetype)->write_file_info(filename, track);
+    return FILE_TYPE_GET_INTERFACE(filetype)->write_file_info(filename, track, error);
 }
 
-gboolean filetype_read_soundcheck(FileType *filetype, const gchar *filename, Track *track) {
+gboolean filetype_read_soundcheck(FileType *filetype, const gchar *filename, Track *track, GError **error) {
     if (!FILE_IS_TYPE(filetype))
         return FALSE;
-    return FILE_TYPE_GET_INTERFACE(filetype)->read_soundcheck(filename, track);
+    return FILE_TYPE_GET_INTERFACE(filetype)->read_soundcheck(filename, track, error);
 }
 
 gchar *filetype_get_gain_cmd(FileType *filetype) {
@@ -120,22 +121,22 @@ gchar *filetype_get_gain_cmd(FileType *filetype) {
     return FILE_TYPE_GET_INTERFACE(filetype)->get_gain_cmd();
 }
 
-gboolean filetype_read_lyrics(FileType *filetype, const gchar *filename, gchar **lyrics) {
+gboolean filetype_read_lyrics(FileType *filetype, const gchar *filename, gchar **lyrics, GError **error) {
     if (!FILE_IS_TYPE(filetype))
         return FALSE;
-    return FILE_TYPE_GET_INTERFACE(filetype)->read_lyrics(filename, lyrics);
+    return FILE_TYPE_GET_INTERFACE(filetype)->read_lyrics(filename, lyrics, error);
 }
 
-gboolean filetype_write_lyrics(FileType *filetype, const gchar *filename, const gchar *lyrics) {
+gboolean filetype_write_lyrics(FileType *filetype, const gchar *filename, const gchar *lyrics, GError **error) {
     if (!FILE_IS_TYPE(filetype))
         return FALSE;
-    return FILE_TYPE_GET_INTERFACE(filetype)->write_lyrics(filename, lyrics);
+    return FILE_TYPE_GET_INTERFACE(filetype)->write_lyrics(filename, lyrics, error);
 }
 
-gboolean filetype_read_gapless(FileType *filetype, const gchar *filename, Track *track) {
+gboolean filetype_read_gapless(FileType *filetype, const gchar *filename, Track *track, GError **error) {
     if (!FILE_IS_TYPE(filetype))
         return FALSE;
-    return FILE_TYPE_GET_INTERFACE(filetype)->read_gapless(filename, track);
+    return FILE_TYPE_GET_INTERFACE(filetype)->read_gapless(filename, track, error);
 }
 
 gboolean filetype_can_convert(FileType *filetype) {
@@ -168,15 +169,15 @@ gboolean filetype_is_audio_filetype(FileType *filetype) {
     return FILE_TYPE_GET_INTERFACE(filetype)->category == AUDIO;
 }
 
-Track *filetype_no_track_info(const gchar *name) {
+Track *filetype_no_track_info(const gchar *name, GError **error) {
     return NULL;
 }
 
-gboolean filetype_no_write_file_info(const gchar *filename, Track *track) {
+gboolean filetype_no_write_file_info(const gchar *filename, Track *track, GError **error) {
     return FALSE;
 }
 
-gboolean filetype_no_soundcheck(const gchar *filename, Track *track) {
+gboolean filetype_no_soundcheck(const gchar *filename, Track *track, GError **error) {
     return FALSE;
 }
 
@@ -184,16 +185,17 @@ gchar *filetype_no_gain_cmd() {
     return NULL;
 }
 
-gboolean filetype_no_read_lyrics(const gchar *filename, gchar **lyrics) {
-    *lyrics = g_strdup(_("Error: Lyrics not supported for this file format."));
+gboolean filetype_no_read_lyrics(const gchar *filename, gchar **lyrics, GError **error) {
+    filetype_log_error (error,
+            _("Error: Lyrics not supported for this file format."));
     return FALSE;
 }
 
-gboolean filetype_no_write_lyrics(const gchar *filename, const gchar *lyrics) {
+gboolean filetype_no_write_lyrics(const gchar *filename, const gchar *lyrics, GError **error) {
     return FALSE;
 }
 
-gboolean filetype_no_read_gapless(const gchar *filename, Track *track) {
+gboolean filetype_no_read_gapless(const gchar *filename, Track *track, GError **error) {
     return FALSE;
 }
 
@@ -205,3 +207,9 @@ gchar * filetype_no_conversion_cmd() {
     return NULL;
 }
 
+void filetype_log_error(GError **error, gchar *msg) {
+    g_set_error (error,
+                GTKPOD_GENERAL_ERROR,                       /* error domain */
+                GTKPOD_GENERAL_ERROR_FAILED,               /* error code */
+                msg);
+}
