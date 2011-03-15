@@ -300,7 +300,7 @@ void gtkpod_track_added(Track *track) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
     g_return_if_fail (track);
 
-    g_signal_emit(gtkpod_app, gtkpod_app_signals[TRACK_UPDATED], 0, track);
+    g_signal_emit(gtkpod_app, gtkpod_app_signals[TRACK_ADDED], 0, track);
 }
 
 void gtkpod_track_removed(Track *track) {

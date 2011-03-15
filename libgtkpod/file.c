@@ -59,6 +59,72 @@
 static const gchar *imageext[] =
     { ".jpg", ".jpeg", ".png", ".pbm", ".pgm", ".ppm", ".tif", ".tiff", ".gif", NULL };
 
+/*
+ * Struct to hold the track added signal and
+ * hashtable of itdb to count of tracks added
+ * so far
+ */
+typedef struct {
+    gulong file_added_signal_id;
+    GHashTable *itdb_tracks_count;
+} TrackMonitor;
+
+/*
+ * Pair struct for insertion into the TrackMonitor
+ * hashtable
+ */
+typedef struct {
+    guint64 *id;
+    gint count;
+} TrackMonitorPair;
+
+/* Single TrackMonitor instance */
+static TrackMonitor *trkmonitor = NULL;
+
+/**
+ * Callback fired when a new track is added to an itdb.
+ * Will be fired from playlist, directory and file functions
+ */
+static void file_track_added_cb(GtkPodApp *app, gpointer tk, gpointer data) {
+    Track *track = tk;
+    if (!track)
+        return;
+
+    g_return_if_fail(track->itdb);
+    g_return_if_fail(trkmonitor);
+
+    guint64 *key = &track->itdb->id;
+    TrackMonitorPair *value = g_hash_table_lookup(trkmonitor->itdb_tracks_count, key);
+    if (!value) {
+        value = g_new0(TrackMonitorPair, 1);
+        value->id = key;
+        value->count = 1;
+    } else {
+        value->count++;
+    }
+
+    /* save every ${file_threshold} files but do at least ${file_theshold} first*/
+    int threshold = prefs_get_int("file_saving_threshold");
+    if (value->count >= threshold) {
+        gp_save_itdb(track->itdb);
+        gtkpod_tracks_statusbar_update();
+        // Reset the count
+        value->count = 0;
+    }
+
+    g_hash_table_replace(trkmonitor->itdb_tracks_count, key, value);
+}
+
+/**
+ * Initialise the file added signal with the callback
+ */
+static void init_file_added_signal() {
+    if (! trkmonitor) {
+        trkmonitor = g_new0(TrackMonitor, 1);
+        trkmonitor->itdb_tracks_count = g_hash_table_new (g_int64_hash, g_int64_equal);
+        trkmonitor->file_added_signal_id = g_signal_connect (gtkpod_app, SIGNAL_TRACK_ADDED, G_CALLBACK (file_track_added_cb), NULL);
+    }
+}
 
 /* Determine the type of a file.
  *
@@ -87,15 +153,6 @@ FileType *determine_filetype(const gchar *path) {
 
     g_free(path_utf8);
     return type;
-}
-
-static void save_if_needed(gint count, iTunesDB *itdb) {
-    /* save every ${file_threshold} files but do at least ${file_theshold} first*/
-    int threshold = prefs_get_int("file_saving_threshold");
-    if (count >= threshold && count % threshold == 0) {
-        gp_save_itdb(itdb);
-        gtkpod_tracks_statusbar_update();
-    }
 }
 
 /** check a filename against the "excludes file mask" from the preferences
@@ -265,8 +322,8 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
             else if (strcmp(plfile, filename) == 0) {
                 gtkpod_warning(_("Skipping '%s' to avoid adding playlist file recursively\n"), filename);
             }
-            else if (add_track_by_filename(itdb, filename, plitem, prefs_get_int("add_recursively"), addtrackfunc, data)) {
-                save_if_needed(tracks, itdb);
+            else {
+                add_track_by_filename(itdb, filename, plitem, prefs_get_int("add_recursively"), addtrackfunc, data);
             }
             g_free(filename);
         }
@@ -289,44 +346,6 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
  *                                                                  *
  \*------------------------------------------------------------------*/
 
-
-static gint add_directory_by_name_internal(iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, gint *filecount, AddTrackFunc addtrackfunc, gpointer data) {
-    gint result = 0;
-
-    g_return_val_if_fail (itdb, 0);
-    g_return_val_if_fail (name, 0);
-
-    if (g_file_test(name, G_FILE_TEST_IS_DIR)) {
-        GDir *dir = g_dir_open(name, 0, NULL);
-        block_widgets();
-        if (dir != NULL) {
-            G_CONST_RETURN gchar *next;
-            do {
-                next = g_dir_read_name(dir);
-                if (next != NULL) {
-                    gchar *nextfull = g_build_filename(name, next, NULL);
-                    if (descend || !g_file_test(nextfull, G_FILE_TEST_IS_DIR)) {
-                        result += add_directory_by_name_internal(itdb, nextfull, plitem, descend, filecount, addtrackfunc, data);
-                    }
-                    g_free(nextfull);
-                }
-            }
-            while (next != NULL);
-
-            g_dir_close(dir);
-        }
-        release_widgets();
-    }
-    else {
-        if (add_track_by_filename(itdb, name, plitem, descend, addtrackfunc, data)) {
-            *filecount = *filecount + 1;
-            save_if_needed(*filecount, itdb);
-        }
-        result += *filecount;
-    }
-    return result;
-}
-
 /*
  * Add all files in directory and subdirectories.
  *
@@ -344,9 +363,37 @@ static gint add_directory_by_name_internal(iTunesDB *itdb, gchar *name, Playlist
  */
 /* */
 gint add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data) {
-    /* Uses internal method so that a count parameter can be added for saving purposes. */
-    gint filecount = 0;
-    return add_directory_by_name_internal(itdb, name, plitem, descend, &filecount, addtrackfunc, data);
+    gint result = 0;
+
+    g_return_val_if_fail (itdb, 0);
+    g_return_val_if_fail (name, 0);
+
+    if (g_file_test(name, G_FILE_TEST_IS_DIR)) {
+        GDir *dir = g_dir_open(name, 0, NULL);
+        block_widgets();
+        if (dir != NULL) {
+            G_CONST_RETURN gchar *next;
+            do {
+                next = g_dir_read_name(dir);
+                if (next != NULL) {
+                    gchar *nextfull = g_build_filename(name, next, NULL);
+                    if (descend || !g_file_test(nextfull, G_FILE_TEST_IS_DIR)) {
+                        result += add_directory_by_name(itdb, nextfull, plitem, descend, addtrackfunc, data);
+                    }
+                    g_free(nextfull);
+                }
+            }
+            while (next != NULL);
+
+            g_dir_close(dir);
+        }
+        release_widgets();
+    }
+    else {
+        if (add_track_by_filename(itdb, name, plitem, descend, addtrackfunc, data))
+            result++;
+    }
+    return result;
 }
 
 /*------------------------------------------------------------------*\
@@ -1461,6 +1508,8 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
     g_return_val_if_fail (itdb, FALSE);
     mpl = itdb_playlist_mpl(itdb);
     g_return_val_if_fail (mpl, FALSE);
+
+    init_file_added_signal();
 
     if (!plitem)
         plitem = mpl;
