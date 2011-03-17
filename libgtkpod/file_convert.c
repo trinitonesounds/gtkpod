@@ -196,6 +196,7 @@ struct _Conversion {
     gint log_window_posx; /* last x-position of log window            */
     gint log_window_posy; /* last x-position of log window            */
     GtkWidget *notebook; /* notebook                                 */
+    GtkWidget *errorview; /* view to report any errors */
     GList *textviews; /* list with pages currently added          */
     GList *pages; /* list with pages currently added          */
     GtkStatusbar *log_statusbar; /* statusbar of log display           */
@@ -203,6 +204,7 @@ struct _Conversion {
     /* data for background transfer */
     GList *transfer_itdbs; /* list with TransferItdbs for background
      transfer                                 */
+    gchar *last_error_msg; /* keep a record of the last error message */
 };
 
 struct _ConvTrack {
@@ -301,6 +303,19 @@ void file_convert_init() {
     conversion->notebook = gtk_notebook_new();
     gtk_widget_show(conversion->notebook);
     gtk_box_pack_start(GTK_BOX (vbox), conversion->notebook, TRUE, TRUE, 0);
+
+    /* Add the error view to the log notebook */
+    GtkWidget *scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    conversion->errorview = gtk_text_view_new();
+    gtk_text_view_set_editable(GTK_TEXT_VIEW(conversion->errorview), FALSE);
+    gtk_container_add(GTK_CONTAINER (scrolled_window), conversion->errorview);
+    gtk_widget_show_all(scrolled_window);
+    gtk_notebook_append_page(GTK_NOTEBOOK (conversion->notebook), scrolled_window, NULL);
+
+    GtkWidget *errorpage = gtk_notebook_get_nth_page(GTK_NOTEBOOK (conversion->notebook), 0);
+    gtk_notebook_set_tab_label_text(GTK_NOTEBOOK (conversion->notebook), errorpage, _("errors"));
+
     conversion->log_window_posx = G_MININT;
     conversion->log_window_posy = G_MININT;
     conversion->log_statusbar = GTK_STATUSBAR (
@@ -563,6 +578,7 @@ static void conversion_log_add_pages(Conversion *conv, gint threads) {
         gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
         conv->pages = g_list_append(conv->pages, scrolled_window);
         textview = gtk_text_view_new();
+        gtk_text_view_set_editable(GTK_TEXT_VIEW(textview), FALSE);
         gtk_container_add(GTK_CONTAINER (scrolled_window), textview);
         conv->textviews = g_list_append(conv->textviews, textview);
 
@@ -663,6 +679,61 @@ static void conversion_itdb_first(Conversion *conv, iTunesDB *itdb) {
     g_list_free(conv->scheduled);
     conv->scheduled = g_list_concat(gl_other, gl_itdb);
     file_convert_unlock(conv);
+}
+
+/* adds @text to the errorview of the log window. If
+ * required 'file_convert_lock(conv)' before calling this
+ * function. */
+static void conversion_log_append_error(Conversion *conv, const gchar *errormsg) {
+    GtkTextBuffer *textbuffer;
+    GtkTextIter start, end;
+    const gchar *run, *ptr, *next;
+
+    g_return_if_fail (conv);
+
+    if (conv->last_error_msg && g_str_equal(conv->last_error_msg, errormsg)) {
+        /* This message is the same as the previous one
+         * so avoid repeating ourselves
+         */
+        return;
+    }
+
+    conv->last_error_msg = g_strdup(errormsg);
+
+    textbuffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (conv->errorview));
+    gtk_text_buffer_get_end_iter(textbuffer, &end);
+
+    run = ptr = errormsg;
+
+    while (*ptr) {
+        next = g_utf8_find_next_char(ptr, NULL);
+        if (*ptr == '\b') {
+            if (ptr > run) {
+                gtk_text_buffer_insert(textbuffer, &end, run, ptr - run);
+            }
+            run = next;
+            start = end;
+            if (gtk_text_iter_backward_char(&start)) {
+                gtk_text_buffer_delete(textbuffer, &start, &end);
+            }
+        }
+        else if (*ptr == '\r') {
+            if (ptr > run) {
+                gtk_text_buffer_insert(textbuffer, &end, run, ptr - run);
+            }
+            run = next;
+            start = end;
+            gtk_text_iter_set_line_offset(&start, 0);
+            gtk_text_buffer_delete(textbuffer, &start, &end);
+        }
+        ptr = next;
+    }
+    if (ptr > run) {
+        gtk_text_buffer_insert(textbuffer, &end, run, ptr - run);
+    }
+    gtk_text_view_scroll_to_iter(GTK_TEXT_VIEW (conv->errorview), &end, 0.0, FALSE, 0.0, 0.0);
+
+    gtk_widget_show(conv->log_window);
 }
 
 /* adds @text to the textview on page @threadnum of the log window. If
@@ -1267,7 +1338,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
             if (ctr->valid) {
                 ExtraTrackData *etr;
                 if (ctr->errormessage) {
-                    gtkpod_warning(ctr->errormessage);
+                    conversion_log_append_error(conv, ctr->errormessage);
                     debug("Conversion error: %s\n", ctr->errormessage);
                     g_free(ctr->errormessage);
                     ctr->errormessage = NULL;
@@ -1435,7 +1506,9 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
                     else { /* error!? */
                         tri->failed = g_list_prepend(tri->failed, ctr);
                         gchar *buf = conversion_get_track_info(ctr);
-                        gtkpod_warning(_("Transfer of '%s' failed. %s\n\n"), buf, error ? error->message : "");
+                        gchar *msg = g_strdup_printf(_("Transfer of '%s' failed. %s\n\n"), buf, error ? error->message : "");
+                        conversion_log_append_error(conv, msg);
+                        g_free(msg);
                         g_free(buf);
                         if (error) {
                             g_error_free(error);
@@ -1460,7 +1533,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
 
                 if (tri->valid && ctr->valid) {
                     if (ctr->errormessage) {
-                        gtkpod_warning(ctr->errormessage);
+                        conversion_log_append_error(conv, ctr->errormessage);
                         debug("Conversion error: %s\n", ctr->errormessage);
                         g_free(ctr->errormessage);
                         ctr->errormessage = NULL;
