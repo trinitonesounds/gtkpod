@@ -9,8 +9,9 @@ AM_CPPFLAGS = \
     -DGTKPOD_UI_DIR=\"$(gtkpod_ui_dir)\" \
     -DPACKAGE_DATA_DIR=\"$(datadir)\" \
     -DPACKAGE_SRC_DIR=\"$(srcdir)\" \
-    -I$(top_srcdir)\
-    $(GTKPOD_CFLAGS)
+    -I$(top_srcdir) \
+    $(GTKPOD_CFLAGS) \
+    $(LIBANJUTA_LIBS)
 
 # Where to install the plugin
 plugindir = $(gtkpod_plugin_dir)

@@ -37,7 +37,7 @@ libcoverweb_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
 # Plugin dependencies
 libcoverweb_la_LIBADD = \
-    $(LIBGTKPOD_LIBS) \
+    $(GTKPOD_LIBS) \
     $(LIBANJUTA_LIBS) \
     $(WEBKIT_LIBS)
 endif

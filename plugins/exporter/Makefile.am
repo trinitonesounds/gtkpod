@@ -34,7 +34,7 @@ libexporter_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
 # Plugin dependencies
 libexporter_la_LIBADD = \
-    $(LIBGTKPOD_LIBS) \
+    $(GTKPOD_LIBS) \
     $(LIBANJUTA_LIBS)
 
 EXTRA_DIST = \

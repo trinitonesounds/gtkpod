@@ -36,7 +36,7 @@ libfiletype_flac_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
 # Plugin dependencies
 libfiletype_flac_la_LIBADD = \
-    $(LIBGTKPOD_LIBS) \
+    $(GTKPOD_LIBS) \
     $(LIBANJUTA_LIBS)
 
 endif
