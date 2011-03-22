@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: cs_CZ\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
 "X-Generator: Lokalize 1.0\n"
 "X-Poedit-Language: Czech\n"
 "X-Poedit-Country: CZECH REPUBLIC\n"
@@ -27,7 +27,7 @@ msgstr ""
 
 #: ../data/glade/core-gtkpod.xml.h:1
 msgid "Conversion Progress Display"
-msgstr ""
+msgstr "Postup konverze"
 
 #: ../data/glade/core-gtkpod.xml.h:2
 msgid "Never show this dialogue again"
@@ -985,7 +985,7 @@ msgstr ""
 #: ../plugins/repository_editor/repository_editor.c:1115
 #: ../plugins/repository_editor/repository_editor.xml.h:52
 msgid "iPod"
-msgstr ""
+msgstr "iPod"
 
 #: ../libgtkpod/gp_itdb.c:1010
 #, c-format
@@ -2097,7 +2097,7 @@ msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.c:178
 msgid "Browse"
-msgstr ""
+msgstr "Prohlížet"
 
 #: ../plugins/core_preferences/core_prefs.plugin.in.h:1
 msgid "Core Preferences Plugin"
@@ -2549,7 +2549,7 @@ msgstr ""
 
 #: ../plugins/cover_display/cover_display.xml.h:1
 msgid "<"
-msgstr ""
+msgstr "<"
 
 #: ../plugins/cover_display/cover_display.xml.h:2
 msgid "<b>Album Cover Sort Order</b>"
@@ -2579,7 +2579,7 @@ msgstr ""
 
 #: ../plugins/cover_display/cover_display.xml.h:7
 msgid ">"
-msgstr ""
+msgstr ">"
 
 #: ../plugins/cover_display/cover_display.xml.h:8
 msgid "Artwork Preview"
@@ -3134,7 +3134,7 @@ msgstr ""
 #: ../plugins/filetype_flac/flacfile.c:57
 #, c-format
 msgid "'%s' does not appear to be an FLAC audio file.\n"
-msgstr ""
+msgstr "'%s' nevypadá jako soubor typu FLAC.\n"
 
 #: ../plugins/filetype_flac/flacfile.c:70
 #, c-format
@@ -3143,7 +3143,7 @@ msgstr ""
 
 #: ../plugins/filetype_flac/plugin.c:91
 msgid "Flac audio file type"
-msgstr ""
+msgstr "audio soubor typu FLAC"
 
 #: ../plugins/filetype_m4a/filetype_m4a.plugin.in.h:1
 msgid "M4A File Type Plugin"
@@ -3180,6 +3180,9 @@ msgid ""
 "Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
 "You must install the mp4v2 library.\n"
 msgstr ""
+"Vložení souboru '%s' selhalo: soubory typu m4a/m4p/m4b jsou podporovány "
+"prostřednictvím knihovny mp4v2, která ve Vašem systému není nainstalována. "
+"Nainstalujte ji.\n"
 
 #: ../plugins/filetype_m4a/mp4file.c:864 ../plugins/filetype_mp4/mp4file.c:864
 #, c-format
@@ -3187,6 +3190,9 @@ msgid ""
 "m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
 "without the mp4v2 library. You must install the mp4v2 library.\n"
 msgstr ""
+"Aktualizace metadat pro '%s' selhalo: soubory typu m4a/m4p/m4b jsou "
+"podporovány prostřednictvím knihovny mp4v2, která ve Vašem systému není "
+"nainstalována. Nainstalujte ji.\n"
 
 #: ../plugins/filetype_m4a/mp4file.c:986 ../plugins/filetype_mp4/mp4file.c:986
 #, c-format
@@ -3240,7 +3246,7 @@ msgstr ""
 
 #: ../plugins/filetype_mp3/plugin.c:78
 msgid "MP3 audio file type"
-msgstr ""
+msgstr "audio soubor typu MP3"
 
 #: ../plugins/filetype_mp4/filetype_mp4.plugin.in.h:1
 msgid "MP4 File Type Plugin"
@@ -3548,7 +3554,7 @@ msgstr "<b>Nastavení</b>"
 #: ../plugins/mserv/mserv.xml.h:2 ../plugins/mserv/plugin.c:47
 #: ../plugins/mserv/plugin.c:96
 msgid "Mserv"
-msgstr ""
+msgstr "Mserv"
 
 #: ../plugins/mserv/mserv.xml.h:3
 msgid "Music root:"
@@ -3592,11 +3598,11 @@ msgstr ""
 
 #: ../plugins/mserv/plugin.c:73 ../plugins/track_display/plugin.c:63
 msgid "Selected Tracks"
-msgstr ""
+msgstr "Vybrané skladby"
 
 #: ../plugins/photo_editor/display_photo.c:163
 msgid "  iPod Photo Editor"
-msgstr ""
+msgstr "  Editor fotografií pro iPod"
 
 #: ../plugins/photo_editor/display_photo.c:225
 #: ../plugins/photo_editor/display_photo.c:1483
@@ -3613,7 +3619,7 @@ msgstr ""
 
 #: ../plugins/photo_editor/display_photo.c:673
 msgid "Do you want to remove the album's photos too?"
-msgstr ""
+msgstr "Chcete též odstranit fotografie z alba?"
 
 #: ../plugins/photo_editor/display_photo.c:674
 msgid "Yes. Do Not Display Again"
@@ -3624,12 +3630,16 @@ msgid ""
 "This will remove the photo selection from the selected album.\n"
 " Do you want to delete them from the database as well?"
 msgstr ""
+"Tímto odstraníte z vybrané fotografie z fotoalba.\n"
+"Chcete je též vymazat z databáze?"
 
 #: ../plugins/photo_editor/display_photo.c:743
 msgid ""
 "This will delete the photo selection from the Photo Library and all albums. "
 "Are you sure?"
 msgstr ""
+"Tímto odstraníte vybrané fotografie z Knihovny fotografií a všech alb. "
+"Opravdu provést?"
 
 #: ../plugins/photo_editor/display_photo.c:849
 msgid "New Photo Album Name"
@@ -3767,9 +3777,9 @@ msgstr ""
 #, c-format
 msgid "Copied one track"
 msgid_plural "Copied %d tracks"
-msgstr[0] "%d skladby byly zkopírovány."
-msgstr[1] "%d skladeb bylo zkopírováno."
-msgstr[2] ""
+msgstr[0] "Zkopírována %d skladba."
+msgstr[1] "Zkopírovány %d skladby."
+msgstr[2] "Zkopírováno %d skladeb."
 
 #: ../plugins/playlist_display/display_playlists.c:729
 #: ../plugins/playlist_display/display_playlists.c:740
@@ -4502,31 +4512,31 @@ msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.c:911
 msgid "Smart playlist updated."
-msgstr ""
+msgstr "Chytrý playlist byl aktualizován."
 
 #: ../plugins/repository_editor/repository_editor.c:1118
 msgid "Podcasts Repository"
-msgstr ""
+msgstr "Úložiště Podcastů"
 
 #: ../plugins/repository_editor/repository_editor.c:1121
 msgid "Local Repository"
-msgstr ""
+msgstr "Místní úložiště"
 
 #: ../plugins/repository_editor/repository_editor.c:1239
 msgid "Master Playlist"
-msgstr ""
+msgstr "Hlavní playlist"
 
 #: ../plugins/repository_editor/repository_editor.c:1242
 msgid "Podcasts Playlist"
-msgstr ""
+msgstr "Playlist podcastů"
 
 #: ../plugins/repository_editor/repository_editor.c:1248
 msgid "Regular Playlist"
-msgstr ""
+msgstr "Standardní playlist"
 
 #: ../plugins/repository_editor/repository_editor.c:1413
 msgid "  Edit iPod Repositories"
-msgstr ""
+msgstr "  Upravit úložště iPod(ů)"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:2
 msgid "<b>General</b>"
@@ -4559,7 +4569,7 @@ msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.xml.h:9
 msgid "Add New ..."
-msgstr ""
+msgstr "Přidat nové"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:10
 msgid "Calendar sync command:"
@@ -4587,11 +4597,11 @@ msgstr ""
 #: ../plugins/track_display/track_display_context_menu.c:182
 #: ../plugins/track_display/track_display_context_menu.c:190
 msgid "Delete"
-msgstr ""
+msgstr "Smazat"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:16
 msgid "Delete missing tracks from the iPod or repository"
-msgstr ""
+msgstr "Smazat chybějící skladby z iPodu nebo úložiště"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:17
 msgid ""
@@ -4601,11 +4611,11 @@ msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.xml.h:18
 msgid "Don't automatically sync on startup"
-msgstr ""
+msgstr "Nesynchronizovat automaticky po startu"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:19
 msgid "Initialize iPod"
-msgstr ""
+msgstr "Inicializovat iPod"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:20
 msgid "Insert after"
@@ -4629,7 +4639,7 @@ msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.xml.h:26
 msgid "Model:"
-msgstr ""
+msgstr "Model:"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:27
 msgid ""
@@ -4684,7 +4694,7 @@ msgstr "Zvolte složku pro synchronizaci"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:42
 msgid "Select mountpoint"
-msgstr "Zvolte název přípojného bodu"
+msgstr "Zvolte název mount pointu"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:43
 msgid "Set backup file"
@@ -4721,11 +4731,11 @@ msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.xml.h:53
 msgid "iPod mountpoint:"
-msgstr ""
+msgstr "Mount point iPodu:"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:54
 msgid "iTunesDB backup:"
-msgstr ""
+msgstr "Záloha iTunesDB:"
 
 #: ../plugins/repository_editor/repository_editor.plugin.in.h:1
 msgid "Edit iTunesDB Properties"
@@ -4738,27 +4748,29 @@ msgstr ""
 #. Strings used several times
 #: ../plugins/repository_editor/repository_init.c:47
 msgid "Select or enter your model"
-msgstr ""
+msgstr "Zvolte Váš model"
 
 #: ../plugins/repository_editor/repository_init.c:190
 #, c-format
 msgid "Error initialising iPod: %s\n"
-msgstr ""
+msgstr "Chyba při inicializaci iPodu: %s\n"
 
 #: ../plugins/repository_editor/repository_init.c:195
 msgid "Error initialising iPod, unknown error\n"
-msgstr ""
+msgstr "Neznámá chyba při inicializaci iPodu\n"
 
 #: ../plugins/repository_editor/repository_init.c:245
 #, c-format
 msgid "<b>Please select your iPod model at </b><i>%s</i>"
-msgstr ""
+msgstr "<b>Prosím zvolte svůj model z</b><i>%s</i>"
 
 #: ../plugins/repository_editor/repository_init.c:280
 msgid ""
 "Could not determine the model you selected -- this could be a bug or incompatibilty in the GTK+ or glade library.\n"
 "\n"
 msgstr ""
+"Nemohu zjistit vybraný model - může to být chybou nebo nekompatibilitou knihoven GTK+ nebo glade.\n"
+"\n"
 
 #: date_parser.l:270
 #, c-format
@@ -5087,9 +5099,9 @@ msgstr ""
 #, c-format
 msgid "Moved one track"
 msgid_plural "Moved %d tracks"
-msgstr[0] "%d skladby byly přesunuty."
-msgstr[1] "%d skladeb bylo přesunuto."
-msgstr[2] ""
+msgstr[0] "Přesunuta %d skladba."
+msgstr[1] "Přesunuty %d stopy."
+msgstr[2] "Přesunuto %d stop."
 
 #: ../plugins/track_display/display_tracks.c:1596
 #, c-format
