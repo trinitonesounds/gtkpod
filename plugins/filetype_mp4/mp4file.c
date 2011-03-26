@@ -548,7 +548,7 @@ static gboolean mp4_scan_soundcheck(MP4FileHandle mp4File, Track *track) {
 gboolean mp4_read_soundcheck(const gchar *mp4FileName, Track *track, GError **error) {
     if (!mp4v2_handle) {
         filetype_log_error(error,
-                g_strdup_printf(_("m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b/mp4 not supported without the mp4v2 library. You must install the mp4v2 library.\n"), mp4FileName));
+                g_strdup_printf(_("m4a/m4p/m4b/mp4 soundcheck update for '%s' failed: m4a/m4p/m4b/mp4 not supported without the mp4v2 library. You must install the mp4v2 library.\n"), mp4FileName));
         return FALSE;
     }
 
@@ -867,7 +867,7 @@ Track *mp4_get_file_info(const gchar *mp4FileName, GError **error) {
 gboolean mp4_write_file_info(const gchar *mp4FileName, Track *track, GError **error) {
     if (!mp4v2_handle) {
         filetype_log_error(error,
-                                    g_strdup_printf(_("m4a/m4p/m4b/mp4 metadata update for '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must install the mp4v2 library.\n"), mp4FileName));
+                                    g_strdup_printf(_("m4a/m4p/m4b/mp4 metadata update for '%s' failed: m4a/m4p/m4b/mp4 not supported without the mp4v2 library. You must install the mp4v2 library.\n"), mp4FileName));
         return FALSE;
     }
 

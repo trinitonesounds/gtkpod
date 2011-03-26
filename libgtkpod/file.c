@@ -53,7 +53,7 @@
 #include "misc_conversion.h"
 #include "filetype_iface.h"
 
-#define UNKNOWN_ERROR "Unknown error"
+#define UNKNOWN_ERROR _("Unknown error")
 
 /* The uppercase version of these extensions is tried as well. */
 static const gchar *imageext[] =
