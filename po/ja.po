@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
-"Report-Msgid-Bugs-To: http://www.gtkpod.org/bugs\n"
-"POT-Creation-Date: 2011-02-26 21:30+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-03-27 08:50+0100\n"
 "PO-Revision-Date: 2010-08-08 12:41+0100\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: jp <jp@li.gtkpod.org>\n"
@@ -289,7 +289,7 @@ msgstr "gtkpod がすでに動作中です。プレイカウントサーバー�
 msgid "Update Tracks from File"
 msgstr "ファイルを元に曲を更新する(_U)"
 
-#: ../libgtkpod/context_menus.c:175 ../plugins/playlist_display/plugin.c:100
+#: ../libgtkpod/context_menus.c:175 ../plugins/playlist_display/plugin.c:116
 msgid "Sync Playlist with Dir(s)"
 msgstr ""
 
@@ -315,14 +315,19 @@ msgstr "曲情報を編集"
 msgid "Copy Tracks to Filesystem..."
 msgstr "曲をファイルシステムにコピーする"
 
-#: ../libgtkpod/directories.c:120
+#: ../libgtkpod/directories.c:130
 #, c-format
 msgid ""
 "Using local %s directory since program was started from source directory:\n"
 "%s\n"
 msgstr ""
 
-#: ../libgtkpod/file.c:175
+#: ../libgtkpod/file.c:56
+#, fuzzy
+msgid "Unknown error"
+msgstr "不明"
+
+#: ../libgtkpod/file.c:217
 #, c-format
 msgid ""
 "'%s' is a directory, not a playlist file.\n"
@@ -331,7 +336,7 @@ msgstr ""
 "'%s' はプレイリストファイルではなく、ディレクトリです。\n"
 "\n"
 
-#: ../libgtkpod/file.c:189
+#: ../libgtkpod/file.c:231
 #, c-format
 msgid ""
 "'%s' is a not a known playlist file.\n"
@@ -340,61 +345,61 @@ msgstr ""
 "'%s' は プレイリストファイルではないようです。\n"
 "\n"
 
-#: ../libgtkpod/file.c:197 ../plugins/exporter/file_export.c:233
+#: ../libgtkpod/file.c:239 ../plugins/exporter/file_export.c:233
 #: ../plugins/filetype_ogg/oggfile.c:66 ../plugins/filetype_wav/wavfile.c:98
 #, c-format
 msgid "Could not open '%s' for reading.\n"
 msgstr "ファイル '%s' を読み込もうとしましたが、開くことができません。\n"
 
-#: ../libgtkpod/file.c:276
+#: ../libgtkpod/file.c:319
 #, c-format
 msgid "Skipping '%s' because it is a directory.\n"
 msgstr "'%s' はディレクトリなので飛ばします。\n"
 
-#: ../libgtkpod/file.c:280
+#: ../libgtkpod/file.c:323
 #, c-format
 msgid "Skipping '%s' to avoid adding playlist file recursively\n"
 msgstr "プレイリストファイルの再帰的な登録を避けるため、'%s' は飛ばします。\n"
 
-#: ../libgtkpod/file.c:517
+#: ../libgtkpod/file.c:549
 #, c-format
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr "未知のトークン '%s' がテンプレート '%s' 中にあります。\n"
 
-#: ../libgtkpod/file.c:797
+#: ../libgtkpod/file.c:829
 #, fuzzy, c-format
 msgid "Could not create '%s'"
 msgstr "'%s' をロックすることができませんでした。\n"
 
-#: ../libgtkpod/file.c:831
+#: ../libgtkpod/file.c:863
 #, fuzzy
 msgid "Error creating thumbnail file"
 msgstr "'%s'の作成に失敗: %s\n"
 
-#: ../libgtkpod/file.c:859 ../libgtkpod/misc.c:967
+#: ../libgtkpod/file.c:891 ../libgtkpod/misc.c:967
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
 msgstr "未知のトークン '%%%c' がテンプレート '%s' 中にあります"
 
-#: ../libgtkpod/file.c:879
+#: ../libgtkpod/file.c:911
 #, c-format
 msgid ""
 "Unable to start video thumbnail generator\n"
 "(command line was: '%s')"
 msgstr ""
 
-#: ../libgtkpod/file.c:882
+#: ../libgtkpod/file.c:914
 #, c-format
 msgid "Thumbnail generator returned status %d"
 msgstr ""
 
-#: ../libgtkpod/file.c:1006
+#: ../libgtkpod/file.c:1039
 #, c-format
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
 msgstr "以下の曲を処理できませんでした (ファイルが存在しないため): '%s'\n"
 
-#: ../libgtkpod/file.c:1024
+#: ../libgtkpod/file.c:1055
 #, c-format
 msgid ""
 "The filetype '%s' is not currently supported.\n"
@@ -402,20 +407,38 @@ msgid ""
 "If you have a plugin that supports this filetype then please enable it."
 msgstr ""
 
-#: ../libgtkpod/file.c:1130 ../plugins/mserv/mserv.c:199
+#: ../libgtkpod/file.c:1062
+#, fuzzy, c-format
+msgid ""
+"No track information could be retrieved from the file %s due to the "
+"following error:\n"
+"\n"
+"%s"
+msgstr "以下の%d曲について、mserv から情報を取得できません"
+
+#: ../libgtkpod/file.c:1068
+#, fuzzy, c-format
+msgid ""
+"No track information could be retrieved from the file %s due to the "
+"following error:\n"
+"\n"
+"An error was not returned."
+msgstr "以下の%d曲について、mserv から情報を取得できません"
+
+#: ../libgtkpod/file.c:1174 ../plugins/mserv/mserv.c:199
 msgid "Nothing to update"
 msgstr "更新されるデータはありません"
 
-#: ../libgtkpod/file.c:1149
+#: ../libgtkpod/file.c:1193
 #, c-format
 msgid "Updating %s"
 msgstr "%s を更新中"
 
-#: ../libgtkpod/file.c:1161
+#: ../libgtkpod/file.c:1205
 msgid "Updated selected tracks with info from file."
 msgstr "選択された曲の情報を、ファイルを元に更新しました。"
 
-#: ../libgtkpod/file.c:1177
+#: ../libgtkpod/file.c:1221
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -423,11 +446,11 @@ msgstr[0] "以下の%d曲を更新することができませんでした"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1180
+#: ../libgtkpod/file.c:1224
 msgid "Failed Track Update"
 msgstr "曲の更新に失敗"
 
-#: ../libgtkpod/file.c:1234
+#: ../libgtkpod/file.c:1278
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -435,48 +458,48 @@ msgstr[0] "以下の%d曲を更新しました"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1237
+#: ../libgtkpod/file.c:1281
 msgid "Successful Track Update"
 msgstr "曲の更新を完了"
 
-#: ../libgtkpod/file.c:1324
+#: ../libgtkpod/file.c:1368
 msgid "no local filename available, file on the iPod will be used instead"
 msgstr ""
 
-#: ../libgtkpod/file.c:1328
+#: ../libgtkpod/file.c:1372
 msgid "no local filename available and copy on iPod cannot be found"
 msgstr ""
 
-#: ../libgtkpod/file.c:1331 ../libgtkpod/file.c:1344
+#: ../libgtkpod/file.c:1375 ../libgtkpod/file.c:1388
 #, fuzzy
 msgid "no local filename available"
 msgstr "ファイル名がわかりません"
 
-#: ../libgtkpod/file.c:1337
+#: ../libgtkpod/file.c:1381
 msgid "local file could not be found, file on the iPod will be used instead"
 msgstr ""
 
-#: ../libgtkpod/file.c:1341
+#: ../libgtkpod/file.c:1385
 msgid "local file as well as copy on the iPod cannot be found"
 msgstr ""
 
 #. update not successful -- log this track for later display
-#: ../libgtkpod/file.c:1426
+#: ../libgtkpod/file.c:1470
 #, fuzzy
 msgid "update failed (format not supported?)"
 msgstr "対応していない形式です"
 
-#: ../libgtkpod/file.c:1491 ../libgtkpod/misc_playlist.c:742
+#: ../libgtkpod/file.c:1537 ../libgtkpod/misc_playlist.c:742
 #, c-format
 msgid "Processing '%s'..."
 msgstr "'%s' の処理中..."
 
-#: ../libgtkpod/file.c:1497
+#: ../libgtkpod/file.c:1543
 #, fuzzy, c-format
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "'%s' はディレクトリなので飛ばします。\n"
 
-#: ../libgtkpod/file.c:1601 ../libgtkpod/misc_track.c:1620
+#: ../libgtkpod/file.c:1647 ../libgtkpod/misc_track.c:1620
 #: ../libgtkpod/misc_track.c:1716
 #, c-format
 msgid ""
@@ -486,36 +509,41 @@ msgstr ""
 "Podcast はすでに存在します: '%s'\n"
 "\n"
 
-#: ../libgtkpod/file.c:1674 ../libgtkpod/file.c:1681
+#: ../libgtkpod/file.c:1721
+#, fuzzy, c-format
+msgid "Couldn't change tags of file: %s"
+msgstr "次のファイルのタグを変更できません: %s\n"
+
+#: ../libgtkpod/file.c:1737
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "次のファイルのタグを変更できません: %s\n"
 
-#: ../libgtkpod/file.c:1764
+#: ../libgtkpod/file.c:1829
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr "ファイル '%s' の読み込みおよび書き込みができません。\n"
 
-#: ../libgtkpod/file.c:1769
+#: ../libgtkpod/file.c:1834
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr "'%s' をロックすることができませんでした。\n"
 
 #. error!
-#: ../libgtkpod/file.c:1784 ../libgtkpod/file.c:1792 ../libgtkpod/file.c:1802
-#: ../libgtkpod/file.c:1809
+#: ../libgtkpod/file.c:1849 ../libgtkpod/file.c:1857 ../libgtkpod/file.c:1867
+#: ../libgtkpod/file.c:1874
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr "'%s' におかしな行があります: %s\n"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1835
+#: ../libgtkpod/file.c:1896
 msgid "Remove offline playcounts?"
 msgstr "オフラインでの再生回数を削除しますか"
 
 #. title
-#: ../libgtkpod/file.c:1836
+#: ../libgtkpod/file.c:1897
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
@@ -524,28 +552,57 @@ msgstr ""
 "とそれらの曲の再生回数はファイルから削除されます。'キャンセル' を押せば削除さ"
 "れず残ります。"
 
-#: ../libgtkpod/file.c:1851
+#: ../libgtkpod/file.c:1912
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr "'%s'の書き込み中にエラーが発生しました。\n"
 
-#: ../libgtkpod/file.c:1900
+#: ../libgtkpod/file.c:1941
+#, c-format
+msgid "Failed to read sound check from track because"
+msgstr ""
+
+#: ../libgtkpod/file.c:1948
+#, c-format
+msgid ""
+"%s\n"
+"\n"
+"filetype of %s is not recognised."
+msgstr ""
+
+#: ../libgtkpod/file.c:1953 ../libgtkpod/file.c:1955
+#, c-format
+msgid ""
+"%s\n"
+"\n"
+"%s"
+msgstr ""
+
+#: ../libgtkpod/file.c:1983
 #, c-format
 msgid ""
 "Error: Could not determine filetype for file at path: %s.\n"
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file.c:1906
+#: ../libgtkpod/file.c:1989 ../libgtkpod/file.c:1994
+#, c-format
+msgid ""
+"Error: Failed to read lyrics because:\n"
+"\n"
+"%s"
+msgstr ""
+
+#: ../libgtkpod/file.c:1998
 #, c-format
 msgid "Error: Unable to get filename from path"
 msgstr ""
 
-#: ../libgtkpod/file.c:1936
+#: ../libgtkpod/file.c:2029
 msgid "Error:"
 msgstr ""
 
-#: ../libgtkpod/file.c:1950
+#: ../libgtkpod/file.c:2043
 #, c-format
 msgid ""
 "iPod File not available and ID3 saving disabled in options, cannot save "
@@ -553,7 +610,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file.c:1959
+#: ../libgtkpod/file.c:2052
 #, fuzzy, c-format
 msgid ""
 "Lyrics not written, file type cannot be determined (%s).\n"
@@ -562,38 +619,61 @@ msgstr ""
 "平均化に失敗: ファイルが取得できません (%s).\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:310
+#: ../libgtkpod/file.c:2059
+#, fuzzy, c-format
+msgid ""
+"Lyrics not written due to the error:\n"
+"\n"
+"%s"
+msgstr ""
+"平均化に失敗: ファイルが取得できません (%s).\n"
+"\n"
+
+#: ../libgtkpod/file.c:2064
+#, fuzzy, c-format
+msgid ""
+"Lyrics not written due to the error:\n"
+"%s"
+msgstr ""
+"平均化に失敗: ファイルが取得できません (%s).\n"
+"\n"
+
+#: ../libgtkpod/file_convert.c:317
+msgid "errors"
+msgstr ""
+
+#: ../libgtkpod/file_convert.c:325
 msgid "Summary status of conversion processes"
 msgstr ""
 
 #. only change the label if it has changed --
 #. otherwise our tooltips will be switched off
-#: ../libgtkpod/file_convert.c:527 ../libgtkpod/file_convert.c:529
+#: ../libgtkpod/file_convert.c:542 ../libgtkpod/file_convert.c:544
 msgid "active"
 msgstr ""
 
-#: ../libgtkpod/file_convert.c:533 ../libgtkpod/file_convert.c:534
+#: ../libgtkpod/file_convert.c:548 ../libgtkpod/file_convert.c:549
 msgid "inactive"
 msgstr ""
 
-#: ../libgtkpod/file_convert.c:546
+#: ../libgtkpod/file_convert.c:561
 #, c-format
 msgid "Active threads: %d. Scheduled tracks: %d."
 msgstr ""
 
-#: ../libgtkpod/file_convert.c:964
+#: ../libgtkpod/file_convert.c:1035
 #, fuzzy, c-format
 msgid "Original filename not available for '%s.'\n"
 msgstr ""
 "平均化に失敗: ファイルが取得できません (%s).\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:980
+#: ../libgtkpod/file_convert.c:1051
 #, c-format
 msgid "Filename '%s' is no longer valid for '%s'.\n"
 msgstr ""
 
-#: ../libgtkpod/file_convert.c:1054
+#: ../libgtkpod/file_convert.c:1125
 #, c-format
 msgid ""
 "Files of type '%s' are not supported by the iPod. Please go to the "
@@ -601,38 +681,38 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file_convert.c:1127
+#: ../libgtkpod/file_convert.c:1198
 #, fuzzy
 msgid "No information available"
 msgstr "ファイル名がわかりません"
 
-#: ../libgtkpod/file_convert.c:1156
+#: ../libgtkpod/file_convert.c:1227
 #, c-format
 msgid "Could not create '%s'. Filetype conversion will not work.\n"
 msgstr ""
 
-#: ../libgtkpod/file_convert.c:1438 ../libgtkpod/file_convert.c:2678
+#: ../libgtkpod/file_convert.c:1509 ../libgtkpod/file_convert.c:2751
 #, c-format
 msgid ""
 "Transfer of '%s' failed. %s\n"
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file_convert.c:1795 ../libgtkpod/file_convert.c:2025
+#: ../libgtkpod/file_convert.c:1868 ../libgtkpod/file_convert.c:2098
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s'.\n"
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file_convert.c:1810
+#: ../libgtkpod/file_convert.c:1883
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s %s' returned exit status %d.\n"
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file_convert.c:1836
+#: ../libgtkpod/file_convert.c:1909
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '\"%s\" %s' did not return filename extension as "
@@ -640,49 +720,49 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file_convert.c:1901
+#: ../libgtkpod/file_convert.c:1974
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not access original file '%s' (%s).\n"
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file_convert.c:1945
+#: ../libgtkpod/file_convert.c:2018
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not create directory '%s'.\n"
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file_convert.c:2053
+#: ../libgtkpod/file_convert.c:2126
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s' returned exit status %d.\n"
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file_convert.c:2087
+#: ../libgtkpod/file_convert.c:2160
 #, c-format
 msgid ""
 "Conversion of '%s' failed: could not stat the converted file '%s'.\n"
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:122
+#: ../libgtkpod/file_itunesdb.c:121
 #, fuzzy, c-format
 msgid "Matching SHA1 checksum for file %d/%d"
 msgstr "MD5 チェックサムの照合中 %d/%d"
 
-#: ../libgtkpod/file_itunesdb.c:240
+#: ../libgtkpod/file_itunesdb.c:232
 msgid "Could not create hash value from itunesdb\n"
 msgstr "itunesdb からハッシュ値を読み込めませんでした。\n"
 
-#: ../libgtkpod/file_itunesdb.c:255
+#: ../libgtkpod/file_itunesdb.c:247
 #, c-format
 msgid "Error while reading extended info: %s\n"
 msgstr "拡張情報ファイルの読み込み中に以下のエラーが発生しました: %s\n"
 
-#: ../libgtkpod/file_itunesdb.c:271
+#: ../libgtkpod/file_itunesdb.c:263
 #, fuzzy, c-format
 msgid ""
 "iTunesDB '%s' does not match checksum in extended information file '%s'\n"
@@ -695,7 +775,7 @@ msgstr ""
 "ます。\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:281
+#: ../libgtkpod/file_itunesdb.c:273
 #, c-format
 msgid ""
 "%s:\n"
@@ -704,7 +784,7 @@ msgstr ""
 "%s:\n"
 "\"itunesdb_hash=\" が書かれているべき箇所に違う内容が書かれています: \"%s\"\n"
 
-#: ../libgtkpod/file_itunesdb.c:326
+#: ../libgtkpod/file_itunesdb.c:318
 #, c-format
 msgid ""
 "%s:\n"
@@ -713,7 +793,7 @@ msgstr ""
 "%s:\n"
 "書式エラー: %s\n"
 
-#: ../libgtkpod/file_itunesdb.c:368
+#: ../libgtkpod/file_itunesdb.c:360
 #, fuzzy
 msgid ""
 "No SHA1 checksums on individual tracks are available.\n"
@@ -730,47 +810,48 @@ msgstr ""
 "にしてください。\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:404
+#: ../libgtkpod/file_itunesdb.c:396
 #, c-format
 msgid "Error reading iPod photo database (%s).\n"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:409
+#: ../libgtkpod/file_itunesdb.c:401
 msgid "Error reading iPod photo database. (No error message)\n"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:466
+#: ../libgtkpod/file_itunesdb.c:459
 #, c-format
 msgid "The repository %s does not have a readable extended database.\n"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:468
+#: ../libgtkpod/file_itunesdb.c:461
 msgid ""
 "This database identifies the track on disk with the track data in the "
-"repository database."
+"repository database. "
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:468
+#: ../libgtkpod/file_itunesdb.c:461
 msgid ""
 "Any tracks already in the database cannot be transferred between "
-"repositories without the extended database."
+"repositories without the extended database. "
+msgstr ""
+
+#: ../libgtkpod/file_itunesdb.c:461
+msgid ""
+"A new extended database will be created upon saving but existing tracks will "
+"need to be reimported to be linked to the file on disk.\n"
+"\n"
 msgstr ""
 
 #: ../libgtkpod/file_itunesdb.c:468
-msgid ""
-"A new extended database will be created upon saving but existing tracks will "
-"need to be reimported to be linked to the file on disk."
-msgstr ""
-
-#: ../libgtkpod/file_itunesdb.c:476
 msgid "Offline iPod database successfully imported"
 msgstr "オフラインでiPodデータベースを読み込みました"
 
-#: ../libgtkpod/file_itunesdb.c:478
+#: ../libgtkpod/file_itunesdb.c:470
 msgid "Local database successfully imported"
 msgstr "ローカルデータベースを読み込みました"
 
-#: ../libgtkpod/file_itunesdb.c:483
+#: ../libgtkpod/file_itunesdb.c:475
 #, c-format
 msgid ""
 "Offline iPod database import failed: '%s'\n"
@@ -779,7 +860,7 @@ msgstr ""
 "オフラインでのiPodデータベースの読み込みに失敗しました: '%s'\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:485
+#: ../libgtkpod/file_itunesdb.c:477
 #, c-format
 msgid ""
 "Local database import failed: '%s'\n"
@@ -788,7 +869,7 @@ msgstr ""
 "ローカルデータベースの読み込みに失敗しました: '%s'\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:489
+#: ../libgtkpod/file_itunesdb.c:483
 msgid ""
 "Offline iPod database import failed: \n"
 "\n"
@@ -796,7 +877,7 @@ msgstr ""
 "オフラインでのiPodデータベースの読み込みに失敗しました\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:491
+#: ../libgtkpod/file_itunesdb.c:485
 msgid ""
 "Local database import failed: \n"
 "\n"
@@ -804,7 +885,7 @@ msgstr ""
 "ローカルデータベースの読み込みに失敗しました: \n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:496
+#: ../libgtkpod/file_itunesdb.c:490
 #, c-format
 msgid ""
 "'%s' does not exist. Import aborted.\n"
@@ -813,15 +894,21 @@ msgstr ""
 "'%s' は見つかりません。読み込みを中止します。\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:510
-msgid "Extended info will not be used.\n"
+#: ../libgtkpod/file_itunesdb.c:504
+#, fuzzy
+msgid ""
+"Extended info will not be used.\n"
+"\n"
 msgstr "拡張情報は使用されません。\n"
 
-#: ../libgtkpod/file_itunesdb.c:515
-msgid "iPod Database Successfully Imported"
+#: ../libgtkpod/file_itunesdb.c:509
+#, fuzzy
+msgid ""
+"iPod Database Successfully Imported\n"
+"\n"
 msgstr "iPod からデータベースを読み込みました"
 
-#: ../libgtkpod/file_itunesdb.c:519
+#: ../libgtkpod/file_itunesdb.c:513
 #, c-format
 msgid ""
 "iPod Database Import Failed: '%s'\n"
@@ -830,7 +917,7 @@ msgstr ""
 "iPod からのデータベースの読み込みに失敗しました: '%s'\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:522
+#: ../libgtkpod/file_itunesdb.c:517
 msgid ""
 "iPod Database Import Failed.\n"
 "\n"
@@ -838,7 +925,7 @@ msgstr ""
 "iPodからのデータベースの読み込みに失敗しました。\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:528
+#: ../libgtkpod/file_itunesdb.c:523
 #, fuzzy, c-format
 msgid ""
 "'%s' (or similar) does not exist. Import aborted.\n"
@@ -847,7 +934,19 @@ msgstr ""
 "'%s' は見つかりません。読み込みを中止します。\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:809
+#. gint id,
+#. gboolean modal,
+#: ../libgtkpod/file_itunesdb.c:696
+#, fuzzy
+msgid "Import Repository Errors"
+msgstr "iPodから削除"
+
+#. title
+#: ../libgtkpod/file_itunesdb.c:697
+msgid "Errors created during repository import"
+msgstr ""
+
+#: ../libgtkpod/file_itunesdb.c:823
 #, c-format
 msgid ""
 "Could not find iPod directory structure at '%s'.\n"
@@ -858,39 +957,39 @@ msgid ""
 "Do you want to create the directory structure now?"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:813
+#: ../libgtkpod/file_itunesdb.c:827
 msgid "iPod directory structure not found"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:813
+#: ../libgtkpod/file_itunesdb.c:827
 #, fuzzy
 msgid "Create directory structure"
 msgstr "再帰的に追加するディレクトリを選択してください"
 
-#: ../libgtkpod/file_itunesdb.c:1078
+#: ../libgtkpod/file_itunesdb.c:1092
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr "'%s' を開けないため、拡張情報を記録できません。\n"
 
-#: ../libgtkpod/file_itunesdb.c:1090
+#: ../libgtkpod/file_itunesdb.c:1104
 msgid "Aborted writing of extended info.\n"
 msgstr "拡張情報の書き込みは中止されました。\n"
 
-#: ../libgtkpod/file_itunesdb.c:1219
+#: ../libgtkpod/file_itunesdb.c:1233
 #, c-format
 msgid "%d%%  %s"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1230
+#: ../libgtkpod/file_itunesdb.c:1244
 #, fuzzy, c-format
 msgid "%d%% (%d/%d  %d:%02d:%02d left)  %s"
 msgstr "%d%% (残り %d:%02d:%02d)"
 
-#: ../libgtkpod/file_itunesdb.c:1275
+#: ../libgtkpod/file_itunesdb.c:1289
 msgid "Status: Deleting File"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1331
+#: ../libgtkpod/file_itunesdb.c:1345
 #, fuzzy, c-format
 msgid ""
 "Could not remove the following file: '%s'\n"
@@ -899,7 +998,7 @@ msgstr ""
 "'%s' を書き込み用に開くことができません。(%s)\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:1426
+#: ../libgtkpod/file_itunesdb.c:1440
 #, fuzzy
 msgid ""
 "The following track could not be converted successfully:\n"
@@ -909,7 +1008,7 @@ msgid_plural ""
 "\n"
 msgstr[0] "以下の%d曲を更新することができませんでした"
 
-#: ../libgtkpod/file_itunesdb.c:1432
+#: ../libgtkpod/file_itunesdb.c:1446
 #, fuzzy
 msgid ""
 "The following track could not be transferred successfully:\n"
@@ -921,34 +1020,34 @@ msgstr[0] "以下の%d曲を更新することができませんでした"
 
 #. ID
 #. modal,
-#: ../libgtkpod/file_itunesdb.c:1439 ../libgtkpod/gtkpod_app_iface.c:249
+#: ../libgtkpod/file_itunesdb.c:1453 ../libgtkpod/gtkpod_app_iface.c:249
 msgid "Warning"
 msgstr "警告"
 
 #. title
-#: ../libgtkpod/file_itunesdb.c:1440
+#: ../libgtkpod/file_itunesdb.c:1454
 msgid ""
 "The iPod could not be ejected. Please fix the problems mentioned below and "
 "then eject the iPod again. Pressing 'OK' will re-schedule the failed tracks "
 "for conversion and transfer."
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1488
+#: ../libgtkpod/file_itunesdb.c:1502
 #, c-format
 msgid "Saving: waiting for %d tracks to be copied"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1492
+#: ../libgtkpod/file_itunesdb.c:1506
 #, c-format
 msgid "Saving: waiting for %d tracks to convert"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1495
+#: ../libgtkpod/file_itunesdb.c:1509
 #, c-format
 msgid "Saving: finished track transfer"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1527
+#: ../libgtkpod/file_itunesdb.c:1541
 #, c-format
 msgid ""
 "One track could not be transferred because your iPod is full. Either delete "
@@ -960,7 +1059,7 @@ msgid_plural ""
 "again."
 msgstr[0] ""
 
-#: ../libgtkpod/file_itunesdb.c:1595
+#: ../libgtkpod/file_itunesdb.c:1609
 #, fuzzy, c-format
 msgid ""
 "You did not import the existing iTunesDB ('%s'). This is most likely "
@@ -976,20 +1075,20 @@ msgstr ""
 "さい。キャンセルした場合は、既にあるデータベースを取り込んでから再びこの操作"
 "を行うことができます。\n"
 
-#: ../libgtkpod/file_itunesdb.c:1599 ../libgtkpod/misc_playlist.c:836
+#: ../libgtkpod/file_itunesdb.c:1613 ../libgtkpod/misc_playlist.c:836
 msgid "Existing iTunes database not imported"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1599 ../libgtkpod/misc_playlist.c:836
+#: ../libgtkpod/file_itunesdb.c:1613 ../libgtkpod/misc_playlist.c:836
 msgid "Proceed anyway"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1599
+#: ../libgtkpod/file_itunesdb.c:1613
 #, fuzzy
 msgid "Skip storing"
 msgstr "並べ換え(_S)"
 
-#: ../libgtkpod/file_itunesdb.c:1623
+#: ../libgtkpod/file_itunesdb.c:1637
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
@@ -997,26 +1096,26 @@ msgstr ""
 "iPod への同期を行うためには、まず iPod のディレクトリ構造をあらかじめ作成して"
 "おく必要があります。\n"
 
-#: ../libgtkpod/file_itunesdb.c:1630
+#: ../libgtkpod/file_itunesdb.c:1644
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr "一部の曲をiPodから削除できませんでした。エクスポートを中断します。"
 
-#: ../libgtkpod/file_itunesdb.c:1644
+#: ../libgtkpod/file_itunesdb.c:1658
 #, fuzzy, c-format
 msgid "Now writing database '%s'. Please wait..."
 msgstr "iTunesDBの書き込み中。しばらくお待ちください..."
 
-#: ../libgtkpod/file_itunesdb.c:1685
+#: ../libgtkpod/file_itunesdb.c:1705
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "拡張情報ファイルを削除できません: '%s'"
 
-#: ../libgtkpod/file_itunesdb.c:1791
+#: ../libgtkpod/file_itunesdb.c:1811
 #, fuzzy, c-format
 msgid "%s: Database saved"
 msgstr "iPodデータベースを保存しました"
 
-#: ../libgtkpod/file_itunesdb.c:1794
+#: ../libgtkpod/file_itunesdb.c:1814
 #, c-format
 msgid "%s: Changes saved"
 msgstr ""
@@ -1025,7 +1124,7 @@ msgstr ""
 msgid "Set Cover"
 msgstr "カバーアートを設定"
 
-#: ../libgtkpod/filetype_iface.c:188
+#: ../libgtkpod/filetype_iface.c:190
 msgid "Error: Lyrics not supported for this file format."
 msgstr ""
 
@@ -1210,7 +1309,7 @@ msgid "Title"
 msgstr "タイトル"
 
 #: ../libgtkpod/misc_conversion.c:64
-#: ../plugins/core_preferences/core_prefs.xml.h:63
+#: ../plugins/core_preferences/core_prefs.xml.h:62
 #: ../plugins/playlist_display/playlist_display_spl.c:83
 #: ../plugins/sorttab_display/display_sorttabs.c:2584
 msgid "Genre"
@@ -1223,7 +1322,7 @@ msgstr "コメント"
 
 #. 5
 #: ../libgtkpod/misc_conversion.c:66
-#: ../plugins/core_preferences/core_prefs.xml.h:33
+#: ../plugins/core_preferences/core_prefs.xml.h:32
 #: ../plugins/playlist_display/playlist_display_spl.c:91
 msgid "Composer"
 msgstr "作曲者"
@@ -1573,7 +1672,7 @@ msgstr "新しいプレイリストの名前を入力してください"
 #: ../libgtkpod/misc_playlist.c:74 ../libgtkpod/misc_playlist.c:318
 #: ../plugins/playlist_display/playlist_display_spl.c:1432
 #: ../plugins/playlist_display/playlist_display_spl.c:1488
-#: ../plugins/playlist_display/plugin.c:320
+#: ../plugins/playlist_display/plugin.c:337
 msgid "New Playlist"
 msgstr "新規プレイリスト"
 
@@ -2301,194 +2400,190 @@ msgid "Also use this encoding when writing tracks"
 msgstr "選択された文字コードを更新・同期処理でも使用する"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:30
-msgid "Auto-save every seconds:"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:31
 msgid "Automatically generate video thumbnails"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:32
+#: ../plugins/core_preferences/core_prefs.xml.h:31
 #, fuzzy
 msgid "Cache folder:"
 msgstr "ディレクトリを追加する(_D)"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:34
+#: ../plugins/core_preferences/core_prefs.xml.h:33
 #, fuzzy
 msgid "Confirm deletion of playlists or tracks from a playlist"
 msgstr "プレイリストや、プレイリストから曲を削除する時"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:35
+#: ../plugins/core_preferences/core_prefs.xml.h:34
 #, fuzzy
 msgid "Confirm deletion of tracks during synchronization"
 msgstr "ディレクトリのリストを確認する"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:36
+#: ../plugins/core_preferences/core_prefs.xml.h:35
 #, fuzzy
 msgid "Confirm deletion of tracks:"
 msgstr "ディレクトリのリストを確認する"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:37
+#: ../plugins/core_preferences/core_prefs.xml.h:36
 #, fuzzy
 msgid "Conversion Preferences"
 msgstr "設定(_P)"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:38
+#: ../plugins/core_preferences/core_prefs.xml.h:37
 #, fuzzy
 msgid "Conversion Settings..."
 msgstr "<b>インポート</b>"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:39
+#: ../plugins/core_preferences/core_prefs.xml.h:38
 #, fuzzy
 msgid "Convert AAC (M4A)"
 msgstr "カバー"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:40
+#: ../plugins/core_preferences/core_prefs.xml.h:39
 #, fuzzy
 msgid "Convert MP3"
 msgstr "カバー"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:41
+#: ../plugins/core_preferences/core_prefs.xml.h:40
 #, fuzzy
 msgid "Convert WAV"
 msgstr "カバー"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:42
+#: ../plugins/core_preferences/core_prefs.xml.h:41
 msgid "Convert compatible formats to a single format"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:43
+#: ../plugins/core_preferences/core_prefs.xml.h:42
 msgid "Convert incompatible audio formats to:"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:44
+#: ../plugins/core_preferences/core_prefs.xml.h:43
 #, fuzzy
 msgid "Cover Art Search Preferences"
 msgstr "設定(_P)"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:45
+#: ../plugins/core_preferences/core_prefs.xml.h:44
 #, fuzzy
 msgid "Cover art file pattern:"
 msgstr "ファイル名の書式: "
 
-#: ../plugins/core_preferences/core_prefs.xml.h:46
+#: ../plugins/core_preferences/core_prefs.xml.h:45
 msgid "Customize..."
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:47
+#: ../plugins/core_preferences/core_prefs.xml.h:46
 #, fuzzy
 msgid "Delete missing tracks when synchronizing playlists"
 msgstr "プレイリスト '%2$s' から %1$d 曲削除しました"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:48
+#: ../plugins/core_preferences/core_prefs.xml.h:47
 msgid "Display conversion log"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:49
+#: ../plugins/core_preferences/core_prefs.xml.h:48
 #, fuzzy
 msgid "Display information about detected duplicate files"
 msgstr "重複を見つけた際に報告する"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:50
+#: ../plugins/core_preferences/core_prefs.xml.h:49
 msgid "Display messages and warnings at startup"
 msgstr "起動時にメッセージや警告を表示する"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:51
+#: ../plugins/core_preferences/core_prefs.xml.h:50
 msgid "Display synchronization results"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:52
+#: ../plugins/core_preferences/core_prefs.xml.h:51
 #, fuzzy
 msgid "Encoding Preferences"
 msgstr "設定(_P)"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:53
+#: ../plugins/core_preferences/core_prefs.xml.h:52
 #, fuzzy
 msgid "Encoding..."
 msgstr "コピー中..."
 
-#: ../plugins/core_preferences/core_prefs.xml.h:54
+#: ../plugins/core_preferences/core_prefs.xml.h:53
 #, fuzzy
 msgid "Excluded files..."
 msgstr "適用しないファイル"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:55
+#: ../plugins/core_preferences/core_prefs.xml.h:54
 msgid "Exclusions List"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:56
+#: ../plugins/core_preferences/core_prefs.xml.h:55
 msgid "Feedback"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:57
+#: ../plugins/core_preferences/core_prefs.xml.h:56
 #, fuzzy
 msgid "Filename Parse Preferences"
 msgstr "設定(_P)"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:58
+#: ../plugins/core_preferences/core_prefs.xml.h:57
 #, fuzzy
 msgid "Filename parse pattern:"
 msgstr "ファイル名の書式: "
 
-#: ../plugins/core_preferences/core_prefs.xml.h:59
+#: ../plugins/core_preferences/core_prefs.xml.h:58
 #, fuzzy
 msgid "From the hard disk"
 msgstr "ハードディスクから削除"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:60
+#: ../plugins/core_preferences/core_prefs.xml.h:59
 #, fuzzy
 msgid "From the iPod"
 msgstr "iPodから削除"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:61
+#: ../plugins/core_preferences/core_prefs.xml.h:60
 #, fuzzy
 msgid "From the local database"
 msgstr "ローカルデータベースから%d曲削除しました"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:62
+#: ../plugins/core_preferences/core_prefs.xml.h:61
 #: ../plugins/info_display/info.c:371
 #: ../plugins/playlist_display/playlist_display_spl.c:168
 msgid "GB"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:64
+#: ../plugins/core_preferences/core_prefs.xml.h:63
 #, fuzzy
 msgid "Include tracks never played in the \"Best Rated\" playlist"
 msgstr ""
 "「評価の高い曲」のリストを作る際に、一度も\n"
 "再生された事のない曲も対象とします。"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:65
+#: ../plugins/core_preferences/core_prefs.xml.h:64
 msgid "MP3"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:66
+#: ../plugins/core_preferences/core_prefs.xml.h:65
 msgid "Mass-modify tags when multiple tracks are selected"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:67
+#: ../plugins/core_preferences/core_prefs.xml.h:66
 msgid "Maximum cache size:"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:68
+#: ../plugins/core_preferences/core_prefs.xml.h:67
 msgid "Maximum threads:"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:69
+#: ../plugins/core_preferences/core_prefs.xml.h:68
 msgid "Metadata"
 msgstr ""
 
 #. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:70 ../src/anjuta-app.c:405
+#: ../plugins/core_preferences/core_prefs.xml.h:69 ../src/anjuta-app.c:405
 msgid "Music"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:71
+#: ../plugins/core_preferences/core_prefs.xml.h:70
 #, fuzzy
 msgid "Normalization..."
 msgstr "平均化中..."
 
-#: ../plugins/core_preferences/core_prefs.xml.h:72
+#: ../plugins/core_preferences/core_prefs.xml.h:71
 msgid ""
 "Normally, the encoding specified above will only be used when importing new "
 "tracks, and for any operations involving existing tracks, the encoding "
@@ -2497,21 +2592,21 @@ msgid ""
 "incorrectly for the first import."
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:73
+#: ../plugins/core_preferences/core_prefs.xml.h:72
 #, fuzzy
 msgid "Number of tracks:"
 msgstr "曲数"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:74
+#: ../plugins/core_preferences/core_prefs.xml.h:73
 #, fuzzy
 msgid "Overwrite existing tags"
 msgstr "ファイルを上書きします: '%s'\n"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:75
+#: ../plugins/core_preferences/core_prefs.xml.h:74
 msgid "Parse file name to set missing tags"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:77
+#: ../plugins/core_preferences/core_prefs.xml.h:76
 #, no-c-format
 msgid ""
 "Provide a shell command to generate a thumbnail image of your video file.  "
@@ -2520,41 +2615,45 @@ msgid ""
 "- %o: the output file (which is automatically generated)\n"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:81
+#: ../plugins/core_preferences/core_prefs.xml.h:80
 msgid "Read embedded cover art information"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:82
+#: ../plugins/core_preferences/core_prefs.xml.h:81
 msgid "Read embedded tags from music files"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:83
+#: ../plugins/core_preferences/core_prefs.xml.h:82
 #, fuzzy
 msgid "ReplayGain Preferences"
 msgstr "設定(_P)"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:84
+#: ../plugins/core_preferences/core_prefs.xml.h:83
 #, fuzzy
 msgid "ReplayGain..."
 msgstr "コピー中..."
 
-#: ../plugins/core_preferences/core_prefs.xml.h:85
+#: ../plugins/core_preferences/core_prefs.xml.h:84
 msgid "Set still missing tags to file name"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:86
+#: ../plugins/core_preferences/core_prefs.xml.h:85
 #, fuzzy
 msgid "Skip the track"
 msgstr "%d曲コピーしました"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:87
+#: ../plugins/core_preferences/core_prefs.xml.h:86
 msgid "Tag and filename encoding:"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:88
+#: ../plugins/core_preferences/core_prefs.xml.h:87
 msgid ""
 "These settings will only be applied to newly added or updated tracks. This "
 "could result in tracks that are normalized to different levels until updated."
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:88
+msgid "Threshold for import of tracks before a save triggered:"
 msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:90
@@ -2587,22 +2686,23 @@ msgid ""
 "When multiple tracks are added to a repository, should an\n"
 "error occur then it is likely, without saving all added tracks\n"
 "will be lost since they are not saved. This preference allows for\n"
-"a save operation to be conducted periodically.\n"
+"a save operation to be conducted after the number of tracks\n"
+"specified.\n"
 "\n"
-"The default is 60 seconds, so every minute a save\n"
+"The default is 10 so after 10 tracks have been added a save\n"
 "will be imposed on the repository."
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:103
+#: ../plugins/core_preferences/core_prefs.xml.h:104
 msgid "When updating tracks, display information:"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:104
+#: ../plugins/core_preferences/core_prefs.xml.h:105
 #, fuzzy
 msgid "Write tags to disk when edited"
 msgstr "gtkpod内で変更があったID3タグをディスクに書き込む"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:106
+#: ../plugins/core_preferences/core_prefs.xml.h:107
 #, no-c-format
 msgid ""
 "You can separate several templates by a ';'. The first one matching the "
@@ -2622,7 +2722,7 @@ msgid ""
 "- the character '%': %%."
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:121
+#: ../plugins/core_preferences/core_prefs.xml.h:122
 #, no-c-format
 msgid ""
 "You can separate several templates by a ';'. The first one matching the "
@@ -2648,7 +2748,7 @@ msgid ""
 "- the character '%': %%."
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:140
+#: ../plugins/core_preferences/core_prefs.xml.h:141
 msgid "dB"
 msgstr ""
 
@@ -2751,27 +2851,27 @@ msgid "Display Cover Artwork of Tracks"
 msgstr "表示されている曲(_D)"
 
 #. Set the resolution in the label
-#: ../plugins/cover_display/display_coverart.c:1465
+#: ../plugins/cover_display/display_coverart.c:1471
 #: ../plugins/photo_editor/display_photo.c:952
 #, c-format
 msgid "<b>Image Dimensions: %d x %d</b>"
 msgstr ""
 
-#: ../plugins/cover_display/display_coverart.c:1615
+#: ../plugins/cover_display/display_coverart.c:1621
 msgid "Failed to remove the album from the album hash store."
 msgstr ""
 
-#: ../plugins/cover_display/display_coverart.c:1980
+#: ../plugins/cover_display/display_coverart.c:1986
 #: ../plugins/details_editor/details.c:1700
 msgid "Item had to be downloaded but gtkpod was not compiled with curl."
 msgstr ""
 
-#: ../plugins/cover_display/display_coverart.c:1986
+#: ../plugins/cover_display/display_coverart.c:1992
 #, c-format
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
 msgstr ""
 
-#: ../plugins/cover_display/display_coverart.c:2019
+#: ../plugins/cover_display/display_coverart.c:2025
 #: ../plugins/details_editor/details.c:1748
 msgid "Successfully set new coverart for selected tracks"
 msgstr ""
@@ -3328,58 +3428,69 @@ msgstr ""
 msgid "Support for the m4a / m4p file type"
 msgstr ""
 
-#: ../plugins/filetype_m4a/mp4file.c:550 ../plugins/filetype_mp4/mp4file.c:550
+#: ../plugins/filetype_m4a/mp4file.c:551 ../plugins/filetype_mp4/mp4file.c:551
 #, fuzzy, c-format
 msgid ""
-"m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
-"without the mp4v2 library. You must install the mp4v2 library.\n"
+"m4a/m4p/m4b/mp4 soundcheck update for '%s' failed: m4a/m4p/m4b/mp4 not "
+"supported without the mp4v2 library. You must install the mp4v2 library.\n"
 msgstr ""
 "'%s' の m4a/m4p メタデータの更新に失敗: m4a/m4p の取り扱いには mp4v2 ライブラ"
 "リが必要です。mp4v2 ライブラリを使って gtkpod を再度コンパイルしてくださ"
 "い。\n"
 
-#: ../plugins/filetype_m4a/mp4file.c:584 ../plugins/filetype_m4a/mp4file.c:848
-#: ../plugins/filetype_mp4/mp4file.c:584 ../plugins/filetype_mp4/mp4file.c:848
+#: ../plugins/filetype_m4a/mp4file.c:586 ../plugins/filetype_mp4/mp4file.c:586
 #, fuzzy, c-format
-msgid "'%s' does not appear to be a mp4 audio or video file.\n"
+msgid "'%s' does not appear to be a m4a/m4b/m4v/mp4 audio or video file.\n"
 msgstr "'%s' は mp4 オーディオファイルとは認識できません。\n"
 
-#: ../plugins/filetype_m4a/mp4file.c:591 ../plugins/filetype_m4a/mp4file.c:855
-#: ../plugins/filetype_mp4/mp4file.c:591 ../plugins/filetype_mp4/mp4file.c:855
-#, c-format
-msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
-msgstr "'%s' は読み込みが許可されていないか、mp4 ファイルではありません。\n"
-
-#: ../plugins/filetype_m4a/mp4file.c:600 ../plugins/filetype_mp4/mp4file.c:600
+#: ../plugins/filetype_m4a/mp4file.c:594 ../plugins/filetype_mp4/mp4file.c:594
 #, fuzzy, c-format
 msgid ""
-"Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
+"Could not open '%s' for reading, or file is not an m4a/m4b/m4v/mp4 file.\n"
+msgstr "'%s' は読み込みが許可されていないか、mp4 ファイルではありません。\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:603 ../plugins/filetype_mp4/mp4file.c:603
+#, fuzzy, c-format
+msgid ""
+"Import of '%s' failed: file type not supported without the mp4v2 library. "
 "You must install the mp4v2 library.\n"
 msgstr ""
 "'%s'の読み込みに失敗: m4a/m4p の取り扱いには mp4v2 ライブラリが必要です。"
 "mp4v2 ライブラリを使って gtkpod を再度コンパイルしてください。\n"
 
-#: ../plugins/filetype_m4a/mp4file.c:864 ../plugins/filetype_mp4/mp4file.c:864
+#: ../plugins/filetype_m4a/mp4file.c:852 ../plugins/filetype_mp4/mp4file.c:852
+#, fuzzy, c-format
+msgid "'%s' does not appear to be a m4a/m4p/m4b/mp4 audio or video file.\n"
+msgstr "'%s' は mp4 オーディオファイルとは認識できません。\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:860 ../plugins/filetype_mp4/mp4file.c:860
+#, c-format
+msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
+msgstr "'%s' は読み込みが許可されていないか、mp4 ファイルではありません。\n"
+
+#: ../plugins/filetype_m4a/mp4file.c:870 ../plugins/filetype_mp4/mp4file.c:870
 #, fuzzy, c-format
 msgid ""
-"m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
-"without the mp4v2 library. You must install the mp4v2 library.\n"
+"m4a/m4p/m4b/mp4 metadata update for '%s' failed: m4a/m4p/m4b/mp4 not "
+"supported without the mp4v2 library. You must install the mp4v2 library.\n"
 msgstr ""
 "'%s' の m4a/m4p メタデータの更新に失敗: m4a/m4p の取り扱いには mp4v2 ライブラ"
 "リが必要です。mp4v2 ライブラリを使って gtkpod を再度コンパイルしてくださ"
 "い。\n"
 
-#: ../plugins/filetype_m4a/mp4file.c:986 ../plugins/filetype_mp4/mp4file.c:986
-#, c-format
-msgid "'%s' does not appear to be a mp4 audio file.\n"
+#: ../plugins/filetype_m4a/mp4file.c:993 ../plugins/filetype_mp4/mp4file.c:993
+#, fuzzy, c-format
+msgid "'%s' does not appear to be a m4a/m4b/m4v/mp4 audio file.\n"
 msgstr "'%s' は mp4 オーディオファイルとは認識できません。\n"
 
-#: ../plugins/filetype_m4a/mp4file.c:994 ../plugins/filetype_mp4/mp4file.c:994
-#, c-format
-msgid "Could not open '%s' for writing, or file is not an mp4 file.\n"
+#: ../plugins/filetype_m4a/mp4file.c:1002
+#: ../plugins/filetype_mp4/mp4file.c:1002
+#, fuzzy, c-format
+msgid ""
+"Could not open '%s' for writing, or file is not an m4a/m4b/m4v/mp4 file.\n"
 msgstr "'%s' は書き込みが許可されていないか、mp4 ファイルではありません。\n"
 
-#: ../plugins/filetype_m4a/plugin.c:80
+#: ../plugins/filetype_m4a/plugin.c:84
 msgid "M4A audio file type"
 msgstr ""
 
@@ -3391,30 +3502,29 @@ msgstr ""
 msgid "Support for the MP3 file type"
 msgstr ""
 
-#: ../plugins/filetype_mp3/mp3file.c:1247
+#: ../plugins/filetype_mp3/mp3file.c:1249
 #, fuzzy, c-format
 msgid "Error setting ID3 field: %s\n"
 msgstr "'%s'の作成に失敗: %s\n"
 
-#: ../plugins/filetype_mp3/mp3file.c:1267
-#: ../plugins/filetype_mp3/mp3file.c:1426
-#: ../plugins/filetype_mp3/mp3file.c:1572
-#: ../plugins/filetype_mp3/mp3file.c:1955
-#: ../plugins/filetype_mp3/mp3file.c:2778
-#: ../plugins/filetype_mp3/mp3file.c:2841
-#: ../plugins/filetype_mp3/mp3file.c:2863
+#: ../plugins/filetype_mp3/mp3file.c:1269
+#: ../plugins/filetype_mp3/mp3file.c:1428
+#: ../plugins/filetype_mp3/mp3file.c:1575
+#: ../plugins/filetype_mp3/mp3file.c:1959
+#: ../plugins/filetype_mp3/mp3file.c:2783
+#: ../plugins/filetype_mp3/mp3file.c:2848
+#: ../plugins/filetype_mp3/mp3file.c:2870
 #, c-format
 msgid "ERROR while opening file: '%s' (%s).\n"
 msgstr "ファイル '%s' を開く際にエラーが発生しました。 (%s)\n"
 
-#: ../plugins/filetype_mp3/mp3file.c:1646
-#: ../plugins/filetype_mp3/mp3file.c:2896
+#: ../plugins/filetype_mp3/mp3file.c:1650
+#: ../plugins/filetype_mp3/mp3file.c:2903
 #, fuzzy, c-format
 msgid "ERROR while writing tag to file: '%s' (%s).\n"
 msgstr "ファイル '%s' を開く際にエラーが発生しました。 (%s)\n"
 
-#. Tracks with zero play length are ignored by iPod...
-#: ../plugins/filetype_mp3/mp3file.c:2810
+#: ../plugins/filetype_mp3/mp3file.c:2816
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr "ファイル \"%s\" は長さが0なので無視します。\n"
@@ -3773,8 +3883,8 @@ msgstr ""
 msgid "_Update mserv Data from File"
 msgstr "mserv データを更新する(_m)"
 
-#: ../plugins/mserv/plugin.c:65 ../plugins/playlist_display/plugin.c:252
-#: ../plugins/playlist_display/plugin.c:276
+#: ../plugins/mserv/plugin.c:65 ../plugins/playlist_display/plugin.c:268
+#: ../plugins/playlist_display/plugin.c:292
 #, fuzzy
 msgid "Selected Playlist"
 msgstr "選択されたプレイリスト(_P)"
@@ -4065,7 +4175,7 @@ msgstr ""
 
 #: ../plugins/playlist_display/playlist_display.xml.h:16
 #: ../plugins/playlist_display/plugin.c:50
-#: ../plugins/playlist_display/plugin.c:317
+#: ../plugins/playlist_display/plugin.c:334
 #, fuzzy
 msgid "Playlist Display"
 msgstr "プレイリスト"
@@ -4090,18 +4200,18 @@ msgid "_Limit to"
 msgstr "制限(_L)"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:73
-#: ../plugins/playlist_display/playlist_display_actions.c:267
+#: ../plugins/playlist_display/playlist_display_actions.c:265
 msgid "Successfully added files"
 msgstr "ファイルの追加に成功しました"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:75
-#: ../plugins/playlist_display/playlist_display_actions.c:269
+#: ../plugins/playlist_display/playlist_display_actions.c:267
 msgid "Some files were not added successfully"
 msgstr "一部のファイルの追加に失敗しました"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:97
 #: ../plugins/playlist_display/playlist_display_actions.c:206
-#: ../plugins/playlist_display/playlist_display_actions.c:296
+#: ../plugins/playlist_display/playlist_display_actions.c:294
 msgid "Please select a playlist or repository before adding tracks."
 msgstr ""
 
@@ -4111,7 +4221,7 @@ msgid "Add Folder"
 msgstr "ファイルを追加する(_F)"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:214
-#: ../plugins/playlist_display/playlist_display_actions.c:306
+#: ../plugins/playlist_display/playlist_display_actions.c:304
 msgid "Please load the iPod before adding tracks."
 msgstr ""
 
@@ -4121,12 +4231,12 @@ msgstr ""
 msgid "Add playlist files to '%s'"
 msgstr "プレイリストをファイルから読み込んで追加します"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:315
+#: ../plugins/playlist_display/playlist_display_actions.c:313
 #, fuzzy, c-format
 msgid "Add files to '%s'"
 msgstr "ファイルを追加する"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:318
+#: ../plugins/playlist_display/playlist_display_actions.c:316
 #, c-format
 msgid "Add files to '%s/%s'"
 msgstr ""
@@ -4454,249 +4564,278 @@ msgstr "プレイリスト"
 #. Action name
 #. Stock icon
 #: ../plugins/playlist_display/plugin.c:60
+#, fuzzy
+msgid "_Load Selected iPod"
+msgstr "iPod ファイル"
+
+#. Display label
+#. short-cut
+#: ../plugins/playlist_display/plugin.c:62
+#, fuzzy
+msgid "Load the currently selected iPod"
+msgstr "ファイルを追加する"
+
+#. Action name
+#. Stock icon
+#: ../plugins/playlist_display/plugin.c:68
 msgid "_Load iPod(s)"
 msgstr "iPod から読み込み(_L)"
 
 #. Display label
 #. short-cut
-#: ../plugins/playlist_display/plugin.c:62
+#: ../plugins/playlist_display/plugin.c:70
 msgid "Load all currently listed iPods"
 msgstr ""
 
+#: ../plugins/playlist_display/plugin.c:76
+#, fuzzy
+msgid "_Load iPods"
+msgstr "iPod から読み込み(_L)"
+
 #. Action name
 #. Stock icon
-#: ../plugins/playlist_display/plugin.c:68
+#: ../plugins/playlist_display/plugin.c:84
 msgid "_Save Changes"
 msgstr "変更の保存(_S)"
 
 #. Display label
 #. short-cut
-#: ../plugins/playlist_display/plugin.c:70
+#: ../plugins/playlist_display/plugin.c:86
 #, fuzzy
 msgid "Save all changes"
 msgstr "変更を保存"
 
 #. Action name
 #. Stock icon
-#: ../plugins/playlist_display/plugin.c:76
+#: ../plugins/playlist_display/plugin.c:92
 #, fuzzy
 msgid "Add _Files..."
 msgstr "ファイルを追加する(_F)"
 
 #. Display label
 #. short-cut
-#: ../plugins/playlist_display/plugin.c:78
+#: ../plugins/playlist_display/plugin.c:94
 #, fuzzy
 msgid "Add files to selected iPod"
 msgstr "ファイルを追加する"
 
 #. Action name
 #. Stock icon
-#: ../plugins/playlist_display/plugin.c:84
+#: ../plugins/playlist_display/plugin.c:100
 #, fuzzy
 msgid "Add Fol_der..."
 msgstr "ファイルを追加する(_F)"
 
 #. Display label
 #. short-cut
-#: ../plugins/playlist_display/plugin.c:86
+#: ../plugins/playlist_display/plugin.c:102
 #, fuzzy
 msgid "Add folder contents to selected iPod"
 msgstr "ファイルを追加する"
 
 #. Action name
 #. Stock icon
-#: ../plugins/playlist_display/plugin.c:92
+#: ../plugins/playlist_display/plugin.c:108
 #, fuzzy
 msgid "Add _Playlist..."
 msgstr "プレイリストを追加する(_P)"
 
 #. Display label
 #. short-cut
-#: ../plugins/playlist_display/plugin.c:94
+#: ../plugins/playlist_display/plugin.c:110
 #, fuzzy
 msgid "Add playlist to selected iPod"
 msgstr "プレイリストが選択されていません"
 
-#: ../plugins/playlist_display/plugin.c:108
+#: ../plugins/playlist_display/plugin.c:124
 #, fuzzy
 msgid "_New Playlist"
 msgstr "新規プレイリスト"
 
-#: ../plugins/playlist_display/plugin.c:116
+#: ../plugins/playlist_display/plugin.c:132
 #, fuzzy
 msgid "Empty Playlist..."
 msgstr "空リスト"
 
-#: ../plugins/playlist_display/plugin.c:118
+#: ../plugins/playlist_display/plugin.c:134
 #, fuzzy
 msgid "Create an empty playlist"
 msgstr "プレイリストの新規作成"
 
-#: ../plugins/playlist_display/plugin.c:124
+#: ../plugins/playlist_display/plugin.c:140
 #, fuzzy
 msgid "Smart Playlist..."
 msgstr "スマートプレイリスト"
 
-#: ../plugins/playlist_display/plugin.c:126
+#: ../plugins/playlist_display/plugin.c:142
 #, fuzzy
 msgid "Create a new smart playlist"
 msgstr "プレイリストの新規作成"
 
-#: ../plugins/playlist_display/plugin.c:132
+#: ../plugins/playlist_display/plugin.c:148
 msgid "Random Playlist from Displayed Tracks"
 msgstr "表示されている曲からランダムに作成"
 
-#: ../plugins/playlist_display/plugin.c:134
+#: ../plugins/playlist_display/plugin.c:150
 #, fuzzy
 msgid "Create a random playlist from the displayed tracks"
 msgstr "表示されている曲からランダムに作成"
 
-#: ../plugins/playlist_display/plugin.c:140
+#: ../plugins/playlist_display/plugin.c:156
 msgid "Containing Displayed Tracks"
 msgstr "表示されている曲から作成"
 
-#: ../plugins/playlist_display/plugin.c:142
+#: ../plugins/playlist_display/plugin.c:158
 #, fuzzy
 msgid "Create a playlist containing the displayed tracks"
 msgstr "新規プレイリストに %d曲登録しました。"
 
-#: ../plugins/playlist_display/plugin.c:148
+#: ../plugins/playlist_display/plugin.c:164
 msgid "Containing Selected Tracks"
 msgstr "選択されている曲から作成"
 
-#: ../plugins/playlist_display/plugin.c:150
+#: ../plugins/playlist_display/plugin.c:166
 #, fuzzy
 msgid "Create a playlist containing the selected tracks"
 msgstr "新規プレイリストに %d曲登録しました。"
 
-#: ../plugins/playlist_display/plugin.c:156
+#: ../plugins/playlist_display/plugin.c:172
 msgid "Best Rated Tracks"
 msgstr "評価の高い曲"
 
-#: ../plugins/playlist_display/plugin.c:158
+#: ../plugins/playlist_display/plugin.c:174
 #, fuzzy
 msgid "Create a playlist containing the best rated tracks"
 msgstr "新規プレイリストに %d曲登録しました。"
 
-#: ../plugins/playlist_display/plugin.c:164
+#: ../plugins/playlist_display/plugin.c:180
 msgid "Tracks Most Often Listened To"
 msgstr "再生回数の多い曲"
 
-#: ../plugins/playlist_display/plugin.c:166
+#: ../plugins/playlist_display/plugin.c:182
 msgid "Create a playlist containing the tracks most often listened to"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:172
+#: ../plugins/playlist_display/plugin.c:188
 msgid "Most Recently Played Tracks"
 msgstr "最近再生された曲"
 
-#: ../plugins/playlist_display/plugin.c:174
+#: ../plugins/playlist_display/plugin.c:190
 #, fuzzy
 msgid "Create a playlist containing the most recently played tracks"
 msgstr "新規プレイリストに %d曲登録しました。"
 
-#: ../plugins/playlist_display/plugin.c:180
+#: ../plugins/playlist_display/plugin.c:196
 msgid "All Tracks Played Since Last Time"
 msgstr "前回以降再生された曲"
 
-#: ../plugins/playlist_display/plugin.c:182
+#: ../plugins/playlist_display/plugin.c:198
 msgid "Create a playlist containing all tracks played since last time"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:188
+#: ../plugins/playlist_display/plugin.c:204
 msgid "All Tracks Never Listened To"
 msgstr "一度も聴いた事がない曲"
 
-#: ../plugins/playlist_display/plugin.c:190
+#: ../plugins/playlist_display/plugin.c:206
 msgid "Create a playlist of all tracks never listened to"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:196
+#: ../plugins/playlist_display/plugin.c:212
 msgid "All Tracks not Listed in any Playlist"
 msgstr "プレイリストに載っていないすべての曲"
 
-#: ../plugins/playlist_display/plugin.c:198
+#: ../plugins/playlist_display/plugin.c:214
 #, fuzzy
 msgid "Create a playlist of tracks not list in any other playlist"
 msgstr "プレイリストに載っていないすべての曲"
 
-#: ../plugins/playlist_display/plugin.c:204
+#: ../plugins/playlist_display/plugin.c:220
 msgid "One for each Artist"
 msgstr "各アーティストごとのリスト"
 
-#: ../plugins/playlist_display/plugin.c:206
+#: ../plugins/playlist_display/plugin.c:222
 #, fuzzy
 msgid "Create a playlist for each artist"
 msgstr "各アーティストごとのリスト"
 
-#: ../plugins/playlist_display/plugin.c:212
+#: ../plugins/playlist_display/plugin.c:228
 msgid "One for each Album"
 msgstr "各アルバムごとのリスト"
 
-#: ../plugins/playlist_display/plugin.c:214
+#: ../plugins/playlist_display/plugin.c:230
 #, fuzzy
 msgid "Create a playlist for each album"
 msgstr "新規プレイリストに %d曲登録しました。"
 
-#: ../plugins/playlist_display/plugin.c:220
+#: ../plugins/playlist_display/plugin.c:236
 msgid "One for each Genre"
 msgstr "各ジャンルごとのリスト"
 
-#: ../plugins/playlist_display/plugin.c:222
+#: ../plugins/playlist_display/plugin.c:238
 #, fuzzy
 msgid "Create a playlist for each genre"
 msgstr "新規プレイリストに %d曲登録しました。"
 
-#: ../plugins/playlist_display/plugin.c:228
+#: ../plugins/playlist_display/plugin.c:244
 msgid "One for each Composer"
 msgstr "各作曲者ごとのリスト"
 
-#: ../plugins/playlist_display/plugin.c:230
+#: ../plugins/playlist_display/plugin.c:246
 #, fuzzy
 msgid "Create a playlist for each composer"
 msgstr "各作曲者ごとのリスト"
 
-#: ../plugins/playlist_display/plugin.c:236
+#: ../plugins/playlist_display/plugin.c:252
 msgid "One for each Year"
 msgstr "各年ごとのリスト"
 
-#: ../plugins/playlist_display/plugin.c:238
+#: ../plugins/playlist_display/plugin.c:254
 #, fuzzy
 msgid "Create a playlist for each year"
 msgstr "新規プレイリストに %d曲登録しました。"
 
-#: ../plugins/playlist_display/plugin.c:244
+#: ../plugins/playlist_display/plugin.c:260
 msgid "One for each Rating"
 msgstr "各評価値ごとのリスト"
 
-#: ../plugins/playlist_display/plugin.c:246
+#: ../plugins/playlist_display/plugin.c:262
 #, fuzzy
 msgid "Create a playlist for each rating"
 msgstr "新規プレイリストに %d曲登録しました。"
 
-#: ../plugins/playlist_display/plugin.c:260
+#: ../plugins/playlist_display/plugin.c:276
 #, fuzzy
 msgid "Selected Playlist including Tracks from Database"
 msgstr "選択されたプレイリストを曲ごとデータベースから削除する"
 
-#: ../plugins/playlist_display/plugin.c:268
+#: ../plugins/playlist_display/plugin.c:284
 #, fuzzy
 msgid "Selected Playlist including Tracks from Device"
 msgstr "選択されたプレイリストを曲ごと iPod から削除する"
 
-#: ../plugins/playlist_display/plugin.c:320
+#: ../plugins/playlist_display/plugin.c:337
 #, fuzzy
 msgid "Create a new playlist for the selected iPod"
 msgstr "新規プレイリストに %d曲登録しました。"
 
+#: ../plugins/playlist_display/plugin.c:341
+#, fuzzy
+msgid "Load iPods"
+msgstr "iPod ファイル"
+
+#: ../plugins/playlist_display/plugin.c:341
+#, fuzzy
+msgid "Load all or selected iPods"
+msgstr "ファイルを追加する"
+
 #. Add widget directly as scrolling is handled internally by the widget
-#: ../plugins/playlist_display/plugin.c:343
+#: ../plugins/playlist_display/plugin.c:364
 #, fuzzy
 msgid "  iPod Repositories"
 msgstr "iPodから削除"
 
-#: ../plugins/playlist_display/plugin.c:410 ../src/anjuta-about.c:165
+#: ../plugins/playlist_display/plugin.c:431 ../src/anjuta-about.c:165
 #, fuzzy, c-format
 msgid "Couldn't load icon: %s"
 msgstr "'%s' をロックすることができませんでした。\n"
