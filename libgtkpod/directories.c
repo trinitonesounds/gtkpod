@@ -66,6 +66,23 @@ void init_directories(char *argv[]) {
 //    debug_print_directories();
 }
 
+void dispose_directories() {
+    if (datadir)
+        g_free(datadir);
+    if (docdir)
+        g_free(docdir);
+    if (icondir)
+        g_free(icondir);
+    if (uidir)
+        g_free(uidir);
+    if (gladedir)
+        g_free(gladedir);
+    if (plugindir)
+        g_free(plugindir);
+    if (scriptdir)
+        g_free(scriptdir);
+}
+
 #if LOCALDEBUG
 static void debug_print_directories() {
     g_printf("data directory: %s\n", get_data_dir());

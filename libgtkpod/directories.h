@@ -13,6 +13,8 @@
 
 void init_directories(char *argv[]);
 
+void dispose_directories();
+
 gboolean using_local();
 
 gchar * get_data_dir();

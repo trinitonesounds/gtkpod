@@ -249,6 +249,8 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
 }
 
 static void on_gtkpod_destroy(GtkWidget * w, gpointer data) {
+    dispose_directories();
+
     gtk_widget_hide(w);
     gtk_main_quit();
 }
