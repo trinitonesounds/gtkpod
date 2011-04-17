@@ -2392,7 +2392,7 @@ void display_show_hide_searchbar(void) {
         gtk_check_menu_item_set_active(mi, TRUE);
     }
     else {
-        gtk_widget_hide_all(searchbar);
+        gtk_widget_hide(searchbar);
         gtk_widget_show(upbutton);
         gtk_widget_set_sensitive(upbutton, TRUE);
         gtk_check_menu_item_set_active(mi, FALSE);

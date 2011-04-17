@@ -296,7 +296,7 @@ void file_convert_init() {
 
     conversion->log_window = gtkpod_builder_xml_get_widget(log_builder, "conversion_log");
     gtk_window_set_default_size(GTK_WINDOW (conversion->log_window), prefs_get_int(FILE_CONVERT_LOG_SIZE_X), prefs_get_int(FILE_CONVERT_LOG_SIZE_Y));
-    g_signal_connect_swapped (GTK_OBJECT (conversion->log_window), "delete-event",
+    g_signal_connect_swapped (G_OBJECT (conversion->log_window), "delete-event",
             G_CALLBACK (conversion_log_window_delete),
             conversion);
     vbox = gtkpod_builder_xml_get_widget(log_builder, "conversion_vbox");

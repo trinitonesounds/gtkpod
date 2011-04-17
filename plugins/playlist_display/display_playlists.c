@@ -834,7 +834,7 @@ static gboolean on_playlist_treeview_key_release_event(GtkWidget *widget, GdkEve
         /* 	    case GDK_u: */
         /* 		gp_do_selected_playlist (update_tracks); */
         /* 		break; */
-        case GDK_n:
+        case GDK_KEY_N:
             if (itdb) {
                 add_new_pl_or_spl_user_name(itdb, NULL, -1);
             }

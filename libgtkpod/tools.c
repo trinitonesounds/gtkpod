@@ -360,7 +360,7 @@ void nm_tracks_list (GList *list)
   gtk_label_set_selectable (GTK_LABEL (label), TRUE);
 
   /* Indicate that user wants to abort */
-  g_signal_connect_swapped (GTK_OBJECT (dialog), "response",
+  g_signal_connect_swapped (G_OBJECT (dialog), "response",
 			    G_CALLBACK (normalization_abort),
 			    &abort);
 

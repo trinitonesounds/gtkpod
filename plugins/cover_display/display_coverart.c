@@ -215,7 +215,7 @@ void coverart_init_display(GtkWidget *parent, gchar *gladepath) {
     g_signal_connect (G_OBJECT (cdwidget->draw_area), "expose_event", G_CALLBACK (on_drawing_area_exposed), NULL);
     gtk_widget_add_events(cdwidget->draw_area, GDK_BUTTON_PRESS_MASK);
     /* set up some callback events on the main scaled image */
-    g_signal_connect(GTK_OBJECT(cdwidget->draw_area), "button-press-event", G_CALLBACK(on_main_cover_image_clicked), NULL);
+    g_signal_connect(G_OBJECT(cdwidget->draw_area), "button-press-event", G_CALLBACK(on_main_cover_image_clicked), NULL);
 
     /* Dnd destinaton for foreign image files */
     gtk_drag_dest_set(cdwidget->canvasbox, 0, coverart_drop_types, TGNR(coverart_drop_types), GDK_ACTION_COPY
@@ -285,7 +285,7 @@ void coverart_block_change(gboolean val) {
         if (val) {
             GdkCursor *cursor = gdk_cursor_new(GDK_WATCH);
             gdk_window_set_cursor(gtk_widget_get_window(GTK_WIDGET(gtkpod_app)), cursor);
-            gdk_cursor_unref(cursor);
+            g_object_unref(cursor);
         }
         else
             gdk_window_set_cursor(gtk_widget_get_window(GTK_WIDGET(gtkpod_app)), NULL);
