@@ -39,7 +39,7 @@ version
 /stamp-h1
 /ylwrap
 /.cproject
-/libgtkpod-1.0.pc
+/libgtkpod-*.pc
 /libtool
 /ltmain.sh
 /*.anjuta

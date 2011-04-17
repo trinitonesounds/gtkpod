@@ -14,7 +14,7 @@ dnl libtool versioning
 #                 changes to the signature and the semantic)
 #  ? :+1 : ?   == just internal changes
 # CURRENT : REVISION : AGE
-LIBGTKPOD_SO_VERSION="1:0:0"
+LIBGTKPOD_SO_VERSION="2:0:1"
 
 LIBGTKPOD_VERSION=`./version.sh`
 
@@ -65,6 +65,9 @@ GETTEXT_PACKAGE=gtkpod
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE",["Gettext package name"])
 
+dnl GSettings
+GLIB_GSETTINGS
+
 dnl check if pkg-config exists -- if not print a meaningful error message
 AC_PATH_TOOL([PKG_CONFIG], [pkg-config])
 if test -z "$PKG_CONFIG"; then
@@ -74,15 +77,14 @@ else
 fi
 
 dnl check for required libs that are managed with pkg-config
-PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.12.0,, [AC_MSG_FAILURE([*** $GTK_PKG_ERRORS])])
-PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.15.0,, [AC_MSG_FAILURE([*** $GLIB_PKG_ERRORS])])
-PKG_CHECK_MODULES(GMODULE, gmodule-2.0,, [AC_MSG_FAILURE([*** $GMODULE_PKG_ERRORS])])
-PKG_CHECK_MODULES(GTHREAD, gthread-2.0 >= 0.14.0,, [AC_MSG_FAILURE([*** $GTHREAD_PKG_ERRORS])])
-PKG_CHECK_MODULES(LIBGLADE, libglade-2.0 >= 2.4.0,, [AC_MSG_FAILURE([*** $LIBGLADE_PKG_ERRORS])])
+PKG_CHECK_MODULES(GTK, gtk+-3.0 >= 3.0.8,, [AC_MSG_FAILURE([*** $GTK_PKG_ERRORS])])
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.28.5,, [AC_MSG_FAILURE([*** $GLIB_PKG_ERRORS])])
+PKG_CHECK_MODULES(GMODULE, gmodule-2.0 >= 2.28.5,, [AC_MSG_FAILURE([*** $GMODULE_PKG_ERRORS])])
+PKG_CHECK_MODULES(GTHREAD, gthread-2.0 >= 2.28.5,, [AC_MSG_FAILURE([*** $GTHREAD_PKG_ERRORS])])
 PKG_CHECK_MODULES(LIBGPOD, libgpod-1.0 >= 0.7.0,, [AC_MSG_FAILURE([*** $LIBGPOD_PKG_ERRORS])])
-PKG_CHECK_MODULES(LIBANJUTA, libanjuta-1.0 >= 2.30.0,, [AC_MSG_FAILURE([*** $LIBANJUTA_PKG_ERRORS])])
-PKG_CHECK_MODULES(LIBGDL, gdl-1.0 >= 2.26.0,, [AC_MSG_FAILURE([*** $LIBGDL_PKG_ERRORS])])
-PKG_CHECK_MODULES(GIO, gio-2.0 >= 2.15.0,, [AC_MSG_FAILURE([*** $GIO_PKG_ERRORS])])
+PKG_CHECK_MODULES(LIBANJUTA, libanjuta-3.0 >= 2.91,, [AC_MSG_FAILURE([*** $LIBANJUTA_PKG_ERRORS])])
+PKG_CHECK_MODULES(LIBGDL, gdl-3.0 >= 3.0.0,, [AC_MSG_FAILURE([*** $LIBGDL_PKG_ERRORS])])
+PKG_CHECK_MODULES(GIO, gio-2.0 >= 2.28.5,, [AC_MSG_FAILURE([*** $GIO_PKG_ERRORS])])
 
 dnl Check if GDK has GSEAL for GdkDragContext
 PKG_CHECK_MODULES(GSEALED_GDK, gdk-2.0 >= 2.21.0, have_gsealed_gdk=yes, have_gsealed_gdk=no)
@@ -95,6 +97,7 @@ if test "x$have_gsealed_gdk" = "xyes"; then
 	GTK_CLEANLINESS_FLAGS="$GTK_CLEANLINESS_FLAGS -DG_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 	GTK_CLEANLINESS_FLAGS="$GTK_CLEANLINESS_FLAGS -DGSEAL_ENABLE"
 fi
+
 
 dnl Force C99 mode (no implicit int declarations)
 CFLAGS="$CFLAGS -std=gnu99 -Werror-implicit-function-declaration"
@@ -119,9 +122,11 @@ AC_SUBST(MOUNT)
 AC_PATH_PROG(UMOUNT, umount)
 AC_SUBST(UMOUNT)
 
+
 dnl Add the languages which your application supports here.
 ALL_LINGUAS="ca cs_CZ de es fr he it ja nl pt_BR ro ru sv zh_CN zh_TW"
 AM_GLIB_GNU_GETTEXT
+
 
 dnl Check if flock() is available (seems to be missing on some solaris versions)
 AC_CHECK_FUNCS(flock)
@@ -144,6 +149,7 @@ if test "x$have_id3" = "xyes"; then
 fi
 
 dnl Check for libcurl
+dnl -------------------------------------------------------------
 AC_ARG_WITH(curl, AS_HELP_STRING([--without-curl],[Disable coverart download support]))
 if test "x$with_curl" != "xno"; then
     PKG_CHECK_MODULES(CURL, [libcurl >= 7.10.0], have_curl=yes, have_curl=no)
@@ -161,9 +167,9 @@ else
     have_curl="*no -- will build without coverart download support"
 fi
 
+
 dnl Check for webkit
 dnl -------------------------------------------------------------
-
 AC_ARG_ENABLE(plugin-coverweb,
 	AS_HELP_STRING([--disable-plugin-coverweb],[Disable coverweb plugin for finding coverart in gtkpod]), 
 	[ if test "$enableval" = "no"; then
@@ -178,7 +184,7 @@ else
 	AC_MSG_RESULT(no)
 	
 	PKG_CHECK_MODULES(WEBKIT,
-		[webkit-1.0 >= 1.1],
+		[webkitgtk-3.0 >= 1.3],
 		[have_coverweb="yes"],
 		[have_coverweb="no"])
 fi
@@ -189,10 +195,8 @@ if test "x$have_coverweb" = "xyes"; then
     AC_SUBST(WEBKIT_LIBS)
 fi
 
-
 dnl Check for gstreamer
 dnl -------------------------------------------------------------
-
 AC_ARG_ENABLE(plugin-media-player,
 	AS_HELP_STRING([--disable-plugin-media-player],[Disable media player plugin for playing tracks in gtkpod]), 
 	[ if test "$enableval" = "no"; then
@@ -257,7 +261,9 @@ if test "x$have_flac" = "xyes"; then
     AC_SUBST(FLAC_LIBS)
 fi
 
+
 dnl Check for FAAD for use with m4a files
+dnl -------------------------------------------------------------
 AC_ARG_WITH(faad, AS_HELP_STRING([--without-faad],[Disable M4A -> MP3 conversion support]))
 if test "x$with_faad" != "xno"; then
 	AC_CHECK_PROG(FAAD, faad, yes, no)
@@ -271,13 +277,14 @@ if test "x$with_faad" != "xno"; then
         AC_MSG_ERROR([FAAD support explicitly requested but not available])
     fi
 fi
-
 if test "x$have_faad" = "xyes"; then
     AC_DEFINE(HAVE_FAAD, 1, [Define if you have the faad binary])
 fi
 AM_CONDITIONAL(HAVE_FAAD, test "x$have_faad" = "xyes")
 
+
 dnl Check for MP4 Headers
+dnl -------------------------------------------------------------
 AC_CHECK_HEADERS([mp4v2/platform.h], have_mp4=yes, have_mp4=no)
 AC_CHECK_HEADERS([mp4v2/itmf_tags.h], [], [],
 		 [#ifdef HAVE_MP4V2_PLATFORM_H
@@ -287,13 +294,16 @@ AC_CHECK_HEADERS([mp4v2/itmf_tags.h], [], [],
 		 ])
 AM_CONDITIONAL(HAVE_MP4, test "x$have_mp4" = "xyes")
 
+
 dnl Set up variables for M4A plugin
+dnl -------------------------------------------------------------
 if test "x$have_mp4" = "xyes" -a "x$have_faad" = "xyes"; then
 	have_m4a="yes"
 else
 	have_m4a="no"
 fi
 AM_CONDITIONAL(HAVE_M4A, test "x$have_m4a" = "xyes")
+
 
 # Check that we have endian.h
 AC_CHECK_HEADERS(endian.h, have_endian=yes, have_endian=no)
@@ -304,12 +314,15 @@ if test "x$have_endian" = "xyes"; then
 	AC_DEFINE(HAVE_ENDIAN_H, 1, [Define if you have the endian header])
 fi
 
+
 dnl Additional libs maybe needed when compiling under solaris
 AC_SEARCH_LIBS(bind, ["socket" "nsl" "socket -lnsl"])
+
 
 dnl Check for Linux-specific headers (so we can compile Linux-specific
 dnl stuff only when compiling under Linux)
 AC_CHECK_HEADERS(linux/cdrom.h scsi/sg.h scsi/scsi.h scsi/scsi_ioctl.h)
+
 
 libgpod_version=`$PKG_CONFIG libgpod-1.0 --modversion`
 AC_DEFINE_UNQUOTED(LIBGPOD_VERSION, "${libgpod_version}", [Set this to the libgpod version])
@@ -356,7 +369,7 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 AC_CONFIG_FILES([
 Makefile
-libgtkpod-1.0.pc
+libgtkpod-1.1.0.pc
 src/Makefile
 po/Makefile.in
 scripts/Makefile
@@ -522,7 +535,7 @@ Core Configuration for $PACKAGE $VERSION :
 
  Host System Type .....: $host
  Install path .........: $prefix
- GTK2 version .........: `$PKG_CONFIG gtk+-2.0 --modversion`
+ GTK3 version .........: `$PKG_CONFIG gtk+-3.0 --modversion`
  GLib2/GThread version : `$PKG_CONFIG gthread-2.0 --modversion`
  libgpod version ......: $libgpod_version
  Preprocessor .........: $CC $CPPFLAGS

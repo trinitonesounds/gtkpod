@@ -3,11 +3,11 @@
 SUBDIRS = libgtkpod src po scripts data icons doc plugins
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libgtkpod-1.0.pc
+pkgconfig_DATA = libgtkpod-1.1.0.pc
 
 aboutdir = $(pkgdatadir)/data
 about_DATA = COPYING \
-			 			 AUTHORS
+			 AUTHORS
 
 EXTRA_DIST =			\
 	autogen.sh		\
@@ -19,7 +19,7 @@ EXTRA_DIST =			\
 	intltool-update.in	\
 	TROUBLESHOOTING		\
 	TODOandBUGS.txt \
-	libgtkpod-1.0.pc.in \
+	libgtkpod-1.1.0.pc.in \
 	version.sh \
 	version
 
