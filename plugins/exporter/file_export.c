@@ -39,6 +39,7 @@
 #include "libgtkpod/misc_track.h"
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/directories.h"
+#include "libgtkpod/gp_private.h"
 #include <errno.h>
 #include <limits.h>
 #include <math.h>
@@ -193,24 +194,26 @@ static gboolean file_is_ok(gchar *from, gchar *dest) {
  * @dest - the filename we copy to
  * Returns TRUE on successful copying
  */
-static gboolean copy_file(gchar *file, gchar *dest) {
+static gboolean copy_file(gchar *file, gchar *dest, GError **error) {
     gboolean result = FALSE;
     FILE *from = NULL, *to = NULL;
     gboolean check_existing;
+    gchar *buf = NULL;
 
     prefs_get_int_value(EXPORT_FILES_CHECK_EXISTING, &check_existing);
 
     if (check_existing && file_is_ok(file, dest)) {
-        gchar *buf = g_strdup_printf(_("Skipping existing file with same length: '%s'\n"), dest);
-        gtkpod_warning(buf);
+        buf = g_strdup_printf(_("Skipping existing file with same length: '%s'\n"), dest);
+        gtkpod_log_error(error, buf);
         g_free(buf);
         return TRUE;
     }
 
     if (g_file_test(dest, G_FILE_TEST_EXISTS)) {
-        gchar *buf = g_strdup_printf(_("Overwriting existing file: '%s'\n"), dest);
-        gtkpod_warning(buf);
+        buf = g_strdup_printf(_("Overwriting existing file: '%s'\n"), dest);
+        gtkpod_log_error(error, buf);
         g_free(buf);
+        buf = NULL;
     }
 
     if ((from = fopen(file, "r"))) {
@@ -221,17 +224,23 @@ static gboolean copy_file(gchar *file, gchar *dest) {
         else {
             switch (errno) {
             case EPERM:
-                gtkpod_warning(_("Error copying '%s' to '%s': Permission Error (%s)\n"), file, dest, g_strerror(errno));
-            default:
-                gtkpod_warning(_("Error copying '%s' to '%s' (%s)\n"), file, dest, g_strerror(errno));
+                buf = g_strdup_printf(_("Error copying '%s' to '%s': Permission Error (%s)\n"), file, dest, g_strerror(errno));
                 break;
+            default:
+                buf = g_strdup_printf(_("Error copying '%s' to '%s' (%s)\n"), file, dest, g_strerror(errno));
             }
         }
         fclose(from);
     }
     else {
-        gtkpod_warning(_("Could not open '%s' for reading.\n"), file);
+        buf = g_strdup_printf(_("Could not open '%s' for reading.\n"), file);
     }
+
+    if (buf) {
+        gtkpod_log_error(error, buf);
+        g_free(buf);
+    }
+
     return (result);
 }
 
@@ -298,12 +307,33 @@ static gboolean write_track(struct fcd *fcd) {
             filename = g_build_filename(dest_dir, fcd->filename, NULL);
 
             if (mkdirhierfile(filename)) {
-                if (copy_file(from_file, filename)) {
+                GError *error = NULL;
+                if (copy_file(from_file, filename, &error)) {
                     result = TRUE;
                     if (fcd->filenames) { /* append filename to list */
                         *fcd->filenames = g_list_append(*fcd->filenames, filename);
                         filename = NULL;
                     }
+
+                    if (error) {
+                        /* File may have been skipped so need to log message */
+                        fcd->errors = g_string_append(fcd->errors, g_strdup_printf(("'%s'\n"), error->message));
+                        g_error_free(error);
+                    }
+                }
+                else {
+                    /* Failed to copy correctly */
+                    gchar *buf;
+                    if (error) {
+                        buf = g_strdup_printf(_("'%s'\n"), error->message);
+                    }
+                    else {
+                        buf = g_strdup_printf(_("Failed to copy file %s. No error reported."), from_file);
+                    }
+
+                    fcd->errors = g_string_append(fcd->errors, buf);
+                    g_error_free(error);
+                    g_free(buf);
                 }
             }
             g_free(from_file);
