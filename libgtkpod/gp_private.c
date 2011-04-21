@@ -120,3 +120,10 @@ GQuark gtkpod_general_error_quark (void)
 {
   return g_quark_from_static_string ("gtkpod-general-error-quark");
 }
+
+void gtkpod_log_error(GError **error, gchar *msg) {
+    g_set_error (error,
+                GTKPOD_GENERAL_ERROR,                       /* error domain */
+                GTKPOD_GENERAL_ERROR_FAILED,               /* error code */
+                msg);
+}

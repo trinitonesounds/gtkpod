@@ -1571,7 +1571,7 @@ gboolean mp3_write_file_info(const gchar *filename, Track *track, GError **error
     id3file = id3_file_open(filename, ID3_FILE_MODE_READWRITE);
     if (!id3file) {
         gchar *fbuf = charset_to_utf8(filename);
-        filetype_log_error(error,
+        gtkpod_log_error(error,
                 g_strdup_printf(_("ERROR while opening file: '%s' (%s).\n"), fbuf, g_strerror(errno)));
         g_free(fbuf);
         return FALSE;
@@ -1646,7 +1646,7 @@ gboolean mp3_write_file_info(const gchar *filename, Track *track, GError **error
 
     if (id3_file_update(id3file) != 0) {
         gchar *fbuf = charset_to_utf8(filename);
-        filetype_log_error(error,
+        gtkpod_log_error(error,
                 g_strdup_printf(_("ERROR while writing tag to file: '%s' (%s).\n"), fbuf, g_strerror(errno)));
         g_free(fbuf);
         return FALSE;
@@ -2779,7 +2779,7 @@ Track *mp3_get_file_info(const gchar *name, GError **error) {
     }
     else {
         gchar *fbuf = charset_to_utf8(name);
-        filetype_log_error(error,
+        gtkpod_log_error(error,
                 g_strdup_printf(_("ERROR while opening file: '%s' (%s).\n"), fbuf, g_strerror(errno)));
         g_free(fbuf);
         return NULL;
@@ -2812,7 +2812,7 @@ Track *mp3_get_file_info(const gchar *name, GError **error) {
 
     if (track->tracklen == 0) {
         /* Tracks with zero play length are ignored by iPod... */
-        filetype_log_error(error,
+        gtkpod_log_error(error,
                 g_strdup_printf(_("File \"%s\" has zero play length. Ignoring.\n"), name));
         gp_track_free(track);
         track = NULL;
@@ -2844,7 +2844,7 @@ gboolean id3_lyrics_read(const gchar *filename, gchar **lyrics, GError **error) 
 
     if (!(id3file = id3_file_open(filename, ID3_FILE_MODE_READONLY))) {
         gchar *fbuf = charset_to_utf8(filename);
-        filetype_log_error(error,
+        gtkpod_log_error(error,
                     g_strdup_printf(_("ERROR while opening file: '%s' (%s).\n"), fbuf, g_strerror(errno)));
         g_free(fbuf);
         return FALSE;

@@ -34,6 +34,7 @@
 #include "libgtkpod/charset.h"
 #include "libgtkpod/gp_itdb.h"
 #include "libgtkpod/prefs.h"
+#include "libgtkpod/gp_private.h"
 #include "plugin.h"
 #include "oggfile.h"
 
@@ -63,7 +64,7 @@ Track *ogg_get_file_info(const gchar *oggFileName, GError **error) {
 
     if (file == NULL) {
         gchar *filename = charset_to_utf8(oggFileName);
-        filetype_log_error(error, g_strdup_printf(_("Could not open '%s' for reading.\n"), filename));
+        gtkpod_log_error(error, g_strdup_printf(_("Could not open '%s' for reading.\n"), filename));
         g_free(filename);
     }
     else {
@@ -71,7 +72,7 @@ Track *ogg_get_file_info(const gchar *oggFileName, GError **error) {
         if (ov_open(file, &oggFile, NULL, 0) != 0) {
             gchar *filename = NULL;
             filename = charset_to_utf8(oggFileName);
-            filetype_log_error(error, g_strdup_printf(_("'%s' does not appear to be an Ogg audio file.\n"), filename));
+            gtkpod_log_error(error, g_strdup_printf(_("'%s' does not appear to be an Ogg audio file.\n"), filename));
             g_free(filename);
             fclose(file);
         }

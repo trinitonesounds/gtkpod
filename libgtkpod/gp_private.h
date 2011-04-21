@@ -102,4 +102,6 @@ typedef enum {
 
 GQuark gtkpod_general_error_quark (void);
 
+void gtkpod_log_error(GError **error, gchar *msg);
+
 #endif /* GP_DEFINITIONS_H_ */

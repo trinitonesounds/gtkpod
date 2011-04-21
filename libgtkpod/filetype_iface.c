@@ -186,7 +186,7 @@ gchar *filetype_no_gain_cmd() {
 }
 
 gboolean filetype_no_read_lyrics(const gchar *filename, gchar **lyrics, GError **error) {
-    filetype_log_error (error,
+    gtkpod_log_error (error,
             _("Error: Lyrics not supported for this file format."));
     return FALSE;
 }
@@ -205,11 +205,4 @@ gboolean filetype_no_convert() {
 
 gchar * filetype_no_conversion_cmd() {
     return NULL;
-}
-
-void filetype_log_error(GError **error, gchar *msg) {
-    g_set_error (error,
-                GTKPOD_GENERAL_ERROR,                       /* error domain */
-                GTKPOD_GENERAL_ERROR_FAILED,               /* error code */
-                msg);
 }

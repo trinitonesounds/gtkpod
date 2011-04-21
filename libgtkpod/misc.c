@@ -1035,11 +1035,8 @@ gchar *get_string_from_full_template(Track *track, const gchar *full_template, g
 
     if (!template) {
         gchar *fn = get_file_name_from_source(track, SOURCE_PREFER_LOCAL);
-        g_set_error (error,
-                            GTKPOD_GENERAL_ERROR,                       /* error domain */
-                            GTKPOD_GENERAL_ERROR_FAILED,               /* error code */
-                            _("Template ('%s') does not match file type '%s'\n"),
-                            full_template, fn ? fn : "");
+        gtkpod_log_error(error, g_strdup_printf(_("Template ('%s') does not match file type '%s'\n"),
+                            full_template, fn ? fn : ""));
         g_free(fn);
         return NULL;
     }

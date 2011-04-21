@@ -146,6 +146,4 @@ gchar *filetype_no_gain_cmd();
 gboolean filetype_no_convert();
 gchar *filetype_no_conversion_cmd();
 
-void filetype_log_error(GError **error, gchar *msg);
-
 #endif /* FILE_TYPE_IFACE_H_ */

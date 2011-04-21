@@ -35,6 +35,7 @@
 #include "libgtkpod/charset.h"
 #include "libgtkpod/gp_itdb.h"
 #include "libgtkpod/prefs.h"
+#include "libgtkpod/gp_private.h"
 #include "plugin.h"
 #include "wavfile.h"
 
@@ -95,7 +96,7 @@ Track *wav_get_file_info(const gchar *filename, GError **error) {
     memset(wav_file, 0, sizeof(WaveFile));
     if (!(wav_file->file = fopen(filename, "rb"))) {
         gchar *fn = charset_to_utf8(filename);
-        filetype_log_error(error, g_strdup_printf(_("Could not open '%s' for reading.\n"), fn));
+        gtkpod_log_error(error, g_strdup_printf(_("Could not open '%s' for reading.\n"), fn));
         g_free(fn);
         g_free(wav_file);
         wav_file = NULL;
@@ -172,7 +173,7 @@ Track *wav_get_file_info(const gchar *filename, GError **error) {
     g_free(wav_file);
     wav_file = NULL;
     fn = charset_to_utf8(filename);
-    filetype_log_error(error, g_strdup_printf(_("%s does not appear to be a supported wav file.\n"), fn));
+    gtkpod_log_error(error, g_strdup_printf(_("%s does not appear to be a supported wav file.\n"), fn));
     g_free(fn);
     return NULL;
 }
