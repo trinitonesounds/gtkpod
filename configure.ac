@@ -230,7 +230,7 @@ dnl Check for libvorbisfile and libvorbis
 dnl -------------------------------------------------------------
 AC_ARG_WITH(ogg, AS_HELP_STRING([--without-ogg],[Disable Ogg/Vorbis support]))
 if test "x$with_ogg" != "xno"; then
-	PKG_CHECK_MODULES(VORBIS, vorbis >= 1.3.1, have_ogg=yes, have_ogg=no)
+	PKG_CHECK_MODULES(VORBISFILE, vorbisfile >= 1.3.1, have_ogg=yes, have_ogg=no)
 	if test "x$with_ogg" = "xyes" -a "x$have_ogg" = "xno"; then
         AC_MSG_WARN([Ogg/Vorbis support explicitly requested but ogg/vorbis libs couldn't be found])
     fi
@@ -238,9 +238,9 @@ fi
 AM_CONDITIONAL(HAVE_LIBVORBISFILE, test "x$have_ogg" = "xyes")
 if test "x$have_ogg" = "xyes"; then
     AC_DEFINE(HAVE_LIBVORBISFILE, 1, [Define if you have the ogg/vorbis library])
-    CPPFLAGS="$CPPFLAGS $VORBIS_CFLAGS"
-    CFLAGS="$CFLAGS $VORBIS_CFLAGS"
-    LIBS="$LIBS $VORBIS_LIBS"
+    CPPFLAGS="$CPPFLAGS $VORBISFILE_CFLAGS"
+    CFLAGS="$CFLAGS $VORBISFILE_CFLAGS"
+    LIBS="$LIBS $VORBISFILE_LIBS"
 fi
 
 dnl Check for FLAC
