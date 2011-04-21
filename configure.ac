@@ -102,23 +102,6 @@ CFLAGS="$CFLAGS -std=gnu99 -Werror-implicit-function-declaration"
 CFLAGS="$CFLAGS $GTK_CFLAGS $GLIB_CFLAGS $GMODULE_CFLAGS $GTHREAD_CFLAGS $LIBGLADE_CFLAGS $LIBGPOD_CFLAGS $LIBANJUTA_CFLAGS $LIBGDL_CFLAGS $GTK_CLEANLINESS_FLAGS"
 LIBS="$LIBS $GTK_LIBS $GLIB_LIBS $GMODULE_LIBS $GTHREAD_LIBS $LIBGLADE_LIBS $LIBGPOD_LIBS $LIBANJUTA_LIBS $LIBGDL_LIBS"
 
-dnl Setup Gtkpod flags for building library
-dnl --------------------------
-LIBGTKPOD_CFLAGS="$CFLAGS"
-LIBGTKPOD_LIBS="$LIBS"
-AC_SUBST(LIBGTKPOD_CFLAGS)
-AC_SUBST(LIBGTKPOD_LIBS)
-
-dnl Setup Gtkpod flags for building platform
-dnl --------------------------
-LIBGTKPOD_STATIC='$(top_builddir)/libgtkpod/libgtkpod.la'
-GTKPOD_LIBS="$LIBGTKPOD_STATIC"
-GTKPOD_CFLAGS="$CFLAGS"
-AC_SUBST(GTKPOD_CFLAGS)
-AC_SUBST(GTKPOD_LIBS)
-
-GTKPOD_PLUGIN_LDFLAGS="-module -avoid-version -no-undefined"
-AC_SUBST(GTKPOD_PLUGIN_LDFLAGS)
 
 dnl we need 'flex'
 AM_PROG_LEX
@@ -143,13 +126,22 @@ AM_GLIB_GNU_GETTEXT
 dnl Check if flock() is available (seems to be missing on some solaris versions)
 AC_CHECK_FUNCS(flock)
 
+
 dnl Check if statvfs() is available (otherwise we fall back on 'df' to determine
 dnl free space on the iPod
 AC_CHECK_FUNCS(statvfs)
 
+
 dnl Check for libid3tag
-AC_SEARCH_LIBS([id3_frame_field], ["id3tag" "id3tag -lz"],,
-    AC_MSG_ERROR([*** id3tag >= 0.15 lib not found (0.14 will not work!)]))
+dnl -------------------------------------------------------------
+PKG_CHECK_MODULES(ID3TAG, id3tag >= 0.15, [have_id3="yes"], [AC_MSG_FAILURE([*** $ID3TAG_PKG_ERRORS])])
+AM_CONDITIONAL(HAVE_ID3TAG, [test "x$have_id3" = "xyes"])
+if test "x$have_id3" = "xyes"; then
+    AC_DEFINE(HAVE_ID3TAG, 1, [Define if you have id3 support])
+    CPPFLAGS="$CPPFLAGS $ID3TAG_CFLAGS"
+    CFLAGS="$CFLAGS $ID3TAG_CFLAGS"
+    LIBS="$LIBS $ID3TAG_LIBS"
+fi
 
 dnl Check for libcurl
 AC_ARG_WITH(curl, AS_HELP_STRING([--without-curl],[Disable coverart download support]))
@@ -182,17 +174,23 @@ AC_ARG_ENABLE(plugin-coverweb,
 AC_MSG_CHECKING(if coverweb plugin is disabled)
 if test "$user_disabled_coverweb" = 1; then
 	AC_MSG_RESULT(yes)
-	coverweb="no"
+	have_coverweb="no"
 else
 	AC_MSG_RESULT(no)
 	
 	PKG_CHECK_MODULES(WEBKIT,
 		[webkit-1.0 >= 1.1],
-		[coverweb="yes"],
-		[coverweb="no"])
+		[have_coverweb="yes"],
+		[have_coverweb="no"])
+fi
+AM_CONDITIONAL(HAVE_PLUGIN_COVERWEB, [test "x$have_coverweb" = "xyes"])
+if test "x$have_coverweb" = "xyes"; then
+    AC_DEFINE(HAVE_PLUGIN_COVERWEB, 1, [Define if you have coverweb support])
+    CPPFLAGS="$CPPFLAGS $WEBKIT_CFLAGS"
+    CFLAGS="$CFLAGS $WEBKIT_CFLAGS"
+    LIBS="$LIBS $WEBKIT_LIBS"
 fi
 
-AM_CONDITIONAL(HAVE_PLUGIN_COVERWEB, [test "x$coverweb" = "xyes"])
 
 dnl Check for gstreamer
 dnl -------------------------------------------------------------
@@ -206,68 +204,61 @@ AC_ARG_ENABLE(plugin-media-player,
 AC_MSG_CHECKING(if media player plugin is disabled)
 if test "$user_disabled_media_player" = 1; then
 	AC_MSG_RESULT(yes)
-	media_player="no"
+	have_media_player="no"
 else
 	AC_MSG_RESULT(no)
 	
 	PKG_CHECK_MODULES(GSTREAMER,
 		[gstreamer-0.10 >= 0.10.25],
-		[media_player="yes"],
-		[media_player="no"])
+		[have_media_player="yes"],
+		[have_media_player="no"])
 	
 	PKG_CHECK_MODULES(GSTREAMER_INTERFACES,
 		[gstreamer-interfaces-0.10 >= 0.10.25],
-		[media_player="yes"],
-		[media_player="no"])
+		[have_media_player="yes"],
+		[have_media_player="no"])
 fi
-
-AM_CONDITIONAL(HAVE_PLUGIN_MEDIA_PLAYER, [test "x$media_player" = "xyes"])
+AM_CONDITIONAL(HAVE_PLUGIN_MEDIA_PLAYER, [test "x$have_media_player" = "xyes"])
+if test "x$have_media_player" = "xyes"; then
+    AC_DEFINE(HAVE_PLUGIN_MEDIA_PLAYER, 1, [Define if you have media player support])
+    CPPFLAGS="$CPPFLAGS $GSTREAMER_CFLAGS $GSTREAMER_INTERFACES_CFLAGS"
+    CFLAGS="$CFLAGS $GSTREAMER_CFLAGS $GSTREAMER_INTERFACES_CFLAGS"
+    LIBS="$LIBS $GSTREAMER_LIBS $GSTREAMER_INTERFACES_LIBS"
+fi
 
 dnl Check for libvorbisfile and libvorbis
+dnl -------------------------------------------------------------
 AC_ARG_WITH(ogg, AS_HELP_STRING([--without-ogg],[Disable Ogg/Vorbis support]))
 if test "x$with_ogg" != "xno"; then
-    AC_SEARCH_LIBS(ov_open, ["vorbisfile"],
-        [AC_CHECK_HEADER(vorbis/vorbisfile.h, have_ogg=yes, have_ogg_header=no)], have_ogg=no)
-    if test "x$have_ogg_header" = "xno"; then
-        have_ogg="no"
-        AC_MSG_WARN([vorbis/vorbisfile.h cannot be found or is unusable. Check your ogg/vorbis installation.])
+	PKG_CHECK_MODULES(VORBIS, vorbis >= 1.3.1, have_ogg=yes, have_ogg=no)
+	if test "x$with_ogg" = "xyes" -a "x$have_ogg" = "xno"; then
+        AC_MSG_WARN([Ogg/Vorbis support explicitly requested but ogg/vorbis libs couldn't be found])
     fi
-    if test "x$have_ogg" = "xyes"; then
-        AC_SEARCH_LIBS(vorbis_comment_query, ["vorbis"],
-            [AC_CHECK_HEADER(vorbis/codec.h, have_ogg=yes, have_ogg_header=no)], have_ogg=no)
-        if test "x$have_ogg_header" = "xno"; then
-            have_ogg="no"
-            AC_MSG_WARN([vorbis/codec.h cannot be found or is unusable. Check your ogg/vorbis installation.])
-        fi
-    fi
-    if test "x$with_ogg" = "xyes" -a "x$have_ogg" = "xno"; then
-        AC_MSG_ERROR([Ogg/Vorbis support explicitly requested but ogg/vorbis libs couldn't be found])
-    fi
-fi
-
-if test "x$have_ogg" = "xyes"; then
-    AC_DEFINE(HAVE_LIBVORBISFILE, 1, [Define if you have the ogg/vorbis library])
 fi
 AM_CONDITIONAL(HAVE_LIBVORBISFILE, test "x$have_ogg" = "xyes")
+if test "x$have_ogg" = "xyes"; then
+    AC_DEFINE(HAVE_LIBVORBISFILE, 1, [Define if you have the ogg/vorbis library])
+    CPPFLAGS="$CPPFLAGS $VORBIS_CFLAGS"
+    CFLAGS="$CFLAGS $VORBIS_CFLAGS"
+    LIBS="$LIBS $VORBIS_LIBS"
+fi
 
 dnl Check for FLAC
+dnl -------------------------------------------------------------
 AC_ARG_WITH(flac, AS_HELP_STRING([--without-flac],[Disable FLAC support]))
 if test "x$with_flac" != "xno"; then
-    AC_SEARCH_LIBS(FLAC__metadata_get_streaminfo, ["FLAC"],
-        [AC_CHECK_HEADER(FLAC/metadata.h, have_flac=yes, have_flac_header=no)], have_flac=no)
-    if test "x$have_flac_header" = "xno"; then
-        have_flac="no"
-        AC_MSG_WARN([FLAC/metadata.h cannot be found or is unusable. Check your FLACinstallation.])
-    fi
+	PKG_CHECK_MODULES(FLAC, flac >= 1.2.1, have_flac=yes, have_flac=no)
     if test "xwith_flac" = "xyes" -a "x$have_flac" = "xno"; then
         AC_MSG_ERROR([FLAC support explicitly requested but flac libs couldn't be found])
     fi
 fi
-
+AM_CONDITIONAL(HAVE_FLAC, test "x$have_flac" = "xyes")
 if test "x$have_flac" = "xyes"; then
     AC_DEFINE(HAVE_FLAC, 1, [Define if you have the flac library])
+    CPPFLAGS="$CPPFLAGS $FLAC_CFLAGS"
+    CFLAGS="$CFLAGS $FLAC_CFLAGS"
+    LIBS="$LIBS $FLAC_LIBS"
 fi
-AM_CONDITIONAL(HAVE_FLAC, test "x$have_flac" = "xyes")
 
 dnl Check for FAAD for use with m4a files
 AC_ARG_WITH(faad, AS_HELP_STRING([--without-faad],[Disable M4A -> MP3 conversion support]))
@@ -325,6 +316,27 @@ AC_CHECK_HEADERS(linux/cdrom.h scsi/sg.h scsi/scsi.h scsi/scsi_ioctl.h)
 
 libgpod_version=`$PKG_CONFIG libgpod-1.0 --modversion`
 AC_DEFINE_UNQUOTED(LIBGPOD_VERSION, "${libgpod_version}", [Set this to the libgpod version])
+
+
+dnl Setup Gtkpod flags for building library
+dnl --------------------------
+LIBGTKPOD_CFLAGS="$CFLAGS"
+LIBGTKPOD_LIBS="$LIBS"
+AC_SUBST(LIBGTKPOD_CFLAGS)
+AC_SUBST(LIBGTKPOD_LIBS)
+
+dnl Setup Gtkpod flags for building platform
+dnl --------------------------
+LIBGTKPOD_STATIC='$(top_builddir)/libgtkpod/libgtkpod.la'
+GTKPOD_LIBS="$LIBGTKPOD_STATIC"
+GTKPOD_CFLAGS="$CFLAGS"
+AC_SUBST(GTKPOD_CFLAGS)
+AC_SUBST(GTKPOD_LIBS)
+
+GTKPOD_PLUGIN_LDFLAGS="-module -avoid-version -no-undefined"
+AC_SUBST(GTKPOD_PLUGIN_LDFLAGS)
+
+
 
 dnl Setup Plugin directories
 dnl ------------------------
@@ -524,8 +536,8 @@ Core Configuration for $PACKAGE $VERSION :
 echo "
 Plugin Configuration :
 ---------------------------------"
-echo " CoverWeb Browser           .....: $coverweb"
-echo " Media Player               .....: $media_player"
+echo " CoverWeb Browser           .....: $have_coverweb"
+echo " Media Player               .....: $have_media_player"
 echo " MP4 File Type              .....: $have_mp4"
 echo " M4A File Type              .....: $have_m4a"
 echo " Flac File Type             .....: $have_flac"
