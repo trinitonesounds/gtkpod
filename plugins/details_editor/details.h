@@ -35,7 +35,6 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include "libgtkpod/itdb.h"
 
 #define DETAILS_LYRICS_NOTEBOOK_PAGE 3

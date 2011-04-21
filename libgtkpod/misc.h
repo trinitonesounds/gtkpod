@@ -34,7 +34,6 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <stdio.h>
 #include <libxml/xmlversion.h>
 #include <libxml/xmlmemory.h>

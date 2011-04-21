@@ -34,7 +34,6 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <glade/glade-xml.h>
 #include "itdb.h"
 #include "exporter_iface.h"
 #include "repository_editor_iface.h"

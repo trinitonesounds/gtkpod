@@ -30,7 +30,6 @@
 #define __DISPLAY_COVERART_H__
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <cairo/cairo.h>
 #include "libgtkpod/itdb.h"
 
