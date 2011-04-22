@@ -155,9 +155,8 @@ AM_CONDITIONAL(HAVE_CURL, test "x$have_curl" = "xyes")
 if test "x$have_curl" = "xyes"; then
     AC_DEFINE(HAVE_CURL, 1, [Define if you have curl support])
     have_curl="yes -- will build with coverart download support"
-    CPPFLAGS="$CPPFLAGS $CURL_CFLAGS"
-    CFLAGS="$CFLAGS $CURL_CFLAGS"
-    LIBS="$LIBS $CURL_LIBS"
+    AC_SUBST(CURL_CFLAGS)
+    AC_SUBST(CURL_LIBS)
 else
     have_curl="*no -- will build without coverart download support"
 fi
@@ -186,9 +185,8 @@ fi
 AM_CONDITIONAL(HAVE_PLUGIN_COVERWEB, [test "x$have_coverweb" = "xyes"])
 if test "x$have_coverweb" = "xyes"; then
     AC_DEFINE(HAVE_PLUGIN_COVERWEB, 1, [Define if you have coverweb support])
-    CPPFLAGS="$CPPFLAGS $WEBKIT_CFLAGS"
-    CFLAGS="$CFLAGS $WEBKIT_CFLAGS"
-    LIBS="$LIBS $WEBKIT_LIBS"
+    AC_SUBST(WEBKIT_CFLAGS)
+    AC_SUBST(WEBKIT_LIBS)
 fi
 
 
@@ -221,9 +219,10 @@ fi
 AM_CONDITIONAL(HAVE_PLUGIN_MEDIA_PLAYER, [test "x$have_media_player" = "xyes"])
 if test "x$have_media_player" = "xyes"; then
     AC_DEFINE(HAVE_PLUGIN_MEDIA_PLAYER, 1, [Define if you have media player support])
-    CPPFLAGS="$CPPFLAGS $GSTREAMER_CFLAGS $GSTREAMER_INTERFACES_CFLAGS"
-    CFLAGS="$CFLAGS $GSTREAMER_CFLAGS $GSTREAMER_INTERFACES_CFLAGS"
-    LIBS="$LIBS $GSTREAMER_LIBS $GSTREAMER_INTERFACES_LIBS"
+    GSTREAMER_ALL_CFLAGS="$GSTREAMER_CFLAGS $GSTREAMER_INTERFACES_CFLAGS"
+    GSTREAMER_ALL_LIBS="$GSTREAMER_LIBS $GSTREAMER_INTERFACES_LIBS"
+    AC_SUBST(GSTREAMER_ALL_CFLAGS)
+    AC_SUBST(GSTREAMER_ALL_LIBS)
 fi
 
 dnl Check for libvorbisfile and libvorbis
@@ -238,9 +237,8 @@ fi
 AM_CONDITIONAL(HAVE_LIBVORBISFILE, test "x$have_ogg" = "xyes")
 if test "x$have_ogg" = "xyes"; then
     AC_DEFINE(HAVE_LIBVORBISFILE, 1, [Define if you have the ogg/vorbis library])
-    CPPFLAGS="$CPPFLAGS $VORBISFILE_CFLAGS"
-    CFLAGS="$CFLAGS $VORBISFILE_CFLAGS"
-    LIBS="$LIBS $VORBISFILE_LIBS"
+    AC_SUBST(VORBISFILE_CFLAGS)
+    AC_SUBST(VORBISFILE_LIBS)
 fi
 
 dnl Check for FLAC
@@ -255,9 +253,8 @@ fi
 AM_CONDITIONAL(HAVE_FLAC, test "x$have_flac" = "xyes")
 if test "x$have_flac" = "xyes"; then
     AC_DEFINE(HAVE_FLAC, 1, [Define if you have the flac library])
-    CPPFLAGS="$CPPFLAGS $FLAC_CFLAGS"
-    CFLAGS="$CFLAGS $FLAC_CFLAGS"
-    LIBS="$LIBS $FLAC_LIBS"
+    AC_SUBST(FLAC_CFLAGS)
+    AC_SUBST(FLAC_LIBS)
 fi
 
 dnl Check for FAAD for use with m4a files

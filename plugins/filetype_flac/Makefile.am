@@ -31,13 +31,14 @@ plugin_LTLIBRARIES = libfiletype_flac.la
 # Plugin sources
 libfiletype_flac_la_SOURCES = plugin.c plugin.h \
 							  flacfile.c flacfile.h
-
+libfiletype_flac_la_CFLAGS = $(FLAC_CFLAGS)
 libfiletype_flac_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
 # Plugin dependencies
 libfiletype_flac_la_LIBADD = \
     $(GTKPOD_LIBS) \
-    $(LIBANJUTA_LIBS)
+    $(LIBANJUTA_LIBS) \
+    $(FLAC_LIBS)
 
 endif
 

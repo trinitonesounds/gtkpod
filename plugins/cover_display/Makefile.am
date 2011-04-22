@@ -31,13 +31,14 @@ libcover_display_la_SOURCES = plugin.c plugin.h \
 							  cover_display_context_menu.c cover_display_context_menu.h \
 							  fetchcover.c fetchcover.h \
 							  cover_display_preferences.c cover_display_preferences.h
-
+libcover_display_la_CFLAGS = $(CURL_CFLAGS)
 libcover_display_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
 # Plugin dependencies
 libcover_display_la_LIBADD = \
     $(GTKPOD_LIBS) \
-    $(LIBANJUTA_LIBS)
+    $(LIBANJUTA_LIBS) \
+    $(CURL_LIBS)
 
 EXTRA_DIST = \
 	$(plugin_file).in \

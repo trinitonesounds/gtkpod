@@ -30,13 +30,14 @@ libdetails_editor_la_SOURCES = 	plugin.c plugin.h \
 								details.c details.h \
 								details_editor_actions.c details_editor_actions.h \
 								fetchcover.c fetchcover.h
-							   
+libdetails_editor_la_CFLAGS = $(CURL_CFLAGS)							   
 libdetails_editor_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
 # Plugin dependencies
 libdetails_editor_la_LIBADD = \
     $(GTKPOD_LIBS) \
-    $(LIBANJUTA_LIBS)
+    $(LIBANJUTA_LIBS) \
+    $(CURL_LIBS)
 
 EXTRA_DIST = \
 	$(plugin_file).in \

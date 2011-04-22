@@ -31,13 +31,14 @@ plugin_LTLIBRARIES = libfiletype_ogg.la
 # Plugin sources
 libfiletype_ogg_la_SOURCES = plugin.c plugin.h \
 							  oggfile.c oggfile.h
-
+libfiletype_ogg_la_CFLAGS = $(VORBISFILE_CFLAGS)
 libfiletype_ogg_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
 # Plugin dependencies
 libfiletype_ogg_la_LIBADD = \
     $(GTKPOD_LIBS) \
-    $(LIBANJUTA_LIBS)
+    $(LIBANJUTA_LIBS) \
+    $(VORBISFILE_LIBS)
 
 endif
 
