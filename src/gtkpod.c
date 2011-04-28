@@ -104,7 +104,6 @@ void gtkpod_init(int argc, char *argv[]) {
     add_blocked_widget(app->view_menu);
 
     /* Set up shutdown signals */
-    g_object_set_data(G_OBJECT(app), "__proper_shutdown", "1");
     g_signal_connect(G_OBJECT(app), "delete_event", G_CALLBACK(
                     on_gtkpod_delete_event), NULL);
     g_signal_connect(G_OBJECT(app), "destroy", G_CALLBACK(on_gtkpod_destroy),
@@ -202,7 +201,6 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
 
     AnjutaPluginManager *plugin_manager;
     AnjutaProfileManager *profile_manager;
-    AnjutaProfile *current_profile;
     AnjutaApp *app;
     gchar *remembered_plugins;
     gchar *session_dir;
@@ -216,29 +214,12 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
     anjuta_preferences_set(app->preferences, GTKPOD_REMEMBERED_PLUGINS, remembered_plugins);
     g_free(remembered_plugins);
 
-    current_profile = anjuta_profile_manager_get_current(profile_manager);
-    anjuta_profile_sync(current_profile, NULL);
-
-    /*
-     * Workaround
-     * Seems that when the plugins are unloaded in the last line below, the changed
-     * signal is emitted onto the current_profile, which has the effect of wiping the
-     * user profile. This line avoids this by setting the profile file to null. Anjuta does
-     * not do this but gtkpod does.
-     */
-    anjuta_profile_set_sync_file(current_profile, NULL);
 
     session_dir = g_build_filename(g_get_home_dir(), ".gtkpod", "session", NULL);
     anjuta_shell_session_save(ANJUTA_SHELL (app), session_dir, NULL);
     g_free(session_dir);
 
     anjuta_shell_notify_exit(ANJUTA_SHELL (app), NULL);
-
-    /* Shutdown */
-    if (g_object_get_data(G_OBJECT (app), "__proper_shutdown")) {
-        gtk_widget_hide(GTK_WIDGET (app));
-        anjuta_plugin_manager_unload_all_plugins(plugin_manager);
-    }
 
     if (!gtkpod_cleanup_quit()) {
         // Dont want to quit so avoid signalling any destroy event
