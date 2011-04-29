@@ -1038,10 +1038,7 @@ void gp_info_deleted_tracks(iTunesDB *itdb, gdouble *size, guint32 *num) {
     g_return_if_fail (eitdb);
 
     for (gl = eitdb->pending_deletion; gl; gl = gl->next) {
-        ExtraTrackData *etr;
         Track *tr = gl->data;
-        g_return_if_fail (tr);
-        etr = tr->userdata;
         g_return_if_fail (tr);
 
         if (size)

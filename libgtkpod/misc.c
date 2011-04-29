@@ -280,7 +280,7 @@ static void do_script(const gchar *script, va_list args) {
     argv = (char **) g_ptr_array_free(ptra, FALSE);
 
     if (script) {
-        pid_t pid, tpid;
+        pid_t pid;
         int status;
 
         pid = fork();
@@ -292,7 +292,7 @@ static void do_script(const gchar *script, va_list args) {
         case -1: /* parent and error */
             break;
         default: /* parent -- let's wait for the child to terminate */
-            tpid = waitpid(pid, &status, 0);
+            waitpid(pid, &status, 0);
             /* we could evaluate tpid and status now */
             break;
         }

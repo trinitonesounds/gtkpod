@@ -206,7 +206,7 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
     gchar *dirname = NULL, *plname = NULL;
     gchar buf[PATH_MAX];
     FileType *type = NULL; /* type of playlist file */
-    gint line, tracks;
+    gint line;
     FILE *fp;
     gboolean error;
 
@@ -253,7 +253,6 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
      all of these are line based -- add different code for different
      playlist files */
     line = -1; /* nr of line being read */
-    tracks = 0; /* nr of tracks added */
     error = FALSE;
     while (!error && fgets(buf, PATH_MAX, fp)) {
         gchar *bufp = buf;

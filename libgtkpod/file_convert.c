@@ -624,14 +624,14 @@ static void conversion_prefs_changed(Conversion *conv) {
     conv->template = prefs_get_string(FILE_CONVERT_TEMPLATE);
 
     if ((conv->dirsize == CONV_DIRSIZE_INVALID) || (conv->dirsize > conv->max_dirsize)) {
-        GThread *thread;
         /* Prune dir of unused files if size is too big, calculate and set
          the size of the directory. Do all that in the background. */
-        thread = g_thread_create_full(conversion_prune_dir, conv, /* user data  */
-        0, /* stack size */
-        FALSE, /* joinable   */
-        TRUE, /* bound      */
-        G_THREAD_PRIORITY_NORMAL, NULL); /* error      */
+        g_thread_create_full(conversion_prune_dir,
+                                                        conv, /* user data  */
+                                                        0, /* stack size */
+                                                        FALSE, /* joinable   */
+                                                        TRUE, /* bound      */
+                                                        G_THREAD_PRIORITY_NORMAL, NULL); /* error      */
     }
 
     background_transfer = prefs_get_int(FILE_CONVERT_BACKGROUND_TRANSFER);
