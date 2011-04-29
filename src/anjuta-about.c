@@ -144,7 +144,7 @@ static void about_free_credit(void) {
     g_free(translators);
 }
 
-GtkWidget *about_box_new() {
+GtkWidget *about_box_new(GtkWindow *parent) {
     GtkWidget *dialog;
     GdkPixbuf *pix;
     gchar* license = NULL;
@@ -167,6 +167,9 @@ GtkWidget *about_box_new() {
     }
 
     dialog = gtk_about_dialog_new();
+    gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
+    gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+
     gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog), "gtkpod");
     gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), VERSION);
     gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), _("Copyright (c) Jorg Schuler et al."));

@@ -157,7 +157,7 @@ struct _GtkPodAppInterface {
     void (*statusbar_busy_pop)(GtkPodApp *obj);
     GList * (*export_tracks_as_gchar)(iTunesDB *source_db, iTunesDB *dest_db, gchar *tracks);
     GList * (*export_tracks_as_glist)(iTunesDB *source_db, iTunesDB *dest_db, GList *tracks);
-    void (*display_widget)(GtkWidget *widget);
+    void (*display_widget)(GtkPodApp *obj, GtkWidget *widget);
 };
 
 GType gtkpod_app_get_type(void);

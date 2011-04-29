@@ -458,7 +458,7 @@ Exporter *gtkpod_get_exporter() {
 void gtkpod_display_widget(GtkWidget *widget) {
     g_return_if_fail(widget);
     g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
-    GTKPOD_APP_GET_INTERFACE(gtkpod_app)->display_widget(widget);
+    GTKPOD_APP_GET_INTERFACE(gtkpod_app)->display_widget(gtkpod_app, widget);
 }
 
 void gtkpod_register_repository_editor(RepositoryEditor *editor) {

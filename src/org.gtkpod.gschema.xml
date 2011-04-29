@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+	<schema path="/org/gtkpod/" id="org.gtkpod">
+		<key type="b" name="toolbar-visible">
+			<default>false</default>
+		</key>
+		<key type="s" name="remembered-plugins">
+			<default>""</default>
+		</key>
+		<key type="b" name="session-skip-last">
+			<default>false</default>
+		</key>
+		<key type="b" name="session-skip-last-files">
+			<default>false</default>
+		</key>
+		<key type="s" name="gdl-style">
+			<choices>
+				<choice value="Text"/>
+				<choice value="Icon"/>
+				<choice value="Both"/>
+				<choice value="Toolbar"/>
+				<choice value="Tabs"/>
+			</choices>
+			<default>"Both"</default>
+		</key>
+		<key type="s" name="toolbar-style">
+			<choices>
+				<choice value="Default"/>
+				<choice value="Both"/>
+				<choice value="Horiz"/>
+				<choice value="Icons"/>
+				<choice value="Text"/>
+			</choices>
+			<default>"Default"</default>
+		</key>
+	</schema>
+</schemalist>

@@ -67,6 +67,7 @@ version
 /src/date_parser2.c
 /src/gtkpod
 /src/itdb
+/src/org.gtkpod.gschema.valid
 
 # /plugins/
 /plugins/*.plugin

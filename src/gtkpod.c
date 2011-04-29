@@ -37,10 +37,26 @@
 #include "libgtkpod/stock_icons.h"
 #include "anjuta-app.h"
 
-#define GTKPOD_REMEMBERED_PLUGINS "gtkpod.remembered.plugins"
+#define GTKPOD_REMEMBERED_PLUGINS "remembered-plugins"
+
+static gchar *system_restore_session = NULL;
 
 static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 static void on_gtkpod_destroy(GtkWidget * w, gpointer data);
+static void on_profile_descoped(AnjutaProfileManager *profile_manager, AnjutaProfile *profile, AnjutaApp *app);
+static void on_profile_scoped(AnjutaProfileManager *profile_manager, AnjutaProfile *profile, AnjutaApp *app);
+
+static gchar *get_user_session_dir() {
+    return g_build_filename(g_get_home_dir(), ".gtkpod", "session", NULL);
+}
+
+static gchar* get_user_profile_path() {
+    return g_build_filename(g_get_home_dir(), ".gtkpod", "gtkpod.profile", NULL);
+}
+
+static gchar* get_default_profile_path() {
+    return g_build_filename(get_data_dir(), "default.profile", NULL);
+}
 
 void gtkpod_init(int argc, char *argv[]) {
     AnjutaPluginManager *plugin_manager;
@@ -80,11 +96,9 @@ void gtkpod_init(int argc, char *argv[]) {
     anjuta_status_progress_add_ticks(status, 1);
 
     splash = g_build_filename(get_icon_dir(), "gtkpod-splash.png", NULL);
-
     if (g_file_test(splash, G_FILE_TEST_IS_REGULAR))
-        anjuta_status_set_splash (status, splash, 100);
+        anjuta_status_set_splash(status, splash, 100);
     else {
-        g_warning("Cannot find splash file %s", splash);
         anjuta_status_disable_splash(status, TRUE);
     }
 
@@ -94,7 +108,6 @@ void gtkpod_init(int argc, char *argv[]) {
      * initialise gtkpod library items. Needs to be safety threaded due
      * to splash screen.
      */
-
     gdk_threads_enter();
     gp_init(argc, argv);
     gdk_threads_leave();
@@ -113,15 +126,13 @@ void gtkpod_init(int argc, char *argv[]) {
     profile_manager = anjuta_shell_get_profile_manager(ANJUTA_SHELL(app), NULL);
 
     /* Restore remembered plugins */
-    remembered_plugins = anjuta_preferences_get(app->preferences, GTKPOD_REMEMBERED_PLUGINS);
-    g_message("REMEMBERED PLUGINS %s", remembered_plugins);
+    remembered_plugins = g_settings_get_string(app->settings, GTKPOD_REMEMBERED_PLUGINS);
     if (remembered_plugins)
         anjuta_plugin_manager_set_remembered_plugins(plugin_manager, remembered_plugins);
     g_free(remembered_plugins);
 
     /* Load default profile */
-    default_profile_file = g_build_filename(get_data_dir(), "default.profile", NULL);
-    g_message("DEFAULT PROFILE %s", default_profile_file);
+    default_profile_file = get_default_profile_path();
     profile = anjuta_profile_new(USER_PROFILE_NAME, plugin_manager);
     session_profile = g_file_new_for_path(default_profile_file);
     anjuta_profile_add_plugins_from_xml(profile, session_profile, TRUE, &error);
@@ -134,11 +145,9 @@ void gtkpod_init(int argc, char *argv[]) {
     g_free(default_profile_file);
 
     /* Load user session profile */
-    user_profile_file = g_build_filename(g_get_home_dir(), ".gtkpod", "gtkpod.profile", NULL);
-    g_message("User profile %s", user_profile_file);
+    user_profile_file = get_user_profile_path();
     session_profile = g_file_new_for_path(user_profile_file);
     if (g_file_query_exists(session_profile, NULL)) {
-        g_message("user session profile exists so adding plugins from it");
         anjuta_profile_add_plugins_from_xml(profile, session_profile, FALSE, &error);
         if (error) {
             anjuta_util_dialog_error(GTK_WINDOW(app), "%s", error->message);
@@ -159,6 +168,10 @@ void gtkpod_init(int argc, char *argv[]) {
         error = NULL;
     }
 
+    /* Prepare for session save and load on profile change */
+    g_signal_connect (profile_manager, "profile-scoped",
+            G_CALLBACK (on_profile_scoped), app);
+
     anjuta_profile_manager_thaw(profile_manager, &error);
 
     if (error) {
@@ -167,17 +180,20 @@ void gtkpod_init(int argc, char *argv[]) {
         error = NULL;
     }
 
+    g_signal_connect (profile_manager, "profile-descoped",
+            G_CALLBACK (on_profile_descoped), app);
+
     gdk_threads_enter();
     gp_init_itdbs();
     gdk_threads_leave();
 
     /* Load layout.*/
-    session_dir = g_build_filename(g_get_home_dir(), ".gtkpod", "session", NULL);
-    if (! g_file_test(session_dir, G_FILE_TEST_IS_DIR))
+    session_dir = get_user_session_dir();
+    if (!g_file_test(session_dir, G_FILE_TEST_IS_DIR))
         session_dir = g_strdup(get_data_dir());
 
     /* Restore session */
-    anjuta_shell_session_load(ANJUTA_SHELL (app), session_dir, NULL);
+    anjuta_shell_session_load(ANJUTA_SHELL(app), session_dir, NULL);
     g_free(session_dir);
 
     anjuta_status_progress_tick(status, NULL, _("Loaded Session..."));
@@ -188,38 +204,32 @@ void gtkpod_init(int argc, char *argv[]) {
 
     gtk_window_set_role(GTK_WINDOW(app), "gtkpod-app");
     gtk_widget_show(GTK_WIDGET(app));
-
-    GList *plugins = anjuta_plugin_manager_get_active_plugins(plugin_manager);
-    g_printf("Number of active plugins: %d\n", g_list_length(plugins));
 }
 
 /* callback for gtkpod window's close button */
 static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
 
-    if (! ok_to_close_gtkpod())
+    if (!ok_to_close_gtkpod())
         return TRUE;
 
     AnjutaPluginManager *plugin_manager;
-    AnjutaProfileManager *profile_manager;
     AnjutaApp *app;
     gchar *remembered_plugins;
     gchar *session_dir;
 
     app = ANJUTA_APP(widget);
-    plugin_manager = anjuta_shell_get_plugin_manager(ANJUTA_SHELL (app), NULL);
-    profile_manager = anjuta_shell_get_profile_manager(ANJUTA_SHELL (app), NULL);
+    plugin_manager = anjuta_shell_get_plugin_manager(ANJUTA_SHELL(app), NULL);
 
     /* Save remembered plugins */
     remembered_plugins = anjuta_plugin_manager_get_remembered_plugins(plugin_manager);
-    anjuta_preferences_set(app->preferences, GTKPOD_REMEMBERED_PLUGINS, remembered_plugins);
+    g_settings_set_string(app->settings, GTKPOD_REMEMBERED_PLUGINS, remembered_plugins);
     g_free(remembered_plugins);
 
-
-    session_dir = g_build_filename(g_get_home_dir(), ".gtkpod", "session", NULL);
-    anjuta_shell_session_save(ANJUTA_SHELL (app), session_dir, NULL);
+    session_dir = get_user_session_dir();
+    anjuta_shell_session_save(ANJUTA_SHELL(app), session_dir, NULL);
     g_free(session_dir);
 
-    anjuta_shell_notify_exit(ANJUTA_SHELL (app), NULL);
+    anjuta_shell_notify_exit(ANJUTA_SHELL(app), NULL);
 
     if (!gtkpod_cleanup_quit()) {
         // Dont want to quit so avoid signalling any destroy event
@@ -234,4 +244,49 @@ static void on_gtkpod_destroy(GtkWidget * w, gpointer data) {
 
     gtk_widget_hide(w);
     gtk_main_quit();
+}
+
+static void on_profile_scoped(AnjutaProfileManager *profile_manager, AnjutaProfile *profile, AnjutaApp *app) {
+    gchar *session_dir;
+    static gboolean first_time = TRUE;
+
+    if (strcmp(anjuta_profile_get_name(profile), USER_PROFILE_NAME) != 0)
+        return;
+
+    /* If profile scoped to "user", restore user session */
+    if (system_restore_session) {
+        session_dir = system_restore_session;
+        system_restore_session = NULL;
+    }
+    else {
+        session_dir = get_user_session_dir();
+    }
+
+    if (first_time) {
+        first_time = FALSE;
+    }
+    else {
+        AnjutaSession *session;
+        session = anjuta_session_new(session_dir);
+        anjuta_session_sync(session);
+        g_object_unref(session);
+    }
+
+    /* Restore session */
+    anjuta_shell_session_load(ANJUTA_SHELL (app), session_dir, NULL);
+    g_free(session_dir);
+}
+
+static void on_profile_descoped(AnjutaProfileManager *profile_manager, AnjutaProfile *profile, AnjutaApp *app) {
+    gchar *session_dir;
+
+    if (strcmp(anjuta_profile_get_name(profile), USER_PROFILE_NAME) != 0)
+        return;
+
+    /* If profile descoped from is "user", save user session */
+    session_dir = get_user_session_dir();
+
+    /* Save current session */
+    anjuta_shell_session_save(ANJUTA_SHELL (app), session_dir, NULL);
+    g_free(session_dir);
 }

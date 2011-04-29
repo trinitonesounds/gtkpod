@@ -30,6 +30,7 @@
 #include <gtk/gtk.h>
 
 #include <gdl/gdl.h>
+#include <glib-2.0/gio/gio.h>
 
 #include <libanjuta/anjuta-shell.h>
 #include <libanjuta/anjuta-ui.h>
@@ -49,6 +50,10 @@
 #include "libgtkpod/misc.h"
 
 #define ICON_FILE "anjuta-preferences-general-48.png"
+#define PREF_SCHEMA "org.gtkpod"
+#define GDL_STYLE "gdl-style"
+#define TOOLBAR_VISIBLE "toolbar-visible"
+#define TOOLBAR_STYLE "toolbar-style"
 
 static void anjuta_app_layout_load(AnjutaApp *app, const gchar *layout_filename, const gchar *name);
 static void anjuta_app_layout_save(AnjutaApp *app, const gchar *layout_filename, const gchar *name);
@@ -110,72 +115,170 @@ static void disconnect_proxy_cb(GtkUIManager *manager, GtkAction *action, GtkWid
     }
 }
 
-static void on_gdl_style_changed(AnjutaPreferences* prefs, const gchar* key, const gchar* pr_style, gpointer user_data) {
+static void anjuta_app_iconify_dockable_widget(AnjutaShell *shell, GtkWidget *widget, GError **error) {
+    AnjutaApp *app = NULL;
+    GtkWidget *dock_item = NULL;
+
+    /* Argumments assertions */
+    g_return_if_fail(ANJUTA_IS_APP (shell));
+    g_return_if_fail(GTK_IS_WIDGET(widget));
+
+    app = ANJUTA_APP (shell);
+    g_return_if_fail(app->widgets != NULL);
+
+    dock_item = g_object_get_data(G_OBJECT(widget), "dockitem");
+    g_return_if_fail(dock_item != NULL);
+
+    /* Iconify the dockable item */
+    gdl_dock_item_iconify_item(GDL_DOCK_ITEM(dock_item));
+}
+
+static void anjuta_app_hide_dockable_widget(AnjutaShell *shell, GtkWidget *widget, GError **error) {
+    AnjutaApp *app = NULL;
+    GtkWidget *dock_item = NULL;
+
+    /* Arguments assertions */
+    g_return_if_fail(ANJUTA_IS_APP (shell));
+    g_return_if_fail(GTK_IS_WIDGET(widget));
+
+    app = ANJUTA_APP (shell);
+    g_return_if_fail(app->widgets != NULL);
+
+    dock_item = g_object_get_data(G_OBJECT(widget), "dockitem");
+    g_return_if_fail(dock_item != NULL);
+
+    /* Hide the dockable item */
+    gdl_dock_item_hide_item(GDL_DOCK_ITEM(dock_item));
+}
+
+static void anjuta_app_show_dockable_widget(AnjutaShell *shell, GtkWidget* widget, GError **error) {
+    AnjutaApp *app = NULL;
+    GtkWidget *dock_item = NULL;
+
+    /* Argumments assertions */
+    g_return_if_fail(ANJUTA_IS_APP (shell));
+    g_return_if_fail(GTK_IS_WIDGET(widget));
+
+    app = ANJUTA_APP (shell);
+    g_return_if_fail(app->widgets != NULL);
+
+    dock_item = g_object_get_data(G_OBJECT(widget), "dockitem");
+    g_return_if_fail(dock_item != NULL);
+
+    /* Show the dockable item */
+    gdl_dock_item_show_item(GDL_DOCK_ITEM(dock_item));
+}
+
+static void anjuta_app_maximize_widget(AnjutaShell *shell, const char *widget_name, GError **error) {
+    AnjutaApp *app = NULL;
+    GtkWidget *dock_item = NULL;
+    gpointer value, key;
+    GtkWidget *widget = NULL;
+    GHashTableIter iter;
+
+    /* AnjutaApp assertions */
+    g_return_if_fail(ANJUTA_IS_APP (shell));
+    app = ANJUTA_APP (shell);
+
+    /* If app->maximized is TRUE then another widget is already maximized.
+     Restoring the UI for a new maximization. */
+    if (app->maximized)
+        gdl_dock_layout_load_layout(app->layout_manager, "back-up");
+
+    /* Back-up the layout so it can be restored */
+    gdl_dock_layout_save_layout(app->layout_manager, "back-up");
+
+    /* Mark the app as maximized (the other widgets except center are hidden) */
+    app->maximized = TRUE;
+
+    /* Hide all DockItem's except the ones positioned in the center */
+    g_hash_table_iter_init(&iter, app->widgets);
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        if (value == NULL)
+            continue;
+
+        /* If it's the widget requesting maximization then continue */
+        if (!g_strcmp0((gchar*) key, widget_name))
+            continue;
+
+        /* Widget assertions */
+        widget = GTK_WIDGET(value);
+        if (!GTK_IS_WIDGET(widget))
+            continue;
+
+        /* DockItem assertions */
+        dock_item = g_object_get_data(G_OBJECT(widget), "dockitem");
+        if (dock_item == NULL || !GDL_IS_DOCK_ITEM(dock_item))
+            continue;
+
+        /* Hide the item */
+        gdl_dock_item_hide_item(GDL_DOCK_ITEM(dock_item));
+    }
+}
+
+static void anjuta_app_unmaximize(AnjutaShell *shell, GError **error) {
+    AnjutaApp *app = NULL;
+
+    /* AnjutaApp assertions */
+    g_return_if_fail(ANJUTA_IS_APP (shell));
+    app = ANJUTA_APP (shell);
+
+    /* If not maximized then the operation doesn't make sence. */
+    g_return_if_fail(app->maximized);
+
+    /* Load the backed-up layout */
+    gdl_dock_layout_load_layout(app->layout_manager, "back-up");
+    gdl_dock_layout_delete_layout(app->layout_manager, "back-up");
+
+    /* Un-mark maximized */
+    app->maximized = FALSE;
+}
+
+static void on_gdl_style_changed(GSettings* settings, const gchar* key, gpointer user_data) {
     AnjutaApp* app = ANJUTA_APP (user_data);
     GdlSwitcherStyle style = GDL_SWITCHER_STYLE_BOTH;
 
-    if (pr_style) {
-        if (strcasecmp(pr_style, "Text") == 0)
-            style = GDL_SWITCHER_STYLE_TEXT;
-        else if (strcasecmp(pr_style, "Icon") == 0)
-            style = GDL_SWITCHER_STYLE_ICON;
-        else if (strcasecmp(pr_style, "Both") == 0)
-            style = GDL_SWITCHER_STYLE_BOTH;
-        else if (strcasecmp(pr_style, "Toolbar") == 0)
-            style = GDL_SWITCHER_STYLE_TOOLBAR;
-        else if (strcasecmp(pr_style, "Tabs") == 0)
-            style = GDL_SWITCHER_STYLE_TABS;
+    gchar* pr_style = g_settings_get_string(settings, key);
 
-        DEBUG_PRINT ("Switcher style: %s", pr_style);
-    }
+    if (strcasecmp(pr_style, "Text") == 0)
+        style = GDL_SWITCHER_STYLE_TEXT;
+    else if (strcasecmp(pr_style, "Icon") == 0)
+        style = GDL_SWITCHER_STYLE_ICON;
+    else if (strcasecmp(pr_style, "Both") == 0)
+        style = GDL_SWITCHER_STYLE_BOTH;
+    else if (strcasecmp(pr_style, "Toolbar") == 0)
+        style = GDL_SWITCHER_STYLE_TOOLBAR;
+    else if (strcasecmp(pr_style, "Tabs") == 0)
+        style = GDL_SWITCHER_STYLE_TABS;
+
     g_object_set(G_OBJECT(app->layout_manager->master), "switcher-style", style, NULL);
-}
-
-static void anjuta_gtkpod_app_display_widget(GtkWidget *widget) {
-    g_return_if_fail(widget);
-
-    GtkWidget *w;
-    if (GDL_IS_DOCK_ITEM(widget))
-        w = widget;
-    else {
-        w = g_object_get_data(G_OBJECT (widget), "dockitem");
-    }
-
-    if (w) {
-        // Only show docked widget if really sure it is no longer
-        // in the dock layout, ie. widget is not visible
-        gdl_dock_item_show_item(GDL_DOCK_ITEM (w));
-    }
+    g_free(pr_style);
 }
 
 static void on_toggle_widget_view(GtkCheckMenuItem *menuitem, GtkWidget *dockitem) {
     gboolean state;
     state = gtk_check_menu_item_get_active(menuitem);
     if (state)
-        anjuta_gtkpod_app_display_widget(dockitem);
+        gdl_dock_item_show_item(GDL_DOCK_ITEM(dockitem));
     else
-        gdl_dock_item_hide_item(GDL_DOCK_ITEM (dockitem));
+        gdl_dock_item_hide_item(GDL_DOCK_ITEM(dockitem));
 }
 
 static void on_update_widget_view_menuitem(gpointer key, gpointer wid, gpointer data) {
     GtkCheckMenuItem *menuitem;
     GdlDockItem *dockitem;
 
-    dockitem = g_object_get_data(G_OBJECT (wid), "dockitem");
-    menuitem = g_object_get_data(G_OBJECT (wid), "menuitem");
+    dockitem = g_object_get_data(G_OBJECT(wid), "dockitem");
+    menuitem = g_object_get_data(G_OBJECT(wid), "menuitem");
 
-    g_signal_handlers_block_by_func (menuitem,
-            G_CALLBACK (on_toggle_widget_view),
-            dockitem);
+    g_signal_handlers_block_by_func(menuitem, G_CALLBACK(on_toggle_widget_view), dockitem);
 
-    if (GDL_DOCK_OBJECT_ATTACHED (dockitem))
+    if (GDL_DOCK_OBJECT_ATTACHED(dockitem))
         gtk_check_menu_item_set_active(menuitem, TRUE);
     else
         gtk_check_menu_item_set_active(menuitem, FALSE);
 
-    g_signal_handlers_unblock_by_func (menuitem,
-            G_CALLBACK (on_toggle_widget_view),
-            dockitem);
+    g_signal_handlers_unblock_by_func(menuitem, G_CALLBACK(on_toggle_widget_view), dockitem);
 }
 
 static void on_layout_dirty_notify(GObject *object, GParamSpec *pspec, gpointer user_data) {
@@ -209,7 +312,7 @@ static void on_session_save(AnjutaShell *shell, AnjutaSessionPhase phase, Anjuta
         return;
 
     /* Save geometry */
-    state = gdk_window_get_state(gtk_widget_get_window(GTK_WIDGET (app)));
+    state = gdk_window_get_state(gtk_widget_get_window(GTK_WIDGET(app)));
     if (state & GDK_WINDOW_STATE_MAXIMIZED) {
         anjuta_session_set_int(session, "Anjuta", "Maximized", 1);
     }
@@ -310,34 +413,37 @@ static void anjuta_app_dispose(GObject *widget) {
         app->status = NULL;
     }
 
+    if (app->settings) {
+        g_object_unref(app->settings);
+        app->settings = NULL;
+    }
+
     G_OBJECT_CLASS (parent_class)->dispose(widget);
 }
 
 static void anjuta_app_finalize(GObject *widget) {
     AnjutaApp *app;
 
-    g_return_if_fail (ANJUTA_IS_APP (widget));
+    g_return_if_fail(ANJUTA_IS_APP (widget));
 
     app = ANJUTA_APP (widget);
 
-    g_object_unref(G_OBJECT(app->ui));
-    g_object_unref(G_OBJECT (app->preferences));
+    g_object_unref(app->ui);
+    g_object_unref(app->preferences);
 
-    G_OBJECT_CLASS (parent_class)->finalize(widget);
+    G_OBJECT_CLASS(parent_class)->finalize(widget);
 }
 
 static void anjuta_app_instance_init(AnjutaApp *app) {
-    gint merge_id;
-    GtkWidget *about_menu;
+    GtkWidget *menubar, *about_menu;
     GtkWidget *view_menu, *hbox;
     GtkWidget *main_box;
     GtkWidget *dockbar;
     GList *plugins_dirs = NULL;
-    gchar * style;
     GdkGeometry size_hints =
         { 100, 100, 0, 0, 100, 100, 1, 1, 0.0, 0.0, GDK_GRAVITY_NORTH_WEST };
 
-    DEBUG_PRINT ("%s", "Initializing gtkpod...");
+    DEBUG_PRINT("%s", "Initializing gtkpod...");
 
     gtk_window_set_geometry_hints(GTK_WINDOW (app), GTK_WIDGET (app), &size_hints, GDK_HINT_RESIZE_INC);
     gtk_window_set_resizable(GTK_WINDOW (app), TRUE);
@@ -351,9 +457,13 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
 
     app->values = NULL;
     app->widgets = NULL;
+    app->maximized = FALSE;
+
+    /* Settings */
+    app->settings = g_settings_new (PREF_SCHEMA);
 
     /* Status bar */
-    app->status = ANJUTA_STATUS (anjuta_status_new ());
+    app->status = ANJUTA_STATUS(anjuta_status_new());
     anjuta_status_set_title_window(app->status, GTK_WIDGET (app));
     gtk_widget_show(GTK_WIDGET (app->status));
     gtk_box_pack_end(GTK_BOX (main_box), GTK_WIDGET (app->status), FALSE, TRUE, 0);
@@ -379,13 +489,12 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
 
     /* UI engine */
     app->ui = anjuta_ui_new();
-    g_object_add_weak_pointer(G_OBJECT(app->ui), (gpointer) & app->ui);
+    g_object_add_weak_pointer(G_OBJECT(app->ui), (gpointer) &app->ui);
     /* show tooltips in the statusbar */
     g_signal_connect(app->ui, "connect_proxy", G_CALLBACK(connect_proxy_cb), app);
     g_signal_connect(app->ui, "disconnect_proxy", G_CALLBACK(disconnect_proxy_cb), app);
 
     /* Plugin Manager */
-    g_printf("Prepending %s to plugin directories\n", get_plugin_dir());
     plugins_dirs = g_list_prepend(plugins_dirs, get_plugin_dir());
     app->plugin_manager = anjuta_plugin_manager_new(G_OBJECT (app), app->status, plugins_dirs);
     app->profile_manager = anjuta_profile_manager_new(app->plugin_manager);
@@ -395,11 +504,8 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
     app->preferences = anjuta_preferences_new(app->plugin_manager);
     g_object_add_weak_pointer(G_OBJECT (app->preferences), (gpointer) &app->preferences);
 
-    anjuta_preferences_notify_add_string(app->preferences, "anjuta.gdl.style", on_gdl_style_changed, app, NULL);
-    style = anjuta_preferences_get(app->preferences, "anjuta.gdl.style");
-
-    on_gdl_style_changed(app->preferences, NULL, style, app);
-    g_free(style);
+    g_signal_connect(app->settings, "changed::" GDL_STYLE, G_CALLBACK(on_gdl_style_changed), app);
+    on_gdl_style_changed(app->settings, GDL_STYLE, app);
 
     /* Register actions */
     anjuta_ui_add_action_group_entries(app->ui, "ActionGroupMusic", _("Music"), menu_entries_music, G_N_ELEMENTS (menu_entries_music), GETTEXT_PACKAGE, TRUE, app);
@@ -410,15 +516,15 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
     anjuta_ui_add_action_group_entries(app->ui, "ActionGroupHelp", _("Help"), menu_entries_help, G_N_ELEMENTS (menu_entries_help), GETTEXT_PACKAGE, TRUE, app);
 
     /* Merge UI */
-    merge_id = anjuta_ui_merge(app->ui, uifile);
+    anjuta_ui_merge(app->ui, uifile);
 
     /* Adding accels group */
     gtk_window_add_accel_group(GTK_WINDOW (app), gtk_ui_manager_get_accel_group(GTK_UI_MANAGER (app->ui)));
 
     /* create main menu */
-    app->menubar = gtk_ui_manager_get_widget(GTK_UI_MANAGER (app->ui), "/MenuMain");
-    gtk_box_pack_start(GTK_BOX (main_box), app->menubar, FALSE, FALSE, 0);
-    gtk_widget_show(app->menubar);
+    menubar = gtk_ui_manager_get_widget(GTK_UI_MANAGER (app->ui), "/MenuMain");
+    gtk_box_pack_start(GTK_BOX (main_box), menubar, FALSE, FALSE, 0);
+    gtk_widget_show(menubar);
 
     /* Create widgets menu */
     view_menu = gtk_ui_manager_get_widget(GTK_UI_MANAGER(app->ui), "/MenuMain/MenuView");
@@ -427,7 +533,7 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
     /* Create about plugins menu */
     about_menu = gtk_ui_manager_get_widget(GTK_UI_MANAGER(app->ui), "/MenuMain/PlaceHolderHelpMenus/MenuHelp/"
         "PlaceHolderHelpAbout/AboutPlugins");
-    about_create_plugins_submenu(ANJUTA_SHELL (app), about_menu);
+    about_create_plugins_submenu(ANJUTA_SHELL(app), about_menu);
 
     /* Add main view */
     gtk_box_pack_start(GTK_BOX (main_box), hbox, TRUE, TRUE, 0);
@@ -522,7 +628,7 @@ void anjuta_app_set_geometry(AnjutaApp *app, const gchar *geometry) {
     gboolean geometry_set = FALSE;
 
     if (geometry && strlen(geometry) > 0) {
-        DEBUG_PRINT ("Setting geometry: %s", geometry);
+        DEBUG_PRINT("Setting geometry: %s", geometry);
 
         if (sscanf(geometry, "%dx%d+%d+%d", &width, &height, &posx, &posy) == 4) {
             if (gtk_widget_get_realized (GTK_WIDGET (app))) {
@@ -556,6 +662,11 @@ static void anjuta_app_layout_save(AnjutaApp *app, const gchar *filename, const 
     g_return_if_fail (ANJUTA_IS_APP (app));
     g_return_if_fail (filename != NULL);
 
+    /* If maximized, the layout should be loaded from the back-up first */
+    if (app->maximized)
+        gdl_dock_layout_load_layout(app->layout_manager, "back-up");
+
+    /* Continue with the saving */
     gdl_dock_layout_save_layout(app->layout_manager, name);
     if (!gdl_dock_layout_save_to_file(app->layout_manager, filename))
         g_warning ("Saving dock layout to '%s' failed!", filename);
@@ -571,7 +682,7 @@ static void anjuta_app_layout_load(AnjutaApp *app, const gchar *layout_filename,
         gchar *filename;
 
         filename = g_build_filename(get_data_dir(), "dock-layout.xml", NULL);
-        DEBUG_PRINT ("Layout = %s", filename);
+        DEBUG_PRINT("Layout = %s", filename);
         if (!gdl_dock_layout_load_from_file(app->layout_manager, filename))
             g_warning ("Loading layout from '%s' failed!!", filename);
         g_free(filename);
@@ -591,15 +702,10 @@ void anjuta_app_install_preferences(AnjutaApp *app) {
     GtkWidget *notebook, *shortcuts, *plugins, *remember_plugins;
 
     notebook = gtk_notebook_new();
-    img_path = anjuta_res_get_pixmap_file (ICON_FILE);
-    pixbuf = gdk_pixbuf_new_from_file (img_path, NULL);
-    anjuta_preferences_dialog_add_page (
-                ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (app->preferences)),
-                "plugins",
-                _(" Plugins"),
-                pixbuf,
-                notebook);
-    shortcuts = anjuta_ui_get_accel_editor(ANJUTA_UI (app->ui));
+    img_path = anjuta_res_get_pixmap_file(ICON_FILE);
+    pixbuf = gdk_pixbuf_new_from_file(img_path, NULL);
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG(anjuta_preferences_get_dialog(app->preferences)), "plugins", _(" Plugins"), pixbuf, notebook);
+    shortcuts = anjuta_ui_get_accel_editor(ANJUTA_UI(app->ui));
     plugins = anjuta_plugin_manager_get_plugins_page(app->plugin_manager);
     remember_plugins = anjuta_plugin_manager_get_remembered_plugins_page(app->plugin_manager);
 
@@ -611,9 +717,9 @@ void anjuta_app_install_preferences(AnjutaApp *app) {
     gtk_notebook_append_page(GTK_NOTEBOOK (notebook), remember_plugins, gtk_label_new(_("Preferred plugins")));
     gtk_notebook_append_page(GTK_NOTEBOOK (notebook), shortcuts, gtk_label_new(_("Shortcuts")));
 
-    g_object_unref (notebook);
-    g_free (img_path);
-    g_object_unref (pixbuf);
+    g_object_unref(notebook);
+    g_free(img_path);
+    g_object_unref(pixbuf);
 }
 
 /* AnjutaShell Implementation */
@@ -718,7 +824,7 @@ static gboolean remove_from_widgets_hash(gpointer name, gpointer hash_widget, gp
 }
 
 static void on_widget_destroy(GtkWidget *widget, AnjutaApp *app) {
-    DEBUG_PRINT ("%s", "Widget about to be destroyed");
+    DEBUG_PRINT("%s", "Widget about to be destroyed");
     g_hash_table_foreach_remove(app->widgets, remove_from_widgets_hash, widget);
 }
 
@@ -734,7 +840,7 @@ static void on_widget_remove(GtkWidget *container, GtkWidget *widget, AnjutaApp 
         gdl_dock_item_unbind(GDL_DOCK_ITEM(dock_item));
     }
     if (g_hash_table_foreach_remove(app->widgets, remove_from_widgets_hash, widget)) {
-        DEBUG_PRINT ("%s", "Widget removed from container");
+        DEBUG_PRINT("%s", "Widget removed from container");
     }
 }
 
@@ -743,7 +849,7 @@ static void on_widget_removed_from_hash(gpointer widget) {
     GtkWidget *menuitem;
     GdlDockItem *dockitem;
 
-    DEBUG_PRINT ("%s", "Removing widget from hash");
+    DEBUG_PRINT("%s", "Removing widget from hash");
 
     app = g_object_get_data(G_OBJECT (widget), "app-object");
     dockitem = g_object_get_data(G_OBJECT (widget), "dockitem");
@@ -954,6 +1060,11 @@ static void anjuta_shell_iface_init(AnjutaShellIface *iface) {
     iface->add_widget_custom = anjuta_app_add_widget_custom;
     iface->remove_widget = anjuta_app_remove_widget;
     iface->present_widget = anjuta_app_present_widget;
+    iface->iconify_dockable_widget = anjuta_app_iconify_dockable_widget;
+    iface->hide_dockable_widget = anjuta_app_hide_dockable_widget;
+    iface->show_dockable_widget = anjuta_app_show_dockable_widget;
+    iface->maximize_widget = anjuta_app_maximize_widget;
+    iface->unmaximize = anjuta_app_unmaximize;
     iface->add_value = anjuta_app_add_value;
     iface->get_value = anjuta_app_get_value;
     iface->remove_value = anjuta_app_remove_value;
@@ -976,8 +1087,8 @@ static void anjuta_shell_iface_init(AnjutaShellIface *iface) {
 static void anjuta_gtkpod_statusbar_reset_progress(GtkPodApp *obj, gint total) {
     g_return_if_fail(ANJUTA_IS_APP(gtkpod_app));
     AnjutaStatus *status = anjuta_shell_get_status(ANJUTA_SHELL(gtkpod_app), NULL);
-    anjuta_status_progress_reset (status);
-    anjuta_status_progress_add_ticks (status, total);
+    anjuta_status_progress_reset(status);
+    anjuta_status_progress_add_ticks(status, total);
 }
 
 static void anjuta_gtkpod_statusbar_increment_progress_ticks(GtkPodApp *obj, gint ticks, gchar* text) {
@@ -1207,7 +1318,8 @@ static void confirm_append_text(GtkBuilder *builder, const gchar *text) {
 
     w = gtkpod_builder_xml_get_widget(builder, "scroller");
     adjustment = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW (w));
-    gtk_adjustment_set_value(adjustment, gtk_adjustment_get_upper(adjustment) - gtk_adjustment_get_page_size(adjustment));
+    gtk_adjustment_set_value(adjustment, gtk_adjustment_get_upper(adjustment)
+            - gtk_adjustment_get_page_size(adjustment));
 
     g_strfreev(strings);
 }
@@ -1393,7 +1505,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
      ENTER in the window (usually OK)*/
     /* Hide or default CANCEL button */
     if ((w = gtkpod_builder_xml_get_widget(confirm_builder, "cancel"))) {
-        gtk_widget_set_can_default (w, TRUE);
+        gtk_widget_set_can_default(w, TRUE);
         gtk_widget_grab_default(w);
 
         if (!cancel_handler)
@@ -1402,7 +1514,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
 
     /* Hide or default APPLY button */
     if ((w = gtkpod_builder_xml_get_widget(confirm_builder, "apply"))) {
-        gtk_widget_set_can_default (w, TRUE);
+        gtk_widget_set_can_default(w, TRUE);
         gtk_widget_grab_default(w);
 
         if (!apply_handler)
@@ -1411,7 +1523,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
 
     /* Hide or default OK button */
     if ((w = gtkpod_builder_xml_get_widget(confirm_builder, "ok"))) {
-        gtk_widget_set_can_default (w, TRUE);
+        gtk_widget_set_can_default(w, TRUE);
         gtk_widget_grab_default(w);
 
         if (!ok_handler)
@@ -1419,7 +1531,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
     }
 
     /* Connect Close window */
-    g_signal_connect (GTK_OBJECT (window),
+    g_signal_connect (G_OBJECT (window),
             "delete_event",
             G_CALLBACK (on_cancel_clicked),
             GINT_TO_POINTER(id));
@@ -1443,7 +1555,7 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
     }
     else {
         /* Make sure we catch the response */
-        g_signal_connect (GTK_OBJECT (window),
+        g_signal_connect (G_OBJECT (window),
                 "response",
                 G_CALLBACK (on_response),
                 GINT_TO_POINTER(id));
@@ -1451,6 +1563,13 @@ static GtkResponseType anjuta_gtkpod_app_confirmation(GtkPodApp *obj, gint id, g
 
         return GTK_RESPONSE_ACCEPT;
     }
+}
+
+static void anjuta_gtkpod_app_display_widget(GtkPodApp *obj, GtkWidget *widget) {
+    g_return_if_fail(widget);
+    g_return_if_fail(ANJUTA_IS_APP(gtkpod_app));
+
+    anjuta_app_show_dockable_widget(ANJUTA_SHELL(gtkpod_app), widget, NULL);
 }
 
 static void gtkpod_app_iface_init(GtkPodAppInterface *iface) {
@@ -1476,6 +1595,6 @@ G_MODULE_EXPORT void on_confirm_tree_size_allocate(GtkWidget *sender, GtkAllocat
 }
 
 ANJUTA_TYPE_BEGIN(AnjutaApp, anjuta_app, GTK_TYPE_WINDOW);
-            ANJUTA_TYPE_ADD_INTERFACE(anjuta_shell, ANJUTA_TYPE_SHELL);
-            ANJUTA_TYPE_ADD_INTERFACE(gtkpod_app, GTKPOD_APP_TYPE);ANJUTA_TYPE_END
-;
+ANJUTA_TYPE_ADD_INTERFACE( anjuta_shell, ANJUTA_TYPE_SHELL);
+ANJUTA_TYPE_ADD_INTERFACE( gtkpod_app, GTKPOD_APP_TYPE);
+ANJUTA_TYPE_END;
