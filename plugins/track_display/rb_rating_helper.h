@@ -29,7 +29,7 @@ typedef struct _RBRatingPixbufs RBRatingPixbufs;
 /* Number of stars */
 #define RB_RATING_MAX_SCORE 5
 
-gboolean rb_rating_render_stars (GtkWidget *widget, GdkWindow *window,
+gboolean rb_rating_render_stars (GtkWidget *widget, cairo_t *cairo_context,
 				 RBRatingPixbufs *pixbufs,
 				 gulong x, gulong y,
 				 gulong x_offset, gulong y_offset,
