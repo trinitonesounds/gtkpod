@@ -378,6 +378,7 @@ static void trkcmd_combobox_changed(GtkComboBox *combo) {
 
 static void populate_track_cmd_combo(GtkComboBox *combo) {
     GtkListStore *store;
+    GtkTreeIter iter;
     GtkCellRenderer *cell;
     GList *trkcmds = gtkpod_get_registered_track_commands();
     gint i = 0, activeindex = -1;
@@ -386,7 +387,6 @@ static void populate_track_cmd_combo(GtkComboBox *combo) {
 
     store = gtk_list_store_new(1, G_TYPE_STRING);
     gtk_combo_box_set_model(combo, GTK_TREE_MODEL (store));
-    g_object_unref(store);
 
     cell = gtk_cell_renderer_text_new();
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT (combo), cell, TRUE);
@@ -397,13 +397,16 @@ static void populate_track_cmd_combo(GtkComboBox *combo) {
 
     for (i = 0; i < g_list_length(trkcmds); ++i) {
         TrackCommand *cmd = g_list_nth_data(trkcmds, i);
-        gtk_combo_box_append_text(combo, _(track_command_get_text(cmd)));
+        gtk_list_store_append (store, &iter);
+        gtk_list_store_set (store, &iter,
+                                           0, _(track_command_get_text(cmd)),
+                                           -1);
         if (cmdpref && g_str_equal(cmdpref, track_command_get_id(cmd)))
             activeindex = i;
     }
 
     if (activeindex > -1)
-        gtk_combo_box_set_active(combo, activeindex);
+        gtk_combo_box_set_active(GTK_COMBO_BOX(combo), activeindex);
 
     g_signal_connect (combo, "changed",
                     G_CALLBACK (trkcmd_combobox_changed),

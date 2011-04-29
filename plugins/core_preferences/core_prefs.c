@@ -267,7 +267,17 @@ G_MODULE_EXPORT void open_encoding_dialog(GtkButton *sender, gpointer e) {
  glade callback
  */
 G_MODULE_EXPORT void on_encoding_combo_changed(GtkComboBox *sender, gpointer e) {
-    gchar *description = gtk_combo_box_get_active_text(sender);
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+
+    if (!gtk_combo_box_get_active_iter(sender, &iter))
+        return;
+
+    model = gtk_combo_box_get_model(sender);
+
+    gchar *description;
+    gtk_tree_model_get(model, &iter, 0, &description, -1);
+
     gchar *charset = charset_from_description(description);
 
     prefs_set_string("charset", charset);

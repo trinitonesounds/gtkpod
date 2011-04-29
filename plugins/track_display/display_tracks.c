@@ -621,7 +621,6 @@ void tm_add_track_to_track_model(Track *track, GtkTreeIter *into_iter) {
     }
 
     gtk_list_store_set(get_model_as_store(model), &iter, READOUT_COL, track, -1);
-    /*    update_model_view (model); -- not needed */
 }
 
 /* Used by remove_track() to remove track from model by calling

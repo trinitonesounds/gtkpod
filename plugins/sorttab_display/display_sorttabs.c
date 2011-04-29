@@ -3236,7 +3236,7 @@ gint st_get_sort_tab_number(gchar *text) {
 
     dialog = GTK_DIALOG (mdialog);
 
-    combo = gtk_combo_box_new_text();
+    combo = gtk_combo_box_text_new();
     gtk_widget_show(combo);
     gtk_container_add(GTK_CONTAINER (gtk_dialog_get_content_area(GTK_DIALOG(dialog))), combo);
 
@@ -3244,7 +3244,7 @@ gint st_get_sort_tab_number(gchar *text) {
     /* Create list */
     for (i = 1; i <= stn; ++i) {
         sprintf(buf, "%d", i);
-        gtk_combo_box_append_text(GTK_COMBO_BOX (combo), buf);
+        gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT (combo), buf);
     }
 
     result = gtk_dialog_run(GTK_DIALOG (mdialog));
@@ -3254,7 +3254,7 @@ gint st_get_sort_tab_number(gchar *text) {
         nr = -1; /* no selection */
     }
     else {
-        bufp = gtk_combo_box_get_active_text(GTK_COMBO_BOX (combo));
+        bufp = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT (combo));
         nr = atoi(bufp) - 1;
         last_nr = nr + 1;
     }

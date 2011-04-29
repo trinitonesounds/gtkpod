@@ -290,22 +290,27 @@ static void spl_setup_combobox(GtkComboBox *cb, const ComboEntry centries[], gin
         const ComboEntry *ce = centries;
         GtkCellRenderer *cell;
         GtkListStore *store;
+        GtkTreeIter iter;
 
         /* Set the model -- that is you cannot do a
          gtk_combo_box_new_text()! This gives us the flexibility to
          expand this function to set some graphic next to the text. */
         store = gtk_list_store_new(1, G_TYPE_STRING);
         gtk_combo_box_set_model(cb, GTK_TREE_MODEL (store));
-        g_object_unref(store);
 
         cell = gtk_cell_renderer_text_new();
         gtk_cell_layout_pack_start(GTK_CELL_LAYOUT (cb), cell, TRUE);
         gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT (cb), cell, "text", 0, NULL);
 
         while (ce->str != NULL) {
-            gtk_combo_box_append_text(cb, _(ce->str));
+            gtk_list_store_append (store, &iter);
+            gtk_list_store_set (store, &iter,
+                                      0, _(ce->str),
+                                      -1);
             ++ce;
         }
+
+        g_object_unref(store);
         g_object_set_data(G_OBJECT (cb), "spl_centries", (gpointer) centries);
         g_object_set_data(G_OBJECT (cb), "combo_set", "set");
         if (cb_func)
@@ -954,7 +959,7 @@ static void spl_pl_ids_destroy(GArray *array) {
 static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
     GtkWidget *hbox = NULL;
     ItdbSPLActionType at;
-    GtkWidget *entry, *label, *combobox;
+    GtkWidget *label, *combobox;
     gint index;
     GArray *pl_ids = NULL;
     Playlist *spl_orig;
@@ -980,10 +985,10 @@ static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
 
     switch (at) {
     case ITDB_SPLAT_STRING:
-        entry = hbox_add_entry(hbox, splr, spl_ET_STRING);
+        hbox_add_entry(hbox, splr, spl_ET_STRING);
         break;
     case ITDB_SPLAT_INT:
-        entry = hbox_add_entry(hbox, splr, spl_ET_FROMVALUE);
+        hbox_add_entry(hbox, splr, spl_ET_FROMVALUE);
         /* check for unit */
         index = comboentry_index_from_id(splfield_units, splr->field);
         if (index != -1) {
@@ -993,14 +998,14 @@ static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
         }
         break;
     case ITDB_SPLAT_DATE:
-        entry = hbox_add_entry(hbox, splr, spl_ET_FROMVALUE_DATE);
+        hbox_add_entry(hbox, splr, spl_ET_FROMVALUE_DATE);
         break;
     case ITDB_SPLAT_RANGE_INT:
-        entry = hbox_add_entry(hbox, splr, spl_ET_FROMVALUE);
+        hbox_add_entry(hbox, splr, spl_ET_FROMVALUE);
         label = gtk_label_new(_("to"));
         gtk_widget_show(label);
         gtk_box_pack_start(GTK_BOX (hbox), label, FALSE, FALSE, 0);
-        entry = hbox_add_entry(hbox, splr, spl_ET_TOVALUE),
+        hbox_add_entry(hbox, splr, spl_ET_TOVALUE),
         /* check for unit */
         index = comboentry_index_from_id(splfield_units, splr->field);
         if (index != -1) {
@@ -1010,11 +1015,11 @@ static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
         }
         break;
     case ITDB_SPLAT_RANGE_DATE:
-        entry = hbox_add_entry(hbox, splr, spl_ET_FROMVALUE_DATE);
+        hbox_add_entry(hbox, splr, spl_ET_FROMVALUE_DATE);
         label = gtk_label_new(_("to"));
         gtk_widget_show(label);
         gtk_box_pack_start(GTK_BOX (hbox), label, FALSE, FALSE, 0);
-        entry = hbox_add_entry(hbox, splr, spl_ET_TOVALUE_DATE);
+        hbox_add_entry(hbox, splr, spl_ET_TOVALUE_DATE);
         /* check for unit */
         index = comboentry_index_from_id(splfield_units, splr->field);
         if (index != -1) {
@@ -1030,7 +1035,7 @@ static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
             splr->fromunits = splat_inthelast_units_comboentries[0].id;
             splr->fromvalue *= ((double) units) / splr->fromunits;
         }
-        entry = hbox_add_entry(hbox, splr, spl_ET_INTHELAST);
+        hbox_add_entry(hbox, splr, spl_ET_INTHELAST);
         combobox = gtk_combo_box_new();
         gtk_widget_show(combobox);
         gtk_box_pack_start(GTK_BOX (hbox), combobox, TRUE, TRUE, 0);
@@ -1038,7 +1043,7 @@ static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
         spl_set_combobox(GTK_COMBO_BOX (combobox), splat_inthelast_units_comboentries, splr->fromunits, G_CALLBACK (spl_fromunits_changed), spl_window);
         break;
     case ITDB_SPLAT_PLAYLIST:
-        combobox = gtk_combo_box_new_text();
+        combobox = gtk_combo_box_text_new();
         gtk_widget_show(combobox);
         gtk_box_pack_start(GTK_BOX (hbox), combobox, TRUE, TRUE, 0);
         pl_ids = g_array_sized_new(TRUE, TRUE, sizeof(guint64), itdb_playlists_number(itdb));
@@ -1047,7 +1052,7 @@ static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
             Playlist *pl = gl->next->data;
             g_return_val_if_fail (pl, NULL);
             if (pl != spl_orig) {
-                gtk_combo_box_append_text(GTK_COMBO_BOX (combobox), pl->name);
+                gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT (combobox), pl->name);
                 g_array_append_val (pl_ids, pl->id);
             }
             gl = gl->next;
@@ -1078,7 +1083,7 @@ static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
             spl_set_combobox(GTK_COMBO_BOX (combobox), use_centries, splr->fromvalue, G_CALLBACK (spl_videokind_comboentry_changed), spl_window);
         }
         else { /* not supported: display as standard INT */
-            entry = hbox_add_entry(hbox, splr, spl_ET_FROMVALUE);
+            hbox_add_entry(hbox, splr, spl_ET_FROMVALUE);
         }
         break;
     case ITDB_SPLAT_NONE:

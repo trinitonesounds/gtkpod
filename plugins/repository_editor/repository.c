@@ -180,7 +180,7 @@ void repository_init_model_number_combo(GtkComboBox *cb) {
      messes up the entire layout) */
     gtk_combo_box_set_model(cb, GTK_TREE_MODEL (store));
     g_object_unref(store);
-    gtk_combo_box_entry_set_text_column(GTK_COMBO_BOX_ENTRY (cb), COL_STRING);
+    gtk_combo_box_set_entry_text_column(GTK_COMBO_BOX (cb), COL_STRING);
     gtk_cell_layout_clear(GTK_CELL_LAYOUT (cb));
 
     renderer = gtk_cell_renderer_text_new();

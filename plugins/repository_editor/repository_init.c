@@ -174,7 +174,7 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
             g_free(new_mount);
             new_mount = NULL;
         }
-        model = gtk_combo_box_get_active_text(GTK_COMBO_BOX (GET_WIDGET (ii->builder, IID_MODEL_COMBO)));
+        model = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT (GET_WIDGET (ii->builder, IID_MODEL_COMBO)));
         if ((strcmp(model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0) || (strlen(model) == 0)) { /* User didn't choose a model */
             g_free(model);
             model = NULL;
@@ -275,7 +275,7 @@ void repository_ipod_init_set_model(iTunesDB *itdb, const gchar *old_model) {
 
     switch (response) {
     case GTK_RESPONSE_OK:
-        model = gtk_combo_box_get_active_text(GTK_COMBO_BOX (GET_WIDGET (builder, SIMD_MODEL_COMBO)));
+        model = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT (GET_WIDGET (builder, SIMD_MODEL_COMBO)));
         if (!model) {
             gtkpod_warning(_("Could not determine the model you selected -- this could be a bug or incompatibilty in the GTK+ or glade library.\n\n"));
         }
