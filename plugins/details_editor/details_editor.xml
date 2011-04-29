@@ -2492,7 +2492,6 @@ simultaneously</property>
                                   <object class="GtkHScale" id="details_scale_23">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
-                                    <property name="update_policy">discontinuous</property>
                                     <property name="digits">0</property>
                                     <property name="value_pos">right</property>
                                   </object>
