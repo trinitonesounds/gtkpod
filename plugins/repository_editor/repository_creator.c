@@ -176,9 +176,8 @@ static void create_delete_event(GtkWidget *widget, GdkEvent *event, CreateRepWin
  *        Callback (repository type)
  *
  * ------------------------------------------------------------ */
-
-static void cr_repository_type_changed(GtkComboBox *cb, CreateRepWindow *cr) {
-    gint index, i;
+static void show_hide_widgets(CreateRepWindow *cr, int index) {
+    gint i;
     const gchar **show = NULL;
     /* widgets to show for iPod repositories */
     const gchar *show_ipod[] =
@@ -212,8 +211,6 @@ static void cr_repository_type_changed(GtkComboBox *cb, CreateRepWindow *cr) {
             NULL
         };
 
-    index = gtk_combo_box_get_active(cb);
-
     switch (index) {
     case REPOSITORY_TYPE_IPOD:
         show = show_ipod;
@@ -234,6 +231,13 @@ static void cr_repository_type_changed(GtkComboBox *cb, CreateRepWindow *cr) {
     for (i = 0; show[i]; ++i) {
         gtk_widget_show(GET_WIDGET (cr->builder, show[i]));
     }
+}
+
+static void cr_repository_type_changed(GtkComboBox *cb, CreateRepWindow *cr) {
+    gint index = 0;
+
+    index = gtk_combo_box_get_active(cb);
+    show_hide_widgets(cr, index);
 }
 
 /**
@@ -314,4 +318,6 @@ void display_create_repository_dialog() {
     g_free(buf1);
 
     gtk_widget_show_all(cr->window);
+
+    show_hide_widgets(cr, 0);
 }
