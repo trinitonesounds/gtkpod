@@ -379,6 +379,11 @@ static void thread_play_song() {
     }
 
     player->play_element = gst_element_factory_make("playbin2", "play");
+    if (!player->play_element) {
+        gtkpod_statusbar_message("Failed to play track: Cannot create a play element. Ensure that all gstreamer plugins are installed");
+        return;
+    }
+
     g_object_set(G_OBJECT (player->play_element), "uri", uri, NULL);
     g_object_set(player->play_element, "volume", player->volume_level, NULL);
 
