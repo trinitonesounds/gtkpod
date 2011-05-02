@@ -125,5 +125,5 @@ void gtkpod_log_error(GError **error, gchar *msg) {
     g_set_error (error,
                 GTKPOD_GENERAL_ERROR,                       /* error domain */
                 GTKPOD_GENERAL_ERROR_FAILED,               /* error code */
-                msg);
+		 "%s", msg);
 }
