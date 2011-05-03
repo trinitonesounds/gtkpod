@@ -285,7 +285,12 @@ AM_CONDITIONAL(HAVE_FAAD, test "x$have_faad" = "xyes")
 
 dnl Check for MP4 Headers
 dnl -------------------------------------------------------------
-AC_CHECK_HEADERS([mp4v2/platform.h], have_mp4=yes, have_mp4=no)
+AC_CHECK_HEADERS([mp4v2/mp4v2.h], have_mp4=yes, have_mp4=no)
+if test "x$have_mp4" = "xno"; then
+	dnl rollback to older mp4 library - should help with distros
+	dnl not using 1.9.1 of the mp4v2 library
+	AC_CHECK_HEADERS([mp4.h], have_mp4=yes, have_mp4=no)
+fi
 AC_CHECK_HEADERS([mp4v2/itmf_tags.h], [], [],
 		 [#ifdef HAVE_MP4V2_PLATFORM_H
 		  # include <mp4v2/platform.h>

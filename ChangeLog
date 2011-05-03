@@ -1,3 +1,250 @@
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-01
+
+    Try and improve mp4/m4a support for distros not using libmp4v2 1.9.1
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-01
+
+    Stop segfault when trying to play files with no gsteamer plugins
+    
+    * If gstreamer plugins have not been installed then it is possible to
+      segfault application as the gstreamer factory fails to create a play
+      element
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-04-29
+
+    Shutdown section incorrectly copied from anjuta source
+    
+    * Seems that use of the data object "__propery_shutdown" is only used for
+      debugging purposes and therefore is not required in production application
+    
+    * Not calling unload_all_plugins means that setting the profile sync file to
+      null is an unnecessary workaround
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-04-22
+
+    Tidy up some autotools issues
+    
+    * The library does not need to depend on all the optional libraries; only
+      the plugins need to do that.
+    
+    * configure.ac
+     * Additional libraries should only be made available and not added to the
+       libraries list of dependencies
+    
+    * cover_display
+     * Should depend on curl
+    
+    * details_editor
+     * Should depend on curl
+    
+    * filetype_flac
+     * Should depend on flac
+    
+    * filetype_ogg
+     * Should depend on vorbisfile
+    
+    * media_player
+     * Should depend on gstreamer
+    
+    * plugins.mk
+     * Should append CFLAGS not LIBS
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-04-21
+
+    Incorrect library for ogg vorbis files
+    
+    * Need libvorbisfile not just libvorbis
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-04-21
+
+    Replace gtkpod_warnings causing threading errors
+    
+    * copy_file riddled with warnings and potentially producing lots of dialog
+      boxes. Pass it a GError and display the errors at the end of the operation
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-04-21
+
+    Move and rename filetype_log_error to gtkpod_log_error
+    
+    * Allow function to be used more widely in the application
+
+scorpion <scorpion@falcon15.BIRDS-OF-PREY>	2011-04-17
+
+    dispose the initialised directories when quitting
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-04-21
+
+    Remove superfluous glade includes
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-04-21
+
+    Migrate flac, id3tag and ogg to use pkgconfig files
+    
+    * These libraries all bring pc files with them so unless there is a good
+      reason, it seems more portable to use them rather than search the libraries
+      for header functions.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-03-27
+
+    Update to po files pre-release
+
+Daniele Forsi <daniele@forsi.it>	2011-03-26
+
+    Update Italian translation
+
+Daniele Forsi <daniele@forsi.it>	2011-03-26
+
+    String fixes
+    
+    * libgtkpod/file.c
+     * Make error string translatable
+    
+    * plugins/filetype_mp4/mp4file.c
+     * Fix typos
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-03-22
+
+    Updates for Czech translations
+    
+    * Taken from transiflex, with thanks to supp
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-03-20
+
+    Update the plugin makefiles to publish their libgtkpod dependency
+    
+    * Appears that libgtkpod was not advertised as a needed dependency on the
+      plugin libraries
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-03-17
+
+    Stop infinite display of warning dialog in coverter
+    
+    * If an error occurs in the converter, an error dialog is displayed in the
+      function conversion_scheduler_unlocked. Since this mehtod is called
+      repeatedly every 100ms, then gtkpod will soon run out of resources and
+      crash.
+    
+    * Addition of error page on conversion log window. If an error occurs then
+      append the error to the error page and force the display of the log
+      window.
+    
+    * Record the last error displayed so as not to infinitely repeat text down
+      the error log screen.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-03-15
+
+    Fix save if needed to always save on threshold
+    
+    * file.c
+     * Init a signal that is fired upon the addition of a track
+     * The callback added one to a count for the track's itdb.
+     * When the count reaches the threshold, the itdb is saved.
+     * This is a single point of saving and will always be fired upon track
+       addition regardless of how the track was added, eg. by directory, playlist
+    
+    * Removal of all locations where save is called upon reaching threshold as
+      no longer necessary
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-03-13
+
+    Revert "trial attempt at converting itdb"
+    
+    Not yet ready to push.
+    
+    This reverts commit 1968080128bbc4ded4fe8f31ae420b3b42a5e578.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-03-13
+
+    trial attempt at converting itdb
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-03-13
+
+    Avoid possible syntax crash
+    
+    * If %s contains another % then this may cause a crash when forming
+      a gtkpod_warning
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-03-13
+
+    Refactor filetype getter functions to return GErrors
+    
+    * Rather than display double warning dialogs, have the getter functions
+      populate a GError which is returned to the caller functions. The latter
+      use the message in the GError for augment a more general error message.
+    
+    * Filetype plugins updated to populate the GError.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-03-09
+
+    m4a plugin not initialising mp4 library handle
+    
+    * m4a relies on the mp4v2 library for all its functions. This is initialised
+      using mp4_init to get a handle to the mp4v2 dynamic library
+    
+    * also ensure the handle is disposed when deactivating plugin
+    
+    * this is a mirror of the mp filetype library
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-03-06
+
+    Add extra action to load a selected ipod
+    
+    * With more than one iPod, it is annoying to click load iPods only to find
+      that all iPods try to be loaded rather than just the selected one.
+    
+    * Load iPod toolbar button modified to have a drop down that includes a
+      "load selected ipod" menuitem as well as the "load all ipods".
+    
+    * Default of the button is still to load all ipods as most users will have
+      just the one iPod
+
+Javier Kohen <jkohen@users.sourceforge.net>	2011-03-08
+
+    Increased default value for file_saving_threshold.
+
+Javier Kohen <jkohen@users.sourceforge.net>	2011-03-07
+
+    Use more appropriate values for the number of tracks GtkAdjustment.
+
+Javier Kohen <jkohen@users.sourceforge.net>	2011-03-07
+
+    Revert "Changed auto-save gating to use time based intervals."
+    
+    This reverts commit e98b100c7658bf62901e0658339f3344cf0bf9fc.
+    
+    Conflicts:
+    
+libgtkpod/file.c           
+
+Javier Kohen <jkohen@users.sourceforge.net>	2011-03-07
+
+    Revert "Don't track count of saved files anymore."
+    
+    This reverts commit 63c1dab53811675bf084d1b9194987d35b204c53.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-03-05
+
+    Small fixes to coverart display
+    
+    * cover_display.xml
+     * update_policy changed to discontinuous which will only update the cover
+       display once the user releases the drag of the slider
+    
+    * display_coverart.c
+     * redraw on changing the sort order
+     * fix the slider value when select_cover is called as inaccurate by the
+       4 nulls prepended to the album_key_list
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-03-02
+
+    Auto generate ChangeLog. Update news
+    
+    * Enters quick paragraph in NEWS
+    
+    * generate-ChangeLog.sh
+     * Auto generate the ChangeLog file from the git log
+     * hooked into make dist to auto-gen when creating dist tarballs
+
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-03-02
 
     Clear up error message dialogs that occur during itdb import
