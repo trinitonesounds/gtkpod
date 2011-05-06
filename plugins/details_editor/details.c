@@ -528,10 +528,11 @@ static gint comboentry_index_from_id(const ComboEntry centries[], guint32 id) {
 }
 
 /* initialize a combobox with the corresponding entry strings */
-static void details_setup_combobox(GtkWidget *cb, const ComboEntry centries[]) {
+static void details_setup_combo_box(GtkWidget *cb, const ComboEntry centries[]) {
     const ComboEntry *ce = centries;
     GtkCellRenderer *cell;
     GtkListStore *store;
+    GtkTreeIter iter;
 
     g_return_if_fail (cb);
     g_return_if_fail (centries);
@@ -548,7 +549,10 @@ static void details_setup_combobox(GtkWidget *cb, const ComboEntry centries[]) {
     gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT (cb), cell, "text", 0, NULL);
 
     while (ce->str != NULL) {
-        gtk_combo_box_append_text(GTK_COMBO_BOX (cb), _(ce->str));
+        gtk_list_store_append (store, &iter);
+        gtk_list_store_set (store, &iter,
+                                        0, _(ce->str),
+                                        -1);
         ++ce;
     }
 }
@@ -669,7 +673,7 @@ static void details_setup_widget(T_item item) {
     case T_MEDIA_TYPE:
         buf = g_strdup_printf("details_combobox_%d", item);
         w = gtkpod_builder_xml_get_widget(details_view->xml, buf);
-        details_setup_combobox(w, mediatype_comboentries);
+        details_setup_combo_box(w, mediatype_comboentries);
         g_signal_connect (w, "changed",
                 G_CALLBACK (details_combobox_changed),
                 details_view);

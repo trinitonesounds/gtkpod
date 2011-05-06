@@ -3227,25 +3227,43 @@ gint st_get_sort_tab_number(gchar *text) {
     GtkWidget *mdialog;
     GtkDialog *dialog;
     GtkWidget *combo;
+    GtkCellRenderer *cell;
     gint result;
     gint i, nr, stn;
-    gchar buf[20], *bufp;
+    gchar *bufp;
+    GtkListStore *store;
+    GtkTreeIter iter;
 
     mdialog = gtk_message_dialog_new(GTK_WINDOW (gtkpod_app), GTK_DIALOG_DESTROY_WITH_PARENT,
                                      GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, "%s", text);
 
     dialog = GTK_DIALOG (mdialog);
 
-    combo = gtk_combo_box_new_text();
-    gtk_widget_show(combo);
-    gtk_container_add(GTK_CONTAINER (gtk_dialog_get_content_area(GTK_DIALOG(dialog))), combo);
-
+    store = gtk_list_store_new(1, G_TYPE_STRING);
     stn = prefs_get_int("sort_tab_num");
     /* Create list */
     for (i = 1; i <= stn; ++i) {
-        sprintf(buf, "%d", i);
-        gtk_combo_box_append_text(GTK_COMBO_BOX (combo), buf);
+        bufp = g_strdup_printf("%d", i);
+        gtk_list_store_append(store, &iter);
+        gtk_list_store_set(store, &iter, 0, bufp, -1);
+        g_free(bufp);
     }
+
+    combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
+
+    /* Create cell renderer. */
+    cell = gtk_cell_renderer_text_new();
+
+    /* Pack it to the combo box. */
+    gtk_cell_layout_pack_start( GTK_CELL_LAYOUT(combo), cell, TRUE );
+
+    /* Connect renderer to data source */
+    gtk_cell_layout_set_attributes( GTK_CELL_LAYOUT(combo), cell, "text", 0, NULL );
+
+    gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
+
+    gtk_widget_show_all(combo);
+    gtk_container_add(GTK_CONTAINER (gtk_dialog_get_content_area(GTK_DIALOG(dialog))), combo);
 
     result = gtk_dialog_run(GTK_DIALOG (mdialog));
 
@@ -3254,12 +3272,19 @@ gint st_get_sort_tab_number(gchar *text) {
         nr = -1; /* no selection */
     }
     else {
-        bufp = gtk_combo_box_get_active_text(GTK_COMBO_BOX (combo));
-        nr = atoi(bufp) - 1;
-        last_nr = nr + 1;
+        gtk_combo_box_get_active_iter(GTK_COMBO_BOX(combo), &iter);
+        gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &bufp, -1);
+        if (bufp) {
+            nr = atoi(bufp) - 1;
+            last_nr = nr + 1;
+            g_free(bufp);
+        } else {
+            nr = -1; /* selection failed */
+        }
     }
 
     gtk_widget_destroy(mdialog);
+    g_object_unref(store);
 
     return nr;
 }

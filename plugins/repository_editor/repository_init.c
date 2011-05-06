@@ -104,6 +104,7 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
     gchar buf[PATH_MAX];
     GtkComboBox *cb;
     const IpodInfo *info;
+    GtkTreeIter iter;
 
     g_return_val_if_fail (itdb, FALSE);
 
@@ -174,7 +175,11 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
             g_free(new_mount);
             new_mount = NULL;
         }
-        model = gtk_combo_box_get_active_text(GTK_COMBO_BOX (GET_WIDGET (ii->builder, IID_MODEL_COMBO)));
+
+        g_return_val_if_fail(gtk_combo_box_get_active_iter(cb, &iter), FALSE);
+        gtk_tree_model_get(gtk_combo_box_get_model(cb), &iter, COL_STRING, &model, -1);
+        g_return_val_if_fail(model, FALSE);
+
         if ((strcmp(model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0) || (strlen(model) == 0)) { /* User didn't choose a model */
             g_free(model);
             model = NULL;
@@ -230,6 +235,7 @@ void repository_ipod_init_set_model(iTunesDB *itdb, const gchar *old_model) {
     gchar buf[PATH_MAX];
     GtkComboBox *cb;
     const IpodInfo *info;
+    GtkTreeIter iter;
 
     g_return_if_fail (itdb);
 
@@ -275,7 +281,8 @@ void repository_ipod_init_set_model(iTunesDB *itdb, const gchar *old_model) {
 
     switch (response) {
     case GTK_RESPONSE_OK:
-        model = gtk_combo_box_get_active_text(GTK_COMBO_BOX (GET_WIDGET (builder, SIMD_MODEL_COMBO)));
+        g_return_if_fail(gtk_combo_box_get_active_iter(cb, &iter));
+        gtk_tree_model_get(gtk_combo_box_get_model(cb), &iter, COL_STRING, &model, -1);
         if (!model) {
             gtkpod_warning(_("Could not determine the model you selected -- this could be a bug or incompatibilty in the GTK+ or glade library.\n\n"));
         }
