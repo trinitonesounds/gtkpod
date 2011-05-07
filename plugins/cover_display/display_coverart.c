@@ -623,7 +623,13 @@ static void set_cover_dimensions(Cover_Item *cover, int cover_index, gdouble img
     gint PANEL_WIDTH = 0, PANEL_HEIGHT = 0;
     gint CONTBOX_WIDTH = 0, CONTBOX_HEIGHT = 0;
 
+#if GTK_CHECK_VERSION(2,24,0)
+    PANEL_WIDTH = gdk_window_get_width(gtk_widget_get_window(cdwidget->canvasbox));
+    PANEL_HEIGHT = gdk_window_get_height(gtk_widget_get_window(cdwidget->canvasbox));
+#else
     gdk_drawable_get_size(GDK_DRAWABLE(gtk_widget_get_window(cdwidget->canvasbox)), &PANEL_WIDTH, &PANEL_HEIGHT);
+#endif
+
     gtk_widget_get_size_request(cdwidget->controlbox, &CONTBOX_WIDTH, &CONTBOX_HEIGHT);
 
     // If panel width not been rendered default to minimum
