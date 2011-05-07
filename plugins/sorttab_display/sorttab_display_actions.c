@@ -65,14 +65,14 @@ static void delete_selected_entry(DeleteAction deleteaction, gchar *text) {
 
     entry = st_get_selected_entry(inst);
     if (!entry) {
-        gtkpod_statusbar_message(_("No entry selected in Sort Tab %d"), inst + 1);
+        gtkpod_statusbar_message(_("No entry selected in Filter Tab %d"), inst + 1);
         return;
     }
     st_delete_entry_head(inst, deleteaction);
 }
 
 void on_delete_selected_entry_from_database(GtkAction *action, SorttabDisplayPlugin* plugin) {
-    delete_selected_entry(DELETE_ACTION_DATABASE, _("Remove entry of which sort tab from database?"));
+    delete_selected_entry(DELETE_ACTION_DATABASE, _("Remove entry of which filter tab from database?"));
 }
 
 void on_delete_selected_entry_from_ipod(GtkAction *action, SorttabDisplayPlugin* plugin) {
@@ -104,13 +104,13 @@ void on_update_selected_tab_entry (GtkAction *action, SorttabDisplayPlugin* plug
     TabEntry *entry;
     gint inst;
 
-    inst = st_get_sort_tab_number(_("Update selected entry of which sort tab?"));
+    inst = st_get_sort_tab_number(_("Update selected entry of which filter tab?"));
     if (inst == -1)
         return;
 
     entry = st_get_selected_entry(inst);
     if (!entry) {
-        gtkpod_statusbar_message(_("No entry selected in Sort Tab %d"), inst + 1);
+        gtkpod_statusbar_message(_("No entry selected in Filter Tab %d"), inst + 1);
         return;
     }
 

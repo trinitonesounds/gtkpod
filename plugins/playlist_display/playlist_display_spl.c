@@ -965,6 +965,8 @@ static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
     Playlist *spl_orig;
     iTunesDB *itdb;
     GList *gl;
+    GtkListStore *store;
+    GtkTreeIter iter;
 
     g_return_val_if_fail (spl_window, NULL);
     g_return_val_if_fail (splr, NULL);
@@ -1043,7 +1045,10 @@ static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
         spl_set_combobox(GTK_COMBO_BOX (combobox), splat_inthelast_units_comboentries, splr->fromunits, G_CALLBACK (spl_fromunits_changed), spl_window);
         break;
     case ITDB_SPLAT_PLAYLIST:
-        combobox = gtk_combo_box_text_new();
+        combobox = gtk_combo_box_new();
+        store = gtk_list_store_new(1, G_TYPE_STRING);
+        gtk_combo_box_set_model(GTK_COMBO_BOX(combobox), GTK_TREE_MODEL(store));
+
         gtk_widget_show(combobox);
         gtk_box_pack_start(GTK_BOX (hbox), combobox, TRUE, TRUE, 0);
         pl_ids = g_array_sized_new(TRUE, TRUE, sizeof(guint64), itdb_playlists_number(itdb));
@@ -1052,11 +1057,15 @@ static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
             Playlist *pl = gl->next->data;
             g_return_val_if_fail (pl, NULL);
             if (pl != spl_orig) {
-                gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT (combobox), pl->name);
+                gtk_list_store_append(store, &iter);
+                gtk_list_store_set(store, &iter,
+                                            0, pl->name,
+                                            -1);
                 g_array_append_val (pl_ids, pl->id);
             }
             gl = gl->next;
         }
+        g_object_unref(store);
         g_object_set_data(G_OBJECT (combobox), "spl_rule", splr);
         g_object_set_data_full(G_OBJECT (combobox), "spl_pl_ids", pl_ids, (GDestroyNotify) spl_pl_ids_destroy);
         if (splr->fromvalue == ITDB_SPL_DATE_IDENTIFIER)
