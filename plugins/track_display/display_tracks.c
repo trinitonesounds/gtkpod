@@ -2371,33 +2371,6 @@ gboolean tm_add_filelist(gchar *data, GtkTreePath *path, GtkTreeViewDropPosition
     return TRUE;
 }
 
-/* make the search bar visible or hide it depending on the value set in
- * the prefs
- */
-void display_show_hide_searchbar(void) {
-    GtkWidget *upbutton = gtkpod_builder_xml_get_widget(get_track_builder(), "searchbar_up_button");
-    GtkWidget *searchbar = gtkpod_builder_xml_get_widget(get_track_builder(), "searchbar_hpanel");
-    GtkCheckMenuItem *mi = GTK_CHECK_MENU_ITEM (gtkpod_builder_xml_get_widget (get_track_builder(), "filterbar_menu"));
-    GtkStatusbar *sb = GTK_STATUSBAR (gtkpod_builder_xml_get_widget (get_track_builder(), "tracks_statusbar"));
-
-    g_return_if_fail (upbutton);
-    g_return_if_fail (searchbar);
-    g_return_if_fail (mi);
-    g_return_if_fail (sb);
-
-    if (prefs_get_int("display_search_entry")) {
-        gtk_widget_show_all(searchbar);
-        gtk_widget_hide(upbutton);
-        gtk_check_menu_item_set_active(mi, TRUE);
-    }
-    else {
-        gtk_widget_hide_all(searchbar);
-        gtk_widget_show(upbutton);
-        gtk_widget_set_sensitive(upbutton, TRUE);
-        gtk_check_menu_item_set_active(mi, FALSE);
-    }
-}
-
 void track_display_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data) {
     GList *tracks = tks;
 
