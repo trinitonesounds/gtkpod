@@ -1,6 +1,15 @@
 #!/bin/bash
-top_srcdir=$1
-distdir=$2
+
+if [ $# -eq 0 ]; then
+  top_srcdir="."
+  distdir="."
+elif [ $# -eq 1 ]; then
+  top_srcdir=$1
+  distdir="."
+else
+  top_srcdir=$1
+  distdir=$2
+fi
 
 if [ -f ${distdir}/ChangeLog ]; then
 	chmod u+w ${distdir}/ChangeLog
