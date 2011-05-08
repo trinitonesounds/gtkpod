@@ -1,3 +1,58 @@
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-07
+
+    Removal of libglade requires addition of libxml2
+    
+    * libxml2 is implied in distros like mandriva but not in fedora.
+    
+    * Removal of libglade highlights requirement of libxml2
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-06
+
+    Remove display_search_bar function from track_dsiplay header
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-07
+
+    Migrate gdk_drawable_get_size
+    
+    * For gtk libraries 2.24 and later use gdk_drawable_get_width and height
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-07
+
+    Remove pointless search bar code
+    
+    * Since windowing, it seems pointless to have a preference to show or hide
+      the searchbar, especially since most people will want to see it.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-07
+
+    Remove libgade from configure
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-07
+
+    Migrate combo boxes to remove deprecated code
+    
+    * configure dictates that compile should fail upon use of deprecated functions
+      so migrate deprecated combo box code to make it compatible.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-02
+
+    Correction to formatting strings in gtkpod_log_error
+    
+    * Thanks to Götzg (goetz.waschk AT gmail.com) for the patch
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-01
+
+    Repository creator wizard showing all widgets
+    
+    * Should only display those widgets dependent upon the value of the
+      repository type, ie. local or ipod
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-01
+
+    Update release information
+    
+    * Move from 2.0.0 to 2.0.1
+
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-01
 
     Try and improve mp4/m4a support for distros not using libmp4v2 1.9.1

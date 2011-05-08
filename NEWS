@@ -16,6 +16,14 @@ gtkpod V2.0.1
 	BUGFIX: Allow compiling of m4a and mp4 plugins against older versions of
 					libmp4v2.
 
+	BUGFIX: Formatting strings correction in gtkpod_log_error. Thanks to
+	        Götzg (goetz.waschk AT gmail.com).
+
+	BUGFIX: Remove deprecated gtk code.
+
+  BUGFIX: Final removal of glade dependencies but still need to depend on
+	        libxml2.
+
 gtkpod V2.0.0
 	UI completely reworked with anjuta as the windowing system. Provides
 	major features as plugins that can be added and removed depending upon
