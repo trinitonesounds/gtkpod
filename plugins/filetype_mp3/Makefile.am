@@ -34,7 +34,8 @@ libfiletype_mp3_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 # Plugin dependencies
 libfiletype_mp3_la_LIBADD = \
     $(GTKPOD_LIBS) \
-    $(LIBANJUTA_LIBS)
+    $(LIBANJUTA_LIBS) \
+    $(ID3TAG_LIBS)
 
 EXTRA_DIST = \
 	$(plugin_file).in \

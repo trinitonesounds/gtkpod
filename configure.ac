@@ -138,9 +138,8 @@ PKG_CHECK_MODULES(ID3TAG, id3tag >= 0.15, [have_id3="yes"], [AC_MSG_FAILURE([***
 AM_CONDITIONAL(HAVE_ID3TAG, [test "x$have_id3" = "xyes"])
 if test "x$have_id3" = "xyes"; then
     AC_DEFINE(HAVE_ID3TAG, 1, [Define if you have id3 support])
-    CPPFLAGS="$CPPFLAGS $ID3TAG_CFLAGS"
-    CFLAGS="$CFLAGS $ID3TAG_CFLAGS"
-    LIBS="$LIBS $ID3TAG_LIBS"
+    AC_SUBST(ID3TAG_CFLAGS)
+    AC_SUBST(ID3TAG_LIBS)
 fi
 
 dnl Check for libcurl
