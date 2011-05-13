@@ -334,9 +334,9 @@ GTKPOD_CFLAGS="$CFLAGS"
 AC_SUBST(GTKPOD_CFLAGS)
 AC_SUBST(GTKPOD_LIBS)
 
-GTKPOD_PLUGIN_LDFLAGS="-module -avoid-version -no-undefined"
+LDFLAGS="-no-undefined --as-needed"
+GTKPOD_PLUGIN_LDFLAGS="$LDFLAGS -module -avoid-version"
 AC_SUBST(GTKPOD_PLUGIN_LDFLAGS)
-
 
 
 dnl Setup Plugin directories
