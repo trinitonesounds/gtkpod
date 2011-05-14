@@ -334,7 +334,7 @@ GTKPOD_CFLAGS="$CFLAGS"
 AC_SUBST(GTKPOD_CFLAGS)
 AC_SUBST(GTKPOD_LIBS)
 
-LDFLAGS="-no-undefined --as-needed"
+LDFLAGS="-no-undefined -Wl,--as-needed"
 GTKPOD_PLUGIN_LDFLAGS="$LDFLAGS -module -avoid-version"
 AC_SUBST(GTKPOD_PLUGIN_LDFLAGS)
 
