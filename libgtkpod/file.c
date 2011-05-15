@@ -1674,14 +1674,14 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
  \*------------------------------------------------------------------*/
 
 /* Call the correct tag writing function for the filename @name */
-static gboolean file_write_info(gchar *name, Track *track, GError *error) {
+static gboolean file_write_info(gchar *name, Track *track, GError **error) {
     FileType *filetype;
 
     g_return_val_if_fail (name, FALSE);
     g_return_val_if_fail (track, FALSE);
 
     filetype = determine_filetype(name);
-    return filetype_write_file_info(filetype, name, track, &error);
+    return filetype_write_file_info(filetype, name, track, error);
 }
 
 /* Write tags to file */
@@ -1716,7 +1716,7 @@ gboolean write_tags_to_file(Track *track) {
     }
 
     if (etr->pc_path_locale && (strlen(etr->pc_path_locale) > 0)) {
-        if (! file_write_info(etr->pc_path_locale, track, error)) {
+        if (! file_write_info(etr->pc_path_locale, track, &error)) {
             gchar *msg = g_strdup_printf(_("Couldn't change tags of file: %s"), etr->pc_path_locale);
             if (error) {
                 gtkpod_warning("%s\n%s", msg, error->message);
@@ -1732,7 +1732,7 @@ gboolean write_tags_to_file(Track *track) {
     if (!get_offline(itdb) && track->transferred && track->ipod_path && (g_utf8_strlen(track->ipod_path, -1) > 0)) {
         /* need to get ipod filename */
         ipod_fullpath = get_file_name_from_source(track, SOURCE_IPOD);
-        if (!file_write_info(ipod_fullpath, track, error)) {
+        if (!file_write_info(ipod_fullpath, track, &error)) {
             gchar *msg = g_strdup_printf(_("Couldn't change tags of file: %s\n"), ipod_fullpath);
             if (error) {
                 gtkpod_warning("%s\n%s", msg, error->message);
