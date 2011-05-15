@@ -141,7 +141,7 @@ static gchar * init_dir(char *argv[], gchar *localdir, gchar *fullinstalldir) {
     }
 
     if (!newdir)
-        newdir = fullinstalldir;
+        newdir = g_strdup(fullinstalldir);
     else {
         USING_LOCAL = TRUE;
         g_printf(_("Using local %s directory since program was started from source directory:\n%s\n"), localdir, newdir);
