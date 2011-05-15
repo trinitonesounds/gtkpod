@@ -170,14 +170,17 @@ gboolean filetype_is_audio_filetype(FileType *filetype) {
 }
 
 Track *filetype_no_track_info(const gchar *name, GError **error) {
+    gtkpod_log_error(error, _("Error: Track info for this file type not supported."));
     return NULL;
 }
 
 gboolean filetype_no_write_file_info(const gchar *filename, Track *track, GError **error) {
+    gtkpod_log_error(error, _("Error: Writing track info to files of this file type is not supported."));
     return FALSE;
 }
 
 gboolean filetype_no_soundcheck(const gchar *filename, Track *track, GError **error) {
+    gtkpod_log_error(error, _("Error: Limiting of sound level not supported for this file type."));
     return FALSE;
 }
 
@@ -187,15 +190,19 @@ gchar *filetype_no_gain_cmd() {
 
 gboolean filetype_no_read_lyrics(const gchar *filename, gchar **lyrics, GError **error) {
     gtkpod_log_error (error,
-            _("Error: Lyrics not supported for this file format."));
+            _("Error: Lyrics not supported for this file type."));
     return FALSE;
 }
 
 gboolean filetype_no_write_lyrics(const gchar *filename, const gchar *lyrics, GError **error) {
+    gtkpod_log_error (error,
+                _("Error: Writing of lyrics is not supported for this file type."));
     return FALSE;
 }
 
 gboolean filetype_no_read_gapless(const gchar *filename, Track *track, GError **error) {
+    gtkpod_log_error (error,
+                _("Error: Gapless playback for this file type is not supported."));
     return FALSE;
 }
 

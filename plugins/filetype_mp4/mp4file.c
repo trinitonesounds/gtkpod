@@ -991,7 +991,7 @@ gboolean mp4_write_file_info(const gchar *mp4FileName, Track *track, GError **er
         else {
             gchar *filename = charset_to_utf8(mp4FileName);
             gtkpod_log_error(error,
-                                        g_strdup_printf(_("'%s' does not appear to be a m4a/m4b/m4v/mp4 audio file.\n"), filename));
+                                        g_strdup_printf(_("Only writing to m4a/m4b/m4v/mp4 audio tracks is supported. '%s' is not one of these file formats.\n"), filename));
             g_free(filename);
             result = FALSE;
         }
