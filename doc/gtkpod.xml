@@ -32,7 +32,7 @@
             <sect2>
                 <title>Introduction</title>
                 <para>The iPod has largely been an USB device yet there are older models of iPods that used IEEE1394/ / firewire for their connection interface. Historically, it took something of an effort for linux to recognise the iPod model correctly. However, this situation has greatly improved in recent times where it is now possible to simply plug the iPod into a USB port and have your distro recognise it straight off.</para>
-                <para>gtkpod first and foremost relies on the successful mounting of a recognised iPod. Thus, if the iPod cannot be mounted then gtkpod is NOT going to do it for you! Thus, before firing up gtkpod make sure you can see the filesystem of your iPod at its desginated mount point, eg. /mnt/ipod.</para>
+                <para>gtkpod first and foremost relies on the successful mounting of a recognised iPod. Thus, if the iPod cannot be mounted then gtkpod is NOT going to do it for you! Thus, before firing up gtkpod make sure you can see the filesystem of your iPod at its desginated mount point, eg. /media/ipod.</para>
             </sect2>
             <sect2>
                 <title>Using udev</title><para>For linux distros installed with hal and udev, plugging an ipod in and mounting it becomes a trivial exercise. A device node will normally be created under /dev, eg. /dev/sdc.</para><para>Using udev rules it is possible to "play" and refine this device node to reflect personal requirements. For example, including these udev rules will allow 2 ipods to be loaded at the same time without interfering with one another:</para><programlisting>
@@ -51,7 +51,7 @@ NAME="4gbnano", MODE="0664", OPTIONS="last_rule"]]>
                 <para>
                     The result of this is that the ipod will be located on a device node and this can be mounted manually using the command (performed as root):
                 </para>
-                <programlisting>mount /dev/sdc2 /mnt/ipod</programlisting>
+                <programlisting>mount /dev/sdc2 /media/ipod</programlisting>
                 <para>This assumes an iPod is loaded onto the device /dev/sdc and that it is a 2 partition model. It seems that post-2006, iPods have become 1-partition items.</para>
                 <para>However, it should be noted that moden window managers such as gnome and kde take on the responsibility of managing connected devices. Thus, the result of connecting an iPod will be an icon on the desktop which will either be mounted automatically or can be mounted by the user with a click of the mouse on a popup menu.</para>
             </sect2>
@@ -476,7 +476,7 @@ usb-storage: Status code -75; transferred 0/13 ]]>
                     <para>touch_ip -- denotes the IP address that is assigned to your iPod Touch
                         (e.g. 192.168.0.27). 
                     </para>
-                    <para>touch_mnt -- denotes the mount point to your iPod Touch (i.e. the
+                    <para>touch_media -- denotes the mount point to your iPod Touch (i.e. the
                         directory the iPod is mounted on). 
                     </para>
                     <para>To make effective use of the following you have to jailbreak your iPod Touch first (in order to access it via SSH). This document won't go into detail on this topic. One possibility to do this using a computer that runs Microsoft Windows (XP) can be found at:
@@ -528,16 +528,16 @@ usb-storage: Status code -75; transferred 0/13 ]]>
                     <title id='making-libgpod-aware-of-the-firewire-guid-title'>Making libgpod Aware of the Firewire GUID</title>
                     <para>Mount your iPod Touch via:
                     </para>
-                    <programlisting>sudo sshfs root@touch_ip:Media touch_mnt/ -o allow_other
+                    <programlisting>sudo sshfs root@touch_ip:Media touch_media/ -o allow_other
                     </programlisting>
                     <para>Go to the directory 'iTunes_Control' and create (if it does not already exist) a directory named 'Device':
                     </para>
-                    <programlisting><![CDATA[~/touch_mnt/iTunesControl$ mkdir Device; cd Device
-~/touch_mnt/iTunesControl/Device$ echo "FirewireGuid: 0xfd98145617c113dc" > SysInfo ]]>
+                    <programlisting><![CDATA[~/touch_media/iTunesControl$ mkdir Device; cd Device
+~/touch_media/iTunesControl/Device$ echo "FirewireGuid: 0xfd98145617c113dc" > SysInfo ]]>
                     </programlisting>
                     <para>Test if libgpod is able to retrieve the FWGUID by changing into the 'tests' subdirectory of libgpod's source directory and runnning:
                     </para>
-                    <programlisting>./test-firewire-id touch_mnt/
+                    <programlisting>./test-firewire-id touch_media/
                     </programlisting>
                 </sect3>
                 <sect3 id='gtkpod-revisited'>
@@ -559,11 +559,11 @@ usb-storage: Status code -75; transferred 0/13 ]]>
                 <title id='the-classic-and-nano-three-g-title'>The Classic and Nano3g</title>
                 <para>There are two ways to set up the iPod to make libgpod able to find its firewire id.
                 </para>
-                <para>The 1st one is mostly automated. First, make sure you have libsgutils installed before running configure/autogen.sh. If you built libgpod without it, install it and run configure/make/make install. You should now have an ipod-read-sysinfo-extended tool available. Run it with the iPod device path (eg /dev/sda) and the iPod mount point (eg /mnt/ipod) as arguments. This may require root privileges. ipod-read-sysinfo-extended will read an XMLfile from the iPod and write it as /mnt/ipod/iPod_Control/Device/SysInfoExtended. See http://ipodlinux.org/Device_Information for more details about the method used.
+                <para>The 1st one is mostly automated. First, make sure you have libsgutils installed before running configure/autogen.sh. If you built libgpod without it, install it and run configure/make/make install. You should now have an ipod-read-sysinfo-extended tool available. Run it with the iPod device path (eg /dev/sda) and the iPod mount point (eg /media/ipod) as arguments. This may require root privileges. ipod-read-sysinfo-extended will read an XMLfile from the iPod and write it as /media/ipod/iPod_Control/Device/SysInfoExtended. See http://ipodlinux.org/Device_Information for more details about the method used.
                 </para>
                 <para>Having that file is enough for libgpod to figure out the iPod firewire id.
                 </para>
-                <para>The 2nd method requires more manual intervention. First, you need to get your firewire id manually. To do that, run "sudo lsusb -v | grep -i Serial" (without the "") with your iPod plugged in, this should print a 16 character long string like 00A1234567891231. For an iPod Touch, this number will be much longer than 16 characters, the firewire ID is constituted by the first 16 characters. Once you have that number, create/edit /mnt/ipod/iPod_Control/Device/SysInfo (if your iPod is mounted at /mnt/ipod). Add to that file the line below:
+                <para>The 2nd method requires more manual intervention. First, you need to get your firewire id manually. To do that, run "sudo lsusb -v | grep -i Serial" (without the "") with your iPod plugged in, this should print a 16 character long string like 00A1234567891231. For an iPod Touch, this number will be much longer than 16 characters, the firewire ID is constituted by the first 16 characters. Once you have that number, create/edit /media/ipod/iPod_Control/Device/SysInfo (if your iPod is mounted at /media/ipod). Add to that file the line below:
                 </para>
                 <programlisting>FirewireGuid: 0xffffffffffffffff
                 </programlisting>

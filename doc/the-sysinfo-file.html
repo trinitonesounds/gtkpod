@@ -506,7 +506,7 @@ dd.answer div.label { float: left; }
 <p class="para block block-first">touch_ip -- denotes the IP address that is assigned to your iPod Touch
                         (e.g. 192.168.0.27). 
                     </p>
-<p class="para block">touch_mnt -- denotes the mount point to your iPod Touch (i.e. the
+<p class="para block">touch_media -- denotes the mount point to your iPod Touch (i.e. the
                         directory the iPod is mounted on). 
                     </p>
 <p class="para block">To make effective use of the following you have to jailbreak your iPod Touch first (in order to access it via SSH). This document won't go into detail on this topic. One possibility to do this using a computer that runs Microsoft Windows (XP) can be found at:
@@ -558,16 +558,15 @@ dd.answer div.label { float: left; }
 <a name="making-libgpod-aware-of-the-firewire-guid"></a><div class="header"><h3 class="sect3 title"><span class="title"><a name="making-libgpod-aware-of-the-firewire-guid-title"></a><span class="label">1.4.1.4. </span>Making libgpod Aware of the Firewire GUID</span></h3></div>
 <p class="para block block-first">Mount your iPod Touch via:
                     </p>
-<div class=" block programlisting block-indent"><pre class="programlisting">sudo sshfs root@touch_ip:Media touch_mnt/ -o allow_other
+<div class=" block programlisting block-indent"><pre class="programlisting">sudo sshfs root@touch_ip:Media touch_media/ -o allow_other
                     </pre></div>
 <p class="para block">Go to the directory 'iTunes_Control' and create (if it does not already exist) a directory named 'Device':
                     </p>
-<div class=" block programlisting block-indent"><pre class="programlisting">~/touch_mnt/iTunesControl$ mkdir Device; cd Device
-~/touch_mnt/iTunesControl/Device$ echo "FirewireGuid: 0xfd98145617c113dc" &gt; SysInfo 
+<div class=" block programlisting block-indent"><pre class="programlisting">~/touch_media/iTunesControl$ mkdir Device; cd Device ~/touch_media/iTunesControl/Device$ echo "FirewireGuid: 0xfd98145617c113dc" &gt; SysInfo
                     </pre></div>
 <p class="para block">Test if libgpod is able to retrieve the FWGUID by changing into the 'tests' subdirectory of libgpod's source directory and runnning:
                     </p>
-<div class=" block programlisting block-indent"><pre class="programlisting">./test-firewire-id touch_mnt/
+<div class=" block programlisting block-indent"><pre class="programlisting">./test-firewire-id touch_media/
                     </pre></div>
 </div>
 <div class="division sect3">
@@ -588,11 +587,11 @@ dd.answer div.label { float: left; }
 <a name="the-classic-and-nano-three-g"></a><div class="header"><h2 class="sect2 title"><span class="title"><a name="the-classic-and-nano-three-g-title"></a><span class="label">1.4.2. </span>The Classic and Nano3g</span></h2></div>
 <p class="para block block-first">There are two ways to set up the iPod to make libgpod able to find its firewire id.
                 </p>
-<p class="para block">The 1st one is mostly automated. First, make sure you have libsgutils installed before running configure/autogen.sh. If you built libgpod without it, install it and run configure/make/make install. You should now have an ipod-read-sysinfo-extended tool available. Run it with the iPod device path (eg /dev/sda) and the iPod mount point (eg /mnt/ipod) as arguments. This may require root privileges. ipod-read-sysinfo-extended will read an XMLfile from the iPod and write it as /mnt/ipod/iPod_Control/Device/SysInfoExtended. See http://ipodlinux.org/Device_Information for more details about the method used.
+<p class="para block">The 1st one is mostly automated. First, make sure you have libsgutils installed before running configure/autogen.sh. If you built libgpod without it, install it and run configure/make/make install. You should now have an ipod-read-sysinfo-extended tool available. Run it with the iPod device path (eg /dev/sda) and the iPod mount point (eg /media/ipod) as arguments. This may require root privileges. ipod-read-sysinfo-extended will read an XMLfile from the iPod and write it as /media/ipod/iPod_Control/Device/SysInfoExtended. See http://ipodlinux.org/Device_Information for more details about the method used.
                 </p>
 <p class="para block">Having that file is enough for libgpod to figure out the iPod firewire id.
                 </p>
-<p class="para block">The 2nd method requires more manual intervention. First, you need to get your firewire id manually. To do that, run "sudo lsusb -v | grep -i Serial" (without the "") with your iPod plugged in, this should print a 16 character long string like 00A1234567891231. For an iPod Touch, this number will be much longer than 16 characters, the firewire ID is constituted by the first 16 characters. Once you have that number, create/edit /mnt/ipod/iPod_Control/Device/SysInfo (if your iPod is mounted at /mnt/ipod). Add to that file the line below:
+<p class="para block">The 2nd method requires more manual intervention. First, you need to get your firewire id manually. To do that, run "sudo lsusb -v | grep -i Serial" (without the "") with your iPod plugged in, this should print a 16 character long string like 00A1234567891231. For an iPod Touch, this number will be much longer than 16 characters, the firewire ID is constituted by the first 16 characters. Once you have that number, create/edit /media/ipod/iPod_Control/Device/SysInfo (if your iPod is mounted at /media/ipod). Add to that file the line below:
                 </p>
 <div class=" block programlisting block-indent"><pre class="programlisting">FirewireGuid: 0xffffffffffffffff
                 </pre></div>

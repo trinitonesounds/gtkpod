@@ -488,7 +488,7 @@ dd.answer div.label { float: left; }
 <div class="division sect2">
 <div class="header"><h2 class="sect2 title"><span class="title"><span class="label">1.1.1. </span>Introduction</span></h2></div>
 <p class="para block block-first">The iPod has largely been an USB device yet there are older models of iPods that used IEEE1394/ / firewire for their connection interface. Historically, it took something of an effort for linux to recognise the iPod model correctly. However, this situation has greatly improved in recent times where it is now possible to simply plug the iPod into a USB port and have your distro recognise it straight off.</p>
-<p class="para block">gtkpod first and foremost relies on the successful mounting of a recognised iPod. Thus, if the iPod cannot be mounted then gtkpod is NOT going to do it for you! Thus, before firing up gtkpod make sure you can see the filesystem of your iPod at its desginated mount point, eg. /mnt/ipod.</p>
+<p class="para block">gtkpod first and foremost relies on the successful mounting of a recognised iPod. Thus, if the iPod cannot be mounted then gtkpod is NOT going to do it for you! Thus, before firing up gtkpod make sure you can see the filesystem of your iPod at its desginated mount point, eg. /media/ipod.</p>
 </div>
 <div class="division sect2">
 <div class="header"><h2 class="sect2 title"><span class="title"><span class="label">1.1.2. </span>Using udev</span></h2></div>
@@ -509,7 +509,7 @@ NAME="4gbnano", MODE="0664", OPTIONS="last_rule"
 <p class="para block block-first">
                     The result of this is that the ipod will be located on a device node and this can be mounted manually using the command (performed as root):
                 </p>
-<div class=" block programlisting block-indent"><pre class="programlisting">mount /dev/sdc2 /mnt/ipod</pre></div>
+<div class=" block programlisting block-indent"><pre class="programlisting">mount /dev/sdc2 /media/ipod</pre></div>
 <p class="para block">This assumes an iPod is loaded onto the device /dev/sdc and that it is a 2 partition model. It seems that post-2006, iPods have become 1-partition items.</p>
 <p class="para block">However, it should be noted that moden window managers such as gnome and kde take on the responsibility of managing connected devices. Thus, the result of connecting an iPod will be an icon on the desktop which will either be mounted automatically or can be mounted by the user with a click of the mouse on a popup menu.</p>
 </div>
