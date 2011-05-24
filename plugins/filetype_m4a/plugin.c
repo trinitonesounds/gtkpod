@@ -84,6 +84,7 @@ static void m4a_filetype_iface_init(FileTypeInterface *iface) {
     iface->description = _("M4A audio file type");
     iface->name = "m4a";
     iface->suffixes = g_list_append(iface->suffixes, "m4a");
+    iface->suffixes = g_list_append(iface->suffixes, "m4b");
     iface->suffixes = g_list_append(iface->suffixes, "m4p");
     iface->suffixes = g_list_append(iface->suffixes, "aac");
 
