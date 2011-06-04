@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-08 21:07+0100\n"
+"POT-Creation-Date: 2011-06-04 23:42+0000\n"
 "PO-Revision-Date: 2010-08-08 12:50+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@comhem.se>\n"
 "Language-Team: Svenska <sv@li.org>\n"
@@ -326,12 +326,12 @@ msgid ""
 "%s\n"
 msgstr ""
 
-#: ../libgtkpod/file.c:56
+#: ../libgtkpod/file.c:57
 #, fuzzy
 msgid "Unknown error"
 msgstr "Okänd"
 
-#: ../libgtkpod/file.c:217
+#: ../libgtkpod/file.c:219
 #, c-format
 msgid ""
 "'%s' is a directory, not a playlist file.\n"
@@ -340,7 +340,7 @@ msgstr ""
 "'%s' är en katalog, inte en spellistefil.\n"
 "\n"
 
-#: ../libgtkpod/file.c:231
+#: ../libgtkpod/file.c:233
 #, c-format
 msgid ""
 "'%s' is a not a known playlist file.\n"
@@ -349,43 +349,43 @@ msgstr ""
 "'%s' är inte en känd spellistefil.\n"
 "\n"
 
-#: ../libgtkpod/file.c:239 ../plugins/exporter/file_export.c:236
+#: ../libgtkpod/file.c:241 ../plugins/exporter/file_export.c:236
 #: ../plugins/filetype_ogg/oggfile.c:67 ../plugins/filetype_wav/wavfile.c:99
 #, c-format
 msgid "Could not open '%s' for reading.\n"
 msgstr "Kunde inte öppna '%s' för läsning.\n"
 
-#: ../libgtkpod/file.c:319
+#: ../libgtkpod/file.c:320
 #, c-format
 msgid "Skipping '%s' because it is a directory.\n"
 msgstr "Hoppar över '%s' eftersom det är en katalog.\n"
 
-#: ../libgtkpod/file.c:323
+#: ../libgtkpod/file.c:326
 #, c-format
 msgid "Skipping '%s' to avoid adding playlist file recursively\n"
 msgstr ""
 "Hoppar över '%s' för att undvika att spellistfiler läggs till rekursivt.\n"
 
-#: ../libgtkpod/file.c:549
+#: ../libgtkpod/file.c:585
 #, c-format
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr "Okänd beteckning '%s' i mallen '%s'\n"
 
-#: ../libgtkpod/file.c:829
+#: ../libgtkpod/file.c:865
 #, c-format
 msgid "Could not create '%s'"
 msgstr "Kunde inte skapa '%s'"
 
-#: ../libgtkpod/file.c:863
+#: ../libgtkpod/file.c:899
 msgid "Error creating thumbnail file"
 msgstr "Fel när miniatyrbildsfil skulle skapas"
 
-#: ../libgtkpod/file.c:891 ../libgtkpod/misc.c:967
+#: ../libgtkpod/file.c:927 ../libgtkpod/misc.c:967
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
 msgstr "Okänd beteckning '%%%c' i mallen '%s'"
 
-#: ../libgtkpod/file.c:911
+#: ../libgtkpod/file.c:947
 #, fuzzy, c-format
 msgid ""
 "Unable to start video thumbnail generator\n"
@@ -394,18 +394,18 @@ msgstr ""
 "Kunde inte starta miniatyrbildsprogrammet för video\n"
 "(kommandoraden var: '%s')"
 
-#: ../libgtkpod/file.c:914
+#: ../libgtkpod/file.c:950
 #, c-format
 msgid "Thumbnail generator returned status %d"
 msgstr "Miniatyrbildsprogrammet returnerade status %d"
 
-#: ../libgtkpod/file.c:1039
+#: ../libgtkpod/file.c:1074
 #, c-format
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
 msgstr "Följande spår kunde inte behandlas (filen finns inte): '%s'\n"
 
-#: ../libgtkpod/file.c:1055
+#: ../libgtkpod/file.c:1090
 #, c-format
 msgid ""
 "The filetype '%s' is not currently supported.\n"
@@ -413,7 +413,7 @@ msgid ""
 "If you have a plugin that supports this filetype then please enable it."
 msgstr ""
 
-#: ../libgtkpod/file.c:1062
+#: ../libgtkpod/file.c:1098
 #, fuzzy, c-format
 msgid ""
 "No track information could be retrieved from the file %s due to the "
@@ -422,7 +422,7 @@ msgid ""
 "%s"
 msgstr "Ingen information kunde hämtas från mserv för följande spår"
 
-#: ../libgtkpod/file.c:1068
+#: ../libgtkpod/file.c:1104
 #, fuzzy, c-format
 msgid ""
 "No track information could be retrieved from the file %s due to the "
@@ -431,20 +431,20 @@ msgid ""
 "An error was not returned."
 msgstr "Ingen information kunde hämtas från mserv för följande spår"
 
-#: ../libgtkpod/file.c:1174 ../plugins/mserv/mserv.c:199
+#: ../libgtkpod/file.c:1210 ../plugins/mserv/mserv.c:199
 msgid "Nothing to update"
 msgstr "Ingenting att uppdatera"
 
-#: ../libgtkpod/file.c:1193
+#: ../libgtkpod/file.c:1229
 #, c-format
 msgid "Updating %s"
 msgstr "Uppdaterar %s"
 
-#: ../libgtkpod/file.c:1205
+#: ../libgtkpod/file.c:1241
 msgid "Updated selected tracks with info from file."
 msgstr "Uppdaterar markerade spår med information från fil."
 
-#: ../libgtkpod/file.c:1221
+#: ../libgtkpod/file.c:1257
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -453,11 +453,11 @@ msgstr[1] "Följande %d spår kunde inte uppdateras"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1224
+#: ../libgtkpod/file.c:1260
 msgid "Failed Track Update"
 msgstr "Uppdatering av spår misslyckades"
 
-#: ../libgtkpod/file.c:1278
+#: ../libgtkpod/file.c:1314
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -466,46 +466,51 @@ msgstr[1] "Följande %d spår har uppdaterats"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1281
+#: ../libgtkpod/file.c:1317
 msgid "Successful Track Update"
 msgstr "Uppdatering av spår lyckades"
 
-#: ../libgtkpod/file.c:1368
+#: ../libgtkpod/file.c:1404
 msgid "no local filename available, file on the iPod will be used instead"
 msgstr "inget lokalt filnamn tillgängligt, filen på iPod används istället"
 
-#: ../libgtkpod/file.c:1372
+#: ../libgtkpod/file.c:1408
 msgid "no local filename available and copy on iPod cannot be found"
 msgstr "inget lokalt filnamn tillgängligt och kopian på iPod kan inte hittas"
 
-#: ../libgtkpod/file.c:1375 ../libgtkpod/file.c:1388
+#: ../libgtkpod/file.c:1411 ../libgtkpod/file.c:1424
 msgid "no local filename available"
 msgstr "inget lokalt filnamn tillgängligt"
 
-#: ../libgtkpod/file.c:1381
+#: ../libgtkpod/file.c:1417
 msgid "local file could not be found, file on the iPod will be used instead"
 msgstr "den lokala filen kunde inte hittas, filen på iPod används istället"
 
-#: ../libgtkpod/file.c:1385
+#: ../libgtkpod/file.c:1421
 msgid "local file as well as copy on the iPod cannot be found"
 msgstr "den lokala filen samt kopian på iPod kan inte hittas"
 
 #. update not successful -- log this track for later display
-#: ../libgtkpod/file.c:1470
+#: ../libgtkpod/file.c:1506
 msgid "update failed (format not supported?)"
 msgstr "uppdatering misslyckades (formatet stöds kanske inte)"
 
-#: ../libgtkpod/file.c:1537 ../libgtkpod/misc_playlist.c:742
+#: ../libgtkpod/file.c:1566
+#, c-format
+msgid "File type of %s is not recognised"
+msgstr ""
+
+#: ../libgtkpod/file.c:1574 ../libgtkpod/misc_playlist.c:742
 #, c-format
 msgid "Processing '%s'..."
 msgstr "Behandlar '%s'..."
 
-#: ../libgtkpod/file.c:1543
+#: ../libgtkpod/file.c:1580
 #, c-format
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "Hoppar över '%s' eftersom det motsvarar filmasker att utesluta.\n"
 
-#: ../libgtkpod/file.c:1647 ../libgtkpod/misc_track.c:1620
+#: ../libgtkpod/file.c:1684 ../libgtkpod/misc_track.c:1620
 #: ../libgtkpod/misc_track.c:1716
 #, c-format
 msgid ""
@@ -515,41 +520,41 @@ msgstr ""
 "Podradiosändning finns redan: '%s'\n"
 "\n"
 
-#: ../libgtkpod/file.c:1721
+#: ../libgtkpod/file.c:1758
 #, fuzzy, c-format
 msgid "Couldn't change tags of file: %s"
 msgstr "Kunde inte ändra taggar för filen: %s\n"
 
-#: ../libgtkpod/file.c:1737
+#: ../libgtkpod/file.c:1774
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "Kunde inte ändra taggar för filen: %s\n"
 
-#: ../libgtkpod/file.c:1829
+#: ../libgtkpod/file.c:1866
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr "Kunde inte öppna '%s' för läsning och skrivning.\n"
 
-#: ../libgtkpod/file.c:1834
+#: ../libgtkpod/file.c:1871
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr "Kunde inte låsa '%s'.\n"
 
 #. error!
-#: ../libgtkpod/file.c:1849 ../libgtkpod/file.c:1857 ../libgtkpod/file.c:1867
-#: ../libgtkpod/file.c:1874
+#: ../libgtkpod/file.c:1886 ../libgtkpod/file.c:1894 ../libgtkpod/file.c:1904
+#: ../libgtkpod/file.c:1911
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr "Felaktig rad i '%s': %s\n"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1896
+#: ../libgtkpod/file.c:1933
 msgid "Remove offline playcounts?"
 msgstr "Ta bort nerkopplade spelningsantal?"
 
 #. title
-#: ../libgtkpod/file.c:1897
+#: ../libgtkpod/file.c:1934
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
@@ -558,17 +563,17 @@ msgstr ""
 "Klicka på 'Ok' för att ta bort dem från filen med nerkopplade "
 "spelningsantal, eller 'Avbryt' för att behålla dem."
 
-#: ../libgtkpod/file.c:1912
+#: ../libgtkpod/file.c:1949
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr "Fel vid skrivning till '%s'.\n"
 
-#: ../libgtkpod/file.c:1941
+#: ../libgtkpod/file.c:1978
 #, c-format
 msgid "Failed to read sound check from track because"
 msgstr ""
 
-#: ../libgtkpod/file.c:1948
+#: ../libgtkpod/file.c:1985
 #, c-format
 msgid ""
 "%s\n"
@@ -576,7 +581,7 @@ msgid ""
 "filetype of %s is not recognised."
 msgstr ""
 
-#: ../libgtkpod/file.c:1953 ../libgtkpod/file.c:1955
+#: ../libgtkpod/file.c:1990 ../libgtkpod/file.c:1992
 #, fuzzy, c-format
 msgid ""
 "%s\n"
@@ -584,14 +589,14 @@ msgid ""
 "%s"
 msgstr "%s - %s"
 
-#: ../libgtkpod/file.c:1983
+#: ../libgtkpod/file.c:2020
 #, c-format
 msgid ""
 "Error: Could not determine filetype for file at path: %s.\n"
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file.c:1989 ../libgtkpod/file.c:1994
+#: ../libgtkpod/file.c:2026 ../libgtkpod/file.c:2031
 #, c-format
 msgid ""
 "Error: Failed to read lyrics because:\n"
@@ -599,16 +604,16 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../libgtkpod/file.c:1998
+#: ../libgtkpod/file.c:2035
 #, c-format
 msgid "Error: Unable to get filename from path"
 msgstr ""
 
-#: ../libgtkpod/file.c:2029
+#: ../libgtkpod/file.c:2066
 msgid "Error:"
 msgstr ""
 
-#: ../libgtkpod/file.c:2043
+#: ../libgtkpod/file.c:2080
 #, c-format
 msgid ""
 "iPod File not available and ID3 saving disabled in options, cannot save "
@@ -619,7 +624,7 @@ msgstr ""
 "inställningarna, kan inte spara sångtext i: %s.\n"
 "\n"
 
-#: ../libgtkpod/file.c:2052
+#: ../libgtkpod/file.c:2089
 #, fuzzy, c-format
 msgid ""
 "Lyrics not written, file type cannot be determined (%s).\n"
@@ -628,7 +633,7 @@ msgstr ""
 "Sångtexten skrevs inte, filnamnet inte tillgängligt (%s).\n"
 "\n"
 
-#: ../libgtkpod/file.c:2059
+#: ../libgtkpod/file.c:2096
 #, fuzzy, c-format
 msgid ""
 "Lyrics not written due to the error:\n"
@@ -638,7 +643,7 @@ msgstr ""
 "Sångtexten skrevs inte, filnamnet inte tillgängligt (%s).\n"
 "\n"
 
-#: ../libgtkpod/file.c:2064
+#: ../libgtkpod/file.c:2101
 #, fuzzy, c-format
 msgid ""
 "Lyrics not written due to the error:\n"
@@ -1001,30 +1006,30 @@ msgstr "Hittade inte iPod-katalogstrykturen"
 msgid "Create directory structure"
 msgstr "Skapa katalogstruktur"
 
-#: ../libgtkpod/file_itunesdb.c:1092
+#: ../libgtkpod/file_itunesdb.c:1089
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr "Kunde inte öppna \"%s\" för att skriva utökad information.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1104
+#: ../libgtkpod/file_itunesdb.c:1101
 msgid "Aborted writing of extended info.\n"
 msgstr "Avbröt skrivning av utökad information.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1233
+#: ../libgtkpod/file_itunesdb.c:1230
 #, fuzzy, c-format
 msgid "%d%%  %s"
 msgstr "%d %%"
 
-#: ../libgtkpod/file_itunesdb.c:1244
+#: ../libgtkpod/file_itunesdb.c:1241
 #, fuzzy, c-format
 msgid "%d%% (%d/%d  %d:%02d:%02d left)  %s"
 msgstr "%d %% (%d/%d  %d:%02d:%02d kvar)"
 
-#: ../libgtkpod/file_itunesdb.c:1289
+#: ../libgtkpod/file_itunesdb.c:1286
 msgid "Status: Deleting File"
 msgstr "Status: Tar bort fil"
 
-#: ../libgtkpod/file_itunesdb.c:1345
+#: ../libgtkpod/file_itunesdb.c:1342
 #, c-format
 msgid ""
 "Could not remove the following file: '%s'\n"
@@ -1033,7 +1038,7 @@ msgstr ""
 "Kunde inte ta bort följande fil: '%s'\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:1440
+#: ../libgtkpod/file_itunesdb.c:1437
 msgid ""
 "The following track could not be converted successfully:\n"
 "\n"
@@ -1047,7 +1052,7 @@ msgstr[1] ""
 "Följande spår kunde inte konverteras med lyckat resultat:\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:1446
+#: ../libgtkpod/file_itunesdb.c:1443
 msgid ""
 "The following track could not be transferred successfully:\n"
 "\n"
@@ -1063,12 +1068,12 @@ msgstr[1] ""
 
 #. ID
 #. modal,
-#: ../libgtkpod/file_itunesdb.c:1453 ../libgtkpod/gtkpod_app_iface.c:249
+#: ../libgtkpod/file_itunesdb.c:1450 ../libgtkpod/gtkpod_app_iface.c:249
 msgid "Warning"
 msgstr "Varning"
 
 #. title
-#: ../libgtkpod/file_itunesdb.c:1454
+#: ../libgtkpod/file_itunesdb.c:1451
 msgid ""
 "The iPod could not be ejected. Please fix the problems mentioned below and "
 "then eject the iPod again. Pressing 'OK' will re-schedule the failed tracks "
@@ -1078,22 +1083,22 @@ msgstr ""
 "ut iPod igen. Att klicka på 'Ok' gör att misslyckade spår schemaläggs för "
 "konvertering och överföring igen."
 
-#: ../libgtkpod/file_itunesdb.c:1502
+#: ../libgtkpod/file_itunesdb.c:1499
 #, c-format
 msgid "Saving: waiting for %d tracks to be copied"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1506
+#: ../libgtkpod/file_itunesdb.c:1503
 #, fuzzy, c-format
 msgid "Saving: waiting for %d tracks to convert"
 msgstr "Status: Väntar på att konvertering ska bli klar"
 
-#: ../libgtkpod/file_itunesdb.c:1509
+#: ../libgtkpod/file_itunesdb.c:1506
 #, fuzzy, c-format
 msgid "Saving: finished track transfer"
 msgstr "Status: Överföring klar"
 
-#: ../libgtkpod/file_itunesdb.c:1541
+#: ../libgtkpod/file_itunesdb.c:1538
 #, c-format
 msgid ""
 "One track could not be transferred because your iPod is full. Either delete "
@@ -1112,7 +1117,7 @@ msgstr[1] ""
 "spår eller skapa utrymme på iPod på något annat sätt innan iPod matas ut "
 "igen."
 
-#: ../libgtkpod/file_itunesdb.c:1609
+#: ../libgtkpod/file_itunesdb.c:1606
 #, c-format
 msgid ""
 "You did not import the existing iTunesDB ('%s'). This is most likely "
@@ -1127,19 +1132,19 @@ msgstr ""
 "Om du hoppar över lagring, kan du importera befintlig databas innan du "
 "använder den här funktionen igen.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1613 ../libgtkpod/misc_playlist.c:836
+#: ../libgtkpod/file_itunesdb.c:1610 ../libgtkpod/misc_playlist.c:836
 msgid "Existing iTunes database not imported"
 msgstr "Befintlig iTunes-databas importerades inte"
 
-#: ../libgtkpod/file_itunesdb.c:1613 ../libgtkpod/misc_playlist.c:836
+#: ../libgtkpod/file_itunesdb.c:1610 ../libgtkpod/misc_playlist.c:836
 msgid "Proceed anyway"
 msgstr "Fortsätt ändå"
 
-#: ../libgtkpod/file_itunesdb.c:1613
+#: ../libgtkpod/file_itunesdb.c:1610
 msgid "Skip storing"
 msgstr "Hoppa över lagring"
 
-#: ../libgtkpod/file_itunesdb.c:1637
+#: ../libgtkpod/file_itunesdb.c:1634
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
@@ -1147,26 +1152,26 @@ msgstr ""
 "Katalogstrukturen i iPod måste finnas innan synkronisering av iPod kan "
 "utföras.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1644
+#: ../libgtkpod/file_itunesdb.c:1641
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr "Vissa spår kunde inte tas bort från iPod. Export avbruten."
 
-#: ../libgtkpod/file_itunesdb.c:1658
+#: ../libgtkpod/file_itunesdb.c:1655
 #, c-format
 msgid "Now writing database '%s'. Please wait..."
 msgstr "Skriver nu databas '%s'. Vänta..."
 
-#: ../libgtkpod/file_itunesdb.c:1705
+#: ../libgtkpod/file_itunesdb.c:1702
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "Filen med utökad information inte borttagen: '%s'"
 
-#: ../libgtkpod/file_itunesdb.c:1811
+#: ../libgtkpod/file_itunesdb.c:1808
 #, c-format
 msgid "%s: Database saved"
 msgstr "%s: Databas sparad"
 
-#: ../libgtkpod/file_itunesdb.c:1814
+#: ../libgtkpod/file_itunesdb.c:1811
 #, c-format
 msgid "%s: Changes saved"
 msgstr "%s: Ändringar sparade"
@@ -1175,8 +1180,37 @@ msgstr "%s: Ändringar sparade"
 msgid "Set Cover"
 msgstr "Ange omslag"
 
-#: ../libgtkpod/filetype_iface.c:190
-msgid "Error: Lyrics not supported for this file format."
+#: ../libgtkpod/filetype_iface.c:173
+#, fuzzy
+msgid "Error: Track info for this file type not supported."
+msgstr ""
+"Normalisering misslyckades: Filtypen stöds inte (%s).\n"
+"\n"
+
+#: ../libgtkpod/filetype_iface.c:178
+#, fuzzy
+msgid "Error: Writing track info to files of this file type is not supported."
+msgstr ""
+"Att skriva till videofiler stöds inte än (%s).\n"
+"\n"
+
+#: ../libgtkpod/filetype_iface.c:183
+msgid "Error: Limiting of sound level not supported for this file type."
+msgstr ""
+
+#: ../libgtkpod/filetype_iface.c:193
+#, fuzzy
+msgid "Error: Lyrics not supported for this file type."
+msgstr ""
+"Sångtext hittades inte, filen inte tillgänglig (%s).\n"
+"\n"
+
+#: ../libgtkpod/filetype_iface.c:199
+msgid "Error: Writing of lyrics is not supported for this file type."
+msgstr ""
+
+#: ../libgtkpod/filetype_iface.c:205
+msgid "Error: Gapless playback for this file type is not supported."
 msgstr ""
 
 #: ../libgtkpod/gp_itdb.c:808
@@ -1874,7 +1908,7 @@ msgstr "Kontrollerar iPod-filer med kända filer i databasen"
 msgid "Orphaned"
 msgstr "Övergivna"
 
-#: ../libgtkpod/misc_playlist.c:948
+#: ../libgtkpod/misc_playlist.c:950
 #, c-format
 msgid ""
 "The following orphaned file had already been added to the iPod again. It "
@@ -1887,12 +1921,12 @@ msgstr ""
 "%s\n"
 "\n"
 
-#: ../libgtkpod/misc_playlist.c:973
+#: ../libgtkpod/misc_playlist.c:975
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Processing..."
 msgstr "Hittade %d övergivna filer och %d spår med saknade filer. Behandlar..."
 
-#: ../libgtkpod/misc_playlist.c:993
+#: ../libgtkpod/misc_playlist.c:995
 #, c-format
 msgid ""
 "The following dangling track has a file on PC.\n"
@@ -1911,7 +1945,7 @@ msgstr[1] ""
 "Klicka på Ok för att överföra filerna vid nästa synkronisering. Avbryt för "
 "att lämna dem som de är."
 
-#: ../libgtkpod/misc_playlist.c:998
+#: ../libgtkpod/misc_playlist.c:1000
 #, c-format
 msgid ""
 "The following dangling track doesn't have file on PC. \n"
@@ -1928,27 +1962,27 @@ msgstr[1] ""
 
 #. we want unique window for each
 #. gboolean modal,
-#: ../libgtkpod/misc_playlist.c:1004
+#: ../libgtkpod/misc_playlist.c:1006
 msgid "Dangling Tracks"
 msgstr "Spår med saknade filer"
 
-#: ../libgtkpod/misc_playlist.c:1027
+#: ../libgtkpod/misc_playlist.c:1029
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Done."
 msgstr "Hittade %d övergivna filer och %d spår med saknade filer. Klar."
 
-#: ../libgtkpod/misc_playlist.c:1064
+#: ../libgtkpod/misc_playlist.c:1066
 #, c-format
 msgid "Removed all %d tracks from the iPod"
 msgstr "Tog bort alla %d spår från iPod"
 
-#: ../libgtkpod/misc_playlist.c:1067
+#: ../libgtkpod/misc_playlist.c:1069
 #, c-format
 msgid "Removed all podcasts from the iPod"
 msgstr "Tog bort alla podradiosändningar från iPod"
 
 #. first use playlist name
-#: ../libgtkpod/misc_playlist.c:1071 ../libgtkpod/misc_playlist.c:1126
+#: ../libgtkpod/misc_playlist.c:1073 ../libgtkpod/misc_playlist.c:1128
 #, c-format
 msgid "Deleted playlist '%s' including %d member track"
 msgid_plural "Deleted playlist '%s' including %d member tracks"
@@ -1956,40 +1990,40 @@ msgstr[0] "Tog bort spellistan '%s' inklusive %d ingående spår"
 msgstr[1] "Tog bort spellistan '%s' inklusive %d ingående spår"
 
 #. first use playlist name
-#: ../libgtkpod/misc_playlist.c:1084 ../libgtkpod/misc_playlist.c:1139
+#: ../libgtkpod/misc_playlist.c:1086 ../libgtkpod/misc_playlist.c:1141
 #, c-format
 msgid "Deleted playlist '%s'"
 msgstr "Tog bort spellistan '%s'"
 
 #. first use playlist name
-#: ../libgtkpod/misc_playlist.c:1109
+#: ../libgtkpod/misc_playlist.c:1111
 #, c-format
 msgid "Deleted playlist '%s' including %d member track on harddisk"
 msgid_plural "Deleted playlist '%s' including %d member tracks on harddisk"
 msgstr[0] "Tog bort spellistan '%s' inklusive %d ingående spår från hårddisken"
 msgstr[1] "Tog bort spellistan '%s' inklusive %d ingående spår från hårddisken"
 
-#: ../libgtkpod/misc_playlist.c:1122
+#: ../libgtkpod/misc_playlist.c:1124
 #, c-format
 msgid "Removed all %d tracks from the database"
 msgstr "Tog bort alla %d spår från databasen"
 
 #. no playlist selected
-#: ../libgtkpod/misc_playlist.c:1168 ../libgtkpod/misc_playlist.c:1394
+#: ../libgtkpod/misc_playlist.c:1170 ../libgtkpod/misc_playlist.c:1396
 msgid "No playlist selected"
 msgstr "Ingen spellista markerad"
 
-#: ../libgtkpod/misc_playlist.c:1184
+#: ../libgtkpod/misc_playlist.c:1186
 #, c-format
 msgid "Are you sure you want to remove all tracks from your iPod?"
 msgstr "Är du säker på att du vill ta bort alla spår från iPod?"
 
-#: ../libgtkpod/misc_playlist.c:1188
+#: ../libgtkpod/misc_playlist.c:1190
 #, c-format
 msgid "Are you sure you want to remove all podcasts from your iPod?"
 msgstr "Är du säker på att du vill ta bort alla podradiosändningar från iPod?"
 
-#: ../libgtkpod/misc_playlist.c:1195
+#: ../libgtkpod/misc_playlist.c:1197
 #, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and the following track "
@@ -2006,12 +2040,12 @@ msgstr[1] ""
 "Är du säker på att du vill ta bort spellistan '%s' och följande spår helt "
 "från iPod? Antal spellistor som spåret finns i anges inom parentes."
 
-#: ../libgtkpod/misc_playlist.c:1204 ../libgtkpod/misc_playlist.c:1251
+#: ../libgtkpod/misc_playlist.c:1206 ../libgtkpod/misc_playlist.c:1253
 #, c-format
 msgid "Are you sure you want to delete the playlist '%s'?"
 msgstr "Är du säker på att du vill ta bort spellistan '%s'?"
 
-#: ../libgtkpod/misc_playlist.c:1226
+#: ../libgtkpod/misc_playlist.c:1228
 #, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and remove the following track "
@@ -2028,12 +2062,12 @@ msgstr[1] ""
 "Är du säker på att du vill ta bort spellistan '%s' och följande spår helt "
 "från hårddisken? Antal spellistor som spåren finns i anges inom parentes."
 
-#: ../libgtkpod/misc_playlist.c:1233
+#: ../libgtkpod/misc_playlist.c:1235
 #, c-format
 msgid "Are you sure you want to remove all tracks from the database?"
 msgstr "Är du säker på att du vill ta bort alla spår från databasen?"
 
-#: ../libgtkpod/misc_playlist.c:1241
+#: ../libgtkpod/misc_playlist.c:1243
 #, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and remove the following track "
@@ -2050,21 +2084,21 @@ msgstr[1] ""
 "Är du säker på att du vill ta bort spellistan '%s' och följande spår helt "
 "från databasen? Antal spellistor som spåren finns i anges inom parentes."
 
-#: ../libgtkpod/misc_playlist.c:1310
+#: ../libgtkpod/misc_playlist.c:1312
 #, c-format
 msgid "Copied '%s' playlist to '%s' in '%s'"
 msgstr "Kopierade spellistan '%s'till '%s' i '%s'"
 
-#: ../libgtkpod/misc_playlist.c:1335
+#: ../libgtkpod/misc_playlist.c:1337
 #, c-format
 msgid "Copied \"%s\" playlist to %s"
 msgstr "Kopierade spellistan \"%s\" till %s"
 
-#: ../libgtkpod/misc_playlist.c:1390
+#: ../libgtkpod/misc_playlist.c:1392
 msgid "No database or playlist selected"
 msgstr "Ingen databas eller spellista markerad"
 
-#: ../libgtkpod/misc_playlist.c:1398
+#: ../libgtkpod/misc_playlist.c:1400
 msgid "No iPod or iPod playlist selected"
 msgstr "Ingen iPod eller iPod-spellista markerad"
 
@@ -2117,64 +2151,66 @@ msgstr "Omslagsbild inte angiven"
 msgid "Could not find source file for '%s'. Track not copied."
 msgstr "Kunde hitta källfilen för '%s'. Spåret kopierades inte."
 
-#: ../libgtkpod/misc_track.c:1857
-#, c-format
-msgid "drag and drop: ignored '%s'\n"
+#: ../libgtkpod/misc_track.c:1854
+#, fuzzy, c-format
+msgid ""
+"drag and drop: ignored '%s'.\n"
+"reason: %s\n"
 msgstr "drag och släpp: ignorerade '%s'\n"
 
-#: ../libgtkpod/misc_track.c:1982
+#: ../libgtkpod/misc_track.c:1981
 #, fuzzy, c-format
 msgid "Deleting one track completely from iPod"
 msgid_plural "Deleting %d tracks completely from iPod"
 msgstr[0] "Tog bort ett spår helt från iPod"
 msgstr[1] "Tog bort %d spår helt från iPod"
 
-#: ../libgtkpod/misc_track.c:1987 ../libgtkpod/misc_track.c:2007
+#: ../libgtkpod/misc_track.c:1986 ../libgtkpod/misc_track.c:2006
 #, fuzzy, c-format
 msgid "Deleting %d track from playlist '%s'"
 msgid_plural "Deleting %d tracks from playlist '%s'"
 msgstr[0] "Tog bort %d spår från spellistan '%s'"
 msgstr[1] "Tog bort %d spår från spellistan '%s'"
 
-#: ../libgtkpod/misc_track.c:2002
+#: ../libgtkpod/misc_track.c:2001
 #, fuzzy, c-format
 msgid "Deleting one track from harddisk"
 msgid_plural "Deleting %d tracks from harddisk"
 msgstr[0] "Tog bort ett spår från hårddisken"
 msgstr[1] "Tog bort %d spår från hårddisken"
 
-#: ../libgtkpod/misc_track.c:2012
+#: ../libgtkpod/misc_track.c:2011
 #, fuzzy, c-format
 msgid "Deleting one track from local database"
 msgid_plural "Deleting %d tracks from local database"
 msgstr[0] "Tog bort spår från den lokala databasen"
 msgstr[1] "Tog bort %d spår från den lokala databasen"
 
-#: ../libgtkpod/misc_track.c:2027
+#: ../libgtkpod/misc_track.c:2026
 #, c-format
 msgid "Deleting Track %d/%d ..."
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:2037
+#: ../libgtkpod/misc_track.c:2036
 #, fuzzy
 msgid "Completed deletion"
 msgstr "Detektering av duplikat"
 
-#: ../libgtkpod/misc_track.c:2131
+#: ../libgtkpod/misc_track.c:2130
 #, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
 msgstr[0] "Kopierade %d spår till '%s' i '%s'"
 msgstr[1] "Kopierade %d spår till '%s' i '%s'"
 
-#: ../libgtkpod/misc_track.c:2161
+#: ../libgtkpod/misc_track.c:2160
 #, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
 msgstr[0] "Kopierade %d spår till '%s'"
 msgstr[1] "Kopierade %d spår till '%s'"
 
-#: ../libgtkpod/misc_track.c:2175
+#: ../libgtkpod/misc_track.c:2174
 msgid "No tracks selected"
 msgstr "Inga spår markerade"
 
@@ -2255,7 +2291,7 @@ msgstr "Ingenting har ändrats.\n"
 msgid "Sync summary"
 msgstr "Sammanfattning av synkronisering"
 
-#: ../libgtkpod/tools.c:116
+#: ../libgtkpod/tools.c:108
 #, c-format
 msgid ""
 "Could not find '%s'.\n"
@@ -2269,7 +2305,7 @@ msgstr ""
 "programmet om det inte är installerat på systemet.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:201
+#: ../libgtkpod/tools.c:190
 #, c-format
 msgid ""
 "Execution of '%s' failed.\n"
@@ -2278,7 +2314,7 @@ msgstr ""
 "Körning av '%s' misslyckades.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:241
+#: ../libgtkpod/tools.c:221
 #, c-format
 msgid ""
 "Normalization failed: file not available (%s).\n"
@@ -2287,7 +2323,7 @@ msgstr ""
 "Normalisering misslyckades: Filen inte tillgänglig (%s).\n"
 "\n"
 
-#: ../libgtkpod/tools.c:256
+#: ../libgtkpod/tools.c:234
 #, c-format
 msgid ""
 "Normalization failed for file %s: file type not supported.\n"
@@ -2297,28 +2333,27 @@ msgid ""
 "\taac files: aacgain"
 msgstr ""
 
-#. create the dialog window
-#: ../libgtkpod/tools.c:328
+#: ../libgtkpod/tools.c:301
 msgid "Information"
 msgstr "Information"
 
-#: ../libgtkpod/tools.c:340
+#: ../libgtkpod/tools.c:305
 msgid "Press button to abort."
 msgstr "Tryck på knappen för att avbryta."
 
-#: ../libgtkpod/tools.c:353
+#: ../libgtkpod/tools.c:318
 msgid "Normalizing..."
 msgstr "Normaliserar..."
 
-#: ../libgtkpod/tools.c:429
+#: ../libgtkpod/tools.c:388
 msgid "Aborting..."
 msgstr "Avbryter..."
 
-#: ../libgtkpod/tools.c:433
+#: ../libgtkpod/tools.c:391
 msgid "Will abort after current mp3gain process ends."
 msgstr "Avbryter efter aktuell mp3gain process slutar."
 
-#: ../libgtkpod/tools.c:459
+#: ../libgtkpod/tools.c:414
 #, c-format
 msgid ""
 "'%s-%s' (%s) could not be normalized.\n"
@@ -2327,19 +2362,21 @@ msgstr ""
 "'%s-%s' (%s) kunde inte normaliseras.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:486 ../plugins/exporter/file_export.c:494
+#. don't bounce up too quickly (>10% change only)
+#. left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;
+#: ../libgtkpod/tools.c:436 ../plugins/exporter/file_export.c:494
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
 msgstr "%d%% (%d:%02d:%02d kvar)"
 
-#: ../libgtkpod/tools.c:602
+#: ../libgtkpod/tools.c:540
 msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
 msgstr ""
 "Ange kommandot som ska anropas under 'Verktyg' i inställningsdialogrutan.\n"
 
-#: ../libgtkpod/tools.c:614
+#: ../libgtkpod/tools.c:551
 #, c-format
 msgid ""
 "Could not find the command '%s'.\n"
@@ -2352,7 +2389,7 @@ msgstr ""
 "Kontrollera inställningarna under 'Verktyg' i inställningsdialogrutan.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:656
+#: ../libgtkpod/tools.c:592
 #, c-format
 msgid ""
 "'%s' returned the following output:\n"
@@ -2643,7 +2680,7 @@ msgid "Metadata"
 msgstr "Metadata"
 
 #. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:69 ../src/anjuta-app.c:405
+#: ../plugins/core_preferences/core_prefs.xml.h:69 ../src/anjuta-app.c:511
 msgid "Music"
 msgstr "Musik"
 
@@ -2954,27 +2991,27 @@ msgid "Display Cover Artwork of Tracks"
 msgstr "_Visade spår"
 
 #. Set the resolution in the label
-#: ../plugins/cover_display/display_coverart.c:1477
+#: ../plugins/cover_display/display_coverart.c:1453
 #: ../plugins/photo_editor/display_photo.c:952
 #, c-format
 msgid "<b>Image Dimensions: %d x %d</b>"
 msgstr "<b>Bilddimensioner: %d x %d</b>"
 
-#: ../plugins/cover_display/display_coverart.c:1627
+#: ../plugins/cover_display/display_coverart.c:1603
 msgid "Failed to remove the album from the album hash store."
 msgstr "Misslyckades ta bort albumet från den checksummerade albumlagringen."
 
-#: ../plugins/cover_display/display_coverart.c:1992
+#: ../plugins/cover_display/display_coverart.c:1968
 #: ../plugins/details_editor/details.c:1704
 msgid "Item had to be downloaded but gtkpod was not compiled with curl."
 msgstr ""
 
-#: ../plugins/cover_display/display_coverart.c:1998
+#: ../plugins/cover_display/display_coverart.c:1974
 #, c-format
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
 msgstr "Fel uppstod när en bild släpptes på visningen av omslag: %s\n"
 
-#: ../plugins/cover_display/display_coverart.c:2031
+#: ../plugins/cover_display/display_coverart.c:2007
 #: ../plugins/details_editor/details.c:1752
 msgid "Successfully set new coverart for selected tracks"
 msgstr "Nya omslagsbilder för markerade spår tillagda med lyckat resultat"
@@ -3248,18 +3285,18 @@ msgstr "Titta efter befintliga filer vid kopiering från iPod."
 #: ../plugins/exporter/exporter.xml.h:4
 #, no-c-format
 msgid ""
-"Determines how the string for the info field should be constructed, e.g '%a/%"
-"A/%T - %t.mp3' or '%o'.  You can separate several templates by semicolons -- "
-"gtkpod will determine which one to use by the filename extension given. "
+"Determines how the string for the info field should be constructed, e.g '%a/"
+"%A/%T - %t.mp3' or '%o'.  You can separate several templates by semicolons "
+"-- gtkpod will determine which one to use by the filename extension given. "
 "Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD "
-"nr: %C, year: %Y, original filename (requires extended information file): %"
-"o, the character '%': %%."
+"nr: %C, year: %Y, original filename (requires extended information file): "
+"%o, the character '%': %%."
 msgstr ""
 "Avgör hur strängen för informationsfältet ska skapas, t.ex. '%a/%A/%T - %t."
 "mp3' eller '%o'. Du kan skilja flera mönster åt med semikolon. Vilket som "
 "används avgörs av gtkpod genom filnamnsändelsen som anges. Artist: %a, "
-"album: %A, kompositör: %c, titel: %t, genre: %G, spårnummer: %T, cd-nummer: %"
-"C, år: %Y, ursprungligt filnamn (kräver fil med utökad information): %o, "
+"album: %A, kompositör: %c, titel: %t, genre: %G, spårnummer: %T, cd-nummer: "
+"%C, år: %Y, ursprungligt filnamn (kräver fil med utökad information): %o, "
 "tecknet '%': %%."
 
 #: ../plugins/exporter/exporter.xml.h:6
@@ -3394,6 +3431,7 @@ msgid "Error copying '%s' to '%s' (%s)\n"
 msgstr "Fel vid kopiering av '%s' till '%s' (%s)\n"
 
 #: ../plugins/exporter/file_export.c:328
+#: ../plugins/playlist_display/playlist_display_actions.c:171
 #, c-format
 msgid "'%s'\n"
 msgstr ""
@@ -3599,9 +3637,11 @@ msgstr ""
 "tillsammans med biblioteket mp4v2.\n"
 
 #: ../plugins/filetype_m4a/mp4file.c:994 ../plugins/filetype_mp4/mp4file.c:994
-#, fuzzy, c-format
-msgid "'%s' does not appear to be a m4a/m4b/m4v/mp4 audio file.\n"
-msgstr "'%s' verkar inte vara en mp4-ljudfil.\n"
+#, c-format
+msgid ""
+"Only writing to m4a/m4b/m4v/mp4 audio tracks is supported. '%s' is not one "
+"of these file formats.\n"
+msgstr ""
 
 #: ../plugins/filetype_m4a/mp4file.c:1003
 #: ../plugins/filetype_mp4/mp4file.c:1003
@@ -4308,43 +4348,83 @@ msgstr "Sortera enligt:"
 msgid "_Limit to"
 msgstr "_Begränsa till"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:73
-#: ../plugins/playlist_display/playlist_display_actions.c:265
-msgid "Successfully added files"
-msgstr "Filer tillagda med lyckat resultat"
+#: ../plugins/playlist_display/playlist_display_actions.c:64
+#: ../plugins/playlist_display/playlist_display_actions.c:316
+#, fuzzy, c-format
+msgid "%s\n"
+msgstr "%s - %s"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:75
-#: ../plugins/playlist_display/playlist_display_actions.c:267
-msgid "Some files were not added successfully"
+#. gint id,
+#. gboolean modal,
+#: ../plugins/playlist_display/playlist_display_actions.c:89
+msgid "Directory Addition Errors"
+msgstr ""
+
+#. title
+#: ../plugins/playlist_display/playlist_display_actions.c:90
+#, fuzzy
+msgid " Some directories were not added successfully"
 msgstr "Vissa filer kunde inte läggas till med lyckat resultat"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:97
-#: ../plugins/playlist_display/playlist_display_actions.c:206
-#: ../plugins/playlist_display/playlist_display_actions.c:294
+#: ../plugins/playlist_display/playlist_display_actions.c:103
+msgid "Some directories failed to be added but no errors were reported."
+msgstr ""
+
+#: ../plugins/playlist_display/playlist_display_actions.c:126
+#: ../plugins/playlist_display/playlist_display_actions.c:266
+#: ../plugins/playlist_display/playlist_display_actions.c:385
 msgid "Please select a playlist or repository before adding tracks."
 msgstr "Välj en spellista eller arkiv innan spår läggs till."
 
-#: ../plugins/playlist_display/playlist_display_actions.c:102
+#: ../plugins/playlist_display/playlist_display_actions.c:131
 msgid "Add Folder"
 msgstr "Lägg till katalog"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:214
-#: ../plugins/playlist_display/playlist_display_actions.c:304
+#. gint id,
+#. gboolean modal,
+#: ../plugins/playlist_display/playlist_display_actions.c:196
+msgid "Playlist Addition Errors"
+msgstr ""
+
+#. title
+#: ../plugins/playlist_display/playlist_display_actions.c:197
+#, fuzzy
+msgid "Some tracks in the playlist were not added successfully"
+msgstr "Vissa filer kunde inte läggas till med lyckat resultat"
+
+#: ../plugins/playlist_display/playlist_display_actions.c:210
+#: ../plugins/playlist_display/playlist_display_actions.c:359
+msgid "Some tracks failed to be added but no errors were reported."
+msgstr ""
+
+#: ../plugins/playlist_display/playlist_display_actions.c:274
+#: ../plugins/playlist_display/playlist_display_actions.c:395
 msgid "Please load the iPod before adding tracks."
 msgstr "Ladda iPod innan spår läggs till."
 
 #. Create window title
-#: ../plugins/playlist_display/playlist_display_actions.c:222
+#: ../plugins/playlist_display/playlist_display_actions.c:282
 #, c-format
 msgid "Add playlist files to '%s'"
 msgstr "Lägg till spellistefiler i '%s'"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:313
+#. gint id,
+#. gboolean modal,
+#: ../plugins/playlist_display/playlist_display_actions.c:345
+msgid "File Addition Errors"
+msgstr ""
+
+#. title
+#: ../plugins/playlist_display/playlist_display_actions.c:346
+msgid "Some files were not added successfully"
+msgstr "Vissa filer kunde inte läggas till med lyckat resultat"
+
+#: ../plugins/playlist_display/playlist_display_actions.c:404
 #, c-format
 msgid "Add files to '%s'"
 msgstr "Lägg till filer i '%s'"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:316
+#: ../plugins/playlist_display/playlist_display_actions.c:407
 #, c-format
 msgid "Add files to '%s/%s'"
 msgstr "Lägg till filer i '%s/%s'"
@@ -5656,8 +5736,8 @@ msgstr[1] "Flyttade %d spår"
 #: ../plugins/track_display/display_tracks.c:1595
 #, c-format
 msgid ""
-"Cannot unsort track view because of a bug in the GTK lib you are using (%d.%"
-"d.%d < 2.5.4). Once you sort the track view, you cannot go back to the "
+"Cannot unsort track view because of a bug in the GTK lib you are using (%d."
+"%d.%d < 2.5.4). Once you sort the track view, you cannot go back to the "
 "unsorted state.\n"
 "\n"
 msgstr ""
@@ -5794,16 +5874,16 @@ msgstr ""
 msgid "Couldn't read license file %s: %s"
 msgstr "Kunde inte ändra taggar för filen: %s\n"
 
-#: ../src/anjuta-about.c:172
+#: ../src/anjuta-about.c:175
 msgid "Copyright (c) Jorg Schuler et al."
 msgstr ""
 
-#: ../src/anjuta-about.c:173
+#: ../src/anjuta-about.c:176
 #, fuzzy
 msgid "iPod Management Platform"
 msgstr "Hantering av iPod"
 
-#: ../src/anjuta-action-callbacks.c:106
+#: ../src/anjuta-action-callbacks.c:108
 #, fuzzy
 msgid "GtkPod Preferences"
 msgstr "Inställningar"
@@ -5935,61 +6015,68 @@ msgstr ""
 msgid "About third party gtkpod plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:406
+#: ../src/anjuta-app.c:512
 #, fuzzy
 msgid "Edit"
 msgstr "_Redigera"
 
-#: ../src/anjuta-app.c:407 ../src/anjuta-app.c:408
+#: ../src/anjuta-app.c:513 ../src/anjuta-app.c:514
 #, fuzzy
 msgid "View"
 msgstr "_Visa"
 
-#: ../src/anjuta-app.c:409
+#: ../src/anjuta-app.c:515
 #, fuzzy
 msgid "Tools"
 msgstr "Verk_tyg"
 
-#: ../src/anjuta-app.c:410
+#: ../src/anjuta-app.c:516
 #, fuzzy
 msgid "Help"
 msgstr "_Hjälp"
 
-#: ../src/anjuta-app.c:599
+#: ../src/anjuta-app.c:707
 msgid " Plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:610
+#: ../src/anjuta-app.c:716
 msgid "Installed plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:611
+#: ../src/anjuta-app.c:717
 #, fuzzy
 msgid "Preferred plugins"
 msgstr "Inställningar"
 
-#: ../src/anjuta-app.c:612
+#: ../src/anjuta-app.c:718
 #, fuzzy
 msgid "Shortcuts"
 msgstr "Sorterade artister"
 
-#: ../src/anjuta-app.c:670
+#: ../src/anjuta-app.c:776
 #, c-format
 msgid "Value doesn't exist"
 msgstr ""
 
-#: ../src/anjuta-app.c:1282
+#: ../src/anjuta-app.c:1394
 msgid "Confirmation"
 msgstr "Bekräftelse"
 
-#: ../src/gtkpod.c:183
+#: ../src/gtkpod.c:199
 msgid "Loaded Session..."
 msgstr ""
 
-#: ../src/main.c:57
+#: ../src/main.c:58
 #, fuzzy
 msgid "gtkpod"
 msgstr "_Om gtkpod"
+
+#, fuzzy
+#~ msgid "'%s' does not appear to be a m4a/m4b/m4v/mp4 audio file.\n"
+#~ msgstr "'%s' verkar inte vara en mp4-ljudfil.\n"
+
+#~ msgid "Successfully added files"
+#~ msgstr "Filer tillagda med lyckat resultat"
 
 #~ msgid ""
 #~ "Any rules\n"
@@ -6458,13 +6545,6 @@ msgstr "_Om gtkpod"
 #~ "inställningsdialogrutan.\n"
 
 #~ msgid ""
-#~ "Normalization failed: file type not supported (%s).\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Normalisering misslyckades: Filtypen stöds inte (%s).\n"
-#~ "\n"
-
-#~ msgid ""
 #~ "Import of '%s' failed: FLAC not supported without the FLAC library. You "
 #~ "must compile the gtkpod source together with the FLAC library.\n"
 #~ msgstr ""
@@ -6491,24 +6571,9 @@ msgstr "_Om gtkpod"
 #~ "Följande spår kunde inte behandlas (filtypen känd, men analys "
 #~ "misslyckades): '%s'\n"
 
-#~ msgid ""
-#~ "Writing to video files not yet supported (%s).\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Att skriva till videofiler stöds inte än (%s).\n"
-#~ "\n"
-
 #, fuzzy
 #~ msgid "Error: File format unsupported now."
 #~ msgstr "uppdatering misslyckades (formatet stöds kanske inte)"
-
-#, fuzzy
-#~ msgid ""
-#~ "Error: Lyrics not found, file not available (%s).\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Sångtext hittades inte, filen inte tillgänglig (%s).\n"
-#~ "\n"
 
 #~ msgid "<b>Playback</b>"
 #~ msgstr "<b>Uppspelning</b>"
