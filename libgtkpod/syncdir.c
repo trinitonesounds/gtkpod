@@ -355,7 +355,7 @@ static void add_files(gpointer key, gpointer value, gpointer user_data) {
                         data.filepath = filename;
                         data.filepath_hash = afd->filepath_hash;
 
-                        add_track_by_filename(pl->itdb, filename, pl, FALSE, sync_addtrackfunc, &data);
+                        add_track_by_filename(pl->itdb, filename, pl, FALSE, sync_addtrackfunc, &data, NULL);
 
                         tr = g_hash_table_lookup(afd->filepath_hash, filename);
                         updated = TRUE;
