@@ -1294,8 +1294,8 @@ msgstr[1] ""
 #: ../libgtkpod/misc.c:1698
 msgid "Delete Track Completely from iPod?"
 msgid_plural "Delete Tracks Completely from iPod?"
-msgstr[0] "Suppression définitive d'un morceau de l'iPod ?"
-msgstr[1] "Suppression définitive de morceaux de l'iPod ?"
+msgstr[0] "Supprimer ce morceau de l'iPod ?"
+msgstr[1] "Supprimer ces morceaux de l'iPod ?"
 
 #: ../libgtkpod/misc.c:1709 ../libgtkpod/misc.c:1746
 #, c-format

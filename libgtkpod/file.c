@@ -52,6 +52,7 @@
 #include "prefs.h"
 #include "misc_conversion.h"
 #include "filetype_iface.h"
+#include "gp_private.h"
 
 #define UNKNOWN_ERROR _("Unknown error")
 
@@ -201,20 +202,21 @@ static gboolean excludefile(gchar *filename) {
 /* Return value: playlist to which the files were added to or NULL on
  * error */
 Playlist *
-add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint plitem_pos, AddTrackFunc addtrackfunc, gpointer data) {
+add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint plitem_pos, AddTrackFunc addtrackfunc, gpointer data, GError **error) {
     gchar *bufp, *plfile_utf8;
     gchar *dirname = NULL, *plname = NULL;
     gchar buf[PATH_MAX];
     FileType *type = NULL; /* type of playlist file */
     gint line;
     FILE *fp;
-    gboolean error;
+    gboolean errstatus;
+    GString *errors = g_string_new("");
 
     g_return_val_if_fail (plfile, FALSE);
     g_return_val_if_fail (itdb, FALSE);
 
     if (g_file_test(plfile, G_FILE_TEST_IS_DIR)) {
-        gtkpod_warning(_("'%s' is a directory, not a playlist file.\n\n"), plfile);
+        gtkpod_log_error_printf(error, _("'%s' is a directory, not a playlist file.\n\n"), plfile);
         return FALSE; /* definitely not! */
     }
 
@@ -228,7 +230,7 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
         *bufp = 0; /* truncate playlist name */
         type = determine_filetype(plfile);
         if (!filetype_is_playlist_filetype(type)) {
-            gtkpod_warning(_("'%s' is a not a known playlist file.\n\n"), plfile);
+            gtkpod_log_error_printf(error, _("'%s' is a not a known playlist file.\n\n"), plfile);
             g_free(plname);
             return FALSE;
         }
@@ -236,7 +238,7 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
 
     /* attempt to open playlist file */
     if (!(fp = fopen(plfile, "r"))) {
-        gtkpod_warning(_("Could not open '%s' for reading.\n"), plfile);
+        gtkpod_log_error_printf(error, _("Could not open '%s' for reading.\n"), plfile);
         g_free(plname);
         return FALSE; /* definitely not! */
     }
@@ -253,8 +255,8 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
      all of these are line based -- add different code for different
      playlist files */
     line = -1; /* nr of line being read */
-    error = FALSE;
-    while (!error && fgets(buf, PATH_MAX, fp)) {
+    errstatus = FALSE;
+    while (!errstatus && fgets(buf, PATH_MAX, fp)) {
         gchar *bufp = buf;
         gchar *filename = NULL;
         gint len = strlen(bufp); /* remove newline */
@@ -300,7 +302,7 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
                  correct the code if you know more */
                 if (line == 0) { /* check for "[playlist]" */
                     if (strncasecmp(bufp, "[playlist]", 10) != 0)
-                        error = TRUE;
+                        errstatus = TRUE;
                 }
                 else if (strncasecmp(bufp, "File", 4) == 0) { /* looks like a file entry */
                     bufp = strchr(bufp, '=');
@@ -315,14 +317,26 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
         if (filename) {
             /* do not allow to add directories! */
             if (g_file_test(filename, G_FILE_TEST_IS_DIR)) {
-                gtkpod_warning(_("Skipping '%s' because it is a directory.\n"), filename);
+                gchar *msg = g_strdup_printf(_("Skipping '%s' because it is a directory.\n"), filename);
+                g_string_append(errors, msg);
+                g_free(msg);
             }
             /* do not allow to add playlist file recursively */
             else if (strcmp(plfile, filename) == 0) {
-                gtkpod_warning(_("Skipping '%s' to avoid adding playlist file recursively\n"), filename);
+                gchar *msg = g_strdup_printf(_("Skipping '%s' to avoid adding playlist file recursively\n"), filename);
+                g_string_append(errors, msg);
+                g_free(msg);
             }
             else {
-                add_track_by_filename(itdb, filename, plitem, prefs_get_int("add_recursively"), addtrackfunc, data);
+                GError *trackerror = NULL;
+                add_track_by_filename(itdb, filename, plitem, prefs_get_int("add_recursively"), addtrackfunc, data, &trackerror);
+                if (trackerror) {
+                    gchar *msg = g_strdup_printf("%s\n", trackerror->message);
+                    g_string_append(errors, msg);
+                    g_free(msg);
+                    g_error_free(trackerror);
+                    trackerror = NULL;
+                }
             }
             g_free(filename);
         }
@@ -334,8 +348,16 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
      duplicates -- but we should reset the list. */
     gp_duplicate_remove(NULL, (void *) -1);
 
+    if (errors) {
+        if (errors->len > 0) {
+            gtkpod_log_error(error, errors->str);
+        }
+        g_string_free(errors, TRUE);
+    }
+
     if (!error)
         return plitem;
+
     return NULL;
 }
 
@@ -361,8 +383,9 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
  *              value indicating number of added tracks.
  */
 /* */
-gint add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data) {
+gint add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data, GError **error) {
     gint result = 0;
+    GString *errors = g_string_new("");
 
     g_return_val_if_fail (itdb, 0);
     g_return_val_if_fail (name, 0);
@@ -377,7 +400,15 @@ gint add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gboole
                 if (next != NULL) {
                     gchar *nextfull = g_build_filename(name, next, NULL);
                     if (descend || !g_file_test(nextfull, G_FILE_TEST_IS_DIR)) {
-                        result += add_directory_by_name(itdb, nextfull, plitem, descend, addtrackfunc, data);
+                        GError *direrror = NULL;
+                        result += add_directory_by_name(itdb, nextfull, plitem, descend, addtrackfunc, data, &direrror);
+                        if (direrror) {
+                            gchar *msg = g_strdup_printf("%s\n", direrror->message);
+                            g_string_append(errors, msg);
+                            g_free(msg);
+                            g_error_free(direrror);
+                            direrror = NULL;
+                        }
                     }
                     g_free(nextfull);
                 }
@@ -389,9 +420,15 @@ gint add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gboole
         release_widgets();
     }
     else {
-        if (add_track_by_filename(itdb, name, plitem, descend, addtrackfunc, data))
+        if (add_track_by_filename(itdb, name, plitem, descend, addtrackfunc, data, error))
             result++;
     }
+
+    if (errors->len > 0) {
+        gtkpod_log_error_printf(error, errors->str);
+    }
+    g_string_free(errors, TRUE);
+
     return result;
 }
 
@@ -1019,13 +1056,12 @@ static void add_coverart(Track *tr) {
  * pc_path_utf8 and pc_path_locale are not changed if an entry already
  * exists. time_added is not modified if already set. */
 /* Returns NULL on error, a pointer to the Track otherwise */
-Track *get_track_info_from_file(gchar *name, Track *orig_track) {
+Track *get_track_info_from_file(gchar *name, Track *orig_track, GError **error) {
     Track *track = NULL;
     Track *nti = NULL;
     FileType *filetype;
     gint len;
     gchar *name_utf8 = NULL;
-    GError *error = NULL;
 
     g_return_val_if_fail (name, NULL);
 
@@ -1035,7 +1071,7 @@ Track *get_track_info_from_file(gchar *name, Track *orig_track) {
     name_utf8 = charset_to_utf8(name);
 
     if (!g_file_test(name, G_FILE_TEST_EXISTS)) {
-        gtkpod_warning(_("The following track could not be processed (file does not exist): '%s'\n"), name_utf8);
+        gtkpod_log_error_printf(error, _("The following track could not be processed (file does not exist): '%s'\n"), name_utf8);
         g_free(name_utf8);
         return NULL;
     }
@@ -1050,21 +1086,22 @@ Track *get_track_info_from_file(gchar *name, Track *orig_track) {
 
     filetype = determine_filetype(name);
     if (!filetype) {
-        gtkpod_warning(
+        gtkpod_log_error_printf(error,
                 _("The filetype '%s' is not currently supported.\n\n"
                         "If you have a plugin that supports this filetype then please enable it."), name_utf8);
         return NULL;
     }
 
-    nti = filetype_get_file_info(filetype, name, &error);
-    if (error || !nti) {
-        gtkpod_warning(_("No track information could be retrieved from the file %s due to the following error:\n\n%s"), name_utf8, error->message);
-        g_error_free(error);
-        error = NULL;
+    GError *info_error = NULL;
+    nti = filetype_get_file_info(filetype, name, &info_error);
+    if (info_error || !nti) {
+        gtkpod_log_error_printf(error, _("No track information could be retrieved from the file %s due to the following error:\n\n%s"), name_utf8, info_error->message);
+        g_error_free(info_error);
+        info_error = NULL;
         g_free(name_utf8);
         return NULL;
     } else if (!nti) {
-        gtkpod_warning(_("No track information could be retrieved from the file %s due to the following error:\n\nAn error was not returned."), name_utf8);
+        gtkpod_log_error_printf(error, _("No track information could be retrieved from the file %s due to the following error:\n\nAn error was not returned."), name_utf8);
         g_free(name_utf8);
         return NULL;
     }
@@ -1389,7 +1426,7 @@ void update_track_from_file(iTunesDB *itdb, Track *track) {
         }
     }
 
-    if (trackpath && get_track_info_from_file(trackpath, track)) { /* update successful */
+    if (trackpath && get_track_info_from_file(trackpath, track, NULL)) { /* update successful */
         ExtraTrackData *netr = track->userdata;
 
         /* remove track from sha1 hash and reinsert it
@@ -1495,7 +1532,7 @@ void update_track_from_file(iTunesDB *itdb, Track *track) {
 /* @addtrackfunc: if != NULL this will be called instead of
  "add_track_to_playlist () -- used for dropping tracks at a specific
  position in the track view */
-gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data) {
+gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data, GError **error) {
     Track *oldtrack;
     gchar str[PATH_MAX];
     gchar *basename;
@@ -1514,18 +1551,19 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
         plitem = mpl;
 
     if (g_file_test(fname, G_FILE_TEST_IS_DIR)) {
-        return add_directory_by_name(itdb, fname, plitem, descend, addtrackfunc, data);
+        return add_directory_by_name(itdb, fname, plitem, descend, addtrackfunc, data, error);
     }
 
     /* check if file is a playlist */
     filetype = determine_filetype(fname);
     if (filetype_is_playlist_filetype(filetype)) {
-        if (add_playlist_by_filename(itdb, fname, plitem, -1, addtrackfunc, data))
+        if (add_playlist_by_filename(itdb, fname, plitem, -1, addtrackfunc, data, error))
             return TRUE;
         return FALSE;
     }
 
     if (!filetype_is_audio_filetype(filetype) && !filetype_is_video_filetype(filetype)) {
+        gtkpod_log_error_printf(error, _("File type of %s is not recognised"), fname);
         return FALSE;
     }
 
@@ -1539,7 +1577,7 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
         g_free(bn_utf8);
 
         if (excludefile(basename)) {
-            gtkpod_warning(_("Skipping '%s' because it matches exclude masks.\n"), basename);
+            gtkpod_log_error_printf(error, _("Skipping '%s' because it matches exclude masks.\n"), basename);
             while (widgets_blocked && gtk_events_pending())
                 gtk_main_iteration();
             g_free(basename);
@@ -1568,7 +1606,7 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
     }
     else /* oldtrack == NULL */
     { /* OK, the same filename does not already exist */
-        Track *track = get_track_info_from_file(fname, NULL);
+        Track *track = get_track_info_from_file(fname, NULL, error);
         if (track) {
             Track *added_track = NULL;
             ExtraTrackData *etr = track->userdata;
@@ -1643,7 +1681,7 @@ gboolean add_track_by_filename(iTunesDB *itdb, gchar *fname, Playlist *plitem, g
                  * to podcasts list and track already exists there */
                 if (itdb_playlist_is_podcasts(plitem) && g_list_find(plitem->members, added_track)) {
                     gchar *buf = get_track_info(added_track, FALSE);
-                    gtkpod_warning(_("Podcast already present: '%s'\n\n"), buf);
+                    gtkpod_log_error_printf(error, _("Podcast already present: '%s'\n\n"), buf);
                     g_free(buf);
                 }
                 else {

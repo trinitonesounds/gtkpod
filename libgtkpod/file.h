@@ -59,18 +59,11 @@ FileType *determine_filetype (const gchar *path);
  * Used inside file functions but also used in file_itunesdb for importing
  * itdbs. Embedded artwork can be read using this.
  */
-Track *get_track_info_from_file(gchar *name, Track *orig_track);
+Track *get_track_info_from_file(gchar *name, Track *orig_track, GError **error);
 
-gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
-				Playlist *plitem, gboolean descend,
-				AddTrackFunc addtrackfunc, gpointer data);
-gboolean add_directory_by_name (iTunesDB *itdb, gchar *name,
-				Playlist *plitem, gboolean descend,
-				AddTrackFunc addtrackfunc, gpointer data);
-Playlist *add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
-				    Playlist *plitem, gint plitem_pos,
-				    AddTrackFunc addtrackfunc,
-				    gpointer data);
+gboolean add_track_by_filename (iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data, GError **error);
+gboolean add_directory_by_name (iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data, GError **error);
+Playlist *add_playlist_by_filename (iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint plitem_pos, AddTrackFunc addtrackfunc, gpointer data, GError **error);
 gboolean write_tags_to_file(Track *s);
 void update_track_from_file (iTunesDB *itdb, Track *track);
 void update_tracks (GList *selected_tracks);

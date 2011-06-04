@@ -931,8 +931,10 @@ void check_db(iTunesDB *itdb) {
 
                     if (localdebug)
                         fprintf(stdout, "to orphaned ");
-                    if ((dupl_track = sha1_file_exists(itdb, fn_orphaned, TRUE))) { /* This orphan has already been added again.
-                     It will be removed with the next sync */
+
+                    if ((dupl_track = sha1_file_exists(itdb, fn_orphaned, TRUE))) {
+                        /* This orphan has already been added again.
+                            It will be removed with the next sync */
                         Track *track = gp_track_new();
                         gchar *fn_utf8 = charset_to_utf8(fn_orphaned);
                         const gchar *dir_rel = music_dir + strlen(mountpoint);
@@ -951,7 +953,7 @@ void check_db(iTunesDB *itdb) {
                         g_free(fn_utf8);
                     }
                     else {
-                        add_track_by_filename(itdb, fn_orphaned, pl_orphaned, FALSE, NULL, NULL);
+                        add_track_by_filename(itdb, fn_orphaned, pl_orphaned, FALSE, NULL, NULL, NULL);
                     }
                     g_free(fn_orphaned);
                     g_free(num_str);

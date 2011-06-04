@@ -48,6 +48,8 @@
 /* Callback after directories to add have been selected */
 static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
     gboolean result = TRUE;
+    GString *errors = g_string_new("");
+    GError *error = NULL;
 
     g_return_if_fail (names);
     g_return_if_fail (db_active_pl);
@@ -57,7 +59,14 @@ static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
         GSList* currentnode;
         for (currentnode = names; currentnode; currentnode = currentnode->next) {
             result
-                    &= add_directory_by_name(db_active_pl->itdb, currentnode->data, db_active_pl, prefs_get_int("add_recursively"), NULL, NULL);
+                    &= add_directory_by_name(db_active_pl->itdb, currentnode->data, db_active_pl, prefs_get_int("add_recursively"), NULL, NULL, &error);
+            if (error) {
+                gchar *buf = g_strdup_printf(_("%s\n"), error->message);
+                g_string_append(errors, buf);
+                g_free(buf);
+                g_error_free(error);
+                error = NULL;
+            }
         }
 
         /* Final save of itdb */
@@ -69,13 +78,33 @@ static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
         /* display log of detected duplicates */
         gp_duplicate_remove(NULL, NULL);
 
-        if (result == TRUE)
-            gtkpod_statusbar_message(_("Successfully added files"));
-        else
-            gtkpod_statusbar_message(_("Some files were not added successfully"));
-
-        gtkpod_statusbar_busy_pop();
         gtkpod_set_current_playlist(db_active_pl);
+        gtkpod_statusbar_busy_pop();
+
+        /* Were all files successfully added? */
+        if (result == FALSE) {
+            if (errors->len > 0) {
+                gtkpod_confirmation(-1, /* gint id, */
+                        TRUE, /* gboolean modal, */
+                        _("Directory Addition Errors"), /* title */
+                        _(" Some directories were not added successfully"), /* label */
+                        errors->str, /* scrolled text */
+                        NULL, 0, NULL, /* option 1 */
+                        NULL, 0, NULL, /* option 2 */
+                        TRUE, /* gboolean confirm_again, */
+                        "show_file_addition_errors",/* confirm_again_key,*/
+                        CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
+                        NULL, /* don't show "Apply" button */
+                        NULL, /* cancel_handler,*/
+                        NULL, /* gpointer user_data1,*/
+                        NULL); /* gpointer user_data2,*/
+            }
+            else {
+                gtkpod_warning(_("Some directories failed to be added but no errors were reported."));
+            }
+        }
+
+        g_string_free(errors, TRUE);
     }
 }
 
@@ -126,6 +155,7 @@ static void create_add_directories_dialog(Playlist *pl) {
 /* OK Button */
 static void fileselection_add_playlists(GSList* names, iTunesDB *itdb) {
     GSList* gsl;
+    GString *errors = g_string_new("");
 
     /* Get the names of the playlist(s) and add them */
 
@@ -135,7 +165,15 @@ static void fileselection_add_playlists(GSList* names, iTunesDB *itdb) {
 
     gtkpod_statusbar_busy_push();
     for (gsl = names; gsl; gsl = gsl->next) {
-        add_playlist_by_filename(itdb, gsl->data, NULL, -1, NULL, NULL);
+        GError *error = NULL;
+        add_playlist_by_filename(itdb, gsl->data, NULL, -1, NULL, NULL, &error);
+        if (error) {
+            gchar *buf = g_strdup_printf(_("'%s'\n"), error->message);
+            g_string_append(errors, buf);
+            g_free(buf);
+            g_error_free(error);
+            error = NULL;
+        }
     }
 
     release_widgets();
@@ -151,6 +189,28 @@ static void fileselection_add_playlists(GSList* names, iTunesDB *itdb) {
     gtkpod_statusbar_busy_pop();
     gtkpod_tracks_statusbar_update();
     gtkpod_set_current_playlist(itdb_playlist_mpl(itdb));
+
+    if (errors->len > 0) {
+        gtkpod_confirmation(-1, /* gint id, */
+                TRUE, /* gboolean modal, */
+                _("Playlist Addition Errors"), /* title */
+                _("Some tracks in the playlist were not added successfully"), /* label */
+                errors->str, /* scrolled text */
+                NULL, 0, NULL, /* option 1 */
+                NULL, 0, NULL, /* option 2 */
+                TRUE, /* gboolean confirm_again, */
+                "show_playlist_addition_errors",/* confirm_again_key,*/
+                CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
+                NULL, /* don't show "Apply" button */
+                NULL, /* cancel_handler,*/
+                NULL, /* gpointer user_data1,*/
+                NULL); /* gpointer user_data2,*/
+    }
+    else {
+        gtkpod_warning(_("Some tracks failed to be added but no errors were reported."));
+    }
+
+    g_string_free(errors, TRUE);
 }
 
 /* Open a modal file selection dialog with multiple selction enabled */
@@ -236,6 +296,7 @@ static void create_add_playlists_dialog(iTunesDB *itdb) {
 static void fileselection_add_files(GSList* names, Playlist *playlist) {
     GSList* gsl; /* Current node in list */
     gboolean result = TRUE; /* Result of file adding */
+    GString *errors = g_string_new("");
 
     /* If we don't have a playlist to add to, don't add anything */
     g_return_if_fail (playlist);
@@ -245,8 +306,19 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
     gtkpod_statusbar_busy_push();
     /* Get the filenames and add them */
     for (gsl = names; gsl; gsl = gsl->next) {
+        GError *error = NULL;
+        /* Might be useful to stick a GError on this to return a message if the
+         * file fails to be added.
+         */
         result
-                &= add_track_by_filename(playlist->itdb, gsl->data, playlist, prefs_get_int("add_recursively"), NULL, NULL);
+                &= add_track_by_filename(playlist->itdb, gsl->data, playlist, prefs_get_int("add_recursively"), NULL, NULL, &error);
+        if (error) {
+            gchar *buf = g_strdup_printf(_("%s\n"), error->message);
+            g_string_append(errors, buf);
+            g_free(buf);
+            g_error_free(error);
+            error = NULL;
+        }
     }
 
     /* Final save of remaining added tracks */
@@ -260,16 +332,35 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
     /* display log of detected duplicates */
     gp_duplicate_remove(NULL, NULL);
 
-    /* Were all files successfully added? */
-    if (result == TRUE)
-        gtkpod_statusbar_message(_("Successfully added files"));
-    else
-        gtkpod_statusbar_message(_("Some files were not added successfully"));
-
     gtkpod_statusbar_busy_pop();
 
     release_widgets();
     gtkpod_set_current_playlist(playlist);
+
+    /* Were all files successfully added? */
+    if (result == FALSE) {
+        if (errors->len > 0) {
+            gtkpod_confirmation(-1, /* gint id, */
+                TRUE, /* gboolean modal, */
+                _("File Addition Errors"), /* title */
+                _("Some files were not added successfully"), /* label */
+                errors->str, /* scrolled text */
+                NULL, 0, NULL, /* option 1 */
+                NULL, 0, NULL, /* option 2 */
+                TRUE, /* gboolean confirm_again, */
+                "show_file_addition_errors",/* confirm_again_key,*/
+                CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
+                NULL, /* don't show "Apply" button */
+                NULL, /* cancel_handler,*/
+                NULL, /* gpointer user_data1,*/
+                NULL); /* gpointer user_data2,*/
+        }
+        else {
+            gtkpod_warning(_("Some tracks failed to be added but no errors were reported."));
+        }
+    }
+
+    g_string_free(errors, TRUE);
 }
 
 static gboolean fileselection_add_files_cb(gpointer data) {

@@ -1785,6 +1785,7 @@ Playlist *add_text_plain_to_playlist(iTunesDB *itdb, Playlist *pl, gchar *str, g
     gchar **files = NULL, **filesp = NULL;
     Playlist *pl_playlist = pl; /* playlist for playlist file */
     Playlist *pl_playlist_created = NULL;
+    GError *error = NULL;
 
     g_return_val_if_fail (itdb, NULL);
 
@@ -1799,7 +1800,6 @@ Playlist *add_text_plain_to_playlist(iTunesDB *itdb, Playlist *pl, gchar *str, g
     if (files) {
         filesp = files;
         while (*filesp) {
-            gboolean added = FALSE;
             gint file_len = -1;
 
             gchar *file = NULL;
@@ -1829,10 +1829,9 @@ Playlist *add_text_plain_to_playlist(iTunesDB *itdb, Playlist *pl, gchar *str, g
                         if (!pl)
                             break; /* while (*filesp) */
                     }
-                    add_directory_by_name(itdb, decoded_file, pl, prefs_get_int("add_recursively"), trackaddfunc, data);
-                    added = TRUE;
+                    add_directory_by_name(itdb, decoded_file, pl, prefs_get_int("add_recursively"), trackaddfunc, data, &error);
                 }
-                if (g_file_test(decoded_file, G_FILE_TEST_IS_REGULAR)) { /* regular file */
+                else if (g_file_test(decoded_file, G_FILE_TEST_IS_REGULAR)) { /* regular file */
                     FileType *filetype = determine_filetype(decoded_file);
 
                     if (filetype_is_video_filetype(filetype) || filetype_is_audio_filetype(filetype)) {
@@ -1841,20 +1840,20 @@ Playlist *add_text_plain_to_playlist(iTunesDB *itdb, Playlist *pl, gchar *str, g
                             if (!pl)
                                 break; /* while (*filesp) */
                         }
-                        add_track_by_filename(itdb, decoded_file, pl, prefs_get_int("add_recursively"), trackaddfunc, data);
-                        added = TRUE;
+                        add_track_by_filename(itdb, decoded_file, pl, prefs_get_int("add_recursively"), trackaddfunc, data, &error);
                     }
                     else if (filetype_is_playlist_filetype(filetype)) {
                         pl_playlist_created
-                                = add_playlist_by_filename(itdb, decoded_file, pl_playlist, pl_pos, trackaddfunc, data);
-                        added = TRUE;
+                                = add_playlist_by_filename(itdb, decoded_file, pl_playlist, pl_pos, trackaddfunc, data, &error);
                     }
                 }
                 g_free(decoded_file);
             }
-            if (!added) {
+            if (error) {
                 if (strlen(*filesp) != 0)
-                    gtkpod_warning(_("drag and drop: ignored '%s'\n"), *filesp);
+                    gtkpod_warning(_("drag and drop: ignored '%s'.\nreason: %s\n"), *filesp, error->message);
+                g_error_free(error);
+                error = NULL;
             }
             ++filesp;
         }
