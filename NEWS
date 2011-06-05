@@ -1,3 +1,21 @@
+gtkpod V2.0.2
+
+	Incremental release, targeted towards fixing identifed bugs.
+
+	IMPROVEMENT: Stop multiple error dialogs displaying when adding tracks.
+
+	BUGFIX: Fixes to translations and documentation - thanks to mfv.
+
+	BUGFIX: Support for m4b file type missing.
+
+	BUGFIX: Errors not being cascaded when writing track tag info.
+
+	BUGFIX: Stop segmentation faults on exit from freeing of directory paths.
+
+	BUGFIX: Incorrect use of as-needed flag in configure script.
+
+
+
 gtkpod V2.0.1
 	Incremental release, targeted towards fixing identified bugs.
 

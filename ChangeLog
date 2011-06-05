@@ -1,3 +1,131 @@
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-06-05
+
+    Updated translation files ready for new release
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-06-04
+
+    Supply GErrors to add functions
+    
+    * Try and avoid displaying multiple dialogs when adding files, directories
+      and playlists.
+    
+    * file.c
+     * Replaces all gtkpod_warnings with population of a GError
+    
+    * gp_private.*
+     * log_error_printf function for convenience in having to duplicate a
+       gchar * each time an error is to be logged
+    
+    * playlist_display_actions.c
+     * File, directory and playlist adddition functions record errors with any
+       additions. These are appended to a single error message which is
+       displayed at the end of the addition process
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-06-03
+
+    Fix to french translation
+    
+    * Received from debian bugs tracker. Thanks to mfv.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-24
+
+    m4a plugin fails to support m4b files
+    
+    * Adds in the m4b suffix which is supported by the m4a file type. Simple
+      error not to have been included previously.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-21
+
+    Update to documentation
+    
+    * Update to documentation.
+    
+    * Thanks to mfv (mvescovi at gmail.com) for the patch.
+    
+    * This is the same patch as reverted in the previous
+      commit but the patch was attributed incorrectly. The
+commit corrects this attribution.           
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-22
+
+    Revert "Update to documentation"
+    
+    This reverts commit 4355f3630a543202f77048a1dd14ff6aa51c257a.
+    
+    This patch has been wrongly attributed.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-21
+
+    Update to documentation
+    
+    * Update to documentation.
+    
+    * Thanks to Götzg (goetz.waschk AT gmail.com) for the patch
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-15
+
+    Errors not being cascaded in write file info function
+    
+    * file.c
+     * modifies filetype_write_file_info function to avoid throwing away the
+       populated GError.
+    
+    * filetype_iface.c
+     * Ensure that the no functions have supported logging
+    
+    * mp4file.c
+     * Better explanation of unsupported mp4 files
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-15
+
+    Stop illegal freeing of memory on exit
+    
+    * directories.c
+     * When installed, the directory path is not being manufactured by the
+       init_directories function but points to the parameter passed in.
+     * The dispose directories function tries to free this pointer when it
+       really should not. However, to be consistent directories should a copy
+       of the path and then correctly free it.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-14
+
+    Upgrade version number to 2.0.2
+    
+    * Increase the version number due to release of 2.0.1
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-14
+
+    Fix for mistake with the --as-needed flag on the linker
+    
+    * The Wl symbol should prefix the --as-needed flag
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-13
+
+    Add as-needed to LDFLAGS
+    
+    * Requirement in debian's social contract to include the as-needed flag in
+      linker flags
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-13
+
+    No need for binary to depend on id3tag
+    
+    * Only the mp3 filetype plugin needs to depend on id3tag
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-08
+
+    Update translation information
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-08
+
+    Update release information
+    
+      * Bugs fixed between 2.0.1 beta1 and 2.0.1 rc1
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-08
+
+    Make generator changelog script more convenient to run
+
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-07
 
     Removal of libglade requires addition of libxml2
