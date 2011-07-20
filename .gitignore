@@ -18,6 +18,7 @@ version
 /.anjuta*
 /.cdtproject
 /.project
+/.autotools
 /.settings
 /CMakeLists.txt.user
 /aclocal.m4
