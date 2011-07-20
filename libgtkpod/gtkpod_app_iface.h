@@ -80,7 +80,7 @@ typedef enum {
 } CONF_STATE;
 
 /* predefined IDs for use with gtkpod_confirmation() */
-enum {
+typedef enum {
     CONF_ID_IPOD_DIR = 0,
     CONF_ID_GTKPOD_WARNING,
     CONF_ID_DANGLING0,
