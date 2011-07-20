@@ -38,15 +38,12 @@
 */
 G_MODULE_EXPORT void on_coverart_dialog_bg_color_set (GtkColorButton *widget, gpointer user_data)
 {
-    GdkColor color;
-    gtk_color_button_get_color (widget, &color);
-    gchar *hexstring = g_strdup_printf("#%02X%02X%02X",
-                                       color.red >> 8,
-                                       color.green >> 8,
-                                       color.blue >> 8);
+    GdkRGBA color;
+    gtk_color_button_get_rgba (widget, &color);
+    gchar *color_string = gdk_rgba_to_string(&color);
 
-    prefs_set_string ("coverart_display_bg_color", hexstring);
-    g_free (hexstring);
+    prefs_set_string ("coverart_display_bg_color", color_string);
+    g_free (color_string);
     coverart_display_update (FALSE);
 }
 
@@ -55,15 +52,12 @@ G_MODULE_EXPORT void on_coverart_dialog_bg_color_set (GtkColorButton *widget, gp
 */
 G_MODULE_EXPORT void on_coverart_dialog_fg_color_set (GtkColorButton *widget, gpointer user_data)
 {
-    GdkColor color;
-    gtk_color_button_get_color (widget, &color);
-    gchar *hexstring = g_strdup_printf("#%02X%02X%02X",
-                                       color.red >> 8,
-                                       color.green >> 8,
-                                       color.blue >> 8);
+    GdkRGBA color;
+    gtk_color_button_get_rgba (widget, &color);
+    gchar *color_string = gdk_rgba_to_string(&color);
 
-    prefs_set_string ("coverart_display_fg_color", hexstring);
-    g_free (hexstring);
+    prefs_set_string ("coverart_display_fg_color", color_string);
+    g_free (color_string);
     coverart_display_update (FALSE);
 }
 
@@ -94,7 +88,7 @@ GtkWidget *init_cover_preferences(gchar *gladepath) {
     GtkWidget *coverart_bgcolorselect_button;
     GtkWidget *coverart_fgcolorselect_button;
     GtkWidget *w, *win;
-    GdkColor *color;
+    GdkRGBA *color;
 
     pref_xml = gtkpod_builder_xml_new(gladepath);
     win = gtkpod_builder_xml_get_widget(pref_xml, "preference_window");
@@ -105,12 +99,12 @@ GtkWidget *init_cover_preferences(gchar *gladepath) {
     gtk_container_remove(GTK_CONTAINER (win), notebook);
 
     color = coverart_get_background_display_color();
-    gtk_color_button_set_color (GTK_COLOR_BUTTON(coverart_bgcolorselect_button), color);
-    g_free (color);
+    gtk_color_button_set_rgba (GTK_COLOR_BUTTON(coverart_bgcolorselect_button), color);
+    gdk_rgba_free(color);
 
     color = coverart_get_foreground_display_color();
-    gtk_color_button_set_color (GTK_COLOR_BUTTON(coverart_fgcolorselect_button), color);
-    g_free (color);
+    gtk_color_button_set_rgba (GTK_COLOR_BUTTON(coverart_fgcolorselect_button), color);
+    gdk_rgba_free(color);
 
     switch (prefs_get_int("cad_sort")) {
     case SORT_ASCENDING:

@@ -590,6 +590,12 @@ void coverart_display_update(gboolean clear_track_list) {
         set_slider_range(0);
     else
         set_slider_range(cdwidget->first_imgindex);
+
+    /*
+     * The slider range is blocked from initiating a redraw so
+     * do it manually here
+     */
+    redraw(clear_track_list);
 }
 
 /**
@@ -600,7 +606,6 @@ void coverart_display_update(gboolean clear_track_list) {
 void coverart_display_sort(gint order) {
     prefs_set_int("cad_sort", order);
     coverart_display_update(TRUE);
-    redraw(FALSE);
     gtkpod_broadcast_preference_change("cad_sort", order);
 }
 
@@ -1699,7 +1704,7 @@ GdkRGBA *coverart_get_foreground_display_color() {
 
     if (album_key_list == NULL)
         hex_string = "#000000";
-    else if (!prefs_get_string_value("coverart_display_bg_color", NULL))
+    else if (!prefs_get_string_value("coverart_display_fg_color", NULL))
         hex_string = "#FFFFFF";
     else
         prefs_get_string_value("coverart_display_fg_color", &hex_string);
