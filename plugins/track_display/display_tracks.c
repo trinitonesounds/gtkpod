@@ -1823,8 +1823,6 @@ static GtkTreeViewColumn *tm_add_column(TM_item tm_item, gint pos) {
         /* for some column names we want to use shorter alternatives to
          get_tm_string() */
     case TM_COLUMN_RATING:
-        gtk_tree_view_column_set_fixed_width(col, 85);
-        gtk_tree_view_column_set_resizable(col, FALSE);
         text = _("Rating");
         break;
     case TM_COLUMN_TRACK_NR:
@@ -2147,8 +2145,15 @@ void tm_show_preferred_columns(void) {
             col_width = 80;
 
         if (horizontal_scrollbar) {
-            gtk_tree_view_column_set_fixed_width(tvc, col_width);
-            gtk_tree_view_column_set_min_width(tvc, -1);
+            switch(tm_item) {
+            case TM_COLUMN_RATING:
+                gtk_tree_view_column_set_fixed_width(tvc, 85);
+                gtk_tree_view_column_set_min_width(tvc, 85);
+                break;
+            default:
+                gtk_tree_view_column_set_fixed_width(tvc, col_width);
+                gtk_tree_view_column_set_min_width(tvc, -1);
+            }
             gtk_tree_view_column_set_expand(tvc, FALSE);
         }
         else {

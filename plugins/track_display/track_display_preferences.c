@@ -453,6 +453,10 @@ GtkWidget *init_track_display_preferences() {
 
     populate_track_cmd_combo(cmd_combo);
 
+    if ((w = gtkpod_builder_xml_get_widget(prefbuilder, "horizontal_scrollbar"))) {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("horizontal_scrollbar"));
+    }
+
     if ((w = gtkpod_builder_xml_get_widget(prefbuilder, "tm_cfg_case_sensitive"))) {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("tm_case_sensitive"));
     }
