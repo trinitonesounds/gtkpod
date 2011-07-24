@@ -15,14 +15,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-04 14:49+0100\n"
-"PO-Revision-Date: 2011-03-26 21:55+0100\n"
+"POT-Creation-Date: 2011-07-25 00:01+0200\n"
+"PO-Revision-Date: 2011-07-25 00:14+0100\n"
 "Last-Translator: Daniele Forsi <daniele@forsi.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-Language: Italian\n"
 "X-Poedit-Country: ITALY\n"
@@ -524,12 +524,9 @@ msgid "update failed (format not supported?)"
 msgstr "aggiornamento fallito (formato non supportato?)"
 
 #: ../libgtkpod/file.c:1567
-#, fuzzy, c-format
+#, c-format
 msgid "File type of %s is not recognised"
-msgstr ""
-"%s\n"
-"\n"
-"il tipo di file di %s non è riconosciuto."
+msgstr "Il tipo di file di %s non è riconosciuto"
 
 #: ../libgtkpod/file.c:1575 ../libgtkpod/misc_playlist.c:742
 #, c-format
@@ -1235,32 +1232,36 @@ msgid "Set Cover"
 msgstr "Imposta copertina"
 
 #: ../libgtkpod/filetype_iface.c:173
-#, fuzzy
 msgid "Error: Track info for this file type not supported."
-msgstr "Errore: testi non supportati per questo formato di file."
+msgstr ""
+"Errore: le informazioni sulle tracce non sono supportate per questo tipo di "
+"file."
 
 #: ../libgtkpod/filetype_iface.c:178
 msgid "Error: Writing track info to files of this file type is not supported."
 msgstr ""
+"Errore: la scrittura delle informazioni sulle tracce nel file non è "
+"supportata per questo tipo di file."
 
 #: ../libgtkpod/filetype_iface.c:183
-#, fuzzy
 msgid "Error: Limiting of sound level not supported for this file type."
-msgstr "Errore: testi non supportati per questo formato di file."
+msgstr ""
+"Errore: la limitazione del livello sonoro non è supportata per questo tipo "
+"di file."
 
 #: ../libgtkpod/filetype_iface.c:193
-#, fuzzy
 msgid "Error: Lyrics not supported for this file type."
-msgstr "Errore: testi non supportati per questo formato di file."
+msgstr "Errore: i testi non sono supportati per questo tipo di file."
 
 #: ../libgtkpod/filetype_iface.c:199
-#, fuzzy
 msgid "Error: Writing of lyrics is not supported for this file type."
-msgstr "Errore: testi non supportati per questo formato di file."
+msgstr ""
+"Errore: la scrittura dei testi non è supportata per questo tipo di file."
 
 #: ../libgtkpod/filetype_iface.c:205
 msgid "Error: Gapless playback for this file type is not supported."
 msgstr ""
+"Errore: la riproduzione senza pause non è supportata per questo tipo di file."
 
 #: ../libgtkpod/gp_itdb.c:808
 msgid "Music Library"
@@ -2208,11 +2209,13 @@ msgid "Could not find source file for '%s'. Track not copied."
 msgstr "Impossibile trovare il file sorgente per «%s». Traccia non copiata."
 
 #: ../libgtkpod/misc_track.c:1854
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "drag and drop: ignored '%s'.\n"
 "reason: %s\n"
-msgstr "drag and drop: ignorato «%s»\n"
+msgstr ""
+"drag and drop: ignorato «%s»\n"
+"motivo: %s\n"
 
 #: ../libgtkpod/misc_track.c:1981
 #, c-format
@@ -3490,12 +3493,12 @@ msgstr "Errore nella copia di «%s» su «%s» (%s)\n"
 #: ../plugins/playlist_display/playlist_display_actions.c:171
 #, c-format
 msgid "'%s'\n"
-msgstr ""
+msgstr "\"%s\"\n"
 
 #: ../plugins/exporter/file_export.c:331
 #, c-format
 msgid "Failed to copy file %s. No error reported."
-msgstr ""
+msgstr "Impossibile copiare il file «%s». Nessun errore riportato."
 
 #: ../plugins/exporter/file_export.c:344
 #, c-format
@@ -3700,6 +3703,8 @@ msgid ""
 "Only writing to m4a/m4b/m4v/mp4 audio tracks is supported. '%s' is not one "
 "of these file formats.\n"
 msgstr ""
+"È supportata solo la scrittura su tracce audio m4a/m4b/m4v/mp4. \"%s\" non è "
+"uno di tali formati.\n"
 
 #: ../plugins/filetype_m4a/mp4file.c:1003
 #: ../plugins/filetype_mp4/mp4file.c:1003
@@ -4395,28 +4400,26 @@ msgstr "_Limitare a"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:64
 #: ../plugins/playlist_display/playlist_display_actions.c:316
-#, fuzzy, c-format
+#, c-format
 msgid "%s\n"
-msgstr ""
-"%s\n"
-"\n"
-"%s"
+msgstr "%s\n"
 
 #. gint id,
 #. gboolean modal,
 #: ../plugins/playlist_display/playlist_display_actions.c:89
 msgid "Directory Addition Errors"
-msgstr ""
+msgstr "Errori nell'aggiunta della directory"
 
 #. title
 #: ../plugins/playlist_display/playlist_display_actions.c:90
-#, fuzzy
 msgid " Some directories were not added successfully"
-msgstr "Alcuni file non sono stati aggiunti con successo"
+msgstr "Alcune directory non sono state aggiunte"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:103
 msgid "Some directories failed to be added but no errors were reported."
 msgstr ""
+"L'aggiunta di alcune directory non è riuscita, ma non è stato riportato "
+"alcun messaggio di errore."
 
 #: ../plugins/playlist_display/playlist_display_actions.c:126
 #: ../plugins/playlist_display/playlist_display_actions.c:266
@@ -4432,18 +4435,19 @@ msgstr "Aggiungi cartella"
 #. gboolean modal,
 #: ../plugins/playlist_display/playlist_display_actions.c:196
 msgid "Playlist Addition Errors"
-msgstr ""
+msgstr "Errori nell'aggiunta della playlist"
 
 #. title
 #: ../plugins/playlist_display/playlist_display_actions.c:197
-#, fuzzy
 msgid "Some tracks in the playlist were not added successfully"
-msgstr "Alcuni file non sono stati aggiunti con successo"
+msgstr "Alcune tracce nella playlist non sono state aggiunte"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:210
 #: ../plugins/playlist_display/playlist_display_actions.c:359
 msgid "Some tracks failed to be added but no errors were reported."
 msgstr ""
+"L'aggiunta di alcune tracce non è riuscita, ma non è stato riportato alcun "
+"messaggio di errore."
 
 #: ../plugins/playlist_display/playlist_display_actions.c:274
 #: ../plugins/playlist_display/playlist_display_actions.c:395
@@ -4460,7 +4464,7 @@ msgstr "Aggiungi file di playlist a «%s»"
 #. gboolean modal,
 #: ../plugins/playlist_display/playlist_display_actions.c:345
 msgid "File Addition Errors"
-msgstr ""
+msgstr "Errori nell'aggiunta del file"
 
 #. title
 #: ../plugins/playlist_display/playlist_display_actions.c:346
@@ -5563,7 +5567,7 @@ msgstr "Mostra le tracce che corrispondono ai criteri inseriti sopra."
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:27
 msgid "Dummy - do not delete"
-msgstr ""
+msgstr "Dummy - do not delete"
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:28
 msgid "Filter tab:"
@@ -5650,12 +5654,11 @@ msgstr "_Mostra"
 
 #: ../plugins/sorttab_display/sorttab_display_actions.c:68
 #: ../plugins/sorttab_display/sorttab_display_actions.c:113
-#, fuzzy, c-format
+#, c-format
 msgid "No entry selected in Filter Tab %d"
 msgstr "Nessuna voce selezionata nella scheda di ordinamento %d"
 
 #: ../plugins/sorttab_display/sorttab_display_actions.c:75
-#, fuzzy
 msgid "Remove entry of which filter tab from database?"
 msgstr "Rimuovere dal database la voce di quale scheda di ordinamento?"
 
@@ -5678,7 +5681,6 @@ msgstr ""
 "filtro?"
 
 #: ../plugins/sorttab_display/sorttab_display_actions.c:107
-#, fuzzy
 msgid "Update selected entry of which filter tab?"
 msgstr "Aggiornare la voce selezionata di quale scheda di ordinamento?"
 
