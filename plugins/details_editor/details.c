@@ -896,7 +896,6 @@ static void details_get_item(T_item item, gboolean assumechanged) {
     case T_TITLE:
     case T_GENRE:
     case T_COMPOSER:
-    case T_FILETYPE:
     case T_GROUPING:
     case T_CATEGORY:
     case T_PODCASTURL:
@@ -1081,6 +1080,7 @@ static void details_get_item(T_item item, gboolean assumechanged) {
             }
         }
         break;
+    case T_FILETYPE:
     case T_TRANSFERRED:
     case T_PC_PATH:
     case T_IPOD_PATH:
@@ -1088,7 +1088,6 @@ static void details_get_item(T_item item, gboolean assumechanged) {
     case T_THUMB_PATH:
     case T_GAPLESS_TRACK_FLAG:
         /* These are read-only only */
-        break;
         break;
     case T_ALL:
     case T_ITEM_NUM:

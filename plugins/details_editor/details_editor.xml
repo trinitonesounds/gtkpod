@@ -2478,6 +2478,8 @@ simultaneously</property>
                                   <object class="GtkEntry" id="details_entry_7">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
+                                    <property name="editable">False</property>
+                                    <property name="has_frame">False</property>
                                     <property name="invisible_char">&#x25CF;</property>
                                   </object>
                                   <packing>
