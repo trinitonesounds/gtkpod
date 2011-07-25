@@ -162,7 +162,7 @@ Track *wav_get_file_info(const gchar *filename, GError **error) {
     track->samplerate = wav_file->samples_per_sec;
     track->tracklen = 1000 * ((double) 8 * len / track->bitrate);
     track->bitrate /= 1000; /* change to kbps */
-    track->filetype = g_strdup("WAV audio file");
+    track->filetype = g_strdup(_("WAV audio file"));
 
     fclose(wav_file->file);
     g_free(wav_file);

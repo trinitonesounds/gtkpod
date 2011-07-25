@@ -146,7 +146,7 @@ static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover);
 
 		if (! g_str_has_suffix(fetch_cover->url->str, ".jpg") && ! g_str_has_suffix(fetch_cover->url->str, ".JPG"))
 		{
-			fetch_cover->err_msg = g_strdup("Only jpg images are currently supported at this time\n");
+			fetch_cover->err_msg = g_strdup(_("Only jpg images are currently supported at this time\n"));
 			return FALSE;
 		}
 
@@ -169,14 +169,14 @@ static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover);
 
 		if (fetchcover_curl_data.memory == NULL)
 		{
-			fetch_cover->err_msg = g_strdup("fetchcover curl data memory is null so failed to download anything!\n");
+			fetch_cover->err_msg = g_strdup(_("fetchcover curl data memory is NULL so failed to download anything!\n"));
 			return FALSE;
 		}
 
 		/* Check that the page returned is a valid web page */
 		if (strstr(fetchcover_curl_data.memory, "<html>") != NULL)
 		{
-			fetch_cover->err_msg = g_strdup("fetchcover memory contains <html> tag so not a valid jpg image\n");
+			fetch_cover->err_msg = g_strdup(_("fetchcover memory contains <html> tag so not a valid jpg image\n"));
 			return FALSE;
 		}
 
@@ -196,7 +196,7 @@ static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover);
 				fetchcover_curl_data.size = 0;
 			}
 			g_free (path);
-			fetch_cover->err_msg = g_strdup ("Failed to create a file with the filename\n");
+			fetch_cover->err_msg = g_strdup(_("Failed to create a file with the filename\n"));
 			return FALSE;
 		}
 
@@ -210,7 +210,7 @@ static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover);
 			}
 			fclose(tmpf);
 			g_free (path);
-			fetch_cover->err_msg = g_strdup("fetchcover failed to write the data to the new file\n");
+			fetch_cover->err_msg = g_strdup(_("fetchcover failed to write the data to the new file\n"));
 			return FALSE;
 		}
 
@@ -221,7 +221,7 @@ static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover);
 		fileformat = gdk_pixbuf_get_file_info (path, NULL, NULL);
 		if (fileformat == NULL)
 		{
-			fetch_cover->err_msg = g_strdup("fetchcover downloaded file is not a valid image file\n");
+			fetch_cover->err_msg = g_strdup(_("fetchcover downloaded file is not a valid image file\n"));
 			return FALSE;
 		}
 
@@ -237,7 +237,7 @@ static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover);
 				fetchcover_curl_data.size = 0;
 			}
 			g_free(path);
-			fetch_cover->err_msg = g_strconcat ("fetchcover error occurred while creating a pixbuf from the file\n", error->message, NULL);
+			fetch_cover->err_msg = g_strconcat(_("fetchcover error occurred while creating a pixbuf from the file\n", error->message, NULL));
 			return FALSE;
 		}
 
@@ -257,7 +257,7 @@ static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover);
 
 		if (tracks == NULL || g_list_length (tracks) <= 0)
 		{
-			fetch_cover->err_msg = g_strdup("fetchcover object's tracks list either NULL or no tracks were selected\n");
+			fetch_cover->err_msg = g_strdup(_("fetchcover object's tracks list either NULL or no tracks were selected\n"));
 			return FALSE;
 		}
 
@@ -298,7 +298,7 @@ static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover);
 
 		if (fetchcover_check_file_exists (fetch_cover) == NULL)
 		{
-			fetch_cover->err_msg = g_strdup("operation cancelled\n");
+			fetch_cover->err_msg = g_strdup(_("operation cancelled\n"));
 			return FALSE;
 		}
 
