@@ -84,5 +84,5 @@ PO_FILES=\
 
 # Create plugin description file with translations
 build-plugin-file: $(INTLTOOL_MERGE) $(PO_FILES)
-	$(INTLTOOL_MERGE) $(top_srcdir)/po $(plugin_name).plugin.in $(plugin_name).plugin -d -u -c $(top_builddir)/po/.intltool-merge-cache
+	$(INTLTOOL_MERGE) $(top_srcdir)/po $(srcdir)/$(plugin_name).plugin.in $(plugin_name).plugin -d -u -c $(top_builddir)/po/.intltool-merge-cache
 

@@ -15,7 +15,6 @@ if [ -f ${distdir}/ChangeLog ]; then
 	chmod u+w ${distdir}/ChangeLog
 fi
 
-cd ${top_srcdir}
 git log --date-order --date=short | \
 	sed -e '/^commit.*$/d' | \
 	awk '/^Author/ {sub(/\\$/,""); getline t; print $0 t; next}; 1' | \
