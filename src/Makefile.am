@@ -52,4 +52,4 @@ gsettings_SCHEMAS = $(schema_in_files:.gschema.xml.in=.gschema.xml)
 EXTRA_DIST = \
 	$(schema_in_files)
 
-
+CLEANFILES = $(gsettings_SCHEMAS)
