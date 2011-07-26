@@ -238,7 +238,8 @@
                                 <property name="column_spacing">80</property>
                                 <property name="row_spacing">6</property>
                                 <child>
-                                  <object class="GtkComboBoxEntry" id="ipod_model_combo">
+                                  <object class="GtkComboBoxText" id="ipod_model_combo">
+                                    <property name="has_entry">True</property>
                                     <property name="visible">True</property>
                                   </object>
                                   <packing>
@@ -1345,7 +1346,8 @@ NOTE: if you sync with the master playlist, you must check this option if you wa
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkComboBoxEntry" id="crw_ipod_model_combo">
+                  <object class="GtkComboBoxText" id="crw_ipod_model_combo">
+                   <property name="has_entry">True</property>
                     <property name="visible">True</property>
                   </object>
                   <packing>
@@ -1535,7 +1537,8 @@ NOTE: if you sync with the master playlist, you must check this option if you wa
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkComboBoxEntry" id="iid_model_combo">
+                          <object class="GtkComboBoxText" id="iid_model_combo">
+                            <property name="has_entry">True</property>
                             <property name="visible">True</property>
                           </object>
                           <packing>
@@ -1695,7 +1698,8 @@ NOTE: if you sync with the master playlist, you must check this option if you wa
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkComboBoxEntry" id="simd_model_combo">
+                          <object class="GtkComboBoxText" id="simd_model_combo">
+                            <property name="has_entry">True</property>
                             <property name="width_request">250</property>
                             <property name="visible">True</property>
                           </object>
