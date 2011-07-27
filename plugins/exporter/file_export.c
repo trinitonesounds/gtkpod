@@ -317,7 +317,7 @@ static gboolean write_track(struct fcd *fcd) {
 
                     if (error) {
                         /* File may have been skipped so need to log message */
-                        fcd->errors = g_string_append(fcd->errors, g_strdup_printf(("'%s'\n"), error->message));
+                        fcd->errors = g_string_append(fcd->errors, g_strdup_printf(_("'%s'\n"), error->message));
                         g_error_free(error);
                     }
                 }

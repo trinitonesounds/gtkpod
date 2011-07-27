@@ -68,15 +68,15 @@ void set_cell(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTreeModel *t
     else {
         if (info->capacity >= 1) { /* size in GB */
             text
-                    = g_strdup_printf("%2.0f GB %s (x%s)", info->capacity, itdb_info_get_ipod_model_name_string(info->ipod_model), info->model_number);
+                    = g_strdup_printf(_("%2.0f GB %s (x%s)"), info->capacity, itdb_info_get_ipod_model_name_string(info->ipod_model), info->model_number);
         }
         else if (info->capacity > 0) { /* size in MB */
             text
-                    = g_strdup_printf("%3.0f MB %s (x%s)", info->capacity * 1024, itdb_info_get_ipod_model_name_string(info->ipod_model), info->model_number);
+                    = g_strdup_printf(_("%3.0f MB %s (x%s)"), info->capacity * 1024, itdb_info_get_ipod_model_name_string(info->ipod_model), info->model_number);
         }
         else { /* no capacity information available */
             text
-                    = g_strdup_printf("%s (x%s)", itdb_info_get_ipod_model_name_string(info->ipod_model), info->model_number);
+                    = g_strdup_printf(_("%s (x%s)"), itdb_info_get_ipod_model_name_string(info->ipod_model), info->model_number);
         }
     }
 

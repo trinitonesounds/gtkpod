@@ -44,7 +44,7 @@ Track *video_get_file_info(const gchar *filename, GError **error) {
     track = gp_track_new();
     track->mediatype = ITDB_MEDIATYPE_MOVIE;
     track->movie_flag = 0x01;
-    track->filetype = g_strdup("Generic video file");
+    track->filetype = g_strdup(_("Generic video file"));
 
     return track;
 }

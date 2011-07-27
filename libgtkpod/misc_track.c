@@ -1102,7 +1102,8 @@ time_t track_get_timestamp(Track *track, T_item t_item) {
 
 /* unified format for TRACKLEN, STARTTIME, STOPTIME */
 static gchar *track_get_length_string(gint32 length) {
-    return g_strdup_printf("%d:%06.3f", length / 60000, ((float) (length % 60000)) / 1000);
+    /* Translators: this is minutes:seconds.thousandths */
+    return g_strdup_printf(_("%d:%06.3f"), length / 60000, ((float) (length % 60000)) / 1000);
 }
 
 /* Return text for display. g_free() after use. */
@@ -1192,19 +1193,19 @@ gchar *track_get_text(Track *track, T_item item) {
         if (track->tracks == 0)
             text = g_strdup_printf("%d", track->track_nr);
         else
-            text = g_strdup_printf("%d/%d", track->track_nr, track->tracks);
+            text = g_strdup_printf(_("%d/%d"), track->track_nr, track->tracks);
         break;
     case T_CD_NR:
         if (track->cds == 0)
             text = g_strdup_printf("%d", track->cd_nr);
         else
-            text = g_strdup_printf("%d/%d", track->cd_nr, track->cds);
+            text = g_strdup_printf(_("%d/%d"), track->cd_nr, track->cds);
         break;
     case T_IPOD_ID:
         if (track->id != -1)
             text = g_strdup_printf("%d", track->id);
         else
-            text = g_strdup("--");
+            text = g_strdup(_("n/a"));
         break;
     case T_PC_PATH:
         text = g_strdup(etr->pc_path_utf8);

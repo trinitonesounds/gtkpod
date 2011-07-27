@@ -22,6 +22,7 @@ libgtkpod/prefs.c
 libgtkpod/sha1.c
 libgtkpod/syncdir.c
 libgtkpod/tools.c
+plugins/filetype_video/videofile.c
 plugins/core_preferences/core_prefs.c
 [type: gettext/ini]plugins/core_preferences/core_prefs.plugin.in
 [type: gettext/glade]plugins/core_preferences/core_prefs.xml

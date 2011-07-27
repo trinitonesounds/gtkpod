@@ -702,13 +702,13 @@ Track *mp4_get_file_info(const gchar *mp4FileName, GError **error) {
                 value = strrchr(mp4FileName, '.');
                 if (value) {
                     if (g_ascii_strcasecmp(value, ".m4a") == 0)
-                        track->filetype = g_strdup("AAC audio file");
+                        track->filetype = g_strdup(_("AAC audio file"));
                     if (g_ascii_strcasecmp(value, ".m4p") == 0)
-                        track->filetype = g_strdup("Protected AAC audio file");
+                        track->filetype = g_strdup(_("Protected AAC audio file"));
                     if (g_ascii_strcasecmp(value, ".m4b") == 0)
-                        track->filetype = g_strdup("AAC audio book file");
+                        track->filetype = g_strdup(_("AAC audio book file"));
                     if (g_ascii_strcasecmp(value, ".mp4") == 0)
-                        track->filetype = g_strdup("MP4 video file");
+                        track->filetype = g_strdup(_("MP4 video file"));
                 }
                 if (prefs_get_int("readtags")) {
                     if (MP4GetMetadataName(mp4File, &value) && value != NULL) {
