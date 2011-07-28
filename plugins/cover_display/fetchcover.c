@@ -237,7 +237,7 @@ static gchar *fetchcover_check_file_exists (Fetch_Cover *fetch_cover);
 				fetchcover_curl_data.size = 0;
 			}
 			g_free(path);
-			fetch_cover->err_msg = g_strconcat(_("fetchcover error occurred while creating a pixbuf from the file\n", error->message, NULL));
+			fetch_cover->err_msg = g_strconcat(_("fetchcover error occurred while creating a pixbuf from the file\n"), error->message, NULL);
 			return FALSE;
 		}
 

@@ -78,7 +78,7 @@ Track *ogg_get_file_info(const gchar *oggFileName, GError **error) {
         }
         else {
             track = gp_track_new();
-            track->description = g_strdup_(("Ogg audio file"));
+            track->description = g_strdup(_("Ogg audio file"));
             //FIXME
             // Question whether ogg video files should be handled separately?
             track->mediatype = ITDB_MEDIATYPE_AUDIO;

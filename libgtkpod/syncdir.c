@@ -34,7 +34,6 @@
     #include <config.h>
 #endif
 
-#include <libintl.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>

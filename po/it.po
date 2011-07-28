@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-27 12:48+0200\n"
-"PO-Revision-Date: 2011-07-27 12:49+0100\n"
+"POT-Creation-Date: 2011-07-28 16:28+0200\n"
+"PO-Revision-Date: 2011-07-28 16:29+0100\n"
 "Last-Translator: Daniele Forsi <daniele@forsi.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
@@ -3566,6 +3566,10 @@ msgstr "Supporto per il tipo file Ogg"
 #, c-format
 msgid "'%s' does not appear to be an Ogg audio file.\n"
 msgstr "«%s» non sembra essere un file audio Ogg.\n"
+
+#: ../plugins/filetype_ogg/oggfile.c:81
+msgid "Ogg audio file"
+msgstr "File audio Ogg"
 
 #: ../plugins/filetype_ogg/plugin.c:90
 msgid "Ogg audio file type"

@@ -32,7 +32,6 @@
 
 #include <stdlib.h>
 #include <time.h>
-#include <libintl.h>
 #include <gtk/gtk.h>
 #include "gtkpod.h"
 #include <glib/gi18n-lib.h>
