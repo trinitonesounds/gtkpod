@@ -1,3 +1,368 @@
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-07-24
+
+    Update news and translation files for gtk 3.0 release
+    
+    * News for gtk 3 branch
+    
+    * ChangeLog for gtk 3 branch
+
+Merge: 068590a 915a763
+Daniele Forsi <daniele@forsi.it>	2011-07-28
+
+    Merge branch 'master' into gtk-3.0
+    
+    Conflicts:
+po/it.po           
+src/main.c           
+
+Daniele Forsi <daniele@forsi.it>	2011-07-28
+
+    Remove unneeded include
+    
+    * libgtkpod/syncdir.c
+    * src/main.c
+     * Remove libintl.h for consistency with all other source files that
+       include glib/gi18n-lib.h which in turn includes libintl.h
+
+Daniele Forsi <daniele@forsi.it>	2011-07-28
+
+    Update Italian translation
+
+Daniele Forsi <daniele@forsi.it>	2011-07-28
+
+    Fix compilation errors introduced by commit 09b1ef56
+    
+    * plugins/cover_display/fetchcover.c
+    * plugins/filetype_ogg/oggfile.c
+     * Fix syntax for the "_()" macro.
+
+Daniele Forsi <daniele@forsi.it>	2011-07-27
+
+    Update Italian translation
+
+Daniele Forsi <daniele@forsi.it>	2011-07-26
+
+    Fix make distcheck
+    
+    * src/Makefile.am
+     * Remove generated file.
+
+Merge: bcf96a2 b82c87d
+Daniele Forsi <daniele@forsi.it>	2011-07-27
+
+    Merge branch 'master' into gtk-3.0
+    
+    Don't merge changes to ChangeLog, NEWS and translations (except it.po).
+    Commands:
+    git checkout gtk-3.0
+    git merge master --strategy recursive --strategy-option ours --no-commit
+    git checkout HEAD^ ChangeLog NEWS
+    git checkout master po/it.po
+    git commit
+
+Daniele Forsi <daniele@forsi.it>	2011-07-27
+
+    Fix crash when trying to open the Configure Repositories dialog
+    
+     * plugins/repository_editor/repository_editor.xml
+      * Replace GtkComboBoxEntry with GtkComboBoxText with has_entry=true
+    
+    Fixes:
+    ** ERROR **: Failed to create builder from file /usr/share/gtkpod/data/glade/repository_editor.xml: Invalid object type `GtkComboBoxEntry'
+    aborting...
+    
+    Program received signal SIGABRT, Aborted.
+
+Daniele Forsi <daniele@forsi.it>	2011-07-26
+
+    Fix make distcheck
+
+Daniele Forsi <daniele@forsi.it>	2011-07-26
+
+    Fix make check
+
+Daniele Forsi <daniele@forsi.it>	2011-07-25
+
+    Update Italian translation
+
+Daniele Forsi <daniele@forsi.it>	2011-07-25
+
+    More strings need translation
+
+Daniele Forsi <daniele@forsi.it>	2011-07-25
+
+    File type field is not to be edited by the user
+
+Daniele Forsi <daniele@forsi.it>	2011-07-25
+
+    Update Italian translation
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-07-24
+
+    Media player plugin fixes
+    
+    * When the stop button is pressed, ensure the the play/pause button is
+      reset accordinly.
+    
+    * Add some warning and debug information if the player fails to play.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-07-24
+
+    Track plugin fixes
+    
+    * display_track.c
+     * Stop the Rating column from being expanded to a too long a size
+    
+    * track_display.xml
+     * Align 2 checkboxes in the preferences to make them look a little more
+       neat
+    
+    * track_display_preferences.c
+     * Populate the horizontal scrollbar checkbox will its value
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-07-20
+
+    Cover art display fixes for colors and updating
+    
+    * cover_display_preferences.c
+     * display_coverart has transitioned to GdkRGBA while the preference dialog
+       has not, producing some odd colours for the foreground text colour.
+    
+    * display_coverart.c
+     * coverart_display_update never actually redrawing the cover display so
+       a call to redraw is required.
+     * no need to include a separate one in the sort function as a consequence
+     * typo in coverart_get_foreground_display_color
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-07-20
+
+    Ignore eclipse autotools config file
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-07-20
+
+    Stop volume property warning when media player loaded
+    
+    * On starting, an error concerning volume_adjustment is logged. Resaving
+      the gtkbuilder file with glade-3 solves this.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-07-20
+
+    Fix to address compilation error in macport
+    
+    * Error identified by Ryan Stonecipher and patch provided by teuf.
+    
+    * Thanks to both.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-07-17
+
+    Fixes cover art preference stretching
+    
+    * Radio buttons in the coverart display preferences are stretching when the
+      dialog is resized. This corrects this behaviour.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-07-11
+
+    Append LDFLAGS rather than replace them entirely
+    
+    * configure.ac
+     * LDFLAGS should be appended to rather than replaced
+     * Thanks to Samuli.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-06-05
+
+    Update changelong and news for release
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-06-04
+
+    Updated translation files ready for new release
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-06-05
+
+    Updated translation files ready for new release
+
+Merge: c9bf5ab e7def59
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-06-04
+
+    Merge branch 'master' into gtk-3.0
+    
+    Conflicts:
+libgtkpod/file.c           
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-06-04
+
+    Supply GErrors to add functions
+    
+    * Try and avoid displaying multiple dialogs when adding files, directories
+      and playlists.
+    
+    * file.c
+     * Replaces all gtkpod_warnings with population of a GError
+    
+    * gp_private.*
+     * log_error_printf function for convenience in having to duplicate a
+       gchar * each time an error is to be logged
+    
+    * playlist_display_actions.c
+     * File, directory and playlist adddition functions record errors with any
+       additions. These are appended to a single error message which is
+       displayed at the end of the addition process
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-06-03
+
+    Fix to french translation
+    
+    * Received from debian bugs tracker. Thanks to mfv.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-24
+
+    m4a plugin fails to support m4b files
+    
+    * Adds in the m4b suffix which is supported by the m4a file type. Simple
+      error not to have been included previously.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-24
+
+    m4a plugin fails to support m4b files
+    
+    * Adds in the m4b suffix which is supported by the m4a file type. Simple
+      error not to have been included previously.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-21
+
+    Update to documentation
+    
+    * Update to documentation.
+    
+    * Thanks to mfv (mvescovi at gmail.com) for the patch.
+    
+    * This is the same patch as reverted in the previous
+      commit but the patch was attributed incorrectly. The
+commit corrects this attribution.           
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-22
+
+    Revert "Update to documentation"
+    
+    This reverts commit 4355f3630a543202f77048a1dd14ff6aa51c257a.
+    
+    This patch has been wrongly attributed.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-21
+
+    Update to documentation
+    
+    * Update to documentation.
+    
+    * Thanks to mfv (mvescovi at gmail.com) for the patch.
+    
+    * This is the same patch as reverted in the previous
+      commit but the patch was attributed incorrectly. The
+commit corrects this attribution.           
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-22
+
+    Revert "Update to documentation"
+    
+    This reverts commit 4355f3630a543202f77048a1dd14ff6aa51c257a.
+    
+    This patch has been wrongly attributed.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-21
+
+    Update to documentation
+    
+    * Update to documentation.
+    
+    * Thanks to Götzg (goetz.waschk AT gmail.com) for the patch
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-21
+
+    Update to documentation
+    
+    * Update to documentation.
+    
+    * Thanks to Götzg (goetz.waschk AT gmail.com) for the patch
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-17
+
+    Update version.sh script with new version number
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-15
+
+    Correction of merge
+
+Merge: e5b2bbd aefe455
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-15
+
+    Merge branch 'master' into gtk-3.0
+    
+    Conflicts:
+configure.ac           
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-15
+
+    Errors not being cascaded in write file info function
+    
+    * file.c
+     * modifies filetype_write_file_info function to avoid throwing away the
+       populated GError.
+    
+    * filetype_iface.c
+     * Ensure that the no functions have supported logging
+    
+    * mp4file.c
+     * Better explanation of unsupported mp4 files
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-15
+
+    Stop illegal freeing of memory on exit
+    
+    * directories.c
+     * When installed, the directory path is not being manufactured by the
+       init_directories function but points to the parameter passed in.
+     * The dispose directories function tries to free this pointer when it
+       really should not. However, to be consistent directories should a copy
+       of the path and then correctly free it.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-14
+
+    Upgrade version number to 2.0.2
+    
+    * Increase the version number due to release of 2.0.1
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-14
+
+    Fix for mistake with the --as-needed flag on the linker
+    
+    * The Wl symbol should prefix the --as-needed flag
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-13
+
+    Add as-needed to LDFLAGS
+    
+    * Requirement in debian's social contract to include the as-needed flag in
+      linker flags
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-13
+
+    No need for binary to depend on id3tag
+    
+    * Only the mp3 filetype plugin needs to depend on id3tag
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-08
+
+    Update translation information
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-08
+
+    Update release information
+    
+      * Bugs fixed between 2.0.1 beta1 and 2.0.1 rc1
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-08
+
+    Make generator changelog script more convenient to run
+
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-07
 
     Removal of libglade requires addition of libxml2
@@ -5,6 +370,20 @@ phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-07
     * libxml2 is implied in distros like mandriva but not in fedora.
     
     * Removal of libglade highlights requirement of libxml2
+
+Merge: fe52be4 71b72c6
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-07
+
+    Merge branch 'master' into gtk-3.0
+    
+    Conflicts:
+configure.ac           
+plugins/cover_display/display_coverart.c           
+plugins/playlist_display/playlist_display_spl.c           
+plugins/repository_editor/repository.c           
+plugins/repository_editor/repository_init.c           
+plugins/sorttab_display/display_sorttabs.c           
+plugins/track_display/display_tracks.c           
 
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-06
 
@@ -33,6 +412,14 @@ phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-07
     
     * configure dictates that compile should fail upon use of deprecated functions
       so migrate deprecated combo box code to make it compatible.
+
+Merge: 76ae6d1 53ddce8
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-03
+
+    Merge branch 'master' into gtk-3.0
+    
+    Conflicts:
+configure.ac           
 
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-02
 
@@ -64,6 +451,76 @@ phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-05-01
     * If gstreamer plugins have not been installed then it is possible to
       segfault application as the gstreamer factory fails to create a play
       element
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-04-29
+
+    Stop the sort order preference containers from filling the preference tab
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-04-29
+
+    Gdk to Cairo migration of coverart display
+    
+    * Migrate GdkColor use to GdkRGBA
+    
+    * cairo_region_t replaces GdkRegion
+    
+    * Replaces expose event with draw event which already provide a cairo
+      context to draw on.
+    
+    * Horizontal scroll bars no longer have an update-policy property
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-04-29
+
+    Gdk / cairo migration necessary for the rating stars renderer in track display
+    
+    * Cairo use is preferred directly over GDK
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-04-29
+
+    Migrate combo boxes due to changes with combo box and combo box text
+    
+    * combo_box_append_text can no longer be used with combo_box but only with
+      combo_box_text. Replace these with appending iters to the combo box models
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-04-29
+
+    Fix warnings about variables in libgtkpod
+    
+    * Variables declared, set but never used
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-04-29
+
+    Realignment of anjuta-app in line with new version
+    
+    * Taken the code from the anjuta-app in version 2.91 and updated the
+      gtkpod version acccordingly
+    
+    * New issues include anjuta;s use of g_settings and introduction of a
+      supporting gschema. A gtkpod version has been created accordingly
+    
+    * Change in gtkpod_app_iface api to support new anjuta docking functions
+    
+    * anjuta ui manager and preferences are not gtkwidgets but gobjects hence
+      unref them rather than destroy them
+
+scorpion <scorpion@falcon15.BIRDS-OF-PREY>	2011-04-17
+
+    Initial migration fixes for gdk/gtk version 3.0
+
+scorpion <scorpion@falcon15.BIRDS-OF-PREY>	2011-04-17
+
+    gtkdialog.has_separator property no longer supported
+
+scorpion <scorpion@falcon15.BIRDS-OF-PREY>	2011-04-17
+
+    Upgrade gtk/glib modules to version 3 and similar
+    
+    * Include GLIB_SETTINGS macros since anjuta now requires it
+    
+    * Sort out some spacing issues
+    
+    * Upgrade the libgtkpod pc file to be version 1.3, making it obvious that
+      it has been modified.
 
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-04-29
 

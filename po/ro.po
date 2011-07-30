@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-04 23:42+0000\n"
+"POT-Creation-Date: 2011-07-24 22:13+0100\n"
 "PO-Revision-Date: 2010-08-08 12:46+0100\n"
 "Last-Translator: alexef <alex@eftimie.ro>\n"
 "Language-Team: Romanian <tradu@softwareliber.ro>\n"
@@ -1481,7 +1481,7 @@ msgid "Track Nr (#)"
 msgstr "Nr pistă"
 
 #: ../libgtkpod/misc_conversion.c:72
-#: ../plugins/track_display/display_tracks.c:1840
+#: ../plugins/track_display/display_tracks.c:1838
 msgid "Transferred"
 msgstr "Transferat"
 
@@ -1516,7 +1516,7 @@ msgstr "Număr redări"
 
 #: ../libgtkpod/misc_conversion.c:79
 #: ../plugins/playlist_display/playlist_display_spl.c:95
-#: ../plugins/track_display/display_tracks.c:1828
+#: ../plugins/track_display/display_tracks.c:1826
 msgid "Rating"
 msgstr "Apreciere"
 
@@ -1547,7 +1547,7 @@ msgstr "Verificare sunet"
 #: ../libgtkpod/misc_conversion.c:85
 #: ../plugins/playlist_display/playlist_display_spl.c:82
 #: ../plugins/sorttab_display/display_sorttabs.c:2593
-#: ../plugins/track_display/display_tracks.c:1876
+#: ../plugins/track_display/display_tracks.c:1874
 msgid "Year"
 msgstr "An"
 
@@ -3077,27 +3077,27 @@ msgid "Display Cover Artwork of Tracks"
 msgstr "_Piese afişate"
 
 #. Set the resolution in the label
-#: ../plugins/cover_display/display_coverart.c:1453
+#: ../plugins/cover_display/display_coverart.c:1458
 #: ../plugins/photo_editor/display_photo.c:952
 #, fuzzy, c-format
 msgid "<b>Image Dimensions: %d x %d</b>"
 msgstr "<b>Dimensiuni imagine: %s</b>"
 
-#: ../plugins/cover_display/display_coverart.c:1603
+#: ../plugins/cover_display/display_coverart.c:1608
 msgid "Failed to remove the album from the album hash store."
 msgstr "Ştergerea albumului din memoria hash a albumelor eşuată."
 
-#: ../plugins/cover_display/display_coverart.c:1968
+#: ../plugins/cover_display/display_coverart.c:1973
 #: ../plugins/details_editor/details.c:1704
 msgid "Item had to be downloaded but gtkpod was not compiled with curl."
 msgstr ""
 
-#: ../plugins/cover_display/display_coverart.c:1974
+#: ../plugins/cover_display/display_coverart.c:1979
 #, c-format
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
 msgstr "Eroare la tragerea unei imagini în căsuţa afişare copertă: %s\n"
 
-#: ../plugins/cover_display/display_coverart.c:2007
+#: ../plugins/cover_display/display_coverart.c:2012
 #: ../plugins/details_editor/details.c:1752
 msgid "Successfully set new coverart for selected tracks"
 msgstr "Copertă nouă stabilită cu succes pentru piesele selectate"
@@ -5651,7 +5651,7 @@ msgid ""
 msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:18
-#: ../plugins/track_display/display_tracks.c:1870
+#: ../plugins/track_display/display_tracks.c:1868
 msgid "Added"
 msgstr "Adăugat"
 
@@ -5879,47 +5879,47 @@ msgstr ""
 "puteţi întoarce în starea anterioară sortării.\n"
 "\n"
 
-#: ../plugins/track_display/display_tracks.c:1831
+#: ../plugins/track_display/display_tracks.c:1829
 msgid "#"
 msgstr "#"
 
-#: ../plugins/track_display/display_tracks.c:1834
+#: ../plugins/track_display/display_tracks.c:1832
 msgid "CD"
 msgstr "CD"
 
-#: ../plugins/track_display/display_tracks.c:1837
+#: ../plugins/track_display/display_tracks.c:1835
 msgid "ID"
 msgstr "ID"
 
-#: ../plugins/track_display/display_tracks.c:1851
+#: ../plugins/track_display/display_tracks.c:1849
 msgid "Cmpl"
 msgstr ""
 
-#: ../plugins/track_display/display_tracks.c:1858
+#: ../plugins/track_display/display_tracks.c:1856
 msgid "Time"
 msgstr "Timp"
 
-#: ../plugins/track_display/display_tracks.c:1861
+#: ../plugins/track_display/display_tracks.c:1859
 msgid "Plycnt"
 msgstr "Red"
 
-#: ../plugins/track_display/display_tracks.c:1864
+#: ../plugins/track_display/display_tracks.c:1862
 msgid "Played"
 msgstr "Redat"
 
-#: ../plugins/track_display/display_tracks.c:1867
+#: ../plugins/track_display/display_tracks.c:1865
 msgid "Modified"
 msgstr "Modificat"
 
-#: ../plugins/track_display/display_tracks.c:1873
+#: ../plugins/track_display/display_tracks.c:1871
 msgid "Released"
 msgstr "Lansat"
 
-#: ../plugins/track_display/display_tracks.c:1879
+#: ../plugins/track_display/display_tracks.c:1877
 msgid "Vol."
 msgstr ""
 
-#: ../plugins/track_display/display_tracks.c:1882
+#: ../plugins/track_display/display_tracks.c:1880
 msgid "Sndchk."
 msgstr "Verif."
 

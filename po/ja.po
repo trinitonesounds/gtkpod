@@ -7,10 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-04 23:42+0000\n"
+"POT-Creation-Date: 2011-07-24 22:13+0100\n"
 "PO-Revision-Date: 2010-08-08 12:41+0100\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: jp <jp@li.gtkpod.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1381,7 +1382,7 @@ msgid "Track Nr (#)"
 msgstr "トラックNo.(#)"
 
 #: ../libgtkpod/misc_conversion.c:72
-#: ../plugins/track_display/display_tracks.c:1840
+#: ../plugins/track_display/display_tracks.c:1838
 msgid "Transferred"
 msgstr "転送済み"
 
@@ -1416,7 +1417,7 @@ msgstr "再生回数"
 
 #: ../libgtkpod/misc_conversion.c:79
 #: ../plugins/playlist_display/playlist_display_spl.c:95
-#: ../plugins/track_display/display_tracks.c:1828
+#: ../plugins/track_display/display_tracks.c:1826
 msgid "Rating"
 msgstr "評価"
 
@@ -1447,7 +1448,7 @@ msgstr "サウンドチェック"
 #: ../libgtkpod/misc_conversion.c:85
 #: ../plugins/playlist_display/playlist_display_spl.c:82
 #: ../plugins/sorttab_display/display_sorttabs.c:2593
-#: ../plugins/track_display/display_tracks.c:1876
+#: ../plugins/track_display/display_tracks.c:1874
 msgid "Year"
 msgstr "年"
 
@@ -2886,27 +2887,27 @@ msgid "Display Cover Artwork of Tracks"
 msgstr "表示されている曲(_D)"
 
 #. Set the resolution in the label
-#: ../plugins/cover_display/display_coverart.c:1453
+#: ../plugins/cover_display/display_coverart.c:1458
 #: ../plugins/photo_editor/display_photo.c:952
 #, c-format
 msgid "<b>Image Dimensions: %d x %d</b>"
 msgstr ""
 
-#: ../plugins/cover_display/display_coverart.c:1603
+#: ../plugins/cover_display/display_coverart.c:1608
 msgid "Failed to remove the album from the album hash store."
 msgstr ""
 
-#: ../plugins/cover_display/display_coverart.c:1968
+#: ../plugins/cover_display/display_coverart.c:1973
 #: ../plugins/details_editor/details.c:1704
 msgid "Item had to be downloaded but gtkpod was not compiled with curl."
 msgstr ""
 
-#: ../plugins/cover_display/display_coverart.c:1974
+#: ../plugins/cover_display/display_coverart.c:1979
 #, c-format
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
 msgstr ""
 
-#: ../plugins/cover_display/display_coverart.c:2007
+#: ../plugins/cover_display/display_coverart.c:2012
 #: ../plugins/details_editor/details.c:1752
 msgid "Successfully set new coverart for selected tracks"
 msgstr ""
@@ -5444,7 +5445,7 @@ msgid ""
 msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:18
-#: ../plugins/track_display/display_tracks.c:1870
+#: ../plugins/track_display/display_tracks.c:1868
 msgid "Added"
 msgstr "登録日"
 
@@ -5669,47 +5670,47 @@ msgstr ""
 "はできません。\n"
 "\n"
 
-#: ../plugins/track_display/display_tracks.c:1831
+#: ../plugins/track_display/display_tracks.c:1829
 msgid "#"
 msgstr "#"
 
-#: ../plugins/track_display/display_tracks.c:1834
+#: ../plugins/track_display/display_tracks.c:1832
 msgid "CD"
 msgstr ""
 
-#: ../plugins/track_display/display_tracks.c:1837
+#: ../plugins/track_display/display_tracks.c:1835
 msgid "ID"
 msgstr "ID"
 
-#: ../plugins/track_display/display_tracks.c:1851
+#: ../plugins/track_display/display_tracks.c:1849
 msgid "Cmpl"
 msgstr "コンピ"
 
-#: ../plugins/track_display/display_tracks.c:1858
+#: ../plugins/track_display/display_tracks.c:1856
 msgid "Time"
 msgstr "演奏時間"
 
-#: ../plugins/track_display/display_tracks.c:1861
+#: ../plugins/track_display/display_tracks.c:1859
 msgid "Plycnt"
 msgstr "再生回数"
 
-#: ../plugins/track_display/display_tracks.c:1864
+#: ../plugins/track_display/display_tracks.c:1862
 msgid "Played"
 msgstr "演奏日"
 
-#: ../plugins/track_display/display_tracks.c:1867
+#: ../plugins/track_display/display_tracks.c:1865
 msgid "Modified"
 msgstr "変更日"
 
-#: ../plugins/track_display/display_tracks.c:1873
+#: ../plugins/track_display/display_tracks.c:1871
 msgid "Released"
 msgstr "公開日"
 
-#: ../plugins/track_display/display_tracks.c:1879
+#: ../plugins/track_display/display_tracks.c:1877
 msgid "Vol."
 msgstr "音量"
 
-#: ../plugins/track_display/display_tracks.c:1882
+#: ../plugins/track_display/display_tracks.c:1880
 msgid "Sndchk."
 msgstr "サウンドチェック"
 
