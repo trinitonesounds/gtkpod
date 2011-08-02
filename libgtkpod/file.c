@@ -394,7 +394,7 @@ gint add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gboole
         GDir *dir = g_dir_open(name, 0, NULL);
         block_widgets();
         if (dir != NULL) {
-            G_CONST_RETURN gchar *next;
+            const gchar *next;
             do {
                 next = g_dir_read_name(dir);
                 if (next != NULL) {

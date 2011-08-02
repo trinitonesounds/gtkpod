@@ -80,9 +80,9 @@ Playlist *add_new_pl_user_name (iTunesDB *itdb, gchar *dflt, gint32 pos);
 void add_new_pl_or_spl_user_name (iTunesDB *itdb, gchar *dflt, gint32 pos);
 void create_add_files_fileselector (void);
 void create_add_playlists_fileselector (void);
-gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);
-gchar *concat_dir_if_relative (G_CONST_RETURN gchar *base_dir,
-			       G_CONST_RETURN gchar *rel_dir);
+gchar *concat_dir (const gchar *dir, const gchar *file);
+gchar *concat_dir_if_relative (const gchar *base_dir,
+			       const gchar *rel_dir);
 float get_ms_since (GTimeVal *old_time, gboolean update);
 gint get_sort_tab_number (gchar *text);
 gboolean parse_tracks_from_string (gchar **s, Track **track);

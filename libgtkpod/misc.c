@@ -161,7 +161,7 @@ void update_blocked_widget(GtkWidget *w, gboolean sens) {
 /* Concats @base_dir and @rel_dir if and only if @rel_dir is not
  * absolute (does not start with '~' or '/'). Otherwise simply return
  * a copy of @rel_dir. Must free return value after use */
-gchar *concat_dir_if_relative(G_CONST_RETURN gchar *base_dir, G_CONST_RETURN gchar *rel_dir) {
+gchar *concat_dir_if_relative(const gchar *base_dir, const gchar *rel_dir) {
     /* sanity */
     if (!rel_dir || !*rel_dir)
         return g_build_filename(base_dir, rel_dir, NULL);

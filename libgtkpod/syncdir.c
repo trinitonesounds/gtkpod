@@ -318,7 +318,7 @@ static void add_files(gpointer key, gpointer value, gpointer user_data) {
     if (g_file_test(dirname, G_FILE_TEST_IS_DIR)) {
         GDir *dir = g_dir_open(dirname, 0, NULL);
         if (dir != NULL) {
-            G_CONST_RETURN gchar *next;
+            const gchar *next;
             while ((next = g_dir_read_name(dir))) {
                 gchar *filename = g_build_filename(dirname, next, NULL);
                 FileType *filetype = determine_filetype(filename);
