@@ -49,12 +49,6 @@
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/prefs.h"
 
-#ifndef HAVE_GSEALED_GDK
-/* Compatibility macros for previous GDK versions */
-#define gdk_drag_context_get_selected_action(x) ((x)->action)
-#define gdk_drag_context_get_suggested_action(x) ((x)->suggested_action)
-#endif
-
 /* pointer to the playlist display's toolbar */
 static GtkToolbar *playlist_toolbar = NULL;
 /* pointer to the treeview for the playlist display */

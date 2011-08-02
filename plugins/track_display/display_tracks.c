@@ -52,12 +52,6 @@
 #include "rb_cell_renderer_rating.h"
 #include "track_display_context_menu.h"
 
-#ifndef HAVE_GSEALED_GDK
-/* Compatibility macros for previous GDK versions */
-#define gdk_drag_context_get_selected_action(x) ((x)->action)
-#define gdk_drag_context_get_suggested_action(x) ((x)->suggested_action)
-#endif
-
 /* reference to gtkbuilder for use with track plugin */
 static GtkBuilder *trackbuilder = NULL;
 /* pointer to the container for the track display */
