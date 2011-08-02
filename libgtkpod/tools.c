@@ -309,7 +309,7 @@ void nm_tracks_list(GList *list) {
     gtk_label_set_selectable(GTK_LABEL (label), TRUE);
 
     /* hbox to put the image+label in */
-    hbox = gtk_hbox_new(FALSE, 6);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
     gtk_box_pack_start(GTK_BOX (hbox), image, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX (hbox), label, FALSE, FALSE, 0);
 

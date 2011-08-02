@@ -1986,7 +1986,7 @@ GtkWidget *pm_create_playlist_view(GtkActionGroup *action_group) {
     GtkBox *vbox;
     GtkScrolledWindow *scrolledwin;
 
-    vbox = GTK_BOX(gtk_vbox_new (FALSE, 0));
+    vbox = GTK_BOX(gtk_box_new (GTK_ORIENTATION_VERTICAL, 0));
 
     pm_create_toolbar(action_group);
     gtk_box_pack_start(vbox, GTK_WIDGET(playlist_toolbar), FALSE, TRUE, 0);

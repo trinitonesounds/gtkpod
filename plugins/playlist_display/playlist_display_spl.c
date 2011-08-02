@@ -981,7 +981,7 @@ static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
     g_return_val_if_fail (at != ITDB_SPLAT_UNKNOWN, NULL);
     g_return_val_if_fail (at != ITDB_SPLAT_INVALID, NULL);
 
-    hbox = gtk_hbox_new(FALSE, 3);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 3);
     gtk_widget_show(hbox);
     g_object_set_data(G_OBJECT (hbox), "spl_window", spl_window);
 
@@ -1240,7 +1240,7 @@ static void spl_update_rule(GtkWidget *spl_window, Itdb_SPLRule *splr) {
     hbox = g_object_get_data(G_OBJECT (table), name);
     if (!hbox) {
         /* create hbox with buttons */
-        hbox = gtk_hbox_new(TRUE, 2);
+        hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
         gtk_widget_show(hbox);
         g_object_set_data(G_OBJECT (table), name, hbox);
         gtk_table_attach(table, hbox, 3, 4, row, row + 1, 0, 0, /* expand options */

@@ -451,7 +451,7 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
     /*
      * Main box
      */
-    main_box = gtk_vbox_new(FALSE, 0);
+    main_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     gtk_container_add(GTK_CONTAINER (app), main_box);
     gtk_widget_show(main_box);
 
@@ -471,7 +471,7 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
     g_object_add_weak_pointer(G_OBJECT (app->status), (gpointer) &app->status);
 
     /* configure dock */
-    hbox = gtk_hbox_new(FALSE, 0);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_widget_show(hbox);
     app->dock = gdl_dock_new();
     gtk_widget_show(app->dock);
