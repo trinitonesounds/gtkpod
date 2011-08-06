@@ -137,7 +137,7 @@ on_url_home_activate (GtkAction * action, gpointer user_data)
 void
 on_url_bugs_activate (GtkAction * action, gpointer user_data)
 {
-    anjuta_res_url_show("http://sourceforge.net/tracker/?group_id=67873&atid=519273");
+    anjuta_res_url_show("http://gtkpod.org/bugs/");
 }
 
 void
