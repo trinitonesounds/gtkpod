@@ -1,4 +1,51 @@
-phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-07-24
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-08-06
+
+    Update NEWS and Changelog
+    
+    * Final update prior to release of 2.1.0
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-08-06
+
+    Replace bugs url from sourceforge to flyspray
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-08-06
+
+    Correction of desktop file
+    
+    * Fixed as per task FS#78
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-08-02
+
+    Replacement of deprecated gtk_[vh]box_new
+    
+    * In gtk3, gtk_hbox_new and gtk_vbox_new have been deprecated / removed
+      in favor of gtk_box_new, which handles both cases.
+    
+    * Bug 3383833
+    
+    * Thanks to dimstar for the patch.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-08-02
+
+    G_CONST_RETURN has been deprecated / removed in gtk3
+    
+    * See bug 3383824. Thanks to the contributor of the bug for the patch.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-08-02
+
+    With move to gtk 3 assume gsealed gdk
+    
+    * Assume a gdk library greater than or equal to 3.0.11
+    
+    * Assume the gdk library is gsealed and no longer any need for
+      compatibility macros for gdk_dragging.
+    
+    * These macros will be maintained in the gtk2 branches.
+    
+    * Bug identified and investigate in #3323692 - Thanks to dimstar for the
+      investigation and suggested fix.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-07-30
 
     Update news and translation files for gtk 3.0 release
     

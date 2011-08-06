@@ -4,9 +4,14 @@ gtkpod V2.1.0
 
 	IMPROVEMENT: Migrates the application to the new gtk 3.0 framework.
 
+	UPDATE: Removal of GSEALED checks on gdk due to assumption of gdk 3 being
+                sealed.
+
 	BUGFIX: Allow LDFLAGS to be specified on command line.
 
 	BUGFIX: Fix compilation error for the mac port.
+
+	BUGFIX: Removed deprecated gtk / gdk function calls - thanks to dimstar
 
 
 
