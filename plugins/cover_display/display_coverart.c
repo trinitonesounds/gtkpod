@@ -398,8 +398,11 @@ static void draw(cairo_t *cairo_context) {
         cover->album = album;
 
         if (force_pixbuf_covers) {
-            g_object_unref(album->albumart);
-            album->albumart = NULL;
+            if (album->albumart) {
+                g_object_unref(album->albumart);
+                album->albumart = NULL;
+            }
+
             if (album->scaled_art != NULL) {
                 g_object_unref(album->scaled_art);
                 album->scaled_art = NULL;
