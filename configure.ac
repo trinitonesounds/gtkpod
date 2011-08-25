@@ -93,8 +93,8 @@ GTK_CLEANLINESS_FLAGS="-DG_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_I
 dnl Force C99 mode (no implicit int declarations)
 CFLAGS="$CFLAGS -std=gnu99 -Werror-implicit-function-declaration"
 
-CFLAGS="$CFLAGS $GTK_CFLAGS $GLIB_CFLAGS $GDK_CFLAGS $GMODULE_CFLAGS $GTHREAD_CFLAGS $LIBGLADE_CFLAGS $LIBGPOD_CFLAGS $LIBANJUTA_CFLAGS $LIBGDL_CFLAGS $LIBXML_CFLAGS $GTK_CLEANLINESS_FLAGS"
-LIBS="$LIBS $GTK_LIBS $GLIB_LIBS $GDK_LIBS $GMODULE_LIBS $GTHREAD_LIBS $LIBGLADE_LIBS $LIBGPOD_LIBS $LIBANJUTA_LIBS $LIBGDL_LIBS $LIBXML_LIBS"
+CFLAGS="$CFLAGS $GTK_CFLAGS $GLIB_CFLAGS $GDK_CFLAGS $GMODULE_CFLAGS $GTHREAD_CFLAGS $LIBGLADE_CFLAGS $LIBGPOD_CFLAGS $LIBANJUTA_CFLAGS $LIBGDL_CFLAGS $LIBXML_CFLAGS $CLUTTER_CFLAGS $GTK_CLEANLINESS_FLAGS"
+LIBS="$LIBS $GTK_LIBS $GLIB_LIBS $GDK_LIBS $GMODULE_LIBS $GTHREAD_LIBS $LIBGLADE_LIBS $LIBGPOD_LIBS $LIBANJUTA_LIBS $LIBGDL_LIBS $LIBXML_LIBS $CLUTTER_LIBS"
 
 
 dnl we need 'flex'
@@ -184,6 +184,40 @@ if test "x$have_coverweb" = "xyes"; then
     AC_SUBST(WEBKIT_CFLAGS)
     AC_SUBST(WEBKIT_LIBS)
 fi
+
+
+dnl Check for clutter gtk
+dnl -------------------------------------------------------------
+AC_ARG_ENABLE(plugin-clarity,
+	AS_HELP_STRING([--disable-plugin-clarity],[Disable clarity plugin for displaying coverart in gtkpod]), 
+	[ if test "$enableval" = "no"; then
+		user_disabled_clarity=1
+	  fi ],
+	[ user_disabled_clarity=0 ])
+AC_MSG_CHECKING(if clarity plugin is disabled)
+if test "$user_disabled_clarity" = 1; then
+	AC_MSG_RESULT(yes)
+	have_clarity="no"
+else
+	AC_MSG_RESULT(no)
+	
+	PKG_CHECK_MODULES(CLUTTER_GTK,
+		[clutter-gtk-1.0 >= 1.0],
+		[have_clutter_gtk="yes"],
+		[have_clutter_gtk="no"])
+	have_clarity="yes"
+fi
+AM_CONDITIONAL(HAVE_CLUTTER_GTK, [test "x$have_clutter_gtk" = "xyes"])
+AM_CONDITIONAL(HAVE_PLUGIN_CLARITY, [test "x$have_clutter_gtk" = "xyes"])
+if test "x$have_clutter_gtk" = "xyes"; then
+	AC_DEFINE(HAVE_CLUTTER_GTK, 1, [Define if you have clutter gtk support])
+    AC_SUBST(CLUTTER_GTK_CFLAGS)
+    AC_SUBST(CLUTTER_GTK_LIBS)
+    dnl Need to add to CFLAGS and LIBS so main can init correctly
+    CFLAGS="$CFLAGS $CLUTTER_GTK_CFLAGS"
+    LIBS="$LIBS $CLUTTER_GTK_LIBS"
+fi
+
 
 dnl Check for gstreamer
 dnl -------------------------------------------------------------
@@ -521,6 +555,21 @@ plugins/mserv/icons/hicolor/32x32/Makefile
 plugins/mserv/icons/hicolor/32x32/places/Makefile
 plugins/mserv/icons/hicolor/48x48/Makefile
 plugins/mserv/icons/hicolor/48x48/places/Makefile
+plugins/clarity/Makefile
+plugins/clarity/icons/Makefile
+plugins/clarity/icons/hicolor/Makefile
+plugins/clarity/icons/hicolor/16x16/Makefile
+plugins/clarity/icons/hicolor/16x16/places/Makefile
+plugins/clarity/icons/hicolor/22x22/Makefile
+plugins/clarity/icons/hicolor/22x22/places/Makefile
+plugins/clarity/icons/hicolor/24x24/Makefile
+plugins/clarity/icons/hicolor/24x24/places/Makefile
+plugins/clarity/icons/hicolor/32x32/Makefile
+plugins/clarity/icons/hicolor/32x32/places/Makefile
+plugins/clarity/icons/hicolor/48x48/Makefile
+plugins/clarity/icons/hicolor/48x48/places/Makefile
+plugins/clarity/icons/hicolor/240x240/Makefile
+plugins/clarity/icons/hicolor/240x240/places/Makefile
 ])
 AC_OUTPUT
 
@@ -547,6 +596,7 @@ echo " MP4 File Type              .....: $have_mp4"
 echo " M4A File Type              .....: $have_m4a"
 echo " Flac File Type             .....: $have_flac"
 echo " Ogg File Type              .....: $have_ogg"
+echo " Clarity Display Widget     .....: $have_clarity"
 
 echo " Support for cover download .....: $have_curl"
 

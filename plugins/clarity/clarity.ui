@@ -1,0 +1,7 @@
+<!--*- xml -*-->
+<ui>
+	<menubar name="MenuMain">
+	</menubar>
+	<toolbar name="ToolbarMain">
+	</toolbar>
+</ui>

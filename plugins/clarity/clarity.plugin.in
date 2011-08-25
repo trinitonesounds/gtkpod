@@ -1,0 +1,4 @@
+[Anjuta Plugin]
+Location=clarity:ClarityPlugin
+_Name=Clarity Plugin
+_Description=Display Cover Artwork of Tracks

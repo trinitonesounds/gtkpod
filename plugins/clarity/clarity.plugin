@@ -1,0 +1,5 @@
+[Anjuta Plugin]
+Location=clarity:ClarityPlugin
+Name=Clarity Plugin
+Description=Display Cover Artwork of Tracks
+Description[it]=Mostra le copertine delle tracce

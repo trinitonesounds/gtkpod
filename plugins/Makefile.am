@@ -20,6 +20,7 @@ SUBDIRS = . \
 	filetype_wav \
 	filetype_video \
 	filetype_mp4 \
-	filetype_m4a
+	filetype_m4a \
+	clarity
 
 # indent
