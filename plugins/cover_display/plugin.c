@@ -113,11 +113,11 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
 
     coverart_block_change(TRUE);
 
-    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (coverart_display_update_cb), plugin);
-    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (coverart_display_track_removed_cb), plugin);
-    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (coverart_display_set_tracks_cb), plugin);
-    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (coverart_display_track_updated_cb), plugin);
-    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (coverart_display_track_added_cb), plugin);
+    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (coverart_display_update_cb), NULL);
+    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (coverart_display_track_removed_cb), NULL);
+    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (coverart_display_set_tracks_cb), NULL);
+    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (coverart_display_track_updated_cb), NULL);
+    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (coverart_display_track_added_cb), NULL);
 
     cover_display_plugin = (CoverDisplayPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
