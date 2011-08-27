@@ -107,7 +107,7 @@ GtkWidget *init_clarity_preferences(const gchar *gladepath, ClarityWidget *cw) {
     gtk_color_button_set_rgba (GTK_COLOR_BUTTON(coverart_bgcolorselect_button), color);
     gdk_rgba_free(color);
 
-    color = clarity_widget_get_foreground_display_color(cw);
+    color = clarity_widget_get_text_display_color(cw);
     gtk_color_button_set_rgba (GTK_COLOR_BUTTON(coverart_fgcolorselect_button), color);
     gdk_rgba_free(color);
 

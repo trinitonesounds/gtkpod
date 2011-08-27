@@ -56,6 +56,8 @@ struct _ClarityCanvasPrivate {
     ClutterActor *container;
     ClutterTimeline *timeline;
     ClutterAlpha *alpha;
+    ClutterActor *title_text;
+    ClutterActor *artist_text;
 
     gint curr_index;
 
@@ -142,12 +144,19 @@ static void clarity_canvas_init(ClarityCanvas *self) {
 
     priv = self->priv;
 
+    priv->title_text = clutter_text_new();
+    clutter_text_set_font_name(CLUTTER_TEXT(priv->title_text), "Sans");
+
+    priv->artist_text = clutter_text_new();
+    clutter_text_set_font_name(CLUTTER_TEXT(priv->title_text), "Sans");
+
     priv->container = clutter_group_new();
     clutter_actor_set_reactive(priv->container, TRUE);
     priv->preview_signal = g_signal_connect (self,
                                 "button-press-event",
                                 G_CALLBACK (_preview_cover_cb),
                                 priv);
+    clutter_container_add(CLUTTER_CONTAINER(priv->container), priv->title_text, priv->artist_text, NULL);
 
     priv->embed = gtk_clutter_embed_new();
     /*
@@ -182,11 +191,11 @@ GtkWidget *clarity_canvas_new() {
 }
 
 /**
- * coverart_get_background_display_color:
+ * clarity_canvas_get_background_display_color:
  *
  * Returns the background color of the clarity canvas.
  *
- * The return value is a hexstring in the form "rrggbbaa"
+ * The return value is a GdkRGBA
  *
  */
 GdkRGBA *clarity_canvas_get_background_color(ClarityCanvas *self) {
@@ -212,7 +221,36 @@ GdkRGBA *clarity_canvas_get_background_color(ClarityCanvas *self) {
     return rgba;
 }
 
-void clarity_canvas_set_background(ClarityCanvas *self, const gchar *color_string) {
+/**
+ * clarity_canvas_get_text_color:
+ *
+ * Returns the text color of the clarity text.
+ *
+ * The return value is a GdkRGBA
+ *
+ */
+GdkRGBA *clarity_canvas_get_text_color(ClarityCanvas *self) {
+    g_return_val_if_fail(CLARITY_IS_CANVAS(self), NULL);
+
+    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
+
+    ClutterColor *ccolor;
+    ccolor = g_malloc(sizeof(ClutterColor));
+
+    clutter_text_get_color(CLUTTER_TEXT(priv->title_text), ccolor);
+    g_return_val_if_fail(ccolor, NULL);
+
+    GdkRGBA *rgba;
+    rgba = g_malloc(sizeof(GdkRGBA));
+    rgba->red = ((gdouble) ccolor->red) / 255;
+    rgba->green = ((gdouble) ccolor->green) / 255;
+    rgba->blue = ((gdouble) ccolor->blue) / 255;
+    rgba->alpha = ((gdouble) ccolor->alpha) / 255;
+
+    return rgba;
+}
+
+void clarity_canvas_set_background_color(ClarityCanvas *self, const gchar *color_string) {
     g_return_if_fail(self);
     g_return_if_fail(color_string);
 
@@ -225,6 +263,21 @@ void clarity_canvas_set_background(ClarityCanvas *self, const gchar *color_strin
 
     clutter_color_from_string(ccolor, color_string);
     clutter_stage_set_color(CLUTTER_STAGE(stage), ccolor);
+}
+
+void clarity_canvas_set_text_color(ClarityCanvas *self, const gchar *color_string) {
+    g_return_if_fail(self);
+    g_return_if_fail(color_string);
+
+    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
+
+    ClutterColor *ccolor;
+    ccolor = g_malloc(sizeof(ClutterColor));
+
+    clutter_color_from_string(ccolor, color_string);
+
+    clutter_text_set_color(CLUTTER_TEXT(priv->title_text), ccolor);
+    clutter_text_set_color(CLUTTER_TEXT(priv->artist_text), ccolor);
 }
 
 void clarity_canvas_clear(ClarityCanvas *self) {
@@ -286,6 +339,37 @@ static gint _calculate_index_opacity (gint dist_from_front) {
     return CLAMP ( 255 * (VISIBLE_ITEMS - ABS(dist_from_front)) / VISIBLE_ITEMS, 0, 255);
 }
 
+static void _update_text(ClarityCanvasPrivate *priv) {
+    g_return_if_fail(priv);
+
+    if (g_list_length(priv->covers) == 0)
+            return;
+
+    ClarityCover *ccover = g_list_nth_data(priv->covers, priv->curr_index);
+
+    gchar *title = clarity_cover_get_title(ccover);
+    gchar *artist = clarity_cover_get_artist(ccover);
+
+    clutter_text_set_text(CLUTTER_TEXT(priv->title_text), title);
+    clutter_text_set_text(CLUTTER_TEXT(priv->artist_text), artist);
+
+    g_warning("%s", clutter_text_get_font_name(CLUTTER_TEXT(priv->title_text)));
+
+    g_free(title);
+    g_free(artist);
+
+    clutter_actor_raise_top(priv->title_text);
+    clutter_actor_raise_top(priv->artist_text);
+
+    gfloat artistx = (clutter_actor_get_width(priv->artist_text) / 2) * -1;
+    gfloat artisty = ((clutter_actor_get_height(CLUTTER_ACTOR(ccover)) / 2) - 25) * -1;
+    clutter_actor_set_position(priv->artist_text, artistx, artisty);
+
+    gfloat titlex = (clutter_actor_get_width(priv->title_text) / 2) * -1;
+    gfloat titley = artisty - clutter_actor_get_height(priv->artist_text) - 2;
+    clutter_actor_set_position(priv->title_text, titlex, titley);
+}
+
 static void _display_clarity_cover(ClarityCover *ccover, gint index) {
     ClutterTimeline  *timeline = clutter_timeline_new(1600 * 5);
     ClutterAlpha *alpha = clutter_alpha_new_full (timeline, CLUTTER_EASE_OUT_EXPO);
@@ -298,7 +382,8 @@ static void _display_clarity_cover(ClarityCover *ccover, gint index) {
 static gboolean _set_loading_complete(gpointer data) {
     ClarityCanvasPrivate *priv = (ClarityCanvasPrivate *) data;
     priv->loading_complete = TRUE;
-    return TRUE;
+    _update_text(priv);
+    return FALSE;
 }
 
 static gboolean _create_cover_idle(gpointer data) {
@@ -460,6 +545,7 @@ static void _animate_indices(ClarityCanvasPrivate *priv, enum DIRECTION directio
 }
 
 static void _restore_z_order(ClarityCanvasPrivate *priv) {
+    g_return_if_fail(priv);
 
     if (g_list_length(priv->covers) == 0)
         return;
@@ -497,7 +583,7 @@ static void _move(ClarityCanvasPrivate *priv, enum DIRECTION direction, gint inc
 
     priv->curr_index += ((direction * -1) * increment);
 
-//        update_text     ();
+    _update_text(priv);
     _restore_z_order(priv);
 }
 

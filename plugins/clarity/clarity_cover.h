@@ -101,6 +101,10 @@ void clarity_cover_clear_rotation_behaviour(ClarityCover *self);
 
 void clarity_cover_set_rotation_behaviour(ClarityCover *self, ClutterAlpha *alpha, int final_angle, ClutterRotateDirection direction);
 
+gchar *clarity_cover_get_title(ClarityCover *self);
+
+gchar *clarity_cover_get_artist(ClarityCover *self);
+
 /* constructor - note this returns a ClutterActor instance */
 ClarityCover *clarity_cover_new (void);
 

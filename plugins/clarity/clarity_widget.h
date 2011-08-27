@@ -67,7 +67,7 @@ struct _ClarityWidgetClass {
 
 GdkRGBA *clarity_widget_get_background_display_color(ClarityWidget *self);
 
-GdkRGBA *clarity_widget_get_foreground_display_color(ClarityWidget *self);
+GdkRGBA *clarity_widget_get_text_display_color(ClarityWidget *self);
 
 GtkWidget * clarity_widget_new();
 

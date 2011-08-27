@@ -162,63 +162,62 @@ static void clarity_cover_init(ClarityCover *self) {
     priv->reflection = NULL;
 }
 
-static void _clone_paint_cb (ClutterActor *actor)
-{
+static void _clone_paint_cb (ClutterActor *actor) {
     ClutterActor *source;
-      ClutterActorBox box;
-      CoglHandle material;
-      gfloat width, height;
-      guint8 opacity;
-      CoglColor color_1, color_2;
-      CoglTextureVertex vertices[4];
+    ClutterActorBox box;
+    CoglHandle material;
+    gfloat width, height;
+    guint8 opacity;
+    CoglColor color_1, color_2;
+    CoglTextureVertex vertices[4];
 
-      /* if we don't have a source actor, don't paint */
-      source = clutter_clone_get_source (CLUTTER_CLONE (actor));
-      if (source == NULL)
+    /* if we don't have a source actor, don't paint */
+    source = clutter_clone_get_source (CLUTTER_CLONE (actor));
+    if (source == NULL)
         goto out;
 
-      /* if the source texture does not have any content, don't paint */
-      material = clutter_texture_get_cogl_material (CLUTTER_TEXTURE (source));
-      if (material == NULL)
+    /* if the source texture does not have any content, don't paint */
+    material = clutter_texture_get_cogl_material (CLUTTER_TEXTURE (source));
+    if (material == NULL)
         goto out;
 
-      /* get the size of the reflection */
-      clutter_actor_get_allocation_box (actor, &box);
-      clutter_actor_box_get_size (&box, &width, &height);
+    /* get the size of the reflection */
+    clutter_actor_get_allocation_box (actor, &box);
+    clutter_actor_box_get_size (&box, &width, &height);
 
-      /* get the composite opacity of the actor */
-      opacity = clutter_actor_get_paint_opacity (actor);
+    /* get the composite opacity of the actor */
+    opacity = clutter_actor_get_paint_opacity (actor);
 
-      /* figure out the two colors for the reflection: the first is
-       * full color and the second is the same, but at 0 opacity
-       */
-      cogl_color_init_from_4f (&color_1, 1.0, 1.0, 1.0, opacity / 255.0);
-      cogl_color_premultiply (&color_1);
-      cogl_color_init_from_4f (&color_2, 1.0, 1.0, 1.0, 0.0);
-      cogl_color_premultiply (&color_2);
+    /* figure out the two colors for the reflection: the first is
+     * full color and the second is the same, but at 0 opacity
+     */
+    cogl_color_init_from_4f (&color_1, 1.0, 1.0, 1.0, opacity / 255.0);
+    cogl_color_premultiply (&color_1);
+    cogl_color_init_from_4f (&color_2, 1.0, 1.0, 1.0, 0.0);
+    cogl_color_premultiply (&color_2);
 
-      /* now describe the four vertices of the quad; since it has
-       * to be a reflection, we need to invert it as well
-       */
-      vertices[0].x = 0; vertices[0].y = 0; vertices[0].z = 0;
-      vertices[0].tx = 0.0; vertices[0].ty = 1.0;
-      vertices[0].color = color_1;
+    /* now describe the four vertices of the quad; since it has
+     * to be a reflection, we need to invert it as well
+     */
+    vertices[0].x = 0; vertices[0].y = 0; vertices[0].z = 0;
+    vertices[0].tx = 0.0; vertices[0].ty = 1.0;
+    vertices[0].color = color_1;
 
-      vertices[1].x = width; vertices[1].y = 0; vertices[1].z = 0;
-      vertices[1].tx = 1.0; vertices[1].ty = 1.0;
-      vertices[1].color = color_1;
+    vertices[1].x = width; vertices[1].y = 0; vertices[1].z = 0;
+    vertices[1].tx = 1.0; vertices[1].ty = 1.0;
+    vertices[1].color = color_1;
 
-      vertices[2].x = width; vertices[2].y = height; vertices[2].z = 0;
-      vertices[2].tx = 1.0; vertices[2].ty = 0.0;
-      vertices[2].color = color_2;
+    vertices[2].x = width; vertices[2].y = height; vertices[2].z = 0;
+    vertices[2].tx = 1.0; vertices[2].ty = 0.0;
+    vertices[2].color = color_2;
 
-      vertices[3].x = 0; vertices[3].y = height; vertices[3].z = 0;
-      vertices[3].tx = 0.0; vertices[3].ty = 0.0;
-      vertices[3].color = color_2;
+    vertices[3].x = 0; vertices[3].y = height; vertices[3].z = 0;
+    vertices[3].tx = 0.0; vertices[3].ty = 0.0;
+    vertices[3].color = color_2;
 
-      /* paint the same texture but with a different geometry */
-      cogl_set_source (material);
-      cogl_polygon (vertices, 4, TRUE);
+    /* paint the same texture but with a different geometry */
+    cogl_set_source (material);
+    cogl_polygon (vertices, 4, TRUE);
 
     out:
       /* prevent the default clone handler from running */
@@ -267,6 +266,10 @@ void clarity_cover_set_album_item (ClarityCover *self, AlbumItem *item) {
         gfloat temp = w * DEFAULT_IMG_SIZE / h;
         clutter_actor_set_size(priv->texture, temp, DEFAULT_IMG_SIZE);
     }
+
+    // Add title / artist data
+    priv->title = g_strdup(item->albumname);
+    priv->artist = g_strdup(item->artist);
 }
 
 void clarity_cover_clear_rotation_behaviour(ClarityCover *self) {
@@ -307,6 +310,15 @@ void clarity_cover_set_rotation_behaviour(ClarityCover *self, ClutterAlpha *alph
     }
 }
 
+gchar *clarity_cover_get_title(ClarityCover *self) {
+    ClarityCoverPrivate *priv = self->priv;
+    return g_strdup(priv->title);
+}
+
+gchar *clarity_cover_get_artist(ClarityCover *self) {
+    ClarityCoverPrivate *priv = self->priv;
+    return g_strdup(priv->artist);
+}
 
 /**
  * clarity_cover_new:

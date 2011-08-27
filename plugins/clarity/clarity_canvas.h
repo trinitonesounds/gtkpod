@@ -70,7 +70,11 @@ GtkWidget * clarity_canvas_new();
 
 GdkRGBA *clarity_canvas_get_background_color(ClarityCanvas *self);
 
-void clarity_canvas_set_background(ClarityCanvas *self, const gchar *color_string);
+GdkRGBA *clarity_canvas_get_text_color(ClarityCanvas *self);
+
+void clarity_canvas_set_background_color(ClarityCanvas *self, const gchar *color_string);
+
+void clarity_canvas_set_text_color(ClarityCanvas *self, const gchar *color_string);
 
 void clarity_canvas_clear(ClarityCanvas *self);
 

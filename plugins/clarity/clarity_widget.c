@@ -70,11 +70,7 @@ enum {
  * track added
  * track removed
  * track updated
- * change background
- * text
  * set cover from file
- * sort
- * preferences
  */
 
 static void clarity_widget_dispose(GObject *gobject) {
@@ -220,10 +216,8 @@ static void _init_slider_range(ClarityWidgetPrivate *priv) {
     g_signal_handler_unblock(G_OBJECT(priv->cdslider), priv->slider_signal_id);
 }
 
-static void _set_background(ClarityWidget *self) {
+static void _set_background_color(ClarityWidget *self) {
     gchar *hex_string;
-
-    hex_string = "#FFFFFF";
 
     if (!prefs_get_string_value("clarity_bg_color", NULL))
         hex_string = "#000000";
@@ -232,7 +226,20 @@ static void _set_background(ClarityWidget *self) {
 
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
 
-    clarity_canvas_set_background(CLARITY_CANVAS(priv->draw_area), hex_string);
+    clarity_canvas_set_background_color(CLARITY_CANVAS(priv->draw_area), hex_string);
+}
+
+static void _set_text_color(ClarityWidget *self) {
+    gchar *hex_string;
+
+    if (!prefs_get_string_value("clarity_fg_color", NULL))
+        hex_string = "#FFFFFF";
+    else
+        prefs_get_string_value("clarity_fg_color", &hex_string);
+
+    ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
+
+    clarity_canvas_set_text_color(CLARITY_CANVAS(priv->draw_area), hex_string);
 }
 
 static void clarity_widget_class_init (ClarityWidgetClass *klass) {
@@ -257,7 +264,8 @@ static void clarity_widget_init (ClarityWidget *self) {
                                     G_CALLBACK(_on_scrolling_covers_cb),
                                     priv);
 
-    _set_background(self);
+    _set_background_color(self);
+    _set_text_color(self);
 
     priv->leftbutton = gtk_button_new_with_label("<");
     gtk_widget_set_name(priv->leftbutton, LEFT_BUTTON);
@@ -331,12 +339,12 @@ GdkRGBA *clarity_widget_get_background_display_color(ClarityWidget *self) {
     return clarity_canvas_get_background_color(CLARITY_CANVAS(priv->draw_area));
 }
 
-GdkRGBA *clarity_widget_get_foreground_display_color(ClarityWidget *self) {
+GdkRGBA *clarity_widget_get_text_display_color(ClarityWidget *self) {
     g_return_val_if_fail(CLARITY_IS_WIDGET(self), NULL);
 
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
 
-    return clarity_canvas_get_background_color(CLARITY_CANVAS(priv->draw_area));
+    return clarity_canvas_get_text_color(CLARITY_CANVAS(priv->draw_area));
 }
 
 static void _resort_albums(ClarityWidget *self) {
@@ -366,7 +374,9 @@ void clarity_widget_preference_changed_cb(GtkPodApp *app, gpointer pfname, gpoin
 
     gchar *pref_name = pfname;
     if (g_str_equal(pref_name, "clarity_bg_color"))
-        _set_background(cw);
+        _set_background_color(cw);
+    else if (g_str_equal(pref_name, "clarity_fg_color"))
+        _set_text_color(cw);
     else if (g_str_equal(pref_name, "clarity_sort"))
         _resort_albums(cw);
 }
