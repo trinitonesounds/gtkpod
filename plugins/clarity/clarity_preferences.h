@@ -29,6 +29,8 @@
 #ifndef CLARITY_PREFERENCES_H_
 #define CLARITY_PREFERENCES_H_
 
-GtkWidget *init_clarity_preferences();
+#include "clarity_widget.h"
+
+GtkWidget *init_clarity_preferences(const gchar *gladepath, ClarityWidget *cw);
 
 #endif /* CLARITY_PREFERENCES_H_ */

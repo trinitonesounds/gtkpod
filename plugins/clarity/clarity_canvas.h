@@ -68,7 +68,7 @@ struct _ClarityCanvasClass {
 
 GtkWidget * clarity_canvas_new();
 
-gchar *clarity_canvas_get_background_color(ClarityCanvas *self);
+GdkRGBA *clarity_canvas_get_background_color(ClarityCanvas *self);
 
 void clarity_canvas_set_background(ClarityCanvas *self, const gchar *color_string);
 
@@ -81,6 +81,8 @@ void clarity_canvas_move_left(ClarityCanvas *self, gint increment);
 void clarity_canvas_move_right(ClarityCanvas *self, gint increment);
 
 gint clarity_canvas_get_current_index(ClarityCanvas *self);
+
+gboolean clarity_canvas_is_loading(ClarityCanvas *self);
 
 G_END_DECLS
 

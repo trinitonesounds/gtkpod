@@ -39,7 +39,7 @@
 #include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "clarity_widget.h"
-//#include "clarity_preferences.h"
+#include "clarity_preferences.h"
 
 #define TAB_NAME "Clarity"
 
@@ -50,11 +50,11 @@ static GtkActionEntry cover_actions[] =
     { };
 
 static void set_default_preferences() {
-    if (!prefs_get_string_value("clarity_display_bg_color", NULL))
-        prefs_set_string("clarity_display_bg_color", "#000000");
+    if (!prefs_get_string_value("clarity_bg_color", NULL))
+        prefs_set_string("clarity_bg_color", "#000000");
 
-    if (!prefs_get_string_value("clarity_display_fg_color", NULL))
-        prefs_set_string("clarity_display_fg_color", "#FFFFFF");
+    if (!prefs_get_string_value("clarity_fg_color", NULL))
+        prefs_set_string("clarity_fg_color", "#FFFFFF");
 }
 
 static gboolean activate_plugin(AnjutaPlugin *plugin) {
@@ -88,18 +88,18 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     gtk_scrolled_window_set_policy(clarity_plugin->cover_window, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type(clarity_plugin->cover_window, GTK_SHADOW_IN);
 
-    GtkWidget* cw = clarity_widget_new ();
-    gtk_scrolled_window_add_with_viewport(clarity_plugin->cover_window, cw);
+    clarity_plugin->clarity_widget = CLARITY_WIDGET(clarity_widget_new ());
+    gtk_scrolled_window_add_with_viewport(clarity_plugin->cover_window, GTK_WIDGET(clarity_plugin->clarity_widget));
     gtk_widget_show_all(GTK_WIDGET(clarity_plugin->cover_window));
     anjuta_shell_add_widget(plugin->shell, GTK_WIDGET(clarity_plugin->cover_window), "ClarityPlugin", "Cover Artwork", NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
 
-    g_signal_connect (gtkpod_app, SIGNAL_PREFERENCE_CHANGE, G_CALLBACK (clarity_widget_preference_changed_cb), cw);
-    g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (clarity_widget_playlist_selected_cb), cw);
-    g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (clarity_widget_track_removed_cb), cw);
-    g_signal_connect (gtkpod_app, SIGNAL_TRACKS_DISPLAYED, G_CALLBACK (clarity_widget_tracks_selected_cb), cw);
-    g_signal_connect (gtkpod_app, SIGNAL_TRACKS_SELECTED, G_CALLBACK (clarity_widget_tracks_selected_cb), cw);
-    g_signal_connect (gtkpod_app, SIGNAL_TRACK_UPDATED, G_CALLBACK (clarity_widget_track_updated_cb), cw);
-    g_signal_connect (gtkpod_app, SIGNAL_TRACK_ADDED, G_CALLBACK (clarity_widget_track_added_cb), cw);
+    g_signal_connect (gtkpod_app, SIGNAL_PREFERENCE_CHANGE, G_CALLBACK (clarity_widget_preference_changed_cb), clarity_plugin->clarity_widget);
+    g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (clarity_widget_playlist_selected_cb), clarity_plugin->clarity_widget);
+    g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (clarity_widget_track_removed_cb), clarity_plugin->clarity_widget);
+    g_signal_connect (gtkpod_app, SIGNAL_TRACKS_DISPLAYED, G_CALLBACK (clarity_widget_tracks_selected_cb), clarity_plugin->clarity_widget);
+    g_signal_connect (gtkpod_app, SIGNAL_TRACKS_SELECTED, G_CALLBACK (clarity_widget_tracks_selected_cb), clarity_plugin->clarity_widget);
+    g_signal_connect (gtkpod_app, SIGNAL_TRACK_UPDATED, G_CALLBACK (clarity_widget_track_updated_cb), clarity_plugin->clarity_widget);
+    g_signal_connect (gtkpod_app, SIGNAL_TRACK_ADDED, G_CALLBACK (clarity_widget_track_added_cb), clarity_plugin->clarity_widget);
 
     return TRUE; /* FALSE if activation failed */
 }
@@ -109,6 +109,14 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     ClarityPlugin *clarity_plugin;
 
     clarity_plugin = (ClarityPlugin*) plugin;
+
+    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (clarity_widget_preference_changed_cb), clarity_plugin->clarity_widget);
+    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (clarity_widget_playlist_selected_cb), clarity_plugin->clarity_widget);
+    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (clarity_widget_track_removed_cb), clarity_plugin->clarity_widget);
+    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (clarity_widget_tracks_selected_cb), clarity_plugin->clarity_widget);
+    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (clarity_widget_track_updated_cb), clarity_plugin->clarity_widget);
+    g_signal_handlers_disconnect_by_func(plugin->shell, G_CALLBACK (clarity_widget_track_added_cb), clarity_plugin->clarity_widget);
+
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
 
     /* Remove widgets from Shell */
@@ -116,6 +124,10 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
 
     /* Unmerge UI */
     anjuta_ui_unmerge(ui, clarity_plugin->uiid);
+
+    /* Destroy the widget */
+    gtk_widget_destroy(GTK_WIDGET(clarity_plugin->clarity_widget));
+    clarity_plugin->clarity_widget = NULL;
 
     /* Remove Action groups */
     anjuta_ui_remove_action_group(ui, clarity_plugin->action_group);
@@ -144,33 +156,33 @@ static void clarity_plugin_class_init(GObjectClass *klass) {
 }
 
 static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
-//    GdkPixbuf *pixbuf;
-//    GError *error = NULL;
-//
-//    ClarityPlugin* plugin = CLARITY_PLUGIN(ipref);
-//    plugin->prefs = init_cover_preferences(plugin->gladepath);
-//    if (plugin->prefs == NULL)
-//        return;
-//
-//    pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), DEFAULT_COVER_ICON, 48, 0, &error);
-//
-//    if (!pixbuf) {
-//        g_warning ("Couldn't load icon: %s", error->message);
-//        g_error_free(error);
-//    }
-//    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-clarity-settings", _(TAB_NAME), pixbuf, plugin->prefs);
-//    g_object_unref(pixbuf);
+    GdkPixbuf *pixbuf;
+    GError *error = NULL;
+
+    ClarityPlugin* plugin = CLARITY_PLUGIN(ipref);
+    plugin->prefs = init_clarity_preferences(plugin->gladepath, plugin->clarity_widget);
+    if (plugin->prefs == NULL)
+        return;
+
+    pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), DEFAULT_COVER_ICON, 48, 0, &error);
+
+    if (!pixbuf) {
+        g_warning ("Couldn't load icon: %s", error->message);
+        g_error_free(error);
+    }
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-clarity-settings", _(TAB_NAME), pixbuf, plugin->prefs);
+    g_object_unref(pixbuf);
 }
 
 static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
-//    anjuta_preferences_remove_page(prefs, _(TAB_NAME));
-//    ClarityPlugin* plugin = CLARITY_PLUGIN(ipref);
-//    gtk_widget_destroy(plugin->prefs);
+    anjuta_preferences_remove_page(prefs, _(TAB_NAME));
+    ClarityPlugin* plugin = CLARITY_PLUGIN(ipref);
+    gtk_widget_destroy(plugin->prefs);
 }
 
 static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
-//    iface->merge = ipreferences_merge;
-//    iface->unmerge = ipreferences_unmerge;
+    iface->merge = ipreferences_merge;
+    iface->unmerge = ipreferences_unmerge;
 }
 
 ANJUTA_PLUGIN_BEGIN (ClarityPlugin, clarity_plugin);

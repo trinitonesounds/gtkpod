@@ -31,14 +31,15 @@
                         <property name="can_focus">False</property>
                         <property name="spacing">12</property>
                         <child>
-                          <object class="GtkColorButton" id="coverart_display_bg_button">
+                          <object class="GtkColorButton" id="clarity_bg_button">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="use_action_appearance">False</property>
-                            <property name="title" translatable="yes">Choose a Different Colour for the CoverArt Display Background</property>
+                            <property name="use_alpha">True</property>
+                            <property name="title" translatable="yes">Choose a Different Colour for the Clarity Background</property>
                             <property name="color">#000000000000</property>
-                            <signal name="color-set" handler="on_coverart_dialog_bg_color_set" swapped="no"/>
+                            <signal name="color-set" handler="on_clarity_dialog_bg_color_set" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -59,14 +60,15 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkColorButton" id="coverart_display_fg_button">
+                          <object class="GtkColorButton" id="clarity_fg_button">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="use_action_appearance">False</property>
-                            <property name="title" translatable="yes">Choose a Different Colour for the CoverArt Display Background</property>
+                            <property name="use_alpha">True</property>
+                            <property name="title" translatable="yes">Choose a Different Colour for the Clarity Foreground</property>
                             <property name="color">#ffffffffffff</property>
-                            <signal name="color-set" handler="on_coverart_dialog_fg_color_set" swapped="no"/>
+                            <signal name="color-set" handler="on_clarity_dialog_fg_color_set" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -94,7 +96,7 @@
                   <object class="GtkLabel" id="label18">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Cover Art Display&lt;/b&gt;</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Clarity&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
                 </child>
@@ -161,14 +163,14 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkRadioButton" id="cad_ascend">
+                                  <object class="GtkRadioButton" id="clarity_ascend">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
                                     <property name="use_action_appearance">False</property>
                                     <property name="draw_indicator">True</property>
-                                    <property name="group">cad_none</property>
-                                    <signal name="toggled" handler="on_cad_ascend_toggled" swapped="no"/>
+                                    <property name="group">clarity_none</property>
+                                    <signal name="toggled" handler="on_clarity_ascend_toggled" swapped="no"/>
                                     <child>
                                       <object class="GtkImage" id="image1928">
                                         <property name="visible">True</property>
@@ -186,14 +188,14 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkRadioButton" id="cad_descend">
+                                  <object class="GtkRadioButton" id="clarity_descend">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
                                     <property name="use_action_appearance">False</property>
                                     <property name="draw_indicator">True</property>
-                                    <property name="group">cad_none</property>
-                                    <signal name="toggled" handler="on_cad_descend_toggled" swapped="no"/>
+                                    <property name="group">clarity_none</property>
+                                    <signal name="toggled" handler="on_clarity_descend_toggled" swapped="no"/>
                                     <child>
                                       <object class="GtkImage" id="image1929">
                                         <property name="visible">True</property>
@@ -222,14 +224,14 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkRadioButton" id="cad_none">
+                                  <object class="GtkRadioButton" id="clarity_none">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
                                     <property name="use_action_appearance">False</property>
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
-                                    <signal name="toggled" handler="on_cad_none_toggled" swapped="no"/>
+                                    <signal name="toggled" handler="on_clarity_none_toggled" swapped="no"/>
                                     <child>
                                       <object class="GtkImage" id="image1930">
                                         <property name="visible">True</property>
@@ -259,7 +261,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkCheckButton" id="cad_cfg_case_sensitive">
+                          <object class="GtkCheckButton" id="clarity_cfg_case_sensitive">
                             <property name="label" translatable="yes">Case sensitive sorting</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -267,7 +269,7 @@
                             <property name="use_action_appearance">False</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="on_cad_sort_case_sensitive_toggled" swapped="no"/>
+                            <signal name="toggled" handler="on_clarity_sort_case_sensitive_toggled" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -300,7 +302,7 @@
           <object class="GtkLabel" id="display_page_label">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Cover Art Display</property>
+            <property name="label" translatable="yes">Clarity</property>
           </object>
           <packing>
             <property name="tab_fill">False</property>

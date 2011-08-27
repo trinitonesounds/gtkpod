@@ -36,6 +36,7 @@
 
 #include <libanjuta/anjuta-plugin.h>
 #include "clarity_utils.h"
+#include "clarity_widget.h"
 
 extern GType clarity_plugin_get_type (GTypeModule *module);
 #define CLARITY_TYPE_PLUGIN         (clarity_plugin_get_type (NULL))
@@ -51,6 +52,7 @@ typedef struct _ClarityPluginClass ClarityPluginClass;
 struct _ClarityPlugin {
     AnjutaPlugin parent;
     GtkScrolledWindow *cover_window;
+    ClarityWidget *clarity_widget;
     gint uiid;
     GtkActionGroup *action_group;
     GtkWidget *prefs;

@@ -43,8 +43,8 @@ G_MODULE_EXPORT void on_clarity_dialog_bg_color_set (GtkColorButton *widget, gpo
     gchar *color_string = gdk_rgba_to_string(&color);
 
     prefs_set_string ("clarity_bg_color", color_string);
+    gtkpod_broadcast_preference_change("clarity_bg_color", color_string);
     g_free (color_string);
-    coverart_display_update (FALSE);
 }
 
 /*
@@ -57,32 +57,37 @@ G_MODULE_EXPORT void on_clarity_dialog_fg_color_set (GtkColorButton *widget, gpo
     gchar *color_string = gdk_rgba_to_string(&color);
 
     prefs_set_string ("clarity_fg_color", color_string);
+    gtkpod_broadcast_preference_change("clarity_fg_color", color_string);
     g_free (color_string);
-    coverart_display_update (FALSE);
 }
 
-G_MODULE_EXPORT void on_cad_ascend_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+static void _set_sort_preference(gint order) {
+    prefs_set_int("clarity_sort", order);
+    gtkpod_broadcast_preference_change("clarity_sort", &order);
+}
+
+G_MODULE_EXPORT void on_clarity_ascend_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     if (gtk_toggle_button_get_active(togglebutton))
-        coverart_display_sort(SORT_ASCENDING);
+        _set_sort_preference(SORT_ASCENDING);
 }
 
-G_MODULE_EXPORT void on_cad_descend_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+G_MODULE_EXPORT void on_clarity_descend_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     if (gtk_toggle_button_get_active(togglebutton))
-        coverart_display_sort(SORT_DESCENDING);
+        _set_sort_preference(SORT_DESCENDING);
 }
 
-G_MODULE_EXPORT void on_cad_none_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+G_MODULE_EXPORT void on_clarity_none_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     if (gtk_toggle_button_get_active(togglebutton))
-        coverart_display_sort(SORT_NONE);
+        _set_sort_preference(SORT_NONE);
 }
 
-G_MODULE_EXPORT void on_cad_sort_case_sensitive_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+G_MODULE_EXPORT void on_clarity_sort_case_sensitive_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     gboolean val = gtk_toggle_button_get_active(togglebutton);
-    prefs_set_int("cad_case_sensitive", val);
-    gtkpod_broadcast_preference_change("cad_case_sensitive", val);
+    prefs_set_int("clarity_case_sensitive", val);
+    gtkpod_broadcast_preference_change("clarity_case_sensitive", &val);
 }
 
-GtkWidget *init_cover_preferences(gchar *gladepath) {
+GtkWidget *init_clarity_preferences(const gchar *gladepath, ClarityWidget *cw) {
     GtkWidget *notebook;
     GtkBuilder *pref_xml;
     GtkWidget *coverart_bgcolorselect_button;
@@ -93,36 +98,36 @@ GtkWidget *init_cover_preferences(gchar *gladepath) {
     pref_xml = gtkpod_builder_xml_new(gladepath);
     win = gtkpod_builder_xml_get_widget(pref_xml, "preference_window");
     notebook = gtkpod_builder_xml_get_widget(pref_xml, "cover_settings_notebook");
-    coverart_bgcolorselect_button = gtkpod_builder_xml_get_widget (pref_xml, "coverart_display_bg_button");
-    coverart_fgcolorselect_button = gtkpod_builder_xml_get_widget (pref_xml, "coverart_display_fg_button");
+    coverart_bgcolorselect_button = gtkpod_builder_xml_get_widget (pref_xml, "clarity_bg_button");
+    coverart_fgcolorselect_button = gtkpod_builder_xml_get_widget (pref_xml, "clarity_fg_button");
     g_object_ref(notebook);
     gtk_container_remove(GTK_CONTAINER (win), notebook);
 
-    color = coverart_get_background_display_color();
+    color = clarity_widget_get_background_display_color(cw);
     gtk_color_button_set_rgba (GTK_COLOR_BUTTON(coverart_bgcolorselect_button), color);
     gdk_rgba_free(color);
 
-    color = coverart_get_foreground_display_color();
+    color = clarity_widget_get_foreground_display_color(cw);
     gtk_color_button_set_rgba (GTK_COLOR_BUTTON(coverart_fgcolorselect_button), color);
     gdk_rgba_free(color);
 
-    switch (prefs_get_int("cad_sort")) {
+    switch (prefs_get_int("clarity_sort")) {
     case SORT_ASCENDING:
-        w = gtkpod_builder_xml_get_widget(pref_xml, "cad_ascend");
+        w = gtkpod_builder_xml_get_widget(pref_xml, "clarity_ascend");
         break;
     case SORT_DESCENDING:
-        w = gtkpod_builder_xml_get_widget(pref_xml, "cad_descend");
+        w = gtkpod_builder_xml_get_widget(pref_xml, "clarity_descend");
         break;
     default:
-        w = gtkpod_builder_xml_get_widget(pref_xml, "cad_none");
+        w = gtkpod_builder_xml_get_widget(pref_xml, "clarity_none");
         break;
     }
 
     if (w)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
-    if ((w = gtkpod_builder_xml_get_widget(pref_xml, "cad_cfg_case_sensitive"))) {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("cad_case_sensitive"));
+    if ((w = gtkpod_builder_xml_get_widget(pref_xml, "clarity_cfg_case_sensitive"))) {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("clarity_case_sensitive"));
     }
 
     gtk_builder_connect_signals(pref_xml, NULL);

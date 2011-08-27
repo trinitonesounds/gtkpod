@@ -83,16 +83,17 @@ void album_model_destroy(AlbumModel *model);
 
 void album_model_clear(AlbumModel *model);
 
-void album_model_add_track(AlbumModel *model, Track *track);
-
-void album_model_reset_loaded_index(AlbumModel *model);
-
 void album_model_foreach(AlbumModel *model, GFunc func, gpointer user_data);
 
-gint album_model_get_size(AlbumModel *model);
+void album_model_resort(AlbumModel *model, GList *tracks);
+
+void album_model_add_tracks(AlbumModel *model, GList *tracks);
 
 AlbumItem *album_model_get_item(AlbumModel *model, gint index);
 
 gint album_model_get_index(AlbumModel *model, Track *track);
+
+gint album_model_get_size(AlbumModel *model);
+
 
 #endif /* ALBUM_MODEL_H_ */

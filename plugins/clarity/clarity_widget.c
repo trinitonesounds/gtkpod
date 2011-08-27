@@ -72,7 +72,6 @@ enum {
  * track updated
  * change background
  * text
- * select cover
  * set cover from file
  * sort
  * preferences
@@ -221,6 +220,21 @@ static void _init_slider_range(ClarityWidgetPrivate *priv) {
     g_signal_handler_unblock(G_OBJECT(priv->cdslider), priv->slider_signal_id);
 }
 
+static void _set_background(ClarityWidget *self) {
+    gchar *hex_string;
+
+    hex_string = "#FFFFFF";
+
+    if (!prefs_get_string_value("clarity_bg_color", NULL))
+        hex_string = "#000000";
+    else
+        prefs_get_string_value("clarity_bg_color", &hex_string);
+
+    ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
+
+    clarity_canvas_set_background(CLARITY_CANVAS(priv->draw_area), hex_string);
+}
+
 static void clarity_widget_class_init (ClarityWidgetClass *klass) {
     GObjectClass *gobject_class;
 
@@ -243,7 +257,7 @@ static void clarity_widget_init (ClarityWidget *self) {
                                     G_CALLBACK(_on_scrolling_covers_cb),
                                     priv);
 
-    clarity_widget_set_background(self);
+    _set_background(self);
 
     priv->leftbutton = gtk_button_new_with_label("<");
     gtk_widget_set_name(priv->leftbutton, LEFT_BUTTON);
@@ -294,7 +308,7 @@ static void clarity_widget_clear(ClarityWidget *self) {
     album_model_clear(priv->album_model);
 }
 
-static void clarity_widget_init_tracks(ClarityWidget *cw, GList *tracks) {
+static void _init_tracks(ClarityWidget *cw, GList *tracks) {
     g_return_if_fail(CLARITY_IS_WIDGET(cw));
 
     if (!tracks)
@@ -302,40 +316,59 @@ static void clarity_widget_init_tracks(ClarityWidget *cw, GList *tracks) {
 
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(cw);
 
-    while (tracks) {
-        Track *track = tracks->data;
-        album_model_add_track(priv->album_model, track);
-        tracks = tracks->next;
-    }
+    album_model_add_tracks(priv->album_model, tracks);
 
     clarity_canvas_init_album_model(CLARITY_CANVAS(priv->draw_area), priv->album_model);
 
     _init_slider_range(priv);
 }
 
-void clarity_widget_set_background(ClarityWidget *self) {
-    gchar *hex_string;
-
-    hex_string = "#FFFFFF";
-
-    if (!prefs_get_string_value("clarity_bg_color", NULL))
-        hex_string = "#000000";
-    else
-        prefs_get_string_value("clarity_bg_color", &hex_string);
+GdkRGBA *clarity_widget_get_background_display_color(ClarityWidget *self) {
+    g_return_val_if_fail(CLARITY_IS_WIDGET(self), NULL);
 
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
 
-    clarity_canvas_set_background(CLARITY_CANVAS(priv->draw_area), hex_string);
+    return clarity_canvas_get_background_color(CLARITY_CANVAS(priv->draw_area));
 }
 
-void clarity_widget_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data) {
+GdkRGBA *clarity_widget_get_foreground_display_color(ClarityWidget *self) {
+    g_return_val_if_fail(CLARITY_IS_WIDGET(self), NULL);
+
+    ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
+
+    return clarity_canvas_get_background_color(CLARITY_CANVAS(priv->draw_area));
+}
+
+static void _resort_albums(ClarityWidget *self) {
+    g_return_if_fail(CLARITY_IS_WIDGET(self));
+    ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
+
+    // Need to clear away the graphics and start again
+    clarity_canvas_clear(CLARITY_CANVAS(priv->draw_area));
+
+    // Resort the albums
+    Playlist *playlist = gtkpod_get_current_playlist();
+    if (playlist) {
+        album_model_resort(priv->album_model, playlist->members);
+
+        // Re-init the graphics
+        clarity_canvas_init_album_model(CLARITY_CANVAS(priv->draw_area), priv->album_model);
+
+        // Reset the slider and buttons
+        _init_slider_range(priv);
+    }
+}
+
+void clarity_widget_preference_changed_cb(GtkPodApp *app, gpointer pfname, gpointer value, gpointer data) {
     g_return_if_fail(CLARITY_IS_WIDGET(data));
 
     ClarityWidget *cw = CLARITY_WIDGET(data);
 
     gchar *pref_name = pfname;
     if (g_str_equal(pref_name, "clarity_bg_color"))
-        clarity_widget_set_background(cw);
+        _set_background(cw);
+    else if (g_str_equal(pref_name, "clarity_sort"))
+        _resort_albums(cw);
 }
 
 void clarity_widget_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointer data) {
@@ -353,7 +386,7 @@ void clarity_widget_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointer d
     if (!tracks)
         return;
 
-    clarity_widget_init_tracks(cw, tracks);
+    _init_tracks(cw, tracks);
 }
 
 void clarity_widget_tracks_selected_cb(GtkPodApp *app, gpointer tks, gpointer data) {
@@ -364,6 +397,11 @@ void clarity_widget_tracks_selected_cb(GtkPodApp *app, gpointer tks, gpointer da
     GList *tracks = tks;
 
     if (!tracks)
+        return;
+
+    ClarityCanvas *ccanvas = CLARITY_CANVAS(priv->draw_area);
+
+    if (clarity_canvas_is_loading(ccanvas))
         return;
 
     gint album_index = album_model_get_index(priv->album_model, tracks->data);

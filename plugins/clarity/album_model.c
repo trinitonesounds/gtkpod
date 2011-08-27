@@ -32,6 +32,7 @@
 #include "album_model.h"
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/misc.h"
+#include "libgtkpod/gp_private.h"
 
 G_DEFINE_TYPE( AlbumModel, album_model, G_TYPE_OBJECT);
 
@@ -42,9 +43,102 @@ struct _AlbumModelPrivate {
 
     GHashTable *album_hash;
     GList *album_key_list;
-
-    gint loaded;
 };
+
+static gchar *_create_key(Track *track) {
+    g_return_val_if_fail(track, "");
+
+    return g_strconcat(track->artist, "_", track->album, NULL);
+}
+
+static void _add_track_to_album_item(AlbumItem *item, Track *track) {
+    item->tracks = g_list_prepend(item->tracks, track);
+}
+
+static AlbumItem *_create_album_item(Track *track) {
+    AlbumItem *item = NULL;
+
+    /* Album item not found so create a new one and populate */
+    item = g_new0 (AlbumItem, 1);
+    item->albumart = NULL;
+    item->albumname = g_strdup(track->album);
+    item->artist = g_strdup(track->artist);
+    item->tracks = NULL;
+    _add_track_to_album_item(item, track);
+
+    return item;
+}
+
+/**
+ * compare_album_keys:
+ *
+ * Comparison function for comparing keys in
+ * the key list to sort them into alphabetical order.
+ * Could use g_ascii_strcasecmp directly but the NULL
+ * strings cause assertion errors.
+ *
+ * @a: first album key to compare
+ * @b: second album key to compare
+ *
+ */
+static gint _compare_album_item_keys(gchar *a, gchar *b) {
+    if (a == NULL)
+        return -1;
+    if (b == NULL)
+        return -1;
+
+    return compare_string(a, b, prefs_get_int("clarity_case_sensitive"));
+}
+
+void _index_album_item(AlbumModelPrivate *priv, gchar *album_key, AlbumItem *item) {
+    enum GtkPodSortTypes value = prefs_get_int("clarity_sort");
+
+    g_hash_table_insert(priv->album_hash, album_key, item);
+
+    switch(value) {
+    case SORT_ASCENDING:
+        priv->album_key_list = g_list_insert_sorted(priv->album_key_list, album_key, (GCompareFunc) _compare_album_item_keys);
+        break;
+    case SORT_DESCENDING:
+        /* Already in descending order so reverse into ascending order */
+        priv->album_key_list = g_list_reverse(priv->album_key_list);
+        /* Insert the track */
+        priv->album_key_list = g_list_insert_sorted(priv->album_key_list, album_key, (GCompareFunc) _compare_album_item_keys);
+        /* Reverse again */
+        priv->album_key_list = g_list_reverse(priv->album_key_list);
+        break;
+    default:
+        /* NO SORT */
+
+        // Quicker to reverse, prepend then reverse back
+        priv->album_key_list = g_list_reverse(priv->album_key_list);
+        priv->album_key_list = g_list_prepend(priv->album_key_list, album_key);
+        priv->album_key_list = g_list_reverse(priv->album_key_list);
+        break;
+    }
+}
+
+static void _insert_track(AlbumModelPrivate *priv, Track *track) {
+    AlbumItem *item;
+    gchar *album_key;
+
+    album_key = _create_key(track);
+    /* Check whether an album item has already been created in connection
+     * with the track's artist and album
+     */
+    item = g_hash_table_lookup(priv->album_hash, album_key);
+    if (!item) {
+        // Create new album item
+        item = _create_album_item(track);
+        _index_album_item(priv, album_key, item);
+    }
+    else {
+        /* Album Item found in the album hash so prepend the
+         * track to the start of the track list */
+        g_free(album_key);
+        _add_track_to_album_item(item, track);
+    }
+}
 
 /**
  *
@@ -53,24 +147,26 @@ struct _AlbumModelPrivate {
  * Destroy an album struct once no longer needed.
  *
  */
-static void album_model_free_album(AlbumItem *album) {
-    if (album != NULL) {
-        if (album->tracks) {
-            g_list_free(album->tracks);
+static void album_model_free_album_item(AlbumItem *item) {
+    if (item) {
+        if (item->tracks) {
+            g_list_free(item->tracks);
         }
+        item->tracks = NULL;
 
-        g_free(album->albumname);
-        g_free(album->artist);
+        g_free(item->albumname);
+        g_free(item->artist);
 
-        if (album->albumart)
-            g_object_unref(album->albumart);
+        if (item->albumart)
+            g_object_unref(item->albumart);
+
+        item->data = NULL;
     }
 }
 
 static void album_model_finalize(GObject *gobject) {
     AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE(gobject);
 
-    priv->album_key_list = g_list_remove_all(priv->album_key_list, NULL);
     g_hash_table_foreach_remove(priv->album_hash, (GHRFunc) gtk_true, NULL);
     g_hash_table_destroy(priv->album_hash);
     g_list_free(priv->album_key_list);
@@ -92,9 +188,8 @@ static void album_model_init (AlbumModel *self) {
     AlbumModelPrivate *priv;
 
     priv = ALBUM_MODEL_GET_PRIVATE (self);
-    priv->album_hash = g_hash_table_new_full(g_str_hash, g_str_equal, (GDestroyNotify) g_free, (GDestroyNotify) album_model_free_album);
+    priv->album_hash = g_hash_table_new_full(g_str_hash, g_str_equal, (GDestroyNotify) g_free, (GDestroyNotify) album_model_free_album_item);
     priv->album_key_list = NULL;
-    priv->loaded = 0;
 
 }
 
@@ -112,64 +207,49 @@ void album_model_clear(AlbumModel *model) {
     priv = ALBUM_MODEL_GET_PRIVATE (model);
     g_hash_table_remove_all (priv->album_hash);
 
-    g_list_free(priv->album_key_list);
-    priv->album_key_list = NULL;
-}
-
-static gchar *_create_key(Track *track) {
-    g_return_val_if_fail(track, "");
-
-    return g_strconcat(track->artist, "_", track->album, NULL);
-}
-
-void album_model_add_track(AlbumModel *model, Track *track) {
-    AlbumItem *album;
-    gchar *album_key;
-    AlbumModelPrivate *priv;
-
-    priv = ALBUM_MODEL_GET_PRIVATE (model);
-    album_key = _create_key(track);
-    /* Check whether an album item has already been created in connection
-     * with the track's artist and album
-     */
-    album = g_hash_table_lookup(priv->album_hash, album_key);
-    if (album == NULL) {
-        /* Album item not found so create a new one and populate */
-        album = g_new0 (AlbumItem, 1);
-        album->albumart = NULL;
-        album->albumname = g_strdup(track->album);
-        album->artist = g_strdup(track->artist);
-        album->tracks = NULL;
-        album->tracks = g_list_prepend(album->tracks, track);
-
-        /* Insert the new Album Item into the hash */
-        g_hash_table_insert(priv->album_hash, album_key, album);
-        /* Add the key to the list for sorting and other functions */
-        priv->album_key_list = g_list_prepend(priv->album_key_list, album_key);
-    }
-    else {
-        /* Album Item found in the album hash so
-         * append the track to the end of the
-         * track list */
-        g_free(album_key);
-        album->tracks = g_list_prepend(album->tracks, track);
+    if (priv->album_key_list) {
+        g_list_free(priv->album_key_list);
+        priv->album_key_list = NULL;
     }
 }
 
-void album_model_reset_loaded_index(AlbumModel *model) {
+void album_model_resort(AlbumModel *model, GList *tracks) {
+    AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE (model);
+    enum GtkPodSortTypes value = prefs_get_int("clarity_sort");
+
+    switch (value) {
+    case SORT_ASCENDING:
+        priv->album_key_list = g_list_sort(priv->album_key_list, (GCompareFunc) _compare_album_item_keys);
+        break;
+    case SORT_DESCENDING:
+        priv->album_key_list = g_list_sort(priv->album_key_list, (GCompareFunc) _compare_album_item_keys);
+        priv->album_key_list = g_list_reverse(priv->album_key_list);
+        break;
+    default:
+        // No sorting needs to re-initialise the model from scratch
+        album_model_clear(model);
+        album_model_add_tracks(model, tracks);
+        break;
+    }
+}
+
+void album_model_add_tracks(AlbumModel *model, GList *tracks) {
     g_return_if_fail(model);
 
-    AlbumModelPrivate *priv;
-    priv = ALBUM_MODEL_GET_PRIVATE (model);
-    priv->loaded = 0;
+    AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE(model);
+    GList *trks = tracks;
+    while(trks) {
+        Track *track = trks->data;
+        _insert_track(priv, track);
+        trks = trks->next;
+    }
 }
 
 void album_model_foreach (AlbumModel *model, GFunc func, gpointer user_data) {
     g_return_if_fail(model);
     g_return_if_fail(func);
 
-    AlbumModelPrivate *priv;
-    priv = ALBUM_MODEL_GET_PRIVATE (model);
+    AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE (model);
     GList *iter = priv->album_key_list;
 
     while(iter) {
@@ -182,6 +262,31 @@ void album_model_foreach (AlbumModel *model, GFunc func, gpointer user_data) {
     }
 }
 
+AlbumItem *album_model_get_item(AlbumModel *model, gint index) {
+    g_return_val_if_fail(model, NULL);
+
+    AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE (model);
+
+    gchar *key = g_list_nth_data(priv->album_key_list, index);
+    return g_hash_table_lookup(priv->album_hash, key);
+}
+
+gint album_model_get_index(AlbumModel *model, Track *track) {
+    g_return_val_if_fail(model, -1);
+
+    AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE (model);
+
+    gchar *trk_key = _create_key(track);
+    GList *key_list = priv->album_key_list;
+
+    GList *key = g_list_find_custom(key_list, trk_key, (GCompareFunc) _compare_album_item_keys);
+    g_return_val_if_fail (key, -1);
+
+    gint index = g_list_position(key_list, key);
+    g_free(trk_key);
+
+    return index;
+}
 
 gint album_model_get_size(AlbumModel *model) {
     g_return_val_if_fail(model, 0);
@@ -190,53 +295,6 @@ gint album_model_get_size(AlbumModel *model) {
     priv = ALBUM_MODEL_GET_PRIVATE (model);
 
     return g_list_length(priv->album_key_list);
-}
-
-AlbumItem *album_model_get_item(AlbumModel *model, gint index) {
-    g_return_val_if_fail(model, NULL);
-
-    AlbumModelPrivate *priv;
-    priv = ALBUM_MODEL_GET_PRIVATE (model);
-
-    gchar *key = g_list_nth_data(priv->album_key_list, index);
-    return g_hash_table_lookup(priv->album_hash, key);
-}
-
-/**
- * compare_album_keys:
- *
- * Comparison function for comparing keys in
- * the key list to sort them into alphabetical order.
- * Could use g_ascii_strcasecmp directly but the NULL
- * strings cause assertion errors.
- *
- * @a: first album key to compare
- * @b: second album key to compare
- *
- */
-static gint _compare_album_keys(gchar *a, gchar *b) {
-    if (a == NULL)
-        return -1;
-    if (b == NULL)
-        return -1;
-
-    return compare_string(a, b, prefs_get_int("cad_case_sensitive"));
-}
-
-gint album_model_get_index(AlbumModel *model, Track *track) {
-    g_return_val_if_fail(model, -1);
-
-    AlbumModelPrivate *priv;
-    priv = ALBUM_MODEL_GET_PRIVATE (model);
-
-    gchar *trk_key = _create_key(track);
-    GList *key = g_list_find_custom(priv->album_key_list, trk_key, (GCompareFunc) _compare_album_keys);
-    g_return_val_if_fail (key, -1);
-
-    gint index = g_list_position(priv->album_key_list, key);
-    g_free(trk_key);
-
-    return index;
 }
 
 #endif /* ALBUM_MODEL_C_ */

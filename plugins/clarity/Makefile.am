@@ -35,6 +35,7 @@ libclarity_la_SOURCES = plugin.c plugin.h \
 							  clarity_widget.c clarity_widget.h \
 							  clarity_preview.c clarity_preview.h \
 							  clarity_utils.c clarity_utils.h \
+							  clarity_preferences.c clarity_preferences.h \
 							  clarity_context_menu.c clarity_context_menu.h \
 							  fetchcover.c fetchcover.h
 libclarity_la_CFLAGS = $(CLUTTER_GTK_CFLAGS)

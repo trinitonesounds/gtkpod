@@ -65,13 +65,15 @@ struct _ClarityWidgetClass {
 
 };
 
-void clarity_widget_set_background(ClarityWidget *self);
+GdkRGBA *clarity_widget_get_background_display_color(ClarityWidget *self);
+
+GdkRGBA *clarity_widget_get_foreground_display_color(ClarityWidget *self);
 
 GtkWidget * clarity_widget_new();
 
 
 // Signal callbacks
-void clarity_widget_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data);
+void clarity_widget_preference_changed_cb(GtkPodApp *app, gpointer pfname, gpointer value, gpointer data);
 void clarity_widget_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointer data);
 void clarity_widget_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data);
 void clarity_widget_tracks_selected_cb(GtkPodApp *app, gpointer tks, gpointer data);

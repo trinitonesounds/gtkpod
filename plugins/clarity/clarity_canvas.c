@@ -60,6 +60,8 @@ struct _ClarityCanvasPrivate {
     gint curr_index;
 
     gulong preview_signal;
+
+    gboolean loading_complete;
 };
 
 enum DIRECTION {
@@ -171,6 +173,7 @@ static void clarity_canvas_init(ClarityCanvas *self) {
     priv->timeline = clutter_timeline_new(1600);
     priv->alpha = clutter_alpha_new_full(priv->timeline, CLUTTER_EASE_OUT_EXPO);
     priv->curr_index = 0;
+    priv->loading_complete = FALSE;
 
 }
 
@@ -186,7 +189,7 @@ GtkWidget *clarity_canvas_new() {
  * The return value is a hexstring in the form "rrggbbaa"
  *
  */
-gchar *clarity_canvas_get_background_color(ClarityCanvas *self) {
+GdkRGBA *clarity_canvas_get_background_color(ClarityCanvas *self) {
     g_return_val_if_fail(CLARITY_IS_CANVAS(self), NULL);
 
     ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
@@ -199,7 +202,14 @@ gchar *clarity_canvas_get_background_color(ClarityCanvas *self) {
     clutter_stage_get_color(CLUTTER_STAGE(stage), ccolor);
     g_return_val_if_fail(ccolor, NULL);
 
-    return clutter_color_to_string(ccolor);
+    GdkRGBA *rgba;
+    rgba = g_malloc(sizeof(GdkRGBA));
+    rgba->red = ((gdouble) ccolor->red) / 255;
+    rgba->green = ((gdouble) ccolor->green) / 255;
+    rgba->blue = ((gdouble) ccolor->blue) / 255;
+    rgba->alpha = ((gdouble) ccolor->alpha) / 255;
+
+    return rgba;
 }
 
 void clarity_canvas_set_background(ClarityCanvas *self, const gchar *color_string) {
@@ -283,6 +293,12 @@ static void _display_clarity_cover(ClarityCover *ccover, gint index) {
     gint opacity = _calculate_index_opacity(index);
     clutter_actor_animate_with_alpha(CLUTTER_ACTOR(ccover), alpha, "opacity", opacity, NULL);
     clutter_timeline_start (timeline);
+}
+
+static gboolean _set_loading_complete(gpointer data) {
+    ClarityCanvasPrivate *priv = (ClarityCanvasPrivate *) data;
+    priv->loading_complete = TRUE;
+    return TRUE;
 }
 
 static gboolean _create_cover_idle(gpointer data) {
@@ -372,6 +388,8 @@ static gpointer _init_album_model_threaded(gpointer data) {
 
     album_model_foreach(model, _init_album_item, cc);
 
+    g_idle_add_full(G_PRIORITY_LOW, _set_loading_complete, priv, NULL);
+
     return NULL;
 }
 
@@ -384,7 +402,7 @@ void clarity_canvas_init_album_model(ClarityCanvas *self, AlbumModel *model) {
 
     ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
     priv->model = model;
-    album_model_reset_loaded_index(model);
+    priv->loading_complete = FALSE;
 
     g_thread_create_full(_init_album_model_threaded, self, /* user data  */
     0, /* stack size */
@@ -490,6 +508,8 @@ void clarity_canvas_move_left(ClarityCanvas *self, gint increment) {
     if(priv->curr_index == g_list_length(priv->covers) - 1)
         return;
 
+    priv->loading_complete = FALSE;
+
     _move(priv, MOVE_LEFT, increment);
 }
 
@@ -499,6 +519,8 @@ void clarity_canvas_move_right(ClarityCanvas *self, gint increment) {
 
     if(priv->curr_index == 0)
         return;
+
+    priv->loading_complete = FALSE;
 
     _move(priv, MOVE_RIGHT, increment);
 }
@@ -510,5 +532,9 @@ gint clarity_canvas_get_current_index(ClarityCanvas *self) {
     return priv->curr_index;
 }
 
-
+gboolean clarity_canvas_is_loading(ClarityCanvas *self) {
+    g_return_val_if_fail(self, FALSE);
+    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
+    return !priv->loading_complete;
+}
 
