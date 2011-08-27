@@ -603,7 +603,7 @@ void coverart_display_update(gboolean clear_track_list) {
 void coverart_display_sort(gint order) {
     prefs_set_int("cad_sort", order);
     coverart_display_update(TRUE);
-    gtkpod_broadcast_preference_change("cad_sort", order);
+    gtkpod_broadcast_preference_change("cad_sort", &order);
 }
 
 /**

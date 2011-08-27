@@ -38,7 +38,7 @@ static GtkWidget *notebook = NULL;
 
 static void set_pm_sort(gint val) {
     prefs_set_int("pm_sort", val);
-    gtkpod_broadcast_preference_change("pm_sort", val);
+    gtkpod_broadcast_preference_change("pm_sort", &val);
 }
 
 G_MODULE_EXPORT void on_pm_ascend_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
@@ -59,7 +59,7 @@ G_MODULE_EXPORT void on_pm_none_toggled(GtkToggleButton *togglebutton, gpointer 
 G_MODULE_EXPORT void on_pm_sort_case_sensitive_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     gboolean val = gtk_toggle_button_get_active(togglebutton);
     prefs_set_int("pm_case_sensitive", val);
-    gtkpod_broadcast_preference_change("pm_case_sensitive", val);
+    gtkpod_broadcast_preference_change("pm_case_sensitive", &val);
 }
 
 GtkWidget *init_playlist_display_preferences() {

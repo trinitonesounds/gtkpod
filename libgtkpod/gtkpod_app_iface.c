@@ -414,8 +414,7 @@ void gtkpod_notify_data_unchanged(iTunesDB *itdb) {
     g_signal_emit(gtkpod_app, gtkpod_app_signals[ITDB_DATA_SAVED], 0, itdb);
 
 }
-
-void gtkpod_broadcast_preference_change(gchar *preference_name, gint value) {
+void gtkpod_broadcast_preference_change(gchar *preference_name, gpointer value) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
     g_return_if_fail (preference_name);
 

@@ -72,7 +72,7 @@ G_MODULE_EXPORT void on_st_none_toggled(GtkToggleButton *togglebutton, gpointer 
 G_MODULE_EXPORT void on_st_sort_case_sensitive_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     gboolean val = gtk_toggle_button_get_active(togglebutton);
     prefs_set_int("st_case_sensitive", val);
-    gtkpod_broadcast_preference_change("st_case_sensitive", val);
+    gtkpod_broadcast_preference_change("st_case_sensitive", &val);
 }
 
 GtkWidget *init_sorttab_preferences() {

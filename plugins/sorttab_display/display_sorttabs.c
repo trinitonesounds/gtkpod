@@ -1059,7 +1059,7 @@ static void st_free_entry_cb(gpointer data, gpointer user_data) {
 void st_remove_all_entries_from_model(guint32 inst) {
     SortTab *st = sorttab[inst];
     gint column;
-    GtkSortType order;
+    enum GtkPodSortTypes order;
 
     if (st) {
         if (st->current_entry) {
@@ -1789,7 +1789,7 @@ void st_sort(gint order) {
         st_sort_inst(i, order);
 
     prefs_set_int("st_sort", order);
-    gtkpod_broadcast_preference_change("st_sort", order);
+    gtkpod_broadcast_preference_change("st_sort", &order);
 }
 
 gint st_get_sorttab_page_number(int inst) {

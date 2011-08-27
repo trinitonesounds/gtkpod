@@ -2132,10 +2132,10 @@ void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer 
     pm_remove_playlist(old_playlist, TRUE);
 }
 
-void playlist_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data) {
+void playlist_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gpointer value, gpointer data) {
     gchar *pref_name = pfname;
     if (g_str_equal(pref_name, "pm_sort"))
-        pm_sort(value);
+        pm_sort((GtkSortType) value);
     else if (g_str_equal(pref_name, "pm_case_sensitive")) {
         gint val = prefs_get_int("pm_sort");
         pm_sort((GtkSortType) val);

@@ -416,7 +416,7 @@ static void populate_track_cmd_combo(GtkComboBox *combo) {
 G_MODULE_EXPORT void on_tm_sort_case_sensitive_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     gboolean val = gtk_toggle_button_get_active(togglebutton);
     prefs_set_int("tm_case_sensitive", val);
-    gtkpod_broadcast_preference_change("tm_case_sensitive", val);
+    gtkpod_broadcast_preference_change("tm_case_sensitive", &val);
 }
 
 GtkWidget *init_track_display_preferences() {

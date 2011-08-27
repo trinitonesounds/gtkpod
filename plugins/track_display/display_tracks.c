@@ -2417,7 +2417,7 @@ void track_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data) 
     tm_track_changed(track);
 }
 
-void track_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data) {
+void track_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gpointer value, gpointer data) {
     gchar *pref_name = pfname;
     if (g_str_equal(pref_name, "tm_sort")) {
         tm_sort_counter(-1);

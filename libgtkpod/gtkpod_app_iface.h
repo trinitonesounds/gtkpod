@@ -203,7 +203,7 @@ void gtkpod_track_updated(Track *track);
 void gtkpod_set_sort_enablement(gboolean enable);
 gboolean gtkpod_get_sort_enablement();
 
-void gtkpod_broadcast_preference_change(gchar *preference_name, gint value);
+void gtkpod_broadcast_preference_change(gchar *preference_name, gpointer value);
 
 void gtkpod_register_exporter(Exporter *exporter);
 void gtkpod_unregister_exporter();
