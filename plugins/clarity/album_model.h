@@ -45,6 +45,8 @@ typedef struct {
 
 } AlbumItem;
 
+typedef void (*AMFunc) (gpointer value, gint index, gpointer user_data);
+
 GType album_model_get_type (void);
 
 #define ALBUM_TYPE_MODEL            (album_model_get_type ())
@@ -83,15 +85,27 @@ void album_model_destroy(AlbumModel *model);
 
 void album_model_clear(AlbumModel *model);
 
-void album_model_foreach(AlbumModel *model, GFunc func, gpointer user_data);
+void album_model_foreach(AlbumModel *model, AMFunc func, gpointer user_data);
 
 void album_model_resort(AlbumModel *model, GList *tracks);
 
 void album_model_add_tracks(AlbumModel *model, GList *tracks);
 
-AlbumItem *album_model_get_item(AlbumModel *model, gint index);
+/**
+ * Add a single track to the album model.
+ *
+ * @return gboolean: whether a new album model was
+ *                                  created.
+ */
+gboolean album_model_add_track(AlbumModel *model, Track *track);
 
-gint album_model_get_index(AlbumModel *model, Track *track);
+AlbumItem *album_model_get_item_with_index(AlbumModel *model, gint index);
+
+AlbumItem *album_model_get_item_with_track(AlbumModel *model, Track *track);
+
+gint album_model_get_index_with_album_item(AlbumModel *model, AlbumItem *item);
+
+gint album_model_get_index_with_track(AlbumModel *model, Track *track);
 
 gint album_model_get_size(AlbumModel *model);
 

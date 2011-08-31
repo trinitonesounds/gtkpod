@@ -45,10 +45,14 @@ struct _AlbumModelPrivate {
     GList *album_key_list;
 };
 
-static gchar *_create_key(Track *track) {
+static gchar *_create_key(gchar *artist, gchar *album) {
+    return g_strconcat(artist, "_", album, NULL);
+}
+
+static gchar *_create_key_from_track(Track *track) {
     g_return_val_if_fail(track, "");
 
-    return g_strconcat(track->artist, "_", track->album, NULL);
+    return _create_key(track->artist, track->album);
 }
 
 static void _add_track_to_album_item(AlbumItem *item, Track *track) {
@@ -118,11 +122,14 @@ void _index_album_item(AlbumModelPrivate *priv, gchar *album_key, AlbumItem *ite
     }
 }
 
-static void _insert_track(AlbumModelPrivate *priv, Track *track) {
+/**
+ * Return true if a new album item was created. Otherwise false.
+ */
+static gboolean _insert_track(AlbumModelPrivate *priv, Track *track) {
     AlbumItem *item;
     gchar *album_key;
 
-    album_key = _create_key(track);
+    album_key = _create_key_from_track(track);
     /* Check whether an album item has already been created in connection
      * with the track's artist and album
      */
@@ -131,13 +138,14 @@ static void _insert_track(AlbumModelPrivate *priv, Track *track) {
         // Create new album item
         item = _create_album_item(track);
         _index_album_item(priv, album_key, item);
+        return TRUE;
     }
-    else {
-        /* Album Item found in the album hash so prepend the
-         * track to the start of the track list */
-        g_free(album_key);
-        _add_track_to_album_item(item, track);
-    }
+
+    /* Album Item found in the album hash so prepend the
+     * track to the start of the track list */
+    g_free(album_key);
+    _add_track_to_album_item(item, track);
+    return FALSE;
 }
 
 /**
@@ -245,24 +253,34 @@ void album_model_add_tracks(AlbumModel *model, GList *tracks) {
     }
 }
 
-void album_model_foreach (AlbumModel *model, GFunc func, gpointer user_data) {
+gboolean album_model_add_track(AlbumModel *model, Track *track) {
+    g_return_val_if_fail(model, -1);
+    g_return_val_if_fail(track, -1);
+
+    AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE(model);
+    return _insert_track(priv, track);
+}
+
+void album_model_foreach (AlbumModel *model, AMFunc func, gpointer user_data) {
     g_return_if_fail(model);
     g_return_if_fail(func);
 
     AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE (model);
     GList *iter = priv->album_key_list;
 
+    gint i = 0;
     while(iter) {
         gchar *key = iter->data;
         AlbumItem *item = g_hash_table_lookup(priv->album_hash, key);
 
-        (* func) (item, user_data);
+        (* func) (item, i, user_data);
 
         iter = iter->next;
+        i++;
     }
 }
 
-AlbumItem *album_model_get_item(AlbumModel *model, gint index) {
+AlbumItem *album_model_get_item_with_index(AlbumModel *model, gint index) {
     g_return_val_if_fail(model, NULL);
 
     AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE (model);
@@ -271,18 +289,44 @@ AlbumItem *album_model_get_item(AlbumModel *model, gint index) {
     return g_hash_table_lookup(priv->album_hash, key);
 }
 
-gint album_model_get_index(AlbumModel *model, Track *track) {
-    g_return_val_if_fail(model, -1);
+AlbumItem *album_model_get_item_with_track(AlbumModel *model, Track *track) {
+    g_return_val_if_fail(model, NULL);
 
     AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE (model);
 
-    gchar *trk_key = _create_key(track);
+    gchar *album_key = _create_key_from_track(track);
+    return g_hash_table_lookup(priv->album_hash, album_key);
+}
+
+static gint _get_index(AlbumModelPrivate *priv, gchar *trk_key) {
     GList *key_list = priv->album_key_list;
 
     GList *key = g_list_find_custom(key_list, trk_key, (GCompareFunc) _compare_album_item_keys);
     g_return_val_if_fail (key, -1);
 
     gint index = g_list_position(key_list, key);
+
+    return index;
+}
+
+gint album_model_get_index_with_album_item(AlbumModel *model, AlbumItem *item) {
+    g_return_val_if_fail(model, -1);
+    AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE (model);
+
+    gchar *trk_key = _create_key(item->artist, item->albumname);
+    gint index = _get_index(priv, trk_key);
+    g_free(trk_key);
+
+    return index;
+}
+
+gint album_model_get_index_with_track(AlbumModel *model, Track *track) {
+    g_return_val_if_fail(model, -1);
+
+    AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE (model);
+
+    gchar *trk_key = _create_key_from_track(track);
+    gint index = _get_index(priv, trk_key);
     g_free(trk_key);
 
     return index;

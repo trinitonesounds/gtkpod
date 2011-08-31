@@ -434,12 +434,40 @@ void clarity_widget_tracks_selected_cb(GtkPodApp *app, gpointer tks, gpointer da
     if (clarity_canvas_is_loading(ccanvas))
         return;
 
-    gint album_index = album_model_get_index(priv->album_model, tracks->data);
+    gint album_index = album_model_get_index_with_track(priv->album_model, tracks->data);
     gtk_range_set_value(GTK_RANGE (priv->cdslider), album_index);
+}
+
+void clarity_widget_track_added_cb(GtkPodApp *app, gpointer tk, gpointer data) {
+    g_return_if_fail(CLARITY_IS_WIDGET(data));
+
+    ClarityWidget *cw = CLARITY_WIDGET(data);
+    ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(cw);
+    Track *track = tk;
+
+
+    if (!track)
+        return;
+
+    GList *current_tracks = cw->current_playlist->members;
+    if (!g_list_find(current_tracks, track)) {
+        // Track not added to this playlist
+        return;
+    }
+
+    ClarityCanvas *ccanvas = CLARITY_CANVAS(priv->draw_area);
+
+    if (clarity_canvas_is_loading(ccanvas))
+        return;
+
+    if (album_model_add_track(priv->album_model, track)) {
+        AlbumItem *item = album_model_get_item_with_track(priv->album_model, track);
+        clarity_canvas_add_album_item(CLARITY_CANVAS(priv->draw_area), item);
+        _init_slider_range(priv);
+    }
 }
 
 void clarity_widget_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data) {}
 void clarity_widget_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data) {}
-void clarity_widget_track_added_cb(GtkPodApp *app, gpointer tk, gpointer data) {}
 
 

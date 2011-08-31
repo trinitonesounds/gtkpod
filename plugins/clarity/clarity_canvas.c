@@ -106,7 +106,7 @@ static gboolean _preview_cover_cb(GtkWidget *widget, GdkEvent *event, gpointer u
     if (!priv->model)
         return TRUE;
 
-    AlbumItem *item = album_model_get_item(priv->model, priv->curr_index);
+    AlbumItem *item = album_model_get_item_with_index(priv->model, priv->curr_index);
 
     GtkWidget *dialog = clarity_preview_new(item);
 
@@ -353,8 +353,6 @@ static void _update_text(ClarityCanvasPrivate *priv) {
     clutter_text_set_text(CLUTTER_TEXT(priv->title_text), title);
     clutter_text_set_text(CLUTTER_TEXT(priv->artist_text), artist);
 
-    g_warning("%s", clutter_text_get_font_name(CLUTTER_TEXT(priv->title_text)));
-
     g_free(title);
     g_free(artist);
 
@@ -379,26 +377,24 @@ static void _display_clarity_cover(ClarityCover *ccover, gint index) {
     clutter_timeline_start (timeline);
 }
 
-static gboolean _set_loading_complete(gpointer data) {
-    ClarityCanvasPrivate *priv = (ClarityCanvasPrivate *) data;
-    priv->loading_complete = TRUE;
-    _update_text(priv);
-    return FALSE;
+static void _set_loading_complete(ClarityCanvasPrivate *priv, gboolean value) {
+    priv->loading_complete = value;
+
+    if (value) {
+        _update_text(priv);
+    }
+
+    g_warning("Loading complete = %d", priv->loading_complete);
 }
 
-static gboolean _create_cover_idle(gpointer data) {
+static gboolean _create_cover_actors(ClarityCanvasPrivate *priv, AlbumItem *album_item, gint index) {
+    g_return_val_if_fail(priv, FALSE);
 
-    AlbumItem *album_item = (AlbumItem *) data;
-    GObject *gobject = album_item->data;
+    _set_loading_complete(priv, FALSE);
 
-    g_return_val_if_fail(CLARITY_IS_CANVAS(gobject), FALSE);
-    ClarityCanvas *ccanvas = CLARITY_CANVAS(gobject);
-    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(ccanvas);
-
-    gint index = g_list_length(priv->covers);
     ClarityCover *ccover = clarity_cover_new();
     clutter_actor_set_opacity(CLUTTER_ACTOR(ccover), 0);
-    priv->covers = g_list_append(priv->covers, ccover);
+    priv->covers = g_list_insert(priv->covers, ccover, index);
 
     clutter_container_add_actor(
                             CLUTTER_CONTAINER(priv->container),
@@ -406,15 +402,12 @@ static gboolean _create_cover_idle(gpointer data) {
 
     clarity_cover_set_album_item(ccover, album_item);
 
-    //TEXT
-    //FIXME
-//    temp.filename = filename;
-//    temp.filetype = filetype;
-
-    //FIXME
-    // Confirm whether this does improve performance
-    if(index > 20)
+    if((priv->curr_index + VISIBLE_ITEMS < index) ||
+            (priv->curr_index - VISIBLE_ITEMS > index)) {
+        g_warning("Not creating anything more");
+        _set_loading_complete(priv, TRUE);
         return FALSE;
+    }
 
     gint pos = _calculate_index_distance(index);
     float scale = _calculate_index_scale(index);
@@ -446,25 +439,24 @@ static gboolean _create_cover_idle(gpointer data) {
 
     _display_clarity_cover(ccover, index);
 
+    _set_loading_complete(priv, TRUE);
+
     return FALSE;
 }
 
-void _init_album_item(gpointer data, gpointer user_data) {
-    AlbumItem *item = (AlbumItem *) data;
+void _init_album_item(gpointer value, gint index, gpointer user_data) {
+    AlbumItem *item = (AlbumItem *) value;
     ClarityCanvas *cc = CLARITY_CANVAS(user_data);
-
-    gdk_threads_enter();
+    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(cc);
 
     Track *track = g_list_nth_data(item->tracks, 0);
     item->albumart = _get_track_image(track);
     item->data = cc;
 
-    g_idle_add_full(G_PRIORITY_LOW, _create_cover_idle, item, NULL);
-
-    gdk_threads_leave();
+    _create_cover_actors(priv, item, index);
 }
 
-static gpointer _init_album_model_threaded(gpointer data) {
+static gpointer _init_album_model(gpointer data) {
     g_return_val_if_fail(CLARITY_IS_CANVAS(data), NULL);
 
     ClarityCanvas *cc = CLARITY_CANVAS(data);
@@ -472,8 +464,6 @@ static gpointer _init_album_model_threaded(gpointer data) {
     AlbumModel *model = priv->model;
 
     album_model_foreach(model, _init_album_item, cc);
-
-    g_idle_add_full(G_PRIORITY_LOW, _set_loading_complete, priv, NULL);
 
     return NULL;
 }
@@ -487,13 +477,8 @@ void clarity_canvas_init_album_model(ClarityCanvas *self, AlbumModel *model) {
 
     ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
     priv->model = model;
-    priv->loading_complete = FALSE;
 
-    g_thread_create_full(_init_album_model_threaded, self, /* user data  */
-    0, /* stack size */
-    FALSE, /* joinable   */
-    TRUE, /* bound      */
-    G_THREAD_PRIORITY_LOW, NULL);
+    _init_album_model(self);
 
 }
 
@@ -569,6 +554,9 @@ static void _restore_z_order(ClarityCanvasPrivate *priv) {
 }
 
 static void _move(ClarityCanvasPrivate *priv, enum DIRECTION direction, gint increment) {
+
+    _set_loading_complete(priv, FALSE);
+
     /* Stop any animation */
     clutter_timeline_stop(priv->timeline);
 
@@ -583,8 +571,9 @@ static void _move(ClarityCanvasPrivate *priv, enum DIRECTION direction, gint inc
 
     priv->curr_index += ((direction * -1) * increment);
 
-    _update_text(priv);
     _restore_z_order(priv);
+
+    _set_loading_complete(priv, TRUE);
 }
 
 void clarity_canvas_move_left(ClarityCanvas *self, gint increment) {
@@ -593,8 +582,6 @@ void clarity_canvas_move_left(ClarityCanvas *self, gint increment) {
 
     if(priv->curr_index == g_list_length(priv->covers) - 1)
         return;
-
-    priv->loading_complete = FALSE;
 
     _move(priv, MOVE_LEFT, increment);
 }
@@ -605,8 +592,6 @@ void clarity_canvas_move_right(ClarityCanvas *self, gint increment) {
 
     if(priv->curr_index == 0)
         return;
-
-    priv->loading_complete = FALSE;
 
     _move(priv, MOVE_RIGHT, increment);
 }
@@ -624,3 +609,16 @@ gboolean clarity_canvas_is_loading(ClarityCanvas *self) {
     return !priv->loading_complete;
 }
 
+void clarity_canvas_add_album_item(ClarityCanvas *self, AlbumItem *item) {
+    g_return_if_fail(self);
+    g_return_if_fail(item);
+
+    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
+    gint index = album_model_get_index_with_album_item(priv->model, item);
+
+    _set_loading_complete(priv, FALSE);
+
+    _init_album_item(item, index, self);
+
+    _set_loading_complete(priv, TRUE);
+}

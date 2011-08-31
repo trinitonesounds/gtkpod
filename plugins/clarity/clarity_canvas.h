@@ -88,6 +88,8 @@ gint clarity_canvas_get_current_index(ClarityCanvas *self);
 
 gboolean clarity_canvas_is_loading(ClarityCanvas *self);
 
+void clarity_canvas_add_album_item(ClarityCanvas *self, AlbumItem *item);
+
 G_END_DECLS
 
 #endif /* CLARITY_CANVAS_H_ */
