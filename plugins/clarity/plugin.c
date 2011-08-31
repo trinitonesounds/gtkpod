@@ -95,6 +95,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     g_signal_connect (gtkpod_app, SIGNAL_PREFERENCE_CHANGE, G_CALLBACK (clarity_widget_preference_changed_cb), clarity_plugin->clarity_widget);
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (clarity_widget_playlist_selected_cb), clarity_plugin->clarity_widget);
+    g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_REMOVED, G_CALLBACK (clarity_widget_playlist_removed_cb), clarity_plugin->clarity_widget);
     g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (clarity_widget_track_removed_cb), clarity_plugin->clarity_widget);
     g_signal_connect (gtkpod_app, SIGNAL_TRACKS_DISPLAYED, G_CALLBACK (clarity_widget_tracks_selected_cb), clarity_plugin->clarity_widget);
     g_signal_connect (gtkpod_app, SIGNAL_TRACKS_SELECTED, G_CALLBACK (clarity_widget_tracks_selected_cb), clarity_plugin->clarity_widget);

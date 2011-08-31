@@ -74,7 +74,10 @@ enum {
  */
 
 static void clarity_widget_dispose(GObject *gobject) {
-    ClarityWidgetPrivate *priv = CLARITY_WIDGET(gobject)->priv;
+    ClarityWidget *cw = CLARITY_WIDGET(gobject);
+    cw->current_playlist = NULL;
+
+    ClarityWidgetPrivate *priv = cw->priv;
     if (priv) {
 
         if (GTK_IS_WIDGET(priv->contentpanel))
@@ -355,7 +358,7 @@ static void _resort_albums(ClarityWidget *self) {
     clarity_canvas_clear(CLARITY_CANVAS(priv->draw_area));
 
     // Resort the albums
-    Playlist *playlist = gtkpod_get_current_playlist();
+    Playlist *playlist = self->current_playlist;
     if (playlist) {
         album_model_resort(priv->album_model, playlist->members);
 
@@ -386,17 +389,34 @@ void clarity_widget_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointer d
 
     ClarityWidget *cw = CLARITY_WIDGET(data);
 
-    clarity_widget_clear(cw);
-
     Playlist *playlist = (Playlist *) pl;
     if (!playlist)
         return;
 
+    if (cw->current_playlist == playlist)
+        // Should already have all these tracks displayed
+        return;
+
+    clarity_widget_clear(cw);
+
+    cw->current_playlist = playlist;
     GList *tracks = playlist->members;
     if (!tracks)
         return;
 
     _init_tracks(cw, tracks);
+}
+
+void clarity_widget_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer data) {
+    g_return_if_fail(CLARITY_IS_WIDGET(data));
+
+    ClarityWidget *cw = CLARITY_WIDGET(data);
+    Playlist *playlist = (Playlist *) pl;
+    if (!playlist)
+        return;
+
+    if (cw->current_playlist == playlist)
+        clarity_widget_clear(cw);
 }
 
 void clarity_widget_tracks_selected_cb(GtkPodApp *app, gpointer tks, gpointer data) {

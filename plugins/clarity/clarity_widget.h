@@ -55,6 +55,12 @@ struct _ClarityWidget {
     /*<private>*/
     GtkBox parent_instance;
 
+    /*
+     * Playlist currently associated
+     * with the display.
+     */
+    Playlist *current_playlist;
+
     /* structure containing private members */
      /*<private>*/
      ClarityWidgetPrivate *priv;
@@ -75,6 +81,7 @@ GtkWidget * clarity_widget_new();
 // Signal callbacks
 void clarity_widget_preference_changed_cb(GtkPodApp *app, gpointer pfname, gpointer value, gpointer data);
 void clarity_widget_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointer data);
+void clarity_widget_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer data);
 void clarity_widget_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data);
 void clarity_widget_tracks_selected_cb(GtkPodApp *app, gpointer tks, gpointer data);
 void clarity_widget_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data);
