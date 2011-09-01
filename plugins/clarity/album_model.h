@@ -109,5 +109,7 @@ gint album_model_get_index_with_track(AlbumModel *model, Track *track);
 
 gint album_model_get_size(AlbumModel *model);
 
+gint compare_tracks(Track *a, Track *b);
+
 
 #endif /* ALBUM_MODEL_H_ */

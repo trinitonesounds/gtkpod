@@ -419,16 +419,36 @@ void clarity_widget_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer da
         clarity_widget_clear(cw);
 }
 
+GList *_sort_track_list(GList *tracks) {
+    enum GtkPodSortTypes value = prefs_get_int("clarity_sort");
+
+    switch(value) {
+        case SORT_ASCENDING:
+            tracks = g_list_sort(tracks, (GCompareFunc) compare_tracks);
+            break;
+        case SORT_DESCENDING:
+            tracks = g_list_sort(tracks, (GCompareFunc) compare_tracks);
+            tracks = g_list_reverse(tracks);
+            break;
+        default:
+            // Do Nothing
+            break;
+    }
+
+    return tracks;
+}
+
 void clarity_widget_tracks_selected_cb(GtkPodApp *app, gpointer tks, gpointer data) {
     g_return_if_fail(CLARITY_IS_WIDGET(data));
 
     ClarityWidget *cw = CLARITY_WIDGET(data);
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(cw);
-    GList *tracks = tks;
+    GList *tracks = g_list_copy((GList *) tks);
 
     if (!tracks)
         return;
 
+    tracks = _sort_track_list(tracks);
     ClarityCanvas *ccanvas = CLARITY_CANVAS(priv->draw_area);
 
     if (clarity_canvas_is_loading(ccanvas))

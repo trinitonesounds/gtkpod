@@ -85,13 +85,26 @@ static AlbumItem *_create_album_item(Track *track) {
  * @b: second album key to compare
  *
  */
-static gint _compare_album_item_keys(gchar *a, gchar *b) {
+static gint _compare_album_keys(gchar *a, gchar *b) {
     if (a == NULL)
         return -1;
     if (b == NULL)
-        return -1;
+        return 1;
 
     return compare_string(a, b, prefs_get_int("clarity_case_sensitive"));
+}
+
+gint compare_tracks(Track *a, Track *b) {
+    if (!a)
+        return -1;
+
+    if (!b)
+        return 1;
+
+    gchar *keya = _create_key_from_track(a);
+    gchar *keyb = _create_key_from_track(b);
+
+    return _compare_album_keys(keya, keyb);
 }
 
 void _index_album_item(AlbumModelPrivate *priv, gchar *album_key, AlbumItem *item) {
@@ -101,13 +114,13 @@ void _index_album_item(AlbumModelPrivate *priv, gchar *album_key, AlbumItem *ite
 
     switch(value) {
     case SORT_ASCENDING:
-        priv->album_key_list = g_list_insert_sorted(priv->album_key_list, album_key, (GCompareFunc) _compare_album_item_keys);
+        priv->album_key_list = g_list_insert_sorted(priv->album_key_list, album_key, (GCompareFunc) _compare_album_keys);
         break;
     case SORT_DESCENDING:
         /* Already in descending order so reverse into ascending order */
         priv->album_key_list = g_list_reverse(priv->album_key_list);
         /* Insert the track */
-        priv->album_key_list = g_list_insert_sorted(priv->album_key_list, album_key, (GCompareFunc) _compare_album_item_keys);
+        priv->album_key_list = g_list_insert_sorted(priv->album_key_list, album_key, (GCompareFunc) _compare_album_keys);
         /* Reverse again */
         priv->album_key_list = g_list_reverse(priv->album_key_list);
         break;
@@ -227,10 +240,10 @@ void album_model_resort(AlbumModel *model, GList *tracks) {
 
     switch (value) {
     case SORT_ASCENDING:
-        priv->album_key_list = g_list_sort(priv->album_key_list, (GCompareFunc) _compare_album_item_keys);
+        priv->album_key_list = g_list_sort(priv->album_key_list, (GCompareFunc) _compare_album_keys);
         break;
     case SORT_DESCENDING:
-        priv->album_key_list = g_list_sort(priv->album_key_list, (GCompareFunc) _compare_album_item_keys);
+        priv->album_key_list = g_list_sort(priv->album_key_list, (GCompareFunc) _compare_album_keys);
         priv->album_key_list = g_list_reverse(priv->album_key_list);
         break;
     default:
@@ -301,7 +314,7 @@ AlbumItem *album_model_get_item_with_track(AlbumModel *model, Track *track) {
 static gint _get_index(AlbumModelPrivate *priv, gchar *trk_key) {
     GList *key_list = priv->album_key_list;
 
-    GList *key = g_list_find_custom(key_list, trk_key, (GCompareFunc) _compare_album_item_keys);
+    GList *key = g_list_find_custom(key_list, trk_key, (GCompareFunc) _compare_album_keys);
     g_return_val_if_fail (key, -1);
 
     gint index = g_list_position(key_list, key);
