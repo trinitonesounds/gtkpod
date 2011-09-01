@@ -383,8 +383,6 @@ static void _set_loading_complete(ClarityCanvasPrivate *priv, gboolean value) {
     if (value) {
         _update_text(priv);
     }
-
-    g_warning("Loading complete = %d", priv->loading_complete);
 }
 
 static gboolean _create_cover_actors(ClarityCanvasPrivate *priv, AlbumItem *album_item, gint index) {
@@ -404,7 +402,6 @@ static gboolean _create_cover_actors(ClarityCanvasPrivate *priv, AlbumItem *albu
 
     if((priv->curr_index + VISIBLE_ITEMS < index) ||
             (priv->curr_index - VISIBLE_ITEMS > index)) {
-        g_warning("Not creating anything more");
         _set_loading_complete(priv, TRUE);
         return FALSE;
     }
