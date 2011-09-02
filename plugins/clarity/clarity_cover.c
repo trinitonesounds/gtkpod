@@ -99,7 +99,7 @@ static void clarity_cover_finalize(GObject *gobject) {
  * implementation destroy any actors they are composed from;
  * in this case, we just destroy the child ClutterBox
  */
-static void clarity_cover_destroy(ClutterActor *self) {
+void clarity_cover_destroy(ClutterActor *self) {
     ClarityCoverPrivate *priv = CLARITY_COVER_GET_PRIVATE(self);
 
     if (priv) {
@@ -114,7 +114,7 @@ static void clarity_cover_destroy(ClutterActor *self) {
         }
 
         if (G_IS_OBJECT(priv->rotateBehaviour))
-            g_object_unref(priv->rotateBehaviour);
+            priv->rotateBehaviour = NULL;
     }
 
     /* chain up to destroy() on the parent ClutterActorClass;

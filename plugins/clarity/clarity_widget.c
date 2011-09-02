@@ -487,7 +487,34 @@ void clarity_widget_track_added_cb(GtkPodApp *app, gpointer tk, gpointer data) {
     }
 }
 
-void clarity_widget_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data) {}
+void clarity_widget_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data) {
+    g_return_if_fail(CLARITY_IS_WIDGET(data));
+
+    ClarityWidget *cw = CLARITY_WIDGET(data);
+    ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(cw);
+    Track *track = tk;
+
+
+    if (!track)
+        return;
+
+    ClarityCanvas *ccanvas = CLARITY_CANVAS(priv->draw_area);
+
+    if (clarity_canvas_is_loading(ccanvas))
+        return;
+
+    AlbumItem *item = album_model_get_item_with_track(priv->album_model, track);
+    if(g_list_length(item->tracks) == 1) {
+        // Last track in album item so remove canvas cover first
+        clarity_canvas_remove_album_item(CLARITY_CANVAS(priv->draw_area), item);
+    }
+
+    // Remove the track from the model
+    album_model_remove_track(priv->album_model, track);
+
+    _init_slider_range(priv);
+}
+
 void clarity_widget_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data) {}
 
 

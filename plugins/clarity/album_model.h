@@ -99,6 +99,14 @@ void album_model_add_tracks(AlbumModel *model, GList *tracks);
  */
 gboolean album_model_add_track(AlbumModel *model, Track *track);
 
+/**
+ * Remove a single track from the album model.
+ *
+ * @return gboolean: whether an album model was removed.
+ *
+ */
+gboolean album_model_remove_track(AlbumModel *model, Track *track);
+
 AlbumItem *album_model_get_item_with_index(AlbumModel *model, gint index);
 
 AlbumItem *album_model_get_item_with_track(AlbumModel *model, Track *track);

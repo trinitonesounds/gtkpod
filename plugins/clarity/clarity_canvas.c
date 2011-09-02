@@ -400,13 +400,18 @@ static gboolean _create_cover_actors(ClarityCanvasPrivate *priv, AlbumItem *albu
 
     clarity_cover_set_album_item(ccover, album_item);
 
+    gint pos = _calculate_index_distance(index);
+    clutter_actor_set_position(
+                CLUTTER_ACTOR(ccover),
+                pos - clutter_actor_get_width(CLUTTER_ACTOR(ccover)) / 2,
+                110 - clutter_actor_get_height(CLUTTER_ACTOR(ccover)));
+
     if((priv->curr_index + VISIBLE_ITEMS < index) ||
             (priv->curr_index - VISIBLE_ITEMS > index)) {
         _set_loading_complete(priv, TRUE);
         return FALSE;
     }
 
-    gint pos = _calculate_index_distance(index);
     float scale = _calculate_index_scale(index);
 
     gint angle;
@@ -419,11 +424,6 @@ static gboolean _create_cover_actors(ClarityCanvasPrivate *priv, AlbumItem *albu
             angle,
             clutter_actor_get_width(CLUTTER_ACTOR(ccover)) / 2,
             0, 0);
-
-    clutter_actor_set_position(
-            CLUTTER_ACTOR(ccover),
-            pos - clutter_actor_get_width(CLUTTER_ACTOR(ccover)) / 2,
-            110 - clutter_actor_get_height(CLUTTER_ACTOR(ccover)));
 
     clutter_actor_set_scale_full(
             CLUTTER_ACTOR(ccover),
@@ -451,6 +451,24 @@ void _init_album_item(gpointer value, gint index, gpointer user_data) {
     item->data = cc;
 
     _create_cover_actors(priv, item, index);
+}
+
+void _destroy_cover(ClarityCanvas *cc, gint index) {
+    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(cc);
+
+    ClarityCover *ccover = (ClarityCover *) g_list_nth_data(priv->covers, index);
+    if (!ccover)
+        return;
+
+    priv->covers = g_list_remove(priv->covers, ccover);
+
+    clutter_container_remove_actor(
+                               CLUTTER_CONTAINER(priv->container),
+                               CLUTTER_ACTOR(ccover));
+
+    clarity_cover_destroy(CLUTTER_ACTOR(ccover));
+
+    return;
 }
 
 static gpointer _init_album_model(gpointer data) {
@@ -489,7 +507,7 @@ static void _clear_rotation_behaviours(GList *covers) {
     }
 }
 
-static void _animate_indices(ClarityCanvasPrivate *priv, enum DIRECTION direction, gint increment) {
+static void _animate_indices(ClarityCanvasPrivate *priv, gint direction, gint increment) {
 
     for (gint i = 0; i < g_list_length(priv->covers); ++i) {
 
@@ -521,7 +539,7 @@ static void _animate_indices(ClarityCanvasPrivate *priv, enum DIRECTION directio
                         "scale-y",          depth,
                         "scale-center-x" ,  clutter_actor_get_width(CLUTTER_ACTOR(ccover)) / 2,
                         "scale-center-y" ,  clutter_actor_get_height(CLUTTER_ACTOR(ccover)) / 2,
-                        "x", pos - clutter_actor_get_width(CLUTTER_ACTOR(ccover)) / 2 ,
+                        "x", pos - clutter_actor_get_width(CLUTTER_ACTOR(ccover)) / 2,
                         NULL);
      }
 }
@@ -616,6 +634,22 @@ void clarity_canvas_add_album_item(ClarityCanvas *self, AlbumItem *item) {
     _set_loading_complete(priv, FALSE);
 
     _init_album_item(item, index, self);
+
+    _set_loading_complete(priv, TRUE);
+}
+
+void clarity_canvas_remove_album_item(ClarityCanvas *self, AlbumItem *item) {
+    g_return_if_fail(self);
+    g_return_if_fail(item);
+
+    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
+    gint index = album_model_get_index_with_album_item(priv->model, item);
+
+    _set_loading_complete(priv, FALSE);
+
+    _destroy_cover(self, index);
+
+    _animate_indices(priv, 0, 0);
 
     _set_loading_complete(priv, TRUE);
 }

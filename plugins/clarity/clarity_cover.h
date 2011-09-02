@@ -108,4 +108,6 @@ gchar *clarity_cover_get_artist(ClarityCover *self);
 /* constructor - note this returns a ClutterActor instance */
 ClarityCover *clarity_cover_new (void);
 
+void clarity_cover_destroy(ClutterActor *self);
+
 #endif /* CLARITY_COVER_H_ */

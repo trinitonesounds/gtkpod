@@ -274,6 +274,36 @@ gboolean album_model_add_track(AlbumModel *model, Track *track) {
     return _insert_track(priv, track);
 }
 
+gboolean album_model_remove_track(AlbumModel *model, Track *track) {
+    g_return_val_if_fail(model, -1);
+    g_return_val_if_fail(track, -1);
+
+    AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE(model);
+
+    AlbumItem *item = album_model_get_item_with_track(model, track);
+    if (!item || !item->tracks) {
+        return FALSE;
+    }
+
+    item->tracks = g_list_remove(item->tracks, track);
+
+    if (g_list_length(item->tracks) == 0) {
+        // Remove the album item
+
+        gint index = album_model_get_index_with_album_item(model, item);
+        gchar *album_key = g_list_nth_data(priv->album_key_list, index);
+
+        priv->album_key_list = g_list_remove(priv->album_key_list, album_key);
+
+        g_hash_table_remove(priv->album_hash, item);
+
+        g_free(album_key);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 void album_model_foreach (AlbumModel *model, AMFunc func, gpointer user_data) {
     g_return_if_fail(model);
     g_return_if_fail(func);
