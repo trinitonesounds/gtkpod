@@ -292,6 +292,12 @@ void clarity_canvas_clear(ClarityCanvas *self) {
             clutter_container_remove(CLUTTER_CONTAINER(priv->container), CLUTTER_ACTOR(ccover), NULL);
             iter = iter->next;
         }
+
+        if (CLUTTER_IS_ACTOR(priv->artist_text))
+            clutter_text_set_text(CLUTTER_TEXT(priv->artist_text), "");
+
+        if (CLUTTER_IS_ACTOR(priv->title_text))
+            clutter_text_set_text(CLUTTER_TEXT(priv->title_text), "");
     }
 
     priv->covers = NULL;
