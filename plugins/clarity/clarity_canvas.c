@@ -641,6 +641,8 @@ void clarity_canvas_add_album_item(ClarityCanvas *self, AlbumItem *item) {
 
     _init_album_item(item, index, self);
 
+    _animate_indices(priv, 0, 0);
+
     _set_loading_complete(priv, TRUE);
 }
 

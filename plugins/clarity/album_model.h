@@ -105,7 +105,7 @@ gboolean album_model_add_track(AlbumModel *model, Track *track);
  * @return gboolean: whether an album model was removed.
  *
  */
-gboolean album_model_remove_track(AlbumModel *model, Track *track);
+gboolean album_model_remove_track(AlbumModel *model, AlbumItem *item, Track *track);
 
 AlbumItem *album_model_get_item_with_index(AlbumModel *model, gint index);
 
@@ -119,5 +119,6 @@ gint album_model_get_size(AlbumModel *model);
 
 gint compare_tracks(Track *a, Track *b);
 
+AlbumItem *album_model_search_for_track(AlbumModel *model, Track *track);
 
 #endif /* ALBUM_MODEL_H_ */

@@ -274,14 +274,14 @@ gboolean album_model_add_track(AlbumModel *model, Track *track) {
     return _insert_track(priv, track);
 }
 
-gboolean album_model_remove_track(AlbumModel *model, Track *track) {
+gboolean album_model_remove_track(AlbumModel *model, AlbumItem *item, Track *track) {
     g_return_val_if_fail(model, -1);
+    g_return_val_if_fail(item, -1);
     g_return_val_if_fail(track, -1);
 
     AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE(model);
 
-    AlbumItem *item = album_model_get_item_with_track(model, track);
-    if (!item || !item->tracks) {
+    if (!item->tracks) {
         return FALSE;
     }
 
@@ -345,7 +345,8 @@ static gint _get_index(AlbumModelPrivate *priv, gchar *trk_key) {
     GList *key_list = priv->album_key_list;
 
     GList *key = g_list_find_custom(key_list, trk_key, (GCompareFunc) _compare_album_keys);
-    g_return_val_if_fail (key, -1);
+    if (!key)
+        return -1;
 
     gint index = g_list_position(key_list, key);
 
@@ -382,6 +383,25 @@ gint album_model_get_size(AlbumModel *model) {
     priv = ALBUM_MODEL_GET_PRIVATE (model);
 
     return g_list_length(priv->album_key_list);
+}
+
+AlbumItem *album_model_search_for_track(AlbumModel *model, Track *track) {
+    g_return_val_if_fail(model, NULL);
+    g_return_val_if_fail(track, NULL);
+
+    AlbumModelPrivate *priv = ALBUM_MODEL_GET_PRIVATE (model);
+    GList *album_items = g_hash_table_get_values(priv->album_hash);
+    while (album_items) {
+        AlbumItem *item = album_items->data;
+
+        if (g_list_index(item->tracks, track) > -1) {
+            return item;
+        }
+
+        album_items = album_items->next;
+    }
+
+    return NULL;
 }
 
 #endif /* ALBUM_MODEL_C_ */
