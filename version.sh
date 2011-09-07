@@ -4,7 +4,7 @@ if [ -d .git ]; then
   COMMIT=`git rev-parse --short HEAD`
 
   # Use this line for unstable dev builds
-  REVISION="2.0.3.${COMMIT}"
+  REVISION="2.0.3~${COMMIT}"
 
   # Use this line for releases
   #REVISION="2.0.3"
