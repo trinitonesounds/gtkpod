@@ -37,23 +37,32 @@
 #define DEFAULT_IMG_SIZE 140
 
 /**
- * _get_default_track_image:
+ * clarity_util_get_default_track_image:
  *
  * Retrieve the artwork pixbuf from the default image file.
  *
  * Returns:
  * pixbuf of the default file for tracks with no cover art.
  */
-GdkPixbuf *get_default_track_image(gint default_img_size);
+GdkPixbuf *clarity_util_get_default_track_image(gint default_img_size);
 
 /**
- * _get_track_image:
+ * clarity_util_get_track_image:
  *
  * Retrieve the artwork pixbuf from the given track.
  *
  * Returns:
  * pixbuf of the artwork of the track.
  */
-GdkPixbuf *_get_track_image(Track *track);
+GdkPixbuf *clarity_util_get_track_image(Track *track);
+
+/**
+ * clarity_util_update_coverart
+ *
+ * Update each track with the given filename of the
+ * proposed artwork then notify all parties of the change.
+ *
+ */
+void clarity_util_update_coverart(GList *tracks, const gchar *filename);
 
 #endif /* CLARITY_UTILS_H_ */

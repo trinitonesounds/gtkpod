@@ -67,7 +67,7 @@ struct _ClarityCanvasPrivate {
 
     gulong preview_signal;
 
-    gboolean loading_complete;
+    gboolean blocked;
 };
 
 enum DIRECTION {
@@ -132,12 +132,21 @@ static void _update_text(ClarityCanvasPrivate *priv) {
     clutter_actor_set_position(priv->title_text, titlex, titley);
 }
 
-static void _set_loading_complete(ClarityCanvasPrivate *priv, gboolean value) {
-    priv->loading_complete = value;
+void clarity_canvas_block_change(ClarityCanvas *self, gboolean value) {
+    g_return_if_fail(self);
 
-    if (value) {
+    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
+    priv->blocked = value;
+
+    if (!value) {
         _update_text(priv);
     }
+}
+
+gboolean clarity_canvas_is_blocked(ClarityCanvas *self) {
+    g_return_val_if_fail(self, TRUE);
+    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
+    return priv->blocked;
 }
 
 static void _preview_cover(ClarityCanvasPrivate *priv) {
@@ -164,8 +173,8 @@ static void _preview_cover(ClarityCanvasPrivate *priv) {
  *
  */
 static gint _on_main_cover_image_clicked_cb(GtkWidget *widget, GdkEvent *event, gpointer data) {
-    ClarityCanvas *ccanvas = CLARITY_CANVAS(widget);
-    ClarityCanvasPrivate *priv = ccanvas->priv;
+    ClarityCanvas *self = CLARITY_CANVAS(widget);
+    ClarityCanvasPrivate *priv = self->priv;
     guint mbutton;
 
     if (event->type != GDK_BUTTON_PRESS)
@@ -174,14 +183,14 @@ static gint _on_main_cover_image_clicked_cb(GtkWidget *widget, GdkEvent *event, 
     mbutton = event->button.button;
 
     if ((mbutton == 1) && (event->button.state & GDK_SHIFT_MASK)) {
-        _set_loading_complete(priv, FALSE);
+        clarity_canvas_block_change(self, TRUE);
 
         AlbumItem *item = album_model_get_item_with_index(priv->model, priv->curr_index);
         if (item) {
             gtkpod_set_displayed_tracks(item->tracks);
         }
 
-        _set_loading_complete(priv, TRUE);
+        clarity_canvas_block_change(self, FALSE);
     }
     else if (mbutton == 1) {
         _preview_cover(priv);
@@ -198,7 +207,7 @@ static gint _on_main_cover_image_clicked_cb(GtkWidget *widget, GdkEvent *event, 
         /* Right mouse button clicked on its own so display
          * popup menu
          */
-        clarity_context_menu_init(ccanvas);
+        clarity_context_menu_init(self);
     }
 
     return FALSE;
@@ -270,7 +279,7 @@ static void clarity_canvas_init(ClarityCanvas *self) {
     priv->timeline = clutter_timeline_new(1600);
     priv->alpha = clutter_alpha_new_full(priv->timeline, CLUTTER_EASE_OUT_EXPO);
     priv->curr_index = 0;
-    priv->loading_complete = FALSE;
+    priv->blocked = FALSE;
 
 }
 
@@ -453,8 +462,6 @@ static void _set_cover_position(ClarityCover *ccover, gint index) {
 static gboolean _create_cover_actors(ClarityCanvasPrivate *priv, AlbumItem *album_item, gint index) {
     g_return_val_if_fail(priv, FALSE);
 
-    _set_loading_complete(priv, FALSE);
-
     ClarityCover *ccover = clarity_cover_new();
     clutter_actor_set_opacity(CLUTTER_ACTOR(ccover), 0);
     priv->covers = g_list_insert(priv->covers, ccover, index);
@@ -469,7 +476,6 @@ static gboolean _create_cover_actors(ClarityCanvasPrivate *priv, AlbumItem *albu
 
     if((priv->curr_index + VISIBLE_ITEMS < index) ||
             (priv->curr_index - VISIBLE_ITEMS > index)) {
-        _set_loading_complete(priv, TRUE);
         return FALSE;
     }
 
@@ -497,19 +503,19 @@ static gboolean _create_cover_actors(ClarityCanvasPrivate *priv, AlbumItem *albu
 
     _display_clarity_cover(ccover, index);
 
-    _set_loading_complete(priv, TRUE);
-
     return FALSE;
 }
 
 void _init_album_item(gpointer value, gint index, gpointer user_data) {
     AlbumItem *item = (AlbumItem *) value;
-    ClarityCanvas *cc = CLARITY_CANVAS(user_data);
-    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(cc);
+    ClarityCanvas *self = CLARITY_CANVAS(user_data);
+    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
 
     album_model_init_coverart(priv->model, item);
 
+    clarity_canvas_block_change(self, TRUE);
     _create_cover_actors(priv, item, index);
+    clarity_canvas_block_change(self, FALSE);
 }
 
 void _destroy_cover(ClarityCanvas *cc, gint index) {
@@ -632,8 +638,6 @@ static void _restore_z_order(ClarityCanvasPrivate *priv) {
 
 static void _move(ClarityCanvasPrivate *priv, enum DIRECTION direction, gint increment) {
 
-    _set_loading_complete(priv, FALSE);
-
     /* Stop any animation */
     clutter_timeline_stop(priv->timeline);
 
@@ -649,8 +653,6 @@ static void _move(ClarityCanvasPrivate *priv, enum DIRECTION direction, gint inc
     priv->curr_index += ((direction * -1) * increment);
 
     _restore_z_order(priv);
-
-    _set_loading_complete(priv, TRUE);
 }
 
 void clarity_canvas_move_left(ClarityCanvas *self, gint increment) {
@@ -660,7 +662,9 @@ void clarity_canvas_move_left(ClarityCanvas *self, gint increment) {
     if(priv->curr_index == g_list_length(priv->covers) - 1)
         return;
 
+    clarity_canvas_block_change(self, TRUE);
     _move(priv, MOVE_LEFT, increment);
+    clarity_canvas_block_change(self, FALSE);
 }
 
 void clarity_canvas_move_right(ClarityCanvas *self, gint increment) {
@@ -670,7 +674,9 @@ void clarity_canvas_move_right(ClarityCanvas *self, gint increment) {
     if(priv->curr_index == 0)
         return;
 
+    clarity_canvas_block_change(self, TRUE);
     _move(priv, MOVE_RIGHT, increment);
+    clarity_canvas_block_change(self, FALSE);
 }
 
 gint clarity_canvas_get_current_index(ClarityCanvas *self) {
@@ -680,10 +686,14 @@ gint clarity_canvas_get_current_index(ClarityCanvas *self) {
     return priv->curr_index;
 }
 
-gboolean clarity_canvas_is_loading(ClarityCanvas *self) {
-    g_return_val_if_fail(self, FALSE);
+AlbumItem *clarity_canvas_get_current_album_item(ClarityCanvas *self) {
+    g_return_val_if_fail(self, NULL);
     ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
-    return !priv->loading_complete;
+
+    if (!priv->model)
+        return NULL;
+
+    return album_model_get_item_with_index(priv->model, priv->curr_index);
 }
 
 void clarity_canvas_add_album_item(ClarityCanvas *self, AlbumItem *item) {
@@ -693,13 +703,13 @@ void clarity_canvas_add_album_item(ClarityCanvas *self, AlbumItem *item) {
     ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
     gint index = album_model_get_index_with_album_item(priv->model, item);
 
-    _set_loading_complete(priv, FALSE);
+    clarity_canvas_block_change(self, TRUE);
 
     _init_album_item(item, index, self);
 
     _animate_indices(priv, 0, 0);
 
-    _set_loading_complete(priv, TRUE);
+    clarity_canvas_block_change(self, FALSE);
 }
 
 void clarity_canvas_remove_album_item(ClarityCanvas *self, AlbumItem *item) {
@@ -709,23 +719,23 @@ void clarity_canvas_remove_album_item(ClarityCanvas *self, AlbumItem *item) {
     ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
     gint index = album_model_get_index_with_album_item(priv->model, item);
 
-    _set_loading_complete(priv, FALSE);
+    clarity_canvas_block_change(self, TRUE);
 
     _destroy_cover(self, index);
 
     _animate_indices(priv, 0, 0);
 
-    _set_loading_complete(priv, TRUE);
+    clarity_canvas_block_change(self, FALSE);
 }
 
-void clarity_canvas_update(ClarityCanvas *cc, AlbumItem *item) {
-    g_return_if_fail(cc);
+void clarity_canvas_update(ClarityCanvas *self, AlbumItem *item) {
+    g_return_if_fail(self);
 
-    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(cc);
+    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
 
     gint index = album_model_get_index_with_album_item(priv->model, item);
 
-    _set_loading_complete(priv, FALSE);
+    clarity_canvas_block_change(self, TRUE);
 
     album_model_init_coverart(priv->model, item);
 
@@ -739,7 +749,7 @@ void clarity_canvas_update(ClarityCanvas *cc, AlbumItem *item) {
 
     _animate_indices(priv, 0, 0);
 
-    _set_loading_complete(priv, TRUE);
+    clarity_canvas_block_change(self, FALSE);
 }
 
 static void _set_cover_from_file(ClarityCanvas *self) {
@@ -747,32 +757,11 @@ static void _set_cover_from_file(ClarityCanvas *self) {
 
     ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
 
-    gchar *filename;
-    Track *track;
-    GList *tracks;
-
-    filename = fileselection_get_cover_filename();
+    gchar *filename = fileselection_get_cover_filename();
 
     if (filename) {
         AlbumItem *item = album_model_get_item_with_index(priv->model, priv->curr_index);
-        tracks = g_list_copy(item->tracks);
-
-        while (tracks) {
-            track = tracks->data;
-
-            if (gp_track_set_thumbnails(track, filename)) {
-                ExtraTrackData *etd;
-                etd = track->userdata;
-                etd->tartwork_changed = TRUE;
-
-                gtkpod_track_updated(track);
-                data_changed(track->itdb);
-
-                etd->tartwork_changed = FALSE;
-            }
-
-            tracks = tracks->next;
-        }
+        clarity_util_update_coverart(item->tracks, filename);
     }
 
     g_free(filename);

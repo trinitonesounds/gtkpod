@@ -46,19 +46,10 @@ struct _ClarityPreviewPrivate {
 
 };
 
-static void clarity_preview_finalize(GObject *gobject) {
-    ClarityPreviewPrivate *priv = CLARITY_PREVIEW(gobject)->priv;
-
-
-    /* call the parent class' finalize() method */
-    G_OBJECT_CLASS(clarity_preview_parent_class)->finalize(gobject);
-}
-
 static void clarity_preview_class_init(ClarityPreviewClass *klass) {
     GObjectClass *gobject_class;
 
     gobject_class = G_OBJECT_CLASS (klass);
-    gobject_class->finalize = clarity_preview_finalize;
 
     g_type_class_add_private(klass, sizeof(ClarityPreviewPrivate));
 }
@@ -129,7 +120,7 @@ static GdkPixbuf *_get_album_artwork(AlbumItem *item) {
      */
     if (!imgbuf) {
         /* Could not get a viable thumbnail so get default pixbuf */
-        imgbuf = get_default_track_image(400);
+        imgbuf = clarity_util_get_default_track_image(400);
     }
 
     return imgbuf;

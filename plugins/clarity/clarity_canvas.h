@@ -86,7 +86,11 @@ void clarity_canvas_move_right(ClarityCanvas *self, gint increment);
 
 gint clarity_canvas_get_current_index(ClarityCanvas *self);
 
-gboolean clarity_canvas_is_loading(ClarityCanvas *self);
+AlbumItem *clarity_canvas_get_current_album_item(ClarityCanvas *self);
+
+void clarity_canvas_block_change(ClarityCanvas *self, gboolean value);
+
+gboolean clarity_canvas_is_blocked(ClarityCanvas *self);
 
 void clarity_canvas_add_album_item(ClarityCanvas *self, AlbumItem *item);
 

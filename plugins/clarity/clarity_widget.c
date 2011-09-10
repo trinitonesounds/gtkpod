@@ -448,7 +448,7 @@ void clarity_widget_tracks_selected_cb(GtkPodApp *app, gpointer tks, gpointer da
     tracks = _sort_track_list(tracks);
     ClarityCanvas *ccanvas = CLARITY_CANVAS(priv->draw_area);
 
-    if (clarity_canvas_is_loading(ccanvas))
+    if (clarity_canvas_is_blocked(ccanvas))
         return;
 
     gint album_index = album_model_get_index_with_track(priv->album_model, tracks->data);
@@ -458,7 +458,7 @@ void clarity_widget_tracks_selected_cb(GtkPodApp *app, gpointer tks, gpointer da
 static void _add_track(ClarityWidgetPrivate *priv, Track *track) {
     ClarityCanvas *ccanvas = CLARITY_CANVAS(priv->draw_area);
 
-    if (clarity_canvas_is_loading(ccanvas))
+    if (clarity_canvas_is_blocked(ccanvas))
         return;
 
     if (album_model_add_track(priv->album_model, track)) {
@@ -493,7 +493,7 @@ static void _remove_track(ClarityWidgetPrivate *priv, AlbumItem *item, Track *tr
 
     ClarityCanvas *ccanvas = CLARITY_CANVAS(priv->draw_area);
 
-    if (clarity_canvas_is_loading(ccanvas))
+    if (clarity_canvas_is_blocked(ccanvas))
         return;
 
     if(!item)
@@ -538,7 +538,7 @@ void clarity_widget_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data)
 
     ClarityCanvas *ccanvas = CLARITY_CANVAS(priv->draw_area);
 
-    if (clarity_canvas_is_loading(ccanvas))
+    if (clarity_canvas_is_blocked(ccanvas))
         return;
 
     AlbumItem *item = NULL;

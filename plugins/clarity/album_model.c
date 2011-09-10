@@ -333,7 +333,7 @@ void album_model_init_coverart(AlbumModel *model, AlbumItem *item) {
         item->albumart = NULL;
     }
 
-    item->albumart = _get_track_image(track);
+    item->albumart = clarity_util_get_track_image(track);
 }
 
 AlbumItem *album_model_get_item_with_index(AlbumModel *model, gint index) {

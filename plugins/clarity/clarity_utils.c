@@ -30,6 +30,7 @@
 #define CLARITY_UTILS_C_
 
 #include "clarity_utils.h"
+#include "libgtkpod/file.h"
 
 /**
  * _get_default_track_image:
@@ -39,7 +40,7 @@
  * Returns:
  * pixbuf of the default file for tracks with no cover art.
  */
-GdkPixbuf *get_default_track_image(gint default_img_size) {
+GdkPixbuf *clarity_util_get_default_track_image(gint default_img_size) {
     GdkPixbuf *pixbuf = NULL;
     GdkPixbuf *scaled = NULL;
     GError *error = NULL;
@@ -56,7 +57,7 @@ GdkPixbuf *get_default_track_image(gint default_img_size) {
     return scaled;
 }
 
-GdkPixbuf *_get_track_image(Track *track) {
+GdkPixbuf *clarity_util_get_track_image(Track *track) {
     GdkPixbuf *pixbuf = NULL;
     ExtraTrackData *etd;
 
@@ -69,10 +70,35 @@ GdkPixbuf *_get_track_image(Track *track) {
 
     if (!pixbuf) {
         /* Could not get a viable thumbnail so get default pixbuf */
-        pixbuf = get_default_track_image(DEFAULT_IMG_SIZE);
+        pixbuf = clarity_util_get_default_track_image(DEFAULT_IMG_SIZE);
     }
 
     return pixbuf;
+}
+
+void clarity_util_update_coverart(GList *tracks, const gchar *filename) {
+    g_return_if_fail(filename);
+
+    if (!tracks)
+        return;
+
+    GList *tks = g_list_copy(tracks);
+
+    while (tks) {
+        Track *track = tks->data;
+
+        if (gp_track_set_thumbnails(track, filename)) {
+            ExtraTrackData *etd = track->userdata;
+            etd->tartwork_changed = TRUE;
+
+            gtkpod_track_updated(track);
+            data_changed(track->itdb);
+
+            etd->tartwork_changed = FALSE;
+        }
+
+        tks = tks->next;
+    }
 }
 
 #endif /* CLARITY_UTILS_C_ */
