@@ -31,6 +31,7 @@
 #include "clarity_canvas.h"
 #include "clarity_widget.h"
 #include "album_model.h"
+#include "clarity_dnd_support.h"
 
 G_DEFINE_TYPE( ClarityWidget, clarity_widget, GTK_TYPE_BOX);
 
@@ -61,14 +62,6 @@ struct _ClarityWidgetPrivate {
 enum {
     PROP_0
 };
-
-/*
- * TODO
- *
- * popup menu
- * drag n drop
- * set cover from file
- */
 
 static void clarity_widget_dispose(GObject *gobject) {
     ClarityWidget *cw = CLARITY_WIDGET(gobject);
@@ -288,6 +281,22 @@ static void clarity_widget_init (ClarityWidget *self) {
     gtk_widget_set_can_focus(priv->rightbutton, TRUE);
     g_signal_connect (G_OBJECT(priv->rightbutton), "clicked",
                 G_CALLBACK(_on_clarity_button_clicked), priv);
+
+    /* Dnd destinaton for foreign image files */
+    gtk_drag_dest_set(priv->draw_area, 0, clarity_drop_types, TGNR(clarity_drop_types), GDK_ACTION_COPY
+            | GDK_ACTION_MOVE);
+
+    g_signal_connect ((gpointer) priv->draw_area, "drag-drop",
+            G_CALLBACK (dnd_clarity_drag_drop),
+            NULL);
+
+    g_signal_connect ((gpointer) priv->draw_area, "drag-data-received",
+            G_CALLBACK (dnd_clarity_drag_data_received),
+            NULL);
+
+    g_signal_connect ((gpointer) priv->draw_area, "drag-motion",
+            G_CALLBACK (dnd_clarity_drag_motion),
+            NULL);
 
     _init_slider_range(priv);
 
