@@ -34,47 +34,33 @@
 #include "libgtkpod/context_menus.h"
 #include "libgtkpod/misc.h"
 #include "clarity_context_menu.h"
+#include "clarity_canvas.h"
 
-//static GtkWidget *add_get_cover_from_file(GtkWidget *menu) {
-//    return hookup_menu_item(menu, _("Select Cover From File"), GTK_STOCK_FLOPPY, G_CALLBACK (clarity_set_cover_from_file), NULL);
-//}
-//
-///*
-// * display the dialog with the full size cd artwork cover
-// * @mi - the menu item selected
-// * @data - Ignored, should be NULL
-// */
-//static void display_track_artwork(GtkMenuItem *mi, gpointer data) {
-//    if (gtkpod_get_selected_tracks())
-//        clarity_display_big_artwork(gtkpod_get_selected_tracks());
-//}
-//
-//static GtkWidget *add_display_big_coverart(GtkWidget *menu) {
-//    return hookup_menu_item(menu, _("View Full Size Artwork"), GTK_STOCK_FULLSCREEN, G_CALLBACK (display_track_artwork), NULL);
-//}
-//
-///**
-// * cad_context_menu_init - initialize the right click menu for coverart display
-// */
-//void cad_context_menu_init(void) {
-//    if (widgets_blocked)
-//        return;
-//
-//    GtkWidget *menu = NULL;
-//
-//    if (gtkpod_get_selected_tracks()) {
-//        menu = gtk_menu_new();
-//
-//        add_get_cover_from_file(menu);
-//        add_display_big_coverart(menu);
-//        add_edit_track_details(menu);
-//
-//        /*
-//         * button should be button 0 as per the docs because we're calling
-//         * from a button release event
-//         */
-//        if (menu) {
-//            gtk_menu_popup(GTK_MENU (menu), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time());
-//        }
-//    }
-//}
+static GtkWidget *add_get_cover_from_file(GtkWidget *menu, ClarityCanvas *ccanvas) {
+    return hookup_menu_item(menu, _("Select Cover From File"), GTK_STOCK_FLOPPY, G_CALLBACK (on_clarity_set_cover_menuitem_activate), ccanvas);
+}
+
+/**
+ * clarity_context_menu_init - initialize the right click menu for clarity
+ */
+void clarity_context_menu_init(ClarityCanvas *ccanvas) {
+    if (widgets_blocked)
+        return;
+
+    GtkWidget *menu = NULL;
+
+    if (gtkpod_get_selected_tracks()) {
+        menu = gtk_menu_new();
+
+        add_get_cover_from_file(menu, ccanvas);
+        add_edit_track_details(menu);
+
+        /*
+         * button should be button 0 as per the docs because we're calling
+         * from a button release event
+         */
+        if (menu) {
+            gtk_menu_popup(GTK_MENU (menu), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time());
+        }
+    }
+}

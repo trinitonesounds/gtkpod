@@ -92,6 +92,10 @@ void clarity_canvas_add_album_item(ClarityCanvas *self, AlbumItem *item);
 
 void clarity_canvas_remove_album_item(ClarityCanvas *self, AlbumItem *item);
 
+void clarity_canvas_update(ClarityCanvas *cc, AlbumItem *item);
+
+void on_clarity_set_cover_menuitem_activate(GtkMenuItem *mi, gpointer data);
+
 G_END_DECLS
 
 #endif /* CLARITY_CANVAS_H_ */

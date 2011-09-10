@@ -105,6 +105,10 @@ gchar *clarity_cover_get_title(ClarityCover *self);
 
 gchar *clarity_cover_get_artist(ClarityCover *self);
 
+gfloat clarity_cover_get_artwork_height(ClarityCover *self);
+
+gfloat clarity_cover_get_artwork_width(ClarityCover *self);
+
 /* constructor - note this returns a ClutterActor instance */
 ClarityCover *clarity_cover_new (void);
 

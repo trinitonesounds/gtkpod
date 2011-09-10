@@ -41,8 +41,6 @@ typedef struct {
     gchar *artist;
     GdkPixbuf *albumart;
 
-    gpointer data;
-
 } AlbumItem;
 
 typedef void (*AMFunc) (gpointer value, gint index, gpointer user_data);
@@ -106,6 +104,8 @@ gboolean album_model_add_track(AlbumModel *model, Track *track);
  *
  */
 gboolean album_model_remove_track(AlbumModel *model, AlbumItem *item, Track *track);
+
+void album_model_init_coverart(AlbumModel *model, AlbumItem *item);
 
 AlbumItem *album_model_get_item_with_index(AlbumModel *model, gint index);
 

@@ -354,6 +354,7 @@ static void details_button_apply_clicked(GtkButton *button) {
 
             changed |= tr_changed;
             etr->tchanged = FALSE;
+            etr->tartwork_changed = FALSE;
         }
     }
 

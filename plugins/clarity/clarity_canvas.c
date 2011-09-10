@@ -27,11 +27,14 @@
  */
 #include <clutter-gtk/clutter-gtk.h>
 #include "libgtkpod/gp_itdb.h"
+#include "libgtkpod/fileselection.h"
+#include "libgtkpod/misc.h"
 #include "plugin.h"
 #include "clarity_cover.h"
 #include "clarity_canvas.h"
 #include "clarity_preview.h"
 #include "clarity_utils.h"
+#include "clarity_context_menu.h"
 
 G_DEFINE_TYPE( ClarityCanvas, clarity_canvas, GTK_TYPE_BOX);
 
@@ -43,6 +46,7 @@ G_DEFINE_TYPE( ClarityCanvas, clarity_canvas, GTK_TYPE_BOX);
 #define FRONT_COVER_SPACE     150
 #define MAX_SCALE                          1.4
 #define VISIBLE_ITEMS                     8
+#define FLOOR                              110
 
 struct _ClarityCanvasPrivate {
 
@@ -99,12 +103,46 @@ static void clarity_canvas_class_init(ClarityCanvasClass *klass) {
     g_type_class_add_private(klass, sizeof(ClarityCanvasPrivate));
 }
 
-static gboolean _preview_cover_cb(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    ClarityCanvas *ccanvas = CLARITY_CANVAS(widget);
-    ClarityCanvasPrivate *priv = ccanvas->priv;
+static void _update_text(ClarityCanvasPrivate *priv) {
+    g_return_if_fail(priv);
 
+    if (g_list_length(priv->covers) == 0)
+            return;
+
+    ClarityCover *ccover = g_list_nth_data(priv->covers, priv->curr_index);
+
+    gchar *title = clarity_cover_get_title(ccover);
+    gchar *artist = clarity_cover_get_artist(ccover);
+
+    clutter_text_set_text(CLUTTER_TEXT(priv->title_text), title);
+    clutter_text_set_text(CLUTTER_TEXT(priv->artist_text), artist);
+
+    g_free(title);
+    g_free(artist);
+
+    clutter_actor_raise_top(priv->title_text);
+    clutter_actor_raise_top(priv->artist_text);
+
+    gfloat artistx = (clutter_actor_get_width(priv->artist_text) / 2) * -1;
+    gfloat artisty = FLOOR - (clarity_cover_get_artwork_height(ccover) * MAX_SCALE);
+    clutter_actor_set_position(priv->artist_text, artistx, artisty);
+
+    gfloat titlex = (clutter_actor_get_width(priv->title_text) / 2) * -1;
+    gfloat titley = artisty - clutter_actor_get_height(priv->artist_text) - 2;
+    clutter_actor_set_position(priv->title_text, titlex, titley);
+}
+
+static void _set_loading_complete(ClarityCanvasPrivate *priv, gboolean value) {
+    priv->loading_complete = value;
+
+    if (value) {
+        _update_text(priv);
+    }
+}
+
+static void _preview_cover(ClarityCanvasPrivate *priv) {
     if (!priv->model)
-        return TRUE;
+        return;
 
     AlbumItem *item = album_model_get_item_with_index(priv->model, priv->curr_index);
 
@@ -112,8 +150,58 @@ static gboolean _preview_cover_cb(GtkWidget *widget, GdkEvent *event, gpointer u
 
     /* Display the dialog */
     gtk_widget_show_all(dialog);
+}
 
-    return TRUE;
+/**
+ * on_main_cover_image_clicked_cb:
+ *
+ * Call handler used for displaying the tracks associated with
+ * the main displayed album cover.
+ *
+ * @ClarityCanvas
+ * @event: event object used to determine the event type
+ * @data: any data needed by the function (not required)
+ *
+ */
+static gint _on_main_cover_image_clicked_cb(GtkWidget *widget, GdkEvent *event, gpointer data) {
+    ClarityCanvas *ccanvas = CLARITY_CANVAS(widget);
+    ClarityCanvasPrivate *priv = ccanvas->priv;
+    guint mbutton;
+
+    if (event->type != GDK_BUTTON_PRESS)
+            return FALSE;
+
+    mbutton = event->button.button;
+
+    if ((mbutton == 1) && (event->button.state & GDK_SHIFT_MASK)) {
+        _set_loading_complete(priv, FALSE);
+
+        AlbumItem *item = album_model_get_item_with_index(priv->model, priv->curr_index);
+        if (item) {
+            gtkpod_set_displayed_tracks(item->tracks);
+        }
+
+        _set_loading_complete(priv, TRUE);
+    }
+    else if (mbutton == 1) {
+        _preview_cover(priv);
+    }
+    else if ((mbutton == 3) && (event->button.state & GDK_SHIFT_MASK)) {
+        /* Right mouse button clicked and shift pressed.
+         * Go straight to edit details window
+         */
+        AlbumItem *item = album_model_get_item_with_index(priv->model, priv->curr_index);
+        GList *tracks = item->tracks;
+        gtkpod_edit_details(tracks);
+    }
+    else if (mbutton == 3) {
+        /* Right mouse button clicked on its own so display
+         * popup menu
+         */
+        clarity_context_menu_init(ccanvas);
+    }
+
+    return FALSE;
 }
 
 /**
@@ -154,7 +242,7 @@ static void clarity_canvas_init(ClarityCanvas *self) {
     clutter_actor_set_reactive(priv->container, TRUE);
     priv->preview_signal = g_signal_connect (self,
                                 "button-press-event",
-                                G_CALLBACK (_preview_cover_cb),
+                                G_CALLBACK (_on_main_cover_image_clicked_cb),
                                 priv);
     clutter_container_add(CLUTTER_CONTAINER(priv->container), priv->title_text, priv->artist_text, NULL);
 
@@ -345,35 +433,6 @@ static gint _calculate_index_opacity (gint dist_from_front) {
     return CLAMP ( 255 * (VISIBLE_ITEMS - ABS(dist_from_front)) / VISIBLE_ITEMS, 0, 255);
 }
 
-static void _update_text(ClarityCanvasPrivate *priv) {
-    g_return_if_fail(priv);
-
-    if (g_list_length(priv->covers) == 0)
-            return;
-
-    ClarityCover *ccover = g_list_nth_data(priv->covers, priv->curr_index);
-
-    gchar *title = clarity_cover_get_title(ccover);
-    gchar *artist = clarity_cover_get_artist(ccover);
-
-    clutter_text_set_text(CLUTTER_TEXT(priv->title_text), title);
-    clutter_text_set_text(CLUTTER_TEXT(priv->artist_text), artist);
-
-    g_free(title);
-    g_free(artist);
-
-    clutter_actor_raise_top(priv->title_text);
-    clutter_actor_raise_top(priv->artist_text);
-
-    gfloat artistx = (clutter_actor_get_width(priv->artist_text) / 2) * -1;
-    gfloat artisty = ((clutter_actor_get_height(CLUTTER_ACTOR(ccover)) / 2) - 25) * -1;
-    clutter_actor_set_position(priv->artist_text, artistx, artisty);
-
-    gfloat titlex = (clutter_actor_get_width(priv->title_text) / 2) * -1;
-    gfloat titley = artisty - clutter_actor_get_height(priv->artist_text) - 2;
-    clutter_actor_set_position(priv->title_text, titlex, titley);
-}
-
 static void _display_clarity_cover(ClarityCover *ccover, gint index) {
     ClutterTimeline  *timeline = clutter_timeline_new(1600 * 5);
     ClutterAlpha *alpha = clutter_alpha_new_full (timeline, CLUTTER_EASE_OUT_EXPO);
@@ -383,12 +442,12 @@ static void _display_clarity_cover(ClarityCover *ccover, gint index) {
     clutter_timeline_start (timeline);
 }
 
-static void _set_loading_complete(ClarityCanvasPrivate *priv, gboolean value) {
-    priv->loading_complete = value;
-
-    if (value) {
-        _update_text(priv);
-    }
+static void _set_cover_position(ClarityCover *ccover, gint index) {
+    gint pos = _calculate_index_distance(index);
+    clutter_actor_set_position(
+                    CLUTTER_ACTOR(ccover),
+                    pos - clarity_cover_get_artwork_width(ccover) / 2,
+                    FLOOR - clarity_cover_get_artwork_height(ccover));
 }
 
 static gboolean _create_cover_actors(ClarityCanvasPrivate *priv, AlbumItem *album_item, gint index) {
@@ -406,11 +465,7 @@ static gboolean _create_cover_actors(ClarityCanvasPrivate *priv, AlbumItem *albu
 
     clarity_cover_set_album_item(ccover, album_item);
 
-    gint pos = _calculate_index_distance(index);
-    clutter_actor_set_position(
-                CLUTTER_ACTOR(ccover),
-                pos - clutter_actor_get_width(CLUTTER_ACTOR(ccover)) / 2,
-                110 - clutter_actor_get_height(CLUTTER_ACTOR(ccover)));
+    _set_cover_position(ccover, index);
 
     if((priv->curr_index + VISIBLE_ITEMS < index) ||
             (priv->curr_index - VISIBLE_ITEMS > index)) {
@@ -435,8 +490,8 @@ static gboolean _create_cover_actors(ClarityCanvasPrivate *priv, AlbumItem *albu
             CLUTTER_ACTOR(ccover),
             scale,
             scale,
-            clutter_actor_get_width(CLUTTER_ACTOR(ccover)) / 2,
-            clutter_actor_get_height(CLUTTER_ACTOR(ccover)) / 2);
+            clarity_cover_get_artwork_width(ccover) / 2,
+            clarity_cover_get_artwork_height(ccover) / 2);
 
     clutter_actor_lower_bottom(CLUTTER_ACTOR(ccover));
 
@@ -452,9 +507,7 @@ void _init_album_item(gpointer value, gint index, gpointer user_data) {
     ClarityCanvas *cc = CLARITY_CANVAS(user_data);
     ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(cc);
 
-    Track *track = g_list_nth_data(item->tracks, 0);
-    item->albumart = _get_track_image(track);
-    item->data = cc;
+    album_model_init_coverart(priv->model, item);
 
     _create_cover_actors(priv, item, index);
 }
@@ -516,18 +569,17 @@ static void _clear_rotation_behaviours(GList *covers) {
 static void _animate_indices(ClarityCanvasPrivate *priv, gint direction, gint increment) {
 
     for (gint i = 0; i < g_list_length(priv->covers); ++i) {
-
         ClarityCover *ccover = g_list_nth_data(priv->covers, i);
 
         gint dist = i - priv->curr_index + (direction * increment);
-        gfloat depth = 1;
+        gfloat scale = 1;
         gint pos = 0;
         gint opacity = 0;
         gint angle = 0;
         ClutterRotateDirection rotation_dir;
 
         opacity = _calculate_index_opacity(dist);
-        depth = _calculate_index_scale(dist);
+        scale = _calculate_index_scale(dist);
         pos = _calculate_index_distance(dist);
         _calculate_index_angle_and_dir(dist, direction, &angle, &rotation_dir);
 
@@ -539,13 +591,17 @@ static void _animate_indices(ClarityCanvasPrivate *priv, gint direction, gint in
                         "opacity", opacity,
                         NULL);
 
+        gfloat w = clarity_cover_get_artwork_width(ccover);
+        gfloat h = clarity_cover_get_artwork_height(ccover);
+
         /* Position and scale */
         clutter_actor_animate_with_alpha (CLUTTER_ACTOR(ccover), priv->alpha,
-                        "scale-x",          depth,
-                        "scale-y",          depth,
-                        "scale-center-x" ,  clutter_actor_get_width(CLUTTER_ACTOR(ccover)) / 2,
-                        "scale-center-y" ,  clutter_actor_get_height(CLUTTER_ACTOR(ccover)) / 2,
-                        "x", pos - clutter_actor_get_width(CLUTTER_ACTOR(ccover)) / 2,
+                        "scale-x",          scale,
+                        "scale-y",          scale,
+                        "scale-center-x" ,  w / 2,
+                        "scale-center-y", h / 2,
+                        "x", pos - (w / 2),
+                        "y", FLOOR - h,
                         NULL);
      }
 }
@@ -660,4 +716,70 @@ void clarity_canvas_remove_album_item(ClarityCanvas *self, AlbumItem *item) {
     _animate_indices(priv, 0, 0);
 
     _set_loading_complete(priv, TRUE);
+}
+
+void clarity_canvas_update(ClarityCanvas *cc, AlbumItem *item) {
+    g_return_if_fail(cc);
+
+    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(cc);
+
+    gint index = album_model_get_index_with_album_item(priv->model, item);
+
+    _set_loading_complete(priv, FALSE);
+
+    album_model_init_coverart(priv->model, item);
+
+    ClarityCover *ccover = (ClarityCover *) g_list_nth_data(priv->covers, index);
+    if (!ccover)
+        return;
+
+    clarity_cover_set_album_item(ccover, item);
+
+    _set_cover_position(ccover, index);
+
+    _animate_indices(priv, 0, 0);
+
+    _set_loading_complete(priv, TRUE);
+}
+
+static void _set_cover_from_file(ClarityCanvas *self) {
+    g_return_if_fail(self);
+
+    ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
+
+    gchar *filename;
+    Track *track;
+    GList *tracks;
+
+    filename = fileselection_get_cover_filename();
+
+    if (filename) {
+        AlbumItem *item = album_model_get_item_with_index(priv->model, priv->curr_index);
+        tracks = g_list_copy(item->tracks);
+
+        while (tracks) {
+            track = tracks->data;
+
+            if (gp_track_set_thumbnails(track, filename)) {
+                ExtraTrackData *etd;
+                etd = track->userdata;
+                etd->tartwork_changed = TRUE;
+
+                gtkpod_track_updated(track);
+                data_changed(track->itdb);
+
+                etd->tartwork_changed = FALSE;
+            }
+
+            tracks = tracks->next;
+        }
+    }
+
+    g_free(filename);
+}
+
+void on_clarity_set_cover_menuitem_activate(GtkMenuItem *mi, gpointer data) {
+    g_return_if_fail(CLARITY_IS_CANVAS(data));
+
+    _set_cover_from_file(CLARITY_CANVAS(data));
 }

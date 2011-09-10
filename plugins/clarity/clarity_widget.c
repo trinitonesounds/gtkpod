@@ -541,72 +541,70 @@ void clarity_widget_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data)
     if (clarity_canvas_is_loading(ccanvas))
         return;
 
-    AlbumItem *item;
-    gboolean findremove = FALSE;
+    AlbumItem *item = NULL;
 
     gint index = album_model_get_index_with_track(priv->album_model, track);
-    if (index == -1) {
-        /* The track's key could not be found according to the track!
-         * The ONLY way this could happen is if the user changed the
-         * components of the track's key. Well it should be rare but the only
-         * way to remove it from its "old" album item is to search each one
-         */
-        findremove = TRUE;
-    }
-    else {
-        /* Track has a valid key so can get the album back.
+    if (index > -1) {
+        /*
+         * Track has a valid key so can get the album back.
          * Either has happened:
          * a) Artist/Album key has been changed so the track is being moved
          *     to another existing album
-         * b) Some other change has occurred that is irrelevant to this code.
+         * b) Artwork has been updated
+         * c) Some other change has occurred that is irrelevant to this code.
          *
          * To determine if a) is the case need to determine whether track exists
-         * in the album items track list. If it does then b) is true and nothing
-         * more is required.
+         * in the album items track list. If it does then b) or c) is true.
          */
         item = album_model_get_item_with_track(priv->album_model, track);
         g_return_if_fail (item);
 
         index = g_list_index(item->tracks, track);
         if (index != -1) {
-            /* Track exists in the album list so ignore the change and return */
+            /*
+             * Track exists in the album list so determine whether
+             * its artwork is up to date
+             */
             ExtraTrackData *etd;
             etd = track->userdata;
-            if (etd->tartwork_changed == TRUE) {
-                etd->tartwork_changed = FALSE;
+            if (etd->tartwork_changed) {
+                clarity_canvas_update(ccanvas, item);
+                return;
             }
-
-            return;
+            else {
+                /*
+                 *  Artwork is up to date so nothing changed relevant
+                 *  to the display.
+                 */
+                return;
+            }
         }
         else {
-            /* Track does not exist in the album list so the artist/album
-             * key has definitely changed */
-            findremove = TRUE;
-        }
-    }
-
-    if (findremove) {
-        /* It has been determined that the track has had its key changed
-         * and thus a search must be performed to find the "original" album
-         * that the track belonged to, remove it then add the track to the
-         * new album.
-         */
-        item = album_model_search_for_track(priv->album_model, track);
-        /* item represents the album item containing the track */
-        if (item) {
-            g_warning("Item %s %s", item->albumname, item->artist);
-
-            /* The track is in this album so remove it in preparation for
-             * readding under the new album key
+            /*
+             * Track does not exist in the album list so the artist/album
+             * key has definitely changed so find the old album item the long
+             * way.
              */
-            _remove_track(priv, item, track);
+            item = album_model_search_for_track(priv->album_model, track);
         }
-
-        /* Create a new album item or find existing album to house the
-         * "brand new" track
-         */
-        _add_track(priv, track);
     }
+
+    /* item represents the old album item containing the track */
+    if (item) {
+        /*
+         * The track is in this album so remove it in preparation for
+         * readding it back either under the same album item but with
+         * a different cover or under a different album item due to a
+         * different album key.
+         */
+        _remove_track(priv, item, track);
+    }
+
+    /*
+     * Create a new album item or find existing album to house the
+     * "brand new" track
+     */
+    _add_track(priv, track);
 }
 
 

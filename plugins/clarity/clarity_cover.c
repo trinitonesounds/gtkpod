@@ -233,9 +233,13 @@ void clarity_cover_set_album_item (ClarityCover *self, AlbumItem *item) {
     GError *error = NULL;
     gint y_offset;
 
-    priv->texture = gtk_clutter_texture_new();
-    gtk_clutter_texture_set_from_pixbuf (GTK_CLUTTER_TEXTURE(priv->texture), item->albumart, &error);
+    if (!priv->texture) {
+        priv->texture = gtk_clutter_texture_new();
+        clutter_container_add_actor(CLUTTER_CONTAINER(self), priv->texture);
+    }
 
+    // Set cover artwork
+    gtk_clutter_texture_set_from_pixbuf (GTK_CLUTTER_TEXTURE(priv->texture), item->albumart, &error);
     if (error) {
         g_warning(error->message);
         g_error_free(error);
@@ -243,19 +247,21 @@ void clarity_cover_set_album_item (ClarityCover *self, AlbumItem *item) {
     }
 
     // Add reflection
-    y_offset = clutter_actor_get_height (priv->texture) + V_PADDING;
+    if (! priv->reflection) {
+        y_offset = clutter_actor_get_height (priv->texture) + V_PADDING;
 
-    priv->reflection = clutter_clone_new (priv->texture);
-    clutter_actor_add_constraint (priv->reflection, clutter_bind_constraint_new (priv->texture, CLUTTER_BIND_X, 0.0));
-    clutter_actor_add_constraint (priv->reflection, clutter_bind_constraint_new (priv->texture, CLUTTER_BIND_Y, y_offset));
-    clutter_actor_add_constraint (priv->reflection, clutter_bind_constraint_new (priv->texture, CLUTTER_BIND_WIDTH, 0.0));
-    clutter_actor_add_constraint (priv->reflection, clutter_bind_constraint_new (priv->texture, CLUTTER_BIND_HEIGHT, 0.0));
-    g_signal_connect (priv->reflection,
+        priv->reflection = clutter_clone_new (priv->texture);
+        clutter_actor_add_constraint (priv->reflection, clutter_bind_constraint_new (priv->texture, CLUTTER_BIND_X, 0.0));
+        clutter_actor_add_constraint (priv->reflection, clutter_bind_constraint_new (priv->texture, CLUTTER_BIND_Y, y_offset));
+        clutter_actor_add_constraint (priv->reflection, clutter_bind_constraint_new (priv->texture, CLUTTER_BIND_WIDTH, 0.0));
+        clutter_actor_add_constraint (priv->reflection, clutter_bind_constraint_new (priv->texture, CLUTTER_BIND_HEIGHT, 0.0));
+        g_signal_connect (priv->reflection,
                        "paint",
                        G_CALLBACK (_clone_paint_cb),
                        NULL);
 
-    clutter_container_add(CLUTTER_CONTAINER(self), priv->texture, priv->reflection, NULL);
+        clutter_container_add_actor(CLUTTER_CONTAINER(self), priv->reflection);
+    }
 
     ClutterActorBox box;
     gfloat w, h;
@@ -268,7 +274,14 @@ void clarity_cover_set_album_item (ClarityCover *self, AlbumItem *item) {
     }
 
     // Add title / artist data
+    if (priv->title)
+        g_free(priv->title);
+
     priv->title = g_strdup(item->albumname);
+
+    if (priv->artist)
+            g_free(priv->artist);
+
     priv->artist = g_strdup(item->artist);
 }
 
@@ -318,6 +331,16 @@ gchar *clarity_cover_get_title(ClarityCover *self) {
 gchar *clarity_cover_get_artist(ClarityCover *self) {
     ClarityCoverPrivate *priv = self->priv;
     return g_strdup(priv->artist);
+}
+
+gfloat clarity_cover_get_artwork_height(ClarityCover *self) {
+    ClarityCoverPrivate *priv = self->priv;
+    return clutter_actor_get_height(priv->texture);
+}
+
+gfloat clarity_cover_get_artwork_width(ClarityCover *self) {
+    ClarityCoverPrivate *priv = self->priv;
+    return clutter_actor_get_width(priv->texture);
 }
 
 /**

@@ -949,8 +949,7 @@ void coverart_track_changed(Track *track, gint signal) {
                 /* Track exists in the album list so ignore the change and return */
                 ExtraTrackData *etd;
                 etd = track->userdata;
-                if (etd->tartwork_changed == TRUE) {
-                    etd->tartwork_changed = FALSE;
+                if (etd->tartwork_changed) {
                     redraw(TRUE);
                 }
 

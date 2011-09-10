@@ -26,12 +26,14 @@
  |
  */
 
-#ifndef COVER_DISPLAY_CONTEXT_MENU_H_
-#define COVER_DISPLAY_CONTEXT_MENU_H_
+#ifndef CLARITY_CONTEXT_MENU_H_
+#define CLARTIY_CONTEXT_MENU_H_
+
+#include "clarity_canvas.h"
 
 /**
- * cad_context_menu_init - initialize the right click menu for coverart display
+ * clarity_context_menu_init - initialize the right click menu for clarity
  */
-void cad_context_menu_init(void);
+void clarity_context_menu_init(ClarityCanvas *ccanvas);
 
-#endif /* COVER_DISPLAY_CONTEXT_MENU_H_ */
+#endif /* CLARITY_CONTEXT_MENU_H_ */

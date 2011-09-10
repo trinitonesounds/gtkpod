@@ -30,6 +30,7 @@
 #define ALBUM_MODEL_C_
 
 #include "album_model.h"
+#include "clarity_utils.h"
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/misc.h"
 #include "libgtkpod/gp_private.h"
@@ -181,7 +182,6 @@ static void album_model_free_album_item(AlbumItem *item) {
         if (item->albumart)
             g_object_unref(item->albumart);
 
-        item->data = NULL;
     }
 }
 
@@ -321,6 +321,19 @@ void album_model_foreach (AlbumModel *model, AMFunc func, gpointer user_data) {
         iter = iter->next;
         i++;
     }
+}
+
+void album_model_init_coverart(AlbumModel *model, AlbumItem *item) {
+    g_return_if_fail(item);
+
+    Track *track = g_list_nth_data(item->tracks, 0);
+
+    if (item->albumart) {
+        g_object_unref(item->albumart);
+        item->albumart = NULL;
+    }
+
+    item->albumart = _get_track_image(track);
 }
 
 AlbumItem *album_model_get_item_with_index(AlbumModel *model, gint index) {
