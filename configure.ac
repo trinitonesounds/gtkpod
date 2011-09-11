@@ -87,7 +87,7 @@ PKG_CHECK_MODULES(LIBANJUTA, libanjuta-3.0 >= 2.91,, [AC_MSG_FAILURE([*** $LIBAN
 PKG_CHECK_MODULES(LIBGDL, gdl-3.0 >= 3.0.0,, [AC_MSG_FAILURE([*** $LIBGDL_PKG_ERRORS])])
 PKG_CHECK_MODULES(GIO, gio-2.0 >= 2.28.5,, [AC_MSG_FAILURE([*** $GIO_PKG_ERRORS])])
 PKG_CHECK_MODULES(LIBXML, libxml-2.0 >= 2.7.7,, [AC_MSG_FAILURE([*** $LIBXML_PKG_ERRORS])])
-
+	
 GTK_CLEANLINESS_FLAGS="-DG_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES -DG_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGSEAL_ENABLE"
 
 dnl Force C99 mode (no implicit int declarations)
@@ -127,7 +127,19 @@ dnl Check if statvfs() is available (otherwise we fall back on 'df' to determine
 dnl free space on the iPod
 AC_CHECK_FUNCS(statvfs)
 
-
+dnl Check for clutter-gtk 
+dnl -------------------------------------------------------------
+PKG_CHECK_MODULES(CLUTTER_GTK, [clutter-gtk-1.0 >= 1.0], [have_clutter_gtk="yes"], [have_clutter_gtk="no"])
+if test "x$have_clutter_gtk" = "xyes"; then		
+	AC_DEFINE(HAVE_CLUTTER_GTK, 1, [Define if you have clutter gtk support])
+    AC_SUBST(CLUTTER_GTK_CFLAGS)
+    AC_SUBST(CLUTTER_GTK_LIBS)
+    dnl Need to add to CFLAGS and LIBS so main can init correctly
+    CFLAGS="$CFLAGS $CLUTTER_GTK_CFLAGS"
+    LIBS="$LIBS $CLUTTER_GTK_LIBS" 		
+fi
+AM_CONDITIONAL(HAVE_CLUTTER_GTK, [test "x$have_clutter_gtk" = "xyes"])
+	
 dnl Check for libid3tag
 dnl -------------------------------------------------------------
 PKG_CHECK_MODULES(ID3TAG, id3tag >= 0.15, [have_id3="yes"], [AC_MSG_FAILURE([*** $ID3TAG_PKG_ERRORS])])
@@ -186,7 +198,7 @@ if test "x$have_coverweb" = "xyes"; then
 fi
 
 
-dnl Check for clutter gtk
+dnl Check for clarity
 dnl -------------------------------------------------------------
 AC_ARG_ENABLE(plugin-clarity,
 	AS_HELP_STRING([--disable-plugin-clarity],[Disable clarity plugin for displaying coverart in gtkpod]), 
@@ -200,29 +212,13 @@ if test "$user_disabled_clarity" = 1; then
 	have_clarity="no"
 else
 	AC_MSG_RESULT(no)
-	
-	PKG_CHECK_MODULES(CLUTTER_GTK,
-		[clutter-gtk-1.0 >= 1.0],
-		[have_clutter_gtk="yes"],
-		[have_clutter_gtk="no"])
-	
-	dnl we have clutter installed	
-	AM_CONDITIONAL(HAVE_CLUTTER_GTK, [test "x$have_clutter_gtk" = "xyes"])
-
-	dnl we can go ahead and build clarity
-	
-	if test "x$have_clutter_gtk" = "xyes"; then
+	if test "x$have_clutter_gtk" = "xyes"; then	
 		have_clarity="yes"
-		AM_CONDITIONAL(HAVE_PLUGIN_CLARITY, [test "x$have_clarity" = "xyes"])
-		
-		AC_DEFINE(HAVE_CLUTTER_GTK, 1, [Define if you have clutter gtk support])
-    	AC_SUBST(CLUTTER_GTK_CFLAGS)
-    	AC_SUBST(CLUTTER_GTK_LIBS)
-    	dnl Need to add to CFLAGS and LIBS so main can init correctly
-    	CFLAGS="$CFLAGS $CLUTTER_GTK_CFLAGS"
-    	LIBS="$LIBS $CLUTTER_GTK_LIBS"		
+	else
+		have_clarity="no"
 	fi
 fi
+AM_CONDITIONAL(HAVE_PLUGIN_CLARITY, [test "x$have_clarity" = "xyes"])	
 
 dnl Check for gstreamer
 dnl -------------------------------------------------------------
