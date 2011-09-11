@@ -968,6 +968,11 @@ usb-storage: Status code -75; transferred 0/13 ]]>
             <title>Cover art</title>
             <para>Cover art is a visual element of your gtkpod music collection. It changes the black and white database of artists and title names back into something related to the physical CDs and DVDs that have been imported.
             </para>
+            <sect2 id='clarity'>
+            	<title id='clarity-title'>The Clarity Display Plugin</title>
+            	<para>Should you have the capability of an opengl rendering graphics card and drivers then the clarity plugin provides a more stylish cover art display than the original coverart display plugin described here.
+            	</para>
+            </sect2>
             <sect2 id='coverart-display'>
                 <title id='coverart-display-title'>CoverArt Display</title>
                 <para>The display consists of 9 covers displayed at any one time. The entire album collection can be cycled through from one end to another. The main image is slighly larger and lacking in "shine" for viewing clarity.
