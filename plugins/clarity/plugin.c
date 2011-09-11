@@ -91,7 +91,7 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     clarity_plugin->clarity_widget = CLARITY_WIDGET(clarity_widget_new ());
     gtk_scrolled_window_add_with_viewport(clarity_plugin->cover_window, GTK_WIDGET(clarity_plugin->clarity_widget));
     gtk_widget_show_all(GTK_WIDGET(clarity_plugin->cover_window));
-    anjuta_shell_add_widget(plugin->shell, GTK_WIDGET(clarity_plugin->cover_window), "ClarityPlugin", "Cover Artwork", NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
+    anjuta_shell_add_widget(plugin->shell, GTK_WIDGET(clarity_plugin->cover_window), "ClarityPlugin", "Clarity Cover Display", NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
 
     g_signal_connect (gtkpod_app, SIGNAL_PREFERENCE_CHANGE, G_CALLBACK (clarity_widget_preference_changed_cb), clarity_plugin->clarity_widget);
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (clarity_widget_playlist_selected_cb), clarity_plugin->clarity_widget);

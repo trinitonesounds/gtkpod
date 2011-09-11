@@ -1,4 +1,4 @@
 [Anjuta Plugin]
 Location=clarity:ClarityPlugin
 _Name=Clarity Plugin
-_Description=Display Cover Artwork of Tracks
+_Description=Stylish cover art display (requires opengl rendering support)
