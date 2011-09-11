@@ -205,19 +205,24 @@ else
 		[clutter-gtk-1.0 >= 1.0],
 		[have_clutter_gtk="yes"],
 		[have_clutter_gtk="no"])
-	have_clarity="yes"
-fi
-AM_CONDITIONAL(HAVE_CLUTTER_GTK, [test "x$have_clutter_gtk" = "xyes"])
-AM_CONDITIONAL(HAVE_PLUGIN_CLARITY, [test "x$have_clutter_gtk" = "xyes"])
-if test "x$have_clutter_gtk" = "xyes"; then
-	AC_DEFINE(HAVE_CLUTTER_GTK, 1, [Define if you have clutter gtk support])
-    AC_SUBST(CLUTTER_GTK_CFLAGS)
-    AC_SUBST(CLUTTER_GTK_LIBS)
-    dnl Need to add to CFLAGS and LIBS so main can init correctly
-    CFLAGS="$CFLAGS $CLUTTER_GTK_CFLAGS"
-    LIBS="$LIBS $CLUTTER_GTK_LIBS"
-fi
+	
+	dnl we have clutter installed	
+	AM_CONDITIONAL(HAVE_CLUTTER_GTK, [test "x$have_clutter_gtk" = "xyes"])
 
+	dnl we can go ahead and build clarity
+	
+	if test "x$have_clutter_gtk" = "xyes"; then
+		have_clarity="yes"
+		AM_CONDITIONAL(HAVE_PLUGIN_CLARITY, [test "x$have_clarity" = "xyes"])
+		
+		AC_DEFINE(HAVE_CLUTTER_GTK, 1, [Define if you have clutter gtk support])
+    	AC_SUBST(CLUTTER_GTK_CFLAGS)
+    	AC_SUBST(CLUTTER_GTK_LIBS)
+    	dnl Need to add to CFLAGS and LIBS so main can init correctly
+    	CFLAGS="$CFLAGS $CLUTTER_GTK_CFLAGS"
+    	LIBS="$LIBS $CLUTTER_GTK_LIBS"		
+	fi
+fi
 
 dnl Check for gstreamer
 dnl -------------------------------------------------------------
