@@ -1720,7 +1720,7 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
                 g_free(ipod_model);
                 eitdb->offline_filename = g_build_filename(cfgdir, backup_name, NULL);
                 g_free(backup_name);
-                gtkpod_statusbar_message("Backup database could not be found so backing up database to %s\n", eitdb->offline_filename);
+                gtkpod_statusbar_message(_("Backup database could not be found so backing up database to %s\n"), eitdb->offline_filename);
             }
 
             if (!itdb_cp(itdb->filename, eitdb->offline_filename, &error)) {

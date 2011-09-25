@@ -251,7 +251,7 @@ G_MODULE_EXPORT void on_ign_word_add_clicked (GtkButton *sender, gpointer e) {
         comparison = compare_string_case_insensitive(word, curr_ign);
         g_free (curr_ign);
         if (comparison == 0) {
-            gtkpod_statusbar_message("The word %s is already in the \"Ignored Frequent Word\" list", word);
+            gtkpod_statusbar_message(_("The word %s is already in the \"Ignored Frequent Word\" list"), word);
             return;
         }
 

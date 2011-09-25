@@ -274,7 +274,8 @@ static void pause_or_play_song() {
 
         player->thread = g_thread_create ((GThreadFunc)thread_play_song, NULL, TRUE, &err1);
         if (!player->thread) {
-            gtkpod_statusbar_message("GStreamer thread creation failed: %s\n", err1->message);
+            /* Translators: %s is an error message */
+            gtkpod_statusbar_message(_("GStreamer thread creation failed: %s\n"), err1->message);
             g_error_free(err1);
         }
     } else if (is_playing()) {
@@ -331,7 +332,7 @@ void seek_to_time(gint64 time_seconds) {
 
     if (!gst_element_seek(player->play_element, 1.0, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, GST_SEEK_TYPE_SET, time_seconds
             * 1000000000, GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE))
-        gtkpod_statusbar_message("Seek failed!\n");
+        gtkpod_statusbar_message(_("Seek failed!\n"));
 }
 
 static int pipeline_bus_watch_cb(GstBus *bus, GstMessage *msg, gpointer data) {
@@ -373,14 +374,15 @@ static void thread_play_song() {
     uri = g_filename_to_uri (track_name, NULL, &error);
     g_free(track_name);
     if (error) {
-        gtkpod_statusbar_message("Failed to play track: %s", error->message);
+        /* Translators: %s is an error message */
+        gtkpod_statusbar_message(_("Failed to play track: %s"), error->message);
         g_free(uri);
         return;
     }
 
     player->play_element = gst_element_factory_make("playbin2", "play");
     if (!player->play_element) {
-        gtkpod_statusbar_message("Failed to play track: Cannot create a play element. Ensure that all gstreamer plugins are installed");
+        gtkpod_statusbar_message(_("Failed to play track: Cannot create a play element. Ensure that all gstreamer plugins are installed"));
         return;
     }
 
