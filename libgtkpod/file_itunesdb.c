@@ -1158,6 +1158,26 @@ static gboolean write_extended_info(iTunesDB *itdb) {
     return TRUE;
 }
 
+gboolean gp_create_extended_info(iTunesDB *itdb) {
+    /* Ensure that the itdb has a filename allocated */
+    g_return_val_if_fail(itdb, FALSE);
+
+    const gchar *mp = itdb_get_mountpoint(itdb);
+    g_return_val_if_fail(mp, FALSE);
+
+    gchar *filename = itdb_get_itunescdb_path (mp);
+    if (!filename) {
+        filename = itdb_get_itunesdb_path (mp);
+    }
+
+    g_return_val_if_fail(filename, FALSE);
+
+    itdb->filename = g_strdup(filename);
+    g_free(filename);
+
+    return write_extended_info(itdb);
+}
+
 TransferData *transfer_data_new(void) {
     TransferData *transfer_data;
     transfer_data = g_new0 (TransferData, 1);
