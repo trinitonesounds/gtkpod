@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-28 16:28+0200\n"
-"PO-Revision-Date: 2011-07-28 16:29+0100\n"
+"POT-Creation-Date: 2011-09-26 01:05+0200\n"
+"PO-Revision-Date: 2011-09-26 19:05+0100\n"
 "Last-Translator: Daniele Forsi <daniele@forsi.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
@@ -1150,6 +1150,11 @@ msgstr "Scrittura del database «%s» in corso. Attendere prego..."
 msgid "Extended information file not deleted: '%s'"
 msgstr "Il file con le informazioni estese non è stato eliminato: «%s»"
 
+#: ../libgtkpod/file_itunesdb.c:1723
+#, c-format
+msgid "Backup database could not be found so backing up database to %s\n"
+msgstr "Impossibile trovare il backup del database per cui il backup sarà fatto su %s\n"
+
 #: ../libgtkpod/file_itunesdb.c:1811
 #, c-format
 msgid "%s: Database saved"
@@ -2171,40 +2176,40 @@ msgstr "Il file sottoposto ad hash è lungo 0 byte\n"
 msgid "Could not open '%s' to calculate SHA1 checksum: %s\n"
 msgstr "Impossibile aprire «%s» per calcolare le somme di controllo SHA1: %s\n"
 
-#: ../libgtkpod/syncdir.c:221
+#: ../libgtkpod/syncdir.c:220
 #, c-format
 msgid "Sync summary for %s/%s\n"
 msgstr "Riepilogo della sincronizzazione per %s/%s\n"
 
-#: ../libgtkpod/syncdir.c:226
+#: ../libgtkpod/syncdir.c:225
 msgid "The following track has been added or updated:\n"
 msgid_plural "The following tracks have been added or updated:\n"
 msgstr[0] "La traccia seguente è stata aggiunta o aggiornata:\n"
 msgstr[1] "Le %d tracce seguenti sono state aggiunte o aggiornate:\n"
 
-#: ../libgtkpod/syncdir.c:231
+#: ../libgtkpod/syncdir.c:230
 msgid "The following track has been completely removed from the iPod:\n"
 msgid_plural "The following tracks have been completely removed from the iPod:\n"
 msgstr[0] "La traccia seguente è stata completamente rimossa dall'iPod:\n"
 msgstr[1] "La tracce seguenti sono state completamente rimosse dall'iPod:\n"
 
-#: ../libgtkpod/syncdir.c:236
+#: ../libgtkpod/syncdir.c:235
 msgid "The following track has been removed from the repository:\n"
 msgid_plural "The following tracks have been removed from the repository:\n"
 msgstr[0] "La traccia seguente è stata completamente rimossa dall'archivio:\n"
 msgstr[1] "Le tracce seguenti sono state completamente rimosse dall'archivio:\n"
 
-#: ../libgtkpod/syncdir.c:241
+#: ../libgtkpod/syncdir.c:240
 msgid "The following track has been removed from the playlist:\n"
 msgid_plural "The following tracks have been removed from the playlist:\n"
 msgstr[0] "La traccia seguente è stata completamente rimossa dalla playlist:\n"
 msgstr[1] "Le tracce seguenti sono state completamente rimosse dalla playlist:\n"
 
-#: ../libgtkpod/syncdir.c:246
+#: ../libgtkpod/syncdir.c:245
 msgid "Nothing was changed.\n"
 msgstr "Nessun cambiamento.\n"
 
-#: ../libgtkpod/syncdir.c:249
+#: ../libgtkpod/syncdir.c:248
 msgid "Sync summary"
 msgstr "Riepilogo della sincronizzazione"
 
@@ -3760,6 +3765,26 @@ msgstr "<b>%s</b> di %s"
 #, c-format
 msgid "<b>%s</b> from %s"
 msgstr "<b>%s</b> da %s"
+
+#. Translators: %s is an error message
+#: ../plugins/media_player/media_player.c:278
+#, c-format
+msgid "GStreamer thread creation failed: %s\n"
+msgstr "Impossibile creare il thread di GStreamer: %s\n"
+
+#: ../plugins/media_player/media_player.c:335
+msgid "Seek failed!\n"
+msgstr "Seek fallito\n"
+
+#. Translators: %s is an error message
+#: ../plugins/media_player/media_player.c:378
+#, c-format
+msgid "Failed to play track: %s"
+msgstr "Impossibile riprodurre la traccia: %s"
+
+#: ../plugins/media_player/media_player.c:385
+msgid "Failed to play track: Cannot create a play element. Ensure that all gstreamer plugins are installed"
+msgstr "Impossibile riprodurre la traccia: impossibile creare un elemento «play», assicurarsi che tutti i plugin di gstreamer siano installati"
 
 #: ../plugins/media_player/media_player.xml.h:1
 msgid "Next"
@@ -5544,7 +5569,7 @@ msgstr "<b>Colonne visualizzate</b>"
 
 #: ../plugins/track_display/track_display.xml.h:3
 msgid "<b>Ignore Frequent Words</b>"
-msgstr "<b>Ignora parole frequenti</b>"
+msgstr "<b>Parole frequenti da ignorare</b>"
 
 #: ../plugins/track_display/track_display.xml.h:4
 msgid "<b>Preferred Track Execution Command</b>"
@@ -5585,6 +5610,11 @@ msgstr "Nuova parola da ignorare"
 #: ../plugins/track_display/track_display_preferences.c:235
 msgid "Please enter a word for sorting functions to ignore"
 msgstr "Inserire una parola da ignorare nelle funzioni di ordinamento"
+
+#: ../plugins/track_display/track_display_preferences.c:254
+#, c-format
+msgid "The word %s is already in the \"Ignored Frequent Word\" list"
+msgstr "La parola %s è già nell'elenco «Parole frequenti da ignorare»"
 
 #: ../src/anjuta-about.c:158
 #, c-format
@@ -5774,7 +5804,7 @@ msgstr "Conferma"
 msgid "Loaded Session..."
 msgstr "Sessione caricata."
 
-#: ../src/main.c:57
+#: ../src/main.c:56
 msgid "gtkpod"
 msgstr "gtkpod"
 
