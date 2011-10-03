@@ -116,7 +116,7 @@ static GtkActionEntry playlist_actions[] =
             N_("Sync Playlist with Dir(s)"),
             NULL,
             NULL,
-            G_CALLBACK (on_sync_playlist_with_dirs)
+            G_CALLBACK (on_sync_playlists_with_dirs)
         },
         {
             ACTION_NEW_PLAYLIST_MENU,
@@ -268,7 +268,7 @@ static GtkActionEntry playlist_actions[] =
             N_("Selected Playlist"),
             NULL,
             NULL,
-            G_CALLBACK (on_delete_selected_playlist)
+            G_CALLBACK (on_delete_selected_playlists)
         },
         {
             "ActionDeleteSelectedPlaylistIncDb",
@@ -276,7 +276,7 @@ static GtkActionEntry playlist_actions[] =
             N_("Selected Playlist including Tracks from Database"),
             NULL,
             NULL,
-            G_CALLBACK (on_delete_selected_playlist_including_tracks_from_database)
+            G_CALLBACK (on_delete_selected_playlists_including_tracks_from_database)
         },
         {
             "ActionDeleteSelectedPlaylistIncDev",
@@ -284,7 +284,7 @@ static GtkActionEntry playlist_actions[] =
             N_("Selected Playlist including Tracks from Device"),
             NULL,
             NULL,
-            G_CALLBACK (on_delete_selected_playlist_including_tracks_from_device)
+            G_CALLBACK (on_delete_selected_playlists_including_tracks_from_device)
         },
         {
             "ActionUpdatePlaylist",
@@ -292,7 +292,7 @@ static GtkActionEntry playlist_actions[] =
             N_("Selected Playlist"),
             NULL,
             NULL,
-            G_CALLBACK (on_update_selected_playlist)
+            G_CALLBACK (on_update_selected_playlists)
         }
     };
 
@@ -349,7 +349,6 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
 
     playlist_display_plugin->playlist_view = pm_create_playlist_view(action_group);
 
-    g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (playlist_display_select_playlist_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_ADDED, G_CALLBACK (playlist_display_playlist_added_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_REMOVED, G_CALLBACK (playlist_display_playlist_removed_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_ITDB_ADDED, G_CALLBACK (playlist_display_itdb_added_cb), NULL);
@@ -373,7 +372,6 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     playlist_display_plugin = (PlaylistDisplayPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
 
-    g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_select_playlist_cb), plugin);
     g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_playlist_added_cb), plugin);
     g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_playlist_removed_cb), plugin);
     g_signal_handlers_disconnect_by_func (plugin->shell, G_CALLBACK (playlist_display_itdb_added_cb), plugin);

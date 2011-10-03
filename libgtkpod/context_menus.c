@@ -110,11 +110,6 @@ GtkWidget *add_separator(GtkWidget *menu) {
     return sep;
 }
 
-void context_menu_delete_track_head(GtkMenuItem *mi, gpointer data) {
-    DeleteAction deleteaction = GPOINTER_TO_INT (data);
-    delete_track_head(deleteaction);
-}
-
 GtkWidget *add_exec_commands(GtkWidget *menu) {
     GList *trkcmds = gtkpod_get_registered_track_commands();
     GList *cmds = trkcmds;
@@ -154,25 +149,6 @@ static void update_tracks_from_file(GtkMenuItem *mi, gpointer data) {
 
 GtkWidget *add_update_tracks_from_file(GtkWidget *menu) {
     return hookup_menu_item(menu, _("Update Tracks from File"), GTK_STOCK_REFRESH, G_CALLBACK (update_tracks_from_file), NULL);
-}
-
-/*
- * sync_dirs_ entries - sync the directories of the selected playlist
- *
- * @mi - the menu item selected
- * @data - Ignored, should be NULL
- */
-static void sync_dirs(GtkMenuItem *mi, gpointer data) {
-    if (gtkpod_get_current_playlist()) {
-        sync_playlist(gtkpod_get_current_playlist(), NULL, KEY_SYNC_CONFIRM_DIRS, 0, KEY_SYNC_DELETE_TRACKS, 0, KEY_SYNC_CONFIRM_DELETE, 0, KEY_SYNC_SHOW_SUMMARY, 0);
-    }
-    else {
-        g_return_if_reached ();
-    }
-}
-
-GtkWidget *add_sync_playlist_with_dirs(GtkWidget *menu) {
-    return hookup_menu_item(menu, _("Sync Playlist with Dir(s)"), GTK_STOCK_REFRESH, G_CALLBACK (sync_dirs), NULL);
 }
 
 static void copy_selected_tracks_to_target_itdb(GtkMenuItem *mi, gpointer *userdata) {

@@ -231,7 +231,7 @@ static gboolean pm_drag_motion(GtkWidget *widget, GdkDragContext *dc, gint x, gi
             return TRUE;
         case DND_GTKPOD_TRACKLIST:
             /* do not allow drop into currently selected playlist */
-            if (pl_d == pm_get_selected_playlist()) {
+            if (pl_d == pm_get_first_selected_playlist()) {
                 if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) || (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER)) {
                     gtk_tree_path_free(path);
                     gdk_drag_status(dc, 0, time);
@@ -1015,55 +1015,20 @@ void pm_add_child(Itdb_iTunesDB *itdb, PM_column_type type, gpointer item, gint 
     gtk_tree_store_set(GTK_TREE_STORE (model), &iter, PM_COLUMN_ITDB, itdb, PM_COLUMN_TYPE, type, type, item, -1);
 }
 
-/* Remove "playlist" from the display model.
- "select": TRUE: a new playlist is selected
- FALSE: no selection is taking place
- (useful when quitting program) */
-void pm_remove_playlist(Playlist *playlist, gboolean select) {
+/* Remove "playlist" from the display model */
+void pm_remove_playlist(Playlist *playlist) {
     GtkTreeModel *model;
-    gboolean have_iter = FALSE;
-    GtkTreeIter select_iter, delete_iter;
-    GtkTreeSelection *ts = NULL;
+    GtkTreeIter iter;
 
     g_return_if_fail (playlist);
     model = gtk_tree_view_get_model(playlist_treeview);
     g_return_if_fail (model);
 
-    ts = gtk_tree_view_get_selection(playlist_treeview);
+    gtkpod_set_current_playlist(NULL);
 
-    if (itdb_playlist_is_mpl(playlist) && (playlist->itdb == gtkpod_get_current_itdb())) {
-        /* We are about to remove the entire itdb (playlist is MPL) and
-         * a playlist of this itdb is selected --> clear display
-         * (pm_unselect_playlist probably works as well, but the
-         * unselect won't be done until later (callback)) */
-        gtkpod_set_current_playlist(NULL);
+    if (pm_get_iter_for_playlist(playlist, &iter)) {
+        gtk_tree_store_remove(GTK_TREE_STORE (model), &iter);
     }
-
-    if (select && (gtkpod_get_current_playlist() == playlist)) {
-        /* We are about to delete the currently selected
-         * playlist. Try to select the next. */
-        if (gtk_tree_selection_get_selected(ts, NULL, &select_iter)) {
-            GtkTreePath *path = gtk_tree_model_get_path(model, &select_iter);
-            if (gtk_tree_model_iter_next(model, &select_iter)) {
-                have_iter = TRUE;
-            }
-            else { /* no next iter -- try previous iter */
-                if (gtk_tree_path_prev(path)) { /* OK -- make iter from it */
-                    gtk_tree_model_get_iter(model, &select_iter, path);
-                    have_iter = TRUE;
-                }
-            }
-            gtk_tree_path_free(path);
-        }
-    }
-
-    if (pm_get_iter_for_playlist(playlist, &delete_iter)) {
-        gtk_tree_store_remove(GTK_TREE_STORE (model), &delete_iter);
-    }
-
-    /* select our new iter !!! */
-    if (have_iter && select)
-        gtk_tree_selection_select_iter(ts, &select_iter);
 }
 
 /* Remove all playlists from the display model */
@@ -1086,6 +1051,35 @@ void pm_remove_all_playlists(gboolean clear_sort) {
     if (clear_sort && gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE (model), &column, &order)) { /* recreate track treeview to unset sorted column */
         if (column >= 0) {
             pm_create_treeview();
+        }
+    }
+}
+
+/* Select specified playlist */
+void pm_select_playlists(GList *playlists) {
+    GtkTreeIter iter;
+    GtkTreeSelection *ts;
+
+    g_return_if_fail (playlist_treeview);
+
+    if (!playlists) {
+        ts = gtk_tree_view_get_selection(playlist_treeview);
+        gtk_tree_selection_unselect_all(ts);
+        return;
+    }
+
+    ts = gtk_tree_view_get_selection(playlist_treeview);
+
+    for (gint i = 0; i < g_list_length(playlists); ++i) {
+        Playlist *pl = g_list_nth_data(playlists, i);
+
+        if (pm_get_iter_for_playlist(pl, &iter)) {
+            gtk_tree_selection_select_iter(ts, &iter);
+        }
+
+        /* Only properly select the first in the list */
+        if (i == 0 && gtkpod_get_current_playlist() != pl) {
+            gtkpod_set_current_playlist(pl);
         }
     }
 }
@@ -1128,10 +1122,13 @@ void pm_unselect_playlist(Playlist *playlist) {
 }
 
 static gboolean pm_selection_changed_cb(gpointer data) {
-    GtkTreeModel *model;
     GtkTreeIter iter;
     GtkTreeView *tree_view = GTK_TREE_VIEW (data);
-    GtkTreeSelection *selection = gtk_tree_view_get_selection(tree_view);
+
+    g_return_val_if_fail(tree_view, FALSE);
+
+    GtkTreeModel *model = gtk_tree_view_get_model(tree_view);
+    g_return_val_if_fail(model, FALSE);
 
 #if DEBUG_TIMING
     GTimeVal time;
@@ -1140,16 +1137,20 @@ static gboolean pm_selection_changed_cb(gpointer data) {
             time.tv_sec % 3600, time.tv_usec);
 #endif
 
-    if (gtk_tree_selection_get_selected(selection, &model, &iter) == FALSE) { /* no selection -> reset sort tabs */
-        //		gphoto_change_to_photo_window (FALSE);
+    if (! pm_is_playlist_selected()) {
+        /* no selection */
         gtkpod_set_current_playlist(NULL);
     }
     else {
-        Playlist *new_playlist = NULL;
+        Playlist *new_playlist = pm_get_first_selected_playlist();
+        g_return_val_if_fail(new_playlist, FALSE);
+
         Itdb_iTunesDB *itdb = NULL;
         Itdb_PhotoDB *photodb = NULL;
         PM_column_type type = 0;
+
         /* handle new selection */
+        pm_get_iter_for_playlist(new_playlist, &iter);
         gtk_tree_model_get(model, &iter, PM_COLUMN_TYPE, &type, PM_COLUMN_ITDB, &itdb, PM_COLUMN_PLAYLIST, &new_playlist, PM_COLUMN_PHOTOS, &photodb, -1);
 
         gtkpod_set_current_playlist(new_playlist);
@@ -1159,8 +1160,6 @@ static gboolean pm_selection_changed_cb(gpointer data) {
             g_return_val_if_fail (new_playlist, FALSE);
             g_return_val_if_fail (itdb, FALSE);
 
-            //		gphoto_change_to_photo_window (FALSE);
-
             if (new_playlist->is_spl && new_playlist->splpref.liveupdate)
                 itdb_spl_update(new_playlist);
 
@@ -1169,7 +1168,6 @@ static gboolean pm_selection_changed_cb(gpointer data) {
         case PM_COLUMN_PHOTOS:
             g_return_val_if_fail (photodb, FALSE);
             g_return_val_if_fail (itdb, FALSE);
-            //		gphoto_display_photo_window (itdb);
             break;
         case PM_COLUMN_ITDB:
         case PM_COLUMN_TYPE:
@@ -1361,16 +1359,16 @@ static gint pm_get_position_for_playlist(Playlist *playlist) {
 /* "unsort" the playlist view without causing the sort tabs to be
  touched. */
 static void pm_unsort() {
-    Playlist *cur_pl;
+    GList *cur_pls;
 
     pm_selection_blocked = TRUE;
 
     /* remember */
-    cur_pl = pm_get_selected_playlist();
+    cur_pls = pm_get_selected_playlists();
 
     pm_remove_all_playlists(TRUE);
 
-    pm_set_selected_playlist(cur_pl);
+    pm_select_playlists(cur_pls);
 
     pm_selection_blocked = FALSE;
     /* reset sort counter */
@@ -1904,11 +1902,12 @@ static void pm_create_treeview(void) {
     model = gtk_tree_store_new(PM_NUM_COLUMNS, G_TYPE_POINTER, G_TYPE_INT, G_TYPE_POINTER, G_TYPE_POINTER);
     /* set tree model */
     gtk_tree_view_set_model(playlist_treeview, GTK_TREE_MODEL (model));
-    /* gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (playlist_treeview), TRUE); */
-    gtk_tree_selection_set_mode(gtk_tree_view_get_selection(playlist_treeview), GTK_SELECTION_SINGLE);
+
+    /* set selection mode */
     selection = gtk_tree_view_get_selection(playlist_treeview);
-    g_signal_connect (G_OBJECT (selection), "changed",
-            G_CALLBACK (pm_selection_changed), NULL);
+    gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
+    g_signal_connect (G_OBJECT (selection), "changed", G_CALLBACK (pm_selection_changed), NULL);
+
     pm_add_columns();
     pm_add_all_itdbs();
 
@@ -2005,51 +2004,63 @@ GtkWidget *pm_create_playlist_view(GtkActionGroup *action_group) {
     return GTK_WIDGET(vbox);
 }
 
-Playlist* pm_get_selected_playlist(void) {
-    GtkTreeSelection *ts;
-    GtkTreeIter iter;
-    GtkTreeModel *model;
-    Playlist *result = NULL;
-
-    g_return_val_if_fail (playlist_treeview, NULL);
-    ts = gtk_tree_view_get_selection(playlist_treeview);
-    g_return_val_if_fail (ts, NULL);
-
-    if (gtk_tree_selection_get_selected(ts, &model, &iter)) {
-        gtk_tree_model_get(model, &iter, PM_COLUMN_PLAYLIST, &result, -1);
+void pm_selected_playlists_foreach(PlaylistSelectionForeachFunc func, gpointer data) {
+    GList *playlists = pm_get_selected_playlists();
+    while(playlists) {
+        Playlist *pl = playlists->data;
+        (* func) (pl ,data);
+        playlists = playlists->next;
     }
-
-    /* playlist was just changed -- wait until current_playlist is
-     updated. */
-    if (result != gtkpod_get_current_playlist())
-        result = NULL;
-    return result;
 }
 
-Itdb_iTunesDB* pm_get_selected_itdb(void) {
-    GtkTreeSelection *ts;
-    GtkTreeIter iter;
-    GtkTreeModel *model;
-    Itdb_iTunesDB *result = NULL;
+GList *pm_get_selected_playlists() {
+    g_return_val_if_fail(playlist_treeview, NULL);
 
-    g_return_val_if_fail (playlist_treeview, NULL);
-    ts = gtk_tree_view_get_selection(playlist_treeview);
-    g_return_val_if_fail (ts, NULL);
+    GtkTreeSelection *selection = gtk_tree_view_get_selection(playlist_treeview);
+    g_return_val_if_fail(selection, NULL);
 
-    if (gtk_tree_selection_get_selected(ts, &model, &iter)) {
-        gtk_tree_model_get(model, &iter, PM_COLUMN_ITDB, &result, -1);
+    GtkTreeModel *model = gtk_tree_view_get_model(playlist_treeview);
+    GList *paths = gtk_tree_selection_get_selected_rows(selection, &model);
+    GList *playlists = NULL;
+
+    while (paths) {
+        GtkTreePath *path = paths->data;
+        GtkTreeIter iter;
+
+        if (gtk_tree_model_get_iter(model, &iter, path)) {
+            Playlist *pl;
+            gtk_tree_model_get(model, &iter, PM_COLUMN_PLAYLIST, &pl, -1);
+            if (pl) {
+                playlists = g_list_append(playlists, pl);
+            }
+        }
+
+        paths = paths->next;
     }
 
-    /* playlist was just changed -- wait until current_playlist is
-     updated. */
-    if (result != gtkpod_get_current_itdb())
-        result = NULL;
-    return result;
+    g_list_free(paths);
+
+    return playlists;
 }
 
-/* use with care!! */
-void pm_set_selected_playlist(Playlist *pl) {
-    gtkpod_set_current_playlist(pl);
+Playlist *pm_get_first_selected_playlist(void) {
+
+    GList *playlists = pm_get_selected_playlists();
+
+    if (!playlists) {
+        return NULL;
+    }
+
+    return playlists->data;
+}
+
+gint pm_get_selected_playlist_count() {
+    GtkTreeSelection *selection = gtk_tree_view_get_selection(playlist_treeview);
+    return gtk_tree_selection_count_selected_rows(selection);
+}
+
+gboolean pm_is_playlist_selected() {
+    return pm_get_selected_playlist_count() > 0;
 }
 
 void pm_show_all_playlists() {
@@ -2082,7 +2093,7 @@ void playlist_display_update_itdb_cb(GtkPodApp *app, gpointer olditdb, gpointer 
     /* remove @old_itdb (all playlists are removed if the MPL is
      removed and add @new_itdb at its place */
 
-    pm_remove_playlist(itdb_playlist_mpl(old_itdb), FALSE);
+    pm_remove_playlist(itdb_playlist_mpl(old_itdb));
 
     /* display replacement */
     pm_add_itdb(new_itdb, pos);
@@ -2103,21 +2114,7 @@ void playlist_display_itdb_removed_cb(GtkPodApp *app, gpointer itdb, gpointer da
         return;
     }
 
-    pm_remove_playlist(itdb_playlist_mpl(old_itdb), FALSE);
-}
-
-void playlist_display_select_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data) {
-    Playlist *new_playlist = pl;
-    Playlist *old_playlist = pm_get_selected_playlist();
-
-    if (old_playlist == new_playlist) {
-        return;
-    }
-
-    if (old_playlist)
-        pm_unselect_playlist(old_playlist);
-
-    pm_select_playlist(new_playlist);
+    pm_remove_playlist(itdb_playlist_mpl(old_itdb));
 }
 
 void playlist_display_playlist_added_cb(GtkPodApp *app, gpointer pl, gint32 pos, gpointer data) {
@@ -2129,7 +2126,7 @@ void playlist_display_playlist_added_cb(GtkPodApp *app, gpointer pl, gint32 pos,
 void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer data) {
     Playlist *old_playlist = pl;
 
-    pm_remove_playlist(old_playlist, TRUE);
+    pm_remove_playlist(old_playlist);
 }
 
 void playlist_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gpointer value, gpointer data) {

@@ -49,16 +49,22 @@ typedef enum  {
 GtkWidget *pm_create_playlist_view(GtkActionGroup *action_group);
 void pm_destroy_playlist_view(void);
 void pm_select_playlist(Playlist *playlist);
-void pm_set_selected_playlist(Playlist *pl);
+
+GList *pm_get_selected_playlists(void);
+Playlist *pm_get_first_selected_playlist(void);
+gint pm_get_selected_playlist_count(void);
+gboolean pm_is_playlist_selected(void);
+
+typedef gboolean (* PlaylistSelectionForeachFunc) (Playlist *playlist, gpointer data);
+void pm_selected_playlists_foreach(PlaylistSelectionForeachFunc func, gpointer data);
+
 void pm_remove_all_playlists (gboolean clear_sort);
 void pm_add_all_itdbs (void);
-Playlist* pm_get_selected_playlist(void);
 void pm_stop_editing(gboolean cancel);
 
 void playlist_display_itdb_added_cb(GtkPodApp *app, gpointer itdb, gint32 pos, gpointer data);
 void playlist_display_itdb_removed_cb(GtkPodApp *app, gpointer itdb, gpointer data);
 void playlist_display_update_itdb_cb (GtkPodApp *app, gpointer olditdb, gpointer newitdb, gpointer data);
-void playlist_display_select_playlist_cb (GtkPodApp *app, gpointer pl, gpointer data);
 void playlist_display_playlist_added_cb(GtkPodApp *app, gpointer pl, gint32 pos, gpointer data);
 void playlist_display_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer data);
 void playlist_display_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data);
