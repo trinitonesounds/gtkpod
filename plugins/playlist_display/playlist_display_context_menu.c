@@ -47,12 +47,38 @@
 
 static void context_menu_delete_playlist_head(GtkMenuItem *mi, gpointer data) {
     DeleteAction deleteaction = GPOINTER_TO_INT (data);
-    delete_playlist_head(deleteaction);
+    GList *playlists = pm_get_selected_playlists();
+    if (! playlists) {
+        message_sb_no_playlist_selected();
+        return;
+    }
+
+    while (playlists) {
+        Playlist *pl = playlists->data;
+        if (pl) {
+            gtkpod_set_current_playlist(pl);
+            delete_playlist_head(deleteaction);
+        }
+        playlists = playlists->next;
+    }
 }
 
 void context_menu_delete_track_head(GtkMenuItem *mi, gpointer data) {
     DeleteAction deleteaction = GPOINTER_TO_INT (data);
-    delete_track_head(deleteaction);
+    GList *playlists = pm_get_selected_playlists();
+    if (! playlists) {
+        message_sb_no_playlist_selected();
+        return;
+    }
+
+    while (playlists) {
+        Playlist *pl = playlists->data;
+        if (pl) {
+            gtkpod_set_current_playlist(pl);
+            delete_track_head(deleteaction);
+        }
+        playlists = playlists->next;
+    }
 }
 
 static GtkWidget *add_delete_all_tracks_from_ipod(GtkWidget *menu) {

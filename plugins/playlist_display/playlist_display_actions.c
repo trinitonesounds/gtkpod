@@ -627,16 +627,17 @@ void on_pl_for_each_rating_activate(GtkAction *action, PlaylistDisplayPlugin* pl
 static void delete_selected_playlists(DeleteAction deleteaction) {
     GList *playlists = pm_get_selected_playlists();
 
+    if (! playlists) {
+        message_sb_no_playlist_selected();
+        return;
+    }
+
     while (playlists) {
         Playlist *pl = playlists->data;
         if (pl) {
             gtkpod_set_current_playlist(pl);
             delete_playlist_head(deleteaction);
         }
-        else {
-            message_sb_no_playlist_selected();
-        }
-
         playlists = playlists->next;
     }
 }
