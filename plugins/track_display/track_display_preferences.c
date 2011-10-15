@@ -419,6 +419,12 @@ G_MODULE_EXPORT void on_tm_sort_case_sensitive_toggled(GtkToggleButton *togglebu
     gtkpod_broadcast_preference_change("tm_case_sensitive", &val);
 }
 
+G_MODULE_EXPORT void on_tm_sort_autostore_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+    gboolean val = gtk_toggle_button_get_active(togglebutton);
+    prefs_set_int("tm_autostore", val);
+    gtkpod_broadcast_preference_change("tm_autostore", &val);
+}
+
 GtkWidget *init_track_display_preferences() {
     GtkComboBox *cmd_combo;
     gint i = 0;
@@ -459,6 +465,10 @@ GtkWidget *init_track_display_preferences() {
 
     if ((w = gtkpod_builder_xml_get_widget(prefbuilder, "tm_cfg_case_sensitive"))) {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("tm_case_sensitive"));
+    }
+
+    if ((w = gtkpod_builder_xml_get_widget(prefbuilder, "tm_cfg_autostore"))) {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("tm_autostore"));
     }
 
     gtk_builder_connect_signals(prefbuilder, NULL);

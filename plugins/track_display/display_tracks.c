@@ -1113,78 +1113,93 @@ void tm_rows_reordered(void) {
     g_return_if_fail (track_treeview);
     current_pl = gtkpod_get_current_playlist();
 
-    if (current_pl) {
-        GtkTreeModel *tm = NULL;
-        GtkTreeIter i;
-        GList *new_list = NULL, *old_pos_l = NULL;
-        gboolean valid = FALSE;
-        GList *nlp, *olp;
-        gboolean changed = FALSE;
-        iTunesDB *itdb = NULL;
+    if (! current_pl)
+        return;
 
-        tm = gtk_tree_view_get_model(track_treeview);
-        g_return_if_fail (tm);
+    GtkTreeModel *tm = NULL;
+    GtkTreeIter i;
+    GList *new_list = NULL, *old_pos_l = NULL;
+    gboolean valid = FALSE;
+    GList *nlp, *olp;
+    gboolean changed = FALSE;
+    iTunesDB *itdb = NULL;
 
-        valid = gtk_tree_model_get_iter_first(tm, &i);
-        while (valid) {
-            Track *new_track;
-            gint old_position;
+    tm = gtk_tree_view_get_model(track_treeview);
+    g_return_if_fail (tm);
 
-            gtk_tree_model_get(tm, &i, READOUT_COL, &new_track, -1);
-            g_return_if_fail (new_track);
+    valid = gtk_tree_model_get_iter_first(tm, &i);
+    while (valid) {
+        Track *new_track;
+        gint old_position;
 
-            if (!itdb)
-                itdb = new_track->itdb;
-            new_list = g_list_append(new_list, new_track);
-            /* what position was this track in before? */
-            old_position = g_list_index(current_pl->members, new_track);
-            /* check if we already used this position before (can
-             happen if track has been added to playlist more than
-             once */
-            while ((old_position != -1) && g_list_find(old_pos_l, GINT_TO_POINTER(old_position))) { /* find next occurence */
-                GList *link;
-                gint next;
-                link = g_list_nth(current_pl->members, old_position + 1);
-                next = g_list_index(link, new_track);
-                if (next == -1)
-                    old_position = -1;
-                else
-                    old_position += (1 + next);
-            }
-            /* we make a sorted list of the old positions */
-            old_pos_l = g_list_insert_sorted(old_pos_l, GINT_TO_POINTER(old_position), comp_int);
-            valid = gtk_tree_model_iter_next(tm, &i);
+        gtk_tree_model_get(tm, &i, READOUT_COL, &new_track, -1);
+        g_return_if_fail (new_track);
+
+        if (!itdb)
+            itdb = new_track->itdb;
+
+        new_list = g_list_append(new_list, new_track);
+        /* what position was this track in before? */
+        old_position = g_list_index(current_pl->members, new_track);
+        /*
+         * check if we already used this position before (can
+         * happen if track has been added to playlist more than
+         * once
+         */
+        while ((old_position != -1) && g_list_find(old_pos_l, GINT_TO_POINTER(old_position))) {
+            /* find next occurence */
+            GList *link;
+            gint next;
+            link = g_list_nth(current_pl->members, old_position + 1);
+            next = g_list_index(link, new_track);
+            if (next == -1)
+                old_position = -1;
+            else
+                old_position += (1 + next);
         }
-        nlp = new_list;
-        olp = old_pos_l;
-        while (nlp && olp) {
-            GList *old_link;
-            guint position = GPOINTER_TO_INT(olp->data);
-
-            /* if position == -1 one of the tracks in the track view
-             could not be found in the selected playlist -> stop! */
-            if (position == -1) {
-                g_warning ("Programming error: tm_rows_reordered_callback: track in track view was not in selected playlist\n");
-                g_return_if_reached ();
-            }
-            old_link = g_list_nth(current_pl->members, position);
-            /* replace old track with new track */
-            if (old_link->data != nlp->data) {
-                old_link->data = nlp->data;
-                changed = TRUE;
-            }
-            /* next */
-            nlp = nlp->next;
-            olp = olp->next;
-        }
-        g_list_free(new_list);
-        g_list_free(old_pos_l);
-        /* if we changed data, mark data as changed and adopt order in
-         sort tabs */
-        if (changed) {
-            data_changed(itdb);
-        }
+        /* we make a sorted list of the old positions */
+        old_pos_l = g_list_insert_sorted(old_pos_l, GINT_TO_POINTER(old_position), comp_int);
+        valid = gtk_tree_model_iter_next(tm, &i);
     }
+
+    nlp = new_list;
+    olp = old_pos_l;
+    while (nlp && olp) {
+        GList *old_link;
+        guint position = GPOINTER_TO_INT(olp->data);
+
+        /*
+         * if position == -1 one of the tracks in the track view
+         * could not be found in the selected playlist -> stop!
+         */
+        if (position == -1) {
+            g_warning ("Programming error: tm_rows_reordered_callback: track in track view was not in selected playlist\n");
+            g_return_if_reached ();
+        }
+        old_link = g_list_nth(current_pl->members, position);
+        /* replace old track with new track */
+        if (old_link->data != nlp->data) {
+            old_link->data = nlp->data;
+            changed = TRUE;
+        }
+        /* next */
+        nlp = nlp->next;
+        olp = olp->next;
+    }
+    g_list_free(new_list);
+    g_list_free(old_pos_l);
+
+    /*
+     * if we changed data, mark data as changed and adopt order
+     * in sort tabs
+     */
+    if (changed)
+        data_changed(itdb);
+}
+
+static gboolean tm_rows_reordered_idle_callback (gpointer user_data) {
+    tm_rows_reordered();
+    return FALSE;
 }
 
 static void on_trackids_list_foreach(GtkTreeModel *tm, GtkTreePath *tp, GtkTreeIter *i, gpointer data) {
@@ -1697,8 +1712,14 @@ static void tm_sort_column_changed(GtkTreeSortable *ts, gpointer user_data) {
 
     tm_set_search_column(newcol);
 
-    if (prefs_get_int("tm_autostore"))
-        tm_rows_reordered();
+    if (prefs_get_int("tm_autostore")) {
+        /*
+         * Once this signal callback has finished will the model
+         * be resorted. At that point will we updated the
+         * selected playlist with the new track order.
+         */
+        g_idle_add(tm_rows_reordered_idle_callback, NULL);
+    }
 
     /* stable sorting: index original order */
     tracks = tm_get_all_tracks();
