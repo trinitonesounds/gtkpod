@@ -68,7 +68,7 @@ typedef struct {
 	GtkWidget *canvasbox;
 	GtkWidget *controlbox;
 	GtkButton *leftbutton;
-	GtkHScale *cdslider;
+	GtkScale *cdslider;
 	GtkButton *rightbutton;
 
 	/* Utility data */

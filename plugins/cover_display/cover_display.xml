@@ -43,7 +43,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkHScale" id="cover_display_scaler">
+              <object class="GtkScale" id="cover_display_scaler">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="digits">0</property>

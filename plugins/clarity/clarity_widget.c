@@ -267,7 +267,7 @@ static void clarity_widget_init (ClarityWidget *self) {
     g_signal_connect (G_OBJECT(priv->leftbutton), "clicked",
                 G_CALLBACK(_on_clarity_button_clicked), priv);
 
-    priv->cdslider = gtk_hscale_new_with_range(0, 1, 1);
+    priv->cdslider = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL, 0, 1, 1);
     gtk_scale_set_digits(GTK_SCALE(priv->cdslider), 0);
     gtk_scale_set_draw_value(GTK_SCALE(priv->cdslider), FALSE);
     gtk_widget_set_can_focus(priv->cdslider, TRUE);
@@ -300,12 +300,12 @@ static void clarity_widget_init (ClarityWidget *self) {
 
     _init_slider_range(priv);
 
-    priv->controlbox = gtk_hbox_new(FALSE, 2);
+    priv->controlbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
     gtk_box_pack_start(GTK_BOX(priv->controlbox), priv->leftbutton, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(priv->controlbox), priv->cdslider, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(priv->controlbox), priv->rightbutton, FALSE, FALSE, 0);
 
-    priv->contentpanel = gtk_vbox_new(FALSE, 0);
+    priv->contentpanel = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     gtk_box_pack_start(GTK_BOX(priv->contentpanel), priv->draw_area, TRUE, TRUE, 0);
     gtk_box_pack_end(GTK_BOX(priv->contentpanel), priv->controlbox, FALSE, TRUE, 0);
 

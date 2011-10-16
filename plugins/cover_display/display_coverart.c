@@ -174,7 +174,7 @@ void coverart_init_display(GtkWidget *parent, gchar *gladepath) {
     cdwidget->controlbox = gtkpod_builder_xml_get_widget(xml, "cover_display_controlbox");
     cdwidget->leftbutton = GTK_BUTTON (gtkpod_builder_xml_get_widget (xml, "cover_display_leftbutton"));
     cdwidget->rightbutton = GTK_BUTTON (gtkpod_builder_xml_get_widget (xml, "cover_display_rightbutton"));
-    cdwidget->cdslider = GTK_HSCALE (gtkpod_builder_xml_get_widget (xml, "cover_display_scaler"));
+    cdwidget->cdslider = GTK_SCALE (gtkpod_builder_xml_get_widget (xml, "cover_display_scaler"));
     /* create a new drawing area */
     cdwidget->draw_area = gtk_drawing_area_new();
     cdwidget->cdcovers = g_ptr_array_sized_new(IMG_TOTAL);
