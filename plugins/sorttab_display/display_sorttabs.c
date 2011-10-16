@@ -2300,7 +2300,7 @@ static void st_create_paned() {
     for (i = 0; i < PANED_NUM_ST; ++i) {
         GtkWidget *paned;
 
-        paned = gtk_hpaned_new();
+        paned = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
         gtk_widget_show(paned);
 
         if (!i) {
