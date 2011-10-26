@@ -361,11 +361,63 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
     return NULL;
 }
 
+static gint compare_names (gchar* name1, gchar* name2, gpointer case_sensitive) {
+    gint value = compare_string(name1, name2, GPOINTER_TO_INT(case_sensitive));
+    return value;
+}
+
+/**
+ * Sort a list of filenames, using the tm_sort and
+ * tm_case_sensitive preferences to determine the
+ * filenames' sort order.
+ */
+GSList* sort_tracknames_list(GSList *names) {
+    /* Get the track sort order preference */
+    GtkSortType sortorder = prefs_get_int("tm_sort");
+    gboolean case_sensitive = prefs_get_int("tm_case_sensitive");
+
+    switch (sortorder) {
+    case SORT_ASCENDING:
+        return g_slist_sort_with_data (names, (GCompareDataFunc) compare_names, GINT_TO_POINTER(case_sensitive));
+    case SORT_DESCENDING:
+        names = g_slist_sort_with_data (names, (GCompareDataFunc) compare_names, GINT_TO_POINTER(case_sensitive));
+        return g_slist_reverse(names);
+    default:
+        return names;
+    }
+}
+
 /*------------------------------------------------------------------*\
  *                                                                  *
  *      Add Dir                                                     *
  *                                                                  *
  \*------------------------------------------------------------------*/
+
+static void recurse_directories(gchar *name, GSList **trknames, gboolean descend) {
+    if (g_file_test(name, G_FILE_TEST_IS_DIR)) {
+        GDir *dir = g_dir_open(name, 0, NULL);
+        if (dir != NULL) {
+            const gchar *next;
+            do {
+                next = g_dir_read_name(dir);
+                if (next != NULL) {
+                    gchar *nextfull = g_build_filename(name, next, NULL);
+                    if (descend || !g_file_test(nextfull, G_FILE_TEST_IS_DIR)) {
+                        recurse_directories(nextfull, trknames, descend);
+                    }
+                    g_free(nextfull);
+                }
+            }
+            while (next != NULL);
+
+            g_dir_close(dir);
+        }
+    }
+    else {
+        *trknames = g_slist_append(*trknames, g_strdup(name));
+    }
+}
+
 
 /*
  * Add all files in directory and subdirectories.
@@ -386,48 +438,43 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
 gint add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data, GError **error) {
     gint result = 0;
     GString *errors = g_string_new("");
+    GSList *trknames = NULL;
+    GSList *tkn = NULL;
 
     g_return_val_if_fail (itdb, 0);
     g_return_val_if_fail (name, 0);
 
-    if (g_file_test(name, G_FILE_TEST_IS_DIR)) {
-        GDir *dir = g_dir_open(name, 0, NULL);
-        block_widgets();
-        if (dir != NULL) {
-            const gchar *next;
-            do {
-                next = g_dir_read_name(dir);
-                if (next != NULL) {
-                    gchar *nextfull = g_build_filename(name, next, NULL);
-                    if (descend || !g_file_test(nextfull, G_FILE_TEST_IS_DIR)) {
-                        GError *direrror = NULL;
-                        result += add_directory_by_name(itdb, nextfull, plitem, descend, addtrackfunc, data, &direrror);
-                        if (direrror) {
-                            gchar *msg = g_strdup_printf("%s\n", direrror->message);
-                            g_string_append(errors, msg);
-                            g_free(msg);
-                            g_error_free(direrror);
-                            direrror = NULL;
-                        }
-                    }
-                    g_free(nextfull);
-                }
-            }
-            while (next != NULL);
+    block_widgets();
 
-            g_dir_close(dir);
-        }
-        release_widgets();
-    }
-    else {
-        if (add_track_by_filename(itdb, name, plitem, descend, addtrackfunc, data, error))
+    recurse_directories(name, &trknames, descend);
+
+    trknames = sort_tracknames_list(trknames);
+
+    tkn = trknames;
+    while (tkn) {
+        GError *trkerror = NULL;
+        if (add_track_by_filename(itdb, tkn->data, plitem, descend, addtrackfunc, data, &trkerror)) {
             result++;
+        }
+
+        if (trkerror) {
+            gchar *msg = g_strdup_printf("%s\n", trkerror->message);
+            g_string_append(errors, msg);
+            g_free(msg);
+            g_error_free(trkerror);
+            trkerror = NULL;
+        }
+
+        tkn = tkn->next;
     }
+
+    release_widgets();
 
     if (errors->len > 0) {
         gtkpod_log_error_printf(error, errors->str);
     }
     g_string_free(errors, TRUE);
+    g_slist_free_full(trknames, g_free);
 
     return result;
 }

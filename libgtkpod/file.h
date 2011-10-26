@@ -95,4 +95,7 @@ gboolean read_lyrics_from_file (Track *track, gchar **lyrics);
 gboolean write_lyrics_to_file (Track *track);
 
 gchar *fileselection_get_file_or_dir(const gchar *title, const gchar *cur_file, GtkFileChooserAction action);
+
+GSList* sort_tracknames_list(GSList *names);
+
 #endif

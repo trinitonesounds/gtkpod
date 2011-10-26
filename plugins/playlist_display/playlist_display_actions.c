@@ -56,6 +56,7 @@ static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
 
     if (names) {
         gtkpod_statusbar_busy_push();
+
         GSList* currentnode;
         for (currentnode = names; currentnode; currentnode = currentnode->next) {
             result
@@ -304,6 +305,9 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
     block_widgets();
 
     gtkpod_statusbar_busy_push();
+
+    names = sort_tracknames_list(names);
+
     /* Get the filenames and add them */
     for (gsl = names; gsl; gsl = gsl->next) {
         GError *error = NULL;
