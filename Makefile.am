@@ -18,7 +18,7 @@ EXTRA_DIST =			\
 	intltool-merge.in	\
 	intltool-update.in	\
 	TROUBLESHOOTING		\
-	TODOandBUGS.txt \
+	TODO.txt \
 	libgtkpod-1.1.0.pc.in \
 	version.sh \
 	version
