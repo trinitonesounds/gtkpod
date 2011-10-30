@@ -393,7 +393,10 @@ GSList* sort_tracknames_list(GSList *names) {
  *                                                                  *
  \*------------------------------------------------------------------*/
 
-static void recurse_directories(gchar *name, GSList **trknames, gboolean descend) {
+/*
+ * Internal function called by recurse_directories_with_history
+ */
+static void recurse_directories_internal(gchar *name, GSList **trknames, gboolean descend, GHashTable **directories_seen) {
     if (g_file_test(name, G_FILE_TEST_IS_DIR)) {
         GDir *dir = g_dir_open(name, 0, NULL);
         if (dir != NULL) {
@@ -402,8 +405,28 @@ static void recurse_directories(gchar *name, GSList **trknames, gboolean descend
                 next = g_dir_read_name(dir);
                 if (next != NULL) {
                     gchar *nextfull = g_build_filename(name, next, NULL);
+
+                    if (g_file_test(nextfull, G_FILE_TEST_IS_SYMLINK)) {
+                        /*
+                         * Need to check symlinks don't point to another directory that
+                         * we have already dealt with, avoiding infinite loops.
+                         */
+                        gchar* basepath = convert_symlink_to_absolute_path(name, nextfull);
+                        if (!basepath) {
+                            g_free(nextfull);
+                            return;
+                        }
+
+                        nextfull = basepath;
+                    }
+
+                    if (g_hash_table_lookup(*directories_seen, nextfull))
+                        continue;
+                    else
+                        g_hash_table_insert(*directories_seen, nextfull, nextfull);
+
                     if (descend || !g_file_test(nextfull, G_FILE_TEST_IS_DIR)) {
-                        recurse_directories(nextfull, trknames, descend);
+                        recurse_directories_internal(nextfull, trknames, descend, directories_seen);
                     }
                     g_free(nextfull);
                 }
@@ -418,6 +441,22 @@ static void recurse_directories(gchar *name, GSList **trknames, gboolean descend
     }
 }
 
+/*
+ * Recurse directories from @dir, adding filenames to @trknames.
+ *
+ * To avoid infinite loops due to symlinks, a directories hash is
+ * used to record visited sub-directories.
+ *
+ * @dir:             root directory from which to retrieve filenames
+ * @trknames:   list populated with filenames
+ * @descend:    TRUE: add recursively
+ *                      FALSE: don't enter subdirectories
+ */
+static void recurse_directories_with_history(gchar *dir, GSList **trknames, gboolean descend) {
+    GHashTable *directories = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+    recurse_directories_internal(dir, trknames, descend, &directories);
+    g_hash_table_destroy(directories);
+}
 
 /*
  * Add all files in directory and subdirectories.
@@ -446,7 +485,7 @@ gint add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gboole
 
     block_widgets();
 
-    recurse_directories(name, &trknames, descend);
+    recurse_directories_with_history(name, &trknames, descend);
 
     trknames = sort_tracknames_list(trknames);
 

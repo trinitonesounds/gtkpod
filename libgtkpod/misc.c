@@ -1804,3 +1804,71 @@ void gtkpod_shutdown() {
     call_script("gtkpod.out", NULL);
 }
 
+/**
+ * Convert the relative path @relpath to an absolute path using
+ * @basepath as the basis for deriving the new path.
+ *
+ * Essentially, removes any '.' and '..' from the relative path then
+ * concatenates the remaining path to the base path.
+ *
+ */
+gchar *convert_relative_to_absolute_path(gchar *basepath, gchar *relpath) {
+    if (g_path_is_absolute(relpath))
+        return relpath;
+
+    gchar *currdir = g_strconcat(".", G_DIR_SEPARATOR_S, NULL);
+    gchar *parentdir = g_strconcat("..", G_DIR_SEPARATOR_S, NULL);
+    gchar *abspath = NULL;
+    gchar *relsubpath = NULL;
+
+    if (g_str_has_prefix(relpath, currdir)) {
+        if (strlen(relpath) > strlen(currdir)) {
+            relsubpath = relpath + strlen (currdir);
+            abspath = convert_relative_to_absolute_path(basepath, relsubpath);
+        }
+        else
+            abspath = basepath;
+    }
+    else if(g_str_has_prefix(relpath, parentdir)) {
+        gchar *baseparent = g_path_get_dirname(basepath);
+
+        if (strlen(relpath) > strlen(parentdir)) {
+            relsubpath = relpath + strlen (parentdir);
+            abspath = convert_relative_to_absolute_path(baseparent, relsubpath);
+        }
+        else {
+            abspath = baseparent;
+        }
+
+        g_free(baseparent);
+    }
+    else {
+        abspath = g_build_filename(basepath, relpath, NULL);
+    }
+
+    g_free(parentdir);
+    g_free(currdir);
+
+    return abspath;
+}
+
+/**
+ * Reads the target of a symlink and returns the appropriate path.
+ *
+ * If the target is absolute then this is returned.
+ *
+ * If the target is relative then an absolute path derived from @basepath
+ * is returned.
+ *
+ */
+gchar *convert_symlink_to_absolute_path(gchar *basepath, gchar *symlink) {
+    gchar *sympath = g_file_read_link(symlink, NULL);
+    if (!sympath)
+        return NULL;
+
+    if (g_path_is_absolute(sympath))
+        return sympath;
+    else
+        return convert_relative_to_absolute_path(basepath, sympath);
+}
+

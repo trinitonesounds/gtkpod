@@ -229,4 +229,7 @@ void message_sb_no_ipod_itdb_selected ();
 
 void gtkpod_shutdown ();
 
+gchar *convert_relative_to_absolute_path(gchar *basepath, gchar *relpath);
+gchar *convert_symlink_to_absolute_path(gchar *basepath, gchar *symlink);
+
 #endif
