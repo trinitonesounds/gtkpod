@@ -489,11 +489,12 @@ static void cmd_setup_widget(const gchar *entry_name, const gchar *envname, cons
     if (!temp) {
         temp = g_strdup("");
     }
-    gtk_entry_set_text(GTK_ENTRY (entry), temp);
-    g_free(temp);
 
     g_object_set_data(G_OBJECT (entry), "envname", (gpointer) envname);
     g_object_set_data(G_OBJECT (gtk_builder_get_object(builder, browse_name)), "entry", entry);
+
+    gtk_entry_set_text(GTK_ENTRY (entry), temp);
+    g_free(temp);
 }
 
 /*
@@ -517,7 +518,6 @@ G_MODULE_EXPORT void on_normalization_clicked(GtkButton *sender, gpointer e) {
  */
 G_MODULE_EXPORT void on_cmd_entry_changed(GtkEditable *sender, gpointer e) {
     const gchar *envname = g_object_get_data(G_OBJECT (sender), "envname");
-
     prefs_set_string(envname, gtk_entry_get_text(GTK_ENTRY (sender)));
 }
 
