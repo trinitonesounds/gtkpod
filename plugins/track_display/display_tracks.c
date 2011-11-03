@@ -369,7 +369,6 @@ static void tm_drag_leave(GtkWidget *widget, GdkDragContext *dc, guint time, gpo
 }
 
 static gboolean tm_drag_motion(GtkWidget *widget, GdkDragContext *dc, gint x, gint y, guint time, gpointer user_data) {
-    GtkTreeView *treeview;
     GdkAtom target;
     GtkTreePath *path = NULL;
     GtkTreeViewDropPosition pos;
@@ -382,8 +381,6 @@ static gboolean tm_drag_motion(GtkWidget *widget, GdkDragContext *dc, gint x, gi
     /*     printf ("x: %d y: %d\n", x, y); */
 
     g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
-
-    treeview = GTK_TREE_VIEW (widget);
 
     gp_install_autoscroll_row_timeout(widget);
 
@@ -486,7 +483,6 @@ static void tm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     GtkTreePath *path = NULL;
     GtkTreeModel *model = NULL;
     GtkTreeViewDropPosition pos = 0;
-    gboolean result = FALSE;
 
     /* printf ("sm drop received info: %d\n", info); */
 
@@ -543,12 +539,12 @@ static void tm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     switch (info) {
     case DND_GTKPOD_TM_PATHLIST:
         g_return_if_fail (path);
-        result = tm_move_pathlist(data_copy, path, pos);
+        tm_move_pathlist(data_copy, path, pos);
         gdk_drag_status(dc, GDK_ACTION_MOVE, time);
         gtk_drag_finish(dc, TRUE, FALSE, time);
         break;
     case DND_TEXT_PLAIN:
-        result = tm_add_filelist(data_copy, path, pos);
+        tm_add_filelist(data_copy, path, pos);
         gdk_drag_status(dc, gdk_drag_context_get_suggested_action(dc), time);
         if (gdk_drag_context_get_selected_action(dc) == GDK_ACTION_MOVE)
             gtk_drag_finish(dc, TRUE, TRUE, time);
@@ -556,7 +552,7 @@ static void tm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
             gtk_drag_finish(dc, TRUE, FALSE, time);
         break;
     case DND_TEXT_URI_LIST:
-        result = tm_add_filelist(data_copy, path, pos);
+        tm_add_filelist(data_copy, path, pos);
         gdk_drag_status(dc, gdk_drag_context_get_suggested_action(dc), time);
         if (gdk_drag_context_get_selected_action(dc) == GDK_ACTION_MOVE)
             gtk_drag_finish(dc, TRUE, TRUE, time);
@@ -1746,7 +1742,7 @@ static void tm_sort_column_changed(GtkTreeSortable *ts, gpointer user_data) {
     g_list_free(tracks);
 }
 
-void tm_sort(TM_item col, GtkSortType order) {
+void tm_sort(TM_item col, enum GtkPodSortTypes order) {
     if (track_treeview) {
         GtkTreeModel *model = gtk_tree_view_get_model(track_treeview);
 

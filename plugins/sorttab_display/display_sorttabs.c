@@ -374,13 +374,11 @@ static TimeInfo *sp_get_timeinfo_ptr(guint32 inst, T_item item) {
 /* Return value: pointer to the corresponding TimeInfo struct (for
  convenience) or NULL if error occurred */
 static TimeInfo *sp_update_date_interval_from_string(guint32 inst, T_item item, gboolean force_update) {
-    SortTab *st;
     TimeInfo *ti;
 
     if (inst >= SORT_TAB_MAX)
         return NULL;
 
-    st = sorttab[inst];
     ti = sp_get_timeinfo_ptr(inst, item);
 
     if (ti) {
@@ -1059,7 +1057,7 @@ static void st_free_entry_cb(gpointer data, gpointer user_data) {
 void st_remove_all_entries_from_model(guint32 inst) {
     SortTab *st = sorttab[inst];
     gint column;
-    enum GtkPodSortTypes order;
+    GtkSortType sortorder;
 
     if (st) {
         if (st->current_entry) {
@@ -1079,7 +1077,7 @@ void st_remove_all_entries_from_model(guint32 inst) {
         st->entry_hash = NULL;
 
         if ((prefs_get_int("st_sort") == SORT_NONE)
-                && gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE (st->model), &column, &order)) { /* recreate track treeview to unset sorted column */
+                && gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE (st->model), &column, &sortorder)) { /* recreate track treeview to unset sorted column */
             if (column >= 0) {
                 st_create_notebook(inst);
             }
@@ -1751,7 +1749,7 @@ void st_redisplay(guint32 inst) {
 }
 
 /* Start sorting */
-static void st_sort_inst(guint32 inst, GtkSortType order) {
+static void st_sort_inst(guint32 inst, enum GtkPodSortTypes order) {
     if (inst < prefs_get_int("sort_tab_num")) {
         SortTab *st = sorttab[inst];
         if (st) {
@@ -3223,7 +3221,6 @@ void cal_open_calendar(gint inst, T_item item) {
 /* return value: -1: user selected cancel
  0...prefs_get_sort_tab_number()-1: selected tab */
 gint st_get_sort_tab_number(gchar *text) {
-    static gint last_nr = 1;
     GtkWidget *mdialog;
     GtkDialog *dialog;
     GtkWidget *combo;
@@ -3276,7 +3273,6 @@ gint st_get_sort_tab_number(gchar *text) {
         gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &bufp, -1);
         if (bufp) {
             nr = atoi(bufp) - 1;
-            last_nr = nr + 1;
             g_free(bufp);
         } else {
             nr = -1; /* selection failed */

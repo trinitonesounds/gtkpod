@@ -451,7 +451,6 @@ static gboolean mp4_get_apple_uint8_property(MP4FileHandle hFile, const char* pr
     u_int8_t *value;
     guint32 valuelen;
     guint32 class_flag;
-    guint8 atom_version;
     gboolean success = FALSE;
 
     success = MP4GetBytesProperty(hFile, propName, &value, &valuelen);
@@ -461,7 +460,6 @@ static gboolean mp4_get_apple_uint8_property(MP4FileHandle hFile, const char* pr
         pos += 8; /* Skip over the length and the atom name */
 
         /* pos now points to a 1-byte atom version followed by a 3-byte class/flag field */
-        atom_version = *pos;
         class_flag = GUINT32_FROM_BE(*(guint32*)pos) & 0x00ffffff;
         if (class_flag == 21 || class_flag == 0) {
             pos += 4; /* Skip over the atom version and class/flag */
@@ -481,7 +479,6 @@ static gboolean mp4_get_apple_text_property(MP4FileHandle hFile, const char* pro
     u_int8_t *value;
     guint32 valuelen;
     guint32 class_flag;
-    guint8 atom_version;
     gboolean success = FALSE;
 
     success = MP4GetBytesProperty(hFile, propName, &value, &valuelen);
@@ -490,7 +487,6 @@ static gboolean mp4_get_apple_text_property(MP4FileHandle hFile, const char* pro
         pos = value;
         pos += 8; /* Skip over the length and the atom name */
         /* pos now points to a 1-byte atom version followed by a 3-byte class/flag field */
-        atom_version = *pos;
         class_flag = GUINT32_FROM_BE(*(guint32*)pos) & 0x00ffffff;
         if (class_flag == 1) {
             pos += 4; /* Skip over the atom version and class/flag */

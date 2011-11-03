@@ -1376,7 +1376,7 @@ static void pm_unsort() {
 }
 
 /* Set the sorting accordingly */
-void pm_sort(GtkSortType order) {
+void pm_sort(enum GtkPodSortTypes order) {
     GtkTreeModel *model = gtk_tree_view_get_model(playlist_treeview);
     g_return_if_fail (model);
     if (order != SORT_NONE) {
@@ -1468,15 +1468,18 @@ void pm_rows_reordered(void) {
 gint pm_data_compare_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data) {
     Playlist *playlist1 = NULL;
     Playlist *playlist2 = NULL;
-    GtkSortType order;
+    enum GtkPodSortTypes order;
     gint corr, colid;
 
     g_return_val_if_fail (model, 0);
     g_return_val_if_fail (a, 0);
     g_return_val_if_fail (b, 0);
 
-    if (gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE (model), &colid, &order) == FALSE)
+    GtkSortType sortorder;
+    if (gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE (model), &colid, &sortorder) == FALSE)
         return 0;
+
+    order = (enum GtkPodSortTypes) sortorder;
 
     if (order == SORT_NONE)
         return 0;
@@ -1487,7 +1490,7 @@ gint pm_data_compare_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, g
     g_return_val_if_fail (playlist1 && playlist2, 0);
 
     /* We make sure that the master playlist always stays on top */
-    if (order == GTK_SORT_ASCENDING)
+    if (order == SORT_ASCENDING)
         corr = +1;
     else
         corr = -1;

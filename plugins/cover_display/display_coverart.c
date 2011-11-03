@@ -71,7 +71,7 @@ static gboolean
 dnd_coverart_drag_motion(GtkWidget *widget, GdkDragContext *dc, gint x, gint y, guint time, gpointer user_data);
 
 static void set_cover_dimensions(Cover_Item *cover, int cover_index, gdouble img_width, gdouble img_height);
-static void coverart_sort_images(GtkSortType order);
+static void coverart_sort_images(enum GtkPodSortTypes order);
 static void set_slider_range(gint index);
 static GdkRGBA *convert_hexstring_to_rgba(const gchar *hexstring);
 static gboolean on_drawing_area_drawn(GtkWidget *draw_area, cairo_t *cairo_draw_context, gpointer data);
@@ -1565,7 +1565,7 @@ static gint compare_album_keys(gchar *a, gchar *b) {
  * @order: order type
  *
  */
-static void coverart_sort_images(GtkSortType order) {
+static void coverart_sort_images(enum GtkPodSortTypes order) {
     if (order == SORT_NONE) {
         /* No sorting means original order so this should have been called after a coverart_display_update (TRUE)
          * when the TRUE means the tracks were freshly established from the playlist and the hash and key_list
@@ -1577,7 +1577,7 @@ static void coverart_sort_images(GtkSortType order) {
         album_key_list = g_list_sort(album_key_list, (GCompareFunc) compare_album_keys);
     }
 
-    if (order == GTK_SORT_DESCENDING) {
+    if (order == SORT_DESCENDING) {
         album_key_list = g_list_reverse(album_key_list);
     }
 }

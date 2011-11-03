@@ -59,8 +59,6 @@ Track *flac_get_file_info(const gchar *flacFileName, GError **error) {
         g_free(filename);
     }
     else {
-        gboolean flac_metadata_ok = FALSE;
-
         track = gp_track_new();
         track->mediatype = ITDB_MEDIATYPE_AUDIO;
 
@@ -73,10 +71,6 @@ Track *flac_get_file_info(const gchar *flacFileName, GError **error) {
             }
             else {
                 gint i;
-
-                if (tags->data.vorbis_comment.num_comments > 0) {
-                    flac_metadata_ok = TRUE;
-                }
 
                 for (i = 0; i < tags->data.vorbis_comment.num_comments; i++) {
                     gchar *tag = (gchar*) tags->data.vorbis_comment.comments[i].entry;

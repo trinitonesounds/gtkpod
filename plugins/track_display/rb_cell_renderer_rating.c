@@ -183,10 +183,6 @@ rb_cell_renderer_rating_class_init (RBCellRendererRatingClass *class)
 static void
 rb_cell_renderer_rating_finalize (GObject *object)
 {
-	RBCellRendererRating *cellrating;
-
-	cellrating = RB_CELL_RENDERER_RATING (object);
-
 	G_OBJECT_CLASS (rb_cell_renderer_rating_parent_class)->finalize (object);
 }
 
