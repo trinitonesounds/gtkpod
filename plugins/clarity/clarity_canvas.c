@@ -548,6 +548,16 @@ static gpointer _init_album_model(gpointer data) {
     return NULL;
 }
 
+static gboolean _init_album_model_idle(gpointer data) {
+    g_return_val_if_fail(CLARITY_IS_CANVAS(data), FALSE);
+
+    ClarityCanvas *self = CLARITY_CANVAS(data);
+
+    _init_album_model(self);
+
+    return FALSE;
+}
+
 void clarity_canvas_init_album_model(ClarityCanvas *self, AlbumModel *model) {
     g_return_if_fail(self);
     g_return_if_fail(model);
@@ -558,8 +568,19 @@ void clarity_canvas_init_album_model(ClarityCanvas *self, AlbumModel *model) {
     ClarityCanvasPrivate *priv = CLARITY_CANVAS_GET_PRIVATE(self);
     priv->model = model;
 
-    _init_album_model(self);
-
+    /*
+     * Necessary to avoid generating cogl errors in the following use case:
+     * 1) Load gtkpod with clarity plugin window docked in the gui but
+     *      obscured by another plugin window.
+     * 2) Select a playlist.
+     * 3) Select the relevant toggle button to bring the clarity window to
+     *      the front and visible.
+     *
+     * This function gets called during the realized signal callback so using
+     * g_idle_add lets the realized callback finish and the window display
+     * before loading the cogl textures.
+     */
+    g_idle_add(_init_album_model_idle, self);
 }
 
 static void _clear_rotation_behaviours(GList *covers) {

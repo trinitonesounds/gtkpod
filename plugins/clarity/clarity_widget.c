@@ -235,6 +235,132 @@ static void _set_text_color(ClarityWidget *self) {
     clarity_canvas_set_text_color(CLARITY_CANVAS(priv->draw_area), hex_string);
 }
 
+/**
+ * Sort the given list of tracks based on the clarity_sort preference
+ */
+GList *_sort_track_list(GList *tracks) {
+    enum GtkPodSortTypes value = prefs_get_int("clarity_sort");
+
+    switch(value) {
+        case SORT_ASCENDING:
+            tracks = g_list_sort(tracks, (GCompareFunc) compare_tracks);
+            break;
+        case SORT_DESCENDING:
+            tracks = g_list_sort(tracks, (GCompareFunc) compare_tracks);
+            tracks = g_list_reverse(tracks);
+            break;
+        default:
+            // Do Nothing
+            break;
+    }
+
+    return tracks;
+}
+
+/**
+ * Clear the clarity canvas of all tracks and album covers
+ */
+static void _clarity_widget_clear(ClarityWidget *self) {
+    ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
+    clarity_canvas_clear(CLARITY_CANVAS(priv->draw_area));
+    album_model_clear(priv->album_model);
+}
+
+/**
+ * Reload the clarity canvas with the given playlist.
+ */
+static void _init_clarity_with_playlist(ClarityWidget *cw, Playlist *playlist) {
+    if (! gtk_widget_get_realized(GTK_WIDGET(cw)))
+        return;
+
+    if (cw->current_playlist == playlist)
+        // Should already have all these tracks displayed
+        return;
+
+    _clarity_widget_clear(cw);
+
+    cw->current_playlist = playlist;
+    GList *tracks = playlist->members;
+    if (!tracks)
+        return;
+
+    ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(cw);
+
+    album_model_add_tracks(priv->album_model, tracks);
+
+    clarity_canvas_init_album_model(CLARITY_CANVAS(priv->draw_area), priv->album_model);
+
+    _init_slider_range(priv);
+}
+
+/**
+ * Select the given tracks in the clarity widget
+ */
+static void _clarity_widget_select_tracks(ClarityWidget *self, GList *tracks) {
+    if (! gtk_widget_get_realized(GTK_WIDGET(self)))
+            return;
+
+    ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
+
+    tracks = _sort_track_list(tracks);
+    ClarityCanvas *ccanvas = CLARITY_CANVAS(priv->draw_area);
+
+    if (clarity_canvas_is_blocked(ccanvas))
+        return;
+
+    gint album_index = album_model_get_index_with_track(priv->album_model, tracks->data);
+    gtk_range_set_value(GTK_RANGE (priv->cdslider), album_index);
+}
+
+/**
+ * Select gtkpod's currently selected tracks in the clarity window.
+ *
+ * Shoudl be called from a g_idle thread.
+ */
+static gboolean _clarity_widget_select_tracks_idle(gpointer data) {
+    if (! CLARITY_IS_WIDGET(data))
+        return FALSE;
+
+    ClarityWidget *cw = CLARITY_WIDGET(data);
+    GList *tracks = gtkpod_get_selected_tracks();
+    if (!tracks)
+        return FALSE;
+
+    _clarity_widget_select_tracks(cw, tracks);
+
+    return FALSE;
+}
+
+/**
+ * Necessary callback for following use case:
+ *
+ * 1) Load gtkpod with clarity plugin window docked in the gui but
+ *      obscured by another plugin window.
+ * 2) Select a playlist.
+ * 3) Select the relevant toggle button to bring the clarity window to
+ *      the front and visible.
+ *
+ * Without this callback the window remains blank.
+ */
+static void _clarity_widget_realized_cb(GtkWidget *widget, gpointer data) {
+    if (! CLARITY_IS_WIDGET(widget))
+        return;
+
+    ClarityWidget *cw = CLARITY_WIDGET(widget);
+    Playlist *playlist = gtkpod_get_current_playlist();
+    if (!playlist)
+        return;
+
+    _init_clarity_with_playlist(cw, playlist);
+
+    /*
+     * Needs to be an idle function that will be called
+     * after the idle cover addition functions called by
+     * _init_clarity_with_playlist.
+     */
+    g_idle_add(_clarity_widget_select_tracks_idle, cw);
+}
+
 static void clarity_widget_class_init (ClarityWidgetClass *klass) {
     GObjectClass *gobject_class;
 
@@ -298,6 +424,14 @@ static void clarity_widget_init (ClarityWidget *self) {
             G_CALLBACK (dnd_clarity_drag_motion),
             NULL);
 
+    /*
+     * Ensure everything is inited correctly if gtkpod is loaded with
+     * the clarity window is not initially visible.
+     */
+    g_signal_connect_after(GTK_WIDGET(self), "realize",
+            G_CALLBACK(_clarity_widget_realized_cb),
+            NULL);
+
     _init_slider_range(priv);
 
     priv->controlbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
@@ -317,27 +451,6 @@ GtkWidget *clarity_widget_new() {
 
     ClarityWidget *cw = g_object_new(CLARITY_TYPE_WIDGET, NULL);
     return GTK_WIDGET(cw);
-}
-
-static void clarity_widget_clear(ClarityWidget *self) {
-    ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
-    clarity_canvas_clear(CLARITY_CANVAS(priv->draw_area));
-    album_model_clear(priv->album_model);
-}
-
-static void _init_tracks(ClarityWidget *cw, GList *tracks) {
-    g_return_if_fail(CLARITY_IS_WIDGET(cw));
-
-    if (!tracks)
-        return;
-
-    ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(cw);
-
-    album_model_add_tracks(priv->album_model, tracks);
-
-    clarity_canvas_init_album_model(CLARITY_CANVAS(priv->draw_area), priv->album_model);
-
-    _init_slider_range(priv);
 }
 
 GdkRGBA *clarity_widget_get_background_display_color(ClarityWidget *self) {
@@ -392,25 +505,13 @@ void clarity_widget_preference_changed_cb(GtkPodApp *app, gpointer pfname, gpoin
 
 void clarity_widget_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointer data) {
     g_return_if_fail(CLARITY_IS_WIDGET(data));
-
     ClarityWidget *cw = CLARITY_WIDGET(data);
 
     Playlist *playlist = (Playlist *) pl;
     if (!playlist)
         return;
 
-    if (cw->current_playlist == playlist)
-        // Should already have all these tracks displayed
-        return;
-
-    clarity_widget_clear(cw);
-
-    cw->current_playlist = playlist;
-    GList *tracks = playlist->members;
-    if (!tracks)
-        return;
-
-    _init_tracks(cw, tracks);
+    _init_clarity_with_playlist(cw, playlist);
 }
 
 void clarity_widget_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer data) {
@@ -421,47 +522,23 @@ void clarity_widget_playlist_removed_cb(GtkPodApp *app, gpointer pl, gpointer da
     if (!playlist)
         return;
 
+    if (! gtk_widget_get_realized(GTK_WIDGET(cw)))
+        return;
+
     if (cw->current_playlist == playlist)
-        clarity_widget_clear(cw);
-}
-
-GList *_sort_track_list(GList *tracks) {
-    enum GtkPodSortTypes value = prefs_get_int("clarity_sort");
-
-    switch(value) {
-        case SORT_ASCENDING:
-            tracks = g_list_sort(tracks, (GCompareFunc) compare_tracks);
-            break;
-        case SORT_DESCENDING:
-            tracks = g_list_sort(tracks, (GCompareFunc) compare_tracks);
-            tracks = g_list_reverse(tracks);
-            break;
-        default:
-            // Do Nothing
-            break;
-    }
-
-    return tracks;
+        _clarity_widget_clear(cw);
 }
 
 void clarity_widget_tracks_selected_cb(GtkPodApp *app, gpointer tks, gpointer data) {
     g_return_if_fail(CLARITY_IS_WIDGET(data));
 
     ClarityWidget *cw = CLARITY_WIDGET(data);
-    ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(cw);
     GList *tracks = g_list_copy((GList *) tks);
 
     if (!tracks)
         return;
 
-    tracks = _sort_track_list(tracks);
-    ClarityCanvas *ccanvas = CLARITY_CANVAS(priv->draw_area);
-
-    if (clarity_canvas_is_blocked(ccanvas))
-        return;
-
-    gint album_index = album_model_get_index_with_track(priv->album_model, tracks->data);
-    gtk_range_set_value(GTK_RANGE (priv->cdslider), album_index);
+    _clarity_widget_select_tracks(cw, tracks);
 }
 
 static void _add_track(ClarityWidgetPrivate *priv, Track *track) {
@@ -484,8 +561,10 @@ void clarity_widget_track_added_cb(GtkPodApp *app, gpointer tk, gpointer data) {
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(cw);
     Track *track = tk;
 
-
     if (!track)
+        return;
+
+    if (! gtk_widget_get_realized(GTK_WIDGET(cw)))
         return;
 
     GList *current_tracks = cw->current_playlist->members;
@@ -526,8 +605,10 @@ void clarity_widget_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data)
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(cw);
     Track *track = tk;
 
-
     if (!track)
+        return;
+
+    if (! gtk_widget_get_realized(GTK_WIDGET(cw)))
         return;
 
     AlbumItem *item = album_model_get_item_with_track(priv->album_model, track);
@@ -543,6 +624,9 @@ void clarity_widget_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data)
     Track *track = tk;
 
     if (!track)
+        return;
+
+    if (! gtk_widget_get_realized(GTK_WIDGET(cw)))
         return;
 
     ClarityCanvas *ccanvas = CLARITY_CANVAS(priv->draw_area);
