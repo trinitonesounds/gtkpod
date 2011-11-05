@@ -35,6 +35,7 @@
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/misc.h"
 #include "libgtkpod/stock_icons.h"
+#include "libgtkpod/prefs.h"
 #include "anjuta-app.h"
 
 #define GTKPOD_REMEMBERED_PLUGINS "remembered-plugins"
@@ -91,18 +92,24 @@ void gtkpod_init(int argc, char *argv[]) {
     app = ANJUTA_APP(anjuta_app_new());
     gtkpod_app = GTKPOD_APP(app);
 
+    /* Initialise the preferences as required for the display of the splash screen */
+    prefs_init(argc, argv);
+
     /* Show some progress as the app is initialised */
     status = anjuta_shell_get_status(ANJUTA_SHELL(app), NULL);
     anjuta_status_progress_add_ticks(status, 1);
 
-    splash = g_build_filename(get_icon_dir(), "gtkpod-splash.png", NULL);
-    if (g_file_test(splash, G_FILE_TEST_IS_REGULAR))
-        anjuta_status_set_splash(status, splash, 100);
-    else {
-        anjuta_status_disable_splash(status, TRUE);
-    }
+    /* Show the splash screen if user requires */
+    if (! prefs_get_int(DISABLE_SPLASH_SCREEN)) {
+        splash = g_build_filename(get_icon_dir(), "gtkpod-splash.png", NULL);
+        if (g_file_test(splash, G_FILE_TEST_IS_REGULAR))
+            anjuta_status_set_splash(status, splash, 100);
+        else {
+            anjuta_status_disable_splash(status, TRUE);
+        }
 
-    g_free(splash);
+        g_free(splash);
+    }
 
     /*
      * initialise gtkpod library items. Needs to be safety threaded due

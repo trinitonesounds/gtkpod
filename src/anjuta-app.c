@@ -79,7 +79,7 @@ typedef struct {
     gpointer user_data2;
 } ConfData;
 
-void anjuta_set_ui_file_path(gchar * path) {
+void anjuta_set_ui_file_path(gchar *path) {
     uifile = path;
 }
 
@@ -697,14 +697,30 @@ void anjuta_app_layout_reset(AnjutaApp *app) {
 }
 
 void anjuta_app_install_preferences(AnjutaApp *app) {
-    gchar *img_path;
-    GdkPixbuf *pixbuf;
-    GtkWidget *notebook, *shortcuts, *plugins, *remember_plugins;
+    GtkBuilder* builder = gtk_builder_new();
+    GError* error = NULL;
+    GtkWidget *notebook, *splash_toggle, *shortcuts, *plugins, *remember_plugins;
 
-    notebook = gtk_notebook_new();
-    img_path = anjuta_res_get_pixmap_file(ICON_FILE);
-    pixbuf = gdk_pixbuf_new_from_file(img_path, NULL);
-    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG(anjuta_preferences_get_dialog(app->preferences)), "plugins", _(" Plugins"), pixbuf, notebook);
+    /* Create preferences page */
+    gchar *glade_path = g_build_filename(get_glade_dir(), CORE_GTKPOD_XML, NULL);
+    gtk_builder_add_from_file(builder, glade_path, &error);
+    g_free(glade_path);
+    if (error) {
+        g_warning("Could not load general preferences: %s", error->message);
+        g_error_free(error);
+        return;
+    }
+
+    splash_toggle = GTK_WIDGET(gtk_builder_get_object(builder, "preferences_disable_splash_screen"));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(splash_toggle), prefs_get_int(DISABLE_SPLASH_SCREEN));
+
+    gtk_builder_connect_signals(builder, NULL);
+
+    gchar *icon_path = g_build_filename(get_icon_dir(), ICON_FILE, NULL);
+    anjuta_preferences_add_from_builder(app->preferences, builder, app->settings, "General", _("General"), ICON_FILE);
+    g_free(icon_path);
+
+    notebook = GTK_WIDGET(gtk_builder_get_object(builder, "General"));
     shortcuts = anjuta_ui_get_accel_editor(ANJUTA_UI(app->ui));
     plugins = anjuta_plugin_manager_get_plugins_page(app->plugin_manager);
     remember_plugins = anjuta_plugin_manager_get_remembered_plugins_page(app->plugin_manager);
@@ -717,9 +733,7 @@ void anjuta_app_install_preferences(AnjutaApp *app) {
     gtk_notebook_append_page(GTK_NOTEBOOK (notebook), remember_plugins, gtk_label_new(_("Preferred plugins")));
     gtk_notebook_append_page(GTK_NOTEBOOK (notebook), shortcuts, gtk_label_new(_("Shortcuts")));
 
-    g_object_unref(notebook);
-    g_free(img_path);
-    g_object_unref(pixbuf);
+    g_object_unref(builder);
 }
 
 /* AnjutaShell Implementation */
@@ -1592,6 +1606,10 @@ static void gtkpod_app_iface_init(GtkPodAppInterface *iface) {
 G_MODULE_EXPORT void on_confirm_tree_size_allocate(GtkWidget *sender, GtkAllocation *allocation, gpointer e) {
     GtkCellRenderer *renderer = GTK_CELL_RENDERER (g_object_get_data (G_OBJECT (sender), "renderer"));
     g_object_set(renderer, "wrap-width", allocation->width, NULL);
+}
+
+G_MODULE_EXPORT void on_disable_splash_screen_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+    prefs_set_int(DISABLE_SPLASH_SCREEN, gtk_toggle_button_get_active(togglebutton));
 }
 
 ANJUTA_TYPE_BEGIN(AnjutaApp, anjuta_app, GTK_TYPE_WINDOW);

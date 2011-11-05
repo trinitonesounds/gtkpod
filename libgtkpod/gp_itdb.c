@@ -788,7 +788,6 @@ void gp_track_cleanup_empty_strings (Track *track)
 void gp_init(int argc, char *argv[]) {
     gchar *cfgdir;
 
-    prefs_init(argc, argv);
     cfgdir = prefs_get_cfgdir();
 
     itdbs_head = g_new0 (struct itdbs_head, 1);

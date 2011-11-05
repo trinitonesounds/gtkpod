@@ -39,6 +39,8 @@
 /* End-of-list marker for variable-length lists */
 #define LIST_END_MARKER "----++++----"
 
+#define DISABLE_SPLASH_SCREEN "disable-splash-screen"
+
 #define CONVERT_TO_MP3_SCRIPT "convert-2mp3.sh"
 #define CONVERT_TO_M4A_SCRIPT "convert-2m4a.sh"
 #define CONVERT_TO_MP4_SCRIPT "convert-2mp4.sh"
