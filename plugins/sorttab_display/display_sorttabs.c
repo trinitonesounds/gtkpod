@@ -2199,12 +2199,7 @@ void st_enable_disable_view_sort(gint inst, gboolean enable) {
             if (prefs_get_int("st_sort") != SORT_NONE) {
                 SortTab *st = sorttab[inst];
                 if (st && (st->current_category != ST_CAT_SPECIAL) && st->model) {
-                    if (BROKEN_GTK_TREE_SORT) {
-                        gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE (st->model), ST_COLUMN_ENTRY, st_data_compare_func, GINT_TO_POINTER(inst), NULL);
-                    }
-                    else {
-                        gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (st->model), ST_COLUMN_ENTRY, prefs_get_int("st_sort"));
-                    }
+                    gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (st->model), ST_COLUMN_ENTRY, prefs_get_int("st_sort"));
                 }
             }
             st_enable_disable_view_sort(inst + 1, enable);
@@ -2216,12 +2211,7 @@ void st_enable_disable_view_sort(gint inst, gboolean enable) {
             if (prefs_get_int("st_sort") != SORT_NONE) {
                 SortTab *st = sorttab[inst];
                 if (st && (st->current_category != ST_CAT_SPECIAL) && st->model) {
-                    if (BROKEN_GTK_TREE_SORT) {
-                        gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE (st->model), ST_COLUMN_ENTRY, st_nosort_comp, NULL, NULL);
-                    }
-                    else {
-                        gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (st->model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, prefs_get_int("st_sort"));
-                    }
+                    gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (st->model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, prefs_get_int("st_sort"));
                 }
             }
             st_enable_disable_view_sort(inst + 1, enable);

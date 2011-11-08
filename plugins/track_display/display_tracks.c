@@ -1588,17 +1588,13 @@ static void tm_unsort(void) {
         }
 
         prefs_set_int("tm_sort", SORT_NONE);
-        if (!BROKEN_GTK_TREE_SORT) {
-            /* no need to comment this out -- searching still works, but for lack
+
+        /* no need to comment this out -- searching still works, but for lack
              of a ctrl-g only the first occurence will be found */
-            /*	    gtk_tree_view_set_enable_search (GTK_TREE_VIEW
-             * (track_treeview), FALSE);*/
-            gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
-            tm_adopt_order();
-        }
-        else {
-            gtkpod_warning(_("Cannot unsort track view because of a bug in the GTK lib you are using (%d.%d.%d < 2.5.4). Once you sort the track view, you cannot go back to the unsorted state.\n\n"), gtk_major_version, gtk_minor_version, gtk_micro_version);
-        }
+        /*	    gtk_tree_view_set_enable_search (GTK_TREE_VIEW
+         * (track_treeview), FALSE);*/
+        gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
+        tm_adopt_order();
         tm_sort_counter(-1);
     }
 }
@@ -2236,11 +2232,6 @@ static TM_item tm_lookup_col_id(GtkTreeViewColumn *column) {
     return -1;
 }
 
-/* Compare function to avoid sorting */
-static gint tm_nosort_comp(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data) {
-    return 0;
-}
-
 /* Disable sorting of the view during lengthy updates. */
 /* @enable: TRUE: enable, FALSE: disable */
 void tm_enable_disable_view_sort(gboolean enable) {
@@ -2259,12 +2250,7 @@ void tm_enable_disable_view_sort(gboolean enable) {
                     model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(model));
                 }
 
-                if (BROKEN_GTK_TREE_SORT) {
-                    gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE (model), prefs_get_int("tm_sortcol"), tm_data_compare_func, NULL, NULL);
-                }
-                else {
-                    gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
-                }
+                gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
             }
         }
     }
@@ -2278,12 +2264,7 @@ void tm_enable_disable_view_sort(gboolean enable) {
                     model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(model));
                 }
 
-                if (BROKEN_GTK_TREE_SORT) {
-                    gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE (model), prefs_get_int("tm_sortcol"), tm_nosort_comp, NULL, NULL);
-                }
-                else {
-                    gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, prefs_get_int("tm_sort"));
-                }
+                gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, prefs_get_int("tm_sort"));
             }
         }
         disable_count++;
