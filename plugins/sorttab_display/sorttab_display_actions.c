@@ -33,14 +33,15 @@
 
 #include "libgtkpod/prefs.h"
 #include "sorttab_display_actions.h"
-#include "display_sorttabs.h"
 #include "libgtkpod/gp_itdb.h"
 #include "libgtkpod/file.h"
+#include "display_sorttabs.h"
+#include "sorttab_widget.h"
 
 void on_more_sort_tabs_activate(GtkAction *action, SorttabDisplayPlugin* plugin) {
     int sort_tab_num = prefs_get_int("sort_tab_num") + 1;
     prefs_set_int("sort_tab_num", sort_tab_num);
-    st_show_visible();
+    sorttab_display_append_widget();
 
     gtk_action_set_sensitive(action, sort_tab_num < SORT_TAB_MAX);
     gtk_action_set_sensitive(plugin->fewer_filtertabs_action, sort_tab_num > 0);
@@ -49,26 +50,29 @@ void on_more_sort_tabs_activate(GtkAction *action, SorttabDisplayPlugin* plugin)
 void on_fewer_sort_tabs_activate(GtkAction *action, SorttabDisplayPlugin* plugin) {
     int sort_tab_num = prefs_get_int("sort_tab_num") - 1;
     prefs_set_int("sort_tab_num", sort_tab_num);
-    st_show_visible();
+    sorttab_display_remove_widget();
 
     gtk_action_set_sensitive(plugin->more_filtertabs_action, sort_tab_num < SORT_TAB_MAX);
     gtk_action_set_sensitive(action, sort_tab_num > 1);
 }
 
 static void delete_selected_entry(DeleteAction deleteaction, gchar *text) {
-    TabEntry *entry;
+    SortTabWidget *st_widget;
+    GList *tracks = NULL;
     gint inst;
 
-    inst = st_get_sort_tab_number(text);
-    if (inst == -1)
+    st_widget = sorttab_display_get_sort_tab_widget(text);
+    if (!SORT_TAB_IS_WIDGET(st_widget))
         return;
 
-    entry = st_get_selected_entry(inst);
-    if (!entry) {
-        gtkpod_statusbar_message(_("No entry selected in Filter Tab %d"), inst + 1);
+    tracks = sort_tab_widget_get_selected_tracks(st_widget);
+    inst = sort_tab_widget_get_instance(st_widget);
+    if (!tracks) {
+        gtkpod_statusbar_message(_("No tracks selected in Filter Tab %d"), inst + 1);
         return;
     }
-    st_delete_entry_head(inst, deleteaction);
+
+    sort_tab_widget_delete_entry_head(st_widget, deleteaction);
 }
 
 void on_delete_selected_entry_from_database(GtkAction *action, SorttabDisplayPlugin* plugin) {
@@ -101,18 +105,20 @@ void on_delete_selected_entry_from_device(GtkAction *action, SorttabDisplayPlugi
 }
 
 void on_update_selected_tab_entry (GtkAction *action, SorttabDisplayPlugin* plugin) {
-    TabEntry *entry;
+    SortTabWidget *st_widget;
+    GList *tracks = NULL;
     gint inst;
 
-    inst = st_get_sort_tab_number(_("Update selected entry of which filter tab?"));
-    if (inst == -1)
+    st_widget = sorttab_display_get_sort_tab_widget(_("Update selected entry of which filter tab?"));
+    if (!SORT_TAB_IS_WIDGET(st_widget))
         return;
 
-    entry = st_get_selected_entry(inst);
-    if (!entry) {
+    tracks = sort_tab_widget_get_selected_tracks(st_widget);
+    inst = sort_tab_widget_get_instance(st_widget);
+    if (!tracks) {
         gtkpod_statusbar_message(_("No entry selected in Filter Tab %d"), inst + 1);
         return;
     }
 
-    update_tracks(entry->members);
+    update_tracks(tracks);
 }

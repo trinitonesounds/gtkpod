@@ -25,9 +25,6 @@
  |  This product is not supported/written/published by Apple!
  |
  */
-/**
- * pm_context_menu_init - initialize the right click menu for playlists
- */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -41,98 +38,14 @@
 #include "libgtkpod/gp_private.h"
 #include "libgtkpod/misc_track.h"
 #include "display_sorttabs.h"
+#include "sorttab_widget.h"
 #include "sorttab_display_context_menu.h"
 
-static gint entry_inst = -1;
-
-/* deletes the currently selected entry from the current playlist
- @inst: selected entry of which instance?
- @delete_full: if true, member songs are removed from the iPod
- completely */
-static void delete_entry_head(DeleteAction deleteaction) {
-    struct DeleteData *dd;
-    Playlist *pl;
-    GList *selected_tracks = NULL;
-    GString *str;
-    gchar *label = NULL, *title = NULL;
-    gboolean confirm_again;
-    gchar *confirm_again_key;
-    TabEntry *entry;
-    GtkResponseType response;
-    iTunesDB *itdb;
-
-    g_return_if_fail (entry_inst >= 0);
-    g_return_if_fail (entry_inst <= prefs_get_int("sort_tab_num"));
-
-    pl = gtkpod_get_current_playlist();
-    if (pl == NULL) { /* no playlist??? Cannot happen, but... */
-        message_sb_no_playlist_selected();
-        return;
-    }
-    itdb = pl->itdb;
-    g_return_if_fail (itdb);
-
-    entry = st_get_selected_entry(entry_inst);
-    if (entry == NULL) { /* no entry selected */
-        gtkpod_statusbar_message(_("No entry selected."));
-        return;
-    }
-
-    if (entry->members == NULL) { /* no tracks in entry -> just remove entry */
-        if (!entry->master)
-            st_remove_entry(entry, entry_inst);
-        else
-            gtkpod_statusbar_message(_("Cannot remove entry 'All'"));
-        return;
-    }
-
-    selected_tracks = g_list_copy(entry->members);
-
-    dd = g_malloc0(sizeof(struct DeleteData));
-    dd->deleteaction = deleteaction;
-    dd->tracks = selected_tracks;
-    dd->pl = pl;
-    dd->itdb = itdb;
-
-    delete_populate_settings(dd, &label, &title, &confirm_again, &confirm_again_key, &str);
-
-    /* open window */
-    response = gtkpod_confirmation(-1, /* gint id, */
-    TRUE, /* gboolean modal, */
-    title, /* title */
-    label, /* label */
-    str->str, /* scrolled text */
-    NULL, 0, NULL, /* option 1 */
-    NULL, 0, NULL, /* option 2 */
-    confirm_again, /* gboolean confirm_again, */
-    confirm_again_key,/* ConfHandlerOpt confirm_again_key,*/
-    CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
-    NULL, /* don't show "Apply" button */
-    CONF_NULL_HANDLER, /* cancel_handler,*/
-    NULL, /* gpointer user_data1,*/
-    NULL); /* gpointer user_data2,*/
-
-    switch (response) {
-    case GTK_RESPONSE_OK:
-        /* Delete the tracks */
-        delete_track_ok(dd);
-        /* Delete the entry */
-        st_remove_entry(entry, entry_inst);
-        break;
-    default:
-        delete_track_cancel(dd);
-        break;
-    }
-
-    g_free(label);
-    g_free(title);
-    g_free(confirm_again_key);
-    g_string_free(str, TRUE);
-}
+static SortTabWidget *st_widget = NULL;
 
 static void context_menu_delete_entry_head(GtkMenuItem *mi, gpointer data) {
     DeleteAction deleteaction = GPOINTER_TO_INT (data);
-    delete_entry_head(deleteaction);
+    sort_tab_widget_delete_entry_head(st_widget, deleteaction);
 }
 
 static GtkWidget *add_delete_entry_from_ipod(GtkWidget *menu) {
@@ -151,36 +64,22 @@ static GtkWidget *add_delete_entry_from_database(GtkWidget *menu) {
     return hookup_menu_item(menu, _("Delete From Database"), GTK_STOCK_DELETE, G_CALLBACK (context_menu_delete_entry_head), GINT_TO_POINTER (DELETE_ACTION_DATABASE));
 }
 
-/*
- * Copy selected tracks to a specified itdb.
- */
-static void copy_entry_to_target_itdb(TabEntry *entry, iTunesDB *t_itdb) {
-    g_return_if_fail(entry);
-    g_return_if_fail(t_itdb);
-
-    copy_tracks_to_target_itdb(entry->members, t_itdb);
-}
-
-static void copy_selected_entry_to_target_itdb(GtkMenuItem *mi, gpointer *userdata) {
+static void copy_selected_tracks_to_target_itdb(GtkMenuItem *mi, gpointer *userdata) {
     iTunesDB *t_itdb = *userdata;
     g_return_if_fail (t_itdb);
-    if (st_get_selected_entry(entry_inst))
-        copy_entry_to_target_itdb(st_get_selected_entry(entry_inst), t_itdb);
+    GList *tracks = sort_tab_widget_get_selected_tracks(st_widget);
+
+    if (tracks)
+        copy_tracks_to_target_itdb(tracks, t_itdb);
 }
 
-static void copy_entry_to_target_playlist(TabEntry *entry, Playlist *t_pl) {
-    g_return_if_fail(entry);
-    g_return_if_fail (t_pl);
-    g_return_if_fail (t_pl->itdb);
-
-    copy_tracks_to_target_playlist(entry->members, t_pl);
-}
-
-static void copy_selected_entry_to_target_playlist(GtkMenuItem *mi, gpointer *userdata) {
+static void copy_selected_tracks_to_target_playlist(GtkMenuItem *mi, gpointer *userdata) {
     Playlist *t_pl = *userdata;
     g_return_if_fail (t_pl);
-    if (st_get_selected_entry(entry_inst))
-        copy_entry_to_target_playlist(st_get_selected_entry(entry_inst), t_pl);
+    GList *tracks = sort_tab_widget_get_selected_tracks(st_widget);
+
+    if (tracks)
+        copy_tracks_to_target_playlist(tracks, t_pl);
 }
 
 static GtkWidget *add_copy_selected_entry_to_target_itdb(GtkWidget *menu, const gchar *title) {
@@ -220,7 +119,7 @@ static GtkWidget *add_copy_selected_entry_to_target_itdb(GtkWidget *menu, const 
         pl_sub = gtk_menu_new();
         gtk_widget_show(pl_sub);
         gtk_menu_item_set_submenu(GTK_MENU_ITEM (pl_mi), pl_sub);
-        hookup_menu_item(pl_sub, _(itdb_playlist_mpl(itdb)->name), stock_id, G_CALLBACK(copy_selected_entry_to_target_itdb), &itdbs->data);
+        hookup_menu_item(pl_sub, _(itdb_playlist_mpl(itdb)->name), stock_id, G_CALLBACK(copy_selected_tracks_to_target_itdb), &itdbs->data);
         add_separator(pl_sub);
         for (db = itdb->playlists; db; db = db->next) {
             pl = db->data;
@@ -229,35 +128,34 @@ static GtkWidget *add_copy_selected_entry_to_target_itdb(GtkWidget *menu, const 
                     stock_id = GTK_STOCK_PROPERTIES;
                 else
                     stock_id = GTK_STOCK_JUSTIFY_LEFT;
-                hookup_menu_item(pl_sub, _(pl->name), stock_id, G_CALLBACK(copy_selected_entry_to_target_playlist), &db->data);
+                hookup_menu_item(pl_sub, _(pl->name), stock_id, G_CALLBACK(copy_selected_tracks_to_target_playlist), &db->data);
             }
         }
     }
     return mi;
 }
 
-void st_context_menu_init(gint inst) {
+void st_context_menu_init(SortTabWidget *w) {
     GtkWidget *menu = NULL;
     Playlist *pl;
-    TabEntry *selected_entry;
+    GList *tracks;
 
     if (widgets_blocked)
         return;
 
-    st_stop_editing(inst, TRUE);
+    sort_tab_widget_stop_editing(w, TRUE);
 
-    if (!st_get_selected_entry(inst))
+    if (! (tracks = sort_tab_widget_get_selected_tracks(w)))
         return;
-
-    selected_entry = st_get_selected_entry(inst);
-    entry_inst = inst;
 
     pl = gtkpod_get_current_playlist();
     if (!pl)
         return;
 
+    st_widget = w;
+
     // Ensure that all the tracks in the entry are the current selected tracks
-    gtkpod_set_selected_tracks(selected_entry->members);
+    gtkpod_set_selected_tracks(tracks);
 
     ExtraiTunesDBData *eitdb;
     iTunesDB *itdb = pl->itdb;

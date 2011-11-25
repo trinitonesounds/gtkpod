@@ -1,6 +1,6 @@
 /*
- |  Copyright (C) 2002-2010 Jorg Schuler <jcsjcs at users sourceforge net>
- |                                          Paul Richardson <phantom_sf at users.sourceforge.net>
+ |  Copyright (C) 2002-2011 Jorg Schuler <jcsjcs at users sourceforge net>
+ |                                             Paul Richardson <phantom_sf at users.sourceforge.net>
  |  Part of the gtkpod project.
  |
  |  URL: http://www.gtkpod.org/
@@ -26,11 +26,12 @@
  |
  */
 
-#ifndef SORTTAB_DISPLAY_CONTEXT_MENU_H_
-#define SORTTAB_DISPLAY_CONTEXT_MENU_H_
+#ifndef SPECIAL_SORTTAB_PAGE_CALENDAR_H_
+#define SPECIAL_SORTTAB_PAGE_CALENDAR_H_
 
-#include "sorttab_widget.h"
+#include "libgtkpod/misc_conversion.h"
+#include "special_sorttab_page.h"
 
-void st_context_menu_init(SortTabWidget *w);
+void cal_open_calendar(SpecialSortTabPage *page, T_item item);
 
-#endif /* SORTTAB_DISPLAY_CONTEXT_MENU_H_ */
+#endif /* SPECIAL_SORTTAB_PAGE_CALENDAR_H_ */

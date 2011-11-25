@@ -104,6 +104,9 @@ plugins/sorttab_display/plugin.c
 [type: gettext/glade]plugins/sorttab_display/sorttab_display.xml
 plugins/sorttab_display/sorttab_display_actions.c
 plugins/sorttab_display/sorttab_display_context_menu.c
+plugins/sorttab_display/normal_sorttab_page.c
+plugins/sorttab_display/sorttab_widget.c
+plugins/sorttab_display/special_sorttab_page.c
 [type: gettext/ini]plugins/sorttab_display/sorttab_display.plugin.in
 plugins/track_display/display_tracks.c
 plugins/track_display/plugin.c

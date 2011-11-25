@@ -40,7 +40,7 @@ G_MODULE_EXPORT void on_filter_tabs_count_value_changed (GtkSpinButton *sender, 
 
     /* Update the number of filter tabs */
     prefs_set_int ("sort_tab_num", num);
-    st_show_visible();
+    gtkpod_broadcast_preference_change("sort_tab_num", GINT_TO_POINTER(num));
 }
 
 /*
@@ -51,22 +51,22 @@ G_MODULE_EXPORT void on_group_compilations_toggled (GtkToggleButton *sender, gpo
     gboolean active = gtk_toggle_button_get_active (sender);
 
     prefs_set_int ("group_compilations", active);
-    st_show_visible();
+    gtkpod_broadcast_preference_change("group_compilations", GINT_TO_POINTER(active));
 }
 
 G_MODULE_EXPORT void on_st_ascend_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     if (gtk_toggle_button_get_active(togglebutton))
-        st_sort(SORT_ASCENDING);
+        gtkpod_broadcast_preference_change("st_sort", GINT_TO_POINTER(SORT_ASCENDING));
 }
 
 G_MODULE_EXPORT void on_st_descend_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     if (gtk_toggle_button_get_active(togglebutton))
-        st_sort(SORT_DESCENDING);
+        gtkpod_broadcast_preference_change("st_sort", GINT_TO_POINTER(SORT_DESCENDING));
 }
 
 G_MODULE_EXPORT void on_st_none_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     if (gtk_toggle_button_get_active(togglebutton))
-        st_sort(SORT_NONE);
+        gtkpod_broadcast_preference_change("st_sort", GINT_TO_POINTER(SORT_NONE));
 }
 
 G_MODULE_EXPORT void on_st_sort_case_sensitive_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
@@ -105,6 +105,10 @@ GtkWidget *init_sorttab_preferences() {
 
     if ((w = gtkpod_builder_xml_get_widget(pref_xml, "st_cfg_case_sensitive"))) {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("st_case_sensitive"));
+    }
+
+    if ((w = gtkpod_builder_xml_get_widget(pref_xml, "group_compilations"))) {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("group_compilations"));
     }
 
     if ((w = gtkpod_builder_xml_get_widget(pref_xml, "filter_tabs_count"))) {
