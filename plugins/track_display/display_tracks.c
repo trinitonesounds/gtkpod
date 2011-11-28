@@ -108,6 +108,7 @@ static gboolean filter_tracks(GtkTreeModel *model, GtkTreeIter *iter, gpointer e
     Track *tr;
     gboolean result = FALSE;
     const gchar *text = gtk_entry_get_text(GTK_ENTRY (entry));
+    gchar *utext =  g_utf8_casefold(text, -1);
     int i;
 
     gtk_tree_model_get(model, iter, READOUT_COL, &tr, -1);
@@ -117,19 +118,24 @@ static gboolean filter_tracks(GtkTreeModel *model, GtkTreeIter *iter, gpointer e
             return TRUE;
         for (i = 0; i < TM_NUM_COLUMNS; i++) {
             gint visible = prefs_get_int_index("col_visible", i);
-            gchar *data;
+            gchar *data = NULL;
+            gchar *udata =  NULL;
 
             if (!visible)
                 continue;
 
             data = track_get_text(tr, TM_to_T(i));
-            if (data && utf8_strcasestr(data, text)) {
-                g_free(data);
+            if (data)
+                udata = g_utf8_casefold(data, -1);
+
+            if (udata && utf8_strcasestr(udata, utext)) {
+                g_free(udata);
                 result = TRUE;
                 break;
             }
 
-            g_free(data);
+            if (data)
+                g_free(data);
         }
     }
 
