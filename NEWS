@@ -1,3 +1,56 @@
+gtkpod V2.1.1
+
+	Incremental release
+
+	FEATURE: Clarity plugin for alternative display of coverart using clutter/opengl
+
+  IMPROVEMENT: Make splash screen preference to allow it to be disabled
+
+	IMPROVEMENT: Update core app code to align with current anjuta
+
+
+  libgtkpod
+
+	BUGFIX: Allow broadcast of string preferences
+
+	BUGFIX: Provide some sensible sorting of tracks when added from files / directories
+
+	BUGFIX: Ensure progress bar is updated when saving ipod database
+
+	BUGFIX: Avoid possibility of symlinks, when adding files, hanging gtkpod
+	
+
+  Coverart Display plugin
+
+	BUGFIX: Avoid trying to unreference NULL album art in cover art display plugin
+
+  BUGFIX: Ensure signal handlers are disconnected on plugin deactivation
+
+
+	Track Display plugin
+
+	BUGFIX: Fix incorrect default preferences
+
+	BUGFIX: Ensure order of tracks in playlist is preserved on ipod
+
+	BUGFIX: Make the track display filter case-insensitive
+
+
+	Repository Editor plugin
+
+	BUGFIX: Fix runtime errors on getting active model iter
+
+
+	Playlist Display plugin
+
+	IMPROVEMENT: Allow multiple selection of playlists
+
+
+	Sort Tab Display plugin
+
+	IMPROVEMENT: Allow multiple selection of entries in filter windows
+
+
 gtkpod V2.1.0
 
 	Release for the migration to gtk 3.0
