@@ -89,7 +89,7 @@ void gp_info_deleted_tracks (iTunesDB *itdb,
 void update_charset_info (Track *track);
 void parse_offline_playcount (void);
 
-gboolean read_soundcheck (Track *track);
+gboolean read_soundcheck (Track *track, GError **error);
 
 gboolean read_lyrics_from_file (Track *track, gchar **lyrics);
 gboolean write_lyrics_to_file (Track *track);

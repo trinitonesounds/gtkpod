@@ -43,6 +43,7 @@
 #include "libgtkpod/misc_playlist.h"
 #include "libgtkpod/file.h"
 #include "libgtkpod/syncdir.h"
+#include "libgtkpod/tools.h"
 #include <gdk/gdk.h>
 
 /* Callback after directories to add have been selected */
@@ -699,6 +700,17 @@ void on_sync_playlists_with_dirs(GtkAction *action, PlaylistDisplayPlugin* plugi
         Playlist *pl = playlists->data;
         if (pl) {
             sync_playlist(pl, NULL, KEY_SYNC_CONFIRM_DIRS, 0, KEY_SYNC_DELETE_TRACKS, 0, KEY_SYNC_CONFIRM_DELETE, 0, KEY_SYNC_SHOW_SUMMARY, 0);
+        }
+        playlists = playlists->next;
+    }
+}
+
+void on_normalize_selected_playlist (GtkMenuItem *menuitem, gpointer user_data) {
+    GList *playlists = pm_get_selected_playlists();
+    while (playlists) {
+        Playlist *pl = playlists->data;
+        if (pl) {
+            nm_tracks_list (pl->members);
         }
         playlists = playlists->next;
     }

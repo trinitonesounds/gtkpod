@@ -69,5 +69,6 @@ void on_delete_selected_playlists_including_tracks_from_device(GtkAction *action
 
 void on_update_selected_playlists (GtkAction *action, PlaylistDisplayPlugin* plugin);
 void on_sync_playlists_with_dirs(GtkAction *action, PlaylistDisplayPlugin* plugin);
+void on_normalize_selected_playlist (GtkMenuItem *menuitem, gpointer user_data);
 
 #endif

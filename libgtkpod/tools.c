@@ -33,6 +33,7 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
+#include "gp_private.h"
 #include "tools.h"
 #include <errno.h>
 #include <fcntl.h>
@@ -43,6 +44,12 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <glib/gi18n-lib.h>
+
+/* Structure to keep all necessary information */
+struct nm {
+    Track *track; /* track to be normalised */
+    GError *error; /* Errors generated during the normalisation */
+};
 
 /*pipe's definition*/
 enum {
@@ -75,10 +82,11 @@ static gboolean mutex_data = FALSE;
  * Return value: TRUE if the command ran successfully, FALSE if any
  * error occurred.
  */
-static gboolean run_exec_on_track(const gchar *commandline, const gchar *track_path) {
+static gboolean run_exec_on_track(const gchar *commandline, const gchar *track_path, GError **error) {
     gchar *command_full_path = NULL;
     gchar *command = NULL;
     gchar *command_base = NULL;
+    gchar *buf;
     const gchar *nextarg;
     gboolean success = FALSE;
     gboolean percs = FALSE;
@@ -105,7 +113,9 @@ static gboolean run_exec_on_track(const gchar *commandline, const gchar *track_p
     command_full_path = g_find_program_in_path(command);
 
     if (!command_full_path) {
-        gtkpod_warning(_("Could not find '%s'.\nPlease specifiy the exact path in the Tools section of the preference dialog or install the program if it is not installed on your system.\n\n"), command);
+        buf = g_strdup_printf(_("Could not find '%s'.\nPlease specifiy the exact path in the Tools section of the preference dialog or install the program if it is not installed on your system.\n\n"), command);
+        gtkpod_log_error(error, buf);
+        g_free(buf);
         goto cleanup;
     }
 
@@ -187,7 +197,9 @@ static gboolean run_exec_on_track(const gchar *commandline, const gchar *track_p
         else
             ret = 2;
         if (ret > 1) {
-            gtkpod_warning(_("Execution of '%s' failed.\n\n"), command_full_path);
+            buf = g_strdup_printf(_("Execution of '%s' failed.\n\n"), command_full_path);
+            gtkpod_log_error(error, buf);
+            g_free(buf);
         }
         else {
             success = TRUE;
@@ -203,38 +215,44 @@ static gboolean run_exec_on_track(const gchar *commandline, const gchar *track_p
 }
 
 /* reread the soundcheck value from the file */
-static gboolean nm_get_soundcheck(Track *track) {
-    gchar *path;
+static gboolean nm_get_soundcheck(Track *track, GError **error) {
+    gchar *path, *buf;
     gchar *commandline = NULL;
     FileType *filetype;
 
     g_return_val_if_fail (track, FALSE);
 
-    if (read_soundcheck(track))
+    if (read_soundcheck(track, error))
         return TRUE;
+
+    if (error && *error)
+        return FALSE;
 
     path = get_file_name_from_source(track, SOURCE_PREFER_LOCAL);
     filetype = determine_filetype(path);
 
     if (!path || !filetype) {
-        gchar *buf = get_track_info(track, FALSE);
-        gtkpod_warning(_("Normalization failed: file not available (%s).\n\n"), buf);
+        buf = get_track_info(track, FALSE);
+        buf = g_strdup_printf(_("Normalization failed: file not available (%s)."), buf);
+        gtkpod_log_error(error, buf);
         g_free(buf);
         return FALSE;
     }
 
     commandline = filetype_get_gain_cmd(filetype);
     if (commandline) {
-        if (run_exec_on_track(commandline, path)) {
+        if (run_exec_on_track(commandline, path, error)) {
             g_free(path);
-            return read_soundcheck(track);
+            return read_soundcheck(track, error);
         }
     }
     else {
-        gtkpod_warning(_("Normalization failed for file %s: file type not supported.\n"
-                "To normalize mp3 and aac files ensure the following commands paths have been set in the Tools section\n"
-                "\tmp3 files: mp3gain\n"
+        buf = g_strdup_printf(_("Normalization failed for file %s: file type not supported."
+                "To normalize mp3 and aac files ensure the following commands paths have been set in the Tools section"
+                "\tmp3 files: mp3gain"
                 "\taac files: aacgain"), path);
+        gtkpod_log_error(error, buf);
+        g_free(buf);
     }
 
     return FALSE;
@@ -242,8 +260,9 @@ static gboolean nm_get_soundcheck(Track *track) {
 
 #ifdef G_THREADS_ENABLED
 /* Threaded getTrackGain*/
-static gpointer th_nm_get_soundcheck(gpointer track) {
-    gboolean success = nm_get_soundcheck((Track *) track);
+static gpointer th_nm_get_soundcheck(gpointer data) {
+    struct nm *nm = data;
+    gboolean success = nm_get_soundcheck(nm->track, &(nm->error));
     g_mutex_lock (mutex);
     mutex_data = TRUE; /* signal that thread will end */
     g_cond_signal (cond);
@@ -270,20 +289,36 @@ void nm_new_tracks(iTunesDB *itdb) {
     g_list_free(tracks);
 }
 
-static void normalization_abort(gboolean *abort) {
-    *abort = TRUE;
+static void nm_report_errors_and_free(GString *errors) {
+    if (errors && errors->len > 0) {
+        gtkpod_confirmation(-1, /* gint id, */
+                TRUE, /* gboolean modal, */
+                _("Normalization Errors"), /* title */
+                _("Errors created by track normalisation"), /* label */
+                errors->str, /* scrolled text */
+                NULL, 0, NULL, /* option 1 */
+                NULL, 0, NULL, /* option 2 */
+                TRUE, /* gboolean confirm_again, */
+                "show_normalization_errors",/* confirm_again_key,*/
+                CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
+                NULL, /* don't show "Apply" button */
+                NULL, /* cancel_handler,*/
+                NULL, /* gpointer user_data1,*/
+                NULL); /* gpointer user_data2,*/
+
+        g_string_free(errors, TRUE);
+    }
 }
 
 void nm_tracks_list(GList *list) {
     gint count, succ_count, n;
+    gdouble fraction = 0;
+    gdouble old_fraction = 0;
     guint32 old_soundcheck;
     gboolean success;
-    static gboolean abort;
-    GtkWidget *dialog, *progress_bar, *label, *track_label;
-    GtkWidget *image, *hbox;
-    GtkWidget *content_area;
-    time_t diff, start, fullsecs, hrs, mins, secs;
     gchar *progtext = NULL;
+    struct nm *nm;
+    GString *errors = g_string_new(""); /* Errors generated during the normalisation */
 
 #ifdef G_THREADS_ENABLED
     GThread *thread = NULL;
@@ -296,46 +331,6 @@ void nm_tracks_list(GList *list) {
 
     block_widgets();
 
-    /* create the dialog window */
-    dialog
-            = gtk_dialog_new_with_buttons(_("Information"), GTK_WINDOW (gtkpod_app), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_CANCEL, GTK_RESPONSE_NONE, NULL);
-
-    /* emulate gtk_message_dialog_new */
-    image = gtk_image_new_from_stock(GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
-    label = gtk_label_new(_("Press button to abort."));
-
-    gtk_misc_set_alignment(GTK_MISC (image), 0.5, 0.0);
-    gtk_label_set_line_wrap(GTK_LABEL (label), TRUE);
-    gtk_label_set_selectable(GTK_LABEL (label), TRUE);
-
-    /* hbox to put the image+label in */
-    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
-    gtk_box_pack_start(GTK_BOX (hbox), image, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX (hbox), label, FALSE, FALSE, 0);
-
-    /* Create the progress bar */
-    progress_bar = gtk_progress_bar_new();
-    progtext = g_strdup(_("Normalizing..."));
-    gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
-    g_free(progtext);
-
-    /* Create label for track name */
-    track_label = gtk_label_new(NULL);
-    gtk_label_set_line_wrap(GTK_LABEL (label), TRUE);
-    gtk_label_set_selectable(GTK_LABEL (label), TRUE);
-
-    /* Indicate that user wants to abort */
-    g_signal_connect_swapped (G_OBJECT (dialog), "response",
-            G_CALLBACK (normalization_abort),
-            &abort);
-
-    /* Add the image/label + progress bar to dialog */
-    content_area = gtk_dialog_get_content_area(GTK_DIALOG (dialog));
-    gtk_box_pack_start(GTK_BOX (content_area), hbox, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX (content_area), track_label, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX (content_area), progress_bar, FALSE, FALSE, 0);
-    gtk_widget_show_all(dialog);
-
     while (widgets_blocked && gtk_events_pending())
         gtk_main_iteration();
 
@@ -343,55 +338,36 @@ void nm_tracks_list(GList *list) {
     n = g_list_length(list);
     count = 0; /* tracks processed */
     succ_count = 0; /* tracks normalized */
-    abort = FALSE;
-    start = time(NULL);
 
     if (n == 0) {
-        /* FIXME we should tell something*/
-
+        // nothing to do
+        return;
     }
-    else {
-        /* we need ***much*** longer timeout */
-        g_message("TODO tools:nm_tracks_list - statusbar\n");
-        //      gtkpod_statusbar_timeout (30*STATUSBAR_TIMEOUT);
-    }
-    while (!abort && (list != NULL)) {
-        Track *track = list->data;
-        gchar *label_buf = g_strdup_printf("%d/%d", count, n);
 
-        gtk_label_set_text(GTK_LABEL (track_label), label_buf);
+    gtkpod_statusbar_reset_progress(100);
 
-        g_message("TODO tools:nm_tracks_list - statusbar\n");
-        //     gtkpod_statusbar_message (_("%s - %s"),
-        //			       track->artist, track->title);
-        C_FREE (label_buf);
+    nm = g_malloc0(sizeof(struct nm));
+    while (list) {
+        nm->track = list->data;
+        nm->error = NULL;
 
         while (widgets_blocked && gtk_events_pending())
             gtk_main_iteration();
 
         /* need to know so we can update the display when necessary */
-        old_soundcheck = track->soundcheck;
+        old_soundcheck = nm->track->soundcheck;
 
 #ifdef G_THREADS_ENABLED
         mutex_data = FALSE;
-        thread = g_thread_create (th_nm_get_soundcheck, track, TRUE, NULL);
+
+        thread = g_thread_create (th_nm_get_soundcheck, nm, TRUE, NULL);
         if (thread) {
-            gboolean first_abort = TRUE;
             g_mutex_lock (mutex);
             do {
                 while (widgets_blocked && gtk_events_pending())
                     gtk_main_iteration();
                 /* wait a maximum of 10 ms */
 
-                if (abort && first_abort) {
-                    first_abort = FALSE;
-                    progtext = g_strdup(_("Aborting..."));
-                    gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
-                    g_free(progtext);
-                    gtkpod_statusbar_message(_("Will abort after current mp3gain process ends."));
-                    while (widgets_blocked && gtk_events_pending())
-                        gtk_main_iteration();
-                }
                 g_get_current_time(&gtime);
                 g_time_val_add(&gtime, 20000);
                 g_cond_timed_wait (cond, mutex, &gtime);
@@ -402,54 +378,69 @@ void nm_tracks_list(GList *list) {
         }
         else {
             g_warning ("Thread creation failed, falling back to default.\n");
-            success = nm_get_soundcheck(track);
+            success = nm_get_soundcheck(nm->track, &(nm->error));
+
         }
 #else
-        success = nm_get_soundcheck (track);
+        success = nm_get_soundcheck (nm->track, nm->error);
 #endif
 
         /*normalization part*/
         if (!success) {
-            gchar *path = get_file_name_from_source(track, SOURCE_PREFER_LOCAL);
-            gtkpod_warning(_("'%s-%s' (%s) could not be normalized.\n\n"), track->artist, track->title, path ? path : "");
+            gchar *path = get_file_name_from_source(nm->track, SOURCE_PREFER_LOCAL);
+
+            if (nm->error) {
+                errors = g_string_append(errors, g_strdup_printf(_("'%s-%s' (%s) could not be normalized. %s\n"), nm->track->artist, nm->track->title, path ? path : "", nm->error->message));
+            }
+            else {
+                errors = g_string_append(errors, g_strdup_printf(_("'%s-%s' (%s) could not be normalized. Unknown error.\n"), nm->track->artist, nm->track->title, path ? path : ""));
+            }
+
             g_free(path);
         }
         else {
             ++succ_count;
-            if (old_soundcheck != track->soundcheck) {
-                gtkpod_track_updated(track);
-                data_changed(track->itdb);
+            if (old_soundcheck != nm->track->soundcheck) {
+                gtkpod_track_updated(nm->track);
+                data_changed(nm->track->itdb);
             }
         }
         /*end normalization*/
 
         ++count;
-        gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (progress_bar), (gdouble) count / n);
+        fraction = (gdouble) count / (gdouble) n;
+        progtext = g_strdup_printf(_("%d%% (%d tracks left)"), count * 100 / n, n - count);
 
-        diff = time(NULL) - start;
-        fullsecs = (diff * n / count) - diff;
-        hrs = fullsecs / 3600;
-        mins = (fullsecs % 3600) / 60;
-        secs = ((fullsecs % 60) / 5) * 5;
-        /* don't bounce up too quickly (>10% change only) */
-        /*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
-        progtext = g_strdup_printf(_("%d%% (%d:%02d:%02d left)"), count * 100 / n, (int) hrs, (int) mins, (int) secs);
-        gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
+        gdouble ticks = fraction - old_fraction;
+        gtkpod_statusbar_increment_progress_ticks(ticks * 100, progtext);
+
+        old_fraction = fraction;
         g_free(progtext);
+
+        if (fraction == 1) {
+            /* All finished */
+            gtkpod_statusbar_reset_progress(100);
+            gtkpod_statusbar_message(ngettext ("Normalized %d of %d track.", "Normalized %d of %d tracks.", n), count, n);
+        }
 
         while (widgets_blocked && gtk_events_pending())
             gtk_main_iteration();
+
         list = g_list_next(list);
+
+        if (nm->error)
+            g_error_free(nm->error);
+
     } /*end while*/
 
-    g_message("TODO tools:nm_tracks_list - statusbar\n");
-    //  gtkpod_statusbar_timeout (0);
+    g_free(nm);
 
-    //  gtkpod_statusbar_message (ngettext ("Normalized %d of %d tracks.",
-    //				      "Normalized %d of %d tracks.", n),
-    //			    count, n);
+    nm_report_errors_and_free(errors);
 
-    gtk_widget_destroy(dialog);
+    gtkpod_statusbar_message (ngettext ("Normalized %d of %d tracks.",
+    				      "Normalized %d of %d tracks.", n),
+    			    count, n);
+
     release_widgets();
 }
 

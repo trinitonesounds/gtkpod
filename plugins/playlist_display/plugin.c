@@ -119,6 +119,14 @@ static GtkActionEntry playlist_actions[] =
             G_CALLBACK (on_sync_playlists_with_dirs)
         },
         {
+            "ActionNormalizePlaylist",
+            GTK_STOCK_EXECUTE,
+            N_("Normalize"),
+            NULL,
+            NULL,
+            G_CALLBACK (on_normalize_selected_playlist)
+        },
+        {
             ACTION_NEW_PLAYLIST_MENU,
             NULL,
             N_("_New Playlist"),

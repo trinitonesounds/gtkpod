@@ -2056,35 +2056,35 @@ void parse_offline_playcount(void) {
  *
  * Return value: TRUE, if gain could be read
  */
-gboolean read_soundcheck(Track *track) {
-    gchar *path;
+gboolean read_soundcheck(Track *track, GError **error) {
+    gchar *path, *buf;
     FileType *filetype;
     gboolean result = FALSE;
-    GError *error = NULL;
-    gchar *msg = g_strdup_printf(_("Failed to read sound check from track because"));
 
     g_return_val_if_fail (track, FALSE);
 
     path = get_file_name_from_source(track, SOURCE_PREFER_LOCAL);
+    if (!path) {
+        buf = g_strdup_printf(_("Failed to read sound check from track with no path setting."));
+        gtkpod_log_error(error, buf);
+        g_free(buf);
+        return FALSE;
+    }
+
     filetype = determine_filetype(path);
     if (! filetype) {
-        gtkpod_warning(_("%s\n\nfiletype of %s is not recognised."), msg, path);
+        buf = g_strdup_printf(_("Failed to read sound check from track because filetype is not recognised."));
+        gtkpod_log_error(error, buf);
+        g_free(buf);
     }
     else {
-        if (!filetype_read_soundcheck(filetype, path, track, &error)) {
-            if (error) {
-                gtkpod_warning(_("%s\n\n%s"), msg, error->message);
-            } else {
-                gtkpod_warning(_("%s\n\n%s"), msg, UNKNOWN_ERROR);
-            }
-        } else {
+        if (filetype_read_soundcheck(filetype, path, track, error)) {
             // track read successfully
             result = TRUE;
         }
     }
 
     g_free(path);
-    g_free(msg);
     return result;
 }
 
