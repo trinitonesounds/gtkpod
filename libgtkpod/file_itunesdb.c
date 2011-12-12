@@ -1504,7 +1504,11 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
     file_transfer_reschedule(itdb);
 
     /* find out how many tracks have already been processed */
-    file_transfer_get_status(itdb, NULL, NULL, NULL, &transferred_num, &failed_num);
+    file_transfer_get_status(itdb, &to_convert_num, &converting_num, &to_transfer_num, &transferred_num, &failed_num);
+
+    /* Reset the progress bar to the total number of tracks to be transferred */
+    gtkpod_statusbar_reset_progress(to_convert_num + converting_num + to_transfer_num + failed_num + transferred_num);
+
     transferred_init = transferred_num + failed_num;
 
     start = time(NULL);
@@ -1663,6 +1667,12 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
         }
         if (success) {
             /* write tracks to iPod */
+            /*
+             * Note:
+             * this resets and increments the progress bar
+             * so the reset_progress_status must be called after
+             * this has finished.
+             */
             success = transfer_tracks(itdb, transferdata);
         }
     }
