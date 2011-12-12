@@ -464,7 +464,6 @@ static gboolean _st_selection_changed_cb(gpointer data) {
             inst, time.tv_sec % 3600, time.tv_usec);
 #endif
 
-    printf("st_s_c_cb instance %d: entered\n", sort_tab_widget_get_instance(priv->st_widget_parent));
     if (gtk_tree_selection_count_selected_rows(selection) == 0) {
         /*
          * no selection -- unselect current selection (unless
@@ -628,7 +627,6 @@ static gboolean _st_is_all_entry_selected(NormalSortTabPage *self) {
     while(se) {
         TabEntry *entry = se->data;
         if (entry->master) {
-            g_message("Entry is master so all entry selected");
             return TRUE;
         }
 
@@ -979,7 +977,6 @@ void normal_sort_tab_page_add_track(NormalSortTabPage *self, Track *track, gbool
 
         /* add track to next tab if "entry" is selected */
         if (_st_is_all_entry_selected(self) || _st_is_entry_selected(self, entry)) {
-            g_warning("Called from add track normal (1)");
             sort_tab_widget_add_track(st_next, track, final, display);
         }
 
