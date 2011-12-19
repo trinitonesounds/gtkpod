@@ -967,6 +967,7 @@ static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
     GList *gl;
     GtkListStore *store;
     GtkTreeIter iter;
+    GtkCellRenderer *cell;
 
     g_return_val_if_fail (spl_window, NULL);
     g_return_val_if_fail (splr, NULL);
@@ -1066,6 +1067,11 @@ static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
             gl = gl->next;
         }
         g_object_unref(store);
+
+        cell = gtk_cell_renderer_text_new();
+        gtk_cell_layout_pack_start(GTK_CELL_LAYOUT (combobox), cell, TRUE);
+        gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT (combobox), cell, "text", 0, NULL);
+
         g_object_set_data(G_OBJECT (combobox), "spl_rule", splr);
         g_object_set_data_full(G_OBJECT (combobox), "spl_pl_ids", pl_ids, (GDestroyNotify) spl_pl_ids_destroy);
         if (splr->fromvalue == ITDB_SPL_DATE_IDENTIFIER)
