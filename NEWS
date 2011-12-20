@@ -8,6 +8,8 @@ gtkpod V2.1.1
 
 	IMPROVEMENT: Update core app code to align with current anjuta
 
+	BUGFIX: Reintroduce track normalization
+
 
   libgtkpod
 
@@ -19,6 +21,13 @@ gtkpod V2.1.1
 
 	BUGFIX: Avoid possibility of symlinks, when adding files, hanging gtkpod
 	
+	BUGFIX: Display track conversion progress correctly
+
+
+	Edit Track Details
+
+  BUGFIX: Fix for track volume control
+
 
   Coverart Display plugin
 
@@ -44,6 +53,8 @@ gtkpod V2.1.1
 	Playlist Display plugin
 
 	IMPROVEMENT: Allow multiple selection of playlists
+
+	BUGFIX: Smart playlist wizard not correctly displaying playlist rules
 
 
 	Sort Tab Display plugin

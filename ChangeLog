@@ -1,3 +1,66 @@
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-12-20
+
+    Updates to Changelog and NEWS
+    
+    * Updates before release of release candidate
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-12-20
+
+    Ignore transifex client configuration directory
+    
+    * Local transifex client used for push and pull changes to the gtkpod.pot
+      file and related translations.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-12-20
+
+    Updates to translations
+    
+    * it.po
+     * Contributions made by Daniele Napolitano <dnax@gmail.com>. Thanks
+    
+    * Translation files updated due to changes in source files.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-12-19
+
+    Playlists names not displaying correctly in smart playlist wizard
+    
+    * Seems that the playlist combo box lacks a renderer for the text.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-12-17
+
+    Track volume control broken
+    
+    * Missing a scale adjustment for the scale to slide correctly.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-12-12
+
+    Remove superfluous debug statements
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-12-12
+
+    Fix for display of progress while converting tracks
+    
+    * When converting tracks on writing itdb, the progress bar must be reset
+      to the number of tracks to be transferred. Otherwise, no progress and lots
+      of warning messages on the cmd line.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-12-09
+
+    Fix for restoring functionality of track normalization
+    
+    * Ensure that internal soundcheck functions populate a GError rather than
+      displaying a warning dialog. The latter does not work well inside threads!
+    
+    * Save up all error messages until the end of the normalization run
+    
+    * Use the platform progress bar rather than bringing up a custom dialog
+    
+    * Provide the action for normalizing a playlist to the playlist plugins menus.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-12-04
+
+    Translations po files updated to reflect codebase changes
+
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-11-28
 
     Update NEWS and Changelog
