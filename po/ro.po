@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-29 10:19+0000\n"
+"POT-Creation-Date: 2011-12-20 10:57+0000\n"
 "PO-Revision-Date: 2010-08-08 12:46+0100\n"
 "Last-Translator: alexef <alex@eftimie.ro>\n"
 "Language-Team: Romanian <tradu@softwareliber.ro>\n"
@@ -581,26 +581,16 @@ msgstr ""
 msgid "Error writing to '%s'.\n"
 msgstr "Eroare la scrierea către '%s'.\n"
 
-#: ../libgtkpod/file.c:2064
+#: ../libgtkpod/file.c:2068
 #, c-format
-msgid "Failed to read sound check from track because"
+msgid "Failed to read sound check from track with no path setting."
 msgstr ""
 
-#: ../libgtkpod/file.c:2071
+#: ../libgtkpod/file.c:2076
 #, c-format
 msgid ""
-"%s\n"
-"\n"
-"filetype of %s is not recognised."
+"Failed to read sound check from track because filetype is not recognised."
 msgstr ""
-
-#: ../libgtkpod/file.c:2076 ../libgtkpod/file.c:2078
-#, fuzzy, c-format
-msgid ""
-"%s\n"
-"\n"
-"%s"
-msgstr "%s - %s"
 
 #: ../libgtkpod/file.c:2106
 #, c-format
@@ -1092,22 +1082,22 @@ msgstr ""
 "mai jos şi apoi deconectaţi iPod din nou. Apăsând 'Ok' va re-programa "
 "piesele eşuate pentru conversie şi transfer."
 
-#: ../libgtkpod/file_itunesdb.c:1519
+#: ../libgtkpod/file_itunesdb.c:1523
 #, c-format
 msgid "Saving: waiting for %d tracks to be copied"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1523
+#: ../libgtkpod/file_itunesdb.c:1527
 #, fuzzy, c-format
 msgid "Saving: waiting for %d tracks to convert"
 msgstr "Stare: se aşteaptă finalizarea conversiei"
 
-#: ../libgtkpod/file_itunesdb.c:1526
+#: ../libgtkpod/file_itunesdb.c:1530
 #, fuzzy, c-format
 msgid "Saving: finished track transfer"
 msgstr "Stare: s-a terminat transferul"
 
-#: ../libgtkpod/file_itunesdb.c:1558
+#: ../libgtkpod/file_itunesdb.c:1562
 #, c-format
 msgid ""
 "One track could not be transferred because your iPod is full. Either delete "
@@ -1130,7 +1120,7 @@ msgstr[2] ""
 "de a deconecta iPod-ul, ştergeţi nişte piese sau creaţi spaţiu printr-o altă "
 "metodă."
 
-#: ../libgtkpod/file_itunesdb.c:1627
+#: ../libgtkpod/file_itunesdb.c:1631
 #, fuzzy, c-format
 msgid ""
 "You did not import the existing iTunesDB ('%s'). This is most likely "
@@ -1146,20 +1136,20 @@ msgstr ""
 "peste memorare. Dacă revocaţi, puteţi importa baza de date existentă înainte "
 "de a apela această funcţie din nou.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1631 ../libgtkpod/misc_playlist.c:836
+#: ../libgtkpod/file_itunesdb.c:1635 ../libgtkpod/misc_playlist.c:836
 msgid "Existing iTunes database not imported"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1631 ../libgtkpod/misc_playlist.c:836
+#: ../libgtkpod/file_itunesdb.c:1635 ../libgtkpod/misc_playlist.c:836
 msgid "Proceed anyway"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1631
+#: ../libgtkpod/file_itunesdb.c:1635
 #, fuzzy
 msgid "Skip storing"
 msgstr "Număr săriri peste"
 
-#: ../libgtkpod/file_itunesdb.c:1654
+#: ../libgtkpod/file_itunesdb.c:1658
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
@@ -1167,26 +1157,26 @@ msgstr ""
 "Structura de dosare a iPod trebuie să fie prezentă înainte de a putea "
 "efectua sincronizarea iPod.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1661
+#: ../libgtkpod/file_itunesdb.c:1665
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr "Unele piese nu au putut fi şterse de pe iPod. Exportare abandonată!"
 
-#: ../libgtkpod/file_itunesdb.c:1677
+#: ../libgtkpod/file_itunesdb.c:1687
 #, c-format
 msgid "Now writing database '%s'. Please wait..."
 msgstr "Scriu în baza de date '%s'. Vă rugăm aşteptaţi..."
 
-#: ../libgtkpod/file_itunesdb.c:1726
+#: ../libgtkpod/file_itunesdb.c:1736
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "Fişierul de informaţii extinse nu a fost şters: '%s'"
 
-#: ../libgtkpod/file_itunesdb.c:1850
+#: ../libgtkpod/file_itunesdb.c:1860
 #, c-format
 msgid "%s: Database saved"
 msgstr "%s: bază de date salvată"
 
-#: ../libgtkpod/file_itunesdb.c:1853
+#: ../libgtkpod/file_itunesdb.c:1863
 #, c-format
 msgid "%s: Changes saved"
 msgstr "%s: schimbări salvate"
@@ -1423,7 +1413,7 @@ msgstr[1] "Şterg piesele din baza de date locală?"
 msgstr[2] "Şterg piesele din baza de date locală?"
 
 #: ../libgtkpod/misc_conversion.c:60
-#: ../plugins/sorttab_display/normal_sorttab_page.c:940
+#: ../plugins/sorttab_display/normal_sorttab_page.c:938
 msgid "All"
 msgstr "Toate"
 
@@ -1796,20 +1786,20 @@ msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "URI '%s' conţine caractere întârziate invalid"
 
 #: ../libgtkpod/misc_playlist.c:69
-#: ../plugins/playlist_display/playlist_display_spl.c:1497
+#: ../plugins/playlist_display/playlist_display_spl.c:1503
 #, fuzzy
 msgid "Please load the iPod before adding playlists."
 msgstr "Vă rugăm încărcaţi iPod-ul înainte de a adăuga piese."
 
 #: ../libgtkpod/misc_playlist.c:74 ../libgtkpod/misc_playlist.c:318
-#: ../plugins/playlist_display/playlist_display_spl.c:1446
-#: ../plugins/playlist_display/playlist_display_spl.c:1502
-#: ../plugins/playlist_display/plugin.c:337
+#: ../plugins/playlist_display/playlist_display_spl.c:1452
+#: ../plugins/playlist_display/playlist_display_spl.c:1508
+#: ../plugins/playlist_display/plugin.c:345
 msgid "New Playlist"
 msgstr "Listă nouă"
 
 #: ../libgtkpod/misc_playlist.c:74 ../libgtkpod/misc_playlist.c:318
-#: ../plugins/playlist_display/playlist_display_spl.c:1502
+#: ../plugins/playlist_display/playlist_display_spl.c:1508
 msgid "Please enter a name for the new playlist"
 msgstr "Vă rugăm să introduceţi un nume pentru lista de redare nouă"
 
@@ -2393,7 +2383,7 @@ msgstr "Nu am modificat nimic.\n"
 msgid "Sync summary"
 msgstr "Rezumat sincronizare"
 
-#: ../libgtkpod/tools.c:108
+#: ../libgtkpod/tools.c:116
 #, c-format
 msgid ""
 "Could not find '%s'.\n"
@@ -2406,7 +2396,7 @@ msgstr ""
 "preferinţe sau instalaţi programul dacă nu este instalat pe sistem.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:190
+#: ../libgtkpod/tools.c:200
 #, c-format
 msgid ""
 "Execution of '%s' failed.\n"
@@ -2415,62 +2405,69 @@ msgstr ""
 "Execuţia '%s' eşuată.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:221
-#, c-format
-msgid ""
-"Normalization failed: file not available (%s).\n"
-"\n"
+#: ../libgtkpod/tools.c:236
+#, fuzzy, c-format
+msgid "Normalization failed: file not available (%s)."
 msgstr ""
 "Normalizare eşuată: fişier indisponibil (%s).\n"
 "\n"
 
-#: ../libgtkpod/tools.c:234
+#: ../libgtkpod/tools.c:250
 #, c-format
 msgid ""
-"Normalization failed for file %s: file type not supported.\n"
-"To normalize mp3 and aac files ensure the following commands paths have been "
-"set in the Tools section\n"
-"\tmp3 files: mp3gain\n"
-"\taac files: aacgain"
+"Normalization failed for file %s: file type not supported.To normalize mp3 "
+"and aac files ensure the following commands paths have been set in the Tools "
+"section\tmp3 files: mp3gain\taac files: aacgain"
 msgstr ""
 
-#: ../libgtkpod/tools.c:301
-msgid "Information"
-msgstr "Informaţie"
-
-#: ../libgtkpod/tools.c:305
-msgid "Press button to abort."
-msgstr "Apăsaţi butonul pentru a abandona."
-
-#: ../libgtkpod/tools.c:318
-msgid "Normalizing..."
+#. gint id,
+#. gboolean modal,
+#: ../libgtkpod/tools.c:296
+#, fuzzy
+msgid "Normalization Errors"
 msgstr "Normalizez..."
 
-#: ../libgtkpod/tools.c:388
-msgid "Aborting..."
-msgstr "Renunţare..."
+#. title
+#: ../libgtkpod/tools.c:297
+msgid "Errors created by track normalisation"
+msgstr ""
 
-#: ../libgtkpod/tools.c:391
-msgid "Will abort after current mp3gain process ends."
-msgstr "Voi abandonda după ce procesul curent mp3gain se încheie."
-
-#: ../libgtkpod/tools.c:414
-#, c-format
-msgid ""
-"'%s-%s' (%s) could not be normalized.\n"
-"\n"
+#: ../libgtkpod/tools.c:393
+#, fuzzy, c-format
+msgid "'%s-%s' (%s) could not be normalized. %s\n"
 msgstr ""
 "'%s-%s' (%s) nu a putut fi normalizat.\n"
 "\n"
 
-#. don't bounce up too quickly (>10% change only)
-#. left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;
-#: ../libgtkpod/tools.c:436 ../plugins/exporter/file_export.c:494
-#, c-format
-msgid "%d%% (%d:%02d:%02d left)"
+#: ../libgtkpod/tools.c:396
+#, fuzzy, c-format
+msgid "'%s-%s' (%s) could not be normalized. Unknown error.\n"
+msgstr ""
+"'%s-%s' (%s) nu a putut fi normalizat.\n"
+"\n"
+
+#: ../libgtkpod/tools.c:412
+#, fuzzy, c-format
+msgid "%d%% (%d tracks left)"
 msgstr "%d%% (Timp rămas: %d:%02d:%02d)"
 
-#: ../libgtkpod/tools.c:540
+#: ../libgtkpod/tools.c:423
+#, fuzzy, c-format
+msgid "Normalized %d of %d track."
+msgid_plural "Normalized %d of %d tracks."
+msgstr[0] "Am normalizat %d din %d piese."
+msgstr[1] "Am normalizat %d din %d piese."
+msgstr[2] "Am normalizat %d din %d piese."
+
+#: ../libgtkpod/tools.c:440
+#, c-format
+msgid "Normalized %d of %d tracks."
+msgid_plural "Normalized %d of %d tracks."
+msgstr[0] "Am normalizat %d din %d piese."
+msgstr[1] "Am normalizat %d din %d piese."
+msgstr[2] "Am normalizat %d din %d piese."
+
+#: ../libgtkpod/tools.c:531
 msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
@@ -2478,7 +2475,7 @@ msgstr ""
 "Vă rugăm specificaţi comanda de apelat în secţiunea 'Unelte' din dialogul "
 "preferinţe.\n"
 
-#: ../libgtkpod/tools.c:551
+#: ../libgtkpod/tools.c:542
 #, c-format
 msgid ""
 "Could not find the command '%s'.\n"
@@ -2491,7 +2488,7 @@ msgstr ""
 "Vă rugăm verificaţi setările din secţiunea Unelte a dialogului preferinţe.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:592
+#: ../libgtkpod/tools.c:583
 #, c-format
 msgid ""
 "'%s' returned the following output:\n"
@@ -3594,7 +3591,7 @@ msgstr "Eroare la copierea '%s' către '%s' (%s)\n"
 
 #. File may have been skipped so need to log message
 #: ../plugins/exporter/file_export.c:320 ../plugins/exporter/file_export.c:328
-#: ../plugins/playlist_display/playlist_display_actions.c:172
+#: ../plugins/playlist_display/playlist_display_actions.c:173
 #, c-format
 msgid "'%s'\n"
 msgstr ""
@@ -3627,6 +3624,11 @@ msgid ""
 "Failed to write '%s-%s'\n"
 "\n"
 msgstr "Scriere eşuată '%s-%s'\n"
+
+#: ../plugins/exporter/file_export.c:494
+#, c-format
+msgid "%d%% (%d:%02d:%02d left)"
+msgstr "%d%% (Timp rămas: %d:%02d:%02d)"
 
 #: ../plugins/exporter/file_export.c:503
 #, fuzzy, c-format
@@ -4248,13 +4250,13 @@ msgstr "Rădăcină mserv:"
 msgid "_Update mserv Data from File"
 msgstr "Actualizează date _mserv din fişier"
 
-#: ../plugins/mserv/plugin.c:65 ../plugins/playlist_display/plugin.c:268
-#: ../plugins/playlist_display/plugin.c:292
+#: ../plugins/mserv/plugin.c:65 ../plugins/playlist_display/plugin.c:276
+#: ../plugins/playlist_display/plugin.c:300
 #, fuzzy
 msgid "Selected Playlist"
 msgstr "Lista de _redare selectată"
 
-#: ../plugins/mserv/plugin.c:73 ../plugins/track_display/plugin.c:63
+#: ../plugins/mserv/plugin.c:73 ../plugins/track_display/plugin.c:64
 #, fuzzy
 msgid "Selected Tracks"
 msgstr "P_iese selectate"
@@ -4534,7 +4536,7 @@ msgstr "Cale:"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:16
 #: ../plugins/playlist_display/plugin.c:50
-#: ../plugins/playlist_display/plugin.c:334
+#: ../plugins/playlist_display/plugin.c:342
 #, fuzzy
 msgid "Playlist Display"
 msgstr "Liste de redare"
@@ -4544,7 +4546,7 @@ msgid "Playlist name:"
 msgstr "Nume listă de redare:"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:18
-#: ../plugins/playlist_display/playlist_display_spl.c:1502
+#: ../plugins/playlist_display/playlist_display_spl.c:1508
 #: ../plugins/repository_editor/repository_editor.c:1241
 msgid "Smart Playlist"
 msgstr "Listă de redare inteligentă"
@@ -4558,85 +4560,85 @@ msgstr "   Sortare după:"
 msgid "_Limit to"
 msgstr "_Limitează la"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:65
-#: ../plugins/playlist_display/playlist_display_actions.c:320
+#: ../plugins/playlist_display/playlist_display_actions.c:66
+#: ../plugins/playlist_display/playlist_display_actions.c:321
 #, fuzzy, c-format
 msgid "%s\n"
 msgstr "%s - %s"
 
 #. gint id,
 #. gboolean modal,
-#: ../plugins/playlist_display/playlist_display_actions.c:90
+#: ../plugins/playlist_display/playlist_display_actions.c:91
 msgid "Directory Addition Errors"
 msgstr ""
 
 #. title
-#: ../plugins/playlist_display/playlist_display_actions.c:91
+#: ../plugins/playlist_display/playlist_display_actions.c:92
 #, fuzzy
 msgid " Some directories were not added successfully"
 msgstr "Unele fişiere nu au fost adăugate cu succes"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:104
+#: ../plugins/playlist_display/playlist_display_actions.c:105
 msgid "Some directories failed to be added but no errors were reported."
 msgstr ""
 
-#: ../plugins/playlist_display/playlist_display_actions.c:127
-#: ../plugins/playlist_display/playlist_display_actions.c:267
-#: ../plugins/playlist_display/playlist_display_actions.c:389
+#: ../plugins/playlist_display/playlist_display_actions.c:128
+#: ../plugins/playlist_display/playlist_display_actions.c:268
+#: ../plugins/playlist_display/playlist_display_actions.c:390
 msgid "Please select a playlist or repository before adding tracks."
 msgstr ""
 "Vă rugăm selectaţi o listă de redare sau un depozit înainte de a adăuga "
 "piese."
 
-#: ../plugins/playlist_display/playlist_display_actions.c:132
+#: ../plugins/playlist_display/playlist_display_actions.c:133
 msgid "Add Folder"
 msgstr "Adaugă dosar"
 
 #. gint id,
 #. gboolean modal,
-#: ../plugins/playlist_display/playlist_display_actions.c:197
+#: ../plugins/playlist_display/playlist_display_actions.c:198
 msgid "Playlist Addition Errors"
 msgstr ""
 
 #. title
-#: ../plugins/playlist_display/playlist_display_actions.c:198
+#: ../plugins/playlist_display/playlist_display_actions.c:199
 #, fuzzy
 msgid "Some tracks in the playlist were not added successfully"
 msgstr "Unele fişiere nu au fost adăugate cu succes"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:211
-#: ../plugins/playlist_display/playlist_display_actions.c:363
+#: ../plugins/playlist_display/playlist_display_actions.c:212
+#: ../plugins/playlist_display/playlist_display_actions.c:364
 msgid "Some tracks failed to be added but no errors were reported."
 msgstr ""
 
-#: ../plugins/playlist_display/playlist_display_actions.c:275
-#: ../plugins/playlist_display/playlist_display_actions.c:399
+#: ../plugins/playlist_display/playlist_display_actions.c:276
+#: ../plugins/playlist_display/playlist_display_actions.c:400
 msgid "Please load the iPod before adding tracks."
 msgstr "Vă rugăm încărcaţi iPod-ul înainte de a adăuga piese."
 
 #. Create window title
-#: ../plugins/playlist_display/playlist_display_actions.c:283
+#: ../plugins/playlist_display/playlist_display_actions.c:284
 #, c-format
 msgid "Add playlist files to '%s'"
 msgstr "Adaugă fişiere listă de redare la '%s'"
 
 #. gint id,
 #. gboolean modal,
-#: ../plugins/playlist_display/playlist_display_actions.c:349
+#: ../plugins/playlist_display/playlist_display_actions.c:350
 msgid "File Addition Errors"
 msgstr ""
 
 #. title
-#: ../plugins/playlist_display/playlist_display_actions.c:350
+#: ../plugins/playlist_display/playlist_display_actions.c:351
 msgid "Some files were not added successfully"
 msgstr "Unele fişiere nu au fost adăugate cu succes"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:408
+#: ../plugins/playlist_display/playlist_display_actions.c:409
 #, c-format
 msgid "Add files to '%s'"
 msgstr "Adaugă fişiere la '%s'"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:411
+#: ../plugins/playlist_display/playlist_display_actions.c:412
 #, c-format
 msgid "Add files to '%s/%s'"
 msgstr "Adaugă fişiere la '%s/%s'"
@@ -4851,25 +4853,25 @@ msgstr "aprecierea cea mai mică"
 msgid "Movie"
 msgstr "Film"
 
-#: ../plugins/playlist_display/playlist_display_spl.c:1007
-#: ../plugins/playlist_display/playlist_display_spl.c:1021
+#: ../plugins/playlist_display/playlist_display_spl.c:1008
+#: ../plugins/playlist_display/playlist_display_spl.c:1022
 msgid "to"
 msgstr "până la"
 
-#: ../plugins/playlist_display/playlist_display_spl.c:1253
+#: ../plugins/playlist_display/playlist_display_spl.c:1259
 msgid "-"
 msgstr "-"
 
-#: ../plugins/playlist_display/playlist_display_spl.c:1266
+#: ../plugins/playlist_display/playlist_display_spl.c:1272
 msgid "+"
 msgstr "+"
 
-#: ../plugins/playlist_display/playlist_display_spl.c:1507
+#: ../plugins/playlist_display/playlist_display_spl.c:1513
 #, fuzzy
 msgid "Playlist name cannot be blank"
 msgstr "Nume listă de redare:"
 
-#: ../plugins/playlist_display/playlist_display_spl.c:1513
+#: ../plugins/playlist_display/playlist_display_spl.c:1519
 #, fuzzy, c-format
 msgid "A playlist named '%s' already exists"
 msgstr "Un album cu acelaşi nume există deja."
@@ -5045,193 +5047,198 @@ msgstr "Nici o listă de redare selectată"
 
 #: ../plugins/playlist_display/plugin.c:124
 #, fuzzy
+msgid "Normalize"
+msgstr "Normalizez..."
+
+#: ../plugins/playlist_display/plugin.c:132
+#, fuzzy
 msgid "_New Playlist"
 msgstr "Listă nouă"
 
-#: ../plugins/playlist_display/plugin.c:132
+#: ../plugins/playlist_display/plugin.c:140
 #, fuzzy
 msgid "Empty Playlist..."
 msgstr "Listă de redare goală"
 
-#: ../plugins/playlist_display/plugin.c:134
+#: ../plugins/playlist_display/plugin.c:142
 #, fuzzy
 msgid "Create an empty playlist"
 msgstr "Creează listă de redare nouă"
 
-#: ../plugins/playlist_display/plugin.c:140
+#: ../plugins/playlist_display/plugin.c:148
 #, fuzzy
 msgid "Smart Playlist..."
 msgstr "Listă de redare inteligentă"
 
-#: ../plugins/playlist_display/plugin.c:142
+#: ../plugins/playlist_display/plugin.c:150
 #, fuzzy
 msgid "Create a new smart playlist"
 msgstr "Creează listă de redare nouă"
 
-#: ../plugins/playlist_display/plugin.c:148
+#: ../plugins/playlist_display/plugin.c:156
 msgid "Random Playlist from Displayed Tracks"
 msgstr "Listă de redare aleatoare din piesele afişate"
 
-#: ../plugins/playlist_display/plugin.c:150
+#: ../plugins/playlist_display/plugin.c:158
 #, fuzzy
 msgid "Create a random playlist from the displayed tracks"
 msgstr "Listă de redare aleatoare din piesele afişate"
 
-#: ../plugins/playlist_display/plugin.c:156
+#: ../plugins/playlist_display/plugin.c:164
 msgid "Containing Displayed Tracks"
 msgstr "Conţinând piesele afişate"
 
-#: ../plugins/playlist_display/plugin.c:158
+#: ../plugins/playlist_display/plugin.c:166
 #, fuzzy
 msgid "Create a playlist containing the displayed tracks"
 msgstr "S-a creat o listă de redare cu o piesă."
 
-#: ../plugins/playlist_display/plugin.c:164
+#: ../plugins/playlist_display/plugin.c:172
 msgid "Containing Selected Tracks"
 msgstr "Conţinând piesele selectate"
 
-#: ../plugins/playlist_display/plugin.c:166
+#: ../plugins/playlist_display/plugin.c:174
 #, fuzzy
 msgid "Create a playlist containing the selected tracks"
 msgstr "S-a creat o listă de redare cu o piesă."
 
-#: ../plugins/playlist_display/plugin.c:172
+#: ../plugins/playlist_display/plugin.c:180
 msgid "Best Rated Tracks"
 msgstr "Piesele cele mai apreciate"
 
-#: ../plugins/playlist_display/plugin.c:174
+#: ../plugins/playlist_display/plugin.c:182
 #, fuzzy
 msgid "Create a playlist containing the best rated tracks"
 msgstr "S-a creat o listă de redare cu o piesă."
 
-#: ../plugins/playlist_display/plugin.c:180
+#: ../plugins/playlist_display/plugin.c:188
 msgid "Tracks Most Often Listened To"
 msgstr "Cele mai ascultate piese"
 
-#: ../plugins/playlist_display/plugin.c:182
+#: ../plugins/playlist_display/plugin.c:190
 msgid "Create a playlist containing the tracks most often listened to"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:188
+#: ../plugins/playlist_display/plugin.c:196
 msgid "Most Recently Played Tracks"
 msgstr "Piese redate recent"
 
-#: ../plugins/playlist_display/plugin.c:190
+#: ../plugins/playlist_display/plugin.c:198
 #, fuzzy
 msgid "Create a playlist containing the most recently played tracks"
 msgstr "S-a creat o listă de redare cu o piesă."
 
-#: ../plugins/playlist_display/plugin.c:196
+#: ../plugins/playlist_display/plugin.c:204
 msgid "All Tracks Played Since Last Time"
 msgstr "Toate piesele redate începând de ultima oară"
 
-#: ../plugins/playlist_display/plugin.c:198
+#: ../plugins/playlist_display/plugin.c:206
 msgid "Create a playlist containing all tracks played since last time"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:204
+#: ../plugins/playlist_display/plugin.c:212
 msgid "All Tracks Never Listened To"
 msgstr "Toate piesele care nu au fost niciodată ascultate"
 
-#: ../plugins/playlist_display/plugin.c:206
+#: ../plugins/playlist_display/plugin.c:214
 msgid "Create a playlist of all tracks never listened to"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:212
+#: ../plugins/playlist_display/plugin.c:220
 msgid "All Tracks not Listed in any Playlist"
 msgstr "Toate piesele ne-listate în nicio listă de redare"
 
-#: ../plugins/playlist_display/plugin.c:214
+#: ../plugins/playlist_display/plugin.c:222
 #, fuzzy
 msgid "Create a playlist of tracks not list in any other playlist"
 msgstr "Toate piesele ne-listate în nicio listă de redare"
 
-#: ../plugins/playlist_display/plugin.c:220
+#: ../plugins/playlist_display/plugin.c:228
 msgid "One for each Artist"
 msgstr "Câte una din fiecare artist"
 
-#: ../plugins/playlist_display/plugin.c:222
+#: ../plugins/playlist_display/plugin.c:230
 #, fuzzy
 msgid "Create a playlist for each artist"
 msgstr "Câte una din fiecare artist"
 
-#: ../plugins/playlist_display/plugin.c:228
+#: ../plugins/playlist_display/plugin.c:236
 msgid "One for each Album"
 msgstr "Câte una din fiecare album"
 
-#: ../plugins/playlist_display/plugin.c:230
+#: ../plugins/playlist_display/plugin.c:238
 #, fuzzy
 msgid "Create a playlist for each album"
 msgstr "S-a creat o listă de redare cu o piesă."
 
-#: ../plugins/playlist_display/plugin.c:236
+#: ../plugins/playlist_display/plugin.c:244
 msgid "One for each Genre"
 msgstr "Câte una din fiecare gen"
 
-#: ../plugins/playlist_display/plugin.c:238
+#: ../plugins/playlist_display/plugin.c:246
 #, fuzzy
 msgid "Create a playlist for each genre"
 msgstr "S-a creat o listă de redare cu o piesă."
 
-#: ../plugins/playlist_display/plugin.c:244
+#: ../plugins/playlist_display/plugin.c:252
 msgid "One for each Composer"
 msgstr "Câte una din fiecare compozitor"
 
-#: ../plugins/playlist_display/plugin.c:246
+#: ../plugins/playlist_display/plugin.c:254
 #, fuzzy
 msgid "Create a playlist for each composer"
 msgstr "Câte una din fiecare compozitor"
 
-#: ../plugins/playlist_display/plugin.c:252
+#: ../plugins/playlist_display/plugin.c:260
 msgid "One for each Year"
 msgstr "Câte una din fiecare an"
 
-#: ../plugins/playlist_display/plugin.c:254
+#: ../plugins/playlist_display/plugin.c:262
 #, fuzzy
 msgid "Create a playlist for each year"
 msgstr "S-a creat o listă de redare cu o piesă."
 
-#: ../plugins/playlist_display/plugin.c:260
+#: ../plugins/playlist_display/plugin.c:268
 msgid "One for each Rating"
 msgstr "Câte una din fiecare nivel de apreciere"
 
-#: ../plugins/playlist_display/plugin.c:262
+#: ../plugins/playlist_display/plugin.c:270
 #, fuzzy
 msgid "Create a playlist for each rating"
 msgstr "S-a creat o listă de redare cu o piesă."
 
-#: ../plugins/playlist_display/plugin.c:276
+#: ../plugins/playlist_display/plugin.c:284
 #, fuzzy
 msgid "Selected Playlist including Tracks from Database"
 msgstr "Lista de redare selectată incluzând piesele din baza de date"
 
-#: ../plugins/playlist_display/plugin.c:284
+#: ../plugins/playlist_display/plugin.c:292
 #, fuzzy
 msgid "Selected Playlist including Tracks from Device"
 msgstr "Lista de redare selectată incluzând piesele de pe iPod"
 
-#: ../plugins/playlist_display/plugin.c:337
+#: ../plugins/playlist_display/plugin.c:345
 #, fuzzy
 msgid "Create a new playlist for the selected iPod"
 msgstr "S-a creat o listă de redare cu o piesă."
 
-#: ../plugins/playlist_display/plugin.c:341
+#: ../plugins/playlist_display/plugin.c:349
 #, fuzzy
 msgid "Load iPods"
 msgstr "Încarcă iPod"
 
-#: ../plugins/playlist_display/plugin.c:341
+#: ../plugins/playlist_display/plugin.c:349
 #, fuzzy
 msgid "Load all or selected iPods"
 msgstr "Adaugă fişiere la '%s'"
 
 #. Add widget directly as scrolling is handled internally by the widget
-#: ../plugins/playlist_display/plugin.c:363
+#: ../plugins/playlist_display/plugin.c:371
 #, fuzzy
 msgid "  iPod Repositories"
 msgstr "Depozit podcasturi"
 
-#: ../plugins/playlist_display/plugin.c:429 ../src/anjuta-about.c:165
+#: ../plugins/playlist_display/plugin.c:437 ../src/anjuta-about.c:165
 #, fuzzy, c-format
 msgid "Couldn't load icon: %s"
 msgstr "Nu am putut obţine blocare pentru '%s'.\n"
@@ -5937,7 +5944,7 @@ msgstr "Comp."
 msgid "Copy selected track(s) to"
 msgstr "Copiază piesa(piesele) selectat(e) către..."
 
-#: ../plugins/sorttab_display/normal_sorttab_page.c:967
+#: ../plugins/sorttab_display/normal_sorttab_page.c:965
 msgid "Compilations"
 msgstr "Compilaţii"
 
@@ -6029,29 +6036,34 @@ msgstr ""
 msgid "Sndchk."
 msgstr "Verif."
 
-#: ../plugins/track_display/plugin.c:46 ../plugins/track_display/plugin.c:112
+#: ../plugins/track_display/plugin.c:47 ../plugins/track_display/plugin.c:113
 #: ../plugins/track_display/track_display.xml.h:13
 #, fuzzy
 msgid "Track Display"
 msgstr "_Afişare"
 
-#: ../plugins/track_display/plugin.c:54
+#: ../plugins/track_display/plugin.c:55
 msgid "Selected Tracks from Playlist"
 msgstr "Piese selectate din lista de redare"
 
-#: ../plugins/track_display/plugin.c:57
+#: ../plugins/track_display/plugin.c:58
 msgid "Selected Tracks from Database"
 msgstr "Piese selectate din baza de date"
 
-#: ../plugins/track_display/plugin.c:60
+#: ../plugins/track_display/plugin.c:61
 #, fuzzy
 msgid "Selected Tracks from Device"
 msgstr "Piese selectate de pe iPod "
 
-#: ../plugins/track_display/plugin.c:136
+#: ../plugins/track_display/plugin.c:137
 #, fuzzy
 msgid "  Playlist Tracks"
 msgstr "Liste de redare"
+
+#: ../plugins/track_display/plugin.c:219
+#, fuzzy
+msgid "Normalise"
+msgstr "_Normalizare volum"
 
 #: ../plugins/track_display/track_display.xml.h:1
 msgid "<b>Available Columns</b>"
@@ -6329,6 +6341,25 @@ msgstr "Informaţie"
 #: ../src/gtkpod.c:206
 msgid "Loaded Session..."
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "%s\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr "%s - %s"
+
+#~ msgid "Information"
+#~ msgstr "Informaţie"
+
+#~ msgid "Press button to abort."
+#~ msgstr "Apăsaţi butonul pentru a abandona."
+
+#~ msgid "Aborting..."
+#~ msgstr "Renunţare..."
+
+#~ msgid "Will abort after current mp3gain process ends."
+#~ msgstr "Voi abandonda după ce procesul curent mp3gain se încheie."
 
 #, fuzzy
 #~ msgid "gtkpod iPod Manager"
@@ -6881,9 +6912,6 @@ msgstr ""
 #~ msgid "_Newly Added Tracks"
 #~ msgstr "Piese adăugate _recent"
 
-#~ msgid "_Normalize Volume"
-#~ msgstr "_Normalizare volum"
-
 #~ msgid "_Play Now"
 #~ msgstr "_Redă acum"
 
@@ -7008,12 +7036,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Puteţi folosi de asemenea antetele tabelului, dar această opţiune vă "
 #~ "permite să sortaţi conform unei coloane care nu este afişată."
-
-#~ msgid "Normalized %d of %d tracks."
-#~ msgid_plural "Normalized %d of %d tracks."
-#~ msgstr[0] "Am normalizat %d din %d piese."
-#~ msgstr[1] "Am normalizat %d din %d piese."
-#~ msgstr[2] "Am normalizat %d din %d piese."
 
 #~ msgid "No command set for '%s'"
 #~ msgstr "Nici o comandă stabilită pentru '%s'"

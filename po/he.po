@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-29 10:19+0000\n"
+"POT-Creation-Date: 2011-12-20 10:57+0000\n"
 "PO-Revision-Date: 2010-08-10 07:37+0200\n"
 "Last-Translator: David Kohen <dudyk@users.sourceforge.net>\n"
 "Language-Team: HEBREW <kde-il@yahoogroups.com>\n"
@@ -577,26 +577,16 @@ msgstr ""
 msgid "Error writing to '%s'.\n"
 msgstr "תקלה בכתיבה ל-'%s'.\n"
 
-#: ../libgtkpod/file.c:2064
+#: ../libgtkpod/file.c:2068
 #, c-format
-msgid "Failed to read sound check from track because"
+msgid "Failed to read sound check from track with no path setting."
 msgstr ""
 
-#: ../libgtkpod/file.c:2071
+#: ../libgtkpod/file.c:2076
 #, c-format
 msgid ""
-"%s\n"
-"\n"
-"filetype of %s is not recognised."
+"Failed to read sound check from track because filetype is not recognised."
 msgstr ""
-
-#: ../libgtkpod/file.c:2076 ../libgtkpod/file.c:2078
-#, fuzzy, c-format
-msgid ""
-"%s\n"
-"\n"
-"%s"
-msgstr "%s - %s"
 
 #: ../libgtkpod/file.c:2106
 #, c-format
@@ -1089,22 +1079,22 @@ msgid ""
 "for conversion and transfer."
 msgstr "תמונות"
 
-#: ../libgtkpod/file_itunesdb.c:1519
+#: ../libgtkpod/file_itunesdb.c:1523
 #, c-format
 msgid "Saving: waiting for %d tracks to be copied"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1523
+#: ../libgtkpod/file_itunesdb.c:1527
 #, fuzzy, c-format
 msgid "Saving: waiting for %d tracks to convert"
 msgstr "מצב: ממתין לסיום ההמרה"
 
-#: ../libgtkpod/file_itunesdb.c:1526
+#: ../libgtkpod/file_itunesdb.c:1530
 #, fuzzy, c-format
 msgid "Saving: finished track transfer"
 msgstr "מצב: העברה הסתיימה"
 
-#: ../libgtkpod/file_itunesdb.c:1558
+#: ../libgtkpod/file_itunesdb.c:1562
 #, c-format
 msgid ""
 "One track could not be transferred because your iPod is full. Either delete "
@@ -1121,7 +1111,7 @@ msgstr[1] ""
 "אי אפשר להעביר %d רצועות בעקבות זה שה־iPod שלך מלא. מחק מספר רצועות או "
 "לחילופין פנה מקום על ה־iPod לפני שתנתק את ה־iPod שוב."
 
-#: ../libgtkpod/file_itunesdb.c:1627
+#: ../libgtkpod/file_itunesdb.c:1631
 #, c-format
 msgid ""
 "You did not import the existing iTunesDB ('%s'). This is most likely "
@@ -1136,44 +1126,44 @@ msgstr ""
 "אם תדלג על השמירה, תוכל לייבא את מסד הנתונים הקיים לפני קריאה לפונקציה זו "
 "שוב.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1631 ../libgtkpod/misc_playlist.c:836
+#: ../libgtkpod/file_itunesdb.c:1635 ../libgtkpod/misc_playlist.c:836
 msgid "Existing iTunes database not imported"
 msgstr "מסד הנתונים של ה-iTunes לא יובא"
 
-#: ../libgtkpod/file_itunesdb.c:1631 ../libgtkpod/misc_playlist.c:836
+#: ../libgtkpod/file_itunesdb.c:1635 ../libgtkpod/misc_playlist.c:836
 msgid "Proceed anyway"
 msgstr "המשך בכל מקרה"
 
-#: ../libgtkpod/file_itunesdb.c:1631
+#: ../libgtkpod/file_itunesdb.c:1635
 msgid "Skip storing"
 msgstr "דילוג על השמירה"
 
-#: ../libgtkpod/file_itunesdb.c:1654
+#: ../libgtkpod/file_itunesdb.c:1658
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
 msgstr "מבנה התיקיות של ה-iPod חייב להיות זמין לפני סנכרון ה-iPod.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1661
+#: ../libgtkpod/file_itunesdb.c:1665
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr "מספר רצועות לא יכלו להימחק מה-iPod. יצוא בוטל!"
 
-#: ../libgtkpod/file_itunesdb.c:1677
+#: ../libgtkpod/file_itunesdb.c:1687
 #, c-format
 msgid "Now writing database '%s'. Please wait..."
 msgstr "כותב כעת מסד נתונים '%s'. אנא המתן..."
 
-#: ../libgtkpod/file_itunesdb.c:1726
+#: ../libgtkpod/file_itunesdb.c:1736
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "קובץ מידע מורחב לא נמחק: '%s'"
 
-#: ../libgtkpod/file_itunesdb.c:1850
+#: ../libgtkpod/file_itunesdb.c:1860
 #, c-format
 msgid "%s: Database saved"
 msgstr "מסד נתונים של iPod נשמר :%s"
 
-#: ../libgtkpod/file_itunesdb.c:1853
+#: ../libgtkpod/file_itunesdb.c:1863
 #, c-format
 msgid "%s: Changes saved"
 msgstr "%s: שינויים נשמרו"
@@ -1387,7 +1377,7 @@ msgstr[0] "הסר את הרצועה ממסד הנתונים המקומי?"
 msgstr[1] "הסר את הרצועות ממסד הנתונים המקומי?"
 
 #: ../libgtkpod/misc_conversion.c:60
-#: ../plugins/sorttab_display/normal_sorttab_page.c:940
+#: ../plugins/sorttab_display/normal_sorttab_page.c:938
 msgid "All"
 msgstr "הכל"
 
@@ -1759,19 +1749,19 @@ msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "הנתיב URI '%s' מכיל תווים לא חוקיים"
 
 #: ../libgtkpod/misc_playlist.c:69
-#: ../plugins/playlist_display/playlist_display_spl.c:1497
+#: ../plugins/playlist_display/playlist_display_spl.c:1503
 msgid "Please load the iPod before adding playlists."
 msgstr "אנא טען את ה־iPod לפני הוספת רצועות."
 
 #: ../libgtkpod/misc_playlist.c:74 ../libgtkpod/misc_playlist.c:318
-#: ../plugins/playlist_display/playlist_display_spl.c:1446
-#: ../plugins/playlist_display/playlist_display_spl.c:1502
-#: ../plugins/playlist_display/plugin.c:337
+#: ../plugins/playlist_display/playlist_display_spl.c:1452
+#: ../plugins/playlist_display/playlist_display_spl.c:1508
+#: ../plugins/playlist_display/plugin.c:345
 msgid "New Playlist"
 msgstr "רשימת השמעה חדשה"
 
 #: ../libgtkpod/misc_playlist.c:74 ../libgtkpod/misc_playlist.c:318
-#: ../plugins/playlist_display/playlist_display_spl.c:1502
+#: ../plugins/playlist_display/playlist_display_spl.c:1508
 msgid "Please enter a name for the new playlist"
 msgstr "הכנס בבקשה את השם של רשימת ההשמעה החדשה"
 
@@ -2299,7 +2289,7 @@ msgstr "כלום לא השתנה.\n"
 msgid "Sync summary"
 msgstr "סיכום הסנכרון"
 
-#: ../libgtkpod/tools.c:108
+#: ../libgtkpod/tools.c:116
 #, c-format
 msgid ""
 "Could not find '%s'.\n"
@@ -2312,7 +2302,7 @@ msgstr ""
 "התכנית אם היא לא מותקנת על המערכת שלך.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:190
+#: ../libgtkpod/tools.c:200
 #, c-format
 msgid ""
 "Execution of '%s' failed.\n"
@@ -2321,68 +2311,73 @@ msgstr ""
 "הביצוע של '%s' נכשל.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:221
-#, c-format
-msgid ""
-"Normalization failed: file not available (%s).\n"
-"\n"
+#: ../libgtkpod/tools.c:236
+#, fuzzy, c-format
+msgid "Normalization failed: file not available (%s)."
 msgstr ""
 "נרמול נכשל: קובץ לא קיים (%s).\n"
 "\n"
 
-#: ../libgtkpod/tools.c:234
+#: ../libgtkpod/tools.c:250
 #, c-format
 msgid ""
-"Normalization failed for file %s: file type not supported.\n"
-"To normalize mp3 and aac files ensure the following commands paths have been "
-"set in the Tools section\n"
-"\tmp3 files: mp3gain\n"
-"\taac files: aacgain"
+"Normalization failed for file %s: file type not supported.To normalize mp3 "
+"and aac files ensure the following commands paths have been set in the Tools "
+"section\tmp3 files: mp3gain\taac files: aacgain"
 msgstr ""
 
-#: ../libgtkpod/tools.c:301
-msgid "Information"
-msgstr "מידע"
-
-#: ../libgtkpod/tools.c:305
-msgid "Press button to abort."
-msgstr "לביטול לחץ על הכפתור."
-
-#: ../libgtkpod/tools.c:318
-msgid "Normalizing..."
+#. gint id,
+#. gboolean modal,
+#: ../libgtkpod/tools.c:296
+#, fuzzy
+msgid "Normalization Errors"
 msgstr "מנרמל..."
 
-#: ../libgtkpod/tools.c:388
-msgid "Aborting..."
-msgstr "מבטל..."
+#. title
+#: ../libgtkpod/tools.c:297
+msgid "Errors created by track normalisation"
+msgstr ""
 
-#: ../libgtkpod/tools.c:391
-msgid "Will abort after current mp3gain process ends."
-msgstr "יבוטל אחרי שתהליך mp3gain יסתיים."
-
-#: ../libgtkpod/tools.c:414
-#, c-format
-msgid ""
-"'%s-%s' (%s) could not be normalized.\n"
-"\n"
+#: ../libgtkpod/tools.c:393
+#, fuzzy, c-format
+msgid "'%s-%s' (%s) could not be normalized. %s\n"
 msgstr ""
 "אי אפשר לנרמל את '%s-%s' (%s)\n"
 "\n"
 
-#. don't bounce up too quickly (>10% change only)
-#. left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;
-#: ../libgtkpod/tools.c:436 ../plugins/exporter/file_export.c:494
-#, c-format
-msgid "%d%% (%d:%02d:%02d left)"
+#: ../libgtkpod/tools.c:396
+#, fuzzy, c-format
+msgid "'%s-%s' (%s) could not be normalized. Unknown error.\n"
+msgstr ""
+"אי אפשר לנרמל את '%s-%s' (%s)\n"
+"\n"
+
+#: ../libgtkpod/tools.c:412
+#, fuzzy, c-format
+msgid "%d%% (%d tracks left)"
 msgstr "%d%% (%d:%02d:%02d נותרו)"
 
-#: ../libgtkpod/tools.c:540
+#: ../libgtkpod/tools.c:423
+#, fuzzy, c-format
+msgid "Normalized %d of %d track."
+msgid_plural "Normalized %d of %d tracks."
+msgstr[0] "נורמלו %d מתוך %d רצועות."
+msgstr[1] "נורמלו %d מתוך %d רצועות."
+
+#: ../libgtkpod/tools.c:440
+#, c-format
+msgid "Normalized %d of %d tracks."
+msgid_plural "Normalized %d of %d tracks."
+msgstr[0] "נורמלו %d מתוך %d רצועות."
+msgstr[1] "נורמלו %d מתוך %d רצועות."
+
+#: ../libgtkpod/tools.c:531
 msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
 msgstr "אנא ציין את הפקודה שיקראו לה בחלק 'כלים' בחלון הדו-שיח העדפות.\n"
 
-#: ../libgtkpod/tools.c:551
+#: ../libgtkpod/tools.c:542
 #, c-format
 msgid ""
 "Could not find the command '%s'.\n"
@@ -2395,7 +2390,7 @@ msgstr ""
 "אנא בדוק את ההגדרות בחלק 'כלים' של חלון דו-שיח ההעדפות.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:592
+#: ../libgtkpod/tools.c:583
 #, c-format
 msgid ""
 "'%s' returned the following output:\n"
@@ -3483,7 +3478,7 @@ msgstr "תקלה בהעתקת '%s' ל '%s' (%s)\n"
 
 #. File may have been skipped so need to log message
 #: ../plugins/exporter/file_export.c:320 ../plugins/exporter/file_export.c:328
-#: ../plugins/playlist_display/playlist_display_actions.c:172
+#: ../plugins/playlist_display/playlist_display_actions.c:173
 #, c-format
 msgid "'%s'\n"
 msgstr ""
@@ -3516,6 +3511,11 @@ msgid ""
 "Failed to write '%s-%s'\n"
 "\n"
 msgstr "כישלון בכתיבה ל '%s-%s'\n"
+
+#: ../plugins/exporter/file_export.c:494
+#, c-format
+msgid "%d%% (%d:%02d:%02d left)"
+msgstr "%d%% (%d:%02d:%02d נותרו)"
 
 #: ../plugins/exporter/file_export.c:503
 #, fuzzy, c-format
@@ -4128,13 +4128,13 @@ msgstr "שורש ה-mserv:"
 msgid "_Update mserv Data from File"
 msgstr "עדכון _נתוני mserv מקובץ"
 
-#: ../plugins/mserv/plugin.c:65 ../plugins/playlist_display/plugin.c:268
-#: ../plugins/playlist_display/plugin.c:292
+#: ../plugins/mserv/plugin.c:65 ../plugins/playlist_display/plugin.c:276
+#: ../plugins/playlist_display/plugin.c:300
 #, fuzzy
 msgid "Selected Playlist"
 msgstr "_רשימות השמעה נבחרות"
 
-#: ../plugins/mserv/plugin.c:73 ../plugins/track_display/plugin.c:63
+#: ../plugins/mserv/plugin.c:73 ../plugins/track_display/plugin.c:64
 #, fuzzy
 msgid "Selected Tracks"
 msgstr "ר_צועות נבחרות"
@@ -4404,7 +4404,7 @@ msgstr "התאמה:"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:16
 #: ../plugins/playlist_display/plugin.c:50
-#: ../plugins/playlist_display/plugin.c:334
+#: ../plugins/playlist_display/plugin.c:342
 #, fuzzy
 msgid "Playlist Display"
 msgstr "רשימות השמעה"
@@ -4414,7 +4414,7 @@ msgid "Playlist name:"
 msgstr "שם רשימת ההשמעה:"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:18
-#: ../plugins/playlist_display/playlist_display_spl.c:1502
+#: ../plugins/playlist_display/playlist_display_spl.c:1508
 #: ../plugins/repository_editor/repository_editor.c:1241
 msgid "Smart Playlist"
 msgstr "רשימת השמעה חכמה"
@@ -4427,83 +4427,83 @@ msgstr "מיין על פי:"
 msgid "_Limit to"
 msgstr "_הגבל ל"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:65
-#: ../plugins/playlist_display/playlist_display_actions.c:320
+#: ../plugins/playlist_display/playlist_display_actions.c:66
+#: ../plugins/playlist_display/playlist_display_actions.c:321
 #, fuzzy, c-format
 msgid "%s\n"
 msgstr "%s - %s"
 
 #. gint id,
 #. gboolean modal,
-#: ../plugins/playlist_display/playlist_display_actions.c:90
+#: ../plugins/playlist_display/playlist_display_actions.c:91
 msgid "Directory Addition Errors"
 msgstr ""
 
 #. title
-#: ../plugins/playlist_display/playlist_display_actions.c:91
+#: ../plugins/playlist_display/playlist_display_actions.c:92
 #, fuzzy
 msgid " Some directories were not added successfully"
 msgstr "מספר קבצים לא הוספו בהצלחה"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:104
+#: ../plugins/playlist_display/playlist_display_actions.c:105
 msgid "Some directories failed to be added but no errors were reported."
 msgstr ""
 
-#: ../plugins/playlist_display/playlist_display_actions.c:127
-#: ../plugins/playlist_display/playlist_display_actions.c:267
-#: ../plugins/playlist_display/playlist_display_actions.c:389
+#: ../plugins/playlist_display/playlist_display_actions.c:128
+#: ../plugins/playlist_display/playlist_display_actions.c:268
+#: ../plugins/playlist_display/playlist_display_actions.c:390
 msgid "Please select a playlist or repository before adding tracks."
 msgstr "אנא בחר רשימת השמעה או מאגר לפני הוספת רצועות."
 
-#: ../plugins/playlist_display/playlist_display_actions.c:132
+#: ../plugins/playlist_display/playlist_display_actions.c:133
 msgid "Add Folder"
 msgstr "הוספת תיקייה"
 
 #. gint id,
 #. gboolean modal,
-#: ../plugins/playlist_display/playlist_display_actions.c:197
+#: ../plugins/playlist_display/playlist_display_actions.c:198
 msgid "Playlist Addition Errors"
 msgstr ""
 
 #. title
-#: ../plugins/playlist_display/playlist_display_actions.c:198
+#: ../plugins/playlist_display/playlist_display_actions.c:199
 #, fuzzy
 msgid "Some tracks in the playlist were not added successfully"
 msgstr "מספר קבצים לא הוספו בהצלחה"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:211
-#: ../plugins/playlist_display/playlist_display_actions.c:363
+#: ../plugins/playlist_display/playlist_display_actions.c:212
+#: ../plugins/playlist_display/playlist_display_actions.c:364
 msgid "Some tracks failed to be added but no errors were reported."
 msgstr ""
 
-#: ../plugins/playlist_display/playlist_display_actions.c:275
-#: ../plugins/playlist_display/playlist_display_actions.c:399
+#: ../plugins/playlist_display/playlist_display_actions.c:276
+#: ../plugins/playlist_display/playlist_display_actions.c:400
 msgid "Please load the iPod before adding tracks."
 msgstr "אנא טען את ה־iPod לפני הוספת רצועות."
 
 #. Create window title
-#: ../plugins/playlist_display/playlist_display_actions.c:283
+#: ../plugins/playlist_display/playlist_display_actions.c:284
 #, c-format
 msgid "Add playlist files to '%s'"
 msgstr "הוספת קבצי רשימות ניגון אל '%s'"
 
 #. gint id,
 #. gboolean modal,
-#: ../plugins/playlist_display/playlist_display_actions.c:349
+#: ../plugins/playlist_display/playlist_display_actions.c:350
 msgid "File Addition Errors"
 msgstr ""
 
 #. title
-#: ../plugins/playlist_display/playlist_display_actions.c:350
+#: ../plugins/playlist_display/playlist_display_actions.c:351
 msgid "Some files were not added successfully"
 msgstr "מספר קבצים לא הוספו בהצלחה"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:408
+#: ../plugins/playlist_display/playlist_display_actions.c:409
 #, c-format
 msgid "Add files to '%s'"
 msgstr "הוספת קבצים אל '%s'"
 
-#: ../plugins/playlist_display/playlist_display_actions.c:411
+#: ../plugins/playlist_display/playlist_display_actions.c:412
 #, c-format
 msgid "Add files to '%s/%s'"
 msgstr "הוסף קבצים אל '%s/%s'"
@@ -4718,25 +4718,25 @@ msgstr "מדרוג נמוך ביותר"
 msgid "Movie"
 msgstr "סרט"
 
-#: ../plugins/playlist_display/playlist_display_spl.c:1007
-#: ../plugins/playlist_display/playlist_display_spl.c:1021
+#: ../plugins/playlist_display/playlist_display_spl.c:1008
+#: ../plugins/playlist_display/playlist_display_spl.c:1022
 msgid "to"
 msgstr "אל "
 
-#: ../plugins/playlist_display/playlist_display_spl.c:1253
+#: ../plugins/playlist_display/playlist_display_spl.c:1259
 msgid "-"
 msgstr "-"
 
-#: ../plugins/playlist_display/playlist_display_spl.c:1266
+#: ../plugins/playlist_display/playlist_display_spl.c:1272
 msgid "+"
 msgstr "+"
 
-#: ../plugins/playlist_display/playlist_display_spl.c:1507
+#: ../plugins/playlist_display/playlist_display_spl.c:1513
 #, fuzzy
 msgid "Playlist name cannot be blank"
 msgstr "שם רשימת ההשמעה:"
 
-#: ../plugins/playlist_display/playlist_display_spl.c:1513
+#: ../plugins/playlist_display/playlist_display_spl.c:1519
 #, fuzzy, c-format
 msgid "A playlist named '%s' already exists"
 msgstr "אלבום בשם זה כבר קיים."
@@ -4912,193 +4912,198 @@ msgstr "לא נבחרה רשימת השמעה"
 
 #: ../plugins/playlist_display/plugin.c:124
 #, fuzzy
+msgid "Normalize"
+msgstr "מנרמל..."
+
+#: ../plugins/playlist_display/plugin.c:132
+#, fuzzy
 msgid "_New Playlist"
 msgstr "רשימת השמעה חדשה"
 
-#: ../plugins/playlist_display/plugin.c:132
+#: ../plugins/playlist_display/plugin.c:140
 #, fuzzy
 msgid "Empty Playlist..."
 msgstr "רשימת השמעה ריקה"
 
-#: ../plugins/playlist_display/plugin.c:134
+#: ../plugins/playlist_display/plugin.c:142
 #, fuzzy
 msgid "Create an empty playlist"
 msgstr "יצירת רשימת השמעה חדשה"
 
-#: ../plugins/playlist_display/plugin.c:140
+#: ../plugins/playlist_display/plugin.c:148
 #, fuzzy
 msgid "Smart Playlist..."
 msgstr "רשימת השמעה חכמה"
 
-#: ../plugins/playlist_display/plugin.c:142
+#: ../plugins/playlist_display/plugin.c:150
 #, fuzzy
 msgid "Create a new smart playlist"
 msgstr "יצירת רשימת השמעה חדשה"
 
-#: ../plugins/playlist_display/plugin.c:148
+#: ../plugins/playlist_display/plugin.c:156
 msgid "Random Playlist from Displayed Tracks"
 msgstr "רשימת השמעה אקראית מהרצועות הנראות"
 
-#: ../plugins/playlist_display/plugin.c:150
+#: ../plugins/playlist_display/plugin.c:158
 #, fuzzy
 msgid "Create a random playlist from the displayed tracks"
 msgstr "רשימת השמעה אקראית מהרצועות הנראות"
 
-#: ../plugins/playlist_display/plugin.c:156
+#: ../plugins/playlist_display/plugin.c:164
 msgid "Containing Displayed Tracks"
 msgstr "המכילה רצועות נראות"
 
-#: ../plugins/playlist_display/plugin.c:158
+#: ../plugins/playlist_display/plugin.c:166
 #, fuzzy
 msgid "Create a playlist containing the displayed tracks"
 msgstr "נוצרה רשימת השמעה עם רצועה אחת."
 
-#: ../plugins/playlist_display/plugin.c:164
+#: ../plugins/playlist_display/plugin.c:172
 msgid "Containing Selected Tracks"
 msgstr "המכילה רצועות נבחרות"
 
-#: ../plugins/playlist_display/plugin.c:166
+#: ../plugins/playlist_display/plugin.c:174
 #, fuzzy
 msgid "Create a playlist containing the selected tracks"
 msgstr "נוצרה רשימת השמעה עם רצועה אחת."
 
-#: ../plugins/playlist_display/plugin.c:172
+#: ../plugins/playlist_display/plugin.c:180
 msgid "Best Rated Tracks"
 msgstr "הרצועות המדורגות בראש"
 
-#: ../plugins/playlist_display/plugin.c:174
+#: ../plugins/playlist_display/plugin.c:182
 #, fuzzy
 msgid "Create a playlist containing the best rated tracks"
 msgstr "נוצרה רשימת השמעה עם רצועה אחת."
 
-#: ../plugins/playlist_display/plugin.c:180
+#: ../plugins/playlist_display/plugin.c:188
 msgid "Tracks Most Often Listened To"
 msgstr "הרצועות שהכי מאזינים להן"
 
-#: ../plugins/playlist_display/plugin.c:182
+#: ../plugins/playlist_display/plugin.c:190
 msgid "Create a playlist containing the tracks most often listened to"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:188
+#: ../plugins/playlist_display/plugin.c:196
 msgid "Most Recently Played Tracks"
 msgstr "הרצועות שהושמעו הכי לאחרונה"
 
-#: ../plugins/playlist_display/plugin.c:190
+#: ../plugins/playlist_display/plugin.c:198
 #, fuzzy
 msgid "Create a playlist containing the most recently played tracks"
 msgstr "נוצרה רשימת השמעה עם רצועה אחת."
 
-#: ../plugins/playlist_display/plugin.c:196
+#: ../plugins/playlist_display/plugin.c:204
 msgid "All Tracks Played Since Last Time"
 msgstr "כל הרצועות שהושמעו מאז הפעם האחרונה"
 
-#: ../plugins/playlist_display/plugin.c:198
+#: ../plugins/playlist_display/plugin.c:206
 msgid "Create a playlist containing all tracks played since last time"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:204
+#: ../plugins/playlist_display/plugin.c:212
 msgid "All Tracks Never Listened To"
 msgstr "כל הרצועות שמעולם לא השמיעו אותן"
 
-#: ../plugins/playlist_display/plugin.c:206
+#: ../plugins/playlist_display/plugin.c:214
 msgid "Create a playlist of all tracks never listened to"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:212
+#: ../plugins/playlist_display/plugin.c:220
 msgid "All Tracks not Listed in any Playlist"
 msgstr "כל הרצועות שלא מופיעות באף רשימת השמעה"
 
-#: ../plugins/playlist_display/plugin.c:214
+#: ../plugins/playlist_display/plugin.c:222
 #, fuzzy
 msgid "Create a playlist of tracks not list in any other playlist"
 msgstr "כל הרצועות שלא מופיעות באף רשימת השמעה"
 
-#: ../plugins/playlist_display/plugin.c:220
+#: ../plugins/playlist_display/plugin.c:228
 msgid "One for each Artist"
 msgstr "אחת לכל אמן"
 
-#: ../plugins/playlist_display/plugin.c:222
+#: ../plugins/playlist_display/plugin.c:230
 #, fuzzy
 msgid "Create a playlist for each artist"
 msgstr "נוצרה רשימת השמעה עם רצועה אחת."
 
-#: ../plugins/playlist_display/plugin.c:228
+#: ../plugins/playlist_display/plugin.c:236
 msgid "One for each Album"
 msgstr "אחת לכל כותר"
 
-#: ../plugins/playlist_display/plugin.c:230
+#: ../plugins/playlist_display/plugin.c:238
 #, fuzzy
 msgid "Create a playlist for each album"
 msgstr "נוצרה רשימת השמעה עם רצועה אחת."
 
-#: ../plugins/playlist_display/plugin.c:236
+#: ../plugins/playlist_display/plugin.c:244
 msgid "One for each Genre"
 msgstr "אחת לכל סגנון"
 
-#: ../plugins/playlist_display/plugin.c:238
+#: ../plugins/playlist_display/plugin.c:246
 #, fuzzy
 msgid "Create a playlist for each genre"
 msgstr "נוצרה רשימת השמעה עם רצועה אחת."
 
-#: ../plugins/playlist_display/plugin.c:244
+#: ../plugins/playlist_display/plugin.c:252
 msgid "One for each Composer"
 msgstr "אחת לכל יוצר"
 
-#: ../plugins/playlist_display/plugin.c:246
+#: ../plugins/playlist_display/plugin.c:254
 #, fuzzy
 msgid "Create a playlist for each composer"
 msgstr "אחת לכל יוצר"
 
-#: ../plugins/playlist_display/plugin.c:252
+#: ../plugins/playlist_display/plugin.c:260
 msgid "One for each Year"
 msgstr "אחת לכל שנה"
 
-#: ../plugins/playlist_display/plugin.c:254
+#: ../plugins/playlist_display/plugin.c:262
 #, fuzzy
 msgid "Create a playlist for each year"
 msgstr "נוצרה רשימת השמעה עם רצועה אחת."
 
-#: ../plugins/playlist_display/plugin.c:260
+#: ../plugins/playlist_display/plugin.c:268
 msgid "One for each Rating"
 msgstr "אחת לכל מדרוג"
 
-#: ../plugins/playlist_display/plugin.c:262
+#: ../plugins/playlist_display/plugin.c:270
 #, fuzzy
 msgid "Create a playlist for each rating"
 msgstr "נוצרה רשימת השמעה עם רצועה אחת."
 
-#: ../plugins/playlist_display/plugin.c:276
+#: ../plugins/playlist_display/plugin.c:284
 #, fuzzy
 msgid "Selected Playlist including Tracks from Database"
 msgstr "נבחרה רשימת השמעה כולל רצועות ממסד הנתונים"
 
-#: ../plugins/playlist_display/plugin.c:284
+#: ../plugins/playlist_display/plugin.c:292
 #, fuzzy
 msgid "Selected Playlist including Tracks from Device"
 msgstr "נבחרה רשימת השמעה כולל רצועות מה־iPod"
 
-#: ../plugins/playlist_display/plugin.c:337
+#: ../plugins/playlist_display/plugin.c:345
 #, fuzzy
 msgid "Create a new playlist for the selected iPod"
 msgstr "נוצרה רשימת השמעה עם רצועה אחת."
 
-#: ../plugins/playlist_display/plugin.c:341
+#: ../plugins/playlist_display/plugin.c:349
 #, fuzzy
 msgid "Load iPods"
 msgstr "טען iPod"
 
-#: ../plugins/playlist_display/plugin.c:341
+#: ../plugins/playlist_display/plugin.c:349
 #, fuzzy
 msgid "Load all or selected iPods"
 msgstr "הוספת קבצים אל '%s'"
 
 #. Add widget directly as scrolling is handled internally by the widget
-#: ../plugins/playlist_display/plugin.c:363
+#: ../plugins/playlist_display/plugin.c:371
 #, fuzzy
 msgid "  iPod Repositories"
 msgstr "מאגר פודקסטים"
 
-#: ../plugins/playlist_display/plugin.c:429 ../src/anjuta-about.c:165
+#: ../plugins/playlist_display/plugin.c:437 ../src/anjuta-about.c:165
 #, fuzzy, c-format
 msgid "Couldn't load icon: %s"
 msgstr "אי אשפר להשיג נעילה על '%s'.\n"
@@ -5780,7 +5785,7 @@ msgstr "יצירה"
 msgid "Copy selected track(s) to"
 msgstr "העתק רצועה/ות נבחרת/ות אל..."
 
-#: ../plugins/sorttab_display/normal_sorttab_page.c:967
+#: ../plugins/sorttab_display/normal_sorttab_page.c:965
 msgid "Compilations"
 msgstr "יצירות"
 
@@ -5871,29 +5876,34 @@ msgstr "עוצמה"
 msgid "Sndchk."
 msgstr "בדיקת קול"
 
-#: ../plugins/track_display/plugin.c:46 ../plugins/track_display/plugin.c:112
+#: ../plugins/track_display/plugin.c:47 ../plugins/track_display/plugin.c:113
 #: ../plugins/track_display/track_display.xml.h:13
 #, fuzzy
 msgid "Track Display"
 msgstr "תצוגה"
 
-#: ../plugins/track_display/plugin.c:54
+#: ../plugins/track_display/plugin.c:55
 msgid "Selected Tracks from Playlist"
 msgstr "הרצועות הנבחרות מרשימות הניגון"
 
-#: ../plugins/track_display/plugin.c:57
+#: ../plugins/track_display/plugin.c:58
 msgid "Selected Tracks from Database"
 msgstr "הרצועות הנבחרות ממסד הנתונים"
 
-#: ../plugins/track_display/plugin.c:60
+#: ../plugins/track_display/plugin.c:61
 #, fuzzy
 msgid "Selected Tracks from Device"
 msgstr "הרצועות הנבחרות מה־iPod"
 
-#: ../plugins/track_display/plugin.c:136
+#: ../plugins/track_display/plugin.c:137
 #, fuzzy
 msgid "  Playlist Tracks"
 msgstr "רשימות השמעה"
+
+#: ../plugins/track_display/plugin.c:219
+#, fuzzy
+msgid "Normalise"
+msgstr "_נרמל עוצמת קול"
 
 #: ../plugins/track_display/track_display.xml.h:1
 msgid "<b>Available Columns</b>"
@@ -6168,6 +6178,25 @@ msgstr "אישור"
 #: ../src/gtkpod.c:206
 msgid "Loaded Session..."
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "%s\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr "%s - %s"
+
+#~ msgid "Information"
+#~ msgstr "מידע"
+
+#~ msgid "Press button to abort."
+#~ msgstr "לביטול לחץ על הכפתור."
+
+#~ msgid "Aborting..."
+#~ msgstr "מבטל..."
+
+#~ msgid "Will abort after current mp3gain process ends."
+#~ msgstr "יבוטל אחרי שתהליך mp3gain יסתיים."
 
 #~ msgid "gtkpod iPod Manager"
 #~ msgstr "תוכנת gtkpod מנהל ה־iPod"
@@ -6704,11 +6733,6 @@ msgstr ""
 #~ msgid "Could not access the iPod's photo database."
 #~ msgstr "אי אפשר לגשת אל מסד הנתונים של התמונות ב־iPod."
 
-#~ msgid "Normalized %d of %d tracks."
-#~ msgid_plural "Normalized %d of %d tracks."
-#~ msgstr[0] "נורמלו %d מתוך %d רצועות."
-#~ msgstr[1] "נורמלו %d מתוך %d רצועות."
-
 #~ msgid "No command set for '%s'"
 #~ msgstr "אין רשימת פקודות ל-'%s'"
 
@@ -6965,9 +6989,6 @@ msgstr ""
 
 #~ msgid "_Newly Added Tracks"
 #~ msgstr "_רצועות חדשות שהוספו"
-
-#~ msgid "_Normalize Volume"
-#~ msgstr "_נרמל עוצמת קול"
 
 #~ msgid "_Play Now"
 #~ msgstr "_נגן עכשיו"
