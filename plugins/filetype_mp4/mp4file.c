@@ -690,21 +690,25 @@ Track *mp4_get_file_info(const gchar *mp4FileName, GError **error) {
                 guint32 samplerate = MP4GetTrackTimeScale(mp4File, trackId);
 
                 track = gp_track_new();
-                track->mediatype = ITDB_MEDIATYPE_MOVIE;
-                track->movie_flag = 0x01;
                 track->tracklen = msDuration;
                 track->bitrate = avgBitRate / 1000;
                 track->samplerate = samplerate;
                 value = strrchr(mp4FileName, '.');
                 if (value) {
                     if (g_ascii_strcasecmp(value, ".m4a") == 0)
+                        track->mediatype = ITDB_MEDIATYPE_AUDIO;
                         track->filetype = g_strdup(_("AAC audio file"));
                     if (g_ascii_strcasecmp(value, ".m4p") == 0)
+                        track->mediatype = ITDB_MEDIATYPE_AUDIO;
                         track->filetype = g_strdup(_("Protected AAC audio file"));
                     if (g_ascii_strcasecmp(value, ".m4b") == 0)
+                        track->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
                         track->filetype = g_strdup(_("AAC audio book file"));
-                    if (g_ascii_strcasecmp(value, ".mp4") == 0)
+                    if (g_ascii_strcasecmp(value, ".mp4") == 0) {
+                        track->mediatype = ITDB_MEDIATYPE_MOVIE;
+                        track->movie_flag = 0x01;
                         track->filetype = g_strdup(_("MP4 video file"));
+                    }
                 }
                 if (prefs_get_int("readtags")) {
                     if (MP4GetMetadataName(mp4File, &value) && value != NULL) {
