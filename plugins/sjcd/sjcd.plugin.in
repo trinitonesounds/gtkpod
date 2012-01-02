@@ -1,0 +1,4 @@
+[Anjuta Plugin]
+Location=sjcd:SJCDPlugin
+_Name=Sound Juicer Plugin
+_Description=Extract tracks from CDs

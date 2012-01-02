@@ -90,6 +90,8 @@ This program borrows code from the following projects
 	mp3info		- mp3 playlength detection <http://ibiblio.org/mp3info/>
 		
 	xmms		- dirbrowser, mp3 playlength detection <http://www.xmms.org>
+	
+	sound-juicer - by Ross Burton <ross@burtonini.com> <http://http://live.gnome.org/SoundJuicer>
 
 The GUI was created with the help of glade <http://glade.gnome.org/> and anjuta <http://projects.gnome.org/anjuta>.
 
