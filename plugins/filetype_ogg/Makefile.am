@@ -19,7 +19,7 @@ filetype_ogg_plugin_DATA =
 
 SUBDIRS =
 
-if HAVE_LIBVORBISFILE
+if HAVE_PLUGIN_FILETYPE_OGG
 
 include ../plugins.mk
 filetype_ogg.plugin: build-plugin-file

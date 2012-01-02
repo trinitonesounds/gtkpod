@@ -31,14 +31,15 @@ plugin_LTLIBRARIES = libmedia_player.la
 # Plugin sources
 libmedia_player_la_SOURCES = plugin.c plugin.h \
 						 	 media_player.c media_player.h
-libmedia_player_la_CFLAGS = $(GSTREAMER_ALL_CFLAGS)
+						 	 
+libmedia_player_la_CFLAGS = $(GSTREAMER_CFLAGS)
 libmedia_player_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
 # Plugin dependencies
 libmedia_player_la_LIBADD = \
     $(GTKPOD_LIBS) \
     $(LIBANJUTA_LIBS) \
-    $(GSTREAMER_ALL_LIBS)
+    $(GSTREAMER_LIBS)
 endif
 
 EXTRA_DIST = \

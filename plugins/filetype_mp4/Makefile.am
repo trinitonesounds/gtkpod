@@ -19,7 +19,7 @@ filetype_mp4_plugin_DATA =
 
 SUBDIRS =
 
-if HAVE_MP4
+if HAVE_PLUGIN_FILETYPE_MP4
 
 include ../plugins.mk
 filetype_mp4.plugin: build-plugin-file

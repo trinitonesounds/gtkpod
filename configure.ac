@@ -87,7 +87,16 @@ PKG_CHECK_MODULES(LIBANJUTA, libanjuta-3.0 >= 2.91,, [AC_MSG_FAILURE([*** $LIBAN
 PKG_CHECK_MODULES(LIBGDL, gdl-3.0 >= 3.0.0,, [AC_MSG_FAILURE([*** $LIBGDL_PKG_ERRORS])])
 PKG_CHECK_MODULES(GIO, gio-2.0 >= 2.28.5,, [AC_MSG_FAILURE([*** $GIO_PKG_ERRORS])])
 PKG_CHECK_MODULES(LIBXML, libxml-2.0 >= 2.7.7,, [AC_MSG_FAILURE([*** $LIBXML_PKG_ERRORS])])
+PKG_CHECK_MODULES(ID3TAG, id3tag >= 0.15, [have_id3="yes"], [AC_MSG_FAILURE([*** $ID3TAG_PKG_ERRORS])])
 
+dnl --- optional dependencies ---
+echo "Checking optional dependencies"
+PKG_CHECK_MODULES(CLUTTER_GTK, [clutter-gtk-1.0 >= 1.0], [have_clutter_gtk="yes"], [have_clutter_gtk="no"])
+PKG_CHECK_MODULES(CURL, [libcurl >= 7.10.0], [have_curl="yes"], [have_curl="no"])
+PKG_CHECK_MODULES(WEBKIT, [webkitgtk-3.0 >= 1.3], [have_webkit="yes"], [have_webkit="no"])
+PKG_CHECK_MODULES(GSTREAMER, gstreamer-0.10 >= 0.10.25 gstreamer-interfaces-0.10 >= 0.10.25, [have_gstreamer="yes"], [have_gstreamer="no"])
+PKG_CHECK_MODULES(VORBISFILE, vorbisfile >= 1.3.1, [have_vorbis="yes"], [have_vorbis="no"])
+PKG_CHECK_MODULES(FLAC, flac >= 1.2.1, [have_flac="yes"], [have_flac="no"])
 
 GTK_CLEANLINESS_FLAGS="-DG_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE"
 
@@ -107,8 +116,8 @@ fi
 dnl Force C99 mode (no implicit int declarations)
 CFLAGS="$CFLAGS -std=gnu99 -Werror-implicit-function-declaration"
 
-CFLAGS="$CFLAGS $GTK_CFLAGS $GLIB_CFLAGS $GDK_CFLAGS $GMODULE_CFLAGS $GTHREAD_CFLAGS $LIBGLADE_CFLAGS $LIBGPOD_CFLAGS $LIBANJUTA_CFLAGS $LIBGDL_CFLAGS $LIBXML_CFLAGS $CLUTTER_CFLAGS $GTK_CLEANLINESS_FLAGS"
-LIBS="$LIBS $GTK_LIBS $GLIB_LIBS $GDK_LIBS $GMODULE_LIBS $GTHREAD_LIBS $LIBGLADE_LIBS $LIBGPOD_LIBS $LIBANJUTA_LIBS $LIBGDL_LIBS $LIBXML_LIBS $CLUTTER_LIBS"
+CFLAGS="$CFLAGS $GTK_CFLAGS $GLIB_CFLAGS $GDK_CFLAGS $GMODULE_CFLAGS $GTHREAD_CFLAGS $LIBGLADE_CFLAGS $LIBGPOD_CFLAGS $LIBANJUTA_CFLAGS $LIBGDL_CFLAGS $LIBXML_CFLAGS $ID3TAG_CFLAGS $GTK_CLEANLINESS_FLAGS"
+LIBS="$LIBS $GTK_LIBS $GLIB_LIBS $GDK_LIBS $GMODULE_LIBS $GTHREAD_LIBS $LIBGLADE_LIBS $LIBGPOD_LIBS $LIBANJUTA_LIBS $LIBGDL_LIBS $LIBXML_LIBS $ID3TAG_LIBS"
 
 
 dnl we need 'flex'
@@ -141,51 +150,37 @@ dnl Check if statvfs() is available (otherwise we fall back on 'df' to determine
 dnl free space on the iPod
 AC_CHECK_FUNCS(statvfs)
 
-dnl Check for clutter-gtk 
+dnl Add clutter gtk if installed
 dnl -------------------------------------------------------------
-PKG_CHECK_MODULES(CLUTTER_GTK, [clutter-gtk-1.0 >= 1.0], [have_clutter_gtk="yes"], [have_clutter_gtk="no"])
 if test "x$have_clutter_gtk" = "xyes"; then		
 	AC_DEFINE(HAVE_CLUTTER_GTK, 1, [Define if you have clutter gtk support])
-    AC_SUBST(CLUTTER_GTK_CFLAGS)
-    AC_SUBST(CLUTTER_GTK_LIBS)
     dnl Need to add to CFLAGS and LIBS so main can init correctly
     CFLAGS="$CFLAGS $CLUTTER_GTK_CFLAGS"
-    LIBS="$LIBS $CLUTTER_GTK_LIBS" 		
+    LIBS="$LIBS $CLUTTER_GTK_LIBS"
 fi
 AM_CONDITIONAL(HAVE_CLUTTER_GTK, [test "x$have_clutter_gtk" = "xyes"])
-	
-dnl Check for libid3tag
-dnl -------------------------------------------------------------
-PKG_CHECK_MODULES(ID3TAG, id3tag >= 0.15, [have_id3="yes"], [AC_MSG_FAILURE([*** $ID3TAG_PKG_ERRORS])])
-AM_CONDITIONAL(HAVE_ID3TAG, [test "x$have_id3" = "xyes"])
-if test "x$have_id3" = "xyes"; then
-    AC_DEFINE(HAVE_ID3TAG, 1, [Define if you have id3 support])
-    AC_SUBST(ID3TAG_CFLAGS)
-    AC_SUBST(ID3TAG_LIBS)
-fi
+
 
 dnl Check for libcurl
 dnl -------------------------------------------------------------
 AC_ARG_WITH(curl, AS_HELP_STRING([--without-curl],[Disable coverart download support]))
-if test "x$with_curl" != "xno"; then
-    PKG_CHECK_MODULES(CURL, [libcurl >= 7.10.0], have_curl=yes, have_curl=no)
-    if test "x$with_curl" = "xyes" -a "x$have_curl" = "xno"; then
-        AC_MSG_ERROR([curl support explicitly requested but curl couldn't be found])
-    fi
+if test "x$with_curl" != "xno" -a "x$have_curl" = "xno"; then
+	AC_MSG_ERROR([curl support explicitly requested but curl couldn't be found])
 fi
+
 AM_CONDITIONAL(HAVE_CURL, test "x$have_curl" = "xyes")
 if test "x$have_curl" = "xyes"; then
     AC_DEFINE(HAVE_CURL, 1, [Define if you have curl support])
     have_curl="yes -- will build with coverart download support"
-    AC_SUBST(CURL_CFLAGS)
-    AC_SUBST(CURL_LIBS)
 else
     have_curl="*no -- will build without coverart download support"
 fi
 
 
-dnl Check for webkit
+dnl Checks for coverweb plugin
 dnl -------------------------------------------------------------
+have_coverweb="no"
+
 AC_ARG_ENABLE(plugin-coverweb,
 	AS_HELP_STRING([--disable-plugin-coverweb],[Disable coverweb plugin for finding coverart in gtkpod]), 
 	[ if test "$enableval" = "no"; then
@@ -194,26 +189,27 @@ AC_ARG_ENABLE(plugin-coverweb,
 	[ user_disabled_coverweb=0 ])
 AC_MSG_CHECKING(if coverweb plugin is disabled)
 if test "$user_disabled_coverweb" = 1; then
-	AC_MSG_RESULT(yes)
-	have_coverweb="no"
+	AC_MSG_RESULT(yes)	
 else
 	AC_MSG_RESULT(no)
-	
-	PKG_CHECK_MODULES(WEBKIT,
-		[webkitgtk-3.0 >= 1.3],
-		[have_coverweb="yes"],
-		[have_coverweb="no"])
+	AC_MSG_CHECKING(coverweb plugin dependencies)
+	if test "x$have_webkit" = "xyes"; then
+		have_coverweb="yes"
+		AC_MSG_RESULT(yes)
+	else
+		AC_MSG_RESULT(no)
+	fi
 fi
 AM_CONDITIONAL(HAVE_PLUGIN_COVERWEB, [test "x$have_coverweb" = "xyes"])
 if test "x$have_coverweb" = "xyes"; then
     AC_DEFINE(HAVE_PLUGIN_COVERWEB, 1, [Define if you have coverweb support])
-    AC_SUBST(WEBKIT_CFLAGS)
-    AC_SUBST(WEBKIT_LIBS)
 fi
 
 
-dnl Check for clarity
+dnl Checks for clarity plugin
 dnl -------------------------------------------------------------
+have_clarity="no"
+
 AC_ARG_ENABLE(plugin-clarity,
 	AS_HELP_STRING([--disable-plugin-clarity],[Disable clarity plugin for displaying coverart in gtkpod]), 
 	[ if test "$enableval" = "no"; then
@@ -223,19 +219,22 @@ AC_ARG_ENABLE(plugin-clarity,
 AC_MSG_CHECKING(if clarity plugin is disabled)
 if test "$user_disabled_clarity" = 1; then
 	AC_MSG_RESULT(yes)
-	have_clarity="no"
 else
 	AC_MSG_RESULT(no)
-	if test "x$have_clutter_gtk" = "xyes"; then	
+	AC_MSG_CHECKING(clarity plugin dependencies)
+	if test "x$have_clutter_gtk" = "xyes"; then
 		have_clarity="yes"
+		AC_MSG_RESULT(yes)
 	else
-		have_clarity="no"
+		AC_MSG_RESULT(no)
 	fi
 fi
 AM_CONDITIONAL(HAVE_PLUGIN_CLARITY, [test "x$have_clarity" = "xyes"])	
 
-dnl Check for gstreamer
+dnl Checks for media player plugin
 dnl -------------------------------------------------------------
+have_media_player="no"
+
 AC_ARG_ENABLE(plugin-media-player,
 	AS_HELP_STRING([--disable-plugin-media-player],[Disable media player plugin for playing tracks in gtkpod]), 
 	[ if test "$enableval" = "no"; then
@@ -245,84 +244,46 @@ AC_ARG_ENABLE(plugin-media-player,
 AC_MSG_CHECKING(if media player plugin is disabled)
 if test "$user_disabled_media_player" = 1; then
 	AC_MSG_RESULT(yes)
-	have_media_player="no"
 else
 	AC_MSG_RESULT(no)
-	
-	PKG_CHECK_MODULES(GSTREAMER,
-		[gstreamer-0.10 >= 0.10.25],
-		[have_media_player="yes"],
-		[have_media_player="no"])
-	
-	PKG_CHECK_MODULES(GSTREAMER_INTERFACES,
-		[gstreamer-interfaces-0.10 >= 0.10.25],
-		[have_media_player="yes"],
-		[have_media_player="no"])
+	AC_MSG_CHECKING(media player plugin dependencies)
+	if test "x$have_gstreamer" = "xyes"; then
+		have_media_player="yes"
+		AC_MSG_RESULT(yes)
+	else
+		AC_MSG_RESULT(no)
+	fi
 fi
 AM_CONDITIONAL(HAVE_PLUGIN_MEDIA_PLAYER, [test "x$have_media_player" = "xyes"])
 if test "x$have_media_player" = "xyes"; then
     AC_DEFINE(HAVE_PLUGIN_MEDIA_PLAYER, 1, [Define if you have media player support])
-    GSTREAMER_ALL_CFLAGS="$GSTREAMER_CFLAGS $GSTREAMER_INTERFACES_CFLAGS"
-    GSTREAMER_ALL_LIBS="$GSTREAMER_LIBS $GSTREAMER_INTERFACES_LIBS"
-    AC_SUBST(GSTREAMER_ALL_CFLAGS)
-    AC_SUBST(GSTREAMER_ALL_LIBS)
 fi
 
-dnl Check for libvorbisfile and libvorbis
+dnl Checks for filetype_ogg plugin
 dnl -------------------------------------------------------------
 AC_ARG_WITH(ogg, AS_HELP_STRING([--without-ogg],[Disable Ogg/Vorbis support]))
-if test "x$with_ogg" != "xno"; then
-	PKG_CHECK_MODULES(VORBISFILE, vorbisfile >= 1.3.1, have_ogg=yes, have_ogg=no)
-	if test "x$with_ogg" = "xyes" -a "x$have_ogg" = "xno"; then
-        AC_MSG_WARN([Ogg/Vorbis support explicitly requested but ogg/vorbis libs couldn't be found])
-    fi
+if test "x$with_ogg" != "xno" -a "x$have_vorbis" = "xno"; then
+    AC_MSG_ERROR([Ogg/Vorbis support explicitly requested but ogg/vorbis libs couldn't be found])
 fi
-AM_CONDITIONAL(HAVE_LIBVORBISFILE, test "x$have_ogg" = "xyes")
-if test "x$have_ogg" = "xyes"; then
-    AC_DEFINE(HAVE_LIBVORBISFILE, 1, [Define if you have the ogg/vorbis library])
-    AC_SUBST(VORBISFILE_CFLAGS)
-    AC_SUBST(VORBISFILE_LIBS)
+AM_CONDITIONAL(HAVE_PLUGIN_FILETYPE_OGG, test "x$have_vorbis" = "xyes")
+if test "x$have_vorbis" = "xyes"; then
+    AC_DEFINE(HAVE_PLUGIN_FILETYPE_OGG, 1, [Define if you have the ogg/vorbis support])
 fi
 
-dnl Check for FLAC
+
+dnl Checks for filetype_flac plugin
 dnl -------------------------------------------------------------
 AC_ARG_WITH(flac, AS_HELP_STRING([--without-flac],[Disable FLAC support]))
-if test "x$with_flac" != "xno"; then
-	PKG_CHECK_MODULES(FLAC, flac >= 1.2.1, have_flac=yes, have_flac=no)
-    if test "xwith_flac" = "xyes" -a "x$have_flac" = "xno"; then
-        AC_MSG_ERROR([FLAC support explicitly requested but flac libs couldn't be found])
-    fi
+if test "xwith_flac" = "xyes" -a "x$have_flac" = "xno"; then
+	AC_MSG_ERROR([FLAC support explicitly requested but flac libs couldn't be found])
 fi
-AM_CONDITIONAL(HAVE_FLAC, test "x$have_flac" = "xyes")
+AM_CONDITIONAL(HAVE_PLUGIN_FILETYPE_FLAC, test "x$have_flac" = "xyes")
 if test "x$have_flac" = "xyes"; then
-    AC_DEFINE(HAVE_FLAC, 1, [Define if you have the flac library])
-    AC_SUBST(FLAC_CFLAGS)
-    AC_SUBST(FLAC_LIBS)
+    AC_DEFINE(HAVE_PLUGIN_FILETYPE_FLAC, 1, [Define if you have flac support])
 fi
 
 
-dnl Check for FAAD for use with m4a files
-dnl -------------------------------------------------------------
-AC_ARG_WITH(faad, AS_HELP_STRING([--without-faad],[Disable M4A -> MP3 conversion support]))
-if test "x$with_faad" != "xno"; then
-	AC_CHECK_PROG(FAAD, faad, yes, no)
-	if test "x$FAAD" = "xyes"; then
-		have_faad="yes"
-	else
-        have_faad="no"
-        AC_MSG_WARN(["Cannot find faad. Conversion from m4a to mp3 not possible"])
-    fi
-    if test "xwith_faad" = "xyes" -a "x$have_faad" = "xno"; then
-        AC_MSG_ERROR([FAAD support explicitly requested but not available])
-    fi
-fi
-if test "x$have_faad" = "xyes"; then
-    AC_DEFINE(HAVE_FAAD, 1, [Define if you have the faad binary])
-fi
-AM_CONDITIONAL(HAVE_FAAD, test "x$have_faad" = "xyes")
-
-
-dnl Check for MP4 Headers
+dnl Checks for MP4 and M4A plugins
 dnl -------------------------------------------------------------
 AC_CHECK_HEADERS([mp4v2/mp4v2.h], have_mp4=yes, have_mp4=no)
 if test "x$have_mp4" = "xno"; then
@@ -336,17 +297,29 @@ AC_CHECK_HEADERS([mp4v2/itmf_tags.h], [], [],
 		  #endif
 		  typedef void* MP4FileHandle;
 		 ])
-AM_CONDITIONAL(HAVE_MP4, test "x$have_mp4" = "xyes")
+AM_CONDITIONAL(HAVE_PLUGIN_FILETYPE_MP4, test "x$have_mp4" = "xyes")
 
+
+dnl Check for faad for use filetype_m4a plugin
+dnl -------------------------------------------------------------
+have_faad="no"
+
+AC_CHECK_PROG(FAAD, faad, yes, no)
+if test "x$FAAD" = "xyes"; then
+	have_faad="yes"
+else
+    AC_MSG_WARN(["Cannot find faad. Conversion from m4a to mp3 not possible"])
+fi
 
 dnl Set up variables for M4A plugin
 dnl -------------------------------------------------------------
+
 if test "x$have_mp4" = "xyes" -a "x$have_faad" = "xyes"; then
 	have_m4a="yes"
 else
 	have_m4a="no"
 fi
-AM_CONDITIONAL(HAVE_M4A, test "x$have_m4a" = "xyes")
+AM_CONDITIONAL(HAVE_PLUGIN_FILETYPE_M4A, test "x$have_m4a" = "xyes")
 
 
 # Check that we have endian.h
@@ -610,7 +583,7 @@ echo " Media Player               .....: $have_media_player"
 echo " MP4 File Type              .....: $have_mp4"
 echo " M4A File Type              .....: $have_m4a"
 echo " Flac File Type             .....: $have_flac"
-echo " Ogg File Type              .....: $have_ogg"
+echo " Ogg File Type              .....: $have_vorbis"
 echo " Clarity Display Widget     .....: $have_clarity"
 
 echo " Support for cover download .....: $have_curl"

@@ -19,7 +19,7 @@ filetype_flac_plugin_DATA =
 
 SUBDIRS =
 
-if HAVE_FLAC
+if HAVE_PLUGIN_FILETYPE_FLAC
 
 include ../plugins.mk
 filetype_flac.plugin: build-plugin-file

@@ -19,7 +19,7 @@ filetype_m4a_plugin_DATA =
 
 SUBDIRS =
 
-if HAVE_M4A
+if HAVE_PLUGIN_FILETYPE_M4A
 
 include ../plugins.mk
 filetype_m4a.plugin: build-plugin-file
