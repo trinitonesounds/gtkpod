@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2003 Ross Burton <ross@burtonini.com>
  *
  * Sound Juicer - sound-juicer.h
@@ -33,11 +33,6 @@
  * A GSettings object
  */
 extern GSettings *sj_settings;
-
-/**
- * The main window
- */
-extern GtkWidget *main_window;
 
 /**
  * The GtkBuilder UI file
@@ -124,19 +119,9 @@ extern gboolean eject_finished;
 extern gboolean open_finished;
 
 /**
- * If we are in auto-start mode
- */
-extern gboolean autostart;
-
-/**
  * Toggle, Title and Artist Renderers
  */
 extern GtkCellRenderer *toggle_renderer, *title_renderer, *artist_renderer;
-
-/**
- * Debug
- */
-void sj_debug (SjDebugDomain domain, const gchar* format, ...);
 
 /**
  * GSettings key names
@@ -162,8 +147,5 @@ void sj_debug (SjDebugDomain domain, const gchar* format, ...);
  * Custom stock icons
  */
 #define SJ_STOCK_EXTRACT "sj-stock-extract"
-
-/* TODO: need to add a SjWindow object or something */
-void sj_main_set_title (const char* detail);
 
 #endif /* SOUND_JUICER_H */

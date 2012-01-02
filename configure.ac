@@ -97,6 +97,7 @@ PKG_CHECK_MODULES(WEBKIT, [webkitgtk-3.0 >= 1.3], [have_webkit="yes"], [have_web
 PKG_CHECK_MODULES(GSTREAMER, gstreamer-0.10 >= 0.10.25 gstreamer-interfaces-0.10 >= 0.10.25, [have_gstreamer="yes"], [have_gstreamer="no"])
 PKG_CHECK_MODULES(VORBISFILE, vorbisfile >= 1.3.1, [have_vorbis="yes"], [have_vorbis="no"])
 PKG_CHECK_MODULES(FLAC, flac >= 1.2.1, [have_flac="yes"], [have_flac="no"])
+PKG_CHECK_MODULES(SOUND_JUICER, libcanberra-gtk3 libbrasero-media3 >= 3.0, [have_sj="yes"], [have_sj="no"])		
 
 GTK_CLEANLINESS_FLAGS="-DG_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE"
 
@@ -320,6 +321,58 @@ else
 	have_m4a="no"
 fi
 AM_CONDITIONAL(HAVE_PLUGIN_FILETYPE_M4A, test "x$have_m4a" = "xyes")
+
+
+dnl Checks for sjcd plugin
+dnl -------------------------------------------------------------
+have_sjcd="no"
+
+AC_ARG_ENABLE(plugin-sjcd,
+	AS_HELP_STRING([--disable-plugin-sjcd],[Disable sound juicer plugin for extracting tracks from cd]), 
+	[ if test "$enableval" = "no"; then
+		user_disabled_sjcd=1
+	  fi ],
+	[ user_disabled_sjcd=0 ])
+AC_MSG_CHECKING(if sjcd plugin is disabled)
+if test "$user_disabled_sjcd" = 1; then
+	AC_MSG_RESULT(yes)
+else
+	AC_MSG_RESULT(no)
+	AC_MSG_CHECKING(sjcd plugin dependencies)
+	if test "x$have_gstreamer" = "xyes" -a "x$have_sj" = "xyes"; then
+		AC_MSG_RESULT(yes)
+		have_sjcd="yes"
+		
+		dnl Checks for components of gstreamer
+		if test "x$have_gstreamer" = "xyes"; then
+			AM_GST_ELEMENT_CHECK(vorbisenc,,AC_MSG_WARN([The 'vorbisenc' element was not found. This will cause encoding to Ogg Vorbis to fail.]))
+			AM_GST_ELEMENT_CHECK(flacenc,,AC_MSG_WARN([The 'flacenc' element was not found. This will cause encoding to FLAC to fail.]))
+			AM_GST_ELEMENT_CHECK(wavenc,,AC_MSG_WARN([The 'wavenc' element was not found. This will cause encoding to Wave to fail.]))
+			AM_GST_ELEMENT_CHECK(giosink,,AC_MSG_WARN([The 'giosink' element was not found. This will cause Sound Juicer to fail at runtime.]))
+		fi
+	else
+		AC_MSG_RESULT(no)
+	fi
+fi
+
+if test "x$have_sjcd" = "xyes" ; then
+	dnl musicbrainz 3 is deprecated so may not be included
+    dnl will probably need replacing faily soon
+    
+    PKG_CHECK_MODULES(MUSICBRAINZ3, libmusicbrainz3 >= 3.0.2, [have_mb3="yes"], [have_mb3="no"])		
+    AM_CONDITIONAL(HAVE_MUSICBRAINZ3, [test "x$have_mb3" = "xyes"])
+    if test "x$have_mb3" = "xyes" ; then
+		AC_DEFINE([HAVE_MUSICBRAINZ3], 1, [Whether libmusicbrainz3 is available])
+	else
+        AC_MSG_WARN([libmusicbrainz3 needs to be available for sound-juicer to build])
+        have_sjcd="no"
+    fi
+fi
+
+AM_CONDITIONAL(HAVE_PLUGIN_SJCD, [test "x$have_sjcd" = "xyes"])
+if test "x$have_sjcd" = "xyes"; then
+    AC_DEFINE(HAVE_PLUGIN_SJCD, 1, [Define if you have sound juicer support])
+fi
 
 
 # Check that we have endian.h
@@ -558,6 +611,9 @@ plugins/clarity/icons/hicolor/48x48/Makefile
 plugins/clarity/icons/hicolor/48x48/places/Makefile
 plugins/clarity/icons/hicolor/240x240/Makefile
 plugins/clarity/icons/hicolor/240x240/places/Makefile
+plugins/sjcd/Makefile
+plugins/sjcd/data/Makefile
+plugins/sjcd/libjuicer/Makefile
 ])
 AC_OUTPUT
 
@@ -585,6 +641,7 @@ echo " M4A File Type              .....: $have_m4a"
 echo " Flac File Type             .....: $have_flac"
 echo " Ogg File Type              .....: $have_vorbis"
 echo " Clarity Display Widget     .....: $have_clarity"
+echo " Sound Juicer Widget        .....: $have_sjcd"
 
 echo " Support for cover download .....: $have_curl"
 

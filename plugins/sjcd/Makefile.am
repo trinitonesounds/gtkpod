@@ -16,6 +16,8 @@ sjcd_pixmaps_DATA =
 sjcd_plugindir = $(gtkpod_plugin_dir)
 sjcd_plugin_DATA =
 
+if HAVE_PLUGIN_SJCD
+
 SUBDIRS = data libjuicer
 
 include ../plugins.mk
@@ -26,14 +28,33 @@ plugin_lib = lib$(plugin_name).so
 plugin_LTLIBRARIES = libsjcd.la
 
 # Plugin sources
-libsjcd_la_SOURCES = plugin.c plugin.h
+libsjcd_la_SOURCES = plugin.c plugin.h \
+					 sj-main.c sj-main.h \
+					 sound-juicer.h \
+					 sj-prefs.c sj-prefs.h \
+					 sj-extracting.c sj-extracting.h \
+					 sj-inhibit.c sj-inhibit.h \
+					 sj-genres.c sj-genres.h \
+					 egg-play-preview.c egg-play-preview.h \
+					 bacon-message-connection.c bacon-message-connection.h
 
+libsjcd_la_CFLAGS = -I$(top_srcdir)/plugins/$(plugin_name)/libjuicer \
+					$(GSTREAMER_CFLAGS) \
+					$(SOUND_JUICER_CFLAGS) \
+					$(MUSICBRAINZ3_CFLAGS)
+					
 libsjcd_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
 # Plugin dependencies
 libsjcd_la_LIBADD = \
+	$(top_srcdir)/plugins/$(plugin_name)/libjuicer/libjuicer.la \
     $(GTKPOD_LIBS) \
-    $(LIBANJUTA_LIBS)
+    $(LIBANJUTA_LIBS) \
+    $(GSTREAMER_LIBS) \
+    $(SOUND_JUICER_LIBS) \
+    $(MUSICBRAINZ3_LIBS)
+
+endif
 
 EXTRA_DIST = \
 	$(plugin_file).in \

@@ -25,6 +25,10 @@
 #include <config.h>
 #endif
 
+#include "libgtkpod/gtkpod_app_iface.h"
+#include "libgtkpod/directories.h"
+#include "libgtkpod/misc.h"
+
 #include "sound-juicer.h"
 
 #include <string.h>
@@ -40,7 +44,6 @@
 
 #include "bacon-message-connection.h"
 #include "rb-gst-media-types.h"
-#include "sj-about.h"
 #include "sj-metadata-getter.h"
 #include "sj-extractor.h"
 #include "sj-structures.h"
@@ -48,7 +51,6 @@
 #include "sj-util.h"
 #include "sj-main.h"
 #include "sj-prefs.h"
-#include "sj-play.h"
 #include "sj-genres.h"
 
 gboolean on_delete_event (GtkWidget *widget, GdkEvent *event, gpointer user_data);
@@ -70,12 +72,12 @@ SjExtractor *extractor;
 
 GSettings *sj_settings;
 
-GtkWidget *main_window;
+static GtkWidget *vbox1;
 static GtkWidget *message_area_eventbox;
 static GtkWidget *title_entry, *artist_entry, *duration_label, *genre_entry, *year_entry, *disc_number_entry;
-static GtkWidget *track_listview, *extract_button, *play_button;
+static GtkWidget *track_listview, *extract_button;
 static GtkWidget *status_bar;
-static GtkWidget *extract_menuitem, *play_menuitem, *next_menuitem, *prev_menuitem, *select_all_menuitem, *deselect_all_menuitem;
+static GtkWidget *extract_menuitem, *select_all_menuitem, *deselect_all_menuitem;
 static GtkWidget *submit_menuitem;
 static GtkWidget *duplicate, *eject;
 GtkListStore *track_store;
@@ -99,112 +101,14 @@ static gint no_of_tracks_selected;
 static AlbumDetails *current_album;
 static char *current_submit_url = NULL;
 
-gboolean autostart = FALSE, autoplay = FALSE;
-
-static guint debug_flags = 0;
-
 #define DEFAULT_PARANOIA 4
 #define RAISE_WINDOW "raise-window"
-#define SOURCE_BUILDER "../data/sound-juicer.ui"
-#define INSTALLED_BUILDER DATADIR"/sound-juicer/sound-juicer.ui"
-
-void
-sj_stock_init (void)
-{
-  static gboolean initialized = FALSE;
-  static GtkIconFactory *sj_icon_factory = NULL;
-
-  static const GtkStockItem sj_stock_items[] =
-  {
-    { SJ_STOCK_EXTRACT, N_("E_xtract"), GDK_CONTROL_MASK, GDK_KEY_Return, NULL }
-  };
-
-  if (initialized)
-    return;
-
-  sj_icon_factory = gtk_icon_factory_new ();
-
-  gtk_icon_factory_add (sj_icon_factory, SJ_STOCK_EXTRACT, gtk_icon_factory_lookup_default (GTK_STOCK_CDROM));
-
-  gtk_icon_factory_add_default (sj_icon_factory);
-
-  gtk_stock_add_static (sj_stock_items, G_N_ELEMENTS (sj_stock_items));
-
-  initialized = TRUE;
-}
-
-void
-sj_main_set_title (const char* detail)
-{
-  if (detail == NULL) {
-    gtk_window_set_title (GTK_WINDOW (main_window), _("Sound Juicer"));
-  } else {
-    char *s = g_strdup_printf ("%s - %s", detail, _("Sound Juicer"));
-    gtk_window_set_title (GTK_WINDOW (main_window), s);
-    g_free (s);
-  }
-}
-
-void sj_debug (SjDebugDomain domain, const gchar* format, ...)
-{
-  va_list args;
-  gchar *string;
-
-  if (debug_flags & domain) {
-    va_start (args, format);
-    string = g_strdup_vprintf (format, args);
-    va_end (args);
-    g_printerr ("%s", string);
-    g_free (string);
-  }
-}
-
-static void sj_debug_init (void)
-{
-  const char *str;
-  const GDebugKey debug_keys[] = {
-    { "cd", DEBUG_CD },
-    { "metadata", DEBUG_METADATA },
-    { "playing", DEBUG_PLAYING },
-    { "extracting", DEBUG_EXTRACTING }
-  };
-
-  str = g_getenv ("SJ_DEBUG");
-  if (str) {
-    debug_flags = g_parse_debug_string (str, debug_keys, G_N_ELEMENTS (debug_keys));
-  }
-}
+#define SJCD_SCHEMA "org.gtkpod.sjcd"
 
 static void error_on_start (GError *error)
 {
-  GtkWidget *dialog;
-  dialog = gtk_message_dialog_new_with_markup (NULL, 0,
-                                               GTK_MESSAGE_ERROR,
-                                               GTK_BUTTONS_CLOSE,
-                                               "<b>%s</b>\n\n%s: %s.\n%s",
-                                               _("Could not start Sound Juicer"),
-                                               _("Reason"),
-                                               error->message,
-                                               _("Please consult the documentation for assistance."));
-  gtk_dialog_run (GTK_DIALOG (dialog));
-}
-
-/**
- * Clicked Quit
- */
-G_MODULE_EXPORT void on_quit_activate (GtkMenuItem *item, gpointer user_data)
-{
-  if (on_delete_event (NULL, NULL, NULL) == FALSE) {
-    gtk_main_quit ();
-  }
-}
-
-/**
- * Destroy signal Callback
- */
-G_MODULE_EXPORT void on_destroy_signal (GtkMenuItem *item, gpointer user_data)
-{
-   gtk_main_quit ();
+  gtkpod_statusbar_message("Could not start sound juicer because %s", error->message);
+  g_error_free(error);
 }
 
 /**
@@ -212,9 +116,6 @@ G_MODULE_EXPORT void on_destroy_signal (GtkMenuItem *item, gpointer user_data)
  */
 G_MODULE_EXPORT void on_eject_activate (GtkMenuItem *item, gpointer user_data)
 {
-  /* first make sure we're not playing */
-  stop_playback ();
-
   brasero_drive_eject (drive, FALSE, NULL);
 }
 
@@ -224,7 +125,7 @@ G_MODULE_EXPORT gboolean on_delete_event (GtkWidget *widget, GdkEvent *event, gp
     GtkWidget *dialog;
     int response;
 
-    dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), GTK_DIALOG_MODAL,
+    dialog = gtk_message_dialog_new (GTK_WINDOW (gtkpod_app), GTK_DIALOG_MODAL,
                                      GTK_MESSAGE_QUESTION,
                                      GTK_BUTTONS_NONE,
                                      _("You are currently extracting a CD. Do you want to quit now or continue?"));
@@ -455,9 +356,6 @@ static void update_ui_for_album (AlbumDetails *album)
   char* duration_text;
   total_no_of_tracks=0;
 
-  /* Really really make sure we don't have a playing title */
-  sj_main_set_title (NULL);
-
   if (album == NULL) {
     gtk_list_store_clear (track_store);
     gtk_entry_set_text (GTK_ENTRY (title_entry), "");
@@ -471,14 +369,10 @@ static void update_ui_for_album (AlbumDetails *album)
     gtk_widget_set_sensitive (genre_entry, FALSE);
     gtk_widget_set_sensitive (year_entry, FALSE);
     gtk_widget_set_sensitive (disc_number_entry, FALSE);
-    gtk_widget_set_sensitive (play_button, FALSE);
-    gtk_widget_set_sensitive (play_menuitem, FALSE);
     gtk_widget_set_sensitive (extract_button, FALSE);
     gtk_widget_set_sensitive (extract_menuitem, FALSE);
     gtk_widget_set_sensitive (select_all_menuitem, FALSE);
     gtk_widget_set_sensitive (deselect_all_menuitem, FALSE);
-    gtk_widget_set_sensitive (prev_menuitem, FALSE);
-    gtk_widget_set_sensitive (next_menuitem, FALSE);
     set_duplication (FALSE);
 
     set_message_area (message_area_eventbox, NULL);
@@ -513,14 +407,10 @@ static void update_ui_for_album (AlbumDetails *album)
     gtk_widget_set_sensitive (genre_entry, TRUE);
     gtk_widget_set_sensitive (year_entry, TRUE);
     gtk_widget_set_sensitive (disc_number_entry, TRUE);
-    gtk_widget_set_sensitive (play_button, TRUE);
-    gtk_widget_set_sensitive (play_menuitem, TRUE);
     gtk_widget_set_sensitive (extract_button, TRUE);
     gtk_widget_set_sensitive (extract_menuitem, TRUE);
     gtk_widget_set_sensitive (select_all_menuitem, FALSE);
     gtk_widget_set_sensitive (deselect_all_menuitem, TRUE);
-    gtk_widget_set_sensitive (prev_menuitem, FALSE);
-    gtk_widget_set_sensitive (next_menuitem, FALSE);
     set_duplication (TRUE);
 
     for (l = album->tracks; l; l=g_list_next (l)) {
@@ -618,7 +508,7 @@ AlbumDetails* multiple_album_dialog(GList *albums)
 
     dialog = GET_WIDGET ("multiple_dialog");
     g_assert (dialog != NULL);
-    gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (main_window));
+    gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gtkpod_app));
     albums_listview = GET_WIDGET ("albums_listview");
     ok_button       = GET_WIDGET ("ok_button");
 
@@ -696,7 +586,7 @@ static void baseuri_changed_cb (GSettings *settings, gchar *key, gpointer user_d
   g_free (value);
   /* TODO: sanity check the URI somewhat */
 }
- 
+
  /**
   * The GSettings key for the directory pattern changed
   */
@@ -707,7 +597,7 @@ static void path_pattern_changed_cb (GSettings *settings, gchar *key, gpointer u
   path_pattern = g_settings_get_string (settings, key);
   /* TODO: sanity check the pattern */
 }
- 
+
  /**
   * The GSettings key for the filename pattern changed
   */
@@ -718,7 +608,7 @@ static void file_pattern_changed_cb (GSettings *settings, gchar *key, gpointer u
   file_pattern = g_settings_get_string (settings, key);
   /* TODO: sanity check the pattern */
 }
- 
+
  /**
  * The GSettings key for the paranoia mode has changed
   */
@@ -731,7 +621,7 @@ static void paranoia_changed_cb (GSettings *settings, gchar *key, gpointer user_
     sj_extractor_set_paranoia (extractor, value);
   }
 }
- 
+
  /**
   * The GSettings key for the strip characters option changed
   */
@@ -740,7 +630,7 @@ static void strip_changed_cb (GSettings *settings, gchar *key, gpointer user_dat
   g_assert (strcmp (key, SJ_SETTINGS_STRIP) == 0);
   strip_chars = g_settings_get_boolean (settings, key);
 }
- 
+
  /**
   * The GSettings key for the eject when finished option changed
   */
@@ -749,7 +639,7 @@ static void eject_changed_cb (GSettings *settings, gchar *key, gpointer user_dat
   g_assert (strcmp (key, SJ_SETTINGS_EJECT) == 0);
   eject_finished = g_settings_get_boolean (settings, key);
 }
- 
+
  /**
   * The GSettings key for the open when finished option changed
   */
@@ -758,14 +648,14 @@ static void open_changed_cb (GSettings *settings, gchar *key, gpointer user_data
   g_assert (strcmp (key, SJ_SETTINGS_OPEN) == 0);
   open_finished = g_settings_get_boolean (settings, key);
 }
- 
+
  /**
   * The GSettings key for audio volume changes
   */
 static void audio_volume_changed_cb (GSettings *settings, gchar *key, gpointer user_data)
 {
   g_assert (strcmp (key, SJ_SETTINGS_AUDIO_VOLUME) == 0);
- 
+
   GtkWidget *volb = GET_WIDGET ("volume_button");
   gtk_scale_button_set_value (GTK_SCALE_BUTTON (volb), g_settings_get_double (settings, key));
 }
@@ -773,17 +663,17 @@ static void audio_volume_changed_cb (GSettings *settings, gchar *key, gpointer u
 static void
 metadata_cb (SjMetadataGetter *m, GList *albums, GError *error)
 {
-  gboolean realized = gtk_widget_get_realized (main_window);
+  gboolean realized = gtk_widget_get_realized (GTK_WIDGET(gtkpod_app));
 
   if (realized)
-    gdk_window_set_cursor (gtk_widget_get_window (main_window), NULL);
+    gdk_window_set_cursor (gtk_widget_get_window (GTK_WIDGET(gtkpod_app)), NULL);
     /* Clear the statusbar message */
     gtk_statusbar_pop(GTK_STATUSBAR(status_bar), 0);
 
   if (error && !(error->code == SJ_ERROR_CD_NO_MEDIA)) {
     GtkWidget *dialog;
 
-    dialog = gtk_message_dialog_new_with_markup (realized ? GTK_WINDOW (main_window) : NULL, 0,
+    dialog = gtk_message_dialog_new_with_markup (realized ? GTK_WINDOW (gtkpod_app) : NULL, 0,
                                                  GTK_MESSAGE_ERROR,
                                                  GTK_BUTTONS_CLOSE,
                                                  "<b>%s</b>\n\n%s\n%s: %s",
@@ -825,15 +715,6 @@ metadata_cb (SjMetadataGetter *m, GList *albums, GError *error)
     albums = NULL;
   }
   update_ui_for_album (current_album);
-
-  if (autostart) {
-    g_signal_emit_by_name (extract_button, "activate", NULL);
-    autostart = FALSE;
-  }
-  if (autoplay) {
-    g_signal_emit_by_name (play_button, "activate", NULL);
-    autoplay = FALSE;
-  }
 }
 
 static gboolean
@@ -861,48 +742,45 @@ static void reread_cd (gboolean ignore_no_media)
 {
   /* TODO: remove ignore_no_media? */
   GError *error = NULL;
-  GdkCursor *cursor;
-  GdkWindow *window;
-  gboolean realized = gtk_widget_get_realized (main_window);
-
-  window = gtk_widget_get_window (main_window);
-
-  /* Make sure nothing is playing */
-  stop_playback ();
-
-  /* Set watch cursor */
-  if (realized) {
-    cursor = gdk_cursor_new_for_display (gtk_widget_get_display (GTK_WIDGET (main_window)), GDK_WATCH);
-    gdk_window_set_cursor (window, cursor);
-    gdk_cursor_unref (cursor);
-    gdk_display_sync (gtk_widget_get_display (GTK_WIDGET (main_window)));
-  }
+//  GdkCursor *cursor;
+//  GdkWindow *window;
+  gboolean realized = gtk_widget_get_realized (GTK_WIDGET(gtkpod_app));
+//
+//  window = gtk_widget_get_window (GTK_WIDGET(gtkpod_app));
+//
+//  /* Set watch cursor */
+//  if (realized) {
+//    cursor = gdk_cursor_new_for_display (gtk_widget_get_display (GTK_WIDGET (gtkpod_app)), GDK_WATCH);
+//    gdk_window_set_cursor (window, cursor);
+//    gdk_cursor_unref (cursor);
+//    gdk_display_sync (gtk_widget_get_display (GTK_WIDGET (gtkpod_app)));
+//  }
 
   /* Set statusbar message */
   gtk_statusbar_push(GTK_STATUSBAR(status_bar), 0, _("Retrieving track listing...please wait."));
-
-  if (!drive)
-    sj_debug (DEBUG_CD, "Attempting to re-read NULL drive\n");
 
   g_free (current_submit_url);
   current_submit_url = NULL;
   gtk_widget_set_sensitive (submit_menuitem, FALSE);
 
   if (!is_audio_cd (drive)) {
-    sj_debug (DEBUG_CD, "Media is not an audio CD\n");
     update_ui_for_album (NULL);
+    // TODO Use gtkpod statusbar instead
     gtk_statusbar_pop(GTK_STATUSBAR(status_bar), 0);
-    if (realized)
-      gdk_window_set_cursor (window, NULL);
+//    if (realized)
+//      gdk_window_set_cursor (window, NULL);
     return;
   }
 
   sj_metadata_getter_list_albums (metadata, &error);
 
   if (error && !(error->code == SJ_ERROR_CD_NO_MEDIA && ignore_no_media)) {
+      //TODO
+      // Change dialog to be gtkpod dialog
+
     GtkWidget *dialog;
 
-    dialog = gtk_message_dialog_new (realized ? GTK_WINDOW (main_window) : NULL, 0,
+    dialog = gtk_message_dialog_new (realized ? GTK_WINDOW (gtkpod_app) : NULL, 0,
                                      GTK_MESSAGE_ERROR,
                                      GTK_BUTTONS_CLOSE,
                                      "%s", _("Could not read the CD"));
@@ -929,7 +807,6 @@ media_added_cb (BraseroMediumMonitor	*drive,
     /* FIXME: recover? */
   }
 
-  sj_debug (DEBUG_CD, "Media added to device %s\n", brasero_drive_get_device (brasero_medium_get_drive (medium)));
   reread_cd (TRUE);
 }
 
@@ -942,11 +819,6 @@ media_removed_cb (BraseroMediumMonitor	*drive,
     /* FIXME: recover? */
   }
 
-  /* first make sure we're not playing */
-  stop_playback ();
-
-  sj_debug (DEBUG_CD, "Media removed from device %s\n", brasero_drive_get_device (brasero_medium_get_drive (medium)));
-  stop_ui_hack ();
   update_ui_for_album (NULL);
 }
 
@@ -969,7 +841,7 @@ set_drive_from_device (const char *device)
     GtkWidget *dialog;
     char *message;
     message = g_strdup_printf (_("Sound Juicer could not use the CD-ROM device '%s'"), device);
-    dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (main_window),
+    dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtkpod_app),
                                                  GTK_DIALOG_DESTROY_WITH_PARENT,
                                                  GTK_MESSAGE_ERROR,
                                                  GTK_BUTTONS_CLOSE,
@@ -1001,7 +873,7 @@ set_device (const char* device, gboolean ignore_no_media)
     error = g_strerror (errno);
     message = g_strdup_printf (_("Sound Juicer could not access the CD-ROM device '%s'"), device);
 
-    dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (main_window),
+    dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtkpod_app),
                                                  GTK_DIALOG_DESTROY_WITH_PARENT,
                                                  GTK_MESSAGE_ERROR,
                                                  GTK_BUTTONS_CLOSE,
@@ -1094,7 +966,7 @@ static void device_changed_cb (GSettings *settings, gchar *key, gpointer user_da
     if (device == NULL) {
 #ifndef IGNORE_MISSING_CD
       GtkWidget *dialog;
-      dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (main_window),
+      dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtkpod_app),
                                                    GTK_DIALOG_DESTROY_WITH_PARENT,
                                                    GTK_MESSAGE_ERROR,
                                                    GTK_BUTTONS_CLOSE,
@@ -1115,7 +987,7 @@ static void device_changed_cb (GSettings *settings, gchar *key, gpointer user_da
 static void profile_changed_cb (GSettings *settings, gchar *key, gpointer user_data)
 {
   GstEncodingProfile *profile;
-  const char *media_type;
+  gchar *media_type;
 
   g_assert (strcmp (key, SJ_SETTINGS_AUDIO_PROFILE) == 0);
   media_type = g_settings_get_string (settings, key);
@@ -1129,7 +1001,7 @@ static void profile_changed_cb (GSettings *settings, gchar *key, gpointer user_d
     GtkWidget *dialog;
     int response;
 
-    dialog = gtk_message_dialog_new (GTK_WINDOW (main_window),
+    dialog = gtk_message_dialog_new (GTK_WINDOW (gtkpod_app),
                                      GTK_DIALOG_MODAL,
                                      GTK_MESSAGE_QUESTION,
                                      GTK_BUTTONS_NONE,
@@ -1178,7 +1050,7 @@ static void http_proxy_enable_changed_cb (GSettings *settings, gchar *key, gpoin
   g_assert (strcmp (key, SJ_SETTINGS_HTTP_PROXY_ENABLE) == 0);
   http_proxy_setup (settings);
 }
- 
+
 /**
  * The GSettings key for the HTTP proxy changed.
  */
@@ -1187,7 +1059,7 @@ static void http_proxy_changed_cb (GSettings *settings, gchar *key, gpointer use
   g_assert (strcmp (key, SJ_SETTINGS_HTTP_PROXY) == 0);
   http_proxy_setup (settings);
 }
- 
+
 /**
  * The GSettings key for the HTTP proxy port changed.
  */
@@ -1216,7 +1088,7 @@ G_MODULE_EXPORT void on_submit_activate (GtkWidget *menuitem, gpointer user_data
       if (!gtk_show_uri (NULL, current_submit_url, GDK_CURRENT_TIME, &error)) {
       GtkWidget *dialog;
 
-      dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (main_window),
+      dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtkpod_app),
                                                    GTK_DIALOG_DESTROY_WITH_PARENT,
                                                    GTK_MESSAGE_ERROR,
                                                    GTK_BUTTONS_CLOSE,
@@ -1467,7 +1339,7 @@ G_MODULE_EXPORT void on_contents_activate(GtkWidget *button, gpointer user_data)
   if (error) {
     GtkWidget *dialog;
 
-    dialog = gtk_message_dialog_new (GTK_WINDOW (main_window),
+    dialog = gtk_message_dialog_new (GTK_WINDOW (gtkpod_app),
                                      GTK_DIALOG_DESTROY_WITH_PARENT,
                                      GTK_MESSAGE_ERROR,
                                      GTK_BUTTONS_CLOSE,
@@ -1488,7 +1360,7 @@ on_message_received (const char *message, gpointer user_data)
   if (message == NULL)
     return;
   if (strcmp (RAISE_WINDOW, message) == 0) {
-    gtk_window_present (GTK_WINDOW (main_window));
+    gtk_window_present (GTK_WINDOW (gtkpod_app));
   }
 }
 
@@ -1549,7 +1421,7 @@ G_MODULE_EXPORT void on_duplicate_activate (GtkWidget *button, gpointer user_dat
   if (!g_spawn_command_line_async (g_strconcat ("brasero -c ", device, NULL), &error)) {
       GtkWidget *dialog;
 
-      dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (main_window),
+      dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtkpod_app),
                                                    GTK_DIALOG_DESTROY_WITH_PARENT,
                                                    GTK_MESSAGE_ERROR,
                                                    GTK_BUTTONS_CLOSE,
@@ -1575,56 +1447,22 @@ static void set_duplication(gboolean enabled)
   }
 }
 
-int main (int argc, char **argv)
+GtkWidget *sj_create_sound_juicer()
 {
+  gchar *glade_path;
+  GtkWidget *w;
   GError *error = NULL;
   GtkTreeSelection *selection;
   char *device = NULL, **uris = NULL;
-  GOptionContext *ctx;
-  const GOptionEntry entries[] = {
-    { "auto-start", 'a', 0, G_OPTION_ARG_NONE, &autostart, N_("Start extracting immediately"), NULL },
-    { "play", 'p', 0, G_OPTION_ARG_NONE, &autoplay, N_("Start playing immediately"), NULL},
-    { "device", 'd', 0, G_OPTION_ARG_FILENAME, &device, N_("What CD device to read"), N_("DEVICE") },
-    { G_OPTION_REMAINING, '\0', 0, G_OPTION_ARG_FILENAME_ARRAY, &uris, N_("URI to the CD device to read"), NULL },
-    { NULL }
-  };
   GSettings *http_settings;
 
-  if (!g_thread_supported ()) g_thread_init (NULL);
-
-  bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
-  bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-  textdomain (GETTEXT_PACKAGE);
-
-  g_set_application_name (_("Sound Juicer"));
   g_setenv ("PULSE_PROP_media.role", "music", TRUE);
-
-  ctx = g_option_context_new (N_("- Extract music from your CDs"));
-  g_option_context_add_main_entries (ctx, entries, GETTEXT_PACKAGE);
-  g_option_context_set_translation_domain(ctx, GETTEXT_PACKAGE);
-  g_option_context_add_group (ctx, gtk_get_option_group (TRUE));
-  g_option_context_add_group (ctx, gst_init_get_option_group ());
-  g_option_context_add_group (ctx, brasero_media_get_option_group ());
-  g_option_context_set_ignore_unknown_options (ctx, TRUE);
-
-  g_option_context_parse (ctx, &argc, &argv, &error);
-  if (error != NULL) {
-      g_printerr ("Error parsing options: %s", error->message);
-      exit (1);
-  }
-  g_option_context_free (ctx);
-
-  sj_debug_init ();
-
-  sj_stock_init ();
-
-  gtk_window_set_default_icon_name ("sound-juicer");
 
   connection = bacon_message_connection_new ("sound-juicer");
   if (bacon_message_connection_get_is_server (connection) == FALSE) {
     bacon_message_connection_send (connection, RAISE_WINDOW);
     bacon_message_connection_free (connection);
-    exit (0);
+    return NULL;
   } else {
     bacon_message_connection_set_callback (connection, on_message_received, NULL);
   }
@@ -1634,10 +1472,10 @@ int main (int argc, char **argv)
   metadata = sj_metadata_getter_new ();
   g_signal_connect (metadata, "metadata", G_CALLBACK (metadata_cb), NULL);
 
-  sj_settings = g_settings_new ("org.gnome.SoundJuicer");
+  sj_settings = g_settings_new (SJCD_SCHEMA);
   if (sj_settings == NULL) {
     g_warning (_("Could not create GSettings object.\n"));
-    exit (1);
+    return NULL;
   }
 
   g_signal_connect (sj_settings, "changed::"SJ_SETTINGS_DEVICE,
@@ -1673,22 +1511,18 @@ int main (int argc, char **argv)
   g_signal_connect (http_settings, "changed::"SJ_SETTINGS_HTTP_PROXY_PORT,
                     (GCallback)http_proxy_port_changed_cb, NULL);
 
-  builder = gtk_builder_new ();
-  if (g_file_test (SOURCE_BUILDER, G_FILE_TEST_EXISTS) != FALSE) {
-    gtk_builder_add_from_file (builder, SOURCE_BUILDER, &error);
-  } else {
-    gtk_builder_add_from_file (builder, INSTALLED_BUILDER, &error);
-  }
-
-  if (error != NULL) {
-    error_on_start (error);
-    g_error_free (error);
-    exit (1);
-  }
+  glade_path = g_build_filename(get_glade_dir(), "sjcd.xml", NULL);
+  builder = gtkpod_builder_xml_new(glade_path);
+  g_free(glade_path);
 
   gtk_builder_connect_signals (builder, NULL);
 
-  main_window           = GET_WIDGET ("main_window");
+  w                             = GET_WIDGET ("main_window");
+  vbox1                      = GET_WIDGET ("vbox1");
+  g_object_ref(vbox1);
+  gtk_container_remove(GTK_CONTAINER(w), vbox1);
+  gtk_widget_destroy(w);
+
   message_area_eventbox = GET_WIDGET ("message_area_eventbox");
   select_all_menuitem   = GET_WIDGET ("select_all");
   deselect_all_menuitem = GET_WIDGET ("deselect_all");
@@ -1702,35 +1536,10 @@ int main (int argc, char **argv)
   track_listview        = GET_WIDGET ("track_listview");
   extract_button        = GET_WIDGET ("extract_button");
   extract_menuitem      = GET_WIDGET ("extract_menuitem");
-  play_button           = GET_WIDGET ("play_button");
-  play_menuitem         = GET_WIDGET ("play_menuitem");
-  next_menuitem         = GET_WIDGET ("next_track_menuitem");
-  prev_menuitem         = GET_WIDGET ("previous_track_menuitem");
   status_bar            = GET_WIDGET ("status_bar");
   duplicate             = GET_WIDGET ("duplicate_menuitem");
   eject                 = GET_WIDGET ("eject");
 
-  { /* ensure that the play/pause button's size is constant */
-    GtkWidget *fake_button1, *fake_button2;
-    GtkSizeGroup *size_group;
-
-    size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
-
-    fake_button1 = gtk_button_new_from_stock (GTK_STOCK_MEDIA_PLAY);
-    gtk_size_group_add_widget (size_group, fake_button1);
-    g_signal_connect_swapped (play_button, "destroy",
-                              G_CALLBACK (gtk_widget_destroy),
-                              fake_button1);
-
-    fake_button2 = gtk_button_new_from_stock (GTK_STOCK_MEDIA_PAUSE);
-    gtk_size_group_add_widget (size_group, fake_button2);
-    g_signal_connect_swapped (play_button, "destroy",
-                              G_CALLBACK (gtk_widget_destroy),
-                              fake_button2);
-
-    gtk_size_group_add_widget (size_group, play_button);
-    g_object_unref (G_OBJECT (size_group));
-  }
 
   setup_genre_entry (genre_entry);
 
@@ -1797,12 +1606,10 @@ int main (int argc, char **argv)
   error = sj_extractor_get_new_error (extractor);
   if (error) {
     error_on_start (error);
-    exit (1);
+    return NULL;
   }
 
   update_ui_for_album (NULL);
-
-  sj_play_init ();
 
   selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (track_listview));
   gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
@@ -1856,16 +1663,12 @@ int main (int argc, char **argv)
 
   if (sj_extractor_supports_encoding (&error) == FALSE) {
     error_on_start (error);
-    return 0;
+    return NULL;
   }
 
   /* Set whether duplication of a cd is available using the brasero tool */
   gtk_widget_set_sensitive (duplicate, FALSE);
   duplication_enabled = is_cd_duplication_available();
-
-  /*gconf_bridge_bind_window_size(gconf_bridge_get(), GCONF_WINDOW, GTK_WINDOW (main_window)); */
-  gtk_widget_show (main_window);
-  gtk_main ();
 
   g_object_unref (base_uri);
   g_object_unref (metadata);
@@ -1874,5 +1677,5 @@ int main (int argc, char **argv)
   g_object_unref (http_settings);
   brasero_media_library_stop ();
 
-  return 0;
+  return vbox1;
 }

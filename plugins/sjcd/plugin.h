@@ -42,8 +42,7 @@ typedef struct _SJCDPluginClass SJCDPluginClass;
 struct _SJCDPlugin {
     AnjutaPlugin parent;
     gint uiid;
-    GtkWidget *sj_window;
-    GtkWidget *sj_instance;
+    GtkWidget *sj_view;
     GtkActionGroup *action_group;
 };
 

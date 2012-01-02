@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <schemalist>
-  <schema id="org.gnome.SoundJuicer" path="/apps/sound-juicer/">
+  <schema id="org.gtkpod.sjcd" path="/apps/gtkpod/sjcd/">
     <key name="device" type="s">
       <default>''</default>
       <summary>The CD to extract from.</summary>

@@ -1,4 +1,4 @@
-/* 
+/*
  * Sound Juicer - sj-main.h
  *
  * This program is free software; you can redistribute it and/or modify
@@ -22,9 +22,9 @@
 #define SJ_MAIN_H
 
 #include <gtk/gtk.h>
-#include "sj-structures.h"
+#include "libjuicer/sj-structures.h"
 
-void sj_stock_init (void);
+GtkWidget *sj_create_sound_juicer();
 
 G_MODULE_EXPORT void on_quit_activate (GtkMenuItem *item, gpointer user_data);
 G_MODULE_EXPORT void on_destroy_activate (GtkMenuItem *item, gpointer user_data);

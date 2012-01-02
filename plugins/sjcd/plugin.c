@@ -34,6 +34,7 @@
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/directories.h"
 #include "plugin.h"
+#include "sj-main.h"
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -45,7 +46,11 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
     GtkActionGroup* action_group;
 
-    sjcd_plugin = (SjCdPlugin*) plugin;
+    /* Prepare the icons for the playlist */
+//    register_icon_path(get_plugin_dir(), "sjcd");
+//    register_stock_icon(PREFERENCE_ICON, PREFERENCE_ICON_STOCK_ID);
+
+    sjcd_plugin = (SJCDPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
 
     /* Add actions */
@@ -58,13 +63,17 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     sjcd_plugin->uiid = anjuta_ui_merge(ui, uipath);
     g_free(uipath);
 
+    sjcd_plugin->sj_view = sj_create_sound_juicer();
+    gtk_widget_show_all(sjcd_plugin->sj_view);
+    // Add widget directly as scrolling is handled internally by the widget
+    anjuta_shell_add_widget(plugin->shell, sjcd_plugin->sj_view, "SJCDPlugin", _("  Sound Juicer"), NULL, ANJUTA_SHELL_PLACEMENT_TOP, NULL);
+
+
     return TRUE; /* FALSE if activation failed */
 }
 
 static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
     AnjutaUI *ui;
-
-    destroy_sjcd();
 
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
 
@@ -79,7 +88,7 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
 }
 
 static void sjcd_plugin_instance_init(GObject *obj) {
-    SjCdPlugin *plugin = (SjCdPlugin*) obj;
+    SJCDPlugin *plugin = (SJCDPlugin*) obj;
     plugin->uiid = 0;
     plugin->action_group = NULL;
 }
@@ -93,8 +102,8 @@ static void sjcd_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_plugin;
 }
 
-ANJUTA_PLUGIN_BEGIN (SjCdPlugin, sjcd_plugin);
+ANJUTA_PLUGIN_BEGIN (SJCDPlugin, sjcd_plugin);
 ANJUTA_PLUGIN_END;
 
-ANJUTA_SIMPLE_PLUGIN (SjCdPlugin, sjcd_plugin)
+ANJUTA_SIMPLE_PLUGIN (SJCDPlugin, sjcd_plugin)
 ;

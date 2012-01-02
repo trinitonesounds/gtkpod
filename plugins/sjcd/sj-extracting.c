@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2003 Ross Burton <ross@burtonini.com>
  *
  * Sound Juicer - sj-extracting.c
@@ -24,6 +24,9 @@
 #include <config.h>
 #endif
 
+// TODO Remove this and replace dialogs with gtkpod dialogs
+#include "libgtkpod/gtkpod_app_iface.h"
+
 #include "sound-juicer.h"
 
 #include <sys/time.h>
@@ -42,7 +45,6 @@
 #include "sj-error.h"
 #include "sj-extracting.h"
 #include "sj-util.h"
-#include "sj-play.h"
 #include "sj-inhibit.h"
 #include "sj-genres.h"
 #include "egg-play-preview.h"
@@ -195,12 +197,12 @@ find_next (void)
 {
   do {
     gboolean extract = FALSE;
-    
+
     gtk_tree_model_get (GTK_TREE_MODEL (track_store), &current, COLUMN_EXTRACT, &extract, -1);
-    
+
     if (extract)
       return TRUE;
-    
+
   } while (gtk_tree_model_iter_next (GTK_TREE_MODEL (track_store), &current));
   return FALSE;
 }
@@ -235,31 +237,30 @@ cleanup (void)
   /* TODO: find out why GTK+ needs this to work (see #364371) */
   gtk_button_set_label (GTK_BUTTON (extract_button), _("Extract"));
   gtk_button_set_label (GTK_BUTTON (extract_button), SJ_STOCK_EXTRACT);
-  
+
   /* Clear the Status bar */
   gtk_statusbar_push (GTK_STATUSBAR (status_bar), 0, "");
   /* Clear the progress bar */
   gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), 0);
   gtk_widget_hide (progress_bar);
-  
+
   gtk_widget_set_sensitive (play_button, TRUE);
   gtk_widget_set_sensitive (title_entry, TRUE);
   gtk_widget_set_sensitive (artist_entry, TRUE);
   gtk_widget_set_sensitive (genre_entry, TRUE);
   gtk_widget_set_sensitive (year_entry, TRUE);
   gtk_widget_set_sensitive (disc_number_entry, TRUE);
-  /* Enabling the Menuitem */ 
+  /* Enabling the Menuitem */
   gtk_widget_set_sensitive (play_menuitem, TRUE);
   gtk_widget_set_sensitive (extract_menuitem, TRUE);
   gtk_widget_set_sensitive (reread_menuitem, TRUE);
   gtk_widget_set_sensitive (select_all_menuitem, TRUE);
   gtk_widget_set_sensitive (deselect_all_menuitem, TRUE);
-  
+
   /*Enable the Extract column and Make the Title and Artist column Editable*/
   g_object_set (G_OBJECT (toggle_renderer), "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE, NULL);
   g_object_set (G_OBJECT (title_renderer), "editable", TRUE, NULL);
   g_object_set (G_OBJECT (artist_renderer), "editable", TRUE, NULL);
-  g_signal_handlers_unblock_by_func (track_listview, on_tracklist_row_activate, NULL);
 }
 
 
@@ -273,7 +274,7 @@ check_file_size (GFile *uri)
   GFileInfo *gfile_info;
   GError *error = NULL;
   goffset size;
- 
+
   gfile_info = g_file_query_info (uri, G_FILE_ATTRIBUTE_STANDARD_SIZE, 0,
                                   NULL, &error);
 
@@ -299,7 +300,7 @@ check_file_size (GFile *uri)
 
 static gboolean
 confirm_overwrite_existing_file (GFile *uri, int *overwrite_mode, goffset info_size)
-{ 
+{
   OverwriteDialogResponse ret;
   GtkWidget *dialog;
   GtkWidget *play_preview;
@@ -307,7 +308,7 @@ confirm_overwrite_existing_file (GFile *uri, int *overwrite_mode, goffset info_s
 
   display_name = g_file_get_parse_name (uri);
   size = g_format_size_for_display (info_size);
-  dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), GTK_DIALOG_MODAL,
+  dialog = gtk_message_dialog_new (GTK_WINDOW (gtkpod_app), GTK_DIALOG_MODAL,
                                    GTK_MESSAGE_QUESTION,
                                    GTK_BUTTONS_NONE,
                                    _("A file with the same name exists"));
@@ -457,13 +458,13 @@ pop_and_extract (int *overwrite_mode)
     /* Update the state stock image */
     gtk_list_store_set (track_store, &current,
                    COLUMN_STATE, STATE_EXTRACTING, -1);
-    
+
     /* Update the progress bars */
     gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar),
                                    CLAMP ((float)current_duration / (float)total_duration, 0.0, 1.0));
 
     /* Set the Treelist focus to the item to be extracted */
-    GtkTreePath* path = gtk_tree_model_get_path(GTK_TREE_MODEL (track_store), &current); 
+    GtkTreePath* path = gtk_tree_model_get_path(GTK_TREE_MODEL (track_store), &current);
     gtk_tree_view_set_cursor(GTK_TREE_VIEW (track_listview), path, NULL, TRUE);
     gtk_tree_path_free(path);
 
@@ -472,7 +473,7 @@ pop_and_extract (int *overwrite_mode)
     if (error) {
       goto error;
     } else
-        successful_extract = TRUE;       
+        successful_extract = TRUE;
     goto local_cleanup;
 error:
     successful_extract = FALSE;
@@ -514,11 +515,11 @@ update_speed_progress (SjExtractor *extractor, float speed, int eta)
   char *eta_str;
 
   if (eta >= 0) {
-    eta_str = g_strdup_printf (_("Estimated time left: %d:%02d (at %0.1f\303\227)"), eta / 60, eta % 60, speed);  
+    eta_str = g_strdup_printf (_("Estimated time left: %d:%02d (at %0.1f\303\227)"), eta / 60, eta % 60, speed);
   } else {
-    eta_str = g_strdup (_("Estimated time left: unknown"));  
+    eta_str = g_strdup (_("Estimated time left: unknown"));
   }
-  
+
   gtk_statusbar_push (GTK_STATUSBAR (status_bar), 0, eta_str);
   g_free (eta_str);
 }
@@ -545,7 +546,7 @@ on_progress_cb (SjExtractor *extractor, const int seconds, gpointer data)
 
       gettimeofday(&time, NULL);
       taken = time.tv_sec + (time.tv_usec / 1000000.0)
-        - (before.time.tv_sec + (before.time.tv_usec / 1000000.0)); 
+        - (before.time.tv_sec + (before.time.tv_usec / 1000000.0));
       if (taken >= 4) {
         before.taken += taken;
         before.ripped += current_duration + seconds - before.seconds;
@@ -593,7 +594,7 @@ base_finder (char *path, char **ret)
 static gboolean
 on_main_window_focus_in (GtkWidget * widget, GdkEventFocus * event, gpointer data)
 {
-  gtk_window_set_urgency_hint (GTK_WINDOW (main_window), FALSE);
+  gtk_window_set_urgency_hint (GTK_WINDOW (gtkpod_app), FALSE);
   return FALSE;
 }
 
@@ -604,21 +605,21 @@ static void
 finished_actions (void)
 {
   /* Trigger a sound effect */
-  ca_gtk_play_for_widget (main_window, 0,
+  ca_gtk_play_for_widget (GTK_WIDGET(gtkpod_app), 0,
     CA_PROP_EVENT_ID, "complete-media-rip",
     CA_PROP_EVENT_DESCRIPTION, _("CD rip complete"),
     NULL);
-  
+
   /* Trigger glowing effect after copy */
-  g_signal_connect (G_OBJECT (main_window), "focus-in-event",
+  g_signal_connect (G_OBJECT (gtkpod_app), "focus-in-event",
                     G_CALLBACK (on_main_window_focus_in),  NULL);
-  gtk_window_set_urgency_hint (GTK_WINDOW (main_window), TRUE);
+  gtk_window_set_urgency_hint (GTK_WINDOW (gtkpod_app), TRUE);
 
   /* Maybe eject */
   if (eject_finished && successful_extract) {
     brasero_drive_eject (drive, FALSE, NULL);
   }
-  
+
   /* Maybe open the target directory */
   if (open_finished) {
     char *base = NULL;
@@ -650,7 +651,7 @@ on_completion_cb (SjExtractor *extractor, gpointer data)
     /* Uncheck the Extract check box */
     gtk_list_store_set (track_store, &current, COLUMN_EXTRACT, FALSE, -1);
   }
-  
+
   gtk_tree_model_get (GTK_TREE_MODEL (track_store), &current,
                       COLUMN_DETAILS, &track, -1);
 
@@ -664,7 +665,7 @@ on_completion_cb (SjExtractor *extractor, gpointer data)
 
     g_object_unref (temp_file);
     g_object_unref (new_file);
-    
+
   if (error) {
     on_error_cb (NULL, error, NULL);
     g_error_free (error);
@@ -679,10 +680,6 @@ on_completion_cb (SjExtractor *extractor, gpointer data)
     current.stamp = 0;
     finished_actions ();
     cleanup ();
-
-    if (autostart) {
-      gtk_main_quit ();
-    }
   }
 }
 
@@ -695,7 +692,7 @@ on_error_cb (SjExtractor *extractor, GError *error, gpointer data)
   GtkWidget *dialog;
 
   /* Display a nice dialog */
-  dialog = gtk_message_dialog_new (GTK_WINDOW (main_window), 0,
+  dialog = gtk_message_dialog_new (GTK_WINDOW (gtkpod_app), 0,
                                    GTK_MESSAGE_ERROR,
                                    GTK_BUTTONS_CLOSE,
                                    "%s", _("Sound Juicer could not extract this CD."));
@@ -720,7 +717,7 @@ on_progress_cancel_clicked (GtkWidget *button, gpointer user_data)
   GError *error = NULL;
 
   sj_extractor_cancel_extract (extractor);
-  
+
   gtk_tree_model_get (GTK_TREE_MODEL (track_store), &current,
                       COLUMN_DETAILS, &track, -1);
 
@@ -743,16 +740,13 @@ G_MODULE_EXPORT void
 on_extract_activate (GtkWidget *button, gpointer user_data)
 {
   char *reason;
-  
-  /* first make sure we're not playing, we cannot share the resource */
-  stop_playback ();
-  
+
   /* If extracting, then cancel the extract */
   if (extracting) {
      on_progress_cancel_clicked (NULL, NULL);
      return;
   }
-        
+
   /* Populate the pending list */
   current.stamp = 0;
   total_extracting = 0;
@@ -784,22 +778,22 @@ on_extract_activate (GtkWidget *button, gpointer user_data)
     track_listview    = GET_WIDGET ("track_listview");
     progress_bar      = GET_WIDGET ("progress_bar");
     status_bar        = GET_WIDGET ("status_bar");
-  
+
     play_menuitem         = GET_WIDGET ("play_menuitem");
     extract_menuitem      = GET_WIDGET ("extract_menuitem");
     reread_menuitem       = GET_WIDGET ("re-read");
     select_all_menuitem   = GET_WIDGET ("select_all");
     deselect_all_menuitem = GET_WIDGET ("deselect_all");
-    
+
     initialised = TRUE;
   }
-  
+
   /* Change the label to Stop while extracting*/
   /* TODO: find out why GTK+ needs this to work (see #364371) */
   gtk_button_set_label (GTK_BUTTON (extract_button), _("Stop"));
   gtk_button_set_label (GTK_BUTTON (extract_button), GTK_STOCK_STOP);
   gtk_widget_show (progress_bar);
-  
+
   /* Reset the progress dialog */
   gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), 0);
   update_speed_progress (NULL, 0.0, -1);
@@ -812,27 +806,26 @@ on_extract_activate (GtkWidget *button, gpointer user_data)
   gtk_widget_set_sensitive (year_entry, FALSE);
   gtk_widget_set_sensitive (disc_number_entry, FALSE);
 
-  /* Disable the menuitems in the main menu*/ 
+  /* Disable the menuitems in the main menu*/
   gtk_widget_set_sensitive (play_menuitem, FALSE);
   gtk_widget_set_sensitive (extract_menuitem, FALSE);
   gtk_widget_set_sensitive (reread_menuitem, FALSE);
   gtk_widget_set_sensitive (select_all_menuitem, FALSE);
   gtk_widget_set_sensitive (deselect_all_menuitem, FALSE);
-  
+
   /* Disable the Extract column */
   g_object_set (G_OBJECT (toggle_renderer), "mode", GTK_CELL_RENDERER_MODE_INERT, NULL);
   g_object_set (G_OBJECT (title_renderer), "editable", FALSE, NULL);
   g_object_set (G_OBJECT (artist_renderer), "editable", FALSE, NULL);
-  g_signal_handlers_block_by_func (track_listview, on_tracklist_row_activate, NULL);
 
   if (! brasero_drive_lock (drive, _("Extracting audio from CD"), &reason)) {
     g_warning ("Could not lock drive: %s", reason);
     g_free (reason);
   }
-  
+
   cookie = sj_inhibit (g_get_application_name (),
                        _("Extracting audio from CD"),
-                       GDK_WINDOW_XID(gtk_widget_get_window (main_window)));
+                       GDK_WINDOW_XID(gtk_widget_get_window (GTK_WIDGET(gtkpod_app))));
 
   /* Save the genre */
   save_genre (genre_entry);
@@ -856,7 +849,7 @@ on_extract_activate (GtkWidget *button, gpointer user_data)
  * shell-friendly. This involves removing [?*\ ] and replacing with '_'.  Also
  * any leading periods are removed so that the files don't end up being hidden.
  *
- * This function doesn't change the input, and returns an allocated 
+ * This function doesn't change the input, and returns an allocated
  * string.
  */
 static char*
@@ -868,11 +861,11 @@ sanitize_path (const char* str, const char* filesystem_type)
   /* Skip leading periods, otherwise files disappear... */
   while (*str == '.')
     str++;
-  
+
   s = g_strdup(str);
   /* Replace path seperators with a hyphen */
   g_strdelimit (s, "/", '-');
-  
+
   /* filesystem specific sanitizing */
   if (filesystem_type) {
     if ((strcmp (filesystem_type, "vfat") == 0) ||
@@ -880,7 +873,7 @@ sanitize_path (const char* str, const char* filesystem_type)
       g_strdelimit (s, "\\:*?\"<>|", ' ');
     }
   }
-    
+
   if (strip_chars) {
     /* Replace separators with a hyphen */
     g_strdelimit (s, "\\:|", '-');
@@ -928,7 +921,7 @@ filepath_parse_pattern (const char* pattern, const TrackDetails *track)
 
   if (pattern == NULL || pattern[0] == 0)
     return g_strdup (" ");
-  
+
   fs_info = g_file_query_filesystem_info (base_uri, G_FILE_ATTRIBUTE_FILESYSTEM_TYPE,
                                           NULL, NULL);
   if (fs_info) {
@@ -973,7 +966,7 @@ filepath_parse_pattern (const char* pattern, const TrackDetails *track)
         break;
       case 'y':
         if (track->album->release_date && g_date_valid(track->album->release_date)) {
-          tmp = g_strdup_printf ("%d", g_date_get_year (track->album->release_date)); 
+          tmp = g_strdup_printf ("%d", g_date_get_year (track->album->release_date));
           string = sanitize_path (tmp, filesystem_type);
           g_free (tmp);
         }
@@ -1080,7 +1073,7 @@ filepath_parse_pattern (const char* pattern, const TrackDetails *track)
       default:
         g_string_append (s, "%d");
         p += 2;
-        
+
         g_string_append_unichar (s, g_utf8_get_char (p));
         p = g_utf8_next_char (p);
         go_next = FALSE;
@@ -1102,8 +1095,8 @@ filepath_parse_pattern (const char* pattern, const TrackDetails *track)
     if (go_next)
       ++p;
   }
-  
-  g_free (filesystem_type); 
+
+  g_free (filesystem_type);
 
   str = s->str;
   g_string_free (s, FALSE);

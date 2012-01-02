@@ -27,6 +27,8 @@
 
 #include "config.h"
 
+#include "libgtkpod/directories.h"
+
 #include <memory.h>
 
 #include <gst/pbutils/encoding-target.h>
@@ -34,8 +36,6 @@
 
 #include "rb-gst-media-types.h"
 
-#define SOURCE_ENCODING_TARGET_FILE "../data/rhythmbox.gep"
-#define INSTALLED_ENCODING_TARGET_FILE DATADIR"/sound-juicer/rhythmbox.gep"
 static GstEncodingTarget *default_target = NULL;
 
 char *
@@ -201,15 +201,10 @@ GstEncodingTarget *
 rb_gst_get_default_encoding_target ()
 {
 	if (default_target == NULL) {
-		char *target_file;
+		gchar *target_file;
 		GError *error = NULL;
 
-		if (g_file_test (SOURCE_ENCODING_TARGET_FILE,
-			         G_FILE_TEST_EXISTS) != FALSE) {
-			target_file = SOURCE_ENCODING_TARGET_FILE;
-		} else {
-			target_file = INSTALLED_ENCODING_TARGET_FILE;
-		}
+		target_file = g_build_filename(get_data_dir(), "rhythmbox.gep", NULL);
 
 		default_target = gst_encoding_target_load_from_file (target_file, &error);
 		if (default_target == NULL) {

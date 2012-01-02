@@ -425,7 +425,7 @@ static void
 sj_metadata_musicbrainz3_finalize (GObject *object)
 {
   SjMetadataMusicbrainz3Private *priv;
-  
+
   priv = GET_PRIVATE (object);
 
   if (priv->mb != NULL) {

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2003 Ross Burton <ross@burtonini.com>
  *
  * Sound Juicer - sj-about.c
@@ -24,9 +24,13 @@
 #include <config.h>
 #endif
 
+// TODO need to remove when replacing the prefs to gtkpod prefs
+#include "libgtkpod/gtkpod_app_iface.h"
+
 #include "sound-juicer.h"
 
 #include <string.h>
+#include <gst/pbutils/encoding-profile.h>
 #include <gtk/gtk.h>
 #include <brasero-drive-selection.h>
 
@@ -36,7 +40,6 @@
 #include "sj-prefs.h"
 
 extern GtkBuilder *builder;
-extern GtkWidget *main_window;
 
 static GtkWidget *audio_profile;
 static GtkWidget *cd_option, *path_option, *file_option, *basepath_fcb, *check_strip, *check_eject, *check_open;
@@ -80,13 +83,13 @@ void prefs_profile_changed (GtkWidget *widget, gpointer user_data)
 
   model = gtk_combo_box_get_model (GTK_COMBO_BOX (widget));
   /* Handle the change being to unselect a profile */
-	if (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (widget), &iter)) {
-	   char *media_type;
-	   gtk_tree_model_get (GTK_TREE_MODEL (model), &iter,
+  if (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (widget), &iter)) {
+    char *media_type;
+    gtk_tree_model_get (GTK_TREE_MODEL (model), &iter,
 	                        0, &media_type, -1);
-	   g_settings_set_string (sj_settings, SJ_SETTINGS_AUDIO_PROFILE, media_type);
-	   g_free (media_type);
-	}
+	g_settings_set_string (sj_settings, SJ_SETTINGS_AUDIO_PROFILE, media_type);
+	g_free (media_type);
+  }
 }
 
 /**
@@ -121,14 +124,14 @@ void show_help (GtkWindow *parent)
 G_MODULE_EXPORT void prefs_base_folder_changed (GtkWidget *chooser, gpointer user_data)
 {
   char *new_uri, *current_uri;
-  
+
   current_uri = g_settings_get_string (sj_settings, SJ_SETTINGS_BASEURI);
-  new_uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (chooser)); 
+  new_uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (chooser));
 
   if (current_uri == NULL || strcmp(current_uri, new_uri) != 0) {
       g_settings_set_string (sj_settings, SJ_SETTINGS_BASEURI, new_uri);
   }
-  
+
   g_free (new_uri);
   g_free (current_uri);
 }
@@ -222,9 +225,9 @@ static void baseuri_changed_cb  (GSettings *settings, gchar *key, gpointer user_
     g_object_unref (dir);
   } else {
     current_uri = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (basepath_fcb));
-    if (current_uri == NULL || strcmp (current_uri, base_uri) != 0) 
+    if (current_uri == NULL || strcmp (current_uri, base_uri) != 0)
       gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (basepath_fcb), base_uri);
-    
+
   }
 }
 
@@ -257,7 +260,7 @@ static void pattern_label_update (void)
     NULL, /* track ID */
     NULL, /* artist ID */
   };
-  
+
   g_object_get (extractor, "profile", &profile, NULL);
   /* It's possible the profile isn't set, in which case do nothing */
   if (!profile) {
@@ -294,7 +297,7 @@ static void pattern_label_update (void)
                         "</i></small>", NULL);
   g_free (example);
   g_free (media_type);
-  
+
   gtk_label_set_markup (GTK_LABEL (path_example_label), format);
   g_free (format);
 }
@@ -320,7 +323,7 @@ static void file_pattern_changed_cb (GSettings *settings, gchar *key, gpointer u
   int i = 0;
 
   g_return_if_fail (strcmp (key, SJ_SETTINGS_FILE_PATTERN) == 0);
- 
+
   value = g_settings_get_string (settings, key);
   while (file_patterns[i].pattern && strcmp(file_patterns[i].pattern, value) != 0) {
     i++;
@@ -386,7 +389,7 @@ static void populate_pattern_combo (GtkComboBox *combo, const FilePattern *patte
 {
   GtkListStore *store;
   int i;
-  
+
   store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_STRING);
   for (i = 0; patterns[i].pattern; ++i) {
     GtkTreeIter iter;
@@ -461,7 +464,7 @@ G_MODULE_EXPORT void on_edit_preferences_cb (GtkMenuItem *item, gpointer user_da
     g_assert (prefs_dialog != NULL);
     g_object_add_weak_pointer (G_OBJECT (prefs_dialog), (gpointer)&prefs_dialog);
 
-    gtk_window_set_transient_for (GTK_WINDOW (prefs_dialog), GTK_WINDOW (main_window));
+    gtk_window_set_transient_for (GTK_WINDOW (prefs_dialog), GTK_WINDOW (gtkpod_app));
 
     group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
     for (i = 0; i < G_N_ELEMENTS (labels); i++) {
@@ -521,7 +524,7 @@ G_MODULE_EXPORT void on_edit_preferences_cb (GtkMenuItem *item, gpointer user_da
                       (GCallback)file_pattern_changed_cb, NULL);
     g_signal_connect (G_OBJECT (sj_settings), "changed::"SJ_SETTINGS_STRIP,
                       (GCallback)strip_changed_cb, NULL);
-    
+
 		g_signal_connect (extractor, "notify::profile", pattern_label_update, NULL);
 
     baseuri_changed_cb (sj_settings, SJ_SETTINGS_BASEURI, NULL);

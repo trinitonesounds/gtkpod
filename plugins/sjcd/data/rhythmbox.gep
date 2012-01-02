@@ -1,7 +1,7 @@
 [GStreamer Encoding Target]
-name = rhythmbox
+name = gtkpod
 category = muh
-description = Common encoding profiles for Rhythmbox
+description = Common encoding profiles for gtkpod
 
 [profile-mp3]
 name = mp3

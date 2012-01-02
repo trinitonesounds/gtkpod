@@ -24,19 +24,15 @@ libjuicer_la_CPPFLAGS = \
 
 libjuicer_la_CFLAGS = \
 	$(WARN_CFLAGS)	\
+	$(SOUND_JUICER_CFLAGS) \
 	$(MUSICBRAINZ3_CFLAGS) \
 	$(GSTREAMER_CFLAGS) \
-	$(BURN_CFLAGS) \
-	$(UI_CFLAGS) \
-	$(CDIO_CFLAGS) \
 	$(AM_CFLAGS)
 
 libjuicer_la_LIBADD = \
+	$(SOUND_JUICER_LIBS) \
 	$(MUSICBRAINZ3_LIBS) \
-	$(GSTREAMER_LIBS) \
-	$(BURN_LIBS) \
-	$(UI_LIBS) \
-	$(CDIO_LIBS)
+	$(GSTREAMER_LIBS)
 
 libjuicer_la_LDFLAGS = \
 	-export-dynamic \
