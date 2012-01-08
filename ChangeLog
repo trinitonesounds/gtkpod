@@ -1,3 +1,30 @@
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-08
+
+    Updates to Changelog and NEWS
+    
+        * Updates before release of release candidate
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-08
+
+    Add quotes to the $LOG variable in the transcoding scripts
+    
+    * Allows the LOG path to contain spaces.
+    
+    * Thanks to Walt Ogburn <reuben at ugcs.caltech.edu> for the bug report and
+      patch.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-12-27
+
+    m4a plugin incorrectly sets files to video.
+    
+    * m4afile.c
+     * The mp4_get_file_info function already sets the media type so pointless
+       to do it again here.
+    
+    * mp4file.c
+     * Incorrectly sets m4a/m4b/m4p files to movie media type. Appropriately
+       set media type based on file type.
+
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-12-20
 
     Updates to Changelog and NEWS
