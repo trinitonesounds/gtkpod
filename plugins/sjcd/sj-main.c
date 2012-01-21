@@ -53,8 +53,6 @@
 #include "sj-prefs.h"
 #include "sj-genres.h"
 
-gboolean on_delete_event (GtkWidget *widget, GdkEvent *event, gpointer user_data);
-
 static void reread_cd (gboolean ignore_no_media);
 static void update_ui_for_album (AlbumDetails *album);
 static void set_duplication (gboolean enable);
@@ -105,6 +103,31 @@ static char *current_submit_url = NULL;
 #define RAISE_WINDOW "raise-window"
 #define SJCD_SCHEMA "org.gtkpod.sjcd"
 
+void
+sj_stock_init (void)
+{
+  static gboolean initialized = FALSE;
+  static GtkIconFactory *sj_icon_factory = NULL;
+
+  static const GtkStockItem sj_stock_items[] =
+  {
+    { SJ_STOCK_EXTRACT, N_("E_xtract"), GDK_CONTROL_MASK, GDK_KEY_Return, NULL }
+  };
+
+  if (initialized)
+    return;
+
+  sj_icon_factory = gtk_icon_factory_new ();
+
+  gtk_icon_factory_add (sj_icon_factory, SJ_STOCK_EXTRACT, gtk_icon_factory_lookup_default (GTK_STOCK_CDROM));
+
+  gtk_icon_factory_add_default (sj_icon_factory);
+
+  gtk_stock_add_static (sj_stock_items, G_N_ELEMENTS (sj_stock_items));
+
+  initialized = TRUE;
+}
+
 static void error_on_start (GError *error)
 {
   gtkpod_statusbar_message("Could not start sound juicer because %s", error->message);
@@ -117,29 +140,6 @@ static void error_on_start (GError *error)
 G_MODULE_EXPORT void on_eject_activate (GtkMenuItem *item, gpointer user_data)
 {
   brasero_drive_eject (drive, FALSE, NULL);
-}
-
-G_MODULE_EXPORT gboolean on_delete_event (GtkWidget *widget, GdkEvent *event, gpointer user_data)
-{
-  if (extracting) {
-    GtkWidget *dialog;
-    int response;
-
-    dialog = gtk_message_dialog_new (GTK_WINDOW (gtkpod_app), GTK_DIALOG_MODAL,
-                                     GTK_MESSAGE_QUESTION,
-                                     GTK_BUTTONS_NONE,
-                                     _("You are currently extracting a CD. Do you want to quit now or continue?"));
-    gtk_dialog_add_button (GTK_DIALOG (dialog), "gtk-quit", GTK_RESPONSE_ACCEPT);
-    gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Continue"), GTK_RESPONSE_REJECT);
-    response = gtk_dialog_run (GTK_DIALOG (dialog));
-    gtk_widget_destroy (dialog);
-
-    if (response == GTK_RESPONSE_ACCEPT) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-  return FALSE;
 }
 
 static gboolean select_all_foreach_cb (GtkTreeModel *model,
@@ -649,17 +649,6 @@ static void open_changed_cb (GSettings *settings, gchar *key, gpointer user_data
   open_finished = g_settings_get_boolean (settings, key);
 }
 
- /**
-  * The GSettings key for audio volume changes
-  */
-static void audio_volume_changed_cb (GSettings *settings, gchar *key, gpointer user_data)
-{
-  g_assert (strcmp (key, SJ_SETTINGS_AUDIO_VOLUME) == 0);
-
-  GtkWidget *volb = GET_WIDGET ("volume_button");
-  gtk_scale_button_set_value (GTK_SCALE_BUTTON (volb), g_settings_get_double (settings, key));
-}
-
 static void
 metadata_cb (SjMetadataGetter *m, GList *albums, GError *error)
 {
@@ -975,7 +964,7 @@ static void device_changed_cb (GSettings *settings, gchar *key, gpointer user_da
                                                    _("Sound Juicer could not find any CD-ROM drives to read."));
       gtk_dialog_run (GTK_DIALOG (dialog));
       gtk_widget_destroy (dialog);
-      exit (1);
+      return;
 #endif
     }
   } else {
@@ -1014,7 +1003,7 @@ static void profile_changed_cb (GSettings *settings, gchar *key, gpointer user_d
       on_edit_preferences_cb (NULL, NULL);
     } else {
       /* Can't use gtk_main_quit here, we may be outside the main loop */
-      exit(0);
+      return;
     }
   }
 
@@ -1458,6 +1447,8 @@ GtkWidget *sj_create_sound_juicer()
 
   g_setenv ("PULSE_PROP_media.role", "music", TRUE);
 
+  sj_stock_init();
+
   connection = bacon_message_connection_new ("sound-juicer");
   if (bacon_message_connection_get_is_server (connection) == FALSE) {
     bacon_message_connection_send (connection, RAISE_WINDOW);
@@ -1496,13 +1487,11 @@ GtkWidget *sj_create_sound_juicer()
                     (GCallback)path_pattern_changed_cb, NULL);
   g_signal_connect (sj_settings, "changed::"SJ_SETTINGS_FILE_PATTERN,
                     (GCallback)file_pattern_changed_cb, NULL);
-  g_signal_connect (sj_settings, "changed::"SJ_SETTINGS_AUDIO_VOLUME,
-                    (GCallback)audio_volume_changed_cb, NULL);
 
   http_settings = g_settings_new ("org.gnome.system.proxy.http");
   if (http_settings == NULL) {
     g_warning (_("Could not create GSettings object.\n"));
-    exit (1);
+    return NULL;
   }
   g_signal_connect (http_settings, "changed::"SJ_SETTINGS_HTTP_PROXY_ENABLE,
                     (GCallback)http_proxy_enable_changed_cb, NULL);
@@ -1623,7 +1612,6 @@ GtkWidget *sj_create_sound_juicer()
   strip_changed_cb (sj_settings, SJ_SETTINGS_STRIP, NULL);
   eject_changed_cb (sj_settings, SJ_SETTINGS_EJECT, NULL);
   open_changed_cb (sj_settings, SJ_SETTINGS_OPEN, NULL);
-  audio_volume_changed_cb (sj_settings, SJ_SETTINGS_AUDIO_VOLUME, NULL);
   if (device == NULL && uris == NULL) {
     /* FIXME: this should set the device gsettings key to a meaningful
      * value if it's empty (which is the case until the user changes it in
@@ -1670,11 +1658,6 @@ GtkWidget *sj_create_sound_juicer()
   gtk_widget_set_sensitive (duplicate, FALSE);
   duplication_enabled = is_cd_duplication_available();
 
-  g_object_unref (base_uri);
-  g_object_unref (metadata);
-  g_object_unref (extractor);
-  g_object_unref (sj_settings);
-  g_object_unref (http_settings);
   brasero_media_library_stop ();
 
   return vbox1;

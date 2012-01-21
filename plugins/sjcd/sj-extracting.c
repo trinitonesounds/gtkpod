@@ -244,14 +244,12 @@ cleanup (void)
   gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress_bar), 0);
   gtk_widget_hide (progress_bar);
 
-  gtk_widget_set_sensitive (play_button, TRUE);
   gtk_widget_set_sensitive (title_entry, TRUE);
   gtk_widget_set_sensitive (artist_entry, TRUE);
   gtk_widget_set_sensitive (genre_entry, TRUE);
   gtk_widget_set_sensitive (year_entry, TRUE);
   gtk_widget_set_sensitive (disc_number_entry, TRUE);
   /* Enabling the Menuitem */
-  gtk_widget_set_sensitive (play_menuitem, TRUE);
   gtk_widget_set_sensitive (extract_menuitem, TRUE);
   gtk_widget_set_sensitive (reread_menuitem, TRUE);
   gtk_widget_set_sensitive (select_all_menuitem, TRUE);
@@ -799,7 +797,6 @@ on_extract_activate (GtkWidget *button, gpointer user_data)
   update_speed_progress (NULL, 0.0, -1);
 
   /* Disable the widgets in the main UI*/
-  gtk_widget_set_sensitive (play_button, FALSE);
   gtk_widget_set_sensitive (title_entry, FALSE);
   gtk_widget_set_sensitive (artist_entry, FALSE);
   gtk_widget_set_sensitive (genre_entry, FALSE);
@@ -807,7 +804,6 @@ on_extract_activate (GtkWidget *button, gpointer user_data)
   gtk_widget_set_sensitive (disc_number_entry, FALSE);
 
   /* Disable the menuitems in the main menu*/
-  gtk_widget_set_sensitive (play_menuitem, FALSE);
   gtk_widget_set_sensitive (extract_menuitem, FALSE);
   gtk_widget_set_sensitive (reread_menuitem, FALSE);
   gtk_widget_set_sensitive (select_all_menuitem, FALSE);

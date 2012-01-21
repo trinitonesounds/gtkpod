@@ -94,10 +94,11 @@ echo "Checking optional dependencies"
 PKG_CHECK_MODULES(CLUTTER_GTK, [clutter-gtk-1.0 >= 1.0], [have_clutter_gtk="yes"], [have_clutter_gtk="no"])
 PKG_CHECK_MODULES(CURL, [libcurl >= 7.10.0], [have_curl="yes"], [have_curl="no"])
 PKG_CHECK_MODULES(WEBKIT, [webkitgtk-3.0 >= 1.3], [have_webkit="yes"], [have_webkit="no"])
-PKG_CHECK_MODULES(GSTREAMER, gstreamer-0.10 >= 0.10.25 gstreamer-interfaces-0.10 >= 0.10.25, [have_gstreamer="yes"], [have_gstreamer="no"])
+PKG_CHECK_MODULES(GSTREAMER, gstreamer-0.10 >= 0.10.25 gstreamer-base-0.10 >= 0.10.25 gstreamer-plugins-base-0.10 >= 0.10.25 gstreamer-interfaces-0.10 >= 0.10.25 gstreamer-pbutils-0.10 >= 0.10.25, [have_gstreamer="yes"], [have_gstreamer="no"])
 PKG_CHECK_MODULES(VORBISFILE, vorbisfile >= 1.3.1, [have_vorbis="yes"], [have_vorbis="no"])
 PKG_CHECK_MODULES(FLAC, flac >= 1.2.1, [have_flac="yes"], [have_flac="no"])
-PKG_CHECK_MODULES(SOUND_JUICER, libcanberra-gtk3 libbrasero-media3 >= 3.0, [have_sj="yes"], [have_sj="no"])		
+PKG_CHECK_MODULES(BRASERO, libbrasero-media3 >= 3.0, [have_brasero="yes"], [have_brasero="no"])		
+PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk3, [have_canberra="yes"], [have_canberra="no"])		
 
 GTK_CLEANLINESS_FLAGS="-DG_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE"
 
@@ -161,6 +162,23 @@ if test "x$have_clutter_gtk" = "xyes"; then
 fi
 AM_CONDITIONAL(HAVE_CLUTTER_GTK, [test "x$have_clutter_gtk" = "xyes"])
 
+dnl Add gstreamer if installed
+dnl -------------------------------------------------------------
+if test "x$have_gstreamer" = "xyes"; then
+	AC_DEFINE(HAVE_GSTREAMER, 1, [Define if you have gstreamer support])
+	dnl Need to add to CFLAGS and LIBS so main can init correctly
+    CFLAGS="$CFLAGS $GSTREAMER_CFLAGS"
+    LIBS="$LIBS $GSTREAMER_LIBS"
+fi
+
+dnl Add brasero if installed
+dnl -------------------------------------------------------------
+if test "x$have_brasero" = "xyes"; then
+	AC_DEFINE(HAVE_BRASERO, 1, [Define if you have brasero support])
+	dnl Need to add to CFLAGS and LIBS so main can init correctly
+    CFLAGS="$CFLAGS $BRASERO_CFLAGS"
+    LIBS="$LIBS $BRASERO_LIBS"
+fi
 
 dnl Check for libcurl
 dnl -------------------------------------------------------------
@@ -339,17 +357,15 @@ if test "$user_disabled_sjcd" = 1; then
 else
 	AC_MSG_RESULT(no)
 	AC_MSG_CHECKING(sjcd plugin dependencies)
-	if test "x$have_gstreamer" = "xyes" -a "x$have_sj" = "xyes"; then
+	if test "x$have_gstreamer" = "xyes" -a "x$have_brasero" = "xyes" -a "x$have_canberra" = "xyes"; then
 		AC_MSG_RESULT(yes)
 		have_sjcd="yes"
 		
 		dnl Checks for components of gstreamer
-		if test "x$have_gstreamer" = "xyes"; then
-			AM_GST_ELEMENT_CHECK(vorbisenc,,AC_MSG_WARN([The 'vorbisenc' element was not found. This will cause encoding to Ogg Vorbis to fail.]))
-			AM_GST_ELEMENT_CHECK(flacenc,,AC_MSG_WARN([The 'flacenc' element was not found. This will cause encoding to FLAC to fail.]))
-			AM_GST_ELEMENT_CHECK(wavenc,,AC_MSG_WARN([The 'wavenc' element was not found. This will cause encoding to Wave to fail.]))
-			AM_GST_ELEMENT_CHECK(giosink,,AC_MSG_WARN([The 'giosink' element was not found. This will cause Sound Juicer to fail at runtime.]))
-		fi
+		AM_GST_ELEMENT_CHECK(vorbisenc,,AC_MSG_WARN([The 'vorbisenc' element was not found. This will cause encoding to Ogg Vorbis to fail.]))
+		AM_GST_ELEMENT_CHECK(flacenc,,AC_MSG_WARN([The 'flacenc' element was not found. This will cause encoding to FLAC to fail.]))
+		AM_GST_ELEMENT_CHECK(wavenc,,AC_MSG_WARN([The 'wavenc' element was not found. This will cause encoding to Wave to fail.]))
+		AM_GST_ELEMENT_CHECK(giosink,,AC_MSG_WARN([The 'giosink' element was not found. This will cause Sound Juicer to fail at runtime.]))	
 	else
 		AC_MSG_RESULT(no)
 	fi

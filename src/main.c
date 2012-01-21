@@ -38,11 +38,19 @@
 #ifdef HAVE_CLUTTER_GTK
     #include <clutter-gtk/clutter-gtk.h>
 #endif
-
+#ifdef HAVE_GSTREAMER
+    #include <gst/gst.h>
+#endif
+#ifdef HAVE_BRASERO
+    #include <brasero-media.h>
+#endif
 
 int
 main (int argc, char *argv[])
 {
+    GOptionContext *ctx;
+    GError *error = NULL;
+
 #ifdef ENABLE_NLS
     bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
     bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -63,6 +71,26 @@ main (int argc, char *argv[])
 #else
     gtk_init (&argc, &argv);
 #endif
+
+    ctx = g_option_context_new (N_("- Interface with your ipod"));
+    g_option_context_add_group (ctx, gtk_get_option_group (TRUE));
+
+#ifdef HAVE_GSTREAMER
+    g_option_context_add_group (ctx, gst_init_get_option_group ());
+#endif
+
+#ifdef HAVE_BRASERO
+    g_option_context_add_group (ctx, brasero_media_get_option_group ());
+#endif
+
+    g_option_context_set_ignore_unknown_options (ctx, TRUE);
+    g_option_context_parse (ctx, &argc, &argv, &error);
+    if (error != NULL) {
+        g_printerr ("Error parsing options: %s", error->message);
+        g_error_free(error);
+        exit(1);
+    }
+    g_option_context_free (ctx);
 
     g_set_application_name(_("gtkpod"));
     gtk_window_set_auto_startup_notification(FALSE);
