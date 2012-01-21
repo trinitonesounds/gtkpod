@@ -36,6 +36,14 @@
 
 #include <libanjuta/anjuta-plugin.h>
 
+extern GType sjcd_plugin_get_type (GTypeModule *module);
+#define SJCD_TYPE_PLUGIN         (sjcd_plugin_get_type (NULL))
+#define SJCD_PLUGIN(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), SJCD_TYPE_PLUGIN, SJCDPlugin))
+#define SJCD_PLUGIN_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST ((k), SJCD_TYPE_PLUGIN, SJCDPluginClass))
+#define SJCD_IS_PLUGIN(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), SJCD_TYPE_PLUGIN))
+#define SJCD_IS_PLUGIN_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), SJCD_TYPE_PLUGIN))
+#define SJCD_PLUGIN_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), SJCD_TYPE_PLUGIN, SJCDPluginClass))
+
 typedef struct _SJCDPlugin SJCDPlugin;
 typedef struct _SJCDPluginClass SJCDPluginClass;
 
@@ -44,6 +52,7 @@ struct _SJCDPlugin {
     gint uiid;
     GtkWidget *sj_view;
     GtkActionGroup *action_group;
+    GtkWidget *prefs;
 };
 
 struct _SJCDPluginClass {

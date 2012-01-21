@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2003 Ross Burton <ross@burtonini.com>
  *
  * Sound Juicer - sj-prefs.h
@@ -22,6 +22,8 @@
 
 #ifndef SJ_PREFS_H
 #define SJ_PREFS_H
+
+GtkWidget *init_sjcd_preferences();
 
 extern const char* prefs_get_default_device ();
 void on_edit_preferences_cb (GtkMenuItem *item, gpointer user_data);

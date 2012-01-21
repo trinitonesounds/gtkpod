@@ -31,10 +31,17 @@
 #endif
 
 #include <glib.h>
+#include <libanjuta/interfaces/ianjuta-preferences.h>
 #include "libgtkpod/gtkpod_app_iface.h"
+#include "libgtkpod/stock_icons.h"
 #include "libgtkpod/directories.h"
 #include "plugin.h"
 #include "sj-main.h"
+#include "sj-prefs.h"
+
+#define PREFERENCE_ICON "sjcd-playlist-category"
+#define PREFERENCE_ICON_STOCK_ID "sjcd-preference-icon"
+#define TAB_NAME N_("Sound Juicer")
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -47,8 +54,8 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     GtkActionGroup* action_group;
 
     /* Prepare the icons for the playlist */
-//    register_icon_path(get_plugin_dir(), "sjcd");
-//    register_stock_icon(PREFERENCE_ICON, PREFERENCE_ICON_STOCK_ID);
+    register_icon_path(get_plugin_dir(), "sjcd");
+    register_stock_icon(PREFERENCE_ICON, PREFERENCE_ICON_STOCK_ID);
 
     sjcd_plugin = (SJCDPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
@@ -102,7 +109,39 @@ static void sjcd_plugin_class_init(GObjectClass *klass) {
     plugin_class->deactivate = deactivate_plugin;
 }
 
+static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
+    GdkPixbuf *pixbuf;
+    GError *error = NULL;
+
+    SJCDPlugin* plugin = SJCD_PLUGIN(ipref);
+    plugin->prefs = init_sjcd_preferences();
+    if (plugin->prefs == NULL)
+        return;
+
+    pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), PREFERENCE_ICON, 48, 0, &error);
+
+    if (!pixbuf) {
+        g_warning (N_("Couldn't load icon: %s"), error->message);
+        g_error_free(error);
+    }
+
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-track-display-settings", _(TAB_NAME), pixbuf, plugin->prefs);
+    g_object_unref(pixbuf);
+}
+
+static void ipreferences_unmerge(IAnjutaPreferences* ipref, AnjutaPreferences* prefs, GError** e) {
+    anjuta_preferences_remove_page(prefs, TAB_NAME);
+    SJCDPlugin* plugin = SJCD_PLUGIN(ipref);
+    gtk_widget_destroy(plugin->prefs);
+}
+
+static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
+    iface->merge = ipreferences_merge;
+    iface->unmerge = ipreferences_unmerge;
+}
+
 ANJUTA_PLUGIN_BEGIN (SJCDPlugin, sjcd_plugin);
+ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);
 ANJUTA_PLUGIN_END;
 
 ANJUTA_SIMPLE_PLUGIN (SJCDPlugin, sjcd_plugin)
