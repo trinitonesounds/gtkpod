@@ -42,7 +42,6 @@
 #include <brasero-volume.h>
 #include <gst/gst.h>
 
-#include "bacon-message-connection.h"
 #include "rb-gst-media-types.h"
 #include "sj-metadata-getter.h"
 #include "sj-extractor.h"
@@ -79,7 +78,6 @@ static GtkWidget *extract_menuitem, *select_all_menuitem, *deselect_all_menuitem
 static GtkWidget *submit_menuitem;
 static GtkWidget *duplicate, *eject;
 GtkListStore *track_store;
-static BaconMessageConnection *connection;
 GtkCellRenderer *toggle_renderer, *title_renderer, *artist_renderer;
 
 GtkWidget *current_message_area;
@@ -90,7 +88,6 @@ GFile *base_uri;
 BraseroDrive *drive = NULL;
 gboolean strip_chars;
 gboolean eject_finished;
-gboolean open_finished;
 gboolean extracting = FALSE;
 static gboolean duplication_enabled;
 
@@ -638,15 +635,6 @@ static void eject_changed_cb (GSettings *settings, gchar *key, gpointer user_dat
 {
   g_assert (strcmp (key, SJ_SETTINGS_EJECT) == 0);
   eject_finished = g_settings_get_boolean (settings, key);
-}
-
- /**
-  * The GSettings key for the open when finished option changed
-  */
-static void open_changed_cb (GSettings *settings, gchar *key, gpointer user_data)
-{
-  g_assert (strcmp (key, SJ_SETTINGS_OPEN) == 0);
-  open_finished = g_settings_get_boolean (settings, key);
 }
 
 static void
@@ -1343,16 +1331,6 @@ G_MODULE_EXPORT void on_contents_activate(GtkWidget *button, gpointer user_data)
   }
 }
 
-static void
-on_message_received (const char *message, gpointer user_data)
-{
-  if (message == NULL)
-    return;
-  if (strcmp (RAISE_WINDOW, message) == 0) {
-    gtk_window_present (GTK_WINDOW (gtkpod_app));
-  }
-}
-
 /**
  * Performs various checks to ensure CD duplication is available.
  * If this is found TRUE is returned, otherwise FALSE is returned.
@@ -1449,15 +1427,6 @@ GtkWidget *sj_create_sound_juicer()
 
   sj_stock_init();
 
-  connection = bacon_message_connection_new ("sound-juicer");
-  if (bacon_message_connection_get_is_server (connection) == FALSE) {
-    bacon_message_connection_send (connection, RAISE_WINDOW);
-    bacon_message_connection_free (connection);
-    return NULL;
-  } else {
-    bacon_message_connection_set_callback (connection, on_message_received, NULL);
-  }
-
   brasero_media_library_start ();
 
   metadata = sj_metadata_getter_new ();
@@ -1473,8 +1442,6 @@ GtkWidget *sj_create_sound_juicer()
                     (GCallback)device_changed_cb, NULL);
   g_signal_connect (sj_settings, "changed::"SJ_SETTINGS_EJECT,
                     (GCallback)eject_changed_cb, NULL);
-  g_signal_connect (sj_settings, "changed::"SJ_SETTINGS_OPEN,
-                    (GCallback)open_changed_cb, NULL);
   g_signal_connect (sj_settings, "changed::"SJ_SETTINGS_BASEURI,
                     (GCallback)baseuri_changed_cb, NULL);
   g_signal_connect (sj_settings, "changed::"SJ_SETTINGS_STRIP,
@@ -1611,7 +1578,6 @@ GtkWidget *sj_create_sound_juicer()
   paranoia_changed_cb (sj_settings, SJ_SETTINGS_PARANOIA, NULL);
   strip_changed_cb (sj_settings, SJ_SETTINGS_STRIP, NULL);
   eject_changed_cb (sj_settings, SJ_SETTINGS_EJECT, NULL);
-  open_changed_cb (sj_settings, SJ_SETTINGS_OPEN, NULL);
   if (device == NULL && uris == NULL) {
     /* FIXME: this should set the device gsettings key to a meaningful
      * value if it's empty (which is the case until the user changes it in

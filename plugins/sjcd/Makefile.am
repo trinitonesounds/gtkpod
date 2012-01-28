@@ -35,9 +35,8 @@ libsjcd_la_SOURCES = plugin.c plugin.h \
 					 sj-extracting.c sj-extracting.h \
 					 sj-inhibit.c sj-inhibit.h \
 					 sj-genres.c sj-genres.h \
-					 egg-play-preview.c egg-play-preview.h \
-					 bacon-message-connection.c bacon-message-connection.h
-
+					 egg-play-preview.c egg-play-preview.h
+					 
 libsjcd_la_CFLAGS = -I$(top_srcdir)/plugins/$(plugin_name)/libjuicer \
 					$(GSTREAMER_CFLAGS) \
 					$(BRASERO_CFLAGS) \

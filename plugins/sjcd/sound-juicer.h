@@ -114,11 +114,6 @@ extern gboolean strip_chars;
 extern gboolean eject_finished;
 
 /**
- * If the destination folder should be opened when the rip has finished.
- */
-extern gboolean open_finished;
-
-/**
  * Toggle, Title and Artist Renderers
  */
 extern GtkCellRenderer *toggle_renderer, *title_renderer, *artist_renderer;

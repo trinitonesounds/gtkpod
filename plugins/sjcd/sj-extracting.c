@@ -24,8 +24,10 @@
 #include <config.h>
 #endif
 
-// TODO Remove this and replace dialogs with gtkpod dialogs
 #include "libgtkpod/gtkpod_app_iface.h"
+#include "libgtkpod/gp_itdb.h"
+#include "libgtkpod/misc.h"
+#include "libgtkpod/misc_track.h"
 
 #include "sound-juicer.h"
 
@@ -87,10 +89,10 @@ static gboolean successful_extract = FALSE;
 static GtkWidget *progress_bar, *status_bar;
 
 /** The widgets in the main UI */
-static GtkWidget *extract_button, *play_button, *title_entry, *artist_entry, *genre_entry, *year_entry, *disc_number_entry, *track_listview;
+static GtkWidget *extract_button, *title_entry, *artist_entry, *genre_entry, *year_entry, *disc_number_entry, *track_listview;
 
 /** The menuitem in the main menu */
-static GtkWidget *extract_menuitem, *play_menuitem, *reread_menuitem, *select_all_menuitem, *deselect_all_menuitem;
+static GtkWidget *extract_menuitem, *reread_menuitem, *select_all_menuitem, *deselect_all_menuitem;
 
 static GtkTreeIter current;
 
@@ -99,6 +101,11 @@ static GtkTreeIter current;
  * the data and the list when finished.
  */
 static GList *paths = NULL;
+
+/**
+ * A list of files we have extracted.
+ */
+static GList *files = NULL;
 
 /**
  * The total number of tracks we are extracting.
@@ -428,6 +435,8 @@ pop_and_extract (int *overwrite_mode)
     /* Save the directory name for later */
     paths = g_list_append (paths, directory);
 
+    /* Save the file name for later */
+    files = g_list_append(files, g_file_get_path(file));
 
     goffset file_size;
     file_size = check_file_size (file);
@@ -557,43 +566,95 @@ on_progress_cb (SjExtractor *extractor, const int seconds, gpointer data)
   }
 }
 
-/**
- * A list foreach function which will find the deepest common directory in a
- * list of filenames.
- * @param path the path in this iteration
- * @param ret a char** to the deepest common path
- */
-static void
-base_finder (char *path, char **ret)
-{
-  if (*ret == NULL) {
-    /* If no common directory so far, this must be it. */
-    *ret = g_strdup (path);
-    return;
-  } else {
-    /* Urgh */
-    char *i, *j, *marker;
-    i = marker = path;
-    j = *ret;
-    while (*i == *j) {
-      if (*i == G_DIR_SEPARATOR) marker = i;
-      if (*i == 0) {
-        marker = i;
-        break;
-      }
-      i = g_utf8_next_char (i);
-      j = g_utf8_next_char (j);
-    }
-    g_free (*ret);
-    *ret = g_strndup (path, marker - path + 1);
-  }
-}
-
 static gboolean
-on_main_window_focus_in (GtkWidget * widget, GdkEventFocus * event, gpointer data)
+import_files_to_itdb(gpointer *data)
 {
-  gtk_window_set_urgency_hint (GTK_WINDOW (gtkpod_app), FALSE);
-  return FALSE;
+    GList *file_list = files;
+    gchar *statusmsg;
+    iTunesDB *itdb;
+    GError *error = NULL;
+    gboolean result = TRUE; /* Result of file adding */
+    GString *errors = g_string_new("");
+
+    itdb = gp_get_selected_itdb();
+    if (!itdb) {
+        gtkpod_warning(_("%d were ripped from the CD but no repository was selected. Please import them manually."), g_list_length(files));
+        g_string_free(errors, TRUE);
+        g_list_free_full(files, g_free);
+        return TRUE;
+    }
+
+    block_widgets();
+
+    gtkpod_statusbar_busy_push();
+
+    gtkpod_statusbar_reset_progress(g_list_length(files));
+
+    while(file_list) {
+        gchar *file = file_list->data;
+        statusmsg = g_strdup_printf(_("Importing file '%s'. Please wait..."), file);
+        error = NULL;
+
+        result &= add_track_by_filename(itdb, file, NULL, FALSE, NULL, NULL, &error);
+        if (error) {
+            gchar *buf = g_strdup_printf(_("%s\n"), error->message);
+            g_string_append(errors, buf);
+            g_free(buf);
+            g_error_free(error);
+            error = NULL;
+        }
+
+        gtkpod_statusbar_increment_progress_ticks(1, statusmsg);
+
+        file_list = file_list->next;
+    }
+
+    gtkpod_statusbar_busy_pop();
+
+    release_widgets();
+
+    /* Final save of remaining added tracks */
+    gp_save_itdb(itdb);
+
+    /* clear log of non-updated tracks */
+    display_non_updated((void *) -1, NULL);
+
+    /* display log of updated tracks */
+    display_updated(NULL, NULL);
+
+    /* display log of detected duplicates */
+    gp_duplicate_remove(NULL, NULL);
+
+    /* Set the itdb's playlist as the selected - updates the display */
+    gtkpod_set_current_playlist(itdb_playlist_mpl(itdb));
+
+    /* Were all files successfully added? */
+    if (!result) {
+        if (errors->len > 0) {
+            gtkpod_confirmation(-1, /* gint id, */
+                   TRUE, /* gboolean modal, */
+                   _("File Addition Errors"), /* title */
+                   _("Some files were not added successfully"), /* label */
+                   errors->str, /* scrolled text */
+                   NULL, 0, NULL, /* option 1 */
+                   NULL, 0, NULL, /* option 2 */
+                   TRUE, /* gboolean confirm_again, */
+                   "show_file_addition_errors",/* confirm_again_key,*/
+                   CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
+                   NULL, /* don't show "Apply" button */
+                   NULL, /* cancel_handler,*/
+                   NULL, /* gpointer user_data1,*/
+                   NULL); /* gpointer user_data2,*/
+        }
+        else {
+            gtkpod_warning(_("Some tracks failed to be added but no errors were reported."));
+        }
+    }
+
+    g_string_free(errors, TRUE);
+    g_list_free_full(files, g_free);
+
+    return TRUE;
 }
 
 /**
@@ -602,33 +663,14 @@ on_main_window_focus_in (GtkWidget * widget, GdkEventFocus * event, gpointer dat
 static void
 finished_actions (void)
 {
-  /* Trigger a sound effect */
-  ca_gtk_play_for_widget (GTK_WIDGET(gtkpod_app), 0,
-    CA_PROP_EVENT_ID, "complete-media-rip",
-    CA_PROP_EVENT_DESCRIPTION, _("CD rip complete"),
-    NULL);
-
-  /* Trigger glowing effect after copy */
-  g_signal_connect (G_OBJECT (gtkpod_app), "focus-in-event",
-                    G_CALLBACK (on_main_window_focus_in),  NULL);
-  gtk_window_set_urgency_hint (GTK_WINDOW (gtkpod_app), TRUE);
-
   /* Maybe eject */
   if (eject_finished && successful_extract) {
     brasero_drive_eject (drive, FALSE, NULL);
   }
 
-  /* Maybe open the target directory */
-  if (open_finished) {
-    char *base = NULL;
-
-    /* Find the deepest common directory. */
-    g_list_foreach (paths, (GFunc)base_finder, &base);
-
-    gtk_show_uri (NULL, base, GDK_CURRENT_TIME, NULL);
-
-    g_free (base);
-  }
+  gdk_threads_enter();
+  import_files_to_itdb(NULL);
+  gdk_threads_leave();
 }
 
 /**
@@ -767,7 +809,6 @@ on_extract_activate (GtkWidget *button, gpointer user_data)
     g_signal_connect (extractor, "error", G_CALLBACK (on_error_cb), NULL);
 
     extract_button    = GET_WIDGET ("extract_button");
-    play_button       = GET_WIDGET ("play_button");
     title_entry       = GET_WIDGET ("title_entry");
     artist_entry      = GET_WIDGET ("artist_entry");
     genre_entry       = GET_WIDGET ("genre_entry");
@@ -777,7 +818,6 @@ on_extract_activate (GtkWidget *button, gpointer user_data)
     progress_bar      = GET_WIDGET ("progress_bar");
     status_bar        = GET_WIDGET ("status_bar");
 
-    play_menuitem         = GET_WIDGET ("play_menuitem");
     extract_menuitem      = GET_WIDGET ("extract_menuitem");
     reread_menuitem       = GET_WIDGET ("re-read");
     select_all_menuitem   = GET_WIDGET ("select_all");
@@ -819,6 +859,7 @@ on_extract_activate (GtkWidget *button, gpointer user_data)
     g_free (reason);
   }
 
+  // TODO
   cookie = sj_inhibit (g_get_application_name (),
                        _("Extracting audio from CD"),
                        GDK_WINDOW_XID(gtk_widget_get_window (GTK_WIDGET(gtkpod_app))));

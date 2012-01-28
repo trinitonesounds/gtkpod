@@ -621,7 +621,7 @@ sj_extractor_extract_track (SjExtractor *extractor, const TrackDetails *track, G
   if (state_ret == GST_STATE_CHANGE_FAILURE) {
     GstMessage *msg;
 
-    msg = gst_bus_poll (GST_ELEMENT_BUS (priv->pipeline), GST_MESSAGE_ERROR, 0);
+    msg = gst_bus_timed_pop_filtered(GST_ELEMENT_BUS (priv->pipeline), 0, GST_MESSAGE_ERROR);
     if (msg) {
       gst_message_parse_error (msg, error, NULL);
       gst_message_unref (msg);
