@@ -39,9 +39,9 @@ else
 fi
 
 if [ $filetype = "wav" ]; then
-    "$encoder" $ENCODER_OPTS --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$track" --tg "$usegenre" "$infile" "$outfile" >> $LOG 2>&1
+    "$encoder" $ENCODER_OPTS --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$track" --tg "$usegenre" "$infile" "$outfile" >> "$LOG" 2>&1
 else
-    "$decoder" $options "$infile" | "$encoder" $ENCODER_OPTS --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$track" --tg "$usegenre" - "$outfile" >> $LOG 2>&1
+    "$decoder" $options "$infile" | "$encoder" $ENCODER_OPTS --add-id3v2 --tt "$title" --ta "$artist" --tl "$album" --ty "$year" --tc "$comment" --tn "$track" --tg "$usegenre" - "$outfile" >> "$LOG" 2>&1
 fi
 # Check result
 if [ "x$?" != "x0" ]; then

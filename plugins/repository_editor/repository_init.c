@@ -85,6 +85,26 @@ void set_cell(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTreeModel *t
     g_free(text);
 }
 
+static void _model_combo_set_active_iter(GtkComboBox *cb, const gchar* modelstr) {
+    GtkTreeIter iter;
+    GtkTreeModel *cb_model = gtk_combo_box_get_model(cb);
+    if (gtk_tree_model_get_iter_first(cb_model, &iter)) {
+        do {
+            GtkTreeIter iter_child;
+            if (gtk_tree_model_iter_children (cb_model, &iter_child, &iter)) {
+                do {
+                    gchar *model;
+                    gtk_tree_model_get(cb_model, &iter_child, COL_STRING, &model, -1);
+                    if (g_str_equal(modelstr, model)) {
+                        gtk_combo_box_set_active_iter(cb, &iter_child);
+                        return;
+                    }
+                } while (gtk_tree_model_iter_next(cb_model, &iter_child));
+            }
+        } while (gtk_tree_model_iter_next(cb_model, &iter));
+    }
+}
+
 /**
  * repository_ipod_init:
  *
@@ -100,7 +120,6 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
     gboolean result = FALSE;
     gchar *mountpoint, *new_mount, *name, *model;
     GError *error = NULL;
-    GtkEntry *entry;
     gchar buf[PATH_MAX];
     GtkComboBox *cb;
     const IpodInfo *info;
@@ -143,8 +162,9 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
             g_snprintf(buf, PATH_MAX, "%s", gettext (SELECT_OR_ENTER_YOUR_MODEL));
         }
     }
-    entry = GTK_ENTRY (gtk_bin_get_child(GTK_BIN (cb)));
-    gtk_entry_set_text(entry, buf);
+
+    /* Try and set buf as the active selection in the combo box */
+    _model_combo_set_active_iter(cb, buf);
 
     gtk_window_set_transient_for(GTK_WINDOW (ii->window), GTK_WINDOW (gtkpod_app));
     response = gtk_dialog_run(GTK_DIALOG (ii->window));
@@ -152,6 +172,16 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
     switch (response) {
     case GTK_RESPONSE_OK:
         new_mount = g_strdup(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(GET_WIDGET (ii->builder, IID_MOUNTPOINT_CHOOSER))));
+        if (!new_mount || (strlen(new_mount) == 0)) {
+            gtkpod_statusbar_message("No mount point has been selected");
+            return FALSE;
+        }
+
+        if (!gtk_combo_box_get_has_entry(cb)) {
+            gtkpod_statusbar_message("No model has been selected");
+            return FALSE;
+        }
+
         /* remove trailing '/' in case it's present. */
         if (mountpoint && (strlen(mountpoint) > 0)) {
             if (G_IS_DIR_SEPARATOR(mountpoint[strlen(mountpoint) - 1])) {
@@ -190,6 +220,10 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
 
         name = get_itdb_prefs_string(itdb, "name");
         result = itdb_init_ipod(mountpoint, model, name, &error);
+
+        /* Set the model in the sysinfo of the itdb */
+        itdb_device_set_sysinfo(itdb->device, "ModelNumStr", model);
+
         if (!result) {
             if (error) {
                 gtkpod_warning(_("Error initialising iPod: %s\n"), error->message);
@@ -200,6 +234,11 @@ gboolean repository_ipod_init(iTunesDB *itdb) {
                 gtkpod_warning(_("Error initialising iPod, unknown error\n"));
             }
         }
+        else {
+            /* Should write the extended info file */
+            result = gp_create_extended_info(itdb);
+        }
+
         g_free(name);
         g_free(model);
         break;
@@ -231,7 +270,6 @@ void repository_ipod_init_set_model(iTunesDB *itdb, const gchar *old_model) {
     GtkWidget *window;
     gint response;
     gchar *model, *mountpoint;
-    GtkEntry *entry;
     gchar buf[PATH_MAX];
     GtkComboBox *cb;
     const IpodInfo *info;
@@ -274,8 +312,8 @@ void repository_ipod_init_set_model(iTunesDB *itdb, const gchar *old_model) {
         }
     }
 
-    entry = GTK_ENTRY (gtk_bin_get_child(GTK_BIN (cb)));
-    gtk_entry_set_text(entry, buf);
+    /* Try and set buf as the active selection in the combo box */
+    _model_combo_set_active_iter(cb, buf);
 
     response = gtk_dialog_run(GTK_DIALOG (window));
 

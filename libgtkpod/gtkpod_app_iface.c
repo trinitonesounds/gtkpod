@@ -179,6 +179,10 @@ void gtkpod_statusbar_reset_progress(gint total) {
     GTKPOD_APP_GET_INTERFACE (gtkpod_app)->statusbar_reset_progress(gtkpod_app, total);
 }
 
+/**
+ * Increments the current progress bar value by the
+ * given number of ticks.
+ */
 void gtkpod_statusbar_increment_progress_ticks(gint ticks, gchar* text) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
     GTKPOD_APP_GET_INTERFACE (gtkpod_app)->statusbar_increment_progress_ticks(gtkpod_app, ticks, text);
@@ -414,8 +418,7 @@ void gtkpod_notify_data_unchanged(iTunesDB *itdb) {
     g_signal_emit(gtkpod_app, gtkpod_app_signals[ITDB_DATA_SAVED], 0, itdb);
 
 }
-
-void gtkpod_broadcast_preference_change(gchar *preference_name, gint value) {
+void gtkpod_broadcast_preference_change(gchar *preference_name, gpointer value) {
     g_return_if_fail (GTKPOD_IS_APP(gtkpod_app));
     g_return_if_fail (preference_name);
 
@@ -458,7 +461,7 @@ Exporter *gtkpod_get_exporter() {
 void gtkpod_display_widget(GtkWidget *widget) {
     g_return_if_fail(widget);
     g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
-    GTKPOD_APP_GET_INTERFACE(gtkpod_app)->display_widget(widget);
+    GTKPOD_APP_GET_INTERFACE(gtkpod_app)->display_widget(gtkpod_app, widget);
 }
 
 void gtkpod_register_repository_editor(RepositoryEditor *editor) {

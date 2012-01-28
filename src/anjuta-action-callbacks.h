@@ -36,6 +36,6 @@ void on_url_home_activate (GtkAction * action, gpointer user_data);
 void on_url_bugs_activate (GtkAction * action, gpointer user_data);
 void on_url_faqs_activate (GtkAction * action, gpointer user_data);
 void on_url_activate (GtkAction * action, gpointer url);
-void on_about_activate (GtkAction * action, gpointer user_data);
+void on_about_activate (GtkAction * action, AnjutaApp *app);
 
 #endif

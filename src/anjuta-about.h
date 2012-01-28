@@ -23,7 +23,7 @@
 
 #include <libanjuta/anjuta-shell.h>
 
-GtkWidget *about_box_new (void);
+GtkWidget *about_box_new (GtkWindow *parent);
 void about_create_plugins_submenu (AnjutaShell *shell, GtkWidget *menuitem);
 
 #endif

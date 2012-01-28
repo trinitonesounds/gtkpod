@@ -10,3 +10,4 @@ data/glade/playlist_display.xml
 data/glade/repository_editor.xml
 data/glade/sorttab_display.xml
 data/glade/track_display.xml
+data/glade/clarity.xml

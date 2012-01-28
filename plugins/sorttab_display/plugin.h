@@ -49,7 +49,7 @@ typedef struct _SorttabDisplayPluginClass SorttabDisplayPluginClass;
 
 struct _SorttabDisplayPlugin {
     AnjutaPlugin parent;
-    GtkWidget *st_paned;
+    GtkWidget *sort_tab_widget_parent;
     gint uiid;
     GtkActionGroup *action_group;
     GtkWidget *prefs;

@@ -54,7 +54,6 @@ void context_menu_delete_track_head(GtkMenuItem *mi, gpointer data);
 GtkWidget *add_copy_track_to_filesystem (GtkWidget *menu);
 GtkWidget *add_create_playlist_file (GtkWidget *menu);
 GtkWidget *add_update_tracks_from_file (GtkWidget *menu);
-GtkWidget *add_sync_playlist_with_dirs (GtkWidget *menu);
 GtkWidget *add_create_new_playlist (GtkWidget *menu);
 GtkWidget *add_edit_track_details (GtkWidget *menu);
 

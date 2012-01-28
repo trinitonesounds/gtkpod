@@ -26,18 +26,18 @@ ENCODER="ffmpeg"
 
 . ${0%/*}/gtkpod-convert-common.sh
 
-echo "Attempting to convert file $infile" >> $LOG
+echo "Attempting to convert file $infile" >> "$LOG"
 
-"$encoder" -i "$infile" $ENCODER_OPTS -metadata author="$artist" -metadata title="$title" -metadata album="$album" -metadata year="$year" -metadata track="$track" -metadata genre="$genre" -metadata comment="$comment" "$outfile" >> $LOG 2>&1
+"$encoder" -i "$infile" $ENCODER_OPTS -metadata author="$artist" -metadata title="$title" -metadata album="$album" -metadata year="$year" -metadata track="$track" -metadata genre="$genre" -metadata comment="$comment" "$outfile" >> "$LOG" 2>&1
 
 # Check result
 if [ "x$?" != "x0" ]; then
-	echo "Failed with status 6" >> $LOG
+	echo "Failed with status 6" >> "$LOG"
     exit 6
 fi
 
 if [ ! -f "$outfile" ]; then
-	echo "Failed with status 6" >> $LOG
+	echo "Failed with status 6" >> "$LOG"
 	exit 8
 fi
 

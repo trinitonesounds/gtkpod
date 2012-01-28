@@ -1,3 +1,87 @@
+gtkpod V2.1.1
+
+	Incremental release
+
+	FEATURE: Clarity plugin for alternative display of coverart using clutter/opengl
+
+  IMPROVEMENT: Make splash screen preference to allow it to be disabled
+
+	IMPROVEMENT: Update core app code to align with current anjuta
+
+	BUGFIX: Reintroduce track normalization
+
+	BUGFIX: Allows the LOG path to contain spaces. 
+	        Thanks to Walt Ogburn <reuben at ugcs.caltech.edu> for the bug report and patch.
+
+
+  libgtkpod
+
+	BUGFIX: Allow broadcast of string preferences
+
+	BUGFIX: Provide some sensible sorting of tracks when added from files / directories
+
+	BUGFIX: Ensure progress bar is updated when saving ipod database
+
+	BUGFIX: Avoid possibility of symlinks, when adding files, hanging gtkpod
+	
+	BUGFIX: Display track conversion progress correctly
+
+
+	Edit Track Details
+
+  BUGFIX: Fix for track volume control
+
+
+  Coverart Display plugin
+
+	BUGFIX: Avoid trying to unreference NULL album art in cover art display plugin
+
+  BUGFIX: Ensure signal handlers are disconnected on plugin deactivation
+
+
+	Track Display plugin
+
+	BUGFIX: Fix incorrect default preferences
+
+	BUGFIX: Ensure order of tracks in playlist is preserved on ipod
+
+	BUGFIX: Make the track display filter case-insensitive
+
+
+	Repository Editor plugin
+
+	BUGFIX: Fix runtime errors on getting active model iter
+
+
+	Playlist Display plugin
+
+	IMPROVEMENT: Allow multiple selection of playlists
+
+	BUGFIX: Smart playlist wizard not correctly displaying playlist rules
+
+
+	Sort Tab Display plugin
+
+	IMPROVEMENT: Allow multiple selection of entries in filter windows
+
+
+gtkpod V2.1.0
+
+	Release for the migration to gtk 3.0
+
+	IMPROVEMENT: Migrates the application to the new gtk 3.0 framework.
+
+	UPDATE: Removal of GSEALED checks on gdk due to assumption of gdk 3 being
+                sealed.
+
+	BUGFIX: Allow LDFLAGS to be specified on command line.
+
+	BUGFIX: Fix compilation error for the mac port.
+
+	BUGFIX: Removed deprecated gtk / gdk function calls - thanks to dimstar
+
+
+
 gtkpod V2.0.2
 
 	Incremental release, targeted towards fixing identifed bugs.
@@ -13,7 +97,6 @@ gtkpod V2.0.2
 	BUGFIX: Stop segmentation faults on exit from freeing of directory paths.
 
 	BUGFIX: Incorrect use of as-needed flag in configure script.
-
 
 
 gtkpod V2.0.1

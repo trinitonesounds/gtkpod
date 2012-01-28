@@ -36,3 +36,20 @@ gtkpod_SOURCES = \
     main.c
 
 gtkpod_LDADD = $(GTKPOD_LIBS) $(INTLLIBS) -ldl
+
+### gschema settings in line with anjuta architecture ###
+
+prefs_name = org.gtkpod
+
+# gsettings_SCHEMAS is a list of all the schemas you want to install
+schema_in_files = $(prefs_name).gschema.xml.in
+gsettings_SCHEMAS = $(schema_in_files:.gschema.xml.in=.gschema.xml)
+
+# include the appropriate makefile rules for schema handling
+@INTLTOOL_XML_NOMERGE_RULE@
+@GSETTINGS_RULES@
+
+EXTRA_DIST = \
+	$(schema_in_files)
+
+CLEANFILES = $(gsettings_SCHEMAS)

@@ -43,6 +43,7 @@
 #include "libgtkpod/misc_playlist.h"
 #include "libgtkpod/file.h"
 #include "libgtkpod/syncdir.h"
+#include "libgtkpod/tools.h"
 #include <gdk/gdk.h>
 
 /* Callback after directories to add have been selected */
@@ -56,6 +57,7 @@ static void add_selected_dirs(GSList *names, Playlist *db_active_pl) {
 
     if (names) {
         gtkpod_statusbar_busy_push();
+
         GSList* currentnode;
         for (currentnode = names; currentnode; currentnode = currentnode->next) {
             result
@@ -304,6 +306,9 @@ static void fileselection_add_files(GSList* names, Playlist *playlist) {
     block_widgets();
 
     gtkpod_statusbar_busy_push();
+
+    names = sort_tracknames_list(names);
+
     /* Get the filenames and add them */
     for (gsl = names; gsl; gsl = gsl->next) {
         GError *error = NULL;
@@ -624,59 +629,89 @@ void on_pl_for_each_rating_activate(GtkAction *action, PlaylistDisplayPlugin* pl
     }
 }
 
-static void delete_selected_playlist(DeleteAction deleteaction) {
-    Playlist *pl = pm_get_selected_playlist();
+static void delete_selected_playlists(DeleteAction deleteaction) {
+    GList *playlists = pm_get_selected_playlists();
 
-    if (pl) {
-        delete_playlist_head(deleteaction);
-    }
-    else {
+    if (! playlists) {
         message_sb_no_playlist_selected();
+        return;
+    }
+
+    while (playlists) {
+        Playlist *pl = playlists->data;
+        if (pl) {
+            gtkpod_set_current_playlist(pl);
+            delete_playlist_head(deleteaction);
+        }
+        playlists = playlists->next;
     }
 }
 
-void on_delete_selected_playlist (GtkAction *action, PlaylistDisplayPlugin* plugin)
+void on_delete_selected_playlists (GtkAction *action, PlaylistDisplayPlugin* plugin)
 {
-    delete_selected_playlist (DELETE_ACTION_PLAYLIST);
+    delete_selected_playlists (DELETE_ACTION_PLAYLIST);
 }
 
-void on_delete_selected_playlist_including_tracks_from_harddisk (GtkAction *action, PlaylistDisplayPlugin* plugin)
+void on_delete_selected_playlists_including_tracks_from_harddisk (GtkAction *action, PlaylistDisplayPlugin* plugin)
 {
-    delete_selected_playlist (DELETE_ACTION_LOCAL);
+    delete_selected_playlists (DELETE_ACTION_LOCAL);
 }
 
-void on_delete_selected_playlist_including_tracks_from_ipod (GtkAction *action, PlaylistDisplayPlugin* plugin)
+void on_delete_selected_playlists_including_tracks_from_ipod (GtkAction *action, PlaylistDisplayPlugin* plugin)
 {
-    delete_selected_playlist (DELETE_ACTION_IPOD);
+    delete_selected_playlists (DELETE_ACTION_IPOD);
 }
 
-void on_delete_selected_playlist_including_tracks_from_database (GtkAction *action, PlaylistDisplayPlugin* plugin)
+void on_delete_selected_playlists_including_tracks_from_database (GtkAction *action, PlaylistDisplayPlugin* plugin)
 {
-    delete_selected_playlist (DELETE_ACTION_DATABASE);
+    delete_selected_playlists (DELETE_ACTION_DATABASE);
 }
 
-void on_delete_selected_playlist_including_tracks_from_device(GtkAction *action, PlaylistDisplayPlugin* plugin)
+void on_delete_selected_playlists_including_tracks_from_device(GtkAction *action, PlaylistDisplayPlugin* plugin)
 {
     iTunesDB *itdb = gtkpod_get_current_itdb();
     if (!itdb)
         return;
 
     if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
-        on_delete_selected_playlist_including_tracks_from_ipod(action, plugin);
+        on_delete_selected_playlists_including_tracks_from_ipod(action, plugin);
     } else if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
-        on_delete_selected_playlist_including_tracks_from_harddisk(action, plugin);
+        on_delete_selected_playlists_including_tracks_from_harddisk(action, plugin);
     }
 }
 
-void on_update_selected_playlist (GtkAction *action, PlaylistDisplayPlugin* plugin) {
-    Playlist *pl = pm_get_selected_playlist();
-    if (pl) {
-        update_tracks(pm_get_selected_playlist()->members);
+void on_update_selected_playlists (GtkAction *action, PlaylistDisplayPlugin* plugin) {
+
+    GList *playlists = pm_get_selected_playlists();
+
+    while (playlists) {
+        Playlist *pl = playlists->data;
+        if (pl) {
+            update_tracks(pl->members);
+        }
+        playlists = playlists->next;
     }
 }
 
-void on_sync_playlist_with_dirs(GtkAction *action, PlaylistDisplayPlugin* plugin) {
-    if (gtkpod_get_current_playlist()) {
-        sync_playlist(gtkpod_get_current_playlist(), NULL, KEY_SYNC_CONFIRM_DIRS, 0, KEY_SYNC_DELETE_TRACKS, 0, KEY_SYNC_CONFIRM_DELETE, 0, KEY_SYNC_SHOW_SUMMARY, 0);
+void on_sync_playlists_with_dirs(GtkAction *action, PlaylistDisplayPlugin* plugin) {
+    GList *playlists = pm_get_selected_playlists();
+
+    while (playlists) {
+        Playlist *pl = playlists->data;
+        if (pl) {
+            sync_playlist(pl, NULL, KEY_SYNC_CONFIRM_DIRS, 0, KEY_SYNC_DELETE_TRACKS, 0, KEY_SYNC_CONFIRM_DELETE, 0, KEY_SYNC_SHOW_SUMMARY, 0);
+        }
+        playlists = playlists->next;
+    }
+}
+
+void on_normalize_selected_playlist (GtkMenuItem *menuitem, gpointer user_data) {
+    GList *playlists = pm_get_selected_playlists();
+    while (playlists) {
+        Playlist *pl = playlists->data;
+        if (pl) {
+            nm_tracks_list (pl->members);
+        }
+        playlists = playlists->next;
     }
 }

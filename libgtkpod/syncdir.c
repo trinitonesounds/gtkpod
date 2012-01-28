@@ -318,7 +318,7 @@ static void add_files(gpointer key, gpointer value, gpointer user_data) {
     if (g_file_test(dirname, G_FILE_TEST_IS_DIR)) {
         GDir *dir = g_dir_open(dirname, 0, NULL);
         if (dir != NULL) {
-            G_CONST_RETURN gchar *next;
+            const gchar *next;
             while ((next = g_dir_read_name(dir))) {
                 gchar *filename = g_build_filename(dirname, next, NULL);
                 FileType *filetype = determine_filetype(filename);
@@ -460,7 +460,6 @@ static void cache_directory(const gchar *dir, GHashTable *dirs_hash) {
 void sync_playlist(Playlist *playlist, const gchar *syncdir, const gchar *key_sync_confirm_dirs, gboolean sync_confirm_dirs, const gchar *key_sync_delete_tracks, gboolean sync_delete_tracks, const gchar *key_sync_confirm_delete, gboolean sync_confirm_delete, const gchar *key_sync_show_summary, gboolean sync_show_summary) {
     GHashTable *dirs_hash, *filepath_hash;
     gboolean delete_tracks, is_mpl;
-    time_t current_time;
     GList *tracks_to_delete_from_ipod = NULL;
     GList *tracks_to_delete_from_playlist = NULL;
     GList *tracks_updated = NULL;
@@ -525,10 +524,6 @@ void sync_playlist(Playlist *playlist, const gchar *syncdir, const gchar *key_sy
             return;
         }
     }
-
-    /* current_time can be used to recognize newly added/updated
-     tracks */
-    current_time = time(NULL);
 
     /* craete a hash with all files in the current playlist for faster
      * comparison with files in the directory */

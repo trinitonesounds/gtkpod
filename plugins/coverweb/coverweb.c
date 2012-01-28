@@ -178,7 +178,7 @@ WebBrowser *init_web_browser(GtkWidget *parent) {
     create_browser();
     create_statusbar();
 
-    GtkWidget* vbox = gtk_vbox_new(FALSE, 0);
+    GtkWidget* vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     gtk_box_pack_start(GTK_BOX (vbox), browser->menubar, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX (vbox), browser->toolbar, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX (vbox), browser->browser_window, TRUE, TRUE, 0);

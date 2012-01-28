@@ -39,6 +39,7 @@
 #include "libgtkpod/gp_private.h"
 #include "plugin.h"
 #include "display_sorttabs.h"
+#include "sorttab_widget.h"
 #include "sorttab_display_actions.h"
 #include "sorttab_display_preferences.h"
 
@@ -176,16 +177,18 @@ static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
     set_default_preferences();
 
     /* Add widget in Shell. Any number of widgets can be added */
-    sorttab_display_plugin->st_paned = gtk_hpaned_new();
+    sorttab_display_plugin->sort_tab_widget_parent = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
     gchar *glade_path = g_build_filename(get_glade_dir(), "sorttab_display.xml", NULL);
-    st_create_tabs(GTK_PANED(sorttab_display_plugin->st_paned), glade_path);
-    gtk_widget_show(sorttab_display_plugin->st_paned);
+
+    sorttab_display_new(GTK_PANED(sorttab_display_plugin->sort_tab_widget_parent), glade_path);
+    gtk_widget_show(sorttab_display_plugin->sort_tab_widget_parent);
 
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (sorttab_display_select_playlist_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_TRACK_REMOVED, G_CALLBACK (sorttab_display_track_removed_cb), NULL);
     g_signal_connect (gtkpod_app, SIGNAL_TRACK_UPDATED, G_CALLBACK (sorttab_display_track_updated_cb), NULL);
+    g_signal_connect (gtkpod_app, SIGNAL_PREFERENCE_CHANGE, G_CALLBACK (sorttab_display_preference_changed_cb), NULL);
 
-    anjuta_shell_add_widget(plugin->shell, sorttab_display_plugin->st_paned, "SorttabDisplayPlugin", _("  Track Filter"), NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
+    anjuta_shell_add_widget(plugin->shell, sorttab_display_plugin->sort_tab_widget_parent, "SorttabDisplayPlugin", _("  Track Filter"), NULL, ANJUTA_SHELL_PLACEMENT_CENTER, NULL);
     return TRUE; /* FALSE if activation failed */
 }
 
@@ -196,16 +199,15 @@ static gboolean deactivate_sorttab_display_plugin(AnjutaPlugin *plugin) {
     sorttab_display_plugin = (SorttabDisplayPlugin*) plugin;
     ui = anjuta_shell_get_ui(plugin->shell, NULL);
 
-    st_cleanup();
-
     sorttab_display_plugin->more_filtertabs_action = NULL;
     sorttab_display_plugin->fewer_filtertabs_action = NULL;
 
     /* Remove widgets from Shell */
-    anjuta_shell_remove_widget(plugin->shell, sorttab_display_plugin->st_paned, NULL);
+    anjuta_shell_remove_widget(plugin->shell, sorttab_display_plugin->sort_tab_widget_parent, NULL);
 
-    /* Destroy the paned */
-    sorttab_display_plugin->st_paned = NULL;
+    /* Destroy the sort tab widget parent */
+    gtk_widget_destroy(sorttab_display_plugin->sort_tab_widget_parent);
+    sorttab_display_plugin->sort_tab_widget_parent = NULL;
 
     /* Unmerge UI */
     anjuta_ui_unmerge(ui, sorttab_display_plugin->uiid);
@@ -220,7 +222,7 @@ static gboolean deactivate_sorttab_display_plugin(AnjutaPlugin *plugin) {
 static void sorttab_display_plugin_instance_init(GObject *obj) {
     SorttabDisplayPlugin *plugin = (SorttabDisplayPlugin*) obj;
     plugin->uiid = 0;
-    plugin->st_paned = NULL;
+    plugin->sort_tab_widget_parent = NULL;
     plugin->action_group = NULL;
 }
 
@@ -264,8 +266,5 @@ static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
 }
 
 ANJUTA_PLUGIN_BEGIN (SorttabDisplayPlugin, sorttab_display_plugin);
-        ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);ANJUTA_PLUGIN_END
-;
-
-ANJUTA_SIMPLE_PLUGIN (SorttabDisplayPlugin, sorttab_display_plugin)
-;
+ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);ANJUTA_PLUGIN_END;
+ANJUTA_SIMPLE_PLUGIN (SorttabDisplayPlugin, sorttab_display_plugin);

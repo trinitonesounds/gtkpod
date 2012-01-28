@@ -40,21 +40,7 @@
 /* Info on how to implement new file formats: see mp3file.c for more info */
 
 Track *m4a_get_file_info(const gchar *m4aFileName, GError **error) {
-    gchar *path_utf8;
-    gchar *suf;
-    Track *track = mp4_get_file_info(m4aFileName, error);
-    if (!track || error)
-        return track;
-
-    path_utf8 = charset_to_utf8(m4aFileName);
-    suf = strrchr(path_utf8, '.') + 1;
-    if (g_str_equal(suf, "m4b"))
-        track->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
-    else
-        track->mediatype = ITDB_MEDIATYPE_AUDIO;
-
-    g_free(path_utf8);
-    return track;
+    return mp4_get_file_info(m4aFileName, error);
 }
 
 gboolean m4a_write_file_info(const gchar *filename, Track *track, GError **error) {

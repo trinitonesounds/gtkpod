@@ -351,7 +351,7 @@ gchar *fileselection_select_script(const gchar *opath, const gchar *fallback, co
 /* Render apply insensitive when no changes were made.
  When an itdb is marked for deletion, make entries insensitive */
 static void update_buttons() {
-    gboolean apply, ok, deleted;
+    gboolean apply, deleted;
     gchar *key;
 
     g_return_if_fail (repository_view);
@@ -360,11 +360,9 @@ static void update_buttons() {
 
     if ((temp_prefs_size(repository_view->temp_prefs) > 0) || (temp_prefs_size(repository_view->extra_prefs) > 0)) {
         apply = TRUE;
-        ok = TRUE;
     }
     else {
         apply = FALSE;
-        ok = TRUE;
     }
 
     gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, APPLY_BUTTON), apply);
@@ -1208,7 +1206,6 @@ static void display_repository_info() {
 static void display_playlist_info() {
     gchar *buf, *key;
     Playlist *playlist;
-    iTunesDB *itdb;
     gint i, index;
     const gchar *widget_names[] =
         {
@@ -1230,7 +1227,6 @@ static void display_playlist_info() {
     g_return_if_fail (repository_view->playlist);
 
     /* for convenience */
-    itdb = repository_view->itdb;
     index = repository_view->itdb_index;
     playlist = repository_view->playlist;
 

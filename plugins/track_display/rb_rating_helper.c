@@ -103,7 +103,7 @@ rb_rating_pixbufs_new (void)
 
 gboolean
 rb_rating_render_stars (GtkWidget *widget,
-			GdkWindow *window,
+			cairo_t *cairo_context,
 			RBRatingPixbufs *pixbufs,
 			gulong x,
 			gulong y,
@@ -114,10 +114,9 @@ rb_rating_render_stars (GtkWidget *widget,
 {
 	int i, icon_width;
 	gboolean rtl;
-	cairo_t *cr = gdk_cairo_create (window);
 
 	g_return_val_if_fail (widget != NULL, FALSE);
-	g_return_val_if_fail (window != NULL, FALSE);
+	g_return_val_if_fail (cairo_context != NULL, FALSE);
 	g_return_val_if_fail (pixbufs != NULL, FALSE);
 
 	rtl = (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL);
@@ -151,16 +150,10 @@ rb_rating_render_stars (GtkWidget *widget,
 			buf = pixbufs->pix_blank;
 
 		if (buf == NULL) {
-			cairo_destroy(cr);
 			return FALSE;
 		}
 
-/*		buf = eel_create_colorized_pixbuf (buf,
-						   (widget->style->text[state].red + offset) >> 8,
-						   (widget->style->text[state].green + offset) >> 8,
-						   (widget->style->text[state].blue + offset) >> 8); */
 		if (buf == NULL) {
-			cairo_destroy(cr);
 			return FALSE;
 		}
 
@@ -170,13 +163,12 @@ rb_rating_render_stars (GtkWidget *widget,
 			star_offset = i * icon_width;
 		}
 
-		cairo_save (cr);
-		gdk_cairo_set_source_pixbuf (cr, buf, x_offset + star_offset, y_offset);
-		cairo_paint (cr);
-		cairo_restore (cr);
+		cairo_save (cairo_context);
+		gdk_cairo_set_source_pixbuf (cairo_context, buf, x_offset + star_offset, y_offset);
+		cairo_paint (cairo_context);
+		cairo_restore (cairo_context);
 	}
 
-	cairo_destroy(cr);
 	return TRUE;
 }
 

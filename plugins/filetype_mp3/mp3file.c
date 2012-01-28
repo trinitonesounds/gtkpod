@@ -423,13 +423,11 @@ void get_mp3_info(MP3Info *mp3) {
     gint counter = 0;
     MP3Header header;
     struct stat filestat;
-    off_t data_start = 0;
 
     stat(mp3->filename, &filestat);
     mp3->datasize = filestat.st_size;
 
     if (get_first_header(mp3, 0L)) {
-        data_start = ftell(mp3->file);
         while ((bitrate = get_next_header(mp3))) {
             if (bitrate < 15) /* sanity added by JCS */
                 frame_type[15 - bitrate]++;

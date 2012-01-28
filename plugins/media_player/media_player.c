@@ -261,6 +261,8 @@ static void stop_song() {
     waitforpipeline(GST_STATE_NULL);
 
     player->thread = NULL;
+
+    set_control_state(GST_STATE_NULL);
 }
 
 static void pause_or_play_song() {
@@ -342,6 +344,16 @@ static int pipeline_bus_watch_cb(GstBus *bus, GstMessage *msg, gpointer data) {
         break;
     case GST_MESSAGE_ERROR: {
         g_idle_add(thread_stop_song, NULL);
+
+        GError *err = NULL;
+        gchar *dbg_info = NULL;
+
+        gst_message_parse_error (msg, &err, &dbg_info);
+        g_warning ("ERROR from element %s: %s\n",
+                GST_OBJECT_NAME (msg->src), err->message);
+        g_warning ("Debugging info: %s\n", (dbg_info) ? dbg_info : "none");
+        g_error_free (err);
+        g_free (dbg_info);
         break;
     }
     default:

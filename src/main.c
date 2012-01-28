@@ -32,8 +32,13 @@
 
 #include <stdlib.h>
 #include <time.h>
+#include <gtk/gtk.h>
 #include "gtkpod.h"
 #include <glib/gi18n-lib.h>
+#ifdef HAVE_CLUTTER_GTK
+    #include <clutter-gtk/clutter-gtk.h>
+#endif
+
 
 int
 main (int argc, char *argv[])
@@ -52,7 +57,13 @@ main (int argc, char *argv[])
     gdk_threads_init ();
 #endif
 
+#ifdef HAVE_CLUTTER_GTK
+    gtk_clutter_init(&argc, &argv);
+    clutter_threads_init();
+#else
     gtk_init (&argc, &argv);
+#endif
+
     g_set_application_name(_("gtkpod"));
     gtk_window_set_auto_startup_notification(FALSE);
 

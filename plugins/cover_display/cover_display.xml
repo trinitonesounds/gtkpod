@@ -1,95 +1,23 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="2.16"/>
-  <!-- interface-naming-policy toplevel-contextual -->
-  <object class="GtkDialog" id="coverart_preview_dialog">
-    <property name="title" translatable="yes">Artwork Preview</property>
-    <property name="modal">True</property>
-    <property name="window_position">center-on-parent</property>
-    <property name="icon_name">gtk-dialog-info</property>
-    <property name="type_hint">dialog</property>
-    <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox4">
-        <property name="visible">True</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkVBox" id="coverart_preview_dialog_vbox">
-            <property name="visible">True</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkDrawingArea" id="coverart_preview_dialog_drawarea">
-                <property name="visible">True</property>
-              </object>
-              <packing>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="coverart_preview_dialog_res_lbl">
-                <property name="visible">True</property>
-                <property name="ypad">6</property>
-                <property name="label">&lt;b&gt;Placeholder for image information&lt;/b&gt;</property>
-                <property name="use_markup">True</property>
-                <property name="justify">center</property>
-                <property name="wrap">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="pack_type">end</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area4">
-            <property name="visible">True</property>
-            <property name="layout_style">end</property>
-            <child>
-              <object class="GtkButton" id="okbutton3">
-                <property name="label">gtk-close</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_stock">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="pack_type">end</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-    <action-widgets>
-      <action-widget response="-5">okbutton3</action-widget>
-    </action-widgets>
-  </object>
   <object class="GtkWindow" id="cover_display_window">
+    <property name="can_focus">False</property>
     <child>
       <object class="GtkVBox" id="cover_display_panel">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
+        <property name="can_focus">False</property>
         <child>
           <object class="GtkHBox" id="cover_display_canvasbox">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <placeholder/>
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -97,6 +25,7 @@
           <object class="GtkHBox" id="cover_display_controlbox">
             <property name="height_request">25</property>
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="spacing">2</property>
             <child>
               <object class="GtkButton" id="cover_display_leftbutton">
@@ -104,6 +33,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
                 <property name="relief">none</property>
               </object>
               <packing>
@@ -113,14 +43,15 @@
               </packing>
             </child>
             <child>
-              <object class="GtkHScale" id="cover_display_scaler">
+              <object class="GtkScale" id="cover_display_scaler">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="update_policy">discontinuous</property>
                 <property name="digits">0</property>
                 <property name="draw_value">False</property>
               </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -130,6 +61,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
                 <property name="relief">none</property>
               </object>
               <packing>
@@ -149,7 +81,94 @@
       </object>
     </child>
   </object>
+  <object class="GtkDialog" id="coverart_preview_dialog">
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Artwork Preview</property>
+    <property name="modal">True</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="icon_name">gtk-dialog-info</property>
+    <property name="type_hint">dialog</property>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="dialog-vbox4">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="dialog-action_area4">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="okbutton3">
+                <property name="label">gtk-close</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkVBox" id="coverart_preview_dialog_vbox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <child>
+              <object class="GtkDrawingArea" id="coverart_preview_dialog_drawarea">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="coverart_preview_dialog_res_lbl">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="ypad">6</property>
+                <property name="label">&lt;b&gt;Placeholder for image information&lt;/b&gt;</property>
+                <property name="use_markup">True</property>
+                <property name="justify">center</property>
+                <property name="wrap">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="pack_type">end</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="-5">okbutton3</action-widget>
+    </action-widgets>
+  </object>
   <object class="GtkWindow" id="preference_window">
+    <property name="can_focus">False</property>
     <child>
       <object class="GtkNotebook" id="cover_settings_notebook">
         <property name="visible">True</property>
@@ -157,31 +176,35 @@
         <child>
           <object class="GtkVBox" id="vbox5">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="border_width">12</property>
-            <property name="orientation">vertical</property>
             <property name="spacing">18</property>
             <child>
               <object class="GtkFrame" id="frame15">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label_xalign">0</property>
                 <property name="shadow_type">none</property>
                 <child>
                   <object class="GtkAlignment" id="alignment29">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="top_padding">6</property>
                     <property name="left_padding">12</property>
                     <child>
                       <object class="GtkHBox" id="hbox214">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="spacing">12</property>
                         <child>
                           <object class="GtkColorButton" id="coverart_display_bg_button">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="use_action_appearance">False</property>
                             <property name="title" translatable="yes">Choose a Different Colour for the CoverArt Display Background</property>
                             <property name="color">#000000000000</property>
-                            <signal name="color_set" handler="on_coverart_dialog_bg_color_set"/>
+                            <signal name="color-set" handler="on_coverart_dialog_bg_color_set" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -192,6 +215,7 @@
                         <child>
                           <object class="GtkLabel" id="label472">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="label" translatable="yes">Background color</property>
                           </object>
                           <packing>
@@ -205,9 +229,10 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="use_action_appearance">False</property>
                             <property name="title" translatable="yes">Choose a Different Colour for the CoverArt Display Background</property>
                             <property name="color">#ffffffffffff</property>
-                            <signal name="color_set" handler="on_coverart_dialog_fg_color_set"/>
+                            <signal name="color-set" handler="on_coverart_dialog_fg_color_set" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -218,6 +243,7 @@
                         <child>
                           <object class="GtkLabel" id="label50">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="label" translatable="yes">Text color</property>
                           </object>
                           <packing>
@@ -233,6 +259,7 @@
                 <child type="label">
                   <object class="GtkLabel" id="label18">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Cover Art Display&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
@@ -247,24 +274,29 @@
             <child>
               <object class="GtkFrame" id="frame4">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label_xalign">0</property>
                 <property name="shadow_type">none</property>
                 <child>
                   <object class="GtkAlignment" id="alignment14">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="top_padding">6</property>
                     <property name="left_padding">12</property>
                     <child>
                       <object class="GtkVBox" id="vbox2">
                         <property name="visible">True</property>
-                        <property name="orientation">vertical</property>
+                        <property name="can_focus">False</property>
+                        <property name="valign">start</property>
                         <property name="spacing">10</property>
                         <child>
                           <object class="GtkHBox" id="hbox30">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <child>
                               <object class="GtkTable" id="table1">
                                 <property name="visible">True</property>
+                                <property name="can_focus">False</property>
                                 <property name="border_width">5</property>
                                 <property name="n_rows">2</property>
                                 <property name="n_columns">3</property>
@@ -299,12 +331,14 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="draw_indicator">True</property>
                                     <property name="group">cad_none</property>
-                                    <signal name="toggled" handler="on_cad_ascend_toggled"/>
+                                    <signal name="toggled" handler="on_cad_ascend_toggled" swapped="no"/>
                                     <child>
                                       <object class="GtkImage" id="image1928">
                                         <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
                                         <property name="stock">gtk-sort-ascending</property>
                                       </object>
                                     </child>
@@ -322,12 +356,14 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="draw_indicator">True</property>
                                     <property name="group">cad_none</property>
-                                    <signal name="toggled" handler="on_cad_descend_toggled"/>
+                                    <signal name="toggled" handler="on_cad_descend_toggled" swapped="no"/>
                                     <child>
                                       <object class="GtkImage" id="image1929">
                                         <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
                                         <property name="stock">gtk-sort-descending</property>
                                       </object>
                                     </child>
@@ -356,12 +392,14 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
-                                    <signal name="toggled" handler="on_cad_none_toggled"/>
+                                    <signal name="toggled" handler="on_cad_none_toggled" swapped="no"/>
                                     <child>
                                       <object class="GtkImage" id="image1930">
                                         <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
                                         <property name="stock">gtk-undo</property>
                                       </object>
                                     </child>
@@ -374,11 +412,15 @@
                                 </child>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                           </object>
                           <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
@@ -388,9 +430,10 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
+                            <property name="use_action_appearance">False</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="on_cad_sort_case_sensitive_toggled"/>
+                            <signal name="toggled" handler="on_cad_sort_case_sensitive_toggled" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -405,6 +448,7 @@
                 <child type="label">
                   <object class="GtkLabel" id="label7">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Album Cover Sort Order&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
@@ -412,6 +456,7 @@
               </object>
               <packing>
                 <property name="expand">False</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -420,6 +465,7 @@
         <child type="tab">
           <object class="GtkLabel" id="display_page_label">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">Cover Art Display</property>
           </object>
           <packing>

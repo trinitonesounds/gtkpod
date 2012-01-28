@@ -52,13 +52,12 @@ static void rb_cell_renderer_rating_get_size  (GtkCellRenderer *cell,
 					       gint *y_offset,
 					       gint *width,
 					       gint *height);
-static void rb_cell_renderer_rating_render (GtkCellRenderer *cell,
-					    GdkWindow *window,
-					    GtkWidget *widget,
-					    GdkRectangle *background_area,
-					    GdkRectangle *cell_area,
-					    GdkRectangle *expose_area,
-					    GtkCellRendererState flags);
+static void rb_cell_renderer_rating_render (GtkCellRenderer      *cell,
+                                                                    cairo_t              *cr,
+                                                                    GtkWidget            *widget,
+                                                                    const GdkRectangle   *background_area,
+                                                                    const GdkRectangle   *cell_area,
+                                                                    GtkCellRendererState  flags);
 static gboolean rb_cell_renderer_rating_activate (GtkCellRenderer *cell,
 					          GdkEvent *event,
 					          GtkWidget *widget,
@@ -184,10 +183,6 @@ rb_cell_renderer_rating_class_init (RBCellRendererRatingClass *class)
 static void
 rb_cell_renderer_rating_finalize (GObject *object)
 {
-	RBCellRendererRating *cellrating;
-
-	cellrating = RB_CELL_RENDERER_RATING (object);
-
 	G_OBJECT_CLASS (rb_cell_renderer_rating_parent_class)->finalize (object);
 }
 
@@ -273,14 +268,12 @@ rb_cell_renderer_rating_get_size (GtkCellRenderer *cell,
 }
 
 static void
-rb_cell_renderer_rating_render (GtkCellRenderer  *cell,
-				GdkWindow *window,
-				GtkWidget *widget,
-				GdkRectangle *background_area,
-				GdkRectangle *cell_area,
-				GdkRectangle *expose_area,
-				GtkCellRendererState flags)
-
+rb_cell_renderer_rating_render (GtkCellRenderer      *cell,
+                                                     cairo_t              *cr,
+                                                     GtkWidget            *widget,
+                                                     const GdkRectangle   *background_area,
+                                                     const GdkRectangle   *cell_area,
+                                                     GtkCellRendererState  flags)
 {
 	gboolean selected;
 	GdkRectangle pix_rect, draw_rect;
@@ -308,7 +301,8 @@ rb_cell_renderer_rating_render (GtkCellRenderer  *cell,
 
 	selected = (flags & GTK_CELL_RENDERER_SELECTED);
 
-	rb_rating_render_stars (widget, window, cell_class->priv->pixbufs,
+
+	rb_rating_render_stars (widget, cr, cell_class->priv->pixbufs,
 				draw_rect.x - pix_rect.x,
 				draw_rect.y - pix_rect.y,
 				draw_rect.x, draw_rect.y,

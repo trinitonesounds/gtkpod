@@ -207,7 +207,7 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
     gchar *dirname = NULL, *plname = NULL;
     gchar buf[PATH_MAX];
     FileType *type = NULL; /* type of playlist file */
-    gint line, tracks;
+    gint line;
     FILE *fp;
     gboolean errstatus;
     GString *errors = g_string_new("");
@@ -255,7 +255,6 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
      all of these are line based -- add different code for different
      playlist files */
     line = -1; /* nr of line being read */
-    tracks = 0; /* nr of tracks added */
     errstatus = FALSE;
     while (!errstatus && fgets(buf, PATH_MAX, fp)) {
         gchar *bufp = buf;
@@ -362,11 +361,102 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
     return NULL;
 }
 
+static gint compare_names (gchar* name1, gchar* name2, gpointer case_sensitive) {
+    gint value = compare_string(name1, name2, GPOINTER_TO_INT(case_sensitive));
+    return value;
+}
+
+/**
+ * Sort a list of filenames, using the tm_sort and
+ * tm_case_sensitive preferences to determine the
+ * filenames' sort order.
+ */
+GSList* sort_tracknames_list(GSList *names) {
+    /* Get the track sort order preference */
+    GtkSortType sortorder = prefs_get_int("tm_sort");
+    gboolean case_sensitive = prefs_get_int("tm_case_sensitive");
+
+    switch (sortorder) {
+    case SORT_ASCENDING:
+        return g_slist_sort_with_data (names, (GCompareDataFunc) compare_names, GINT_TO_POINTER(case_sensitive));
+    case SORT_DESCENDING:
+        names = g_slist_sort_with_data (names, (GCompareDataFunc) compare_names, GINT_TO_POINTER(case_sensitive));
+        return g_slist_reverse(names);
+    default:
+        return names;
+    }
+}
+
 /*------------------------------------------------------------------*\
  *                                                                  *
  *      Add Dir                                                     *
  *                                                                  *
  \*------------------------------------------------------------------*/
+
+/*
+ * Internal function called by recurse_directories_with_history
+ */
+static void recurse_directories_internal(gchar *name, GSList **trknames, gboolean descend, GHashTable **directories_seen) {
+    if (g_file_test(name, G_FILE_TEST_IS_DIR)) {
+        GDir *dir = g_dir_open(name, 0, NULL);
+        if (dir != NULL) {
+            const gchar *next;
+            do {
+                next = g_dir_read_name(dir);
+                if (next != NULL) {
+                    gchar *nextfull = g_build_filename(name, next, NULL);
+
+                    if (g_file_test(nextfull, G_FILE_TEST_IS_SYMLINK)) {
+                        /*
+                         * Need to check symlinks don't point to another directory that
+                         * we have already dealt with, avoiding infinite loops.
+                         */
+                        gchar* basepath = convert_symlink_to_absolute_path(name, nextfull);
+                        if (!basepath) {
+                            g_free(nextfull);
+                            return;
+                        }
+
+                        nextfull = basepath;
+                    }
+
+                    if (g_hash_table_lookup(*directories_seen, nextfull))
+                        continue;
+                    else
+                        g_hash_table_insert(*directories_seen, nextfull, nextfull);
+
+                    if (descend || !g_file_test(nextfull, G_FILE_TEST_IS_DIR)) {
+                        recurse_directories_internal(nextfull, trknames, descend, directories_seen);
+                    }
+                    g_free(nextfull);
+                }
+            }
+            while (next != NULL);
+
+            g_dir_close(dir);
+        }
+    }
+    else {
+        *trknames = g_slist_append(*trknames, g_strdup(name));
+    }
+}
+
+/*
+ * Recurse directories from @dir, adding filenames to @trknames.
+ *
+ * To avoid infinite loops due to symlinks, a directories hash is
+ * used to record visited sub-directories.
+ *
+ * @dir:             root directory from which to retrieve filenames
+ * @trknames:   list populated with filenames
+ * @descend:    TRUE: add recursively
+ *                      FALSE: don't enter subdirectories
+ */
+static void recurse_directories_with_history(gchar *dir, GSList **trknames, gboolean descend) {
+    GHashTable *directories = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+    recurse_directories_internal(dir, trknames, descend, &directories);
+    g_hash_table_destroy(directories);
+}
 
 /*
  * Add all files in directory and subdirectories.
@@ -387,48 +477,43 @@ add_playlist_by_filename(iTunesDB *itdb, gchar *plfile, Playlist *plitem, gint p
 gint add_directory_by_name(iTunesDB *itdb, gchar *name, Playlist *plitem, gboolean descend, AddTrackFunc addtrackfunc, gpointer data, GError **error) {
     gint result = 0;
     GString *errors = g_string_new("");
+    GSList *trknames = NULL;
+    GSList *tkn = NULL;
 
     g_return_val_if_fail (itdb, 0);
     g_return_val_if_fail (name, 0);
 
-    if (g_file_test(name, G_FILE_TEST_IS_DIR)) {
-        GDir *dir = g_dir_open(name, 0, NULL);
-        block_widgets();
-        if (dir != NULL) {
-            G_CONST_RETURN gchar *next;
-            do {
-                next = g_dir_read_name(dir);
-                if (next != NULL) {
-                    gchar *nextfull = g_build_filename(name, next, NULL);
-                    if (descend || !g_file_test(nextfull, G_FILE_TEST_IS_DIR)) {
-                        GError *direrror = NULL;
-                        result += add_directory_by_name(itdb, nextfull, plitem, descend, addtrackfunc, data, &direrror);
-                        if (direrror) {
-                            gchar *msg = g_strdup_printf("%s\n", direrror->message);
-                            g_string_append(errors, msg);
-                            g_free(msg);
-                            g_error_free(direrror);
-                            direrror = NULL;
-                        }
-                    }
-                    g_free(nextfull);
-                }
-            }
-            while (next != NULL);
+    block_widgets();
 
-            g_dir_close(dir);
-        }
-        release_widgets();
-    }
-    else {
-        if (add_track_by_filename(itdb, name, plitem, descend, addtrackfunc, data, error))
+    recurse_directories_with_history(name, &trknames, descend);
+
+    trknames = sort_tracknames_list(trknames);
+
+    tkn = trknames;
+    while (tkn) {
+        GError *trkerror = NULL;
+        if (add_track_by_filename(itdb, tkn->data, plitem, descend, addtrackfunc, data, &trkerror)) {
             result++;
+        }
+
+        if (trkerror) {
+            gchar *msg = g_strdup_printf("%s\n", trkerror->message);
+            g_string_append(errors, msg);
+            g_free(msg);
+            g_error_free(trkerror);
+            trkerror = NULL;
+        }
+
+        tkn = tkn->next;
     }
+
+    release_widgets();
 
     if (errors->len > 0) {
         gtkpod_log_error_printf(error, errors->str);
     }
     g_string_free(errors, TRUE);
+    g_slist_free_full(trknames, g_free);
 
     return result;
 }
@@ -1971,35 +2056,35 @@ void parse_offline_playcount(void) {
  *
  * Return value: TRUE, if gain could be read
  */
-gboolean read_soundcheck(Track *track) {
-    gchar *path;
+gboolean read_soundcheck(Track *track, GError **error) {
+    gchar *path, *buf;
     FileType *filetype;
     gboolean result = FALSE;
-    GError *error = NULL;
-    gchar *msg = g_strdup_printf(_("Failed to read sound check from track because"));
 
     g_return_val_if_fail (track, FALSE);
 
     path = get_file_name_from_source(track, SOURCE_PREFER_LOCAL);
+    if (!path) {
+        buf = g_strdup_printf(_("Failed to read sound check from track with no path setting."));
+        gtkpod_log_error(error, buf);
+        g_free(buf);
+        return FALSE;
+    }
+
     filetype = determine_filetype(path);
     if (! filetype) {
-        gtkpod_warning(_("%s\n\nfiletype of %s is not recognised."), msg, path);
+        buf = g_strdup_printf(_("Failed to read sound check from track because filetype is not recognised."));
+        gtkpod_log_error(error, buf);
+        g_free(buf);
     }
     else {
-        if (!filetype_read_soundcheck(filetype, path, track, &error)) {
-            if (error) {
-                gtkpod_warning(_("%s\n\n%s"), msg, error->message);
-            } else {
-                gtkpod_warning(_("%s\n\n%s"), msg, UNKNOWN_ERROR);
-            }
-        } else {
+        if (filetype_read_soundcheck(filetype, path, track, error)) {
             // track read successfully
             result = TRUE;
         }
     }
 
     g_free(path);
-    g_free(msg);
     return result;
 }
 

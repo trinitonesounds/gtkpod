@@ -1038,10 +1038,7 @@ void gp_info_deleted_tracks(iTunesDB *itdb, gdouble *size, guint32 *num) {
     g_return_if_fail (eitdb);
 
     for (gl = eitdb->pending_deletion; gl; gl = gl->next) {
-        ExtraTrackData *etr;
         Track *tr = gl->data;
-        g_return_if_fail (tr);
-        etr = tr->userdata;
         g_return_if_fail (tr);
 
         if (size)
@@ -1159,6 +1156,26 @@ static gboolean write_extended_info(iTunesDB *itdb) {
     fprintf(fp, "id=xxx\n");
     fclose(fp);
     return TRUE;
+}
+
+gboolean gp_create_extended_info(iTunesDB *itdb) {
+    /* Ensure that the itdb has a filename allocated */
+    g_return_val_if_fail(itdb, FALSE);
+
+    const gchar *mp = itdb_get_mountpoint(itdb);
+    g_return_val_if_fail(mp, FALSE);
+
+    gchar *filename = itdb_get_itunescdb_path (mp);
+    if (!filename) {
+        filename = itdb_get_itunesdb_path (mp);
+    }
+
+    g_return_val_if_fail(filename, FALSE);
+
+    itdb->filename = g_strdup(filename);
+    g_free(filename);
+
+    return write_extended_info(itdb);
 }
 
 TransferData *transfer_data_new(void) {
@@ -1487,7 +1504,11 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
     file_transfer_reschedule(itdb);
 
     /* find out how many tracks have already been processed */
-    file_transfer_get_status(itdb, NULL, NULL, NULL, &transferred_num, &failed_num);
+    file_transfer_get_status(itdb, &to_convert_num, &converting_num, &to_transfer_num, &transferred_num, &failed_num);
+
+    /* Reset the progress bar to the total number of tracks to be transferred */
+    gtkpod_statusbar_reset_progress(to_convert_num + converting_num + to_transfer_num + failed_num + transferred_num);
+
     transferred_init = transferred_num + failed_num;
 
     start = time(NULL);
@@ -1566,6 +1587,7 @@ static gboolean transfer_tracks(iTunesDB *itdb, TransferData *td) {
 static gboolean gp_write_itdb(iTunesDB *itdb) {
     gchar *cfgdir;
     gboolean success = TRUE;
+    gchar *statusmsg = NULL;
     ExtraiTunesDBData *eitdb;
     Playlist *mpl;
     TransferData *transferdata;
@@ -1624,7 +1646,6 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
     block_widgets();
 
     transferdata = transfer_data_new();
-    gtkpod_statusbar_reset_progress(100);
 
     if ((itdb->usertype & GP_ITDB_TYPE_IPOD) && !get_offline(itdb)) {
         const gchar *mountpoint = itdb_get_mountpoint(itdb);
@@ -1646,6 +1667,12 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
         }
         if (success) {
             /* write tracks to iPod */
+            /*
+             * Note:
+             * this resets and increments the progress bar
+             * so the reset_progress_status must be called after
+             * this has finished.
+             */
             success = transfer_tracks(itdb, transferdata);
         }
     }
@@ -1654,11 +1681,15 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
         success = delete_files(itdb, transferdata);
     }
 
-    if (success) {
-        gtkpod_statusbar_message(_("Now writing database '%s'. Please wait..."), mpl->name);
+    while (widgets_blocked && gtk_events_pending())
+        gtk_main_iteration();
 
-        while (widgets_blocked && gtk_events_pending())
-            gtk_main_iteration();
+    statusmsg = g_strdup_printf(_("Now writing database '%s'. Please wait..."), mpl->name);
+    gtkpod_statusbar_reset_progress(100);
+
+    if (success) {
+        /* Removed deleted files and transferred tracks */
+        gtkpod_statusbar_increment_progress_ticks(50, statusmsg);
     }
 
     for (it = itdb->tracks; it != NULL; it = it->next) {
@@ -1750,6 +1781,11 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
         }
     }
 
+    if (success) {
+        /* Written database now write extended info */
+        gtkpod_statusbar_increment_progress_ticks(30, statusmsg);
+    }
+
     if (success && get_offline(itdb) && (itdb->usertype & GP_ITDB_TYPE_IPOD)) { /* write to cfgdir */
         GError *error = NULL;
         if (!itdb_write_file(itdb, eitdb->offline_filename, &error)) { /* an error occurred */
@@ -1786,6 +1822,11 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
         gp_track_validate_entries((Itdb_Track *) it->data);
     }
 
+    if (success) {
+        /* Written extended info now write photo db */
+        gtkpod_statusbar_increment_progress_ticks(10, statusmsg);
+    }
+
     /* If the ipod supports photos and the photo_data_changed
      * flag has been set to true then wrtie the photo database
      */
@@ -1803,6 +1844,14 @@ static gboolean gp_write_itdb(iTunesDB *itdb) {
             error = NULL;
         }
     }
+
+    if (success) {
+        /* Everything done saving */
+        gtkpod_statusbar_increment_progress_ticks(10, statusmsg);
+    }
+
+    if (statusmsg)
+        g_free(statusmsg);
 
     /* indicate that files and/or database is saved */
     if (success) {

@@ -40,11 +40,45 @@
 #include "libgtkpod/gp_itdb.h"
 #include "libgtkpod/context_menus.h"
 #include "libgtkpod/misc_playlist.h"
+#include "libgtkpod/misc_track.h"
 #include "libgtkpod/misc.h"
+#include "libgtkpod/prefs.h"
+#include "libgtkpod/syncdir.h"
 
 static void context_menu_delete_playlist_head(GtkMenuItem *mi, gpointer data) {
     DeleteAction deleteaction = GPOINTER_TO_INT (data);
-    delete_playlist_head(deleteaction);
+    GList *playlists = pm_get_selected_playlists();
+    if (! playlists) {
+        message_sb_no_playlist_selected();
+        return;
+    }
+
+    while (playlists) {
+        Playlist *pl = playlists->data;
+        if (pl) {
+            gtkpod_set_current_playlist(pl);
+            delete_playlist_head(deleteaction);
+        }
+        playlists = playlists->next;
+    }
+}
+
+void context_menu_delete_track_head(GtkMenuItem *mi, gpointer data) {
+    DeleteAction deleteaction = GPOINTER_TO_INT (data);
+    GList *playlists = pm_get_selected_playlists();
+    if (! playlists) {
+        message_sb_no_playlist_selected();
+        return;
+    }
+
+    while (playlists) {
+        Playlist *pl = playlists->data;
+        if (pl) {
+            gtkpod_set_current_playlist(pl);
+            delete_track_head(deleteaction);
+        }
+        playlists = playlists->next;
+    }
 }
 
 static GtkWidget *add_delete_all_tracks_from_ipod(GtkWidget *menu) {
@@ -99,21 +133,33 @@ static GtkWidget *add_delete_playlist_but_keep_tracks(GtkWidget *menu) {
     return hookup_menu_item(menu, _("Delete But Keep Tracks"), GTK_STOCK_DELETE, G_CALLBACK (context_menu_delete_playlist_head), GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
 }
 
-static void copy_selected_playlist_to_target_itdb(GtkMenuItem *mi, gpointer *userdata) {
+static void copy_selected_playlists_to_target_itdb(GtkMenuItem *mi, gpointer *userdata) {
     iTunesDB *t_itdb = *userdata;
     g_return_if_fail (t_itdb);
-    if (gtkpod_get_current_playlist())
-        copy_playlist_to_target_itdb(gtkpod_get_current_playlist(), t_itdb);
+
+    GList *playlists = pm_get_selected_playlists();
+    while(playlists) {
+        Playlist *pl = playlists->data;
+        copy_playlist_to_target_itdb(pl, t_itdb);
+        playlists = playlists->next;
+    }
 }
 
-static void copy_selected_playlist_to_target_playlist(GtkMenuItem *mi, gpointer *userdata) {
+
+
+static void copy_selected_playlists_to_target_playlist(GtkMenuItem *mi, gpointer *userdata) {
     Playlist *t_pl = *userdata;
     g_return_if_fail (t_pl);
-    if (gtkpod_get_current_playlist())
-        copy_playlist_to_target_playlist(gtkpod_get_current_playlist(), t_pl);
+
+    GList *playlists = pm_get_selected_playlists();
+    while(playlists) {
+        Playlist *pl = playlists->data;
+        copy_playlist_to_target_playlist(pl, t_pl);
+        playlists = playlists->next;
+    }
 }
 
-static GtkWidget *add_copy_selected_playlist_to_target_itdb(GtkWidget *menu, const gchar *title) {
+static GtkWidget *add_copy_selected_playlists_to_target_itdb(GtkWidget *menu, const gchar *title) {
     GtkWidget *mi;
     GtkWidget *sub;
     GtkWidget *pl_mi;
@@ -150,7 +196,7 @@ static GtkWidget *add_copy_selected_playlist_to_target_itdb(GtkWidget *menu, con
         pl_sub = gtk_menu_new();
         gtk_widget_show(pl_sub);
         gtk_menu_item_set_submenu(GTK_MENU_ITEM (pl_mi), pl_sub);
-        hookup_menu_item(pl_sub, _(itdb_playlist_mpl(itdb)->name), stock_id, G_CALLBACK(copy_selected_playlist_to_target_itdb), &itdbs->data);
+        hookup_menu_item(pl_sub, _(itdb_playlist_mpl(itdb)->name), stock_id, G_CALLBACK(copy_selected_playlists_to_target_itdb), &itdbs->data);
         add_separator(pl_sub);
         for (db = itdb->playlists; db; db = db->next) {
             pl = db->data;
@@ -159,7 +205,7 @@ static GtkWidget *add_copy_selected_playlist_to_target_itdb(GtkWidget *menu, con
                     stock_id = GTK_STOCK_PROPERTIES;
                 else
                     stock_id = GTK_STOCK_JUSTIFY_LEFT;
-                hookup_menu_item(pl_sub, _(pl->name), stock_id, G_CALLBACK(copy_selected_playlist_to_target_playlist), &db->data);
+                hookup_menu_item(pl_sub, _(pl->name), stock_id, G_CALLBACK(copy_selected_playlists_to_target_playlist), &db->data);
             }
         }
     }
@@ -195,7 +241,13 @@ static void open_photo_editor(GtkMenuItem *mi, gpointer data) {
 /* Save Changes */
 static void save_changes(GtkMenuItem *mi, gpointer data) {
     g_return_if_fail (gtkpod_get_current_playlist());
-    gp_save_itdb(gtkpod_get_current_playlist()->itdb);
+
+    GList *playlists = pm_get_selected_playlists();
+    while (playlists) {
+        Playlist *pl = playlists->data;
+        gp_save_itdb(pl->itdb);
+        playlists = playlists->next;
+    }
 }
 
 /* Load an itdb */
@@ -268,21 +320,42 @@ static GtkWidget *add_eject_ipod(GtkWidget *menu) {
     return hookup_menu_item(menu, _("Eject iPod"), GTK_STOCK_DISCONNECT, G_CALLBACK (eject_ipod), NULL);
 }
 
-void pm_context_menu_init(void) {
-    GtkWidget *menu = NULL;
-    Playlist *pl;
+/*
+ * sync_dirs_ entries - sync the directories of the selected playlist
+ *
+ * @mi - the menu item selected
+ * @data - Ignored, should be NULL
+ */
+static void sync_dirs(GtkMenuItem *mi, gpointer data) {
+    GList *playlists = pm_get_selected_playlists();
+    while (playlists) {
+        Playlist *pl = playlists->data;
+        sync_playlist(pl, NULL, KEY_SYNC_CONFIRM_DIRS, 0, KEY_SYNC_DELETE_TRACKS, 0, KEY_SYNC_CONFIRM_DELETE, 0, KEY_SYNC_SHOW_SUMMARY, 0);
+        playlists = playlists->next;
+    }
+}
 
-    if (widgets_blocked)
-        return;
+static GtkWidget *add_sync_playlist_with_dirs(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Sync Playlist with Dir(s)"), GTK_STOCK_REFRESH, G_CALLBACK (sync_dirs), NULL);
+}
 
-    pm_stop_editing(TRUE);
+static void update_multi_tracks_from_file(GtkMenuItem *mi, gpointer data) {
+    GList *playlists = pm_get_selected_playlists();
+    while (playlists) {
+        Playlist *pl = playlists->data;
+        update_tracks(pl->members);
+        playlists = playlists->next;
+    }
+}
 
-    if (!pm_get_selected_playlist())
-        return;
+GtkWidget *add_multi_update_tracks_from_file(GtkWidget *menu) {
+    return hookup_menu_item(menu, _("Update Tracks from File"), GTK_STOCK_REFRESH, G_CALLBACK (update_multi_tracks_from_file), NULL);
+}
 
-    pl = pm_get_selected_playlist();
-    if (!pl)
-        return;
+static void _populate_single_playlist_menu(GtkWidget *menu) {
+
+    Playlist *pl = pm_get_first_selected_playlist();
+    g_return_if_fail(pl);
 
     // Ensure that all the tracks in the playlist are the current selected tracks
     gtkpod_set_selected_tracks(pl->members);
@@ -292,8 +365,6 @@ void pm_context_menu_init(void) {
     g_return_if_fail (itdb);
     eitdb = itdb->userdata;
     g_return_if_fail (eitdb);
-
-    menu = gtk_menu_new();
 
     if (itdb->usertype & GP_ITDB_TYPE_IPOD) {
         if (eitdb->itdb_imported) {
@@ -312,7 +383,7 @@ void pm_context_menu_init(void) {
                 add_delete_playlist_but_keep_tracks(delete_menu);
             }
             add_separator(menu);
-            add_copy_selected_playlist_to_target_itdb(menu, _("Copy selected playlist to..."));
+            add_copy_selected_playlists_to_target_itdb(menu, _("Copy selected playlist to..."));
 
             add_separator(menu);
             add_update_tracks_from_file(menu);
@@ -340,7 +411,7 @@ void pm_context_menu_init(void) {
             add_load_ipod(menu);
         }
     }
-    if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
+    else if (itdb->usertype & GP_ITDB_TYPE_LOCAL) {
         add_exec_commands(menu);
         add_separator(menu);
 
@@ -353,7 +424,7 @@ void pm_context_menu_init(void) {
             add_delete_playlist_including_tracks_harddisk(delete_menu);
             add_delete_playlist_but_keep_tracks(delete_menu);
         }
-        add_copy_selected_playlist_to_target_itdb(menu, _("Copy selected playlist to..."));
+        add_copy_selected_playlists_to_target_itdb(menu, _("Copy selected playlist to..."));
         add_separator(menu);
         add_update_tracks_from_file(menu);
         if (!pl->is_spl) {
@@ -375,6 +446,43 @@ void pm_context_menu_init(void) {
 
     if (eitdb->data_changed) {
         add_save_changes(menu);
+    }
+}
+
+static void _populate_multi_playlist_menu(GtkWidget *menu) {
+
+    GtkWidget *delete_menu = add_sub_menu(menu, "Delete", GTK_STOCK_DELETE);
+    add_delete_playlist_including_tracks_ipod(delete_menu);
+    add_delete_playlist_but_keep_tracks(delete_menu);
+
+    add_separator(menu);
+    add_copy_selected_playlists_to_target_itdb(menu, _("Copy selected playlist to..."));
+
+    add_separator(menu);
+    add_multi_update_tracks_from_file(menu);
+
+    add_sync_playlist_with_dirs(menu);
+
+    add_save_changes(menu);
+}
+
+void pm_context_menu_init(void) {
+    GtkWidget *menu = NULL;
+
+    if (widgets_blocked)
+        return;
+
+    pm_stop_editing(TRUE);
+
+    if (!pm_is_playlist_selected())
+        return;
+
+    menu = gtk_menu_new();
+
+    if (pm_get_selected_playlist_count() == 1) {
+        _populate_single_playlist_menu(menu);
+    } else {
+        _populate_multi_playlist_menu(menu);
     }
 
     /*

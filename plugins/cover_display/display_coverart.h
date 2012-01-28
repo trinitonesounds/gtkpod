@@ -68,7 +68,7 @@ typedef struct {
 	GtkWidget *canvasbox;
 	GtkWidget *controlbox;
 	GtkButton *leftbutton;
-	GtkHScale *cdslider;
+	GtkScale *cdslider;
 	GtkButton *rightbutton;
 
 	/* Utility data */
@@ -180,7 +180,7 @@ void coverart_select_cover (Itdb_Track *track);
  * of the coverart display, which is selected from the preferences.
  *
  */
-GdkColor *coverart_get_background_display_color ();
+GdkRGBA *coverart_get_background_display_color ();
 
 /**
  * coverart_get_foreground_display_color:
@@ -190,7 +190,7 @@ GdkColor *coverart_get_background_display_color ();
  * foreground color refers to the color used by the artist and album text.
  *
  */
-GdkColor *coverart_get_foreground_display_color ();
+GdkRGBA *coverart_get_foreground_display_color ();
 
 /**
  *

@@ -29,6 +29,8 @@
 #ifndef SORTTAB_DISPLAY_CONTEXT_MENU_H_
 #define SORTTAB_DISPLAY_CONTEXT_MENU_H_
 
-void st_context_menu_init(gint inst);
+#include "sorttab_widget.h"
+
+void st_context_menu_init(SortTabWidget *w);
 
 #endif /* SORTTAB_DISPLAY_CONTEXT_MENU_H_ */

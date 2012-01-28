@@ -43,12 +43,6 @@
 #include "details.h"
 #include "fetchcover.h"
 
-#ifndef HAVE_GSEALED_GDK
-/* Compatibility macros for previous GDK versions */
-#define gdk_drag_context_get_selected_action(x) ((x)->action)
-#define gdk_drag_context_get_suggested_action(x) ((x)->suggested_action)
-#endif
-
 /* string constants for preferences */
 const gchar *DETAILS_WINDOW_NOTEBOOK_PAGE = "details_window_notebook_page";
 
@@ -360,6 +354,7 @@ static void details_button_apply_clicked(GtkButton *button) {
 
             changed |= tr_changed;
             etr->tchanged = FALSE;
+            etr->tartwork_changed = FALSE;
         }
     }
 

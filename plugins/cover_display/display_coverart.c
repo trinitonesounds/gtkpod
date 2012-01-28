@@ -43,12 +43,6 @@
 #include "fetchcover.h"
 #include "cover_display_context_menu.h"
 
-#ifndef HAVE_GSEALED_GDK
-/* Compatibility macros for previous GDK versions */
-#define gdk_drag_context_get_selected_action(x) ((x)->action)
-#define gdk_drag_context_get_suggested_action(x) ((x)->suggested_action)
-#endif
-
 #define DEBUG 0
 
 /* Declarations */
@@ -77,10 +71,10 @@ static gboolean
 dnd_coverart_drag_motion(GtkWidget *widget, GdkDragContext *dc, gint x, gint y, guint time, gpointer user_data);
 
 static void set_cover_dimensions(Cover_Item *cover, int cover_index, gdouble img_width, gdouble img_height);
-static void coverart_sort_images(GtkSortType order);
+static void coverart_sort_images(enum GtkPodSortTypes order);
 static void set_slider_range(gint index);
-static GdkColor *convert_hexstring_to_gdk_color(gchar *hexstring);
-static gboolean on_drawing_area_exposed(GtkWidget *draw_area, GdkEventExpose *event);
+static GdkRGBA *convert_hexstring_to_rgba(const gchar *hexstring);
+static gboolean on_drawing_area_drawn(GtkWidget *draw_area, cairo_t *cairo_draw_context, gpointer data);
 static void draw(cairo_t *cairo_context);
 static void redraw(gboolean force_pixbuf_update);
 
@@ -180,7 +174,7 @@ void coverart_init_display(GtkWidget *parent, gchar *gladepath) {
     cdwidget->controlbox = gtkpod_builder_xml_get_widget(xml, "cover_display_controlbox");
     cdwidget->leftbutton = GTK_BUTTON (gtkpod_builder_xml_get_widget (xml, "cover_display_leftbutton"));
     cdwidget->rightbutton = GTK_BUTTON (gtkpod_builder_xml_get_widget (xml, "cover_display_rightbutton"));
-    cdwidget->cdslider = GTK_HSCALE (gtkpod_builder_xml_get_widget (xml, "cover_display_scaler"));
+    cdwidget->cdslider = GTK_SCALE (gtkpod_builder_xml_get_widget (xml, "cover_display_scaler"));
     /* create a new drawing area */
     cdwidget->draw_area = gtk_drawing_area_new();
     cdwidget->cdcovers = g_ptr_array_sized_new(IMG_TOTAL);
@@ -212,10 +206,10 @@ void coverart_init_display(GtkWidget *parent, gchar *gladepath) {
     gtk_box_pack_start(GTK_BOX(cdwidget->canvasbox), GTK_WIDGET(cdwidget->draw_area), TRUE, TRUE, 0);
 
     /* create the expose event for the drawing area */
-    g_signal_connect (G_OBJECT (cdwidget->draw_area), "expose_event", G_CALLBACK (on_drawing_area_exposed), NULL);
+    g_signal_connect (G_OBJECT (cdwidget->draw_area), "draw", G_CALLBACK (on_drawing_area_drawn), NULL);
     gtk_widget_add_events(cdwidget->draw_area, GDK_BUTTON_PRESS_MASK);
     /* set up some callback events on the main scaled image */
-    g_signal_connect(GTK_OBJECT(cdwidget->draw_area), "button-press-event", G_CALLBACK(on_main_cover_image_clicked), NULL);
+    g_signal_connect(G_OBJECT(cdwidget->draw_area), "button-press-event", G_CALLBACK(on_main_cover_image_clicked), NULL);
 
     /* Dnd destinaton for foreign image files */
     gtk_drag_dest_set(cdwidget->canvasbox, 0, coverart_drop_types, TGNR(coverart_drop_types), GDK_ACTION_COPY
@@ -285,7 +279,7 @@ void coverart_block_change(gboolean val) {
         if (val) {
             GdkCursor *cursor = gdk_cursor_new(GDK_WATCH);
             gdk_window_set_cursor(gtk_widget_get_window(GTK_WIDGET(gtkpod_app)), cursor);
-            gdk_cursor_unref(cursor);
+            g_object_unref(cursor);
         }
         else
             gdk_window_set_cursor(gtk_widget_get_window(GTK_WIDGET(gtkpod_app)), NULL);
@@ -308,11 +302,11 @@ void coverart_block_change(gboolean val) {
  */
 static void draw_string(cairo_t *cairo_context, const gchar *text, gdouble x, gdouble y) {
     static PangoFontDescription *desc = NULL;
-    GdkColor *color = coverart_get_foreground_display_color();
+    GdkRGBA *color = coverart_get_foreground_display_color();
     PangoLayout *layout;
     PangoRectangle extents;
 
-    gdk_cairo_set_source_color(cairo_context, color);
+    cairo_set_source_rgba(cairo_context, color->red, color->green, color->blue, color->alpha);
     g_free(color);
 
     if (!desc) {
@@ -345,11 +339,11 @@ static void redraw(gboolean force_pixbuf_update) {
     g_return_if_fail(gtk_widget_get_window(GTK_WIDGET(cdwidget->draw_area)));
 
     force_pixbuf_covers = force_pixbuf_update;
-    GdkRegion *region = gdk_drawable_get_clip_region(gtk_widget_get_window(GTK_WIDGET(cdwidget->draw_area)));
+    cairo_region_t *region = gdk_window_get_clip_region(gtk_widget_get_window(GTK_WIDGET(cdwidget->draw_area)));
     /* redraw the cairo canvas completely by exposing it */
     gdk_window_invalidate_region(gtk_widget_get_window(GTK_WIDGET(cdwidget->draw_area)), region, TRUE);
     gdk_window_process_updates(gtk_widget_get_window(GTK_WIDGET(cdwidget->draw_area)), TRUE);
-    gdk_region_destroy(region);
+    cairo_region_destroy(region);
 
     if (g_list_length(album_key_list) <= 1) {
         gtk_widget_set_sensitive(GTK_WIDGET(cdwidget->cdslider), FALSE);
@@ -374,10 +368,10 @@ static void draw(cairo_t *cairo_context) {
     gint cover_index[] =
         { 0, 8, 1, 7, 2, 6, 3, 5, 4 };
     /* Draw the background */
-    GdkColor *color = coverart_get_background_display_color();
+    GdkRGBA *color = coverart_get_background_display_color();
 
     cairo_save(cairo_context);
-    gdk_cairo_set_source_color(cairo_context, color);
+    cairo_set_source_rgba(cairo_context, color->red, color->green, color->blue, color->alpha);
     cairo_set_operator(cairo_context, CAIRO_OPERATOR_SOURCE);
     cairo_paint(cairo_context);
     cairo_restore(cairo_context);
@@ -404,8 +398,11 @@ static void draw(cairo_t *cairo_context) {
         cover->album = album;
 
         if (force_pixbuf_covers) {
-            g_object_unref(album->albumart);
-            album->albumart = NULL;
+            if (album->albumart) {
+                g_object_unref(album->albumart);
+                album->albumart = NULL;
+            }
+
             if (album->scaled_art != NULL) {
                 g_object_unref(album->scaled_art);
                 album->scaled_art = NULL;
@@ -590,6 +587,12 @@ void coverart_display_update(gboolean clear_track_list) {
         set_slider_range(0);
     else
         set_slider_range(cdwidget->first_imgindex);
+
+    /*
+     * The slider range is blocked from initiating a redraw so
+     * do it manually here
+     */
+    redraw(clear_track_list);
 }
 
 /**
@@ -600,8 +603,7 @@ void coverart_display_update(gboolean clear_track_list) {
 void coverart_display_sort(gint order) {
     prefs_set_int("cad_sort", order);
     coverart_display_update(TRUE);
-    redraw(FALSE);
-    gtkpod_broadcast_preference_change("cad_sort", order);
+    gtkpod_broadcast_preference_change("cad_sort", &order);
 }
 
 /**
@@ -623,13 +625,8 @@ static void set_cover_dimensions(Cover_Item *cover, int cover_index, gdouble img
     gint PANEL_WIDTH = 0, PANEL_HEIGHT = 0;
     gint CONTBOX_WIDTH = 0, CONTBOX_HEIGHT = 0;
 
-#if GTK_CHECK_VERSION(2,24,0)
-    PANEL_WIDTH = gdk_window_get_width(gtk_widget_get_window(cdwidget->canvasbox));
-    PANEL_HEIGHT = gdk_window_get_height(gtk_widget_get_window(cdwidget->canvasbox));
-#else
-    gdk_drawable_get_size(GDK_DRAWABLE(gtk_widget_get_window(cdwidget->canvasbox)), &PANEL_WIDTH, &PANEL_HEIGHT);
-#endif
-
+    PANEL_WIDTH = gtk_widget_get_allocated_width(cdwidget->canvasbox);
+    PANEL_HEIGHT = gtk_widget_get_allocated_height(cdwidget->canvasbox);
     gtk_widget_get_size_request(cdwidget->controlbox, &CONTBOX_WIDTH, &CONTBOX_HEIGHT);
 
     // If panel width not been rendered default to minimum
@@ -778,10 +775,10 @@ static void set_highlight(Cover_Item *cover, gint index, cairo_t * cr) {
  *
  */
 static void set_shadow_reflection(Cover_Item *cover, cairo_t *cr) {
-    GdkColor *color = coverart_get_background_display_color();
-    gdouble r = ((gdouble) (color->red >> 8)) / 255;
-    gdouble g = ((gdouble) (color->green >> 8)) / 255;
-    gdouble b = ((gdouble) (color->blue >> 8)) / 255;
+    GdkRGBA *color = coverart_get_background_display_color();
+    gdouble r = color->red;
+    gdouble g = color->green;
+    gdouble b = color->blue;
     g_free(color);
 
     cairo_save(cr);
@@ -952,8 +949,7 @@ void coverart_track_changed(Track *track, gint signal) {
                 /* Track exists in the album list so ignore the change and return */
                 ExtraTrackData *etd;
                 etd = track->userdata;
-                if (etd->tartwork_changed == TRUE) {
-                    etd->tartwork_changed = FALSE;
+                if (etd->tartwork_changed) {
                     redraw(TRUE);
                 }
 
@@ -1013,20 +1009,11 @@ void coverart_track_changed(Track *track, gint signal) {
  * Returns:
  * boolean indicating whether other handlers should be run.
  */
-static gboolean on_drawing_area_exposed(GtkWidget *draw_area, GdkEventExpose *event) {
+static gboolean on_drawing_area_drawn(GtkWidget *draw_area, cairo_t *cairo_draw_context, gpointer data) {
     if (!draw_area || !gtk_widget_get_window(draw_area))
         return FALSE;
 
-    cairo_t *cairo_draw_context;
-
-    /* get a cairo_t */
-    cairo_draw_context = gdk_cairo_create(gtk_widget_get_window(draw_area));
-
-    /* set a clip region for the expose event */
-    cairo_rectangle(cairo_draw_context, event->area.x, event->area.y, event->area.width, event->area.height);
-    cairo_clip(cairo_draw_context);
     draw(cairo_draw_context);
-    cairo_destroy(cairo_draw_context);
 
     return FALSE;
 }
@@ -1421,22 +1408,12 @@ void coverart_select_cover(Track *track) {
  * Returns:
  * boolean indicating whether other handlers should be run.
  */
-static gboolean on_coverart_preview_dialog_exposed(GtkWidget *drawarea, GdkEventExpose *event, gpointer data) {
+static gboolean on_coverart_preview_dialog_drawn(GtkWidget *draw_area, cairo_t *cairo_draw_context, gpointer data) {
     GdkPixbuf *image = data;
 
-    /* Draw the image using cairo */
-    cairo_t *cairo_context;
+    gdk_cairo_set_source_pixbuf(cairo_draw_context, image, 0, 0);
+    cairo_paint(cairo_draw_context);
 
-    /* get a cairo_t */
-    cairo_context = gdk_cairo_create(gtk_widget_get_window(drawarea));
-    /* set a clip region for the expose event */
-    cairo_rectangle(cairo_context, event->area.x, event->area.y, event->area.width, event->area.height);
-    cairo_clip(cairo_context);
-
-    gdk_cairo_set_source_pixbuf(cairo_context, image, 0, 0);
-    cairo_paint(cairo_context);
-
-    cairo_destroy(cairo_context);
     return FALSE;
 }
 
@@ -1496,7 +1473,7 @@ static void display_coverart_image_dialog(GdkPixbuf *image) {
 
     /* Set the draw area's minimum size */
     gtk_widget_set_size_request(drawarea, pixwidth, pixheight);
-    g_signal_connect (G_OBJECT (drawarea), "expose_event", G_CALLBACK (on_coverart_preview_dialog_exposed), scaled);
+    g_signal_connect (G_OBJECT (drawarea), "draw", G_CALLBACK (on_coverart_preview_dialog_drawn), scaled);
 
     /* Display the dialog and block everything else until the
      * dialog is closed.
@@ -1588,7 +1565,7 @@ static gint compare_album_keys(gchar *a, gchar *b) {
  * @order: order type
  *
  */
-static void coverart_sort_images(GtkSortType order) {
+static void coverart_sort_images(enum GtkPodSortTypes order) {
     if (order == SORT_NONE) {
         /* No sorting means original order so this should have been called after a coverart_display_update (TRUE)
          * when the TRUE means the tracks were freshly established from the playlist and the hash and key_list
@@ -1600,7 +1577,7 @@ static void coverart_sort_images(GtkSortType order) {
         album_key_list = g_list_sort(album_key_list, (GCompareFunc) compare_album_keys);
     }
 
-    if (order == GTK_SORT_DESCENDING) {
+    if (order == SORT_DESCENDING) {
         album_key_list = g_list_reverse(album_key_list);
     }
 }
@@ -1694,9 +1671,9 @@ void coverart_set_cover_from_file() {
  * of the coverart display, which is selected from the preferences.
  *
  */
-GdkColor *coverart_get_background_display_color() {
+GdkRGBA *coverart_get_background_display_color() {
     gchar *hex_string;
-    GdkColor *color;
+    GdkRGBA *color;
 
     if (album_key_list == NULL)
         hex_string = "#FFFFFF";
@@ -1705,7 +1682,7 @@ GdkColor *coverart_get_background_display_color() {
     else
         prefs_get_string_value("coverart_display_bg_color", &hex_string);
 
-    color = convert_hexstring_to_gdk_color(hex_string);
+    color = convert_hexstring_to_rgba(hex_string);
     return color;
 }
 
@@ -1717,18 +1694,18 @@ GdkColor *coverart_get_background_display_color() {
  * foreground color refers to the color used by the artist and album text.
  *
  */
-GdkColor *coverart_get_foreground_display_color() {
+GdkRGBA *coverart_get_foreground_display_color() {
     gchar *hex_string;
-    GdkColor *color;
+    GdkRGBA *color;
 
     if (album_key_list == NULL)
         hex_string = "#000000";
-    else if (!prefs_get_string_value("coverart_display_bg_color", NULL))
+    else if (!prefs_get_string_value("coverart_display_fg_color", NULL))
         hex_string = "#FFFFFF";
     else
         prefs_get_string_value("coverart_display_fg_color", &hex_string);
 
-    color = convert_hexstring_to_gdk_color(hex_string);
+    color = convert_hexstring_to_rgba(hex_string);
     return color;
 }
 
@@ -2041,17 +2018,11 @@ static void dnd_coverart_drag_data_received(GtkWidget *widget, GdkDragContext *d
  *
  * @GdkColor
  */
-static GdkColor *convert_hexstring_to_gdk_color(gchar *hexstring) {
-    GdkColor *colour;
-    GdkColormap *map;
-    map = gdk_colormap_get_system();
+static GdkRGBA *convert_hexstring_to_rgba(const gchar *hexstring) {
+    GdkRGBA *colour;
 
-    colour = g_malloc(sizeof(GdkColor));
-
-    if (!gdk_color_parse(hexstring, colour))
-        return NULL;
-
-    if (!gdk_colormap_alloc_color(map, colour, FALSE, TRUE))
+    colour = g_malloc(sizeof(GdkRGBA));
+    if (!gdk_rgba_parse(colour, hexstring))
         return NULL;
 
     return colour;

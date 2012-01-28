@@ -36,6 +36,7 @@
 #include "libgtkpod/gtkpod_app_iface.h"
 #include "libgtkpod/gp_private.h"
 #include "libgtkpod/prefs.h"
+#include "libgtkpod/tools.h"
 #include "plugin.h"
 #include "display_tracks.h"
 #include "track_display_actions.h"
@@ -85,13 +86,13 @@ static void set_default_preferences() {
         prefs_set_string("sm_sort_", NULL);
     }
 
-    if (prefs_get_int_value("tm_autostore", NULL))
-        prefs_set_int("tm_autostore", FALSE);
+    if (!prefs_get_int_value("tm_autostore", NULL))
+        prefs_set_int("tm_autostore", TRUE);
 
-    if (prefs_get_int_value("tm_sortcol", NULL))
+    if (!prefs_get_int_value("tm_sortcol", NULL))
         prefs_set_int("tm_sortcol", TM_COLUMN_TITLE);
 
-    if (prefs_get_int_value("tm_sort", NULL))
+    if (!prefs_get_int_value("tm_sort", NULL))
         prefs_set_int("tm_sort", SORT_NONE);
 
 }
@@ -134,6 +135,8 @@ static gboolean activate_track_display_plugin(AnjutaPlugin *plugin) {
 
     gtk_widget_show_all(track_display_plugin->track_window);
     anjuta_shell_add_widget(plugin->shell, track_display_plugin->track_window, "TrackDisplayPlugin", _("  Playlist Tracks"), NULL, ANJUTA_SHELL_PLACEMENT_TOP, NULL);
+
+    gtkpod_register_track_command(TRACK_COMMAND(track_display_plugin));
 
     return TRUE; /* FALSE if activation failed */
 }
@@ -211,8 +214,15 @@ static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
     iface->unmerge = ipreferences_unmerge;
 }
 
+static void track_command_iface_init(TrackCommandInterface *iface) {
+    iface->id = "track_display_normalise_track_command";
+    iface->text = _("Normalise");
+    iface->execute = nm_tracks_list;
+}
+
 ANJUTA_PLUGIN_BEGIN (TrackDisplayPlugin, track_display_plugin);
-        ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);ANJUTA_PLUGIN_END
+ANJUTA_PLUGIN_ADD_INTERFACE(track_command, TRACK_COMMAND_TYPE);
+ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);ANJUTA_PLUGIN_END
 ;
 
 ANJUTA_SIMPLE_PLUGIN (TrackDisplayPlugin, track_display_plugin)

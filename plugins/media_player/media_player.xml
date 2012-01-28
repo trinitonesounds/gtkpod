@@ -1,34 +1,40 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="2.16"/>
-  <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="media_window">
+    <property name="can_focus">False</property>
     <property name="window_position">mouse</property>
     <child>
       <object class="GtkVBox" id="media_panel">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
+        <property name="can_focus">False</property>
         <child>
           <object class="GtkHBox" id="song_label_box">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="spacing">10</property>
             <child>
               <object class="GtkLabel" id="song_label">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="xalign">0</property>
                 <property name="xpad">6</property>
               </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkLabel" id="song_time_label">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label">00:00:00</property>
               </object>
               <packing>
                 <property name="expand">False</property>
+                <property name="fill">True</property>
                 <property name="padding">5</property>
                 <property name="pack_type">end</property>
                 <property name="position">1</property>
@@ -37,6 +43,7 @@
           </object>
           <packing>
             <property name="expand">False</property>
+            <property name="fill">True</property>
             <property name="padding">5</property>
             <property name="position">0</property>
           </packing>
@@ -44,21 +51,27 @@
         <child>
           <object class="GtkHBox" id="media_toolbar">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="spacing">30</property>
             <child>
               <object class="GtkHBox" id="button_box">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkToolButton" id="previous_button">
                     <property name="width_request">35</property>
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="use_action_appearance">False</property>
                     <property name="label" translatable="yes">Previous</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-media-previous</property>
-                    <signal name="clicked" handler="on_previous_button_clicked_cb"/>
+                    <signal name="clicked" handler="on_previous_button_clicked_cb" swapped="no"/>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -66,36 +79,48 @@
                   <object class="GtkToolButton" id="play_button">
                     <property name="width_request">35</property>
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="use_action_appearance">False</property>
                     <property name="label" translatable="yes">Play</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-media-play</property>
-                    <signal name="clicked" handler="on_play_button_clicked_cb"/>
+                    <signal name="clicked" handler="on_play_button_clicked_cb" swapped="no"/>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkToolButton" id="stop_button">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="use_action_appearance">False</property>
                     <property name="label" translatable="yes">Stop</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-media-stop</property>
-                    <signal name="clicked" handler="on_stop_button_clicked_cb"/>
+                    <signal name="clicked" handler="on_stop_button_clicked_cb" swapped="no"/>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkToolButton" id="next_button">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="use_action_appearance">False</property>
                     <property name="label" translatable="yes">Next</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-media-next</property>
-                    <signal name="clicked" handler="on_next_button_clicked_cb"/>
+                    <signal name="clicked" handler="on_next_button_clicked_cb" swapped="no"/>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">3</property>
                   </packing>
                 </child>
@@ -114,23 +139,30 @@
                 <property name="digits">0</property>
                 <property name="draw_value">False</property>
                 <property name="value_pos">left</property>
-                <signal name="change_value" handler="on_song_scale_change_value_cb"/>
+                <signal name="change-value" handler="on_song_scale_change_value_cb" swapped="no"/>
               </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
             <child>
               <object class="GtkHBox" id="volume_box">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <child>
                   <object class="GtkToolButton" id="volume_button">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="use_action_appearance">False</property>
                     <property name="label" translatable="yes">Volume</property>
                     <property name="stock_id">media_player-volume-control-icon</property>
-                    <signal name="clicked" handler="on_volume_button_clicked_cb"/>
+                    <signal name="clicked" handler="on_volume_button_clicked_cb" swapped="no"/>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -151,9 +183,16 @@
       </object>
     </child>
   </object>
+  <object class="GtkAdjustment" id="volume_adjustment">
+    <property name="upper">10</property>
+    <property name="value">5</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">2</property>
+  </object>
   <object class="GtkWindow" id="volume_window">
     <property name="width_request">30</property>
     <property name="height_request">150</property>
+    <property name="can_focus">False</property>
     <property name="resizable">False</property>
     <property name="window_position">mouse</property>
     <property name="default_width">20</property>
@@ -171,7 +210,6 @@
         <property name="can_focus">True</property>
         <property name="is_focus">True</property>
         <property name="events">GDK_EXPOSURE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_MOTION_MASK | GDK_BUTTON1_MOTION_MASK | GDK_BUTTON2_MOTION_MASK | GDK_BUTTON3_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK | GDK_ENTER_NOTIFY_MASK | GDK_LEAVE_NOTIFY_MASK | GDK_FOCUS_CHANGE_MASK | GDK_STRUCTURE_MASK | GDK_PROPERTY_CHANGE_MASK | GDK_VISIBILITY_NOTIFY_MASK | GDK_PROXIMITY_IN_MASK | GDK_PROXIMITY_OUT_MASK | GDK_SUBSTRUCTURE_MASK | GDK_SCROLL_MASK</property>
-        <property name="orientation">vertical</property>
         <property name="adjustment">volume_adjustment</property>
         <property name="inverted">True</property>
         <property name="lower_stepper_sensitivity">off</property>
@@ -181,11 +219,5 @@
         <property name="digits">0</property>
       </object>
     </child>
-  </object>
-  <object class="GtkAdjustment" id="volume_adjustment">
-    <property name="value">5</property>
-    <property name="upper">10</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">2</property>
   </object>
 </interface>

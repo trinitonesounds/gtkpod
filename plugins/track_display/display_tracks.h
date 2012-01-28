@@ -49,7 +49,7 @@ void track_display_set_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data);
 void track_display_set_sort_enablement(GtkPodApp *app, gboolean flag, gpointer data);
 void track_display_track_removed_cb(GtkPodApp *app, gpointer tk, gint32 pos, gpointer data);
 void track_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data);
-void track_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data);
+void track_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gpointer value, gpointer data);
 void track_display_tracks_reordered_cb(GtkPodApp *app, gpointer data);
 
 void on_search_entry_changed(GtkEditable *editable, gpointer user_data);

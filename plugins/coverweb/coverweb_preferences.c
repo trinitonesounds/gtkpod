@@ -90,13 +90,11 @@ static gboolean tree_get_current_iter (GtkTreeView *view, GtkTreeIter *iter)
 static void save_bookmarks_preferences() {
     g_return_if_fail(bookmarks_view);
     GtkTreeModel *model;
-    GtkListStore *store;
     GtkTreeIter iter;
     gint row = 0;
     gboolean valid;
 
     model = gtk_tree_view_get_model (GTK_TREE_VIEW(bookmarks_view));
-    store = GTK_LIST_STORE(model);
 
     valid = gtk_tree_model_get_iter_first (model, &iter);
     while (valid) {

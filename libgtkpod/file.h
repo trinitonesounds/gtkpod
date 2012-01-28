@@ -76,6 +76,7 @@ void gp_load_ipods (void);
 iTunesDB *gp_load_ipod (iTunesDB *itdb);
 gboolean gp_eject_ipod(iTunesDB *itdb);
 gboolean gp_save_itdb (iTunesDB *itdb);
+gboolean gp_create_extended_info(iTunesDB *itdb);
 void handle_export (void);
 void data_changed (iTunesDB *itdb);
 void data_unchanged (iTunesDB *itdb);
@@ -88,10 +89,13 @@ void gp_info_deleted_tracks (iTunesDB *itdb,
 void update_charset_info (Track *track);
 void parse_offline_playcount (void);
 
-gboolean read_soundcheck (Track *track);
+gboolean read_soundcheck (Track *track, GError **error);
 
 gboolean read_lyrics_from_file (Track *track, gchar **lyrics);
 gboolean write_lyrics_to_file (Track *track);
 
 gchar *fileselection_get_file_or_dir(const gchar *title, const gchar *cur_file, GtkFileChooserAction action);
+
+GSList* sort_tracknames_list(GSList *names);
+
 #endif

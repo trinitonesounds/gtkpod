@@ -80,7 +80,7 @@ typedef enum {
 } CONF_STATE;
 
 /* predefined IDs for use with gtkpod_confirmation() */
-enum {
+typedef enum {
     CONF_ID_IPOD_DIR = 0,
     CONF_ID_GTKPOD_WARNING,
     CONF_ID_DANGLING0,
@@ -157,7 +157,7 @@ struct _GtkPodAppInterface {
     void (*statusbar_busy_pop)(GtkPodApp *obj);
     GList * (*export_tracks_as_gchar)(iTunesDB *source_db, iTunesDB *dest_db, gchar *tracks);
     GList * (*export_tracks_as_glist)(iTunesDB *source_db, iTunesDB *dest_db, GList *tracks);
-    void (*display_widget)(GtkWidget *widget);
+    void (*display_widget)(GtkPodApp *obj, GtkWidget *widget);
 };
 
 GType gtkpod_app_get_type(void);
@@ -203,7 +203,7 @@ void gtkpod_track_updated(Track *track);
 void gtkpod_set_sort_enablement(gboolean enable);
 gboolean gtkpod_get_sort_enablement();
 
-void gtkpod_broadcast_preference_change(gchar *preference_name, gint value);
+void gtkpod_broadcast_preference_change(gchar *preference_name, gpointer value);
 
 void gtkpod_register_exporter(Exporter *exporter);
 void gtkpod_unregister_exporter();

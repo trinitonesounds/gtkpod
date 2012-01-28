@@ -1153,7 +1153,7 @@ static void on_photodb_add_image_dir_menuItem_activate(GtkMenuItem *menuItem, gp
     /* Leaf through all the files inside the directory and check if they are image
      * files. If they are then add them to the database.
      */
-    G_CONST_RETURN gchar *filename;
+    const gchar *filename;
     GPtrArray* filename_arr = g_ptr_array_new();
     unsigned u;
 

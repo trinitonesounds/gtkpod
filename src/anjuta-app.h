@@ -52,12 +52,14 @@ struct _AnjutaApp
 
 	GHashTable *values;
 	GHashTable *widgets;
+	gboolean maximized;
 
 	GtkAccelGroup *accel_group;
 
 	AnjutaStatus *status;
 	AnjutaUI *ui;
 	AnjutaPreferences *preferences;
+	GSettings* settings;
 	AnjutaPluginManager *plugin_manager;
 	AnjutaProfileManager *profile_manager;
 

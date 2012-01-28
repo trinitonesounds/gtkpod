@@ -1,5 +1,5 @@
 [Desktop Entry]
-_Name=gtkpod iPod Manager
+_Name=gtkpod
 _GenericName=iPod Manager
 _Comment=Manage music and video on an Apple iPod
 Exec=gtkpod
@@ -7,3 +7,4 @@ Icon=gtkpod
 Terminal=false
 Type=Application
 Categories=GTK;AudioVideo;
+X-GNOME-FullName=gtkpod iPod Manager

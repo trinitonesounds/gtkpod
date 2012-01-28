@@ -52,12 +52,6 @@
 #include "rb_cell_renderer_rating.h"
 #include "track_display_context_menu.h"
 
-#ifndef HAVE_GSEALED_GDK
-/* Compatibility macros for previous GDK versions */
-#define gdk_drag_context_get_selected_action(x) ((x)->action)
-#define gdk_drag_context_get_suggested_action(x) ((x)->suggested_action)
-#endif
-
 /* reference to gtkbuilder for use with track plugin */
 static GtkBuilder *trackbuilder = NULL;
 /* pointer to the container for the track display */
@@ -114,6 +108,7 @@ static gboolean filter_tracks(GtkTreeModel *model, GtkTreeIter *iter, gpointer e
     Track *tr;
     gboolean result = FALSE;
     const gchar *text = gtk_entry_get_text(GTK_ENTRY (entry));
+    gchar *utext =  g_utf8_casefold(text, -1);
     int i;
 
     gtk_tree_model_get(model, iter, READOUT_COL, &tr, -1);
@@ -123,19 +118,24 @@ static gboolean filter_tracks(GtkTreeModel *model, GtkTreeIter *iter, gpointer e
             return TRUE;
         for (i = 0; i < TM_NUM_COLUMNS; i++) {
             gint visible = prefs_get_int_index("col_visible", i);
-            gchar *data;
+            gchar *data = NULL;
+            gchar *udata =  NULL;
 
             if (!visible)
                 continue;
 
             data = track_get_text(tr, TM_to_T(i));
-            if (data && utf8_strcasestr(data, text)) {
-                g_free(data);
+            if (data)
+                udata = g_utf8_casefold(data, -1);
+
+            if (udata && utf8_strcasestr(udata, utext)) {
+                g_free(udata);
                 result = TRUE;
                 break;
             }
 
-            g_free(data);
+            if (data)
+                g_free(data);
         }
     }
 
@@ -375,7 +375,6 @@ static void tm_drag_leave(GtkWidget *widget, GdkDragContext *dc, guint time, gpo
 }
 
 static gboolean tm_drag_motion(GtkWidget *widget, GdkDragContext *dc, gint x, gint y, guint time, gpointer user_data) {
-    GtkTreeView *treeview;
     GdkAtom target;
     GtkTreePath *path = NULL;
     GtkTreeViewDropPosition pos;
@@ -388,8 +387,6 @@ static gboolean tm_drag_motion(GtkWidget *widget, GdkDragContext *dc, gint x, gi
     /*     printf ("x: %d y: %d\n", x, y); */
 
     g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
-
-    treeview = GTK_TREE_VIEW (widget);
 
     gp_install_autoscroll_row_timeout(widget);
 
@@ -492,7 +489,6 @@ static void tm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     GtkTreePath *path = NULL;
     GtkTreeModel *model = NULL;
     GtkTreeViewDropPosition pos = 0;
-    gboolean result = FALSE;
 
     /* printf ("sm drop received info: %d\n", info); */
 
@@ -549,12 +545,12 @@ static void tm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     switch (info) {
     case DND_GTKPOD_TM_PATHLIST:
         g_return_if_fail (path);
-        result = tm_move_pathlist(data_copy, path, pos);
+        tm_move_pathlist(data_copy, path, pos);
         gdk_drag_status(dc, GDK_ACTION_MOVE, time);
         gtk_drag_finish(dc, TRUE, FALSE, time);
         break;
     case DND_TEXT_PLAIN:
-        result = tm_add_filelist(data_copy, path, pos);
+        tm_add_filelist(data_copy, path, pos);
         gdk_drag_status(dc, gdk_drag_context_get_suggested_action(dc), time);
         if (gdk_drag_context_get_selected_action(dc) == GDK_ACTION_MOVE)
             gtk_drag_finish(dc, TRUE, TRUE, time);
@@ -562,7 +558,7 @@ static void tm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
             gtk_drag_finish(dc, TRUE, FALSE, time);
         break;
     case DND_TEXT_URI_LIST:
-        result = tm_add_filelist(data_copy, path, pos);
+        tm_add_filelist(data_copy, path, pos);
         gdk_drag_status(dc, gdk_drag_context_get_suggested_action(dc), time);
         if (gdk_drag_context_get_selected_action(dc) == GDK_ACTION_MOVE)
             gtk_drag_finish(dc, TRUE, TRUE, time);
@@ -1119,78 +1115,93 @@ void tm_rows_reordered(void) {
     g_return_if_fail (track_treeview);
     current_pl = gtkpod_get_current_playlist();
 
-    if (current_pl) {
-        GtkTreeModel *tm = NULL;
-        GtkTreeIter i;
-        GList *new_list = NULL, *old_pos_l = NULL;
-        gboolean valid = FALSE;
-        GList *nlp, *olp;
-        gboolean changed = FALSE;
-        iTunesDB *itdb = NULL;
+    if (! current_pl)
+        return;
 
-        tm = gtk_tree_view_get_model(track_treeview);
-        g_return_if_fail (tm);
+    GtkTreeModel *tm = NULL;
+    GtkTreeIter i;
+    GList *new_list = NULL, *old_pos_l = NULL;
+    gboolean valid = FALSE;
+    GList *nlp, *olp;
+    gboolean changed = FALSE;
+    iTunesDB *itdb = NULL;
 
-        valid = gtk_tree_model_get_iter_first(tm, &i);
-        while (valid) {
-            Track *new_track;
-            gint old_position;
+    tm = gtk_tree_view_get_model(track_treeview);
+    g_return_if_fail (tm);
 
-            gtk_tree_model_get(tm, &i, READOUT_COL, &new_track, -1);
-            g_return_if_fail (new_track);
+    valid = gtk_tree_model_get_iter_first(tm, &i);
+    while (valid) {
+        Track *new_track;
+        gint old_position;
 
-            if (!itdb)
-                itdb = new_track->itdb;
-            new_list = g_list_append(new_list, new_track);
-            /* what position was this track in before? */
-            old_position = g_list_index(current_pl->members, new_track);
-            /* check if we already used this position before (can
-             happen if track has been added to playlist more than
-             once */
-            while ((old_position != -1) && g_list_find(old_pos_l, GINT_TO_POINTER(old_position))) { /* find next occurence */
-                GList *link;
-                gint next;
-                link = g_list_nth(current_pl->members, old_position + 1);
-                next = g_list_index(link, new_track);
-                if (next == -1)
-                    old_position = -1;
-                else
-                    old_position += (1 + next);
-            }
-            /* we make a sorted list of the old positions */
-            old_pos_l = g_list_insert_sorted(old_pos_l, GINT_TO_POINTER(old_position), comp_int);
-            valid = gtk_tree_model_iter_next(tm, &i);
+        gtk_tree_model_get(tm, &i, READOUT_COL, &new_track, -1);
+        g_return_if_fail (new_track);
+
+        if (!itdb)
+            itdb = new_track->itdb;
+
+        new_list = g_list_append(new_list, new_track);
+        /* what position was this track in before? */
+        old_position = g_list_index(current_pl->members, new_track);
+        /*
+         * check if we already used this position before (can
+         * happen if track has been added to playlist more than
+         * once
+         */
+        while ((old_position != -1) && g_list_find(old_pos_l, GINT_TO_POINTER(old_position))) {
+            /* find next occurence */
+            GList *link;
+            gint next;
+            link = g_list_nth(current_pl->members, old_position + 1);
+            next = g_list_index(link, new_track);
+            if (next == -1)
+                old_position = -1;
+            else
+                old_position += (1 + next);
         }
-        nlp = new_list;
-        olp = old_pos_l;
-        while (nlp && olp) {
-            GList *old_link;
-            guint position = GPOINTER_TO_INT(olp->data);
-
-            /* if position == -1 one of the tracks in the track view
-             could not be found in the selected playlist -> stop! */
-            if (position == -1) {
-                g_warning ("Programming error: tm_rows_reordered_callback: track in track view was not in selected playlist\n");
-                g_return_if_reached ();
-            }
-            old_link = g_list_nth(current_pl->members, position);
-            /* replace old track with new track */
-            if (old_link->data != nlp->data) {
-                old_link->data = nlp->data;
-                changed = TRUE;
-            }
-            /* next */
-            nlp = nlp->next;
-            olp = olp->next;
-        }
-        g_list_free(new_list);
-        g_list_free(old_pos_l);
-        /* if we changed data, mark data as changed and adopt order in
-         sort tabs */
-        if (changed) {
-            data_changed(itdb);
-        }
+        /* we make a sorted list of the old positions */
+        old_pos_l = g_list_insert_sorted(old_pos_l, GINT_TO_POINTER(old_position), comp_int);
+        valid = gtk_tree_model_iter_next(tm, &i);
     }
+
+    nlp = new_list;
+    olp = old_pos_l;
+    while (nlp && olp) {
+        GList *old_link;
+        guint position = GPOINTER_TO_INT(olp->data);
+
+        /*
+         * if position == -1 one of the tracks in the track view
+         * could not be found in the selected playlist -> stop!
+         */
+        if (position == -1) {
+            g_warning ("Programming error: tm_rows_reordered_callback: track in track view was not in selected playlist\n");
+            g_return_if_reached ();
+        }
+        old_link = g_list_nth(current_pl->members, position);
+        /* replace old track with new track */
+        if (old_link->data != nlp->data) {
+            old_link->data = nlp->data;
+            changed = TRUE;
+        }
+        /* next */
+        nlp = nlp->next;
+        olp = olp->next;
+    }
+    g_list_free(new_list);
+    g_list_free(old_pos_l);
+
+    /*
+     * if we changed data, mark data as changed and adopt order
+     * in sort tabs
+     */
+    if (changed)
+        data_changed(itdb);
+}
+
+static gboolean tm_rows_reordered_idle_callback (gpointer user_data) {
+    tm_rows_reordered();
+    return FALSE;
 }
 
 static void on_trackids_list_foreach(GtkTreeModel *tm, GtkTreePath *tp, GtkTreeIter *i, gpointer data) {
@@ -1583,17 +1594,13 @@ static void tm_unsort(void) {
         }
 
         prefs_set_int("tm_sort", SORT_NONE);
-        if (!BROKEN_GTK_TREE_SORT) {
-            /* no need to comment this out -- searching still works, but for lack
+
+        /* no need to comment this out -- searching still works, but for lack
              of a ctrl-g only the first occurence will be found */
-            /*	    gtk_tree_view_set_enable_search (GTK_TREE_VIEW
-             * (track_treeview), FALSE);*/
-            gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
-            tm_adopt_order();
-        }
-        else {
-            gtkpod_warning(_("Cannot unsort track view because of a bug in the GTK lib you are using (%d.%d.%d < 2.5.4). Once you sort the track view, you cannot go back to the unsorted state.\n\n"), gtk_major_version, gtk_minor_version, gtk_micro_version);
-        }
+        /*	    gtk_tree_view_set_enable_search (GTK_TREE_VIEW
+         * (track_treeview), FALSE);*/
+        gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
+        tm_adopt_order();
         tm_sort_counter(-1);
     }
 }
@@ -1703,8 +1710,14 @@ static void tm_sort_column_changed(GtkTreeSortable *ts, gpointer user_data) {
 
     tm_set_search_column(newcol);
 
-    if (prefs_get_int("tm_autostore"))
-        tm_rows_reordered();
+    if (prefs_get_int("tm_autostore")) {
+        /*
+         * Once this signal callback has finished will the model
+         * be resorted. At that point will we updated the
+         * selected playlist with the new track order.
+         */
+        g_idle_add(tm_rows_reordered_idle_callback, NULL);
+    }
 
     /* stable sorting: index original order */
     tracks = tm_get_all_tracks();
@@ -1731,7 +1744,7 @@ static void tm_sort_column_changed(GtkTreeSortable *ts, gpointer user_data) {
     g_list_free(tracks);
 }
 
-void tm_sort(TM_item col, GtkSortType order) {
+void tm_sort(TM_item col, enum GtkPodSortTypes order) {
     if (track_treeview) {
         GtkTreeModel *model = gtk_tree_view_get_model(track_treeview);
 
@@ -1823,8 +1836,6 @@ static GtkTreeViewColumn *tm_add_column(TM_item tm_item, gint pos) {
         /* for some column names we want to use shorter alternatives to
          get_tm_string() */
     case TM_COLUMN_RATING:
-        gtk_tree_view_column_set_fixed_width(col, 85);
-        gtk_tree_view_column_set_resizable(col, FALSE);
         text = _("Rating");
         break;
     case TM_COLUMN_TRACK_NR:
@@ -2147,8 +2158,15 @@ void tm_show_preferred_columns(void) {
             col_width = 80;
 
         if (horizontal_scrollbar) {
-            gtk_tree_view_column_set_fixed_width(tvc, col_width);
-            gtk_tree_view_column_set_min_width(tvc, -1);
+            switch(tm_item) {
+            case TM_COLUMN_RATING:
+                gtk_tree_view_column_set_fixed_width(tvc, 85);
+                gtk_tree_view_column_set_min_width(tvc, 85);
+                break;
+            default:
+                gtk_tree_view_column_set_fixed_width(tvc, col_width);
+                gtk_tree_view_column_set_min_width(tvc, -1);
+            }
             gtk_tree_view_column_set_expand(tvc, FALSE);
         }
         else {
@@ -2220,11 +2238,6 @@ static TM_item tm_lookup_col_id(GtkTreeViewColumn *column) {
     return -1;
 }
 
-/* Compare function to avoid sorting */
-static gint tm_nosort_comp(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data) {
-    return 0;
-}
-
 /* Disable sorting of the view during lengthy updates. */
 /* @enable: TRUE: enable, FALSE: disable */
 void tm_enable_disable_view_sort(gboolean enable) {
@@ -2243,12 +2256,7 @@ void tm_enable_disable_view_sort(gboolean enable) {
                     model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(model));
                 }
 
-                if (BROKEN_GTK_TREE_SORT) {
-                    gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE (model), prefs_get_int("tm_sortcol"), tm_data_compare_func, NULL, NULL);
-                }
-                else {
-                    gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
-                }
+                gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
             }
         }
     }
@@ -2262,12 +2270,7 @@ void tm_enable_disable_view_sort(gboolean enable) {
                     model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(model));
                 }
 
-                if (BROKEN_GTK_TREE_SORT) {
-                    gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE (model), prefs_get_int("tm_sortcol"), tm_nosort_comp, NULL, NULL);
-                }
-                else {
-                    gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, prefs_get_int("tm_sort"));
-                }
+                gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, prefs_get_int("tm_sort"));
             }
         }
         disable_count++;
@@ -2418,7 +2421,7 @@ void track_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data) 
     tm_track_changed(track);
 }
 
-void track_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gint32 value, gpointer data) {
+void track_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gpointer value, gpointer data) {
     gchar *pref_name = pfname;
     if (g_str_equal(pref_name, "tm_sort")) {
         tm_sort_counter(-1);
