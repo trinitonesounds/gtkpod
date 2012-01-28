@@ -561,7 +561,7 @@ static void _st_selection_changed(GtkTreeSelection *selection, gpointer user_dat
 #if DEBUG_CB_INIT
     printf("st_s_c enter (inst: %p)\n", (gint)user_data);
 #endif
-    g_idle_add_full(G_PRIORITY_DEFAULT_IDLE, _st_selection_changed_cb, user_data, NULL);
+    gdk_threads_add_idle_full(G_PRIORITY_DEFAULT_IDLE, _st_selection_changed_cb, user_data, NULL);
 #if DEBUG_CB_INIT
     printf("st_s_c exit (inst: %p)\n", (gint)user_data);
 #endif
@@ -595,8 +595,6 @@ static gboolean _st_is_entry_selected(NormalSortTabPage *self, TabEntry *entry) 
 
     if (g_list_index(priv->selected_entries, entry) == -1)
         return FALSE;
-
-    g_message("Entry %s selected", entry->name);
 
     return TRUE;
 }
@@ -737,8 +735,6 @@ static TabEntry *_st_get_entry_by_track(NormalSortTabPage *self, Track *track) {
     entries = g_list_nth(priv->entries, 1);
     while (entries) {
         entry = (TabEntry *) entries->data;
-        g_warning("name %s", entry->name);
-        g_warning("length %d" , g_list_length(entry->members));
 
         if (entry && entry->members && g_list_find(entry->members, track))
             break; /* found! */

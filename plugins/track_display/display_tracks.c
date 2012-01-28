@@ -1716,7 +1716,7 @@ static void tm_sort_column_changed(GtkTreeSortable *ts, gpointer user_data) {
          * be resorted. At that point will we updated the
          * selected playlist with the new track order.
          */
-        g_idle_add(tm_rows_reordered_idle_callback, NULL);
+        gdk_threads_add_idle(tm_rows_reordered_idle_callback, NULL);
     }
 
     /* stable sorting: index original order */
@@ -2007,7 +2007,7 @@ static gboolean tm_selection_changed_cb(gpointer data) {
 
 /* called when the track selection changes */
 static void tm_selection_changed(GtkTreeSelection *selection, gpointer data) {
-    g_idle_add(tm_selection_changed_cb, gtk_tree_selection_get_tree_view(selection));
+    gdk_threads_add_idle(tm_selection_changed_cb, gtk_tree_selection_get_tree_view(selection));
 }
 
 /* Create tracks treeview */

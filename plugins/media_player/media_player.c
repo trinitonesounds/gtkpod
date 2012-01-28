@@ -340,10 +340,10 @@ void seek_to_time(gint64 time_seconds) {
 static int pipeline_bus_watch_cb(GstBus *bus, GstMessage *msg, gpointer data) {
     switch (GST_MESSAGE_TYPE (msg)) {
     case GST_MESSAGE_EOS:
-        g_idle_add(thread_next_song, NULL);
+        gdk_threads_add_idle(thread_next_song, NULL);
         break;
     case GST_MESSAGE_ERROR: {
-        g_idle_add(thread_stop_song, NULL);
+        gdk_threads_add_idle(thread_stop_song, NULL);
 
         GError *err = NULL;
         gchar *dbg_info = NULL;

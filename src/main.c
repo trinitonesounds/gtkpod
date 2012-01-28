@@ -98,7 +98,14 @@ main (int argc, char *argv[])
     srand(time(NULL));
 
     gtkpod_init (argc, argv);
+
+#ifdef G_THREADS_ENABLED
+    gdk_threads_enter();
+#endif
     gtk_main ();
+#ifdef G_THREADS_ENABLED
+    gdk_threads_leave();
+#endif
 
     return 0;
 }
