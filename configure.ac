@@ -100,6 +100,10 @@ PKG_CHECK_MODULES(FLAC, flac >= 1.2.1, [have_flac="yes"], [have_flac="no"])
 PKG_CHECK_MODULES(BRASERO, libbrasero-media3 >= 3.0, [have_brasero="yes"], [have_brasero="no"])		
 PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk3, [have_canberra="yes"], [have_canberra="no"])		
 
+dnl musicbrainz 3 is deprecated so may not be included. However required by sound juicer
+dnl will probably need replacing faily soon
+PKG_CHECK_MODULES(MUSICBRAINZ3, libmusicbrainz3 >= 3.0.2, [have_mb3="yes"], [have_mb3="no"])		
+    
 GTK_CLEANLINESS_FLAGS="-DG_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE"
 
 AC_MSG_CHECKING(for using DISABLE_DEPRECATED flags)
@@ -357,7 +361,7 @@ if test "$user_disabled_sjcd" = 1; then
 else
 	AC_MSG_RESULT(no)
 	AC_MSG_CHECKING(sjcd plugin dependencies)
-	if test "x$have_gstreamer" = "xyes" -a "x$have_brasero" = "xyes" -a "x$have_canberra" = "xyes"; then
+	if test "x$have_gstreamer" = "xyes" -a "x$have_brasero" = "xyes" -a "x$have_canberra" = "xyes" -a "x$have_mb3" = "xyes"; then
 		AC_MSG_RESULT(yes)
 		have_sjcd="yes"
 		
@@ -365,26 +369,15 @@ else
 		AM_GST_ELEMENT_CHECK(vorbisenc,,AC_MSG_WARN([The 'vorbisenc' element was not found. This will cause encoding to Ogg Vorbis to fail.]))
 		AM_GST_ELEMENT_CHECK(flacenc,,AC_MSG_WARN([The 'flacenc' element was not found. This will cause encoding to FLAC to fail.]))
 		AM_GST_ELEMENT_CHECK(wavenc,,AC_MSG_WARN([The 'wavenc' element was not found. This will cause encoding to Wave to fail.]))
-		AM_GST_ELEMENT_CHECK(giosink,,AC_MSG_WARN([The 'giosink' element was not found. This will cause Sound Juicer to fail at runtime.]))	
+		AM_GST_ELEMENT_CHECK(giosink,,AC_MSG_WARN([The 'giosink' element was not found. This will cause Sound Juicer to fail at runtime.]))
+		
+		AC_DEFINE([HAVE_MUSICBRAINZ3], 1, [Whether libmusicbrainz3 is available])	
 	else
 		AC_MSG_RESULT(no)
 	fi
 fi
 
-if test "x$have_sjcd" = "xyes" ; then
-	dnl musicbrainz 3 is deprecated so may not be included
-    dnl will probably need replacing faily soon
-    
-    PKG_CHECK_MODULES(MUSICBRAINZ3, libmusicbrainz3 >= 3.0.2, [have_mb3="yes"], [have_mb3="no"])		
-    AM_CONDITIONAL(HAVE_MUSICBRAINZ3, [test "x$have_mb3" = "xyes"])
-    if test "x$have_mb3" = "xyes" ; then
-		AC_DEFINE([HAVE_MUSICBRAINZ3], 1, [Whether libmusicbrainz3 is available])
-	else
-        AC_MSG_WARN([libmusicbrainz3 needs to be available for sound-juicer to build])
-        have_sjcd="no"
-    fi
-fi
-
+AM_CONDITIONAL(HAVE_MUSICBRAINZ3, [test "x$have_mb3" = "xyes"])
 AM_CONDITIONAL(HAVE_PLUGIN_SJCD, [test "x$have_sjcd" = "xyes"])
 if test "x$have_sjcd" = "xyes"; then
     AC_DEFINE(HAVE_PLUGIN_SJCD, 1, [Define if you have sound juicer support])
