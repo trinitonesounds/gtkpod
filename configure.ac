@@ -630,6 +630,20 @@ plugins/clarity/icons/hicolor/240x240/places/Makefile
 plugins/sjcd/Makefile
 plugins/sjcd/data/Makefile
 plugins/sjcd/libjuicer/Makefile
+plugins/sjcd/icons/Makefile
+plugins/sjcd/icons/hicolor/Makefile
+plugins/sjcd/icons/hicolor/16x16/Makefile
+plugins/sjcd/icons/hicolor/16x16/places/Makefile
+plugins/sjcd/icons/hicolor/22x22/Makefile
+plugins/sjcd/icons/hicolor/22x22/places/Makefile
+plugins/sjcd/icons/hicolor/24x24/Makefile
+plugins/sjcd/icons/hicolor/24x24/places/Makefile
+plugins/sjcd/icons/hicolor/32x32/Makefile
+plugins/sjcd/icons/hicolor/32x32/places/Makefile
+plugins/sjcd/icons/hicolor/48x48/Makefile
+plugins/sjcd/icons/hicolor/48x48/places/Makefile
+plugins/sjcd/icons/hicolor/scalable/Makefile
+plugins/sjcd/icons/hicolor/scalable/places/Makefile
 ])
 AC_OUTPUT
 

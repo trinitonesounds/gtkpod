@@ -39,7 +39,7 @@
 #include "sj-main.h"
 #include "sj-prefs.h"
 
-#define PREFERENCE_ICON "sjcd-playlist-category"
+#define PREFERENCE_ICON "sjcd-category"
 #define PREFERENCE_ICON_STOCK_ID "sjcd-preference-icon"
 #define TAB_NAME N_("Sound Juicer")
 

@@ -18,7 +18,7 @@ sjcd_plugin_DATA =
 
 if HAVE_PLUGIN_SJCD
 
-SUBDIRS = data libjuicer
+SUBDIRS = data icons libjuicer
 
 include ../plugins.mk
 sjcd.plugin: build-plugin-file

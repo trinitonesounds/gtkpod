@@ -859,7 +859,6 @@ on_extract_activate (GtkWidget *button, gpointer user_data)
     g_free (reason);
   }
 
-  // TODO
   cookie = sj_inhibit (g_get_application_name (),
                        _("Extracting audio from CD"),
                        GDK_WINDOW_XID(gtk_widget_get_window (GTK_WIDGET(gtkpod_app))));
