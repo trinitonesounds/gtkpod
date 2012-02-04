@@ -38,7 +38,11 @@ How to compile/install gtkpod:
 
 				For audio player plugin:
 				gstreamer
+				gstreamer-base
+				gstreamer-plugins-base
+				gstreamer-interfaces
 				gstreamer-plugins (plugins to support mp3 / mp4 playback)
+				gstreamer-pbutils
 
 				For filetype conversion:
 				flac
@@ -53,6 +57,11 @@ How to compile/install gtkpod:
 
 				For download of coverart:
 				libcurl
+
+				For sjcd (sound-juicer) plugin:
+				libcanberra
+				libbrasero-media3
+				musicbrainz3
 
    The following can be used for installing the dependencies on ubuntu 11.10:
 
