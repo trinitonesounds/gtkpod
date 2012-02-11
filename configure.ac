@@ -637,6 +637,7 @@ plugins/sjcd/icons/hicolor/48x48/Makefile
 plugins/sjcd/icons/hicolor/48x48/places/Makefile
 plugins/sjcd/icons/hicolor/scalable/Makefile
 plugins/sjcd/icons/hicolor/scalable/places/Makefile
+plugins/external_player/Makefile
 ])
 AC_OUTPUT
 

@@ -76,17 +76,18 @@ static gboolean mutex_data = FALSE;
  *
  * Command may include options, like "mp3gain -q -k %s"
  *
- * %s is replaced by @track_path if present, otherwise @track_path is
+ * %s is replaced by @selected_tracks if present, otherwise @selected_tracks are
  * added at the end.
  *
  * Return value: TRUE if the command ran successfully, FALSE if any
  * error occurred.
  */
-static gboolean run_exec_on_track(const gchar *commandline, const gchar *track_path, GError **error) {
+gboolean run_exec_on_tracks(const gchar *commandline, GList *selected_tracks, GError **error) {
     gchar *command_full_path = NULL;
     gchar *command = NULL;
     gchar *command_base = NULL;
     gchar *buf;
+    GList *tks;
     const gchar *nextarg;
     gboolean success = FALSE;
     gboolean percs = FALSE;
@@ -95,8 +96,8 @@ static gboolean run_exec_on_track(const gchar *commandline, const gchar *track_p
     int status, fdnull, ret;
     pid_t tpid;
 
-    g_return_val_if_fail (commandline, FALSE);
-    g_return_val_if_fail (track_path, FALSE);
+    g_return_val_if_fail(commandline, FALSE);
+    g_return_val_if_fail(selected_tracks, FALSE);
 
     /* skip whitespace */
     while (g_ascii_isspace (*commandline))
@@ -113,7 +114,8 @@ static gboolean run_exec_on_track(const gchar *commandline, const gchar *track_p
     command_full_path = g_find_program_in_path(command);
 
     if (!command_full_path) {
-        buf = g_strdup_printf(_("Could not find '%s'.\nPlease specifiy the exact path in the Tools section of the preference dialog or install the program if it is not installed on your system.\n\n"), command);
+        buf =
+                g_strdup_printf(_("Could not find '%s'.\nPlease specifiy the exact path in the preference dialog or install the program if it is not installed on your system.\n\n"), command);
         gtkpod_log_error(error, buf);
         g_free(buf);
         goto cleanup;
@@ -143,8 +145,16 @@ static gboolean run_exec_on_track(const gchar *commandline, const gchar *track_p
         if (!next)
             next = commandline + strlen(commandline);
 
-        if (strncmp(commandline, "%s", 2) == 0) { /* substitute %s with @track_path */
-            g_ptr_array_add(args, g_strdup(track_path));
+        if (strncmp(commandline, "%s", 2) == 0) { /* substitute %s with @selected_tracks */
+            for (tks = selected_tracks; tks; tks = tks->next) {
+                Track *tr = tks->data;
+                g_return_val_if_fail(tr, FALSE);
+                gchar *path;
+                path = get_file_name_from_source(tr, SOURCE_PREFER_LOCAL);
+                if (path) {
+                    g_ptr_array_add(args, path);
+                }
+            }
             percs = TRUE;
         }
         else {
@@ -159,9 +169,18 @@ static gboolean run_exec_on_track(const gchar *commandline, const gchar *track_p
             ++commandline;
     }
 
-    /* Add @track_path if "%s" was not present */
-    if (!percs)
-        g_ptr_array_add(args, g_strdup(track_path));
+    /* Add @selected_tracks if "%s" was not present */
+    if (!percs) {
+        for (tks = selected_tracks; tks; tks = tks->next) {
+            Track *tr = tks->data;
+            g_return_val_if_fail(tr, FALSE);
+            gchar *path;
+            path = get_file_name_from_source(tr, SOURCE_PREFER_LOCAL);
+            if (path) {
+                g_ptr_array_add(args, path);
+            }
+        }
+    }
 
     /* need NULL pointer */
     g_ptr_array_add(args, NULL);
@@ -190,10 +209,8 @@ static gboolean run_exec_on_track(const gchar *commandline, const gchar *track_p
     default: /* we are the parent, everything's fine */
         tpid = waitpid(tpid, &status, 0);
         g_ptr_array_free(args, TRUE);
-        if (
-        WIFEXITED(status))
-            ret =
-            WEXITSTATUS(status);
+        if (WIFEXITED(status))
+            ret = WEXITSTATUS(status);
         else
             ret = 2;
         if (ret > 1) {
@@ -214,13 +231,15 @@ static gboolean run_exec_on_track(const gchar *commandline, const gchar *track_p
     return success;
 }
 
+
+
 /* reread the soundcheck value from the file */
 static gboolean nm_get_soundcheck(Track *track, GError **error) {
     gchar *path, *buf;
     gchar *commandline = NULL;
     FileType *filetype;
 
-    g_return_val_if_fail (track, FALSE);
+    g_return_val_if_fail(track, FALSE);
 
     if (read_soundcheck(track, error))
         return TRUE;
@@ -241,8 +260,9 @@ static gboolean nm_get_soundcheck(Track *track, GError **error) {
 
     commandline = filetype_get_gain_cmd(filetype);
     if (commandline) {
-        if (run_exec_on_track(commandline, path, error)) {
-            g_free(path);
+        GList *tks = NULL;
+        tks = g_list_append(tks, track);
+        if (run_exec_on_tracks(commandline, tks, error)) {
             return read_soundcheck(track, error);
         }
     }
@@ -263,10 +283,10 @@ static gboolean nm_get_soundcheck(Track *track, GError **error) {
 static gpointer th_nm_get_soundcheck(gpointer data) {
     struct nm *nm = data;
     gboolean success = nm_get_soundcheck(nm->track, &(nm->error));
-    g_mutex_lock (mutex);
+    g_mutex_lock(mutex);
     mutex_data = TRUE; /* signal that thread will end */
-    g_cond_signal (cond);
-    g_mutex_unlock (mutex);
+    g_cond_signal(cond);
+    g_mutex_unlock(mutex);
     return GUINT_TO_POINTER(success);
 }
 #endif
@@ -276,11 +296,11 @@ void nm_new_tracks(iTunesDB *itdb) {
     GList *tracks = NULL;
     GList *gl;
 
-    g_return_if_fail (itdb);
+    g_return_if_fail(itdb);
 
     for (gl = itdb->tracks; gl; gl = gl->next) {
         Track *track = gl->data;
-        g_return_if_fail (track);
+        g_return_if_fail(track);
         if (!track->transferred) {
             tracks = g_list_append(tracks, track);
         }
@@ -292,19 +312,19 @@ void nm_new_tracks(iTunesDB *itdb) {
 static void nm_report_errors_and_free(GString *errors) {
     if (errors && errors->len > 0) {
         gtkpod_confirmation(-1, /* gint id, */
-                TRUE, /* gboolean modal, */
-                _("Normalization Errors"), /* title */
-                _("Errors created by track normalisation"), /* label */
-                errors->str, /* scrolled text */
-                NULL, 0, NULL, /* option 1 */
-                NULL, 0, NULL, /* option 2 */
-                TRUE, /* gboolean confirm_again, */
-                "show_normalization_errors",/* confirm_again_key,*/
-                CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
-                NULL, /* don't show "Apply" button */
-                NULL, /* cancel_handler,*/
-                NULL, /* gpointer user_data1,*/
-                NULL); /* gpointer user_data2,*/
+        TRUE, /* gboolean modal, */
+        _("Normalization Errors"), /* title */
+        _("Errors created by track normalisation"), /* label */
+        errors->str, /* scrolled text */
+        NULL, 0, NULL, /* option 1 */
+        NULL, 0, NULL, /* option 2 */
+        TRUE, /* gboolean confirm_again, */
+        "show_normalization_errors",/* confirm_again_key,*/
+        CONF_NULL_HANDLER, /* ConfHandler ok_handler,*/
+        NULL, /* don't show "Apply" button */
+        NULL, /* cancel_handler,*/
+        NULL, /* gpointer user_data1,*/
+        NULL); /* gpointer user_data2,*/
 
         g_string_free(errors, TRUE);
     }
@@ -362,7 +382,7 @@ void nm_tracks_list(GList *list) {
 
         thread = g_thread_create (th_nm_get_soundcheck, nm, TRUE, NULL);
         if (thread) {
-            g_mutex_lock (mutex);
+            g_mutex_lock(mutex);
             do {
                 while (widgets_blocked && gtk_events_pending())
                     gtk_main_iteration();
@@ -370,14 +390,14 @@ void nm_tracks_list(GList *list) {
 
                 g_get_current_time(&gtime);
                 g_time_val_add(&gtime, 20000);
-                g_cond_timed_wait (cond, mutex, &gtime);
+                g_cond_timed_wait(cond, mutex, &gtime);
             }
             while (!mutex_data);
             success = GPOINTER_TO_UINT(g_thread_join (thread));
-            g_mutex_unlock (mutex);
+            g_mutex_unlock(mutex);
         }
         else {
-            g_warning ("Thread creation failed, falling back to default.\n");
+            g_warning("Thread creation failed, falling back to default.\n");
             success = nm_get_soundcheck(nm->track, &(nm->error));
 
         }
@@ -390,10 +410,14 @@ void nm_tracks_list(GList *list) {
             gchar *path = get_file_name_from_source(nm->track, SOURCE_PREFER_LOCAL);
 
             if (nm->error) {
-                errors = g_string_append(errors, g_strdup_printf(_("'%s-%s' (%s) could not be normalized. %s\n"), nm->track->artist, nm->track->title, path ? path : "", nm->error->message));
+                errors =
+                        g_string_append(errors, g_strdup_printf(_("'%s-%s' (%s) could not be normalized. %s\n"), nm->track->artist, nm->track->title,
+                                path ? path : "", nm->error->message));
             }
             else {
-                errors = g_string_append(errors, g_strdup_printf(_("'%s-%s' (%s) could not be normalized. Unknown error.\n"), nm->track->artist, nm->track->title, path ? path : ""));
+                errors =
+                        g_string_append(errors, g_strdup_printf(_("'%s-%s' (%s) could not be normalized. Unknown error.\n"), nm->track->artist, nm->track->title,
+                                path ? path : ""));
             }
 
             g_free(path);
@@ -437,9 +461,8 @@ void nm_tracks_list(GList *list) {
 
     nm_report_errors_and_free(errors);
 
-    gtkpod_statusbar_message (ngettext ("Normalized %d of %d tracks.",
-    				      "Normalized %d of %d tracks.", n),
-    			    count, n);
+    gtkpod_statusbar_message(ngettext ("Normalized %d of %d tracks.",
+            "Normalized %d of %d tracks.", n), count, n);
 
     release_widgets();
 }
@@ -525,7 +548,7 @@ static gboolean tools_sync_script(iTunesDB *itdb, SyncType type) {
 
     /* remove leading and trailing whitespace */
     if (script)
-        g_strstrip (script);
+        g_strstrip(script);
 
     if (!script || (strlen(script) == 0)) {
         gtkpod_warning(_("Please specify the command to be called on the 'Tools' section of the preferences dialog.\n"));

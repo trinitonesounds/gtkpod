@@ -22,6 +22,7 @@ SUBDIRS = . \
 	filetype_mp4 \
 	filetype_m4a \
 	clarity \
-	sjcd
+	sjcd \
+	external_player
 
 # indent

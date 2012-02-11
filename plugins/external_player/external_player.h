@@ -1,9 +1,8 @@
-/* Time-stamp: <2006-05-10 00:01:02 jcs>
+/*
 |
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+|  Copyright (C) 2002-2012 Paul Richardson <phantom_sf at users.sourceforge.net>
 |  Part of the gtkpod project.
 |
-|  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
 |  This program is free software; you can redistribute it and/or modify
@@ -24,33 +23,16 @@
 |
 |  This product is not supported/written/published by Apple!
 |
-|  $Id$
+|  $Id: oggfile.h 954 2007-01-16 09:45:00Z jcsjcs $
 */
 
-#ifndef __NORMALIZE_H__
-#define __NORMALIZE_H__
+#ifndef __EXTERNAL_PLAYER_H__
+#define __EXTERNAL_PLAYER_H__
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <gtk/gtk.h>
 
-#include <glib.h>
+void external_player_play_tracks(GList *tracks);
 
-/* appears to be missing prior to glib 2.4 */
-#ifndef G_MININT32
-#define G_MININT32	((gint32)  0x80000000)
-#endif
-
-#define TRACKVOLERROR G_MININT32
-
-gboolean run_exec_on_tracks(const gchar *commandline, GList *selected_tracks, GError **error);
-
-void nm_new_tracks (iTunesDB *itdb);
-void nm_tracks_list (GList *list);
-
-gboolean tools_sync_all (iTunesDB *itdb);
-gboolean tools_sync_contacts (iTunesDB *itdb);
-gboolean tools_sync_calendar (iTunesDB *itdb);
-gboolean tools_sync_notes (iTunesDB *itdb);
+GtkWidget *init_external_player_preferences();
 
 #endif

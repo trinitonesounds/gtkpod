@@ -1,0 +1,4 @@
+[Anjuta Plugin]
+Location=external_player:ExternalPlayerPlugin
+_Name=External Media Player Plugin
+_Description=Adds track command for playing tracks in external player, eg. xmms

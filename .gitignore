@@ -95,6 +95,7 @@ version
 /data/glade/mserv.xml
 /data/glade/clarity.xml
 /data/glade/sjcd.xml
+/data/glade/external_player.xml
 
 /data/ui/details_editor.ui
 /data/ui/coverweb.ui
@@ -111,6 +112,7 @@ version
 /data/ui/mserv.ui
 /data/ui/clarity.ui
 /data/ui/sjcd.ui
+/data/ui/external_player.ui
 
 /data/rhythmbox.gep
 
