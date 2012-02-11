@@ -119,6 +119,20 @@ plugins/clarity/clarity_context_menu.c
 plugins/clarity/clarity_dnd_support.c
 plugins/clarity/fetchcover.c
 plugins/clarity/plugin.c
+plugins/external_player/plugin.c
+[type: gettext/glade]plugins/external_player/external_player.xml
+plugins/external_player/plugin.c
+plugins/sjcd/egg-play-preview.c
+plugins/sjcd/libjuicer/sj-extractor.c
+plugins/sjcd/libjuicer/sj-metadata-getter.c
+plugins/sjcd/libjuicer/sj-metadata-gvfs.c
+plugins/sjcd/libjuicer/sj-metadata.c
+plugins/sjcd/plugin.c
+plugins/sjcd/sj-extracting.c
+plugins/sjcd/sj-genres.c
+plugins/sjcd/sj-main.c
+plugins/sjcd/sj-prefs.c
+[type: gettext/glade]plugins/sjcd/sjcd.xml
 src/anjuta-about.c
 src/anjuta-action-callbacks.c
 src/anjuta-actions.h

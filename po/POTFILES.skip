@@ -11,3 +11,5 @@ data/glade/repository_editor.xml
 data/glade/sorttab_display.xml
 data/glade/track_display.xml
 data/glade/clarity.xml
+data/glade/sjcd.xml
+data/glade/external_player.xml
