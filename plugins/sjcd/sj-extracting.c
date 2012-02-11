@@ -42,7 +42,6 @@
 #include <gdk/gdkx.h>
 
 #include <brasero-volume.h>
-#include <canberra-gtk.h>
 
 #include "sj-error.h"
 #include "sj-extracting.h"

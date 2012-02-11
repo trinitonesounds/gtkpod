@@ -98,7 +98,6 @@ PKG_CHECK_MODULES(GSTREAMER, gstreamer-0.10 >= 0.10.25 gstreamer-base-0.10 >= 0.
 PKG_CHECK_MODULES(VORBISFILE, vorbisfile >= 1.3.1, [have_vorbis="yes"], [have_vorbis="no"])
 PKG_CHECK_MODULES(FLAC, flac >= 1.2.1, [have_flac="yes"], [have_flac="no"])
 PKG_CHECK_MODULES(BRASERO, libbrasero-media3 >= 3.0, [have_brasero="yes"], [have_brasero="no"])		
-PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk3, [have_canberra="yes"], [have_canberra="no"])		
 
 dnl musicbrainz 3 is deprecated so may not be included. However required by sound juicer
 dnl will probably need replacing faily soon
@@ -361,7 +360,7 @@ if test "$user_disabled_sjcd" = 1; then
 else
 	AC_MSG_RESULT(no)
 	AC_MSG_CHECKING(sjcd plugin dependencies)
-	if test "x$have_gstreamer" = "xyes" -a "x$have_brasero" = "xyes" -a "x$have_canberra" = "xyes" -a "x$have_mb3" = "xyes"; then
+	if test "x$have_gstreamer" = "xyes" -a "x$have_brasero" = "xyes" -a "x$have_mb3" = "xyes"; then
 		AC_MSG_RESULT(yes)
 		have_sjcd="yes"
 		
