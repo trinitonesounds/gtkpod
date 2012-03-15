@@ -23,7 +23,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <signal.h>
-#include <string.h>
 #include <ctype.h>
 #include <sys/wait.h>
 
@@ -240,15 +239,15 @@ static void on_gdl_style_changed(GSettings* settings, const gchar* key, gpointer
 
     gchar* pr_style = g_settings_get_string(settings, key);
 
-    if (strcasecmp(pr_style, "Text") == 0)
+    if (g_strcmp0(pr_style, "Text") == 0)
         style = GDL_SWITCHER_STYLE_TEXT;
-    else if (strcasecmp(pr_style, "Icon") == 0)
+    else if (g_strcmp0(pr_style, "Icon") == 0)
         style = GDL_SWITCHER_STYLE_ICON;
-    else if (strcasecmp(pr_style, "Both") == 0)
+    else if (g_strcmp0(pr_style, "Both") == 0)
         style = GDL_SWITCHER_STYLE_BOTH;
-    else if (strcasecmp(pr_style, "Toolbar") == 0)
+    else if (g_strcmp0(pr_style, "Toolbar") == 0)
         style = GDL_SWITCHER_STYLE_TOOLBAR;
-    else if (strcasecmp(pr_style, "Tabs") == 0)
+    else if (g_strcmp0(pr_style, "Tabs") == 0)
         style = GDL_SWITCHER_STYLE_TABS;
 
     g_object_set(G_OBJECT(app->layout_manager->master), "switcher-style", style, NULL);
