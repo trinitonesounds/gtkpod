@@ -47,7 +47,7 @@ static void rb_cell_renderer_rating_init (RBCellRendererRating *celltext);
 static void rb_cell_renderer_rating_class_init (RBCellRendererRatingClass *class);
 static void rb_cell_renderer_rating_get_size  (GtkCellRenderer *cell,
 					       GtkWidget *widget,
-					       GdkRectangle *rectangle,
+					       const GdkRectangle *rectangle,
 					       gint *x_offset,
 					       gint *y_offset,
 					       gint *width,
@@ -62,8 +62,8 @@ static gboolean rb_cell_renderer_rating_activate (GtkCellRenderer *cell,
 					          GdkEvent *event,
 					          GtkWidget *widget,
 					          const gchar *path,
-					          GdkRectangle *background_area,
-					          GdkRectangle *cell_area,
+					          const GdkRectangle *background_area,
+					          const GdkRectangle *cell_area,
 					          GtkCellRendererState flags);
 static void rb_cell_renderer_rating_finalize (GObject *object);
 
@@ -241,7 +241,7 @@ rb_cell_renderer_rating_new ()
 static void
 rb_cell_renderer_rating_get_size (GtkCellRenderer *cell,
 				  GtkWidget *widget,
-				  GdkRectangle *cell_area,
+				  const GdkRectangle *cell_area,
 				  gint *x_offset,
 				  gint *y_offset,
 				  gint *width,
@@ -314,8 +314,8 @@ rb_cell_renderer_rating_activate (GtkCellRenderer *cell,
 				  GdkEvent *event,
 				  GtkWidget *widget,
 				  const gchar *path,
-				  GdkRectangle *background_area,
-				  GdkRectangle *cell_area,
+				  const GdkRectangle *background_area,
+				  const GdkRectangle *cell_area,
 				  GtkCellRendererState flags)
 {
 	int mouse_x, mouse_y;
