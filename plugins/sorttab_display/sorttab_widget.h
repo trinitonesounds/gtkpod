@@ -30,6 +30,7 @@
 #define SORT_TAB_WIDGET_H_
 
 #include <gtk/gtk.h>
+#include "libgtkpod/gp_private.h"
 #include "libgtkpod/gp_itdb.h"
 #include "sorttab_conversion.h"
 
