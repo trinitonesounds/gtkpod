@@ -31,7 +31,6 @@
 
 #include <gtk/gtk.h>
 #include "sorttab_widget.h"
-#include "special_sorttab_page.h"
 #include "date_parser.h"
 
 G_BEGIN_DECLS
