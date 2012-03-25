@@ -452,7 +452,7 @@ static gboolean finish_string_storage(gchar *key, gchar *str) {
         temp_prefs_remove_key(repository_view->temp_prefs, key);
         result = FALSE;
     }
-    update_buttons(repository_view);
+    update_buttons();
     g_free(key);
     g_free(str);
     g_free(prefs_str);
@@ -580,7 +580,7 @@ static void sync_playlist_mode_manual_toggled(GtkToggleButton *togglebutton) {
     if (gtk_toggle_button_get_active(togglebutton)) {
         finish_int_storage(key, SYNC_PLAYLIST_MODE_MANUAL);
         gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, MANUAL_SYNCDIR_CHOOSER), TRUE);
-        update_buttons(repository_view);
+        update_buttons();
     }
 
     g_free(key);
@@ -597,7 +597,7 @@ static void sync_playlist_mode_automatic_toggled(GtkToggleButton *togglebutton) 
     if (gtk_toggle_button_get_active(togglebutton)) {
         finish_int_storage(key, SYNC_PLAYLIST_MODE_AUTOMATIC);
         gtk_widget_set_sensitive(GET_WIDGET (repository_view->builder, MANUAL_SYNCDIR_CHOOSER), FALSE);
-        update_buttons(repository_view);
+        update_buttons();
     }
 
     g_free(key);
@@ -638,7 +638,7 @@ static void standard_playlist_checkbutton_toggled(GtkToggleButton *togglebutton)
         else
             temp_prefs_set_int(repository_view->extra_prefs, key, active);
 
-        update_buttons(repository_view);
+        update_buttons();
         g_free(key);
         return;
     }
@@ -670,7 +670,7 @@ static void delete_repository_button_clicked(GtkButton *button) {
 
     temp_prefs_set_int(repository_view->extra_prefs, key, TRUE);
     g_free(key);
-    update_buttons(repository_view);
+    update_buttons();
 }
 
 /* new repository button was clicked */
@@ -802,7 +802,7 @@ static void edit_apply_clicked(GtkButton *button) {
         iTunesDB *old_itdb = repository_view->itdb;
         Playlist *old_playlist = repository_view->playlist;
 
-        init_repository_combo(repository_view);
+        init_repository_combo();
         if (new_itdb == old_itdb) {
             select_repository(new_itdb, old_playlist);
         }
@@ -814,7 +814,7 @@ static void edit_apply_clicked(GtkButton *button) {
     printf ("index: %d\n", repository_view->itdb_index);
 #   endif
 
-    update_buttons(repository_view);
+    update_buttons();
 
     /*
      * Free the deleted itdbs. Need to do this at the end
