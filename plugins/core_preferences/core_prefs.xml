@@ -61,9 +61,6 @@
       </row>
     </data>
   </object>
-  <object class="GtkTextBuffer" id="textbuffer1">
-    <property name="text" translatable="yes">Normally, the encoding specified above will only be used when importing new tracks, and for any operations involving existing tracks, the encoding specified when the file was first imported will be used. You can use the options below to override this behavior, in case you specified the encoding incorrectly for the first import.</property>
-  </object>
   <object class="GtkDialog" id="prefs_encoding_dialog">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
     <property name="border_width">5</property>
@@ -124,14 +121,11 @@
               <object class="GtkHBox" id="hbox13">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkTextView" id="textview1">
+                  <object class="GtkLabel" id="label1">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
-                    <property name="can_focus">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="editable">False</property>
-                    <property name="wrap_mode">word</property>
-                    <property name="buffer">textbuffer1</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Normally, the encoding specified above will only be used when importing new tracks, and for any operations involving existing tracks, the encoding specified when the file was first imported will be used. You can use the options below to override this behavior, in case you specified the encoding incorrectly for the first import.</property>
+                    <property name="wrap">True</property>
                   </object>
                   <packing>
                     <property name="position">0</property>
