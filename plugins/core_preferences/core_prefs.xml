@@ -1612,7 +1612,6 @@ will be imposed on the repository.</property>
                               <object class="GtkSpinButton" id="save_threshold_spin_button">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="has_frame">False</property>
                                 <property name="invisible_char">&#x25CF;</property>
                                 <property name="adjustment">adjustment6</property>
                                 <property name="climb_rate">1</property>
