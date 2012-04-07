@@ -1180,7 +1180,7 @@ Track *get_track_info_from_file(gchar *name, Track *orig_track, GError **error) 
 
     GError *info_error = NULL;
     nti = filetype_get_file_info(filetype, name, &info_error);
-    if (info_error || !nti) {
+    if (info_error && !nti) {
         gtkpod_log_error_printf(error, _("No track information could be retrieved from the file %s due to the following error:\n\n%s"), name_utf8, info_error->message);
         g_error_free(info_error);
         info_error = NULL;
