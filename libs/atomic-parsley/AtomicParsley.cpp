@@ -318,7 +318,6 @@ void TestFileExistence(const char *filePath, bool errorOut) {
 	a_file = APar_OpenFile(filePath, "rb");
 	if( (a_file == NULL) && errorOut ){
 		fprintf(stderr, "AtomicParsley error: can't open %s for reading: %s\n", filePath, strerror(errno));
-		exit(1);
 	} else {
 		fclose(a_file);
 	}
@@ -348,13 +347,13 @@ int APar_TestArtworkBinaryData(const char* artworkPath) {
 			artwork_dataType = AtomFlags_Data_JPEGBinary;
 		} else {
 			fprintf(stdout, "AtomicParsley error: %s\n\t image file is not jpg/png and cannot be embedded.\n", artworkPath);
-			exit(1);
+			artwork_dataType = -1;
 		}
 		fclose(artfile);
 
 	} else {
 		fprintf(stdout, "AtomicParsley error: %s\n\t image file could not be opened.\n", artworkPath);
-		exit(1);
+		artwork_dataType = -1;
 	}
 	return artwork_dataType;
 }
@@ -423,7 +422,7 @@ void APar_FreeMemory() {
 	free(file_progress_buffer);
 	file_progress_buffer=NULL;
 
-	if (source_file) {
+	if (source_file && file_opened) {
 	    fclose(source_file);
 	    file_opened = false;
 	}
@@ -2197,7 +2196,6 @@ void APar_IdentifyBrand(char* file_brand ) {
 		//what ISN'T supported
 		case 0x71742020 : //'qt  '  --this is listed at mp4ra, but there are features of the file that aren't supported (like the 4 NULL bytes after the last udta child atom
 			fprintf(stdout, "AtomicParsley error: Quicktime movie files are not supported.\n");
-			exit(2);
 			break;
 
 		//3gp-brands are listed in 3GPP/3GPP2 specification documents, not all are listed at mp4ra
@@ -2245,7 +2243,6 @@ void APar_IdentifyBrand(char* file_brand ) {
 		//other lesser unsupported brands; http://www.mp4ra.org/filetype.html like dv, mjpeg200, mp21 & ... whatever mpeg7 brand is
 		default :
 			fprintf(stdout, "AtomicParsley error: unsupported MPEG-4 file brand found '%s'\n", file_brand);
-			exit(2);
 			break;
 
 	}
@@ -2281,7 +2278,6 @@ uint64_t APar_64bitAtomRead(FILE *file, uint32_t jump_point) {
 		contains_unsupported_64_bit_atom = true;
 		fprintf(stdout, "You must be off your block thinking I'm going to tag a file that is at LEAST %llu bytes long.\n", extended_dataSize);
 		fprintf(stdout, "AtomicParsley doesn't have full 64-bit support");
-		exit (2);
 	}
 	return extended_dataSize;
 }
@@ -3503,7 +3499,7 @@ void APar_MetaData_atom_QuickInit(short atom_num, const uint32_t atomFlags, uint
 	parsedAtoms[atom_num].AtomicData = (char*)calloc(1, sizeof(char)* allotment+50 );
 	if (parsedAtoms[atom_num].AtomicData == NULL) {
 		fprintf(stdout, "AP error: there was insufficient memory available for allocation. Exiting.%c\n", '\a');
-		exit(1);
+		return;
 	}
 
 	parsedAtoms[atom_num].AtomicLength = 16 + supplemental_length; // 4bytes atom length, 4 bytes atom length, 4 bytes version/flags, 4 bytes NULL
@@ -4408,7 +4404,7 @@ void APar_ValidateAtoms() {
 
 	if (atom_number > MAX_ATOMS) {
 		fprintf(stderr, "AtomicParsley error: amount of atoms exceeds internal limit. Aborting.\n");
-		exit(1);
+		return;
 	}
 
 	while (true) {
@@ -4426,7 +4422,7 @@ void APar_ValidateAtoms() {
 #else
 				fprintf(stderr, "atom %s is %u bytes long which is greater than the filesize of %llu\n", parsedAtoms[iter].AtomicName, parsedAtoms[iter].AtomicLength, (long long unsigned int)file_size);
 #endif
-				exit(1); //its conceivable to repair such an off length by the surrounding atoms constrained by file_size - just not anytime soon; probly would catch a foobar2000 0.9 tagged file
+				return; //its conceivable to repair such an off length by the surrounding atoms constrained by file_size - just not anytime soon; probly would catch a foobar2000 0.9 tagged file
 			}
 		}
 
@@ -4440,13 +4436,13 @@ void APar_ValidateAtoms() {
 
 		if (strncmp(parsedAtoms[iter].AtomicName, "mdat", 4) == 0 && parsedAtoms[iter].AtomicLevel != 1) {
 			fprintf(stderr, "AtomicParsley error: mdat atom was found at an illegal (not at top level). Aborting. %c\n", '\a');
-			exit(1); //the error which forced this was some bad atom length redetermination; probably won't be fixed
+			return; //the error which forced this was some bad atom length redetermination; probably won't be fixed
 		}
 
 		if (memcmp(parsedAtoms[iter].AtomicName, "trak", 4) == 0 && parsedAtoms[iter+1].NextAtomNumber != 0) { //prevent writing any malformed tracks
 			if (memcmp(parsedAtoms[ parsedAtoms[iter].NextAtomNumber ].AtomicName, "tkhd", 4) != 0) {
 				fprintf(stderr, "AtomicParsley error: incorrect track structure. %c\n", '\a');
-				exit(1);
+				return;
 			}
 		}
 
@@ -4463,7 +4459,7 @@ void APar_ValidateAtoms() {
 		fprintf(stderr, "AtomicParsley error: total existing atoms present as larger than filesize. Aborting. %c\n", '\a');
 		//APar_PrintAtomicTree();
 		fprintf(stdout, "%i %llu\n", percentage_difference, simple_tally);
-		exit(1);
+		return;
 	}
 
 	if (!atom_name_with_4_characters) {
@@ -5015,7 +5011,7 @@ void APar_WriteFile(const char* m4aFile, const char* outfile, bool rewrite_origi
 
 	} else {
 		fprintf(stdout, "AtomicParsley error: an error occurred while trying to create a temp file.\n");
-		exit(1);
+		return;
 	}
 
 	if (udta_dynamics.dynamic_updating) {
@@ -5027,7 +5023,7 @@ void APar_WriteFile(const char* m4aFile, const char* outfile, bool rewrite_origi
 		if (source_file == NULL) {
 			fclose(temp_file);
 			remove(temp_file_name);
-			exit(1);
+			return;
 		}
 
 		//update moov's length
@@ -5056,7 +5052,10 @@ void APar_WriteFile(const char* m4aFile, const char* outfile, bool rewrite_origi
 				fwrite(file_buffer, 1, free_padding_size-8, source_file);
 			}
 		}
+
 		fclose(source_file);
+		file_opened = false;
+
 		fclose(temp_file);
 		remove(temp_file_name);
 		fclose(temp_file);
@@ -5064,6 +5063,7 @@ void APar_WriteFile(const char* m4aFile, const char* outfile, bool rewrite_origi
 
 	} else if (rewrite_original && !outfile) { //disable overWrite when writing out to a specifically named file; presumably the enumerated output file was meant to be the final destination
 		fclose(source_file);
+		file_opened = false;
 
 		if ( IsUnicodeWinOS() && UnicodeOutputStatus == WIN32_UTF16) {
 #if defined (_MSC_VER) /* native windows seems to require removing the file first; rename() on Mac OS X does the removing automatically as needed */
@@ -5114,19 +5114,19 @@ void APar_WriteFile(const char* m4aFile, const char* outfile, bool rewrite_origi
 
 				case ENAMETOOLONG: {
 					fprintf (stdout, "Some or all of the orginal path was too long.");
-					exit (-1);
+					return;
 				}
 				case ENOENT: {
 					fprintf (stdout, "Some part of the original path was missing.");
-					exit (-1);
+					return;
 				}
 				case EACCES: {
 					fprintf (stdout, "Unable to write to a directory lacking write permission.");
-					exit (-1);
+					return;
 				}
 				case ENOSPC: {
 					fprintf (stdout, "Out of space.");
-					exit (-1);
+					return;
 				}
 			}
 		}

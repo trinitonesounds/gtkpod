@@ -34,5 +34,7 @@
 
 gboolean mp4_write_file_info (const gchar *filename, Track *track, GError **error);
 Track *mp4_get_file_info (const gchar *name, GError **error);
-gboolean mp4_read_soundcheck (const gchar *filename, Track *track, GError **error);
+gboolean mp4_read_lyrics(const gchar *filename, gchar **lyrics, GError **error);
+gboolean mp4_write_lyrics(const gchar *filename, const gchar *lyrics, GError **error);
+gboolean mp4_read_gapless(const gchar *filename, Track *track, GError **error);
 #endif

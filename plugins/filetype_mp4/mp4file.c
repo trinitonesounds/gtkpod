@@ -152,12 +152,31 @@ Track *mp4_get_file_info(const gchar *mp4FileName, GError **error) {
     track = gp_track_new();
 
     mp4_set_media_type(mp4FileName, track);
-
     AP_extract_metadata(mp4FileName, track);
 
     return track;
 }
 
 gboolean mp4_write_file_info(const gchar *mp4FileName, Track *track, GError **error) {
+    AP_write_metadata(track, mp4FileName, error);
+
+    return error ? TRUE : FALSE;
+}
+
+gboolean mp4_read_lyrics(const gchar *mp4FileName, gchar **lyrics, GError **error) {
+    char *value = AP_read_lyrics(mp4FileName, error);
+
+    *lyrics = value;
+
+    return error ? TRUE : FALSE;
+}
+
+gboolean mp4_write_lyrics(const gchar *mp4FileName, const gchar *lyrics, GError **error) {
+    AP_write_lyrics(lyrics, mp4FileName, error);
+
+    return error ? TRUE : FALSE;
+}
+
+gboolean mp4_read_gapless(const gchar *filename, Track *track, GError **error) {
     return FALSE;
 }

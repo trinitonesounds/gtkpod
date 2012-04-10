@@ -86,9 +86,9 @@ static void m4a_filetype_iface_init(FileTypeInterface *iface) {
     iface->get_file_info = m4a_get_file_info;
     iface->write_file_info = m4a_write_file_info;
     iface->read_soundcheck = filetype_no_soundcheck;
-    iface->read_lyrics = filetype_no_read_lyrics;
-    iface->write_lyrics = filetype_no_write_lyrics;
-    iface->read_gapless = filetype_no_read_gapless;
+    iface->read_lyrics = m4a_read_lyrics;
+    iface->write_lyrics = m4a_write_lyrics;
+    iface->read_gapless = m4a_read_gapless;
     iface->can_convert = m4a_can_convert;
     iface->get_conversion_cmd = m4a_get_conversion_cmd;
     iface->get_gain_cmd = m4a_get_gain_cmd;

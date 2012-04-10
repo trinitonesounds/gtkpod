@@ -31,52 +31,38 @@
 
 #include "libgtkpod/itdb.h"
 
+/**
+ * Open and scan the metadata of the m4a/mp4/... file
+ * and populate the given track.
+ */
 #ifdef __cplusplus
 extern "C"
 #endif
-void AP_extract_metadata(const char *path, Track *track);
+void AP_extract_metadata(const char *filePath, Track *track);
 
-
-
-/*
- * Want to use:
- * APar_ExtractTrackDetails
- * APar_ExtractMovieDetails
- * APar_Extract_iods_Info
+/**
+ * Using the given track, set the metadata of the target
+ * file
  */
+#ifdef __cplusplus
+extern "C"
+#endif
+void AP_write_metadata(Track *track, const char *filePath, GError **error);
 
-//char *MP4GetMetadataName(const ca, &value);
-//MP4GetMetadataArtist(mp4File, &value) && value
-//MP4GetMetadataAlbumArtist(mp4File, &value) && value
-//MP4GetMetadataComposer(mp4File, &value) && value != NULL)
-//MP4GetMetadataComment(mp4File, &value) && value
-//MP4GetMetadataReleaseDate(mp4File, &value) && value != NULL)
-//MP4GetMetadataAlbum(mp4File, &value) && value
-//MP4GetMetadataTrack(mp4File, &numvalue, &numvalue2))
-//MP4GetMetadataDisk(mp4File, &numvalue, &numvalue2))
-//MP4GetMetadataGrouping(mp4File, &value) && value
-//MP4GetMetadataGenre(mp4File, &value) && value
-//MP4GetMetadataBPM(mp4File, &numvalue))
+/**
+ * Read any lyrics from the given file
+ */
+#ifdef __cplusplus
+extern "C"
+#endif
+char *AP_read_lyrics(const char *filePath, GError **error);
 
-//MP4GetMetadataLyrics(mp4File);
-//
-//MP4GetMetadataTVShow
-//
-//MP4TagsFetchFunc( mp4tags, mp4File);
-//mp4tags->tvShow)
-//track->tvshow = g_strdup(mp4tags->tvShow);
-//mp4tags->tvEpisodeID)
-//track->tvepisode = g_strdup(mp4tags->tvEpisodeID);
-//mp4tags->tvNetwork)
-//track->tvnetwork = g_strdup(mp4tags->tvNetwork);
-//mp4tags->tvSeason)
-//track->season_nr = *mp4tags->tvSeason;
-//mp4tags->tvEpisode)
-//track->episode_nr = *mp4tags->tvEpisode;
-//mp4tags->tvEpisode)
-//track->mediatype = mediaTypeTagToMediaType(*mp4tags->mediaType);
-//MP4TagsFreeFunc( mp4tags);
-//
-//MP4GetMetadataCoverArt(mp4File, &image_data, &image_data_len, 0))
+/**
+ * Write lyrics to the file at filePath
+ */
+#ifdef __cplusplus
+extern "C"
+#endif
+void AP_write_lyrics(const char *lyrics, const char *filePath, GError **error);
 
 #endif /* ATOMIC_PARSLEY_BRIDGE_H_ */

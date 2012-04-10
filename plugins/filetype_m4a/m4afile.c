@@ -56,7 +56,7 @@ static void m4a_set_media_type(const gchar *m4aFileName, Track *track) {
             track->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
             track->filetype = g_strdup(_("AAC audio book file"));
         }
-        else if (g_ascii_strcasecmp(value, ".mp4") == 0) {
+        else if (g_ascii_strcasecmp(value, ".m4a") == 0) {
             track->mediatype = ITDB_MEDIATYPE_MOVIE;
             track->movie_flag = 0x01;
             track->filetype = g_strdup(_("MP4 video file"));
@@ -80,6 +80,24 @@ Track *m4a_get_file_info(const gchar *m4aFileName, GError **error) {
 }
 
 gboolean m4a_write_file_info(const gchar *filename, Track *track, GError **error) {
+    AP_write_metadata(track, filename, error);
+
+    return error ? TRUE : FALSE;
+}
+
+gboolean m4a_read_lyrics(const gchar *m4aFileName, gchar **lyrics, GError **error) {
+    gchar *value = AP_read_lyrics(m4aFileName, error);
+    *lyrics = value;
+    return error ? TRUE : FALSE;
+}
+
+gboolean m4a_write_lyrics(const gchar *m4aFileName, const gchar *lyrics, GError **error) {
+    AP_write_lyrics(lyrics, m4aFileName, error);
+
+    return error ? TRUE : FALSE;
+}
+
+gboolean m4a_read_gapless(const gchar *filename, Track *track, GError **error) {
     return FALSE;
 }
 
