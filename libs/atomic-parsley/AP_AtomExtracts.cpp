@@ -1238,8 +1238,7 @@ void APar_ExtractMovieDetails(char* uint32_buffer, FILE* isofile, MovieInfo *mov
     movie_info->simple_bitrate_calc = ((double) media_bits / movie_info->seconds) / 1000.0;
 }
 
-double APar_calculate_bitrate(TrackInfo *track_info)
-{
+double APar_calculate_bitrate(TrackInfo *track_info) {
     if (track_info->max_bitrate > 0 && track_info->avg_bitrate > 0) {
         return track_info->avg_bitrate / 1000.0;
     }

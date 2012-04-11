@@ -1,31 +1,30 @@
 //==================================================================//
 /*
-    AtomicParsley - APar_uuid.h
+ AtomicParsley - APar_uuid.h
 
-    AtomicParsley is GPL software; you can freely distribute, 
-    redistribute, modify & use under the terms of the GNU General
-    Public License; either version 2 or its successor.
+ AtomicParsley is GPL software; you can freely distribute,
+ redistribute, modify & use under the terms of the GNU General
+ Public License; either version 2 or its successor.
 
-    AtomicParsley is distributed under the GPL "AS IS", without
-    any warranty; without the implied warranty of merchantability
-    or fitness for either an expressed or implied particular purpose.
+ AtomicParsley is distributed under the GPL "AS IS", without
+ any warranty; without the implied warranty of merchantability
+ or fitness for either an expressed or implied particular purpose.
 
-    Please see the included GNU General Public License (GPL) for 
-    your rights and further details; see the file COPYING. If you
-    cannot, write to the Free Software Foundation, 59 Temple Place
-    Suite 330, Boston, MA 02111-1307, USA.  Or www.fsf.org
+ Please see the included GNU General Public License (GPL) for
+ your rights and further details; see the file COPYING. If you
+ cannot, write to the Free Software Foundation, 59 Temple Place
+ Suite 330, Boston, MA 02111-1307, USA.  Or www.fsf.org
 
-    Copyright ©2006 puck_lock
-                                                                   */
+ Copyright ï¿½2006 puck_lock
+ */
 //==================================================================//
-
 typedef struct {
-    uint32_t       time_low;
-    uint16_t       time_mid;
-    uint16_t       time_hi_and_version;
-    uint8_t        clock_seq_hi_and_reserved;
-    uint8_t        clock_seq_low;
-    unsigned char  node[6];
+    uint32_t time_low;
+    uint16_t time_mid;
+    uint16_t time_hi_and_version;
+    uint8_t clock_seq_hi_and_reserved;
+    uint8_t clock_seq_low;
+    unsigned char node[6];
 } ap_uuid_t;
 
 void APar_print_uuid(ap_uuid_t* uuid, bool new_line = true);

@@ -85,7 +85,7 @@ static void mp4_filetype_iface_init(FileTypeInterface *iface) {
     iface->read_soundcheck = filetype_no_soundcheck;
     iface->read_lyrics = mp4_read_lyrics;
     iface->write_lyrics = mp4_write_lyrics;
-    iface->read_gapless = mp4_read_gapless;
+    iface->read_gapless = filetype_no_read_gapless;
     iface->can_convert = filetype_no_convert;
     iface->get_conversion_cmd = filetype_no_conversion_cmd;
     iface->get_gain_cmd = filetype_no_gain_cmd;

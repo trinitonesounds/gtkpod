@@ -42,6 +42,9 @@ extern "C" {
 #include "libgtkpod/gp_private.h"
 }
 
+#define ILST_FULL_ATOM "moov.udta.meta.ilst"
+#define DATA "data"
+
 #define TITLE "\251nam"
 #define ARTIST "\251ART"
 #define ALBUM_ARTIST "aART"
@@ -68,6 +71,7 @@ extern "C" {
 #define CATEGORY "catg"
 #define PODCAST_URL "purl"
 #define ARTWORK "covr"
+#define GAPLESS_FLAG "pgap"
 
 static guint32 mediaTypeTagToMediaType(guint8 media_type) {
     switch (media_type) {
@@ -114,7 +118,7 @@ static guint8 mediaTypeToMediaTypeTag(guint32 media_type) {
 static AtomicInfo *find_atom(const char *meta) {
     char atomName[100];
 
-    sprintf(atomName, "moov.udta.meta.ilst.%s.data", meta);
+    sprintf(atomName, "%s.%s.%s", ILST_FULL_ATOM, meta, DATA);
 
     return APar_FindAtom(atomName, FALSE, VERSIONED_ATOM, 1);
 }
@@ -132,7 +136,7 @@ static char* find_atom_value(const char* meta) {
  * Open and scan the metadata of the m4a/mp4/... file
  * and populate the given track.
  */
-void AP_extract_metadata(const char *filePath, Track *track) {
+void AP_read_metadata(const char *filePath, Track *track) {
     FILE *mp4File;
     Trackage *trackage;
     uint8_t track_cur;
@@ -359,29 +363,11 @@ void AP_extract_metadata(const char *filePath, Track *track) {
             free(value);
         }
 
-
-        fprintf(stdout, "Track title = %s\n", track->title);
-        fprintf(stdout, "Track artist = %s\n", track->artist);
-        fprintf(stdout, "Track album artist = %s\n", track->albumartist);
-        fprintf(stdout, "Track composer = %s\n", track->composer);
-        fprintf(stdout, "Track comment = %s\n", track->comment);
-        fprintf(stdout, "Track year = %d\n", track->year);
-        fprintf(stdout, "Track album = %s\n", track->album);
-        fprintf(stdout, "Track no. = %d\n", track->track_nr);
-        fprintf(stdout, "Track total = %d\n", track->tracks);
-        fprintf(stdout, "Disk no. = %d\n", track->cd_nr);
-        fprintf(stdout, "Disk total = %d\n", track->cds);
-        fprintf(stdout, "Track Grouping = %s\n", track->grouping);
-        fprintf(stdout, "Track genre = %s\n", track->genre);
-        fprintf(stdout, "Track BPM = %d\n", track->BPM);
-        fprintf(stdout, "Track Lyrics = %d\n", track->lyrics_flag);
-        fprintf(stdout, "Track tv show = %s\n", track->tvshow);
-        fprintf(stdout, "Track season no. = %d\n", track->season_nr);
-        fprintf(stdout, "Track episode no. = %d\n", track->episode_nr);
-        fprintf(stdout, "Track episode = %s\n", track->tvepisode);
-        fprintf(stdout, "Track network name = %s\n", track->tvnetwork);
-        fprintf(stdout, "Track media type = %d\n", track->mediatype);
-        fprintf(stdout, "Track compilation = %d\n", track->compilation);
+        value = find_atom_value(GAPLESS_FLAG);
+        if (value) {
+            track->gapless_track_flag = atoi(value);
+            free(value);
+        }
 
         if (prefs_get_int("coverart_apic")) {
             gchar *tmp_file_prefix = g_build_filename(g_get_tmp_dir(), "ttt", NULL);
@@ -398,14 +384,6 @@ void AP_extract_metadata(const char *filePath, Track *track) {
 
                     // Set the thumbnail using the tmp file
                     itdb_track_set_thumbnails(track, tmp_file);
-
-                    if (track->artwork) {
-                        fprintf(stdout, "Track has artwork");
-                    }
-                    else {
-                        fprintf(stdout, "No artwork applied to track");
-                    }
-
                     g_remove(tmp_file);
                 }
 
@@ -428,20 +406,22 @@ char *AP_read_lyrics(const char *filePath, GError **error) {
 
     char *value = find_atom_value(LYRICS);
 
-    fprintf(stdout, "Value of lyrics is %s\n", value);
-
     APar_FreeMemory();
 
     return value;
 }
 
 static void write_lyrics_internal(const char* lyrics, const char *filePath, GError **error) {
+    gchar *atom = g_strdup_printf("%s.%s.%s", ILST_FULL_ATOM, LYRICS, DATA);
+
     if (!lyrics || strlen(lyrics) == 0)
-        APar_RemoveAtom("moov.udta.meta.ilst.\251lyr.data", VERSIONED_ATOM, 0);
+        APar_RemoveAtom(atom, VERSIONED_ATOM, 0);
     else {
-        short lyricsData_atom = APar_MetaData_atom_Init("moov.udta.meta.ilst.\251lyr.data", lyrics, AtomFlags_Data_Text);
+        short lyricsData_atom = APar_MetaData_atom_Init(atom, lyrics, AtomFlags_Data_Text);
         APar_Unified_atom_Put(lyricsData_atom, lyrics, UTF8_iTunesStyle_Unlimited, 0, 0);
     }
+
+    g_free(atom);
 }
 
 void AP_write_lyrics(const char *lyrics, const char *filePath, GError **error) {
@@ -452,7 +432,7 @@ void AP_write_lyrics(const char *lyrics, const char *filePath, GError **error) {
 static void set_limited_text_atom_value(const char *meta, const char *value) {
     char atomName[100];
 
-    sprintf(atomName, "moov.udta.meta.ilst.%s.data", meta);
+    sprintf(atomName, "%s.%s.%s", ILST_FULL_ATOM, meta, DATA);
 
     if (!value || strlen(value) == 0)
         APar_RemoveAtom(atomName, VERSIONED_ATOM, 0);
@@ -468,16 +448,16 @@ static void set_limited_text_atom_value(const char *meta, const char *value) {
  */
 void AP_write_metadata(Track *track, const char *filePath, GError **error) {
     ExtraTrackData *etr;
+    gchar *atom;
     gchar *value;
 
-    g_return_if_fail (track);
+    g_return_if_fail(track);
 
     APar_ScanAtoms(filePath);
 
     if (metadata_style != ITUNES_STYLE) {
         gchar *fbuf = charset_to_utf8(filePath);
-        gtkpod_log_error(error,
-                g_strdup_printf(_("ERROR %s is not itunes style."), fbuf));
+        gtkpod_log_error(error, g_strdup_printf(_("ERROR %s is not itunes style."), fbuf));
         g_free(fbuf);
         return;
     }
@@ -491,33 +471,42 @@ void AP_write_metadata(Track *track, const char *filePath, GError **error) {
     // Album Artist
     set_limited_text_atom_value(ALBUM_ARTIST, track->albumartist);
 
+    // Album
+    set_limited_text_atom_value(ALBUM, track->album);
+
     // Genre
     APar_MetaData_atomGenre_Set(track->genre);
 
     // Track Number and Total
+    atom = g_strdup_printf("%s.%s.%s", ILST_FULL_ATOM, TRACK_NUM_AND_TOTAL, DATA);
     if (track->track_nr == 0) {
-        APar_RemoveAtom("moov.udta.meta.ilst.trkn.data", VERSIONED_ATOM, 0);
-    } else {
+        APar_RemoveAtom(atom, VERSIONED_ATOM, 0);
+    }
+    else {
         gchar *track_info = g_strdup_printf("%d / %d", track->track_nr, track->tracks);
-        short tracknumData_atom = APar_MetaData_atom_Init("moov.udta.meta.ilst.trkn.data", track_info, AtomFlags_Data_Binary);
+        short tracknumData_atom = APar_MetaData_atom_Init(atom, track_info, AtomFlags_Data_Binary);
         APar_Unified_atom_Put(tracknumData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, 0, 16);
         APar_Unified_atom_Put(tracknumData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, track->track_nr, 16);
         APar_Unified_atom_Put(tracknumData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, track->tracks, 16);
         APar_Unified_atom_Put(tracknumData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, 0, 16);
         g_free(track_info);
     }
+    g_free(atom);
 
     // Disk Number and Total
+    atom = g_strdup_printf("%s.%s.%s", ILST_FULL_ATOM, DISK_NUM_AND_TOTAL, DATA);
     if (track->cd_nr == 0) {
-        APar_RemoveAtom("moov.udta.meta.ilst.disk.data", VERSIONED_ATOM, 0);
-    } else {
+        APar_RemoveAtom(atom, VERSIONED_ATOM, 0);
+    }
+    else {
         gchar *disk_info = g_strdup_printf("%d / %d", track->cd_nr, track->cds);
-        short disknumData_atom = APar_MetaData_atom_Init("moov.udta.meta.ilst.disk.data", disk_info, AtomFlags_Data_Binary);
+        short disknumData_atom = APar_MetaData_atom_Init(atom, disk_info, AtomFlags_Data_Binary);
         APar_Unified_atom_Put(disknumData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, 0, 16);
         APar_Unified_atom_Put(disknumData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, track->cd_nr, 16);
         APar_Unified_atom_Put(disknumData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, track->cds, 16);
         g_free(disk_info);
     }
+    g_free(atom);
 
     // Comment
     set_limited_text_atom_value(COMMENT, track->comment);
@@ -556,55 +545,69 @@ void AP_write_metadata(Track *track, const char *filePath, GError **error) {
     set_limited_text_atom_value(TV_EPISODE, track->tvepisode);
 
     // Compilation
-    if (! track->compilation) {
-        APar_RemoveAtom("moov.udta.meta.ilst.cpil.data", VERSIONED_ATOM, 0);
-    } else {
+    atom = g_strdup_printf("%s.%s.%s", ILST_FULL_ATOM, COMPILATION, DATA);
+    if (!track->compilation) {
+        APar_RemoveAtom(atom, VERSIONED_ATOM, 0);
+    }
+    else {
         //compilation: [0, 0, 0, 0,   boolean_value]; BUT that first uint32_t is already accounted for in APar_MetaData_atom_Init
         value = g_strdup_printf("%d", track->compilation);
-        short compilationData_atom = APar_MetaData_atom_Init("moov.udta.meta.ilst.cpil.data", value, AtomFlags_Data_UInt);
+        short compilationData_atom = APar_MetaData_atom_Init(atom, value, AtomFlags_Data_UInt);
         APar_Unified_atom_Put(compilationData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, 1, 8); //a hard coded uint8_t of: 1 is compilation
         g_free(value);
     }
+    g_free(atom);
 
     // Tempo / BPM
-    if (! track->BPM) {
-        APar_RemoveAtom("moov.udta.meta.ilst.tmpo.data", VERSIONED_ATOM, 0);
-    } else {
+    atom = g_strdup_printf("%s.%s.%s", ILST_FULL_ATOM, TEMPO, DATA);
+    if (!track->BPM) {
+        APar_RemoveAtom(atom, VERSIONED_ATOM, 0);
+    }
+    else {
         //bpm is [0, 0, 0, 0,   0, bpm_value]; BUT that first uint32_t is already accounted for in APar_MetaData_atom_Init
         value = g_strdup_printf("%d", track->BPM);
-        short bpmData_atom = APar_MetaData_atom_Init("moov.udta.meta.ilst.tmpo.data", value, AtomFlags_Data_UInt);
+        short bpmData_atom = APar_MetaData_atom_Init(atom, value, AtomFlags_Data_UInt);
         APar_Unified_atom_Put(bpmData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, track->BPM, 16);
         g_free(value);
     }
+    g_free(atom);
 
     // Media Type
+    atom = g_strdup_printf("%s.%s.%s", ILST_FULL_ATOM, MEDIA_TYPE, DATA);
     guint8 mediaTypeTag = mediaTypeToMediaTypeTag(track->mediatype);
     value = g_strdup_printf("%d", track->season_nr);
-    short stikData_atom = APar_MetaData_atom_Init("moov.udta.meta.ilst.stik.data", value, AtomFlags_Data_UInt);
+    short stikData_atom = APar_MetaData_atom_Init(atom, value, AtomFlags_Data_UInt);
     APar_Unified_atom_Put(stikData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, mediaTypeTag, 8);
     g_free(value);
+    g_free(atom);
 
     // TV Season No.
+    atom = g_strdup_printf("%s.%s.%s", ILST_FULL_ATOM, TV_SEASON_NO, DATA);
     if (track->season_nr == 0) {
-        APar_RemoveAtom("moov.udta.meta.ilst.tvsn.data", VERSIONED_ATOM, 0);
-    } else {
+        APar_RemoveAtom(atom, VERSIONED_ATOM, 0);
+    }
+    else {
         value = g_strdup_printf("%d", track->season_nr);
-        short tvseasonData_atom = APar_MetaData_atom_Init("moov.udta.meta.ilst.tvsn.data", value, AtomFlags_Data_UInt);
+        short tvseasonData_atom = APar_MetaData_atom_Init(atom, value, AtomFlags_Data_UInt);
         APar_Unified_atom_Put(tvseasonData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, 0, 16);
         APar_Unified_atom_Put(tvseasonData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, track->season_nr, 16);
         g_free(value);
     }
+    g_free(atom);
 
     // TV Episode No.
-    if(track->episode_nr == 0) {
-        APar_RemoveAtom("moov.udta.meta.ilst.tves.data", VERSIONED_ATOM, 0);
-    } else {
+    atom = g_strdup_printf("%s.%s.%s", ILST_FULL_ATOM, TV_EPISODE_NO, DATA);
+    if (track->episode_nr == 0) {
+        APar_RemoveAtom(atom, VERSIONED_ATOM, 0);
+    }
+    else {
         value = g_strdup_printf("%d", track->episode_nr);
-        short tvepisodenumData_atom = APar_MetaData_atom_Init("moov.udta.meta.ilst.tves.data", value, AtomFlags_Data_UInt);
+        short tvepisodenumData_atom = APar_MetaData_atom_Init(atom, value, AtomFlags_Data_UInt);
         APar_Unified_atom_Put(tvepisodenumData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, 0, 16);
         APar_Unified_atom_Put(tvepisodenumData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, track->episode_nr, 16);
         g_free(value);
     }
+    g_free(atom);
 
     // Keywords
     set_limited_text_atom_value(KEYWORD, track->keywords);
@@ -613,51 +616,58 @@ void AP_write_metadata(Track *track, const char *filePath, GError **error) {
     set_limited_text_atom_value(CATEGORY, track->category);
 
     // Podcast URL
-    if (! track->podcasturl || strlen(track->podcasturl) == 0) {
-        APar_RemoveAtom("moov.udta.meta.ilst.purl.data", VERSIONED_ATOM, 0);
-    } else {
-        short podcasturlData_atom = APar_MetaData_atom_Init("moov.udta.meta.ilst.purl.data", track->podcasturl, AtomFlags_Data_Binary);
+    atom = g_strdup_printf("%s.%s.%s", ILST_FULL_ATOM, PODCAST_URL, DATA);
+    if (!track->podcasturl || strlen(track->podcasturl) == 0) {
+        APar_RemoveAtom(atom, VERSIONED_ATOM, 0);
+    }
+    else {
+        short podcasturlData_atom = APar_MetaData_atom_Init(atom, track->podcasturl, AtomFlags_Data_Binary);
         APar_Unified_atom_Put(podcasturlData_atom, track->podcasturl, UTF8_iTunesStyle_Binary, 0, 0);
     }
+    g_free(atom);
 
     // Gapless Playback
-    if (! track->gapless_track_flag) {
-        APar_RemoveAtom("moov.udta.meta.ilst.pgap.data", VERSIONED_ATOM, 0);
-    } else {
+    atom = g_strdup_printf("%s.%s.%s", ILST_FULL_ATOM, GAPLESS_FLAG, DATA);
+    if (!track->gapless_track_flag) {
+        APar_RemoveAtom(atom, VERSIONED_ATOM, 0);
+    }
+    else {
         value = g_strdup_printf("%d", track->gapless_track_flag);
-        short gaplessData_atom = APar_MetaData_atom_Init("moov.udta.meta.ilst.pgap.data", value, AtomFlags_Data_UInt);
+        short gaplessData_atom = APar_MetaData_atom_Init(atom, value, AtomFlags_Data_UInt);
         APar_Unified_atom_Put(gaplessData_atom, NULL, UTF8_iTunesStyle_256glyphLimited, 1, 8); //a hard coded uint8_t of: 1 is gapl
         g_free(value);
     }
+    g_free(atom);
 
-    GdkPixbuf *pixbuf = (GdkPixbuf*) itdb_artwork_get_pixbuf(track->itdb->device, track->artwork, -1, -1);
-    if (! pixbuf) {
-        // Destroy any existing artwork if any
-        APar_MetaData_atomArtwork_Set("REMOVE_ALL", NULL);
-    }
-    else {
-        gchar *tmp_file = g_build_filename(g_get_tmp_dir(), "ttt.jpg", NULL);
-        GError *pixbuf_err = NULL;
-
-        gdk_pixbuf_save (pixbuf, tmp_file, "jpeg", &pixbuf_err, "quality", "100", NULL);
-
-        if (!pixbuf_err) {
-            APar_MetaData_atomArtwork_Set(tmp_file, NULL);
-            g_remove(tmp_file);
+    if (prefs_get_int("coverart_apic")) {
+        GdkPixbuf *pixbuf = (GdkPixbuf*) itdb_artwork_get_pixbuf(track->itdb->device, track->artwork, -1, -1);
+        if (!pixbuf) {
+            // Destroy any existing artwork if any
+            APar_MetaData_atomArtwork_Set("REMOVE_ALL", NULL);
         }
         else {
-            gtkpod_log_error(error,
-                    g_strdup_printf(_("ERROR failed to change track file's artwork.")));
-            g_error_free(pixbuf_err);
-            return;
-        }
+            gchar *tmp_file = g_build_filename(g_get_tmp_dir(), "ttt.jpg", NULL);
+            GError *pixbuf_err = NULL;
 
-        g_free(tmp_file);
-        g_object_unref(pixbuf);
+            gdk_pixbuf_save(pixbuf, tmp_file, "jpeg", &pixbuf_err, "quality", "100", NULL);
+
+            if (!pixbuf_err) {
+                APar_MetaData_atomArtwork_Set(tmp_file, NULL);
+                g_remove(tmp_file);
+            }
+            else {
+                gtkpod_log_error(error, g_strdup_printf(_("ERROR failed to change track file's artwork.")));
+                g_error_free(pixbuf_err);
+                return;
+            }
+
+            g_free(tmp_file);
+            g_object_unref(pixbuf);
+        }
     }
 
-    //after all the modifications are enacted on the tree in memory
-    // THEN write out the changes
+    // after all the modifications are enacted on the tree in memory
+    // then write out the changes
     APar_DetermineAtomLengths();
     openSomeFile(filePath, true);
     APar_WriteFile(filePath, NULL, true);

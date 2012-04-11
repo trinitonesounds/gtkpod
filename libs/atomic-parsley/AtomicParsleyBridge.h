@@ -38,7 +38,7 @@
 #ifdef __cplusplus
 extern "C"
 #endif
-void AP_extract_metadata(const char *filePath, Track *track);
+void AP_read_metadata(const char *filePath, Track *track);
 
 /**
  * Using the given track, set the metadata of the target

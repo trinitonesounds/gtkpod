@@ -68,13 +68,12 @@ Track *m4a_get_file_info(const gchar *m4aFileName, GError **error) {
     Track *track = NULL;
 
     g_return_val_if_fail(m4aFileName, NULL);
-    g_message("Track Name: %s", m4aFileName);
 
     track = gp_track_new();
 
     m4a_set_media_type(m4aFileName, track);
 
-    AP_extract_metadata(m4aFileName, track);
+    AP_read_metadata(m4aFileName, track);
 
     return track;
 }
@@ -95,10 +94,6 @@ gboolean m4a_write_lyrics(const gchar *m4aFileName, const gchar *lyrics, GError 
     AP_write_lyrics(lyrics, m4aFileName, error);
 
     return error ? TRUE : FALSE;
-}
-
-gboolean m4a_read_gapless(const gchar *filename, Track *track, GError **error) {
-    return FALSE;
 }
 
 gboolean m4a_can_convert() {
