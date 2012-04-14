@@ -26,6 +26,7 @@ AM_INIT_AUTOMAKE([1.9 tar-ustar])
 AM_MAINTAINER_MODE
 
 AC_PROG_CC
+AC_PROG_CXX
 
 LT_PATH_LD
 AC_HEADER_STDC
@@ -123,7 +124,6 @@ CFLAGS="$CFLAGS -std=gnu99 -Werror-implicit-function-declaration"
 
 CFLAGS="$CFLAGS $GTK_CFLAGS $GLIB_CFLAGS $GDK_CFLAGS $GMODULE_CFLAGS $GTHREAD_CFLAGS $LIBGLADE_CFLAGS $LIBGPOD_CFLAGS $LIBANJUTA_CFLAGS $LIBGDL_CFLAGS $LIBXML_CFLAGS $ID3TAG_CFLAGS $GTK_CLEANLINESS_FLAGS"
 LIBS="$LIBS $GTK_LIBS $GLIB_LIBS $GDK_LIBS $GMODULE_LIBS $GTHREAD_LIBS $LIBGLADE_LIBS $LIBGPOD_LIBS $LIBANJUTA_LIBS $LIBGDL_LIBS $LIBXML_LIBS $ID3TAG_LIBS"
-
 
 dnl we need 'flex'
 AM_PROG_LEX
@@ -307,20 +307,15 @@ fi
 
 dnl Checks for MP4 and M4A plugins
 dnl -------------------------------------------------------------
-AC_CHECK_HEADERS([mp4v2/mp4v2.h], have_mp4=yes, have_mp4=no)
-if test "x$have_mp4" = "xno"; then
-	dnl rollback to older mp4 library - should help with distros
-	dnl not using 1.9.1 of the mp4v2 library
-	AC_CHECK_HEADERS([mp4.h], have_mp4=yes, have_mp4=no)
+AC_ARG_WITH(mp4, AS_HELP_STRING([--without-mp4],[Disable mp4/m4a support]))
+have_mp4="yes"
+if test "xwith_mp4" = "xno"; then
+	have_mp4="no"
 fi
-AC_CHECK_HEADERS([mp4v2/itmf_tags.h], [], [],
-		 [#ifdef HAVE_MP4V2_PLATFORM_H
-		  # include <mp4v2/platform.h>
-		  #endif
-		  typedef void* MP4FileHandle;
-		 ])
 AM_CONDITIONAL(HAVE_PLUGIN_FILETYPE_MP4, test "x$have_mp4" = "xyes")
-
+if test "x$have_mp4" = "xyes"; then
+    AC_DEFINE(HAVE_PLUGIN_FILETYPE_MP4, 1, [Define if you have mp4 support])
+fi
 
 dnl Check for faad for use filetype_m4a plugin
 dnl -------------------------------------------------------------
@@ -469,6 +464,8 @@ data/ui/Makefile
 doc/Makefile
 doc/figures/Makefile
 libgtkpod/Makefile
+libs/Makefile
+libs/atomic-parsley/Makefile
 plugins/Makefile
 plugins/filetype_mp3/Makefile
 plugins/filetype_ogg/Makefile

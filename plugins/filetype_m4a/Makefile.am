@@ -30,15 +30,16 @@ plugin_LTLIBRARIES = libfiletype_m4a.la
 
 # Plugin sources
 libfiletype_m4a_la_SOURCES = plugin.c plugin.h \
-							  m4afile.c m4afile.h \
-							  mp4file.c mp4file.h
+							  m4afile.c m4afile.h
 
+libfiletype_m4a_la_CFLAGS = -I $(top_srcdir)/libs/atomic-parsley
 libfiletype_m4a_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
 # Plugin dependencies
 libfiletype_m4a_la_LIBADD = \
     $(GTKPOD_LIBS) \
-    $(LIBANJUTA_LIBS)
+    $(LIBANJUTA_LIBS) \
+    $(top_builddir)/libs/atomic-parsley/libatomicparsley.la
 
 endif
 

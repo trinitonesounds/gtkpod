@@ -45,8 +45,6 @@ static gboolean activate_plugin(AnjutaPlugin *plugin) {
     mp4_filetype_plugin = (MP4FileTypePlugin*) plugin;
     g_return_val_if_fail(FILE_IS_TYPE(mp4_filetype_plugin), TRUE);
 
-    mp4_init();
-
     gtkpod_register_filetype(FILE_TYPE(mp4_filetype_plugin));
 
     return TRUE; /* FALSE if activation failed */
@@ -57,8 +55,6 @@ static gboolean deactivate_plugin(AnjutaPlugin *plugin) {
 
     mp4_filetype_plugin = (MP4FileTypePlugin*) plugin;
     gtkpod_unregister_filetype(FILE_TYPE(mp4_filetype_plugin));
-
-    mp4_close();
 
     /* FALSE if plugin doesn't want to deactivate */
     return TRUE;
@@ -86,7 +82,7 @@ static void mp4_filetype_iface_init(FileTypeInterface *iface) {
 
     iface->get_file_info = mp4_get_file_info;
     iface->write_file_info = mp4_write_file_info;
-    iface->read_soundcheck = mp4_read_soundcheck;
+    iface->read_soundcheck = filetype_no_soundcheck;
     iface->read_lyrics = filetype_no_read_lyrics;
     iface->write_lyrics = filetype_no_write_lyrics;
     iface->read_gapless = filetype_no_read_gapless;

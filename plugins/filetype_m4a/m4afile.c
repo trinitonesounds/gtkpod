@@ -35,20 +35,52 @@
 #include "libgtkpod/prefs.h"
 #include "plugin.h"
 #include "m4afile.h"
-#include "mp4file.h"
+#include "libs/atomic-parsley/AtomicParsleyBridge.h"
 
 /* Info on how to implement new file formats: see mp3file.c for more info */
 
+static void m4a_set_media_type(const gchar *m4aFileName, Track *track) {
+    gchar *value;
+
+    value = strrchr(m4aFileName, '.');
+    if (value) {
+        if (g_ascii_strcasecmp(value, ".m4a") == 0) {
+            track->mediatype = ITDB_MEDIATYPE_AUDIO;
+            track->filetype = g_strdup(_("AAC audio file"));
+        }
+        else if (g_ascii_strcasecmp(value, ".m4p") == 0) {
+            track->mediatype = ITDB_MEDIATYPE_AUDIO;
+            track->filetype = g_strdup(_("Protected AAC audio file"));
+        }
+        else if (g_ascii_strcasecmp(value, ".m4b") == 0) {
+            track->mediatype = ITDB_MEDIATYPE_AUDIOBOOK;
+            track->filetype = g_strdup(_("AAC audio book file"));
+        }
+        else if (g_ascii_strcasecmp(value, ".mp4") == 0) {
+            track->mediatype = ITDB_MEDIATYPE_MOVIE;
+            track->movie_flag = 0x01;
+            track->filetype = g_strdup(_("MP4 video file"));
+        }
+    }
+}
+
 Track *m4a_get_file_info(const gchar *m4aFileName, GError **error) {
-    return mp4_get_file_info(m4aFileName, error);
+    Track *track = NULL;
+
+    g_return_val_if_fail(m4aFileName, NULL);
+    g_message("Track Name: %s", m4aFileName);
+
+    track = gp_track_new();
+
+    m4a_set_media_type(m4aFileName, track);
+
+    AP_extract_metadata(m4aFileName, track);
+
+    return track;
 }
 
 gboolean m4a_write_file_info(const gchar *filename, Track *track, GError **error) {
-    return mp4_write_file_info(filename, track, error);
-}
-
-gboolean m4a_read_soundcheck(const gchar *filename, Track *track, GError **error) {
-    return mp4_read_soundcheck(filename, track, error);
+    return FALSE;
 }
 
 gboolean m4a_can_convert() {

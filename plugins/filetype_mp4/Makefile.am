@@ -32,12 +32,14 @@ plugin_LTLIBRARIES = libfiletype_mp4.la
 libfiletype_mp4_la_SOURCES = plugin.c plugin.h \
 							  mp4file.c mp4file.h
 
+libfiletype_mp4_la_CFLAGS = -I $(top_srcdir)/libs/atomic-parsley
 libfiletype_mp4_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
 # Plugin dependencies
 libfiletype_mp4_la_LIBADD = \
     $(GTKPOD_LIBS) \
-    $(LIBANJUTA_LIBS)
+    $(LIBANJUTA_LIBS) \
+    $(top_builddir)/libs/atomic-parsley/libatomicparsley.la
 
 endif
 

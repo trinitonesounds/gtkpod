@@ -32,9 +32,6 @@
 
 #include "libgtkpod/itdb.h"
 
-void mp4_init();
-void mp4_close();
-
 gboolean mp4_write_file_info (const gchar *filename, Track *track, GError **error);
 Track *mp4_get_file_info (const gchar *name, GError **error);
 gboolean mp4_read_soundcheck (const gchar *filename, Track *track, GError **error);
