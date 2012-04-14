@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = libgtkpod src po scripts data icons doc plugins
+SUBDIRS = libgtkpod libs src po scripts data icons doc plugins
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgtkpod-1.1.0.pc
