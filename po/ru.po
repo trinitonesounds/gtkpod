@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-20 10:57+0000\n"
+"POT-Creation-Date: 2012-04-15 00:44+0100\n"
 "PO-Revision-Date: 2010-08-08 21:16+0700\n"
 "Last-Translator: Matvey Kozhev <sikon@lucidfox.org>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Manage music and video on an Apple iPod"
 msgstr "Менеджер музыки и видео для Apple iPod"
 
-#: ../data/gtkpod.desktop.in.h:2 ../src/main.c:67
+#: ../data/gtkpod.desktop.in.h:2 ../src/main.c:95
 msgid "gtkpod"
 msgstr "gtkpod"
 
@@ -1195,6 +1195,11 @@ msgstr "Записывается база данных \"%s\". Пожалуйс�
 msgid "Extended information file not deleted: '%s'"
 msgstr "Файл расширенных сведений не удалён: \"%s\""
 
+#: ../libgtkpod/file_itunesdb.c:1754
+#, c-format
+msgid "Backup database could not be found so backing up database to %s\n"
+msgstr ""
+
 #: ../libgtkpod/file_itunesdb.c:1860
 #, c-format
 msgid "%s: Database saved"
@@ -1442,7 +1447,7 @@ msgstr[1] "Удалить дорожки из локальной базы дан
 msgstr[2] "Удалить дорожки из локальной базы данных?"
 
 #: ../libgtkpod/misc_conversion.c:60
-#: ../plugins/sorttab_display/normal_sorttab_page.c:938
+#: ../plugins/sorttab_display/normal_sorttab_page.c:934
 msgid "All"
 msgstr "Все"
 
@@ -1451,6 +1456,7 @@ msgstr "Все"
 #: ../plugins/core_preferences/core_prefs.xml.h:24
 #: ../plugins/playlist_display/playlist_display_spl.c:78
 #: ../plugins/sorttab_display/sorttab_widget.c:241
+#: ../plugins/sjcd/egg-play-preview.c:199
 msgid "Album"
 msgstr "Альбом"
 
@@ -1458,6 +1464,8 @@ msgstr "Альбом"
 #: ../plugins/core_preferences/core_prefs.xml.h:29
 #: ../plugins/playlist_display/playlist_display_spl.c:79
 #: ../plugins/sorttab_display/sorttab_widget.c:238
+#: ../plugins/sjcd/egg-play-preview.c:189 ../plugins/sjcd/sj-main.c:521
+#: ../plugins/sjcd/sj-main.c:1542
 msgid "Artist"
 msgstr "Исполнитель"
 
@@ -1465,6 +1473,8 @@ msgstr "Исполнитель"
 #: ../plugins/core_preferences/core_prefs.xml.h:89
 #: ../plugins/playlist_display/playlist_display_spl.c:77
 #: ../plugins/sorttab_display/sorttab_widget.c:250
+#: ../plugins/sjcd/egg-play-preview.c:179 ../plugins/sjcd/sj-main.c:515
+#: ../plugins/sjcd/sj-main.c:1533
 msgid "Title"
 msgstr "Название"
 
@@ -1673,7 +1683,7 @@ msgstr "Номер сезона"
 msgid "Episode Nr"
 msgstr "Номер серии"
 
-#: ../libgtkpod/misc_conversion.c:107
+#: ../libgtkpod/misc_conversion.c:107 ../plugins/sjcd/sj-prefs.c:57
 msgid "Album Artist"
 msgstr "Художник обложки"
 
@@ -1927,7 +1937,7 @@ msgstr "Повисшие дорожки без файлов на ПК были �
 msgid "Dangling tracks with files on PC were handled."
 msgstr "Повисшие дорожки без файлов на ПК были обработаны."
 
-#: ../libgtkpod/misc_playlist.c:789
+#: ../libgtkpod/misc_playlist.c:789 ../plugins/sjcd/sj-main.c:1518
 msgid "Track"
 msgstr "Дорожка"
 
@@ -2412,12 +2422,12 @@ msgstr "Никаких изменений не произошло.\n"
 msgid "Sync summary"
 msgstr "Сводная информация о синхронизации"
 
-#: ../libgtkpod/tools.c:116
-#, c-format
+#: ../libgtkpod/tools.c:118
+#, fuzzy, c-format
 msgid ""
 "Could not find '%s'.\n"
-"Please specifiy the exact path in the Tools section of the preference dialog "
-"or install the program if it is not installed on your system.\n"
+"Please specifiy the exact path in the preference dialog or install the "
+"program if it is not installed on your system.\n"
 "\n"
 msgstr ""
 "Не удалось найти \"%s\".\n"
@@ -2425,7 +2435,7 @@ msgstr ""
 "настроекили установите программу, если она не установлена на вашей системе.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:200
+#: ../libgtkpod/tools.c:217
 #, c-format
 msgid ""
 "Execution of '%s' failed.\n"
@@ -2434,14 +2444,14 @@ msgstr ""
 "Ошибка при исполнении \"%s\".\n"
 "\n"
 
-#: ../libgtkpod/tools.c:236
+#: ../libgtkpod/tools.c:255
 #, fuzzy, c-format
 msgid "Normalization failed: file not available (%s)."
 msgstr ""
 "Нормализация завершена неуспешно: файл недоступен (%s).\n"
 "\n"
 
-#: ../libgtkpod/tools.c:250
+#: ../libgtkpod/tools.c:270
 #, c-format
 msgid ""
 "Normalization failed for file %s: file type not supported.To normalize mp3 "
@@ -2451,36 +2461,36 @@ msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/tools.c:296
+#: ../libgtkpod/tools.c:316
 #, fuzzy
 msgid "Normalization Errors"
 msgstr "Нормализация..."
 
 #. title
-#: ../libgtkpod/tools.c:297
+#: ../libgtkpod/tools.c:317
 msgid "Errors created by track normalisation"
 msgstr ""
 
-#: ../libgtkpod/tools.c:393
+#: ../libgtkpod/tools.c:414
 #, fuzzy, c-format
 msgid "'%s-%s' (%s) could not be normalized. %s\n"
 msgstr ""
 "'%s-%s' (%s) не может быть нормализован.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:396
+#: ../libgtkpod/tools.c:419
 #, fuzzy, c-format
 msgid "'%s-%s' (%s) could not be normalized. Unknown error.\n"
 msgstr ""
 "'%s-%s' (%s) не может быть нормализован.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:412
+#: ../libgtkpod/tools.c:436
 #, fuzzy, c-format
 msgid "%d%% (%d tracks left)"
 msgstr "%d%% (%d:%02d:%02d осталось)"
 
-#: ../libgtkpod/tools.c:423
+#: ../libgtkpod/tools.c:447
 #, fuzzy, c-format
 msgid "Normalized %d of %d track."
 msgid_plural "Normalized %d of %d tracks."
@@ -2488,7 +2498,7 @@ msgstr[0] "Нормализовано %d из %d дорожек."
 msgstr[1] "Нормализовано %d из %d дорожек."
 msgstr[2] "Нормализовано %d из %d дорожек."
 
-#: ../libgtkpod/tools.c:440
+#: ../libgtkpod/tools.c:464
 #, c-format
 msgid "Normalized %d of %d tracks."
 msgid_plural "Normalized %d of %d tracks."
@@ -2496,7 +2506,7 @@ msgstr[0] "Нормализовано %d из %d дорожек."
 msgstr[1] "Нормализовано %d из %d дорожек."
 msgstr[2] "Нормализовано %d из %d дорожек."
 
-#: ../libgtkpod/tools.c:531
+#: ../libgtkpod/tools.c:554
 msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
@@ -2504,7 +2514,7 @@ msgstr ""
 "Пожалуйста, задайте команду для вызова в разделе \"Инструменты\"диалога "
 "настроек.\n"
 
-#: ../libgtkpod/tools.c:542
+#: ../libgtkpod/tools.c:565
 #, c-format
 msgid ""
 "Could not find the command '%s'.\n"
@@ -2515,7 +2525,7 @@ msgstr ""
 "Не удалось найти команду \"%s\".\n"
 "Пожалуйста, проверьте настройку в разделе \"Инструменты\"диалога настроек.\n"
 
-#: ../libgtkpod/tools.c:583
+#: ../libgtkpod/tools.c:606
 #, c-format
 msgid ""
 "'%s' returned the following output:\n"
@@ -2523,6 +2533,16 @@ msgid ""
 msgstr ""
 "\"%s\" вернул следующий вывод:\n"
 "%s\n"
+
+#: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:460
+#, c-format
+msgid "ERROR %s is not itunes style."
+msgstr ""
+
+#: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:659
+#, c-format
+msgid "ERROR failed to change track file's artwork."
+msgstr ""
 
 #: ../plugins/filetype_video/videofile.c:47
 #, fuzzy
@@ -3776,91 +3796,25 @@ msgstr ""
 msgid "Support for the m4a / m4p file type"
 msgstr ""
 
-#: ../plugins/filetype_m4a/mp4file.c:548 ../plugins/filetype_mp4/mp4file.c:548
-#, fuzzy, c-format
-msgid ""
-"m4a/m4p/m4b/mp4 soundcheck update for '%s' failed: m4a/m4p/m4b/mp4 not "
-"supported without the mp4v2 library. You must install the mp4v2 library.\n"
-msgstr ""
-"Обновление soundcheck M4A/M4P/M4B для \"%s\" завершилось неуспешно: M4A/M4P/"
-"M4B не поддерживается без библиотеки mp4v2. Вы должны установить библиотеку "
-"mp4v2.\n"
-
-#: ../plugins/filetype_m4a/mp4file.c:583 ../plugins/filetype_mp4/mp4file.c:583
-#, fuzzy, c-format
-msgid "'%s' does not appear to be a m4a/m4b/m4v/mp4 audio or video file.\n"
-msgstr "\"%s\" не похож на видео- или аудиофайл MP4.\n"
-
-#: ../plugins/filetype_m4a/mp4file.c:591 ../plugins/filetype_mp4/mp4file.c:591
-#, fuzzy, c-format
-msgid ""
-"Could not open '%s' for reading, or file is not an m4a/m4b/m4v/mp4 file.\n"
-msgstr ""
-"Не удалось открыть \"%s\" для чтения или файл не является MP4-файлом.\n"
-
-#: ../plugins/filetype_m4a/mp4file.c:600 ../plugins/filetype_mp4/mp4file.c:600
-#, fuzzy, c-format
-msgid ""
-"Import of '%s' failed: file type not supported without the mp4v2 library. "
-"You must install the mp4v2 library.\n"
-msgstr ""
-"Импорт \"%s\" завершился неуспешно: M4A/M4P/M4B не поддерживается без "
-"библиотеки mp4v2. Вы должны установить библиотеку mp4v2.\n"
-
-#: ../plugins/filetype_m4a/mp4file.c:701 ../plugins/filetype_mp4/mp4file.c:701
+#: ../plugins/filetype_m4a/m4afile.c:49 ../plugins/filetype_mp4/mp4file.c:128
 #, fuzzy
 msgid "AAC audio file"
 msgstr "Тип файла"
 
-#: ../plugins/filetype_m4a/mp4file.c:703 ../plugins/filetype_mp4/mp4file.c:703
+#: ../plugins/filetype_m4a/m4afile.c:53 ../plugins/filetype_mp4/mp4file.c:132
 msgid "Protected AAC audio file"
 msgstr ""
 
-#: ../plugins/filetype_m4a/mp4file.c:705 ../plugins/filetype_mp4/mp4file.c:705
+#: ../plugins/filetype_m4a/m4afile.c:57 ../plugins/filetype_mp4/mp4file.c:136
 #, fuzzy
 msgid "AAC audio book file"
 msgstr "Аудиокнига"
 
-#: ../plugins/filetype_m4a/mp4file.c:707 ../plugins/filetype_mp4/mp4file.c:707
+#: ../plugins/filetype_m4a/m4afile.c:62 ../plugins/filetype_mp4/mp4file.c:141
 msgid "MP4 video file"
 msgstr ""
 
-#: ../plugins/filetype_m4a/mp4file.c:849 ../plugins/filetype_mp4/mp4file.c:849
-#, fuzzy, c-format
-msgid "'%s' does not appear to be a m4a/m4p/m4b/mp4 audio or video file.\n"
-msgstr "\"%s\" не похож на видео- или аудиофайл MP4.\n"
-
-#: ../plugins/filetype_m4a/mp4file.c:857 ../plugins/filetype_mp4/mp4file.c:857
-#, c-format
-msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
-msgstr ""
-"Не удалось открыть \"%s\" для чтения или файл не является MP4-файлом.\n"
-
-#: ../plugins/filetype_m4a/mp4file.c:867 ../plugins/filetype_mp4/mp4file.c:867
-#, fuzzy, c-format
-msgid ""
-"m4a/m4p/m4b/mp4 metadata update for '%s' failed: m4a/m4p/m4b/mp4 not "
-"supported without the mp4v2 library. You must install the mp4v2 library.\n"
-msgstr ""
-"Обновление метаданных M4A/M4P/M4B для \"%s\" завершилось неуспешно: M4A/M4P/"
-"M4B не поддерживается без библиотеки mp4v2. Вы должны установить библиотеку "
-"mp4v2.\n"
-
-#: ../plugins/filetype_m4a/mp4file.c:990 ../plugins/filetype_mp4/mp4file.c:990
-#, c-format
-msgid ""
-"Only writing to m4a/m4b/m4v/mp4 audio tracks is supported. '%s' is not one "
-"of these file formats.\n"
-msgstr ""
-
-#: ../plugins/filetype_m4a/mp4file.c:999 ../plugins/filetype_mp4/mp4file.c:999
-#, fuzzy, c-format
-msgid ""
-"Could not open '%s' for writing, or file is not an m4a/m4b/m4v/mp4 file.\n"
-msgstr ""
-"Не удалось открыть \"%s\" для записи или файл не является MP4-файлом.\n"
-
-#: ../plugins/filetype_m4a/plugin.c:84
+#: ../plugins/filetype_m4a/plugin.c:79
 msgid "M4A audio file type"
 msgstr ""
 
@@ -3911,7 +3865,7 @@ msgstr ""
 msgid "Support for the MP4 video file type"
 msgstr ""
 
-#: ../plugins/filetype_mp4/plugin.c:82
+#: ../plugins/filetype_mp4/plugin.c:78
 msgid "MP4 video file type"
 msgstr ""
 
@@ -4129,6 +4083,28 @@ msgstr "<b>Метки</b>"
 msgid "<b>%s</b> from %s"
 msgstr ""
 
+#. Translators: %s is an error message
+#: ../plugins/media_player/media_player.c:280
+#, c-format
+msgid "GStreamer thread creation failed: %s\n"
+msgstr ""
+
+#: ../plugins/media_player/media_player.c:337
+msgid "Seek failed!\n"
+msgstr ""
+
+#. Translators: %s is an error message
+#: ../plugins/media_player/media_player.c:390
+#, fuzzy, c-format
+msgid "Failed to play track: %s"
+msgstr "Не удалось задать обложку: \"%s\"\n"
+
+#: ../plugins/media_player/media_player.c:397
+msgid ""
+"Failed to play track: Cannot create a play element. Ensure that all "
+"gstreamer plugins are installed"
+msgstr ""
+
 #: ../plugins/media_player/media_player.xml.h:1
 msgid "Next"
 msgstr ""
@@ -4143,7 +4119,10 @@ msgstr "Воспроизведено"
 msgid "Previous"
 msgstr ""
 
+#. Change the label to Stop while extracting
+#. TODO: find out why GTK+ needs this to work (see #364371)
 #: ../plugins/media_player/media_player.xml.h:4
+#: ../plugins/sjcd/sj-extracting.c:830
 #, fuzzy
 msgid "Stop"
 msgstr "до"
@@ -4573,6 +4552,7 @@ msgstr "_Ограничить"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:66
 #: ../plugins/playlist_display/playlist_display_actions.c:321
+#: ../plugins/sjcd/sj-extracting.c:599
 #, fuzzy, c-format
 msgid "%s\n"
 msgstr "%s - %s"
@@ -4619,6 +4599,7 @@ msgstr "Произошла ошибка при добавлении некото
 
 #: ../plugins/playlist_display/playlist_display_actions.c:212
 #: ../plugins/playlist_display/playlist_display_actions.c:364
+#: ../plugins/sjcd/sj-extracting.c:649
 msgid "Some tracks failed to be added but no errors were reported."
 msgstr ""
 
@@ -4636,11 +4617,13 @@ msgstr "Добавить файлы списка воспроизведения 
 #. gint id,
 #. gboolean modal,
 #: ../plugins/playlist_display/playlist_display_actions.c:350
+#: ../plugins/sjcd/sj-extracting.c:635
 msgid "File Addition Errors"
 msgstr ""
 
 #. title
 #: ../plugins/playlist_display/playlist_display_actions.c:351
+#: ../plugins/sjcd/sj-extracting.c:636
 msgid "Some files were not added successfully"
 msgstr "Произошла ошибка при добавлении некоторых файлов"
 
@@ -5249,7 +5232,8 @@ msgstr "Добавить файлы к \"%s\""
 msgid "  iPod Repositories"
 msgstr "Репозиторий подкастов"
 
-#: ../plugins/playlist_display/plugin.c:437 ../src/anjuta-about.c:165
+#: ../plugins/playlist_display/plugin.c:437 ../plugins/sjcd/plugin.c:124
+#: ../src/anjuta-about.c:165
 #, fuzzy, c-format
 msgid "Couldn't load icon: %s"
 msgstr "Не удалось получить блокировку для \"%s\".\n"
@@ -5949,7 +5933,7 @@ msgstr "Сбор."
 msgid "Copy selected track(s) to"
 msgstr "Копировать выбранные дорожки в..."
 
-#: ../plugins/sorttab_display/normal_sorttab_page.c:965
+#: ../plugins/sorttab_display/normal_sorttab_page.c:961
 msgid "Compilations"
 msgstr "Сборники"
 
@@ -6143,6 +6127,11 @@ msgstr ""
 msgid "Please enter a word for sorting functions to ignore"
 msgstr ""
 
+#: ../plugins/track_display/track_display_preferences.c:254
+#, c-format
+msgid "The word %s is already in the \"Ignored Frequent Word\" list"
+msgstr ""
+
 #: ../plugins/clarity/clarity_dnd_support.c:223
 #, fuzzy, c-format
 msgid "Error occurred dropping an image onto the clarity display: %s\n"
@@ -6153,6 +6142,703 @@ msgstr ""
 #, fuzzy
 msgid "Successfully set new cover art for selected tracks"
 msgstr "Новая обложка успешно установлена для выбранных дорожек"
+
+#: ../plugins/external_player/plugin.c:70
+#, fuzzy
+msgid "External Player"
+msgstr "Тип содержимого"
+
+#: ../plugins/external_player/plugin.c:120
+msgid "Play with preferred app..."
+msgstr ""
+
+#: ../plugins/external_player/plugin.c:135
+#, fuzzy
+msgid "Couldn't load theme media player icon"
+msgstr "Не удалось получить блокировку для \"%s\".\n"
+
+#: ../plugins/external_player/external_player.xml.h:1
+#, fuzzy
+msgid "<b>Player Command</b>"
+msgstr "<b>Отображаемые столбцы</b>"
+
+#: ../plugins/external_player/external_player.xml.h:2
+#, fuzzy
+msgid "Command for 'play'"
+msgstr "Команда \"Воспроизвести сейчас\":"
+
+#: ../plugins/external_player/external_player.xml.h:3
+#, fuzzy
+msgid "External Media Player"
+msgstr "Тип содержимого"
+
+#: ../plugins/sjcd/egg-play-preview.c:169
+msgid "URI"
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:170
+msgid "The URI of the audio file"
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:180
+msgid "The title of the current stream."
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:190
+msgid "The artist of the current stream."
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:200
+#, fuzzy
+msgid "The album of the current stream."
+msgstr "Не удалось создать новый альбом."
+
+#: ../plugins/sjcd/egg-play-preview.c:209
+#, fuzzy
+msgid "Position"
+msgstr "Позиция:"
+
+#: ../plugins/sjcd/egg-play-preview.c:210
+msgid "The position in the current stream in seconds."
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:219 ../plugins/sjcd/sj-main.c:1553
+#, fuzzy
+msgid "Duration"
+msgstr "Сведения"
+
+#: ../plugins/sjcd/egg-play-preview.c:220
+msgid "The duration of the current stream in seconds."
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:463
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:109
+#, fuzzy
+msgid "Unknown Title"
+msgstr "Неизвестно"
+
+#: ../plugins/sjcd/egg-play-preview.c:468
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:113
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:139
+#, fuzzy
+msgid "Unknown Artist"
+msgstr "Неизвестно"
+
+#: ../plugins/sjcd/egg-play-preview.c:469
+#, fuzzy
+msgid "Unknown Album"
+msgstr "Неизвестно"
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:193
+#, fuzzy
+msgid "Audio Profile"
+msgstr "Тип файла"
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:194
+msgid "The GStreamer Encoding Profile used for encoding audio"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:199
+msgid "Paranoia Level"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:200
+msgid "The paranoia level"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:205
+msgid "device"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:206
+msgid "The device"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:348
+#, c-format
+msgid "Could not create GStreamer CD reader"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:366
+#, fuzzy, c-format
+msgid "Could not create GStreamer encoders for %s"
+msgstr "Не удалось создать \"%s\""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:378
+#, fuzzy, c-format
+msgid "Could not create GStreamer file output"
+msgstr "Не удалось создать значение хэша из iTunesDB\n"
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:392
+#, fuzzy, c-format
+msgid "Could not link pipeline"
+msgstr "Не удалось инициализировать GnomeVFS\n"
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:416
+msgid "Could not get current track position"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:445
+#, c-format
+msgid ""
+"Extractor object is not valid. This is bad, check your console for errors."
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:665
+#, c-format
+msgid "The plugin necessary for CD access was not found"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:673
+#, c-format
+msgid "The plugin necessary for file access was not found"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata-getter.c:247
+#, fuzzy, c-format
+msgid "Could not create CD lookup thread"
+msgstr "Не удалось создать значение хэша из iTunesDB\n"
+
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:90
+#, c-format
+msgid "Cannot access CD"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:135
+#, fuzzy, c-format
+msgid "Track %d"
+msgstr "Дорожка"
+
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:160
+#, c-format
+msgid "Cannot access CD: %s"
+msgstr ""
+
+#. FIXME: would be nicer to only check if "cdrom" is being probed,
+#. * but libbrasero doesn't seem to have an API for that
+#.
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:182
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:205
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:216
+#, c-format
+msgid "Cannot read CD: %s"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:183
+msgid "Devices haven't been all probed yet"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:199
+#, c-format
+msgid "Device '%s' does not contain any media"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:202
+#, c-format
+msgid ""
+"Device '%s' could not be opened. Check the access permissions on the device."
+msgstr ""
+
+#: ../plugins/sjcd/plugin.c:44 ../plugins/sjcd/plugin.c:65
+#: ../plugins/sjcd/sjcd.xml.h:14
+#, fuzzy
+msgid "Sound Juicer"
+msgstr "Soundcheck"
+
+#. Add widget directly as scrolling is handled internally by the widget
+#: ../plugins/sjcd/plugin.c:76
+msgid "  Sound Juicer"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:160
+#, c-format
+msgid "Failed to get output format"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:185
+msgid "Name too long"
+msgstr ""
+
+#. TODO: find out why GTK+ needs this to work (see #364371)
+#: ../plugins/sjcd/sj-extracting.c:244
+#, fuzzy
+msgid "Extract"
+msgstr "дорожке"
+
+#: ../plugins/sjcd/sj-extracting.c:318
+#, fuzzy
+msgid "A file with the same name exists"
+msgstr "Альбом с таким названием уже существует."
+
+#: ../plugins/sjcd/sj-extracting.c:320
+#, c-format
+msgid ""
+"A file called '%s' exists, size %s.\n"
+"Do you want to skip this track or overwrite it?"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:330
+msgid "_Skip"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:331
+msgid "S_kip All"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:332
+#, fuzzy
+msgid "_Overwrite"
+msgstr "Перезаписать"
+
+#: ../plugins/sjcd/sj-extracting.c:333
+#, fuzzy
+msgid "Overwrite _All"
+msgstr "Перезаписать"
+
+#: ../plugins/sjcd/sj-extracting.c:382
+#, fuzzy, c-format
+msgid "Failed to create output directory: %s"
+msgstr "Не удалось задать обложку: \"%s\"\n"
+
+#: ../plugins/sjcd/sj-extracting.c:524
+#, c-format
+msgid "Estimated time left: %d:%02d (at %0.1f×)"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:526
+msgid "Estimated time left: unknown"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:580
+#, c-format
+msgid ""
+"%d were ripped from the CD but no repository was selected. Please import "
+"them manually."
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:594
+#, fuzzy, c-format
+msgid "Importing file '%s'. Please wait..."
+msgstr "Записывается база данных \"%s\". Пожалуйста, подождите..."
+
+#: ../plugins/sjcd/sj-extracting.c:737
+msgid "Sound Juicer could not extract this CD."
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:739 ../plugins/sjcd/sj-main.c:659
+#: ../plugins/sjcd/sj-main.c:767 ../plugins/sjcd/sj-main.c:860
+#: ../plugins/sjcd/sj-main.c:1075 ../plugins/sjcd/sj-main.c:1398
+#, fuzzy
+msgid "Reason"
+msgstr "Номер сезона"
+
+#: ../plugins/sjcd/sj-extracting.c:856 ../plugins/sjcd/sj-extracting.c:862
+msgid "Extracting audio from CD"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:34
+msgid "Ambient"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:35
+msgid "Blues"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:36
+msgid "Classical"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:37
+msgid "Country"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:38
+#, fuzzy
+msgid "Dance"
+msgstr "Отмена"
+
+#: ../plugins/sjcd/sj-genres.c:39
+msgid "Electronica"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:40
+msgid "Folk"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:41
+msgid "Funk"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:42
+msgid "Jazz"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:43
+#, fuzzy
+msgid "Latin"
+msgstr "Рейтинг"
+
+#: ../plugins/sjcd/sj-genres.c:44
+#, fuzzy
+msgid "Pop"
+msgstr "Вверху"
+
+#: ../plugins/sjcd/sj-genres.c:45
+msgid "Rap"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:46
+msgid "Reggae"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:47
+msgid "Rock"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:48
+msgid "Soul"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:49
+msgid "Spoken Word"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:189
+#, fuzzy, c-format
+msgid "Error while saving custom genre: %s"
+msgstr "Ошибка при чтении расширенных сведений: %s\n"
+
+#: ../plugins/sjcd/sj-main.c:111
+msgid "E_xtract"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:188 ../plugins/sjcd/sj-main.c:437
+#, fuzzy
+msgid "(unknown)"
+msgstr "Неизвестно"
+
+#: ../plugins/sjcd/sj-main.c:316
+#, fuzzy
+msgid "S_ubmit Album"
+msgstr "Сортировка по альбомам"
+
+#. Translators: title, artist
+#: ../plugins/sjcd/sj-main.c:321
+#, fuzzy, c-format
+msgid "Could not find %s by %s on MusicBrainz."
+msgstr "Не удалось открыть \"%s\" для чтения.\n"
+
+#: ../plugins/sjcd/sj-main.c:326
+msgid "You can improve the MusicBrainz database by adding this album."
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:657 ../plugins/sjcd/sj-main.c:763
+#: ../plugins/sjcd/sj-main.c:858
+#, fuzzy
+msgid "Could not read the CD"
+msgstr "Не удалось создать \"%s\""
+
+#: ../plugins/sjcd/sj-main.c:658 ../plugins/sjcd/sj-main.c:766
+msgid "Sound Juicer could not read the track listing on this CD."
+msgstr ""
+
+#.
+#. window = gtk_widget_get_window (GTK_WIDGET(gtkpod_app));
+#.
+#. /* Set watch cursor */
+#. if (realized) {
+#. cursor = gdk_cursor_new_for_display (gtk_widget_get_display (GTK_WIDGET (gtkpod_app)), GDK_WATCH);
+#. gdk_window_set_cursor (window, cursor);
+#. gdk_cursor_unref (cursor);
+#. gdk_display_sync (gtk_widget_get_display (GTK_WIDGET (gtkpod_app)));
+#. }
+#. Set statusbar message
+#: ../plugins/sjcd/sj-main.c:737
+msgid "Retrieving track listing...please wait."
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:820
+#, c-format
+msgid "Sound Juicer could not use the CD-ROM device '%s'"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:827
+msgid "HAL daemon may not be running."
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:851
+#, c-format
+msgid "Sound Juicer could not access the CD-ROM device '%s'"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:951
+msgid "No CD-ROM drives found"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:952
+msgid "Sound Juicer could not find any CD-ROM drives to read."
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:985
+msgid ""
+"The currently selected audio profile is not available on your installation."
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:987
+msgid "_Change Profile"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:1073
+#, fuzzy
+msgid "Could not open URL"
+msgstr "Не удалось создать \"%s\""
+
+#: ../plugins/sjcd/sj-main.c:1074
+msgid "Sound Juicer could not open the submission URL"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:1182
+#, c-format
+msgid "Unknown column %d was edited"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:1323 ../plugins/sjcd/sj-prefs.c:109
+#, c-format
+msgid ""
+"Could not display help for Sound Juicer\n"
+"%s"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:1396
+#, fuzzy
+msgid "Could not duplicate disc"
+msgstr "Не удалось создать \"%s\""
+
+#: ../plugins/sjcd/sj-main.c:1397
+msgid "Sound Juicer could not duplicate the disc"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:1437 ../plugins/sjcd/sj-main.c:1460
+#, fuzzy
+msgid "Could not create GSettings object.\n"
+msgstr "Не удалось создать \"%s\""
+
+#: ../plugins/sjcd/sj-prefs.c:52
+#, fuzzy
+msgid "Album Artist, Album Title"
+msgstr "Художник обложки"
+
+#: ../plugins/sjcd/sj-prefs.c:53
+msgid "Album Artist (sortable), Album Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:54
+msgid "Track Artist, Album Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:55
+msgid "Track Artist (sortable), Album Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:56
+#, fuzzy
+msgid "Album Title"
+msgstr "Обложка"
+
+#: ../plugins/sjcd/sj-prefs.c:58
+#, fuzzy
+msgid "Album Artist (sortable)"
+msgstr "Художник обложки"
+
+#: ../plugins/sjcd/sj-prefs.c:59
+#, fuzzy
+msgid "Album Artist - Album Title"
+msgstr "Художник обложки"
+
+#: ../plugins/sjcd/sj-prefs.c:60
+msgid "Album Artist (sortable) - Album Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:61
+msgid "[none]"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:66
+#, fuzzy
+msgid "Number - Title"
+msgstr "Число вкладок сортировки:"
+
+#: ../plugins/sjcd/sj-prefs.c:67
+#, fuzzy
+msgid "Track Title"
+msgstr "Сортировка по названиям"
+
+#: ../plugins/sjcd/sj-prefs.c:68
+#, fuzzy
+msgid "Track Artist - Track Title"
+msgstr "Сортировка по названиям"
+
+#: ../plugins/sjcd/sj-prefs.c:69
+msgid "Track Artist (sortable) - Track Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:70
+msgid "Number. Track Artist - Track Title"
+msgstr ""
+
+#. {N_("Number. Track Artist (sortable) - Track Title"), "%tN. %ts - %tt"},
+#: ../plugins/sjcd/sj-prefs.c:72
+msgid "Number-Track Artist-Track Title (lowercase)"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:291
+#, fuzzy
+msgid "Example Path"
+msgstr "Дискретизация"
+
+#: ../plugins/sjcd/sjcd.xml.h:1
+msgid "CD _drive:"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:2
+msgid "Device"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:3
+msgid "Disc:"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:4
+#, fuzzy
+msgid "Duration:"
+msgstr "Сведения"
+
+#: ../plugins/sjcd/sjcd.xml.h:5
+#, fuzzy
+msgid "E_ject"
+msgstr "Извлечь iPod"
+
+#: ../plugins/sjcd/sjcd.xml.h:6
+#, fuzzy
+msgid "File _name:"
+msgstr "Формат имени файла: "
+
+#: ../plugins/sjcd/sjcd.xml.h:7
+msgid "Folder hie_rarchy:"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:8
+msgid "Format"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:9
+msgid "Multiple Albums Found"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:10
+#, fuzzy
+msgid "Music Folder"
+msgstr "Музыкальный видеоклип"
+
+#: ../plugins/sjcd/sjcd.xml.h:11
+msgid "O_utput Format:"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:12
+#, fuzzy
+msgid "Preferences"
+msgstr "Параметры mserv"
+
+#: ../plugins/sjcd/sjcd.xml.h:13
+#, fuzzy
+msgid "Select A Folder"
+msgstr "Выбранный список воспроизведения"
+
+#: ../plugins/sjcd/sjcd.xml.h:15
+msgid ""
+"This CD could be more than one album. Please select which album it is below "
+"and press <i>Continue</i>."
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:16
+#, fuzzy
+msgid "Track Names"
+msgstr "Дорожки"
+
+#: ../plugins/sjcd/sjcd.xml.h:17
+msgid "Tracks"
+msgstr "Дорожки"
+
+#: ../plugins/sjcd/sjcd.xml.h:18
+#, fuzzy
+msgid "_Artist:"
+msgstr "Исполнитель"
+
+#: ../plugins/sjcd/sjcd.xml.h:19
+#, fuzzy
+msgid "_Continue"
+msgstr "_Содержание"
+
+#: ../plugins/sjcd/sjcd.xml.h:20
+#, fuzzy
+msgid "_Deselect All"
+msgstr "Выбранный список воспроизведения"
+
+#: ../plugins/sjcd/sjcd.xml.h:21
+#, fuzzy
+msgid "_Disc"
+msgstr "_Отображение"
+
+#: ../plugins/sjcd/sjcd.xml.h:22
+#, fuzzy
+msgid "_Duplicate Disc"
+msgstr "Обнаружение дубликатов"
+
+#: ../plugins/sjcd/sjcd.xml.h:23 ../src/anjuta-actions.h:49
+#, fuzzy
+msgid "_Edit"
+msgstr "_Правка"
+
+#: ../plugins/sjcd/sjcd.xml.h:24
+msgid "_Eject after extracting tracks"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:25
+#, fuzzy
+msgid "_Folder:"
+msgstr "folder"
+
+#: ../plugins/sjcd/sjcd.xml.h:26
+#, fuzzy
+msgid "_Genre:"
+msgstr "Жанр"
+
+#: ../plugins/sjcd/sjcd.xml.h:27
+msgid "_Open music folder when finished"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:28
+#, fuzzy
+msgid "_Select All"
+msgstr "Выбранный список воспроизведения"
+
+#: ../plugins/sjcd/sjcd.xml.h:29
+msgid "_Strip special characters"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:30
+msgid "_Submit Track Names..."
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:31
+#, fuzzy
+msgid "_Title:"
+msgstr "Название"
+
+#: ../plugins/sjcd/sjcd.xml.h:32
+#, fuzzy
+msgid "_Year:"
+msgstr "Год"
 
 #: ../src/anjuta-about.c:158
 #, fuzzy, c-format
@@ -6190,11 +6876,6 @@ msgstr "_Правка"
 #, fuzzy
 msgid "Quit gtkpod"
 msgstr "GtkPod"
-
-#: ../src/anjuta-actions.h:49
-#, fuzzy
-msgid "_Edit"
-msgstr "_Правка"
 
 #: ../src/anjuta-actions.h:54
 #, fuzzy
@@ -6346,15 +7027,66 @@ msgstr "Подтверждение"
 msgid "Loaded Session..."
 msgstr ""
 
+#: ../src/main.c:75
+msgid "- Interface with your ipod"
+msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "m4a/m4p/m4b/mp4 soundcheck update for '%s' failed: m4a/m4p/m4b/mp4 not "
+#~ "supported without the mp4v2 library. You must install the mp4v2 library.\n"
+#~ msgstr ""
+#~ "Обновление soundcheck M4A/M4P/M4B для \"%s\" завершилось неуспешно: M4A/"
+#~ "M4P/M4B не поддерживается без библиотеки mp4v2. Вы должны установить "
+#~ "библиотеку mp4v2.\n"
+
+#, fuzzy
+#~ msgid "'%s' does not appear to be a m4a/m4b/m4v/mp4 audio or video file.\n"
+#~ msgstr "\"%s\" не похож на видео- или аудиофайл MP4.\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "Could not open '%s' for reading, or file is not an m4a/m4b/m4v/mp4 file.\n"
+#~ msgstr ""
+#~ "Не удалось открыть \"%s\" для чтения или файл не является MP4-файлом.\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "Import of '%s' failed: file type not supported without the mp4v2 library. "
+#~ "You must install the mp4v2 library.\n"
+#~ msgstr ""
+#~ "Импорт \"%s\" завершился неуспешно: M4A/M4P/M4B не поддерживается без "
+#~ "библиотеки mp4v2. Вы должны установить библиотеку mp4v2.\n"
+
+#, fuzzy
+#~ msgid "'%s' does not appear to be a m4a/m4p/m4b/mp4 audio or video file.\n"
+#~ msgstr "\"%s\" не похож на видео- или аудиофайл MP4.\n"
+
+#~ msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
+#~ msgstr ""
+#~ "Не удалось открыть \"%s\" для чтения или файл не является MP4-файлом.\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "m4a/m4p/m4b/mp4 metadata update for '%s' failed: m4a/m4p/m4b/mp4 not "
+#~ "supported without the mp4v2 library. You must install the mp4v2 library.\n"
+#~ msgstr ""
+#~ "Обновление метаданных M4A/M4P/M4B для \"%s\" завершилось неуспешно: M4A/"
+#~ "M4P/M4B не поддерживается без библиотеки mp4v2. Вы должны установить "
+#~ "библиотеку mp4v2.\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "Could not open '%s' for writing, or file is not an m4a/m4b/m4v/mp4 file.\n"
+#~ msgstr ""
+#~ "Не удалось открыть \"%s\" для записи или файл не является MP4-файлом.\n"
+
 #, fuzzy
 #~ msgid ""
 #~ "%s\n"
 #~ "\n"
 #~ "%s"
 #~ msgstr "%s - %s"
-
-#~ msgid "Information"
-#~ msgstr "Сведения"
 
 #~ msgid "Press button to abort."
 #~ msgstr "Нажмите кнопку для отмены."
@@ -6467,9 +7199,6 @@ msgstr ""
 
 #~ msgid "Sort tracks according to: "
 #~ msgstr "Сортировать дорожки по:"
-
-#~ msgid "Tracks"
-#~ msgstr "Дорожки"
 
 #~ msgid " "
 #~ msgstr " "
@@ -6923,17 +7652,11 @@ msgstr ""
 #~ msgid "Add playlist from file"
 #~ msgstr "Добавить список воспроизведения из файла"
 
-#~ msgid "Album Art"
-#~ msgstr "Обложка"
-
 #~ msgid "Bottom"
 #~ msgstr "Внизу"
 
 #~ msgid "Command for \"Enqueue\":"
 #~ msgstr "Команда \"Поставить в очередь\":"
-
-#~ msgid "Command for \"Play now\":"
-#~ msgstr "Команда \"Воспроизвести сейчас\":"
 
 #~ msgid "Commands..."
 #~ msgstr "Команды..."
@@ -6973,9 +7696,6 @@ msgstr ""
 #~ "MP3\n"
 #~ "AAC\n"
 
-#~ msgid "Position:"
-#~ msgstr "Позиция:"
-
 #~ msgid "Randomize Current Playlist"
 #~ msgstr "Перестроить текущий список воспроизведения случайным образом"
 
@@ -7012,9 +7732,6 @@ msgstr ""
 #~ msgid "Synchronize Notes"
 #~ msgstr "Синхронизировать заметки"
 
-#~ msgid "Top"
-#~ msgstr "Вверху"
-
 #~ msgid "Tracks in Selected Tab _Entry"
 #~ msgstr "Дорожки в выбранной _записи вкладки"
 
@@ -7036,9 +7753,6 @@ msgstr ""
 
 #~ msgid "_Arrange Filter Tabs"
 #~ msgstr "_Упорядочить вкладки фильтрации"
-
-#~ msgid "_Contents"
-#~ msgstr "_Содержание"
 
 #~ msgid "_Conversion Log"
 #~ msgstr "_Журнал сообщений преобразования"
@@ -7095,9 +7809,6 @@ msgstr ""
 #~ msgid "Normalize tracks in selected entry of which sort tab?"
 #~ msgstr ""
 #~ "На какой вкладке сортировки нормализовать дорожки из выбранной записи?"
-
-#~ msgid "Failed to set cover art: '%s'\n"
-#~ msgstr "Не удалось задать обложку: \"%s\"\n"
 
 #~ msgid "Error reading iPod photo database.\n"
 #~ msgstr "Ошибка при чтении базы данных снимков iPod.\n"
@@ -7193,9 +7904,6 @@ msgstr ""
 
 #~ msgid "Could not find command '%s' specified for '%s'"
 #~ msgstr "Не удалось найти команду \"%s\", заданную для \"%s\""
-
-#~ msgid "Could not initialize GnomeVFS\n"
-#~ msgstr "Не удалось инициализировать GnomeVFS\n"
 
 #~ msgid ""
 #~ "Extended info will not be used. If you have non-transferred tracks,\n"
@@ -7738,9 +8446,6 @@ msgstr ""
 #~ "использован первый, отвечающий именифайла. Пример: '%a - %A/%T %t.mp3;%t."
 #~ "wav'."
 
-#~ msgid "folder"
-#~ msgstr "folder"
-
 #~ msgid "folder.jpg"
 #~ msgstr "folder.jpg"
 
@@ -7812,9 +8517,6 @@ msgstr ""
 
 #~ msgid "Ok"
 #~ msgstr "OK"
-
-#~ msgid "Cancel"
-#~ msgstr "Отмена"
 
 #~ msgid ""
 #~ "Are you sure you want to remove the following track from the playlist \"%s"

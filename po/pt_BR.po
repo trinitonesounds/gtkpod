@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-20 10:57+0000\n"
+"POT-Creation-Date: 2012-04-15 00:44+0100\n"
 "PO-Revision-Date: 2011-02-26 21:35+0000\n"
 "Last-Translator: dnoway <None>\n"
 "Language-Team: Portuguese (Brazilian) <None>\n"
@@ -58,7 +58,7 @@ msgstr ""
 msgid "Manage music and video on an Apple iPod"
 msgstr ""
 
-#: ../data/gtkpod.desktop.in.h:2 ../src/main.c:67
+#: ../data/gtkpod.desktop.in.h:2 ../src/main.c:95
 msgid "gtkpod"
 msgstr "gtkpod"
 
@@ -1056,6 +1056,11 @@ msgstr ""
 msgid "Extended information file not deleted: '%s'"
 msgstr ""
 
+#: ../libgtkpod/file_itunesdb.c:1754
+#, c-format
+msgid "Backup database could not be found so backing up database to %s\n"
+msgstr ""
+
 #: ../libgtkpod/file_itunesdb.c:1860
 #, c-format
 msgid "%s: Database saved"
@@ -1269,7 +1274,7 @@ msgstr[0] "Remover faixa do banco de dados local?"
 msgstr[1] "Remover faixas do banco de dados local?"
 
 #: ../libgtkpod/misc_conversion.c:60
-#: ../plugins/sorttab_display/normal_sorttab_page.c:938
+#: ../plugins/sorttab_display/normal_sorttab_page.c:934
 msgid "All"
 msgstr ""
 
@@ -1278,6 +1283,7 @@ msgstr ""
 #: ../plugins/core_preferences/core_prefs.xml.h:24
 #: ../plugins/playlist_display/playlist_display_spl.c:78
 #: ../plugins/sorttab_display/sorttab_widget.c:241
+#: ../plugins/sjcd/egg-play-preview.c:199
 msgid "Album"
 msgstr "Álbum"
 
@@ -1285,6 +1291,8 @@ msgstr "Álbum"
 #: ../plugins/core_preferences/core_prefs.xml.h:29
 #: ../plugins/playlist_display/playlist_display_spl.c:79
 #: ../plugins/sorttab_display/sorttab_widget.c:238
+#: ../plugins/sjcd/egg-play-preview.c:189 ../plugins/sjcd/sj-main.c:521
+#: ../plugins/sjcd/sj-main.c:1542
 msgid "Artist"
 msgstr "Artista"
 
@@ -1292,6 +1300,8 @@ msgstr "Artista"
 #: ../plugins/core_preferences/core_prefs.xml.h:89
 #: ../plugins/playlist_display/playlist_display_spl.c:77
 #: ../plugins/sorttab_display/sorttab_widget.c:250
+#: ../plugins/sjcd/egg-play-preview.c:179 ../plugins/sjcd/sj-main.c:515
+#: ../plugins/sjcd/sj-main.c:1533
 msgid "Title"
 msgstr "Título"
 
@@ -1500,7 +1510,7 @@ msgstr ""
 msgid "Episode Nr"
 msgstr ""
 
-#: ../libgtkpod/misc_conversion.c:107
+#: ../libgtkpod/misc_conversion.c:107 ../plugins/sjcd/sj-prefs.c:57
 msgid "Album Artist"
 msgstr ""
 
@@ -1750,7 +1760,7 @@ msgstr ""
 msgid "Dangling tracks with files on PC were handled."
 msgstr ""
 
-#: ../libgtkpod/misc_playlist.c:789
+#: ../libgtkpod/misc_playlist.c:789 ../plugins/sjcd/sj-main.c:1518
 msgid "Track"
 msgstr ""
 
@@ -2189,28 +2199,28 @@ msgstr ""
 msgid "Sync summary"
 msgstr ""
 
-#: ../libgtkpod/tools.c:116
+#: ../libgtkpod/tools.c:118
 #, c-format
 msgid ""
 "Could not find '%s'.\n"
-"Please specifiy the exact path in the Tools section of the preference dialog "
-"or install the program if it is not installed on your system.\n"
+"Please specifiy the exact path in the preference dialog or install the "
+"program if it is not installed on your system.\n"
 "\n"
 msgstr ""
 
-#: ../libgtkpod/tools.c:200
+#: ../libgtkpod/tools.c:217
 #, c-format
 msgid ""
 "Execution of '%s' failed.\n"
 "\n"
 msgstr ""
 
-#: ../libgtkpod/tools.c:236
+#: ../libgtkpod/tools.c:255
 #, c-format
 msgid "Normalization failed: file not available (%s)."
 msgstr ""
 
-#: ../libgtkpod/tools.c:250
+#: ../libgtkpod/tools.c:270
 #, c-format
 msgid ""
 "Normalization failed for file %s: file type not supported.To normalize mp3 "
@@ -2220,51 +2230,51 @@ msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/tools.c:296
+#: ../libgtkpod/tools.c:316
 msgid "Normalization Errors"
 msgstr ""
 
 #. title
-#: ../libgtkpod/tools.c:297
+#: ../libgtkpod/tools.c:317
 msgid "Errors created by track normalisation"
 msgstr ""
 
-#: ../libgtkpod/tools.c:393
+#: ../libgtkpod/tools.c:414
 #, c-format
 msgid "'%s-%s' (%s) could not be normalized. %s\n"
 msgstr ""
 
-#: ../libgtkpod/tools.c:396
+#: ../libgtkpod/tools.c:419
 #, c-format
 msgid "'%s-%s' (%s) could not be normalized. Unknown error.\n"
 msgstr ""
 
-#: ../libgtkpod/tools.c:412
+#: ../libgtkpod/tools.c:436
 #, c-format
 msgid "%d%% (%d tracks left)"
 msgstr ""
 
-#: ../libgtkpod/tools.c:423
+#: ../libgtkpod/tools.c:447
 #, fuzzy, c-format
 msgid "Normalized %d of %d track."
 msgid_plural "Normalized %d of %d tracks."
 msgstr[0] "Retomada %d de %d faixa"
 msgstr[1] "Retomada %d de %d faixas"
 
-#: ../libgtkpod/tools.c:440
+#: ../libgtkpod/tools.c:464
 #, fuzzy, c-format
 msgid "Normalized %d of %d tracks."
 msgid_plural "Normalized %d of %d tracks."
 msgstr[0] "Retomada %d de %d faixa"
 msgstr[1] "Retomada %d de %d faixas"
 
-#: ../libgtkpod/tools.c:531
+#: ../libgtkpod/tools.c:554
 msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
 msgstr ""
 
-#: ../libgtkpod/tools.c:542
+#: ../libgtkpod/tools.c:565
 #, c-format
 msgid ""
 "Could not find the command '%s'.\n"
@@ -2273,11 +2283,21 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../libgtkpod/tools.c:583
+#: ../libgtkpod/tools.c:606
 #, c-format
 msgid ""
 "'%s' returned the following output:\n"
 "%s\n"
+msgstr ""
+
+#: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:460
+#, c-format
+msgid "ERROR %s is not itunes style."
+msgstr ""
+
+#: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:659
+#, c-format
+msgid "ERROR failed to change track file's artwork."
 msgstr ""
 
 #: ../plugins/filetype_video/videofile.c:47
@@ -3461,78 +3481,23 @@ msgstr ""
 msgid "Support for the m4a / m4p file type"
 msgstr ""
 
-#: ../plugins/filetype_m4a/mp4file.c:548 ../plugins/filetype_mp4/mp4file.c:548
-#, c-format
-msgid ""
-"m4a/m4p/m4b/mp4 soundcheck update for '%s' failed: m4a/m4p/m4b/mp4 not "
-"supported without the mp4v2 library. You must install the mp4v2 library.\n"
-msgstr ""
-
-#: ../plugins/filetype_m4a/mp4file.c:583 ../plugins/filetype_mp4/mp4file.c:583
-#, c-format
-msgid "'%s' does not appear to be a m4a/m4b/m4v/mp4 audio or video file.\n"
-msgstr ""
-
-#: ../plugins/filetype_m4a/mp4file.c:591 ../plugins/filetype_mp4/mp4file.c:591
-#, c-format
-msgid ""
-"Could not open '%s' for reading, or file is not an m4a/m4b/m4v/mp4 file.\n"
-msgstr ""
-
-#: ../plugins/filetype_m4a/mp4file.c:600 ../plugins/filetype_mp4/mp4file.c:600
-#, c-format
-msgid ""
-"Import of '%s' failed: file type not supported without the mp4v2 library. "
-"You must install the mp4v2 library.\n"
-msgstr ""
-
-#: ../plugins/filetype_m4a/mp4file.c:701 ../plugins/filetype_mp4/mp4file.c:701
+#: ../plugins/filetype_m4a/m4afile.c:49 ../plugins/filetype_mp4/mp4file.c:128
 msgid "AAC audio file"
 msgstr ""
 
-#: ../plugins/filetype_m4a/mp4file.c:703 ../plugins/filetype_mp4/mp4file.c:703
+#: ../plugins/filetype_m4a/m4afile.c:53 ../plugins/filetype_mp4/mp4file.c:132
 msgid "Protected AAC audio file"
 msgstr ""
 
-#: ../plugins/filetype_m4a/mp4file.c:705 ../plugins/filetype_mp4/mp4file.c:705
+#: ../plugins/filetype_m4a/m4afile.c:57 ../plugins/filetype_mp4/mp4file.c:136
 msgid "AAC audio book file"
 msgstr ""
 
-#: ../plugins/filetype_m4a/mp4file.c:707 ../plugins/filetype_mp4/mp4file.c:707
+#: ../plugins/filetype_m4a/m4afile.c:62 ../plugins/filetype_mp4/mp4file.c:141
 msgid "MP4 video file"
 msgstr ""
 
-#: ../plugins/filetype_m4a/mp4file.c:849 ../plugins/filetype_mp4/mp4file.c:849
-#, c-format
-msgid "'%s' does not appear to be a m4a/m4p/m4b/mp4 audio or video file.\n"
-msgstr ""
-
-#: ../plugins/filetype_m4a/mp4file.c:857 ../plugins/filetype_mp4/mp4file.c:857
-#, c-format
-msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
-msgstr ""
-
-#: ../plugins/filetype_m4a/mp4file.c:867 ../plugins/filetype_mp4/mp4file.c:867
-#, c-format
-msgid ""
-"m4a/m4p/m4b/mp4 metadata update for '%s' failed: m4a/m4p/m4b/mp4 not "
-"supported without the mp4v2 library. You must install the mp4v2 library.\n"
-msgstr ""
-
-#: ../plugins/filetype_m4a/mp4file.c:990 ../plugins/filetype_mp4/mp4file.c:990
-#, c-format
-msgid ""
-"Only writing to m4a/m4b/m4v/mp4 audio tracks is supported. '%s' is not one "
-"of these file formats.\n"
-msgstr ""
-
-#: ../plugins/filetype_m4a/mp4file.c:999 ../plugins/filetype_mp4/mp4file.c:999
-#, c-format
-msgid ""
-"Could not open '%s' for writing, or file is not an m4a/m4b/m4v/mp4 file.\n"
-msgstr ""
-
-#: ../plugins/filetype_m4a/plugin.c:84
+#: ../plugins/filetype_m4a/plugin.c:79
 msgid "M4A audio file type"
 msgstr ""
 
@@ -3583,7 +3548,7 @@ msgstr ""
 msgid "Support for the MP4 video file type"
 msgstr ""
 
-#: ../plugins/filetype_mp4/plugin.c:82
+#: ../plugins/filetype_mp4/plugin.c:78
 msgid "MP4 video file type"
 msgstr ""
 
@@ -3782,6 +3747,28 @@ msgstr ""
 msgid "<b>%s</b> from %s"
 msgstr ""
 
+#. Translators: %s is an error message
+#: ../plugins/media_player/media_player.c:280
+#, c-format
+msgid "GStreamer thread creation failed: %s\n"
+msgstr ""
+
+#: ../plugins/media_player/media_player.c:337
+msgid "Seek failed!\n"
+msgstr ""
+
+#. Translators: %s is an error message
+#: ../plugins/media_player/media_player.c:390
+#, c-format
+msgid "Failed to play track: %s"
+msgstr ""
+
+#: ../plugins/media_player/media_player.c:397
+msgid ""
+"Failed to play track: Cannot create a play element. Ensure that all "
+"gstreamer plugins are installed"
+msgstr ""
+
 #: ../plugins/media_player/media_player.xml.h:1
 msgid "Next"
 msgstr ""
@@ -3795,7 +3782,10 @@ msgstr ""
 msgid "Previous"
 msgstr ""
 
+#. Change the label to Stop while extracting
+#. TODO: find out why GTK+ needs this to work (see #364371)
 #: ../plugins/media_player/media_player.xml.h:4
+#: ../plugins/sjcd/sj-extracting.c:830
 msgid "Stop"
 msgstr ""
 
@@ -4198,6 +4188,7 @@ msgstr "_Limitado a"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:66
 #: ../plugins/playlist_display/playlist_display_actions.c:321
+#: ../plugins/sjcd/sj-extracting.c:599
 #, c-format
 msgid "%s\n"
 msgstr ""
@@ -4240,6 +4231,7 @@ msgstr ""
 
 #: ../plugins/playlist_display/playlist_display_actions.c:212
 #: ../plugins/playlist_display/playlist_display_actions.c:364
+#: ../plugins/sjcd/sj-extracting.c:649
 msgid "Some tracks failed to be added but no errors were reported."
 msgstr ""
 
@@ -4257,11 +4249,13 @@ msgstr ""
 #. gint id,
 #. gboolean modal,
 #: ../plugins/playlist_display/playlist_display_actions.c:350
+#: ../plugins/sjcd/sj-extracting.c:635
 msgid "File Addition Errors"
 msgstr ""
 
 #. title
 #: ../plugins/playlist_display/playlist_display_actions.c:351
+#: ../plugins/sjcd/sj-extracting.c:636
 msgid "Some files were not added successfully"
 msgstr ""
 
@@ -4836,7 +4830,8 @@ msgstr ""
 msgid "  iPod Repositories"
 msgstr ""
 
-#: ../plugins/playlist_display/plugin.c:437 ../src/anjuta-about.c:165
+#: ../plugins/playlist_display/plugin.c:437 ../plugins/sjcd/plugin.c:124
+#: ../src/anjuta-about.c:165
 #, c-format
 msgid "Couldn't load icon: %s"
 msgstr ""
@@ -5489,7 +5484,7 @@ msgstr ""
 msgid "Copy selected track(s) to"
 msgstr ""
 
-#: ../plugins/sorttab_display/normal_sorttab_page.c:965
+#: ../plugins/sorttab_display/normal_sorttab_page.c:961
 msgid "Compilations"
 msgstr ""
 
@@ -5672,6 +5667,11 @@ msgstr ""
 msgid "Please enter a word for sorting functions to ignore"
 msgstr ""
 
+#: ../plugins/track_display/track_display_preferences.c:254
+#, c-format
+msgid "The word %s is already in the \"Ignored Frequent Word\" list"
+msgstr ""
+
 #: ../plugins/clarity/clarity_dnd_support.c:223
 #, c-format
 msgid "Error occurred dropping an image onto the clarity display: %s\n"
@@ -5679,6 +5679,668 @@ msgstr ""
 
 #: ../plugins/clarity/clarity_dnd_support.c:241
 msgid "Successfully set new cover art for selected tracks"
+msgstr ""
+
+#: ../plugins/external_player/plugin.c:70
+msgid "External Player"
+msgstr ""
+
+#: ../plugins/external_player/plugin.c:120
+msgid "Play with preferred app..."
+msgstr ""
+
+#: ../plugins/external_player/plugin.c:135
+msgid "Couldn't load theme media player icon"
+msgstr ""
+
+#: ../plugins/external_player/external_player.xml.h:1
+#, fuzzy
+msgid "<b>Player Command</b>"
+msgstr "<b>Colunas exibidas</b>"
+
+#: ../plugins/external_player/external_player.xml.h:2
+msgid "Command for 'play'"
+msgstr ""
+
+#: ../plugins/external_player/external_player.xml.h:3
+msgid "External Media Player"
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:169
+msgid "URI"
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:170
+msgid "The URI of the audio file"
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:180
+msgid "The title of the current stream."
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:190
+msgid "The artist of the current stream."
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:200
+msgid "The album of the current stream."
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:209
+msgid "Position"
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:210
+msgid "The position in the current stream in seconds."
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:219 ../plugins/sjcd/sj-main.c:1553
+msgid "Duration"
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:220
+msgid "The duration of the current stream in seconds."
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:463
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:109
+msgid "Unknown Title"
+msgstr ""
+
+#: ../plugins/sjcd/egg-play-preview.c:468
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:113
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:139
+#, fuzzy
+msgid "Unknown Artist"
+msgstr "Artista"
+
+#: ../plugins/sjcd/egg-play-preview.c:469
+msgid "Unknown Album"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:193
+msgid "Audio Profile"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:194
+msgid "The GStreamer Encoding Profile used for encoding audio"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:199
+msgid "Paranoia Level"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:200
+msgid "The paranoia level"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:205
+msgid "device"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:206
+msgid "The device"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:348
+#, c-format
+msgid "Could not create GStreamer CD reader"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:366
+#, c-format
+msgid "Could not create GStreamer encoders for %s"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:378
+#, c-format
+msgid "Could not create GStreamer file output"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:392
+#, c-format
+msgid "Could not link pipeline"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:416
+msgid "Could not get current track position"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:445
+#, c-format
+msgid ""
+"Extractor object is not valid. This is bad, check your console for errors."
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:665
+#, c-format
+msgid "The plugin necessary for CD access was not found"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:673
+#, c-format
+msgid "The plugin necessary for file access was not found"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata-getter.c:247
+#, c-format
+msgid "Could not create CD lookup thread"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:90
+#, c-format
+msgid "Cannot access CD"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:135
+#, c-format
+msgid "Track %d"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:160
+#, c-format
+msgid "Cannot access CD: %s"
+msgstr ""
+
+#. FIXME: would be nicer to only check if "cdrom" is being probed,
+#. * but libbrasero doesn't seem to have an API for that
+#.
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:182
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:205
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:216
+#, c-format
+msgid "Cannot read CD: %s"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:183
+msgid "Devices haven't been all probed yet"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:199
+#, c-format
+msgid "Device '%s' does not contain any media"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:202
+#, c-format
+msgid ""
+"Device '%s' could not be opened. Check the access permissions on the device."
+msgstr ""
+
+#: ../plugins/sjcd/plugin.c:44 ../plugins/sjcd/plugin.c:65
+#: ../plugins/sjcd/sjcd.xml.h:14
+msgid "Sound Juicer"
+msgstr ""
+
+#. Add widget directly as scrolling is handled internally by the widget
+#: ../plugins/sjcd/plugin.c:76
+msgid "  Sound Juicer"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:160
+#, c-format
+msgid "Failed to get output format"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:185
+msgid "Name too long"
+msgstr ""
+
+#. TODO: find out why GTK+ needs this to work (see #364371)
+#: ../plugins/sjcd/sj-extracting.c:244
+msgid "Extract"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:318
+msgid "A file with the same name exists"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:320
+#, c-format
+msgid ""
+"A file called '%s' exists, size %s.\n"
+"Do you want to skip this track or overwrite it?"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:330
+msgid "_Skip"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:331
+msgid "S_kip All"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:332
+msgid "_Overwrite"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:333
+msgid "Overwrite _All"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:382
+#, c-format
+msgid "Failed to create output directory: %s"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:524
+#, c-format
+msgid "Estimated time left: %d:%02d (at %0.1f×)"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:526
+msgid "Estimated time left: unknown"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:580
+#, c-format
+msgid ""
+"%d were ripped from the CD but no repository was selected. Please import "
+"them manually."
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:594
+#, c-format
+msgid "Importing file '%s'. Please wait..."
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:737
+msgid "Sound Juicer could not extract this CD."
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:739 ../plugins/sjcd/sj-main.c:659
+#: ../plugins/sjcd/sj-main.c:767 ../plugins/sjcd/sj-main.c:860
+#: ../plugins/sjcd/sj-main.c:1075 ../plugins/sjcd/sj-main.c:1398
+msgid "Reason"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:856 ../plugins/sjcd/sj-extracting.c:862
+msgid "Extracting audio from CD"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:34
+msgid "Ambient"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:35
+msgid "Blues"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:36
+msgid "Classical"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:37
+msgid "Country"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:38
+msgid "Dance"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:39
+msgid "Electronica"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:40
+msgid "Folk"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:41
+msgid "Funk"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:42
+msgid "Jazz"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:43
+#, fuzzy
+msgid "Latin"
+msgstr "Avaliação:"
+
+#: ../plugins/sjcd/sj-genres.c:44
+msgid "Pop"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:45
+msgid "Rap"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:46
+msgid "Reggae"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:47
+msgid "Rock"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:48
+msgid "Soul"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:49
+msgid "Spoken Word"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:189
+#, c-format
+msgid "Error while saving custom genre: %s"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:111
+msgid "E_xtract"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:188 ../plugins/sjcd/sj-main.c:437
+msgid "(unknown)"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:316
+#, fuzzy
+msgid "S_ubmit Album"
+msgstr "_Álbum"
+
+#. Translators: title, artist
+#: ../plugins/sjcd/sj-main.c:321
+#, c-format
+msgid "Could not find %s by %s on MusicBrainz."
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:326
+msgid "You can improve the MusicBrainz database by adding this album."
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:657 ../plugins/sjcd/sj-main.c:763
+#: ../plugins/sjcd/sj-main.c:858
+msgid "Could not read the CD"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:658 ../plugins/sjcd/sj-main.c:766
+msgid "Sound Juicer could not read the track listing on this CD."
+msgstr ""
+
+#.
+#. window = gtk_widget_get_window (GTK_WIDGET(gtkpod_app));
+#.
+#. /* Set watch cursor */
+#. if (realized) {
+#. cursor = gdk_cursor_new_for_display (gtk_widget_get_display (GTK_WIDGET (gtkpod_app)), GDK_WATCH);
+#. gdk_window_set_cursor (window, cursor);
+#. gdk_cursor_unref (cursor);
+#. gdk_display_sync (gtk_widget_get_display (GTK_WIDGET (gtkpod_app)));
+#. }
+#. Set statusbar message
+#: ../plugins/sjcd/sj-main.c:737
+msgid "Retrieving track listing...please wait."
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:820
+#, c-format
+msgid "Sound Juicer could not use the CD-ROM device '%s'"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:827
+msgid "HAL daemon may not be running."
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:851
+#, c-format
+msgid "Sound Juicer could not access the CD-ROM device '%s'"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:951
+msgid "No CD-ROM drives found"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:952
+msgid "Sound Juicer could not find any CD-ROM drives to read."
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:985
+msgid ""
+"The currently selected audio profile is not available on your installation."
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:987
+msgid "_Change Profile"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:1073
+msgid "Could not open URL"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:1074
+msgid "Sound Juicer could not open the submission URL"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:1182
+#, c-format
+msgid "Unknown column %d was edited"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:1323 ../plugins/sjcd/sj-prefs.c:109
+#, c-format
+msgid ""
+"Could not display help for Sound Juicer\n"
+"%s"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:1396
+#, fuzzy
+msgid "Could not duplicate disc"
+msgstr "Permitir arquivos duplicados"
+
+#: ../plugins/sjcd/sj-main.c:1397
+msgid "Sound Juicer could not duplicate the disc"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:1437 ../plugins/sjcd/sj-main.c:1460
+msgid "Could not create GSettings object.\n"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:52
+msgid "Album Artist, Album Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:53
+msgid "Album Artist (sortable), Album Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:54
+msgid "Track Artist, Album Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:55
+msgid "Track Artist (sortable), Album Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:56
+#, fuzzy
+msgid "Album Title"
+msgstr "Álbum"
+
+#: ../plugins/sjcd/sj-prefs.c:58
+msgid "Album Artist (sortable)"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:59
+msgid "Album Artist - Album Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:60
+msgid "Album Artist (sortable) - Album Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:61
+msgid "[none]"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:66
+#, fuzzy
+msgid "Number - Title"
+msgstr "Números de abas de filtros:"
+
+#: ../plugins/sjcd/sj-prefs.c:67
+#, fuzzy
+msgid "Track Title"
+msgstr "Título"
+
+#: ../plugins/sjcd/sj-prefs.c:68
+msgid "Track Artist - Track Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:69
+msgid "Track Artist (sortable) - Track Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:70
+msgid "Number. Track Artist - Track Title"
+msgstr ""
+
+#. {N_("Number. Track Artist (sortable) - Track Title"), "%tN. %ts - %tt"},
+#: ../plugins/sjcd/sj-prefs.c:72
+msgid "Number-Track Artist-Track Title (lowercase)"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:291
+msgid "Example Path"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:1
+msgid "CD _drive:"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:2
+msgid "Device"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:3
+msgid "Disc:"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:4
+msgid "Duration:"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:5
+msgid "E_ject"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:6
+#, fuzzy
+msgid "File _name:"
+msgstr "Formato do nome de arquivos:"
+
+#: ../plugins/sjcd/sjcd.xml.h:7
+msgid "Folder hie_rarchy:"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:8
+msgid "Format"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:9
+msgid "Multiple Albums Found"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:10
+#, fuzzy
+msgid "Music Folder"
+msgstr "Adicionar pasta"
+
+#: ../plugins/sjcd/sjcd.xml.h:11
+msgid "O_utput Format:"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:12
+#, fuzzy
+msgid "Preferences"
+msgstr "Preferências de codificação"
+
+#: ../plugins/sjcd/sjcd.xml.h:13
+#, fuzzy
+msgid "Select A Folder"
+msgstr "Adicionar pasta"
+
+#: ../plugins/sjcd/sjcd.xml.h:15
+msgid ""
+"This CD could be more than one album. Please select which album it is below "
+"and press <i>Continue</i>."
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:16
+msgid "Track Names"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:17
+msgid "Tracks"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:18
+#, fuzzy
+msgid "_Artist:"
+msgstr "Artista"
+
+#: ../plugins/sjcd/sjcd.xml.h:19
+msgid "_Continue"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:20
+msgid "_Deselect All"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:21
+#, fuzzy
+msgid "_Disc"
+msgstr "_Exibir"
+
+#: ../plugins/sjcd/sjcd.xml.h:22
+#, fuzzy
+msgid "_Duplicate Disc"
+msgstr "Permitir arquivos duplicados"
+
+#: ../plugins/sjcd/sjcd.xml.h:23 ../src/anjuta-actions.h:49
+msgid "_Edit"
+msgstr "_Editar"
+
+#: ../plugins/sjcd/sjcd.xml.h:24
+msgid "_Eject after extracting tracks"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:25
+#, fuzzy
+msgid "_Folder:"
+msgstr "Adicionar pasta"
+
+#: ../plugins/sjcd/sjcd.xml.h:26
+#, fuzzy
+msgid "_Genre:"
+msgstr "Gênero"
+
+#: ../plugins/sjcd/sjcd.xml.h:27
+msgid "_Open music folder when finished"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:28
+msgid "_Select All"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:29
+msgid "_Strip special characters"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:30
+msgid "_Submit Track Names..."
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:31
+#, fuzzy
+msgid "_Title:"
+msgstr "Título"
+
+#: ../plugins/sjcd/sjcd.xml.h:32
+msgid "_Year:"
 msgstr ""
 
 #: ../src/anjuta-about.c:158
@@ -5713,10 +6375,6 @@ msgstr ""
 #: ../src/anjuta-actions.h:41
 msgid "Quit gtkpod"
 msgstr ""
-
-#: ../src/anjuta-actions.h:49
-msgid "_Edit"
-msgstr "_Editar"
 
 #: ../src/anjuta-actions.h:54
 msgid "_Delete"
@@ -5853,6 +6511,10 @@ msgstr ""
 
 #: ../src/gtkpod.c:206
 msgid "Loaded Session..."
+msgstr ""
+
+#: ../src/main.c:75
+msgid "- Interface with your ipod"
 msgstr ""
 
 #~ msgid "gtkpod iPod Manager"

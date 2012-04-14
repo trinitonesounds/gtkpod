@@ -22,6 +22,14 @@ libgtkpod/prefs.c
 libgtkpod/sha1.c
 libgtkpod/syncdir.c
 libgtkpod/tools.c
+libs/atomic-parsley/APar_sha1.cpp
+libs/atomic-parsley/AP_iconv.cpp
+libs/atomic-parsley/APar_uuid.cpp
+libs/atomic-parsley/AtomicParsleyBridge.cpp
+libs/atomic-parsley/AP_AtomExtracts.cpp
+libs/atomic-parsley/AtomicParsley.cpp
+libs/atomic-parsley/AP_commons.cpp
+libs/atomic-parsley/AtomicParsley_genres.cpp
 plugins/filetype_video/videofile.c
 plugins/core_preferences/core_prefs.c
 [type: gettext/ini]plugins/core_preferences/core_prefs.plugin.in
@@ -51,7 +59,7 @@ plugins/exporter/plugin.c
 plugins/filetype_flac/flacfile.c
 plugins/filetype_flac/plugin.c
 [type: gettext/ini]plugins/filetype_m4a/filetype_m4a.plugin.in
-plugins/filetype_m4a/mp4file.c
+plugins/filetype_m4a/m4afile.c
 plugins/filetype_m4a/plugin.c
 [type: gettext/ini]plugins/filetype_mp3/filetype_mp3.plugin.in
 plugins/filetype_mp3/mp3file.c
