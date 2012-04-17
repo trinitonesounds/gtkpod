@@ -272,7 +272,7 @@ cleanup (void)
  * Check if a file exists, can be written to, etc.
  * Return true on continue, false on skip.
  */
-static goffset
+static guint64
 check_file_size (GFile *uri)
 {
   GFileInfo *gfile_info;
@@ -303,7 +303,7 @@ check_file_size (GFile *uri)
 }
 
 static gboolean
-confirm_overwrite_existing_file (GFile *uri, int *overwrite_mode, goffset info_size)
+confirm_overwrite_existing_file (GFile *uri, int *overwrite_mode, guint64 info_size)
 {
   OverwriteDialogResponse ret;
   GtkWidget *dialog;
@@ -311,7 +311,13 @@ confirm_overwrite_existing_file (GFile *uri, int *overwrite_mode, goffset info_s
   char *display_name, *filename, *size;
 
   display_name = g_file_get_parse_name (uri);
-  size = g_format_size_for_display (info_size);
+
+#if GLIB_CHECK_VERSION(2,30,0)
+  size = g_format_size (info_size);
+#else
+  size = g_format_size_for_display(info_size);
+#endif
+
   dialog = gtk_message_dialog_new (GTK_WINDOW (gtkpod_app), GTK_DIALOG_MODAL,
                                    GTK_MESSAGE_QUESTION,
                                    GTK_BUTTONS_NONE,
@@ -437,7 +443,7 @@ pop_and_extract (int *overwrite_mode)
     /* Save the file name for later */
     files = g_list_append(files, g_file_get_path(file));
 
-    goffset file_size;
+    guint64 file_size;
     file_size = check_file_size (file);
 
     /* Skip if destination file can't be accessed (unexpected error). */

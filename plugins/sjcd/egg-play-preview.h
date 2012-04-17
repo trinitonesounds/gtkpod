@@ -2,7 +2,7 @@
 
 /*
  * EggPlayPreview GTK+ Widget - egg-play-preview.h
- * 
+ *
  * Copyright (C) 2008 Luca Cavalli <luca.cavalli@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ typedef struct _EggPlayPreviewClass   EggPlayPreviewClass;
 typedef struct _EggPlayPreviewPrivate EggPlayPreviewPrivate;
 
 struct _EggPlayPreview {
-	GtkHBox parent;
+	GtkBox parent;
 
 	gchar *file;
 
@@ -52,7 +52,7 @@ struct _EggPlayPreview {
 };
 
 struct _EggPlayPreviewClass {
-	GtkHBoxClass parent_class;
+	GtkBoxClass parent_class;
 
 	/* signals */
 	void (* play)  (EggPlayPreview *play_preview);
