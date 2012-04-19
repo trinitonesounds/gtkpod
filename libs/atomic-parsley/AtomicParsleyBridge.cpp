@@ -383,7 +383,12 @@ void AP_read_metadata(const char *filePath, Track *track) {
                 if (tmp_file && g_file_test(tmp_file, G_FILE_TEST_EXISTS)) {
 
                     // Set the thumbnail using the tmp file
-                    itdb_track_set_thumbnails(track, tmp_file);
+                    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(tmp_file, NULL);
+                    if (pixbuf) {
+                        itdb_track_set_thumbnails_from_pixbuf(track, pixbuf);
+                        g_object_unref(pixbuf);
+                    }
+
                     g_remove(tmp_file);
                 }
 
