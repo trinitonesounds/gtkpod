@@ -15,11 +15,13 @@ dnl libtool versioning
 #  ? :+1 : ?   == just internal changes
 # CURRENT : REVISION : AGE
 LIBGTKPOD_SO_VERSION="2:0:1"
+LIBATOMIC_PARSLEY_SO_VERSION="0:1:0"
 
 LIBGTKPOD_VERSION=`./version.sh`
 
 AC_SUBST(LIBGTKPOD_SO_VERSION)
 AC_SUBST(LIBGTKPOD_VERSION)
+AC_SUBST(LIBATOMIC_PARSLEY_SO_VERSION)
 
 AM_INIT_AUTOMAKE([1.9 tar-ustar]) 
 
@@ -400,6 +402,12 @@ AC_CHECK_HEADERS(linux/cdrom.h scsi/sg.h scsi/scsi.h scsi/scsi_ioctl.h)
 libgpod_version=`$PKG_CONFIG libgpod-1.0 --modversion`
 AC_DEFINE_UNQUOTED(LIBGPOD_VERSION, "${libgpod_version}", [Set this to the libgpod version])
 
+
+dnl Setup Atomic Parsley library flags
+dnl --------------------------
+LIBATOMIC_CFLAGS="$ATOMIC_CFLAGS -Wall"
+LIBATOMIC_CFLAGS="$ATOMIC_CFLAGS $GTK_CFLAGS $GLIB_CFLAGS $GDK_CFLAGS $GMODULE_CFLAGS $GTHREAD_CFLAGS $LIBGPOD_CFLAGS $GTK_CLEANLINESS_FLAGS"
+AC_SUBST(LIBATOMIC_CFLAGS)
 
 dnl Setup Gtkpod flags for building library
 dnl --------------------------

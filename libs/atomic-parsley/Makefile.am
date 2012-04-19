@@ -24,9 +24,9 @@ AM_CPPFLAGS = \
     -DGTKPOD_IMAGE_DIR=\""$(gtkpod_image_dir)"\" \
     -DGTKPOD_SCRIPT_DIR=\""$(gtkpod_script_dir)"\" \
     -I$(top_srcdir) \
-    $(GTKPOD_CFLAGS)
+    $(LIBATOMIC_CFLAGS)
  
-libatomicparsley_la_LDFLAGS = $(LDFLAGS)
+libatomicparsley_la_LDFLAGS = $(LDFLAGS) -version-info $(LIBATOMIC_PARSLEY_SO_VERSION)
 libatomicparsley_la_LIBADD = \
 	$(GTKPOD_LIBS) \
 	@LIBOBJS@
