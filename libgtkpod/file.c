@@ -422,8 +422,11 @@ static void recurse_directories_internal(gchar *name, GSList **trknames, gboolea
 
                     if (g_hash_table_lookup(*directories_seen, nextfull))
                         continue;
-                    else
-                        g_hash_table_insert(*directories_seen, nextfull, nextfull);
+                    else {
+                        // Avoid double freeing when directories_seen is destroyed
+                        // by duplicating the nextfull string
+                        g_hash_table_insert(*directories_seen, g_strdup(nextfull), g_strdup(nextfull));
+                    }
 
                     if (descend || !g_file_test(nextfull, G_FILE_TEST_IS_DIR)) {
                         recurse_directories_internal(nextfull, trknames, descend, directories_seen);
