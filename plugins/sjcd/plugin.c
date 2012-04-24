@@ -140,6 +140,10 @@ static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
     iface->unmerge = ipreferences_unmerge;
 }
 
+gchar* sjcd_plugin_get_builder_file() {
+    return g_build_filename(get_glade_dir(), "sjcd.xml", NULL);
+}
+
 ANJUTA_PLUGIN_BEGIN (SJCDPlugin, sjcd_plugin);
 ANJUTA_PLUGIN_ADD_INTERFACE(ipreferences, IANJUTA_TYPE_PREFERENCES);
 ANJUTA_PLUGIN_END;

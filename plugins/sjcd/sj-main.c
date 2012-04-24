@@ -26,8 +26,8 @@
 #endif
 
 #include "libgtkpod/gtkpod_app_iface.h"
-#include "libgtkpod/directories.h"
 #include "libgtkpod/misc.h"
+#include "plugin.h"
 
 #include "sound-juicer.h"
 
@@ -1418,7 +1418,7 @@ static void set_duplication(gboolean enabled)
 
 GtkWidget *sj_create_sound_juicer()
 {
-  gchar *glade_path;
+  gchar *builderXML;
   GtkWidget *w;
   GError *error = NULL;
   GtkTreeSelection *selection;
@@ -1469,9 +1469,9 @@ GtkWidget *sj_create_sound_juicer()
   g_signal_connect (http_settings, "changed::"SJ_SETTINGS_HTTP_PROXY_PORT,
                     (GCallback)http_proxy_port_changed_cb, NULL);
 
-  glade_path = g_build_filename(get_glade_dir(), "sjcd.xml", NULL);
-  builder = gtkpod_builder_xml_new(glade_path);
-  g_free(glade_path);
+  builderXML = sjcd_plugin_get_builder_file();
+  builder = gtkpod_builder_xml_new(builderXML);
+  g_free(builderXML);
 
   gtk_builder_connect_signals (builder, NULL);
 

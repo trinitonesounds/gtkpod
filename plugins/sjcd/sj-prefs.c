@@ -26,7 +26,8 @@
 
 // TODO need to remove when replacing the prefs to gtkpod prefs
 #include "libgtkpod/gtkpod_app_iface.h"
-
+#include "libgtkpod/misc.h"
+#include "plugin.h"
 #include "sound-juicer.h"
 
 #include <string.h>
@@ -39,9 +40,18 @@
 #include "sj-extracting.h"
 #include "sj-prefs.h"
 
-static GtkWidget *audio_profile;
-static GtkWidget *cd_option, *path_option, *file_option, *basepath_fcb, *check_strip, *check_eject, *check_open;
-static GtkWidget *path_example_label;
+#define GET_BUILDER_WIDGET(x, a) gtkpod_builder_xml_get_widget (x, a)
+
+GtkWidget *dialog = NULL;
+GtkWidget *audio_profile = NULL;
+GtkWidget *cd_option = NULL;
+GtkWidget *path_option = NULL;
+GtkWidget *file_option = NULL;
+GtkWidget *basepath_fcb = NULL;
+GtkWidget *check_strip = NULL;
+GtkWidget *check_eject = NULL;
+GtkWidget *check_open = NULL;
+GtkWidget *path_example_label = NULL;
 
 typedef struct {
   char* name;
@@ -194,8 +204,10 @@ static void audio_profile_changed_cb (GSettings *settings, gchar *key, gpointer 
 {
   char *value;
   g_return_if_fail (strcmp (key, SJ_SETTINGS_AUDIO_PROFILE) == 0);
+  g_return_if_fail (GTK_IS_WIDGET(user_data));
+
   value = g_settings_get_string (settings, key);
-  sj_audio_profile_chooser_set_active (audio_profile, value);
+  sj_audio_profile_chooser_set_active (GTK_WIDGET(user_data), value);
   g_free (value);
 }
 
@@ -210,6 +222,7 @@ static void baseuri_changed_cb  (GSettings *settings, gchar *key, gpointer user_
    */
   const char* base_uri, *current_uri;
   g_return_if_fail (strcmp (key, SJ_SETTINGS_BASEURI) == 0);
+  g_return_if_fail (GTK_IS_FILE_CHOOSER(user_data));
 
   base_uri = g_settings_get_string (settings, key);
 
@@ -219,13 +232,13 @@ static void baseuri_changed_cb  (GSettings *settings, gchar *key, gpointer user_
 
     dir = sj_get_default_music_directory ();
     dir_uri = g_file_get_uri (dir);
-    gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (basepath_fcb), dir_uri);
+    gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (user_data), dir_uri);
     g_free (dir_uri);
     g_object_unref (dir);
   } else {
-    current_uri = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (basepath_fcb));
+    current_uri = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (user_data));
     if (current_uri == NULL || strcmp (current_uri, base_uri) != 0)
-      gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (basepath_fcb), base_uri);
+      gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (user_data), base_uri);
 
   }
 }
@@ -305,14 +318,16 @@ static void path_pattern_changed_cb (GSettings *settings, gchar *key, gpointer u
 {
   char *value;
   int i = 0;
-	g_return_if_fail (strcmp (key, SJ_SETTINGS_PATH_PATTERN) == 0);
+  g_return_if_fail (strcmp (key, SJ_SETTINGS_PATH_PATTERN) == 0);
+  g_return_if_fail (GTK_IS_COMBO_BOX(user_data));
 
-	value = g_settings_get_string (settings, key);
+  value = g_settings_get_string (settings, key);
   while (path_patterns[i].pattern && strcmp(path_patterns[i].pattern, value) != 0) {
     i++;
   }
   g_free (value);
-  gtk_combo_box_set_active (GTK_COMBO_BOX (path_option), i);
+
+  gtk_combo_box_set_active (GTK_COMBO_BOX (user_data), i);
   pattern_label_update ();
 }
 
@@ -322,13 +337,15 @@ static void file_pattern_changed_cb (GSettings *settings, gchar *key, gpointer u
   int i = 0;
 
   g_return_if_fail (strcmp (key, SJ_SETTINGS_FILE_PATTERN) == 0);
+  g_return_if_fail (GTK_IS_COMBO_BOX(user_data));
 
   value = g_settings_get_string (settings, key);
   while (file_patterns[i].pattern && strcmp(file_patterns[i].pattern, value) != 0) {
     i++;
   }
   g_free (value);
-  gtk_combo_box_set_active (GTK_COMBO_BOX (file_option), i);
+
+  gtk_combo_box_set_active (GTK_COMBO_BOX (user_data), i);
   pattern_label_update ();
 }
 
@@ -342,20 +359,17 @@ static void device_changed_cb (GSettings *settings, gchar *key, gpointer user_da
   char *value;
 
   g_return_if_fail (strcmp (key, SJ_SETTINGS_DEVICE) == 0);
+  g_return_if_fail (BRASERO_IS_DRIVE_SELECTION(user_data));
 
   value = g_settings_get_string (settings, key);
   if ((value != NULL) && (*value != '\0')) {
     monitor = brasero_medium_monitor_get_default ();
     drive = brasero_medium_monitor_get_drive (monitor, value);
-    brasero_drive_selection_set_active (BRASERO_DRIVE_SELECTION (cd_option), drive);
+    brasero_drive_selection_set_active (BRASERO_DRIVE_SELECTION (user_data), drive);
     g_object_unref (drive);
     g_object_unref (monitor);
-  } else {
-    /* FIXME: see the FIXME in sj-main.c around one of the
-     * device_changed_cb calls for a way to fix this
-     */
-    g_warn_if_reached();
   }
+
   g_free (value);
 }
 
@@ -404,7 +418,7 @@ on_response (GtkDialog *dialog, gint response, gpointer user_data)
   if (response == GTK_RESPONSE_HELP) {
     show_help (GTK_WINDOW (dialog));
   } else {
-    gtk_widget_hide (GTK_WIDGET (dialog));
+    gtk_widget_destroy(GTK_WIDGET (dialog));
   }
 }
 
@@ -443,42 +457,63 @@ static GtkWidget *sj_audio_profile_chooser_new(void)
   return GTK_WIDGET (combo_box);
 }
 
-static GtkWidget *create_preferences_dialog() {
-  GtkWidget *prefs_dialog;
+G_MODULE_EXPORT void on_destroy_dialog_content_cb(GtkWidget *widget, gpointer user_data) {
+
+    g_settings_unbind (sj_settings, SJ_SETTINGS_EJECT);
+    g_settings_unbind (sj_settings, SJ_SETTINGS_OPEN);
+    g_settings_unbind (sj_settings, SJ_SETTINGS_STRIP);
+
+    g_signal_handlers_disconnect_by_func(G_OBJECT (sj_settings),
+            (GCallback)device_changed_cb, cd_option);
+    g_signal_handlers_disconnect_by_func (G_OBJECT (sj_settings),
+            (GCallback)baseuri_changed_cb, basepath_fcb);
+    g_signal_handlers_disconnect_by_func (G_OBJECT (sj_settings),
+            (GCallback)audio_profile_changed_cb, audio_profile);
+    g_signal_handlers_disconnect_by_func (G_OBJECT (sj_settings),
+            (GCallback)path_pattern_changed_cb, path_option);
+    g_signal_handlers_disconnect_by_func (G_OBJECT (sj_settings),
+            (GCallback)file_pattern_changed_cb, file_option);
+    g_signal_handlers_disconnect_by_func (G_OBJECT (sj_settings),
+            (GCallback)strip_changed_cb, NULL);
+
+    g_signal_handlers_disconnect_by_func (extractor, pattern_label_update, NULL);
+}
+
+static GtkWidget *create_preferences_dialog(GtkBuilder *builder) {
   const char *labels[] = { "cd_label", "path_label", "folder_label", "file_label", "profile_label" };
   guint i;
   GtkSizeGroup *group;
   GtkWidget  *box;
 
-  prefs_dialog = GET_WIDGET ("prefs_dialog");
-  box    = GET_WIDGET ("hack_hbox");
-  g_assert (prefs_dialog != NULL);
-  g_object_add_weak_pointer (G_OBJECT (prefs_dialog), (gpointer)&prefs_dialog);
+  dialog = GET_BUILDER_WIDGET (builder, "prefs_dialog");
+  box    = GET_BUILDER_WIDGET (builder, "hack_hbox");
+  g_return_val_if_fail(dialog, NULL);
+  g_object_add_weak_pointer (G_OBJECT (dialog), (gpointer) &(dialog));
 
-  gtk_window_set_transient_for (GTK_WINDOW (prefs_dialog), GTK_WINDOW (gtkpod_app));
+  gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gtkpod_app));
 
   group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
   for (i = 0; i < G_N_ELEMENTS (labels); i++) {
     GtkWidget *widget;
-    widget = GET_WIDGET (labels[i]);
+    widget = GET_BUILDER_WIDGET (builder, labels[i]);
     if (widget) {
-    gtk_size_group_add_widget (group, widget);
+        gtk_size_group_add_widget (group, widget);
     } else {
-    g_warning ("Widget %s not found", labels[i]);
+        g_warning ("Widget %s not found", labels[i]);
     }
   }
   g_object_unref (group);
 
-  cd_option    = GET_WIDGET ("cd_option");
-  basepath_fcb   = GET_WIDGET ("path_chooser");
-  path_option  = GET_WIDGET ("path_option");
-  file_option  = GET_WIDGET ("file_option");
+  cd_option = GET_BUILDER_WIDGET (builder, "cd_option");
+  basepath_fcb = GET_BUILDER_WIDGET (builder, "path_chooser");
+  path_option = GET_BUILDER_WIDGET (builder, "path_option");
+  file_option = GET_BUILDER_WIDGET (builder, "file_option");
   #if 0
   /* FIXME: This cannot be currently used, because aufio profile selector
    *  from gnome-media-profiles package is not fully qualified widget.
    *  Once gnome-media package is updated, this widget can be created
    *  using GtkBuilder. */
-  audio_profile  = GET_WIDGET ("audio_profile");
+  audio_profile = GET_BUILDER_WIDGET (builder, "audio_profile");
   #else
   audio_profile = sj_audio_profile_chooser_new();
   g_signal_connect (G_OBJECT (audio_profile), "changed",
@@ -486,17 +521,18 @@ static GtkWidget *create_preferences_dialog() {
   gtk_box_pack_start (GTK_BOX (box), audio_profile, TRUE, TRUE, 0);
   gtk_widget_show (audio_profile);
   #endif
-  check_strip  = GET_WIDGET ("check_strip");
-  check_eject  = GET_WIDGET ("check_eject");
-  check_open   = GET_WIDGET ("check_open");
-  path_example_label = GET_WIDGET ("path_example_label");
+  check_strip = GET_BUILDER_WIDGET (builder, "check_strip");
+  check_eject = GET_BUILDER_WIDGET (builder, "check_eject");
+  check_open = GET_BUILDER_WIDGET (builder, "check_open");
+  path_example_label = GET_BUILDER_WIDGET (builder, "path_example_label");
 
   sj_add_default_dirs (GTK_FILE_CHOOSER (basepath_fcb));
+
   populate_pattern_combo (GTK_COMBO_BOX (path_option), path_patterns);
   g_signal_connect (path_option, "changed", G_CALLBACK (prefs_path_option_changed), NULL);
+
   populate_pattern_combo (GTK_COMBO_BOX (file_option), file_patterns);
   g_signal_connect (file_option, "changed", G_CALLBACK (prefs_file_option_changed), NULL);
-
   g_signal_connect (cd_option, "drive-changed", G_CALLBACK (prefs_drive_changed), NULL);
 
   /* Connect to GSettings to update the UI */
@@ -504,27 +540,27 @@ static GtkWidget *create_preferences_dialog() {
   g_settings_bind (sj_settings, SJ_SETTINGS_OPEN, G_OBJECT (check_open), "active", G_SETTINGS_BIND_DEFAULT);
   g_settings_bind (sj_settings, SJ_SETTINGS_STRIP, G_OBJECT (check_strip), "active", G_SETTINGS_BIND_DEFAULT);
   g_signal_connect (G_OBJECT (sj_settings), "changed::"SJ_SETTINGS_DEVICE,
-        (GCallback)device_changed_cb, NULL);
+        (GCallback)device_changed_cb, cd_option);
   g_signal_connect (G_OBJECT (sj_settings), "changed::"SJ_SETTINGS_BASEURI,
-        (GCallback)baseuri_changed_cb, NULL);
+        (GCallback)baseuri_changed_cb, basepath_fcb);
   g_signal_connect (G_OBJECT (sj_settings), "changed::"SJ_SETTINGS_AUDIO_PROFILE,
-        (GCallback)audio_profile_changed_cb, NULL);
+        (GCallback)audio_profile_changed_cb, audio_profile);
   g_signal_connect (G_OBJECT (sj_settings), "changed::"SJ_SETTINGS_PATH_PATTERN,
-        (GCallback)path_pattern_changed_cb, NULL);
+        (GCallback)path_pattern_changed_cb, path_option);
   g_signal_connect (G_OBJECT (sj_settings), "changed::"SJ_SETTINGS_FILE_PATTERN,
-        (GCallback)file_pattern_changed_cb, NULL);
+        (GCallback)file_pattern_changed_cb, file_option);
   g_signal_connect (G_OBJECT (sj_settings), "changed::"SJ_SETTINGS_STRIP,
         (GCallback)strip_changed_cb, NULL);
 
   g_signal_connect (extractor, "notify::profile", pattern_label_update, NULL);
 
-  baseuri_changed_cb (sj_settings, SJ_SETTINGS_BASEURI, NULL);
-  audio_profile_changed_cb (sj_settings, SJ_SETTINGS_AUDIO_PROFILE, NULL);
-  file_pattern_changed_cb (sj_settings, SJ_SETTINGS_FILE_PATTERN, NULL);
-  path_pattern_changed_cb (sj_settings, SJ_SETTINGS_PATH_PATTERN, NULL);
-  device_changed_cb (sj_settings, SJ_SETTINGS_DEVICE, NULL);
+  baseuri_changed_cb (sj_settings, SJ_SETTINGS_BASEURI, basepath_fcb);
+  audio_profile_changed_cb (sj_settings, SJ_SETTINGS_AUDIO_PROFILE, audio_profile);
+  file_pattern_changed_cb (sj_settings, SJ_SETTINGS_FILE_PATTERN, file_option);
+  path_pattern_changed_cb (sj_settings, SJ_SETTINGS_PATH_PATTERN, path_option);
+  device_changed_cb (sj_settings, SJ_SETTINGS_DEVICE, cd_option);
 
-  return prefs_dialog;
+  return dialog;
 }
 
 /**
@@ -532,24 +568,36 @@ static GtkWidget *create_preferences_dialog() {
  */
 G_MODULE_EXPORT void on_edit_preferences_cb (GtkMenuItem *item, gpointer user_data)
 {
-  static GtkWidget *prefs_dialog = NULL;
-  if (prefs_dialog) {
-    gtk_window_present (GTK_WINDOW (prefs_dialog));
-  } else {
-    prefs_dialog = create_preferences_dialog();
-    g_signal_connect (GTK_DIALOG (prefs_dialog), "response", G_CALLBACK (on_response), NULL);
-    gtk_widget_show_all (prefs_dialog);
-  }
+  GtkBuilder *prefBuilder;
+  gchar *builderXML;
+  GtkWidget *prefs_dialog;
+
+  builderXML = sjcd_plugin_get_builder_file();
+  prefBuilder = gtkpod_builder_xml_new(builderXML);
+  gtk_builder_connect_signals(prefBuilder, NULL);
+
+  prefs_dialog = create_preferences_dialog(prefBuilder);
+  g_signal_connect (GTK_DIALOG (prefs_dialog), "response", G_CALLBACK (on_response), NULL);
+  gtk_widget_show_all (prefs_dialog);
+
+  g_free(builderXML);
+  g_object_unref(prefBuilder);
 }
 
 GtkWidget *init_sjcd_preferences()
 {
+    GtkBuilder *prefBuilder;
+    gchar *builderXML;
     GtkWidget *prefs_dialog;
     GtkWidget *container;
     GtkWidget *vbox;
     GList *children = NULL;
 
-    prefs_dialog = create_preferences_dialog();
+    builderXML = sjcd_plugin_get_builder_file();
+    prefBuilder = gtkpod_builder_xml_new(builderXML);
+    gtk_builder_connect_signals(prefBuilder, NULL);
+
+    prefs_dialog = create_preferences_dialog(prefBuilder);
     container = gtk_dialog_get_content_area(GTK_DIALOG(prefs_dialog));
     children = gtk_container_get_children(GTK_CONTAINER(container));
     g_return_val_if_fail(children, NULL);
@@ -557,6 +605,9 @@ GtkWidget *init_sjcd_preferences()
     vbox = GTK_WIDGET(children->data);
     g_object_ref(vbox);
     gtk_container_remove(GTK_CONTAINER(container), vbox);
+
+    g_free(builderXML);
+    g_object_unref(prefBuilder);
 
     return vbox;
 }

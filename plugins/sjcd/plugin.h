@@ -61,4 +61,6 @@ struct _SJCDPluginClass {
 
 SJCDPlugin *sjcd_plugin;
 
+gchar* sjcd_plugin_get_builder_file();
+
 #endif /* PLUGIN_H_ */
