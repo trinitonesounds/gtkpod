@@ -2376,15 +2376,28 @@ gboolean tm_add_filelist(gchar *data, GtkTreePath *path, GtkTreeViewDropPosition
 
 void track_display_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data) {
     GList *tracks = tks;
+    GtkTreeModel *model = NULL;
+
 
     tm_remove_all_tracks();
 
+    // Unsort the track view to improve performance
+    model = gtk_tree_view_get_model(track_treeview);
+    gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
+
     while (tracks != NULL) { /* add all tracks to model */
         Track *track = tracks->data;
-        tm_add_track_to_track_model(track, NULL);
+        gtk_list_store_insert_with_values (get_model_as_store(model), NULL, -1, READOUT_COL, track, -1);
         tracks = tracks->next;
     }
 
+    if (model) {
+        int column = prefs_get_int("tm_sortcol");
+        int order = prefs_get_int("tm_sort");
+        if (order != SORT_NONE) {
+            gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), column, order);
+        }
+    }
 }
 
 void track_display_set_playlist_cb(GtkPodApp *app, gpointer pl, gpointer data) {
