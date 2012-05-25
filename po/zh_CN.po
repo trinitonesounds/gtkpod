@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-15 00:44+0100\n"
+"POT-Creation-Date: 2012-05-25 10:07+0100\n"
 "PO-Revision-Date: 2010-08-09 19:36+0100\n"
 "Last-Translator: Tan Zhixin <tanzhxin@gmail.com>\n"
 "Language-Team: Zhuang <zh_CN@li.gtkpod.org>\n"
@@ -373,26 +373,26 @@ msgstr "忽略目录文件'%s'\n"
 msgid "Skipping '%s' to avoid adding playlist file recursively\n"
 msgstr "忽略'%s'以免递归添加播放列表\n"
 
-#: ../libgtkpod/file.c:671
+#: ../libgtkpod/file.c:674
 #, c-format
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr "模板'%2$s'中有未知字符串'%1$s'\n"
 
-#: ../libgtkpod/file.c:951
+#: ../libgtkpod/file.c:954
 #, c-format
 msgid "Could not create '%s'"
 msgstr "无法创建'%s'"
 
-#: ../libgtkpod/file.c:985
+#: ../libgtkpod/file.c:988
 msgid "Error creating thumbnail file"
 msgstr "创建缩略文件时发生错误"
 
-#: ../libgtkpod/file.c:1013 ../libgtkpod/misc.c:967
+#: ../libgtkpod/file.c:1016 ../libgtkpod/misc.c:967
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
 msgstr "模板'%2$s'中有未知字符串'%%%1$c'"
 
-#: ../libgtkpod/file.c:1033
+#: ../libgtkpod/file.c:1036
 #, fuzzy, c-format
 msgid ""
 "Unable to start video thumbnail generator\n"
@@ -401,18 +401,18 @@ msgstr ""
 "无法运行视频缩略工具\n"
 "命令为：'%s'"
 
-#: ../libgtkpod/file.c:1036
+#: ../libgtkpod/file.c:1039
 #, c-format
 msgid "Thumbnail generator returned status %d"
 msgstr "缩略生成工具返回信息%d"
 
-#: ../libgtkpod/file.c:1160
+#: ../libgtkpod/file.c:1163
 #, c-format
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
 msgstr "下列音轨无法完成处理（文件不存在）：'%s'\n"
 
-#: ../libgtkpod/file.c:1176
+#: ../libgtkpod/file.c:1179
 #, c-format
 msgid ""
 "The filetype '%s' is not currently supported.\n"
@@ -420,7 +420,7 @@ msgid ""
 "If you have a plugin that supports this filetype then please enable it."
 msgstr ""
 
-#: ../libgtkpod/file.c:1184
+#: ../libgtkpod/file.c:1187
 #, fuzzy, c-format
 msgid ""
 "No track information could be retrieved from the file %s due to the "
@@ -429,7 +429,7 @@ msgid ""
 "%s"
 msgstr "无法为下列音轨获取mserv信息"
 
-#: ../libgtkpod/file.c:1190
+#: ../libgtkpod/file.c:1193
 #, fuzzy, c-format
 msgid ""
 "No track information could be retrieved from the file %s due to the "
@@ -438,20 +438,20 @@ msgid ""
 "An error was not returned."
 msgstr "无法为下列音轨获取mserv信息"
 
-#: ../libgtkpod/file.c:1296 ../plugins/mserv/mserv.c:199
+#: ../libgtkpod/file.c:1299 ../plugins/mserv/mserv.c:199
 msgid "Nothing to update"
 msgstr "无需要更新的项目"
 
-#: ../libgtkpod/file.c:1315
+#: ../libgtkpod/file.c:1318
 #, c-format
 msgid "Updating %s"
 msgstr "更新%s中"
 
-#: ../libgtkpod/file.c:1327
+#: ../libgtkpod/file.c:1330
 msgid "Updated selected tracks with info from file."
 msgstr "从文件更新所选音轨的信息。"
 
-#: ../libgtkpod/file.c:1343
+#: ../libgtkpod/file.c:1346
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -460,11 +460,11 @@ msgstr[1] "下列%d条音轨无法更新"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1346
+#: ../libgtkpod/file.c:1349
 msgid "Failed Track Update"
 msgstr "更新音轨失败"
 
-#: ../libgtkpod/file.c:1400
+#: ../libgtkpod/file.c:1403
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -473,51 +473,51 @@ msgstr[1] "下列%d条音轨完成更新"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:1403
+#: ../libgtkpod/file.c:1406
 msgid "Successful Track Update"
 msgstr "成功更新音轨"
 
-#: ../libgtkpod/file.c:1490
+#: ../libgtkpod/file.c:1493
 msgid "no local filename available, file on the iPod will be used instead"
 msgstr "本地文件不存在，将使用iPod上的文件代替"
 
-#: ../libgtkpod/file.c:1494
+#: ../libgtkpod/file.c:1497
 msgid "no local filename available and copy on iPod cannot be found"
 msgstr "本地文件不存在，iPod中的拷贝也找不到"
 
-#: ../libgtkpod/file.c:1497 ../libgtkpod/file.c:1510
+#: ../libgtkpod/file.c:1500 ../libgtkpod/file.c:1513
 msgid "no local filename available"
 msgstr "本地文件不存在"
 
-#: ../libgtkpod/file.c:1503
+#: ../libgtkpod/file.c:1506
 msgid "local file could not be found, file on the iPod will be used instead"
 msgstr "找不到本地文件，将使用iPod上的文件代替"
 
-#: ../libgtkpod/file.c:1507
+#: ../libgtkpod/file.c:1510
 msgid "local file as well as copy on the iPod cannot be found"
 msgstr "本地文件和iPod中的拷贝都找不到"
 
 #. update not successful -- log this track for later display
-#: ../libgtkpod/file.c:1592
+#: ../libgtkpod/file.c:1595
 msgid "update failed (format not supported?)"
 msgstr "更新失败（格式不支持?）"
 
-#: ../libgtkpod/file.c:1652
+#: ../libgtkpod/file.c:1655
 #, c-format
 msgid "File type of %s is not recognised"
 msgstr ""
 
-#: ../libgtkpod/file.c:1660 ../libgtkpod/misc_playlist.c:742
+#: ../libgtkpod/file.c:1663 ../libgtkpod/misc_playlist.c:742
 #, c-format
 msgid "Processing '%s'..."
 msgstr "处理'%s'中..."
 
-#: ../libgtkpod/file.c:1666
+#: ../libgtkpod/file.c:1669
 #, c-format
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "忽略'%s'因为它满足排除条件。\n"
 
-#: ../libgtkpod/file.c:1770 ../libgtkpod/misc_track.c:1621
+#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1621
 #: ../libgtkpod/misc_track.c:1717
 #, c-format
 msgid ""
@@ -527,41 +527,41 @@ msgstr ""
 "Podcast已存在：'%s'\n"
 "\n"
 
-#: ../libgtkpod/file.c:1844
+#: ../libgtkpod/file.c:1847
 #, fuzzy, c-format
 msgid "Couldn't change tags of file: %s"
 msgstr "无法改变文件的标签：%s\n"
 
-#: ../libgtkpod/file.c:1860
+#: ../libgtkpod/file.c:1863
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "无法改变文件的标签：%s\n"
 
-#: ../libgtkpod/file.c:1952
+#: ../libgtkpod/file.c:1955
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr "无法打开文件'%s'读写。\n"
 
-#: ../libgtkpod/file.c:1957
+#: ../libgtkpod/file.c:1960
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr "无法对文件'%s'加锁。\n"
 
 #. error!
-#: ../libgtkpod/file.c:1972 ../libgtkpod/file.c:1980 ../libgtkpod/file.c:1990
-#: ../libgtkpod/file.c:1997
+#: ../libgtkpod/file.c:1975 ../libgtkpod/file.c:1983 ../libgtkpod/file.c:1993
+#: ../libgtkpod/file.c:2000
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr "'%s'中格式有误：%s\n"
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file.c:2019
+#: ../libgtkpod/file.c:2022
 msgid "Remove offline playcounts?"
 msgstr "清除离线播放计数？"
 
 #. title
-#: ../libgtkpod/file.c:2020
+#: ../libgtkpod/file.c:2023
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
@@ -569,30 +569,30 @@ msgstr ""
 "iTunesDB中的一些离线播放的音轨找不到。按下'ok'从离线播放计数文件中删除它"
 "们，'Cancel'保持不变。"
 
-#: ../libgtkpod/file.c:2035
+#: ../libgtkpod/file.c:2038
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr "写入'%s'时发生错误。\n"
 
-#: ../libgtkpod/file.c:2068
+#: ../libgtkpod/file.c:2071
 #, c-format
 msgid "Failed to read sound check from track with no path setting."
 msgstr ""
 
-#: ../libgtkpod/file.c:2076
+#: ../libgtkpod/file.c:2079
 #, c-format
 msgid ""
 "Failed to read sound check from track because filetype is not recognised."
 msgstr ""
 
-#: ../libgtkpod/file.c:2106
+#: ../libgtkpod/file.c:2109
 #, c-format
 msgid ""
 "Error: Could not determine filetype for file at path: %s.\n"
 "\n"
 msgstr ""
 
-#: ../libgtkpod/file.c:2112 ../libgtkpod/file.c:2117
+#: ../libgtkpod/file.c:2115 ../libgtkpod/file.c:2120
 #, c-format
 msgid ""
 "Error: Failed to read lyrics because:\n"
@@ -600,16 +600,16 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../libgtkpod/file.c:2121
+#: ../libgtkpod/file.c:2124
 #, c-format
 msgid "Error: Unable to get filename from path"
 msgstr ""
 
-#: ../libgtkpod/file.c:2152
+#: ../libgtkpod/file.c:2155
 msgid "Error:"
 msgstr "错误："
 
-#: ../libgtkpod/file.c:2166
+#: ../libgtkpod/file.c:2169
 #, c-format
 msgid ""
 "iPod File not available and ID3 saving disabled in options, cannot save "
@@ -619,7 +619,7 @@ msgstr ""
 "iPod文件不存在并且ID3保存功能被禁用，无法保存歌词到：%s \n"
 "\n"
 
-#: ../libgtkpod/file.c:2175
+#: ../libgtkpod/file.c:2178
 #, fuzzy, c-format
 msgid ""
 "Lyrics not written, file type cannot be determined (%s).\n"
@@ -628,7 +628,7 @@ msgstr ""
 "歌词未写入，文件名不存在(%s)。\n"
 "\n"
 
-#: ../libgtkpod/file.c:2182
+#: ../libgtkpod/file.c:2185
 #, fuzzy, c-format
 msgid ""
 "Lyrics not written due to the error:\n"
@@ -638,7 +638,7 @@ msgstr ""
 "歌词未写入，文件名不存在(%s)。\n"
 "\n"
 
-#: ../libgtkpod/file.c:2187
+#: ../libgtkpod/file.c:2190
 #, fuzzy, c-format
 msgid ""
 "Lyrics not written due to the error:\n"
@@ -1393,7 +1393,7 @@ msgstr "专辑"
 #: ../plugins/playlist_display/playlist_display_spl.c:79
 #: ../plugins/sorttab_display/sorttab_widget.c:238
 #: ../plugins/sjcd/egg-play-preview.c:189 ../plugins/sjcd/sj-main.c:521
-#: ../plugins/sjcd/sj-main.c:1542
+#: ../plugins/sjcd/sj-main.c:1527
 msgid "Artist"
 msgstr "艺术家"
 
@@ -1402,7 +1402,7 @@ msgstr "艺术家"
 #: ../plugins/playlist_display/playlist_display_spl.c:77
 #: ../plugins/sorttab_display/sorttab_widget.c:250
 #: ../plugins/sjcd/egg-play-preview.c:179 ../plugins/sjcd/sj-main.c:515
-#: ../plugins/sjcd/sj-main.c:1533
+#: ../plugins/sjcd/sj-main.c:1518
 msgid "Title"
 msgstr "歌曲"
 
@@ -1611,7 +1611,7 @@ msgstr "Season Nr"
 msgid "Episode Nr"
 msgstr "Episode Nr"
 
-#: ../libgtkpod/misc_conversion.c:107 ../plugins/sjcd/sj-prefs.c:57
+#: ../libgtkpod/misc_conversion.c:107 ../plugins/sjcd/sj-prefs.c:67
 msgid "Album Artist"
 msgstr "专辑艺术家"
 
@@ -1861,7 +1861,7 @@ msgstr "在PC上没有对应文件的悬空音轨被移除"
 msgid "Dangling tracks with files on PC were handled."
 msgstr "悬空音轨的PC对应文件已找到"
 
-#: ../libgtkpod/misc_playlist.c:789 ../plugins/sjcd/sj-main.c:1518
+#: ../libgtkpod/misc_playlist.c:789 ../plugins/sjcd/sj-main.c:1503
 msgid "Track"
 msgstr "音轨"
 
@@ -2399,12 +2399,12 @@ msgstr ""
 "'%s' 返回下列输出：\n"
 "%s\n"
 
-#: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:460
+#: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:465
 #, c-format
 msgid "ERROR %s is not itunes style."
 msgstr ""
 
-#: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:659
+#: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:664
 #, c-format
 msgid "ERROR failed to change track file's artwork."
 msgstr ""
@@ -3954,7 +3954,7 @@ msgstr ""
 #. Change the label to Stop while extracting
 #. TODO: find out why GTK+ needs this to work (see #364371)
 #: ../plugins/media_player/media_player.xml.h:4
-#: ../plugins/sjcd/sj-extracting.c:830
+#: ../plugins/sjcd/sj-extracting.c:838
 #, fuzzy
 msgid "Stop"
 msgstr "至"
@@ -4378,7 +4378,7 @@ msgstr "限制"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:66
 #: ../plugins/playlist_display/playlist_display_actions.c:321
-#: ../plugins/sjcd/sj-extracting.c:599
+#: ../plugins/sjcd/sj-extracting.c:607
 #, fuzzy, c-format
 msgid "%s\n"
 msgstr "%s - %s"
@@ -4423,7 +4423,7 @@ msgstr "部分文件没有添加成功"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:212
 #: ../plugins/playlist_display/playlist_display_actions.c:364
-#: ../plugins/sjcd/sj-extracting.c:649
+#: ../plugins/sjcd/sj-extracting.c:657
 msgid "Some tracks failed to be added but no errors were reported."
 msgstr ""
 
@@ -4441,13 +4441,13 @@ msgstr "添加播放列表到'%s'"
 #. gint id,
 #. gboolean modal,
 #: ../plugins/playlist_display/playlist_display_actions.c:350
-#: ../plugins/sjcd/sj-extracting.c:635
+#: ../plugins/sjcd/sj-extracting.c:643
 msgid "File Addition Errors"
 msgstr ""
 
 #. title
 #: ../plugins/playlist_display/playlist_display_actions.c:351
-#: ../plugins/sjcd/sj-extracting.c:636
+#: ../plugins/sjcd/sj-extracting.c:644
 msgid "Some files were not added successfully"
 msgstr "部分文件没有添加成功"
 
@@ -5994,7 +5994,7 @@ msgstr "位置："
 msgid "The position in the current stream in seconds."
 msgstr ""
 
-#: ../plugins/sjcd/egg-play-preview.c:219 ../plugins/sjcd/sj-main.c:1553
+#: ../plugins/sjcd/egg-play-preview.c:219 ../plugins/sjcd/sj-main.c:1538
 #, fuzzy
 msgid "Duration"
 msgstr "信息"
@@ -6086,7 +6086,7 @@ msgstr ""
 msgid "The plugin necessary for file access was not found"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-metadata-getter.c:247
+#: ../plugins/sjcd/libjuicer/sj-metadata-getter.c:253
 #, fuzzy, c-format
 msgid "Could not create CD lookup thread"
 msgstr "无法从iTunesDB创建哈希值\n"
@@ -6142,89 +6142,89 @@ msgstr "试音"
 msgid "  Sound Juicer"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:160
+#: ../plugins/sjcd/sj-extracting.c:162
 #, c-format
 msgid "Failed to get output format"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:185
+#: ../plugins/sjcd/sj-extracting.c:187
 msgid "Name too long"
 msgstr ""
 
 #. TODO: find out why GTK+ needs this to work (see #364371)
-#: ../plugins/sjcd/sj-extracting.c:244
+#: ../plugins/sjcd/sj-extracting.c:246
 #, fuzzy
 msgid "Extract"
 msgstr "音轨"
 
-#: ../plugins/sjcd/sj-extracting.c:318
+#: ../plugins/sjcd/sj-extracting.c:326
 #, fuzzy
 msgid "A file with the same name exists"
 msgstr "已经存在一个同名照片簿。"
 
-#: ../plugins/sjcd/sj-extracting.c:320
+#: ../plugins/sjcd/sj-extracting.c:328
 #, c-format
 msgid ""
 "A file called '%s' exists, size %s.\n"
 "Do you want to skip this track or overwrite it?"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:330
+#: ../plugins/sjcd/sj-extracting.c:338
 msgid "_Skip"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:331
+#: ../plugins/sjcd/sj-extracting.c:339
 msgid "S_kip All"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:332
+#: ../plugins/sjcd/sj-extracting.c:340
 #, fuzzy
 msgid "_Overwrite"
 msgstr "覆盖"
 
-#: ../plugins/sjcd/sj-extracting.c:333
+#: ../plugins/sjcd/sj-extracting.c:341
 #, fuzzy
 msgid "Overwrite _All"
 msgstr "覆盖"
 
-#: ../plugins/sjcd/sj-extracting.c:382
+#: ../plugins/sjcd/sj-extracting.c:390
 #, fuzzy, c-format
 msgid "Failed to create output directory: %s"
 msgstr "设置插图失败：'%s'\n"
 
-#: ../plugins/sjcd/sj-extracting.c:524
+#: ../plugins/sjcd/sj-extracting.c:532
 #, c-format
 msgid "Estimated time left: %d:%02d (at %0.1f×)"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:526
+#: ../plugins/sjcd/sj-extracting.c:534
 msgid "Estimated time left: unknown"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:580
+#: ../plugins/sjcd/sj-extracting.c:588
 #, c-format
 msgid ""
 "%d were ripped from the CD but no repository was selected. Please import "
 "them manually."
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:594
+#: ../plugins/sjcd/sj-extracting.c:602
 #, fuzzy, c-format
 msgid "Importing file '%s'. Please wait..."
 msgstr "现在开始写入数据库'%s'，请等待..."
 
-#: ../plugins/sjcd/sj-extracting.c:737
+#: ../plugins/sjcd/sj-extracting.c:745
 msgid "Sound Juicer could not extract this CD."
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:739 ../plugins/sjcd/sj-main.c:659
-#: ../plugins/sjcd/sj-main.c:767 ../plugins/sjcd/sj-main.c:860
-#: ../plugins/sjcd/sj-main.c:1075 ../plugins/sjcd/sj-main.c:1398
+#: ../plugins/sjcd/sj-extracting.c:747 ../plugins/sjcd/sj-main.c:661
+#: ../plugins/sjcd/sj-main.c:769 ../plugins/sjcd/sj-main.c:862
+#: ../plugins/sjcd/sj-main.c:1060 ../plugins/sjcd/sj-main.c:1383
 #, fuzzy
 msgid "Reason"
 msgstr "Season Nr"
 
-#: ../plugins/sjcd/sj-extracting.c:856 ../plugins/sjcd/sj-extracting.c:862
+#: ../plugins/sjcd/sj-extracting.c:864 ../plugins/sjcd/sj-extracting.c:870
 msgid "Extracting audio from CD"
 msgstr ""
 
@@ -6323,13 +6323,13 @@ msgstr "无法读取'%s'。\n"
 msgid "You can improve the MusicBrainz database by adding this album."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:657 ../plugins/sjcd/sj-main.c:763
-#: ../plugins/sjcd/sj-main.c:858
+#: ../plugins/sjcd/sj-main.c:659 ../plugins/sjcd/sj-main.c:765
+#: ../plugins/sjcd/sj-main.c:860
 #, fuzzy
 msgid "Could not read the CD"
 msgstr "无法创建'%s'"
 
-#: ../plugins/sjcd/sj-main.c:658 ../plugins/sjcd/sj-main.c:766
+#: ../plugins/sjcd/sj-main.c:660 ../plugins/sjcd/sj-main.c:768
 msgid "Sound Juicer could not read the track listing on this CD."
 msgstr ""
 
@@ -6344,145 +6344,142 @@ msgstr ""
 #. gdk_display_sync (gtk_widget_get_display (GTK_WIDGET (gtkpod_app)));
 #. }
 #. Set statusbar message
-#: ../plugins/sjcd/sj-main.c:737
+#: ../plugins/sjcd/sj-main.c:739
 msgid "Retrieving track listing...please wait."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:820
+#: ../plugins/sjcd/sj-main.c:822
 #, c-format
 msgid "Sound Juicer could not use the CD-ROM device '%s'"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:827
+#: ../plugins/sjcd/sj-main.c:829
 msgid "HAL daemon may not be running."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:851
+#: ../plugins/sjcd/sj-main.c:853
 #, c-format
 msgid "Sound Juicer could not access the CD-ROM device '%s'"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:951
+#: ../plugins/sjcd/sj-main.c:953
 msgid "No CD-ROM drives found"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:952
+#: ../plugins/sjcd/sj-main.c:954
 msgid "Sound Juicer could not find any CD-ROM drives to read."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:985
+#: ../plugins/sjcd/sj-main.c:980
 msgid ""
-"The currently selected audio profile is not available on your installation."
+"sjcd plugin: the currently selected audio profile is not available on your "
+"installation."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:987
-msgid "_Change Profile"
-msgstr ""
-
-#: ../plugins/sjcd/sj-main.c:1073
+#: ../plugins/sjcd/sj-main.c:1058
 #, fuzzy
 msgid "Could not open URL"
 msgstr "无法创建'%s'"
 
-#: ../plugins/sjcd/sj-main.c:1074
+#: ../plugins/sjcd/sj-main.c:1059
 msgid "Sound Juicer could not open the submission URL"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:1182
+#: ../plugins/sjcd/sj-main.c:1167
 #, c-format
 msgid "Unknown column %d was edited"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:1323 ../plugins/sjcd/sj-prefs.c:109
+#: ../plugins/sjcd/sj-main.c:1308 ../plugins/sjcd/sj-prefs.c:119
 #, c-format
 msgid ""
 "Could not display help for Sound Juicer\n"
 "%s"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:1396
+#: ../plugins/sjcd/sj-main.c:1381
 #, fuzzy
 msgid "Could not duplicate disc"
 msgstr "无法创建'%s'"
 
-#: ../plugins/sjcd/sj-main.c:1397
+#: ../plugins/sjcd/sj-main.c:1382
 msgid "Sound Juicer could not duplicate the disc"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:1437 ../plugins/sjcd/sj-main.c:1460
+#: ../plugins/sjcd/sj-main.c:1422 ../plugins/sjcd/sj-main.c:1445
 #, fuzzy
 msgid "Could not create GSettings object.\n"
 msgstr "无法创建'%s'"
 
-#: ../plugins/sjcd/sj-prefs.c:52
+#: ../plugins/sjcd/sj-prefs.c:62
 #, fuzzy
 msgid "Album Artist, Album Title"
 msgstr "专辑艺术家"
 
-#: ../plugins/sjcd/sj-prefs.c:53
+#: ../plugins/sjcd/sj-prefs.c:63
 msgid "Album Artist (sortable), Album Title"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:54
+#: ../plugins/sjcd/sj-prefs.c:64
 msgid "Track Artist, Album Title"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:55
+#: ../plugins/sjcd/sj-prefs.c:65
 msgid "Track Artist (sortable), Album Title"
-msgstr ""
-
-#: ../plugins/sjcd/sj-prefs.c:56
-#, fuzzy
-msgid "Album Title"
-msgstr "专辑封面"
-
-#: ../plugins/sjcd/sj-prefs.c:58
-#, fuzzy
-msgid "Album Artist (sortable)"
-msgstr "专辑艺术家"
-
-#: ../plugins/sjcd/sj-prefs.c:59
-#, fuzzy
-msgid "Album Artist - Album Title"
-msgstr "专辑艺术家"
-
-#: ../plugins/sjcd/sj-prefs.c:60
-msgid "Album Artist (sortable) - Album Title"
-msgstr ""
-
-#: ../plugins/sjcd/sj-prefs.c:61
-msgid "[none]"
 msgstr ""
 
 #: ../plugins/sjcd/sj-prefs.c:66
 #, fuzzy
+msgid "Album Title"
+msgstr "专辑封面"
+
+#: ../plugins/sjcd/sj-prefs.c:68
+#, fuzzy
+msgid "Album Artist (sortable)"
+msgstr "专辑艺术家"
+
+#: ../plugins/sjcd/sj-prefs.c:69
+#, fuzzy
+msgid "Album Artist - Album Title"
+msgstr "专辑艺术家"
+
+#: ../plugins/sjcd/sj-prefs.c:70
+msgid "Album Artist (sortable) - Album Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:71
+msgid "[none]"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:76
+#, fuzzy
 msgid "Number - Title"
 msgstr "过滤器标签数："
 
-#: ../plugins/sjcd/sj-prefs.c:67
+#: ../plugins/sjcd/sj-prefs.c:77
 #, fuzzy
 msgid "Track Title"
 msgstr "按歌曲排序"
 
-#: ../plugins/sjcd/sj-prefs.c:68
+#: ../plugins/sjcd/sj-prefs.c:78
 #, fuzzy
 msgid "Track Artist - Track Title"
 msgstr "按歌曲排序"
 
-#: ../plugins/sjcd/sj-prefs.c:69
+#: ../plugins/sjcd/sj-prefs.c:79
 msgid "Track Artist (sortable) - Track Title"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:70
+#: ../plugins/sjcd/sj-prefs.c:80
 msgid "Number. Track Artist - Track Title"
 msgstr ""
 
 #. {N_("Number. Track Artist (sortable) - Track Title"), "%tN. %ts - %tt"},
-#: ../plugins/sjcd/sj-prefs.c:72
+#: ../plugins/sjcd/sj-prefs.c:82
 msgid "Number-Track Artist-Track Title (lowercase)"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:291
+#: ../plugins/sjcd/sj-prefs.c:304
 #, fuzzy
 msgid "Example Path"
 msgstr "采样速率"
