@@ -1,3 +1,436 @@
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-05-12
+
+    Updates NEWS and Changelog
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-05-25
+
+    Update language files ready for release 2.1.2
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-05-25
+
+    Update and fix sjcd plugin
+    
+    * Update sjcd plugin to reflect latest developements in sound juicer
+      including use of musicbrainz 4
+    
+    * sj_extracting.c
+     * Avoid segfaulting if a track value is empty. Happen to have a CD that
+       failed to return any track names for an album - maybe a bug in the
+       sound juicer musicbrainz 4 code
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-05-09
+
+    Improve performance of playlist selection
+    
+    * For playlists / ipods with many tracks, playlist selection can be very
+      slow. Turns out this is due to excessive track display signals being
+      fired while tracks are added.
+    
+    * Use gtk_list_store_insert_with_values since this triggers fewer signals
+      than the gtk_list_store_append/gtk_list_store_set couplet
+    
+    * Turn off sorting then turn back on afterwards since sorting makes adding
+      very slow!
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-04-24
+
+    Fix sjcd preference dialog
+    
+    * Sound juicer dialog opening one but failing to open correctly on
+      subsquent occasions.
+    
+    * Ensures that the dialog is fully constructed from scratch and fully
+      destroyed when closed, inclusing unbinding and disconnecting the
+      g_settings
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-04-23
+
+    Fix for double free segfault
+    
+    * Occurs when adding a directory
+    
+    * Directory names inserted into hash table, added as both key and value then
+      being freed as key and then freed as value. Second free causing the
+      segfault
+    
+    Fixes 3477268 (sf.net)
+    Fixes FS#92
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-04-22
+
+    Fix deadlock when mult metadata is available in sjcd
+    
+    * When preparing to rip a CD and cddb returns more than one choice for the
+      CD's metadata, a dialog is displayed so user can choose which metadata to
+      take. Pressing continue, causes a deadlock in application.
+    
+    * Surrounding gtk_dialog_run function with gdk_threads_enter/leave solves
+      the deadlock by ensuring gtkpod's main loop owns the lock.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-04-19
+
+    Fix for not setting artwork correctly
+    
+    * Mistake in code that points to the temporary file rather than extracting
+      the pixbuf data from it. Fixed to manually extract and apply data as
+      artwork.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-04-19
+
+    Tidy up variables for library compilation
+    
+    * configure.ac
+     * Set the so version of the atomic parsley library
+     * Some default CFLAGS are inappropriate for C++ compilation so provide
+       reduced CFLAGS for atomic parsley library
+    
+    * libgkpod/Makefile.am
+     * Remove unnecessary variable definitions
+    
+    * atomic-parsley/Makefile.am
+     * Apply CFLAGS and SO_VERSION to library
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-04-17
+
+    Fix deprecations in sjcd plugin
+    
+    * Deprecated code causing compile errors in rpm compilations
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-04-15
+
+    Fix language files
+    
+    * Update po files to reflect changes in plugins. Include atomic parsley
+      library for translation of error messages
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-04-14
+
+    Build libs directory before plugins
+    
+    * atomic parsley library required for plugins but depends on libgtkpod
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-04-11
+
+    Small fixes and reformatting
+    
+    * Reformats all atomic-parsley files to same formatting as the other
+      gtkpod sources
+    
+    * Convert some atom strings to defines
+    
+    * Fix some bugs after testing
+    
+    * Disable gapless reading since there is a lot more to it than just the
+      gapless flag. May be sorted in the future
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-04-10
+
+    Support for writing mp4 tags using atomic parsley
+    
+    * AtomicParsleyBridge
+     * Include read / write lyric support for the first time
+     * Include write metadata function
+    
+    * m4afile.[ch]
+     * Mirror the function calls in mp4file.c
+     * Could we make these common somehow??
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-04-14
+
+    Remove the dependency on libmp4v2
+    
+    * The dependency on libmp4v2 is a license violation when
+      linked to the GPL codebase.
+    
+    * Integrate a modified version of the GPL AtomicParsely code
+      into the filetype_mp4 plugin instead. This code is written
+      in C++ so use of the CXX bits n pieces is required. Small
+      price to pay to avoid the license violation.
+    
+    * Atomic Parsley library added to separate libs directory to
+      allow linkage from both mp4 and m4a plugins.
+    
+    * TODO
+     * Only read is currently supported so write needs implementing
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-04-08
+
+    Small fixes
+    
+    * file.c
+     * Fix incorrect logic when error handling file info
+    
+    * gtkpod_app_iface.c
+     * Avoid winding on the suffixes list permanently when registering file
+       types.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-02-11
+
+    Remove canberra dependency
+    
+    * All use has been removed from sjcd plugin so no need to include the
+      actual dependency.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-02-11
+
+    Modify potfiles for sjcd and external player plugins
+
+Daniele Forsi <dforsi@src.gnome.org>	2012-03-27
+
+    strcmp() needs #include <string.h>
+    
+    This reverts one hunk of commit 1c640e4bbc5efa6e7a85456b54d1c86376e0ccc4
+
+Daniele Forsi <dforsi@src.gnome.org>	2012-03-27
+
+    Add the border to the spin button
+    
+    So it looks like all other spin buttons.
+
+Daniele Forsi <dforsi@src.gnome.org>	2012-03-27
+
+    Use a GtkLabel like all other dialogs
+    
+    So it looks like all other text.
+
+Daniele Forsi <dforsi@src.gnome.org>	2012-03-26
+
+    Trivial: s/lyrics/details/ in license text
+    
+    Possibly a side effect of a global search and replace.
+
+Daniele Forsi <dforsi@src.gnome.org>	2012-03-25
+
+    Add const keywords (warnings by clang)
+    
+    At some time they were added to gtk too.
+    Eg. see http://developer.gnome.org/gtk/2.24/GtkCellRenderer.html
+    Fixes:
+      CC     rb_cell_renderer_rating.lo
+    rb_cell_renderer_rating.c:159:23: warning: incompatible pointer types assigning to 'void (*)(GtkCellRenderer *, GtkWidget *, const GdkRectangle *, gint *, gint *, gint *, gint *)' from 'void (GtkCellRenderer *, GtkWidget *, GdkRectangle *, gint *, gint *, gint *, gint *)'
+            cell_class->get_size = rb_cell_renderer_rating_get_size;
+                                 ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    rb_cell_renderer_rating.c:161:23: warning: incompatible pointer types assigning to 'gboolean (*)(GtkCellRenderer *, GdkEvent *, GtkWidget *, const gchar *, const GdkRectangle *, const GdkRectangle *, GtkCellRendererState)' from 'gboolean (GtkCellRenderer *, GdkEvent *, GtkWidget *, const gchar *, GdkRectangle *, GdkRectangle *, GtkCellRendererState)'
+            cell_class->activate = rb_cell_renderer_rating_activate;
+                                 ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    rb_cell_renderer_rating.c:287:50: warning: passing 'const GdkRectangle *' (aka 'const struct _cairo_rectangle_int *') to parameter of type 'GdkRectangle *' (aka 'struct _cairo_rectangle_int *') discards qualifiers
+            rb_cell_renderer_rating_get_size (cell, widget, cell_area,
+                                                            ^~~~~~~~~
+    rb_cell_renderer_rating.c:244:21: note: passing argument to parameter 'cell_area' here
+                                      GdkRectangle *cell_area,
+                                                    ^
+    3 warnings generated.
+
+Daniele Forsi <dforsi@src.gnome.org>	2012-03-25
+
+    Fix visibility of enum GtkPodSortTypes (warnings by clang)
+    
+    Fixes:
+      CC     special_sorttab_page.lo
+    In file included from special_sorttab_page.c:37:
+    In file included from ./special_sorttab_page.h:33:
+    ./sorttab_widget.h:108:53: warning: declaration of 'enum GtkPodSortTypes' will not be visible outside of this function
+    void sort_tab_widget_sort(SortTabWidget *self, enum GtkPodSortTypes order);
+                                                        ^
+    1 warning generated.
+      CC     special_sorttab_page_calendar.lo
+    In file included from special_sorttab_page_calendar.c:36:
+    ./sorttab_widget.h:108:53: warning: declaration of 'enum GtkPodSortTypes' will not be visible outside of this function
+    void sort_tab_widget_sort(SortTabWidget *self, enum GtkPodSortTypes order);
+                                                        ^
+    1 warning generated.
+      CC     sorttab_widget.lo
+      CC     display_sorttabs.lo
+      CC     sorttab_display_actions.lo
+    In file included from sorttab_display_actions.c:38:
+    In file included from ./display_sorttabs.h:36:
+    ./sorttab_widget.h:108:53: warning: declaration of 'enum GtkPodSortTypes' will not be visible outside of this function
+    void sort_tab_widget_sort(SortTabWidget *self, enum GtkPodSortTypes order);
+                                                        ^
+    1 warning generated.
+
+Daniele Forsi <dforsi@src.gnome.org>	2012-03-25
+
+    Do not include itself
+
+Daniele Forsi <dforsi@src.gnome.org>	2012-03-25
+
+    Do not pass arguments to void functions (warnings by clang)
+    
+    Fixes:
+    repository_editor.c:455:35: warning: too many arguments in call to 'update_buttons'
+        update_buttons(repository_view);
+        ~~~~~~~~~~~~~~                ^
+    repository_editor.c:583:39: warning: too many arguments in call to 'update_buttons'
+            update_buttons(repository_view);
+            ~~~~~~~~~~~~~~                ^
+    repository_editor.c:600:39: warning: too many arguments in call to 'update_buttons'
+            update_buttons(repository_view);
+            ~~~~~~~~~~~~~~                ^
+    repository_editor.c:641:39: warning: too many arguments in call to 'update_buttons'
+            update_buttons(repository_view);
+            ~~~~~~~~~~~~~~                ^
+    repository_editor.c:673:35: warning: too many arguments in call to 'update_buttons'
+        update_buttons(repository_view);
+        ~~~~~~~~~~~~~~                ^
+    repository_editor.c:817:35: warning: too many arguments in call to 'update_buttons'
+        update_buttons(repository_view);
+        ~~~~~~~~~~~~~~                ^
+    WARNING: While resolving call to function 'update_buttons' arguments were dropped!
+    WARNING: While resolving call to function 'update_buttons' arguments were dropped!
+    WARNING: While resolving call to function 'update_buttons' arguments were dropped!
+    WARNING: While resolving call to function 'update_buttons' arguments were dropped!
+    WARNING: While resolving call to function 'update_buttons' arguments were dropped!
+    WARNING: While resolving call to function 'init_repository_combo' arguments were dropped!
+    WARNING: While resolving call to function 'update_buttons' arguments were dropped!
+
+Daniele Forsi <dforsi@src.gnome.org>	2012-03-15
+
+    Fix segfault when g_settings schema isn't installed
+    
+     * src/anjuta-app.c
+      * Use a NULL safe string comparison function
+    
+    Fixes:
+    Program received signal SIGSEGV, Segmentation fault.
+    (gdb) bt
+     #0  __GI___strcasecmp (s1=0x0, s2=0x805459c "Text") at strcasecmp.c:65
+     #1  0x08050d15 in on_gdl_style_changed (settings=0x80b6af0, key=0x8054609 "gdl-style", user_data=0x80c4008) at anjuta-app.c:243
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-02-11
+
+    Plugin for attaching use of an external player
+    
+    * Allow the user to plug in their own player to play tracks
+    
+    * xmms added back as the default preference
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-02-11
+
+    Ignore generated marshalling source files
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-02-04
+
+    Update INSTALL file with sjcd plugin details
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-29
+
+    Configure script failing without musicbrainz available
+    
+    * Check for musicbrainz3 as one of the optional dependencies
+    
+    * Don't enable sjcd plugin unless we have musicbrainz 3
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-29
+
+    Add sjcd plugin icon for preference dialog
+    
+    * Use the sound juicer icon for the category icon for sjcd in the
+      preferences dialog
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-28
+
+    Import tracks once sjcd has ripped them
+    
+    * bacon-message-connection files not necessary since a flashing application
+      is not required.
+    
+    * sj-extractor.c
+     * documentation recommends using gst_bus_timed_pop_filtered instead of
+       gt_bus_poll
+    
+    * sj-main.c
+     * Remove unneeded callbacks
+    
+    * sj-extracing.c
+     * Remove remaining play button references as not used and generating
+       warnings
+     * add import_files_to_itdb function to take the files ripped by sjcd and
+       import them into the selected itdb
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-28
+
+    Clear up and handle threading issues correctly
+    
+    * main.c
+     * It is recommended practice to have gdk_threads functions surrounding
+       the gtk_main function
+    
+    * normal_sorttab_page.c
+    * media_player.c
+    * display_tracks.c
+     * tidy up some erroneous debug statements
+     * replace g_idle_add with gdk_threads_add_idle
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-21
+
+    Get the preference window to appear correctly
+    
+    * Window available as separate dialog from sj edit menu or from the gtkpod
+      preference window.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-21
+
+    Fix errors to get the sj gui to appear cleanly
+    
+    * configure.ac
+     * gstreamer-pbutils is required
+     * Split out the SOUND_JUICER package checks since brasero is needed to be
+       checked on initialisation of main app.
+     * Declare and link both gstreamer and brasero so that their goptions can
+       be properly checked when starting gtkpod. This is necessary in the case
+       of gstreamer as certain arrays and hashmaps in gstvalue are only inited
+       via the parsing of the gst_init_option_group function.
+    
+    * plugins/sjcd
+     * Needs to link against brasero and canberra explicitly due to configure
+       changes
+     * Restore stock_init function for loading the CD extract icon
+     * Audio volume changed callback not required
+     * Remove some exit(1)s
+     * Remove destroy callbacks
+    
+    * src/main.c
+     * Support for goption use on the command line
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-02
+
+    Refactor sjcd plugin codebase for use in gtkpod
+    
+    * sj-main.c
+     * Most refactoring to return the gtk vbox rather than displaying a window
+       independently.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-02
+
+    Refactor the configure script to group together the module checks
+    
+    * Since more libraries are being used by multiple plugins, it is better to
+      check the libraries then enable the plugins accordingly.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-02
+
+    Boiler plate for sjcd plugin
+    
+    * includes acknowledgement of sound-juicer authors in AUTHORS file
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-02
+
+    Initial addition of sound juicer codebase as sjcd plugin
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-28
+
+    Update version to reflect unstable builds
+
+Merge: 1939051 4de9e60
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-28
+
+    Merge branch 'gtk-3.0'
+    
+    Conflicts:
+po/it.po           
+version.sh           
+
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-01-08
 
     Updates to Changelog and NEWS
@@ -290,6 +723,16 @@ phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-10-03
     
     Fixes:3413192 - Not obvious how to delete a playlist without selecting from
 
+Daniele Forsi <daniele@forsi.it>	2011-09-26
+
+    Update Italian translation
+
+Daniele Forsi <daniele@forsi.it>	2011-09-26
+
+    Translation fixes
+    
+    * Mark more strings as translatable
+
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-09-25
 
     Fix for fail message when initialising an ipod
@@ -417,6 +860,12 @@ Matteo F. Vescovi <m.vescovi@revese.it>	2011-09-07
     
     Signed-off-by: Matteo F. Vescovi <m.vescovi@revese.it>
 
+Matteo F. Vescovi <m.vescovi@revese.it>	2011-09-07
+
+    version.sh: update unstable builds separator
+    
+    Signed-off-by: Matteo F. Vescovi <m.vescovi@revese.it>
+
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-09-04
 
     Support for updating clarity when a track is modified
@@ -444,6 +893,10 @@ phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-09-04
      * Given we already know the album item in _remove function it is unnecessary
        to find it again so pass it in as a parameter.
      * Completion of track_updated callback.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-09-04
+
+    Update version to reflect for unstable builds
 
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2011-09-04
 

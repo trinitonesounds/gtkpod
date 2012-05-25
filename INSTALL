@@ -4,8 +4,7 @@ How to compile/install gtkpod:
 
 1. First, make sure you have compiled and installed the dependencies.
    Most Linux distros will include them, except maybe for libid3tag
-   (http://sourceforge.net/project/showfiles.php?group_id=12349) and
-   libmp4v2 (http://mpeg4ip.sourceforge.net/).
+   (http://sourceforge.net/project/showfiles.php?group_id=12349).
 
    Please do not confuse the libid3 library with the libid3tag
    library -- they are not related. libid3tag is part of the MAD
@@ -29,7 +28,6 @@ How to compile/install gtkpod:
 				anjuta
         libid3tag (at least 0.15)
         libgnome-vfs-2.0 > 2.6 (for iPod autodetection under GNOME)
-        libhal > 0.5 < 0.6 (in combination with libgnome-vfs: better detection of iPods)
 
 				Optional Packages
 
@@ -49,7 +47,6 @@ How to compile/install gtkpod:
 				libogg
 				libvorbis
 				lame
-				libmp4v2
 				faad2
 
 				For opengl coverart display (clarity) plugin:
@@ -81,14 +78,15 @@ How to compile/install gtkpod:
 				   libogg-dev \
 				   libvorbis-dev \
 				   libmp3lame-dev \
-				   libmp4v2-dev \
 				   libclutter-gtk-1.0-dev \
 				   libgpod-dev \
 				   libanjuta-dev \
 				   libgdl-3-dev \
 				   libid3tag0-dev
 				   faad \
-				   libcurl3
+				   libcurl3 \
+					 libbrasero-media3-dev \
+					 libmusicbrainz3-dev
 
    The following can be used for installing the dependencies on fedora 15:
 
@@ -103,14 +101,15 @@ How to compile/install gtkpod:
             libogg-devel.i686 \
             libvorbis-devel.i686 \
             lame-devel.i686 \
-            libmp4v2-devel.i686 \
             clutter-gtk-devel.i686 \
             libpod-devel \
             anjuta-devel \
             libgdl-devel \
             libid3tag-devel \
             faad2 \
-            curl
+            curl-devel \
+						brasero-devel \
+						libmusicbrainz3-devel 
 
 2. If you install libraries to /usr/local/lib please don't forget to
    add the path to LD_LIBRARY_PATH and PKG_CONFIG_PATH
@@ -183,7 +182,7 @@ The following steps were necessary to install libgpod and gtkpod on a fairly vir
 sudo apt-get install autoconf flex gettext libglib2.0-dev libgtk2.0-dev libglade2-dev libid3tag0-dev libxml-parser-perl pkg-config automake gcc git-core gtk-doc-tools
 
 # recommended packages
-sudo apt-get install libcurl4-dev libflac-dev libgnomevfs2-dev libhal-dev libvorbis-dev libmp4v2-dev libwebkit-dev
+sudo apt-get install libcurl4-dev libflac-dev libgnomevfs2-dev libhal-dev libvorbis-dev libwebkit-dev
 
 # checkout libgpod and gtkpod
 git clone git://gtkpod.git.sourceforge.net/gitroot/gtkpod/libgpod

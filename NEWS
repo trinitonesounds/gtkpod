@@ -1,3 +1,26 @@
+gtkpod V2.1.2
+	
+	Incremental release
+
+	FEATURE: sjcd plugin, incorporating the sound juicer CD ripper into gtkpod
+
+	FEATURE: external player plugin restoring functionality to play tracks through a configured external
+	         media player
+	
+	FEATURE: replace dependency on libmp4v2 (incompatible licence) with integrated mp4 read/write library
+	         based on the atomic parsley application (http://atomicparsley.sourceforge.net)
+
+	IMPROVEMENT: Reduce time for listing of tracks in track display in big repositories
+
+	BUGFIX: Fix threading issues / deadlocks with music player, filters and track display
+
+	BUGFIX: Fix crash when anjuta g_settings schema is not installed
+
+	BUGFIX: Fixes highlighted by clang compiler (thank to Daniel Forsi)
+
+	BUGFIX: Fix for double free when adding music using the 'add folder' command
+
+
 gtkpod V2.1.1
 
 	Incremental release
