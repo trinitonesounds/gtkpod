@@ -105,6 +105,7 @@ PKG_CHECK_MODULES(BRASERO, libbrasero-media3 >= 3.0, [have_brasero="yes"], [have
 dnl musicbrainz 3 is deprecated so may not be included. However required by sound juicer
 dnl will probably need replacing faily soon
 PKG_CHECK_MODULES(MUSICBRAINZ3, libmusicbrainz3 >= 3.0.2, [have_mb3="yes"], [have_mb3="no"])		
+PKG_CHECK_MODULES(MUSICBRAINZ4, libmusicbrainz4 >= 4.0.0, [have_mb4="yes"], [have_mb4="no"])		
     
 GTK_CLEANLINESS_FLAGS="-DG_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE"
 
@@ -189,7 +190,7 @@ dnl Check for libcurl
 dnl -------------------------------------------------------------
 AC_ARG_WITH(curl, AS_HELP_STRING([--without-curl],[Disable coverart download support]))
 if test "x$with_curl" != "xno" -a "x$have_curl" = "xno"; then
-	AC_MSG_ERROR([curl support explicitly requested but curl couldn't be found])
+	AC_MSG_ERROR([curl support explicitly requested but curl could not be found])
 fi
 
 AM_CONDITIONAL(HAVE_CURL, test "x$have_curl" = "xyes")
@@ -287,7 +288,7 @@ dnl Checks for filetype_ogg plugin
 dnl -------------------------------------------------------------
 AC_ARG_WITH(ogg, AS_HELP_STRING([--without-ogg],[Disable Ogg/Vorbis support]))
 if test "x$with_ogg" != "xno" -a "x$have_vorbis" = "xno"; then
-    AC_MSG_ERROR([Ogg/Vorbis support explicitly requested but ogg/vorbis libs couldn't be found])
+    AC_MSG_ERROR([Ogg/Vorbis support explicitly requested but ogg/vorbis libs could not be found])
 fi
 AM_CONDITIONAL(HAVE_PLUGIN_FILETYPE_OGG, test "x$have_vorbis" = "xyes")
 if test "x$have_vorbis" = "xyes"; then
@@ -299,7 +300,7 @@ dnl Checks for filetype_flac plugin
 dnl -------------------------------------------------------------
 AC_ARG_WITH(flac, AS_HELP_STRING([--without-flac],[Disable FLAC support]))
 if test "xwith_flac" = "xyes" -a "x$have_flac" = "xno"; then
-	AC_MSG_ERROR([FLAC support explicitly requested but flac libs couldn't be found])
+	AC_MSG_ERROR([FLAC support explicitly requested but flac libs could not be found])
 fi
 AM_CONDITIONAL(HAVE_PLUGIN_FILETYPE_FLAC, test "x$have_flac" = "xyes")
 if test "x$have_flac" = "xyes"; then
@@ -357,23 +358,42 @@ if test "$user_disabled_sjcd" = 1; then
 else
 	AC_MSG_RESULT(no)
 	AC_MSG_CHECKING(sjcd plugin dependencies)
-	if test "x$have_gstreamer" = "xyes" -a "x$have_brasero" = "xyes" -a "x$have_mb3" = "xyes"; then
-		AC_MSG_RESULT(yes)
-		have_sjcd="yes"
+	if test "x$have_gstreamer" = "xyes" -a "x$have_brasero" = "xyes"; then
+		if test "x$have_mb3" = "xyes" -o "x$have_mb4" = "xyes"; then
+	  
+			AC_MSG_RESULT(yes)
+			have_sjcd="yes"
 		
-		dnl Checks for components of gstreamer
-		AM_GST_ELEMENT_CHECK(vorbisenc,,AC_MSG_WARN([The 'vorbisenc' element was not found. This will cause encoding to Ogg Vorbis to fail.]))
-		AM_GST_ELEMENT_CHECK(flacenc,,AC_MSG_WARN([The 'flacenc' element was not found. This will cause encoding to FLAC to fail.]))
-		AM_GST_ELEMENT_CHECK(wavenc,,AC_MSG_WARN([The 'wavenc' element was not found. This will cause encoding to Wave to fail.]))
-		AM_GST_ELEMENT_CHECK(giosink,,AC_MSG_WARN([The 'giosink' element was not found. This will cause Sound Juicer to fail at runtime.]))
+			dnl Checks for components of gstreamer
+			AM_GST_ELEMENT_CHECK(vorbisenc,,AC_MSG_WARN([The 'vorbisenc' element was not found. This will cause encoding to Ogg Vorbis to fail.]))
+			AM_GST_ELEMENT_CHECK(flacenc,,AC_MSG_WARN([The 'flacenc' element was not found. This will cause encoding to FLAC to fail.]))
+			AM_GST_ELEMENT_CHECK(wavenc,,AC_MSG_WARN([The 'wavenc' element was not found. This will cause encoding to Wave to fail.]))
+			AM_GST_ELEMENT_CHECK(giosink,,AC_MSG_WARN([The 'giosink' element was not found. This will cause Sound Juicer to fail at runtime.]))
 		
-		AC_DEFINE([HAVE_MUSICBRAINZ3], 1, [Whether libmusicbrainz3 is available])	
-	else
-		AC_MSG_RESULT(no)
+			if test "x$have_mb4" = "xyes"; then
+				AC_DEFINE([HAVE_MUSICBRAINZ4], 1, [Whether libmusicbrainz4 is available])	
+			elif test "x$have_mb3" = "xyes"; then
+				dnl fallback to musicbrainz 3
+				AC_DEFINE([HAVE_MUSICBRAINZ3], 1, [Whether libmusicbrainz3 is available])	
+			fi
+
+		else
+			AC_MSG_RESULT(no)
+		fi
 	fi
 fi
 
-AM_CONDITIONAL(HAVE_MUSICBRAINZ3, [test "x$have_mb3" = "xyes"])
+if test "x$have_mb4" = "xyes"; then
+	AM_CONDITIONAL(HAVE_MUSICBRAINZ4, true)
+	dnl do not need musicbrainz 3
+	AM_CONDITIONAL(HAVE_MUSICBRAINZ3, false)
+elif test "xhave_mb3" = "xyes"; then
+	AM_CONDITIONAL(HAVE_MUSICBRAINZ4, false)
+	AM_CONDITIONAL(HAVE_MUSICBRAINZ3, true)
+else
+	AM_CONDITIONAL(HAVE_MUSICBRAINZ4, false)
+	AM_CONDITIONAL(HAVE_MUSICBRAINZ3, false)
+fi
 AM_CONDITIONAL(HAVE_PLUGIN_SJCD, [test "x$have_sjcd" = "xyes"])
 if test "x$have_sjcd" = "xyes"; then
     AC_DEFINE(HAVE_PLUGIN_SJCD, 1, [Define if you have sound juicer support])

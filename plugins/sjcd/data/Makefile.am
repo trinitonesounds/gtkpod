@@ -1,5 +1,6 @@
 profilesdir = $(pkgdatadir)/data
 profiles_DATA = rhythmbox.gep
+dist_profiles_DATA = rhythmbox.gep
 
 # gsettings_SCHEMAS is a list of all the schemas you want to install
 schema_in_files = org.gtkpod.sjcd.gschema.xml.in

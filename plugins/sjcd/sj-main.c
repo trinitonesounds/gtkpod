@@ -237,7 +237,7 @@ set_info_bar_text_and_icon (GtkInfoBar  *infobar,
 
   ally_target = gtk_widget_get_accessible (button);
 
-  hbox_content = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 8); 
+  hbox_content = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 8);
   gtk_widget_show (hbox_content);
 
   image = gtk_image_new_from_stock (icon_stock_id, GTK_ICON_SIZE_DIALOG);
@@ -245,7 +245,7 @@ set_info_bar_text_and_icon (GtkInfoBar  *infobar,
   gtk_box_pack_start (GTK_BOX (hbox_content), image, FALSE, FALSE, 0);
   gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0);
 
-  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6); 
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
   gtk_widget_show (vbox);
   gtk_box_pack_start (GTK_BOX (hbox_content), vbox, TRUE, TRUE, 0);
 
@@ -977,24 +977,7 @@ static void profile_changed_cb (GSettings *settings, gchar *key, gpointer user_d
     g_object_set (extractor, "profile", profile, NULL);
 
   if (profile == NULL || !sj_extractor_supports_profile(profile)) {
-    GtkWidget *dialog;
-    int response;
-
-    dialog = gtk_message_dialog_new (GTK_WINDOW (gtkpod_app),
-                                     GTK_DIALOG_MODAL,
-                                     GTK_MESSAGE_QUESTION,
-                                     GTK_BUTTONS_NONE,
-                                     _("The currently selected audio profile is not available on your installation."));
-    gtk_dialog_add_button (GTK_DIALOG (dialog), "gtk-quit", GTK_RESPONSE_REJECT);
-    gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Change Profile"), GTK_RESPONSE_ACCEPT);
-    response = gtk_dialog_run (GTK_DIALOG (dialog));
-    if (response == GTK_RESPONSE_ACCEPT) {
-      gtk_widget_destroy (dialog);
-      on_edit_preferences_cb (NULL, NULL);
-    } else {
-      /* Can't use gtk_main_quit here, we may be outside the main loop */
-      return;
-    }
+    gtkpod_warning(_("sjcd plugin: the currently selected audio profile is not available on your installation."));
   }
 
   if (profile != NULL)

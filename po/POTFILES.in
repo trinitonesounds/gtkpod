@@ -135,6 +135,7 @@ plugins/sjcd/libjuicer/sj-extractor.c
 plugins/sjcd/libjuicer/sj-metadata-getter.c
 plugins/sjcd/libjuicer/sj-metadata-gvfs.c
 plugins/sjcd/libjuicer/sj-metadata.c
+plugins/sjcd/libjuicer/sj-metadata-musicbrainz4.c
 plugins/sjcd/plugin.c
 plugins/sjcd/sj-extracting.c
 plugins/sjcd/sj-genres.c

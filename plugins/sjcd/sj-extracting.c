@@ -50,6 +50,8 @@
 #include "sj-genres.h"
 #include "egg-play-preview.h"
 
+#define UNKNOWN_TAG_VALUE "???"
+
 typedef struct {
   int seconds;
   struct timeval time;
@@ -899,6 +901,11 @@ sanitize_path (const char* str, const char* filesystem_type)
   gchar *res = NULL;
   gchar *s;
 
+  if (str == NULL) {
+      /* Not a lot we can do other than return an empty string */
+      return g_strdup_printf(UNKNOWN_TAG_VALUE);
+  }
+
   /* Skip leading periods, otherwise files disappear... */
   while (*str == '.')
     str++;
@@ -1050,10 +1057,18 @@ filepath_parse_pattern (const char* pattern, const TrackDetails *track)
       switch (*++p) {
       case 't':
         string = sanitize_path (track->title, filesystem_type);
+        if (g_strcmp0(string, UNKNOWN_TAG_VALUE) == 0) {
+            g_free(string);
+            string = g_strdup_printf ("%d", track->number);
+        }
         break;
       case 'T':
         tmp = g_utf8_strdown (track->title, -1);
         string = sanitize_path (tmp, filesystem_type);
+        if (g_strcmp0(string, UNKNOWN_TAG_VALUE) == 0) {
+            g_free(string);
+            string = g_strdup_printf ("%d", track->number);
+        }
         g_free(tmp);
         break;
       case 'a':
