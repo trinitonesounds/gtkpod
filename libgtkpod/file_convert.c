@@ -110,6 +110,8 @@
  processed next.
  */
 
+#define CONVERSION_THREAD "Conversion Thread"
+
 /* Preferences keys */
 const gchar *FILE_CONVERT_CACHEDIR = "file_convert_cachedir";
 const gchar *FILE_CONVERT_MAXDIRSIZE = "file_convert_maxdirsize";
@@ -163,32 +165,37 @@ struct GaplessData {
 };
 
 struct _Conversion {
-    GMutex *mutex; /* shared lock                              */
+#if GLIB_CHECK_VERSION(2,31,0)
+    GMutex mutex; /* mutex for this struct          */
+    GCond finished_cond; /* signals if a new track is added to the finished list */
+    GCond dirsize_cond; /* signal when dirsize has been updated     */
+    GCond prune_cond; /* signal when dir has been pruned          */
+#else
+    GMutex *mutex; /* mutex for this struct          */
+    GCond *finished_cond; /* signals if a new track is added to the finished list */
+    GCond *dirsize_cond; /* signal when dirsize has been updated     */
+    GCond *prune_cond; /* signal when dir has been pruned          */
+#endif
+
     GList *scheduled; /* tracks scheduled for conversion          */
     GList *processing; /* tracks currently being converted         */
     GList *failed; /* tracks with failed conversion            */
-    GList *converted; /* tracks successfully converted but not
-     yet unscheduled                          */
-    GList *finished; /* tracks unscheduled but not yet
-     transferred */
-    GCond *finished_cond; /* signals if a new track is added to the
-     finished list                            */
+    GList *converted; /* tracks successfully converted but not yet unscheduled                          */
+    GList *finished; /* tracks unscheduled but not yet transferred */
+
     gchar *cachedir; /* directory for converted files            */
     gchar *template; /* name template to use for converted files */
     gint max_threads_num; /* maximum number of allowed threads        */
     GList *threads; /* list of threads                          */
     gint threads_num; /* number of threads currently running      */
-    gboolean conversion_force; /* force a new thread to start even if
-     the dirsize is too large           */
+    gboolean conversion_force; /* force a new thread to start even if the dirsize is too large           */
     gint64 max_dirsize; /* maximum size of cache directory in bytes */
     gint64 dirsize; /* current size of cache directory in bytes */
     gboolean dirsize_in_progress; /* currently determining dirsize      */
-    GCond *dirsize_cond; /* signal when dirsize has been updated     */
     gboolean prune_in_progress; /* currently pruning directory        */
-    GCond *prune_cond; /* signal when dir has been pruned          */
-    gboolean force_prune_in_progress; /* do another prune right after
-     the current process finishes   */
+    gboolean force_prune_in_progress; /* do another prune right after the current process finishes   */
     guint timeout_id;
+
     /* data for log display */
     GtkWidget *log_window; /* display log window                       */
     gboolean log_window_hidden; /* whether the window was closed      */
@@ -201,9 +208,9 @@ struct _Conversion {
     GList *pages; /* list with pages currently added          */
     GtkStatusbar *log_statusbar; /* statusbar of log display           */
     guint log_context_id; /* context ID for statusbar                 */
+
     /* data for background transfer */
-    GList *transfer_itdbs; /* list with TransferItdbs for background
-     transfer                                 */
+    GList *transfer_itdbs; /* list with TransferItdbs for background transfer                                 */
     gchar *last_error_msg; /* keep a record of the last error message */
 };
 
@@ -259,6 +266,103 @@ enum {
 
 static Conversion *conversion = NULL;
 
+static GThread *_create_thread(GThreadFunc func, gpointer userdata) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    return g_thread_new (CONVERSION_THREAD, func, userdata);
+#else
+    return g_thread_create_full(func,
+            userdata,
+            0, /* stack size */
+            FALSE, /* joinable   */
+            TRUE, /* bound      */
+            G_THREAD_PRIORITY_NORMAL, NULL); /* error      */
+#endif
+}
+
+static void _create_mutex(Conversion *c) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_mutex_init(&c->mutex);
+#else
+    c->mutex = g_mutex_new ();
+#endif
+}
+
+static gboolean _try_lock(Conversion *c) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    return g_mutex_trylock(&c->mutex);
+#else
+    return g_mutex_trylock(c->mutex);
+#endif
+}
+
+static void _lock_mutex(Conversion *c) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_mutex_lock (&c->mutex);
+#else
+    g_mutex_lock (c->mutex);
+#endif
+}
+
+static void _unlock_mutex(Conversion *c) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_mutex_unlock (&c->mutex);
+#else
+    g_mutex_unlock (c->mutex);
+#endif
+}
+
+static void _create_cond(Conversion *c) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_cond_init(&c->finished_cond);
+    g_cond_init(&c->dirsize_cond);
+    g_cond_init(&c->prune_cond);
+#else
+    c->finished_cond = g_cond_new ();
+    c->dirsize_cond = g_cond_new ();
+    c->prune_cond = g_cond_new ();
+#endif
+}
+
+static void _broadcast_prune_cond(Conversion *c) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_cond_broadcast (&c->prune_cond);
+#else
+    g_cond_broadcast (c->prune_cond);
+#endif
+}
+
+static void _broadcast_dirsize_cond(Conversion *c) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_cond_broadcast (&c->dirsize_cond);
+#else
+    g_cond_broadcast (c->dirsize_cond);
+#endif
+}
+
+static void _broadcast_finished_cond(Conversion *c) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_cond_broadcast (&c->finished_cond);
+#else
+    g_cond_broadcast (c->finished_cond);
+#endif
+}
+
+static void _wait_prune_cond(Conversion *c) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_cond_wait (&c->prune_cond, &c->mutex);
+#else
+    g_cond_wait (c->prune_cond, c->mutex);
+#endif
+}
+
+static void _wait_dirsize_cond(Conversion *c) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_cond_wait (&c->dirsize_cond, &c->mutex);
+#else
+    g_cond_wait (c->dirsize_cond, c->mutex);
+#endif
+}
+
 /* Set up conversion infrastructure. Must only be called once. */
 void file_convert_init() {
     GtkBuilder *log_builder;
@@ -268,11 +372,9 @@ void file_convert_init() {
         return;
 
     conversion = g_new0 (Conversion, 1);
-    conversion->mutex = g_mutex_new ();
+    _create_mutex(conversion);
 
-    conversion->finished_cond = g_cond_new ();
-    conversion->dirsize_cond = g_cond_new ();
-    conversion->prune_cond = g_cond_new ();
+    _create_cond(conversion);
     conversion_setup_cachedir(conversion);
 
     if (!prefs_get_string_value(FILE_CONVERT_TEMPLATE, NULL)) {
@@ -347,12 +449,12 @@ void file_convert_shutdown() {
 
 static void file_convert_lock(Conversion *conv) {
     debug ("Locking conversion");
-    g_mutex_lock(conv->mutex);
+    _lock_mutex(conv);
 }
 
 static void file_convert_unlock(Conversion *conv) {
     debug("Unlocking conversion");
-    g_mutex_unlock(conv->mutex);
+    _unlock_mutex(conv);
 }
 
 /* This is called just before gtkpod closes down */
@@ -626,12 +728,7 @@ static void conversion_prefs_changed(Conversion *conv) {
     if ((conv->dirsize == CONV_DIRSIZE_INVALID) || (conv->dirsize > conv->max_dirsize)) {
         /* Prune dir of unused files if size is too big, calculate and set
          the size of the directory. Do all that in the background. */
-        g_thread_create_full(conversion_prune_dir,
-                                                        conv, /* user data  */
-                                                        0, /* stack size */
-                                                        FALSE, /* joinable   */
-                                                        TRUE, /* bound      */
-                                                        G_THREAD_PRIORITY_NORMAL, NULL); /* error      */
+        _create_thread(conversion_prune_dir, conv);
     }
 
     background_transfer = prefs_get_int(FILE_CONVERT_BACKGROUND_TRANSFER);
@@ -1291,11 +1388,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
             GList *gl;
             GThread *thread;
 
-            thread = g_thread_create_full(conversion_thread, conv, /* user data  */
-            0, /* stack size */
-            FALSE, /* joinable   */
-            TRUE, /* bound      */
-            G_THREAD_PRIORITY_LOW, NULL); /* error      */
+            thread = _create_thread(conversion_thread, conv);
 
             /* Add thread to thread list. Use first available slot */
             gl = g_list_find(conv->threads, NULL);
@@ -1438,7 +1531,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
                 g_return_val_if_fail (tr && tr->itdb && tr->userdata, TRUE);
                 etr = tr->userdata;
                 /* broadcast finished track */
-                g_cond_broadcast (conv->finished_cond);
+                _broadcast_finished_cond(conv);
 
                 tri = transfer_get_tri(conv, tr->itdb);
                 g_return_val_if_fail (tri, TRUE);
@@ -1477,11 +1570,7 @@ static gboolean conversion_scheduler_unlocked(Conversion *conv) {
         g_return_val_if_fail (tri, TRUE);
         if (tri->scheduled) {
             if ((tri->thread == NULL) && (tri->transfer == TRUE) && (tri->status != FILE_TRANSFER_DISK_FULL)) { /* start new thread */
-                tri->thread = g_thread_create_full(transfer_thread, tri, /* user data  */
-                0, /* stack size */
-                FALSE, /* joinable   */
-                TRUE, /* bound      */
-                G_THREAD_PRIORITY_LOW, NULL); /* error      */
+                tri->thread = _create_thread(transfer_thread, tri);
             }
         }
 
@@ -1579,7 +1668,7 @@ static gboolean conversion_scheduler(gpointer data) {
 //    debug ("conversion_scheduler enter\n");
 
     gdk_threads_enter();
-    if (!g_mutex_trylock(conv->mutex)) {
+    if (!_try_lock(conv)) {
         gdk_threads_leave();
         /* Do not destroy the timeout function by returning FALSE */
         return TRUE;
@@ -1608,7 +1697,7 @@ static gpointer conversion_update_dirsize(gpointer data) {
     file_convert_lock(conv);
     if (conv->dirsize_in_progress) { /* another thread is already working on the directory
      size. We'll wait until it has finished and just return. */
-        g_cond_wait (conv->dirsize_cond, conv->mutex);
+        _wait_dirsize_cond(conv);
         file_convert_unlock(conv);
         debug ("%p update_dirsize concurrent exit\n", g_thread_self ());
         return NULL;
@@ -1635,7 +1724,7 @@ static gpointer conversion_update_dirsize(gpointer data) {
     /* We're finished doing the directory upgrade. Unset the flag and
      broadcast to all threads waiting to wake them up. */
     conv->dirsize_in_progress = FALSE;
-    g_cond_broadcast (conv->dirsize_cond);
+    _broadcast_dirsize_cond(conv);
     file_convert_unlock(conv);
 
     debug ("%p update_dirsize exit\n", g_thread_self ());
@@ -1734,7 +1823,7 @@ static gpointer conversion_prune_dir(gpointer data) {
     file_convert_lock(conv);
     if (conv->prune_in_progress) { /* another thread is already working on the directory
      prune. We'll wait until it has finished and just return. */
-        g_cond_wait (conv->prune_cond, conv->mutex);
+        _wait_prune_cond(conv);
         file_convert_unlock(conv);
         return NULL;
     }
@@ -1766,7 +1855,7 @@ static gpointer conversion_prune_dir(gpointer data) {
         for (gl = conv->transfer_itdbs; gl; gl = gl->next) {
             TransferItdb *tri = gl->data;
             g_return_val_if_fail (tri, (conv->prune_in_progress = FALSE,
-                            g_cond_broadcast (conv->prune_cond),
+                            _broadcast_prune_cond(conv),
                             file_convert_unlock(conv),
                             NULL));
             conversion_prune_needed_add(hash_needed_files, tri->scheduled);
@@ -1795,11 +1884,11 @@ static gpointer conversion_prune_dir(gpointer data) {
         for (gl = files; gl && (dirsize > maxsize); gl = gl->next) {
             struct conversion_prune_file *cpf = gl->data;
             g_return_val_if_fail (cpf, (conv->prune_in_progress = FALSE,
-                            g_cond_broadcast (conv->prune_cond),
+                            _broadcast_prune_cond(conv),
                             NULL));
             g_return_val_if_fail (cpf->filename,
                     (conv->prune_in_progress = FALSE,
-                            g_cond_broadcast (conv->prune_cond),
+                            _broadcast_prune_cond(conv),
                             NULL));
             if (g_hash_table_lookup(hash_needed_files, cpf->filename) == NULL) { /* file is not among those remove */
                 if (g_remove(cpf->filename) == 0) {
@@ -1821,7 +1910,7 @@ static gpointer conversion_prune_dir(gpointer data) {
 
     file_convert_lock(conv);
     conv->prune_in_progress = FALSE;
-    g_cond_broadcast (conv->prune_cond);
+    _broadcast_prune_cond(conv);
     file_convert_unlock(conv);
 
     debug ("%p prune_dir exit\n", g_thread_self ());
@@ -2677,7 +2766,7 @@ static gpointer transfer_force_prune_dir(gpointer data) {
             return NULL;
         }
         conv->force_prune_in_progress = TRUE;
-        g_cond_wait (conv->prune_cond, conv->mutex);
+        _wait_prune_cond(conv);
         conv->force_prune_in_progress = FALSE;
     }
 
@@ -2861,11 +2950,7 @@ static gpointer transfer_thread(gpointer data) {
 
         if (conv->dirsize > conv->max_dirsize) { /* we just transferred a track -- there should be space
          available again -> force a directory prune */
-            g_thread_create_full(transfer_force_prune_dir, conv, /* user data  */
-            0, /* stack size */
-            FALSE, /* joinable   */
-            TRUE, /* bound      */
-            G_THREAD_PRIORITY_NORMAL, NULL); /* error      */
+            _create_thread(transfer_force_prune_dir, conv);
         }
 
     }

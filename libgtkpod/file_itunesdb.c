@@ -52,6 +52,8 @@
 #define debug(s) printf(__FILE__":" TO_STR(__LINE__) ":" s)
 #define debugx(s,...) printf(__FILE__":" TO_STR(__LINE__) ":" s,__VA_ARGS__)
 
+#define TRANSFER_THREAD "Transfer Data Thread"
+
 #define WRITE_EXTENDED_INFO TRUE
 /* #define WRITE_EXTENDED_INFO prefs_get_int("write_extended_info") */
 
@@ -82,9 +84,15 @@ struct track_extended_info {
 };
 
 typedef struct {
+#if GLIB_CHECK_VERSION(2,31,0)
+    GMutex mutex; /* mutex for this struct          */
+    GCond finished_cond; /* used to signal end of thread   */
+#else
     GMutex *mutex; /* mutex for this struct          */
-    gboolean abort; /* TRUE = abort                   */
     GCond *finished_cond; /* used to signal end of thread   */
+#endif
+
+    gboolean abort; /* TRUE = abort                   */
     gboolean finished; /* background thread has finished */
     Track *track; /* Current track                  */
     const gchar *filename; /* Filename to copy/remove        */
@@ -99,6 +107,83 @@ static float extendedinfoversion = 0.0;
 
 /* Some declarations */
 static gboolean gp_write_itdb(iTunesDB *itdb);
+
+static GThread *_create_thread(GThreadFunc func, gpointer userdata) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    return g_thread_new (TRANSFER_THREAD, func, userdata);
+#else
+    return g_thread_create (func, userdata, TRUE, NULL);
+#endif
+}
+
+static void _create_mutex(TransferData *td) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_mutex_init(&td->mutex);
+#else
+    td->mutex = g_mutex_new ();
+#endif
+}
+
+static void _lock_mutex(TransferData *td) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_mutex_lock (&td->mutex);
+#else
+    g_mutex_lock (td->mutex);
+#endif
+}
+
+static void _unlock_mutex(TransferData *td) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_mutex_unlock (&td->mutex);
+#else
+    g_mutex_unlock (td->mutex);
+#endif
+}
+
+static void _clear_mutex(TransferData *td) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_mutex_clear (&td->mutex);
+#else
+    if (td->mutex)
+        g_mutex_free (td->mutex);
+#endif
+}
+
+static void _create_cond(TransferData *td) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_cond_init(&td->finished_cond);
+#else
+    td->finished_cond = g_cond_new ();
+#endif
+}
+
+static void _cond_signal(TransferData *td) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_cond_signal (&td->finished_cond);
+#else
+    g_cond_signal (td->finished_cond);
+#endif
+}
+
+static void _cond_timed_wait(TransferData *td, glong timeout) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_cond_wait_until (&td->finished_cond, &td->mutex, (gint64) timeout);
+#else
+    GTimeVal gtime;
+    g_get_current_time(&gtime);
+    g_time_val_add(&gtime, timeout);
+    g_cond_timed_wait (td->finished_cond, td->mutex, &gtime);
+#endif
+}
+
+static void _clear_cond(TransferData *td) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_cond_clear (&td->finished_cond);
+#else
+    if (td->finished_cond)
+        g_cond_free (td->finished_cond);
+#endif
+}
 
 /* fills in extended info if available */
 /* num/total are used to give updates in case the sha1 checksums have
@@ -1181,17 +1266,18 @@ gboolean gp_create_extended_info(iTunesDB *itdb) {
 TransferData *transfer_data_new(void) {
     TransferData *transfer_data;
     transfer_data = g_new0 (TransferData, 1);
-    transfer_data->mutex = g_mutex_new ();
-    transfer_data->finished_cond = g_cond_new ();
+
+    _create_mutex(transfer_data);
+    _create_cond(transfer_data);
+
     transfer_data->current_progress = 0;
     return transfer_data;
 }
 
 void transfer_data_free(TransferData *transfer_data) {
-    if (transfer_data->mutex)
-        g_mutex_free (transfer_data->mutex);
-    if (transfer_data->finished_cond)
-        g_cond_free (transfer_data->finished_cond);
+    _clear_mutex(transfer_data);
+    _clear_cond(transfer_data);
+
     g_free(transfer_data);
 }
 
@@ -1202,10 +1288,15 @@ static gpointer th_remove(gpointer userdata) {
     gint result;
 
     result = g_remove(td->filename);
-    g_mutex_lock (td->mutex);
+
+    _lock_mutex(td);
+
     td->finished = TRUE; /* signal that thread will end */
-    g_cond_signal (td->finished_cond);
-    g_mutex_unlock (td->mutex);
+
+    _cond_signal(td);
+
+    _unlock_mutex(td);
+
     return GINT_TO_POINTER(result);
 }
 
@@ -1330,31 +1421,26 @@ static gboolean delete_files(iTunesDB *itdb, TransferData *td) {
             td->finished = FALSE;
             td->filename = filename;
 
-            g_mutex_lock (td->mutex);
+            _lock_mutex (td);
 
-            thread = g_thread_create (th_remove, td, TRUE, NULL);
+            thread = _create_thread(th_remove, td);
 
             do {
-                GTimeVal gtime;
-
                 td->current_progress = set_progress(start, n, count, 0, td->current_progress, "deletion completed");
 
-                g_mutex_unlock (td->mutex);
+                _unlock_mutex (td);
 
                 while (widgets_blocked && gtk_events_pending())
                     gtk_main_iteration();
 
-                g_mutex_lock (td->mutex);
+                _lock_mutex (td);
 
                 /* wait a maximum of 20 ms or until cond is signaled */
-                g_get_current_time(&gtime);
-                g_time_val_add(&gtime, 20000);
-                g_cond_timed_wait (td->finished_cond,
-                        td->mutex, &gtime);
+                _cond_timed_wait(td, 20000);
             }
             while (!td->finished);
 
-            g_mutex_unlock (td->mutex);
+            _unlock_mutex (td);
 
             rmres = GPOINTER_TO_INT(g_thread_join (thread));
 

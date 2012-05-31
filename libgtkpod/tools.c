@@ -45,6 +45,8 @@
 #include <unistd.h>
 #include <glib/gi18n-lib.h>
 
+#define TOOLS_THREAD "Tools Thread"
+
 /* Structure to keep all necessary information */
 struct nm {
     Track *track; /* track to be normalised */
@@ -67,10 +69,80 @@ enum {
  ------------------------------------------------------------ */
 
 #ifdef G_THREADS_ENABLED
+
+#if GLIB_CHECK_VERSION(2,31,0)
+static GMutex mutex;
+static GCond cond;
+#else
 static GMutex *mutex = NULL;
 static GCond *cond = NULL;
+#endif
+
 static gboolean mutex_data = FALSE;
 #endif
+
+static GThread *_create_thread(GThreadFunc func, gpointer userdata) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    return g_thread_new (TOOLS_THREAD, func, userdata);
+#else
+    return g_thread_create (func, userdata, TRUE, NULL);
+#endif
+}
+
+static void _create_cond() {
+#if GLIB_CHECK_VERSION(2,31,0)
+    // As it is static the cond needs no initialisation
+#else
+    if (!cond)
+        cond = g_cond_new ();
+#endif
+}
+
+static void _cond_signal() {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_cond_signal (&cond);
+#else
+    g_cond_signal (cond);
+#endif
+}
+
+static void _cond_timed_wait(glong timeout) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_cond_wait_until (&cond, &mutex, (gint64) timeout);
+#else
+    GTimeVal gtime;
+    g_get_current_time(&gtime);
+    g_time_val_add(&gtime, timeout);
+    g_cond_timed_wait (cond, mutex, &gtime);
+#endif
+}
+
+static void _create_mutex() {
+#if GLIB_CHECK_VERSION(2,31,0)
+    // As it is static the mutex needs no initialisation
+#else
+    if (!mutex)
+        mutex = g_mutex_new ();
+#endif
+}
+
+static void _lock_mutex() {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_mutex_lock (&mutex);
+#else
+    g_return_if_fail (mutex);
+    g_mutex_lock (mutex);
+#endif
+}
+
+static void _unlock_mutex() {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_mutex_unlock (&mutex);
+#else
+    g_return_if_fail (mutex);
+    g_mutex_unlock (mutex);
+#endif
+}
 
 /* Run @command on @track_path.
  *
@@ -283,10 +355,10 @@ static gboolean nm_get_soundcheck(Track *track, GError **error) {
 static gpointer th_nm_get_soundcheck(gpointer data) {
     struct nm *nm = data;
     gboolean success = nm_get_soundcheck(nm->track, &(nm->error));
-    g_mutex_lock(mutex);
+    _lock_mutex();
     mutex_data = TRUE; /* signal that thread will end */
-    g_cond_signal(cond);
-    g_mutex_unlock(mutex);
+    _cond_signal();
+    _unlock_mutex();
     return GUINT_TO_POINTER(success);
 }
 #endif
@@ -342,11 +414,9 @@ void nm_tracks_list(GList *list) {
 
 #ifdef G_THREADS_ENABLED
     GThread *thread = NULL;
-    GTimeVal gtime;
-    if (!mutex)
-        mutex = g_mutex_new ();
-    if (!cond)
-        cond = g_cond_new ();
+
+    _create_mutex();
+    _create_cond();
 #endif
 
     block_widgets();
@@ -380,21 +450,18 @@ void nm_tracks_list(GList *list) {
 #ifdef G_THREADS_ENABLED
         mutex_data = FALSE;
 
-        thread = g_thread_create (th_nm_get_soundcheck, nm, TRUE, NULL);
+        thread = _create_thread(th_nm_get_soundcheck, nm);
         if (thread) {
-            g_mutex_lock(mutex);
+            _lock_mutex();
             do {
                 while (widgets_blocked && gtk_events_pending())
                     gtk_main_iteration();
-                /* wait a maximum of 10 ms */
-
-                g_get_current_time(&gtime);
-                g_time_val_add(&gtime, 20000);
-                g_cond_timed_wait(cond, mutex, &gtime);
+                /* wait a maximum of 20 ms */
+                _cond_timed_wait(20000);
             }
             while (!mutex_data);
             success = GPOINTER_TO_UINT(g_thread_join (thread));
-            g_mutex_unlock(mutex);
+            _unlock_mutex();
         }
         else {
             g_warning("Thread creation failed, falling back to default.\n");

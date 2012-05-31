@@ -106,12 +106,41 @@ typedef struct _AutoDetect AutoDetect;
 static gboolean ad_timeout_cb(gpointer data);
 
 struct _AutoDetect {
+#if GLIB_CHECK_VERSION(2,31,0)
+    GMutex mutex; /* shared lock */
+#else
     GMutex *mutex; /* shared lock */
+#endif
+
     GList *new_ipod_uris; /* list of new mounts */
     guint timeout_id;
 };
 
 static AutoDetect *autodetect;
+
+static void _create_mutex(AutoDetect *ad) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_mutex_init(&ad->mutex);
+#else
+    ad->mutex = g_mutex_new ();
+#endif
+}
+
+static void _lock_mutex(AutoDetect *ad) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_mutex_lock (&ad->mutex);
+#else
+    g_mutex_lock (ad->mutex);
+#endif
+}
+
+static void _unlock_mutex(AutoDetect *ad) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_mutex_unlock (&ad->mutex);
+#else
+    g_mutex_unlock (ad->mutex);
+#endif
+}
 
 /* adapted from rb-ipod-plugin.c (rhythmbox ipod plugin) */
 static gboolean ad_mount_is_ipod(GMount *mount) {
@@ -146,9 +175,9 @@ static void ad_volume_mounted_cb(GVolumeMonitor *volumemonitor, GMount *mount, A
             if (uri) {
                 debug ("mounted iPod: '%s'\n", uri);
 
-                g_mutex_lock (ad->mutex);
+                _lock_mutex(ad);
                 ad->new_ipod_uris = g_list_prepend(ad->new_ipod_uris, uri);
-                g_mutex_unlock (ad->mutex);
+                _unlock_mutex(ad);
             }
             else {
                 fprintf(stderr, "ERROR: could not get activation root!\n");
@@ -167,7 +196,7 @@ void autodetection_init() {
         g_once (&g_type_init_once, (GThreadFunc)g_type_init, NULL);
 
         autodetect = g_new0 (AutoDetect, 1);
-        autodetect->mutex = g_mutex_new ();
+        _create_mutex(autodetect);
 
         /* Check if an iPod is already mounted and add it to the list */
         mounts = g_volume_monitor_get_mounts(g_volume_monitor_get());
@@ -198,7 +227,7 @@ static gboolean ad_timeout_cb(gpointer data) {
     /* Don't interfere with a blocked display -- try again later */
     if (!widgets_blocked) {
         gdk_threads_enter();
-        g_mutex_lock (ad->mutex);
+        _lock_mutex(ad);
 
         while (ad->new_ipod_uris) {
             iTunesDB *itdb = NULL, *loaded_itdb = NULL;
@@ -211,7 +240,7 @@ static gboolean ad_timeout_cb(gpointer data) {
 
             ad->new_ipod_uris = g_list_delete_link(ad->new_ipod_uris, gl);
 
-            g_mutex_unlock (ad->mutex);
+            _unlock_mutex(ad);
 
             g_return_val_if_fail (mount_uri, (gdk_threads_leave(), release_widgets(), TRUE));
 
@@ -276,9 +305,9 @@ static gboolean ad_timeout_cb(gpointer data) {
             g_free(mount_uri);
             g_free(displaymp);
 
-            g_mutex_lock (ad->mutex);
+            _lock_mutex(ad);
         }
-        g_mutex_unlock (ad->mutex);
+        _unlock_mutex(ad);
         gdk_threads_leave();
     }
 

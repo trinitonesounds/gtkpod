@@ -99,7 +99,39 @@ struct sub_data {
 
 /* Pointer to preferences hash table */
 static GHashTable *prefs_table = NULL;
+
+#if GLIB_CHECK_VERSION(2,31,0)
+static GMutex prefs_table_mutex;
+#else
 static GMutex *prefs_table_mutex = NULL;
+#endif
+
+static void _create_mutex() {
+#if GLIB_CHECK_VERSION(2,31,0)
+    // As it is static the mutex needs no initialisation
+#else
+    if (!prefs_table_mutex)
+        prefs_table_mutex = g_mutex_new ();
+#endif
+}
+
+static void _lock_mutex() {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_mutex_lock (&prefs_table_mutex);
+#else
+    g_return_if_fail (prefs_table_mutex);
+    g_mutex_lock (prefs_table_mutex);
+#endif
+}
+
+static void _unlock_mutex() {
+#if GLIB_CHECK_VERSION(2,31,0)
+    g_mutex_unlock (&prefs_table_mutex);
+#else
+    g_return_if_fail (prefs_table_mutex);
+    g_mutex_unlock (prefs_table_mutex);
+#endif
+}
 
 /*
  * Functions used by this module only
@@ -119,14 +151,12 @@ enum {
 /* Lock the prefs table. If the table is already locked the calling
  * thread will remain blocked until the lock is released by the other thread. */
 static void lock_prefs_table() {
-    g_return_if_fail (prefs_table_mutex);
-    g_mutex_lock (prefs_table_mutex);
+    _lock_mutex();
 }
 
 /* Unlock the prefs table again. */
 static void unlock_prefs_table() {
-    g_return_if_fail (prefs_table_mutex);
-    g_mutex_unlock (prefs_table_mutex);
+    _unlock_mutex();
 }
 
 /* Set default preferences */
@@ -873,8 +903,7 @@ static void cleanup_keys() {
 
 /* Initialize the prefs table and read configuration */
 void prefs_init(int argc, char *argv[]) {
-    if (!prefs_table_mutex)
-        prefs_table_mutex = g_mutex_new ();
+    _create_mutex();
 
     lock_prefs_table();
 

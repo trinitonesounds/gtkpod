@@ -38,6 +38,8 @@
 #include "sj-metadata-gvfs.h"
 #include "sj-error.h"
 
+#define SJ_METADATA_THREAD "SJ MetaData Thread"
+
 enum {
   METADATA,
   LAST_SIGNAL
@@ -94,7 +96,7 @@ static void
 sj_metadata_getter_finalize (GObject *object)
 {
   SjMetadataGetterPrivate *priv = GETTER_PRIVATE (object);
-  
+
   g_free (priv->url);
   g_free (priv->cdrom);
   g_free (priv->proxy_host);
@@ -240,13 +242,21 @@ lookup_cd (SjMetadataGetter *mdg)
   return NULL;
 }
 
+static GThread *_create_thread(GThreadFunc func, gpointer userdata, GError **error) {
+#if GLIB_CHECK_VERSION(2,31,0)
+    return g_thread_new (SJ_METADATA_THREAD, func, userdata);
+#else
+    return g_thread_create (func, userdata, TRUE, error);
+#endif
+}
+
 gboolean
 sj_metadata_getter_list_albums (SjMetadataGetter *mdg, GError **error)
 {
   GThread *thread;
 
   g_object_ref (mdg);
-  thread = g_thread_create ((GThreadFunc)lookup_cd, mdg, TRUE, error);
+  thread = _create_thread((GThreadFunc)lookup_cd, mdg, error);
   if (thread == NULL) {
     g_set_error (error,
                  SJ_ERROR, SJ_ERROR_INTERNAL_ERROR,

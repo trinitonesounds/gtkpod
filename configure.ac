@@ -38,8 +38,8 @@ AC_CANONICAL_HOST
 AC_SEARCH_LIBS([strerror],[cposix])
 
 AC_DIAGNOSE([obsolete],[AM_PROG_CC_STDC:
-	your code should no longer depend upon `am_cv_prog_cc_stdc', but upon
-	`ac_cv_prog_cc_stdc'.  Remove this warning and the assignment when
+	your code should no longer depend upon am_cv_prog_cc_stdc, but upon
+	ac_cv_prog_cc_stdc.  Remove this warning and the assignment when
 	you adjust the code.  You can also remove the above call to
 	AC_PROG_CC if you already called it elsewhere.])
 am_cv_prog_cc_stdc=$ac_cv_prog_cc_stdc
@@ -110,17 +110,18 @@ PKG_CHECK_MODULES(MUSICBRAINZ4, libmusicbrainz4 >= 4.0.0, [have_mb4="yes"], [hav
 GTK_CLEANLINESS_FLAGS="-DG_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE"
 
 AC_MSG_CHECKING(for using DISABLE_DEPRECATED flags)
-if expr "$LIBGTKPOD_VERSION" : '.*~' >/dev/null; then
+
+dnl if expr "$LIBGTKPOD_VERSION" : '.*~' >/dev/null; then
   dnl The version contains a tilde so this is not a release
   dnl Thus, we can add in disable deprecated flags to avoid
   dnl using deprecated functions
-  GTK_CLEANLINESS_FLAGS="$GTK_CLEANLINESS_FLAGS -DG_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
-  AC_MSG_RESULT(yes)
-else
+dnl  GTK_CLEANLINESS_FLAGS="$GTK_CLEANLINESS_FLAGS -DG_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
+dnl  AC_MSG_RESULT(yes)
+dnl else
   dnl The version is a release so do not include deprecated
   dnl flags.
   AC_MSG_RESULT(no)
-fi
+dnl fi
 
 dnl Force C99 mode (no implicit int declarations)
 CFLAGS="$CFLAGS -std=gnu99 -Werror-implicit-function-declaration"
