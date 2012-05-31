@@ -697,9 +697,11 @@ void anjuta_app_layout_reset(AnjutaApp *app) {
 }
 
 void anjuta_app_install_preferences(AnjutaApp *app) {
+    gchar *img_path;
+    GdkPixbuf *pixbuf;
     GtkBuilder* builder = gtk_builder_new();
     GError* error = NULL;
-    GtkWidget *notebook, *splash_toggle, *shortcuts, *plugins, *remember_plugins;
+    GtkWidget *parent, *notebook, *splash_toggle, *shortcuts, *plugins, *remember_plugins;
 
     /* Create preferences page */
     gchar *glade_path = g_build_filename(get_glade_dir(), CORE_GTKPOD_XML, NULL);
@@ -716,11 +718,18 @@ void anjuta_app_install_preferences(AnjutaApp *app) {
 
     gtk_builder_connect_signals(builder, NULL);
 
-    gchar *icon_path = g_build_filename(get_icon_dir(), ICON_FILE, NULL);
-    anjuta_preferences_add_from_builder(app->preferences, builder, app->settings, "General", _("General"), ICON_FILE);
-    g_free(icon_path);
-
     notebook = GTK_WIDGET(gtk_builder_get_object(builder, "General"));
+    parent = gtk_widget_get_parent(notebook);
+    g_object_ref(notebook);
+    gtk_container_remove(parent, notebook);
+    gtk_widget_destroy(parent);
+
+    img_path = anjuta_res_get_pixmap_file(ICON_FILE);
+    pixbuf = gdk_pixbuf_new_from_file(img_path, NULL);
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG(anjuta_preferences_get_dialog(app->preferences)), "plugins", _(" Plugins"), pixbuf, notebook);
+
+    // Cannot use anjuta_preferences_add_from_builder() since this requires the splash screen key to be a gsetting
+
     shortcuts = anjuta_ui_get_accel_editor(ANJUTA_UI(app->ui));
     plugins = anjuta_plugin_manager_get_plugins_page(app->plugin_manager);
     remember_plugins = anjuta_plugin_manager_get_remembered_plugins_page(app->plugin_manager);
@@ -734,6 +743,9 @@ void anjuta_app_install_preferences(AnjutaApp *app) {
     gtk_notebook_append_page(GTK_NOTEBOOK (notebook), shortcuts, gtk_label_new(_("Shortcuts")));
 
     g_object_unref(builder);
+    g_object_unref(notebook);
+    g_free(img_path);
+    g_object_unref(pixbuf);
 }
 
 /* AnjutaShell Implementation */
