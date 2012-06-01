@@ -1,4 +1,31 @@
-phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-05-12
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-06-01
+
+    Update Changelog
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-06-01
+
+    Fix typo for musicbrainz3 compilation option
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-05-31
+
+    Change to anjuta preference creation causing crash in pref dialog
+    
+    * The use of anjuta_prefences_add_from_builder assumes all the widgets in
+      the builder have related preferences in the gsettings of the core gtkpod
+      xml. The disable_splash_screen is not in there as it is from .prefs.
+    
+    * Reverts modifications made by f671cc889 with a little bit of tidying up
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-05-31
+
+    Modifications due to change in gthreads API
+    
+    * Threading API in glib-2.0 < 2.31 has been deprecated so must be
+      migrated to new API.
+    
+    * Preserves backward compatibility with glib-2.0 < 2.31
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-05-25
 
     Updates NEWS and Changelog
 
