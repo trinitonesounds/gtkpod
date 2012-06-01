@@ -388,7 +388,7 @@ if test "x$have_mb4" = "xyes"; then
 	AM_CONDITIONAL(HAVE_MUSICBRAINZ4, true)
 	dnl do not need musicbrainz 3
 	AM_CONDITIONAL(HAVE_MUSICBRAINZ3, false)
-elif test "xhave_mb3" = "xyes"; then
+elif test "x$have_mb3" = "xyes"; then
 	AM_CONDITIONAL(HAVE_MUSICBRAINZ4, false)
 	AM_CONDITIONAL(HAVE_MUSICBRAINZ3, true)
 else
