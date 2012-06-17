@@ -1,3 +1,20 @@
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-06-17
+
+    Update Changelog
+    
+    * Release 2.1.2
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-06-11
+
+    Avoid Creating new uint definitions
+    
+    * Include stdint.h in AP_commons.h instead
+    
+    * Allows compilation of freebsd
+    
+    * Thanks to Matteo <mfv.debian at gmail.com> for the investigation and
+      patch
+
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-06-01
 
     Update Changelog
