@@ -339,9 +339,9 @@ static gboolean nm_get_soundcheck(Track *track, GError **error) {
         }
     }
     else {
-        buf = g_strdup_printf(_("Normalization failed for file %s: file type not supported."
-                "To normalize mp3 and aac files ensure the following commands paths have been set in the Tools section"
-                "\tmp3 files: mp3gain"
+        buf = g_strdup_printf(_("Normalization failed for file %s: file type not supported.\n"
+                "To normalize mp3 and aac files ensure the following commands paths have been set in the Tools section\n"
+                "\tmp3 files: mp3gain\n"
                 "\taac files: aacgain"), path);
         gtkpod_log_error(error, buf);
         g_free(buf);
