@@ -216,7 +216,7 @@ static void ipreferences_iface_init(IAnjutaPreferencesIface* iface) {
 
 static void track_command_iface_init(TrackCommandInterface *iface) {
     iface->id = "track_display_normalise_track_command";
-    iface->text = _("Normalise");
+    iface->text = _("Normalize");
     iface->execute = nm_tracks_list;
 }
 
