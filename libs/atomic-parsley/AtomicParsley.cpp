@@ -1887,7 +1887,7 @@ char* APar_ExtractDataAtom(int this_atom_number) {
 
             }
             else { //purl & egid would end up here too, but Apple switched it to a text string (0x00), so gets taken care above explicitly
-                char* result = (char*) malloc(sizeof(char) * 6);
+                char* result = (char*) malloc(sizeof(char) * 7);
                 sprintf(result, "hex 0x");
 
                 for (int hexx = 1; hexx <= (int) (thisAtom->AtomicLength - atom_header_size); ++hexx) {
