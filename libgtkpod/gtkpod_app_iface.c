@@ -669,7 +669,9 @@ void gtkpod_register_filetype(FileType *filetype) {
 
     s = suffixes;
     while(s) {
+        gchar *uc = g_ascii_strup(s->data, -1);
         g_hash_table_insert(gp_iface->filetypes, s->data, filetype);
+        g_hash_table_insert(gp_iface->filetypes, uc, filetype);
         s = g_list_next(s);
     }
 }
@@ -679,7 +681,20 @@ void gtkpod_unregister_filetype(FileType *filetype) {
 
     g_return_if_fail(GTKPOD_IS_APP(gtkpod_app));
     GtkPodAppInterface *gp_iface = GTKPOD_APP_GET_INTERFACE (gtkpod_app);
-    g_hash_table_remove(gp_iface->filetypes, filetype_get_name(filetype));
+    GList *s;
+
+    GList *suffixes = filetype_get_suffixes(filetype);
+    if (!suffixes)
+        return;
+
+    s = suffixes;
+    while(s) {
+        gchar *uc = g_ascii_strup(s->data, -1);
+        g_hash_table_remove(gp_iface->filetypes, s->data);
+        g_hash_table_remove(gp_iface->filetypes, uc);
+        s = g_list_next(s);
+        g_free(uc);
+    }
 }
 
 gboolean gtkpod_filetype_is_supported(gchar *name) {
