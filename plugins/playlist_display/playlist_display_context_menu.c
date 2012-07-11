@@ -378,7 +378,7 @@ static void _populate_single_playlist_menu(GtkWidget *menu) {
                 add_delete_all_podcasts_from_ipod(menu);
             }
             else {
-                GtkWidget *delete_menu = add_sub_menu(menu, "Delete", GTK_STOCK_DELETE);
+                GtkWidget *delete_menu = add_sub_menu(menu, _("Delete"), GTK_STOCK_DELETE);
                 add_delete_playlist_including_tracks_ipod(delete_menu);
                 add_delete_playlist_but_keep_tracks(delete_menu);
             }
@@ -419,7 +419,7 @@ static void _populate_single_playlist_menu(GtkWidget *menu) {
             add_delete_all_tracks_from_database(menu);
         }
         else {
-            GtkWidget *delete_menu = add_sub_menu(menu, "Delete", GTK_STOCK_DELETE);
+            GtkWidget *delete_menu = add_sub_menu(menu, _("Delete"), GTK_STOCK_DELETE);
             add_delete_playlist_including_tracks_database(delete_menu);
             add_delete_playlist_including_tracks_harddisk(delete_menu);
             add_delete_playlist_but_keep_tracks(delete_menu);
@@ -451,7 +451,7 @@ static void _populate_single_playlist_menu(GtkWidget *menu) {
 
 static void _populate_multi_playlist_menu(GtkWidget *menu) {
 
-    GtkWidget *delete_menu = add_sub_menu(menu, "Delete", GTK_STOCK_DELETE);
+    GtkWidget *delete_menu = add_sub_menu(menu, _("Delete"), GTK_STOCK_DELETE);
     add_delete_playlist_including_tracks_ipod(delete_menu);
     add_delete_playlist_but_keep_tracks(delete_menu);
 

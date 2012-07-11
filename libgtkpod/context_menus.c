@@ -122,7 +122,7 @@ GtkWidget *add_exec_commands(GtkWidget *menu) {
         mm = menu;
     }
     else {
-        GtkWidget *submenu = add_sub_menu(menu, "Execute", GTK_STOCK_EXECUTE);
+        GtkWidget *submenu = add_sub_menu(menu, _("Execute"), GTK_STOCK_EXECUTE);
         mm = submenu;
     }
 
