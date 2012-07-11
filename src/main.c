@@ -78,7 +78,7 @@ main (int argc, char *argv[])
     gtk_init (&argc, &argv);
 #endif
 
-    ctx = g_option_context_new (N_("- Interface with your ipod"));
+    ctx = g_option_context_new (_("- Interface with your iPod"));
     g_option_context_add_group (ctx, gtk_get_option_group (TRUE));
 
 #ifdef HAVE_GSTREAMER
