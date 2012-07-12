@@ -1504,20 +1504,22 @@ void add_new_pl_or_spl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position) {
         return;
     }
 
+    name = dflt ? dflt : _("New Playlist");
+retry:
     name
-            = get_user_string(_("New Playlist"), _("Please enter a name for the new playlist"), dflt ? dflt : _("New Playlist"), _("Smart Playlist"), &is_spl, GTK_STOCK_ADD);
+            = get_user_string(_("New Playlist"), _("Please enter a name for the new playlist"), name, _("Smart Playlist"), &is_spl, GTK_STOCK_ADD);
     if (!name)
         return;
 
     if (strlen(name) == 0) {
         gtkpod_warning_simple(_("Playlist name cannot be blank"));
-        return;
+        goto retry;
     }
 
     Playlist *pl = itdb_playlist_by_name(itdb, name);
     if (pl) {
         gtkpod_warning_simple(_("A playlist named '%s' already exists"), name);
-        return;
+        goto retry;
     }
 
     if (!is_spl) { /* add standard playlist */
