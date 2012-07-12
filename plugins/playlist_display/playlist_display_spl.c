@@ -336,6 +336,14 @@ static void spl_set_combobox(GtkComboBox *cb, const ComboEntry centries[], guint
 
 }
 
+static void spl_name_entry_changed(GtkEntry *entry, GtkWidget *button) {
+    g_return_if_fail (button);
+    if (gtk_entry_get_text_length (entry) >= 1)
+        gtk_widget_set_sensitive(button, TRUE);
+    else
+        gtk_widget_set_sensitive(button, FALSE);
+}
+
 static void spl_matchcheckedonly_toggled(GtkToggleButton *togglebutton, GtkWidget *spl_window) {
     Playlist *spl;
 
@@ -1386,6 +1394,9 @@ static void spl_edit_all(iTunesDB *itdb, Playlist *spl, gint32 pos) {
 
     /* Set checkboxes and connect signal handlers */
     if ((w = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_name_entry"))) {
+        g_signal_connect (w, "changed",
+                G_CALLBACK (spl_name_entry_changed),
+                gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_ok_button"));
         if (spl_dup->name)
             gtk_entry_set_text(GTK_ENTRY (w), spl_dup->name);
     }
