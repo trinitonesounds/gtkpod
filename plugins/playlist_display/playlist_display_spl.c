@@ -1520,14 +1520,12 @@ void add_new_pl_or_spl_user_name(iTunesDB *itdb, gchar *dflt, gint32 position) {
         return;
     }
 
-    if (name) {
-        if (!is_spl) { /* add standard playlist */
-            gp_playlist_add_new(itdb, name, FALSE, position);
-            gtkpod_tracks_statusbar_update ();
-        }
-        else { /* add smart playlist */
-            spl_edit_new(itdb, name, position);
-        }
+    if (!is_spl) { /* add standard playlist */
+        gp_playlist_add_new(itdb, name, FALSE, position);
+        gtkpod_tracks_statusbar_update ();
+    }
+    else { /* add smart playlist */
+        spl_edit_new(itdb, name, position);
     }
 }
 
