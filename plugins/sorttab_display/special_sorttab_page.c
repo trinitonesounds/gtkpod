@@ -571,7 +571,7 @@ GtkWidget *special_sort_tab_page_new(SortTabWidget *st_widget_parent, gchar *gla
     g_signal_connect ((gpointer)w,
             "value_changed",
             G_CALLBACK (_on_sp_playcount_low_value_changed),
-            sst);
+            userdata);
 
     w = gtkpod_builder_xml_get_widget(special_xml, "sp_playcount_high");
     gtk_spin_button_set_value(GTK_SPIN_BUTTON (w),
@@ -579,7 +579,7 @@ GtkWidget *special_sort_tab_page_new(SortTabWidget *st_widget_parent, gchar *gla
     g_signal_connect ((gpointer)w,
             "value_changed",
             G_CALLBACK (_on_sp_playcount_high_value_changed),
-            sst);
+            userdata);
 
     /* PLAYED */
     buf = prefs_get_string_index("sp_played_state", inst);
