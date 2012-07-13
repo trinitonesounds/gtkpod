@@ -269,7 +269,7 @@ static gboolean _sp_check_track(SpecialSortTabPage *self, Track *track) {
     /* time added */
     if (prefs_get_int_index("sp_added_cond", inst)) {
         IntervalState result = _sp_check_time(self, T_TIME_ADDED, track);
-        g_warning("time added result %d for track %s", result, track->title);
+        g_message("time added result %d for track %s", result, track->title);
         if (sp_or && (result == IS_INSIDE))
             return TRUE;
         if ((!sp_or) && (result == IS_OUTSIDE))
@@ -278,7 +278,7 @@ static gboolean _sp_check_track(SpecialSortTabPage *self, Track *track) {
             checked = TRUE;
     }
 
-    g_warning("Returning %d (checked %d) for track %s", result, checked, track->title);
+    g_message("Returning %d (checked %d) for track %s", result, checked, track->title);
     if (checked)
         return result;
     else
@@ -360,7 +360,7 @@ static void _on_sp_cond_button_toggled(GtkToggleButton *togglebutton, gpointer u
     guint32 inst = _get_sort_tab_widget_instance(pagedata->page);
     T_item cond = (guint32) GPOINTER_TO_UINT(pagedata->data);
 
-    g_warning("value of cond: %d", cond);
+    g_message("value of cond: %d", cond);
     switch (cond) {
     case T_RATING:
         prefs_set_int_index("sp_rating_cond", inst, gtk_toggle_button_get_active(togglebutton));
