@@ -38,7 +38,7 @@
 #include "plugin.h"
 #include "external_player.h"
 
-#define TAB_NAME "External Media Player"
+#define TAB_NAME _("External Media Player")
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -137,7 +137,7 @@ static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* pre
 
     scaled = gdk_pixbuf_scale_simple(pixbuf, 48, 48, GDK_INTERP_BILINEAR);
 
-    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-external-player-settings", _(TAB_NAME), scaled, plugin->prefs);
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-external-player-settings", TAB_NAME, scaled, plugin->prefs);
     g_object_unref(scaled);
     g_object_unref(pixbuf);
 }

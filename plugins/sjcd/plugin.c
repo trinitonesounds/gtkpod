@@ -41,7 +41,7 @@
 
 #define PREFERENCE_ICON "sjcd-category"
 #define PREFERENCE_ICON_STOCK_ID "sjcd-preference-icon"
-#define TAB_NAME N_("Sound Juicer")
+#define TAB_NAME _("Sound Juicer")
 
 /* Parent class. Part of standard class definition */
 static gpointer parent_class;
@@ -125,7 +125,7 @@ static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* pre
         g_error_free(error);
     }
 
-    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-track-display-settings", _(TAB_NAME), pixbuf, plugin->prefs);
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-track-display-settings", TAB_NAME, pixbuf, plugin->prefs);
     g_object_unref(pixbuf);
 }
 
