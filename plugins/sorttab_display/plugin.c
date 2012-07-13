@@ -181,6 +181,7 @@ static gboolean activate_sorttab_display_plugin(AnjutaPlugin *plugin) {
     gchar *glade_path = g_build_filename(get_glade_dir(), "sorttab_display.xml", NULL);
 
     sorttab_display_new(GTK_PANED(sorttab_display_plugin->sort_tab_widget_parent), glade_path);
+    g_free(glade_path);
     gtk_widget_show(sorttab_display_plugin->sort_tab_widget_parent);
 
     g_signal_connect (gtkpod_app, SIGNAL_PLAYLIST_SELECTED, G_CALLBACK (sorttab_display_select_playlist_cb), NULL);
