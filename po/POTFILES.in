@@ -122,13 +122,15 @@ plugins/track_display/plugin.c
 plugins/track_display/track_display_context_menu.c
 [type: gettext/ini]plugins/track_display/track_display.plugin.in
 plugins/track_display/track_display_preferences.c
-[type: gettext/ini]plugins/clarity/clarity.xml
+[type: gettext/glade]plugins/clarity/clarity.xml
+[type: gettext/ini]plugins/clarity/clarity.plugin.in
 plugins/clarity/clarity_context_menu.c
 plugins/clarity/clarity_dnd_support.c
 plugins/clarity/fetchcover.c
 plugins/clarity/plugin.c
 plugins/external_player/plugin.c
 [type: gettext/glade]plugins/external_player/external_player.xml
+[type: gettext/ini]plugins/external_player/external_player.plugin.in
 plugins/external_player/plugin.c
 plugins/sjcd/egg-play-preview.c
 plugins/sjcd/libjuicer/sj-extractor.c
