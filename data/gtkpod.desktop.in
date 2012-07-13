@@ -1,7 +1,7 @@
 [Desktop Entry]
 _Name=gtkpod
 _GenericName=iPod Manager
-_Comment=Manage music and video on an Apple iPod
+_Comment=Manage music, video and photos on an Apple iPod
 Exec=gtkpod
 Icon=gtkpod
 Terminal=false
