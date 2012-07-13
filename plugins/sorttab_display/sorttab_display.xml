@@ -574,9 +574,6 @@
       <row>
         <col id="0" translatable="yes">Added</col>
       </row>
-      <row>
-        <col id="0" translatable="yes"></col>
-      </row>
     </data>
   </object>
   <object class="GtkWindow" id="preference_window">
