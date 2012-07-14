@@ -6066,7 +6066,7 @@ msgstr "<b>Comando riproduttore</b>"
 
 #: ../plugins/external_player/external_player.plugin.in.h:1
 msgid "External Media Player Plugin"
-msgstr "Plugin Riproduttore multimediale esterno"
+msgstr "Plugin riproduttore multimediale esterno"
 
 #: ../plugins/external_player/external_player.plugin.in.h:2
 msgid "Adds track command for playing tracks in external player, eg. xmms"
