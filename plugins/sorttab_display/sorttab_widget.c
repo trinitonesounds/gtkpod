@@ -92,6 +92,8 @@ static void _sort_tab_widget_dispose(GObject *gobject) {
         priv->prev = NULL;
         priv->model = NULL;
         priv->parent = NULL;
+        g_free(priv->glade_xml_path);
+        priv->glade_xml_path = NULL;
     }
 
     /* call the parent class' dispose() method */
@@ -325,7 +327,7 @@ SortTabWidget *sort_tab_widget_new(gint inst, GtkWidget *parent, gchar *glade_xm
 
     priv->parent = parent;
     priv->instance = inst;
-    priv->glade_xml_path = glade_xml_path;
+    priv->glade_xml_path = g_strdup(glade_xml_path);
 
     /*
      * Initialise the notebook pages. This has to be done here rather than
