@@ -2187,7 +2187,7 @@ gboolean write_lyrics_to_file(Track *track) {
                 error = NULL;
             }
             else
-                gtkpod_warning(_("Lyrics not written due to the error:\n%s"), UNKNOWN_ERROR);
+                gtkpod_warning(_("Lyrics not written due to the error:\n\n%s"), UNKNOWN_ERROR);
         }
     }
 
