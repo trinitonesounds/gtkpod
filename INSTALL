@@ -29,36 +29,36 @@ How to compile/install gtkpod:
         libid3tag (at least 0.15)
         libgnome-vfs-2.0 > 2.6 (for iPod autodetection under GNOME)
 
-				Optional Packages
+   Optional Packages
 
-				For web browser plugin:
-				webkitgtk (version 1 or 3 depending on version of gtk)
+        For web browser plugin:
+        webkitgtk (version 1 or 3 depending on version of gtk)
 
-				For audio player plugin:
-				gstreamer
-				gstreamer-base
-				gstreamer-plugins-base
-				gstreamer-interfaces
-				gstreamer-plugins (plugins to support mp3 / mp4 playback)
-				gstreamer-pbutils
+        For audio player plugin:
+        gstreamer
+        gstreamer-base
+        gstreamer-plugins-base
+        gstreamer-interfaces
+        gstreamer-plugins (plugins to support mp3 / mp4 playback)
+        gstreamer-pbutils
 
-				For filetype conversion:
-				flac
-				libogg
-				libvorbis
-				lame
-				faad2
+        For filetype conversion:
+        flac
+        libogg
+        libvorbis
+        lame
+        faad2
 
-				For opengl coverart display (clarity) plugin:
-				clutter-gtk
+        For opengl coverart display (clarity) plugin:
+        clutter-gtk
 
-				For download of coverart:
-				libcurl
+        For download of coverart:
+        libcurl
 
-				For sjcd (sound-juicer) plugin:
-				libcanberra
-				libbrasero-media3
-				musicbrainz3
+        For sjcd (sound-juicer) plugin:
+        libcanberra
+        libbrasero-media3
+        musicbrainz3
 
    The following can be used for installing the dependencies on ubuntu 11.10:
 
