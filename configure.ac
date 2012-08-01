@@ -189,9 +189,9 @@ fi
 
 dnl Check for libcurl
 dnl -------------------------------------------------------------
-AC_ARG_WITH(curl, AS_HELP_STRING([--without-curl],[Disable coverart download support]))
+AC_ARG_WITH(curl, AS_HELP_STRING([--without-curl], [Disable coverart download support]), [], [with_curl=yes])
 if test "x$with_curl" != "xno" -a "x$have_curl" = "xno"; then
-	AC_MSG_ERROR([curl support explicitly requested but curl could not be found])
+	AC_MSG_ERROR([The curl library could not be found. Explicity disable support by rerunning with --without-curl])
 fi
 
 AM_CONDITIONAL(HAVE_CURL, test "x$have_curl" = "xyes")
@@ -287,10 +287,11 @@ fi
 
 dnl Checks for filetype_ogg plugin
 dnl -------------------------------------------------------------
-AC_ARG_WITH(ogg, AS_HELP_STRING([--without-ogg],[Disable Ogg/Vorbis support]))
+AC_ARG_WITH(ogg, AS_HELP_STRING([--without-ogg], [Disable Ogg/Vorbis support]), [], [with_ogg=yes])
 if test "x$with_ogg" != "xno" -a "x$have_vorbis" = "xno"; then
-    AC_MSG_ERROR([Ogg/Vorbis support explicitly requested but ogg/vorbis libs could not be found])
+		AC_MSG_ERROR([Ogg/Vorbis libraries could not be found. Explicitly disable support by rerunning with --without-ogg])
 fi
+
 AM_CONDITIONAL(HAVE_PLUGIN_FILETYPE_OGG, test "x$have_vorbis" = "xyes")
 if test "x$have_vorbis" = "xyes"; then
     AC_DEFINE(HAVE_PLUGIN_FILETYPE_OGG, 1, [Define if you have the ogg/vorbis support])
@@ -299,9 +300,9 @@ fi
 
 dnl Checks for filetype_flac plugin
 dnl -------------------------------------------------------------
-AC_ARG_WITH(flac, AS_HELP_STRING([--without-flac],[Disable FLAC support]))
-if test "xwith_flac" = "xyes" -a "x$have_flac" = "xno"; then
-	AC_MSG_ERROR([FLAC support explicitly requested but flac libs could not be found])
+AC_ARG_WITH(flac, AS_HELP_STRING([--without-flac], [Disable FLAC support]), [], [with_flac=yes])
+if test "x$with_flac" != "xno" -a "x$have_flac" = "xno"; then
+		AC_MSG_ERROR([The FLAC library could not be found. Explicitly disable support by rerunning with --without-flac])
 fi
 AM_CONDITIONAL(HAVE_PLUGIN_FILETYPE_FLAC, test "x$have_flac" = "xyes")
 if test "x$have_flac" = "xyes"; then
