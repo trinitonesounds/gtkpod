@@ -156,13 +156,18 @@ void AP_read_metadata(const char *filePath, Track *track) {
                 && ((info->track_type & AUDIO_TRACK) || (info->track_type & VIDEO_TRACK)
                         || (info->track_type & DRM_PROTECTED_TRACK))) {
 
-            track->tracklen = info->duration;
+            /*
+             * the info->duration is in the track's timescale units so must be divided by that
+             * value to get seconds, while track->tracklen in gtkpod is in ms
+             */
+            float duration = ((float) info->duration / (float) info->parent->movie_info->timescale) * 1000;
+            track->tracklen = (gint32) duration;
+
             track->bitrate = APar_calculate_bitrate(info);
             track->samplerate = info->media_sample_rate;
         }
 
         audio_or_video_found = TRUE;
-
     }
 
     if (prefs_get_int("readtags")) {
@@ -661,7 +666,7 @@ void AP_write_metadata(Track *track, const char *filePath, GError **error) {
                 g_remove(tmp_file);
             }
             else {
-                gtkpod_log_error(error, g_strdup_printf(_("ERROR failed to change track file's artwork.")));
+                gtkpod_log_error(error, g_strdup_printf(_("ERROR failed to change track file's artwork.") ));
                 g_error_free(pixbuf_err);
                 return;
             }
