@@ -153,10 +153,6 @@ rb_rating_render_stars (GtkWidget *widget,
 			return FALSE;
 		}
 
-		if (buf == NULL) {
-			return FALSE;
-		}
-
 		if (rtl) {
 			star_offset = (RB_RATING_MAX_SCORE - i - 1) * icon_width;
 		} else {
