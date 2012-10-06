@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the gtkpod package.
 #
 # Tan Zhixin <tanzhxin@gmail.com>, 2009, 2010.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
@@ -30,7 +29,6 @@ msgid "Conversion Progress Display"
 msgstr "转换进程显示"
 
 #: ../data/glade/core-gtkpod.xml.h:2 ../src/anjuta-app.c:720
-#, fuzzy
 msgid "General"
 msgstr "通用"
 
@@ -40,26 +38,25 @@ msgstr "不再显示此对话窗口"
 
 #: ../data/glade/core-gtkpod.xml.h:4
 msgid "Session"
-msgstr ""
+msgstr "任务"
 
 #: ../data/glade/core-gtkpod.xml.h:5
 msgid ""
 "The output of the background conversion scripts is copied below. Each page "
 "of the notebook corresponds to one background thread."
-msgstr "下面是背景转换脚本的输出，其每一页对应于一个背景。"
+msgstr "下面是背景转换脚本的输出，每一页对应于一个背景。"
 
 #: ../data/glade/core-gtkpod.xml.h:6
 msgid "Turn off the splash screen"
-msgstr ""
+msgstr "关闭初始背景"
 
 #: ../data/gtkpod.desktop.in.h:1
 msgid "Manage music and video on an Apple iPod"
 msgstr "管理Apple iPod的音乐和视频"
 
 #: ../data/gtkpod.desktop.in.h:2 ../src/main.c:95
-#, fuzzy
 msgid "gtkpod"
-msgstr "关于gtkpod"
+msgstr "gtkpod"
 
 #: ../data/gtkpod.desktop.in.h:3
 msgid "iPod Manager"
@@ -70,7 +67,7 @@ msgstr "iPod管理器"
 msgid ""
 "Newly mounted iPod at '%s' could not be loaded into gtkpod.\n"
 "\n"
-msgstr "新挂载在'%s'的iPod无法载入gtkpod\n"
+msgstr "'%s'的新iPod无法载入gtkpod\n"
 
 #: ../libgtkpod/autodetection.c:249
 #, c-format
@@ -83,7 +80,7 @@ msgstr ""
 
 #: ../libgtkpod/autodetection.c:257
 msgid "New iPod"
-msgstr "新iPod"
+msgstr "新加iPod"
 
 #: ../libgtkpod/charset.c:54
 msgid "Arabic (IBM-864)"
@@ -271,19 +268,19 @@ msgstr "希伯来语(ISO-8859-8)"
 
 #: ../libgtkpod/charset.c:100
 msgid "Western (IBM-850)"
-msgstr "西方(IBM-850)"
+msgstr "西欧(IBM-850)"
 
 #: ../libgtkpod/charset.c:101
 msgid "Western (ISO-8859-1)"
-msgstr "西方(ISO-8859-1)"
+msgstr "西欧(ISO-8859-1)"
 
 #: ../libgtkpod/charset.c:102
 msgid "Western (ISO-8859-15)"
-msgstr "西方(ISO-8859-15)"
+msgstr "西欧(ISO-8859-15)"
 
 #: ../libgtkpod/charset.c:103
 msgid "Western (Windows-1252)"
-msgstr "西方(Windows-1252)"
+msgstr "西欧(Windows-1252)"
 
 #. sanity!
 #. check for "System Charset" and return NULL
@@ -310,7 +307,6 @@ msgid "Create new Playlist"
 msgstr "创建新的播放列表"
 
 #: ../libgtkpod/context_menus.c:254
-#, fuzzy
 msgid "Create Playlist File..."
 msgstr "创建播放列表文件"
 
@@ -323,7 +319,6 @@ msgid "Edit Track Details"
 msgstr "编辑音轨信息"
 
 #: ../libgtkpod/context_menus.c:292
-#, fuzzy
 msgid "Copy Tracks to Filesystem..."
 msgstr "复制音轨到文件系统"
 
@@ -332,12 +327,11 @@ msgstr "复制音轨到文件系统"
 msgid ""
 "Using local %s directory since program was started from source directory:\n"
 "%s\n"
-msgstr ""
-
+msgstr "使用启动位置的本地目录%s"
+"%s\n"
 #: ../libgtkpod/file.c:57
-#, fuzzy
 msgid "Unknown error"
-msgstr "未知"
+msgstr "未知错误"
 
 #: ../libgtkpod/file.c:219
 #, c-format
@@ -354,7 +348,7 @@ msgid ""
 "'%s' is a not a known playlist file.\n"
 "\n"
 msgstr ""
-"'%s'是一个未知播放列表文件。\n"
+"'%s'不是已知的播放列表文件。\n"
 "\n"
 
 #: ../libgtkpod/file.c:241 ../plugins/exporter/file_export.c:236
@@ -366,12 +360,12 @@ msgstr "无法读取'%s'。\n"
 #: ../libgtkpod/file.c:320
 #, c-format
 msgid "Skipping '%s' because it is a directory.\n"
-msgstr "忽略目录文件'%s'\n"
+msgstr "忽略文件目录'%s'\n"
 
 #: ../libgtkpod/file.c:326
 #, c-format
 msgid "Skipping '%s' to avoid adding playlist file recursively\n"
-msgstr "忽略'%s'以免递归添加播放列表\n"
+msgstr "忽略'%s'以避免递归添加播放列表\n"
 
 #: ../libgtkpod/file.c:674
 #, c-format
@@ -393,7 +387,6 @@ msgid "Unknown token '%%%c' in template '%s'"
 msgstr "模板'%2$s'中有未知字符串'%%%1$c'"
 
 #: ../libgtkpod/file.c:1036
-#, fuzzy, c-format
 msgid ""
 "Unable to start video thumbnail generator\n"
 "(command line was: '%s')"
@@ -418,29 +411,35 @@ msgid ""
 "The filetype '%s' is not currently supported.\n"
 "\n"
 "If you have a plugin that supports this filetype then please enable it."
-msgstr ""
+msgstr "当前版本不支持'%s'类型文件"
+"\n"
+"如果你已经有一个该文件类型的支持插件，请先启用它。"
 
 #: ../libgtkpod/file.c:1187
-#, fuzzy, c-format
 msgid ""
 "No track information could be retrieved from the file %s due to the "
 "following error:\n"
 "\n"
 "%s"
-msgstr "无法为下列音轨获取mserv信息"
+msgstr "无法从文件获取音轨信息，"
+"错误原因： \n"
+"\n"
+"%s"
 
 #: ../libgtkpod/file.c:1193
-#, fuzzy, c-format
 msgid ""
 "No track information could be retrieved from the file %s due to the "
 "following error:\n"
 "\n"
 "An error was not returned."
-msgstr "无法为下列音轨获取mserv信息"
+msgstr "无法从文件获取音轨信息，"
+"错误原因： \n"
+"\n"
+"没有返回错误信息。"
 
 #: ../libgtkpod/file.c:1299 ../plugins/mserv/mserv.c:199
 msgid "Nothing to update"
-msgstr "无需要更新的项目"
+msgstr "没有需要更新的项目"
 
 #: ../libgtkpod/file.c:1318
 #, c-format
@@ -500,12 +499,12 @@ msgstr "本地文件和iPod中的拷贝都找不到"
 #. update not successful -- log this track for later display
 #: ../libgtkpod/file.c:1595
 msgid "update failed (format not supported?)"
-msgstr "更新失败（格式不支持?）"
+msgstr "更新失败（不支持的格式?）"
 
 #: ../libgtkpod/file.c:1655
 #, c-format
 msgid "File type of %s is not recognised"
-msgstr ""
+msgstr "文件格式%s无法识别"
 
 #: ../libgtkpod/file.c:1663 ../libgtkpod/misc_playlist.c:742
 #, c-format
@@ -528,9 +527,8 @@ msgstr ""
 "\n"
 
 #: ../libgtkpod/file.c:1847
-#, fuzzy, c-format
 msgid "Couldn't change tags of file: %s"
-msgstr "无法改变文件的标签：%s\n"
+msgstr "无法改变文件的标签：%s"
 
 #: ../libgtkpod/file.c:1863
 #, c-format
@@ -545,7 +543,7 @@ msgstr "无法打开文件'%s'读写。\n"
 #: ../libgtkpod/file.c:1960
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
-msgstr "无法对文件'%s'加锁。\n"
+msgstr "无法获取文件'%s'的锁定。\n"
 
 #. error!
 #: ../libgtkpod/file.c:1975 ../libgtkpod/file.c:1983 ../libgtkpod/file.c:1993
@@ -566,8 +564,8 @@ msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
 msgstr ""
-"iTunesDB中的一些离线播放的音轨找不到。按下'ok'从离线播放计数文件中删除它"
-"们，'Cancel'保持不变。"
+"iTunesDB中的一些离线播放的音轨找不到。按下'OK'从离线播放计数文件中删除它"
+"们，'Cancel'则保持不变。"
 
 #: ../libgtkpod/file.c:2038
 #, c-format
@@ -577,13 +575,13 @@ msgstr "写入'%s'时发生错误。\n"
 #: ../libgtkpod/file.c:2071
 #, c-format
 msgid "Failed to read sound check from track with no path setting."
-msgstr ""
+msgstr "从音轨读取声音失败因为没有设置路径"
 
 #: ../libgtkpod/file.c:2079
 #, c-format
 msgid ""
 "Failed to read sound check from track because filetype is not recognised."
-msgstr ""
+msgstr "从音轨读取声音失败因为文件格式不支持"
 
 #: ../libgtkpod/file.c:2109
 #, c-format
@@ -591,6 +589,8 @@ msgid ""
 "Error: Could not determine filetype for file at path: %s.\n"
 "\n"
 msgstr ""
+"错误：无法确定该文件的文件类型：%s \n"
+"\n"
 
 #: ../libgtkpod/file.c:2115 ../libgtkpod/file.c:2120
 #, c-format
@@ -599,11 +599,14 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"错误：读取歌词失败因为：\n"
+"\n"
+"%s"
 
 #: ../libgtkpod/file.c:2124
 #, c-format
 msgid "Error: Unable to get filename from path"
-msgstr ""
+msgstr "错误：无法获取文件名"
 
 #: ../libgtkpod/file.c:2155
 msgid "Error:"
@@ -620,35 +623,33 @@ msgstr ""
 "\n"
 
 #: ../libgtkpod/file.c:2178
-#, fuzzy, c-format
 msgid ""
 "Lyrics not written, file type cannot be determined (%s).\n"
 "\n"
 msgstr ""
-"歌词未写入，文件名不存在(%s)。\n"
+"歌词未写入，文件类型不确定(%s)。\n"
 "\n"
 
 #: ../libgtkpod/file.c:2185
-#, fuzzy, c-format
 msgid ""
 "Lyrics not written due to the error:\n"
 "\n"
 "%s"
 msgstr ""
-"歌词未写入，文件名不存在(%s)。\n"
+"歌词未写入，由于以下错误：\n"
 "\n"
+"%s"
 
 #: ../libgtkpod/file.c:2190
-#, fuzzy, c-format
 msgid ""
 "Lyrics not written due to the error:\n"
 "%s"
 msgstr ""
-"歌词未写入，文件名不存在(%s)。\n"
+"歌词未写入，由于以下错误：\n"
 "\n"
+"%s"
 
 #: ../libgtkpod/file_convert.c:317
-#, fuzzy
 msgid "errors"
 msgstr "错误："
 
@@ -669,7 +670,7 @@ msgstr "不活跃的"
 #: ../libgtkpod/file_convert.c:561
 #, c-format
 msgid "Active threads: %d. Scheduled tracks: %d."
-msgstr "活跃进程：%d    计划播放音轨：%d条"
+msgstr "活跃进程：%d    计划播放音轨数：%d条"
 
 #: ../libgtkpod/file_convert.c:1035
 #, c-format
@@ -706,7 +707,7 @@ msgid ""
 "Transfer of '%s' failed. %s\n"
 "\n"
 msgstr ""
-"移动'%s'失败。%s\n"
+"传输'%s'失败。%s\n"
 "\n"
 
 #: ../libgtkpod/file_convert.c:1868 ../libgtkpod/file_convert.c:2098
@@ -776,7 +777,7 @@ msgstr ""
 #: ../libgtkpod/file_itunesdb.c:121
 #, c-format
 msgid "Matching SHA1 checksum for file %d/%d"
-msgstr "文件的SHA1验证匹配中 %d/%d"
+msgstr "文件%d/%d的SHA1验证匹配中"
 
 #: ../libgtkpod/file_itunesdb.c:232
 msgid "Could not create hash value from itunesdb\n"
@@ -806,7 +807,7 @@ msgid ""
 "Expected \"itunesdb_hash=\" but got:\"%s\"\n"
 msgstr ""
 "%s:\n"
-"期望是\"itunesdb_hash\"，但是得到:\"%s\"\n"
+"期望是\"itunesdb_hash=\"，但是返回:\"%s\"\n"
 
 #: ../libgtkpod/file_itunesdb.c:318
 #, c-format
@@ -826,9 +827,9 @@ msgid ""
 "than gtkpod.\n"
 "\n"
 msgstr ""
-"不存在单条音轨的SHA1验证码。\n"
+"单条音轨的SHA1验证码不存在。\n"
 "\n"
-"为了避免这种情形，或者打开重复文件探测（当然有SHA1验证码）或者不在gtkpod以外"
+"为了避免这种情形，打开重复文件探测（当然有SHA1验证码）或者避免在gtkpod以外"
 "的其他程序中使用iPod。\n"
 "\n"
 
@@ -838,38 +839,34 @@ msgid "Error reading iPod photo database (%s).\n"
 msgstr "读取照片数据库(%s)时发生错误。\n"
 
 #: ../libgtkpod/file_itunesdb.c:401
-#, fuzzy
 msgid "Error reading iPod photo database. (No error message)\n"
-msgstr "读取照片数据库(%s)时发生错误。\n"
+msgstr "读取照片数据库(%s)时发生错误。(无错误信息)\n"
 
 #: ../libgtkpod/file_itunesdb.c:459
 #, c-format
 msgid "The repository %s does not have a readable extended database.\n"
-msgstr "音乐库%s没有可读的扩展数据库。\n"
+msgstr "音乐库%s没有扩展数据库。\n"
 
 #: ../libgtkpod/file_itunesdb.c:461
-#, fuzzy
 msgid ""
 "This database identifies the track on disk with the track data in the "
 "repository database. "
-msgstr "该数据库用音乐库中的音轨数据库来识别磁盘上的音轨。"
+msgstr "该数据库用音乐库中的音轨数据库来确定磁盘上的音轨。"
 
 #: ../libgtkpod/file_itunesdb.c:461
-#, fuzzy
 msgid ""
 "Any tracks already in the database cannot be transferred between "
 "repositories without the extended database. "
 msgstr "如果没有扩展数据库，数据库中已有的音轨不能在音乐库之间进行转移。"
 
 #: ../libgtkpod/file_itunesdb.c:461
-#, fuzzy
 msgid ""
 "A new extended database will be created upon saving but existing tracks will "
 "need to be reimported to be linked to the file on disk.\n"
 "\n"
 msgstr ""
-"新的扩展数据库会在保存时创建，但已有的音轨仍需要被重新导入来和磁盘上的文件进"
-"行链接。"
+"在保存时将创建新的扩展数据库，但现有的音轨仍需要被重新导入来和磁盘上的文件进\n"
+"行链接。\n"
 
 #: ../libgtkpod/file_itunesdb.c:468
 msgid "Offline iPod database successfully imported"
@@ -923,18 +920,17 @@ msgstr ""
 "\n"
 
 #: ../libgtkpod/file_itunesdb.c:504
-#, fuzzy
 msgid ""
 "Extended info will not be used.\n"
 "\n"
 msgstr "扩展信息将不会被使用。\n"
 
 #: ../libgtkpod/file_itunesdb.c:509
-#, fuzzy
 msgid ""
 "iPod Database Successfully Imported\n"
 "\n"
-msgstr "iPod数据库已成功导入"
+msgstr "iPod数据库已成功导入\n"
+"\n"
 
 #: ../libgtkpod/file_itunesdb.c:513
 #, c-format
@@ -965,14 +961,13 @@ msgstr ""
 #. gint id,
 #. gboolean modal,
 #: ../libgtkpod/file_itunesdb.c:696
-#, fuzzy
 msgid "Import Repository Errors"
-msgstr "音乐库"
+msgstr "导入仓库时错误"
 
 #. title
 #: ../libgtkpod/file_itunesdb.c:697
 msgid "Errors created during repository import"
-msgstr ""
+msgstr "在音乐库导入时发生错误"
 
 #: ../libgtkpod/file_itunesdb.c:823
 #, c-format
@@ -986,7 +981,7 @@ msgid ""
 msgstr ""
 "在'%s'中无法找到iPod目录结构。\n"
 "\n"
-"如果你确定iPod正确挂载在'%s'，并且似乎不工作。这种情况下，你可以用gtkpod强制"
+"如果你确定iPod正确挂载在'%s'，它可能没有正确地初始化。这种情况下，你可以用gtkpod强制"
 "初始化。\n"
 "\n"
 "你真的准备现在就创建目录结构吗？"
@@ -1002,25 +997,23 @@ msgstr "创建目录结构"
 #: ../libgtkpod/file_itunesdb.c:1089
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
-msgstr "无法打开\"%s\"写入扩展信息。\n"
+msgstr "无法打开\"%s\"以写入扩展信息。\n"
 
 #: ../libgtkpod/file_itunesdb.c:1101
 msgid "Aborted writing of extended info.\n"
-msgstr "放弃扩展信息的写入操作。\n"
+msgstr "放弃写入扩展信息。\n"
 
 #: ../libgtkpod/file_itunesdb.c:1250
-#, fuzzy, c-format
 msgid "%d%%  %s"
-msgstr "%d%%"
+msgstr "%d%%  %s"
 
 #: ../libgtkpod/file_itunesdb.c:1261
-#, fuzzy, c-format
 msgid "%d%% (%d/%d  %d:%02d:%02d left)  %s"
-msgstr "%d%% (%d/%d  还有%d:%02d:%02d)"
+msgstr "%d%% (%d/%d  剩余%d:%02d:%02d)  %s"
 
 #: ../libgtkpod/file_itunesdb.c:1306
 msgid "Status: Deleting File"
-msgstr "状态：删除文件中"
+msgstr "当前状态：删除文件中"
 
 #: ../libgtkpod/file_itunesdb.c:1362
 #, c-format
@@ -1072,23 +1065,21 @@ msgid ""
 "then eject the iPod again. Pressing 'OK' will re-schedule the failed tracks "
 "for conversion and transfer."
 msgstr ""
-"iPod无法弹出，请按照下面的指示修复并再次尝试弹出。按'ok'将重新安排对操作失败"
+"iPod无法弹出，请按照下面的指示修复并再次尝试弹出。按'OK'将重新安排对操作失败"
 "的音轨进行转换和传输。"
 
 #: ../libgtkpod/file_itunesdb.c:1523
 #, c-format
 msgid "Saving: waiting for %d tracks to be copied"
-msgstr ""
+msgstr "保存：等待，还要复制%d条音轨"
 
 #: ../libgtkpod/file_itunesdb.c:1527
-#, fuzzy, c-format
 msgid "Saving: waiting for %d tracks to convert"
-msgstr "等待完成转换"
+msgstr "保存：等待，还要转换%d条音轨"
 
 #: ../libgtkpod/file_itunesdb.c:1530
-#, fuzzy, c-format
 msgid "Saving: finished track transfer"
-msgstr "状态：传输完成"
+msgstr "保存：传输完成"
 
 #: ../libgtkpod/file_itunesdb.c:1562
 #, c-format
@@ -1127,7 +1118,7 @@ msgstr "现有的iTunes数据库没有被导入"
 
 #: ../libgtkpod/file_itunesdb.c:1635 ../libgtkpod/misc_playlist.c:836
 msgid "Proceed anyway"
-msgstr "不管，继续原来操作"
+msgstr "继续原来操作"
 
 #: ../libgtkpod/file_itunesdb.c:1635
 msgid "Skip storing"
@@ -1156,7 +1147,7 @@ msgstr "扩展信息文件没有被删除：'%s'"
 #: ../libgtkpod/file_itunesdb.c:1754
 #, c-format
 msgid "Backup database could not be found so backing up database to %s\n"
-msgstr ""
+msgstr "无法找到备份数据库，因此备份到%s\n"
 
 #: ../libgtkpod/file_itunesdb.c:1860
 #, c-format
@@ -1170,40 +1161,31 @@ msgstr "%s：改动已经保存"
 
 #: ../libgtkpod/fileselection.c:65
 msgid "Set Cover"
-msgstr "设置插图"
+msgstr "设置封面"
 
 #: ../libgtkpod/filetype_iface.c:173
-#, fuzzy
 msgid "Error: Track info for this file type not supported."
-msgstr ""
-"均衡化失败：文件类型不支持(%s)。\n"
-"\n"
+msgstr "错误：该文件类型的音轨不支持。"
 
 #: ../libgtkpod/filetype_iface.c:178
-#, fuzzy
 msgid "Error: Writing track info to files of this file type is not supported."
-msgstr ""
-"还不支持对视频文件的写入操作(%s)。\n"
-"\n"
+msgstr "错误：不支持该文件类型的音轨信息写入。"
 
 #: ../libgtkpod/filetype_iface.c:183
-#, fuzzy
 msgid "Error: Limiting of sound level not supported for this file type."
-msgstr "错误：本文件格式不支持歌词。"
+msgstr "错误：该文件类型支持有限。"
 
 #: ../libgtkpod/filetype_iface.c:193
-#, fuzzy
 msgid "Error: Lyrics not supported for this file type."
-msgstr "错误：本文件格式不支持歌词。"
+msgstr "错误：该文件类型不支持歌词。"
 
 #: ../libgtkpod/filetype_iface.c:199
-#, fuzzy
 msgid "Error: Writing of lyrics is not supported for this file type."
-msgstr "错误：本文件格式不支持歌词。"
+msgstr "错误：该文件类型不支持歌词写入。"
 
 #: ../libgtkpod/filetype_iface.c:205
 msgid "Error: Gapless playback for this file type is not supported."
-msgstr ""
+msgstr "错误：该文件类型不支持无缝回放。"
 
 #: ../libgtkpod/gp_itdb.c:805
 msgid "Music Library"
@@ -1213,7 +1195,7 @@ msgstr "音乐库"
 #: ../libgtkpod/gp_itdb.c:812 ../libgtkpod/gp_itdb.c:920
 #: ../libgtkpod/gp_itdb.c:952
 msgid "Podcasts"
-msgstr "Podcast"
+msgstr "Podcasts"
 
 #: ../libgtkpod/gp_itdb.c:922
 msgid "Local"
@@ -1229,20 +1211,18 @@ msgstr "iPod"
 #: ../libgtkpod/gp_itdb.c:1007
 #, c-format
 msgid "Increased playcount for '%s'"
-msgstr "'%s'增加播放计数"
+msgstr "为'%s'增加播放计数"
 
 #: ../libgtkpod/gtkpod_app_iface.c:149
-#, fuzzy
 msgid ""
 "Data has been changed and not been saved. If you quit gtkpod, all unsaved "
 "changes will be lost.\n"
 "\n"
 "Do you want to save your changes first?"
 msgstr ""
-"数据已经被改动且还没保存，如果你要退出gtkpod，所有还没有保存的改动都将丢"
-"失。\n"
+"数据已经被改动且还没保存，如果你要退出，所有未保存的改动都将丢失。\n"
 "\n"
-"你要先保存改动吗？"
+"先保存改动吗？"
 
 #: ../libgtkpod/gtkpod_app_iface.c:152
 msgid "Save changes before quiting?"
@@ -1250,7 +1230,7 @@ msgstr "退出前保存改动吗？"
 
 #: ../libgtkpod/gtkpod_app_iface.c:152
 msgid "Quit without saving"
-msgstr "退出并且不保存改动"
+msgstr "退出并且放弃保存"
 
 #. Translators: this is total number of playlists ("P") and number of tracks ("T") in the selected playlist / total number of tracks
 #: ../libgtkpod/gtkpod_app_iface.c:224
@@ -1284,7 +1264,7 @@ msgstr ""
 
 #: ../libgtkpod/misc.c:1512
 msgid "unspecified error"
-msgstr "未知错误"
+msgstr "未分类错误"
 
 #: ../libgtkpod/misc.c:1519
 #, c-format
@@ -1423,7 +1403,7 @@ msgstr "注释"
 #: ../plugins/core_preferences/core_prefs.xml.h:32
 #: ../plugins/playlist_display/playlist_display_spl.c:91
 msgid "Composer"
-msgstr "作曲"
+msgstr "作曲者"
 
 #: ../libgtkpod/misc_conversion.c:67
 msgid "File type"
@@ -1444,7 +1424,7 @@ msgstr "iPod ID"
 #. 10
 #: ../libgtkpod/misc_conversion.c:71
 msgid "Track Nr (#)"
-msgstr "Track Nr(#)"
+msgstr "音轨Nr(#)"
 
 #: ../libgtkpod/misc_conversion.c:72
 #: ../plugins/track_display/display_tracks.c:1851
@@ -1468,7 +1448,7 @@ msgstr "比特率"
 #: ../libgtkpod/misc_conversion.c:76
 #: ../plugins/playlist_display/playlist_display_spl.c:81
 msgid "Samplerate"
-msgstr "采样速率"
+msgstr "采样率"
 
 #: ../libgtkpod/misc_conversion.c:77
 #: ../plugins/playlist_display/playlist_display_spl.c:97
@@ -1634,7 +1614,7 @@ msgstr "按专辑艺术家排序"
 
 #: ../libgtkpod/misc_conversion.c:112
 msgid "Sort Composer"
-msgstr "按作曲排序"
+msgstr "按作曲者排序"
 
 #: ../libgtkpod/misc_conversion.c:113
 msgid "Sort TV Show"
@@ -1712,7 +1692,7 @@ msgstr "播放列表所在的类别（例如'技术'或'音乐'）"
 
 #: ../libgtkpod/misc_conversion.c:152
 msgid "Accessible by selecting the center button on the iPod."
-msgstr "通过iPod中间的按钮选择"
+msgstr "通过iPod的中间按钮来选择"
 
 #: ../libgtkpod/misc_conversion.c:156
 msgid "Release date (for podcasts displayed next to the title on the iPod)"
@@ -1733,7 +1713,7 @@ msgstr "URI'%s'不是一个绝对地址"
 #: ../libgtkpod/misc_conversion.c:731
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
-msgstr "本地文件URI'%s'可能没有包含'#'"
+msgstr "本地文件的URI'%s'可能没有包含'#'"
 
 #: ../libgtkpod/misc_conversion.c:748
 #, c-format
@@ -1773,19 +1753,19 @@ msgstr "AR:"
 
 #: ../libgtkpod/misc_playlist.c:107
 msgid "AL:"
-msgstr "AL:"
+msgstr "专辑:"
 
 #: ../libgtkpod/misc_playlist.c:110
 msgid "GE:"
-msgstr "GE:"
+msgstr "类型:"
 
 #: ../libgtkpod/misc_playlist.c:113
 msgid "CO:"
-msgstr "CO:"
+msgstr "作曲:"
 
 #: ../libgtkpod/misc_playlist.c:116
 msgid "YE:"
-msgstr "YE:"
+msgstr "年代:"
 
 #: ../libgtkpod/misc_playlist.c:140
 msgid "Unknown"
@@ -1804,13 +1784,13 @@ msgstr "未列出"
 #, c-format
 msgid "Created playlist '%s' with %d track."
 msgid_plural "Created playlist '%s' with %d tracks."
-msgstr[0] "从当前%2$d条音轨创建播放列表'%1$s'"
-msgstr[1] "从当前%2$d条音轨创建播放列表'%1$s'"
+msgstr[0] "从当前的%2$d条音轨创建播放列表'%1$s'"
+msgstr[1] "从当前的%2$d条音轨创建播放列表'%1$s'"
 
 #. n==0
 #: ../libgtkpod/misc_playlist.c:307
 msgid "No tracks available, playlist not created"
-msgstr "无音轨，无法创建播放列表"
+msgstr "没有选择音轨，无法创建播放列表"
 
 #: ../libgtkpod/misc_playlist.c:414
 #, c-format
@@ -1834,7 +1814,7 @@ msgstr "未评分的音轨"
 #: ../libgtkpod/misc_playlist.c:525
 #, c-format
 msgid "Rated %d"
-msgstr "评分 %d"
+msgstr "已评分 %d"
 
 #: ../libgtkpod/misc_playlist.c:564
 #, c-format
@@ -1859,7 +1839,7 @@ msgstr "在PC上没有对应文件的悬空音轨被移除"
 
 #: ../libgtkpod/misc_playlist.c:769
 msgid "Dangling tracks with files on PC were handled."
-msgstr "悬空音轨的PC对应文件已找到"
+msgstr "悬空音轨在PC上的对应文件已找到"
 
 #: ../libgtkpod/misc_playlist.c:789 ../plugins/sjcd/sj-main.c:1503
 msgid "Track"
@@ -1886,13 +1866,12 @@ msgid "Creating a tree of known files"
 msgstr "创建已知文件的树形图"
 
 #: ../libgtkpod/misc_playlist.c:886
-#, fuzzy
 msgid "Checking iPod files against known files in DB"
 msgstr "对照数据库中的记录检查iPod的文件"
 
 #: ../libgtkpod/misc_playlist.c:925
 msgid "Orphaned"
-msgstr "遗弃的"
+msgstr "遗弃文件"
 
 #: ../libgtkpod/misc_playlist.c:950
 #, c-format
@@ -1902,7 +1881,7 @@ msgid ""
 "%s\n"
 "\n"
 msgstr ""
-"下列遗弃文件已经添加再次添加到iPod中，它将在下次同步时被移除：\n"
+"下列遗弃文件已经再次添加到iPod中，它将在下次同步时被移除：\n"
 "%s\n"
 "\n"
 
@@ -1962,7 +1941,7 @@ msgstr "从iPod移除所有%d条音轨"
 #: ../libgtkpod/misc_playlist.c:1069
 #, c-format
 msgid "Removed all podcasts from the iPod"
-msgstr "从iPod移除所有音轨"
+msgstr "从iPod移除所有podcast"
 
 #. first use playlist name
 #: ../libgtkpod/misc_playlist.c:1073 ../libgtkpod/misc_playlist.c:1128
@@ -2150,56 +2129,50 @@ msgid "Could not find source file for '%s'. Track not copied."
 msgstr "找不到'%s'的源文件，不会复制音轨。"
 
 #: ../libgtkpod/misc_track.c:1855
-#, fuzzy, c-format
 msgid ""
 "drag and drop: ignored '%s'.\n"
 "reason: %s\n"
 msgstr "拖拽：忽略'%s'\n"
+"原因: %s\n"
 
 #: ../libgtkpod/misc_track.c:1982
-#, fuzzy, c-format
 msgid "Deleting one track completely from iPod"
 msgid_plural "Deleting %d tracks completely from iPod"
 msgstr[0] "已从iPod中完全删除一条音轨"
 msgstr[1] "已从iPod中完全删除%d条音轨"
 
 #: ../libgtkpod/misc_track.c:1987 ../libgtkpod/misc_track.c:2007
-#, fuzzy, c-format
 msgid "Deleting %d track from playlist '%s'"
 msgid_plural "Deleting %d tracks from playlist '%s'"
 msgstr[0] "从播放列表'%2$s'删除%1$d条音轨"
 msgstr[1] "从播放列表'%2$s'删除%1$d条音轨"
 
 #: ../libgtkpod/misc_track.c:2002
-#, fuzzy, c-format
 msgid "Deleting one track from harddisk"
 msgid_plural "Deleting %d tracks from harddisk"
 msgstr[0] "已从硬盘删除一条音轨"
 msgstr[1] "已从硬盘删除%d条音轨"
 
 #: ../libgtkpod/misc_track.c:2012
-#, fuzzy, c-format
 msgid "Deleting one track from local database"
 msgid_plural "Deleting %d tracks from local database"
 msgstr[0] "已从本地数据库删除一条音轨"
 msgstr[1] "已从本地数据库删除%d条音轨"
 
 #: ../libgtkpod/misc_track.c:2027
-#, c-format
 msgid "Deleting Track %d/%d ..."
-msgstr ""
+msgstr "删除音轨%d/%d ..."
 
 #: ../libgtkpod/misc_track.c:2037
-#, fuzzy
 msgid "Completed deletion"
-msgstr "检查重复文件"
+msgstr "删除已完成"
 
 #: ../libgtkpod/misc_track.c:2131
 #, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
-msgstr[0] "复制%1$d条音轨到'%3$s'中的'%2$s'"
-msgstr[1] "复制%1$d条音轨到'%3$s'中的'%2$s'"
+msgstr[0] "从'%3$s'中复制%1$d条音轨到'%2$s'"
+msgstr[1] "从'%3$s'中复制%1$d条音轨到'%2$s'"
 
 #: ../libgtkpod/misc_track.c:2161
 #, c-format
@@ -2215,7 +2188,7 @@ msgstr "没有选择音轨"
 #: ../libgtkpod/prefs.c:293
 #, c-format
 msgid "gtkpod version %s usage:\n"
-msgstr "gtkpod版本%s的使用方法：\n"
+msgstr "gtkpod %s的使用方法：\n"
 
 #: ../libgtkpod/prefs.c:294
 msgid "  -h, --help:   display this message\n"
@@ -2249,7 +2222,7 @@ msgstr "验证文件为0 bytes长度\n"
 #: ../libgtkpod/sha1.c:234
 #, c-format
 msgid "Could not open '%s' to calculate SHA1 checksum: %s\n"
-msgstr "无法打开'%s'计算SHA1验证码：%s\n"
+msgstr "无法打开'%s'以计算SHA1码：%s\n"
 
 #: ../libgtkpod/syncdir.c:220
 #, c-format
@@ -2283,14 +2256,13 @@ msgstr[1] "下列音轨已从播放列表中完全移除：\n"
 
 #: ../libgtkpod/syncdir.c:245
 msgid "Nothing was changed.\n"
-msgstr "无改动。\n"
+msgstr "没有改动。\n"
 
 #: ../libgtkpod/syncdir.c:248
 msgid "Sync summary"
 msgstr "同步摘要"
 
 #: ../libgtkpod/tools.c:118
-#, fuzzy, c-format
 msgid ""
 "Could not find '%s'.\n"
 "Please specifiy the exact path in the preference dialog or install the "
@@ -2312,11 +2284,10 @@ msgstr ""
 "\n"
 
 #: ../libgtkpod/tools.c:255
-#, fuzzy, c-format
 msgid "Normalization failed: file not available (%s)."
 msgstr ""
-"均衡化失败：文件不存在(%s)。\n"
-"\n"
+"均衡化失败：文件不存在(%s)。"
+
 
 #: ../libgtkpod/tools.c:270
 #, c-format
@@ -2324,41 +2295,35 @@ msgid ""
 "Normalization failed for file %s: file type not supported.To normalize mp3 "
 "and aac files ensure the following commands paths have been set in the Tools "
 "section\tmp3 files: mp3gain\taac files: aacgain"
-msgstr ""
+msgstr "文件%s 均衡化失败：不支持的文件类型，如果要对mp3或aac文件均衡化，"
+"请确保以下命令的路径在设置工具"
+"\tmp3文件：mp3增益\taac文件: aac增益"
 
 #. gint id,
 #. gboolean modal,
 #: ../libgtkpod/tools.c:316
-#, fuzzy
 msgid "Normalization Errors"
-msgstr "均衡化"
+msgstr "均衡化错误"
 
 #. title
 #: ../libgtkpod/tools.c:317
 msgid "Errors created by track normalisation"
-msgstr ""
+msgstr "音轨均衡化时发生的错误"
 
 #: ../libgtkpod/tools.c:414
-#, fuzzy, c-format
 msgid "'%s-%s' (%s) could not be normalized. %s\n"
-msgstr ""
-"'%s-%s' (%s)无法设置音量均衡。\n"
-"\n"
+msgstr "'%s-%s' (%s)无法设置音量均衡。%s\n"
 
 #: ../libgtkpod/tools.c:419
-#, fuzzy, c-format
 msgid "'%s-%s' (%s) could not be normalized. Unknown error.\n"
-msgstr ""
-"'%s-%s' (%s)无法设置音量均衡。\n"
-"\n"
+msgstr "'%s-%s' (%s)无法设置音量均衡。未知错误。\n"
+
 
 #: ../libgtkpod/tools.c:436
-#, fuzzy, c-format
 msgid "%d%% (%d tracks left)"
-msgstr "%d%% (还需要%d:%02d:%02d)"
+msgstr "%d%% (还剩%d条音轨)"
 
 #: ../libgtkpod/tools.c:447
-#, fuzzy, c-format
 msgid "Normalized %d of %d track."
 msgid_plural "Normalized %d of %d tracks."
 msgstr[0] "已完成%2$d条音轨中%1$d条的音量均衡设置"
@@ -2375,7 +2340,7 @@ msgstr[1] "已完成%2$d条音轨中%1$d条的音量均衡设置"
 msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
-msgstr "请在首选项对话框工具栏中指定命令。\n"
+msgstr "请在首选项对话框工具栏中设定命令。\n"
 
 #: ../libgtkpod/tools.c:565
 #, c-format
@@ -2387,7 +2352,7 @@ msgid ""
 msgstr ""
 "找不到命令 '%s'。\n"
 "\n"
-"请检查首选项中'工具'部分的设置。\n"
+"请检查首选项中工具栏的设置。\n"
 "\n"
 
 #: ../libgtkpod/tools.c:606
@@ -2402,40 +2367,37 @@ msgstr ""
 #: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:465
 #, c-format
 msgid "ERROR %s is not itunes style."
-msgstr ""
+msgstr "错误：%s不是itunes的方式"
 
 #: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:664
 #, c-format
 msgid "ERROR failed to change track file's artwork."
-msgstr ""
+msgstr "错误：改变音轨文件的艺术封面失败。"
 
 #: ../plugins/filetype_video/videofile.c:47
-#, fuzzy
 msgid "Generic video file"
-msgstr "文件类型"
+msgstr "通用视频文件"
 
 #: ../plugins/core_preferences/core_prefs.c:178
 msgid "Browse"
 msgstr "浏览"
 
 #: ../plugins/core_preferences/core_prefs.plugin.in.h:1
-#, fuzzy
 msgid "Core Preferences Plugin"
-msgstr "转换首选项"
+msgstr "核心插件选择"
 
 #: ../plugins/core_preferences/core_prefs.plugin.in.h:2
-#, fuzzy
 msgid "Modify Core Preferences"
-msgstr "转换首选项"
+msgstr "修改核心首选项"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:1
 #: ../plugins/repository_editor/repository_editor.xml.h:1
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: ../plugins/core_preferences/core_prefs.xml.h:2
 msgid "<b>Auto-Generated Playlists</b>"
-msgstr "<b>自动生成播放列表</b>"
+msgstr "<b>自动生成的播放列表</b>"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:3
 msgid "<b>Compatible Formats</b>"
@@ -2470,18 +2432,16 @@ msgid "<b>On-the-fly Conversion</b>"
 msgstr "<b>实时转换</b>"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:11
-#, fuzzy
 msgid "<b>Preferred gain type</b>"
-msgstr "首选获取类型"
+msgstr "<b>首选获取类型</b>"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:12
 msgid "<b>Tag Editing</b>"
 msgstr "<b>编辑标签</b>"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:13
-#, fuzzy
 msgid "<b>Tags</b>"
-msgstr "<b>n/a</b>"
+msgstr "<b>标签</b>"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:14
 msgid "<b>Volume Normalization</b>"
@@ -2501,15 +2461,15 @@ msgstr "<i>mp3增益</i>调整："
 
 #: ../plugins/core_preferences/core_prefs.xml.h:18
 msgid "AAC"
-msgstr ""
+msgstr "AAC"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:19
 msgid "About unupdated tracks"
-msgstr "未更新的音轨"
+msgstr "关于未更新的音轨"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:20
 msgid "About updated tracks"
-msgstr "已更新的音轨"
+msgstr "关于已更新的音轨"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:21
 msgid "Add cover art using file name template"
@@ -2535,11 +2495,11 @@ msgstr "允许重复文件"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:27
 msgid "Also use this encoding when updating or synchronizing tracks"
-msgstr "当更新和同步时始终使用这种字符编码"
+msgstr "当更新和同步时同样使用这种字符编码"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:28
 msgid "Also use this encoding when writing tracks"
-msgstr "当新建时始终使用这种字符编码"
+msgstr "当新建时同样使用这种字符编码"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:30
 msgid "Automatically generate video thumbnails"
@@ -2559,16 +2519,15 @@ msgstr "确认同步时删除音轨"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:35
 msgid "Confirm deletion of tracks:"
-msgstr "确认删除音轨"
+msgstr "确认删除音轨："
 
 #: ../plugins/core_preferences/core_prefs.xml.h:36
-#, fuzzy
 msgid "Conversion Preferences"
 msgstr "转换首选项"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:37
 msgid "Conversion Settings..."
-msgstr "转换设置"
+msgstr "转换设置..."
 
 #: ../plugins/core_preferences/core_prefs.xml.h:38
 msgid "Convert AAC (M4A)"
@@ -2587,21 +2546,20 @@ msgid "Convert compatible formats to a single format"
 msgstr "转换兼容格式到单一格式"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:42
-#, fuzzy
 msgid "Convert incompatible audio formats to:"
 msgstr "转换不兼容音乐格式到："
 
 #: ../plugins/core_preferences/core_prefs.xml.h:43
 msgid "Cover Art Search Preferences"
-msgstr "插图搜索首选项"
+msgstr "艺术封面搜索首选项"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:44
 msgid "Cover art file pattern:"
-msgstr "插图文件样式"
+msgstr "艺术封面文件的样式"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:45
 msgid "Customize..."
-msgstr "定制"
+msgstr "定制..."
 
 #: ../plugins/core_preferences/core_prefs.xml.h:46
 msgid "Delete missing tracks when synchronizing playlists"
@@ -2609,7 +2567,7 @@ msgstr "同步播放列表时删除缺失的音轨"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:47
 msgid "Display conversion log"
-msgstr "显示转换日志"
+msgstr "显示转换记录"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:48
 msgid "Display information about detected duplicate files"
@@ -2675,7 +2633,7 @@ msgstr "包括\"评分最高的\"播放列表中从未使用的音轨"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:64
 msgid "MP3"
-msgstr ""
+msgstr "MP3"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:65
 msgid "Mass-modify tags when multiple tracks are selected"
@@ -2699,9 +2657,8 @@ msgid "Music"
 msgstr "音乐"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:70
-#, fuzzy
 msgid "Normalization..."
-msgstr "均衡化"
+msgstr "均衡化..."
 
 #: ../plugins/core_preferences/core_prefs.xml.h:71
 msgid ""
@@ -2725,7 +2682,7 @@ msgstr "覆盖已有标签"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:74
 msgid "Parse file name to set missing tags"
-msgstr "检查文件名的缺失标签"
+msgstr "检查文件名以设置缺失的标签"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:76
 #, no-c-format
@@ -2735,26 +2692,25 @@ msgid ""
 "- %f: the input file\n"
 "- %o: the output file (which is automatically generated)\n"
 msgstr ""
-"指定生成视频文件缩略的shell命令。下面的这些格式串将被展开：- %f: 输入文件\n"
+"指定生成视频文件缩略的shell命令。下面的这些格式串将被展开：\n"
+"- %f: 输入文件\n"
 "- %o: 输出文件（自动生成）\n"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:80
 msgid "Read embedded cover art information"
-msgstr "读取嵌入的插图信息"
+msgstr "读取嵌入的艺术封面信息"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:81
 msgid "Read embedded tags from music files"
 msgstr "从音乐文件中读取嵌入的标签"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:82
-#, fuzzy
 msgid "ReplayGain Preferences"
-msgstr "播放增益首选项"
+msgstr "重播增益的首选项"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:83
-#, fuzzy
 msgid "ReplayGain..."
-msgstr "播放增益中"
+msgstr "重播增益..."
 
 #: ../plugins/core_preferences/core_prefs.xml.h:84
 msgid "Set still missing tags to file name"
@@ -2774,11 +2730,11 @@ msgid ""
 "could result in tracks that are normalized to different levels until updated."
 msgstr ""
 "这些设置只会被应用到新添加或新更改的音轨。这会导致音轨被均衡到不同的水平上直"
-"到更新为止。"
+"到再次更新为止。"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:88
 msgid "Threshold for import of tracks before a save triggered:"
-msgstr ""
+msgstr "触发保存前，导入音轨的阈值"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:90
 msgid "Track gain (formerly \"radio gain\")"
@@ -2786,7 +2742,7 @@ msgstr "音轨增益"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:91
 msgid "Transfer tracks in background mode"
-msgstr "在后台传输音轨"
+msgstr "在后台传输音轨的模式"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:92
 msgid "Update information about the existing track"
@@ -2794,7 +2750,7 @@ msgstr "更新现有音轨的信息"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:93
 msgid "Use legacy format for MP3 tags"
-msgstr "MP3标签采用老格式"
+msgstr "MP3标签采用旧式格式"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:94
 msgid "Video Thumbnail Generation"
@@ -2802,7 +2758,7 @@ msgstr "生成视频缩略"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:95
 msgid "Video thumbnailing program:"
-msgstr "生成视频缩略的程序："
+msgstr "视频缩略的程序："
 
 #: ../plugins/core_preferences/core_prefs.xml.h:96
 msgid ""
@@ -2815,10 +2771,17 @@ msgid ""
 "The default is 10 so after 10 tracks have been added a save\n"
 "will be imposed on the repository."
 msgstr ""
+"在向仓库添加多个音轨时，如果发生错误，可能的情形是没有保存\n"
+"导致所有添加的音轨都将丢失。这一选项确保在处理一定数量音轨\n"
+"后指定一个保存操作。\n"
+"\n"
+"默认是10,因此每添加10个音轨就会对仓库执行一次保存操作。"
+
+
 
 #: ../plugins/core_preferences/core_prefs.xml.h:104
 msgid "When updating tracks, display information:"
-msgstr "当更新音轨时显示："
+msgstr "当更新音轨时显示信息："
 
 #: ../plugins/core_preferences/core_prefs.xml.h:105
 msgid "Write tags to disk when edited"
@@ -2852,14 +2815,13 @@ msgstr ""
 "- 作曲: %c\n"
 "- 歌曲: %t\n"
 "- 风格: %G\n"
-"- track nr: %T\n"
-"- CD nr: %C\n"
+"- 音轨序号: %T\n"
+"- CD序号: %C\n"
 "- 年代: %Y\n"
 "- skip data: %*\n"
 "- 特殊字符'%': %%."
 
 #: ../plugins/core_preferences/core_prefs.xml.h:122
-#, fuzzy, no-c-format
 msgid ""
 "You can separate several templates by a ';'. The first one matching the "
 "filename will be used.\n"
@@ -2905,27 +2867,23 @@ msgstr ""
 "- 特殊字符'%': %%."
 
 #: ../plugins/core_preferences/core_prefs.xml.h:141
-#, fuzzy
 msgid "dB"
-msgstr "B"
+msgstr "dB"
 
 #: ../plugins/core_preferences/plugin.c:65
-#, fuzzy
 msgid "Core Preferences"
-msgstr "转换首选项"
+msgstr "核心首选项"
 
 #: ../plugins/core_preferences/plugin.c:126
 #: ../plugins/core_preferences/plugin.c:131
-#, fuzzy
 msgid "Settings"
-msgstr "设定"
+msgstr "设置"
 
 #: ../plugins/cover_display/cover_display.xml.h:1
 msgid "<"
 msgstr "<"
 
 #: ../plugins/cover_display/cover_display.xml.h:2
-#, fuzzy
 msgid "<b>Album Cover Sort Order</b>"
 msgstr "<b>排列顺序</b>"
 
@@ -2968,16 +2926,15 @@ msgstr "背景颜色"
 #: ../plugins/sorttab_display/sorttab_display.xml.h:24
 #: ../plugins/track_display/track_display.xml.h:8
 msgid "Case sensitive sorting"
-msgstr "区分大小写排序"
+msgstr "排序（区分大小写）"
 
 #: ../plugins/cover_display/cover_display.xml.h:11
 msgid "Choose a Different Colour for the CoverArt Display Background"
-msgstr "为插图背景选择颜色"
+msgstr "为封面艺术的背景选择颜色"
 
 #: ../plugins/cover_display/cover_display.xml.h:12
-#, fuzzy
 msgid "Cover Art Display"
-msgstr "<b>显示封面</b>"
+msgstr "显示封面艺术"
 
 #: ../plugins/cover_display/cover_display.xml.h:13
 msgid "Text color"
@@ -2986,21 +2943,19 @@ msgstr "文字颜色"
 #: ../plugins/cover_display/cover_display_context_menu.c:40
 #: ../plugins/clarity/clarity_context_menu.c:40
 msgid "Select Cover From File"
-msgstr "从文件选择插图"
+msgstr "从文件选择封面"
 
 #: ../plugins/cover_display/cover_display_context_menu.c:53
 msgid "View Full Size Artwork"
-msgstr "查看全部插图"
+msgstr "查看全尺寸的封面"
 
 #: ../plugins/cover_display/cover_display.plugin.in.h:1
-#, fuzzy
 msgid "Cover Display Plugin"
-msgstr "<b>显示封面</b>"
+msgstr "封面显示插件"
 
 #: ../plugins/cover_display/cover_display.plugin.in.h:2
-#, fuzzy
 msgid "Display Cover Artwork of Tracks"
-msgstr "显示的音轨"
+msgstr "显示音轨的艺术封面"
 
 #. Set the resolution in the label
 #: ../plugins/cover_display/display_coverart.c:1454
@@ -3011,27 +2966,27 @@ msgstr "<b>图片尺寸： %d x %d</b>"
 
 #: ../plugins/cover_display/display_coverart.c:1604
 msgid "Failed to remove the album from the album hash store."
-msgstr "将专辑从album hash store删除失败。"
+msgstr "将专辑从album hash store移除失败。"
 
 #: ../plugins/cover_display/display_coverart.c:1969
 #: ../plugins/details_editor/details.c:1698
 #: ../plugins/clarity/clarity_dnd_support.c:217
 msgid "Item had to be downloaded but gtkpod was not compiled with curl."
-msgstr ""
+msgstr "需要下载但gtkpod编译时没有curl支持"
 
 #: ../plugins/cover_display/display_coverart.c:1975
 #, c-format
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
-msgstr "把图片作为插图显示时发生错误:%s\n"
+msgstr "把图片作为封面显示时发生错误:%s\n"
 
 #: ../plugins/cover_display/display_coverart.c:2008
 #: ../plugins/details_editor/details.c:1746
 msgid "Successfully set new coverart for selected tracks"
-msgstr "成功为选定音轨设置新的插图"
+msgstr "成功为选定音轨设置新的封面艺术"
 
 #: ../plugins/cover_display/fetchcover.c:149
 msgid "Only jpg images are currently supported at this time\n"
-msgstr ""
+msgstr "当前只有jpg图像被支持\n"
 
 #: ../plugins/cover_display/fetchcover.c:172
 msgid "fetchcover curl data memory is NULL so failed to download anything!\n"
@@ -3090,7 +3045,7 @@ msgstr ""
 #: ../plugins/details_editor/fetchcover.c:365
 #: ../plugins/clarity/fetchcover.c:365
 msgid "Cover art file already exists"
-msgstr "插图文件存在"
+msgstr "封面艺术文件已存在"
 
 #: ../plugins/cover_display/fetchcover.c:367
 #: ../plugins/details_editor/fetchcover.c:367
@@ -3111,67 +3066,58 @@ msgid "Abort"
 msgstr "放弃"
 
 #: ../plugins/cover_display/plugin.c:44
-#, fuzzy
 msgid "Coverart Display"
-msgstr "<b>显示封面</b>"
+msgstr "显示封面艺术"
 
 #: ../plugins/cover_display/plugin.c:77 ../plugins/coverweb/plugin.c:75
 #: ../plugins/clarity/plugin.c:74
-#, fuzzy
 msgid "Cover Display"
-msgstr "<b>显示封面</b>"
+msgstr "显示封面"
 
 #: ../plugins/cover_display/plugin.c:102
-#, fuzzy
 msgid "  Cover Artwork"
-msgstr "浏览"
+msgstr " 封面艺术"
 
 #. Translators: you may change the web address to get a localized page, if it exists
 #: ../plugins/coverweb/coverweb.c:92
 msgid "http://images.google.com"
-msgstr ""
+msgstr "http://images.google.com"
 
 #: ../plugins/coverweb/coverweb.c:125
-#, fuzzy
 msgid "Bookmarks"
-msgstr "<b>标签</b>"
+msgstr "书签"
 
 #: ../plugins/coverweb/coverweb.xml.h:1
-#, fuzzy
 msgid "<b>Bookmarks</b>"
-msgstr "<b>标签</b>"
+msgstr "<b>书签</b>"
 
 #: ../plugins/coverweb/coverweb.xml.h:2
-#, fuzzy
 msgid "Cover Browser"
-msgstr "浏览"
+msgstr "封面浏览"
 
 #: ../plugins/coverweb/coverweb.plugin.in.h:1
-#, fuzzy
 msgid "Cover Web Plugin"
-msgstr "插图"
+msgstr "封面的网络插件"
 
 #: ../plugins/coverweb/coverweb.plugin.in.h:2
 msgid "Web Browser for downloading Cover Artwork"
-msgstr ""
+msgstr "网络浏览器以下载封面艺术"
 
 #: ../plugins/coverweb/coverweb_preferences.c:139
 msgid "Bookmark Url"
-msgstr ""
+msgstr "URL保存为书签"
 
 #: ../plugins/coverweb/coverweb_preferences.c:139
 msgid "Please enter the full url of the bookmark"
-msgstr ""
+msgstr "请输入书签的完整URL"
 
 #: ../plugins/coverweb/plugin.c:46
-#, fuzzy
 msgid "Cover Web"
-msgstr "插图"
+msgstr "封面网络"
 
 #: ../plugins/coverweb/plugin.c:94
-#, fuzzy
 msgid "  Cover Browser"
-msgstr "浏览"
+msgstr " 封面浏览"
 
 #: ../plugins/details_editor/details.c:62
 msgid "Audio/Video"
@@ -3229,12 +3175,10 @@ msgid ""
 msgstr ""
 
 #: ../plugins/details_editor/details.c:1294
-#, fuzzy
 msgid "Tracks in details editor have been modified."
-msgstr "音轨最后被修改的日期和时间"
+msgstr "最后被编辑器处理的音轨"
 
 #: ../plugins/details_editor/details.c:1435
-#, fuzzy
 msgid "  Edit Track Details"
 msgstr "编辑音轨信息"
 
@@ -3261,77 +3205,71 @@ msgstr "详细"
 
 #: ../plugins/details_editor/details_editor.xml.h:5
 msgid "Set Cover Art from _File"
-msgstr "从文件设置插图"
+msgstr "从文件设置封面艺术(_F)"
 
 #: ../plugins/details_editor/details_editor.xml.h:6
 msgid "Undo _Track"
-msgstr "取消音轨"
+msgstr "取消音轨(_T)"
 
 #: ../plugins/details_editor/details_editor.xml.h:7
 msgid "_General"
-msgstr "通用"
+msgstr "通用(_G)"
 
 #: ../plugins/details_editor/details_editor.xml.h:8
 msgid "_Lyrics"
-msgstr "歌词"
+msgstr "歌词(_L)"
 
 #: ../plugins/details_editor/details_editor.xml.h:9
 msgid "_Misc."
-msgstr "杂项"
+msgstr "其他(_M)"
 
 #: ../plugins/details_editor/details_editor.xml.h:10
 msgid "_Podcasts"
-msgstr "Podcast"
+msgstr "Podcast(_P)"
 
 #: ../plugins/details_editor/details_editor.xml.h:11
-#, fuzzy
 msgid "_Remove Cover Art"
-msgstr "移除插图"
+msgstr "移除插图(_R)"
 
 #: ../plugins/details_editor/details_editor.xml.h:12
 msgid "_Sorting"
-msgstr "排序中"
+msgstr "排序中(_S)"
 
 #: ../plugins/details_editor/details_editor.xml.h:13
 msgid "_Undo All"
-msgstr "取消所有"
+msgstr "取消所有(_U)"
 
 #: ../plugins/details_editor/details_editor.xml.h:14
 msgid "_Video"
-msgstr "视频"
+msgstr "视频(_V)"
 
 #: ../plugins/details_editor/details_editor.plugin.in.h:1
-#, fuzzy
 msgid "Details Editor Plugin"
-msgstr "详细"
+msgstr "编辑器插件"
 
 #: ../plugins/details_editor/details_editor.plugin.in.h:2
-#, fuzzy
 msgid "Edit Track detail of Files"
 msgstr "编辑音轨信息"
 
 #: ../plugins/details_editor/plugin.c:64
-#, fuzzy
 msgid "Details Editor"
-msgstr "详细"
+msgstr "编辑器"
 
 #: ../plugins/exporter/exporter.plugin.in.h:1
-#, fuzzy
 msgid "Export Tracks to File"
-msgstr "复制音轨到文件系统"
+msgstr "导出音轨到文件"
 
 #: ../plugins/exporter/exporter.plugin.in.h:2
 msgid "Exporter Plugin"
-msgstr ""
+msgstr "导出插件"
 
 #: ../plugins/exporter/exporter.xml.h:1
 msgid "<b>gtkpod Options</b>"
 msgstr "<b>gtkpod选项</b>"
 
 #: ../plugins/exporter/exporter.xml.h:2
-#, fuzzy
 msgid "Check for existing files when copying from iPod"
-msgstr "当从iPod中复制文件时检查现有文件。"
+msgstr "从iPod中复制文件时检查文件是否存在"
 
 #: ../plugins/exporter/exporter.xml.h:4
 #, no-c-format
@@ -3343,7 +3281,7 @@ msgid ""
 "nr: %C, year: %Y, original filename (requires extended information file): "
 "%o, the character '%': %%."
 msgstr ""
-"选择格式串确定如何显示info, 比如'%a/%A/%T - %t.mp3' 或者 '%o'。你可以用分号分"
+"选择格式串确定如何显示信息, 比如'%a/%A/%T - %t.mp3' 或者 '%o'。你可以用分号分"
 "隔几个模板，gtkpod按照文件扩展信息选取对应的字段，艺术家: %a, 专辑: %A, 作"
 "曲: %c, 歌曲: %t, 风格: %G, track nr: %T, CD nr: %C, 年: %Y, 原始文件名 (需要"
 "文件扩展信息): %o, 字符 '%': %%."
@@ -3375,10 +3313,9 @@ msgstr "如果存在的话，播放列表中的音轨指向本地拷贝，否则
 
 #: ../plugins/exporter/exporter.xml.h:9
 msgid "Info field template:"
-msgstr "Info区模板:"
+msgstr "信息区域模板:"
 
 #: ../plugins/exporter/exporter.xml.h:10
-#, fuzzy
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "for the filename. If you set this option you can set a different charset "
@@ -3393,9 +3330,8 @@ msgstr ""
 "使用指定字符集"
 
 #: ../plugins/exporter/exporter.xml.h:11
-#, fuzzy
 msgid "Playlist type:"
-msgstr "播放列表名："
+msgstr "播放列表类型："
 
 #: ../plugins/exporter/exporter.xml.h:12
 msgid "Source:"
@@ -3405,18 +3341,16 @@ msgstr "来源："
 msgid ""
 "The local copy of the track is referenced in the playlist. If the track is "
 "not available locally, an error message is displayed."
-msgstr "播放列表中的音轨指向其本地拷贝，如果找不到文件则显示错误信息。"
+msgstr "播放列表中的音轨指向其本地拷贝，如果本地找不到音轨则显示错误信息。"
 
 #: ../plugins/exporter/exporter.xml.h:14
 msgid "The track on the iPod is referenced in the playlist file."
 msgstr "播放列表指向iPod中的音轨"
 
 #: ../plugins/exporter/exporter.xml.h:15
-#, fuzzy
 msgid "Use selected charset (Preferences/Music/Encoding) for this filename"
-msgstr ""
-"文件名字符编码（首选项/'添加/更新/同步'）采用\n"
-" "
+msgstr "文件名采用编码（首选项/音乐/编码）"
+
 
 #: ../plugins/exporter/exporter.xml.h:16
 msgid ""
@@ -3426,28 +3360,28 @@ msgid ""
 "skipped, allowing a quick sync of the iPod's contents."
 msgstr ""
 "当从iPod中复制时不会对目标文件存在与否进行检查，选择此选项后gtkpod就会检查目"
-"标文件的长度是否与iPod中的原始文件一致，如果这样，则忽略文件允许对iPod的内容"
-"快速同步。"
+"标文件的长度是否与iPod中的原始文件一致，因此可以忽略文件，从而可以对iPod的内"
+"容快速同步。"
 
 #: ../plugins/exporter/exporter.xml.h:17
 msgid "_Local"
-msgstr "本地"
+msgstr "本地(_L)"
 
 #: ../plugins/exporter/exporter.xml.h:18
 msgid "_M3U"
-msgstr "M3U"
+msgstr "M3U(_M)"
 
 #: ../plugins/exporter/exporter.xml.h:19
 msgid "_PLS"
-msgstr "PLS"
+msgstr "PLS(_P)"
 
 #: ../plugins/exporter/exporter.xml.h:20
 msgid "_Prefer Local"
-msgstr "本地偏好"
+msgstr "本地偏好(_P)"
 
 #: ../plugins/exporter/exporter.xml.h:21
 msgid "_iPod"
-msgstr "iPod"
+msgstr "iPod(_i)"
 
 #: ../plugins/exporter/file_export.c:206
 #, c-format
@@ -3474,53 +3408,49 @@ msgstr "复制'%s'到'%s'时发生错误(%s)\n"
 #: ../plugins/playlist_display/playlist_display_actions.c:173
 #, c-format
 msgid "'%s'\n"
-msgstr ""
+msgstr "'%s'\n"
 
 #: ../plugins/exporter/file_export.c:331
 #, c-format
 msgid "Failed to copy file %s. No error reported."
-msgstr ""
+msgstr "复制文件失败 %s，没有返回报告。"
 
 #: ../plugins/exporter/file_export.c:344
-#, fuzzy, c-format
 msgid "Could not find file for '%s' on the iPod\n"
-msgstr "无法找到iPod中'%s'的文件\n"
+msgstr "iPod中无法找到'%s'的文件\n"
 
 #. gint id,
 #. gboolean modal,
 #: ../plugins/exporter/file_export.c:355
-#, fuzzy
 msgid "Export Errors"
-msgstr "从数据库导出音轨"
+msgstr "导出错误"
 
 #. title
 #: ../plugins/exporter/file_export.c:356
 msgid "Errors created by export"
-msgstr ""
+msgstr "导出时产生的错误"
 
 #: ../plugins/exporter/file_export.c:477
-#, fuzzy, c-format
 msgid ""
 "Failed to write '%s-%s'\n"
 "\n"
 msgstr "写入'%s-%s'失败\n"
+"\n"
 
 #: ../plugins/exporter/file_export.c:494
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
-msgstr "%d%% (还需要%d:%02d:%02d)"
+msgstr "%d%% (剩余%d:%02d:%02d)"
 
 #: ../plugins/exporter/file_export.c:503
-#, fuzzy, c-format
 msgid "Exported %d of %d track."
 msgid_plural "Exported %d of %d tracks."
-msgstr[0] "复制%2$d条音轨中的第%1$d条"
-msgstr[1] "复制%2$d条音轨中的第%1$d条"
+msgstr[0] "导出%2$d条音轨中的第%1$d条"
+msgstr[1] "导出%2$d条音轨中的第%1$d条"
 
 #: ../plugins/exporter/file_export.c:511
-#, fuzzy
 msgid "Some tracks were not exported."
-msgstr "部分音轨将不会被复制。"
+msgstr "部分音轨将不会被导出。"
 
 #: ../plugins/exporter/file_export.c:570
 msgid "Export from iPod database not possible in offline mode."
@@ -3544,7 +3474,7 @@ msgid ""
 "included in the current drag and drop operation.\n"
 "\n"
 msgstr ""
-"部分音轨将不会被复制到你的硬盘，当前的拖拽操作只包括那些复制的音轨。\n"
+"部分音轨复制到你的硬盘，当前的拖拽操作只包括那些复制的音轨。\n"
 "\n"
 
 #: ../plugins/exporter/file_export.c:910
@@ -3553,7 +3483,7 @@ msgid ""
 "No valid filename for: %s\n"
 "\n"
 msgstr ""
-"无有效文件名：%s\n"
+"无效文件名：%s\n"
 "\n"
 
 #: ../plugins/exporter/file_export.c:924
@@ -3577,35 +3507,32 @@ msgid "Create Playlist File"
 msgstr "创建播放列表文件"
 
 #: ../plugins/exporter/plugin.c:49
-#, fuzzy
 msgid "_Export Tracks"
-msgstr "从数据库导出音轨"
+msgstr "导出音轨(_E)"
 
 #. Action name
 #. Stock icon
 #: ../plugins/exporter/plugin.c:57
-#, fuzzy
 msgid "Export Tracks To Playlist File..."
-msgstr "从数据库导出音轨"
+msgstr "从播放列表文件导出音轨..."
 
 #. Action name
 #. Stock icon
 #: ../plugins/exporter/plugin.c:65
-#, fuzzy
 msgid "Export Tracks To Filesystem..."
-msgstr "复制音轨到文件系统"
+msgstr "导出音轨到文件系统"
 
 #: ../plugins/exporter/plugin.c:82
 msgid "Exporter"
-msgstr ""
+msgstr "导出工具"
 
 #: ../plugins/filetype_flac/filetype_flac.plugin.in.h:1
 msgid "Flac File Type Plugin"
-msgstr ""
+msgstr "Flac文件插件"
 
 #: ../plugins/filetype_flac/filetype_flac.plugin.in.h:2
 msgid "Support for the flac file type"
-msgstr ""
+msgstr "支持flac文件类型"
 
 #: ../plugins/filetype_flac/flacfile.c:58
 #, c-format
@@ -3618,47 +3545,44 @@ msgid "Error retrieving tags for '%s'.\n"
 msgstr "获取'%s'的标签时发生错误。\n"
 
 #: ../plugins/filetype_flac/plugin.c:91
-#, fuzzy
 msgid "Flac audio file type"
-msgstr "文件类型"
+msgstr "Flac音频文件"
 
 #: ../plugins/filetype_m4a/filetype_m4a.plugin.in.h:1
 msgid "M4A File Type Plugin"
-msgstr ""
+msgstr "M4A文件插件"
 
 #: ../plugins/filetype_m4a/filetype_m4a.plugin.in.h:2
 msgid "Support for the m4a / m4p file type"
-msgstr ""
+msgstr "支持m4a/m4p文件类型"
 
 #: ../plugins/filetype_m4a/m4afile.c:49 ../plugins/filetype_mp4/mp4file.c:128
-#, fuzzy
 msgid "AAC audio file"
-msgstr "文件类型"
+msgstr "AAC音频文件"
 
 #: ../plugins/filetype_m4a/m4afile.c:53 ../plugins/filetype_mp4/mp4file.c:132
 msgid "Protected AAC audio file"
-msgstr ""
+msgstr "受保护的AAC音频文件"
 
 #: ../plugins/filetype_m4a/m4afile.c:57 ../plugins/filetype_mp4/mp4file.c:136
-#, fuzzy
 msgid "AAC audio book file"
-msgstr "有声书"
+msgstr "AAC有声书"
 
 #: ../plugins/filetype_m4a/m4afile.c:62 ../plugins/filetype_mp4/mp4file.c:141
 msgid "MP4 video file"
-msgstr ""
+msgstr "MP4视频文件"
 
 #: ../plugins/filetype_m4a/plugin.c:79
 msgid "M4A audio file type"
-msgstr ""
+msgstr "M4a音频文件"
 
 #: ../plugins/filetype_mp3/filetype_mp3.plugin.in.h:1
 msgid "MP3 File Type Plugin"
-msgstr ""
+msgstr "MP3文件插件"
 
 #: ../plugins/filetype_mp3/filetype_mp3.plugin.in.h:2
 msgid "Support for the MP3 file type"
-msgstr ""
+msgstr "MP3文件支持"
 
 #: ../plugins/filetype_mp3/mp3file.c:1247
 #, c-format
@@ -3689,73 +3613,68 @@ msgstr "文件\"%s\"播放时间长度为0，忽略。\n"
 
 #: ../plugins/filetype_mp3/plugin.c:78
 msgid "MP3 audio file type"
-msgstr ""
+msgstr "MP3音频文件"
 
 #: ../plugins/filetype_mp4/filetype_mp4.plugin.in.h:1
 msgid "MP4 File Type Plugin"
-msgstr ""
+msgstr "MP4文件插件"
 
 #: ../plugins/filetype_mp4/filetype_mp4.plugin.in.h:2
 msgid "Support for the MP4 video file type"
-msgstr ""
+msgstr "MP4视频文件支持"
 
 #: ../plugins/filetype_mp4/plugin.c:78
 msgid "MP4 video file type"
-msgstr ""
+msgstr "MP4视频文件"
 
 #: ../plugins/filetype_ogg/filetype_ogg.plugin.in.h:1
 msgid "Ogg File Type Plugin"
-msgstr ""
+msgstr "Ogg文件插件"
 
 #: ../plugins/filetype_ogg/filetype_ogg.plugin.in.h:2
 msgid "Support for the Ogg file type"
-msgstr ""
+msgstr "Ogg文件支持"
 
 #: ../plugins/filetype_ogg/oggfile.c:75
-#, fuzzy, c-format
 msgid "'%s' does not appear to be an Ogg audio file.\n"
 msgstr "'%s'似乎不是一个ogg音频文件。\n"
 
 #: ../plugins/filetype_ogg/oggfile.c:81
-#, fuzzy
 msgid "Ogg audio file"
-msgstr "文件类型"
+msgstr "Ogg音频文件"
 
 #: ../plugins/filetype_ogg/plugin.c:90
-#, fuzzy
 msgid "Ogg audio file type"
-msgstr "文件类型"
+msgstr "Ogg音频文件类型"
 
 #: ../plugins/filetype_video/filetype_video.plugin.in.h:1
-#, fuzzy
 msgid "Generic video file type"
-msgstr "文件类型"
+msgstr "通用视频文件类型"
 
 #: ../plugins/filetype_video/filetype_video.plugin.in.h:2
 msgid "Video File Type Plugin"
-msgstr ""
+msgstr "视频文件插件"
 
 #: ../plugins/filetype_video/plugin.c:78
 msgid "Generic Video file type"
-msgstr ""
+msgstr "通用视频文件类型"
 
 #: ../plugins/filetype_wav/filetype_wav.plugin.in.h:1
 msgid "Support for the wav file type"
-msgstr ""
+msgstr "wav文件支持"
 
 #: ../plugins/filetype_wav/filetype_wav.plugin.in.h:2
 msgid "Wav File Type Plugin"
-msgstr ""
+msgstr "Wav文件插件"
 
 #: ../plugins/filetype_wav/plugin.c:90
 msgid "Wav audio file type"
-msgstr ""
+msgstr "Wav音频文件类型"
 
 #. change to kbps
 #: ../plugins/filetype_wav/wavfile.c:165
-#, fuzzy
 msgid "WAV audio file"
-msgstr "文件类型"
+msgstr "WAV音频文件"
 
 #: ../plugins/filetype_wav/wavfile.c:176
 #, c-format
@@ -3781,13 +3700,12 @@ msgid "TB"
 msgstr "TB"
 
 #: ../plugins/info_display/info_display.plugin.in.h:1
-#, fuzzy
 msgid "Info Display Plugin"
-msgstr "显示"
+msgstr "显示插件"
 
 #: ../plugins/info_display/info_display.plugin.in.h:2
 msgid "Information dialog for connected iPods"
-msgstr ""
+msgstr "已连接的iPod信息"
 
 #: ../plugins/info_display/infoview.c:49
 msgid ""
@@ -3873,21 +3791,18 @@ msgid "offline"
 msgstr "离线"
 
 #: ../plugins/info_display/infoview.c:206
-#, fuzzy
 msgid "  Repository Information"
-msgstr "音乐库选项"
+msgstr "音乐库信息"
 
 #. Action name
 #. Stock icon
 #: ../plugins/info_display/plugin.c:48
-#, fuzzy
 msgid "_Open Repository Information View"
-msgstr "音乐库选项"
+msgstr "查看音乐库信息(_O)"
 
 #: ../plugins/info_display/plugin.c:64
-#, fuzzy
 msgid "Info Display"
-msgstr "显示"
+msgstr "显示信息"
 
 #: ../plugins/media_player/media_player.c:104
 #, c-format
@@ -3896,9 +3811,8 @@ msgstr ""
 
 #. title by artist from album
 #: ../plugins/media_player/media_player.c:140
-#, fuzzy
 msgid "No Track Title"
-msgstr "按歌曲排序"
+msgstr "没有音轨标题"
 
 #: ../plugins/media_player/media_player.c:145
 #, c-format
@@ -3906,9 +3820,8 @@ msgid "<b>%s</b> by %s from %s"
 msgstr ""
 
 #: ../plugins/media_player/media_player.c:147
-#, fuzzy, c-format
 msgid "<b>%s</b> by %s"
-msgstr "<b>标签</b>"
+msgstr ""
 
 #: ../plugins/media_player/media_player.c:149
 #, c-format
@@ -3919,64 +3832,60 @@ msgstr ""
 #: ../plugins/media_player/media_player.c:280
 #, c-format
 msgid "GStreamer thread creation failed: %s\n"
-msgstr ""
+msgstr "创建GStreamer线程失败：%s\n"
 
 #: ../plugins/media_player/media_player.c:337
 msgid "Seek failed!\n"
-msgstr ""
+msgstr "寻址失败!\n"
 
 #. Translators: %s is an error message
 #: ../plugins/media_player/media_player.c:390
-#, fuzzy, c-format
 msgid "Failed to play track: %s"
-msgstr "设置插图失败：'%s'\n"
+msgstr "播放音轨失败：%s"
 
 #: ../plugins/media_player/media_player.c:397
 msgid ""
 "Failed to play track: Cannot create a play element. Ensure that all "
 "gstreamer plugins are installed"
 msgstr ""
+"播放音轨失败：无法创建播放单元，请确保安装了所有的gstreamer插件"
+""
 
 #: ../plugins/media_player/media_player.xml.h:1
 msgid "Next"
-msgstr ""
+msgstr "下一首"
 
 #: ../plugins/media_player/media_player.xml.h:2
 #: ../plugins/media_player/plugin.c:139
-#, fuzzy
 msgid "Play"
-msgstr "已播放"
+msgstr "播放"
 
 #: ../plugins/media_player/media_player.xml.h:3
 msgid "Previous"
-msgstr ""
+msgstr "上一首"
 
 #. Change the label to Stop while extracting
 #. TODO: find out why GTK+ needs this to work (see #364371)
 #: ../plugins/media_player/media_player.xml.h:4
 #: ../plugins/sjcd/sj-extracting.c:838
-#, fuzzy
 msgid "Stop"
-msgstr "至"
+msgstr "停止"
 
 #: ../plugins/media_player/media_player.plugin.in.h:1
 msgid "Controls for playing tracks and videos"
-msgstr ""
+msgstr "控制台"
 
 #: ../plugins/media_player/media_player.plugin.in.h:2
-#, fuzzy
 msgid "Media Player Plugin"
-msgstr "媒体类型"
+msgstr "Media Player插件"
 
 #: ../plugins/media_player/plugin.c:66
-#, fuzzy
 msgid "Media Player"
-msgstr "媒体类型"
+msgstr "Media Player"
 
 #: ../plugins/media_player/plugin.c:91
-#, fuzzy
 msgid "  Media Player"
-msgstr "媒体类型"
+msgstr "  Media Player"
 
 #: ../plugins/mserv/mserv.c:53
 #, c-format
@@ -4019,7 +3928,7 @@ msgstr "获取mserv数据%s"
 
 #: ../plugins/mserv/mserv.c:218
 msgid "no filename available"
-msgstr "没有现成文件名"
+msgstr "没有可用文件名"
 
 #: ../plugins/mserv/mserv.c:223
 msgid "Updated selected tracks with data from mserv."
@@ -4027,21 +3936,20 @@ msgstr "以mserv的数据更新选定音轨。"
 
 #: ../plugins/mserv/mserv.plugin.in.h:1
 msgid "Mserv Jukebox Plugin"
-msgstr ""
+msgstr "Mserv Jukebox插件"
 
 #: ../plugins/mserv/mserv.plugin.in.h:2
 msgid "Mserv is a jukebox-style music server (see http://www.mserv.org)"
-msgstr ""
+msgstr "Mserv是一个jukebox式的音乐服务器(http://www.mserv.org)"
 
 #: ../plugins/mserv/mserv.xml.h:1
-#, fuzzy
 msgid "<b>Settings</b>"
-msgstr "<b>mserv选项</b>"
+msgstr "<b>设置</b>"
 
 #: ../plugins/mserv/mserv.xml.h:2 ../plugins/mserv/plugin.c:47
 #: ../plugins/mserv/plugin.c:96
 msgid "Mserv"
-msgstr ""
+msgstr "Mserv"
 
 #: ../plugins/mserv/mserv.xml.h:3
 msgid "Music root:"
@@ -4052,19 +3960,20 @@ msgid "Report problems when accessing mserv"
 msgstr "连接mserv时报告问题"
 
 #: ../plugins/mserv/mserv.xml.h:5
-#, fuzzy
 msgid ""
 "To fill additional information, <i>gtkpod</i> can use a database \n"
 "provided by the <i>mserv</i> music server.\n"
 "\n"
 "More details on mserv can be found at <b>http://www.mserv.org</b>"
 msgstr ""
-"填写更多信息，<i>gtkpod</i>可以保存在<i>mserv</i>音乐数据库，如果你不知道什么"
-"是<i>mserv</i>，请留空。"
+"填写更多信息，<i>gtkpod</i>可以保存在<i>mserv</i>音乐服务的数\n"
+"据库上\n"
+"\n"
+"有关mserv的更多信息，请参看<b>http://www.mserv.org</b>"
 
 #: ../plugins/mserv/mserv.xml.h:9
 msgid "Use mserv database to fill track information"
-msgstr "用mserv数据库填写音轨信息"
+msgstr "用mserv数据填写音轨信息"
 
 #: ../plugins/mserv/mserv.xml.h:10
 msgid "Username:"
@@ -4075,25 +3984,21 @@ msgid "mserv root:"
 msgstr "mserv根目录："
 
 #: ../plugins/mserv/plugin.c:57
-#, fuzzy
 msgid "_Update mserv Data from File"
-msgstr "从文件更新mserv数据"
+msgstr "从文件更新mserv数据(_U)"
 
 #: ../plugins/mserv/plugin.c:65 ../plugins/playlist_display/plugin.c:276
 #: ../plugins/playlist_display/plugin.c:300
-#, fuzzy
 msgid "Selected Playlist"
-msgstr "选定播放列表"
+msgstr "选定的播放列表"
 
 #: ../plugins/mserv/plugin.c:73 ../plugins/track_display/plugin.c:64
-#, fuzzy
 msgid "Selected Tracks"
 msgstr "选定音轨"
 
 #: ../plugins/photo_editor/display_photo.c:163
-#, fuzzy
 msgid "  iPod Photo Editor"
-msgstr "照片窗口"
+msgstr "  iPod照片编辑器"
 
 #: ../plugins/photo_editor/display_photo.c:225
 #: ../plugins/photo_editor/display_photo.c:1483
@@ -4136,7 +4041,7 @@ msgstr "新照片簿的名称"
 
 #: ../plugins/photo_editor/display_photo.c:849
 msgid "Please enter a new name for the photo album"
-msgstr "请为照片簿输入新名称"
+msgstr "请为照片簿输入新的名称"
 
 #: ../plugins/photo_editor/display_photo.c:857
 #: ../plugins/photo_editor/display_photo.c:1044
@@ -4161,7 +4066,7 @@ msgstr "将图片添加到iPod"
 
 #: ../plugins/photo_editor/display_photo.c:1129
 msgid "Add a Directory of Images to the iPod. Select the Directory."
-msgstr "添加图片到iPod，请选择目录。"
+msgstr "将目录内的图片添加到iPod，请选择目录。"
 
 #: ../plugins/photo_editor/display_photo.c:1498
 #, c-format
@@ -4170,12 +4075,11 @@ msgstr "<无成员>\n"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:1
 msgid "Add Image_s"
-msgstr "添加图像"
+msgstr "添加图像(_s)"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:2
-#, fuzzy
 msgid "Photo Image"
-msgstr "照片簿"
+msgstr "照片"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:3
 msgid "Photo Window"
@@ -4183,44 +4087,43 @@ msgstr "照片窗口"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:4
 msgid "R_ename Album"
-msgstr "重命名专辑"
+msgstr "重命名照片补簿(_e)"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:5
 msgid "_Add Album"
-msgstr "新增专辑"
+msgstr "新增照片簿(_A)"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:6
 msgid "_Add Image"
-msgstr "新增图像"
+msgstr "新增相片(_A)"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:7
 msgid "_Album"
-msgstr "专辑"
+msgstr "照片簿(_A)"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:8
 msgid "_Photos"
-msgstr "照片"
+msgstr "照片(_P)"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:9
 msgid "_Remove Album"
-msgstr "移除专辑"
+msgstr "移除照片簿(_R)"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:10
 msgid "_Remove Images"
-msgstr "移除图像"
+msgstr "移除照片(_R)"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:11
-#, fuzzy
 msgid "_View Full Size"
-msgstr "查看整个文件"
+msgstr "查看整个文件(_V)"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:12
 msgid "_Zoom"
-msgstr "缩放"
+msgstr "缩放(_Z)"
 
 #: ../plugins/photo_editor/photo_editor_context_menu.c:47
 msgid "Remove Album"
-msgstr "删除专辑"
+msgstr "删除照片簿"
 
 #: ../plugins/photo_editor/photo_editor_context_menu.c:57
 msgid "Remove Photo"
@@ -4228,29 +4131,26 @@ msgstr "删除照片"
 
 #: ../plugins/photo_editor/photo_editor_context_menu.c:78
 msgid "Rename Album"
-msgstr "重命名专辑"
+msgstr "重命名照片簿"
 
 #: ../plugins/photo_editor/photo_editor.plugin.in.h:1
-#, fuzzy
 msgid "Add and Remove Photographs"
-msgstr "删除照片"
+msgstr "添加和删除相片"
 
 #: ../plugins/photo_editor/photo_editor.plugin.in.h:2
-#, fuzzy
 msgid "Photo Editor Plugin"
-msgstr "照片窗口"
+msgstr "照片编辑插件"
 
 #. Action name
 #. Stock icon
 #: ../plugins/photo_editor/plugin.c:49
 #: ../plugins/playlist_display/playlist_display_context_menu.c:301
 msgid "Open Photo Editor"
-msgstr ""
+msgstr "打开图像编辑器"
 
 #: ../plugins/photo_editor/plugin.c:71
-#, fuzzy
 msgid "Photo Editor"
-msgstr "照片窗口"
+msgstr "照片编辑器"
 
 #. DND between different itdbs
 #. Do not allow drags from the iPod in offline mode
@@ -4308,22 +4208,20 @@ msgid "<b>General Options</b>"
 msgstr "<b>通用选项</b>"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:6
-#, fuzzy
 msgid "<b>Playlist Sort Order</b>"
-msgstr "<b>排列顺序</b>"
+msgstr "<b>播放列表排序</b>"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:7
 msgid "<b>Rules</b>"
 msgstr "<b>规则</b>"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:8
-#, fuzzy
 msgid "All rules"
-msgstr "所有音轨"
+msgstr "所有规则"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:9
 msgid "Any rules"
-msgstr ""
+msgstr "任一规则"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:11
 #: ../plugins/sorttab_display/sorttab_display.xml.h:30
@@ -4333,19 +4231,19 @@ msgid ""
 "sorting will not work well with most charsets."
 msgstr ""
 "如果选择，则排序时区分大小写，但是注意区分大小写排序在大多数字符集上无法正常"
-"工作"
+"工作。"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:12
 msgid "Ignore rules"
-msgstr ""
+msgstr "忽略规则"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:13
 msgid "Live _updating"
-msgstr "在线更新"
+msgstr "在线更新(_u)"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:14
 msgid "Match only _checked tracks"
-msgstr "只匹配选择的音轨"
+msgstr "只匹配选择的音轨(_c)"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:15
 msgid "Match:"
@@ -4354,9 +4252,8 @@ msgstr "匹配："
 #: ../plugins/playlist_display/playlist_display.xml.h:16
 #: ../plugins/playlist_display/plugin.c:50
 #: ../plugins/playlist_display/plugin.c:342
-#, fuzzy
 msgid "Playlist Display"
-msgstr "播放列表"
+msgstr "显示播放列表"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:17
 msgid "Playlist name:"
@@ -4374,30 +4271,28 @@ msgstr "按此排序："
 
 #: ../plugins/playlist_display/playlist_display.xml.h:20
 msgid "_Limit to"
-msgstr "限制"
+msgstr "限制(_L)"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:66
 #: ../plugins/playlist_display/playlist_display_actions.c:321
 #: ../plugins/sjcd/sj-extracting.c:607
-#, fuzzy, c-format
 msgid "%s\n"
-msgstr "%s - %s"
+msgstr "%s\n"
 
 #. gint id,
 #. gboolean modal,
 #: ../plugins/playlist_display/playlist_display_actions.c:91
 msgid "Directory Addition Errors"
-msgstr ""
+msgstr "添加目录错误"
 
 #. title
 #: ../plugins/playlist_display/playlist_display_actions.c:92
-#, fuzzy
 msgid " Some directories were not added successfully"
 msgstr "部分文件没有添加成功"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:105
 msgid "Some directories failed to be added but no errors were reported."
-msgstr ""
+msgstr "部分目录添加失败但是没有返回错误"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:128
 #: ../plugins/playlist_display/playlist_display_actions.c:268
@@ -4407,25 +4302,24 @@ msgstr "在添加音轨之前请先选择一个播放列表或者音乐库。"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:133
 msgid "Add Folder"
-msgstr "添加目录"
+msgstr "添加文件夹"
 
 #. gint id,
 #. gboolean modal,
 #: ../plugins/playlist_display/playlist_display_actions.c:198
 msgid "Playlist Addition Errors"
-msgstr ""
+msgstr "添加播放列表错误"
 
 #. title
 #: ../plugins/playlist_display/playlist_display_actions.c:199
-#, fuzzy
 msgid "Some tracks in the playlist were not added successfully"
-msgstr "部分文件没有添加成功"
+msgstr "播放列表的部分音轨没有添加成功"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:212
 #: ../plugins/playlist_display/playlist_display_actions.c:364
 #: ../plugins/sjcd/sj-extracting.c:657
 msgid "Some tracks failed to be added but no errors were reported."
-msgstr ""
+msgstr "部分音轨添加失败但是没有返回错误"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:276
 #: ../plugins/playlist_display/playlist_display_actions.c:400
@@ -4443,7 +4337,7 @@ msgstr "添加播放列表到'%s'"
 #: ../plugins/playlist_display/playlist_display_actions.c:350
 #: ../plugins/sjcd/sj-extracting.c:643
 msgid "File Addition Errors"
-msgstr ""
+msgstr "添加文件错误"
 
 #. title
 #: ../plugins/playlist_display/playlist_display_actions.c:351
@@ -4491,7 +4385,7 @@ msgstr "类型"
 
 #: ../plugins/playlist_display/playlist_display_spl.c:86
 msgid "Track number"
-msgstr "音轨号"
+msgstr "音轨序号"
 
 #: ../plugins/playlist_display/playlist_display_spl.c:87
 msgid "Size"
@@ -4620,7 +4514,7 @@ msgstr "随机"
 
 #: ../plugins/playlist_display/playlist_display_spl.c:175
 msgid "title"
-msgstr "歌名"
+msgstr "歌曲"
 
 #: ../plugins/playlist_display/playlist_display_spl.c:176
 msgid "album"
@@ -4685,14 +4579,12 @@ msgid "+"
 msgstr "+"
 
 #: ../plugins/playlist_display/playlist_display_spl.c:1513
-#, fuzzy
 msgid "Playlist name cannot be blank"
-msgstr "播放列表名："
+msgstr "播放列表名不能为空"
 
 #: ../plugins/playlist_display/playlist_display_spl.c:1519
-#, fuzzy, c-format
 msgid "A playlist named '%s' already exists"
-msgstr "已经存在一个同名照片簿。"
+msgstr "已经存在一个同名播放列表'%s'。"
 
 #: ../plugins/playlist_display/playlist_display_context_menu.c:88
 msgid "Remove All Tracks from iPod"
@@ -4765,140 +4657,121 @@ msgstr "同步目录到播放列表"
 #: ../plugins/playlist_display/playlist_display_context_menu.c:427
 #: ../plugins/playlist_display/playlist_display_context_menu.c:459
 msgid "Copy selected playlist to..."
-msgstr "复制选定的播放列表到"
+msgstr "复制选定的播放列表到..."
 
 #: ../plugins/playlist_display/playlist_display.plugin.in.h:1
-#, fuzzy
 msgid "Playlist Display Plugin"
-msgstr "播放列表"
+msgstr "播放列表显示插件"
 
 #: ../plugins/playlist_display/playlist_display.plugin.in.h:2
-#, fuzzy
 msgid "Playlist View"
-msgstr "播放列表"
+msgstr "显示播放列表"
 
 #. Action name
 #. Stock icon
 #: ../plugins/playlist_display/plugin.c:60
-#, fuzzy
 msgid "_Load Selected iPod"
-msgstr "加载iPod"
+msgstr "加载选定iPod(_L)"
 
 #. Display label
 #. short-cut
 #: ../plugins/playlist_display/plugin.c:62
-#, fuzzy
 msgid "Load the currently selected iPod"
-msgstr "添加文件到'%s'"
+msgstr "加载当前选定iPod"
 
 #. Action name
 #. Stock icon
 #: ../plugins/playlist_display/plugin.c:68
 msgid "_Load iPod(s)"
-msgstr "加载iPod"
+msgstr "加载iPod(_L)"
 
 #. Display label
 #. short-cut
 #: ../plugins/playlist_display/plugin.c:70
 msgid "Load all currently listed iPods"
-msgstr ""
+msgstr "加载所有列表iPods"
 
 #: ../plugins/playlist_display/plugin.c:76
-#, fuzzy
 msgid "_Load iPods"
-msgstr "加载iPod"
+msgstr "加载iPods(_L)"
 
 #. Action name
 #. Stock icon
 #: ../plugins/playlist_display/plugin.c:84
 msgid "_Save Changes"
-msgstr "保存改动"
+msgstr "保存改动(_S)"
 
 #. Display label
 #. short-cut
 #: ../plugins/playlist_display/plugin.c:86
-#, fuzzy
 msgid "Save all changes"
-msgstr "保存改动"
+msgstr "保存所有改动"
 
 #. Action name
 #. Stock icon
 #: ../plugins/playlist_display/plugin.c:92
-#, fuzzy
 msgid "Add _Files..."
-msgstr "添加文件"
+msgstr "添加文件(_F)"
 
 #. Display label
 #. short-cut
 #: ../plugins/playlist_display/plugin.c:94
-#, fuzzy
 msgid "Add files to selected iPod"
-msgstr "添加文件到'%s'"
+msgstr "添加文件到选定iPod"
 
 #. Action name
 #. Stock icon
 #: ../plugins/playlist_display/plugin.c:100
-#, fuzzy
 msgid "Add Fol_der..."
-msgstr "添加目录"
+msgstr "添加目录(_d)"
 
 #. Display label
 #. short-cut
 #: ../plugins/playlist_display/plugin.c:102
-#, fuzzy
 msgid "Add folder contents to selected iPod"
-msgstr "添加文件到'%s'"
+msgstr "添加目录内容到选定iPod"
 
 #. Action name
 #. Stock icon
 #: ../plugins/playlist_display/plugin.c:108
-#, fuzzy
 msgid "Add _Playlist..."
-msgstr "添加播放列表"
+msgstr "添加播放列表(_P)"
 
 #. Display label
 #. short-cut
 #: ../plugins/playlist_display/plugin.c:110
-#, fuzzy
 msgid "Add playlist to selected iPod"
-msgstr "没有选择播放列表"
+msgstr "添加播放列表到已选iPod"
 
 #: ../plugins/playlist_display/plugin.c:124
-#, fuzzy
 msgid "Normalize"
 msgstr "均衡化"
 
 #: ../plugins/playlist_display/plugin.c:132
-#, fuzzy
 msgid "_New Playlist"
-msgstr "新建播放列表"
+msgstr "新建播放列表(_N)"
 
 #: ../plugins/playlist_display/plugin.c:140
-#, fuzzy
 msgid "Empty Playlist..."
 msgstr "空白播放列表"
 
 #: ../plugins/playlist_display/plugin.c:142
-#, fuzzy
 msgid "Create an empty playlist"
-msgstr "创建新的播放列表"
+msgstr "创建空白播放列表"
 
 #: ../plugins/playlist_display/plugin.c:148
-#, fuzzy
 msgid "Smart Playlist..."
 msgstr "智能播放列表"
 
 #: ../plugins/playlist_display/plugin.c:150
-#, fuzzy
 msgid "Create a new smart playlist"
-msgstr "创建新的播放列表"
+msgstr "新建智能播放列表"
 
 #: ../plugins/playlist_display/plugin.c:156
 msgid "Random Playlist from Displayed Tracks"
 msgstr "从显示音轨中生成随机播放列表"
 
 #: ../plugins/playlist_display/plugin.c:158
-#, fuzzy
 msgid "Create a random playlist from the displayed tracks"
 msgstr "从显示音轨中生成随机播放列表"
 
@@ -4907,16 +4780,14 @@ msgid "Containing Displayed Tracks"
 msgstr "包含已显示音轨"
 
 #: ../plugins/playlist_display/plugin.c:166
-#, fuzzy
 msgid "Create a playlist containing the displayed tracks"
-msgstr "为这条音轨创建播放列表"
+msgstr "为当前显示音轨创建播放列表"
 
 #: ../plugins/playlist_display/plugin.c:172
 msgid "Containing Selected Tracks"
-msgstr "包含已选择音轨"
+msgstr "包含已选音轨"
 
 #: ../plugins/playlist_display/plugin.c:174
-#, fuzzy
 msgid "Create a playlist containing the selected tracks"
 msgstr "为这条音轨创建播放列表"
 
@@ -4925,26 +4796,24 @@ msgid "Best Rated Tracks"
 msgstr "评分最高的音轨"
 
 #: ../plugins/playlist_display/plugin.c:182
-#, fuzzy
 msgid "Create a playlist containing the best rated tracks"
-msgstr "为这条音轨创建播放列表"
+msgstr "为评分最高的音轨创建一个播放列表"
 
 #: ../plugins/playlist_display/plugin.c:188
 msgid "Tracks Most Often Listened To"
-msgstr "最经常听的音轨"
+msgstr "最常听的音轨"
 
 #: ../plugins/playlist_display/plugin.c:190
 msgid "Create a playlist containing the tracks most often listened to"
-msgstr ""
+msgstr "为经常听的音轨创建一个播放列表"
 
 #: ../plugins/playlist_display/plugin.c:196
 msgid "Most Recently Played Tracks"
 msgstr "最近播放的音轨"
 
 #: ../plugins/playlist_display/plugin.c:198
-#, fuzzy
 msgid "Create a playlist containing the most recently played tracks"
-msgstr "为这条音轨创建播放列表"
+msgstr "为最近听的音轨创建播放列表"
 
 #: ../plugins/playlist_display/plugin.c:204
 msgid "All Tracks Played Since Last Time"
@@ -4952,7 +4821,7 @@ msgstr "上次以来的所有播放的音轨"
 
 #: ../plugins/playlist_display/plugin.c:206
 msgid "Create a playlist containing all tracks played since last time"
-msgstr ""
+msgstr "为上次后的所有音轨创建播放列表"
 
 #: ../plugins/playlist_display/plugin.c:212
 msgid "All Tracks Never Listened To"
@@ -4960,127 +4829,109 @@ msgstr "所有从未听过的音轨"
 
 #: ../plugins/playlist_display/plugin.c:214
 msgid "Create a playlist of all tracks never listened to"
-msgstr ""
+msgstr "为所有从未听过的音轨创建播放列表"
 
 #: ../plugins/playlist_display/plugin.c:220
 msgid "All Tracks not Listed in any Playlist"
-msgstr "所有没进入播放列表的音轨"
+msgstr "所有没列入任何播放列表的音轨"
 
 #: ../plugins/playlist_display/plugin.c:222
-#, fuzzy
 msgid "Create a playlist of tracks not list in any other playlist"
-msgstr "所有没进入播放列表的音轨"
+msgstr "为所有没列入其他播放列表的音轨创建播放列表"
 
 #: ../plugins/playlist_display/plugin.c:228
 msgid "One for each Artist"
 msgstr "每个艺术家选择一条"
 
 #: ../plugins/playlist_display/plugin.c:230
-#, fuzzy
 msgid "Create a playlist for each artist"
-msgstr "每个艺术家选择一条"
+msgstr "为每个艺术家创建一个播放列表"
 
 #: ../plugins/playlist_display/plugin.c:236
 msgid "One for each Album"
 msgstr "每个专辑选择一条"
 
 #: ../plugins/playlist_display/plugin.c:238
-#, fuzzy
 msgid "Create a playlist for each album"
-msgstr "为这条音轨创建播放列表"
+msgstr "为这个专辑创建播放列表"
 
 #: ../plugins/playlist_display/plugin.c:244
 msgid "One for each Genre"
-msgstr "每种类型选择一条"
+msgstr "为每种类型选择一条"
 
 #: ../plugins/playlist_display/plugin.c:246
-#, fuzzy
 msgid "Create a playlist for each genre"
-msgstr "为这条音轨创建播放列表"
+msgstr "为每种类型创建一个播放列表"
 
 #: ../plugins/playlist_display/plugin.c:252
 msgid "One for each Composer"
 msgstr "每个作曲选择一条"
 
 #: ../plugins/playlist_display/plugin.c:254
-#, fuzzy
 msgid "Create a playlist for each composer"
-msgstr "每个作曲选择一条"
+msgstr "每个作曲家创建一个播放列表"
 
 #: ../plugins/playlist_display/plugin.c:260
 msgid "One for each Year"
 msgstr "每个年代选择一条"
 
 #: ../plugins/playlist_display/plugin.c:262
-#, fuzzy
 msgid "Create a playlist for each year"
-msgstr "为这条音轨创建播放列表"
+msgstr "每个年份选取一首并创建播放列表"
 
 #: ../plugins/playlist_display/plugin.c:268
 msgid "One for each Rating"
-msgstr "每个评分选择一条"
+msgstr "每个评分选择一首"
 
 #: ../plugins/playlist_display/plugin.c:270
-#, fuzzy
 msgid "Create a playlist for each rating"
-msgstr "为这条音轨创建播放列表"
+msgstr "每个评分选取一首并创建播放列表"
 
 #: ../plugins/playlist_display/plugin.c:284
-#, fuzzy
 msgid "Selected Playlist including Tracks from Database"
-msgstr "选择播放列表包括数据库的音轨"
+msgstr "选择的播放列表包含数据库的音轨"
 
 #: ../plugins/playlist_display/plugin.c:292
-#, fuzzy
 msgid "Selected Playlist including Tracks from Device"
-msgstr "选择播放列表包括iPod中的音轨"
+msgstr "选择的播放列表包括iPod中的音轨"
 
 #: ../plugins/playlist_display/plugin.c:345
-#, fuzzy
 msgid "Create a new playlist for the selected iPod"
-msgstr "为这条音轨创建播放列表"
+msgstr "从选中的iPod创建播放列表"
 
 #: ../plugins/playlist_display/plugin.c:349
-#, fuzzy
 msgid "Load iPods"
-msgstr "加载iPod"
+msgstr "加载iPods"
 
 #: ../plugins/playlist_display/plugin.c:349
-#, fuzzy
 msgid "Load all or selected iPods"
-msgstr "添加文件到'%s'"
+msgstr "添加所有或者选中的iPod"
 
 #. Add widget directly as scrolling is handled internally by the widget
 #: ../plugins/playlist_display/plugin.c:371
-#, fuzzy
 msgid "  iPod Repositories"
-msgstr "Podcast音乐库"
+msgstr "iPod音乐库"
 
 #: ../plugins/playlist_display/plugin.c:437 ../plugins/sjcd/plugin.c:124
 #: ../src/anjuta-about.c:165
-#, fuzzy, c-format
 msgid "Couldn't load icon: %s"
-msgstr "无法对文件'%s'加锁。\n"
+msgstr "无法加载图标文件:%s"
 
 #: ../plugins/repository_editor/plugin.c:48
-#, fuzzy
 msgid "Create iPod's _Directories..."
-msgstr "创建iPod文件夹"
+msgstr "创建iPod文件夹(_D)"
 
 #: ../plugins/repository_editor/plugin.c:56
-#, fuzzy
 msgid "Check iPod's _Files"
-msgstr "检查iPod文件"
+msgstr "检查iPod文件(_F)"
 
 #: ../plugins/repository_editor/plugin.c:64
-#, fuzzy
 msgid "_Configure Repositories"
-msgstr "新建音乐库"
+msgstr "配置音乐库(_C)"
 
 #: ../plugins/repository_editor/plugin.c:80
-#, fuzzy
 msgid "Repository Editor"
-msgstr "音乐库"
+msgstr "音乐库编辑器"
 
 #: ../plugins/repository_editor/repository_actions.c:57
 #: ../plugins/repository_editor/repository_actions.c:82
@@ -5095,7 +4946,7 @@ msgstr ""
 #. Set default repository name
 #: ../plugins/repository_editor/repository_creator.c:296
 msgid "New Repository"
-msgstr "新音乐库"
+msgstr "新建音乐库"
 
 #: ../plugins/repository_editor/repository_editor.c:660
 #, c-format
@@ -5155,9 +5006,8 @@ msgid "Regular Playlist"
 msgstr "常规播放列表"
 
 #: ../plugins/repository_editor/repository_editor.c:1409
-#, fuzzy
 msgid "  Edit iPod Repositories"
-msgstr "编辑iPod属性"
+msgstr "编辑iPod音乐库"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:2
 msgid "<b>General</b>"
@@ -5179,20 +5029,19 @@ msgstr "<b>同步</b>"
 msgid ""
 "<i>Note: Only directories that do not already exist will be created. </i>"
 msgstr ""
+"<i>注意：只创建还没有的文件夹。</i>"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:7
-#, fuzzy
 msgid "<i>Playlist type</i>"
-msgstr "播放列表类型："
+msgstr "<i>播放列表类型</i>"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:8
-#, fuzzy
 msgid "<i>Repository type</i>"
-msgstr "音乐库类型："
+msgstr "<i>音乐库类型</i>"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:9
 msgid "Add New ..."
-msgstr ""
+msgstr "新增..."
 
 #: ../plugins/repository_editor/repository_editor.xml.h:10
 msgid "Calendar sync command:"
@@ -5219,7 +5068,6 @@ msgstr "新建音乐库"
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:191
 #: ../plugins/track_display/track_display_context_menu.c:182
 #: ../plugins/track_display/track_display_context_menu.c:190
-#, fuzzy
 msgid "Delete"
 msgstr "删除"
 
@@ -5242,26 +5090,22 @@ msgid "Initialize iPod"
 msgstr "初始化iPod"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:20
-#, fuzzy
 msgid "Insert after"
 msgstr "晚于"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:21
-#, fuzzy
 msgid "Insert before"
 msgstr "早于"
 
 #. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
 #: ../plugins/repository_editor/repository_editor.xml.h:23
-#, fuzzy
 msgid "Local Repository (Podcasts)"
-msgstr "本地音乐库"
+msgstr "本地音乐库（Podcast）"
 
 #. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
 #: ../plugins/repository_editor/repository_editor.xml.h:25
-#, fuzzy
 msgid "Local Repository (Standard)"
-msgstr "本地音乐库"
+msgstr "本地音乐库(标准)"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:26
 msgid "Model:"
@@ -5294,9 +5138,8 @@ msgid "On startup automatically sync with playlist directories"
 msgstr "启动时自动与播放列表目录同步"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:32
-#, fuzzy
 msgid "On startup automatically sync with the directory:"
-msgstr "启动时自动与下列目录同步"
+msgstr "启动时自动与目录同步"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:33
 msgid "On startup automatically update (Live Playlist)"
@@ -5316,14 +5159,13 @@ msgstr "音乐库选项"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:38
 msgid "Repository name:"
-msgstr "音乐库名："
+msgstr "音乐库名称："
 
 #: ../plugins/repository_editor/repository_editor.xml.h:39
 msgid "Repository type:"
 msgstr "音乐库类型："
 
 #: ../plugins/repository_editor/repository_editor.xml.h:40
-#, fuzzy
 msgid "Select backup file"
 msgstr "设置备份文件"
 
@@ -5377,14 +5219,12 @@ msgid "iTunesDB backup:"
 msgstr "iTunesDB备份："
 
 #: ../plugins/repository_editor/repository_editor.plugin.in.h:1
-#, fuzzy
 msgid "Edit iTunesDB Properties"
-msgstr "编辑iPod属性"
+msgstr "编辑iTuneDB属性"
 
 #: ../plugins/repository_editor/repository_editor.plugin.in.h:2
-#, fuzzy
 msgid "Repository Editor Plugin"
-msgstr "音乐库"
+msgstr "音乐库编辑插件"
 
 #. Strings used several times
 #: ../plugins/repository_editor/repository_init.c:47
@@ -5394,17 +5234,17 @@ msgstr "选择或输入你的iPod型号"
 #: ../plugins/repository_editor/repository_init.c:71
 #, c-format
 msgid "%2.0f GB %s (x%s)"
-msgstr ""
+msgstr "%2.0f GB %s (x%s)"
 
 #: ../plugins/repository_editor/repository_init.c:75
 #, c-format
 msgid "%3.0f MB %s (x%s)"
-msgstr ""
+msgstr "%3.0f MB %s (x%s)"
 
 #: ../plugins/repository_editor/repository_init.c:79
 #, c-format
 msgid "%s (x%s)"
-msgstr ""
+msgstr "%s (x%s)"
 
 #: ../plugins/repository_editor/repository_init.c:229
 #, c-format
@@ -5436,9 +5276,8 @@ msgstr "日期格式错误：无法识别字符, '%s'\n"
 
 #: ../plugins/sorttab_display/plugin.c:48
 #: ../plugins/sorttab_display/sorttab_display.xml.h:47
-#, fuzzy
 msgid "Track Filter"
-msgstr "音轨号"
+msgstr "音轨过滤器"
 
 #: ../plugins/sorttab_display/plugin.c:56
 msgid "Selected Filter Tab Entry from Playlist"
@@ -5449,34 +5288,28 @@ msgid "Selected Filter Tab Entry from Database"
 msgstr "数据库中的过滤器标签"
 
 #: ../plugins/sorttab_display/plugin.c:62
-#, fuzzy
 msgid "Selected Filter Tab Entry from Device"
 msgstr "iPod中的过滤器标签"
 
 #: ../plugins/sorttab_display/plugin.c:65
-#, fuzzy
 msgid "Selected Tab Entry"
-msgstr "选定标签项"
+msgstr "选中的标签项"
 
 #: ../plugins/sorttab_display/plugin.c:158
-#, fuzzy
 msgid "Sort Tab Display"
-msgstr "显示"
+msgstr "标签排序"
 
 #: ../plugins/sorttab_display/plugin.c:162
-#, fuzzy
 msgid "More Filter Tabs"
 msgstr "更多过滤器标签"
 
 #: ../plugins/sorttab_display/plugin.c:167
-#, fuzzy
 msgid "Fewer Filter Tabs"
 msgstr "更少过滤器标签"
 
 #: ../plugins/sorttab_display/plugin.c:191
-#, fuzzy
 msgid "  Track Filter"
-msgstr "音轨号"
+msgstr "过滤器"
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:1
 msgid " <= cts <= "
@@ -5517,7 +5350,6 @@ msgid ":"
 msgstr ":"
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:12
-#, fuzzy
 msgid "<b>Filter Sort Order</b>"
 msgstr "<b>排列顺序</b>"
 
@@ -5545,7 +5377,7 @@ msgstr "已添加"
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:19
 msgid "Added:"
-msgstr "添加："
+msgstr "已添加："
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:20
 msgid "All (AND)"
@@ -5575,7 +5407,7 @@ msgstr "显示符合以上要求的音轨"
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:27
 msgid "Dummy - do not delete"
-msgstr ""
+msgstr "假的--没有删除"
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:28
 msgid "Filter tab:"
@@ -5594,12 +5426,10 @@ msgstr ""
 "\"自动保存\""
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:32
-#, fuzzy
 msgid "Last Modified"
-msgstr "修改日期"
+msgstr "最后修改日期"
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:33
-#, fuzzy
 msgid "Last Played"
 msgstr "最后播放"
 
@@ -5609,7 +5439,7 @@ msgstr "逻辑："
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:35
 msgid "Modified:"
-msgstr "修改："
+msgstr "已修改："
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:36
 msgid "No lower margin"
@@ -5657,39 +5487,35 @@ msgstr "时间："
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:48
 msgid "_Display"
-msgstr "显示"
+msgstr "显示(_D)"
 
 #: ../plugins/sorttab_display/sorttab_display_actions.c:71
-#, fuzzy, c-format
 msgid "No tracks selected in Filter Tab %d"
-msgstr "没有选择排序标签 %d"
+msgstr "过滤器标签%d中没有音轨"
 
 #: ../plugins/sorttab_display/sorttab_display_actions.c:79
-#, fuzzy
 msgid "Remove entry of which filter tab from database?"
-msgstr "删除数据库中的哪个排序标签？"
+msgstr "删除数据库中的过滤器标签对应条目？"
 
 #: ../plugins/sorttab_display/sorttab_display_actions.c:83
 msgid "Remove tracks in selected entry of which filter tab from the iPod?"
-msgstr "删除iPod中的音轨时按照哪个过滤器标签？"
+msgstr "删除iPod中过滤器标签对应条目的音轨？"
 
 #: ../plugins/sorttab_display/sorttab_display_actions.c:87
 msgid "Remove tracks in selected entry of which filter tab from the harddisk?"
-msgstr "删除硬盘中的音轨时按照哪个过滤器标签？"
+msgstr "删除硬盘中过滤器标签对应条目的音轨？"
 
 #: ../plugins/sorttab_display/sorttab_display_actions.c:91
 msgid "Remove tracks in selected entry of which filter tab from playlist?"
-msgstr "删除播放列表中的音轨时按照哪个过滤器标签？"
+msgstr "删除播放列表中过滤器标签对应条目的音轨？"
 
 #: ../plugins/sorttab_display/sorttab_display_actions.c:112
-#, fuzzy
 msgid "Update selected entry of which filter tab?"
-msgstr "按照哪个排序标签更新选定项目？"
+msgstr "按照哪个排序标签更新选中条目？"
 
 #: ../plugins/sorttab_display/sorttab_display_actions.c:119
-#, fuzzy, c-format
 msgid "No entry selected in Filter Tab %d"
-msgstr "没有选择排序标签 %d"
+msgstr "过滤器标签%d中没有条目"
 
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:52
 #: ../plugins/track_display/track_display_context_menu.c:60
@@ -5713,25 +5539,22 @@ msgstr "从数据库中删除"
 
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:171
 #: ../plugins/track_display/track_display_context_menu.c:170
-#, fuzzy
 msgid "Create Playlist"
 msgstr "创建播放列表"
 
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:176
 #: ../plugins/track_display/track_display_context_menu.c:175
-#, fuzzy
 msgid "Copy"
-msgstr "唱片公司"
+msgstr "复制"
 
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:178
 #: ../plugins/track_display/track_display_context_menu.c:177
-#, fuzzy
 msgid "Copy selected track(s) to"
 msgstr "复制选定的音轨到"
 
 #: ../plugins/sorttab_display/normal_sorttab_page.c:961
 msgid "Compilations"
-msgstr "汇集"
+msgstr "唱片集"
 
 #: ../plugins/sorttab_display/sorttab_widget.c:247
 msgid "Comp."
@@ -5743,38 +5566,34 @@ msgstr "特别"
 
 #. no tracks selected
 #: ../plugins/sorttab_display/sorttab_widget.c:716
-#, fuzzy
 msgid "No tracks selected."
 msgstr "没有选择音轨"
 
 #: ../plugins/sorttab_display/special_sorttab_page.c:182
 msgid "'Played' condition ignored because of error."
-msgstr "发生错误忽略'已播放'"
+msgstr "发生错误，忽略'已播放'"
 
 #: ../plugins/sorttab_display/special_sorttab_page.c:185
 msgid "'Modified' condition ignored because of error."
-msgstr "发生错误忽略'已修改'"
+msgstr "发生错误，忽略'已修改'"
 
 #: ../plugins/sorttab_display/special_sorttab_page.c:188
 msgid "'Added' condition ignored because of error."
-msgstr "发生错误忽略'已添加'"
+msgstr "发生错误，忽略'已添加'"
 
 #: ../plugins/sorttab_display/sorttab_display.plugin.in.h:1
-#, fuzzy
 msgid "Filter Track View"
-msgstr "更新音轨失败"
+msgstr ""
 
 #: ../plugins/sorttab_display/sorttab_display.plugin.in.h:2
-#, fuzzy
 msgid "Sorttab Display Plugin"
-msgstr "显示"
+msgstr "排序显示插件"
 
 #: ../plugins/track_display/display_tracks.c:341
-#, c-format
 msgid "Moved one track"
 msgid_plural "Moved %d tracks"
-msgstr[0] "移动音轨%d"
-msgstr[1] "移动音轨%d"
+msgstr[0] "移动一条音轨"
+msgstr[1] "移动%d条音轨"
 
 #: ../plugins/track_display/display_tracks.c:1842
 msgid "#"
@@ -5798,7 +5617,7 @@ msgstr "时间"
 
 #: ../plugins/track_display/display_tracks.c:1872
 msgid "Plycnt"
-msgstr "Plycnt"
+msgstr "计数"
 
 #: ../plugins/track_display/display_tracks.c:1875
 msgid "Played"
@@ -5822,30 +5641,26 @@ msgstr "sndchk."
 
 #: ../plugins/track_display/plugin.c:47 ../plugins/track_display/plugin.c:113
 #: ../plugins/track_display/track_display.xml.h:13
-#, fuzzy
 msgid "Track Display"
-msgstr "显示"
+msgstr "显示音轨"
 
 #: ../plugins/track_display/plugin.c:55
 msgid "Selected Tracks from Playlist"
-msgstr "播放列表中的音轨"
+msgstr "从播放列表选择的音轨"
 
 #: ../plugins/track_display/plugin.c:58
 msgid "Selected Tracks from Database"
-msgstr "数据库中的音轨"
+msgstr "从数据库选择的音轨"
 
 #: ../plugins/track_display/plugin.c:61
-#, fuzzy
 msgid "Selected Tracks from Device"
-msgstr "iPod中的音轨"
+msgstr "从iPod选择的音轨"
 
 #: ../plugins/track_display/plugin.c:137
-#, fuzzy
 msgid "  Playlist Tracks"
-msgstr "播放列表"
+msgstr "  播放列表音轨"
 
 #: ../plugins/track_display/plugin.c:219
-#, fuzzy
 msgid "Normalise"
 msgstr "均衡音量"
 
@@ -5862,14 +5677,12 @@ msgid "<b>Ignore Frequent Words</b>"
 msgstr "<b>忽略常用词语</b>"
 
 #: ../plugins/track_display/track_display.xml.h:4
-#, fuzzy
 msgid "<b>Preferred Track Execution Command</b>"
-msgstr "首选获取类型"
+msgstr "<b>首选的音轨执行命令</b>"
 
 #: ../plugins/track_display/track_display.xml.h:5
-#, fuzzy
 msgid "<b>Sorting Options</b>"
-msgstr "排序选项"
+msgstr "<b>排序选项</b>"
 
 #: ../plugins/track_display/track_display.xml.h:6
 msgid "<span weight='bold' size='larger'>No playlist selected</span>"
@@ -5889,7 +5702,7 @@ msgstr "在下列区域的开头忽略这些字段"
 
 #: ../plugins/track_display/track_display.xml.h:12
 msgid "Modify selected tracks sort order in selected playlist"
-msgstr ""
+msgstr "修改播放列表内当前已选中的音轨排序方式"
 
 #: ../plugins/track_display/track_display.xml.h:14
 msgid ""
@@ -5898,19 +5711,16 @@ msgid ""
 msgstr ""
 
 #: ../plugins/track_display/track_display_context_menu.c:51
-#, fuzzy
 msgid "Select All"
-msgstr "选定播放列表"
+msgstr "选择所有"
 
 #: ../plugins/track_display/track_display.plugin.in.h:1
-#, fuzzy
 msgid "Track Display Plugin"
-msgstr "显示"
+msgstr "音轨显示插件"
 
 #: ../plugins/track_display/track_display.plugin.in.h:2
-#, fuzzy
 msgid "Track View"
-msgstr "音轨号"
+msgstr "音轨显示"
 
 #: ../plugins/track_display/track_display_preferences.c:235
 msgid "New Word to Ignore"
@@ -5918,7 +5728,7 @@ msgstr ""
 
 #: ../plugins/track_display/track_display_preferences.c:235
 msgid "Please enter a word for sorting functions to ignore"
-msgstr ""
+msgstr "请输入想要排序功能忽略的字母"
 
 #: ../plugins/track_display/track_display_preferences.c:254
 #, c-format
@@ -5926,47 +5736,40 @@ msgid "The word %s is already in the \"Ignored Frequent Word\" list"
 msgstr ""
 
 #: ../plugins/clarity/clarity_dnd_support.c:223
-#, fuzzy, c-format
 msgid "Error occurred dropping an image onto the clarity display: %s\n"
-msgstr "把图片作为插图显示时发生错误:%s\n"
+msgstr ""
 
 #: ../plugins/clarity/clarity_dnd_support.c:241
-#, fuzzy
 msgid "Successfully set new cover art for selected tracks"
 msgstr "成功为选定音轨设置新的插图"
 
 #: ../plugins/external_player/plugin.c:70
-#, fuzzy
 msgid "External Player"
-msgstr "媒体类型"
+msgstr "外部播放器"
 
 #: ../plugins/external_player/plugin.c:120
 msgid "Play with preferred app..."
 msgstr ""
 
 #: ../plugins/external_player/plugin.c:135
-#, fuzzy
 msgid "Couldn't load theme media player icon"
-msgstr "无法对文件'%s'加锁。\n"
+msgstr "无法加载主题媒体播放器图标"
 
 #: ../plugins/external_player/external_player.xml.h:1
-#, fuzzy
 msgid "<b>Player Command</b>"
-msgstr "<b>显示列</b>"
+msgstr "<b>播放器命令</b>"
 
 #: ../plugins/external_player/external_player.xml.h:2
-#, fuzzy
 msgid "Command for 'play'"
 msgstr "'开始播放'命令:"
 
 #: ../plugins/external_player/external_player.xml.h:3
-#, fuzzy
 msgid "External Media Player"
-msgstr "媒体类型"
+msgstr "外部媒体播放器"
 
 #: ../plugins/sjcd/egg-play-preview.c:169
 msgid "URI"
-msgstr ""
+msgstr "URI"
 
 #: ../plugins/sjcd/egg-play-preview.c:170
 msgid "The URI of the audio file"
@@ -5978,53 +5781,46 @@ msgstr ""
 
 #: ../plugins/sjcd/egg-play-preview.c:190
 msgid "The artist of the current stream."
-msgstr ""
+msgstr "当前流媒体的艺术家"
 
 #: ../plugins/sjcd/egg-play-preview.c:200
-#, fuzzy
 msgid "The album of the current stream."
-msgstr "新照片簿创建失败。"
+msgstr "当前流媒体的专辑"
 
 #: ../plugins/sjcd/egg-play-preview.c:209
-#, fuzzy
 msgid "Position"
-msgstr "位置："
+msgstr "位置"
 
 #: ../plugins/sjcd/egg-play-preview.c:210
 msgid "The position in the current stream in seconds."
 msgstr ""
 
 #: ../plugins/sjcd/egg-play-preview.c:219 ../plugins/sjcd/sj-main.c:1538
-#, fuzzy
 msgid "Duration"
-msgstr "信息"
+msgstr "时长"
 
 #: ../plugins/sjcd/egg-play-preview.c:220
 msgid "The duration of the current stream in seconds."
-msgstr ""
+msgstr "当前流媒体的时长(以秒计)"
 
 #: ../plugins/sjcd/egg-play-preview.c:463
 #: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:109
-#, fuzzy
 msgid "Unknown Title"
-msgstr "未知"
+msgstr "未知标题"
 
 #: ../plugins/sjcd/egg-play-preview.c:468
 #: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:113
 #: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:139
-#, fuzzy
 msgid "Unknown Artist"
-msgstr "未知"
+msgstr "未知艺术家"
 
 #: ../plugins/sjcd/egg-play-preview.c:469
-#, fuzzy
 msgid "Unknown Album"
-msgstr "未知"
+msgstr "未知专辑"
 
 #: ../plugins/sjcd/libjuicer/sj-extractor.c:193
-#, fuzzy
 msgid "Audio Profile"
-msgstr "文件类型"
+msgstr "音频配置文件"
 
 #: ../plugins/sjcd/libjuicer/sj-extractor.c:194
 msgid "The GStreamer Encoding Profile used for encoding audio"
@@ -6040,11 +5836,11 @@ msgstr ""
 
 #: ../plugins/sjcd/libjuicer/sj-extractor.c:205
 msgid "device"
-msgstr ""
+msgstr "设备"
 
 #: ../plugins/sjcd/libjuicer/sj-extractor.c:206
 msgid "The device"
-msgstr ""
+msgstr "设备"
 
 #: ../plugins/sjcd/libjuicer/sj-extractor.c:348
 #, c-format
@@ -6052,19 +5848,16 @@ msgid "Could not create GStreamer CD reader"
 msgstr ""
 
 #: ../plugins/sjcd/libjuicer/sj-extractor.c:366
-#, fuzzy, c-format
 msgid "Could not create GStreamer encoders for %s"
-msgstr "无法创建'%s'"
+msgstr "无法为%s 创建GStreamer解码器"
 
 #: ../plugins/sjcd/libjuicer/sj-extractor.c:378
-#, fuzzy, c-format
 msgid "Could not create GStreamer file output"
-msgstr "无法从iTunesDB创建哈希值\n"
+msgstr "无法创建GStramer文件输出"
 
 #: ../plugins/sjcd/libjuicer/sj-extractor.c:392
-#, fuzzy, c-format
 msgid "Could not link pipeline"
-msgstr "无法初始化GnomeVFS\n"
+msgstr "无法连接管道"
 
 #: ../plugins/sjcd/libjuicer/sj-extractor.c:416
 msgid "Could not get current track position"
@@ -6074,7 +5867,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Extractor object is not valid. This is bad, check your console for errors."
-msgstr ""
+msgstr "提取对象无效，请开启终端检查错误。"
 
 #: ../plugins/sjcd/libjuicer/sj-extractor.c:665
 #, c-format
@@ -6084,27 +5877,25 @@ msgstr ""
 #: ../plugins/sjcd/libjuicer/sj-extractor.c:673
 #, c-format
 msgid "The plugin necessary for file access was not found"
-msgstr ""
+msgstr "未找到读取该文件的插件"
 
 #: ../plugins/sjcd/libjuicer/sj-metadata-getter.c:253
-#, fuzzy, c-format
 msgid "Could not create CD lookup thread"
-msgstr "无法从iTunesDB创建哈希值\n"
+msgstr "无法创建CD搜索线程"
 
 #: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:90
 #, c-format
 msgid "Cannot access CD"
-msgstr ""
+msgstr "无法连接CD"
 
 #: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:135
-#, fuzzy, c-format
 msgid "Track %d"
-msgstr "音轨"
+msgstr "音轨 %d"
 
 #: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:160
 #, c-format
 msgid "Cannot access CD: %s"
-msgstr ""
+msgstr "无法连接CD: %s"
 
 #. FIXME: would be nicer to only check if "cdrom" is being probed,
 #. * but libbrasero doesn't seem to have an API for that
@@ -6114,224 +5905,211 @@ msgstr ""
 #: ../plugins/sjcd/libjuicer/sj-metadata.c:216
 #, c-format
 msgid "Cannot read CD: %s"
-msgstr ""
+msgstr "无法读取CD: %s"
 
 #: ../plugins/sjcd/libjuicer/sj-metadata.c:183
 msgid "Devices haven't been all probed yet"
-msgstr ""
+msgstr "还未完成所有设备的检测"
 
 #: ../plugins/sjcd/libjuicer/sj-metadata.c:199
 #, c-format
 msgid "Device '%s' does not contain any media"
-msgstr ""
+msgstr "设备'%s'不包含任何媒体内容"
 
 #: ../plugins/sjcd/libjuicer/sj-metadata.c:202
 #, c-format
 msgid ""
 "Device '%s' could not be opened. Check the access permissions on the device."
 msgstr ""
+"设备'%s'无法打开，请检查该设备的权限。"
 
 #: ../plugins/sjcd/plugin.c:44 ../plugins/sjcd/plugin.c:65
 #: ../plugins/sjcd/sjcd.xml.h:14
-#, fuzzy
 msgid "Sound Juicer"
-msgstr "试音"
+msgstr "音乐榨汁机"
 
 #. Add widget directly as scrolling is handled internally by the widget
 #: ../plugins/sjcd/plugin.c:76
 msgid "  Sound Juicer"
-msgstr ""
+msgstr " 音乐榨汁机"
 
 #: ../plugins/sjcd/sj-extracting.c:162
 #, c-format
 msgid "Failed to get output format"
-msgstr ""
+msgstr "获取输出格式失败"
 
 #: ../plugins/sjcd/sj-extracting.c:187
 msgid "Name too long"
-msgstr ""
+msgstr "命名太长"
 
 #. TODO: find out why GTK+ needs this to work (see #364371)
 #: ../plugins/sjcd/sj-extracting.c:246
-#, fuzzy
 msgid "Extract"
-msgstr "音轨"
+msgstr "提取"
 
 #: ../plugins/sjcd/sj-extracting.c:326
-#, fuzzy
 msgid "A file with the same name exists"
-msgstr "已经存在一个同名照片簿。"
+msgstr "已经存在一个同名文件"
 
 #: ../plugins/sjcd/sj-extracting.c:328
 #, c-format
 msgid ""
 "A file called '%s' exists, size %s.\n"
 "Do you want to skip this track or overwrite it?"
-msgstr ""
+msgstr "文件'%s'已存在，大小为%s。\n"
+"你要跳过还是覆盖文件。"
 
 #: ../plugins/sjcd/sj-extracting.c:338
 msgid "_Skip"
-msgstr ""
+msgstr "跳过(_S)"
 
 #: ../plugins/sjcd/sj-extracting.c:339
 msgid "S_kip All"
-msgstr ""
+msgstr "跳过所有(_k)"
 
 #: ../plugins/sjcd/sj-extracting.c:340
-#, fuzzy
 msgid "_Overwrite"
-msgstr "覆盖"
+msgstr "覆盖(_O)"
 
 #: ../plugins/sjcd/sj-extracting.c:341
-#, fuzzy
 msgid "Overwrite _All"
-msgstr "覆盖"
+msgstr "覆盖所有(_A)"
 
 #: ../plugins/sjcd/sj-extracting.c:390
-#, fuzzy, c-format
 msgid "Failed to create output directory: %s"
-msgstr "设置插图失败：'%s'\n"
+msgstr "创建输出文件夹失败：%s"
 
 #: ../plugins/sjcd/sj-extracting.c:532
 #, c-format
 msgid "Estimated time left: %d:%02d (at %0.1f×)"
-msgstr ""
+msgstr "估计剩余时间：%d:%02d (at %0.1f×)"
 
 #: ../plugins/sjcd/sj-extracting.c:534
 msgid "Estimated time left: unknown"
-msgstr ""
+msgstr "估计剩余时间：未知"
 
 #: ../plugins/sjcd/sj-extracting.c:588
 #, c-format
 msgid ""
 "%d were ripped from the CD but no repository was selected. Please import "
 "them manually."
-msgstr ""
+msgstr "%s 已从CD提取，但是没有选择音乐库，请手工导入。"
 
 #: ../plugins/sjcd/sj-extracting.c:602
-#, fuzzy, c-format
 msgid "Importing file '%s'. Please wait..."
-msgstr "现在开始写入数据库'%s'，请等待..."
+msgstr "正在导入文件'%s'，请等待..."
 
 #: ../plugins/sjcd/sj-extracting.c:745
 msgid "Sound Juicer could not extract this CD."
-msgstr ""
+msgstr "Sound Juicer无法提取这张CD的内容。"
 
 #: ../plugins/sjcd/sj-extracting.c:747 ../plugins/sjcd/sj-main.c:661
 #: ../plugins/sjcd/sj-main.c:769 ../plugins/sjcd/sj-main.c:862
 #: ../plugins/sjcd/sj-main.c:1060 ../plugins/sjcd/sj-main.c:1383
-#, fuzzy
 msgid "Reason"
-msgstr "Season Nr"
+msgstr "理由"
 
 #: ../plugins/sjcd/sj-extracting.c:864 ../plugins/sjcd/sj-extracting.c:870
 msgid "Extracting audio from CD"
-msgstr ""
+msgstr "从CD提取音频"
 
 #: ../plugins/sjcd/sj-genres.c:34
 msgid "Ambient"
-msgstr ""
+msgstr "氛围"
 
 #: ../plugins/sjcd/sj-genres.c:35
 msgid "Blues"
-msgstr ""
+msgstr "蓝调"
 
 #: ../plugins/sjcd/sj-genres.c:36
 msgid "Classical"
-msgstr ""
+msgstr "经典"
 
 #: ../plugins/sjcd/sj-genres.c:37
 msgid "Country"
-msgstr ""
+msgstr "国家"
 
 #: ../plugins/sjcd/sj-genres.c:38
 msgid "Dance"
-msgstr ""
+msgstr "舞曲"
 
 #: ../plugins/sjcd/sj-genres.c:39
 msgid "Electronica"
-msgstr ""
+msgstr "电子"
 
 #: ../plugins/sjcd/sj-genres.c:40
 msgid "Folk"
-msgstr ""
+msgstr "民族"
 
 #: ../plugins/sjcd/sj-genres.c:41
 msgid "Funk"
-msgstr ""
+msgstr "芬克"
 
 #: ../plugins/sjcd/sj-genres.c:42
 msgid "Jazz"
-msgstr ""
+msgstr "爵士"
 
 #: ../plugins/sjcd/sj-genres.c:43
-#, fuzzy
 msgid "Latin"
-msgstr "评分"
+msgstr "拉丁"
 
 #: ../plugins/sjcd/sj-genres.c:44
-#, fuzzy
 msgid "Pop"
-msgstr "最佳"
+msgstr "流行"
 
 #: ../plugins/sjcd/sj-genres.c:45
 msgid "Rap"
-msgstr ""
+msgstr "Rap"
 
 #: ../plugins/sjcd/sj-genres.c:46
 msgid "Reggae"
-msgstr ""
+msgstr "Reggae"
 
 #: ../plugins/sjcd/sj-genres.c:47
 msgid "Rock"
-msgstr ""
+msgstr "摇滚"
 
 #: ../plugins/sjcd/sj-genres.c:48
 msgid "Soul"
-msgstr ""
+msgstr "Soul"
 
 #: ../plugins/sjcd/sj-genres.c:49
 msgid "Spoken Word"
-msgstr ""
+msgstr "Spoken Word"
 
 #: ../plugins/sjcd/sj-genres.c:189
-#, fuzzy, c-format
 msgid "Error while saving custom genre: %s"
-msgstr "读取扩展信息时发生错误：%s\n"
+msgstr "保存指定风格时错误：%s"
 
 #: ../plugins/sjcd/sj-main.c:111
 msgid "E_xtract"
-msgstr ""
+msgstr "提取(_x)"
 
 #: ../plugins/sjcd/sj-main.c:188 ../plugins/sjcd/sj-main.c:437
-#, fuzzy
 msgid "(unknown)"
 msgstr "未知"
 
 #: ../plugins/sjcd/sj-main.c:316
-#, fuzzy
 msgid "S_ubmit Album"
-msgstr "按专辑排序"
+msgstr "确认专辑(_u)"
 
 #. Translators: title, artist
 #: ../plugins/sjcd/sj-main.c:321
-#, fuzzy, c-format
 msgid "Could not find %s by %s on MusicBrainz."
-msgstr "无法读取'%s'。\n"
+msgstr "采用%2$s在MusicBrainz上搜索，无法找到%1$s。"
 
 #: ../plugins/sjcd/sj-main.c:326
 msgid "You can improve the MusicBrainz database by adding this album."
-msgstr ""
+msgstr "向MusicBrainz添加该专辑"
 
 #: ../plugins/sjcd/sj-main.c:659 ../plugins/sjcd/sj-main.c:765
 #: ../plugins/sjcd/sj-main.c:860
-#, fuzzy
 msgid "Could not read the CD"
-msgstr "无法创建'%s'"
+msgstr "无法读取CD"
 
 #: ../plugins/sjcd/sj-main.c:660 ../plugins/sjcd/sj-main.c:768
 msgid "Sound Juicer could not read the track listing on this CD."
-msgstr ""
+msgstr "Sound Jucier无法读取CD上的音轨"
 
 #.
 #. window = gtk_widget_get_window (GTK_WIDGET(gtkpod_app));
@@ -6346,49 +6124,48 @@ msgstr ""
 #. Set statusbar message
 #: ../plugins/sjcd/sj-main.c:739
 msgid "Retrieving track listing...please wait."
-msgstr ""
+msgstr "获取音轨列表，请等待..."
 
 #: ../plugins/sjcd/sj-main.c:822
 #, c-format
 msgid "Sound Juicer could not use the CD-ROM device '%s'"
-msgstr ""
+msgstr "Sound Juicer无法使用CD-ROM设备'%s'"
 
 #: ../plugins/sjcd/sj-main.c:829
 msgid "HAL daemon may not be running."
-msgstr ""
+msgstr "HAL服务可能没有运行"
 
 #: ../plugins/sjcd/sj-main.c:853
 #, c-format
 msgid "Sound Juicer could not access the CD-ROM device '%s'"
-msgstr ""
+msgstr "Sound Jucier无法读取CD-ROM设备'%s'"
 
 #: ../plugins/sjcd/sj-main.c:953
 msgid "No CD-ROM drives found"
-msgstr ""
+msgstr "未找到CD-ROM设备"
 
 #: ../plugins/sjcd/sj-main.c:954
 msgid "Sound Juicer could not find any CD-ROM drives to read."
-msgstr ""
+msgstr "Sound Juicer无法找到任何CD-ROM设备"
 
 #: ../plugins/sjcd/sj-main.c:980
 msgid ""
 "sjcd plugin: the currently selected audio profile is not available on your "
 "installation."
-msgstr ""
+msgstr "sjcd插件：当前选择的音频模式不存在"
 
 #: ../plugins/sjcd/sj-main.c:1058
-#, fuzzy
 msgid "Could not open URL"
-msgstr "无法创建'%s'"
+msgstr "无法打开链接"
 
 #: ../plugins/sjcd/sj-main.c:1059
 msgid "Sound Juicer could not open the submission URL"
-msgstr ""
+msgstr "Sound Juicer无法打开子任务URL"
 
 #: ../plugins/sjcd/sj-main.c:1167
 #, c-format
 msgid "Unknown column %d was edited"
-msgstr ""
+msgstr "未知列%d已被编辑"
 
 #: ../plugins/sjcd/sj-main.c:1308 ../plugins/sjcd/sj-prefs.c:119
 #, c-format
@@ -6396,417 +6173,374 @@ msgid ""
 "Could not display help for Sound Juicer\n"
 "%s"
 msgstr ""
+"无法显示Sound Juicer的帮助\n"
+"%s"
 
 #: ../plugins/sjcd/sj-main.c:1381
-#, fuzzy
 msgid "Could not duplicate disc"
-msgstr "无法创建'%s'"
+msgstr "无法复制盘片"
 
 #: ../plugins/sjcd/sj-main.c:1382
 msgid "Sound Juicer could not duplicate the disc"
-msgstr ""
+msgstr "Sound Juicer无法复制盘片"
 
 #: ../plugins/sjcd/sj-main.c:1422 ../plugins/sjcd/sj-main.c:1445
-#, fuzzy
 msgid "Could not create GSettings object.\n"
-msgstr "无法创建'%s'"
+msgstr "无法创建Gsetting对象。\n"
 
 #: ../plugins/sjcd/sj-prefs.c:62
-#, fuzzy
 msgid "Album Artist, Album Title"
-msgstr "专辑艺术家"
+msgstr "专辑艺术家，专辑标题"
 
 #: ../plugins/sjcd/sj-prefs.c:63
 msgid "Album Artist (sortable), Album Title"
-msgstr ""
+msgstr "专辑艺术家（排序），专辑标题"
 
 #: ../plugins/sjcd/sj-prefs.c:64
 msgid "Track Artist, Album Title"
-msgstr ""
+msgstr "音轨艺术家，专辑标题"
 
 #: ../plugins/sjcd/sj-prefs.c:65
 msgid "Track Artist (sortable), Album Title"
-msgstr ""
+msgstr "音轨艺术家（排序），专辑标题"
 
 #: ../plugins/sjcd/sj-prefs.c:66
-#, fuzzy
 msgid "Album Title"
-msgstr "专辑封面"
+msgstr "专辑标题"
 
 #: ../plugins/sjcd/sj-prefs.c:68
-#, fuzzy
 msgid "Album Artist (sortable)"
-msgstr "专辑艺术家"
+msgstr "专辑艺术家（排序）"
 
 #: ../plugins/sjcd/sj-prefs.c:69
-#, fuzzy
 msgid "Album Artist - Album Title"
-msgstr "专辑艺术家"
+msgstr "专辑艺术家-专辑标题"
 
 #: ../plugins/sjcd/sj-prefs.c:70
 msgid "Album Artist (sortable) - Album Title"
-msgstr ""
+msgstr "专辑艺术家（排序）-专辑标题"
 
 #: ../plugins/sjcd/sj-prefs.c:71
 msgid "[none]"
-msgstr ""
+msgstr "[无信息]"
 
 #: ../plugins/sjcd/sj-prefs.c:76
-#, fuzzy
 msgid "Number - Title"
-msgstr "过滤器标签数："
+msgstr "序号-标题"
 
 #: ../plugins/sjcd/sj-prefs.c:77
-#, fuzzy
 msgid "Track Title"
-msgstr "按歌曲排序"
+msgstr "标题"
 
 #: ../plugins/sjcd/sj-prefs.c:78
-#, fuzzy
 msgid "Track Artist - Track Title"
-msgstr "按歌曲排序"
+msgstr "艺术家-标题"
 
 #: ../plugins/sjcd/sj-prefs.c:79
 msgid "Track Artist (sortable) - Track Title"
-msgstr ""
+msgstr "艺术家(排序)-标题"
 
 #: ../plugins/sjcd/sj-prefs.c:80
 msgid "Number. Track Artist - Track Title"
-msgstr ""
+msgstr "序号.艺术家-标题"
 
 #. {N_("Number. Track Artist (sortable) - Track Title"), "%tN. %ts - %tt"},
 #: ../plugins/sjcd/sj-prefs.c:82
 msgid "Number-Track Artist-Track Title (lowercase)"
-msgstr ""
+msgstr "序号-艺术家-标题(小写)"
 
 #: ../plugins/sjcd/sj-prefs.c:304
-#, fuzzy
 msgid "Example Path"
-msgstr "采样速率"
+msgstr "示例路径"
 
 #: ../plugins/sjcd/sjcd.xml.h:1
 msgid "CD _drive:"
-msgstr ""
+msgstr "CD驱动(_d)"
 
 #: ../plugins/sjcd/sjcd.xml.h:2
 msgid "Device"
-msgstr ""
+msgstr "设备："
 
 #: ../plugins/sjcd/sjcd.xml.h:3
 msgid "Disc:"
-msgstr ""
+msgstr "CD盘："
 
 #: ../plugins/sjcd/sjcd.xml.h:4
-#, fuzzy
 msgid "Duration:"
-msgstr "信息"
+msgstr "时长："
 
 #: ../plugins/sjcd/sjcd.xml.h:5
-#, fuzzy
 msgid "E_ject"
-msgstr "弹出iPod"
+msgstr "弹出iPod(_j)"
 
 #: ../plugins/sjcd/sjcd.xml.h:6
-#, fuzzy
 msgid "File _name:"
-msgstr "文件名格式："
+msgstr "文件名(_n)："
 
 #: ../plugins/sjcd/sjcd.xml.h:7
 msgid "Folder hie_rarchy:"
-msgstr ""
+msgstr "目录层次(_r):"
 
 #: ../plugins/sjcd/sjcd.xml.h:8
 msgid "Format"
-msgstr ""
+msgstr "格式"
 
 #: ../plugins/sjcd/sjcd.xml.h:9
 msgid "Multiple Albums Found"
-msgstr ""
+msgstr "找到多个专辑"
 
 #: ../plugins/sjcd/sjcd.xml.h:10
-#, fuzzy
 msgid "Music Folder"
-msgstr "音乐视频"
+msgstr "音乐文件夹"
 
 #: ../plugins/sjcd/sjcd.xml.h:11
 msgid "O_utput Format:"
-msgstr ""
+msgstr "输出格式(_u)"
 
 #: ../plugins/sjcd/sjcd.xml.h:12
-#, fuzzy
 msgid "Preferences"
-msgstr "mserv首选项"
+msgstr "首选项"
 
 #: ../plugins/sjcd/sjcd.xml.h:13
-#, fuzzy
 msgid "Select A Folder"
-msgstr "选定播放列表"
+msgstr "选择一个文件夹"
 
 #: ../plugins/sjcd/sjcd.xml.h:15
 msgid ""
 "This CD could be more than one album. Please select which album it is below "
 "and press <i>Continue</i>."
 msgstr ""
+"该CD超过一个专辑，请选择是下面哪个专辑"
+"并点击<i>继续</i>"
 
 #: ../plugins/sjcd/sjcd.xml.h:16
-#, fuzzy
 msgid "Track Names"
-msgstr "音轨"
+msgstr "音轨名"
 
 #: ../plugins/sjcd/sjcd.xml.h:17
 msgid "Tracks"
 msgstr "音轨"
 
 #: ../plugins/sjcd/sjcd.xml.h:18
-#, fuzzy
 msgid "_Artist:"
-msgstr "艺术家"
+msgstr "艺术家(_A)"
 
 #: ../plugins/sjcd/sjcd.xml.h:19
-#, fuzzy
 msgid "_Continue"
-msgstr "内容"
+msgstr "继续(_C)"
 
 #: ../plugins/sjcd/sjcd.xml.h:20
-#, fuzzy
 msgid "_Deselect All"
-msgstr "选定播放列表"
+msgstr "取消所有选定（_D)"
 
 #: ../plugins/sjcd/sjcd.xml.h:21
-#, fuzzy
 msgid "_Disc"
-msgstr "显示"
+msgstr "盘片(_D)"
 
 #: ../plugins/sjcd/sjcd.xml.h:22
-#, fuzzy
 msgid "_Duplicate Disc"
-msgstr "检查重复文件"
+msgstr "复制盘片(_D)"
 
 #: ../plugins/sjcd/sjcd.xml.h:23 ../src/anjuta-actions.h:49
-#, fuzzy
 msgid "_Edit"
-msgstr "编辑"
+msgstr "编辑(_E)"
 
 #: ../plugins/sjcd/sjcd.xml.h:24
 msgid "_Eject after extracting tracks"
-msgstr ""
+msgstr "提取音轨后弹出(_E)"
 
 #: ../plugins/sjcd/sjcd.xml.h:25
-#, fuzzy
 msgid "_Folder:"
-msgstr "添加目录"
+msgstr "目录(_F)"
 
 #: ../plugins/sjcd/sjcd.xml.h:26
-#, fuzzy
 msgid "_Genre:"
-msgstr "风格"
+msgstr "风格(_G)"
 
 #: ../plugins/sjcd/sjcd.xml.h:27
 msgid "_Open music folder when finished"
-msgstr ""
+msgstr "结束厚打开音乐文件夹(_O)"
 
 #: ../plugins/sjcd/sjcd.xml.h:28
-#, fuzzy
 msgid "_Select All"
-msgstr "选定播放列表"
+msgstr "选择所有(_S)"
 
 #: ../plugins/sjcd/sjcd.xml.h:29
 msgid "_Strip special characters"
-msgstr ""
+msgstr "去除特殊字符(_S)"
 
 #: ../plugins/sjcd/sjcd.xml.h:30
 msgid "_Submit Track Names..."
-msgstr ""
+msgstr "提交音轨名称(_S)..."
 
 #: ../plugins/sjcd/sjcd.xml.h:31
-#, fuzzy
 msgid "_Title:"
-msgstr "歌曲"
+msgstr "歌曲(_T)"
 
 #: ../plugins/sjcd/sjcd.xml.h:32
-#, fuzzy
 msgid "_Year:"
-msgstr "年代"
+msgstr "年代(_Y)"
 
 #: ../src/anjuta-about.c:158
-#, fuzzy, c-format
 msgid "Couldn't read license file %s: %s"
-msgstr "无法改变文件的标签：%s\n"
+msgstr "无法读取许可证文件%s：%s"
 
 #: ../src/anjuta-about.c:175
 msgid "Copyright (c) Jorg Schuler et al."
-msgstr ""
+msgstr "版权所有Jorg Schuler et al."
 
 #: ../src/anjuta-about.c:176
-#, fuzzy
 msgid "iPod Management Platform"
-msgstr "iPod管理器"
+msgstr "iPod管理平台"
 
 #: ../src/anjuta-action-callbacks.c:108
-#, fuzzy
 msgid "GtkPod Preferences"
-msgstr "首选项"
+msgstr "GtkPod首选项"
 
 #: ../src/anjuta-actions.h:26
 msgid "_Music"
-msgstr "iPod音乐"
+msgstr "iPod音乐(_M)"
 
 #: ../src/anjuta-actions.h:31
 msgid "_Update Tracks from File"
-msgstr "从文件更新音轨"
+msgstr "从文件更新音轨(_U)"
 
 #: ../src/anjuta-actions.h:39
-#, fuzzy
 msgid "_Quit"
-msgstr "编辑"
+msgstr "退出(_Q)"
 
 #: ../src/anjuta-actions.h:41
-#, fuzzy
 msgid "Quit gtkpod"
-msgstr "关于gtkpod"
+msgstr "退出gtkpod"
 
 #: ../src/anjuta-actions.h:54
-#, fuzzy
 msgid "_Delete"
-msgstr "删除"
+msgstr "删除(_P)"
 
 #: ../src/anjuta-actions.h:62
-#, fuzzy
 msgid "_Preferences"
-msgstr "mserv首选项"
+msgstr "首选项(_P)"
 
 #: ../src/anjuta-actions.h:63
 msgid "Do you prefer coffee to tea? Check it out."
-msgstr ""
+msgstr "你选择咖啡还是茶？请打勾。"
 
 #: ../src/anjuta-actions.h:72
-#, fuzzy
 msgid "_View"
-msgstr "查看"
+msgstr "查看(_V)"
 
 #: ../src/anjuta-actions.h:77
 msgid "_Reset Dock Layout"
-msgstr ""
+msgstr "重置视图(_R)"
 
 #: ../src/anjuta-actions.h:79
 msgid "Reset the widgets docking layout to default"
-msgstr ""
+msgstr "重置为默认视图"
 
 #: ../src/anjuta-actions.h:88
 msgid "_Full Screen"
-msgstr ""
+msgstr "全屏(_F)"
 
 #: ../src/anjuta-actions.h:90
 msgid "Toggle fullscreen mode"
-msgstr ""
+msgstr "全屏模式"
 
 #: ../src/anjuta-actions.h:96
 msgid "_Lock Dock Layout"
-msgstr ""
+msgstr "锁定视图(_L)"
 
 #: ../src/anjuta-actions.h:98
 msgid "Lock the current dock layout so that widgets cannot be moved"
-msgstr ""
+msgstr "锁定当前视图"
 
 #: ../src/anjuta-actions.h:107
-#, fuzzy
 msgid "_Tools"
-msgstr "工具"
+msgstr "工具(_T)"
 
 #: ../src/anjuta-actions.h:115
-#, fuzzy
 msgid "_Help"
-msgstr "帮助"
+msgstr "帮助(_H)"
 
 #: ../src/anjuta-actions.h:120
 msgid "_User's Manual"
-msgstr ""
+msgstr "用户手册(U)"
 
 #: ../src/anjuta-actions.h:122
 msgid "gtkpod user's manual"
-msgstr ""
+msgstr "gtkpod用户手册"
 
 #: ../src/anjuta-actions.h:128
-#, fuzzy
 msgid "gtkpod _Home Page"
-msgstr "gtkpod iPod管理器"
+msgstr "gtkpod主页(_H)"
 
 #: ../src/anjuta-actions.h:130
 msgid "Online documentation and resources"
-msgstr ""
+msgstr "在线文档和资源"
 
 #: ../src/anjuta-actions.h:136
 msgid "Report _Bugs/Patches/Requests"
-msgstr ""
+msgstr "汇报Bug/补丁/需求(_B)"
 
 #: ../src/anjuta-actions.h:138
 msgid "Submit a bug report, patch or feature request for gtkpod"
-msgstr ""
+msgstr "提交bug，补丁或者特性需求"
 
 #: ../src/anjuta-actions.h:144
 msgid "Ask a _Question"
-msgstr ""
+msgstr "提问"
 
 #: ../src/anjuta-actions.h:146
 msgid "Submit a question for FAQs"
-msgstr ""
+msgstr "向FAQs提交问题"
 
 #: ../src/anjuta-actions.h:152
-#, fuzzy
 msgid "_About"
-msgstr "放弃"
+msgstr "关于(_A)"
 
 #: ../src/anjuta-actions.h:154
-#, fuzzy
 msgid "About gtkpod"
 msgstr "关于gtkpod"
 
 #: ../src/anjuta-actions.h:160
 msgid "About External _Plugins"
-msgstr ""
+msgstr "关于外部插件(_P)"
 
 #: ../src/anjuta-actions.h:162
 msgid "About third party gtkpod plugins"
-msgstr ""
+msgstr "关于第三方gtkpod插件"
 
 #: ../src/anjuta-app.c:512
-#, fuzzy
 msgid "Edit"
 msgstr "编辑"
 
 #: ../src/anjuta-app.c:513 ../src/anjuta-app.c:514
-#, fuzzy
 msgid "View"
 msgstr "查看"
 
 #: ../src/anjuta-app.c:515
-#, fuzzy
 msgid "Tools"
-msgstr "工具"
+msgstr "工具(_T)"
 
 #: ../src/anjuta-app.c:516
-#, fuzzy
 msgid "Help"
 msgstr "帮助"
 
 #: ../src/anjuta-app.c:732
 msgid "Installed plugins"
-msgstr ""
+msgstr "已安装的插件"
 
 #: ../src/anjuta-app.c:733
-#, fuzzy
 msgid "Preferred plugins"
-msgstr "首选项"
+msgstr "已选的插件"
 
 #: ../src/anjuta-app.c:734
-#, fuzzy
 msgid "Shortcuts"
-msgstr "按艺术家排序"
+msgstr "快捷方式"
 
 #: ../src/anjuta-app.c:790
 #, c-format
 msgid "Value doesn't exist"
-msgstr ""
+msgstr "值不存在"
 
 #: ../src/anjuta-app.c:1408
 msgid "Confirmation"
@@ -6814,883 +6548,9 @@ msgstr "确认"
 
 #: ../src/gtkpod.c:206
 msgid "Loaded Session..."
-msgstr ""
+msgstr "加载任务..."
 
 #: ../src/main.c:75
 msgid "- Interface with your ipod"
-msgstr ""
+msgstr "- 与你的ipod交互"
 
-#, fuzzy
-#~ msgid ""
-#~ "m4a/m4p/m4b/mp4 soundcheck update for '%s' failed: m4a/m4p/m4b/mp4 not "
-#~ "supported without the mp4v2 library. You must install the mp4v2 library.\n"
-#~ msgstr ""
-#~ "文件'%s'的m4a/m4p/m4b试音更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须"
-#~ "编译gtkpod源文件并且加入mp4v2库支持。\n"
-
-#, fuzzy
-#~ msgid "'%s' does not appear to be a m4a/m4b/m4v/mp4 audio or video file.\n"
-#~ msgstr "'%s'似乎不是一个mp4音频(或视频)文件。\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Could not open '%s' for reading, or file is not an m4a/m4b/m4v/mp4 file.\n"
-#~ msgstr "无法读取文件'%s'，或者这不是个mp4文件。\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Import of '%s' failed: file type not supported without the mp4v2 library. "
-#~ "You must install the mp4v2 library.\n"
-#~ msgstr ""
-#~ "导入'%s'失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译gtkpod源文件并且加"
-#~ "入mp4v2库支持。\n"
-
-#, fuzzy
-#~ msgid "'%s' does not appear to be a m4a/m4p/m4b/mp4 audio or video file.\n"
-#~ msgstr "'%s'似乎不是一个mp4音频(或视频)文件。\n"
-
-#~ msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
-#~ msgstr "无法读取文件'%s'，或者这不是个mp4文件。\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "m4a/m4p/m4b/mp4 metadata update for '%s' failed: m4a/m4p/m4b/mp4 not "
-#~ "supported without the mp4v2 library. You must install the mp4v2 library.\n"
-#~ msgstr ""
-#~ "'%s'的m4a/m4p/m4b 元数据更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编"
-#~ "译gtkpod源文件并且加入mp4v2库支持。\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Could not open '%s' for writing, or file is not an m4a/m4b/m4v/mp4 file.\n"
-#~ msgstr "无法写入文件'%s'，或者它不是个mp4文件。\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "%s\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr "%s - %s"
-
-#~ msgid "Press button to abort."
-#~ msgstr "放弃？"
-
-#~ msgid "Aborting..."
-#~ msgstr "放弃"
-
-#~ msgid "Will abort after current mp3gain process ends."
-#~ msgstr "当前mp3gain进程结束后将放弃。"
-
-#~ msgid "gtkpod iPod Manager"
-#~ msgstr "gtkpod iPod管理器"
-
-#~ msgid "No entry selected."
-#~ msgstr "没有选择项目"
-
-#~ msgid "Cannot remove entry 'All'"
-#~ msgstr "无法移除项目'所有'"
-
-#~ msgid ""
-#~ "Cannot unsort track view because of a bug in the GTK lib you are using "
-#~ "(%d.%d.%d < 2.5.4). Once you sort the track view, you cannot go back to "
-#~ "the unsorted state.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "由于gtk库(%d.%d.%d<2.5.4)的一个bug不能以未排序方式查看。因为一旦你排序后，"
-#~ "就无法再以原来未排序方式查看\n"
-
-#, fuzzy
-#~ msgid "'%s' does not appear to be a m4a/m4b/m4v/mp4 audio file.\n"
-#~ msgstr "'%s'似乎不是一个mp4音频文件。\n"
-
-#~ msgid "Successfully added files"
-#~ msgstr "成功添加文件"
-
-#~ msgid ""
-#~ "Any rules\n"
-#~ "All rules\n"
-#~ "Ignore rules"
-#~ msgstr ""
-#~ "任一规则\n"
-#~ "所有规则\n"
-#~ "忽略"
-
-#~ msgid "Export can be continued at a later time if canceled."
-#~ msgstr "取消后还可以下次继续导出"
-
-#~ msgid "Progress Information"
-#~ msgstr "进度信息"
-
-#~ msgid "Status: Copying track"
-#~ msgstr "状态：复制音轨中"
-
-#~ msgid "Browse..."
-#~ msgstr "浏览"
-
-#~ msgid ""
-#~ "If you check this, information (cover art and meta information) changed "
-#~ "for this track will be copied to all other selected tracks as well. Use "
-#~ "with care."
-#~ msgstr ""
-#~ "如果选择这里，改变这条音轨的信息（插图和元信息）也将影响其他被选音轨，小心"
-#~ "使用。"
-
-#~ msgid "copying..."
-#~ msgstr "复制中"
-
-#~ msgid "Add Images from a Directory"
-#~ msgstr "从目录添加图像"
-
-#~ msgid ""
-#~ "Insert before\n"
-#~ "Insert after"
-#~ msgstr ""
-#~ "在之前插入\n"
-#~ "在之后插入"
-
-#~ msgid ""
-#~ "iPod\n"
-#~ "Local Repository (Standard)\n"
-#~ "Local Repository (Podcasts)\n"
-#~ msgstr ""
-#~ "iPod\n"
-#~ "本地音乐库（标准）\n"
-#~ "本地音乐库（Podcast）\n"
-
-#~ msgid "<b>Auto Store</b>"
-#~ msgstr "<b>自动保存</b>"
-
-#~ msgid "<b>Sort Order</b>"
-#~ msgstr "<b>排列顺序</b>"
-
-#~ msgid "Filter tabs"
-#~ msgstr "过滤器标签"
-
-#~ msgid ""
-#~ "Last Played\n"
-#~ "Last Modified\n"
-#~ "Added\n"
-#~ msgstr ""
-#~ "最后播放的\n"
-#~ "最后修改的\n"
-#~ "新增的\n"
-
-#~ msgid "Please refer to the notice below."
-#~ msgstr "请参考下面的注意事项。"
-
-#~ msgid "Sort tracks according to: "
-#~ msgstr "按此对音轨排序："
-
-#~ msgid " "
-#~ msgstr " "
-
-#, fuzzy
-#~ msgid "_Info View"
-#~ msgstr "Info窗口"
-
-#~ msgid "    "
-#~ msgstr "    "
-
-#~ msgid "_Toolbar"
-#~ msgstr "工具栏"
-
-#~ msgid "special_sorttab -- Don't translate!"
-#~ msgstr "special_sorttab -- Don't translate!"
-
-#, fuzzy
-#~ msgid "_New Playlist Menu"
-#~ msgstr "新建播放列表"
-
-#~ msgid "gtkpod Information"
-#~ msgstr "gtkpod信息"
-
-#~ msgid "<b>Incompatible Formats</b>"
-#~ msgstr "<b>不兼容格式</b>"
-
-#~ msgid "Convert FLAC"
-#~ msgstr "转换成FLAC"
-
-#~ msgid "Convert Ogg Vorbis"
-#~ msgstr "转换成Ogg Vorbis"
-
-#, fuzzy
-#~ msgid ""
-#~ "© 2002 - 2010\n"
-#~ "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
-#~ "Corey Donohoe (atmos at atmos dot org)\n"
-#~ msgstr ""
-#~ "© 2002 - 2007\n"
-#~ "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
-#~ "Corey Donohoe (atmos at atmos dot org)\n"
-
-#~ msgid ""
-#~ "Codebase includes contribution from the following people and many other "
-#~ "helpful individuals\n"
-#~ msgstr "代码库包括来自下面的人们以及其他很多个人的贡献\n"
-
-#~ msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
-#~ msgstr "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)"
-
-#~ msgid "Hiroshi Kawashima: Japanese charset autodetection feature"
-#~ msgstr "Hiroshi Kawashima: Japanese charset autodetection feature"
-
-#~ msgid ""
-#~ "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
-#~ msgstr ""
-#~ "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c"
-
-#~ msgid ""
-#~ "Walter Bell: correct handling of DND URIs with escaped characters and/or "
-#~ "cr/newlines at the end"
-#~ msgstr ""
-#~ "Walter Bell: correct handling of DND URIs with escaped characters and/or "
-#~ "cr/newlines at the end"
-
-#~ msgid ""
-#~ "Sam Clegg: user defined filenames when exporting tracks from the iPod"
-#~ msgstr ""
-#~ "Sam Clegg: user defined filenames when exporting tracks from the iPod"
-
-#~ msgid "Chris Cutler: automatic creation of various playlist types"
-#~ msgstr "Chris Cutler: automatic creation of various playlist types"
-
-#~ msgid ""
-#~ "Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
-#~ "dialogue during sync"
-#~ msgstr ""
-#~ "Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
-#~ "dialogue during sync"
-
-#~ msgid ""
-#~ "Edward Matteucci: debugging, special playlist creation, most of the "
-#~ "volume normalizing code"
-#~ msgstr ""
-#~ "Edward Matteucci: debugging, special playlist creation, most of the "
-#~ "volume normalizing code"
-
-#~ msgid "Jens Lautenbach: some optical improvements"
-#~ msgstr "Jens Lautenbach: some optical improvements"
-
-#~ msgid "Alex Tribble: iPod eject patch"
-#~ msgstr "Alex Tribble: iPod eject patch"
-
-#~ msgid "Yaroslav Halchenko: Orphaned and dangling tracks handling"
-#~ msgstr "Yaroslav Halchenko: Orphaned and dangling tracks handling"
-
-#~ msgid ""
-#~ "Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
-#~ msgstr ""
-#~ "Andrew Huntwork: Filename case sensitivity fix and various other bugfixes"
-
-#~ msgid ""
-#~ "Ero Carrera: Filename validation and quick sync when copying tracks from "
-#~ "the iPod"
-#~ msgstr ""
-#~ "Ero Carrera: Filename validation and quick sync when copying tracks from "
-#~ "the iPod"
-
-#~ msgid ""
-#~ "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
-#~ msgstr ""
-#~ "Jens Taprogge: Support for LAME's replay gain tag to normalize volume"
-
-#~ msgid "Armando Atienza: Support with external playcounts"
-#~ msgstr "Armando Atienza: Support with external playcounts"
-
-#~ msgid "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
-#~ msgstr "D.L. Sharp: Support for m4b files (bookmarkable AAC files)"
-
-#~ msgid "Jim Hall: Decent INSTALL file"
-#~ msgstr "Jim Hall: Decent INSTALL file"
-
-#~ msgid ""
-#~ "Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
-#~ "contacts to the iPod"
-#~ msgstr ""
-#~ "Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/"
-#~ "contacts to the iPod"
-
-#~ msgid "Flavio Stanchina: bugfixes"
-#~ msgstr "Flavio Stanchina: bugfixes"
-
-#~ msgid ""
-#~ "Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
-#~ "the title"
-#~ msgstr ""
-#~ "Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
-#~ "the title"
-
-#~ msgid "Steve Jay: use statvfs() instead of df (better portability, faster)"
-#~ msgstr "Steve Jay: use statvfs() instead of df (better portability, faster)"
-
-#~ msgid ""
-#~ "Christoph Kunz: address compatibility issues when writing id3v2.4 type "
-#~ "mp3 tags"
-#~ msgstr ""
-#~ "Christoph Kunz: address compatibility issues when writing id3v2.4 type "
-#~ "mp3 tags"
-
-#~ msgid ""
-#~ "James Liggett:\n"
-#~ "replacement of old GTK file selection dialogs with new GTK filechooser "
-#~ "dialogs\n"
-#~ "refactored user preferences system."
-#~ msgstr ""
-#~ "James Liggett:\n"
-#~ "replacement of old GTK file selection dialogs with new GTK filechooser "
-#~ "dialogs\n"
-#~ "refactored user preferences system."
-
-#~ msgid "Daniel Kercher: sync scripts for abook and webcalendar"
-#~ msgstr "Daniel Kercher: sync scripts for abook and webcalendar"
-
-#~ msgid "Clinton Gormley: sync scripts for thunderbird"
-#~ msgstr "Clinton Gormley: sync scripts for thunderbird"
-
-#~ msgid "Sebastien Beridot: sync script for ldif addressbook format"
-#~ msgstr "Sebastien Beridot: sync script for ldif addressbook format"
-
-#~ msgid "Sebastian Scherer: sync script for kNotes"
-#~ msgstr "Sebastian Scherer: sync script for kNotes"
-
-#~ msgid "Nick Piper: sync script for Palm, type-ahead search"
-#~ msgstr "Nick Piper: sync script for Palm, type-ahead search"
-
-#~ msgid "Uwe Hermann: help with support for iPod Video"
-#~ msgstr "Uwe Hermann: help with support for iPod Video"
-
-#~ msgid ""
-#~ "Iain Benson: support for compilation tag in mp3 files and separate "
-#~ "display of compilations in the sort tab."
-#~ msgstr ""
-#~ "Iain Benson: support for compilation tag in mp3 files and separate "
-#~ "display of compilations in the sort tab."
-
-#, fuzzy
-#~ msgid "Nicolas Chariot: icons of buttons\n"
-#~ msgstr ""
-#~ "Nicolas Chariot: icons of buttons\n"
-#~ "\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Others past and present for their excellent contributions\n"
-#~ "\n"
-#~ msgstr "别人的过去和现在的出色贡献\n"
-
-#~ msgid "This program borrows code from the following projects:"
-#~ msgstr "本程序的代码参考了下列项目的工作："
-
-#~ msgid ""
-#~ "gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  "
-#~ "(http://www.gnu.org/software/gnupod/)"
-#~ msgstr ""
-#~ "gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB  "
-#~ "(http://www.gnu.org/software/gnupod/)"
-
-#~ msgid ""
-#~ "iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some "
-#~ "code for smart playlists is based on his C++-classes."
-#~ msgstr ""
-#~ "iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some "
-#~ "code for smart playlists is based on his C++-classes."
-
-#~ msgid "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
-#~ msgstr "mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)"
-
-#~ msgid "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
-#~ msgstr "xmms: dirbrowser, mp3 playlength detection (http://www.xmms.org)"
-
-#, fuzzy
-#~ msgid ""
-#~ "The GUI was created with the help of glade (http://glade.gnome.org/)."
-#~ msgstr ""
-#~ "The GUI was created with the help of glade-2 (http://glade.gnome.org/)."
-
-#~ msgid "French: David Le Brun (david at dyn-ns dot net)"
-#~ msgstr "French: David Le Brun (david at dyn-ns dot net)"
-
-#~ msgid "French: Éric Lassauge (rpmfarm at free dot fr)"
-#~ msgstr "French: Éric Lassauge (rpmfarm at free dot fr)"
-
-#, fuzzy
-#~ msgid "French: Alain Portal (alain.portal at free dot fr)"
-#~ msgstr "French: Éric Lassauge (rpmfarm at free dot fr)"
-
-#~ msgid "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
-#~ msgstr "German: Jorg Schuler (jcsjcs at users dot sourceforge dot net)"
-
-#~ msgid "German: Kai-Ove"
-#~ msgstr "German: Kai-Ove"
-
-#~ msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)"
-#~ msgstr "Hebrew: Assaf Gillat (gillata at gmail dot com)"
-
-#~ msgid ""
-#~ "Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot "
-#~ "net)"
-#~ msgstr ""
-#~ "Italian: Edward Matteucci (edward_matteucc at users dot sourceforge dot "
-#~ "net)"
-
-#~ msgid "Italian: Daniele Forsi (dforsi at gmail dot com)"
-#~ msgstr "Italian: Daniele Forsi (dforsi at gmail dot com)"
-
-#~ msgid "Japanese: Ayako Sano"
-#~ msgstr "Japanese: Ayako Sano"
-
-#~ msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
-#~ msgstr ""
-#~ "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)"
-
-#~ msgid "Romanian: Alex Eftimie (alexeftimie at gmail dot com)"
-#~ msgstr "Romanian: Alex Eftimie (alexeftimie at gmail dot com)"
-
-#~ msgid ""
-#~ "Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
-#~ msgstr ""
-#~ "Spanish: Alejandro Lamas Daviña (alejandro.lamas at ific dot uv dot es)"
-
-#~ msgid "Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"
-#~ msgstr "Swedish: Stefan Asserhall (stefan.asserhall at comhem dot se)"
-
-#~ msgid ""
-#~ "This program is free software; you can redistribute it and/or\n"
-#~ "modify it under the terms of the GNU General Public License as\n"
-#~ "published by the Free Software Foundation; either version 2 of the\n"
-#~ "License, or (at your option) any later version.\n"
-#~ "\n"
-#~ "This program is distributed in the hope that it will be useful, but\n"
-#~ "WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
-#~ "the GNU General Public License for more details.\n"
-#~ "\n"
-#~ "You should have received a copy of the GNU General Public\n"
-#~ "License along with this program; if not, write to the Free Software\n"
-#~ "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
-#~ "02111-1307, USA."
-#~ msgstr ""
-#~ "This program is free software; you can redistribute it and/or\n"
-#~ "modify it under the terms of the GNU General Public License as\n"
-#~ "published by the Free Software Foundation; either version 2 of the\n"
-#~ "License, or (at your option) any later version.\n"
-#~ "\n"
-#~ "This program is distributed in the hope that it will be useful, but\n"
-#~ "WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
-#~ "the GNU General Public License for more details.\n"
-#~ "\n"
-#~ "You should have received a copy of the GNU General Public\n"
-#~ "License along with this program; if not, write to the Free Software\n"
-#~ "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA\n"
-#~ "02111-1307, USA."
-
-#, fuzzy
-#~ msgid ""
-#~ "© 2002-2007\n"
-#~ "Jorg Schuler <jcsjcs at users.sourceforge.net>\n"
-#~ "Corey Donohoe <atmos at atmos.org>"
-#~ msgstr ""
-#~ "版权所有 © 2002-2007\n"
-#~ "Jorg Schuler <jcsjcs@users.sourceforge.net>\n"
-#~ "Corey Donohoe <atmos@atmos.org>"
-
-#~ msgid "(using libgpod %s)"
-#~ msgstr "(using libgpod %s)"
-
-#~ msgid "Cross-platform multilingual interface to Apple's iPod™"
-#~ msgstr "Cross-platform multilingual interface to Apple's iPod™"
-
-#~ msgid ""
-#~ "Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 "
-#~ "library. You must compile the gtkpod source together with the mp4v2 "
-#~ "library.\n"
-#~ msgstr ""
-#~ "导入'%s'失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编译gtkpod源文件并且加"
-#~ "入mp4v2库支持。\n"
-
-#~ msgid ""
-#~ "m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
-#~ "without the mp4v2 library. You must compile the gtkpod source together "
-#~ "with the mp4v2 library.\n"
-#~ msgstr ""
-#~ "'%s'的m4a/m4p/m4b 元数据更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须编"
-#~ "译gtkpod源文件并且加入mp4v2库支持。\n"
-
-#~ msgid ""
-#~ "m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
-#~ "without the mp4v2 library. You must compile the gtkpod source together "
-#~ "with the mp4v2 library.\n"
-#~ msgstr ""
-#~ "文件'%s'的m4a/m4p/m4b试音更新失败：没有mp4v2库，不支持m4a/m4p/m4b。你必须"
-#~ "编译gtkpod源文件并且加入mp4v2库支持。\n"
-
-#~ msgid ""
-#~ "Import of '%s' failed: ogg not supported without the ogg library. You "
-#~ "must compile the gtkpod source together with the ogg library.\n"
-#~ msgstr ""
-#~ "导入'%s'失败：没有ogg库，不支持ogg格式。你必须编译gtkpod源文件并且加入ogg"
-#~ "库支持。\n"
-
-#~ msgid ""
-#~ "ogg metadata update for '%s' failed: ogg not supported without the ogg "
-#~ "library. You must compile the gtkpod source together with the ogg "
-#~ "library.\n"
-#~ msgstr ""
-#~ "文件'%s'的元数据更新失败：没有ogg库，不支持ogg格式。你必须编译gtkpod源文件"
-#~ "并且加入ogg库支持。\n"
-
-#~ msgid "Ogg Vorbis"
-#~ msgstr "Ogg Vorbis"
-
-#~ msgid "FLAC"
-#~ msgstr "FLAC"
-
-#~ msgid ""
-#~ "Did not normalize '%s'. Set mp3gain path in the Tools section of the "
-#~ "preferences.\n"
-#~ msgstr "不要对'%s'均衡化，在首选项中工具栏里设置mp3gain的路径。\n"
-
-#~ msgid ""
-#~ "Did not normalize '%s'. Set aacgain path in the Tools section of the "
-#~ "preferences.\n"
-#~ msgstr "不要对'%s'均衡化，在首选项中工具栏里设置aacgain的路径。\n"
-
-#~ msgid ""
-#~ "Import of '%s' failed: FLAC not supported without the FLAC library. You "
-#~ "must compile the gtkpod source together with the FLAC library.\n"
-#~ msgstr ""
-#~ "导入'%s'失败：没有FLAC库，不支持FLAC文件。你必须重新编译gtkpod源程序并加入"
-#~ "FLAC库支持。\n"
-
-#~ msgid ""
-#~ "FLAC metadata update for '%s' failed: FLAC not supported without the FLAC "
-#~ "library. You must compile the gtkpod source together with the FLAC "
-#~ "library.\n"
-#~ msgstr ""
-#~ "'%s'的FLAC元数据更新失败：没有FLAC库，不支持FLAC文件。你必须重新编译gtkpod"
-#~ "源程序并加入FLAC库支持。\n"
-
-#~ msgid ""
-#~ "The following track could not be processed (filetype unknown): '%s'\n"
-#~ msgstr "下列音轨无法完成处理（文件类型未知）：'%s'\n"
-
-#~ msgid ""
-#~ "The following track could not be processed (filetype is known but "
-#~ "analysis failed): '%s'\n"
-#~ msgstr "下列音轨无法完成处理（文件类型已知但文件解析失败）：'%s'\n"
-
-#, fuzzy
-#~ msgid "Error: File format unsupported now."
-#~ msgstr "错误：更新失败（格式不支持?）"
-
-#, fuzzy
-#~ msgid ""
-#~ "Error: Lyrics not found, file not available (%s).\n"
-#~ "\n"
-#~ msgstr ""
-#~ "错误：找不到歌词，文件不存在(%s)。\n"
-#~ "\n"
-
-#~ msgid "<b>Playback</b>"
-#~ msgstr "<b>回放</b>"
-
-#~ msgid "<b>Toolbar Style</b>"
-#~ msgstr "<b>工具栏样式</b>"
-
-#~ msgid "<b>Tooltips</b>"
-#~ msgstr "<b>工具提示</b>"
-
-#~ msgid "<b>mserv</b>"
-#~ msgstr "<b>mserv</b>"
-
-#~ msgid "Add Directories Recursively"
-#~ msgstr "递归添加目录"
-
-#~ msgid "Add Files"
-#~ msgstr "添加文件"
-
-#~ msgid "Add Files or Directories"
-#~ msgstr "添加文件或目录"
-
-#~ msgid "Add Playlist"
-#~ msgstr "添加播放列表"
-
-#~ msgid "Add new repository/iPod..."
-#~ msgstr "添加新的音乐库/iPod"
-
-#~ msgid "Add playlist from file"
-#~ msgstr "从文件新建播放列表"
-
-#~ msgid "Bottom"
-#~ msgstr "下方"
-
-#~ msgid "Command for \"Enqueue\":"
-#~ msgstr "'队列'命令:"
-
-#~ msgid "Commands..."
-#~ msgstr "命令"
-
-#~ msgid "Create New Playlist"
-#~ msgstr "新建播放列表"
-
-#~ msgid "Create _Playlist File"
-#~ msgstr "新建播放列表"
-
-#~ msgid "Delete Repository"
-#~ msgstr "删除音乐库"
-
-#~ msgid "Display tooltips in main window"
-#~ msgstr "在主窗口显示工具提示"
-
-#~ msgid "Filter:"
-#~ msgstr "过滤器："
-
-#~ msgid ""
-#~ "Find orphan files (files with no track info in DB) and dangling tracks "
-#~ "(tracks with no corresponding files on iPod)"
-#~ msgstr ""
-#~ "找出遗弃文件（数据库中没有音轨信息的文件）和悬空音轨(在iPod中没有对应文件"
-#~ "的音轨)"
-
-#~ msgid "Get Help _Online"
-#~ msgstr "在线获得帮助"
-
-#~ msgid "Load iPod(s)"
-#~ msgstr "加载iPod"
-
-#~ msgid ""
-#~ "MP3\n"
-#~ "AAC\n"
-#~ msgstr ""
-#~ "MP3\n"
-#~ "AAC\n"
-
-#~ msgid "Randomize Current Playlist"
-#~ msgstr "随机当前播放列表"
-
-#~ msgid "Report a _Problem"
-#~ msgstr "报告问题"
-
-#~ msgid "Repository/iPod Options"
-#~ msgstr "音乐库/iPod选项"
-
-#~ msgid "Selected Filter Tab Entry from Hard Disk"
-#~ msgstr "硬盘中的过滤器标签"
-
-#~ msgid "Selected Playlist Including Tracks from Hard Disk"
-#~ msgstr "选择播放列表包括硬盘中的音轨"
-
-#~ msgid "Selected Tracks from Hard Disk"
-#~ msgstr "硬盘中的音轨"
-
-#~ msgid "Sorting..."
-#~ msgstr "排序"
-
-#~ msgid "Synchronise Contacts, Calendar and Notes"
-#~ msgstr "同步通讯录、日历和备忘录"
-
-#~ msgid "Synchronize All"
-#~ msgstr "同步所有"
-
-#~ msgid "Synchronize Calendar"
-#~ msgstr "同步日历"
-
-#~ msgid "Synchronize Contacts"
-#~ msgstr "同步通讯录"
-
-#~ msgid "Synchronize Notes"
-#~ msgstr "同步备忘录"
-
-#~ msgid "Tracks in Selected Tab _Entry"
-#~ msgstr "选定标签的音轨"
-
-#~ msgid "Tracks in Selected _Playlist"
-#~ msgstr "选定播放列表的音轨"
-
-#~ msgid ""
-#~ "Try to load contents of all connected iPods. For each iPod a separate "
-#~ "repository must be set up."
-#~ msgstr "尝试加载所有已连接iPod的内容，每个iPod必须设置一个独立的音乐库。"
-
-#~ msgid "Write all changes made to the disk and the iPod(s)."
-#~ msgstr "将所有改动写入到磁盘和iPod。"
-
-#~ msgid "_Arrange Filter Tabs"
-#~ msgstr "整理过滤器标签"
-
-#~ msgid "_Conversion Log"
-#~ msgstr "转换日志"
-
-#~ msgid "_Enqueue"
-#~ msgstr "加入队列"
-
-#~ msgid "_Filter Bar"
-#~ msgstr "过滤器栏"
-
-#~ msgid "_Newly Added Tracks"
-#~ msgstr "新添加的音轨"
-
-#~ msgid "_Play Now"
-#~ msgstr "开始播放"
-
-#~ msgid "_Save Displayed Track Order"
-#~ msgstr "顺序保存音轨"
-
-#~ msgid "_Synchronize Playlist with Dir(s)"
-#~ msgstr "播放列表与目录同步"
-
-#~ msgid "_Tooltips"
-#~ msgstr "工具提示"
-
-#~ msgid "Play Now"
-#~ msgstr "现在播放"
-
-#~ msgid "Enqueue"
-#~ msgstr "队列"
-
-#~ msgid "Alphabetize"
-#~ msgstr "按字母顺序排列"
-
-#~ msgid "Edit selected entry of which sort tab?"
-#~ msgstr "编辑选定那个标签项目?"
-
-#~ msgid "Export selected entry of which sort tab?"
-#~ msgstr "按照哪个排序标签导出所选项目？"
-
-#~ msgid "Create playlist file from selected entry of which sort tab?"
-#~ msgstr "按照哪个排序标签创建播放列表？"
-
-#~ msgid "Play tracks in selected entry of which sort tab?"
-#~ msgstr "按照哪个排序标签来播放音轨？"
-
-#~ msgid "Enqueue tracks in selected entry of which sort tab?"
-#~ msgstr "选定项目中按照哪个排序标签来对音轨排队？"
-
-#~ msgid "Normalize tracks in selected entry of which sort tab?"
-#~ msgstr "选定项目按照哪个排序标签对音轨进行均衡化？"
-
-#~ msgid "Error reading iPod photo database.\n"
-#~ msgstr "读取iPod照片数据库时发生错误。\n"
-
-#~ msgid "Could not access the iPod's photo database."
-#~ msgstr "无法连接iPod照片数据库。"
-
-#~ msgid "Rtng"
-#~ msgstr "Rtng"
-
-#~ msgid "Trnsfrd"
-#~ msgstr "Trnsfrd"
-
-#~ msgid "%s: option `%s' is ambiguous\n"
-#~ msgstr "%s：`%s'选项有岐义\n"
-
-#~ msgid "%s: option `--%s' doesn't allow an argument\n"
-#~ msgstr "%s：`--%s'选项不允许一个参数\n"
-
-#~ msgid "%s: option `%c%s' doesn't allow an argument\n"
-#~ msgstr "%s：`%c%s'选项不允许一个参数\n"
-
-#~ msgid "%s: option `%s' requires an argument\n"
-#~ msgstr "%s:`%s'选项需要一个参数\n"
-
-#~ msgid "%s: unrecognized option `--%s'\n"
-#~ msgstr "%s：无法识别选项 `--%s'\n"
-
-#~ msgid "%s: unrecognized option `%c%s'\n"
-#~ msgstr "%s：无法识别选项 `%c%s'\n"
-
-#~ msgid "%s: illegal option -- %c\n"
-#~ msgstr "%s：非法选项 --%c\n"
-
-#~ msgid "%s: invalid option -- %c\n"
-#~ msgstr "%s：无效选项 --%c\n"
-
-#~ msgid "%s: option requires an argument -- %c\n"
-#~ msgstr "%s：选项需要一个参数 -- %c\n"
-
-#~ msgid "%s: option `-W %s' is ambiguous\n"
-#~ msgstr "%s：选项 `-W %s'有岐义\n"
-
-#~ msgid "%s: option `-W %s' doesn't allow an argument\n"
-#~ msgstr "%s：选项 `-W %s'不允许一个参数\n"
-
-#~ msgid " %s Free"
-#~ msgstr " %s 可用空间"
-
-#~ msgid " %s Pending"
-#~ msgstr " %s 等待中"
-
-#~ msgid " disconnected"
-#~ msgstr "已断开"
-
-#~ msgid "The following has occurred:"
-#~ msgstr "出现下列问题："
-
-#~ msgid ""
-#~ "Auto Store of track view disabled.\n"
-#~ "\n"
-#~ msgstr "音轨自动保存被禁用\n"
-
-#~ msgid "Hide"
-#~ msgstr "隐藏"
-
-#~ msgid "Icons only"
-#~ msgstr "仅图标"
-
-#~ msgid "Text only"
-#~ msgstr "仅文字"
-
-#~ msgid "Text under icons"
-#~ msgstr "文字在图标下"
-
-#~ msgid "Text beside icons"
-#~ msgstr "文字在图标旁"
-
-#~ msgid "No sorting"
-#~ msgstr "不排序"
-
-#~ msgid ""
-#~ "You can also use the table headers, but this allows you to sort according "
-#~ "to a column that is not displayed."
-#~ msgstr "你也可以使用这个列表的表头，这样就会根据这一栏进行排序。"
-
-#~ msgid "No command set for '%s'"
-#~ msgstr "没有设置'%s'的命令"
-
-#~ msgid "Could not find command '%s' specified for '%s'"
-#~ msgstr "找不到'%s'的指令'%s'"
-
-#~ msgid ""
-#~ "Extended info will not be used. If you have non-transferred tracks,\n"
-#~ "these will be lost.\n"
-#~ msgstr "扩展信息将不会被使用，如果还有未传输的音轨，它们将会丢失。\n"
-
-#~ msgid ""
-#~ "Patches were supplied by the following people (list may be incomplete -- "
-#~ "please contact me)\n"
-#~ msgstr "下列人员提供了补丁文件（名单可能不全--请联系我）\n"
-
-#~ msgid ""
-#~ "<span weight='bold' size='larger'>Message</span>\n"
-#~ "\n"
-#~ "The quick brown fox jumps over the lazy dog."
-#~ msgstr ""
-#~ "<span weight='bold' size='larger'>消息</span>\n"
-#~ "\n"
-#~ "那只敏捷的棕毛狐狸跃过那只懒狗。"
-
-#~ msgid "Dummy\n"
-#~ msgstr "Dummy\n"
-
-#~ msgid "checkbutton"
-#~ msgstr "检查"
-
-#~ msgid "gtk-revert-to-saved"
-#~ msgstr "gtk-revert-to-saved"
-
-#~ msgid "Could not open \"%s\" for reading extended info.\n"
-#~ msgstr "无法打开\"%s\"以读取扩展信息。\n"
-
-#~ msgid "韩语(EUC-KR)"
-#~ msgstr "韩语(EUC-KR)"
