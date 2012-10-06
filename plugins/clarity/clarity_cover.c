@@ -241,7 +241,7 @@ void clarity_cover_set_album_item (ClarityCover *self, AlbumItem *item) {
     // Set cover artwork
     gtk_clutter_texture_set_from_pixbuf (GTK_CLUTTER_TEXTURE(priv->texture), item->albumart, &error);
     if (error) {
-        g_warning(error->message);
+        g_warning("%s", error->message);
         g_error_free(error);
         return;
     }
