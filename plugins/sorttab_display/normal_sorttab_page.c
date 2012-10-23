@@ -41,6 +41,8 @@
 #include "normal_sorttab_page.h"
 #include "sorttab_display_context_menu.h"
 
+#define NO_IDLE_SELECTION_CALLBACK -1
+
 G_DEFINE_TYPE( NormalSortTabPage, normal_sort_tab_page, GTK_TYPE_TREE_VIEW);
 
 #define NORMAL_SORT_TAB_PAGE_GET_PRIVATE(obj) \
@@ -59,6 +61,12 @@ struct _NormalSortTabPagePrivate {
 
     /* Handler id of the selection changed callback */
     gulong selection_changed_id;
+
+    /*
+     * Handler id of the idle callback when the selection
+     * changed callback is executed
+     */
+    guint selection_changed_idle_id;
 
     /* name of entry last selected */
     GList *last_selection;
@@ -547,6 +555,8 @@ static gboolean _st_selection_changed_cb(gpointer data) {
             time.tv_sec % 3600, time.tv_usec);
 #endif
 
+    priv->selection_changed_idle_id = NO_IDLE_SELECTION_CALLBACK;
+
     return FALSE;
 }
 
@@ -558,10 +568,28 @@ static gboolean _st_selection_changed_cb(gpointer data) {
  * called.
  */
 static void _st_selection_changed(GtkTreeSelection *selection, gpointer user_data) {
+
+    NormalSortTabPage *self = NORMAL_SORT_TAB_PAGE(user_data);
+    gulong idleId = NO_IDLE_SELECTION_CALLBACK;
+
+    if (self) {
+        NormalSortTabPagePrivate *priv = NORMAL_SORT_TAB_PAGE_GET_PRIVATE(self);
+        idleId = priv->selection_changed_idle_id;
+    }
+
 #if DEBUG_CB_INIT
     printf("st_s_c enter (inst: %p)\n", (gint)user_data);
 #endif
-    gdk_threads_add_idle_full(G_PRIORITY_DEFAULT_IDLE, _st_selection_changed_cb, user_data, NULL);
+
+    if (idleId == NO_IDLE_SELECTION_CALLBACK) {
+        // Only execute an idle function if one has not already been scheduled
+        idleId = gdk_threads_add_idle_full(G_PRIORITY_DEFAULT_IDLE, _st_selection_changed_cb, user_data, NULL);
+        if (self) {
+            NormalSortTabPagePrivate *priv = NORMAL_SORT_TAB_PAGE_GET_PRIVATE(self);
+            priv->selection_changed_idle_id = idleId;
+        }
+    }
+
 #if DEBUG_CB_INIT
     printf("st_s_c exit (inst: %p)\n", (gint)user_data);
 #endif
@@ -883,6 +911,9 @@ GtkWidget *normal_sort_tab_page_new(SortTabWidget *st_widget_parent, ST_CAT_item
     priv->selection_changed_id = g_signal_connect (G_OBJECT (selection), "changed",
                 G_CALLBACK (_st_selection_changed),
                 nst);
+
+    priv->selection_changed_idle_id = NO_IDLE_SELECTION_CALLBACK;
+
     /*
      * set string compare function according to
      * whether the ignore field is set or not
