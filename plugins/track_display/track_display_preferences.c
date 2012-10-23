@@ -31,6 +31,7 @@
 #include "libgtkpod/misc_conversion.h"
 #include "libgtkpod/prefs.h"
 #include "libgtkpod/directories.h"
+#include "libgtkpod/gp_private.h"
 #include "plugin.h"
 #include "display_tracks.h"
 
@@ -425,6 +426,27 @@ G_MODULE_EXPORT void on_tm_sort_autostore_toggled(GtkToggleButton *togglebutton,
     gtkpod_broadcast_preference_change("tm_autostore", &val);
 }
 
+G_MODULE_EXPORT void on_tm_sort_none_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+    if (gtk_toggle_button_get_active(togglebutton)) {
+        prefs_set_int("tm_sort", SORT_NONE);
+        gtkpod_broadcast_preference_change("tm_sort", GINT_TO_POINTER(SORT_NONE));
+    }
+}
+
+G_MODULE_EXPORT void on_tm_sort_asc_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+    if (gtk_toggle_button_get_active(togglebutton)) {
+        prefs_set_int("tm_sort", SORT_ASCENDING);
+        gtkpod_broadcast_preference_change("tm_sort", GINT_TO_POINTER(SORT_ASCENDING));
+    }
+}
+
+G_MODULE_EXPORT void on_tm_sort_desc_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+    if (gtk_toggle_button_get_active(togglebutton)) {
+        prefs_set_int("tm_sort", SORT_DESCENDING);
+        gtkpod_broadcast_preference_change("tm_sort", GINT_TO_POINTER(SORT_DESCENDING));
+    }
+}
+
 GtkWidget *init_track_display_preferences() {
     GtkComboBox *cmd_combo;
     gint i = 0;
@@ -470,6 +492,22 @@ GtkWidget *init_track_display_preferences() {
     if ((w = gtkpod_builder_xml_get_widget(prefbuilder, "tm_cfg_autostore"))) {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), prefs_get_int("tm_autostore"));
     }
+
+    // Sort toggle buttons
+    switch (prefs_get_int("tm_sort")) {
+       case SORT_ASCENDING:
+           w = gtkpod_builder_xml_get_widget(prefbuilder, "tm_sort_ascend");
+           break;
+       case SORT_DESCENDING:
+           w = gtkpod_builder_xml_get_widget(prefbuilder, "tm_sort_descend");
+           break;
+       default:
+           w = gtkpod_builder_xml_get_widget(prefbuilder, "tm_sort_none");
+           break;
+    }
+
+    if (w)
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
     gtk_builder_connect_signals(prefbuilder, NULL);
 

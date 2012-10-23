@@ -142,6 +142,52 @@ static gboolean filter_tracks(GtkTreeModel *model, GtkTreeIter *iter, gpointer e
     return result;
 }
 
+static gboolean _is_auto_sort_on() {
+    return prefs_get_int("tm_autostore");
+}
+
+static void _sort_trackview() {
+    GtkTreeModel *model = NULL;
+
+    g_return_if_fail (track_treeview);
+
+    gint column = prefs_get_int("tm_sortcol");
+    gint order = prefs_get_int("tm_sort");
+
+    if (order == SORT_NONE) {
+        return;
+    }
+
+    model = gtk_tree_view_get_model(track_treeview);
+    g_return_if_fail (model);
+
+    if (GTK_IS_TREE_MODEL_FILTER (model)) {
+        model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(model));
+    }
+
+    gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), column, order);
+}
+
+static void _unsort_trackview() {
+    GtkTreeModel *model = NULL;
+
+    g_return_if_fail (track_treeview);
+
+    gint order = prefs_get_int("tm_sort");
+    if (order != SORT_NONE) {
+        return;
+    }
+
+    model = gtk_tree_view_get_model(track_treeview);
+    g_return_if_fail (model);
+
+    if (GTK_IS_TREE_MODEL_FILTER (model)) {
+        model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(model));
+    }
+
+    gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
+}
+
 static GtkListStore *get_model_as_store(GtkTreeModel *model) {
     if (!GTK_IS_TREE_MODEL_FILTER (model))
         return GTK_LIST_STORE (model);
@@ -1086,22 +1132,45 @@ static gint comp_int(gconstpointer a, gconstpointer b) {
     return (GPOINTER_TO_INT(a) - (GPOINTER_TO_INT(b)));
 }
 
-/* Redisplays the tracks in the track view according to the order
- * stored in the sort tab view. This only works if the track view is
- * not sorted --> skip if sorted */
+/*
+ * Redisplays the tracks in the track view according to the order
+ * stored in the current playlist.
+ */
+static void tm_adopt_order(GList *tracks) {
+    // Clear the track view
+    tm_remove_all_tracks();
 
-static void tm_adopt_order(void) {
-    if (prefs_get_int("tm_sort") == SORT_NONE) {
-        GList *gl, *tracks = NULL;
+    // Unsort the track view to improve performance
+    _unsort_trackview();
 
-        /* retrieve the currently displayed tracks (non ordered) from
-         the last sort tab or from the selected playlist if no sort
-         tabs are being used */
-        tm_remove_all_tracks();
-        tracks = gtkpod_get_displayed_tracks();
-        for (gl = tracks; gl; gl = gl->next)
-            tm_add_track_to_track_model((Track *) gl->data, NULL);
+    GHashTable *track_hash = g_hash_table_new(g_direct_hash, g_direct_equal);
+    GList *dt = tracks;
+    while (dt != NULL) { /* add display track to hash */
+        Track *track = dt->data;
+        g_hash_table_insert(track_hash, track, track);
+        dt = dt->next;
     }
+
+    /*
+     * add playlist tracks to model in the order they
+     * appear in the playlist rather than the displayed
+     * list.
+     */
+    Playlist *cp = gtkpod_get_current_playlist();
+    GList *pt = cp->members;
+    GtkTreeModel *model = gtk_tree_view_get_model(track_treeview);
+    while (pt != NULL) {
+        Track *track = pt->data;
+        ExtraTrackData *etr = track->userdata;
+
+        if (g_hash_table_lookup(track_hash, track))
+            gtk_list_store_insert_with_values (get_model_as_store(model), NULL, -1, READOUT_COL, track, -1);
+
+        pt = pt->next;
+    }
+
+    g_hash_table_destroy(track_hash);
+    track_hash = NULL;
 }
 
 /**
@@ -1538,7 +1607,15 @@ gboolean tm_search_equal_func(GtkTreeModel *model, gint column, const gchar *key
     }
     return cmp;
 }
-;
+
+/* Function used to compare tracks by their sort index */
+static gint _compare_track_sort_index(Track* trk1, Track* trk2) {
+    ExtraTrackData *etr1 = trk1->userdata;
+    ExtraTrackData *etr2 = trk2->userdata;
+    g_return_val_if_fail (etr1 && etr2, 0);
+
+    return etr1->sortindex - etr2->sortindex;
+}
 
 /* Function used to compare two cells during sorting (track view) */
 gint tm_data_compare_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data) {
@@ -1559,10 +1636,7 @@ gint tm_data_compare_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, g
     /* implement stable sorting: if two items are the same, revert to
      the last relative positition */
     if (result == 0) {
-        ExtraTrackData *etr1 = track1->userdata;
-        ExtraTrackData *etr2 = track2->userdata;
-        g_return_val_if_fail (etr1 && etr2, 0);
-        result = etr1->sortindex - etr2->sortindex;
+        return _compare_track_sort_index(track1, track2);
     }
     return result;
 }
@@ -1582,27 +1656,6 @@ gint tm_sort_counter(gint inc) {
         cnt += inc;
     }
     return cnt;
-}
-
-/* redisplay the contents of the track view in it's unsorted order */
-static void tm_unsort(void) {
-    if (track_treeview) {
-        GtkTreeModel *model = gtk_tree_view_get_model(track_treeview);
-
-        if (GTK_IS_TREE_MODEL_FILTER (model)) {
-            model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(model));
-        }
-
-        prefs_set_int("tm_sort", SORT_NONE);
-
-        /* no need to comment this out -- searching still works, but for lack
-             of a ctrl-g only the first occurence will be found */
-        /*	    gtk_tree_view_set_enable_search (GTK_TREE_VIEW
-         * (track_treeview), FALSE);*/
-        gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
-        tm_adopt_order();
-        tm_sort_counter(-1);
-    }
 }
 
 static void tm_set_search_column(TM_item newcol) {
@@ -1669,6 +1722,23 @@ static void tm_set_search_column(TM_item newcol) {
     prefs_set_int(TM_PREFS_SEARCH_COLUMN, newcol);
 }
 
+/*
+ * Sorts and unsorts the track view according to the given order
+ */
+static void tm_sort(TM_item col, enum GtkPodSortTypes order) {
+    prefs_set_int("tm_sortcol", col);
+    prefs_set_int("tm_sort", order);
+
+    if (order == SORT_NONE) {
+        _unsort_trackview();
+        tm_adopt_order(gtkpod_get_displayed_tracks());
+        tm_sort_counter(-1);
+    }
+    else {
+        _sort_trackview();
+    }
+}
+
 /* This is called before when changing the sort order or the sort
  column, and before doing the sorting */
 static void tm_sort_column_changed(GtkTreeSortable *ts, gpointer user_data) {
@@ -1701,7 +1771,7 @@ static void tm_sort_column_changed(GtkTreeSortable *ts, gpointer user_data) {
     }
 
     if (tm_sort_counter(1) >= 3) { /* after clicking three times, reset sort order! */
-        tm_unsort(); /* also resets sort counter */
+        tm_sort(prefs_get_int("tm_sortcol"), SORT_NONE); /* also resets sort counter */
     }
     else {
         prefs_set_int("tm_sort", order);
@@ -1710,14 +1780,12 @@ static void tm_sort_column_changed(GtkTreeSortable *ts, gpointer user_data) {
 
     tm_set_search_column(newcol);
 
-    if (prefs_get_int("tm_autostore")) {
-        /*
-         * Once this signal callback has finished will the model
-         * be resorted. At that point will we updated the
-         * selected playlist with the new track order.
-         */
-        gdk_threads_add_idle(tm_rows_reordered_idle_callback, NULL);
-    }
+    /*
+     * Once this signal callback has finished will the model
+     * be resorted. At that point will we updated the
+     * selected playlist with the new track order.
+     */
+    gdk_threads_add_idle(tm_rows_reordered_idle_callback, NULL);
 
     /* stable sorting: index original order */
     tracks = tm_get_all_tracks();
@@ -1742,31 +1810,6 @@ static void tm_sort_column_changed(GtkTreeSortable *ts, gpointer user_data) {
         i += inc;
     }
     g_list_free(tracks);
-}
-
-void tm_sort(TM_item col, enum GtkPodSortTypes order) {
-    if (track_treeview) {
-        GtkTreeModel *model = gtk_tree_view_get_model(track_treeview);
-
-        if (GTK_IS_TREE_MODEL_FILTER (model)) {
-            model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(model));
-        }
-
-        if (order != SORT_NONE) {
-            gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), col, order);
-        }
-        else { /* only unsort if treeview is sorted */
-            gint column;
-            GtkSortType order;
-            if (gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE (model), &column, &order)) {
-                /* column == -2 actually is not defined, but it means
-                 that the model is unsorted. The sortable interface
-                 is badly implemented in gtk 2.4 */
-                if (column != -2)
-                    tm_unsort();
-            }
-        }
-    }
 }
 
 /* Adds the columns to our track_treeview */
@@ -2243,35 +2286,25 @@ static TM_item tm_lookup_col_id(GtkTreeViewColumn *column) {
 void tm_enable_disable_view_sort(gboolean enable) {
     static gint disable_count = 0;
 
+    /*
+     * Sorting will only have been automatic if the preference
+     * has been set. Otherwise, sorting is a totally manual
+     * process with the user sorting the displayed tracks.
+     */
+    if(! _is_auto_sort_on())
+        return;
+
     if (enable) {
         disable_count--;
         if (disable_count < 0)
             fprintf(stderr, "Programming error: disable_count < 0\n");
         if (disable_count == 0 && track_treeview) {
-            if (prefs_get_int("tm_sort") != SORT_NONE) {
-                /* Re-enable sorting */
-                GtkTreeModel *model = gtk_tree_view_get_model(track_treeview);
-
-                if (GTK_IS_TREE_MODEL_FILTER (model)) {
-                    model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(model));
-                }
-
-                gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
-            }
+            _sort_trackview();
         }
     }
     else {
         if (disable_count == 0 && track_treeview) {
-            if (prefs_get_int("tm_sort") != SORT_NONE) {
-                /* Disable sorting */
-                GtkTreeModel *model = gtk_tree_view_get_model(track_treeview);
-
-                if (GTK_IS_TREE_MODEL_FILTER (model)) {
-                    model = gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(model));
-                }
-
-                gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, prefs_get_int("tm_sort"));
-            }
+            _unsort_trackview();
         }
         disable_count++;
     }
@@ -2375,28 +2408,18 @@ gboolean tm_add_filelist(gchar *data, GtkTreePath *path, GtkTreeViewDropPosition
 }
 
 void track_display_set_tracks_cb(GtkPodApp *app, gpointer tks, gpointer data) {
+
     GList *tracks = tks;
-    GtkTreeModel *model = NULL;
 
+    tm_adopt_order(tracks);
 
-    tm_remove_all_tracks();
-
-    // Unsort the track view to improve performance
-    model = gtk_tree_view_get_model(track_treeview);
-    gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
-
-    while (tracks != NULL) { /* add all tracks to model */
-        Track *track = tracks->data;
-        gtk_list_store_insert_with_values (get_model_as_store(model), NULL, -1, READOUT_COL, track, -1);
-        tracks = tracks->next;
-    }
-
-    if (model) {
-        int column = prefs_get_int("tm_sortcol");
-        int order = prefs_get_int("tm_sort");
-        if (order != SORT_NONE) {
-            gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE (model), column, order);
-        }
+    /*
+     * If the preference for auto-sorting has been set then
+     * sort the tracks view accordingly, otherwise leave it
+     * as it is.
+     */
+    if (_is_auto_sort_on()) {
+        _sort_trackview();
     }
 }
 
@@ -2436,7 +2459,7 @@ void track_display_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data) 
 
 void track_display_preference_changed_cb(GtkPodApp *app, gpointer pfname, gpointer value, gpointer data) {
     gchar *pref_name = pfname;
-    if (g_str_equal(pref_name, "tm_sort")) {
+    if (g_str_equal(pref_name, "tm_sort") || g_str_equal(pref_name, "tm_autostore")) {
         tm_sort_counter(-1);
         tm_sort(prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort"));
     }

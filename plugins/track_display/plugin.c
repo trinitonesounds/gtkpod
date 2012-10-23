@@ -86,9 +86,6 @@ static void set_default_preferences() {
         prefs_set_string("sm_sort_", NULL);
     }
 
-    if (!prefs_get_int_value("tm_autostore", NULL))
-        prefs_set_int("tm_autostore", TRUE);
-
     if (!prefs_get_int_value("tm_sortcol", NULL))
         prefs_set_int("tm_sortcol", TM_COLUMN_TITLE);
 
