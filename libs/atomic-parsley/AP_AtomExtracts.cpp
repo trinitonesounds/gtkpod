@@ -1085,11 +1085,19 @@ void APar_ExtractTrackDetails(char* uint32_buffer, FILE* isofile, Trackage* trac
     APar_TrackLevelInfo(track, "hdlr");
     memset(uint32_buffer, 0, 5);
     track_info->track_type = APar_read32(uint32_buffer, isofile, parsedAtoms[track->track_atom].AtomicStart + 16);
-    if (track_info->track_type == 0x736F756E) { //soun
+    switch (track_info->track_type)
+    {
+    case 0x736F756E: //soun
         track_info->type_of_track = AUDIO_TRACK;
-    }
-    else if (track_info->track_type == 0x76696465) { //vide
+        break;
+    case 0x76696465: //vide
         track_info->type_of_track = VIDEO_TRACK;
+        break;
+    case 0x74657874: //text
+        track_info->type_of_track = TEXT_TRACK;
+        break;
+    default:
+        break;
     }
     if (parsedAtoms[track->track_atom].AtomicLength > 34) {
         memset(track_info->track_hdlr_name, 0, 100);
