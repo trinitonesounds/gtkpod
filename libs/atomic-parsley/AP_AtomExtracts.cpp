@@ -1070,7 +1070,20 @@ void APar_ExtractTrackDetails(char* uint32_buffer, FILE* isofile, Trackage* trac
                 + 12);
         track_info->modified_time = APar_read32(uint32_buffer, isofile, parsedAtoms[track->track_atom].AtomicStart
                 + 16);
+        track_info->track_id = APar_read32(uint32_buffer, isofile, parsedAtoms[track->track_atom].AtomicStart + 20);
         track_info->duration = APar_read32(uint32_buffer, isofile, parsedAtoms[track->track_atom].AtomicStart + 28);
+    }
+    else if (APar_read8(isofile, parsedAtoms[track->track_atom].AtomicStart + 8) == 1) {
+        if (APar_read8(isofile, parsedAtoms[track->track_atom].AtomicStart + 11) & 1) {
+            track_info->track_enabled = true;
+        }
+        //version 1 has 64-bit creation/modified times which AP currently doesn't support
+        //track_info->creation_time = APar_read64(uint64_buffer, isofile, parsedAtoms[track->track_atom].AtomicStart
+        //        + 12);
+        //track_info->modified_time = APar_read32(uint64_buffer, isofile, parsedAtoms[track->track_atom].AtomicStart
+        //        + 20);
+        track_info->track_id = APar_read32(uint32_buffer, isofile, parsedAtoms[track->track_atom].AtomicStart + 28);
+        track_info->duration = APar_read32(uint32_buffer, isofile, parsedAtoms[track->track_atom].AtomicStart + 36);
     }
 
     //language code

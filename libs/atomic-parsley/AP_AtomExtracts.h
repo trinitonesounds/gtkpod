@@ -35,6 +35,7 @@ typedef struct { //if any of these are unused, they are set to 0xFF
 struct _TrackInfo {
     uint32_t creation_time;
     uint32_t modified_time;
+    uint32_t track_id;
     uint32_t duration;
     bool track_enabled;
     uint32_t media_sample_rate;
