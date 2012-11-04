@@ -72,6 +72,12 @@ extern "C" {
 #define PODCAST_URL "purl"
 #define ARTWORK "covr"
 #define GAPLESS_FLAG "pgap"
+#define SORT_TITLE "sonm"
+#define SORT_ARTIST "soar"
+#define SORT_ALBUM_ARTIST "soaa"
+#define SORT_COMPOSER "soco"
+#define SORT_ALBUM "soal"
+#define SORT_TV_SHOW "sosn"
 
 static guint32 mediaTypeTagToMediaType(guint8 media_type) {
     switch (media_type) {
@@ -374,6 +380,48 @@ void AP_read_metadata(const char *filePath, Track *track) {
             free(value);
         }
 
+        // MP4 Sort Title
+        value = find_atom_value(SORT_TITLE);
+        if (value) {
+            track->sort_title = g_strdup(value);
+            free(value);
+        }
+
+        // MP4 Sort Artist
+        value = find_atom_value(SORT_ARTIST);
+        if (value) {
+            track->sort_artist = g_strdup(value);
+            free(value);
+        }
+
+        // MP4 Sort Album Artist
+        value = find_atom_value(SORT_ALBUM_ARTIST);
+        if (value) {
+            track->sort_albumartist = g_strdup(value);
+            free(value);
+        }
+
+        // MP4 Sort Composer
+        value = find_atom_value(SORT_COMPOSER);
+        if (value) {
+            track->sort_composer = g_strdup(value);
+            free(value);
+        }
+
+        // MP4 Sort Album
+        value = find_atom_value(SORT_ALBUM);
+        if (value) {
+            track->sort_album = g_strdup(value);
+            free(value);
+        }
+
+        // MP4 Sort TV Show
+        value = find_atom_value(SORT_TV_SHOW);
+        if (value) {
+            track->sort_tvshow = g_strdup(value);
+            free(value);
+        }
+
         if (prefs_get_int("coverart_apic")) {
             gchar *tmp_file_prefix = g_build_filename(g_get_tmp_dir(), "ttt", NULL);
             gchar *tmp_file;
@@ -648,6 +696,24 @@ void AP_write_metadata(Track *track, const char *filePath, GError **error) {
         g_free(value);
     }
     g_free(atom);
+
+    // Sort Title
+    set_limited_text_atom_value(SORT_TITLE, track->sort_title);
+
+    // Sort Artist
+    set_limited_text_atom_value(SORT_ARTIST, track->sort_artist);
+
+    // Sort Album Artist
+    set_limited_text_atom_value(SORT_ALBUM_ARTIST, track->sort_albumartist);
+
+    // Sort Composer
+    set_limited_text_atom_value(SORT_COMPOSER, track->sort_composer);
+
+    // Sort Album
+    set_limited_text_atom_value(SORT_ALBUM, track->sort_album);
+
+    // Sort TV Show
+    set_limited_text_atom_value(SORT_TV_SHOW, track->sort_tvshow);
 
     if (prefs_get_int("coverart_apic")) {
         GdkPixbuf *pixbuf = (GdkPixbuf*) itdb_artwork_get_pixbuf(track->itdb->device, track->artwork, -1, -1);
