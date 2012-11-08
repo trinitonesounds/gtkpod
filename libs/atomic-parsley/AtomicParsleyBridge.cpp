@@ -32,6 +32,7 @@
 #include "AtomicParsley.h"
 #include "AP_AtomExtracts.h"
 #include "AtomicParsleyBridge.h"
+#include "AtomicParsley_genres.h"
 
 extern "C" {
 #include <glib/gstdio.h>
@@ -462,14 +463,18 @@ void AP_read_metadata(const char *filePath, Track *track) {
         // MP4 Media Type
         value = find_atom_value(MEDIA_TYPE);
         if (value) {
-            track->mediatype = mediaTypeTagToMediaType(atoi(value));
+            stiks * stik = MatchStikString(value);
+            if (stik)
+            {
+                track->mediatype = mediaTypeTagToMediaType(stik->stik_number);
+            }
             // Should not free standard media types
         }
 
         // MP4 Compilation flag
         value = find_atom_value(COMPILATION);
         if (value) {
-            track->compilation = atoi(value);
+            track->compilation = !g_strcmp0("true", value);
             free(value);
         }
 
