@@ -146,7 +146,10 @@ void AP_read_metadata(const char *filePath, Track *track) {
     FILE *mp4File;
     Trackage *trackage;
     uint8_t track_cur;
+    uint8_t txttrack_cur;
     gboolean audio_or_video_found = FALSE;
+    gboolean has_quicktime_chaps = FALSE;
+    uint32_t timescale = 0;
 
     APar_ScanAtoms(filePath, true);
     mp4File = openSomeFile(filePath, true);
@@ -156,11 +159,8 @@ void AP_read_metadata(const char *filePath, Track *track) {
     for (track_cur = 0; track_cur < trackage->total_tracks; ++track_cur) {
         TrackInfo *info = trackage->infos[track_cur];
 
-        // FIXME no chapter information implemented yet
-
-        if (info->track_type && audio_or_video_found == FALSE
-                && ((info->track_type & AUDIO_TRACK) || (info->track_type & VIDEO_TRACK)
-                        || (info->track_type & DRM_PROTECTED_TRACK))) {
+        if ((info->type_of_track & AUDIO_TRACK) || (info->type_of_track & VIDEO_TRACK)
+                        || (info->type_of_track & DRM_PROTECTED_TRACK)) {
 
             /*
              * the info->duration is in the track's timescale units so must be divided by that
@@ -171,10 +171,123 @@ void AP_read_metadata(const char *filePath, Track *track) {
 
             track->bitrate = APar_calculate_bitrate(info);
             track->samplerate = info->media_sample_rate;
+            audio_or_video_found = TRUE;
+            break;
         }
-
-        audio_or_video_found = TRUE;
     }
+    for (txttrack_cur = 0; audio_or_video_found && txttrack_cur < trackage->total_tracks; ++txttrack_cur) {
+        TrackInfo *txtinfo = trackage->infos[txttrack_cur];
+        char buf[128];
+        // search for chapter track
+        if (!(txtinfo->type_of_track & TEXT_TRACK))
+            continue;
+        // see if the AV track's chap refers to this text track
+        // chap: 0: atom size  4: 'chap'  8,12,...,8+(N-1)*4: (0: referenced track ID)
+        snprintf(buf, sizeof(buf), "moov.trak[%u].tref.chap", track_cur + 1);
+        AtomicInfo* chapAtom = APar_FindAtom(buf, false, SIMPLE_ATOM, 0);
+        if (!chapAtom)
+            continue;
+        int entry_count = (chapAtom->AtomicLength - 8) / 4;
+        for (int i = 0; i < entry_count; ++i) {
+            if (APar_read32(buf, mp4File, chapAtom->AtomicStart + 8 + i * 4) == txtinfo->track_id) {
+                has_quicktime_chaps = TRUE;
+                timescale = txtinfo->media_sample_rate;
+                break;
+            }
+        }
+        if (has_quicktime_chaps)
+            break;
+    }
+    if (has_quicktime_chaps) {
+        // found a chapter... now get the chapter data from the text track
+        char buf[128];
+
+        // stts: 0: atom size  4: 'stts'  8: version  12: entry count  16,24,...,16+(N-1)*8: (0: frame count 4: duration)
+        snprintf(buf, sizeof(buf), "moov.trak[%u].mdia.minf.stbl.stts", txttrack_cur + 1);
+        AtomicInfo* sampleAtom = APar_FindAtom(buf, false, VERSIONED_ATOM, 0);
+
+        // stsz: 0: atom size  4: 'stsz'  8: version  12: size of all (or 0)  16: entry count  20,24,...,20+(N-1)*4: (0: sample size)
+        snprintf(buf, sizeof(buf), "moov.trak[%u].mdia.minf.stbl.stsz", txttrack_cur + 1);
+        AtomicInfo* sampleSizeAtom = APar_FindAtom(buf, false, VERSIONED_ATOM, 0);
+
+        // stco: 0: atom size  4: 'stco'  8: version  12: entry count  16,20,...,16+(N-1)*4: (0: sample byte offset)
+        snprintf(buf, sizeof(buf), "moov.trak[%u].mdia.minf.stbl.stco", txttrack_cur + 1);
+        AtomicInfo* sampleOffsetAtom = APar_FindAtom(buf, false, VERSIONED_ATOM, 0);
+
+        // We must have a valid sampleAtom to know chapter times. If sampleSizeAtom or sampleOffsetAtom is invalid,
+        // we can do without them (and instead create a default chapter name).
+        if (sampleAtom && sampleAtom->AtomicLength >= 16) {
+            Itdb_Chapterdata *chapterdata = itdb_chapterdata_new();
+            uint32_t stts_entry_count = APar_read32(buf, mp4File, sampleAtom->AtomicStart + 12);
+            uint32_t stsz_entry_count = !sampleSizeAtom || sampleSizeAtom->AtomicLength < 20 ? 0 :
+                APar_read32(buf, mp4File, sampleSizeAtom->AtomicStart + 16);
+            uint32_t stco_entry_count = !sampleOffsetAtom || sampleOffsetAtom->AtomicLength < 16 ? 0 :
+                APar_read32(buf, mp4File, sampleOffsetAtom->AtomicStart + 12);
+            uint32_t stsz_all_size = !sampleSizeAtom || sampleSizeAtom->AtomicLength < 16 ? 0 :
+                APar_read32(buf, mp4File, sampleSizeAtom->AtomicStart + 12);
+
+            uint32_t start_time = 0;
+
+            u_int32_t max_frame_size = stsz_all_size; // if stsz_all_size specified, use only that size
+            for (int i = 0; !stsz_all_size && i < stsz_entry_count; ++i) {
+                uint32_t chap_name_len = APar_read32(buf, mp4File, sampleSizeAtom->AtomicStart + 20 + i * 4);
+                if (chap_name_len > max_frame_size)
+                    max_frame_size = chap_name_len;
+            }
+            max_frame_size += 1; // for trailing '\0' (unneeded?), and to make sure that malloc() gets passed at least 1
+            char * namebuf = (char *)malloc(max_frame_size * sizeof(char));
+            for (int i = 0; i < stts_entry_count; ++i) {
+                gchar *title = NULL;
+                uint32_t chap_name_len = stsz_all_size;
+                uint32_t chap_offset = 0;
+                if (stsz_all_size == 0 && i < stsz_entry_count)
+                    chap_name_len = APar_read32(buf, mp4File, sampleSizeAtom->AtomicStart + 20 + i * 4);
+                if (i < stco_entry_count)
+                    chap_offset = APar_read32(buf, mp4File, sampleOffsetAtom->AtomicStart + 16 + i * 4);
+                if (chap_offset != 0)
+                    APar_readX(namebuf, mp4File, chap_offset, chap_name_len);
+                else // If the location of the chapter name is unknown, trigger default chapter naming
+                    chap_name_len = 0;
+                if (chap_name_len > 2) {
+                    int titlelength = (namebuf[0] << 8) + namebuf[1];
+                    // if the stsz atom and the title value disagree, use the smaller one for safety
+                    titlelength = (titlelength > chap_name_len) ? chap_name_len : titlelength;
+                    // If a title begins with 0xFFFE, it's a UTF-16 title
+                    if (titlelength >= 2 && namebuf[2] == 0xff && namebuf[3] == 0xfe)
+                        title = g_utf16_to_utf8((const gunichar2 *) &namebuf[4], titlelength - 2, NULL, NULL, NULL);
+                    else
+                        title = g_strndup(&namebuf[2], titlelength);
+                }
+                else
+                {
+                    // chapter title couldn't be found; create our own titles
+                    // (and some ipods don't display them anyway)
+                    title = g_strdup_printf("Chapter %3d", i);
+                }
+
+                if (!timescale) // assume 1000, also, don't divide by 0
+                    timescale = 1000;
+                double duration_ms = (double)start_time * 1000.0 / (double)timescale;
+
+                itdb_chapterdata_add_chapter(chapterdata, duration_ms, title);
+                g_free(title);
+
+                if (i < (stts_entry_count - 1)) // skip this stage after the last chapter has been added
+                {
+                    uint32_t frame_count = APar_read32(buf, mp4File, sampleAtom->AtomicStart + 16 + i * 8);
+                    uint32_t duration = APar_read32(buf, mp4File, sampleAtom->AtomicStart + 20 + i * 8);
+                    start_time += frame_count * duration;
+                }
+            }
+            if (namebuf)
+                free(namebuf);
+            if (track->chapterdata) // if there was already chapter data, don't leak it
+                itdb_chapterdata_free(track->chapterdata);
+            track->chapterdata = itdb_chapterdata_duplicate(chapterdata);
+            itdb_chapterdata_free(chapterdata);
+        }
+    }
+    // TODO: add support for Nero-style mp4 chapters
 
     if (prefs_get_int("readtags")) {
         char* value = NULL;
