@@ -990,8 +990,12 @@ void normal_sort_tab_page_add_track(NormalSortTabPage *self, Track *track, gbool
             entry = g_malloc0(sizeof(TabEntry));
             if (group_track)
                 entry->name = g_strdup(_("Compilations"));
-            else
+            else {
+                if (! entryname)
+                    entryname = g_strdup(_("No Metadata Value"));
+
                 entry->name = g_strdup(entryname);
+            }
 
             _st_build_sortkeys(entry);
             entry->compilation = group_track;
