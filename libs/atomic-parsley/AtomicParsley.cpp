@@ -1816,7 +1816,7 @@ char* APar_ExtractDataAtom(int this_atom_number) {
                     }
                 }
                 case 2: { //tmpo
-                    char* result = (char*) malloc(sizeof(char) * 4);
+                    char* result = (char*) malloc(sizeof(char) * 7); // 5 for tempo value, up to 65535, 2 for \n\0
                     sprintf(result, "%hu\n", UInt16FromBigEndian(data_payload));
                     return result;
                 }
