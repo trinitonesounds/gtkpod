@@ -296,49 +296,49 @@ void AP_read_metadata(const char *filePath, Track *track) {
         // MP4 Title
         value = find_atom_value(TITLE);
         if (value) {
-            track->title = charset_to_utf8(value);
+            track->title = g_strdup(value);
             free(value);
         }
 
         // MP4 Artist
         value = find_atom_value(ARTIST);
         if (value) {
-            track->artist = charset_to_utf8(value);
+            track->artist = g_strdup(value);
             free(value);
         }
 
         // MP4 Album Artist
         value = find_atom_value(ALBUM_ARTIST);
         if (value) {
-            track->albumartist = charset_to_utf8(value);
+            track->albumartist = g_strdup(value);
             free(value);
         }
 
         // MP4 Composer
         value = find_atom_value(COMPOSER);
         if (value) {
-            track->composer = charset_to_utf8(value);
+            track->composer = g_strdup(value);
             free(value);
         }
 
         // MP4 Comment
         value = find_atom_value(COMMENT);
         if (value) {
-            track->comment = charset_to_utf8(value);
+            track->comment = g_strdup(value);
             free(value);
         }
 
         // MP4 Description
         value = find_atom_value(DESCRIPTION);
         if (value) {
-            track->description = charset_to_utf8(value);
+            track->description = g_strdup(value);
             free(value);
         }
 
         // MP4 Keywords
         value = find_atom_value(KEYWORD);
         if (value) {
-            track->keywords = charset_to_utf8(value);
+            track->keywords = g_strdup(value);
             free(value);
         }
 
@@ -352,7 +352,7 @@ void AP_read_metadata(const char *filePath, Track *track) {
         // MP4 Album
         value = find_atom_value(ALBUM);
         if (value) {
-            track->album = charset_to_utf8(value);
+            track->album = g_strdup(value);
             free(value);
         }
 
@@ -391,7 +391,7 @@ void AP_read_metadata(const char *filePath, Track *track) {
         // MP4 Grouping
         value = find_atom_value(GROUPING);
         if (value) {
-            track->grouping = charset_to_utf8(value);
+            track->grouping = g_strdup(value);
             free(value);
         }
 
@@ -406,7 +406,7 @@ void AP_read_metadata(const char *filePath, Track *track) {
             // custom genre
             value = find_atom_value(CUSTOM_GENRE);
             if (value) {
-                track->genre = charset_to_utf8(value);
+                track->genre = g_strdup(value);
                 free(value);
             }
         }
@@ -428,14 +428,14 @@ void AP_read_metadata(const char *filePath, Track *track) {
         // MP4 TV Show
         value = find_atom_value(TV_SHOW);
         if (value) {
-            track->tvshow = charset_to_utf8(value);
+            track->tvshow = g_strdup(value);
             free(value);
         }
 
         // MP4 TV Episode
         value = find_atom_value(TV_EPISODE);
         if (value) {
-            track->tvepisode = charset_to_utf8(value);
+            track->tvepisode = g_strdup(value);
             free(value);
         }
 
@@ -449,7 +449,7 @@ void AP_read_metadata(const char *filePath, Track *track) {
         // MP4 TV Network
         value = find_atom_value(TV_NETWORK_NAME);
         if (value) {
-            track->tvnetwork = charset_to_utf8(value);
+            track->tvnetwork = g_strdup(value);
             free(value);
         }
 
@@ -481,7 +481,7 @@ void AP_read_metadata(const char *filePath, Track *track) {
         // MP4 Category
         value = find_atom_value(CATEGORY);
         if (value) {
-            track->category = charset_to_utf8(value);
+            track->category = g_strdup(value);
             free(value);
         }
 
