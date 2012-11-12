@@ -261,9 +261,9 @@ void AP_read_metadata(const char *filePath, Track *track) {
                 }
                 else
                 {
-                    // chapter title couldn't be found; create our own titles
-                    // (and some ipods don't display them anyway)
-                    title = g_strdup_printf("Chapter %3d", i);
+                    // chapter title couldn't be found; create our own titles (and some ipods don't display them anyway).
+                    // Translators: this string is used to create a chapter title when no chapter title could be found
+                    title = g_strdup_printf(_("Chapter %3d"), i);
                 }
 
                 if (!timescale) // assume 1000, also, don't divide by 0
