@@ -1,3 +1,341 @@
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-12-02
+
+    Updates NEWS and Changelog
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-12-02
+
+    Update language files ready for release 2.1.3
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-12-02
+
+    Fix bug in track display sorting
+    
+    * Track Display column sorting is not being reset when a new playlist is
+      selected so the new set of tracks is having the previous sort order
+      applied, causing confusion.
+
+Joel Smith <jsf-lists.gtkpod@jk1.net>	2012-11-12
+
+    make MP4 generated chapter names translateable
+    
+    Thanks to Daniele Forsi for the suggestion
+
+Joel Smith <jsf-lists.gtkpod@jk1.net>	2012-11-12
+
+    MP4 text tags are already UTF-8. Remove UTF-8 conversion.
+
+Joel Smith <jsf-lists.gtkpod@jk1.net>	2012-11-10
+
+    fix mp4 tag crash on tempo (BPM) values above 99
+    
+    As reported here:
+    http://sourceforge.net/tracker/index.php?func=detail&aid=3575205&group_id=67873&atid=519273
+
+Joel Smith <jsf-lists.gtkpod@jk1.net>	2012-11-08
+
+    fix compilation flag and media type tag for mp4 files
+
+Joel Smith <jsf-lists.gtkpod@jk1.net>	2012-11-08
+
+    add mp4 chapter reading support to Atomic Parsley bridge
+
+Joel Smith <jsf-lists.gtkpod@jk1.net>	2012-11-04
+
+    add track ID field to AtomicParseley library
+
+Joel Smith <jsf-lists.gtkpod@jk1.net>	2012-11-03
+
+    add text track type to AtomicParseley library
+
+Joel Smith <jsf-lists.gtkpod@jk1.net>	2012-11-03
+
+    add track sort fields read/write support to AP library
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-11-10
+
+    Mitigate possibility of sort tab category where track has no value
+    
+    * Possible that a track is used to display a sort tab category but that
+      the track has no metadata value for the category.
+    
+    * Replaces with a hard constant to avoid null pointer crashes
+    
+    Thanks to j.neuschaefer at gmx.net for reporting and debugging
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-10-23
+
+    Solve the confusing sorting of the track display
+    
+    * The track display has traditionally been based on the list of displayed
+      tracks. This list comes from the filters, which may have been sorted.
+      Thus, despite turning off sorting in the track display, the tracks can
+      still end up sorted asc/desc due to sorting in the filters
+    
+    * Makes the track display sorting independent by fetching the tracks from
+      the playlist and only displaying those contained in the displayed list.
+      Thus, the track display adopts the tracks from the filter but not their
+      order.
+    
+    * Redefines the tm_autostore preference in that only if it is switched on
+      will the track display sort order be applied automatically to any selected
+      playlist's displayed tracks. Turning this off means tracks will only ever
+      be sorted manually on a per playlist basis by the user.
+    
+    * Adds sort order radio buttons to the track display preferences to make the
+      sort order more prominent. Adds tooltips to explain what the auto checkbox
+      and the sort order radio buttons are for.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-10-23
+
+    Reduce the number of selection changed callbacks
+    
+    * When a playlist is selected, the sorttabs are repopulated and their
+      selections reselected. This causes the displayed tracks to be reset,
+      producing more signals and firing more callbacks.
+    
+    * Reduces the number of callbacks fired by only initiating the idle
+      selection callback if one has not already been scheduled.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-10-13
+
+    Fix to cater for changing API in anjuta version 3.5.3+
+    
+    * Contribute to future proofing against new versions of anjuta library
+    
+    * Thanks to Dominique (dimstar at opensuse.org) for the report and patch
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-10-06
+
+    Update of chinese translation
+    
+    * Thanks to Zhixin Tan tanzhxin at gmail.com for the update
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-10-06
+
+    Fix for error caught by turning on error=format-security
+    
+    * configure.ac
+     * Leave error trapping switched on to trap further errors.
+    
+    * Thanks to Brent <webe3vt@aim.com> for the report and fix.
+
+Daniele Forsi <daniele@forsi.it>	2012-08-30
+
+    trivial: remove duplicated NULL check
+    
+    The same check is performed just above this one.
+    Found with coccicheck by the coccinelle project
+    http://coccinelle.lip6.fr/coccicheck.php
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-08-06
+
+    fix m4a track length value
+    
+    * The duration value read by atomic parsley is stored in the mp4 in its
+      moov->mdia->timescale atom. The duration must be divided by this value
+      to get the duration in seconds. In addition, gtkpod stores the track
+      length in ms so the duration must be multiplied by 1000.
+    
+    * Fixes #3537899
+      https://sourceforge.net/tracker/?func=detail&atid=519273&aid=3537899&group_id=67873
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-08-01
+
+    Fix configure script to properly handle 'without' switches
+    
+    * --without-* switches are available for flac, ogg and curl libraries. This
+      corrects the logic so that configuration can continue if these libraries
+      are specifically excluded.
+
+Jonathan Neuschäfer <j.neuschaefer@gmx.net>	2012-07-29
+
+    INSTALL: fix indentation in the Optional Packages section
+
+Daniele Forsi <daniele@forsi.it>	2012-07-14
+
+    Small fix to Italian translation
+
+Daniele Forsi <daniele@forsi.it>	2012-07-14
+
+    Fix adding more sort tabs
+    
+    Do not store a pointer to a local variable on the caller's stack.
+    In the following backtrace by chance the same memory area was reused by another filename.
+    Fixes:
+    ** (lt-gtkpod:15891): ERROR **: Failed to create builder from file /home/daniele/gtkpod/gtkpod/plugins/libtrack_display.so: Errore alla riga 1 carattere 1: Il documento deve iniziare con un elemento (es. <book>)
+    
+    Program received signal SIGTRAP, Trace/breakpoint trap.
+    0xb74a8f81 in g_logv () from /lib/i386-linux-gnu/libglib-2.0.so.0
+    (gdb) bt
+     #0  0xb74a8f81 in g_logv () from /lib/i386-linux-gnu/libglib-2.0.so.0
+     #1  0xb74a90c3 in g_log () from /lib/i386-linux-gnu/libglib-2.0.so.0
+     #2  0xb7fc112d in gtkpod_builder_xml_new (filepath=filepath@entry=0x841b550 "/home/daniele/gtkpod/gtkpod/plugins/libtrack_display.so")
+         at misc.c:1210
+     #3  0xaf1bab3b in special_sort_tab_page_new (st_widget_parent=st_widget_parent@entry=0x840e3a8,
+         glade_file_path=0x841b550 "/home/daniele/gtkpod/gtkpod/plugins/libtrack_display.so") at special_sorttab_page.c:505
+     #4  0xaf1be18f in _sort_tab_widget_init_page (st_cat=ST_CAT_SPECIAL, self=0x840e3a8) at sorttab_widget.c:227
+     #5  sort_tab_widget_new (inst=inst@entry=2, parent=0x8af0710,
+         glade_xml_path=0x841b550 "/home/daniele/gtkpod/gtkpod/plugins/libtrack_display.so") at sorttab_widget.c:336
+     #6  0xaf1bf8bf in sorttab_display_append_widget () at display_sorttabs.c:145
+     #7  0xaf1bffa0 in sorttab_display_preference_changed_cb (app=app@entry=0x838f008, pfname=0xaf1c4955, value=0x3, data=0x0) at display_sorttabs.c:354
+
+Daniele Forsi <daniele@forsi.it>	2012-07-14
+
+    Make the string identical to the other ones
+    
+    Add a \n. One string less to check for translators.
+
+Daniele Forsi <daniele@forsi.it>	2012-07-14
+
+    Fix setting the sort order with the Playlist Display plugin
+    
+    Dereference gpointer value.
+
+Daniele Forsi <daniele@forsi.it>	2012-07-14
+
+    Update Italian translation
+
+Daniele Forsi <daniele@forsi.it>	2012-07-14
+
+    Make more strings translatable
+    
+    Add *.plugin.in for of Clarity and External Player plugins and fix
+    an existing entry.
+
+Daniele Forsi <daniele@forsi.it>	2012-07-13
+
+    Fix memleak
+
+Daniele Forsi <daniele@forsi.it>	2012-07-13
+
+    Make another string translatable
+    
+    Add 2 leading spaces like similar strings.
+
+Daniele Forsi <daniele@forsi.it>	2012-07-13
+
+    Fix multiple icons appearing when toggling plugins in preferences window
+    
+    The anjuta_preferences_dialog_add_page() was using the translated string
+    while anjuta_preferences_remove_page() was using the untranslated string.
+    Make the code similar to most plugins.
+    
+    Fixes:
+    libanjuta-WARNING **: Could not find page to remove
+    
+    Program received signal SIGTRAP, Trace/breakpoint trap.
+    0xb74a9f81 in g_logv () from /lib/i386-linux-gnu/libglib-2.0.so.0
+    (gdb) bt
+    [...]
+     #2  0xb7ef4b40 in anjuta_preferences_dialog_remove_page () from /usr/lib/libanjuta-3.so.0
+     #3  0xb7ef5c3b in anjuta_preferences_remove_page () from /usr/lib/libanjuta-3.so.0
+     #4  0xa61abc45 in ipreferences_unmerge (ipref=0x855f650, prefs=0x83b0a60, e=0x0) at plugin.c:446
+    [...]
+
+Daniele Forsi <daniele@forsi.it>	2012-07-13
+
+    Fix segfault when using playcount spin buttons
+    
+    All callbacks expect to receive a pointer to userdata.
+    Fixes:
+    (lt-gtkpod:7461): GLib-GObject-WARNING **: instance of invalid non-instantiatable type `<unknown>'
+    
+    Program received signal SIGSEGV, Segmentation fault.
+    _get_sort_tab_widget_instance (self=0x84c3008) at special_sorttab_page.c:104
+    104	    return sort_tab_widget_get_instance(priv->st_widget_parent);
+    (gdb) bt
+    [...]
+
+Daniele Forsi <daniele@forsi.it>	2012-07-13
+
+    gtkpod also manages photos on supported iPods
+
+Daniele Forsi <daniele@forsi.it>	2012-07-13
+
+    Replace g_warning() with g_message() since they are printed during normal use
+    
+    Printing those as warnings would also interfere with the use of --g-fatal-warnings
+    for debugging with gdb.
+
+Daniele Forsi <daniele@forsi.it>	2012-07-13
+
+    Remove empty and unused item from list of date types
+    
+    Valid choices are Last Played, Last Modified and Added; choosing the
+    empty item prints on the terminal:
+    Programming error: cal_get_category () -- item not found.
+
+Daniele Forsi <daniele@forsi.it>	2012-07-12
+
+    Only the box containing smart playlist rules need to expand
+
+Daniele Forsi <daniele@forsi.it>	2012-07-12
+
+    Do not accept empty names for smart playlists
+    
+    Make the "Save" button insensitive if the name is empty.
+
+Daniele Forsi <daniele@forsi.it>	2012-07-12
+
+    Make it easier for the user to retry entering a valid playlist name
+    
+    Automatically ask again a name if the one provided by the user was
+    empty or duplicated.
+
+Daniele Forsi <daniele@forsi.it>	2012-07-12
+
+    Don't check twice if name is NULL
+    
+    It is already checked after calling get_user_string().
+
+Daniele Forsi <daniele@forsi.it>	2012-07-12
+
+    Fix setting default width of main window
+    
+    Only used when window Geometry couldn't be read from
+    ~/.gtkpod/session/anjuta.session file.
+
+Daniele Forsi <daniele@forsi.it>	2012-07-11
+
+    Actually use the translation and change capitalization
+    
+    The N_() macro only marks a string for translation but it's a noop
+    at compile time.
+
+Daniele Forsi <daniele@forsi.it>	2012-07-11
+
+    Make more strings translatable
+
+Daniele Forsi <daniele@forsi.it>	2012-07-08
+
+    Add missing newlines to a message string
+
+Daniele Forsi <daniele@forsi.it>	2012-07-08
+
+    Use the spelling "Normalize" like in other strings
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-07-09
+
+    Fix an identified buffer overflow
+    
+    3536102 - Buffer overflow in atomic parsley
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-07-09
+
+    Register all upper case version of filetype suffixes
+    
+    * Should files have upper case file type suffixes then such files are not
+      recognised by the filetype plugins.
+    
+    * Registers each filetype plugin against all suffixes and their upper case
+      versions.
+    
+    3538271 - MP3 extensions do not get loaded
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-06-28
+
+    Update version script to 2.1.3
+
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-06-17
 
     Update Changelog
