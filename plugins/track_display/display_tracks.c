@@ -173,11 +173,6 @@ static void _unsort_trackview() {
 
     g_return_if_fail (track_treeview);
 
-    gint order = prefs_get_int("tm_sort");
-    if (order != SORT_NONE) {
-        return;
-    }
-
     model = gtk_tree_view_get_model(track_treeview);
     g_return_if_fail (model);
 
@@ -1730,7 +1725,6 @@ static void tm_sort(TM_item col, enum GtkPodSortTypes order) {
     prefs_set_int("tm_sort", order);
 
     if (order == SORT_NONE) {
-        _unsort_trackview();
         tm_adopt_order(gtkpod_get_displayed_tracks());
         tm_sort_counter(-1);
     }
