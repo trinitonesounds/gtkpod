@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-14 00:09+0200\n"
-"PO-Revision-Date: 2012-07-13 22:48+0200\n"
+"POT-Creation-Date: 2012-12-04 22:09+0100\n"
+"PO-Revision-Date: 2012-12-04 22:22+0100\n"
 "Last-Translator: Daniele Forsi <dforsi@gmail.com>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
@@ -674,7 +674,7 @@ msgstr ""
 "Testi non scritti, tipo del file non determinabile (%s).\n"
 "\n"
 
-#: ../libgtkpod/file.c:2185
+#: ../libgtkpod/file.c:2185 ../libgtkpod/file.c:2190
 #, c-format
 msgid ""
 "Lyrics not written due to the error:\n"
@@ -683,15 +683,6 @@ msgid ""
 msgstr ""
 "Testi non scritti a causa dell'errore:\n"
 "\n"
-"%s"
-
-#: ../libgtkpod/file.c:2190
-#, c-format
-msgid ""
-"Lyrics not written due to the error:\n"
-"%s"
-msgstr ""
-"Testi non scritti a causa dell'errore:\n"
 "%s"
 
 #: ../libgtkpod/file_convert.c:419
@@ -1449,7 +1440,7 @@ msgstr[0] "Rimuovere la traccia dal database locale?"
 msgstr[1] "Rimuovere le tracce dal database locale?"
 
 #: ../libgtkpod/misc_conversion.c:60
-#: ../plugins/sorttab_display/normal_sorttab_page.c:934
+#: ../plugins/sorttab_display/normal_sorttab_page.c:965
 msgid "All"
 msgstr "Tutti"
 
@@ -1457,7 +1448,7 @@ msgstr "Tutti"
 #: ../libgtkpod/misc_conversion.c:61
 #: ../plugins/core_preferences/core_prefs.xml.h:116
 #: ../plugins/playlist_display/playlist_display_spl.c:78
-#: ../plugins/sorttab_display/sorttab_widget.c:241
+#: ../plugins/sorttab_display/sorttab_widget.c:243
 #: ../plugins/sjcd/egg-play-preview.c:199
 msgid "Album"
 msgstr "Album"
@@ -1465,7 +1456,7 @@ msgstr "Album"
 #: ../libgtkpod/misc_conversion.c:62
 #: ../plugins/core_preferences/core_prefs.xml.h:112
 #: ../plugins/playlist_display/playlist_display_spl.c:79
-#: ../plugins/sorttab_display/sorttab_widget.c:238
+#: ../plugins/sorttab_display/sorttab_widget.c:240
 #: ../plugins/sjcd/egg-play-preview.c:189 ../plugins/sjcd/sj-main.c:521
 #: ../plugins/sjcd/sj-main.c:1527
 msgid "Artist"
@@ -1474,7 +1465,7 @@ msgstr "Artista"
 #: ../libgtkpod/misc_conversion.c:63
 #: ../plugins/core_preferences/core_prefs.xml.h:113
 #: ../plugins/playlist_display/playlist_display_spl.c:77
-#: ../plugins/sorttab_display/sorttab_widget.c:250
+#: ../plugins/sorttab_display/sorttab_widget.c:252
 #: ../plugins/sjcd/egg-play-preview.c:179 ../plugins/sjcd/sj-main.c:515
 #: ../plugins/sjcd/sj-main.c:1518
 msgid "Title"
@@ -1483,7 +1474,7 @@ msgstr "Titolo"
 #: ../libgtkpod/misc_conversion.c:64
 #: ../plugins/core_preferences/core_prefs.xml.h:114
 #: ../plugins/playlist_display/playlist_display_spl.c:83
-#: ../plugins/sorttab_display/sorttab_widget.c:244
+#: ../plugins/sorttab_display/sorttab_widget.c:246
 msgid "Genre"
 msgstr "Genere"
 
@@ -1521,7 +1512,7 @@ msgid "Track Nr (#)"
 msgstr "Numero traccia"
 
 #: ../libgtkpod/misc_conversion.c:72
-#: ../plugins/track_display/display_tracks.c:1851
+#: ../plugins/track_display/display_tracks.c:1894
 msgid "Transferred"
 msgstr "Trasferito"
 
@@ -1556,7 +1547,7 @@ msgstr "Contatore riproduzioni"
 
 #: ../libgtkpod/misc_conversion.c:79
 #: ../plugins/playlist_display/playlist_display_spl.c:95
-#: ../plugins/track_display/display_tracks.c:1839
+#: ../plugins/track_display/display_tracks.c:1882
 msgid "Rating"
 msgstr "Voto"
 
@@ -1586,8 +1577,8 @@ msgstr "Ver. livello sonoro"
 
 #: ../libgtkpod/misc_conversion.c:85
 #: ../plugins/playlist_display/playlist_display_spl.c:82
-#: ../plugins/sorttab_display/sorttab_widget.c:253
-#: ../plugins/track_display/display_tracks.c:1887
+#: ../plugins/sorttab_display/sorttab_widget.c:255
+#: ../plugins/track_display/display_tracks.c:1930
 msgid "Year"
 msgstr "Anno"
 
@@ -2497,12 +2488,20 @@ msgstr ""
 "«%s» ha restituito il seguente output:\n"
 "%s\n"
 
-#: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:465
+# Titolo di ripiego se non è stato letto uno dal file 
+#. chapter title couldn't be found; create our own titles (and some ipods don't display them anyway).
+#. Translators: this string is used to create a chapter title when no chapter title could be found
+#: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:266
+#, c-format
+msgid "Chapter %3d"
+msgstr "Capitolo %3d"
+
+#: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:636
 #, c-format
 msgid "ERROR %s is not itunes style."
 msgstr "ERRORE %s non è nello stile di iTunes."
 
-#: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:664
+#: ../libs/atomic-parsley/AtomicParsleyBridge.cpp:853
 #, c-format
 msgid "ERROR failed to change track file's artwork."
 msgstr "ERRORE impossibile cambiare il file con la copertina della traccia."
@@ -2897,7 +2896,7 @@ msgid "<b>On-the-fly Conversion</b>"
 msgstr "<b>Conversione al volo</b>"
 
 #. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-app.c:511
+#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-app.c:516
 msgid "Music"
 msgstr "Musica"
 
@@ -3060,6 +3059,7 @@ msgstr "<b>Riquadro delle copertine</b>"
 #: ../plugins/cover_display/cover_display.xml.h:8
 #: ../plugins/playlist_display/playlist_display.xml.h:4
 #: ../plugins/sorttab_display/sorttab_display.xml.h:18
+#: ../plugins/track_display/track_display.xml.h:7
 #: ../plugins/clarity/clarity.xml.h:6
 msgid "<b>Ascending</b>"
 msgstr "<b>Crescente</b>"
@@ -3067,6 +3067,7 @@ msgstr "<b>Crescente</b>"
 #: ../plugins/cover_display/cover_display.xml.h:9
 #: ../plugins/playlist_display/playlist_display.xml.h:5
 #: ../plugins/sorttab_display/sorttab_display.xml.h:19
+#: ../plugins/track_display/track_display.xml.h:8
 #: ../plugins/clarity/clarity.xml.h:7
 msgid "<b>Descending</b>"
 msgstr "<b>Decrescente</b>"
@@ -3074,6 +3075,7 @@ msgstr "<b>Decrescente</b>"
 #: ../plugins/cover_display/cover_display.xml.h:10
 #: ../plugins/playlist_display/playlist_display.xml.h:6
 #: ../plugins/sorttab_display/sorttab_display.xml.h:20
+#: ../plugins/track_display/track_display.xml.h:13
 #: ../plugins/clarity/clarity.xml.h:8
 msgid "<b>None</b>"
 msgstr "<b>Nessuno</b>"
@@ -3081,7 +3083,7 @@ msgstr "<b>Nessuno</b>"
 #: ../plugins/cover_display/cover_display.xml.h:11
 #: ../plugins/playlist_display/playlist_display.xml.h:7
 #: ../plugins/sorttab_display/sorttab_display.xml.h:21
-#: ../plugins/track_display/track_display.xml.h:7
+#: ../plugins/track_display/track_display.xml.h:14
 #: ../plugins/clarity/clarity.xml.h:9
 msgid "Case sensitive sorting"
 msgstr "Distinguere MAIUSCOLE/minuscole nell'ordinamento"
@@ -4380,7 +4382,7 @@ msgstr ""
 
 #. display message in statusbar
 #: ../plugins/playlist_display/display_playlists.c:487
-#: ../plugins/track_display/display_tracks.c:345
+#: ../plugins/track_display/display_tracks.c:391
 #, c-format
 msgid "Copied one track"
 msgid_plural "Copied %d tracks"
@@ -4427,7 +4429,7 @@ msgstr "Ignora le regole"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:8
 #: ../plugins/sorttab_display/sorttab_display.xml.h:22
-#: ../plugins/track_display/track_display.xml.h:8
+#: ../plugins/track_display/track_display.xml.h:15
 msgid ""
 "If checked, sorting will be case sensitive. Please note that case sensitive "
 "sorting will not work well with most charsets."
@@ -4977,7 +4979,7 @@ msgid "Add playlist to selected iPod"
 msgstr "Aggiunge una playlist all'iPod selezionato"
 
 #: ../plugins/playlist_display/plugin.c:124
-#: ../plugins/track_display/plugin.c:219
+#: ../plugins/track_display/plugin.c:216
 msgid "Normalize"
 msgstr "Normalizza"
 
@@ -5611,7 +5613,7 @@ msgid "Last Modified"
 msgstr "Ultima modifica"
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:14
-#: ../plugins/track_display/display_tracks.c:1881
+#: ../plugins/track_display/display_tracks.c:1924
 msgid "Added"
 msgstr "Aggiunto"
 
@@ -5815,20 +5817,24 @@ msgstr "Copia"
 msgid "Copy selected track(s) to"
 msgstr "Copia tracce selezionate su"
 
-#: ../plugins/sorttab_display/normal_sorttab_page.c:961
+#: ../plugins/sorttab_display/normal_sorttab_page.c:992
 msgid "Compilations"
 msgstr "Compilation"
 
-#: ../plugins/sorttab_display/sorttab_widget.c:247
+#: ../plugins/sorttab_display/normal_sorttab_page.c:995
+msgid "No Metadata Value"
+msgstr "Nessun valore per il metadato"
+
+#: ../plugins/sorttab_display/sorttab_widget.c:249
 msgid "Comp."
 msgstr "Comp."
 
-#: ../plugins/sorttab_display/sorttab_widget.c:256
+#: ../plugins/sorttab_display/sorttab_widget.c:258
 msgid "Special"
 msgstr "Speciale"
 
 #. no tracks selected
-#: ../plugins/sorttab_display/sorttab_widget.c:716
+#: ../plugins/sorttab_display/sorttab_widget.c:718
 msgid "No tracks selected."
 msgstr "Nessuna traccia selezionata."
 
@@ -5852,59 +5858,59 @@ msgstr "Plugin linguette ordinamento"
 msgid "Filter Track View"
 msgstr "Visualizza e filtra le tracce"
 
-#: ../plugins/track_display/display_tracks.c:341
+#: ../plugins/track_display/display_tracks.c:387
 #, c-format
 msgid "Moved one track"
 msgid_plural "Moved %d tracks"
 msgstr[0] "Spostata una traccia"
 msgstr[1] "Spostate %d tracce"
 
-#: ../plugins/track_display/display_tracks.c:1842
+#: ../plugins/track_display/display_tracks.c:1885
 msgid "#"
 msgstr "N°"
 
-#: ../plugins/track_display/display_tracks.c:1845
+#: ../plugins/track_display/display_tracks.c:1888
 msgid "CD"
 msgstr "CD"
 
-#: ../plugins/track_display/display_tracks.c:1848
+#: ../plugins/track_display/display_tracks.c:1891
 msgid "ID"
 msgstr "ID"
 
-#: ../plugins/track_display/display_tracks.c:1862
+#: ../plugins/track_display/display_tracks.c:1905
 msgid "Cmpl"
 msgstr "Cmpl"
 
-#: ../plugins/track_display/display_tracks.c:1869
+#: ../plugins/track_display/display_tracks.c:1912
 msgid "Time"
 msgstr "Durata"
 
-#: ../plugins/track_display/display_tracks.c:1872
+#: ../plugins/track_display/display_tracks.c:1915
 msgid "Plycnt"
 msgstr "Conta rip."
 
-#: ../plugins/track_display/display_tracks.c:1875
+#: ../plugins/track_display/display_tracks.c:1918
 msgid "Played"
 msgstr "Riprodotto"
 
-#: ../plugins/track_display/display_tracks.c:1878
+#: ../plugins/track_display/display_tracks.c:1921
 msgid "Modified"
 msgstr "Modificato"
 
-#: ../plugins/track_display/display_tracks.c:1884
+#: ../plugins/track_display/display_tracks.c:1927
 msgid "Released"
 msgstr "Pubblicato"
 
-#: ../plugins/track_display/display_tracks.c:1890
+#: ../plugins/track_display/display_tracks.c:1933
 msgid "Vol."
 msgstr "Vol."
 
-#: ../plugins/track_display/display_tracks.c:1893
+#: ../plugins/track_display/display_tracks.c:1936
 msgid "Sndchk."
 msgstr "Ver. liv. sonoro"
 
-#: ../plugins/track_display/plugin.c:47 ../plugins/track_display/plugin.c:113
-#: ../plugins/track_display/track_display.xml.h:13
+#: ../plugins/track_display/plugin.c:47 ../plugins/track_display/plugin.c:110
+#: ../plugins/track_display/track_display.xml.h:21
 msgid "Track Display"
 msgstr "Mostra tracce"
 
@@ -5920,7 +5926,7 @@ msgstr "Tracce selezionate dal database"
 msgid "Selected Tracks from Device"
 msgstr "Tracce selezionate dall'iPod"
 
-#: ../plugins/track_display/plugin.c:137
+#: ../plugins/track_display/plugin.c:134
 msgid "  Playlist Tracks"
 msgstr "  Tracce playlist"
 
@@ -5941,35 +5947,51 @@ msgid "<b>Displayed Columns</b>"
 msgstr "<b>Colonne visualizzate</b>"
 
 #: ../plugins/track_display/track_display.xml.h:5
-msgid "Modify selected tracks sort order in selected playlist"
+msgid "Automatically sort selected tracks in selected playlist"
 msgstr ""
-"Modificare l'ordinamento delle tracce selezionate nella playlist selezionata"
+"Ordinare automaticamente le tracce selezionate nella playlist selezionata"
 
 #: ../plugins/track_display/track_display.xml.h:6
 msgid ""
-"if checked, the sort order of the displayed tracks will be applied to the "
-"selected playlist."
+"if checked, the sort order (defined below) will be applied to the selected "
+"playlist."
 msgstr ""
-"Se selezionata, l'ordinamento delle tracce visualizzate sarà applicato alla "
-"playlist selezionata."
+"Se selezionata, l'ordinamento definito sotto sarà applicato alla playlist "
+"selezionata."
 
 #: ../plugins/track_display/track_display.xml.h:9
+msgid ""
+"Sort order applied to displayed tracks.\n"
+"\n"
+"This is only applied if the 'auto sort tracks' \n"
+"checkbox (above) is checked."
+msgstr ""
+"L'ordinamento applicato alle tracce visualizzate.\n"
+"\n"
+"È applicato solo se la casella «Ordinare automaticamente»\n"
+"precedente è selezionata."
+
+#: ../plugins/track_display/track_display.xml.h:16
+msgid "<b>Track Display Sort Order</b>"
+msgstr "<b>Ordinamento mostra tracce</b>"
+
+#: ../plugins/track_display/track_display.xml.h:17
 msgid "<b>Sorting Options</b>"
 msgstr "<b>Opzioni di ordinamento</b>"
 
-#: ../plugins/track_display/track_display.xml.h:10
+#: ../plugins/track_display/track_display.xml.h:18
 msgid "Ignore these words when at the beginning of the following fields:"
 msgstr "Ignorare queste parole quando sono all'inizio dei campi seguenti:"
 
-#: ../plugins/track_display/track_display.xml.h:11
+#: ../plugins/track_display/track_display.xml.h:19
 msgid "<b>Ignore Frequent Words</b>"
 msgstr "<b>Parole comuni da ignorare</b>"
 
-#: ../plugins/track_display/track_display.xml.h:12
+#: ../plugins/track_display/track_display.xml.h:20
 msgid "<b>Preferred Track Execution Command</b>"
 msgstr "<b>Comando preferito per eseguire le tracce</b>"
 
-#: ../plugins/track_display/track_display.xml.h:14
+#: ../plugins/track_display/track_display.xml.h:22
 msgid "<span weight='bold' size='larger'>No playlist selected</span>"
 msgstr "<span weight='bold' size='larger'>Nessuna playlist selezionata</span>"
 
@@ -5985,15 +6007,15 @@ msgstr "Plugin mostra tracce"
 msgid "Track View"
 msgstr "Mostra tracce"
 
-#: ../plugins/track_display/track_display_preferences.c:235
+#: ../plugins/track_display/track_display_preferences.c:236
 msgid "New Word to Ignore"
 msgstr "Nuova parola da ignorare"
 
-#: ../plugins/track_display/track_display_preferences.c:235
+#: ../plugins/track_display/track_display_preferences.c:236
 msgid "Please enter a word for sorting functions to ignore"
 msgstr "Inserire una parola da ignorare nelle funzioni di ordinamento"
 
-#: ../plugins/track_display/track_display_preferences.c:254
+#: ../plugins/track_display/track_display_preferences.c:255
 #, c-format
 msgid "The word %s is already in the \"Ignored Frequent Word\" list"
 msgstr "La parola «%s» è già nell'elenco di «Parole comuni da ignorare»"
@@ -6845,44 +6867,44 @@ msgstr "Informazioni sui _plugin esterni"
 msgid "About third party gtkpod plugins"
 msgstr "Informazioni sui plugin di gtkpod di terze parti"
 
-#: ../src/anjuta-app.c:512
+#: ../src/anjuta-app.c:517
 msgid "Edit"
 msgstr "Modifica"
 
-#: ../src/anjuta-app.c:513 ../src/anjuta-app.c:514
+#: ../src/anjuta-app.c:518 ../src/anjuta-app.c:519
 msgid "View"
 msgstr "Visualizza"
 
-#: ../src/anjuta-app.c:515
+#: ../src/anjuta-app.c:520
 msgid "Tools"
 msgstr "Strumenti"
 
-#: ../src/anjuta-app.c:516
+#: ../src/anjuta-app.c:521
 msgid "Help"
 msgstr "Aiuto"
 
-#: ../src/anjuta-app.c:729
+#: ../src/anjuta-app.c:734
 msgid " Plugins"
 msgstr " Plugin"
 
-#: ../src/anjuta-app.c:741
+#: ../src/anjuta-app.c:746
 msgid "Installed plugins"
 msgstr "Plugin installati"
 
-#: ../src/anjuta-app.c:742
+#: ../src/anjuta-app.c:747
 msgid "Preferred plugins"
 msgstr "Plugin preferiti"
 
-#: ../src/anjuta-app.c:743
+#: ../src/anjuta-app.c:748
 msgid "Shortcuts"
 msgstr "Scorciatoie"
 
-#: ../src/anjuta-app.c:802
+#: ../src/anjuta-app.c:807
 #, c-format
 msgid "Value doesn't exist"
 msgstr "Il valore non esiste"
 
-#: ../src/anjuta-app.c:1420
+#: ../src/anjuta-app.c:1425
 msgid "Confirmation"
 msgstr "Conferma"
 
@@ -6893,6 +6915,13 @@ msgstr "Sessione caricata"
 #: ../src/main.c:81
 msgid "- Interface with your iPod"
 msgstr "- Interfaccia per iPod"
+
+#~ msgid ""
+#~ "Lyrics not written due to the error:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Testi non scritti a causa dell'errore:\n"
+#~ "%s"
 
 #~ msgid "Press button to abort."
 #~ msgstr "Premere il pulsante per interrompere."
