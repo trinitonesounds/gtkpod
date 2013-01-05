@@ -1096,10 +1096,11 @@ void normal_sort_tab_page_remove_track(NormalSortTabPage *self, Track *track) {
                 if (entry == rowentry)
                     break;
 
-                gtk_tree_model_iter_next(model, &iter);
+                valid = gtk_tree_model_iter_next(model, &iter);
             }
 
-            gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
+            if (valid)
+                gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
         }
     }
 
