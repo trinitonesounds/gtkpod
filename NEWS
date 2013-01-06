@@ -13,24 +13,26 @@ gtkpod V2.1.3
 
 	BUGFIX: Ensure files with an upper case file extension are loaded correctly
 
-  BUGFIX: Selection of bugs identified in atomic parsley library. Thanks to Joel Smith for both
+	BUGFIX: Selection of bugs identified in atomic parsley library. Thanks to Joel Smith for both
 	        identifying and fixing.
 
-  BUGFIX: Fixes and updates to translations. Thanks to Daniele Forsi and Zhixin Tan
+	BUGFIX: Fixes and updates to translations. Thanks to Daniele Forsi and Zhixin Tan
 
-  BUGFIX: Fix setting the default width of main window
+	BUGFIX: Fix setting the default width of main window
 
-  IMPROVEMENT: Make it easier for the uer to retry entering a vlaid playlist name
+	IMPROVEMENT: Make it easier for the user to retry entering a valid playlist name
 
-  BUGFIX: Do not accept empty names for smart playlists
+	BUGFIX: Do not accept empty names for smart playlists
     
-  BUGFIX: Fix segfault when using playcount spin buttons
+	BUGFIX: Fix segfault when using playcount spin buttons
     
 	BUGFIX: Fix multiple icons appearing when toggling plugins in preferences window
   
 	BUGFIX: Fix m4a track length value calculated in atomic parsely library
 
 	IMPROVEMENT: Fix to cater for changing API in anjuta version 3.5.3+. Thanks to dimstar at opensuse.org.
+
+	BUGFIX: Fix for potential crashes when deleting all tracks. Thanks to goetz.waschk at gmail.com.
 
 
 gtkpod V2.1.2

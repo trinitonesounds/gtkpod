@@ -1,3 +1,23 @@
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-01-05
+
+    Updates NEWS and Changelog
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-01-05
+
+    Avoid getting data from an invalid iter
+    
+    * Crash occurs when deleting all tracks from ipod. Try and mitigate by
+      making the loop safer.
+    
+    * If the iter_next assigns an invalid reference to iter, then the loop
+      still makes another iteration and potentially will crash the application.
+    
+    * Assign the return value of iter_next to valid to avoid the iteration.
+    
+    * Only try and remove the row if iter is valid
+    
+    * Thanks to goetz.waschk at gmail.com for pointing out the bug
+
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-12-02
 
     Updates NEWS and Changelog
@@ -13,6 +33,10 @@ phantomjinx <p.g.richardson@phantomjinx.co.uk>	2012-12-02
     * Track Display column sorting is not being reset when a new playlist is
       selected so the new set of tracks is having the previous sort order
       applied, causing confusion.
+
+Daniele Forsi <daniele@forsi.it>	2012-12-04
+
+    Update Italian translation
 
 Joel Smith <jsf-lists.gtkpod@jk1.net>	2012-11-12
 
