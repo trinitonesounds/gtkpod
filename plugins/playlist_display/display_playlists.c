@@ -765,6 +765,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
             if (pos == GTK_TREE_VIEW_DROP_AFTER)
                 pl_d = gp_playlist_add_new(pl->itdb, pl_s->name, FALSE, position + 1);
             g_free(data_copy);
+            data_copy = NULL;
             g_return_if_fail (pl_d);
 
             /* copy files from iPod if necessary */
