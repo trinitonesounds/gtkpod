@@ -1152,7 +1152,7 @@ static void tm_adopt_order(GList *tracks) {
      * list.
      */
     Playlist *cp = gtkpod_get_current_playlist();
-    GList *pt = cp->members;
+    GList *pt = cp? cp->members : NULL;
     GtkTreeModel *model = gtk_tree_view_get_model(track_treeview);
     while (pt != NULL) {
         Track *track = pt->data;
