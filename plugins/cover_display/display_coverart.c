@@ -533,9 +533,11 @@ void coverart_display_update(gboolean clear_track_list) {
 
         while (tracks) {
             gchar *album_key;
+            gchar *artist_name;
             track = tracks->data;
 
-            album_key = g_strconcat(track->artist, "_", track->album, NULL);
+            artist_name = track->artist? track->artist : "";
+            album_key = g_strconcat(artist_name, "_", track->album, NULL);
             /* Check whether an album item has already been created in connection
              * with the track's artist and album
              */
