@@ -69,7 +69,7 @@ es				Javier Kohen <jkohen at users.sourceforge.net>
 
 sv				Stefan Asserhall <stefan.asserhall at comhem dot se>
 
-zh_CN			Tan Zhixin <tanzhxin@gmail.com>
+zh_CN				Tan Zhixin <tanzhxin@gmail.com>
 		  		Américo Wang <xiyou.wangcong at gmail.com>
 
 Website:
@@ -81,17 +81,17 @@ Paul Richardson <phantom_sf at users dot sourceforge dot net>
 Note:
 -------------------------------------------------------------------------------
 This program borrows code from the following projects
-	gnutools		- mktunes.pl, ported to C, reading and writing 
-							 		of iTunesDB  <http://www.gnu.org/software/gnupod/>
-		
+	gnutools	- mktunes.pl, ported to C, reading and writing 
+			  of iTunesDB  <http://www.gnu.org/software/gnupod/>
+
 	iPod.cpp/h	- by Samuel Wood <sam dot wood at gmail dot com> 
-									some code for smart playlists is based on his C++-classes.
-		
+			  some code for smart playlists is based on his C++-classes.
+
 	mp3info		- mp3 playlength detection <http://ibiblio.org/mp3info/>
-		
+
 	xmms		- dirbrowser, mp3 playlength detection <http://www.xmms.org>
-	
-	sound-juicer - by Ross Burton <ross@burtonini.com> <http://http://live.gnome.org/SoundJuicer>
+
+	sound-juicer	- by Ross Burton <ross@burtonini.com> <http://live.gnome.org/SoundJuicer>
 
 The GUI was created with the help of glade <http://glade.gnome.org/> and anjuta <http://projects.gnome.org/anjuta>.
 
