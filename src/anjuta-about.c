@@ -142,6 +142,7 @@ static void about_free_credit(void) {
         g_free(ptr[i]);
 
     g_free(translators);
+    translators = NULL;
 }
 
 GtkWidget *about_box_new(GtkWindow *parent) {
