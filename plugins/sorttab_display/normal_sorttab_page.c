@@ -66,7 +66,7 @@ struct _NormalSortTabPagePrivate {
      * Handler id of the idle callback when the selection
      * changed callback is executed
      */
-    gulong selection_changed_idle_id;
+    guint selection_changed_idle_id;
 
     /* name of entry last selected */
     GList *last_selection;
