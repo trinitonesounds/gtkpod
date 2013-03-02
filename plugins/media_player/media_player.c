@@ -30,7 +30,6 @@
 #endif
 
 #include <math.h>
-#include <gst/interfaces/xoverlay.h>
 #include "libgtkpod/itdb.h"
 #include "libgtkpod/file.h"
 #include "libgtkpod/directories.h"
@@ -56,17 +55,16 @@ static gint thread_next_song(void *data);
 static int pipeline_bus_watch_cb(GstBus *bus, GstMessage *msg, gpointer data);
 
 static gboolean set_scale_range(GstElement *pipeline) {
-    GstFormat fmt = GST_FORMAT_TIME;
     gint64 len;
 
     if (!player)
         return FALSE;
 
-    if (!player->loop || GST_OBJECT_IS_DISPOSING(pipeline))
+    if (!player->loop)
         return FALSE;
 
     if (g_main_loop_is_running(player->loop)) {
-        if (gst_element_query_duration(pipeline, &fmt, &len)) {
+        if (gst_element_query_duration(pipeline, GST_FORMAT_TIME, &len)) {
             gtk_range_set_range(GTK_RANGE(player->song_scale), 0, (((GstClockTime) (len)) / GST_SECOND));
             //            if (icon)
             //                gtk_status_icon_set_tooltip(icon, (gchar *) g_object_get_data(G_OBJECT (song_label), "tr_title"));
@@ -80,7 +78,6 @@ static gboolean set_scale_range(GstElement *pipeline) {
 }
 
 static gboolean set_scale_position(GstElement *pipeline) {
-    GstFormat fmt = GST_FORMAT_TIME;
     gint64 pos;
     gint64 len;
 
@@ -93,12 +90,12 @@ static gboolean set_scale_position(GstElement *pipeline) {
     if (!g_main_loop_is_running(player->loop))
         return FALSE;
 
-    if (gst_element_query_position(pipeline, &fmt, &pos)) {
+    if (gst_element_query_position(pipeline, GST_FORMAT_TIME, &pos)) {
         gint seconds = ((GstClockTime) pos) / GST_SECOND;
         gint length;
         gchar *label;
 
-        gst_element_query_duration(pipeline, &fmt, &len);
+        gst_element_query_duration(pipeline, GST_FORMAT_TIME, &len);
         length = ((GstClockTime) len) / GST_SECOND;
 
         label = g_strdup_printf(_("%d:%02d of %d:%02d"), seconds / 60, seconds % 60, length / 60, length % 60);
@@ -398,7 +395,7 @@ static void thread_play_song() {
         return;
     }
 
-    player->play_element = gst_element_factory_make("playbin2", "play");
+    player->play_element = gst_element_factory_make("playbin", "play");
     if (!player->play_element) {
         gtkpod_statusbar_message(_("Failed to play track: Cannot create a play element. Ensure that all gstreamer plugins are installed"));
         stop_song();
