@@ -32,6 +32,7 @@
 #include <libanjuta/anjuta-utils.h>
 #include <libanjuta/resources.h>
 #include <libanjuta/interfaces/ianjuta-preferences.h>
+#include <libanjuta/anjuta-version.h>
 
 #include "anjuta-app.h"
 #include "anjuta-about.h"
@@ -65,7 +66,11 @@ void
 on_layout_lock_toggle (GtkAction *action, AnjutaApp *app)
 {
 	if (app->layout_manager)
+#if (ANJUTA_CHECK_VERSION(3, 6, 2))
+	    g_object_set (gdl_dock_layout_get_master (app->layout_manager), "locked",
+#else
 		g_object_set (app->layout_manager->master, "locked",
+#endif
 					  gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)),
 					  NULL);
 }

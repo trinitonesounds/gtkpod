@@ -252,7 +252,13 @@ static void on_gdl_style_changed(GSettings* settings, const gchar* key, gpointer
     else if (g_strcmp0(pr_style, "Tabs") == 0)
         style = GDL_SWITCHER_STYLE_TABS;
 
+#if (ANJUTA_CHECK_VERSION(3, 6, 2))
+    g_object_set (gdl_dock_layout_get_master (app->layout_manager), "switcher-style",
+                      style, NULL);
+#else
     g_object_set(G_OBJECT(app->layout_manager->master), "switcher-style", style, NULL);
+#endif
+
     g_free(pr_style);
 }
 
@@ -344,6 +350,7 @@ static void on_session_load(AnjutaShell *shell, AnjutaSessionPhase phase, Anjuta
         /* Restore geometry */
         geometry = anjuta_session_get_string(session, "Anjuta", "Geometry");
         anjuta_app_set_geometry(app, geometry);
+		g_free (geometry);
 
         /* Restore window state */
         if (anjuta_session_get_int(session, "Anjuta", "Fullscreen")) {
@@ -429,8 +436,8 @@ static void anjuta_app_finalize(GObject *widget) {
 
     app = ANJUTA_APP (widget);
 
-    g_object_unref(app->ui);
-    g_object_unref(app->preferences);
+	gtk_widget_destroy (GTK_WIDGET (app->ui));
+	gtk_widget_destroy (GTK_WIDGET (app->preferences));
 
     G_OBJECT_CLASS(parent_class)->finalize(widget);
 }
@@ -485,8 +492,13 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
     app->layout_manager = gdl_dock_layout_new(GDL_DOCK (app->dock));
     g_signal_connect (app->layout_manager, "notify::dirty",
             G_CALLBACK (on_layout_dirty_notify), app);
+#if (ANJUTA_CHECK_VERSION(3, 6, 2))
+    g_signal_connect (gdl_dock_layout_get_master (app->layout_manager), "notify::locked",
+                          G_CALLBACK (on_layout_locked_notify), app);
+#else
     g_signal_connect (app->layout_manager->master, "notify::locked",
             G_CALLBACK (on_layout_locked_notify), app);
+#endif
 
     /* UI engine */
     app->ui = anjuta_ui_new();
