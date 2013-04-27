@@ -736,10 +736,10 @@ GtkWidget *init_settings_preferences(gchar *builder_file_path) {
 }
 
 void destroy_settings_preferences() {
-    if (notebook)
+    if (notebook && GTK_IS_WIDGET(notebook))
         gtk_widget_destroy(notebook);
 
-    if (builder)
+    if (builder && G_IS_OBJECT(builder))
         g_object_unref(builder);
 
     builder_path = NULL;

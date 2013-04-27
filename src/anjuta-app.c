@@ -436,9 +436,6 @@ static void anjuta_app_finalize(GObject *widget) {
 
     app = ANJUTA_APP (widget);
 
-	gtk_widget_destroy (GTK_WIDGET (app->ui));
-	gtk_widget_destroy (GTK_WIDGET (app->preferences));
-
     G_OBJECT_CLASS(parent_class)->finalize(widget);
 }
 

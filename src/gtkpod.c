@@ -29,6 +29,7 @@
 #include <gtk/gtk.h>
 #include <libanjuta/anjuta-utils.h>
 #include <libanjuta/anjuta-shell.h>
+#include <libanjuta/anjuta-version.h>
 
 #include "gtkpod.h"
 #include "libgtkpod/directories.h"
@@ -220,12 +221,14 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
         return TRUE;
 
     AnjutaPluginManager *plugin_manager;
+    AnjutaProfileManager *profile_manager;
     AnjutaApp *app;
     gchar *remembered_plugins;
     gchar *session_dir;
 
     app = ANJUTA_APP(widget);
     plugin_manager = anjuta_shell_get_plugin_manager(ANJUTA_SHELL(app), NULL);
+    profile_manager = anjuta_shell_get_profile_manager(ANJUTA_SHELL(app), NULL);
 
     /* Save remembered plugins */
     remembered_plugins = anjuta_plugin_manager_get_remembered_plugins(plugin_manager);
@@ -236,7 +239,20 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
     anjuta_shell_session_save(ANJUTA_SHELL(app), session_dir, NULL);
     g_free(session_dir);
 
+#if (ANJUTA_CHECK_VERSION(3, 8, 0))
+    /* Close the profile manager which will emit "profile-descoped" and release
+     * all previous profiles. */
+    anjuta_profile_manager_close (profile_manager);
+
+    /* Hide the window while unloading all the plugins. */
+    gtk_widget_hide (widget);
+    anjuta_plugin_manager_unload_all_plugins (plugin_manager);
+#else
     anjuta_shell_notify_exit(ANJUTA_SHELL(app), NULL);
+#endif
+
+    /** Release any blocked widgets in order to cleanup correctly */
+    release_widgets();
 
     if (!gtkpod_cleanup_quit()) {
         // Dont want to quit so avoid signalling any destroy event

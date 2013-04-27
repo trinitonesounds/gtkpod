@@ -207,7 +207,9 @@ static gboolean deactivate_sorttab_display_plugin(AnjutaPlugin *plugin) {
     anjuta_shell_remove_widget(plugin->shell, sorttab_display_plugin->sort_tab_widget_parent, NULL);
 
     /* Destroy the sort tab widget parent */
-    gtk_widget_destroy(sorttab_display_plugin->sort_tab_widget_parent);
+    if (GTK_IS_WIDGET(sorttab_display_plugin->sort_tab_widget_parent))
+        gtk_widget_destroy(sorttab_display_plugin->sort_tab_widget_parent);
+
     sorttab_display_plugin->sort_tab_widget_parent = NULL;
 
     /* Unmerge UI */
