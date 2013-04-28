@@ -46,6 +46,7 @@ static gint gp_autoscroll_row_timeout(gpointer data) {
     GtkTreeView *treeview = data;
     gint px, py;
     GdkModifierType mask;
+    GdkDevice *device;
     GdkRectangle vis_rect;
     guint times;
     gboolean resp = TRUE;
@@ -56,8 +57,13 @@ static gint gp_autoscroll_row_timeout(gpointer data) {
     gdk_threads_enter();
 
     times = GPOINTER_TO_UINT(g_object_get_data(G_OBJECT(data), "scroll_row_times"));
+    device = g_object_get_data(G_OBJECT(data), "effected_device");
 
-    gdk_window_get_pointer(gtk_tree_view_get_bin_window(treeview), &px, &py, &mask);
+    gdk_window_get_device_position(gtk_tree_view_get_bin_window(treeview),
+                                                              device,
+                                                              &px,
+                                                              &py,
+                                                              &mask);
     gtk_tree_view_get_visible_rect(treeview, &vis_rect);
     /*     printf ("px/py, w/h, mask: %d/%d, %d/%d, %d\n", px, py, */
     /*      vis_rect.width, vis_rect.height, mask); */
@@ -96,10 +102,11 @@ static gint gp_autoscroll_row_timeout(gpointer data) {
     return resp;
 }
 
-void gp_install_autoscroll_row_timeout(GtkWidget *widget) {
+void gp_install_autoscroll_row_timeout(GtkWidget *widget, GdkDevice *device) {
     if (!g_object_get_data(G_OBJECT(widget), "scroll_row_timeout")) { /* install timeout function for autoscroll */
         guint timeout = g_timeout_add(75, gp_autoscroll_row_timeout, widget);
         g_object_set_data(G_OBJECT(widget), "scroll_row_timeout", GUINT_TO_POINTER(timeout));
+        g_object_set_data(G_OBJECT(widget), "effected_device", device);
     }
 }
 

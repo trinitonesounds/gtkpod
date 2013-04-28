@@ -80,7 +80,7 @@ struct asf_data {
 
  ------------------------------------------------------------ */
 
-void gp_install_autoscroll_row_timeout(GtkWidget *widget);
+void gp_install_autoscroll_row_timeout(GtkWidget *widget, GdkDevice *device);
 
 void gp_remove_autoscroll_row_timeout(GtkWidget *widget);
 

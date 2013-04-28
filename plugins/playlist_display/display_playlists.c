@@ -164,7 +164,7 @@ static gboolean pm_drag_motion(GtkWidget *widget, GdkDragContext *dc, gint x, gi
     g_return_val_if_fail (widget, FALSE);
     g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
 
-    gp_install_autoscroll_row_timeout(widget);
+    gp_install_autoscroll_row_timeout(widget, gdk_drag_context_get_device(dc));
 
     /* no drop possible if position is not valid */
     if (!gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW (widget), x, y, &path, &pos))
@@ -387,7 +387,11 @@ static GdkDragAction pm_pm_get_action(Playlist *src, Playlist *dest, GtkWidget *
     g_return_val_if_fail (dc, 0);
 
     /* get modifier mask */
-    gdk_window_get_pointer(gtk_tree_view_get_bin_window(GTK_TREE_VIEW (widget)), NULL, NULL, &mask);
+    gdk_window_get_device_position(gtk_tree_view_get_bin_window(GTK_TREE_VIEW(widget)),
+                                                              gdk_drag_context_get_device(dc),
+                                                              NULL,
+                                                              NULL,
+                                                              &mask);
 
     /* don't allow copy/move before the MPL */
     if ((itdb_playlist_is_mpl(dest)) && (pos == GTK_TREE_VIEW_DROP_BEFORE))

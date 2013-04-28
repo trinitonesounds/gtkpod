@@ -429,7 +429,7 @@ static gboolean tm_drag_motion(GtkWidget *widget, GdkDragContext *dc, gint x, gi
 
     g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
 
-    gp_install_autoscroll_row_timeout(widget);
+    gp_install_autoscroll_row_timeout(widget, gdk_drag_context_get_device(dc));
 
     itdb = gp_get_selected_itdb();
     /* no drop is possible if no playlist/repository is selected */
@@ -546,7 +546,11 @@ static void tm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     g_return_if_fail (model);
     if (!gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW (widget), x, y, &path, &pos)) {
         gint py;
-        gdk_window_get_pointer(gtk_tree_view_get_bin_window(GTK_TREE_VIEW (widget)), NULL, &py, NULL);
+        gdk_window_get_device_position(gtk_tree_view_get_bin_window(GTK_TREE_VIEW (widget)),
+                                                                  gdk_drag_context_get_device(dc),
+                                                                  NULL,
+                                                                  &py,
+                                                                  NULL);
         if (py < 5) {
             /* initialize with first displayed and drop before */
             GtkTreeIter iter;
