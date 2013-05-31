@@ -2315,7 +2315,7 @@ msgstr "  -m <Pfad>:    Einhängepunkt für iPod angeben\n"
 
 #: ../libgtkpod/prefs.c:328
 msgid "  --mountpoint: same as '-m'.\n"
-msgstr "  --Einhängepunkt: wie '-m'.\n"
+msgstr "  --mountpoint: wie '-m'.\n"
 
 #: ../libgtkpod/prefs.c:496
 #, c-format
