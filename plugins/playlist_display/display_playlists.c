@@ -747,7 +747,6 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
             GList *trackglist = NULL;
 
             /* create new playlist */
-            /* FIXME: support copying of SPL data? */
             pl_d = gp_playlist_add_new(pl->itdb, pl_s->name, FALSE,
                                        pm_adjust_for_drop_pos(position, pos));
             g_free(data_copy);
