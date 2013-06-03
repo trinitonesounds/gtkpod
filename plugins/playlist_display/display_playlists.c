@@ -96,7 +96,7 @@ static gboolean pm_get_iter_for_playlist(Playlist *pl, GtkTreeIter *iter);
  *
  * ---------------------------------------------------------------- */
 static void pm_drag_begin(GtkWidget *widget, GdkDragContext *drag_context, gpointer user_data) {
-    /*     puts ("drag_begin"); */
+    /* nothing to do */
 }
 
 static void pm_drag_data_delete_remove_playlist(GtkTreeModel *tm, GtkTreePath *tp, GtkTreeIter *iter, gpointer data) {
@@ -113,8 +113,6 @@ static void pm_drag_data_delete(GtkWidget *widget, GdkDragContext *drag_context,
     g_return_if_fail (widget);
     g_return_if_fail (drag_context);
 
-    /*     printf ("drag_data_delete: %d\n", drag_context->action); */
-
     if (gdk_drag_context_get_selected_action(drag_context) == GDK_ACTION_MOVE) {
         GtkTreeSelection *ts = gtk_tree_view_get_selection(GTK_TREE_VIEW (widget));
         gtk_tree_selection_selected_foreach(ts, pm_drag_data_delete_remove_playlist, NULL);
@@ -123,8 +121,6 @@ static void pm_drag_data_delete(GtkWidget *widget, GdkDragContext *drag_context,
 
 static gboolean pm_drag_drop(GtkWidget *widget, GdkDragContext *drag_context, gint x, gint y, guint time, gpointer user_data) {
     GdkAtom target;
-
-    /*     puts ("drag_data_drop"); */
 
     gp_remove_autoscroll_row_timeout(widget);
 
@@ -138,13 +134,11 @@ static gboolean pm_drag_drop(GtkWidget *widget, GdkDragContext *drag_context, gi
 }
 
 static void pm_drag_end(GtkWidget *widget, GdkDragContext *drag_context, gpointer user_data) {
-    /*     puts ("drag_end"); */
     gp_remove_autoscroll_row_timeout(widget);
     gtkpod_tracks_statusbar_update();
 }
 
 static void pm_drag_leave(GtkWidget *widget, GdkDragContext *drag_context, guint time, gpointer user_data) {
-    /*     puts ("drag_leave"); */
     gp_remove_autoscroll_row_timeout(widget);
 }
 
@@ -171,9 +165,6 @@ static gboolean pm_drag_motion(GtkWidget *widget, GdkDragContext *dc, gint x, gi
         return FALSE;
 
     g_return_val_if_fail (path, FALSE);
-
-    /*     printf ("pm_drag_motion (x/y/pos/s/a): %d %d %d %d %d\n", */
-    /* 	    x, y, pos, dc->suggested_action, dc->actions); */
 
     gtk_tree_view_set_drag_dest_row(GTK_TREE_VIEW (widget), path, pos);
 
@@ -351,10 +342,6 @@ static void pm_drag_data_get(GtkWidget *widget, GdkDragContext *dc, GtkSelection
     if (!data)
         return;
 
-    /*     puts ("data_get"); */
-
-    /* printf("sm drag get info: %d\n", info);*/
-
     ts = gtk_tree_view_get_selection(GTK_TREE_VIEW (widget));
     if (ts) {
         switch (info) {
@@ -504,8 +491,6 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     Exporter *exporter = gtkpod_get_exporter();
     g_return_if_fail(exporter);
 
-    /* printf ("drag_data_received: x y a: %d %d %d\n", x, y, dc->suggested_action); */
-
     g_return_if_fail (widget);
     g_return_if_fail (dc);
     g_return_if_fail (data);
@@ -513,16 +498,15 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
     g_return_if_fail (gtk_selection_data_get_data(data));
     g_return_if_fail (gtk_selection_data_get_format(data) == 8);
 
-    /* puts(gtk_tree_path_to_string (path)); */
-
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
     g_return_if_fail (model);
 
     path_m = g_object_get_data(G_OBJECT (widget), "drag_data_by_motion_path");
 
-    if (path_m) { /* this callback was caused by pm_drag_motion -- we are
-     * supposed to call gdk_drag_status () */
-        /* puts ("...by motion"); */
+    if (path_m) {
+        /* this callback was caused by pm_drag_motion -- we are
+         * supposed to call gdk_drag_status () */
+
         pos = (GtkTreeViewDropPosition) g_object_get_data(G_OBJECT (widget), "drag_data_by_motion_pos");
         /* unset flag that */
         g_object_set_data(G_OBJECT (widget), "drag_data_by_motion_path", NULL);
@@ -543,9 +527,6 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
                 g_return_if_reached ();
             }
             gdk_drag_status(dc, pm_tm_get_action(tr_s, pl, pos, dc), time);
-            /* 	    printf ("src: %p  dest: %p  sugg: %d a:%d\n", */
-            /* 		    pl_s->itdb, pl->itdb, dc->suggested_action, */
-            /* 		    pm_tm_get_action (tr_s, pl, pos, dc)); */
             return;
         case DND_GTKPOD_PLAYLISTLIST:
             /* get first playlist and check itdb */
@@ -555,17 +536,11 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
                 g_return_if_reached ();
             }
             gdk_drag_status(dc, pm_pm_get_action(pl_s, pl, widget, pos, dc), time);
-            /* 	    printf ("src: %p  dest: %p  sugg: %d a:%d\n", */
-            /* 		    pl_s->itdb, pl->itdb, dc->suggested_action, */
-            /* 		    pm_pm_get_action (pl_s, pl, widget, pos, dc)); */
             return;
         }
         g_return_if_reached ();
         return;
     }
-
-    /*     printf ("treeview received drag data/length/format: %p/%d/%d\n", data, data?data->length:0, data?data->format:0); */
-    /*     printf ("treeview received drag context/actions/suggested action: %p/%d/%d\n", context, context?context->actions:0, context?context->suggested_action:0); */
 
     gp_remove_autoscroll_row_timeout(widget);
 
@@ -590,7 +565,6 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
 
     gchar *data_copy = g_strdup(gtk_selection_data_get_data(data));
 
-    /*  printf("position: %d\n", position); */
     switch (info) {
     case DND_GTKPOD_TRACKLIST:
         /* get first track */
@@ -1524,8 +1498,6 @@ static void pm_cell_edited(GtkCellRendererText *renderer, const gchar *path_stri
 
     gtk_tree_model_get(model, &iter, PM_COLUMN_PLAYLIST, &playlist, -1);
     g_return_if_fail (playlist);
-
-    /*printf("pm_cell_edited: column: %d  track:%lx\n", PM_COLUMN_PLAYLIST, track);*/
 
     /* We only do something, if the name actually got changed */
     if (!playlist->name || g_utf8_collate(playlist->name, new_text) != 0) {
