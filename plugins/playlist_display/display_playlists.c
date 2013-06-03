@@ -471,7 +471,7 @@ static GdkDragAction pm_tm_get_action(Track *src, Playlist *dest, GtkTreeViewDro
 }
 
 /* Print a message about the number of tracks copied (the number of
- tracks moved is printed in tm_drag_data_delete() */
+ tracks moved is printed in tm_drag_data_delete()) */
 static void pm_tm_tracks_moved_or_copied(gchar *tracks, gboolean moved) {
     g_return_if_fail (tracks);
     if (!moved) {
