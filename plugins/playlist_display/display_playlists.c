@@ -476,6 +476,21 @@ static void pm_tm_tracks_moved_or_copied(gchar *tracks, gboolean moved) {
     }
 }
 
+static gint pm_adjust_for_drop_pos(gint position, GtkTreeViewDropPosition pos)
+{
+    switch (pos) {
+    case GTK_TREE_VIEW_DROP_BEFORE:
+    case GTK_TREE_VIEW_DROP_INTO_OR_BEFORE:
+        return position;
+    case GTK_TREE_VIEW_DROP_AFTER:
+    case GTK_TREE_VIEW_DROP_INTO_OR_AFTER:
+        return position + 1;
+    default:
+        g_warn_if_reached();
+        return position;
+    }
+}
+
 static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x, gint y, GtkSelectionData *data, guint info, guint time, gpointer user_data) {
     GtkTreeIter iter_d, iter_s;
     GtkTreePath *path_d = NULL;
@@ -729,15 +744,12 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
             }
         }
         else { /*handle DND between two itdbs */
-            /* set destination pl */
             GList *trackglist = NULL;
-            pl_d = pl;
-            /* if drop is between two playlists, create new playlist */
+
+            /* create new playlist */
             /* FIXME: support copying of SPL data? */
-            if (pos == GTK_TREE_VIEW_DROP_BEFORE)
-                pl_d = gp_playlist_add_new(pl->itdb, pl_s->name, FALSE, position);
-            if (pos == GTK_TREE_VIEW_DROP_AFTER)
-                pl_d = gp_playlist_add_new(pl->itdb, pl_s->name, FALSE, position + 1);
+            pl_d = gp_playlist_add_new(pl->itdb, pl_s->name, FALSE,
+                                       pm_adjust_for_drop_pos(position, pos));
             g_free(data_copy);
             data_copy = NULL;
             g_return_if_fail (pl_d);
