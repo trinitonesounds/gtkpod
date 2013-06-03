@@ -92,7 +92,7 @@ main (int argc, char *argv[])
     g_option_context_set_ignore_unknown_options (ctx, TRUE);
     g_option_context_parse (ctx, &argc, &argv, &error);
     if (error != NULL) {
-        g_printerr ("Error parsing options: %s", error->message);
+        g_printerr ("Error parsing options: %s\n", error->message);
         g_error_free(error);
         exit(1);
     }
