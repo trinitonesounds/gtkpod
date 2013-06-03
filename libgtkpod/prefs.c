@@ -323,6 +323,7 @@ static void usage(FILE *fp) {
     locale_fprintf(fp, _("gtkpod version %s usage:\n"), VERSION);
     locale_fprintf(fp, _("  -h, --help:   display this message\n"));
     locale_fprintf(fp, _("  -p <file>:    increment playcount for file by one\n"));
+    locale_fprintf(fp, _("  --playcount:  same as '-p'.\n"));
     locale_fprintf(fp, _("  --hash <file>:print gtkpod hash for file\n"));
     locale_fprintf(fp, _("  -m path:      define the mountpoint of your iPod\n"));
     locale_fprintf(fp, _("  --mountpoint: same as '-m'.\n"));
@@ -338,6 +339,7 @@ static void read_commandline(int argc, char *argv[]) {
             { "h", no_argument, NULL, GP_HELP },
             { "help", no_argument, NULL, GP_HELP },
             { "p", required_argument, NULL, GP_PLAYCOUNT },
+            { "playcount", required_argument, NULL, GP_PLAYCOUNT },
             { "hash", required_argument, NULL, GP_PRINT_HASH },
             { "m", required_argument, NULL, GP_MOUNT },
             { "mountpoint", required_argument, NULL, GP_MOUNT },
