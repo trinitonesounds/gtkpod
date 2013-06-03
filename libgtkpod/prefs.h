@@ -34,6 +34,7 @@
 #  include <config.h>
 #endif
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 /* End-of-list marker for variable-length lists */

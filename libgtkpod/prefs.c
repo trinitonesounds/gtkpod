@@ -49,6 +49,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <glib.h>
 #include <glib/gstdio.h>
 #include <glib/gi18n-lib.h>
 #ifdef HAVE_GETOPT_LONG_ONLY
@@ -142,11 +143,6 @@ void discard_prefs(void);
 typedef enum {
     PATH_MP3GAIN, PATH_SYNC_CONTACTS, PATH_SYNC_CALENDAR, PATH_SYNC_NOTES, PATH_AACGAIN, PATH_NUM
 } PathType;
-
-/* enum for reading of options */
-enum {
-    GP_HELP, GP_PLAYCOUNT, GP_MOUNT, GP_PRINT_HASH,
-};
 
 /* Lock the prefs table. If the table is already locked the calling
  * thread will remain blocked until the lock is released by the other thread. */
@@ -298,79 +294,43 @@ static void set_default_list_entries() {
     }
 }
 
-/* A printf-like function that outputs in the system locale */
-static void locale_fprintf(FILE *fp, const gchar *format, ...) {
-    gchar *utf8_string; /* Raw UTF-8 string */
-    gchar *locale_string; /* String in system locale format */
-    va_list format_list; /* Printf-like formatting arguments */
+/* Command line options. */
+/* Printing usage information (--help) is handled by glib */
+static gchar *option_playcount, *option_hash, *option_mountpoint;
 
-    /* Create the locale format string based on the given format */
-    va_start(format_list, format);
-    utf8_string = g_strdup_vprintf(format, format_list);
-    va_end(format_list);
+static const GOptionEntry option_entries[] = {
+    { "playcount", 'p', 0, G_OPTION_ARG_FILENAME, &option_playcount,
+        N_("increment playcount for file by one"), N_("FILE") },
+    { "hash", '\0', 0, G_OPTION_ARG_FILENAME, &option_hash,
+        N_("print gtkpod hash for file"), N_("FILE") },
+    { "mountpoint", 'm', 0, G_OPTION_ARG_STRING, &option_mountpoint,
+        N_("define the mountpoint of your iPod"), N_("PATH") },
+    { NULL }
+};
 
-    locale_string = g_locale_from_utf8(utf8_string, -1, NULL, NULL, NULL);
+static void handle_command_line_options(void)
+{
+    if (option_playcount) {
+        client_playcount(option_playcount);
+        exit(0);
+    }
 
-    if (fp)
-        fprintf(fp, "%s", locale_string);
+    if (option_hash) {
+        print_sha1_hash(option_hash);
+        exit(0);
+    }
 
-    g_free(utf8_string);
-    g_free(locale_string);
-}
-
-/* Print commandline usage information */
-static void usage(FILE *fp) {
-    locale_fprintf(fp, _("gtkpod version %s usage:\n"), VERSION);
-    locale_fprintf(fp, _("  -h, --help:   display this message\n"));
-    locale_fprintf(fp, _("  -p <file>:    increment playcount for file by one\n"));
-    locale_fprintf(fp, _("  --playcount:  same as '-p'.\n"));
-    locale_fprintf(fp, _("  --hash <file>:print gtkpod hash for file\n"));
-    locale_fprintf(fp, _("  -m path:      define the mountpoint of your iPod\n"));
-    locale_fprintf(fp, _("  --mountpoint: same as '-m'.\n"));
-}
-
-/* Parse commandline based options */
-static void read_commandline(int argc, char *argv[]) {
-    int option; /* Code returned by getopt */
-
-    /* The options data structure. The format is standard getopt. */
-    struct option const options[] =
-        {
-            { "h", no_argument, NULL, GP_HELP },
-            { "help", no_argument, NULL, GP_HELP },
-            { "p", required_argument, NULL, GP_PLAYCOUNT },
-            { "playcount", required_argument, NULL, GP_PLAYCOUNT },
-            { "hash", required_argument, NULL, GP_PRINT_HASH },
-            { "m", required_argument, NULL, GP_MOUNT },
-            { "mountpoint", required_argument, NULL, GP_MOUNT },
-            { 0, 0, 0, 0 } };
-
-    /* Handle commandline options */
-    while ((option = getopt_long_only(argc, argv, "", options, NULL)) != -1) {
-        switch (option) {
-        case GP_HELP:
-            usage(stdout);
-            exit(0);
-            break;
-        case GP_PLAYCOUNT:
-            client_playcount(optarg);
-            exit(0);
-            break;
-        case GP_PRINT_HASH:
-            print_sha1_hash(optarg);
-            exit(0);
-            break;
-        case GP_MOUNT:
-            prefs_set_string("initial_mountpoint", optarg);
-            break;
-        default:
-            locale_fprintf(stderr, "Unknown option: %s\n", argv[optind]);
-            usage(stderr);
-            exit(1);
-            break;
-        };
+    if (option_mountpoint) {
+        prefs_set_string("initial_mountpoint", option_mountpoint);
+        g_free(option_mountpoint);
     }
 }
+
+const GOptionEntry *gtkpod_get_option_entries(void)
+{
+    return option_entries;
+}
+
 
 /* Read options from environment variables */
 static void read_environment() {
@@ -923,8 +883,8 @@ void prefs_init(int argc, char *argv[]) {
     /* Read environment variables */
     read_environment();
 
-    /* Read commandline arguments */
-    read_commandline(argc, argv);
+    /* Handle the results of command line parsing */
+    handle_command_line_options();
 }
 
 /* Delete the hash table */
