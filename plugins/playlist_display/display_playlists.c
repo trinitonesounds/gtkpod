@@ -615,10 +615,7 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
         else { /* drop between playlists */
             Playlist *plitem;
             /* adjust position */
-            if (pos == GTK_TREE_VIEW_DROP_AFTER)
-                plitem = add_new_pl_user_name(pl->itdb, NULL, position + 1);
-            else
-                plitem = add_new_pl_user_name(pl->itdb, NULL, position);
+            plitem = add_new_pl_user_name(pl->itdb, NULL, pm_adjust_for_drop_pos(position, pos));
 
             if (plitem) {
                 /* copy files from iPod if necessary */
@@ -650,10 +647,8 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
         }
         else { /* drop between playlists */
             Playlist *plitem;
-            if (pos == GTK_TREE_VIEW_DROP_AFTER)
-                plitem = add_text_plain_to_playlist(pl->itdb, NULL, data_copy, position + 1, NULL, NULL);
-            else
-                plitem = add_text_plain_to_playlist(pl->itdb, NULL, data_copy, position, NULL, NULL);
+            plitem = add_text_plain_to_playlist(pl->itdb, NULL, data_copy,
+                        pm_adjust_for_drop_pos(position, pos), NULL, NULL);
 
             if (plitem) {
                 gdk_drag_status(dc, GDK_ACTION_COPY, time);
@@ -689,12 +684,9 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
                  * playlist */
                 switch (pos) {
                 case GTK_TREE_VIEW_DROP_BEFORE:
-                    pl_d = itdb_playlist_duplicate(pl_s);
-                    gp_playlist_add(pl->itdb, pl_d, position);
-                    break;
                 case GTK_TREE_VIEW_DROP_AFTER:
                     pl_d = itdb_playlist_duplicate(pl_s);
-                    gp_playlist_add(pl->itdb, pl_d, position + 1);
+                    gp_playlist_add(pl->itdb, pl_d, pm_adjust_for_drop_pos(position, pos));
                     break;
                 default:
                     pl_d = pl;
@@ -708,16 +700,6 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
                 pm_get_iter_for_playlist(pl_s, &iter_s);
                 switch (pos) {
                 case GTK_TREE_VIEW_DROP_BEFORE:
-                    if (prefs_get_int("pm_sort") != SORT_NONE) {
-                        gtkpod_statusbar_message(_("Can't reorder sorted treeview."));
-                        gtk_drag_finish(dc, FALSE, FALSE, time);
-                        g_free(data_copy);
-                        return;
-                    }
-                    gtk_tree_store_move_before(GTK_TREE_STORE (model), &iter_s, &iter_d);
-                    pm_rows_reordered();
-                    gtk_drag_finish(dc, TRUE, FALSE, time);
-                    break;
                 case GTK_TREE_VIEW_DROP_AFTER:
                     if (prefs_get_int("pm_sort") != SORT_NONE) {
                         gtkpod_statusbar_message(_("Can't reorder sorted treeview."));
@@ -725,7 +707,11 @@ static void pm_drag_data_received(GtkWidget *widget, GdkDragContext *dc, gint x,
                         g_free(data_copy);
                         return;
                     }
-                    gtk_tree_store_move_after(GTK_TREE_STORE (model), &iter_s, &iter_d);
+                    if (pos == GTK_TREE_VIEW_DROP_BEFORE)
+                        gtk_tree_store_move_before(GTK_TREE_STORE (model), &iter_s, &iter_d);
+                    else
+                        gtk_tree_store_move_after(GTK_TREE_STORE (model), &iter_s, &iter_d);
+
                     pm_rows_reordered();
                     gtk_drag_finish(dc, TRUE, FALSE, time);
                     break;
