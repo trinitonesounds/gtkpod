@@ -75,7 +75,7 @@ typedef struct _ClarityCoverClass   ClarityCoverClass;
 struct _ClarityCover
 {
   /*<private>*/
-  ClutterGroup parent_instance;
+  ClutterActor parent_instance;
 
   /* structure containing private members */
   /*<private>*/
@@ -86,7 +86,7 @@ struct _ClarityCover
 struct _ClarityCoverClass
 {
   /*<private>*/
-  ClutterGroupClass parent_class;
+  ClutterActorClass parent_class;
 };
 
 /* public API */
@@ -96,10 +96,6 @@ void clarity_cover_set_album_item (ClarityCover *self, AlbumItem *item);
 gint clarity_cover_get_index(ClarityCover *self);
 
 void clarity_cover_set_index(ClarityCover *self, gint index);
-
-void clarity_cover_clear_rotation_behaviour(ClarityCover *self);
-
-void clarity_cover_set_rotation_behaviour(ClarityCover *self, ClutterAlpha *alpha, int final_angle, ClutterRotateDirection direction);
 
 gchar *clarity_cover_get_title(ClarityCover *self);
 

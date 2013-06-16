@@ -41,7 +41,11 @@ G_DEFINE_TYPE( ClarityCanvas, clarity_canvas, GTK_TYPE_BOX);
 #define CLARITY_CANVAS_GET_PRIVATE(obj) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((obj), CLARITY_TYPE_CANVAS, ClarityCanvasPrivate))
 
-#define MAX_ANGLE                       70
+#define ANGLE_CCW                        70
+#define ANGLE_CW                           ANGLE_CCW - 360
+#define MIRROR_ANGLE_CW           360 - ANGLE_CCW
+#define MIRROR_ANGLE_CCW         ANGLE_CCW * -1
+#define TEXT_SPACE                         2
 #define COVER_SPACE                    50
 #define FRONT_COVER_SPACE     150
 #define MAX_SCALE                          1.4
@@ -58,8 +62,6 @@ struct _ClarityCanvasPrivate {
     // clutter items
     GList *covers;
     ClutterActor *container;
-    ClutterTimeline *timeline;
-    ClutterAlpha *alpha;
     ClutterActor *title_text;
     ClutterActor *artist_text;
 
@@ -80,12 +82,6 @@ static void clarity_canvas_finalize(GObject *gobject) {
 
     //FIXME
 //    g_list_free_full(priv->covers, clarity_cover_destroy);
-
-    if (G_IS_OBJECT(priv->alpha))
-        g_object_unref(priv->alpha);
-
-    if (G_IS_OBJECT(priv->timeline))
-        g_object_unref(priv->timeline);
 
     if (GTK_IS_WIDGET(priv->embed))
         gtk_widget_destroy(priv->embed);
@@ -120,15 +116,39 @@ static void _update_text(ClarityCanvasPrivate *priv) {
     g_free(title);
     g_free(artist);
 
-    clutter_actor_raise_top(priv->title_text);
-    clutter_actor_raise_top(priv->artist_text);
+    // Ensure the text is above the artwork container
+    ClutterActor* stage = clutter_actor_get_stage(priv->container);
+    clutter_actor_set_child_above_sibling(stage, priv->title_text, priv->container);
+    clutter_actor_set_child_above_sibling(stage, priv->artist_text, priv->container);
 
-    gfloat artistx = (clutter_actor_get_width(priv->artist_text) / 2) * -1;
-    gfloat artisty = FLOOR - (clarity_cover_get_artwork_height(ccover) * MAX_SCALE);
+    /*
+     * Find the position of the artwork container. This co-ordinate will be at the centre
+     * of the central (front) artwork cover.
+     */
+    gfloat contx, conty;
+    clutter_actor_get_position(priv->container, &contx, &conty);
+
+    /* artist text x co-ordinate is the centre of the container minus half the width of the text */
+    gfloat artistx = contx - (clutter_actor_get_width(priv->artist_text) / 2);
+
+    /*
+     * artist text y co-ordinate is the centre of the container minus the total of
+     * half the centre cover's height, the height of the artist text, the space
+     * between the text and the height of the title text.
+     */
+    gfloat artisty = conty - (clarity_cover_get_artwork_height(ccover) / 2)
+                                    - clutter_actor_get_height(priv->artist_text)
+                                    - TEXT_SPACE
+                                    - clutter_actor_get_height(priv->title_text);
+
     clutter_actor_set_position(priv->artist_text, artistx, artisty);
 
-    gfloat titlex = (clutter_actor_get_width(priv->title_text) / 2) * -1;
-    gfloat titley = artisty - clutter_actor_get_height(priv->artist_text) - 2;
+    /* title text x co-ordinate is the centre of the container minus half the width of the text */
+    gfloat titlex = contx - (clutter_actor_get_width(priv->title_text) / 2);
+
+    /* title text y co-ordinate is above the height of the artist text and TEXT_SPACE */
+    gfloat titley = artisty - clutter_actor_get_height(priv->artist_text) - TEXT_SPACE;
+
     clutter_actor_set_position(priv->title_text, titlex, titley);
 }
 
@@ -149,7 +169,8 @@ gboolean clarity_canvas_is_blocked(ClarityCanvas *self) {
     return priv->blocked;
 }
 
-static void _preview_cover(ClarityCanvasPrivate *priv) {
+static void _preview_cover(ClarityCanvas *self) {
+    ClarityCanvasPrivate *priv = self->priv;
     if (!priv->model)
         return;
 
@@ -193,7 +214,7 @@ static gint _on_main_cover_image_clicked_cb(GtkWidget *widget, GdkEvent *event, 
         clarity_canvas_block_change(self, FALSE);
     }
     else if (mbutton == 1) {
-        _preview_cover(priv);
+        _preview_cover(self);
     }
     else if ((mbutton == 3) && (event->button.state & GDK_SHIFT_MASK)) {
         /* Right mouse button clicked and shift pressed.
@@ -247,13 +268,12 @@ static void clarity_canvas_init(ClarityCanvas *self) {
     priv->artist_text = clutter_text_new();
     clutter_text_set_font_name(CLUTTER_TEXT(priv->title_text), "Sans");
 
-    priv->container = clutter_group_new();
+    priv->container = clutter_actor_new();
     clutter_actor_set_reactive(priv->container, TRUE);
     priv->preview_signal = g_signal_connect (self,
                                 "button-press-event",
                                 G_CALLBACK (_on_main_cover_image_clicked_cb),
                                 priv);
-    clutter_container_add(CLUTTER_CONTAINER(priv->container), priv->title_text, priv->artist_text, NULL);
 
     priv->embed = gtk_clutter_embed_new();
     /*
@@ -269,15 +289,15 @@ static void clarity_canvas_init(ClarityCanvas *self) {
                   G_CALLBACK(_embed_widget_size_allocated_cb), priv);
 
     ClutterActor *stage = gtk_clutter_embed_get_stage(GTK_CLUTTER_EMBED(priv->embed));
-    clutter_container_add_actor(CLUTTER_CONTAINER(stage), priv->container);
+    clutter_actor_add_child(stage, priv->container);
+    clutter_actor_add_child(stage, priv->title_text);
+    clutter_actor_add_child(stage, priv->artist_text);
 
     gtk_widget_show(priv->embed);
 
     gtk_box_pack_start(GTK_BOX(self), priv->embed, TRUE, TRUE, 0);
 
     priv->covers = NULL;
-    priv->timeline = clutter_timeline_new(1600);
-    priv->alpha = clutter_alpha_new_full(priv->timeline, CLUTTER_EASE_OUT_EXPO);
     priv->curr_index = 0;
     priv->blocked = FALSE;
 
@@ -305,7 +325,7 @@ GdkRGBA *clarity_canvas_get_background_color(ClarityCanvas *self) {
     ClutterColor *ccolor;
     ccolor = g_malloc(sizeof(ClutterColor));
 
-    clutter_stage_get_color(CLUTTER_STAGE(stage), ccolor);
+    clutter_actor_get_background_color(stage, ccolor);
     g_return_val_if_fail(ccolor, NULL);
 
     GdkRGBA *rgba;
@@ -359,7 +379,7 @@ void clarity_canvas_set_background_color(ClarityCanvas *self, const gchar *color
     ccolor = g_malloc(sizeof(ClutterColor));
 
     clutter_color_from_string(ccolor, color_string);
-    clutter_stage_set_color(CLUTTER_STAGE(stage), ccolor);
+    clutter_actor_set_background_color(stage, ccolor);
 }
 
 void clarity_canvas_set_text_color(ClarityCanvas *self, const gchar *color_string) {
@@ -386,7 +406,7 @@ void clarity_canvas_clear(ClarityCanvas *self) {
         while(iter) {
             ClarityCover *ccover = iter->data;
             // cover is not referenced anywhere else so it should be destroyed too
-            clutter_container_remove(CLUTTER_CONTAINER(priv->container), CLUTTER_ACTOR(ccover), NULL);
+            clutter_actor_remove_child(priv->container, CLUTTER_ACTOR(ccover));
             iter = iter->next;
         }
 
@@ -402,24 +422,89 @@ void clarity_canvas_clear(ClarityCanvas *self) {
     priv->curr_index = 0;
 }
 
-static void _calculate_index_angle_and_dir (gint dist_from_front, enum DIRECTION dir, gint *angle, ClutterRotateDirection *rotation_dir) {
-    /* The front item direction depends on the direction we came from */
-    if (dist_from_front == 0) {
-        *rotation_dir =  (dir == MOVE_RIGHT ? CLUTTER_ROTATE_CCW : CLUTTER_ROTATE_CW);
-        *angle = 0;
+/**
+ * A positive rotation angle results in a CCW spin. So depending on the starting angle
+ * either a positive or negative value must be calculated in order to result in the smallest
+ * rotation, as opposed to a full spin.
+ */
+static gint _calculate_index_angle (gint new_position, enum DIRECTION dir, double current_angle) {
+    gint angle = -1;
+
+    if (new_position >= 2) {
+
+        if (current_angle == 0 || current_angle == 360)
+            // Need to go CCW to reach the correct angle and avoid a full spin
+            angle = MIRROR_ANGLE_CCW;
+        else {
+            // Nothing to do, leave the angle alone
+            angle = current_angle;
+        }
+
+    } else if (new_position <= -2) {
+
+        if (current_angle == 0 || current_angle == 360)
+            // Need to go CCW to reach the correct angle and avoid a full spin
+            angle = ANGLE_CCW;
+        else {
+            // Nothing to do, leave the angle alone
+            angle = current_angle;
+        }
+
+    } else if (new_position == 1) {
+
+        if (dir == MOVE_RIGHT) {
+            // Moving from left to right so from 0 / 360 to -70 / 290
+            if (current_angle == 0 || current_angle == ANGLE_CCW)
+                // From 0 or 70, the smallest rotation is to -70, which ensures we
+                // are going CW hence no full spin.
+                angle = MIRROR_ANGLE_CCW;
+            else {
+                // An angle of 360 will move CW to 290
+                angle = MIRROR_ANGLE_CW;
+            }
+
+        } else {
+            // Moving from right to left then this needs no change
+            // since the old position was 2
+            angle = current_angle;
+        }
+
+    } else if (new_position == 0) {
+
+        if (abs(current_angle) > 180)
+            // Whether the angle was -290 or 290, the smallest rotation
+            // is to 360 and avoids a full spin
+            angle = 360;
+        else {
+            // Angles of 70 and -70 are closest to 0 hence avoiding a full spin
+            angle = 0;
+        }
+
+    } else if (new_position == -1) {
+
+        if (dir == MOVE_LEFT) {
+            // Moving from right to left so from 0 / 360 to 70 / -290
+            if (current_angle == 0) {
+                // Since the spin goes CCW, a simple rotation of the smaller
+                // positive angle, ie. 70, is sufficient.
+                angle = ANGLE_CCW;
+            } else if (current_angle == MIRROR_ANGLE_CW) {
+                // Odd case that to get from 290 to 70 but going CCW, need to
+                // actually end up at (360 + 70).
+                angle = 360 + ANGLE_CCW;
+            } else {
+                // An angle of 360 will move CW to -290 and avoid a full spin
+                angle = ANGLE_CW;
+            }
+
+        } else {
+            // Moving from left to right then this needs no change
+            // since the old position was -2
+            angle = current_angle;
+        }
     }
 
-    /* Item on the right */
-    else if (dist_from_front > 0) {
-        *rotation_dir = CLUTTER_ROTATE_CCW;
-        *angle = 360 - MAX_ANGLE;
-    }
-
-    /* Item on the left */
-    else if (dist_from_front < 0) {
-        *rotation_dir = CLUTTER_ROTATE_CW;
-        *angle = MAX_ANGLE;
-    }
+    return angle;
 }
 
 static gint _calculate_index_distance (gint dist_from_front) {
@@ -443,12 +528,12 @@ static gint _calculate_index_opacity (gint dist_from_front) {
 }
 
 static void _display_clarity_cover(ClarityCover *ccover, gint index) {
-    ClutterTimeline  *timeline = clutter_timeline_new(1600 * 5);
-    ClutterAlpha *alpha = clutter_alpha_new_full (timeline, CLUTTER_EASE_OUT_EXPO);
+    clutter_actor_save_easing_state (CLUTTER_ACTOR(ccover));
+    clutter_actor_set_easing_mode (CLUTTER_ACTOR(ccover), CLUTTER_EASE_OUT_EXPO);
+    clutter_actor_set_easing_duration (CLUTTER_ACTOR(ccover), 1600);
 
     gint opacity = _calculate_index_opacity(index);
-    clutter_actor_animate_with_alpha(CLUTTER_ACTOR(ccover), alpha, "opacity", opacity, NULL);
-    clutter_timeline_start (timeline);
+    clutter_actor_set_opacity (CLUTTER_ACTOR(ccover), opacity);
 }
 
 static void _set_cover_position(ClarityCover *ccover, gint index) {
@@ -463,11 +548,12 @@ static gboolean _create_cover_actors(ClarityCanvasPrivate *priv, AlbumItem *albu
     g_return_val_if_fail(priv, FALSE);
 
     ClarityCover *ccover = clarity_cover_new();
+
     clutter_actor_set_opacity(CLUTTER_ACTOR(ccover), 0);
     priv->covers = g_list_insert(priv->covers, ccover, index);
 
-    clutter_container_add_actor(
-                            CLUTTER_CONTAINER(priv->container),
+    clutter_actor_add_child(
+                            priv->container,
                             CLUTTER_ACTOR(ccover));
 
     clarity_cover_set_album_item(ccover, album_item);
@@ -482,24 +568,20 @@ static gboolean _create_cover_actors(ClarityCanvasPrivate *priv, AlbumItem *albu
     float scale = _calculate_index_scale(index);
 
     gint angle;
-    ClutterRotateDirection rotation_dir;
-    _calculate_index_angle_and_dir(index, MOVE_LEFT, &angle, &rotation_dir);
+    if (index > 0)
+        angle = MIRROR_ANGLE_CW;
+    else if (index < 0)
+        angle = ANGLE_CCW;
+    else
+        angle = 0;
 
-    clutter_actor_set_rotation(
-            CLUTTER_ACTOR(ccover),
-            CLUTTER_Y_AXIS,
-            angle,
-            clutter_actor_get_width(CLUTTER_ACTOR(ccover)) / 2,
-            0, 0);
+    angle = _calculate_index_angle(index, MOVE_LEFT, angle);
 
-    clutter_actor_set_scale_full(
-            CLUTTER_ACTOR(ccover),
-            scale,
-            scale,
-            clarity_cover_get_artwork_width(ccover) / 2,
-            clarity_cover_get_artwork_height(ccover) / 2);
+    clutter_actor_set_pivot_point(CLUTTER_ACTOR(ccover), 0.5f, 0.5f);
+    clutter_actor_set_rotation_angle(CLUTTER_ACTOR(ccover), CLUTTER_Y_AXIS, angle);
+    clutter_actor_set_scale(CLUTTER_ACTOR(ccover), scale, scale);
 
-    clutter_actor_lower_bottom(CLUTTER_ACTOR(ccover));
+    clutter_actor_set_child_below_sibling(priv->container, CLUTTER_ACTOR(ccover), NULL);
 
     _display_clarity_cover(ccover, index);
 
@@ -527,8 +609,8 @@ void _destroy_cover(ClarityCanvas *cc, gint index) {
 
     priv->covers = g_list_remove(priv->covers, ccover);
 
-    clutter_container_remove_actor(
-                               CLUTTER_CONTAINER(priv->container),
+    clutter_actor_remove_child(
+                               priv->container,
                                CLUTTER_ACTOR(ccover));
 
     clarity_cover_destroy(CLUTTER_ACTOR(ccover));
@@ -583,17 +665,41 @@ void clarity_canvas_init_album_model(ClarityCanvas *self, AlbumModel *model) {
     g_idle_add(_init_album_model_idle, self);
 }
 
-static void _clear_rotation_behaviours(GList *covers) {
-    //Clear rotation behaviours
+static void _clear_cover_transitions(GList *covers) {
     GList *iter = covers;
     while (iter) {
         ClarityCover *ccover = iter->data;
-        clarity_cover_clear_rotation_behaviour(ccover);
+        clutter_actor_remove_all_transitions(CLUTTER_ACTOR(ccover));
         iter = iter->next;
     }
 }
 
+static void _clear_rotation_behaviours(GList *covers, gint current_index) {
+    //Clear rotation behaviours
+    for (gint i = 0; i < g_list_length(covers); ++i) {
+        ClarityCover *ccover = g_list_nth_data(covers, i);
+        clutter_actor_set_easing_duration (CLUTTER_ACTOR(ccover), 0);
+        /*
+         * Reset the rotation angle since it is the only property that has to be calculated
+         * based on its current property value.
+         */
+        gint index = i - current_index;
+        if (index >= 1)
+            clutter_actor_set_rotation_angle(CLUTTER_ACTOR(ccover), CLUTTER_Y_AXIS, MIRROR_ANGLE_CW);
+        else if (index == 0)
+            clutter_actor_set_rotation_angle(CLUTTER_ACTOR(ccover), CLUTTER_Y_AXIS, 0);
+        else
+            clutter_actor_set_rotation_angle(CLUTTER_ACTOR(ccover), CLUTTER_Y_AXIS, ANGLE_CCW);
+    }
+}
+
 static void _animate_indices(ClarityCanvasPrivate *priv, gint direction, gint increment) {
+
+    /* Stop any animations already in progress */
+    _clear_cover_transitions(priv->covers);
+
+    /* Clear all current rotation behaviours */
+    _clear_rotation_behaviours(priv->covers, priv->curr_index);
 
     for (gint i = 0; i < g_list_length(priv->covers); ++i) {
         ClarityCover *ccover = g_list_nth_data(priv->covers, i);
@@ -603,33 +709,33 @@ static void _animate_indices(ClarityCanvasPrivate *priv, gint direction, gint in
         gint pos = 0;
         gint opacity = 0;
         gint angle = 0;
-        ClutterRotateDirection rotation_dir;
+        double current_rotation;
 
         opacity = _calculate_index_opacity(dist);
         scale = _calculate_index_scale(dist);
         pos = _calculate_index_distance(dist);
-        _calculate_index_angle_and_dir(dist, direction, &angle, &rotation_dir);
-
-        /*Rotation*/
-        clarity_cover_set_rotation_behaviour(ccover, priv->alpha, angle, rotation_dir);
-
-        /* Opacity */
-        clutter_actor_animate_with_alpha (CLUTTER_ACTOR(ccover), priv->alpha,
-                        "opacity", opacity,
-                        NULL);
-
         gfloat w = clarity_cover_get_artwork_width(ccover);
         gfloat h = clarity_cover_get_artwork_height(ccover);
 
+        clutter_actor_save_easing_state (CLUTTER_ACTOR(ccover));
+        clutter_actor_set_easing_mode (CLUTTER_ACTOR(ccover), CLUTTER_EASE_OUT_EXPO);
+        clutter_actor_set_easing_duration (CLUTTER_ACTOR(ccover), 1600);
+
         /* Position and scale */
-        clutter_actor_animate_with_alpha (CLUTTER_ACTOR(ccover), priv->alpha,
-                        "scale-x",          scale,
-                        "scale-y",          scale,
-                        "scale-center-x" ,  w / 2,
-                        "scale-center-y", h / 2,
-                        "x", pos - (w / 2),
-                        "y", FLOOR - h,
-                        NULL);
+        clutter_actor_set_scale(CLUTTER_ACTOR(ccover), scale, scale);
+        clutter_actor_set_position(CLUTTER_ACTOR(ccover), pos - (w / 2), FLOOR - h);
+        clutter_actor_set_pivot_point(CLUTTER_ACTOR(ccover), 0.5f, 0.5f);
+
+        /*Rotation*/
+        current_rotation = clutter_actor_get_rotation_angle(CLUTTER_ACTOR(ccover), CLUTTER_Y_AXIS);
+        angle = _calculate_index_angle(dist, direction, current_rotation);
+
+        if(current_rotation != angle) {
+            clutter_actor_set_rotation_angle(CLUTTER_ACTOR(ccover), CLUTTER_Y_AXIS, angle);
+        }
+
+        /* Opacity */
+        clutter_actor_set_opacity (CLUTTER_ACTOR(ccover), opacity);
      }
 }
 
@@ -645,31 +751,22 @@ static void _restore_z_order(ClarityCanvasPrivate *priv) {
     GList *iter = main_cover ->prev;
     while(iter) {
         ClarityCover *ccover = iter->data;
-        clutter_actor_lower_bottom(CLUTTER_ACTOR(ccover));
+        clutter_actor_set_child_below_sibling(priv->container, CLUTTER_ACTOR(ccover), NULL);
         iter = iter->prev;
     }
 
     iter = main_cover->next;
     while(iter) {
         ClarityCover *ccover = iter->data;
-        clutter_actor_lower_bottom(CLUTTER_ACTOR(ccover));
+        clutter_actor_set_child_below_sibling(priv->container, CLUTTER_ACTOR(ccover), NULL);
         iter = iter->next;
     }
 }
 
 static void _move(ClarityCanvasPrivate *priv, enum DIRECTION direction, gint increment) {
 
-    /* Stop any animation */
-    clutter_timeline_stop(priv->timeline);
-
-    /* Clear all current rotation behaviours */
-    _clear_rotation_behaviours(priv->covers);
-
     /* Animate to move left */
     _animate_indices (priv, direction, increment);
-
-    /* Begin the animation */
-    clutter_timeline_start(priv->timeline);
 
     priv->curr_index += ((direction * -1) * increment);
 

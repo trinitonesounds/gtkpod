@@ -94,7 +94,7 @@ PKG_CHECK_MODULES(ID3TAG, id3tag >= 0.15, [have_id3="yes"], [AC_MSG_FAILURE([***
 
 dnl --- optional dependencies ---
 echo "Checking optional dependencies"
-PKG_CHECK_MODULES(CLUTTER_GTK, [clutter-gtk-1.0 >= 1.0], [have_clutter_gtk="yes"], [have_clutter_gtk="no"])
+PKG_CHECK_MODULES(CLUTTER_GTK, [clutter-gtk-1.0 >= 1.2], [have_clutter_gtk="yes"], [have_clutter_gtk="no"])
 PKG_CHECK_MODULES(CURL, [libcurl >= 7.10.0], [have_curl="yes"], [have_curl="no"])
 PKG_CHECK_MODULES(WEBKIT, [webkitgtk-3.0 >= 1.3], [have_webkit="yes"], [have_webkit="no"])
 PKG_CHECK_MODULES(GSTREAMER, gstreamer-0.10 >= 0.10.25 gstreamer-base-0.10 >= 0.10.25 gstreamer-plugins-base-0.10 >= 0.10.25 gstreamer-interfaces-0.10 >= 0.10.25 gstreamer-pbutils-0.10 >= 0.10.25, [have_gstreamer="yes"], [have_gstreamer="no"])

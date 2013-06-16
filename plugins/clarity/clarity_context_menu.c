@@ -49,6 +49,9 @@ void clarity_context_menu_init(ClarityCanvas *ccanvas) {
 
     GtkWidget *menu = NULL;
 
+    AlbumItem *item = clarity_canvas_get_current_album_item(ccanvas);
+    gtkpod_set_selected_tracks(item->tracks);
+
     if (gtkpod_get_selected_tracks()) {
         menu = gtk_menu_new();
 

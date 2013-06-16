@@ -62,12 +62,11 @@ static void clarity_preview_init(ClarityPreview *self) {
 
     priv = self->priv = CLARITY_PREVIEW_GET_PRIVATE (self);
 
-    priv->container = clutter_group_new();
-    clutter_actor_set_opacity(CLUTTER_ACTOR(priv->container), 0);
+    priv->container = clutter_actor_new();
 
     priv->embed = gtk_clutter_embed_new();
-        ClutterActor *stage = gtk_clutter_embed_get_stage(GTK_CLUTTER_EMBED(priv->embed));
-    clutter_container_add_actor(CLUTTER_CONTAINER(stage), priv->container);
+    ClutterActor *stage = gtk_clutter_embed_get_stage(GTK_CLUTTER_EMBED(priv->embed));
+    clutter_actor_add_child(stage, priv->container);
 
     gtk_window_set_decorated(GTK_WINDOW(self), FALSE);
     gtk_window_set_resizable (GTK_WINDOW (self), FALSE);
@@ -99,7 +98,7 @@ static GdkPixbuf *_get_album_artwork(AlbumItem *item) {
     while(iter && !imgbuf) {
         Track *track = iter->data;
         etd = track->userdata;
-        if (etd && etd->thumb_path_locale) {
+        if (etd && etd->thumb_path_locale && strlen(etd->thumb_path_locale) > 0) {
             GError *error = NULL;
             imgbuf = gdk_pixbuf_new_from_file(etd->thumb_path_locale, &error);
             if (error != NULL) {
@@ -124,7 +123,7 @@ static GdkPixbuf *_get_album_artwork(AlbumItem *item) {
 
 GtkWidget *clarity_preview_new(AlbumItem *item) {
     GError *error = NULL;
-    ClutterActor *texture;
+    ClutterContent *artwork;
     GdkPixbuf *image;
     GdkPixbuf *scaled;
 
@@ -155,13 +154,21 @@ GtkWidget *clarity_preview_new(AlbumItem *item) {
 
     /* Scale the original image */
     scaled = gdk_pixbuf_scale_simple(image, pixwidth, pixheight, GDK_INTERP_BILINEAR);
+    clutter_actor_set_width(priv->container, gdk_pixbuf_get_width(scaled));
+    clutter_actor_set_height(priv->container, gdk_pixbuf_get_height(scaled));
 
-    texture = gtk_clutter_texture_new();
-    gtk_clutter_texture_set_from_pixbuf (GTK_CLUTTER_TEXTURE(texture), scaled, &error);
+    artwork = clutter_image_new();
+    clutter_image_set_data( CLUTTER_IMAGE (artwork),
+                                              gdk_pixbuf_get_pixels (scaled),
+                                              gdk_pixbuf_get_has_alpha (scaled)
+                                                          ? COGL_PIXEL_FORMAT_RGBA_8888
+                                                          : COGL_PIXEL_FORMAT_RGB_888,
+                                              gdk_pixbuf_get_width(scaled),
+                                              gdk_pixbuf_get_height(scaled),
+                                              gdk_pixbuf_get_rowstride (scaled),
+                                              &error);
     if (!error) {
-        clutter_container_add_actor(
-                CLUTTER_CONTAINER(priv->container),
-                CLUTTER_ACTOR(texture));
+        clutter_actor_set_content (priv->container, artwork);
     }
     else {
         g_warning("Failed to load cover art preview: %s", error->message);
@@ -169,15 +176,6 @@ GtkWidget *clarity_preview_new(AlbumItem *item) {
     }
 
     g_object_unref(image);
-
-    ClutterTimeline *timeline = clutter_timeline_new(1600);
-    clutter_actor_animate_with_timeline(
-            CLUTTER_ACTOR(priv->container),
-            CLUTTER_EASE_OUT_CUBIC,
-            timeline,
-            "opacity", 255,
-            NULL);
-    clutter_timeline_start(timeline);
 
     return GTK_WIDGET(preview);
 }

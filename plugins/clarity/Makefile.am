@@ -31,6 +31,7 @@ plugin_LTLIBRARIES = libclarity.la
 libclarity_la_SOURCES = plugin.c plugin.h \
 							  album_model.c album_model.h \
 							  clarity_cover.c clarity_cover.h \
+							  clarity_flip_effect.c clarity_flip_effect.h \
 							  clarity_canvas.c clarity_canvas.h \
 							  clarity_widget.c clarity_widget.h \
 							  clarity_preview.c clarity_preview.h \
