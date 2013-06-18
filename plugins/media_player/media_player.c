@@ -373,13 +373,18 @@ static void thread_play_song() {
         return;
 
     Track *tr = g_list_nth_data(player->tracks, player->track_index);
-    if (!tr)
+    if (!tr) {
+        gtkpod_statusbar_message(_("Failed to play track: Track is no longer available"));
         return;
+    }
 
     error = NULL;
     track_name = get_file_name_from_source(tr, SOURCE_PREFER_LOCAL);
-    if (!track_name)
+    if (!track_name) {
+        gtkpod_statusbar_message(_("Failed to play track: Unable to find the file for the track '%s'"), tr->title);
+        stop_song();
         return;
+    }
 
     /* init GStreamer */
     player->loop = g_main_loop_new(NULL, FALSE); // make new loop
@@ -388,6 +393,7 @@ static void thread_play_song() {
     if (error) {
         /* Translators: %s is an error message */
         gtkpod_statusbar_message(_("Failed to play track: %s"), error->message);
+        stop_song();
         g_free(uri);
         return;
     }
@@ -395,6 +401,7 @@ static void thread_play_song() {
     player->play_element = gst_element_factory_make("playbin2", "play");
     if (!player->play_element) {
         gtkpod_statusbar_message(_("Failed to play track: Cannot create a play element. Ensure that all gstreamer plugins are installed"));
+        stop_song();
         return;
     }
 
@@ -458,6 +465,9 @@ void set_selected_tracks(GList *tracks) {
 
     Track *track = player->tracks->data;
     set_song_label(track);
+
+    // Reset the track index
+    player->track_index = 0;
 }
 
 void init_media_player(GtkWidget *parent) {
