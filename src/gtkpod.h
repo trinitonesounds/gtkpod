@@ -34,6 +34,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <glib.h>
 #include <glib/gprintf.h>
 
 #define USER_PROFILE_NAME "user"
@@ -42,5 +43,6 @@
 #define GTKPOD_ICON "gtkpod"
 
 void gtkpod_init(int argc, char *argv[]);
+const GOptionEntry *gtkpod_get_option_entries(void);
 
 #endif /* GTKPOD_H_ */
