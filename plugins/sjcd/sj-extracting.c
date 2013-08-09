@@ -675,9 +675,7 @@ finished_actions (void)
     brasero_drive_eject (drive, FALSE, NULL);
   }
 
-  gdk_threads_enter();
-  import_files_to_itdb(NULL);
-  gdk_threads_leave();
+  gdk_threads_add_idle((GSourceFunc) import_files_to_itdb, NULL);
 }
 
 /**

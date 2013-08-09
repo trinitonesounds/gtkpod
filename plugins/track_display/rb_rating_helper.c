@@ -124,23 +124,7 @@ rb_rating_render_stars (GtkWidget *widget,
 
 	for (i = 0; i < RB_RATING_MAX_SCORE; i++) {
 		GdkPixbuf *buf;
-		GtkStateType state;
 		gint star_offset;
-		int offset;
-
-		if (selected == TRUE) {
-			offset = 0;
-			if (gtk_widget_has_focus (widget))
-				state = GTK_STATE_SELECTED;
-			else
-				state = GTK_STATE_ACTIVE;
-		} else {
-			offset = 120;
-			if (!gtk_widget_get_sensitive (widget))
-				state = GTK_STATE_INSENSITIVE;
-			else
-				state = GTK_STATE_NORMAL;
-		}
 
 		if (i < rating)
 			buf = pixbufs->pix_star;

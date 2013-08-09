@@ -165,17 +165,10 @@ struct GaplessData {
 };
 
 struct _Conversion {
-#if GLIB_CHECK_VERSION(2,31,0)
     GMutex mutex; /* mutex for this struct          */
     GCond finished_cond; /* signals if a new track is added to the finished list */
     GCond dirsize_cond; /* signal when dirsize has been updated     */
     GCond prune_cond; /* signal when dir has been pruned          */
-#else
-    GMutex *mutex; /* mutex for this struct          */
-    GCond *finished_cond; /* signals if a new track is added to the finished list */
-    GCond *dirsize_cond; /* signal when dirsize has been updated     */
-    GCond *prune_cond; /* signal when dir has been pruned          */
-#endif
 
     GList *scheduled; /* tracks scheduled for conversion          */
     GList *processing; /* tracks currently being converted         */
@@ -267,100 +260,49 @@ enum {
 static Conversion *conversion = NULL;
 
 static GThread *_create_thread(GThreadFunc func, gpointer userdata) {
-#if GLIB_CHECK_VERSION(2,31,0)
     return g_thread_new (CONVERSION_THREAD, func, userdata);
-#else
-    return g_thread_create_full(func,
-            userdata,
-            0, /* stack size */
-            FALSE, /* joinable   */
-            TRUE, /* bound      */
-            G_THREAD_PRIORITY_NORMAL, NULL); /* error      */
-#endif
 }
 
 static void _create_mutex(Conversion *c) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_mutex_init(&c->mutex);
-#else
-    c->mutex = g_mutex_new ();
-#endif
 }
 
 static gboolean _try_lock(Conversion *c) {
-#if GLIB_CHECK_VERSION(2,31,0)
     return g_mutex_trylock(&c->mutex);
-#else
-    return g_mutex_trylock(c->mutex);
-#endif
 }
 
 static void _lock_mutex(Conversion *c) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_mutex_lock (&c->mutex);
-#else
-    g_mutex_lock (c->mutex);
-#endif
 }
 
 static void _unlock_mutex(Conversion *c) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_mutex_unlock (&c->mutex);
-#else
-    g_mutex_unlock (c->mutex);
-#endif
 }
 
 static void _create_cond(Conversion *c) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_cond_init(&c->finished_cond);
     g_cond_init(&c->dirsize_cond);
     g_cond_init(&c->prune_cond);
-#else
-    c->finished_cond = g_cond_new ();
-    c->dirsize_cond = g_cond_new ();
-    c->prune_cond = g_cond_new ();
-#endif
 }
 
 static void _broadcast_prune_cond(Conversion *c) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_cond_broadcast (&c->prune_cond);
-#else
-    g_cond_broadcast (c->prune_cond);
-#endif
 }
 
 static void _broadcast_dirsize_cond(Conversion *c) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_cond_broadcast (&c->dirsize_cond);
-#else
-    g_cond_broadcast (c->dirsize_cond);
-#endif
 }
 
 static void _broadcast_finished_cond(Conversion *c) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_cond_broadcast (&c->finished_cond);
-#else
-    g_cond_broadcast (c->finished_cond);
-#endif
 }
 
 static void _wait_prune_cond(Conversion *c) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_cond_wait (&c->prune_cond, &c->mutex);
-#else
-    g_cond_wait (c->prune_cond, c->mutex);
-#endif
 }
 
 static void _wait_dirsize_cond(Conversion *c) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_cond_wait (&c->dirsize_cond, &c->mutex);
-#else
-    g_cond_wait (c->dirsize_cond, c->mutex);
-#endif
 }
 
 /* Set up conversion infrastructure. Must only be called once. */
@@ -431,8 +373,9 @@ void file_convert_init() {
     file_convert_prefs_changed();
 
     /* start timeout function for the scheduler */
-    conversion->timeout_id = g_timeout_add(100, /* every 100 ms */
-    conversion_scheduler, conversion);
+    conversion->timeout_id = gdk_threads_add_timeout(   100, /* every 100 ms */
+                                                                                            conversion_scheduler,
+                                                                                            conversion);
     g_object_unref(G_OBJECT (log_builder));
 }
 
@@ -1667,9 +1610,7 @@ static gboolean conversion_scheduler(gpointer data) {
 
 //    debug ("conversion_scheduler enter\n");
 
-    gdk_threads_enter();
     if (!_try_lock(conv)) {
-        gdk_threads_leave();
         /* Do not destroy the timeout function by returning FALSE */
         return TRUE;
     }
@@ -1677,7 +1618,6 @@ static gboolean conversion_scheduler(gpointer data) {
     result = conversion_scheduler_unlocked(conv);
 
     file_convert_unlock(conv);
-    gdk_threads_leave();
 
     debug ("conversion_scheduler exit\n");
 

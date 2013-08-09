@@ -40,8 +40,6 @@
 /* callbacks */
 typedef void (*info_update_callback) ();
 
-void info_display_init();
-
 void register_info_update (info_update_callback cb);
 void register_info_update_track_view (info_update_callback cb);
 void register_info_update_playlist_view (info_update_callback cb);

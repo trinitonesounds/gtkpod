@@ -274,7 +274,7 @@ static void pause_or_play_song() {
 
         set_control_state(GST_STATE_PLAYING);
 
-        player->thread = g_thread_create ((GThreadFunc)thread_play_song, NULL, TRUE, &err1);
+        player->thread = g_thread_try_new ("play-song-thread", (GThreadFunc)thread_play_song, NULL, &err1);
         if (!player->thread) {
             /* Translators: %s is an error message */
             gtkpod_statusbar_message(_("GStreamer thread creation failed: %s\n"), err1->message);

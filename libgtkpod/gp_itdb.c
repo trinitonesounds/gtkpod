@@ -785,7 +785,7 @@ void gp_track_cleanup_empty_strings (Track *track)
  * of one local database and one ipod database.
  *
  */
-void gp_init(int argc, char *argv[]) {
+gboolean gp_init(gpointer data) {
     gchar *cfgdir;
 
     cfgdir = prefs_get_cfgdir();
@@ -818,27 +818,31 @@ void gp_init(int argc, char *argv[]) {
     server_setup();
 
     g_free(cfgdir);
+
+    return FALSE;
 }
 
 /**
  * Initialise all the itunes databases
  */
-void gp_init_itdbs() {
+gboolean gp_init_itdbs(gpointer data) {
     gint i;
 
     for (i = 0;; ++i) {
         ExtraiTunesDBData *eitdb;
         iTunesDB *itdb = setup_itdb_n(i);
 
-        if (itdb == NULL)
+        if (itdb == NULL) {
+            gtkpod_statusbar_message(_("Importing of ipods completed."));
             break;
+        }
 
         /* add to the display */
         gp_itdb_add(itdb, -1);
 
         /* update/sync playlists according to options set */
         eitdb = itdb->userdata;
-        g_return_if_fail (eitdb);
+        g_return_val_if_fail (eitdb, FALSE);
         if (eitdb->itdb_imported) {
             /* take care of autosync... */
             sync_all_playlists(itdb);
@@ -850,6 +854,8 @@ void gp_init_itdbs() {
 
     /* Itdbs now ready. Initiate autodetection */
     autodetection_init();
+
+    return FALSE;
 }
 
 /* Create an repository according to the settings in the preferences

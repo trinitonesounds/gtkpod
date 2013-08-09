@@ -70,78 +70,30 @@ enum {
 
 #ifdef G_THREADS_ENABLED
 
-#if GLIB_CHECK_VERSION(2,31,0)
 static GMutex mutex;
 static GCond cond;
-#else
-static GMutex *mutex = NULL;
-static GCond *cond = NULL;
-#endif
 
 static gboolean mutex_data = FALSE;
 #endif
 
 static GThread *_create_thread(GThreadFunc func, gpointer userdata) {
-#if GLIB_CHECK_VERSION(2,31,0)
     return g_thread_new (TOOLS_THREAD, func, userdata);
-#else
-    return g_thread_create (func, userdata, TRUE, NULL);
-#endif
-}
-
-static void _create_cond() {
-#if GLIB_CHECK_VERSION(2,31,0)
-    // As it is static the cond needs no initialisation
-#else
-    if (!cond)
-        cond = g_cond_new ();
-#endif
 }
 
 static void _cond_signal() {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_cond_signal (&cond);
-#else
-    g_cond_signal (cond);
-#endif
 }
 
 static void _cond_timed_wait(glong timeout) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_cond_wait_until (&cond, &mutex, (gint64) timeout);
-#else
-    GTimeVal gtime;
-    g_get_current_time(&gtime);
-    g_time_val_add(&gtime, timeout);
-    g_cond_timed_wait (cond, mutex, &gtime);
-#endif
-}
-
-static void _create_mutex() {
-#if GLIB_CHECK_VERSION(2,31,0)
-    // As it is static the mutex needs no initialisation
-#else
-    if (!mutex)
-        mutex = g_mutex_new ();
-#endif
 }
 
 static void _lock_mutex() {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_mutex_lock (&mutex);
-#else
-    g_return_if_fail (mutex);
-    g_mutex_lock (mutex);
-#endif
 }
 
 static void _unlock_mutex() {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_mutex_unlock (&mutex);
-#else
-    g_return_if_fail (mutex);
-    g_mutex_unlock (mutex);
-#endif
 }
 
 /* Run @command on @track_path.
@@ -414,9 +366,6 @@ void nm_tracks_list(GList *list) {
 
 #ifdef G_THREADS_ENABLED
     GThread *thread = NULL;
-
-    _create_mutex();
-    _create_cond();
 #endif
 
     block_widgets();

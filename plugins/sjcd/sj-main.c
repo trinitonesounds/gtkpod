@@ -549,9 +549,7 @@ AlbumDetails* multiple_album_dialog(GList *albums)
   }
 
   gtk_widget_show_all (dialog);
-  gdk_threads_enter();
   response = gtk_dialog_run (GTK_DIALOG (dialog));
-  gdk_threads_leave();
   gtk_widget_hide (dialog);
 
   if (response == GTK_RESPONSE_DELETE_EVENT) {

@@ -430,11 +430,7 @@ static void anjuta_app_dispose(GObject *widget) {
 }
 
 static void anjuta_app_finalize(GObject *widget) {
-    AnjutaApp *app;
-
     g_return_if_fail(ANJUTA_IS_APP (widget));
-
-    app = ANJUTA_APP (widget);
 
     G_OBJECT_CLASS(parent_class)->finalize(widget);
 }
@@ -482,11 +478,11 @@ static void anjuta_app_instance_init(AnjutaApp *app) {
     gtk_widget_show(app->dock);
     gtk_box_pack_end(GTK_BOX (hbox), app->dock, TRUE, TRUE, 0);
 
-    dockbar = gdl_dock_bar_new(GDL_DOCK(app->dock));
+    dockbar = gdl_dock_bar_new(G_OBJECT(app->dock));
     gtk_widget_show(dockbar);
     gtk_box_pack_start(GTK_BOX (hbox), dockbar, FALSE, FALSE, 0);
 
-    app->layout_manager = gdl_dock_layout_new(GDL_DOCK (app->dock));
+    app->layout_manager = gdl_dock_layout_new(G_OBJECT (app->dock));
     g_signal_connect (app->layout_manager, "notify::dirty",
             G_CALLBACK (on_layout_dirty_notify), app);
 #if (ANJUTA_CHECK_VERSION(3, 6, 2))
@@ -735,7 +731,7 @@ void anjuta_app_install_preferences(AnjutaApp *app) {
     notebook = GTK_WIDGET(gtk_builder_get_object(builder, "General"));
     parent = gtk_widget_get_parent(notebook);
     g_object_ref(notebook);
-    gtk_container_remove(parent, notebook);
+    gtk_container_remove(GTK_CONTAINER(parent), notebook);
     gtk_widget_destroy(parent);
 
     img_path = anjuta_res_get_pixmap_file(ICON_FILE);

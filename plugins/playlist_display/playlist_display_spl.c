@@ -1121,7 +1121,7 @@ static GtkWidget *spl_create_hbox(GtkWidget *spl_window, Itdb_SPLRule *splr) {
 
 /* Display/update rule @n in @spl_window */
 static void spl_update_rule(GtkWidget *spl_window, Itdb_SPLRule *splr) {
-    GtkTable *table;
+    GtkGrid *grid;
     Playlist *spl;
     GtkWidget *combobox, *hbox, *button;
     gchar name[WNLEN];
@@ -1135,8 +1135,8 @@ static void spl_update_rule(GtkWidget *spl_window, Itdb_SPLRule *splr) {
 
     spl = g_object_get_data(G_OBJECT (spl_window), "spl_work");
     g_return_if_fail (spl);
-    table = g_object_get_data(G_OBJECT (spl_window), "spl_rules_table");
-    g_return_if_fail (table);
+    grid = g_object_get_data(G_OBJECT (spl_window), "spl_rules_table");
+    g_return_if_fail (grid);
 
     row = g_list_index(spl->splrules.rules, splr);
     g_return_if_fail (row != -1);
@@ -1144,13 +1144,13 @@ static void spl_update_rule(GtkWidget *spl_window, Itdb_SPLRule *splr) {
     /* Combobox for field */
     /* ------------------ */
     snprintf(name, WNLEN, "spl_fieldcombo%d", row);
-    combobox = g_object_get_data(G_OBJECT (table), name);
+    combobox = g_object_get_data(G_OBJECT (grid), name);
     if (!combobox) { /* create combo for field */
         combobox = gtk_combo_box_new();
         gtk_widget_show(combobox);
-        gtk_table_attach(table, combobox, 0, 1, row, row + 1, 0, 0, /* expand options */
-        XPAD, YPAD); /* padding options */
-        g_object_set_data(G_OBJECT (table), name, combobox);
+        gtk_grid_attach(grid, combobox, 0, row, 1, 1);
+
+        g_object_set_data(G_OBJECT (grid), name, combobox);
     }
     g_object_set_data(G_OBJECT (combobox), "spl_rule", splr);
     spl_set_combobox(GTK_COMBO_BOX (combobox), splfield_comboentries, splr->field, G_CALLBACK (spl_field_changed), spl_window);
@@ -1159,7 +1159,7 @@ static void spl_update_rule(GtkWidget *spl_window, Itdb_SPLRule *splr) {
     /* ------------------- */
     ft = itdb_splr_get_field_type(splr);
     snprintf(name, WNLEN, "spl_actioncombo%d", row);
-    combobox = g_object_get_data(G_OBJECT (table), name);
+    combobox = g_object_get_data(G_OBJECT (grid), name);
 
     if (combobox) { /* check if existing combobox is of same type */
         ItdbSPLFieldType old_ft = GPOINTER_TO_INT (
@@ -1173,9 +1173,8 @@ static void spl_update_rule(GtkWidget *spl_window, Itdb_SPLRule *splr) {
     if (!combobox) { /* create combo for action */
         combobox = gtk_combo_box_new();
         gtk_widget_show(combobox);
-        gtk_table_attach(table, combobox, 1, 2, row, row + 1, GTK_FILL, 0, /* expand options */
-        XPAD, YPAD); /* padding options */
-        g_object_set_data(G_OBJECT (table), name, combobox);
+        gtk_grid_attach(grid, combobox, 1, row, 1, 1);
+        g_object_set_data(G_OBJECT (grid), name, combobox);
     }
     g_object_set_data(G_OBJECT (combobox), "spl_rule", splr);
     g_object_set_data(G_OBJECT (combobox), "spl_fieldtype", GINT_TO_POINTER (ft));
@@ -1234,35 +1233,33 @@ static void spl_update_rule(GtkWidget *spl_window, Itdb_SPLRule *splr) {
     /* ------------------------------------- */
     at = itdb_splr_get_action_type(splr);
     snprintf(name, WNLEN, "spl_actionhbox%d", row);
-    hbox = g_object_get_data(G_OBJECT (table), name);
+    hbox = g_object_get_data(G_OBJECT (grid), name);
     if (hbox) {
         gtk_widget_destroy(hbox);
-        g_object_set_data(G_OBJECT (table), name, NULL);
+        g_object_set_data(G_OBJECT (grid), name, NULL);
     }
     if (centries != splaction_notsupported_comboentries) {
         g_return_if_fail (at != ITDB_SPLAT_UNKNOWN);
         g_return_if_fail (at != ITDB_SPLAT_INVALID);
         hbox = spl_create_hbox(spl_window, splr);
-        gtk_table_attach(table, hbox, 2, 3, row, row + 1, GTK_FILL, 0, /* expand options */
-        XPAD, YPAD); /* padding options */
-        g_object_set_data(G_OBJECT (table), name, hbox);
+        gtk_grid_attach(grid, hbox, 2, row, 1, 1);
+        g_object_set_data(G_OBJECT (grid), name, hbox);
     }
 
     /* +/- buttons */
     /* ----------- */
     snprintf(name, WNLEN, "spl_buttonhbox%d", row);
-    hbox = g_object_get_data(G_OBJECT (table), name);
+    hbox = g_object_get_data(G_OBJECT (grid), name);
     if (!hbox) {
         /* create hbox with buttons */
         hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
         gtk_widget_show(hbox);
-        g_object_set_data(G_OBJECT (table), name, hbox);
-        gtk_table_attach(table, hbox, 3, 4, row, row + 1, 0, 0, /* expand options */
-        XPAD, YPAD); /* padding options */
+        g_object_set_data(G_OBJECT (grid), name, hbox);
+        gtk_grid_attach(grid, hbox, 3, row, 1, 1);
     }
 
     snprintf(name, WNLEN, "spl_button-%d", row);
-    button = g_object_get_data(G_OBJECT (table), name);
+    button = g_object_get_data(G_OBJECT (grid), name);
     if (!button) {
         button = gtk_button_new_with_label(_("-"));
         gtk_widget_show(button);
@@ -1270,12 +1267,12 @@ static void spl_update_rule(GtkWidget *spl_window, Itdb_SPLRule *splr) {
         g_signal_connect (button, "clicked",
                 G_CALLBACK (spl_button_minus_clicked),
                 spl_window);
-        g_object_set_data(G_OBJECT (table), name, button);
+        g_object_set_data(G_OBJECT (grid), name, button);
     }
     g_object_set_data(G_OBJECT (button), "spl_rule", splr);
 
     snprintf(name, WNLEN, "spl_button+%d", row);
-    button = g_object_get_data(G_OBJECT (table), name);
+    button = g_object_get_data(G_OBJECT (grid), name);
     if (!button) {
         button = gtk_button_new_with_label(_("+"));
         gtk_widget_show(button);
@@ -1283,7 +1280,7 @@ static void spl_update_rule(GtkWidget *spl_window, Itdb_SPLRule *splr) {
         g_signal_connect (button, "clicked",
                 G_CALLBACK (spl_button_plus_clicked),
                 spl_window);
-        g_object_set_data(G_OBJECT (table), name, button);
+        g_object_set_data(G_OBJECT (grid), name, button);
         snprintf(name, WNLEN, "spl_button+%d", row);
     }
     g_object_set_data(G_OBJECT (button), "spl_rule", splr);
@@ -1293,7 +1290,7 @@ static void spl_update_rule(GtkWidget *spl_window, Itdb_SPLRule *splr) {
 static void spl_display_rules(GtkWidget *spl_window) {
     SPLWizard *spl_wizard;
     Playlist *spl;
-    GtkWidget *align, *table;
+    GtkWidget *align, *grid;
     GList *gl;
 
     spl_wizard = get_spl_wizard();
@@ -1304,13 +1301,13 @@ static void spl_display_rules(GtkWidget *spl_window) {
     align = gtkpod_builder_xml_get_widget(spl_wizard->builder, "spl_rules_table_align");
     g_return_if_fail (align);
     /* Destroy table if it already exists */
-    table = g_object_get_data(G_OBJECT (spl_wizard->window), "spl_rules_table");
-    if (table)
-        gtk_widget_destroy(table);
-    table = gtk_table_new(1, 4, FALSE);
-    gtk_widget_show(table);
-    gtk_container_add(GTK_CONTAINER (align), table);
-    g_object_set_data(G_OBJECT (spl_wizard->window), "spl_rules_table", table);
+    grid = g_object_get_data(G_OBJECT (spl_wizard->window), "spl_rules_table");
+    if (grid)
+        gtk_widget_destroy(grid);
+    grid = gtk_grid_new();
+    gtk_widget_show(grid);
+    gtk_container_add(GTK_CONTAINER (align), grid);
+    g_object_set_data(G_OBJECT (spl_wizard->window), "spl_rules_table", grid);
 
     for (gl = spl->splrules.rules; gl; gl = gl->next)
         spl_update_rule(spl_wizard->window, gl->data);

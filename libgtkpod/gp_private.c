@@ -54,8 +54,6 @@ static gint gp_autoscroll_row_timeout(gpointer data) {
 
     g_return_val_if_fail(data, FALSE);
 
-    gdk_threads_enter();
-
     times = GPOINTER_TO_UINT(g_object_get_data(G_OBJECT(data), "scroll_row_times"));
     device = g_object_get_data(G_OBJECT(data), "effected_device");
 
@@ -98,13 +96,13 @@ static gint gp_autoscroll_row_timeout(gpointer data) {
         _remove_scroll_row_timeout(data);
         resp = FALSE;
     }
-    gdk_threads_leave();
+
     return resp;
 }
 
 void gp_install_autoscroll_row_timeout(GtkWidget *widget, GdkDevice *device) {
     if (!g_object_get_data(G_OBJECT(widget), "scroll_row_timeout")) { /* install timeout function for autoscroll */
-        guint timeout = g_timeout_add(75, gp_autoscroll_row_timeout, widget);
+        guint timeout = gdk_threads_add_timeout(75, gp_autoscroll_row_timeout, widget);
         g_object_set_data(G_OBJECT(widget), "scroll_row_timeout", GUINT_TO_POINTER(timeout));
         g_object_set_data(G_OBJECT(widget), "effected_device", device);
     }

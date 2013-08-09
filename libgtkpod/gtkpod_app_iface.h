@@ -162,7 +162,7 @@ struct _GtkPodAppInterface {
 
 GType gtkpod_app_get_type(void);
 
-void gp_init(int argc, char *argv[]);
+gboolean gp_init(gpointer data);
 
 gboolean ok_to_close_gtkpod();
 gint gtkpod_cleanup_quit();

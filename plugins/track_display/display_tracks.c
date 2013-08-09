@@ -1160,7 +1160,6 @@ static void tm_adopt_order(GList *tracks) {
     GtkTreeModel *model = gtk_tree_view_get_model(track_treeview);
     while (pt != NULL) {
         Track *track = pt->data;
-        ExtraTrackData *etr = track->userdata;
 
         if (g_hash_table_lookup(track_hash, track))
             gtk_list_store_insert_with_values (get_model_as_store(model), NULL, -1, READOUT_COL, track, -1);

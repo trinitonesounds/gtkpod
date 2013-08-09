@@ -107,10 +107,26 @@ const gchar *EXPORT_PLAYLIST_FILE_TPL_DFLT = "%a - %t";
 
 #ifdef G_THREADS_ENABLED
 /* Thread specific */
-static GMutex *mutex = NULL;
-static GCond *cond = NULL;
+static GMutex mutex; /* shared lock */
+static GCond cond;
 static gboolean mutex_data = FALSE;
 #endif
+
+static void _lock_mutex() {
+    g_mutex_lock (&mutex);
+}
+
+static void _unlock_mutex() {
+    g_mutex_unlock (&mutex);
+}
+
+static void _wait_cond(gint64 gtime) {
+    g_cond_wait_until (&cond, &mutex, gtime);
+}
+
+static void _cond_signal() {
+    g_cond_signal (&cond);
+}
 
 /******************************************************************
  export_fcd_cleanup - free memory taken up by the fcd
@@ -374,10 +390,10 @@ static gpointer th_write_track(gpointer fcd) {
 
     result = write_track(fcd);
 
-    g_mutex_lock (mutex);
+    _lock_mutex();
     mutex_data = TRUE; /* signal that thread will end */
-    g_cond_signal (cond);
-    g_mutex_unlock (mutex);
+    _cond_signal();
+    _unlock_mutex();
 
     return GINT_TO_POINTER(result);
 }
@@ -394,11 +410,7 @@ static void export_files_write(struct fcd *fcd) {
 
 #ifdef G_THREADS_ENABLED
     GThread *thread = NULL;
-    GTimeVal gtime;
-    if (!mutex)
-        mutex = g_mutex_new ();
-    if (!cond)
-        cond = g_cond_new ();
+    gint64 gtime;
 #endif
 
     g_return_if_fail (fcd);
@@ -439,19 +451,18 @@ static void export_files_write(struct fcd *fcd) {
                 copied += tr->size;
 #ifdef G_THREADS_ENABLED
                 mutex_data = FALSE;
-                thread = g_thread_create (th_write_track, fcd, TRUE, NULL);
+                thread = g_thread_new ("export-thread", th_write_track, fcd);
                 if (thread) {
-                    g_mutex_lock (mutex);
+                    _lock_mutex();
                     do {
                         while (widgets_blocked && gtk_events_pending())
                         gtk_main_iteration();
                         /* wait a maximum of 20 ms */
-                        g_get_current_time(&gtime);
-                        g_time_val_add(&gtime, 20000);
-                        g_cond_timed_wait (cond, mutex, &gtime);
+                        gtime = g_get_monotonic_time () + 20000 * G_TIME_SPAN_SECOND;
+                        _wait_cond(gtime);
                     }
                     while (!mutex_data);
-                    g_mutex_unlock (mutex);
+                    _unlock_mutex();
                     resultWrite = (gboolean) GPOINTER_TO_INT(g_thread_join (thread));
                     result &= resultWrite;
                 }

@@ -57,20 +57,6 @@ main (int argc, char *argv[])
     textdomain (GETTEXT_PACKAGE);
 #endif
 
-#ifdef G_THREADS_ENABLED
-
-#if GLIB_CHECK_VERSION(2,31,0)
-    /* No longer need to init threads manually anymore */
-#else
-    /* this must be called before gtk_init () */
-    g_thread_init (NULL);
-#endif
-
-    /* FIXME: this call causes gtkpod to freeze as soon as tracks should be
-       displayed */
-    gdk_threads_init ();
-#endif
-
 #ifdef HAVE_CLUTTER_GTK
     gtk_clutter_init(&argc, &argv);
     clutter_threads_init();
@@ -106,13 +92,7 @@ main (int argc, char *argv[])
 
     gtkpod_init (argc, argv);
 
-#ifdef G_THREADS_ENABLED
-    gdk_threads_enter();
-#endif
     gtk_main ();
-#ifdef G_THREADS_ENABLED
-    gdk_threads_leave();
-#endif
 
     return 0;
 }

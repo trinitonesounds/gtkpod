@@ -243,11 +243,7 @@ lookup_cd (SjMetadataGetter *mdg)
 }
 
 static GThread *_create_thread(GThreadFunc func, gpointer userdata, GError **error) {
-#if GLIB_CHECK_VERSION(2,31,0)
     return g_thread_new (SJ_METADATA_THREAD, func, userdata);
-#else
-    return g_thread_create (func, userdata, TRUE, error);
-#endif
 }
 
 gboolean

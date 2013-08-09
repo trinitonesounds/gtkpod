@@ -84,13 +84,8 @@ struct track_extended_info {
 };
 
 typedef struct {
-#if GLIB_CHECK_VERSION(2,31,0)
     GMutex mutex; /* mutex for this struct          */
     GCond finished_cond; /* used to signal end of thread   */
-#else
-    GMutex *mutex; /* mutex for this struct          */
-    GCond *finished_cond; /* used to signal end of thread   */
-#endif
 
     gboolean abort; /* TRUE = abort                   */
     gboolean finished; /* background thread has finished */
@@ -109,80 +104,39 @@ static float extendedinfoversion = 0.0;
 static gboolean gp_write_itdb(iTunesDB *itdb);
 
 static GThread *_create_thread(GThreadFunc func, gpointer userdata) {
-#if GLIB_CHECK_VERSION(2,31,0)
     return g_thread_new (TRANSFER_THREAD, func, userdata);
-#else
-    return g_thread_create (func, userdata, TRUE, NULL);
-#endif
 }
 
 static void _create_mutex(TransferData *td) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_mutex_init(&td->mutex);
-#else
-    td->mutex = g_mutex_new ();
-#endif
 }
 
 static void _lock_mutex(TransferData *td) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_mutex_lock (&td->mutex);
-#else
-    g_mutex_lock (td->mutex);
-#endif
 }
 
 static void _unlock_mutex(TransferData *td) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_mutex_unlock (&td->mutex);
-#else
-    g_mutex_unlock (td->mutex);
-#endif
 }
 
 static void _clear_mutex(TransferData *td) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_mutex_clear (&td->mutex);
-#else
-    if (td->mutex)
-        g_mutex_free (td->mutex);
-#endif
 }
 
 static void _create_cond(TransferData *td) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_cond_init(&td->finished_cond);
-#else
-    td->finished_cond = g_cond_new ();
-#endif
 }
 
 static void _cond_signal(TransferData *td) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_cond_signal (&td->finished_cond);
-#else
-    g_cond_signal (td->finished_cond);
-#endif
 }
 
 static void _cond_timed_wait(TransferData *td, glong timeout) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_cond_wait_until (&td->finished_cond, &td->mutex, (gint64) timeout);
-#else
-    GTimeVal gtime;
-    g_get_current_time(&gtime);
-    g_time_val_add(&gtime, timeout);
-    g_cond_timed_wait (td->finished_cond, td->mutex, &gtime);
-#endif
 }
 
 static void _clear_cond(TransferData *td) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_cond_clear (&td->finished_cond);
-#else
-    if (td->finished_cond)
-        g_cond_free (td->finished_cond);
-#endif
 }
 
 /* fills in extended info if available */

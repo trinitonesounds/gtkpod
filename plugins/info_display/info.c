@@ -48,7 +48,8 @@
 static GtkWidget *info_window = NULL;
 
 /* lock for size related variables (used by child and parent) */
-static GMutex *space_mutex = NULL;
+static GMutex mutex; /* shared lock */
+
 static gboolean space_uptodate = FALSE;
 static gchar *space_mp = NULL; /* thread save access through mutex */
 static iTunesDB *space_itdb = NULL; /* semi thread save access
@@ -65,6 +66,14 @@ static GList *callbacks_info_update_totals_view = NULL;
 #if 0
 static gdouble get_ipod_used_space(void);
 #endif
+
+static void _lock_mutex() {
+    g_mutex_lock (&mutex);
+}
+
+static void _unlock_mutex() {
+    g_mutex_unlock (&mutex);
+}
 
 /* callback management */
 static void register_callback(GList **list, info_update_callback cb) {
@@ -121,13 +130,12 @@ void unregister_info_update_totals_view(info_update_callback cb) {
  both zero, we assume the iPod is not connected */
 gboolean ipod_connected(void) {
     gboolean result;
-    g_return_val_if_fail (space_mutex!=NULL, FALSE);
-    g_mutex_lock (space_mutex);
+    _lock_mutex();
     if ((space_ipod_used == 0) && (space_ipod_free == 0))
         result = FALSE;
     else
         result = TRUE;
-    g_mutex_unlock (space_mutex);
+    _unlock_mutex();
     return result;
 }
 
@@ -317,8 +325,7 @@ void space_set_ipod_itdb(iTunesDB *itdb) {
         }
     }
 
-    if (space_mutex)
-        g_mutex_lock (space_mutex);
+    _lock_mutex ();
 
     space_itdb = itdb;
 
@@ -330,9 +337,7 @@ void space_set_ipod_itdb(iTunesDB *itdb) {
         space_data_update();
     }
 
-    if (space_mutex)
-        g_mutex_unlock (space_mutex);
-
+    _unlock_mutex ();
 }
 
 /* retrieve the currently set ipod itdb -- needed in case the itdb is
@@ -344,9 +349,9 @@ iTunesDB *space_get_ipod_itdb(void) {
 /* in Bytes */
 gdouble get_ipod_free_space(void) {
     gdouble result;
-    g_mutex_lock (space_mutex);
+    _lock_mutex ();
     result = space_ipod_free;
-    g_mutex_unlock (space_mutex);
+    _unlock_mutex ();
     return result;
 }
 
@@ -355,9 +360,9 @@ gdouble get_ipod_free_space(void) {
 static gdouble get_ipod_used_space(void)
 {
     gdouble result;
-    g_mutex_lock (space_mutex);
+    _lock_mutex ();
     result = space_ipod_used;
-    g_mutex_unlock (space_mutex);
+    _unlock_mutex ();
     return result;
 }
 #endif
@@ -404,12 +409,6 @@ void info_display_playlist_selected_cb(GtkPodApp *app, gpointer pl, gpointer dat
     }
 
     info_update();
-}
-
-void info_display_init() {
-    if (!space_mutex) {
-        space_mutex = g_mutex_new ();
-    }
 }
 
 void info_display_playlist_added_cb(GtkPodApp *app, gpointer pl, gint32 pos, gpointer data) {

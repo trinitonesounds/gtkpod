@@ -106,12 +106,7 @@ typedef struct _AutoDetect AutoDetect;
 static gboolean ad_timeout_cb(gpointer data);
 
 struct _AutoDetect {
-#if GLIB_CHECK_VERSION(2,31,0)
     GMutex mutex; /* shared lock */
-#else
-    GMutex *mutex; /* shared lock */
-#endif
-
     GList *new_ipod_uris; /* list of new mounts */
     guint timeout_id;
 };
@@ -119,27 +114,15 @@ struct _AutoDetect {
 static AutoDetect *autodetect;
 
 static void _create_mutex(AutoDetect *ad) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_mutex_init(&ad->mutex);
-#else
-    ad->mutex = g_mutex_new ();
-#endif
 }
 
 static void _lock_mutex(AutoDetect *ad) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_mutex_lock (&ad->mutex);
-#else
-    g_mutex_lock (ad->mutex);
-#endif
 }
 
 static void _unlock_mutex(AutoDetect *ad) {
-#if GLIB_CHECK_VERSION(2,31,0)
     g_mutex_unlock (&ad->mutex);
-#else
-    g_mutex_unlock (ad->mutex);
-#endif
 }
 
 /* adapted from rb-ipod-plugin.c (rhythmbox ipod plugin) */
@@ -215,8 +198,9 @@ void autodetection_init() {
                 autodetect);
 
         /* start timeout function for the monitor */
-        autodetect->timeout_id = g_timeout_add(100, /* every 100 ms */
-        ad_timeout_cb, autodetect);
+        autodetect->timeout_id = gdk_threads_add_timeout(  100, /* every 100 ms */
+                                                                                               ad_timeout_cb,
+                                                                                               autodetect);
     }
 }
 
@@ -226,7 +210,6 @@ static gboolean ad_timeout_cb(gpointer data) {
 
     /* Don't interfere with a blocked display -- try again later */
     if (!widgets_blocked) {
-        gdk_threads_enter();
         _lock_mutex(ad);
 
         while (ad->new_ipod_uris) {
@@ -242,7 +225,7 @@ static gboolean ad_timeout_cb(gpointer data) {
 
             _unlock_mutex(ad);
 
-            g_return_val_if_fail (mount_uri, (gdk_threads_leave(), release_widgets(), TRUE));
+            g_return_val_if_fail (mount_uri, (release_widgets(), TRUE));
 
             GFile *muri = g_file_parse_name(mount_uri);
             mountpoint = g_file_get_path(muri);
@@ -254,13 +237,13 @@ static gboolean ad_timeout_cb(gpointer data) {
             }
 
             itdbs = gp_get_itdbs_head();
-            g_return_val_if_fail (itdbs, (gdk_threads_leave(), release_widgets(), TRUE));
+            g_return_val_if_fail (itdbs, (release_widgets(), TRUE));
 
             block_widgets();
 
             if (itdb) {
                 ExtraiTunesDBData *eitdb = itdb->userdata;
-                g_return_val_if_fail (eitdb,(gdk_threads_leave(), release_widgets(), TRUE));
+                g_return_val_if_fail (eitdb, (release_widgets(), TRUE));
 
                 debug ("...used by itdb %p\n", itdb);
 
@@ -286,8 +269,7 @@ static gboolean ad_timeout_cb(gpointer data) {
                 set_itdb_index_prefs_string(index, "name", _("New iPod"));
                 set_itdb_index_prefs_int(index, "type", GP_ITDB_TYPE_IPOD | GP_ITDB_TYPE_AUTOMATIC);
                 new_itdb = setup_itdb_n(index);
-                g_return_val_if_fail (new_itdb,
-                        (gdk_threads_leave(), release_widgets(), TRUE));
+                g_return_val_if_fail (new_itdb, (release_widgets(), TRUE));
                 /* add to display */
                 gp_itdb_add(new_itdb, -1);
                 /* load prefs from iPod */
@@ -308,7 +290,6 @@ static gboolean ad_timeout_cb(gpointer data) {
             _lock_mutex(ad);
         }
         _unlock_mutex(ad);
-        gdk_threads_leave();
     }
 
     return TRUE;

@@ -116,9 +116,7 @@ void gtkpod_init(int argc, char *argv[]) {
      * initialise gtkpod library items. Needs to be safety threaded due
      * to splash screen.
      */
-    gdk_threads_enter();
-    gp_init(argc, argv);
-    gdk_threads_leave();
+    gdk_threads_add_idle(gp_init, NULL);
 
     /* Add blocking widgets from the framework */
     add_blocked_widget(app->toolbar);
@@ -191,9 +189,7 @@ void gtkpod_init(int argc, char *argv[]) {
     g_signal_connect (profile_manager, "profile-descoped",
             G_CALLBACK (on_profile_descoped), app);
 
-    gdk_threads_enter();
-    gp_init_itdbs();
-    gdk_threads_leave();
+    gdk_threads_add_idle(gp_init_itdbs, NULL);
 
     /* Load layout.*/
     session_dir = get_user_session_dir();
@@ -212,6 +208,12 @@ void gtkpod_init(int argc, char *argv[]) {
 
     gtk_window_set_role(GTK_WINDOW(app), "gtkpod-app");
     gtk_widget_show(GTK_WIDGET(app));
+
+    /*
+     * Indicate to user that although the UI is up, the itdbs are still loading.
+     * The message will be overriden by the import of
+     */
+    gtkpod_statusbar_message(_("Importing configured ipods ... "));
 }
 
 /* callback for gtkpod window's close button */
@@ -221,14 +223,12 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
         return TRUE;
 
     AnjutaPluginManager *plugin_manager;
-    AnjutaProfileManager *profile_manager;
     AnjutaApp *app;
     gchar *remembered_plugins;
     gchar *session_dir;
 
     app = ANJUTA_APP(widget);
     plugin_manager = anjuta_shell_get_plugin_manager(ANJUTA_SHELL(app), NULL);
-    profile_manager = anjuta_shell_get_profile_manager(ANJUTA_SHELL(app), NULL);
 
     /* Save remembered plugins */
     remembered_plugins = anjuta_plugin_manager_get_remembered_plugins(plugin_manager);
