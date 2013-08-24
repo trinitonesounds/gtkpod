@@ -1,4 +1,227 @@
-phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-01-05
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-08-24
+
+    Updates NEWS and Changelog
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-08-24
+
+    Update language files ready for release 2.1.4
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-08-24
+
+    Bug #122 - Make edit playlist name function check for existing name
+    
+    * When double-clicking on a playlist name and editing, ensure the new name
+      is not the name of another existing playlist.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-08-24
+
+    Task #119 - Make smart playlist wizard check for duplicate playlist
+    
+    * Checks the existing playlists for the playlist name before allowing the
+      save of the edited smart playlist. Should the user be editing an existing
+      list then this is catered for by the if condition.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-08-09
+
+    Removes mutex and cond deprecations
+    
+    * configure.ac
+     * Updates glib minimum version to 2.31 which was released in 2011
+    
+    * Replace deprecated mutex and cond function calls
+    
+    * Removes GLIB_CHECK_VERSION #checks for 2.31.0
+    
+    * gtkpod.c
+     * Since gdk_threads_enter/leave is deprecated and removed, they have been
+       replaced with gdk_threads_add_idle, which means the playlist display is
+       populated after the rest of the UI
+     * Adds status bar messages to show the playlist is initialising and fully
+       loaded
+
+Merge: 93c2a2e cb43cb6
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-06-20
+
+    Merge remote-tracking branch 'remotes/jn/ui.v2'
+
+Merge: 35cffe3 002c61e
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-06-20
+
+    Merge remote-tracking branch 'jn/cmdline'
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-06-18
+
+    Media player fixes
+    
+    * Return status message if a track is not played for whatever reason
+    
+    * Ensure the buttons are stopped if the track cannot be played
+    
+    * Reset the track index when a new set of tracks are selected, otherwise
+      the index can be larger than the total number of selected tracks!
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-06-16
+
+    Remove deprecations in clarity plugin up to clutter 1.10
+    
+    * Replaces all deprecated functions in clarity as of clutter version 1.10
+    
+    * Officially update clutter-gtk to check for version 1.2, which depends on
+      clutter 1.10
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-04-28
+
+    Fix gdk deprecations
+    
+    * Replace gdk_window_get_pointer with gdk_window_get_device_position
+      due to deprecation.
+
+Jonathan Neuschäfer <j.neuschaefer@gmx.net>	2013-06-03
+
+    use g_option_* for gtkpod's own options, too
+    
+    It's already used for the options of other libraries (gtk and
+    brasero).
+    
+    The options are handled in a delayed fashion: Parsing is done
+    at the same time as all other command line parsing, but the
+    results are handled at the same time as they were before.
+
+Jonathan Neuschäfer <j.neuschaefer@gmx.net>	2013-06-03
+
+    libgtkpod/prefs: add --playcount option
+    
+    This option will have to be implemented, because glib requires each
+    option to have a long form. The purpose of this patch is to make its
+    introduction visible in the changelog.
+
+Jonathan Neuschäfer <j.neuschaefer@gmx.net>	2013-06-03
+
+    main: translate "Error parsing options: %s\n"
+
+Jonathan Neuschäfer <j.neuschaefer@gmx.net>	2013-06-03
+
+    main: add \n after "Error parsing options: %s"
+
+Jonathan Neuschäfer <j.neuschaefer@gmx.net>	2013-06-03
+
+    playlist_display: reduce duplicate code
+
+Jonathan Neuschäfer <j.neuschaefer@gmx.net>	2013-06-03
+
+    playlist_display: remove a comment about "SPL data"
+    
+    I wasn't able to find any information about what that is.
+
+Jonathan Neuschäfer <j.neuschaefer@gmx.net>	2013-06-03
+
+    playlist_display: support dropping playlist into an itdb
+
+Jonathan Neuschäfer <j.neuschaefer@gmx.net>	2013-06-03
+
+    display_playlists: remove outdated debugging printfs
+
+Jonathan Neuschäfer <j.neuschaefer@gmx.net>	2013-06-03
+
+    display_playlists: balance parentheses in a comment
+
+Jonathan Neuschäfer <j.neuschaefer@gmx.net>	2013-05-31
+
+    po/de.po: untranslate --mountpoint
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-04-27
+
+    Fixes to cater for changing API in anjuta version 3.8.0+
+    
+    * Contribute to future proofing against new versions of anjuta library
+    
+    * core_prefs.c
+    * coverweb.c
+    * plugin.c
+    * anjuta-app.c
+     * Fixes error messages about destroyed widgets being already destroyed
+    
+    * gtkpod.c
+    * anjuta-about.c
+     * Makes changes to align code more closely with the anjuta 3.8.0 codebase
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-04-26
+
+    Fix to cater for changing API in anjuta version 3.6.2+
+    
+    * Contribute to future proofing against new versions of anjuta library
+
+Daniele Forsi <daniele@forsi.it>	2013-02-28
+
+    Fix showing tracks of selected artist on 64-bit systems
+    
+    The return value of gdk_threads_add_idle_full() is guint and is
+    greater than 0; see
+    http://developer.gnome.org/gdk/2.22/gdk-Threads.html#gdk-threads-add-idle-full
+    
+    Bug reported in http://sourceforge.net/mailarchive/message.php?msg_id=30490385
+
+Daniele Forsi <daniele@forsi.it>	2013-02-28
+
+    Revert "Fix showing tracks of selected artist on 64-bit systems"
+    
+    This reverts commit 3732944d096943125e4a51f753644a00726acc68.
+
+Benno <fwxx@rocketmail.com>	2013-02-15
+
+    Fix showing tracks of selected artist on 64-bit systems
+    
+    The handler_id is of type gulong (while signal_id is guint); see
+    http://developer.gnome.org/gobject/unstable/gobject-Signals.html
+    
+    Bug reported in http://sourceforge.net/mailarchive/message.php?msg_id=30490385
+
+Daniele Forsi <daniele@forsi.it>	2013-02-15
+
+    Fix possible crasher
+    
+    When opening the About dialog for the second time, a variable pointed
+    to freed memory.
+    
+    Fixes:
+    (lt-gtkpod:13277): Gtk-WARNING **: Failed to set text from markup due to error parsing markup: Error on line 1 char 36: Invalid UTF-8 encoded text in name - not valid ' \xc5\xc5	h\xdd\xc3	'
+    
+    (lt-gtkpod:13277): Pango-WARNING **: Invalid UTF-8 string passed to pango_layout_set_text()
+
+Daniele Forsi <daniele@forsi.it>	2013-02-15
+
+    Fix tabs
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-01-26
+
+    Playlist_display - prevent a double-free
+    
+    This crash could previously be triggered by dragging a newly
+    created (and not yet saved) playlist from one local repository
+    to another.
+    
+    Thanks to Jonathan Neuschäfer for the patch
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-01-26
+
+    Prevent a crash in coverart display if a track has no artist
+    
+    Use a placeholder for the artist name, if the track lacks the metadata
+    value.
+    
+    Thanks to Jonathan Neuschäfer for the patch
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-01-26
+
+    Handle when the current playlist is NULL in track display
+    
+    Thanks to Jonathan Neuschäfer for the patch
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-01-06
+
+    Update version script to 2.1.4
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-01-06
 
     Updates NEWS and Changelog
 
