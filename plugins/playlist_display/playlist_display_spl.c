@@ -763,6 +763,18 @@ static void spl_ok(GtkButton *button, GtkWidget *spl_window) {
         spl_orig->name = gtk_editable_get_chars(GTK_EDITABLE (w), 0, -1);
     }
 
+    /*
+     * Test to see if we have a playlist with the same.
+     * If we do then the playlist must be the same playlist reference, ie. editing an existing playlist.
+     * If not the same reference then we are trying to create a playlist with a duplicate name.
+     */
+    Playlist *pl = itdb_playlist_by_name(itdb, spl_orig->name);
+    if (pl && pl != spl_orig) {
+        gtkpod_warning_simple(_("A playlist named '%s' already exists"), spl_orig->name);
+        // Stop the save but leave the wizard displaying.
+        return;
+    }
+
     itdb_spl_copy_rules(spl_orig, spl_dup);
 
     itdb_playlist_free(spl_dup);
