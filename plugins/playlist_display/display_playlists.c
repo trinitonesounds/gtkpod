@@ -1502,6 +1502,20 @@ static void pm_cell_edited(GtkCellRendererText *renderer, const gchar *path_stri
 
     /* We only do something, if the name actually got changed */
     if (!playlist->name || g_utf8_collate(playlist->name, new_text) != 0) {
+
+        /*
+         * Check that the new name is not the same as that of another playlist
+         */
+        gchar *pl_name = g_strdup(new_text);
+        Playlist *pl = itdb_playlist_by_name(playlist->itdb, pl_name);
+        g_free(pl_name);
+
+        if (pl && pl != playlist) {
+            gtkpod_warning_simple(_("A playlist named '%s' already exists"), new_text);
+            // Stop the change as there is already a playlist with the same name
+            return;
+        }
+
         g_free(playlist->name);
         playlist->name = g_strdup(new_text);
         data_changed(playlist->itdb);
