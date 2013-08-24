@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-02 22:25+0000\n"
+"POT-Creation-Date: 2013-08-24 22:25+0100\n"
 "PO-Revision-Date: 2011-10-25 20:44+0000\n"
 "Last-Translator: davitymola <davitymola@gmail.com>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.net/projects/p/gtkpod/"
@@ -22,23 +22,27 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: ../data/glade/core-gtkpod.xml.h:1
-msgid "Conversion Progress Display"
-msgstr "Mostrar el progreso de la conversión"
+msgid "Turn off the splash screen"
+msgstr ""
 
 #: ../data/glade/core-gtkpod.xml.h:2
+msgid "Session"
+msgstr ""
+
+#: ../data/glade/core-gtkpod.xml.h:3
 #, fuzzy
 msgid "General"
 msgstr "_General"
 
-#: ../data/glade/core-gtkpod.xml.h:3
+#: ../data/glade/core-gtkpod.xml.h:4
 msgid "Never show this dialogue again"
 msgstr "No volver a mostrar este diálogo"
 
-#: ../data/glade/core-gtkpod.xml.h:4
-msgid "Session"
-msgstr ""
-
 #: ../data/glade/core-gtkpod.xml.h:5
+msgid "Conversion Progress Display"
+msgstr "Mostrar el progreso de la conversión"
+
+#: ../data/glade/core-gtkpod.xml.h:6
 msgid ""
 "The output of the background conversion scripts is copied below. Each page "
 "of the notebook corresponds to one background thread."
@@ -47,24 +51,20 @@ msgstr ""
 "muestra debajo. Cada página del libro de notas corresponde a un hilo en "
 "segundo plano."
 
-#: ../data/glade/core-gtkpod.xml.h:6
-msgid "Turn off the splash screen"
-msgstr ""
+#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:88
+msgid "gtkpod"
+msgstr "gtkpod"
 
-#: ../data/gtkpod.desktop.in.h:1
+#: ../data/gtkpod.desktop.in.h:2
+msgid "iPod Manager"
+msgstr "Administrador de iPod"
+
+#: ../data/gtkpod.desktop.in.h:3
 #, fuzzy
 msgid "Manage music, video and photos on an Apple iPod"
 msgstr "Administrar musica y vídeo en un iPod Apple"
 
-#: ../data/gtkpod.desktop.in.h:2 ../src/main.c:101
-msgid "gtkpod"
-msgstr "gtkpod"
-
-#: ../data/gtkpod.desktop.in.h:3
-msgid "iPod Manager"
-msgstr "Administrador de iPod"
-
-#: ../libgtkpod/autodetection.c:274
+#: ../libgtkpod/autodetection.c:257
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' could not be loaded into gtkpod.\n"
@@ -73,7 +73,7 @@ msgstr ""
 "No se ha podido cargar en gtkpod el nuevo iPod mountado en '%s'.\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:278
+#: ../libgtkpod/autodetection.c:261
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' appears to be already loaded!\n"
@@ -82,7 +82,7 @@ msgstr ""
 "¡Parece que el iPod recién montado en '%s' ya está cargado!\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:286
+#: ../libgtkpod/autodetection.c:269
 msgid "New iPod"
 msgstr "Nuevo iPod"
 
@@ -364,7 +364,7 @@ msgstr ""
 "'%s' no es una lista de reproducción conocida.\n"
 "\n"
 
-#: ../libgtkpod/file.c:241 ../plugins/exporter/file_export.c:236
+#: ../libgtkpod/file.c:241 ../plugins/exporter/file_export.c:252
 #: ../plugins/filetype_ogg/oggfile.c:67 ../plugins/filetype_wav/wavfile.c:99
 #, c-format
 msgid "Could not open '%s' for reading.\n"
@@ -670,40 +670,40 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../libgtkpod/file_convert.c:419
+#: ../libgtkpod/file_convert.c:361
 msgid "errors"
 msgstr "errores"
 
-#: ../libgtkpod/file_convert.c:427
+#: ../libgtkpod/file_convert.c:369
 msgid "Summary status of conversion processes"
 msgstr "Resumen del estado de los procesos de conversión"
 
 #. only change the label if it has changed --
 #. otherwise our tooltips will be switched off
-#: ../libgtkpod/file_convert.c:644 ../libgtkpod/file_convert.c:646
+#: ../libgtkpod/file_convert.c:587 ../libgtkpod/file_convert.c:589
 msgid "active"
 msgstr "activo"
 
-#: ../libgtkpod/file_convert.c:650 ../libgtkpod/file_convert.c:651
+#: ../libgtkpod/file_convert.c:593 ../libgtkpod/file_convert.c:594
 msgid "inactive"
 msgstr "inactivo"
 
-#: ../libgtkpod/file_convert.c:663
+#: ../libgtkpod/file_convert.c:606
 #, c-format
 msgid "Active threads: %d. Scheduled tracks: %d."
 msgstr "Hilos activos: %d. Pistas planificadas: %d."
 
-#: ../libgtkpod/file_convert.c:1132
+#: ../libgtkpod/file_convert.c:1075
 #, c-format
 msgid "Original filename not available for '%s.'\n"
 msgstr "Nombre de fichero original no disponible para '%s'.\n"
 
-#: ../libgtkpod/file_convert.c:1148
+#: ../libgtkpod/file_convert.c:1091
 #, c-format
 msgid "Filename '%s' is no longer valid for '%s'.\n"
 msgstr "El nombre de fichero '%s' ha dejado de ser válido para '%s'.\n"
 
-#: ../libgtkpod/file_convert.c:1222
+#: ../libgtkpod/file_convert.c:1165
 #, c-format
 msgid ""
 "Files of type '%s' are not supported by the iPod. Please go to the "
@@ -714,17 +714,17 @@ msgstr ""
 "a preferencias para especificar un guión de conversión adecuado para '%s'.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1295
+#: ../libgtkpod/file_convert.c:1238
 msgid "No information available"
 msgstr "Información no disponible"
 
-#: ../libgtkpod/file_convert.c:1324
+#: ../libgtkpod/file_convert.c:1267
 #, c-format
 msgid "Could not create '%s'. Filetype conversion will not work.\n"
 msgstr ""
 "No se ha podido crear '%s'. La conversión de tipo de fichero no funcionará.\n"
 
-#: ../libgtkpod/file_convert.c:1598 ../libgtkpod/file_convert.c:2840
+#: ../libgtkpod/file_convert.c:1541 ../libgtkpod/file_convert.c:2780
 #, c-format
 msgid ""
 "Transfer of '%s' failed. %s\n"
@@ -733,7 +733,7 @@ msgstr ""
 "Ha fallado la transferencia de '%s'. %s\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1957 ../libgtkpod/file_convert.c:2187
+#: ../libgtkpod/file_convert.c:1897 ../libgtkpod/file_convert.c:2127
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s'.\n"
@@ -742,7 +742,7 @@ msgstr ""
 "Ha fallado la conversión de '%s': '%s'\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1972
+#: ../libgtkpod/file_convert.c:1912
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s %s' returned exit status %d.\n"
@@ -752,7 +752,7 @@ msgstr ""
 "%d.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:1998
+#: ../libgtkpod/file_convert.c:1938
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '\"%s\" %s' did not return filename extension as "
@@ -763,7 +763,7 @@ msgstr ""
 "fichero como se esperaba.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:2063
+#: ../libgtkpod/file_convert.c:2003
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not access original file '%s' (%s).\n"
@@ -773,7 +773,7 @@ msgstr ""
 "original '%s' (%s).\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:2107
+#: ../libgtkpod/file_convert.c:2047
 #, c-format
 msgid ""
 "Conversion of '%s' failed: Could not create directory '%s'.\n"
@@ -782,7 +782,7 @@ msgstr ""
 "Ha fallado la extensión de '%s': No se ha podido crear el directorio '%s'.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:2215
+#: ../libgtkpod/file_convert.c:2155
 #, c-format
 msgid ""
 "Conversion of '%s' failed: '%s' returned exit status %d.\n"
@@ -791,7 +791,7 @@ msgstr ""
 "Ha fallado la conversión de '%s': %s ha devuelto el estado de salida %d.\n"
 "\n"
 
-#: ../libgtkpod/file_convert.c:2249
+#: ../libgtkpod/file_convert.c:2189
 #, c-format
 msgid ""
 "Conversion of '%s' failed: could not stat the converted file '%s'.\n"
@@ -801,23 +801,23 @@ msgstr ""
 "fichero convertido '%s'.\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:206
+#: ../libgtkpod/file_itunesdb.c:160
 #, c-format
 msgid "Matching SHA1 checksum for file %d/%d"
 msgstr ""
 "Buscando concordancias de la suma de comprobación SHA1 para el fichero %d/%d"
 
-#: ../libgtkpod/file_itunesdb.c:317
+#: ../libgtkpod/file_itunesdb.c:271
 msgid "Could not create hash value from itunesdb\n"
 msgstr ""
 "No se ha podido crear valor de resumen (hash) de la base de datos iTunes\n"
 
-#: ../libgtkpod/file_itunesdb.c:332
+#: ../libgtkpod/file_itunesdb.c:286
 #, c-format
 msgid "Error while reading extended info: %s\n"
 msgstr "Error al leer la información extendida: %s\n"
 
-#: ../libgtkpod/file_itunesdb.c:348
+#: ../libgtkpod/file_itunesdb.c:302
 #, c-format
 msgid ""
 "iTunesDB '%s' does not match checksum in extended information file '%s'\n"
@@ -831,7 +831,7 @@ msgstr ""
 "Esto puede durar bastante tiempo.\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:358
+#: ../libgtkpod/file_itunesdb.c:312
 #, c-format
 msgid ""
 "%s:\n"
@@ -840,7 +840,7 @@ msgstr ""
 "%s:\n"
 "Esperado \"itunesdb_hash=\" , pero encontrado:\"%s\"\n"
 
-#: ../libgtkpod/file_itunesdb.c:403
+#: ../libgtkpod/file_itunesdb.c:357
 #, c-format
 msgid ""
 "%s:\n"
@@ -849,7 +849,7 @@ msgstr ""
 "%s:\n"
 "Error de formato: %s\n"
 
-#: ../libgtkpod/file_itunesdb.c:445
+#: ../libgtkpod/file_itunesdb.c:399
 msgid ""
 "No SHA1 checksums on individual tracks are available.\n"
 "\n"
@@ -866,23 +866,23 @@ msgstr ""
 "programas que no sean gtkpod.\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:481
+#: ../libgtkpod/file_itunesdb.c:435
 #, c-format
 msgid "Error reading iPod photo database (%s).\n"
 msgstr "Error al leer la base de datos de fotos del iPod (%s).\n"
 
-#: ../libgtkpod/file_itunesdb.c:486
+#: ../libgtkpod/file_itunesdb.c:440
 msgid "Error reading iPod photo database. (No error message)\n"
 msgstr ""
 "Error al leer la base de datos fotográfica del iPod. (Sin mensaje de error)\n"
 
-#: ../libgtkpod/file_itunesdb.c:544
+#: ../libgtkpod/file_itunesdb.c:498
 #, c-format
 msgid "The repository %s does not have a readable extended database.\n"
 msgstr ""
 "El repositorio %s no tiene una base de datos extendida que pueda ser leída.\n"
 
-#: ../libgtkpod/file_itunesdb.c:546
+#: ../libgtkpod/file_itunesdb.c:500
 msgid ""
 "This database identifies the track on disk with the track data in the "
 "repository database. "
@@ -890,7 +890,7 @@ msgstr ""
 "Esta base de datos identifica la pista en el disco con los datos de "
 "seguimiento en la base de datos del repositorio."
 
-#: ../libgtkpod/file_itunesdb.c:546
+#: ../libgtkpod/file_itunesdb.c:500
 msgid ""
 "Any tracks already in the database cannot be transferred between "
 "repositories without the extended database. "
@@ -898,7 +898,7 @@ msgstr ""
 "Las pistas que ya están en la base de datos no se pueden transferir entre "
 "los repositorios sin la base de datos extendida."
 
-#: ../libgtkpod/file_itunesdb.c:546
+#: ../libgtkpod/file_itunesdb.c:500
 msgid ""
 "A new extended database will be created upon saving but existing tracks will "
 "need to be reimported to be linked to the file on disk.\n"
@@ -908,15 +908,15 @@ msgstr ""
 "existentes necesitan volver a importarse para ser enlazadas a un archivo en "
 "el disco.\n"
 
-#: ../libgtkpod/file_itunesdb.c:553
+#: ../libgtkpod/file_itunesdb.c:507
 msgid "Offline iPod database successfully imported"
 msgstr "Base de datos del iPod en modo desconectado importada con éxito."
 
-#: ../libgtkpod/file_itunesdb.c:555
+#: ../libgtkpod/file_itunesdb.c:509
 msgid "Local database successfully imported"
 msgstr "Base de datos local importada con éxito."
 
-#: ../libgtkpod/file_itunesdb.c:560
+#: ../libgtkpod/file_itunesdb.c:514
 #, c-format
 msgid ""
 "Offline iPod database import failed: '%s'\n"
@@ -926,7 +926,7 @@ msgstr ""
 "'%s'\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:562
+#: ../libgtkpod/file_itunesdb.c:516
 #, c-format
 msgid ""
 "Local database import failed: '%s'\n"
@@ -935,7 +935,7 @@ msgstr ""
 "Error en la importación de la base de datos local: '%s'\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:568
+#: ../libgtkpod/file_itunesdb.c:522
 msgid ""
 "Offline iPod database import failed: \n"
 "\n"
@@ -943,7 +943,7 @@ msgstr ""
 "Error en la importación de la base de datos del iPod en modo desconectado:\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:570
+#: ../libgtkpod/file_itunesdb.c:524
 msgid ""
 "Local database import failed: \n"
 "\n"
@@ -951,7 +951,7 @@ msgstr ""
 "Error en la importación de la base de datos local:\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:575
+#: ../libgtkpod/file_itunesdb.c:529
 #, c-format
 msgid ""
 "'%s' does not exist. Import aborted.\n"
@@ -960,7 +960,7 @@ msgstr ""
 "'%s' no existe. Importación cancelada.\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:589
+#: ../libgtkpod/file_itunesdb.c:543
 msgid ""
 "Extended info will not be used.\n"
 "\n"
@@ -968,7 +968,7 @@ msgstr ""
 "No se usará la información extendida.\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:594
+#: ../libgtkpod/file_itunesdb.c:548
 msgid ""
 "iPod Database Successfully Imported\n"
 "\n"
@@ -976,7 +976,7 @@ msgstr ""
 "Base de datos del iPod importada con éxito\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:598
+#: ../libgtkpod/file_itunesdb.c:552
 #, c-format
 msgid ""
 "iPod Database Import Failed: '%s'\n"
@@ -985,7 +985,7 @@ msgstr ""
 "Error en la importación de la base de datos del iPod:'%s'\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:602
+#: ../libgtkpod/file_itunesdb.c:556
 msgid ""
 "iPod Database Import Failed.\n"
 "\n"
@@ -993,7 +993,7 @@ msgstr ""
 "Error en la importación de la base de datos del iPod.\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:608
+#: ../libgtkpod/file_itunesdb.c:562
 #, c-format
 msgid ""
 "'%s' (or similar) does not exist. Import aborted.\n"
@@ -1004,16 +1004,16 @@ msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/file_itunesdb.c:781
+#: ../libgtkpod/file_itunesdb.c:735
 msgid "Import Repository Errors"
 msgstr "Errores de Importación del Repositorio"
 
 #. title
-#: ../libgtkpod/file_itunesdb.c:782
+#: ../libgtkpod/file_itunesdb.c:736
 msgid "Errors created during repository import"
 msgstr "Errores creados durante la importación del repositorio"
 
-#: ../libgtkpod/file_itunesdb.c:908
+#: ../libgtkpod/file_itunesdb.c:862
 #, c-format
 msgid ""
 "Could not find iPod directory structure at '%s'.\n"
@@ -1031,38 +1031,38 @@ msgstr ""
 "\n"
 "¿Quieres crear la estructura de directorios ahora?"
 
-#: ../libgtkpod/file_itunesdb.c:912
+#: ../libgtkpod/file_itunesdb.c:866
 msgid "iPod directory structure not found"
 msgstr "No ha sido encontrada la estructura de directorios del iPod"
 
-#: ../libgtkpod/file_itunesdb.c:912
+#: ../libgtkpod/file_itunesdb.c:866
 msgid "Create directory structure"
 msgstr "Crear estructura de directorios"
 
-#: ../libgtkpod/file_itunesdb.c:1174
+#: ../libgtkpod/file_itunesdb.c:1128
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr "No es posible abrir \"%s\" para escribir la información extendida.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1186
+#: ../libgtkpod/file_itunesdb.c:1140
 msgid "Aborted writing of extended info.\n"
 msgstr "Cancelada la escritura de la información extendida.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1341
+#: ../libgtkpod/file_itunesdb.c:1295
 #, c-format
 msgid "%d%%  %s"
 msgstr "%d%%  %s"
 
-#: ../libgtkpod/file_itunesdb.c:1352
+#: ../libgtkpod/file_itunesdb.c:1306
 #, c-format
 msgid "%d%% (%d/%d  %d:%02d:%02d left)  %s"
 msgstr "%d%% (falta %d/%d  %d:%02d:%02d)  %s"
 
-#: ../libgtkpod/file_itunesdb.c:1397
+#: ../libgtkpod/file_itunesdb.c:1351
 msgid "Status: Deleting File"
 msgstr "Estado: borrando fichero"
 
-#: ../libgtkpod/file_itunesdb.c:1448
+#: ../libgtkpod/file_itunesdb.c:1402
 #, c-format
 msgid ""
 "Could not remove the following file: '%s'\n"
@@ -1071,7 +1071,7 @@ msgstr ""
 "No se ha podido borrar el siguiente fichero: '%s'\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:1543
+#: ../libgtkpod/file_itunesdb.c:1497
 msgid ""
 "The following track could not be converted successfully:\n"
 "\n"
@@ -1085,7 +1085,7 @@ msgstr[1] ""
 "Las siguientes pistas no han podido ser convertidas:\n"
 "\n"
 
-#: ../libgtkpod/file_itunesdb.c:1549
+#: ../libgtkpod/file_itunesdb.c:1503
 msgid ""
 "The following track could not be transferred successfully:\n"
 "\n"
@@ -1101,12 +1101,12 @@ msgstr[1] ""
 
 #. ID
 #. modal,
-#: ../libgtkpod/file_itunesdb.c:1556 ../libgtkpod/gtkpod_app_iface.c:253
+#: ../libgtkpod/file_itunesdb.c:1510 ../libgtkpod/gtkpod_app_iface.c:253
 msgid "Warning"
 msgstr "Atención"
 
 #. title
-#: ../libgtkpod/file_itunesdb.c:1557
+#: ../libgtkpod/file_itunesdb.c:1511
 msgid ""
 "The iPod could not be ejected. Please fix the problems mentioned below and "
 "then eject the iPod again. Pressing 'OK' will re-schedule the failed tracks "
@@ -1116,22 +1116,22 @@ msgstr ""
 "muestran a continuación y expulse el iPod de nuevo. Pulsando OK las pistas "
 "que han fallado serán re-añadidas para su conversión y transferencia."
 
-#: ../libgtkpod/file_itunesdb.c:1609
+#: ../libgtkpod/file_itunesdb.c:1563
 #, c-format
 msgid "Saving: waiting for %d tracks to be copied"
 msgstr "Guardando: esperando a que se copien %d pistas"
 
-#: ../libgtkpod/file_itunesdb.c:1613
+#: ../libgtkpod/file_itunesdb.c:1567
 #, c-format
 msgid "Saving: waiting for %d tracks to convert"
 msgstr "Guardando: esperando a que se conviertan %d pistas"
 
-#: ../libgtkpod/file_itunesdb.c:1616
+#: ../libgtkpod/file_itunesdb.c:1570
 #, c-format
 msgid "Saving: finished track transfer"
 msgstr "Guardando: finalizando la transferencia de pistas"
 
-#: ../libgtkpod/file_itunesdb.c:1648
+#: ../libgtkpod/file_itunesdb.c:1602
 #, c-format
 msgid ""
 "One track could not be transferred because your iPod is full. Either delete "
@@ -1148,7 +1148,7 @@ msgstr[1] ""
 "%d pistas no han podido ser transferidas porque el iPod está lleno. Borre "
 "algunas pistas o haga espacio en el iPod antes de expulsarlo de nuevo."
 
-#: ../libgtkpod/file_itunesdb.c:1717
+#: ../libgtkpod/file_itunesdb.c:1671
 #, c-format
 msgid ""
 "You did not import the existing iTunesDB ('%s'). This is most likely "
@@ -1163,19 +1163,19 @@ msgstr ""
 "Si se cancela, se podrá importar la base de datos iTunes antes de usar de "
 "nuevo esta función.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1721 ../libgtkpod/misc_playlist.c:836
+#: ../libgtkpod/file_itunesdb.c:1675 ../libgtkpod/misc_playlist.c:836
 msgid "Existing iTunes database not imported"
 msgstr "Base de datos existente de iTunes no importada"
 
-#: ../libgtkpod/file_itunesdb.c:1721 ../libgtkpod/misc_playlist.c:836
+#: ../libgtkpod/file_itunesdb.c:1675 ../libgtkpod/misc_playlist.c:836
 msgid "Proceed anyway"
 msgstr "Proceder de todas maneras"
 
-#: ../libgtkpod/file_itunesdb.c:1721
+#: ../libgtkpod/file_itunesdb.c:1675
 msgid "Skip storing"
 msgstr "Saltar almacenamiento"
 
-#: ../libgtkpod/file_itunesdb.c:1744
+#: ../libgtkpod/file_itunesdb.c:1698
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
@@ -1183,33 +1183,33 @@ msgstr ""
 "La estructura de directorios del iPod debe estar creada antes de que se "
 "pueda sincronizar con el iPod.\n"
 
-#: ../libgtkpod/file_itunesdb.c:1751
+#: ../libgtkpod/file_itunesdb.c:1705
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr ""
 "No ha sido posible borrar algunas pistas del iPod. ¡La exportación ha sido "
 "cancelada!"
 
-#: ../libgtkpod/file_itunesdb.c:1773
+#: ../libgtkpod/file_itunesdb.c:1727
 #, c-format
 msgid "Now writing database '%s'. Please wait..."
 msgstr "Escribiendo la base de datos '%s'. Espere, por favor."
 
-#: ../libgtkpod/file_itunesdb.c:1822
+#: ../libgtkpod/file_itunesdb.c:1776
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "El fichero de información extendida '%s' no ha sido borrado."
 
-#: ../libgtkpod/file_itunesdb.c:1840
+#: ../libgtkpod/file_itunesdb.c:1794
 #, c-format
 msgid "Backup database could not be found so backing up database to %s\n"
 msgstr ""
 
-#: ../libgtkpod/file_itunesdb.c:1946
+#: ../libgtkpod/file_itunesdb.c:1900
 #, c-format
 msgid "%s: Database saved"
 msgstr "Guardada la base de datos: %s"
 
-#: ../libgtkpod/file_itunesdb.c:1949
+#: ../libgtkpod/file_itunesdb.c:1903
 #, c-format
 msgid "%s: Changes saved"
 msgstr "%s: Cambios guardados"
@@ -1254,23 +1254,27 @@ msgid "Music Library"
 msgstr "Biblioteca de música"
 
 #. add podcast playlist
-#: ../libgtkpod/gp_itdb.c:812 ../libgtkpod/gp_itdb.c:920
-#: ../libgtkpod/gp_itdb.c:952
+#: ../libgtkpod/gp_itdb.c:812 ../libgtkpod/gp_itdb.c:926
+#: ../libgtkpod/gp_itdb.c:958
 msgid "Podcasts"
 msgstr "Podcasts"
 
-#: ../libgtkpod/gp_itdb.c:922
+#: ../libgtkpod/gp_itdb.c:836
+msgid "Importing of ipods completed."
+msgstr ""
+
+#: ../libgtkpod/gp_itdb.c:928
 msgid "Local"
 msgstr "Local"
 
 #. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
-#: ../libgtkpod/gp_itdb.c:924
+#: ../libgtkpod/gp_itdb.c:930
 #: ../plugins/repository_editor/repository_editor.c:1113
-#: ../plugins/repository_editor/repository_editor.xml.h:52
+#: ../plugins/repository_editor/repository_editor.xml.h:4
 msgid "iPod"
 msgstr "iPod"
 
-#: ../libgtkpod/gp_itdb.c:1007
+#: ../libgtkpod/gp_itdb.c:1013
 #, c-format
 msgid "Increased playcount for '%s'"
 msgstr "Contador incrementado en '%s'"
@@ -1438,7 +1442,7 @@ msgstr "Todo"
 
 #. 0
 #: ../libgtkpod/misc_conversion.c:61
-#: ../plugins/core_preferences/core_prefs.xml.h:24
+#: ../plugins/core_preferences/core_prefs.xml.h:116
 #: ../plugins/playlist_display/playlist_display_spl.c:78
 #: ../plugins/sorttab_display/sorttab_widget.c:243
 #: ../plugins/sjcd/egg-play-preview.c:199
@@ -1446,25 +1450,25 @@ msgid "Album"
 msgstr "Álbum"
 
 #: ../libgtkpod/misc_conversion.c:62
-#: ../plugins/core_preferences/core_prefs.xml.h:29
+#: ../plugins/core_preferences/core_prefs.xml.h:112
 #: ../plugins/playlist_display/playlist_display_spl.c:79
 #: ../plugins/sorttab_display/sorttab_widget.c:240
 #: ../plugins/sjcd/egg-play-preview.c:189 ../plugins/sjcd/sj-main.c:521
-#: ../plugins/sjcd/sj-main.c:1527
+#: ../plugins/sjcd/sj-main.c:1525
 msgid "Artist"
 msgstr "Artista"
 
 #: ../libgtkpod/misc_conversion.c:63
-#: ../plugins/core_preferences/core_prefs.xml.h:89
+#: ../plugins/core_preferences/core_prefs.xml.h:113
 #: ../plugins/playlist_display/playlist_display_spl.c:77
 #: ../plugins/sorttab_display/sorttab_widget.c:252
 #: ../plugins/sjcd/egg-play-preview.c:179 ../plugins/sjcd/sj-main.c:515
-#: ../plugins/sjcd/sj-main.c:1518
+#: ../plugins/sjcd/sj-main.c:1516
 msgid "Title"
 msgstr "Título"
 
 #: ../libgtkpod/misc_conversion.c:64
-#: ../plugins/core_preferences/core_prefs.xml.h:62
+#: ../plugins/core_preferences/core_prefs.xml.h:114
 #: ../plugins/playlist_display/playlist_display_spl.c:83
 #: ../plugins/sorttab_display/sorttab_widget.c:246
 msgid "Genre"
@@ -1477,7 +1481,7 @@ msgstr "Comentario"
 
 #. 5
 #: ../libgtkpod/misc_conversion.c:66
-#: ../plugins/core_preferences/core_prefs.xml.h:32
+#: ../plugins/core_preferences/core_prefs.xml.h:115
 #: ../plugins/playlist_display/playlist_display_spl.c:91
 msgid "Composer"
 msgstr "Compositor"
@@ -1504,7 +1508,7 @@ msgid "Track Nr (#)"
 msgstr "Número de pista (#)"
 
 #: ../libgtkpod/misc_conversion.c:72
-#: ../plugins/track_display/display_tracks.c:1888
+#: ../plugins/track_display/display_tracks.c:1891
 msgid "Transferred"
 msgstr "Transferido"
 
@@ -1539,7 +1543,7 @@ msgstr "Contador"
 
 #: ../libgtkpod/misc_conversion.c:79
 #: ../plugins/playlist_display/playlist_display_spl.c:95
-#: ../plugins/track_display/display_tracks.c:1876
+#: ../plugins/track_display/display_tracks.c:1879
 msgid "Rating"
 msgstr "Puntuación"
 
@@ -1570,7 +1574,7 @@ msgstr "Control de sonido"
 #: ../libgtkpod/misc_conversion.c:85
 #: ../plugins/playlist_display/playlist_display_spl.c:82
 #: ../plugins/sorttab_display/sorttab_widget.c:255
-#: ../plugins/track_display/display_tracks.c:1924
+#: ../plugins/track_display/display_tracks.c:1927
 msgid "Year"
 msgstr "Año"
 
@@ -1813,20 +1817,20 @@ msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "El URI '%s' contiene caracteres de escape no válidos"
 
 #: ../libgtkpod/misc_playlist.c:69
-#: ../plugins/playlist_display/playlist_display_spl.c:1514
+#: ../plugins/playlist_display/playlist_display_spl.c:1523
 msgid "Please load the iPod before adding playlists."
 msgstr "Por favor, cargar el iPod antes de añadir listas de reproducción."
 
 #: ../libgtkpod/misc_playlist.c:74 ../libgtkpod/misc_playlist.c:318
-#: ../plugins/playlist_display/playlist_display_spl.c:1463
-#: ../plugins/playlist_display/playlist_display_spl.c:1518
-#: ../plugins/playlist_display/playlist_display_spl.c:1521
+#: ../plugins/playlist_display/playlist_display_spl.c:1472
+#: ../plugins/playlist_display/playlist_display_spl.c:1527
+#: ../plugins/playlist_display/playlist_display_spl.c:1530
 #: ../plugins/playlist_display/plugin.c:345
 msgid "New Playlist"
 msgstr "Nueva lista de reproducción"
 
 #: ../libgtkpod/misc_playlist.c:74 ../libgtkpod/misc_playlist.c:318
-#: ../plugins/playlist_display/playlist_display_spl.c:1521
+#: ../plugins/playlist_display/playlist_display_spl.c:1530
 msgid "Please enter a name for the new playlist"
 msgstr "Introducir el nombre de la nueva lista de reproducción"
 
@@ -1932,7 +1936,7 @@ msgstr ""
 "Las pistas pendientes con ficheros correspondientes en el PC han sido "
 "procesadas."
 
-#: ../libgtkpod/misc_playlist.c:789 ../plugins/sjcd/sj-main.c:1503
+#: ../libgtkpod/misc_playlist.c:789 ../plugins/sjcd/sj-main.c:1501
 msgid "Track"
 msgstr "Pista"
 
@@ -2301,32 +2305,30 @@ msgstr[1] "Copiadas %d pistas a '%s'"
 msgid "No tracks selected"
 msgstr "No se ha seleccionado ninguna pista"
 
-#: ../libgtkpod/prefs.c:323
-#, c-format
-msgid "gtkpod version %s usage:\n"
-msgstr "Uso de gtkpod versión %s:\n"
-
-#: ../libgtkpod/prefs.c:324
-msgid "  -h, --help:   display this message\n"
-msgstr "  -h, --help:   muestra este mensaje\n"
-
-#: ../libgtkpod/prefs.c:325
-msgid "  -p <file>:    increment playcount for file by one\n"
+#: ../libgtkpod/prefs.c:280
+#, fuzzy
+msgid "increment playcount for file by one"
 msgstr "  -p <fichero>:    incrementa el contador del fichero en uno\n"
 
-#: ../libgtkpod/prefs.c:326
-msgid "  --hash <file>:print gtkpod hash for file\n"
+#: ../libgtkpod/prefs.c:280 ../libgtkpod/prefs.c:282
+msgid "FILE"
+msgstr ""
+
+#: ../libgtkpod/prefs.c:282
+#, fuzzy
+msgid "print gtkpod hash for file"
 msgstr "  --hash <file>:muestra la suma de resumen de gtkpod para el fichero\n"
 
-#: ../libgtkpod/prefs.c:327
-msgid "  -m path:      define the mountpoint of your iPod\n"
+#: ../libgtkpod/prefs.c:284
+#, fuzzy
+msgid "define the mountpoint of your iPod"
 msgstr "  -m ruta:      define el punto de montaje del iPod\n"
 
-#: ../libgtkpod/prefs.c:328
-msgid "  --mountpoint: same as '-m'.\n"
-msgstr "  --mountpoint: igual que '-m'.\n"
+#: ../libgtkpod/prefs.c:284
+msgid "PATH"
+msgstr ""
 
-#: ../libgtkpod/prefs.c:496
+#: ../libgtkpod/prefs.c:435
 #, c-format
 msgid "Couldn't create '%s'\n"
 msgstr "No se ha podido crear '%s'\n"
@@ -2381,7 +2383,7 @@ msgstr "No ha habido cambios.\n"
 msgid "Sync summary"
 msgstr "Sincronizar resumen"
 
-#: ../libgtkpod/tools.c:190
+#: ../libgtkpod/tools.c:142
 #, fuzzy, c-format
 msgid ""
 "Could not find '%s'.\n"
@@ -2395,7 +2397,7 @@ msgstr ""
 "sistema.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:289
+#: ../libgtkpod/tools.c:241
 #, c-format
 msgid ""
 "Execution of '%s' failed.\n"
@@ -2404,14 +2406,14 @@ msgstr ""
 "Error al ejecutar '%s'.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:327
+#: ../libgtkpod/tools.c:279
 #, fuzzy, c-format
 msgid "Normalization failed: file not available (%s)."
 msgstr ""
 "Error al normalizar: fichero no disponible (%s).\n"
 "\n"
 
-#: ../libgtkpod/tools.c:342
+#: ../libgtkpod/tools.c:294
 #, fuzzy, c-format
 msgid ""
 "Normalization failed for file %s: file type not supported.\n"
@@ -2428,51 +2430,51 @@ msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: ../libgtkpod/tools.c:388
+#: ../libgtkpod/tools.c:340
 #, fuzzy
 msgid "Normalization Errors"
 msgstr "Normalización ..."
 
 #. title
-#: ../libgtkpod/tools.c:389
+#: ../libgtkpod/tools.c:341
 #, fuzzy
 msgid "Errors created by track normalisation"
 msgstr "Errores creados por la exportación"
 
-#: ../libgtkpod/tools.c:481
+#: ../libgtkpod/tools.c:430
 #, fuzzy, c-format
 msgid "'%s-%s' (%s) could not be normalized. %s\n"
 msgstr ""
 "'%s-%s' (%s) no se ha podido normalizar.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:486
+#: ../libgtkpod/tools.c:435
 #, fuzzy, c-format
 msgid "'%s-%s' (%s) could not be normalized. Unknown error.\n"
 msgstr ""
 "'%s-%s' (%s) no se ha podido normalizar.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:503
+#: ../libgtkpod/tools.c:452
 #, fuzzy, c-format
 msgid "%d%% (%d tracks left)"
 msgstr "%d%% (%d:%02d:%02d restantes)"
 
-#: ../libgtkpod/tools.c:514
+#: ../libgtkpod/tools.c:463
 #, fuzzy, c-format
 msgid "Normalized %d of %d track."
 msgid_plural "Normalized %d of %d tracks."
 msgstr[0] "Exportadas %d de %d pista."
 msgstr[1] "Exportadas %d de %d pistas."
 
-#: ../libgtkpod/tools.c:531
+#: ../libgtkpod/tools.c:480
 #, fuzzy, c-format
 msgid "Normalized %d of %d tracks."
 msgid_plural "Normalized %d of %d tracks."
 msgstr[0] "Exportadas %d de %d pista."
 msgstr[1] "Exportadas %d de %d pistas."
 
-#: ../libgtkpod/tools.c:621
+#: ../libgtkpod/tools.c:570
 msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
@@ -2480,7 +2482,7 @@ msgstr ""
 "Seleccionar el programa a ser ejecutado en la sección de 'Herramientas' del "
 "diálogo de edición de preferencias.\n"
 
-#: ../libgtkpod/tools.c:632
+#: ../libgtkpod/tools.c:581
 #, c-format
 msgid ""
 "Could not find the command '%s'.\n"
@@ -2494,7 +2496,7 @@ msgstr ""
 "edición de preferencias.\n"
 "\n"
 
-#: ../libgtkpod/tools.c:673
+#: ../libgtkpod/tools.c:622
 #, c-format
 msgid ""
 "'%s' returned the following output:\n"
@@ -2538,281 +2540,22 @@ msgid "Modify Core Preferences"
 msgstr "Modificar Propiedades del Núcleo"
 
 #: ../plugins/core_preferences/core_prefs.xml.h:1
-#: ../plugins/repository_editor/repository_editor.xml.h:1
-msgid "..."
-msgstr "..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:2
-msgid "<b>Auto-Generated Playlists</b>"
-msgstr "<b>Listas de Reproducción Auto-Generadas</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:3
-msgid "<b>Compatible Formats</b>"
-msgstr "<b>Formatos compatibles</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:4
-msgid "<b>Conversion Settings</b>"
-msgstr "<b>Configuración de la conversión</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:5
-msgid "<b>Cover Art</b>"
-msgstr "<b>Carátula</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:6
-msgid "<b>Deletion Confirmation Messages</b>"
-msgstr "<b>Mensajes de Confirmación de Borrado</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:7
-msgid "<b>Import and Synchronization</b>"
-msgstr "<b>Importación y sincronización</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:8
-msgid "<b>Information Messages</b>"
-msgstr "<b>Mensajes de información</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:9
-msgid "<b>Offset to add to ReplayGain</b>"
-msgstr "<b>Offset para añadir a ReplayGain</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:10
-msgid "<b>On-the-fly Conversion</b>"
-msgstr "<b>Conversión en-el-aire</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:11
-msgid "<b>Preferred gain type</b>"
-msgstr "<b>Tipo de ganancia preferido</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:12
-msgid "<b>Tag Editing</b>"
-msgstr "<b>Edición de etiquetas</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:13
-msgid "<b>Tags</b>"
-msgstr "<b>Etiquetas</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:14
-msgid "<b>Volume Normalization</b>"
-msgstr "<b>Normalización de Volumen</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:15
-msgid "<b>When Attempting to Add an Existing Track</b>"
-msgstr "<b>Al intentar Agregar una Pista Existente</b>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:16
-msgid "<i>aacgain</i> executable:"
-msgstr "Ejecutable de <i>aacgain</i>:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:17
-msgid "<i>mp3gain</i> executable:"
-msgstr "Ejecutable de <i>mp3gain</i>:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:18
-msgid "AAC"
-msgstr "AAC"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:19
-msgid "About unupdated tracks"
-msgstr "Acerca de las pistas sin actualizar"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:20
-msgid "About updated tracks"
-msgstr "Acerca de las pistas actualizadas"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:21
-msgid "Add cover art using file name template"
-msgstr "Añadir carátula utilizando la plantilla de nombre de archivo"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:22
-msgid ""
-"Add file masks to be excluded from import and synchronization, for example, "
-"<i>*.mp3</i>."
-msgstr ""
-"Añadir las máscaras de ficheros que serán excluidos de la importación y "
-"sincronización, por ejemplo, <i>*. mp3.</i>"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:23
-msgid "Add subfolders recursively"
-msgstr "Añadir subcarpetas de forma recursiva"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:25
-msgid "Album gain (formerly \"audiophile gain\")"
-msgstr "Ganancia del álbum (anteriormente \"ganancia de audiófilo\")"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:26
-msgid "Allow duplicate files"
-msgstr "Permitir archivos duplicados"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:27
-msgid "Also use this encoding when updating or synchronizing tracks"
-msgstr ""
-"Utilizar también esta codificación cuando se actualicen o sincronicen pistas"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:28
-msgid "Also use this encoding when writing tracks"
-msgstr "Utilizar también esta codificación cuando para escribir pistas"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:30
-msgid "Automatically generate video thumbnails"
-msgstr "Generar automáticamente miniaturas de vídeo"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:31
-msgid "Cache folder:"
-msgstr "Carpeta de caché:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:33
-msgid "Confirm deletion of playlists or tracks from a playlist"
-msgstr ""
-"Confirmar la eliminación de listas de reproducción o canciones de una lista "
-"de reproducción"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:34
-msgid "Confirm deletion of tracks during synchronization"
-msgstr "Confirmar la eliminación de las pistas durante la sincronización"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:35
-msgid "Confirm deletion of tracks:"
-msgstr "Confirmar la eliminación de pistas:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:36
-msgid "Conversion Preferences"
-msgstr "Preferencias de conversión"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:37
-msgid "Conversion Settings..."
-msgstr "Configuración de conversión ..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:38
-msgid "Convert AAC (M4A)"
-msgstr "Convertir AAC (M4A)"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:39
-msgid "Convert MP3"
-msgstr "Convertir MP3"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:40
-msgid "Convert WAV"
-msgstr "Convertir WAV"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:41
-msgid "Convert compatible formats to a single format"
-msgstr "Convertir los formatos compatibles a un formato único"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:42
-msgid "Convert incompatible audio formats to:"
-msgstr "Convertir formatos de audio incompatibles a:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:43
-msgid "Cover Art Search Preferences"
-msgstr "Preferencias de la Búsqueda de Carátulas"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:44
-msgid "Cover art file pattern:"
-msgstr "Patrón de archivo de carátulas"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:45
-msgid "Customize..."
-msgstr "Personalizar ..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:46
-msgid "Delete missing tracks when synchronizing playlists"
-msgstr "Eliminar las pistas que faltan al sincronizar listas de reproducción"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:47
-msgid "Display conversion log"
-msgstr "Mostrar registro de conversión"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:48
-msgid "Display information about detected duplicate files"
-msgstr "Mostrar información sobre los archivos duplicados detectados"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:49
-msgid "Display messages and warnings at startup"
-msgstr "Mensajes de la pantalla y las advertencias en el arranque"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:50
-msgid "Display synchronization results"
-msgstr "Mostrar los resultados de la sincronización"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:51
-msgid "Encoding Preferences"
-msgstr "Preferencias de codificación"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:52
-msgid "Encoding..."
-msgstr "Codificación ..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:53
-msgid "Excluded files..."
-msgstr "Archivos excluidos ..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:54
-msgid "Exclusions List"
-msgstr "Lista de exclusiones"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:55
-msgid "Feedback"
-msgstr "Feedback"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:56
-msgid "Filename Parse Preferences"
-msgstr "Preferencias del Analizador de Nombres de Archivo"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:57
-msgid "Filename parse pattern:"
-msgstr "Patrón del Analizador de Nombres de Archivo:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:58
-msgid "From the hard disk"
-msgstr "Desde el disco duro"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:59
-msgid "From the iPod"
-msgstr "Desde el iPod"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:60
-msgid "From the local database"
-msgstr "De la base de datos local"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:61
-#: ../plugins/info_display/info.c:371
-#: ../plugins/playlist_display/playlist_display_spl.c:168
-msgid "GB"
-msgstr "GB"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:63
-msgid "Include tracks never played in the \"Best Rated\" playlist"
-msgstr "Incluir las pistas no reproducidas en la lista \"Mejor Valoradas\""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:64
 msgid "MP3"
 msgstr "MP3"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:65
-msgid "Mass-modify tags when multiple tracks are selected"
-msgstr "Modificar las etiquetas en masas cuando se seleccionan varias pistas"
+#: ../plugins/core_preferences/core_prefs.xml.h:2
+msgid "AAC"
+msgstr "AAC"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:66
-msgid "Maximum cache size:"
-msgstr "Tamaño máximo de caché:"
+#: ../plugins/core_preferences/core_prefs.xml.h:3
+msgid "Encoding Preferences"
+msgstr "Preferencias de codificación"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:67
-msgid "Maximum threads:"
-msgstr "Número máximo de subprocesos:"
+#: ../plugins/core_preferences/core_prefs.xml.h:4
+msgid "Tag and filename encoding:"
+msgstr "Codificación de etiqueta y nombre:"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:68
-msgid "Metadata"
-msgstr "Metadatos"
-
-#. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:69 ../src/anjuta-app.c:516
-msgid "Music"
-msgstr "Música"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:70
-msgid "Normalization..."
-msgstr "Normalización ..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:71
+#: ../plugins/core_preferences/core_prefs.xml.h:5
 msgid ""
 "Normally, the encoding specified above will only be used when importing new "
 "tracks, and for any operations involving existing tracks, the encoding "
@@ -2827,125 +2570,24 @@ msgstr ""
 "para modificar este comportamiento en caso de que especificara "
 "incorrectamente la codificación en la primera importación."
 
-#: ../plugins/core_preferences/core_prefs.xml.h:72
-msgid "Number of tracks:"
-msgstr "Número de pistas:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:73
-msgid "Overwrite existing tags"
-msgstr "Sobreescribir etiquetas existentes"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:74
-msgid "Parse file name to set missing tags"
+#: ../plugins/core_preferences/core_prefs.xml.h:6
+msgid "Also use this encoding when updating or synchronizing tracks"
 msgstr ""
-"Analizar el nombre del archivo para establecer las etiquetas que faltan"
+"Utilizar también esta codificación cuando se actualicen o sincronicen pistas"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:76
-#, no-c-format
-msgid ""
-"Provide a shell command to generate a thumbnail image of your video file.  "
-"The following format strings will be expanded:\n"
-"- %f: the input file\n"
-"- %o: the output file (which is automatically generated)\n"
-msgstr ""
-"Proporcionar un comando shell para generar una imagen en miniatura de "
-"archivos de vídeo.  Se expandirán las siguientes cadenas de formato: \n"
-"- %f: el archivo de entrada\n"
-"- %o: el archivo de salida (que se genera automáticamente)\n"
+#: ../plugins/core_preferences/core_prefs.xml.h:7
+msgid "Also use this encoding when writing tracks"
+msgstr "Utilizar también esta codificación cuando para escribir pistas"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:80
-msgid "Read embedded cover art information"
-msgstr "Leer información incluida en la portada"
+#: ../plugins/core_preferences/core_prefs.xml.h:8
+msgid "Filename Parse Preferences"
+msgstr "Preferencias del Analizador de Nombres de Archivo"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:81
-msgid "Read embedded tags from music files"
-msgstr "Lea las etiquetas incrustadas en los archivos de música"
+#: ../plugins/core_preferences/core_prefs.xml.h:9
+msgid "Filename parse pattern:"
+msgstr "Patrón del Analizador de Nombres de Archivo:"
 
-#: ../plugins/core_preferences/core_prefs.xml.h:82
-msgid "ReplayGain Preferences"
-msgstr "Preferencias de ReplayGain"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:83
-msgid "ReplayGain..."
-msgstr "ReplayGain..."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:84
-msgid "Set still missing tags to file name"
-msgstr "Establecer etiquetas que aún faltan al nombre del archivo"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:85
-msgid "Skip the track"
-msgstr "Saltar la pista"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:86
-msgid "Tag and filename encoding:"
-msgstr "Codificación de etiqueta y nombre:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:87
-msgid ""
-"These settings will only be applied to newly added or updated tracks. This "
-"could result in tracks that are normalized to different levels until updated."
-msgstr ""
-"Estas opciones sólo se aplicarán a las pistas recién añadidas o "
-"actualizadas. Esto podría resultar en pistas que se normalizan a diferentes "
-"niveles hasta que se actualicen."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:88
-msgid "Threshold for import of tracks before a save triggered:"
-msgstr "Umbral para la importación de pistas previo a un guardado programado:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:90
-msgid "Track gain (formerly \"radio gain\")"
-msgstr "Ganancia de la pista (anteriormente \"ganancia de radio\")"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:91
-msgid "Transfer tracks in background mode"
-msgstr "Transferir las canciones en segundo plano"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:92
-msgid "Update information about the existing track"
-msgstr "Actualizar la información de la pista existente"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:93
-msgid "Use legacy format for MP3 tags"
-msgstr "Utilizar el formato legacy para las etiquetas MP3"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:94
-msgid "Video Thumbnail Generation"
-msgstr "Generación de Miniaturas de Vídeo"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:95
-msgid "Video thumbnailing program:"
-msgstr "Programa de miniaturas de vídeo:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:96
-msgid ""
-"When multiple tracks are added to a repository, should an\n"
-"error occur then it is likely, without saving all added tracks\n"
-"will be lost since they are not saved. This preference allows for\n"
-"a save operation to be conducted after the number of tracks\n"
-"specified.\n"
-"\n"
-"The default is 10 so after 10 tracks have been added a save\n"
-"will be imposed on the repository."
-msgstr ""
-"Cuando se añaden varias pistas a un repositorio, en caso de\n"
-"producirse un error, las pistas añadidas se perderñan ya que\n"
-"no se guardan hasta añadirse todas. Este parámetro permite\n"
-"ejecutar un guardado tras el número de pistas especificado.\n"
-"\n"
-"El valor predeterminado es 10, así que después de que se\n"
-"añadan 10 pistas, se forzará un guardado en el repositorio."
-
-#: ../plugins/core_preferences/core_prefs.xml.h:104
-msgid "When updating tracks, display information:"
-msgstr "Al actualizar las pistas, mostrar la información:"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:105
-msgid "Write tags to disk when edited"
-msgstr "Escribir etiquetas en el disco cuando se editen"
-
-#: ../plugins/core_preferences/core_prefs.xml.h:107
+#: ../plugins/core_preferences/core_prefs.xml.h:11
 #, no-c-format
 msgid ""
 "You can separate several templates by a ';'. The first one matching the "
@@ -2980,7 +2622,19 @@ msgstr ""
 "- saltar datos: %*\n"
 "- el carácter '%': %%."
 
-#: ../plugins/core_preferences/core_prefs.xml.h:122
+#: ../plugins/core_preferences/core_prefs.xml.h:25
+msgid "Overwrite existing tags"
+msgstr "Sobreescribir etiquetas existentes"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:26
+msgid "Cover Art Search Preferences"
+msgstr "Preferencias de la Búsqueda de Carátulas"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:27
+msgid "Cover art file pattern:"
+msgstr "Patrón de archivo de carátulas"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:29
 #, no-c-format
 msgid ""
 "You can separate several templates by a ';'. The first one matching the "
@@ -3027,9 +2681,357 @@ msgstr ""
 "- saltar datos: %*\n"
 "- el carácter '%': %%."
 
-#: ../plugins/core_preferences/core_prefs.xml.h:141
+#: ../plugins/core_preferences/core_prefs.xml.h:48
+msgid "Video Thumbnail Generation"
+msgstr "Generación de Miniaturas de Vídeo"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:49
+msgid "Video thumbnailing program:"
+msgstr "Programa de miniaturas de vídeo:"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:51
+#, no-c-format
+msgid ""
+"Provide a shell command to generate a thumbnail image of your video file.  "
+"The following format strings will be expanded:\n"
+"- %f: the input file\n"
+"- %o: the output file (which is automatically generated)\n"
+msgstr ""
+"Proporcionar un comando shell para generar una imagen en miniatura de "
+"archivos de vídeo.  Se expandirán las siguientes cadenas de formato: \n"
+"- %f: el archivo de entrada\n"
+"- %o: el archivo de salida (que se genera automáticamente)\n"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:55
+msgid "Exclusions List"
+msgstr "Lista de exclusiones"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:56
+msgid ""
+"Add file masks to be excluded from import and synchronization, for example, "
+"<i>*.mp3</i>."
+msgstr ""
+"Añadir las máscaras de ficheros que serán excluidos de la importación y "
+"sincronización, por ejemplo, <i>*. mp3.</i>"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:57
+msgid "<i>aacgain</i> executable:"
+msgstr "Ejecutable de <i>aacgain</i>:"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:58
+msgid "<i>mp3gain</i> executable:"
+msgstr "Ejecutable de <i>mp3gain</i>:"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:59
+#: ../plugins/repository_editor/repository_editor.xml.h:25
+msgid "..."
+msgstr "..."
+
+#: ../plugins/core_preferences/core_prefs.xml.h:60
+msgid "<b>Volume Normalization</b>"
+msgstr "<b>Normalización de Volumen</b>"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:61
+msgid "Conversion Preferences"
+msgstr "Preferencias de conversión"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:62
+msgid "Convert compatible formats to a single format"
+msgstr "Convertir los formatos compatibles a un formato único"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:63
+msgid "Convert MP3"
+msgstr "Convertir MP3"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:64
+msgid "Convert AAC (M4A)"
+msgstr "Convertir AAC (M4A)"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:65
+msgid "Convert WAV"
+msgstr "Convertir WAV"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:66
+msgid "<b>Compatible Formats</b>"
+msgstr "<b>Formatos compatibles</b>"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:67
+#: ../plugins/info_display/info.c:376
+#: ../plugins/playlist_display/playlist_display_spl.c:168
+msgid "GB"
+msgstr "GB"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:68
+msgid "Cache folder:"
+msgstr "Carpeta de caché:"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:69
+msgid "Maximum cache size:"
+msgstr "Tamaño máximo de caché:"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:70
+msgid "Maximum threads:"
+msgstr "Número máximo de subprocesos:"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:71
+msgid "Display conversion log"
+msgstr "Mostrar registro de conversión"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:72
+msgid "<b>Conversion Settings</b>"
+msgstr "<b>Configuración de la conversión</b>"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:73
+msgid "ReplayGain Preferences"
+msgstr "Preferencias de ReplayGain"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:74
+msgid "Album gain (formerly \"audiophile gain\")"
+msgstr "Ganancia del álbum (anteriormente \"ganancia de audiófilo\")"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:75
+msgid "Track gain (formerly \"radio gain\")"
+msgstr "Ganancia de la pista (anteriormente \"ganancia de radio\")"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:76
+msgid "<b>Preferred gain type</b>"
+msgstr "<b>Tipo de ganancia preferido</b>"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:77
 msgid "dB"
 msgstr "dB"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:78
+msgid "<b>Offset to add to ReplayGain</b>"
+msgstr "<b>Offset para añadir a ReplayGain</b>"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:79
+msgid ""
+"These settings will only be applied to newly added or updated tracks. This "
+"could result in tracks that are normalized to different levels until updated."
+msgstr ""
+"Estas opciones sólo se aplicarán a las pistas recién añadidas o "
+"actualizadas. Esto podría resultar en pistas que se normalizan a diferentes "
+"niveles hasta que se actualicen."
+
+#: ../plugins/core_preferences/core_prefs.xml.h:80
+msgid "Transfer tracks in background mode"
+msgstr "Transferir las canciones en segundo plano"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:81
+msgid "Add subfolders recursively"
+msgstr "Añadir subcarpetas de forma recursiva"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:82
+msgid "Allow duplicate files"
+msgstr "Permitir archivos duplicados"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:83
+msgid "Delete missing tracks when synchronizing playlists"
+msgstr "Eliminar las pistas que faltan al sincronizar listas de reproducción"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:84
+msgid ""
+"When multiple tracks are added to a repository, should an\n"
+"error occur then it is likely, without saving all added tracks\n"
+"will be lost since they are not saved. This preference allows for\n"
+"a save operation to be conducted after the number of tracks\n"
+"specified.\n"
+"\n"
+"The default is 10 so after 10 tracks have been added a save\n"
+"will be imposed on the repository."
+msgstr ""
+"Cuando se añaden varias pistas a un repositorio, en caso de\n"
+"producirse un error, las pistas añadidas se perderñan ya que\n"
+"no se guardan hasta añadirse todas. Este parámetro permite\n"
+"ejecutar un guardado tras el número de pistas especificado.\n"
+"\n"
+"El valor predeterminado es 10, así que después de que se\n"
+"añadan 10 pistas, se forzará un guardado en el repositorio."
+
+#: ../plugins/core_preferences/core_prefs.xml.h:92
+msgid "Threshold for import of tracks before a save triggered:"
+msgstr "Umbral para la importación de pistas previo a un guardado programado:"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:93
+msgid "Excluded files..."
+msgstr "Archivos excluidos ..."
+
+#: ../plugins/core_preferences/core_prefs.xml.h:94
+msgid "Encoding..."
+msgstr "Codificación ..."
+
+#: ../plugins/core_preferences/core_prefs.xml.h:95
+msgid "Normalization..."
+msgstr "Normalización ..."
+
+#: ../plugins/core_preferences/core_prefs.xml.h:96
+msgid "ReplayGain..."
+msgstr "ReplayGain..."
+
+#: ../plugins/core_preferences/core_prefs.xml.h:97
+msgid "<b>Import and Synchronization</b>"
+msgstr "<b>Importación y sincronización</b>"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:98
+msgid "Update information about the existing track"
+msgstr "Actualizar la información de la pista existente"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:99
+msgid "Skip the track"
+msgstr "Saltar la pista"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:100
+msgid "<b>When Attempting to Add an Existing Track</b>"
+msgstr "<b>Al intentar Agregar una Pista Existente</b>"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:101
+msgid "Number of tracks:"
+msgstr "Número de pistas:"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:102
+msgid "Include tracks never played in the \"Best Rated\" playlist"
+msgstr "Incluir las pistas no reproducidas en la lista \"Mejor Valoradas\""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:103
+msgid "<b>Auto-Generated Playlists</b>"
+msgstr "<b>Listas de Reproducción Auto-Generadas</b>"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:104
+msgid "Convert incompatible audio formats to:"
+msgstr "Convertir formatos de audio incompatibles a:"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:105
+msgid "Conversion Settings..."
+msgstr "Configuración de conversión ..."
+
+#: ../plugins/core_preferences/core_prefs.xml.h:106
+msgid "<b>On-the-fly Conversion</b>"
+msgstr "<b>Conversión en-el-aire</b>"
+
+#. Register actions
+#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-app.c:521
+msgid "Music"
+msgstr "Música"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:108
+msgid "Read embedded tags from music files"
+msgstr "Lea las etiquetas incrustadas en los archivos de música"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:109
+msgid "Parse file name to set missing tags"
+msgstr ""
+"Analizar el nombre del archivo para establecer las etiquetas que faltan"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:110
+msgid "Customize..."
+msgstr "Personalizar ..."
+
+#: ../plugins/core_preferences/core_prefs.xml.h:111
+msgid "Set still missing tags to file name"
+msgstr "Establecer etiquetas que aún faltan al nombre del archivo"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:117
+msgid "<b>Tags</b>"
+msgstr "<b>Etiquetas</b>"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:118
+msgid "Mass-modify tags when multiple tracks are selected"
+msgstr "Modificar las etiquetas en masas cuando se seleccionan varias pistas"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:119
+msgid "Write tags to disk when edited"
+msgstr "Escribir etiquetas en el disco cuando se editen"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:120
+msgid "Use legacy format for MP3 tags"
+msgstr "Utilizar el formato legacy para las etiquetas MP3"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:121
+msgid "<b>Tag Editing</b>"
+msgstr "<b>Edición de etiquetas</b>"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:122
+msgid "Read embedded cover art information"
+msgstr "Leer información incluida en la portada"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:123
+msgid "Add cover art using file name template"
+msgstr "Añadir carátula utilizando la plantilla de nombre de archivo"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:124
+msgid "Automatically generate video thumbnails"
+msgstr "Generar automáticamente miniaturas de vídeo"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:125
+msgid "<b>Cover Art</b>"
+msgstr "<b>Carátula</b>"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:126
+msgid "Metadata"
+msgstr "Metadatos"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:127
+msgid "Confirm deletion of tracks:"
+msgstr "Confirmar la eliminación de pistas:"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:128
+msgid "From the iPod"
+msgstr "Desde el iPod"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:129
+msgid "From the hard disk"
+msgstr "Desde el disco duro"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:130
+msgid "From the local database"
+msgstr "De la base de datos local"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:131
+msgid "Confirm deletion of playlists or tracks from a playlist"
+msgstr ""
+"Confirmar la eliminación de listas de reproducción o canciones de una lista "
+"de reproducción"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:132
+msgid "Confirm deletion of tracks during synchronization"
+msgstr "Confirmar la eliminación de las pistas durante la sincronización"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:133
+msgid "<b>Deletion Confirmation Messages</b>"
+msgstr "<b>Mensajes de Confirmación de Borrado</b>"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:134
+msgid "Display messages and warnings at startup"
+msgstr "Mensajes de la pantalla y las advertencias en el arranque"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:135
+msgid "Display information about detected duplicate files"
+msgstr "Mostrar información sobre los archivos duplicados detectados"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:136
+msgid "Display synchronization results"
+msgstr "Mostrar los resultados de la sincronización"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:137
+msgid "When updating tracks, display information:"
+msgstr "Al actualizar las pistas, mostrar la información:"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:138
+msgid "About updated tracks"
+msgstr "Acerca de las pistas actualizadas"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:139
+msgid "About unupdated tracks"
+msgstr "Acerca de las pistas sin actualizar"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:140
+msgid "<b>Information Messages</b>"
+msgstr "<b>Mensajes de información</b>"
+
+#: ../plugins/core_preferences/core_prefs.xml.h:141
+msgid "Feedback"
+msgstr "Feedback"
 
 #: ../plugins/core_preferences/plugin.c:65
 msgid "Core Preferences"
@@ -3045,71 +3047,71 @@ msgid "<"
 msgstr "<"
 
 #: ../plugins/cover_display/cover_display.xml.h:2
-#: ../plugins/clarity/clarity.xml.h:1
-msgid "<b>Album Cover Sort Order</b>"
-msgstr "<b>Orden de las Carátulas de Álbum</b>"
-
-#: ../plugins/cover_display/cover_display.xml.h:3
-#: ../plugins/playlist_display/playlist_display.xml.h:2
-#: ../plugins/sorttab_display/sorttab_display.xml.h:10
-#: ../plugins/track_display/track_display.xml.h:1
-#: ../plugins/clarity/clarity.xml.h:2
-msgid "<b>Ascending</b>"
-msgstr "<b>Ascendente</b>"
-
-#: ../plugins/cover_display/cover_display.xml.h:4
-msgid "<b>Cover Art Display</b>"
-msgstr "<b>Pantalla de carátulas</b>"
-
-#: ../plugins/cover_display/cover_display.xml.h:5
-#: ../plugins/playlist_display/playlist_display.xml.h:3
-#: ../plugins/sorttab_display/sorttab_display.xml.h:11
-#: ../plugins/track_display/track_display.xml.h:3
-#: ../plugins/clarity/clarity.xml.h:4
-msgid "<b>Descending</b>"
-msgstr "<b>Descendente</b>"
-
-#: ../plugins/cover_display/cover_display.xml.h:6
-#: ../plugins/playlist_display/playlist_display.xml.h:5
-#: ../plugins/sorttab_display/sorttab_display.xml.h:15
-#: ../plugins/track_display/track_display.xml.h:6
-#: ../plugins/clarity/clarity.xml.h:5
-msgid "<b>None</b>"
-msgstr "<b>Ninguno</b>"
-
-#: ../plugins/cover_display/cover_display.xml.h:7
 msgid ">"
 msgstr ">"
 
-#: ../plugins/cover_display/cover_display.xml.h:8
+#: ../plugins/cover_display/cover_display.xml.h:3
 msgid "Artwork Preview"
 msgstr "Previsualización de carátula"
 
-#: ../plugins/cover_display/cover_display.xml.h:9
-#: ../plugins/clarity/clarity.xml.h:6
-msgid "Background color"
-msgstr "Color de fondo"
-
-#: ../plugins/cover_display/cover_display.xml.h:10
-#: ../plugins/playlist_display/playlist_display.xml.h:10
-#: ../plugins/sorttab_display/sorttab_display.xml.h:24
-#: ../plugins/track_display/track_display.xml.h:13
-#: ../plugins/clarity/clarity.xml.h:7
-msgid "Case sensitive sorting"
-msgstr "Ordenación sensible a mayúsculas"
-
-#: ../plugins/cover_display/cover_display.xml.h:11
+#: ../plugins/cover_display/cover_display.xml.h:4
 msgid "Choose a Different Colour for the CoverArt Display Background"
 msgstr "Elegir un color diferente para el fondo de pantalla de la carátula"
 
-#: ../plugins/cover_display/cover_display.xml.h:12
-msgid "Cover Art Display"
-msgstr "Visualización de la Carátula"
+#: ../plugins/cover_display/cover_display.xml.h:5
+#: ../plugins/clarity/clarity.xml.h:2
+msgid "Background color"
+msgstr "Color de fondo"
 
-#: ../plugins/cover_display/cover_display.xml.h:13
-#: ../plugins/clarity/clarity.xml.h:11
+#: ../plugins/cover_display/cover_display.xml.h:6
+#: ../plugins/clarity/clarity.xml.h:4
 msgid "Text color"
 msgstr "Color de texto"
+
+#: ../plugins/cover_display/cover_display.xml.h:7
+msgid "<b>Cover Art Display</b>"
+msgstr "<b>Pantalla de carátulas</b>"
+
+#: ../plugins/cover_display/cover_display.xml.h:8
+#: ../plugins/playlist_display/playlist_display.xml.h:4
+#: ../plugins/sorttab_display/sorttab_display.xml.h:18
+#: ../plugins/track_display/track_display.xml.h:7
+#: ../plugins/clarity/clarity.xml.h:6
+msgid "<b>Ascending</b>"
+msgstr "<b>Ascendente</b>"
+
+#: ../plugins/cover_display/cover_display.xml.h:9
+#: ../plugins/playlist_display/playlist_display.xml.h:5
+#: ../plugins/sorttab_display/sorttab_display.xml.h:19
+#: ../plugins/track_display/track_display.xml.h:8
+#: ../plugins/clarity/clarity.xml.h:7
+msgid "<b>Descending</b>"
+msgstr "<b>Descendente</b>"
+
+#: ../plugins/cover_display/cover_display.xml.h:10
+#: ../plugins/playlist_display/playlist_display.xml.h:6
+#: ../plugins/sorttab_display/sorttab_display.xml.h:20
+#: ../plugins/track_display/track_display.xml.h:13
+#: ../plugins/clarity/clarity.xml.h:8
+msgid "<b>None</b>"
+msgstr "<b>Ninguno</b>"
+
+#: ../plugins/cover_display/cover_display.xml.h:11
+#: ../plugins/playlist_display/playlist_display.xml.h:7
+#: ../plugins/sorttab_display/sorttab_display.xml.h:21
+#: ../plugins/track_display/track_display.xml.h:14
+#: ../plugins/clarity/clarity.xml.h:9
+msgid "Case sensitive sorting"
+msgstr "Ordenación sensible a mayúsculas"
+
+#: ../plugins/cover_display/cover_display.xml.h:12
+#: ../plugins/clarity/clarity.xml.h:10
+msgid "<b>Album Cover Sort Order</b>"
+msgstr "<b>Orden de las Carátulas de Álbum</b>"
+
+#: ../plugins/cover_display/cover_display.xml.h:13
+msgid "Cover Art Display"
+msgstr "Visualización de la Carátula"
 
 #: ../plugins/cover_display/cover_display_context_menu.c:40
 #: ../plugins/clarity/clarity_context_menu.c:40
@@ -3129,30 +3131,30 @@ msgid "Display Cover Artwork of Tracks"
 msgstr "Visor de Carátula de las Pistas"
 
 #. Set the resolution in the label
-#: ../plugins/cover_display/display_coverart.c:1454
+#: ../plugins/cover_display/display_coverart.c:1456
 #: ../plugins/photo_editor/display_photo.c:952
 #, c-format
 msgid "<b>Image Dimensions: %d x %d</b>"
 msgstr "<b>Dimensiones de la imagen: %d x %d</b>"
 
-#: ../plugins/cover_display/display_coverart.c:1604
+#: ../plugins/cover_display/display_coverart.c:1606
 msgid "Failed to remove the album from the album hash store."
 msgstr "Fallo al borrar el álbum de la lista de resúmenes de álbumes."
 
-#: ../plugins/cover_display/display_coverart.c:1969
+#: ../plugins/cover_display/display_coverart.c:1971
 #: ../plugins/details_editor/details.c:1698
 #: ../plugins/clarity/clarity_dnd_support.c:217
 msgid "Item had to be downloaded but gtkpod was not compiled with curl."
 msgstr ""
 "El artículo tenía que ser descargado, pero gtkpod no fue compilado con rizos."
 
-#: ../plugins/cover_display/display_coverart.c:1975
+#: ../plugins/cover_display/display_coverart.c:1977
 #, c-format
 msgid "Error occurred dropping an image onto the coverart display: %s\n"
 msgstr ""
 "Ha ocurrido un error al soltar una imagen sobre la pantalla de carátula:%s\n"
 
-#: ../plugins/cover_display/display_coverart.c:2008
+#: ../plugins/cover_display/display_coverart.c:2010
 #: ../plugins/details_editor/details.c:1746
 msgid "Successfully set new coverart for selected tracks"
 msgstr ""
@@ -3366,10 +3368,26 @@ msgstr ""
 "Ha ocurrido un error al soltar una imagen en la ventana de detalles: %s\n"
 
 #: ../plugins/details_editor/details_editor.xml.h:1
-msgid "(Checked)"
-msgstr "(Revisado)"
+msgid "Details"
+msgstr "Detalles"
 
 #: ../plugins/details_editor/details_editor.xml.h:2
+msgid "_Undo All"
+msgstr "_Deshacer Todo"
+
+#: ../plugins/details_editor/details_editor.xml.h:3
+msgid "Undo _Track"
+msgstr "Deshacer _Pista"
+
+#: ../plugins/details_editor/details_editor.xml.h:4
+msgid "Set Cover Art from _File"
+msgstr "Establecer Carátula fesde _Fichero"
+
+#: ../plugins/details_editor/details_editor.xml.h:5
+msgid "_Remove Cover Art"
+msgstr "_Borrar carátula"
+
+#: ../plugins/details_editor/details_editor.xml.h:6
 msgid ""
 "Change all tracks\n"
 "simultaneously"
@@ -3377,49 +3395,33 @@ msgstr ""
 "Cambiar todas las pistas\n"
 "a la vez"
 
-#: ../plugins/details_editor/details_editor.xml.h:4
-msgid "Details"
-msgstr "Detalles"
+#: ../plugins/details_editor/details_editor.xml.h:8
+msgid "(Checked)"
+msgstr "(Revisado)"
 
-#: ../plugins/details_editor/details_editor.xml.h:5
-msgid "Set Cover Art from _File"
-msgstr "Establecer Carátula fesde _Fichero"
-
-#: ../plugins/details_editor/details_editor.xml.h:6
-msgid "Undo _Track"
-msgstr "Deshacer _Pista"
-
-#: ../plugins/details_editor/details_editor.xml.h:7
+#: ../plugins/details_editor/details_editor.xml.h:9
 msgid "_General"
 msgstr "_General"
 
-#: ../plugins/details_editor/details_editor.xml.h:8
-msgid "_Lyrics"
-msgstr "_Letras"
-
-#: ../plugins/details_editor/details_editor.xml.h:9
-msgid "_Misc."
-msgstr "_Misc."
-
 #: ../plugins/details_editor/details_editor.xml.h:10
-msgid "_Podcasts"
-msgstr "_Podcasts"
-
-#: ../plugins/details_editor/details_editor.xml.h:11
-msgid "_Remove Cover Art"
-msgstr "_Borrar carátula"
-
-#: ../plugins/details_editor/details_editor.xml.h:12
 msgid "_Sorting"
 msgstr "_Ordenar"
 
-#: ../plugins/details_editor/details_editor.xml.h:13
-msgid "_Undo All"
-msgstr "_Deshacer Todo"
+#: ../plugins/details_editor/details_editor.xml.h:11
+msgid "_Podcasts"
+msgstr "_Podcasts"
 
-#: ../plugins/details_editor/details_editor.xml.h:14
+#: ../plugins/details_editor/details_editor.xml.h:12
+msgid "_Lyrics"
+msgstr "_Letras"
+
+#: ../plugins/details_editor/details_editor.xml.h:13
 msgid "_Video"
 msgstr "_Vídeo"
+
+#: ../plugins/details_editor/details_editor.xml.h:14
+msgid "_Misc."
+msgstr "_Misc."
 
 #: ../plugins/details_editor/details_editor.plugin.in.h:1
 msgid "Details Editor Plugin"
@@ -3434,22 +3436,14 @@ msgid "Details Editor"
 msgstr "Detalles del Editor"
 
 #: ../plugins/exporter/exporter.plugin.in.h:1
-msgid "Export Tracks to File"
-msgstr "Exportar Pistas a un Archivo"
-
-#: ../plugins/exporter/exporter.plugin.in.h:2
 msgid "Exporter Plugin"
 msgstr "Plugin Exportador"
 
-#: ../plugins/exporter/exporter.xml.h:1
-msgid "<b>gtkpod Options</b>"
-msgstr "<b> Opciones de gtkpod</b>"
+#: ../plugins/exporter/exporter.plugin.in.h:2
+msgid "Export Tracks to File"
+msgstr "Exportar Pistas a un Archivo"
 
 #: ../plugins/exporter/exporter.xml.h:2
-msgid "Check for existing files when copying from iPod"
-msgstr "Comprobar archivos existentes cuando se copie desde el iPod"
-
-#: ../plugins/exporter/exporter.xml.h:4
 #, no-c-format
 msgid ""
 "Determines how the string for the info field should be constructed, e.g '%a/"
@@ -3466,7 +3460,69 @@ msgstr ""
 "%G, pista no.: %T, CD no.: %C, año: %Y, nombre original (requiere un archivo "
 "de informacióne xtendido): %o, el carácter '%': %%."
 
+#: ../plugins/exporter/exporter.xml.h:3
+msgid "_Prefer Local"
+msgstr "_Prefer Local"
+
+#: ../plugins/exporter/exporter.xml.h:4
+msgid ""
+"If available, the local copy of the track is referenced in the playlist. "
+"Otherwise the file on the iPod is used."
+msgstr ""
+"Si está disponible, se hace referencia a la copia local de la pista en la "
+"lista de reproducción. De lo contrario el archivo en el iPod se utiliza."
+
+#: ../plugins/exporter/exporter.xml.h:5
+msgid "_Local"
+msgstr "_Local"
+
 #: ../plugins/exporter/exporter.xml.h:6
+msgid ""
+"The local copy of the track is referenced in the playlist. If the track is "
+"not available locally, an error message is displayed."
+msgstr ""
+"La copia local de la pista es referenciada en la lista de reproducción. Si "
+"la pista no está disponible localmente, se mostrará un mensaje de error."
+
+#: ../plugins/exporter/exporter.xml.h:7
+msgid "_iPod"
+msgstr "_iPod"
+
+#: ../plugins/exporter/exporter.xml.h:8
+msgid "The track on the iPod is referenced in the playlist file."
+msgstr ""
+"La pista en el iPod es referenciada en el archivo de la lista de "
+"reproducción."
+
+#: ../plugins/exporter/exporter.xml.h:9
+msgid "_M3U"
+msgstr "_M3U"
+
+#: ../plugins/exporter/exporter.xml.h:10
+msgid "_PLS"
+msgstr "_PLS"
+
+#: ../plugins/exporter/exporter.xml.h:11
+msgid "Playlist type:"
+msgstr "Tipo de lista de reproducción:"
+
+#: ../plugins/exporter/exporter.xml.h:12
+msgid "Source:"
+msgstr "Fuente:"
+
+#: ../plugins/exporter/exporter.xml.h:13
+msgid "Info field template:"
+msgstr "Plantilla campo información:"
+
+#: ../plugins/exporter/exporter.xml.h:14
+msgid "<b>gtkpod Options</b>"
+msgstr "<b> Opciones de gtkpod</b>"
+
+#: ../plugins/exporter/exporter.xml.h:15
+msgid "Filename format: "
+msgstr "Formato del nombre: "
+
+#: ../plugins/exporter/exporter.xml.h:17
 #, no-c-format
 msgid ""
 "Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t."
@@ -3483,23 +3539,13 @@ msgstr ""
 "%G, pista no.: %T, CD no.: %C, año: %Y, nombre original (requiere un archivo "
 "de informacióne xtendido): %o, lista actual: %p, el carácter '%': %%."
 
-#: ../plugins/exporter/exporter.xml.h:7
-msgid "Filename format: "
-msgstr "Formato del nombre: "
-
-#: ../plugins/exporter/exporter.xml.h:8
-msgid ""
-"If available, the local copy of the track is referenced in the playlist. "
-"Otherwise the file on the iPod is used."
+#: ../plugins/exporter/exporter.xml.h:18
+msgid "Use selected charset (Preferences/Music/Encoding) for this filename"
 msgstr ""
-"Si está disponible, se hace referencia a la copia local de la pista en la "
-"lista de reproducción. De lo contrario el archivo en el iPod se utiliza."
+"Usar la codificación elegida (Preferncias/Música/Codificación) para el "
+"nombre del fichero:"
 
-#: ../plugins/exporter/exporter.xml.h:9
-msgid "Info field template:"
-msgstr "Plantilla campo información:"
-
-#: ../plugins/exporter/exporter.xml.h:10
+#: ../plugins/exporter/exporter.xml.h:19
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "for the filename. If you set this option you can set a different charset "
@@ -3516,35 +3562,11 @@ msgstr ""
 "antes de la V0.51 no van a contener ningún juego de caracteres. En vez de "
 "eso se usará el especificado."
 
-#: ../plugins/exporter/exporter.xml.h:11
-msgid "Playlist type:"
-msgstr "Tipo de lista de reproducción:"
+#: ../plugins/exporter/exporter.xml.h:20
+msgid "Check for existing files when copying from iPod"
+msgstr "Comprobar archivos existentes cuando se copie desde el iPod"
 
-#: ../plugins/exporter/exporter.xml.h:12
-msgid "Source:"
-msgstr "Fuente:"
-
-#: ../plugins/exporter/exporter.xml.h:13
-msgid ""
-"The local copy of the track is referenced in the playlist. If the track is "
-"not available locally, an error message is displayed."
-msgstr ""
-"La copia local de la pista es referenciada en la lista de reproducción. Si "
-"la pista no está disponible localmente, se mostrará un mensaje de error."
-
-#: ../plugins/exporter/exporter.xml.h:14
-msgid "The track on the iPod is referenced in the playlist file."
-msgstr ""
-"La pista en el iPod es referenciada en el archivo de la lista de "
-"reproducción."
-
-#: ../plugins/exporter/exporter.xml.h:15
-msgid "Use selected charset (Preferences/Music/Encoding) for this filename"
-msgstr ""
-"Usar la codificación elegida (Preferncias/Música/Codificación) para el "
-"nombre del fichero:"
-
-#: ../plugins/exporter/exporter.xml.h:16
+#: ../plugins/exporter/exporter.xml.h:21
 msgid ""
 "When copying from iPod no check is performed on whether the destination file "
 "exists. Enabling this option will make gtkpod check whether the length of "
@@ -3557,75 +3579,55 @@ msgstr ""
 "omite el archivo, lo que permite una sincronización rápida de los contenidos "
 "del iPod."
 
-#: ../plugins/exporter/exporter.xml.h:17
-msgid "_Local"
-msgstr "_Local"
-
-#: ../plugins/exporter/exporter.xml.h:18
-msgid "_M3U"
-msgstr "_M3U"
-
-#: ../plugins/exporter/exporter.xml.h:19
-msgid "_PLS"
-msgstr "_PLS"
-
-#: ../plugins/exporter/exporter.xml.h:20
-msgid "_Prefer Local"
-msgstr "_Prefer Local"
-
-#: ../plugins/exporter/exporter.xml.h:21
-msgid "_iPod"
-msgstr "_iPod"
-
-#: ../plugins/exporter/file_export.c:206
+#: ../plugins/exporter/file_export.c:222
 #, c-format
 msgid "Skipping existing file with same length: '%s'\n"
 msgstr "Se ignora el fichero existente con la misma longitud:'%s'\n"
 
-#: ../plugins/exporter/file_export.c:213
+#: ../plugins/exporter/file_export.c:229
 #, c-format
 msgid "Overwriting existing file: '%s'\n"
 msgstr "Se sobreescribe el fichero existente:'%s'\n"
 
-#: ../plugins/exporter/file_export.c:227
+#: ../plugins/exporter/file_export.c:243
 #, c-format
 msgid "Error copying '%s' to '%s': Permission Error (%s)\n"
 msgstr "Error al copiar '%s' a '%s': Error en los permisos (%s)\n"
 
-#: ../plugins/exporter/file_export.c:230
+#: ../plugins/exporter/file_export.c:246
 #, c-format
 msgid "Error copying '%s' to '%s' (%s)\n"
 msgstr "Error al copiar '%s' a '%s' (%s)\n"
 
 #. File may have been skipped so need to log message
-#: ../plugins/exporter/file_export.c:320 ../plugins/exporter/file_export.c:328
+#: ../plugins/exporter/file_export.c:336 ../plugins/exporter/file_export.c:344
 #: ../plugins/playlist_display/playlist_display_actions.c:173
 #, c-format
 msgid "'%s'\n"
 msgstr "'%s'\n"
 
-#: ../plugins/exporter/file_export.c:331
+#: ../plugins/exporter/file_export.c:347
 #, c-format
 msgid "Failed to copy file %s. No error reported."
 msgstr "Fallo al copiar el fichero %s. No se ha reportado ningún error."
 
-#: ../plugins/exporter/file_export.c:344
+#: ../plugins/exporter/file_export.c:360
 #, c-format
 msgid "Could not find file for '%s' on the iPod\n"
 msgstr "No se pudo encontrar el archivo para '%s' en el iPod\n"
 
 #. gint id,
 #. gboolean modal,
-#: ../plugins/exporter/file_export.c:355
+#: ../plugins/exporter/file_export.c:371
 msgid "Export Errors"
 msgstr "Errores de Exportación"
 
 #. title
-#: ../plugins/exporter/file_export.c:356
+#: ../plugins/exporter/file_export.c:372
 msgid "Errors created by export"
 msgstr "Errores creados por la exportación"
 
-#: ../plugins/exporter/file_export.c:477
+#: ../plugins/exporter/file_export.c:488
 #, c-format
 msgid ""
 "Failed to write '%s-%s'\n"
@@ -3634,40 +3636,40 @@ msgstr ""
 "Falla al escribir '%s-%s'\n"
 "\n"
 
-#: ../plugins/exporter/file_export.c:494
+#: ../plugins/exporter/file_export.c:505
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
 msgstr "%d%% (%d:%02d:%02d restantes)"
 
-#: ../plugins/exporter/file_export.c:503
+#: ../plugins/exporter/file_export.c:514
 #, c-format
 msgid "Exported %d of %d track."
 msgid_plural "Exported %d of %d tracks."
 msgstr[0] "Exportadas %d de %d pista."
 msgstr[1] "Exportadas %d de %d pistas."
 
-#: ../plugins/exporter/file_export.c:511
+#: ../plugins/exporter/file_export.c:522
 msgid "Some tracks were not exported."
 msgstr "Algunas pistas no fueron exportadas."
 
-#: ../plugins/exporter/file_export.c:570
+#: ../plugins/exporter/file_export.c:581
 msgid "Export from iPod database not possible in offline mode."
 msgstr "No es posible exportar la base de datos del iPod en modo desconectado."
 
-#: ../plugins/exporter/file_export.c:578
+#: ../plugins/exporter/file_export.c:589
 msgid "Select Export Destination Directory"
 msgstr "Seleccionar Directorio Destino de la Exportacion"
 
-#: ../plugins/exporter/file_export.c:707
+#: ../plugins/exporter/file_export.c:718
 msgid "Drag from iPod database not possible in offline mode."
 msgstr ""
 "No es posible arrastrar desde la base de datos del iPod en modo desconectado."
 
-#: ../plugins/exporter/file_export.c:736
+#: ../plugins/exporter/file_export.c:747
 msgid "The following tracks have to be copied to your harddisk"
 msgstr "Se van a copiar las siguientes pistas a su disco duro"
 
-#: ../plugins/exporter/file_export.c:779
+#: ../plugins/exporter/file_export.c:790
 msgid ""
 "Some tracks were not copied to your harddisk. Only the copied tracks will be "
 "included in the current drag and drop operation.\n"
@@ -3677,7 +3679,7 @@ msgstr ""
 "se incluirán en la actual operación de arrastar y soltar.\n"
 "\n"
 
-#: ../plugins/exporter/file_export.c:910
+#: ../plugins/exporter/file_export.c:921
 #, c-format
 msgid ""
 "No valid filename for: %s\n"
@@ -3686,14 +3688,14 @@ msgstr ""
 "Ningún nombre de fichero valido para:%s\n"
 "\n"
 
-#: ../plugins/exporter/file_export.c:924
+#: ../plugins/exporter/file_export.c:935
 #, c-format
 msgid "Created playlist with one track."
 msgid_plural "Created playlist with %d tracks."
 msgstr[0] "Creada lista de reproducción con una pista."
 msgstr[1] "Creada lista de reproducción con %d pistas."
 
-#: ../plugins/exporter/file_export.c:928
+#: ../plugins/exporter/file_export.c:939
 #, c-format
 msgid ""
 "Could not open '%s' for writing (%s).\n"
@@ -3702,7 +3704,7 @@ msgstr ""
 "No se ha podido abrir '%s' para escritura (%s).\n"
 "\n"
 
-#: ../plugins/exporter/file_export.c:982
+#: ../plugins/exporter/file_export.c:993
 msgid "Create Playlist File"
 msgstr "Crear Lista de Reproducción"
 
@@ -3854,24 +3856,24 @@ msgid "Ogg audio file type"
 msgstr "Archivo de audio Ogg"
 
 #: ../plugins/filetype_video/filetype_video.plugin.in.h:1
-msgid "Generic video file type"
-msgstr "Tipo archivo de vídeo genérico"
-
-#: ../plugins/filetype_video/filetype_video.plugin.in.h:2
 msgid "Video File Type Plugin"
 msgstr "Plugin Tipo de Archivo de Vídeo"
+
+#: ../plugins/filetype_video/filetype_video.plugin.in.h:2
+msgid "Generic video file type"
+msgstr "Tipo archivo de vídeo genérico"
 
 #: ../plugins/filetype_video/plugin.c:78
 msgid "Generic Video file type"
 msgstr "Tipo Genérico de Vídeo"
 
 #: ../plugins/filetype_wav/filetype_wav.plugin.in.h:1
-msgid "Support for the wav file type"
-msgstr "Soporte para el tipo de archivo wav"
-
-#: ../plugins/filetype_wav/filetype_wav.plugin.in.h:2
 msgid "Wav File Type Plugin"
 msgstr "Plugin Tipo de Archivo Wav"
+
+#: ../plugins/filetype_wav/filetype_wav.plugin.in.h:2
+msgid "Support for the wav file type"
+msgstr "Soporte para el tipo de archivo wav"
 
 #: ../plugins/filetype_wav/plugin.c:90
 msgid "Wav audio file type"
@@ -3888,21 +3890,21 @@ msgstr "Archivo de audio M4A"
 msgid "%s does not appear to be a supported wav file.\n"
 msgstr "%s no parece ser un fichero wav soportado.\n"
 
-#: ../plugins/info_display/info.c:371
+#: ../plugins/info_display/info.c:376
 msgid "B"
 msgstr "B"
 
-#: ../plugins/info_display/info.c:371
+#: ../plugins/info_display/info.c:376
 msgid "kB"
 msgstr "KB"
 
-#: ../plugins/info_display/info.c:371
+#: ../plugins/info_display/info.c:376
 #: ../plugins/playlist_display/playlist_display_spl.c:71
 #: ../plugins/playlist_display/playlist_display_spl.c:165
 msgid "MB"
 msgstr "MB"
 
-#: ../plugins/info_display/info.c:371
+#: ../plugins/info_display/info.c:376
 msgid "TB"
 msgstr "TB"
 
@@ -4048,45 +4050,54 @@ msgstr ""
 msgid "Seek failed!\n"
 msgstr ""
 
+#: ../plugins/media_player/media_player.c:377
+msgid "Failed to play track: Track is no longer available"
+msgstr ""
+
+#: ../plugins/media_player/media_player.c:384
+#, c-format
+msgid "Failed to play track: Unable to find the file for the track '%s'"
+msgstr ""
+
 #. Translators: %s is an error message
-#: ../plugins/media_player/media_player.c:390
+#: ../plugins/media_player/media_player.c:395
 #, c-format
 msgid "Failed to play track: %s"
 msgstr ""
 
-#: ../plugins/media_player/media_player.c:397
+#: ../plugins/media_player/media_player.c:403
 msgid ""
 "Failed to play track: Cannot create a play element. Ensure that all "
 "gstreamer plugins are installed"
 msgstr ""
 
 #: ../plugins/media_player/media_player.xml.h:1
-msgid "Next"
-msgstr "Siguiente"
+msgid "Previous"
+msgstr "Anterior"
 
 #: ../plugins/media_player/media_player.xml.h:2
 #: ../plugins/media_player/plugin.c:139
 msgid "Play"
 msgstr "Reproducir"
 
-#: ../plugins/media_player/media_player.xml.h:3
-msgid "Previous"
-msgstr "Anterior"
-
 #. Change the label to Stop while extracting
 #. TODO: find out why GTK+ needs this to work (see #364371)
-#: ../plugins/media_player/media_player.xml.h:4
-#: ../plugins/sjcd/sj-extracting.c:838
+#: ../plugins/media_player/media_player.xml.h:3
+#: ../plugins/sjcd/sj-extracting.c:836
 msgid "Stop"
 msgstr "Detener"
 
-#: ../plugins/media_player/media_player.plugin.in.h:1
-msgid "Controls for playing tracks and videos"
-msgstr "Controles para reproducir pistas y vídeos"
+#: ../plugins/media_player/media_player.xml.h:4
+msgid "Next"
+msgstr "Siguiente"
 
-#: ../plugins/media_player/media_player.plugin.in.h:2
+#: ../plugins/media_player/media_player.plugin.in.h:1
 msgid "Media Player Plugin"
 msgstr "Plugin Media Player"
+
+#: ../plugins/media_player/media_player.plugin.in.h:2
+msgid "Controls for playing tracks and videos"
+msgstr "Controles para reproducir pistas y vídeos"
 
 #: ../plugins/media_player/plugin.c:66
 msgid "Media Player"
@@ -4154,23 +4165,6 @@ msgstr ""
 "Mserv es un servidor de música al estilo jukebox (ver http://www.mserv.org)"
 
 #: ../plugins/mserv/mserv.xml.h:1
-msgid "<b>Settings</b>"
-msgstr "<b>Configuración</b>"
-
-#: ../plugins/mserv/mserv.xml.h:2 ../plugins/mserv/plugin.c:47
-#: ../plugins/mserv/plugin.c:96
-msgid "Mserv"
-msgstr "Mserv"
-
-#: ../plugins/mserv/mserv.xml.h:3
-msgid "Music root:"
-msgstr "Raíz de música:"
-
-#: ../plugins/mserv/mserv.xml.h:4
-msgid "Report problems when accessing mserv"
-msgstr "Informar de problemas al acceder a mserv"
-
-#: ../plugins/mserv/mserv.xml.h:5
 msgid ""
 "To fill additional information, <i>gtkpod</i> can use a database \n"
 "provided by the <i>mserv</i> music server.\n"
@@ -4184,18 +4178,35 @@ msgstr ""
 "\n"
 "Se pueden encontrar más detalles sobre mserv en <b>http://www.mserv.org</b>"
 
+#: ../plugins/mserv/mserv.xml.h:5
+msgid "Username:"
+msgstr "Usuario:"
+
+#: ../plugins/mserv/mserv.xml.h:6
+msgid "mserv root:"
+msgstr "Raíz de mserv:"
+
+#: ../plugins/mserv/mserv.xml.h:7
+msgid "Music root:"
+msgstr "Raíz de música:"
+
+#: ../plugins/mserv/mserv.xml.h:8
+msgid "Report problems when accessing mserv"
+msgstr "Informar de problemas al acceder a mserv"
+
 #: ../plugins/mserv/mserv.xml.h:9
 msgid "Use mserv database to fill track information"
 msgstr ""
 "Usar la base de datos mserv para rellenar lal información de las pistas"
 
 #: ../plugins/mserv/mserv.xml.h:10
-msgid "Username:"
-msgstr "Usuario:"
+msgid "<b>Settings</b>"
+msgstr "<b>Configuración</b>"
 
-#: ../plugins/mserv/mserv.xml.h:11
-msgid "mserv root:"
-msgstr "Raíz de mserv:"
+#: ../plugins/mserv/mserv.xml.h:11 ../plugins/mserv/plugin.c:47
+#: ../plugins/mserv/plugin.c:96
+msgid "Mserv"
+msgstr "Mserv"
 
 #: ../plugins/mserv/plugin.c:57
 msgid "_Update mserv Data from File"
@@ -4290,52 +4301,52 @@ msgid "<No members>\n"
 msgstr "<Sin miembros>\n"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:1
-msgid "Add Image_s"
-msgstr "Añadir imágene_s"
-
-#: ../plugins/photo_editor/photo_editor.xml.h:2
-msgid "Photo Image"
-msgstr "Imagen de Foto"
-
-#: ../plugins/photo_editor/photo_editor.xml.h:3
 msgid "Photo Window"
 msgstr "Ventana de foto"
 
-#: ../plugins/photo_editor/photo_editor.xml.h:4
-msgid "R_ename Album"
-msgstr "R_enombrar Álbum"
-
-#: ../plugins/photo_editor/photo_editor.xml.h:5
-msgid "_Add Album"
-msgstr "_Añadir álbum"
-
-#: ../plugins/photo_editor/photo_editor.xml.h:6
-msgid "_Add Image"
-msgstr "_Añadir imagen"
-
-#: ../plugins/photo_editor/photo_editor.xml.h:7
+#: ../plugins/photo_editor/photo_editor.xml.h:2
 msgid "_Album"
 msgstr "_Álbum"
 
-#: ../plugins/photo_editor/photo_editor.xml.h:8
-msgid "_Photos"
-msgstr "_Fotos"
+#: ../plugins/photo_editor/photo_editor.xml.h:3
+msgid "_Add Album"
+msgstr "_Añadir álbum"
 
-#: ../plugins/photo_editor/photo_editor.xml.h:9
+#: ../plugins/photo_editor/photo_editor.xml.h:4
 msgid "_Remove Album"
 msgstr "_Borrar álbum"
 
-#: ../plugins/photo_editor/photo_editor.xml.h:10
+#: ../plugins/photo_editor/photo_editor.xml.h:5
+msgid "R_ename Album"
+msgstr "R_enombrar Álbum"
+
+#: ../plugins/photo_editor/photo_editor.xml.h:6
+msgid "_Photos"
+msgstr "_Fotos"
+
+#: ../plugins/photo_editor/photo_editor.xml.h:7
+msgid "_Add Image"
+msgstr "_Añadir imagen"
+
+#: ../plugins/photo_editor/photo_editor.xml.h:8
+msgid "Add Image_s"
+msgstr "Añadir imágene_s"
+
+#: ../plugins/photo_editor/photo_editor.xml.h:9
 msgid "_Remove Images"
 msgstr "_Borrar imágenes"
+
+#: ../plugins/photo_editor/photo_editor.xml.h:10
+msgid "_Zoom"
+msgstr "_Zoom"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:11
 msgid "_View Full Size"
 msgstr "_Ver a Tamaño Completo"
 
 #: ../plugins/photo_editor/photo_editor.xml.h:12
-msgid "_Zoom"
-msgstr "_Zoom"
+msgid "Photo Image"
+msgstr "Imagen de Foto"
 
 #: ../plugins/photo_editor/photo_editor_context_menu.c:47
 msgid "Remove Album"
@@ -4350,12 +4361,12 @@ msgid "Rename Album"
 msgstr "Renombrar álbum"
 
 #: ../plugins/photo_editor/photo_editor.plugin.in.h:1
-msgid "Add and Remove Photographs"
-msgstr "Agregar y quitar fotografías"
-
-#: ../plugins/photo_editor/photo_editor.plugin.in.h:2
 msgid "Photo Editor Plugin"
 msgstr "Plugin Editor de Fotografías"
+
+#: ../plugins/photo_editor/photo_editor.plugin.in.h:2
+msgid "Add and Remove Photographs"
+msgstr "Agregar y quitar fotografías"
 
 #. Action name
 #. Stock icon
@@ -4376,13 +4387,13 @@ msgstr "Editor Fotográfico"
 #. Do not allow drags from the iPod in offline mode
 #. give a notice on the statusbar -- otherwise the user
 #. * will never know why the drag is not possible
-#: ../plugins/playlist_display/display_playlists.c:434
-#: ../plugins/playlist_display/display_playlists.c:465
+#: ../plugins/playlist_display/display_playlists.c:425
+#: ../plugins/playlist_display/display_playlists.c:456
 msgid "Error: drag from iPod not possible in offline mode."
 msgstr "Error: arrastrar desde el iPod no es posible en el modo desconectado"
 
 #. display message in statusbar
-#: ../plugins/playlist_display/display_playlists.c:487
+#: ../plugins/playlist_display/display_playlists.c:478
 #: ../plugins/track_display/display_tracks.c:386
 #, c-format
 msgid "Copied one track"
@@ -4390,12 +4401,11 @@ msgid_plural "Copied %d tracks"
 msgstr[0] "Copiada una pista"
 msgstr[1] "Copiadas %d pistas"
 
-#: ../plugins/playlist_display/display_playlists.c:723
-#: ../plugins/playlist_display/display_playlists.c:734
+#: ../plugins/playlist_display/display_playlists.c:709
 msgid "Can't reorder sorted treeview."
 msgstr "No se puede reordenar una vista en árbol ya ordenada"
 
-#: ../plugins/playlist_display/display_playlists.c:804
+#: ../plugins/playlist_display/display_playlists.c:780
 #, c-format
 msgid ""
 "This DND type (%d) is not (yet) supported. If you feel implementing this "
@@ -4406,42 +4416,37 @@ msgstr ""
 "puede ser útil, por favor, contacte con el autor.\n"
 "\n"
 
+#: ../plugins/playlist_display/display_playlists.c:1514
+#: ../plugins/playlist_display/playlist_display_spl.c:773
+#: ../plugins/playlist_display/playlist_display_spl.c:1541
+#, c-format
+msgid "A playlist named '%s' already exists"
+msgstr "La lista de reproducción '%s' ya existe"
+
 #. bold face
-#: ../plugins/playlist_display/display_playlists.c:1587
+#: ../plugins/playlist_display/display_playlists.c:1575
 msgid "Photos"
 msgstr "Fotos"
 
-#: ../plugins/playlist_display/display_playlists.c:1844
-#: ../plugins/repository_editor/repository_editor.xml.h:35
+#: ../plugins/playlist_display/display_playlists.c:1832
+#: ../plugins/repository_editor/repository_editor.xml.h:46
 msgid "Playlists"
 msgstr "Listas de reproducción"
 
 #: ../plugins/playlist_display/playlist_display.xml.h:1
-msgid "<b>Advanced Options</b>"
-msgstr "<b>Opciones avanzadas</b>"
-
-#: ../plugins/playlist_display/playlist_display.xml.h:4
-msgid "<b>General Options</b>"
-msgstr "<b>Opciones generales</b>"
-
-#: ../plugins/playlist_display/playlist_display.xml.h:6
-msgid "<b>Playlist Sort Order</b>"
-msgstr "<b>Orden de las Listas de Reproducción</b>"
-
-#: ../plugins/playlist_display/playlist_display.xml.h:7
-msgid "<b>Rules</b>"
-msgstr "<b>Reglas</b>"
-
-#: ../plugins/playlist_display/playlist_display.xml.h:8
-msgid "All rules"
-msgstr "Todas las reglas"
-
-#: ../plugins/playlist_display/playlist_display.xml.h:9
 msgid "Any rules"
 msgstr "Cualquier regla"
 
-#: ../plugins/playlist_display/playlist_display.xml.h:11
-#: ../plugins/sorttab_display/sorttab_display.xml.h:30
+#: ../plugins/playlist_display/playlist_display.xml.h:2
+msgid "All rules"
+msgstr "Todas las reglas"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:3
+msgid "Ignore rules"
+msgstr "Ignorar reglas"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:8
+#: ../plugins/sorttab_display/sorttab_display.xml.h:22
 #: ../plugins/track_display/track_display.xml.h:15
 msgid ""
 "If checked, sorting will be case sensitive. Please note that case sensitive "
@@ -4451,45 +4456,57 @@ msgstr ""
 "Tenga en cuenta que una ordenación de este tipo no funciona bien con todos "
 "los juegos de caracteres."
 
-#: ../plugins/playlist_display/playlist_display.xml.h:12
-msgid "Ignore rules"
-msgstr "Ignorar reglas"
+#: ../plugins/playlist_display/playlist_display.xml.h:9
+msgid "<b>Playlist Sort Order</b>"
+msgstr "<b>Orden de las Listas de Reproducción</b>"
 
-#: ../plugins/playlist_display/playlist_display.xml.h:13
-msgid "Live _updating"
-msgstr "_Actualizacion en directo"
-
-#: ../plugins/playlist_display/playlist_display.xml.h:14
-msgid "Match only _checked tracks"
-msgstr "Hacer coincidir sólo pistas _Seleccionadas"
-
-#: ../plugins/playlist_display/playlist_display.xml.h:15
-msgid "Match:"
-msgstr "Coincidencia:"
-
-#: ../plugins/playlist_display/playlist_display.xml.h:16
+#: ../plugins/playlist_display/playlist_display.xml.h:10
 #: ../plugins/playlist_display/plugin.c:50
 #: ../plugins/playlist_display/plugin.c:342
 msgid "Playlist Display"
 msgstr "Visor de Listas de Reproducción"
 
-#: ../plugins/playlist_display/playlist_display.xml.h:17
-msgid "Playlist name:"
-msgstr "Nombre de la lista de reproducción:"
-
-#: ../plugins/playlist_display/playlist_display.xml.h:18
-#: ../plugins/playlist_display/playlist_display_spl.c:1521
+#: ../plugins/playlist_display/playlist_display.xml.h:11
+#: ../plugins/playlist_display/playlist_display_spl.c:1530
 #: ../plugins/repository_editor/repository_editor.c:1241
 msgid "Smart Playlist"
 msgstr "Lista de reproducción inteligente"
 
-#: ../plugins/playlist_display/playlist_display.xml.h:19
+#: ../plugins/playlist_display/playlist_display.xml.h:12
+msgid "Match:"
+msgstr "Coincidencia:"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:13
+msgid "Playlist name:"
+msgstr "Nombre de la lista de reproducción:"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:14
+msgid "<b>General Options</b>"
+msgstr "<b>Opciones generales</b>"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:15
+msgid "<b>Rules</b>"
+msgstr "<b>Reglas</b>"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:16
+msgid "_Limit to"
+msgstr "_Limitar a"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:17
 msgid "Sort by:"
 msgstr "Ordenar por:"
 
+#: ../plugins/playlist_display/playlist_display.xml.h:18
+msgid "Match only _checked tracks"
+msgstr "Hacer coincidir sólo pistas _Seleccionadas"
+
+#: ../plugins/playlist_display/playlist_display.xml.h:19
+msgid "Live _updating"
+msgstr "_Actualizacion en directo"
+
 #: ../plugins/playlist_display/playlist_display.xml.h:20
-msgid "_Limit to"
-msgstr "_Limitar a"
+msgid "<b>Advanced Options</b>"
+msgstr "<b>Opciones avanzadas</b>"
 
 #: ../plugins/playlist_display/playlist_display_actions.c:66
 #: ../plugins/playlist_display/playlist_display_actions.c:321
@@ -4790,27 +4807,22 @@ msgstr "menor puntuación"
 msgid "Movie"
 msgstr "Película"
 
-#: ../plugins/playlist_display/playlist_display_spl.c:1016
-#: ../plugins/playlist_display/playlist_display_spl.c:1030
+#: ../plugins/playlist_display/playlist_display_spl.c:1028
+#: ../plugins/playlist_display/playlist_display_spl.c:1042
 msgid "to"
 msgstr "a"
 
-#: ../plugins/playlist_display/playlist_display_spl.c:1267
+#: ../plugins/playlist_display/playlist_display_spl.c:1276
 msgid "-"
 msgstr "-"
 
-#: ../plugins/playlist_display/playlist_display_spl.c:1280
+#: ../plugins/playlist_display/playlist_display_spl.c:1289
 msgid "+"
 msgstr "+"
 
-#: ../plugins/playlist_display/playlist_display_spl.c:1526
+#: ../plugins/playlist_display/playlist_display_spl.c:1535
 msgid "Playlist name cannot be blank"
 msgstr "Se debe introducir un nombre para la lista de reproducción"
-
-#: ../plugins/playlist_display/playlist_display_spl.c:1532
-#, c-format
-msgid "A playlist named '%s' already exists"
-msgstr "La lista de reproducción '%s' ya existe"
 
 #: ../plugins/playlist_display/playlist_display_context_menu.c:88
 msgid "Remove All Tracks from iPod"
@@ -4882,7 +4894,7 @@ msgstr "Sincronizar la lista de reproducción con el/los directorio(s)"
 #: ../plugins/playlist_display/playlist_display_context_menu.c:381
 #: ../plugins/playlist_display/playlist_display_context_menu.c:422
 #: ../plugins/playlist_display/playlist_display_context_menu.c:454
-#: ../plugins/repository_editor/repository_editor.xml.h:15
+#: ../plugins/repository_editor/repository_editor.xml.h:11
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:183
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:191
 #: ../plugins/track_display/track_display_context_menu.c:182
@@ -5160,7 +5172,7 @@ msgid "  iPod Repositories"
 msgstr "  Repositorios del iPod"
 
 #: ../plugins/playlist_display/plugin.c:437 ../plugins/sjcd/plugin.c:124
-#: ../src/anjuta-about.c:165
+#: ../src/anjuta-about.c:166
 #, c-format
 msgid "Couldn't load icon: %s"
 msgstr "No se han podido cargar el icono: %s"
@@ -5260,64 +5272,117 @@ msgstr "Lista de reproducción regular"
 msgid "  Edit iPod Repositories"
 msgstr "  Editar Repositorios del iPod"
 
+#: ../plugins/repository_editor/repository_editor.xml.h:1
+msgid "Insert before"
+msgstr "Insertar antes"
+
 #: ../plugins/repository_editor/repository_editor.xml.h:2
-msgid "<b>General</b>"
-msgstr "<b>General</b>"
+msgid "Insert after"
+msgstr "Insertar después"
 
-#: ../plugins/repository_editor/repository_editor.xml.h:3
-msgid "<b>Playlist Options</b>"
-msgstr "<b>Opciones de listas de reproducción</b>"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:4
-msgid "<b>Please select mountpoint and your iPod model</b>"
-msgstr "<b>Por favor, seleccionar el punto de montaje y el modelo de iPod</b>"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:5
-msgid "<b>Synchronization</b>"
-msgstr "<b>Sincronización</b>"
-
+#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
 #: ../plugins/repository_editor/repository_editor.xml.h:6
-msgid ""
-"<i>Note: Only directories that do not already exist will be created. </i>"
-msgstr "<i>Nota: Sólo se crearán los directorios que no existan. </i>"
+msgid "Local Repository (Standard)"
+msgstr "Repositorio Local (Estándar)"
 
-#: ../plugins/repository_editor/repository_editor.xml.h:7
-msgid "<i>Playlist type</i>"
-msgstr "<i>Tipo de Lista</i>"
-
+#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
 #: ../plugins/repository_editor/repository_editor.xml.h:8
+msgid "Local Repository (Podcasts)"
+msgstr "Repositorio Local (Podcasts)"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:9
+msgid "Repository Options"
+msgstr "Opciones de repositorio"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:10
 msgid "<i>Repository type</i>"
 msgstr "<i>Tipo de Repositorio</i>"
 
-#: ../plugins/repository_editor/repository_editor.xml.h:9
+#: ../plugins/repository_editor/repository_editor.xml.h:12
 msgid "Add New ..."
 msgstr "Añadir Nuevo..."
 
-#: ../plugins/repository_editor/repository_editor.xml.h:10
-msgid "Calendar sync command:"
-msgstr "Programa de sincronización del calendario:"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:11
-msgid "Call automatically when synchronizing iTunesDB"
-msgstr "Llamar automáticamente al sincronizar la base de datos iTunes"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:12
-msgid "Confirm before removing tracks from the iPod or repository"
-msgstr "Confirmar antes de borrar pistas del iPod o del repositorio"
-
 #: ../plugins/repository_editor/repository_editor.xml.h:13
+msgid "iPod mountpoint:"
+msgstr "Punto de montaje del iPod:"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:14
+msgid "iTunesDB backup:"
+msgstr "Copia de seguridad de iTunesDB:"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:15
+msgid "Model:"
+msgstr "Modelo:"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:16
+msgid "Path:"
+msgstr "Ruta:"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:17
+msgid "Select mountpoint"
+msgstr "Seleccionar el punto de montaje del iPod"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:18
+msgid "Select backup file"
+msgstr "Seleccionar el archivo de backup:"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:19
+msgid "<b>General</b>"
+msgstr "<b>General</b>"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:20
 msgid "Contacts sync command:"
 msgstr "Programa de sincronización de contactos:"
 
-#: ../plugins/repository_editor/repository_editor.xml.h:14
-msgid "Create Repository"
-msgstr "Crear repositorio"
+#: ../plugins/repository_editor/repository_editor.xml.h:21
+msgid "Notes sync command:"
+msgstr "Programa de sincronización de notas:"
 
-#: ../plugins/repository_editor/repository_editor.xml.h:16
-msgid "Delete missing tracks from the iPod or repository"
-msgstr "Borrar pistas perdidas del iPod o del repositorio"
+#: ../plugins/repository_editor/repository_editor.xml.h:22
+msgid "Calendar sync command:"
+msgstr "Programa de sincronización del calendario:"
 
-#: ../plugins/repository_editor/repository_editor.xml.h:17
+#: ../plugins/repository_editor/repository_editor.xml.h:24
+#, no-c-format
+msgid ""
+"Specify exact path including command line options. '%i' will be replaced "
+"with the mount point of the iPod."
+msgstr ""
+"Especificar la ruta completa del programa, incluyendo opciones del "
+"intérprete de órdenes. '%i' será reemplazado con el directorio de montaje "
+"del iPod."
+
+#: ../plugins/repository_editor/repository_editor.xml.h:26
+msgid "Call automatically when synchronizing iTunesDB"
+msgstr "Llamar automáticamente al sincronizar la base de datos iTunes"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:27
+msgid "<b>Synchronization</b>"
+msgstr "<b>Sincronización</b>"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:28
+msgid "Repository"
+msgstr "Repositorio"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:29
+msgid "<i>Playlist type</i>"
+msgstr "<i>Tipo de Lista</i>"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:30
+msgid "Update/Sync Playlist"
+msgstr "Actualizar/sincronizar la lista de reproducción"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:31
+msgid "Update/Sync All Playlists"
+msgstr "Actualizar/sincronizar todas las listas de reproducción."
+
+#: ../plugins/repository_editor/repository_editor.xml.h:32
+msgid "On startup automatically sync with playlist directories"
+msgstr ""
+"Sincronizar automáticamente con los directorios de las listas de "
+"reproducción en el inicio."
+
+#: ../plugins/repository_editor/repository_editor.xml.h:33
 msgid ""
 "Directories to sync with are determined from the filenames of the tracks in "
 "the playlist."
@@ -5325,37 +5390,19 @@ msgstr ""
 "Los directorios con los que sincronizar son determinados mediante los "
 "nombres de fichero de las pistas en la lista de reproducción."
 
-#: ../plugins/repository_editor/repository_editor.xml.h:18
-msgid "Don't automatically sync on startup"
-msgstr "No sincronizar automáticamente al inicio"
+#: ../plugins/repository_editor/repository_editor.xml.h:34
+msgid "On startup automatically sync with the directory:"
+msgstr "Sincronizar automáticamente con el directorio al iniciar:"
 
-#: ../plugins/repository_editor/repository_editor.xml.h:19
-msgid "Initialize iPod"
-msgstr "Inicializar iPod"
+#: ../plugins/repository_editor/repository_editor.xml.h:35
+msgid "Select directory for synchronization"
+msgstr "Seleccionar directorio a sincronizar"
 
-#: ../plugins/repository_editor/repository_editor.xml.h:20
-msgid "Insert after"
-msgstr "Insertar después"
+#: ../plugins/repository_editor/repository_editor.xml.h:36
+msgid "Delete missing tracks from the iPod or repository"
+msgstr "Borrar pistas perdidas del iPod o del repositorio"
 
-#: ../plugins/repository_editor/repository_editor.xml.h:21
-msgid "Insert before"
-msgstr "Insertar antes"
-
-#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
-#: ../plugins/repository_editor/repository_editor.xml.h:23
-msgid "Local Repository (Podcasts)"
-msgstr "Repositorio Local (Podcasts)"
-
-#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
-#: ../plugins/repository_editor/repository_editor.xml.h:25
-msgid "Local Repository (Standard)"
-msgstr "Repositorio Local (Estándar)"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:26
-msgid "Model:"
-msgstr "Modelo:"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:27
+#: ../plugins/repository_editor/repository_editor.xml.h:37
 msgid ""
 "Normally, if a track is no longer present in the sync directory, it will be "
 "removed from the playlist, but not from the iPod or local repository.\n"
@@ -5376,87 +5423,15 @@ msgstr ""
 "debe estar seleccionada, porque borrar de la lista de reproducción maestra "
 "significa borrar del iPod."
 
-#: ../plugins/repository_editor/repository_editor.xml.h:30
-msgid "Notes sync command:"
-msgstr "Programa de sincronización de notas:"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:31
-msgid "On startup automatically sync with playlist directories"
-msgstr ""
-"Sincronizar automáticamente con los directorios de las listas de "
-"reproducción en el inicio."
-
-#: ../plugins/repository_editor/repository_editor.xml.h:32
-msgid "On startup automatically sync with the directory:"
-msgstr "Sincronizar automáticamente con el directorio al iniciar:"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:33
-msgid "On startup automatically update (Live Playlist)"
-msgstr "Actualizar automáticamente en el inicio (listas de reproducción vivas)"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:34
-msgid "Path:"
-msgstr "Ruta:"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:36
-msgid "Repository"
-msgstr "Repositorio"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:37
-msgid "Repository Options"
-msgstr "Opciones de repositorio"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:38
-msgid "Repository name:"
-msgstr "Nombre del repositorio:"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:39
-msgid "Repository type:"
-msgstr "Tipo de repositorio:"
-
 #: ../plugins/repository_editor/repository_editor.xml.h:40
-msgid "Select backup file"
-msgstr "Seleccionar el archivo de backup:"
+msgid "Confirm before removing tracks from the iPod or repository"
+msgstr "Confirmar antes de borrar pistas del iPod o del repositorio"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:41
-msgid "Select directory for synchronization"
-msgstr "Seleccionar directorio a sincronizar"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:42
-msgid "Select mountpoint"
-msgstr "Seleccionar el punto de montaje del iPod"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:43
-msgid "Set backup file"
-msgstr "Configurar fichero de copia de seguridad"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:44
-msgid "Set local repository file"
-msgstr "Configurar el fichero de repositorio local"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:45
 msgid "Show summary of sync result"
 msgstr "Mostrar resumen del resultado de la sincronización"
 
-#: ../plugins/repository_editor/repository_editor.xml.h:47
-#, no-c-format
-msgid ""
-"Specify exact path including command line options. '%i' will be replaced "
-"with the mount point of the iPod."
-msgstr ""
-"Especificar la ruta completa del programa, incluyendo opciones del "
-"intérprete de órdenes. '%i' será reemplazado con el directorio de montaje "
-"del iPod."
-
-#: ../plugins/repository_editor/repository_editor.xml.h:48
-msgid "Update/Sync All Playlists"
-msgstr "Actualizar/sincronizar todas las listas de reproducción."
-
-#: ../plugins/repository_editor/repository_editor.xml.h:49
-msgid "Update/Sync Playlist"
-msgstr "Actualizar/sincronizar la lista de reproducción"
-
-#: ../plugins/repository_editor/repository_editor.xml.h:50
+#: ../plugins/repository_editor/repository_editor.xml.h:42
 msgid ""
 "Will show a list of tracks removed and a list of tracks newly added or "
 "updated."
@@ -5464,21 +5439,58 @@ msgstr ""
 "Se mostrará una lista de las pistas eliminadas y una lista de las pistas "
 "añadidas o actualizadas."
 
+#: ../plugins/repository_editor/repository_editor.xml.h:43
+msgid "On startup automatically update (Live Playlist)"
+msgstr "Actualizar automáticamente en el inicio (listas de reproducción vivas)"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:44
+msgid "Don't automatically sync on startup"
+msgstr "No sincronizar automáticamente al inicio"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:45
+msgid "<b>Playlist Options</b>"
+msgstr "<b>Opciones de listas de reproducción</b>"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:47
+msgid "Create Repository"
+msgstr "Crear repositorio"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:48
+msgid "Repository name:"
+msgstr "Nombre del repositorio:"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:49
+msgid "Repository type:"
+msgstr "Tipo de repositorio:"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:50
+msgid "Set backup file"
+msgstr "Configurar fichero de copia de seguridad"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:51
+msgid "Set local repository file"
+msgstr "Configurar el fichero de repositorio local"
+
+#: ../plugins/repository_editor/repository_editor.xml.h:52
+msgid "Initialize iPod"
+msgstr "Inicializar iPod"
+
 #: ../plugins/repository_editor/repository_editor.xml.h:53
-msgid "iPod mountpoint:"
-msgstr "Punto de montaje del iPod:"
+msgid "<b>Please select mountpoint and your iPod model</b>"
+msgstr "<b>Por favor, seleccionar el punto de montaje y el modelo de iPod</b>"
 
 #: ../plugins/repository_editor/repository_editor.xml.h:54
-msgid "iTunesDB backup:"
-msgstr "Copia de seguridad de iTunesDB:"
+msgid ""
+"<i>Note: Only directories that do not already exist will be created. </i>"
+msgstr "<i>Nota: Sólo se crearán los directorios que no existan. </i>"
 
 #: ../plugins/repository_editor/repository_editor.plugin.in.h:1
-msgid "Edit iTunesDB Properties"
-msgstr "Editar Propiedades de iTunesDB"
-
-#: ../plugins/repository_editor/repository_editor.plugin.in.h:2
 msgid "Repository Editor Plugin"
 msgstr "Plugin Editor de Repositorio"
+
+#: ../plugins/repository_editor/repository_editor.plugin.in.h:2
+msgid "Edit iTunesDB Properties"
+msgstr "Editar Propiedades de iTunesDB"
 
 #. Strings used several times
 #: ../plugins/repository_editor/repository_init.c:47
@@ -5530,7 +5542,7 @@ msgid "Date format error: unrecognized character: '%s'\n"
 msgstr "Formáto de fecha erróneo: Imposible reconocer el carácter: '%s'\n"
 
 #: ../plugins/sorttab_display/plugin.c:48
-#: ../plugins/sorttab_display/sorttab_display.xml.h:47
+#: ../plugins/sorttab_display/sorttab_display.xml.h:24
 msgid "Track Filter"
 msgstr "Filtro de pista"
 
@@ -5568,10 +5580,130 @@ msgid "  Track Filter"
 msgstr "  Filtro de pista"
 
 #: ../plugins/sorttab_display/sorttab_display.xml.h:1
+msgid "Calendar"
+msgstr "Calendario"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:2
+msgid ""
+"<span weight=\"bold\" size=\"larger\">Please specify a time interval</span>"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">Especificar un intervalo de tiempo, "
+"por favor</span>"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:3
+msgid "Filter tab:"
+msgstr "Pestaña de filtrado:"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:4
+msgid "Category:"
+msgstr "Categoría:"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:5
+msgid "<b>Lower Margin</b>"
+msgstr "<b>Margen inferior</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:6
+msgid "Time:"
+msgstr "Tiempo:"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:7
+msgid ":"
+msgstr ":"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:8
+msgid "No lower margin"
+msgstr "Sin margen inferior"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:9
+msgid "<b>Upper Margin</b>"
+msgstr "<b>Margen superior</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:10
+msgid "No upper margin"
+msgstr "Sin margen superior"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:11
+msgid "Dummy - do not delete"
+msgstr "Vacío - no borrar"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:12
+msgid "Last Played"
+msgstr "Última Reproducción"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:13
+msgid "Last Modified"
+msgstr "Última Modificación"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:14
+#: ../plugins/track_display/display_tracks.c:1921
+msgid "Added"
+msgstr "Añadido"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:15
+msgid "Number of filter tabs:"
+msgstr "Número de pestañas:"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:16
+msgid "Group artist filter tab by compilation CDs"
+msgstr "Agrupar pestaña de filtrado de artista por generación de CDs"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:17
+msgid "<b>Filter Tabs</b>"
+msgstr "<b>Pestañas de filtrado</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:23
+msgid "<b>Filter Sort Order</b>"
+msgstr "<b>Orden de filtrado</b>"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:25
+msgid "Logic:"
+msgstr "Lógica:"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:26
+msgid "Any (OR)"
+msgstr "o (OR)"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:27
+msgid "All (AND)"
+msgstr "y (AND)"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:28
+msgid "0"
+msgstr "0"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:29
+msgid "1"
+msgstr "1"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:30
+msgid "2"
+msgstr "2"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:31
+msgid "3"
+msgstr "3"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:32
+msgid "4"
+msgstr "4"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:33
+msgid "5"
+msgstr "5"
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:34
+msgid "Select '0' for no lower limit."
+msgstr "Seleccionar '0' para eliminar el límite inferior."
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:35
 msgid " <= cts <= "
 msgstr " <= cts <= "
 
-#: ../plugins/sorttab_display/sorttab_display.xml.h:2
+#: ../plugins/sorttab_display/sorttab_display.xml.h:36
+msgid "Select '-1' for no upper limit."
+msgstr "Seleccionar '-1' para eliminar el límite superior."
+
+#: ../plugins/sorttab_display/sorttab_display.xml.h:37
 msgid ""
 "'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when "
 "finished."
@@ -5579,75 +5711,35 @@ msgstr ""
 "'DD/MM/AAAA HH:MM < d < DD/MM/AAAA HH:MM' o similar. Pulse 'Intro' al "
 "terminar."
 
-#: ../plugins/sorttab_display/sorttab_display.xml.h:3
-msgid "0"
-msgstr "0"
+#: ../plugins/sorttab_display/sorttab_display.xml.h:38
+msgid "Rating:"
+msgstr "Puntuación:"
 
-#: ../plugins/sorttab_display/sorttab_display.xml.h:4
-msgid "1"
-msgstr "1"
+#: ../plugins/sorttab_display/sorttab_display.xml.h:39
+msgid "Playcount:"
+msgstr "Contador:"
 
-#: ../plugins/sorttab_display/sorttab_display.xml.h:5
-msgid "2"
-msgstr "2"
+#: ../plugins/sorttab_display/sorttab_display.xml.h:40
+msgid "Specify interval"
+msgstr "Especificar intervalo"
 
-#: ../plugins/sorttab_display/sorttab_display.xml.h:6
-msgid "3"
-msgstr "3"
+#: ../plugins/sorttab_display/sorttab_display.xml.h:41
+msgid "Played:"
+msgstr "Reproducido:"
 
-#: ../plugins/sorttab_display/sorttab_display.xml.h:7
-msgid "4"
-msgstr "4"
+#: ../plugins/sorttab_display/sorttab_display.xml.h:42
+msgid "Modified:"
+msgstr "Modificado:"
 
-#: ../plugins/sorttab_display/sorttab_display.xml.h:8
-msgid "5"
-msgstr "5"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:9
-msgid ":"
-msgstr ":"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:12
-msgid "<b>Filter Sort Order</b>"
-msgstr "<b>Orden de filtrado</b>"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:13
-msgid "<b>Filter Tabs</b>"
-msgstr "<b>Pestañas de filtrado</b>"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:14
-msgid "<b>Lower Margin</b>"
-msgstr "<b>Margen inferior</b>"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:16
-msgid "<b>Upper Margin</b>"
-msgstr "<b>Margen superior</b>"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:17
-msgid ""
-"<span weight=\"bold\" size=\"larger\">Please specify a time interval</span>"
-msgstr ""
-"<span weight=\"bold\" size=\"larger\">Especificar un intervalo de tiempo, "
-"por favor</span>"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:18
-#: ../plugins/track_display/display_tracks.c:1918
-msgid "Added"
-msgstr "Añadido"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:19
+#: ../plugins/sorttab_display/sorttab_display.xml.h:43
 msgid "Added:"
 msgstr "Añadido:"
 
-#: ../plugins/sorttab_display/sorttab_display.xml.h:20
-msgid "All (AND)"
-msgstr "y (AND)"
+#: ../plugins/sorttab_display/sorttab_display.xml.h:44
+msgid "Start display automatically"
+msgstr "Mostrar automáticamente"
 
-#: ../plugins/sorttab_display/sorttab_display.xml.h:21
-msgid "Any (OR)"
-msgstr "o (OR)"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:22
+#: ../plugins/sorttab_display/sorttab_display.xml.h:45
 msgid ""
 "Automatically start displaying tracks that match the criteria entered above. "
 "If not selected, you must press 'Display' to start displaying."
@@ -5656,31 +5748,15 @@ msgstr ""
 "búsqueda. Si no está seleccionado se deberá pulsar 'Mostar' para que "
 "comiencen a visualizarse."
 
-#: ../plugins/sorttab_display/sorttab_display.xml.h:23
-msgid "Calendar"
-msgstr "Calendario"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:25
-msgid "Category:"
-msgstr "Categoría:"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:26
+#: ../plugins/sorttab_display/sorttab_display.xml.h:46
 msgid "Display tracks that match the criteria entered above."
 msgstr "Mostrar las pistas que concuerden con el criterio de búsqueda."
 
-#: ../plugins/sorttab_display/sorttab_display.xml.h:27
-msgid "Dummy - do not delete"
-msgstr "Vacío - no borrar"
+#: ../plugins/sorttab_display/sorttab_display.xml.h:47
+msgid "_Display"
+msgstr "_Mostrar"
 
-#: ../plugins/sorttab_display/sorttab_display.xml.h:28
-msgid "Filter tab:"
-msgstr "Pestaña de filtrado:"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:29
-msgid "Group artist filter tab by compilation CDs"
-msgstr "Agrupar pestaña de filtrado de artista por generación de CDs"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:31
+#: ../plugins/sorttab_display/sorttab_display.xml.h:48
 msgid ""
 "In order to save the displayed track order to the iPod choose 'Save "
 "Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
@@ -5688,70 +5764,6 @@ msgstr ""
 "Pulse 'Guardar' para salvar el orden de las pistas mostradas al iPod. Orden "
 "de las pistas mostradas del menú 'Editar' o seleccionar 'Guardar "
 "automáticamente' más abajo."
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:32
-msgid "Last Modified"
-msgstr "Última Modificación"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:33
-msgid "Last Played"
-msgstr "Última Reproducción"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:34
-msgid "Logic:"
-msgstr "Lógica:"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:35
-msgid "Modified:"
-msgstr "Modificado:"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:36
-msgid "No lower margin"
-msgstr "Sin margen inferior"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:37
-msgid "No upper margin"
-msgstr "Sin margen superior"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:38
-msgid "Number of filter tabs:"
-msgstr "Número de pestañas:"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:39
-msgid "Playcount:"
-msgstr "Contador:"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:40
-msgid "Played:"
-msgstr "Reproducido:"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:41
-msgid "Rating:"
-msgstr "Puntuación:"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:42
-msgid "Select '-1' for no upper limit."
-msgstr "Seleccionar '-1' para eliminar el límite superior."
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:43
-msgid "Select '0' for no lower limit."
-msgstr "Seleccionar '0' para eliminar el límite inferior."
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:44
-msgid "Specify interval"
-msgstr "Especificar intervalo"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:45
-msgid "Start display automatically"
-msgstr "Mostrar automáticamente"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:46
-msgid "Time:"
-msgstr "Tiempo:"
-
-#: ../plugins/sorttab_display/sorttab_display.xml.h:48
-msgid "_Display"
-msgstr "_Mostrar"
 
 #: ../plugins/sorttab_display/sorttab_display_actions.c:71
 #, fuzzy, c-format
@@ -5854,12 +5866,12 @@ msgid "'Added' condition ignored because of error."
 msgstr "Ignorada la condición de «añadido» debido a un error"
 
 #: ../plugins/sorttab_display/sorttab_display.plugin.in.h:1
-msgid "Filter Track View"
-msgstr "Vista de Filtros de Pista"
-
-#: ../plugins/sorttab_display/sorttab_display.plugin.in.h:2
 msgid "Sorttab Display Plugin"
 msgstr "Plugin Mostar Ordenar Columnas"
+
+#: ../plugins/sorttab_display/sorttab_display.plugin.in.h:2
+msgid "Filter Track View"
+msgstr "Vista de Filtros de Pista"
 
 #: ../plugins/track_display/display_tracks.c:382
 #, c-format
@@ -5868,47 +5880,47 @@ msgid_plural "Moved %d tracks"
 msgstr[0] "Movida una pista"
 msgstr[1] "Movidas %d pistas"
 
-#: ../plugins/track_display/display_tracks.c:1879
+#: ../plugins/track_display/display_tracks.c:1882
 msgid "#"
 msgstr "#"
 
-#: ../plugins/track_display/display_tracks.c:1882
+#: ../plugins/track_display/display_tracks.c:1885
 msgid "CD"
 msgstr "CD"
 
-#: ../plugins/track_display/display_tracks.c:1885
+#: ../plugins/track_display/display_tracks.c:1888
 msgid "ID"
 msgstr "ID"
 
-#: ../plugins/track_display/display_tracks.c:1899
+#: ../plugins/track_display/display_tracks.c:1902
 msgid "Cmpl"
 msgstr "Cmpl"
 
-#: ../plugins/track_display/display_tracks.c:1906
+#: ../plugins/track_display/display_tracks.c:1909
 msgid "Time"
 msgstr "Duración"
 
-#: ../plugins/track_display/display_tracks.c:1909
+#: ../plugins/track_display/display_tracks.c:1912
 msgid "Plycnt"
 msgstr "Contador"
 
-#: ../plugins/track_display/display_tracks.c:1912
+#: ../plugins/track_display/display_tracks.c:1915
 msgid "Played"
 msgstr "Reproducido"
 
-#: ../plugins/track_display/display_tracks.c:1915
+#: ../plugins/track_display/display_tracks.c:1918
 msgid "Modified"
 msgstr "Modificado"
 
-#: ../plugins/track_display/display_tracks.c:1921
+#: ../plugins/track_display/display_tracks.c:1924
 msgid "Released"
 msgstr "Liberado"
 
-#: ../plugins/track_display/display_tracks.c:1927
+#: ../plugins/track_display/display_tracks.c:1930
 msgid "Vol."
 msgstr "Vol."
 
-#: ../plugins/track_display/display_tracks.c:1930
+#: ../plugins/track_display/display_tracks.c:1933
 msgid "Sndchk."
 msgstr "Control de sonido"
 
@@ -5933,57 +5945,33 @@ msgstr "Pistas Seleccionadas del Dispositivo"
 msgid "  Playlist Tracks"
 msgstr "  Pistas de la lista de reproducción"
 
+#: ../plugins/track_display/track_display.xml.h:1
+msgid "Add Column"
+msgstr "Añadir columna"
+
 #: ../plugins/track_display/track_display.xml.h:2
 msgid "<b>Available Columns</b>"
 msgstr "<b>Columnas disponibles</b>"
+
+#: ../plugins/track_display/track_display.xml.h:3
+msgid "Expand columns beyond the track list width"
+msgstr "Expandir las columnas más allá del ancho de la lista de pistas"
 
 #: ../plugins/track_display/track_display.xml.h:4
 msgid "<b>Displayed Columns</b>"
 msgstr "<b>Columnas mostradas</b>"
 
 #: ../plugins/track_display/track_display.xml.h:5
-msgid "<b>Ignore Frequent Words</b>"
-msgstr "<b>Ignorar palabras comunes (p.e: artículos)</b>"
-
-#: ../plugins/track_display/track_display.xml.h:7
-msgid "<b>Preferred Track Execution Command</b>"
-msgstr "<b>Ejecución preferida del comando de pista</b>"
-
-#: ../plugins/track_display/track_display.xml.h:8
-#, fuzzy
-msgid "<b>Sorting Options</b>"
-msgstr "<b> Opciones de gtkpod</b>"
-
-#: ../plugins/track_display/track_display.xml.h:9
-#, fuzzy
-msgid "<b>Track Display Sort Order</b>"
-msgstr "<b>Orden de las Listas de Reproducción</b>"
-
-#: ../plugins/track_display/track_display.xml.h:10
-msgid "<span weight='bold' size='larger'>No playlist selected</span>"
-msgstr ""
-"<span weight='bold' size='larger'>Ninguna lista de reproducción ha sido "
-"seleccionada</span>"
-
-#: ../plugins/track_display/track_display.xml.h:11
-msgid "Add Column"
-msgstr "Añadir columna"
-
-#: ../plugins/track_display/track_display.xml.h:12
 msgid "Automatically sort selected tracks in selected playlist"
 msgstr ""
 
-#: ../plugins/track_display/track_display.xml.h:14
-msgid "Expand columns beyond the track list width"
-msgstr "Expandir las columnas más allá del ancho de la lista de pistas"
-
-#: ../plugins/track_display/track_display.xml.h:16
-msgid "Ignore these words when at the beginning of the following fields:"
+#: ../plugins/track_display/track_display.xml.h:6
+msgid ""
+"if checked, the sort order (defined below) will be applied to the selected "
+"playlist."
 msgstr ""
-"Ignorar estas palabras cuando se encuentren al principio de los siguientes "
-"campos:"
 
-#: ../plugins/track_display/track_display.xml.h:17
+#: ../plugins/track_display/track_display.xml.h:9
 msgid ""
 "Sort order applied to displayed tracks.\n"
 "\n"
@@ -5991,11 +5979,35 @@ msgid ""
 "checkbox (above) is checked."
 msgstr ""
 
-#: ../plugins/track_display/track_display.xml.h:22
-msgid ""
-"if checked, the sort order (defined below) will be applied to the selected "
-"playlist."
+#: ../plugins/track_display/track_display.xml.h:16
+#, fuzzy
+msgid "<b>Track Display Sort Order</b>"
+msgstr "<b>Orden de las Listas de Reproducción</b>"
+
+#: ../plugins/track_display/track_display.xml.h:17
+#, fuzzy
+msgid "<b>Sorting Options</b>"
+msgstr "<b> Opciones de gtkpod</b>"
+
+#: ../plugins/track_display/track_display.xml.h:18
+msgid "Ignore these words when at the beginning of the following fields:"
 msgstr ""
+"Ignorar estas palabras cuando se encuentren al principio de los siguientes "
+"campos:"
+
+#: ../plugins/track_display/track_display.xml.h:19
+msgid "<b>Ignore Frequent Words</b>"
+msgstr "<b>Ignorar palabras comunes (p.e: artículos)</b>"
+
+#: ../plugins/track_display/track_display.xml.h:20
+msgid "<b>Preferred Track Execution Command</b>"
+msgstr "<b>Ejecución preferida del comando de pista</b>"
+
+#: ../plugins/track_display/track_display.xml.h:22
+msgid "<span weight='bold' size='larger'>No playlist selected</span>"
+msgstr ""
+"<span weight='bold' size='larger'>Ninguna lista de reproducción ha sido "
+"seleccionada</span>"
 
 #: ../plugins/track_display/track_display_context_menu.c:51
 msgid "Select All"
@@ -6024,22 +6036,22 @@ msgstr ""
 msgid "The word %s is already in the \"Ignored Frequent Word\" list"
 msgstr ""
 
-#: ../plugins/clarity/clarity.xml.h:3
-#, fuzzy
-msgid "<b>Clarity</b>"
-msgstr "<b>Carátula</b>"
-
-#: ../plugins/clarity/clarity.xml.h:8
+#: ../plugins/clarity/clarity.xml.h:1
 #, fuzzy
 msgid "Choose a Different Colour for the Clarity Background"
 msgstr "Elegir un color diferente para el fondo de pantalla de la carátula"
 
-#: ../plugins/clarity/clarity.xml.h:9
+#: ../plugins/clarity/clarity.xml.h:3
 #, fuzzy
 msgid "Choose a Different Colour for the Clarity Text"
 msgstr "Elegir un color diferente para el fondo de pantalla de la carátula"
 
-#: ../plugins/clarity/clarity.xml.h:10
+#: ../plugins/clarity/clarity.xml.h:5
+#, fuzzy
+msgid "<b>Clarity</b>"
+msgstr "<b>Carátula</b>"
+
+#: ../plugins/clarity/clarity.xml.h:11
 msgid "Clarity"
 msgstr ""
 
@@ -6090,22 +6102,22 @@ msgid "Couldn't load theme media player icon"
 msgstr "No se han podido cargar el icono: %s"
 
 #: ../plugins/external_player/external_player.xml.h:1
+msgid "Command for 'play'"
+msgstr ""
+
+#: ../plugins/external_player/external_player.xml.h:2
 #, fuzzy
 msgid "<b>Player Command</b>"
 msgstr "<b>Columnas mostradas</b>"
 
-#: ../plugins/external_player/external_player.xml.h:2
-msgid "Command for 'play'"
-msgstr ""
-
 #: ../plugins/external_player/external_player.plugin.in.h:1
-msgid "Adds track command for playing tracks in external player, eg. xmms"
-msgstr ""
-
-#: ../plugins/external_player/external_player.plugin.in.h:2
 #, fuzzy
 msgid "External Media Player Plugin"
 msgstr "  Reproductor de medios"
+
+#: ../plugins/external_player/external_player.plugin.in.h:2
+msgid "Adds track command for playing tracks in external player, eg. xmms"
+msgstr ""
 
 #: ../plugins/sjcd/egg-play-preview.c:169
 msgid "URI"
@@ -6137,7 +6149,7 @@ msgstr "Compilación"
 msgid "The position in the current stream in seconds."
 msgstr ""
 
-#: ../plugins/sjcd/egg-play-preview.c:219 ../plugins/sjcd/sj-main.c:1538
+#: ../plugins/sjcd/egg-play-preview.c:219 ../plugins/sjcd/sj-main.c:1536
 #, fuzzy
 msgid "Duration"
 msgstr "Información"
@@ -6230,7 +6242,7 @@ msgstr ""
 msgid "The plugin necessary for file access was not found"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-metadata-getter.c:263
+#: ../plugins/sjcd/libjuicer/sj-metadata-getter.c:259
 #, fuzzy, c-format
 msgid "Could not create CD lookup thread"
 msgstr ""
@@ -6277,7 +6289,7 @@ msgid ""
 msgstr ""
 
 #: ../plugins/sjcd/plugin.c:44 ../plugins/sjcd/plugin.c:65
-#: ../plugins/sjcd/sjcd.xml.h:14
+#: ../plugins/sjcd/sjcd.xml.h:1
 #, fuzzy
 msgid "Sound Juicer"
 msgstr "Control de sonido"
@@ -6358,18 +6370,18 @@ msgstr ""
 msgid "Importing file '%s'. Please wait..."
 msgstr "Escribiendo la base de datos '%s'. Espere, por favor."
 
-#: ../plugins/sjcd/sj-extracting.c:745
+#: ../plugins/sjcd/sj-extracting.c:743
 msgid "Sound Juicer could not extract this CD."
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:747 ../plugins/sjcd/sj-main.c:661
-#: ../plugins/sjcd/sj-main.c:769 ../plugins/sjcd/sj-main.c:862
-#: ../plugins/sjcd/sj-main.c:1060 ../plugins/sjcd/sj-main.c:1383
+#: ../plugins/sjcd/sj-extracting.c:745 ../plugins/sjcd/sj-main.c:659
+#: ../plugins/sjcd/sj-main.c:767 ../plugins/sjcd/sj-main.c:860
+#: ../plugins/sjcd/sj-main.c:1058 ../plugins/sjcd/sj-main.c:1381
 #, fuzzy
 msgid "Reason"
 msgstr "Temporada Nº"
 
-#: ../plugins/sjcd/sj-extracting.c:864 ../plugins/sjcd/sj-extracting.c:870
+#: ../plugins/sjcd/sj-extracting.c:862 ../plugins/sjcd/sj-extracting.c:868
 msgid "Extracting audio from CD"
 msgstr ""
 
@@ -6467,13 +6479,13 @@ msgstr "No se ha podido abrir '%s' para su lectura.\n"
 msgid "You can improve the MusicBrainz database by adding this album."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:659 ../plugins/sjcd/sj-main.c:765
-#: ../plugins/sjcd/sj-main.c:860
+#: ../plugins/sjcd/sj-main.c:657 ../plugins/sjcd/sj-main.c:763
+#: ../plugins/sjcd/sj-main.c:858
 #, fuzzy
 msgid "Could not read the CD"
 msgstr "No se ha podido crear '%s'"
 
-#: ../plugins/sjcd/sj-main.c:660 ../plugins/sjcd/sj-main.c:768
+#: ../plugins/sjcd/sj-main.c:658 ../plugins/sjcd/sj-main.c:766
 msgid "Sound Juicer could not read the track listing on this CD."
 msgstr ""
 
@@ -6488,69 +6500,69 @@ msgstr ""
 #. gdk_display_sync (gtk_widget_get_display (GTK_WIDGET (gtkpod_app)));
 #. }
 #. Set statusbar message
-#: ../plugins/sjcd/sj-main.c:739
+#: ../plugins/sjcd/sj-main.c:737
 msgid "Retrieving track listing...please wait."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:822
+#: ../plugins/sjcd/sj-main.c:820
 #, c-format
 msgid "Sound Juicer could not use the CD-ROM device '%s'"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:829
+#: ../plugins/sjcd/sj-main.c:827
 msgid "HAL daemon may not be running."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:853
+#: ../plugins/sjcd/sj-main.c:851
 #, c-format
 msgid "Sound Juicer could not access the CD-ROM device '%s'"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:953
+#: ../plugins/sjcd/sj-main.c:951
 msgid "No CD-ROM drives found"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:954
+#: ../plugins/sjcd/sj-main.c:952
 msgid "Sound Juicer could not find any CD-ROM drives to read."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:980
+#: ../plugins/sjcd/sj-main.c:978
 msgid ""
 "sjcd plugin: the currently selected audio profile is not available on your "
 "installation."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:1058
+#: ../plugins/sjcd/sj-main.c:1056
 #, fuzzy
 msgid "Could not open URL"
 msgstr "No se ha podido crear '%s'"
 
-#: ../plugins/sjcd/sj-main.c:1059
+#: ../plugins/sjcd/sj-main.c:1057
 msgid "Sound Juicer could not open the submission URL"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:1167
+#: ../plugins/sjcd/sj-main.c:1165
 #, c-format
 msgid "Unknown column %d was edited"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:1308 ../plugins/sjcd/sj-prefs.c:119
+#: ../plugins/sjcd/sj-main.c:1306 ../plugins/sjcd/sj-prefs.c:119
 #, c-format
 msgid ""
 "Could not display help for Sound Juicer\n"
 "%s"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:1381
+#: ../plugins/sjcd/sj-main.c:1379
 #, fuzzy
 msgid "Could not duplicate disc"
 msgstr "No se ha podido crear '%s'"
 
-#: ../plugins/sjcd/sj-main.c:1382
+#: ../plugins/sjcd/sj-main.c:1380
 msgid "Sound Juicer could not duplicate the disc"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:1422 ../plugins/sjcd/sj-main.c:1445
+#: ../plugins/sjcd/sj-main.c:1420 ../plugins/sjcd/sj-main.c:1443
 #, fuzzy
 msgid "Could not create GSettings object.\n"
 msgstr "No se ha podido crear '%s'"
@@ -6628,111 +6640,112 @@ msgstr ""
 msgid "Example Path"
 msgstr "Ratio de muestras"
 
-#: ../plugins/sjcd/sjcd.xml.h:1
-msgid "CD _drive:"
-msgstr ""
-
 #: ../plugins/sjcd/sjcd.xml.h:2
-msgid "Device"
-msgstr ""
+#, fuzzy
+msgid "_Disc"
+msgstr "_Mostrar"
 
 #: ../plugins/sjcd/sjcd.xml.h:3
-msgid "Disc:"
-msgstr ""
-
-#: ../plugins/sjcd/sjcd.xml.h:4
-#, fuzzy
-msgid "Duration:"
-msgstr "Información"
-
-#: ../plugins/sjcd/sjcd.xml.h:5
 #, fuzzy
 msgid "E_ject"
 msgstr "Expulsar iPod"
 
-#: ../plugins/sjcd/sjcd.xml.h:6
+#: ../plugins/sjcd/sjcd.xml.h:4
+msgid "_Submit Track Names..."
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:5
 #, fuzzy
-msgid "File _name:"
-msgstr "Formato del nombre: "
+msgid "_Duplicate Disc"
+msgstr "Detección de duplicados"
+
+#: ../plugins/sjcd/sjcd.xml.h:6 ../src/anjuta-actions.h:49
+msgid "_Edit"
+msgstr "_Editar"
 
 #: ../plugins/sjcd/sjcd.xml.h:7
-msgid "Folder hie_rarchy:"
-msgstr ""
+#, fuzzy
+msgid "_Select All"
+msgstr "Seleccionar Todo"
 
 #: ../plugins/sjcd/sjcd.xml.h:8
-msgid "Format"
-msgstr ""
+#, fuzzy
+msgid "_Deselect All"
+msgstr "Seleccionar Todo"
 
 #: ../plugins/sjcd/sjcd.xml.h:9
-msgid "Multiple Albums Found"
-msgstr ""
+#, fuzzy
+msgid "_Year:"
+msgstr "Año"
 
 #: ../plugins/sjcd/sjcd.xml.h:10
-#, fuzzy
-msgid "Music Folder"
-msgstr "Vídeo musical"
+msgid "Disc:"
+msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:11
-msgid "O_utput Format:"
-msgstr ""
+#, fuzzy
+msgid "_Title:"
+msgstr "Título"
 
 #: ../plugins/sjcd/sjcd.xml.h:12
 #, fuzzy
-msgid "Preferences"
-msgstr "_Preferencias"
+msgid "_Artist:"
+msgstr "Artista"
 
 #: ../plugins/sjcd/sjcd.xml.h:13
 #, fuzzy
-msgid "Select A Folder"
-msgstr "Seleccionar Todo"
+msgid "_Genre:"
+msgstr "Género"
+
+#: ../plugins/sjcd/sjcd.xml.h:14
+#, fuzzy
+msgid "Duration:"
+msgstr "Información"
 
 #: ../plugins/sjcd/sjcd.xml.h:15
+#, fuzzy
+msgid "Tracks"
+msgstr "Pista"
+
+#: ../plugins/sjcd/sjcd.xml.h:16
+msgid "Multiple Albums Found"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:17
+msgid "_Continue"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:18
 msgid ""
 "This CD could be more than one album. Please select which album it is below "
 "and press <i>Continue</i>."
 msgstr ""
 
-#: ../plugins/sjcd/sjcd.xml.h:16
-#, fuzzy
-msgid "Track Names"
-msgstr "Número de pista"
-
-#: ../plugins/sjcd/sjcd.xml.h:17
-#, fuzzy
-msgid "Tracks"
-msgstr "Pista"
-
-#: ../plugins/sjcd/sjcd.xml.h:18
-#, fuzzy
-msgid "_Artist:"
-msgstr "Artista"
-
 #: ../plugins/sjcd/sjcd.xml.h:19
-msgid "_Continue"
-msgstr ""
+#, fuzzy
+msgid "Preferences"
+msgstr "_Preferencias"
 
 #: ../plugins/sjcd/sjcd.xml.h:20
-#, fuzzy
-msgid "_Deselect All"
-msgstr "Seleccionar Todo"
+msgid "Device"
+msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:21
-#, fuzzy
-msgid "_Disc"
-msgstr "_Mostrar"
+msgid "CD _drive:"
+msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:22
-#, fuzzy
-msgid "_Duplicate Disc"
-msgstr "Detección de duplicados"
-
-#: ../plugins/sjcd/sjcd.xml.h:23 ../src/anjuta-actions.h:49
-msgid "_Edit"
-msgstr "_Editar"
-
-#: ../plugins/sjcd/sjcd.xml.h:24
 msgid "_Eject after extracting tracks"
 msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:23
+msgid "_Open music folder when finished"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:24
+#, fuzzy
+msgid "Music Folder"
+msgstr "Vídeo musical"
 
 #: ../plugins/sjcd/sjcd.xml.h:25
 #, fuzzy
@@ -6741,50 +6754,49 @@ msgstr "Añadir directorio"
 
 #: ../plugins/sjcd/sjcd.xml.h:26
 #, fuzzy
-msgid "_Genre:"
-msgstr "Género"
-
-#: ../plugins/sjcd/sjcd.xml.h:27
-msgid "_Open music folder when finished"
-msgstr ""
-
-#: ../plugins/sjcd/sjcd.xml.h:28
-#, fuzzy
-msgid "_Select All"
+msgid "Select A Folder"
 msgstr "Seleccionar Todo"
 
+#: ../plugins/sjcd/sjcd.xml.h:27
+#, fuzzy
+msgid "Track Names"
+msgstr "Número de pista"
+
+#: ../plugins/sjcd/sjcd.xml.h:28
+msgid "Folder hie_rarchy:"
+msgstr ""
+
 #: ../plugins/sjcd/sjcd.xml.h:29
+#, fuzzy
+msgid "File _name:"
+msgstr "Formato del nombre: "
+
+#: ../plugins/sjcd/sjcd.xml.h:30
 msgid "_Strip special characters"
 msgstr ""
 
-#: ../plugins/sjcd/sjcd.xml.h:30
-msgid "_Submit Track Names..."
+#: ../plugins/sjcd/sjcd.xml.h:31
+msgid "Format"
 msgstr ""
 
-#: ../plugins/sjcd/sjcd.xml.h:31
-#, fuzzy
-msgid "_Title:"
-msgstr "Título"
-
 #: ../plugins/sjcd/sjcd.xml.h:32
-#, fuzzy
-msgid "_Year:"
-msgstr "Año"
+msgid "O_utput Format:"
+msgstr ""
 
-#: ../src/anjuta-about.c:158
+#: ../src/anjuta-about.c:159
 #, c-format
 msgid "Couldn't read license file %s: %s"
 msgstr "No se ha podido leer el archivo de licencia %s: %s"
 
-#: ../src/anjuta-about.c:175
+#: ../src/anjuta-about.c:176
 msgid "Copyright (c) Jorg Schuler et al."
 msgstr "Copyright (c) Jorge Schuler et al."
 
-#: ../src/anjuta-about.c:176
+#: ../src/anjuta-about.c:177
 msgid "iPod Management Platform"
 msgstr "Plataforma de Gestion de iPod"
 
-#: ../src/anjuta-action-callbacks.c:108
+#: ../src/anjuta-action-callbacks.c:113
 msgid "GtkPod Preferences"
 msgstr "Preferencias de GtkPod"
 
@@ -6903,54 +6915,76 @@ msgstr "Acerca de los _Plugins Externos"
 msgid "About third party gtkpod plugins"
 msgstr "Acerca de plugins de terceros"
 
-#: ../src/anjuta-app.c:517
+#: ../src/anjuta-app.c:522
 msgid "Edit"
 msgstr "Editar"
 
-#: ../src/anjuta-app.c:518 ../src/anjuta-app.c:519
+#: ../src/anjuta-app.c:523 ../src/anjuta-app.c:524
 msgid "View"
 msgstr "Ver"
 
-#: ../src/anjuta-app.c:520
+#: ../src/anjuta-app.c:525
 msgid "Tools"
 msgstr "Herramientas"
 
-#: ../src/anjuta-app.c:521
+#: ../src/anjuta-app.c:526
 msgid "Help"
 msgstr "Ayuda"
 
-#: ../src/anjuta-app.c:734
+#: ../src/anjuta-app.c:739
 msgid " Plugins"
 msgstr " Plugins"
 
-#: ../src/anjuta-app.c:746
+#: ../src/anjuta-app.c:751
 msgid "Installed plugins"
 msgstr "Plugins instalados"
 
-#: ../src/anjuta-app.c:747
+#: ../src/anjuta-app.c:752
 msgid "Preferred plugins"
 msgstr "Plugins preferidos"
 
-#: ../src/anjuta-app.c:748
+#: ../src/anjuta-app.c:753
 msgid "Shortcuts"
 msgstr "Accesos directos"
 
-#: ../src/anjuta-app.c:807
+#: ../src/anjuta-app.c:812
 #, c-format
 msgid "Value doesn't exist"
 msgstr "El valor no existe"
 
-#: ../src/anjuta-app.c:1425
+#: ../src/anjuta-app.c:1430
 msgid "Confirmation"
 msgstr "Confirmación"
 
-#: ../src/gtkpod.c:206
+#: ../src/gtkpod.c:203
 msgid "Loaded Session..."
 msgstr "Sesión Cargada..."
 
-#: ../src/main.c:81
+#.
+#. * Indicate to user that although the UI is up, the itdbs are still loading.
+#. * The message will be overriden by the import of
+#.
+#: ../src/gtkpod.c:216
+msgid "Importing configured ipods ... "
+msgstr ""
+
+#: ../src/main.c:67
 msgid "- Interface with your iPod"
 msgstr ""
+
+#: ../src/main.c:82
+#, fuzzy, c-format
+msgid "Error parsing options: %s\n"
+msgstr "Error al crear %s: %s\n"
+
+#~ msgid "gtkpod version %s usage:\n"
+#~ msgstr "Uso de gtkpod versión %s:\n"
+
+#~ msgid "  -h, --help:   display this message\n"
+#~ msgstr "  -h, --help:   muestra este mensaje\n"
+
+#~ msgid "  --mountpoint: same as '-m'.\n"
+#~ msgstr "  --mountpoint: igual que '-m'.\n"
 
 #~ msgid ""
 #~ "Lyrics not written due to the error:\n"
