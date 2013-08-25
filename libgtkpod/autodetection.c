@@ -174,9 +174,13 @@ void autodetection_init() {
     if (autodetect == NULL) {
         GList *mounts, *gl;
 
+#if GLIB_CHECK_VERSION(2, 36, 0)
+        // Not required for 2.36+
+#else
         static GOnce g_type_init_once =
         G_ONCE_INIT;
         g_once (&g_type_init_once, (GThreadFunc)g_type_init, NULL);
+#endif
 
         autodetect = g_new0 (AutoDetect, 1);
         _create_mutex(autodetect);
