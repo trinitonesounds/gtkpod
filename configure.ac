@@ -111,17 +111,17 @@ GTK_CLEANLINESS_FLAGS="-DG_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_I
 
 AC_MSG_CHECKING(for using DISABLE_DEPRECATED flags)
 
-dnl if expr "$LIBGTKPOD_VERSION" : '.*~' >/dev/null; then
+if expr "$LIBGTKPOD_VERSION" : '.*~' >/dev/null; then
   dnl The version contains a tilde so this is not a release
   dnl Thus, we can add in disable deprecated flags to avoid
   dnl using deprecated functions
-GTK_CLEANLINESS_FLAGS="$GTK_CLEANLINESS_FLAGS -DG_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
-dnl  AC_MSG_RESULT(yes)
-dnl else
+  GTK_CLEANLINESS_FLAGS="$GTK_CLEANLINESS_FLAGS -DG_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
+  AC_MSG_RESULT(yes)
+else
   dnl The version is a release so do not include deprecated
   dnl flags.
   AC_MSG_RESULT(no)
-dnl fi
+fi
 
 dnl Force C99 mode (no implicit int declarations)
 CFLAGS="$CFLAGS -std=gnu99 -Werror-implicit-function-declaration -Werror=format-security"
