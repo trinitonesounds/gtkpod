@@ -1,6 +1,6 @@
 # Italian language translation for gtkpod.
 # Copyright (C) 2003, 2005 Edward Matteucci <edward.matteucci@libero.it>
-# Copyright (C) 2007, 2008, 2010, 2011, 2012 Daniele Forsi <daniele@forsi.it>
+# Copyright (C) 2007, 2008, 2010, 2011, 2012, 2013 Daniele Forsi <daniele@forsi.it>
 # Copyright (C) 2011 Daniele Napolitano <dnax88@gmail.com>
 # This file is distributed under the same license as the gtkpod package.
 #
@@ -16,10 +16,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-24 22:25+0100\n"
-"PO-Revision-Date: 2012-12-04 22:22+0100\n"
-"Last-Translator: Daniele Forsi <dforsi@gmail.com>\n"
-"Language-Team: Italian <tp@lists.linux.it>\n"
+"POT-Creation-Date: 2013-08-25 11:57+0200\n"
+"PO-Revision-Date: 2013-08-25 12:06+0200\n"
+"Last-Translator: Daniele Forsi <daniele@forsi.it>\n"
+"Language-Team: Italian <debian-l10n-italian@lists.debian.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -553,8 +553,8 @@ msgstr "Elaborazione di «%s» in corso..."
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "Saltato «%s» perché coincide con le maschere di esclusione.\n"
 
-#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1621
-#: ../libgtkpod/misc_track.c:1717
+#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1617
+#: ../libgtkpod/misc_track.c:1713
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
@@ -1278,7 +1278,7 @@ msgstr "Podcast"
 
 #: ../libgtkpod/gp_itdb.c:836
 msgid "Importing of ipods completed."
-msgstr ""
+msgstr "Importazione degli iPod completata."
 
 #: ../libgtkpod/gp_itdb.c:928
 msgid "Local"
@@ -2204,39 +2204,39 @@ msgid "Duplicate detection"
 msgstr "Rilevazione dei duplicati"
 
 #. Translators: this is minutes:seconds.thousandths
-#: ../libgtkpod/misc_track.c:1106
+#: ../libgtkpod/misc_track.c:1102
 #, c-format
 msgid "%d:%06.3f"
 msgstr "%d.%06.3f"
 
-#: ../libgtkpod/misc_track.c:1196 ../libgtkpod/misc_track.c:1202
+#: ../libgtkpod/misc_track.c:1192 ../libgtkpod/misc_track.c:1198
 #, c-format
 msgid "%d/%d"
 msgstr "%d/%d"
 
-#: ../libgtkpod/misc_track.c:1208 ../plugins/details_editor/details.c:1204
+#: ../libgtkpod/misc_track.c:1204 ../plugins/details_editor/details.c:1204
 msgid "n/a"
 msgstr "n/d"
 
-#: ../libgtkpod/misc_track.c:1218
+#: ../libgtkpod/misc_track.c:1214
 msgid "Local Database"
 msgstr "Database locale"
 
 #. artwork is set
-#: ../libgtkpod/misc_track.c:1227
+#: ../libgtkpod/misc_track.c:1223
 msgid "Embedded or filename was lost"
 msgstr "Incorporato o il nome del file è andato perso"
 
-#: ../libgtkpod/misc_track.c:1230
+#: ../libgtkpod/misc_track.c:1226
 msgid "Artwork not set"
 msgstr "Copertina non impostata"
 
-#: ../libgtkpod/misc_track.c:1657
+#: ../libgtkpod/misc_track.c:1653
 #, c-format
 msgid "Could not find source file for '%s'. Track not copied."
 msgstr "Impossibile trovare il file sorgente per «%s». Traccia non copiata."
 
-#: ../libgtkpod/misc_track.c:1855
+#: ../libgtkpod/misc_track.c:1851
 #, c-format
 msgid ""
 "drag and drop: ignored '%s'.\n"
@@ -2245,83 +2245,80 @@ msgstr ""
 "drag and drop: ignorato «%s»\n"
 "motivo: %s\n"
 
-#: ../libgtkpod/misc_track.c:1982
+#: ../libgtkpod/misc_track.c:1978
 #, c-format
 msgid "Deleting one track completely from iPod"
 msgid_plural "Deleting %d tracks completely from iPod"
 msgstr[0] "Eliminazione completa di una traccia dall'iPod"
 msgstr[1] "Eliminazione completa di %d tracce dall'iPod"
 
-#: ../libgtkpod/misc_track.c:1987 ../libgtkpod/misc_track.c:2007
+#: ../libgtkpod/misc_track.c:1983 ../libgtkpod/misc_track.c:2003
 #, c-format
 msgid "Deleting %d track from playlist '%s'"
 msgid_plural "Deleting %d tracks from playlist '%s'"
 msgstr[0] "Eliminazione di %d traccia dalla playlist «%s»"
 msgstr[1] "Eliminazione di %d tracce dalla playlist «%s»"
 
-#: ../libgtkpod/misc_track.c:2002
+#: ../libgtkpod/misc_track.c:1998
 #, c-format
 msgid "Deleting one track from harddisk"
 msgid_plural "Deleting %d tracks from harddisk"
 msgstr[0] "Eliminazione di una traccia dal disco fisso"
 msgstr[1] "Eliminazione di %d tracce dal disco fisso"
 
-#: ../libgtkpod/misc_track.c:2012
+#: ../libgtkpod/misc_track.c:2008
 #, c-format
 msgid "Deleting one track from local database"
 msgid_plural "Deleting %d tracks from local database"
 msgstr[0] "Eliminazione di una traccia dal database locale"
 msgstr[1] "Eliminazione di %d tracce dal database locale"
 
-#: ../libgtkpod/misc_track.c:2027
+#: ../libgtkpod/misc_track.c:2023
 #, c-format
 msgid "Deleting Track %d/%d ..."
 msgstr "Eliminazione traccia %d/%d..."
 
-#: ../libgtkpod/misc_track.c:2037
+#: ../libgtkpod/misc_track.c:2033
 msgid "Completed deletion"
 msgstr "Eliminazione completata"
 
-#: ../libgtkpod/misc_track.c:2131
+#: ../libgtkpod/misc_track.c:2127
 #, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
 msgstr[0] "Copiata %d traccia su «%s» in «%s»"
 msgstr[1] "Copiate %d tracce su «%s» in «%s»"
 
-#: ../libgtkpod/misc_track.c:2161
+#: ../libgtkpod/misc_track.c:2157
 #, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
 msgstr[0] "Copiata %d traccia in «%s»"
 msgstr[1] "Copiate %d tracce in «%s»"
 
-#: ../libgtkpod/misc_track.c:2175
+#: ../libgtkpod/misc_track.c:2171
 msgid "No tracks selected"
 msgstr "Nessuna traccia selezionata"
 
 #: ../libgtkpod/prefs.c:280
-#, fuzzy
 msgid "increment playcount for file by one"
-msgstr "  -p <file>:    incrementa di uno il contatore delle riproduzioni\n"
+msgstr "incrementa di uno il contatore delle riproduzioni per il FILE"
 
 #: ../libgtkpod/prefs.c:280 ../libgtkpod/prefs.c:282
 msgid "FILE"
-msgstr ""
+msgstr "FILE"
 
 #: ../libgtkpod/prefs.c:282
-#, fuzzy
 msgid "print gtkpod hash for file"
-msgstr "  --hash <file>:stampa l'hash di gtkpod per il file\n"
+msgstr "stampa l'hash di gtkpod per il FILE"
 
 #: ../libgtkpod/prefs.c:284
-#, fuzzy
 msgid "define the mountpoint of your iPod"
-msgstr "  -m percorso:  definisce il punto di montaggio dell'iPod\n"
+msgstr "definisce il punto di montaggio dell'iPod"
 
 #: ../libgtkpod/prefs.c:284
 msgid "PATH"
-msgstr ""
+msgstr "PERCORSO"
 
 #: ../libgtkpod/prefs.c:435
 #, c-format
@@ -4046,14 +4043,14 @@ msgid "Seek failed!\n"
 msgstr "Seek fallito\n"
 
 #: ../plugins/media_player/media_player.c:377
-#, fuzzy
 msgid "Failed to play track: Track is no longer available"
-msgstr "Impossibile riprodurre la traccia: %s"
+msgstr "Impossibile riprodurre la traccia: la traccia non è più disponibile"
 
 #: ../plugins/media_player/media_player.c:384
 #, c-format
 msgid "Failed to play track: Unable to find the file for the track '%s'"
 msgstr ""
+"Impossibile riprodurre la traccia: file per la traccia «%s» non trovato"
 
 #. Translators: %s is an error message
 #: ../plugins/media_player/media_player.c:395
@@ -6931,16 +6928,16 @@ msgstr "Sessione caricata"
 #.
 #: ../src/gtkpod.c:216
 msgid "Importing configured ipods ... "
-msgstr ""
+msgstr "Importazione degli iPod configurati..."
 
 #: ../src/main.c:67
 msgid "- Interface with your iPod"
 msgstr "- Interfaccia per iPod"
 
 #: ../src/main.c:82
-#, fuzzy, c-format
+#, c-format
 msgid "Error parsing options: %s\n"
-msgstr "Errore nella creazione di %s: %s\n"
+msgstr "Errore durante la scansione delle opzioni: %s\n"
 
 #~ msgid "gtkpod version %s usage:\n"
 #~ msgstr "Uso di gtkpod versione %s:\n"
