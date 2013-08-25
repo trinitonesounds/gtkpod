@@ -555,10 +555,6 @@ void gp_itdb_pc_path_hash_add_track(Track *track) {
     g_return_if_fail (eitdb);
     g_return_if_fail (eitdb->pc_path_hash);
 
-    g_return_if_fail (track);
-    etr = track->userdata;
-    g_return_if_fail (etr);
-
     /* This is only to detect programming errors */
     g_return_if_fail (!etr->pc_path_hashed);
 
