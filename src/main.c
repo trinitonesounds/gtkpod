@@ -59,7 +59,11 @@ main (int argc, char *argv[])
 
 #ifdef HAVE_CLUTTER_GTK
     gtk_clutter_init(&argc, &argv);
+#if CLUTTER_CHECK_VERSION(1, 10, 0)
+    // Initialising threads not required in 1.10+
+#else
     clutter_threads_init();
+#endif
 #else
     gtk_init (&argc, &argv);
 #endif

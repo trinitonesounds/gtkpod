@@ -222,6 +222,10 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
     if (!ok_to_close_gtkpod())
         return TRUE;
 
+#if (ANJUTA_CHECK_VERSION(3, 8, 0))
+    AnjutaProfileManager *profile_manager;
+#endif
+
     AnjutaPluginManager *plugin_manager;
     AnjutaApp *app;
     gchar *remembered_plugins;
@@ -242,6 +246,7 @@ static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpoin
 #if (ANJUTA_CHECK_VERSION(3, 8, 0))
     /* Close the profile manager which will emit "profile-descoped" and release
      * all previous profiles. */
+    profile_manager = anjuta_shell_get_profile_manager(ANJUTA_SHELL(app), NULL);
     anjuta_profile_manager_close (profile_manager);
 
     /* Hide the window while unloading all the plugins. */
