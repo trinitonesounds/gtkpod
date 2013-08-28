@@ -31,7 +31,7 @@ gtkpod_SOURCES = \
     anjuta-about.c anjuta-about.h \
     anjuta-action-callbacks.c anjuta-action-callbacks.h \
     anjuta-actions.h \
-    anjuta-app.c anjuta-app.h \
+    anjuta-window.c anjuta-window.h \
     gtkpod.c gtkpod.h \
     main.c
 

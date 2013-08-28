@@ -22,12 +22,12 @@
 
 #include <gtk/gtk.h>
 
-void on_exit1_activate (GtkAction * action, AnjutaApp *app);
-void on_fullscreen_toggle (GtkAction *action, AnjutaApp *app);
-void on_layout_lock_toggle (GtkAction *action, AnjutaApp *app);
-void on_reset_layout_activate (GtkAction *action, AnjutaApp *app);
-void on_toolbar_view_toggled (GtkAction *action,  AnjutaApp *app);
-void on_set_preferences1_activate (GtkAction * action, AnjutaApp *app);
+void on_exit1_activate (GtkAction * action, AnjutaWindow *app);
+void on_fullscreen_toggle (GtkAction *action, AnjutaWindow *app);
+void on_layout_lock_toggle (GtkAction *action, AnjutaWindow *app);
+void on_reset_layout_activate (GtkAction *action, AnjutaWindow *app);
+void on_toolbar_view_toggled (GtkAction *action,  AnjutaWindow *app);
+void on_set_preferences1_activate (GtkAction * action, AnjutaWindow *app);
 
 /* Help actions */
 void on_help_manual_activate (GtkAction *action, gpointer data);
@@ -36,6 +36,6 @@ void on_url_home_activate (GtkAction * action, gpointer user_data);
 void on_url_bugs_activate (GtkAction * action, gpointer user_data);
 void on_url_faqs_activate (GtkAction * action, gpointer user_data);
 void on_url_activate (GtkAction * action, gpointer url);
-void on_about_activate (GtkAction * action, AnjutaApp *app);
+void on_about_activate (GtkAction * action, AnjutaWindow *app);
 
 #endif

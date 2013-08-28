@@ -18,8 +18,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _ANJUTA_APP_H_
-#define _ANJUTA_APP_H_
+#ifndef _ANJUTA_WINDOW_H_
+#define _ANJUTA_WINDOW_H_
 
 #include <gmodule.h>
 #include <gdl/gdl-dock-layout.h>
@@ -32,16 +32,16 @@
 
 G_BEGIN_DECLS
 
-#define ANJUTA_TYPE_APP        (anjuta_app_get_type ())
-#define ANJUTA_APP(o)          (G_TYPE_CHECK_INSTANCE_CAST ((o), ANJUTA_TYPE_APP, AnjutaApp))
-#define ANJUTA_APP_CLASS(k)    (G_TYPE_CHECK_CLASS_CAST((k), ANJUTA_TYPE_APP, AnjutaAppClass))
-#define ANJUTA_IS_APP(o)       (G_TYPE_CHECK_INSTANCE_TYPE ((o), ANJUTA_TYPE_APP))
-#define ANJUTA_IS_APP_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE ((k), ANJUTA_TYPE_APP))
+#define ANJUTA_TYPE_WINDOW        (anjuta_window_get_type ())
+#define ANJUTA_WINDOW(o)          (G_TYPE_CHECK_INSTANCE_CAST ((o), ANJUTA_TYPE_WINDOW, AnjutaWindow))
+#define ANJUTA_WINDOW_CLASS(k)    (G_TYPE_CHECK_CLASS_CAST((k), ANJUTA_TYPE_WINDOW, AnjutaWindowClass))
+#define ANJUTA_IS_WINDOW(o)       (G_TYPE_CHECK_INSTANCE_TYPE ((o), ANJUTA_TYPE_WINDOW))
+#define ANJUTA_IS_WINDOW_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE ((k), ANJUTA_TYPE_WINDOW))
 
-typedef struct _AnjutaApp AnjutaApp;
-typedef struct _AnjutaAppClass AnjutaAppClass;
+typedef struct _AnjutaWindow AnjutaWindow;
+typedef struct _AnjutaWindowClass AnjutaWindowClass;
 
-struct _AnjutaApp
+struct _AnjutaWindow
 {
 	GtkWindow parent;
 	GtkWidget *toolbar;
@@ -66,18 +66,18 @@ struct _AnjutaApp
 	gint save_count;
 };
 
-struct _AnjutaAppClass
+struct _AnjutaWindowClass
 {
 	GtkWindowClass klass;
 };
 
-GType      anjuta_app_get_type (void);
-GtkWidget* anjuta_app_new (void);
+GType      anjuta_window_get_type (void);
+GtkWidget* anjuta_window_new (void);
 
-void       anjuta_app_set_geometry (AnjutaApp *app, const gchar *geometry);
-gchar*     anjuta_app_get_geometry (AnjutaApp *app);
-void       anjuta_app_layout_reset (AnjutaApp *app);
-void	   anjuta_app_install_preferences (AnjutaApp *app);
+void       anjuta_window_set_geometry (AnjutaWindow *app, const gchar *geometry);
+gchar*     anjuta_window_get_geometry (AnjutaWindow *app);
+void       anjuta_window_layout_reset (AnjutaWindow *app);
+void	   anjuta_window_install_preferences (AnjutaWindow *app);
 void anjuta_set_ui_file_path (gchar * path);
 
 G_END_DECLS

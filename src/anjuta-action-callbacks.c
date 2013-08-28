@@ -34,7 +34,7 @@
 #include <libanjuta/interfaces/ianjuta-preferences.h>
 #include <libanjuta/anjuta-version.h>
 
-#include "anjuta-app.h"
+#include "anjuta-window.h"
 #include "anjuta-about.h"
 #include "anjuta-action-callbacks.h"
 #include "../libgtkpod/directories.h"
@@ -42,11 +42,11 @@
 #define TOOLBAR_VISIBLE "toolbar-visible"
 
 void
-on_exit1_activate (GtkAction * action, AnjutaApp *app)
+on_exit1_activate (GtkAction * action, AnjutaWindow *win)
 {
 	GdkEvent *event = gdk_event_new (GDK_DELETE);
 
-	event->any.window = g_object_ref (gtk_widget_get_window (GTK_WIDGET(app)));
+	event->any.window = g_object_ref (gtk_widget_get_window (GTK_WIDGET(win)));
 	event->any.send_event = TRUE;
 
 	gtk_main_do_event (event);
@@ -54,66 +54,66 @@ on_exit1_activate (GtkAction * action, AnjutaApp *app)
 }
 
 void
-on_fullscreen_toggle (GtkAction *action, AnjutaApp *app)
+on_fullscreen_toggle (GtkAction *action, AnjutaWindow *win)
 {
 	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)))
-		gtk_window_fullscreen (GTK_WINDOW(app));
+		gtk_window_fullscreen (GTK_WINDOW(win));
 	else
-		gtk_window_unfullscreen (GTK_WINDOW(app));
+		gtk_window_unfullscreen (GTK_WINDOW(win));
 }
 
 void
-on_layout_lock_toggle (GtkAction *action, AnjutaApp *app)
+on_layout_lock_toggle (GtkAction *action, AnjutaWindow *win)
 {
-	if (app->layout_manager)
+	if (win->layout_manager)
 #if (ANJUTA_CHECK_VERSION(3, 6, 2))
-	    g_object_set (gdl_dock_layout_get_master (app->layout_manager), "locked",
+	    g_object_set (gdl_dock_layout_get_master (win->layout_manager), "locked",
 #else
-		g_object_set (app->layout_manager->master, "locked",
+		g_object_set (win->layout_manager->master, "locked",
 #endif
 					  gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)),
 					  NULL);
 }
 
 void
-on_reset_layout_activate(GtkAction *action, AnjutaApp *app)
+on_reset_layout_activate(GtkAction *action, AnjutaWindow *win)
 {
-	anjuta_app_layout_reset (app);
+	anjuta_window_layout_reset (win);
 }
 
 void
-on_toolbar_view_toggled (GtkAction *action, AnjutaApp *app)
+on_toolbar_view_toggled (GtkAction *action, AnjutaWindow *win)
 {
 	gboolean status = gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(action));
 	if (status)
 	{
-		gtk_widget_show (app->toolbar);
+		gtk_widget_show (win->toolbar);
 	}
 	else
 	{
-		gtk_widget_hide (app->toolbar);
+		gtk_widget_hide (win->toolbar);
 	}
-	g_settings_set_boolean (app->settings,
+	g_settings_set_boolean (win->settings,
 	                            TOOLBAR_VISIBLE,
 	                            status);
 }
 
 void
-on_set_preferences1_activate (GtkAction * action, AnjutaApp *app)
+on_set_preferences1_activate (GtkAction * action, AnjutaWindow *win)
 {
 
 	GtkWidget *preferences_dialog;
 
-	if (anjuta_preferences_is_dialog_created (app->preferences))
+	if (anjuta_preferences_is_dialog_created (win->preferences))
 	{
-		gtk_window_present (GTK_WINDOW (anjuta_preferences_get_dialog (app->preferences)));
+		gtk_window_present (GTK_WINDOW (anjuta_preferences_get_dialog (win->preferences)));
 		return;
 	}
-	preferences_dialog = anjuta_preferences_get_dialog (app->preferences);
+	preferences_dialog = anjuta_preferences_get_dialog (win->preferences);
 	gtk_window_set_title (GTK_WINDOW (preferences_dialog), _("GtkPod Preferences"));
 
 	/* Install main application preferences */
-	anjuta_app_install_preferences (app);
+	anjuta_window_install_preferences (win);
 
 	g_signal_connect_swapped (G_OBJECT (preferences_dialog),
 					  		  "response",
@@ -121,7 +121,7 @@ on_set_preferences1_activate (GtkAction * action, AnjutaApp *app)
 					  		  preferences_dialog);
 
 	gtk_window_set_transient_for (GTK_WINDOW (preferences_dialog),
-								  GTK_WINDOW (app));
+								  GTK_WINDOW (win));
 
 	gtk_widget_show (preferences_dialog);
 }
@@ -152,9 +152,9 @@ on_url_faqs_activate (GtkAction * action, gpointer user_data)
 }
 
 void
-on_about_activate (GtkAction * action, AnjutaApp *app)
+on_about_activate (GtkAction * action, AnjutaWindow *win)
 {
-	GtkWidget *about_dlg = about_box_new (GTK_WINDOW(app));
+	GtkWidget *about_dlg = about_box_new (GTK_WINDOW(win));
 
 	g_signal_connect_swapped(about_dlg, "response",
 		G_CALLBACK(gtk_widget_destroy), about_dlg);

@@ -84,17 +84,22 @@ static gchar* read_documenters(FILE *fp, gchar *line, gint *index, const gchar *
 }
 
 static gchar* read_translators(FILE *fp, gchar *line) {
-    do {
-        line = g_strchomp(line);
-        if (translators == NULL) {
-            translators = g_strdup_printf("%s", line);
-        }
-        else {
-            translators = g_strconcat(translators, "\n", line, NULL);
-        }
+    gboolean found = FALSE;
+    gchar *env_lang = getenv("LANG");
 
+    do {
         if (!(line = about_read_line(fp)))
             return NULL;
+
+        line = g_strchug(line);
+        if (!found && g_str_has_prefix(line, env_lang)) {
+            found = TRUE;
+            gchar *tmp = g_strdup(line + strlen(env_lang));
+            tmp = g_strchug(tmp);
+            translators = g_strconcat("\n\n", tmp, NULL);
+            g_free(tmp);
+        }
+        line = g_strchomp(line);
     }
     while (!g_str_has_suffix(line, ":"));
 
