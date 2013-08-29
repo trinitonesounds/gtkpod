@@ -48,6 +48,9 @@ struct _ClarityWidgetPrivate {
     /* Gtk widgets */
     GtkWidget *contentpanel;
 
+    /* Panel containing the draw widget */
+    GtkWidget *draw_panel;
+
     /* Drawing area related widget */
     GtkWidget *draw_area;
 
@@ -74,6 +77,7 @@ static void clarity_widget_dispose(GObject *gobject) {
             gtk_widget_destroy(priv->contentpanel);
 
         priv->contentpanel = NULL;
+        priv->draw_panel = NULL;
         priv->draw_area = NULL;
         priv->controlbox = NULL;
         priv->leftbutton = NULL;
@@ -153,6 +157,7 @@ static void _on_clarity_slider_value_changed(GtkRange *range, gpointer data) {
 
     ClarityWidgetPrivate *priv;
     priv = (ClarityWidgetPrivate *) data;
+    g_return_if_fail(priv->draw_area);
 
     if (album_model_get_size(priv->album_model) == 0)
         return;
@@ -178,6 +183,8 @@ static void _on_clarity_slider_value_changed(GtkRange *range, gpointer data) {
  *
  */
 static void _init_slider_range(ClarityWidgetPrivate *priv) {
+    g_return_if_fail(priv->draw_area);
+
     g_signal_handler_block(G_OBJECT(priv->cdslider), priv->slider_signal_id);
 
     gint slider_ubound = album_model_get_size(priv->album_model) - 1;
@@ -218,6 +225,7 @@ static void _set_background_color(ClarityWidget *self) {
         prefs_get_string_value("clarity_bg_color", &hex_string);
 
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
+    g_return_if_fail(priv->draw_area);
 
     clarity_canvas_set_background_color(CLARITY_CANVAS(priv->draw_area), hex_string);
 }
@@ -231,6 +239,7 @@ static void _set_text_color(ClarityWidget *self) {
         prefs_get_string_value("clarity_fg_color", &hex_string);
 
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
+    g_return_if_fail(priv->draw_area);
 
     clarity_canvas_set_text_color(CLARITY_CANVAS(priv->draw_area), hex_string);
 }
@@ -262,8 +271,48 @@ GList *_sort_track_list(GList *tracks) {
  */
 static void _clarity_widget_clear(ClarityWidget *self) {
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
+    g_return_if_fail(priv->draw_area);
+    g_return_if_fail(priv->album_model);
+
     clarity_canvas_clear(CLARITY_CANVAS(priv->draw_area));
     album_model_clear(priv->album_model);
+}
+
+static void _init_draw_area(ClarityWidget *self) {
+    ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE (self);
+
+    if (priv->draw_area != NULL)
+        return;
+
+    priv->draw_area = clarity_canvas_new();
+    g_signal_connect (G_OBJECT(priv->draw_area),
+                                        "scroll-event",
+                                        G_CALLBACK(_on_scrolling_covers_cb),
+                                        priv);
+
+    _set_background_color(self);
+    _set_text_color(self);
+
+    /* Dnd destinaton for foreign image files */
+    gtk_drag_dest_set(priv->draw_area, 0, clarity_drop_types, TGNR(clarity_drop_types), GDK_ACTION_COPY
+            | GDK_ACTION_MOVE);
+
+    g_signal_connect ((gpointer) priv->draw_area, "drag-drop",
+            G_CALLBACK (dnd_clarity_drag_drop),
+            NULL);
+
+    g_signal_connect ((gpointer) priv->draw_area, "drag-data-received",
+            G_CALLBACK (dnd_clarity_drag_data_received),
+            NULL);
+
+    g_signal_connect ((gpointer) priv->draw_area, "drag-motion",
+            G_CALLBACK (dnd_clarity_drag_motion),
+            NULL);
+
+    _init_slider_range(priv);
+
+    gtk_box_pack_start(GTK_BOX (priv->draw_panel), priv->draw_area, TRUE, TRUE, 0);
+    gtk_widget_show_all(GTK_WIDGET(self));
 }
 
 /**
@@ -285,6 +334,8 @@ static void _init_clarity_with_playlist(ClarityWidget *cw, Playlist *playlist) {
         return;
 
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(cw);
+    g_return_if_fail(priv->draw_area);
+    g_return_if_fail(priv->album_model);
 
     album_model_add_tracks(priv->album_model, tracks);
 
@@ -301,6 +352,8 @@ static void _clarity_widget_select_tracks(ClarityWidget *self, GList *tracks) {
             return;
 
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
+    g_return_if_fail(priv->album_model);
+    g_return_if_fail(priv->cdslider);
 
     tracks = _sort_track_list(tracks);
     ClarityCanvas *ccanvas = CLARITY_CANVAS(priv->draw_area);
@@ -347,6 +400,11 @@ static void _clarity_widget_realized_cb(GtkWidget *widget, gpointer data) {
         return;
 
     ClarityWidget *cw = CLARITY_WIDGET(widget);
+    /*
+     * Only when the parent widget is realized should the draw area be initialised
+     */
+    _init_draw_area(cw);
+
     Playlist *playlist = gtkpod_get_current_playlist();
     if (!playlist)
         return;
@@ -359,6 +417,27 @@ static void _clarity_widget_realized_cb(GtkWidget *widget, gpointer data) {
      * _init_clarity_with_playlist.
      */
     g_idle_add(_clarity_widget_select_tracks_idle, cw);
+}
+
+static void _clarity_widget_unrealized_cb(GtkWidget *widget, gpointer data) {
+    if (! CLARITY_IS_WIDGET(widget))
+        return;
+
+    ClarityWidget *cw = CLARITY_WIDGET(widget);
+    ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE (cw);
+
+    if (priv->draw_area == NULL)
+        return;
+
+    /*
+     * When this widget is being hidden and its being unrealised then the draw
+     * area should be destroyed since cogl throws errors when trying to render
+     * on an invisible widget canvas.
+     */
+    if (GTK_IS_WIDGET(priv->draw_area)) {
+        gtk_widget_destroy(priv->draw_area);
+        priv->draw_area = NULL;
+    }
 }
 
 static void clarity_widget_class_init (ClarityWidgetClass *klass) {
@@ -375,16 +454,8 @@ static void clarity_widget_init (ClarityWidget *self) {
 
     priv = CLARITY_WIDGET_GET_PRIVATE (self);
 
+    priv->draw_area = NULL;
     priv->album_model = album_model_new();
-
-    priv->draw_area = clarity_canvas_new();
-    g_signal_connect (G_OBJECT(priv->draw_area),
-                                    "scroll-event",
-                                    G_CALLBACK(_on_scrolling_covers_cb),
-                                    priv);
-
-    _set_background_color(self);
-    _set_text_color(self);
 
     priv->leftbutton = gtk_button_new_with_label("<");
     gtk_widget_set_name(priv->leftbutton, LEFT_BUTTON);
@@ -408,22 +479,6 @@ static void clarity_widget_init (ClarityWidget *self) {
     g_signal_connect (G_OBJECT(priv->rightbutton), "clicked",
                 G_CALLBACK(_on_clarity_button_clicked), priv);
 
-    /* Dnd destinaton for foreign image files */
-    gtk_drag_dest_set(priv->draw_area, 0, clarity_drop_types, TGNR(clarity_drop_types), GDK_ACTION_COPY
-            | GDK_ACTION_MOVE);
-
-    g_signal_connect ((gpointer) priv->draw_area, "drag-drop",
-            G_CALLBACK (dnd_clarity_drag_drop),
-            NULL);
-
-    g_signal_connect ((gpointer) priv->draw_area, "drag-data-received",
-            G_CALLBACK (dnd_clarity_drag_data_received),
-            NULL);
-
-    g_signal_connect ((gpointer) priv->draw_area, "drag-motion",
-            G_CALLBACK (dnd_clarity_drag_motion),
-            NULL);
-
     /*
      * Ensure everything is inited correctly if gtkpod is loaded with
      * the clarity window is not initially visible.
@@ -432,7 +487,14 @@ static void clarity_widget_init (ClarityWidget *self) {
             G_CALLBACK(_clarity_widget_realized_cb),
             NULL);
 
-    _init_slider_range(priv);
+    /*
+     * Ensure the draw area is removed and destroyed prior to making
+     * the clarity window invisible since cogl throws X errors when trying
+     * to paint on a hidden widget.
+     */
+    g_signal_connect(GTK_WIDGET(self), "unrealize",
+            G_CALLBACK(_clarity_widget_unrealized_cb),
+            NULL);
 
     priv->controlbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
     gtk_box_pack_start(GTK_BOX(priv->controlbox), priv->leftbutton, FALSE, FALSE, 0);
@@ -440,10 +502,18 @@ static void clarity_widget_init (ClarityWidget *self) {
     gtk_box_pack_start(GTK_BOX(priv->controlbox), priv->rightbutton, FALSE, FALSE, 0);
 
     priv->contentpanel = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-    gtk_box_pack_start(GTK_BOX(priv->contentpanel), priv->draw_area, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX (self), priv->contentpanel, TRUE, TRUE, 0);
+
+    priv->draw_panel = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_box_pack_start(GTK_BOX (priv->contentpanel), priv->draw_panel, TRUE, TRUE, 0);
     gtk_box_pack_end(GTK_BOX(priv->contentpanel), priv->controlbox, FALSE, TRUE, 0);
 
-    gtk_box_pack_start(GTK_BOX (self), priv->contentpanel, TRUE, TRUE, 0);
+    /*
+     * Initialise the draw area. Most of the time this will display the draw area correctly.
+     * Only if the parent widget is subsequently hidden will the draw area be destroyed
+     * then when redisplayed be recreated.
+     */
+    _init_draw_area(self);
     gtk_widget_show_all(GTK_WIDGET(self));
 }
 
@@ -457,6 +527,7 @@ GdkRGBA *clarity_widget_get_background_display_color(ClarityWidget *self) {
     g_return_val_if_fail(CLARITY_IS_WIDGET(self), NULL);
 
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
+    g_return_val_if_fail(priv->draw_area, NULL);
 
     return clarity_canvas_get_background_color(CLARITY_CANVAS(priv->draw_area));
 }
@@ -465,6 +536,7 @@ GdkRGBA *clarity_widget_get_text_display_color(ClarityWidget *self) {
     g_return_val_if_fail(CLARITY_IS_WIDGET(self), NULL);
 
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
+    g_return_val_if_fail(priv->draw_area, NULL);
 
     return clarity_canvas_get_text_color(CLARITY_CANVAS(priv->draw_area));
 }
@@ -472,6 +544,8 @@ GdkRGBA *clarity_widget_get_text_display_color(ClarityWidget *self) {
 static void _resort_albums(ClarityWidget *self) {
     g_return_if_fail(CLARITY_IS_WIDGET(self));
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(self);
+    g_return_if_fail(priv->draw_area);
+    g_return_if_fail(priv->album_model);
 
     // Need to clear away the graphics and start again
     clarity_canvas_clear(CLARITY_CANVAS(priv->draw_area));
@@ -493,6 +567,9 @@ void clarity_widget_preference_changed_cb(GtkPodApp *app, gpointer pfname, gpoin
     g_return_if_fail(CLARITY_IS_WIDGET(data));
 
     ClarityWidget *cw = CLARITY_WIDGET(data);
+
+    if (! gtk_widget_get_realized(GTK_WIDGET(cw)))
+        return;
 
     gchar *pref_name = pfname;
     if (g_str_equal(pref_name, "clarity_bg_color"))
@@ -538,10 +615,16 @@ void clarity_widget_tracks_selected_cb(GtkPodApp *app, gpointer tks, gpointer da
     if (!tracks)
         return;
 
+    if (! gtk_widget_get_realized(GTK_WIDGET(cw)))
+        return;
+
     _clarity_widget_select_tracks(cw, tracks);
 }
 
 static void _add_track(ClarityWidgetPrivate *priv, Track *track) {
+    g_return_if_fail(priv->draw_area);
+    g_return_if_fail(priv->album_model);
+
     ClarityCanvas *ccanvas = CLARITY_CANVAS(priv->draw_area);
 
     if (clarity_canvas_is_blocked(ccanvas))
@@ -578,6 +661,8 @@ void clarity_widget_track_added_cb(GtkPodApp *app, gpointer tk, gpointer data) {
 
 static void _remove_track(ClarityWidgetPrivate *priv, AlbumItem *item, Track *track) {
     g_return_if_fail(priv);
+    g_return_if_fail(priv->draw_area);
+    g_return_if_fail(priv->album_model);
 
     ClarityCanvas *ccanvas = CLARITY_CANVAS(priv->draw_area);
 
@@ -603,6 +688,8 @@ void clarity_widget_track_removed_cb(GtkPodApp *app, gpointer tk, gpointer data)
 
     ClarityWidget *cw = CLARITY_WIDGET(data);
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(cw);
+    g_return_if_fail(priv->album_model);
+
     Track *track = tk;
 
     if (!track)
@@ -621,6 +708,9 @@ void clarity_widget_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data)
 
     ClarityWidget *cw = CLARITY_WIDGET(data);
     ClarityWidgetPrivate *priv = CLARITY_WIDGET_GET_PRIVATE(cw);
+    g_return_if_fail(priv->draw_area);
+    g_return_if_fail(priv->album_model);
+
     Track *track = tk;
 
     if (!track)
@@ -699,5 +789,3 @@ void clarity_widget_track_updated_cb(GtkPodApp *app, gpointer tk, gpointer data)
      */
     _add_track(priv, track);
 }
-
-
