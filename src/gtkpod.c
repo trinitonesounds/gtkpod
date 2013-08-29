@@ -45,8 +45,14 @@ static gchar *system_restore_session = NULL;
 
 static gboolean on_gtkpod_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 static void on_gtkpod_destroy(GtkWidget * w, gpointer data);
-static void on_profile_descoped(AnjutaProfileManager *profile_manager, AnjutaProfile *profile, AnjutaWindow *win);
+
+#if (ANJUTA_CHECK_VERSION(3, 9, 3))
+static void on_profile_scoped(AnjutaProfile *profile, AnjutaWindow *win);
+static void on_profile_descoped (AnjutaProfile *profile, AnjutaWindow *win);
+#else
 static void on_profile_scoped(AnjutaProfileManager *profile_manager, AnjutaProfile *profile, AnjutaWindow *win);
+static void on_profile_descoped(AnjutaProfileManager *profile_manager, AnjutaProfile *profile, AnjutaWindow *win);
+#endif
 
 static gchar *get_user_session_dir() {
     return g_build_filename(g_get_home_dir(), ".gtkpod", "session", NULL);
@@ -175,8 +181,11 @@ void gtkpod_init(int argc, char *argv[]) {
     }
 
     /* Prepare for session save and load on profile change */
-    g_signal_connect (profile_manager, "profile-scoped",
-            G_CALLBACK (on_profile_scoped), win);
+#if (ANJUTA_CHECK_VERSION(3, 9, 3))
+    g_signal_connect (profile, "scoped", G_CALLBACK (on_profile_scoped), win);
+#else
+    g_signal_connect (profile_manager, "profile-scoped", G_CALLBACK (on_profile_scoped), win);
+#endif
 
     anjuta_profile_manager_thaw(profile_manager, &error);
 
@@ -186,8 +195,11 @@ void gtkpod_init(int argc, char *argv[]) {
         error = NULL;
     }
 
-    g_signal_connect (profile_manager, "profile-descoped",
-            G_CALLBACK (on_profile_descoped), win);
+#if (ANJUTA_CHECK_VERSION(3, 9, 3))
+    g_signal_connect (profile, "descoped", G_CALLBACK (on_profile_descoped), win);
+#else
+    g_signal_connect (profile_manager, "profile-descoped", G_CALLBACK (on_profile_descoped), win);
+#endif
 
     gdk_threads_add_idle(gp_init_itdbs, NULL);
 
@@ -274,7 +286,11 @@ static void on_gtkpod_destroy(GtkWidget * w, gpointer data) {
     gtk_main_quit();
 }
 
+#if (ANJUTA_CHECK_VERSION(3, 9, 3))
+static void on_profile_scoped(AnjutaProfile *profile, AnjutaWindow *win) {
+#else
 static void on_profile_scoped(AnjutaProfileManager *profile_manager, AnjutaProfile *profile, AnjutaWindow *win) {
+#endif
     gchar *session_dir;
     static gboolean first_time = TRUE;
 
@@ -305,7 +321,11 @@ static void on_profile_scoped(AnjutaProfileManager *profile_manager, AnjutaProfi
     g_free(session_dir);
 }
 
+#if (ANJUTA_CHECK_VERSION(3, 9, 3))
+static void on_profile_descoped (AnjutaProfile *profile, AnjutaWindow *win) {
+#else
 static void on_profile_descoped(AnjutaProfileManager *profile_manager, AnjutaProfile *profile, AnjutaWindow *win) {
+#endif
     gchar *session_dir;
 
     if (strcmp(anjuta_profile_get_name(profile), USER_PROFILE_NAME) != 0)

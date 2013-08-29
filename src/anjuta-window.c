@@ -886,7 +886,6 @@ static void on_widget_remove(GtkWidget *container, GtkWidget *widget, AnjutaWind
         g_free(unique_name);
         g_signal_handlers_disconnect_by_func (G_OBJECT (dock_item),
                 G_CALLBACK (on_widget_remove), win);
-        gdl_dock_item_unbind(GDL_DOCK_ITEM(dock_item));
     }
     if (g_hash_table_foreach_remove(win->widgets, remove_from_widgets_hash, widget)) {
         DEBUG_PRINT("%s", "Widget removed from container");
@@ -1033,6 +1032,7 @@ static void anjuta_window_remove_widget(AnjutaShell *shell, GtkWidget *widget, G
     /* It should call on_widget_remove() and clean up should happen */
     gtk_container_remove(GTK_CONTAINER (dock_item), widget);
     g_object_unref(widget);
+    gdl_dock_item_unbind (GDL_DOCK_ITEM(dock_item));
 }
 
 static void anjuta_window_present_widget(AnjutaShell *shell, GtkWidget *widget, GError **error) {

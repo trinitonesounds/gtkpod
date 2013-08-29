@@ -26,6 +26,7 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <libanjuta/anjuta-plugin-manager.h>
+#include <libanjuta/anjuta-version.h>
 
 #include "anjuta-about.h"
 #include "../libgtkpod/directories.h"
@@ -262,7 +263,14 @@ void about_create_plugins_submenu(AnjutaShell *shell, GtkWidget *menuitem) {
     while (node) {
         gchar *label;
         GtkWidget *item;
+
+#if (ANJUTA_CHECK_VERSION(3, 9, 3))
+        AnjutaPluginHandle *handle = (AnjutaPluginHandle *)node->data;
+        AnjutaPluginDescription *desc = anjuta_plugin_handle_get_description (handle);
+#else
         AnjutaPluginDescription *desc = node->data;
+#endif
+
         if (anjuta_plugin_description_get_locale_string(desc, "Anjuta Plugin", "Name", &label)) {
             gchar *authors = NULL;
             gchar *license = NULL;
