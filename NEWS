@@ -6,8 +6,10 @@ gtkpod V2.1.4
 
   BUGFIX: Fix showing tracks of selected artist on 64-bit systems. Thanks to Benno.
 
-  IMPROVMENT: Update clutter, glib and gtk deprecations and updates the glib minimum version to 2.31 
-              which was released in 2011.
+  IMPROVEMENT: Update clutter, glib and gtk deprecations and updates the glib minimum version to 2.31 
+               which was released in 2011.
+
+  IMPROVEMENT: Update to support anjuta releases up to 3.9.1
 
   BUGFIX: Handle attempts to create duplicate-named playlist.
 

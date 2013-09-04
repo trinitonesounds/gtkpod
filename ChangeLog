@@ -1,3 +1,91 @@
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-09-04
+
+    Updates NEWS and Changelog
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-09-04
+
+    Update language files ready for final release 2.1.4
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-08-29
+
+    Fixes for support for anjuta 3.9.3+
+    
+    * Modifications in anjuta 3.9.3 require support in gtkpod / anjuta app
+    
+    * gtkpod.c
+     * profile-scoped and descoped signals moved to AnjutaProfile from
+       AnjutaProfileManager
+    
+    * anjuta-about.c
+     * AnjutaPluginHandle returned rather than an AnjutaPluginDescription
+       hence unwrapping required
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-08-29
+
+    Fixes segfault when clarity window is hidden
+    
+    * When app is opened and the clarity window is hidden, the actual events
+      are showing the window then immediately hiding it. This process causes
+      the cogl rendering in the draw area to throw and X window error and kill
+      the app.
+    
+    * Adds a single draw_panel for the draw_area to be added to, allowing for
+      the latter to be destroyed when the parent widget is unrealised and
+      recreated when the parent widget is made visible.
+    
+    * More g_return statements added to protect function calls involving the
+      draw area and other private initialised fields.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-08-28
+
+    Changes while testing against anjuta 3.9.1
+    
+    * Converts anjuta-app into anjuta-window so as to match the original
+      anjuta codebase, making diff-checking easier.
+    
+    * Includes minor changes provided in anjuta 3.9.1
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-08-25
+
+    Fixes for deprecation mistakes
+    
+    * gtkpod.c
+     * profile manager was removed incorrectly in 69b17cd9a. Restoring but
+       placing in a CHECK_VERSION since it is only used in anjuta 3.8.0+
+    
+    * main.c
+     * Fixes deprecation warning for clutter_threads_init where it is not
+       required for clutter 1.10+
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-08-25
+
+    Revert incorrect commit of configure.ac changes
+    
+    * DISABLE_DEPRECATED flags being commented out should not have been
+      committed in 525bfe4b
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-08-25
+
+    Only initialise the g types if glib is 2.35 or less
+    
+    * glib 2.36+ no longer requires manual initialising of the g type system
+    
+    * Thanks to willysr at gmail.com for the bug report
+
+Daniele Forsi <daniele@forsi.it>	2013-08-25
+
+    Update Italian translation
+
+Daniele Forsi <daniele@forsi.it>	2013-08-25
+
+    Remove duplicated code
+    
+    The same code is at lines 547-549 in the same function.
+    Fixes a Clang warning:
+    misc_track.c:559:9: warning: Assigned value is always the same as the existing value
+        etr = track->userdata;
+        ~~~ ^ ~~~~~~~~~~~~~~~
+
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-08-24
 
     Updates NEWS and Changelog
