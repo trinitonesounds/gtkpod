@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-24 22:25+0100\n"
+"POT-Creation-Date: 2013-09-04 21:38+0100\n"
 "PO-Revision-Date: 2010-08-09 19:36+0100\n"
 "Last-Translator: Tan Zhixin <tanzhxin@gmail.com>\n"
 "Language-Team: Zhuang <zh_CN@li.gtkpod.org>\n"
@@ -50,7 +50,7 @@ msgid ""
 "of the notebook corresponds to one background thread."
 msgstr "下面是背景转换脚本的输出，每一页对应于一个背景。"
 
-#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:88
+#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:92
 msgid "gtkpod"
 msgstr "gtkpod"
 
@@ -63,14 +63,14 @@ msgstr "iPod管理器"
 msgid "Manage music, video and photos on an Apple iPod"
 msgstr "管理Apple iPod的音乐和视频"
 
-#: ../libgtkpod/autodetection.c:257
+#: ../libgtkpod/autodetection.c:261
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' could not be loaded into gtkpod.\n"
 "\n"
 msgstr "'%s'的新iPod无法载入gtkpod\n"
 
-#: ../libgtkpod/autodetection.c:261
+#: ../libgtkpod/autodetection.c:265
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' appears to be already loaded!\n"
@@ -79,7 +79,7 @@ msgstr ""
 "新挂载在'%s'的iPod似乎已经装入！\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:269
+#: ../libgtkpod/autodetection.c:273
 msgid "New iPod"
 msgstr "新加iPod"
 
@@ -524,8 +524,8 @@ msgstr "处理'%s'中..."
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "忽略'%s'因为它满足排除条件。\n"
 
-#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1621
-#: ../libgtkpod/misc_track.c:1717
+#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1617
+#: ../libgtkpod/misc_track.c:1713
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
@@ -2109,39 +2109,39 @@ msgid "Duplicate detection"
 msgstr "检查重复文件"
 
 #. Translators: this is minutes:seconds.thousandths
-#: ../libgtkpod/misc_track.c:1106
+#: ../libgtkpod/misc_track.c:1102
 #, c-format
 msgid "%d:%06.3f"
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:1196 ../libgtkpod/misc_track.c:1202
+#: ../libgtkpod/misc_track.c:1192 ../libgtkpod/misc_track.c:1198
 #, c-format
 msgid "%d/%d"
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:1208 ../plugins/details_editor/details.c:1204
+#: ../libgtkpod/misc_track.c:1204 ../plugins/details_editor/details.c:1204
 msgid "n/a"
 msgstr "n/a"
 
-#: ../libgtkpod/misc_track.c:1218
+#: ../libgtkpod/misc_track.c:1214
 msgid "Local Database"
 msgstr "本地数据库"
 
 #. artwork is set
-#: ../libgtkpod/misc_track.c:1227
+#: ../libgtkpod/misc_track.c:1223
 msgid "Embedded or filename was lost"
 msgstr "嵌入或文件丢失"
 
-#: ../libgtkpod/misc_track.c:1230
+#: ../libgtkpod/misc_track.c:1226
 msgid "Artwork not set"
 msgstr "没有设置封面"
 
-#: ../libgtkpod/misc_track.c:1657
+#: ../libgtkpod/misc_track.c:1653
 #, c-format
 msgid "Could not find source file for '%s'. Track not copied."
 msgstr "找不到'%s'的源文件，不会复制音轨。"
 
-#: ../libgtkpod/misc_track.c:1855
+#: ../libgtkpod/misc_track.c:1851
 #, c-format
 msgid ""
 "drag and drop: ignored '%s'.\n"
@@ -2150,58 +2150,58 @@ msgstr ""
 "拖拽：忽略'%s'\n"
 "原因: %s\n"
 
-#: ../libgtkpod/misc_track.c:1982
+#: ../libgtkpod/misc_track.c:1978
 #, c-format
 msgid "Deleting one track completely from iPod"
 msgid_plural "Deleting %d tracks completely from iPod"
 msgstr[0] "已从iPod中完全删除一条音轨"
 msgstr[1] "已从iPod中完全删除%d条音轨"
 
-#: ../libgtkpod/misc_track.c:1987 ../libgtkpod/misc_track.c:2007
+#: ../libgtkpod/misc_track.c:1983 ../libgtkpod/misc_track.c:2003
 #, c-format
 msgid "Deleting %d track from playlist '%s'"
 msgid_plural "Deleting %d tracks from playlist '%s'"
 msgstr[0] "从播放列表'%2$s'删除%1$d条音轨"
 msgstr[1] "从播放列表'%2$s'删除%1$d条音轨"
 
-#: ../libgtkpod/misc_track.c:2002
+#: ../libgtkpod/misc_track.c:1998
 #, c-format
 msgid "Deleting one track from harddisk"
 msgid_plural "Deleting %d tracks from harddisk"
 msgstr[0] "已从硬盘删除一条音轨"
 msgstr[1] "已从硬盘删除%d条音轨"
 
-#: ../libgtkpod/misc_track.c:2012
+#: ../libgtkpod/misc_track.c:2008
 #, c-format
 msgid "Deleting one track from local database"
 msgid_plural "Deleting %d tracks from local database"
 msgstr[0] "已从本地数据库删除一条音轨"
 msgstr[1] "已从本地数据库删除%d条音轨"
 
-#: ../libgtkpod/misc_track.c:2027
+#: ../libgtkpod/misc_track.c:2023
 #, c-format
 msgid "Deleting Track %d/%d ..."
 msgstr "删除音轨%d/%d ..."
 
-#: ../libgtkpod/misc_track.c:2037
+#: ../libgtkpod/misc_track.c:2033
 msgid "Completed deletion"
 msgstr "删除已完成"
 
-#: ../libgtkpod/misc_track.c:2131
+#: ../libgtkpod/misc_track.c:2127
 #, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
 msgstr[0] "从'%3$s'中复制%1$d条音轨到'%2$s'"
 msgstr[1] "从'%3$s'中复制%1$d条音轨到'%2$s'"
 
-#: ../libgtkpod/misc_track.c:2161
+#: ../libgtkpod/misc_track.c:2157
 #, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
 msgstr[0] "复制%d条音轨到'%s'"
 msgstr[1] "复制%d条音轨到'%s'"
 
-#: ../libgtkpod/misc_track.c:2175
+#: ../libgtkpod/misc_track.c:2171
 msgid "No tracks selected"
 msgstr "没有选择音轨"
 
@@ -2779,7 +2779,7 @@ msgid "<b>On-the-fly Conversion</b>"
 msgstr "<b>实时转换</b>"
 
 #. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-app.c:521
+#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-window.c:534
 msgid "Music"
 msgstr "音乐"
 
@@ -4981,7 +4981,7 @@ msgid "  iPod Repositories"
 msgstr "iPod音乐库"
 
 #: ../plugins/playlist_display/plugin.c:437 ../plugins/sjcd/plugin.c:124
-#: ../src/anjuta-about.c:166
+#: ../src/anjuta-about.c:172
 #, c-format
 msgid "Couldn't load icon: %s"
 msgstr "无法加载图标文件:%s"
@@ -6510,16 +6510,16 @@ msgstr "格式"
 msgid "O_utput Format:"
 msgstr "输出格式(_u)"
 
-#: ../src/anjuta-about.c:159
+#: ../src/anjuta-about.c:165
 #, c-format
 msgid "Couldn't read license file %s: %s"
 msgstr "无法读取许可证文件%s：%s"
 
-#: ../src/anjuta-about.c:176
+#: ../src/anjuta-about.c:182
 msgid "Copyright (c) Jorg Schuler et al."
 msgstr "版权所有Jorg Schuler et al."
 
-#: ../src/anjuta-about.c:177
+#: ../src/anjuta-about.c:183
 msgid "iPod Management Platform"
 msgstr "iPod管理平台"
 
@@ -6639,49 +6639,49 @@ msgstr "关于外部插件(_P)"
 msgid "About third party gtkpod plugins"
 msgstr "关于第三方gtkpod插件"
 
-#: ../src/anjuta-app.c:522
+#: ../src/anjuta-window.c:535
 msgid "Edit"
 msgstr "编辑"
 
-#: ../src/anjuta-app.c:523 ../src/anjuta-app.c:524
+#: ../src/anjuta-window.c:536 ../src/anjuta-window.c:537
 msgid "View"
 msgstr "查看"
 
-#: ../src/anjuta-app.c:525
+#: ../src/anjuta-window.c:538
 msgid "Tools"
 msgstr "工具(_T)"
 
-#: ../src/anjuta-app.c:526
+#: ../src/anjuta-window.c:539
 msgid "Help"
 msgstr "帮助"
 
-#: ../src/anjuta-app.c:739
+#: ../src/anjuta-window.c:752
 #, fuzzy
 msgid " Plugins"
 msgstr "导出插件"
 
-#: ../src/anjuta-app.c:751
+#: ../src/anjuta-window.c:764
 msgid "Installed plugins"
 msgstr "已安装的插件"
 
-#: ../src/anjuta-app.c:752
+#: ../src/anjuta-window.c:765
 msgid "Preferred plugins"
 msgstr "已选的插件"
 
-#: ../src/anjuta-app.c:753
+#: ../src/anjuta-window.c:766
 msgid "Shortcuts"
 msgstr "快捷方式"
 
-#: ../src/anjuta-app.c:812
+#: ../src/anjuta-window.c:825
 #, c-format
 msgid "Value doesn't exist"
 msgstr "值不存在"
 
-#: ../src/anjuta-app.c:1430
+#: ../src/anjuta-window.c:1443
 msgid "Confirmation"
 msgstr "确认"
 
-#: ../src/gtkpod.c:203
+#: ../src/gtkpod.c:215
 msgid "Loaded Session..."
 msgstr "加载任务..."
 
@@ -6689,16 +6689,16 @@ msgstr "加载任务..."
 #. * Indicate to user that although the UI is up, the itdbs are still loading.
 #. * The message will be overriden by the import of
 #.
-#: ../src/gtkpod.c:216
+#: ../src/gtkpod.c:228
 msgid "Importing configured ipods ... "
 msgstr ""
 
-#: ../src/main.c:67
+#: ../src/main.c:71
 #, fuzzy
 msgid "- Interface with your iPod"
 msgstr "- 与你的ipod交互"
 
-#: ../src/main.c:82
+#: ../src/main.c:86
 #, fuzzy, c-format
 msgid "Error parsing options: %s\n"
 msgstr "创建%s时发生错误：%s\n"

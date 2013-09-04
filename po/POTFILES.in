@@ -147,6 +147,6 @@ plugins/sjcd/sj-prefs.c
 src/anjuta-about.c
 src/anjuta-action-callbacks.c
 src/anjuta-actions.h
-src/anjuta-app.c
+src/anjuta-window.c
 src/gtkpod.c
 src/main.c

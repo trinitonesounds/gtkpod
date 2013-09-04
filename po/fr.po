@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-24 22:25+0100\n"
+"POT-Creation-Date: 2013-09-04 21:38+0100\n"
 "PO-Revision-Date: 2011-10-06 13:04+0000\n"
 "Last-Translator: Gilrain <pierre.buard+transifex@gmail.com>\n"
 "Language-Team: French (http://www.transifex.net/projects/p/gtkpod/team/fr/)\n"
@@ -50,7 +50,7 @@ msgstr ""
 "La sortie du script de conversion est donnée ci-dessous. Chaque onglet "
 "correspond à une tâche d'arrière-plan."
 
-#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:88
+#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:92
 msgid "gtkpod"
 msgstr "gtkpod"
 
@@ -63,7 +63,7 @@ msgstr "Gestionnaire d'iPod"
 msgid "Manage music, video and photos on an Apple iPod"
 msgstr "Gérer des musiques et des vidéos sur un iPod Apple"
 
-#: ../libgtkpod/autodetection.c:257
+#: ../libgtkpod/autodetection.c:261
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' could not be loaded into gtkpod.\n"
@@ -72,7 +72,7 @@ msgstr ""
 "L'iPod nouvellement monté sur « %s » n'a pas pu être chargé dans gtkpod.\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:261
+#: ../libgtkpod/autodetection.c:265
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' appears to be already loaded!\n"
@@ -81,7 +81,7 @@ msgstr ""
 "L'iPod nouvellement monté sur « %s » semble déjà être chargé !\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:269
+#: ../libgtkpod/autodetection.c:273
 msgid "New iPod"
 msgstr "Nouvel iPod"
 
@@ -537,8 +537,8 @@ msgstr "Traitement de « %s »..."
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "Saut de « %s » parce qu'il correspond à un masque d'exclusion.\n"
 
-#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1621
-#: ../libgtkpod/misc_track.c:1717
+#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1617
+#: ../libgtkpod/misc_track.c:1713
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
@@ -2196,39 +2196,39 @@ msgid "Duplicate detection"
 msgstr "Détection de doublon"
 
 #. Translators: this is minutes:seconds.thousandths
-#: ../libgtkpod/misc_track.c:1106
+#: ../libgtkpod/misc_track.c:1102
 #, c-format
 msgid "%d:%06.3f"
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:1196 ../libgtkpod/misc_track.c:1202
+#: ../libgtkpod/misc_track.c:1192 ../libgtkpod/misc_track.c:1198
 #, c-format
 msgid "%d/%d"
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:1208 ../plugins/details_editor/details.c:1204
+#: ../libgtkpod/misc_track.c:1204 ../plugins/details_editor/details.c:1204
 msgid "n/a"
 msgstr "n/d"
 
-#: ../libgtkpod/misc_track.c:1218
+#: ../libgtkpod/misc_track.c:1214
 msgid "Local Database"
 msgstr "Base de données locale"
 
 #. artwork is set
-#: ../libgtkpod/misc_track.c:1227
+#: ../libgtkpod/misc_track.c:1223
 msgid "Embedded or filename was lost"
 msgstr "nom de fichier perdu"
 
-#: ../libgtkpod/misc_track.c:1230
+#: ../libgtkpod/misc_track.c:1226
 msgid "Artwork not set"
 msgstr "Jaquette non renseignée"
 
-#: ../libgtkpod/misc_track.c:1657
+#: ../libgtkpod/misc_track.c:1653
 #, c-format
 msgid "Could not find source file for '%s'. Track not copied."
 msgstr "Impossible de trouver le fichier pour « %s ». Morceau pas copié."
 
-#: ../libgtkpod/misc_track.c:1855
+#: ../libgtkpod/misc_track.c:1851
 #, c-format
 msgid ""
 "drag and drop: ignored '%s'.\n"
@@ -2237,58 +2237,58 @@ msgstr ""
 "glisser-déposer : « %s » ignoré.\n"
 "raison : %s\n"
 
-#: ../libgtkpod/misc_track.c:1982
+#: ../libgtkpod/misc_track.c:1978
 #, c-format
 msgid "Deleting one track completely from iPod"
 msgid_plural "Deleting %d tracks completely from iPod"
 msgstr[0] "Efface définitivement un morceau de l'iPod"
 msgstr[1] "Efface définitivement %d morceaux de l'iPod"
 
-#: ../libgtkpod/misc_track.c:1987 ../libgtkpod/misc_track.c:2007
+#: ../libgtkpod/misc_track.c:1983 ../libgtkpod/misc_track.c:2003
 #, c-format
 msgid "Deleting %d track from playlist '%s'"
 msgid_plural "Deleting %d tracks from playlist '%s'"
 msgstr[0] "Efface %d morceau de la liste de lecture « %s »"
 msgstr[1] "Efface %d morceaux de la liste de lecture « %s »"
 
-#: ../libgtkpod/misc_track.c:2002
+#: ../libgtkpod/misc_track.c:1998
 #, c-format
 msgid "Deleting one track from harddisk"
 msgid_plural "Deleting %d tracks from harddisk"
 msgstr[0] "Efface un morceau du disque dur"
 msgstr[1] "Efface %d morceaux du disque dur"
 
-#: ../libgtkpod/misc_track.c:2012
+#: ../libgtkpod/misc_track.c:2008
 #, c-format
 msgid "Deleting one track from local database"
 msgid_plural "Deleting %d tracks from local database"
 msgstr[0] "Efface un morceau de la base de données locale"
 msgstr[1] "Efface %d morceaux de la base de données locale"
 
-#: ../libgtkpod/misc_track.c:2027
+#: ../libgtkpod/misc_track.c:2023
 #, c-format
 msgid "Deleting Track %d/%d ..."
 msgstr "Supprime le(s) morceau(x) %d / %d..."
 
-#: ../libgtkpod/misc_track.c:2037
+#: ../libgtkpod/misc_track.c:2033
 msgid "Completed deletion"
 msgstr "Effacement terminé"
 
-#: ../libgtkpod/misc_track.c:2131
+#: ../libgtkpod/misc_track.c:2127
 #, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
 msgstr[0] "Extraction de %d morceau vers « %s » dans « %s »"
 msgstr[1] "Extraction de %d morceaux vers « %s » dans « %s »"
 
-#: ../libgtkpod/misc_track.c:2161
+#: ../libgtkpod/misc_track.c:2157
 #, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
 msgstr[0] "Extraction de %d morceau vers « %s »"
 msgstr[1] "Extraction de %d morceaux vers « %s »"
 
-#: ../libgtkpod/misc_track.c:2175
+#: ../libgtkpod/misc_track.c:2171
 msgid "No tracks selected"
 msgstr "Aucun morceau sélectionné"
 
@@ -2897,7 +2897,7 @@ msgid "<b>On-the-fly Conversion</b>"
 msgstr "<b>Conversion à la volée</b>"
 
 #. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-app.c:521
+#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-window.c:534
 msgid "Music"
 msgstr "Musique"
 
@@ -5160,7 +5160,7 @@ msgid "  iPod Repositories"
 msgstr "  Répertoires de l'iPod"
 
 #: ../plugins/playlist_display/plugin.c:437 ../plugins/sjcd/plugin.c:124
-#: ../src/anjuta-about.c:166
+#: ../src/anjuta-about.c:172
 #, c-format
 msgid "Couldn't load icon: %s"
 msgstr "Impossible de charger l'icône : %s"
@@ -6767,16 +6767,16 @@ msgstr ""
 msgid "O_utput Format:"
 msgstr ""
 
-#: ../src/anjuta-about.c:159
+#: ../src/anjuta-about.c:165
 #, c-format
 msgid "Couldn't read license file %s: %s"
 msgstr "Impossible de lire le fichier de licence %s : %s"
 
-#: ../src/anjuta-about.c:176
+#: ../src/anjuta-about.c:182
 msgid "Copyright (c) Jorg Schuler et al."
 msgstr "Copyright (c) Jorg Schuler et al."
 
-#: ../src/anjuta-about.c:177
+#: ../src/anjuta-about.c:183
 msgid "iPod Management Platform"
 msgstr "Plate-forme de gestion de l'iPod"
 
@@ -6899,48 +6899,48 @@ msgstr "À _propos des greffons externes"
 msgid "About third party gtkpod plugins"
 msgstr "À propos des greffons gtkpod tiers"
 
-#: ../src/anjuta-app.c:522
+#: ../src/anjuta-window.c:535
 msgid "Edit"
 msgstr "Édition"
 
-#: ../src/anjuta-app.c:523 ../src/anjuta-app.c:524
+#: ../src/anjuta-window.c:536 ../src/anjuta-window.c:537
 msgid "View"
 msgstr "Affichage"
 
-#: ../src/anjuta-app.c:525
+#: ../src/anjuta-window.c:538
 msgid "Tools"
 msgstr "Outils"
 
-#: ../src/anjuta-app.c:526
+#: ../src/anjuta-window.c:539
 msgid "Help"
 msgstr "Aide"
 
-#: ../src/anjuta-app.c:739
+#: ../src/anjuta-window.c:752
 msgid " Plugins"
 msgstr " Greffons"
 
-#: ../src/anjuta-app.c:751
+#: ../src/anjuta-window.c:764
 msgid "Installed plugins"
 msgstr "Greffons installés"
 
-#: ../src/anjuta-app.c:752
+#: ../src/anjuta-window.c:765
 msgid "Preferred plugins"
 msgstr "Greffons préférés"
 
-#: ../src/anjuta-app.c:753
+#: ../src/anjuta-window.c:766
 msgid "Shortcuts"
 msgstr "Raccourcis"
 
-#: ../src/anjuta-app.c:812
+#: ../src/anjuta-window.c:825
 #, c-format
 msgid "Value doesn't exist"
 msgstr "La valeur n'existe pas"
 
-#: ../src/anjuta-app.c:1430
+#: ../src/anjuta-window.c:1443
 msgid "Confirmation"
 msgstr "Confirmation"
 
-#: ../src/gtkpod.c:203
+#: ../src/gtkpod.c:215
 msgid "Loaded Session..."
 msgstr "Chargement de la session..."
 
@@ -6948,15 +6948,15 @@ msgstr "Chargement de la session..."
 #. * Indicate to user that although the UI is up, the itdbs are still loading.
 #. * The message will be overriden by the import of
 #.
-#: ../src/gtkpod.c:216
+#: ../src/gtkpod.c:228
 msgid "Importing configured ipods ... "
 msgstr ""
 
-#: ../src/main.c:67
+#: ../src/main.c:71
 msgid "- Interface with your iPod"
 msgstr ""
 
-#: ../src/main.c:82
+#: ../src/main.c:86
 #, fuzzy, c-format
 msgid "Error parsing options: %s\n"
 msgstr "Erreur à la création de « %s » : %s\n"

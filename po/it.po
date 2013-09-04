@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-25 11:57+0200\n"
+"POT-Creation-Date: 2013-09-04 21:38+0100\n"
 "PO-Revision-Date: 2013-08-25 12:06+0200\n"
 "Last-Translator: Daniele Forsi <daniele@forsi.it>\n"
 "Language-Team: Italian <debian-l10n-italian@lists.debian.org>\n"
@@ -62,7 +62,7 @@ msgstr ""
 "L'output degli script di conversione sullo sfondo è copiato sotto. Ogni "
 "linguetta corrisponde a un thread sullo sfondo."
 
-#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:88
+#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:92
 msgid "gtkpod"
 msgstr "gtkpod"
 
@@ -74,7 +74,7 @@ msgstr "Gestore di iPod"
 msgid "Manage music, video and photos on an Apple iPod"
 msgstr "Gestisce musica, video e foto negli iPod Apple"
 
-#: ../libgtkpod/autodetection.c:257
+#: ../libgtkpod/autodetection.c:261
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' could not be loaded into gtkpod.\n"
@@ -83,7 +83,7 @@ msgstr ""
 "Non è stato possibile leggere il nuovo iPod montato in «%s».\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:261
+#: ../libgtkpod/autodetection.c:265
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' appears to be already loaded!\n"
@@ -92,7 +92,7 @@ msgstr ""
 "Il nuovo iPod montato in «%s» sembra che sia già stato letto.\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:269
+#: ../libgtkpod/autodetection.c:273
 msgid "New iPod"
 msgstr "Nuovo iPod"
 
@@ -2895,7 +2895,7 @@ msgid "<b>On-the-fly Conversion</b>"
 msgstr "<b>Conversione al volo</b>"
 
 #. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-app.c:521
+#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-window.c:534
 msgid "Music"
 msgstr "Musica"
 
@@ -5160,7 +5160,7 @@ msgid "  iPod Repositories"
 msgstr "  Archivi iPod"
 
 #: ../plugins/playlist_display/plugin.c:437 ../plugins/sjcd/plugin.c:124
-#: ../src/anjuta-about.c:166
+#: ../src/anjuta-about.c:172
 #, c-format
 msgid "Couldn't load icon: %s"
 msgstr "Impossibile caricare l'icona: %s"
@@ -6736,16 +6736,16 @@ msgstr "Formato"
 msgid "O_utput Format:"
 msgstr "Formato di o_utput:"
 
-#: ../src/anjuta-about.c:159
+#: ../src/anjuta-about.c:165
 #, c-format
 msgid "Couldn't read license file %s: %s"
 msgstr "Impossibile leggere il file della licenza %s: %s"
 
-#: ../src/anjuta-about.c:176
+#: ../src/anjuta-about.c:182
 msgid "Copyright (c) Jorg Schuler et al."
 msgstr "Copyright © Jorg Schuler et al."
 
-#: ../src/anjuta-about.c:177
+#: ../src/anjuta-about.c:183
 msgid "iPod Management Platform"
 msgstr "Piattaforma di gestione di iPod"
 
@@ -6877,48 +6877,48 @@ msgstr "Informazioni sui _plugin esterni"
 msgid "About third party gtkpod plugins"
 msgstr "Informazioni sui plugin di gtkpod di terze parti"
 
-#: ../src/anjuta-app.c:522
+#: ../src/anjuta-window.c:535
 msgid "Edit"
 msgstr "Modifica"
 
-#: ../src/anjuta-app.c:523 ../src/anjuta-app.c:524
+#: ../src/anjuta-window.c:536 ../src/anjuta-window.c:537
 msgid "View"
 msgstr "Visualizza"
 
-#: ../src/anjuta-app.c:525
+#: ../src/anjuta-window.c:538
 msgid "Tools"
 msgstr "Strumenti"
 
-#: ../src/anjuta-app.c:526
+#: ../src/anjuta-window.c:539
 msgid "Help"
 msgstr "Aiuto"
 
-#: ../src/anjuta-app.c:739
+#: ../src/anjuta-window.c:752
 msgid " Plugins"
 msgstr " Plugin"
 
-#: ../src/anjuta-app.c:751
+#: ../src/anjuta-window.c:764
 msgid "Installed plugins"
 msgstr "Plugin installati"
 
-#: ../src/anjuta-app.c:752
+#: ../src/anjuta-window.c:765
 msgid "Preferred plugins"
 msgstr "Plugin preferiti"
 
-#: ../src/anjuta-app.c:753
+#: ../src/anjuta-window.c:766
 msgid "Shortcuts"
 msgstr "Scorciatoie"
 
-#: ../src/anjuta-app.c:812
+#: ../src/anjuta-window.c:825
 #, c-format
 msgid "Value doesn't exist"
 msgstr "Il valore non esiste"
 
-#: ../src/anjuta-app.c:1430
+#: ../src/anjuta-window.c:1443
 msgid "Confirmation"
 msgstr "Conferma"
 
-#: ../src/gtkpod.c:203
+#: ../src/gtkpod.c:215
 msgid "Loaded Session..."
 msgstr "Sessione caricata"
 
@@ -6926,15 +6926,15 @@ msgstr "Sessione caricata"
 #. * Indicate to user that although the UI is up, the itdbs are still loading.
 #. * The message will be overriden by the import of
 #.
-#: ../src/gtkpod.c:216
+#: ../src/gtkpod.c:228
 msgid "Importing configured ipods ... "
 msgstr "Importazione degli iPod configurati..."
 
-#: ../src/main.c:67
+#: ../src/main.c:71
 msgid "- Interface with your iPod"
 msgstr "- Interfaccia per iPod"
 
-#: ../src/main.c:82
+#: ../src/main.c:86
 #, c-format
 msgid "Error parsing options: %s\n"
 msgstr "Errore durante la scansione delle opzioni: %s\n"

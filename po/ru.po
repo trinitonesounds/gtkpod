@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-24 22:25+0100\n"
+"POT-Creation-Date: 2013-09-04 21:38+0100\n"
 "PO-Revision-Date: 2010-08-08 21:16+0700\n"
 "Last-Translator: Matvey Kozhev <sikon@lucidfox.org>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -57,7 +57,7 @@ msgstr ""
 "Вывод фоновых сценариев преобразования копируется ниже. Каждая "
 "вкладкасоответствует одному фоновому потоку."
 
-#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:88
+#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:92
 msgid "gtkpod"
 msgstr "gtkpod"
 
@@ -70,7 +70,7 @@ msgstr "Менеджер iPod"
 msgid "Manage music, video and photos on an Apple iPod"
 msgstr "Менеджер музыки и видео для Apple iPod"
 
-#: ../libgtkpod/autodetection.c:257
+#: ../libgtkpod/autodetection.c:261
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' could not be loaded into gtkpod.\n"
@@ -79,7 +79,7 @@ msgstr ""
 "Вновь примонтированный iPod \"%s\" не мог быть загружен в gtkpod.\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:261
+#: ../libgtkpod/autodetection.c:265
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' appears to be already loaded!\n"
@@ -88,7 +88,7 @@ msgstr ""
 "Вновь примонтированный iPod \"%s\" выглядит уже загруженным!\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:269
+#: ../libgtkpod/autodetection.c:273
 msgid "New iPod"
 msgstr "Новый iPod"
 
@@ -535,8 +535,8 @@ msgstr "Идёт обработка \"%s\"..."
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "Пропущено \"%s\", поскольку оно соответствует маскам исключения.\n"
 
-#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1621
-#: ../libgtkpod/misc_track.c:1717
+#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1617
+#: ../libgtkpod/misc_track.c:1713
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
@@ -2243,46 +2243,46 @@ msgid "Duplicate detection"
 msgstr "Обнаружение дубликатов"
 
 #. Translators: this is minutes:seconds.thousandths
-#: ../libgtkpod/misc_track.c:1106
+#: ../libgtkpod/misc_track.c:1102
 #, c-format
 msgid "%d:%06.3f"
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:1196 ../libgtkpod/misc_track.c:1202
+#: ../libgtkpod/misc_track.c:1192 ../libgtkpod/misc_track.c:1198
 #, c-format
 msgid "%d/%d"
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:1208 ../plugins/details_editor/details.c:1204
+#: ../libgtkpod/misc_track.c:1204 ../plugins/details_editor/details.c:1204
 msgid "n/a"
 msgstr "н/д"
 
-#: ../libgtkpod/misc_track.c:1218
+#: ../libgtkpod/misc_track.c:1214
 msgid "Local Database"
 msgstr "Локальная база данных"
 
 #. artwork is set
-#: ../libgtkpod/misc_track.c:1227
+#: ../libgtkpod/misc_track.c:1223
 msgid "Embedded or filename was lost"
 msgstr "Внедрено или имя файла было потеряно"
 
-#: ../libgtkpod/misc_track.c:1230
+#: ../libgtkpod/misc_track.c:1226
 msgid "Artwork not set"
 msgstr "Изображение не задано"
 
-#: ../libgtkpod/misc_track.c:1657
+#: ../libgtkpod/misc_track.c:1653
 #, c-format
 msgid "Could not find source file for '%s'. Track not copied."
 msgstr "Не удалось найти исходный файл для \"%s\". Дорожка не скопирована."
 
-#: ../libgtkpod/misc_track.c:1855
+#: ../libgtkpod/misc_track.c:1851
 #, fuzzy, c-format
 msgid ""
 "drag and drop: ignored '%s'.\n"
 "reason: %s\n"
 msgstr "перетаскивание: проигнорировано \"%s\"\n"
 
-#: ../libgtkpod/misc_track.c:1982
+#: ../libgtkpod/misc_track.c:1978
 #, fuzzy, c-format
 msgid "Deleting one track completely from iPod"
 msgid_plural "Deleting %d tracks completely from iPod"
@@ -2290,7 +2290,7 @@ msgstr[0] "Одна дорожка полностью удалена с iPod"
 msgstr[1] "%d дорожки полностью удалено с iPod"
 msgstr[2] "%d дорожек полностью удалено с iPod"
 
-#: ../libgtkpod/misc_track.c:1987 ../libgtkpod/misc_track.c:2007
+#: ../libgtkpod/misc_track.c:1983 ../libgtkpod/misc_track.c:2003
 #, fuzzy, c-format
 msgid "Deleting %d track from playlist '%s'"
 msgid_plural "Deleting %d tracks from playlist '%s'"
@@ -2298,7 +2298,7 @@ msgstr[0] "Дорожка %d удалена из списка воспроизв
 msgstr[1] "%d дорожки удалено из списка воспроизведения \"%s\""
 msgstr[2] "%d дорожек удалено из списка воспроизведения \"%s\""
 
-#: ../libgtkpod/misc_track.c:2002
+#: ../libgtkpod/misc_track.c:1998
 #, fuzzy, c-format
 msgid "Deleting one track from harddisk"
 msgid_plural "Deleting %d tracks from harddisk"
@@ -2306,7 +2306,7 @@ msgstr[0] "Одна дорожка удалена с жёсткого диска
 msgstr[1] "%d дорожки удалены с жёсткого диска"
 msgstr[2] "%d дорожек удалено с жёсткого диска"
 
-#: ../libgtkpod/misc_track.c:2012
+#: ../libgtkpod/misc_track.c:2008
 #, fuzzy, c-format
 msgid "Deleting one track from local database"
 msgid_plural "Deleting %d tracks from local database"
@@ -2314,17 +2314,17 @@ msgstr[0] "Дорожка удалена из локальной базы дан
 msgstr[1] "%d дорожки удалены из локальной базы данных"
 msgstr[2] "%d дорожек удалено из локальной базы данных"
 
-#: ../libgtkpod/misc_track.c:2027
+#: ../libgtkpod/misc_track.c:2023
 #, c-format
 msgid "Deleting Track %d/%d ..."
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:2037
+#: ../libgtkpod/misc_track.c:2033
 #, fuzzy
 msgid "Completed deletion"
 msgstr "Обнаружение дубликатов"
 
-#: ../libgtkpod/misc_track.c:2131
+#: ../libgtkpod/misc_track.c:2127
 #, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
@@ -2332,7 +2332,7 @@ msgstr[0] "Дорожка %d скопирована в \"%s\" в \"%s\""
 msgstr[1] "Дорожка %d скопирована в \"%s\" в \"%s\""
 msgstr[2] "Дорожка %d скопирована в \"%s\" в \"%s\""
 
-#: ../libgtkpod/misc_track.c:2161
+#: ../libgtkpod/misc_track.c:2157
 #, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
@@ -2340,7 +2340,7 @@ msgstr[0] "%d дорожка скопировано в \"%s\""
 msgstr[1] "%d дорожек скопировано в \"%s\""
 msgstr[2] "%d дорожек скопировано в \"%s\""
 
-#: ../libgtkpod/misc_track.c:2175
+#: ../libgtkpod/misc_track.c:2171
 msgid "No tracks selected"
 msgstr "Дорожки не выбраны"
 
@@ -2945,7 +2945,7 @@ msgid "<b>On-the-fly Conversion</b>"
 msgstr "<b>Преобразование на лету</b>"
 
 #. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-app.c:521
+#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-window.c:534
 msgid "Music"
 msgstr "Музыка"
 
@@ -5277,7 +5277,7 @@ msgid "  iPod Repositories"
 msgstr "Репозиторий подкастов"
 
 #: ../plugins/playlist_display/plugin.c:437 ../plugins/sjcd/plugin.c:124
-#: ../src/anjuta-about.c:166
+#: ../src/anjuta-about.c:172
 #, fuzzy, c-format
 msgid "Couldn't load icon: %s"
 msgstr "Не удалось получить блокировку для \"%s\".\n"
@@ -6928,16 +6928,16 @@ msgstr ""
 msgid "O_utput Format:"
 msgstr ""
 
-#: ../src/anjuta-about.c:159
+#: ../src/anjuta-about.c:165
 #, fuzzy, c-format
 msgid "Couldn't read license file %s: %s"
 msgstr "Не удалось изменить метки файла: %s\n"
 
-#: ../src/anjuta-about.c:176
+#: ../src/anjuta-about.c:182
 msgid "Copyright (c) Jorg Schuler et al."
 msgstr ""
 
-#: ../src/anjuta-about.c:177
+#: ../src/anjuta-about.c:183
 #, fuzzy
 msgid "iPod Management Platform"
 msgstr "Менеджер iPod"
@@ -7068,54 +7068,54 @@ msgstr ""
 msgid "About third party gtkpod plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:522
+#: ../src/anjuta-window.c:535
 #, fuzzy
 msgid "Edit"
 msgstr "_Правка"
 
-#: ../src/anjuta-app.c:523 ../src/anjuta-app.c:524
+#: ../src/anjuta-window.c:536 ../src/anjuta-window.c:537
 #, fuzzy
 msgid "View"
 msgstr "_Вид"
 
-#: ../src/anjuta-app.c:525
+#: ../src/anjuta-window.c:538
 #, fuzzy
 msgid "Tools"
 msgstr "_Инструменты"
 
-#: ../src/anjuta-app.c:526
+#: ../src/anjuta-window.c:539
 #, fuzzy
 msgid "Help"
 msgstr "_Справка"
 
-#: ../src/anjuta-app.c:739
+#: ../src/anjuta-window.c:752
 msgid " Plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:751
+#: ../src/anjuta-window.c:764
 msgid "Installed plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:752
+#: ../src/anjuta-window.c:765
 #, fuzzy
 msgid "Preferred plugins"
 msgstr "Параметры"
 
-#: ../src/anjuta-app.c:753
+#: ../src/anjuta-window.c:766
 #, fuzzy
 msgid "Shortcuts"
 msgstr "Вкладки сортировки"
 
-#: ../src/anjuta-app.c:812
+#: ../src/anjuta-window.c:825
 #, c-format
 msgid "Value doesn't exist"
 msgstr ""
 
-#: ../src/anjuta-app.c:1430
+#: ../src/anjuta-window.c:1443
 msgid "Confirmation"
 msgstr "Подтверждение"
 
-#: ../src/gtkpod.c:203
+#: ../src/gtkpod.c:215
 msgid "Loaded Session..."
 msgstr ""
 
@@ -7123,15 +7123,15 @@ msgstr ""
 #. * Indicate to user that although the UI is up, the itdbs are still loading.
 #. * The message will be overriden by the import of
 #.
-#: ../src/gtkpod.c:216
+#: ../src/gtkpod.c:228
 msgid "Importing configured ipods ... "
 msgstr ""
 
-#: ../src/main.c:67
+#: ../src/main.c:71
 msgid "- Interface with your iPod"
 msgstr ""
 
-#: ../src/main.c:82
+#: ../src/main.c:86
 #, fuzzy, c-format
 msgid "Error parsing options: %s\n"
 msgstr "Ошибка при создании %s: %s\n"

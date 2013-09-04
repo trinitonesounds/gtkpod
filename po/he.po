@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-24 22:25+0100\n"
+"POT-Creation-Date: 2013-09-04 21:38+0100\n"
 "PO-Revision-Date: 2010-08-10 07:37+0200\n"
 "Last-Translator: David Kohen <dudyk@users.sourceforge.net>\n"
 "Language-Team: HEBREW <kde-il@yahoogroups.com>\n"
@@ -53,7 +53,7 @@ msgstr ""
 "תוצר הפלט של תסריט ההמרה ברקע יועתק למטה. כל דף של המחברת תואם לתהליך רקע "
 "אחד."
 
-#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:88
+#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:92
 #, fuzzy
 msgid "gtkpod"
 msgstr "_אודות gtkpod"
@@ -67,7 +67,7 @@ msgstr "מנהל ה־iPod"
 msgid "Manage music, video and photos on an Apple iPod"
 msgstr "ניהול מוסיקה ווידאו על נגן ה־iPod של Apple"
 
-#: ../libgtkpod/autodetection.c:257
+#: ../libgtkpod/autodetection.c:261
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' could not be loaded into gtkpod.\n"
@@ -76,7 +76,7 @@ msgstr ""
 "אי אפשר לטעון את ה־iPod החדש '%s' שעוגן לתוך gtkpod.\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:261
+#: ../libgtkpod/autodetection.c:265
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' appears to be already loaded!\n"
@@ -85,7 +85,7 @@ msgstr ""
 "ה־iPod החדש העגון ב־'%s' כבר עדיין טעון!\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:269
+#: ../libgtkpod/autodetection.c:273
 msgid "New iPod"
 msgstr "מכשיר iPod חדש"
 
@@ -525,8 +525,8 @@ msgstr "מעבד '%s'..."
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "מדלג על '%s' בגלל שהוא תואם למסכת אי ההכללה.\n"
 
-#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1621
-#: ../libgtkpod/misc_track.c:1717
+#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1617
+#: ../libgtkpod/misc_track.c:1713
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
@@ -2128,98 +2128,98 @@ msgid "Duplicate detection"
 msgstr "זיהוי כפילויות"
 
 #. Translators: this is minutes:seconds.thousandths
-#: ../libgtkpod/misc_track.c:1106
+#: ../libgtkpod/misc_track.c:1102
 #, c-format
 msgid "%d:%06.3f"
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:1196 ../libgtkpod/misc_track.c:1202
+#: ../libgtkpod/misc_track.c:1192 ../libgtkpod/misc_track.c:1198
 #, c-format
 msgid "%d/%d"
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:1208 ../plugins/details_editor/details.c:1204
+#: ../libgtkpod/misc_track.c:1204 ../plugins/details_editor/details.c:1204
 msgid "n/a"
 msgstr "ל/ז"
 
-#: ../libgtkpod/misc_track.c:1218
+#: ../libgtkpod/misc_track.c:1214
 msgid "Local Database"
 msgstr "מסד נתונים מקומי"
 
 #. artwork is set
-#: ../libgtkpod/misc_track.c:1227
+#: ../libgtkpod/misc_track.c:1223
 msgid "Embedded or filename was lost"
 msgstr "מוטבע או ששם הקובץ אבד"
 
-#: ../libgtkpod/misc_track.c:1230
+#: ../libgtkpod/misc_track.c:1226
 msgid "Artwork not set"
 msgstr "לא נקבעו תמונות"
 
-#: ../libgtkpod/misc_track.c:1657
+#: ../libgtkpod/misc_track.c:1653
 #, c-format
 msgid "Could not find source file for '%s'. Track not copied."
 msgstr "אי אפשר למצוא את הקובץ עבור '%s'. הרצועה לא הועתקה."
 
-#: ../libgtkpod/misc_track.c:1855
+#: ../libgtkpod/misc_track.c:1851
 #, fuzzy, c-format
 msgid ""
 "drag and drop: ignored '%s'.\n"
 "reason: %s\n"
 msgstr "גרור ושחרר: התעלמות מ '%s'\n"
 
-#: ../libgtkpod/misc_track.c:1982
+#: ../libgtkpod/misc_track.c:1978
 #, fuzzy, c-format
 msgid "Deleting one track completely from iPod"
 msgid_plural "Deleting %d tracks completely from iPod"
 msgstr[0] "הרצועה נמחקה לגמרי מה-iPod"
 msgstr[1] "הרצועות %d נמחקו לגמרי מה-iPod"
 
-#: ../libgtkpod/misc_track.c:1987 ../libgtkpod/misc_track.c:2007
+#: ../libgtkpod/misc_track.c:1983 ../libgtkpod/misc_track.c:2003
 #, fuzzy, c-format
 msgid "Deleting %d track from playlist '%s'"
 msgid_plural "Deleting %d tracks from playlist '%s'"
 msgstr[0] "נמחקה %d רצועה מרשימת ההשמעה '%s'"
 msgstr[1] "נמחקו %d רצועות מרשימת ההשמעה '%s'"
 
-#: ../libgtkpod/misc_track.c:2002
+#: ../libgtkpod/misc_track.c:1998
 #, fuzzy, c-format
 msgid "Deleting one track from harddisk"
 msgid_plural "Deleting %d tracks from harddisk"
 msgstr[0] "נמחקה רצועה אחת מהדיסק הקשיח"
 msgstr[1] "נמחקו %d רצועות מהדיסק הקשיח"
 
-#: ../libgtkpod/misc_track.c:2012
+#: ../libgtkpod/misc_track.c:2008
 #, fuzzy, c-format
 msgid "Deleting one track from local database"
 msgid_plural "Deleting %d tracks from local database"
 msgstr[0] "נמחקה רצועה ממסד הנתונים המקומי"
 msgstr[1] "נמחקו %d רצועות ממסד הנתונים המקומי"
 
-#: ../libgtkpod/misc_track.c:2027
+#: ../libgtkpod/misc_track.c:2023
 #, c-format
 msgid "Deleting Track %d/%d ..."
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:2037
+#: ../libgtkpod/misc_track.c:2033
 #, fuzzy
 msgid "Completed deletion"
 msgstr "זיהוי כפילויות"
 
-#: ../libgtkpod/misc_track.c:2131
+#: ../libgtkpod/misc_track.c:2127
 #, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
 msgstr[0] "הועתקה %d רצועה אל '%s' בתוך '%s'"
 msgstr[1] "הועתקו %d רצועות אל '%s' בתוך '%s'"
 
-#: ../libgtkpod/misc_track.c:2161
+#: ../libgtkpod/misc_track.c:2157
 #, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
 msgstr[0] "הועתקה %d רצועה אל '%s'."
 msgstr[1] "הועתקו %d רצועות אל '%s'."
 
-#: ../libgtkpod/misc_track.c:2175
+#: ../libgtkpod/misc_track.c:2171
 msgid "No tracks selected"
 msgstr "לא נבחרו רצועות"
 
@@ -2813,7 +2813,7 @@ msgid "<b>On-the-fly Conversion</b>"
 msgstr "<b>המרה על המקום</b>"
 
 #. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-app.c:521
+#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-window.c:534
 msgid "Music"
 msgstr "מוזיקה"
 
@@ -5132,7 +5132,7 @@ msgid "  iPod Repositories"
 msgstr "מאגר פודקסטים"
 
 #: ../plugins/playlist_display/plugin.c:437 ../plugins/sjcd/plugin.c:124
-#: ../src/anjuta-about.c:166
+#: ../src/anjuta-about.c:172
 #, fuzzy, c-format
 msgid "Couldn't load icon: %s"
 msgstr "אי אשפר להשיג נעילה על '%s'.\n"
@@ -6760,16 +6760,16 @@ msgstr ""
 msgid "O_utput Format:"
 msgstr ""
 
-#: ../src/anjuta-about.c:159
+#: ../src/anjuta-about.c:165
 #, fuzzy, c-format
 msgid "Couldn't read license file %s: %s"
 msgstr "לא ניתן למצוא את קובץ ה־pixmap של היישום: %s"
 
-#: ../src/anjuta-about.c:176
+#: ../src/anjuta-about.c:182
 msgid "Copyright (c) Jorg Schuler et al."
 msgstr ""
 
-#: ../src/anjuta-about.c:177
+#: ../src/anjuta-about.c:183
 #, fuzzy
 msgid "iPod Management Platform"
 msgstr "מנהל ה־iPod"
@@ -6901,54 +6901,54 @@ msgstr ""
 msgid "About third party gtkpod plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:522
+#: ../src/anjuta-window.c:535
 #, fuzzy
 msgid "Edit"
 msgstr "_עריכה"
 
-#: ../src/anjuta-app.c:523 ../src/anjuta-app.c:524
+#: ../src/anjuta-window.c:536 ../src/anjuta-window.c:537
 #, fuzzy
 msgid "View"
 msgstr "_תצוגה"
 
-#: ../src/anjuta-app.c:525
+#: ../src/anjuta-window.c:538
 #, fuzzy
 msgid "Tools"
 msgstr "_כלים"
 
-#: ../src/anjuta-app.c:526
+#: ../src/anjuta-window.c:539
 #, fuzzy
 msgid "Help"
 msgstr "_עזרה"
 
-#: ../src/anjuta-app.c:739
+#: ../src/anjuta-window.c:752
 msgid " Plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:751
+#: ../src/anjuta-window.c:764
 msgid "Installed plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:752
+#: ../src/anjuta-window.c:765
 #, fuzzy
 msgid "Preferred plugins"
 msgstr "הגדרות"
 
-#: ../src/anjuta-app.c:753
+#: ../src/anjuta-window.c:766
 #, fuzzy
 msgid "Shortcuts"
 msgstr "מיין לפי אמן"
 
-#: ../src/anjuta-app.c:812
+#: ../src/anjuta-window.c:825
 #, c-format
 msgid "Value doesn't exist"
 msgstr ""
 
-#: ../src/anjuta-app.c:1430
+#: ../src/anjuta-window.c:1443
 msgid "Confirmation"
 msgstr "אישור"
 
-#: ../src/gtkpod.c:203
+#: ../src/gtkpod.c:215
 msgid "Loaded Session..."
 msgstr ""
 
@@ -6956,15 +6956,15 @@ msgstr ""
 #. * Indicate to user that although the UI is up, the itdbs are still loading.
 #. * The message will be overriden by the import of
 #.
-#: ../src/gtkpod.c:216
+#: ../src/gtkpod.c:228
 msgid "Importing configured ipods ... "
 msgstr ""
 
-#: ../src/main.c:67
+#: ../src/main.c:71
 msgid "- Interface with your iPod"
 msgstr ""
 
-#: ../src/main.c:82
+#: ../src/main.c:86
 #, fuzzy, c-format
 msgid "Error parsing options: %s\n"
 msgstr "תקלה ביצירת %s: %s\n"

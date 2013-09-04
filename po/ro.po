@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-24 22:25+0100\n"
+"POT-Creation-Date: 2013-09-04 21:38+0100\n"
 "PO-Revision-Date: 2010-08-08 12:46+0100\n"
 "Last-Translator: alexef <alex@eftimie.ro>\n"
 "Language-Team: Romanian <tradu@softwareliber.ro>\n"
@@ -50,7 +50,7 @@ msgstr ""
 "Ieşirea scripturilor de conversie din fundal este copiată mai jos. Fiecare "
 "pagină din carneţel corespunde unui fir de execuţie pe fundal."
 
-#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:88
+#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:92
 msgid "gtkpod"
 msgstr "gtkpod"
 
@@ -63,7 +63,7 @@ msgstr "Gestionar de iPod"
 msgid "Manage music, video and photos on an Apple iPod"
 msgstr "Gestionează muzica şi fişierele video pe un iPod Apple"
 
-#: ../libgtkpod/autodetection.c:257
+#: ../libgtkpod/autodetection.c:261
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' could not be loaded into gtkpod.\n"
@@ -72,7 +72,7 @@ msgstr ""
 "iPod-ul montat de curând la '%s' nu a putut fi încărcat în gtkpod\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:261
+#: ../libgtkpod/autodetection.c:265
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' appears to be already loaded!\n"
@@ -81,7 +81,7 @@ msgstr ""
 "iPod-ul montat de curând la '%s' pare să fie deja încărcat!\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:269
+#: ../libgtkpod/autodetection.c:273
 msgid "New iPod"
 msgstr "iPod nou"
 
@@ -528,8 +528,8 @@ msgstr "Procesare '%s'..."
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "Sar peste '%s' pentru că se potriveşte cu măşti de excludere.\n"
 
-#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1621
-#: ../libgtkpod/misc_track.c:1717
+#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1617
+#: ../libgtkpod/misc_track.c:1713
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
@@ -2214,46 +2214,46 @@ msgid "Duplicate detection"
 msgstr "Detecţie dubluri"
 
 #. Translators: this is minutes:seconds.thousandths
-#: ../libgtkpod/misc_track.c:1106
+#: ../libgtkpod/misc_track.c:1102
 #, c-format
 msgid "%d:%06.3f"
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:1196 ../libgtkpod/misc_track.c:1202
+#: ../libgtkpod/misc_track.c:1192 ../libgtkpod/misc_track.c:1198
 #, c-format
 msgid "%d/%d"
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:1208 ../plugins/details_editor/details.c:1204
+#: ../libgtkpod/misc_track.c:1204 ../plugins/details_editor/details.c:1204
 msgid "n/a"
 msgstr "indisponibil"
 
-#: ../libgtkpod/misc_track.c:1218
+#: ../libgtkpod/misc_track.c:1214
 msgid "Local Database"
 msgstr "Bază de date locală"
 
 #. artwork is set
-#: ../libgtkpod/misc_track.c:1227
+#: ../libgtkpod/misc_track.c:1223
 msgid "Embedded or filename was lost"
 msgstr "Înglobată sau numele de fişier s-a pierdut"
 
-#: ../libgtkpod/misc_track.c:1230
+#: ../libgtkpod/misc_track.c:1226
 msgid "Artwork not set"
 msgstr "Coperta nu a fost stabilită"
 
-#: ../libgtkpod/misc_track.c:1657
+#: ../libgtkpod/misc_track.c:1653
 #, c-format
 msgid "Could not find source file for '%s'. Track not copied."
 msgstr "Nu am putut găsi fişierul sursă pentru '%s'. Piesa nu a fost copiată."
 
-#: ../libgtkpod/misc_track.c:1855
+#: ../libgtkpod/misc_track.c:1851
 #, fuzzy, c-format
 msgid ""
 "drag and drop: ignored '%s'.\n"
 "reason: %s\n"
 msgstr "trage şi aruncă: ignorat '%s'\n"
 
-#: ../libgtkpod/misc_track.c:1982
+#: ../libgtkpod/misc_track.c:1978
 #, fuzzy, c-format
 msgid "Deleting one track completely from iPod"
 msgid_plural "Deleting %d tracks completely from iPod"
@@ -2261,7 +2261,7 @@ msgstr[0] "\t\t\t\t"
 msgstr[1] "Am şters complet %d piese de pe iPod"
 msgstr[2] "Am şters complet %d piese de pe iPod"
 
-#: ../libgtkpod/misc_track.c:1987 ../libgtkpod/misc_track.c:2007
+#: ../libgtkpod/misc_track.c:1983 ../libgtkpod/misc_track.c:2003
 #, fuzzy, c-format
 msgid "Deleting %d track from playlist '%s'"
 msgid_plural "Deleting %d tracks from playlist '%s'"
@@ -2269,7 +2269,7 @@ msgstr[0] "Am şters complet %d piesă din lista de redare '%s'"
 msgstr[1] "Am şters complet %d piese din lista de redare '%s'"
 msgstr[2] "Am şters complet %d piese din lista de redare '%s'"
 
-#: ../libgtkpod/misc_track.c:2002
+#: ../libgtkpod/misc_track.c:1998
 #, fuzzy, c-format
 msgid "Deleting one track from harddisk"
 msgid_plural "Deleting %d tracks from harddisk"
@@ -2277,7 +2277,7 @@ msgstr[0] "Am şters o piesă de pe discul dur"
 msgstr[1] "Am şters %d piese de pe discul dur"
 msgstr[2] "Am şters %d piese de pe discul dur"
 
-#: ../libgtkpod/misc_track.c:2012
+#: ../libgtkpod/misc_track.c:2008
 #, fuzzy, c-format
 msgid "Deleting one track from local database"
 msgid_plural "Deleting %d tracks from local database"
@@ -2285,17 +2285,17 @@ msgstr[0] "Am şters o piesă din baza de date locală"
 msgstr[1] "Am şters %d piese din baza de date locală"
 msgstr[2] "Am şters %d piese din baza de date locală"
 
-#: ../libgtkpod/misc_track.c:2027
+#: ../libgtkpod/misc_track.c:2023
 #, c-format
 msgid "Deleting Track %d/%d ..."
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:2037
+#: ../libgtkpod/misc_track.c:2033
 #, fuzzy
 msgid "Completed deletion"
 msgstr "Detecţie dubluri"
 
-#: ../libgtkpod/misc_track.c:2131
+#: ../libgtkpod/misc_track.c:2127
 #, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
@@ -2303,7 +2303,7 @@ msgstr[0] "S-a copiat %d piesă către „%s” în „%s”"
 msgstr[1] "S-au copiat %d piese către %s în „%s”"
 msgstr[2] "S-au copiat %d de piese către %s în „%s”"
 
-#: ../libgtkpod/misc_track.c:2161
+#: ../libgtkpod/misc_track.c:2157
 #, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
@@ -2311,7 +2311,7 @@ msgstr[0] "S-a copiat %d piesă către „%s”"
 msgstr[1] "S-au copiat %d piese către „%s”"
 msgstr[2] "S-au copiat %d de piese către „%s”"
 
-#: ../libgtkpod/misc_track.c:2175
+#: ../libgtkpod/misc_track.c:2171
 msgid "No tracks selected"
 msgstr "Nici o piesă selectată"
 
@@ -2898,7 +2898,7 @@ msgid "<b>On-the-fly Conversion</b>"
 msgstr "<b>Conversie \"în zbor\"</b>"
 
 #. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-app.c:521
+#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-window.c:534
 #, fuzzy
 msgid "Music"
 msgstr "Dosar de muzică rădăcină:"
@@ -5264,7 +5264,7 @@ msgid "  iPod Repositories"
 msgstr "Depozit podcasturi"
 
 #: ../plugins/playlist_display/plugin.c:437 ../plugins/sjcd/plugin.c:124
-#: ../src/anjuta-about.c:166
+#: ../src/anjuta-about.c:172
 #, fuzzy, c-format
 msgid "Couldn't load icon: %s"
 msgstr "Nu am putut obţine blocare pentru '%s'.\n"
@@ -6914,16 +6914,16 @@ msgstr ""
 msgid "O_utput Format:"
 msgstr ""
 
-#: ../src/anjuta-about.c:159
+#: ../src/anjuta-about.c:165
 #, fuzzy, c-format
 msgid "Couldn't read license file %s: %s"
 msgstr "Nu am putut modifica etichetele fişierului: %s\n"
 
-#: ../src/anjuta-about.c:176
+#: ../src/anjuta-about.c:182
 msgid "Copyright (c) Jorg Schuler et al."
 msgstr ""
 
-#: ../src/anjuta-about.c:177
+#: ../src/anjuta-about.c:183
 #, fuzzy
 msgid "iPod Management Platform"
 msgstr "Gestionar de iPod"
@@ -7055,55 +7055,55 @@ msgstr ""
 msgid "About third party gtkpod plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:522
+#: ../src/anjuta-window.c:535
 #, fuzzy
 msgid "Edit"
 msgstr "_Editare"
 
-#: ../src/anjuta-app.c:523 ../src/anjuta-app.c:524
+#: ../src/anjuta-window.c:536 ../src/anjuta-window.c:537
 #, fuzzy
 msgid "View"
 msgstr "_Vizualizare"
 
-#: ../src/anjuta-app.c:525
+#: ../src/anjuta-window.c:538
 #, fuzzy
 msgid "Tools"
 msgstr "_Unelte"
 
-#: ../src/anjuta-app.c:526
+#: ../src/anjuta-window.c:539
 #, fuzzy
 msgid "Help"
 msgstr "_Ajutor"
 
-#: ../src/anjuta-app.c:739
+#: ../src/anjuta-window.c:752
 msgid " Plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:751
+#: ../src/anjuta-window.c:764
 msgid "Installed plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:752
+#: ../src/anjuta-window.c:765
 #, fuzzy
 msgid "Preferred plugins"
 msgstr "Preferinţe"
 
-#: ../src/anjuta-app.c:753
+#: ../src/anjuta-window.c:766
 #, fuzzy
 msgid "Shortcuts"
 msgstr "Categorii"
 
-#: ../src/anjuta-app.c:812
+#: ../src/anjuta-window.c:825
 #, c-format
 msgid "Value doesn't exist"
 msgstr ""
 
-#: ../src/anjuta-app.c:1430
+#: ../src/anjuta-window.c:1443
 #, fuzzy
 msgid "Confirmation"
 msgstr "Informaţie"
 
-#: ../src/gtkpod.c:203
+#: ../src/gtkpod.c:215
 msgid "Loaded Session..."
 msgstr ""
 
@@ -7111,15 +7111,15 @@ msgstr ""
 #. * Indicate to user that although the UI is up, the itdbs are still loading.
 #. * The message will be overriden by the import of
 #.
-#: ../src/gtkpod.c:216
+#: ../src/gtkpod.c:228
 msgid "Importing configured ipods ... "
 msgstr ""
 
-#: ../src/main.c:67
+#: ../src/main.c:71
 msgid "- Interface with your iPod"
 msgstr ""
 
-#: ../src/main.c:82
+#: ../src/main.c:86
 #, fuzzy, c-format
 msgid "Error parsing options: %s\n"
 msgstr "Eroare la crearea %s: %s\n"

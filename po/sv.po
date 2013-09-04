@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-24 22:25+0100\n"
+"POT-Creation-Date: 2013-09-04 21:38+0100\n"
 "PO-Revision-Date: 2010-08-08 12:50+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@comhem.se>\n"
 "Language-Team: Svenska <sv@li.org>\n"
@@ -53,7 +53,7 @@ msgstr ""
 "Utmatningen från konverteringsskripten som kört i bakgrunden har kopierats "
 "nedan. Varje sida i anteckningsboken motsvarar en bakgrundstråd."
 
-#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:88
+#: ../data/gtkpod.desktop.in.h:1 ../src/main.c:92
 #, fuzzy
 msgid "gtkpod"
 msgstr "_Om gtkpod"
@@ -67,7 +67,7 @@ msgstr "Hantering av iPod"
 msgid "Manage music, video and photos on an Apple iPod"
 msgstr "Hantera musik och video på en Apple iPod"
 
-#: ../libgtkpod/autodetection.c:257
+#: ../libgtkpod/autodetection.c:261
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' could not be loaded into gtkpod.\n"
@@ -76,7 +76,7 @@ msgstr ""
 "Nymonterad iPod på '%s' kunde inte laddas i gtkpod.\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:261
+#: ../libgtkpod/autodetection.c:265
 #, c-format
 msgid ""
 "Newly mounted iPod at '%s' appears to be already loaded!\n"
@@ -85,7 +85,7 @@ msgstr ""
 "Nymonterad iPod på '%s' verkar redan vara laddad.\n"
 "\n"
 
-#: ../libgtkpod/autodetection.c:269
+#: ../libgtkpod/autodetection.c:273
 msgid "New iPod"
 msgstr "Ny iPod"
 
@@ -527,8 +527,8 @@ msgstr "Behandlar '%s'..."
 msgid "Skipping '%s' because it matches exclude masks.\n"
 msgstr "Hoppar över '%s' eftersom det motsvarar filmasker att utesluta.\n"
 
-#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1621
-#: ../libgtkpod/misc_track.c:1717
+#: ../libgtkpod/file.c:1773 ../libgtkpod/misc_track.c:1617
+#: ../libgtkpod/misc_track.c:1713
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
@@ -2147,98 +2147,98 @@ msgid "Duplicate detection"
 msgstr "Detektering av duplikat"
 
 #. Translators: this is minutes:seconds.thousandths
-#: ../libgtkpod/misc_track.c:1106
+#: ../libgtkpod/misc_track.c:1102
 #, c-format
 msgid "%d:%06.3f"
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:1196 ../libgtkpod/misc_track.c:1202
+#: ../libgtkpod/misc_track.c:1192 ../libgtkpod/misc_track.c:1198
 #, c-format
 msgid "%d/%d"
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:1208 ../plugins/details_editor/details.c:1204
+#: ../libgtkpod/misc_track.c:1204 ../plugins/details_editor/details.c:1204
 msgid "n/a"
 msgstr "ej tillgänglig"
 
-#: ../libgtkpod/misc_track.c:1218
+#: ../libgtkpod/misc_track.c:1214
 msgid "Local Database"
 msgstr "Lokal databas"
 
 #. artwork is set
-#: ../libgtkpod/misc_track.c:1227
+#: ../libgtkpod/misc_track.c:1223
 msgid "Embedded or filename was lost"
 msgstr "Inbäddad eller förlorat filnamn"
 
-#: ../libgtkpod/misc_track.c:1230
+#: ../libgtkpod/misc_track.c:1226
 msgid "Artwork not set"
 msgstr "Omslagsbild inte angiven"
 
-#: ../libgtkpod/misc_track.c:1657
+#: ../libgtkpod/misc_track.c:1653
 #, c-format
 msgid "Could not find source file for '%s'. Track not copied."
 msgstr "Kunde hitta källfilen för '%s'. Spåret kopierades inte."
 
-#: ../libgtkpod/misc_track.c:1855
+#: ../libgtkpod/misc_track.c:1851
 #, fuzzy, c-format
 msgid ""
 "drag and drop: ignored '%s'.\n"
 "reason: %s\n"
 msgstr "drag och släpp: ignorerade '%s'\n"
 
-#: ../libgtkpod/misc_track.c:1982
+#: ../libgtkpod/misc_track.c:1978
 #, fuzzy, c-format
 msgid "Deleting one track completely from iPod"
 msgid_plural "Deleting %d tracks completely from iPod"
 msgstr[0] "Tog bort ett spår helt från iPod"
 msgstr[1] "Tog bort %d spår helt från iPod"
 
-#: ../libgtkpod/misc_track.c:1987 ../libgtkpod/misc_track.c:2007
+#: ../libgtkpod/misc_track.c:1983 ../libgtkpod/misc_track.c:2003
 #, fuzzy, c-format
 msgid "Deleting %d track from playlist '%s'"
 msgid_plural "Deleting %d tracks from playlist '%s'"
 msgstr[0] "Tog bort %d spår från spellistan '%s'"
 msgstr[1] "Tog bort %d spår från spellistan '%s'"
 
-#: ../libgtkpod/misc_track.c:2002
+#: ../libgtkpod/misc_track.c:1998
 #, fuzzy, c-format
 msgid "Deleting one track from harddisk"
 msgid_plural "Deleting %d tracks from harddisk"
 msgstr[0] "Tog bort ett spår från hårddisken"
 msgstr[1] "Tog bort %d spår från hårddisken"
 
-#: ../libgtkpod/misc_track.c:2012
+#: ../libgtkpod/misc_track.c:2008
 #, fuzzy, c-format
 msgid "Deleting one track from local database"
 msgid_plural "Deleting %d tracks from local database"
 msgstr[0] "Tog bort spår från den lokala databasen"
 msgstr[1] "Tog bort %d spår från den lokala databasen"
 
-#: ../libgtkpod/misc_track.c:2027
+#: ../libgtkpod/misc_track.c:2023
 #, c-format
 msgid "Deleting Track %d/%d ..."
 msgstr ""
 
-#: ../libgtkpod/misc_track.c:2037
+#: ../libgtkpod/misc_track.c:2033
 #, fuzzy
 msgid "Completed deletion"
 msgstr "Detektering av duplikat"
 
-#: ../libgtkpod/misc_track.c:2131
+#: ../libgtkpod/misc_track.c:2127
 #, c-format
 msgid "Copied %d track to '%s' in '%s'"
 msgid_plural "Copied %d tracks to %s in '%s'"
 msgstr[0] "Kopierade %d spår till '%s' i '%s'"
 msgstr[1] "Kopierade %d spår till '%s' i '%s'"
 
-#: ../libgtkpod/misc_track.c:2161
+#: ../libgtkpod/misc_track.c:2157
 #, c-format
 msgid "Copied %d track to '%s'"
 msgid_plural "Copied %d tracks to '%s'"
 msgstr[0] "Kopierade %d spår till '%s'"
 msgstr[1] "Kopierade %d spår till '%s'"
 
-#: ../libgtkpod/misc_track.c:2175
+#: ../libgtkpod/misc_track.c:2171
 msgid "No tracks selected"
 msgstr "Inga spår markerade"
 
@@ -2832,7 +2832,7 @@ msgid "<b>On-the-fly Conversion</b>"
 msgstr "<b>Konvertering i farten</b>"
 
 #. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-app.c:521
+#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-window.c:534
 msgid "Music"
 msgstr "Musik"
 
@@ -5155,7 +5155,7 @@ msgid "  iPod Repositories"
 msgstr "Podsändningsarkiv"
 
 #: ../plugins/playlist_display/plugin.c:437 ../plugins/sjcd/plugin.c:124
-#: ../src/anjuta-about.c:166
+#: ../src/anjuta-about.c:172
 #, fuzzy, c-format
 msgid "Couldn't load icon: %s"
 msgstr "Kunde inte låsa '%s'.\n"
@@ -6787,16 +6787,16 @@ msgstr ""
 msgid "O_utput Format:"
 msgstr ""
 
-#: ../src/anjuta-about.c:159
+#: ../src/anjuta-about.c:165
 #, fuzzy, c-format
 msgid "Couldn't read license file %s: %s"
 msgstr "Kunde inte ändra taggar för filen: %s\n"
 
-#: ../src/anjuta-about.c:176
+#: ../src/anjuta-about.c:182
 msgid "Copyright (c) Jorg Schuler et al."
 msgstr ""
 
-#: ../src/anjuta-about.c:177
+#: ../src/anjuta-about.c:183
 #, fuzzy
 msgid "iPod Management Platform"
 msgstr "Hantering av iPod"
@@ -6928,54 +6928,54 @@ msgstr ""
 msgid "About third party gtkpod plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:522
+#: ../src/anjuta-window.c:535
 #, fuzzy
 msgid "Edit"
 msgstr "_Redigera"
 
-#: ../src/anjuta-app.c:523 ../src/anjuta-app.c:524
+#: ../src/anjuta-window.c:536 ../src/anjuta-window.c:537
 #, fuzzy
 msgid "View"
 msgstr "_Visa"
 
-#: ../src/anjuta-app.c:525
+#: ../src/anjuta-window.c:538
 #, fuzzy
 msgid "Tools"
 msgstr "Verk_tyg"
 
-#: ../src/anjuta-app.c:526
+#: ../src/anjuta-window.c:539
 #, fuzzy
 msgid "Help"
 msgstr "_Hjälp"
 
-#: ../src/anjuta-app.c:739
+#: ../src/anjuta-window.c:752
 msgid " Plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:751
+#: ../src/anjuta-window.c:764
 msgid "Installed plugins"
 msgstr ""
 
-#: ../src/anjuta-app.c:752
+#: ../src/anjuta-window.c:765
 #, fuzzy
 msgid "Preferred plugins"
 msgstr "Inställningar"
 
-#: ../src/anjuta-app.c:753
+#: ../src/anjuta-window.c:766
 #, fuzzy
 msgid "Shortcuts"
 msgstr "Sorterade artister"
 
-#: ../src/anjuta-app.c:812
+#: ../src/anjuta-window.c:825
 #, c-format
 msgid "Value doesn't exist"
 msgstr ""
 
-#: ../src/anjuta-app.c:1430
+#: ../src/anjuta-window.c:1443
 msgid "Confirmation"
 msgstr "Bekräftelse"
 
-#: ../src/gtkpod.c:203
+#: ../src/gtkpod.c:215
 msgid "Loaded Session..."
 msgstr ""
 
@@ -6983,15 +6983,15 @@ msgstr ""
 #. * Indicate to user that although the UI is up, the itdbs are still loading.
 #. * The message will be overriden by the import of
 #.
-#: ../src/gtkpod.c:216
+#: ../src/gtkpod.c:228
 msgid "Importing configured ipods ... "
 msgstr ""
 
-#: ../src/main.c:67
+#: ../src/main.c:71
 msgid "- Interface with your iPod"
 msgstr ""
 
-#: ../src/main.c:82
+#: ../src/main.c:86
 #, fuzzy, c-format
 msgid "Error parsing options: %s\n"
 msgstr "Fel när %s skulle skapas: %s\n"
