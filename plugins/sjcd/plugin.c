@@ -125,7 +125,7 @@ static void ipreferences_merge(IAnjutaPreferences* ipref, AnjutaPreferences* pre
         g_error_free(error);
     }
 
-    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-track-display-settings", TAB_NAME, pixbuf, plugin->prefs);
+    anjuta_preferences_dialog_add_page(ANJUTA_PREFERENCES_DIALOG (anjuta_preferences_get_dialog (prefs)), "gtkpod-sjcd-settings", TAB_NAME, pixbuf, plugin->prefs);
     g_object_unref(pixbuf);
 }
 

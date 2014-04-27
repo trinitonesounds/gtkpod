@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Ross Burton <ross@burtonini.com>
  */
@@ -43,7 +42,7 @@
 #define GET_BUILDER_WIDGET(x, a) gtkpod_builder_xml_get_widget (x, a)
 
 GtkWidget *dialog = NULL;
-GtkWidget *audio_profile = NULL;
+GtkWidget *profile_option = NULL;
 GtkWidget *cd_option = NULL;
 GtkWidget *path_option = NULL;
 GtkWidget *file_option = NULL;
@@ -68,6 +67,10 @@ static const FilePattern path_patterns[] = {
   {N_("Album Artist (sortable)"), "%as"},
   {N_("Album Artist - Album Title"), "%aa - %at"},
   {N_("Album Artist (sortable) - Album Title"), "%as - %at"},
+  {N_("Album Composer, Album Title"), "%ac/%at"},
+  {N_("Album Composer (sortable), Album Title"), "%ap/%at"},
+  {N_("Track Composer, Album Title"), "%tc/%at"},
+  {N_("Track Composer (sortable), Album Title"), "%tp/%at"},
   {N_("[none]"), "./"},
   {NULL, NULL}
 };
@@ -81,9 +84,24 @@ static const FilePattern file_patterns[] = {
   /* {N_("Number. Track Artist (sortable) - Track Title"), "%tN. %ts - %tt"}, */
   {N_("Number-Track Artist-Track Title (lowercase)"), "%dN-%tA-%tT"},
   /* {N_("Number-Track Artist (sortable)-Track Title (lowercase)"), "%tN-%tS-%tT"}, */
+  {N_("Track Composer - Track Artist - Track Title"), "%tc - %ta - %tt"},
+  {N_("Track Composer (sortable) - Track Artist (sortable) - Track Title"), "%tp - %ts - %tt"},
+  {N_("Number. Track Composer - Track Artist - Track Title"), "%dN. %tc - %ta - %tt"},
+  {N_("Number-Track Composer-Track Artist-Track Title (lowercase)"), "%dN-%tC-%tA-%tT"},
   {NULL, NULL}
 };
 
+const gchar*
+sj_get_default_file_pattern (void)
+{
+  return file_patterns[0].pattern;
+}
+
+const gchar*
+sj_get_default_path_pattern (void)
+{
+  return path_patterns[0].pattern;
+}
 void prefs_profile_changed (GtkWidget *widget, gpointer user_data)
 {
   GtkTreeIter iter;
@@ -108,7 +126,7 @@ void show_help (GtkWindow *parent)
 {
   GError *error = NULL;
 
-  gtk_show_uri (NULL, "ghelp:sound-juicer?preferences", GDK_CURRENT_TIME, &error);
+  gtk_show_uri (NULL, "help:sound-juicer/preferences", GDK_CURRENT_TIME, &error);
   if (error) {
     GtkWidget *dialog;
 
@@ -174,7 +192,7 @@ G_MODULE_EXPORT void prefs_file_option_changed (GtkComboBox *combo, gpointer use
 }
 
 static void
-sj_audio_profile_chooser_set_active (GtkWidget *chooser, const char *profile)
+sj_profile_option_set_active (GtkWidget *chooser, const char *profile)
 {
   GtkTreeIter iter;
   GtkTreeModel *model;
@@ -204,10 +222,9 @@ static void audio_profile_changed_cb (GSettings *settings, gchar *key, gpointer 
 {
   char *value;
   g_return_if_fail (strcmp (key, SJ_SETTINGS_AUDIO_PROFILE) == 0);
-  g_return_if_fail (GTK_IS_WIDGET(user_data));
 
   value = g_settings_get_string (settings, key);
-  sj_audio_profile_chooser_set_active (GTK_WIDGET(user_data), value);
+  sj_profile_option_set_active (profile_option, value);
   g_free (value);
 }
 
@@ -222,7 +239,6 @@ static void baseuri_changed_cb  (GSettings *settings, gchar *key, gpointer user_
    */
   const char* base_uri, *current_uri;
   g_return_if_fail (strcmp (key, SJ_SETTINGS_BASEURI) == 0);
-  g_return_if_fail (GTK_IS_FILE_CHOOSER(user_data));
 
   base_uri = g_settings_get_string (settings, key);
 
@@ -232,13 +248,13 @@ static void baseuri_changed_cb  (GSettings *settings, gchar *key, gpointer user_
 
     dir = sj_get_default_music_directory ();
     dir_uri = g_file_get_uri (dir);
-    gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (user_data), dir_uri);
+    gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (basepath_fcb), dir_uri);
     g_free (dir_uri);
     g_object_unref (dir);
   } else {
-    current_uri = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (user_data));
+    current_uri = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (basepath_fcb));
     if (current_uri == NULL || strcmp (current_uri, base_uri) != 0)
-      gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (user_data), base_uri);
+      gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (basepath_fcb), base_uri);
 
   }
 }
@@ -251,26 +267,28 @@ static void pattern_label_update (void)
   GstEncodingProfile *profile;
 
   static const AlbumDetails sample_album = {
-    "Help!", /* title */
-    "The Beatles", /* artist */
-    "Beatles, The", /* sortname */
-    NULL, /* genre */
-    0, /* number of tracks*/
-    1, /* disc number */
-    NULL, /* track list */
-    NULL, /* release date */
-    NULL, /* album ID */
-    NULL /* artist ID */
+    .title = "Help!", /* title */
+    .artist = "The Beatles", /* artist */
+    .artist_sortname = "Beatles, The", /* artist_sortname */
+    .genre = NULL, /* genre */
+    .number = 0, /* number of tracks*/
+    .disc_number = 1, /* disc number */
+    .tracks = NULL, /* track list */
+    .release_date = NULL, /* release date */
+    .album_id = NULL, /* album ID */
+    .artist_id = NULL /* artist ID */
   };
   static const TrackDetails sample_track = {
-    (AlbumDetails*)&sample_album,  /*album */
-    7, /* track number */
-    "Ticket To Ride", /* title */
-    "The Beatles", /* artist */
-    "Beatles, The", /* sortname */
-    0, /* duration */
-    NULL, /* track ID */
-    NULL, /* artist ID */
+    .album = (AlbumDetails*)&sample_album,  /*album */
+    .number = 7, /* track number */
+    .title = "Ticket To Ride", /* title */
+    .artist = "The Beatles", /* artist */
+    .artist_sortname = "Beatles, The", /* artist_sortname */
+    .composer = "John Lennon and Paul McCartney", /* composer */
+    .composer_sortname = "Lennon, John", /* composer_sortname */
+    .duration = 0, /* duration */
+    .track_id = NULL, /* track ID */
+    .artist_id = NULL, /* artist ID */
   };
 
   g_object_get (extractor, "profile", &profile, NULL);
@@ -284,11 +302,11 @@ static void pattern_label_update (void)
   /* TODO: sucky. Replace with get-gconf-key-with-default mojo */
 	file_pattern = g_settings_get_string (sj_settings, SJ_SETTINGS_FILE_PATTERN);
   if (file_pattern == NULL) {
-    file_pattern = g_strdup(file_patterns[0].pattern);
+    file_pattern = g_strdup (sj_get_default_file_pattern ());
   }
 	path_pattern = g_settings_get_string (sj_settings, SJ_SETTINGS_PATH_PATTERN);
   if (path_pattern == NULL) {
-    path_pattern = g_strdup(path_patterns[0].pattern);
+    path_pattern = g_strdup (sj_get_default_path_pattern ());
   }
 
   file_value = filepath_parse_pattern (file_pattern, &sample_track);
@@ -319,7 +337,6 @@ static void path_pattern_changed_cb (GSettings *settings, gchar *key, gpointer u
   char *value;
   int i = 0;
   g_return_if_fail (strcmp (key, SJ_SETTINGS_PATH_PATTERN) == 0);
-  g_return_if_fail (GTK_IS_COMBO_BOX(user_data));
 
   value = g_settings_get_string (settings, key);
   while (path_patterns[i].pattern && strcmp(path_patterns[i].pattern, value) != 0) {
@@ -327,7 +344,7 @@ static void path_pattern_changed_cb (GSettings *settings, gchar *key, gpointer u
   }
   g_free (value);
 
-  gtk_combo_box_set_active (GTK_COMBO_BOX (user_data), i);
+  gtk_combo_box_set_active (GTK_COMBO_BOX (path_option), i);
   pattern_label_update ();
 }
 
@@ -337,7 +354,6 @@ static void file_pattern_changed_cb (GSettings *settings, gchar *key, gpointer u
   int i = 0;
 
   g_return_if_fail (strcmp (key, SJ_SETTINGS_FILE_PATTERN) == 0);
-  g_return_if_fail (GTK_IS_COMBO_BOX(user_data));
 
   value = g_settings_get_string (settings, key);
   while (file_patterns[i].pattern && strcmp(file_patterns[i].pattern, value) != 0) {
@@ -345,7 +361,7 @@ static void file_pattern_changed_cb (GSettings *settings, gchar *key, gpointer u
   }
   g_free (value);
 
-  gtk_combo_box_set_active (GTK_COMBO_BOX (user_data), i);
+  gtk_combo_box_set_active (GTK_COMBO_BOX (file_option), i);
   pattern_label_update ();
 }
 
@@ -359,15 +375,19 @@ static void device_changed_cb (GSettings *settings, gchar *key, gpointer user_da
   char *value;
 
   g_return_if_fail (strcmp (key, SJ_SETTINGS_DEVICE) == 0);
-  g_return_if_fail (BRASERO_IS_DRIVE_SELECTION(user_data));
 
   value = g_settings_get_string (settings, key);
   if ((value != NULL) && (*value != '\0')) {
     monitor = brasero_medium_monitor_get_default ();
     drive = brasero_medium_monitor_get_drive (monitor, value);
-    brasero_drive_selection_set_active (BRASERO_DRIVE_SELECTION (user_data), drive);
+    brasero_drive_selection_set_active (BRASERO_DRIVE_SELECTION (cd_option), drive);
     g_object_unref (drive);
     g_object_unref (monitor);
+  } else {
+    /* FIXME: see the FIXME in sj-main.c around one of the
+     * device_changed_cb calls for a way to fix this
+     */
+    g_warn_if_reached();
   }
 
   g_free (value);
@@ -375,10 +395,11 @@ static void device_changed_cb (GSettings *settings, gchar *key, gpointer user_da
 
 static void prefs_drive_changed (BraseroDriveSelection *selection, BraseroDrive *drive, gpointer user_data)
 {
-  if (drive)
+  if (drive) {
     g_settings_set_string (sj_settings, SJ_SETTINGS_DEVICE, brasero_drive_get_device (drive));
-  else
+  } else {
     g_settings_set_string (sj_settings, SJ_SETTINGS_DEVICE, NULL);
+  }
 }
 
 /**
@@ -418,16 +439,14 @@ on_response (GtkDialog *dialog, gint response, gpointer user_data)
   if (response == GTK_RESPONSE_HELP) {
     show_help (GTK_WINDOW (dialog));
   } else {
-    gtk_widget_destroy(GTK_WIDGET (dialog));
+    gtk_widget_hide (GTK_WIDGET (dialog));
   }
 }
 
-static GtkWidget *sj_audio_profile_chooser_new(void)
+static void populate_profile_combo (GtkComboBox *combo)
 {
   GstEncodingTarget *target;
   const GList *p;
-  GtkWidget *combo_box;
-  GtkCellRenderer *renderer;
   GtkTreeModel *model;
 
   model = GTK_TREE_MODEL (gtk_tree_store_new (3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER));
@@ -449,12 +468,7 @@ static GtkWidget *sj_audio_profile_chooser_new(void)
     g_free (media_type);
   }
 
-  combo_box = gtk_combo_box_new_with_model (model);
-  renderer = gtk_cell_renderer_text_new ();
-  gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo_box), renderer, TRUE);
-  gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo_box), renderer, "text", 1, NULL);
-
-  return GTK_WIDGET (combo_box);
+  gtk_combo_box_set_model (GTK_COMBO_BOX (combo), model);
 }
 
 G_MODULE_EXPORT void on_destroy_dialog_content_cb(GtkWidget *widget, gpointer user_data) {
@@ -468,7 +482,7 @@ G_MODULE_EXPORT void on_destroy_dialog_content_cb(GtkWidget *widget, gpointer us
     g_signal_handlers_disconnect_by_func (G_OBJECT (sj_settings),
             (GCallback)baseuri_changed_cb, basepath_fcb);
     g_signal_handlers_disconnect_by_func (G_OBJECT (sj_settings),
-            (GCallback)audio_profile_changed_cb, audio_profile);
+            (GCallback)audio_profile_changed_cb, profile_option);
     g_signal_handlers_disconnect_by_func (G_OBJECT (sj_settings),
             (GCallback)path_pattern_changed_cb, path_option);
     g_signal_handlers_disconnect_by_func (G_OBJECT (sj_settings),
@@ -483,10 +497,8 @@ static GtkWidget *create_preferences_dialog(GtkBuilder *builder) {
   const char *labels[] = { "cd_label", "path_label", "folder_label", "file_label", "profile_label" };
   guint i;
   GtkSizeGroup *group;
-  GtkWidget  *box;
 
   dialog = GET_BUILDER_WIDGET (builder, "prefs_dialog");
-  box    = GET_BUILDER_WIDGET (builder, "hack_hbox");
   g_return_val_if_fail(dialog, NULL);
   g_object_add_weak_pointer (G_OBJECT (dialog), (gpointer) &(dialog));
 
@@ -508,19 +520,7 @@ static GtkWidget *create_preferences_dialog(GtkBuilder *builder) {
   basepath_fcb = GET_BUILDER_WIDGET (builder, "path_chooser");
   path_option = GET_BUILDER_WIDGET (builder, "path_option");
   file_option = GET_BUILDER_WIDGET (builder, "file_option");
-  #if 0
-  /* FIXME: This cannot be currently used, because aufio profile selector
-   *  from gnome-media-profiles package is not fully qualified widget.
-   *  Once gnome-media package is updated, this widget can be created
-   *  using GtkBuilder. */
-  audio_profile = GET_BUILDER_WIDGET (builder, "audio_profile");
-  #else
-  audio_profile = sj_audio_profile_chooser_new();
-  g_signal_connect (G_OBJECT (audio_profile), "changed",
-        G_CALLBACK (prefs_profile_changed), NULL);
-  gtk_box_pack_start (GTK_BOX (box), audio_profile, TRUE, TRUE, 0);
-  gtk_widget_show (audio_profile);
-  #endif
+  profile_option = GET_BUILDER_WIDGET (builder, "profile_option");
   check_strip = GET_BUILDER_WIDGET (builder, "check_strip");
   check_eject = GET_BUILDER_WIDGET (builder, "check_eject");
   check_open = GET_BUILDER_WIDGET (builder, "check_open");
@@ -533,6 +533,8 @@ static GtkWidget *create_preferences_dialog(GtkBuilder *builder) {
 
   populate_pattern_combo (GTK_COMBO_BOX (file_option), file_patterns);
   g_signal_connect (file_option, "changed", G_CALLBACK (prefs_file_option_changed), NULL);
+  populate_profile_combo (GTK_COMBO_BOX (profile_option));
+  g_signal_connect (profile_option, "changed", G_CALLBACK (prefs_profile_changed), NULL);
   g_signal_connect (cd_option, "drive-changed", G_CALLBACK (prefs_drive_changed), NULL);
 
   /* Connect to GSettings to update the UI */
@@ -540,25 +542,27 @@ static GtkWidget *create_preferences_dialog(GtkBuilder *builder) {
   g_settings_bind (sj_settings, SJ_SETTINGS_OPEN, G_OBJECT (check_open), "active", G_SETTINGS_BIND_DEFAULT);
   g_settings_bind (sj_settings, SJ_SETTINGS_STRIP, G_OBJECT (check_strip), "active", G_SETTINGS_BIND_DEFAULT);
   g_signal_connect (G_OBJECT (sj_settings), "changed::"SJ_SETTINGS_DEVICE,
-        (GCallback)device_changed_cb, cd_option);
+                      (GCallback)device_changed_cb, NULL);
   g_signal_connect (G_OBJECT (sj_settings), "changed::"SJ_SETTINGS_BASEURI,
-        (GCallback)baseuri_changed_cb, basepath_fcb);
+                      (GCallback)baseuri_changed_cb, NULL);
   g_signal_connect (G_OBJECT (sj_settings), "changed::"SJ_SETTINGS_AUDIO_PROFILE,
-        (GCallback)audio_profile_changed_cb, audio_profile);
+                      (GCallback)audio_profile_changed_cb, NULL);
   g_signal_connect (G_OBJECT (sj_settings), "changed::"SJ_SETTINGS_PATH_PATTERN,
-        (GCallback)path_pattern_changed_cb, path_option);
+                      (GCallback)path_pattern_changed_cb, NULL);
   g_signal_connect (G_OBJECT (sj_settings), "changed::"SJ_SETTINGS_FILE_PATTERN,
-        (GCallback)file_pattern_changed_cb, file_option);
+                      (GCallback)file_pattern_changed_cb, NULL);
   g_signal_connect (G_OBJECT (sj_settings), "changed::"SJ_SETTINGS_STRIP,
         (GCallback)strip_changed_cb, NULL);
 
   g_signal_connect (extractor, "notify::profile", pattern_label_update, NULL);
 
-  baseuri_changed_cb (sj_settings, SJ_SETTINGS_BASEURI, basepath_fcb);
-  audio_profile_changed_cb (sj_settings, SJ_SETTINGS_AUDIO_PROFILE, audio_profile);
-  file_pattern_changed_cb (sj_settings, SJ_SETTINGS_FILE_PATTERN, file_option);
-  path_pattern_changed_cb (sj_settings, SJ_SETTINGS_PATH_PATTERN, path_option);
-  device_changed_cb (sj_settings, SJ_SETTINGS_DEVICE, cd_option);
+  baseuri_changed_cb (sj_settings, SJ_SETTINGS_BASEURI, NULL);
+  audio_profile_changed_cb (sj_settings, SJ_SETTINGS_AUDIO_PROFILE, NULL);
+  file_pattern_changed_cb (sj_settings, SJ_SETTINGS_FILE_PATTERN, NULL);
+  path_pattern_changed_cb (sj_settings, SJ_SETTINGS_PATH_PATTERN, NULL);
+  device_changed_cb (sj_settings, SJ_SETTINGS_DEVICE, NULL);
+
+  g_signal_connect (GTK_DIALOG (dialog), "response", G_CALLBACK (on_response), NULL);
 
   return dialog;
 }
@@ -566,7 +570,7 @@ static GtkWidget *create_preferences_dialog(GtkBuilder *builder) {
 /**
  * Clicked on Preferences in the UI
  */
-G_MODULE_EXPORT void on_edit_preferences_cb (GtkMenuItem *item, gpointer user_data)
+void show_preferences_dialog ()
 {
   GtkBuilder *prefBuilder;
   gchar *builderXML;

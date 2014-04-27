@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Ross Burton <ross@burtonini.com>
  *          Mike Hearn  <mike@theoretic.com>
@@ -33,6 +32,7 @@
 
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #include <glib/gi18n.h>
 #include <gdk/gdkkeysyms.h>
@@ -41,8 +41,10 @@
 #include <brasero-medium-selection.h>
 #include <brasero-volume.h>
 #include <gst/gst.h>
+#include <gst/pbutils/encoding-profile.h>
 
 #include "rb-gst-media-types.h"
+#include "sj-metadata.h"
 #include "sj-metadata-getter.h"
 #include "sj-extractor.h"
 #include "sj-structures.h"
@@ -54,11 +56,10 @@
 
 static void reread_cd (gboolean ignore_no_media);
 static void update_ui_for_album (AlbumDetails *album);
-static void set_duplication (gboolean enable);
 
 /* Prototypes for the signal blocking/unblocking in update_ui_for_album */
 G_MODULE_EXPORT void on_title_edit_changed(GtkEditable *widget, gpointer user_data);
-G_MODULE_EXPORT void on_artist_edit_changed(GtkEditable *widget, gpointer user_data);
+G_MODULE_EXPORT void on_person_edit_changed(GtkEditable *widget, gpointer user_data);
 G_MODULE_EXPORT void on_year_edit_changed(GtkEditable *widget, gpointer user_data);
 G_MODULE_EXPORT void on_disc_number_edit_changed(GtkEditable *widget, gpointer user_data);
 
@@ -69,25 +70,30 @@ SjExtractor *extractor;
 
 GSettings *sj_settings;
 
+/* 
+ * Added since gtkpod lacks a built-in GActionGroup/GActionMap
+ * due to it not being a GtkApplication
+ */
+static GSimpleActionGroup *action_group;
+
 static GtkWidget *vbox1;
 static GtkWidget *message_area_eventbox;
-static GtkWidget *title_entry, *artist_entry, *duration_label, *genre_entry, *year_entry, *disc_number_entry;
-static GtkWidget *track_listview, *extract_button;
+static GtkWidget *title_entry, *artist_entry, *composer_label, *composer_entry, *duration_label, *genre_entry, *year_entry, *disc_number_entry;
+static GtkWidget *entry_table; /* GtkTable containing composer_entry */
+static GtkTreeViewColumn *composer_column; /* Treeview column containing composers */
+static GtkWidget *track_listview, *extract_button, *select_button;
 static GtkWidget *status_bar;
-static GtkWidget *extract_menuitem, *select_all_menuitem, *deselect_all_menuitem;
-static GtkWidget *submit_menuitem;
-static GtkWidget *duplicate, *eject;
 GtkListStore *track_store;
-GtkCellRenderer *toggle_renderer, *title_renderer, *artist_renderer;
+GtkCellRenderer *toggle_renderer, *title_renderer, *artist_renderer, *composer_renderer;
 
 GtkWidget *current_message_area;
 
-char *path_pattern = NULL;
-char *file_pattern = NULL;
+char *path_pattern, *file_pattern;
 GFile *base_uri;
 BraseroDrive *drive = NULL;
 gboolean strip_chars;
 gboolean eject_finished;
+gboolean open_finished;
 gboolean extracting = FALSE;
 static gboolean duplication_enabled;
 
@@ -96,33 +102,43 @@ static gint no_of_tracks_selected;
 static AlbumDetails *current_album;
 static char *current_submit_url = NULL;
 
-#define DEFAULT_PARANOIA 4
+static char *device = NULL, **uris = NULL;
+
+static guint debug_flags = 0;
+
+#define DEFAULT_PARANOIA 15
 #define RAISE_WINDOW "raise-window"
 #define SJCD_SCHEMA "org.gtkpod.sjcd"
+#define COMPOSER_ROW 2 /* Row of entry_table containing composer_entry */
 
-void
-sj_stock_init (void)
+void sj_debug (SjDebugDomain domain, const gchar* format, ...)
 {
-  static gboolean initialized = FALSE;
-  static GtkIconFactory *sj_icon_factory = NULL;
+  va_list args;
+  gchar *string;
 
-  static const GtkStockItem sj_stock_items[] =
-  {
-    { SJ_STOCK_EXTRACT, N_("E_xtract"), GDK_CONTROL_MASK, GDK_KEY_Return, NULL }
+  if (debug_flags & domain) {
+    va_start (args, format);
+    string = g_strdup_vprintf (format, args);
+    va_end (args);
+    g_printerr ("%s", string);
+    g_free (string);
+  }
+}
+
+static void sj_debug_init (void)
+{
+  const char *str;
+  const GDebugKey debug_keys[] = {
+    { "cd", DEBUG_CD },
+    { "metadata", DEBUG_METADATA },
+    { "playing", DEBUG_PLAYING },
+    { "extracting", DEBUG_EXTRACTING }
   };
 
-  if (initialized)
-    return;
-
-  sj_icon_factory = gtk_icon_factory_new ();
-
-  gtk_icon_factory_add (sj_icon_factory, SJ_STOCK_EXTRACT, gtk_icon_factory_lookup_default (GTK_STOCK_CDROM));
-
-  gtk_icon_factory_add_default (sj_icon_factory);
-
-  gtk_stock_add_static (sj_stock_items, G_N_ELEMENTS (sj_stock_items));
-
-  initialized = TRUE;
+  str = g_getenv ("SJ_DEBUG");
+  if (str) {
+    debug_flags = g_parse_debug_string (str, debug_keys, G_N_ELEMENTS (debug_keys));
+  }
 }
 
 static void error_on_start (GError *error)
@@ -134,7 +150,7 @@ static void error_on_start (GError *error)
 /**
  * Clicked Eject
  */
-G_MODULE_EXPORT void on_eject_activate (GtkMenuItem *item, gpointer user_data)
+static void on_eject_activate (GSimpleAction *action, GVariant *parameter, gpointer data)
 {
   brasero_drive_eject (drive, FALSE, NULL);
 }
@@ -149,23 +165,27 @@ static gboolean select_all_foreach_cb (GtkTreeModel *model,
   return FALSE;
 }
 
-G_MODULE_EXPORT void on_select_all_activate (GtkMenuItem *item, gpointer user_data)
+static void on_select_all_activate (GSimpleAction *action, GVariant *parameter, gpointer data)
 {
   gtk_tree_model_foreach (GTK_TREE_MODEL (track_store), select_all_foreach_cb, GINT_TO_POINTER (TRUE));
   gtk_widget_set_sensitive (extract_button, TRUE);
-  gtk_widget_set_sensitive (extract_menuitem, TRUE);
-  gtk_widget_set_sensitive (select_all_menuitem, FALSE);
-  gtk_widget_set_sensitive (deselect_all_menuitem, TRUE);
+  set_action_enabled ("select-all", FALSE);
+  set_action_enabled ("deselect-all", TRUE);
+
+  gtk_actionable_set_action_name(GTK_ACTIONABLE(select_button), "win.deselect-all");
+  gtk_button_set_label(GTK_BUTTON(select_button), _("Select None"));
   no_of_tracks_selected = total_no_of_tracks;
 }
 
-G_MODULE_EXPORT void on_deselect_all_activate (GtkMenuItem *item, gpointer user_data)
+static void on_deselect_all_activate (GSimpleAction *action, GVariant *parameter, gpointer data)
 {
   gtk_tree_model_foreach (GTK_TREE_MODEL (track_store), select_all_foreach_cb, GINT_TO_POINTER (FALSE));
   gtk_widget_set_sensitive (extract_button, FALSE);
-  gtk_widget_set_sensitive (extract_menuitem, FALSE);
-  gtk_widget_set_sensitive (deselect_all_menuitem, FALSE);
-  gtk_widget_set_sensitive (select_all_menuitem,TRUE);
+  set_action_enabled ("deselect-all", FALSE);
+  set_action_enabled ("select-all", TRUE);
+
+  gtk_actionable_set_action_name(GTK_ACTIONABLE(select_button), "win.select-all");
+  gtk_button_set_label(GTK_BUTTON(select_button), _("Select All"));
   no_of_tracks_selected = 0;
 }
 
@@ -201,16 +221,20 @@ static void number_cell_icon_data_cb (GtkTreeViewColumn *tree_column,
   gtk_tree_model_get (tree_model, iter, COLUMN_STATE, &state, -1);
   switch (state) {
   case STATE_IDLE:
-    g_object_set (G_OBJECT (cell), "stock-id", "", NULL);
+    g_object_set (G_OBJECT (cell), "icon-name", NULL, NULL);
     break;
   case STATE_PLAYING:
-    g_object_set (G_OBJECT (cell), "stock-id", GTK_STOCK_MEDIA_PLAY, NULL);
+    {
+      gboolean rtl = gtk_widget_get_direction (track_listview) == GTK_TEXT_DIR_RTL;
+      gchar *name = rtl ? "media-playback-start-rtl" : "media-playback-start";
+      g_object_set (G_OBJECT (cell), "icon-name", name, NULL);
+    }
     break;
   case STATE_PAUSED:
-    g_object_set (G_OBJECT (cell), "stock-id", GTK_STOCK_MEDIA_PAUSE, NULL);
+    g_object_set (G_OBJECT (cell), "icon-name", "media-playback-pause", NULL);
     break;
   case STATE_EXTRACTING:
-    g_object_set (G_OBJECT (cell), "stock-id", GTK_STOCK_MEDIA_RECORD, NULL);
+    g_object_set (G_OBJECT (cell), "icon-name", "media-record", NULL);
     break;
   default:
     g_warning("Unhandled track state %d\n", state);
@@ -220,7 +244,7 @@ static void number_cell_icon_data_cb (GtkTreeViewColumn *tree_column,
 /* Taken from gedit */
 static void
 set_info_bar_text_and_icon (GtkInfoBar  *infobar,
-                            const gchar *icon_stock_id,
+                            const gchar *icon_name,
                             const gchar *primary_text,
                             const gchar *secondary_text,
                             GtkWidget   *button)
@@ -240,7 +264,7 @@ set_info_bar_text_and_icon (GtkInfoBar  *infobar,
   hbox_content = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 8);
   gtk_widget_show (hbox_content);
 
-  image = gtk_image_new_from_stock (icon_stock_id, GTK_ICON_SIZE_DIALOG);
+  image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_DIALOG);
   gtk_widget_show (image);
   gtk_box_pack_start (GTK_BOX (hbox_content), image, FALSE, FALSE, 0);
   gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0);
@@ -315,13 +339,13 @@ musicbrainz_submit_info_bar_new (char *title, char *artist)
   button = gtk_info_bar_add_button (GTK_INFO_BAR (infobar),
                                     _("S_ubmit Album"), GTK_RESPONSE_OK);
   gtk_info_bar_add_button (GTK_INFO_BAR (infobar),
-                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+                           _("Ca_ncel"), GTK_RESPONSE_CANCEL);
 
   /* Translators: title, artist */
   primary_text = g_strdup_printf (_("Could not find %s by %s on MusicBrainz."), title, artist);
 
   set_info_bar_text_and_icon (GTK_INFO_BAR (infobar),
-                              "gtk-dialog-info",
+                              "dialog-information",
                               primary_text,
                               _("You can improve the MusicBrainz database by adding this album."),
                               button);
@@ -331,17 +355,161 @@ musicbrainz_submit_info_bar_new (char *title, char *artist)
   return infobar;
 }
 
+/**
+ * Clicked the Submit menu item in the UI
+ */
+static void on_submit_activate (GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+  GError *error = NULL;
+
+  if (current_submit_url) {
+      if (!gtk_show_uri (NULL, current_submit_url, GDK_CURRENT_TIME, &error)) {
+      GtkWidget *dialog;
+
+      dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtkpod_app),
+                                                   GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                   GTK_MESSAGE_ERROR,
+                                                   GTK_BUTTONS_CLOSE,
+                                                   "<b>%s</b>\n\n%s\n%s: %s",
+                                                   _("Could not open URL"),
+                                                   _("Sound Juicer could not open the submission URL"),
+                                                   _("Reason"),
+                                                   error->message);
+      gtk_dialog_run (GTK_DIALOG (dialog));
+      gtk_widget_destroy (dialog);
+      g_error_free (error);
+    }
+  }
+}
+
+static void on_preferences_activate (GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+  show_preferences_dialog ();
+}
+
+/**
+ * Clicked on duplicate in the UI (button/menu)
+ */
+static void on_duplicate_activate (GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+  GError *error = NULL;
+  const gchar* device;
+
+  device = brasero_drive_get_device (drive);
+  if (!g_spawn_command_line_async (g_strconcat ("brasero -c ", device, NULL), &error)) {
+      GtkWidget *dialog;
+
+      dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtkpod_app),
+                                                   GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                   GTK_MESSAGE_ERROR,
+                                                   GTK_BUTTONS_CLOSE,
+                                                   "<b>%s</b>\n\n%s\n%s: %s",
+                                                   _("Could not duplicate disc"),
+                                                   _("Sound Juicer could not duplicate the disc"),
+                                                   _("Reason"),
+                                                   error->message);
+      gtk_dialog_run (GTK_DIALOG (dialog));
+      gtk_widget_destroy (dialog);
+      g_error_free (error);
+  }
+}
+
 static void
 musicbrainz_submit_info_bar_response (GtkInfoBar *infobar,
                                       int         response_id,
                                       gpointer    user_data)
 {
   if (response_id == GTK_RESPONSE_OK) {
-    on_submit_activate (NULL, NULL);
+    on_submit_activate (NULL, NULL, NULL);
   }
 
   set_message_area (message_area_eventbox, NULL);
 }
+#define TABLE_ROW_SPACING 6 /* spacing of rows in entry_table */
+
+/*
+ * Show composer entry and composer column in track listview
+ */
+static void
+show_composer_fields (void)
+{
+  if (!gtk_widget_get_visible (GTK_WIDGET (composer_label))) {
+    gtk_table_set_row_spacing (GTK_TABLE (entry_table), COMPOSER_ROW,
+                               TABLE_ROW_SPACING);
+    gtk_widget_show (GTK_WIDGET (composer_entry));
+    gtk_widget_show (GTK_WIDGET (composer_label));
+    gtk_tree_view_column_set_visible (composer_column, TRUE);
+  }
+}
+
+#undef TABLE_ROW_SPACING
+
+/*
+ * Hide composer entry and composer column in track listview
+ */
+static void
+hide_composer_fields (void)
+{
+  if (gtk_widget_get_visible (GTK_WIDGET (composer_label))) {
+    gtk_table_set_row_spacing (GTK_TABLE (entry_table), COMPOSER_ROW, 0);
+    gtk_widget_hide (GTK_WIDGET (composer_entry));
+    gtk_widget_hide (GTK_WIDGET (composer_label));
+    gtk_tree_view_column_set_visible (composer_column, FALSE);
+  }
+}
+
+/*
+ * Determine if the composer fields should be shown based on genre,
+ * always show composer fields if they are non-empty.
+ */
+static void
+composer_show_hide (const char* genre)
+{
+  const static char *composer_genres[] = {
+    N_("Classical"), N_("Lieder"), N_("Opera"), N_("Chamber"), N_("Musical")
+  };  /* Genres for which the composer fields should be shown. */
+#define COUNT (G_N_ELEMENTS (composer_genres))
+  static char *genres[COUNT]; /* store localized genre names */
+  static gboolean init = FALSE; /* TRUE if localized genre names initalized*/
+  gboolean composer_show = FALSE;
+  int i;
+  GList* l;
+  char *folded_genre;
+
+  if (composer_column == NULL)
+    return;
+
+  if (!init) {
+    for (i = 0; i < COUNT; i++)
+      genres[i] = g_utf8_casefold (gettext (composer_genres[i]), -1);
+
+    init = TRUE;
+  }
+
+  composer_show = !sj_str_is_empty (current_album->composer);
+  for (l = current_album->tracks; l; l = g_list_next (l)) {
+    if (!sj_str_is_empty (((TrackDetails*) (l->data))->composer) == TRUE) {
+      composer_show = TRUE;
+      break;
+    }
+  }
+
+  folded_genre = g_utf8_casefold (genre, -1);
+  for (i = 0; i < COUNT; i++) {
+    if (g_str_equal (folded_genre, genres[i])) {
+      composer_show = TRUE;
+      break;
+    }
+  }
+  g_free (folded_genre);
+
+  if (composer_show)
+    show_composer_fields ();
+  else
+    hide_composer_fields ();
+  return;
+}
+#undef COUNT
 
 /**
  * Utility function to update the UI for a given Album
@@ -353,47 +521,58 @@ static void update_ui_for_album (AlbumDetails *album)
   char* duration_text;
   total_no_of_tracks=0;
 
+  hide_composer_fields ();
+
   if (album == NULL) {
     gtk_list_store_clear (track_store);
     gtk_entry_set_text (GTK_ENTRY (title_entry), "");
     gtk_entry_set_text (GTK_ENTRY (artist_entry), "");
+    gtk_entry_set_text (GTK_ENTRY (composer_entry), "");
     gtk_entry_set_text (GTK_ENTRY (genre_entry), "");
     gtk_entry_set_text (GTK_ENTRY (year_entry), "");
     gtk_entry_set_text (GTK_ENTRY (disc_number_entry), "");
     gtk_label_set_text (GTK_LABEL (duration_label), "");
     gtk_widget_set_sensitive (title_entry, FALSE);
     gtk_widget_set_sensitive (artist_entry, FALSE);
+    gtk_widget_set_sensitive (composer_entry, FALSE);
     gtk_widget_set_sensitive (genre_entry, FALSE);
     gtk_widget_set_sensitive (year_entry, FALSE);
     gtk_widget_set_sensitive (disc_number_entry, FALSE);
     gtk_widget_set_sensitive (extract_button, FALSE);
-    gtk_widget_set_sensitive (extract_menuitem, FALSE);
-    gtk_widget_set_sensitive (select_all_menuitem, FALSE);
-    gtk_widget_set_sensitive (deselect_all_menuitem, FALSE);
-    set_duplication (FALSE);
+    set_action_enabled ("select-all", FALSE);
+    set_action_enabled ("deselect-all", FALSE);
+    set_action_enabled ("duplicate", FALSE);
 
     set_message_area (message_area_eventbox, NULL);
   } else {
     gtk_list_store_clear (track_store);
 
     g_signal_handlers_block_by_func (title_entry, on_title_edit_changed, NULL);
-    g_signal_handlers_block_by_func (artist_entry, on_artist_edit_changed, NULL);
+    g_signal_handlers_block_by_func (artist_entry, on_person_edit_changed, NULL);
+    g_signal_handlers_block_by_func (composer_entry, on_person_edit_changed, NULL);
     g_signal_handlers_block_by_func (year_entry, on_year_edit_changed, NULL);
     g_signal_handlers_block_by_func (disc_number_entry, on_disc_number_edit_changed, NULL);
     gtk_entry_set_text (GTK_ENTRY (title_entry), album->title);
     gtk_entry_set_text (GTK_ENTRY (artist_entry), album->artist);
+    if (!sj_str_is_empty (album->composer)) {
+      gtk_entry_set_text (GTK_ENTRY (composer_entry), album->composer);
+      show_composer_fields ();
+    } else {
+      gtk_entry_set_text (GTK_ENTRY (composer_entry), "");
+    }
     if (album->disc_number) {
       gchar *disc_number = g_strdup_printf ("%d", album->disc_number);
       gtk_entry_set_text (GTK_ENTRY (disc_number_entry), disc_number);
       g_free (disc_number);
     }
-    if (album->release_date && g_date_valid (album->release_date)) {
-      gchar *release_date =  g_strdup_printf ("%d", g_date_get_year (album->release_date));
+    if (album->release_date && gst_date_time_has_year (album->release_date)) {
+      gchar *release_date =  g_strdup_printf ("%d", gst_date_time_get_year (album->release_date));
       gtk_entry_set_text (GTK_ENTRY (year_entry), release_date);
       g_free (release_date);
     }
     g_signal_handlers_unblock_by_func (title_entry, on_title_edit_changed, NULL);
-    g_signal_handlers_unblock_by_func (artist_entry, on_artist_edit_changed, NULL);
+    g_signal_handlers_unblock_by_func (artist_entry, on_person_edit_changed, NULL);
+    g_signal_handlers_unblock_by_func (composer_entry, on_person_edit_changed, NULL);
     g_signal_handlers_unblock_by_func (year_entry, on_year_edit_changed, NULL);
     g_signal_handlers_unblock_by_func (disc_number_entry, on_disc_number_edit_changed, NULL);
     /* Clear the genre field, it's from the user */
@@ -401,14 +580,14 @@ static void update_ui_for_album (AlbumDetails *album)
 
     gtk_widget_set_sensitive (title_entry, TRUE);
     gtk_widget_set_sensitive (artist_entry, TRUE);
+    gtk_widget_set_sensitive (composer_entry, TRUE);
     gtk_widget_set_sensitive (genre_entry, TRUE);
     gtk_widget_set_sensitive (year_entry, TRUE);
     gtk_widget_set_sensitive (disc_number_entry, TRUE);
     gtk_widget_set_sensitive (extract_button, TRUE);
-    gtk_widget_set_sensitive (extract_menuitem, TRUE);
-    gtk_widget_set_sensitive (select_all_menuitem, FALSE);
-    gtk_widget_set_sensitive (deselect_all_menuitem, TRUE);
-    set_duplication (TRUE);
+    set_action_enabled ("select-all", FALSE);
+    set_action_enabled ("deselect-all", TRUE);
+    set_action_enabled ("duplicate", TRUE);
 
     for (l = album->tracks; l; l=g_list_next (l)) {
       GtkTreeIter iter;
@@ -421,9 +600,12 @@ static void update_ui_for_album (AlbumDetails *album)
                           COLUMN_NUMBER, track->number,
                           COLUMN_TITLE, track->title,
                           COLUMN_ARTIST, track->artist,
+                          COLUMN_COMPOSER, track->composer,
                           COLUMN_DURATION, track->duration,
                           COLUMN_DETAILS, track,
                           -1);
+      if (!sj_str_is_empty (track->composer))
+        show_composer_fields ();
      total_no_of_tracks++;
     }
     no_of_tracks_selected=total_no_of_tracks;
@@ -487,6 +669,234 @@ static void selected_album_changed (GtkTreeSelection *selection,
 }
 
 /**
+ * NULL safe utility to collate utf8 strings
+ */
+static gint collate (const char *a, const char *b)
+{
+  gint ret_val = 0;
+
+  if (a) {
+    if (b) {
+      ret_val = g_utf8_collate (a, b);
+    } else {
+      ret_val = 1;
+    }
+  } else if (b) {
+    ret_val = -1;
+  }
+  return ret_val;
+}
+
+static gint sj_gst_date_time_compare_field (GstDateTime *lhs, GstDateTime *rhs,
+                                            gboolean (*has_field) (const GstDateTime *datetime),
+                                            gint (*get_field) (const GstDateTime *datetime))
+{
+  gint field_lhs = -1;
+  gint field_rhs = -1;
+
+  if (has_field (lhs)) {
+    field_lhs = get_field (lhs);
+  }
+  if (has_field (rhs)) {
+    field_rhs = get_field (rhs);
+  }
+
+  return (field_lhs - field_rhs);
+}
+
+static gint sj_gst_date_time_compare (gpointer lhs, gpointer rhs)
+{
+  GstDateTime *date_lhs = (GstDateTime *)lhs;
+  GstDateTime *date_rhs = (GstDateTime *)rhs;
+
+  int comparison;
+
+  comparison = sj_gst_date_time_compare_field (date_lhs, date_rhs,
+                                               gst_date_time_has_year,
+                                               gst_date_time_get_year);
+  if (comparison != 0) {
+      return comparison;
+  }
+
+  comparison = sj_gst_date_time_compare_field (date_lhs, date_rhs,
+                                               gst_date_time_has_month,
+                                               gst_date_time_get_month);
+  if (comparison != 0) {
+      return comparison;
+  }
+
+  comparison = sj_gst_date_time_compare_field (date_lhs, date_rhs,
+                                               gst_date_time_has_day,
+                                               gst_date_time_get_day);
+
+  return comparison;
+}
+
+/**
+ * Utility function to sort albums in multiple_album_dialog
+ */
+static gint sort_release_info (GtkTreeModel *model, GtkTreeIter *a,
+                               GtkTreeIter *b, gpointer user_data)
+{
+  AlbumDetails *album_a, *album_b;
+  GList *label_a, *label_b;
+  gint ret_val = 0;
+  const gint column = GPOINTER_TO_INT (user_data);
+
+  gtk_tree_model_get (model, a, column, &album_a, -1);
+  gtk_tree_model_get (model, b, column, &album_b, -1);
+
+  ret_val = collate (album_a->title, album_b->title);
+  if (ret_val)
+    return ret_val;
+
+  ret_val = collate (album_a->artist_sortname, album_b->artist_sortname);
+  if (ret_val)
+    return ret_val;
+
+  ret_val = collate (album_a->country, album_b->country);
+  if (ret_val)
+    return ret_val;
+
+  if (album_a->release_date) {
+    if (album_b->release_date) {
+      ret_val = sj_gst_date_time_compare (album_a->release_date, album_b->release_date);
+      if (ret_val)
+        return ret_val;
+    } else {
+      return -1;
+    }
+  } else if (album_b->release_date) {
+    return 1;
+  }
+
+  label_a = album_a->labels;
+  label_b = album_b->labels;
+  while (label_a && label_b) {
+    LabelDetails *a = label_a->data;
+    LabelDetails *b = label_b->data;
+    ret_val = collate (a->sortname,b->sortname);
+    if (ret_val)
+      return ret_val;
+
+    label_a = label_a->next;
+    label_b = label_b->next;
+  }
+  if (label_a && !label_b)
+    return -1;
+  if (!label_a && label_b)
+    return 1;
+
+  ret_val = (album_a->disc_number < album_b->disc_number) ? -1 :
+    ((album_a->disc_number > album_b->disc_number) ? 1 : 0);
+  if (ret_val)
+    return ret_val;
+
+  return (album_a->disc_count < album_b->disc_count) ? -1 :
+    ((album_a->disc_count > album_b->disc_count) ? 1 : 0);
+}
+
+
+/**
+ * Utility function to format label string for multiple_album_dialog
+ */
+static GString* format_label_text (GList* labels)
+{
+  int count;
+  GString *label_text;
+
+  if (labels == NULL)
+    return NULL;
+
+  label_text = g_string_new (NULL);
+  count = g_list_length (labels);
+  while (count > 2) {
+    g_string_append (label_text, ((LabelDetails*)labels->data)->name);
+    g_string_append (label_text, ", ");
+    labels = labels->next;
+    count--;
+  }
+
+  if (count > 1) {
+    g_string_append (label_text, ((LabelDetails*)labels->data)->name);
+    g_string_append (label_text, " & ");
+  }
+
+  g_string_append (label_text, ((LabelDetails*)labels->data)->name);
+
+  return label_text;
+}
+
+/**
+ * Utility function for multiple_album_dialog to format the
+ * release label, date and country.
+ */
+static char *format_release_details (AlbumDetails *album)
+{
+  gchar *details;
+  GString *label_text = NULL;
+
+  if (album->labels)
+    label_text = format_label_text (album->labels);
+
+  if (!sj_str_is_empty (album->country)) {
+    if (album->labels) {
+      if (album->release_date && gst_date_time_has_year (album->release_date)) {
+        /* Translators: this string appears when multiple CDs were
+         * found in musicbrainz online database, it corresponds to
+         * "Released: <country> in <year> on <label>" */
+        details = g_strdup_printf (_("Released: %s in %d on %s"),
+                                   album->country,
+                                   gst_date_time_get_year (album->release_date),
+                                   label_text->str);
+      } else {
+        /* Translators: this string appears when multiple CDs were
+         * found in musicbrainz online database, it corresponds to
+         * "Released: <country> on <label>" */
+        details = g_strdup_printf (_("Released: %s on %s"), album->country, label_text->str);
+      }
+    } else if (album->release_date && gst_date_time_has_year (album->release_date)) {
+      /* Translators: this string appears when multiple CDs were
+       * found in musicbrainz online database, it corresponds to
+       * "Released: <country> in <year>" */
+      details = g_strdup_printf (_("Released: %s in %d"), album->country,
+                                 gst_date_time_get_year (album->release_date));
+    } else {
+      /* Translators: this string appears when multiple CDs were
+       * found in musicbrainz online database, it corresponds to
+       * "Released: <country>" */
+      details = g_strdup_printf (_("Released: %s"), album->country);
+    }
+  } else if (album->release_date && gst_date_time_has_year (album->release_date)) {
+    if (album->labels) {
+        /* Translators: this string appears when multiple CDs were
+         * found in musicbrainz online database, it corresponds to
+         * "Released in <year> on <label>" */
+        details = g_strdup_printf (_("Released in %d on %s"),
+                                   gst_date_time_get_year (album->release_date),
+                                   label_text->str);
+    } else {
+        /* Translators: this string appears when multiple CDs were
+         * found in musicbrainz online database, it corresponds to
+         * "Released in <year>" */
+        details = g_strdup_printf(_("Released in %d"),
+                                  gst_date_time_get_year (album->release_date));
+    }
+  } else if (album->labels) {
+    /* Translators: this string appears when multiple CDs were
+     * found in musicbrainz online database, it corresponds to
+     * "Released on <label>" */
+    details = g_strdup_printf (_("Released on %s"), label_text->str);
+  } else {
+    details = _("Release label, year & country unknown");
+  }
+
+  if (label_text)
+    g_string_free (label_text, TRUE);
+
+  return details;
+}
+/**
  * Utility function for when there are more than one albums available
  */
 AlbumDetails* multiple_album_dialog(GList *albums)
@@ -498,10 +908,21 @@ AlbumDetails* multiple_album_dialog(GList *albums)
   GtkTreeIter iter;
   int response;
   GtkWidget *ok_button = NULL;
+  enum COLUMNS
+  {
+    COLUMN_TITLE,
+    COLUMN_ARTIST,
+    COLUMN_RELEASE_DETAILS,
+    COLUMN_DETAILS,
+    COLUMN_COUNT
+  };
 
   if (dialog == NULL) {
-    GtkTreeViewColumn *column;
-    GtkCellRenderer *text_renderer = gtk_cell_renderer_text_new ();
+    GtkTreeViewColumn *column = gtk_tree_view_column_new ();
+    GtkCellArea *cell_area = gtk_cell_area_box_new ();
+    GtkCellRenderer *title_renderer  = gtk_cell_renderer_text_new ();
+    GtkCellRenderer *artist_renderer = gtk_cell_renderer_text_new ();
+    GtkCellRenderer *release_details_renderer   = gtk_cell_renderer_text_new ();
 
     dialog = GET_WIDGET ("multiple_dialog");
     g_assert (dialog != NULL);
@@ -509,38 +930,70 @@ AlbumDetails* multiple_album_dialog(GList *albums)
     albums_listview = GET_WIDGET ("albums_listview");
     ok_button       = GET_WIDGET ("ok_button");
 
-    g_signal_connect (albums_listview, "row-activated", G_CALLBACK (album_row_activated), dialog);
+    g_object_get (G_OBJECT (column), "cell-area", &cell_area, NULL);
+    g_assert (cell_area != NULL);
+    gtk_orientable_set_orientation (GTK_ORIENTABLE (cell_area),
+                                    GTK_ORIENTATION_VERTICAL);
+    gtk_tree_view_column_set_title (column, _("Albums"));
+    gtk_tree_view_column_pack_start (column, title_renderer,  TRUE);
+    gtk_tree_view_column_pack_start (column, artist_renderer, TRUE);
+    gtk_tree_view_column_pack_start (column, release_details_renderer,   TRUE);
+    g_object_set(title_renderer, "weight", PANGO_WEIGHT_BOLD, "weight-set",
+                 TRUE, NULL);
+    g_object_set(artist_renderer, "style", PANGO_STYLE_ITALIC, "style-set",
+                 TRUE, NULL);
+    gtk_tree_view_column_add_attribute (column, title_renderer,  "text",
+                                        COLUMN_TITLE);
+    gtk_tree_view_column_add_attribute (column, artist_renderer, "text",
+                                        COLUMN_ARTIST);
+    gtk_tree_view_column_add_attribute (column, release_details_renderer,   "text",
+                                        COLUMN_RELEASE_DETAILS);
 
-    albums_store = gtk_list_store_new (3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER);
-    column = gtk_tree_view_column_new_with_attributes (_("Title"),
-                                                       text_renderer,
-                                                       "text", 0,
-                                                       NULL);
+    g_signal_connect (albums_listview, "row-activated",
+                      G_CALLBACK (album_row_activated), dialog);
+
+    albums_store = gtk_list_store_new (COLUMN_COUNT, G_TYPE_STRING,
+                                       G_TYPE_STRING, G_TYPE_STRING,
+                                       G_TYPE_POINTER);
+    gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (albums_store),
+                                     COLUMN_DETAILS, sort_release_info,
+                                     GINT_TO_POINTER (COLUMN_DETAILS), NULL);
     gtk_tree_view_append_column (GTK_TREE_VIEW (albums_listview), column);
 
-    column = gtk_tree_view_column_new_with_attributes (_("Artist"),
-                                                       text_renderer,
-                                                       "text", 1,
-                                                       NULL);
-    gtk_tree_view_append_column (GTK_TREE_VIEW (albums_listview), column);
-    gtk_tree_view_set_model (GTK_TREE_VIEW (albums_listview), GTK_TREE_MODEL (albums_store));
+    gtk_tree_view_set_model (GTK_TREE_VIEW (albums_listview),
+                             GTK_TREE_MODEL (albums_store));
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW (albums_listview));
     gtk_tree_selection_set_mode(selection, GTK_SELECTION_BROWSE);
     gtk_widget_set_sensitive (ok_button, FALSE);
-    g_signal_connect (selection, "changed", (GCallback)selected_album_changed, ok_button);
+    g_signal_connect (selection, "changed", (GCallback)selected_album_changed,
+                      ok_button);
   }
 
   gtk_list_store_clear (albums_store);
   for (; albums ; albums = g_list_next (albums)) {
     GtkTreeIter iter;
     AlbumDetails *album = (AlbumDetails*)(albums->data);
+    GString *album_title = g_string_new (album->title);
+    gchar *release_details = format_release_details (album);
+
+    if (album->disc_number > 0 && album->disc_count > 1)
+      g_string_append_printf (album_title,_(" (Disc %d/%d)"),
+                              album->disc_number, album->disc_count);
     gtk_list_store_append (albums_store, &iter);
     gtk_list_store_set (albums_store, &iter,
-                        0, album->title,
-                        1, album->artist,
-                        2, album,
+                        COLUMN_TITLE, album_title->str,
+                        COLUMN_ARTIST, album->artist,
+                        COLUMN_RELEASE_DETAILS, release_details,
+                        COLUMN_DETAILS, album,
                         -1);
+
+    g_string_free (album_title, TRUE);
+    g_free (release_details);
   }
+
+  /* Sort the model */
+  gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (albums_store),
+                                        COLUMN_DETAILS, GTK_SORT_ASCENDING);
 
   /* Select the first album */
   if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (albums_store), &iter))
@@ -557,7 +1010,8 @@ AlbumDetails* multiple_album_dialog(GList *albums)
   }
 
   if (gtk_tree_selection_get_selected (selection, NULL, &iter)) {
-    gtk_tree_model_get (GTK_TREE_MODEL (albums_store), &iter, 2, &album, -1);
+    gtk_tree_model_get (GTK_TREE_MODEL (albums_store), &iter, COLUMN_DETAILS,
+                        &album, -1);
     return album;
   } else {
     return NULL;
@@ -575,13 +1029,18 @@ static void baseuri_changed_cb (GSettings *settings, gchar *key, gpointer user_d
      g_object_unref (base_uri);
   }
   value = g_settings_get_string (settings, key);
-  if ((value == NULL) || (*value == '\0')) {
+  if (sj_str_is_empty (value)) {
      base_uri = sj_get_default_music_directory ();
   } else {
+    GFileType file_type;
      base_uri = g_file_new_for_uri (value);
+    file_type = g_file_query_file_type (base_uri, G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS, NULL);
+    if (file_type != G_FILE_TYPE_DIRECTORY) {
+      g_object_unref (base_uri);
+      base_uri = sj_get_default_music_directory ();
+    }
   }
   g_free (value);
-  /* TODO: sanity check the URI somewhat */
 }
 
  /**
@@ -592,6 +1051,10 @@ static void path_pattern_changed_cb (GSettings *settings, gchar *key, gpointer u
   g_assert (strcmp (key, SJ_SETTINGS_PATH_PATTERN) == 0);
   g_free (path_pattern);
   path_pattern = g_settings_get_string (settings, key);
+  if (sj_str_is_empty (path_pattern)) {
+    g_free (path_pattern);
+    path_pattern = g_strdup (sj_get_default_path_pattern ());
+  }
   /* TODO: sanity check the pattern */
 }
 
@@ -603,6 +1066,10 @@ static void file_pattern_changed_cb (GSettings *settings, gchar *key, gpointer u
   g_assert (strcmp (key, SJ_SETTINGS_FILE_PATTERN) == 0);
   g_free (file_pattern);
   file_pattern = g_settings_get_string (settings, key);
+  if (sj_str_is_empty (file_pattern)) {
+    g_free (file_pattern);
+    file_pattern = g_strdup (sj_get_default_file_pattern ());
+  }
   /* TODO: sanity check the pattern */
 }
 
@@ -613,9 +1080,14 @@ static void paranoia_changed_cb (GSettings *settings, gchar *key, gpointer user_
 {
   int value;
   g_assert (strcmp (key, SJ_SETTINGS_PARANOIA) == 0);
-  value = g_settings_get_int (settings, key);
-  if (value == 0 || value == 2 || value == 4 || value == 8 || value == 16 || value == 255) {
-    sj_extractor_set_paranoia (extractor, value);
+  value = g_settings_get_flags (settings, key);
+
+  if (value >= 0) {
+    if (value < 32) {
+      sj_extractor_set_paranoia (extractor, value);
+    } else {
+      sj_extractor_set_paranoia (extractor, DEFAULT_PARANOIA);
+    }
   }
 }
 
@@ -635,6 +1107,15 @@ static void eject_changed_cb (GSettings *settings, gchar *key, gpointer user_dat
 {
   g_assert (strcmp (key, SJ_SETTINGS_EJECT) == 0);
   eject_finished = g_settings_get_boolean (settings, key);
+}
+
+/**
+ * The GSettings key for the open when finished option changed
+ */
+static void open_changed_cb (GSettings *settings, gchar *key, gpointer user_data)
+{
+  g_assert (strcmp (key, SJ_SETTINGS_OPEN) == 0);
+  open_finished = g_settings_get_boolean (settings, key);
 }
 
 static void
@@ -667,8 +1148,9 @@ metadata_cb (SjMetadataGetter *m, GList *albums, GError *error)
   g_free (current_submit_url);
   current_submit_url = sj_metadata_getter_get_submit_url (metadata);
   if (current_submit_url) {
-    gtk_widget_set_sensitive (submit_menuitem, TRUE);
+    set_action_enabled ("submit-tracks", TRUE);
   }
+  set_action_enabled ("re-read", TRUE);
 
   /* Free old album details */
   if (current_album != NULL) {
@@ -719,33 +1201,39 @@ static void reread_cd (gboolean ignore_no_media)
 {
   /* TODO: remove ignore_no_media? */
   GError *error = NULL;
-//  GdkCursor *cursor;
-//  GdkWindow *window;
+  GdkCursor *cursor;
+  GdkWindow *window;
   gboolean realized = gtk_widget_get_realized (GTK_WIDGET(gtkpod_app));
-//
-//  window = gtk_widget_get_window (GTK_WIDGET(gtkpod_app));
-//
-//  /* Set watch cursor */
-//  if (realized) {
-//    cursor = gdk_cursor_new_for_display (gtk_widget_get_display (GTK_WIDGET (gtkpod_app)), GDK_WATCH);
-//    gdk_window_set_cursor (window, cursor);
-//    gdk_cursor_unref (cursor);
-//    gdk_display_sync (gtk_widget_get_display (GTK_WIDGET (gtkpod_app)));
-//  }
+
+  window = gtk_widget_get_window (GTK_WIDGET(gtkpod_app));
+
+  set_action_enabled ("re-read", FALSE);
+
+  /* Set watch cursor */
+  if (realized) {
+    cursor = gdk_cursor_new_for_display (gtk_widget_get_display (GTK_WIDGET (gtkpod_app)), GDK_WATCH);
+    gdk_window_set_cursor (window, cursor);
+    g_object_unref (cursor);
+    gdk_display_sync (gtk_widget_get_display (GTK_WIDGET (gtkpod_app)));
+  }
 
   /* Set statusbar message */
   gtk_statusbar_push(GTK_STATUSBAR(status_bar), 0, _("Retrieving track listing...please wait."));
 
+  if (!drive)
+    sj_debug (DEBUG_CD, "Attempting to re-read NULL drive\n");
+
   g_free (current_submit_url);
   current_submit_url = NULL;
-  gtk_widget_set_sensitive (submit_menuitem, FALSE);
+  set_action_enabled ("submit-tracks", FALSE);
 
   if (!is_audio_cd (drive)) {
+    sj_debug (DEBUG_CD, "Media is not an audio CD\n");
     update_ui_for_album (NULL);
     // TODO Use gtkpod statusbar instead
     gtk_statusbar_pop(GTK_STATUSBAR(status_bar), 0);
-//    if (realized)
-//      gdk_window_set_cursor (window, NULL);
+    if (realized)
+      gdk_window_set_cursor (window, NULL);
     return;
   }
 
@@ -784,6 +1272,7 @@ media_added_cb (BraseroMediumMonitor	*drive,
     /* FIXME: recover? */
   }
 
+  sj_debug (DEBUG_CD, "Media added to device %s\n", brasero_drive_get_device (brasero_medium_get_drive (medium)));
   reread_cd (TRUE);
 }
 
@@ -796,6 +1285,7 @@ media_removed_cb (BraseroMediumMonitor	*drive,
     /* FIXME: recover? */
   }
 
+  sj_debug (DEBUG_CD, "Media removed from device %s\n", brasero_drive_get_device (brasero_medium_get_drive (medium)));
   update_ui_for_album (NULL);
 }
 
@@ -880,7 +1370,7 @@ set_device (const char* device, gboolean ignore_no_media)
     }
 
     /* Enable/disable the eject options based on wether the drive supports ejection */
-    gtk_widget_set_sensitive (eject, brasero_drive_can_eject (drive));
+    set_action_enabled ("eject", brasero_drive_can_eject (drive));
   }
 }
 
@@ -959,6 +1449,7 @@ static void device_changed_cb (GSettings *settings, gchar *key, gpointer user_da
     device = value;
   }
   set_device (device, ignore_no_media);
+  g_free (value);
 }
 
 static void profile_changed_cb (GSettings *settings, gchar *key, gpointer user_data)
@@ -983,86 +1474,11 @@ static void profile_changed_cb (GSettings *settings, gchar *key, gpointer user_d
 }
 
 /**
- * Configure the http proxy
- */
-static void
-http_proxy_setup (GSettings *settings)
-{
-  if (!g_settings_get_boolean (settings, SJ_SETTINGS_HTTP_PROXY_ENABLE)) {
-    sj_metadata_getter_set_proxy (metadata, NULL);
-  } else {
-    char *host;
-    int port;
-
-    host = g_settings_get_string (settings, SJ_SETTINGS_HTTP_PROXY);
-    sj_metadata_getter_set_proxy (metadata, host);
-    g_free (host);
-    port = g_settings_get_int (settings, SJ_SETTINGS_HTTP_PROXY_PORT);
-    sj_metadata_getter_set_proxy_port (metadata, port);
-  }
-}
-
-/**
- * The GSettings key for the HTTP proxy being enabled changed.
- */
-static void http_proxy_enable_changed_cb (GSettings *settings, gchar *key, gpointer user_data)
-{
-  g_assert (strcmp (key, SJ_SETTINGS_HTTP_PROXY_ENABLE) == 0);
-  http_proxy_setup (settings);
-}
-
-/**
- * The GSettings key for the HTTP proxy changed.
- */
-static void http_proxy_changed_cb (GSettings *settings, gchar *key, gpointer user_data)
-{
-  g_assert (strcmp (key, SJ_SETTINGS_HTTP_PROXY) == 0);
-  http_proxy_setup (settings);
-}
-
-/**
- * The GSettings key for the HTTP proxy port changed.
- */
-static void http_proxy_port_changed_cb (GSettings *settings, gchar *key, gpointer user_data)
-{
-  g_assert (strcmp (key, SJ_SETTINGS_HTTP_PROXY_PORT) == 0);
-  http_proxy_setup (settings);
-}
-
-/**
  * Clicked on Reread in the UI (button/menu)
  */
-G_MODULE_EXPORT void on_reread_activate (GtkWidget *button, gpointer user_data)
+static void on_reread_activate (GSimpleAction *action, GVariant *parameter, gpointer data)
 {
   reread_cd (FALSE);
-}
-
-/**
- * Clicked the Submit menu item in the UI
- */
-G_MODULE_EXPORT void on_submit_activate (GtkWidget *menuitem, gpointer user_data)
-{
-  GError *error = NULL;
-
-  if (current_submit_url) {
-      if (!gtk_show_uri (NULL, current_submit_url, GDK_CURRENT_TIME, &error)) {
-      GtkWidget *dialog;
-
-      dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtkpod_app),
-                                                   GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                   GTK_MESSAGE_ERROR,
-                                                   GTK_BUTTONS_CLOSE,
-                                                   "<b>%s</b>\n\n%s\n%s: %s",
-                                                   _("Could not open URL"),
-                                                   _("Sound Juicer could not open the submission URL"),
-                                                   _("Reason"),
-                                                   error->message);
-      gtk_dialog_run (GTK_DIALOG (dialog));
-      gtk_widget_destroy (dialog);
-      g_error_free (error);
-    }
-  }
-
 }
 
 /**
@@ -1107,32 +1523,30 @@ static void on_extract_toggled (GtkCellRendererToggle *cellrenderertoggle,
   if (extract) {
     /* If true, then we can extract */
     gtk_widget_set_sensitive (extract_button, TRUE);
-    gtk_widget_set_sensitive (extract_menuitem, TRUE);
     no_of_tracks_selected++;
   } else {
     /* Reuse the boolean extract */
     extract = FALSE;
     gtk_tree_model_foreach (GTK_TREE_MODEL (track_store), (GtkTreeModelForeachFunc)extract_available_foreach, &extract);
     gtk_widget_set_sensitive (extract_button, extract);
-    gtk_widget_set_sensitive (extract_menuitem, extract);
     no_of_tracks_selected--;
   }
   /* Enable and disable the Select/Deselect All buttons */
   if (no_of_tracks_selected == total_no_of_tracks) {
-    gtk_widget_set_sensitive(deselect_all_menuitem, TRUE);
-    gtk_widget_set_sensitive(select_all_menuitem, FALSE);
+    set_action_enabled ("deselect-all", TRUE);
+    set_action_enabled ("select-all", FALSE);
   } else if (no_of_tracks_selected == 0) {
-    gtk_widget_set_sensitive(deselect_all_menuitem, FALSE);
-    gtk_widget_set_sensitive(select_all_menuitem, TRUE);
+    set_action_enabled ("deselect-all", FALSE);
+    set_action_enabled ("select-all", TRUE);
   } else {
-    gtk_widget_set_sensitive(select_all_menuitem, TRUE);
-    gtk_widget_set_sensitive(deselect_all_menuitem, TRUE);
+    set_action_enabled ("select-all", TRUE);
+    set_action_enabled ("deselect-all", TRUE);
   }
 }
 
 /**
- * Callback when the title or artist cells are edited in the list. column_data
- * contains the column number in the model which was modified.
+ * Callback when the title, artist or composer cells are edited in the list.
+ * column_data contains the column number in the model which was modified.
  */
 static void on_cell_edited (GtkCellRendererText *renderer,
                  gchar *path, gchar *string,
@@ -1141,13 +1555,10 @@ static void on_cell_edited (GtkCellRendererText *renderer,
   ViewColumn column = GPOINTER_TO_INT (column_data);
   GtkTreeIter iter;
   TrackDetails *track;
-  char *artist, *title;
 
   if (!gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (track_store), &iter, path))
     return;
   gtk_tree_model_get (GTK_TREE_MODEL (track_store), &iter,
-                      COLUMN_ARTIST, &artist,
-                      COLUMN_TITLE, &title,
                       COLUMN_DETAILS, &track,
                       -1);
   switch (column) {
@@ -1160,12 +1571,27 @@ static void on_cell_edited (GtkCellRendererText *renderer,
     g_free (track->artist);
     track->artist = g_strdup (string);
     gtk_list_store_set (track_store, &iter, COLUMN_ARTIST, track->artist, -1);
+    if (track->artist_sortname) {
+      g_free (track->artist_sortname);
+      track->artist_sortname = NULL;
+    }
+    if (track->artist_id) {
+      g_free (track->artist_id);
+      track->artist_id = NULL;
+    }
+    break;
+  case COLUMN_COMPOSER:
+    g_free (track->composer);
+    track->composer = g_strdup (string);
+    gtk_list_store_set (track_store, &iter, COLUMN_COMPOSER, track->composer, -1);
+    if (track->composer_sortname) {
+      g_free (track->composer_sortname);
+      track->composer_sortname = NULL;
+    }
     break;
   default:
     g_warning (_("Unknown column %d was edited"), column);
   }
-  g_free (artist);
-  g_free (title);
 
   return;
 }
@@ -1210,51 +1636,110 @@ G_MODULE_EXPORT void on_title_edit_changed(GtkEditable *widget, gpointer user_da
   current_album->title = gtk_editable_get_chars (widget, 0, -1); /* get all the characters */
 }
 
-G_MODULE_EXPORT void on_artist_edit_changed(GtkEditable *widget, gpointer user_data) {
+/**
+ * Return TRUE if s1 and s2 are equal according to g_utf8_casefold or
+ * if they are NULL, NUL or just ascii space. NULL, NUL and space are
+ * considered equal
+ */
+static gboolean str_case_equal (const char*s1, const char *s2)
+{
+  gboolean retval;
+  char *t1, *t2;
+
+  if (sj_str_is_empty (s1) && sj_str_is_empty (s2))
+    return TRUE;
+
+  /* is_empty can handle NULL pointers but g_utf8_casefold cannot */
+  if (!s1 || !s2)
+    return FALSE;
+
+  t1 = g_utf8_casefold (s1, -1);
+  t2 = g_utf8_casefold (s2, -1);
+  retval = g_str_equal (t1, t2);
+  g_free (t1);
+  g_free (t2);
+  return retval;
+}
+
+G_MODULE_EXPORT void on_person_edit_changed(GtkEditable *widget,
+                                            gpointer user_data) {
   GtkTreeIter iter;
+  gboolean ok; /* TRUE if iter is valid */
   TrackDetails *track;
-  gchar *current_track_artist, *former_album_artist = NULL;
+  gchar *former_album_person = NULL;
+  /* Album person name and sortname */
+  gchar **album_person_name, **album_person_sortname;
+  /* Offsets for track person name and sortname */
+  int off_person_name, off_person_sortname;
+  int column; /* column for person in listview */
 
   g_return_if_fail (current_album != NULL);
-
-  remove_musicbrainz_ids (current_album);
-
-  /* Unset the sortable artist field, as we can't change it automatically */
-  if (current_album->artist_sortname) {
-    g_free (current_album->artist_sortname);
-    current_album->artist_sortname = NULL;
-  }
-
-  if (current_album->artist) {
-    former_album_artist = current_album->artist;
-  }
-  current_album->artist = gtk_editable_get_chars (widget, 0, -1); /* get all the characters */
-
-  if (!gtk_tree_model_get_iter_first (GTK_TREE_MODEL (track_store), &iter)) {
-    g_free (former_album_artist);
+  if (widget == GTK_EDITABLE (artist_entry)) {
+    column = COLUMN_ARTIST;
+    album_person_name = &current_album->artist;
+    album_person_sortname = &current_album->artist_sortname;
+    off_person_name = G_STRUCT_OFFSET (TrackDetails, artist);
+    off_person_sortname = G_STRUCT_OFFSET (TrackDetails,
+                                           artist_sortname);
+  } else if (widget == GTK_EDITABLE (composer_entry)) {
+    column = COLUMN_COMPOSER;
+    album_person_name = &current_album->composer;
+    album_person_sortname = &current_album->composer_sortname;
+    off_person_name = G_STRUCT_OFFSET (TrackDetails, composer);
+    off_person_sortname = G_STRUCT_OFFSET (TrackDetails,
+                                           composer_sortname);
+  } else {
+    g_warning (_("Unknown widget calling on_person_edit_changed."));
     return;
   }
 
-  /* Set the artist field in each tree row */
-  do {
-    gtk_tree_model_get (GTK_TREE_MODEL (track_store), &iter, COLUMN_ARTIST, &current_track_artist, -1);
-    /* Change track artist if it matched album artist before the change */
-    if ((strcasecmp (current_track_artist, former_album_artist) == 0) || (strcasecmp (current_track_artist, current_album->artist) == 0)) {
-      gtk_tree_model_get (GTK_TREE_MODEL (track_store), &iter, COLUMN_DETAILS, &track, -1);
+  remove_musicbrainz_ids (current_album);
 
-      g_free (track->artist);
-      track->artist = g_strdup (current_album->artist);
+  /* Unset the sortname field, as we can't change it automatically */
+  if (*album_person_sortname) {
+    g_free (*album_person_sortname);
+    *album_person_sortname = NULL;
+  }
 
-      if (track->artist_sortname) {
-        g_free (track->artist_sortname);
-        track->artist_sortname = NULL;
-      }
+  if (*album_person_name) {
+    former_album_person = *album_person_name;
+  }
 
-      gtk_list_store_set (track_store, &iter, COLUMN_ARTIST, track->artist, -1);
+  /* get all the characters */
+  *album_person_name = gtk_editable_get_chars (widget, 0, -1);
+
+  /* Set the person field in each tree row */
+  for (ok = gtk_tree_model_get_iter_first (GTK_TREE_MODEL (track_store), &iter);
+       ok;
+       ok = gtk_tree_model_iter_next (GTK_TREE_MODEL (track_store), &iter)) {
+    gchar *current_track_person;
+    gchar **track_person_name, **track_person_sortname;
+
+    gtk_tree_model_get (GTK_TREE_MODEL (track_store), &iter, column,
+                        &current_track_person, -1);
+
+    /* Change track person if it matched album person before the change */
+    if (!str_case_equal (current_track_person, former_album_person) &&
+        !str_case_equal (current_track_person, *album_person_name))
+      continue;
+
+    gtk_tree_model_get (GTK_TREE_MODEL (track_store), &iter, COLUMN_DETAILS,
+                        &track, -1);
+    track_person_name     = G_STRUCT_MEMBER_P (track, off_person_name);
+    track_person_sortname = G_STRUCT_MEMBER_P (track, off_person_sortname);
+
+    g_free (*track_person_name);
+    *track_person_name = g_strdup (*album_person_name);
+
+    /* Unset the sortname field, as we can't change it automatically */
+    if (*track_person_sortname) {
+      g_free (*track_person_sortname);
+      *track_person_sortname = NULL;
     }
-  } while (gtk_tree_model_iter_next (GTK_TREE_MODEL (track_store), &iter));
 
-  g_free (former_album_artist);
+    gtk_list_store_set (track_store, &iter, column, *track_person_name, -1);
+  }
+  g_free (former_album_person);
 }
 
 G_MODULE_EXPORT void on_genre_edit_changed(GtkEditable *widget, gpointer user_data) {
@@ -1263,6 +1748,8 @@ G_MODULE_EXPORT void on_genre_edit_changed(GtkEditable *widget, gpointer user_da
     g_free (current_album->genre);
   }
   current_album->genre = gtk_editable_get_chars (widget, 0, -1); /* get all the characters */
+  /* Toggle visibility of composer fields based on genre */
+  composer_show_hide (current_album->genre);
 }
 
 G_MODULE_EXPORT void on_year_edit_changed(GtkEditable *widget, gpointer user_data) {
@@ -1275,10 +1762,9 @@ G_MODULE_EXPORT void on_year_edit_changed(GtkEditable *widget, gpointer user_dat
   year = atoi (yearstr);
   if (year > 0) {
     if (current_album->release_date) {
-      g_date_set_dmy (current_album->release_date, 1, 1, year);
-    } else {
-      current_album->release_date = g_date_new_dmy (1, 1, year);
+      gst_date_time_unref (current_album->release_date);
     }
+    current_album->release_date = gst_date_time_new_y (year);
   }
 }
 
@@ -1292,10 +1778,10 @@ G_MODULE_EXPORT void on_disc_number_edit_changed(GtkEditable *widget, gpointer u
     current_album->disc_number = disc_number;
 }
 
-G_MODULE_EXPORT void on_contents_activate(GtkWidget *button, gpointer user_data) {
+static void on_contents_activate(GSimpleAction *action, GVariant *parameter, gpointer data) {
   GError *error = NULL;
 
-  gtk_show_uri (NULL, "ghelp:sound-juicer", GDK_CURRENT_TIME, &error);
+  gtk_show_uri (NULL, "help:sound-juicer", GDK_CURRENT_TIME, &error);
   if (error) {
     GtkWidget *dialog;
 
@@ -1319,7 +1805,7 @@ G_MODULE_EXPORT void on_contents_activate(GtkWidget *button, gpointer user_data)
  * If this is found TRUE is returned, otherwise FALSE is returned.
  */
 static gboolean
-is_cd_duplication_available()
+is_cd_duplication_available(void)
 {
   /* First check the brasero tool is available in the path */
   gchar* brasero_cd_burner = g_find_program_in_path ("brasero");
@@ -1359,56 +1845,30 @@ is_cd_duplication_available()
   return FALSE;
 }
 
-/**
- * Clicked on duplicate in the UI (button/menu)
- */
-G_MODULE_EXPORT void on_duplicate_activate (GtkWidget *button, gpointer user_data)
-{
-  GError *error = NULL;
-  const gchar* device;
+GActionEntry app_entries[] = {
+  { "re-read", on_reread_activate, NULL, NULL, NULL },
+  { "duplicate", on_duplicate_activate, NULL, NULL, NULL },
+  { "eject", on_eject_activate, NULL, NULL, NULL },
+  { "submit-tracks", on_submit_activate, NULL, NULL, NULL },
+  { "preferences", on_preferences_activate, NULL, NULL, NULL },
+  { "help", on_contents_activate, NULL, NULL, NULL }
+};
 
-  device = brasero_drive_get_device (drive);
-  if (!g_spawn_command_line_async (g_strconcat ("brasero -c ", device, NULL), &error)) {
-      GtkWidget *dialog;
-
-      dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtkpod_app),
-                                                   GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                   GTK_MESSAGE_ERROR,
-                                                   GTK_BUTTONS_CLOSE,
-                                                   "<b>%s</b>\n\n%s\n%s: %s",
-                                                   _("Could not duplicate disc"),
-                                                   _("Sound Juicer could not duplicate the disc"),
-                                                   _("Reason"),
-                                                   error->message);
-      gtk_dialog_run (GTK_DIALOG (dialog));
-      gtk_widget_destroy (dialog);
-      g_error_free (error);
-  }
-}
-
-/**
- * Sets the duplication buttons sensitive property if duplication is enabled.
- * This is setup in the main entry point.
- */
-static void set_duplication(gboolean enabled)
-{
-  if (duplication_enabled) {
-    gtk_widget_set_sensitive (duplicate, enabled);
-  }
-}
+GActionEntry win_entries[] = {
+  { "select-all", on_select_all_activate, NULL, NULL, NULL },
+  { "deselect-all", on_deselect_all_activate, NULL, NULL, NULL }
+};
 
 GtkWidget *sj_create_sound_juicer()
 {
   gchar *builderXML;
   GtkWidget *w;
-  GError *error = NULL;
   GtkTreeSelection *selection;
-  char *device = NULL, **uris = NULL;
-  GSettings *http_settings;
+  GError *error = NULL;
 
   g_setenv ("PULSE_PROP_media.role", "music", TRUE);
 
-  sj_stock_init();
+  sj_debug_init ();
 
   brasero_media_library_start ();
 
@@ -1425,6 +1885,8 @@ GtkWidget *sj_create_sound_juicer()
                     (GCallback)device_changed_cb, NULL);
   g_signal_connect (sj_settings, "changed::"SJ_SETTINGS_EJECT,
                     (GCallback)eject_changed_cb, NULL);
+  g_signal_connect (sj_settings, "changed::"SJ_SETTINGS_OPEN,
+                    (GCallback)open_changed_cb, NULL);
   g_signal_connect (sj_settings, "changed::"SJ_SETTINGS_BASEURI,
                     (GCallback)baseuri_changed_cb, NULL);
   g_signal_connect (sj_settings, "changed::"SJ_SETTINGS_STRIP,
@@ -1437,19 +1899,7 @@ GtkWidget *sj_create_sound_juicer()
                     (GCallback)path_pattern_changed_cb, NULL);
   g_signal_connect (sj_settings, "changed::"SJ_SETTINGS_FILE_PATTERN,
                     (GCallback)file_pattern_changed_cb, NULL);
-
-  http_settings = g_settings_new ("org.gnome.system.proxy.http");
-  if (http_settings == NULL) {
-    g_warning (_("Could not create GSettings object.\n"));
-    return NULL;
-  }
-  g_signal_connect (http_settings, "changed::"SJ_SETTINGS_HTTP_PROXY_ENABLE,
-                    (GCallback)http_proxy_enable_changed_cb, NULL);
-  g_signal_connect (http_settings, "changed::"SJ_SETTINGS_HTTP_PROXY,
-                    (GCallback)http_proxy_changed_cb, NULL);
-  g_signal_connect (http_settings, "changed::"SJ_SETTINGS_HTTP_PROXY_PORT,
-                    (GCallback)http_proxy_port_changed_cb, NULL);
-
+  
   builderXML = sjcd_plugin_get_builder_file();
   builder = gtkpod_builder_xml_new(builderXML);
   g_free(builderXML);
@@ -1463,26 +1913,101 @@ GtkWidget *sj_create_sound_juicer()
   gtk_widget_destroy(w);
 
   message_area_eventbox = GET_WIDGET ("message_area_eventbox");
-  select_all_menuitem   = GET_WIDGET ("select_all");
-  deselect_all_menuitem = GET_WIDGET ("deselect_all");
-  submit_menuitem       = GET_WIDGET ("submit");
   title_entry           = GET_WIDGET ("title_entry");
   artist_entry          = GET_WIDGET ("artist_entry");
+  composer_label        = GET_WIDGET ("composer_label");
+  composer_entry        = GET_WIDGET ("composer_entry");
   duration_label        = GET_WIDGET ("duration_label");
   genre_entry           = GET_WIDGET ("genre_entry");
   year_entry            = GET_WIDGET ("year_entry");
   disc_number_entry     = GET_WIDGET ("disc_number_entry");
   track_listview        = GET_WIDGET ("track_listview");
   extract_button        = GET_WIDGET ("extract_button");
-  extract_menuitem      = GET_WIDGET ("extract_menuitem");
+  select_button         = GET_WIDGET ("select_button");
   status_bar            = GET_WIDGET ("status_bar");
-  duplicate             = GET_WIDGET ("duplicate_menuitem");
-  eject                 = GET_WIDGET ("eject");
+  entry_table           = GET_WIDGET ("entry_table");
 
+  /*
+   * Adding entries taken from sj but inserting action group
+   * into vbox1 to couple the actions to the buttons
+   */
+  action_group = g_simple_action_group_new ();
+
+  g_action_map_add_action_entries (G_ACTION_MAP (action_group),
+                                   app_entries, G_N_ELEMENTS (app_entries),
+                                   NULL);
+
+  gtk_widget_insert_action_group(GTK_WIDGET(vbox1), "app", G_ACTION_GROUP(action_group));
+
+  g_action_map_add_action_entries (G_ACTION_MAP (action_group),
+                                   win_entries, G_N_ELEMENTS (win_entries),
+                                   NULL);
+
+  gtk_widget_insert_action_group(GTK_WIDGET(vbox1), "win", G_ACTION_GROUP(action_group));
+
+  gtk_button_set_label(GTK_BUTTON(select_button), _("Select None"));
+  gtk_actionable_set_action_name(GTK_ACTIONABLE(select_button), "win.deselect-all");
+
+  
+
+  /* window actions are only available via shortcuts */
+//   gtk_application_add_accelerator (GTK_APPLICATION (app),
+//                                    "<Primary>a", "win.select-all", NULL);
+//   gtk_application_add_accelerator (GTK_APPLICATION (app),
+//                                    "<Primary><Shift>a", "win.deselect-all", NULL);
+
+  { /* ensure that the extract/play button's size is constant */
+    GtkWidget *fake_button1, *fake_button2;
+    GtkSizeGroup *size_group;
+
+    size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
+
+    fake_button1 = gtk_button_new_with_label (_("E_xtract"));
+    gtk_button_set_use_underline (GTK_BUTTON (fake_button1), TRUE);
+    gtk_size_group_add_widget (size_group, fake_button1);
+    g_signal_connect_swapped (extract_button, "destroy",
+                              G_CALLBACK (gtk_widget_destroy),
+                              fake_button1);
+
+    fake_button2 = gtk_button_new_with_label (_("_Stop"));
+    gtk_button_set_use_underline (GTK_BUTTON (fake_button2), TRUE);
+    gtk_size_group_add_widget (size_group, fake_button2);
+    g_signal_connect_swapped (extract_button, "destroy",
+                              G_CALLBACK (gtk_widget_destroy),
+                              fake_button2);
+
+    gtk_size_group_add_widget (size_group, extract_button);
+    g_object_unref (G_OBJECT (size_group));
+  }
+
+  { /* ensure that the select/unselect button's size is constant */
+    GtkWidget *fake_button1, *fake_button2;
+    GtkSizeGroup *size_group;
+
+    size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
+
+    fake_button1 = gtk_button_new_with_label (_("Select All"));
+    gtk_size_group_add_widget (size_group, fake_button1);
+    g_signal_connect_swapped (select_button, "destroy",
+                              G_CALLBACK (gtk_widget_destroy),
+                              fake_button1);
+
+    fake_button2 = gtk_button_new_with_label (_("Select None"));
+    gtk_size_group_add_widget (size_group, fake_button2);
+    g_signal_connect_swapped (select_button, "destroy",
+                              G_CALLBACK (gtk_widget_destroy),
+                              fake_button2);
+
+    gtk_size_group_add_widget (size_group, select_button);
+    g_object_unref (G_OBJECT (size_group));
+  }
 
   setup_genre_entry (genre_entry);
 
-  track_store = gtk_list_store_new (COLUMN_TOTAL, G_TYPE_INT, G_TYPE_BOOLEAN, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_POINTER);
+  /* Remove row spacing from hidden row containing composer_entry */
+  gtk_table_set_row_spacing (GTK_TABLE (entry_table), COMPOSER_ROW, 0);
+
+  track_store = gtk_list_store_new (COLUMN_TOTAL, G_TYPE_INT, G_TYPE_BOOLEAN, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_POINTER);
   gtk_tree_view_set_model (GTK_TREE_VIEW (track_listview), GTK_TREE_MODEL (track_store));
   {
     GtkTreeViewColumn *column;
@@ -1532,6 +2057,19 @@ GtkWidget *sj_create_sound_juicer()
     g_object_set (G_OBJECT (artist_renderer), "editable", TRUE, NULL);
     gtk_tree_view_append_column (GTK_TREE_VIEW (track_listview), column);
 
+    composer_renderer = gtk_cell_renderer_text_new ();
+    column = gtk_tree_view_column_new_with_attributes (_("Composer"),
+                                                       composer_renderer,
+                                                       "text", COLUMN_COMPOSER,
+                                                       NULL);
+    gtk_tree_view_column_set_resizable (column, TRUE);
+    gtk_tree_view_column_set_expand (column, TRUE);
+    g_signal_connect (composer_renderer, "edited", G_CALLBACK (on_cell_edited), GUINT_TO_POINTER (COLUMN_COMPOSER));
+    g_object_set (G_OBJECT (composer_renderer), "editable", TRUE, NULL);
+    gtk_tree_view_column_set_visible (column, FALSE);
+    composer_column = column;
+    gtk_tree_view_append_column (GTK_TREE_VIEW (track_listview), column);
+
     renderer = gtk_cell_renderer_text_new ();
     column = gtk_tree_view_column_new_with_attributes (_("Duration"),
                                                        renderer,
@@ -1553,7 +2091,6 @@ GtkWidget *sj_create_sound_juicer()
   selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (track_listview));
   gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
 
-  http_proxy_setup (http_settings);
   baseuri_changed_cb (sj_settings, SJ_SETTINGS_BASEURI, NULL);
   path_pattern_changed_cb (sj_settings, SJ_SETTINGS_PATH_PATTERN, NULL);
   file_pattern_changed_cb (sj_settings, SJ_SETTINGS_FILE_PATTERN, NULL);
@@ -1561,6 +2098,7 @@ GtkWidget *sj_create_sound_juicer()
   paranoia_changed_cb (sj_settings, SJ_SETTINGS_PARANOIA, NULL);
   strip_changed_cb (sj_settings, SJ_SETTINGS_STRIP, NULL);
   eject_changed_cb (sj_settings, SJ_SETTINGS_EJECT, NULL);
+  open_changed_cb (sj_settings, SJ_SETTINGS_OPEN, NULL);
   if (device == NULL && uris == NULL) {
     /* FIXME: this should set the device gsettings key to a meaningful
      * value if it's empty (which is the case until the user changes it in
@@ -1568,24 +2106,15 @@ GtkWidget *sj_create_sound_juicer()
      */
     device_changed_cb (sj_settings, SJ_SETTINGS_DEVICE, NULL);
   } else {
-    if (device) {
-#ifdef __sun
-      if (strstr(device, "/dev/dsk/") != NULL ) {
-        device = g_strdup_printf("/dev/rdsk/%s", device + strlen("/dev/dsk/"));
-      }
-#endif
+    if (device)
       set_device (device, TRUE);
-    } else {
+    else {
       char *d;
 
       /* Mash up the CDDA URIs into a device path */
       if (g_str_has_prefix (uris[0], "cdda://")) {
         gint len;
-#ifdef __sun
-        d = g_strdup_printf ("/dev/rdsk/%s", uris[0] + strlen ("cdda://"));
-#else
         d = g_strdup_printf ("/dev/%s%c", uris[0] + strlen ("cdda://"), '\0');
-#endif
         /* Take last '/' out of path, or set_device thinks it is part of the device name */
         len = strlen (d);
         if (d[len - 1] == '/')
@@ -1604,10 +2133,21 @@ GtkWidget *sj_create_sound_juicer()
   }
 
   /* Set whether duplication of a cd is available using the brasero tool */
-  gtk_widget_set_sensitive (duplicate, FALSE);
+  set_action_enabled ("duplicate", FALSE);
   duplication_enabled = is_cd_duplication_available();
 
   brasero_media_library_stop ();
 
   return vbox1;
+}
+
+void set_action_enabled (const char *name, gboolean enabled)
+{
+  GActionMap *map = G_ACTION_MAP (action_group);
+  GAction *action = g_action_map_lookup_action (map, name);
+
+  if (action == NULL)
+	g_warning("action %s is null", name);
+
+  g_simple_action_set_enabled (G_SIMPLE_ACTION (action), enabled);
 }

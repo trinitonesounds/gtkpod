@@ -13,9 +13,7 @@
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * License along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef SJ_METADATA_GETTER_H
@@ -52,8 +50,6 @@ struct _SjMetadataGetterClass
 GType sj_metadata_getter_get_type (void);
 SjMetadataGetter *sj_metadata_getter_new (void);
 void sj_metadata_getter_set_cdrom (SjMetadataGetter *mdg, const char* device);
-void sj_metadata_getter_set_proxy (SjMetadataGetter *mdg, const char* proxy);
-void sj_metadata_getter_set_proxy_port (SjMetadataGetter *mdg, const int proxy_port);
 gboolean sj_metadata_getter_list_albums (SjMetadataGetter *mdg, GError **error);
 char *sj_metadata_getter_get_submit_url (SjMetadataGetter *mdg);
 

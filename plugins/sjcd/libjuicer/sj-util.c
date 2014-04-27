@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Ross Burton <ross@burtonini.com>
  */
@@ -120,3 +119,19 @@ sj_add_default_dirs (GtkFileChooser *dialog)
 	}
 }
 
+/*
+ * True if string is NULL, empty or contains only ascii space
+ */
+gboolean
+sj_str_is_empty (const char *s)
+{
+  int i = 0;
+
+  if (s == NULL)
+    return TRUE;
+  while (s[i]) {
+    if (!g_ascii_isspace (s[i++]))
+      return FALSE;
+  }
+  return TRUE;
+}

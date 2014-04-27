@@ -13,9 +13,7 @@
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * License along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "config.h"
@@ -53,6 +51,11 @@ sj_metadata_base_init (gpointer g_iface)
                                                               G_PARAM_STATIC_NAME|G_PARAM_STATIC_NICK|G_PARAM_STATIC_BLURB));
 
     g_object_interface_install_property (g_iface,
+                                         g_param_spec_boolean ("proxy-use-authentication", "proxy-use-authentication",
+                                                               "Whether the http proxy requires authentication", FALSE,
+                                                               G_PARAM_READABLE|G_PARAM_WRITABLE|
+                                                               G_PARAM_STATIC_NAME|G_PARAM_STATIC_NICK|G_PARAM_STATIC_BLURB));
+    g_object_interface_install_property (g_iface,
                                          g_param_spec_string ("proxy-host", "proxy-host", NULL, NULL,
                                                               G_PARAM_READABLE|G_PARAM_WRITABLE|
                                                               G_PARAM_STATIC_NAME|G_PARAM_STATIC_NICK|G_PARAM_STATIC_BLURB));
@@ -63,6 +66,15 @@ sj_metadata_base_init (gpointer g_iface)
                                                            G_PARAM_READABLE|G_PARAM_WRITABLE|
                                                            G_PARAM_STATIC_NAME|G_PARAM_STATIC_NICK|G_PARAM_STATIC_BLURB));
 
+    g_object_interface_install_property (g_iface,
+                                         g_param_spec_string ("proxy-username", "proxy-username", NULL, NULL,
+                                                              G_PARAM_READABLE|G_PARAM_WRITABLE|
+                                                              G_PARAM_STATIC_NAME|G_PARAM_STATIC_NICK|G_PARAM_STATIC_BLURB));
+
+    g_object_interface_install_property (g_iface,
+                                         g_param_spec_string ("proxy-password", "proxy-password", NULL, NULL,
+                                                              G_PARAM_READABLE|G_PARAM_WRITABLE|
+                                                              G_PARAM_STATIC_NAME|G_PARAM_STATIC_NICK|G_PARAM_STATIC_BLURB));
     initialized = TRUE;
   }
 }
@@ -95,18 +107,6 @@ void
 sj_metadata_set_cdrom (SjMetadata *metadata, const char* device)
 {
   g_object_set (metadata, "device", device, NULL);
-}
-
-void
-sj_metadata_set_proxy (SjMetadata *metadata, const char* proxy)
-{
-  g_object_set (metadata, "proxy-host", proxy, NULL);
-}
-
-void
-sj_metadata_set_proxy_port (SjMetadata *metadata, const int proxy_port)
-{
-  g_object_set (metadata, "proxy-port", proxy_port, NULL);
 }
 
 GList *
@@ -146,22 +146,6 @@ sj_metadata_helper_scan_disc_number (const char *album_title, int *disc_number)
   g_regex_unref (disc_regex);
 
   return new_title;
-}
-
-GDate *
-sj_metadata_helper_scan_date (const char *date)
-{
-  int matched, year=1, month=1, day=1;
-
-  if (date == NULL)
-    return NULL;
-
-  matched = sscanf (date, "%u-%u-%u", &year, &month, &day);
-  if (matched >= 1) {
-    return g_date_new_dmy ((day == 0) ? 1 : day, (month == 0) ? 1 : month, year);
-  }
-
-  return NULL;
 }
 
 gboolean
@@ -223,3 +207,154 @@ sj_metadata_helper_check_media (const char *cdrom, GError **error)
   return TRUE;
 }
 
+/* ISO-3166 helpers, these functions translate between a country code
+ * returned by MusicBrainz and the country name. Adapted from the
+ * totem language name lookup functions before it switched to using
+ * the GStreamer language helpers
+ */
+static GHashTable *country_table;
+
+void
+sj_metadata_helper_cleanup (void)
+{
+  if (country_table == NULL)
+    return;
+
+  g_hash_table_destroy (country_table);
+  country_table = NULL;
+}
+
+static void
+country_table_parse_start_tag (GMarkupParseContext *ctx,
+                               const gchar         *element_name,
+                               const gchar        **attr_names,
+                               const gchar        **attr_values,
+                               gpointer             data,
+                               GError             **error)
+{
+  const char *ccode, *country_name;
+
+  if (!g_str_equal (element_name, "iso_3166_entry")
+      || attr_names == NULL
+      || attr_values == NULL)
+    return;
+
+  ccode = NULL;
+  country_name = NULL;
+
+  while (*attr_names && *attr_values)
+    {
+      if (g_str_equal (*attr_names, "alpha_2_code"))
+        {
+          /* skip if empty */
+          if (**attr_values)
+            {
+              g_return_if_fail (strlen (*attr_values) == 2);
+              ccode = *attr_values;
+            }
+        } else if (g_str_equal (*attr_names, "name")) {
+        country_name = *attr_values;
+      }
+
+      ++attr_names;
+      ++attr_values;
+    }
+
+  if (country_name == NULL)
+    return;
+
+  if (ccode != NULL)
+    {
+      g_hash_table_insert (country_table,
+                           g_strdup (ccode),
+                           g_strdup (country_name));
+    }
+}
+
+#define ISO_CODES_DATADIR ISO_CODES_PREFIX"/share/xml/iso-codes"
+#define ISO_CODES_LOCALESDIR ISO_CODES_PREFIX"/share/locale"
+
+static void
+country_table_init (void)
+{
+  GError *err = NULL;
+  char *buf;
+  gsize buf_len;
+
+  country_table = g_hash_table_new_full
+    (g_str_hash, g_str_equal, g_free, g_free);
+
+  bindtextdomain ("iso_3166", ISO_CODES_LOCALESDIR);
+  bind_textdomain_codeset ("iso_3166", "UTF-8");
+
+  if (g_file_get_contents (ISO_CODES_DATADIR "/iso_3166.xml",
+                           &buf, &buf_len, &err))
+    {
+      GMarkupParseContext *ctx;
+      GMarkupParser parser =
+        { country_table_parse_start_tag, NULL, NULL, NULL, NULL };
+
+      ctx = g_markup_parse_context_new (&parser, 0, NULL, NULL);
+
+      if (!g_markup_parse_context_parse (ctx, buf, buf_len, &err))
+        {
+          g_warning ("Failed to parse '%s': %s\n",
+                     ISO_CODES_DATADIR"/iso_3166.xml",
+                     err->message);
+          g_error_free (err);
+        }
+
+      g_markup_parse_context_free (ctx);
+      g_free (buf);
+    } else {
+    g_warning ("Failed to load '%s': %s\n",
+               ISO_CODES_DATADIR"/iso_3166.xml", err->message);
+    g_error_free (err);
+  }
+}
+
+char *
+sj_metadata_helper_lookup_country_code (const char *code)
+{
+  const char *country_name;
+  int len, i;
+  /* Musicbrainz uses some additional codes on top of ISO-3166 so
+     treat those as a special case if we don't get a match from the
+     iso-codes data */
+  const static struct {
+    char *code;
+    char *name;
+  } mb_countries[]  = {
+    {"XC", N_("Czechoslovakia")},
+    {"XG", N_("East Germany")},
+    {"XE", N_("Europe")},
+    {"CS", N_("Serbia and Montenegro")},
+    {"SU", N_("Soviet Union")},
+    {"XW", N_("Worldwide")},
+    {"YU", N_("Yugoslavia")}
+  };
+
+  g_return_val_if_fail (code != NULL, NULL);
+
+  len = strlen (code);
+  if (len != 2)
+    return NULL;
+  if (country_table == NULL)
+    country_table_init ();
+
+  country_name = (const gchar*) g_hash_table_lookup (country_table, code);
+
+  if (country_name)
+    return g_strdup (dgettext ("iso_3166", country_name));
+
+  for (i = 0; i < G_N_ELEMENTS (mb_countries); i++) {
+    if (strcmp (code, mb_countries[i].code) == 0)
+      return g_strdup (gettext (mb_countries[i].name));
+  }
+
+  /* Musicbrainz uses XU for unknown so don't print an error, just
+     treat it as if a country wasn't provided */
+  if (strcmp (code, "XU") != 0)
+    g_warning ("Unknown country code: %s", code);
+  return NULL;
+}

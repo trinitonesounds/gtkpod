@@ -67,6 +67,8 @@ struct _EggPlayPreviewPrivate {
 	GstElement *playbin;
 	GstState state;
 
+	gchar *play_icon_name;
+
 	gchar *title;
 	gchar *artist;
 	gchar *album;
@@ -278,7 +280,11 @@ egg_play_preview_init (EggPlayPreview *play_preview)
 
 	/* play button */
 	priv->play_button = gtk_button_new ();
-	priv->play_button_image = gtk_image_new_from_stock (GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON);
+	if (gtk_widget_get_direction (GTK_WIDGET (priv->play_button)) == GTK_TEXT_DIR_RTL)
+	    priv->play_icon_name = "media-playback-start-rtl";
+	else
+	    priv->play_icon_name = "media-playback-start";
+	priv->play_button_image = gtk_image_new_from_icon_name (priv->play_icon_name, GTK_ICON_SIZE_BUTTON);
 	gtk_container_add (GTK_CONTAINER (priv->play_button), priv->play_button_image);
 	align = gtk_alignment_new (0.5, 0.5, 1.0, 0.0);
 	gtk_container_add (GTK_CONTAINER (align), priv->play_button);
@@ -518,8 +524,8 @@ static void
 _setup_pipeline (EggPlayPreview *play_preview)
 {
 	EggPlayPreviewPrivate *priv;
-	GstElement *audiosink;
 	GstBus *bus = NULL;
+        guint flags;
 
 	priv = GET_PRIVATE (play_preview);
 
@@ -529,20 +535,14 @@ _setup_pipeline (EggPlayPreview *play_preview)
 	if (!priv->playbin)
 		return;
 
-	audiosink = gst_element_factory_make ("gsettingsaudiosink", "audiosink");
-	if (!audiosink) {
-		audiosink = gst_element_factory_make ("autoaudiosink", "audiosink");
-		if (!audiosink) {
-			audiosink = gst_element_factory_make ("alsasink", "audiosink");
-			if (!audiosink) {
-				return;
-			}
-		}
-	}
+        /* Disable video output */
+        g_object_get (G_OBJECT (priv->playbin),
+                      "flags", &flags,
+                      NULL);
+        flags &= ~0x00000001;
 
 	g_object_set (G_OBJECT (priv->playbin),
-				  "audio-sink", audiosink,
-				  "video-sink", NULL,
+                      "flags", flags,
 				  NULL);
 
 	bus = gst_pipeline_get_bus (GST_PIPELINE (priv->playbin));
@@ -684,10 +684,8 @@ _query_duration (GstElement *element)
 	GstState state;
 	GstState pending;
 	gint64 duration;
-	GstFormat format;
 
 	duration = 0;
-	format = GST_FORMAT_TIME;
 
 	result = gst_element_get_state (element, &state, &pending, GST_CLOCK_TIME_NONE);
 
@@ -702,7 +700,7 @@ _query_duration (GstElement *element)
 	if (result == GST_STATE_CHANGE_ASYNC)
 		gst_element_get_state (element, NULL, NULL, GST_CLOCK_TIME_NONE);
 
-	gst_element_query_duration (element, &format, &duration);
+	gst_element_query_duration (element, GST_FORMAT_TIME, &duration);
 
 	gst_element_set_state (element, state);
 
@@ -713,12 +711,10 @@ static gint
 _query_position (GstElement *element)
 {
 	gint64 position;
-	GstFormat format;
 
 	position = 0;
-	format = GST_FORMAT_TIME;
 
-	gst_element_query_position (element, &format, &position);
+	gst_element_query_position (element, GST_FORMAT_TIME, &position);
 
 	return (gint) (position / GST_SECOND);
 }
@@ -762,8 +758,8 @@ _play (EggPlayPreview *play_preview)
 
 	gst_element_set_state (priv->playbin, GST_STATE_PLAYING);
 
-	gtk_image_set_from_stock (GTK_IMAGE (priv->play_button_image),
-							  GTK_STOCK_MEDIA_PAUSE,
+	gtk_image_set_from_icon_name (GTK_IMAGE (priv->play_button_image),
+	                              "media-playback-pause",
 							  GTK_ICON_SIZE_BUTTON);
 }
 
@@ -776,9 +772,9 @@ _pause (EggPlayPreview *play_preview)
 
 	gst_element_set_state (priv->playbin, GST_STATE_PAUSED);
 
-	gtk_image_set_from_stock (GTK_IMAGE (priv->play_button_image),
-							  GTK_STOCK_MEDIA_PLAY,
-							  GTK_ICON_SIZE_BUTTON);
+	gtk_image_set_from_icon_name (GTK_IMAGE (priv->play_button_image),
+	                              priv->play_icon_name,
+							      GTK_ICON_SIZE_BUTTON);
 }
 
 static void
@@ -790,9 +786,9 @@ _stop (EggPlayPreview *play_preview)
 
 	gst_element_set_state (priv->playbin, GST_STATE_READY);
 
-	gtk_image_set_from_stock (GTK_IMAGE (priv->play_button_image),
-							  GTK_STOCK_MEDIA_PLAY,
-							  GTK_ICON_SIZE_BUTTON);
+	gtk_image_set_from_icon_name (GTK_IMAGE (priv->play_button_image),
+	                              priv->play_icon_name,
+							      GTK_ICON_SIZE_BUTTON);
 }
 
 GtkWidget *

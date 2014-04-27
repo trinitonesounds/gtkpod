@@ -1,59 +1,76 @@
 <?xml version="1.0"?>
 <schemalist>
-  <schema id="org.gtkpod.sjcd" path="/apps/gtkpod/sjcd/">
+
+  <flags id="org.gtkpod.sjcd.paranoia">
+    <value nick="disable" value="0"/>
+    <value nick="fragment" value="2"/>
+    <value nick="overlap" value="4"/>
+    <value nick="scratch" value="8"/>
+    <value nick="repair" value="16"/>
+  </flags>
+
+ <schema gettext-domain="sjcd" id="org.gtkpod.sjcd" path="/org/gtkpod/sjcd/">
+
+    <!-- Please note: There is no default value for the 'device' key
+                      because sjcd does not handle symlinks like
+                      e.g. /dev/cdrom -->
+
     <key name="device" type="s">
       <default>''</default>
-      <summary>The CD to extract from.</summary>
+      <summary>The CD to extract from</summary>
+      <description>Please note: Sound Juicer currently only handles real device names, no symlinks like e.g. /dev/cdrom. An empty key implicates that the system's default CD-ROM drive will be used.</description>
     </key>
+
     <key name="eject" type="b">
       <default>false</default>
-      <summary>Whether to eject the CD when finished extracting.</summary>
+      <summary>Whether to eject the CD when finished extracting</summary>
     </key>
+
     <key name="open-completed" type="b">
       <default>false</default>
-      <summary>Whether to open the target directory when finished extracting.</summary>
+      <summary>Whether to open the target directory when finished extracting</summary>
     </key>
+
     <key name="base-uri" type="s">
       <default>''</default>
-      <summary>The URI to save the extracted music to.</summary>
+      <summary>The URI to save the extracted music to</summary>
     </key>
-    <key name="base-path" type="s">
-      <default>''</default>
-      <summary>The local directory to save the extracted music to (deprecated, use base_uri)</summary>
-    </key>
+
     <key name="path-pattern" type="s">
       <default>'%aa/%at'</default>
       <summary>The directory structure for the files</summary>
-      <description>%at -- album title %aT -- album title (lowercase) %aa -- album artist %aA -- album artist (lowercase) %as -- album artist (sortable) %aS -- album artist (sortable lowercase) %ay -- album year %tt -- track title %tT -- track title (lowercase) %ta -- track artist %tA -- track artist (lowercase) %ts -- track artist (sortable) %tS -- track artist (sortable lowercase)</description>
+      <description>Format specifiers: %at - album title; %aT - album title (lowercase); %aa - album artist; %aA - album artist (lowercase); %as - album artist (sortable); %aS - album artist (sortable lowercase); %ac - album composer; %aC - album composer (lowercase); %ap - album composer (sortable); %aP - album composer (sortable lowercase); %ay - album year; %tt - track title; %tT - track title (lowercase); %ta - track artist; %tA - track artist (lowercase); %ts - track artist (sortable); %tS - track artist (sortable lowercase); %tc - track composer; %tC - track composer (lowercase); %tp - track composer (sortable); %tP - track composer (sortable lowercase).</description>
     </key>
+
     <key name="file-pattern" type="s">
       <default>'%dn - %tt'</default>
       <summary>The name pattern for files</summary>
-      <description>Do not specify an extension. %at -- album title %aT -- album title (lowercase) %aa -- album artist %aA -- album artist (lowercase) %as -- album artist (sortable) %aS -- album artist (sortable lowercase) %tn -- track number (i.e 8) %tN -- track number, zero padded (i.e 08) %tt -- track title %tT -- track title (lowercase) %ta -- track artist %tA -- track artist (lowercase) %ts -- track artist (sortable) %tS -- track artist (sortable lowercase) %dn -- disc and track number (i.e Disk 2 - 6, or 6) %dN -- disc number, zero padded (i.e d02t06, or 06)</description>
+      <description>Do not specify an extension. Format specifiers: %at - album title; %aT - album title (lowercase); %aa - album artist; %aA - album artist (lowercase); %as - album artist (sortable); %aS - album artist (sortable lowercase); %ac - album composer; %aC - album composer (lowercase); %ap - album composer (sortable); %aP - album composer (sortable lowercase); %tn - track number (i.e 8); %tN - track number, zero padded (i.e 08); %tt - track title; %tT - track title (lowercase); %ta - track artist; %tA - track artist (lowercase); %ts - track artist (sortable); %tS - track artist (sortable lowercase); %tc - track composer; %tC - track composer (lowercase); %tp - track composer (sortable); %tP - track composer (sortable lowercase); %dn - disc and track number (i.e Disk 2 - 6, or 6); %dN - disc number, zero padded (i.e d02t06, or 06).</description>
     </key>
-    <key name="paranoia" type="i">
-      <default>8</default>
+
+    <key name="paranoia" flags="org.gtkpod.sjcd.paranoia">
+      <default>["fragment","overlap","scratch"]</default>
       <summary>The paranoia mode to use</summary>
-      <description>Paranoia mode: 0) disable 2) fragment 4) overlap 8) scratch 16) repair 255) full</description>
+      <description>Paranoia flags: disable; fragment; overlap; scratch; repair.</description>
     </key>
+
     <key name="strip-special" type="b">
       <default>false</default>
-      <summary>If to strip special characters from filenames</summary>
+      <summary>Whether to strip special characters from filenames</summary>
       <description>If enabled, special characters such as space, wildcards and backslashes will be removed from the output filename.</description>
     </key>
-    <key name="musicbrainz-server" type="s">
-      <default>''</default>
-      <summary>The MusicBrainz server to use</summary>
-      <description>If specified, this value will override the default MusicBrainz server.</description>
-    </key>
+
     <key name="audio-profile" type="s">
       <default>'audio/x-vorbis'</default>
       <summary>Media type to encode to</summary>
       <description>The GStreamer media type to encode to.</description>
     </key>
+
+    <!-- Please note: The 'volume' key may be deprecated soon -->
     <key name="volume" type="d">
       <default>1.0</default>
       <summary>Audio volume</summary>
     </key>
+
   </schema>
 </schemalist>

@@ -40,7 +40,8 @@ libsjcd_la_SOURCES = plugin.c plugin.h \
 libsjcd_la_CFLAGS = -I$(top_srcdir)/plugins/$(plugin_name)/libjuicer \
 					$(GSTREAMER_CFLAGS) \
 					$(BRASERO_CFLAGS) \
-					$(MUSICBRAINZ3_CFLAGS)
+					$(MUSICBRAINZ5_CFLAGS) \
+					$(DISCID_CFLAGS)
 					
 libsjcd_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
@@ -51,7 +52,8 @@ libsjcd_la_LIBADD = \
     $(LIBANJUTA_LIBS) \
     $(GSTREAMER_LIBS) \
     $(BRASERO_LIBS) \
-    $(MUSICBRAINZ3_LIBS)
+    $(MUSICBRAINZ5_LIBS) \
+    $(DISCID_LIBS)
 
 endif
 

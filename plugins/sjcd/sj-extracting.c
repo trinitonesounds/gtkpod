@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Ross Burton <ross@burtonini.com>
  */
@@ -45,12 +44,11 @@
 
 #include "sj-error.h"
 #include "sj-extracting.h"
+#include "sj-main.h"
 #include "sj-util.h"
 #include "sj-inhibit.h"
 #include "sj-genres.h"
 #include "egg-play-preview.h"
-
-#define UNKNOWN_TAG_VALUE "???"
 
 typedef struct {
   int seconds;
@@ -90,10 +88,7 @@ static gboolean successful_extract = FALSE;
 static GtkWidget *progress_bar, *status_bar;
 
 /** The widgets in the main UI */
-static GtkWidget *extract_button, *title_entry, *artist_entry, *genre_entry, *year_entry, *disc_number_entry, *track_listview;
-
-/** The menuitem in the main menu */
-static GtkWidget *extract_menuitem, *reread_menuitem, *select_all_menuitem, *deselect_all_menuitem;
+static GtkWidget *extract_button, *title_entry, *artist_entry, *composer_entry, *genre_entry, *year_entry, *disc_number_entry, *track_listview;
 
 static GtkTreeIter current;
 
@@ -242,9 +237,7 @@ cleanup (void)
   }
   /* Forcibly invalidate the iterator */
   current.stamp = 0;
-  /* TODO: find out why GTK+ needs this to work (see #364371) */
-  gtk_button_set_label (GTK_BUTTON (extract_button), _("Extract"));
-  gtk_button_set_label (GTK_BUTTON (extract_button), SJ_STOCK_EXTRACT);
+  gtk_button_set_label (GTK_BUTTON (extract_button), _("E_xtract"));
 
   /* Clear the Status bar */
   gtk_statusbar_push (GTK_STATUSBAR (status_bar), 0, "");
@@ -254,14 +247,14 @@ cleanup (void)
 
   gtk_widget_set_sensitive (title_entry, TRUE);
   gtk_widget_set_sensitive (artist_entry, TRUE);
+  gtk_widget_set_sensitive (composer_entry, TRUE);
   gtk_widget_set_sensitive (genre_entry, TRUE);
   gtk_widget_set_sensitive (year_entry, TRUE);
   gtk_widget_set_sensitive (disc_number_entry, TRUE);
   /* Enabling the Menuitem */
-  gtk_widget_set_sensitive (extract_menuitem, TRUE);
-  gtk_widget_set_sensitive (reread_menuitem, TRUE);
-  gtk_widget_set_sensitive (select_all_menuitem, TRUE);
-  gtk_widget_set_sensitive (deselect_all_menuitem, TRUE);
+  set_action_enabled ("select-all", TRUE);
+  set_action_enabled ("deselect-all", TRUE);
+  set_action_enabled ("re-read", TRUE);
 
   /*Enable the Extract column and Make the Title and Artist column Editable*/
   g_object_set (G_OBJECT (toggle_renderer), "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE, NULL);
@@ -274,7 +267,7 @@ cleanup (void)
  * Check if a file exists, can be written to, etc.
  * Return true on continue, false on skip.
  */
-static guint64
+static goffset
 check_file_size (GFile *uri)
 {
   GFileInfo *gfile_info;
@@ -305,7 +298,7 @@ check_file_size (GFile *uri)
 }
 
 static gboolean
-confirm_overwrite_existing_file (GFile *uri, int *overwrite_mode, guint64 info_size)
+confirm_overwrite_existing_file (GFile *uri, int *overwrite_mode, goffset info_size)
 {
   OverwriteDialogResponse ret;
   GtkWidget *dialog;
@@ -445,7 +438,7 @@ pop_and_extract (int *overwrite_mode)
     /* Save the file name for later */
     files = g_list_append(files, g_file_get_path(file));
 
-    guint64 file_size;
+    goffset file_size;
     file_size = check_file_size (file);
 
     /* Skip if destination file can't be accessed (unexpected error). */
@@ -469,7 +462,7 @@ pop_and_extract (int *overwrite_mode)
     /* OK, we can write/overwrite the file */
 
 
-    /* Update the state stock image */
+    /* Update the state image */
     gtk_list_store_set (track_store, &current,
                    COLUMN_STATE, STATE_EXTRACTING, -1);
 
@@ -570,6 +563,38 @@ on_progress_cb (SjExtractor *extractor, const int seconds, gpointer data)
         gettimeofday(&before.time, NULL);
       }
     }
+  }
+}
+
+/**
+ * A list foreach function which will find the deepest common directory in a
+ * list of filenames.
+ * @param path the path in this iteration
+ * @param ret a char** to the deepest common path
+ */
+static void
+base_finder (char *path, char **ret)
+{
+  if (*ret == NULL) {
+    /* If no common directory so far, this must be it. */
+    *ret = g_strdup (path);
+    return;
+  } else {
+    /* Urgh */
+    char *i, *j, *marker;
+    i = marker = path;
+    j = *ret;
+    while (*i == *j) {
+      if (*i == G_DIR_SEPARATOR) marker = i;
+      if (*i == 0) {
+        marker = i;
+        break;
+      }
+      i = g_utf8_next_char (i);
+      j = g_utf8_next_char (j);
+    }
+    g_free (*ret);
+    *ret = g_strndup (path, marker - path + 1);
   }
 }
 
@@ -784,7 +809,7 @@ on_progress_cancel_clicked (GtkWidget *button, gpointer user_data)
 G_MODULE_EXPORT void
 on_extract_activate (GtkWidget *button, gpointer user_data)
 {
-  char *reason;
+  char *reason = NULL;
 
   /* If extracting, then cancel the extract */
   if (extracting) {
@@ -816,6 +841,7 @@ on_extract_activate (GtkWidget *button, gpointer user_data)
     extract_button    = GET_WIDGET ("extract_button");
     title_entry       = GET_WIDGET ("title_entry");
     artist_entry      = GET_WIDGET ("artist_entry");
+    composer_entry    = GET_WIDGET ("composer_entry");
     genre_entry       = GET_WIDGET ("genre_entry");
     year_entry        = GET_WIDGET ("year_entry");
     disc_number_entry = GET_WIDGET ("disc_number_entry");
@@ -823,18 +849,11 @@ on_extract_activate (GtkWidget *button, gpointer user_data)
     progress_bar      = GET_WIDGET ("progress_bar");
     status_bar        = GET_WIDGET ("status_bar");
 
-    extract_menuitem      = GET_WIDGET ("extract_menuitem");
-    reread_menuitem       = GET_WIDGET ("re-read");
-    select_all_menuitem   = GET_WIDGET ("select_all");
-    deselect_all_menuitem = GET_WIDGET ("deselect_all");
-
     initialised = TRUE;
   }
 
   /* Change the label to Stop while extracting*/
-  /* TODO: find out why GTK+ needs this to work (see #364371) */
-  gtk_button_set_label (GTK_BUTTON (extract_button), _("Stop"));
-  gtk_button_set_label (GTK_BUTTON (extract_button), GTK_STOCK_STOP);
+  gtk_button_set_label (GTK_BUTTON (extract_button), _("_Stop"));
   gtk_widget_show (progress_bar);
 
   /* Reset the progress dialog */
@@ -844,15 +863,15 @@ on_extract_activate (GtkWidget *button, gpointer user_data)
   /* Disable the widgets in the main UI*/
   gtk_widget_set_sensitive (title_entry, FALSE);
   gtk_widget_set_sensitive (artist_entry, FALSE);
+  gtk_widget_set_sensitive (composer_entry, FALSE);
   gtk_widget_set_sensitive (genre_entry, FALSE);
   gtk_widget_set_sensitive (year_entry, FALSE);
   gtk_widget_set_sensitive (disc_number_entry, FALSE);
 
   /* Disable the menuitems in the main menu*/
-  gtk_widget_set_sensitive (extract_menuitem, FALSE);
-  gtk_widget_set_sensitive (reread_menuitem, FALSE);
-  gtk_widget_set_sensitive (select_all_menuitem, FALSE);
-  gtk_widget_set_sensitive (deselect_all_menuitem, FALSE);
+  set_action_enabled ("select-all", FALSE);
+  set_action_enabled ("deselect-all", FALSE);
+  set_action_enabled ("re-read", FALSE);
 
   /* Disable the Extract column */
   g_object_set (G_OBJECT (toggle_renderer), "mode", GTK_CELL_RENDERER_MODE_INERT, NULL);
@@ -899,10 +918,7 @@ sanitize_path (const char* str, const char* filesystem_type)
   gchar *res = NULL;
   gchar *s;
 
-  if (str == NULL) {
-      /* Not a lot we can do other than return an empty string */
-      return g_strdup_printf(UNKNOWN_TAG_VALUE);
-  }
+  g_return_val_if_fail (str != NULL, NULL);
 
   /* Skip leading periods, otherwise files disappear... */
   while (*str == '.')
@@ -934,6 +950,56 @@ sanitize_path (const char* str, const char* filesystem_type)
   return res ? res : g_strdup(str);
 }
 
+/*
+ * Return sanitized name or default if name is empty
+ */
+static char*
+sanitize_name (const char *name, const char *default_name,
+               const char *filesystem_type)
+{
+  const char *n = (sj_str_is_empty (name)) ? default_name : name;
+  return sanitize_path (n, filesystem_type);
+}
+
+/*
+ * Return lowercase sanitized name or default if name is empty
+ */
+static char*
+lower_sanitize_name (const char *name, const char *default_name,
+                     const char *filesystem_type)
+{
+  char *tmp, *s;
+  const char *n = (sj_str_is_empty (name)) ? default_name : name;
+  tmp = g_utf8_strdown (n, -1);
+  s = sanitize_path (tmp, filesystem_type);
+  g_free (tmp);
+  return s;
+}
+
+/*
+ * Return sanitized sortname or name if sortname is empty or default
+ * if name is empty
+ */
+static char*
+sanitize_sortname (const char *sortname, const char *name,
+                   const char *default_name, const char *filesystem_type)
+{
+  const char *n = (sj_str_is_empty (sortname)) ? name : sortname;
+  return sanitize_name (n, default_name, filesystem_type);
+}
+
+/*
+ * Return lowercase sanitized sortname or name if sortname is empty or
+ * default if name is empty
+ */
+static char*
+lower_sanitize_sortname (const char *sortname, const char *name,
+                         const char *default_name, const char *filesystem_type)
+{
+  const char *n = (sj_str_is_empty (sortname)) ? name : sortname;
+  return lower_sanitize_name (n, default_name, filesystem_type);
+}
+
 /**
  * Parse a filename pattern and replace markers with values from a TrackDetails
  * structure.
@@ -945,6 +1011,10 @@ sanitize_path (const char* str, const char* filesystem_type)
  * %aA -- album artist (lowercase)
  * %as -- album artist sortname
  * %aS -- album artist sortname (lowercase)
+ * %ac -- album composer
+ * %aC -- album composer (lowercase)
+ * %ap -- album composer (sortable)
+ * %aP -- album composer (sortable lowercase)
  * %tn -- track number (i.e 8)
  * %tN -- track number, zero padded (i.e 08)
  * %tt -- track title
@@ -953,8 +1023,12 @@ sanitize_path (const char* str, const char* filesystem_type)
  * %tA -- track artist (lowercase)
  * %ts -- track artist sortname
  * %tS -- track artist sortname (lowercase)
- * %dn -- disc and track number (i.e Disk 2 - 6, or 6)
- * %dN -- disc number, zero padded (i.e d02t06, or 06)
+ * %tc -- track composer
+ * %tC -- track composer (lowercase)
+ * %tp -- track composer (sortable)
+ * %tP -- track composer (sortable lowercase)
+ * %dn -- disc and track number, track zero padded (i.e Disk 2 - 06, or 06)
+ * %dN -- condensed disc and track number, zero padded (i.e d02t06, or 06)
  */
 char*
 filepath_parse_pattern (const char* pattern, const TrackDetails *track)
@@ -964,6 +1038,10 @@ filepath_parse_pattern (const char* pattern, const TrackDetails *track)
   char *tmp, *str, *filesystem_type = NULL;
   GString *s;
   GFileInfo *fs_info;
+  const char *default_album    = _("Unknown Album");
+  const char *default_artist   = _("Unknown Artist");
+  const char *default_composer = _("Unknown Composer");
+  const char *default_track    = _("Unknown Track");
 
   if (pattern == NULL || pattern[0] == 0)
     return g_strdup (" ");
@@ -1008,35 +1086,55 @@ filepath_parse_pattern (const char* pattern, const TrackDetails *track)
        */
       switch (*++p) {
       case 't':
-        string = sanitize_path (track->album->title, filesystem_type);
+        string = sanitize_name (track->album->title, default_album,
+                                filesystem_type);
         break;
       case 'y':
-        if (track->album->release_date && g_date_valid(track->album->release_date)) {
-          tmp = g_strdup_printf ("%d", g_date_get_year (track->album->release_date));
+        if (track->album->release_date && gst_date_time_has_year (track->album->release_date)) {
+          tmp = g_strdup_printf ("%d", gst_date_time_get_year (track->album->release_date));
           string = sanitize_path (tmp, filesystem_type);
           g_free (tmp);
         }
         break;
       case 'T':
-        tmp = g_utf8_strdown (track->album->title, -1);
-        string = sanitize_path (tmp, filesystem_type);
-        g_free (tmp);
+        string = lower_sanitize_name (track->album->title, default_album,
+                                      filesystem_type);
         break;
       case 'a':
-        string = sanitize_path (track->album->artist, filesystem_type);
+        string = sanitize_name (track->album->artist, default_artist,
+                                filesystem_type);
         break;
       case 'A':
-        tmp = g_utf8_strdown (track->album->artist, -1);
-        string = sanitize_path (tmp, filesystem_type);
-        g_free (tmp);
+        string = lower_sanitize_name (track->album->artist, default_artist,
+                                      filesystem_type);
         break;
       case 's':
-        string = sanitize_path (track->album->artist_sortname ? track->album->artist_sortname : track->album->artist, filesystem_type);
+        string = sanitize_sortname (track->album->artist_sortname,
+                                    track->album->artist, default_artist,
+                                    filesystem_type);
         break;
       case 'S':
-        tmp = g_utf8_strdown (track->album->artist_sortname ? track->album->artist_sortname : track->album->artist, -1);
-        string = sanitize_path (tmp, filesystem_type);
-        g_free(tmp);
+        string = lower_sanitize_sortname (track->album->artist_sortname,
+                                          track->album->artist, default_artist,
+                                          filesystem_type);
+        break;
+      case 'c':
+        string = sanitize_name (track->album->composer, default_composer,
+                                filesystem_type);
+        break;
+      case 'C':
+        string = lower_sanitize_name (track->album->composer, default_composer,
+                                      filesystem_type);
+        break;
+      case 'p':
+        string = sanitize_sortname (track->album->composer_sortname,
+                                    track->album->composer, default_composer,
+                                    filesystem_type);
+        break;
+      case 'P':
+        string = lower_sanitize_sortname (track->album->composer_sortname,
+                                          track->album->composer,
+                                          default_composer, filesystem_type);
         break;
       default:
         /* append "%a", and then the unicode character */
@@ -1054,36 +1152,43 @@ filepath_parse_pattern (const char* pattern, const TrackDetails *track)
        */
       switch (*++p) {
       case 't':
-        string = sanitize_path (track->title, filesystem_type);
-        if (g_strcmp0(string, UNKNOWN_TAG_VALUE) == 0) {
-            g_free(string);
-            string = g_strdup_printf ("%d", track->number);
-        }
+        string = sanitize_name (track->title, default_track, filesystem_type);
         break;
       case 'T':
-        tmp = g_utf8_strdown (track->title, -1);
-        string = sanitize_path (tmp, filesystem_type);
-        if (g_strcmp0(string, UNKNOWN_TAG_VALUE) == 0) {
-            g_free(string);
-            string = g_strdup_printf ("%d", track->number);
-        }
-        g_free(tmp);
+        string = lower_sanitize_name (track->title, default_track,
+                                      filesystem_type);
         break;
       case 'a':
-        string = sanitize_path (track->artist, filesystem_type);
+        string = sanitize_name (track->artist, default_artist, filesystem_type);
         break;
       case 'A':
-        tmp = g_utf8_strdown (track->artist, -1);
-        string = sanitize_path (tmp, filesystem_type);
-        g_free(tmp);
+        string = lower_sanitize_name (track->artist, default_artist,
+                                      filesystem_type);
         break;
       case 's':
-        string = sanitize_path (track->artist_sortname ? track->album->artist_sortname : track->artist, filesystem_type);
+        string = sanitize_sortname (track->artist_sortname, track->artist,
+                                    default_artist, filesystem_type);
         break;
       case 'S':
-        tmp = g_utf8_strdown (track->artist_sortname ? track->album->artist_sortname : track->artist, -1);
-        string = sanitize_path (tmp, filesystem_type);
-        g_free(tmp);
+        string = lower_sanitize_sortname (track->artist_sortname, track->artist,
+                                          default_artist, filesystem_type);
+        break;
+      case 'c':
+         string = sanitize_name (track->composer, default_composer,
+                                 filesystem_type);
+        break;
+      case 'C':
+        string = lower_sanitize_name (track->composer, default_composer,
+                                      filesystem_type);
+        break;
+      case 'p':
+        string = sanitize_sortname (track->composer_sortname, track->composer,
+                                    default_composer, filesystem_type);
+        break;
+      case 'P':
+        string = lower_sanitize_sortname (track->composer_sortname,
+                                          track->composer, default_composer,
+                                          filesystem_type);
         break;
       case 'n':
         /* Track number */
@@ -1111,7 +1216,9 @@ filepath_parse_pattern (const char* pattern, const TrackDetails *track)
       case 'n':
         /* Disc and track number */
         if (track->album->disc_number > 0) {
-          string = g_strdup_printf ("Disc %d - %d", track->album->disc_number, track->number);
+          char *s = g_strdup_printf ("Disc %d - %02d", track->album->disc_number, track->number);
+          string = sanitize_path (s, filesystem_type); /* strip spaces if required */
+          g_free (s);
         } else {
           string = g_strdup_printf ("%d", track->number);
         }

@@ -36,22 +36,11 @@ libjuicer_la_LDFLAGS = \
 	-export-dynamic \
 	$(AM_LDFLAGS)
 
-if HAVE_MUSICBRAINZ3
 libjuicer_la_SOURCES += \
-	sj-metadata-musicbrainz3.h \
-	sj-metadata-musicbrainz3.c
-libjuicer_la_LIBADD += $(MUSICBRAINZ3_LIBS)
-libjuicer_la_CFLAGS += $(MUSICBRAINZ3_CFLAGS)
-endif
-
-if HAVE_MUSICBRAINZ4
-libjuicer_la_SOURCES += \
-	sj-metadata-musicbrainz4.h \
-	sj-metadata-musicbrainz4.c
-libjuicer_la_LIBADD += $(MUSICBRAINZ4_LIBS)
-libjuicer_la_CFLAGS += $(MUSICBRAINZ4_CFLAGS)
-endif
-
+	sj-metadata-musicbrainz5.h \
+	sj-metadata-musicbrainz5.c
+libjuicer_la_LIBADD += $(MUSICBRAINZ5_LIBS) $(DISCID_LIBS)
+libjuicer_la_CFLAGS += $(MUSICBRAINZ5_CFLAGS) $(DISCID_CFLAGS)
 
 #
 # Build the GValue marshals

@@ -13,9 +13,7 @@
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * License along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef SJ_METADATA_H
@@ -46,13 +44,12 @@ struct _SjMetadataClass
 
 GType sj_metadata_get_type (void);
 void sj_metadata_set_cdrom (SjMetadata *metadata, const char* device);
-void sj_metadata_set_proxy (SjMetadata *metadata, const char* proxy);
-void sj_metadata_set_proxy_port (SjMetadata *metadata, const int proxy_port);
 GList * sj_metadata_list_albums (SjMetadata *metadata, char **url, GError **error);
 
 char * sj_metadata_helper_scan_disc_number (const char *album_title, int *disc_number);
-GDate * sj_metadata_helper_scan_date (const char *date);
 gboolean sj_metadata_helper_check_media (const char *cdrom, GError **error);
+char * sj_metadata_helper_lookup_country_code (const char *code);
+void sj_metadata_helper_cleanup (void);
 
 G_END_DECLS
 

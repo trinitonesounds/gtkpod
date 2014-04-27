@@ -13,9 +13,7 @@
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * License along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -43,8 +41,11 @@ struct SjMetadataGvfsPrivate {
 enum {
   PROP_0,
   PROP_DEVICE,
+  PROP_PROXY_USE_AUTHENTICATION,
   PROP_PROXY_HOST,
   PROP_PROXY_PORT,
+  PROP_PROXY_USERNAME,
+  PROP_PROXY_PASSWORD
 };
 
 static void metadata_iface_init (gpointer g_iface, gpointer iface_data);
@@ -178,7 +179,13 @@ sj_metadata_gvfs_get_property (GObject *object, guint property_id,
   case PROP_DEVICE:
     g_value_set_string (value, priv->cdrom);
     break;
+  case PROP_PROXY_USE_AUTHENTICATION:
+    /* Do nothing */
+    g_value_set_boolean (value, FALSE);
+    break;
   case PROP_PROXY_HOST:
+  case PROP_PROXY_USERNAME:
+  case PROP_PROXY_PASSWORD:
     /* Do nothing */
     g_value_set_string (value, "");
     break;
@@ -205,8 +212,11 @@ sj_metadata_gvfs_set_property (GObject *object, guint property_id,
     g_free (priv->uri);
     priv->uri = device_to_cdda_uri (priv->cdrom);
     break;
+  case PROP_PROXY_USE_AUTHENTICATION:
   case PROP_PROXY_HOST:
   case PROP_PROXY_PORT:
+  case PROP_PROXY_USERNAME:
+  case PROP_PROXY_PASSWORD:
     /* Do nothing */
     break;
   default:
@@ -247,9 +257,18 @@ sj_metadata_gvfs_class_init (SjMetadataGvfsClass *class)
   object_class->set_property = sj_metadata_gvfs_set_property;
   object_class->finalize = sj_metadata_gvfs_finalize;
 
-  g_object_class_override_property (object_class, PROP_DEVICE, "device");
-  g_object_class_override_property (object_class, PROP_PROXY_HOST, "proxy-host");
-  g_object_class_override_property (object_class, PROP_PROXY_PORT, "proxy-port");
+  g_object_class_override_property (object_class,
+                                    PROP_DEVICE, "device");
+  g_object_class_override_property (object_class,
+                                    PROP_PROXY_USE_AUTHENTICATION, "proxy-use-authentication");
+  g_object_class_override_property (object_class,
+                                    PROP_PROXY_HOST, "proxy-host");
+  g_object_class_override_property (object_class,
+                                    PROP_PROXY_PORT, "proxy-port");
+  g_object_class_override_property (object_class,
+                                    PROP_PROXY_USERNAME, "proxy-username");
+  g_object_class_override_property (object_class,
+                                    PROP_PROXY_PASSWORD, "proxy-password");
 }
 
 

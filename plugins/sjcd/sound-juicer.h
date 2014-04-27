@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Ross Burton <ross@burtonini.com>
  */
@@ -59,6 +58,7 @@ typedef enum {
   COLUMN_NUMBER,
   COLUMN_TITLE,
   COLUMN_ARTIST,
+  COLUMN_COMPOSER,
   COLUMN_DURATION,
   COLUMN_DETAILS,
   COLUMN_TOTAL
@@ -114,9 +114,14 @@ extern gboolean strip_chars;
 extern gboolean eject_finished;
 
 /**
- * Toggle, Title and Artist Renderers
+ * Toggle, Title, Artist and Composer Renderers
  */
-extern GtkCellRenderer *toggle_renderer, *title_renderer, *artist_renderer;
+extern GtkCellRenderer *toggle_renderer, *title_renderer, *artist_renderer, *composer_renderer;
+
+/**
+ * Debug
+ */
+void sj_debug (SjDebugDomain domain, const gchar* format, ...);
 
 /**
  * GSettings key names
@@ -133,14 +138,5 @@ extern GtkCellRenderer *toggle_renderer, *title_renderer, *artist_renderer;
 #define SJ_SETTINGS_STRIP "strip-special"
 #define SJ_SETTINGS_WINDOW "window"
 #define SJ_SETTINGS_AUDIO_VOLUME "volume"
-
-#define SJ_SETTINGS_HTTP_PROXY_ENABLE "enabled"
-#define SJ_SETTINGS_HTTP_PROXY "host"
-#define SJ_SETTINGS_HTTP_PROXY_PORT "port"
-
-/**
- * Custom stock icons
- */
-#define SJ_STOCK_EXTRACT "sj-stock-extract"
 
 #endif /* SOUND_JUICER_H */

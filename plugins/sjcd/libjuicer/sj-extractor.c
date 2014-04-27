@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Ross Burton <ross@burtonini.com>
  */
@@ -272,17 +271,25 @@ build_encoder (SjExtractor *extractor)
 {
   SjExtractorPrivate *priv;
   GstElement *encodebin;
+  const char *profile_name;
+  static const char * mp3_pipeline = "lamemp3enc ! xingmux ! id3v2mux";
 
   g_return_val_if_fail (SJ_IS_EXTRACTOR (extractor), NULL);
   priv = (SjExtractorPrivate*)extractor->priv;
   g_return_val_if_fail (priv->profile != NULL, NULL);
 
-  encodebin = gst_element_factory_make ("encodebin", NULL);
-  if (encodebin == NULL)
-    return NULL;
-  g_object_set (encodebin, "profile", priv->profile, NULL);
-  /* Nice big buffers... */
-  g_object_set (encodebin, "queue-time-max", 120 * GST_SECOND, NULL);
+  /* encodebin does not use xingmux so do mp3 pipeline ourselves */
+  profile_name = gst_encoding_profile_get_name (priv->profile);
+  if (strcmp (profile_name, "mp3") == 0) {
+    encodebin = gst_parse_bin_from_description (mp3_pipeline, TRUE, NULL);
+  } else {
+    encodebin = gst_element_factory_make ("encodebin", NULL);
+    if (encodebin == NULL)
+      return NULL;
+    g_object_set (encodebin, "profile", priv->profile, NULL);
+    /* Nice big buffers... */
+    g_object_set (encodebin, "queue-time-max", 120 * GST_SECOND, NULL);
+  }
 
   return encodebin;
 }
@@ -341,7 +348,7 @@ build_pipeline (SjExtractor *extractor)
   g_signal_connect (G_OBJECT (bus), "message::error", G_CALLBACK (error_cb), extractor);
 
   /* Read from CD */
-  priv->cdsrc = gst_element_make_from_uri (GST_URI_SRC, "cdda://1", "cd_src");
+  priv->cdsrc = gst_element_make_from_uri (GST_URI_SRC, "cdda://1", "cd_src", NULL);
   if (priv->cdsrc == NULL) {
     g_set_error (&priv->construct_error,
                  SJ_ERROR, SJ_ERROR_INTERNAL_ERROR,
@@ -402,7 +409,6 @@ tick_timeout_cb(SjExtractor *extractor)
   gint64 nanos;
   gint secs;
   GstState state, pending_state;
-  static GstFormat format = GST_FORMAT_TIME;
 
   g_return_val_if_fail (SJ_IS_EXTRACTOR (extractor), FALSE);
 
@@ -412,7 +418,7 @@ tick_timeout_cb(SjExtractor *extractor)
     return FALSE;
   }
 
-  if (!gst_element_query_position (extractor->priv->cdsrc, &format, &nanos)) {
+  if (!gst_element_query_position (extractor->priv->cdsrc, GST_FORMAT_TIME, &nanos)) {
     g_warning (_("Could not get current track position"));
     return TRUE;
   }
@@ -472,6 +478,7 @@ sj_extractor_extract_track (SjExtractor *extractor, const TrackDetails *track, G
   GstStateChangeReturn state_ret;
   SjExtractorPrivate *priv;
   GstIterator *iter;
+  GValue item = {0, };
   GstTagSetter *tagger;
   gboolean done;
   char *uri;
@@ -509,9 +516,10 @@ sj_extractor_extract_track (SjExtractor *extractor, const TrackDetails *track, G
   iter = gst_bin_iterate_all_by_interface (GST_BIN (priv->pipeline), GST_TYPE_TAG_SETTER);
   done = FALSE;
   while (!done) {
-    switch (gst_iterator_next (iter, (gpointer)&tagger)) {
+    switch (gst_iterator_next (iter, &item)) {
     case GST_ITERATOR_OK:
       /* TODO: generate this as a taglist once, and apply it to all elements */
+      tagger = g_value_get_object (&item);
       gst_tag_setter_add_tags (tagger,
                                GST_TAG_MERGE_REPLACE_ALL,
                                GST_TAG_TITLE, track->title,
@@ -522,6 +530,19 @@ sj_extractor_extract_track (SjExtractor *extractor, const TrackDetails *track, G
                                GST_TAG_DURATION, track->duration * GST_SECOND,
                                NULL);
 
+     if (track->composer != NULL && strcmp (track->composer, "") != 0) {
+        gst_tag_setter_add_tags (tagger,
+                            GST_TAG_MERGE_APPEND,
+                            GST_TAG_COMPOSER, track->composer,
+                            NULL);
+      }
+
+     if (track->composer_sortname != NULL && strcmp (track->composer_sortname, "") != 0) {
+        gst_tag_setter_add_tags (tagger,
+                            GST_TAG_MERGE_APPEND,
+                            GST_TAG_COMPOSER_SORTNAME, track->composer_sortname,
+                            NULL);
+      }
       if (track->album->album_id != NULL && strcmp (track->album->album_id, "") != 0) {
         gst_tag_setter_add_tags (tagger,
                             GST_TAG_MERGE_APPEND,
@@ -578,10 +599,30 @@ sj_extractor_extract_track (SjExtractor *extractor, const TrackDetails *track, G
         g_strfreev (values);
       }
       if (track->album->release_date) {
+        GDate *date;
+        guint year = 1;
+        guint month = 1;
+        guint day = 1;
+        if (gst_date_time_has_year (track->album->release_date)) {
+            year = gst_date_time_get_year (track->album->release_date);
+        }
+        if (gst_date_time_has_month (track->album->release_date)) {
+            month = gst_date_time_get_month (track->album->release_date);
+        }
+        if (gst_date_time_has_day (track->album->release_date)) {
+            day = gst_date_time_get_day (track->album->release_date);
+        }
+        date = g_date_new_dmy (day, month, year);
+        /* We set both GST_TAG_DATE_TIME and GST_TAG_DATE as most taggers
+         * use GST_TAG__DATE_TIME, but a few (id3v2mux/apemux) are still using
+         * GST_TAG_DATE
+         */
         gst_tag_setter_add_tags (tagger,
                                  GST_TAG_MERGE_APPEND,
-                                 GST_TAG_DATE, track->album->release_date,
+                                 GST_TAG_DATE_TIME, track->album->release_date,
+                                 GST_TAG_DATE, date,
                                  NULL);
+        g_date_free (date);
       }
       if (track->album->disc_number > 0) {
         gst_tag_setter_add_tags (tagger,
@@ -589,7 +630,7 @@ sj_extractor_extract_track (SjExtractor *extractor, const TrackDetails *track, G
                                  GST_TAG_ALBUM_VOLUME_NUMBER, track->album->disc_number,
                                  NULL);
       }
-      gst_object_unref (tagger);
+      g_value_unset (&item);
       break;
     case GST_ITERATOR_RESYNC:
       /* TODO? */
@@ -604,6 +645,7 @@ sj_extractor_extract_track (SjExtractor *extractor, const TrackDetails *track, G
       break;
     }
   }
+  g_value_unset (&item);
   gst_iterator_free (iter);
 
   /* Seek to the right track */
@@ -621,7 +663,7 @@ sj_extractor_extract_track (SjExtractor *extractor, const TrackDetails *track, G
   if (state_ret == GST_STATE_CHANGE_FAILURE) {
     GstMessage *msg;
 
-    msg = gst_bus_timed_pop_filtered(GST_ELEMENT_BUS (priv->pipeline), 0, GST_MESSAGE_ERROR);
+    msg = gst_bus_poll (GST_ELEMENT_BUS (priv->pipeline), GST_MESSAGE_ERROR, 0);
     if (msg) {
       gst_message_parse_error (msg, error, NULL);
       gst_message_unref (msg);
@@ -659,7 +701,7 @@ sj_extractor_supports_encoding (GError **error)
 {
   GstElement *element = NULL;
 
-  element = gst_element_make_from_uri (GST_URI_SRC, "cdda://1", "test");
+  element = gst_element_make_from_uri (GST_URI_SRC, "cdda://1", "test", NULL);
   if (element == NULL) {
     g_set_error (error, SJ_ERROR, SJ_ERROR_INTERNAL_ERROR,
                  _("The plugin necessary for CD access was not found"));
@@ -682,5 +724,21 @@ gboolean
 sj_extractor_supports_profile (GstEncodingProfile *profile)
 {
   /* TODO: take a GError to return a message if the profile isn't supported */
+  const gchar *profile_name = gst_encoding_profile_get_name (profile);
+  if (strcmp (profile_name, "mp3") == 0) {
+    GstElementFactory *factory = gst_element_factory_find ("lamemp3enc");
+    if (factory == NULL)
+      return FALSE;
+    g_object_unref (factory);
+    factory = gst_element_factory_find ("xingmux");
+    if (factory == NULL)
+      return FALSE;
+    g_object_unref (factory);
+    factory = gst_element_factory_find ("id3v2mux");
+    if (factory == NULL)
+      return FALSE;
+    g_object_unref (factory);
+    return TRUE;
+  }
   return !rb_gst_check_missing_plugins(profile, NULL, NULL);
 }

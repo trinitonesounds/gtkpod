@@ -101,27 +101,10 @@ PKG_CHECK_MODULES(GSTREAMER, gstreamer-1.0 >= 1.0 gstreamer-base-1.0 >= 1.0 gstr
 PKG_CHECK_MODULES(VORBISFILE, vorbisfile >= 1.3.1, [have_vorbis="yes"], [have_vorbis="no"])
 PKG_CHECK_MODULES(FLAC, flac >= 1.2.1, [have_flac="yes"], [have_flac="no"])
 PKG_CHECK_MODULES(BRASERO, libbrasero-media3 >= 3.0, [have_brasero="yes"], [have_brasero="no"])		
+PKG_CHECK_MODULES(MUSICBRAINZ5, libmusicbrainz5 >= 5.0.1, [have_mb5="yes"], [have_mb5="no"])
+PKG_CHECK_MODULES(DISCID, libdiscid >= 0.2.2, [have_discid="yes"], [have_discid="no"])
 
-dnl musicbrainz 3 is deprecated so may not be included. However required by sound juicer
-dnl will probably need replacing faily soon
-PKG_CHECK_MODULES(MUSICBRAINZ3, libmusicbrainz3 >= 3.0.2, [have_mb3="yes"], [have_mb3="no"])		
-PKG_CHECK_MODULES(MUSICBRAINZ4, libmusicbrainz4 >= 4.0.0, [have_mb4="yes"], [have_mb4="no"])		
-    
 GTK_CLEANLINESS_FLAGS="-DG_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE"
-
-AC_MSG_CHECKING(for using DISABLE_DEPRECATED flags)
-
-if expr "$LIBGTKPOD_VERSION" : '.*~' >/dev/null; then
-  dnl The version contains a tilde so this is not a release
-  dnl Thus, we can add in disable deprecated flags to avoid
-  dnl using deprecated functions
-  GTK_CLEANLINESS_FLAGS="$GTK_CLEANLINESS_FLAGS -DG_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
-  AC_MSG_RESULT(yes)
-else
-  dnl The version is a release so do not include deprecated
-  dnl flags.
-  AC_MSG_RESULT(no)
-fi
 
 dnl Force C99 mode (no implicit int declarations)
 CFLAGS="$CFLAGS -std=gnu99 -Werror-implicit-function-declaration -Werror=format-security"
@@ -360,42 +343,32 @@ if test "$user_disabled_sjcd" = 1; then
 else
 	AC_MSG_RESULT(no)
 	AC_MSG_CHECKING(sjcd plugin dependencies)
-	if test "x$have_gstreamer" = "xyes" -a "x$have_brasero" = "xyes"; then
-		if test "x$have_mb3" = "xyes" -o "x$have_mb4" = "xyes"; then
-	  
-			AC_MSG_RESULT(yes)
-			have_sjcd="yes"
-		
-			dnl Checks for components of gstreamer
-			AM_GST_ELEMENT_CHECK(vorbisenc,,AC_MSG_WARN([The 'vorbisenc' element was not found. This will cause encoding to Ogg Vorbis to fail.]))
-			AM_GST_ELEMENT_CHECK(flacenc,,AC_MSG_WARN([The 'flacenc' element was not found. This will cause encoding to FLAC to fail.]))
-			AM_GST_ELEMENT_CHECK(wavenc,,AC_MSG_WARN([The 'wavenc' element was not found. This will cause encoding to Wave to fail.]))
-			AM_GST_ELEMENT_CHECK(giosink,,AC_MSG_WARN([The 'giosink' element was not found. This will cause Sound Juicer to fail at runtime.]))
-		
-			if test "x$have_mb4" = "xyes"; then
-				AC_DEFINE([HAVE_MUSICBRAINZ4], 1, [Whether libmusicbrainz4 is available])	
-			elif test "x$have_mb3" = "xyes"; then
-				dnl fallback to musicbrainz 3
-				AC_DEFINE([HAVE_MUSICBRAINZ3], 1, [Whether libmusicbrainz3 is available])	
-			fi
+	if test "x$have_gstreamer" = "xyes" -a "x$have_brasero" = "xyes" -a "x$have_mb5" = "xyes" -a "x$have_discid" = "xyes"; then
 
+		dnl Used within code for determining whether musicbrainz5 gtype is available
+		AC_DEFINE([HAVE_MUSICBRAINZ5], 1, [Whether libmusicbrainz5 is available])
+  
+		# ISO-CODES
+		PKG_CHECK_MODULES(ISO_CODES, [iso-codes])
+		if $PKG_CONFIG --variable=domains iso-codes | grep 3166 >/dev/null ; then
+			AC_DEFINE_UNQUOTED([ISO_CODES_PREFIX],["`$PKG_CONFIG --variable=prefix iso-codes`"],[ISO codes prefix])
 		else
-			AC_MSG_RESULT(no)
+			AC_MSG_ERROR([iso-codes database does not support iso3166 country codes])
 		fi
+
+		AC_MSG_RESULT(yes)
+		have_sjcd="yes"
+		
+		dnl Checks for components of gstreamer
+		GST_ELEMENT_CHECK(vorbisenc,1.0,,AC_MSG_WARN([The 'vorbisenc' element was not found. This will cause encoding to Ogg Vorbis to fail.]))
+		GST_ELEMENT_CHECK(flacenc,1.0,,AC_MSG_WARN([The 'flacenc' element was not found. This will cause encoding to FLAC to fail.]))
+		GST_ELEMENT_CHECK(wavenc,1.0,,AC_MSG_WARN([The 'wavenc' element was not found. This will cause encoding to Wave to fail.]))
+		GST_ELEMENT_CHECK(giosink,1.0,,AC_MSG_WARN([The 'giosink' element was not found. This will cause Sound Juicer to fail at runtime.]))
+	else
+		AC_MSG_RESULT(no)
 	fi
 fi
 
-if test "x$have_mb4" = "xyes"; then
-	AM_CONDITIONAL(HAVE_MUSICBRAINZ4, true)
-	dnl do not need musicbrainz 3
-	AM_CONDITIONAL(HAVE_MUSICBRAINZ3, false)
-elif test "x$have_mb3" = "xyes"; then
-	AM_CONDITIONAL(HAVE_MUSICBRAINZ4, false)
-	AM_CONDITIONAL(HAVE_MUSICBRAINZ3, true)
-else
-	AM_CONDITIONAL(HAVE_MUSICBRAINZ4, false)
-	AM_CONDITIONAL(HAVE_MUSICBRAINZ3, false)
-fi
 AM_CONDITIONAL(HAVE_PLUGIN_SJCD, [test "x$have_sjcd" = "xyes"])
 if test "x$have_sjcd" = "xyes"; then
     AC_DEFINE(HAVE_PLUGIN_SJCD, 1, [Define if you have sound juicer support])

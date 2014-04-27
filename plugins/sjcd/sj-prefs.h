@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Ross Burton <ross@burtonini.com>
  */
@@ -25,16 +24,17 @@
 
 GtkWidget *init_sjcd_preferences();
 
-extern const char* prefs_get_default_device ();
-void on_edit_preferences_cb (GtkMenuItem *item, gpointer user_data);
+extern const char* prefs_get_default_device (void);
+void show_preferences_dialog (void);
 gboolean cd_drive_exists (const char *device);
 void show_help (GtkWindow *parent);
 
+const gchar* sj_get_default_file_pattern (void);
+const gchar* sj_get_default_path_pattern (void);
 void prefs_profile_changed (GtkWidget *widget, gpointer user_data);
 G_MODULE_EXPORT void prefs_base_folder_changed (GtkWidget *chooser, gpointer user_data);
 void prefs_path_option_changed (GtkComboBox *combo, gpointer user_data);
 void prefs_file_option_changed (GtkComboBox *combo, gpointer user_data);
-G_MODULE_EXPORT void on_edit_preferences_cb (GtkMenuItem *item, gpointer user_data);
 
 G_MODULE_EXPORT void on_destroy_dialog_content_cb(GtkWidget *widget, gpointer user_data);
 

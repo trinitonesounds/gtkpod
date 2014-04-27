@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Ross Burton <ross@burtonini.com>
  */
@@ -22,27 +21,20 @@
 #define SJ_MAIN_H
 
 #include <gtk/gtk.h>
-#include "libjuicer/sj-structures.h"
+#include "sj-structures.h"
 
 GtkWidget *sj_create_sound_juicer();
 
-G_MODULE_EXPORT void on_quit_activate (GtkMenuItem *item, gpointer user_data);
+void set_action_enabled (const char *name, gboolean enabled);
+
 G_MODULE_EXPORT void on_destroy_activate (GtkMenuItem *item, gpointer user_data);
-G_MODULE_EXPORT void on_eject_activate (GtkMenuItem *item, gpointer user_data);
-G_MODULE_EXPORT void on_select_all_activate (GtkMenuItem *item, gpointer user_data);
-G_MODULE_EXPORT void on_deselect_all_activate (GtkMenuItem *item, gpointer user_data);
-G_MODULE_EXPORT void on_destroy_signal (GtkMenuItem *item, gpointer user_data);
 
 AlbumDetails* multiple_album_dialog (GList* albums);
 
 const char* prefs_get_default_device (void);
 
-G_MODULE_EXPORT void on_reread_activate (GtkWidget *button, gpointer user_data);
-G_MODULE_EXPORT void on_submit_activate (GtkWidget *menuitem, gpointer user_data);
 G_MODULE_EXPORT void on_genre_edit_changed(GtkEditable *widget, gpointer user_data);
 G_MODULE_EXPORT void on_year_edit_changed(GtkEditable *widget, gpointer user_data);
-G_MODULE_EXPORT void on_contents_activate(GtkWidget *button, gpointer user_data);
-G_MODULE_EXPORT void on_duplicate_activate (GtkWidget *button, gpointer user_data);
 
 GtkWidget* sj_make_volume_button (void);
 

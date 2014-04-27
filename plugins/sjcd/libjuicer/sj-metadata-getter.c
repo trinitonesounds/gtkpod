@@ -13,32 +13,29 @@
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * License along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "config.h"
 
+#include <gio/gio.h>
 #include <glib-object.h>
 #include <glib/gi18n.h>
 #include "sj-structures.h"
 #include "sj-metadata-getter.h"
 #include "sj-metadata-marshal.h"
 #include "sj-metadata.h"
-#ifdef HAVE_MUSICBRAINZ4
-#include "sj-metadata-musicbrainz4.h"
-#endif /* HAVE_MUSICBRAINZ4 */
-#ifdef HAVE_MUSICBRAINZ3
-#include "sj-metadata-musicbrainz3.h"
-#endif /* HAVE_MUSICBRAINZ3 */
-#ifdef HAVE_MUSICBRAINZ
-#include "sj-metadata-musicbrainz.h"
-#endif /* HAVE_MUSICBRAINZ */
+#ifdef HAVE_MUSICBRAINZ5
+#include "sj-metadata-musicbrainz5.h"
+#endif /* HAVE_MUSICBRAINZ5 */
 #include "sj-metadata-gvfs.h"
 #include "sj-error.h"
 
-#define SJ_METADATA_THREAD "SJ MetaData Thread"
+#define SJ_SETTINGS_PROXY_HOST "host"
+#define SJ_SETTINGS_PROXY_PORT "port"
+#define SJ_SETTINGS_PROXY_USE_AUTHENTICATION "use-authentication"
+#define SJ_SETTINGS_PROXY_USERNAME "authentication-user"
+#define SJ_SETTINGS_PROXY_PASSWORD "authentication-password"
 
 enum {
   METADATA,
@@ -48,8 +45,6 @@ enum {
 struct SjMetadataGetterPrivate {
   char *url;
   char *cdrom;
-  char *proxy_host;
-  int proxy_port;
 };
 
 struct SjMetadataGetterSignal {
@@ -99,7 +94,6 @@ sj_metadata_getter_finalize (GObject *object)
 
   g_free (priv->url);
   g_free (priv->cdrom);
-  g_free (priv->proxy_host);
 
   G_OBJECT_CLASS (sj_metadata_getter_parent_class)->finalize (object);
 }
@@ -133,26 +127,41 @@ sj_metadata_getter_set_cdrom (SjMetadataGetter *mdg, const char* device)
   priv->cdrom = g_strdup (device);
 }
 
-void
-sj_metadata_getter_set_proxy (SjMetadataGetter *mdg, const char* proxy)
+static void
+bind_http_proxy_settings (SjMetadata *metadata)
 {
-  SjMetadataGetterPrivate *priv;
+  GSettings *settings = g_settings_new ("org.gnome.system.proxy.http");
+  /* bind with G_SETTINGS_BIND_GET_NO_CHANGES to avoid occasional
+     segfaults in g_object_set_property called with an invalid pointer
+     which I think were caused by the update being scheduled before
+     metadata was destroy but happening afterwards (g_settings_bind is
+     not called from the main thread). metadata is a short lived
+     object so there shouldn't be a problem in practice, as the setting
+     are unlikely to change while it exists. If the settings change
+     between ripping one CD and the next then as a new metadata object
+     is created for the second query it will have the updated
+     settings. */
+  g_settings_bind (settings, SJ_SETTINGS_PROXY_HOST,
+                   metadata, "proxy-host",
+                   G_SETTINGS_BIND_GET_NO_CHANGES);
 
-  priv = GETTER_PRIVATE (mdg);
+  g_settings_bind (settings, SJ_SETTINGS_PROXY_PORT,
+                   metadata, "proxy-port",
+                   G_SETTINGS_BIND_GET_NO_CHANGES);
 
-  if (priv->proxy_host)
-    g_free (priv->proxy_host);
-  priv->proxy_host = g_strdup (proxy);
-}
+  g_settings_bind (settings, SJ_SETTINGS_PROXY_USERNAME,
+                   metadata, "proxy-username",
+                   G_SETTINGS_BIND_GET_NO_CHANGES);
 
-void
-sj_metadata_getter_set_proxy_port (SjMetadataGetter *mdg, const int proxy_port)
-{
-  SjMetadataGetterPrivate *priv;
+  g_settings_bind (settings, SJ_SETTINGS_PROXY_PASSWORD,
+                   metadata, "proxy-password",
+                   G_SETTINGS_BIND_GET_NO_CHANGES);
 
-  priv = GETTER_PRIVATE (mdg);
+  g_settings_bind (settings, SJ_SETTINGS_PROXY_USE_AUTHENTICATION,
+                   metadata, "proxy-use-authentication",
+                   G_SETTINGS_BIND_GET_NO_CHANGES);
 
-  priv->proxy_port = proxy_port;
+  g_object_unref (settings);
 }
 
 static gboolean
@@ -180,15 +189,9 @@ lookup_cd (SjMetadataGetter *mdg)
   GError *error = NULL;
   gboolean found = FALSE;
   GType types[] = {
-#ifdef HAVE_MUSICBRAINZ4
-    SJ_TYPE_METADATA_MUSICBRAINZ4,
-#endif /* HAVE_MUSICBRAINZ4 */
-#ifdef HAVE_MUSICBRAINZ3
-    SJ_TYPE_METADATA_MUSICBRAINZ3,
-#endif /* HAVE_MUSICBRAINZ3 */
-#ifdef HAVE_MUSICBRAINZ
-    SJ_TYPE_METADATA_MUSICBRAINZ,
-#endif /* HAVE_MUSICBRAINZ */
+#ifdef HAVE_MUSICBRAINZ5
+    SJ_TYPE_METADATA_MUSICBRAINZ5,
+#endif /* HAVE_MUSICBRAINZ5 */
     SJ_TYPE_METADATA_GVFS
   };
 
@@ -196,16 +199,16 @@ lookup_cd (SjMetadataGetter *mdg)
 
   g_free (priv->url);
   priv->url = NULL;
-
+  
   for (i = 0; i < G_N_ELEMENTS (types); i++) {
     SjMetadata *metadata;
     GList *albums;
 
     metadata = g_object_new (types[i],
     			     "device", priv->cdrom,
-    			     "proxy-host", priv->proxy_host,
-    			     "proxy-port", priv->proxy_port,
     			     NULL);
+
+    bind_http_proxy_settings (metadata);
     if (priv->url == NULL)
       albums = sj_metadata_list_albums (metadata, &priv->url, &error);
     else
@@ -242,24 +245,11 @@ lookup_cd (SjMetadataGetter *mdg)
   return NULL;
 }
 
-static GThread *_create_thread(GThreadFunc func, gpointer userdata, GError **error) {
-    return g_thread_new (SJ_METADATA_THREAD, func, userdata);
-}
-
 gboolean
 sj_metadata_getter_list_albums (SjMetadataGetter *mdg, GError **error)
 {
-  GThread *thread;
-
   g_object_ref (mdg);
-  thread = _create_thread((GThreadFunc)lookup_cd, mdg, error);
-  if (thread == NULL) {
-    g_set_error (error,
-                 SJ_ERROR, SJ_ERROR_INTERNAL_ERROR,
-                 _("Could not create CD lookup thread"));
-    g_object_unref (mdg);
-    return FALSE;
-  }
+  g_thread_new ("sj-list-albums", (GThreadFunc)lookup_cd, mdg);
 
   return TRUE;
 }
