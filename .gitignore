@@ -14,11 +14,14 @@ Makefile.in
 cscope.out
 version
 .tx
+.kdev*
 
 # /
 /.anjuta*
 /.cdtproject
 /.project
+/.kdev4
+/gtkpod.kdev4
 /.autotools
 /.settings
 /CMakeLists.txt.user
