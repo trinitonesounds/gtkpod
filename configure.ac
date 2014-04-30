@@ -106,6 +106,28 @@ PKG_CHECK_MODULES(DISCID, libdiscid >= 0.2.2, [have_discid="yes"], [have_discid=
 
 GTK_CLEANLINESS_FLAGS="-DG_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE"
 
+AC_MSG_CHECKING(Prohibit deprecated function calls)
+AC_ARG_ENABLE(deprecations,
+AC_HELP_STRING([--enable-deprecations],
+[Allow deprecated function calls]),
+[enable_deprecations=$enableval],[enable_deprecations=no])
+
+if expr "$LIBGTKPOD_VERSION" : '.*~' >/dev/null; then
+  dnl The version contains a tilde so this is not a release
+  dnl Thus, we can add in disable deprecated flags to avoid
+  dnl using deprecated functions
+  if test "x$enable_deprecations" = "xno"; then
+    GTK_CLEANLINESS_FLAGS="$GTK_CLEANLINESS_FLAGS -DG_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
+    AC_MSG_RESULT(yes)
+  else
+    AC_MSG_RESULT(no)
+  fi
+else
+  dnl The version is a release so do not include deprecated
+  dnl flags.
+  AC_MSG_RESULT(no)
+fi
+
 dnl Force C99 mode (no implicit int declarations)
 CFLAGS="$CFLAGS -std=gnu99 -Werror-implicit-function-declaration -Werror=format-security"
 
