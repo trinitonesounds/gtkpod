@@ -58,7 +58,7 @@ How to compile/install gtkpod:
         For sjcd (sound-juicer) plugin:
         libcanberra
         libbrasero-media3
-        musicbrainz3
+        musicbrainz5
 
    The following can be used for installing the dependencies on ubuntu 11.10:
 
@@ -86,30 +86,42 @@ How to compile/install gtkpod:
 				   faad \
 				   libcurl3 \
 					 libbrasero-media3-dev \
-					 libmusicbrainz3-dev
+					 libmusicbrainz5-dev
 
-   The following can be used for installing the dependencies on fedora 15:
+   The following can be used for installing the dependencies on fedora 19:
 
         yum groupinstall Development\ Tools
+
         yum install \
+            intltool \
+            flex \
+            gcc-c++ \
             webkitgtk3-devel \
-            gstreamer-devel.i686 \
-            gstreamer-plugins-bad-free-devel.i686 \
-            gstreamer-plugins-base-devel.i686 \
-            gstreamer-plugins-good.i686 \
+            gstreamer1-devel.i686 \
+            gstreamer1-plugins-bad-free-devel.i686 \
+            gstreamer1-plugins-base-devel.i686 \
+            gstreamer1-plugins-good.i686 \
             flac-devel.i686 \
             libogg-devel.i686 \
             libvorbis-devel.i686 \
-            lame-devel.i686 \
             clutter-gtk-devel.i686 \
-            libpod-devel \
+            libgpod-devel \
             anjuta-devel \
             libgdl-devel \
             libid3tag-devel \
-            faad2 \
             curl-devel \
 						brasero-devel \
-						libmusicbrainz3-devel 
+            libdiscid-devel \
+            iso-codes-devel \
+            libmusicbrainz5-devel \
+            libdiscid-devel
+
+        # Enable rpmfusion
+        yum localinstall --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+                                      http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+
+        # Add questionable media software!
+        yum install lame-devel.i686 faad2
 
 2. If you install libraries to /usr/local/lib please don't forget to
    add the path to LD_LIBRARY_PATH and PKG_CONFIG_PATH
