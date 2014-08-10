@@ -79,7 +79,7 @@ static GSimpleActionGroup *action_group;
 static GtkWidget *vbox1;
 static GtkWidget *message_area_eventbox;
 static GtkWidget *title_entry, *artist_entry, *composer_label, *composer_entry, *duration_label, *genre_entry, *year_entry, *disc_number_entry;
-static GtkWidget *entry_table; /* GtkTable containing composer_entry */
+static GtkWidget *entry_grid; /* GtkGrid containing composer_entry */
 static GtkTreeViewColumn *composer_column; /* Treeview column containing composers */
 static GtkWidget *track_listview, *extract_button, *select_button;
 static GtkWidget *status_bar;
@@ -109,7 +109,7 @@ static guint debug_flags = 0;
 #define DEFAULT_PARANOIA 15
 #define RAISE_WINDOW "raise-window"
 #define SJCD_SCHEMA "org.gtkpod.sjcd"
-#define COMPOSER_ROW 2 /* Row of entry_table containing composer_entry */
+#define COMPOSER_ROW 2 /* Row of entry_grid containing composer_entry */
 
 void sj_debug (SjDebugDomain domain, const gchar* format, ...)
 {
@@ -425,53 +425,42 @@ musicbrainz_submit_info_bar_response (GtkInfoBar *infobar,
 
   set_message_area (message_area_eventbox, NULL);
 }
-#define TABLE_ROW_SPACING 6 /* spacing of rows in entry_table */
-
 /*
  * Show composer entry and composer column in track listview
  */
 static void
-show_composer_fields (void)
+enable_composer_fields (void)
 {
-  if (!gtk_widget_get_visible (GTK_WIDGET (composer_label))) {
-    gtk_table_set_row_spacing (GTK_TABLE (entry_table), COMPOSER_ROW,
-                               TABLE_ROW_SPACING);
-    gtk_widget_show (GTK_WIDGET (composer_entry));
-    gtk_widget_show (GTK_WIDGET (composer_label));
-    gtk_tree_view_column_set_visible (composer_column, TRUE);
-  }
+  // enable rather than show
+  gtk_widget_set_sensitive (GTK_WIDGET (composer_label), TRUE);
+  gtk_widget_set_sensitive (GTK_WIDGET (composer_entry), TRUE);
 }
-
-#undef TABLE_ROW_SPACING
 
 /*
  * Hide composer entry and composer column in track listview
  */
 static void
-hide_composer_fields (void)
+disable_composer_fields (void)
 {
-  if (gtk_widget_get_visible (GTK_WIDGET (composer_label))) {
-    gtk_table_set_row_spacing (GTK_TABLE (entry_table), COMPOSER_ROW, 0);
-    gtk_widget_hide (GTK_WIDGET (composer_entry));
-    gtk_widget_hide (GTK_WIDGET (composer_label));
-    gtk_tree_view_column_set_visible (composer_column, FALSE);
-  }
+  //disable rather than hide
+  gtk_widget_set_sensitive (GTK_WIDGET (composer_label), FALSE);
+  gtk_widget_set_sensitive (GTK_WIDGET (composer_entry), FALSE);
 }
 
 /*
- * Determine if the composer fields should be shown based on genre,
+ * Determine if the composer fields should be enabled based on genre,
  * always show composer fields if they are non-empty.
  */
 static void
-composer_show_hide (const char* genre)
+composer_enable_disable (const char* genre)
 {
   const static char *composer_genres[] = {
     N_("Classical"), N_("Lieder"), N_("Opera"), N_("Chamber"), N_("Musical")
-  };  /* Genres for which the composer fields should be shown. */
+  };  /* Genres for which the composer fields should be enabled. */
 #define COUNT (G_N_ELEMENTS (composer_genres))
   static char *genres[COUNT]; /* store localized genre names */
   static gboolean init = FALSE; /* TRUE if localized genre names initalized*/
-  gboolean composer_show = FALSE;
+  gboolean composer_enable = FALSE;
   int i;
   GList* l;
   char *folded_genre;
@@ -486,10 +475,10 @@ composer_show_hide (const char* genre)
     init = TRUE;
   }
 
-  composer_show = !sj_str_is_empty (current_album->composer);
+  composer_enable = !sj_str_is_empty (current_album->composer);
   for (l = current_album->tracks; l; l = g_list_next (l)) {
     if (!sj_str_is_empty (((TrackDetails*) (l->data))->composer) == TRUE) {
-      composer_show = TRUE;
+      composer_enable = TRUE;
       break;
     }
   }
@@ -497,16 +486,16 @@ composer_show_hide (const char* genre)
   folded_genre = g_utf8_casefold (genre, -1);
   for (i = 0; i < COUNT; i++) {
     if (g_str_equal (folded_genre, genres[i])) {
-      composer_show = TRUE;
+      composer_enable = TRUE;
       break;
     }
   }
   g_free (folded_genre);
 
-  if (composer_show)
-    show_composer_fields ();
+  if (composer_enable)
+    enable_composer_fields ();
   else
-    hide_composer_fields ();
+    disable_composer_fields ();
   return;
 }
 #undef COUNT
@@ -521,7 +510,7 @@ static void update_ui_for_album (AlbumDetails *album)
   char* duration_text;
   total_no_of_tracks=0;
 
-  hide_composer_fields ();
+  disable_composer_fields ();
 
   if (album == NULL) {
     gtk_list_store_clear (track_store);
@@ -556,7 +545,7 @@ static void update_ui_for_album (AlbumDetails *album)
     gtk_entry_set_text (GTK_ENTRY (artist_entry), album->artist);
     if (!sj_str_is_empty (album->composer)) {
       gtk_entry_set_text (GTK_ENTRY (composer_entry), album->composer);
-      show_composer_fields ();
+      enable_composer_fields ();
     } else {
       gtk_entry_set_text (GTK_ENTRY (composer_entry), "");
     }
@@ -605,7 +594,7 @@ static void update_ui_for_album (AlbumDetails *album)
                           COLUMN_DETAILS, track,
                           -1);
       if (!sj_str_is_empty (track->composer))
-        show_composer_fields ();
+        enable_composer_fields ();
      total_no_of_tracks++;
     }
     no_of_tracks_selected=total_no_of_tracks;
@@ -1749,7 +1738,7 @@ G_MODULE_EXPORT void on_genre_edit_changed(GtkEditable *widget, gpointer user_da
   }
   current_album->genre = gtk_editable_get_chars (widget, 0, -1); /* get all the characters */
   /* Toggle visibility of composer fields based on genre */
-  composer_show_hide (current_album->genre);
+  composer_enable_disable (current_album->genre);
 }
 
 G_MODULE_EXPORT void on_year_edit_changed(GtkEditable *widget, gpointer user_data) {
@@ -1925,7 +1914,7 @@ GtkWidget *sj_create_sound_juicer()
   extract_button        = GET_WIDGET ("extract_button");
   select_button         = GET_WIDGET ("select_button");
   status_bar            = GET_WIDGET ("status_bar");
-  entry_table           = GET_WIDGET ("entry_table");
+  entry_grid            = GET_WIDGET ("entry_grid");
 
   /*
    * Adding entries taken from sj but inserting action group
@@ -2003,9 +1992,6 @@ GtkWidget *sj_create_sound_juicer()
   }
 
   setup_genre_entry (genre_entry);
-
-  /* Remove row spacing from hidden row containing composer_entry */
-  gtk_table_set_row_spacing (GTK_TABLE (entry_table), COMPOSER_ROW, 0);
 
   track_store = gtk_list_store_new (COLUMN_TOTAL, G_TYPE_INT, G_TYPE_BOOLEAN, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_POINTER);
   gtk_tree_view_set_model (GTK_TREE_VIEW (track_listview), GTK_TREE_MODEL (track_store));

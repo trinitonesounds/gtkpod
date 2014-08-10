@@ -636,7 +636,7 @@ static void spl_playlist_changed(GtkComboBox *combobox, GtkWidget *spl_window) {
  (spl_button-0) */
 static void spl_check_number_of_rules(GtkWidget *spl_window) {
     Playlist *spl;
-    GtkTable *table;
+    GtkWidget *grid;
     gint numrules;
     GtkWidget *button;
 
@@ -645,13 +645,13 @@ static void spl_check_number_of_rules(GtkWidget *spl_window) {
     spl = g_object_get_data(G_OBJECT (spl_window), "spl_work");
     g_return_if_fail (spl);
 
-    table = g_object_get_data(G_OBJECT (spl_window), "spl_rules_table");
-    g_return_if_fail (table);
+    grid = g_object_get_data(G_OBJECT (spl_window), "spl_rules_table");
+    g_return_if_fail (grid);
 
     numrules = g_list_length(spl->splrules.rules);
     g_return_if_fail (numrules > 0);
 
-    button = g_object_get_data(G_OBJECT (table), "spl_button-0");
+    button = g_object_get_data(G_OBJECT (grid), "spl_button-0");
     g_return_if_fail (button);
     if (numrules > 1)
         gtk_widget_set_sensitive(button, TRUE);
@@ -1327,18 +1327,18 @@ static void spl_display_rules(GtkWidget *spl_window) {
     spl_check_number_of_rules(spl_wizard->window);
 }
 
-/* destroy widget @wname in row @row of table @table (used by
+/* destroy widget @wname in row @row of grid @grid (used by
  spl_update_rules_from_row() */
-static gboolean splremove(GtkWidget *table, const gchar *wname, gint row) {
+static gboolean splremove(GtkWidget *grid, const gchar *wname, gint row) {
     GtkWidget *w;
     gchar name[WNLEN];
     gboolean removed = FALSE;
 
     snprintf(name, WNLEN, "%s%d", wname, row);
-    w = g_object_get_data(G_OBJECT (table), name);
+    w = g_object_get_data(G_OBJECT (grid), name);
     if (w) {
         gtk_widget_destroy(w);
-        g_object_set_data(G_OBJECT (table), name, NULL);
+        g_object_set_data(G_OBJECT (grid), name, NULL);
         removed = TRUE;
     }
     return removed;
@@ -1348,14 +1348,14 @@ static gboolean splremove(GtkWidget *table, const gchar *wname, gint row) {
 static void spl_update_rules_from_row(GtkWidget *spl_window, gint row) {
     gint i, numrules;
     Playlist *spl;
-    GtkWidget *table;
+    GtkWidget *grid;
     gboolean removed;
 
     g_return_if_fail (spl_window);
     spl = g_object_get_data(G_OBJECT (spl_window), "spl_work");
     g_return_if_fail (spl);
-    table = g_object_get_data(G_OBJECT (spl_window), "spl_rules_table");
-    g_return_if_fail (table);
+    grid = g_object_get_data(G_OBJECT (spl_window), "spl_rules_table");
+    g_return_if_fail (grid);
 
     numrules = g_list_length(spl->splrules.rules);
 
@@ -1365,15 +1365,15 @@ static void spl_update_rules_from_row(GtkWidget *spl_window, gint row) {
     }
     /* remove rules that do no longer exist */
     for (removed = TRUE; removed == TRUE; ++i) {
-        removed = splremove(table, "spl_fieldcombo", i);
-        removed |= splremove(table, "spl_actioncombo", i);
-        removed |= splremove(table, "spl_actionhbox", i);
+        removed = splremove(grid, "spl_fieldcombo", i);
+        removed |= splremove(grid, "spl_actioncombo", i);
+        removed |= splremove(grid, "spl_actionhbox", i);
         /* remove spl_button+/- BEFORE removing spl_buttonhbox, as
          removing spl_buttonhbox will destroy the buttons as well --
          we'd have to g_object_set_data(..., NULL) manually. */
-        removed |= splremove(table, "spl_button+", i);
-        removed |= splremove(table, "spl_button-", i);
-        removed |= splremove(table, "spl_buttonhbox", i);
+        removed |= splremove(grid, "spl_button+", i);
+        removed |= splremove(grid, "spl_button-", i);
+        removed |= splremove(grid, "spl_buttonhbox", i);
     }
 }
 
