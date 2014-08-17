@@ -33,7 +33,8 @@
 #include "libgtkpod/misc.h"
 
 /* widget names for the "Create New Repository" window */
-#define CRW_BACKUP_CHOOSER "crw_backup_chooser"
+#define CRW_BACKUP_SELECT_FILE_BUTTON "crw_backup_select_file_button"
+#define CRW_BACKUP_FILE_ENTRY "crw_backup_file_entry"
 #define CRW_BACKUP_LABEL "crw_backup_label"
 #define CRW_CANCEL_BUTTON "crw_cancel_button"
 #define CRW_INSERT_BEFORE_AFTER_COMBO "crw_insert_before_after_combo"
@@ -77,6 +78,35 @@ static void createrep_free(CreateRepWindow *cr) {
     g_free(cr);
 }
 
+static void backup_file_select_clicked(GtkButton *button, CreateRepWindow *cr) {
+	GtkWidget *dialog;
+	GtkEntry *backup_entry;
+	gint res;
+
+	backup_entry = GTK_ENTRY(GET_WIDGET (cr->builder, CRW_BACKUP_FILE_ENTRY));
+
+	dialog = gtk_file_chooser_dialog_new (_("Select or Create Backup DB File"),
+                                      GTK_WINDOW(cr->window),
+                                      GTK_FILE_CHOOSER_ACTION_SAVE,
+                                      _("_Cancel"),
+                                      GTK_RESPONSE_CANCEL,
+                                      _("_Open"),
+                                      GTK_RESPONSE_ACCEPT,
+                                      NULL);
+	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (dialog), gtk_entry_get_text(backup_entry));
+
+	res = gtk_dialog_run (GTK_DIALOG (dialog));
+	if (res == GTK_RESPONSE_ACCEPT) {
+		char *filename;
+		GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+		filename = gtk_file_chooser_get_filename (chooser);
+		gtk_entry_set_text(backup_entry, filename);
+		g_free (filename);
+	}
+
+	gtk_widget_destroy (dialog);
+}
+
 static void create_cancel_clicked(GtkButton *button, CreateRepWindow *cr) {
     g_return_if_fail (cr);
 
@@ -109,9 +139,16 @@ static void create_ok_clicked(GtkButton *button, CreateRepWindow *cr) {
 
     mountpoint = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (GET_WIDGET (cr->builder, CRW_MOUNTPOINT_CHOOSER)));
 
-    backup = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (GET_WIDGET (cr->builder, CRW_BACKUP_CHOOSER)));
+    backup = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->builder, CRW_BACKUP_FILE_ENTRY)));
+	if (! g_file_test(backup, G_FILE_TEST_EXISTS)) {
+		FILE *tmpf = NULL;
+		if ((tmpf = fopen(backup, "a+")) == NULL)
+			g_warning("Failed to create the backup DB file '%s'", backup);
 
-    ipod_model = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->builder, CRW_IPOD_MODEL_ENTRY)));
+		fclose(tmpf);
+	}
+
+	ipod_model = gtk_entry_get_text(GTK_ENTRY (GET_WIDGET (cr->builder, CRW_IPOD_MODEL_ENTRY)));
     if (strcmp(ipod_model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0) { /* User didn't choose a model */
         ipod_model = "";
     }
@@ -185,7 +222,8 @@ static void show_hide_widgets(CreateRepWindow *cr, int index) {
             CRW_MOUNTPOINT_LABEL,
             CRW_MOUNTPOINT_CHOOSER,
             CRW_BACKUP_LABEL,
-            CRW_BACKUP_CHOOSER,
+            CRW_BACKUP_FILE_ENTRY,
+            CRW_BACKUP_SELECT_FILE_BUTTON,
             CRW_IPOD_MODEL_LABEL,
             CRW_IPOD_MODEL_COMBO,
             NULL
@@ -203,7 +241,8 @@ static void show_hide_widgets(CreateRepWindow *cr, int index) {
             CRW_MOUNTPOINT_LABEL,
             CRW_MOUNTPOINT_CHOOSER,
             CRW_BACKUP_LABEL,
-            CRW_BACKUP_CHOOSER,
+            CRW_BACKUP_FILE_ENTRY,
+            CRW_BACKUP_SELECT_FILE_BUTTON,
             CRW_IPOD_MODEL_LABEL,
             CRW_IPOD_MODEL_COMBO,
             CRW_LOCAL_PATH_LABEL,
@@ -277,6 +316,10 @@ void display_create_repository_dialog() {
     g_signal_connect (GET_WIDGET (cr->builder, CRW_REPOSITORY_TYPE_COMBO), "changed",
             G_CALLBACK (cr_repository_type_changed), cr);
 
+    /* Backup file button callback */
+    g_signal_connect (GET_WIDGET (cr->builder, CRW_BACKUP_SELECT_FILE_BUTTON), "clicked",
+            G_CALLBACK (backup_file_select_clicked), cr);
+
     /* Setup model number combo */
     model_number_combo = GTK_COMBO_BOX (GET_WIDGET (cr->builder, CRW_IPOD_MODEL_COMBO));
     repository_init_model_number_combo(model_number_combo);
@@ -305,7 +348,7 @@ void display_create_repository_dialog() {
     /* Set initial backup path */
     buf2 = g_strdup_printf("backupDB_%d", g_list_length(itdbs_head->itdbs));
     str = g_build_filename(buf1, buf2, NULL);
-    gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (GET_WIDGET (cr->builder, CRW_BACKUP_CHOOSER)), str);
+    gtk_entry_set_text(GTK_ENTRY (GET_WIDGET (cr->builder, CRW_BACKUP_FILE_ENTRY)), str);
     g_free(str);
     g_free(buf2);
 

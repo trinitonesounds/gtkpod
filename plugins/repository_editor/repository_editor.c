@@ -50,7 +50,8 @@ typedef enum {
 #define MOUNTPOINT_LABEL "mountpoint_label"
 #define MOUNTPOINT_CHOOSER "mountpoint_chooser"
 #define BACKUP_LABEL "backup_label"
-#define BACKUP_CHOOSER "backup_chooser"
+#define BACKUP_FILE_ENTRY "backup_file_entry"
+#define BACKUP_SELECT_FILE_BUTTON "backup_select_file_button"
 #define IPOD_MODEL_LABEL "ipod_model_label"
 #define LOCAL_PATH_LABEL "local_path_label"
 #define LOCAL_PATH_CHOOSER "local_path_chooser"
@@ -982,6 +983,35 @@ static void sync_or_update_playlist(Playlist *playlist) {
     }
 }
 
+static void backup_file_select_clicked(GtkButton *button) {
+	GtkWidget *dialog;
+	GtkEntry *backup_entry;
+	gint res;
+
+	backup_entry = GTK_ENTRY(GET_WIDGET (repository_view->builder, BACKUP_FILE_ENTRY));
+
+	dialog = gtk_file_chooser_dialog_new (_("Select or Create Backup DB File"),
+                                      GTK_WINDOW(repository_view->window),
+                                      GTK_FILE_CHOOSER_ACTION_SAVE,
+                                      _("_Cancel"),
+                                      GTK_RESPONSE_CANCEL,
+                                      _("_Open"),
+                                      GTK_RESPONSE_ACCEPT,
+                                      NULL);
+	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (dialog), gtk_entry_get_text(backup_entry));
+
+	res = gtk_dialog_run (GTK_DIALOG (dialog));
+	if (res == GTK_RESPONSE_ACCEPT) {
+		char *filename;
+		GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+		filename = gtk_file_chooser_get_filename (chooser);
+		gtk_entry_set_text(backup_entry, filename);
+		g_free (filename);
+	}
+
+	gtk_widget_destroy (dialog);
+}
+
 /* Callback */
 static void update_all_playlists_button_clicked(GtkButton *button) {
     GList *gl;
@@ -1131,7 +1161,8 @@ static void display_repository_info() {
                 MOUNTPOINT_LABEL,
                 MOUNTPOINT_CHOOSER,
                 BACKUP_LABEL,
-                BACKUP_CHOOSER,
+                BACKUP_FILE_ENTRY,
+                BACKUP_SELECT_FILE_BUTTON,
                 IPOD_MODEL_LABEL,
                 IPOD_MODEL_COMBO,
                 LOCAL_PATH_CHOOSER,
@@ -1154,7 +1185,7 @@ static void display_repository_info() {
 
         set_widget_index(index, KEY_MOUNTPOINT, MOUNTPOINT_CHOOSER);
 
-        set_widget_index(index, KEY_FILENAME, BACKUP_CHOOSER);
+        set_widget_index(index, KEY_FILENAME, BACKUP_FILE_ENTRY);
 
         set_widget_index(index, KEY_PATH_SYNC_CONTACTS, IPOD_SYNC_CONTACTS_ENTRY);
 
@@ -1180,7 +1211,8 @@ static void display_repository_info() {
                 MOUNTPOINT_LABEL,
                 MOUNTPOINT_CHOOSER,
                 BACKUP_LABEL,
-                BACKUP_CHOOSER,
+                BACKUP_FILE_ENTRY,
+                BACKUP_SELECT_FILE_BUTTON,
                 IPOD_MODEL_LABEL,
                 IPOD_MODEL_COMBO,
                 SYNC_FRAME,
@@ -1445,7 +1477,7 @@ static void create_repository_editor_view() {
     const gchar *itdb_widget_names_entry[] =
         {
             MOUNTPOINT_CHOOSER,
-            BACKUP_CHOOSER,
+            BACKUP_FILE_ENTRY,
             IPOD_MODEL_ENTRY,
             LOCAL_PATH_CHOOSER,
             IPOD_SYNC_CONTACTS_ENTRY,
@@ -1548,6 +1580,9 @@ static void create_repository_editor_view() {
 
     g_signal_connect (GET_WIDGET (repository_view->builder, MANUAL_SYNCDIR_CHOOSER), "selection_changed",
             G_CALLBACK (standard_playlist_chooser_button_updated), repository_view);
+
+	g_signal_connect (GET_WIDGET (repository_view->builder, BACKUP_SELECT_FILE_BUTTON), "clicked",
+			G_CALLBACK (backup_file_select_clicked), repository_view);
 
     init_repository_combo();
 
