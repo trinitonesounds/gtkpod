@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-04 21:38+0100\n"
+"POT-Creation-Date: 2015-06-02 20:12+0100\n"
 "PO-Revision-Date: 2011-02-26 21:35+0000\n"
 "Last-Translator: phantomjinx <pgrichardson@linux.com>\n"
 "Language-Team: Dutch (Netherlands) <None>\n"
@@ -1106,8 +1106,8 @@ msgstr ""
 
 #. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
 #: ../libgtkpod/gp_itdb.c:930
-#: ../plugins/repository_editor/repository_editor.c:1113
-#: ../plugins/repository_editor/repository_editor.xml.h:4
+#: ../plugins/repository_editor/repository_editor.c:1143
+#: ../plugins/repository_editor/repository_editor.xml.h:19
 msgid "iPod"
 msgstr ""
 
@@ -1249,33 +1249,31 @@ msgstr ""
 
 #. 0
 #: ../libgtkpod/misc_conversion.c:61
-#: ../plugins/core_preferences/core_prefs.xml.h:116
+#: ../plugins/core_preferences/core_prefs.xml.h:39
 #: ../plugins/playlist_display/playlist_display_spl.c:78
 #: ../plugins/sorttab_display/sorttab_widget.c:243
-#: ../plugins/sjcd/egg-play-preview.c:199
+#: ../plugins/sjcd/egg-play-preview.c:201
 msgid "Album"
 msgstr ""
 
 #: ../libgtkpod/misc_conversion.c:62
-#: ../plugins/core_preferences/core_prefs.xml.h:112
+#: ../plugins/core_preferences/core_prefs.xml.h:35
 #: ../plugins/playlist_display/playlist_display_spl.c:79
 #: ../plugins/sorttab_display/sorttab_widget.c:240
-#: ../plugins/sjcd/egg-play-preview.c:189 ../plugins/sjcd/sj-main.c:521
-#: ../plugins/sjcd/sj-main.c:1525
+#: ../plugins/sjcd/egg-play-preview.c:191 ../plugins/sjcd/sj-main.c:2036
 msgid "Artist"
 msgstr ""
 
 #: ../libgtkpod/misc_conversion.c:63
-#: ../plugins/core_preferences/core_prefs.xml.h:113
+#: ../plugins/core_preferences/core_prefs.xml.h:36
 #: ../plugins/playlist_display/playlist_display_spl.c:77
 #: ../plugins/sorttab_display/sorttab_widget.c:252
-#: ../plugins/sjcd/egg-play-preview.c:179 ../plugins/sjcd/sj-main.c:515
-#: ../plugins/sjcd/sj-main.c:1516
+#: ../plugins/sjcd/egg-play-preview.c:181 ../plugins/sjcd/sj-main.c:2027
 msgid "Title"
 msgstr ""
 
 #: ../libgtkpod/misc_conversion.c:64
-#: ../plugins/core_preferences/core_prefs.xml.h:114
+#: ../plugins/core_preferences/core_prefs.xml.h:37
 #: ../plugins/playlist_display/playlist_display_spl.c:83
 #: ../plugins/sorttab_display/sorttab_widget.c:246
 msgid "Genre"
@@ -1288,8 +1286,9 @@ msgstr ""
 
 #. 5
 #: ../libgtkpod/misc_conversion.c:66
-#: ../plugins/core_preferences/core_prefs.xml.h:115
+#: ../plugins/core_preferences/core_prefs.xml.h:38
 #: ../plugins/playlist_display/playlist_display_spl.c:91
+#: ../plugins/sjcd/sj-main.c:2047
 msgid "Composer"
 msgstr ""
 
@@ -1479,7 +1478,7 @@ msgstr ""
 msgid "Episode Nr"
 msgstr ""
 
-#: ../libgtkpod/misc_conversion.c:107 ../plugins/sjcd/sj-prefs.c:67
+#: ../libgtkpod/misc_conversion.c:107 ../plugins/sjcd/sj-prefs.c:66
 msgid "Album Artist"
 msgstr ""
 
@@ -1730,7 +1729,7 @@ msgstr ""
 msgid "Dangling tracks with files on PC were handled."
 msgstr ""
 
-#: ../libgtkpod/misc_playlist.c:789 ../plugins/sjcd/sj-main.c:1501
+#: ../libgtkpod/misc_playlist.c:789 ../plugins/sjcd/sj-main.c:2012
 msgid "Track"
 msgstr ""
 
@@ -2260,71 +2259,273 @@ msgid "AAC"
 msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:3
-msgid "Encoding Preferences"
+msgid "Transfer tracks in background mode"
 msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:4
-msgid "Tag and filename encoding:"
+msgid "Add subfolders recursively"
 msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:5
-msgid ""
-"Normally, the encoding specified above will only be used when importing new "
-"tracks, and for any operations involving existing tracks, the encoding "
-"specified when the file was first imported will be used. You can use the "
-"options below to override this behavior, in case you specified the encoding "
-"incorrectly for the first import."
+msgid "Allow duplicate files"
 msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:6
-msgid "Also use this encoding when updating or synchronizing tracks"
+msgid "Delete missing tracks when synchronizing playlists"
 msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:7
-msgid "Also use this encoding when writing tracks"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:8
-msgid "Filename Parse Preferences"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:9
-msgid "Filename parse pattern:"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:11
-#, no-c-format
 msgid ""
-"You can separate several templates by a ';'. The first one matching the "
-"filename will be used.\n"
+"When multiple tracks are added to a repository, should an\n"
+"error occur then it is likely, without saving all added tracks\n"
+"will be lost since they are not saved. This preference allows for\n"
+"a save operation to be conducted after the number of tracks\n"
+"specified.\n"
 "\n"
-"Example: <i>%a - %A/%T %t.mp3;%t.wav</i>.\n"
-"\n"
-"- artist: %a\n"
-"- album: %A\n"
-"- composer: %c\n"
-"- title: %t\n"
-"- genre: %G\n"
-"- track nr: %T\n"
-"- CD nr: %C\n"
-"- year: %Y\n"
-"- skip data: %*\n"
-"- the character '%': %%."
+"The default is 10 so after 10 tracks have been added a save\n"
+"will be imposed on the repository."
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:15
+msgid "Threshold for import of tracks before a save triggered:"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:16
+msgid "Excluded files..."
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:17
+msgid "Encoding..."
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:18
+msgid "Normalization..."
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:19
+msgid "ReplayGain..."
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:20
+msgid "<b>Import and Synchronization</b>"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:21
+msgid "Update information about the existing track"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:22
+msgid "Skip the track"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:23
+msgid "<b>When Attempting to Add an Existing Track</b>"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:24
+msgid "Number of tracks:"
 msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:25
-msgid "Overwrite existing tags"
+msgid "Include tracks never played in the \"Best Rated\" playlist"
 msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:26
-msgid "Cover Art Search Preferences"
+msgid "<b>Auto-Generated Playlists</b>"
 msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:27
-msgid "Cover art file pattern:"
+msgid "Convert incompatible audio formats to:"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:28
+msgid "Conversion Settings..."
 msgstr ""
 
 #: ../plugins/core_preferences/core_prefs.xml.h:29
+msgid "<b>On-the-fly Conversion</b>"
+msgstr ""
+
+#. Register actions
+#: ../plugins/core_preferences/core_prefs.xml.h:30 ../src/anjuta-window.c:534
+msgid "Music"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:31
+msgid "Read embedded tags from music files"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:32
+msgid "Parse file name to set missing tags"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:33
+msgid "Customize..."
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:34
+msgid "Set still missing tags to file name"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:40
+msgid "<b>Tags</b>"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:41
+msgid "Mass-modify tags when multiple tracks are selected"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:42
+msgid "Write tags to disk when edited"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:43
+msgid "Use legacy format for MP3 tags"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:44
+msgid "<b>Tag Editing</b>"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:45
+msgid "Read embedded cover art information"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:46
+msgid "Add cover art using file name template"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:47
+msgid "Automatically generate video thumbnails"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:48
+msgid "<b>Cover Art</b>"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:49
+msgid "Metadata"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:50
+msgid "Confirm deletion of tracks:"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:51
+msgid "From the iPod"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:52
+msgid "From the hard disk"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:53
+msgid "From the local database"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:54
+msgid "Confirm deletion of playlists or tracks from a playlist"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:55
+msgid "Confirm deletion of tracks during synchronization"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:56
+msgid "<b>Deletion Confirmation Messages</b>"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:57
+msgid "Display messages and warnings at startup"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:58
+msgid "Display information about detected duplicate files"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:59
+msgid "Display synchronization results"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:60
+msgid "When updating tracks, display information:"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:61
+msgid "About updated tracks"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:62
+msgid "About unupdated tracks"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:63
+msgid "<b>Information Messages</b>"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:64
+msgid "Feedback"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:65
+msgid "Conversion Preferences"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:66
+msgid "Convert compatible formats to a single format"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:67
+msgid "Convert MP3"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:68
+msgid "Convert AAC (M4A)"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:69
+msgid "Convert WAV"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:70
+msgid "<b>Compatible Formats</b>"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:71
+#: ../plugins/info_display/info.c:376
+#: ../plugins/playlist_display/playlist_display_spl.c:168
+msgid "GB"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:72
+msgid "Cache folder:"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:73
+msgid "Maximum cache size:"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:74
+msgid "Maximum threads:"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:75
+msgid "Display conversion log"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:76
+msgid "<b>Conversion Settings</b>"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:77
+msgid "Cover Art Search Preferences"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:78
+msgid "Cover art file pattern:"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:80
 #, no-c-format
 msgid ""
 "You can separate several templates by a ';'. The first one matching the "
@@ -2350,337 +2551,135 @@ msgid ""
 "- the character '%': %%."
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:48
+#: ../plugins/core_preferences/core_prefs.xml.h:99
+msgid "Encoding Preferences"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:100
+msgid "Tag and filename encoding:"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:101
+msgid ""
+"Normally, the encoding specified above will only be used when importing new "
+"tracks, and for any operations involving existing tracks, the encoding "
+"specified when the file was first imported will be used. You can use the "
+"options below to override this behavior, in case you specified the encoding "
+"incorrectly for the first import."
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:102
+msgid "Also use this encoding when updating or synchronizing tracks"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:103
+msgid "Also use this encoding when writing tracks"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:104
+msgid "Exclusions List"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:105
+msgid ""
+"Add file masks to be excluded from import and synchronization, for example, "
+"<i>*.mp3</i>."
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:106
+msgid "<i>aacgain</i> executable:"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:107
+msgid "<i>mp3gain</i> executable:"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:108
+#: ../plugins/repository_editor/repository_editor.xml.h:6
+msgid "..."
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:109
+msgid "<b>Volume Normalization</b>"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:110
+msgid "ReplayGain Preferences"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:111
+msgid "Album gain (formerly \"audiophile gain\")"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:112
+msgid "Track gain (formerly \"radio gain\")"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:113
+msgid "<b>Preferred gain type</b>"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:114
+msgid "dB"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:115
+msgid "<b>Offset to add to ReplayGain</b>"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:116
+msgid ""
+"These settings will only be applied to newly added or updated tracks. This "
+"could result in tracks that are normalized to different levels until updated."
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:117
+msgid "Filename Parse Preferences"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:118
+msgid "Filename parse pattern:"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:120
+#, no-c-format
+msgid ""
+"You can separate several templates by a ';'. The first one matching the "
+"filename will be used.\n"
+"\n"
+"Example: <i>%a - %A/%T %t.mp3;%t.wav</i>.\n"
+"\n"
+"- artist: %a\n"
+"- album: %A\n"
+"- composer: %c\n"
+"- title: %t\n"
+"- genre: %G\n"
+"- track nr: %T\n"
+"- CD nr: %C\n"
+"- year: %Y\n"
+"- skip data: %*\n"
+"- the character '%': %%."
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:134
+msgid "Overwrite existing tags"
+msgstr ""
+
+#: ../plugins/core_preferences/core_prefs.xml.h:135
 msgid "Video Thumbnail Generation"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:49
+#: ../plugins/core_preferences/core_prefs.xml.h:136
 msgid "Video thumbnailing program:"
 msgstr ""
 
-#: ../plugins/core_preferences/core_prefs.xml.h:51
+#: ../plugins/core_preferences/core_prefs.xml.h:138
 #, no-c-format
 msgid ""
 "Provide a shell command to generate a thumbnail image of your video file.  "
 "The following format strings will be expanded:\n"
 "- %f: the input file\n"
 "- %o: the output file (which is automatically generated)\n"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:55
-msgid "Exclusions List"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:56
-msgid ""
-"Add file masks to be excluded from import and synchronization, for example, "
-"<i>*.mp3</i>."
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:57
-msgid "<i>aacgain</i> executable:"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:58
-msgid "<i>mp3gain</i> executable:"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:59
-#: ../plugins/repository_editor/repository_editor.xml.h:25
-msgid "..."
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:60
-msgid "<b>Volume Normalization</b>"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:61
-msgid "Conversion Preferences"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:62
-msgid "Convert compatible formats to a single format"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:63
-msgid "Convert MP3"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:64
-msgid "Convert AAC (M4A)"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:65
-msgid "Convert WAV"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:66
-msgid "<b>Compatible Formats</b>"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:67
-#: ../plugins/info_display/info.c:376
-#: ../plugins/playlist_display/playlist_display_spl.c:168
-msgid "GB"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:68
-msgid "Cache folder:"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:69
-msgid "Maximum cache size:"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:70
-msgid "Maximum threads:"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:71
-msgid "Display conversion log"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:72
-msgid "<b>Conversion Settings</b>"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:73
-msgid "ReplayGain Preferences"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:74
-msgid "Album gain (formerly \"audiophile gain\")"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:75
-msgid "Track gain (formerly \"radio gain\")"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:76
-msgid "<b>Preferred gain type</b>"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:77
-msgid "dB"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:78
-msgid "<b>Offset to add to ReplayGain</b>"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:79
-msgid ""
-"These settings will only be applied to newly added or updated tracks. This "
-"could result in tracks that are normalized to different levels until updated."
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:80
-msgid "Transfer tracks in background mode"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:81
-msgid "Add subfolders recursively"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:82
-msgid "Allow duplicate files"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:83
-msgid "Delete missing tracks when synchronizing playlists"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:84
-msgid ""
-"When multiple tracks are added to a repository, should an\n"
-"error occur then it is likely, without saving all added tracks\n"
-"will be lost since they are not saved. This preference allows for\n"
-"a save operation to be conducted after the number of tracks\n"
-"specified.\n"
-"\n"
-"The default is 10 so after 10 tracks have been added a save\n"
-"will be imposed on the repository."
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:92
-msgid "Threshold for import of tracks before a save triggered:"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:93
-msgid "Excluded files..."
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:94
-msgid "Encoding..."
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:95
-msgid "Normalization..."
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:96
-msgid "ReplayGain..."
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:97
-msgid "<b>Import and Synchronization</b>"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:98
-msgid "Update information about the existing track"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:99
-msgid "Skip the track"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:100
-msgid "<b>When Attempting to Add an Existing Track</b>"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:101
-msgid "Number of tracks:"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:102
-msgid "Include tracks never played in the \"Best Rated\" playlist"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:103
-msgid "<b>Auto-Generated Playlists</b>"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:104
-msgid "Convert incompatible audio formats to:"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:105
-msgid "Conversion Settings..."
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:106
-msgid "<b>On-the-fly Conversion</b>"
-msgstr ""
-
-#. Register actions
-#: ../plugins/core_preferences/core_prefs.xml.h:107 ../src/anjuta-window.c:534
-msgid "Music"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:108
-msgid "Read embedded tags from music files"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:109
-msgid "Parse file name to set missing tags"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:110
-msgid "Customize..."
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:111
-msgid "Set still missing tags to file name"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:117
-msgid "<b>Tags</b>"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:118
-msgid "Mass-modify tags when multiple tracks are selected"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:119
-msgid "Write tags to disk when edited"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:120
-msgid "Use legacy format for MP3 tags"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:121
-msgid "<b>Tag Editing</b>"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:122
-msgid "Read embedded cover art information"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:123
-msgid "Add cover art using file name template"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:124
-msgid "Automatically generate video thumbnails"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:125
-msgid "<b>Cover Art</b>"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:126
-msgid "Metadata"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:127
-msgid "Confirm deletion of tracks:"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:128
-msgid "From the iPod"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:129
-msgid "From the hard disk"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:130
-msgid "From the local database"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:131
-msgid "Confirm deletion of playlists or tracks from a playlist"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:132
-msgid "Confirm deletion of tracks during synchronization"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:133
-msgid "<b>Deletion Confirmation Messages</b>"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:134
-msgid "Display messages and warnings at startup"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:135
-msgid "Display information about detected duplicate files"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:136
-msgid "Display synchronization results"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:137
-msgid "When updating tracks, display information:"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:138
-msgid "About updated tracks"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:139
-msgid "About unupdated tracks"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:140
-msgid "<b>Information Messages</b>"
-msgstr ""
-
-#: ../plugins/core_preferences/core_prefs.xml.h:141
-msgid "Feedback"
 msgstr ""
 
 #: ../plugins/core_preferences/plugin.c:65
@@ -3078,74 +3077,11 @@ msgstr ""
 msgid "Export Tracks to File"
 msgstr ""
 
-#: ../plugins/exporter/exporter.xml.h:2
-#, no-c-format
-msgid ""
-"Determines how the string for the info field should be constructed, e.g '%a/"
-"%A/%T - %t.mp3' or '%o'.  You can separate several templates by semicolons "
-"-- gtkpod will determine which one to use by the filename extension given. "
-"Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD "
-"nr: %C, year: %Y, original filename (requires extended information file): "
-"%o, the character '%': %%."
-msgstr ""
-
-#: ../plugins/exporter/exporter.xml.h:3
-msgid "_Prefer Local"
-msgstr ""
-
-#: ../plugins/exporter/exporter.xml.h:4
-msgid ""
-"If available, the local copy of the track is referenced in the playlist. "
-"Otherwise the file on the iPod is used."
-msgstr ""
-
-#: ../plugins/exporter/exporter.xml.h:5
-msgid "_Local"
-msgstr ""
-
-#: ../plugins/exporter/exporter.xml.h:6
-msgid ""
-"The local copy of the track is referenced in the playlist. If the track is "
-"not available locally, an error message is displayed."
-msgstr ""
-
-#: ../plugins/exporter/exporter.xml.h:7
-msgid "_iPod"
-msgstr ""
-
-#: ../plugins/exporter/exporter.xml.h:8
-msgid "The track on the iPod is referenced in the playlist file."
-msgstr ""
-
-#: ../plugins/exporter/exporter.xml.h:9
-msgid "_M3U"
-msgstr ""
-
-#: ../plugins/exporter/exporter.xml.h:10
-msgid "_PLS"
-msgstr ""
-
-#: ../plugins/exporter/exporter.xml.h:11
-msgid "Playlist type:"
-msgstr ""
-
-#: ../plugins/exporter/exporter.xml.h:12
-msgid "Source:"
-msgstr ""
-
-#: ../plugins/exporter/exporter.xml.h:13
-msgid "Info field template:"
-msgstr ""
-
-#: ../plugins/exporter/exporter.xml.h:14
-msgid "<b>gtkpod Options</b>"
-msgstr ""
-
-#: ../plugins/exporter/exporter.xml.h:15
+#: ../plugins/exporter/exporter.xml.h:1
 msgid "Filename format: "
 msgstr ""
 
-#: ../plugins/exporter/exporter.xml.h:17
+#: ../plugins/exporter/exporter.xml.h:3
 #, no-c-format
 msgid ""
 "Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t."
@@ -3156,11 +3092,11 @@ msgid ""
 "current playlist: %p, the character '%': %%."
 msgstr ""
 
-#: ../plugins/exporter/exporter.xml.h:18
+#: ../plugins/exporter/exporter.xml.h:4
 msgid "Use selected charset (Preferences/Music/Encoding) for this filename"
 msgstr ""
 
-#: ../plugins/exporter/exporter.xml.h:19
+#: ../plugins/exporter/exporter.xml.h:5
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "for the filename. If you set this option you can set a different charset "
@@ -3170,16 +3106,79 @@ msgid ""
 "used."
 msgstr ""
 
-#: ../plugins/exporter/exporter.xml.h:20
+#: ../plugins/exporter/exporter.xml.h:6
 msgid "Check for existing files when copying from iPod"
 msgstr ""
 
-#: ../plugins/exporter/exporter.xml.h:21
+#: ../plugins/exporter/exporter.xml.h:7
 msgid ""
 "When copying from iPod no check is performed on whether the destination file "
 "exists. Enabling this option will make gtkpod check whether the length of "
 "the destination file is the same as the file in the iPod. If so the file is "
 "skipped, allowing a quick sync of the iPod's contents."
+msgstr ""
+
+#: ../plugins/exporter/exporter.xml.h:8
+msgid "<b>gtkpod Options</b>"
+msgstr ""
+
+#: ../plugins/exporter/exporter.xml.h:10
+#, no-c-format
+msgid ""
+"Determines how the string for the info field should be constructed, e.g '%a/"
+"%A/%T - %t.mp3' or '%o'.  You can separate several templates by semicolons "
+"-- gtkpod will determine which one to use by the filename extension given. "
+"Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD "
+"nr: %C, year: %Y, original filename (requires extended information file): "
+"%o, the character '%': %%."
+msgstr ""
+
+#: ../plugins/exporter/exporter.xml.h:11
+msgid "_Prefer Local"
+msgstr ""
+
+#: ../plugins/exporter/exporter.xml.h:12
+msgid ""
+"If available, the local copy of the track is referenced in the playlist. "
+"Otherwise the file on the iPod is used."
+msgstr ""
+
+#: ../plugins/exporter/exporter.xml.h:13
+msgid "_Local"
+msgstr ""
+
+#: ../plugins/exporter/exporter.xml.h:14
+msgid ""
+"The local copy of the track is referenced in the playlist. If the track is "
+"not available locally, an error message is displayed."
+msgstr ""
+
+#: ../plugins/exporter/exporter.xml.h:15
+msgid "_iPod"
+msgstr ""
+
+#: ../plugins/exporter/exporter.xml.h:16
+msgid "The track on the iPod is referenced in the playlist file."
+msgstr ""
+
+#: ../plugins/exporter/exporter.xml.h:17
+msgid "_M3U"
+msgstr ""
+
+#: ../plugins/exporter/exporter.xml.h:18
+msgid "_PLS"
+msgstr ""
+
+#: ../plugins/exporter/exporter.xml.h:19
+msgid "Playlist type:"
+msgstr ""
+
+#: ../plugins/exporter/exporter.xml.h:20
+msgid "Source:"
+msgstr ""
+
+#: ../plugins/exporter/exporter.xml.h:21
+msgid "Info field template:"
 msgstr ""
 
 #: ../plugins/exporter/file_export.c:222
@@ -3592,57 +3591,57 @@ msgstr ""
 msgid "Info Display"
 msgstr ""
 
-#: ../plugins/media_player/media_player.c:104
+#: ../plugins/media_player/media_player.c:101
 #, c-format
 msgid "%d:%02d of %d:%02d"
 msgstr ""
 
 #. title by artist from album
-#: ../plugins/media_player/media_player.c:140
+#: ../plugins/media_player/media_player.c:137
 msgid "No Track Title"
 msgstr ""
 
-#: ../plugins/media_player/media_player.c:145
+#: ../plugins/media_player/media_player.c:142
 #, c-format
 msgid "<b>%s</b> by %s from %s"
 msgstr ""
 
-#: ../plugins/media_player/media_player.c:147
+#: ../plugins/media_player/media_player.c:144
 #, c-format
 msgid "<b>%s</b> by %s"
 msgstr ""
 
-#: ../plugins/media_player/media_player.c:149
+#: ../plugins/media_player/media_player.c:146
 #, c-format
 msgid "<b>%s</b> from %s"
 msgstr ""
 
 #. Translators: %s is an error message
-#: ../plugins/media_player/media_player.c:280
+#: ../plugins/media_player/media_player.c:277
 #, c-format
 msgid "GStreamer thread creation failed: %s\n"
 msgstr ""
 
-#: ../plugins/media_player/media_player.c:337
+#: ../plugins/media_player/media_player.c:334
 msgid "Seek failed!\n"
 msgstr ""
 
-#: ../plugins/media_player/media_player.c:377
+#: ../plugins/media_player/media_player.c:374
 msgid "Failed to play track: Track is no longer available"
 msgstr ""
 
-#: ../plugins/media_player/media_player.c:384
+#: ../plugins/media_player/media_player.c:381
 #, c-format
 msgid "Failed to play track: Unable to find the file for the track '%s'"
 msgstr ""
 
 #. Translators: %s is an error message
-#: ../plugins/media_player/media_player.c:395
+#: ../plugins/media_player/media_player.c:392
 #, c-format
 msgid "Failed to play track: %s"
 msgstr ""
 
-#: ../plugins/media_player/media_player.c:403
+#: ../plugins/media_player/media_player.c:400
 msgid ""
 "Failed to play track: Cannot create a play element. Ensure that all "
 "gstreamer plugins are installed"
@@ -3657,10 +3656,7 @@ msgstr ""
 msgid "Play"
 msgstr ""
 
-#. Change the label to Stop while extracting
-#. TODO: find out why GTK+ needs this to work (see #364371)
 #: ../plugins/media_player/media_player.xml.h:3
-#: ../plugins/sjcd/sj-extracting.c:836
 msgid "Stop"
 msgstr ""
 
@@ -3990,7 +3986,7 @@ msgid "Photos"
 msgstr ""
 
 #: ../plugins/playlist_display/display_playlists.c:1832
-#: ../plugins/repository_editor/repository_editor.xml.h:46
+#: ../plugins/repository_editor/repository_editor.xml.h:52
 msgid "Playlists"
 msgstr ""
 
@@ -4026,7 +4022,7 @@ msgstr ""
 
 #: ../plugins/playlist_display/playlist_display.xml.h:11
 #: ../plugins/playlist_display/playlist_display_spl.c:1530
-#: ../plugins/repository_editor/repository_editor.c:1241
+#: ../plugins/repository_editor/repository_editor.c:1273
 msgid "Smart Playlist"
 msgstr ""
 
@@ -4068,7 +4064,7 @@ msgstr ""
 
 #: ../plugins/playlist_display/playlist_display_actions.c:66
 #: ../plugins/playlist_display/playlist_display_actions.c:321
-#: ../plugins/sjcd/sj-extracting.c:607
+#: ../plugins/sjcd/sj-extracting.c:632
 #, c-format
 msgid "%s\n"
 msgstr ""
@@ -4111,7 +4107,7 @@ msgstr ""
 
 #: ../plugins/playlist_display/playlist_display_actions.c:212
 #: ../plugins/playlist_display/playlist_display_actions.c:364
-#: ../plugins/sjcd/sj-extracting.c:657
+#: ../plugins/sjcd/sj-extracting.c:682
 msgid "Some tracks failed to be added but no errors were reported."
 msgstr ""
 
@@ -4129,13 +4125,13 @@ msgstr ""
 #. gint id,
 #. gboolean modal,
 #: ../plugins/playlist_display/playlist_display_actions.c:350
-#: ../plugins/sjcd/sj-extracting.c:643
+#: ../plugins/sjcd/sj-extracting.c:668
 msgid "File Addition Errors"
 msgstr ""
 
 #. title
 #: ../plugins/playlist_display/playlist_display_actions.c:351
-#: ../plugins/sjcd/sj-extracting.c:644
+#: ../plugins/sjcd/sj-extracting.c:669
 msgid "Some files were not added successfully"
 msgstr ""
 
@@ -4446,7 +4442,7 @@ msgstr ""
 #: ../plugins/playlist_display/playlist_display_context_menu.c:381
 #: ../plugins/playlist_display/playlist_display_context_menu.c:422
 #: ../plugins/playlist_display/playlist_display_context_menu.c:454
-#: ../plugins/repository_editor/repository_editor.xml.h:11
+#: ../plugins/repository_editor/repository_editor.xml.h:27
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:183
 #: ../plugins/sorttab_display/sorttab_display_context_menu.c:191
 #: ../plugins/track_display/track_display_context_menu.c:182
@@ -4744,35 +4740,50 @@ msgid ""
 "Please load it first."
 msgstr ""
 
+#: ../plugins/repository_editor/repository_creator.c:88
+#: ../plugins/repository_editor/repository_editor.c:993
+msgid "Select or Create Backup DB File"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_creator.c:91
+#: ../plugins/repository_editor/repository_editor.c:996
+msgid "_Cancel"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_creator.c:93
+#: ../plugins/repository_editor/repository_editor.c:998
+msgid "_Open"
+msgstr ""
+
 #. Set default repository name
-#: ../plugins/repository_editor/repository_creator.c:296
+#: ../plugins/repository_editor/repository_creator.c:339
 msgid "New Repository"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.c:660
+#: ../plugins/repository_editor/repository_editor.c:661
 #, c-format
 msgid ""
 "Are you sure you want to delete repository \"%s\"? This action cannot be "
 "undone!"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.c:662
+#: ../plugins/repository_editor/repository_editor.c:663
 msgid "Delete repository?"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.c:839
+#: ../plugins/repository_editor/repository_editor.c:840
 msgid "Please select command to sync contacts"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.c:844
+#: ../plugins/repository_editor/repository_editor.c:845
 msgid "Please select command to sync calendar"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.c:849
+#: ../plugins/repository_editor/repository_editor.c:850
 msgid "Please select command to sync notes"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.c:861
+#: ../plugins/repository_editor/repository_editor.c:862
 #, c-format
 msgid ""
 "<i>Have a look at the scripts provided in '%s'. If you write a new script or "
@@ -4780,158 +4791,183 @@ msgid ""
 "for inclusion into the next release.</i>"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.c:909
+#: ../plugins/repository_editor/repository_editor.c:910
 msgid "Smart playlist updated."
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.c:1116
+#: ../plugins/repository_editor/repository_editor.c:1146
 msgid "Podcasts Repository"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.c:1119
+#: ../plugins/repository_editor/repository_editor.c:1149
 msgid "Local Repository"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.c:1235
+#: ../plugins/repository_editor/repository_editor.c:1267
 msgid "Master Playlist"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.c:1238
+#: ../plugins/repository_editor/repository_editor.c:1270
 msgid "Podcasts Playlist"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.c:1244
+#: ../plugins/repository_editor/repository_editor.c:1276
 msgid "Regular Playlist"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.c:1409
+#: ../plugins/repository_editor/repository_editor.c:1441
 msgid "  Edit iPod Repositories"
 msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.xml.h:1
-msgid "Insert before"
+msgid "Create Repository"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.xml.h:2
-msgid "Insert after"
-msgstr ""
-
-#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
-#: ../plugins/repository_editor/repository_editor.xml.h:6
-msgid "Local Repository (Standard)"
-msgstr ""
-
-#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
-#: ../plugins/repository_editor/repository_editor.xml.h:8
-msgid "Local Repository (Podcasts)"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:9
-msgid "Repository Options"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:10
-msgid "<i>Repository type</i>"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:12
-msgid "Add New ..."
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:13
-msgid "iPod mountpoint:"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:14
-msgid "iTunesDB backup:"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:15
-msgid "Model:"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:16
-msgid "Path:"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:17
-msgid "Select mountpoint"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:18
-msgid "Select backup file"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:19
-msgid "<b>General</b>"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:20
-msgid "Contacts sync command:"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:21
-msgid "Notes sync command:"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:22
-msgid "Calendar sync command:"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:24
+#: ../plugins/repository_editor/repository_editor.xml.h:3
 #, no-c-format
 msgid ""
 "Specify exact path including command line options. '%i' will be replaced "
 "with the mount point of the iPod."
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.xml.h:26
-msgid "Call automatically when synchronizing iTunesDB"
+#: ../plugins/repository_editor/repository_editor.xml.h:4
+msgid "Select mountpoint"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.xml.h:27
-msgid "<b>Synchronization</b>"
+#: ../plugins/repository_editor/repository_editor.xml.h:5
+msgid "Set local repository file"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:7
+msgid "Repository type:"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:8
+msgid "Repository name:"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:9
+msgid "iPod mountpoint:"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:10
+msgid "iTunesDB backup:"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:11
+msgid "Model:"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:12
+msgid "Path:"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:13
+msgid "Initialize iPod"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:14
+msgid "<b>Please select mountpoint and your iPod model</b>"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:15
+msgid ""
+"<i>Note: Only directories that do not already exist will be created. </i>"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:16
+msgid "Insert before"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:17
+msgid "Insert after"
+msgstr ""
+
+#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
+#: ../plugins/repository_editor/repository_editor.xml.h:21
+msgid "Local Repository (Standard)"
+msgstr ""
+
+#. These are the items for the 'Repository type' combo in the 'Create Repository' dialog. Keep the three items in order!
+#: ../plugins/repository_editor/repository_editor.xml.h:23
+msgid "Local Repository (Podcasts)"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:24
+msgid "Repository Options"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:25
+msgid "<i>Repository type</i>"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:26
+msgid "Add New ..."
 msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.xml.h:28
-msgid "Repository"
+msgid "<b>General</b>"
 msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.xml.h:29
-msgid "<i>Playlist type</i>"
+msgid "Contacts sync command:"
 msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.xml.h:30
-msgid "Update/Sync Playlist"
+msgid "Notes sync command:"
 msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.xml.h:31
-msgid "Update/Sync All Playlists"
+msgid "Calendar sync command:"
 msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.xml.h:32
-msgid "On startup automatically sync with playlist directories"
+msgid "Call automatically when synchronizing iTunesDB"
 msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.xml.h:33
+msgid "<b>Synchronization</b>"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:34
+msgid "Repository"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:35
+msgid "<i>Playlist type</i>"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:36
+msgid "Update/Sync Playlist"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:37
+msgid "Update/Sync All Playlists"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:38
+msgid "On startup automatically sync with playlist directories"
+msgstr ""
+
+#: ../plugins/repository_editor/repository_editor.xml.h:39
 msgid ""
 "Directories to sync with are determined from the filenames of the tracks in "
 "the playlist."
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.xml.h:34
+#: ../plugins/repository_editor/repository_editor.xml.h:40
 msgid "On startup automatically sync with the directory:"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.xml.h:35
+#: ../plugins/repository_editor/repository_editor.xml.h:41
 msgid "Select directory for synchronization"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.xml.h:36
+#: ../plugins/repository_editor/repository_editor.xml.h:42
 msgid "Delete missing tracks from the iPod or repository"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.xml.h:37
+#: ../plugins/repository_editor/repository_editor.xml.h:43
 msgid ""
 "Normally, if a track is no longer present in the sync directory, it will be "
 "removed from the playlist, but not from the iPod or local repository.\n"
@@ -4943,63 +4979,30 @@ msgid ""
 "means removing from the iPod."
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.xml.h:40
+#: ../plugins/repository_editor/repository_editor.xml.h:46
 msgid "Confirm before removing tracks from the iPod or repository"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.xml.h:41
+#: ../plugins/repository_editor/repository_editor.xml.h:47
 msgid "Show summary of sync result"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.xml.h:42
+#: ../plugins/repository_editor/repository_editor.xml.h:48
 msgid ""
 "Will show a list of tracks removed and a list of tracks newly added or "
 "updated."
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.xml.h:43
+#: ../plugins/repository_editor/repository_editor.xml.h:49
 msgid "On startup automatically update (Live Playlist)"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.xml.h:44
+#: ../plugins/repository_editor/repository_editor.xml.h:50
 msgid "Don't automatically sync on startup"
 msgstr ""
 
-#: ../plugins/repository_editor/repository_editor.xml.h:45
-msgid "<b>Playlist Options</b>"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:47
-msgid "Create Repository"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:48
-msgid "Repository name:"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:49
-msgid "Repository type:"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:50
-msgid "Set backup file"
-msgstr ""
-
 #: ../plugins/repository_editor/repository_editor.xml.h:51
-msgid "Set local repository file"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:52
-msgid "Initialize iPod"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:53
-msgid "<b>Please select mountpoint and your iPod model</b>"
-msgstr ""
-
-#: ../plugins/repository_editor/repository_editor.xml.h:54
-msgid ""
-"<i>Note: Only directories that do not already exist will be created. </i>"
+msgid "<b>Playlist Options</b>"
 msgstr ""
 
 #: ../plugins/repository_editor/repository_editor.plugin.in.h:1
@@ -5506,6 +5509,7 @@ msgid "<span weight='bold' size='larger'>No playlist selected</span>"
 msgstr ""
 
 #: ../plugins/track_display/track_display_context_menu.c:51
+#: ../plugins/sjcd/sj-main.c:188 ../plugins/sjcd/sj-main.c:1978
 msgid "Select All"
 msgstr ""
 
@@ -5600,137 +5604,133 @@ msgstr ""
 msgid "Adds track command for playing tracks in external player, eg. xmms"
 msgstr ""
 
-#: ../plugins/sjcd/egg-play-preview.c:169
+#: ../plugins/sjcd/egg-play-preview.c:171
 msgid "URI"
 msgstr ""
 
-#: ../plugins/sjcd/egg-play-preview.c:170
+#: ../plugins/sjcd/egg-play-preview.c:172
 msgid "The URI of the audio file"
 msgstr ""
 
-#: ../plugins/sjcd/egg-play-preview.c:180
+#: ../plugins/sjcd/egg-play-preview.c:182
 msgid "The title of the current stream."
 msgstr ""
 
-#: ../plugins/sjcd/egg-play-preview.c:190
+#: ../plugins/sjcd/egg-play-preview.c:192
 msgid "The artist of the current stream."
 msgstr ""
 
-#: ../plugins/sjcd/egg-play-preview.c:200
+#: ../plugins/sjcd/egg-play-preview.c:202
 msgid "The album of the current stream."
 msgstr ""
 
-#: ../plugins/sjcd/egg-play-preview.c:209
+#: ../plugins/sjcd/egg-play-preview.c:211
 msgid "Position"
 msgstr ""
 
-#: ../plugins/sjcd/egg-play-preview.c:210
+#: ../plugins/sjcd/egg-play-preview.c:212
 msgid "The position in the current stream in seconds."
 msgstr ""
 
-#: ../plugins/sjcd/egg-play-preview.c:219 ../plugins/sjcd/sj-main.c:1536
+#: ../plugins/sjcd/egg-play-preview.c:221 ../plugins/sjcd/sj-main.c:2060
 msgid "Duration"
 msgstr ""
 
-#: ../plugins/sjcd/egg-play-preview.c:220
+#: ../plugins/sjcd/egg-play-preview.c:222
 msgid "The duration of the current stream in seconds."
 msgstr ""
 
-#: ../plugins/sjcd/egg-play-preview.c:463
-#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:109
+#: ../plugins/sjcd/egg-play-preview.c:469
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:110
 msgid "Unknown Title"
 msgstr ""
 
-#: ../plugins/sjcd/egg-play-preview.c:468
-#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:113
-#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:139
+#: ../plugins/sjcd/egg-play-preview.c:474
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:114
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:140
+#: ../plugins/sjcd/sj-extracting.c:1042
 msgid "Unknown Artist"
 msgstr ""
 
-#: ../plugins/sjcd/egg-play-preview.c:469
+#: ../plugins/sjcd/egg-play-preview.c:475 ../plugins/sjcd/sj-extracting.c:1041
 msgid "Unknown Album"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-extractor.c:193
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:192
 msgid "Audio Profile"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-extractor.c:194
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:193
 msgid "The GStreamer Encoding Profile used for encoding audio"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-extractor.c:199
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:198
 msgid "Paranoia Level"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-extractor.c:200
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:199
 msgid "The paranoia level"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-extractor.c:205
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:204
 msgid "device"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-extractor.c:206
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:205
 msgid "The device"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-extractor.c:348
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:355
 #, c-format
 msgid "Could not create GStreamer CD reader"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-extractor.c:366
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:373
 #, c-format
 msgid "Could not create GStreamer encoders for %s"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-extractor.c:378
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:385
 #, c-format
 msgid "Could not create GStreamer file output"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-extractor.c:392
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:399
 #, c-format
 msgid "Could not link pipeline"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-extractor.c:416
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:422
 msgid "Could not get current track position"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-extractor.c:445
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:451
 #, c-format
 msgid ""
 "Extractor object is not valid. This is bad, check your console for errors."
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-extractor.c:665
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:707
 #, c-format
 msgid "The plugin necessary for CD access was not found"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-extractor.c:673
+#: ../plugins/sjcd/libjuicer/sj-extractor.c:715
 #, c-format
 msgid "The plugin necessary for file access was not found"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-metadata-getter.c:259
-#, c-format
-msgid "Could not create CD lookup thread"
-msgstr ""
-
-#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:90
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:91
 #, c-format
 msgid "Cannot access CD"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:135
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:136
 #, c-format
 msgid "Track %d"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:160
+#: ../plugins/sjcd/libjuicer/sj-metadata-gvfs.c:161
 #, c-format
 msgid "Cannot access CD: %s"
 msgstr ""
@@ -5738,26 +5738,54 @@ msgstr ""
 #. FIXME: would be nicer to only check if "cdrom" is being probed,
 #. * but libbrasero doesn't seem to have an API for that
 #.
-#: ../plugins/sjcd/libjuicer/sj-metadata.c:182
-#: ../plugins/sjcd/libjuicer/sj-metadata.c:205
-#: ../plugins/sjcd/libjuicer/sj-metadata.c:216
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:166
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:189
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:200
 #, c-format
 msgid "Cannot read CD: %s"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-metadata.c:183
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:167
 msgid "Devices haven't been all probed yet"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-metadata.c:199
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:183
 #, c-format
 msgid "Device '%s' does not contain any media"
 msgstr ""
 
-#: ../plugins/sjcd/libjuicer/sj-metadata.c:202
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:186
 #, c-format
 msgid ""
 "Device '%s' could not be opened. Check the access permissions on the device."
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:328
+msgid "Czechoslovakia"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:329
+msgid "East Germany"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:330
+msgid "Europe"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:331
+msgid "Serbia and Montenegro"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:332
+msgid "Soviet Union"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:333
+msgid "Worldwide"
+msgstr ""
+
+#: ../plugins/sjcd/libjuicer/sj-metadata.c:334
+msgid "Yugoslavia"
 msgstr ""
 
 #: ../plugins/sjcd/plugin.c:44 ../plugins/sjcd/plugin.c:65
@@ -5770,324 +5798,454 @@ msgstr ""
 msgid "  Sound Juicer"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:162
+#: ../plugins/sjcd/sj-extracting.c:157
 #, c-format
 msgid "Failed to get output format"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:187
+#: ../plugins/sjcd/sj-extracting.c:182
 msgid "Name too long"
 msgstr ""
 
-#. TODO: find out why GTK+ needs this to work (see #364371)
-#: ../plugins/sjcd/sj-extracting.c:246
-msgid "Extract"
+#: ../plugins/sjcd/sj-extracting.c:240 ../plugins/sjcd/sj-main.c:1954
+#: ../plugins/sjcd/sjcd.xml.h:18
+msgid "E_xtract"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:326
+#: ../plugins/sjcd/sj-extracting.c:319
 msgid "A file with the same name exists"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:328
+#: ../plugins/sjcd/sj-extracting.c:321
 #, c-format
 msgid ""
 "A file called '%s' exists, size %s.\n"
 "Do you want to skip this track or overwrite it?"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:338
+#: ../plugins/sjcd/sj-extracting.c:331
 msgid "_Skip"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:339
+#: ../plugins/sjcd/sj-extracting.c:332
 msgid "S_kip All"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:340
+#: ../plugins/sjcd/sj-extracting.c:333
 msgid "_Overwrite"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:341
+#: ../plugins/sjcd/sj-extracting.c:334
 msgid "Overwrite _All"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:390
+#: ../plugins/sjcd/sj-extracting.c:383
 #, c-format
 msgid "Failed to create output directory: %s"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:532
+#: ../plugins/sjcd/sj-extracting.c:525
 #, c-format
 msgid "Estimated time left: %d:%02d (at %0.1f×)"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:534
+#: ../plugins/sjcd/sj-extracting.c:527
 msgid "Estimated time left: unknown"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:588
+#: ../plugins/sjcd/sj-extracting.c:613
 #, c-format
 msgid ""
 "%d were ripped from the CD but no repository was selected. Please import "
 "them manually."
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:602
+#: ../plugins/sjcd/sj-extracting.c:627
 #, c-format
 msgid "Importing file '%s'. Please wait..."
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:743
+#: ../plugins/sjcd/sj-extracting.c:768
 msgid "Sound Juicer could not extract this CD."
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:745 ../plugins/sjcd/sj-main.c:659
-#: ../plugins/sjcd/sj-main.c:767 ../plugins/sjcd/sj-main.c:860
-#: ../plugins/sjcd/sj-main.c:1058 ../plugins/sjcd/sj-main.c:1381
+#: ../plugins/sjcd/sj-extracting.c:770 ../plugins/sjcd/sj-main.c:376
+#: ../plugins/sjcd/sj-main.c:409 ../plugins/sjcd/sj-main.c:1129
+#: ../plugins/sjcd/sj-main.c:1244 ../plugins/sjcd/sj-main.c:1339
 msgid "Reason"
 msgstr ""
 
-#: ../plugins/sjcd/sj-extracting.c:862 ../plugins/sjcd/sj-extracting.c:868
+#. Change the label to Stop while extracting
+#: ../plugins/sjcd/sj-extracting.c:856 ../plugins/sjcd/sj-main.c:1961
+msgid "_Stop"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:881 ../plugins/sjcd/sj-extracting.c:887
 msgid "Extracting audio from CD"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:34
+#: ../plugins/sjcd/sj-extracting.c:1043
+msgid "Unknown Composer"
+msgstr ""
+
+#: ../plugins/sjcd/sj-extracting.c:1044
+msgid "Unknown Track"
+msgstr ""
+
+#: ../plugins/sjcd/sj-genres.c:33
 msgid "Ambient"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:35
+#: ../plugins/sjcd/sj-genres.c:34
 msgid "Blues"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:36
+#: ../plugins/sjcd/sj-genres.c:35 ../plugins/sjcd/sj-main.c:458
 msgid "Classical"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:37
+#: ../plugins/sjcd/sj-genres.c:36
 msgid "Country"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:38
+#: ../plugins/sjcd/sj-genres.c:37
 msgid "Dance"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:39
+#: ../plugins/sjcd/sj-genres.c:38
 msgid "Electronica"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:40
+#: ../plugins/sjcd/sj-genres.c:39
 msgid "Folk"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:41
+#: ../plugins/sjcd/sj-genres.c:40
 msgid "Funk"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:42
+#: ../plugins/sjcd/sj-genres.c:41
 msgid "Jazz"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:43
+#: ../plugins/sjcd/sj-genres.c:42
 msgid "Latin"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:44
+#: ../plugins/sjcd/sj-genres.c:43
 msgid "Pop"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:45
+#: ../plugins/sjcd/sj-genres.c:44
 msgid "Rap"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:46
+#: ../plugins/sjcd/sj-genres.c:45
 msgid "Reggae"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:47
+#: ../plugins/sjcd/sj-genres.c:46
 msgid "Rock"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:48
+#: ../plugins/sjcd/sj-genres.c:47
 msgid "Soul"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:49
+#: ../plugins/sjcd/sj-genres.c:48
 msgid "Spoken Word"
 msgstr ""
 
-#: ../plugins/sjcd/sj-genres.c:189
+#: ../plugins/sjcd/sj-genres.c:188
 #, c-format
 msgid "Error while saving custom genre: %s"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:111
-msgid "E_xtract"
+#: ../plugins/sjcd/sj-main.c:176 ../plugins/sjcd/sj-main.c:1937
+#: ../plugins/sjcd/sj-main.c:1984
+msgid "Select None"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:188 ../plugins/sjcd/sj-main.c:437
+#: ../plugins/sjcd/sj-main.c:208 ../plugins/sjcd/sj-main.c:608
 msgid "(unknown)"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:316
+#: ../plugins/sjcd/sj-main.c:340
 msgid "S_ubmit Album"
 msgstr ""
 
+#: ../plugins/sjcd/sj-main.c:342
+msgid "Ca_ncel"
+msgstr ""
+
 #. Translators: title, artist
-#: ../plugins/sjcd/sj-main.c:321
+#: ../plugins/sjcd/sj-main.c:345
 #, c-format
 msgid "Could not find %s by %s on MusicBrainz."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:326
+#: ../plugins/sjcd/sj-main.c:350
 msgid "You can improve the MusicBrainz database by adding this album."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:657 ../plugins/sjcd/sj-main.c:763
-#: ../plugins/sjcd/sj-main.c:858
+#: ../plugins/sjcd/sj-main.c:374
+msgid "Could not open URL"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:375
+msgid "Sound Juicer could not open the submission URL"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:407
+msgid "Could not duplicate disc"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:408
+msgid "Sound Juicer could not duplicate the disc"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:458
+msgid "Lieder"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:458
+msgid "Opera"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:458
+msgid "Chamber"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:458
+msgid "Musical"
+msgstr ""
+
+#. Translators: this string appears when multiple CDs were
+#. * found in musicbrainz online database, it corresponds to
+#. * "Released: <country> in <year> on <label>"
+#: ../plugins/sjcd/sj-main.c:837
+#, c-format
+msgid "Released: %s in %d on %s"
+msgstr ""
+
+#. Translators: this string appears when multiple CDs were
+#. * found in musicbrainz online database, it corresponds to
+#. * "Released: <country> on <label>"
+#: ../plugins/sjcd/sj-main.c:845
+#, c-format
+msgid "Released: %s on %s"
+msgstr ""
+
+#. Translators: this string appears when multiple CDs were
+#. * found in musicbrainz online database, it corresponds to
+#. * "Released: <country> in <year>"
+#: ../plugins/sjcd/sj-main.c:851
+#, c-format
+msgid "Released: %s in %d"
+msgstr ""
+
+#. Translators: this string appears when multiple CDs were
+#. * found in musicbrainz online database, it corresponds to
+#. * "Released: <country>"
+#: ../plugins/sjcd/sj-main.c:857
+#, c-format
+msgid "Released: %s"
+msgstr ""
+
+#. Translators: this string appears when multiple CDs were
+#. * found in musicbrainz online database, it corresponds to
+#. * "Released in <year> on <label>"
+#: ../plugins/sjcd/sj-main.c:864
+#, c-format
+msgid "Released in %d on %s"
+msgstr ""
+
+#. Translators: this string appears when multiple CDs were
+#. * found in musicbrainz online database, it corresponds to
+#. * "Released in <year>"
+#: ../plugins/sjcd/sj-main.c:871
+#, c-format
+msgid "Released in %d"
+msgstr ""
+
+#. Translators: this string appears when multiple CDs were
+#. * found in musicbrainz online database, it corresponds to
+#. * "Released on <label>"
+#: ../plugins/sjcd/sj-main.c:878
+#, c-format
+msgid "Released on %s"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:880
+msgid "Release label, year & country unknown"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:926
+msgid "Albums"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:969
+#, c-format
+msgid " (Disc %d/%d)"
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:1127 ../plugins/sjcd/sj-main.c:1240
+#: ../plugins/sjcd/sj-main.c:1337
 msgid "Could not read the CD"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:658 ../plugins/sjcd/sj-main.c:766
+#: ../plugins/sjcd/sj-main.c:1128 ../plugins/sjcd/sj-main.c:1243
 msgid "Sound Juicer could not read the track listing on this CD."
 msgstr ""
 
-#.
-#. window = gtk_widget_get_window (GTK_WIDGET(gtkpod_app));
-#.
-#. /* Set watch cursor */
-#. if (realized) {
-#. cursor = gdk_cursor_new_for_display (gtk_widget_get_display (GTK_WIDGET (gtkpod_app)), GDK_WATCH);
-#. gdk_window_set_cursor (window, cursor);
-#. gdk_cursor_unref (cursor);
-#. gdk_display_sync (gtk_widget_get_display (GTK_WIDGET (gtkpod_app)));
-#. }
 #. Set statusbar message
-#: ../plugins/sjcd/sj-main.c:737
+#: ../plugins/sjcd/sj-main.c:1210
 msgid "Retrieving track listing...please wait."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:820
+#: ../plugins/sjcd/sj-main.c:1299
 #, c-format
 msgid "Sound Juicer could not use the CD-ROM device '%s'"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:827
+#: ../plugins/sjcd/sj-main.c:1306
 msgid "HAL daemon may not be running."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:851
+#: ../plugins/sjcd/sj-main.c:1330
 #, c-format
 msgid "Sound Juicer could not access the CD-ROM device '%s'"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:951
+#: ../plugins/sjcd/sj-main.c:1430
 msgid "No CD-ROM drives found"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:952
+#: ../plugins/sjcd/sj-main.c:1431
 msgid "Sound Juicer could not find any CD-ROM drives to read."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:978
+#: ../plugins/sjcd/sj-main.c:1458
 msgid ""
 "sjcd plugin: the currently selected audio profile is not available on your "
 "installation."
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:1056
-msgid "Could not open URL"
-msgstr ""
-
-#: ../plugins/sjcd/sj-main.c:1057
-msgid "Sound Juicer could not open the submission URL"
-msgstr ""
-
-#: ../plugins/sjcd/sj-main.c:1165
+#: ../plugins/sjcd/sj-main.c:1582
 #, c-format
 msgid "Unknown column %d was edited"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:1306 ../plugins/sjcd/sj-prefs.c:119
+#: ../plugins/sjcd/sj-main.c:1681
+msgid "Unknown widget calling on_person_edit_changed."
+msgstr ""
+
+#: ../plugins/sjcd/sj-main.c:1781 ../plugins/sjcd/sj-prefs.c:137
 #, c-format
 msgid ""
 "Could not display help for Sound Juicer\n"
 "%s"
 msgstr ""
 
-#: ../plugins/sjcd/sj-main.c:1379
-msgid "Could not duplicate disc"
-msgstr ""
-
-#: ../plugins/sjcd/sj-main.c:1380
-msgid "Sound Juicer could not duplicate the disc"
-msgstr ""
-
-#: ../plugins/sjcd/sj-main.c:1420 ../plugins/sjcd/sj-main.c:1443
+#: ../plugins/sjcd/sj-main.c:1869
 msgid "Could not create GSettings object.\n"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:62
+#: ../plugins/sjcd/sj-prefs.c:61
 msgid "Album Artist, Album Title"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:63
+#: ../plugins/sjcd/sj-prefs.c:62
 msgid "Album Artist (sortable), Album Title"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:64
+#: ../plugins/sjcd/sj-prefs.c:63
 msgid "Track Artist, Album Title"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:65
+#: ../plugins/sjcd/sj-prefs.c:64
 msgid "Track Artist (sortable), Album Title"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:66
+#: ../plugins/sjcd/sj-prefs.c:65
 msgid "Album Title"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:68
+#: ../plugins/sjcd/sj-prefs.c:67
 msgid "Album Artist (sortable)"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:69
+#: ../plugins/sjcd/sj-prefs.c:68
 msgid "Album Artist - Album Title"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:70
+#: ../plugins/sjcd/sj-prefs.c:69
 msgid "Album Artist (sortable) - Album Title"
 msgstr ""
 
+#: ../plugins/sjcd/sj-prefs.c:70
+msgid "Album Composer, Album Title"
+msgstr ""
+
 #: ../plugins/sjcd/sj-prefs.c:71
+msgid "Album Composer (sortable), Album Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:72
+msgid "Track Composer, Album Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:73
+msgid "Track Composer (sortable), Album Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:74
 msgid "[none]"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:76
+#: ../plugins/sjcd/sj-prefs.c:79
 msgid "Number - Title"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:77
+#: ../plugins/sjcd/sj-prefs.c:80
 msgid "Track Title"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:78
+#: ../plugins/sjcd/sj-prefs.c:81
 msgid "Track Artist - Track Title"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:79
+#: ../plugins/sjcd/sj-prefs.c:82
 msgid "Track Artist (sortable) - Track Title"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:80
+#: ../plugins/sjcd/sj-prefs.c:83
 msgid "Number. Track Artist - Track Title"
 msgstr ""
 
 #. {N_("Number. Track Artist (sortable) - Track Title"), "%tN. %ts - %tt"},
-#: ../plugins/sjcd/sj-prefs.c:82
+#: ../plugins/sjcd/sj-prefs.c:85
 msgid "Number-Track Artist-Track Title (lowercase)"
 msgstr ""
 
-#: ../plugins/sjcd/sj-prefs.c:304
+#. {N_("Number-Track Artist (sortable)-Track Title (lowercase)"), "%tN-%tS-%tT"},
+#: ../plugins/sjcd/sj-prefs.c:87
+msgid "Track Composer - Track Artist - Track Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:88
+msgid "Track Composer (sortable) - Track Artist (sortable) - Track Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:89
+msgid "Number. Track Composer - Track Artist - Track Title"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:90
+msgid "Number-Track Composer-Track Artist-Track Title (lowercase)"
+msgstr ""
+
+#: ../plugins/sjcd/sj-prefs.c:322
 msgid "Example Path"
 msgstr ""
 
@@ -6096,124 +6254,136 @@ msgid "_Disc"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:3
-msgid "E_ject"
+msgid "Re-read"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:4
-msgid "_Submit Track Names..."
+msgid "Duplicate"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:5
-msgid "_Duplicate Disc"
+msgid "Eject"
 msgstr ""
 
-#: ../plugins/sjcd/sjcd.xml.h:6 ../src/anjuta-actions.h:49
-msgid "_Edit"
+#: ../plugins/sjcd/sjcd.xml.h:6
+msgid "Submit Track Names"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:7
-msgid "_Select All"
-msgstr ""
-
-#: ../plugins/sjcd/sjcd.xml.h:8
-msgid "_Deselect All"
-msgstr ""
-
-#: ../plugins/sjcd/sjcd.xml.h:9
 msgid "_Year:"
 msgstr ""
 
-#: ../plugins/sjcd/sjcd.xml.h:10
-msgid "Disc:"
+#: ../plugins/sjcd/sjcd.xml.h:8
+msgid "_Disc:"
 msgstr ""
 
-#: ../plugins/sjcd/sjcd.xml.h:11
+#: ../plugins/sjcd/sjcd.xml.h:9
 msgid "_Title:"
 msgstr ""
 
-#: ../plugins/sjcd/sjcd.xml.h:12
+#: ../plugins/sjcd/sjcd.xml.h:10
 msgid "_Artist:"
 msgstr ""
 
-#: ../plugins/sjcd/sjcd.xml.h:13
-msgid "_Genre:"
+#: ../plugins/sjcd/sjcd.xml.h:11
+msgid "_Composer:"
 msgstr ""
 
-#: ../plugins/sjcd/sjcd.xml.h:14
-msgid "Duration:"
+#: ../plugins/sjcd/sjcd.xml.h:12
+msgid ""
+"Composer field enabling is dependent upon:\n"
+"if the value is populated by the CD metadata;\n"
+"if the selected genre requires the field, eg. Classical, Lieder, Opera, "
+"Chamber, Musical"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:15
-msgid "Tracks"
+msgid "_Genre:"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:16
-msgid "Multiple Albums Found"
+msgid "Duration:"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:17
+msgid "Tracks"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:19
+msgid "Multiple Albums Found"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:20
 msgid "_Continue"
 msgstr ""
 
-#: ../plugins/sjcd/sjcd.xml.h:18
+#: ../plugins/sjcd/sjcd.xml.h:21
 msgid ""
 "This CD could be more than one album. Please select which album it is below "
 "and press <i>Continue</i>."
 msgstr ""
 
-#: ../plugins/sjcd/sjcd.xml.h:19
+#: ../plugins/sjcd/sjcd.xml.h:22
 msgid "Preferences"
 msgstr ""
 
-#: ../plugins/sjcd/sjcd.xml.h:20
-msgid "Device"
-msgstr ""
-
-#: ../plugins/sjcd/sjcd.xml.h:21
-msgid "CD _drive:"
-msgstr ""
-
-#: ../plugins/sjcd/sjcd.xml.h:22
-msgid "_Eject after extracting tracks"
-msgstr ""
-
-#: ../plugins/sjcd/sjcd.xml.h:23
-msgid "_Open music folder when finished"
+#: ../plugins/sjcd/sjcd.xml.h:23 ../src/anjuta-actions.h:115
+msgid "_Help"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:24
-msgid "Music Folder"
+msgid "_Close"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:25
-msgid "_Folder:"
+msgid "Device"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:26
-msgid "Select A Folder"
+msgid "CD _drive:"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:27
-msgid "Track Names"
+msgid "_Eject after extracting tracks"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:28
-msgid "Folder hie_rarchy:"
+msgid "_Open music folder when finished"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:29
-msgid "File _name:"
+msgid "Music Folder"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:30
-msgid "_Strip special characters"
+msgid "_Folder:"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:31
-msgid "Format"
+msgid "Select A Folder"
 msgstr ""
 
 #: ../plugins/sjcd/sjcd.xml.h:32
+msgid "Track Names"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:33
+msgid "Folder hie_rarchy:"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:34
+msgid "File _name:"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:35
+msgid "_Strip special characters"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:36
+msgid "Format"
+msgstr ""
+
+#: ../plugins/sjcd/sjcd.xml.h:37
 msgid "O_utput Format:"
 msgstr ""
 
@@ -6248,6 +6418,10 @@ msgstr ""
 
 #: ../src/anjuta-actions.h:41
 msgid "Quit gtkpod"
+msgstr ""
+
+#: ../src/anjuta-actions.h:49
+msgid "_Edit"
 msgstr ""
 
 #: ../src/anjuta-actions.h:54
@@ -6292,10 +6466,6 @@ msgstr ""
 
 #: ../src/anjuta-actions.h:107
 msgid "_Tools"
-msgstr ""
-
-#: ../src/anjuta-actions.h:115
-msgid "_Help"
 msgstr ""
 
 #: ../src/anjuta-actions.h:120
