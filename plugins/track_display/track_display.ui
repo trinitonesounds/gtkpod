@@ -1,7 +1,7 @@
 <!--*- xml -*-->
 <ui>
 	<menubar name="MenuMain">
-		<menu name="MenuMusic" action="menuMusic">
+		<menu name="MenuMusic" action="ActionMenuMusic">
 			<placeholder name="PlaceholderMusicMenus">
 			</placeholder>
 			<placeholder name="PlaceholderFileMenus">

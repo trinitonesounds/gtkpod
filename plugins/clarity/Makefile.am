@@ -40,14 +40,15 @@ libclarity_la_SOURCES = plugin.c plugin.h \
 							  clarity_context_menu.c clarity_context_menu.h \
 							  clarity_dnd_support.c clarity_dnd_support.h \
 							  fetchcover.c fetchcover.h
-libclarity_la_CFLAGS = $(CLUTTER_GTK_CFLAGS)
+libclarity_la_CFLAGS = $(CLUTTER_GTK_CFLAGS) $(CURL_CFLAGS)
 libclarity_la_LDFLAGS = $(GTKPOD_PLUGIN_LDFLAGS)
 
 # Plugin dependencies
 libclarity_la_LIBADD = \
     $(LIBGTKPOD_LIBS) \
     $(LIBANJUTA_LIBS) \
-    $(CLUTTER_GTK_LIBS)
+    $(CLUTTER_GTK_LIBS) \
+    $(CURL_LIBS)
 
 endif
 
