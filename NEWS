@@ -1,3 +1,18 @@
+gtkpod V2.1.5
+
+  Incrmental Release
+
+  IMPROVEMENT: Port to GStreamer 1.0
+
+  IMPROVEMENT: Upgrade sjcd plugin to use latest sound juicer code
+
+  IMPROVEMENT: Refactor deprecated GtkTable replacing with GtkGrid
+
+  BUGFIX: #324 Fixes the setting display of the repository file settings
+
+  BUGFIX: Update install instructions and documentation
+
+
 gtkpod V2.1.4
 
   Incremental Release

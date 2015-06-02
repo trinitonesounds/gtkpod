@@ -1,3 +1,95 @@
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2015-06-02
+
+    Updates NEWS and Changelog
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2015-06-02
+
+    Update language files ready for final release 2.1.5
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2015-06-02
+
+    Minor fixes
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2015-06-02
+
+    Downloads from wikispaces website containing the documentation
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2015-05-25
+
+    Updates to install instructions
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2014-08-17
+
+    Replacement of all remaining GtkTables with GtkGrid
+    
+    * All entries of GtkTable widgets directly replaced with GtkGrid widgets
+      and inner components realigned accordingly.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2014-08-17
+
+    #324 - Fixes the setting display of the repository file settings
+    
+    * The GtkFileChooser only displays the path to the selected file if it
+      exists. If the loaded path does not happen to exist then 'None' is
+      displayed instead causing confusion.
+    
+    * Replaces the backupDB file choosers in the repository editor and creator
+      with an ineditable path entry and ... button.
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2014-08-10
+
+    Replaces deprecated GtkTable with GtkGrid
+    
+    * playlist_display_spl.c
+     * Already partially replaced
+    
+    * sjcd
+     * Updates glade xml file
+     * Disadvantage to GtkGrid is that the rows cannot be hidden in the same
+       way as GtkTable hence the composer field is disabled rather than hidden
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2014-05-08
+
+    Updates the INSTALL instructions for fedora 19
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2014-04-30
+
+    Add back in previously removed handling of deprecation flags
+    
+    * Restores the deprecation flag handling in configure script but adds an
+      additional option for disabling deprecation prohibition flags even when
+      gtkpod version is a development build.
+    
+    * ./configure --enable-deprecations=yes will stop the addition of all the
+      deprecation prohibition flags hence allow deprecated function calls
+    
+    * ./configure --enable-deprecations=no will ensure that the deprecation
+       flags will be added to development builds
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2014-04-27
+
+    Ignore kdevelop-related project files
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2014-04-27
+
+    Upgrades sjcd plugin to latest sound juicer codebase
+    
+    * Upgrades gtkpod to use musicbrainz5 from 3/4
+    
+    * Upgrades to gstreamer 1.0 from 0.10
+    
+    * sj-main.c
+     * Slight changes required to add a GSimpleActionGroup since gtkpod does
+       not use GtkApplication so no default GActionGroup available
+
+Dominique Leuenberger <dimstar@opensuse.org>	2013-03-02
+
+    Port to GStreamer 1.0
+
+phantomjinx <p.g.richardson@phantomjinx.co.uk>	2014-05-08
+
+    Update version script to 2.1.5
+
 phantomjinx <p.g.richardson@phantomjinx.co.uk>	2013-09-04
 
     Updates NEWS and Changelog
