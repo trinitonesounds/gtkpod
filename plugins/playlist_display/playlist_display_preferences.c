@@ -38,7 +38,7 @@ static GtkWidget *notebook = NULL;
 
 static void set_pm_sort(gint val) {
     prefs_set_int("pm_sort", val);
-    gtkpod_broadcast_preference_change("pm_sort", &val);
+    gtkpod_broadcast_preference_change("pm_sort", GINT_TO_POINTER(val));
 }
 
 G_MODULE_EXPORT void on_pm_ascend_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
