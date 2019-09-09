@@ -1,0 +1,4 @@
+[Anjuta Plugin]
+Location=filetype_opus:OpusFileTypePlugin
+_Name=Opus File Type Plugin
+_Description=Support for the Opus file type

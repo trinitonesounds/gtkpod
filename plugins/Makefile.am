@@ -16,6 +16,7 @@ SUBDIRS = . \
 	mserv \
 	filetype_mp3 \
 	filetype_ogg \
+	filetype_opus \
 	filetype_flac \
 	filetype_wav \
 	filetype_video \

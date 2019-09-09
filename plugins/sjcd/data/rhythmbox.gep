@@ -15,6 +15,12 @@ type = audio
 format = audio/mpeg, mpegversion=1, layer=3
 presence = 1
 
+[profile-opus]
+name = opus
+description = Opus
+format = application/opus
+type = container
+
 [profile-oggvorbis]
 name = oggvorbis
 description = Ogg Vorbis

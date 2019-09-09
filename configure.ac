@@ -99,6 +99,7 @@ PKG_CHECK_MODULES(CURL, [libcurl >= 7.10.0], [have_curl="yes"], [have_curl="no"]
 PKG_CHECK_MODULES(WEBKIT, [webkitgtk-3.0 >= 1.3], [have_webkit="yes"], [have_webkit="no"])
 PKG_CHECK_MODULES(GSTREAMER, gstreamer-1.0 >= 1.0 gstreamer-base-1.0 >= 1.0 gstreamer-plugins-base-1.0 >= 1.0 gstreamer-pbutils-1.0 >= 1.0, [have_gstreamer="yes"], [have_gstreamer="no"])
 PKG_CHECK_MODULES(VORBISFILE, vorbisfile >= 1.3.1, [have_vorbis="yes"], [have_vorbis="no"])
+PKG_CHECK_MODULES(OPUSFILE, opusfile >= 0.11, [have_opus="yes"], [have_opus="no"])
 PKG_CHECK_MODULES(FLAC, flac >= 1.2.1, [have_flac="yes"], [have_flac="no"])
 PKG_CHECK_MODULES(BRASERO, libbrasero-media3 >= 3.0, [have_brasero="yes"], [have_brasero="no"])		
 PKG_CHECK_MODULES(MUSICBRAINZ5, libmusicbrainz5 >= 5.0.1, [have_mb5="yes"], [have_mb5="no"])
@@ -302,6 +303,17 @@ if test "x$have_vorbis" = "xyes"; then
     AC_DEFINE(HAVE_PLUGIN_FILETYPE_OGG, 1, [Define if you have the ogg/vorbis support])
 fi
 
+dnl Checks for filetype_opus plugin
+dnl -------------------------------------------------------------
+AC_ARG_WITH(opus, AS_HELP_STRING([--without-opus], [Disable Opus support]), [], [with_opus=yes])
+if test "x$with_opus" != "xno" -a "x$have_opus" = "xno"; then
+               AC_MSG_ERROR([Opus libraries could not be found. Explicitly disable support by rerunning with --without-opus])
+fi
+
+AM_CONDITIONAL(HAVE_PLUGIN_FILETYPE_OPUS, test "x$have_opus" = "xyes")
+if test "x$have_opus" = "xyes"; then
+    AC_DEFINE(HAVE_PLUGIN_FILETYPE_OPUS, 1, [Define if you have the opus support])
+fi
 
 dnl Checks for filetype_flac plugin
 dnl -------------------------------------------------------------
@@ -494,6 +506,7 @@ libs/atomic-parsley/Makefile
 plugins/Makefile
 plugins/filetype_mp3/Makefile
 plugins/filetype_ogg/Makefile
+plugins/filetype_opus/Makefile
 plugins/filetype_flac/Makefile
 plugins/filetype_wav/Makefile
 plugins/filetype_m4a/Makefile
@@ -685,6 +698,7 @@ echo " MP4 File Type              .....: $have_mp4"
 echo " M4A File Type              .....: $have_m4a"
 echo " Flac File Type             .....: $have_flac"
 echo " Ogg File Type              .....: $have_vorbis"
+echo " Opus File Type             .....: $have_opus"
 echo " Clarity Display Widget     .....: $have_clarity"
 echo " Sound Juicer Widget        .....: $have_sjcd"
 
